@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F3426A0F8
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C7326FA5E
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845553; cv=none; b=oXhshZ0h1S8lbOo7tKvOKErtIhPrAwwuoZVg60yWkik2EUtDjDwQfHFc1hfqWHLD8AoE9D8Ryr4/9UZbKkemFdecB8bijdGTgWqN+Q8t2D/sJJZX8G9WWaqSXrOxqdo/VIygaqY3D5JoAeRDcqTfP3FcKvYE6oB1UTPjDyu9kGQ=
+	t=1745845558; cv=none; b=ETY5oekk++2Xo/YmlKqfpg56NDiPJiLZnmKBvJSdNnq5tYZzlCwsWkEEGmQFkohX0LvQrJU9VwRNtdKSc/F19F5Ll5dhKAY4BZ79F8oVTHGrGFSzKn4J6GlEU3bssSNp9bdNTbT9Y9L3LgJmOnYkMnQ0WWTsXVjF2S6o+dl74sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845553; c=relaxed/simple;
-	bh=5URiGYR5zlAEfTrePIZ8K4h++6AoVHBDIfSU+U1wtuI=;
+	s=arc-20240116; t=1745845558; c=relaxed/simple;
+	bh=m3CV5y+75OrkXs29P7nZ6ztqK94G8aYhLYyrBKdBEpg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BzfX8AH4BVvhoVkPYfmiXb1amOjZtVr+3ByzAXVR12BnFLmOtfhRXSPISwpwtjAcgbLNlkCzW68t55jZ2eeRcu3Ga2vf6h7tO1wH8kNa81fMVAIpF5xH7NxWf9mrdxJCFdQbvO7InmJY5khAqJznb3cbWntJh2UsWSiOZiDumUk=
+	 MIME-Version:Content-Type; b=dqox+rWuWWPNUmHVJYp+IM6k08kLw8Ic1hVvZ4XF1Axn2EfKELDDtvqHvZOpDjbjX1b/C4I9dxjkugBVrkvFpfa37VrBZhReGbPfMkC2mmACBXzj/pWEaHXMIGmu3MAqMUPJ2cH+azEFdpGhBFrXgRZ1NSxHFbhfrgUwwbbDF9Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9OB7-0000MQ-L7; Mon, 28 Apr 2025 15:05:45 +0200
+	id 1u9OBB-0000MW-NZ; Mon, 28 Apr 2025 15:05:49 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9OB6-0006FM-0Y;
+	id 1u9OB6-0006Fd-1C;
 	Mon, 28 Apr 2025 15:05:44 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9OB6-00GJ7J-0J;
+	id 1u9OB6-00GJB8-0k;
 	Mon, 28 Apr 2025 15:05:44 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Phil Elwell <phil@raspberrypi.org>,
 	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v7 03/12] net: usb: lan78xx: refactor PHY init to separate detection and MAC configuration
-Date: Mon, 28 Apr 2025 15:05:33 +0200
-Message-Id: <20250428130542.3879769-4-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v7 11/12] net: usb: lan78xx: Integrate EEE support with phylink LPI API
+Date: Mon, 28 Apr 2025 15:05:41 +0200
+Message-Id: <20250428130542.3879769-12-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250428130542.3879769-1-o.rempel@pengutronix.de>
 References: <20250428130542.3879769-1-o.rempel@pengutronix.de>
@@ -66,254 +66,212 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Split out PHY detection into lan78xx_get_phy() and MAC-side setup into
-lan78xx_mac_prepare_for_phy(), making the main lan78xx_phy_init() cleaner
-and easier to follow.
+Refactor Energy-Efficient Ethernet (EEE) support in the LAN78xx driver to
+fully integrate with the phylink Low Power Idle (LPI) API. This includes:
 
-This improves separation of concerns and prepares the code for a future
-transition to phylink. Fixed PHY registration and interface selection
-are now handled in lan78xx_get_phy(), while MAC-side delay configuration
-is done in lan78xx_mac_prepare_for_phy().
-
-The fixed PHY fallback is preserved for setups like EVB-KSZ9897-1,
-where LAN7801 connects directly to a KSZ switch without a standard PHY
-or device tree support.
-
-No functional changes intended.
+- Replacing direct calls to `phy_ethtool_get_eee` and `phy_ethtool_set_eee`
+  with `phylink_ethtool_get_eee` and `phylink_ethtool_set_eee`.
+- Implementing `.mac_enable_tx_lpi` and `.mac_disable_tx_lpi` to control
+  LPI transitions via phylink.
+- Configuring `lpi_timer_default` to align with recommended values from
+  LAN7800 documentation.
+- ensure EEE is disabled on controller reset
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
 changes v6:
-- this patch is added in v6
+- clarify in lan78xx_mac_eee_enable() comment that MAC_CR_EEE_EN can be
+  modified without disabling TX/RX.
+  I can't recall where the requirement to disable TX/RX came from;
+  may have confused it with nearby MAC_CR bits that require this
+  kind of configuration
+changes v5:
+- remove redundant error prints
+changes v2:
+- use latest PHYlink TX_LPI API
 ---
- drivers/net/usb/lan78xx.c | 174 ++++++++++++++++++++++++++++----------
- 1 file changed, 128 insertions(+), 46 deletions(-)
+ drivers/net/usb/lan78xx.c | 123 ++++++++++++++++++++++++--------------
+ 1 file changed, 79 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 9c0658227bde..7f1ecc415d53 100644
+index 45e9158655b7..ba6a6cda779e 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -2508,53 +2508,145 @@ static void lan78xx_remove_irq_domain(struct lan78xx_net *dev)
- 	dev->domain_data.irqdomain = NULL;
+@@ -1789,54 +1789,15 @@ static int lan78xx_set_wol(struct net_device *netdev,
+ static int lan78xx_get_eee(struct net_device *net, struct ethtool_keee *edata)
+ {
+ 	struct lan78xx_net *dev = netdev_priv(net);
+-	struct phy_device *phydev = net->phydev;
+-	int ret;
+-	u32 buf;
+-
+-	ret = usb_autopm_get_interface(dev->intf);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = phy_ethtool_get_eee(phydev, edata);
+-	if (ret < 0)
+-		goto exit;
+ 
+-	ret = lan78xx_read_reg(dev, MAC_CR, &buf);
+-	if (buf & MAC_CR_EEE_EN_) {
+-		/* EEE_TX_LPI_REQ_DLY & tx_lpi_timer are same uSec unit */
+-		ret = lan78xx_read_reg(dev, EEE_TX_LPI_REQ_DLY, &buf);
+-		edata->tx_lpi_timer = buf;
+-	} else {
+-		edata->tx_lpi_timer = 0;
+-	}
+-
+-	ret = 0;
+-exit:
+-	usb_autopm_put_interface(dev->intf);
+-
+-	return ret;
++	return phylink_ethtool_get_eee(dev->phylink, edata);
  }
  
--static struct phy_device *lan7801_phy_init(struct lan78xx_net *dev)
-+/**
-+ * lan78xx_register_fixed_phy() - Register a fallback fixed PHY
-+ * @dev: LAN78xx device
-+ *
-+ * Registers a fixed PHY with 1 Gbps full duplex. This is used in special cases
-+ * like EVB-KSZ9897-1, where LAN7801 acts as a USB-to-Ethernet interface to a
-+ * switch without a visible PHY.
-+ *
-+ * Return: pointer to the registered fixed PHY, or ERR_PTR() on error.
-+ */
-+static struct phy_device *lan78xx_register_fixed_phy(struct lan78xx_net *dev)
+ static int lan78xx_set_eee(struct net_device *net, struct ethtool_keee *edata)
  {
- 	struct fixed_phy_status fphy_status = {
- 		.link = 1,
- 		.speed = SPEED_1000,
- 		.duplex = DUPLEX_FULL,
- 	};
-+
-+	netdev_info(dev->net,
-+		    "No PHY found on LAN7801 – registering fixed PHY (e.g. EVB-KSZ9897-1)\n");
-+
-+	return fixed_phy_register(PHY_POLL, &fphy_status, NULL);
-+}
-+
-+/**
-+ * lan78xx_get_phy() - Probe or register PHY device and set interface mode
-+ * @dev: LAN78xx device structure
-+ *
-+ * This function attempts to find a PHY on the MDIO bus. If no PHY is found
-+ * and the chip is LAN7801, it registers a fixed PHY as fallback. It also
-+ * sets dev->interface based on chip ID and detected PHY type.
-+ *
-+ * Return: a valid PHY device pointer, or ERR_PTR() on failure.
-+ */
-+static struct phy_device *lan78xx_get_phy(struct lan78xx_net *dev)
-+{
- 	struct phy_device *phydev;
+ 	struct lan78xx_net *dev = netdev_priv(net);
 -	int ret;
+-	u32 buf;
+-
+-	ret = usb_autopm_get_interface(dev->intf);
+-	if (ret < 0)
+-		return ret;
  
-+	/* Attempt to locate a PHY on the MDIO bus */
- 	phydev = phy_find_first(dev->mdiobus);
--	if (!phydev) {
--		netdev_dbg(dev->net, "PHY Not Found!! Registering Fixed PHY\n");
--		phydev = fixed_phy_register(PHY_POLL, &fphy_status, NULL);
--		if (IS_ERR(phydev)) {
--			netdev_err(dev->net, "No PHY/fixed_PHY found\n");
--			return ERR_PTR(-ENODEV);
+-	ret = phy_ethtool_set_eee(net->phydev, edata);
+-	if (ret < 0)
+-		goto out;
+-
+-	buf = (u32)edata->tx_lpi_timer;
+-	ret = lan78xx_write_reg(dev, EEE_TX_LPI_REQ_DLY, buf);
+-out:
+-	usb_autopm_put_interface(dev->intf);
+-
+-	return ret;
++	return phylink_ethtool_set_eee(dev->phylink, edata);
+ }
+ 
+ static void lan78xx_get_drvinfo(struct net_device *net,
+@@ -2555,10 +2516,62 @@ static void lan78xx_mac_link_up(struct phylink_config *config,
+ 		   ERR_PTR(ret));
+ }
+ 
++/**
++ * lan78xx_mac_eee_enable - Enable or disable MAC-side EEE support
++ * @dev: LAN78xx device
++ * @enable: true to enable EEE, false to disable
++ *
++ * This function sets or clears the MAC_CR_EEE_EN_ bit to control Energy
++ * Efficient Ethernet (EEE) operation. According to current understanding
++ * of the LAN7800 documentation, this bit can be modified while TX and RX
++ * are enabled. No explicit requirement was found to disable data paths
++ * before changing this bit.
++ *
++ * Return: 0 on success or a negative error code
++ */
++static int lan78xx_mac_eee_enable(struct lan78xx_net *dev, bool enable)
++{
++	u32 mac_cr = 0;
 +
-+	switch (dev->chipid) {
-+	case ID_REV_CHIP_ID_7801_:
-+		if (phydev) {
-+			/* External RGMII PHY detected */
-+			dev->interface = PHY_INTERFACE_MODE_RGMII_ID;
-+			phydev->is_internal = false;
++	if (enable)
++		mac_cr |= MAC_CR_EEE_EN_;
 +
-+			if (!phydev->drv)
-+				netdev_warn(dev->net,
-+					    "PHY driver not found – assuming RGMII delays are on PCB or strapped for the PHY\n");
-+
-+			return phydev;
- 		}
--		netdev_dbg(dev->net, "Registered FIXED PHY\n");
-+
- 		dev->interface = PHY_INTERFACE_MODE_RGMII;
-+		/* No PHY found – fallback to fixed PHY (e.g. KSZ switch board) */
-+		return lan78xx_register_fixed_phy(dev);
-+
-+	case ID_REV_CHIP_ID_7800_:
-+	case ID_REV_CHIP_ID_7850_:
-+		if (!phydev)
-+			return ERR_PTR(-ENODEV);
-+
-+		/* These use internal GMII-connected PHY */
-+		dev->interface = PHY_INTERFACE_MODE_GMII;
-+		phydev->is_internal = true;
-+		return phydev;
-+
-+	default:
-+		netdev_err(dev->net, "Unknown CHIP ID: 0x%08x\n", dev->chipid);
-+		return ERR_PTR(-ENODEV);
-+	}
++	return lan78xx_update_reg(dev, MAC_CR, MAC_CR_EEE_EN_, mac_cr);
 +}
 +
-+/**
-+ * lan78xx_mac_prepare_for_phy() - Preconfigure MAC-side interface settings
-+ * @dev: LAN78xx device
-+ *
-+ * Configure MAC-side registers according to dev->interface, which should be
-+ * set by lan78xx_get_phy().
-+ *
-+ * - For PHY_INTERFACE_MODE_RGMII:
-+ *   Enable MAC-side TXC delay. This mode seems to be used in a special setup
-+ *   without a real PHY, likely on EVB-KSZ9897-1. In that design, LAN7801 is
-+ *   connected to the KSZ9897 switch, and the link timing is expected to be
-+ *   hardwired (e.g. via strapping or board layout). No devicetree support is
-+ *   assumed here.
-+ *
-+ * - For PHY_INTERFACE_MODE_RGMII_ID:
-+ *   Disable MAC-side delay and rely on the PHY driver to provide delay.
-+ *
-+ * - For GMII, no MAC-specific config is needed.
-+ *
-+ * Return: 0 on success or a negative error code.
-+ */
-+static int lan78xx_mac_prepare_for_phy(struct lan78xx_net *dev)
++static void lan78xx_mac_disable_tx_lpi(struct phylink_config *config)
 +{
++	struct net_device *net = to_net_dev(config->dev);
++	struct lan78xx_net *dev = netdev_priv(net);
++
++	lan78xx_mac_eee_enable(dev, false);
++}
++
++static int lan78xx_mac_enable_tx_lpi(struct phylink_config *config, u32 timer,
++				     bool tx_clk_stop)
++{
++	struct net_device *net = to_net_dev(config->dev);
++	struct lan78xx_net *dev = netdev_priv(net);
 +	int ret;
 +
-+	switch (dev->interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+		/* Enable MAC-side TX clock delay */
- 		ret = lan78xx_write_reg(dev, MAC_RGMII_ID,
- 					MAC_RGMII_ID_TXC_DELAY_EN_);
- 		if (ret < 0)
--			return ERR_PTR(ret);
-+			return ret;
++	/* Software should only change this field when Energy Efficient
++	 * Ethernet Enable (EEEEN) is cleared. We ensure that by clearing
++	 * EEEEN during probe, and phylink itself guarantees that
++	 * mac_disable_tx_lpi() will have been previously called.
++	 */
++	ret = lan78xx_write_reg(dev, EEE_TX_LPI_REQ_DLY, timer);
++	if (ret < 0)
++		return ret;
++
++	return lan78xx_mac_eee_enable(dev, true);
++}
++
+ static const struct phylink_mac_ops lan78xx_phylink_mac_ops = {
+ 	.mac_config = lan78xx_mac_config,
+ 	.mac_link_down = lan78xx_mac_link_down,
+ 	.mac_link_up = lan78xx_mac_link_up,
++	.mac_disable_tx_lpi = lan78xx_mac_disable_tx_lpi,
++	.mac_enable_tx_lpi = lan78xx_mac_enable_tx_lpi,
+ };
  
- 		ret = lan78xx_write_reg(dev, RGMII_TX_BYP_DLL, 0x3D00);
- 		if (ret < 0)
--			return ERR_PTR(ret);
-+			return ret;
+ /**
+@@ -2754,12 +2767,36 @@ static int lan78xx_phylink_setup(struct lan78xx_net *dev)
+ 	pc->mac_capabilities = MAC_SYM_PAUSE | MAC_ASYM_PAUSE | MAC_10 |
+ 			       MAC_100 | MAC_1000FD;
+ 	pc->mac_managed_pm = true;
++	pc->lpi_capabilities = MAC_100FD | MAC_1000FD;
++	/*
++	 * Default TX LPI (Low Power Idle) request delay count is set to 50us.
++	 *
++	 * Source: LAN7800 Documentation, DS00001992H, Section 15.1.57, Page 204.
++	 *
++	 * Reasoning:
++	 * According to the application note in the LAN7800 documentation, a
++	 * zero delay may negatively impact the TX data path’s ability to
++	 * support Gigabit operation. A value of 50us is recommended as a
++	 * reasonable default when the part operates at Gigabit speeds,
++	 * balancing stability and power efficiency in EEE mode. This delay can
++	 * be increased based on performance testing, as EEE is designed for
++	 * scenarios with mostly idle links and occasional bursts of full
++	 * bandwidth transmission. The goal is to ensure reliable Gigabit
++	 * performance without overly aggressive power optimization during
++	 * inactive periods.
++	 */
++	pc->lpi_timer_default = 50;
++	pc->eee_enabled_default = true;
  
--		ret = lan78xx_update_reg(dev, HW_CFG, HW_CFG_CLK125_EN_ |
--					 HW_CFG_REFCLK25_EN_,
-+		ret = lan78xx_update_reg(dev, HW_CFG,
-+					 HW_CFG_CLK125_EN_ | HW_CFG_REFCLK25_EN_,
- 					 HW_CFG_CLK125_EN_ | HW_CFG_REFCLK25_EN_);
- 		if (ret < 0)
--			return ERR_PTR(ret);
--	} else {
--		dev->interface = PHY_INTERFACE_MODE_RGMII_ID;
--		/* The PHY driver is responsible to configure proper RGMII
--		 * interface delays. Disable RGMII delays on MAC side.
--		 */
-+			return ret;
-+
-+		break;
-+
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		/* Disable MAC-side TXC delay, PHY provides it */
- 		ret = lan78xx_write_reg(dev, MAC_RGMII_ID, 0);
- 		if (ret < 0)
--			return ERR_PTR(ret);
-+			return ret;
+ 	if (dev->chipid == ID_REV_CHIP_ID_7801_)
+ 		phy_interface_set_rgmii(pc->supported_interfaces);
+ 	else
+ 		__set_bit(PHY_INTERFACE_MODE_GMII, pc->supported_interfaces);
  
--		phydev->is_internal = false;
-+		break;
++	memcpy(dev->phylink_config.lpi_interfaces,
++	       dev->phylink_config.supported_interfaces,
++	       sizeof(dev->phylink_config.lpi_interfaces));
 +
-+	case PHY_INTERFACE_MODE_GMII:
-+		/* No MAC-specific configuration required */
-+		break;
-+
-+	default:
-+		netdev_warn(dev->net, "Unsupported interface mode: %d\n",
-+			    dev->interface);
-+		break;
+ 	phylink = phylink_create(pc, dev->net->dev.fwnode,
+ 				 dev->interface, &lan78xx_phylink_mac_ops);
+ 	if (IS_ERR(phylink))
+@@ -2816,8 +2853,6 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 		return ret;
  	}
  
--	return phydev;
-+	return 0;
- }
- 
- static int lan78xx_phy_init(struct lan78xx_net *dev)
-@@ -2564,31 +2656,13 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
- 	u32 mii_adv;
- 	struct phy_device *phydev;
- 
--	switch (dev->chipid) {
--	case ID_REV_CHIP_ID_7801_:
--		phydev = lan7801_phy_init(dev);
--		if (IS_ERR(phydev)) {
--			netdev_err(dev->net, "lan7801: failed to init PHY: %pe\n",
--				   phydev);
--			return PTR_ERR(phydev);
--		}
--		break;
+-	phy_support_eee(phydev);
 -
--	case ID_REV_CHIP_ID_7800_:
--	case ID_REV_CHIP_ID_7850_:
--		phydev = phy_find_first(dev->mdiobus);
--		if (!phydev) {
--			netdev_err(dev->net, "no PHY found\n");
--			return -ENODEV;
--		}
--		phydev->is_internal = true;
--		dev->interface = PHY_INTERFACE_MODE_GMII;
--		break;
-+	phydev = lan78xx_get_phy(dev);
-+	if (IS_ERR(phydev))
-+		return PTR_ERR(phydev);
- 
--	default:
--		netdev_err(dev->net, "Unknown CHIP ID found\n");
--		return -ENODEV;
--	}
-+	ret = lan78xx_mac_prepare_for_phy(dev);
-+	if (ret < 0)
-+		goto free_phy;
- 
- 	/* if phyirq is not set, use polling mode in phylib */
- 	if (dev->domain_data.phyirq > 0)
-@@ -2662,6 +2736,14 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
- 	dev->fc_autoneg = phydev->autoneg;
- 
- 	return 0;
-+
-+free_phy:
-+	if (phy_is_pseudo_fixed_link(phydev)) {
-+		fixed_phy_unregister(phydev);
-+		phy_device_free(phydev);
-+	}
-+
-+	return ret;
+ 	return lan78xx_configure_leds_from_dt(dev, phydev);
  }
  
- static int lan78xx_set_rx_max_frame_length(struct lan78xx_net *dev, int size)
+@@ -3322,7 +3357,7 @@ static int lan78xx_reset(struct lan78xx_net *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	buf &= ~(MAC_CR_AUTO_DUPLEX_ | MAC_CR_AUTO_SPEED_);
++	buf &= ~(MAC_CR_AUTO_DUPLEX_ | MAC_CR_AUTO_SPEED_ | MAC_CR_EEE_EN_);
+ 
+ 	/* LAN7801 only has RGMII mode */
+ 	if (dev->chipid == ID_REV_CHIP_ID_7801_)
 -- 
 2.39.5
 
