@@ -1,85 +1,128 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5861A072A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B231A072A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745884009; cv=none; b=UcaMYm4SgRIom3LZV9ppq+hgaVMsBh07ZUmjbE2l1/2EX+tBvXZxIQHApKC/eM6TrUo4iRI6oMfShxVHD/o2l5DSHjLU75HnloM1ma++MZiyx4M6QMk0Z47dIUyF1/HM7qwqBwhqbdbwJK+NUe9wVNmAdbGxNBuurhri39aZpts=
+	t=1745884079; cv=none; b=JhmP/6gqLBF93x/7fyBjkf1vjYNCaNzNnQlMdN6JEPMhS+9IZ9ilP1IiJZZgfqCd9HYplZBV2XWEg6XKx/prHNrOcKElT1g0nx15yJ64HdSo3MPnTPxLZWC9q8/vrNs5UWcWOtLPIJKB1jd8iGXc4Cd1IYVm4FHNDizRWRspCuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745884009; c=relaxed/simple;
-	bh=sHRpXwXoaokznke3vSifW3fx6cyzRrXojISyPf+eY3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gk2qbqcY0M553Wje1ytxhcgG0FwB0snXLou5kqaWKJIV7dQVxJzQ+T2TLf3xKlb9wLyIfdrVS4IPhF8LMbdnjHHhkKUsPI54/FGddtIdXzKmfVn7Dn4+sMr0tQ4d3mPr7/CANhbeu6V11ngS+8eO9+B5mcHV9HrVWsa1RJBaKps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AtOZijfC; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745884079; c=relaxed/simple;
+	bh=WZj44QHQBnk6/jl3xb6TT+AiJGLpd1Hrwoo45YNQDy0=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FCVMrQrOblfpbauH3R9JRuRD/HJ+9+BYwWg8kwsmg480jLw83bnSGYz0MUaRjRMdYjnNsd876JX8FZ8gmaWa4FGDT2sEmZNglXOBeSlo9+1IgVjKATSny6XHYx52ho7+1aCdGkwCzORrRN+u+R6Cy5Nb9+/qalyS+3T8up4i4tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a7H/flpV; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtOZijfC"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73bb647eb23so4484468b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:46:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a7H/flpV"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c07cd527e4so586658985a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745884007; x=1746488807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XYOjyiwss6r+VGlHdBJomz5B/9IES0TTyx4UY1+HBVQ=;
-        b=AtOZijfCG/2V3gH7bshieOZozAE+fkPyCrpjLTkd922FjQenCwRw1HFvyEik7N1o5Y
-         Bbag8mNJfAexpCAmoGqUzqnnGyqNVhD+tQpX1UwTSTIRB3beEPIQJZLTMqXmHS9euVC6
-         iTwNqiSwqPiWjF4ISGAcsgoXz52GNolBidJA70r7uGradvA8qB68BWcBVuymA2ThePlP
-         MFF5ng42WnzO3+xmQa+KRrE9GTxK4ARXF+IvOsmuX+lrDO9B32/gCfGoVGlKns3WswqY
-         qoOuaJuMi3IUgVaEp5PqtcL8nGzvQXthCZiuwuR1g6aabxOTZlAdW3s+KjB2wsISzPG5
-         Vb/w==
+        d=chromium.org; s=google; t=1745884077; x=1746488877; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ak6BhAJ6X0RHy54tG0/xdLDkXO0ZMwVkyD18C7XTCJw=;
+        b=a7H/flpVap2HExlt3SXbVZznTZrAdeg9AAZDlh5Eo9+KPK8HjYtwsO5DHT5+2iFX2i
+         Lw8Qm+Uoh6rcJMvWpzQ50ZOIN+M33MTOkFLWygCAEhUgLS3T4+6DWA8t/SLCu2b91nD1
+         Moy4Y2yHBO0RHgGBCmzFWc+aQMomHOFH1kSeQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745884007; x=1746488807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1745884077; x=1746488877;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XYOjyiwss6r+VGlHdBJomz5B/9IES0TTyx4UY1+HBVQ=;
-        b=UcS+lcXwW+9E1I2w1c/4xMjf0uFIhUSJ16kOb+Cpq+IZZmBK0zo8Lc5J+fuDELULMq
-         bu49ylFIQRyXbeX1SYMDg5E3HouX+m3AtR5Gx4XnzkWKlQfEWbIC9aUqoZE6q8+w4uCX
-         WePunhvoxbyYfo21G29AUx8Z46h43WiMeFnICbgODdpWuX+1WWFa2XUAgsgYDFnuviLJ
-         cDSzou8xSlhV7/K8fLpvIF9dZzzlsv0IP/dIx98J5LV/w1+SJHCoPMU3UIZEgZfBLXag
-         4k8wd5ao34bJ6UcAfehiB/oCXKfklVqR48SheBAwl4y5AvYvSlRgMVzIYgibaEn80QCr
-         JkAw==
-X-Gm-Message-State: AOJu0Yw5rlBcUsuVSDjA3cb83IjZ8hhemIAfQlfHXteGZLjGrcfrJGfE
-	qyyn1F9AaxWCRV2RoVDMcBOJNtzqPyCOQs358PigzEjS4iSYPlGE8PkEAA==
-X-Gm-Gg: ASbGnct30Q0ic+OYcFviT/Pq9b2rhYeH1cfAKpfsfBX8DD+54gYA8TMdyEvI4YYB4L5
-	4jTGmiS+Lenm6xed5sVEURi8QoM1ybsbUE+I8xYRT9sHxAHa97LSjOaLTrXxZCGMbMlFFZQooMW
-	iKtfBNUkGVZqsEK2Aip327tcjvfIkr0z4BMA6DEJWm+Yu7soN/Z9vcWRSeftLcJ2+1zg4cl/hpE
-	9WkwAPlxUMmgceEAre08+tMP3RCBp+LisDA1/Rm3ydgarSBAkfVedCNwk62WhwilGqp/IT7UGVQ
-	luVsCoKdElYprKIledDL1ZNo0PasHb2GSuL3MkIj
-X-Google-Smtp-Source: AGHT+IFrqzNMTjbe4oOhcubx+sQCxv+Ly+pynu78NFyy+OpCpmeR3ngzBBiJ6+8d3+2MeTQRCabcJA==
-X-Received: by 2002:aa7:88d2:0:b0:736:ab1e:b1ab with SMTP id d2e1a72fcca58-73ff70ccfc2mr14762044b3a.0.1745884007308;
-        Mon, 28 Apr 2025 16:46:47 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:67d:4372:d1e6:def0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6b274sm8926753b3a.100.2025.04.28.16.46.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 16:46:46 -0700 (PDT)
-Date: Mon, 28 Apr 2025 16:46:44 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Lode Willems <me@lodewillems.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: xpad: Add support for 8BitDo Ultimate 2 Wireless
- Controller
-Message-ID: <htoalmsqaylqulua3vqddhpixbzyfzrbndnyp7difs5442mue4@2fcsnusykvey>
-References: <20250422112457.6728-1-me@lodewillems.com>
+        bh=Ak6BhAJ6X0RHy54tG0/xdLDkXO0ZMwVkyD18C7XTCJw=;
+        b=DSlb3FvtaI+lOW5atMe7XMxOVnxPEgLxspalNcQ15bFPPV9cvF0EuS/ZeX4p9VCq1q
+         JnKk9l1cGcagYkVphWOxCDkVujD4xrPtb+R5XPGDrhUwjmcFf6r9AEgJotaVov8V7lkx
+         uym8pAs5nvTs9jmhYn/jbicTsN3bChDbcFr2D24A46Pnf792R/XEPG8pYP/zj8Feu9l9
+         WhZMrkeKEJBS5O4gzsaMBJ/1g2j0/utp8leP0791yUm8JjVT/oUBLSn4/KzDth2E1TpA
+         P4sa/ZBj/cn+MwNXiU/Bo3xO0Ijd62ESHACG9tIrofvQGA0HqrMlJItYJsq+1aNXsh3Z
+         rzRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhY7wqqKsCpYd6Jauk0Jx2D4ohYoXWpredCSR1MwM5qnlCtV+P7bVh/6YCSrsd+ToRx972+MunDekVrgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBRcIyqyz9Two0BVw+is9PBS8h3gjhsHH+L5IVjyCp+NEfjNXf
+	AGI8y92E0iGugD8RHfXc0dgwuNOKD8ZmOQC7DCjOqCrPEB8rsnsiS9+EOf42oQwuoU2KaN6b8st
+	XnGLu94BTDkaimkddMVvb/VIsM6/6PfYbGSYbNs4RS+IU8e8=
+X-Gm-Gg: ASbGncsAffhxjZD6oCGZ9RvbDqHlHaborRf8s2f/S++bBbYP9xoKRzRvWyThdyr6pGD
+	6jWib636hYaYA6NvX17PpvOa9I6FUQALS43fMI+/H5oXX+e1FbWKhBICAfM+r5/Tu0kIlXrYFsd
+	ZBBR9BAL2/21SPDhdNEbaSnSOmm0wCOdDO9xm5NiCZHm1uDF+ST5Sqmq0ijpxn
+X-Google-Smtp-Source: AGHT+IEOwwLCnV38tgYzdwBpHh/iuQ/Dg5WIoTl/PdYaLVHLxP22Y6T/XnZs7REl2/ug1JMK2C7MjZvEkwHCSYTEpTA=
+X-Received: by 2002:a05:620a:d95:b0:7c7:b4de:12f0 with SMTP id
+ af79cd13be357-7cabe6042dbmr154141985a.32.1745884076974; Mon, 28 Apr 2025
+ 16:47:56 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 28 Apr 2025 16:47:56 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 28 Apr 2025 16:47:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422112457.6728-1-me@lodewillems.com>
+In-Reply-To: <20250422082957.2058229-2-treapking@chromium.org>
+References: <20250422082957.2058229-1-treapking@chromium.org> <20250422082957.2058229-2-treapking@chromium.org>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.12.dev8+g17a99a841c4b
+Date: Mon, 28 Apr 2025 16:47:56 -0700
+X-Gm-Features: ATxdqUGt6hXcRm7OLJk9Kd93IRb1IeGk61Kri8RoIXMe8x8uCjahMbyGOUSl8Co
+Message-ID: <CAE-0n52fsf37Xg+Qpj-VwAiUO-kOWFRXKtqLL4VmxtCzAck2dA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: usb: Introduce usb-hub.yaml
+To: Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, 
+	Pin-yen Lin <treapking@chromium.org>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 22, 2025 at 01:24:27PM +0200, Lode Willems wrote:
-> This patch adds support for the 8BitDo Ultimate 2 Wireless Controller.
-> Tested using the wireless dongle and plugged in.
-> 
-> Signed-off-by: Lode Willems <me@lodewillems.com>
+Quoting Pin-yen Lin (2025-04-22 01:28:27)
+> diff --git a/Documentation/devicetree/bindings/usb/usb-hub.yaml b/Documentation/devicetree/bindings/usb/usb-hub.yaml
+> new file mode 100644
+> index 00000000000000..5238ab10576308
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-hub.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/usb-hub.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic USB Hub
+> +
+> +maintainers:
+> +  - Pin-yen Lin <treapking@chromium.org>
+> +
+> +allOf:
+> +  - $ref: usb-device.yaml#
+> +
+> +properties:
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  peer-hub:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      phandle to the peer hub on the controller.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    description:
+> +      The downstream facing USB ports
+> +
+> +    patternProperties:
+> +      "^port@[1-9a-f][0-9a-f]*$":
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +
+> +patternProperties:
+> +  '^.*@[1-9a-f][0-9a-f]*$':
+> +    description: The hard wired USB devices
+> +    type: object
+> +    $ref: /schemas/usb/usb-device.yaml
+> +    additionalProperties: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
 
-Applied, thank you.
-
--- 
-Dmitry
+Can 'reg' be dropped because usb-device.yaml requires it?
