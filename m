@@ -1,172 +1,176 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C3C2973D4
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD21D297A48
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745869510; cv=none; b=ctS0vpIpDK+YDuOERlUk2H3l7duB6sAl1J4O59hrr6p1GoPvNbppPSXW3CjgXFIdDN9LuHgnBCFFR+gSkgwg3yd5lRsjfIGmQIs0Ta76dFc14DTrZYUQSeN1n5WG+ZxXu+clD3p3SCokpaG8uV/+T5nj+gvd/KssOD18ETW+IDc=
+	t=1745869513; cv=none; b=M6UHd5gl0SgFPx5FOFydqgaLp57RcBOVBeDNUfvMTF3bRiQK1C4kUvMyj3YB14bgw2YdNTzJ9/fUkzks9iIcEJU2o81t4sGnA49hy7fr13+fVc60Hbrcf81cxSmTK3usFJgzJpAW5UL0wC6FfJuAG62zywJhYGUEWewey95bMn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745869510; c=relaxed/simple;
-	bh=Ske+BDAj21huhvtbIRDfyBrEs+/jQGWomwPZgUuFL2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1UjqkBXtovnuCZiRx5RC0bIqv2H8cJ4xzzlJtlv870usJkq0U8C7lr36ueVItRIrezLhuZxfn4EaBG4mUFBnPfCqw1t9wN3xG++vPwbGj83q4+cd3EbNhYj5X/iksi4c6Qdb7fmVTkAoCUHvIMq6WxhE6PuY01L5GUlbJBXwBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eFj7DDQ+; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745869513; c=relaxed/simple;
+	bh=PEvOynK8fef5vs/DPgS1vW8DxkjBzuCR2y7obPmNTC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cmQ+QY25B02jLtHuU5HRaIss6vadbvcSGw668Yjkb98vN9uhWaoI/fr3FFGLvz8DwQFbzpNqt9ZdlsWnNQnnuR/u9g/LK6O5TkEu/OChRRbzvsXuMnUxIUSvyMflU7ZPXc+L5LhcoeZuT6iax8Srnl7qpumDkKdQHK9nnfyD6Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W+3ghlyK; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eFj7DDQ+"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af579e46b5dso3708950a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:45:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W+3ghlyK"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2279915e06eso59448785ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:45:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745869508; x=1746474308; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KaMu0L4wBURz9xq4JXnOvgxpR2Jhc7zGFIG2V5tCWLw=;
-        b=eFj7DDQ+3JW1iavBKbsxGboGIg7RsxfyyCr7BzNV3XXywElUMvaXuONSQciAAaOHfr
-         8hg1tfFvmiiAWQPc796s/T3X215Hg0VkC8koFytNFXsllglOu7cO9qMEdQxbKLm6aCvH
-         dzZuuBXqqPYSj1vXnCdlvIicoWZZFpf31xDhwoi6Ts+uKI0047MjBNrBvRLV0iDJ1LbY
-         p6DAL8c3t7LDdEx/O3Y3571jLy1spHx4X3PGge2uAmmIP63wlWILroUzzMxBJniXjXax
-         YhroESF38NFYuBA6pfCJ/VlYHsGQv7FrJCnI9+4mmL7yZ79qD2sEiTq6id4ECJnVZKoy
-         n+lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745869508; x=1746474308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1745869510; x=1746474310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KaMu0L4wBURz9xq4JXnOvgxpR2Jhc7zGFIG2V5tCWLw=;
-        b=acuVN8CFKHGBkqjXbq5kVqdzmCud1Cnrk1aoZS2swk73e/Egey+vViQ9p3H60KGsG8
-         Jva2zCjf8odAbBP3jV4sJFw69SUV6vSDEyYh8WF4WK7h2pgTlPhNKpjfJd7ojLTwGWMx
-         7Siw3G/fZn8b0MSP/QFS6QG7k3+Do5t/GjR1SaYl0ZMD41mLrBM45QGgIHmdC2RqqjRq
-         3R0NbRwZ2PHYnE4qTDm8cTRSjHddOn8uo9noInvukdbIIcv+Kv/5jFBK5+N7C414AKOM
-         w2oKEhqwUaA8gHPFU6R3gcqXz6fHQ/c8VMHVFkQ+sWZyW1OUo9+npPn+mqpUmfzvtlzI
-         w7Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZW2KFd0FmOsOIdpmMU52TWne3PiQMe6fUxVVzjC+L+Cqwrt9jwqW9Wqj0FvP/iuEuyyXXVVKjDcJGAAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+KoHRfdTZ7Q9+v0yOukTYhVqnHkKti16ZqrU5HlBwrFLBeoKV
-	dH+/8BalnfPf+5QUOe6z7Qp7SWpEn+aiYcz3rsHiKIKPGsiikr15Ni+3ub+90w==
-X-Gm-Gg: ASbGncsaCgpXBPt2uASBVZ8CBhn1OvcBuYboPmHdfPfOQpQpSolt8HUZUC4oph2qO7Y
-	GyGQzW76I56/Fp0iP+vfaYOmtvepnveFxIT2nbVvyD9FQtkvc8d88ClzGIWB1j2uzgSvdtFeObb
-	criBcAEGUlC73WV4Xqs4kJ5SglG9pWR5KGdep6brNh+GHx3iT+kj13YLy+e0sHwses+7ckSnnWk
-	yra9dLnzmsuUijkv6M2BlHR//+cwHNBwe/c97gFecnFadWQgtFq647Gqv4ICjaYCF/ZMtFZ1KhL
-	yFWJI1ZI9gtBd6RrJa03MayxCSm4uRrJ7TIvLpuKXUtdT7VEYmvTfrBry5xzbMAzxsnVFk/2ww=
+        bh=aZxk2qDFzusmDUPvRVv1xooykDuhZrrXcD8mPPsnc9s=;
+        b=W+3ghlyK7Ux1sXJ6PvcJUzW8APNrG3cLPKHzwgupLRVqTAKQJUaLxOb703CEVLPt9W
+         PGAj2cZF/ICKRU1cr86JjZSpq0cVsq0nCvK3Y+1RWVU3MARaSHcONzcfa/AI1AiwvUOx
+         ZOudev70+yTiY2YwcX6KmiF8Z578D3ZCF//lc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745869510; x=1746474310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aZxk2qDFzusmDUPvRVv1xooykDuhZrrXcD8mPPsnc9s=;
+        b=T8g5wUZuGyDOO6GhMzSs9wWGG+jfQ3am1tgOMjGCtLvj2xSJZ37WtdOM4SoqxWl6Jk
+         PN5snPyoPv3c3WW+VIcjIk2/u+3XDW5eVs8H4Em55nRYBSuMi2XIGBHCNIuqQuTsh/Bn
+         zjJT7nKyy7e8xR/YQAYEBfpZ23LrEJbIQsA1AFUnaNaMMpInMkhEIGv1aKAFKZnvWcbd
+         9ZThp2PZgM64PhVT0uccMPXLiTqjudJ0zwWx6a5TgkBdO0YpqzFhviZ8qaOYhZkdbsun
+         IUsiTo+FzqBHCZU/CGPTw9SQXBt0xXX2DcvCSpPHZDu7B7pFzxKOa4C926Lqy/4ruGv6
+         2fYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQk7Bj9Ik3bhLBcuWEFoKBjk0/3DI5GxGEpo1ejrbdEk3ThTBVWw1IP7m1lUCC669khMR5YGpOJrWTNGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtA0NJAvgpNOLgyziJ1OmEJwKhdirPBge/BSzW7ykg39UeYhIa
+	HcVV7T4VjPc69g+m7j5/6BkMJjPfqHbEgpcfZPmq42SpauzxOO03lIvWgkgEOdyiLkt8yG1vj3k
 	=
-X-Google-Smtp-Source: AGHT+IG6R82DFa9jAy922lzUHN2EAVQRNR18xiowU6WDSy9TAXdGrX8+WhcNG0tMNBGpq3fQ1R7ExQ==
-X-Received: by 2002:a05:6a20:43a1:b0:1f5:75a9:526c with SMTP id adf61e73a8af0-2093c7e3860mr1003669637.13.1745869507413;
-        Mon, 28 Apr 2025 12:45:07 -0700 (PDT)
-Received: from google.com (28.67.125.34.bc.googleusercontent.com. [34.125.67.28])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9abf2sm8338322b3a.122.2025.04.28.12.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 12:45:06 -0700 (PDT)
-Date: Mon, 28 Apr 2025 19:45:01 +0000
-From: Benson Leung <bleung@google.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, chrome-platform@lists.linux.dev,
-	linux-input@vger.kernel.org,
-	Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 8/8] platform/chrome: of_hw_prober: Support
- touchscreen probing on Squirtle
-Message-ID: <aA_avWpDUMAvbRBu@google.com>
-References: <20250421101248.426929-1-wenst@chromium.org>
- <20250421101248.426929-9-wenst@chromium.org>
+X-Gm-Gg: ASbGncs86T/z4eo0ZG6l2OgKimWANN4Ap+LrnVtryBejMlfuUQvG3RjtubQfPEAVVGS
+	4B94b3JNjHs7dzv3iNUPjTEciQS1deVP9LnpqEKpGRrpdyOL07gW5TXpiyUBarsba3PdGyQbCWu
+	b1u0ZqtvUZ8MbRyQJZGgNpUnjZluJadIbGa2b/z2NCFiBtCN46ZWhNcdSlgcDUMTck9pdEqEFAu
+	gTFzp7zBJVEtz7f7Hnehec+15u3+u52oxqg1SbxzK6tTqvK55M7k43YeAma/7GRpB4dsN5dIBHz
+	hIAfMES+SRDJwxb+5rQUgwP5OeyTDyq39U+RShaW9cUORf3tZifX8oROSa5lgiNs9V/04DqKxaM
+	CTGfl
+X-Google-Smtp-Source: AGHT+IG7BwCh/3bpqiIhmT2nq1gnfB6kiUg6ffCNBsafJIU7QURjNyHo4WfX7cOobdqS3CpVyl/nGw==
+X-Received: by 2002:a17:903:1b6e:b0:223:60ce:2451 with SMTP id d9443c01a7336-22dc6a03081mr159711125ad.15.1745869510030;
+        Mon, 28 Apr 2025 12:45:10 -0700 (PDT)
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com. [209.85.216.51])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db521b0c2sm87088655ad.247.2025.04.28.12.45.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 12:45:09 -0700 (PDT)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-301c4850194so4293648a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:45:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDNOPeIAmMnSlojz5E6Ov8CrYPqIAuh8Eu+hmlfwxzE+yaBabquBCxtqt0GbzEIhawcpmJWHsa8pjfpL4=@vger.kernel.org
+X-Received: by 2002:a17:90a:8a88:b0:30a:214e:befc with SMTP id
+ 98e67ed59e1d1-30a214ebfe5mr1256694a91.27.1745869508777; Mon, 28 Apr 2025
+ 12:45:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3yxgRYuYXTrM4tBx"
-Content-Disposition: inline
-In-Reply-To: <20250421101248.426929-9-wenst@chromium.org>
-
-
---3yxgRYuYXTrM4tBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250421113637.27886-1-xiazhengqiao@huaqin.corp-partner.google.com>
+ <20250421113637.27886-3-xiazhengqiao@huaqin.corp-partner.google.com>
+In-Reply-To: <20250421113637.27886-3-xiazhengqiao@huaqin.corp-partner.google.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 28 Apr 2025 12:44:57 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UF7Jz6mtx14dEV0udLti9ssU_rK88DvJmf2x39kr1cWQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHz1VL7o00_0SZbd4hPRDtUuNMfZKAxGJksy3VoNmYs7sifB67JMfU74Yc
+Message-ID: <CAD=FV=UF7Jz6mtx14dEV0udLti9ssU_rK88DvJmf2x39kr1cWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] drm/panel-edp: Add support for BOE NE140WUM-N6S panel
+To: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
+Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 06:12:46PM +0800, Chen-Yu Tsai wrote:
-> The MT8186 Squirtle Chromebook is built with one of two possible
-> touchscreens. Let the prober probe for them.
->=20
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Hi,
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
-
-
+On Mon, Apr 21, 2025 at 4:37=E2=80=AFAM Zhengqiao Xia
+<xiazhengqiao@huaqin.corp-partner.google.com> wrote:
+>
+> BOE NE140WUM-N6S EDID:
+> edid-decode (hex):
+>
+> 00 ff ff ff ff ff ff 00 09 e5 73 0d 00 00 00 00
+> 32 22 01 04 a5 1e 13 78 07 13 45 a6 54 4d a0 27
+> 0c 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 03 3e 80 a0 70 b0 48 40 30 20
+> 36 00 2e bc 10 00 00 1a 00 00 00 fd 00 1e 78 99
+> 99 20 01 0a 20 20 20 20 20 20 00 00 00 fc 00 4e
+> 45 31 34 30 57 55 4d 2d 4e 36 53 0a 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 45
+>
+> 70 20 79 02 00 22 00 14 33 d8 04 85 7f 07 9f 00
+> 2f 00 1f 00 af 04 47 00 02 00 05 00 81 00 13 72
+> 1a 00 00 03 01 1e 78 00 00 5a 4a 5a 4a 78 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ad 90
+>
+> Signed-off-by: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com=
+>
 > ---
->  drivers/platform/chrome/chromeos_of_hw_prober.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/drivers/platform/chrome/chromeos_of_hw_prober.c b/drivers/pl=
-atform/chrome/chromeos_of_hw_prober.c
-> index 10dbaede0541..f3cd612e5584 100644
-> --- a/drivers/platform/chrome/chromeos_of_hw_prober.c
-> +++ b/drivers/platform/chrome/chromeos_of_hw_prober.c
-> @@ -59,6 +59,7 @@ static int chromeos_i2c_component_prober(struct device =
-*dev, const void *_data)
->  DEFINE_CHROMEOS_I2C_PROBE_DATA_DUMB_BY_TYPE(touchscreen);
->  DEFINE_CHROMEOS_I2C_PROBE_DATA_DUMB_BY_TYPE(trackpad);
-> =20
-> +DEFINE_CHROMEOS_I2C_PROBE_CFG_SIMPLE_BY_TYPE(touchscreen);
->  DEFINE_CHROMEOS_I2C_PROBE_CFG_SIMPLE_BY_TYPE(trackpad);
-> =20
->  static const struct chromeos_i2c_probe_data chromeos_i2c_probe_hana_trac=
-kpad =3D {
-> @@ -76,6 +77,17 @@ static const struct chromeos_i2c_probe_data chromeos_i=
-2c_probe_hana_trackpad =3D {
->  	},
+>  drivers/gpu/drm/panel/panel-edp.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/pa=
+nel-edp.c
+> index 958d260cda8a..92844ab4cb9c 100644
+> --- a/drivers/gpu/drm/panel/panel-edp.c
+> +++ b/drivers/gpu/drm/panel/panel-edp.c
+> @@ -1757,6 +1757,13 @@ static const struct panel_delay delay_200_500_e80_=
+d50 =3D {
+>         .disable =3D 50,
 >  };
-> =20
-> +static const struct chromeos_i2c_probe_data chromeos_i2c_probe_squirtle_=
-touchscreen =3D {
-> +	.cfg =3D &chromeos_i2c_probe_simple_touchscreen_cfg,
-> +	.opts =3D &(const struct i2c_of_probe_simple_opts) {
-> +		.res_node_compatible =3D "elan,ekth6a12nay",
-> +		.supply_name =3D "vcc33",
-> +		.gpio_name =3D "reset",
-> +		.post_power_on_delay_ms =3D 10,
-> +		.post_gpio_config_delay_ms =3D 300,
-> +	},
+>
+> +static const struct panel_delay delay_200_500_e80_p2e80 =3D {
+> +       .hpd_absent =3D 200,
+> +       .unprepare =3D 500,
+> +       .enable =3D 80,
+> +       .prepare_to_enable =3D 80,
 > +};
+
+Unless I'm mistaken, you don't need to add this timing. See the docs
+for `prepare_to_enable`, where the relationship between the `enable`
+and `prepare_to_enable` delay is documented. Specifically, see:
+
+* In other words:
+*   prepare()
+*     ...
+*     // do fixed prepare delay
+*     // wait for HPD GPIO if applicable
+*     // start counting for prepare_to_enable
+*
+*   enable()
+*     // do fixed enable delay
+*     // enforce prepare_to_enable min time
+
+Given that the fixed delay is 80 ms in your timings it seems
+impossible to ever need the `prepare_to_enable` delay. ...so you can
+just leave the `prepare_to_enable` off, which means you can just use
+`delay_200_500_e80` like many of the other BOE panels.
+
+
 > +
->  static const struct hw_prober_entry hw_prober_platforms[] =3D {
->  	{
->  		.compatible =3D "google,hana",
-> @@ -93,6 +105,10 @@ static const struct hw_prober_entry hw_prober_platfor=
-ms[] =3D {
->  		.compatible =3D "google,squirtle",
->  		.prober =3D chromeos_i2c_component_prober,
->  		.data =3D &chromeos_i2c_probe_dumb_trackpad,
-> +	}, {
-> +		.compatible =3D "google,squirtle",
-> +		.prober =3D chromeos_i2c_component_prober,
-> +		.data =3D &chromeos_i2c_probe_squirtle_touchscreen,
->  	}, {
->  		.compatible =3D "google,steelix",
->  		.prober =3D chromeos_i2c_component_prober,
-> --=20
-> 2.49.0.805.g082f7c87e0-goog
->=20
+>  static const struct panel_delay delay_80_500_e50 =3D {
+>         .hpd_absent =3D 80,
+>         .unprepare =3D 500,
+> @@ -1916,6 +1923,7 @@ static const struct edp_panel_entry edp_panels[] =
+=3D {
+>         EDP_PANEL_ENTRY('B', 'O', 'E', 0x09c3, &delay_200_500_e50, "NT116=
+WHM-N21,836X2"),
+>         EDP_PANEL_ENTRY('B', 'O', 'E', 0x094b, &delay_200_500_e50, "NT116=
+WHM-N21"),
+>         EDP_PANEL_ENTRY('B', 'O', 'E', 0x0951, &delay_200_500_e80, "NV116=
+WHM-N47"),
+> +       EDP_PANEL_ENTRY('B', 'O', 'E', 0x0d73, &delay_200_500_e80_p2e80, =
+"NE140WUM-N6S"),
+>         EDP_PANEL_ENTRY('B', 'O', 'E', 0x095f, &delay_200_500_e50, "NE135=
+FBM-N41 v8.1"),
 
---3yxgRYuYXTrM4tBx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCaA/avQAKCRBzbaomhzOw
-wuHsAP9k0n2/zZ8JMwMbW9PvC1L4S+rXwkDzn4vNgVA9gpUADgEAqqQGBGFcOCTo
-ivudInVAQKMFJJvenfbspzj/SwoyHA8=
-=MQA+
------END PGP SIGNATURE-----
-
---3yxgRYuYXTrM4tBx--
+Please sort. 0x0d73 does not come between 0x0951 and 0x095f.
