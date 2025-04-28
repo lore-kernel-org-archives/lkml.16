@@ -1,133 +1,64 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0803B25F7AA;
-	Mon, 28 Apr 2025 11:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA2126461D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745838703; cv=none; b=LqEPOqu3TaciLwunUAIw0KQyUPghzXd4sv2hd4eV99/hPyzw6E506piqCQ1Z3KBxy0WS4fSutQNlVkNK/Wq6N0mIX3uYVP8VTQ13YOMZYnV7mmtQLKOpp22iev9BplUGBxKrNrdl6StUZnCYBNKoYIwunGPAho530lj2+iUgpug=
+	t=1745838708; cv=none; b=VbXkASPPLuRmkHt2IUQOqgPiL61FYxzl2+CLh+iBTttBGyKlT07I2cutS4WWJNBprXfCyWD4J1R5QkIcDc7e/YpLYZleZSPmgUfz/F0x83q3d86PJSFOnPn8kEhtROnStSz56BXW7LY6zz4ocNnRkCkgHIjs1reKFOdQ0UxwquA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745838703; c=relaxed/simple;
-	bh=McOM0VUTJ+DdjGmhVBpGrxjCfpAB0KF9ke7LVj13w84=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W9VsZ9MLiirAazpRng73U70cAj5QvfD2lBJRhX9iJoyaOfoX80UiVXsy8mOio0OoqucXu3wMVIElHtpxMdO/m8DgWc1MO6frjdT9UdciF/3kpOSw6WMqLaIjtJIeIlmUlWX1TpfotCy9E+mCdEkxhnEBVVJS8pxRQLEx1rbnGRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZmLJc5nXcz69c9;
-	Mon, 28 Apr 2025 19:07:44 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 632361401F3;
-	Mon, 28 Apr 2025 19:11:38 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg500010.china.huawei.com
- (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 28 Apr
- 2025 19:11:37 +0800
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-To: <miklos@szeredi.hu>, <amir73il@gmail.com>
-CC: <linux-unionfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH] overlayfs: fix potential NULL pointer dereferences in file handle code
-Date: Mon, 28 Apr 2025 19:11:36 +0800
-Message-ID: <20250428111136.290004-1-wangzhaolong1@huawei.com>
-X-Mailer: git-send-email 2.34.3
+	s=arc-20240116; t=1745838708; c=relaxed/simple;
+	bh=Veuk+Z/sR4H/xEb/EwiI6wtFnWURIfFvrkb6odssbcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b7DBzGhE1dcosTxv8jJsObJvzwUcCtx6xgnaf/mLQZ9eMZ+1bwdBR8ajrd7bONz4v9f/PB4FrTyFwXdsCDHZC/+qtpurF5wJLubHOSAnZsmu6UQB9CJTtRL/NxhngeV2NSn5rKVr8jtlHX7Rn2jRrwAxMHCV+xHNzMeqjeWM7Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=rfRFviFJ; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="rfRFviFJ"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id BC9F8470B7;
+	Mon, 28 Apr 2025 13:11:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1745838705;
+	bh=Veuk+Z/sR4H/xEb/EwiI6wtFnWURIfFvrkb6odssbcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rfRFviFJT9ccUMEDhTzc9B++u4Pr5H0EL3t3VfgeVKGXQ8RrEh5S0KxD2Dhq9xug/
+	 tHWt+hwHh0cnIdaIS0zwo/Kkc8uQeNCUQ2dz8XcNXVLlHnWQkzaUeHPHJR7ea93huV
+	 BBLNPqoZUgqaRrWoc3bxmCNgkApYyuGeTG3bRPggD169NN4Z845VzaOXFILpmRXUWv
+	 bFY4iuMo5NjMycRxlzypzkDfjVaBQ6Eg78ETnJTGi2KymeCCTqs1lvpNS54/V1a5od
+	 3SR+jOTguk26n3yfFXMlaSLV/h1WAdfCvaJ00HVnwsdEB+zKQ6v85aaikKpRyRBv7E
+	 45xCYAe9Y+XSw==
+Date: Mon, 28 Apr 2025 13:11:44 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: sven@svenpeter.dev, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev,
+	will@kernel.org, robin.murphy@arm.com, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu: apple-dart: Remove unnecessary NULL check before
+ free_io_pgtable_ops()
+Message-ID: <aA9icDMayHKAocnc@8bytes.org>
+References: <20250422072511.1334243-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422072511.1334243-1-nichen@iscas.ac.cn>
 
-Several locations in overlayfs file handle code fail to check if a file
-handle pointer is NULL before accessing its members. A NULL file handle
-can occur when the lower filesystem doesn't support export operations,
-as seen in ovl_get_origin_fh() which explicitly returns NULL in this case.
+On Tue, Apr 22, 2025 at 03:25:11PM +0800, Chen Ni wrote:
+> free_io_pgtable_ops() checks for NULL pointers internally.
+> Remove unneeded NULL check here.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>  drivers/iommu/apple-dart.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-The following locations are vulnerable to NULL pointer dereference:
-
-1. ovl_set_origin_fh() accesses fh->buf without checking if fh is NULL
-2. ovl_verify_fh() uses fh->fb members without NULL check
-3. ovl_get_index_name_fh() accesses fh->fb.len without NULL check
-
-Fix these potential NULL pointer dereferences by adding appropriate NULL
-checks before accessing the file handle structure members.
-
-Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
----
- fs/overlayfs/copy_up.c | 4 ++--
- fs/overlayfs/namei.c   | 8 +++++++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-index d7310fcf3888..9b45010d4a7d 100644
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -489,12 +489,12 @@ int ovl_set_origin_fh(struct ovl_fs *ofs, const struct ovl_fh *fh,
- 	int err;
- 
- 	/*
- 	 * Do not fail when upper doesn't support xattrs.
- 	 */
--	err = ovl_check_setxattr(ofs, upper, OVL_XATTR_ORIGIN, fh->buf,
--				 fh ? fh->fb.len : 0, 0);
-+	err = ovl_check_setxattr(ofs, upper, OVL_XATTR_ORIGIN,
-+				 fh ? fh->buf : NULL, fh ? fh->fb.len : 0, 0);
- 
- 	/* Ignore -EPERM from setting "user.*" on symlink/special */
- 	return err == -EPERM ? 0 : err;
- }
- 
-diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-index be5c65d6f848..5acc13c012c1 100644
---- a/fs/overlayfs/namei.c
-+++ b/fs/overlayfs/namei.c
-@@ -496,10 +496,13 @@ static int ovl_verify_fh(struct ovl_fs *ofs, struct dentry *dentry,
- 			 enum ovl_xattr ox, const struct ovl_fh *fh)
- {
- 	struct ovl_fh *ofh = ovl_get_fh(ofs, dentry, ox);
- 	int err = 0;
- 
-+	if (!fh)
-+		return -ENODATA;
-+
- 	if (!ofh)
- 		return -ENODATA;
- 
- 	if (IS_ERR(ofh))
- 		return PTR_ERR(ofh);
-@@ -516,11 +519,11 @@ int ovl_verify_set_fh(struct ovl_fs *ofs, struct dentry *dentry,
- 		      bool is_upper, bool set)
- {
- 	int err;
- 
- 	err = ovl_verify_fh(ofs, dentry, ox, fh);
--	if (set && err == -ENODATA)
-+	if (set && err == -ENODATA && fh)
- 		err = ovl_setxattr(ofs, dentry, ox, fh->buf, fh->fb.len);
- 
- 	return err;
- }
- 
-@@ -702,10 +705,13 @@ int ovl_verify_index(struct ovl_fs *ofs, struct dentry *index)
- 
- int ovl_get_index_name_fh(const struct ovl_fh *fh, struct qstr *name)
- {
- 	char *n, *s;
- 
-+	if (!fh)
-+		return -EINVAL;
-+
- 	n = kcalloc(fh->fb.len, 2, GFP_KERNEL);
- 	if (!n)
- 		return -ENOMEM;
- 
- 	s  = bin2hex(n, fh->buf, fh->fb.len);
--- 
-2.34.3
+Applied, thanks.
 
