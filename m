@@ -1,35 +1,35 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0894D8BF8;
-	Mon, 28 Apr 2025 00:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B65E1E871;
+	Mon, 28 Apr 2025 00:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745800688; cv=none; b=Lg3S4DMYigtDlQIqEwn+GEcXsKoFn/Kd3nlV1dGUXkX6kSGqMLTW/yjid46F8G1GSyMtpkfGeaWyTBo7MS6J41e/XM2TQtPFYfvIOzfvV1DWSHUFM3HB17zszehVH0LeTlYbjaz+g8DD2/aJ5sFuuE+PdmVsTkgD25s+LfePM9Y=
+	t=1745800736; cv=none; b=D5uI50wtGmU6rpXzszI5G3tzXu7UBPJLW4aFer8Owq4H1AobwUJM0JPqiowXmRU0bw19nKSSf/Rd1Fhg8RUwu+E+pQb8f9QqMqwlYoFZchyxcstw5qAKYwLCqkGWFdIv/BVioG+dByQBPPUpyXkcX+kYqLE69GKN8jrLYEJ+f+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745800688; c=relaxed/simple;
-	bh=X93ENz4hZ9SghUIv/n963X0gxLuWiGrP0pFJLjKpsSM=;
+	s=arc-20240116; t=1745800736; c=relaxed/simple;
+	bh=GMCelmTJOEDjiErKUudFvTj7l96E7BnjFXg4cCquDM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HH1BI2+zyLbU9VoSDwk6Tuh7aG1gqVESVPoGL1men+YxhYOov8eKbnbYy91v0UACEAZSvtNp6aY8DRMfpvAqHQVXFWnnJAihgDtuKrRsUVAKB2eg0gF3/to++goPTPSBG0aYcjx6fRFOJNtWbjuz3w1aQcDkaBbkE90VcaBx/Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T98fcr7o; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcTJx/vHHkoSnr14/42FrvPx/utVd9pWWPyKslChSJbQosmSI2RRL/ToumT4JVRjjKZhMsNShHBTNtd7Tg8jUb98p5zOXpqdoGFM9RqY2QSeSIIt95gIZ48t2B1+Fn0qWyYckzO8ioosP5gcsirw6vxd9yh4THFRXhIKPA6ShJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WDvuS+po; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T98fcr7o"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WDvuS+po"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WwuY/6ttiqKGxuiZxXTw1pq5GZbsJP4t0dCyVGoDwXg=; b=T98fcr7okBkuiBWbdzq0KStxgu
-	umKA8nfSz3IUntLKD9imBZ9mgjMydQgtVoRWFQa98SrZltEw4jaWcTDdSEC68GcEkGi2IalBR8f3V
-	eGWyQ9kwIvYWbaI3Qegv4BgikQaEaFmT10qJxtH704B0V69FdqofAku90hZCFn3KFvBh4V/WkS0ra
-	1feaPdT1TkFkrSYxBGuGYXxoc2MpVxS8eqBKBY4K3iWZMR5sqcCcGNXFljbPl0X1w2pfov9IkPBiM
-	dPEsfuAGULpUBPOIQpgvsp6RVdCPjmBrwDhcSQo8m00+jv8hmnS4xLUyvQUWGW7Oi2hoB6NkmTjRh
-	xEZcWOwg==;
+	bh=5rLvH8pJhYps2+lWBXdf1cfAWXXjRrV8V0mx0pzJnLY=; b=WDvuS+poskjYdA+emKUrqk9RL7
+	JlB20k2foudKEG3kZdUh6hvRd9nIQtr6bV6GH13uqVPYtBNAd07hzjP465l6Y6xqaPUUZs0t0go9K
+	xzERm9xzIraqI/nw3B968Tcek/l6jGnvR5e5k9vY68FIZWPOVrylndIOddHRFKmlS7DCE185FYUar
+	FULkaZuctOHJIroy7avOZiS74255Zd28t6OyAhIqUZXlgRmj4PjlF6xzAn/IQk5CwOx89PHATf7kY
+	1m+gkpPvzip8leAoi7zETgJ9gzUyzrwdBCpweOV1lkuRwrayH5vl1hkBnb6Ty1uFFcHnDV6ldbylL
+	i9fbwYZQ==;
 Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9CVC-00000004ewq-0kBu;
-	Mon, 28 Apr 2025 00:37:42 +0000
-Date: Mon, 28 Apr 2025 01:37:42 +0100
+	id 1u9CW4-00000004fvu-0YyB;
+	Mon, 28 Apr 2025 00:38:36 +0000
+Date: Mon, 28 Apr 2025 01:38:35 +0100
 From: Matthew Wilcox <willy@infradead.org>
 To: Kairui Song <kasong@tencent.com>
 Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
@@ -38,13 +38,13 @@ Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
 	Yosry Ahmed <yosryahmed@google.com>,
 	"Huang, Ying" <ying.huang@linux.alibaba.com>,
 	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
-	linux-kernel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/6] fuse: drop usage of folio_index
-Message-ID: <aA7N1SHoR-tY4PJW@casper.infradead.org>
+	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 2/6] btrfs: drop usage of folio_index
+Message-ID: <aA7OC1d0L1lgZ557@casper.infradead.org>
 References: <20250427185908.90450-1-ryncsn@gmail.com>
- <20250427185908.90450-2-ryncsn@gmail.com>
+ <20250427185908.90450-3-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,37 +53,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427185908.90450-2-ryncsn@gmail.com>
+In-Reply-To: <20250427185908.90450-3-ryncsn@gmail.com>
 
-On Mon, Apr 28, 2025 at 02:59:03AM +0800, Kairui Song wrote:
+On Mon, Apr 28, 2025 at 02:59:04AM +0800, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
 > folio_index is only needed for mixed usage of page cache and swap
 > cache, for pure page cache usage, the caller can just use
 > folio->index instead.
 > 
 > It can't be a swap cache folio here.  Swap mapping may only call into fs
-> through `swap_rw` and that is not supported for fuse.  So just drop it
+> through `swap_rw` and that is not supported for btrfs.  So just drop it
 > and use folio->index instead.
 > 
-> uigned-off-by: Kairui Song <kasong@tencent.com>
-> Cc: Miklos Szeredi <miklos@szeredi.hu>
-> Cc: Joanne Koong <joannelkoong@gmail.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
 > Signed-off-by: Kairui Song <kasong@tencent.com>
 
 Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-> @@ -2349,7 +2349,7 @@ static bool fuse_writepage_need_send(struct fuse_conn *fc, struct folio *folio,
->  		return true;
->  
->  	/* Discontinuity */
-> -	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio_index(folio))
-> +	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio->index)
->  		return true;
-
-This looks like a pre-existing bug.
-
--	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio_index(folio))
-+	prev_folio = data->orig_folios[ap->num_folios - 1];
-+	if (prev_folio->index + folio_nr_pages(prev_folio) != folio->index)
-		return true;
