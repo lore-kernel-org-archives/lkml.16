@@ -1,206 +1,94 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA1E193062;
-	Mon, 28 Apr 2025 05:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CF318BBBB
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745818624; cv=none; b=LUd5eK7Z+s1QmizZpGdMKflJ+OWyuv+0M2THkUeR1mECLXS/pEigBE0Kn3IIzg6zZ6WFPB5W0tUrjgjeuRYkenYhC/8oH8LjlO669PUsloN+rZ2FYoxBXL7uy7jROargCcR+N4IrzRgmkYyX21v7rs5hzk7GxZgFkR349QTMRVo=
+	t=1745818809; cv=none; b=i5j8+q9RUeDsBal2+hlx1U6+z6lROl+3rfr4Ydq0KlYXDhm8LEGGYFJabxjzBbs6q1U+71dmLzfr8RtA415+2wWwYmXwng+qXdo67VVoAXagFTeja8SftH+MW55Wo4AhDR5cqC1lZA/t9WZJLrG7D1u3Rpd50AGEnfH1Xh2ehYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745818624; c=relaxed/simple;
-	bh=M0LjuoqcMWHsQXSVOf8Nm3gaSAfKQYd2cE3gm/SfEyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OIm7PxHY9o6SLek/H+ImMZtyDnNrc5eWaxN7DlGigPft8Ov0vO5U7hkSus9gOHJ6kwzpDN4axpiA7SVIaLVlM0lKHf2+whGeb3zTKGoiUz1/1e0p3orqNo0BzZC/Kd+Ls1ZkQRcgNNJ9tIkoNz7YomkeIJjAtWVP2pNtKI+f8yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=bHbEERZD; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="bHbEERZD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745818589;
-	bh=UdjdVwsGFyMI747dVYHjmVnUn3MRQZNoNL+bE5qpgw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=bHbEERZDfMGP32wRhX/I3ZGUkT/LNuhLVwr2Hagyqtn9ksxrIM0YVirFQlHwYgS5o
-	 1C3zdqNQIpLHg/+mRTZj4HOM/PymyPpB6D06WdI4A4o5dUidIv7qXhijPEut4EHbId
-	 scK2TyQSrH33V6tO2tDpE49Cy2ZSaw35r4so1fjA=
-X-QQ-mid: zesmtpip4t1745818585t586eff5d
-X-QQ-Originating-IP: Nfbd0PJ9OcESsxwpglGPLodS1rQq/nEc/H8O2c245Pg=
-Received: from [IPV6:240e:668:120a::212:232] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 28 Apr 2025 13:36:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17663403777538385794
-Message-ID: <8024D1C7CE1BC2F4+fb3ca587-fb54-4c3b-af44-77da7c8f4c3a@uniontech.com>
-Date: Mon, 28 Apr 2025 13:36:23 +0800
+	s=arc-20240116; t=1745818809; c=relaxed/simple;
+	bh=H3PzNC3xIhl0GKYFcLaLS3yXa7lBJR6UI7k7WiHNrxQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=SJItwJ5Twwm4zmp4m+4xzIdE1dYavRMZ2YiBJx2psXck2Dc/mX+G1WBZd9KoBG38lGxaXUXk2DdZ8lqfgbXXpj1FgJH7svxMC9DZpWFnXVahcYzQ9laPY4GmEv8MFcT+/Hc18SDOZlOlc9zlqAoQQ+hrhoWr7ZqlsE16LSoXDe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so3128086f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 22:40:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745818806; x=1746423606;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ODFreraoz8xwp2joxLm36YvpQAUecMaSczh29u2bx2Q=;
+        b=bjf2UjO71W0dnnkFHSRTZv+88s0Ax9PGqCpEEptQLuew081Ypxsfq9droJp4xpNh5D
+         s/k5eN/oICsJbANsE2QJQujfiFyMaEns/pGzkgcYvEt+AcdnU9s8uNHDf5LNcPh29is+
+         RzApCxJkd44ap9o5zNoav8qJomGUCP9erSsBT8qzMqPeolbNnXksAhrlIS2R+0rKMhxt
+         d9cfDXdo/Ku2wpy/aNljOrzLJpH0VaXel8E0NU5TwX+uNNUSrbUQm/fsCjv90Z6nYUV8
+         7qZpkp9CUPjvlJS1cRVIS3z6qg0O0tZmsJkihqK6ddhVY5NvJePpoRl5pC8qfhAP9UG2
+         571A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVkH2eKyQYEULGIVVGB2vsP6PYkwO/jvXoSpfPpTJ43FONaUG4v9VhQpHS0Z3q+OKKjNVvFpxVxJOWeDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDzJJnh8SW8dSlTsFBvkgq4mLs2vylFKT/Hufm0H2s4DMOhA0R
+	DuVQKguyeAWAVB1NucVPvz+xsbyayUtKiLgDNbl1XzR2iH3MyV7iPtbo8JrA
+X-Gm-Gg: ASbGncuyixvJIrLm1UveZtdCDNlCWG12H3KnuQNWy8JtTLtNPjXfxPAGEO9NTuEpXMn
+	QZRYJMUQeWfgkWH8LGlAHO7nEp+9OVtcKza/K/QiGeLJHzPwQux73TtRjGfeDcXJfTLcy5p1d9P
+	xNYOZqp0i9QU6tJkmiXGFsQ9B1Xb9cS2BR1H3kLkaweRUpW6GbF2EDiRLofXaxafKwgx5OINKmy
+	lcGkT4oRv00XkHk+7Bnd3LkRRWq0ruug6z2ZsbL0x79vTr8Yhfs82SZHRqNewLCqFc141Ut//Ds
+	1l+ppj79yHwIg2xjHgE/kAVN/gHhdZCz/6Z6FzbwPXmkle6CvJRbqLc=
+X-Google-Smtp-Source: AGHT+IFE8wKoBgBrSZvbT/aWoWWI27jmvxT9toKX9l+1LXwKfmg4jDTFGgvEC8ibUWGk7B/F7kbZgA==
+X-Received: by 2002:a5d:5886:0:b0:39c:310a:f87e with SMTP id ffacd0b85a97d-3a074e1f385mr8397682f8f.16.1745818805584;
+        Sun, 27 Apr 2025 22:40:05 -0700 (PDT)
+Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca56d5sm10118590f8f.32.2025.04.27.22.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 22:40:05 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Costa Shulyupin <costa.shul@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v1] scripts/tags.sh: Don't tag usages of DEFINE_...PERCPU_RWSEM
+Date: Mon, 28 Apr 2025 08:38:59 +0300
+Message-ID: <20250428053907.2851864-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation/kernel-parameters: Update memtest parameter
-To: Randy Dunlap <rdunlap@infradead.org>, corbet@lwn.net,
- akpm@linux-foundation.org, rostedt@goodmis.org, paulmck@kernel.org,
- thuth@redhat.com, bp@alien8.de, ardb@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
- tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chris@zankel.net,
- jcmvbkbc@gmail.com
-References: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
- <b8ffdc7e-1b5b-41df-835e-c11a200d7dec@infradead.org>
-Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <b8ffdc7e-1b5b-41df-835e-c11a200d7dec@infradead.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------Hk6rtjDbqvMS3GCpq8DpmwCI"
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NyPaQtJYQgeorUhi4yGzMqOYfia0pkcETVCmcsCsFpL08dI284ZIdV/z
-	o4ar5ZBkRRuOsW+/J2qv+trfi2BweXprsJK3/Jpm+1AUrY20za3drGqdQkzRazVevPEVzbN
-	sXZ2kXWCjr6czEpLOqTENq/BjRciB5wvxmTV+Chol5OMg7LD5dD14Z2QBoqaO+jiu2gMIdL
-	Z8CTf1+MFWav7t8mdBM2lmok/E7I2wns5r2MfnVVH9yLvTeYoX3UdB3KG6QFK436lI0koje
-	QuhB5peLX01x75MTlGuYZ44PSFRC+fkmGd5mFRdpr7SctZZLHNxxWD7ZKAHR+l60LQwwr4O
-	JsDSWudPF8W1r2lvr0+PxpTeor46wuCj68dZMtTMQl+FqTK1QUlGrIk4l10TfiiOTuwXU6x
-	qpkXzt6AOJTrFZ4XWLoepRPfZDr8hGrXIcwmf5DuasvoQaKs8OTrWpgZxsE3DJ8cdzmZFwa
-	qc7rByHRzPP/x1IjDlMAZPDzZypKZ4iML8LL51EIj5BwEiCn3Ryb6sOJej/mxMOeL0mOatZ
-	9Aax8ULr+hMCcWQzul+ICbs1GoodMbnze9ALFkW765Ke/sj+aK1MP5qnsDcEOE+Cl7mb4d2
-	Q4IiuknRK4auPyM4aKuBLeXg06N/6gBb9IrMZCKbStC08uNrPMhVBbhykhlr89LTKtWZpuI
-	6Y08IB4ueXGBvzX94Vp9gAWMkb317gR0KEF7DmNtUBf4KoQ4gFGc1/V96CpA3k/9yNf4e/Q
-	BmEFKtDOZSPUFQS+SdprLs4c6eXzkWHo3QXayEvVAwVr2udmLumtH5ekQ4OkMq06Ke+E5U9
-	Bh4XlikmFLjbwv6m0VHqNxcVN46jE+jeG7neB6/hyjB9dXj74tXHIEgKWiT46smLM+giabU
-	0xth5yJHp+Z36LiyfuFknMai+bIDU1fEpNtKkfPpGohB2mpsOjN3doAaPpEt6YaHFl/7Zfy
-	ZI85WlgpIYkZbBHIFn/M40goi6ljSP3hYF0iLwcrwoqJxKCdxlbkOraRHvUh/kLsSMu63mv
-	WHVzgCuk0/T5rUhaA1Y6+LrhKdiykEDdJXwYLpyAS5qzJjNh5J
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Hk6rtjDbqvMS3GCpq8DpmwCI
-Content-Type: multipart/mixed; boundary="------------TFjB48ibnpBza0lpiW4f2rV2";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: Randy Dunlap <rdunlap@infradead.org>, corbet@lwn.net,
- akpm@linux-foundation.org, rostedt@goodmis.org, paulmck@kernel.org,
- thuth@redhat.com, bp@alien8.de, ardb@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
- tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chris@zankel.net,
- jcmvbkbc@gmail.com
-Message-ID: <fb3ca587-fb54-4c3b-af44-77da7c8f4c3a@uniontech.com>
-Subject: Re: [PATCH] Documentation/kernel-parameters: Update memtest parameter
-References: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
- <b8ffdc7e-1b5b-41df-835e-c11a200d7dec@infradead.org>
-In-Reply-To: <b8ffdc7e-1b5b-41df-835e-c11a200d7dec@infradead.org>
+For each semaphore declaration like
+DEFINE_PERCPU_RWSEM(x)
+DEFINE_STATIC_PERCPU_RWSEM(x)
+ctags generates multiple DEFINE_PERCPU_RWSEM and
+DEFINE_STATIC_PERCPU_RWSEM tags for each usage because it doesn't expand
+these macros.
 
---------------TFjB48ibnpBza0lpiW4f2rV2
-Content-Type: multipart/mixed; boundary="------------RH90aBEQ6X0g71W3z0xZChr0"
+Configure ctags to skip generating tags for DEFINE_PERCPU_RWSEM and
+DEFINE_STATIC_PERCPU_RWSEM in such cases.
 
---------------RH90aBEQ6X0g71W3z0xZChr0
-Content-Type: multipart/alternative;
- boundary="------------t8iLN9jjEHV14tL9F7ozjhZD"
+The #define DEFINE_... itself and definitions of semaphores are
+tagged correctly.
 
---------------t8iLN9jjEHV14tL9F7ozjhZD
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ scripts/tags.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-SGkgUmFuZHksDQoNCk9uIDIwMjUvNC8yOCAxMzowNSwgUmFuZHkgRHVubGFwIHdyb3RlOg0K
-PiBJdCBsb29rcyB0byBtZSBsaWtlIEFSTTY0IG5lZWRzIGl0cyBvd24gZW50cnkgYWJvdmUu
-DQoNClRoYW5rIHlvdSBmb3IgcG9pbnRpbmcgdGhhdCBvdXQhDQoNCk5ldmVydGhlbGVzcywg
-dGhpcyBhcHBlYXJzIHRvIGJlIGEgZGlmZmVyZW50IHByb2JsZW0uDQoNClVwb24gcmV2aWV3
-aW5nIHRoaXMgZG9jdW1lbnQgY2FyZWZ1bGx5LCBJIGZvdW5kIHRoYXQgd2l0aGluIHRoaXMg
-ZmlsZSwgDQp0aGVyZSBhcmUgaW5kZWVkIG90aGVyIHBhcmFtZXRlcnMgd2hlcmUgIkFSTSIg
-c2hvdWxkIGJlIGNoYW5nZWQgdG8gDQoiQVJNNjQiIG9yICJBUk02NCIgc2hvdWxkIGJlIGFk
-ZGVkLg0KDQpUaGlzIGlzIGRlZmluaXRlbHkgd29ydGggcmUtdmVyaWZ5aW5nIGFuZCBzdWJt
-aXR0aW5nIHRoZSBjaGFuZ2VzIHNlcGFyYXRlbHkuDQoNClRoYW5rcywNCi0tIA0KV2FuZ1l1
-bGkNCg==
---------------t8iLN9jjEHV14tL9F7ozjhZD
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+diff --git a/scripts/tags.sh b/scripts/tags.sh
+index 98680e9cd7be3..503371e59e366 100755
+--- a/scripts/tags.sh
++++ b/scripts/tags.sh
+@@ -271,6 +271,7 @@ exuberant()
+ 		ACPI_EXPORT_SYMBOL
+ 		DECLARE_BITMAP
+ 		DEFINE_{TRACE,MUTEX,TIMER}
++		DEFINE_{,STATIC_}PERCPU_RWSEM
+ 		EXPORT_SYMBOL EXPORT_SYMBOL_GPL
+ 		EXPORT_TRACEPOINT_SYMBOL EXPORT_TRACEPOINT_SYMBOL_GPL
+ 		____cacheline_aligned ____cacheline_aligned_in_smp
+-- 
+2.48.1
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF=
--8">
-  </head>
-  <body>
-    <p>Hi Randy,<br>
-    </p>
-    <div class=3D"moz-cite-prefix">On 2025/4/28 13:05, Randy Dunlap wrote=
-:<span
-      style=3D"white-space: pre-wrap">
-</span></div>
-    <blockquote type=3D"cite"
-      cite=3D"mid:b8ffdc7e-1b5b-41df-835e-c11a200d7dec@infradead.org">
-      <pre wrap=3D"" class=3D"moz-quote-pre">It looks to me like ARM64 ne=
-eds its own entry above.
-</pre>
-    </blockquote>
-    <p>Thank you for pointing that out!</p>
-    <p>Nevertheless, this appears to be a different problem.</p>
-    <p>Upon reviewing this document carefully, I found that within this
-      file, there are indeed other parameters where "ARM" should be
-      changed to "ARM64" or "ARM64" should be added.</p>
-    <p>This is definitely worth re-verifying and submitting the changes
-      separately.</p>
-    <div class=3D"moz-signature">Thanks,<br>
-    </div>
-    <div class=3D"moz-signature">-- <br>
-      <meta http-equiv=3D"content-type" content=3D"text/html; charset=3DU=
-TF-8">
-      WangYuli</div>
-  </body>
-</html>
-
---------------t8iLN9jjEHV14tL9F7ozjhZD--
-
---------------RH90aBEQ6X0g71W3z0xZChr0
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
-
---------------RH90aBEQ6X0g71W3z0xZChr0--
-
---------------TFjB48ibnpBza0lpiW4f2rV2--
-
---------------Hk6rtjDbqvMS3GCpq8DpmwCI
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCaA8T1wUDAAAAAAAKCRDF2h8wRvQL7jYY
-AQCitUPQvnSZa0VYuBIv4ZMKv1iNhr9C+0JLhXVmBxrVDQD/czRR5mngvuppzfv5jbkHleiiYMJy
-HToXvJu3qA+zjQE=
-=nbo1
------END PGP SIGNATURE-----
-
---------------Hk6rtjDbqvMS3GCpq8DpmwCI--
