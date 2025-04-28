@@ -1,146 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 369FE262FEE;
-	Mon, 28 Apr 2025 11:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EC0263F4C;
+	Mon, 28 Apr 2025 11:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745838611; cv=none; b=gKTZWRlYXWvC+FF9NcgmbBfeVVp8Ts9LsIFGOKlP2kZGU3xZVYoOkeieVX6fg2yNihQ0pCuGSapyu4RycBXgyN9+cF1P/ZLi1Evzzo5QzPKKDKNgeBGRHq1ZFMkwgBYxClWu0qIEmL1AEtEQ5vznzkwCD2ZIncK+botCqzzVx0Q=
+	t=1745838628; cv=none; b=miMJq+ll6fLfW2zhO/lH8f7Oz1z0KruZ3Ctgfb2M4WL/ZgfCvjiX8hq8DEvxOeAsHBq2/1x4aT1y2FML1DJo5E4Wl/zFUfBoiqn0p8LRBvQwbHdp60EQ2a6+ERsHUiyQ1gOtECpIoA/tIZWAC4FJfu/dCRV+eq4FG9ELoUVkbW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745838611; c=relaxed/simple;
-	bh=A9Okykt1CO9Gdzyw8Gz9j8J09jGfp2GgOobllD66Xws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ftCqRPX3AQ8PiATPyJ3kgyQZHTE+Gurl76yiryPJE7EWRliAWRD/mPfg0TV2B1k3oLqap8sGbz46yMeXlPWlEAfS5i1VhlwglOF7LywlXxJO9/eeoAVc/HAY9IDpyfAB/NrA77r/pw5n2Tl3CzDFWZxJBBbDp3cYU4R2ZZmC0go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A2F11595;
-	Mon, 28 Apr 2025 04:10:02 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB783F673;
-	Mon, 28 Apr 2025 04:10:08 -0700 (PDT)
-Date: Mon, 28 Apr 2025 12:10:03 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
-Message-ID: <20250428111003.GC551819@e132581.arm.com>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-10-irogers@google.com>
- <20250402143541.GM115840@e132581.arm.com>
- <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
- <20250402163807.GP115840@e132581.arm.com>
- <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
- <Z-4URXOzsVHTY7zz@google.com>
- <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
+	s=arc-20240116; t=1745838628; c=relaxed/simple;
+	bh=bIwFZkm38ynM7HX1Oa10JXlzhPJFAfh/bhhb1iyC5Gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OzZEaL5Flo+vdJ0j4whr4EMgxve9lfGnbWLuOCM7JQ+ksMhSlWIlXDKTVuNJA2Nq6JngBs7x8X5RF3cVFuZjeWmnFQ6kzDEzb3SMXTcM0kb635UBw5rmF7BECNHrogQD9tNCNldew5YmzNuTGQksH46amuclacCFj2un9/3JhtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZcJlintl; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcJlintl"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso7180120a12.1;
+        Mon, 28 Apr 2025 04:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745838624; x=1746443424; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZEPaEW3F/zxdw0Y59OhNfESRd9ryJ0bqx54YjVSlNEM=;
+        b=ZcJlintlA++R/TSYw6ypXpDrXKD6ZJlYhQR/xt/exSEUjJkq+Z1pNsolCHYvKon4HC
+         OQaJLdVGGNWBgBeRS2dskk5ssykSjzdTzcxLrL1IEJTVacjR4CH8M2MjmX0NpesNgPqk
+         4kegSbGYBX5akiv0RsH0HJyE5apHo7kOaBpmPgmOHjUcakrJLWFZvbvyYaUStqz5PxxI
+         jxBdXJkjr67p/8UsZjThzo7zEWi7E2yCeTVp8TW1ouxyOc0Rkqn5Y5TzW6zJRz+FjPpu
+         rHZzSw2/V1IiQv4Gq2BvQvxAWttcU5ALMvqlRcAo1ioK6xH5npjhHe+fvnhRnYfTLNf7
+         yH6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745838624; x=1746443424;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZEPaEW3F/zxdw0Y59OhNfESRd9ryJ0bqx54YjVSlNEM=;
+        b=DmM9hJPw+BUJYF045Uy7ZY6OIv4AxA3dhnZJWWpA573lFS/O84dR2EpVUdOa8xz19L
+         u0wW38IYLcRKHDx9bK6AdJt4btnm3n3iMH2AoZU4X9owSx9iFg/RTCVPIyz+rM/q0UAm
+         kqSAtJmpwJ/mtTW5RzZRcSNviCsu25P0OQaDpf49nUykOpAEbLT/SvUoE1Ma6KQJZvTr
+         MP9w4z2W17YAVE/EZjJzKSP9JK+PwfXAGvSHShEXwQAYwRnkaw6y7g/JUde5zeT6vdJz
+         S5b45U3FRkD3c9UnbjFHydGizcPG17eMJ5Z/73RogjbYjxvnD9YUItEz/rmlPTAjQngX
+         ZnfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfH6/W9egzKn6U4ty6J84L6L68j1YY4ttEOQ8vJOoNAN/r0lEAbetnxAR+4v1rApwvXUwVGS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYrw+rsPwDSSG0S3Kih398271Vfj2juZo/RUx73DFKkyZD0qOh
+	2CFOJlkd5fVT/EDNrUkDw9PwnH4RukVtlehb3J2iqy6KGvsGlZoG
+X-Gm-Gg: ASbGnctjJdAU4R5acg7np+mpCpJKS0fUK9K7WF6db6GPvu89SoQxDewnL/IhYnG0vUT
+	iD339dN+axQ5BwD6Gkfauvo4Pm0Gpb8IgdUad5/SoabM0bDS6KcsdIO86ZPX0WetxxLbf99dQDB
+	ErhdTBpMrIO0IUeD/drz+59dZt5ps4zBJOIESI8+h1LtZvW6Cd13B4t0pPPIEvLZGc3UzuQsEEr
+	fbhOp+R/yoxdMIVzRQLgnL4rflb0LRyLQEbTiOMCi6064x5O4C5po4HNHgYv90MyglcYCBxK5Vb
+	kFbFgbOYRP3Tq9iBNhd6ylm9SEkHmsejRhduOzIqO3DAa5PgpvP017s7csldrS0yJ4RHGTylNcw
+	tnhF6f/w7GmWJO65oevyeiCo1jL1chdABUCWgYXM=
+X-Google-Smtp-Source: AGHT+IGm+R3U2ff1WmMOdGvIBe2V0PqlZpnpHbbBT6HmOy4sjPS3TwTCnqN1mgE4aPVMMPL6rw7qdA==
+X-Received: by 2002:a05:6402:524f:b0:5f6:c5e3:fa98 with SMTP id 4fb4d7f45d1cf-5f72343471dmr10240290a12.27.1745838624398;
+        Mon, 28 Apr 2025 04:10:24 -0700 (PDT)
+Received: from titan.emea.group.atlascopco.com (static-212-247-106-195.cust.tele2.se. [212.247.106.195])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5dccsm5686131a12.37.2025.04.28.04.10.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 04:10:24 -0700 (PDT)
+From: mattiasbarthel@gmail.com
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wei.fang@nxp.com,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Mattias Barthel <mattias.barthel@atlascopco.com>
+Subject: [PATCH net] fec: Workaround for ERR007885 on fec_enet_txq_submit_skb()
+Date: Mon, 28 Apr 2025 13:10:18 +0200
+Message-ID: <20250428111018.3048176-1-mattiasbarthel@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Namhyung, Ian,
+From: Mattias Barthel <mattias.barthel@atlascopco.com>
 
-On Thu, Apr 03, 2025 at 08:20:02AM -0700, Ian Rogers wrote:
+Activate workaround also in fec_enet_txq_submit_skb() for when TSO is not enbabled.
 
-[...]
+Errata: ERR007885
+Symptoms: NETDEV WATCHDOG: eth0 (fec): transmit queue 0 timed out
 
-> > > Anyway, I don't have time to do such a larger refactor so
-> > > somebody else is going to need to pick that up. I did refactor the
-> > > cases where I thought it mattered more, but as you say that does lead
-> > > to a feeling of inconsistency in the series.
-> >
-> > I'm curious there are any actual errorenous cases other than the return
-> > type of comparisons from Leo.
+reference commit 37d6017b84f7 ("net: fec: Workaround for imx6sx enet tx hang when enable three queues"),
 
-I am just wandering if we could give priority for errorenous cases.
+Signed-off-by: Mattias Barthel <mattias.barthel@atlascopco.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Could you send fixes for these cases firstly and leave out refactoring
-for later merging?
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index a86cfebedaa8..17e9bddb9ddd 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -714,7 +714,12 @@ static int fec_enet_txq_submit_skb(struct fec_enet_priv_tx_q *txq,
+ 	txq->bd.cur = bdp;
+ 
+ 	/* Trigger transmission start */
+-	writel(0, txq->bd.reg_desc_active);
++	if (!(fep->quirks & FEC_QUIRK_ERR007885) ||
++	    !readl(txq->bd.reg_desc_active) ||
++	    !readl(txq->bd.reg_desc_active) ||
++	    !readl(txq->bd.reg_desc_active) ||
++	    !readl(txq->bd.reg_desc_active))
++		writel(0, txq->bd.reg_desc_active);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
 
-[...]
-
-> There are lots of cases like:
-> ```
->                 case ARM_SPE_COUNTER:
->                        if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
-> -                               decoder->record.latency = payload;
-> +                               decoder->record.latency = (u32)payload;
-
-This would be fine.  Since Arm SPE implements a counter with a maximum
-of 16 bits, there will never be an overflow when storing the data in a
-32-bit unsigned integer.
-
-Thanks,
-Leo
