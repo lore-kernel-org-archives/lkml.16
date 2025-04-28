@@ -1,118 +1,73 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73422951D8
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3B127990B
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745863717; cv=none; b=LgRUIVyInCo5ywCX4gehJ2a+g2EyXKSuIUlwwECLegyVNXB99yJ+zv4uRX1p3a3SBBnGxYWZhA3d9fj3xwJbIZV1m0S5Vm1qDEZkArlum9uR6U7LMBz+tOfNfEp5mI3E/sP2zOJak4SY0GTFTzdqF1zgLoq5tlGbUa5ZJR3H7Pc=
+	t=1745863782; cv=none; b=tRpmC5k/DUNI9fbNU9la5z6teVxBgw1MGZL/cvsNKCz5BEyURm3VM42c7iDpx1hR4veB51ynZy5/WP67u6SOnXWrxYHRJHGP8kHJ0CkSQghAQyANyOFKeF00wM7cb0MczyhvrTDw9Xov8jWK6+TZAC0I63fokKCPs0Y3LklBNUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745863717; c=relaxed/simple;
-	bh=ObSXFlGsDpWRV8E/7b0vGadnQXgzqYHgpaoAoCxwOYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UiHuDb/0GLnRzv8hYs2RB0QVgZXOV+vFo1aW0cRAsJInWNT8JLymD/X2/AQI4Ft7DaN59cQzWMf4KIKD4mwwXeKgMJlcOUqpWJbGs6y0e/G59F+uLqzqK58IzkeYmrgZaNszDegVSYBxvhZu8i2kbhjVj2sJRz1hlxx8TGMEVmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ivBnIanV; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1745863782; c=relaxed/simple;
+	bh=Tp/iIl9Q/zHH79Zmt5OXH8Ujx60iyEVCTPY1h9qYcFE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=faDlzF9c2b8Qxe3FPzLs1CygqUVXXlK0/xPvDLCbAbBp/JIIkLIcvkAHudGY9Xm7B9z5sO5+A0W6c+Vb2r43VyNZd1Qzj/subsEAoGvMS8xMlk673iyZx+cxyHJl7b35L5r9xIyPSNvDLBlIMVIAdpc3t0UMCjV8e23/dZWszPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q7suKjt0; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ivBnIanV"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-acb615228a4so1080973366b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:08:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q7suKjt0"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso5931990a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745863714; x=1746468514; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ObSXFlGsDpWRV8E/7b0vGadnQXgzqYHgpaoAoCxwOYI=;
-        b=ivBnIanVI2tEGlHEqnJ+eWtTUkl+nJCpW7PgpDkWPhdriYRt9ZnVvgY22zw7lpYEPK
-         CQxmjx35T3j+jrUt6FY2Yj9CMnCGEZl8JDdKl2WbhhRTYMtRwRxGcbeftuq8sUv9rqup
-         pIr1TOAAX9fA1ivQSxLPkRyKgn6+P6PVjBz77o3H+X1jAkVL+PWPZWWodgoCppWT6G5y
-         qQ19f2etoFkQdr5rcZIvm4zvzG/Xkh+kPO6BPYZgg8yjWixB1mKxxqSiqkssSngG9zwr
-         CFRpRyM4JqsC2VCCZXt1VQfhdxrZDOO/9mnPlCMF5DzpEL7tGkOU/m4MPPEVs3yziWec
-         Y4xw==
+        d=google.com; s=20230601; t=1745863781; x=1746468581; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tp/iIl9Q/zHH79Zmt5OXH8Ujx60iyEVCTPY1h9qYcFE=;
+        b=q7suKjt0MCnoSNjT7lqdUE+P4SVeM5wIPR7GIMRErateXWyeV5zJRdgq1oTsHE0qEk
+         zGF9nGnYs7XQ9Y/Ckr6rq+UVGnP/XCXmy33VWOBgyPvsorypiD0lXIPr2UDl3z8cmQVC
+         0kRYxefMcqZPhcgye/3BevPsTGfDUwvmhksfmph5pSTxaHZWVdLaPjz1hpnqmMl0tP8o
+         lyRnrsfBIBG21K6Osy3skKXFXwZ67qHvSf90g6mWIaYwVT3mAK26jJHJfZ5VIXooe/6f
+         oBqADrTHGzPP50VAsBtFZYcv2A3kpLfoIOfnpRi0xYlBpQ+ve/DfcLpflHK44+6doJrv
+         mh1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745863714; x=1746468514;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ObSXFlGsDpWRV8E/7b0vGadnQXgzqYHgpaoAoCxwOYI=;
-        b=NrAhNWRv2I8/EE5eJiT8YtFXIAs+0E0raHB1HU9rd+Bx8RFsczcUvFS/ez0+PjgvYA
-         MjRyUbe5GM7FFwy6cDEh8lG0FqiQkQw7rV/yHSu1c8fD9Y5VWoUG/rG6FZs+wfeajbZ4
-         5Kb09fcDgd9d/RMharb4OKr7+foNbZYe2kH/7MFuCW0G5TVMYal/aUlqxjOHCOBNUlv1
-         o49v/W33zvo/BMdZTLbP2YJ3ASd+ibmYEVdplrIwch/xOeuvhocXWjPXEsLpXA4bXPq7
-         rxdc1i267TI3JKxbG2qCc1K/r3b2CxFZLsjM7s2cYSBDH21mEli+smeskSck/XK5lf33
-         Pmiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKjFtSNn+C1i7SJJW/o1TDO294u60oRG6mX/7e3UlYQhYq9yJkP3K+ZpK2bETLU3SFxpAoI7qTTIrQhXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5YTu9e9E6CRctEBw5KXlK780lTROnaaNTjRC+hO3CYAe0vE60
-	ZWEYru13gVs9I1k9PM6IwDrWAqILogw/6dUajrlFyIBjsmF9wCdacV4XcRPZixuTgxL4BhH1aBs
-	Dqo9Y4AQETBhPmtmtsbLDx6gvTHetpMt9rq8=
-X-Gm-Gg: ASbGncuT4U4G9oIQmH+9j2d/7G+cXsjhwj193YGDTeLI6lmrGci0q/1wiigHVKBWgf4
-	c+y1KHPtjOphL5MVZbuVrWQgzrXNxcmOBhUlvMK97ZzVVKiu78OehOD4npff3fqL9RqlwJf8DMw
-	NGItdnTldmGmVelkpEQFQ=
-X-Google-Smtp-Source: AGHT+IH17lQSjopDcYFAF6vUXYSB4/G8Ck6PNpMZfMLiwEZdqHhhJ7KrtjzzJEVPEcYGZn8hDBoMJ8c6jyFfD4ISC3U=
-X-Received: by 2002:a17:907:940e:b0:acb:1165:9a93 with SMTP id
- a640c23a62f3a-acec69a7894mr16522666b.3.1745863713696; Mon, 28 Apr 2025
- 11:08:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745863781; x=1746468581;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tp/iIl9Q/zHH79Zmt5OXH8Ujx60iyEVCTPY1h9qYcFE=;
+        b=A/G1ESHUAVs2Sx7sHdfq3GmTj7wx3xOgTtJTC88bSizjXMA+VGqGN+jMIsZv/dUF+T
+         xyWKhOUrXf8UC+pMygfNMvYk6YYP60rs2SFeC1vZtouZWxEhFZWlAcH1hQ4ynLwtPVTE
+         xRhg9Vw79Uzmt4P/C0e6ZmyWapUjXYJIaCMODXIqza0YbI8GIMkAr4RYSn3Ek5NTfFOk
+         HMQPqars9p+5KRSv5KSGCVtBTk9sQqz1C2WQ2yo/a5zS+6uJ+8sMBe8xuhGimJSVeVqr
+         dn8xF1lRlx/au/PXqvW94q4RKM2CKD+lEm+D3emGH11wm0eHl5a+G3t9pELHIDQ7zze0
+         l42g==
+X-Forwarded-Encrypted: i=1; AJvYcCWoakfOXzhdxMJuG9ZJ9INVcS4VhLbxGOdVoDnZTrmHQ91opF1N1+MFEWN06c7KUZInsEqPgu6eyCYNUBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7keCIWygR4xgDF2PpwyokH1Z5fBiYB1oEp+JiOH/A8mNMtGsB
+	mPVMlgdgW4GeR03OBP9ZoUZMg7DFY6i04mZutejYD9QNBg4YWYmNH8pw7xNBVkRmvnOwJh9FTa+
+	Vrw==
+X-Google-Smtp-Source: AGHT+IG1aAcjSNzcjUnMtXPJEVikbQf0GuZAZa9ivU+BSsf6ZyacI9MZyufqcmANUeFXs4QrkN9zsIjMW5c=
+X-Received: from pjoo7.prod.google.com ([2002:a17:90b:5827:b0:308:867e:1ced])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dcb:b0:2f6:f32e:90ac
+ with SMTP id 98e67ed59e1d1-30a21552b2dmr1206424a91.11.1745863780872; Mon, 28
+ Apr 2025 11:09:40 -0700 (PDT)
+Date: Mon, 28 Apr 2025 11:09:39 -0700
+In-Reply-To: <20250418115504.17155-1-lirongqing@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAHk-=wiq=E0fwJLFpCc3wPY_9BPZF3dbdqGgVoOmK9Ykj5JEeg@mail.gmail.com>
- <CAHk-=wip2-yTrWpAkrUQ0iejEo2PjReddu4xntwBvdnSvWDbzg@mail.gmail.com>
- <20250426200513.GA427956@ax162> <CAHk-=wgPCbZv0JgqoNWMOO+p=N772YW16xYk_pmb1GU7aeuPFA@mail.gmail.com>
- <20250426232344.GA1395819@ax162> <CAHk-=wha-AgeeqATWRrKuopM4fKhhF_tZE_raQM77qO7Zd3fOQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wha-AgeeqATWRrKuopM4fKhhF_tZE_raQM77qO7Zd3fOQ@mail.gmail.com>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 28 Apr 2025 11:08:16 -0700
-X-Gm-Features: ATxdqUHdkMoNTiG3otQDMcEbh3e1opeHpcZVUMb0X719K18pydkfuXGdraIMEuw
-Message-ID: <CAGG=3QUk8-Ak7YKnRziO4=0z=1C_7+4jF+6ZeDQ9yF+kuTOHOQ@mail.gmail.com>
-Subject: Re: clang and drm issue: objtool warnings from clang build
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	"the arch/x86 maintainers" <x86@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250418115504.17155-1-lirongqing@baidu.com>
+Message-ID: <aA_EY8CR2kxi3X5T@google.com>
+Subject: Re: [PATCH] KVM: Fix obsolete comment about locking for kvm_io_bus_read/write
+From: Sean Christopherson <seanjc@google.com>
+To: Li RongQing <lirongqing@baidu.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Sat, Apr 26, 2025 at 5:31=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> So please. Clang people need to get a clue. Yes, we care *deeply*
-> about performance in the kernel, but a C compiler that thinks that
-> using UD to generate "better" code is a disgrace and pure garbage.
-> Because security matters a whole lot too, and the downsides of turning
-> undefined behavior into random garbage are about a million times
-> bigger than the "I can remove one integer instruction for zero gain".
->
-> For the kerrnel, we want to disable absolutely all undefined behavior
-> crap ideas by the compiler. It's why we use -fwrapv and have for
-> years. It's why we disable the idiotic "strict alias" stuff that
-> should never have become part of C. And it's why I want that "turn UD
-> into unreachable" mindfart fixed.
->
-> The notion of "optimizing" unreachable code is crazy. And the notion
-> of thinking that "UD means unreachable" is so incredibly insane that
-> any compiler person that thinks it is reasonable should have his head
-> examined.
+On Fri, Apr 18, 2025, Li RongQing wrote:
+> Nobody is actually calling these functions with slots_lock held.
+> The srcu read lock is required.
 
-I tend to agree that generating bad code in the face of UB is bad;
-there was another, unrelated, instance where Clang silently generated
-bad code with UB.
-
-The problem borders on the philosophical. But I believe the argument
-is roughly "generating 'good' code in the face of UB is a never-ending
-game of Wack-A-Mole(tm), where we don't actually know what the correct
-outcome should be." ("Correct" implying that the compiler could
-somehow divine what the programmer was hoping for, or at least get
-close to it, but it's not possible.) This situation is one of the
-easier ones: "do something other than fall into the next function";
-but there are far more involved examples, of course. And even in this
-case, the compiler needs to know if a "trap" is okay, or would
-returning with garbage in %rax be okay.
-
--bw
+I vote to delete the comments entirely, the srcu_dereference() precisely communicates
+both what is being protected, and what provides the protection.
