@@ -1,137 +1,136 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F3925DCE9
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A20825E804
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745832978; cv=none; b=XAysZiDt2o7zwI2u3awN0qQbpXnFD6rttGKbca9rGd/G1mtH6M96pclyYzKOJzrqKPwnpOfkrbJw2v29/wdROSQpvH+66hozBx0WVn+CzpPAVsufDXVrCUU21h3pKDpSvaHzXH/Nwn2/90dRIy3lLdGsWr3zHmEzd2+4tBOWSzY=
+	t=1745833111; cv=none; b=Se9LznNKWoleFaN7RkniyqpTEjrqsmfaIq0nwfgKr+nu22Di1z6+2eRL53/w0/l7hIknoydgXq2kmjx9zjXQWZZA1eAfOf5TcnDc582Pi6JR36mZgEBvsGepLjNq4KZIPVRQZ1kXLfAvM4ZsEaQonkjD8MLia5dWmmoJ0Xk4UHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745832978; c=relaxed/simple;
-	bh=QrE7fbdPli9SKQ7LSp5vAGsR4n+1mUUek8BtKoV1gOk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oFvFDz/hYQzcHn/ZRqdNzY6Xsh6xzxYfFIaCGm7ZXHbPJLuPZw/ttaLIS9vwMKAMlCQfWpw79N+nKeF+lQdYSH8JZ6j7/2g7e5xmnWG5ZvQ4FiZVFWuYqsopZs5AafYIj05wA6UmV+4Wb0vJijtI9vzdl+PX7g8D6FwtZDFkxwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TFMB2ye5; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFMB2ye5"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5f6c497a1d4so3127299a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745832975; x=1746437775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PWAe0DpMWspoRIXx1Yu+oQIZJ2WPSmFvo5OnlJZNZxU=;
-        b=TFMB2ye5bLr8WrqT0xjY9+gyVrrxwCalsI7mg0kWTbqvn6PdvMH+Xw+uKxOJKRX05x
-         FEjsyoB1p4u0mEZ9Wal/DRrxWobKNuadqwGGWWAoJ3P+dhBZyOvcZf8Zo1//U++dRton
-         vIBIWTNDoX+zJR6v4hOLw/2+xEc+UsdgFFeDu3H5SPuzfv70zod9pjY03OOSN+KSP3ho
-         TZTIorV2Pg6gV+zVWpCps4WkI3UEXm1NwvdC0e9UnnGi6d5lENDKHojNabkjpHDvEwSB
-         KbyJpKUZlrY/d3nLTn9Glq6ZkKAWhdsUka3Vu/bLU0x5Ns2Z/rBW48A5W1J1KYyPrzhA
-         B1dw==
+	s=arc-20240116; t=1745833111; c=relaxed/simple;
+	bh=mn+t/RacBxME/p1WkOJ7gtkz/AVEfXFenCy1kgWUAFc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=DSOhr+Bsk67bQtUwzAnHNckbMWjHgLgMOQxa9hlu4X0k9X14mvJPZqPAEpRiowQOFyFCmF9WimulZAmIDkkstmLzY2q3WnA98Fgt1x/hdd4hQF1GxR8zDW/tuAnsSjkSHP9+LPQD62p4ikYVhkNWr0PkjKjhhX90Z4xm9rnk/xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b41b906b3so516835439f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:38:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745832975; x=1746437775;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PWAe0DpMWspoRIXx1Yu+oQIZJ2WPSmFvo5OnlJZNZxU=;
-        b=DgS45KDiyZ3v0/kYHKH4DR9ij920ebegep/gcD67qnIKvqyGNF2B0zAKeABN9IMDg1
-         RSa3qc44Uc4cxc9njBvW6bzNJW+V0LBMQVk8GLegaCJCGBlPZH4kyNkSV5BPq0B3RM0m
-         mifH0U0vbjodVCPUPTVr4OcrHgTGEYpcbOfttfBepcJJphRfd1LkUbU/XOAFmFcAPiZa
-         CJSq8IY2nu3XhXj3+e1uyFfmtBvSRJ8L/Ieshb2LJiEIlrym0MSAlDLqqgGowylUMNHZ
-         MIY5fZpeQJOnDk6NoojsNdsvQlYYpcIV6hEmggvVtar7lS7yHKWsgljOPctRWrf6Dzxn
-         Lb3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXp9f38LcTIYzcVoNpsdNHudnHq8v9RgNiIlMnHZHUrPAeRM8Hs+Rz6Wuxtl1l466uvdr1ZElVvbXnv/8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd2EKJ3BCNgFN230tLZJxmdeaOF4yFvE+Rs2bMSGWE0griwqrg
-	ebKe7P2TRHMj9lHLSlgqebuwFdGT64zY0JTXEKPhshafi5Lf5lGuEHypey2HcyoK26yXiqSWZrI
-	fHI2HYmYEMdfo6w==
-X-Google-Smtp-Source: AGHT+IHplcktsjFpEkx0kJSke323IXxxZpJrFWNgrknRo91sDGgdD3KjeRRPvWTtUdIpYScMC0mHYrCnSy+GAeo=
-X-Received: from edbet9.prod.google.com ([2002:a05:6402:3789:b0:5f7:ebf1:2da])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:2749:b0:5f8:30c2:8652 with SMTP id 4fb4d7f45d1cf-5f830c28831mr78672a12.7.1745832975374;
- Mon, 28 Apr 2025 02:36:15 -0700 (PDT)
-Date: Mon, 28 Apr 2025 09:36:12 +0000
-In-Reply-To: <CACQBu=VkFT5yDuDz098L+S+tGvtGHMvm4FaZ6p3sr9VCp88jww@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745833108; x=1746437908;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iMTnP6AIsjjPpmrQ+G1mFdxyIFOKyDG0YgiEfdQ8gfI=;
+        b=Gwgbhh3poQledgHc2ZgLR+mTpp4ZXhlz5qETa6+FNVvTJBuUg9sBgv7rxDTuPWbIJt
+         cUofzhRvo0w5C8eSAyXtjdiEsIVKFBa9Rca6CHsuCMXkJWvsjHoq8wJnZxOSreRAPfyD
+         0Gq9nJ2NNytysSsFNmCWNlB1FWlslvoaGriqsx+/Ram1yU8wrVHZ7l7JcYP6KzmWk8zb
+         Lh9RbKiOthnB73x8LWp+09t/UWCmmqLxVJzHwtaSwVkiYudQkL1dA0Ub/eS78JqXLDvP
+         lF/mRiUM9/r1G1YcjbK87RTJ5mm2sFoGpiSKtshWIU00KAMYxXg7jxP6Wwj1dLa6jXxJ
+         tUHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVafrKqZQxFB6mcQKbkML+pqG1Fw7EwBxHOywPNU/1HS7OdAaMsmjbAepddgzKPmGLEK2XRaB0zdgGljp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNmJP5rvafSmnHAovRzvttO/r4PuDBFk/peJx5vIIxaBbFRbWc
+	WA9c0EfH9h4LWgkHS/jFM6WJhFsO4hq9dJCESASOIWjbEejZWEG7OIf0BtEARBFJUGcxUwp+JzU
+	w3spzb42GD0hEo6GjDOod/2/MNCtB8C3XShVbc0/GGC3/H5x1yxTtgd4=
+X-Google-Smtp-Source: AGHT+IHo5S0y/4Gw8E/UVyBmpcTYAQMN+ue1sq5sfpoafxKP9FdmUl50C1Ato7sVRi0TAzi1wWePzYbTqkmH+r5xWqv5r2vhuLP2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250423134344.3888205-2-bqe@google.com> <20250423134344.3888205-6-bqe@google.com>
- <aAkbw0jEp_IGzvgB@yury> <CACQBu=XaOohewMnLj9PvgR5rYBxzYSXf2OAjCzUY=GFTJ9L=+Q@mail.gmail.com>
- <680a6b54.d40a0220.27afd9.5e84@mx.google.com> <680abbce.050a0220.144721.78ac@mx.google.com>
- <CACQBu=VEATxHmFvt0TKbb+Hx5jeEGO8SL733=0m8LNnX6S+ZKw@mail.gmail.com>
- <aAuR_0om4FI5Pb_F@Mac.home> <CACQBu=VkFT5yDuDz098L+S+tGvtGHMvm4FaZ6p3sr9VCp88jww@mail.gmail.com>
-Message-ID: <aA9MDH8RjOH9hQ2E@google.com>
-Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
-From: Alice Ryhl <aliceryhl@google.com>
-To: Burak Emir <bqe@google.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rong Xu <xur@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:340e:b0:85e:2e8b:602 with SMTP id
+ ca18e2360f4ac-86467a4dfa5mr711592639f.2.1745833108651; Mon, 28 Apr 2025
+ 02:38:28 -0700 (PDT)
+Date: Mon, 28 Apr 2025 02:38:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680f4c94.050a0220.2b69d1.035b.GAE@google.com>
+Subject: [syzbot] [io-uring] KMSAN: uninit-value in putname
+From: syzbot <syzbot+9b12063ba8beec94f5b8@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, brauner@kernel.org, 
+	io-uring@vger.kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 25, 2025 at 06:17:59PM +0200, Burak Emir wrote:
-> On Fri, Apr 25, 2025 at 3:45=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com>=
- wrote:
-> >
-> > On Fri, Apr 25, 2025 at 02:20:13PM +0200, Burak Emir wrote:
-> > > On Fri, Apr 25, 2025 at 12:31=E2=80=AFAM Boqun Feng <boqun.feng@gmail=
-.com> wrote:
-> > > >
-> > > > On Thu, Apr 24, 2025 at 09:48:17AM -0700, Boqun Feng wrote:
-> > > > > On Thu, Apr 24, 2025 at 06:45:33PM +0200, Burak Emir wrote:
-> > > > > > On Wed, Apr 23, 2025 at 6:56=E2=80=AFPM Yury Norov <yury.norov@=
-gmail.com> wrote:
-> > > > > > > So? Can you show your numbers?
-> > > > > >
-> > > > > > For now, I only have numbers that may not be very interesting:
-> > > > > >
-> > > > > > - for find_next_bit,  find_next_zero_bit and find_next_zero_bit=
- (sparse):
-> > > > > >   22 ns/iteration in C, 32 ns/iteration in Rust.
-> > > > > >
-> > > > > > - for sparse find_next_bit (sparse):
-> > > > > >   60 ns/iteration in C, 70 ns/iteration in Rust.
-> > > > > >
-> > > > > > This is a VM running nested in a VM. More importantly: the C he=
-lper
-> > > > > > method is not inlined.
-> > > > > > So we are likely measuring the overhead (plus the extra bounds =
-checking).
->=20
-> Alice and I discussed that it may be better to do away with the extra
-> bounds check.
-> Micro benchmark, for the upcoming v8 that has the bounds check removed
-> (and the test changed to >=3D, as requested):
->=20
-> [] Start testing find_bit() with random-filled bitmap
-> [] find_next_bit:                 3598165 ns, 164282 iterations
-> [] find_next_zero_bit:            3626186 ns, 163399 iterations
-> [] Start testing find_bit() with sparse bitmap
-> [] find_next_bit:                   40865 ns,    656 iterations
-> [] find_next_zero_bit:            7100039 ns, 327025 iterations
-> [] find_bit_benchmark_rust_module: Start testing find_bit() Rust with
-> random-filled bitmap
-> [] find_bit_benchmark_rust_module: next_bit:
-> 4572086 ns, 164112 iterations
-> [] find_bit_benchmark_rust_module: next_zero_bit:
-> 4582930 ns, 163569 iterations
-> [] find_bit_benchmark_rust_module: Start testing find_bit() Rust with
-> sparse bitmap
-> [] find_bit_benchmark_rust_module: next_bit:
-> 42622 ns,    655 iterations
-> [] find_bit_benchmark_rust_module: next_zero_bit:
-> 8835122 ns, 327026 iterations
+Hello,
 
-By the way, if you add assert_eq!(bitmap.len(), BITMAP_LEN) before the
-loop you may get the bounds checks optimized out.
+syzbot found the following issue on:
 
-Alice
+HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f77fac580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fca45111586bf9a6
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b12063ba8beec94f5b8
+compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e23fd3b01d5c/disk-a33b5a08.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d39e4ee184b3/vmlinux-a33b5a08.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d4117549249f/bzImage-a33b5a08.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9b12063ba8beec94f5b8@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in putname+0x8f/0x1d0 fs/namei.c:285
+ putname+0x8f/0x1d0 fs/namei.c:285
+ io_statx_cleanup+0x57/0x80 io_uring/statx.c:70
+ io_clean_op+0x154/0x690 io_uring/io_uring.c:411
+ io_free_batch_list io_uring/io_uring.c:1424 [inline]
+ __io_submit_flush_completions+0x1b00/0x1cd0 io_uring/io_uring.c:1465
+ io_submit_flush_completions io_uring/io_uring.h:165 [inline]
+ io_fallback_req_func+0x28e/0x4e0 io_uring/io_uring.c:260
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xc1d/0x1e80 kernel/workqueue.c:3319
+ worker_thread+0xea3/0x1500 kernel/workqueue.c:3400
+ kthread+0x6ce/0xf10 kernel/kthread.c:464
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4167 [inline]
+ slab_alloc_node mm/slub.c:4210 [inline]
+ kmem_cache_alloc_noprof+0x926/0xe20 mm/slub.c:4217
+ getname_flags+0x102/0xa20 fs/namei.c:146
+ getname_uflags+0x3a/0x50 fs/namei.c:222
+ io_statx_prep+0x26f/0x430 io_uring/statx.c:39
+ io_init_req io_uring/io_uring.c:2140 [inline]
+ io_submit_sqe io_uring/io_uring.c:2187 [inline]
+ io_submit_sqes+0x10c1/0x2f50 io_uring/io_uring.c:2342
+ __do_sys_io_uring_enter io_uring/io_uring.c:3402 [inline]
+ __se_sys_io_uring_enter+0x410/0x4db0 io_uring/io_uring.c:3336
+ __x64_sys_io_uring_enter+0x11f/0x1a0 io_uring/io_uring.c:3336
+ x64_sys_call+0x2dbb/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:427
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 0 UID: 0 PID: 10442 Comm: kworker/0:3 Tainted: G        W           6.15.0-rc3-syzkaller-00008-ga33b5a08cbbd #0 PREEMPT(undef) 
+Tainted: [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: events io_fallback_req_func
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
