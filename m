@@ -1,153 +1,111 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE401C5D63;
-	Mon, 28 Apr 2025 11:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB00EEC8;
+	Mon, 28 Apr 2025 11:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745839104; cv=none; b=Sswp0e7DpfOt9loJo3nmObeLKCdywaUC+vlfK1Tre6rvhCsnXsJbydqMY+U7Gtbm+HvhIdOLQRcNu0HnFoq826e3YHValn3jvoKAifoWbdNlI6lSTUjg1K67FjbyoNpWndGUojobXy5wn/LliPqrM/oshRsQo2rOemnQZbfNW+8=
+	t=1745839230; cv=none; b=L6lny13/zBe0YrZbr18hFmubZQQhyJAGLHKeEN3b4O8NVay0X+IHxqGw+vdbrxwgqgHC7mKGAs91YGXZW0npJtEZKnC5vM0r2iXipYHptbE2FFPPfBEuOVg09bL4JzpUQtKwIa/uYR9TU7XRyJVkQ1QEmoVBeJY8fyLBP40+SWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745839104; c=relaxed/simple;
-	bh=kE2q6PyfwIz3u3D35Rq0H6ItVVBQ6cZNkCx74Y+T4JA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IRAuOaMAhOgKqegWcHmgcZS7Mt1GLU+KqwUhgLOgUAq7AT1ZW77Wr7dRNOjkdf2hEaRJxeilK7PHf4Jlp1hZAvq/FfGMkWdgROqKXN8tuTQR9rmODN+0uRdlpiDL0qTb/rvx4vdURwQLW0ZygUdHRV1BsvyGDbOOKssXoao87Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FwGeB5/s; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745839230; c=relaxed/simple;
+	bh=lrGpwyIeyfi1QIbcIJ/Tj+3KQ+8NpzxTnUlKvV/xJi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWVCyBnitFzoqE4IdTXMC4sJm9wPTnk1IQJSY6V+/mqY1e3docSKKRxlcqUcvPyzQwYAnWE5stPdRTP34U7AMtVP1lefoCOtWeHgR1Oy/HP1erZ5nFL/jEcGOQadRJ8+tG0DwQQqLPxuyPSLf4yKoraponCf/BL9RwV/SaCdtOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=pDiCebDu; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwGeB5/s"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39efc1365e4so2188942f8f.1;
-        Mon, 28 Apr 2025 04:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745839101; x=1746443901; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sLSrnCvsqMd1UKvovx8WYXrY84ebPf2yd+dETS/dXM0=;
-        b=FwGeB5/sbcV+PtGETeJNVHOEs5z9TRQ4pSZtRg0HuSF7c+MpuywEI5NEs0cTjOuMoU
-         RNAAObnpFjUF+aG9KPhkXnqznG8TsL5+yJH0+MJb8nIeksDWe6JzB2ow5Dxcog9SvlkR
-         m5kDQSbX8dg1JoUL2JroiSIL3fKcYuQzDOTacXSv2BALrmib5m+fkQJsDD3AHYW5/J+z
-         nWm1kJK3jnuSyNSJidLDWX82oJxbH15brD/jgW101ocCZi4EePe9oq0tcVgkm6lKb22a
-         H7gj/eENFZUZBRfrXOoBKVcaTj1zit+YNoNxDWAmiVUsEZAwlSVus9/3kUF/viMHb1vP
-         jseQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745839101; x=1746443901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sLSrnCvsqMd1UKvovx8WYXrY84ebPf2yd+dETS/dXM0=;
-        b=VAtEwJMIOhtTAebRp2KqrHivi13KEPNqHAk4YtZyry0OYY9X+EdFmn04fGMowZGExy
-         k5AT7uKA78zzZUQKsmuWpEPT831kEGNp6afTAILEGNFstjxPr7FEi3q+q5n9e4Y7gBeE
-         WqTyCPBn7cGt6o6JS+2v85D1iqD6zSsFX9mUct0PXT/tJOX5CQc+g1vMiVj7td3roIAJ
-         jVNe+0Lo8sXht8cr0On/r7AJB4d7DjaLOW4K57otRCOzkx1AWlHwZxIdJwf2fQOyskFt
-         l24s+B3PE5NCFEsIiHDGOeuyeWVZ7hzhUloZlJNTPVE9M66kFrFHsxJYmX2j1FKmtWCl
-         9vdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUz6s43QLXWwQNtiaCBMudrn+lwMwJxiuj5hcAgYgAaQpdcLXnY9xd4hmpbK/bQmD5T779B4EfTOtBJUlo=@vger.kernel.org, AJvYcCVW0HN9ojq0JLdONGHMqRwpNyKWgfH3Mii31kilj/0siPKPGOIxYIwKU5zYQKfGYZYa2V+FNQuSXVbsx6EI9P8oYpY=@vger.kernel.org, AJvYcCWUM96PnsaReyn9A9REoBnIRlji3k5uvOEnVM+x/aW8WAxC/n4pR5LMlWKofE/oAUUgy3I/P5eduIxvRTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOf/s3VYS7SaiC34E9IcQTGMzUqR8ouDjeaf8vtGcG0rydpvHH
-	hzmvrxKvNmXygTvyBlkL4ScN9HiD9csMXxc8KxApzdQL6MW5q9yEsy9vGP98/CeGPkh9aKbVLGa
-	jRu0frnZQN7+4eBE8DcYrlg2jGXQ=
-X-Gm-Gg: ASbGnctW7IK668Y0oAnKUrGDXDvnTCnKaXBI/ENZpXolZ70PG8rSlPgShN0hxpAq8s1
-	nIAYE6pYpiqk2mLQ2IiTCuEmJ5ZGrhHgXElOMCy5brktFhXPGbPPq0P5APeoJj2OopYUzymtOvu
-	SKxsvrLRulOcZN0AV/7cPEYio=
-X-Google-Smtp-Source: AGHT+IHwF8neALcoTE/zLWU7CtLZPLtAC+f74+P4wnzqn5Yd2P+kde0y1wbgPUVpUUwdOFkNou8edbnrm28KiZwWAPA=
-X-Received: by 2002:a05:6000:420b:b0:3a0:8819:3b69 with SMTP id
- ffacd0b85a97d-3a088193c8bmr452320f8f.21.1745839100653; Mon, 28 Apr 2025
- 04:18:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="pDiCebDu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=sh9fvtw3x+0OKhV0VoEJRrPasUJuLRYfxSzZzi6/cg8=; b=pDiCebDuIci7Mk4OEF0McCApuQ
+	FmKEjP5+MQvESpcUKisrKxMFEveGBInusJogYaKdCXiCiCus5aTr62ELhPOBxB7A3iFx5nMfbyjca
+	aF25QoTTyLb5uCnm1z1rKjXRPOHO/LOaH3RkzXLw5MzluhGQ5C317ZIWnpcMZbDwFBaLNOl+CApuM
+	ShLctgazkaiCjWI+bd7hFG0SDzWMbvvrIOP1RldsVCKLBQgfrUC1Wm5ctw9Uq5/eLt5g4Y4LUhCEB
+	1i7Oos4x9bzJD2VjBFQecqi8SPcsWEoqG6K7xT7u2XK1YRHdwwkWJpk+2UxDz6m/gGE45O73p8Ror
+	eTWhswvQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u9MWg-001aq7-24;
+	Mon, 28 Apr 2025 19:19:55 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 28 Apr 2025 19:19:54 +0800
+Date: Mon, 28 Apr 2025 19:19:54 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: David Howells <dhowells@redhat.com>
+Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, linux-afs@lists.infradead.org,
+	linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] crypto/krb5: Fix change to use SG miter to use
+ offset
+Message-ID: <aA9kWu9eViN17ZBs@gondor.apana.org.au>
+References: <3824017.1745835726@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250428095940.GE3371@pendragon.ideasonboard.com>
-In-Reply-To: <20250428095940.GE3371@pendragon.ideasonboard.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 28 Apr 2025 12:17:54 +0100
-X-Gm-Features: ATxdqUF7svHFGSaMoIsqW18j8sdGEYekSPY9dFmbjkkk5rXbhdt8zL2z0qp7a8Q
-Message-ID: <CA+V-a8taFdmCgiUAwmDG93OA+P9UH-FEw3PeMFW4sLQ2KPnEPQ@mail.gmail.com>
-Subject: Re: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3824017.1745835726@warthog.procyon.org.uk>
 
-Hi Laurent,
+On Mon, Apr 28, 2025 at 11:22:06AM +0100, David Howells wrote:
+> [Note: Nothing in linus/master uses the krb5lib, though the bug is there,
+>  but it is used by AF_RXRPC's RxGK implementation in net-next, so can it go
+>  through the net-next tree rather than directly to Linus or through
+>  crypto?]
 
-Thank you for the review.
+Sure I'm happy for this to go through net-next.
 
-On Mon, Apr 28, 2025 at 10:59=E2=80=AFAM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Mon, Apr 28, 2025 at 10:52:08AM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Simplify the `rzg2l_fifo_empty()` helper by removing the redundant
-> > comparison in the return path. Now the function explicitly returns `tru=
-e`
-> > if the FIFO write and read pointers match, and `false` otherwise, impro=
-ving
-> > readability without changing behavior.
-> >
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mountain/
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/d=
-rivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > index 067c6af14e95..97faefcd6019 100644
-> > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > @@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
-> >       if (amnfifopntr_w =3D=3D amnfifopntr_r_y)
-> >               return true;
-> >
-> > -     return amnfifopntr_w =3D=3D amnfifopntr_r_y;
-> > +     return false;
->
-> So the function always returned true. This seems to be a bug fix, please
-> add a Fixes: tag. The commit message should also make it clear that
-> you're fixing an issue, not just simplifying the code.
->
-No, the function returned true only if the pointers matched;
-otherwise, amnfifopntr_w =3D=3D amnfifopntr_r_y would return false. I was
-simply removing the repetitive pointer check and directly returning
-false at the end of the function, as we can be certain at that point.
-Hence, I did not add a Fixes tag. Am I missing something?
+> The recent patch to make the rfc3961 simplified code use sg_miter rather
+> than manually walking the scatterlist to hash the contents of a buffer
+> described by that scatterlist failed to take the starting offset into
+> account.
+> 
+> This is indicated by the selftests reporting:
+> 
+>     krb5: Running aes128-cts-hmac-sha256-128 mic
+>     krb5: !!! TESTFAIL crypto/krb5/selftest.c:446
+>     krb5: MIC mismatch
+> 
+> Fix this by calling sg_miter_skip() before doing the loop to advance by the
+> offset.
+> 
+> This only affects packet signing modes and not full encryption in RxGK
+> because, for full encryption, the message digest is handled inside the
+> authenc and krb5enc drivers.
+> 
+> Fixes: da6f9bf40ac2 ("crypto: krb5 - Use SG miter instead of doing it by hand")
+> Reported-by: Marc Dionne <marc.dionne@auristor.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Herbert Xu <herbert@gondor.apana.org.au>
+> cc: "David S. Miller" <davem@davemloft.net>
+> cc: Chuck Lever <chuck.lever@oracle.com>
+> cc: Eric Dumazet <edumazet@google.com>
+> cc: Jakub Kicinski <kuba@kernel.org>
+> cc: Paolo Abeni <pabeni@redhat.com>
+> cc: Simon Horman <horms@kernel.org>
+> cc: linux-afs@lists.infradead.org
+> cc: linux-nfs@vger.kernel.org
+> cc: linux-crypto@vger.kernel.org
+> cc: netdev@vger.kernel.org
+> ---
+>  crypto/krb5/rfc3961_simplified.c |    1 +
+>  1 file changed, 1 insertion(+)
 
-> Personally I'd have written
->
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/dri=
-vers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> index 067c6af14e95..3d0810b3c35e 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> @@ -345,8 +345,6 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
->         amnfifopntr_w =3D amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
->         amnfifopntr_r_y =3D
->                 (amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
-> -       if (amnfifopntr_w =3D=3D amnfifopntr_r_y)
-> -               return true;
->
->         return amnfifopntr_w =3D=3D amnfifopntr_r_y;
->  }
->
-> but that's also a bit of a style preference.
->
-I wanted to keep this consistent with the rz3e_fifo_empty(). If you
-prefer the above I'll do that in v2.
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Cheers,
-Prabhakar
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
