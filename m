@@ -1,149 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EA716A94A;
-	Mon, 28 Apr 2025 13:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD97A16A94A;
+	Mon, 28 Apr 2025 13:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848249; cv=none; b=eg+W+MAvuz55iDSGKlHd8HZ+ThpROSosrRQWXipnsQWyqye9aMyPnvGQ6EXzxjuTm/Suf1wPQeQUi9hpIgyZvf5qC/hyscjFmGsoAVTpo0vplXk0cnVQHd+9hAhoM4uwrrINv+Cyu6ckSOHpeKrap7GEVhqpjqKqACUI8yy5aew=
+	t=1745848257; cv=none; b=NezUspOPPorFQL+0Ty2Ftj05U0YY4qcQTsjKKUVUSQtd/NXWrYB8LCZ0/fIxfAWMB+AoqBGWLspL/5XOwfDqdx8mQy0kAXf9YnCNXJNNd7R1G4X7ujjOCCUqZx+LuyBEH62lVOHhYEO6CdlBpO2bcpZ4J5Sh/SzvLuVAszhWlco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848249; c=relaxed/simple;
-	bh=/EUQY98NFzeIEIUFDQZR6dkrXp0+5Uo3ivzFJbutpQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p7G6ojXaBywmoebNP+WeimC83MiXtfiESTczHhBoKAmofeesmV3zW3STDeOBAdlTURoXmzPt+2C6V9spDy0KZSvGCOnho0FHCu2LU5Tde3ro8BoGfwtgep+SenfIaQTNJTVi1nMoqMCZ6sIu66YlpFClZHHXEd7A4iE1vXj8tio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WffDrwpx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745848257; c=relaxed/simple;
+	bh=lQq76dRmueLQGI7dx3SifO6L5gl6uzvl5yyQmxW/zBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dNS4lT/cu1BG5CwKawEU1PlzI42stysIRu2696F3/JjHNhsIuIkwV+23Tn+H49mtgW9XXS+Xg1GIRbpSV3Tb8DmRvzDD53XQZxzVmv8nvy6qBzftcDShIl0cQr2qmhpaX+x7Fr3dSgjgBteAYQb36Zlf7CIbkuYar8296pTDoq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1+gzWbU; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WffDrwpx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 468BBC4CEE4;
-	Mon, 28 Apr 2025 13:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745848249;
-	bh=/EUQY98NFzeIEIUFDQZR6dkrXp0+5Uo3ivzFJbutpQU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WffDrwpxJBR6sKe7djK8zG6L8beJGTvRL4uFGMOX1XekZO84Dxt9hvuAWYcgr9Itm
-	 A5dwuBOIIL8YW/4CjUCZQ27q8j4D2zB63rTtoQyu+JdnAedvhKC6Cuv8ecr9XCaaWy
-	 nV8z3N+ZYF307mIcNoSZ92Y9b9be9khlhIyELyRd6B9ncNmyt+e4XyfV9c6ezfeR1F
-	 kL9abguIPcPmGI7D0T46UDgLG5nHV2Amvx8icDl8J5iU+wPIe0DRzQo8idTR4EP5XH
-	 twJr30Hib0vtMvop1V/Umo8tsd/3FcKdtCslh7t52sk9x/LDRp6o/WT6H5YB5D0Vat
-	 FSxRc1nt83GFQ==
-Message-ID: <a7e82a84-2610-4132-90a8-42b371f57fb0@kernel.org>
-Date: Mon, 28 Apr 2025 08:50:46 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1+gzWbU"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223f4c06e9fso41104785ad.1;
+        Mon, 28 Apr 2025 06:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745848255; x=1746453055; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bIoP0X5XBEcUW4x0/+1BeR2G81ayGVIk254syErGqwc=;
+        b=Z1+gzWbUj3sUI6ph4ZAQcLSOZWeJ9HKzV3mSAT76w7WmgtkCWZHvO490gHnsgU1HT4
+         TdWDj4fPGm3sxB/C90LVu4LclqZXd1kjk+mmdni+hNVId2ipJf03u+FJvA9B1Elngz9f
+         XO9Kbu98oyt+JGuGTMdmGx8+c2GhZT27F7RYBPJLt/d6pWFh6WHgGfgRpjTDdKyLzArR
+         VpVLVwgzOme17tP07OrFeAuwU9/xAq37YfMacRiy6fTToCe7Gb4zkhxekLf/w9FhllBZ
+         P36WZv3tbE0h6DOwRwenUwJQH6ljTXqufoCzqoYvj7LpPD3I3Q9NWm0tmaeK67D82aVc
+         2YGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745848255; x=1746453055;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bIoP0X5XBEcUW4x0/+1BeR2G81ayGVIk254syErGqwc=;
+        b=hH2Dep5tQ6UkQdjnDKTWdiVtVmBcCXaxy7rNAm3YBtQsb23nvN3iQ3sioub3s7A7/x
+         DpGRKvKDJgMmfPlsRyoQQwlsoWzVeCbQx9XmzSiHsni4OaJRD+QTTthYnHMXKLiq305d
+         KqtgT7158hWvrvryJjqNkTkt6DyngHlacHzsW1qN2YAQi9/Fd+IpeDF7yA1BGD8J6pH0
+         T+gYinoIq7s5ATuPZC4lpZ4OJkpVKKTn/PzTCPTLqScpSjncs5ylgtqIhzYQWeJpD+5q
+         pgYx89cpJdphNH2mwHhy9R6pGWr3ZMaYs1DvB/I12gagGv4rJzsqdIiFI6y38YyipP6W
+         WEfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZETonnmr1vtNEmkPvCnav6zgi/+j3ou4px5qmM3DjZR8UL7zBFiTY7r1O8MO7SnA4EFmdl6gmMirlCOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6DpMUXYyAICDTV0ncfnQ/HIHzm4JjcuON4U2eJYPADsIp7Nk8
+	4JdZ8ywNcPF1HxN9XQrLyjvT1RqK2ABSHg7w7PzNhuRW0ZPOtBk3
+X-Gm-Gg: ASbGncu7UxJ8UnIhsxIn1a0z+65ilM6AyATKFEAMbpsZSaDbUojeeyo+d/mZhFxYiyG
+	oL8pZJ23XRqKeagJLboESIAF7zCkHv8+QBzC34170cFx5ldnvfCSMrctOaq1eb2r3thm2EzwbWP
+	a6t4SreYUeacXVFDuG6JuoY57uKRiAuafH89Y107cGDhMJkrx2ZLMAoABQg5XhXCJRZ72XoE48/
+	e3DrB1xX1bilBxchgDvPFR8vo0afCWPUXRMmNjz9fBSIf5aDgEGJa2IJZkpl0SQjLY66vSxu7wY
+	iARZLyf15VAk0ccQAbSPddR3ztZgjzjplRxpyWqgDV5NuYhuneI=
+X-Google-Smtp-Source: AGHT+IEzcxG2UpPCOfExYElxeiJDegKc/VlE1G0K7plE7/TAFQzwceEHQPlxKbBqZZx0PEoL8AY10Q==
+X-Received: by 2002:a17:902:ebd1:b0:224:3994:8a8c with SMTP id d9443c01a7336-22db47f40c9mr222140245ad.8.1745848254952;
+        Mon, 28 Apr 2025 06:50:54 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5100c13sm82623545ad.162.2025.04.28.06.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 06:50:54 -0700 (PDT)
+From: alexjlzheng@gmail.com
+X-Google-Original-From: alexjlzheng@tencent.com
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: [PATCH] fs: remove useless plus one in super_cache_scan()
+Date: Mon, 28 Apr 2025 21:50:50 +0800
+Message-ID: <20250428135050.267297-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-References: <20250425162949.2021325-1-superm1@kernel.org>
- <aAyWFI+o/kU9hDVs@duo.ucw.cz>
- <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
- <aA0o2SWGtd/iMYM2@duo.ucw.cz>
- <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
- <aA3KXNCKKH17mb+a@duo.ucw.cz>
- <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
- <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
- <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/28/2025 12:51 AM, Dmitry Torokhov wrote:
-> On Sun, Apr 27, 2025 at 10:30:24PM -0700, Dmitry Torokhov wrote:
->> Apologies for extended absence...
->>
->> On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
->>>
->>>
->>> On 4/27/25 01:10, Pavel Machek wrote:
->>>> Hi!
->>>>
->>>>>>>>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
->>>>>>>>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
->>>>>>>>> to lock the screen. Modern hardware [2] also sends this sequence of
->>>>>>>>> events for keys with a silkscreen for screen lock.
->>>>>>>>>
->>>>>>>>> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
->>>>>>>>> emitted by driver to META + L.
->>>>>>>>
->>>>>>>> Fix gnome and kde, do not break kernel...
->>>>>>>
->>>>>>> I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
->>>>>>>
->>>>>>> That's going to break modern hardware lockscreen keys.  They've all
->>>>>>> obviously moved to META+L because that's what hardware today uses.
->>
->> Vendors do all kind of weird things. They want to ship their
->> peripherals here and now and they do not care of shortcuts will change a
->> few years down the road.
->>
->> FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
->> do not emit any shortcurts. Anything that is "Woks with Chromebooks"
->> will use KEY_SCREENLOCK.
->>
->>
->>>>>>
->>>>>> Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
->>>>>> screen locking, no?
->>
->> KDE by default recognizes Meta+L combination (which used to be
->> Alt+Ctrl+L), Screensaver key, and allows users to define their custom
->> shortcuts.
->>
->> I also wonder how many other DEs beside Gnome do not recognize
->> KEY_SCREENLOCK.
-> 
-> So I poked around Gnome a bit. According to the gnome-settings-daemon
-> source code KEY_SCREENLOCK should be recognized. It is set up as
-> "screensaver-static" key which is hidden and shoudl not be changed by
-> user:
-> 
-> https://github.com/GNOME/gnome-settings-daemon/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in#L504
-> 
->      <key name="screensaver-static" type="as">
->        <default>['XF86ScreenSaver']</default>
->        <summary>Lock screen</summary>
->        <description>Static binding to lock the screen.</description>
->      </key>
-> 
-> 
-> 
->>
->>>>>
->>>>> This was actually the first path I looked down before I even started the
->>>>> kernel patch direction for this problem.
->>>>>
->>>>> GNOME doesn't support assigning more than one shortcut key for an action.
-> 
-> It sure does even if it is not shown in UI. Poke around with
-> dconf-editor and look in /org/gnome/settings-daemon/plugins/media-keys/
-> and you will see plenty of "*-static" keys with multiple
-> keycodes/shortcuts assigned.
-> 
-> "touchpad-toggle-static" - ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
-> "rotate-video-lock-static" - ['<Super>o', 'XF86RotationLockToggle']
-> 
-> and so on...
-> 
-> Maybe Gnome broke screen lock key in recent release?
-> 
-> Thanks.
-> 
+From: Jinliang Zheng <alexjlzheng@tencent.com>
 
-Thanks for your feedback and looking into what GNOME is doing.  It sure 
-/sounds/ like this should have worked with no kernel changes and GNOME 
-has a bug with the lock screen key.
+After commit 475d0db742e3 ("fs: Fix theoretical division by 0 in
+super_cache_scan()."), there's no need to plus one to prevent
+division by zero.
 
-I'll abandon the kernel series.
+Remove it to simplify the code.
+
+Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+---
+ fs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/super.c b/fs/super.c
+index 97a17f9d9023..6bbdb7e59a8d 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -201,7 +201,7 @@ static unsigned long super_cache_scan(struct shrinker *shrink,
+ 
+ 	inodes = list_lru_shrink_count(&sb->s_inode_lru, sc);
+ 	dentries = list_lru_shrink_count(&sb->s_dentry_lru, sc);
+-	total_objects = dentries + inodes + fs_objects + 1;
++	total_objects = dentries + inodes + fs_objects;
+ 	if (!total_objects)
+ 		total_objects = 1;
+ 
+-- 
+2.49.0
+
