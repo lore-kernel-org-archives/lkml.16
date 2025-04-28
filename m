@@ -1,124 +1,107 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAF81DED72
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246C24A00;
+	Mon, 28 Apr 2025 07:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745824994; cv=none; b=Pjgh9zU4M2ZJgJNulNa8Vb0dDjBG6X6umHxS0AVfYnt2pf4tub92NBAZC3uIaBGXnQOUV12S87lw/aXx1XtwYcJrIcMLqM+fLfRL9zUXc9pqqYjoaoIbPfzUouG5y/2J6qvprviO6i2CnLYJmpu4TN6yHDAxDUyQ8mDJLsZR99g=
+	t=1745825045; cv=none; b=a87br7M5dXxqtmyPo3XMiO+0FpaD6fdn9gCN+MD/0vUaFxhJjKBn3o3pmP1AS5s2mkVwJ9WFFpF7yCxXGeWFZiC29t0H1tfk5r8M5ITuIeg6P2FDPfn0XosUqaaItkjNMHPFCrgsC/NpPj+/CCwgX98Lr4RAokN1H6AyN/nRemI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745824994; c=relaxed/simple;
-	bh=y4TmJ25vii3OrXTwRyQdX/ywNKcOJxWOhKaA/i78N9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YPwJtVnY6YiAZ/1eAx4i9PXlKSeDdzOOPHX5nsNpapWAZ5Bp7WdX1W02EN/HjqGNSwzipMlg6u6wM+qpU+0MbCjl+2DbdhySNw48QW9S5qOyfYtgbzYrzyFd01k4yZC4JABuoQOu1A8AfvtQAZKvYOut7fuCFy+OmL/ZnSAhExA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZvIE2yC8; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745825045; c=relaxed/simple;
+	bh=TTX5/45iPOhYm2FPDqk1S3zuQrLTJXMpfmpEbPNn+XA=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date; b=AstE5neeHZPvGHiSOi2sdXbOngCrz2/g11NyEASgWQ46LgUaHZEkRCvO24djsJN5QdmDlpwJel2MSWoFOLlKfFsfZHtAYASxbUdpDlcfzsibEVVyLwI0AhK4PYZE/oWMiXtlMseCYZ9AfTsC/M4J2iCPT04u11DifRgodLqqzWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=GblMsCOI; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZvIE2yC8"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30db1bc464dso45925001fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745824990; x=1746429790; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9x67H52mTbsg04NVD/Q33hB/CMZ41whHB5oYC02pu1I=;
-        b=ZvIE2yC86sZbybwON/1EN0eXzh5dZJNP9NUOt3kI6h6+YeNe9lD/MQUq67vm8x7B9/
-         eUSK0cjfidJcUXriwtnqcy430NtoaSBmYFvkztxr8irCuzV3+JmsqNV/zIKVAx8U0dyD
-         1ALY7DkK9kfDaa7hH05p25uMfggcGscKtOJZEEdbCufS8rQRcbwlBzU3xABdftpyhBku
-         KBy2giByOfAC6AjlI8J493mG5NSQpUYv/RcHdRLY6uT1C3cGoqD+KtFgB6Re4x/TqYQi
-         Fb8ag7ybGT9NTRLp41dFgmxc3RsFA+jDF1zqYqDnkDei52c8R93KWVN7jGmWaEw53ZAA
-         SucQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745824990; x=1746429790;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9x67H52mTbsg04NVD/Q33hB/CMZ41whHB5oYC02pu1I=;
-        b=oom7S4/rqeXlPFTWu4x+N+eTlHYVjUvhWrURHohtRdN0oLfdP5TiKaOaM12idXf6oB
-         bs60Mk7zNZVf+0jKQWUgQ4OU8MAreIoEfAfkt08/0pN1IExYEV6rbzT5eNW2wSb9XUN2
-         V54VvzVwexXib1ldEKR4lYyW+/HIUzbJgvodOMOSZGWVx9vRwlYlzqNceESBaWJmK7l2
-         I0+qV9mwfjz2Ay58S4tH/8LNVKPIG7ggnCatB9/qJuEaLHAu54Hnm8BEiH8MXqbc8RvW
-         Ca3lpB1NPVKEfGdRR/OK3VPymeXcEut+/6JwKeRcw074BiKtJtNxAZI8BOQySQR4fSLD
-         mETQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMO+EpSA1xuVf1pmYWcJYn2Xu+IyZdEfc2JnpijwB7VWi/yEICSmkmVKIDp38Y/Ed4WpuoXAWSBM/Kix4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1gxMu+U3JSERKNnCG1+mLC98IOP7EZckLtcU8aIetHuaDVol1
-	QKuY4mrSSUHVWWTQdqcAzsObcH7T3/AfzD5XR0Sr/RyV6/+d/kSKCQYePhHGl+BMWxkVBqz0y18
-	AlxKCIkQQyBQcBdXlE9/c9rFJvyPCy/wh0+VZIw==
-X-Gm-Gg: ASbGnctuyTlEiIO6Osv02nwdHHuqMDOGH9DuYV1prwRF4BVUltH3wQfyZZp/G0B3Khm
-	//+mpxIEIBtPVa66UYtIMLyB8mIIHGV3Itw7gVF6gi9pyuReHTA8ZcPf0yc4qq/TUGnYSlmTEA6
-	oMDyrikGuFSaJ65GIckJftUoP4rovNdjxtBD5h73qotBAkTl+xpE6fYpA=
-X-Google-Smtp-Source: AGHT+IFsQTT0ZbvF2qsf5+nWdF2LXv1YLg7Wzp3Hnhz2hZmRgl3unVDnUWtxNWTIAipXDSD9b/QyDMAwPEPo1cUC+LY=
-X-Received: by 2002:a2e:be1e:0:b0:30d:626e:d031 with SMTP id
- 38308e7fff4ca-319086bae60mr41404681fa.33.1745824989984; Mon, 28 Apr 2025
- 00:23:09 -0700 (PDT)
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="GblMsCOI"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53S7MxwA61728456, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1745824979; bh=TTX5/45iPOhYm2FPDqk1S3zuQrLTJXMpfmpEbPNn+XA=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date;
+	b=GblMsCOI5wDUaaD9ZNjGcP3tmIjfyXhEvkaNK1PsSHUQBoesH/s6fv7tqmaAy/bmn
+	 9W1nJvYdCAjakXLr5emJvPClvdgoP7GJSuJpKOZ7TdsvTjFnexh2JJDxewU0pQ655+
+	 sIccn1w2ywFsT8LjVqOVVC03VIbWRohAARwF5tn34L0uLa01doaTSAAP8SckpV3m2W
+	 Trs0rry4cpZeARhqErSMKU+mSCbwKoSBHrOIUP8aydCXV0whXMZ07EykwXyW+Mbnq2
+	 smLfmN6RydAiiU9TCp3/kMeobhJYcm1vcRcvAmaxqaCWjxxV8gcx0B9klAXBhnkdHI
+	 48UF6rs5dRyKw==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53S7MxwA61728456
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 15:22:59 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 28 Apr 2025 15:22:58 +0800
+Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 28 Apr
+ 2025 15:22:57 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Mingcong Bai <jeffbai@aosc.io>, Ping-Ke Shih <pkshih@realtek.com>
+CC: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
+        <stable@vger.kernel.org>, Liangliang Zou <rawdiamondmc@outlook.com>,
+        "Larry
+ Finger" <Larry.Finger@lwfinger.net>,
+        "John W. Linville"
+	<linville@tuxdriver.com>,
+        "open list:REALTEK WIRELESS DRIVER (rtlwifi
+ family)" <linux-wireless@vger.kernel.org>,
+        open list
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH rtw-next v2] wifi: rtlwifi: disable ASPM for RTL8723BE with subsystem ID 11ad:1723
+In-Reply-To: <20250422061755.356535-1-jeffbai@aosc.io>
+References: <20250422061755.356535-1-jeffbai@aosc.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403161143.361461-1-marco.crivellari@suse.com>
- <20250403161143.361461-2-marco.crivellari@suse.com> <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
- <alpine.DEB.2.21.2504280224110.31828@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2504280224110.31828@angie.orcam.me.uk>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Mon, 28 Apr 2025 09:22:57 +0200
-X-Gm-Features: ATxdqUFSBq62_eANDu94efqw9HNqo6fYEiyzy9a3lY1upZoFgF-wlLqcETO9rhc
-Message-ID: <CAAofZF6U_PotxSiXEs+-T5C7E=xA5+7j4=rc-PS-njQMRoCo3g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] MIPS: Fix idle VS timer enqueue
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Huacai Chen <chenhuacai@kernel.org>, linux-mips@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Message-ID: <d12c14c2-c883-47af-a747-fe26594753c2@RTEXMBS04.realtek.com.tw>
+Date: Mon, 28 Apr 2025 15:22:57 +0800
+X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Hi everyone,
+Mingcong Bai <jeffbai@aosc.io> wrote:
 
-Sorry, I have tested the code only with both the patches applied
-(when I also ran the tests with qemu) and I didn't notice my mistake.
+> RTL8723BE found on some ASUSTek laptops, such as F441U and X555UQ with
+> subsystem ID 11ad:1723 are known to output large amounts of PCIe AER
+> errors during and after boot up, causing heavy lags and at times lock-ups:
+> 
+>   pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
+>   pcieport 0000:00:1c.5: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+>   pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
+>   pcieport 0000:00:1c.5:    [ 0] RxErr
+> 
+> Disable ASPM on this combo as a quirk.
+> 
+> This patch is a revision of a previous patch (linked below) which
+> attempted to disable ASPM for RTL8723BE on all Intel Skylake and Kaby Lake
+> PCIe bridges. I take a more conservative approach as all known reports
+> point to ASUSTek laptops of these two generations with this particular
+> wireless card.
+> 
+> Please note, however, before the rtl8723be finishes probing, the AER
+> errors remained. After the module finishes probing, all AER errors would
+> indeed be eliminated, along with heavy lags, poor network throughput,
+> and/or occasional lock-ups.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: a619d1abe20c ("rtlwifi: rtl8723be: Add new driver")
+> Reported-by: Liangliang Zou <rawdiamondmc@outlook.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218127
+> Link: https://lore.kernel.org/lkml/05390e0b-27fd-4190-971e-e70a498c8221@lwfinger.net/T/
+> Tested-by: Liangliang Zou <rawdiamondmc@outlook.com>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
 
-I will submit a new version with the correction and the changes
-suggested in the other patch, when we find the proper way to do it.
+1 patch(es) applied to rtw-next branch of rtw.git, thanks.
 
-Thank you.
+77a6407c6ab2 wifi: rtlwifi: disable ASPM for RTL8723BE with subsystem ID 11ad:1723
 
+---
+https://github.com/pkshih/rtw.git
 
-On Mon, Apr 28, 2025 at 3:32=E2=80=AFAM Maciej W. Rozycki <macro@orcam.me.u=
-k> wrote:
->
-> On Sun, 27 Apr 2025, Huacai Chen wrote:
->
-> > > +r4k_wait_exit:
-> > > +       .set    mips0
-> > > +       local_irq_disable
-> > >         jr      ra
-> > > -        nop
-> > > -       .set    pop
-> > > -       END(__r4k_wait)
-> > > +       END(r4k_wait)
-> > > +       .previous
-> > I'm very sorry for the late response, but I think ".previous" should
-> > be moved to the second patch.
->
->  Indeed; does it even assemble?  Correctness aside I'd rather it didn't
-> cause someone a problem with bisecting sometime.  NB I had no opportunity
-> either to look at this version earlier.
->
->   Maciej
-
-
-
---=20
-
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
-
-
-
-
-marco.crivellari@suse.com
