@@ -1,88 +1,114 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B156A13AC1;
-	Mon, 28 Apr 2025 21:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F0123C9
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745877035; cv=none; b=VHMEKUbGLu8VYe6gvvSQugko+kjbSMX8r2TXSoKXLehHTcRhkpMBA9vpjtNifrU4WN9yb0oalDto/xbwZ9Y3a39uhRzUbFchTE+Cg8hdkAJLbrGLLdF8ku9GHaaXGa61ORZFfxHmSSp5sz0eoi4WcJzfJVyZd/R5FZ6KxdF9zYo=
+	t=1745877287; cv=none; b=kxzr79LNJt1ujJytEza5AOT4ykXGtvAdZHuZktgBmZ9QINJhDuYbOyW059vQf/GWyLhi0uG9Sk/nf3gbqQUOF9ykYrcvjJYo0X2/UsGnOB88DYQQilfdqHoFfCQGTcaqKhFPaMXgTdIwRavOaIuQ9vHq0Chyta5beRfxWKymoFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745877035; c=relaxed/simple;
-	bh=xkgKJ+mM+v2G3RDM01Ni5V44BfStJdd9Ju2IygrNch8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=ZIa/HQBdG+D+zg/WzvjFEW/E/kKuxRXZbinzXsg6vl12IHWUBTRlZ1rzL42D0sk5106L1G7YIzV5iNejKs6lZxZsj6TYWqJSNP3DU8f918QE9+Jv7b3QeAzZEJL7l+WGU9LW68cltv4JD1Sf6az9TY10IIMuIKIcFaH9Z+p8W84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZmcZ80Q70z9tDb;
-	Mon, 28 Apr 2025 23:50:24 +0200 (CEST)
+	s=arc-20240116; t=1745877287; c=relaxed/simple;
+	bh=I0D+24NhqEjNNCwy2eb6utOoFDrJBSYh2LEtPIvzec0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUuE0sNWdv7XB52FKt9/2vV2HHEZbvtRrO7dTH60FLpyj6lDiAxvxo7wmwehJk6noeTsKafbOB42LTE3p8h8jQgMOiBRIHUYgrrxQodIjIhekiq6uJRh9CN1opNcqbhazs4vZ1fbGrKS5trAPEtBIS8w3fWQwQ2+lqJoq6dclQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=wPYaM4Mr; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="wPYaM4Mr"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c277331eso6027504b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745877283; x=1746482083; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7PrFUrYVebeKySS/v6ZqS0K5DEgZAx8oNo9TFzTB1i0=;
+        b=wPYaM4MrPBE5N4Oq1PtW+pcU3xuoJGiUUcUTQdc1/XtcS9Dr4ak2HVOWdmHE3gH640
+         FqdJyRdwC+GyXybjHUE7/wJQHfIu00MxoFSBP5zlfVGFJnVcf9B+uFmPND2nOtyDJOHF
+         OIeEDs82aCEOBhX92hV/RsmxvlODyHQHmcOdSmh1InF5J18l7lfI7oNf0cqN21ULbdHD
+         QzVoXdWpJ2ai5o8w4yRD2x7x445tEnHaC0dDl2Mlmi5JI3tOayUyI7RAwmbgHiXI7QfE
+         1P+swdi2pEwYQGEp4qHj20EsuW4cbsjVow8367OAWNNc3iFfW/xJqcW70c52JJ63b7Vp
+         BeLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745877283; x=1746482083;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7PrFUrYVebeKySS/v6ZqS0K5DEgZAx8oNo9TFzTB1i0=;
+        b=GEehHyS4GhPR8ll1FnXbWusM47kuTxH9i/Evn5VuRpeUH4nzGqa23bL8unHz/cbicF
+         slz5o+SxMl20toUAnSd+oTBWXcTWti3ZL9HwJtbffZ6DpyEUKsbQSDgA+BaOSV0qeBJf
+         W3wVZmAf4qj3FiAyK6In4b1nMofnHy90iLNGJOHgiTr/1nDzuuaErz/mg4KTXDgQWZWJ
+         eE0b7acZxQjt+KzDKOt4gvrccj7hi9W46ucyd9Gqj93YFvf60z2BYs67Bg0F3D8cy68T
+         DIly6lwewquqT3Yu0B+40HvzZxwXtioF++DGAVZUhBPWVPuMnGfdpfAMmg+aFtmlMOxz
+         Kxnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWy8fnz/WPIjeOoJh69aKPG+ctkCAWawYk/QHmgTxk3wayG6i0BxJdzB9cQDO0feFZQDEkC0EB/nuP6p/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzCV1RKbPQMqiHHAGTCoRvTbGKfQ7qJMsovFEKKABpjytrKG4H
+	m3QegySnYkpA9eDL03B2VY9QMQsTemeuIMP/l7Z7tA4KHVMB7HAVyBzrp68J0Fo=
+X-Gm-Gg: ASbGnctiQVn7cFBTY/1xN8MqPKKQIfpao9VbkRNOr4gHKxomBgvqb6y93ut9EUFxFnu
+	P5zDBndJrkTN46nYj12TtIqKdhULnySi0//YTDYl+McrKaZFD57K2BPUoqlKnO6p9UU1VByP5eA
+	Dcj/4U3ecc1uCAauc+V24qsDg6rWJPZ9qjmnbrdUTbI4HBmLJIyUNFZ4Np6h2qGQR2WEla5RQtM
+	m4yrxb+nWoQggDh7Cnda73Ef/OWZKZg0XbWuF+HFwAk4Lju9kNXFVi5IXOBttu2MuZfMkHo+7lY
+	tD9JDBxCBSyFeuUhRe0hhzyVjihsco44pMOS
+X-Google-Smtp-Source: AGHT+IGWT3F9rzHKTZtgpify0Emfhlu0qposGjyGuLHhHiqFNXMP110/wH5dDuLcBSTkm/pZT1KRBQ==
+X-Received: by 2002:a05:6a20:9f44:b0:1fe:61a4:7210 with SMTP id adf61e73a8af0-2094f0854e6mr1162679637.2.1745877283395;
+        Mon, 28 Apr 2025 14:54:43 -0700 (PDT)
+Received: from ghost ([2601:647:6700:64d0:5842:f05a:498b:82d0])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faded547sm7735083a12.69.2025.04.28.14.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 14:54:42 -0700 (PDT)
+Date: Mon, 28 Apr 2025 14:54:40 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH v6 0/4] entry: Move ret_from_fork() to C and inline
+ syscall_exit_to_user_mode()
+Message-ID: <aA_5IGGvXqB7v_EA@ghost>
+References: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
+ <87frj613kz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Apr 2025 23:50:19 +0200
-Message-Id: <D9ILR2IG980H.34N8WNWKWJJO3@buenzli.dev>
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Danilo Krummrich" <dakr@kernel.org>, "Rob Herring" <robh@kernel.org>
-Cc: "Dirk Behme" <dirk.behme@de.bosch.com>, "Dirk Behme"
- <dirk.behme@gmail.com>, "Saravana Kannan" <saravanak@google.com>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-4-remo@buenzli.dev> <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com> <aAyyR5LyhmGVNQpm@pollux>
- <0756503c-02e7-477a-9e89-e7d4881c8ce6@gmail.com> <aA4ht5sUic39mnHj@pollux>
- <ee888c8f-4802-48a1-bd08-b454b782fff4@de.bosch.com>
- <aA-oQAol8rAU7vzg@cassiopeiae> <20250428204840.GB1572343-robh@kernel.org>
- <aA_xUWQt6-UCdlGM@cassiopeiae>
-In-Reply-To: <aA_xUWQt6-UCdlGM@cassiopeiae>
-X-Rspamd-Queue-Id: 4ZmcZ80Q70z9tDb
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87frj613kz.ffs@tglx>
 
-On Mon Apr 28, 2025 at 11:21 PM CEST, Danilo Krummrich wrote:
-> On Mon, Apr 28, 2025 at 03:48:40PM -0500, Rob Herring wrote:
->>=20
->> One thing that's really hard to debug in C drivers is where an=20
->> error came from. You can for example turn on initcall_debug and see that=
-=20
->> a driver probe returned an error. It's virtually impossible to tell=20
->> where that originated from. The only way to tell is with prints. That is=
-=20
->> probably the root of why probe has so many error prints. I think we can=
-=20
->> do a lot better with rust given Result can hold more than just an int.=
-=20
->
-> This I fully agree with, not sure if the solution is to put more stuff in=
-to the
-> Result type though. However, there are things like #[track_caller] (also
-> recently mentioned by Benno), which might be a good candidate for improvi=
-ng this
-> situation.
->
-> As mentioned, for now let's go with
->
-> 	pub fn required_by(self, dev: &Device) -> Result<T>
->
-> additional to required() for this purpose to get a proper dev_err() print=
-.
+On Fri, Mar 21, 2025 at 10:22:36PM +0100, Thomas Gleixner wrote:
+> On Thu, Mar 20 2025 at 10:29, Charlie Jenkins wrote:
+> > Similar to commit 221a164035fd ("entry: Move
+> > syscall_enter_from_user_mode() to header file"), move
+> > syscall_exit_to_user_mode() to the header file as well.
+> >
+> > Testing was done with the byte-unixbench [1] syscall benchmark (which
+> > calls getpid) and QEMU. On riscv I measured a 7.09246% improvement, on
+> > x86 a 2.98843% improvement, on loongarch a 6.07954% improvement, and on
+> > s390 a 11.1328% improvement.
+> >
+> > The Intel bot also reported "kernel test robot noticed a 1.9%
+> > improvement of stress-ng.seek.ops_per_sec" [2]
+> >
+> > Since this is on QEMU, I know these numbers are not perfect, but they
+> > show a trend of general improvement across all architectures that use
+> > the generic entry code.
+> 
+> This looks sane now. I've bookmarked it as post-merge window material.
 
-Could it make sense to _replace_ `required` with `required_by` ?
-Otherwise `required` sits a little awkwardly between `optional` and
-`required_by`. I can't think of a situation where `required` would be
-preferred.
+Has this been applied somewhere?
 
+- Charlie
+
+> 
+> Thanks,
+> 
+>         tglx
