@@ -1,125 +1,102 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4811B29115F
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA91429117C;
+	Mon, 28 Apr 2025 17:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861340; cv=none; b=XnddKAx8cOqdNkuC4lXmMap6QNvuh2Ti+QgY0bh3R0+7BA47hrjjxb+EiQKk9aemdffc7YLeOHpj33rwR5muNlIqQOqf6sGRXmpsDpiqTGLUOIcGt+Zn1tvBODLMKkjBH5xCpEzTeQOWpEXg+Jo+yK5Gm6o5G9AluoWVCpf/x1I=
+	t=1745861384; cv=none; b=oYlejJP7sslmm8lzzqU0zwkMQCf8o2dtz4eTrD+b1VBFHSkYx4UpOEj6DtjzKxXztMPA6PSeXFeiTiNb2ThNyebnvww3e6l1xI0GfPcPSSurQnZsD2hIv7RBsQ5z2EGcH4iVxUFeUBS445v3VYovdyNumrygezjTjYtpECx6GmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861340; c=relaxed/simple;
-	bh=hvj8x3HVmp9P+1p1D0eDo1pbK3RjBLaMP05027S3Y0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kt3hQcQ57pAdPi8fQVnWBVhLY/pjVw8ou5hNHIndXdbIs9RXAjXOHk9HEgWTm3XSim0TVLMwcVHEIaBanS52fn5/Z4varY8xMHPT28gR2+8YAf555e/EGSId2YP62pA5ot1XN4wq0/Iqx1mp/ilFMmyOvTzi7/mTxPnfKrKHQ4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S5JB1327; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745861384; c=relaxed/simple;
+	bh=8qv7BWmQGL+pulHOoiMvT3V6xcrG4raa9JqLOtiwmK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V6JsDbj177dp7jnUcJhZxNsfDXDHCIIOndyWnsdU5apNfEQNre8ge/Nc1Aeou3n+EwUuAXVUa9JJH29F2C5PN68Ww8P97YwKzzzHAqg3I1m6krG/5vQSIspHnb4Wzl/f1Vp89/7ozjV07+FA49cJHceBk+oMpI5TiItewjsHTuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NuREiuzu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S5JB1327"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240aad70f2so15705ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745861338; x=1746466138; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0r7+wCllJmaKxCe01hHV/d2aOrZfvhrAsuNMyHCgYc=;
-        b=S5JB1327JpJxaMmLXm5NYrTJfpPRRsFYe8t1MsMX+g9eo/hWOYhsJFIDjGpiGZJ+Tw
-         Z5dOGM/O/RADOG5X2JnhKBjkp0dsG9DGbAVqPHVHkFZhJKwtYegN9ReqK7kU9QZG75tu
-         83RGNj8AxSp5xemBFUBeylMeuO8FbMzw8SHAvfNleUz2CUA1uSXsco4Bzli/va3N77Rm
-         vCAxyo2xUHI2E9OwLe3x8Fd5KSIhnoqYslZAxFrLq1qFxEZ0sVXl2vZ5EQWdB2lrqMuf
-         dGTNrcUACF9khh3UA/XeSQrMsh5hPyPrlP/HUceBlX7dOJmj0WR06R5K/OpdcPmqx7KQ
-         uXng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745861338; x=1746466138;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0r7+wCllJmaKxCe01hHV/d2aOrZfvhrAsuNMyHCgYc=;
-        b=Yz/v6Ix3BoylX9MCRBe93Bah8InqZcShh77fnHXOxcAMd1JtAsTolcz2inGQA5FWz3
-         guUCZy7xOII/HqfyT1IdEEokTe1pEaUZiwv/+3xpIqJu2wn8ggkOcI5UAM7QYj/bM/24
-         ZhAqpMHAswbut16Jf/pSQyL/T2jE57/6yBsuvvLnjenPSz0rJVQjc1Y0onC7P4hlBYu6
-         5T4OZWV0kWU4OuZOl+ruuujuRRQSKmNkPxRuLtw6hO787XTx+p22vQkMMYqBXtd0s292
-         uKASjXQs/D26T4S79d0DscuQt0nLImd99WkXO2+LKpiyFmE+DYJCz0uE4wWq4IpqvGdl
-         0f3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWjHNuAdJQjQymKW08D0czYp8oid4rhYFwZ+t/uwIM3nuxd75k0Q/RYS/ocrl+lfJEKagXmdg/HOoKJXCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOTe7dCDQscf4e5dyaRT5LNFtp2lQyRb7u/Q6ESWq5FTLEGhIX
-	ob18PDeKe3Vkhzgex5DNMYC9wCUw1Adiy+/mNmKGLLoIJPKAhAgwcQqxFKnNlQ==
-X-Gm-Gg: ASbGncuAe6Ez/DLw08fCMzebTSM64BOp4xldw7VcaYevBhtN09c1zBDOIhS59ldnV8C
-	BXyYHUEKBErftv1bQnufNVaY63vjwm9eFLaDu1IYaZXScQxo35lGT/5JyfpvwN8xRNEEk/61RV3
-	iawN6IuWOKuN7Flui514zFvxqKdhrOqpWDEGJAQz3cbJx+on0RXYBHEaXXtE+KQQ5cON0wZ/BCX
-	jqoqDwgnbGgbogBntCFm9kiSwY3T9DSsA95UDBvRU2q66vj9a+WQ1RGHFs61mmA8iIcif1d8D+A
-	1Q0ZigWPKSQZ1H2in9uA5VAFW86kTOz2RFkkzhlS0IA7xsIWBWYphqbFJ6gI5cbhjznmgqLm
-X-Google-Smtp-Source: AGHT+IFvvbXqVLW7M7K4eTP2s1tq5nZj/xJsE94cw7osWMiH1XhKOhdmN98bqT0YcPcDS66bSCITtg==
-X-Received: by 2002:a17:902:ea01:b0:21f:2ded:bfa0 with SMTP id d9443c01a7336-22de586f035mr708455ad.25.1745861337961;
-        Mon, 28 Apr 2025 10:28:57 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef061bccsm9296497a91.18.2025.04.28.10.28.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:28:57 -0700 (PDT)
-Date: Mon, 28 Apr 2025 17:28:46 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Baolu Lu <baolu.lu@linux.intel.com>, jgg@nvidia.com,
-	kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 02/22] iommu: Pass in a driver-level user data
- structure to viommu_alloc op
-Message-ID: <aA-6zlZNQ6NsrUqw@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <f985e2802a50b5867c9d4d3182ae7b4944a989c5.1745646960.git.nicolinc@nvidia.com>
- <e569c927-65ff-4c0f-8922-45e404fefc5e@linux.intel.com>
- <aA+4mRrGuUnpG/dB@Asurada-Nvidia>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NuREiuzu"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3AC13211AD0B;
+	Mon, 28 Apr 2025 10:29:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3AC13211AD0B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745861381;
+	bh=TMMfsNfjbT3iJYp6TbmXhQJp5PtfCMdChjjTOT1Ekfw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NuREiuzuc0gftRAfEIylmNVRYupxsInMl5g0xiVF5SE8+YeMsbtJnD/U0y8U3Iqml
+	 tUg2Tl3wUYsppjUIY8waXsnoHQ1IcgIPY3DMTML/8IIUEP6WpsOl95IYSQvhJVIw+k
+	 Lv1WWrP+4rJ2YZBeTsCjzDwrXN7hdYsJd8bXE9qo=
+Message-ID: <0001941a-2946-44ab-87f5-78bee7619fe1@linux.microsoft.com>
+Date: Mon, 28 Apr 2025 10:29:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA+4mRrGuUnpG/dB@Asurada-Nvidia>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP ID confusion
+ in hv_snp_boot_ap()
+To: Wei Liu <wei.liu@kernel.org>, Michael Kelley <mhklinux@outlook.com>
+Cc: "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
+ "mikelley@microsoft.com" <mikelley@microsoft.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "tiala@microsoft.com" <tiala@microsoft.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
+ <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250424215746.467281-1-romank@linux.microsoft.com>
+ <SN6PR02MB4157E849025C4A6B64933150D4842@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <8a235e4f-f4ce-445e-9714-380573033455@linux.microsoft.com>
+ <SN6PR02MB41577E8A06C9F8BA66A8D68AD4842@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aA7QZPFS7WWOsahp@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aA7QZPFS7WWOsahp@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 10:19:21AM -0700, Nicolin Chen wrote:
-> On Sun, Apr 27, 2025 at 02:31:54PM +0800, Baolu Lu wrote:
-> > On 4/26/25 13:57, Nicolin Chen wrote:
-> > > The new type of vIOMMU for tegra241-cmdqv needs to pass in a driver-level
-> > > data structure from user space via iommufd, so add a user_data to the op.
-> > > 
-> > > Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
-> > > Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
-> > 
-> > It would be better to add some words explaining what kind of user data
-> > can be passed when allocating a vIOMMU object and the reason why this
-> > might be necessary.
-> > 
-> > Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+
+On 4/27/2025 5:48 PM, Wei Liu wrote:
+> On Fri, Apr 25, 2025 at 04:55:42PM +0000, Michael Kelley wrote:
+
+[...]
+
+>>>
+>>> I appreciate your help with the precision. I used loose language,
+>>> agreed, would like to fix that. The patch was applied though but not yet
+>>> sent to the Linus'es tree as I understand. I'd appreciate guidance on
+>>> the process! Should I send a v2 nevertheless and explain the situation
+>>> in the cover letter?
+>>>
+>>> IOW, how do I make this easier for the maintainer(s)?
+>>
+>> Wei Liu should give his preferences. But in the past, I think he has
+>> just replaced a patch that was updated. If that's the case, you can
+>> send a v2 without a lot of additional explanation.
+>>
 > 
-> Sure. Will do something like this:
+> Normally if you need to send a new version because the original
+> patch is buggy, you can just update your patch.
 > 
-> The new type of vIOMMU for tegra241-cmdqv allows user space VM to use one
-> of its virtual command queue HW resources exclusively. This requires user
-> space to mmap the corresponding MMIO page from kernel space for direct HW
-> control.
-> 
-> To forward the mmap info (vm_pgoff and size), iommufd should add a driver
-> specific data structure to the IOMMUFD_CMD_VIOMMU_ALLOC ioctl, for driver
-> to output the info (during the allocation) back to user space.
-> 
-> Similar to the existing ioctls and their IOMMU handlers, add a user_data
-> to viommu_alloc op to bridge between iommufd and drivers.
+> If only a commit message or comment needs to be updated, I will let the
+> submitter know either to send a new version or not. Sometimes I will
+> just make the changes myself to save the submitter some time.
 > 
 
-Ack, with this change (addressing Lu's nit).
+Very kind of you, thanks a lot for the explanation!
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Wei.
 
-> Thanks
-> Nicolin
+-- 
+Thank you,
+Roman
+
