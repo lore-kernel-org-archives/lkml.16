@@ -1,246 +1,139 @@
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA00225DB1A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5315626562B;
+	Mon, 28 Apr 2025 11:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841408; cv=none; b=Oc9LDZcBzyuqW2QsAIZ7KPxqQpfgMl83Kthvl+jGO9VvoW3KGQGvShmylk1RIRLH16DFAwMWUNPhER1i6ERBi6UjHN1oIWYiE93KX9MzfEdR1zbyx1I6AOl9O0SUoQ0VD2XN/GCOKkiTSaJanydMwLQXjFcGo6mRuUvYouvjd5c=
+	t=1745841468; cv=none; b=nglxKFKbZ7BPMP6QiD5VH1aLuG58Jn9pDjJv9fthiQ9OH4/bpVCaqiaW693/hD2ZQBSmtsDY2zQyBd7SZv1r9rs3kLJNuTHxge+58LUjNYvLCboas99QtlGzQfKfm/Hd57Vb5ryAFGSdwvR6E+r6uJldJL5XIMng1RKyoIBTBbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841408; c=relaxed/simple;
-	bh=wzm1eXQ1YFCUhGLq6tOsKVMzw5DGOSWMdTKgN5XiChM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YlJqzg5EaqByPQr8/7KpyI+lVIJczDGwy1E2IyHhI45BeRJetZOkhDDVNArkKfB1jxKlygTcUiglYjDpXiQYYLJlnKAiHbKwiBXpn5JXayAkzqoBSRU7jaitanLC6rzK5Diyhy2NHFkl6/z2Hi4ieGYPzzoOixrdk4GFOCTicGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:b9c4:1670:abc0:a1fc])
-	by albert.telenet-ops.be with cmsmtp
-	id ibwc2E0084Aed8c06bwcF2; Mon, 28 Apr 2025 13:56:38 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1u9N6B-00000000F7M-0bTd;
-	Mon, 28 Apr 2025 13:56:36 +0200
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1u9N5x-00000006xI6-3POW;
-	Mon, 28 Apr 2025 13:56:21 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] nvmem: Remove unused nvmem cell table support
-Date: Mon, 28 Apr 2025 13:56:15 +0200
-Message-ID: <edc7373f33955f6dc4c9e6268afcb1a40566b39b.1745840884.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1745841468; c=relaxed/simple;
+	bh=bnqDDSUw67uMCw0TA2I9vpvFQ2UMJGa2QZAL3Fzcc2I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=l3pzK2ylJfhKsDycc0Y5hZEp8qWGePFvZFVtY/FurCoIssycmiBW+cNeEvOdSiEm9sSa2fOTKJMTAtoDf8qeE7ATrOXOxAVyQCcXxKcn3WEmXqfv8s9cTsHeOaWAM4pLUP1PWnQAW50INOrWOvimvXrv+7QYUOmRvBQkjOHmJyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GsSkgh8c; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GsSkgh8c"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E878343A17;
+	Mon, 28 Apr 2025 11:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745841464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pxO9n7kzYqDZ1mf4RDLfXt3OXq/5RzLLZD0JQyoUnmY=;
+	b=GsSkgh8cnYJTYAhxBQdZxHrbqWBu0MsH/TQQbd5vnmyrhX4+88/0ISQ6/so4vpUKrtNtjb
+	JO7/KIC7U0dLLyP2GuUaSAkyKV4qQb6EygQawX4dXMEVODO8MXbbLRETOz4PiUAWpRT9RX
+	0BmWmpKeh0qhrQerkwwMfLWyl+SHmnh/DKy28texRppasJpGAXJSwLaTs20+4Xl2krU3+s
+	Iz/Vhx6UXeCBftyOnWaiZplMEqE/52AWpPKMkgdPWi07NetnEFx3J+DyquQa3lUqO7J5nF
+	MOFvR9wEpBas+TU3scI++liLbgQWRvlAFZtoDfPLhjha85wquQerfdmY5Ae47g==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Date: Mon, 28 Apr 2025 13:57:25 +0200
+Subject: [PATCH v7 07/11] gpio: regmap: Allow to provide init_valid_mask
+ callback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250428-mdb-max7360-support-v7-7-4e0608d0a7ff@bootlin.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+In-Reply-To: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745841456; l=2166;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=bnqDDSUw67uMCw0TA2I9vpvFQ2UMJGa2QZAL3Fzcc2I=;
+ b=p21Ze4aRI4dHtR3yvMdzCjF88ezG72v2iYQlyKIlMRVd+KUh9BgMM40A9PYgexmtayNWO+joU
+ SV3GUwCb1NIDBFgAl+KUGf/RoomfVCt3T0EyCDIP+SGONHG+jhZZDI3
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedthfegtedvvdehjeeiheehheeuteejleektdefheehgfefgeelhfetgedttdfhteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhko
+ heslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhm
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Board files are deprecated by DT, and the last user of
-nvmem_add_cell_table() was removed by commit 2af4fcc0d3574482 ("ARM:
-davinci: remove unused board support") in v6.3.  Hence remove all
-support for nvmem cell tables, and update the documentation.
+Allows to populate the gpio_regmap_config structure with
+init_valid_mask() callback to set on the final gpio_chip structure.
 
-Device drivers can still register a single cell using
-nvmem_add_one_cell() (which was not documented before).
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Michael Walle <mwalle@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- Documentation/driver-api/nvmem.rst | 14 ++----
- drivers/nvmem/core.c               | 68 ------------------------------
- include/linux/nvmem-provider.h     | 24 -----------
- 3 files changed, 4 insertions(+), 102 deletions(-)
+ drivers/gpio/gpio-regmap.c  | 1 +
+ include/linux/gpio/regmap.h | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/Documentation/driver-api/nvmem.rst b/Documentation/driver-api/nvmem.rst
-index 5d9500d21ecc4254..790e2dc652c00c3a 100644
---- a/Documentation/driver-api/nvmem.rst
-+++ b/Documentation/driver-api/nvmem.rst
-@@ -59,10 +59,10 @@ For example, a simple nvram case::
- 	devm_nvmem_register(&config);
-   }
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 9cbbbaf82609..3d6a37be6411 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -256,6 +256,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 	chip->names = config->names;
+ 	chip->label = config->label ?: dev_name(config->parent);
+ 	chip->can_sleep = regmap_might_sleep(config->regmap);
++	chip->init_valid_mask = config->init_valid_mask;
  
--Users of board files can define and register nvmem cells using the
--nvmem_cell_table struct::
-+Device drivers can define and register an nvmem cell using the nvmem_cell_info
-+struct::
+ 	chip->request = gpiochip_generic_request;
+ 	chip->free = gpiochip_generic_free;
+diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
+index 19b52ac03a5d..622a2939ebe0 100644
+--- a/include/linux/gpio/regmap.h
++++ b/include/linux/gpio/regmap.h
+@@ -6,6 +6,7 @@
+ struct device;
+ struct fwnode_handle;
+ struct gpio_regmap;
++struct gpio_chip;
+ struct irq_domain;
+ struct regmap;
  
--  static struct nvmem_cell_info foo_nvmem_cells[] = {
-+  static const struct nvmem_cell_info foo_nvmem_cell = {
- 	{
- 		.name		= "macaddr",
- 		.offset		= 0x7f00,
-@@ -70,13 +70,7 @@ nvmem_cell_table struct::
- 	}
-   };
+@@ -40,6 +41,8 @@ struct regmap;
+  * @drvdata:		(Optional) Pointer to driver specific data which is
+  *			not used by gpio-remap but is provided "as is" to the
+  *			driver callback(s).
++ * @init_valid_mask:	(Optional) Routine to initialize @valid_mask, to be used
++ *			if not all GPIOs are valid.
+  * @regmap_irq_chip:	(Optional) Pointer on an regmap_irq_chip structure. If
+  *			set, a regmap-irq device will be created and the IRQ
+  *			domain will be set accordingly.
+@@ -93,6 +96,10 @@ struct gpio_regmap_config {
+ 			      unsigned int offset, unsigned int *reg,
+ 			      unsigned int *mask);
  
--  static struct nvmem_cell_table foo_nvmem_cell_table = {
--	.nvmem_name		= "i2c-eeprom",
--	.cells			= foo_nvmem_cells,
--	.ncells			= ARRAY_SIZE(foo_nvmem_cells),
--  };
--
--  nvmem_add_cell_table(&foo_nvmem_cell_table);
-+  int nvmem_add_one_cell(nvmem, &foo_nvmem_cell);
- 
- Additionally it is possible to create nvmem cell lookup entries and register
- them with the nvmem framework from machine code as shown in the example below::
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index fff85bbf0ecd0f63..5070390c9f076a63 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -47,9 +47,6 @@ struct nvmem_cell {
- static DEFINE_MUTEX(nvmem_mutex);
- static DEFINE_IDA(nvmem_ida);
- 
--static DEFINE_MUTEX(nvmem_cell_mutex);
--static LIST_HEAD(nvmem_cell_tables);
--
- static DEFINE_MUTEX(nvmem_lookup_mutex);
- static LIST_HEAD(nvmem_lookup_list);
- 
-@@ -705,41 +702,6 @@ int nvmem_unregister_notifier(struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(nvmem_unregister_notifier);
- 
--static int nvmem_add_cells_from_table(struct nvmem_device *nvmem)
--{
--	const struct nvmem_cell_info *info;
--	struct nvmem_cell_table *table;
--	struct nvmem_cell_entry *cell;
--	int rval = 0, i;
--
--	mutex_lock(&nvmem_cell_mutex);
--	list_for_each_entry(table, &nvmem_cell_tables, node) {
--		if (strcmp(nvmem_dev_name(nvmem), table->nvmem_name) == 0) {
--			for (i = 0; i < table->ncells; i++) {
--				info = &table->cells[i];
--
--				cell = kzalloc(sizeof(*cell), GFP_KERNEL);
--				if (!cell) {
--					rval = -ENOMEM;
--					goto out;
--				}
--
--				rval = nvmem_cell_info_to_nvmem_cell_entry(nvmem, info, cell);
--				if (rval) {
--					kfree(cell);
--					goto out;
--				}
--
--				nvmem_cell_entry_add(cell);
--			}
--		}
--	}
--
--out:
--	mutex_unlock(&nvmem_cell_mutex);
--	return rval;
--}
--
- static struct nvmem_cell_entry *
- nvmem_find_cell_entry_by_name(struct nvmem_device *nvmem, const char *cell_id)
- {
-@@ -1024,10 +986,6 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 			goto err_remove_cells;
- 	}
- 
--	rval = nvmem_add_cells_from_table(nvmem);
--	if (rval)
--		goto err_remove_cells;
--
- 	if (config->add_legacy_fixed_of_cells) {
- 		rval = nvmem_add_cells_from_legacy_of(nvmem);
- 		if (rval)
-@@ -2127,32 +2085,6 @@ int nvmem_device_write(struct nvmem_device *nvmem,
- }
- EXPORT_SYMBOL_GPL(nvmem_device_write);
- 
--/**
-- * nvmem_add_cell_table() - register a table of cell info entries
-- *
-- * @table: table of cell info entries
-- */
--void nvmem_add_cell_table(struct nvmem_cell_table *table)
--{
--	mutex_lock(&nvmem_cell_mutex);
--	list_add_tail(&table->node, &nvmem_cell_tables);
--	mutex_unlock(&nvmem_cell_mutex);
--}
--EXPORT_SYMBOL_GPL(nvmem_add_cell_table);
--
--/**
-- * nvmem_del_cell_table() - remove a previously registered cell info table
-- *
-- * @table: table of cell info entries
-- */
--void nvmem_del_cell_table(struct nvmem_cell_table *table)
--{
--	mutex_lock(&nvmem_cell_mutex);
--	list_del(&table->node);
--	mutex_unlock(&nvmem_cell_mutex);
--}
--EXPORT_SYMBOL_GPL(nvmem_del_cell_table);
--
- /**
-  * nvmem_add_cell_lookups() - register a list of cell lookup entries
-  *
-diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
-index 515676ebe59875fa..615a560d9edb84d1 100644
---- a/include/linux/nvmem-provider.h
-+++ b/include/linux/nvmem-provider.h
-@@ -137,25 +137,6 @@ struct nvmem_config {
- 	struct device		*base_dev;
++	int (*init_valid_mask)(struct gpio_chip *gc,
++			       unsigned long *valid_mask,
++			       unsigned int ngpios);
++
+ 	void *drvdata;
  };
  
--/**
-- * struct nvmem_cell_table - NVMEM cell definitions for given provider
-- *
-- * @nvmem_name:		Provider name.
-- * @cells:		Array of cell definitions.
-- * @ncells:		Number of cell definitions in the array.
-- * @node:		List node.
-- *
-- * This structure together with related helper functions is provided for users
-- * that don't can't access the nvmem provided structure but wish to register
-- * cell definitions for it e.g. board files registering an EEPROM device.
-- */
--struct nvmem_cell_table {
--	const char		*nvmem_name;
--	const struct nvmem_cell_info	*cells;
--	size_t			ncells;
--	struct list_head	node;
--};
--
- /**
-  * struct nvmem_layout - NVMEM layout definitions
-  *
-@@ -190,9 +171,6 @@ void nvmem_unregister(struct nvmem_device *nvmem);
- struct nvmem_device *devm_nvmem_register(struct device *dev,
- 					 const struct nvmem_config *cfg);
- 
--void nvmem_add_cell_table(struct nvmem_cell_table *table);
--void nvmem_del_cell_table(struct nvmem_cell_table *table);
--
- int nvmem_add_one_cell(struct nvmem_device *nvmem,
- 		       const struct nvmem_cell_info *info);
- 
-@@ -223,8 +201,6 @@ devm_nvmem_register(struct device *dev, const struct nvmem_config *c)
- 	return nvmem_register(c);
- }
- 
--static inline void nvmem_add_cell_table(struct nvmem_cell_table *table) {}
--static inline void nvmem_del_cell_table(struct nvmem_cell_table *table) {}
- static inline int nvmem_add_one_cell(struct nvmem_device *nvmem,
- 				     const struct nvmem_cell_info *info)
- {
+
 -- 
-2.43.0
+2.39.5
 
