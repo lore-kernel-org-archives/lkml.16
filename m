@@ -1,66 +1,35 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8CC20D509
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FF11B3937;
+	Mon, 28 Apr 2025 20:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745871859; cv=none; b=j0hw7CRW2kOU25a8YyPB86zjTNdrCX5NPCK7EFOCa3kA6ZNKe8MEQ2mZJegGSthP2t5FiQTBU/rLhKCKAFgx9PQXBjf8NLH54Pl/IqUi+CN0a7vYNrR4IXiXQR5KIrstXsaaDThY444aiJnEXu2aMtlvfQwqIkleKw7Vw9Zu+Oc=
+	t=1745871882; cv=none; b=SEboNuGSeTcUJ+6oSymfy/a5mCz6IT7US8oxM5Wwm5OfcpBp4KsluL51Ve5NPwrzDjlJxu/ty2MkFQLF7W0SWeM/xrAx7mqGPTbGx/zbFqWgW4I19wbNZe+2kLPeQD81pu0UNll+TYlE3Me76FYgse7Oemfye2rIkrh+hIQK1AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745871859; c=relaxed/simple;
-	bh=0ZROZIYuD1zVkkOa3PNcABnV8cSDGoSdT6l8Emh427M=;
+	s=arc-20240116; t=1745871882; c=relaxed/simple;
+	bh=xptNENGGtclKBVRuB92L5LlI26MH8Q/AAe6oNcqgf3E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CAEnlCV4ZOD25MSNeKF+I2UclnBH3Dg47keUghg0spBe1iT4wZ3S89WqOb0cLkk6PF2npeLFIkgVOMwWhUKHfIZa/nsU1r0ZQjsTL2zh4d99DiHLVFd8Gvh6kBNS7yxR3YovsHGP2UoB0sLQmAqqTgypXtbEsSOg0q/QVU3MU5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bTB6lxM2; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:To:Cc; b=VsO+GHL/EHyUlEO3RK5yZ+n+y9GwFEk9c7uLDh1FuOs8Za9lzq5P3RXlI6LVAnxmyeKOqEgljfCugLwknxLcN+0HsZQXzKWwtyqadDlO1nTW3cpenww2/wMlKDFtUgIwnCTpha94XWx6F1K6XfNCeX19sm6vBpWSsOVGYeDABmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IveTORDH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bTB6lxM2"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3feaedb4085so3688349b6e.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745871857; x=1746476657; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eLGFE4jWdVqehv02FfXRMamFv946mVo/oPig2GMtSpQ=;
-        b=bTB6lxM2IAiqPw4WvBYbySq5aQ/xY8Tgsy7e8J4pGhrvVf2TCDLgv8ZyypGC7fO7uy
-         nFmrMTsXoQk1HbHc/8cvm6RgpZKhQ10MrqreM1EvtnaK5m/DlBAGU7LtVZ9g3uKKPxW/
-         MnHFMBHDuygzEUCxqB7dPBD1f/Ix+0sG5/MRGxXcILiwr+NkYm3i8E38cxOP5LfKYR7E
-         11Qbz6to+ntf73IBcEZt/2PNui1r0+3DkG5IR04KvW8DY1ZliHdDyiSMb7LYvUTAoH2a
-         VwOtBxQZjfCkJQiqdw8K8oVzdGmqPuiKftAg7vgiNYEivN3euW9/2iJTEO+hpndylD59
-         tZwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745871857; x=1746476657;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eLGFE4jWdVqehv02FfXRMamFv946mVo/oPig2GMtSpQ=;
-        b=nUWql0ATRgHKkuWdRY9FYKSCqJ7YgdhB89u8k2XYlF7kZ5vJFSuWKplRSImRPlMt0B
-         XqmaREPfHJpA8TQoUyi9GjhbaCD8HaSRmEk+GeoAgVL4jD08hGOHpHiTZVR0RbOkL4St
-         kSXfBUl+81A3mVJy7wcK3ztk/GGv9GDqhrxgW8av/rPNOz6qB/PrNtT/5zdnm39O9kut
-         5VmU3VDJ1cuQDeWi5lrMkhMgb7fbOQ1T/fD4/F9m2CpIjq/SZ9XxGJPSP+emZ8+HJUR2
-         r66CKru42Pw2C+7xEPqcIEB5dxoUyUsmEYgCMk4czkyWjHKgpcm5UztP2p5yBN4p5+/k
-         JVBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUReXL0XkJpk8DRvzfGM8QCbnjIbeKxN4Pxd+8DdBwGeEuRk2VnhHxoqybgGUiMgKi12qBBd8udNjH1Nuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmqQb9B0hqzsp3nIhzEYpt4LAuwsVHiLN8Wb0BJqARUlacoj9V
-	YjwwKpmrjGejwvfpyHbcYMd6n3wyytHEq0uIdgs9n4rhqQ80fcrVj0t8Bgw/XyU=
-X-Gm-Gg: ASbGncsbrmNywu0QaNg+h3lBGnwt+vfoPjg8nFkkbAyxf8140iI7NBoOTvLRFKq2fLq
-	7LCsbl/6eTDRDgEj/e233kNkOT94n/uXsNnB3zeQcDONBHfgqqNcp4imQ+z+bclCwvYsuxOOE9a
-	nsO7H5RpOfNFjtPc5MYInhhoUbukd96krKneV8SD/KcbYnukqQdVcWyALPT3bHMzi9fFkJbuaWu
-	ArKX61u6WrrvpbBIl7bch+kpTtNxlILAwQhpNhdC8UXK1f5bley9LWbIGWoOGSR/TONgAcyxqYR
-	o4wC7WmcovWFk/pnmNYkF9wNJfVa963GalTM6FBGsfZLxa8=
-X-Google-Smtp-Source: AGHT+IH8dlw0ehMbgO7QpiThtCrPLkett8/hqgxlIDqGeXzMuHImTBnndaA0YhdIbBTxOtiX9weCIw==
-X-Received: by 2002:a05:6808:22ac:b0:3fb:49cd:6bf5 with SMTP id 5614622812f47-402116118d5mr181018b6e.32.1745871856950;
-        Mon, 28 Apr 2025 13:24:16 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:cff6:9ed0:6e45:1ff9])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401ec970ec5sm2196187b6e.34.2025.04.28.13.24.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:24:16 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 28 Apr 2025 15:23:09 -0500
-Subject: [PATCH v4 7/7] iio: adc: at91-sama5d2: use
- IIO_DECLARE_BUFFER_WITH_TS
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IveTORDH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44BBC4CEEE;
+	Mon, 28 Apr 2025 20:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745871881;
+	bh=xptNENGGtclKBVRuB92L5LlI26MH8Q/AAe6oNcqgf3E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IveTORDHv/soZjIb7NsUu1IJ1AarcVDSPlFJnLlmJuXqL5NqCc5LlszMhktDslPsh
+	 32WtKYRGJO8b1KKQ7kKsXbGRl57GtdIzaem9FW7af3mpu0RlfpM+av1i5Bu+0zmF1r
+	 t/MZeTxOmcO2WeICpdjnVhlfxCnXPjtfsEoYj5EtXLmbLyqMsIYRDwnBjLud+M9GfL
+	 ChxjA4MRamcoi+PxoQikM6+WFlq1b9zXav3CVP17Vt32yWJ3xkXxu3QIE2Fl9XR7cT
+	 yEiQGzR41vmwX2c3VI9hPSOxHfVUnKFQHbFcE4SHPTgu/dH5sjHChPLhPm/Jvi2UZ3
+	 kAe6GIHjOOKcg==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Mon, 28 Apr 2025 13:24:38 -0700
+Subject: [PATCH RFC 1/2] nfs: free leftover lsegs before freeing a layout
+ in pnfs_put_layout_hdr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,78 +38,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-7-6f7f6126f1cb@baylibre.com>
-References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
-In-Reply-To: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Eugen Hristev <eugen.hristev@linaro.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
+Message-Id: <20250428-nfs-6-16-v1-1-2d45b80facef@kernel.org>
+References: <20250428-nfs-6-16-v1-0-2d45b80facef@kernel.org>
+In-Reply-To: <20250428-nfs-6-16-v1-0-2d45b80facef@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Omar Sandoval <osandov@osandov.com>, Chris Mason <clm@fb.com>, 
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1676; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=0ZROZIYuD1zVkkOa3PNcABnV8cSDGoSdT6l8Emh427M=;
- b=owGbwMvMwMV46IwC43/G/gOMp9WSGDL4H9/qOSxxJUC0We2S07QzezJ67119YrJbTCBQWHfa3
- IfLlnds6GQ0ZmFg5GKQFVNkeSNxc14SX/O1OTcyZsAMYmUCmcLAxSkAE1nZx8HQaj/NyyrO4M9V
- 286Ze+pFsrgZNzAE7LTuNWJ6If864qfJ1GWuMZfv5etfnO7+LHa/YPf0mp/1bKnWYSnie63ab2r
- 0xBkZWXdo5t3IqhA+uzThdzbzpxQPznV3+wJ+zHQRzp/qVf/qXOefRbnLtKzCTvyYlT6bx2G7ld
- vixFSLiz2dpro75BMesvzWquvbJ1nxeXli0kTNt+EMgTveSUnPkQoO0MiV5JI5m6e/4+OMlsDLp
- qa22oVqvRl8a0TrTJeJpfy1TZMOWlcpZnsot7lnhYS6QL5s0I2d3+Tca8qEZevC1nO4/D21WHVC
- aR2bhhHvi88S21yanvrbZayUYHweXnBlWt+GFWqm56QB
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1884; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=xptNENGGtclKBVRuB92L5LlI26MH8Q/AAe6oNcqgf3E=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoD+QII4ZFNWmKKwPdRPKRSZZXHX7yILZQOXAHB
+ tGVvTTBi/2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaA/kCAAKCRAADmhBGVaC
+ FfysEACjaNN2BHkxxsIgTT4ioaEHV5Vdcyldc8toITSF+zJVNGq54s/tgiZfBgMIKNRiUiCUxlp
+ P9IAdoG8UZ0hba7Y4sYoWVNF2zFfE3nIB1P9x234NCpZnx7OB0wtm79ONVp436q5/ZWON4p07J9
+ R2f3cy8a9I+g/FtElBWOstKld4uuR0te/L3HZQs7fsbNA3zI/q8kGKVFGfVXDHLYJMGdS7boJdo
+ atyd2nvsS3Wg35Dv9/MmtF28xFKLeIiywsey+HiosqO2bpSQLdcLIdg9p5Glysx1UdpkjyxFpFi
+ MRKgJ/BdaR2KXStPBW59T2TIXmWoK9Ccs7dxeiASxFCNDMY10/6tqUtlZuYeinUE9RvkdmDd6VT
+ aF5Il3aPyuqePs9hhJdhq6ADCsxZ9maczt/+muE6QVBWnWpN4Jkn7rTrCwTMkHw8m/FVI60Bou6
+ q8on2YReYiyV8u9rl0214ssSErL/s8Fylpw1PGd4s3b2RrpS3GD3GG5dAnhsrq0MxrM+S7SBkEP
+ XIBZVFm8AbbpypVuOW0Rq//bYTI0z7ohG6y4yokth7RNal+gzwk+BuU97FhkQUTrjFCepmf6c8b
+ 55ZPNDTa2UGpFbekx3gHPFeiI4igW1uc2xGtl6kVDu1qhj1ZWKu3Pk0U2y+I5UfExRH7skVc2hI
+ 5oFR6yYS3/B0pkg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Use IIO_DECLARE_BUFFER_WITH_TS() to declare the buffer that gets used
-with iio_push_to_buffers_with_ts(). This makes the code a bit easier to
-read and understand.
+Entries on the plh_return_segs list have already had their refcount go
+to zero, and are only hanging around so that a LAYOUTRETURN can be
+issued.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+If there are still leftover lsegs on the plh_return_segs list when the
+last pnfs_layout_hdr reference is put, then that means that the
+layoutreturn just before the final refcount_dec_and_lock() has failed,
+or that new lsegs have somehow raced onto plh_return_segs.
+
+In either case, nothing else will be aware of the entries on that list,
+since there are no more outstanding references. On the last
+pnfs_layout_put(), do a final call to pnfs_mark_layout_stateid_invalid()
+to shuffle any leftover segments to a tmp_list. Then free that list
+after dropping the i_lock.
+
+Reported-by: Omar Sandoval <osandov@osandov.com>
+Closes: https://lore.kernel.org/linux-nfs/Z_ArpQC_vREh_hEA@telecaster/
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-This is an alternative to [1].
+ fs/nfs/pnfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-[1]: https://lore.kernel.org/linux-iio/20250418-iio-prefer-aligned_s64-timestamp-v1-2-4c6080710516@baylibre.com/
----
- drivers/iio/adc/at91-sama5d2_adc.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index 414610afcb2c4128a63cf76767803c32cb01ac5e..4ebaeb41aa4568e2461506471af0540af9d1a041 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -586,15 +586,6 @@ struct at91_adc_temp {
- 	u16				saved_oversampling;
- };
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 5f582713bf05eb72eb34b2e2c06d1edcd3c258d3..0bcb5a4bd420c157069ee63457518b206223b7cb 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -307,6 +307,7 @@ pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo)
+ {
+ 	struct inode *inode;
+ 	unsigned long i_state;
++	LIST_HEAD(tmp_list);
  
--/*
-- * Buffer size requirements:
-- * No channels * bytes_per_channel(2) + timestamp bytes (8)
-- * Divided by 2 because we need half words.
-- * We assume 32 channels for now, has to be increased if needed.
-- * Nobody minds a buffer being too big.
-- */
--#define AT91_BUFFER_MAX_HWORDS ((32 * 2 + 8) / 2)
--
- struct at91_adc_state {
- 	void __iomem			*base;
- 	int				irq;
-@@ -616,8 +607,8 @@ struct at91_adc_state {
- 	struct at91_adc_temp		temp_st;
- 	struct iio_dev			*indio_dev;
- 	struct device			*dev;
--	/* Ensure naturally aligned timestamp */
--	u16				buffer[AT91_BUFFER_MAX_HWORDS] __aligned(8);
-+	/* We assume 32 channels for now, has to be increased if needed.*/
-+	IIO_DECLARE_BUFFER_WITH_TS(u16, buffer, 32);
- 	/*
- 	 * lock to prevent concurrent 'single conversion' requests through
- 	 * sysfs.
+ 	if (!lo)
+ 		return;
+@@ -316,9 +317,11 @@ pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo)
+ 	if (refcount_dec_and_lock(&lo->plh_refcount, &inode->i_lock)) {
+ 		if (!list_empty(&lo->plh_segs))
+ 			WARN_ONCE(1, "NFS: BUG unfreed layout segments.\n");
++		pnfs_mark_layout_stateid_invalid(lo, &tmp_list);
+ 		pnfs_detach_layout_hdr(lo);
+ 		i_state = inode->i_state;
+ 		spin_unlock(&inode->i_lock);
++		pnfs_free_lseg_list(&tmp_list);
+ 		pnfs_free_layout_hdr(lo);
+ 		/* Notify pnfs_destroy_layout_final() that we're done */
+ 		if (i_state & (I_FREEING | I_CLEAR))
 
 -- 
-2.43.0
+2.49.0
 
