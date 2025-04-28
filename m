@@ -1,107 +1,135 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C882A2AEED
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777EA26B962;
+	Mon, 28 Apr 2025 14:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745850541; cv=none; b=IoVBGZifchrdklzVs1do7sgNTOh0BBtP7OIyus6Be5gXHrYHWtNHaJg6pvZya5HbGK9DIgvjNOzFzImnc3Smc/951PTL7qOIwMmIkhyGBPQCNktbl8fs1STF/dF+Z4ZBrVIdK2IL+GG5jn9fh1QJNKKNjXS/7p2/gdcyOiR2bfY=
+	t=1745850560; cv=none; b=K9g79Fv0kcye7b2HmZsh5gE2eixUxtKCd5DZ+1a+66B33g3XCt76fv+ZoCL2P9a6BoaCxhViYtLUY8tayNTHi03ZJuKJQRNFLEKFqBgHQQyGZ5wKPs/KBxv11XmfcyevFCfN4jSeeSKS5CxDBb1ebLaFl6FspCizkDMtlKjwsV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745850541; c=relaxed/simple;
-	bh=PlvGxKBAguiMMvzKwXiOHRNITOLwL/WsS4Bi+NDt3Y4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fn94zOAg0/72XDdSRz3wJEj3a382iJ6gbQH2P6MYAfl4TpkS/JdHMXbq3tnU4A5UWzBjKVF8kLjlh+AtZ+f0mqlsRcVUvlKhJHJcsPZomB7rpGLbW5wzUXiow5EU6ArfkBD82tZOr7Nb24f0toZupBVVqMltkqkkXCUb6bQi0V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mztNw7Dh; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745850560; c=relaxed/simple;
+	bh=rJLdBVQbvCv+TluCWMpZ9vIsstIJLp+u2Vh5mAtrQnQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZiRyNJiId7z+sr3EIppydHh+GXgSfaMGIzZfycpYon07OeODiKudKtqgfUGz+TnCkbaRhNsZWjoE96oawbSigjD6gcw1JHFaqhpKQXM/RueS1nIdaVyPcb4t3wOvzEyl0j7zvSW/Qw029w+GiViRVSzaStBYOt7FICnO5Qp3mwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GuTa/GwU; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mztNw7Dh"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3085f5855c4so4399856a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745850539; x=1746455339; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=abibsDl5HoC6YQrSV90fu4wrxKEz17/z8+z0sJ02IW0=;
-        b=mztNw7DhHyy+gLCjtcB4c3phd7umAhW0xmF5/1tsJyF68AEKgFL1UQX4awe2RttAy2
-         8O9asqXcCY3rD08N6SB6aX2QIvcfHskYXzEoD1dO3tiMW+AMbab1sjwFOjcW6UKQDOqx
-         kqEtJoYNZlA6En0JEb79Xn+rMFPOh1SyLzGqfL8f18wlXyQXK0MEz67zcnEKcEITKjod
-         6MCuEDm66UafssSbfpjVe2ng8OzVFrQryeYzbbOdXqp2KDybzgJyr3iW/fQiGZDR2O/p
-         pP5GgxVV2KZ6Urt4/EZln+OfoSDu5pvCp1d5s72aJwqrx6OpymDPEzGMRG7U7C4E0vwc
-         u02Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745850539; x=1746455339;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=abibsDl5HoC6YQrSV90fu4wrxKEz17/z8+z0sJ02IW0=;
-        b=dIUu32eDw9wYxpthD2/yS+ok5gnvJcgnIS3m6dDGYQlHJ2aui9lAZyOkXD7vX/EGto
-         BPYF4PH+PP6KTXJZwGL84je9UiqY3FzCWpZVRukCcTIAQRHab/N28TltXSXRd0S7jdJj
-         4vUzjojMC1zHADnqPFKorIi7REspIPiJwSZL481IRNlFHnOmq4DCVI/fTBseN4zL+c2j
-         nAuMOAG3BQy18OBZM7UpBgPlhFvkWnITDEPV1x4JE6x1nE3fe4KCAOr81p/2HXjnCsPY
-         8Yxe9gnLN/ZHR2UZy98V4WhN4vPtcuUdNYxW0+kP4E1MWWeEBHIqCb6cWw6dMYPACVzG
-         fnjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlNGAPHWTfZChs5dTlQrmDiuYSrANYQUyED3JA4Xs33hZpAZZoUNW2iLa8dbYQHQ/r7Kwq4SSJ+Cw4y0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu1+AW70mLbuTTEFUDnJsnd15o1yvOQGqkzAu/0xXsq1Grei+B
-	i4aacZeM5AKJJVLyqV6pqoRAFcG+JDMxiAbz5QO+TKJbi+k+s947EoNr3vXlVv0pVKZHUWIL5Rd
-	PrA==
-X-Google-Smtp-Source: AGHT+IH2g5hOKU5+3T5piD6P0nZGBIX75kRIQmJW5OuqdbA1tGNsWEyhNp47vSCuY7DI26wirbZfbPwsCgg=
-X-Received: from pjbsb7.prod.google.com ([2002:a17:90b:50c7:b0:2ff:5344:b54])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:544e:b0:2ea:a9ac:eee1
- with SMTP id 98e67ed59e1d1-309f7ddca6fmr19617208a91.10.1745850539160; Mon, 28
- Apr 2025 07:28:59 -0700 (PDT)
-Date: Mon, 28 Apr 2025 07:28:57 -0700
-In-Reply-To: <aA71VD0NgLZMmNGi@intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GuTa/GwU"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SESiWF2797224
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 09:28:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745850524;
+	bh=RBnt6oCOdXftASOE020D1oKxhactwZNgt5XQP4zEG/g=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=GuTa/GwUemjpMPB21SqSYZEWi8J73Q9cSTDCHdOGiWTFgWJZx3Jmjo8ep6SYaL4mT
+	 Sem9HbvtdPMacM3XxfBBejYAxRVA4XBuZ5HlbmNuysJDAgvoSPgF85+JXJcbOJjq0U
+	 jpzx7fhACyOWooFH+E1/3X3luNknWIBdRuTJfFBA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SESivY077126
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 28 Apr 2025 09:28:44 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
+ Apr 2025 09:28:44 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 28 Apr 2025 09:28:44 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SESgc4076217;
+	Mon, 28 Apr 2025 09:28:43 -0500
+Date: Mon, 28 Apr 2025 19:58:42 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Andrew Lunn <andrew@lunn.ch>
+CC: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "Russell King
+ (Oracle)" <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Andy Whitcroft
+	<apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn
+	<lukas.bulwahn@gmail.com>,
+        Joe Perches <joe@perches.com>, Jonathan Corbet
+	<corbet@lwn.net>,
+        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Roger Quadros
+	<rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <8b166e41-8d21-4519-bd59-01b5ae877655@ti.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
+ <a53b5f22-d603-4b7d-9765-a1fc8571614d@lunn.ch>
+ <aAe2NFFrcXDice2Z@shell.armlinux.org.uk>
+ <fdc02e46e4906ba92b562f8d2516901adc85659b.camel@ew.tq-group.com>
+ <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250410072605.2358393-1-chao.gao@intel.com> <20250410072605.2358393-4-chao.gao@intel.com>
- <f53bea9b13bd8351dc9bba5e443d5e4f4934555d.camel@intel.com>
- <aAtG13wd35yMNahd@intel.com> <4a4b1f18d585c7799e5262453e4cfa2cf47c3175.camel@intel.com>
- <aAwdQ759Y6V7SGhv@google.com> <aA71VD0NgLZMmNGi@intel.com>
-Message-ID: <aA-QqaKo825uIuW7@google.com>
-Subject: Re: [PATCH v5 3/7] x86/fpu/xstate: Differentiate default features for
- host and guest FPUs
-From: Sean Christopherson <seanjc@google.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"ebiggers@google.com" <ebiggers@google.com>, Dave Hansen <dave.hansen@intel.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Stanislav Spassov <stanspas@amazon.de>, 
-	"levymitchell0@gmail.com" <levymitchell0@gmail.com>, 
-	"samuel.holland@sifive.com" <samuel.holland@sifive.com>, Xin3 Li <xin3.li@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Weijiang Yang <weijiang.yang@intel.com>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "john.allen@amd.com" <john.allen@amd.com>, 
-	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, Chang Seok Bae <chang.seok.bae@intel.com>, 
-	"vigbalas@amd.com" <vigbalas@amd.com>, "peterz@infradead.org" <peterz@infradead.org>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"bp@alien8.de" <bp@alien8.de>, 
-	"aruna.ramakrishna@oracle.com" <aruna.ramakrishna@oracle.com>, "x86@kernel.org" <x86@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Apr 28, 2025, Chao Gao wrote:
-> >I assume the kernel has bigger problems if CET_S is somehow tied to a
-> >userspace task.
+On Mon, Apr 28, 2025 at 04:08:10PM +0200, Andrew Lunn wrote:
+> > > However, with the yaml stuff, if that is basically becoming "DT
+> > > specification" then it needs to be clearly defined what each value
+> > > actually means for the system, and not this vague airy-fairy thing
+> > > we have now.
 > 
-> To be clear, CET_S here refers to the CET supervisor state, which includes SSP
-> pointers for privilege levels 0 through 2. The IA32_S_CET MSR is not part of
-> that state.
+>  
+> > I agree with Russell that it seems preferable to make it unambiguous whether
+> > delays are added on the MAC or PHY side, in particular for fine-tuning. If
+> > anything is left to the implementation, we should make the range of acceptable
+> > driver behavior very clear in the documentation.
 > 
-> >
-> >For KVM, it's just the one MSR, and KVM needs to support save/restore of that MSR
-> >no matter what, 
+> I think we should try the "Informative" route first, see what the DT
+> Maintainers think when we describe in detail how Linux interprets
+> these values.
+> 
+> I don't think a whole new set of properties will solve anything. I
+> would say the core of the problem is that there are multiple ways of
+> getting a working system, many of which don't fit the DT binding. But
+> DT developers don't care about that, they are just happy when it
+> works. Adding a different set of properties won't change that.
 
-Oh, it's not just one MSR.  I was indeed thinking this was just IA32_S_CET.  But
-lucky for me, the statement holds for SSP0-SS2.
+Isn't the ambiguity arising due to an incomplete description wherein we
+are not having an accurate description for the PCB Traces?
 
-> so supporting it via XSAVE would be more work, a bit sketchy, and
-> >create yet another way for userspace to do weird things when saving/restoring vCPU
-> >state.
-> 
-> Agreed. One more issue of including CET_S into KVM_GET/SET_XSAVE{2} is:
-> 
-> XSAVE UABI buffers adhere to the standard format defined by the SDM, which
-> never includes supervisor states. Attempting to incorporate supervisor states
-> into UABI buffers would lead to many issues, such as deviating from the
-> standard format and the need to define offsets for each supervisor state.
+A complete description might be something like:
+
+mac {
+	pcb-traces {
+		mac-to-phy-trace-delay = <X>; // Nanoseconds
+		phy-to-mac-trace-delay = <Y>; // Nanoseconds
+	};
+	phy-mode = "rgmii-*";
+	phy-handle = <&phy>;
+};
+
+In some designs, the "mac-to-phy-trace" and the "phy-to-mac-trace" are
+treated as a part of the MAC block for example. Depending on which block
+contains the trace, the delay is added accordingly.
+
+Regards,
+Siddharth.
