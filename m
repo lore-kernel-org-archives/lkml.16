@@ -1,191 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EEE1DE2D8;
-	Mon, 28 Apr 2025 12:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C367E268FFF;
+	Mon, 28 Apr 2025 12:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843844; cv=none; b=bwP6V7WrNbHhfOekPINW6eJKwIfTy3dv+lTnE3vTmtjqiWB5H+Ja3P7dec0oq5SD2UsUAAPydNi/Iz3aWqvS37+HAjIULWJGrzijWlpAPT6PVgM8FVSP82jVNbeA42t2uyQd2WvmTi4hkf2UpogGmVgmoBLUoIsjuAQ1Eg5hDLE=
+	t=1745843845; cv=none; b=KP+QNu7Y8qnkeC6JACnv1Wb5A/qOOG+a+cSK/6vvOqGwua2hWiYOUZlrkFGtlJcDqn8In5Tiqz++eknmFao+v9DyK/Cljk7fSuqjoAEapNqTKtBkW0ZB61uibzmt9dQJdCOJ1FxHKyGHg/vnu1H3L71jngntw64FNO5Vkldp2Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843844; c=relaxed/simple;
-	bh=mT/RIYXk40ttqYQuB40/818XHsQdzjGQkXqnLnfSqQU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cJ2Pc/E+zylLPyTOUwA3yHY2+IVX+8MNqnqri03HH7B2kbbmzfkszsS6/NZVtsdsRf20ecH4u6eUwAgANOQ/wWQCSsfokN8sKdzNkLswK5WabHI27HhVQTs067nJmwwtvn3aGb+1lT+T5s9ylAuk/NMNKboBHQak/jitd53UEn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pc0Ugzqp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aZCuGCW5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745843845; c=relaxed/simple;
+	bh=lemq0WlyiYPKOz4ZlJK1Z0Iz2kxrqAihbWSTOP9Bc/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rt8/+X6SkzTBju8wZV7j5ET1OLKF6ms02DfHTptrRnpbqGdhBAGkPOpv5uU+ex2OHN0RKk4bNS9iddHJdKp1zMmP62SmQ+jJuKHB1bBz/ztok1TF1UEC1ntXNaYSVvb/HrNUc3qm/dALHVwfDLT43cLN8kGTdTZYXOwDBEn2ugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KCyfF1SN; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pc0Ugzqp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aZCuGCW5"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745843839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a/l2o6PbIvhGTxkfi6z3TuPhlSt81OUbkxBgnnsi/0U=;
-	b=pc0UgzqpiLeAwBOUf1EJA8/rnl6Ee7rR73sZp9CIU4LXS0xPWGeCeNAFS7PRI7DiiAw7vF
-	wswDPHH2rRmdFjJdwWV+ZXaja72eKXMY9kZd8d7p3qh/cMwwsv8/NjtMcGj59xn+9HjxHV
-	872egQZIYk5ea0etvvKZn4G9666sI23+Xts3+lqV8VqQOXDyM+3ruRNd6cFeST+rrsK1e/
-	f2u2nyVSyrm5krrf2eiwmy8J4cetjFmFQj5M8wUMZiUax+mimWSfEOsYV/EtSy0AYZpwk5
-	yyUl41OjCOc9Mk+MEDtZPM0Y+kZl7ecKdpClcF3eFKnnb4smrOZIw3HPpdBgtA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745843839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a/l2o6PbIvhGTxkfi6z3TuPhlSt81OUbkxBgnnsi/0U=;
-	b=aZCuGCW55jbdINBj1Vh3BbucF7jCF4dyzI4t3VbS9xKnEXP3D87a5rE41TKPSqrP+IUt6M
-	GlGSH2+4YXHzhsBQ==
-To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, Keith
- Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg
- <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, Costa Shulyupin
- <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei
- <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Mel
- Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
- megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
- storagedev@microchip.com, virtualization@lists.linux.dev,
- GR-QLogic-Storage-Upstream@marvell.com, Daniel Wagner <wagi@kernel.org>
-Subject: Re: [PATCH v6 1/9] lib/group_cpus: let group_cpu_evenly return
- number initialized masks
-In-Reply-To: <20250424-isolcpus-io-queues-v6-1-9a53a870ca1f@kernel.org>
-References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
- <20250424-isolcpus-io-queues-v6-1-9a53a870ca1f@kernel.org>
-Date: Mon, 28 Apr 2025 14:37:19 +0200
-Message-ID: <87ikmoqx6o.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KCyfF1SN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745843844; x=1777379844;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lemq0WlyiYPKOz4ZlJK1Z0Iz2kxrqAihbWSTOP9Bc/w=;
+  b=KCyfF1SNbR6sqyK1f4qJqD5z7YC6jJfcxgqZ9z+jNq9H3OAGHTnLroR3
+   EpSUeyyGF7UjgdhpEhQ5Sg86xzlUx4qUkvaRtFeNKapedcs4GSFXZcBKL
+   9fUS1By2t8f2lRbcsSE/Zey4PQyCGvKPw5yOMmKzKwdxHKnZRvRiBBWW4
+   bBp+Nw3CTHndOX/uqrL4TqA3LPIvSy0Q0E3Bhr87NDqM8Ao+z/VyWaHyp
+   SBzOmyG2uW8FgjNLTKfFNYBOz5UmjjLszemw2LZXHQxXs8Yek3OckoFk8
+   v8HK1wK9KpyCIoM3wDIO1o3PkYnBiT22vwNrzcZXBDryMU28+1PgnGBZC
+   w==;
+X-CSE-ConnectionGUID: u4ijRB9nTay3v0B14fJFVA==
+X-CSE-MsgGUID: 2FdgqztvSBeq5pcHV6zQQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47520774"
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="47520774"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 05:37:23 -0700
+X-CSE-ConnectionGUID: xxjgWQxfQBa2LbEbvdEngw==
+X-CSE-MsgGUID: N2DtIr1zTu2/5Z4md6qsKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="133479337"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO [10.245.249.122]) ([10.245.249.122])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 05:37:18 -0700
+Message-ID: <a154e7eb-2708-411d-a494-868abe7052b7@linux.intel.com>
+Date: Mon, 28 Apr 2025 15:38:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: SOF: ipc4-pcm: Adjust pipeline_list->pipelines
+ allocation type
+To: Kees Cook <kees@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, sound-open-firmware@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250426062511.work.859-kees@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <20250426062511.work.859-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24 2025 at 20:19, Daniel Wagner wrote:
 
-"let group_cpu_evenly return number initialized masks' is not a
-sentence.
 
-  Let group_cpu_evenly() return the number of initialized masks
+On 26/04/2025 09:25, Kees Cook wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+> 
+> The assigned type is "struct snd_sof_pipeline **", but the returned type
+> will be "struct snd_sof_widget **". These are the same size allocation
+> (pointer size) but the types don't match. Adjust the allocation type to
+> match the assignment.
 
-is actually parseable.
+It looks like that this is indeed an oversight and a bug introduced by a
+mostly mechanical change (introduced in v6.3).
 
-> group_cpu_evenly might allocated less groups then the requested:
+Can you add:
+Fixes: 9c04363d222b ("ASoC: SOF: Introduce struct snd_sof_pipeline")
 
-group_cpu_evenly() might have .... then requested.
-
-> group_cpu_evenly
->   __group_cpus_evenly
->     alloc_nodes_groups
->       # allocated total groups may be less than numgrps when
->       # active total CPU number is less then numgrps
->
-> In this case, the caller will do an out of bound access because the
-> caller assumes the masks returned has numgrps.
->
-> Return the number of groups created so the caller can limit the access
-> range accordingly.
->
-> --- a/include/linux/group_cpus.h
-> +++ b/include/linux/group_cpus.h
-> @@ -9,6 +9,7 @@
->  #include <linux/kernel.h>
->  #include <linux/cpu.h>
+and:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: <sound-open-firmware@alsa-project.org>
+> Cc: <linux-sound@vger.kernel.org>
+> ---
+>  sound/soc/sof/ipc4-pcm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/sof/ipc4-pcm.c b/sound/soc/sof/ipc4-pcm.c
+> index 1a2841899ff5..52903503cf3b 100644
+> --- a/sound/soc/sof/ipc4-pcm.c
+> +++ b/sound/soc/sof/ipc4-pcm.c
+> @@ -784,7 +784,8 @@ static int sof_ipc4_pcm_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm
 >  
-> -struct cpumask *group_cpus_evenly(unsigned int numgrps);
-> +struct cpumask *group_cpus_evenly(unsigned int numgrps,
-> +				  unsigned int *nummasks);
+>  		/* allocate memory for max number of pipeline IDs */
+>  		pipeline_list->pipelines = kcalloc(ipc4_data->max_num_pipelines,
+> -						   sizeof(struct snd_sof_widget *), GFP_KERNEL);
+> +						   sizeof(*pipeline_list->pipelines),
+> +						   GFP_KERNEL);
+>  		if (!pipeline_list->pipelines) {
+>  			sof_ipc4_pcm_free(sdev, spcm);
+>  			return -ENOMEM;
 
-One line
+-- 
+Péter
 
->  #endif
-> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-> index 44a4eba80315cc098ecfa366ca1d88483641b12a..d2aefab5eb2b929877ced43f48b6268098484bd7 100644
-> --- a/kernel/irq/affinity.c
-> +++ b/kernel/irq/affinity.c
-> @@ -70,20 +70,21 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
->  	 */
->  	for (i = 0, usedvecs = 0; i < affd->nr_sets; i++) {
->  		unsigned int this_vecs = affd->set_size[i];
-> +		unsigned int nr_masks;
-
-  unsigned int nr_masks, this_vect = ....
-
->  		int j;
-
-As yoou touch the loop anyway, move this into the for ()
-
-> -		struct cpumask *result = group_cpus_evenly(this_vecs);
-> +		struct cpumask *result = group_cpus_evenly(this_vecs, &nr_masks);
->  
->  		if (!result) {
->  			kfree(masks);
->  			return NULL;
->  		}
->  
-> -		for (j = 0; j < this_vecs; j++)
-
-                for (int j = 0; ....)
-
-> +		for (j = 0; j < nr_masks; j++)
->  			cpumask_copy(&masks[curvec + j].mask, &result[j]);
->  		kfree(result);
->  
-> -		curvec += this_vecs;
-> -		usedvecs += this_vecs;
-> +		curvec += nr_masks;
-> +		usedvecs += nr_masks;
->  	}
->  
->  	/* Fill out vectors at the end that don't need affinity */
-> diff --git a/lib/group_cpus.c b/lib/group_cpus.c
-> index ee272c4cefcc13907ce9f211f479615d2e3c9154..016c6578a07616959470b47121459a16a1bc99e5 100644
-> --- a/lib/group_cpus.c
-> +++ b/lib/group_cpus.c
-> @@ -332,9 +332,11 @@ static int __group_cpus_evenly(unsigned int startgrp, unsigned int numgrps,
->  /**
->   * group_cpus_evenly - Group all CPUs evenly per NUMA/CPU locality
->   * @numgrps: number of groups
-> + * @nummasks: number of initialized cpumasks
->   *
->   * Return: cpumask array if successful, NULL otherwise. And each element
-> - * includes CPUs assigned to this group
-> + * includes CPUs assigned to this group. nummasks contains the number
-> + * of initialized masks which can be less than numgrps.
->   *
->   * Try to put close CPUs from viewpoint of CPU and NUMA locality into
->   * same group, and run two-stage grouping:
-> @@ -344,7 +346,8 @@ static int __group_cpus_evenly(unsigned int startgrp, unsigned int numgrps,
->   * We guarantee in the resulted grouping that all CPUs are covered, and
->   * no same CPU is assigned to multiple groups
->   */
-> -struct cpumask *group_cpus_evenly(unsigned int numgrps)
-> +struct cpumask *group_cpus_evenly(unsigned int numgrps,
-> +				  unsigned int *nummasks)
-
-No line break required.
-
->  {
->  	unsigned int curgrp = 0, nr_present = 0, nr_others = 0;
->  	cpumask_var_t *node_to_cpumask;
-> @@ -421,10 +424,12 @@ struct cpumask *group_cpus_evenly(unsigned int numgrps)
->  		kfree(masks);
->  		return NULL;
->  	}
-> +	*nummasks = nr_present + nr_others;
->  	return masks;
->  }
->  #else /* CONFIG_SMP */
-> -struct cpumask *group_cpus_evenly(unsigned int numgrps)
-> +struct cpumask *group_cpus_evenly(unsigned int numgrps,
-> +				  unsigned int *nummasks)
-
-Ditto.
-
-Other than that:
-
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
