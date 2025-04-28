@@ -1,76 +1,106 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F11175D53;
-	Mon, 28 Apr 2025 23:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C328F6C;
+	Mon, 28 Apr 2025 23:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745882840; cv=none; b=NCriGQnRO/dWlqwTSA/56IrEgEPETLn4WnauPCSbj6zH1nvBLDLt5O54ddTFzWDqK1QZKcu4x1XxsC2g05OSHM5fcGeMNH3J+Ryc9pYnrL4HWtc9BQPR1+Jm/GnNnlRES1Qyz8EfLADmlRfB8vyeVL6Eq3BJhQ7dLYgwQJKqVGE=
+	t=1745883018; cv=none; b=QQ6SUf4ncHjYnHlyYDBGrs33isDwXTnqj6NPz7bZeCfFSh8EKEiD203E5Y19i5OX6w3DNcp5RZlgGbk6QG1B02zxT1cweSDeTqMjH/Gv06E5yaoNZLKPVoMhtRQT+g9XHvaPH7QwhJy/Fmzr/+CJzR3YFJJahcuH6bq20n/CZBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745882840; c=relaxed/simple;
-	bh=fp1fyhNEcH9C3+gNY6AqPrnomJnKr4nOCRlZZrxvRlc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=r26UP218aP2a+UF1wdLhoqWu7sovq7Vrk/nfLeVzsMO1ri2ZtshQ6IFjqdrQ7wdT00TlXRKKEislP3762F/fiQzpmnBUjSWdZxVcnbd2rdkdnKV7ih1vPq/U+J/dTFx4fKYaJytub8PA0HvL+qn0BbjMkUaHmb+/3aSmRZlQ130=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=sxTodg3t; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1745883018; c=relaxed/simple;
+	bh=F7nAHUG1vlKvXc+NSAIN7inrJkz5k8PT0zsRKXQ7UVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=niJpI15mSjix3IEIFo9G0VfGzEc2zofu2zAcVEehFtpkVitQ8FXP1BdyuX5pAnH+5LPir7ai6SqGXx413Ktexjn5BYEEu5kUXZx3Chp67BItFI9df+LRGTtfqMErgUCxLHJDcBYg3Ej3cJaBAxweduAIaOuA1rSY7nFFX7756vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fK2TGywV; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="sxTodg3t"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DFB5B41060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1745882837; bh=71FJqd39YR5/emSke+WygmuKJTkl6XtVtGtAkhKOafk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=sxTodg3tv9H0eES1DEvFDxhb2+Ts8f6yX4c+QsMUVDEF27SgEDGHe8uDfpPZyZBxw
-	 wNgkfpsuQqczUXyczvgVPlohqEhVUT22xUh134bjf+ddWbd96eYXHemuCkAw+17Xuo
-	 0j+TLmWxdiI4+4z57q+ZqdXLOSNl/Wd/Zxl4/tV1vpNRhbZOAUXTP230GmxdzKJ9al
-	 dQSsV06G4wgXfXoO7gyu/yG4nBFiDKYUpiA9e9YS7VjiH0IoLlhe5doc2VQyX9ylHs
-	 lXyGR6F3c244AsrRs/9KuN9oP7diab0VcHvnR5BdyF9JMfp+O3/eAXyepp10AA5w9b
-	 TeWq60Qls6+PQ==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id DFB5B41060;
-	Mon, 28 Apr 2025 23:27:16 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Mike Rapoport <rppt@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-mm@kvack.org, Maxime
- Ripard <mripard@kernel.org>, Tejun Heo <tj@kernel.org>, Natalie Vock
- <natalie.vock@gmx.de>, Xavier <xavier_qy@163.com>, Samuel Holland
- <samuel.holland@sifive.com>, Maarten Lankhorst <dev@lankhorst.se>, Dan
- Williams <dan.j.williams@intel.com>, Michael Kelley
- <mhklinux@outlook.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, Christian
- Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kernel-doc: Add initial binfmt docs
-In-Reply-To: <20250426000704.work.637-kees@kernel.org>
-References: <20250426000704.work.637-kees@kernel.org>
-Date: Mon, 28 Apr 2025 17:27:15 -0600
-Message-ID: <87selrrhnw.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fK2TGywV"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73c17c770a7so7260284b3a.2;
+        Mon, 28 Apr 2025 16:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745883016; x=1746487816; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=329DdKPNLhWNu0yFa3+5T6Ux91V9gVZ7UmzQBNCxNx4=;
+        b=fK2TGywVakT2A6wu4din6eurbLvmg8GETyPiZKoMQEAeghkMo/Lty4L12JFN4dKtVk
+         GyWZIY6kxJq3F5z50CGqHGtqjObGeYk2AHrL1bupUQm0RGTP2YgNh+jiL/KgdESXMeYL
+         tqrBOWcbOtmeV0mQ2rrfD6ofbJM3BKsTJdyi5s4E8TFfvAS9z/Xil/54tvO+HzxeSl7N
+         XKqHmAVdMTCcD7Nsk9dbpoIxlefHk9L4PPBTjP51bwUnFXBjmz+lhJ6g2TGBOCIkeBTA
+         cFB2tO5+Ly08K0XPWwaTQAGP/FDE6qfVP8K7JivOk+mjzMpjFfiGiD7gcZMIoeRFIYz3
+         VOwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745883016; x=1746487816;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=329DdKPNLhWNu0yFa3+5T6Ux91V9gVZ7UmzQBNCxNx4=;
+        b=Xs/uHn9MmDMaVAqJSS7ZUJKi9FBDUUJd+0olbWNXbQR+OH8aX2HLtmET8nYwSQTmX3
+         deVY7bZT2ErbrFZ0WzF9tIlQV05hPYB47KCkfv1QxbV630rGGnf5eEuaV7whauK4wrQ6
+         sVuUTKWzqL5/b5ck4HcYLmCx4IFE9JCeycT7vNDdgoAfL2qxK+OKfp4NuWtqsPSeUqqk
+         7alYApCjdopdSEiGeSsjJRpsRTST0ms333bgS1c3sfFYyO1IjkrbrIIBLr9AuxdY0vB+
+         hmc8KLCk8wfwnloa7+V//Yq862No7nqG3kILI4e7IJgnFjLBiAC7xVi+d5WzgRBBQwKH
+         Hniw==
+X-Forwarded-Encrypted: i=1; AJvYcCUt8AvlPqDiMeVf5WYyL6CoimpII0cc9emyYT37PUXacEP7FsqYqoSUSE3CdKxx/HAjN6VHkz4Gjwb/V7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9/BXw9bGMHPh8q/3pygd8PVoIZezbCho3yX7wUyNtDlWhaoYP
+	jDRqKQHUv5uSyhCDx1rc4E6mh9zEqaNTVpONFHhSTNxRmX6DM5Ct
+X-Gm-Gg: ASbGncuCvyGO6xRJZymWh1vFs/k7+OCuZrYUVoH2TIs/q55iMv+vnowoCKNqYomPNpn
+	ihrLe6P+lPAJ7WMhenRbLXB0WoJQW+VPdthF1Qn0sa/52R243oda0GQGdFmnhY3p2srk1WXJOnq
+	oVCr2IBH5ICeyzp3kF2Ay9BVCcpQpMZho92kixtX+VfloOfL2VgIvAqrqpqzbcaEG4g36n4iAco
+	ejRn+MOv91Ja+wKpJzLd/N4NwI7G18rhUZHhxe7H5Tdkw91wK4KPjZRdailFEYX2gbus7MuLf9N
+	SEF9x2sWVwBEnRp04g0W0jNgFqA5T9FeNNQO9nlz
+X-Google-Smtp-Source: AGHT+IED5O60hq0KpHF5uKP5cHq6Mugo5SLPYclGsTgHjYasQquAhjcqADeNrr8vHqGI2Tdmmu0Bug==
+X-Received: by 2002:a05:6a21:3a88:b0:1f5:8cc8:9cc5 with SMTP id adf61e73a8af0-2093e029812mr2343382637.34.1745883016546;
+        Mon, 28 Apr 2025 16:30:16 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:67d:4372:d1e6:def0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aa0acfsm8584146b3a.152.2025.04.28.16.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 16:30:16 -0700 (PDT)
+Date: Mon, 28 Apr 2025 16:30:13 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH v1 1/1] Input: ALPS - bail out when device path can't fit
+ buffer
+Message-ID: <ybenmz2fmjxjpo3zhnrh2ptquikxrtb63664qbhhfv5d4ezx5n@c3p2tbosx2tz>
+References: <20250422185645.1949391-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422185645.1949391-1-andriy.shevchenko@linux.intel.com>
 
-Kees Cook <kees@kernel.org> writes:
+Hi Andy,
 
-> Adds a framework to hold the initial exec.c and binfmt_elf.c
-> kernel-docs. Updates scripts/kernel-doc to allow leading whitespace so
-> that embedded "DOC:" tags can be found that aren't at the start of a
-> line so that in-function documentation can be found, like that recently
-> marked up in binfmt_elf.c[1].
+On Tue, Apr 22, 2025 at 09:56:45PM +0300, Andy Shevchenko wrote:
+> @@ -3094,6 +3101,16 @@ int alps_init(struct psmouse *psmouse)
+>  
+>  	if (priv->flags & ALPS_DUALPOINT) {
+>  		struct input_dev *dev2;
+> +		int n;
+> +
+> +		n = snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
+> +			     psmouse->ps2dev.serio->phys);
+> +		if (n >= sizeof(priv->phys2)) {
+> +			psmouse_err(psmouse,
+> +				    "failed to prepare path to the trackstick device\n");
+> +			error = -E2BIG;
+> +			goto init_fail;
 
-Just one tiny little problem ... when you weren't looking, Mauro snuck
-in and replaced scripts/kernel-doc with a shiny new Python
-implementation.  So that part of the patch won't apply to docs-next; if
-you apply it somewhere else, the change will get lost.
+So you just broke touchpad of some poor guy who had it working just fine 
+for many years. For maximum impact you should add BUG() or panic()
+here.
 
-I figured we were going to run into at least one of these ... sorry ...
+In all seriousness, it is OK to have truncated phys, rarely anyone looks
+at it and if we get a report of it being truncated then we can consider
+addressing the size (or we can decide to live with it truncated).
 
-jon
+Thanks.
+
+-- 
+Dmitry
