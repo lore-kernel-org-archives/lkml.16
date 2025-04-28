@@ -1,142 +1,114 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848091F5827;
-	Mon, 28 Apr 2025 09:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B123211;
+	Mon, 28 Apr 2025 09:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745833853; cv=none; b=L8TQj6oBDiqpYjhibCwCoxopR0hpG17Qu+OwHRxNml/ePUBobEQQXk0f6zl/Mxqx8kHESf8cs0C9TDWHYkZlneTLpbI8EIUDgxPO1Ob3b/sQV7/RXFFW1VvAz365R89lrPUQQcZH0GE3O/Cj0pFoljffRIFBU8zOuJuzJwxZ4c4=
+	t=1745833937; cv=none; b=D9KKQSIRiqXNdhUxlllSEq9lDd0uc9HuVLG+Tm9KmhSN8HsitsvSwkBfJY6Fd8t5zrAMCIRJy53pjF6B34A+6XH8KYbGLfQGFBIfUeRgQdnBdc/4XZNa7J279/APZGiBKdwZaMDwshbvll3TkEaxYAwK7XC11hAungjl4bu9dYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745833853; c=relaxed/simple;
-	bh=roN7fJE8EwQX63dAnBJZIVtnYEUulGz6dJ0RcWadLkQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=S3HPmwlfTbMgrTCDW5PdgUgOIzzwgk1YotBEiFnLg+WD81TbBSOx2IurEFnDOiVma0rs6OLB0gRfjFI/1ZteT90GwipIp2gP1ZvUGupG2sb2MLN5g3LvXHm65pFaAtBisRc53xj7SQqOYX5eJWe63F+MJr9EalSiqtVp9c/w9Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lwvspUo6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745833937; c=relaxed/simple;
+	bh=vPO7FCqTPBnOCQ2w7fDeoAW8wssO18SdE/68cKcOv7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T0SlRKCzRXRzujtLb7JaSPUGm1ANMr8kzxIyPcxhn3AvObJCuZ9g+ubMp3kweTQzJuHr2KzSCyZfPHHUfd6xK8rM+2orTZNwufSuICAIqn7XsiPC5BZOURGW9iwTVAltEay2FQOSYiKoIuCLKByV0V1XOQtzdtbkO8NaHbhPN/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pt/9xNwK; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lwvspUo6"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S9bfKP032165;
-	Mon, 28 Apr 2025 09:48:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	d67onAX9c4awf1/a8IEW61luHpsAi1oNRIptFcc2HEI=; b=lwvspUo6Ep1lU3ph
-	aVTByYKL+pUAUS0k4nmpglK7xsV0SVAhroJbk0aJmnLPBX7nyJM3yrPoc8nmsGL6
-	rtTF2MjJ47SQmOnvlcXUmnLf9k5SGX0xVDdozKy4tgZi4aDF1Zd+MLHXHa1xfypj
-	Ni8aGUEm8YgqFJeRnu0I3kgoR1bADuC1jWmKHVyLXXQoNx4zgnqSn5bGJ4M2pXcd
-	oQCI3UeOiomcandphtmq3xR70YYEFDEPJ0tzeXwrMkUeDLVTbwnygGv7mSSFSYtM
-	vtuF7BuQojRYKBXJy3UncoosRGka5PJdvAWpbBgqK+qvJo5yW8wFSTD4xhh/iOYv
-	EyZ6vA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468pevfr2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:48:35 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53S9mSjv000349
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:48:28 GMT
-Received: from [10.231.217.95] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Apr
- 2025 02:48:25 -0700
-Message-ID: <bfd1be89-cb03-4426-ad7e-93b6774a68a7@quicinc.com>
-Date: Mon, 28 Apr 2025 17:48:23 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pt/9xNwK"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso53244185e9.3;
+        Mon, 28 Apr 2025 02:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745833934; x=1746438734; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3iYa4MxU6eARu1/VvWGOAcWwlx81rdNPO/NjIIvnc1I=;
+        b=Pt/9xNwKun4Ezj6eyF05cve9XHEfzKo0HKKYD9YeCuRoHt/NdQVx9jmGnND6LPyS2O
+         UD6BsfIjbPkAPIWH+3VXZ5HK+h5RXW8OIAiNqqHLtkc/It/sDZ5ud6DdAis3qYcAjoWM
+         iEE6A/rfVMw5GEsMwDTNbOuAsE7ZT267R10F/07AFlSnbBJS5jGxH/zOQoNZslCebtfh
+         48S5EzWbmp0Wp6NFsHsyrPCYfc1A1SN/MwFovmro5fu+udOwDdcHOFzGyyXe+4xnD3mF
+         L93G48+H2CFvnibKdELLQclpQVHlUqxfIfiwzjhGLDPL3Sw9YCHrInJlNFtR9oadkmhr
+         PiNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745833934; x=1746438734;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3iYa4MxU6eARu1/VvWGOAcWwlx81rdNPO/NjIIvnc1I=;
+        b=S040mko3icILkUiJReVTiSq63AFRRbQHKx+12Fh4wEjqK6gb1RZ+tSyyo2tbImscGL
+         xnOZlHyn5rqGcNyABSnRs28uTfcgarjYqzy8tzHjehxJhpX7LXgtrrVOb1wTzx5TrvT3
+         3n9OpqHhBpdZGqbfcnsxxW7cl/LTM5nKzgYv3axrNS/Z/uqDCTLMPvr2KleZbfYyPRIe
+         GZyjAU8PO6iXQauCGwki/HUxlTMloWcxqT26vnUrsH8vuXnbTUKMPsiXwfXXZNBro+zw
+         ZXJTT04lLPhoTwTVDOs7HI38b1C2XhLx+W17LWV2YA8eqNX0ohiRGrJ8whHaR6NBwq7x
+         hZmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUakVlEBTYemxfDDw9AGjw7XsTF0K+249TNmtUUcSrqmUxXEtlWP6IFayOznFjaQ9ud4rnFHl+pHHCcM68fvcduUZ8=@vger.kernel.org, AJvYcCWMhNV9UdOj+9SjZ3r4wQPRlEZOHghhRM8BaJtdvSRDrlZSDuzKjJrjaBXJ3WS4CXlnjfUMAJn7Jv3UuY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfkNGqdtBnq8Clj1CrunazKRHBkBzcr7mcRIfk+BYjqXVgbJ+I
+	d5vSiTVBb28cPyMUgsnmD3grGTYamWCBw5BCiRdxYi9Ka0NPpdA9
+X-Gm-Gg: ASbGnctAnrGsKL6CK/4ZlWk5NeWdWHKu4AlzOk+dJAhWMW/5pxZFnEnL3YG6aL/yMtQ
+	LvEXgJBbQaxI1MsmLaGXDv/fqJc/PRtYCFzQZr9qg6n/pm5aXfwXRdF4RJ6UlyQFD6dY73xafic
+	2HHTXC75b4neQzh5dC3GmGhufahY5/PLtGHYnEoRTCUlISHdhfdDEy0AzWSMO3ZGOgzaThpqAQa
+	twilZ9DdlRcREgP1dcWqEzNmShm1kky5VX+InUtiWLfiezywxAsa34jk2WMyDDOIE9PhI4KUqSj
+	nGJ6MilaRuWZwNgRuhvm1o1cERdcqx/PmKLt/W7kBgZAcQhM0JZaTvn+lSgpwD8BSa2BMLfWTQ=
+	=
+X-Google-Smtp-Source: AGHT+IHQIE3IbLN9grTmPPTyYeJCMY0+kRbu20H7dv/9Ml0ERyaY34QGpx1q/Q8dd+TjlLPZxxuzgA==
+X-Received: by 2002:a05:600c:1911:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-440a65dbddcmr91918865e9.12.1745833933918;
+        Mon, 28 Apr 2025 02:52:13 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:593b:8313:b361:2f0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca497esm10551270f8f.24.2025.04.28.02.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 02:52:13 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
+Date: Mon, 28 Apr 2025 10:52:08 +0100
+Message-ID: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND ath-next 1/2] dt-bindings: net: wireless: ath12k:
- describe firmware-name property
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <jjohnson@kernel.org>, <johannes@sipsolutions.net>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250424005703.2479907-1-quic_miaoqing@quicinc.com>
- <20250424005703.2479907-2-quic_miaoqing@quicinc.com>
- <20250428-ruddy-bold-macaw-9ffd28@kuoka>
-Content-Language: en-US
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-In-Reply-To: <20250428-ruddy-bold-macaw-9ffd28@kuoka>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: iizN8q7klUWm_jnELEQp3vutnC4_buQ1
-X-Authority-Analysis: v=2.4 cv=aeBhnQot c=1 sm=1 tr=0 ts=680f4ef4 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=P-IC7800AAAA:8
- a=RzOMtiUZCBSADgEBmXIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: iizN8q7klUWm_jnELEQp3vutnC4_buQ1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA4MSBTYWx0ZWRfXxYZCwZgmcNWW w9qhOnnYK5jj3YwHiTYUPRTnfc6jIDxG4b/kKVBHh5TpVicj3tF0L91v+frhxDVdTT/uHf71O30 5/nlIybwesgA7fRXySFEcnK2B4YlG8WV9Un3Y222yLuGNxQGXZud2yLByjv/7T/KQuFVf/DF8RJ
- PuTRwqkLxkRpuoGK2ce7Sm9GmNFKF17GYj2PLA7fucLJD4QY6tcsdb3ZZ+SNji5MVMnDUdASxs1 pA/7Z5Qoj6c/U1glal73cceGh7sy2CMLUivA/waTIjamG0Atm+rpQLTUo23aLYx4MF/2eectEyf Wase5GBiuyk8gLpul12A77ORqXealFQ0XeMRkQVcS5SAPzzwftuCOPlNecdLFdUYl9pqSSp1l9n
- kS2GfCV89KkoQEG3XvgCnZJbDMV2EyIVVdrReG/+IV18Gb+v7gGs86dUW75lveKqu4jswFZ2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 spamscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280081
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Simplify the `rzg2l_fifo_empty()` helper by removing the redundant
+comparison in the return path. Now the function explicitly returns `true`
+if the FIFO write and read pointers match, and `false` otherwise, improving
+readability without changing behavior.
 
-On 4/28/2025 4:25 PM, Krzysztof Kozlowski wrote:
-> On Thu, Apr 24, 2025 at 08:57:02AM GMT, Miaoqing Pan wrote:
->> Introduce 'firmware-name' property to allow end-users and/or integrators
->> to decide which usecase-specific firmware to run on the WCN7850 platform.
->> This is necessary due to resource limitations such as memory capacity and
->> CPU capability, or performance and power optimization for different
->> application scenarios.
->>
->> Two firmwares are supported: 'WCN7850/hw2.0' and 'WCN7850/hw2.0/ncm825'.
->> The former is the default firmware, suitable for most WiFi 7 STA
->> functions. The latter adds support for commercial-quality SAP and
->> optimizes power consumption for IoT applications.
->>
->> Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
->> ---
->>   .../devicetree/bindings/net/wireless/qcom,ath12k.yaml       | 6 ++++++
->>   1 file changed, 6 insertions(+)
-> 
-> <form letter>
-> This is a friendly reminder during the review process.
-> 
-> It looks like you received a tag and forgot to add it.
-> 
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mountain/
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't find any tags on previous version: 
-https://patchwork.kernel.org/project/linux-wireless/patch/20250423054152.2471568-2-quic_miaoqing@quicinc.com/.
-
-Do you mean I should add 'Reviewed-by: Krzysztof Kozlowski 
-<krzk@kernel.org>' ?
-
-
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions of patchset, under or above your Signed-off-by tag, unless
-> patch changed significantly (e.g. new properties added to the DT
-> bindings). Tag is "received", when provided in a message replied to you
-> on the mailing list. Tools like b4 can help here. However, there's no
-> need to repost patches *only* to add the tags. The upstream maintainer
-> will do that for tags received on the version they apply.
-> 
-> Please read:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
-> 
-> Best regards,
-> Krzysztof
-> 
-
-
+diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+index 067c6af14e95..97faefcd6019 100644
+--- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
++++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+@@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
+ 	if (amnfifopntr_w == amnfifopntr_r_y)
+ 		return true;
+ 
+-	return amnfifopntr_w == amnfifopntr_r_y;
++	return false;
+ }
+ 
+ void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
+-- 
+2.49.0
 
