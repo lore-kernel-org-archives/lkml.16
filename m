@@ -1,82 +1,82 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D0720FAB1;
-	Mon, 28 Apr 2025 20:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BC91FDA9E;
+	Mon, 28 Apr 2025 20:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745873799; cv=none; b=V5HqmU4eLs9vdqmDCye/o9BiVIURxB3TJevHKnXhuwrfp7wE48dxUKJAFZpl8o6FSeJpd1xRwIzCLDRD0zAj6D0/yJTLZQDQfT2QdUmS6tqCtvyKSKIEQmU1ZATZmTVD/i0pHOLkZxitTTh2+HYIJbNCNCeePm7hGT7I+/hut6A=
+	t=1745873803; cv=none; b=Rolni90w4YDscondcb1EEMfZugcu1IEL+uAa/WMXb/1NrdgJib5c28bSkpn5Kkvt+jme8IUKNkmY4y9YKOP4GXkeoMvr8FsiBY8G+udQ9xc9pKx5nnOXoQLzumCZfTsSOsiYLDuxBT2KzaYpxWcNwAiz/Q5d8I6KRIImUb316fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745873799; c=relaxed/simple;
-	bh=WfSpWbv819GCC7nVsEQ+oxTMo5aDH4FF4OdkHTDXtoE=;
+	s=arc-20240116; t=1745873803; c=relaxed/simple;
+	bh=hA0n3sJHSqtfCC0QQbm5Ra4aQsTlaYfz6FOXn+eApww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FzLI5nMtoMkRuEZPx3KeUTW086fOxAEhhoh4S/Uieid9uOQtgDlDxKx8o0pJvOruZWu0y6JWw+6GTrRuJjsoaWkhY7b6s1xwqInCH8nypTDy+SAxmSixZR7B/58D06Np2tm7YW/DkhHaxVbCAk4w2UGhArsi/J7Jp4LirsXXBLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsMDCAlh; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=gqNTLRhlCA3sZ2pClBUyRQBMyt3QLM+6ocSGTwxBXZ7t1joHnx6BuDHookYb0rgD7E/JnuYTCYDiPMLnYpA9VdSYsNVojFp6u+V5SU/6DR8wWbpJmzaiVPCNXuXBUunKft8+DMXZ8Iw4rePSdDpQAyqe9c6Ky+gzfJDYAfdcONk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2cSJAPP; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsMDCAlh"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7369ce5d323so4377629b3a.1;
-        Mon, 28 Apr 2025 13:56:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2cSJAPP"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22423adf751so53957355ad.2;
+        Mon, 28 Apr 2025 13:56:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745873797; x=1746478597; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745873801; x=1746478601; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8ZWdv895QF2g5ZazrpGEqIZ+CNyMWOJKJzfuDlETcFA=;
-        b=HsMDCAlhzdDB1bB1w+Smn3xf3ctAunSzMwZOGvQpC61T8slxm5I75zKX32/eUu+r/e
-         WbvKnCgUihvCZi9RkydBP5ywtBUR6cV0cr94+p8buDgm+ZIbOFm9QEUYRTLcDYutNcD+
-         zlbtQ0/ZCCfZsyjG+0G0MwL/DRln8X9m4F8faGgSmYbXpDeVmysagCQs6i1dVNWzv4RC
-         qrhbS9gIKU9xwB7mL/pxqYIHAlE1hDi9mbRFQS6xNZ73FWrMtSb4RBCBFowsW8fE4uPC
-         PR//dXZkrZ2lB7gH2dFbH6l/1dc6/KaEvyLLiPDoQaQI7iV0CpRqsJXf2JyfquczlSbv
-         XZwA==
+        bh=P9wao8L9QpDXqghTRoSkoUr2w+hVzfvrL1RxfpMOf90=;
+        b=U2cSJAPPOfyhjGHvn/lTXMcClMBvw/In4Wh4n+cYqAk9xaRh2sIiof5g95osqQYO33
+         YPW/yOCbTUGg/PeG4zjNCYSKfaMQiTXhb2BPSkYILhBLwplLX0H+RN8WtDVsn7l2oeyW
+         7dEZHCfPG8Y88Tg+IUwJChoOzJnQv+u+tN4Rvs0erAMcOZvnp82a3oL/vihaQpiezyMF
+         7vU1WcVgBNFO80985JKzygppSA4ZMNdOmmrFCC0MHFR6BE3JyQOxsXjnV8uYqtRvP/0P
+         5I9+3qcKXY7rkCOfPeXer5AU3Z3/nd3zDnBYUjbyDGv7rv+qAZAvGrvV2g02sLGXcmz/
+         qY0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745873797; x=1746478597;
+        d=1e100.net; s=20230601; t=1745873801; x=1746478601;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8ZWdv895QF2g5ZazrpGEqIZ+CNyMWOJKJzfuDlETcFA=;
-        b=Qwf1/Xmu+6tRCQiSWrTSZhOrXlyLzEiDvlRVwUPWehmcmCESTf+MApSf3yGxdchIfd
-         5eGmBFwdxqRnRJnTKMnoc4E8Ux0PDNRA5yJrJkWCxBFTLQUsENRaHn8Ry14nxKijLyah
-         qcBddR4IFgk7kRbKPGVe7w2hpP82jo4ruhOQJjf/KhBPyjPQlbZj5XybbjuQ5YtNZVbW
-         aC/yHapbWZGuXzwDkMLdORZhvH0ms7QlxYQEbX0tFVic/DA3/PjVaRcc+3Wif2yNKdm9
-         Bq9xWNl7I0fvMTRUXrvTB+qRZorF1cG9TU6X+xk6i/Coo/E1jEWKV3xG9nvdbIglynL8
-         0hjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXE6LTTBK0HK0/YNspEkyi5rZx3Q08eCE8d0XutBna6lAUNsgm0pLJENBInj3g12D7bq6iWpVgalX6An7zK@vger.kernel.org, AJvYcCXkIWw/sEK36v7sGcZKvWh2E0W98zmrHsjkwhUSoUoO6dn7s3CC1e4OYTQq5H42f2He9ZyUcnmaBQNPp6J1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8cT7+kZt7O6j0CDIV0hiXwOBFNdM5k2SMQqXmEIe8wBiRhPET
-	8aab+bEVXFAOkuch7tzfOpc7BfWY6N/k//0yxYftQXzrjphL5mkm
-X-Gm-Gg: ASbGncvZEWo0r9gRoO6hTj1ngy4FHOszVWK0Fx6mtZADxTE7bTzsKJYlBYA/8bWRVyC
-	77LEWybKa11vsJOJ0/KXuyA5gvUrQw55j3r0xpPOylrjkPLvCfu9md0EkyPCgTcV1ijVUxT8/Vi
-	TzTg1QcDw6o+NO9/UodiVw8lwwFWwHobBSZamTwdHLD5XgvvvcCtcJ1sbKWVBeCy+he3PNPQZnO
-	tDSHq2MVHEcfid0LyR44DRqSKX2ic4PaDQrtgV7Dodtq4LT37Ax07Rv3131lTlJk7EeTCySvMbT
-	RC31Kq1HYbRGyop1c7jTXtghiWndxhGoy8+LkTzhkDIuVPoVBESGzNNwvEJvBTde2Ke7lvBSNwC
-	tfJU+NTDfLLhqA8LWSNTyYFiG3w==
-X-Google-Smtp-Source: AGHT+IEiI0PIx8sG0Cs/BBXwMjUjK2HcinX0Gfd8jPjSIhMKMTJcc2LognCvLHlEUKydTsw79aws8Q==
-X-Received: by 2002:a05:6a00:3927:b0:732:2923:b70f with SMTP id d2e1a72fcca58-740271689ffmr1632804b3a.11.1745873797293;
-        Mon, 28 Apr 2025 13:56:37 -0700 (PDT)
+        bh=P9wao8L9QpDXqghTRoSkoUr2w+hVzfvrL1RxfpMOf90=;
+        b=uoVFmcTINXsMiIZqZyX+Gn8EqAhzM4P0GRqBSpgPAFqu5PbQhM+mtFTnnvlkuA8co/
+         xNVkOw7d9ba5K5zhMLt4R0xxUYIuUaSE/i1+S8hyHRhWD0phZNN6DsNIkoLs2JBbVCxt
+         LuaQ8Uv95mrkV0T5jjPnDvAyhIG2zVPsZe2nunFaScaolmEujO214g829jIN/SRbsquX
+         XM6u2KrfLAi2r3HISidt3PXGHmB/Yg+JPEWvv3gKqOFN7qbU4ydesYkcuQcYk7k8qOd1
+         bo/jdnnczTDR4ashJwonLJ+Or23UDTcUPn/Nv3na2ylSIrOsnKN6El0SrEINcXoeayBU
+         4LIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrxoFLHJ9cIg0q0lKpIBGHwG1VXjlWnw01d2hnWAvznVDXSZVozs6LvgVUkX3KQGWKkorMN+mtxMkVZyJA@vger.kernel.org, AJvYcCXykw9O4RILjUnndIKJ6hnOIQ5pXGgaluq/yWtlB/VCfGYrZRMUctYY3WC3C3SXKgtrPMU+gd8cUllg7Jl0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVWJB92pAtuYKeMbl2XEXqEcHSlwG+/Dqfhg/2lNMM6JEIDFLL
+	GYiKAX5SbYZy/g9eqHWoplZEm5xNtk2rVcjtwLPAiC1lWW+ZnIeI
+X-Gm-Gg: ASbGncvkxsPcTobY+btO+v3fMMKngUjJaytuwpzeD5lkLVC90eauLIy0Ujbp6YJivLT
+	16qmUOEKhtraoONlwpz9SSGBBZmLKkS9wJT3y5BCi5Yvtd9y8Y2jKNHDToSZnK3xkbNMPJD6TPN
+	tqaMh5AmX8IUDba0Yqg1HLACbdIpCUmXEanDdMAH9M4UFW2QsbnI08rWOQdvJQ+/5K3mXabms50
+	QbLgjrEJofvIhQrKxo8Nmgc6sybomdTMnY3RqxU1cqQvRZ3a6F7GEpmgGzDSLQWUOlQssu+gDcz
+	zbvEpH4+9klYRY0n/z3A7rNt23fUuj1C2qJub7xnVkHYxfnuKB8WcWvT2pEM3kReYxKqtqEZph/
+	WseYDGTHcOBrBlN8=
+X-Google-Smtp-Source: AGHT+IEYlF/hNqQrFTfpBoNpweh9xryEMmimNBOhG4fWdyuCklvbsZ/dxNPV1dYaSw0ArXAE3IBjuw==
+X-Received: by 2002:a17:903:98d:b0:223:653e:eb09 with SMTP id d9443c01a7336-22de6e93a1cmr7904965ad.7.1745873801387;
+        Mon, 28 Apr 2025 13:56:41 -0700 (PDT)
 Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9abf2sm8405360b3a.122.2025.04.28.13.56.36
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76fc0sm88021445ad.27.2025.04.28.13.56.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:56:36 -0700 (PDT)
+        Mon, 28 Apr 2025 13:56:40 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org,
 	linux-arm-msm@vger.kernel.org,
 	Connor Abbott <cwabbott0@gmail.com>,
 	Rob Clark <robdclark@chromium.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-	iommu@lists.linux.dev (open list:IOMMU SUBSYSTEM),
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 03/33] iommu/io-pgtable-arm: Add quirk to quiet WARN_ON()
-Date: Mon, 28 Apr 2025 13:54:10 -0700
-Message-ID: <20250428205619.227835-4-robdclark@gmail.com>
+Subject: [PATCH v3 05/33] drm/msm: Improve msm_context comments
+Date: Mon, 28 Apr 2025 13:54:12 -0700
+Message-ID: <20250428205619.227835-6-robdclark@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250428205619.227835-1-robdclark@gmail.com>
 References: <20250428205619.227835-1-robdclark@gmail.com>
@@ -90,100 +90,120 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-In situations where mapping/unmapping squence can be controlled by
-userspace, attempting to map over a region that has not yet been
-unmapped is an error.  But not something that should spam dmesg.
+Just some tidying up.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 18 ++++++++++++------
- include/linux/io-pgtable.h     |  8 ++++++++
- 2 files changed, 20 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/msm_gpu.h | 44 +++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index f27965caf6a1..99523505dac5 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -475,7 +475,7 @@ static int __arm_lpae_map(struct arm_lpae_io_pgtable *data, unsigned long iova,
- 		cptep = iopte_deref(pte, data);
- 	} else if (pte) {
- 		/* We require an unmap first */
--		WARN_ON(!selftest_running);
-+		WARN_ON(!selftest_running && !(cfg->quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
- 		return -EEXIST;
- 	}
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 957d6fb3469d..c699ce0c557b 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -348,25 +348,39 @@ struct msm_gpu_perfcntr {
  
-@@ -649,8 +649,10 @@ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
- 	unmap_idx_start = ARM_LPAE_LVL_IDX(iova, lvl, data);
- 	ptep += unmap_idx_start;
- 	pte = READ_ONCE(*ptep);
--	if (WARN_ON(!pte))
--		return 0;
-+	if (!pte) {
-+		WARN_ON(!(data->iop.cfg.quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
-+		return -ENOENT;
-+	}
- 
- 	/* If the size matches this level, we're in the right place */
- 	if (size == ARM_LPAE_BLOCK_SIZE(lvl, data)) {
-@@ -660,8 +662,10 @@ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
- 		/* Find and handle non-leaf entries */
- 		for (i = 0; i < num_entries; i++) {
- 			pte = READ_ONCE(ptep[i]);
--			if (WARN_ON(!pte))
-+			if (!pte) {
-+				WARN_ON(!(data->iop.cfg.quirks & IO_PGTABLE_QUIRK_NO_WARN_ON));
- 				break;
-+			}
- 
- 			if (!iopte_leaf(pte, lvl, iop->fmt)) {
- 				__arm_lpae_clear_pte(&ptep[i], &iop->cfg, 1);
-@@ -976,7 +980,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
- 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
- 			    IO_PGTABLE_QUIRK_ARM_TTBR1 |
- 			    IO_PGTABLE_QUIRK_ARM_OUTER_WBWA |
--			    IO_PGTABLE_QUIRK_ARM_HD))
-+			    IO_PGTABLE_QUIRK_ARM_HD |
-+			    IO_PGTABLE_QUIRK_NO_WARN_ON))
- 		return NULL;
- 
- 	data = arm_lpae_alloc_pgtable(cfg);
-@@ -1079,7 +1084,8 @@ arm_64_lpae_alloc_pgtable_s2(struct io_pgtable_cfg *cfg, void *cookie)
- 	struct arm_lpae_io_pgtable *data;
- 	typeof(&cfg->arm_lpae_s2_cfg.vtcr) vtcr = &cfg->arm_lpae_s2_cfg.vtcr;
- 
--	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_S2FWB))
-+	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_S2FWB |
-+			    IO_PGTABLE_QUIRK_NO_WARN_ON))
- 		return NULL;
- 
- 	data = arm_lpae_alloc_pgtable(cfg);
-diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index bba2a51c87d2..639b8f4fb87d 100644
---- a/include/linux/io-pgtable.h
-+++ b/include/linux/io-pgtable.h
-@@ -88,6 +88,13 @@ struct io_pgtable_cfg {
- 	 *
- 	 * IO_PGTABLE_QUIRK_ARM_HD: Enables dirty tracking in stage 1 pagetable.
- 	 * IO_PGTABLE_QUIRK_ARM_S2FWB: Use the FWB format for the MemAttrs bits
+ /**
+  * struct msm_context - per-drm_file context
+- *
+- * @queuelock:    synchronizes access to submitqueues list
+- * @submitqueues: list of &msm_gpu_submitqueue created by userspace
+- * @queueid:      counter incremented each time a submitqueue is created,
+- *                used to assign &msm_gpu_submitqueue.id
+- * @aspace:       the per-process GPU address-space
+- * @ref:          reference count
+- * @seqno:        unique per process seqno
+  */
+ struct msm_context {
++	/** @queuelock: synchronizes access to submitqueues list */
+ 	rwlock_t queuelock;
++
++	/** @submitqueues: list of &msm_gpu_submitqueue created by userspace */
+ 	struct list_head submitqueues;
++
++	/**
++	 * @queueid:
 +	 *
-+	 * IO_PGTABLE_QUIRK_NO_WARN_ON: Do not WARN_ON() on conflicting
-+	 *	mappings, but silently return -EEXISTS.  Normally an attempt
-+	 *	to map over an existing mapping would indicate some sort of
-+	 *	kernel bug, which would justify the WARN_ON().  But for GPU
-+	 *	drivers, this could be under control of userspace.  Which
-+	 *	deserves an error return, but not to spam dmesg.
++	 * Counter incremented each time a submitqueue is created, used to
++	 * assign &msm_gpu_submitqueue.id
++	 */
+ 	int queueid;
++
++	/** @aspace: the per-process GPU address-space */
+ 	struct msm_gem_address_space *aspace;
++
++	/** @kref: the reference count */
+ 	struct kref ref;
++
++	/**
++	 * @seqno:
++	 *
++	 * A unique per-process sequence number.  Used to detect context
++	 * switches, without relying on keeping a, potentially dangling,
++	 * pointer to the previous context.
++	 */
+ 	int seqno;
+ 
+ 	/**
+-	 * sysprof:
++	 * @sysprof:
+ 	 *
+ 	 * The value of MSM_PARAM_SYSPROF set by userspace.  This is
+ 	 * intended to be used by system profiling tools like Mesa's
+@@ -384,21 +398,21 @@ struct msm_context {
+ 	int sysprof;
+ 
+ 	/**
+-	 * comm: Overridden task comm, see MSM_PARAM_COMM
++	 * @comm: Overridden task comm, see MSM_PARAM_COMM
+ 	 *
+ 	 * Accessed under msm_gpu::lock
  	 */
- 	#define IO_PGTABLE_QUIRK_ARM_NS			BIT(0)
- 	#define IO_PGTABLE_QUIRK_NO_PERMS		BIT(1)
-@@ -97,6 +104,7 @@ struct io_pgtable_cfg {
- 	#define IO_PGTABLE_QUIRK_ARM_OUTER_WBWA		BIT(6)
- 	#define IO_PGTABLE_QUIRK_ARM_HD			BIT(7)
- 	#define IO_PGTABLE_QUIRK_ARM_S2FWB		BIT(8)
-+	#define IO_PGTABLE_QUIRK_NO_WARN_ON		BIT(9)
- 	unsigned long			quirks;
- 	unsigned long			pgsize_bitmap;
- 	unsigned int			ias;
+ 	char *comm;
+ 
+ 	/**
+-	 * cmdline: Overridden task cmdline, see MSM_PARAM_CMDLINE
++	 * @cmdline: Overridden task cmdline, see MSM_PARAM_CMDLINE
+ 	 *
+ 	 * Accessed under msm_gpu::lock
+ 	 */
+ 	char *cmdline;
+ 
+ 	/**
+-	 * elapsed:
++	 * @elapsed:
+ 	 *
+ 	 * The total (cumulative) elapsed time GPU was busy with rendering
+ 	 * from this context in ns.
+@@ -406,7 +420,7 @@ struct msm_context {
+ 	uint64_t elapsed_ns;
+ 
+ 	/**
+-	 * cycles:
++	 * @cycles:
+ 	 *
+ 	 * The total (cumulative) GPU cycles elapsed attributed to this
+ 	 * context.
+@@ -414,7 +428,7 @@ struct msm_context {
+ 	uint64_t cycles;
+ 
+ 	/**
+-	 * entities:
++	 * @entities:
+ 	 *
+ 	 * Table of per-priority-level sched entities used by submitqueues
+ 	 * associated with this &drm_file.  Because some userspace apps
+@@ -427,7 +441,7 @@ struct msm_context {
+ 	struct drm_sched_entity *entities[NR_SCHED_PRIORITIES * MSM_GPU_MAX_RINGS];
+ 
+ 	/**
+-	 * ctx_mem:
++	 * @ctx_mem:
+ 	 *
+ 	 * Total amount of memory of GEM buffers with handles attached for
+ 	 * this context.
 -- 
 2.49.0
 
