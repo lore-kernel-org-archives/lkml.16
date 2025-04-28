@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532B425F969;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5314C25F78D;
 	Mon, 28 Apr 2025 10:44:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745837071; cv=none; b=UN4WEqoees170qNla+yVJAsf4iPARh7paWjyB21XyZykw5nPBncTqBpcaTDZEDX15ZZBqQxpscZYo/QZFQt9tnKaccDZhgYYKSkOXmw4QCtU6/8TROZCKKA6KQZuy0z4qGjjzEG2did9oeazLkMzcRPucsUE+xfjhICCIQmMe8k=
+	t=1745837071; cv=none; b=j/alXo1CatIxOnVnFLKX6GV9DsKF5EcOEMPkrxX3P5pk04twc+rJmcq4yMuEY4ZYpnjcGJ9peotrnaGZjTvyqD6RsoQxo2Izt3mBSdklfvhfO/dc4bIZv7YRQVot7/b4COf7nCM2M9vdUKD2+dVIM27lhw8nWxcKyBs68ly3uUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745837071; c=relaxed/simple;
-	bh=bABu/VDEElSSmPA6cekdNFlpkqmVhNewXrFKDvSrJ70=;
+	bh=J/CgIbmBv/dfViEFXB2ZtXKbxhuPVlJtSqog+cbGqNI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vi0VX+M7pCLnOZR+/KfMBk+D5FSyo/8KjAO70IWkEQD+DDXbv7d6vFimBDkU7Yw+pLg1oKmn6FahoqwNuhTILW6hSfujlelTomGmCmfMrfY7mrFfNh9ils1Coq2blxRehn9aAzQ2hbPLk7VwMZLBQdkeZkxPgtAMPpZqstHm0uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sE8+cc9B; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ZARsDk2ctmRoHK8UjLRpPY0ZFem84kaxwZUArTe67L3VIxyHiiuWOPunqEeWOMgKbjRHsMHErb/sYSiavhBqYy0YGnFjFGUSnVRdZq0hI/cYTMovoC+joYasKPMXB4dIr0fOQBUoUybFqh34mGhejWJrMPuVFU/5aNfo3anoGU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqlujBOf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sE8+cc9B"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0E980C4CEF3;
-	Mon, 28 Apr 2025 10:44:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqlujBOf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F27D8C4CEF0;
+	Mon, 28 Apr 2025 10:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745837071;
-	bh=bABu/VDEElSSmPA6cekdNFlpkqmVhNewXrFKDvSrJ70=;
+	bh=J/CgIbmBv/dfViEFXB2ZtXKbxhuPVlJtSqog+cbGqNI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=sE8+cc9BZwAi5Zzk8ui1e54lPZKk2HBRKq2Cq11+GGeKiP9SgR6udO/meV5W2aiq/
-	 vW8Z9Ji5yy4qVty5/GlSHPHZvHCCaQd5veDGjWPeSgYBe03oRMM12axybhd+Q0IWIP
-	 rrWVp85/0o7HdVnQmF0yt+qHCreJHY1iQti9QudCwMSWPQbt57tjBN/ve1fhKgQ5wP
-	 fG6OJhgfFBZdgQ1Kz+pHh9Fs81Go2aU9wpdgrTk3o2nJOd2H0+kDk/zHUN2miosT8w
-	 LcZ2sbs+HpXtQxfagG2kztjwDmizichm0FeTHF4yXSY7uBEGDD6n3yXXnzNNlLD/ZK
-	 nyFu4conRGS0A==
+	b=eqlujBOfTaVkiAdBstmjHc/CtDyxpMBf8fLZphEnrquScJtcKDhtTe83kzaDQ4bjJ
+	 /D+YcXJMmL++PlEPjPK449IBjg60cCXEz4Wha9BunOu7eO4xgPseEAjW5tycPCrGow
+	 3cV3yEWhj0D47m5eKUOoDxnytf726/VYIxMlvN3+9jY2FJzGkFGWoME31ty6K3QKqr
+	 6BQ3+OGXCAKHj0mHK2HVhtN48JlF8wi90rkywuI9GxBp8xIPeuufI6ndVpRsF6M123
+	 qplQJ3YwqDzvrXdNmJ6nZhhoVRpcCLAxTfof3fVbai6EdPu2+5+sKLWpnt5ur8b+tN
+	 6eiOJm22FJLyQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05159C369DC;
-	Mon, 28 Apr 2025 10:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E910BC369D3;
+	Mon, 28 Apr 2025 10:44:30 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Mon, 28 Apr 2025 12:44:31 +0200
-Subject: [PATCH v2 4/4] ARM: dts: amlogic: meson8-fernsehfee3: Describe
- regulators
+Date: Mon, 28 Apr 2025 12:44:30 +0200
+Subject: [PATCH v2 3/4] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250428-fernsehfee-v2-4-293b98a43a91@posteo.net>
+Message-Id: <20250428-fernsehfee-v2-3-293b98a43a91@posteo.net>
 References: <20250428-fernsehfee-v2-0-293b98a43a91@posteo.net>
 In-Reply-To: <20250428-fernsehfee-v2-0-293b98a43a91@posteo.net>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -54,11 +53,11 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745837069; l=6255;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745837069; l=7396;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=AKgCpfdZWCv+zwZ8v1j45DO/pgrxh4IwJ6agZCbSHzg=;
- b=H2zfdKROsGKE+lXPLgpMspCqA17o4V39l5+mZZxisa5jdqEqBITV+eE5Zkft+itNVp4tlp2tm
- HoKZZBJ5DdgDJKT6qoUQu3NSrTkamu5YM59m3WjtJQB1iXlizXKMvQW
+ bh=tebtMtUwOY6xaBmSlEZFxau3HI8tHtfz98jpkXEgmbk=;
+ b=9B41xUce9dP/iObUyE927059Mcqk770UPnl4gXHmSikWu/Q/MXnO02sUkBgXU4XuDO6J4Yfkq
+ QZU/WYkg1IqCtBRdl9nLVOaL4ynKySfnCEueiBJn6525tgkYSF+XVDb
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -68,204 +67,315 @@ Reply-To: j.ne@posteo.net
 
 From: "J. Neuschäfer" <j.ne@posteo.net>
 
-The fernsehfee3 board uses a Ricoh RN5T618 PMIC to generate various
-voltages. Board schematics are not available, but the regulator voltages
-found in /sys/kernel/debug/regulator/regulator_summary match those in
-meson8m2-mxiii-plus.dts:
+Fernsehfee[1] ("TV fairy") 3.0 is a set-top box with HDMI input and
+output ports. It originally ran Android 4.4 and a Linux 3.10 kernel.
 
- DCDC1               0    0      0 unknown  1100mV     0mA     0mV     0mV
- DCDC2               0    0      0 unknown  1150mV     0mA     0mV     0mV
- DCDC3               0    0      0 unknown  1500mV     0mA     0mV     0mV
- LDO1                0    0      0 unknown  2900mV     0mA     0mV     0mV
- LDO2                0    0      0 unknown  1800mV     0mA     0mV     0mV
- LDO3                0    0      0 unknown  1800mV     0mA     0mV     0mV
- LDO4                0    0      0 unknown  2850mV     0mA     0mV     0mV
- LDO5                0    0      0 unknown  1800mV     0mA     0mV     0mV
- LDORTC1             0    0      0 unknown  2700mV     0mA     0mV     0mV
- LDORTC2             0    0      0 unknown   900mV     0mA     0mV     0mV
+The following features are tested and known to work:
 
-This patch takes the following approach:
+- Ethernet
+- Power LED (switching between green and red)
+- Power button
+- eMMC
+- SD Card
+- USB
+- Wifi
 
- - Copy RN5T618 regulator nodes from meson8m2-mxiii-plus.dts
- - Remove some of the regulator names, which do not seem to apply
- - Verify regulator supply relations by starting without any relations
-   (and without regulator-always-on) and seeing what breaks when the
-   kernel turns off "unused" regulators.
+The following features are untested or not working:
 
-This results in the following observations:
+- HDMI input and output
+- Infrared remote control input and output
 
- - When LDO1 is turned off, the board resets
- - When DCDC1, DCDC2, DCDC3, LDO2, or LDO5 are turned off, the board (as
-   observed through the serial port) stops running, so these must stay on
-   at all times.
- - LDO4 (VCC2V8) appears to be unused on this board.
- - LDO3 (VCC1V8_USB) must stay on in order for USB to work, both the
-   external USB ports and the internal USB wifi module.
+[1]: https://fernsehfee.de/ (German), https://telefairy.com/ (English)
 
-The cpu-supply and mali-supply relations are also copied from
-meson8m2-mxiii-plus.dts
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
+This patch depends on a new binding, which has entered linux-next
+through usb-next: "dt-bindings: net: wireless: Add Realtek RTL8188ETV USB WiFi"
 
-Checklist used during the development of this patch (when a given
-regulator is not forced to stay on, which features work/fail?):
-
- regulator | boot | run  | USB  | WLAN | eMMC | SD   | Eth
- ----------|------|------|------|------|------|------|------
-  baseline | ok   | ok   | ok   | ok   | ok   | ok   | ok
-  empty¹   | ok   | ok   | ok   | ok   | ok   | init²| ok
-  DCDC1    | ok   | STOP |      |      |      |      |
-  DCDC2    | ok   | STOP |      |      |      |      |
-  DCDC3    | ok   | STOP |      |      |      |      |
-  LDO1     | ok   | RESET| FAIL | FAIL | ok   | init | ok
-  LDO2     | ok   | STOP | ok   | ok   | ok   | ok   |
-  LDO3     | ok   | ok   | FAIL | FAIL | ok   | ok   | ok
-  LDO4     | ok   | ok   | ok   | ok   | ok   | ok   | ok
-  LDO5     | ok   | STOP |      |      |      |      |
-  LDORTC1  |      |      |      |      |      |      |
-  LDORTC2  |      |      |      |      |      |      |
-
-¹: empty list of regulators
-²: fails to initialize when plugged in at boot, only inits on hotplug
-
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=RTL8188ETV
 
 V2:
-- new patch
+- Fix bias-pull-up property
+- Remove unused sd_card_slot label, apply Neil Armstrong's R-b tag
+- Move vdd-supply to wifi module, instead of using vbus-supply
+- Remove regulator-1v8, because measurements did not show evidence that
+  the eMMC chip actually gets 1.8V for Vccq.
 ---
- arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts | 91 ++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+ arch/arm/boot/dts/amlogic/Makefile               |   1 +
+ arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts | 215 +++++++++++++++++++++++
+ arch/arm/boot/dts/amlogic/meson8.dtsi            |  18 ++
+ 3 files changed, 234 insertions(+)
 
+diff --git a/arch/arm/boot/dts/amlogic/Makefile b/arch/arm/boot/dts/amlogic/Makefile
+index 504c533b1173298ec7f45099888d88b2fb74b978..3c8a1e88b386cd7fb9b5f41f47d7ff78fe7eeacc 100644
+--- a/arch/arm/boot/dts/amlogic/Makefile
++++ b/arch/arm/boot/dts/amlogic/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_MACH_MESON8) += \
+ 	meson8-minix-neo-x8.dtb \
++	meson8-fernsehfee3.dtb \
+ 	meson8b-ec100.dtb \
+ 	meson8b-mxq.dtb \
+ 	meson8b-odroidc1.dtb \
 diff --git a/arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts b/arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts
-index 3f9e2e5d8d5bd7ca7eb31e9b6cc7a591666c89ea..4e52447d51bd2d1d04e4ce21ddf598bc80a4c5f4 100644
---- a/arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f9e2e5d8d5bd7ca7eb31e9b6cc7a591666c89ea
+--- /dev/null
 +++ b/arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts
-@@ -85,6 +85,10 @@ wifi_3v3: regulator-wifi {
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&vcck>;
+@@ -0,0 +1,215 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++// Copyright (C) 2025 J. Neuschäfer <j.ne@posteo.net>
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
++#include <dt-bindings/leds/common.h>
++
++#include "meson8.dtsi"
++
++/ {
++	model = "Fernsehfee 3.0";
++	compatible = "tcu,fernsehfee3", "amlogic,meson8";
++
++	aliases {
++		serial0 = &uart_AO;
++		gpiochip0 = &gpio;
++		gpiochip1 = &gpio_ao;
++		i2c0 = &i2c_AO;
++		i2c1 = &i2c_B;
++		mmc0 = &sdhc;
++		mmc1 = &sdio;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x40000000>;  /* 1 GiB */
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys-polled";
++		poll-interval = <100>;
++
++		power-button {
++			label = "Power button";
++			linux,code = <KEY_POWER>;
++			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led-0 {
++			/*
++			 * The power LED can be turned red, otherwise it is green.
++			 */
++			gpios = <&gpio_ao GPIO_TEST_N GPIO_ACTIVE_LOW>;
++			function = LED_FUNCTION_POWER;
++			color = <LED_COLOR_ID_RED>;
++		};
++	};
++
++	vcc_5v: regulator-5v {
++		/* 5V rail, always on as long as the system is running */
++		compatible = "regulator-fixed";
++		regulator-name = "5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	vcc_3v3: regulator-3v3 {
++		/* Chipown AP2420 step-down converter */
++		compatible = "regulator-fixed";
++		regulator-name = "3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc_5v>;
++	};
++
++	wifi_3v3: regulator-wifi {
++		compatible = "regulator-fixed";
++		regulator-name = "3.3V-WIFI";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc_3v3>;
++		gpio = <&gpio GPIOX_11 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
 +};
 +
- &ethmac {
- 	status = "okay";
- 	pinctrl-0 = <&eth_pins>;
-@@ -117,6 +121,87 @@ pmic@32 {
- 		compatible = "ricoh,rn5t618";
- 		reg = <0x32>;
- 		system-power-controller;
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rmii";
 +
-+		regulators {
-+			vcck: DCDC1 {
-+				regulator-name = "VCCK";
-+				regulator-min-microvolt = <825000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+			vddee: DCDC2 {
-+				/* the output is also used as VDDAO */
-+				regulator-name = "VDD_EE";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++		eth_phy0: ethernet-phy@0 {
++			/* IC Plus IP101A (0x02430c54) */
++			reg = <0>;
 +
-+			DCDC3 {
-+				regulator-name = "VDD_DDR";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++			reset-assert-us = <10000>;
++			reset-deassert-us = <10000>;
++			reset-gpios = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
 +
-+			LDO1 {
-+				regulator-name = "VDDIO_AO28";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++&i2c_AO {
++	status = "okay";
++	pinctrl-0 = <&i2c_ao_pins>;
++	pinctrl-names = "default";
 +
-+			LDO2 {
-+				regulator-name = "VDDIO_AO18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++	pmic@32 {
++		compatible = "ricoh,rn5t618";
++		reg = <0x32>;
++		system-power-controller;
++	};
 +
-+			vcc1v8_usb: LDO3 {
-+				regulator-name = "VCC1V8_USB";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
++	eeprom@50 {
++		/* Fairchild FM24C08A */
++		compatible = "atmel,24c08";
++		reg = <0x50>;
++		pagesize = <16>;
++		wp-gpios = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
++		num-addresses = <4>;
++	};
++};
 +
-+			LDO4 {
-+				/* This one appears to be unused */
-+				regulator-name = "VCC2V8";
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <2850000>;
-+			};
++&i2c_B {
++	status = "okay";
++	pinctrl-0 = <&i2c_b_pins>;
++	pinctrl-names = "default";
 +
-+			LDO5 {
-+				regulator-name = "AVDD1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++	/* TODO: SiI9293 HDMI receiver @ 0x39 */
++};
 +
-+			LDORTC1 {
-+				regulator-name = "VDD_LDO";
-+				regulator-min-microvolt = <2700000>;
-+				regulator-max-microvolt = <2700000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
++&sdhc {
++	status = "okay";
++	pinctrl-0 = <&sdxc_c_pins>;
++	pinctrl-names = "default";
 +
-+			LDORTC2 {
-+				regulator-name = "RTC_0V9";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
++	/* eMMC */
++	bus-width = <8>;
++	max-frequency = <100000000>;
++
++	disable-wp;
++	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
++	no-sdio;
++
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vcc_3v3>;
++};
++
++&sdio {
++	status = "okay";
++	pinctrl-0 = <&sd_b_pins>;
++
++	/* SD card */
++	slot@1 {
++		compatible = "mmc-slot";
++		reg = <1>;
++		status = "okay";
++
++		bus-width = <4>;
++		cap-mmc-highspeed;
++		cap-sd-highspeed;
++		disable-wp;
++
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
++
++		vmmc-supply = <&vcc_3v3>;
++	};
++};
++
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++	dr_mode = "host";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	wifi: wifi@1 {
++		/* Realtek RTL8188 2.4GHz WiFi module */
++		compatible = "usbbda,179";
++		reg = <1>;
++		vdd-supply = <&wifi_3v3>;
++	};
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&ir_receiver {
++	status = "okay";
++	pinctrl-0 = <&ir_recv_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm/boot/dts/amlogic/meson8.dtsi b/arch/arm/boot/dts/amlogic/meson8.dtsi
+index 847f7b1f1e9617cb8b7d153a1ae62b0ff2112606..ddad4695ca073455112fd635bde9e2ac38a2eda3 100644
+--- a/arch/arm/boot/dts/amlogic/meson8.dtsi
++++ b/arch/arm/boot/dts/amlogic/meson8.dtsi
+@@ -481,6 +481,14 @@ gpio: bank@80 {
+ 			gpio-ranges = <&pinctrl_cbus 0 0 120>;
+ 		};
+ 
++		i2c_b_pins: i2c-b {
++			mux {
++				groups = "i2c_sda_b", "i2c_sck_b";
++				function = "i2c_b";
++				bias-disable;
 +			};
 +		};
- 	};
- 
- 	eeprom@50 {
-@@ -137,6 +222,10 @@ &i2c_B {
- 	/* TODO: SiI9293 HDMI receiver @ 0x39 */
- };
- 
-+&mali {
-+	mali-supply = <&vddee>;
-+};
 +
- &sdhc {
- 	status = "okay";
- 	pinctrl-0 = <&sdxc_c_pins>;
-@@ -188,6 +277,7 @@ &usb0 {
+ 		sd_a_pins: sd-a {
+ 			mux {
+ 				groups = "sd_d0_a", "sd_d1_a", "sd_d2_a",
+@@ -526,6 +534,16 @@ mux {
+ 			};
+ 		};
  
- &usb0_phy {
- 	status = "okay";
-+	phy-supply = <&vcc1v8_usb>;
- };
- 
- &usb1 {
-@@ -206,6 +296,7 @@ wifi: wifi@1 {
- 
- &usb1_phy {
- 	status = "okay";
-+	phy-supply = <&vcc1v8_usb>;
- };
- 
- &ir_receiver {
++		sdxc_c_pins: sdxc-c {
++			mux {
++				groups = "sdxc_d0_c", "sdxc_d13_c",
++					"sdxc_clk_c", "sdxc_cmd_c",
++					"sdxc_d47_c";
++				function = "sdxc_c";
++				bias-pull-up;
++			};
++		};
++
+ 		spdif_out_pins: spdif-out {
+ 			mux {
+ 				groups = "spdif_out";
 
 -- 
 2.48.0.rc1.219.gb6b6757d772
