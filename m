@@ -1,251 +1,301 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BB9223338;
-	Mon, 28 Apr 2025 17:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E8E2566DC
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860386; cv=none; b=mmfz3mnlN7R2u1x+Eo983l0SisUNKSExIUZnAWoSIkoRHfP4H7LJCzThEHHIzwRBRSO3CzSSWv/ZEhOCr6fxMgG1ZOnkSVjHGjrtAEPGJuB96045DApy/L6VzllWFsdPnD2DMemfNyLJBe9pcx113OFk27JJxvYx7WYI8PxYdCg=
+	t=1745860420; cv=none; b=f/dujsfm1uyZkoxy1PjiX3uyb7kNCD1+Y0639RYxoaiK/41kD94csd+Xls5C5OXr/npoCdvEmQeZ/iZ2KWLl5SobjNnZwu0YEcW/LUqcCG7TbY0LsrKPdjm+xVFkl/FaK1axROYLoRyiMkeasn7nirwoTCxC3dqPmr9ycpFzMEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860386; c=relaxed/simple;
-	bh=yPImR2FR7PHscbj8FO5MYpY++3jeaaS6t1jVeZ0eY/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LSPaazvIL8gj89VT/zCVSTvK1VMXNChjbfNBWy1jWeE6Ak/UJ8Z04FGSQIRdWm8dA6n+/yOokDhBKpBgK6nRIXxsJ+Ldn1qKgbqrIbiDlnrXA7gJBnqMs5DjHpbyrXxiffzWXfmKqOhVPVRRhQkZmOa+nLAgtzFgNH0pqECPhwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9DhL1HR; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745860420; c=relaxed/simple;
+	bh=nWgWzlUJa06MxNgJOwVP/WXg4pkgTp6oaZEytmQAVYw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=F5iLqB4JNiM6dtnt0C2dk2pbVR6KePioPnncE/8z74GOKgNRbNKWJ5fSbkgmRZ/k6zgOyS7Z9KyC+G/cgaIJ3wFQ/IZ162F/7JWu/4PARe5ZIZNm+zNDvulGw1fyd1UKjohDX+L1qGFYld6sH/mJUzrVV413iQh/n675GgTiRBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LXoBnbXi; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9DhL1HR"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-309fac646adso2843063a91.1;
-        Mon, 28 Apr 2025 10:13:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LXoBnbXi"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so4586051a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:13:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745860384; x=1746465184; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0aWcmtL95uQeYsQHUGFsCmGq4ARE/rjVxbyBKZAibqk=;
-        b=H9DhL1HRq8dNv7TTGnDbDPQWBl9XFlC5s2Gb8KyO52TxLG/Lj24dyPqkxvboHaPFds
-         g2F9xrsjs14IsxSx9oiFqBEoB5n1sJk181iZKOZ2y1Afa/pYotF+ErW7GFNf2H2S6qML
-         aSOdpWgN4f/p+65KrB4hb6y3ouSnu+F9y58PZFvORNa7jCcH7jF5i732yFeR8+13tiPh
-         fBIbFg+zSVd3AgbIZMpGqGkA2fVTnbFYtAUt7fQl113nD2MeTjlmwqc3uapG/Gdw5FLW
-         FnVAtYtq8doiFyRQuTqZrQKOLCT/KQou0OTFfVPe4WjqbBHDTihuVAqtyTcXMdOAJHMZ
-         CNTw==
+        d=google.com; s=20230601; t=1745860418; x=1746465218; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tLXoOx9yRCTvvCd0BrHtncY5tgqACMNmODA1lhD+RGg=;
+        b=LXoBnbXiKvfGk1QIMY/LcN49Uo6CtG4UWARBfzJTa8FgCkjNxiBqgIp8c1qJjp91qP
+         CwpmgLnz5XGv//BNbExWFy8bpgwQngMFsidtowz8F7Ddlx12Qc3YKu77PCl1rMNeCCwP
+         lENSSL25aTu/nbAeRIKYJlIPNQJB/zDCxp3evcEHoBngLiARSiIw8tKtCyp32FCv/9Uk
+         lVOY21CEQE/SJ2mFJpRzFpYFDNw8bURNlaMxaclIQYYpWLSD3FczTkt0hjreDcF8LORb
+         P521/x4rQDqyqNiU95BH9hE2/ydT2oE3KndYxNK+K36eABaj5264p5JT/Ye0qV7bm9Md
+         U3Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745860384; x=1746465184;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0aWcmtL95uQeYsQHUGFsCmGq4ARE/rjVxbyBKZAibqk=;
-        b=nVXOUv68xS0sKsvmhlPigCz3sDMZXi5zfSi+sdkXzNOqaFtTKs5hsHYb+JwzyOU0w0
-         Rp0BYoOB91eaETZ3i83C04n6F+sGNVfEUZ2UOXK1YSNYQhlhd0jU6DlvhCKcTr2fuYYS
-         tmnTpaFTxHDgto54rI1yMDr4XDd1RyJY3maKRD+L/r5Xu7D4mixl4/lX/rzwgW7Tr4i1
-         IyxGbtb9KkQNI4kvlA3byz1MbQPrhniJ7Ovh1uBP0cKANZe4gbC9TmpbuFxE/d9KQp8D
-         0pmmADLCmlfoSgcWSxeTn6RJnqpn8d2IqgGpwKE5xE51AYRDCQSuyS6j58BKkzBE40ei
-         HKQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGWKkY3wn+HklSm1FUWvMpRqbT+gYPx9YVM7YXX1tuVbSU5C6ewpJHNtgdylV0LQSa2WnE1Tdq70cLs+uiAjRjEg==@vger.kernel.org, AJvYcCVV7maQksHZ7XTfiXTDwys0ELGok7/WcuVxmSGW2SXcM39yJwABMdlmfpsCAKpPjTLIllMnOx9jy2bjYKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm1ruOxhe5menIQbBDdDrclZDBSgfIK9uxCIlgpUmyiq3PskG0
-	Ll581xM9vjzNWnDD+ia7ioDMiT1KzJ9pFsHTqPBbn2uZBnbddHtS
-X-Gm-Gg: ASbGnctMaVTgLKhP4RbOx3/sjoC2GRD7z/VqDD2lNclbzNPIeuWq/uvlxHMR/GfCky9
-	4W1QOhoLi5TyNMFjKHhlbANMW688HB/GNuRpnPUDAK8tTQcSOXmZRuetABprqtG7JbD1skafOxX
-	HWdR4HLcxpPuhC57egCAM8/H81m9P3UYMO3ck9nFrWPeiseR5R8NNTP6A8I2dHiiyshtGJKlmJS
-	QiyxVlHr/2JM4VJMVzlnN5LceqL/jg8Bay8BM7t9vLK06f+Xkqdzw4YKy6bmvvEqif2hRQAp5pC
-	snwewjpgxCFAAJW8FlMyaidIyM0++nqUFHWvAYU=
-X-Google-Smtp-Source: AGHT+IHWOIDd9y6vr7huqtxupJfN3hpUaBQLaUlNnozyWv6aH7mSCdhg1ZQngv1XQveJdMkPOacF4g==
-X-Received: by 2002:a17:90b:2550:b0:308:2945:3842 with SMTP id 98e67ed59e1d1-309f8a24cc1mr19035414a91.15.1745860383598;
-        Mon, 28 Apr 2025 10:13:03 -0700 (PDT)
-Received: from hiago-nb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef1475c1sm9321785a91.45.2025.04.28.10.12.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:13:02 -0700 (PDT)
-Date: Mon, 28 Apr 2025 14:12:57 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com, linux-remoteproc@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
- devm_clk_get_optional()
-Message-ID: <20250428171257.276bqhaupe4ksu5l@hiago-nb>
-References: <20250423155131.101473-1-hiagofranco@gmail.com>
- <aAkf6bxBLjgFjvIZ@p14s>
- <20250423192156.b44wobzcgwgojzk3@hiago-nb>
- <20250426134958.GB13806@nxa18884-linux>
+        d=1e100.net; s=20230601; t=1745860418; x=1746465218;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tLXoOx9yRCTvvCd0BrHtncY5tgqACMNmODA1lhD+RGg=;
+        b=dV0LBPg8jtpnOk7N05OUCY6VaokjEnTSe7BE947Ew1KdnbnxV7LxO55v0tFAFGKMy0
+         dGCq4+mztDG1voK1icCOhh/XnJjXQDQ3hPuJ9VQU4ZarL1UsDyGk9rGW/XN7whlPB4zb
+         ecxVeM9CRhpKB7FZIkbOKBztME6SPklHYYfO+dxD8k+8tIhTlt3YTcY4c1ZlMDMw1G/F
+         tfKzI9BbrrwAV4XVkkLLwmWvqkPPMHQGGNUN7Pfo0IoMHZTCm+t3SXiOOHrzxQYWEMCK
+         1Kf6e9GDeXwhlyOTroM43TuQnmhJTa2i4d72ZRabqHFPrlnyPFjJzQnvL5R2Axe7hlRJ
+         L5WA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2PcLUPaMRHirI97Oq83MPJXhuxN6NAYq9pucGWIuIO8HirLLqHhD7jblsvZIf748I+BwYnTjUa5DE3rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznfdbXu8DJ1yARviRkJnoRwPIc7rA98EJlaQWgNRb+vyp4ggAh
+	EJO4safYAe1kPG7YmLvf+Kmy78kO5/DjbSB5WZ6b1YCwgtxmxSEvrBc6Qwevm9wiuJXgxK+1rwZ
+	k1A==
+X-Google-Smtp-Source: AGHT+IE+4L5c7j0EkfxyQmlwMTl0MgYW7wuchNMYU9Od+v/iLDBMMA3J9+5+fhqGN0g7cJa/S4ImSoG6YW8=
+X-Received: from pjyr15.prod.google.com ([2002:a17:90a:e18f:b0:309:f831:28e0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2681:b0:2ff:5e4e:864
+ with SMTP id 98e67ed59e1d1-30a013995dcmr14048612a91.25.1745860418000; Mon, 28
+ Apr 2025 10:13:38 -0700 (PDT)
+Date: Mon, 28 Apr 2025 10:13:31 -0700
+In-Reply-To: <20250426100134.GB4198@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426134958.GB13806@nxa18884-linux>
+Mime-Version: 1.0
+References: <20250414111140.586315004@infradead.org> <20250414113754.172767741@infradead.org>
+ <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
+ <20250415074421.GI5600@noisy.programming.kicks-ass.net> <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
+ <20250416083859.GH4031@noisy.programming.kicks-ass.net> <20250426100134.GB4198@noisy.programming.kicks-ass.net>
+Message-ID: <aA-3OwNum9gzHLH1@google.com>
+Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, 
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	samitolvanen@google.com, ojeda@kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Sat, Apr 26, 2025 at 09:49:58PM +0800, Peng Fan wrote:
-> On Wed, Apr 23, 2025 at 04:21:56PM -0300, Hiago De Franco wrote:
-> >Hi Mathieu,
-> >
-> >On Wed, Apr 23, 2025 at 11:14:17AM -0600, Mathieu Poirier wrote:
-> >> Good morning,
-> >> 
-> >> On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
-> >> > From: Hiago De Franco <hiago.franco@toradex.com>
-> >> > 
-> >> > The "clocks" device tree property is not mandatory, and if not provided
-> >> > Linux will shut down the remote processor power domain during boot if it
-> >> > is not present, even if it is running (e.g. it was started by U-Boot's
-> >> > bootaux command).
-> >> 
-> >> If a clock is not present imx_rproc_probe() will fail, the clock will remain
-> >> unused and Linux will switch it off.  I think that is description of what is
-> >> happening.
-> >> 
-> >> > 
-> >> > Use the optional devm_clk_get instead.
-> >> > 
-> >> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> >> > ---
-> >> >  drivers/remoteproc/imx_rproc.c | 2 +-
-> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> > 
-> >> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> >> > index 74299af1d7f1..45b5b23980ec 100644
-> >> > --- a/drivers/remoteproc/imx_rproc.c
-> >> > +++ b/drivers/remoteproc/imx_rproc.c
-> >> > @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
-> >> >  	if (dcfg->method == IMX_RPROC_NONE)
-> >> >  		return 0;
-> >> >  
-> >> > -	priv->clk = devm_clk_get(dev, NULL);
-> >> > +	priv->clk = devm_clk_get_optional(dev, NULL);
-> >> 
-> >> If my understanding of the problem is correct (see above), I think the real fix
-> >> for this is to make the "clocks" property mandatory in the bindings.
-> >
-> >Thanks for the information, from my understanding this was coming from
-> >the power domain, I had a small discussion about this with Peng [1],
-> >where I was able to bisect the issue into a scu-pd commit. But I see
-> >your point for this commit, I can update the commit description.
-> >
-> >About the change itself, I was not able to find a defined clock to use
-> >into the device tree node for the i.MX8QXP/DX, maybe I am missing
-> >something? I saw some downstream device trees from NXP using a dummy
-> >clock, which I tested and it works, however this would not be the
-> >correct solution.
+On Sat, Apr 26, 2025, Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
 > 
-> The clock should be "clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;" for
-> i.MX8QX. This should be added into device tree to reflect the hardware truth.
+> > Yeah, I finally got there. I'll go cook up something else.
+> 
+> Sean, Paolo, can I once again ask how best to test this fastop crud?
 
-Is this correct? I added this clock entry and also updated the clk
-drivers to handle this option:
+Apply the below, build KVM selftests, enable forced emulation in KVM, and then
+run fastops_test.  It's well past time we had a selftest for this.  It won't
+detect bugs that are specific to 32-bit kernels, e.g. b63f20a778c8 ("x86/retpoline:
+Don't clobber RFLAGS during CALL_NOSPEC on i386"), since KVM selftests are 64-bit
+only, but for what you're doing, it should suffice.
 
-diff --git a/drivers/clk/imx/clk-imx8qxp-rsrc.c b/drivers/clk/imx/clk-imx8qxp-rsrc.c
-index 585c425524a4..69c6f1711667 100644
---- a/drivers/clk/imx/clk-imx8qxp-rsrc.c
-+++ b/drivers/clk/imx/clk-imx8qxp-rsrc.c
-@@ -58,6 +58,7 @@ static const u32 imx8qxp_clk_scu_rsrc_table[] = {
-        IMX_SC_R_NAND,
-        IMX_SC_R_LVDS_0,
-        IMX_SC_R_LVDS_1,
-+       IMX_SC_R_M4_0_PID0,
-        IMX_SC_R_M4_0_UART,
-        IMX_SC_R_M4_0_I2C,
-        IMX_SC_R_ELCDIF_PLL,
-diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
-index 3ae162625bb1..be6dfe0a5b97 100644
---- a/drivers/clk/imx/clk-imx8qxp.c
-+++ b/drivers/clk/imx/clk-imx8qxp.c
-@@ -142,6 +142,7 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
-        imx_clk_scu("a35_clk", IMX_SC_R_A35, IMX_SC_PM_CLK_CPU);
-        imx_clk_scu("a53_clk", IMX_SC_R_A53, IMX_SC_PM_CLK_CPU);
-        imx_clk_scu("a72_clk", IMX_SC_R_A72, IMX_SC_PM_CLK_CPU);
-+       imx_clk_scu("cm40_clk", IMX_SC_R_M4_0_PID0, IMX_SC_PM_CLK_CPU);
+For 32-bit kernels, it requires a 32-bit QEMU and KVM-Unit-Tests (or maybe even
+a full blown 32-bit guest image; I forget how much coverage KUT provides).
+Regardless, I don't see any reason to put you through that pain, I can do that
+sanity testing.
 
-        /* LSIO SS */
-        imx_clk_scu("pwm0_clk", IMX_SC_R_PWM_0, IMX_SC_PM_CLK_PER);
+I'll post a proper patch for the new selftest after testing on AMD.  The test
+relies on hardware providing deterministic behavior for undefined output (RFLAGS
+and GPRs); I don't know if that holds true on AMD.
 
+To enable forced emulation, set /sys/module/kvm/parameters/force_emulation_prefix
+to '1' (for the purposes of this test, the value doesn't matter).  The param is
+writable at runtime, so it doesn't matter if kvm.ko is built-in or a module. 
 
-However I am seeing a permission denied (-13) from the imx_rproc:
+---
+From: Sean Christopherson <seanjc@google.com>
+Date: Mon, 28 Apr 2025 08:55:44 -0700
+Subject: [PATCH] KVM: selftests: Add a test for x86's fastops emulation
 
-root@colibri-imx8x-07308754:~# dmesg | grep rproc
-[    0.489113] imx-rproc imx8x-cm4: Failed to enable clock
-[    0.489644] imx-rproc imx8x-cm4: probe with driver imx-rproc failed with error -13
-[    0.489708] remoteproc remoteproc0: releasing imx-rproc
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../testing/selftests/kvm/x86/fastops_test.c  | 165 ++++++++++++++++++
+ 2 files changed, 166 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/x86/fastops_test.c
 
-	imx8x-cm4 {
-		compatible = "fsl,imx8qxp-cm4";
-		clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;
-		mbox-names = "tx", "rx", "rxdb";
-		mboxes = <&lsio_mu5 0 1
-			  &lsio_mu5 1 1
-			  &lsio_mu5 3 1>;
-		memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>,
-				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
-		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-				<&pd IMX_SC_R_M4_0_MU_1A>;
-		fsl,entry-address = <0x34fe0000>;
-		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
-	};
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index f62b0a5aba35..411c3d5eb5b1 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -66,6 +66,7 @@ TEST_GEN_PROGS_x86 += x86/cr4_cpuid_sync_test
+ TEST_GEN_PROGS_x86 += x86/dirty_log_page_splitting_test
+ TEST_GEN_PROGS_x86 += x86/feature_msrs_test
+ TEST_GEN_PROGS_x86 += x86/exit_on_emulation_failure_test
++TEST_GEN_PROGS_x86 += x86/fastops_test
+ TEST_GEN_PROGS_x86 += x86/fix_hypercall_test
+ TEST_GEN_PROGS_x86 += x86/hwcr_msr_test
+ TEST_GEN_PROGS_x86 += x86/hyperv_clock
+diff --git a/tools/testing/selftests/kvm/x86/fastops_test.c b/tools/testing/selftests/kvm/x86/fastops_test.c
+new file mode 100644
+index 000000000000..c3799edb5d0c
+--- /dev/null
++++ b/tools/testing/selftests/kvm/x86/fastops_test.c
+@@ -0,0 +1,165 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "test_util.h"
++#include "kvm_util.h"
++#include "processor.h"
++
++/*
++ * Execute a fastop() instruction, with or without forced emulation.  BT bit 0
++ * to set RFLAGS.CF based on whether or not the input is even or odd, so that
++ * instructions like ADC and SBB are deterministic.
++ */
++#define guest_execute_fastop_1(FEP, insn, type_t, __val, __flags)			\
++do {											\
++	__asm__ __volatile__("bt $0, %[val]\n\t"					\
++			     FEP insn " %[val]\n\t"					\
++			     "pushfq\n\t"						\
++			     "pop %[flags]\n\t"						\
++			     : [val]"+r"(__val), [flags]"=r"(__flags)			\
++			     : : "cc", "memory");					\
++} while (0)
++
++#define guest_test_fastop_1(insn, type_t, __val)					\
++do {											\
++	type_t val = __val, ex_val = __val, input = __val;				\
++	uint64_t flags, ex_flags;							\
++											\
++	guest_execute_fastop_1("", insn, type_t, ex_val, ex_flags);			\
++	guest_execute_fastop_1(KVM_FEP, insn, type_t, val, flags);			\
++											\
++	__GUEST_ASSERT(val == ex_val,							\
++		       "Wanted 0x%lx for '%s 0x%lx', got 0x%lx",			\
++		       (uint64_t)ex_val, insn, (uint64_t)input, (uint64_t)val);		\
++	__GUEST_ASSERT(flags == ex_flags,						\
++			"Wanted flags 0x%lx for '%s 0x%lx', got 0x%lx",			\
++			ex_flags, insn, (uint64_t)input, flags);			\
++} while (0)
++
++#define guest_execute_fastop_2(FEP, insn, type_t, __input, __output, __flags)		\
++do {											\
++	__asm__ __volatile__("bt $0, %[output]\n\t"					\
++			     FEP insn " %[input], %[output]\n\t"			\
++			     "pushfq\n\t"						\
++			     "pop %[flags]\n\t"						\
++			     : [output]"+r"(__output), [flags]"=r"(__flags)		\
++			     : [input]"r"(__input) : "cc", "memory");			\
++} while (0)
++
++#define guest_test_fastop_2(insn, type_t, __val1, __val2)				\
++do {											\
++	type_t input = __val1, input2 = __val2, output = __val2, ex_output = __val2;	\
++	uint64_t flags, ex_flags;							\
++											\
++	guest_execute_fastop_2("", insn, type_t, input, ex_output, ex_flags);		\
++	guest_execute_fastop_2(KVM_FEP, insn, type_t, input, output, flags);		\
++											\
++	__GUEST_ASSERT(output == ex_output,						\
++		       "Wanted 0x%lx for '%s 0x%lx 0x%lx', got 0x%lx",			\
++		       (uint64_t)ex_output, insn, (uint64_t)input,			\
++		       (uint64_t)input2, (uint64_t)output);				\
++	__GUEST_ASSERT(flags == ex_flags,						\
++			"Wanted flags 0x%lx for '%s 0x%lx, 0x%lx', got 0x%lx",		\
++			ex_flags, insn, (uint64_t)input, (uint64_t)input2, flags);	\
++} while (0)
++
++#define guest_execute_fastop_cl(FEP, insn, type_t, __shift, __output, __flags)		\
++do {											\
++	__asm__ __volatile__("bt $0, %[output]\n\t"					\
++			     FEP insn " %%cl, %[output]\n\t"				\
++			     "pushfq\n\t"						\
++			     "pop %[flags]\n\t"						\
++			     : [output]"+r"(__output), [flags]"=r"(__flags)		\
++			     : "c"(__shift) : "cc", "memory");				\
++} while (0)
++
++#define guest_test_fastop_cl(insn, type_t, __val1, __val2)				\
++do {											\
++	type_t output = __val2, ex_output = __val2, input = __val2;			\
++	uint8_t shift = __val1;								\
++	uint64_t flags, ex_flags;							\
++											\
++	guest_execute_fastop_cl("", insn, type_t, shift, ex_output, ex_flags);		\
++	guest_execute_fastop_cl(KVM_FEP, insn, type_t, shift, output, flags);		\
++											\
++	__GUEST_ASSERT(output == ex_output,						\
++		       "Wanted 0x%lx for '%s 0x%x, 0x%lx', got 0x%lx",			\
++		       (uint64_t)ex_output, insn, shift, (uint64_t)input,		\
++		       (uint64_t)output);						\
++	__GUEST_ASSERT(flags == ex_flags,						\
++			"Wanted flags 0x%lx for '%s 0x%x, 0x%lx', got 0x%lx",		\
++			ex_flags, insn, shift, (uint64_t)input, flags);			\
++} while (0)
++
++static const uint64_t vals[] = {
++	0,
++	1,
++	2,
++	4,
++	7,
++	0x5555555555555555,
++	0xaaaaaaaaaaaaaaaa,
++	0xfefefefefefefefe,
++	0xffffffffffffffff,
++};
++
++#define guest_test_fastops(type_t, suffix)						\
++do {											\
++	int i, j;									\
++											\
++	for (i = 0; i < ARRAY_SIZE(vals); i++) {					\
++		guest_test_fastop_1("dec" suffix, type_t, vals[i]);			\
++		guest_test_fastop_1("inc" suffix, type_t, vals[i]);			\
++		guest_test_fastop_1("neg" suffix, type_t, vals[i]);			\
++		guest_test_fastop_1("not" suffix, type_t, vals[i]);			\
++											\
++		for (j = 0; j < ARRAY_SIZE(vals); j++) {				\
++			guest_test_fastop_2("add" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("adc" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("and" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("bsf" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("bsr" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("bt" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("btc" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("btr" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("bts" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("cmp" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("imul" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("or" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("sbb" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("sub" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("test" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_2("xor" suffix, type_t, vals[i], vals[j]);	\
++											\
++			guest_test_fastop_cl("rol" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_cl("ror" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_cl("rcl" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_cl("rcr" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_cl("sar" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_cl("shl" suffix, type_t, vals[i], vals[j]);	\
++			guest_test_fastop_cl("shr" suffix, type_t, vals[i], vals[j]);	\
++		}									\
++	}										\
++} while (0)
++
++static void guest_code(void)
++{
++	guest_test_fastops(uint16_t, "w");
++	guest_test_fastops(uint32_t, "l");
++	guest_test_fastops(uint64_t, "q");
++
++	GUEST_DONE();
++}
++
++int main(int argc, char *argv[])
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++
++	TEST_REQUIRE(is_forced_emulation_enabled);
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
++
++	vcpu_run(vcpu);
++	TEST_ASSERT_EQ(get_ucall(vcpu, NULL), UCALL_DONE);
++
++	kvm_vm_free(vm);
++}
 
-Am I missing something?
-
-> 
-> But there are several working configurations regarding M4 on i.MX8QM/QX/DX/DXL.
-> 
-> 1. M4 in a separate SCFW partition, linux has no permission to configure
->   anything except building rpmsg connection.
-> 2. M4 in same SCFW partition with Linux, Linux has permission to start/stop M4
->    In this scenario, there are two more items:
->    -(2.1) M4 is started by bootloader
->    -(2.2) M4 is started by Linux remoteproc.
-> 
-> 
-> Current imx_rproc.c only supports 1 and 2.2,
-> Your case is 2.1.
-> 
-> There is a clk_prepare_enable which not work for case 1 if adding a real
-> clock entry.
-> 
-> So need move clk_prepare_enable to imx_rproc_start, not leaving it in probe?
-> But for case 2.1, without clk_prepare_enable, kernel clk disable unused will
-> turn off the clk and hang M4. But even leaving clk_prepare_enable in probe,
-> if imx_rproc.c is built as module, clk_disable_unused will still turn
-> off the clk and hang M4.
-> 
-> So for case 2.1, there is no good way to keep M4 clk not being turned off,
-> unless pass "clk_ignore_unused" in bootargs.
-> 
-> 
-> For case 2.2, you could use the clock entry to enable the clock, but actually
-> SCFW will handle the clock automatically when power on M4.
-> 
-> If you have concern on the clk here, you may considering the various cases
-> and choose which to touch the clk, which to ignore the clk, but not 
-> "clk get and clk prepare" for all cases in current imx_rproc.c implementation.
-> 
-> Regards,
-> Peng
-> 
-> 
-> >
-> >[1] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
-> >
-> >Cheers,
-> >Hiago.
-> >
-> >> 
-> >> Daniel and Iuliana, I'd like to have your opinions on this.
-> >> 
-> >> Thanks,
-> >> Mathieu
-> >> 
-> >> >  	if (IS_ERR(priv->clk)) {
-> >> >  		dev_err(dev, "Failed to get clock\n");
-> >> >  		return PTR_ERR(priv->clk);
-> >> > -- 
-> >> > 2.39.5
-> >> > 
+base-commit: 661b7ddb2d10258b53106d7c39c309806b00a99c
+-- 
