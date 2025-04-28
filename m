@@ -1,54 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E282139AF;
-	Mon, 28 Apr 2025 07:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B236218851;
+	Mon, 28 Apr 2025 07:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826573; cv=none; b=T1Esp8+CgjBilOUBWMQxCgF6Es3j9oydS3+0ZIEtfjbKV3u8W+jYkjWAaoI1vOkjuNehmURh5QKdSZKxF41uQ63m5sFCATXinhs5fh2eKyaSlokNpYusJBs4w6HN/0co/446sqCrL3/NMqRoMYZKa0uzzlSoHohNktW0FBWiD40=
+	t=1745826656; cv=none; b=XajUkX+EAkRWm4dG71Z43o39IV59zAU9ZpcRvuFnv0/lCE/85RLZL3T6roQD7QPH8pVw3v4qpTDoOLMovH6NNYOZ1oZ12V6r314EqMI7AvElSaKvUhPx9qMZTKFpPZ9sy7fRkO5SaWwkSc21fHlW772N3FRrg+Mt+C3cYV36DDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826573; c=relaxed/simple;
-	bh=gz3v87ioQs5PO0ngRoziti1AQO3BGFw3wZSaC9CSs8I=;
+	s=arc-20240116; t=1745826656; c=relaxed/simple;
+	bh=xaqPpMf3FLiuOMO0A2MToq8MZrw//Npjwu/pW/T1Rg0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CaF7n/eO5FPvr+bJIcYxbyOsglq19OxJEU03iIKjxqkFhOUP9aS6Zuhm5bwI+174kbKCq5JmRDQqRxxsKGYD+PuboC+ER3D27mJ7zo8EibsFCUGV6EZ4BJrUaq89pWAdosYdNrHyjX2OvQam5xf0ReA07j8KP/Vq/b9G5KldL3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uPximnop; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dhgW3hHJxSqR391TEzOwrvzQwZnbQg13rMb/+e8VeK7b9E9wnlhX600zs8HLsweBVeI1UttmkVepi50QuCxB5HwIyz15rU1jzQLYglcIivEMBrHKobDzAylNZyjZ0Onkp60BAhFtmWdzVZinQ8O8mbfxxOXn/Whi0fIId23OyH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LUqluV03; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uPximnop"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02BD6C4CEEC;
-	Mon, 28 Apr 2025 07:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745826572;
-	bh=gz3v87ioQs5PO0ngRoziti1AQO3BGFw3wZSaC9CSs8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uPximnopkAxrgRV655KCEfhvJ1fjCkHn8Cnxg5LGMEmrjp+Wb0hcUOj1p00wqeqUO
-	 dzJlkTJF0OCpYhqD3T2sHusjTHmrV8HhuFPzeYoC9V6RUTrTkB/0j/UJBuE23ZJbIK
-	 TWcyt2JNxEdwdo7bsUjYx8qw7JVCoLMq6jNtjD7NTLAdkRqg7c9ooybXK1uMDVJDlo
-	 vfCdlKGblIlmWtEeht8ssisgKsw3pxrKias4RnPnfsZtslh2PmIMouwpR316bapMvJ
-	 8JhEytjwyJYy+Vj9ezr4IpLOfyTyA3Y3d6rwFgAw1qPRi8CXbojTuvkhgv2nhhkGjH
-	 iQMcp72gl2QeA==
-Date: Mon, 28 Apr 2025 13:19:24 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-integrity@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v3 3/4] tpm/tpm_ftpm_tee: support TPM_CHIP_FLAG_SYNC
-Message-ID: <aA8zBP6h8oG5m4w9@sumit-X1>
-References: <20250414145653.239081-1-sgarzare@redhat.com>
- <20250414145653.239081-4-sgarzare@redhat.com>
- <CAGxU2F5SJ9nQfAV-D1WKjsUow_01xjGBRXP4d+q4T=5Bw=yaOg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LUqluV03"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745826655; x=1777362655;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xaqPpMf3FLiuOMO0A2MToq8MZrw//Npjwu/pW/T1Rg0=;
+  b=LUqluV03Xp/XmlcXNsPBJc1AMmnLZxx/J9EjehsZkCqf7tYkJ2kYSJQV
+   F0qtWEHZ6OU4LamsRx8v5AIQZQrrU4xCFSm6YfSH3NhYyNPxNdtuvA0lS
+   0oUSVRhcDhwKDjMLnE8tlKOoLHKlAiYwppzDc3RWlIIXFQFkNpL6sCAas
+   dsvtqjBN9iR72hGlaSP/XsZz0u/XnWJBX7iRwZ3EtQWu9mpzozs7iS6aA
+   NMZR7p5gclVaYR77eo2/RiCLix+dVgumWhNOhxHdWMggP341Q55MGwKU8
+   5j+B7q6uuwgL3jNSkU4k0qQwCWCwPiC564khz92LV16LDB4FumsEDcjIa
+   w==;
+X-CSE-ConnectionGUID: eQY6aDx6QnOERxCF9XofzQ==
+X-CSE-MsgGUID: NcceSAidRQGJ4zPARt6AkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47282503"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="47282503"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:50:54 -0700
+X-CSE-ConnectionGUID: q3hl097cT3GI5ARUC0Eg4A==
+X-CSE-MsgGUID: UkEtZ++dRD2XzVxIEciUBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="138434639"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:50:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u9JGK-000000011PW-47Fp;
+	Mon, 28 Apr 2025 10:50:48 +0300
+Date: Mon, 28 Apr 2025 10:50:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Raag Jadav <raag.jadav@intel.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [GIT PULL] gpio: immutable tag for the driver core for v6.16-rc1
+Message-ID: <aA8zWA9dpw1CrbZ4@smile.fi.intel.com>
+References: <20250428074550.16190-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,31 +66,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGxU2F5SJ9nQfAV-D1WKjsUow_01xjGBRXP4d+q4T=5Bw=yaOg@mail.gmail.com>
+In-Reply-To: <20250428074550.16190-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 14, 2025 at 04:59:47PM +0200, Stefano Garzarella wrote:
-> On Mon, 14 Apr 2025 at 16:57, Stefano Garzarella <sgarzare@redhat.com> wrote:
-> >
-> > From: Stefano Garzarella <sgarzare@redhat.com>
-> >
-> > This driver does not support interrupts, and receiving the response is
-> > synchronous with sending the command.
-> >
-> > So we can set TPM_CHIP_FLAG_SYNC to support synchronous send() and
-> > return responses in the same buffer used for commands. This way we
-> > don't need the 4KB internal buffer used to cache the response before
-> > .send() and .recv(). Also we don't need to implement recv() op.
-> >
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> > v2:
-> > - set TPM_CHIP_FLAG_SYNC and support it in the new send()
-> > - removed Jens' T-b
+On Mon, Apr 28, 2025 at 09:45:50AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> @Jens @Sumit can you test/review this patch again since from v1 we
-> changed the core a bit adding TPM_CHIP_FLAG_SYNC instead of
-> send_recv() op?
+> Here is the tag containing the driver core dependencies pulled into the
+> GPIO tree to enable picking up the final commit from Andy's series[0].
 
-Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+Ah, Now I see, thanks!
 
--Sumit
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
