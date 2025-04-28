@@ -1,197 +1,92 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D8E15B971
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690DB266EE8
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745854425; cv=none; b=rAWWamiXie+KnnvnBhP+2oQnf5spwBGIog2KV+ZOIrvcfNHLQ8JG4nNInv1NEgvQGlRWJPCg27kK5J6XdfxjrR09VQxJXUO7Z+G0Y7tqhBHpXWpY1k6PCGwTjrLFQAapWdN4IPfBcecR4Xi//or6VBnUwo4mRD+9TXbP4UiJKZc=
+	t=1745854426; cv=none; b=bKtTlqicONJE5KnUHV55Hl5QGvonlkqxK7htD0oJQhUPFd5SSEaEK9aq8+ert/ajh8UZj/4EHk59//+DEmNm6P5p53LF/Y5IjnNyov85UH0w2KzyO7kGwdzVimbOZRGAOkC7I+T53Tqo8eqJncjhD/jbu0YCvoQK0uJ2kb6EqcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745854425; c=relaxed/simple;
-	bh=ZwBTfQiOLC5h/ueP8fzXUgqlkDc7WzUUPN/+RfBrDsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VM5iZvqA+LgFfjzVRJxVR5q0/5KdQbC0BU08Wc7oiho/USkGLyYEVkEUmdob7ij/y0tm1dAVAGHsMWcu+mOMR78onfp1B0S6A3Wj7TZJNBRWRYeRQeZAIsF71rDZSgnKI+Jj1gbTW0r0uQOxdw0GQqqcUkWOpR+WVJ8H6D5UWE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Cn6U8qzW; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745854426; c=relaxed/simple;
+	bh=c4lzFxsgENeTiNfGEUAq65bbodJC1AJjZpxKVJ85yHU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=ED4Q/buprVJh8GV2VhV46Gw5taY4oWEHXt8njYESkFrad8TJyVdPZY8wmZDW67qqdiHqQI/eqpoDsfNc54aXSd1GyephSwsOa3X8n5HoSQ0cEyYd9mTfo2BHvE6gG3iJ8Sc2WhfxLRPIFHix/FFDYSu29Ibw/I7ZSUPrPlkHuaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kDj7uUw7; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Cn6U8qzW"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac25520a289so778560466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745854421; x=1746459221; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPYRN4iTyc4wBxfv9JGUS3+HhUXE8EqK5Z+QKmCpoic=;
-        b=Cn6U8qzWayFYV6JUUYTpU1pynYB3SgE+g3bd9KrYG/OtM05d7ZKjBJ3z00y/4tn4gE
-         bQfizdgKaRHc8KvRSXZ2aDg6pPF3TJoO8BndUi10qs8u0sVa75pCSz+rQ6oA6cSWajqn
-         sESOq7HL1UaF2xltpj/CQ1VqABGApJMAJ8Zu3Y2OBSwja/pX/d0WwT9u/ZbiWBIwaBBb
-         ekzMohwMEUA5gsNPr9VgcAikSYuO7O8JTCt6hhWimb9Kjzy6/kiYZ1rwf06Hy+rx8nD+
-         Ou3TY15ue0/2xDYMi5ZH0XxlOHTbKBMJFK+Ez67qu20vrqHW8uD35/FsBL87NuTYuvpq
-         s5ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745854421; x=1746459221;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bPYRN4iTyc4wBxfv9JGUS3+HhUXE8EqK5Z+QKmCpoic=;
-        b=ANaOI/zB+xihlGKZBjH6kUHOJgcJEXVmB6MFlThv0grt1CjW6z25IhSKgCZQnnAfhS
-         JZM9k/tqR93bCHy8DY+mqOCEMO2bNf7AUwAkKwbn6c8cFeCDGLjow7hTplpLAr+Mplhi
-         5g79Bqg1gG2xNqP09cbaZZi5samB7DsagxuffSf7GGdcb5lo5XsTfmXWQD8Rivunu9/Q
-         KJl287egXcdCyHlLGXKsPGOPJ4xSmDipu2yh+BXTiNsqUMDWMCaC+kh0FF3G7DbcudYS
-         laiJhvMjv4Bk/EkpNLjGX4AxuzSy8BLy2UmTcRC/LVnLxkviqWzxyXfdxJ2phIOr2UdD
-         WaYw==
-X-Gm-Message-State: AOJu0YwMdZKgzUSLduMZFaL0ox/dlJW1POo5Hb4WOMr+xLa4ZE6PmE1x
-	cfFcynJQ2ApnYmrT+3c95xzno7VPjpKmA1EQYi2+1U+kyIZhSf8hUpkijFjpWSU=
-X-Gm-Gg: ASbGncu1VkFCII6rGXcc7b1agvmNUIO+xEMFSUKb55ddyHkF+XPUL8fjyrPWe79V59b
-	pkruuOyh662Rf+L1o8NWo1/a41MHP8IN4cQl5e4YiaJ0AjkS6txS1fcTObnRk6thj8AiwQQw634
-	Q98GefpuGQbhQ+IZDpWHWj0oUbh1rGG5JW3Tmk7GiK+BMvjAPIrA89d0Ao1qAuKLVRDihtyeaKb
-	fLUx0GNQ4fVHdZyBWio6tilq8KCTD89VTq3Z0KBB3u8R4e5RYHN8+FPmKsU2mZx+4IUas0AadOF
-	197j5EtHaIbkrn6Mt96kyKTOAmQ6Vj3gLvFs2V0PYKMsqw51T9RM2g==
-X-Google-Smtp-Source: AGHT+IEFRWrIeln/DA+aBHEbqqzfZaXJiu9WqqlUBGHXmlprOppsHLmMCzbWhXmO+8wZrtXWmG1GFQ==
-X-Received: by 2002:a17:906:478a:b0:ac8:1798:c2e7 with SMTP id a640c23a62f3a-acec4eb4acbmr18180666b.41.1745854420612;
-        Mon, 28 Apr 2025 08:33:40 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8446sm648365866b.102.2025.04.28.08.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 08:33:40 -0700 (PDT)
-Date: Mon, 28 Apr 2025 17:33:38 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH v3 11/20] ratelimit: Force re-initialization when
- rate-limiting re-enabled
-Message-ID: <aA-f0jpBBbdfsmn7@pathway.suse.cz>
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <20250425002826.3431914-11-paulmck@kernel.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kDj7uUw7"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250428153336euoutp01b49aa24d9651d54fd651e1adbecee286~6hVd5UmFG1526315263euoutp01h
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:33:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250428153336euoutp01b49aa24d9651d54fd651e1adbecee286~6hVd5UmFG1526315263euoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745854416;
+	bh=IJToYo52fUnx4/+2swkvXuGPm6uMEkAsbOCmRLB8n9Y=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=kDj7uUw7P7RgTyFd6XO8hLzOPu3iIKBuRdYdc2vzPVQHPE+y2lM1SQP50BoHSZiFZ
+	 ruuI0cO5n8/nnuCk4o4bal6kk9LdCAGWAlihwbleZ1nWYfL/MwP/2atkG+pPvMGqZG
+	 oWI71uWmQDjrgXt7UbjsbDAHtP15iUkmm1NvhIE8=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250428153335eucas1p2abd49e68cde41dd73cbc5e4897140053~6hVdm-o9X0606406064eucas1p2F;
+	Mon, 28 Apr 2025 15:33:35 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250428153335eusmtip23c533ade2d8ce61384f50aeae061782d~6hVdK30Wy2124821248eusmtip2B;
+	Mon, 28 Apr 2025 15:33:35 +0000 (GMT)
+Message-ID: <d37ccb03-0d03-46ff-b62f-2fcb78263fe7@samsung.com>
+Date: Mon, 28 Apr 2025 17:33:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425002826.3431914-11-paulmck@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] comedi: allocate DMA coherent buffer as individual
+ pages
+To: Christoph Hellwig <hch@lst.de>, Ian Abbott <abbotti@mev.co.uk>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, H Hartley Sweeten
+	<hsweeten@visionengravers.com>, Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250428125648.GC27794@lst.de>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250428153335eucas1p2abd49e68cde41dd73cbc5e4897140053
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250428125655eucas1p105937dfbffe2d5f3e0ed6a46772bb2f0
+X-EPHeader: CA
+X-CMS-RootMailID: 20250428125655eucas1p105937dfbffe2d5f3e0ed6a46772bb2f0
+References: <20250415114008.5977-1-abbotti@mev.co.uk>
+	<20250415114008.5977-5-abbotti@mev.co.uk>
+	<CGME20250428125655eucas1p105937dfbffe2d5f3e0ed6a46772bb2f0@eucas1p1.samsung.com>
+	<20250428125648.GC27794@lst.de>
 
-On Thu 2025-04-24 17:28:17, Paul E. McKenney wrote:
-> Currently, rate limiting being disabled results in an immediate early
-> return with no state changes.  This can result in false-positive drops
-> when re-enabling rate limiting.  Therefore, mark the ratelimit_state
-> structure "uninitialized" when rate limiting is disabled.
-> 
-> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-> Cc: Mateusz Guzik <mjguzik@gmail.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: John Ogness <john.ogness@linutronix.de>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  lib/ratelimit.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> index 7a7ba4835639f..52aab9229ca50 100644
-> --- a/lib/ratelimit.c
-> +++ b/lib/ratelimit.c
-> @@ -35,11 +35,24 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
->  	unsigned long flags;
->  	int ret;
->  
-> +	/*
-> +	 * Zero interval says never limit, otherwise, non-positive burst
-> +	 * says always limit.
-> +	 */
->  	if (interval <= 0 || burst <= 0) {
->  		ret = interval == 0 || burst > 0;
-> +		if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
-> +		    !raw_spin_trylock_irqsave(&rs->lock, flags)) {
+On 28.04.2025 14:56, Christoph Hellwig wrote:
+> On Tue, Apr 15, 2025 at 12:35:59PM +0100, Ian Abbott wrote:
+>> +			vma->vm_start = start;
+>> +			vma->vm_end = start + PAGE_SIZE;
+>> +			retval = dma_mmap_coherent(bm->dma_hw_dev, vma,
+>> +						   buf->virt_addr,
+>> +						   buf->dma_addr, PAGE_SIZE);
+> I'm not  fan of the vm_start/vm_end manipulation, but I've seen it in
+> other places.  In a perfect world we'd have a dma_mmap_coherent_offset
+> or similar helper that encapsulates it, and then maybe later replace
+> that hack with passing on the offset.
 
-I though more about this. And I am not sure if this is safe.
+Indeed the dma_mmap_*() makes too many assumptions about the vma. The 
+case You mentioned is probably in drivers/infiniband/hw/hfi1/file_ops.c 
+but I also see that the vma->vm_pgoff is being adjusted before most 
+dma_mmap_*() calls, which proves that the current API is somehow 
+limited. It would be great to fix this too while touching the 
+dma_mmap_attrs() API.
 
-We are here when the structure has not been initialized yet.
-The spin lock is going to be likely still initialized.
-In theory, it might happen in parallel:
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-CPU0				CPU1
-
-___ratelimit()
-  if (interval <= 0 || burst <= 0)
-    // true on zero initialized struct
-
-    if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
-      // same here
-      !raw_spin_trylock_irqsave(&rs->lock, flags)) {
-      // success???
-
-				ratelimit_state_init()
-				  raw_spin_lock_init(&rs->lock);
-
-
-      raw_spin_unlock_irqrestore(&rs->lock, flags);
-
-BANG: Unlocked rs->lock which has been initialized in the meantime.
-
-
-Note: The non-initialized structure can be used in ext4 code,
-      definitely, see
-      https://lore.kernel.org/r/aAnp9rdPhRY52F7N@pathway.suse.cz
-
-      Well, I think that it happens in the same CPU. So, it should
-      be "safe".
-
-
-Sigh, I guess that this patch is needed to fix the lib/tests/test_ratelimit.c.
-It works because the test modifies .burst and .interval directly.
-
-What is a sane behavior/API?
-
-IMHO:
-
-1. Nobody, including ext4 code, should use non-initialized
-   struct ratelimit_state. It is a ticking bomb.
-
-   IMHO, it should trigger a warning and the callers should get fixed.
-
-
-2. Nobody, including the selftest, should modify struct ratelimit_state
-   directly.
-
-   This patchset adds ratelimit_state_reset_interval() for this
-   purpose. It clears ~RATELIMIT_INITIALIZED. So this patch won't
-   be needed when the API was used in the selftest.
-
-It was actually great that ___ratelimit() was able to handle
-non-initialized struct ratelimit_state without taking
-the bundled lock.
-
-What do you think, please?
-
-> +			if (!ret)
-> +				ratelimit_state_inc_miss(rs);
-> +			return ret;
-> +		}
-> +
-> +		/* Force re-initialization once re-enabled. */
-> +		rs->flags &= ~RATELIMIT_INITIALIZED;
->  		if (!ret)
->  			ratelimit_state_inc_miss(rs);
-> -		return ret;
-> +		goto unlock_ret;
->  	}
-
-Best Regards,
-Petr
