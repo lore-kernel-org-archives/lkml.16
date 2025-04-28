@@ -1,149 +1,146 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D52C1C1F0D;
-	Mon, 28 Apr 2025 11:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 369FE262FEE;
+	Mon, 28 Apr 2025 11:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745838593; cv=none; b=F6xsij7suCdZn1l+98g829pUQInl37962Cza090rT4QDh+uBsUWLr+CIFPWdYWKrdWGT+48kTX8fBdAJ9sLv8chxJbs6j6GwOoXrmHNe6NaZt7S2uMETTT5xMZRe3C0ZUzTzTFwhQlhsc8guVf/9g3ZFMELKf0EADw3b/Tv6Oec=
+	t=1745838611; cv=none; b=gKTZWRlYXWvC+FF9NcgmbBfeVVp8Ts9LsIFGOKlP2kZGU3xZVYoOkeieVX6fg2yNihQ0pCuGSapyu4RycBXgyN9+cF1P/ZLi1Evzzo5QzPKKDKNgeBGRHq1ZFMkwgBYxClWu0qIEmL1AEtEQ5vznzkwCD2ZIncK+botCqzzVx0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745838593; c=relaxed/simple;
-	bh=IeXXgzKgQ8kwF0+F01gM2sNmOCQIR4xlPk8JwmdDjm8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=gRuc0OqAi3Q3CzAGOMV9dB4XKAvrhSb9Wc8z3VFFGNJFUaOFQ5VJbJz64xNzCiVCS1MtGYxrOAb6iTIVrbgz4u4TigIc9ETNTz7xWLCbe0ghQmUQEJwAXWp0qKM3Ije1EeSDg/o3KvWeeVAu8rTheLcxpd03Mq24FHAW/OZpB/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=c1s9jZjn; arc=none smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="c1s9jZjn"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S6jub8031219;
-	Mon, 28 Apr 2025 12:09:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=j
-	a1nnYiYVVPOxqkZvfptQISEEK1d3OniR8WGUf28Bq0=; b=c1s9jZjnX1qiq2pfV
-	nky5gp9a0dNhS7DjoEefMAvoYONlBTy7uBkoZgj01ijZ20+guc8ikl21JMEYfDp/
-	NgVbibNFc6bElQiA6Q77/fbg4UTCXFIyMqyUvBosPdS64XGAkK3tLSldD0J/p4wa
-	4HgYTI6yvjT3M7AA5v02Xf3SlR+3+TFJ9VX+sOPs2a/Synf1EKmuOE/3XQCCvzpn
-	4RdMnmAHcTNbpnqadhnNDidS3H3b4MxLIowVqOvz+5QBvSkmJ/rGcs6pHowoxaHm
-	PeYlIRXJ9J6XNcBxJHao3P2V0XhGnKl00mmbqJmHBPj4th6o/Yp1J/yulriWzaMt
-	pxraw==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 4694618xrx-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 28 Apr 2025 12:09:26 +0100 (BST)
-Received: from
- 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
- (172.25.2.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 28 Apr 2025 12:09:24 +0100
-From: Matt Coster <matt.coster@imgtec.com>
-Date: Mon, 28 Apr 2025 12:07:15 +0100
-Subject: [PATCH v4 2/2] arm64: dts: ti: k3-j721s2: Add GPU node
+	s=arc-20240116; t=1745838611; c=relaxed/simple;
+	bh=A9Okykt1CO9Gdzyw8Gz9j8J09jGfp2GgOobllD66Xws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ftCqRPX3AQ8PiATPyJ3kgyQZHTE+Gurl76yiryPJE7EWRliAWRD/mPfg0TV2B1k3oLqap8sGbz46yMeXlPWlEAfS5i1VhlwglOF7LywlXxJO9/eeoAVc/HAY9IDpyfAB/NrA77r/pw5n2Tl3CzDFWZxJBBbDp3cYU4R2ZZmC0go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A2F11595;
+	Mon, 28 Apr 2025 04:10:02 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB783F673;
+	Mon, 28 Apr 2025 04:10:08 -0700 (PDT)
+Date: Mon, 28 Apr 2025 12:10:03 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250428111003.GC551819@e132581.arm.com>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-10-irogers@google.com>
+ <20250402143541.GM115840@e132581.arm.com>
+ <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
+ <20250402163807.GP115840@e132581.arm.com>
+ <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
+ <Z-4URXOzsVHTY7zz@google.com>
+ <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250428-bxs-4-64-dts-v4-2-eddafb4ae19f@imgtec.com>
-References: <20250428-bxs-4-64-dts-v4-0-eddafb4ae19f@imgtec.com>
-In-Reply-To: <20250428-bxs-4-64-dts-v4-0-eddafb4ae19f@imgtec.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        "Tero
- Kristo" <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Frank Binns <frank.binns@imgtec.com>,
-        "Alessio Belle" <alessio.belle@imgtec.com>,
-        Alexandru Dadu
-	<alexandru.dadu@imgtec.com>,
-        Luigi Santivetti <luigi.santivetti@imgtec.com>,
-        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
-        Matt Coster
-	<matt.coster@imgtec.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2459;
- i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=IeXXgzKgQ8kwF0+F01gM2sNmOCQIR4xlPk8JwmdDjm8=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMWTwJz4Wfh7ZzninLOGznY/fkeXFrBP+PNu/s+2CWEDAl
- 5eOEl3+HaUsDGIcDLJiiiw7VliuUPujpiVx41cxzBxWJpAhDFycAjCRi+yMDHcyHAq4RPavMgkJ
- zHw2vT5v7aq/5WLzk98HCt1jNEgJXM/IcEVt/+8N+Xe6RSZ8SZKt/rrysvAOJtPOoker73DWm9n
- z8wAA
-X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
- fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Authority-Analysis: v=2.4 cv=WoMrMcfv c=1 sm=1 tr=0 ts=680f61e6 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=OXfeAiaCWNgA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=sozttTNsAAAA:8 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8
- a=KjGJ_YhaLPe-tYgPVq4A:9 a=QEXdDO2ut3YA:10 a=S-JV1fTmrHgA:10 a=j2-svP0xy3wA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: vaxiKJJFniPvml___2t2S2s1DCfpFwlG
-X-Proofpoint-ORIG-GUID: vaxiKJJFniPvml___2t2S2s1DCfpFwlG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA5MiBTYWx0ZWRfXx+mtO/Gv5Iuf CJe5917eWgHlSDP3JvBZf4l4n3hTfNJrlf2Aaap1WPfiJ2dNGnxOQ9K2d4EsGb9aNIZrryo/Mlx 1iHBDRUJ0D3zvJ6slLFRHaYP1dNjrbPHCS454Fyd8cSMI+HpohHUzkKsDcHk/QXBHdBEDZVy93n
- HRg1lWAkYsUhPvuQEryw1O5ZfiN7tnbmXVYyU7zXjNqzhLZP73fXYFd0aLbu4Kt5sEqUijd+Vym ZdglEMtjyizN5wghEC5P2lW64Pz0w3rx5kejjhGe9iAk106NiaOFAPZKaokVE/k8/YLVNNywmdc S2kNZ+yUpDMMJGXhjvl7u0ZtwbI2RJP9Py/MOwnyQwgUwiYu8/jhdpKxagdok1Djeb8dhOjlApO
- eWEEhTON9OARS7E2n8ZIZBucBcIrL/lL7z3haJbn7JrrqAGz1vgEdOXhLer7jqdGdCKC02b4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
 
-The J721S2 binding is based on the TI downstream binding in commit
-54b0f2a00d92 ("arm64: dts: ti: k3-j721s2-main: add gpu node") from [1]
-but with updated compatible strings.
+Hi Namhyung, Ian,
 
-The clock[2] and power[3] indices were verified from HTML docs, while
-the interrupt index comes from the TRM[4] (appendix
-"J721S2_Appendix_20241106_Public.xlsx", "Interrupts (inputs)",
-"GPU_BXS464_WRAP0_GPU_SS_0_OS_IRQ_OUT_0").
+On Thu, Apr 03, 2025 at 08:20:02AM -0700, Ian Rogers wrote:
 
-[1]: https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel
-[2]: https://downloads.ti.com/tisci/esd/latest/5_soc_doc/j721s2/clocks.html
-[3]: https://downloads.ti.com/tisci/esd/latest/5_soc_doc/j721s2/devices.html
-[4]: https://www.ti.com/lit/zip/spruj28 (revision E)
+[...]
 
-Reviewed-by: Randolph Sapp <rs@ti.com>
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
----
-Changes in v4:
-- Fix typo in commit message (intterupt -> interrupt)
-- Link to v3: https://lore.kernel.org/r/20250422-bxs-4-64-dts-v3-2-ec6657bde135@imgtec.com
-Changes in v3:
-- Use assigned-clocks to pre-load the frequency of the core clock
-- Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-2-9f8c09233114@imgtec.com
-Changes in v2:
-- Add interrupt reference details
-- Add Randolph's Rb
-- Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-2-f7d3fa06625d@imgtec.com
+> > > Anyway, I don't have time to do such a larger refactor so
+> > > somebody else is going to need to pick that up. I did refactor the
+> > > cases where I thought it mattered more, but as you say that does lead
+> > > to a feeling of inconsistency in the series.
+> >
+> > I'm curious there are any actual errorenous cases other than the return
+> > type of comparisons from Leo.
 
-This patch was previously sent as [DO NOT MERGE]:
-https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-18-eda620c5865f@imgtec.com
----
- arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I am just wandering if we could give priority for errorenous cases.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-index 92bf48fdbeba45ecca8c854db5f72fd3666239c5..9e36cbbe0ea2fefceedcc95b78068ded7ef395f0 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-@@ -2048,4 +2048,18 @@ watchdog8: watchdog@23f0000 {
- 		/* reserved for MAIN_R5F1_1 */
- 		status = "reserved";
- 	};
-+
-+	gpu: gpu@4e20000000 {
-+		compatible = "ti,j721s2-gpu", "img,img-bxs-4-64", "img,img-rogue";
-+		reg = <0x4e 0x20000000 0x00 0x80000>;
-+		clocks = <&k3_clks 130 1>;
-+		clock-names = "core";
-+		assigned-clocks = <&k3_clks 130 1>;
-+		assigned-clock-rates = <800000000>;
-+		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&k3_pds 130 TI_SCI_PD_EXCLUSIVE>,
-+				<&k3_pds 373 TI_SCI_PD_EXCLUSIVE>;
-+		power-domain-names = "a", "b";
-+		dma-coherent;
-+	};
- };
+Could you send fixes for these cases firstly and leave out refactoring
+for later merging?
 
--- 
-2.49.0
+[...]
 
+> There are lots of cases like:
+> ```
+>                 case ARM_SPE_COUNTER:
+>                        if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
+> -                               decoder->record.latency = payload;
+> +                               decoder->record.latency = (u32)payload;
+
+This would be fine.  Since Arm SPE implements a counter with a maximum
+of 16 bits, there will never be an overflow when storing the data in a
+32-bit unsigned integer.
+
+Thanks,
+Leo
