@@ -1,65 +1,108 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BFB269D13;
-	Mon, 28 Apr 2025 12:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CE3269D13;
+	Mon, 28 Apr 2025 12:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844114; cv=none; b=kF1aGvFGuOBMTmITP8qimBnxVT6PqiJ8BIJr7KUu60SctKb6Fl34xAXMWtuut374V4N5GRll3dEnifXvjVvqwrRme4aBVyQlAtW4IcePuZySYHqHFyILPzxk7jpoVhw1bHvUiHxHD31kZjqVLyZo1PuTW8pZo1IoCdiXQZ4fRSs=
+	t=1745844182; cv=none; b=Yuhg1j9UjAko2Wp6h/d515VUMsgoiAqU8AH0tYx5C5XGDhWj3aZyQYDLuP3h8fZB6qRuIpZOyMFiQ85/B79P4FbowpsHUFI9K8LEY7wtBYJdEUSUNrKTJgokZ0IJBlIkbAcfttzM9tajmnpME8ul4LI+YOnBlROsvgUcu9g5Gp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844114; c=relaxed/simple;
-	bh=fG9PGWdg0B+9vnOam/QT4Vm8XL31KFEpwMdoC0jSNVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hI0iYh9wzRmwf8QdSo7d1x4+/9gMwFzeJSe9mJpTonQ02qVrjMsFX+e6unPKfD5PXMOE33An6INzNL7yk6tEOj3CgTiwR+BuO1Qncvxl1AEp+EjDlLDL1Xjk5/ZiPiSfvztaVWcIvBfJ20ur1RV45FVR0+AbP1XAjDLPkHitayw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FOH+ZdKC; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745844182; c=relaxed/simple;
+	bh=yDz9n3TWyahGCVi9xPiIqDZuE2MgYN7oXN7oGplbqgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A/YYDY5Cb0Upl0mSNzNbsQ2+SpX8VeDUqjHeJDu8ktILbOwERqUrttb7vBLV7HtN/kB8Bc+Wzjrqc/W3QHYPczj6+dOlIXrSX9LcB7Oz0z34IbHyZNozETB1gVHmEi7Onn9vWXRdgJCYxBpMCderm6Gqvwfe1wv5x5sllgyoWrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jDzVAhjF; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FOH+ZdKC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=6IT4CRu7szLgApWWo4521Q5za6MZcWaGmmtSs+5pkOo=; b=FOH+ZdKC4QrpIvSRtVkcZj7UVH
-	ZHE+CijRqzjg5YdTR+FDQ3BWgnN7Iclwi4UaHby/lAq0B0KmavFHf0q2JyPSZQWaVibP9BazuV2Oh
-	lxHk6batO6EE8Nt5yTXb7Sj5f0gcU0MxtsYgLS4Xe43120VdgXH1RjuynpllOkbTMR10=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9Nnt-00Apu8-4w; Mon, 28 Apr 2025 14:41:45 +0200
-Date: Mon, 28 Apr 2025 14:41:45 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-Cc: Hans-Frieder Vogt <hfdevel@gmx.net>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v0] net: phy: aquantia: fix commenting format
-Message-ID: <b8fa57e1-3c61-4c70-9aaf-2753ae880a88@lunn.ch>
-References: <20250428003249.2333650-1-aryan.srivastava@alliedtelesis.co.nz>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jDzVAhjF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=GoBfJ
+	MIbIlI6zPaXaf2aHXumRMjBzcYSuUOqst3TWOg=; b=jDzVAhjF51fqsqiXmrycZ
+	hvIRsk4TZcLWzi1JRxs7dm5odb8tcZp29PgxXZhPMjaXqcZab8RHNJh/3VOcHa8X
+	OwVr4wVFeRuTY2SOw3aSfC4lOirDDH6zjI6FI08Bn5AlvcOXO8SLPULP0ixVwiIX
+	dUPmjNLdy38Y/qDB4yzB3w=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDXClu3dw9oiuSODA--.26989S2;
+	Mon, 28 Apr 2025 20:42:32 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	kw@linux.com
+Cc: robh@kernel.org,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v2] PCI: dwc: ep: Use FIELD_GET()
+Date: Mon, 28 Apr 2025 20:42:30 +0800
+Message-Id: <20250428124230.112648-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428003249.2333650-1-aryan.srivastava@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXClu3dw9oiuSODA--.26989S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar48Jryxur4DuF47GFyDWrg_yoW8uF18p3
+	W8Can0kF1UJF45X3ykua93ZFn8GanxG3y8Aa93GrsIvF9Fvry0q3yqyF95K34xJF40vF45
+	C3W7tw13WFsxA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pimLvtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhg9o2gO9M4mjgABsJ
 
-On Mon, Apr 28, 2025 at 12:32:48PM +1200, Aryan Srivastava wrote:
-> Comment was erroneously added with /**, amend this to use /* as it is
-> not a kernel-doc.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202504262247.1UBrDBVN-lkp@intel.com/
-> Fixes: 7e5b547cac7a ("net: phy: aquantia: poll status register")
-> Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+Use FIELD_GET() to remove dependences on the field position, i.e., the
+shift value. No functional change intended.
 
-The Fixes tag somewhat implies this should be backported in
-stable. But a comment does not really bother anybody, so does not meet
-the stable criteria.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+---
+Changes for v2:
+- The patch commit message were modified.
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Please drop the tag and submit for net-next.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a0bf9341542..f3daf46b5e63 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -256,11 +256,11 @@ static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
+ 		return offset;
+ 
+ 	reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-	nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
++	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
+ 
+ 	for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL) {
+ 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		bar_index = reg & PCI_REBAR_CTRL_BAR_IDX;
++		bar_index = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, reg);
+ 		if (bar_index == bar)
+ 			return offset;
+ 	}
+@@ -875,8 +875,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ 
+ 	if (offset) {
+ 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+-			PCI_REBAR_CTRL_NBAR_SHIFT;
++		nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
+ 
+ 		/*
+ 		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
+@@ -897,7 +896,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ 			 * is why RESBAR_CAP_REG is written here.
+ 			 */
+ 			val = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-			bar = val & PCI_REBAR_CTRL_BAR_IDX;
++			bar = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, val);
+ 			if (ep->epf_bar[bar])
+ 				pci_epc_bar_size_to_rebar_cap(ep->epf_bar[bar]->size, &val);
+ 			else
 
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.25.1
 
-	Andrew
