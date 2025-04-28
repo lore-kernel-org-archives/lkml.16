@@ -1,200 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044461FF603;
-	Mon, 28 Apr 2025 08:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1C425E821
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745830429; cv=none; b=XXMfIcrQxAmKEy59v2e3TiXk740W3RT9ZQ2eOsj/diEXbgWZShYTA6Y45+Y9mRo+X9VrHoyvY7zt+k+B9yO1ONcMpDM1XrHSgwxuKZC2s0Sm7U4m7aDHJuMRfqYGYKYwruMEMmElLAMUbnLYrcBByA/uONb7FDbQ1huXb54YR3Q=
+	t=1745830479; cv=none; b=GGvW9QLiH3Jo4JIv28CmoYZEdykoKbRjPyAvTn7cIJGLtyFEUwhObNohCzHUhLK941U2XHQ8qyFY4GtNYgm7bkXEgWL6iBxFogW19N8x0vPTMq1z42SlwlfFNQixeko9UW9ZfijKIhVY6f4ZuyOfd+dA9h1XO5/MgZTWWCyz5v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745830429; c=relaxed/simple;
-	bh=VwnIIijUV68aeumwgNi36UYJxd3Jbe9wHbDZiudw2/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mykv/ldgfsFAqwN2Ynn8mpRa2bwoqW8+2ajKrWOCM0//1RcQ1IBrDSYM8hKVgIq5ZruXNjIjO0lEPmXj/CHGfBe6MHH39AoTRUdLqTRQ2aFhtt2YrmkfsX41VAxxZF5uetAAiOndEig6ixeibAh0v35yVAtUVWaYqtMuTFSl0Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=od326bi9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745830479; c=relaxed/simple;
+	bh=ALaiR88qvXFJIUmu58oY0ESBsL6U0JAP269AMEHKkqw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=WBM/YdlGTDXd8MclQQ/vC2yC/kZVv0gXfX4cYoXw6qgAE2vPcLGjd5kmoY5k6p7D01ZedMKHzHmRtq1n+WnCf+/rWQmwClYregHNT52qq5Wit3OThpyRUyHPMVAFMfS/m4379YIV4FgUGMcCtiP1VnV4CmSt37+ZKY3nFUJjJj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TSBuK5Dr; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="od326bi9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66357C4CEE4;
-	Mon, 28 Apr 2025 08:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745830428;
-	bh=VwnIIijUV68aeumwgNi36UYJxd3Jbe9wHbDZiudw2/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=od326bi9qTazXNbqlB/m4mnS2rjfdptnoxCg/AUb/HJCu9qrmvin7M2inarikSXtB
-	 DKe+PWsEp9/cjPlKOXvQwlzIOMKFemMS2UK+C7gnZC7b2a7AGOh5wOZlkXHwvRr44s
-	 g/5fRaDDqSYl3o7UjpX4odGzKpgxwf2ySw3Cp5Qs2FDJWKZE/R5JeOspjCfm2a7DcP
-	 ciEZh+NsC5k7xpgh84eYalPC9FeGXEda5fa52iurKEWWynJbSviAcVuLiMjUSRx/Sz
-	 4RBuLx3CJWMkNa614MYfpt2pGHbTSMkAhN79CfzdkPtOuDKtEA9D3eefQsqE0owvVZ
-	 D4U1L4nCj9Giw==
-Date: Mon, 28 Apr 2025 10:53:43 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: paul@paul-moore.com, omosnace@redhat.com, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list to always include
- security.* xattrs
-Message-ID: <20250428-zielgebiet-zinspolitik-5a500ebb76c7@brauner>
-References: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
- <20250425-einspannen-wertarbeit-3f0c939525dc@brauner>
- <CAEjxPJ4vntQ5cCo_=KN0d+5FDPRwStjXUimE4iHXJkz9oeuVCw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TSBuK5Dr"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250428084730epoutp031b120f3ebc95dd4acaa51038526abbd5~6by5TtXfx1341513415epoutp03C
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:47:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250428084730epoutp031b120f3ebc95dd4acaa51038526abbd5~6by5TtXfx1341513415epoutp03C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745830050;
+	bh=p1+Lemg+qbGP6JCQYk04uUjgz5ILrVlgfWOlXzA9lNA=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=TSBuK5DrZ531nBgpBoo7V2HYlUy3Ub4EUVoWTY1fWOP901k5jvcy4Yn0zvNm5Sgw0
+	 tiDcRVLL7eACFy1sOCg8oD5gbHVD/E9q4YcGsCJi+2AyVejDWH6eV1J6BWC6SpI5uh
+	 SoxEHs9yF3qP3NOOuDw1QzJHd/dxk07X4G6/kXIw=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250428084729epcas2p296c44e87443066ec54d24bbfa8a82374~6by4qJB9u2928529285epcas2p2Q;
+	Mon, 28 Apr 2025 08:47:29 +0000 (GMT)
+Received: from epcas2p3.samsung.com (unknown [182.195.36.88]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZmHBn2BQMz2SSKb; Mon, 28 Apr
+	2025 08:47:29 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250428084728epcas2p486ddfccc41bfba9830bde544b6c292e3~6by3m4Zwk0662806628epcas2p4u;
+	Mon, 28 Apr 2025 08:47:28 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250428084728epsmtrp25df5462bc512891301f9dab2ce97bbad~6by3lzUKR1061810618epsmtrp2F;
+	Mon, 28 Apr 2025 08:47:28 +0000 (GMT)
+X-AuditID: b6c32a2a-d63ff70000002265-12-680f40a06ee7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F4.92.08805.0A04F086; Mon, 28 Apr 2025 17:47:28 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.60]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250428084728epsmtip1f94ab56908a3859038aa68d6f3061eb1~6by3TJUDy1894718947epsmtip11;
+	Mon, 28 Apr 2025 08:47:28 +0000 (GMT)
+From: Shin Son <shin.son@samsung.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
+	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
+Cc: Shin Son <shin.son@samsung.com>, linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] add CPUCL1/2 clock support for exynosauto v920 SoC
+Date: Mon, 28 Apr 2025 17:47:18 +0900
+Message-ID: <20250428084721.3832664-1-shin.son@samsung.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjxPJ4vntQ5cCo_=KN0d+5FDPRwStjXUimE4iHXJkz9oeuVCw@mail.gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSnO4CB/4MgxlzRS0ezNvGZrFm7zkm
+	i+tfnrNazD9yjtXi/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrV4v+eHewWh9+0s1r8
+	u7aRxWLy8bWsFk3L1jM58Hu8v9HK7rFpVSebx+Yl9R59W1YxenzeJBfAGsVlk5Kak1mWWqRv
+	l8CV0f1kP2PBM5aKFWfvMjYwfmTuYuTkkBAwkZg/aQp7FyMXh5DAbkaJrlXX2CASEhKHZ0xg
+	hLCFJe63HGGFKHrPKHFi60OmLkYODjYBVYlNv+VB4iICb5kklv8/wATSwCxwmlFi5xkZEFtY
+	wF1i3tt7LCA2C1D96teHwTbzClhLdPyeyA4yR0JAXqK/QwIiLChxcuYTFogx8hLNW2czT2Dk
+	m4UkNQtJagEj0ypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k/NxNjOCA19Lawbhn1Qe9Q4xM
+	HIyHGCU4mJVEeKsM+DOEeFMSK6tSi/Lji0pzUosPMUpzsCiJ83573ZsiJJCeWJKanZpakFoE
+	k2Xi4JRqYKpL/FHsuN93xbWZiywyuJM9u+/FJnx9q7AvkOG23W3B7ZP+JvMqCGSXhckeu60W
+	9vvSv/h4YZEph27z7Ph0ML737Zd7QnM+W3VyzTnO+m9Cmv6LR/v+PI/6FS5199DBxEOzonc9
+	uqQrxmD1WGyf1JdXpzd+O7v8wY0Hj5JEPJQEIu2m60q5M/iuX/o6cv8etlQL+XzFLfaa02T+
+	8icePLIlJd5NWuMc5x++xDNCy+eeXHPnhLmE2aOzfPeXTr59cMKj6gUdDpODT6zh/8uQdVJl
+	w6/n8i275dSOzK+c7drxijntxOmsr1PtbO+0MB72VEti2xU8Idlyd7+M2OqdPYozZnSVWvzM
+	YvO5uyD9xjwtJZbijERDLeai4kQAlxOQ0OcCAAA=
+X-CMS-MailID: 20250428084728epcas2p486ddfccc41bfba9830bde544b6c292e3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250428084728epcas2p486ddfccc41bfba9830bde544b6c292e3
+References: <CGME20250428084728epcas2p486ddfccc41bfba9830bde544b6c292e3@epcas2p4.samsung.com>
 
-On Fri, Apr 25, 2025 at 11:14:46AM -0400, Stephen Smalley wrote:
-> On Fri, Apr 25, 2025 at 5:20 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Thu, Apr 24, 2025 at 11:28:20AM -0400, Stephen Smalley wrote:
-> > > The vfs has long had a fallback to obtain the security.* xattrs from the
-> > > LSM when the filesystem does not implement its own listxattr, but
-> > > shmem/tmpfs and kernfs later gained their own xattr handlers to support
-> > > other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
-> >
-> > This change is from 2011. So no living soul has ever cared at all for
-> > at least 14 years. Surprising that this is an issue now.
-> 
-> Prior to the coreutils change noted in [1], no one would have had
-> reason to notice. I might also be wrong about the point where it was
-> first introduced - I didn't verify via testing the old commit, just
-> looked for when tmpfs gained its own xattr handlers that didn't call
-> security_inode_listsecurity().
-> 
-> [1] https://lore.kernel.org/selinux/CAEjxPJ6ocwsAAdT8cHGLQ77Z=+HOXg2KkaKNP8w9CruFj2ChoA@mail.gmail.com/T/#t
-> 
-> >
-> > > filesystems like sysfs no longer return the synthetic security.* xattr
-> > > names via listxattr unless they are explicitly set by userspace or
-> > > initially set upon inode creation after policy load. coreutils has
-> > > recently switched from unconditionally invoking getxattr for security.*
-> > > for ls -Z via libselinux to only doing so if listxattr returns the xattr
-> > > name, breaking ls -Z of such inodes.
-> >
-> > So no xattrs have been set on a given inode and we lie to userspace by
-> > listing them anyway. Well ok then.
-> 
-> SELinux has always returned a result for getxattr(...,
-> "security.selinux", ...) regardless of whether one has been set by
-> userspace or fetched from backing store because it assigns a label to
-> all inodes for use in permission checks, regardless.
-> And likewise returned "security.selinux" in listxattr() for all inodes
-> using either the vfs fallback or in the per-filesystem handlers prior
-> to the introduction of xattr handlers for tmpfs and later
-> sysfs/kernfs. SELinux labels were always a bit different than regular
-> xattrs; the original implementation didn't use xattrs but we were
-> directed to use them instead of our own MAC labeling scheme.
+This patchset adds the CMU_CPUCL1 and CMU_CPUCL2 block
+to support exynosauto v920 SoC.
 
-Interesting, thanks for the background.
+Shin Son (3):
+  dt-bindings: clock: exynosautov920: add cpucl1/2 clock definitions
+  clk: samsung: exynosautov920: add cpucl1/2 clock support
+  arm64: dts: exynosautov920: add cpucl1/2 clock DT nodes
 
-> 
-> >
-> > > Before:
-> > > $ getfattr -m.* /run/initramfs
-> > > <no output>
-> > > $ getfattr -m.* /sys/kernel/fscaps
-> > > <no output>
-> > > $ setfattr -n user.foo /run/initramfs
-> > > $ getfattr -m.* /run/initramfs
-> > > user.foo
-> > >
-> > > After:
-> > > $ getfattr -m.* /run/initramfs
-> > > security.selinux
-> > > $ getfattr -m.* /sys/kernel/fscaps
-> > > security.selinux
-> > > $ setfattr -n user.foo /run/initramfs
-> > > $ getfattr -m.* /run/initramfs
-> > > security.selinux
-> > > user.foo
-> > >
-> > > Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=iOawX4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
-> > > Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.smalley.work@gmail.com/
-> > > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > > ---
-> > >  fs/xattr.c | 24 ++++++++++++++++++++++++
-> > >  1 file changed, 24 insertions(+)
-> > >
-> > > diff --git a/fs/xattr.c b/fs/xattr.c
-> > > index 02bee149ad96..2fc314b27120 100644
-> > > --- a/fs/xattr.c
-> > > +++ b/fs/xattr.c
-> > > @@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
-> > >       return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_LEN);
-> > >  }
-> > >
-> > > +static bool xattr_is_maclabel(const char *name)
-> > > +{
-> > > +     const char *suffix = name + XATTR_SECURITY_PREFIX_LEN;
-> > > +
-> > > +     return !strncmp(name, XATTR_SECURITY_PREFIX,
-> > > +                     XATTR_SECURITY_PREFIX_LEN) &&
-> > > +             security_ismaclabel(suffix);
-> > > +}
-> > > +
-> > >  /**
-> > >   * simple_xattr_list - list all xattr objects
-> > >   * @inode: inode from which to get the xattrs
-> > > @@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
-> > >       if (err)
-> > >               return err;
-> > >
-> > > +     err = security_inode_listsecurity(inode, buffer, remaining_size);
-> >
-> > Is that supposed to work with multiple LSMs?
-> > Afaict, bpf is always active and has a hook for this.
-> > So the LSMs trample over each other filling the buffer?
-> 
-> There are a number of residual challenges to supporting full stacking
-> of arbitrary LSMs; this is just one instance. Why one would stack
-> SELinux with Smack though I can't imagine, and that's the only
-> combination that would break (and already doesn't work, so no change
-> here).
-> 
-> >
-> > > +     if (err < 0)
-> > > +             return err;
-> > > +
-> > > +     if (buffer) {
-> > > +             if (remaining_size < err)
-> > > +                     return -ERANGE;
-> > > +             buffer += err;
-> > > +     }
-> > > +     remaining_size -= err;
-> >
-> > Really unpleasant code duplication in here. We have xattr_list_one() for
-> > that. security_inode_listxattr() should probably receive a pointer to
-> > &remaining_size?
-> 
-> Not sure how to avoid the duplication, but willing to take it inside
-> of security_inode_listsecurity() and change its hook interface if
-> desired.
+ .../clock/samsung,exynosautov920-clock.yaml   |  45 ++++
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi |  26 +++
+ drivers/clk/samsung/clk-exynosautov920.c      | 208 +++++++++++++++++-
+ .../clock/samsung,exynosautov920.h            |  32 +++
+ 4 files changed, 310 insertions(+), 1 deletion(-)
 
-A follow-up cleanup would be very much appreciated.
+-- 
+2.49.0
 
-> 
-> >
-> > > +
-> > >       read_lock(&xattrs->lock);
-> > >       for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
-> > >               xattr = rb_entry(rbp, struct simple_xattr, rb_node);
-> > > @@ -1468,6 +1488,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
-> > >               if (!trusted && xattr_is_trusted(xattr->name))
-> > >                       continue;
-> > >
-> > > +             /* skip MAC labels; these are provided by LSM above */
-> > > +             if (xattr_is_maclabel(xattr->name))
-> > > +                     continue;
-> > > +
-> > >               err = xattr_list_one(&buffer, &remaining_size, xattr->name);
-> > >               if (err)
-> > >                       break;
-> > > --
-> > > 2.49.0
-> > >
