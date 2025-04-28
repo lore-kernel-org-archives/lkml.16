@@ -1,583 +1,337 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E2E1DED70;
-	Mon, 28 Apr 2025 12:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEDC224244
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843416; cv=none; b=OHo8R7kf6iPskArTh5TkOzsesLFZMGiATmFr2rmZqrNjqeyMOqcxDiHnC7CO/vKVat9UUECwM/+olnhXdmkNgvxLpOl4Zt1uRKEZoT3UqpnGA9HpgFOYoI1dxpWB7JHUB9pen2QMKgXBCI+1LYCmOj8tsRr92lDE2xDS3p/crKg=
+	t=1745843469; cv=none; b=hFDWW4OEaWnMlW1qWBxHCoqyY+svIRoSe/Xoirh/laXnrTpnF+UBhoCYQiaMTRo7nSh5WyS8m5huh/T8cpXuwXiNlTeWfRY8Kkk5UrlDyUKzNRMXpQc7gABVtZvpS7hOZdzMwgkQGaoRn7ZjM3Km+LWh4T6gntrWi16NAeXmryg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843416; c=relaxed/simple;
-	bh=3BbKXe7Zc+RvdFk6D2uK/LuyvPLJdqo/N/svjQb8hpY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I0TPx9PVABLDOUBy9QeoqYwNCqsXf2nRYXZCyPdAytaHJrGKrBPmjtSnEjGzeQpYBorFkb9rIsluuL1PIWPjoksXf+0XqLv0Auw3aqydoMh6s/Mp3Gr874Wy0pdWIlGSku+qstQ/qnv/Z+cqBaAMYvGyceNZEfxO9n9NWZIyqfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=uCzhpyJo; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1745843469; c=relaxed/simple;
+	bh=t9BBSnsURVFrBBj9h2/2B1TCyqnSBwOK4oOsrZuGCR4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=BMYeW2edGtE0JDJMUW+B1VvMffKI9kj5VBShVjAvOlmUkIZ1WksdlWxxiu/e7gUXs0NjNXiIyLvgmo+c+BRSukbLeyFT/6WYIt8BmcONlQElu5c8j66rKZb+WJygjcrR0Dj7ZOUdJfZwKfRIZTvxH298RauuTgAOdjy7zXI5Xbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SuqVfhJw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Pe7cUy/E; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="uCzhpyJo"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAmjNv027378;
-	Mon, 28 Apr 2025 08:29:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=pz4FK
-	ufwXFREbwem8o+20KQ8D3cSpfBzKcleqbS4UR4=; b=uCzhpyJo6reJIqM7mcjVN
-	pLzXPV6dBXihwwhy9SWUJt98TpIXPY7/hass3adY05+BvdPYtVu0sPnsUWqZK68u
-	Qxr4SySE4AK9FuVtEaTzsZLGKq1+Lg4DE4x4YuB8FOAKjT3fzaJg3w9RXn+9xSXu
-	TTpid8OdonulcbCBw4nxxBO0pFyowITEXnb1++Ab/18WVZK/rYjIRUvsr02Wogfw
-	wVQikWgPiDQu2xJb97bqLPR2o4dVqrxz055vNONMa45W9mpCWzwbkMs0j67+1Tba
-	toSmUdowTicybD8gbffIREioTVCBXl3hbl26+/xCwcaYHzC3pcoVrWGewTbBvqkb
-	g==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 469dtgh6gs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 08:29:58 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 53SCTv4c038281
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 28 Apr 2025 08:29:57 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 28 Apr 2025 08:29:57 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 28 Apr 2025 08:29:57 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Mon, 28 Apr 2025 08:29:56 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53SCTfnq032557;
-	Mon, 28 Apr 2025 08:29:43 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v2 7/7] iio: adc: ad4170: Add support for weigh scale and RTD sensors
-Date: Mon, 28 Apr 2025 09:29:40 -0300
-Message-ID: <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1745841276.git.marcelo.schmitt@analog.com>
-References: <cover.1745841276.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SuqVfhJw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pe7cUy/E"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5131D114025B;
+	Mon, 28 Apr 2025 08:31:03 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Mon, 28 Apr 2025 08:31:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745843463;
+	 x=1745929863; bh=l85d+c/VTG74vQy/NEAzc1LT42PJmdxc2NSt71v6MF8=; b=
+	SuqVfhJw+Y3Ur7fgmVIU3Rp0m+MvJO5yJrvKVuxiNbJpYoA5ZEpGjdlX1ipnT/Uq
+	NRYfNwBXA9MFNp/2YTmNVPIrlZsADnE43RAQu8DIvotj6dGLQFFIjZcXmSqx7maz
+	reA3azZRDFIFZ6Znv9YmXzQKivfZbG8sd7c0O0tjNyKsdmOOe6yYGC/oWq1TQxqD
+	qIjuiGOPH4XBkAETKoHOmx2QOYR0pwTUQ6U9zw3L5ss06in4+OQmiw9JFGGohkgs
+	vux+Ypr3DDuPI0KnlM6VlTFbNXO+yVJNSGPf2CXBQzQXXAlywvIfrTxsoUpflgmD
+	WdSfsaEUO5/rvtm+PmQYdA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745843463; x=
+	1745929863; bh=l85d+c/VTG74vQy/NEAzc1LT42PJmdxc2NSt71v6MF8=; b=P
+	e7cUy/ED4IPc+xS8XIUNFU+UA3mshvlZb8hAp88inYhPsvwBdXKBlae+RASnNxOh
+	ELbsgfJhdc3Ow6lmm5bW6BCRWfHgW6NXXWPT5Z+tiZ0VrDahHGAkjRFRjxcu5lSg
+	z/kTZ0JKsKE4UsMuScKG6w9WwOXijYVyMQaPa+MQTJIfQKla7V5bDlu8XtBxNwJz
+	r/tIgrynqylLOXFu48utceWn0XXwmQtBNhVxGPegR2kCozc1O7uL5adxi6hexcK4
+	I2K5hW851mZBhfHH/qfa/QbDGDbzt45oJYDqFlQUxMDgRNMuBpLHc90kDx6RWvgX
+	LLl6o3rpLa8stUhXQWFZA==
+X-ME-Sender: <xms:BXUPaDezTL1TN0-r_UEi_3XH69IDfnAXbjZUMVi4L7KGDhMvh5n1pA>
+    <xme:BXUPaJPUVbNa1w2G92w8YZiV4Kq3KYhgrgj2EtSthgqLLX11iquLFAGOlvOhDN2cj
+    nxt_vO5eaIAIQ9rwO0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtleehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    vddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+    dprhgtphhtthhopegrnhgurhgvfidrtghoohhpvghrfeestghithhrihigrdgtohhmpdhr
+    tghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprg
+    hlvgigrghnuggvrhdruhhshihskhhinhesihhnthgvlhdrtghomhdprhgtphhtthhopegr
+    rhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehr
+    phhptheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:BXUPaMjsa-EdZVMkQozKoOZL5CsDf8FrJh6sGT2tsVxuSqi-cmsThw>
+    <xmx:BXUPaE_t8u4Cp2aH4korOXy6tG5ARYegDCcuV2jQc6HeF5mUiGPPUg>
+    <xmx:BXUPaPvIu4EkBpVC3vhm9XNZJObQFKjQgmO3NLcyWmyguuNXP0cRNA>
+    <xmx:BXUPaDGx0GUBpjL7k75UIGpdtm5e3wHXRVo_Sy41bRu4EZGL8EINug>
+    <xmx:B3UPaLkozNo8AMc5E-AbMwXx-fMoG20mUaw5xfVSxqUuoRLHQfgAgDjy>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BEC902220075; Mon, 28 Apr 2025 08:31:01 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T1abce48479718f0e
+Date: Mon, 28 Apr 2025 14:30:41 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ingo Molnar" <mingo@kernel.org>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: "Andrew Cooper" <andrew.cooper3@citrix.com>,
+ "Arnd Bergmann" <arnd@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Juergen Gross" <jgross@suse.com>,
+ "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+ "Alexander Usyskin" <alexander.usyskin@intel.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+ "Mike Rapoport" <rppt@kernel.org>, "Ard Biesheuvel" <ardb@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Message-Id: <acc95bb8-f277-4e5c-9647-3c034748ed2c@app.fastmail.com>
+In-Reply-To: <aA8q4Ot-1zTzv_Kt@gmail.com>
+References: <20250425141740.734030-1-arnd@kernel.org>
+ <aAyiganPp_UsNlnZ@gmail.com>
+ <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
+ <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
+ <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
+ <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
+ <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
+ <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com>
+ <aA8q4Ot-1zTzv_Kt@gmail.com>
+Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case handling to
+ C
 Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEwMyBTYWx0ZWRfXx99SX91XRjsg Ov30wG8jSMBnlp6CuOjmcnnfGK/XEu7If6y5Y6F4zN+z6Qa0bpxsFmXRY3D0g8ow+VRN9+b0OWh 3WMn388FZGV9zy3jT53aZnLSjK9ZiGx+uHy3iOoLNaqXGDrX1SaVXxIoBprGdKGQralQ2PrQiwn
- I2RDyjrVU5jpDKUGllgjpyQl2FkzchkijoD0hFaJhBmnnPQVvU6TAcehP7D8VOloKA7h5qwPzZZ P7cv9c9GFL5QEMkD/sZg6OE3bYgXdnAoIRrPKvAmfnWbMtuTnWt08lfajWgFZbZnDeEwk9mBSvg 3tQylq1q4tKCArM4jGtHOqE+OyrNq9YDK2RPdt0CsE0ApV2pA1N0hA+oD2hFu6BKJ2vibnKyzNr
- dZgUcdkJZ3+Wt3VLRJ9+ZpA6gyxxLLsRGgDaPBg56DmyHf8oyjaHYIIc0ZbSiHqIJgAMFUeT
-X-Proofpoint-ORIG-GUID: hDFRSFgkuj43S2OyJFDHFpO80R39CEby
-X-Proofpoint-GUID: hDFRSFgkuj43S2OyJFDHFpO80R39CEby
-X-Authority-Analysis: v=2.4 cv=crybk04i c=1 sm=1 tr=0 ts=680f74c6 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=803P3kdnwzmVfup4ueMA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 clxscore=1015 impostorscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2504280103
+Content-Transfer-Encoding: 7bit
 
-The AD4170 design has features to aid interfacing with weigh scale and RTD
-sensors that are expected to be setup with external circuitry for proper
-sensor operation. A key characteristic of those sensors is that the circuit
-they are in must be excited with a pair of signals. The external circuit
-can be excited either by voltage supply or by AD4170 excitation signals.
-The sensor can then be read through a different pair of lines that are
-connected to AD4170 ADC.
+On Mon, Apr 28, 2025, at 09:14, Ingo Molnar wrote:
+>
+> ... and unless I messed up the patch, it seems to have a surprisingly 
+> low impact - maybe because the compiler can amortize its cost by 
+> adjusting all dependent code mostly at build time, so the +1 doesn't 
+> end up being generated most of the time?
 
-Configure AD4170 to handle external circuit sensors.
+Is there any reason we can't just use the compiler-builtins directly
+like we do on other architectures, at least for 32-bit?
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
-changes since v1:
-- Improved to support more than one external sensor connected.
+Looking at a couple of vmlinux objects confirms the  findings from
+fdb6649ab7c1 ("x86/asm/bitops: Use __builtin_ctzl() to evaluate
+constant expressions") from looking at the object file that using
+the built-in helpers is slightly better than the current asm code
+for all 32-bit targets with both gcc and clang. It's also better
+for 64-bit targets with clang, but not with gcc, where the inline
+asm often saves a cmov but in other cases the compiler finds an
+even better instruction sequence.
 
- drivers/iio/adc/ad4170.c | 375 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 372 insertions(+), 3 deletions(-)
+     Arnd
 
-diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-index 335b4194c7eb..9e4a9b524dd4 100644
---- a/drivers/iio/adc/ad4170.c
-+++ b/drivers/iio/adc/ad4170.c
-@@ -62,6 +62,8 @@
- #define AD4170_FILTER_FS_REG(x)				(0xC7 + 14 * (x))
- #define AD4170_OFFSET_REG(x)				(0xCA + 14 * (x))
- #define AD4170_GAIN_REG(x)				(0xCD + 14 * (x))
-+#define AD4170_V_BIAS_REG				0x135
-+#define AD4170_CURRENT_SRC_REG(x)			(0x139 + 2 * (x))
- #define AD4170_GPIO_MODE_REG				0x191
- #define AD4170_GPIO_OUTPUT_REG				0x193
- #define AD4170_GPIO_INPUT_REG				0x195
-@@ -110,6 +112,10 @@
- /* AD4170_FILTER_REG */
- #define AD4170_FILTER_FILTER_TYPE_MSK			GENMASK(3, 0)
- 
-+/* AD4170_CURRENT_SRC_REG */
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_MSK		GENMASK(12, 8)
-+#define AD4170_CURRENT_SRC_I_OUT_VAL_MSK		GENMASK(2, 0)
-+
- /* AD4170 register constants */
- 
- /* AD4170_CLOCK_CTRL_REG constants */
-@@ -171,6 +177,21 @@
- #define AD4170_FILTER_FILTER_TYPE_SINC5			0x4
- #define AD4170_FILTER_FILTER_TYPE_SINC3			0x6
- 
-+/* AD4170_CURRENT_SRC_REG constants */
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN0		0
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN1		1
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN2		2
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN3		3
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN4		4
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN5		5
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN6		6
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN7		7
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_AIN8		8
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_GPIO0		17
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_GPIO1		18
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_GPIO2		19
-+#define AD4170_CURRENT_SRC_I_OUT_PIN_GPIO3		20
-+
- /* Device properties and auxiliary constants */
- 
- #define AD4170_NUM_ANALOG_PINS				9
-@@ -204,6 +225,15 @@
- #define AD4170_PIN_UNASIGNED				0x00
- #define AD4170_PIN_ANALOG_IN				0x01
- #define AD4170_PIN_CURRENT_OUT				0x02
-+#define AD4170_PIN_VBIAS				0x04
-+
-+/* GPIO pin functions  */
-+#define AD4170_GPIO_UNASIGNED				0x00
-+#define AD4170_GPIO_AC_EXCITATION			0x02
-+#define AD4170_GPIO_OUTPUT				0x04
-+
-+/* Current source */
-+#define AD4170_CURRENT_SRC_DISABLED			0xFF
- 
- static const unsigned int ad4170_reg_size[] = {
- 	[AD4170_CONFIG_A_REG] = 1,
-@@ -244,6 +274,8 @@ static const unsigned int ad4170_reg_size[] = {
- 	[AD4170_OFFSET_REG(5) ... AD4170_GAIN_REG(5)] = 3,
- 	[AD4170_OFFSET_REG(6) ... AD4170_GAIN_REG(6)] = 3,
- 	[AD4170_OFFSET_REG(7) ... AD4170_GAIN_REG(7)] = 3,
-+	[AD4170_V_BIAS_REG] = 2,
-+	[AD4170_CURRENT_SRC_REG(0) ... AD4170_CURRENT_SRC_REG(3)] = 2,
- 	[AD4170_GPIO_MODE_REG] = 2,
- 	[AD4170_GPIO_OUTPUT_REG] = 2,
- 	[AD4170_GPIO_INPUT_REG] = 2,
-@@ -305,6 +337,33 @@ static const unsigned int ad4170_sinc5_filt_fs_tbl[] = {
- 	1, 2, 4, 8, 12, 16, 20, 40, 48, 80, 100, 256,
- };
- 
-+static const unsigned int ad4170_iout_pin_tbl[] = {
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN0,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN1,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN2,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN3,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN4,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN5,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN6,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN7,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_AIN8,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_GPIO0,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_GPIO1,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_GPIO2,
-+	AD4170_CURRENT_SRC_I_OUT_PIN_GPIO3,
-+};
-+
-+static const unsigned int ad4170_iout_current_ua_tbl[] = {
-+	0, 10, 50, 100, 250, 500, 1000, 1500
-+};
-+
-+enum ad4170_sensor_type {
-+	AD4170_WEIGH_SCALE_SENSOR = 0,
-+	AD4170_RTD_SENSOR = 1,
-+	AD4170_THERMOCOUPLE_SENSOR = 2,
-+	AD4170_ADC_SENSOR = 3,
-+};
-+
- struct ad4170_chip_info {
- 	const char *name;
- };
-@@ -378,6 +437,8 @@ struct ad4170_state {
- 	struct clk *ext_clk;
- 	struct clk_hw int_clk_hw;
- 	int pins_fn[AD4170_NUM_ANALOG_PINS];
-+	int gpio_fn[AD4170_NUM_GPIO_PINS];
-+	unsigned int cur_src_pins[AD4170_NUM_CURRENT_SRC];
- 	struct gpio_chip gpiochip;
- 	u32 int_pin_sel;
- 	int sps_tbl[ARRAY_SIZE(ad4170_filt_names)][AD4170_MAX_FS_TBL_SIZE][2];
-@@ -925,6 +986,19 @@ static int ad4170_get_ain_voltage_uv(struct ad4170_state *st, int ain_n,
- 	struct device *dev = &st->spi->dev;
- 
- 	*ain_voltage = 0;
-+	/*
-+	 * The voltage bias (vbias) sets the common-mode voltage of the channel
-+	 * to (AVDD + AVSS)/2. If provided, AVSS supply provides the magnitude
-+	 * (absolute value) of the negative voltage supplied to the AVSS pin.
-+	 * So, we do AVDD - AVSS to compute the DC voltage generated by the bias
-+	 * voltage generator.
-+	 */
-+	if (st->pins_fn[ain_n] & AD4170_PIN_VBIAS) {
-+		*ain_voltage = (st->vrefs_uv[AD4170_AVDD_SUP]
-+				- st->vrefs_uv[AD4170_AVSS_SUP]) / 2;
-+		return 0;
-+	}
-+
- 	if (ain_n <= AD4170_CHAN_MAP_TEMP_SENSOR)
- 		return 0;
- 
-@@ -1742,6 +1816,266 @@ static int ad4170_gpio_init(struct iio_dev *indio_dev)
- 	return devm_gpiochip_add_data(&st->spi->dev, &st->gpiochip, indio_dev);
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index eebbc8889e70..bdeae9a497e5 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -246,184 +246,18 @@ arch_test_bit_acquire(unsigned long nr, const volatile unsigned long *addr)
+ 					  variable_test_bit(nr, addr);
  }
  
-+static int _ad4170_find_table_index(const unsigned int *tbl, size_t len,
-+				    unsigned int val)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < len; i++)
-+		if (tbl[i] == val)
-+			return i;
-+
-+	return -EINVAL;
-+}
-+
-+#define ad4170_find_table_index(table, val) \
-+	_ad4170_find_table_index(table, ARRAY_SIZE(table), val)
-+
-+static int ad4170_validate_excitation_pins(struct ad4170_state *st,
-+					   u32 *exc_pins, int num_exc_pins)
-+{
-+	struct device *dev = &st->spi->dev;
-+	int ret, i;
-+
-+	for (i = 0; i < num_exc_pins; i++) {
-+		unsigned int pin = exc_pins[i];
-+
-+		ret = ad4170_find_table_index(ad4170_iout_pin_tbl, pin);
-+		if (ret < 0)
-+			return dev_err_probe(dev, ret,
-+					     "Invalid excitation pin: %u\n",
-+					     pin);
-+
-+		if (pin <= AD4170_MAX_ANALOG_PINS) {
-+			if (st->pins_fn[pin] != AD4170_PIN_UNASIGNED)
-+				return dev_err_probe(dev, -EINVAL,
-+						     "Pin %u already used with fn %u\n",
-+						     pin, st->pins_fn[pin]);
-+
-+			st->pins_fn[pin] |= AD4170_PIN_CURRENT_OUT;
-+		} else {
-+			unsigned int gpio = pin - AD4170_CURRENT_SRC_I_OUT_PIN_GPIO0;
-+
-+			if (st->gpio_fn[gpio] != AD4170_GPIO_UNASIGNED)
-+				return dev_err_probe(dev, -EINVAL,
-+						     "GPIO %u already used with fn %u\n",
-+						     gpio, st->gpio_fn[gpio]);
-+
-+			st->gpio_fn[gpio] |= AD4170_GPIO_AC_EXCITATION;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int ad4170_setup_current_src(struct ad4170_state *st,
-+				    struct fwnode_handle *child,
-+				    struct ad4170_setup *setup, u32 *exc_pins,
-+				    int num_exc_pins, int exc_cur, bool ac_excited)
-+{
-+	unsigned int current_src, i, j;
-+	int ret;
-+
-+	for (i = 0; i < num_exc_pins; i++) {
-+		unsigned int pin = exc_pins[i];
-+
-+		current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK, pin);
-+		current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_VAL_MSK, exc_cur);
-+
-+		for (j = 0; j < AD4170_NUM_CURRENT_SRC; j++) {
-+			/*
-+			 * Excitation current chopping is configured in pairs.
-+			 * If current chopping configured and the first end of
-+			 * the current source pair has already been assigned,
-+			 * skip to the next pair of output currents.
-+			 */
-+			if (ac_excited && j % 2 != 0)
-+				continue;
-+
-+			if (st->cur_src_pins[j] == AD4170_CURRENT_SRC_DISABLED) {
-+				st->cur_src_pins[j] = pin;
-+				break;
-+			}
-+		}
-+		if (j == AD4170_NUM_CURRENT_SRC)
-+			return dev_err_probe(&st->spi->dev, -EINVAL,
-+					     "Failed to setup IOUT at pin %u\n",
-+					     pin);
-+
-+		ret = regmap_write(st->regmap, AD4170_CURRENT_SRC_REG(j),
-+				   current_src);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (ac_excited && num_exc_pins > 1) {
-+		unsigned int exc_cur_pair;
-+
-+		if (st->cur_src_pins[0] == exc_pins[0])
-+			exc_cur_pair = 1;
-+		else
-+			exc_cur_pair = 2;
-+
-+		/*
-+		 * Configure excitation currents chopping.
-+		 * Chop two pairs if using four excitation currents.
-+		 */
-+		setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_IEXC_MSK,
-+					  num_exc_pins == 2 ? exc_cur_pair : 3);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad4170_setup_bridge(struct ad4170_state *st,
-+			       struct fwnode_handle *child,
-+			       struct ad4170_setup *setup, u32 *exc_pins,
-+			       int num_exc_pins, int exc_cur, bool ac_excited)
-+{
-+	int ret;
-+
-+	/*
-+	 * If a specific current is provided through
-+	 * adi,excitation-current-microamp, set excitation pins provided through
-+	 * adi,excitation-pins to AC excite the bridge circuit. Else, use
-+	 * predefined ACX1, ACX1 negated, ACX2, ACX2 negated signals to AC
-+	 * excite the bridge. Those signals are output on GPIO2, GPIO0, GPIO3,
-+	 * and GPIO1, respectively. If only two pins are specified for AC
-+	 * excitation, use ACX1 and ACX2.
-+	 *
-+	 * Also, to avoid any short-circuit condition when more than one channel
-+	 * is enabled, set GPIO2 and GPIO0 high, and set GPIO1 and GPIO3 low to
-+	 * DC excite the bridge whenever a channel without AC excitation is
-+	 * selected. That is needed because GPIO pins are controlled by the next
-+	 * highest priority GPIO function when a channel doesn't enable AC
-+	 * excitation. See datasheet Figure 113 Weigh Scale (AC Excitation) for
-+	 * an example circuit diagram.
-+	 */
-+	if (exc_cur == 0 && ac_excited) {
-+		if (num_exc_pins == 2) {
-+			setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_ADC_MSK, 0x3);
-+			ret = regmap_set_bits(st->regmap,
-+					      AD4170_GPIO_MODE_REG,
-+					      BIT(7) | BIT(5));
-+			if (ret)
-+				return ret;
-+
-+			ret = regmap_set_bits(st->regmap,
-+					      AD4170_GPIO_OUTPUT_REG,
-+					      BIT(3) | BIT(2));
-+			if (ret)
-+				return ret;
-+
-+			st->gpio_fn[3] |= AD4170_GPIO_OUTPUT;
-+			st->gpio_fn[2] |= AD4170_GPIO_OUTPUT;
-+		} else {
-+			setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_ADC_MSK, 0x2);
-+			ret = regmap_set_bits(st->regmap,
-+					      AD4170_GPIO_MODE_REG,
-+					      BIT(7) | BIT(5) | BIT(3) | BIT(1));
-+			if (ret)
-+				return ret;
-+
-+			ret = regmap_set_bits(st->regmap,
-+					      AD4170_GPIO_OUTPUT_REG,
-+					      BIT(3) | BIT(2) | BIT(1) | BIT(0));
-+			if (ret)
-+				return ret;
-+
-+			st->gpio_fn[3] |= AD4170_GPIO_OUTPUT;
-+			st->gpio_fn[2] |= AD4170_GPIO_OUTPUT;
-+			st->gpio_fn[1] |= AD4170_GPIO_OUTPUT;
-+			st->gpio_fn[0] |= AD4170_GPIO_OUTPUT;
-+		}
-+
-+		return 0;
-+	}
-+
-+	return ad4170_setup_current_src(st, child, setup, exc_pins,
-+					num_exc_pins, exc_cur, ac_excited);
-+}
-+
-+static int ad4170_setup_rtd(struct ad4170_state *st,
-+			    struct fwnode_handle *child,
-+			    struct ad4170_setup *setup, u32 *exc_pins,
-+			    int num_exc_pins, int exc_cur, bool ac_excited)
-+{
-+	return ad4170_setup_current_src(st, child, setup, exc_pins,
-+					num_exc_pins, exc_cur, ac_excited);
-+}
-+
-+static int ad4170_parse_external_sensor(struct ad4170_state *st,
-+					struct fwnode_handle *child,
-+					struct ad4170_setup *setup,
-+					struct iio_chan_spec *chan, u8 s_type)
-+{
-+	unsigned int num_exc_pins, exc_cur, reg_val;
-+	struct device *dev = &st->spi->dev;
-+	u32 pins[2], exc_pins[4];
-+	bool ac_excited, vbias;
-+	int ret;
-+
-+	ret = fwnode_property_read_u32_array(child, "diff-channels", pins,
-+					     ARRAY_SIZE(pins));
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to read sensor diff-channels\n");
-+
-+	chan->differential = true;
-+	chan->channel = pins[0];
-+	chan->channel2 = pins[1];
-+
-+	ac_excited = fwnode_property_read_bool(child, "adi,excitation-ac");
-+
-+	num_exc_pins = fwnode_property_count_u32(child, "adi,excitation-pins");
-+	if (num_exc_pins != 1 && num_exc_pins != 2 && num_exc_pins != 4)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "Invalid number of excitation pins\n");
-+
-+	ret = fwnode_property_read_u32_array(child, "adi,excitation-pins",
-+					     exc_pins, num_exc_pins);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to read adi,excitation-pins\n");
-+
-+	ret = ad4170_validate_excitation_pins(st, exc_pins, num_exc_pins);
-+	if (ret)
-+		return ret;
-+
-+	exc_cur = 0;
-+	ret = fwnode_property_read_u32(child, "adi,excitation-current-microamp",
-+				       &exc_cur);
-+	if (ret && s_type == AD4170_RTD_SENSOR)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to read adi,excitation-current-microamp\n");
-+
-+	ret = ad4170_find_table_index(ad4170_iout_current_ua_tbl, exc_cur);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret,
-+				     "Invalid excitation current: %uuA\n",
-+				     exc_cur);
-+
-+	/* Get the excitation current configuration value */
-+	exc_cur = ret;
-+
-+	if (s_type == AD4170_THERMOCOUPLE_SENSOR) {
-+		vbias = fwnode_property_read_bool(child, "adi,vbias");
-+		if (vbias) {
-+			st->pins_fn[chan->channel2] |= AD4170_PIN_VBIAS;
-+			reg_val = BIT(chan->channel2);
-+			return regmap_write(st->regmap, AD4170_V_BIAS_REG,
-+					    reg_val);
-+		}
-+	}
-+	if (s_type == AD4170_WEIGH_SCALE_SENSOR) {
-+		ret = ad4170_setup_bridge(st, child, setup, exc_pins,
-+					  num_exc_pins, exc_cur, ac_excited);
-+	} else {
-+		ret = ad4170_setup_rtd(st, child, setup, exc_pins, num_exc_pins,
-+				       exc_cur, ac_excited);
-+	}
-+	return ret;
-+}
-+
- static int ad4170_parse_reference(struct ad4170_state *st,
- 				  struct fwnode_handle *child,
- 				  struct ad4170_setup *setup)
-@@ -1823,6 +2157,7 @@ static int ad4170_parse_channel_node(struct iio_dev *indio_dev,
- 	struct ad4170_state *st = iio_priv(indio_dev);
- 	struct device *dev = &st->spi->dev;
- 	struct ad4170_chan_info *chan_info;
-+	u8 s_type = AD4170_ADC_SENSOR;
- 	struct ad4170_setup *setup;
- 	struct iio_chan_spec *chan;
- 	unsigned int ch_reg;
-@@ -1854,10 +2189,34 @@ static int ad4170_parse_channel_node(struct iio_dev *indio_dev,
- 	if (ret)
- 		return ret;
+-static __always_inline unsigned long variable__ffs(unsigned long word)
+-{
+-	asm("tzcnt %1,%0"
+-		: "=r" (word)
+-		: ASM_INPUT_RM (word));
+-	return word;
+-}
+-
+-/**
+- * __ffs - find first set bit in word
+- * @word: The word to search
+- *
+- * Undefined if no bit exists, so code should check against 0 first.
+- */
+-#define __ffs(word)				\
+-	(__builtin_constant_p(word) ?		\
+-	 (unsigned long)__builtin_ctzl(word) :	\
+-	 variable__ffs(word))
+-
+-static __always_inline unsigned long variable_ffz(unsigned long word)
+-{
+-	return variable__ffs(~word);
+-}
+-
+-/**
+- * ffz - find first zero bit in word
+- * @word: The word to search
+- *
+- * Undefined if no zero exists, so code should check against ~0UL first.
+- */
+-#define ffz(word)				\
+-	(__builtin_constant_p(word) ?		\
+-	 (unsigned long)__builtin_ctzl(~word) :	\
+-	 variable_ffz(word))
+-
+-/*
+- * __fls: find last set bit in word
+- * @word: The word to search
+- *
+- * Undefined if no set bit exists, so code should check against 0 first.
+- */
+-static __always_inline unsigned long __fls(unsigned long word)
+-{
+-	if (__builtin_constant_p(word))
+-		return BITS_PER_LONG - 1 - __builtin_clzl(word);
+-
+-	asm("bsr %1,%0"
+-	    : "=r" (word)
+-	    : ASM_INPUT_RM (word));
+-	return word;
+-}
+-
+ #undef ADDR
  
--	ret = ad4170_parse_adc_channel_type(dev, child, chan);
--	if (ret < 0)
--		return ret;
-+	ret = fwnode_property_read_u8(child, "adi,sensor-type", &s_type);
-+	if (!ret) {
-+		if (s_type > AD4170_THERMOCOUPLE_SENSOR)
-+			return dev_err_probe(dev, ret,
-+					     "Invalid adi,sensor-type: %u\n",
-+					     s_type);
-+	}
-+	switch (s_type) {
-+	case AD4170_ADC_SENSOR:
-+		ret = ad4170_parse_adc_channel_type(dev, child, chan);
-+		if (ret < 0)
-+			return ret;
-+
-+		break;
-+	case AD4170_WEIGH_SCALE_SENSOR:
-+		fallthrough;
-+	case AD4170_THERMOCOUPLE_SENSOR:
-+		fallthrough;
-+	case AD4170_RTD_SENSOR:
-+		ret = ad4170_parse_external_sensor(st, child, setup, chan,
-+						   s_type);
-+		if (ret < 0)
-+			return ret;
+-#ifdef __KERNEL__
+-static __always_inline int variable_ffs(int x)
+-{
+-	int r;
+-
+-#ifdef CONFIG_X86_64
+-	/*
+-	 * AMD64 says BSFL won't clobber the dest reg if x==0; Intel64 says the
+-	 * dest reg is undefined if x==0, but their CPU architect says its
+-	 * value is written to set it to the same as before, except that the
+-	 * top 32 bits will be cleared.
+-	 *
+-	 * We cannot do this on 32 bits because at the very least some
+-	 * 486 CPUs did not behave this way.
+-	 */
+-	asm("bsfl %1,%0"
+-	    : "=r" (r)
+-	    : ASM_INPUT_RM (x), "0" (-1));
+-#elif defined(CONFIG_X86_CMOV)
+-	asm("bsfl %1,%0\n\t"
+-	    "cmovzl %2,%0"
+-	    : "=&r" (r) : "rm" (x), "r" (-1));
+-#else
+-	asm("bsfl %1,%0\n\t"
+-	    "jnz 1f\n\t"
+-	    "movl $-1,%0\n"
+-	    "1:" : "=r" (r) : "rm" (x));
+-#endif
+-	return r + 1;
+-}
+-
+-/**
+- * ffs - find first set bit in word
+- * @x: the word to search
+- *
+- * This is defined the same way as the libc and compiler builtin ffs
+- * routines, therefore differs in spirit from the other bitops.
+- *
+- * ffs(value) returns 0 if value is 0 or the position of the first
+- * set bit if value is nonzero. The first (least significant) bit
+- * is at position 1.
+- */
+-#define ffs(x) (__builtin_constant_p(x) ? __builtin_ffs(x) : variable_ffs(x))
+-
+-/**
+- * fls - find last set bit in word
+- * @x: the word to search
+- *
+- * This is defined in a similar way as the libc and compiler builtin
+- * ffs, but returns the position of the most significant set bit.
+- *
+- * fls(value) returns 0 if value is 0 or the position of the last
+- * set bit if value is nonzero. The last (most significant) bit is
+- * at position 32.
+- */
+-static __always_inline int fls(unsigned int x)
+-{
+-	int r;
+-
+-	if (__builtin_constant_p(x))
+-		return x ? 32 - __builtin_clz(x) : 0;
+-
+-#ifdef CONFIG_X86_64
+-	/*
+-	 * AMD64 says BSRL won't clobber the dest reg if x==0; Intel64 says the
+-	 * dest reg is undefined if x==0, but their CPU architect says its
+-	 * value is written to set it to the same as before, except that the
+-	 * top 32 bits will be cleared.
+-	 *
+-	 * We cannot do this on 32 bits because at the very least some
+-	 * 486 CPUs did not behave this way.
+-	 */
+-	asm("bsrl %1,%0"
+-	    : "=r" (r)
+-	    : ASM_INPUT_RM (x), "0" (-1));
+-#elif defined(CONFIG_X86_CMOV)
+-	asm("bsrl %1,%0\n\t"
+-	    "cmovzl %2,%0"
+-	    : "=&r" (r) : "rm" (x), "rm" (-1));
+-#else
+-	asm("bsrl %1,%0\n\t"
+-	    "jnz 1f\n\t"
+-	    "movl $-1,%0\n"
+-	    "1:" : "=r" (r) : "rm" (x));
+-#endif
+-	return r + 1;
+-}
+-
+-/**
+- * fls64 - find last set bit in a 64-bit word
+- * @x: the word to search
+- *
+- * This is defined in a similar way as the libc and compiler builtin
+- * ffsll, but returns the position of the most significant set bit.
+- *
+- * fls64(value) returns 0 if value is 0 or the position of the last
+- * set bit if value is nonzero. The last (most significant) bit is
+- * at position 64.
+- */
+-#ifdef CONFIG_X86_64
+-static __always_inline int fls64(__u64 x)
+-{
+-	int bitpos = -1;
+-
+-	if (__builtin_constant_p(x))
+-		return x ? 64 - __builtin_clzll(x) : 0;
+-	/*
+-	 * AMD64 says BSRQ won't clobber the dest reg if x==0; Intel64 says the
+-	 * dest reg is undefined if x==0, but their CPU architect says its
+-	 * value is written to set it to the same as before.
+-	 */
+-	asm("bsrq %1,%q0"
+-	    : "+r" (bitpos)
+-	    : ASM_INPUT_RM (x));
+-	return bitpos + 1;
+-}
+-#else
++#include <asm-generic/bitops/__ffs.h>
++#include <asm-generic/bitops/ffz.h>
++#include <asm-generic/bitops/builtin-fls.h>
++#include <asm-generic/bitops/__fls.h>
+ #include <asm-generic/bitops/fls64.h>
+-#endif
  
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
- 	bipolar = fwnode_property_read_bool(child, "bipolar");
- 	setup->afe |= FIELD_PREP(AD4170_AFE_BIPOLAR_MSK, bipolar);
- 	if (bipolar)
-@@ -2059,6 +2418,12 @@ static int ad4170_parse_firmware(struct iio_dev *indio_dev)
- 	for (i = 0; i < AD4170_NUM_ANALOG_PINS; i++)
- 		st->pins_fn[i] = AD4170_PIN_UNASIGNED;
+-#include <asm-generic/bitops/sched.h>
  
-+	for (i = 0; i < AD4170_NUM_GPIO_PINS; i++)
-+		st->gpio_fn[i] = AD4170_GPIO_UNASIGNED;
-+
-+	for (i = 0; i < AD4170_NUM_CURRENT_SRC; i++)
-+		st->cur_src_pins[i] = AD4170_CURRENT_SRC_DISABLED;
-+
- 	/* On power on, device defaults to using SDO pin for data ready signal */
- 	st->int_pin_sel = AD4170_INT_PIN_SDO;
- 	ret = device_property_match_property_string(dev, "interrupt-names",
-@@ -2083,6 +2448,10 @@ static int ad4170_parse_firmware(struct iio_dev *indio_dev)
++#include <asm-generic/bitops/sched.h>
++#include <asm-generic/bitops/builtin-ffs.h>
+ #include <asm/arch_hweight.h>
+-
+ #include <asm-generic/bitops/const_hweight.h>
  
- 	/* Only create a GPIO chip if flagged for it */
- 	if (device_property_read_bool(&st->spi->dev, "gpio-controller")) {
-+		for (i = 0; i < AD4170_NUM_GPIO_PINS; i++)
-+			if (st->gpio_fn[i] != AD4170_GPIO_UNASIGNED)
-+				return 0;
-+
- 		ret = ad4170_gpio_init(indio_dev);
- 		if (ret)
- 			return ret;
--- 
-2.47.2
-
+ #include <asm-generic/bitops/instrumented-atomic.h>
+@@ -434,5 +268,4 @@ static __always_inline int fls64(__u64 x)
+ 
+ #include <asm-generic/bitops/ext2-atomic-setbit.h>
+ 
+-#endif /* __KERNEL__ */
+ #endif /* _ASM_X86_BITOPS_H */
