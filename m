@@ -1,235 +1,235 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEF127462
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745817226; cv=fail; b=fPJMD/tIq3ksHAmFvT0OWgyEScUQvB5BmDhxn02yFniMCO3usy6PHTgXKSvilT5zpdFVTbTlnbAHjZSMb+B7v9ExRAZyx8ZECtUbjH7k5EYIA7elLPYPc6PFs7bDxSYXqY1Jtu4cg3XKdKggzUW39GemJ8LjT3NyhJSPAyN/rx0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745817226; c=relaxed/simple;
-	bh=0YTnJ7pAlRueDwXMCyYrx2X5n20kaEiajktC8/yVU3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UesXZ/WhA+j7S4Vm7//kJa2ks1S3arcKY1WXzfeJZwor5BirleMcksuZ/MZfTP7B11R8KqpWz/WIi0KywrYxeutb4NqMa9Yd2YYlY+v7TFYQISe+4g8sYn4wOO1Cg69oI5emW4YOi4iDW2+7ITpsD8aoip62Sg0WIHQ+Eni9oWE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aaSW04H+; arc=fail smtp.client-ip=40.107.93.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429D4211C;
+	Mon, 28 Apr 2025 05:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745817434; cv=none; b=peKYD1b9j3qPkWZ4NgJ4mNuzz5GqQkRAATsknPDQ5KdXZHyY6lisdb7C9UhQ9rAUHa+26nC6YjBTbLTBrxLhIkCube/upNwh0mCRjUZoTmjBQyiQ5f5sPnX1kBaecphNqrWv4afe2LSNdcGJ0lrjAswGEwqFN+kihm+aIUk7cFg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745817434; c=relaxed/simple;
+	bh=0sCu39xYIKnVQxxLAdGEEGjswS5E8y30/AC4tvoO9PM=;
+	h=Date:Message-Id:From:Subject:To:Cc; b=of4GF8zchi418nxcLIabAyMTd/XmpTGdD7ot/NIn7LhJV+Rg+/11cCeTK3mt9SeHuvLY4rcj9KPXuNKnzZ6o257idpXlXuGrpsqNy6bsK46zI6+MVO1AWwOK0dL10EBfrEwl7aD1kilYk6xknMZxLKjpRYmlxfIjgydtXECHGig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=aCGp0YGq; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aaSW04H+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=P2PzQEgVeesAIVEJFbbV2SmOoXp4GFc/0aSBfbaWNBSznZf3hjb/5P+v7KDv96BLpmV/QUyLn/54LvyVUapVxRIopjpGEZGk64ReyIyCdmBGupkBbaDGw5p6kK7BOYPEzveyt5twpXnzrbmP0dGLNlEXQ8x92wkU4/03e/HKyb37GJ87RM3Quk2fekf/8xakc7d3NvlajqFBJy6SDeb0bk06uV92P0dzU3rE3YcvQ/m79jcl5KMPrnDnou1HLVq0NeexNytFgcrYoBuOIHLFpqBk/L4SYRuFgzVU+Q0SbZJdi2Bc31ILmOwYgS3a5oEyEV+L5ychGO1sBs9h694avg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=leXFxjYQxpYqSr4USVaTyljyqQK19M/Gcoc9O3tPqeM=;
- b=UDmEeU4p6iX3HJB5Y3dhsI0btjdlHYw1ne/TU32AxBoiTvDxoK6eg0WmokIffq336LnMSCdzkP6Hzpy7J5rhDZM0HUqdIH06NedNNRWDtw3IgXCKrvu80KO2cjDOm6dMJkpdvrK9Myv/u+r0r2oIA17vld9diO4H7kcbS2MwCuSslNzq2J8rGXpLt1BFJIVpNMrzCU7WWHE16ckBrzgceSgN/hXBFJPC6XGVR2scfVi8dzRTwmO1TCMkUj56hG8RNdM03EqqfHrNobTuVRdPgz7HrxeSDlufoOcCHcGmBwibtSxwT6jfrJg5DxCMGOzbRhzDG8K889B9u3awAYsGWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=leXFxjYQxpYqSr4USVaTyljyqQK19M/Gcoc9O3tPqeM=;
- b=aaSW04H+z8qGR503GKoTAO9OasQEeKH/AYJmEQYdd3nTXXJ4pUiJJKPgd40LBkp5El14kt3KiKTQn1S/khLoTts38w+kvIF7Qgskk97Qi2mvCMz3iEcnAvGZPCZJ6bf/3Lr3KsbU+jv1cEkHssFwy+aL1IsZWfmCDV3gezCSZa0=
-Received: from CH5PR04CA0003.namprd04.prod.outlook.com (2603:10b6:610:1f4::12)
- by MW6PR12MB8759.namprd12.prod.outlook.com (2603:10b6:303:243::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Mon, 28 Apr
- 2025 05:13:37 +0000
-Received: from DS3PEPF000099E0.namprd04.prod.outlook.com
- (2603:10b6:610:1f4:cafe::df) by CH5PR04CA0003.outlook.office365.com
- (2603:10b6:610:1f4::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.40 via Frontend Transport; Mon,
- 28 Apr 2025 05:13:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E0.mail.protection.outlook.com (10.167.17.203) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8678.33 via Frontend Transport; Mon, 28 Apr 2025 05:13:36 +0000
-Received: from [10.136.42.115] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
- 2025 00:13:31 -0500
-Message-ID: <1d6574dd-ece9-4826-95a3-1ce6a84f7d77@amd.com>
-Date: Mon, 28 Apr 2025 10:43:23 +0530
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="aCGp0YGq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=Cc:To:Subject:From:Message-Id:Date:Sender:Reply-To:MIME-Version
+	:Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=3QfXck7figLBsN819bPQ+gjhRFmt4SOZZdO62kUezjI=; b=aCGp0YGq2kSGyen47T9KZP5wO0
+	HzdEc/8MpuZk97GSJb2QCFZM9Xa/Pcr/kaSfZ4qth7f7fJJD6EoUZomeuKDFUwKlBA0u5jJUfJAvI
+	2/d5tl/k0LOfMjnBtrBvnxeA/t+lG6PB+3lxV2Ta8jFePQo9/egOuWFsP2pIgzZ38arFTHHHwYkPt
+	eMz36Fyj6T6N+Gb9dUsLtk1jgyMy6ujHeywHOFxrhGMIXId8TOfH+ImEL687DIRzxmEF9DcYEmW7d
+	Iy2fcgrsUHvqbQBjlIykTdXvtd+8UmTWORF7XiS9xVOyeKqA/epXOjUjZx1PHbuULG38pUMRApSUD
+	ZgeTS8Ow==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u9GrW-001WR0-0K;
+	Mon, 28 Apr 2025 13:17:03 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 28 Apr 2025 13:17:02 +0800
+Date: Mon, 28 Apr 2025 13:17:02 +0800
+Message-Id: <cover.1745816372.git.herbert@gondor.apana.org.au>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [v3 PATCH 00/13] Architecture-optimized SHA-256 library API
+To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, "Jason A . Donenfeld " <Jason@zx2c4.com>, Linus Torvalds <torvalds@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH v2] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-	<kernel-team@android.com>, <peter-yc.chang@mediatek.com>
-References: <20250425195757.2139558-1-jstultz@google.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250425195757.2139558-1-jstultz@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E0:EE_|MW6PR12MB8759:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab4b9e59-26bc-4f72-a170-08dd86136e21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?amZwVjdFdDdHUVNQVFc3ZklkSHVZRWc5MXVDR3Bncm5EWUZnSTJ0eWRSdHN3?=
- =?utf-8?B?ZEFWd1lkS2xmeFBwcmZYSGc4ZERTM0E0MG40b3Vyc1hqVXcyclJRZnhiSy9E?=
- =?utf-8?B?VXI1b2ZXaGpkR0ZTRklrK0svSmxMT2VUdUhsWko3Q2I5UDMzTFFSNHhTNk5v?=
- =?utf-8?B?RlNmWTA4NVYvME55emQreGlYZVNQOTlydGZFQjRqaGZHYWljWHZGeVhWUE5H?=
- =?utf-8?B?YzM2K2hEZmw2R0ZmL2tXMVltRXF2Vk5GWTE0TjRTem1uOGZoWWhMejR6WWVs?=
- =?utf-8?B?Wmg2UEJCa2U4Vy9HYzUxekh4b00wOWtUS09NNTBwOW5JVVdSWHJheFNqRDhv?=
- =?utf-8?B?OG9pTTYwNW1QVGhPV01tZVpPU2J6Y3hUR2ZySDR5eDQyVHg5LytWQmFUbVpI?=
- =?utf-8?B?NUswL0ZuV005OXVlZE4xc2o0eU1UZG4zY0FBL2RDcDJabFhmVGRCald5Zjds?=
- =?utf-8?B?UndhVXZWdjMzMDdmVXVmMmF1RkxOUWxteWJ3Q0FOd21GOXFqdEVxNjJvMzBk?=
- =?utf-8?B?RnFDQVVFMERJcnh3QjZkbFRDaVlKRGN5K3NEZUI2b0diNHdWSCt0eHNud2tP?=
- =?utf-8?B?VlppbnFOQnFQRWE0UmJIMWh2eGtvQXRNRllJVVVaOWdUUVpZLzAzbXU3Wm0z?=
- =?utf-8?B?eFpOalN4T3d0bzNnekozZ1Bmeldsc210cDVFMTZHOW5hcmlpNi9MZWhWT1Vo?=
- =?utf-8?B?VzhVQU90S2JSSnBhMnpCWGpCY0YrL2RvVVgrUE0wbzhyN3JKRDZzMHJQbDky?=
- =?utf-8?B?b3VhNlBIRm03TGVEVXkvcEJvcWRZV2lHQXgrMXlUWFpyTnczMlU0VXgwdFlr?=
- =?utf-8?B?TXJRMUFtWm5haG8yNDJORTdPVGM1anZJSlY1disyMTZFZDUrSkRpNjNYYkxB?=
- =?utf-8?B?SHZYRUs1VVBITXYzTW5TLzlNVXZFQThLdnpmZkozYWp2Z2NqOWRXQ2NMWmt0?=
- =?utf-8?B?UmlwZHNudjNXd0NEZWcyYlJVSTk1aHVod0VQczVGZzR1blZTak5NaXk0WDhP?=
- =?utf-8?B?NU1ZdVRhT0RWNVdaVkFadjI1WHlxdlhpajNxMHE0UXdOeE9VL3F1YVlGUU56?=
- =?utf-8?B?VXZKQjNUeHl5NHpiU1JzZnZCZ3p1czlyQ2N2WU9zd3lzK0xUd1FVUFp0RUNX?=
- =?utf-8?B?ZkpQN2pma2h1WFhQdTJjYUhvdEpVTlNZUWV3cU9NOHU3Z2NvN3dSY0syKzR0?=
- =?utf-8?B?enI3ZCtWZ3pBazRMVytMcTNSMVRwK09ra2ZmNGppS0F6RGQ3aVFBTlZHb2NS?=
- =?utf-8?B?NW5GaDZJM1YvTkhPaTJOOGZUNzI1c2VkcnY4Y3RldG1TVW5RazNYOVkwUHFm?=
- =?utf-8?B?NzNUNUVxYVhnVnpRTlBzdTYxaGJXbW16aXRPbzFPd09PZ2p2SDBVdmxxTXNl?=
- =?utf-8?B?OUF6VUhsYTNXdnlMblJJeXVwTlltbnhsSDVMSTlPRzJnbC9sSnkwWlBkUFVD?=
- =?utf-8?B?VDNpRk9rNjVRTlZYK3B2TmJicWtiYTBQMFRqMTBtamRxOVpZQUROby9rT0RL?=
- =?utf-8?B?QXBHNU13WjRUL0pvR3pvWVIvSnVLM2k0SlVPWlpVTlg0bFk4RHRwN2NETVNV?=
- =?utf-8?B?RFVNbkFxYUtIb1dwVnVSdTgzeHdYdW5ZMGk0cmhQRG50bjFhamNoR1ozWk0x?=
- =?utf-8?B?MCtNdDFacFdBWjZsTDhMcWhZVUlWaFpnQkpSVmdBSnRDUzJiUVU0bWR3eGVB?=
- =?utf-8?B?WmJsZEtRVUQ4WW4rM2R0RXNIblozak9aZEZVSHo1c0JsNUc1enJFTDlFbUNw?=
- =?utf-8?B?MitseDUyRWd5SFJMRVFEd2FhRDR6UTY5bzNKWE1Xb25jZVU1aSs1OHpzcC9a?=
- =?utf-8?B?NkM1ZzVwUDRXR3U3dnZidFF2NjlzUkdnOGlmcHliL2ZiQ1UzREFCckRFUDU1?=
- =?utf-8?B?UE1NSmhEZktmbHpQMkVWNVpiczgrQ2U5MVhlNkRZa2oySVlaSmUxbXZEZ29x?=
- =?utf-8?B?Q3EvaUUwQ2F5RTJuUkFnSGRSWTN6anB4bzd3TG9wZGl3dHlJV2dJU3YyWGox?=
- =?utf-8?B?T2dPVkE4YlBqRWluSmZJdGFvNHJ6RFpyYm5KR2thR2NicnlGYVBTSkRQeVV1?=
- =?utf-8?B?WllBdXdkZ1hXWEQ1dG1peURITVhPck0yR1NqQT09?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 05:13:36.5895
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab4b9e59-26bc-4f72-a170-08dd86136e21
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E0.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8759
 
-Hello John,
+Changes in v3:
+- Add shash sha256-lib/sha224-lib to provide test coverage for libsha256.
 
-On 4/26/2025 1:27 AM, John Stultz wrote:
-> It was reported that in 6.12, smpboot_create_threads() was
-> taking much longer then in 6.6.
-> 
-> I narrowed down the call path to:
->   smpboot_create_threads()
->   -> kthread_create_on_cpu()
->      -> kthread_bind()
->         -> __kthread_bind_mask()
->            ->wait_task_inactive()
-> 
-> Where in wait_task_inactive() we were regularly hitting the
-> queued case, which sets a 1 tick timeout, which when called
-> multiple times in a row, accumulates quickly into a long
-> delay.
-> 
-> I noticed disabling the DELAY_DEQUEUE sched feature recovered
-> the performance, and it seems the newly create tasks are usually
-> sched_delayed and left on the runqueue.
-> 
-> So in wait_task_inactive() when we see the task
-> p->se.sched_delayed, manually dequeue the sched_delayed task
-> with DEQUEUE_DELAYED, so we don't have to constantly wait a
-> tick.
-> 
-> This seems to work, but I've only lightly tested it, so I'd love
-> close review and feedback in case I've missed something in
-> wait_task_inactive(), or if there is a simpler alternative
-> approach.
-> 
-> NOTE: Peter did highlight[1] his general distaste for the
-> kthread_bind() through wait_task_inactive() functions, which
-> suggests a deeper rework might be better, but I'm not familiar
-> enough with all its users to have a sense of how that might be
-> done, and this fix seems to address the problem and be more
-> easily backported to 6.12-stable, so I wanted to submit it
-> again, as a potentially more short-term solution.
-> 
-> [1]: https://lore.kernel.org/lkml/20250422085628.GA14170@noisy.programming.kicks-ass.net/
-> 
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Cc: kernel-team@android.com
-> Reported-by: peter-yc.chang@mediatek.com
+This is based on
 
-Perhaps a Fixes tag to help with backporting:
+	https://patchwork.kernel.org/project/linux-crypto/list/?series=957558
 
-Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
+Original description:
 
-other than thank, feel free to include:
+Following the example of several other algorithms (e.g. CRC32, ChaCha,
+Poly1305, BLAKE2s), this series refactors the kernel's existing
+architecture-optimized SHA-256 code to be available via the library API,
+instead of just via the crypto_shash API as it was before.  It also
+reimplements the SHA-256 crypto_shash API on top of the library API.
 
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+This makes it possible to use the SHA-256 library in
+performance-critical cases.  The new design is also much simpler, with a
+negative diffstat of over 1200 lines.  Finally, this also fixes the
+longstanding issue where the arch-optimized SHA-256 was disabled by
+default, so people often forgot to enable it.
+
+For now the SHA-256 library is well-covered by the crypto_shash
+self-tests, but I plan to add a test for the library directly later.
+I've fully tested this series on arm, arm64, riscv, and x86.  On mips,
+powerpc, s390, and sparc I've only been able to partially test it, since
+QEMU does not support the SHA-256 instructions on those platforms.  If
+anyone with access to a mips, powerpc, s390, or sparc system that has
+SHA-256 instructions can verify that the crypto self-tests still pass,
+that would be appreciated.  But I don't expect any issues, especially
+since the new code is more straightforward than the old code.
+
+Eric Biggers (13):
+  crypto: sha256 - support arch-optimized lib and expose through shash
+  crypto: arm/sha256 - implement library instead of shash
+  crypto: arm64/sha256 - remove obsolete chunking logic
+  crypto: arm64/sha256 - implement library instead of shash
+  crypto: mips/sha256 - implement library instead of shash
+  crypto: powerpc/sha256 - implement library instead of shash
+  crypto: riscv/sha256 - implement library instead of shash
+  crypto: s390/sha256 - implement library instead of shash
+  crypto: sparc - move opcodes.h into asm directory
+  crypto: sparc/sha256 - implement library instead of shash
+  crypto: x86/sha256 - implement library instead of shash
+  crypto: sha256 - remove sha256_base.h
+  crypto: lib/sha256 - improve function prototypes
+
+ arch/arm/configs/exynos_defconfig             |   1 -
+ arch/arm/configs/milbeaut_m10v_defconfig      |   1 -
+ arch/arm/configs/multi_v7_defconfig           |   1 -
+ arch/arm/configs/omap2plus_defconfig          |   1 -
+ arch/arm/configs/pxa_defconfig                |   1 -
+ arch/arm/crypto/Kconfig                       |  21 -
+ arch/arm/crypto/Makefile                      |   8 +-
+ arch/arm/crypto/sha2-ce-glue.c                |  87 ----
+ arch/arm/crypto/sha256_glue.c                 | 107 -----
+ arch/arm/crypto/sha256_glue.h                 |   9 -
+ arch/arm/crypto/sha256_neon_glue.c            |  75 ---
+ arch/arm/lib/crypto/.gitignore                |   1 +
+ arch/arm/lib/crypto/Kconfig                   |   7 +
+ arch/arm/lib/crypto/Makefile                  |   8 +-
+ arch/arm/{ => lib}/crypto/sha256-armv4.pl     |  20 +-
+ .../sha2-ce-core.S => lib/crypto/sha256-ce.S} |  10 +-
+ arch/arm/lib/crypto/sha256.c                  |  64 +++
+ arch/arm64/configs/defconfig                  |   1 -
+ arch/arm64/crypto/Kconfig                     |  19 -
+ arch/arm64/crypto/Makefile                    |  13 +-
+ arch/arm64/crypto/sha2-ce-glue.c              | 138 ------
+ arch/arm64/crypto/sha256-glue.c               | 171 -------
+ arch/arm64/crypto/sha512-glue.c               |   6 +-
+ arch/arm64/lib/crypto/.gitignore              |   1 +
+ arch/arm64/lib/crypto/Kconfig                 |   6 +
+ arch/arm64/lib/crypto/Makefile                |   9 +-
+ .../crypto/sha2-armv8.pl}                     |   2 +-
+ .../sha2-ce-core.S => lib/crypto/sha256-ce.S} |  36 +-
+ arch/arm64/lib/crypto/sha256.c                |  75 +++
+ arch/mips/cavium-octeon/Kconfig               |   6 +
+ .../mips/cavium-octeon/crypto/octeon-sha256.c | 139 ++----
+ arch/mips/configs/cavium_octeon_defconfig     |   1 -
+ arch/mips/crypto/Kconfig                      |  10 -
+ arch/powerpc/crypto/Kconfig                   |  11 -
+ arch/powerpc/crypto/Makefile                  |   2 -
+ arch/powerpc/crypto/sha256-spe-glue.c         | 128 ------
+ arch/powerpc/lib/crypto/Kconfig               |   6 +
+ arch/powerpc/lib/crypto/Makefile              |   3 +
+ .../powerpc/{ => lib}/crypto/sha256-spe-asm.S |   0
+ arch/powerpc/lib/crypto/sha256.c              |  70 +++
+ arch/riscv/crypto/Kconfig                     |  11 -
+ arch/riscv/crypto/Makefile                    |   3 -
+ arch/riscv/crypto/sha256-riscv64-glue.c       | 125 -----
+ arch/riscv/lib/crypto/Kconfig                 |   8 +
+ arch/riscv/lib/crypto/Makefile                |   3 +
+ .../sha256-riscv64-zvknha_or_zvknhb-zvkb.S    |   4 +-
+ arch/riscv/lib/crypto/sha256.c                |  67 +++
+ arch/s390/configs/debug_defconfig             |   1 -
+ arch/s390/configs/defconfig                   |   1 -
+ arch/s390/crypto/Kconfig                      |  10 -
+ arch/s390/crypto/Makefile                     |   1 -
+ arch/s390/crypto/sha256_s390.c                | 144 ------
+ arch/s390/lib/crypto/Kconfig                  |   6 +
+ arch/s390/lib/crypto/Makefile                 |   2 +
+ arch/s390/lib/crypto/sha256.c                 |  47 ++
+ arch/sparc/crypto/Kconfig                     |  10 -
+ arch/sparc/crypto/Makefile                    |   2 -
+ arch/sparc/crypto/aes_asm.S                   |   3 +-
+ arch/sparc/crypto/aes_glue.c                  |   3 +-
+ arch/sparc/crypto/camellia_asm.S              |   3 +-
+ arch/sparc/crypto/camellia_glue.c             |   3 +-
+ arch/sparc/crypto/des_asm.S                   |   3 +-
+ arch/sparc/crypto/des_glue.c                  |   3 +-
+ arch/sparc/crypto/md5_asm.S                   |   3 +-
+ arch/sparc/crypto/md5_glue.c                  |   3 +-
+ arch/sparc/crypto/sha1_asm.S                  |   3 +-
+ arch/sparc/crypto/sha1_glue.c                 |   3 +-
+ arch/sparc/crypto/sha256_glue.c               | 129 ------
+ arch/sparc/crypto/sha512_asm.S                |   3 +-
+ arch/sparc/crypto/sha512_glue.c               |   3 +-
+ arch/sparc/{crypto => include/asm}/opcodes.h  |   6 +-
+ arch/sparc/lib/Makefile                       |   1 +
+ arch/sparc/lib/crc32c_asm.S                   |   3 +-
+ arch/sparc/lib/crypto/Kconfig                 |   8 +
+ arch/sparc/lib/crypto/Makefile                |   4 +
+ arch/sparc/lib/crypto/sha256.c                |  64 +++
+ arch/sparc/{ => lib}/crypto/sha256_asm.S      |   5 +-
+ arch/x86/crypto/Kconfig                       |  14 -
+ arch/x86/crypto/Makefile                      |   3 -
+ arch/x86/crypto/sha256_ssse3_glue.c           | 432 ------------------
+ arch/x86/lib/crypto/Kconfig                   |   8 +
+ arch/x86/lib/crypto/Makefile                  |   3 +
+ arch/x86/{ => lib}/crypto/sha256-avx-asm.S    |  12 +-
+ arch/x86/{ => lib}/crypto/sha256-avx2-asm.S   |  12 +-
+ .../crypto/sha256-ni-asm.S}                   |  36 +-
+ arch/x86/{ => lib}/crypto/sha256-ssse3-asm.S  |  14 +-
+ arch/x86/lib/crypto/sha256.c                  |  80 ++++
+ arch/x86/purgatory/Makefile                   |   3 -
+ arch/x86/purgatory/sha256.c                   |  15 +
+ crypto/Kconfig                                |   1 +
+ crypto/Makefile                               |   3 +-
+ crypto/sha256.c                               | 289 ++++++++++++
+ crypto/sha256_generic.c                       | 102 -----
+ include/crypto/internal/sha2.h                |  75 +++
+ include/crypto/sha2.h                         |  37 +-
+ include/crypto/sha256_base.h                  | 148 ------
+ lib/crypto/Kconfig                            |  30 ++
+ lib/crypto/Makefile                           |   1 +
+ lib/crypto/sha256-generic.c                   | 139 ++++++
+ lib/crypto/sha256.c                           | 150 ++----
+ 100 files changed, 1268 insertions(+), 2315 deletions(-)
+ delete mode 100644 arch/arm/crypto/sha2-ce-glue.c
+ delete mode 100644 arch/arm/crypto/sha256_glue.c
+ delete mode 100644 arch/arm/crypto/sha256_glue.h
+ delete mode 100644 arch/arm/crypto/sha256_neon_glue.c
+ rename arch/arm/{ => lib}/crypto/sha256-armv4.pl (97%)
+ rename arch/arm/{crypto/sha2-ce-core.S => lib/crypto/sha256-ce.S} (91%)
+ create mode 100644 arch/arm/lib/crypto/sha256.c
+ delete mode 100644 arch/arm64/crypto/sha2-ce-glue.c
+ delete mode 100644 arch/arm64/crypto/sha256-glue.c
+ rename arch/arm64/{crypto/sha512-armv8.pl => lib/crypto/sha2-armv8.pl} (99%)
+ rename arch/arm64/{crypto/sha2-ce-core.S => lib/crypto/sha256-ce.S} (80%)
+ create mode 100644 arch/arm64/lib/crypto/sha256.c
+ delete mode 100644 arch/powerpc/crypto/sha256-spe-glue.c
+ rename arch/powerpc/{ => lib}/crypto/sha256-spe-asm.S (100%)
+ create mode 100644 arch/powerpc/lib/crypto/sha256.c
+ delete mode 100644 arch/riscv/crypto/sha256-riscv64-glue.c
+ rename arch/riscv/{ => lib}/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S (98%)
+ create mode 100644 arch/riscv/lib/crypto/sha256.c
+ delete mode 100644 arch/s390/crypto/sha256_s390.c
+ create mode 100644 arch/s390/lib/crypto/sha256.c
+ delete mode 100644 arch/sparc/crypto/sha256_glue.c
+ rename arch/sparc/{crypto => include/asm}/opcodes.h (96%)
+ create mode 100644 arch/sparc/lib/crypto/Kconfig
+ create mode 100644 arch/sparc/lib/crypto/Makefile
+ create mode 100644 arch/sparc/lib/crypto/sha256.c
+ rename arch/sparc/{ => lib}/crypto/sha256_asm.S (95%)
+ delete mode 100644 arch/x86/crypto/sha256_ssse3_glue.c
+ rename arch/x86/{ => lib}/crypto/sha256-avx-asm.S (98%)
+ rename arch/x86/{ => lib}/crypto/sha256-avx2-asm.S (98%)
+ rename arch/x86/{crypto/sha256_ni_asm.S => lib/crypto/sha256-ni-asm.S} (85%)
+ rename arch/x86/{ => lib}/crypto/sha256-ssse3-asm.S (98%)
+ create mode 100644 arch/x86/lib/crypto/sha256.c
+ create mode 100644 arch/x86/purgatory/sha256.c
+ create mode 100644 crypto/sha256.c
+ delete mode 100644 crypto/sha256_generic.c
+ create mode 100644 include/crypto/internal/sha2.h
+ delete mode 100644 include/crypto/sha256_base.h
+ create mode 100644 lib/crypto/sha256-generic.c
 
 -- 
-Thanks and Regards,
-Prateek
-
-> Signed-off-by: John Stultz <jstultz@google.com>> ---
-> v2:
-> * Rework & simplify the check as suggested by K Prateek Nayak
-> * Added Reported-by tag for proper attribution
-> ---
->   kernel/sched/core.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index c81cf642dba05..b986cd2fb19b7 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2283,6 +2283,12 @@ unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state
->   		 * just go back and repeat.
->   		 */
->   		rq = task_rq_lock(p, &rf);
-> +		/*
-> +		 * If task is sched_delayed, force dequeue it, to avoid always
-> +		 * hitting the tick timeout in the queued case
-> +		 */
-> +		if (p->se.sched_delayed)
-> +			dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
->   		trace_sched_wait_task(p);
->   		running = task_on_cpu(rq, p);
->   		queued = task_on_rq_queued(p);
-
+2.39.5
 
