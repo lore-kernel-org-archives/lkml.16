@@ -1,137 +1,200 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B1A1E282D
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7256A33F;
+	Mon, 28 Apr 2025 20:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745873273; cv=none; b=WXax5yygMWKFYZKfASFezvpWpwzJ6f6R37XNJPrhgrjJNlPJDkZOs7qFMLflmd6as6x9K/IQakPSK/mQ8VZXJ9ix2KF9qmrC3YpaNIEGLdt9QpBKHzCkyWzvFJIpaY/+yo/uAE0Aa7Zf6ObbJDQ3+dqORNzhokPaO++F7EVWxkI=
+	t=1745873322; cv=none; b=sW5Tef2gKJL54GbD5J+dfZvPD5zyMbL2BubxVvoqv/nAXb720y9Bmvlp817MQyr/xFXvnxOd0yIuh/p6ZmwFs6/wSr1uoZUqvgTE+5xel9DomW7+ZKQD4Zsu60sKO0I8akWrwQJGC5Db00GO8WeZBiGro4piSZkw4SgmnjUlEVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745873273; c=relaxed/simple;
-	bh=f0A7Pv4mUmek+mS/LEx5Ttoi2xlGO1ZlQEuhN91pDOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RXH/wNuuH90exI0H24wcc4b6vAQUoKqEnYUG3huzg6Am5Z2T5HhpAqPpxxvyjGmJX0WpGp4tx2Pxs9hxI+P5tSIhnjkf0Xf+BU6IlGdpxxVy2c2ZakKrZMCkWFIZ2qBnJL8WsecnZcyFDzi8HSc5yc4pS/Z5jNo3CbK5qWgCeDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=RytpChA5; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1745873322; c=relaxed/simple;
+	bh=0HoWU3q4+qyiDoIEkIcqHAS0oyqLX985Vg5lAD6tTmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N62cw2iIPj22y+Nfx3d78FKhzrXK9o2AVF2cGbqMXL/F5JdNvNqgJGz07g00BpQVl0th/1NN0iGsFrqaeuMzikUZFsNuWqQLLGpTRCHQlqzMi4B7oMc4Bb9Hp4KMqhGcXl+rEY/CZfRSlFF4BFo12uw5Yrp3INCx6tIXBhtC9WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/jtwGJn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="RytpChA5"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf257158fso30190375e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1745873269; x=1746478069; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yhRzZPkotlQhfGJ0VfQNAgHBp9wCgKx0I/9SO7HTcOI=;
-        b=RytpChA5ZTaM3oPl+7K3SBfc1szc/xp6jtG0ABFRqON18wmi+mvb793K/mcdED/7Yh
-         +SqNSVOY9qVG7ZO+HJTgUR2KU5BrDQa+Z3K/vV378YXuetJOapHLWWbxOYJtRd1jO5G6
-         HUNWtRGmGJkGUdqOoV9DtGX4BBLc0bJ2GsxuGxSLHjA9+oUn7lDIKKMkINY92VVhxbp0
-         K50k4fPgh/EPMRAzLbaL3KH2kV1liGlNqYGc0qgVJpl8XvzSmvX7fccvsiEb0myA/zpg
-         AtzVak6v42ip0+GwDFXP315jnILtHYA+NLBB9aSLTtTsUYGGrbdW4PruZPwwPi6QgG9T
-         l9GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745873269; x=1746478069;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yhRzZPkotlQhfGJ0VfQNAgHBp9wCgKx0I/9SO7HTcOI=;
-        b=KtDCpTNJqadPCTQBCW6HVOoRXGCxi6rVyX9kAlyC5Mh716y2IMO8g0HCUUXEFho/1d
-         3DgW5F55Qo+ee2B8NToYHmu2ZmU2KAxBFaA0M7dk5xrmsxif8h75otMyS7BtnNvqQi6C
-         BBk8MW/3qFJwuPvj3lPtfa/2kYPz78eXLCh9F/VCvzzPnssCgbRlVBv7UwzCbJQ1LJrZ
-         kABZklgXDul2QCYoJTSlkZT9JuF5rSQZwVqDTY9rPJOZFvWSzf3MKc67/jT7ifUa3Ll/
-         B+ejVAyITZrQ6PLEDxTpnSFvbwjdHIZtxwW0symNCyYjVtjYVvkonv2nImv9w+tIhMM+
-         o0Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWWtFDCS9VAkpX6QKEHF5ekXeilmsqjFbbU0dpA29/3OAyhUfqprku4p8Wqf2dONNOc8GsOGKebuDfMqVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv5l2p4Hz8JWboUU/9ctBkngA96hCg32qIwa8OXczPDiugejK4
-	p1TySO97kqXP/GGKo9wbbqHVH6aByhBgWiIvQkzktqRbydaFZpHijSCNw/CRxl8=
-X-Gm-Gg: ASbGncvADgOiARYcIXLbUHOKAZdKKvgrxARRMz2keu4K0XElKg265wxMwEYxTKW4pLU
-	FP26RA4c+E4z6ipRjjaSdQQNwryLkGRNXdlDZlLFMlVPooXCHuzLDIFhKF/x/i+6lW8gIzkKdd1
-	aA1V6jkSHrMiSNuZnKTeosSrRhTqYm3RDeO9wJC8u+Z/ME7iESY5M7OG8o+zbFyXJopk3m9WLhI
-	OSbAwnggbT8ZN0NcDMb67kLajHxb3HKfVAVCTo0Fw/5Iyp2IrWv/y9jZ4yAHvx7VGToawBf/Tji
-	5JgKqFrZelviniDgvA+KtGy4fYYH5UQqWJsvW/bF4Rof0OeMZugoATC1tgb2zjUg8mUdahB+0V3
-	otajRNKQDpQfRCriHiH9jPCVz39N6YkB/Ccl8S6CP
-X-Google-Smtp-Source: AGHT+IGDcQ1DOtPDev5XDzOw6El4Y5dmKj6k+SP8aP+b4hCmYsuphl2n6OAtORooXHR0Cj3D9Z18yA==
-X-Received: by 2002:a05:600c:4f8f:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-440ab7b5f6emr96114365e9.10.1745873268779;
-        Mon, 28 Apr 2025 13:47:48 -0700 (PDT)
-Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29ba29sm168590675e9.7.2025.04.28.13.47.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:47:48 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: dhowells@redhat.com,
-	netfs@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v2 2/2] fs/netfs: remove unused flag NETFS_RREQ_BLOCKED
-Date: Mon, 28 Apr 2025 22:47:39 +0200
-Message-ID: <20250428204739.3405489-2-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250428204739.3405489-1-max.kellermann@ionos.com>
-References: <20250428204739.3405489-1-max.kellermann@ionos.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/jtwGJn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996D7C4CEE4;
+	Mon, 28 Apr 2025 20:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745873321;
+	bh=0HoWU3q4+qyiDoIEkIcqHAS0oyqLX985Vg5lAD6tTmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K/jtwGJnE0Vw1NW5I1IfjrgKmtFOWIVVc8aLyuZRgrx5W/6/AGacYMvaBrZd9THCY
+	 P3yIQ4MVWUj7fpbyB5/TRrA2xlC/EWRwNLb6d1U9wt4ncRzcoLjbh1Dqb65ZbRpNDk
+	 znFuoZdiTKtAGF0FRa49eBrGwLqwr4e5SfNWWOAtkbpKUDwQp+yoVPBDV+XCUNhVKd
+	 R78cmCmgT52ZBtkHTMPqASZ+TxrAlto2za3iNcTTkHbReYwLItSxflXVpH9QspRV3M
+	 VtI91+N5f3WO+e7uAcoPveaW0ELknRdVtuKSi0b2vHIZfTLPrLLjL4oomuJBOs0z26
+	 IxegNejYhDPxA==
+Date: Mon, 28 Apr 2025 15:48:40 -0500
+From: Rob Herring <robh@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, Dirk Behme <dirk.behme@gmail.com>,
+	Remo Senekowitsch <remo@buenzli.dev>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
+Message-ID: <20250428204840.GB1572343-robh@kernel.org>
+References: <20250425150130.13917-1-remo@buenzli.dev>
+ <20250425150130.13917-4-remo@buenzli.dev>
+ <aAuryiI0lY4qYyIt@pollux>
+ <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
+ <aAyyR5LyhmGVNQpm@pollux>
+ <0756503c-02e7-477a-9e89-e7d4881c8ce6@gmail.com>
+ <aA4ht5sUic39mnHj@pollux>
+ <ee888c8f-4802-48a1-bd08-b454b782fff4@de.bosch.com>
+ <aA-oQAol8rAU7vzg@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aA-oQAol8rAU7vzg@cassiopeiae>
 
-NETFS_RREQ_BLOCKED was added by commit 016dc8516aec ("netfs: Implement
-unbuffered/DIO read support") but has never been used either.  Without
-NETFS_RREQ_BLOCKED, NETFS_RREQ_NONBLOCK makes no sense, and thus can
-be removed as well.
+On Mon, Apr 28, 2025 at 06:09:36PM +0200, Danilo Krummrich wrote:
+> On Mon, Apr 28, 2025 at 07:03:07AM +0200, Dirk Behme wrote:
+> > On 27/04/2025 14:23, Danilo Krummrich wrote:
+> > > On Sun, Apr 27, 2025 at 08:11:58AM +0200, Dirk Behme wrote:
+> > >> On 26.04.25 12:15, Danilo Krummrich wrote:
+> > >>> On Sat, Apr 26, 2025 at 08:19:09AM +0200, Dirk Behme wrote:
+> > >>>> On 25.04.25 17:35, Danilo Krummrich wrote:
+> > >>>>> On Fri, Apr 25, 2025 at 05:01:26PM +0200, Remo Senekowitsch wrote:
+> > >>>>>> +impl<T> PropertyGuard<'_, '_, T> {
+> > >>>>>> +    /// Access the property, indicating it is required.
+> > >>>>>> +    ///
+> > >>>>>> +    /// If the property is not present, the error is automatically logged. If a
+> > >>>>>> +    /// missing property is not an error, use [`Self::optional`] instead.
+> > >>>>>> +    pub fn required(self) -> Result<T> {
+> > >>>>>> +        if self.inner.is_err() {
+> > >>>>>> +            pr_err!(
+> > >>>>>> +                "{}: property '{}' is missing\n",
+> > >>>>>> +                self.fwnode.display_path(),
+> > >>>>>> +                self.name
+> > >>>>>> +            );
+> > >>>>>
+> > >>>>> Hm, we can't use the device pointer of the fwnode_handle, since it is not
+> > >>>>> guaranteed to be valid, hence the pr_*() print...
+> > >>>>>
+> > >>>>> Anyways, I'm not sure we need to print here at all. If a driver wants to print
+> > >>>>> that it is unhappy about a missing required property it can do so by itself, I
+> > >>>>> think.
+> > >>>>
+> > >>>> Hmm, the driver said by using 'required' that it *is* required. So a
+> > >>>> missing property is definitely an error here. Else it would have used
+> > >>>> 'optional'. Which doesn't print in case the property is missing.
+> > >>>>
+> > >>>> If I remember correctly having 'required' and 'optional' is the result
+> > >>>> of some discussion on Zulip. And one conclusion of that discussion was
+> > >>>> to move checking & printing the error out of the individual drivers
+> > >>>> into a central place to avoid this error checking & printing in each
+> > >>>> and every driver. I think the idea is that the drivers just have to do
+> > >>>> ...required()?; and that's it, then.
+> > >>>
+> > >>> Yes, I get the idea.
+> > >>>
+> > >>> If it'd be possible to use dev_err!() instead I wouldn't object in this specific
+> > >>> case. But this code is used by drivers from probe(), hence printing the error
+> > >>> without saying for which device it did occur is a bit pointless.
+> > >>
+> > >> Thinking a little about this, yes, we don't know the device here. But:
+> > >> Does the device matter here?
+> > > 
+> > > If the above fails it means that for a (specific) device a driver expects that
+> > > a specific property of some firmware node is present. So, yes, I think it does
+> > > matter.
+> > > 
+> > >> There is nothing wrong with the (unknown)
+> > >> device, no? What is wrong here is the firmware (node). It misses
+> > >> something.
+> > > 
+> > > How do we know the firmware node is wrong? Maybe the driver has wrong
+> > > expectations for this device?
+> > > 
+> > >> And this is exactly what the message tells: "There is an
+> > >> error due to the missing node 'name' in 'path', please fix it". That
+> > >> should be sufficient to identify the firmware/device tree description
+> > >> and fix it.
+> > > 
+> > > I think we can't always fix them, even if they're wrong. How do we fix ACPI
+> > > firmware nodes for instance?
+> > 
+> > So the argument here is that the device (driver) is expecting something
+> > to be "required" is wrong and might need to be fixed. Not the firmware.
+> > Yes, ok, that is a valid argument. I have a device tree background and
+> > there in 99% of the cases the device tree needs a fix ;)
+> > 
+> > But let me ask the other way around, then: What will it hurt or break if
+> > we keep the pr_err() like Remo did? Even knowing that its not perfect?
+> > But knowing that it will give at least a note that something is wrong
+> > with at least a starting point for searching what needs to be fixed. I
+> > mean even if we don't get the device, we will get the affected node we
+> > can search for which device uses it as "required".
+> > 
+> > Could we somehow agree that in 90% of the cases this should be catched
+> > at device (driver) development time, already?
+> 
+> I don't see why *catching* such errors needs pr_err() in core code; without it
+> you still get a Result as return value that you need to handle in some way.
+> 
+> > And therefore it should be
+> > beneficial if we don't require each and every driver to be "bloated"
+> > with checking this individually?
+> 
+> I guess you mean "bloated with *printing* this individually", rather than
+> "checking".
+> 
+> This is where we disagree: I think it is "bloating" the core kernel instead if
+> we start adding error prints to core code, where a proper error code is
+> propagated up to the driver.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
-v1 -> v2: split into two patches, see
-  https://lore.kernel.org/netfs/88831.1745855591@warthog.procyon.org.uk/
----
- fs/netfs/direct_read.c | 3 ---
- fs/netfs/objects.c     | 2 --
- include/linux/netfs.h  | 2 --
- 3 files changed, 7 deletions(-)
+1 or more error strings in every single driver is what bloats the 
+kernel, not 1 string. It's all kernel code and memory usage whether it's 
+core or drivers.
 
-diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
-index 5e3f0aeb51f3..f11a89f2fdd9 100644
---- a/fs/netfs/direct_read.c
-+++ b/fs/netfs/direct_read.c
-@@ -106,9 +106,6 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
- 			netfs_wait_for_pause(rreq);
- 		if (test_bit(NETFS_RREQ_FAILED, &rreq->flags))
- 			break;
--		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
--		    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
--			break;
- 		cond_resched();
- 	} while (size > 0);
- 
-diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-index dc6b41ef18b0..d6f8984f9f5b 100644
---- a/fs/netfs/objects.c
-+++ b/fs/netfs/objects.c
-@@ -64,8 +64,6 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
- 	}
- 
- 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
--	if (file && file->f_flags & O_NONBLOCK)
--		__set_bit(NETFS_RREQ_NONBLOCK, &rreq->flags);
- 	if (rreq->netfs_ops->init_request) {
- 		ret = rreq->netfs_ops->init_request(rreq, file);
- 		if (ret < 0) {
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index ab6f5e0c38c7..e0c3a63f4f86 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -272,8 +272,6 @@ struct netfs_io_request {
- #define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes */
- #define NETFS_RREQ_FOLIO_COPY_TO_CACHE	6	/* Copy current folio to cache from read */
- #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
--#define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
--#define NETFS_RREQ_BLOCKED		10	/* We blocked */
- #define NETFS_RREQ_PAUSE		11	/* Pause subrequest generation */
- #define NETFS_RREQ_USE_IO_ITER		12	/* Use ->io_iter rather than ->i_pages */
- #define NETFS_RREQ_ALL_QUEUED		13	/* All subreqs are now queued */
--- 
-2.47.2
+> I did say that I would agree to a certain extend with this specific one if we
+> could print it properly, since it is designed to leave no doubt that returning
+> an error code from required() is fatal for the driver. But I'm not even sure
+> about this anymore.
+> 
+> I still haven't read a reason why this one is so crucial to print from core
+> code, while for other things that are always fatal (e.g. request_irq()) we
+> don't.
 
+request_irq() is not always fatal. Some drivers fallback to polling. In 
+general, we've been adding _optional() variants of functions to return 
+NULL rather than errors which is handled silently by subsequent API 
+calls. Secondarily, those print errors in the non-optional case. It's 
+not real consistent in this area, but something we should improve.
+
+> However, if you really think we need a common helper that prints something in
+> the error case, maybe we can add an *additional* helper
+> 
+> 	pub fn required_by(self, dev: &Device) -> Result<T>
+> 
+> and document that it is the same as required(), with an additional error print
+> in case of failure for the given device.
+
+One thing that's really hard to debug in C drivers is where an 
+error came from. You can for example turn on initcall_debug and see that 
+a driver probe returned an error. It's virtually impossible to tell 
+where that originated from. The only way to tell is with prints. That is 
+probably the root of why probe has so many error prints. I think we can 
+do a lot better with rust given Result can hold more than just an int. 
+We obviously can't get back to the origin if that was C code, but just 
+if we know exactly which call from probe failed that would be a huge 
+improvement.
+
+Rob
