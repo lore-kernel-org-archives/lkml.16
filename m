@@ -1,147 +1,81 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448994C91
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30254C91;
+	Mon, 28 Apr 2025 12:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842595; cv=none; b=gz5dKtGVsMOC2ysRTosV+6evnZhmD3z6G7AzdQ4sBw69wx0WkDUAIZdInE17k3iD+TYyaR1fwSvOjBKHZ/xqIELVj6+ke+xj6e6Bhs/l7V2eZGSg+uNSSbgsKzdBXY5EljJyn4rqEkTsHnaotMdlWdvCqLVI6gA3VhWBJxnmA5I=
+	t=1745842669; cv=none; b=bXg+QGwfobYoQVK9USIC439PsD8VbWU1ndhDFxOiekIW5DSbDogPGKQzSe4L6+w8msiReuoMLvniBgFiuRSy8qfFp9SQHPCDcb8P0TpSB39yhTE0qG2IX2Y6cpzwfDAn7UwKDotSvIlpGKg/7KqT2ldQQMH2/MTppsuEb3tQ3Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842595; c=relaxed/simple;
-	bh=bGsqofgo4NXqI1aUsv0UVKWbN/KgMV1cM5RdDhcr3AQ=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=Y+oYTd1yVP4Jo1cpAeTm2hxH5q424TUgK0gHLV5BNlV8aYnB5CjEriNJ1LndHn0/5GbNcuNvUL3ho7frXH+e2zfO/xXLOCb4kucyjzFW4caLtqGNJ0G8acU+0Ui4L6/REhudIVLn5akttm4cNgBAzCk49io32CnuHcKOH8kvaPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TPV3s7xa; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745842669; c=relaxed/simple;
+	bh=P3parEjgsTHZ/P9V5+9aFVZYr8vAnwpcuWEh5ru1KdQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=slJZ2Bq6ljb7jH2uz8HazCRvCBUTImv9qfiJuDl3eQHCzAp1jUvzVDZH/+QyTRN+IsNWdl22+5pGm4MBrhAVeJiQjx43TZLDByd8NDv+BzSK2WgrsSsY59RpULAbWgk0wMET8/xvp3PIHVaf+487NwHyf9x5DySW70gfRu/an2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=qYtTfF38; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TPV3s7xa"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250428121630epoutp03e315d8f07fbd3fa8dff0899da0266745~6epX7pB7X1309313093epoutp03G
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:16:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250428121630epoutp03e315d8f07fbd3fa8dff0899da0266745~6epX7pB7X1309313093epoutp03G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745842590;
-	bh=njfnSw/OzgCfnpUUUvsiz+VFYsSHIIORU2SrxBPlyTA=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=TPV3s7xavoD9UPUQ1keNySicbdEoAp2LeONRS079wIl/cO4qfDHg2UVXgUHTfngsd
-	 yHaCcxGiY4N5/hprTUUgkVvgJkkbRNwHdpLdmIY207oR+i72Kbc58fi9V00lJe2NZi
-	 o2B5+dvQk29OZP2+5rmetTPatbStMBG93HnuFv64=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250428121629epcas5p48af00b74bbf51523585f76a118699f36~6epXNzWit0170601706epcas5p4e;
-	Mon, 28 Apr 2025 12:16:29 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZmMqv5754z2SSKX; Mon, 28 Apr
-	2025 12:16:27 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250428121432epcas5p1d7f070391d0d206909dd8dc82f919396~6enqzJ6yl2814528145epcas5p1C;
-	Mon, 28 Apr 2025 12:14:32 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250428121432epsmtrp2f26bd06225bf3ea60b2b7fecc29e173b~6enqwrRbW0223602236epsmtrp25;
-	Mon, 28 Apr 2025 12:14:32 +0000 (GMT)
-X-AuditID: b6c32a2a-d57fe70000002265-22-680f7128c330
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	98.A4.08805.8217F086; Mon, 28 Apr 2025 21:14:32 +0900 (KST)
-Received: from INBRO000519 (unknown [107.122.1.150]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250428121431epsmtip1f4d6f781b572e671553bd1e14f1f086d~6enpVszo91538615386epsmtip1a;
-	Mon, 28 Apr 2025 12:14:31 +0000 (GMT)
-From: "Faraz Ata" <faraz.ata@samsung.com>
-To: "'Greg KH'" <gregkh@linuxfoundation.org>
-Cc: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <alim.akhtar@samsung.com>,
-	<jirislaby@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <dev.tailor@samsung.com>,
-	<rosa.pila@samsung.com>
-In-Reply-To: <2025042508-statute-pleading-df6f@gregkh>
-Subject: RE: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
-Date: Mon, 28 Apr 2025 17:44:21 +0530
-Message-ID: <0ce801dbb837$19706530$4c512f90$@samsung.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="qYtTfF38"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=VxgZ6a/j/IRQEjoMfGq77quUnJzRwBUMN3NjzuLuPPY=; b=qYtTfF38ZjCl6rxc5IHt7kOCjd
+	4ILBZ/ivrLc5OKPv19NwK6sv99zm4f7mDKezSkHcEmDC/4db1WUE6FAF1YzaKpoluPDcR4YiktFA2
+	WCB9c5AEvM07EVKKEHN07aPJBmxuDRMciplYkYtQCo7po67WbS9e7dLf7nNuwBt14feftsXrQPqtK
+	4HWiJJkR5iTfRqvOzozr4WRcV+TRAx3/rce2gEovS4Y9/m1z6RevRwlL0Dyk8VcDflyBU0o/4nEBa
+	C9wK38C+edVFPSfwAFQjYYsqZg3IWaubqKhuszGGda6kQ6RvEKHxfQRzQarinRmjhF6tggD64RtIW
+	WlOZ66dw==;
+Received: from i53875aba.versanet.de ([83.135.90.186] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u9NQU-000051-Sh; Mon, 28 Apr 2025 14:17:34 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Heiko Stuebner <heiko.stuebner@cherry.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rockchip tree
+Date: Mon, 28 Apr 2025 14:17:34 +0200
+Message-ID: <3363882.44csPzL39Z@diego>
+In-Reply-To: <20250428215539.0ce8d1a0@canb.auug.org.au>
+References: <20250428215539.0ce8d1a0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNDUeEKzZOD+6UL/EvMWKPcOF/PnAGTFIryAfZj8UECGlBVKgGCAc+IsLCZPcA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42LZdlhJTlejkD/DYM9LY4sH87axWdzbsYzd
-	onnxejaLd3NlLM6f38BusenxNVaLy7vmsFnMOL+PyeLM4l52iy8/HzA7cHlsWtXJ5rF/7hp2
-	j81L6j36tqxi9Pi8SS6ANYrLJiU1J7MstUjfLoEr4/Gs58wFL7gr5s1cz9TAuIKzi5GTQ0LA
-	RGL3x2dMILaQwG5GifVXrSHikhKHn95lhbCFJVb+e87excgFVPOcUaKreSJYgk1AU+LO56dg
-	zSICOhIdZ06wgBQxC2xgkliy9g8jRMcMJokPh48yg1RxCphJfJu9B6iDg0NYwF1ixe4IkDCL
-	gKrE25aHLCA2r4ClxIuDv9kgbEGJkzOfsICUMwvoSbRtZAQJMwvIS2x/O4cZ4jgFiZ9Pl7GC
-	lIgI+EnceZQHUSIu8fLoEfYJjMKzkAyahTBoFpJBs5B0LGBkWcUomVpQnJueW2xYYJSXWq5X
-	nJhbXJqXrpecn7uJERxjWlo7GPes+qB3iJGJg/EQowQHs5IIb5UBf4YQb0piZVVqUX58UWlO
-	avEhRmkOFiVx3m+ve1OEBNITS1KzU1MLUotgskwcnFINTPPWNW3dHhOyv1P5pmhqv0aCdPOD
-	EIu9or26n+dfPRq07esmDut1tyzmrPo06cKSVpsPNWdyO7a9PP/li1zetO16z03zJbRkll/3
-	lt/w7OSMz+v3/l3y6qRj6Ik7LneLJ4qZGDaEvkjr9Q/uy3P5pnO2zZ295OK8hLYvK3nfvuxd
-	82VPqSSzhXhQ6/I9XyPNAj/p/dml3DI/q2uVS++cFFvz8vtKK2ZvMPja2bqcT/7zXNOPGu7B
-	Z+fP+2d7RuPYmaTjAe4Vik9zY4pdpnC7Nizjd+n9YX1AcXMqb+qxRi79c+mr58kavqyZZ6p+
-	6Of15qSCi3X5wUm7NPf90ZE57Hwu3CN/qdSMC3qeITvnTVFiKc5INNRiLipOBACclZXeIAMA
-	AA==
-X-CMS-MailID: 20250428121432epcas5p1d7f070391d0d206909dd8dc82f919396
-X-Msg-Generator: CA
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d
-References: <CGME20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d@epcas5p2.samsung.com>
-	<20250417043427.1205626-1-faraz.ata@samsung.com>
-	<d350841c-3560-4511-a866-9490737e48f7@kernel.org>
-	<06cb01dbaf5a$1ea1a8b0$5be4fa10$@samsung.com>
-	<2025042508-statute-pleading-df6f@gregkh>
 
-HI Greg
+Hi Stephen,
 
-> Subject: Re: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
-> 
-> On Thu, Apr 17, 2025 at 11:02:24AM +0530, Faraz Ata wrote:
-> > Hello Krzysztof
-> >
-> > > -----Original Message-----
-> > > From: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Sent: Thursday, April 17, 2025 10:50 AM
-> > > To: Faraz Ata <faraz.ata@samsung.com>; alim.akhtar@samsung.com;
-> > > gregkh@linuxfoundation.org; jirislaby@kernel.org
-> > > Cc: linux-arm-kernel@lists.infradead.org; linux-samsung-
-> > > soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > > serial@vger.kernel.org; dev.tailor@samsung.com;
-> > > rosa.pila@samsung.com
-> > > Subject: Re: [PATCH v3] tty: serial: samsung_tty: support 18 uart
-> > > ports
-> > >
-> > > On 17/04/2025 06:34, Faraz Ata wrote:
-> > > > ExynosAutov920 SoC supports 18 UART ports, update the value of
-> > > UART_NR
-> > > > to accommodate the same.
-> > > >
-> > > > Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
-> > > > ---
-> > > > Changes in v3:
-> > > > - Fixed review comments from Krzysztof
-> > >
-> > > Which ones? What changed?
-> > >
-> > While sending v2  change log was missed unintentionally.
-> > Added missed change log in v3.
-> 
-> Can you add this properly and send a v4?
-> 
-This was a clarification given to Krzysztof.
-The complete change-log was missed in v2, This was pointed out by Krzysztof.
-Added those missed changes in v3.
-Do you want me to add this clarification as well and send v4 ?
+Am Montag, 28. April 2025, 13:55:39 Mitteleurop=C3=A4ische Sommerzeit schri=
+eb Stephen Rothwell:
+> Hi all,
+>=20
+> After merging the rockchip tree, today's linux-next build (arm64
+> defconfig) failed like this:
+>=20
+> make[4]: *** No rule to make target 'arch/arm64/boot/dts/rockchip/rk3588-=
+tiger-haikou-video-demo.dtb', needed by 'arch/arm64/boot/dts/rockchip/'.  S=
+top.
+>=20
+> Caused by commit
+>=20
+>   14e506dcf3b0 ("arm64: dts: rockchip: add overlay for tiger-haikou video=
+=2Ddemo adapter")
+>=20
+> I have reverted that commit for today.
 
-> thanks,
-> 
-> greg k-h
+sorry about me messing up when applying the patch.
+I've amended the patch to build correctly now and re-created the for-next
+branch.
+
+Sorry again
+Heiko
+
 
