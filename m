@@ -1,166 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72E11BBBFD;
-	Mon, 28 Apr 2025 18:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11B61BBBFD;
+	Mon, 28 Apr 2025 18:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745865557; cv=none; b=Z9sAXjen5U3jAcZW9EV02RwFrfq22Lql9LWL3pX1X0TeLNtar4Y+g0wIeSiEZTCkmZMRmuOiewGPSGR8lGb39AdxBPhcuNTJSIiBPTP2dILmJhLsF7whqEa/rdFoI2tHEunCQ/Ktz3OPOIwGeIDP8uPhVXM7hkZS4syBLhQneWg=
+	t=1745865574; cv=none; b=YhxmJbA4ZsQIwYxLBoCsTajTPpIiAi1qJh0NMk4bKVYYvZdLhx6AZBtWRnadjp0KV0/U6ObtBiI0omBrYFWfzAgLYUHwL6BXFJMUutb/bmVqly42u/V/ItjzWM3DD10dAtkP1zmf3ShvRMwPmLcF34scUU1EVdjtbUWuUwFo624=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745865557; c=relaxed/simple;
-	bh=1g5UsXA4X/cUaqdKytfkoN8xTqDuxiR3Ac2nTac0D0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQTtfj3FulNodp7DhYIv5nzwG+Ll1tG/pXsytalCFAliylkEr7EFPto4FXbT9cWErUj8gVuWu1ySYHIZL0bzP1XVeQJFX0lg+8YzMy9WeX4w0lPbQV3gyKDPKfxKw/Ls8BVdGV42T5/9cfM2PNd3eSJVDATGQOxherfRqphDomc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKlBgZjU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745865574; c=relaxed/simple;
+	bh=+GntzX7snpb3B1krCu6ijRajRoUoSqjhzmxdnCjdGVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N466VGZ86k3AE9Dyj+tnI8799zrzU4XCgt9mrkNknpAUmUN6EMzaGQL4/Wx3Tkwyt1xkM1fkOCb2Xeh6BgghEurFNoKLVy/2eBJWI62Ea2EyIf3famq7h+o+0MXtt+uIq4Gjd7VXQ9FR374Lvc4YAGt2MO5/nRRu3q1aaKsAkU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZibGdfa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKlBgZjU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FDE0C4CEEC;
-	Mon, 28 Apr 2025 18:39:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZibGdfa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F264DC4CEE4;
+	Mon, 28 Apr 2025 18:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745865555;
-	bh=1g5UsXA4X/cUaqdKytfkoN8xTqDuxiR3Ac2nTac0D0s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GKlBgZjUebfOQvhUlhLsa1Stsc986glohqumv/oxWqvv5Hy9tnBohba5TMspZSB25
-	 2fpLYfmBfzWNUdBwmCERcWDyV4HwKRy1RG0ogybvqJFO3WLcV8FJSAtxKI6TRF0x1K
-	 VI1mBKCEdkaSUktL2PGxeiPde0RMl8mRFftg+sQGmqHOlHxuUrepfimFa+JogETtWj
-	 AD/p/qPfPBCzGKhWduu4QP4GEm89FKTreIjZwv3BwgyRAfiXnT3XjNlXYh4vcPDe2Q
-	 ZsQaJe5hGA7o1If/PttqrnqY3+9LpBlv2k80zuHvXFN78R9aMOLfqcWEjSimD98ZCj
-	 jq1wjICWWAF/Q==
-From: Eric Biggers <ebiggers@kernel.org>
-To: x86@kernel.org,
-	linux-sgx@vger.kernel.org,
-	Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: [PATCH] x86/sgx: Use SHA-256 library API instead of crypto_shash API
-Date: Mon, 28 Apr 2025 11:38:38 -0700
-Message-ID: <20250428183838.799333-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1745865574;
+	bh=+GntzX7snpb3B1krCu6ijRajRoUoSqjhzmxdnCjdGVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hZibGdfaBaYjKj/JT7l/bvE6YUWtHgeDPuzyFxLAk+ntVlGIlIwxP4E0fNNV3dCRg
+	 KY7FpVfXaqXu+26ws2Zyl62LUGIzkeS5kVE+IrwAWMQdHpIJbS81zPlCA5r1xJuA+I
+	 rV8cBW6/uXE92RPO6EJCAT6BTZ11g+rMUmsNcOSCUuGVG7fUht6TuwTNeCyYzV37JA
+	 B7ghQa5E6lgfVZJrQCr5z+WvCLuVBWdyHN2cNi79buESSYOT103ObccirdEvbVX+EM
+	 5dTBX7Ah2IO5PfFszPka/PzOwt9jY+3ZgbcazqQOAf9hpc7/2BbySg3OcMIAQkyZwy
+	 eQC8EcrpFEAJQ==
+Date: Mon, 28 Apr 2025 20:39:28 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Ayush Singh <ayush@beagleboard.org>
+Cc: Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>,
+	Robert Nelson <robertcnelson@beagleboard.org>,
+	Dhruva Gole <d-gole@ti.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: kernel: device: Add of_platform_populate/depopulate
+Message-ID: <aA_LYKhbQ0iKM7n2@cassiopeiae>
+References: <20250428-rust-of-populate-v1-1-1d33777427c4@beagleboard.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-rust-of-populate-v1-1-1d33777427c4@beagleboard.org>
 
-From: Eric Biggers <ebiggers@google.com>
+On Mon, Apr 28, 2025 at 07:52:29PM +0530, Ayush Singh wrote:
+> Open Questions
+> ***************
+> 
+> 1. Function names
+> 
+> The rust implementations are based on devm_* versions of these
+> functions, i.e of_platform_depopulate() is called when the device is
+> unbound. Since in case of Rust, these are methods on the Device struct,
+> I am not sure if the `devm_` prefix is required.
 
-This user of SHA-256 does not support any other algorithm, so the
-crypto_shash abstraction provides no value.  Just use the SHA-256
-library API instead, which is much simpler and easier to use.
+Please add the 'devm' prefix.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
+> 2. Maybe should be functions instead of methods?
 
-This patch is targeting the x86 tree for 6.16.
+Making those methods is the correct thing.
 
- arch/x86/Kconfig                 |  3 +--
- arch/x86/kernel/cpu/sgx/driver.h |  1 -
- arch/x86/kernel/cpu/sgx/ioctl.c  | 30 ++----------------------------
- 3 files changed, 3 insertions(+), 31 deletions(-)
+> +    /// Populate platform_devices from device tree data
+> +    pub fn of_platform_populate(&self) -> crate::error::Result<()> {
+> +        crate::error::to_result(unsafe { bindings::devm_of_platform_populate(self.as_raw()) })
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index faafd99e52292..bf4874ba4fcfb 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1880,12 +1880,11 @@ config X86_INTEL_TSX_MODE_AUTO
- endchoice
- 
- config X86_SGX
- 	bool "Software Guard eXtensions (SGX)"
- 	depends on X86_64 && CPU_SUP_INTEL && X86_X2APIC
--	depends on CRYPTO=y
--	depends on CRYPTO_SHA256=y
-+	select CRYPTO_LIB_SHA256
- 	select MMU_NOTIFIER
- 	select NUMA_KEEP_MEMINFO if NUMA
- 	select XARRAY_MULTI
- 	help
- 	  Intel(R) Software Guard eXtensions (SGX) is a set of CPU instructions
-diff --git a/arch/x86/kernel/cpu/sgx/driver.h b/arch/x86/kernel/cpu/sgx/driver.h
-index 4eddb4d571ef2..30f39f92c98fc 100644
---- a/arch/x86/kernel/cpu/sgx/driver.h
-+++ b/arch/x86/kernel/cpu/sgx/driver.h
-@@ -1,10 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __ARCH_SGX_DRIVER_H__
- #define __ARCH_SGX_DRIVER_H__
- 
--#include <crypto/hash.h>
- #include <linux/kref.h>
- #include <linux/mmu_notifier.h>
- #include <linux/radix-tree.h>
- #include <linux/rwsem.h>
- #include <linux/sched.h>
-diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-index 776a20172867e..66f1efa16fbb7 100644
---- a/arch/x86/kernel/cpu/sgx/ioctl.c
-+++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-@@ -1,10 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
- /*  Copyright(c) 2016-20 Intel Corporation. */
- 
- #include <asm/mman.h>
- #include <asm/sgx.h>
-+#include <crypto/sha2.h>
- #include <linux/mman.h>
- #include <linux/delay.h>
- #include <linux/file.h>
- #include <linux/hashtable.h>
- #include <linux/highmem.h>
-@@ -461,35 +462,10 @@ static long sgx_ioc_enclave_add_pages(struct sgx_encl *encl, void __user *arg)
- 		return -EFAULT;
- 
- 	return ret;
- }
- 
--static int __sgx_get_key_hash(struct crypto_shash *tfm, const void *modulus,
--			      void *hash)
--{
--	SHASH_DESC_ON_STACK(shash, tfm);
--
--	shash->tfm = tfm;
--
--	return crypto_shash_digest(shash, modulus, SGX_MODULUS_SIZE, hash);
--}
--
--static int sgx_get_key_hash(const void *modulus, void *hash)
--{
--	struct crypto_shash *tfm;
--	int ret;
--
--	tfm = crypto_alloc_shash("sha256", 0, CRYPTO_ALG_ASYNC);
--	if (IS_ERR(tfm))
--		return PTR_ERR(tfm);
--
--	ret = __sgx_get_key_hash(tfm, modulus, hash);
--
--	crypto_free_shash(tfm);
--	return ret;
--}
--
- static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
- 			 void *token)
- {
- 	u64 mrsigner[4];
- 	int i, j;
-@@ -521,13 +497,11 @@ static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct *sigstruct,
- 
- 	if (sigstruct->body.xfrm & sigstruct->body.xfrm_mask &
- 	    sgx_xfrm_reserved_mask)
- 		return -EINVAL;
- 
--	ret = sgx_get_key_hash(sigstruct->modulus, mrsigner);
--	if (ret)
--		return ret;
-+	sha256(sigstruct->modulus, SGX_MODULUS_SIZE, (u8 *)mrsigner);
- 
- 	mutex_lock(&encl->lock);
- 
- 	/*
- 	 * ENCLS[EINIT] is interruptible because it has such a high latency,
+As Greg mentioned, please add the missing safety comments. Additionally, I
+suggest to import to_result().
 
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
--- 
-2.49.0
+Please also make sure to go through [1].
 
+> +    }
+> +
+> +    /// Remove devices populated from device tree
+> +    pub fn of_platform_depopulate(&self) {
+> +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
+> +    }
+>  }
+
+Please move both of those methods into
+
+	impl Device<Bound> {
+
+which ensures that those methods can only be called for a bound device, which is
+required by devres.
+
+The impl block does not exist for Device yet, so you have to create it with your
+patch.
+
+- Danilo
+
+[1] https://rust-for-linux.com/contributing#submit-checklist-addendum
