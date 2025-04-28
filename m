@@ -1,81 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB95288B1;
-	Mon, 28 Apr 2025 18:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DD219309C
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745865287; cv=none; b=LKY9nb9vAh+jn8+6A130d87qkAnX+7cv8Zncp6DVGZUSkPHPSRlKSXibWGfTMdvt5Hds0JZAOHtAKhw0jLfZv/le8xMfTQj0H4nyQfpCd9MogVSrRboNKjJEsQQP8fcJZMSKk+jxrUgIQU4dgJQ/9pFOcR72JVRxFs4UCgI/wGM=
+	t=1745865523; cv=none; b=uBo9IOniwBnnyqoy/Ha/JaG7d3DZo8orY+iCtoIzIufhu5GhjlegScJVPRs18YwDIqCpODW3JVBdCHNOZTqxvhYwlibzu8KblgR0dGAnpA8IMfqQirpyKKKA7F82dsPha4MKtKfH4ntIHSDddW+gBks/TEo3VzXZ7NPIlwFsvgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745865287; c=relaxed/simple;
-	bh=kdC5V1GJVf0AYNDVDpETfg7feyFeCkn1u5NP5gc8Adk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6MCnT1cpm1EgtwDh/xLy6sYlhhiOn+T3hkzM2i00ix40nkUNrjXXXv/whmaY1NghYzKdly5zyFW0LIbeKw8XzFSEt2M0aYX0ZxaxDcqeDQN0wxz9wxB5cU/gr4xbV16J9z0Rc+9e0NQb0ZY/YTQs7yCS2sSbSTGOUclKVOqU+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBFt5NT+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745865523; c=relaxed/simple;
+	bh=cpr+K50FvyrzLvic4cLoc4/7aJPGb+L/hXE3lTuub7A=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=pZKrbFAjqJyFCF77vUDrzQes1NoSIkCtarB1k3V9smL4vXeJ1ZRkxjg4O3kYvTRm22txE5GH8Iv+h+YKRmEB94S17wjUd2qKxDnA6GkMmqY3apcdysakrSala16LWOXzQojLsxetRQZJhEhRqqQePUfgRJRGB/1Z22F4mTYq+2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=Cv9hFcmB; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBFt5NT+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8AFC4CEE4;
-	Mon, 28 Apr 2025 18:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745865286;
-	bh=kdC5V1GJVf0AYNDVDpETfg7feyFeCkn1u5NP5gc8Adk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QBFt5NT+Xr6LNbnOLRU/DXvOKowZJdVbMDR8bHSIaucTRowUy9MOTiIKO/QkbLJcY
-	 VzmRl72a4FnZWlxXbTIz3qaUPQC9vF++rfclh3CAyzJKG6f2q1s1fWyogug9fe/yaX
-	 VPgd/aiyeCEDipyz0CJ40OA23IhEESoWXSuRfQ4OUrf/OIcMIqPV72KRPQg9na0uCW
-	 XEp85y3vkTFjxWz9G0Jc2noseWWxcbwHVgQHBga4lYtn1t5DEWDmMIzg3EmHp33aqd
-	 JHgNtHctCLC1XKRMlKtfg1PPNGsdgJbBdU9PHRz1s7aHVLRFCEV1nfLDvZjqAZn141
-	 NyRm6WcVWLS+w==
-Date: Mon, 28 Apr 2025 08:34:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-	bpf <bpf@vger.kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
-Subject: Re: [RFC][PATCH 2/2] treewide: Have the task->flags & PF_KTHREAD
- check use the helper functions
-Message-ID: <aA_KRQQXt646y37K@slm.duckdns.org>
-References: <20250425204120.639530125@goodmis.org>
- <20250425204313.784243618@goodmis.org>
- <202504251558.AA50716@keescook>
- <CAADnVQKdWSuDm52GmNor75rFZGNBLcoCto3oecA3D3QHD_MyCQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="Cv9hFcmB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:Date:Cc:To:From:Subject:Message-ID:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cpr+K50FvyrzLvic4cLoc4/7aJPGb+L/hXE3lTuub7A=; b=Cv9hFcmBwvHcyWGbRiFnQy8WIN
+	0r0FQo7fDiWwOvwM0LOkpldO6r9+tlP4NksaJPZS7waz9NBl+6CuX3dp3NGLQDC7qjrb/g7KPuJSB
+	zMHXqye63cfZQqg9Wq0um+IO7shc2semqmuPRiekbvQgTzl1WjyxfE0BkfOJMTGPscpOMLApYomob
+	lkiHjtVIrHHzbHxoPuLrVnkqXcWOE4D0M113/kw19WAfPZ724vGokNL0X3QqoiT2P4PFbZRCQ14PY
+	6wCf8T57XHXIbF6QqD6iPaAXIeen2p02lWZIXH7loMdScmWESmBIyVrX913K2C4t/RKx0MJv5cue2
+	Ul6V7o5Q==;
+Received: from [167.98.27.226] (helo=[10.17.3.58])
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1u9Spt-003QV4-RP; Mon, 28 Apr 2025 19:04:10 +0100
+Message-ID: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
+Subject: SCHED_DEADLINE tasks missing their deadline with SCHED_FLAG_RECLAIM
+ jobs in the mix (using GRUB)
+From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Juri Lelli <juri.lelli@redhat.com>, Vineeth Pillai
+ <vineeth@bitbyteword.org>, Daniel Bristot de Oliveira <bristot@kernel.org>
+Date: Mon, 28 Apr 2025 20:04:09 +0200
+Organization: Codethink
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQKdWSuDm52GmNor75rFZGNBLcoCto3oecA3D3QHD_MyCQ@mail.gmail.com>
+Sender: marcel.ziswiler@codethink.co.uk
 
-On Fri, Apr 25, 2025 at 08:22:59PM -0700, Alexei Starovoitov wrote:
-> > >  tools/sched_ext/scx_central.bpf.c          |  2 +-
-> > >  tools/sched_ext/scx_flatcg.bpf.c           |  2 +-
-> > >  tools/sched_ext/scx_qmap.bpf.c             |  2 +-
-> >
-> > I think these are fine. The Makefile is pulling in standard kbuild
-> > Makefiles, so I think the correct include directories (outside of
-> > tools/) are being used.
-> 
-> I suspect they are not fine.
-> I don't think they #include linux/sched.h
-> I would drop them for now.
+Hi
 
-Oh, this won't work. Those get all the kernel defs from the BTF generated
-vmlinux.h file which doesn't include any inline functions or macros, so
-please don't include them in this conversion.
+As part of our trustable work [1], we also run a lot of real time scheduler=
+ (SCHED_DEADLINE) tests on the
+mainline Linux kernel. Overall, the Linux scheduler proves quite capable of=
+ scheduling deadline tasks down to a
+granularity of 5ms on both of our test systems (amd64-based Intel NUCs and =
+aarch64-based RADXA ROCK5Bs).
+However, recently, we noticed a lot of deadline misses if we introduce over=
+running jobs with reclaim mode
+enabled (SCHED_FLAG_RECLAIM) using GRUB (Greedy Reclamation of Unused Bandw=
+idth). E.g. from hundreds of
+millions of test runs over the course of a full week where we usually see a=
+bsolutely zero deadline misses, we
+see 43 million deadline misses on NUC and 600 thousand on ROCK5B (which als=
+o has double the CPU cores). This is
+with otherwise exactly the same test configuration, which adds exactly the =
+same two overrunning jobs to the job
+mix, but once without reclaim enabled and once with reclaim enabled.
 
-Thanks.
+We are wondering whether there are any known limitations to GRUB or what ex=
+actly could be the issue.
 
--- 
-tejun
+We are happy to provide more detailed debugging information but are looking=
+ for suggestions how/what exactly to
+look at.
+
+Any help is much appreciated. Thanks!
+
+Cheers
+
+Marcel
+
+[1] https://projects.eclipse.org/projects/technology.tsf
