@@ -1,143 +1,167 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF81F9D9
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1A05D477
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844495; cv=none; b=dyguUKzWBzB9LCNo0wq07wQ6BLMxBTWQgfPaV3qrRIoU1MuAqQwMe0cnkLcepjFwughQzvi02Rw2DKJT6Bn6Y4WjRIanymojIYXCFNf/lfvgSqVkMpOMb8UlxT1i11MSc+8XIveZuDno4KkNdgNj3UR/H9j+Hz32WV0lP9ymYlA=
+	t=1745844511; cv=none; b=DBPgigBluXxvWT53l3vkcmVA/1AIfycES6c1ZQ+hvJnMW7gx0J7RExkAJC+imeHkApvJ19QzIkuIjpMcqrrkuzOyRNEFbspvttfCtGsnLiHQFLKHrVDHacKg2VmF163LkRzJshPlsAF/2bHi+7f0ZScpVl05FvdM9IZs0mFYvZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844495; c=relaxed/simple;
-	bh=2A2biSJiK66raGZrBios5AKq7fSHonG3xBa3QyVowQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/oHNWAORMFUfS6qgz/nF5GDhh5bmTu6K8qKB0TDck+w5xPPIU1FFO6fJRyak8QOg3e0i35RwgHriKZGQKHV/CxaLUxZZ5ogg3BQCDenSzWCONaaSzCmE2coxFEw8HA/Dx2BEGMbORfHF24o4ipOcc4h60A6e4Mr+YFdML2UR4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lclw8zO+; arc=none smtp.client-ip=209.85.218.41
+	s=arc-20240116; t=1745844511; c=relaxed/simple;
+	bh=sBX41oy5q+NVzneEJp3/De7il4orb3AbguaLLlqdrDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZNJ+SSSUg6Ud5vIZ1BuYjjQW+o4S/1oK8CmZ38Stz/f1fesnKU4L+nnJAmreLzBSxY8kxad9qOWY3oRUTphQBWoLcFl0w4q7wun0FOsS9VhXUIJl7H67MKaqgGzNYiFuJB9y/1aCeVNjBxS6RSOUfr7csj/oEGTVtHaXcguQieA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mPuoeRB6; arc=none smtp.client-ip=209.85.210.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lclw8zO+"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ace358c4d35so50776266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:48:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPuoeRB6"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c172f1de1so2935548a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745844492; x=1746449292; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=YljKQXBtGiaGwd+MSQtk+gKaVlh4BPM5fTbTeZoYEdE=;
-        b=Lclw8zO+1ww/W3Ap+CqaY/BBKOGoYuVJioJjzs1cKG4LRfmlbDx7+qoWInh8/0E6RX
-         hAvEGm9pCbVmZ3aDuYBuVlV6hnU5oAoDLWUG5t+XSt4RGwG4eBMZVVs3ysllebEB1IZB
-         YdtlGfrr23s3ryoaKkbMnWf3m4hT4pL/W3+RoHleHe0YiiJM+m0EbhtCiycbPvSGLa9Q
-         Te3mNVHC+/bzfSFOduMlacl62ut6rrpoLdKtH0uZphJYT3wbNyWUp5xOTZR9A3UdC/9h
-         NtOhek1WU7PEBb+pZLHytlGG/t/5V/JA+xBgCUqtYkVRCiSpZRpaeQNHl6KHvmnMyjZL
-         xs6g==
+        d=linaro.org; s=google; t=1745844509; x=1746449309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IKXmohf/rYRMfzCRTyUm0eMIlUV2EGFBdpsRN9XwbC8=;
+        b=mPuoeRB6OsQAeMgBt/EivnNIo6o5SzBQDszR1XjbK05Zg3HkMSeZ0Thc+6XQ8PtwoP
+         NTUlivoCd9xAUcL0MeLVCwLAI5ahpPnAS0lViui1e78gK3/K4W7vlmVhN0NiWqC0moDR
+         s6rAk0xwdkiRMSxyZQcc2aZFKkUAJ7KyKeOhI6leeOQW0O/GqxL96r0s+AAxduFDQo3k
+         K6Dzsk3m5mQoO1E1L5WVeEihcdPR2Pr3WNwraFJtjQMCsAJV2q1wKdtD7UuC3r4/ya3J
+         hoJYEyDJ3h3DbP1g/5Yiu+1VWvmD910waW7b52A6lxgTIkFYhqqXS1aOO0yrhGtntwEN
+         0Wqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745844492; x=1746449292;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YljKQXBtGiaGwd+MSQtk+gKaVlh4BPM5fTbTeZoYEdE=;
-        b=U/BMIzh7Pb3pMeQ+e7ykdbYfxB/7dERyQhT1mIqt2GygoxTyiLUBg7DhSzxS+gSPAz
-         RG4z7z1uFxAlQXT2q+0JsCKNiQ5KCdF5zHHk5v4Tk0Exk5qZbZ250vBaF+F7JVCjb9fW
-         NChfqIA2h0CR/8fUvgTgFppDgcCi14u2j31/OXmOgh6KHigomb1vfy66D+/PF/Kf7+y9
-         LAM2DXUVzzRhu8kxkaFKSeIQEN4HdE8xfWekqTBraaXrgyvNY5zLl011j6UVkM/visbL
-         CUYp4A7rr+3OHuucl/44X3wqQq6pCbo7an8XzchCBvMfVGIppKAS/KdKEYbaV7ZKkmjt
-         S4Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVve6z/6AjewmvSTiLcv7Hb0r3m4r4dYWfNmVATF27DBjdpirN+zHVWRhoPOiSHrUaXu7csd2KL8hB63uA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmEhv8NODJwFOyxCQ+7G1JsG2C775I5xo9380d/vq4GqaC5mbR
-	CTcTrvg94uTuRedd8qeOkL5KHcMJ7YNpXFP0ELReUzDp7xd0vznicVbFc1f/qN0=
-X-Gm-Gg: ASbGncvv5TT1HK/8wt2DekeogqmvcX9gJaNUJYpJVDbbvEUYfwrkH8+TgJolXzmFncw
-	uPVYJH2rCV+w+zC52iKmNC//I+KgAp9d6imjZD5nldVBtsReqMxqi/JO6zv6vWTolc13eHu1ES9
-	5YvAlCR7ZB0anG4AySvJNheAmzZCUb7JIpHwGPq/Do/FwlBsy6cm+aRg5JWY6UJaw5pxPUvdZwE
-	W5Lz3dhYaW14r6K2Ie5gMfRNYSG5FDkTwSQh4EudCI3qJaRAfUDWOYoLWPa6ldvo1n0JJZHKDf6
-	oMVewvQtOacNlKiUEtHBSJ8/YT8doOXbiu19oD7LqfAdLRMeCuKCccYeV6E=
-X-Google-Smtp-Source: AGHT+IFOroP/fL/DAdnVjum70IajwrW6YU3IaS/LoZWYdb3NibmMKKHUKEvzakkKo/2mdE8tfvRkdQ==
-X-Received: by 2002:a17:907:3d94:b0:ac3:66fb:b197 with SMTP id a640c23a62f3a-ace7103a0c0mr347630966b.3.1745844492159;
-        Mon, 28 Apr 2025 05:48:12 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41b5e7sm636248466b.13.2025.04.28.05.48.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 05:48:11 -0700 (PDT)
-Message-ID: <1df9b47a-d20e-4755-9b30-75d8ff150551@linaro.org>
-Date: Mon, 28 Apr 2025 14:48:09 +0200
+        d=1e100.net; s=20230601; t=1745844509; x=1746449309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IKXmohf/rYRMfzCRTyUm0eMIlUV2EGFBdpsRN9XwbC8=;
+        b=LeLjzrJ88chpep2VooFvq6KmYEDnbtourxYIlFIEIrkb9/p4NEZ8LxR92mWDezHb/M
+         JCUEp8MdgimT2iaNMrpw3J5WphbPf9n29xRB9zaop4gVwJPdLTo9SDO+TLqiz7oFZM8X
+         Shg/Yf4snulhsLgUW/A4jsklY8wQyRBPBjA0JLJsIHY5qAHKDCHBrKVRQMQ9HFViGrJe
+         PYjmptyKjM6dM/fTFJ0J0eo7wsr9+eBF4aNRETcyyFas2ha80fNSiMnhCAI2A2TvUq0I
+         5fF5WrbUqorawdtnn2hK7Uz4/mUM9B7TJrCAT3w7AYjUzu3FgTAwLjT/J3Rs5a4cRIec
+         xWmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8RJzGY5qgM+CWXplBbQLvb8ZDBzTmeJRTY0o8SRQONCGfrpd3OFV80E8BJrWbw9eRAt8bmGNigtHHktw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymHvUS+XXSbYXsPhio46CO99vkBa85t2a3ROYTzGmWv/XlXSF9
+	eiGyBYID5Oic3UU0l2dzUdTlIFsBbuBHxSMouUBZBFbk5OxiCY98YfylO52qLzpvpyCWnbS30P9
+	6lRki81FtFnDBJhjxZkrDU3Z2ZiSUhehtWZZYTQ==
+X-Gm-Gg: ASbGncslygsJpGM//EQH4sY6C+a3lzfa/X6U3+RQIxi2UXC2QT8AAScZBuWNcBVmWra
+	LRCLWQ6b2b5XKoqFc2XG7c8k8UOe3VJYleibKIqjDS+T61UYwrUgUJL0Mdrl7Duf3IVJ5jvlIUc
+	kmzvBL9ZmhOeRG+BjYN86/3kE=
+X-Google-Smtp-Source: AGHT+IEKkJMN8rv7lns8SrDAkmFVU/eA84TXCYOaeFnM5RDCqVT1r578K613WDg3O1mJT13ELpQEF5gWqWlCh5F9b58=
+X-Received: by 2002:a05:6870:a7a5:b0:2bc:7d6f:fa86 with SMTP id
+ 586e51a60fabf-2d99de7e336mr7327702fac.35.1745844508661; Mon, 28 Apr 2025
+ 05:48:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable XDP socket support for
- high-performance networking
-To: Meghana Malladi <m-malladi@ti.com>, nm@ti.com, vigneshr@ti.com
-Cc: prabhakar.mahadev-lad.rj@bp.renesas.com, quic_tdas@quicinc.com,
- nfraprado@collabora.com, arnd@arndb.de, lumag@kernel.org,
- geert+renesas@glider.be, bjorn.andersson@oss.qualcomm.com, will@kernel.org,
- catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, srk@ti.com,
- Roger Quadros <rogerq@kernel.org>, danishanwar@ti.com
-References: <20250428121025.246119-1-m-malladi@ti.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250428121025.246119-1-m-malladi@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250325200740.3645331-1-m.felsch@pengutronix.de>
+ <Z-Pc6C1YUqLyej3Z@casper.infradead.org> <20250326110718.qzbwpmaf6xlcb4xf@pengutronix.de>
+ <CAHUa44FUK_73oKSaqGdiPqB3geZbTNDFsC1Mh=KN3YPWr9=7gQ@mail.gmail.com> <Z-TXMIXzaro0w60M@sumit-X1>
+In-Reply-To: <Z-TXMIXzaro0w60M@sumit-X1>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Mon, 28 Apr 2025 14:48:15 +0200
+X-Gm-Features: ATxdqUFNwbXIdhC9JmpFT6PMYUhHRoccu6LeSmRbvgshoecHjCAuCQo-WTMcvT4
+Message-ID: <CAHUa44HEsMkzQHZZufdwutQyZRtig6e0qWomhwgDZAhy2qDyhg@mail.gmail.com>
+Subject: Re: [PATCH v2] tee: shm: fix slab page refcounting
+To: Sumit Garg <sumit.garg@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Marco Felsch <m.felsch@pengutronix.de>, vbabka@suse.cz, 
+	akpm@linux-foundation.org, kernel@pengutronix.de, 
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28/04/2025 14:10, Meghana Malladi wrote:
-> From: MD Danish Anwar <danishanwar@ti.com>
-> 
-> Enable CONFIG_XDP_SOCKETS to allow for eXpress Data Path (XDP) socket
-> support specifically on TI SoC platforms such as the AM64x and AM65x.
-> This enables the use of XDP sockets for high-performance, low-latency
-> networking applications, allowing for efficient processing of network
-> packets and improved overall system performance.
+On Thu, Mar 27, 2025 at 5:42=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org> =
+wrote:
+>
+> On Wed, Mar 26, 2025 at 02:47:46PM +0100, Jens Wiklander wrote:
+> > On Wed, Mar 26, 2025 at 12:07=E2=80=AFPM Marco Felsch <m.felsch@pengutr=
+onix.de> wrote:
+> > >
+> > > On 25-03-26, Matthew Wilcox wrote:
+> > > > On Tue, Mar 25, 2025 at 09:07:39PM +0100, Marco Felsch wrote:
+> > > > > Skip manipulating the refcount in case of slab pages according co=
+mmit
+> > > > > b9c0e49abfca ("mm: decline to manipulate the refcount on a slab p=
+age").
+> > > >
+> > > > This almost certainly isn't right.  I know nothing about TEE, but t=
+hat
+> > > > you are doing this indicates a problem.  The hack that we put into
+> > > > networking should not be blindly replicated.
+> > > >
+> > > > Why are you taking a reference on the pages to begin with?  Is it c=
+opy
+> > > > and pasted from somewhere else, or was there actual thought put int=
+o it?
+> > >
+> > > Not sure, this belongs to the TEE maintainers.
+> >
+> > I don't know. We were getting the user pages first, so I assume we
+> > just did the same thing when we added support for kernel pages.
+> >
+> > >
+> > > > If it's "prevent the caller from freeing the allocation", well, it =
+never
+> > > > accomplished that with slab allocations.  So for callers that do km=
+alloc
+> > > > (eg setup_mm_hdr()  in drivers/firmware/efi/stmm/tee_stmm_efi.c), y=
+ou
+> > > > have to rely on them not freeing the allocation while the TEE drive=
+r
+> > > > has it.
+>
+> It's not just about the TEE driver but rather if the TEE implementation
+> (a trusted OS) to whom the page is registered with. We don't want the
+> trusted OS to work on registered kernel pages if they gets free somehow
+> in the TEE client driver. Having a reference in the TEE subsystem
+> assured us that won't happen. But if you say slab allocations are still
+> prone the kernel pages getting freed even after refcount then can you
+> suggest how should we handle this better?
+>
+> As otherwise it can cause very hard to debug problems if trusted OS can
+> manipulate kernel pages that are no longer available.
 
-High performance, low-latency network applications do not use defconfig.
-That's a development config.
+We must be able to rely on the kernel callers to have the needed
+references before calling tee_shm_register_kernel_buf() and to keep
+those until after calling tee_shm_free().
 
-Best regards,
-Krzysztof
+
+>
+> > > >
+> > > > And if that's your API contract, then there's no point in taking
+> > > > refcounts on other kinds of pages either; it's just unnecessary ato=
+mic
+> > > > instructions.  So the right patch might be something like this:
+> > > >
+> > > > +++ b/drivers/tee/tee_shm.c
+> > > > @@ -15,29 +15,11 @@
+> > > >  #include <linux/highmem.h>
+> > > >  #include "tee_private.h"
+> > >
+> > > I had the same diff but didn't went this way since we can't be sure t=
+hat
+> > > iov's are always slab backed. As far as I understood IOVs. In
+> > > 'worst-case' scenario an iov can be backed by different page types to=
+o.
+> >
+> > We're only using kvec's. Briefly, before commit 7bdee4157591 ("tee:
+> > Use iov_iter to better support shared buffer registration") we checked
+> > with is_vmalloc_addr() || is_kmap_addr(). I like Matthew's suggestion,
+> > it's nice to fix problems by deleting code. :-)
+> >
+> > Sumit, you know the callers better. What do you think?
+>
+> If we don't have a sane way to refcont registered kernel pages in TEE
+> subsystem then yeah we have to solely rely on the client drivers to
+> behave properly. Nevertheless, it's still within the kernel boundaries
+> which we can rely upon.
+
+Yes.
+
+Cheers,
+Jens
