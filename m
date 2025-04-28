@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5331925F96D;
-	Mon, 28 Apr 2025 10:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531CF25F79B;
+	Mon, 28 Apr 2025 10:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745837071; cv=none; b=fiDIGvof3OFubVQKRXTJBGyhiR/RkGoDAcHkAsgnEBtxlLxV2+tYpQkdKegE+k+GR2xhf1z39LyY5h7g4m0Mtq9z2JiW95IJsfOojrHSH+Zj2EP9Q68OYjmb86vZuEPf2SPLie22zzPox+flrKS+fbiJaVBIrBvTwogoh5Urp+k=
+	t=1745837071; cv=none; b=XM6FGaIhMW9EyOBNSsb5bExwCjNYvU0c8eQjMStKopoFeSyw8MZKydGwPWHZFwaVG9mF2xXdaoy9fHoMd59rHoiiQ7p+6hawq5a7KACe/7lZBIYnN+1yZEOziRgGDj2CWpiu2iHxXFlTYo6LCrCMergCInvhAKbqm2E7hJ/O5bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745837071; c=relaxed/simple;
-	bh=bM/5EDf32Br2Fmtz15dIAtUhg9VujV8OEWyNE+VJDtY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kSbRyRQ6b3yral+DBqazaQF6qrMpWr4AzhO9jy7hiLO2t/ZE/w7nk9b3tePc/qcziHWX3XD+ZQx8NyHsL+SxAVrsk0uZveeiCF0tNVWVr9QiLAE02fXVoW2zonzD+j4mkaewo0SuezL7fBhNQK2u7GKameFuDCn+kuirYlJerO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMHAfWte; arc=none smtp.client-ip=10.30.226.201
+	bh=zoNoOQu9Fld7LEIioJ+wlApw7JJtAWg9ZZxxQWQdkQ0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hKocOWnCmDGR/FRAh4tGm+INaaQX0So4GkKZPHItT+rp4NwGVL0BdjzB/G+JJXwQ3KWeVFYylRNAMQM3tVg/9GE8QqhC8Wh1FLEmUk7jKuOFFXgZU09dqLIzQFNnfDn0pJlW+yW9AmYSWPr1UFVsjghjFsSXJOH+YRr4E1fZ9vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=heTRi+Kn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMHAfWte"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB81FC4CEE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="heTRi+Kn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CA6E7C4CEE4;
 	Mon, 28 Apr 2025 10:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745837070;
-	bh=bM/5EDf32Br2Fmtz15dIAtUhg9VujV8OEWyNE+VJDtY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=GMHAfWteEmXZRUOmsspfjqj3XLZPvza+ufNt58PrhZG56F9WIpcG8JjBqa/bYRwdo
-	 WdrnK0hZmbqeYBxPtKm5VFG9V57yYGMLahOv93JpF+53uhRQnZ9Ux4HmihVC9uPBpW
-	 tlsXQHDuVEGOcUeVRP6Mt+iPeiQumHKumnkr28T3n0BeEoeSXCDipy9fbvC/d/SQoU
-	 MpgcYw0wRCMwUNIC+aioO8rY6hwkPeP5fJsz3f+uRvJTAJNBQSB7/odhapSDyWfQEY
-	 ZP+gZui6oBAoqBw2+X/exFRmHpY0jIC4yzDMFf2l/6jFTxzU3JWFFAoQSJA/ivZL4I
-	 qs04lblftIqaw==
+	bh=zoNoOQu9Fld7LEIioJ+wlApw7JJtAWg9ZZxxQWQdkQ0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=heTRi+KnPNW2vy0rLctBRjFgRRBAennRpA8uIGdIiQhBNfvdzvqU6DnSTx1Zp4aFv
+	 TbYJag4bmzfvMg7TCShf9Wda8Mqd1/ZKQOFIVyCS5F0GsnBNvBI9goB7dYul1tltN/
+	 61rvK4ioEBvMCl7VN3aGW9PAojxwK0QT7YJfzWiPdFIfxNlTPhK9z6TlfKkZYDU+7T
+	 5Jg+d2eKCk7EJ+jE5dmO3E2LGhNGSZd5AJpnHmgk9d8ltqXuaAjkBP2P06cCgaPm6/
+	 JElbMQvL7w9txpTdN/eRb/CzMV6mKDCZLPsHaG6kccIIY8BGk5ejXsderrw7gHU8/9
+	 wkQhQsNZoVspw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA738C369D9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F57C369D3;
 	Mon, 28 Apr 2025 10:44:30 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Mon, 28 Apr 2025 12:44:28 +0200
-Subject: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add TC
- Unterhaltungselektronik AG
+Subject: [PATCH v2 0/4] Board support for Fernsehfee 3.0
+Date: Mon, 28 Apr 2025 12:44:27 +0200
+Message-Id: <20250428-fernsehfee-v2-0-293b98a43a91@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250428-fernsehfee-v2-1-293b98a43a91@posteo.net>
-References: <20250428-fernsehfee-v2-0-293b98a43a91@posteo.net>
-In-Reply-To: <20250428-fernsehfee-v2-0-293b98a43a91@posteo.net>
+X-B4-Tracking: v=1; b=H4sIAAtcD2gC/03MTQ7CIBiE4as031oMP2KjK+9husB2EDbQACGah
+ ruLjQuX7yTzbJSRPDJdh40Sqs8+hh7yMNDsTHiC+aU3SS41V0IzixQynAXYQxvYi+KzGUH9sCZ
+ Y/9qx+9Tb+Vxieu92Fd/1x0j1z1TBOJNnKdRJzIsazW2NuSAeAwpNrbUPE2O1saUAAAA=
+X-Change-ID: 20250315-fernsehfee-b5aef930ca7e
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
  Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -54,11 +54,11 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745837069; l=1023;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745837069; l=1421;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=lhW1S1FqMGlohP33kbMw1Pv6brNFdpf4vK4RYn9L2Ow=;
- b=FTY9CmJ9n2ohyDbO/qJZqosFFn7U14VWhCnco0IzGh6Gm4JAfeBCIiuq5vK/IPab3X0l9f6Sa
- Ihm0gJtX4+jAcTLq+jgTYmqgc0uFaRXuQcRIgnZuzJPM326GFPDN3k9
+ bh=zoNoOQu9Fld7LEIioJ+wlApw7JJtAWg9ZZxxQWQdkQ0=;
+ b=sloiws7PjerztavFOh+WRSwUGtcJ8z57ukYOGobwKBpWoMWMkPQdnhNLJFGvr24RatYRu5di8
+ GLTh5fOlEknAphpjgeeMJ/wjmSSrkPR/7ufDGiz/ou72uuoN0GwH3MD
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -66,32 +66,38 @@ X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
 X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+Fernsehfee[1] ("TV fairy") is a family of set-top boxes marketed as
+ad-blocking appliances. This patchset adds board support in the form of
+a device tree for the third generation, Fernsehfee 3.0.
 
-TC Unterhaltungselektronik is the company behind Fernsehfee branded
-set-top boxes.
+[1]: https://fernsehfee.de/ (German), https://www.telefairy.com/ (English)
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v2:
+- Apply ACKs from Krzysztof Kozlowski and R-b from Neil Armstrong and Martin Blumenstingl
+- New patch 4/4 to describe PMIC regulators, after discussion with Martin Blumenstingl
+- Link to v1: https://lore.kernel.org/r/20250323-fernsehfee-v1-0-2621341cd37a@posteo.net
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 86f6a19b28ae217643bf7a63a471f74819d18238..c61c5e11ff5472acb8a6ebdd6d1a66cfa07ae7af 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1494,6 +1494,8 @@ patternProperties:
-     description: Toby Churchill Ltd.
-   "^tcs,.*":
-     description: Shenzhen City Tang Cheng Technology Co., Ltd.
-+  "^tcu,.*":
-+    description: TC Unterhaltungselektronik AG
-   "^tdo,.*":
-     description: Shangai Top Display Optoelectronics Co., Ltd
-   "^team-source-display,.*":
+---
+J. Neuschäfer (4):
+      dt-bindings: vendor-prefixes: Add TC Unterhaltungselektronik AG
+      dt-bindings: arm: amlogic: Add TCU Fernsehfee 3.0 board
+      ARM: dts: amlogic: Add TCU Fernsehfee 3.0
+      ARM: dts: amlogic: meson8-fernsehfee3: Describe regulators
 
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm/boot/dts/amlogic/Makefile                 |   1 +
+ arch/arm/boot/dts/amlogic/meson8-fernsehfee3.dts   | 306 +++++++++++++++++++++
+ arch/arm/boot/dts/amlogic/meson8.dtsi              |  18 ++
+ 5 files changed, 328 insertions(+)
+---
+base-commit: 9c8bd75378d70cd6087d503eb8317d1eea67164a
+change-id: 20250315-fernsehfee-b5aef930ca7e
+
+Best regards,
 -- 
-2.48.0.rc1.219.gb6b6757d772
+J. Neuschäfer <j.ne@posteo.net>
 
 
