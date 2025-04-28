@@ -1,176 +1,237 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2061.outbound.protection.outlook.com [40.107.223.61])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF86626F478;
-	Mon, 28 Apr 2025 18:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745866737; cv=fail; b=TpvBnQaUjd/XVmsLry+8krGl397FHHDzSCYzuNAfVe7nlAGLNjlXqvDVwk+MEq2ElwsrzS1VXI+k4EmR1g59nhQDjpOsN2eC2OaaG0gPgEKKcNVHhOC+MXIA5ubllGwardELD99QuY6ULGo5Zjys16sxMAw3pCyxvstIMdQpVgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745866737; c=relaxed/simple;
-	bh=6Rcw+Z3pAPJ/5sFkPFayB37Uy5r+hkQ34xqD06iolk0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+F3kQ/wJQ5XEW3q9y10qFSNreE7UMPQ7M+bBv+sGOOW3YQFGTSA6bwJmHYdkqFXyqfc14uCeuBf04QhZ5k6DX4sy5qn46LQdqlMm7Wc/tNSZghOa88ztZhyrH7zOBlKvx37hFRBX7DYYHqMsCZV8c9HFjKgomOXs3hdxET5R10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gOdIjK2D; arc=fail smtp.client-ip=40.107.223.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB6E28C5BF;
+	Mon, 28 Apr 2025 19:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745866811; cv=none; b=Rror9QVoyaE3akyWvZCOKMAhh3hrei2rJXqiAEK3FCKIqS6NMmuxxrrnGo/2ymzNioiYRnlJQD0rNio+e5iTjexQnTxwxbX8hLxo9OCiJ/e085iar5JgaY/SxluxGujnXk8RC+Z2F2tr5CUl9wManXH2TUjm/8f0op75wmxzE74=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745866811; c=relaxed/simple;
+	bh=VOBhTYGv7U6EwTbbvDJfFalfxqXT7QXGEu4dGWzP4rs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RPH9hvwZRUCQXc9a6ppPLONlZLj+QUA+hsoUVZPjN/0KfSuko2b37PznxWKaJ+hoYqStehUKTEgpSbOSDFdbq2AepQlzpz4wvPeFfr8aZO082vaf1/SdIFZjOJb78fCyCBlBxtIZgu0gfhYt/aM2NYUKIDbj/91KzxbNzr3qMEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oa/AnQo7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gOdIjK2D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D4+C35GFg2a2VngNKS8duTOUoi6JP7KDh8Nm1VX0j6Wv0OKJk1cMIaiee20YZI25nnQTzBlrpjRfaHv/Qd2M6bZ7Ip17TRv3HzXaH+o1gOf6SzUl7nYdjZbOTLdIvvWssPxk2/ZMShXt1gjWn4X01fwtCb8ajGTwJNa6STT552H57l6T+5+G2yDAlwYAbBi/HvqMg9rDJje1Pvsg5shv4v6QFqDmfCsesfkhiGmEem5yaWGZWJbyUF4KysH5vFuYa/vQXhK7Li0YOHB3EeLbZfIgPskVyT4jbLONpKwvpm2i0HTXwXjU0zeMEhCdN+AoLw3dvWTX6j3aBjXi7Nwv+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0tWACRV41wVnve2FZvUmFcDo6E/puNFtzF3f1VthyD8=;
- b=wPVxPDUppiPzc+5UfVK04HfLKyOdjhox+1IQq8uavHK3HSLnPqysbBMdW5CE9AjQoO/gWkVZzjlF466QugXaR0Tgj6Sowuf3hNdSSUwMrp6NZCJAhXFLXRHHyNiTESiglIdMc7lnhso/0WUOjgBhScGY4SPdQfX/hpx7pgMPBoHQ0QVssOTmukzIE9yNkrz7gaMqOKKU6Nst97P0Xuy9I8H4pErKaouuttltv6Muw1Yx8mBOYVRTfjS6czDskwac+5emfkV9Uu3HYWXhiIICrqN65l0AwrWgoBQTHnmFAht19/V1HLjqyqiWnhy+KAWrrfYPnhMbllYMrTIAImZ+7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0tWACRV41wVnve2FZvUmFcDo6E/puNFtzF3f1VthyD8=;
- b=gOdIjK2DZ016MFCNfGefR+wXehFhnqrsvTN7xj+ynY7hCOZrNk/U+HzoSV/6ZWGSxG2CU+K7gVV/wcFyzcm4VEVOppGRdpezed9fKXCio7V7/uIAkUVnsFQwzDs1kmicfwciJYQ8D5SdfpKnfTekt36wNiN8gKmNpKSIh2DPJ4NCAc4bmllV+8z28RQMWK2fJP7RZOXDHjkjX5IPrmK3t+WTlwsiFPp4SQbCkIf1TFw2LxbzO3IcE4N6ZVPlUunEKJxdqg8LecWdImrBMmvfAm2AFJCu0DWM2GIrKu2tc302bqKioCdFG/U9igmHxF5KbXZT9AElbrpemQOuJoBPeA==
-Received: from SJ2PR07CA0012.namprd07.prod.outlook.com (2603:10b6:a03:505::13)
- by PH0PR12MB7863.namprd12.prod.outlook.com (2603:10b6:510:28b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Mon, 28 Apr
- 2025 18:58:51 +0000
-Received: from CO1PEPF000044F1.namprd05.prod.outlook.com
- (2603:10b6:a03:505:cafe::75) by SJ2PR07CA0012.outlook.office365.com
- (2603:10b6:a03:505::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Mon,
- 28 Apr 2025 18:58:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1PEPF000044F1.mail.protection.outlook.com (10.167.241.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.33 via Frontend Transport; Mon, 28 Apr 2025 18:58:50 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 28 Apr
- 2025 11:58:32 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 28 Apr
- 2025 11:58:32 -0700
-Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Mon, 28 Apr 2025 11:58:29 -0700
-Date: Mon, 28 Apr 2025 11:58:27 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
-	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
-	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
-	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
-	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
-	<mshavit@google.com>, <praan@google.com>, <zhangzekun11@huawei.com>,
-	<iommu@lists.linux.dev>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-tegra@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<patches@lists.linux.dev>, <mochs@nvidia.com>, <alok.a.tiwari@oracle.com>,
-	<vasant.hegde@amd.com>
-Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
- ioctl
-Message-ID: <aA/P02wgX27/EjBS@Asurada-Nvidia>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
- <dcfd9bfc-44db-4fd8-a49c-0c96c68f6b88@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oa/AnQo7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C882C4CEEC;
+	Mon, 28 Apr 2025 19:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745866811;
+	bh=VOBhTYGv7U6EwTbbvDJfFalfxqXT7QXGEu4dGWzP4rs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oa/AnQo7UxlB/YwqdvTFZfFeOSpZnl85qblx/x2r/W4sJNe27HhO1NR2aDFfSR2J1
+	 TNnETMr7LmhVYK2fvqL+PTcN1R/hGaS+s2TaGmxVQrboHIgsaz0BncvekH12e66xhc
+	 Tmid+y6i9dWfMSRetHgxzt9ndOHExEJB9Zp81sgdHK+/KUvTUWsF+ckhdMLZ9WgD8A
+	 wPE8qZkXge0jPt0wqErjA3JQdlrcGuHSpOfJBmXDN0dbOMqzOxe/BHeMpVr9p2rp1G
+	 WyHNANrvGcgJpy1/0TqnOr5WFmpQAAYYvlxFYUlDYY6jzu4jGTdcuvItqcGiUKWKnu
+	 iPQ7QYAUblv1Q==
+Date: Mon, 28 Apr 2025 12:00:10 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Groves <John@groves.net>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Luis Henriques <luis@igalia.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>, 0@groves.net
+Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
+Message-ID: <20250428190010.GB1035866@frogsfrogsfrogs>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-14-john@groves.net>
+ <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
+ <20250424143848.GN25700@frogsfrogsfrogs>
+ <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dcfd9bfc-44db-4fd8-a49c-0c96c68f6b88@linux.intel.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F1:EE_|PH0PR12MB7863:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb0883be-9871-4256-9fab-08dd8686b691
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uVGanoWR5SHipaoNY2YVkpbjnP7em7L+mNEJMZv5gUI3UGv7/+FCZ+uUizs1?=
- =?us-ascii?Q?xPKA9oITd+mlYfHfWwGiHrBoiMwmLdFNYiDbjdO28bfDB66m9H4bJJTke1gH?=
- =?us-ascii?Q?OOQnXKo0jBuvdOLr2FBwuzn6Kkks5Ehpyk+uQLANVj5srlOykvIOQrHftBD2?=
- =?us-ascii?Q?KZ4+Y+bvgxlqxWjmevvXaaBfuHd/AoRk5YvSKnACpX5MLZaZXAmrWaEfpbWB?=
- =?us-ascii?Q?W0nORFAwVCr6mtygdQ+7GCQg1Egjl0e32jm4KCl8gV5G6WSosMZmMW8rKzqo?=
- =?us-ascii?Q?r0fYOO6J06rRv1aM3UOhUmpKWoIObtFmEUdP5ObEu6/Qu3vpDhDzDCPjHBvV?=
- =?us-ascii?Q?M17A9b1o35/2hDkIRkOaHyaMVfH9rToY7BdgOZK9yng/Ut8696JiY2X5P+DU?=
- =?us-ascii?Q?+aVgSXAKvZZ+shbl/1Mb3YGtwY+HhyToFM7R7cTQmTFsu6ki5/R9M1ztV1gY?=
- =?us-ascii?Q?h2AWr4d7sLkXmfEXqshStUiC4Zv8feHrGhij3kVybA6keZYBrvJsjlrAUcrN?=
- =?us-ascii?Q?JPjZwD9bzvedzTnC/DIw1Aw6dMwhYBVt+6wzBV1yk7/P9bn3gHZAuh0kxkR5?=
- =?us-ascii?Q?pSRfaocVpbpqEl9LUrnvZN/NDNk+qZ/YKhBo7iAx900Y7e82p8Bju3aBt4Zq?=
- =?us-ascii?Q?AxmH5IdiRsWlsZ+7mJT9Woj49cq4mYdJCJwjs2VARMTgk8CUPKn+zde1o2Aa?=
- =?us-ascii?Q?/e+gaZTryySispcbRHaFRSDnd1lMtRhlNZYIxc1pyWWq++RHbBw7h0/xMx+m?=
- =?us-ascii?Q?hyDyE8Koxoiknz3AaI3c8xo8PGiXhrSriqxAw0gVLSjj0gI1m8+Hmve6dtLf?=
- =?us-ascii?Q?GxRIVZ08Q9skwbkqNmGHTSnryePMV3hM2AiDDI3+GaB0uTFfWSIMs361I3Fs?=
- =?us-ascii?Q?pK7n6mA58NOWAyFmRVzq28b9fBOivfEMGDqapFbWWCzLVsivR0Bb8qTLZ3Ri?=
- =?us-ascii?Q?o2DLJpMBSDSOe826d8hwDrvfjb2v04CvL1a+c7HZpNXPD5QpKYH491RgF3s6?=
- =?us-ascii?Q?aAstI2k9Qn0CBMm3Cu2o/yOcIxsoWlDFjty6SaggeiWV1ovUkfG8VG1FnCJK?=
- =?us-ascii?Q?qZ9vmEttSZoMveAGPkTCfvicXoDZ/qHmv+Ua7h81xxXuvK265tjosVkeFyC/?=
- =?us-ascii?Q?pO/8dg1O9uEIRnKXy539XOlMaoPaEYxxroxXPHk2g81iPzxl6gSopww+88/Q?=
- =?us-ascii?Q?/L9/WRn3Ii+KGJKrE2eE4HVPq3PwF0ClfQ/VlGW6EqR8STHB2Qg2MTmpMXnO?=
- =?us-ascii?Q?gbj0vHds6n+fwjbxkMsovk5JKcA8fv1SNfALqB+Ltvik3bkZsf5pyvxtMpAn?=
- =?us-ascii?Q?CyPmhXQ1XLPATahm6RQ2SQbWlDsiso5Nf0blVAC0aeVMfSwwiEOcC5iyjjou?=
- =?us-ascii?Q?TsOKhmXJnj+YWy3QaeK8N2cElWj4G2MhqwA97Rxz70lDyxmk6VGPZCimORkX?=
- =?us-ascii?Q?ivptJDQpfwIAQMJ911563HcvOmYD7xhriEitP3zMA/S7zJmkWlkRsUw3G8H3?=
- =?us-ascii?Q?IwU0CoznDGVG4fKm7Ft4l5266cm7Wud7cMMY?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 18:58:50.2234
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb0883be-9871-4256-9fab-08dd8686b691
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7863
+In-Reply-To: <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
 
-On Mon, Apr 28, 2025 at 09:32:04AM +0800, Baolu Lu wrote:
-> On 4/26/25 13:58, Nicolin Chen wrote:
-> > +int iommufd_vcmdq_alloc_ioctl(struct iommufd_ucmd *ucmd)
-> > +{
-> > +	struct iommu_vcmdq_alloc *cmd = ucmd->cmd;
-> > +	struct iommufd_viommu *viommu;
-> > +	struct iommufd_vcmdq *vcmdq;
-> > +	struct page **pages;
-> > +	int max_npages, i;
-> > +	dma_addr_t end;
-> > +	int rc;
-> > +
-> > +	if (cmd->flags || cmd->type == IOMMU_VCMDQ_TYPE_DEFAULT)
+On Sun, Apr 27, 2025 at 08:48:30PM -0500, John Groves wrote:
+> On 25/04/24 07:38AM, Darrick J. Wong wrote:
+> > On Thu, Apr 24, 2025 at 08:43:33AM -0500, John Groves wrote:
+> > > On 25/04/20 08:33PM, John Groves wrote:
+> > > > On completion of GET_FMAP message/response, setup the full famfs
+> > > > metadata such that it's possible to handle read/write/mmap directly to
+> > > > dax. Note that the devdax_iomap plumbing is not in yet...
+> > > > 
+> > > > Update MAINTAINERS for the new files.
+> > > > 
+> > > > Signed-off-by: John Groves <john@groves.net>
+> > > > ---
+> > > >  MAINTAINERS               |   9 +
+> > > >  fs/fuse/Makefile          |   2 +-
+> > > >  fs/fuse/dir.c             |   3 +
+> > > >  fs/fuse/famfs.c           | 344 ++++++++++++++++++++++++++++++++++++++
+> > > >  fs/fuse/famfs_kfmap.h     |  63 +++++++
+> > > >  fs/fuse/fuse_i.h          |  16 +-
+> > > >  fs/fuse/inode.c           |   2 +-
+> > > >  include/uapi/linux/fuse.h |  42 +++++
+> > > >  8 files changed, 477 insertions(+), 4 deletions(-)
+> > > >  create mode 100644 fs/fuse/famfs.c
+> > > >  create mode 100644 fs/fuse/famfs_kfmap.h
+> > > > 
+> > 
+> > <snip>
+> > 
+> > > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > > > index d85fb692cf3b..0f6ff1ffb23d 100644
+> > > > --- a/include/uapi/linux/fuse.h
+> > > > +++ b/include/uapi/linux/fuse.h
+> > > > @@ -1286,4 +1286,46 @@ struct fuse_uring_cmd_req {
+> > > >  	uint8_t padding[6];
+> > > >  };
+> > > >  
+> > > > +/* Famfs fmap message components */
+> > > > +
+> > > > +#define FAMFS_FMAP_VERSION 1
+> > > > +
+> > > > +#define FUSE_FAMFS_MAX_EXTENTS 2
+> > > > +#define FUSE_FAMFS_MAX_STRIPS 16
+> > > 
+> > > FYI, after thinking through the conversation with Darrick,  I'm planning 
+> > > to drop FUSE_FAMFS_MAX_(EXTENTS|STRIPS) in the next version.  In the 
+> > > response to GET_FMAP, it's the structures below serialized into a message 
+> > > buffer. If it fits, it's good - and if not it's invalid. When the
+> > > in-memory metadata (defined in famfs_kfmap.h) gets assembled, if there is
+> > > a reason to apply limits it can be done - but I don't currently see a reason
+> > > do to that (so if I'm currently enforcing limits there, I'll probably drop
+> > > that.
+> > 
+> > You could also define GET_FMAP to have an offset in the request buffer,
+> > and have the famfs daemon send back the next offset at the end of its
+> > reply (or -1ULL to stop).  Then the kernel can call GET_FMAP again with
+> > that new offset to get more mappings.
+> > 
+> > Though at this point maybe it should go the /other/ way, where the fuse
+> > server can sends a "notification" to the kernel to populate its mapping
+> > data?  fuse already defines a handful of notifications for invalidating
+> > pagecache and directory links.
+> > 
+> > (Ugly wart: notifications aren't yet implemented for the iouring channel)
 > 
-> I don't follow the check of 'cmd->type == IOMMU_VCMDQ_TYPE_DEFAULT'
-> here. My understanding is that it states that "other values of type are
-> not supported". If so, shouldn't it be,
+> I don't have fully-formed thoughts about notifications yet; thinking...
+
+Me neither.  The existing ones seem like they /could/ be useful for 
+
+> If the fmap stuff may be shared by more than one use case (as has always
+> seemed possible), it's a good idea to think through a couple of things: 
+> 1) is there anything important missing from this general approach, and 
+
+Well for general iomap caching, I think we'd need to pull in a lot more
+of the iomap fields:
+
+struct fuse_iomap {
+	u64		addr;	/* disk offset of mapping, bytes */
+	loff_t		offset;	/* file offset of mapping, bytes */
+	u64		length;	/* length of mapping, bytes */
+	u16		type;	/* type of mapping */
+	u16		flags;	/* flags for mapping */
+	u32		devindex;
+	u64		validity_cookie; /* used with .iomap_valid() */
+};
+
+fuse would use devindex to find the block_device/dax_device, but
+otherwise the fields are exactly the same as struct iomap.  Given that
+this is exposed to userspace we'd probably want to add some padding.
+
+The validity cookie I'm not 100% sure about -- buffered IO uses it to
+detect stale iomappings after we've locked a folio for write, having
+dropped whatever locks protect the iomappings.  The ->iomap_valid
+function compares the iomap::validity_cookie against some internal magic
+value (this would have to be the iomap cache) to decide if revalidation
+is needed.
+
+One way to make this work is to implement the cookie entirely within the
+fuse-iomap cache itself -- every time a new mapping comes in (or a range
+gets invalidated) the cache bumps its cookie.  The fuse server doesn't
+have to implement the cookie itself, but it will have to push a new
+mapping or invalidate something every time the mappings change.
+
+Another way would be to have the fuse server implement the cookie
+itself, but now we have to find a way to have the kernel and userspace
+share a piece of memory where the cookie lives.  I don't like this
+option, but it does give the fuse server direct control over when the
+cookie value changes.
+
+> 2) do you need to *partially* cache fmaps? (or is the "offset" idea above 
+> just to deal with an fmap that might otherwise overflow a response size?)
+
+It's mostly to cap the amount of mapping data being copied into the
+kernel in a specific GET_FMAP call.  For famfs I don't think you have
+that many mappings, but for (say) an XFS filesystem there could be
+billions of them.
+
+Though at that point it might make more sense to populate the cache
+piecemeal as file IO actually happens.
+
+I wouldn't split an existing mapping, FWIW.  Think "I have 1,000,000
+mappings and I'm only going to upload them 1,000 at a time", not "I'm
+going to upload mappings for 100MB worth of file range at a time".
+
+> The current approach lets the kernel retrieve and cache simple and 
+> interleaved fmaps (and BTW interleaved can be multi-dev or single-dev - 
+> there are current weird cases where that's useful). Also too, FWIW everything
+> that can be done with simple ext list fmaps can be done with a collection
+> of interleaved extents, each with strip count = 1. But I think there is a
+> worthwhile clarity to having both.
+
+<nod> I don't know what Miklos' opinion is about having multiple
+fusecmds that do similar things -- on the one hand keeping yours and my
+efforts separate explodes the amount of userspace abi that everyone must
+maintain, but on the other hand it then doesn't couple our projects
+together, which might be a good thing if it turns out that our domain
+models are /really/ actually quite different.
+
+(Especially because I suspect that interleaving is the norm for memory,
+whereas we try to avoid that for disk filesystems.)
+
+> But the current implementation does not contemplate partially cached fmaps.
 > 
-> 	if (cmd->flags || cmd->type != IOMMU_VCMDQ_TYPE_DEFAULT)
+> Adding notification could address revoking them post-haste (is that why
+> you're thinking about notifications? And if not can you elaborate on what
+> you're after there?).
+
+Yeah, invalidating the mapping cache at random places.  If, say, you
+implement a clustered filesystem with iomap, the metadata server could
+inform the fuse server on the local node that a certain range of inode X
+has been written to, at which point you need to revoke any local leases,
+invalidate the pagecache, and invalidate the iomapping cache to force
+the client to requery the server.
+
+Or if your fuse server wants to implement its own weird operations (e.g.
+XFS EXCHANGE-RANGE) this would make that possible without needing to
+add a bunch of code to fs/fuse/ for the benefit of a single fuse driver.
+
+--D
+
 > 
-> ?
-
-No. Only other (new) types will be supported. We have this:
-"* @IOMMU_VCMDQ_TYPE_DEFAULT: Reserved for future use"
-which means driver should define a new type.
-
-We have the same DEFAULT type in vIOMMU/vEVENTQ allocators by
-the way.
-
-Thanks
-Nicolin
+> > 
+> > --D
+> 
+> Cheers,
+> John
+> 
+> 
