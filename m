@@ -1,134 +1,144 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDD21AD3E1
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA60118952C
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745859623; cv=none; b=i3QMw0O9KE1zCi14dDEumEHPLnKOdOQ/OQ3tMgjAH6R3UFve/E6qdT9NoLq+Ev3DDwvIZx3stxLpOvWaDveMDJeOgHVu5sGzQwrZuV9SzubYLx+ANT5JJ0ZshezWQr8PvMzm8l0BX5neLYyQI3HXmKupYnIiMWrWtMFuY8h7emQ=
+	t=1745859643; cv=none; b=bbvweSz27Fh8XvlngBh6Vx+zPHsOdlURNGNr77wV438VqDKvorSYSJkCjadmi4wO8X7+LxR2Vjlvx/Ll1Msjryu17NkbuYR2iJ3Wy4RlAz1OxD/shHR8hKPSJ2pNcOiWSTm+DTYpF1rK7Dr+3aeKEKG/6w+0D+aOoRonwwtOni4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745859623; c=relaxed/simple;
-	bh=w4x84lODS+QAHRN8EMLjw/p/t7a91E/LLtSBryDL7eI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unFiuEaprg9c2nEEgx3ZbUrtfsXtNBgeMnkfbJ4l68B1BAaqppvm75JxbSTJG1aQ6wkKWFHvCBUH1H6ftmD+Lm2xf18kdGdS6M1Chx5qEaZLwnvPQPGyoLWX223qIxGWSqx4TPs9liBgnQXNiz/hLzqMmDW6oOscSqjfujFzSHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fQkUyCoK; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745859643; c=relaxed/simple;
+	bh=uqa3pUCCBhc/8XYYDK50VJ8Kh8SjO9GYpSwwxAaDr8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ce2L861nxlK19qo7JNzJ/XgkuakW2BFQM64cP71c4LwVkcLj/So1kOxvR0CpWqw5TalnKqh+zK5gELR6BpduYmvoddI7THN5F+B5m/AoRlBMLhDU8QqyrkqtS76XaTrQ504mZ8N4VSbU+z9R+NlDWCmwSqLQA1mpfpW+DgNH1dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PqJKqkVa; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fQkUyCoK"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c14016868so4952222f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:00:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PqJKqkVa"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224191d92e4so55655225ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745859620; x=1746464420; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g8PGEVntBYwExNM5jR5HyOMl7n0XplmYVb/kJff+sOo=;
-        b=fQkUyCoK48BIxU+avdaTls9h8P1nEwfJ2ILef9Y4Q8ccniS6aEaQaCFEg9P6IJIT+D
-         E54jsjJN0sw7YWqvbmcWveSbp4mlce/3+imyOzFIdD1XiaMQnRuA6zImN2c6K0br44Fx
-         BGLTiBReeE7wnKr1ji1cCeS88+DpBKzIt/fa9vhJUxbCd2EzmFk/cScXADrE49ZF/uKO
-         iLNOIp2pIzH3HyOLT2NRi1cHXItGV0kOMul6baVZjBha3pEpcHHaDPO8tIXb4ZpZuQKn
-         Vf31G7GCcX3QyAEqPjZyV2guByoSVDoKkjhoTt5QzPshksdN7Nd/6w04udeO5djRz8wx
-         eqPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745859620; x=1746464420;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1745859637; x=1746464437; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g8PGEVntBYwExNM5jR5HyOMl7n0XplmYVb/kJff+sOo=;
-        b=LRegSjLx8RS4jKWGCqa7Klliiy4A+42wS+/o+o8n+ywsCQZYo7i5jB8RxRhvDHY9Cr
-         ybunr7kVd499infGw1H2CiDy3TZX1vjvfY8nK0qbBHZ+H06tJWCIM7Th/husPSmpGy6I
-         epI8YlQsh9UXDNFqHw8V5UrRA1uEUxwFx0V/3GCqbFbgGM9McBS2dJmV6PoiLtjmNLYv
-         LICKg8y3tn+V4yUVrzfholvVZPeuz1d/bBhl8dgwudKZH/LEyayj2p8GK6TwAsGxWqJ+
-         tVIl60QWU88EfyYNQnpky24ZxBNxPOMopIJNpZFVOF9W2HiKqmHR4CDOBpQ4EFp7DFzr
-         7mBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZvm+u/fXF0gXPyzFjCOP5+cyWOHiirRd7lF78hZs19IpxCvyZPjLAW8MJxaBrrDeH4MiwtL+fyMgzvJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhABVrfwLU4Z3LW+n/mW1rVd6xZfXbEmQwcFoB+6NJMaoR57Pv
-	4W8YxIdfq/a5s48tUy+P2bJTiHHbwR6ZW74V2gkvYX1yFCW9ePshmgdbcf/Wy3U=
-X-Gm-Gg: ASbGncsABuh+faVUHvzLlIyorT+XxiMOSu+PbSwI9ZiaRZ7iVkkPyhVSMGjDwCxUqgb
-	ZXnJQRzM7DveREERovi8YswTGorDI6d5wbM+9ugyq6qEcb/IxNBn4geBFiOJ7ip/zGpjadt0mJ7
-	zjg3c9VijO6obBHU9n/YN5cwHJI2wfN/Yz93w5mTXUWCHv4WEfvbUaD/Z2Z/MT58zUbhAt9ytB9
-	hFXxd/bPVnh4BVMgpqWzX7W3+nD8hpoSY2OzICo9pQlSmVebZi9WiBgnHuaFBt5QJ+oDCeAe7vT
-	xABhiizmaPZ9SeHIXUZdCreYjqaSh4wnItg0B6N50i/ncdPW0CNOgNS9ieuM9BmxCiEfmd1Uoj2
-	4yvgeJKQ=
-X-Google-Smtp-Source: AGHT+IFVZLb8kJuqkDFjP154IUhR+bkr5kl34F/44rfPGoLzIVhDYQRN05232S1PIENpaWF7X00Ssg==
-X-Received: by 2002:adf:f048:0:b0:39c:1efd:ed8f with SMTP id ffacd0b85a97d-3a0894a1978mr411147f8f.50.1745859619771;
-        Mon, 28 Apr 2025 10:00:19 -0700 (PDT)
-Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a089edeca6sm183876f8f.40.2025.04.28.10.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:00:19 -0700 (PDT)
-Date: Mon, 28 Apr 2025 19:00:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] rtc: Fix offset calculation for .start_secs < 0
-Message-ID: <yhcdgillcnlwditdmitklbhkfd2lh5on7ibvuqdxnhricjoele@c246pnf4uc42>
-References: <20250428-enable-rtc-v4-0-2b2f7e3f9349@baylibre.com>
- <20250428-enable-rtc-v4-2-2b2f7e3f9349@baylibre.com>
+        bh=uqa3pUCCBhc/8XYYDK50VJ8Kh8SjO9GYpSwwxAaDr8Y=;
+        b=PqJKqkVaUBkOfaOXpAuhS7GmHevH3FPLw7w9UP4+cxI/eX3JPMaBZlnaDR4z6VXLjr
+         2lkJrBAPptUHyglcin+rWmxIoOclR+ETKra7Ir23N+20T434o9IsXDS7MwZFZtgohs2G
+         4gsQQ6YEbFeZgxM3FCZ4A5s64zFTwehN4PJcA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745859637; x=1746464437;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uqa3pUCCBhc/8XYYDK50VJ8Kh8SjO9GYpSwwxAaDr8Y=;
+        b=sjW50XDVDaM8gS6soD3i2SUK2T4Ifajg0kpHZVY5YV88GUJBgf3e+KtZkXfm/S3alf
+         DxwkzjPaD1pLQAYAQarw3y9CxGbH6/6c/v4WVGgTcPvuob8mYzA4SOAmI/dHxY1VYYmY
+         2D7oW230ztCKzZdGPfwKdJ1v5TEwJsEnnpkwvTFdv78O5XZYhNJYfB+l0L2/lGVor22J
+         7l1T3h8ljSmAYYLjD0jHGBey77lWKQdAAH65BRdWyrKRIJ/c93y5GQtJf/HuFrtM9SFX
+         q1bDaMjDcFOSKwax5CxVNmUYL5ZvGtcYU9VwJhsj0QbsJEoBaZt4hnVdpWZj/9JzeP/T
+         DA4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWlBKrrQbLA/uy3MGORD0GPdqSWoNcjzqKc9wo2obEvIXjnfpj3WoDVzESa9a2Fxhq6r0SNxXnCj4Q3jjY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKjjYNX/KYvrXisRLc+JqNj1x64i+KY6MlXqA7C1TqPnsxG7Ab
+	GhwkDhXRuS6Vn1iUDu5TYwm2+poh22MuzE7vqu6Ue7tV/FSBWDJmA5t5B0uvbrOoQ3pLnYxrsDc
+	=
+X-Gm-Gg: ASbGncsGbZr9YpZ9KY0p6YRcEMylmuF0+r9PcrcdaQBXrBTqoYLE9UDEB5qOdUwXHyq
+	Ym9J7AghX1BVXYW6OU+jWBn2ZBYagTCs4fHb67S9Fr+ocmwwB4go52hXAB7gds3rg7n74EKRjs9
+	Ma4X0LtZai/pW5+tgcL7KPFkub14YN08tI6pshNW9RoPLg4B7CdqdgMaODW6wP/bJyoxAhbWR80
+	mcE8v0yL/y6/3cyEHbkc03g8X6TLaOWfW3Synd0UM7FJKacp0W8IwR8qO8Q+kfrQkb9H7RyqSZc
+	6dyAUvBaxFhcvEFSd4j2CMYh1AraruEuJx6cFnKeqX+Q8Gfs9Qvuf8SylhkL7I76XAYZ04BatJe
+	oFUMB
+X-Google-Smtp-Source: AGHT+IGlToMiw/O/wET0RnQItLtD67nCUIDA3fbjyrgO58jd/DubrxjHsA10sRHVAGQO0vloLWtqig==
+X-Received: by 2002:a17:902:e841:b0:224:f12:3735 with SMTP id d9443c01a7336-22dc6a09655mr142751655ad.31.1745859636736;
+        Mon, 28 Apr 2025 10:00:36 -0700 (PDT)
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com. [209.85.216.48])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221cbbsm85167795ad.221.2025.04.28.10.00.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 10:00:33 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30828fc17adso5060673a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:00:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWGX1HTmgvzXJIc7gC6yNyoytM2seUPu51XQ5UxgYlon0rVco7jm5l77M9pkV8VPmBG6xIlkDAEGrv6g88=@vger.kernel.org
+X-Received: by 2002:a17:90b:58cd:b0:2fa:15ab:4de7 with SMTP id
+ 98e67ed59e1d1-30a01329af0mr17554015a91.12.1745859632801; Mon, 28 Apr 2025
+ 10:00:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ja36ara4ddswchsp"
-Content-Disposition: inline
-In-Reply-To: <20250428-enable-rtc-v4-2-2b2f7e3f9349@baylibre.com>
-
-
---ja36ara4ddswchsp
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
+References: <20250411092307.238398-1-j-choudhary@ti.com> <CAD=FV=Vkj_YnmYnDF3K+eYZ5M4fFPgGdmryHS8ijZOLZWbt6ZA@mail.gmail.com>
+ <d6e864d9-53ea-44d3-832c-55a6e58ac6d3@ti.com> <526c1714-95f1-49ea-9bf1-a778e00ad6bf@ti.com>
+In-Reply-To: <526c1714-95f1-49ea-9bf1-a778e00ad6bf@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 28 Apr 2025 10:00:21 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WqKawr-e4riTPYfaOOW=pfsFQ9emQSqr=OB=hYNV9EQg@mail.gmail.com>
+X-Gm-Features: ATxdqUENHvp3B6JI9Rchu8sHVmpuke2Fbz8JeoXha2ori6afQDg1Oe3Ku5_NCjU
+Message-ID: <CAD=FV=WqKawr-e4riTPYfaOOW=pfsFQ9emQSqr=OB=hYNV9EQg@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Add necessary DSI flags
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 2/5] rtc: Fix offset calculation for .start_secs < 0
-MIME-Version: 1.0
 
-Hello,
+Hi,
 
-On Mon, Apr 28, 2025 at 12:06:48PM +0200, Alexandre Mergnat wrote:
-> The comparison
->=20
->         rtc->start_secs > rtc->range_max
->=20
-> has a signed left-hand side and an unsigned right-hand side.
-> So the comparison might become true for negative start_secs which is
-> interpreted as a (possibly very large) positive value.
->=20
-> As a negative value can never be bigger than an unsigned value
-> the correct representation of the (mathematical) comparison
->=20
->         rtc->start_secs > rtc->range_max
->=20
-> in C is:
->=20
->         rtc->start_secs >=3D 0 && rtc->start_secs > rtc->range_max
->=20
-> Use that to fix the offset calculation currently used in the
-> rtc-mt6397 driver.
->=20
-> Fixes: 989515647e783 ("rtc: Add one offset seconds to expand RTC range")
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+On Thu, Apr 24, 2025 at 3:47=E2=80=AFAM Jayesh Choudhary <j-choudhary@ti.co=
+m> wrote:
+>
+> Hello Doug,
+>
+> On 17/04/25 02:40, Jayesh Choudhary wrote:
+> > Hello Doug,
+> >
+> > On 13/04/25 07:22, Doug Anderson wrote:
+> >> Hi,
+> >>
+> >> On Fri, Apr 11, 2025 at 2:23=E2=80=AFAM Jayesh Choudhary <j-choudhary@=
+ti.com>
+> >> wrote:
+> >>>
+> >>> Enable NO_EOT and SYNC flags for DSI to use VIDEO_SYNC_PULSE_MODE
+> >>> with EOT disabled.
+> >>
+> >> Any chance you could add some details to this commit message? Your
+> >> subject says that these flags are "necessary", but people have been
+> >> using this driver successfully for many years now. Why did these flags
+> >> suddenly become necessary and why were things working before?
+> >>
+> >> I'm not saying that we shouldn't use these flags, just trying to
+> >> understand. I actually don't know a ton about these details in MIPI,
+> >> so it would help me :-).
+> >>
+> >
+> > Definitely.
+> > I will add more details for the commit message.
+> >
+> > For more context here, I was working with cadence dsi driver for TI
+> > SoCs. So to be more accurate, this is required for CDNS_DSI
+> >
+> > I observed other bridges like lt-9211, where I have seen such flags
+> > being set for dsi-controller by vendors.
+>
+> Upon testing with modes other than video sync pulse mode,
+> I found that with the upcoming fixes in cdns-dsi-core driver made by
+> Tomi[0], this patch is no longer necessary.
+>
+> [0]:
+> https://lore.kernel.org/all/20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ide=
+asonboard.com/
+>
+> I apologies for the noise in the mailing list.
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+No worries. If folks are convinced that adding these flags makes
+things "more correct" I still don't have an objection to landing the
+patch, though the commit message would still need to be clear about
+why these flags make things more correct. I'll leave it up to you. ;-)
 
-Thanks
-Uwe
-
---ja36ara4ddswchsp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgPtB8ACgkQj4D7WH0S
-/k4BbQf8CaVnrNVi6ALQx0pdjBVRl4aZiV8PktMUnlHkY8JSNIN278Iv1Mutq7Ed
-wrgvm+tuqXDlFvKXApQnnRnokZVh0uYQ18ES80Qu/YuSzp2MantS38qlFBNOQ8ns
-Xwg3q2+VrwFjgMRTKuK+rwyjpUXt8HN3TFiy1bapwvQMHFXoCCHdKbYxOGVRPUrv
-0ztn65TRmEKjipGpQr/E7g1xiNMVKXR0jfKlUi2U5fM/TEoK6XLq+tfssgvseNNM
-Cas0rfDR/ifOqCWuoyUronLpRdRpCP88k/29K1riZzRUbW5bWlbmgZjbXKW1VjrZ
-7xBwGCBsnrfHdQMO0XXap0jNbpybEQ==
-=MS12
------END PGP SIGNATURE-----
-
---ja36ara4ddswchsp--
+-Doug
