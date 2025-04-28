@@ -1,122 +1,178 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700DE25E800;
-	Mon, 28 Apr 2025 11:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4C02641F8
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745839529; cv=none; b=e9hz+nBbfhU9JKcFzr4ZN2vc7jmPj1UFQNUKx5434GM5Co/IcxW5Nb4nB0PDRBBWX9LtTNUKgI3LSg4uouagfFECmbxvML0OonK5xHZvW/ofcHTD/mdDDLFy52vJBMAcdREf/waL7XUNgbFPMBUQDvjVk//nAJgn3PD3y/A6GwU=
+	t=1745839570; cv=none; b=ChGbNbJ5mx8viXoNZJKpSMJx4i2hUnzM/Rm1iNpEVOkZMq+iUlLGCNvtjyS6+OaD6uFpD4XIQD4SCiNMnKjVk+KvFX3rSF3TmZlPERCuM2p+YTQu307vmeCP8hux8miq5sTI6sEv0gSCZifi/KL+bTd/socQTpihc9s3L3kYzmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745839529; c=relaxed/simple;
-	bh=MItWLrljEADyLxdVtRlTVGsKMlCfzsO96jbvdW/cImE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GNvpN+GuQF0sODbRFMb7xazs/VNxmFw1U5XN/HdpEpFtID3WWwUCARgZMbc3dBAiJgnSK+NSFjDTG5H5sVEOUr9KLyQP178txje6ys31DUcC55fNAaYAect+M5j+8UVJEukTcAeuN61Smbh9God1KgEM6XOm/GsIvJvJp7M7mf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=K18NFg5D; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745839570; c=relaxed/simple;
+	bh=YuK7JoVFw4BkBRnm2Ypzhevv3vdRGeuSRVhD+23HyZI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=lJxYFJvIHpnkRhnoA2Al4yLAGS/cHVuZNw7zif935KFrf4cXvUH2n4youJ1dRmL4qwICt/lCd36kC2ynRfyTFGEOkkc9oAfD3elTwtMWZwiund2rPm+7eLBe5BZzMsOz0YXy/bbZGa1bWAHRA+yOP0hye52IoPaJooWIGaqJy8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=1frXG2yA; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="K18NFg5D"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 94F80475;
-	Mon, 28 Apr 2025 13:25:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745839517;
-	bh=MItWLrljEADyLxdVtRlTVGsKMlCfzsO96jbvdW/cImE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K18NFg5DbwdGQoCvHiF6X3A7bQxHaHwR8tm6lKf0zIjdDIkVZn07YI81vs0jwJxKR
-	 WO3aDZyN6/1Js/L4m1iRR02AKeoWutt1Ns4n/Z9et9P9sNxdblSS7LmaBUln8z+hrK
-	 atLCRDdX5kV1mo/eQqTx+stLF/UO+8mtmhJiaQ/8=
-Date: Mon, 28 Apr 2025 14:25:16 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
-Message-ID: <20250428112516.GG3371@pendragon.ideasonboard.com>
-References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250428095940.GE3371@pendragon.ideasonboard.com>
- <CA+V-a8taFdmCgiUAwmDG93OA+P9UH-FEw3PeMFW4sLQ2KPnEPQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="1frXG2yA"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acbb48bad09so861690566b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1745839566; x=1746444366; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YuK7JoVFw4BkBRnm2Ypzhevv3vdRGeuSRVhD+23HyZI=;
+        b=1frXG2yA/J31+DxBgvJYyVLUi97KnZtGX9Zk/M3Bl2snVVNXDWQXuc6XG3V6WeUx7B
+         f1U5aDtJKWtiiQRdD4VvYbkD3B+SAt+npqBST1wiL0SNUEVcS1HY7NLDVR6Jzut24wxb
+         gCPESrGCf4WX1/zJLBf38tSIbZbM/8gN1khX0H0GqndfcvVvFqRO+iBKbo3UZit/FLJp
+         R+eFXaVLc4tapFpZXpJaAvS9edbIrVM0L3MCmRjZokCgHuQuvKwZU1jXQemUZ/g3SLNt
+         ylJFpLFLYCDqev6z9amfbQw+GN96I9FGfWSNRZtrGzH1wyv11oJVrqBJVrTF4F3WIdqk
+         YfEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745839566; x=1746444366;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YuK7JoVFw4BkBRnm2Ypzhevv3vdRGeuSRVhD+23HyZI=;
+        b=xH86/eNuXvtDAuHVsstOtkffoJFwVzTDxLQ+jsFsFK7W5dr3SyG58/YRtiyYdFBxy8
+         nMSX0Wigxc5+x/K/yYWxFzdhRGN3XdkWQOc6RPr5BHUR9r4MoQr9leQeM7PUZT2ckNMw
+         TkA+vVE4OGaZE6EImxGuzaDoJxilkGc9tu8IpWzMsRkgqMSK0MMR8HKmCcDrmT/DjI7m
+         s1IL5GgeH9PMM1Ol0v48xR/B0MpP1fx5LqMZJkXsVwKCPWMdxbZ4Qbo6RkegOa7Bj/lF
+         ndnLplzzdbclCBwmg9OwoRUys+vvJWYjLotDj4NMemEYmvlUvsURjrQ6/Lp/ntUM4vbQ
+         3z/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVW5dgVQ0o4NLDcIzBCp0znAErayVAaiSMY562x+5nlZn/hJHry6nmCHdwEAgsJ9AbQKC1Y+tVJcNnEv2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6TmC5QCq3557wEtMYjV/0ECgnnFo4dwSG2n504ECxUzWsr6CJ
+	XFZrVrmxm4zex8UVLpdf3jVXW49HlcsMNRFMDq4SUQZfJwmrkEmwuIxV4pywfFk=
+X-Gm-Gg: ASbGnct72B/WMFwn0IvfedAJ/Uz3fXu1KjxPXM8mQmufIYykOANzcgnWEtpgeMn/li5
+	EW1MOmpHjHCA1wLEXJAGd49mZpdULCzC6JFmPhDwPdrXLBoCEOU5m+vQxMrtMzMfRX37VEEOtVl
+	KC9CEjg/4DXWOXkoV/Ql7rfW51O1zgOeU2SGuuFazUnNdto2jrJ9qxv9+oRRfgdqB83+RYtAWiP
+	72rT3TpMqGNtppXTvdrwBj0LPs6N7WqTv3tAvPTJ7ae+ChzMCgeCTYBfhutk6cHiiiKFXhzk1B2
+	smHHrBR3OjkaSbxUyQ2QuYzMPaLJ7DCG/r3usKGoe/rY4zvFqIVm9yZ1s2nuoOWKkHxc4GoQb79
+	WdhlHSdnTYg==
+X-Google-Smtp-Source: AGHT+IGT+8m3xK7xabSZ29IvBc7+P0gS4DksBTS1Czdm2SNSBAyYHQHsIegSOcFqAFzVvUJUQUDxDA==
+X-Received: by 2002:a17:907:7e84:b0:aca:d83b:611b with SMTP id a640c23a62f3a-ace84aad97bmr827114066b.43.1745839566451;
+        Mon, 28 Apr 2025 04:26:06 -0700 (PDT)
+Received: from localhost (31-151-138-250.dynamic.upc.nl. [31.151.138.250])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed6b009sm609885766b.138.2025.04.28.04.26.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 04:26:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+V-a8taFdmCgiUAwmDG93OA+P9UH-FEw3PeMFW4sLQ2KPnEPQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 28 Apr 2025 13:26:05 +0200
+Message-Id: <D9I8H4AII5EG.3QKI8U79KC8SO@fairphone.com>
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Ziqi Chen" <quic_ziqichen@quicinc.com>, <quic_cang@quicinc.com>,
+ <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
+ <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
+ <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
+ <quic_nitirawa@quicinc.com>, <peter.wang@mediatek.com>,
+ <quic_rampraka@quicinc.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>, "Neil
+ Armstrong" <neil.armstrong@linaro.org>, "Matthias Brugger"
+ <matthias.bgg@gmail.com>, "AngeloGioacchino Del Regno"
+ <angelogioacchino.delregno@collabora.com>, "open list:ARM/Mediatek SoC
+ support:Keyword:mediatek" <linux-kernel@vger.kernel.org>, "moderated
+ list:ARM/Mediatek SoC support:Keyword:mediatek"
+ <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+ support:Keyword:mediatek" <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v5 0/8] Support Multi-frequency scale for UFS
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
+ <D9FZ9U3AEXW4.1I12FX3YQ3JPW@fairphone.com>
+ <df287609-a095-4234-b23b-d335b474a130@quicinc.com>
+ <29c3852c-3218-4b42-bc41-75721a95fccc@quicinc.com>
+In-Reply-To: <29c3852c-3218-4b42-bc41-75721a95fccc@quicinc.com>
 
-On Mon, Apr 28, 2025 at 12:17:54PM +0100, Lad, Prabhakar wrote:
-> On Mon, Apr 28, 2025 at 10:59 AM Laurent Pinchart wrote:
-> > On Mon, Apr 28, 2025 at 10:52:08AM +0100, Prabhakar wrote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Simplify the `rzg2l_fifo_empty()` helper by removing the redundant
-> > > comparison in the return path. Now the function explicitly returns `true`
-> > > if the FIFO write and read pointers match, and `false` otherwise, improving
-> > > readability without changing behavior.
-> > >
-> > > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mountain/
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > index 067c6af14e95..97faefcd6019 100644
-> > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > @@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
-> > >       if (amnfifopntr_w == amnfifopntr_r_y)
-> > >               return true;
-> > >
-> > > -     return amnfifopntr_w == amnfifopntr_r_y;
-> > > +     return false;
-> >
-> > So the function always returned true. This seems to be a bug fix, please
-> > add a Fixes: tag. The commit message should also make it clear that
-> > you're fixing an issue, not just simplifying the code.
+Hi Ziqi,
+
+On Mon Apr 28, 2025 at 10:06 AM CEST, Ziqi Chen wrote:
+> Hi Luca,
 >
-> No, the function returned true only if the pointers matched;
-> otherwise, amnfifopntr_w == amnfifopntr_r_y would return false. I was
-> simply removing the repetitive pointer check and directly returning
-> false at the end of the function, as we can be certain at that point.
-> Hence, I did not add a Fixes tag. Am I missing something?
+> We made changes to fix this special platform issue and verified it can
+> fix this issue.
+> Could you help double check if attached 3 patched can fix it from you sid=
+e?
+> If it is OK from you side as well, we will submit the final patches to
+> upstream
 
-Oops, you're right, my bad.
+With these 3 patches applied the errors are gone and I don't see any
+UFS-related warnings/errors in dmesg anymore.
 
-> > Personally I'd have written
-> >
-> > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > index 067c6af14e95..3d0810b3c35e 100644
-> > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > @@ -345,8 +345,6 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
-> >         amnfifopntr_w = amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
-> >         amnfifopntr_r_y =
-> >                 (amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
-> > -       if (amnfifopntr_w == amnfifopntr_r_y)
-> > -               return true;
-> >
-> >         return amnfifopntr_w == amnfifopntr_r_y;
-> >  }
-> >
-> > but that's also a bit of a style preference.
+Let me know if I should check on anything else. Thanks for the quick
+fix!
+
+Regards
+Luca
+
 >
-> I wanted to keep this consistent with the rz3e_fifo_empty(). If you
-> prefer the above I'll do that in v2.
+> Thanks a lot~
+>
+> BRs
+> Ziqi
+>
+> On 4/27/2025 4:14 PM, Ziqi Chen wrote:
+>> Hi Luca,
+>>=20
+>> Thanks for your report.
+>> Really,=C2=A0 6350 is a special platform that the UFS_PHY_AXI_CLK doesn'=
+t
+>> match to the UFS_PHY_UNIPRO_CORE_CLK. We already found out the root
+>> cause and discussing the fix. We will submit change to fix this corner
+>> case.
+>>=20
+>> BRs
+>> Ziqi
+>>=20
+>> On 4/26/2025 3:48 AM, Luca Weiss wrote:
+>>> Hi Ziqi,
+>>>
+>>> On Thu Feb 13, 2025 at 9:00 AM CET, Ziqi Chen wrote:
+>>>> With OPP V2 enabled, devfreq can scale clocks amongst multiple frequen=
+cy
+>>>> plans. However, the gear speed is only toggled between min and max=20
+>>>> during
+>>>> clock scaling. Enable multi-level gear scaling by mapping clock=20
+>>>> frequencies
+>>>> to gear speeds, so that when devfreq scales clock frequencies we can p=
+ut
+>>>> the UFS link at the appropraite gear speeds accordingly.
+>>>
+>>> I believe this series is causing issues on SM6350:
+>>>
+>>> [=C2=A0=C2=A0=C2=A0 0.859449] ufshcd-qcom 1d84000.ufshc: ufs_qcom_freq_=
+to_gear_speed:=20
+>>> Unsupported clock freq : 200000000
+>>> [=C2=A0=C2=A0=C2=A0 0.886668] ufshcd-qcom 1d84000.ufshc: UNIPRO clk fre=
+q 200 MHz not=20
+>>> supported
+>>> [=C2=A0=C2=A0=C2=A0 0.903791] devfreq 1d84000.ufshc: dvfs failed with (=
+-22) error
+>>>
+>>> That's with this patch, I actually haven't tried without on v6.15-rc3
+>>> https://lore.kernel.org/all/20250314-sm6350-ufs-things-=20
+>>> v1-2-3600362cc52c@fairphone.com/
+>>>
+>>> I believe the issue appears because core clk and unipro clk rates don't
+>>> match on this platform, so this 200 MHz for GCC_UFS_PHY_AXI_CLK is not =
+a
+>>> valid unipro clock rate, but for GCC_UFS_PHY_UNIPRO_CORE_CLK it's
+>>> specified to 150 MHz in the opp table.
+>>>
+>>> Regards
+>>> Luca
+>>>
+>>>>
+>>>> This series has been tested on below platforms -
+>>>> sm8550 mtp + UFS3.1
+>>>> SM8650 MTP + UFS3.1
+>>>> SM8750 MTP + UFS4.0
+>>=20
 
-Up to you.
-
--- 
-Regards,
-
-Laurent Pinchart
