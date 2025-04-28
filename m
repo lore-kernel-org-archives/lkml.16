@@ -1,440 +1,218 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B781F22FE0F
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A4D2356BC
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745828104; cv=none; b=HmviYPB+6Ipk/VjQkpzMGsJ+R9t/b50sNRalpChtYcTgO3/CZhcMuZZDNA+CkdyReimpvFcGGnzl0J10ovBPCwSCNtDdgBjEvv+bOHNSnGvmj9ehfG6oLLK9QP6kKpPEHDhbpx2sWO7s397idpE+depMjqwwFdeCsDFqVFMqNKc=
+	t=1745828294; cv=none; b=tKuVABwLuRiei1SC9h/GpaloGUwuNcrq6PLCjOfbOBm8SajpIngxGRKCqeuwuifZatEZicQ1G0FbN1u3ENv4zTmzK7kxsC2mubI4TgQB+exeQA7WL6K+vGGGQKMfXoyGxpMH1FAmWX65fADWdRIq2ahgAKVH6bjdwjmglrRrllA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745828104; c=relaxed/simple;
-	bh=smaZaaYoXzeniFwBXuqTrpZ3qBD+3RZvqsIZoPcBYnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sz9snkxewCART1WXhh86bU5DjhKrRj48wmWucxF1s0I1PQbz2M15xjnzhD6Wyby1o77PlcFB//R1xqRAqpmyMMIJyt1X2wWr9a4r1c7fGjeNpGEv+N+RRtK15xi0xAYTJuLA3DXhj9fXUozemrrL1l+2t8hPs9xbQeP6LiPVpQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mWdLVnC4; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745828294; c=relaxed/simple;
+	bh=5MTSD89uQLdxjOEDGtXfl6lZjRZyJgPaZgvbDOijRMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AfDtf2Kmuz3Ftv8Hrfd5pRu02Q9hLLIfm54w5b9uTicHEc4xB2cgn85bjIx1Nbw/OFnj4A5Cz4mL3NQ519raBjO5Yuf9r3NKIoJlX/bxkVdt+tBq+rUaR2uwv+DFhqpizI8v+gO/ot/MmYrRowFYkUCb2Zac5SCA937mw5HyQQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XLXd+Bzg; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mWdLVnC4"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c76a1b574cso1122894fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 01:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745828101; x=1746432901; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CjLKLWPVIix6Lq3CRuHZgmalj80BDZ10wGlvfmzu2jw=;
-        b=mWdLVnC4WqsrYWdgWZrmaZ4wvVTatWAYap5JTfjYcKv3CTzmOaXXcqbflnltrnZviB
-         e5q63O/BXVPaTxfJxVYP4JbLnq7noTOB6UUm11jQA+3oBT9Wmp2mwHLkmIw3PrczjpPq
-         xzynZASE90PFw6Br9wdE0gx5AwxX8cubnkjC8CnV5jD5eMuiy0L4hBJJM5mwhRf7DsHJ
-         p7TrLZQHL3HxNg1rhEPGUuHKuXeQnkUWje4VI8SP2x60ssvmuaDuQY4e/NuTmsvbSL8K
-         kIQdzICMt6T7uYIaX7Nl88MYhKCJeMhh+iG04iS/+svPhR1C0SNn8KkHyzi+UgmhE2Iv
-         iMEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745828101; x=1746432901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CjLKLWPVIix6Lq3CRuHZgmalj80BDZ10wGlvfmzu2jw=;
-        b=okn+ucUP3fDOSQJc9mN4oG/+WDKPhS1qvo73PXFZDCy8ELUkkAG3oCNxF3wZzQmSmA
-         P1kSe1pvjYk38WxvLSw9cx/j8I22EIjtdLAb3Zfj5l32EUjsZ47phNSdz9xemyLxXShZ
-         M1H4e+qo97wqYjVa0wO8RkHHYHymtByoGkbbVadtWvZg25q3MkdB+u5PEjeAHGGcrnOk
-         V9iVcGrQwIfrvFID5uPzREUKdi1d7m168r1ybi7kMfu+VlJbXSDKgZHUUd5HRoaTxAUy
-         XLMzaATNIAWPlvZU+F/FgubfmL3fCzEUOG7pPhRcikkzLrdC04sIFOSoC7TgKvic/wEs
-         kKhw==
-X-Gm-Message-State: AOJu0YzqS4Y6Ohd1o04T8Y70eyIMnW7BX2U9sM3tk50eeUZzI2zdDh5z
-	I5LuKaKMgN8HJHo4dqUECwpsIK4OAN1i0EMiiE/w9SLOE1vG8mbOnO66X0kXRHodpcAAzOv7kcX
-	SVKFpbASCcA/jmjTvRl402ZBAZ5SSDrihaBhR/A==
-X-Gm-Gg: ASbGnctXhWbFn2BydtInkP+O56YxJSy2dmhpWoYWlTTpFTbQgjk7cSzzfRODH+lw3bR
-	tqDdwFfGJdDyBcok0nHmiBrwI4ikGaMpgCzmDY5Q3acadUYDMouDiwT4mBwutfBPJiFA1eYBEXZ
-	dB8IZo3TRX3ood92oMHCLHPYM=
-X-Google-Smtp-Source: AGHT+IEWtlpQOJjftCm+n3ouabVHz54n2qgyLCvi3RwihIEpBbgC5PkDIay7d9OERLr+OtQPUr9HF2lFg7zlk9MOBYo=
-X-Received: by 2002:a05:6870:890a:b0:29e:6547:bffa with SMTP id
- 586e51a60fabf-2d9be5c5aa0mr4238130fac.21.1745828100541; Mon, 28 Apr 2025
- 01:15:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XLXd+Bzg"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745828280;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zT6mOl0s4GCyENEa7GwphEh7NFPUZucu05UFLnp5u20=;
+	b=XLXd+BzgGwZWzqC4NrSvNdilihWJmLSJvnIwaG7PtmMLU8kq9oWV1hmniFuqslGUpQS6LP
+	ycoXbrc9s5XTHqgo4n5v3BxQtSyDSNO9dQ/i/KtkHfhvTxdgkAZJlMUigXDXYuwGr/1gF4
+	nDE1YTkTuz2KTmzVLPTbcljqUehaZBg=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v1 0/3] bpf, sockmap: Improve performance with CPU affinity
+Date: Mon, 28 Apr 2025 16:16:51 +0800
+Message-ID: <20250428081744.52375-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404143215.2281034-1-jens.wiklander@linaro.org>
- <20250404143215.2281034-5-jens.wiklander@linaro.org> <CAK8z29XHZXo5e1u8q_0D=iWxr3V2m7PateRGgqVGFe-WDeFKGg@mail.gmail.com>
-In-Reply-To: <CAK8z29XHZXo5e1u8q_0D=iWxr3V2m7PateRGgqVGFe-WDeFKGg@mail.gmail.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 28 Apr 2025 10:14:48 +0200
-X-Gm-Features: ATxdqUH0di-vJZcwSmU7RTw4PhvgopuZ5ILZgAWtuzUvUa846pxVI0QQshePM40
-Message-ID: <CAHUa44GFFUAPRSDUzp-LJ8DZgsbAzNs3ZueA3wkePP4zqG9Z3A@mail.gmail.com>
-Subject: Re: [PATCH v7 04/11] optee: sync secure world ABI headers
-To: Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Rouven,
+Abstract
+===
+This patchset improves the performance of sockmap by providing CPU affinity,
+resulting in a 1-10x increase in throughput.
 
-On Fri, Apr 25, 2025 at 3:36=E2=80=AFPM Rouven Czerwinski
-<rouven.czerwinski@linaro.org> wrote:
->
-> Hi,
->
-> On Fri, 4 Apr 2025 at 16:31, Jens Wiklander <jens.wiklander@linaro.org> w=
-rote:
-> >
-> > Update the header files describing the secure world ABI, both with and
-> > without FF-A. The ABI is extended to deal with protected memory, but as
-> > usual backward compatible.
-> >
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > ---
-> >  drivers/tee/optee/optee_ffa.h | 27 +++++++++---
-> >  drivers/tee/optee/optee_msg.h | 83 ++++++++++++++++++++++++++++++-----
-> >  drivers/tee/optee/optee_smc.h | 71 +++++++++++++++++++++++++++++-
-> >  3 files changed, 163 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/drivers/tee/optee/optee_ffa.h b/drivers/tee/optee/optee_ff=
-a.h
-> > index 257735ae5b56..cc257e7956a3 100644
-> > --- a/drivers/tee/optee/optee_ffa.h
-> > +++ b/drivers/tee/optee/optee_ffa.h
-> > @@ -81,7 +81,7 @@
-> >   *                   as the second MSG arg struct for
-> >   *                   OPTEE_FFA_YIELDING_CALL_WITH_ARG.
-> >   *        Bit[31:8]: Reserved (MBZ)
-> > - * w5:   Bitfield of secure world capabilities OPTEE_FFA_SEC_CAP_* bel=
-ow,
-> > + * w5:   Bitfield of OP-TEE capabilities OPTEE_FFA_SEC_CAP_*
-> >   * w6:   The maximum secure world notification number
-> >   * w7:   Not used (MBZ)
-> >   */
-> > @@ -94,6 +94,8 @@
-> >  #define OPTEE_FFA_SEC_CAP_ASYNC_NOTIF  BIT(1)
-> >  /* OP-TEE supports probing for RPMB device if needed */
-> >  #define OPTEE_FFA_SEC_CAP_RPMB_PROBE   BIT(2)
-> > +/* OP-TEE supports Protected Memory for secure data path */
-> > +#define OPTEE_FFA_SEC_CAP_PROTMEM      BIT(3)
-> >
-> >  #define OPTEE_FFA_EXCHANGE_CAPABILITIES OPTEE_FFA_BLOCKING_CALL(2)
-> >
-> > @@ -108,7 +110,7 @@
-> >   *
-> >   * Return register usage:
-> >   * w3:    Error code, 0 on success
-> > - * w4-w7: Note used (MBZ)
-> > + * w4-w7: Not used (MBZ)
-> >   */
-> >  #define OPTEE_FFA_UNREGISTER_SHM       OPTEE_FFA_BLOCKING_CALL(3)
-> >
-> > @@ -119,16 +121,31 @@
-> >   * Call register usage:
-> >   * w3:    Service ID, OPTEE_FFA_ENABLE_ASYNC_NOTIF
-> >   * w4:   Notification value to request bottom half processing, should =
-be
-> > - *       less than OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE.
-> > + *       less than OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE
-> >   * w5-w7: Not used (MBZ)
-> >   *
-> >   * Return register usage:
-> >   * w3:    Error code, 0 on success
-> > - * w4-w7: Note used (MBZ)
-> > + * w4-w7: Not used (MBZ)
-> >   */
-> >  #define OPTEE_FFA_ENABLE_ASYNC_NOTIF   OPTEE_FFA_BLOCKING_CALL(5)
-> >
-> > -#define OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE 64
-> > +#define OPTEE_FFA_MAX_ASYNC_NOTIF_VALUE        64
-> > +
-> > +/*
-> > + * Release Protected memory
-> > + *
-> > + * Call register usage:
-> > + * w3:    Service ID, OPTEE_FFA_RECLAIM_PROTMEM
-> > + * w4:    Shared memory handle, lower bits
-> > + * w5:    Shared memory handle, higher bits
-> > + * w6-w7: Not used (MBZ)
-> > + *
-> > + * Return register usage:
-> > + * w3:    Error code, 0 on success
-> > + * w4-w7: Note used (MBZ)
-> > + */
-> > +#define OPTEE_FFA_RELEASE_PROTMEM      OPTEE_FFA_BLOCKING_CALL(8)
-> >
-> >  /*
-> >   * Call with struct optee_msg_arg as argument in the supplied shared m=
-emory
-> > diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_ms=
-g.h
-> > index e8840a82b983..22d71d6f110d 100644
-> > --- a/drivers/tee/optee/optee_msg.h
-> > +++ b/drivers/tee/optee/optee_msg.h
-> > @@ -133,13 +133,13 @@ struct optee_msg_param_rmem {
-> >  };
-> >
-> >  /**
-> > - * struct optee_msg_param_fmem - ffa memory reference parameter
-> > + * struct optee_msg_param_fmem - FF-A memory reference parameter
-> >   * @offs_lower:           Lower bits of offset into shared memory refe=
-rence
-> >   * @offs_upper:           Upper bits of offset into shared memory refe=
-rence
-> >   * @internal_offs: Internal offset into the first page of shared memor=
-y
-> >   *                reference
-> >   * @size:         Size of the buffer
-> > - * @global_id:    Global identifier of Shared memory
-> > + * @global_id:    Global identifier of the shared memory
-> >   */
-> >  struct optee_msg_param_fmem {
-> >         u32 offs_low;
-> > @@ -165,7 +165,7 @@ struct optee_msg_param_value {
-> >   * @attr:      attributes
-> >   * @tmem:      parameter by temporary memory reference
-> >   * @rmem:      parameter by registered memory reference
-> > - * @fmem:      parameter by ffa registered memory reference
-> > + * @fmem:      parameter by FF-A registered memory reference
-> >   * @value:     parameter by opaque value
-> >   * @octets:    parameter by octet string
-> >   *
-> > @@ -296,6 +296,18 @@ struct optee_msg_arg {
-> >   */
-> >  #define OPTEE_MSG_FUNCID_GET_OS_REVISION       0x0001
-> >
-> > +/*
-> > + * Values used in OPTEE_MSG_CMD_LEND_PROTMEM below
-> > + * OPTEE_MSG_PROTMEM_RESERVED          Reserved
-> > + * OPTEE_MSG_PROTMEM_SECURE_VIDEO_PLAY Secure Video Playback
-> > + * OPTEE_MSG_PROTMEM_TRUSTED_UI                Trused UI
-> > + * OPTEE_MSG_PROTMEM_SECURE_VIDEO_RECORD       Secure Video Recording
-> > + */
-> > +#define OPTEE_MSG_PROTMEM_RESERVED             0
-> > +#define OPTEE_MSG_PROTMEM_SECURE_VIDEO_PLAY    1
-> > +#define OPTEE_MSG_PROTMEM_TRUSTED_UI           2
-> > +#define OPTEE_MSG_PROTMEM_SECURE_VIDEO_RECORD  3
-> > +
-> >  /*
-> >   * Do a secure call with struct optee_msg_arg as argument
-> >   * The OPTEE_MSG_CMD_* below defines what goes in struct optee_msg_arg=
-::cmd
-> > @@ -337,15 +349,62 @@ struct optee_msg_arg {
-> >   * OPTEE_MSG_CMD_STOP_ASYNC_NOTIF informs secure world that from now i=
-s
-> >   * normal world unable to process asynchronous notifications. Typicall=
-y
-> >   * used when the driver is shut down.
-> > + *
-> > + * OPTEE_MSG_CMD_LEND_PROTMEM lends protected memory. The passed norma=
-l
-> > + * physical memory is protected from normal world access. The memory
-> > + * should be unmapped prior to this call since it becomes inaccessible
-> > + * during the request.
-> > + * Parameters are passed as:
-> > + * [in] param[0].attr                  OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
-> > + * [in] param[0].u.value.a             OPTEE_MSG_PROTMEM_* defined abo=
-ve
-> > + * [in] param[1].attr                  OPTEE_MSG_ATTR_TYPE_TMEM_INPUT
-> > + * [in] param[1].u.tmem.buf_ptr                physical address
-> > + * [in] param[1].u.tmem.size           size
-> > + * [in] param[1].u.tmem.shm_ref                holds protected memory =
-reference
-> > + *
-> > + * OPTEE_MSG_CMD_RECLAIM_PROTMEM reclaims a previously lent protected
-> > + * memory reference. The physical memory is accessible by the normal w=
-orld
-> > + * after this function has return and can be mapped again. The informa=
-tion
-> > + * is passed as:
-> > + * [in] param[0].attr                  OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
-> > + * [in] param[0].u.value.a             holds protected memory cookie
-> > + *
-> > + * OPTEE_MSG_CMD_GET_PROTMEM_CONFIG get configuration for a specific
-> > + * protected memory use case. Parameters are passed as:
-> > + * [in] param[0].attr                  OPTEE_MSG_ATTR_TYPE_VALUE_INOUT
-> > + * [in] param[0].value.a               OPTEE_MSG_PROTMEM_*
-> > + * [in] param[1].attr                  OPTEE_MSG_ATTR_TYPE_{R,F}MEM_OU=
-TPUT
-> > + * [in] param[1].u.{r,f}mem            Buffer or NULL
-> > + * [in] param[1].u.{r,f}mem.size       Provided size of buffer or 0 fo=
-r query
-> > + * output for the protected use case:
-> > + * [out] param[0].value.a              Minimal size of protected memor=
-y
-> > + * [out] param[0].value.b              Required alignment of size and =
-start of
-> > + *                                     protected memory
-> > + * [out] param[1].{r,f}mem.size                Size of output data
-> > + * [out] param[1].{r,f}mem             If non-NULL, contains an array =
-of
-> > + *                                     uint16_t holding endpoints that
-> > + *                                     must be included when lending
-> > + *                                     memory for this use case
-> > + *
-> > + * OPTEE_MSG_CMD_ASSIGN_PROTMEM assigns use-case to protected memory
-> > + * previously lent using the FFA_LEND framework ABI. Parameters are pa=
-ssed
-> > + * as:
-> > + * [in] param[0].attr                  OPTEE_MSG_ATTR_TYPE_VALUE_INPUT
-> > + * [in] param[0].u.value.a             holds protected memory cookie
-> > + * [in] param[0].u.value.b             OPTEE_MSG_PROTMEM_* defined abo=
-ve
-> >   */
-> > -#define OPTEE_MSG_CMD_OPEN_SESSION     0
-> > -#define OPTEE_MSG_CMD_INVOKE_COMMAND   1
-> > -#define OPTEE_MSG_CMD_CLOSE_SESSION    2
-> > -#define OPTEE_MSG_CMD_CANCEL           3
-> > -#define OPTEE_MSG_CMD_REGISTER_SHM     4
-> > -#define OPTEE_MSG_CMD_UNREGISTER_SHM   5
-> > -#define OPTEE_MSG_CMD_DO_BOTTOM_HALF   6
-> > -#define OPTEE_MSG_CMD_STOP_ASYNC_NOTIF 7
-> > -#define OPTEE_MSG_FUNCID_CALL_WITH_ARG 0x0004
-> > +#define OPTEE_MSG_CMD_OPEN_SESSION             0
-> > +#define OPTEE_MSG_CMD_INVOKE_COMMAND           1
-> > +#define OPTEE_MSG_CMD_CLOSE_SESSION            2
-> > +#define OPTEE_MSG_CMD_CANCEL                   3
-> > +#define OPTEE_MSG_CMD_REGISTER_SHM             4
-> > +#define OPTEE_MSG_CMD_UNREGISTER_SHM           5
-> > +#define OPTEE_MSG_CMD_DO_BOTTOM_HALF           6
-> > +#define OPTEE_MSG_CMD_STOP_ASYNC_NOTIF         7
-> > +#define OPTEE_MSG_CMD_LEND_PROTMEM             8
-> > +#define OPTEE_MSG_CMD_RECLAIM_PROTMEM          9
-> > +#define OPTEE_MSG_CMD_GET_PROTMEM_CONFIG       10
-> > +#define OPTEE_MSG_CMD_ASSIGN_PROTMEM           11
-> > +#define OPTEE_MSG_FUNCID_CALL_WITH_ARG         0x0004
-> >
-> >  #endif /* _OPTEE_MSG_H */
-> > diff --git a/drivers/tee/optee/optee_smc.h b/drivers/tee/optee/optee_sm=
-c.h
-> > index 879426300821..b17e81f464a3 100644
-> > --- a/drivers/tee/optee/optee_smc.h
-> > +++ b/drivers/tee/optee/optee_smc.h
-> > @@ -264,7 +264,6 @@ struct optee_smc_get_shm_config_result {
-> >  #define OPTEE_SMC_SEC_CAP_HAVE_RESERVED_SHM    BIT(0)
-> >  /* Secure world can communicate via previously unregistered shared mem=
-ory */
-> >  #define OPTEE_SMC_SEC_CAP_UNREGISTERED_SHM     BIT(1)
-> > -
-> >  /*
-> >   * Secure world supports commands "register/unregister shared memory",
-> >   * secure world accepts command buffers located in any parts of non-se=
-cure RAM
-> > @@ -280,6 +279,10 @@ struct optee_smc_get_shm_config_result {
-> >  #define OPTEE_SMC_SEC_CAP_RPC_ARG              BIT(6)
-> >  /* Secure world supports probing for RPMB device if needed */
-> >  #define OPTEE_SMC_SEC_CAP_RPMB_PROBE           BIT(7)
-> > +/* Secure world supports protected memory */
-> > +#define OPTEE_SMC_SEC_CAP_PROTMEM              BIT(8)
-> > +/* Secure world supports dynamic protected memory */
-> > +#define OPTEE_SMC_SEC_CAP_DYNAMIC_PROTMEM      BIT(9)
-> >
-> >  #define OPTEE_SMC_FUNCID_EXCHANGE_CAPABILITIES 9
-> >  #define OPTEE_SMC_EXCHANGE_CAPABILITIES \
-> > @@ -451,6 +454,72 @@ struct optee_smc_disable_shm_cache_result {
-> >
-> >  /* See OPTEE_SMC_CALL_WITH_REGD_ARG above */
-> >  #define OPTEE_SMC_FUNCID_CALL_WITH_REGD_ARG    19
-> > +/*
-> > + * Get protected memory config
-> > + *
-> > + * Returns the protected memory config.
-> > + *
-> > + * Call register usage:
-> > + * a0   SMC Function ID, OPTEE_SMC_GET_PROTMEM_CONFIG
-> > + * a2-6        Not used, must be zero
-> > + * a7  Hypervisor Client ID register
-> > + *
-> > + * Have config return register usage:
-> > + * a0  OPTEE_SMC_RETURN_OK
-> > + * a1  Physical address of start of protected memory
-> > + * a2  Size of protected memory
-> > + * a3  Not used
-> > + * a4-7        Preserved
-> > + *
-> > + * Not available register usage:
-> > + * a0  OPTEE_SMC_RETURN_ENOTAVAIL
-> > + * a1-3 Not used
-> > + * a4-7        Preserved
-> > + */
-> > +#define OPTEE_SMC_FUNCID_GET_PROTMEM_CONFIG            20
-> > +#define OPTEE_SMC_GET_PROTMEM_CONFIG \
-> > +       OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_PROTMEM_CONFIG)
-> > +
-> > +struct optee_smc_get_protmem_config_result {
-> > +       unsigned long status;
-> > +       unsigned long start;
-> > +       unsigned long size;
-> > +       unsigned long flags;
->
-> The ABI comment does not document a flags return argument, either
-> this can be removed or the ABI comment needs to be fixed.
 
-Sure, I'll remove the field.
+Motivation
+===
+Traditional user-space reverse proxy:
 
-> Same for
-> > +};
-> > +
-> > +/*
-> > + * Get dynamic protected memory config
-> > + *
-> > + * Returns the dynamic protected memory config.
-> > + *
-> > + * Call register usage:
-> > + * a0  SMC Function ID, OPTEE_SMC_GET_DYN_SHM_CONFIG
->
-> should be OPTEE_SMC_GET_DYN_PROTMEM_CONFIG
+              Reserve Proxy
+            _________________
+client  -> | fd1  <->  fd2   | -> server
+           |_________________|
 
-Thanks, I'll update.
+Using sockmap for reverse proxy:
 
->
-> > + * a2-6        Not used, must be zero
-> > + * a7  Hypervisor Client ID register
-> > + *
-> > + * Have config return register usage:
-> > + * a0  OPTEE_SMC_RETURN_OK
-> > + * a1  Minamal size of protected memory
->
-> Nit: Typo, should be "Minimal"
+              Reserve Proxy
+            _________________
+client ->  |  fd1  <->  fd2  |  -> server
+         | |_________________| |
+         |      |       |      |
+         |      _________      |
+         |     | sockmap |     |
+          -->  |_________|  -->
 
-Yes, I'll update.
+By adding fds to sockmap and using a BPF program, we can quickly forward
+data and avoid data copying between user space and kernel space.
 
-Cheers,
-Jens
+Mainstream multi-process reverse proxy applications, such as Nginx and
+HAProxy, support CPU affinity settings, which allow each process to be
+pinned to a specific CPU, avoiding conflicts between data plane processes
+and other processes, especially in multi-tenant environments.
 
->
-> > + * a2  Required alignment of size and start of registered protected me=
-mory
-> > + * a3  Not used
-> > + * a4-7        Preserved
-> > + *
-> > + * Not available register usage:
-> > + * a0  OPTEE_SMC_RETURN_ENOTAVAIL
-> > + * a1-3 Not used
-> > + * a4-7        Preserved
-> > + */
-> > +
-> > +#define OPTEE_SMC_FUNCID_GET_DYN_PROTMEM_CONFIG        21
-> > +#define OPTEE_SMC_GET_DYN_PROTMEM_CONFIG \
-> > +       OPTEE_SMC_FAST_CALL_VAL(OPTEE_SMC_FUNCID_GET_DYN_PROTMEM_CONFIG=
-)
-> > +
-> > +struct optee_smc_get_dyn_protmem_config_result {
-> > +       unsigned long status;
-> > +       unsigned long size;
-> > +       unsigned long align;
-> > +       unsigned long flags;
-> > +};
-> >
-> >  /*
-> >   * Resume from RPC (for example after processing a foreign interrupt)
-> > --
-> > 2.43.0
->
-> - Rouven
+
+Current Issues
+===
+The current design of sockmap uses a workqueue to forward ingress_skb and
+wakes up the workqueue without specifying a CPU
+(by calling schedule_delayed_work()). In the current implementation of
+schedule_delayed_work, it tends to run the workqueue on the current CPU.
+
+This approach has a high probability of running on the current CPU, which
+is the same CPU that handles the net rx soft interrupt, especially for
+programs that access each other using local interfaces.
+
+The loopback driver's transmit interface, loopback_xmit(), directly calls
+__netif_rx() on the current CPU, which means that the CPU handling
+sockmap's workqueue and the client's sending CPU are the same, resulting
+in contention.
+
+For a TCP flow, if the request or response is very large, the
+psock->ingress_skb queue can become very long. When the workqueue
+traverses this queue to forward the data, it can consume a significant
+amount of CPU time.
+
+
+Solution
+===
+Configuring RPS on a loopback interface can be useful, but it will trigger
+additional softirq, and furthermore, it fails to achieve our expected
+effect of CPU isolation from other processes.
+
+Instead, we provide a kfunc that allow users to specify the CPU on which
+the workqueue runs through a BPF program.
+
+We can use the existing benchmark to test the performance, which allows
+us to evaluate the effectiveness of this optimization.
+
+Because we use local interfaces for communication and the client consumes
+a significant amount of CPU when sending data, this prevents the workqueue
+from processing ingress_skb in a timely manner, ultimately causing the
+server to fail to read data quickly.
+
+Without cpu-affinity:
+./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress --no-verify
+Setting up benchmark 'sockmap'...
+create socket fd c1:14 p1:15 c2:16 p2:17
+Benchmark 'sockmap' started.
+Iter   0 ( 36.031us): Send Speed 1143.693 MB/s ... Rcv Speed  109.572 MB/s
+Iter   1 (  0.608us): Send Speed 1320.550 MB/s ... Rcv Speed   48.103 MB/s
+Iter   2 ( -5.448us): Send Speed 1314.790 MB/s ... Rcv Speed   47.842 MB/s
+Iter   3 ( -0.613us): Send Speed 1320.158 MB/s ... Rcv Speed   46.531 MB/s
+Iter   4 ( -3.441us): Send Speed 1319.375 MB/s ... Rcv Speed   46.662 MB/s
+Iter   5 (  3.764us): Send Speed 1166.667 MB/s ... Rcv Speed   42.467 MB/s
+Iter   6 ( -4.404us): Send Speed 1319.508 MB/s ... Rcv Speed   47.973 MB/s
+Summary: total trans     7758 MB ± 1293.506 MB/s
+
+Without cpu-affinity(RPS enabled):
+./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress --no-verify
+Setting up benchmark 'sockmap'...
+create socket fd c1:14 p1:15 c2:16 p2:17
+Benchmark 'sockmap' started.
+Iter   0 ( 28.925us): Send Speed 1630.357 MB/s ... Rcv Speed  850.960 MB/s
+Iter   1 ( -2.042us): Send Speed 1644.564 MB/s ... Rcv Speed  822.478 MB/s
+Iter   2 (  0.754us): Send Speed 1644.297 MB/s ... Rcv Speed  850.787 MB/s
+Iter   3 (  0.159us): Send Speed 1644.429 MB/s ... Rcv Speed  850.198 MB/s
+Iter   4 ( -2.898us): Send Speed 1646.924 MB/s ... Rcv Speed  830.867 MB/s
+Iter   5 ( -0.210us): Send Speed 1649.410 MB/s ... Rcv Speed  824.246 MB/s
+Iter   6 ( -1.448us): Send Speed 1650.723 MB/s ... Rcv Speed  808.256 MB/s
+
+With cpu-affinity(RPS disabled):
+./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress --no-verify --cpu-affinity
+Setting up benchmark 'sockmap'...
+create socket fd c1:14 p1:15 c2:16 p2:17
+Benchmark 'sockmap' started.
+Iter   0 ( 36.051us): Send Speed 1883.437 MB/s ... Rcv Speed 1865.087 MB/s
+Iter   1 (  1.246us): Send Speed 1900.542 MB/s ... Rcv Speed 1761.737 MB/s
+Iter   2 ( -8.595us): Send Speed 1883.128 MB/s ... Rcv Speed 1860.714 MB/s
+Iter   3 (  7.033us): Send Speed 1890.831 MB/s ... Rcv Speed 1806.684 MB/s
+Iter   4 ( -8.397us): Send Speed 1884.700 MB/s ... Rcv Speed 1973.568 MB/s
+Iter   5 ( -1.822us): Send Speed 1894.125 MB/s ... Rcv Speed 1775.046 MB/s
+Iter   6 (  4.936us): Send Speed 1877.597 MB/s ... Rcv Speed 1959.320 MB/s
+Summary: total trans    11328 MB ± 1888.507 MB/s
+
+
+Appendix
+===
+Through this optimization, we discovered that sk_mem_charge()
+and sk_mem_uncharge() have concurrency issues. The performance improvement
+brought by this optimization has made these concurrency issues more
+evident.
+
+This concurrency issue can cause the WARN_ON_ONCE(sk->sk_forward_alloc)
+check to be triggered when the socket is released. Since this patch is a
+feature-type patch and does not intend to fix this bug, I will provide
+additional patches to fix this issue later.
+
+Jiayuan Chen (3):
+  bpf, sockmap: Introduce a new kfunc for sockmap
+  bpf, sockmap: Affinitize workqueue to a specific CPU
+  selftest/bpf/benchs: Add cpu-affinity for sockmap bench
+
+ Documentation/bpf/map_sockmap.rst             | 14 +++++++
+ include/linux/skmsg.h                         | 15 +++++++
+ kernel/bpf/btf.c                              |  3 ++
+ net/core/skmsg.c                              | 10 +++--
+ net/core/sock_map.c                           | 39 +++++++++++++++++++
+ .../selftests/bpf/benchs/bench_sockmap.c      | 35 +++++++++++++++--
+ tools/testing/selftests/bpf/bpf_kfuncs.h      |  6 +++
+ .../selftests/bpf/progs/bench_sockmap_prog.c  |  7 ++++
+ 8 files changed, 122 insertions(+), 7 deletions(-)
+
+-- 
+2.47.1
+
