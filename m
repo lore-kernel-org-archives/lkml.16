@@ -1,119 +1,56 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B61B202996
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9391D202996
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745839815; cv=none; b=c4+V/bo6ZGhOVlp0zwoaqwk7a+TOqqmV6QlZHEcwsSOEOBfFCODGG9ZRW7GMNYAf20Uo8xu3dNrVdAGt9J2cDZA++gNEGkW8rXdY6+hbPIozKRc1ZL4YtRkfKpb8NYJ/AweexjsjN1TZRqjPpAmf7um09sXKCD+6qntdnFDm2/Q=
+	t=1745839914; cv=none; b=pIGk0PzircqBk7EOevs3byWK45lyzgpfh6S7JK2MQtqrmYzgoqSQxcATQaHxY955svXvNSCTbdx0smpw3sTac2rzfrytOD1BXoo6jXeq8krBZXIK0sc7Qs1kZ7jJjq3CA27mcFHOhN9NA49VrNx7EHrZVmNHDCAKP8qZDJU6jSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745839815; c=relaxed/simple;
-	bh=fwld4zkOzPn17td9PUrYMQ1ZtsLZ+Qvv0Fddj7pLU+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=DDnUW0rxWQ0VFdRv0OHNyupkVaiXymYQzwl5jsmHwykYdwczn+3CoqfjjKSwr9gk07OuFQ6gHXxXEIjwVfYviXuGx5B2rM9cqkg0uRiOtVC8cU6qHB1dYlgkILD80w9tpPfTinlU2mgZiGiorDQaiGB+0fK+f/bNWG/Cjaqt3ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OFdW8aC1; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745839914; c=relaxed/simple;
+	bh=uXXYwLargQXr5lQAggHWErF37Aj/MM0G1vi5Q8ijK8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZSKhqFHuMJsxO0ZXEQKM1/HwG8mB8FXYcV5LjT6zMPmMe/wNVa4blahDNdfFcDxhHfw8WuobgD2L8ceN7f2Ml1qf/fzkm9Murev+mIUu6tRq8xkc9WbzqPuKluJiq4+yj5NCdWOZ4P0WJK3Qq1K6WjEg0lWWOrznjRF8iA+Fjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=OW1Yt9T6; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OFdW8aC1"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250428113010epoutp0156e30de02c3cd1ce7535ca1eae7aa6a3~6eA63LOf70501205012epoutp01a
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:30:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250428113010epoutp0156e30de02c3cd1ce7535ca1eae7aa6a3~6eA63LOf70501205012epoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745839810;
-	bh=ZQy/46a1r4WAvJCApFWSuqNU0UpVfcMsny2biIWuzIE=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=OFdW8aC1+zv0YZ0OsW6E0VMV3Yl7wSORCpL/RC+6+jYEVPAWwHdurf5XYBfSmEGSN
-	 l1b4qH0jRPa1p8wIysBhd1XiYtwvLFfCmGUX+al6fEXs53sX4eJFBzr3id8ACFs+dS
-	 YLa6BpaWr/qBAl5vavOiXO76sAlkvCZuvM+LLbSs=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250428113009epcas2p2f7a8cb332fc766d0a47a30fa93c12268~6eA6Ntvek0100801008epcas2p2N;
-	Mon, 28 Apr 2025 11:30:09 +0000 (GMT)
-Received: from epcas2p2.samsung.com (unknown [182.195.36.92]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZmLpT0y8pz3hhT7; Mon, 28 Apr
-	2025 11:30:09 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250428113008epcas2p327275651c8869ee5a113eda2f2ec1d30~6eA5Q6Qmo2967129671epcas2p3F;
-	Mon, 28 Apr 2025 11:30:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250428113008epsmtrp125683d16bb59170d7f0ca1f815620940~6eA5PPu1n2934329343epsmtrp1S;
-	Mon, 28 Apr 2025 11:30:08 +0000 (GMT)
-X-AuditID: b6c32a29-566fe7000000223e-4c-680f66c05646
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6D.81.08766.0C66F086; Mon, 28 Apr 2025 20:30:08 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.60]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250428113008epsmtip2cb6934ace77da911c6152dedc507572a~6eA4-N9DR1092810928epsmtip2R;
-	Mon, 28 Apr 2025 11:30:08 +0000 (GMT)
-From: Shin Son <shin.son@samsung.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
-	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
-Cc: Shin Son <shin.son@samsung.com>, linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Fix CPUCL0 add CPUCL1/2 clock support for exynosauto
- v920 SoC
-Date: Mon, 28 Apr 2025 20:28:54 +0900
-Message-ID: <20250428112858.82434-1-shin.son@samsung.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="OW1Yt9T6"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 66734470B7;
+	Mon, 28 Apr 2025 13:31:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1745839911;
+	bh=uXXYwLargQXr5lQAggHWErF37Aj/MM0G1vi5Q8ijK8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OW1Yt9T64529Pjpm8ieP+tS4ekmOIVx6Vf1awjBx/qzyBPObejKLUL/BpmzFQL9Fw
+	 Q2lM15TXauiLhRGbay9Hc3ognfPJ3+jI8dXaOLY9oJfN2lpsEMsze14k5ToxBkR+nN
+	 oMen62lo3LX+25ut/QcQr6/NkLAS/ghKSRoQE9Es6Y93NeJ91BLvhDjN/75ybPpV/N
+	 MDH5+2bD4IAEX0noFuO5zfNPE6CoPIoiTXbDUnhixq98wxPNhwOMgjv7imuvHgOH8S
+	 A3UjCJIEUPfB2bE3fZthTDxZDY442vtFwJ1Z6o8v4LoLD4yOum5kfvf6hLPpEJyKI6
+	 h3OedCUM5E2dg==
+Date: Mon, 28 Apr 2025 13:31:50 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: will@kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] iommu: Handle yet another race around registration
+Message-ID: <aA9nJgiSHuebk4m9@8bytes.org>
+References: <88d54c1b48fed8279aa47d30f3d75173685bb26a.1745516488.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsWy7bCSvO6BNP4Mg1nThC0ezNvGZrFm7zkm
-	i+tfnrNazD9yjtXi/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrV4v+eHewWh9+0s1r8
-	u7aRxWLy8bWsFk3L1jM58Hu8v9HK7rFpVSebx+Yl9R59W1YxenzeJBfAGsVlk5Kak1mWWqRv
-	l8CVsXrRBcaCnWwVr34/Y25gnMfaxcjJISFgIvHj93PGLkYuDiGB3YwS626vYIdISEgcnjGB
-	EcIWlrjfcgSsQUjgPaPEifllXYwcHGwCqhKbfsuD9IoIvGWSWP7/ABNIDbPAaUaJnWdkQGxh
-	gVCJf7vesIHYLED1rbv/gs3hFbCUOLDgECPIHAkBeYn+DgmIsKDEyZlPWCDGyEs0b53NPIGR
-	bxaS1CwkqQWMTKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz0vWS83M3MYLDXUtzB+P2VR/0DjEy
-	cTAeYpTgYFYS4a0y4M8Q4k1JrKxKLcqPLyrNSS0+xCjNwaIkziv+ojdFSCA9sSQ1OzW1ILUI
-	JsvEwSnVwBQ1c9eN5POvXd8vOtfXrLpCqnAp14mv9uockzzn7FefupYxW2zO6gs2m84942vM
-	+jqjveP1sQW1nu2T/sgtElu2fdKmusI5/UV+a6I+2fXMm7XEYBvLLfFfwYJNfZO5Fk94r5om
-	nrSdZbf9lG2TftVeuCujMuWtsAt3wm+JKxxRjA+8qnednz8pOFDR9kTOBsULST4tH21DfSZP
-	fFLg5topfpfbK1PbI7CJgeW+wO+JchFTp8nY/3haInf23EST1Xd143m4WpTPPWS/WlbPI3Pp
-	e/xrBXve2N13315rbp23b75tYJfdO7aI+exfvma4xYlI8b18qlCvYLr4V0FR/nNN9SMnQ9nU
-	pct/rLLJdVBiKc5INNRiLipOBACoSUGg5gIAAA==
-X-CMS-MailID: 20250428113008epcas2p327275651c8869ee5a113eda2f2ec1d30
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250428113008epcas2p327275651c8869ee5a113eda2f2ec1d30
-References: <CGME20250428113008epcas2p327275651c8869ee5a113eda2f2ec1d30@epcas2p3.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88d54c1b48fed8279aa47d30f3d75173685bb26a.1745516488.git.robin.murphy@arm.com>
 
-This patchset fixes the incorrect CLKS_NR_CPUCL0 definition and
-adds the CMU_CPUCL1 and CMU_CPUCL2 block to support exynosauto v920 SoC.
+On Thu, Apr 24, 2025 at 06:41:28PM +0100, Robin Murphy wrote:
+>  drivers/iommu/iommu.c | 26 ++++++++++++++++++--------
+>  include/linux/iommu.h |  2 ++
+>  2 files changed, 20 insertions(+), 8 deletions(-)
 
-Changes in v2:
-- Separate the fix into its own patch
-- Remove the extra blank line
-
-Shin Son (4):
-  dt-bindings: clock: exynosautov920: add cpucl1/2 clock definitions
-  clk: samsung: exynosautov920: add cpucl1/2 clock support
-  clk: samsung: exynosautov920: Fix incorrect CLKS_NR_CPUCL0 definition
-  arm64: dts: exynosautov920: add cpucl1/2 clock DT nodes
-
- .../clock/samsung,exynosautov920-clock.yaml   |  44 ++++
- .../arm64/boot/dts/exynos/exynosautov920.dtsi |  26 +++
- drivers/clk/samsung/clk-exynosautov920.c      | 208 +++++++++++++++++-
- .../clock/samsung,exynosautov920.h            |  32 +++
- 4 files changed, 309 insertions(+), 1 deletion(-)
-
--- 
-2.49.0
-
+Applied, thanks.
