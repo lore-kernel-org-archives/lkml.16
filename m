@@ -1,174 +1,217 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2069.outbound.protection.outlook.com [40.107.223.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DD127A113;
-	Mon, 28 Apr 2025 15:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745852622; cv=fail; b=Rm48kGrtxWlsDddN6BK7+p8p6m1Oy1uaHK5l3uIMePtn7fDp/1jgBx7k4GXKxCfUEXQT2q+BVbZgSV86Aq0YD5KeApsgJP520TjK6k4epEeA+2HIZNBkgjRDwLe/3RfuBsKfPP1C9mMATRhflw64ioO+DQGmr8Id2j+ZoFWdn8g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745852622; c=relaxed/simple;
-	bh=sFTIvvD7hPaiQOzNXnvIltvyXFOXqYuYmYuUTZsDXnY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DksKCCbm11cfPE4cyoix+DFlKDWh5L2aB0ADPi+Xbs6CdvZ+wyQSKmP8PZ6cFRf8138x5+rNzUD7LwQA27SLdjDu7K/sXluFYyi916k246oYaVArhPqIuIZZzy4XZ1j0pkTzwplYEt6kIvWme/azmiiJpE7Q3Jc6d9wnwbHpuy8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gXh7tx0K; arc=fail smtp.client-ip=40.107.223.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9767192D83;
+	Mon, 28 Apr 2025 15:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745852732; cv=none; b=g3w5W9M02UEBoGcTweh+Xb6p5rAHgFweVu1oR0pl4DqoEHov1Nqpg3+zFY+G3ma8kiimYx7HZUNLYnXfNXAXEcQIeD5Lf9neilIcqbuo21CHIjj9n+XvbAr1Ojsp+27VHe8nM1QgKzjAi4t70AYLHwN/VQlUHPvXtE12W7Dzjwg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745852732; c=relaxed/simple;
+	bh=VJxXe/Ga2jumdetbeBRYvHL7yi4RCMj/Ek53LW4jqPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mTSlu0AvfiOQqCY9YJfKr4qtDVq/C6CscPHEfoBRwbz4RvsJH0fVGPSECtZoAngM28/crpC9/ZiyWaSBg7ckYFjJrEZHNg4eUChlihmTTXXzWOxitMQW7e1V5xbNaVPsjHkmF8d+xcBvsmS1aylv5O854/bINLbYPXk6XjP1TnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVTSuYvj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gXh7tx0K"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gOGe2nkNUTsQr/nzmaBbUUSuMuRnW6Ai18M0SgEPfdiNTuVFSibk7XNf7SI12brwuLgTTWRv5HMCY42fBzTlLpei5mBxwIUQNVGIoZ3pDI4LWvkGMRvNI5M4+wBpNhaytqN1LhB1Kln2PPk7lxVdFMwt/jvdLm7gyfeI0cnF8DhPJZM3QSL6P/AX4a27SMiYtb3/e0DB2B/4WizP+ihz8DpnFoyoZ6gEyeWaZ3yv8Kh7v2jm1zJOvjVhrpy0/Ql4tp73YIOLl0GjF54xycyZa10mjrQXjo5q1VeDADCdlzW1ABnRNBxPTFi7NERavOIL6y1srpBco8dMqVDNPGI5YQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U+ueYxcZmVBqlw0maIp0d6uESCx80aT3eg59/aDI9Jk=;
- b=uRtUEvzbZiyqpRpxXv+Ep8RZ/LX73EorN9Mxc5ZuuIByfzO4G/0kq7LfbXfS0/6ZrBYS7tyYDtcQaWjT7oQZvjEvfHuPfBHatkq2Fz8HLJ0EfuhtuRCFS49JvHTUIU5rSqSkFdqOL1N9BOxwAu6HwhQcuo/cfVdCIJBTQ8BnFzqIDTVFLP0DO4gwZq+NPLCKhh5y4ydOCi2yV5KNVZFBgjyyQ4KWHpEogl/w8wzeIHAS73wjWAa1AudUSrHKdNas4sB3cDXBROtJK+ZfFygGuXepW8mTbJahRTWZls4HLvplRqfl4lkkGU3s9CqBtnTHzZiTk2Ke/Yl4sWAFvRXWhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U+ueYxcZmVBqlw0maIp0d6uESCx80aT3eg59/aDI9Jk=;
- b=gXh7tx0KdFm2AjPy3z++mMSPAf4wttIfc1AM06BHC8ql+jGO9yZUhnkJA50VqSDKEwxY28RlAMFS/xRJdrO0SKcONe6EcaYB4EKxxJcXj0zvYraL1n8fkECtUGuw4rLolCZRKsEKorX+yGWVhd29k4er5UzdY0er9EcNdQ6TeHw=
-Received: from SA0PR11CA0210.namprd11.prod.outlook.com (2603:10b6:806:1bc::35)
- by SA5PPFF3CB57EDE.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8eb) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Mon, 28 Apr
- 2025 15:03:38 +0000
-Received: from SN1PEPF0002636E.namprd02.prod.outlook.com
- (2603:10b6:806:1bc:cafe::6a) by SA0PR11CA0210.outlook.office365.com
- (2603:10b6:806:1bc::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Mon,
- 28 Apr 2025 15:03:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002636E.mail.protection.outlook.com (10.167.241.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8678.33 via Frontend Transport; Mon, 28 Apr 2025 15:03:38 +0000
-Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
- 2025 10:03:34 -0500
-From: Raju Rangoju <Raju.Rangoju@amd.com>
-To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<Shyam-sundar.S-k@amd.com>, Raju Rangoju <Raju.Rangoju@amd.com>
-Subject: [PATCH net-next v2 5/5] amd-xgbe: add support for new pci device id 0x1641
-Date: Mon, 28 Apr 2025 20:32:35 +0530
-Message-ID: <20250428150235.2938110-6-Raju.Rangoju@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250428150235.2938110-1-Raju.Rangoju@amd.com>
-References: <20250428150235.2938110-1-Raju.Rangoju@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVTSuYvj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CE7CC4CEE4;
+	Mon, 28 Apr 2025 15:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745852732;
+	bh=VJxXe/Ga2jumdetbeBRYvHL7yi4RCMj/Ek53LW4jqPA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=iVTSuYvjNmUeYSiWEuEEl722TPRNNSMcZEfDNMMXcgrnTA4Y1k8XDQy/rq9RVk0JG
+	 V7j1S08LtgwQqZ1uBzIB8gEM2xvVqowRGithWICn7J3JZabF4ApvJINi8g3N4q5LwE
+	 BFTYNRy0sJPpclkHMyQf9nqD52F9aG4ESc5FxnUjwbuT69lYfCvnmC8HrcobFXa4zk
+	 EXaqk8hmP82hyFaEjhgpL59DKTl1zYRDH3C1P9tIS1Sl7FE739OPOKAEg6a2wRNzWD
+	 /J9usLZhoVhpurE9DT0U4OGZnsttUVCrSwepq6EtiRFZ0PEXEAD6AQMPoaTLrQTX7e
+	 A3gICimQjCE+g==
+Date: Mon, 28 Apr 2025 10:05:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
+Cc: kvm@vger.kernel.org, Chathura Rajapaksha <chath@bu.edu>,
+	William Wang <xwill@bu.edu>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Xin Zeng <xin.zeng@intel.com>, Kevin Tian <kevin.tian@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Yahui Cao <yahui.cao@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>,
+	Dongdong Zhang <zhangdongdong@eswincomputing.com>,
+	Avihai Horon <avihaih@nvidia.com>, linux-kernel@vger.kernel.org,
+	audit@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] audit accesses to unassigned PCI config regions
+Message-ID: <20250428150530.GA670882@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636E:EE_|SA5PPFF3CB57EDE:EE_
-X-MS-Office365-Filtering-Correlation-Id: a2f81dc8-ecf5-43fa-2838-08dd8665db18
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?W/VJhdrPavMtGvBUbnK+WDqUUy57iyjl1F+rUTD7ke1Z33wXjvejSzP8Pn5c?=
- =?us-ascii?Q?neAfAy+l2S8PhPri50cJA6+TKFKUTarmUsdzgQ7MVpd+G1dKKN/KGGVRRLGA?=
- =?us-ascii?Q?o6b7L6caxXXJoZ9Hpd4WrudYTAhLfqLj2E31JHxZOWiaw/K/x+XU8oVgv8Ce?=
- =?us-ascii?Q?NrZWpkSPs5krWxHvqMz/GvELzXEcqIhCFi7Ymz5vIInDFiIKlYcysRDbisaK?=
- =?us-ascii?Q?M8FoKmSQqD/tVeZX9zKaj7oVB77sEetJZH5GSPl3VA7I1RfM19T755Yk5Sc/?=
- =?us-ascii?Q?aqt4FJT5ltaQG1XfglomBSg4oYzl1S92GpPlwp7em3Pb6vJshZq0eblrf+UE?=
- =?us-ascii?Q?i/SXgK9d8RXRQY3/OTtYNTWgFDATBHUzQjjxTWpvJQx6t66W7cK3NEWlZwat?=
- =?us-ascii?Q?9W9zRbs+dBXThvYQHj/LMVoU8vUTD1L4SHBW17DP0tv+7IxyS9GRZWZAIObB?=
- =?us-ascii?Q?Y0b3zQgHh7/dBT6lFXUjiH56Gv361fGONdmDM3yoXHibQsQLuZQxuDVBNyC+?=
- =?us-ascii?Q?HjNab3p8jqjbF/XG/V8vujmJSqA3ml/yt3rDlkAEU4qhJEIDZqLxN5TS2aIu?=
- =?us-ascii?Q?/kOeptqxki5xdyCDZTLG4Sb9qPwG2F0zBr72Oetp/xxdLbUar1kt74Hhb4fh?=
- =?us-ascii?Q?sWpAeXYNnyZKksgMeATqPrwcE9SKKOL++jGA95kmHF6fpIpTmbbJRq1taxKV?=
- =?us-ascii?Q?JvG2g80WxsVmLtrhTCIqC8qjcGnfu/fN6eUWOMvOmMSO0/cPo8ydkJGcgbj9?=
- =?us-ascii?Q?8tV5dI2vKYhMRob4EnauUzj3GZL5p0BjRZePMjgWuJqocyzX3FnmRr730q73?=
- =?us-ascii?Q?dQzYb8B5o5e9CDQAzF8uvbtlpsj4HqKtn44l0m2Y5KfaTvOFx7hg01rsHPRp?=
- =?us-ascii?Q?49k0Dj1tYjOaY/fpN2CJKAjubqE8w15p5eNE6rzb+Zz8KYi9JWQTLx8oRJbk?=
- =?us-ascii?Q?A1x9nCgLlkkQeOaJY5oHB3lsj7n5WT26VP29QS6Vq6Rpo5WYEFK0QxnUzoVW?=
- =?us-ascii?Q?eUgG+83hxylovcynfoX8EYZBEEOi03MZdELkzij5Mx1ksoKwuyPBanQy1TSZ?=
- =?us-ascii?Q?b1tuu6IXv8DYC7mWm8nCT5iX/tuSkXOL6iP3LpOwoyA/dKsI39fxmnyyL18g?=
- =?us-ascii?Q?9Q9zzrLU++UKVvWa7CnHlDahXCKCOk8SqzYx9+rvYYqKMWoKiIRbBXGHNaZJ?=
- =?us-ascii?Q?iB+7to5HEh43FME+iUjL2jpoDbyUtZWgRKgI+fx/6NB79s527lArxeQnU+s1?=
- =?us-ascii?Q?E8vLCG9rOIq7b2mbi4y7xfA1ckCXHb02szQe4xRWy3tbFEbRPuWl8SSQ1DbG?=
- =?us-ascii?Q?OFivneBJUXNkgzsZY6mj5jAilqvoDY908v86vWN+kMyCsTb1tSLbrXzKDxGn?=
- =?us-ascii?Q?g0ysdJX1u44F/fp9qr2dYU+ttjeowgarJOtuUIQaEPxsOTsgh8wGsj8mxHq2?=
- =?us-ascii?Q?JDkjz+7E4P/KZuHzNL0Kjmc7jxi+si3d/la+spA2f5JH2mjKM2+uWXk3iL+x?=
- =?us-ascii?Q?dUqMKBk73iFHhNIot/j2BWTz15ssb/9EeR9b?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 15:03:38.1547
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2f81dc8-ecf5-43fa-2838-08dd8665db18
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002636E.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFF3CB57EDE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250426212253.40473-3-chath@bu.edu>
 
-Add support for new pci device id 0x1641 to register
-Crater device with PCIe.
+On Sat, Apr 26, 2025 at 09:22:49PM +0000, Chathura Rajapaksha wrote:
+> Some PCIe devices trigger PCI bus errors when accesses are made to
+> unassigned regions within their PCI configuration space. On certain
+> platforms, this can lead to host system hangs or reboots.
+> 
+> The current vfio-pci driver allows guests to access unassigned regions
+> in the PCI configuration space. Therefore, when such a device is passed
+> through to a guest, the guest can induce a host system hang or reboot
+> through crafted configuration space accesses, posing a threat to
+> system availability.
+> 
+> This patch introduces auditing support for config space accesses to
+> unassigned regions. When enabled, this logs such accesses for all
+> passthrough devices. 
+> This feature is controlled via a new Kconfig option:
 
-Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
----
- drivers/net/ethernet/amd/xgbe/xgbe-pci.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Add blank line between paragraphs.
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-pci.c b/drivers/net/ethernet/amd/xgbe/xgbe-pci.c
-index 718534d30651..097ec5e4f261 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-pci.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-pci.c
-@@ -391,6 +391,22 @@ static int __maybe_unused xgbe_pci_resume(struct device *dev)
- 	return ret;
- }
- 
-+static struct xgbe_version_data xgbe_v3 = {
-+	.init_function_ptrs_phy_impl	= xgbe_init_function_ptrs_phy_v2,
-+	.xpcs_access			= XGBE_XPCS_ACCESS_V3,
-+	.mmc_64bit			= 1,
-+	.tx_max_fifo_size		= 65536,
-+	.rx_max_fifo_size		= 65536,
-+	.tx_tstamp_workaround		= 1,
-+	.ecc_support			= 1,
-+	.i2c_support			= 1,
-+	.irq_reissue_support		= 1,
-+	.tx_desc_prefetch		= 5,
-+	.rx_desc_prefetch		= 5,
-+	.an_cdr_workaround		= 0,
-+	.enable_rrc			= 0,
-+};
-+
- static struct xgbe_version_data xgbe_v2a = {
- 	.init_function_ptrs_phy_impl	= xgbe_init_function_ptrs_phy_v2,
- 	.xpcs_access			= XGBE_XPCS_ACCESS_V2,
-@@ -428,6 +444,8 @@ static const struct pci_device_id xgbe_pci_table[] = {
- 	  .driver_data = (kernel_ulong_t)&xgbe_v2a },
- 	{ PCI_VDEVICE(AMD, 0x1459),
- 	  .driver_data = (kernel_ulong_t)&xgbe_v2b },
-+	{ PCI_VDEVICE(AMD, 0x1641),
-+	  .driver_data = (kernel_ulong_t)&xgbe_v3 },
- 	/* Last entry must be zero */
- 	{ 0, }
- };
--- 
-2.34.1
+>   CONFIG_VFIO_PCI_UNASSIGNED_ACCESS_AUDIT
+> 
+> A new audit event type, AUDIT_VFIO, has been introduced to support
+> this, allowing administrators to monitor and investigate suspicious
+> behavior by guests.
 
+Use imperative mood ("Introduce" instead of "This patch introduces
+..." and "Add ..." instead of "A new type has been introduced").
+
+> Co-developed by: William Wang <xwill@bu.edu>
+> Signed-off-by: William Wang <xwill@bu.edu>
+> Signed-off-by: Chathura Rajapaksha <chath@bu.edu>
+> ---
+>  drivers/vfio/pci/Kconfig           | 12 ++++++++
+>  drivers/vfio/pci/vfio_pci_config.c | 46 ++++++++++++++++++++++++++++--
+>  include/uapi/linux/audit.h         |  1 +
+>  3 files changed, 57 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index c3bcb6911c53..7f9f16262b90 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -42,6 +42,18 @@ config VFIO_PCI_IGD
+>  	  and LPC bridge config space.
+>  
+>  	  To enable Intel IGD assignment through vfio-pci, say Y.
+> +
+> +config VFIO_PCI_UNASSIGNED_ACCESS_AUDIT
+> +	bool "Audit accesses to unassigned PCI configuration regions"
+> +	depends on AUDIT && VFIO_PCI_CORE
+> +	help
+> +	  Some PCIe devices are known to cause bus errors when accessing
+> +	  unassigned PCI configuration space, potentially leading to host
+> +	  system hangs on certain platforms. When enabled, this option
+> +	  audits accesses to unassigned PCI configuration regions.
+> +
+> +	  If you don't know what to do here, say N.
+> +
+>  endif
+>  
+>  config VFIO_PCI_ZDEV_KVM
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index cb4d11aa5598..ddd10904d60f 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/vfio.h>
+>  #include <linux/slab.h>
+> +#include <linux/audit.h>
+>  
+>  #include "vfio_pci_priv.h"
+>  
+> @@ -1980,6 +1981,37 @@ static size_t vfio_pci_cap_remaining_dword(struct vfio_pci_core_device *vdev,
+>  	return i;
+>  }
+>  
+> +enum vfio_audit {
+> +	VFIO_AUDIT_READ,
+> +	VFIO_AUDIT_WRITE,
+> +	VFIO_AUDIT_MAX,
+> +};
+> +
+> +static const char * const vfio_audit_str[VFIO_AUDIT_MAX] = {
+> +	[VFIO_AUDIT_READ]  = "READ",
+> +	[VFIO_AUDIT_WRITE] = "WRITE",
+> +};
+> +
+> +static void vfio_audit_access(const struct pci_dev *pdev,
+> +			      size_t count, loff_t *ppos, bool blocked, unsigned int op)
+> +{
+> +	struct audit_buffer *ab;
+> +
+> +	if (WARN_ON_ONCE(op >= VFIO_AUDIT_MAX))
+> +		return;
+> +	if (audit_enabled == AUDIT_OFF)
+> +		return;
+> +	ab = audit_log_start(audit_context(), GFP_ATOMIC, AUDIT_VFIO);
+> +	if (unlikely(!ab))
+> +		return;
+> +	audit_log_format(ab,
+> +			 "device=%04x:%02x:%02x.%d access=%s offset=0x%llx size=%ld blocked=%u\n",
+> +			 pci_domain_nr(pdev->bus), pdev->bus->number,
+> +			 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn),
+> +			 vfio_audit_str[op], *ppos, count, blocked);
+> +	audit_log_end(ab);
+> +}
+> +
+>  static ssize_t vfio_config_do_rw(struct vfio_pci_core_device *vdev, char __user *buf,
+>  				 size_t count, loff_t *ppos, bool iswrite)
+>  {
+> @@ -1989,6 +2021,7 @@ static ssize_t vfio_config_do_rw(struct vfio_pci_core_device *vdev, char __user
+>  	int cap_start = 0, offset;
+>  	u8 cap_id;
+>  	ssize_t ret;
+> +	bool blocked;
+>  
+>  	if (*ppos < 0 || *ppos >= pdev->cfg_size ||
+>  	    *ppos + count > pdev->cfg_size)
+> @@ -2011,13 +2044,22 @@ static ssize_t vfio_config_do_rw(struct vfio_pci_core_device *vdev, char __user
+>  	cap_id = vdev->pci_config_map[*ppos];
+>  
+>  	if (cap_id == PCI_CAP_ID_INVALID) {
+> -		if (((iswrite && block_pci_unassigned_write) ||
+> +		blocked = (((iswrite && block_pci_unassigned_write) ||
+>  		     (!iswrite && block_pci_unassigned_read)) &&
+> -		    !pci_uaccess_lookup(pdev))
+> +		    !pci_uaccess_lookup(pdev));
+> +		if (blocked)
+>  			perm = &block_unassigned_perms;
+>  		else
+>  			perm = &unassigned_perms;
+>  		cap_start = *ppos;
+> +		if (IS_ENABLED(CONFIG_VFIO_PCI_UNASSIGNED_ACCESS_AUDIT)) {
+> +			if (iswrite)
+> +				vfio_audit_access(pdev, count, ppos, blocked,
+> +						  VFIO_AUDIT_WRITE);
+> +			else
+> +				vfio_audit_access(pdev, count, ppos, blocked,
+> +						  VFIO_AUDIT_READ);
+> +		}
+
+Simplify this patch by adding "blocked" in the first patch.  Then you
+won't have to touch the permission checking that is unrelated to the
+audit logging.  Consider adding a helper to do the checking and return
+"blocked" so it doesn't clutter vfio_config_do_rw().
+
+>  	} else if (cap_id == PCI_CAP_ID_INVALID_VIRT) {
+>  		perm = &virt_perms;
+>  		cap_start = *ppos;
+> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> index 9a4ecc9f6dc5..c0aace7384f3 100644
+> --- a/include/uapi/linux/audit.h
+> +++ b/include/uapi/linux/audit.h
+> @@ -122,6 +122,7 @@
+>  #define AUDIT_OPENAT2		1337	/* Record showing openat2 how args */
+>  #define AUDIT_DM_CTRL		1338	/* Device Mapper target control */
+>  #define AUDIT_DM_EVENT		1339	/* Device Mapper events */
+> +#define AUDIT_VFIO		1340	/* VFIO events */
+>  
+>  #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
+>  #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
+> -- 
+> 2.34.1
+> 
