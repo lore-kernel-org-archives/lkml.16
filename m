@@ -1,170 +1,128 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D2046B5;
-	Mon, 28 Apr 2025 05:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C37D46B5;
+	Mon, 28 Apr 2025 05:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745819498; cv=none; b=jbS0LemhYAKVI7zx1TvFOcTQw7VbO5FhcWHlQZkeCdR94keByRsxGCoqjjlYHnsbpRJEY/PSVsbp7SROy8VnaJA7/1TziLfcTR4Cpnu1oRQdapaf6rBacS+tdXiAYVJMXkqeWhTb/lwAAQTgOqAd4cDwGG0sGkiR++I03kYPC5M=
+	t=1745819558; cv=none; b=ID5HgeZhPKLnP0hfU294zDOcLqrbQYegG/RyRLokItY3dtVEnML+H8r1ceQKC2RKAJJ4V85vf21FWkuZAuTFfIJ7DCbccwV5/aAAAwl0do6PCr0627+YRpJOhXipqd6AM7wtNr3fFoZ7OPzG2ImSP8WznoucuCItTHMkcNFPOw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745819498; c=relaxed/simple;
-	bh=fBWfZMks/xNpDQZPHQn7cdiv6dcEzlGaK2uFCX0L0LM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aRe/HlfAaC8tQip3r/b7Fs/US61pvLkrYXyxPNF1HWBPvU3yh1zNg4SNFzVZs9S4aFB1NBRmbtw2iwOUpfzHt9TRi4XqQXJDbpg+UZALpr4k7cv363h4EbJEQPrWcS0roqGFNVq5ZWkoIOFTQZ45Bd0g1zbA+SsHv6hraVz3aUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dKB61EZi; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745819558; c=relaxed/simple;
+	bh=rm5qCNWaoR5n5I1YcDrZtIug1s7duqJq1CtwihptkKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AhjTNpk0sb362gd5DyTisv0TLiXumU62UrP00JFkXNImNZMaKXKjNbJmYPqldXfGDRaOHhTM9Tgkw85fElv8IrSzGKumIHpc5+m1DB7Zpjaq+1KhHdCBg+zQNlHDZ2YoLpWPaDkDYEGN5raY8eHnnbkdQc4H93ftONDrjyBL9Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=fms1zUJ1; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKB61EZi"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22423adf751so44296185ad.2;
-        Sun, 27 Apr 2025 22:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745819496; x=1746424296; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aJj6MHwH4JxPx3ZC0hjq4LRz4vzPTDlUe19nZjMz/Z0=;
-        b=dKB61EZifrkvucAvBSKSssxuJr9QRwwxpkx/eeF5I0lW8wyJnOiFrQdCf7WREXrstX
-         QGkyXtUK7OHE5c/yZDGC/zLtceKSG5SY/Os5dcD8PK7JmOhKWvKaE6w3o1kzd9k0Oji6
-         XAyGSyk1HHQo/5hidvg4RhF0BN1jZigEAs38Ome52A1pk/Cg1siBukTgdySuktY2Zf6J
-         HlXRADFVdeAhOlrrcXjar9P9TP6ERyg3hw7/JeSA1o9CB3nqB5YcHE73zrj2AvLRADtT
-         Xy7fRPMuGWbkR5KWRdTBk0medFfhL6wvfglXKDn5HnCQ4RpsBx7hDZDcsCQPFD1MUKxv
-         btuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745819496; x=1746424296;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aJj6MHwH4JxPx3ZC0hjq4LRz4vzPTDlUe19nZjMz/Z0=;
-        b=OPGPSUWi+kxzcaZZohG5MJSVYckTBGXQVbjO+EYCa+IMMuO7UGm4MHNXzl+ZeBGlFm
-         HFzkO4PvGVoXBx9Eby9Nl3X7uvE5vE06BXY9iEDj8j6YWT/shvFOlen73nyRPEqXitdl
-         9gDu1bPfnacdhoFT2Q1yD9R3nnyoTr2Si84fwz0qycopsEPodu5fqkd1O4dhOhqOTtd2
-         huwhHXDY4uBXZHMBYr/fKKV8kbF8j6s6YfTBcmuiQu3prE/qK4BkJVEE1eFng1RuMZ+C
-         CHto6XYlvhzK3JQDqs2IxsHzw5YmeO1S6MOAXfBcIziUQpSFlTmaXRu/mhcaBHLD/ecN
-         3UKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHyi3MuIClhRWV9ag/b1Lwb6tKgcqf4XNdeQKsXtR6L8Jj0yXTlAELBlHgQ8CL4gLGLqhyqITmHjMkqjL2@vger.kernel.org, AJvYcCUiUdVaq4zdis1Ozxij9ucD6tcdMEPSzN2vUeOMDKc6DKKipOSGRuKMzLZevMi/M0y6kexG/TuxAMYKf3cIoDNRJvg2Fw==@vger.kernel.org, AJvYcCVw9rmpcq3+ydg4ytMpNCzSYF95EeZG8RPgH2JwK5oBFIOd3ns5KUe3xHHC+NpLpQ47bCgtEiGyDCULQQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBHpp0H+Infd93gVbJOp8pEo6X8Av/bd77H63qKrblbERi7HYB
-	FaceYkSdXA5UYUv2hYj90m9DokVIx2iaUnZfw1+YD64isWdKQwGL
-X-Gm-Gg: ASbGncuyOTE6Dnemd6IlCvjqaSW2K/ON71G2DAa+MqcqWnEtGGmqpUTUEtuZ8l8hJXT
-	HTmVa8UgauctnA5OzPvLKyPKP76UH9+c2u3A7uolhluPhIq00vohoy9wa+NMPHGNYkKpThDg129
-	I8QNNQWSr12F8MhyKLFYFwT/Al0gBrrpk6BjFf1cpQ82G4mudJWbBCLy0g7hrzZwxemzJdD7Nes
-	r7rsr78xM3EAlzL0KErGN0XZda6EsYwAst6pv6OxMAhCWjbCtzAx/zXNq5clJnbnSua09Zj89e5
-	Qhvhygjn0MDMmOgNJBBCjcR8ykxvjQO3l388IWaK
-X-Google-Smtp-Source: AGHT+IE56vErmrfFXk09hCFdzyV16haH4ppZQVgDpIFf/VM+2oiixXo4I+AHK1KpetrjF9SdAjZrLw==
-X-Received: by 2002:a17:902:f651:b0:224:24d3:60f4 with SMTP id d9443c01a7336-22dbf5ef6bdmr161587605ad.15.1745819496211;
-        Sun, 27 Apr 2025 22:51:36 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:67d:4372:d1e6:def0])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e75c9sm73670495ad.108.2025.04.27.22.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 22:51:35 -0700 (PDT)
-Date: Sun, 27 Apr 2025 22:51:32 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hdegoede@redhat.com>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-Message-ID: <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
-References: <20250425162949.2021325-1-superm1@kernel.org>
- <aAyWFI+o/kU9hDVs@duo.ucw.cz>
- <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
- <aA0o2SWGtd/iMYM2@duo.ucw.cz>
- <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
- <aA3KXNCKKH17mb+a@duo.ucw.cz>
- <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
- <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fms1zUJ1"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53S5pW1P2979466
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sun, 27 Apr 2025 22:51:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53S5pW1P2979466
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745819495;
+	bh=7VWaFx5C1r40cv5Q5GAUWH5ehA3hIjYVFvGitox8Udo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fms1zUJ1OZklF7FmmUbwDrwL9tVX+21YABl6onWPOgM5XVT/lUufNI98OUjJ6r4pd
+	 mYHD81Y2F802vFN5dVYLsXgYdos6bPmGubsmBvnYi6bTunNVTWo4GSSyzCTtZ4g7E8
+	 qSEOmKxVbYU/kz4/wfcVyWClrnvDW6vZUOtPzN42bI0sPbmWzRBKEUhP3PoJz/KYgH
+	 tU1Y1vfETVXPWsOEpROLxWvUKGOUt+3ttMXk4c35xZfFPFcYIr9OjFbiPoDiHHVg8K
+	 AoCsWtWXwDdtqRiU4H4ZayTuzhk/+MVfpukMAIp5MJhyeUxPgBxnoCvcHajzas9Xyv
+	 /yCpSarWEfd5Q==
+Message-ID: <66b3ac69-447c-433f-a907-da20241d55ed@zytor.com>
+Date: Sun, 27 Apr 2025 22:51:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/7] x86/fpu/xstate: Differentiate default features for
+ host and guest FPUs
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "Gao, Chao" <chao.gao@intel.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "Spassov, Stanislav" <stanspas@amazon.de>,
+        "levymitchell0@gmail.com" <levymitchell0@gmail.com>,
+        "samuel.holland@sifive.com" <samuel.holland@sifive.com>,
+        "Li, Xin3" <xin3.li@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yang, Weijiang" <weijiang.yang@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "john.allen@amd.com" <john.allen@amd.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        "vigbalas@amd.com" <vigbalas@amd.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "hpa@zytor.com"
+ <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "aruna.ramakrishna@oracle.com" <aruna.ramakrishna@oracle.com>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <20250410072605.2358393-1-chao.gao@intel.com>
+ <20250410072605.2358393-4-chao.gao@intel.com>
+ <f53bea9b13bd8351dc9bba5e443d5e4f4934555d.camel@intel.com>
+ <aAtG13wd35yMNahd@intel.com>
+ <4a4b1f18d585c7799e5262453e4cfa2cf47c3175.camel@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <4a4b1f18d585c7799e5262453e4cfa2cf47c3175.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 27, 2025 at 10:30:24PM -0700, Dmitry Torokhov wrote:
-> Apologies for extended absence...
-> 
-> On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
-> > 
-> > 
-> > On 4/27/25 01:10, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > > > > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
-> > > > > > > > to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
-> > > > > > > > to lock the screen. Modern hardware [2] also sends this sequence of
-> > > > > > > > events for keys with a silkscreen for screen lock.
-> > > > > > > > 
-> > > > > > > > Introduced a new Kconfig option that will change KEY_SCREENLOCK when
-> > > > > > > > emitted by driver to META + L.
-> > > > > > > 
-> > > > > > > Fix gnome and kde, do not break kernel...
-> > > > > > 
-> > > > > > I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
-> > > > > > 
-> > > > > > That's going to break modern hardware lockscreen keys.  They've all
-> > > > > > obviously moved to META+L because that's what hardware today uses.
-> 
-> Vendors do all kind of weird things. They want to ship their
-> peripherals here and now and they do not care of shortcuts will change a
-> few years down the road.
-> 
-> FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
-> do not emit any shortcurts. Anything that is "Woks with Chromebooks"
-> will use KEY_SCREENLOCK.
-> 
-> 
-> > > > > 
-> > > > > Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
-> > > > > screen locking, no?
-> 
-> KDE by default recognizes Meta+L combination (which used to be
-> Alt+Ctrl+L), Screensaver key, and allows users to define their custom
-> shortcuts.
-> 
-> I also wonder how many other DEs beside Gnome do not recognize
-> KEY_SCREENLOCK.
+On 4/25/2025 9:09 AM, Edgecombe, Rick P wrote:
+>>    And that will create a bit of a
+>>   :snafu if Linux does gain support for SSS.
+>>
+>> *:https://lore.kernel.org/kvm/ZM1jV3UPL0AMpVDI@google.com/
+> I chatted with Xin about this a few weeks ago. It sounds like FRED bare metal
+> SSS will not need CET_S state, but it wasn't 100% clear.
 
-So I poked around Gnome a bit. According to the gnome-settings-daemon
-source code KEY_SCREENLOCK should be recognized. It is set up as
-"screensaver-static" key which is hidden and shoudl not be changed by
-user:
+FRED reuses one CET_S MSR IA32_PL0_SSP, and give it an alias
+IA32_FRED_SSP0.
 
-https://github.com/GNOME/gnome-settings-daemon/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in#L504
-
-    <key name="screensaver-static" type="as">
-      <default>['XF86ScreenSaver']</default>
-      <summary>Lock screen</summary>
-      <description>Static binding to lock the screen.</description>
-    </key>
-
-
-
-> 
-> > > > 
-> > > > This was actually the first path I looked down before I even started the
-> > > > kernel patch direction for this problem.
-> > > > 
-> > > > GNOME doesn't support assigning more than one shortcut key for an action.
-
-It sure does even if it is not shown in UI. Poke around with
-dconf-editor and look in /org/gnome/settings-daemon/plugins/media-keys/
-and you will see plenty of "*-static" keys with multiple
-keycodes/shortcuts assigned.
-
-"touchpad-toggle-static" - ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
-"rotate-video-lock-static" - ['<Super>o', 'XF86RotationLockToggle']
-
-and so on...
-
-Maybe Gnome broke screen lock key in recent release?
-
-Thanks.
-
--- 
-Dmitry
+Thanks!
+     Xin
