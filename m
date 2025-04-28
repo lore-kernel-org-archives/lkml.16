@@ -1,231 +1,259 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4897B70810;
-	Mon, 28 Apr 2025 13:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECDF2690F9
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846614; cv=none; b=k+wYGHzrmb5QqpACKxtObagVFSJwusgOaTnQ5lf5AOKgV3NAXPa8ykMtGTcHpIH+6CKPXSADCKX++vZiYvtdxxRwRTxsh/lTkyafZlVBYymlUchKgf1xapNOunzScT9aqWXS3TqNDHjKzBnOEmUCDHO5EgpWhTGVajAbAPD9VFo=
+	t=1745846616; cv=none; b=c5zPwxvCTyKDlB+XW1ecQO6Z4UKU/frro4cKCDBbkyFrdMuMma577IAWRIh30vBE0LM+GkzN/eOl3cMuuWczlUQEvt2iuqvgsir7alccBasGyFrFzL4J7DfUEMl0HDWDja7CgxGsfgrOHcWVAzL5e9VOL9+EjpK6jix8ZhoQR7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846614; c=relaxed/simple;
-	bh=335MrcHvnvENFyHo54UTERg/dHu7eoyK/wd1W1y27ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SI6OfGZORkp4G7N1Jri9Irdb7y8quC5uPlNLDPJ4EudkuoN38RSZ/Zf72tsXyrdT7wwZx6jYm49qeAMZf4B8I8Kp0sxeVCTikzKcu/KufAJiMtIiGlGJ+ZBkkSd3Z08Isvr2+aMKS8cH69fkluRxmuGVY7zNiETjUs7YNuRb9Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+VNtlt7; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745846616; c=relaxed/simple;
+	bh=wpc9QTSjTNiKBhsTcu4EGr1jK0YJNp7R1I2Ihug9VOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=opK/yMgWwlIWE/Bqrh9FyLo9gLEgEHD4VMbdSfA3I48Yjp+05aoejA0bT7jiCFYoShGSLoPjVRYWy6DAjF7fFtMHiKly32n13vZmXEewMZq4o58ggmZNGEd/7xsTQZGjRTg2ogQHbuw87PApxJGnVWYJ2HME1n1dPq40/JCqh04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VU8VOs8X; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+VNtlt7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745846612; x=1777382612;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=335MrcHvnvENFyHo54UTERg/dHu7eoyK/wd1W1y27ug=;
-  b=n+VNtlt7ZACCOGriZCkXBVlMtobkdKKBJWDkonwcpymNhbLd1B/qX2Hv
-   GJtc9wgnDO4e+m2mGNsb6wJLyEEiE4MFICeZrBvluIXZpeAHadEfLVu6Y
-   icDV5XiTyL0UsmKD2avru8hNAyaAdhF/HkrV5dPhRQb8X/LyP6nQh4m0w
-   Iws5rO2QfX/kNFufN0uj8qIHDj3QKlWFWGMk++qMQkVSx6qnIWKZMZcYt
-   XKuy/C4IzbGc463q4l29m74OIEPQ35Km9MMicHxvOg0Ki+U8wmekFpDm+
-   xjj+sbrNpWr8fSElLYgfzpVQdzLqXF8Jd1tAtv0ibKqJOtNQNphOUlKXT
-   w==;
-X-CSE-ConnectionGUID: DBAqw15jTKGSzPy1AGGHQA==
-X-CSE-MsgGUID: ASY64+tcQSWG4NvVzZ5Z6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="58422018"
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="58422018"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 06:23:31 -0700
-X-CSE-ConnectionGUID: CcSuqomNR++Tkv1FqcBimw==
-X-CSE-MsgGUID: qUzk6fo9TuKy8UWhQBuc7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="164483064"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa002.jf.intel.com with SMTP; 28 Apr 2025 06:23:28 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 28 Apr 2025 16:23:26 +0300
-Date: Mon, 28 Apr 2025 16:23:26 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Andrei Kuchynski <akuchynski@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jameson Thies <jthies@google.com>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Benson Leung <bleung@chromium.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
-	Pooja Katiyar <pooja.katiyar@intel.com>,
-	Madhu M <madhu.m@intel.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] usb: typec: ucsi: displayport: Fix deadlock
-Message-ID: <aA-BTrunTaYxtrps@kuha.fi.intel.com>
-References: <20250424084429.3220757-1-akuchynski@chromium.org>
- <20250424084429.3220757-2-akuchynski@chromium.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VU8VOs8X"
+Message-ID: <12dd5cdf-6255-4645-b132-b79a3a01f492@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745846612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z6OvVULSMnVqxjIcXe5c/gS9iiRSrJXCtK4Gv9I6sXU=;
+	b=VU8VOs8XYESOTAi+d224zLezIQx56aTpzXhqKHFzvCP7BZLvUX7R9EZd0wKIKdkuiEWrBz
+	7PNE3WkzyXJYQfgEK4C1ymaX/K+BtlizgOz0whaBeB4C+klL4UrQCH1zH0zwyNFnq8VOVm
+	guSrINGnNA/HB6lOBUKc/baftPh8bFA=
+Date: Mon, 28 Apr 2025 21:23:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424084429.3220757-2-akuchynski@chromium.org>
+Subject: Re: [PATCH 6/7] mm: Batch around can_change_pte_writable()
+Content-Language: en-US
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250428120414.12101-1-dev.jain@arm.com>
+ <20250428120414.12101-7-dev.jain@arm.com>
+ <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
+ <083865e8-572b-41b2-9221-3cee01349fab@arm.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <083865e8-572b-41b2-9221-3cee01349fab@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 24, 2025 at 08:44:28AM +0000, Andrei Kuchynski wrote:
-> This patch introduces the ucsi_con_mutex_lock / ucsi_con_mutex_unlock
-> functions to the UCSI driver. ucsi_con_mutex_lock ensures the connector
-> mutex is only locked if a connection is established and the partner pointer
-> is valid. This resolves a deadlock scenario where
-> ucsi_displayport_remove_partner holds con->mutex waiting for
-> dp_altmode_work to complete while dp_altmode_work attempts to acquire it.
+
+
+On 2025/4/28 20:59, Dev Jain wrote:
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: af8622f6a585 ("usb: typec: ucsi: Support for DisplayPort alt mode")
-> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
-
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-> ---
->  drivers/usb/typec/ucsi/displayport.c | 19 +++++++++-------
->  drivers/usb/typec/ucsi/ucsi.c        | 34 ++++++++++++++++++++++++++++
->  drivers/usb/typec/ucsi/ucsi.h        |  2 ++
->  3 files changed, 47 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/usb/typec/ucsi/displayport.c b/drivers/usb/typec/ucsi/displayport.c
-> index 420af5139c70..acd053d4e38c 100644
-> --- a/drivers/usb/typec/ucsi/displayport.c
-> +++ b/drivers/usb/typec/ucsi/displayport.c
-> @@ -54,7 +54,8 @@ static int ucsi_displayport_enter(struct typec_altmode *alt, u32 *vdo)
->  	u8 cur = 0;
->  	int ret;
->  
-> -	mutex_lock(&dp->con->lock);
-> +	if (!ucsi_con_mutex_lock(dp->con))
-> +		return -ENOTCONN;
->  
->  	if (!dp->override && dp->initialized) {
->  		const struct typec_altmode *p = typec_altmode_get_partner(alt);
-> @@ -100,7 +101,7 @@ static int ucsi_displayport_enter(struct typec_altmode *alt, u32 *vdo)
->  	schedule_work(&dp->work);
->  	ret = 0;
->  err_unlock:
-> -	mutex_unlock(&dp->con->lock);
-> +	ucsi_con_mutex_unlock(dp->con);
->  
->  	return ret;
->  }
-> @@ -112,7 +113,8 @@ static int ucsi_displayport_exit(struct typec_altmode *alt)
->  	u64 command;
->  	int ret = 0;
->  
-> -	mutex_lock(&dp->con->lock);
-> +	if (!ucsi_con_mutex_lock(dp->con))
-> +		return -ENOTCONN;
->  
->  	if (!dp->override) {
->  		const struct typec_altmode *p = typec_altmode_get_partner(alt);
-> @@ -144,7 +146,7 @@ static int ucsi_displayport_exit(struct typec_altmode *alt)
->  	schedule_work(&dp->work);
->  
->  out_unlock:
-> -	mutex_unlock(&dp->con->lock);
-> +	ucsi_con_mutex_unlock(dp->con);
->  
->  	return ret;
->  }
-> @@ -202,20 +204,21 @@ static int ucsi_displayport_vdm(struct typec_altmode *alt,
->  	int cmd = PD_VDO_CMD(header);
->  	int svdm_version;
->  
-> -	mutex_lock(&dp->con->lock);
-> +	if (!ucsi_con_mutex_lock(dp->con))
-> +		return -ENOTCONN;
->  
->  	if (!dp->override && dp->initialized) {
->  		const struct typec_altmode *p = typec_altmode_get_partner(alt);
->  
->  		dev_warn(&p->dev,
->  			 "firmware doesn't support alternate mode overriding\n");
-> -		mutex_unlock(&dp->con->lock);
-> +		ucsi_con_mutex_unlock(dp->con);
->  		return -EOPNOTSUPP;
->  	}
->  
->  	svdm_version = typec_altmode_get_svdm_version(alt);
->  	if (svdm_version < 0) {
-> -		mutex_unlock(&dp->con->lock);
-> +		ucsi_con_mutex_unlock(dp->con);
->  		return svdm_version;
->  	}
->  
-> @@ -259,7 +262,7 @@ static int ucsi_displayport_vdm(struct typec_altmode *alt,
->  		break;
->  	}
->  
-> -	mutex_unlock(&dp->con->lock);
-> +	ucsi_con_mutex_unlock(dp->con);
->  
->  	return 0;
->  }
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index e8c7e9dc4930..01ce858a1a2b 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -1922,6 +1922,40 @@ void ucsi_set_drvdata(struct ucsi *ucsi, void *data)
->  }
->  EXPORT_SYMBOL_GPL(ucsi_set_drvdata);
->  
-> +/**
-> + * ucsi_con_mutex_lock - Acquire the connector mutex
-> + * @con: The connector interface to lock
-> + *
-> + * Returns true on success, false if the connector is disconnected
-> + */
-> +bool ucsi_con_mutex_lock(struct ucsi_connector *con)
-> +{
-> +	bool mutex_locked = false;
-> +	bool connected = true;
-> +
-> +	while (connected && !mutex_locked) {
-> +		mutex_locked = mutex_trylock(&con->lock) != 0;
-> +		connected = UCSI_CONSTAT(con, CONNECTED);
-> +		if (connected && !mutex_locked)
-> +			msleep(20);
-> +	}
-> +
-> +	connected = connected && con->partner;
-> +	if (!connected && mutex_locked)
-> +		mutex_unlock(&con->lock);
-> +
-> +	return connected;
-> +}
-> +
-> +/**
-> + * ucsi_con_mutex_unlock - Release the connector mutex
-> + * @con: The connector interface to unlock
-> + */
-> +void ucsi_con_mutex_unlock(struct ucsi_connector *con)
-> +{
-> +	mutex_unlock(&con->lock);
-> +}
-> +
->  /**
->   * ucsi_create - Allocate UCSI instance
->   * @dev: Device interface to the PPM (Platform Policy Manager)
-> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-> index 3a2c1762bec1..9c5278a0c5d4 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.h
-> +++ b/drivers/usb/typec/ucsi/ucsi.h
-> @@ -94,6 +94,8 @@ int ucsi_register(struct ucsi *ucsi);
->  void ucsi_unregister(struct ucsi *ucsi);
->  void *ucsi_get_drvdata(struct ucsi *ucsi);
->  void ucsi_set_drvdata(struct ucsi *ucsi, void *data);
-> +bool ucsi_con_mutex_lock(struct ucsi_connector *con);
-> +void ucsi_con_mutex_unlock(struct ucsi_connector *con);
->  
->  void ucsi_connector_change(struct ucsi *ucsi, u8 num);
->  
-> -- 
-> 2.49.0.805.g082f7c87e0-goog
+> On 28/04/25 6:20 pm, Lance Yang wrote:
+>> Hey Dev,
+>>
+>> On 2025/4/28 20:04, Dev Jain wrote:
+>>> In preparation for patch 7, we need to properly batch around
+>>> can_change_pte_writable(). We batch around pte_needs_soft_dirty_wp() by
+>>> the corresponding fpb flag, we batch around the page-anon exclusive 
+>>> check
+>>> using folio_maybe_mapped_shared(); modify_prot_start_ptes() collects the
+>>> dirty and access bits across the batch, therefore batching across
+>>> pte_dirty(): this is correct since the dirty bit on the PTE really
+>>> is just an indication that the folio got written to, so even if
+>>> the PTE is not actually dirty (but one of the PTEs in the batch is),
+>>> the wp-fault optimization can be made.
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   include/linux/mm.h | 4 ++--
+>>>   mm/gup.c           | 2 +-
+>>>   mm/huge_memory.c   | 4 ++--
+>>>   mm/memory.c        | 6 +++---
+>>>   mm/mprotect.c      | 9 ++++++---
+>>>   5 files changed, 14 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>> index 5eb0d77c4438..ffa02e15863f 100644
+>>> --- a/include/linux/mm.h
+>>> +++ b/include/linux/mm.h
+>>> @@ -2710,8 +2710,8 @@ int get_cmdline(struct task_struct *task, char 
+>>> *buffer, int buflen);
+>>>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>>>                           MM_CP_UFFD_WP_RESOLVE)
+>>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> -                 pte_t pte);
+>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> +                 pte_t pte, struct folio *folio, unsigned int nr);
+>>>   extern long change_protection(struct mmu_gather *tlb,
+>>>                     struct vm_area_struct *vma, unsigned long start,
+>>>                     unsigned long end, unsigned long cp_flags);
+>>> diff --git a/mm/gup.c b/mm/gup.c
+>>> index 84461d384ae2..6a605fc5f2cb 100644
+>>> --- a/mm/gup.c
+>>> +++ b/mm/gup.c
+>>> @@ -614,7 +614,7 @@ static inline bool can_follow_write_common(struct 
+>>> page *page,
+>>>           return false;
+>>>       /*
+>>> -     * See can_change_pte_writable(): we broke COW and could map the 
+>>> page
+>>> +     * See can_change_ptes_writable(): we broke COW and could map 
+>>> the page
+>>>        * writable if we have an exclusive anonymous page ...
+>>>        */
+>>>       return page && PageAnon(page) && PageAnonExclusive(page);
+>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>> index 28c87e0e036f..e5496c0d9e7e 100644
+>>> --- a/mm/huge_memory.c
+>>> +++ b/mm/huge_memory.c
+>>> @@ -2032,12 +2032,12 @@ static inline bool 
+>>> can_change_pmd_writable(struct vm_area_struct *vma,
+>>>           return false;
+>>>       if (!(vma->vm_flags & VM_SHARED)) {
+>>> -        /* See can_change_pte_writable(). */
+>>> +        /* See can_change_ptes_writable(). */
+>>>           page = vm_normal_page_pmd(vma, addr, pmd);
+>>>           return page && PageAnon(page) && PageAnonExclusive(page);
+>>>       }
+>>> -    /* See can_change_pte_writable(). */
+>>> +    /* See can_change_ptes_writable(). */
+>>>       return pmd_dirty(pmd);
+>>>   }
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index b9e8443aaa86..b1fda3de8d27 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -750,7 +750,7 @@ static void restore_exclusive_pte(struct 
+>>> vm_area_struct *vma,
+>>>           pte = pte_mkuffd_wp(pte);
+>>>       if ((vma->vm_flags & VM_WRITE) &&
+>>> -        can_change_pte_writable(vma, address, pte)) {
+>>> +        can_change_ptes_writable(vma, address, pte, NULL, 1)) {
+>>>           if (folio_test_dirty(folio))
+>>>               pte = pte_mkdirty(pte);
+>>>           pte = pte_mkwrite(pte, vma);
+>>> @@ -5767,7 +5767,7 @@ static void numa_rebuild_large_mapping(struct 
+>>> vm_fault *vmf, struct vm_area_stru
+>>>               ptent = pte_modify(ptent, vma->vm_page_prot);
+>>>               writable = pte_write(ptent);
+>>>               if (!writable && pte_write_upgrade &&
+>>> -                can_change_pte_writable(vma, addr, ptent))
+>>> +                can_change_ptes_writable(vma, addr, ptent, NULL, 1))
+>>>                   writable = true;
+>>>           }
+>>> @@ -5808,7 +5808,7 @@ static vm_fault_t do_numa_page(struct vm_fault 
+>>> *vmf)
+>>>        */
+>>>       writable = pte_write(pte);
+>>>       if (!writable && pte_write_upgrade &&
+>>> -        can_change_pte_writable(vma, vmf->address, pte))
+>>> +        can_change_ptes_writable(vma, vmf->address, pte, NULL, 1))
+>>>           writable = true;
+>>>       folio = vm_normal_folio(vma, vmf->address, pte);
+>>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>>> index 33eabc995584..362fd7e5457d 100644
+>>> --- a/mm/mprotect.c
+>>> +++ b/mm/mprotect.c
+>>> @@ -40,8 +40,8 @@
+>>>   #include "internal.h"
+>>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> -                 pte_t pte)
+>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> +                  pte_t pte, struct folio *folio, unsigned int nr)
+>>>   {
+>>>       struct page *page;
+>>> @@ -67,6 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct 
+>>> *vma, unsigned long addr,
+>>>            * write-fault handler similarly would map them writable 
+>>> without
+>>>            * any additional checks while holding the PT lock.
+>>>            */
+>>> +        if (unlikely(nr != 1))
+>>> +            return !folio_maybe_mapped_shared(folio);
+>>> +
+>>>           page = vm_normal_page(vma, addr, pte);
+>>>           return page && PageAnon(page) && PageAnonExclusive(page);
+>>>       }
+>>
+>> IIUC, As mentioned in the comment above, we should do the same 
+>> anonymous check
+>> to large folios. And folio_maybe_mapped_shared() already handles both 
+>> order-0
+>> and large folios nicely, so we could simplify the logic as follows:
+> 
+> Thanks. Although we will have to call vm_normal_folio() in case of ! 
+> folio, since we may not have the folio already for nr == 1 case.
 
--- 
-heikki
+Ah, I see. Should we still check folio_test_anon() when nr != 1?
+
+Thanks,
+Lance
+
+> 
+>>
+>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>> index 1605e89349d2..df56a30bb241 100644
+>> --- a/mm/mprotect.c
+>> +++ b/mm/mprotect.c
+>> @@ -43,8 +43,6 @@
+>>   bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>> long addr,
+>>                                pte_t pte, struct folio *folio, 
+>> unsigned int nr)
+>>   {
+>> -       struct page *page;
+>> -
+>>          if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+>>                  return false;
+>>
+>> @@ -67,11 +65,7 @@ bool can_change_ptes_writable(struct vm_area_struct 
+>> *vma, unsigned long addr,
+>>                   * write-fault handler similarly would map them 
+>> writable without
+>>                   * any additional checks while holding the PT lock.
+>>                   */
+>> -               if (unlikely(nr != 1))
+>> -                       return !folio_maybe_mapped_shared(folio);
+>> -
+>> -               page = vm_normal_page(vma, addr, pte);
+>> -               return page && PageAnon(page) && PageAnonExclusive(page);
+>> +               return folio_test_anon(folio) && ! 
+>> folio_maybe_mapped_shared(folio);
+>>          }
+>>
+>>          VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+>> -- 
+>>
+>> Thanks,
+>> Lance
+>>
+>>> @@ -222,7 +225,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                */
+>>>               if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+>>>                   !pte_write(ptent) &&
+>>> -                can_change_pte_writable(vma, addr, ptent))
+>>> +                can_change_ptes_writable(vma, addr, ptent, folio, 1))
+>>>                   ptent = pte_mkwrite(ptent, vma);
+>>>               ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
+>>
+>>
+> 
+
