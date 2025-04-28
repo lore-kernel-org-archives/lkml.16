@@ -1,105 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942BD7082D;
-	Mon, 28 Apr 2025 16:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D10727F730
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745858784; cv=none; b=bzY94I3H4nk6RVYMGYY1JRmHHU/ZWiabr4x+PL/UoWk9MYMs7o3tICFRTgPuT8ejpZaFErYVLm2Ui8K+3duTrAvopinNn2mf+GFETskQPZw45l2GoM1+kx6Kom60z3kV1b0dLijVyqt9+2Kvbks5GtP2sn1hklTCCDvMz6M2Vtw=
+	t=1745858874; cv=none; b=hE9i5tF1zjwR59sLd2k5TTX9eyanK/RZgxB4hFS7vGO2BshbELZ51FhxeFpuPivW7c94wOtIraZIFYYZCNBm2QZdBVBXEAS3ulPpY+052THH8DojJ7lF9ZERByyCMDvltgJeB1QRpNwLfeqeELhBJkbsWRoiGVAdwggt3KnYqhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745858784; c=relaxed/simple;
-	bh=Z8PCmnJ0yV8qERDqeQfISVPvJ3tqJw2Q7aIBdlyPo/k=;
+	s=arc-20240116; t=1745858874; c=relaxed/simple;
+	bh=Vvmi+6NqUwT6UVM+IiKBQH4cBijiUNMG4llFcTbvbEc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ae2QHgO7A/bt1204w33xdWN12kgigiEFQJlJnh3M5hxE4LU7C4sNygoYDu4IThr2JEhZ56PJ4AtLGJ1RHj549wAQ7zjtiOD9U/zzmYdahNJr4kWuaN8hMCSXTHpyzZ858GU25uc8kR6r7ESHkfpJj+DOtUNTq/Pe3ycdQt1B52s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tlk2eBun; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WU4c0fMfuV9Gn5HoI9Ijjy1c7cVW5Dp/p4ThH/K1zRfBiKqbKPTnfqfwt8puAuLa2EJ4T0bKcV8eLm4dEEDELkdzuOGSqfaw3ak3tS8C4rrNKnU6ZPxCHs3rNm01MUQE4Dx2H5eAIEJwVoSMpcZ/P5Zh9zdO4D49a2pwVV47ul4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=kpGURY3u; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tlk2eBun"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90AEC4CEEC;
-	Mon, 28 Apr 2025 16:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745858784;
-	bh=Z8PCmnJ0yV8qERDqeQfISVPvJ3tqJw2Q7aIBdlyPo/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tlk2eBunYES27PROXmHIGQe3zmMP6HvdTE2sKVLCxFcGCmH8DHxdGjHqd3wobjohg
-	 VwJfw0ItrR32xKrcgdCW8TRpmdlk+DeJY1swcEr9VbaiBCu3yyJuag7MxpY9rcCj1j
-	 8nTXrf6GECR+mLe+QAKunFydd77qXJZBtfWsqaoubYbzZfTupDTo+1dZCG4DPhnIKw
-	 GE9ORFXi++TgAbviRRmsybWuVr08WLZvPsjcAv5o6bRpncDLzkKDP2jiGKorIc8UjF
-	 OQmxqQxbREQlcM8XfaIRqR6lFGfo4bo5dy+E+StVFWQQTe6kZ8U9u+SSstYkVmXSTR
-	 4chXnE6KS/Cag==
-Date: Mon, 28 Apr 2025 10:46:19 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Nitesh Shetty <nj.shetty@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v10 23/24] nvme-pci: convert to blk_rq_dma_map
-Message-ID: <aA-w20gOKus5hyAV@kbusch-mbp.dhcp.thefacebook.com>
-References: <cover.1745831017.git.leon@kernel.org>
- <007e00134d49160d5edab94a72c35b7b91429b09.1745831017.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="kpGURY3u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Vvmi
+	+6NqUwT6UVM+IiKBQH4cBijiUNMG4llFcTbvbEc=; b=kpGURY3uzif6VuK+kyRm
+	89QaCGaS6K8yCm3Tqrvx/ts53OGgWWMpg5iwVgbnMFFq6XRjCK2FLDj+TF15UpjB
+	26tfd0+lnqCH2PljnH54tFEzHl1ZbOymetrPJTAg4nn4e3XrhBo8eimTnQwx2JKD
+	jrOwDoAGhIdY12BUik87X4r/0OEzYNBBGIqF81oLwDh9bl6iLwf69q+tunTkJNF9
+	ThRuD8p09MFf8hIN94ODLEEWkHVZ48l3WddJaEcsslCUsTPHz/UR+N+Jx3MyV9DM
+	XrBVA0Xv1R+nj6FDAn5W1ArwAOF34ht+g5wTRYAFgsbb5JuuNS3ucNtBFVKZb2O0
+	XQ==
+Received: (qmail 655409 invoked from network); 28 Apr 2025 18:47:42 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Apr 2025 18:47:42 +0200
+X-UD-Smtp-Session: l3s3148p1@lN5GcdkzvKMujnsd
+Date: Mon, 28 Apr 2025 18:47:41 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64: dt: imx95: Add TQMa95xxSA
+Message-ID: <aA-xLX_O94O_U5Mt@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
+	linux-renesas-soc@vger.kernel.org
+References: <20250428135915.520432-1-alexander.stein@ew.tq-group.com>
+ <20250428135915.520432-2-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="GZeKDCrC752Annmk"
+Content-Disposition: inline
+In-Reply-To: <20250428135915.520432-2-alexander.stein@ew.tq-group.com>
+
+
+--GZeKDCrC752Annmk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <007e00134d49160d5edab94a72c35b7b91429b09.1745831017.git.leon@kernel.org>
 
-On Mon, Apr 28, 2025 at 12:22:29PM +0300, Leon Romanovsky wrote:
-> +	do {
-> +		if (WARN_ON_ONCE(mapped == entries)) {
-> +			iter.status = BLK_STS_IOERR;
-> +			break;
-> +		}
-> +		nvme_pci_sgl_set_data(&sg_list[mapped++], &iter);
 
-I think this should say "++mapped" so that the data blocks start at
-index 1 (continued below...)
+> Add initial support for TQMa95xxSA module compatible to SMARC-2.
+> There is a common device tree for all variants with e.g. reduced CPU count.
+> It supports LPUART7 for console, CAN, PCIe I2C, SPI, USB3.0, USB2.0, Audio,
+> SDHC1/2 and QSPI as storage.
 
-> +		iod->total_len += iter.len;
-> +	} while (blk_rq_dma_map_iter_next(req, dev->dev, &iod->dma_meta_state,
-> +				 &iter));
->  
-> -out_unmap_sg:
-> -	dma_unmap_sgtable(dev->dev, &iod->meta_sgt, rq_dma_dir(req), 0);
-> -out_free_sg:
-> -	mempool_free(iod->meta_sgt.sgl, dev->iod_meta_mempool);
-> -	return BLK_STS_RESOURCE;
-> +	nvme_pci_sgl_set_seg(sg_list, sgl_dma, mapped);
+Dunno why renesas-soc was CCed but since you are here... ;) do these
+boards support I3C, too? I know that imx95 has I3C cores. Just out of
+interest, not relevant for this series, of course.
 
-because this here is setting sg_list index 0 to be the segment
-descriptor.
 
-And you also need to increment sgl_dma to point to the element after
-sg_list, otherwise it's pointing right back to itself, creating a looped
-list.
+--GZeKDCrC752Annmk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	if (unlikely(iter.status))
-> +		nvme_unmap_metadata(dev, req);
-> +	return iter.status;
->  }
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgPsS0ACgkQFA3kzBSg
+KbYByQ/9E21JI/F6xpffslO17ZJxZuqDRJvwSI1lSeogANMjya+V231kLEgsll19
+hASbEbCsBckqC14BKUOlrCXjD0L9JUPLBOGTfIzmF4u1fUgimZ4i1vvEU7Q6WKLN
+Q6GCiHsu0ES+1W/2fTR2dlrIvGwBjhtvxqN8m1l/OlishK0gh2s/SQWE29CQnPUd
+vaTO5XSgzaQzZBXUXRYq32iog1HJsAzS8aS7e+aPCTiE3iHCMNIDY/596SwEVWW8
+TP2FcuLfR9XwZLvwywOE0vIC9dRiKWSWlNmeBGvKbFXEdd1N/qnyKAvZPWn8PDC2
+sSlwUVm4BBtgCuRcQ5pNs5ijQIx9wE+f867O4CzGKeaJHP5Y4oI3pB+UqcZNAgT7
+DTPkD1NUV4t9FgLBD++mrM1M/5DKbofxDq1nz8gxBHQyN4nfo3AmpH0miFul5wuu
+Dn5+rv9VlcAm79Y9agZmIZwh2TNyQw003dnQKnH4SqGMnZlP/3Cp1Glz1zZwrvie
+6uRWvR3ipVKbYxFtU13SORJuPD3WVVGIlW6DXpBAq20zXJVfGfT/QGhitVX5foza
+U0ApCs2qrCUPaggr9ffNy/CcP9h5l02YjBoMF8B6SdQQEceQ5KTy4fKkvjkbb2ND
+27BFUL1oeadruvaPA8+RuB/wScC++9kEjrV3IPitJ/8irQDgnGA=
+=lP6D
+-----END PGP SIGNATURE-----
+
+--GZeKDCrC752Annmk--
