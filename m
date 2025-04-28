@@ -1,315 +1,245 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CCF279799;
-	Mon, 28 Apr 2025 16:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857040; cv=fail; b=fxJ14J0shKMhYdRCkYVd/554zqbVVOO5GYxklvzN7Dcirk+GVHB+bZ/Ufz0Nwlek47yPjKdPhslBkXB04avA70pJiiewxDENgUrkk6exLSR2SVLQ3fsoI3C7XPZDxESCvbXlH8sytm6SgekItUKy3gPeXMiau2mG6/mmVecPYz0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857040; c=relaxed/simple;
-	bh=e3xr6StpTMs/E98+a4LM/48Wt3Dnlg7bGqYrUIWEVWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lGdJvUtNYBW6luVRo7A/kameBehGGPr6ASNdcI9v5p9fcZl8AKwUlKQ8E8C2gHxZoNszqDft+Cf170/TiWoBEpKtyEA1jI1EvlgYiFgb5Xov6D+f/di/R8RnI4UwmDfjtI97+EE2umhBdvJbFFfVSf1TVGWGyKxqujDud8O0qjc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=X7yie/gk; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wCXYLup5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X7yie/gk";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wCXYLup5"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SFqITj029942;
-	Mon, 28 Apr 2025 16:16:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=706/im1O6+Zdfg+V/8
-	KJWRmdB5/EF/EjLu5usP6LVck=; b=X7yie/gkLUm5OpbiIjWtigCl6hfDlzA+he
-	PaPm7S3I4wjV5KZFKW8COHk/SPdFxsstcMQ2DNQsPX7cqUa7q0xJyzbFMLv7hRPU
-	MsnzkcV312oW11Df1fPRzJWm9HbkiOdCCiL1Q7+ELf2r/hqMKYAPWePfnO8tPkuH
-	znNOJyESHJv3ZdUvrhMUQ4k2HQWEKs2ReCuXspYFTSeyVdfqhy8EHAODxxQrPbz7
-	+SofNDCnaUFVppxXUEnDUn+6/ROwuOqoC5T16+Z1kczUwIrQarNspBfZ1dgw1nou
-	+XtrN4xMlcX8g75wqTNHgLCOk0+G1tWmxUisNYhssfa8phuGsEtg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46acphg2hq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 16:16:38 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53SFge7K003870;
-	Mon, 28 Apr 2025 16:16:37 GMT
-Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazlp17012039.outbound.protection.outlook.com [40.93.6.39])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nx8nc9t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 16:16:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hlLwaiOQ7ACYjrX2bm61YUlsmjCCn1jg53WTALw0nj7VGVqt/27ecaaBTzMyfmYB0Y31Djnp2FqgLBRbxUcXp/sQx2yUzpKRhA/9u91UepTBpo+FWCWUNUs2I10sA4UUE/dmO+c/UpbG3DQe1V1Vwy/28fDfkZg7WT+XrNxKXkm4dWcyceFsHILPbKYdZU7qPQTMls/lbpYBqLyRfOg6VrGl+Tlu37XIuxXvp6nPWmLig70VcwKBr2MyRPyCH5ymP3okL7ilkLTuoJAOyiaoFkMKZUq8yNW4ARdQPHtVep9vJTKvRttXNsC8z9ErO1kRJuQf9UzTnu6qK4Z9jw7GZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=706/im1O6+Zdfg+V/8KJWRmdB5/EF/EjLu5usP6LVck=;
- b=X/YSpg90hoh9i73m9+/qjgoykE0jLhGHedZimFzZwTwO1/in24D2xWwuH6HoxjUNs8vNwDUeSrQvw3svIvV9bQgtjua27OXRg8NVXDQgVFmF7O68bX1JYLwjpkZURXj4CScat07hSluSL8ShXjK4IuezeJ/k6JXQWSHhtDmBHrhaQBf7SRVix8taPUqEN0l8ttg7cZhhav8Ul+kZRcbbCrK4g/A//ruMOFtH/mu23O1qlemvNmRG8MWcf6usIUZeG28sSW1Y+uvsHIJOtnJO+jmDWMnR8VDGLuSqRq5/+1D58gw3k1ekbi2vrF0lm2W0LqfYpLd9xIO3mjECl79YiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=706/im1O6+Zdfg+V/8KJWRmdB5/EF/EjLu5usP6LVck=;
- b=wCXYLup5mVYlyasxDfQV6D4Fwd2pj92ui6rC8MBbTqaNnra9vzYr82Cb12kZNbqSux5tY7HdHZPcvvosqQo9b1S5JhKKWxk0cUg5Hgn7TuL2VMBmFCx1zjSQUUEcfmOzwa7ovUyDXmebgbNpIJF6TtdYCWJcmGlttu3HVGAdg7I=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS7PR10MB5902.namprd10.prod.outlook.com (2603:10b6:8:86::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.33; Mon, 28 Apr 2025 16:16:27 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 16:16:27 +0000
-Date: Mon, 28 Apr 2025 17:16:24 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-trace-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1 01/11] x86/mm/pat: factor out setting cachemode into
- pgprot_set_cachemode()
-Message-ID: <da28d743-8622-46fc-aa60-5db9c776bd87@lucifer.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-2-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425081715.1341199-2-david@redhat.com>
-X-ClientProxiedBy: LO2P265CA0218.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:b::14) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F92E27B4EC;
+	Mon, 28 Apr 2025 16:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745857049; cv=none; b=uyCeTovZNyMrHEf5DwriqEKJKz6dQ/EFyKhXfpyUXfcgsToVfqo8GEmeI9li8rlwBYeGZUlwMT3fRapAano4IZU9HjTtRQ5tw2jwQrEcH8zyTHEyioHGLA7XyjAZtkY3j9mnhQ0YHKSD2JDfvh+i317MeKQguBfl93ZDRus0toI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745857049; c=relaxed/simple;
+	bh=mbJCbKc75tyXUQDVnUygIHJU5BKG8LWacJZ2nHvqLHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=b5cU02QbpzixpXTcsQgfGbQKr6wLhagFU/5PUj6hMgWCQuBwIZfOWCHinQQ8ACklTPXk4pAzU0TbnmKeZgaLNm1ZBtCNXpJsnxSzwAL4wHCLb+zP0kr4G4X0YTh0Lz/yqNU+bXbGCOdLE4Om3qDwL3A0MnVs8wuOnOCM2Yg6o1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6B1A1007;
+	Mon, 28 Apr 2025 09:17:18 -0700 (PDT)
+Received: from [10.57.90.155] (unknown [10.57.90.155])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C39EA3F66E;
+	Mon, 28 Apr 2025 09:17:21 -0700 (PDT)
+Message-ID: <fb0d2181-4e91-4c1a-9410-8729cbba0dfe@arm.com>
+Date: Mon, 28 Apr 2025 17:17:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS7PR10MB5902:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6c3fefd-b664-4251-2935-08dd86700711
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cagVVQqf38bHCHsziJa3Xaz61ZqBvy74ltgPUT8CB71PPkHK0u97VLVZLCVN?=
- =?us-ascii?Q?dF9ySpdUrc3/KTXOo5+/6pXhfdCwBk71FrSxWgxPOJ0RHv2ixN+WW70ZcBZz?=
- =?us-ascii?Q?qbxBlqP71cNdXd2aBTDU8Jhe7aDXQsNngTTcGen0XojBi7YXgPG0HsN6iQFO?=
- =?us-ascii?Q?djyHVqbio8EsZQJEspMUm1XOtcTAFdwu1kONhBDsiOjVG1UZUE8kb5yHlAa3?=
- =?us-ascii?Q?3ECFF816jBZra0WGvvq1oEUwG5D472Shod8DA3FedFfO4cRtSLGi0bJPhuh5?=
- =?us-ascii?Q?5vDMvkLqhxDsYeBWV5VP6jVuwhVdngXWy/72LhZoKV1oPIL6qaLUSAUdMvkv?=
- =?us-ascii?Q?7k8fPs9t8clIRsNxPDqJvF+SoH4ALENtJ1eBlMjweIIN7bnRgHL5FWCeCtqK?=
- =?us-ascii?Q?PI0dfndzPZM0A09mxMTOgR/F1G5n0TMpPirXFL4utJcN6pkx7WjFfzoKu46C?=
- =?us-ascii?Q?bS/3v3LsWxsaL5UwKib8hCUdtmWhb//iUQIauFNGjlSLt0MkiRpCx7JnDwz9?=
- =?us-ascii?Q?B0+cg7bTYG6/cxA3vCHX4KCqyCVvfUua6k1Xo5flE+0clRckU8oNuCJJdi1s?=
- =?us-ascii?Q?8zKfl5awRj1pKN6NPYfaGtWimxiVdXS/GcRoL+S2bnCLJ+p13GSg9ZavvBTJ?=
- =?us-ascii?Q?Yk/eueT18G3wIbo1nFHWL20nr+UOifEKJknC+u2zEw4z/vuZk4iXcQdJrCyv?=
- =?us-ascii?Q?3GOxz067IoQ8/38j9XLi8C5z7nfhoRIfElGlj87qlbZ7oXNBkJki/UTIu+o8?=
- =?us-ascii?Q?YaVzFW/Jx+BM2PAoHddbbR+MtM3twl4csAdLPUrPGDLL5yTG4gsrMT0o/HtN?=
- =?us-ascii?Q?RLgIyg+qSVoit0SSSs1duahNMTqTJRTC5umtTymsGKEWAWEsEuQ2+yuZ0N5V?=
- =?us-ascii?Q?ca8g2fpgJ3F5E4AcTW5D3n7sMR9uMk6oI5fBEnsPm8nzlTCACJRNAKe99eI1?=
- =?us-ascii?Q?HMjIOTtrv2Jp584T5nQ6MlWOgZCLlDG8NO9YJxT58iwxKkFUHjSkQFPVtwDp?=
- =?us-ascii?Q?Ldws/XVhqI2wmO8YRFufF9xduZVJFMcBTykNruwfHorjTRQ0w2ceaSxosF7y?=
- =?us-ascii?Q?cQ9jLkwMU0eRXWAveB8L3l1ROPOhS/tMGEPJccO3k8LpmcyDLG7RPtdh5jt6?=
- =?us-ascii?Q?dDFU8RQh+I8Gis6ZO2zJGDYgAmw8WYta83wv0QwbrPEnfVrTGjvX8/TdoKgQ?=
- =?us-ascii?Q?AfTKB6wYOjDDaHOdksasMxtwaOBjAfPrpIPGOiVz6cYtsQUm2eirJVDepV+F?=
- =?us-ascii?Q?yqqqxtq2XLztw+ThBBl1W/IP8wBtaQe8c1hSuGjhoAb5dw+uiHTuPHBmAn29?=
- =?us-ascii?Q?hhKRnWw95xyMePIgnD253SJKZoinNCCl48/jUEhH85bOcqDm/3Ufb/Rj+0/X?=
- =?us-ascii?Q?ilmc6rYHWiNx5fE6bDVLtxgUmX7/AVCDegW7hY42xkkZRq+awk+XlqLkA9Li?=
- =?us-ascii?Q?V4ig0Mrmh94=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g++xg9/6Idg0R7mORXjwKGN91YhyZJ77vGgOYZrpfaWb1Ct0kcITftlJq61p?=
- =?us-ascii?Q?hU9NfwnktjNtTyJx14A45oLY+LQReIAHnYlHx/xoiHi3swhGyGwOWq8quttD?=
- =?us-ascii?Q?B96uRM6/ee9l8nVpKyD013Aqt4nomtcdFBPHBPRUPF5s/rXNuIy5F9RDvsWu?=
- =?us-ascii?Q?stM8S14zSeGNcz7SQ94XPN+FZcESszM1oQV5w/9tpHCYM/yJcLo8lXzazxYo?=
- =?us-ascii?Q?2yL8bJp4KMvOhtURfReMXSQnfUCWpWAwJrAPp4LjiEdbmVy03l8P7TaY704y?=
- =?us-ascii?Q?Ar0MkiVFQhyE9bOE+E6Q58kcXT38rS8ZoP0D4F8okMae/ywC2+8lNAYz0nO+?=
- =?us-ascii?Q?7hFJLIR56AtnV/ZttrfMgZhkCqLOYk9JBkzSP5ROTm5Yv2eSK8royZWPC5me?=
- =?us-ascii?Q?5vfAki7HGGq5/7k0OPN/NKhcmtwFHx/pKDF2B6Cs805BHfzjF0cy8B1Cg2PB?=
- =?us-ascii?Q?SaNjUIT1Po4Qf2FOvPfC3Tvj9GdR3io1zcG/O9Uw0j11wWlFVS0aIlXoHVAQ?=
- =?us-ascii?Q?dnOSCFDIRb+VVonjhnZBMU+yCGevNn/Z4W4D38lCgvzqD/lzM0YM+Fw3dwRZ?=
- =?us-ascii?Q?v/FBQkcnKNV7odQ5w15XkSyAh63z6FSKTBtsdJv+XGYVcP+0Dbm8jqGQ78kN?=
- =?us-ascii?Q?V6Ftis+4o8/CdW7GbdX/AoK8HNAqdxiMAn+JLpk/vh4KDrOnACSuFm81NGWX?=
- =?us-ascii?Q?i9jYhUbm+9smXVXuk8t2mE+zVYNWa+6yS3mgV3lLwZOSqWqplc0k0P7hGjv/?=
- =?us-ascii?Q?2uxxChHMZuDU0NWUK37kQB4bupwHKO8t2Ncy3xtwrnllD2kfElNawECmAyGn?=
- =?us-ascii?Q?wH5zzK+YLH1yS4CpmZIRnRV8r07JjcoycVqvj6gyIZmjrPz/gmHAqSAeJYZy?=
- =?us-ascii?Q?Ps+Nhe29qIMFyTViWHpzAnmAtJOZR6OBuFC2Sqb1Kib5lPKUsRsHVS8uNGNf?=
- =?us-ascii?Q?NSSRyViV9vEac0SwqKx/tZsUqmJWGa/LYVlEgKpcwHLyzHRCImFCzkLxOdNI?=
- =?us-ascii?Q?G3IFx2Y+Y4XvMkeyLR3NaPKcWsHDT8WThSaH7PPNQXTngDT0Y2DKINeVE8LU?=
- =?us-ascii?Q?WzeA0PZ8tNRfmatBcs2o/+5WOTw8h6bGiEkcmwh9gcgmhK1ahKhoBZNIyUWS?=
- =?us-ascii?Q?VWWE2+aqOSNXffR5l4ucYT8tywH8x2EJ2Egp2iXB16BaCPYKo5MjS7S3lOqH?=
- =?us-ascii?Q?Wz7S4678VmBE69ul/WuP9E2TlmhxFk+Gt928y/CbIJUyqGV7ltkdJN87va9D?=
- =?us-ascii?Q?vB8D4/KoXTfG6aV7Be4VyQ4PICaRKMhNzQbX5DRcAglZBowxdxbcV/G7QBhK?=
- =?us-ascii?Q?SVE7zAEUzEpDuW1ry7/K9XNEj285/poIGXFQzCsw/p/cX7tGkGd7rCTP3e6Z?=
- =?us-ascii?Q?B4JwbUiHL8L/qR4IQtG4/VRn7YFRhea6fhPuXprj6/udD+EOWaTpFcUQmKRA?=
- =?us-ascii?Q?Lv5LddZyCBKX0FA2oN2+mC3ocq2IrLyndeQz5+oCRkY/0LglRz1x8Kdtn4Dt?=
- =?us-ascii?Q?dJe34mIDKq2jyzh7QMDAadz/kwQ9SXby6N/6Infxt99ggFfPpPeurmnLg3RV?=
- =?us-ascii?Q?Md1zfuzylZ3IGmoI7tEtmBkXDnC5X+VhyDIy71Ni8sGvDj9Vq+szHqIYANhK?=
- =?us-ascii?Q?5w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	M+lLt43fdXipfRIlH3LdC4gU3ySvW90BJibETAbZC/dG5hDt9jd7MLy9j6HzEW791gSHfl11KiAtp8nURNhYD41WGT2CFvjOpmjxizON7xaOxDpx/O7AEhGorYqBbar4bD0U9aY3n33B3JxVrYNNlZU+bugG4VpnDGeO0bXdyNaBp+ukOj4hyIbguyGhG1XZ7eWuDKj4C6KCgmNyc/pMGwz20Hw62x3T3q4KnEJ3eg+fgoP8EBehL9FzNNaWsT4VmDBXLftlclCehy8BPHVv1QYcD+fl9oxYOJDi6gp/X4qqJ5U29VKCnoKPaLAMDPQ0WuVaDWhwzGPTuqBahE1LFXqlrRgNs73qCyjE9YF9adLaroH7ChyhgfSgGSI7RYfE1Gpnpmr/t4qgYYfqkw6S0l2k5q/w5pG/cuGyu6RcYVQk+mI85cZqIi2lh8AeXUG5y6HhkRkHqpYwevs+qjGVVBD5wM+LSiZ6GrL18BZG7jKn/EmQYefwizIxPYBmvFcB2lWbT6HqI5H1FWthD678KvruwDkv1A9yVDikMWWStIg0Ijv1L15FEaty7P8+olzEFCU8KYxi8TzXCpdmjl0ISs+MU/KBQjbLVapOc3ObdGw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6c3fefd-b664-4251-2935-08dd86700711
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 16:16:27.0318
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /IvanaFJYGItI0CQz/C5CbWbBexJOo74qeFskAnYHLHz87nnFFtP2SZEJsumle8Y/EU7+paTGE3sG7i3nKVQoccuEa77Qmu1DsOMfH/rxyQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5902
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
- definitions=main-2504280133
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEzMyBTYWx0ZWRfX6WPumLvs84F9 SZ/r59iNZjjIbrTIEcgc9sRKCslLQ6nun1wQLKVDMVPYykhAkiUKFCRoHn5cMfkGrwMiQIV6ZAZ by7UGK5gUz/+zJDfoX4cwxs6/h/shMXGIvpoa7USRjbJ/xPEwCX2ez+5cI8Pj2eZQN4N92KM9Ct
- 1a/60JnBpCbG14ce8Hut8FQvmsXHdWd90e/Fc/+V24LXq6FDjJ/TG+gHSc6gQDB5Ue7rC/9fDMb Wf2AG1XKaU1Fd+TQgG/aTVO9evBO/F2AeWL9H6+5y+vb0ia5trkueIZqDg4atQqrmsvLMH5pqYR QcwWkPeI3vmjl8EDVc1v1Hzs2VhGebrfDjQVcfgh5BrRZST7ZOs+iAjUs1MQREXEmby9NOCJaAN ZyeiiKwG
-X-Proofpoint-GUID: HJKMDhkJm-7Hs9qwZ3HQRBMXOD3HwwgG
-X-Proofpoint-ORIG-GUID: HJKMDhkJm-7Hs9qwZ3HQRBMXOD3HwwgG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v6 3/3] arm64/mm: Elide tlbi in contpte_convert()
+ under BBML2
+Content-Language: en-GB
+To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
+ suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+ catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
+ robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+ paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
+ maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
+ oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
+ ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com, mshavit@google.com,
+ jsnitsel@redhat.com, smostafa@google.com, kevin.tian@intel.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+ <20250428153514.55772-8-miko.lenczewski@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250428153514.55772-8-miko.lenczewski@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 10:17:05AM +0200, David Hildenbrand wrote:
-> Let's factor it out to make the code easier to grasp.
->
-> Use it also in pgprot_writecombine()/pgprot_writethrough() where
-> clearing the old cachemode might not be required, but given that we are
-> already doing a function call, no need to care about this
-> micro-optimization.
+On 28/04/2025 16:35, Mikołaj Lenczewski wrote:
+> When converting a region via contpte_convert() to use mTHP, we have two
+> different goals. We have to mark each entry as contiguous, and we would
+> like to smear the dirty and young (access) bits across all entries in
+> the contiguous block. Currently, we do this by first accumulating the
+> dirty and young bits in the block, using an atomic
+> __ptep_get_and_clear() and the relevant pte_{dirty,young}() calls,
+> performing a tlbi, and finally smearing the correct bits across the
+> block using __set_ptes().
+> 
+> This approach works fine for BBM level 0, but with support for BBM level
+> 2 we are allowed to reorder the tlbi to after setting the pagetable
+> entries. We expect the time cost of a tlbi to be much greater than the
+> cost of clearing and resetting the PTEs. As such, this reordering of the
+> tlbi outside the window where our PTEs are invalid greatly reduces the
+> duration the PTE are visibly invalid for other threads. This reduces the
+> likelyhood of a concurrent page walk finding an invalid PTE, reducing
+> the likelyhood of a fault in other threads, and improving performance
+> (more so when there are more threads).
+> 
+> Because we support via allowlist only bbml2 implementations that never
+> raise conflict aborts and instead invalidate the tlb entries
+> automatically in hardware, we can avoid the final flush altogether.
+> 
+> However, avoiding the intermediate tlbi+dsb must be carefully considered
+> to ensure that we remain both correct and performant. We document our
+> reasoning and the expected interactions further in the contpte_convert()
+> source. To do so we rely on the aarch64 spec (DDI 0487L.a D8.7.1.1)
+> requirements RNGLXZ and RJQQTC to provide guarantees that the elision is
+> correct.
+> 
+> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
 
-Ah my kind of patch :)
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+It would be great to see this series merged this cycle!
 
-LGTM, so:
-
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Thanks,
+Ryan
 
 > ---
->  arch/x86/mm/pat/memtype.c | 33 +++++++++++++++------------------
->  1 file changed, 15 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-> index 72d8cbc611583..edec5859651d6 100644
-> --- a/arch/x86/mm/pat/memtype.c
-> +++ b/arch/x86/mm/pat/memtype.c
-> @@ -800,6 +800,12 @@ static inline int range_is_allowed(unsigned long pfn, unsigned long size)
->  }
->  #endif /* CONFIG_STRICT_DEVMEM */
->
-> +static inline void pgprot_set_cachemode(pgprot_t *prot, enum page_cache_mode pcm)
-> +{
-> +	*prot = __pgprot((pgprot_val(*prot) & ~_PAGE_CACHE_MASK) |
-> +			 cachemode2protval(pcm));
-> +}
+>  arch/arm64/mm/contpte.c | 139 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 138 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+> index bcac4f55f9c1..203357061d0a 100644
+> --- a/arch/arm64/mm/contpte.c
+> +++ b/arch/arm64/mm/contpte.c
+> @@ -68,7 +68,144 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
+>  			pte = pte_mkyoung(pte);
+>  	}
+>  
+> -	__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
+> +	/*
+> +	 * On eliding the __tlb_flush_range() under BBML2+noabort:
+> +	 *
+> +	 * NOTE: Instead of using N=16 as the contiguous block length, we use
+> +	 *       N=4 for clarity.
+> +	 *
+> +	 * NOTE: 'n' and 'c' are used to denote the "contiguous bit" being
+> +	 *       unset and set, respectively.
+> +	 *
+> +	 * We worry about two cases where contiguous bit is used:
+> +	 *  - When folding N smaller non-contiguous ptes as 1 contiguous block.
+> +	 *  - When unfolding a contiguous block into N smaller non-contiguous ptes.
+> +	 *
+> +	 * Currently, the BBML0 folding case looks as follows:
+> +	 *
+> +	 *  0) Initial page-table layout:
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |RO,n|RO,n|RO,n|RW,n| <--- last page being set as RO
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  1) Aggregate AF + dirty flags using __ptep_get_and_clear():
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |  0 |  0 |  0 |  0 |
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  2) __flush_tlb_range():
+> +	 *
+> +	 *   |____ tlbi + dsb ____|
+> +	 *
+> +	 *  3) __set_ptes() to repaint contiguous block:
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |RO,c|RO,c|RO,c|RO,c|
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  4) The kernel will eventually __flush_tlb() for changed page:
+> +	 *
+> +	 *                  |____| <--- tlbi + dsb
+> +	 *
+> +	 * As expected, the intermediate tlbi+dsb ensures that other PEs
+> +	 * only ever see an invalid (0) entry, or the new contiguous TLB entry.
+> +	 * The final tlbi+dsb will always throw away the newly installed
+> +	 * contiguous TLB entry, which is a micro-optimisation opportunity,
+> +	 * but does not affect correctness.
+> +	 *
+> +	 * In the BBML2 case, the change is avoiding the intermediate tlbi+dsb.
+> +	 * This means a few things, but notably other PEs will still "see" any
+> +	 * stale cached TLB entries. This could lead to a "contiguous bit
+> +	 * misprogramming" issue until the final tlbi+dsb of the changed page,
+> +	 * which would clear out both the stale (RW,n) entry and the new (RO,c)
+> +	 * contiguous entry installed in its place.
+> +	 *
+> +	 * What this is saying, is the following:
+> +	 *
+> +	 *  +----+----+----+----+
+> +	 *  |RO,n|RO,n|RO,n|RW,n| <--- old page tables, all non-contiguous
+> +	 *  +----+----+----+----+
+> +	 *
+> +	 *  +----+----+----+----+
+> +	 *  |RO,c|RO,c|RO,c|RO,c| <--- new page tables, all contiguous
+> +	 *  +----+----+----+----+
+> +	 *   /\
+> +	 *   ||
+> +	 *
+> +	 *  If both the old single (RW,n) and new contiguous (RO,c) TLB entries
+> +	 *  are present, and a write is made to this address, do we fault or
+> +	 *  is the write permitted (via amalgamation)?
+> +	 *
+> +	 * The relevant Arm ARM DDI 0487L.a requirements are RNGLXZ and RJQQTC,
+> +	 * and together state that when BBML1 or BBML2 are implemented, either
+> +	 * a TLB conflict abort is raised (which we expressly forbid), or will
+> +	 * "produce an OA, access permissions, and memory attributes that are
+> +	 * consistent with any of the programmed translation table values".
+> +	 *
+> +	 * That is to say, will either raise a TLB conflict, or produce one of
+> +	 * the cached TLB entries, but never amalgamate.
+> +	 *
+> +	 * Thus, as the page tables are only considered "consistent" after
+> +	 * the final tlbi+dsb (which evicts both the single stale (RW,n) TLB
+> +	 * entry as well as the new contiguous (RO,c) TLB entry), omitting the
+> +	 * initial tlbi+dsb is correct.
+> +	 *
+> +	 * It is also important to note that at the end of the BBML2 folding
+> +	 * case, we are still left with potentially all N TLB entries still
+> +	 * cached (the N-1 non-contiguous ptes, and the single contiguous
+> +	 * block). However, over time, natural TLB pressure will cause the
+> +	 * non-contiguous pte TLB entries to be flushed, leaving only the
+> +	 * contiguous block TLB entry. This means that omitting the tlbi+dsb is
+> +	 * not only correct, but also keeps our eventual performance benefits.
+> +	 *
+> +	 * For the unfolding case, BBML0 looks as follows:
+> +	 *
+> +	 *  0) Initial page-table layout:
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |RW,c|RW,c|RW,c|RW,c| <--- last page being set as RO
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  1) Aggregate AF + dirty flags using __ptep_get_and_clear():
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |  0 |  0 |  0 |  0 |
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  2) __flush_tlb_range():
+> +	 *
+> +	 *   |____ tlbi + dsb ____|
+> +	 *
+> +	 *  3) __set_ptes() to repaint as non-contiguous:
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |RW,n|RW,n|RW,n|RW,n|
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  4) Update changed page permissions:
+> +	 *
+> +	 *   +----+----+----+----+
+> +	 *   |RW,n|RW,n|RW,n|RO,n| <--- last page permissions set
+> +	 *   +----+----+----+----+
+> +	 *
+> +	 *  5) The kernel will eventually __flush_tlb() for changed page:
+> +	 *
+> +	 *                  |____| <--- tlbi + dsb
+> +	 *
+> +	 * For BBML2, we again remove the intermediate tlbi+dsb. Here, there
+> +	 * are no issues, as the final tlbi+dsb covering the changed page is
+> +	 * guaranteed to remove the original large contiguous (RW,c) TLB entry,
+> +	 * as well as the intermediate (RW,n) TLB entry; the next access will
+> +	 * install the new (RO,n) TLB entry and the page tables are only
+> +	 * considered "consistent" after the final tlbi+dsb, so software must
+> +	 * be prepared for this inconsistency prior to finishing the mm dance
+> +	 * regardless.
+> +	 */
 > +
->  int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
->  				unsigned long size, pgprot_t *vma_prot)
->  {
-> @@ -811,8 +817,7 @@ int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
->  	if (file->f_flags & O_DSYNC)
->  		pcm = _PAGE_CACHE_MODE_UC_MINUS;
->
-> -	*vma_prot = __pgprot((pgprot_val(*vma_prot) & ~_PAGE_CACHE_MASK) |
-> -			     cachemode2protval(pcm));
-> +	pgprot_set_cachemode(vma_prot, pcm);
->  	return 1;
+> +	if (!system_supports_bbml2_noabort())
+> +		__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
+>  
+>  	__set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
 >  }
->
-> @@ -880,9 +885,7 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
->  				(unsigned long long)paddr,
->  				(unsigned long long)(paddr + size - 1),
->  				cattr_name(pcm));
-> -			*vma_prot = __pgprot((pgprot_val(*vma_prot) &
-> -					     (~_PAGE_CACHE_MASK)) |
-> -					     cachemode2protval(pcm));
-> +			pgprot_set_cachemode(vma_prot, pcm);
->  		}
->  		return 0;
->  	}
-> @@ -907,9 +910,7 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
->  		 * We allow returning different type than the one requested in
->  		 * non strict case.
->  		 */
-> -		*vma_prot = __pgprot((pgprot_val(*vma_prot) &
-> -				      (~_PAGE_CACHE_MASK)) |
-> -				     cachemode2protval(pcm));
-> +		pgprot_set_cachemode(vma_prot, pcm);
->  	}
->
->  	if (memtype_kernel_map_sync(paddr, size, pcm) < 0) {
-> @@ -1060,9 +1061,7 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->  			return -EINVAL;
->  	}
->
-> -	*prot = __pgprot((pgprot_val(*prot) & (~_PAGE_CACHE_MASK)) |
-> -			 cachemode2protval(pcm));
-> -
-> +	pgprot_set_cachemode(prot, pcm);
->  	return 0;
->  }
->
-> @@ -1073,10 +1072,8 @@ void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot, pfn_t pfn)
->  	if (!pat_enabled())
->  		return;
->
-> -	/* Set prot based on lookup */
 
-We're losing a comment here but who cares, it's obvious what's happening.
-
->  	pcm = lookup_memtype(pfn_t_to_phys(pfn));
-> -	*prot = __pgprot((pgprot_val(*prot) & (~_PAGE_CACHE_MASK)) |
-> -			 cachemode2protval(pcm));
-> +	pgprot_set_cachemode(prot, pcm);
->  }
->
->  /*
-> @@ -1115,15 +1112,15 @@ void untrack_pfn_clear(struct vm_area_struct *vma)
->
->  pgprot_t pgprot_writecombine(pgprot_t prot)
->  {
-> -	return __pgprot(pgprot_val(prot) |
-> -				cachemode2protval(_PAGE_CACHE_MODE_WC));
-> +	pgprot_set_cachemode(&prot, _PAGE_CACHE_MODE_WC);
-> +	return prot;
->  }
->  EXPORT_SYMBOL_GPL(pgprot_writecombine);
->
->  pgprot_t pgprot_writethrough(pgprot_t prot)
->  {
-> -	return __pgprot(pgprot_val(prot) |
-> -				cachemode2protval(_PAGE_CACHE_MODE_WT));
-> +	pgprot_set_cachemode(&prot, _PAGE_CACHE_MODE_WT);
-> +	return prot;
->  }
->  EXPORT_SYMBOL_GPL(pgprot_writethrough);
->
-> --
-> 2.49.0
->
