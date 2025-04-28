@@ -1,153 +1,160 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C52925E471;
-	Mon, 28 Apr 2025 08:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597271F4629
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745829166; cv=none; b=frMrnWxLurFw7oV0dTFQA41ZcFqLFA+tp0y0vfDDvhgbNsU4GnXrXysDNmtE4zWkr5RsBnE81gQqvtOMtc61zzsf7amFuB0BG89A9bI1DB0r0K8391WLBfydGRXAfMg9GZN3NnYN3Dg/u8dHQGvOS2xAa19niaKltTDk+V91lj4=
+	t=1745829203; cv=none; b=aFy0OFbiP09y9JocbvYQ6rs1U2NbcWAeRRn9uHd1p2SRGznCxyUMrv8CKNylDgr4wZcQ6HfpZgxhe2FZ+UBhd/10srqX5odJEk/pJu1Bfj5AVeNlOTTEaLtiL09A5V6EK31S4hmR9KbJCeyWzgOihZyCMWfDRC4gUPYK2DAefjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745829166; c=relaxed/simple;
-	bh=VYIGYAzPWiB6IechB7rf7W/hwN4m0GLx1G4VKA0f7EQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpV2rbV7kaMWNLS9QnVhmxQK/yfTCvDOl0elBbiyic+H+MhrzcsPiKb4zVem49t+N6ojX7JgWzUaioP07/13Y7PjdUWxKUvxSuqi6aNlDoQsOf9KovBknTtHRQi+ye8x5A+sNNApPKV9W8edLjAD0PaKVZJ0oWvJEKtgv4n7MRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=QWL+CQ1J; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sJV9tOLy; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1745829203; c=relaxed/simple;
+	bh=pJ8O7gTrYUeWwxuWTIvgNyTjTeTs5VMSdWV0Q7CbJaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QvNVSfnxYtn3kkNIgkLH2zOTUH2hyJG9vfYr1NHVOo6HKSNCthE9DceQn+2OzB71+yb3Y/fbf0SwOoLvDiMdrAIx+BOvTd5un1KBUYgZKZTlN+RzX0jdeascHfA6x0w+PGlHgkbCtTcHima3J6PJH4GxUwaLLam0JeTohl0DARM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QRlQgfVb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QWL+CQ1J";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sJV9tOLy"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 79185114013A;
-	Mon, 28 Apr 2025 04:32:43 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Mon, 28 Apr 2025 04:32:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1745829163; x=1745915563; bh=fUGKdEE1P/
-	KyC1z4PqewzwNp7GLhrY2uDJFiS8OfGSc=; b=QWL+CQ1JvvEtE+YnM83g2MMLUg
-	xEbEpALy42wBsWlfUfxAqkHVOs5S3UdLET0t9wyT1kmI0S9cXUJdPkFF6t3gEbuv
-	ZMmt/KnWf3kCsK/rWgwWoLbOrETmzS9P43a83VQW/N8kCs5xnuKs+dQ2KMeH7RQe
-	u2nbAxjumNl/xCm75gA9evfXyl35Lj1eNSfL73DHRf/FHsMWqsOYQhU5V6yuvVYX
-	CoRLjC8R/pGNRhcEFg8WlCOreEt0cTjfG1nYh5gchltF0s+SIi5oPUW1KmVKy15D
-	3sFJiVsqOUBq7QMTnTu7T7Q3isfKpVsdWQktCpqg94OcPLHQ+Fd9h42nP1iQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1745829163; x=1745915563; bh=fUGKdEE1P/KyC1z4PqewzwNp7GLhrY2uDJF
-	iS8OfGSc=; b=sJV9tOLysCjtfR3+vAHF2tSbaMWq/AcAxA3bLqhN9gS91qBFgef
-	yz5I5ttzuWIIwn+keCbMWvBFbDGcevU/WSJ3zC1wGkunmZfq8lbb32w+COtUB1J2
-	o2X5z/5UoaVTuxIfTR7TbyEbvTNAr5qpmqwYEVO9qW/AHy/JPAI3rQu5LJ+nQKzE
-	rY2qANFLtgaAEeHv1e6ajMDO3bulyQNLu3YOuaVwPBQKFP9wA/A4k7R5g8gjVorE
-	AzZUBpYte082NoHe1B6tR+/bPZwsMS1N91nMSw5OaYgSGQTm79qRd3IV7fQnkGqK
-	DUSWkgtZhKpJferw7Ww8LF6VRBkwc1NCrZA==
-X-ME-Sender: <xms:Kz0PaNwZx0pfDDM2VT9p37yv1ozOyeDD0hQanfngSw1XKkcCMYEgdQ>
-    <xme:Kz0PaNTGx56JJP-2j47gzJTdGtUj0SX8enf9nAgfhH1mzyzvg3g2Qi2dHmQCMO70O
-    w_MjacMt-OMkw>
-X-ME-Received: <xmr:Kz0PaHV4gjKow3FKX-dLrTrss5ABtlfIGdvD3nOfC54DR6psna1eO1OPPpATZI2BqfDVacsJhpofw0jVoxCStLSsoA2vIvE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtgeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
-    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
-    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopedutddpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrg
-    hupdhrtghpthhtohepphgthhgvlhhkihhnsehishhprhgrshdrrhhupdhrtghpthhtohep
-    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    gihurdihrghnghgpvdesnhigphdrtghomh
-X-ME-Proxy: <xmx:Kz0PaPjThYAFwwusQLo4dibIFj4NvfXyi9mVO3iqp4qTDedbap0eXQ>
-    <xmx:Kz0PaPDUT6o1fkBZyC7qjUqjuUyrROATQh0SX3wNFizzBhbUlyGHCw>
-    <xmx:Kz0PaILmcyvOnvQHDM-kfaRHfPH7frLkqAmq5j30rPSVmkhJPkvzuw>
-    <xmx:Kz0PaOCC508OWGfGJNbrrSvaUanmt6M6VIjor-IgbGGDwcUbdKKHjA>
-    <xmx:Kz0PaPja-mWd0pjj-qpbASYvaumx6YJTJRyd6X0vvucTinzI3ycSZvGt>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Apr 2025 04:32:42 -0400 (EDT)
-Date: Mon, 28 Apr 2025 10:32:41 +0200
-From: Greg KH <greg@kroah.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>
-Subject: Re: linux-next: manual merge of the usb tree with the usb.current
- tree
-Message-ID: <2025042832-bronco-rasping-3517@gregkh>
-References: <20250414142307.7df3443d@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRlQgfVb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745829201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LGcvqcUvkm2g9wzS683vHLZvM4pUfmU6Vbf587HsfpE=;
+	b=QRlQgfVbii4lS8qL7CbYJ/Z7/aBzcYghZbiHIz7L/1JdwTPunP9WWC7OiVjAuv6lFeWTFr
+	mPybNMMvgCxGd+vsT9fB1qvo3SsZGYqGEWCREEjQ87Pa4sZKJR13syxN9uncATsMHQNQys
+	7PPoaOM0ix7H2qAq4sSR/IMuRedrZJo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-384-yfamurlxNiyIS1UOlXX54A-1; Mon, 28 Apr 2025 04:33:19 -0400
+X-MC-Unique: yfamurlxNiyIS1UOlXX54A-1
+X-Mimecast-MFC-AGG-ID: yfamurlxNiyIS1UOlXX54A_1745829197
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e6c14c0a95so3455404a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 01:33:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745829197; x=1746433997;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGcvqcUvkm2g9wzS683vHLZvM4pUfmU6Vbf587HsfpE=;
+        b=ZmgvHECy+g7I5sBRIile2y/upJBZUtAG6Ha68J4wafKyS5EyBJL1IiUiVYj8IZm8R0
+         NaYUj5avcucDSdJc9Dcct6nA0OxrFyUpJQEwZ7yvbDvNV7jcC/G5XRoobjJPB9PLTcSs
+         0otoUdzIyPiPuhrL4yP1mwpUJWGSbttslSThhmkyPFLWPPf8vfRzzMvpJ+8689R/P535
+         5NLXrDCsq6icii4IYGX2FmAsMFUGpZklLyoUBBT3cfji6b7W33sS76kl1uwmfaJHnX4C
+         pj+sNOjvxZ9yPz5tBw72C0pEU0NPmEnZmvNux0WYTLZ6j8e7YNushnKCcbcvjOML1pPN
+         q8rA==
+X-Forwarded-Encrypted: i=1; AJvYcCVClv3lndKPG0C3/F4frMogpUS417NhgCaV2lTVDbfdKCmKOR4KZEBUk1/5Nkfqk1ZGimUYGOUtigXfBZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+dXogsXQJRStYEdYnJ/hcM36XXPPi/G8caJw24naOvwbG7Fd3
+	Ja+ublNbpu3BGO+Sh7MNNHvY2IYYPKI8L3lCZUIrKXUIADuTFleFMPsKrTSm21F80vSESAPG9QF
+	8wbpD9aV0eEZuGMgCDgHZkvY3zSgugbVwAu4R9bAeNSi+rxaYNsMIbKKnt0Hpbw==
+X-Gm-Gg: ASbGncsuN8pwAA8g16Fw1hY85FIKbGV24txnsQLb1iykhUqrRFsNJ1BstpNBKEKm/ZZ
+	RAjqswdhxCFriPAwynAF8G4ISG5QP8+xZfJHXPWazZ/LYkWKpSpRLxEttNeBDSM7YeEkoIooAsq
+	L+yQNH3JLlQEzhd/kx+QNyXOF0p7IeGN+86wwDNYiq9SADup9+lMS1sWJ51yLbm43j9wZd8b+7Q
+	T/h3dnSyRFnceNxNSJqma0FrgHTpR64diTudqAiiiRmxOZQEXKSCT2zeJKaw8EugpvMFsCsZW8L
+	+m3VEzxvkXoOz5M=
+X-Received: by 2002:a05:6402:1ed0:b0:5e7:b015:ad42 with SMTP id 4fb4d7f45d1cf-5f7398433aemr7803774a12.28.1745829196879;
+        Mon, 28 Apr 2025 01:33:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnQGf5p3Imb0SlRCtdMs61uLPDDIs2q+uuHYQl1CCgJCkHHSa0Rk4MkuYWgz4wW7ho0OyaDA==
+X-Received: by 2002:a05:6402:1ed0:b0:5e7:b015:ad42 with SMTP id 4fb4d7f45d1cf-5f7398433aemr7803759a12.28.1745829196464;
+        Mon, 28 Apr 2025 01:33:16 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f703833c66sm5480374a12.75.2025.04.28.01.33.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 01:33:15 -0700 (PDT)
+Message-ID: <e9bafdd2-d84a-49e3-a221-36088f3c753b@redhat.com>
+Date: Mon, 28 Apr 2025 10:33:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414142307.7df3443d@canb.auug.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] Input: goodix - Allow DT specification of missing
+ reset pull-up
+To: Esben Haabendal <esben@geanix.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250422-goodix-no-reset-pull-up-v1-0-3983bb65a1bf@geanix.com>
+ <20250422-goodix-no-reset-pull-up-v1-2-3983bb65a1bf@geanix.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250422-goodix-no-reset-pull-up-v1-2-3983bb65a1bf@geanix.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 02:23:07PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the usb tree got a conflict in:
-> 
->   drivers/usb/chipidea/ci_hdrc_imx.c
-> 
-> between commit:
-> 
->   8cab0e9a3f3e ("usb: chipidea: ci_hdrc_imx: fix call balance of regulator routines")
-> 
-> from the usb.current tree and commit:
-> 
->   ee0dc2f7d522 ("usb: chipidea: imx: add wakeup interrupt handling")
-> 
-> from the usb tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/usb/chipidea/ci_hdrc_imx.c
-> index 4f8bfd242b59,c34298ccc399..000000000000
-> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
-> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-> @@@ -336,13 -338,16 +338,23 @@@ static int ci_hdrc_imx_notify_event(str
->   	return ret;
->   }
->   
->  +static void ci_hdrc_imx_disable_regulator(void *arg)
->  +{
->  +	struct ci_hdrc_imx_data *data = arg;
->  +
->  +	regulator_disable(data->hsic_pad_regulator);
->  +}
->  +
-> + static irqreturn_t ci_wakeup_irq_handler(int irq, void *data)
-> + {
-> + 	struct ci_hdrc_imx_data *imx_data = data;
-> + 
-> + 	disable_irq_nosync(irq);
-> + 	pm_runtime_resume(&imx_data->ci_pdev->dev);
-> + 
-> + 	return IRQ_HANDLED;
-> + }
-> + 
->   static int ci_hdrc_imx_probe(struct platform_device *pdev)
->   {
->   	struct ci_hdrc_imx_data *data;
+Hi,
 
-I've now resolved this in my tree, thanks.
+On 22-Apr-25 17:15, Esben Haabendal wrote:
+> In commit a2fd46cd3dbb ("Input: goodix - try not to touch the reset-pin on x86/ACPI devices")
+> a fix for problems on various x86/ACPI devices where external
+> pull-up is missing were added. The same type of problem can exist on
+> device-tree platforms, and the fix can be activated by adding the
+> no-reset-pull-up device-tree property.
+> 
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
 
-greg k-h
+Thank you for your patch.
+
+> ---
+>  drivers/input/touchscreen/goodix.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index a3e8a51c91449533b4d5185746df6b98676053dd..3a55b0f8e5132a5e1fe77bd27de74e058a4afdaf 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -775,7 +775,8 @@ int goodix_reset_no_int_sync(struct goodix_ts_data *ts)
+>  	 * power. Only do this in the non ACPI case since some ACPI boards
+>  	 * don't have a pull-up, so there the reset pin must stay active-high.
+>  	 */
+> -	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_GPIO) {
+> +	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_GPIO &&
+> +	    ts->gpiod_rst_flags == GPIOD_IN) {
+
+You can simplify the check to just:
+
+	if (ts->gpiod_rst_flags == GPIOD_IN) {
+
+that will work for the IRQ_PIN_ACCESS_ACPI* access_methods too and
+nicely lines up with the gpiod_direction_input() on the next line.
+
+Please also update the comment above the check to reflect the new
+situation.
+
+With this fixed, this looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+
+
+>  		error = gpiod_direction_input(ts->gpiod_rst);
+>  		if (error)
+>  			goto error;
+> @@ -969,6 +970,13 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+>  	 */
+>  	ts->gpiod_rst_flags = GPIOD_IN;
+>  
+> +	/*
+> +	 * Devices that does not have pull-up on reset signal should not be
+> +	 * changed to input
+> +	 */
+> +	if (device_property_read_bool(dev, "no-reset-pull-up"))
+> +		ts->gpiod_rst_flags = GPIOD_ASIS;
+> +
+>  	ts->avdd28 = devm_regulator_get(dev, "AVDD28");
+>  	if (IS_ERR(ts->avdd28))
+>  		return dev_err_probe(dev, PTR_ERR(ts->avdd28), "Failed to get AVDD28 regulator\n");
+> 
 
