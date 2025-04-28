@@ -1,120 +1,108 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F259296D1E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C711A3159
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745863259; cv=none; b=n5GXVPmfXLZiQ84LB/z5Ac6oU6MRrG5QzlvjgjLfn1Ifgb3vaZaYWCStKwORJuytgSlFfINwxyY50BtNwu+AU+pWtK8H8cqWslNtfysOLlx31YTitohlVZy9IcUFNfRbDZWHrGEJiwG62Qf3yzq3cy3tG6eXx6dpyLN4Sl5eY6A=
+	t=1745863436; cv=none; b=WohUEyLH5GTm63/2p4p4ippvH6wL0mLjWIOoo4INbnELsKZsWz03U1OyfH7AUGOmRAFM7NrAVJlBT1K3owEHdw3vshB7fDt/9f84aMQ0agI3rlU5Q5iPysFFdv9ZYLxhNeFXaXq4kB8ElN20QqECSAW5zPKcRXmKu7F7KIYN8F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745863259; c=relaxed/simple;
-	bh=N2wU7kmG2IIfCkkipVz4Ed3x45pSvoHez5zYP1lbaMc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=EJpYgmUhBnsYxGLzmlvuUI3wK7cNGb934PygoMVIyC2nrpvXaB+rLztVXWuFVaUxNg05MnxXdMimGc+QI47t+AtDbWWUrMdxvdlJiARI/B00aHAfet/+XZCWQDENeyQhjmebcEYffgmlLGWDow8hRtSH5OhcHWrCzpNdb9290w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=V5cET2gS; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745863436; c=relaxed/simple;
+	bh=/mL7HPcjZJGRPYi0Z91nMrxEdW1H1DRgXdBETT/v/m0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GxvhdKnXja/t6wzJV0H6mkrRRv/IVlUYO7AEfKWQSZMD1nvGYyfJHNbaq4PhKOyEvetCdVbpAMbrbLFklpXN9TN91M+vU1sK0X1xl4nxLUx6Vg+YdSoIoTO778TvJe9MSL5bK/Uny2/waR/Gn4g9/Wz3t6YetY1h64F6416A19Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Dywj3PP; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="V5cET2gS"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39127effa72so660631f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:00:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Dywj3PP"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b00e4358a34so2932070a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745863256; x=1746468056; darn=vger.kernel.org;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mZwXwtzXWmeQYckV0YYno1wNCKBMqM9oV5/JyBASh3g=;
-        b=V5cET2gS/m3xie1dh1KXei4fIVhB9H+Xr9O5gVCRGfNLSNbhXe12Fu27s2iTHbl0Hn
-         5Clw6TL6f+UvZ9yKdH5EbSFuRTY4QGlSXpGdT7p0Vyw7QqgLITLj3/KHBicn5CC2l6Bx
-         eTkyVhn0QLazoAxWBp5SBAkyuebJS82z3lTWTXkMuqM+kBaD1qKQveqAjGt4P6VOCQwI
-         0OwRl+8/gPCwxZj17A+c91yL6oiRRrrkAZErbf5DX8JAVfJqUBG2+cSYd6TsDUEcKeSS
-         VA5WNZMLsyE2oO7TakVjWrSRDKMR5c1ccja6r/sVqNLWNipv6l9OKqT3kEcc6h9EWNG5
-         4B8w==
+        d=google.com; s=20230601; t=1745863434; x=1746468234; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Jrm6Nx7Z5Mh8oLM61Urr/bTwwYotksqIY3MvIPdnC9o=;
+        b=1Dywj3PPfwyS/hAzq50dRSIrzoO563wn66dysDIgProw9tQZgfNC1gYviTTWdtKIvf
+         kcxi9ztFBvuQx9QbV2Z+2aRHDkRQP1So6+YGLhY/018YvDJ/qO7OEbXyt2btv3lQUr0Y
+         3Vjibv3a11ZGVgC3WzNVb+KVG5qWG75s0XIQ25V2hicJgmW90ly2vvYNLTOlit6Msfy5
+         ssORyUNZB84qgGzEws2usWK02pjteobEPvXR6H9WKr+Lbs4FaaSM77auC9gaYfa33n2v
+         E8c5imY9gt9CgB8YE5NzegmoBb+lBNbRRnpNnKFabu0CoWwsVAxDHg04luCcPCpP1IY+
+         ldTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745863256; x=1746468056;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mZwXwtzXWmeQYckV0YYno1wNCKBMqM9oV5/JyBASh3g=;
-        b=BjgSHtwsrHOEc72qJ31rP7rVkUOuMo1Jra+H9aO0iQVVhvpozlQcOjVY58gUPfM9JB
-         TPG3hXsrhidDpegp2UIQYCDiitYQc+LwCtqdiFcrZ5C5uJbGr9zMrRBUgTXyvQ9GB/q/
-         At7fofrNVTp9Ehcj4y0RQz/Mt5HEby8C4dyuavsbcLrYqL/cYfoThh09qmgtscVEQD9j
-         QhzaPzA5/ErhsEu/gRtjkDoe1D4uFx2OvYBDozJGMgzAHHI5RUjaWmHRLUgKxEyCL9iB
-         25VaIEN3VRgZnefWuOJAmW9hdTYHfi7dIH4mxioeXOXeuuYWP7mxwDk4lzUX3qOcC4aX
-         jTvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVf90UWynjpcYuN46tODzCbCXqcTRL1JvIBLlmuo196PYNZTap72BVr4oKm874NkfN4zFf4GA4qAeiYj80=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9GT25Es5/0SjfvFu3GXhDYQwmkNTcdybohzCOkwxvwx68Jmlw
-	3Jq2d+3Oima73DwQ1O2lVfVBiO87IqV/pp3g1wNm9LTaBFgZLt9gRrDu4L1AXm0=
-X-Gm-Gg: ASbGncvWeQ9CrNihJTw4LRNK9yZbRwcScbqs9c0ZEYfx1cbDGQ2pmYl1Gs7pjLJtFqk
-	4vp1QGluAPKdmJe359Nto5P1A1q6jsRde2Dx8HQmoJ+Nr6wWtwDJWUiNBkPmh3hstnDIvU8Kk+6
-	HfvnE7eLba8P8+GnGYyknvCrs+tkg1AZRc2uObIBXXpyDJtolvC6Vu4+NL/VzGTG3ppZ8yChWX6
-	pkK9J6BH3C6U4g6/WaValLpd/Te0JE2WBhwSn2u8mTDnY8dE2xcQ0Oh2018FKw46j6puyBxqGDK
-	/l++Wbj0PCIbDOHyvouTa7FuoGR7V8UZcLtxdcAQ5W0k4T4=
-X-Google-Smtp-Source: AGHT+IEoLn0qfVLaHBdPIxVZ7lJCgR2On0y4jpuci39/L3rmNtHaRZ20QzdrYfwyAYvWF7jRY9MHSQ==
-X-Received: by 2002:a05:6000:1886:b0:3a0:86f3:451f with SMTP id ffacd0b85a97d-3a08a3438camr79148f8f.12.1745863255647;
-        Mon, 28 Apr 2025 11:00:55 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:785:f3a7:1fbb:6b76])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cbdb78sm11569680f8f.41.2025.04.28.11.00.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 11:00:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745863434; x=1746468234;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jrm6Nx7Z5Mh8oLM61Urr/bTwwYotksqIY3MvIPdnC9o=;
+        b=n/1d/d28iz6szPlBqkVuyXAgOap4Di/qYnFCwnV7rBSZpFlVzUkCYtuU0KaprbRACt
+         254nC1uWE+M/YfS91+ystPZx/s/TOC7bZqvmEVhZ87pidJLqURebg+9FZJ3gpB4UxCPK
+         EavUt76Wml8+v/wN/NUw0cGA/XlGdYcWXQcS5JeIrCnpPHaxaBwfnh4WHlzJYueQHJgc
+         VDDsLoPcvvtE3C7TspCt7ShahaqJ4EnmDCW6KbWf1sIPMw6xkYTSjdqjHzYEe3sMbphR
+         8OVCMd59rdtGzdrI/UIZKz/pL7bBJ3B79ZsOG6CnERLTyAqznvesVD2+fVc+2idLyc2u
+         DX8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCx3mpVoToNxzr5QvicanWw+AlKS/VSwEWuhPZm1kBTnmEAjwpZaHRgbQqQBjQLy3HAa/3Y7PgpfWfdYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztquKlNjejZ8dUk36k2DPVYgFkC+rJ0kVmfVv4WNhsra0nqIa9
+	opEr4C4lBOghmMEYGHLxk7pudp/mUaOQBpLHzAUGKQXMzGRyjnJNPo38BBLjpjHzNbFkuiY2R3e
+	R2sZ0B46SKhEA5g==
+X-Google-Smtp-Source: AGHT+IGFy7WG9oO3uBh4Wi8t7O9tAPuPJeA5DbCGTeCTVwRypV0To3vLIJ2Ay+WqLvKrHqdhPZuiAH+PfgHZ0k0=
+X-Received: from pjbnt15.prod.google.com ([2002:a17:90b:248f:b0:30a:2020:e2bd])
+ (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:554f:b0:2fe:dd2c:f8e7 with SMTP id 98e67ed59e1d1-30a21551e90mr1172926a91.10.1745863433996;
+ Mon, 28 Apr 2025 11:03:53 -0700 (PDT)
+Date: Mon, 28 Apr 2025 18:02:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Apr 2025 20:00:54 +0200
-Message-Id: <D9IGVF0OY4WJ.1O1BX0M2LWUVM@ventanamicro.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH 3/5] KVM: RISC-V: remove unnecessary SBI reset state
-Cc: <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Atish
- Patra" <atishp@atishpatra.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Alexandre Ghiti" <alex@ghiti.fr>, "Andrew Jones"
- <ajones@ventanamicro.com>, "Mayuresh Chitale" <mchitale@ventanamicro.com>
-To: "Anup Patel" <anup@brainfault.org>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-6-rkrcmar@ventanamicro.com>
- <CAAhSdy1RSpVCUzD+Aqbhh7aiQPmC2zdvuQfuOsmYNJrF3HxCsA@mail.gmail.com>
-In-Reply-To: <CAAhSdy1RSpVCUzD+Aqbhh7aiQPmC2zdvuQfuOsmYNJrF3HxCsA@mail.gmail.com>
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <20250428180256.1482899-1-tjmercier@google.com>
+Subject: [PATCH] selftests/bpf: Fix kmem_cache iterator draining
+From: "T.J. Mercier" <tjmercier@google.com>
+To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Cc: "T.J. Mercier" <tjmercier@google.com>, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-2025-04-28T17:46:01+05:30, Anup Patel <anup@brainfault.org>:
-> On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcm=
-ar@ventanamicro.com> wrote:
->>
->> The SBI reset state has only two variables -- pc and a1.
->> The rest is known, so keep only the necessary information.
->>
->> The reset structures make sense if we want userspace to control the
->> reset state (which we do), but I'd still remove them now and reintroduce
->> with the userspace interface later -- we could probably have just a
->> single reset state per VM, instead of a reset state for each VCPU.
->
-> The SBI spec does not define the reset state of CPUs. The SBI
-> implementations (aka KVM RISC-V or OpenSBI) or platform
-> firmwares are free to clear additional registers as part system
-> reset or CPU.
->
-> As part of resetting the VCPU, the in-kernel KVM clears all
-> the registers.
+The closing parentheses around the read syscall is misplaced, causing
+single byte reads from the iterator instead of buf sized reads. While
+the end result is the same, many more read calls than necessary are
+performed.
 
-Yes, but instead of doing a simple memset(0), KVM carriers around a lot
-of data with minimal information value.  Reset is not really a fast
-path, so I think it would be good to have the code there as simple as
-possible.
+$ tools/testing/selftests/bpf/vmtest.sh  "./test_progs -t kmem_cache_iter"
+145/1   kmem_cache_iter/check_task_struct:OK
+145/2   kmem_cache_iter/check_slabinfo:OK
+145/3   kmem_cache_iter/open_coded_iter:OK
+145     kmem_cache_iter:OK
+Summary: 1/3 PASSED, 0 SKIPPED, 0 FAILED
 
-> The setting of PC, A0, and A1 is only an entry condition defined
-> for CPUs brought-up using SBI HSM start or SBI System suspend.
+Fixes: a496d0cdc84d ("selftests/bpf: Add a test for kmem_cache_iter")
+Signed-off-by: T.J. Mercier <tjmercier@google.com>
+---
+ tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That is why this patch has to add kvm_vcpu_reset_state, to remember the
-state of pc and a1.  (a0 is hart id and can be figured out.)
+diff --git a/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c b/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c
+index 8e13a3416a21..1de14b111931 100644
+--- a/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c
++++ b/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c
+@@ -104,7 +104,7 @@ void test_kmem_cache_iter(void)
+ 		goto destroy;
+ 
+ 	memset(buf, 0, sizeof(buf));
+-	while (read(iter_fd, buf, sizeof(buf) > 0)) {
++	while (read(iter_fd, buf, sizeof(buf)) > 0) {
+ 		/* Read out all contents */
+ 		printf("%s", buf);
+ 	}
 
-> We should not go ahead with this patch.
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.49.0.906.g1f30a19c02-goog
 
-This patch only does refactoring.  Do you think the current reset
-structures are better?
-
-Thanks.
