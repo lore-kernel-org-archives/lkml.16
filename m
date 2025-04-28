@@ -1,162 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527451A8F7F;
-	Mon, 28 Apr 2025 19:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ED01FECB4;
+	Mon, 28 Apr 2025 19:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745867907; cv=none; b=TwSBjSs+wCqqBvi4GD20HY2EijqZcTOO78/c7S6x7QsBw4w23xl7DMpFbvNzu8WSiUr2No3AYxnsCoSbDmFrjYJCTWu8F6x3FgJng/fEPwDEZas8+NIMX6tsu4SfhuaP0DxRXYIMzvBupkT2ff5ENNbmHssKQVxYYEVvO5Y0jko=
+	t=1745867960; cv=none; b=TQlAnd7+PAiJXR9VE4FjNcbt1ybqgneB8hkUsZGqJ7cl8qCdeXlkIYZlsuaP/ruzod0hBwne8akx71cwz+4L61lbNqaq3d+vrnLF0v87z+L3Z4FVO28/L4dY3Y+Yu91hTE6RUcARhtFR5EzJG8ftZpazLD/C47ZxHcaQtDIh3+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745867907; c=relaxed/simple;
-	bh=i/QKM52Nh1KGsdn9abmiVXQDvhwyr9YUB3yshFRt/jI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CBCwFX1XQGy7CsnozdlNRWy14/jgNMIgdOz+qDklDh4c9bGmtEL5NzYzG6hLaeN/CwkfpuZJS7tjtq91EQrl8yIt/6wVKla5xrQYjH6kIhYWets5BhJ0YNS16xkgDifTE+ePbJ0YrNJaocEfSBS4mFvwCKQrZqpl/zr4ytuekWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiUoHHBf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745867960; c=relaxed/simple;
+	bh=BrUp0nJxKY420p1grOxNlEERiDw8TRzTT9xqyvtD2fA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KO4ihk1U4akqPnAVrXgw7g7XGDRtaDncctI+D89oaaqKLYUX74TjEq2zOvmJctTiNBb+CpVORZaGSjgR4G5cxz9waoL57r6oD7j3yRH3vU6NGV8r1It09cauVcTFYZJzPI/Sp2cMHjaQ+rDwyOS2k2jvV53IdQpUqsG5jjz9S/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IrhGKyt/; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiUoHHBf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE04C4CEE4;
-	Mon, 28 Apr 2025 19:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745867906;
-	bh=i/QKM52Nh1KGsdn9abmiVXQDvhwyr9YUB3yshFRt/jI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SiUoHHBfFUaCjrcHhCWfjHbXTsrf6I4Ov+fNENselLjh993Gozy+iF9itHD21rRkM
-	 0uuk8If8HnS6gzaWAhO3mUDsdNgsEp6ItbhKdnQHoHuYItlQxEEpxhw1Uo/S1AAHhT
-	 eJ5ZRNMbUKiqnb7fqPvg5Y2/K3H/ft+KzigimMFAyziEYPCYilz9K9Zz5N29X2Ye4r
-	 0rTMOEOQn7dHiXU6iK8rhUnVSeQOogKGXJbdvtGyWBX3FzpPzi9TeAsida3waVOj7y
-	 dbsvweahRMoSUOm7D1r/L0y6KwvFk2tMmxPvejnEtUfzbCDvPbcH5E3cjMDGhBAWPy
-	 y/hU1TYTUoExg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net-next] r8152: use SHA-256 library API instead of crypto_shash API
-Date: Mon, 28 Apr 2025 12:16:06 -0700
-Message-ID: <20250428191606.856198-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IrhGKyt/"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3035858c687so4358278a91.2;
+        Mon, 28 Apr 2025 12:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745867958; x=1746472758; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BgCtF609xcKndtg2owySEhQv7l/vQGYnhH9MvvsxaGk=;
+        b=IrhGKyt/I+dzCrXRLTvOvN1CWb63qrIoRiIo24Gt7RcqJfm8czS0xjfNoycQD9ZteT
+         pKXTV7KChLjcxWdwt/jz7V0Gq08oblOODWhcgfrJMxEu30ZdO0fe9e2jvWh3ZQk+HWl+
+         83hti2vseXF/ryRA9+Lf9qZVcjvj/JBlgb4tMO/7uWz5XgUEnFfQXjepmBTUWqW1l8To
+         Jok59D5MmxQE+JT0aeqrhemgOJB5SpOSaBUAFJWIRRRfLVBmwHY5uGxBYTgfm8iah0C0
+         hPTBE4JpSjxxoUS5XuJcdWjHyVPJXllcomoHcOeDnPzB9UdED/UJAtOPamSidrxew5t0
+         e0Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745867958; x=1746472758;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgCtF609xcKndtg2owySEhQv7l/vQGYnhH9MvvsxaGk=;
+        b=Typcl0tTF9J/buX2ILxHECZBD8ozikZ43w8BlZVJhXsM2FR7IYNI9eJh70bStD8YUK
+         /6QteVYyf34Ibou1uscUob6I5CJg3sAhbCdY68BsbQlWKhQkDXYbb1YPohtimBAbI3VP
+         s2WhGK6u0YcXiIIvbQARq8m5yjviY+m6TQNkb+PFcbIy6HZtDaHC+KOPda69fKQOMcIx
+         Zc3WDi7raQEEv/FzpRivAJd0uwYfRAXgkr6E+Hk5Kpedno1jdmeHMf9m9lsb2DgVJzc8
+         zJMozYQ/6ZkpY7lqRzeIzmbXxVYaglKcI6AzIwGo8OhaaSe4bPAlIQOF/QQ9vx9AjYWV
+         tmCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXO5Cipxe+1qBnyxhDHK7hEuEhKvU/wvP4lt72iyQFnI+1eV8K/pe1JUGfHkl1jlI6XJyNlS7ek@vger.kernel.org, AJvYcCXZAHzVn/UBvowFWSrVDFI4xG9X4yBGWyERBcY1F3DLTwll7hNIiJQkTzR18J1PieVcFWJKCh9AJZXVOA==@vger.kernel.org, AJvYcCXsQdg9eQNIocxRZoOl0WAh13wVx5N7SpOtoeG+tVyProdQpUzP++RXRV5Almm64i4shgbuJMaHlFpfsbzY@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywzx8g98XAHpc4fOpEI2dDNG3uqTPJQALRt9EGH9i+Q5JrA46T+
+	QATDQRRxwJJvvafxHWayKrR5q6+Hstzkssbdcnp9MzP+uIZiwGJo
+X-Gm-Gg: ASbGncv72cIVuS4SLwSwsq9wRqM7Likgvrf+p2DtkkQmceVNvqGT3++sBFS3FsNTJY6
+	Jr65z03vXLcVc5JbjtffvgX0LLzeUtHlRUojBXlQwSJqifWvREUk5B+fkUVuF6TlP7l95AktGqa
+	gFFl71b1EjraFRbjLzs0TSrxDxoJUKsTGk0hA7qPEY2amu5hzr07f+h2D/qyhqeS7frtTgYZFWo
+	liy1FsTJ0VkObOvfgP59RZkNRyOqKB/BXo3GWLZzRFXPHF/a5HGZD3j41DxKjrtAsKNSpVDWtuE
+	IocOCnpotq81xAgMHyux8DB9T52YOwE3mbWKt2fJ
+X-Google-Smtp-Source: AGHT+IGAjdKlZf7vr+mPAgNIF99JKmJUUGWr/DLExKdSgaX8/yizgBS5OVmBzIQD1SJYTXSWMF9CCg==
+X-Received: by 2002:a17:90b:384f:b0:2fc:ec7c:d371 with SMTP id 98e67ed59e1d1-30a215416b8mr1416965a91.3.1745867958254;
+        Mon, 28 Apr 2025 12:19:18 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:67d:4372:d1e6:def0])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef03bb7fsm9424189a91.9.2025.04.28.12.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 12:19:17 -0700 (PDT)
+Date: Mon, 28 Apr 2025 12:19:14 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hugo Villeneuve <hugo@hugovil.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Maximilian Weigand <mweigand@mweigand.net>, Alistair Francis <alistair@alistair23.me>, 
+	Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>, stable@vger.kernel.org, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Input: cyttsp5 - fix power control issue on wakeup
+Message-ID: <4yohupeiamzt7sw3qvuj427xsulpk7jcwyixtljhmbih3mzos3@nwyuv6hbxvzz>
+References: <20250423135243.1261460-1-hugo@hugovil.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423135243.1261460-1-hugo@hugovil.com>
 
-From: Eric Biggers <ebiggers@google.com>
+On Wed, Apr 23, 2025 at 09:52:43AM -0400, Hugo Villeneuve wrote:
+> From: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
+> 
+> The power control function ignores the "on" argument when setting the
+> report ID, and thus is always sending HID_POWER_SLEEP. This causes a
+> problem when trying to wakeup.
+> 
+> Fix by sending the state variable, which contains the proper HID_POWER_ON or
+> HID_POWER_SLEEP based on the "on" argument.
+> 
+> Fixes: 3c98b8dbdced ("Input: cyttsp5 - implement proper sleep and wakeup procedures")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> Signed-off-by: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
 
-This user of SHA-256 does not support any other algorithm, so the
-crypto_shash abstraction provides no value.  Just use the SHA-256
-library API instead, which is much simpler and easier to use.
+Applied, thank you.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- drivers/net/usb/Kconfig |  4 +---
- drivers/net/usb/r8152.c | 46 +++++++----------------------------------
- 2 files changed, 8 insertions(+), 42 deletions(-)
-
-diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
-index 3c360d4f06352..370b32fc25880 100644
---- a/drivers/net/usb/Kconfig
-+++ b/drivers/net/usb/Kconfig
-@@ -99,13 +99,11 @@ config USB_RTL8150
- config USB_RTL8152
- 	tristate "Realtek RTL8152/RTL8153 Based USB Ethernet Adapters"
- 	select MII
- 	select PHYLIB
- 	select CRC32
--	select CRYPTO
--	select CRYPTO_HASH
--	select CRYPTO_SHA256
-+	select CRYPTO_LIB_SHA256
- 	help
- 	  This option adds support for Realtek RTL8152 based USB 2.0
- 	  10/100 Ethernet adapters and RTL8153 based USB 3.0 10/100/1000
- 	  Ethernet adapters.
- 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 2cab046749a92..67f5d30ffcbab 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -24,11 +24,11 @@
- #include <linux/usb/cdc.h>
- #include <linux/suspend.h>
- #include <linux/atomic.h>
- #include <linux/acpi.h>
- #include <linux/firmware.h>
--#include <crypto/hash.h>
-+#include <crypto/sha2.h>
- #include <linux/usb/r8152.h>
- #include <net/gso.h>
- 
- /* Information for net-next */
- #define NETNEXT_VERSION		"12"
-@@ -4626,52 +4626,20 @@ static bool rtl8152_is_fw_mac_ok(struct r8152 *tp, struct fw_mac *mac)
-  * make sure the file is correct.
-  */
- static long rtl8152_fw_verify_checksum(struct r8152 *tp,
- 				       struct fw_header *fw_hdr, size_t size)
- {
--	unsigned char checksum[sizeof(fw_hdr->checksum)];
--	struct crypto_shash *alg;
--	struct shash_desc *sdesc;
--	size_t len;
--	long rc;
--
--	alg = crypto_alloc_shash("sha256", 0, 0);
--	if (IS_ERR(alg)) {
--		rc = PTR_ERR(alg);
--		goto out;
--	}
--
--	if (crypto_shash_digestsize(alg) != sizeof(fw_hdr->checksum)) {
--		rc = -EFAULT;
--		dev_err(&tp->intf->dev, "digestsize incorrect (%u)\n",
--			crypto_shash_digestsize(alg));
--		goto free_shash;
--	}
-+	u8 checksum[sizeof(fw_hdr->checksum)];
- 
--	len = sizeof(*sdesc) + crypto_shash_descsize(alg);
--	sdesc = kmalloc(len, GFP_KERNEL);
--	if (!sdesc) {
--		rc = -ENOMEM;
--		goto free_shash;
--	}
--	sdesc->tfm = alg;
--
--	len = size - sizeof(fw_hdr->checksum);
--	rc = crypto_shash_digest(sdesc, fw_hdr->version, len, checksum);
--	kfree(sdesc);
--	if (rc)
--		goto free_shash;
-+	BUILD_BUG_ON(sizeof(checksum) != SHA256_DIGEST_SIZE);
-+	sha256(fw_hdr->version, size - sizeof(checksum), checksum);
- 
--	if (memcmp(fw_hdr->checksum, checksum, sizeof(fw_hdr->checksum))) {
-+	if (memcmp(fw_hdr->checksum, checksum, sizeof(checksum))) {
- 		dev_err(&tp->intf->dev, "checksum fail\n");
--		rc = -EFAULT;
-+		return -EFAULT;
- 	}
--
--free_shash:
--	crypto_free_shash(alg);
--out:
--	return rc;
-+	return 0;
- }
- 
- static long rtl8152_check_firmware(struct r8152 *tp, struct rtl_fw *rtl_fw)
- {
- 	const struct firmware *fw = rtl_fw->fw;
-
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
 -- 
-2.49.0
-
+Dmitry
