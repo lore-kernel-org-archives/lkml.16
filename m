@@ -1,222 +1,241 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B450A5684;
-	Mon, 28 Apr 2025 01:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C029D1CF96;
+	Mon, 28 Apr 2025 01:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745805007; cv=none; b=XQ+1zat4Ab0PypqHpzgykhM8IFhPjrpvLuELei5XAcN5q6V16Aw64B4NNFZdIlQwrM/ibE4856WvOUMX/U3eZJVEcxwygSOI7GdqVXFD2SokAMtF3fQ5Dss6sXn8jfyoeh4fBSwLjIyeTAveKrvUj3aaj6gUS7SEUXwR0tf3WpM=
+	t=1745805240; cv=none; b=ZxMQFhJxuxwRqqcmftJfCbj549p1cnkXmkjbWYP96EfDWHYj1bVQXuG6p6GiixVqWaEkXkPAeyaas+BHzWLuvrED3DAt/uYY/g57zL3g/Majr/h6L6aMVSgyPgQFBIhwquomy5ldmiOFG/Uu06Mqci4yXJejZoQD8bD3Ut2PMHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745805007; c=relaxed/simple;
-	bh=doj6zOgc5VWWmm/qoFnhXtoIVGZlxDYg5PUinPuwuBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElibRTLueDsIigd66oluvtP8IE0kgJJTdRU2mZplj3CG7dwmCw66kNtvnxT5GROcYS9TYg5vAB2x7Gg4xoYJG6R7jFAtpLKHfKeb4wgAeWWEhutEMsAi2wMSsjhPCYOGV9CD03rFy9WkIzRwkxBiun/ZBR2BqiNNA+Mndp0JBoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDe8Jm81; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745805240; c=relaxed/simple;
+	bh=nxyY/WNVcAUuccaX+B2/4kAbRKQRofDQX31TfWMmjvw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pqSJxExx66+DQIUAv2T0Djy1ejkQcBOT8KXlbxM8WRQ0nyFJJmd6WmgL6nTbGWBJ6Dwa+RJQ2nPQ5svgqacCH6nNEHtRPLioMo0/ODWz1f+KTu3igq8wSNcXbR9vjD1np8MYP2a/WikqnXWQgZbs0hyTMbLeiLyM84kPzfe3RKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=UUcpAWOS; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDe8Jm81"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c2c754af3cso2373429fac.3;
-        Sun, 27 Apr 2025 18:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745805005; x=1746409805; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q/ubERfRjdkzW5emP2ZZP5xPtJL9kCLbv4s5tOyr1d0=;
-        b=lDe8Jm8130K+k48alpc04zifXk+zPW1ptL3XKSHukfF9MwO9lqiA+bcsQ1bpbyMcpT
-         EHp/p2dCAfN/KuuRhV+zuImI0tauPNBZ1tPnqvwHSTCDlSjBIJt1/X6hCTnhLiw3p+z9
-         NESHzxQDOx7EJL+5lZluj+Gx3npdDjy9XsS/cwHLeeHCo2NrSTi5n/GXfMNeXVb1g9Wv
-         HRCan7A7JGZ91/ZnZc42YKRDdGiEXW9dX6Z3o00DXKsOpPW/fAoBzTNKvyee+R6lN+NM
-         4ik29xg/RFacllvxI62djdBjAL6nMx+qPjITsNB1VpYQ2jnJkScZUqQZK3BKQgmRuUK9
-         pcqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745805005; x=1746409805;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q/ubERfRjdkzW5emP2ZZP5xPtJL9kCLbv4s5tOyr1d0=;
-        b=VXJMogY2WFoXeTZSlFK9QIs1+pSGOSQwLQZ/QkONd4+X05UO3g6mzwzbkPnU1rIsHd
-         Syt0ARSRXpNDl4xI9mdy4uYSxKyAakMCg+oZrXukofP10zHu6HYnhTTunUzqsOz5rJES
-         GqLvnfxWiI5j7wx9qMG6SXBEYWaOdf13yB1+zVUoJUWZH8po5nEw5c/eeMaJOPcxTrw/
-         s1NmxmVMzZoVo25KMluVP9NE9bdMJ/7gXr1PLZNhExFOvrIErf4vD3PdTpInI6UwGewO
-         gXIApeNP02fQx/RCnJg7gqpc0bCdHdmOo/DVXfcR6z+mFxYlPDPUdXxfemQh6RPUIIOW
-         592w==
-X-Forwarded-Encrypted: i=1; AJvYcCUaP4qTeM5y4aGHlYjkwSTCqqLiAI4xRvhteofwFyoFDOai1v7J9dqURey4+5HYc8RfxxGP0gnBUcgIca7w@vger.kernel.org, AJvYcCWPO3OFm+PAjkn8EgBZYFH5JNFc4U3TqReeAOu/RTkTaGaBXZCZGD3DaE/Qsarj7L5U9DeJi+920w5YIe0AUg==@vger.kernel.org, AJvYcCXRB6JVyQUxkjzfv+TlUX7o8yv8h821JImy5yfA2DBCRiZkgNmB0xIAbvLJRsPV3aSQraovncsUp0I=@vger.kernel.org, AJvYcCXcS1WWj9GV4n6KkpDFRPm+P21VwTlltX0ka4BAUodzLA2CrQa9n9gYmZMKPlAtqNRN/KOOj2ssL/di@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4wLz5neh8vB7XAhnXUeX6qYRWr7H7kI8Y5gzIDSrbJ/snngjd
-	5eT47wo3eeim2FvyWtrM6iXwjBXftD50zmvEl49pj0xNv7CueB+f
-X-Gm-Gg: ASbGncstpT0b6PNk6qmEQW1yYSdY2lULUxdW/NkRjKGk7vUW3hIVrpUK4WUj0zO7Uyp
-	HEWeQJ8Dcqo3bQdK7torityLd4MRoaLaH1XSl0RSd4bRNRmQq9D53CysawYKeefTPyZgc1RN0Rn
-	sUju/9RSg1PQCkd/0lRMBr6ydsFdN5WAC7fOQB9rlRQi+BkEGSz/vRxAtDQfAHLsPsQmbyB86mq
-	/wye2br6x9g6WYnXRVIOQWuQ13R/sX0iHqX/yD9BvkViYIFW9sHy/MwOrUJl4copsOMg/wQZVT8
-	kRc1xOyVNOuhr3aqF9/ozSL9l3X1ZY/FmKORTR8qVHzqEgJVsdXke2s1zL2ncSiXnA==
-X-Google-Smtp-Source: AGHT+IFAMuKE1EJyX06l+5odcVHGZDhKhFY+nBb5zJuOWKhWorN6ZVXS6F1/faYUmlVc/WvBl7O1dg==
-X-Received: by 2002:a05:6870:a794:b0:2c1:6948:d57c with SMTP id 586e51a60fabf-2d99db0acc8mr6417200fac.28.1745805003074;
-        Sun, 27 Apr 2025 18:50:03 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:14de:ab78:90c3:bb9a])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d9737e73b7sm2071903fac.26.2025.04.27.18.50.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 18:50:02 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Sun, 27 Apr 2025 20:50:00 -0500
-From: John Groves <John@groves.net>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 18/19] famfs_fuse: Add documentation
-Message-ID: <bwazd4vbwj2c7flrrkizycvl22oflufawxdiaan674vqqkgumw@lt4zppeg4l7e>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-19-john@groves.net>
- <db2415e3-0ee7-4b72-ac6b-4c7cda875dd3@infradead.org>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="UUcpAWOS"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53S1rj5yB1180188, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1745805225; bh=nxyY/WNVcAUuccaX+B2/4kAbRKQRofDQX31TfWMmjvw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=UUcpAWOS9NYvA/jueu/vLqBOsHGX+bELwcvAMht+ydiGzAolhMeBx20/0UDhaDVy9
+	 G+gYL/XbCWy9GvRkfVCFqQ0BvLFcTJJA0LzuOa9phF2TKPkZ0pvvu1M8oKzDiPilDW
+	 T4Qe9eeic9+VVW5c0iS5IECaeoMZ++YdEptvOAvXjG00cPYODoWNNYcIU90LRn5e5U
+	 X8D3DrobWlm+4FNHtDx7Z7AkMPKehhXsiihdcslmjYlLPLkrDIOyJR8o8cKJicEseN
+	 1a3GiDEKp79ROagVNKjDi89HgJn5L3J6Kir4sr5LqNcFa9CyBD/N3jN+OcH8mg+qWy
+	 GA5Q/N3IxeDbg==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53S1rj5yB1180188
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 09:53:45 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 28 Apr 2025 09:53:45 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 28 Apr 2025 09:53:44 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Mon, 28 Apr 2025 09:53:44 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: =?iso-8859-2?Q?Ond=F8ej_Jirman?= <megi@xff.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "open list:REALTEK WIRELESS DRIVER (rtw89)"
+	<linux-wireless@vger.kernel.org>
+Subject: RE: [PATCH] wifi: rtw89: Fix inadverent sharing of struct ieee80211_supported_band data
+Thread-Topic: [PATCH] wifi: rtw89: Fix inadverent sharing of struct
+ ieee80211_supported_band data
+Thread-Index: AQHbtwrOUtNppvqbbk6+hgDxNYRyi7O4TFxA
+Date: Mon, 28 Apr 2025 01:53:44 +0000
+Message-ID: <d3c6e149a2794551ba4570bdd7f1b7e7@realtek.com>
+References: <20250427002414.410791-1-megi@xff.cz>
+In-Reply-To: <20250427002414.410791-1-megi@xff.cz>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db2415e3-0ee7-4b72-ac6b-4c7cda875dd3@infradead.org>
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On 25/04/21 07:10PM, Randy Dunlap wrote:
-> 
-> 
-> On 4/20/25 6:33 PM, John Groves wrote:
-> > Add Documentation/filesystems/famfs.rst and update MAINTAINERS
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
-> >  Documentation/filesystems/index.rst |   1 +
-> >  MAINTAINERS                         |   1 +
-> >  3 files changed, 144 insertions(+)
-> >  create mode 100644 Documentation/filesystems/famfs.rst
-> > 
-> > diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst
-> > new file mode 100644
-> > index 000000000000..b6b3500b6905
-> > --- /dev/null
-> > +++ b/Documentation/filesystems/famfs.rst
-> > @@ -0,0 +1,142 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +.. _famfs_index:
-> > +
-> > +==================================================================
-> > +famfs: The fabric-attached memory file system
-> > +==================================================================
-> > +
-> > +- Copyright (C) 2024-2025 Micron Technology, Inc.
-> > +
-> > +Introduction
-> > +============
-> > +Compute Express Link (CXL) provides a mechanism for disaggregated or
-> > +fabric-attached memory (FAM). This creates opportunities for data sharing;
-> > +clustered apps that would otherwise have to shard or replicate data can
-> > +share one copy in disaggregated memory.
-> > +
-> > +Famfs, which is not CXL-specific in any way, provides a mechanism for
-> > +multiple hosts to concurrently access data in shared memory, by giving it
-> > +a file system interface. With famfs, any app that understands files can
-> > +access data sets in shared memory. Although famfs supports read and write,
-> > +the real point is to support mmap, which provides direct (dax) access to
-> > +the memory - either writable or read-only.
-> > +
-> > +Shared memory can pose complex coherency and synchronization issues, but
-> > +there are also simple cases. Two simple and eminently useful patterns that
-> > +occur frequently in data analytics and AI are:
-> > +
-> > +* Serial Sharing - Only one host or process at a time has access to a file
-> > +* Read-only Sharing - Multiple hosts or processes share read-only access
-> > +  to a file
-> > +
-> > +The famfs fuse file system is part of the famfs framework; User space
-> 
->                                                               user
-> 
-> > +components [1] handle metadata allocation and distribution, and provide a
-> > +low-level fuse server to expose files that map directly to [presumably
-> > +shared] memory.
-> > +
-> > +The famfs framework manages coherency of its own metadata and structures,
-> > +but does not attempt to manage coherency for applications.
-> > +
-> > +Famfs also provides data isolation between files. That is, even though
-> > +the host has access to an entire memory "device" (as a devdax device), apps
-> > +cannot write to memory for which the file is read-only, and mapping one
-> > +file provides isolation from the memory of all other files. This is pretty
-> > +basic, but some experimental shared memory usage patterns provide no such
-> > +isolation.
-> > +
-> > +Principles of Operation
-> > +=======================
-> > +
-> > +Famfs is a file system with one or more devdax devices as a first-class
-> > +backing device(s). Metadata maintenance and query operations happen
-> > +entirely in user space.
-> > +
-> > +The famfs low-level fuse server daemon provides file maps (fmaps) and
-> > +devdax device info to the fuse/famfs kernel component so that
-> > +read/write/mapping faults can be handled without up-calls for all active
-> > +files.
-> > +
-> > +The famfs user space is responsible for maintaining and distributing
-> > +consistent metadata. This is currently handled via an append-only
-> > +metadata log within the memory, but this is orthogonal to the fuse/famfs
-> > +kernel code.
-> > +
-> > +Once instantiated, "the same file" on each host points to the same shared
-> > +memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
-> > +that has a famfs instance mounted. Use cases are free to allow or not
-> > +allow mutations to data on a file-by-file basis.
-> > +
-> > +When an app accesses a data object in a famfs file, there is no page cache
-> > +involvement. The CPU cache is loaded directly from the shared memory. In
-> > +some use cases, this is an enormous reduction read amplification compared
-> > +to loading an entire page into the page cache.
-> > +
-> > +
-> > +Famfs is Not a Conventional File System
-> > +---------------------------------------
-> > +
-> > +Famfs files can be accessed by conventional means, but there are
-> > +limitations. The kernel component of fuse/famfs is not involved in the
-> > +allocation of backing memory for files at all; the famfs user space
-> > +creates files and responds as a low-level fuse server with fmaps and
-> > +devdax device info upon request.
-> > +
-> > +Famfs differs in some important ways from conventional file systems:
-> > +
-> > +* Files must be pre-allocated by the famfs framework; Allocation is never
-> 
->                                                          allocation
-> 
-> > +  performed on (or after) write.
-> > +* Any operation that changes a file's size is considered to put the file
-> > +  in an invalid state, disabling access to the data. It may be possible to
-> > +  revisit this in the future. (Typically the famfs user space can restore
-> > +  files to a valid state by replaying the famfs metadata log.)
-> > +
-> > +Famfs exists to apply the existing file system abstractions to shared
-> > +memory so applications and workflows can more easily adapt to an
-> > +environment with disaggregated shared memory.
-> 
-> 
-> -- 
-> ~Randy
-> 
+Ond=F8ej Jirman <megi@xff.cz> wrote:
+>=20
+> Internally wiphy writes to individual channels in this structure,
+> so we must not share one static definition of channel list between
+> multiple device instances, because that causes hard to debug
+> breakage.
+>=20
+> For example, with two rtw89 driven devices in the system, channel
+> information may get incoherent, preventing channel use.
+>=20
+> Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> ---
+>=20
+> This patch relates to this report of mine:
+>=20
+>=20
+> https://lore.kernel.org/linux-wireless/2goskmst4na36v42p2bs47uernp6kh3gzp=
+adhr3u3r2yvyoxlg@bfprgq2qae7p
+> /T/#u
+>=20
+>  drivers/net/wireless/realtek/rtw89/core.c | 48 ++++++++++++++++++-----
+>  1 file changed, 38 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/net/wireless/realtek/rtw89/core.c b/drivers/net/wire=
+less/realtek/rtw89/core.c
+> index cc9b014457ac..ae22954f5f5c 100644
+> --- a/drivers/net/wireless/realtek/rtw89/core.c
+> +++ b/drivers/net/wireless/realtek/rtw89/core.c
+> @@ -4398,16 +4398,44 @@ static void rtw89_init_he_eht_cap(struct rtw89_de=
+v *rtwdev,
+>         _ieee80211_set_sband_iftype_data(sband, iftype_data, idx);
+>  }
+>=20
+> +static struct ieee80211_supported_band *rtw89_copy_sband(const struct ie=
+ee80211_supported_band *sband)
 
-Both edits applied to the -next branch for the patch set. Thanks!
+prefer naming rtw89_core_sband_dup().
+
+> +{
+> +       struct ieee80211_supported_band *copy =3D kmemdup(sband, sizeof(*=
+sband), GFP_KERNEL);
+
+Then, '*dup'.=20
+
+> +
+> +       copy->channels =3D kmemdup(sband->channels, sizeof(struct ieee802=
+11_channel) * sband->n_channels,
+> GFP_KERNEL);
+
+I'm planning to use devm_ series to manage sband data, so we don't need to
+free them one by one. Do you interest to adjust that along with this patchs=
+et?=20
+I mean adding additional patches to adjust the code before this patch, and
+make them as a patchset.=20
+
+For kmemdup, the corresponding one is devm_kmemdup.=20
+
+The line is too long. Less than 80 characters is preferred.=20
+
+> +       if (!copy->channels) {
+> +               kfree(copy);
+> +               return NULL;
+> +       }
+> +
+> +       copy->bitrates =3D kmemdup(sband->bitrates, sizeof(struct ieee802=
+11_rate) * sband->n_bitrates,
+> GFP_KERNEL);
+
+Since you have duplicated arrays of channels and bitrate, we should add con=
+st
+to them, like:
+
+  static const struct ieee80211_channel rtw89_channels_{2ghz,5ghz,6ghz}[]
+  static const struct ieee80211_rate rtw89_bitrates[]
+
+
+> +       if (!copy->bitrates) {
+> +               kfree(copy->channels);
+> +               kfree(copy);
+> +               return NULL;
+> +       }
+> +
+> +       return copy;
+> +}
+> +
+> +static void rtw89_free_sband(const struct ieee80211_supported_band *sban=
+d)
+> +{
+> +       if (sband) {
+> +               kfree(sband->bitrates);
+> +               kfree(sband->channels);
+> +               kfree(sband);
+> +       }
+> +}
+> +
+>  static int rtw89_core_set_supported_band(struct rtw89_dev *rtwdev)
+>  {
+>         struct ieee80211_hw *hw =3D rtwdev->hw;
+>         struct ieee80211_supported_band *sband_2ghz =3D NULL, *sband_5ghz=
+ =3D NULL;
+>         struct ieee80211_supported_band *sband_6ghz =3D NULL;
+> -       u32 size =3D sizeof(struct ieee80211_supported_band);
+>         u8 support_bands =3D rtwdev->chip->support_bands;
+>=20
+>         if (support_bands & BIT(NL80211_BAND_2GHZ)) {
+> -               sband_2ghz =3D kmemdup(&rtw89_sband_2ghz, size, GFP_KERNE=
+L);
+> +               sband_2ghz =3D rtw89_copy_sband(&rtw89_sband_2ghz);
+>                 if (!sband_2ghz)
+>                         goto err;
+>                 rtw89_init_ht_cap(rtwdev, &sband_2ghz->ht_cap);
+> @@ -4416,7 +4444,7 @@ static int rtw89_core_set_supported_band(struct rtw=
+89_dev *rtwdev)
+>         }
+>=20
+>         if (support_bands & BIT(NL80211_BAND_5GHZ)) {
+> -               sband_5ghz =3D kmemdup(&rtw89_sband_5ghz, size, GFP_KERNE=
+L);
+> +               sband_5ghz =3D rtw89_copy_sband(&rtw89_sband_5ghz);
+>                 if (!sband_5ghz)
+>                         goto err;
+>                 rtw89_init_ht_cap(rtwdev, &sband_5ghz->ht_cap);
+> @@ -4426,7 +4454,7 @@ static int rtw89_core_set_supported_band(struct rtw=
+89_dev *rtwdev)
+>         }
+>=20
+>         if (support_bands & BIT(NL80211_BAND_6GHZ)) {
+> -               sband_6ghz =3D kmemdup(&rtw89_sband_6ghz, size, GFP_KERNE=
+L);
+> +               sband_6ghz =3D rtw89_copy_sband(&rtw89_sband_6ghz);
+>                 if (!sband_6ghz)
+>                         goto err;
+>                 rtw89_init_he_eht_cap(rtwdev, NL80211_BAND_6GHZ, sband_6g=
+hz);
+> @@ -4445,9 +4473,9 @@ static int rtw89_core_set_supported_band(struct rtw=
+89_dev *rtwdev)
+>                 kfree((__force void *)sband_5ghz->iftype_data);
+>         if (sband_6ghz)
+>                 kfree((__force void *)sband_6ghz->iftype_data);
+> -       kfree(sband_2ghz);
+> -       kfree(sband_5ghz);
+> -       kfree(sband_6ghz);
+> +       rtw89_free_sband(sband_2ghz);
+> +       rtw89_free_sband(sband_5ghz);
+> +       rtw89_free_sband(sband_6ghz);
+>         return -ENOMEM;
+>  }
+>=20
+> @@ -4461,9 +4489,9 @@ static void rtw89_core_clr_supported_band(struct rt=
+w89_dev *rtwdev)
+>                 kfree((__force void *)hw->wiphy->bands[NL80211_BAND_5GHZ]=
+->iftype_data);
+>         if (hw->wiphy->bands[NL80211_BAND_6GHZ])
+>                 kfree((__force void *)hw->wiphy->bands[NL80211_BAND_6GHZ]=
+->iftype_data);
+> -       kfree(hw->wiphy->bands[NL80211_BAND_2GHZ]);
+> -       kfree(hw->wiphy->bands[NL80211_BAND_5GHZ]);
+> -       kfree(hw->wiphy->bands[NL80211_BAND_6GHZ]);
+> +       rtw89_free_sband(hw->wiphy->bands[NL80211_BAND_2GHZ]);
+> +       rtw89_free_sband(hw->wiphy->bands[NL80211_BAND_5GHZ]);
+> +       rtw89_free_sband(hw->wiphy->bands[NL80211_BAND_6GHZ]);
+>         hw->wiphy->bands[NL80211_BAND_2GHZ] =3D NULL;
+>         hw->wiphy->bands[NL80211_BAND_5GHZ] =3D NULL;
+>         hw->wiphy->bands[NL80211_BAND_6GHZ] =3D NULL;
+
+Like I mentioned above, with devm_ series, I suppose this function can be
+removed entirely.=20
+
 
