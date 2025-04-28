@@ -1,54 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D296269D16
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832D326A1BD
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844886; cv=none; b=Mz0Fj/TyClxFHE8xM9LJ47+yiCa20sJ99UWJFEzgaaOS9BrCn6aIlUHkinqJ/g4dQSjy7CvrdIZBLJMB/zRqiQMqhR2MvQvjhdKiLcvSRpm9hiVJprsJWo5oTPCpl9xFG33MEhOXhE4l0ZNKlSWillRaWiVD6hCKz/srHHiJLk0=
+	t=1745844891; cv=none; b=L20oHQ9OozKXaktN+Cy3tztYdeTtdKO1jiTDXBD1t+YX3IBk+UzHIQqBYPCEDsd5/t2j3W+2ri1BLERhKlnVuKkXXY/s3FFGK3GDH9irPHHZlNaK5JQg22lBj/JvV8KMVe0nul1HVYqwGTpLuhRQh/klKfCyNImvFibxPD8ebfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844886; c=relaxed/simple;
-	bh=4OJwV698gQCJPiSIXGfUD/GF6qB5K35cbpsT0ygVLuQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EG9umluOT3zr3Xh1YIAateBNb9TaEeJ49uBpzr7f4gE2LMBGd5JeGl6Xc5dCah2AX/HvOguicsA8lZzbkG9MS6PVweA52jNjT7EP97STD33L1nRuVmWESHmAMdxmOFIPVhvBYHhd2zwlv7nGqVI2dlHsz6100ZR6Ko0PTpA5D08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rr5ii0lx; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1745844891; c=relaxed/simple;
+	bh=tDnXOE4HmetRM9ergwtwOk0oofTBYTeowkzenHyMGxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Mbch7USYuMkxQoTTRmA+dQVnMOSxRAzls90kLAa/hawj6iLtSQ1Gyq/G0DRiHStkC+bU/DDq/jaYCpfkd8nXuafpQGGI5pYsBJ3z9DJvsRkIIHbbKIVbPaWvLA5eFwFSYW+634EejFGFntfDpJd8n3gcYyG5e6HNJfM0KaWmykA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cqqDGj/v; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rr5ii0lx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cqqDGj/v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745844882;
+	s=mimecast20190719; t=1745844888;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dG4e+4IwghzMbYvfmrNmd+Z+EmbBqDlTbrxVQyP0X9w=;
-	b=Rr5ii0lxKBnP5SbxL/eoFzIzzr3Txg49C7kgJQS2bu7SGuXKK6XA+HHbWp09c+pEAgCR8H
-	UxT5kTGjWXV54U37Cs5IRBDryZ+yumoceU2QROFcf6YQqqvo/6WJsQMFUj8he0NtjX4yy0
-	IcqE1UTLm++eMwodY1R7LEhxFgeNSQ8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Eg0z7Pus8n3D8i1OBhTFBP+P7WtdwbC7/sBYnKiCqJU=;
+	b=cqqDGj/vX5GJZMvpFxpK1q/qAXOH9SixCyUpmgs1cn9JGgAZjfyO6P296diMA8dm9fBKtp
+	p48JfzAqUG8XRVEgcGBd+M5R/ufKEPx/cH6IEJYJZJAwi0uU+n2J9ekDYIbCXbDTe1BZa3
+	SWkioEo3qYZvjnP9KsWR/ovox/5bUsI=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-625-RqastXQ1PLeT6Adjidafow-1; Mon,
- 28 Apr 2025 08:54:41 -0400
-X-MC-Unique: RqastXQ1PLeT6Adjidafow-1
-X-Mimecast-MFC-AGG-ID: RqastXQ1PLeT6Adjidafow_1745844880
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-LXguPoPFN8qL-ZhVr-JD-Q-1; Mon,
+ 28 Apr 2025 08:54:44 -0400
+X-MC-Unique: LXguPoPFN8qL-ZhVr-JD-Q-1
+X-Mimecast-MFC-AGG-ID: LXguPoPFN8qL-ZhVr-JD-Q_1745844883
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFA251800ECA;
-	Mon, 28 Apr 2025 12:54:40 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3F7B71956087;
+	Mon, 28 Apr 2025 12:54:43 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.225.38])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7E36119560A3;
-	Mon, 28 Apr 2025 12:54:38 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4FC4119560A3;
+	Mon, 28 Apr 2025 12:54:41 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Frederic Weisbecker <frederic@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Waiman Long <longman@redhat.com>
 Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH v3 0/3] timers: Exclude isolated cpus from timer migation
-Date: Mon, 28 Apr 2025 14:54:18 +0200
-Message-ID: <20250428125417.102741-5-gmonaco@redhat.com>
+Subject: [PATCH v3 1/3] timers: Rename tmigr 'online' bit to 'available'
+Date: Mon, 28 Apr 2025 14:54:19 +0200
+Message-ID: <20250428125417.102741-6-gmonaco@redhat.com>
+In-Reply-To: <20250428125417.102741-5-gmonaco@redhat.com>
+References: <20250428125417.102741-5-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,87 +62,149 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-The timer migration mechanism allows active CPUs to pull timers from
-idle ones to improve the overall idle time. This is however undesired
-when CPU intensive workloads run on isolated cores, as the algorithm
-would move the timers from housekeeping to isolated cores, negatively
-affecting the isolation.
+The timer migration hierarchy excludes offline CPUs via the
+tmigr_is_not_available function, which is essentially checking the
+online bit for the CPU.
 
-This effect was noticed on a 128 cores machine running oslat on the
-isolated cores (1-31,33-63,65-95,97-127). The tool monopolises CPUs,
-and the CPU with lowest count in a timer migration hierarchy (here 1
-and 65) appears as always active and continuously pulls global timers,
-from the housekeeping CPUs. This ends up moving driver work (e.g.
-delayed work) to isolated CPUs and causes latency spikes:
+Rename the online bit to available and all references in function names
+and tracepoint to generalise the concept of available CPUs.
 
-before the change:
-
- # oslat -c 1-31,33-63,65-95,97-127 -D 62s
- ...
-  Maximum:     1203 10 3 4 ... 5 (us)
-
-after the change:
-
- # oslat -c 1-31,33-63,65-95,97-127 -D 62s
- ...
-  Maximum:      10 4 3 4 3 ... 5 (us)
-
-Exclude isolated cores from the timer migration algorithm, extend the
-concept of unavailable cores, currently used for offline ones, to
-isolated ones:
-* A core is unavailable if isolated or offline;
-* A core is available if isolated and offline;
-
-A core is considered unavailable as idle if:
-* is in the isolcpus list
-* is in the nohz_full list
-* is in an isolated cpuset
-
-Due to how the timer migration algorithm works, any CPU part of the
-hierarchy can have their global timers pulled by remote CPUs and have to
-pull remote timers, only skipping pulling remote timers would break the
-logic.
-For this reason, we prevents isolated CPUs from pulling remote global
-timers, but also the other way around: any global timer started on an
-isolated CPU will run there. This does not break the concept of
-isolation (global timers don't come from outside the CPU) and, if
-considered inappropriate, can usually be mitigated with other isolation
-techniques (e.g. IRQ pinning).
-
-The first 2 patches are preparatory work to change the concept of
-online/offline to available/unavailable and keep track of those in a
-separate cpumask.
-
-The third patch extends the unavailable status to isolated CPUs, which
-is the main contribution of the series.
-
-Changes since v2:
-* improve comments about handling CPUs isolated at boot
-* minor cleanup
-
-Changes since v1 [1]:
-* split into smaller patches
-* use available mask instead of unavailable
-* simplification and cleanup
-
-[1] - https://lore.kernel.org/lkml/20250410065446.57304-2-gmonaco@redhat.com
-
-Gabriele Monaco (3):
-  timers: Rename tmigr 'online' bit to 'available'
-  timers: Add the available mask in timer migration
-  timers: Exclude isolated cpus from timer migation
-
- include/linux/timer.h                  |  6 +++
- include/trace/events/timer_migration.h |  4 +-
- kernel/cgroup/cpuset.c                 | 14 +++---
- kernel/time/tick-internal.h            |  1 +
- kernel/time/timer.c                    | 10 ++++
- kernel/time/timer_migration.c          | 65 ++++++++++++++++++++------
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/trace/events/timer_migration.h |  4 ++--
+ kernel/time/timer_migration.c          | 22 +++++++++++-----------
  kernel/time/timer_migration.h          |  2 +-
- 7 files changed, 78 insertions(+), 24 deletions(-)
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+diff --git a/include/trace/events/timer_migration.h b/include/trace/events/timer_migration.h
+index 47db5eaf2f9ab..61171b13c687c 100644
+--- a/include/trace/events/timer_migration.h
++++ b/include/trace/events/timer_migration.h
+@@ -173,14 +173,14 @@ DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_active,
+ 	TP_ARGS(tmc)
+ );
+ 
+-DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_online,
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_available,
+ 
+ 	TP_PROTO(struct tmigr_cpu *tmc),
+ 
+ 	TP_ARGS(tmc)
+ );
+ 
+-DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_offline,
++DEFINE_EVENT(tmigr_cpugroup, tmigr_cpu_unavailable,
+ 
+ 	TP_PROTO(struct tmigr_cpu *tmc),
+ 
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 2f6330831f084..7efd897c79599 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -427,7 +427,7 @@ static DEFINE_PER_CPU(struct tmigr_cpu, tmigr_cpu);
+ 
+ static inline bool tmigr_is_not_available(struct tmigr_cpu *tmc)
+ {
+-	return !(tmc->tmgroup && tmc->online);
++	return !(tmc->tmgroup && tmc->available);
+ }
+ 
+ /*
+@@ -926,7 +926,7 @@ static void tmigr_handle_remote_cpu(unsigned int cpu, u64 now,
+ 	 * updated the event takes care when hierarchy is completely
+ 	 * idle. Otherwise the migrator does it as the event is enqueued.
+ 	 */
+-	if (!tmc->online || tmc->remote || tmc->cpuevt.ignore ||
++	if (!tmc->available || tmc->remote || tmc->cpuevt.ignore ||
+ 	    now < tmc->cpuevt.nextevt.expires) {
+ 		raw_spin_unlock_irq(&tmc->lock);
+ 		return;
+@@ -973,7 +973,7 @@ static void tmigr_handle_remote_cpu(unsigned int cpu, u64 now,
+ 	 * (See also section "Required event and timerqueue update after a
+ 	 * remote expiry" in the documentation at the top)
+ 	 */
+-	if (!tmc->online || !tmc->idle) {
++	if (!tmc->available || !tmc->idle) {
+ 		timer_unlock_remote_bases(cpu);
+ 		goto unlock;
+ 	}
+@@ -1435,19 +1435,19 @@ static long tmigr_trigger_active(void *unused)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+ 
+-	WARN_ON_ONCE(!tmc->online || tmc->idle);
++	WARN_ON_ONCE(!tmc->available || tmc->idle);
+ 
+ 	return 0;
+ }
+ 
+-static int tmigr_cpu_offline(unsigned int cpu)
++static int tmigr_cpu_unavailable(unsigned int cpu)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+ 	int migrator;
+ 	u64 firstexp;
+ 
+ 	raw_spin_lock_irq(&tmc->lock);
+-	tmc->online = false;
++	tmc->available = false;
+ 	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
+ 
+ 	/*
+@@ -1455,7 +1455,7 @@ static int tmigr_cpu_offline(unsigned int cpu)
+ 	 * offline; Therefore nextevt value is set to KTIME_MAX
+ 	 */
+ 	firstexp = __tmigr_cpu_deactivate(tmc, KTIME_MAX);
+-	trace_tmigr_cpu_offline(tmc);
++	trace_tmigr_cpu_unavailable(tmc);
+ 	raw_spin_unlock_irq(&tmc->lock);
+ 
+ 	if (firstexp != KTIME_MAX) {
+@@ -1466,7 +1466,7 @@ static int tmigr_cpu_offline(unsigned int cpu)
+ 	return 0;
+ }
+ 
+-static int tmigr_cpu_online(unsigned int cpu)
++static int tmigr_cpu_available(unsigned int cpu)
+ {
+ 	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+ 
+@@ -1475,11 +1475,11 @@ static int tmigr_cpu_online(unsigned int cpu)
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock_irq(&tmc->lock);
+-	trace_tmigr_cpu_online(tmc);
++	trace_tmigr_cpu_available(tmc);
+ 	tmc->idle = timer_base_is_idle();
+ 	if (!tmc->idle)
+ 		__tmigr_cpu_activate(tmc);
+-	tmc->online = true;
++	tmc->available = true;
+ 	raw_spin_unlock_irq(&tmc->lock);
+ 	return 0;
+ }
+@@ -1850,7 +1850,7 @@ static int __init tmigr_init(void)
+ 		goto err;
+ 
+ 	ret = cpuhp_setup_state(CPUHP_AP_TMIGR_ONLINE, "tmigr:online",
+-				tmigr_cpu_online, tmigr_cpu_offline);
++				tmigr_cpu_available, tmigr_cpu_unavailable);
+ 	if (ret)
+ 		goto err;
+ 
+diff --git a/kernel/time/timer_migration.h b/kernel/time/timer_migration.h
+index ae19f70f8170f..70879cde6fdd0 100644
+--- a/kernel/time/timer_migration.h
++++ b/kernel/time/timer_migration.h
+@@ -97,7 +97,7 @@ struct tmigr_group {
+  */
+ struct tmigr_cpu {
+ 	raw_spinlock_t		lock;
+-	bool			online;
++	bool			available;
+ 	bool			idle;
+ 	bool			remote;
+ 	struct tmigr_group	*tmgroup;
 -- 
 2.49.0
 
