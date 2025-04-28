@@ -1,182 +1,81 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C5D20B7FD;
-	Mon, 28 Apr 2025 22:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A3D18DB29
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745879980; cv=none; b=fJqX52qbrPI3MmeMjajpFAxoHRqZ+2Uzcx41Vf2w0bEv8NOTJZqVmNNyiQqGYg/kd0J/Qr6sgco9yAkUoy61yvaD+bkddeVhmLk0q27c3eskueyHKB1DIpeWn0VLwrTgUpCQnoATE3fFzEmLckzBrADNXNgOgckR/H3FwSGwU/s=
+	t=1745880014; cv=none; b=N9DBtde8vEmVs1Rd+Sn2zM+AEka+OYYEG98SGaJr4fK9kELlDdKIOYdH7Rh8G18GmwMhLom3vBaMlyfr6BhMt+VL4QgvjqbB1QwiROe7XkYegHQ0RmxhgkUB6rRdgtgRj5vH27fWDSbFBwpgJHe6BaJ2RyIecFInizmVzECyEI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745879980; c=relaxed/simple;
-	bh=8kijEYLCWz6PW7HEQrKNd0RhweHY8H7pf4r3gg5DYqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sFzawNiC8S9pKxSv+zekQsn7srpI9zTjfuJEXnrRWXcFdrpznwqKPuhIVOXiNBpdrOQUBBxSSg/VqnHPlHXzW5K3kgY/ahNmuO6SynmIPQImgRUECyxstwMn/lEhPAlYllcMF8Hx3vYfB3IQWsgjDePUONvNA7ALQ09TtFSL9Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=De9DHTTz; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745880014; c=relaxed/simple;
+	bh=5eS6DGU2Q+bCtF9R1Dk2V/qavNj0iNbuvOWY14ztV8g=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=rrcfUR0amXyCK5w805vJbs8emESV24axTE3ZnGCgvhDX2BPtiYFJnmLUUWNHtaGh//o6cS2EQGjVZp+rinbFpG5XOEVlD8O/ogbCBPijSV0+S4W/TUVYg7PNlZP3H3pur/r69fxNTpD+8bgBSEzuqeYFTPGy92HxHKKVgE/aqTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbCBIElQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="De9DHTTz"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54993c68ba0so6386614e87.2;
-        Mon, 28 Apr 2025 15:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745879975; x=1746484775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8kijEYLCWz6PW7HEQrKNd0RhweHY8H7pf4r3gg5DYqk=;
-        b=De9DHTTzTBL5O21Rz4MiyID2FIOFuode+oQO26pUQXPa84QwBw5zSu/ViOZgJTasLp
-         hnQ6JpncroSfS3eFhBRi6SvXF/G9X9Fvxlm9As9KJC9v01EEXB2kAvdpWD2xvRB76Qww
-         DQ6bj1q2s+yb2EBf1MNU/V/YgHcHYcYfh01rte1uzOFkzixAaE+gOB0WMXpPNAssuPCS
-         Vd1vTWFi2kOxF/xp51OYK0B+R3H5ZGhB8wHKioThooP7efLgwkSWAZ+MW7G1qI4tpLA3
-         1gdEHQhthX4KjJEJpgIFlpuCesCy2MJ1W10MXcYx2sf/7W0l9Ezx06P3KzxIaOVWBJgv
-         oEaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745879975; x=1746484775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8kijEYLCWz6PW7HEQrKNd0RhweHY8H7pf4r3gg5DYqk=;
-        b=jXiaP3QslrTAV/8O9VMGc5Y+TpcPLkKN+W+ZrKTwheqhi4doCLpbzirSChqr6ip9U6
-         WuyNTIvVlM8Cocdj1QvOOPLSrowtXr6N2erpEAjq+5nRfDksF/ZTdz5FtIL6KPtqpnLF
-         JlFKD9/pf0ZX+uXN6KBYM1VhJrKAMzD5oyANLFfCqAWQYit5RR9rTdB9glBCKcgQRSP7
-         /f3ZCtVwzjkmmGkTnq0cNbBJpsvqNLFjmQVQuTgeR00YnLWBy4FfEZ2GIWOCcLRtQsOy
-         SyGgGUMat4+uUvMxf/8NRncGzMbDRa/Da9ux2RLs9Ucy7Xavh2fnByuVuUe13+xZuRU7
-         lFIA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaNvoS9Kc1uDvvmB7o8gj35qFPO3FwBZhXiys7XD+VpLPKmPtoQo1ReidNyCDdHQXYjP+ieHQAVNG89Lc=@vger.kernel.org, AJvYcCXpisqHT/bNmY3Y5NH863rTIrlpyVVizNifDLHOLKlaxwo/Y4bUMYWLU/1rn3iiBePe2cGR+oIAfuQP@vger.kernel.org, AJvYcCXq1vOcxb3qGQaWDxSA7bmN55W7T4aMvJZcHdc2WQ3tnXBKwTkLE6MiYrggaRn8D9RiqObten3O1oJkk8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/+Jtx3cGsInGAUrowevrAkhoWMH60NEBJ1MZnbFlroobYYVcB
-	kZsemYylhbn0b1SCdUAUSYm3M/j2cWgtxt6ho3RMpOxlamHvwFp4F7AX/se4S2qwHAOLFn6zVqN
-	cqj0+6feTgUZqePqcveluJ3Rn8yo=
-X-Gm-Gg: ASbGncupxE1qSvL3A81WAWs3VbicvKclJVgSaqkk7pvszg18DukEE15Ig6pc5nyTvF6
-	2+3PM/nmPEH/Dvh0CgFxWiKVVxgb0wt5mISlVwErhpj89B54NrkofS7/mV9aQtMh7oJuYx3cHNn
-	F5V1YKAyY+X/UGFHOxxaQ94g==
-X-Google-Smtp-Source: AGHT+IGpUU0Dr0j69ZA43/sVTpHzX+UlOHTGI9+6U92xp3Xaam4yUKm6LCwuXZkWvHHEBkYoRFB8tLHhw7Kp4fLsTjM=
-X-Received: by 2002:a05:6512:3f12:b0:54b:117b:b54d with SMTP id
- 2adb3069b0e04-54e9e568194mr150477e87.56.1745879974899; Mon, 28 Apr 2025
- 15:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbCBIElQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD479C4CEE4;
+	Mon, 28 Apr 2025 22:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745880013;
+	bh=5eS6DGU2Q+bCtF9R1Dk2V/qavNj0iNbuvOWY14ztV8g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=tbCBIElQ4XwfCdkAsa0HnDaZaICSy3NqmUwPyyxiYNKPNclSBPu6pOoU+DoaeOgYj
+	 JiAp06yF82wR1SxVlvS3N3Npc1GxO2JOMWbx8k7GmB67E8NBxMbY+AtDHnFbTA1Tlh
+	 5iod7zHvNZxG9PLMjxm9OQ82cJgjCauJnY/TuBuzSg3OtwIzbGuIZb9j1L/aFpl7uV
+	 D9KJ/fdmKg3KyXkzAdKKm9qTNeG27SRbODWwkVE+ThE6qU4sOr9ipAinbPXBu95td4
+	 4Q+hoE/vUAhBB+6pCSqnqaQivOuc2p7w2MgiHFMXUfs5ibF555gn2Yu647I8naB7xn
+	 8Cj1DOMo6TwMQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD673822D43;
+	Mon, 28 Apr 2025 22:40:53 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
- <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com> <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
- <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
- <lk37wtb25pr2rj3zhct5udaykr7joqw2mpgtupjq33of2xhesi@rmdgucbzxmgz>
- <CALHNRZ8gSzOVpN_au_ntSan7or=uRBrPSRFdbDqAHxitcEfs7g@mail.gmail.com> <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
-In-Reply-To: <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 28 Apr 2025 17:39:23 -0500
-X-Gm-Features: ATxdqUH3PvKTZWXJSIROsnb_Oqs6Z73ioWcRg9tAM4X2zDrHkmm1o-UaBnHoPx4
-Message-ID: <CALHNRZ-vVzNzfJRMM+i044qwvuv-bm0hB8fTZu0XQJA_qT9Mow@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: sysfs: add encoding_flags entry
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <174588005248.1067750.11308178018864136202.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Apr 2025 22:40:52 +0000
+References: <20250416054805.1416834-1-chao@kernel.org>
+In-Reply-To: <20250416054805.1416834-1-chao@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
-On Sun, Apr 27, 2025 at 10:57=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Mon, Apr 21, 2025 at 11:33:01AM -0500, Aaron Kling wrote:
-> > On Mon, Apr 21, 2025 at 3:54=E2=80=AFAM Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > On Mon, Apr 21, 2025 at 03:09:42AM -0500, Aaron Kling wrote:
-> > > > On Mon, Apr 21, 2025 at 2:52=E2=80=AFAM Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Rela=
-y wrote:
-> > > > > > From: Aaron Kling <webgeek1234@gmail.com>
-> > > > > >
-> > > > > > The driver works fine as a module, so allow building as such.
-> > > > > >
-> > > > >
-> > > > > In the past, the former irqchip maintainer raised concerns for al=
-lowing the
-> > > > > irqchip drivers to be removed from the kernel. The concern was mo=
-stly (afaik)
-> > > > > due to not disposing all IRQs before removing the irq_domain.
-> > > > >
-> > > > > So Marek submitted a series [1] that added a new API for that. Bu=
-t that series
-> > > > > didn't progress further. So if you want to make this driver a mod=
-ule, you need
-> > > > > to do 2 things:
-> > > > >
-> > > > > 1. Make sure the cited series gets merged and this driver uses th=
-e new API.
-> > > > > 2. Get an Ack from Thomas (who is the only irqchip maintainer now=
-).
-> > > >
-> > > > Should this be a hard blocker for building this one driver as a
-> > > > module? I did a quick grep of drivers/pci/controller for irq_domain=
-,
-> > > > then compared several of the hits to the Kconfig. And every single =
-one
-> > > > is tristate. Tegra is by far not a unique offender here.
-> > > >
-> > >
-> > > Not 'unique', yes. But the situation is a bit worse atm. Some of the =
-patches
-> > > (making the driver as a module) were merged in the past without addre=
-ssing the
-> > > mapping issue.
-> > >
-> > > Please take a look at the reply from Marc:
-> > > https://lkml.iu.edu/hypermail/linux/kernel/2207.2/08367.html
-> > >
-> > > Even though Marc said that disposing IRQs is not enough to make sure =
-there are
-> > > no dangling pointers of the IRQs in the client drivers, I'm inclined =
-to atleast
-> > > allow modular drivers if they could dispose all the mappings with the=
- new API.
-> > > This doesn't mean that I'm not cared about the potential issue, but t=
-he removing
-> > > of modules is always an 'experimental' feature in the kernel. So user=
-s should be
-> > > aware of what they are doing. Also, we have not seen any reported iss=
-ues after
-> > > disposing the IRQs from the controller drivers. That also adds to my =
-view on
-> > > this issue.
-> > >
-> > > That being said, the safest option would be to get rid of the remove =
-callback
-> > > and make the module modular. This will allow the driver to be built a=
-s a module
-> > > but never getting removed (make sure .suppress_bind_attrs is also set=
-).
-> > .suppress_bind_attrs is already set in this driver. But what happens
-> > cleanup on shutdown if the remove is dropped? Would it be better to
-> > move remove to shutdown for this case?
-> >
->
-> remove() won't be called on shutdown path, you need to populate the shutd=
-own()
-> callback for that. But do note that both remove() and shutdown() serves
-> different purpose, so do not just rename the function.
+Hello:
 
-I did some more looking into this today and came across 662b94c3195654
-[0]. That commit stated to add support to the driver to be built as a
-module, but didn't touch the Kconfig, so I'm unsure how that ever
-worked. But Manivannan, can you please take a look at that commit and
-its message? I'm not familiar with pcie and what is required for
-proper de-initialization. That commit added the remove method for the
-stated purpose of making the driver a module. Implying that none of
-that was needed on shutdown when built-in. So if the intent is to make
-a permanent module which cannot be unloaded, as you're asking for,
-does that mean it's safe to just fully revert that commit?
+This series was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-Sincerely,
-Aaron
+On Wed, 16 Apr 2025 13:48:04 +0800 you wrote:
+> This patch adds a new sysfs entry /sys/fs/f2fs/<disk>/encoding_flags,
+> it is a read-only entry to show the value of sb.s_encoding_flags, the
+> value is hexadecimal.
+> 
+> ===========================      ==========
+> Flag_Name                        Flag_Value
+> ===========================      ==========
+> SB_ENC_STRICT_MODE_FL            0x00000001
+> SB_ENC_NO_COMPAT_FALLBACK_FL     0x00000002
+> ===========================      ==========
+> 
+> [...]
 
-[0] https://github.com/torvalds/linux/commit/662b94c3195654c225174c68009455=
-5c0d750d41
+Here is the summary with links:
+  - [f2fs-dev,1/2] f2fs: sysfs: add encoding_flags entry
+    https://git.kernel.org/jaegeuk/f2fs/c/0d56663919d2
+  - [f2fs-dev,2/2] f2fs: sysfs: export linear_lookup in features directory
+    https://git.kernel.org/jaegeuk/f2fs/c/217fc63224a9
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
