@@ -1,135 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAF127E1A7;
-	Mon, 28 Apr 2025 17:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8315319ABC6
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745862612; cv=none; b=UgbXq06U3URlXX49wKEUvlsh/ysMhjJ3vMFf6+A495Nnbjls3eZjsN//Mec44Y2BmrXpG1ZZ23U33KmsWgMMU9QDkK+xzChP+7G45s9PcEMsqPE8GBoWu1IR0Q5s1Y1dNW3IP6IzJf5pD3Uuxa4wPPsOxzab9virSOHeF9ta4o8=
+	t=1745862642; cv=none; b=KQV0AkyuG/h1As0cHQPqjjHuwSD++mvMawG0g/m4Z4NbcM5jWP3/6VQf4RPAxyqqFx9S5u7SeeGaTobtVG7xWic2e81T3WOR+K8smu0ynV5n2zCSOLg0WcnqZONNOV33JTgBnylyaaGdeP6wmJCEup6w6kbeZbY9fM7/vnoR5oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745862612; c=relaxed/simple;
-	bh=9nRDz+uGGkaLJotj1jMAe4EMlZOjXI+3UxsVUphfD8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uIn1HbKH/F4j3+jTw5E4o6QBm/AEKAWuOCQ4HBMnncHetFlv40I3yBQQOdN8+3DGJ+skC9vO5UfCMx+JZu160hkkLnXXWXNqj0M/hSO8PnGpaJL96xmnOtaRB3MfqxlZN+LuYgUnzCXQ+cxJKB+R2OykPWogBZ578S1tTOLizTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxi+GL2R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745862642; c=relaxed/simple;
+	bh=OvAf2T+pBvdBVQKKD1SCkOQm7K3cKaRnrNfz9b6U1KI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lwXoGkzsGCUgs4ZS+BRvebtRB0tJaqTlztVkZE8qCGsQy6o7Z9kk+WF41gajxbqCLpMML9sWtoDS51oT0mltMaMcrJSUmv1NLJ6vZOWjfK5Q2bwq0HPULq4pzxAVXxWf+YRcXfs8ge34PzLCDKzUlzDsT4h6XtNk4KDUM7tULH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OmgDpqQa; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxi+GL2R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36732C4CEE4;
-	Mon, 28 Apr 2025 17:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745862610;
-	bh=9nRDz+uGGkaLJotj1jMAe4EMlZOjXI+3UxsVUphfD8s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lxi+GL2RkyOjjP5I5EeSFvbjdp0S4foY+W2Bm/A04k+3ZARivluMmGkXigFXGlzXx
-	 RF1PkLnypHjahjVxDE+Z1nnkESKcLtiaXpA1X/GcccibVgU67IBx9GRrhgni8akuJA
-	 eWIXgPZA1tiYYmZAcVgFi+kgUmBJs/sfEOBya8eIvcOTMXOgrSZgB2/R/jgAyKcQLz
-	 3Pa5LzT0fG9IGC09L2RwrfyQl+7yZdgr4riBiWzOhMI7A9QqZsnDMHZThdHTONOHYP
-	 u+AXRITlBzFirKY3/WWJQuzuh5mOBwKCZ5GHvnlhlYD5u3fY9gmgX2O5QeBg3Lv/ID
-	 hq9MfizvSfjJQ==
-Message-ID: <676324e0-43a7-4227-8b6f-3fec97a484b0@kernel.org>
-Date: Mon, 28 Apr 2025 19:50:04 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmgDpqQa"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2263428c8baso13005ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745862640; x=1746467440; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5mEMzzefTttNVGmGGFEF+tVQHWP3i8v0cb/h12OtES4=;
+        b=OmgDpqQaWfXDEzR3D7bT9oowtk+dIIu88v5Sm176ctaEOfVPp5XjFau3YloJfgx/yi
+         ag35CLiMNd1ci5DOIZ0lzudQiz2AMDieklzrbqAXwNTZaQx3d8SPhQ5797Z/82Ozvy1i
+         Rvm2mlPBqF9sr/ZuI1PjU5Yb7mB8xZu9UOBXxXBfNWi2pwFopCxGwbI9wMv90wtnzDYN
+         bYvKtPTfaAkBM+9egcrBNABC21SGVtlQxKSWNfUnuYD4F2ixB2IVUW15VmZiu22WONRe
+         s6bT81o6Slgb3IlwSUxOc+sjL8Ou4NcQWQix1N0ONy3nQcERXK+Zq+veif3VsWzGAjtt
+         XDSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745862640; x=1746467440;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mEMzzefTttNVGmGGFEF+tVQHWP3i8v0cb/h12OtES4=;
+        b=ob20W+nvw6sNCHKK+K0vciZ5m4FJ6PQcxBRKp4Hzcjv9gKWeswcWYQAAobd0QPR70R
+         1CKmqofNG2paZkuCbbxRqRv3U+KrKvKrR1Y3nxArgAzCY2GVOwNSzoRch3IQRNKmo0cS
+         FAAa5AwDiTVRXgZbUsRodQRKIdrRMf2E5RDvZcJhkQS0xSX/jV2rLAVwljTlcFqIieN0
+         Qg3mHhZj5HzoQ9eaqxxkFP2Oo9fm0oIoR1rIhwJP56y9yYxVI6u9lLd8Rd4+VjcWpcgg
+         +TLHv4X/a7MW1RBD1YO1EQgaC7xwy7r54xOhojvdGTOFBTHuMyge4eB13gBL+7nyNmAg
+         M+Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2rY0iF07g7lCn6o5QtSzPB8To2hJRpIIIHLtXMzJSvX+ksIF2BTFzs/SCPCqeSfOf+8L5z0vrNyaOgGM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwovkCnILKehndv941pgSDR/b/LwH6lO+UXJzXpDV8nGTfydib1
+	N7vempxr0YBZLVinIF9Kua+aUVU+Kc1klI4g5tdN1XG3/LW+5xkkwyVMqDydAQ==
+X-Gm-Gg: ASbGncuk2QBEGM3OKfqZX2aJgH0jqgkrSPZzvQAboJ5vzp46KbxDTn7sm04eUOTJqWx
+	2DLKrYAgRgDPE5aRom+8jIrII6NtwGwJ4My/JerXFH+9dRpRfhhsaVkMPJcA7udqnZ7A4l96WFP
+	NI34bdlr6qwpDNbn68HWVujNc5bUWLV6lScW1uNc6iFlloU+4A72R3s73sANQuMxVlQd+K/wz2c
+	tM7xUNuc8JZ75Rx4qtHQ1bum+JivSiYRnCBwmbmTabbUY5nOo/7m9ScXSMpDxw8KzjR/vwJfVno
+	LwC+HeqUWG/d2TxGEZ5zHHt6zhlVbgG/CFN2XVpitX+88kf65sukqaIDeIEjpXBMudVkYIY+
+X-Google-Smtp-Source: AGHT+IFdvGjCZd8WihYpKKAdbavzVYWBtSaBNCLX1v9EIv3lNKixiHNvn3PMdFhA2dEanqkbNONo4w==
+X-Received: by 2002:a17:902:ebce:b0:229:1de5:e8c9 with SMTP id d9443c01a7336-22de6ebc37cmr33095ad.13.1745862639534;
+        Mon, 28 Apr 2025 10:50:39 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4db9b02sm85788765ad.56.2025.04.28.10.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 10:50:39 -0700 (PDT)
+Date: Mon, 28 Apr 2025 17:50:28 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 04/22] iommu: Add iommu_copy_struct_to_user helper
+Message-ID: <aA-_5FQK0uZPdGVA@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <ca032e90c0241fe0653023fcb655185dba763f5f.1745646960.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/11] Revert "dt-bindings: mfd: syscon: Add
- qcom,apq8064-mmss-sfpb"
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>,
- Lee Jones <lee@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- David Heidelberg <david@ixit.cz>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20250425-fix-nexus-4-v3-0-da4e39e86d41@oss.qualcomm.com>
- <20250425-fix-nexus-4-v3-1-da4e39e86d41@oss.qualcomm.com>
- <20250428-prudent-hasty-pheasant-aecec4@kuoka>
- <29d15e93-8f5e-4cec-97b8-8592beb01d6a@kernel.org>
- <CAO9ioeUo_vO+-wuC4JGi4JfSMZx+JZkvLvsi=ppBD_LvuV2ZLA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAO9ioeUo_vO+-wuC4JGi4JfSMZx+JZkvLvsi=ppBD_LvuV2ZLA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca032e90c0241fe0653023fcb655185dba763f5f.1745646960.git.nicolinc@nvidia.com>
 
-On 28/04/2025 12:49, Dmitry Baryshkov wrote:
-> On Mon, 28 Apr 2025 at 10:09, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 28/04/2025 09:07, Krzysztof Kozlowski wrote:
->>> On Fri, Apr 25, 2025 at 08:47:01PM GMT, Dmitry Baryshkov wrote:
->>>> For some reason Lee has mis-squashed two commits, picking up one chunk
->>>> from the first patch and one chunk from the second one. Rather than
->>>> trying to fix it, revert commit 2c8de7df7418 ("dt-bindings: mfd: syscon:
->>>> Add qcom,apq8064-mmss-sfpb").
->>>
->>> I don't understand: that commit looks like direct, proper result for
->>> https://lore.kernel.org/all/20250318-fix-nexus-4-v2-5-bcedd1406790@oss.qualcomm.com/
->>> so where is squashing two commits? The diff markers have offset by few
->>> lines, but it's still just few lines and they do not matter - there is
->>> no diff/patch mismatch from that point of view.
->>
->> Ah, difference in compatibles. I see the error. Anyway, I don't think
->> revert is correct. Just add missing compatibles.
+On Fri, Apr 25, 2025 at 10:57:59PM -0700, Nicolin Chen wrote:
+> Similar to the iommu_copy_struct_from_user helper receiving data from the
+> user space, add an iommu_copy_struct_to_user helper to report output data
+> back to the user space data pointer.
 > 
-> Why? The commit that went in is invalid, didn't come from my patches
-> and was produced in some weird way.
-And revert is pointless if you immediately add the same changes. Just
-make the changes.
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  include/linux/iommu.h | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index ba7add27e9a0..634ff647888d 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -562,6 +562,46 @@ iommu_copy_struct_from_full_user_array(void *kdst, size_t kdst_entry_size,
+>  	return 0;
+>  }
+>  
+> +/**
+> + * __iommu_copy_struct_to_user - Report iommu driver specific user space data
+> + * @dst_data: Pointer to a struct iommu_user_data for user space data location
+> + * @src_data: Pointer to an iommu driver specific user data that is defined in
+> + *            include/uapi/linux/iommufd.h
+> + * @data_type: The data type of the @dst_data. Must match with @src_data.type
+								   ^
+Nit: Must match with @dst_data type.
 
-When we see a bug, we do not revert the feature and then re-add that
-feature corrected.
+> + * @data_len: Length of current user data structure, i.e. sizeof(struct _src)
+> + * @min_len: Initial length of user data structure for backward compatibility.
+> + *           This should be offsetofend using the last member in the user data
+> + *           struct that was initially added to include/uapi/linux/iommufd.h
+> + */
+> +static inline int
+> +__iommu_copy_struct_to_user(const struct iommu_user_data *dst_data,
+> +			    void *src_data, unsigned int data_type,
+> +			    size_t data_len, size_t min_len)
+> +{
+> +	if (WARN_ON(!dst_data || !src_data))
+> +		return -EINVAL;
+> +	if (dst_data->type != data_type)
+> +		return -EINVAL;
+> +	if (dst_data->len < min_len || data_len < dst_data->len)
+> +		return -EINVAL;
+> +	return copy_struct_to_user(dst_data->uptr, dst_data->len, src_data,
+> +				   data_len, NULL);
+> +}
+> +
+> +/**
+> + * iommu_copy_struct_to_user - Report iommu driver specific user space data
+> + * @user_data: Pointer to a struct iommu_user_data for user space data location
+> + * @ksrc: Pointer to an iommu driver specific user data that is defined in
+> + *        include/uapi/linux/iommufd.h
+> + * @data_type: The data type of the @ksrc. Must match with @user_data->type
+> + * @min_last: The last member of the data structure @ksrc points in the initial
+> + *            version.
+> + * Return 0 for success, otherwise -error.
+> + */
+> +#define iommu_copy_struct_to_user(user_data, ksrc, data_type, min_last)        \
+> +	__iommu_copy_struct_to_user(user_data, ksrc, data_type, sizeof(*ksrc), \
+> +				    offsetofend(typeof(*ksrc), min_last))
+> +
+>  /**
+>   * struct iommu_ops - iommu ops and capabilities
+>   * @capable: check capability
 
-Instead we correct the feature.
+With the above nit.
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
-Best regards,
-Krzysztof
+> -- 
+> 2.43.0
+> 
