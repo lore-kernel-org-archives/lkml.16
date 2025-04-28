@@ -1,234 +1,410 @@
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C6B269CEC;
-	Mon, 28 Apr 2025 12:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843329; cv=fail; b=oIP3Zc8cQTbOaeP0L62XY13zpdVtUypeDcDKawQi/FxSteRHveTzgfXtCJ0dyNNqp4S/LudKB2MLgPbk7uHxQQ57Xn9Fs2la9zYtZDbFxhlAHRynswajBiiziet/5Q9v/4GoXaHzLYeR8bWsrVg3VV4xQiWLCOJrnJ5vM9sZtqk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843329; c=relaxed/simple;
-	bh=/m9qQhwOrxPlY7kIReuyiD2M6vbxCmDvchaNEuvK8xY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=h3fZKine3GsFm4DhmFWC8nE8cjiZw3E0di34CIrbS8h9fG0Fzc1nT2EeQXUd21TPpw2PCfusYYDLk0OigrFyG8bs+SOEd/yoQNB7xqN9/Xb71U4OnBjakpebWYFWnbqfjV3ab5PYSl8xiZNku6vrtdF+u+YiAV+BkTF2e2U25wY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=flK0m2wk; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=JvPx5esq; arc=fail smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89A8269CF0;
+	Mon, 28 Apr 2025 12:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745843332; cv=none; b=IpeNRrWiNdshjg8o6voz3853sssslxtWqqJx8KiUrQgkQG4TgiJqGkp3aRmbJhnvnE/FY5+UP8JdcHlQzxFc212+/9YDZ6eydIXuW2OxIMsl/3ofPOgzfqLLh27XtUpk4bWpExTR8CxoKCvMN43PxOp5JhKOU/V51CbDVQLZnkE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745843332; c=relaxed/simple;
+	bh=FhposC6dBzhn4s7Koj0P61iOS7zAKbblmweTDnQu4TQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a+OuizbiJDmB8CrnfVwBS/Ghk9XT0RabUZanGOKjyW/e7Ugdoqx3wpq3dmUuMx3oUXxd8t+TUeGTCzwaTg02ILMAo8rMpx9aUhHs9hwkg0h2Z1oXVRr1/h6OKMU7piM0hVpx5T5bz7iUP08112Dsz5iLU1GrbXe1hrd4pbmWGL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=H8HvM+rM; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="flK0m2wk";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="JvPx5esq"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1745843327; x=1777379327;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=/m9qQhwOrxPlY7kIReuyiD2M6vbxCmDvchaNEuvK8xY=;
-  b=flK0m2wk5cRu2KDOUd/sPEvZUW7J6pdku+GEsFMxxSTCZq2XVLnN2pLm
-   hv0nn+2MI8GDgEU6LwyZ+w8FbQ4y/NoK1OdlNyx8GeQ6/VTJAo4NuuZQZ
-   f1aP4aaLbdmUMTwbcLxLcGDfwa5FPcF4yRArzzlcWakVm9nV6//xkWrmQ
-   9Z/+EuT3TTtjTlu/7fjesTjIGaqaXsT/pNcUU5lzg4P4YkNgzvjWy2GaZ
-   kXV0UqxK8iw4M5fBPqXh4UH17QCnnWc3NTwFI18JdYlUB9AQjaJ60OSjT
-   ZSmHRFibVS55WaCQH5Ar0FV6nfQZxBJcvKjuSVPsPZ1SuVQge9Vqn/zLx
-   A==;
-X-CSE-ConnectionGUID: 5JI0Nc9GTiWLQx6ALt+dNw==
-X-CSE-MsgGUID: dgdodd8HSWKDKotl5aPAXA==
-X-IronPort-AV: E=Sophos;i="6.15,246,1739808000"; 
-   d="scan'208";a="83567975"
-Received: from mail-mw2nam10lp2045.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.45])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Apr 2025 20:27:38 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lcPcg8WsdeCcWqiBK/qj3fTmp9LTHiCzz8l5m2dQFT0dm5ezYBwyyaAENzJPqYqWxN4VNBbH2B/089EZzGLpLkbvblNFhNPGoqrGYeiafB/GOxyBPLr5S+R9cDHhjpRfXm9T8Xy/0a7oBxIEcZYNYa4hjPPEPIrFfE6Xk8F9DYvjefA5LByWrC+KPkoi3882YK9iMWsSuUJMkefQi0ix4RqMAsLH+WV6S6ssUsDSBtihLaUcxq6uR62WkgDPVqOKJm7iFR2BeNgqKZPxJjWIGORkrCs5kThlb4Dwa2WCcpujMUc9BwfPKw9idHk0oiUBldIY0Lc1IdWCU9/CBFyjsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/m9qQhwOrxPlY7kIReuyiD2M6vbxCmDvchaNEuvK8xY=;
- b=yaUTz5WKlTiMhjhXBSCUARTLlBohGmuQGzlT3gGLtHApESPaUsOhqLRTqQp8GMdNpS+NmsFRTZxFqnjMS2oPc1ftGU+tI5QBnyNSR1x8wG3udgaoollvl8+LmFc1RXRdrxIrR07Umwe0YRBdnlXJPYeNymfHpPvs9ruzjC0JNUl96MDwNgy6ImImBmuEd+05mvWyx6dLYkhLHCcPMY7AxsYsYEEHAe0zbQmVLqpy46dKIsRV/4DIofISeXDdTYVcB9ZMMn6jk5n6YrCs+u3P9t4gi8s9j5cB/WsVRiRoQnsI3W8lw3q2vNZZ18PrPKc6XVqBRNfr8uqSSU2W9jNnDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/m9qQhwOrxPlY7kIReuyiD2M6vbxCmDvchaNEuvK8xY=;
- b=JvPx5esqVjggj5/OcKFkJIsZwpM2fRytKR0kbUHyyt44BGaz6glKqpWh02wUf9KxY5MRPTQmpBfrsDgsJWpz8WMDiMi7DBYpJdSO0OKXaIIbM/rWLKbWnaUsmX1liaUg6hmiYq1fnjl3wuic4K9QEQM9kicqcsdVIDq7oLHNfvU=
-Received: from PH7PR04MB8755.namprd04.prod.outlook.com (2603:10b6:510:236::8)
- by BY1PR04MB8752.namprd04.prod.outlook.com (2603:10b6:a03:535::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Mon, 28 Apr
- 2025 12:27:37 +0000
-Received: from PH7PR04MB8755.namprd04.prod.outlook.com
- ([fe80::4372:e8cb:5341:9a9b]) by PH7PR04MB8755.namprd04.prod.outlook.com
- ([fe80::4372:e8cb:5341:9a9b%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 12:27:37 +0000
-From: Hans Holmberg <Hans.Holmberg@wdc.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-CC: Carlos Maiolino <cem@kernel.org>, Dave Chinner <david@fromorbit.com>, hch
-	<hch@lst.de>, "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: allow ro mounts if rtdev or logdev are read-only
-Thread-Topic: [PATCH] xfs: allow ro mounts if rtdev or logdev are read-only
-Thread-Index: AQHbtb9ugJyGk1wFU0SBquvCoobacLO0eGEAgASN+AA=
-Date: Mon, 28 Apr 2025 12:27:37 +0000
-Message-ID: <68fe75c0-852b-4e81-ab39-1c10a3af506b@wdc.com>
-References: <20250425085217.9189-1-hans.holmberg@wdc.com>
- <20250425145426.GL25675@frogsfrogsfrogs>
-In-Reply-To: <20250425145426.GL25675@frogsfrogsfrogs>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR04MB8755:EE_|BY1PR04MB8752:EE_
-x-ms-office365-filtering-correlation-id: fcdfeea7-429a-46ec-8ff4-08dd86500f87
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?NFBLK25ZazQ2MGx1N3dDVzlLVUNVVlZhM2tkN0FyQkVJTU00UzBRT0FDWGlJ?=
- =?utf-8?B?MVlaZ1FDNFVLc2NsQWVxNlQrSlAzdW5IeGRBMkZ5V0VXRzM0cW95NUQ3MzFP?=
- =?utf-8?B?KzkyOTFHUExQWUpYQjBUUzFocmQzL1lxcFIxZVNkTDhzRkdsdW1mbDFaY0sw?=
- =?utf-8?B?K080ZWFnK3JubktlcHR0MSs3dXJIQ2ZJOXJvUFZOWUxIV0R4TUt4SVVTRlNu?=
- =?utf-8?B?WDdVd3ZkT2R1aFcydVJTdU5MMFovV25YaStxV2E4SjdvcnowRlhtR281aGlz?=
- =?utf-8?B?c0xGZDN1bEhqSzZCa0k3VlAxT1ZWbmd6RWFpS1NxWFdNeGdDa2ZXS0dZRXJn?=
- =?utf-8?B?ZDlIZEtFbmhFLzRHaW5qY0ZoUEZJMGcvdFE0ckFtcGJ3TTVwb21vMXdYMVEr?=
- =?utf-8?B?aUhrNno1a1RDMVNSS29HTG11N0RvQUtoZ0hKOEpIRlBwWTFUWXRWM3lVbGJD?=
- =?utf-8?B?b1RDV3JFYUtRNGN5ajRIWFkwdTVWTkIyZGdNQkYwbmgwSFBPcG5QRGFJZ1Rj?=
- =?utf-8?B?ZlZJcXd6dHNwdUlGazZRcFJFUVNIZ0xITlRRMDFhTmlqY3JodVpOYUs3bnd0?=
- =?utf-8?B?bXA2OWFhZHQzc0Nxd1l5S1ZmWlI0RHJJbGN3dEo1bk5xUjJKVUN2REEwNjh5?=
- =?utf-8?B?MEt4Rld0MmtueDZka3cwcVp0VEd0cFpJbktSYnpUcWxBbWpWQzArUllUZEc3?=
- =?utf-8?B?UTM3V0g0Q0ZSODZaZlFWYTdFK0ZvWnJHdkNZWXdhMHZZNDVicHZTbkJrTmk5?=
- =?utf-8?B?T2dady83TG9SWHBaVVVRano1NHV0SmhGWkpzR0RNVEIxZ1REeXdVOHBWZ1BZ?=
- =?utf-8?B?MDNTaCtrcHk5RzNreks3WEpGVmVDL1E2UE50bnJTYTFwNWhBTS92TkgyU2JZ?=
- =?utf-8?B?Qy9sOHRCdTlaWnIxU2hzZU1wNXVDVHlDSHVsOHdMTTcveDlWUGdpeTNJM29C?=
- =?utf-8?B?ZFBGUUhESjljSS8zVXJzZ3hWcGdLUkVVWmVDdWh5R215OFdVMk9CTXlLWU53?=
- =?utf-8?B?T2RmODBiTFBIN3hpamZYVWJhVkNlUHFPQWpCd0ZtMzhPbktrZGNSWDF0aTA1?=
- =?utf-8?B?ekhJQnBtRk1PMjhsQmpPbW9reFd1bnZYWElwbjFraUNQM0ZOOUJDbGJySVp2?=
- =?utf-8?B?TkZLMzZOYjdYUC9UTGZRcGp1U0tnZWZvZ2tBcVFoSFlXS3dUTzVJMXlTaEdw?=
- =?utf-8?B?WTJ5elRXenZlc1NRRHN6WmtFc0F5dW1tVHhFVkVSU01KMUVzcVJFaXQzWVM1?=
- =?utf-8?B?Umh0Mnp6UTdxYUQ2Z3lDOC9vV2U1NWhEdXNwSFQyYmpDc0xzNERqNVF0VGxB?=
- =?utf-8?B?U2NOTndESUtsejczTERDK0VRYkdkZ0xKY3BlcGV3V25PVE9MNEdzUHV6c0dS?=
- =?utf-8?B?TWkyMElaQUc0U0VhZCs2VFZqY3dLMHhGMGFnM2hqUnUzQzB3cHplY1NkSGl4?=
- =?utf-8?B?SVlzNHZEQlBWM2tBKy9yQ00ra2hLQTN5UzFsRDZvcXdxeEpHcnpES1pzMUxP?=
- =?utf-8?B?SFk3UWUyYmlwbFlOQUtTL1NuMTNuRm9GWnNqekxZNlNjTWR5bE5ZVWZKdmpv?=
- =?utf-8?B?YVVnOFJmb0N6T0JZSkxmeEtsaUtqT01aNEhrRllLV2dzM25pODFhNzlpQmNj?=
- =?utf-8?B?YUdIZzA2dUhqYTd4ZnNDd1RvaGFUUmtHYWp3MElEOFlObW5teU9zRHc0V0RR?=
- =?utf-8?B?S0pQWG82WllZcVJqVWFCYWZWYk1ZVTg1TzV3bHVQenV1S21TRUNVSzAyUEFP?=
- =?utf-8?B?TkcvUHRCOGQ1MHRkMk9GMjNWMEdScERJdWE5YjJXQkpNTzF6eVk5bXV6cytR?=
- =?utf-8?B?ZXJiOXVjanIzNW1tTTIxdlFzK3VsL1NmZVFYSmxhYnhMTk5BY3hEUGZsQXJZ?=
- =?utf-8?B?dHhLNG0zSy9ITE9Ca0QxOEJQZXFtNU1SMm5qM0tCUVRuYWhEMUFacGJvVUxa?=
- =?utf-8?B?d3luOWR5OFFBYjh0YkkvU203RklmVkVIR3JlRTBVcll6bWY3ZFBmZ2tSQVpl?=
- =?utf-8?B?Tmx1K1l6ejJBPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR04MB8755.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Z2JCejNrSlFrc09ZU2lKR0VqT0tEZ3QyV093MWxZY2VxVVdxeG84Nzd2bmdC?=
- =?utf-8?B?TnNiYTVMM0xObGxBWGNSS2ovWDR5a09Cc3VFb3hqRGNhVmFEajh3TTVtMGFk?=
- =?utf-8?B?ZEpqN2ZGTFdPdjliNzkzVmMzS0RGaFlCeHY1VWx5SzN3Ykl6MHFVTjhteEl5?=
- =?utf-8?B?R1Exb0ZmMUVGczRnT0RDRmt1OGo5K3pGcXp2MjZ4YmwxOXdxWUJIWmZSdU5W?=
- =?utf-8?B?QjBGUEtFY0Q1bCt2ZEtuS1VmdlpwdTVqSys1MEdPazJVUWFJMU5RU3JMaXFP?=
- =?utf-8?B?NEpVNTgra3B0b20ybE5jbWRFbTFGUFNmQjEzWW56RU1xWEMydEFhL1lmc0Z5?=
- =?utf-8?B?YWZaMjQyY29SNFVmN2kxUnIyaW5lRVdGalhSUXlubHBSaGZrR21qM3lSM1R4?=
- =?utf-8?B?cjFtTWpmYmJRRHJDTDVHZE4yUDR4UkhDeFZhcTc4TXNRT0ZQbXViUjBHM1Zx?=
- =?utf-8?B?YkdremVDaTlrT1JYMGpBNFk1RytFSDFndkF4SlA0aEJsby9nRE01SWk3U1pm?=
- =?utf-8?B?dG12blkxRUVDZytKU3dpdyt4LzZPcVBnVjBRMHd4MXNVQ2R6YmpDcVFveXF3?=
- =?utf-8?B?VVNsOWNkUkpUUGxkbDJFUWE3N0FUVXo1T3BEak9pZmFQVHB0bE1nRW1pMXpH?=
- =?utf-8?B?SWhybUZ5THlLUWZrQm9KN3FUWkM0cXNFbVk3VnB0TlBMT3V5OVNmbkE5OFBH?=
- =?utf-8?B?cElyM1V5M3Bzb0pzSS9YZmE5M2ZjNEEyV1VzeUUyemdKYnFPbkxCTGhUeGN0?=
- =?utf-8?B?SmwrSzRSdUJXQnp3TFpBTXR0OStvcFQ1RXZXSzhEZTRVWjZ2VWlna3NJWDRu?=
- =?utf-8?B?ejhrSFIyY2Z5ZjBJWHhrOFQySVpJRENLbnFUWmM0dGs4Qk5FYm8wU2tiZTJ2?=
- =?utf-8?B?ekZqUlZ4NkJ0OERYOXY3dXFobElvakhhTFZSUmZVRFQxLzlOc1hmMVN3T3Rz?=
- =?utf-8?B?dC96cnFERFV6MjFrMS82TzIrM2NsMnFBUFl2THBsd2VsUUtnUExoWk9IaUxV?=
- =?utf-8?B?KzRHTmd5N0NqQW5zNi9waUlWU29CTStvUURjZ1A3MUozN0dvdmpvRkIrbVI1?=
- =?utf-8?B?NkwwSW9vQXhUQmVaamFOOFRibEpMM3c2WC81S3V2YnZ1V3B4MnVhcDdlN0xO?=
- =?utf-8?B?dGFGZXBZUFkxbkN4NFpIQUZSWFA0S3FZN3hQa3NzS20vdWRONjNWMnVucW5E?=
- =?utf-8?B?VTdCZ2NBbUNUWk5IOVpZN0Q3cjZDZVlZNEF0ZG4yRlZja2NJSDk4dG1WRFln?=
- =?utf-8?B?N2xMSnFJclBDM01xUXYvcWlQaGZ0dUZhNmNFYXVralBncFZxK1pZR2pPZUx0?=
- =?utf-8?B?RDdYV3c4U0ZlbXpWdm56UndQS3I4NWs2ZkFMSS91cGpsRjZoVW5CekNpbldW?=
- =?utf-8?B?bEM4RkQ4K3l0UmxaeFVveWxiQlVNYmtSd2crSGovaUJzckdqSWlFOUpqT0lV?=
- =?utf-8?B?OHFpT0Z2TjR0c0Fxakt6TkJWRm5XekhLcGdDM0F1b2cxUGo0ZU00RXdHSDlG?=
- =?utf-8?B?Smppd3ZZV2kxTEhLMXQ2ODNlaXd3MDAvencxN21YV25ER3EyK25RNnh3TjVs?=
- =?utf-8?B?TXh3WE1xMGZOK1VrNzE3TjhranZjakw0OGVRdDdaS1NRTlBVaDlnby9COUgv?=
- =?utf-8?B?QU55SHlmZGZoK3pPdVYzNHY3OUhHQm4vZW1Ma2Ixd1pxTmluc0VzOU9jZEdH?=
- =?utf-8?B?dDNzRVNzaVp2cjRRQWlpL1U2N1JyTzRKZnVkY1RGVDRFRForTUMza0EyaUJC?=
- =?utf-8?B?UXROZGF0ZUV4ZHJCaE9kdzJlbmlhT0RkcDJxYlhZMS9WTFBUTkNDdis3M2pM?=
- =?utf-8?B?QzBYR09UZzVrMHArUXZibUtDc2RHczN5cG9aRGsxVzA5dW5MWEtPSm05Yllv?=
- =?utf-8?B?NlpHVUY5Z2RLb3R2YlFqUUdWeXZ3S1EzS2cxcjgwOW0xQ1puekZ0TUxwdnV4?=
- =?utf-8?B?YVBTOWdrYzBZbjdpR1o5R3BvNXhIUTZaSzY1M2tPZFE2OURPM0ZoVnBZM3k4?=
- =?utf-8?B?TkNhVSt2Mkp2VWpwMU5xTG50UWtGUHU2R1BrYjFmWXdxbWZYd1ZHV2FYRFVH?=
- =?utf-8?B?MXZRMFBjYmNWT3RJcnJBY2RCb1RmTVQ2TVhYdTZUV3dMbTYxa0hIYWZJVFNQ?=
- =?utf-8?B?RFVETHFLbC8yeTYzU0JvdEl0dGRWWmZYTnp4MmVKQ01vQ2NpRmFkb2s3c01F?=
- =?utf-8?B?bUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D0C3749BEA056C40854815D4EE2A51A6@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="H8HvM+rM"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S97UVu014124;
+	Mon, 28 Apr 2025 08:28:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=HhoZ3
+	YiLPTwzfcngMCLjxLaLkiN/ZPTH3sBVB746etE=; b=H8HvM+rMvF/+LsAiBwFZ3
+	rK3w9sEB8TRXnmigVS954cC+tyAEpbVv5FfIbNoP+0rT6yILNrw9TpiSK9IvtTY+
+	rcy0/EFnE6qe/3jEmWBhFnSbHjCU3DG+GJh8TwDJOVHYADE8jAff8ICt8stXhx2K
+	qUrPbfJIPW6/ef/p1u3ELnAJApNWESBYAFYV9BmIScUtYZj+5nKB64IOY399nOPL
+	VqA4RQIoEDs2U0SNdMfS+eUfzKrC0NzxNnLhqdsWGwWF7IOlReYiOQ1XYSN5KUsU
+	tb+EkVpEjlbyZlLM5KCrdvKr7LMQPnfDNH/a29NnBQ2YiEaOk/211rEdFTfrYGQo
+	Q==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 468sb76nyy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 08:28:35 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53SCSYjv011809
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 28 Apr 2025 08:28:34 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 28 Apr
+ 2025 08:28:34 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 28 Apr 2025 08:28:34 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53SCSLO5032516;
+	Mon, 28 Apr 2025 08:28:23 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v2 3/7] iio: adc: ad4170: Add support for buffered data capture
+Date: Mon, 28 Apr 2025 09:28:20 -0300
+Message-ID: <db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1745841276.git.marcelo.schmitt@analog.com>
+References: <cover.1745841276.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rbt4LbrHXcdwlQ3PbNNVXKyxx+3DLXLCQz737uEjD/qr6dINAD/K6OscDRcHN2S8GVCksnNBdaVw85BV1kgCz8vUuxGV2htOdbKcwaA4QoI0hSNhT0lhS+pNYEjzBB/5vNUCEKiYY4bp01mTpTXz0BoheUsAWMMhwrh7hC+pBsU4ZbKHP+XkCftIueq8sleeJ5Y/p+VE2w8+WCBzJ+KRcp/R0+xEbeqIZIQHxxVUSd+Nlpchb82UHQ30jXraZnLU5SKU95N2Gd76t7BhlMlyhSaKGBmEr37vcju3RlyhLn1eKpw+9IGj66ExoBWlcq4YJfkdY3un40Vi3oFaBqBDfg62SyNGh88aAXcAWShBIA00BmWBUE5FtL3zfFuvvaRKxSSXf2fa1OveKCFZNIn3ZQaMQFrwLp5JQRqOA8tULM2A2lSGIXSAANMentjcLMbxsmtlEPLoqDsmel1OfwR9YPfIVGykLr6VFlQqVaklgDw4HHfS2KvUliiRiW437joxSLxyKGaJOs2Qw7mIjleHbfz5PtKmzMQrT8HuGHK4n5j7wDdo5wIynS7zLEkOqJ2nx/8dvg1/Nkfth6I7qCAfSrbK3Bv6K9BdyTFf88vypoWSuWpaKPsdzlV0GO0jdHZt
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR04MB8755.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcdfeea7-429a-46ec-8ff4-08dd86500f87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2025 12:27:37.2224
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F6F/Lwze5aW3o9pQEUKIzOctAsH/bRECJL1hgwKjlGU2umHRz57HH5cVy0mYBnF0qmphG7o9lZn1VJXGH/WFXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR04MB8752
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: C027JJ44bbBilIwTnC0UeMx8BFN9ffKc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEwMiBTYWx0ZWRfX1mAWQ7a3Rs0m DQJNMH71a8/43MxhipK8tk8pWSL0/CN9MPFexTiLzoQQT4Qvh+xB60VW8PnegqJbrfwHCOaty5K 8SjMovLJ5riyT9bKqkfdPpsVVFi2SMJsU57cgHNp491dZBEB2zSfxhwEDAix+ZjIuxiZYbInAoz
+ 7GXw485eh+qQBzQRBZV3msaOBlbHWnkwq4kk+2hQOhSRwOeqFGWp29YEmWYvHZqj45MUAS8RWTn IBgGEP/1ByHPzU0NjZPnC63soXbW+3ooLfRQ4rPhMYaC0oLVmBSFVBH/JQCfAisAp4M60R4HiqW aT0Z9BFv5FiB71um2g/m9ARXnuckZcsG/1NsAImsHJm8aRIAWj/sOlrgBY1kB47QM9eno8Y9Jjd
+ L7thCJbIR4klSEv7l2Y8ayGJ2eetwK42rHcTSsKDlZfHYcLd3K/TF6fXytY3xgwqRzMf21Rk
+X-Proofpoint-ORIG-GUID: C027JJ44bbBilIwTnC0UeMx8BFN9ffKc
+X-Authority-Analysis: v=2.4 cv=HPzDFptv c=1 sm=1 tr=0 ts=680f7473 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=iVdL9K_2dCMw-VmQ2KkA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280102
 
-T24gMjUvMDQvMjAyNSAxNjo1NCwgRGFycmljayBKLiBXb25nIHdyb3RlOg0KPiBPbiBGcmksIEFw
-ciAyNSwgMjAyNSBhdCAwODo1Mjo1M0FNICswMDAwLCBIYW5zIEhvbG1iZXJnIHdyb3RlOg0KPj4g
-QWxsb3cgcmVhZC1vbmx5IG1vdW50cyBvbiBydGRldnMgYW5kIGxvZ2RldnMgdGhhdCBhcmUgbWFy
-a2VkIGFzDQo+PiByZWFkLW9ubHkgYW5kIG1ha2Ugc3VyZSB0aG9zZSBtb3VudHMgY2FuJ3QgYmUg
-cmVtb3VudGVkIHJlYWQtd3JpdGUuDQo+IA0KPiBJZiB0aGUgbG9nIGRldmljZSBpcyByZWFkb25s
-eSwgZG9lcyB0aGF0IG1lYW4gdGhlIGZpbGVzeXN0ZW0gZ2V0cw0KPiBtb3VudGVkIG5vcmVjb3Zl
-cnkgdG9vPyAgWW91ciB0ZXN0IG1pZ2h0IHdhbnQgdG8gY2hlY2sgdGhhdCBhIGRpcnR5IGxvZw0K
-PiBpcyBub3QgcmVjb3ZlcmVkIGV2ZW4gaWYgdGhlIGZpbGVzeXN0ZW0gbW91bnRzLg0KPiANCg0K
-UmVhZCBvbmx5LW1vdW50cyBkbyBub3QgbWVhbiB0aGF0IG5vcmVjb3ZlcnkgaXMgc2V0LCBidXQg
-eGZzIHdpbGwgZmFpbA0KdG8gbW91bnQgaWYgcmVjb3ZlcnkgaXMgbmVlZGVkIGFuZCB0aGUgbG9n
-ZGV2L3J0ZGV2Ly4uIGlzIHJlYWQtb25seS4NClRvIG1vdW50IGluIHRoaXMgc3RhdGUsIHRoZSB1
-c2VyIG5lZWRzIHRvIHBhc3MgaW4gbm9yZWNvdmVyeS4NCg0KDQoNCj4gLS1EDQo+IA0KPj4gU2ln
-bmVkLW9mZi1ieTogSGFucyBIb2xtYmVyZyA8aGFucy5ob2xtYmVyZ0B3ZGMuY29tPg0KPj4gLS0t
-DQo+Pg0KPj4gSSB3aWxsIHBvc3QgYSBjb3VwbGUgb2YgeGZzdGVzdHMgdG8gYWRkIGNvdmVyYWdl
-IGZvciB0aGVzZSBjYXNlcy4NCj4+DQo+PiAgZnMveGZzL3hmc19zdXBlci5jIHwgMjQgKysrKysr
-KysrKysrKysrKysrKysrLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyks
-IDMgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2ZzL3hmcy94ZnNfc3VwZXIuYyBi
-L2ZzL3hmcy94ZnNfc3VwZXIuYw0KPj4gaW5kZXggYjJkZDBjMGJmNTA5Li5kN2FjMTY1NGJjODAg
-MTAwNjQ0DQo+PiAtLS0gYS9mcy94ZnMveGZzX3N1cGVyLmMNCj4+ICsrKyBiL2ZzL3hmcy94ZnNf
-c3VwZXIuYw0KPj4gQEAgLTM4MCwxMCArMzgwLDE0IEBAIHhmc19ibGtkZXZfZ2V0KA0KPj4gIAlz
-dHJ1Y3QgZmlsZQkJKipiZGV2X2ZpbGVwKQ0KPj4gIHsNCj4+ICAJaW50CQkJZXJyb3IgPSAwOw0K
-Pj4gKwlibGtfbW9kZV90CQltb2RlOw0KPj4gIA0KPj4gLQkqYmRldl9maWxlcCA9IGJkZXZfZmls
-ZV9vcGVuX2J5X3BhdGgobmFtZSwNCj4+IC0JCUJMS19PUEVOX1JFQUQgfCBCTEtfT1BFTl9XUklU
-RSB8IEJMS19PUEVOX1JFU1RSSUNUX1dSSVRFUywNCj4+IC0JCW1wLT5tX3N1cGVyLCAmZnNfaG9s
-ZGVyX29wcyk7DQo+PiArCW1vZGUgPSBCTEtfT1BFTl9SRUFEIHwgQkxLX09QRU5fUkVTVFJJQ1Rf
-V1JJVEVTOw0KPj4gKwlpZiAoIXhmc19pc19yZWFkb25seShtcCkpDQo+PiArCQltb2RlIHw9IEJM
-S19PUEVOX1dSSVRFOw0KPj4gKw0KPj4gKwkqYmRldl9maWxlcCA9IGJkZXZfZmlsZV9vcGVuX2J5
-X3BhdGgobmFtZSwgbW9kZSwNCj4+ICsJCQltcC0+bV9zdXBlciwgJmZzX2hvbGRlcl9vcHMpOw0K
-Pj4gIAlpZiAoSVNfRVJSKCpiZGV2X2ZpbGVwKSkgew0KPj4gIAkJZXJyb3IgPSBQVFJfRVJSKCpi
-ZGV2X2ZpbGVwKTsNCj4+ICAJCSpiZGV2X2ZpbGVwID0gTlVMTDsNCj4+IEBAIC0xOTY5LDYgKzE5
-NzMsMjAgQEAgeGZzX3JlbW91bnRfcncoDQo+PiAgCXN0cnVjdCB4ZnNfc2IJCSpzYnAgPSAmbXAt
-Pm1fc2I7DQo+PiAgCWludCBlcnJvcjsNCj4+ICANCj4+ICsJaWYgKG1wLT5tX2xvZ2Rldl90YXJn
-cCAmJiBtcC0+bV9sb2dkZXZfdGFyZ3AgIT0gbXAtPm1fZGRldl90YXJncCAmJg0KPj4gKwkgICAg
-YmRldl9yZWFkX29ubHkobXAtPm1fbG9nZGV2X3RhcmdwLT5idF9iZGV2KSkgew0KPj4gKwkJeGZz
-X3dhcm4obXAsDQo+PiArCQkJInJvLT5ydyB0cmFuc2l0aW9uIHByb2hpYml0ZWQgYnkgcmVhZC1v
-bmx5IGxvZ2RldiIpOw0KPj4gKwkJcmV0dXJuIC1FQUNDRVM7DQo+PiArCX0NCj4+ICsNCj4+ICsJ
-aWYgKG1wLT5tX3J0ZGV2X3RhcmdwICYmDQo+PiArCSAgICBiZGV2X3JlYWRfb25seShtcC0+bV9y
-dGRldl90YXJncC0+YnRfYmRldikpIHsNCj4+ICsJCXhmc193YXJuKG1wLA0KPj4gKwkJCSJyby0+
-cncgdHJhbnNpdGlvbiBwcm9oaWJpdGVkIGJ5IHJlYWQtb25seSBydGRldiIpOw0KPj4gKwkJcmV0
-dXJuIC1FQUNDRVM7DQo+PiArCX0NCj4+ICsNCj4+ICAJaWYgKHhmc19oYXNfbm9yZWNvdmVyeSht
-cCkpIHsNCj4+ICAJCXhmc193YXJuKG1wLA0KPj4gIAkJCSJyby0+cncgdHJhbnNpdGlvbiBwcm9o
-aWJpdGVkIG9uIG5vcmVjb3ZlcnkgbW91bnQiKTsNCj4+IC0tIA0KPj4gMi4zNC4xDQo+Pg0KPiAN
-Cj4gDQoNCg0K
+Extend the AD4170 driver to allow buffered data capture in continuous read
+mode. In continuous read mode, the chip skips the instruction phase and
+outputs just ADC sample data, enabling faster sample rates to be reached.
+The internal channel sequencer always starts sampling from channel 0 and
+channel 0 must be enabled if more than one channel is selected for data
+capture. The scan mask validation callback checks the aforementioned
+condition is met.
+
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+---
+changes since v1
+- Using bitmap_weight().
+- rx_buf changed from __be32 to u8 array to better cope with new regmap config.
+
+ drivers/iio/adc/Kconfig  |   2 +
+ drivers/iio/adc/ad4170.c | 199 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 199 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index d5d0308da007..9b4787c127fc 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -75,6 +75,8 @@ config AD4170
+ 	tristate "Analog Device AD4170 ADC Driver"
+ 	depends on SPI
+ 	select REGMAP_SPI
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Say yes here to build support for Analog Devices AD4170 SPI analog
+ 	  to digital converters (ADC).
+diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+index 4d0af15cb48d..5fcf1c023ac2 100644
+--- a/drivers/iio/adc/ad4170.c
++++ b/drivers/iio/adc/ad4170.c
+@@ -10,8 +10,12 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/iio/buffer.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
++#include <linux/iio/trigger.h>
++#include <linux/iio/trigger_consumer.h>
++#include <linux/iio/triggered_buffer.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+@@ -54,6 +58,7 @@
+ #define AD4170_FILTER_FS_REG(x)				(0xC7 + 14 * (x))
+ #define AD4170_OFFSET_REG(x)				(0xCA + 14 * (x))
+ #define AD4170_GAIN_REG(x)				(0xCD + 14 * (x))
++#define AD4170_ADC_CTRL_CONT_READ_EXIT_REG		0x200 /* virtual reg */
+ 
+ #define AD4170_REG_READ_MASK				BIT(14)
+ 
+@@ -221,6 +226,7 @@ static const unsigned int ad4170_reg_size[] = {
+ 	[AD4170_OFFSET_REG(5) ... AD4170_GAIN_REG(5)] = 3,
+ 	[AD4170_OFFSET_REG(6) ... AD4170_GAIN_REG(6)] = 3,
+ 	[AD4170_OFFSET_REG(7) ... AD4170_GAIN_REG(7)] = 3,
++	[AD4170_ADC_CTRL_CONT_READ_EXIT_REG] = 0,
+ };
+ 
+ enum ad4170_ref_buf {
+@@ -347,12 +353,16 @@ struct ad4170_state {
+ 	u32 int_pin_sel;
+ 	int sps_tbl[ARRAY_SIZE(ad4170_filt_names)][AD4170_MAX_FS_TBL_SIZE][2];
+ 	struct completion completion;
++	struct iio_trigger *trig;
++	struct spi_transfer xfer;
++	struct spi_message msg;
++	__be32 bounce_buffer[AD4170_MAX_CHANNELS];
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the transfer buffers
+ 	 * to live in their own cache lines.
+ 	 */
+ 	u8 tx_buf[AD4170_SPI_MAX_XFER_LEN] __aligned(IIO_DMA_MINALIGN);
+-	u8 rx_buf[AD4170_SPI_MAX_XFER_LEN];
++	u8 rx_buf[4];
+ };
+ 
+ static void ad4170_fill_sps_tbl(struct ad4170_state *st)
+@@ -434,6 +444,10 @@ static int ad4170_reg_write(void *context, unsigned int reg, unsigned int val)
+ 	case 1:
+ 		st->tx_buf[2] = val;
+ 		break;
++	case 0:
++		/* Write continuous read exit code */
++		st->tx_buf[0] = AD4170_ADC_CTRL_CONT_READ_EXIT;
++		return spi_write(st->spi, st->tx_buf, 1);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -843,6 +857,7 @@ static const struct iio_chan_spec ad4170_channel_template = {
+ 	.scan_type = {
+ 		.realbits = 24,
+ 		.storagebits = 32,
++		.shift = 8,
+ 		.endianness = IIO_BE,
+ 	},
+ };
+@@ -1451,11 +1466,27 @@ static int ad4170_write_raw_get_fmt(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
++static int ad4170_update_scan_mode(struct iio_dev *indio_dev,
++				   const unsigned long *active_scan_mask)
++{
++	struct ad4170_state *st = iio_priv(indio_dev);
++	unsigned int chan_index;
++	int ret;
++
++	iio_for_each_active_channel(indio_dev, chan_index) {
++		ret = ad4170_set_channel_enable(st, chan_index, true);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
+ static const struct iio_info ad4170_info = {
+ 	.read_raw = ad4170_read_raw,
+ 	.read_avail = ad4170_read_avail,
+ 	.write_raw = ad4170_write_raw,
+ 	.write_raw_get_fmt = ad4170_write_raw_get_fmt,
++	.update_scan_mode = ad4170_update_scan_mode,
+ 	.debugfs_reg_access = ad4170_debugfs_reg_access,
+ };
+ 
+@@ -1731,16 +1762,166 @@ static int ad4170_initial_config(struct iio_dev *indio_dev)
+ 				 AD4170_ADC_CTRL_MULTI_DATA_REG_SEL_MSK);
+ }
+ 
++static int ad4170_prepare_spi_message(struct ad4170_state *st)
++{
++	/*
++	 * Continuous data register read is enabled on buffer postenable so
++	 * no instruction phase is needed meaning we don't need to send the
++	 * register address to read data. Transfer only needs the read buffer.
++	 */
++	st->xfer.rx_buf = &st->rx_buf;
++	st->xfer.len = BITS_TO_BYTES(ad4170_channel_template.scan_type.realbits);
++
++	spi_message_init_with_transfers(&st->msg, &st->xfer, 1);
++
++	return devm_spi_optimize_message(&st->spi->dev, st->spi, &st->msg);
++}
++
++static int ad4170_buffer_postenable(struct iio_dev *indio_dev)
++{
++	struct ad4170_state *st = iio_priv(indio_dev);
++	int ret;
++
++	ret = ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_CONT);
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * Enables continuous data register read.
++	 * This enables continuous read of the ADC Data register. The ADC must
++	 * be in a continuous conversion mode.
++	 */
++	return regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
++				  AD4170_ADC_CTRL_CONT_READ_MSK,
++				  FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK,
++					     AD4170_ADC_CTRL_CONT_READ_ENABLE));
++}
++
++static int ad4170_buffer_predisable(struct iio_dev *indio_dev)
++{
++	struct ad4170_state *st = iio_priv(indio_dev);
++	int ret, i;
++
++	/*
++	 * Use a high register address (virtual register) to request a write of
++	 * 0xA5 to the ADC during the first 8 SCLKs of the ADC data read cycle,
++	 * thus exiting continuous read.
++	 */
++	ret = regmap_write(st->regmap, AD4170_ADC_CTRL_CONT_READ_EXIT_REG, 0);
++
++	ret = regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
++				 AD4170_ADC_CTRL_CONT_READ_MSK,
++				 FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK,
++					    AD4170_ADC_CTRL_CONT_READ_DISABLE));
++	if (ret)
++		return ret;
++
++	ret =  ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_IDLE);
++	if (ret)
++		return ret;
++
++	/*
++	 * The ADC sequences through all the enabled channels (see datasheet
++	 * page 95). That can lead to incorrect channel being read if a
++	 * single-shot read (or buffered read with different active_scan_mask)
++	 * is done after buffer disable. Disable all channels so only requested
++	 * channels will be read.
++	 */
++	for (i = 0; i < indio_dev->num_channels; i++) {
++		ret = ad4170_set_channel_enable(st, i, false);
++		if (ret)
++			return ret;
++	}
++	return ret;
++}
++
++static bool ad4170_validate_scan_mask(struct iio_dev *indio_dev,
++				      const unsigned long *scan_mask)
++{
++	unsigned int masklength = iio_get_masklength(indio_dev);
++
++	/*
++	 * The channel sequencer cycles through the enabled channels in
++	 * sequential order, from channel 0 to channel 15, bypassing disabled
++	 * channels. When more than one channel is enabled, channel 0 must
++	 * always be enabled. See datasheet channel_en register description at
++	 * page 95.
++	 */
++	if (bitmap_weight(scan_mask, masklength) > 1)
++		return test_bit(0, scan_mask);
++
++	return true;
++}
++
++static const struct iio_buffer_setup_ops ad4170_buffer_ops = {
++	.postenable = ad4170_buffer_postenable,
++	.predisable = ad4170_buffer_predisable,
++	.validate_scan_mask = ad4170_validate_scan_mask,
++};
++
++static irqreturn_t ad4170_trigger_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct ad4170_state *st = iio_priv(indio_dev);
++	int i, ret;
++
++	iio_for_each_active_channel(indio_dev, i) {
++		ret = spi_sync(st->spi, &st->msg);
++		if (ret)
++			goto err_out;
++
++		st->bounce_buffer[i] = get_unaligned_be32(st->rx_buf);
++	}
++
++	iio_push_to_buffers(indio_dev, st->bounce_buffer);
++err_out:
++	iio_trigger_notify_done(indio_dev->trig);
++	return IRQ_HANDLED;
++}
++
++static const struct iio_trigger_ops ad4170_trigger_ops = {
++	.validate_device = iio_trigger_validate_own_device,
++};
++
+ static irqreturn_t ad4170_irq_handler(int irq, void *dev_id)
+ {
+ 	struct iio_dev *indio_dev = dev_id;
+ 	struct ad4170_state *st = iio_priv(indio_dev);
+ 
+-	complete(&st->completion);
++	if (iio_buffer_enabled(indio_dev))
++		iio_trigger_poll(st->trig);
++	else
++		complete(&st->completion);
+ 
+ 	return IRQ_HANDLED;
+ };
+ 
++static int ad4170_trigger_setup(struct iio_dev *indio_dev)
++{
++	struct ad4170_state *st = iio_priv(indio_dev);
++	int ret;
++
++	st->trig = devm_iio_trigger_alloc(indio_dev->dev.parent, "%s-trig%d",
++					  indio_dev->name,
++					  iio_device_id(indio_dev));
++	if (!st->trig)
++		return -ENOMEM;
++
++	st->trig->ops = &ad4170_trigger_ops;
++	st->trig->dev.parent = indio_dev->dev.parent;
++
++	iio_trigger_set_drvdata(st->trig, indio_dev);
++	ret = devm_iio_trigger_register(indio_dev->dev.parent, st->trig);
++	if (ret)
++		return dev_err_probe(&st->spi->dev, ret,
++				     "Failed to register trigger\n");
++
++	indio_dev->trig = iio_trigger_get(st->trig);
++
++	return 0;
++}
++
+ static int ad4170_regulator_setup(struct ad4170_state *st)
+ {
+ 	struct device *dev = &st->spi->dev;
+@@ -1851,8 +2032,22 @@ static int ad4170_probe(struct spi_device *spi)
+ 				       indio_dev->name, indio_dev);
+ 		if (ret)
+ 			return ret;
++
++		ret = ad4170_trigger_setup(indio_dev);
++		if (ret)
++			return ret;
+ 	}
+ 
++	ret = ad4170_prepare_spi_message(st);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to prepare SPI message\n");
++
++	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
++					      &ad4170_trigger_handler,
++					      &ad4170_buffer_ops);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to setup read buffer\n");
++
+ 	return devm_iio_device_register(dev, indio_dev);
+ }
+ 
+-- 
+2.47.2
+
