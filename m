@@ -1,215 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4504319ABC6;
-	Mon, 28 Apr 2025 19:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07141296159
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745867098; cv=none; b=Rf3hQAQYnj19cJP2CSP07flIh93UVBBNSqou9G0qNgOcpXbBmkLum8vlH48ldpw6jGHsKDGZ7UY+bGRGermmoMVKKli3KcN6TGGF1LIRJO6Tp6k78dYpzyirxSU/TOxJo1VEmTFccK1LoNRDSdF5Ff1yn0525E2zKuUztb8ntXY=
+	t=1745867123; cv=none; b=ew1yAv/H8stLFY8TQ+Gs99P21GxePf4A9XwOpFLAafpzn+FrR1rvdEKFj2Sgb2/khsdoxAwGEdrJL/R9hMZpcosplxux/1EMYtYHncCw+9SjzF5TaTnsO++UTYQza2+fCfYT7Ci65Z5LdvY+ClOBa5hJOceiD4IL7H/gfBILAbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745867098; c=relaxed/simple;
-	bh=yd3XTTVHcnpHFArsoHLF/KSZ5TfDWwJCeAmdln9qQkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M/G6bCopdcDgKTUKTeHIGVK88zvB5+4LPpcIqS3mLYn7BBYwOw7npvAo1HDRruMgMlhnsaVCktgFz5OQJZuhkI2amz9He7dDgHueFeL5iyJe1ObpoG4Fr3w6u2T5i7Xun393w8ReMsDwUWmiOMznBnUgdwifDNBKMOPMfUAQvig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALJYc9PR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALJYc9PR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E886C4CEE4;
-	Mon, 28 Apr 2025 19:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745867097;
-	bh=yd3XTTVHcnpHFArsoHLF/KSZ5TfDWwJCeAmdln9qQkU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ALJYc9PR+AUq1lxvddH9AbDiAfljYdiuvDEbETp9zB1F3uSSjOOkV+wbgNTg4eYfu
-	 XZRQBn9i9BZ/+YyRZapwV5j6BhmvkzO83Kcq7epw/hPqbeL2zsGaOYdT/KdDmwDvIs
-	 nhqApA8jty67E5MhvES4Ktr9Ih1v7zWMTK3Uj5mjrAK8uYOu+5/dR32eZERKpSs+v9
-	 43GlLTj6W3H2HBBUSpcTLpoNDVL5edUePZkedWJA+fgB7NF6JTqkyydNCReleYV/sE
-	 kpzr0GzI3opXLnT0ZE8fShBuBQG0YQXzesLUXufuRdpbnwYcAOiXbmS6e9mfnjBhHb
-	 E1FJS7is8lGuw==
-From: Eric Biggers <ebiggers@kernel.org>
-To: John Johansen <john.johansen@canonical.com>,
-	apparmor@lists.ubuntu.com
-Cc: linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: [PATCH] apparmor: use SHA-256 library API instead of crypto_shash API
-Date: Mon, 28 Apr 2025 12:04:30 -0700
-Message-ID: <20250428190430.850240-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745867123; c=relaxed/simple;
+	bh=GrJ4TlYWIvOwm5ewrhRvrrk7RniJIEXmtDWAmYFWUN0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uy6nHgI/pzjhZazzHHyamPUCt5fQbMyX91F67mNbGk81RjYwErbe5n5DGR1tp9MMPT0hsVfiF2fAqHLMHtgkR3vdCkvPOf3k1QM9tHND0l4+8KFtdrp4wWBLtXyVevCS8cR3BA7sKWhdxMURRKpMCmpC7rVZ8lCIu1F2O3Jmvj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85ed07f832dso473442439f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:05:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745867121; x=1746471921;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hz5dELjQsdYxeuu2b7u4N9XuZqC3CQB3u5mPsKUNGaA=;
+        b=G66JhOoWN5vfcH+l9yxYXcLhkkfHV/B3q8yQdDIra7OR4+pfXmboR+Ev4G0wyaEOvM
+         x4GmoxMnQDcl+L/3nAEx5oHlDsiFvy+Rl5UU1ANkNz0xteOVIvsdFnF2JIoZmuX8GAWS
+         ABlW+FapXm/FmZ/tGKtVOGzl8S3G1NEMmmIwteXuD8xVq8VyU3hx2oz+6g2cnSAhwQI3
+         tTbmsOjaE6W5DHFVTmkHP2UbRjyTKQ4JBCO03Jd6NhiGnRNnk4eXjXUQxzTEY9yc+SMg
+         5Q13e4++n+TdU6KKGyA4gHh8qfn17mWII836XA283iRNl+VMtBtFvLE0S/MDgfZxDH1u
+         8Gpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgQ+Tr2LWGo9wrQIET06sv1vQioG2eBwJwpl30/k1n2JYV8Wlb5U+EmgauMzhTACj3JVILWBMS8uKNnP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwd2GkkcD9oIqREqR6HolPwOOmybxcPpPQQhc/rjF9TByTtAdE
+	mTARguxB+NgTZ6hXipi+4wnxO9xWkHLnaaC+4d/M2ovjngQ9CkKTcGehQHESw8yZkqT/xt5sBpd
+	P8Prmm60ihkqLaEPmSd10PhRhOMSNgNm3n+iFEEhXHB8zhtEqNxGiI7E=
+X-Google-Smtp-Source: AGHT+IF/ciP+C+7gCkf8QtAU5aPBuuGzMsKR79+P4YtYAMyWG9LSjh4jcP7YWw60Foq0aKGOsJcv9XyBuTHy+QQ+s/yTaCgHEBjN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:3fd0:b0:862:ba37:eb0e with SMTP id
+ ca18e2360f4ac-8645cd71475mr1635299339f.12.1745867121165; Mon, 28 Apr 2025
+ 12:05:21 -0700 (PDT)
+Date: Mon, 28 Apr 2025 12:05:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
+Subject: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Eric Biggers <ebiggers@google.com>
+Hello,
 
-This user of SHA-256 does not support any other algorithm, so the
-crypto_shash abstraction provides no value.  Just use the SHA-256
-library API instead, which is much simpler and easier to use.
+syzbot found the following issue on:
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17ca0374580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
+dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a39d74580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106fa270580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-5bc10186.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3a2f39285e07/vmlinux-5bc10186.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2a37a55f34fb/bzImage-5bc10186.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/cc5918853785/mount_4.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
+
+wlan1: Created IBSS using preconfigured BSSID 50:50:50:50:50:50
+wlan1: Creating new IBSS network, BSSID 50:50:50:50:50:50
+wlan1: Trigger new scan to find an IBSS to join
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1208:5
+index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
+CPU: 0 UID: 0 PID: 131 Comm: kworker/u4:5 Not tainted 6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1208
+ ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
+ ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+---[ end trace ]---
+Kernel panic - not syncing: UBSAN: panic_on_warn set ...
+CPU: 0 UID: 0 PID: 131 Comm: kworker/u4:5 Not tainted 6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
+ panic+0x2db/0x790 kernel/panic.c:354
+ check_panic_on_warn+0x89/0xb0 kernel/panic.c:243
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1208
+ ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
+ ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-This patch is targeting the apparmor tree for 6.16.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
- security/apparmor/Kconfig  |  3 +-
- security/apparmor/crypto.c | 85 ++++++--------------------------------
- 2 files changed, 13 insertions(+), 75 deletions(-)
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
-index 64cc3044a42ce..1e3bd44643dac 100644
---- a/security/apparmor/Kconfig
-+++ b/security/apparmor/Kconfig
-@@ -57,12 +57,11 @@ config SECURITY_APPARMOR_INTROSPECT_POLICY
- 	  cpu is paramount.
- 
- config SECURITY_APPARMOR_HASH
- 	bool "Enable introspection of sha256 hashes for loaded profiles"
- 	depends on SECURITY_APPARMOR_INTROSPECT_POLICY
--	select CRYPTO
--	select CRYPTO_SHA256
-+	select CRYPTO_LIB_SHA256
- 	default y
- 	help
- 	  This option selects whether introspection of loaded policy
- 	  hashes is available to userspace via the apparmor
- 	  filesystem. This option provides a light weight means of
-diff --git a/security/apparmor/crypto.c b/security/apparmor/crypto.c
-index aad486b2fca65..40e17e153f1e5 100644
---- a/security/apparmor/crypto.c
-+++ b/security/apparmor/crypto.c
-@@ -9,115 +9,54 @@
-  * Fns to provide a checksum of policy that has been loaded this can be
-  * compared to userspace policy compiles to check loaded policy is what
-  * it should be.
-  */
- 
--#include <crypto/hash.h>
-+#include <crypto/sha2.h>
- 
- #include "include/apparmor.h"
- #include "include/crypto.h"
- 
--static unsigned int apparmor_hash_size;
--
--static struct crypto_shash *apparmor_tfm;
--
- unsigned int aa_hash_size(void)
- {
--	return apparmor_hash_size;
-+	return SHA256_DIGEST_SIZE;
- }
- 
- char *aa_calc_hash(void *data, size_t len)
- {
--	SHASH_DESC_ON_STACK(desc, apparmor_tfm);
- 	char *hash;
--	int error;
--
--	if (!apparmor_tfm)
--		return NULL;
- 
--	hash = kzalloc(apparmor_hash_size, GFP_KERNEL);
-+	hash = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
- 	if (!hash)
- 		return ERR_PTR(-ENOMEM);
- 
--	desc->tfm = apparmor_tfm;
--
--	error = crypto_shash_init(desc);
--	if (error)
--		goto fail;
--	error = crypto_shash_update(desc, (u8 *) data, len);
--	if (error)
--		goto fail;
--	error = crypto_shash_final(desc, hash);
--	if (error)
--		goto fail;
--
-+	sha256(data, len, hash);
- 	return hash;
--
--fail:
--	kfree(hash);
--
--	return ERR_PTR(error);
- }
- 
- int aa_calc_profile_hash(struct aa_profile *profile, u32 version, void *start,
- 			 size_t len)
- {
--	SHASH_DESC_ON_STACK(desc, apparmor_tfm);
--	int error;
-+	struct sha256_state state;
- 	__le32 le32_version = cpu_to_le32(version);
- 
- 	if (!aa_g_hash_policy)
- 		return 0;
- 
--	if (!apparmor_tfm)
--		return 0;
--
--	profile->hash = kzalloc(apparmor_hash_size, GFP_KERNEL);
-+	profile->hash = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
- 	if (!profile->hash)
- 		return -ENOMEM;
- 
--	desc->tfm = apparmor_tfm;
--
--	error = crypto_shash_init(desc);
--	if (error)
--		goto fail;
--	error = crypto_shash_update(desc, (u8 *) &le32_version, 4);
--	if (error)
--		goto fail;
--	error = crypto_shash_update(desc, (u8 *) start, len);
--	if (error)
--		goto fail;
--	error = crypto_shash_final(desc, profile->hash);
--	if (error)
--		goto fail;
--
-+	sha256_init(&state);
-+	sha256_update(&state, (u8 *)&le32_version, 4);
-+	sha256_update(&state, (u8 *)start, len);
-+	sha256_final(&state, profile->hash);
- 	return 0;
--
--fail:
--	kfree(profile->hash);
--	profile->hash = NULL;
--
--	return error;
- }
- 
- static int __init init_profile_hash(void)
- {
--	struct crypto_shash *tfm;
--
--	if (!apparmor_initialized)
--		return 0;
--
--	tfm = crypto_alloc_shash("sha256", 0, 0);
--	if (IS_ERR(tfm)) {
--		int error = PTR_ERR(tfm);
--		AA_ERROR("failed to setup profile sha256 hashing: %d\n", error);
--		return error;
--	}
--	apparmor_tfm = tfm;
--	apparmor_hash_size = crypto_shash_digestsize(apparmor_tfm);
--
--	aa_info_message("AppArmor sha256 policy hashing enabled");
--
-+	if (apparmor_initialized)
-+		aa_info_message("AppArmor sha256 policy hashing enabled");
- 	return 0;
- }
--
- late_initcall(init_profile_hash);
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
--- 
-2.49.0
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
