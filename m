@@ -1,196 +1,217 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D4626F478
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745866493; cv=none; b=mrotAoWsMzXxKWk3tPC7CEp3L1iL90UiROftvVwnJJQYrUDvUG2qr+QBpM1KA8Fc7edYOTbm1oovlRP+eR11eZzVPN+qCicNhTZg+YYunzCSTywF8tJ4A54KicuAAo9ZAinYTQetBSbWMEzo1bwZstveUCcqja32g4BNBHDmq/M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745866493; c=relaxed/simple;
-	bh=glHgKvu5qMafceNRjAQWTK700+rJbJxcd7BLsI8dDKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=awCqvOLj9E1S8BLqu+BIPhQoJyzPSo7UqJxWAwTkix4a5NrZDsY3hP1/Hyr+WyaS2yt9C3f5EY23ez+OvRtwa71zSvAwkT+pLlL7RBlHmKv08Nfy4siQArtG1jUT2cnN7o3k+nvwGUcrzD3MItJJIreqYBkHdPhHzh4mCGWNIlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y41z2KU4; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910EB26F478;
+	Mon, 28 Apr 2025 18:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745866498; cv=fail; b=EDvx8paNpegi2NUKiyf5Jm1lLuDthh3E1kLS76WpuB7XbRfJLWRdQQa1RuBBCOYdSqVuawGZ9ZnZC6DLiUkjhTJmBMyNJXvsqCgT1CxMehfF285TQA+HhgnVkeg8MTxBB1VMzw8pgPyqvxtT5BsO8Zif7Mp/CzqjrTELiVDKf8o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745866498; c=relaxed/simple;
+	bh=py9x27MhaHqL6eUorNTHPc3cR4A8ZslT3k6JzCl6QU8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mt8+9cnljpWVt4Pszq6JKlKZTETu/cwXPROU2As7oi5gLYbTd/P4YSo4t56LNkcBXz3c6nyV8A/ly8Rg8vBBTc2SlhUPsxDtfWfRwTz/lWhlJk4HP5hoxAM0VVKuDvv60vLxkthTEAxTqLxf5GImh3DhZHWmhq1opHWfiop0Jzk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Uwtjf7qN; arc=fail smtp.client-ip=40.107.94.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y41z2KU4"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54acc0cd458so6225437e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745866489; x=1746471289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I43ZMkcyctLc4IXUH1xZz0lw4Q70kaopNM4Qj8qwNVU=;
-        b=Y41z2KU4Pvqe9aU7ISlbJS/h3GUmaoPhYBAVTC+dNxvnsZJFmEd4r2p0tMi6kpfsTB
-         oaNwyKCx0XUV7F9Ks3x3SlI7uE5ZWTDx2wcwScIJNjCuThkQe0Oen3FTr2Bmx39YS5DJ
-         H1iEHuKmKslg6Ue6axr+oKEr3gOiftIO9c3UCIXttOf2ZfrE/JEHaGOz2Aa6zVbLhXhz
-         xAx6sX3ZW8YQ6h6jZ/ALe/vf/+uHkx2/Y/mmhov48yxbnh987JXbdD5Flk23CH5CsWhM
-         R5Lijn31/S2qvKP6GUMfg1sNtMCu7/jGoHlvHc1aTOOebU/kaM15JTADUAxaspNc1HHP
-         fdvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745866489; x=1746471289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I43ZMkcyctLc4IXUH1xZz0lw4Q70kaopNM4Qj8qwNVU=;
-        b=bgHjZCZ7sJtylcyIC1iWiqKp87MxyheKqzBJO3nkGt3+n8U2y/7CShCKqI+NCR2Hsu
-         b7fh/va8cOpj1mPE1guNbV/IIS2QMMrlg6uZRBjf1oM4C3nZMuUhv7MiWGsUlSzCqmMN
-         mjsSdYHBJ5K6XB9OBkcP3vdj7AtAoWdSn3aT1u3j87dNfkJ2omw/0BKA3ien5mMXMcJd
-         cJYuEI9Zajyge5MDIfObU4dKKybnjjUjLNCcwGNl3gHCAQOWvd3Flsq8CBzw6yaooRkU
-         kvuCYQY3yD9ikVRFvGlzlPzoCVBq+KMikz3FfQWC3RGwZNAE4XF6EGLwo7dMr6TrcPWX
-         EA6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVFojNMDUP76X+16prKe1M0ITnO9uLRH6FQEezZzzsfiJdBL2/xON9Ds2JRZBwxRt0AXdV8U5ta/EMWM+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrbMdoi0ofY+MJmSM09KwxUlcatFJUcohvbPyXnrOXEopI5Mq9
-	c8hZrgEhQypQR6y+7tBfyS1Z7JoWVYJ3BnpxldP1R9xXxTK0uuk86Lbv//GECsLjto2SNykSGyT
-	eqDITDvg4ogvbGrJsvsmpQxLjDYY=
-X-Gm-Gg: ASbGncveaTONxtvpq4O62jGUwEz9G9KIZANXGmW967e0Km5UX8UOEuTtJ9SirNBXs6A
-	QEHmzQqE6Wcp2dggz4NVVOH1GRiLybkjRr2u5aonrBlkbsvAzUsyG1Qkfox79G7PFdtjjO12tM4
-	J0gQFvO/CZ0gLidWHJwX6rFI+Do7uIJGSQ
-X-Google-Smtp-Source: AGHT+IF9eRxEXFP0PqUTdi5OB+NyL32hrHSn/QN5Rz+OLeR/LBUYz6Lcf+yPsBsCQWA8ErnM7X+ZLTIkTzXoCDz3N/Y=
-X-Received: by 2002:a05:6512:1288:b0:549:8d8d:2c62 with SMTP id
- 2adb3069b0e04-54e8cc0bfb1mr4067926e87.36.1745866488899; Mon, 28 Apr 2025
- 11:54:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Uwtjf7qN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xjvxiRsuLeBHXHbdfy4gq+5/Yp+SA2k07Q6zdxXL6bmmh6R056Z8QkgFmsTFtyjjAcYwtRMb15SlYLzdWf2Vfso6FoT2M5wp4GrcrDaE+l89rbGJKnQeZVv/+kwotJgq2im6InanHaFBXz5QSPRYBEGSQE2q5L7NsKoc9mqrvlj1J7U9jIK2JVur9ec2cj98s19XPhMIzhV/WwHk0NONVk3WaOcpuwFsTpO73YEgtUGrXLajcoKpFryCzyxyT4kS7qVKgK3nv4Yoh+sKgdmOurJ1jLCiPycQG9lWbORnv1IjubCMMh/Zu1H0QkGSvTAhFkd3dw6NKY9Yoms2Yghsjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0XofZIRi+6sx4PvT/SsmA1lRh7pOwIOqG8DJIB4g9lY=;
+ b=LpV+yBzuyUjeiIB1DPuQo68xAB3KQApGUKrf/MN3MmZJ3X3xXPt6sHbA6LrwrfTSdRNU7FhgL4xvfxL/IvVk16AAKwiyceEftBpG/0xXL8JUIJmHDLqQRp5QZgNkV0gq04D5HJsFMwuwGnK1cYXkvwtlbWF1ppTEZ2tup0hnpht6Y5MaCCaUObk58/NnOdNQ6EsuPqSWOmTl17gaSgRYA5wFtbSAAnaGadB8ih2bxb7/HtKcM5ZPXylYR1EhsHCEcttanVnsUe25X/3osNf/ub6xubI8jHiSkq6wD39fHVZ/wcUA3/CRNH2w54MHR2XETknKLAzupdcfuQ0So3//Vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0XofZIRi+6sx4PvT/SsmA1lRh7pOwIOqG8DJIB4g9lY=;
+ b=Uwtjf7qNTgVMkR+cwy4zgtmtp+gl8d4SbywTm2GTaNt9kQZEjO+WHUsO+ADTJ0HkJ2BRnxhc2UreZ9B0vYVbYFsstert6HluYdPXE8LZYj1PqZvw9R/FUaeOrrz9YcJap/1RHcuaaZ9W18iLwO+OpDBopeHhfQth5brDYLuDbgb1Uwj639w4uaoimkjMS8cHRBBXEvDL8IurNR5LV1XlZmB/JfFw/T2xNokq1oy8Qwl8uNNUlr8I6u0hCT2s9IJ27KT4JxS5VUQdT8e/2lhejCZOZKXZM5lfMLNLduUddO5a/wkgsf+qDfinSX1Nzr8oLQ/p+V3VR4He5sKTBTdTuQ==
+Received: from CH0P221CA0036.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:11d::14)
+ by SA1PR12MB6797.namprd12.prod.outlook.com (2603:10b6:806:259::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Mon, 28 Apr
+ 2025 18:54:53 +0000
+Received: from CH3PEPF00000011.namprd21.prod.outlook.com
+ (2603:10b6:610:11d:cafe::4e) by CH0P221CA0036.outlook.office365.com
+ (2603:10b6:610:11d::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Mon,
+ 28 Apr 2025 18:54:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.2 via Frontend Transport; Mon, 28 Apr 2025 18:54:52 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 28 Apr
+ 2025 11:54:18 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 28 Apr
+ 2025 11:54:18 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 28 Apr 2025 11:54:15 -0700
+Date: Mon, 28 Apr 2025 11:54:13 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <praan@google.com>, <zhangzekun11@huawei.com>,
+	<iommu@lists.linux.dev>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<patches@lists.linux.dev>, <mochs@nvidia.com>, <alok.a.tiwari@oracle.com>,
+	<vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 13/22] iommufd: Add mmap interface
+Message-ID: <aA/O1eeEJx6ZHdfS@Asurada-Nvidia>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <7be26560c604b0cbc2fd218997b97a47e4ed11ff.1745646960.git.nicolinc@nvidia.com>
+ <c4d03b52-422e-41ab-845b-1d2eda7ca9e2@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427185908.90450-1-ryncsn@gmail.com> <20250427185908.90450-5-ryncsn@gmail.com>
- <aA7PbiXv92WiTy8T@casper.infradead.org> <CAMgjq7CTtJ69W=6kOaEn740seY9Nh7To7WL+JTb_hFUHJ-TqAg@mail.gmail.com>
-In-Reply-To: <CAMgjq7CTtJ69W=6kOaEn740seY9Nh7To7WL+JTb_hFUHJ-TqAg@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 29 Apr 2025 02:54:31 +0800
-X-Gm-Features: ATxdqUGTKRvMzwE_TJQTNf0P4gIR58HJ_Mvs3Pnte5Lo9Mwe8Ge_8uqoDsRzE9U
-Message-ID: <CAMgjq7C7dxGqPu4=yLCrKe1vATemmXEgH6e-XyF+iQSSBYdiHA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] filemap: do not use folio_contains for swap cache folios
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, "Huang, Ying" <ying.huang@linux.alibaba.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <c4d03b52-422e-41ab-845b-1d2eda7ca9e2@linux.intel.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|SA1PR12MB6797:EE_
+X-MS-Office365-Filtering-Correlation-Id: be08db45-80ff-410d-0ccd-08dd868628d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cL+/9uNRQ1+IqI41E4s4xsfbaiKNov+D12S25LpLXDTQqci+4w4RqkvWPDxX?=
+ =?us-ascii?Q?8oL0OYWa4muh5zmvzJRB18x4lxaZi1hOhZKnG2MDXwjLkdkFhtK9Ie+q01Xx?=
+ =?us-ascii?Q?4q7iGorR1kml7kKbbajGOeH823UyMTmDUAiQk37PW5WEsKo9elJAwb6cvU7K?=
+ =?us-ascii?Q?Li86+RmEjtvB2qdwzsYUQzQp8Z8LAyW/uhYyXM5oC5LGzBE79SLLECrLhmu2?=
+ =?us-ascii?Q?zOiKRUXvPlajcsmG31xlNZdV9ocl1Md7DJgtbxMWtZmBz3bsXANGQgD9X+0f?=
+ =?us-ascii?Q?dXwecUFSX99enBUjUK1MFBTj5DtlcP/4YrfYwSpHW3ak+w+r6dlizxWdpeF/?=
+ =?us-ascii?Q?ZWE5zaCM8eZOAET92XZonAvwu+uOMSFgcFX+e7DI0BghG18t1lW6ZC40wGui?=
+ =?us-ascii?Q?d3MVXzkcCUmdF7MlAhS8SdgGzz9W+fs1dU9IA5C5djTz6DGeD4AtRo87GUrH?=
+ =?us-ascii?Q?3SWkGJICwIu3g68RZNx/ougZVn8N2KfgZBiRibuJtGb7CWpYtn+VRa9IHzjT?=
+ =?us-ascii?Q?/Tanli/9Y+Vq5A34hMAN9FKTBtWvMJVHGBB1KnquGMn1befsNzBygR78XK6Q?=
+ =?us-ascii?Q?tCNuMAASZJ2mMucQOEzvcCzDw/MYuJTUiQEQUw8aM4a0NrsLg/WAUFL/YvgQ?=
+ =?us-ascii?Q?ZiiR5J483wxDh7GnmLwVagerrXFE1l7jkQbNS5V21JW24ChywyxLTm4tKI5M?=
+ =?us-ascii?Q?coQrDE4Zu5lLw+dT3x+J3U774ZMemxJGxcH4oNrnlmJvNsbZ2ACkCiYB/ujp?=
+ =?us-ascii?Q?A0IKc7k9yzFfiojTsJtrg9HN2SHOCDiA/Ghl7xOJv+7TSQOt+Awon9SVKGut?=
+ =?us-ascii?Q?wSAu//Ew7y83UPZk1V6ad3yUftLXqjKCZx8m+uIB7pCut/TZ85KGhoxR91Ay?=
+ =?us-ascii?Q?m3d5UFRahYcKOAm6OYOqtzapZkxR6k1m6q1Z/lG1pYNK2fK3k+rVigLQ2g5/?=
+ =?us-ascii?Q?wjEZm1gacMgYZTMBr5+zhYQkseL5aKCgl87NiGktcmkAk9O+oRUdeS5E4b7T?=
+ =?us-ascii?Q?Op7BhnjezNYaIFj9QovwSjSk3MT+UI3VLaZ+2QNsqTd4+X6Px7YsBEj7YYuI?=
+ =?us-ascii?Q?9DuHtRALg1A6lkZtU+ZPDz4u/ou9ys2GFYbBqEQ2ML/LFPllzidB0AV0w1jf?=
+ =?us-ascii?Q?sHZMCsgAmV+wFDme7rr13BUhk87GkLDkCC7tLBMkxfmuWsCRnG33kvED7u7v?=
+ =?us-ascii?Q?8KmbqxoN9INSKeHCx6qkgafXF6ZSSeA3QVD5VlP47OwaaiXtrhwcDg0Y9C8y?=
+ =?us-ascii?Q?meVfV0kNQhYeYg5kizGxa4rOaxKWPRvxicbITkrP1MYmfZJUny5r6Kf5qofi?=
+ =?us-ascii?Q?nxvaOj5Ivr/ojsC/JVvSibXEuj0A+rbGSxacBcAnAdjep0ZwS5tHGzQeV70F?=
+ =?us-ascii?Q?/TMm7mKmTT9TqwnHppEgRJ01i3jGIMS54wjKzeaF0nx/agE7tMoG3e7NQPjM?=
+ =?us-ascii?Q?zI+MmZ+jmTMRcw5cjzoZX2Tsf1aI7RC6CULL/qTDsNJWUkp+WZvoKvrukHav?=
+ =?us-ascii?Q?tNrvUtWN+inoNwks99JVE/BpcDfWbVCkx1p2?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 18:54:52.3300
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: be08db45-80ff-410d-0ccd-08dd868628d0
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF00000011.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6797
 
-On Mon, Apr 28, 2025 at 10:58=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
-te:
->
-> On Mon, Apr 28, 2025 at 8:44=E2=80=AFAM Matthew Wilcox <willy@infradead.o=
-rg> wrote:
-> >
-> > On Mon, Apr 28, 2025 at 02:59:06AM +0800, Kairui Song wrote:
-> > > For filemap and truncate, folio_contains is only used for sanity chec=
-ks
-> > > to verify the folio index matches the expected lookup/invalidation ta=
-rget.
-> > > The swap cache does not utilize filemap or truncate helpers in ways t=
-hat
-> > > would trigger these checks, as it mostly implements its own cache man=
-agement.
-> > >
-> > > Shmem won't interact with these sanity checks either unless thing wen=
-t
-> > > wrong, it would directly trigger a BUG, because swap cache index are
-> > > unrelated to shmem index, and would almost certainly mismatch (unless
-> > > on collide).
-> >
-> > It does happen though.  If shmem is writing the folio to swap at the
-> > same time that the file containing the folio is being truncated, we
-> > can hit this.
->
-> Thanks for the info! I didn't check it in detail because that would
-> likley trigger a BUG_ON but so far I didn't see any BUG_ON commit from
-> there.
->
-> Just checked there are two users in truncate:
->
-> One will lock the folio and check if `folio->mapping !=3D mapping`
-> first, on swapout shmem removes the folio from shmem mapping so this
-> check will skip the folio_contains check.
->
-> Another seems might hit the check, the time window is extremely tiny
-> though, only if the truncate's `xa_is_value(folio)` check passed while
-> another CPU is running between `folio_alloc_swap` and
-> `shmem_delete_from_page_cache` in shmem_writepage, then the next
-> VM_BUG_ON_FOLIO(!folio_contains) will fail as folio is now  a
-> swap cache, not shmem folio anymore. Let me double check if this needs
-> another fix.
+On Mon, Apr 28, 2025 at 10:50:32AM +0800, Baolu Lu wrote:
+> On 4/26/25 13:58, Nicolin Chen wrote:
+> > For vIOMMU passing through HW resources to user space (VMs), add an mmap
+> > infrastructure to map a region of hardware MMIO pages.
+> > 
+> > Maintain an mt_mmap per ictx for validations. To allow IOMMU drivers to
+> > add and delete mmappable regions to/from the mt_mmap, add a pair of new
+> > helpers: iommufd_ctx_alloc_mmap() and iommufd_ctx_free_mmap().
+> 
+> I am wondering why the dma_buf mechanism isn't used here, considering
+> that this also involves an export and import pattern.
 
-Checking all the code path, shmem managed to avoid all possible ways
-to call into truncate_inode_pages_range, this is the only function
-that seemed may call folio_contains with a swap cache folio.
-(except tiny-shmem, it uses this function directly for truncate,
-we can ignore that as it's basically just ramfs).
+The use case here is to expose one small MMIO page for user space
+to directly HW control, so mmap seems to be a good fit. What would
+it benefit from using dma_buf here?
 
-For truncate, shmem need to either zap a whole (large) swap/folio entry,
-or zero part of folio, or swapin a large folio so that part of it can be ze=
-ro'ed
-(using shmem_get_partial_folio), the swapin part is a bit special so
-calling generic truncate helpers might cause unexpected behaviour.
+> > @@ -55,6 +57,12 @@ struct iommufd_ctx {
+> >   	struct iommufd_ioas *vfio_ioas;
+> >   };
+> > +/* Entry for iommufd_ctx::mt_mmap */
+> > +struct iommufd_mmap {
+> > +	unsigned long pfn_start;
+> > +	unsigned long pfn_end;
+> > +};
+> 
+> This structure is introduced to represent a mappable/mapped region,
+> right? It would be better to add comments specifying whether the start
+> and end are inclusive or exclusive.
 
-Similar story for filemap lookup.
+Yes. Sure I can add that pfn_start/pfn_end are inclusive.
 
-So shmem won't call into the truncate helper here that may risk
-calling folio_contains with swap cache.
-Even if somehow it does, this commit won't change the BUG_ON
-behaviour, except now it tells the user the folio shouldn't be a swap cache
-at all, instead of reporting a buggy index. So I think this commit should
-be good to have to make the swap cache less exposed.
+> > diff --git a/drivers/iommu/iommufd/driver.c b/drivers/iommu/iommufd/driver.c
+> > index fb7f8fe40f95..c55336c580dc 100644
+> > --- a/drivers/iommu/iommufd/driver.c
+> > +++ b/drivers/iommu/iommufd/driver.c
+> > @@ -78,6 +78,45 @@ void iommufd_object_undepend(struct iommufd_object *obj_dependent,
+> >   }
+> >   EXPORT_SYMBOL_NS_GPL(iommufd_object_undepend, "IOMMUFD");
+> > +/* Driver should report the output @immap_id to user space for mmap() syscall */
+> > +int iommufd_ctx_alloc_mmap(struct iommufd_ctx *ictx, phys_addr_t base,
+> > +			   size_t size, unsigned long *immap_id)
+> > +{
+> > +	struct iommufd_mmap *immap;
+> > +	int rc;
+> > +
+> > +	if (WARN_ON_ONCE(!immap_id))
+> > +		return -EINVAL;
+> > +	if (base & ~PAGE_MASK)
+> > +		return -EINVAL;
+> 
+> Is it equal to PAGE_ALIGNED()?
 
----
-List of potential call chains that may call into the truncate helper
-here, and not initialized from other FS / block, none will be used by
-shmem.
+Yes. Will change.
 
-do_dentry_open
-  /* filemap_nr_thps always 0 for shmem */
-  truncate_inode_pages
-    truncate_inode_pages_range
+> > +void iommufd_ctx_free_mmap(struct iommufd_ctx *ictx, unsigned long immap_id)
+> > +{
+> > +	kfree(mtree_erase(&ictx->mt_mmap, immap_id >> PAGE_SHIFT));
+> 
+> MMIO lifecycle question: what happens if a region is removed from the
+> maple tree (and is therefore no longer mappable), but is still mapped
+> and in use by userspace?
 
-dquot_disable /* No quota file for shmem */
-  truncate_inode_pages
-    truncate_inode_pages_range
+That's a good point!
 
-dquot_quota_sync /* No quota file for shmem */
-  truncate_inode_pages
-    truncate_inode_pages_range
+Yea, mmap() should refcount an object to prevent its destroy call
+where this iommufd_ctx_free_mmap gets called. So, these two could
+probably be iommufd_object_alloc_mmap/unmmap().
 
-truncate_inode_pages_final /* Override by shmem_evict_inode */
-  truncate_inode_pages
-    truncate_inode_pages_range
+And I need to find some callback in the munmap path to release the
+reference..
 
-simple_setattr /* Override by shmem_setattr */
-  truncate_setsize
-    truncate_pagecache
-      truncate_inode_pages
-        truncate_inode_pages_range
-
-put_aio_ring_file /* AIO calls it for private file */
-  truncate_setsize
-    truncate_pagecache
-      truncate_inode_pages
-        truncate_inode_pages_range
-
-truncate_pagecache /* No user except other fs */
-  truncate_inode_pages
-    truncate_inode_pages_range
-
-truncate_pagecache_range /* No user except other fs  */
-  truncate_inode_pages_range
-
----
-
-invalidate_inode_pages2 /* No user except other fs */
-  invalidate_inode_pages2_range
-
-filemap_invalidate_pages /* only used by block / direct io */
-  invalidate_inode_pages2_range
-
-filemap_invalidate_inode /* No user except other fs */
-  invalidate_inode_pages2_range
-
-kiocb_invalidate_post_direct_write /* only used by block / direct io */
-  invalidate_inode_pages2_range
+Thanks
+Nicolin
