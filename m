@@ -1,170 +1,255 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A701D514E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A861D5AC6;
+	Mon, 28 Apr 2025 07:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745824887; cv=none; b=KD9wxAed9Jq58vWXwBSvJ3r4GMux/4jZClP0WG2LLaJhQPD5N+Ij4LvmO3s9sZ0hW0I+Ap2RFqq7u8i3xJlkh6Aba1bfvxBnZgq0lUhuoFxIqmm1MhGvP1zMpyN2vouEqZwRwcllv+xy1v2SQmepbkB1U8lwuHf7UvJtVv9/3Qw=
+	t=1745824889; cv=none; b=aneRc0k2xnqRq74AEv5aE5mW6TnEe3jioOM3ff9CEKHrp5cPJ55vfQNj0FaVvMqecokIS6vb9ilx2mpjI3E2hIpoBytqE05/bCoDqszcCgFRrLLc1lVanwCtoEaATmWUmtNfu7ZAEdSCil2dRgr9uSf1BtPsZbZQ8ukxAh7RafM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745824887; c=relaxed/simple;
-	bh=9kU6emaXBp4injs62gvKL0Mb5x3U6Zc6yMnEeseG7+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uvWxulGWe9JUkG2MFQB6QQDPM5nYBQTF89Cy/kPGdwoBl0SUiAsnd8oct6FyjfoVMP8mtITvk6Fzp+hKPW0z7JIJxUlEBFWVf6rrTJI7OhF5uFajdx9oXv+4YmevKa+a9nDk70HSjBI1cd3DZq3n/PbRwbdRKdQX1+z2nnCA9yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VYi7gAMV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745824889; c=relaxed/simple;
+	bh=b4gr6GJDTCdFqz+GIIsR8/t+wBTMzYnL6Bpxe2rVhmw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tYH0otynE/2be+lPplf+gqJw0AS9ZXpkZWQeIaVZjxdvCdpLGZ6U/B9HqZnjvxev5uzbm2ejbg6IJFoaaPrK+6Cv8kG0iLrbJ9Q+qYp3MIMeS1gOa+s1wXTM+4bbSMUDxK763C8xZAbyf66W0WdqpN/Bxo/Iu63ZghakgNYQvgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=r0heJAOv; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VYi7gAMV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745824884;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iEbmqg7PxxL61F93dafb5OmtTZxeAKgQMmNRWlTSj7w=;
-	b=VYi7gAMVgxYqsFI3GLWXe/D91WtoOE+eLOB8PU6jW6PlEJzgrawY3snnv1qUd/X5XvkjNI
-	kYgG64ZyaUqbQMWIbru1L465c1hkdQ4ayOlloHV6oGKhykoGjd9y9WAzO0Savnd7yKUlkY
-	N8dyy3Kzuzv6Kx1TuwjvT/nOa2CvxIQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-508-Bj_iXaB1P7WwODDxmlLONQ-1; Mon, 28 Apr 2025 03:21:22 -0400
-X-MC-Unique: Bj_iXaB1P7WwODDxmlLONQ-1
-X-Mimecast-MFC-AGG-ID: Bj_iXaB1P7WwODDxmlLONQ_1745824882
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so19797715e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:21:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745824881; x=1746429681;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iEbmqg7PxxL61F93dafb5OmtTZxeAKgQMmNRWlTSj7w=;
-        b=togzfuP+TBYahl+Zo1fanL88+uR9X/R3iC4oM66nDZHXTfUCOpVs1babtiNWMZ6h/c
-         qDbBpm5PnauiMD7sdaGaWxs7D8Osqa+jbHxcoNxk2iVCtaJRzH6bd5oak15ayBPQlFC5
-         Ewyo/G6+dcF6ZQH09T6vnMASgZ1/zdvJZfeY7hiS091rQGk+JECciZaxJ5q8NTcoHLjC
-         46088ABDIs2Obb3v/KcHKQeMVKaAlQphlD9a6mqUzdOEtg08Ki9WzT1J9imiiZRFKYkU
-         /sFcAwg0eeSVE8Bw7fXqOXTnE5QOYos/d7/EzxcIt1IIpTy+poWSP/Dtbm8cv0GTOsVG
-         lpcA==
-X-Gm-Message-State: AOJu0Yw6c7TRbBd4vBeZOgomFEpYdfPGdKMm34DGQY06GnO6/f6hcu7G
-	atDwgZDHTqHwdxGOOqZ05ciVFlWNkLP9UacKWqSTIwtZmD7ruDzwhiQkS1Z7x4svXF1QAyfAuRo
-	HXSWKqob7bzfVYGq2mI79flubt4wOkqaR4xT/BKobqqlRhuGhJXZ2+Rpn9L+uEUkdkGXyTQ==
-X-Gm-Gg: ASbGncu0GA7bujRv+gnE5APWf/1VMMMmHcoMJAxaJC9MtVzOH6yGA2fiXp59LHN+eO5
-	LkShU3X+RnT8WWfX8dqj2pjFr/cRPoLZyBF/EqFwo49bGiA6t6++D02Qe9aH2ZccrHnW+fO5d5a
-	IFLD18JtwxOTqWGbvXwEyU658gNYdIyGnU25y1OSOtCrwdvoKZtTLKpHfFR9ooW82uefh6p7uDJ
-	AtIszdaPJgK1GMv4cJDJP39qsRg5LmSyOmvjxUvUUNSmzENgoy4/iH88I/EDTtH5ThlDFsC1N6m
-	V3DoULJE0XAyntcx5r0BmqCUg6bq3TRDfpjb13lcK3phUN3mZFeVmd6V83IC15O1OJMaoGl9g0p
-	SCNiI6E0r0tLajaqjuUsOUkU4xkcrXDNl4z48l8Q=
-X-Received: by 2002:a05:600c:4509:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-440ab77d34amr64664105e9.4.1745824881542;
-        Mon, 28 Apr 2025 00:21:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEb+NfnUSeGTbIn7uCSc7PsyDAalTHMS5AOTDwK2EqVc/dsElIS2TcnE7A5EH8HnZ5aPpDkcg==
-X-Received: by 2002:a05:600c:4509:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-440ab77d34amr64663905e9.4.1745824881232;
-        Mon, 28 Apr 2025 00:21:21 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea? (p200300cbc72fea002f00e7e58875a0ea.dip0.t-ipconnect.de. [2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a538f4aasm113133215e9.38.2025.04.28.00.21.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 00:21:20 -0700 (PDT)
-Message-ID: <0c2a0d93-bde9-48ec-bfb4-0a0747857f7e@redhat.com>
-Date: Mon, 28 Apr 2025 09:21:19 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r0heJAOv"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53S7LFp02713999
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 02:21:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745824875;
+	bh=FazsueVaj+YhhF+9bYhnapWdoUDSbmNSp2aLiF/uiLo=;
+	h=From:To:Subject:Date:In-Reply-To:References;
+	b=r0heJAOviv+TG126zn1S1REfyWVEpYO/OF4Vh8lzX+hB8Q4N2zVIpJHk0k8RKtBPk
+	 IDBNL2FAZ1G+s5lZoUejr9VysNLc+VTuRw3Q/4hVqIDV7KyOuWdv3SOXIIvJXljWOD
+	 wispgbMOLoVIYNHMebXgp16ti6GdMnABHwojy5vA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53S7LEbs003563
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 28 Apr 2025 02:21:14 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
+ Apr 2025 02:21:14 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 28 Apr 2025 02:21:14 -0500
+Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.227.7])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53S7KdMd068873;
+	Mon, 28 Apr 2025 02:21:10 -0500
+From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>, <s-adivi@ti.com>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>
+Subject: [PATCH 4/8] dmaengine: ti: k3-psil-am62l: Add AM62Lx PSIL and PDMA data
+Date: Mon, 28 Apr 2025 12:50:28 +0530
+Message-ID: <20250428072032.946008-5-s-adivi@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250428072032.946008-1-s-adivi@ti.com>
+References: <20250428072032.946008-1-s-adivi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] mm/debug_page_alloc: improve error message for
- invalid guardpage minorder
-To: Ye Liu <ye.liu@linux.dev>, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rppt@kernel.org,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, harry.yoo@oracle.com,
- riel@surriel.com, vbabka@suse.cz, liuye@kylinos.cn
-References: <20250427100442.958352-1-ye.liu@linux.dev>
- <20250427100442.958352-3-ye.liu@linux.dev>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250427100442.958352-3-ye.liu@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 27.04.25 12:04, Ye Liu wrote:
-> From: Ye Liu <liuye@kylinos.cn>
-> 
-> When an invalid debug_guardpage_minorder value is provided, include the
-> user input in the error message. This helps users and developers diagnose
-> configuration issues more easily.
-> 
-> No functional change.
-> 
-> Signed-off-by: Ye Liu <liuye@kylinos.cn>
-> ---
->   mm/debug_page_alloc.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/debug_page_alloc.c b/mm/debug_page_alloc.c
-> index d46acf989dde..6a26eca546c3 100644
-> --- a/mm/debug_page_alloc.c
-> +++ b/mm/debug_page_alloc.c
-> @@ -23,7 +23,7 @@ static int __init debug_guardpage_minorder_setup(char *buf)
->   	unsigned long res;
->   
->   	if (kstrtoul(buf, 10, &res) < 0 ||  res > MAX_PAGE_ORDER / 2) {
-> -		pr_err("Bad debug_guardpage_minorder value\n");
-> +		pr_err("Bad debug_guardpage_minorder value: %s\n", buf);
+Add PSIL and PDMA data for AM62Lx SoC.
 
-I would guess everybody setting that should know how to find easily out 
-what they tried to set, but in any case
+Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+---
+ drivers/dma/ti/Makefile        |   1 +
+ drivers/dma/ti/k3-psil-am62l.c | 132 +++++++++++++++++++++++++++++++++
+ drivers/dma/ti/k3-psil-priv.h  |   1 +
+ drivers/dma/ti/k3-psil.c       |   1 +
+ 4 files changed, 135 insertions(+)
+ create mode 100644 drivers/dma/ti/k3-psil-am62l.c
 
-Acked-by: David Hildenbrand <david@redhat.com>
-
+diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
+index 257e8141d7fe0..b03235a78d6cc 100644
+--- a/drivers/dma/ti/Makefile
++++ b/drivers/dma/ti/Makefile
+@@ -12,6 +12,7 @@ k3-psil-lib-objs := k3-psil.o \
+ 		    k3-psil-j721s2.o \
+ 		    k3-psil-am62.o \
+ 		    k3-psil-am62a.o \
++		    k3-psil-am62l.o \
+ 		    k3-psil-j784s4.o \
+ 		    k3-psil-am62p.o
+ obj-$(CONFIG_TI_K3_PSIL) += k3-psil-lib.o
+diff --git a/drivers/dma/ti/k3-psil-am62l.c b/drivers/dma/ti/k3-psil-am62l.c
+new file mode 100644
+index 0000000000000..45f5aac32f6a0
+--- /dev/null
++++ b/drivers/dma/ti/k3-psil-am62l.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2024-2025 Texas Instruments Incorporated - https://www.ti.com
++ */
++
++#include <linux/kernel.h>
++
++#include "k3-psil-priv.h"
++
++#define PSIL_PDMA_XY_TR(x, ch)					\
++	{							\
++		.thread_id = x,					\
++		.ep_config = {					\
++			.ep_type = PSIL_EP_PDMA_XY,		\
++			.mapped_channel_id = ch,		\
++			.default_flow_id = -1,			\
++		},						\
++	}
++
++#define PSIL_PDMA_XY_PKT(x, ch)					\
++	{							\
++		.thread_id = x,					\
++		.ep_config = {					\
++			.ep_type = PSIL_EP_PDMA_XY,		\
++			.mapped_channel_id = ch,		\
++			.pkt_mode = 1,				\
++			.default_flow_id = -1			\
++		},						\
++	}
++
++#define PSIL_ETHERNET(x, ch, flow_base, flow_cnt)		\
++	{							\
++		.thread_id = x,					\
++		.ep_config = {					\
++			.ep_type = PSIL_EP_NATIVE,		\
++			.pkt_mode = 1,				\
++			.needs_epib = 1,			\
++			.psd_size = 16,				\
++			.mapped_channel_id = ch,		\
++			.flow_start = flow_base,		\
++			.flow_num = flow_cnt,			\
++			.default_flow_id = flow_base,		\
++		},						\
++	}
++
++#define PSIL_PDMA_MCASP(x, ch)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_PDMA_XY,	\
++			.pdma_acc32 = 1,		\
++			.pdma_burst = 1,		\
++			.mapped_channel_id = ch,	\
++		},					\
++	}
++
++/* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
++static struct psil_ep am62l_src_ep_map[] = {
++	/* PDMA_MAIN1 - UART0-6 */
++	PSIL_PDMA_XY_PKT(0x4400, 0),
++	PSIL_PDMA_XY_PKT(0x4401, 2),
++	PSIL_PDMA_XY_PKT(0x4402, 4),
++	PSIL_PDMA_XY_PKT(0x4403, 6),
++	PSIL_PDMA_XY_PKT(0x4404, 8),
++	PSIL_PDMA_XY_PKT(0x4405, 10),
++	PSIL_PDMA_XY_PKT(0x4406, 12),
++	/* PDMA_MAIN0 - SPI0 - CH0-3 */
++	PSIL_PDMA_XY_TR(0x4300, 16),
++	/* PDMA_MAIN0 - SPI1 - CH0-3 */
++	PSIL_PDMA_XY_TR(0x4301, 24),
++	/* PDMA_MAIN0 - SPI2 - CH0-3 */
++	PSIL_PDMA_XY_TR(0x4302, 32),
++	/* PDMA_MAIN0 - SPI3 - CH0-3 */
++	PSIL_PDMA_XY_TR(0x4303, 40),
++	/* PDMA_MAIN2 - MCASP0-2 */
++	PSIL_PDMA_MCASP(0x4500, 48),
++	PSIL_PDMA_MCASP(0x4501, 50),
++	PSIL_PDMA_MCASP(0x4502, 52),
++	/* PDMA_MAIN0 - AES */
++	PSIL_PDMA_XY_TR(0x4700, 65),
++	/* PDMA_MAIN0 - ADC */
++	PSIL_PDMA_XY_TR(0x4503, 80),
++	PSIL_PDMA_XY_TR(0x4504, 81),
++	PSIL_ETHERNET(0x4600, 96, 96, 16),
++};
++
++/* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
++static struct psil_ep am62l_dst_ep_map[] = {
++	/* PDMA_MAIN1 - UART0-6 */
++	PSIL_PDMA_XY_PKT(0xC400, 1),
++	PSIL_PDMA_XY_PKT(0xC401, 3),
++	PSIL_PDMA_XY_PKT(0xC402, 5),
++	PSIL_PDMA_XY_PKT(0xC403, 7),
++	PSIL_PDMA_XY_PKT(0xC404, 9),
++	PSIL_PDMA_XY_PKT(0xC405, 11),
++	PSIL_PDMA_XY_PKT(0xC406, 13),
++	/* PDMA_MAIN0 - SPI0 - CH0-3 */
++	PSIL_PDMA_XY_TR(0xC300, 17),
++	/* PDMA_MAIN0 - SPI1 - CH0-3 */
++	PSIL_PDMA_XY_TR(0xC301, 25),
++	/* PDMA_MAIN0 - SPI2 - CH0-3 */
++	PSIL_PDMA_XY_TR(0xC302, 33),
++	/* PDMA_MAIN0 - SPI3 - CH0-3 */
++	PSIL_PDMA_XY_TR(0xC303, 41),
++	/* PDMA_MAIN2 - MCASP0-2 */
++	PSIL_PDMA_MCASP(0xC500, 49),
++	PSIL_PDMA_MCASP(0xC501, 51),
++	PSIL_PDMA_MCASP(0xC502, 53),
++	/* PDMA_MAIN0 - SHA */
++	PSIL_PDMA_XY_TR(0xC700, 64),
++	/* PDMA_MAIN0 - AES */
++	PSIL_PDMA_XY_TR(0xC701, 66),
++	/* PDMA_MAIN0 - CRC32 - CH0-1 */
++	PSIL_PDMA_XY_TR(0xC702, 67),
++	/* CPSW3G */
++	PSIL_ETHERNET(0xc600, 64, 64, 2),
++	PSIL_ETHERNET(0xc601, 66, 66, 2),
++	PSIL_ETHERNET(0xc602, 68, 68, 2),
++	PSIL_ETHERNET(0xc603, 70, 70, 2),
++	PSIL_ETHERNET(0xc604, 72, 72, 2),
++	PSIL_ETHERNET(0xc605, 74, 74, 2),
++	PSIL_ETHERNET(0xc606, 76, 76, 2),
++	PSIL_ETHERNET(0xc607, 78, 78, 2),
++};
++
++struct psil_ep_map am62l_ep_map = {
++	.name = "am62l",
++	.src = am62l_src_ep_map,
++	.src_count = ARRAY_SIZE(am62l_src_ep_map),
++	.dst = am62l_dst_ep_map,
++	.dst_count = ARRAY_SIZE(am62l_dst_ep_map),
++};
+diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
+index a577be97e3447..b2eb6d3b63e1b 100644
+--- a/drivers/dma/ti/k3-psil-priv.h
++++ b/drivers/dma/ti/k3-psil-priv.h
+@@ -44,6 +44,7 @@ extern struct psil_ep_map am64_ep_map;
+ extern struct psil_ep_map j721s2_ep_map;
+ extern struct psil_ep_map am62_ep_map;
+ extern struct psil_ep_map am62a_ep_map;
++extern struct psil_ep_map am62l_ep_map;
+ extern struct psil_ep_map j784s4_ep_map;
+ extern struct psil_ep_map am62p_ep_map;
+ 
+diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+index c4b6f0df46861..27c1bf347b248 100644
+--- a/drivers/dma/ti/k3-psil.c
++++ b/drivers/dma/ti/k3-psil.c
+@@ -25,6 +25,7 @@ static const struct soc_device_attribute k3_soc_devices[] = {
+ 	{ .family = "J721S2", .data = &j721s2_ep_map },
+ 	{ .family = "AM62X", .data = &am62_ep_map },
+ 	{ .family = "AM62AX", .data = &am62a_ep_map },
++	{ .family = "AM62LX", .data = &am62l_ep_map },
+ 	{ .family = "J784S4", .data = &j784s4_ep_map },
+ 	{ .family = "AM62PX", .data = &am62p_ep_map },
+ 	{ .family = "J722S", .data = &am62p_ep_map },
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
