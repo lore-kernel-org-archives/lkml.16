@@ -1,146 +1,290 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3037925DD1A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1565C1AC44D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745835647; cv=none; b=o7vwbMeGrnyPMAizLuwXhkH6EXokUZDjxLO4Rz1HV6KKUNOU90KWI+ZyHQ+gRx2c0RtcSC514mzXsPWw7t7O9xyKdLtHzjiuwjHVSDZiYMHgrDnjeOkDK/0WCVrVMhQvAEW6G74Ejj/54ekV/88yuE+kQcBJggHh29L7vdNBsfU=
+	t=1745835717; cv=none; b=b2U0THifxXbUGXQpEElYHKOYf+PVXIIkDO1FmoE//t5iqQBxO3RHnIREqggujiI4w9dQZAxlFV29SgrzLw064A6AqVVHStmDzqJfQSbMxZ4fcgClSsC2pDDopxeqGcfiMT9zCg8iLvaGei6zUGIk23aTsVbvlkeAg+KV8MFldaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745835647; c=relaxed/simple;
-	bh=6y3GJQkg3WO6HZVx8AbKk9AKup+Iuho9Ws+zs6rdbvQ=;
+	s=arc-20240116; t=1745835717; c=relaxed/simple;
+	bh=u2FSLsCB3A4fJWVoj+5kQ0jgKhEFe32eSp6XHofRZzQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F8K48me7/3WxDnhAVziY+/UCQW5uQEcx3gaDmmog5PZT+Bcs2aAv9G2h0i1JeNsJIksaqKW+QsdNINNjtSAaQgGLMHDGSGAk4xzYGMKxKs+FEqF/ypDm9HiB8zUNDtpCxQq34S+UkQ9F/Tgb7GhQWqHMZthVevCjzkSgJqdH0rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T7w5VshK; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 To:Cc:Content-Type; b=i5xd7dUfEwYAoLn0Apwc1B2xblFcxdXnrWNPW83hidfMzzO3ynRtmvFvew3C36RlV+Q8qHcZC4Aq5D+bbC+td6Zov0i0d1ZvU4BjEbS0J+bkKF9RrRjBFGsviIsCu2gehDbD75HVdAYYtxWzsEDcTKPYAk4s/wmvlOtGN8lQfi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AduobvpF; arc=none smtp.client-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T7w5VshK"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bfca745c7so41431771fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 03:20:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AduobvpF"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-400fa6eafa9so3457830b6e.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 03:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745835642; x=1746440442; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745835715; x=1746440515; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4sK5PIgmZ1Mpik4wrEId0UQH2tIcaV83eQP9njHyGcE=;
-        b=T7w5VshK4RzwpVIjbJ27iY1o0pnOA5jHWAH4IPn7YkGWOpLbmziT+KSN+IbaHX3PlQ
-         inEuHLyDtbIVIxKUQ8HxNt5CNP8Lk57OP+T0DsjPgEr2I7fydmR0PRR5d0tSc/2TnFHl
-         FECSB8JX8BNm3X/QvtdpZV+LSwtpHW9bx5tdfUdanUg+iXqqeZEKAsMjrfY92e7JC83z
-         5nBGIMg4tI3Ffb2fwnYTmADWN8Gyrm/D6XQaXGxXw/YFm4Vpa8SbhZ3I58iDhwy5MfKB
-         dzy5mUGZzBdIZ8h1S2JrKjYsQUuuwtYJ8zP1Y/er4yRYQ7/aoJAWH8fMuO9aZ0TW4n0Y
-         h7NQ==
+        bh=7jbI9ciy9Vn6xR4JtLky4McErFUG8R91ldVXVx/kisk=;
+        b=AduobvpFkJAbFLPgi4VCl9/1TUr+jFmvrYQMS9CfSMyGYFw1Ft4Qeg8TMl7fyH62ws
+         7E3W42/JInAuN6KA2ZC+mIed8CYFTPIm6UnlTPjqc85kRpomFTp1+Yk+KaIjBtkM6q4A
+         imRa/ift9GkHqHXDeQImEnY7WjP44bDVkEH2wRmxvYvRRhZrEFgNGJ0G6d9C/xHhezFy
+         2iNSd/kdTIZbuU9jMaAvYMxbiVlhYqPKuHjv3PViKKkF0YNR3wU6Qj4gLhjtD4pPY8/2
+         YxHS4jxxKDgTceJWItsOARxfeZvwPUi+gd27eecJQ6ej+1kzRxvV2eTCgnoZhFaE1tBr
+         j3uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745835642; x=1746440442;
+        d=1e100.net; s=20230601; t=1745835715; x=1746440515;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4sK5PIgmZ1Mpik4wrEId0UQH2tIcaV83eQP9njHyGcE=;
-        b=SJv5//QY/1dVWP3L39RSEQMnEGnUAqgKbOnsuYwKmXaMbgR7xv3BZttEJncn5QSxY1
-         0JmzDE8FY4h5EF+VLGnZKeVIifnAPUm3bLfyso1ibn82PYx/OVCHI1V+tFL9NHHW8uul
-         HqMwzvfK4dfcaT/JPR4+uZN+1IWgqvXud9Cx+nNIG3bszRRqxYVvJlOXSKyxW4V3y0nB
-         4ToWnuh5EAchv/smFe2F4FgJl/Us8GVl0wSNvYYXS+IKgqkp+VBtfM6MWE4SQfkiszhj
-         2zM9g0eN8aZc4BHrZo0n4Md4PZ2W2CVgi2N+KD8hwv6y6G/B+CukC5AhwlcIZ1wh5X7d
-         +ASg==
-X-Forwarded-Encrypted: i=1; AJvYcCXunLStLCM0o7mBP1YEutZWBMPwr15GwWa0o9RgOuOCXrihjgruN+sr/hscDi2rp3izCJHe9pR4tW3kTIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCqY8+vF+WdINxt0dlhxK0xfSGxrU/n2JZhpSKGvTcFz547Gv9
-	VjkfEtDyE4T4k4mK5YmNuSejlXt2osCas8IbKkM9fsCsRYu+9bJjnT/CZ2V3XHQiMOEebxOgw2y
-	8+AGrIixrmjTr02XCiTc46cZla8AZPfzo+CQrSA==
-X-Gm-Gg: ASbGncvc0fMokpOeAVnc8aSFpC7XGqQXEhVqWAPS9X9/NU9dEQJDhogh5/Wuw5njOQR
-	QVcIYWPtV4LSCa5x5GpLCJJoojREPeO4w43x1O9YMnJb7Hs5GDTYVowqk0QcaLBPAHuX+6osy+y
-	j0Qk7D+RS97tEJJeC2g9mbFNbnVTCIX/KqNSkp01GgGXU8DXAHOGoQwnY=
-X-Google-Smtp-Source: AGHT+IFxSYOh5ACpZ7FmM+wW1wuiew0INq7bJoRMxvSARAwFZSyWC46QwXnSDBXQD+ntiOOavQU0/IWYQ9ZRT/nnGII=
-X-Received: by 2002:a2e:be1b:0:b0:30b:b9e4:13cd with SMTP id
- 38308e7fff4ca-31905b6a701mr38067671fa.2.1745835642321; Mon, 28 Apr 2025
- 03:20:42 -0700 (PDT)
+        bh=7jbI9ciy9Vn6xR4JtLky4McErFUG8R91ldVXVx/kisk=;
+        b=Mtndj2fzWnN04f6N/0bNOmLdvSjgxoBy+ZmzNP6Uskg1/8P98xg7xIATV/Tjwxh9oz
+         HzzbVPN8lzJEaah2QtJh1AYRGHyutCUBR6VJzQ5j7ZiZwfz8c8v+BQZVRz4x+JEKwVrp
+         qAtJ7R0VWi60ontRRxj4hDAAs2M/+pX7BzCoK2VYsS9QiJ8Z2cIDAdR+PfZV1AclyGU+
+         BywC9hvflETeVMHRJ69KzTxb23KdKV8xY2I4WOB1PLOa8xDlOKPNTOUDhNyxgK2qk1rj
+         st9MI6kNO26Hu27F2Kn5WtVs9gITX3TJPeBYfNo4LukSzus5qsxfiQgeMhSk6CQYS/NG
+         7/8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXTzvZcRFh9xPuK4DuI5GVsFCyuuVgv1wKJAY+3vKk1THhRKiDLtjmSkFrHGt0c6/Myo0jGaYAfTbLzLy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAJo0WDM/snxcHRQvE6AtxQM45vi9ctw+HJssOiORt9hkr3MXv
+	ybsPABk8rEucrWPr3nPJKOvoQct0Y0oeY7dHNYRHhnDa9Sr9LN6jj1iDwxBDeM6hc4duRgREfrV
+	Na5uOkryRsE6T4CCGwOpLfnN4xuPVkusrLbs5
+X-Gm-Gg: ASbGncuE9looAaGn01/cRp1al+vFZiIjfU6uqPTXqlXiEFXnu4I2WKLRMb6n/v8dAZE
+	3barbQcFfsv9snhADGCDVzUNJJVt9taACx/Cl99j+TB85HqBEkqH8XO+nMCB+diXmTmqufVjgC3
+	lZNFPPScYaJQzZWUPjHeMoDnU+ORZm3WI6toCHJYrQdvClnrwLxo3N
+X-Google-Smtp-Source: AGHT+IGj3Exgsxm3rRebRdaVBypLCiV4iNylnkVfLJBMXpFpf9Ow4ZNo5JdtIkIzXwPsd7cgweVmv3Mif+G+uFxC0Ic=
+X-Received: by 2002:a05:6808:6a98:b0:3f9:43dd:a031 with SMTP id
+ 5614622812f47-401f28cb3e7mr6423598b6e.27.1745835710305; Mon, 28 Apr 2025
+ 03:21:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403161143.361461-1-marco.crivellari@suse.com>
- <20250403161143.361461-3-marco.crivellari@suse.com> <CAAhV-H4dQ8hRfBm2JWmgMzYH5tuy4ph6hyOSXQBLOvtCQ+K9dQ@mail.gmail.com>
- <alpine.DEB.2.21.2504280426010.31828@angie.orcam.me.uk> <CAAhV-H4WTrYecBj0wev8AUi_of_qAnvHCk4heTU5P_3pMZv4fA@mail.gmail.com>
-In-Reply-To: <CAAhV-H4WTrYecBj0wev8AUi_of_qAnvHCk4heTU5P_3pMZv4fA@mail.gmail.com>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Mon, 28 Apr 2025 12:20:31 +0200
-X-Gm-Features: ATxdqUFj9iVuicJaDf0xifwnqp09kIdWJ30vAMX4UW7_WZ6gAcWBeXZTcI6VmEE
-Message-ID: <CAAofZF4J6H5jgqKu=KUowBrwfHJyGEzL5ThC_DOs-XPdgm497A@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] MIPS: Move r4k_wait() to .cpuidle.text section
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
+References: <20250423134344.3888205-2-bqe@google.com> <20250423134344.3888205-5-bqe@google.com>
+ <aAkZZd8QRXKejVV0@yury>
+In-Reply-To: <aAkZZd8QRXKejVV0@yury>
+From: Burak Emir <bqe@google.com>
+Date: Mon, 28 Apr 2025 12:21:38 +0200
+X-Gm-Features: ATxdqUHJWxUZkueRhnE83ItOCbm4yQKlF2iZnrGfX5q-ft-JahPeuSfU-OHeLAI
+Message-ID: <CACQBu=VBvxyNvwSV8_gMuqNv49Ht+7aiUZwHD9Xh-TGoMTQQsw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/5] rust: add bitmap API.
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-If it sounds good also to Maciej, I will submit the new version with the
-space before "ax" (and of course, the ".previous").
-
-Thank you.
-
-On Mon, Apr 28, 2025 at 6:11=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
+On Wed, Apr 23, 2025 at 6:46=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
 >
-> On Mon, Apr 28, 2025 at 11:28=E2=80=AFAM Maciej W. Rozycki <macro@orcam.m=
-e.uk> wrote:
+> On Wed, Apr 23, 2025 at 01:43:35PM +0000, Burak Emir wrote:
 > >
-> > On Mon, 28 Apr 2025, Huacai Chen wrote:
+> > Provides an abstraction for C bitmap API and bitops operations.
+> > We follow the C Bitmap API closely in naming and semantics, with
+> > a few differences that take advantage of Rust language facilities
+> > and idioms:
 > >
-> > > > diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-> > > > index 46d975d00298..2cf312d9a3b0 100644
-> > > > --- a/arch/mips/kernel/genex.S
-> > > > +++ b/arch/mips/kernel/genex.S
-> > > > @@ -104,6 +104,7 @@ handle_vcei:
-> > > >
-> > > >         __FINIT
-> > > >
-> > > > +       .section .cpuidle.text,"ax"
-> > > If you submit a new version, adding a space before "ax" will be a lit=
-tle better.
+> >   * not all operations are exposed yet, to avoid dead code. This commit
+> >     includes enough to implement an Android Binder data structure that
+> >     was introduced in commit 15d9da3f818c ("binder: use bitmap for
+> >     faster descriptor lookup"), namely drivers/android/dbitmap.h. This
+> >     is part of upstreaming the Android Binder driver.
 > >
-> >  We use no space across our port though, which is why I haven't request=
-ed
-> > that before.
->
-> Current status:
-> arch/mips/include/asm/ftrace.h:         ".section .fixup, \"ax\"\n"
->          \
-> arch/mips/include/asm/ftrace.h:         ".section .fixup, \"ax\"\n"     \
-> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
->                  \n"     \
-> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
->                  \n"     \
-> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
->                          \n"
-> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
->                          \n"
-> arch/mips/include/asm/paccess.h:        ".section\t.fixup,\"ax\"\n"
->                                  \
-> arch/mips/include/asm/paccess.h:        ".section\t.fixup,\"ax\"\n"
->                                  \
->
-> So there are a few files which have spaces.
->
-> Huacai
->
->
+> >   * API uses Option types where appropriate
 > >
-> >   Maciej
+> >   * bound checks are used to treat out-of-bounds access as bug
+> >     (hardening). The C operations treat out-of-bounds parameters
+> >     as a default case e.g. "not found" which is safe (avoids UB) but
+> >     may hide bugs.
+>
+> Few paragraphs later you say:
+>
+> > It enables Rust
+> > code to be a lot more similar and predictable with respect to C code
+>
+> If you want to make Rust similar to C (which is good), you need to
+> make all that Panic'ing stuff configurable, right?
 
+Yes, I agree with this reasoning in combination with BUG_ON.
 
+> This is what I suggested originally, and this is the right way to go,
+> to me.
+>
+> There was a long discussion few years ago regarding BUG_ON()s in the
+> kernel, and the bottomline for it is simple: the kernel has many nice
+> isolating and self-debugging features that help to resolve (hopefully)
+> non-fatal errors like out-of-bond access, so we should let it try.
 
---=20
+In my own words: using BUG_ON to prevent undefined behavior is almost
+always going to be more useful than panic.
 
-Marco Crivellari
+> Just halting the kernel helps little, particularly it prevents from
+> collecting syslogs and other debugging info. You can check git history
+> and see how many BUG()s were demoted to WARN()s, or simply dropped.
+>
+> So, this is again my suggestion: it's OK to have a hardening feature,
+> but the panic should be configurable for the reasons:
+>  - robustness;
+>  - compatibility;
+>  - debugability.
+>
+> To me, this should end up with something like:
+>
+>   fn bitmap_assert(bool, msg)
+>   {
+>   #if CONFIG_RUST_HARDENING_PANIC && CONFIG_RUST_BITMAP_HARDENING
+>         assert(bool, msg)
+>   #elif CONFIG_RUST_BITMAP_HARDENING
+>         if (!bool)
+>                 pr_err(msg)
+>   #else
+>         // do nothing; for the best performance.
+>   #endif
+>   }
+>
+> This doesn't look difficult anyhow right? But if you find it
+> impractical, you can just replace the panic with printing an error.
 
-L3 Support Engineer, Technology & Product
+There are several things at play:
+- for the C methods that tolerate out-of-bounds access, the
+bounds-check is redundant for safety
+- but it is not redundant in terms of API: tolerating out-of-bounds
+access is the spec, someone may rely on it
+- if we would like a Rust API that is stricter (hardening), it is an
+API change (or: a Rust and C API difference).
 
+I will go with your suggestion and do a local (bitmap-specific)
+configurable assert (=3Dpanic).
+This could then later be changed to use a BUG macro.
 
+> After all, this # Panic simply breaks your own coding rules:
+>
+>   Please note that panicking should be very rare and used only with a goo=
+d
+>   reason. In almost all cases, a fallible approach should be used, typica=
+lly
+>   returning a ``Result``.
+>
 
+Bitmap operations are so basic and the API that fallibility does not
+make sense to me here.
+The Rust API is also constrained by what the C API provides: if C
+handles out-of-bounds arguments gracefully, then Rust should, too.
+And panicking has the problems you described, so I have come around to
+think that Rust needs a BUG_ON macro.
 
-marco.crivellari@suse.com
+> >   * better naming convention to distinguish non-atomic from atomic
+> >     operations: {set,clear}_bit vs {set,clear}_bit_atomic.
+> >     The Rust type system ensures that all non-atomic operations
+> >     require a &mut reference which amounts to exclusive access.
+> >     Using the atomic variants only makes sense when multiple threads
+> >     have a shared reference &bitmap which amounts to the interior
+> >     mutability pattern.
+> >
+> >   * optimized to represent the bitmap inline if it would take the space
+> >     of a pointer. This saves allocations which is relevant in the
+> >     Binder use case.
+> >
+> > The underlying C bitmap is *not* exposed. This would lose all static
+> > guarantees.
+> >
+> > An alternative route of vendoring an existing Rust bitmap package was
+> > considered but suboptimal overall. Reusing the C implementation is
+> > preferable for a basic data structure like bitmaps. It enables Rust
+> > code to be a lot more similar and predictable with respect to C code
+> > that uses the same data structures and enables the use of code that
+> > has been tried-and-tested in the kernel.
+> >
+> > We use the `usize` type for sizes and indices into the bitmap,
+> > because Rust generally always uses that type for indices and lengths
+> > and it will be more convenient if the API accepts that type. This means
+> > that we need to perform some casts to/from u32 and usize, since the C
+> > headers use unsigned int instead of size_t/unsigned long for these
+> > numbers in some places.
+> >
+> > Adds new MAINTAINERS section BITMAP API [RUST].
+> >
+> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > Suggested-by: Yury Norov <yury.norov@gmail.com>
+> > Signed-off-by: Burak Emir <bqe@google.com>
+> > ---
+> >  MAINTAINERS           |   7 +
+> >  rust/kernel/bitmap.rs | 396 ++++++++++++++++++++++++++++++++++++++++++
+> >  rust/kernel/lib.rs    |   1 +
+> >  3 files changed, 404 insertions(+)
+> >  create mode 100644 rust/kernel/bitmap.rs
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 1f162f64eded..7d107dc91390 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4135,6 +4135,13 @@ S:     Maintained
+> >  F:   rust/helpers/bitmap.c
+> >  F:   rust/helpers/cpumask.c
+> >
+> > +BITMAP API [RUST]
+> > +M:   Alice Ryhl <aliceryhl@google.com>
+> > +M:   Burak Emir <bqe@google.com>
+> > +R:   Yury Norov <yury.norov@gmail.com>
+> > +S:   Maintained
+> > +F:   rust/kernel/bitmap.rs
+> > +
+> >  BITOPS API
+> >  M:   Yury Norov <yury.norov@gmail.com>
+> >  R:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> > new file mode 100644
+> > index 000000000000..79ddbef2b028
+> > --- /dev/null
+> > +++ b/rust/kernel/bitmap.rs
+> > @@ -0,0 +1,396 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +// Copyright (C) 2025 Google LLC.
+> > +
+> > +//! Rust API for bitmap.
+> > +//!
+> > +//! C headers: [`include/linux/bitmap.h`](srctree/include/linux/bitmap=
+.h).
+> > +
+> > +use crate::alloc::{AllocError, Flags};
+> > +use crate::bindings;
+> > +use core::ptr::NonNull;
+> > +
+> > +/// Holds either a pointer to array of `unsigned long` or a small bitm=
+ap.
+> > +#[repr(C)]
+> > +union BitmapRepr {
+> > +    bitmap: usize,
+> > +    ptr: NonNull<usize>,
+> > +}
+> > +
+> > +    pub fn last_bit(&self) -> Option<usize> {
+>
+> [...]
+>
+> > +        // SAFETY: access is within bounds.
+> > +        let index =3D unsafe { bindings::_find_last_bit(self.as_ptr(),=
+ self.nbits) };
+> > +        if index =3D=3D self.nbits {
+>
+> Here and everywhere, can you please:
+>
+>         if index >=3D self.nbits {
+>
+> I know that bitmap documentation says that index would be exactly
+> nbits, but really it was a bad decision. If one day I'll find a safe
+> way to relax this to >=3D, your code will stay untouched.
+
+Done, going to be in v8.
+
+Thanks,
+Burak
+
+>
+> Thanks,
+> Yury
