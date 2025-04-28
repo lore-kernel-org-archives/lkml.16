@@ -1,163 +1,121 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379031DE882;
-	Mon, 28 Apr 2025 11:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EE479E1;
+	Mon, 28 Apr 2025 11:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840008; cv=none; b=ngSwig/0ZlgJOCRzURJa6zzmJUU0f/hK9koRVkfAqA+NuSWK7bYqaEnFXWQBQqXog/ScwsZNeWCoK+1mG3G2R6D+iV781CHmB2LCSZbA1zbpgdWdWYhnut3IVxMNDe39W4y8JBgrW8ecV8yufZR1YwJsxrJmhVPvASuet3DXjEg=
+	t=1745840071; cv=none; b=OFjGn2Qz87WBNlDY4ilkmEhbSnkkGLauqHaA0M0BmIUeRB76iiOcZN1dHFmubVVcV2FyO3DkWoQNh8gV9syiJ9yxuB16q+Dh9lrGZnq9yc0DfCR0N5iEb1ao4JjW7BZPFuNnlZiuqRTV4FlQCKDTdH4X0zl0Az7iHi6Q/lLHVvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840008; c=relaxed/simple;
-	bh=uqXV5dTssS0RGVPjHopB51Hz0cJB4AkxTLs+PR/83Qc=;
+	s=arc-20240116; t=1745840071; c=relaxed/simple;
+	bh=FaVcAOkDQ7uwALoze+whS6FNUvEv5VQAsvSJRP865wE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kgDdet/+oHnC/Goae4sqtRcUB1XQ0us6yqtZG7zAcZT2MO3/O4olVk4xG+3PTN+3jXMgYG2zqeZoyP8FIaszEzKjwk/Adme0Ap/Fm2ty/43AtQguSLdnyVk3H+lEgmLKQZqsIgpV7DFFOt9CFa8jFCo/LUqZBeaqXb+0fu40h70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0BNiikP; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=kxsDF+HBBalzbKh07z5PluY8f6X0IHdoUO/TLxUfHzS31IGeLF8QIRFaKf43jgHrl/RI/b57RnOg+0zbEpHAree75avU63LEzZI9Fb3QMs8Ufb/Cm4yh9wE/f/ItGfkFmZo+zPV69XUAMlfVHMA7jbw6C/59UdEko5DuixWmdJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0BNiikP"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39ac56756f6so4706863f8f.2;
-        Mon, 28 Apr 2025 04:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745840005; x=1746444805; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G2vLwCux/Eu5nlfc4ZLowdB9vE2DfPBXiivDInz5FEM=;
-        b=h0BNiikPwrKQfvzc0PYBE3wo4J2EzSVyDOuONlDLpVhVSBfKlE9sonXQRKkKE8pCxD
-         L1g81Bk/WTbf7VCm2YdbWT3FE/+5dbW67Jh7CrvZhxW7N/G05D+oNfM98dAfPcmWUmn9
-         LzOJIs6LukwgGrOrb+ZngMxpUGXVWpki91kjckmFBRfHGDMBZpLw5/DX66ioWwpRjn8Q
-         OTRn4CtNxkjWSrZDhATEl5K/Gb1KEyZu49dfn3i6BPIrvPXwDlBCDseElNqWWitsqQOG
-         PCHC7N3xCjWTGPfdFj+xTpOIrfMQdE8rlG+UaqO+zHo3NzH+P6ZdT7EzeFIX6VWXRft3
-         I/Pg==
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso1862740241.2;
+        Mon, 28 Apr 2025 04:34:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745840005; x=1746444805;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G2vLwCux/Eu5nlfc4ZLowdB9vE2DfPBXiivDInz5FEM=;
-        b=KUYQ7i+48jLTw6Pbnza1Xaj6xy6xXv4YWbMB8oLYcKp+hjk1C4quemNm1eLL2JSmRn
-         hHDrNJqok/WPJD0PpzD5pd6wjmMGru4kmtNUaE2MQHZ6dgnwYKOE4fd+r1cish9la/o9
-         3U5YI0QnC7WZZ8W7t92CFeTP2TWhXhki0ORvJRdppq9XhTWTsDkMJdWmDIGVfSnZSFmA
-         RHpZEhVWvn7bIlbKlZ1GjI81VFYTeTV10Rc+ZiWZ8SnknXMOYaG4uvAWct++uVp12UGK
-         QUwuUSsgvbPCwUb4WFldwyiiDWP1J+4dqStlftkF9m2YgW1dirVgt2Nk5Kqs+OfHWeOx
-         IUOA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1y3aniVBnN+oN4NxLMYfZiG9K3NUMLSPahLJ+O61pK6bSflPNLwtJplNsDiLePn0LUTohnR5lweKbkMLVtVTkExc=@vger.kernel.org, AJvYcCVZvItRTdmhHIllDmUT3XFBvFstsnFRi9P20l7bcZs7uQkx9YGlgpqp3Ws9SIqk+xjfWQjrr1v2Chq8jkc=@vger.kernel.org, AJvYcCVta/zo1012uqOut9UPWJMH7az7P4fYM5Py3jE5lrjC0yH8Zd94Y3gz2utsr1y6qXVn09fUomfh8uEKoIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZreUCpqKQ0i27PkTlsO4SvkyGkNO53r9yqDjxHPIbFAaZ97tl
-	lwaDladV1cULD+fW4F4On/xo8UGhFhDmbCkTADb3BukE9hruMrJS+QmVlnoWRYDeQmgPSg+aD0j
-	ty8tRmjjV6yQzLdR/uE/m+uuT9qo=
-X-Gm-Gg: ASbGncshU59pd0W7VQyVSDLcYUpO3xh6mZZsfSb46JDF/ueNytee7y2hgJdS3HCQlBM
-	LkyKRMHn02q6ZKymjgVAVX4BFmZtRZ57s5q5x0Xc0aPDREpdk0wH/DAA0MsA5tRT2ZqlVmHuveN
-	yLupI2AfCIBD2t+gkAoDJ0zMY=
-X-Google-Smtp-Source: AGHT+IEpk4jBFeG0dkyjwmoFtO+FmHdu9xTLOGqUjmZgty2Ty7Q+Ulj0OPvDfi1i7279zcRfseUYFSm/tSJlGqNpbg4=
-X-Received: by 2002:a05:6000:4024:b0:3a0:870e:ca5c with SMTP id
- ffacd0b85a97d-3a0870ecd08mr1343983f8f.5.1745840005271; Mon, 28 Apr 2025
- 04:33:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745840066; x=1746444866;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fsMRvP1XrPCxK2127w/cMyY/iDM/irDUSUu0quMrzrc=;
+        b=ljbPT8FOGQ6KOrBp6rf7jtA8iuHpK5XxjBzb0wUTS2z1RUrJeFQsMnN6EipDEMG8HE
+         JskdxUyLNx3fEkp8M9vTw7QFE7HRR1zDqSrBQWdupT4qetV3eRyUk/ufsqIsA/xpLNBE
+         tCPmhmRl0nZZgO4oOk6941qhy8lf2bLvpJ1mgxta1RO/+igquaYF8Z6ilP84BUD7oHzv
+         pnLXJk2mHPrgCz0AU9LaaH0nWXwNUPNzIQnnOJogkjcUcRRL2+/rdEdA3WkKpU14TJoJ
+         PFRQFqlQJdRpIsKTZANpH4r5NGnSzMEtoxLeEG5opXsX9CS2timx94gsnBffqQKlNpMr
+         XIoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGRM4tNJdskIzdV31o1S9TN/zn4QVCxYTC8NbgokTYN+iyMNSZQTBYLc5zLMYOibdZZbo/8ElD2xRK@vger.kernel.org, AJvYcCVbSEeH2zDfsap408VLGLHJ7dqhKVGLogwi9hXRYJtEGMMVIliraWq0r9lI0YqukwF9NcHh37PJsim+LwsY@vger.kernel.org, AJvYcCXVGylk6tBo3h/lDDVhrNCq+ej9tVMEV2WEWvHTpgPpJNtpOPpeJVbnFmTEt2MvVN6p/3bvwsC8XxpV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSZ4LrLKCWnKATBnq1IlM792z1v6qEPBi09hcnyOlVRGDWraY1
+	Wqj0EA3uYX9hTgHHnYWYNecKe1FWFvGTYWCQzRg3+3M4AsqJxgDxcg/9gSSO
+X-Gm-Gg: ASbGncsxk5tibue+AHRd2UrbpGLc+mKgAzxWKzT+/mZYYxVMq08GrCb1DU1CdFo6a8n
+	e740u2w3pMnDT40PU23lko4NVXljAI70iguiWGLn3uUFKgxLh7QY/nsrpZgE5xUBWVmEnB/ybat
+	qnQ9PPsww32aIC+4jPIzPte6i8Ngdm1hSeEehhkVUhwYdiQEI4aE0ems5Uvyfs2/m1kADD4XOgC
+	6sNMXM3H0ahiRSiQdqMSalKD0iQIw+bCJ+arSefp7OW5DglviQkpyqpCfFg++tAF3umnAIdUOCU
+	tJMAxBe+74Oshu2O8Pvolxv2JDfsKoSDINixMpv8Sji2fIgBJzE7OayM6yOeNZAFKCgvC0bk9S9
+	qJ0I=
+X-Google-Smtp-Source: AGHT+IHfaT70BX2zxXzgZktIohIRVK2xc+kZRpkl955MDRlephWB5SeZ2l9b/jRw795bawp/KBTaDQ==
+X-Received: by 2002:a05:6102:3ca8:b0:4cb:5d6c:9946 with SMTP id ada2fe7eead31-4d64078d5c3mr5227035137.10.1745840065877;
+        Mon, 28 Apr 2025 04:34:25 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4d3d75bcd02sm1864502137.28.2025.04.28.04.34.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 04:34:25 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1852892241.1;
+        Mon, 28 Apr 2025 04:34:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURgSZcYKmPUzfqfPGdhP+BonsX9OJSvUR21BdQ1zoBcmV3rb4OrgGU1latdqcFlvALHLXgZHWTV0eR@vger.kernel.org, AJvYcCUXWUcqeAUGp6f9VNceZsZ5tI16u2FSyyKJPhAfh0Qw5FXcywpR/52YkfrcKylPY69WBhoMhTn4WUUc5E8U@vger.kernel.org, AJvYcCV62RQ/2yz7HijzsKEsBv2Bkwrp7FOdt66mxqVIn2JxqlZE6HMvRoBKjesDFDNJ4YWp/YrSaDKUkPcd@vger.kernel.org
+X-Received: by 2002:a05:6102:32c6:b0:4ba:95f1:cc83 with SMTP id
+ ada2fe7eead31-4d641f67490mr4726020137.16.1745840065194; Mon, 28 Apr 2025
+ 04:34:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250428095940.GE3371@pendragon.ideasonboard.com> <CA+V-a8taFdmCgiUAwmDG93OA+P9UH-FEw3PeMFW4sLQ2KPnEPQ@mail.gmail.com>
- <20250428112516.GG3371@pendragon.ideasonboard.com>
-In-Reply-To: <20250428112516.GG3371@pendragon.ideasonboard.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 28 Apr 2025 12:32:59 +0100
-X-Gm-Features: ATxdqUHkbl7FnMyQw0s2EAGowpeOFjCa09KnwySaJ9gAfmVTbwkECPaEQMHK_sc
-Message-ID: <CA+V-a8vDDLZ422nZds7pEEW+gZ1n7s-U3eJjmG8DsOJT9uJygQ@mail.gmail.com>
-Subject: Re: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
+References: <20250427082447.138359-1-trannamatk@gmail.com> <CAHp75Vch8i50stVO6nH0Tnn=g4xSMji_iPj6q-CE1tLnvesqcQ@mail.gmail.com>
+ <aA9aTjhXHb3gddd9@duo.ucw.cz>
+In-Reply-To: <aA9aTjhXHb3gddd9@duo.ucw.cz>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 28 Apr 2025 13:34:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVJNPRd3GMRV3=W0vsNW+fm4up-mWPOZ_W1-wQigQj8vw@mail.gmail.com>
+X-Gm-Features: ATxdqUGozfO_A0x5sTl7wTcnhEJGNjE5AoOrad-BSBsbvNUoot5qyBGVSxOijmM
+Message-ID: <CAMuHMdVJNPRd3GMRV3=W0vsNW+fm4up-mWPOZ_W1-wQigQj8vw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix
+ LED driver
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Nam Tran <trannamatk@gmail.com>, andy@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	christophe.jaillet@wanadoo.fr, corbet@lwn.net, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Laurent,
+Hi Pavel,
 
-On Mon, Apr 28, 2025 at 12:25=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Mon, Apr 28, 2025 at 12:17:54PM +0100, Lad, Prabhakar wrote:
-> > On Mon, Apr 28, 2025 at 10:59=E2=80=AFAM Laurent Pinchart wrote:
-> > > On Mon, Apr 28, 2025 at 10:52:08AM +0100, Prabhakar wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Simplify the `rzg2l_fifo_empty()` helper by removing the redundant
-> > > > comparison in the return path. Now the function explicitly returns =
-`true`
-> > > > if the FIFO write and read pointers match, and `false` otherwise, i=
-mproving
-> > > > readability without changing behavior.
-> > > >
-> > > > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > > Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mounta=
-in/
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > >  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c=
- b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > index 067c6af14e95..97faefcd6019 100644
-> > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > @@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru=
-)
-> > > >       if (amnfifopntr_w =3D=3D amnfifopntr_r_y)
-> > > >               return true;
-> > > >
-> > > > -     return amnfifopntr_w =3D=3D amnfifopntr_r_y;
-> > > > +     return false;
+On Mon, 28 Apr 2025 at 12:37, Pavel Machek <pavel@ucw.cz> wrote:
+> > > This patch series adds support for the TI/National Semiconductor LP5812
+> > > 4x3 matrix RGB LED driver. The driver supports features such as autonomous
+> > > animation and time-cross-multiplexing (TCM) for dynamic LED effects.
 > > >
-> > > So the function always returned true. This seems to be a bug fix, ple=
-ase
-> > > add a Fixes: tag. The commit message should also make it clear that
-> > > you're fixing an issue, not just simplifying the code.
+> > > Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> > > ---
+> > > Changes in v8:
+> > > - Move driver to drivers/auxdisplay/ instead of drivers/leds/.
+> > > - Rename files from leds-lp5812.c/.h to lp5812.c/.h.
+> > > - Move ti,lp5812.yaml binding to auxdisplay/ directory,
+> > >   and update the title and $id to match new path.
+> > > - No functional changes to the binding itself (keep Reviewed-by).
+> > > - Update commit messages and patch titles to reflect the move.
+> > > - Link to v7: https://lore.kernel.org/linux-leds/20250422190121.46839-1-trannamatk@gmail.com/
 > >
-> > No, the function returned true only if the pointers matched;
-> > otherwise, amnfifopntr_w =3D=3D amnfifopntr_r_y would return false. I w=
-as
-> > simply removing the repetitive pointer check and directly returning
-> > false at the end of the function, as we can be certain at that point.
-> > Hence, I did not add a Fixes tag. Am I missing something?
+> > Out of sudden without discussing with auxdisplay maintainers/reviewers?
+> > Thanks, no.
+> > Please, put into the cover letter the meaningful summary of what's
+> > going on and why this becomes an auxdisplay issue. Brief review of the
+> > bindings sounds more likely like LEDS or PWM subsystems.
 >
-> Oops, you're right, my bad.
->
-> > > Personally I'd have written
-> > >
-> > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b=
-/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > index 067c6af14e95..3d0810b3c35e 100644
-> > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > @@ -345,8 +345,6 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
-> > >         amnfifopntr_w =3D amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
-> > >         amnfifopntr_r_y =3D
-> > >                 (amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
-> > > -       if (amnfifopntr_w =3D=3D amnfifopntr_r_y)
-> > > -               return true;
-> > >
-> > >         return amnfifopntr_w =3D=3D amnfifopntr_r_y;
-> > >  }
-> > >
-> > > but that's also a bit of a style preference.
-> >
-> > I wanted to keep this consistent with the rz3e_fifo_empty(). If you
-> > prefer the above I'll do that in v2.
->
-> Up to you.
->
-Thanks. OK, let's keep this patch as is to stay consistent with
-rz3e_fifo_empty().
+> It is 4x3 matrix. That means it is not suitable for LEDs. I don't
+> believe it is suitable for PWM, either -- yes, it is 36 PWM outputs,
+> but...
 
-Cheers,
-Prabhakar
+Is it intended to be used as a 4x3 matrix, or is this just an internal
+wiring detail, and should it be exposed as 12 individual LEDs instead?
+
+BTW, my first guess was that you just wanted to avoid the LED
+maintainers becoming responsible for the extensive sysfs interface ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
