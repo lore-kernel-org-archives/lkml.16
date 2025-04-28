@@ -1,70 +1,112 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748D7211C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB044211C;
+	Mon, 28 Apr 2025 05:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745817921; cv=none; b=HW8S8eGigM4wXATgjwzNl8FbDpF3y1s7Pl2SSTyt4NCQ087JBA9UpOvVTZTelfIehfWhjNZ4GTXlo6kdDcrvLZsBc6NSDpGjuhIQjf6oGjgG2zc25C6EArmrOnjnZQkTOdsHJ+FierlZc8gYk2DAYsxDEt1yQDHmMrHnYEzmUWA=
+	t=1745818058; cv=none; b=Pc9gx4nU3HVShUQ7nyHd45hfg6CGbiZax7x9BMFBiqxQnYmawK8J16MA0uC0gIPwGYxeGH+eb7Exuv17mPjBFZpl3otOSvKzxjXOR1gSps720cG3wQqLQrNYXVDgbJNX/AWqvoI7Jk5bgbR9iyZ9U520KzIQwFBxW9QrcixUIoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745817921; c=relaxed/simple;
-	bh=9ByCT0iFVeF2bh6j52YCXt9aL9rJLUTMQOTYbq5aCgo=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=DZnShxa+Ip1jO6ZtmtqkWmuS7ivcijgq6nE+80Cg3cYQs7UzeUQJ5Sftyhnr2fMDIWjLQIvxeQDrE4LtWXhy84dKumO3k+yjpzyPUmicRIBvr3vjNrRyLPqSndul7x+gim6icO59BH3O3EqSN6dcXNC1Czrps+ETCFWzT6SrHQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=Wt08eZcV; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
+	s=arc-20240116; t=1745818058; c=relaxed/simple;
+	bh=jImKoBYqpdcHgRW3fjFe0vvxqd9XPuZABTgsqP+l0Ro=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pWarw52AtmBeuyRCNhpGJSvRyOEO2+ZrmnztZDX0mboddzJj5vuIOuRi6agsrkgbqLvMXJQ+o/fOkJJIngFdcXdlZWYzg44BN8QqdrJNIdd0W1+LYfhj4fpV0YeKVkWgIbOoeR8dPwsXLUAIftOMgTvf+aj3Xm1bevEobOsaRro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cdKPjjhE; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="Wt08eZcV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=efn5cVV2xfBgxxN9Cy/IU+g+7ZKqNGqGtDszbXGpqwI=; b=Wt08eZcVFUiJGmLJHhI/AvfvpK
-	8AbKOpsg1NnW5DboQP2N09XpUHolSgJYsRkNolQFAGc8z/7rNv+x2QSlljINXT8LDSfB7jIgcv3Q5
-	U8Cu899vyaLpwFUGu29NypqwpYX8fz8ItCsScyEUgFy6X+YOR8uJoERJbYTKxe9E2CB2RmwVwaDge
-	EMm44zbbx1ezBEyY7G1MJT+jx1YXtK7dH6GuobNeMzZS7nf2a1SQjJJPzOUc+9Zkpn9DVYNSMvTrT
-	QzPZBofVRLcRJwGyfeihzqUjfGQnHccJ3mFmwbyCGXPDTPgcaSXFWlIDWf+UN/5jJQV8s9UxArjPE
-	/rY5iOuA==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1u9GzN-00Gk79-63
-	for linux-kernel@vger.kernel.org;
-	Mon, 28 Apr 2025 07:25:09 +0200
-Message-ID: <33ca7d20-090a-4e86-accb-7b96b0e61ba7@bit-philosophy.net>
-Date: Mon, 28 Apr 2025 07:25:10 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdKPjjhE"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so6649281a12.0;
+        Sun, 27 Apr 2025 22:27:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745818055; x=1746422855; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fq+OzFBLLlyJg+NrzllHpi4v5rB4W3EdcTS9gRuN8A4=;
+        b=cdKPjjhEU06SiQcNVtFe6l0m0Af4HEEjBaJT15DmaKUomS2IvwBuUGdZaE00hjWd4i
+         vBgjwNspL+ktgeYtPBhDc2qNYtzUID7gf26Bz7K6ffTx/Und8JJdNIV5ZDIycIiajg7G
+         Eq5DgWbAUI9ReAvH3uTV2EAeZWi4bY9Ng17jY5YhwKYQpFR0hHhfwRVozYsY76g92GgV
+         7y6w9lTEJlz/lKuRzh7L/MPop0wmnJaG+h1sErNhxFmQL3wneWCAu2mqZoYwrAI7Qlvq
+         OpILtrcE1mp+iniXN5W6nQIc0BPLla4lMxqy1G4ZtYDWNjHWrh73ANcEqfnehKIJFLa5
+         LKgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745818055; x=1746422855;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fq+OzFBLLlyJg+NrzllHpi4v5rB4W3EdcTS9gRuN8A4=;
+        b=YVOJFjK7h/1hRQZPskD62NhnPlCBXxmWyJkwhSa3xZke5IZ+/vFKYg7WpKRaW/544W
+         xbTP1S2DFolJDFO/RjN44L1LqO7gmpk10UHb3nlXmuQN+jCBhjZPrmu6rcmrxzlYPW+O
+         pvMpFQgCixJcKutEBraCL5wEzP2jvqpA+zguqSM1PbdF27k+VXz5t/ogEfB26rDOJ3Vc
+         mGwBpq2qN7d32VkqaMA41jNEqE9FbXom79V6jZrFsxHqPI82fMC8HsCy29uczVptKexe
+         EnbXvrqMMC+6ymrQHXB8CQWogLagNvzREnrR1JjtUBwUCXd8LmX3QpqwTecqqyjg0ZQ/
+         94KA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgN8DftMlbh0XHtUu0ZZRb3X2QK+Q0dM2UAbmH/zXghJu6NPLPRa2c5hmVCHHzznrT3n8CBt9JvxCWTimq@vger.kernel.org, AJvYcCVrNSsV7nAmrfQQQeHjAPusEkMAAo0Hyk1tiRBqU00XpozRndASA83R6KArECv5HIm8tRv0wonjG1kjfQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Yp9BzdKSs81JOxVBFVgFwJYJFO/cnAPB+QIn6Kl0qpz/Mg/R
+	B+wueVH3RJCiep8t+H+Jua2oDeL979pBMIERLq+w5yMBdTjLxZkNB/ptojKPt6s=
+X-Gm-Gg: ASbGncvHohPsaps5jJryd4MkUYh902mTb8ue9W8FDO/ERTA2pTpXO+KxadN9fjGl/ev
+	Y8FE1SjkOfs83PvUc89wE6k+s9QDu0EYT6P6Su/UVMl7UJ1N1A8jDbCY+8KG8Vw+sPWYV7L/6Wp
+	3xkFbf+pFD24GKMqatH2n6WQ+XwxDOkDHZlNye8Gdn6doD/wejMS5u7XR3Ih2JPRDoevuDH8eOD
+	2leoDZrYnZIa1Cd4bkBa993il3XReepzutXERla0NDO+naDyx04PnIT8/5IqVRyqXE/fjiNXovr
+	GGFrsH4osslKcCJnTA1YX741g9dkIw==
+X-Google-Smtp-Source: AGHT+IEsSHjjKE5XelZrc415d9tgO/aN01y7t1du57Pj2dRdc8ZPK3Sz5H4MA9Merr31DkzUlUaz2Q==
+X-Received: by 2002:a17:907:7da1:b0:ac1:e6bd:a568 with SMTP id a640c23a62f3a-ace84a7fe91mr615698266b.37.1745818054976;
+        Sun, 27 Apr 2025 22:27:34 -0700 (PDT)
+Received: from pc ([165.51.118.63])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8453sm564688366b.103.2025.04.27.22.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 22:27:34 -0700 (PDT)
+Date: Mon, 28 Apr 2025 06:27:31 +0100
+From: Salah Triki <salah.triki@gmail.com>
+To: "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Jack Wang <jinpu.wang@ionos.com>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] block: rnbd: add .release to rnbd_dev_ktype
+Message-ID: <aA8Rw1GzSSEs78Us@pc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe@bit-philosophy.net>
-Subject: C^3 Instruction Set (was Low-Jitter, Fair Pay Philosophy)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The bus bandwith could be used more efficiently.
+After the last kobject_put the .release function of the ktype is called.
+If this function is not defined the behavior is unpredictable.
 
-I hereby suggest the C^3 instruction set, using only 1/3 of bus 
-bandwith, and needs only 256K Cache.
+Fixes: 1eb54f8f5dd8a ("block/rnbd: client: sysfs interface functions")
 
-In line with my low-jitter and fair pay philosophy efforts.
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+Changes in v2:
+	- Make the commit message more clearer
+	- Add a Fixes tag
 
-I recently also realized De Ext wavelet, for patent free filtering and 
-compression.
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-As usual, more on https://bit-philosophy.net/
-
-Some playlists: https://www.youtube.com/@Bitullahs_Office/playlists
-
-Light,
-Ywe Cærlyn
-Abbed,
-Bitstreams OS.
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index 6ea7c12e3a87..144aea1466a4 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -475,9 +475,17 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev *dev)
+ 	}
+ }
+ 
++static void rnbd_dev_release(struct kobject *kobj)
++{
++	struct rnbd_clt_dev *dev = container_of(kobj, struct rnbd_clt_dev, kobj);
++
++	kfree(dev);
++}
++
+ static const struct kobj_type rnbd_dev_ktype = {
+ 	.sysfs_ops      = &kobj_sysfs_ops,
+ 	.default_groups = rnbd_dev_groups,
++	.release	= rnbd_dev_release,
+ };
+ 
+ static int rnbd_clt_add_dev_kobj(struct rnbd_clt_dev *dev)
+-- 
+2.43.0
 
