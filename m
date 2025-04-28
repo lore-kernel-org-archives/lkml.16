@@ -1,65 +1,72 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B791DB124
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BE917BCE
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745872644; cv=none; b=db18jZPlxWp99GHFg5Ctyn0Y5fmGBib3/Ddzflulhe2KyxmzewbQklQoJl//zqQ8sV2PjXizh6MdfPBzKV536p3Lo2DU2kX1hHN18gHp1twWImz8gGq7PqWMhw18dMls+vNWaiiim3QXGosUymilG6grCROG6+Dehc4VccxmY7Y=
+	t=1745872681; cv=none; b=aROWf6SFBTvbrN8djUSFg1sjy+QQQQr+/Wzo/YmyZnzr/7/SFVPzU0z9PygnFP6gVeaYs+1QPgrffhcietDLC91R44+hPU5Ss4AsYYxjDOOYhkCAdZm4RxQjBxx82elscbW4ysfPXhGZtQz91yuSJnKORhDtDovEX69pHwnc1VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745872644; c=relaxed/simple;
-	bh=RG16IxyNFQzdJ+l8YiIgV31gwxuUGCnbYmlOxmYE8vM=;
+	s=arc-20240116; t=1745872681; c=relaxed/simple;
+	bh=THDoYScr1eo+Pbh7ent1yOvVFbe0q3tboKZn/t6bKM8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eC+FJW8/615fIfuCy2NOLlyi01KMVJV/8aWuQ9b188nNyYvUgLFaqMhHbBzRtAgbSp/UEDNwn3zFXDEK8uSXWzcRmHbFKAhq9MHIbUiCSzMbFpPISd+tpZGbioIZwCX65FE7TATKYjrIzn7TpZ/NQQLT1TeQsiTp3pK9T6pRznE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jHZ5XZ9I; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=HC4ObqlGp0OFlztpmOA5N8uK06Am9uSiNeq3QrcmgYq34gS8eDVw112eYZrBdH5sLWjfJfIyaxxABfvKQvVS2D3YI/eGehcvwoxPd0ji96zYwsDqIkhuHPQQNAuvJ8zWj2Po6oKQhvCr6hySnPriYn+krwhM2dDQJEeKhZgCR6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OrRkwo/O; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jHZ5XZ9I"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c58974ed57so577949885a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745872642; x=1746477442; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RG16IxyNFQzdJ+l8YiIgV31gwxuUGCnbYmlOxmYE8vM=;
-        b=jHZ5XZ9IrhxvxoclFe3KfaWjgSd6YqvksZpBCtNMbWHmNzFhW3fWiEjzsBIzr4IYId
-         kgZJpSSkkZX8pjLfzTp4tOsRFb6Z9Yn8UPS3iOemVqAFNsTVrnrxmcWALynzXgog1LSS
-         lBXJZd50l0bMdWbphuWUWbWqDEUZdYas8hqqky0iHpLcIg6q95jClAv/NqsgGOLTOSOJ
-         R43MyCGAVZbU7buO83ZzM1kAwe6elj0dB0YHqBzxGEgbDQWgl4faxxOyp91ESt883KAz
-         WTEWcPuBV5TwbnM+hyzreLyZk3lnuT6syQHIrvXyylZjhWNbzhuuxFatdXWfPIWhNlxH
-         Bxxg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OrRkwo/O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745872678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XY39ue14uvxArdHz8g+WhT2+O4Cyc8mCE8ARIrYaUwQ=;
+	b=OrRkwo/OfA6U097Fupk7nfzQV0XQfifufV9l45SUAz6sRH0Od6tpM/1Q/1JkK6LRb+1RZ5
+	vDuOZs5hdeVm/vxaErtfdfZ9zZe0A0eN0Zu0bwCIqD+sadl8yllC8q4TlxhBZNS5tihC5y
+	PdLnR/9xqi0exraXrl/PL3EC/8AI530=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-08BpFmh6OS2MoskShtFPxw-1; Mon, 28 Apr 2025 16:37:55 -0400
+X-MC-Unique: 08BpFmh6OS2MoskShtFPxw-1
+X-Mimecast-MFC-AGG-ID: 08BpFmh6OS2MoskShtFPxw_1745872674
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso23426605e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:37:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745872642; x=1746477442;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RG16IxyNFQzdJ+l8YiIgV31gwxuUGCnbYmlOxmYE8vM=;
-        b=ajkxuOTMAcs4V1Lm4MYxCRnt+6uuNDzaHyuqCMfCvxBiJt7he2Pew2/pIYKYFEtJ1g
-         +nUYmERUJATqHqOQoxVlNfrahZPpAV5099EB5r9gZr5SvJYCcX2IZqYWzAYQ5OzHwkrN
-         ylt/f7FBxlqhJQuzCtHR1x6aZfqnlhzW+5EamVuRmXw4sjJb7o7cp/GWgQaAv8PBrWDZ
-         PISmJk6T+RgSGh2EnGTN/bOdEUrsNvK1NxhltZbstxVIrLY6mAMs5g4jSTt8N+KWyIWP
-         2tjGKVXlzu+5CYh0euzR/fFaw8yVnKbHhDEn2OOlubuBNAko9nSFHGSSeMD8p/TDqlGl
-         lVcg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/rg0cYfzRHdCXDEcYF30zciXFSiIC6ppJw/gFEji8reDur7P0U35zuR4nGNrd65RfOUv+qN5gBQctoSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUS0rOVb7O+n3LUOgurmpkL4chf2bDlswL5sCtI3gIc011LlpZ
-	hxVbX5nN9X+UALXn174muiCGL3n0CHKsC/tXOBc9CDqomrTVPEs0IjddQ5hRLCY=
-X-Gm-Gg: ASbGncun0pn8p2RdBZSSh3AvzRu6WM0IJNhMuOHhCaERazBOe1SyR2ALUot5CBqe5lE
-	v35hp1T2O9uEM4EiGFgpu8ff/+W1NgJoC/FTkhox3QWLGYueWW5FQDZinGqmjSzSyhiSnnqQ6RJ
-	4Wk4JiHhDceFsPdqdGsv2p9k4PtP/znpYpHVkPTx9T8KqQZ2UofQZGifE10Oy1b58jx5yFaN+w/
-	q6CGvVitjJErLzARzhjsTQJYuA/+gORzeJCYvEL2maulsYtW3LtSdNBJQPV5ez0deBaOHuFkBxO
-	KzkpqnhpEJSfwLiKZLh/3g60Qf8lKmLNUVdkS5mQDbwvVQYz1OaTHLonYLtbo0vSHYLjsaWoqlK
-	4WsPpactZ
-X-Google-Smtp-Source: AGHT+IE8cclfNjGpRErtSU+IQYlC80KA/mvktmZUSPUgteaPfn+oZPkriEMGFnPqNoJ53MfrrkiFuA==
-X-Received: by 2002:a05:6214:19ed:b0:6f2:c88a:50b2 with SMTP id 6a1803df08f44-6f4f1b9bf0bmr10177236d6.3.1745872641862;
-        Mon, 28 Apr 2025 13:37:21 -0700 (PDT)
-Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0ad4382sm65108736d6.125.2025.04.28.13.37.20
+        d=1e100.net; s=20230601; t=1745872673; x=1746477473;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XY39ue14uvxArdHz8g+WhT2+O4Cyc8mCE8ARIrYaUwQ=;
+        b=PaGUcYAMMZC33WFVe/ukQzMltaQbGD/9vNlmvf/yikbVYPTkaNSpFX4fxNIZjk1Chk
+         EzUjei3nADEZZzof8nQ7hn45kVvpjCYpMoV+TDGR3sYRwIovLR7nyRmcEUPG7NffaMJY
+         DPBiKSN28es+QGnDC2Cb8NmAF0+ZEJ4lcNpc0wWgsTk7LAQUD9XsajamMqf5CGU/V5s3
+         CUYzFnbojfbPZwQcO3UbWvMqbowsSMIvM5IybedvSu0dx1oZg2BjwGkOhlwZj0GaM+j2
+         nWpe4UEGx4inkRgNPzgxojhwor8DhQGjJTKvXfunqWmwKq6NKAsScMOj+Ig3BlYHzifd
+         01Ow==
+X-Gm-Message-State: AOJu0YxQ0fIYHFsnyv9lLHgxljsAxtRs16jpTFzmfjlNVO+Jn4pCIoBS
+	yggb++Rn0l7qWGfepgBhnrxlZoLJBLSYKHBfWhqeilNTuC3O+o2O8BNmw9rMYujURC07hAayCoV
+	2mpDa5EBdfg+ebslbQaMkKg7WMDfEVDC+tvxfMIvqr+BOkTc8AA2jplxWu3v0PQ==
+X-Gm-Gg: ASbGncvl90T5AjU3L+DFcMwc8Y5IZYbrJMK5lNmUwg3vFVzQlz2Pmo5Q37HWwAH4wGl
+	FQ1Fo49gKCf3G63Gtjeulmreohj//3Fz+wrjuv44dNH9FHsC2vrQz3W/hGGxeZBZhLGeNUgTeJM
+	HXT6JZVhNsmTo1f5Cog1zgHRZaRYzfWB0fYtjRz2QXBnu6pWY0XhT//67FIACBMQNF1nI+uUEVD
+	lRZaZQMDeAgtv1AWLNAKL0EvFYDDSc0TsIkt56k/masnDzsjz/UY7/lQyREmthwni+O+bnl0i8M
+	2JNWSZiG+FnZ9tCN3yTrNLHsAT+72C7Q1pg9wPSg33cWqKYM6idr/Zb03W1KE2RrKDcIcdWu6Di
+	YDssfJlV+EpVjzpWL+HHw7ork4ttH0P/GsG6DYIM=
+X-Received: by 2002:a05:600c:210:b0:43c:f680:5c2e with SMTP id 5b1f17b1804b1-441acb70646mr3929355e9.13.1745872673665;
+        Mon, 28 Apr 2025 13:37:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdOVVjaciIpBaEDdxqoIN01wA3aD3hjnHvIH0Qo61Kck3hgHHZYl5OJ+E1B/9c6lJ7BVT2oQ==
+X-Received: by 2002:a05:600c:210:b0:43c:f680:5c2e with SMTP id 5b1f17b1804b1-441acb70646mr3929175e9.13.1745872673178;
+        Mon, 28 Apr 2025 13:37:53 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea? (p200300cbc72fea002f00e7e58875a0ea.dip0.t-ipconnect.de. [2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d868asm166267255e9.26.2025.04.28.13.37.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 13:37:21 -0700 (PDT)
-Message-ID: <0082078a-32ef-48cb-a181-c2d598ae29e6@baylibre.com>
-Date: Mon, 28 Apr 2025 16:37:19 -0400
+        Mon, 28 Apr 2025 13:37:52 -0700 (PDT)
+Message-ID: <57f9480c-2f8c-4be8-864c-406fec917eb1@redhat.com>
+Date: Mon, 28 Apr 2025 22:37:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,30 +74,215 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] iio: adc: ad4695: rename AD4695_MAX_VIN_CHANNELS
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
- <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-4-6f7f6126f1cb@baylibre.com>
+Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
+ pfnmap_sanitize_pgprot()
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-3-david@redhat.com> <aAvjJOmvm5GsZ-JN@x1.local>
+ <78f88303-6b00-42cf-8977-bf7541fa45a9@redhat.com> <aAwh6n058Hh490io@x1.local>
+ <75998f7c-93d2-4b98-bb53-8d858b2c108e@redhat.com> <aA-q_PrThAw5v1PF@x1.local>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-4-6f7f6126f1cb@baylibre.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aA-q_PrThAw5v1PF@x1.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 28.04.25 18:21, Peter Xu wrote:
+> On Mon, Apr 28, 2025 at 04:58:46PM +0200, David Hildenbrand wrote:
+>>
+>>>> What it does on PAT (only implementation so far ...) is looking up the
+>>>> memory type to select the caching mode that can be use.
+>>>>
+>>>> "sanitize" was IMHO a good fit, because we must make sure that we don't use
+>>>> the wrong caching mode.
+>>>>
+>>>> update/setup/... don't make that quite clear. Any other suggestions?
+>>>
+>>> I'm very poor on naming.. :( So far anything seems slightly better than
+>>> sanitize to me, as the word "sanitize" is actually also used in memtype.c
+>>> for other purpose.. see sanitize_phys().
+>>
+>> Sure, one can sanitize a lot of things. Here it's the cachemode/pgrpot, in
+>> the other functions it's an address.
+>>
+>> Likely we should just call it pfnmap_X_cachemode()/
+>>
+>> Set/update don't really fit for X in case pfnmap_X_cachemode() is a NOP.
+>>
+>> pfnmap_setup_cachemode() ? Hm.
+> 
+> Sounds good here.
 
-On 2025-04-28 16:23, David Lechner wrote:
-> Rename AD4695_MAX_CHANNELS to AD4695_MAX_VIN_CHANNELS. It has been a
-> point of confusion that this macro is only the voltage input channels
-> and not all channels.
->
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Reviewed-by: Trevor Gamblin <tgamblin@baylibre.com>
+Okay, I'll use that one. If ever something else besides PAT would 
+require different semantics, they can bother with finding a better name :)
+
+> 
+>>
+>>>
+>>>>
+>>>>>
+>>>>>> + * @pfn: the start of the pfn range
+>>>>>> + * @size: the size of the pfn range
+>>>>>> + * @prot: the pgprot to sanitize
+>>>>>> + *
+>>>>>> + * Sanitize the given pgprot for a pfn range, for example, adjusting the
+>>>>>> + * cachemode.
+>>>>>> + *
+>>>>>> + * This function cannot fail for a single page, but can fail for multiple
+>>>>>> + * pages.
+>>>>>> + *
+>>>>>> + * Returns 0 on success and -EINVAL on error.
+>>>>>> + */
+>>>>>> +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
+>>>>>> +		pgprot_t *prot);
+>>>>>>     extern int track_pfn_copy(struct vm_area_struct *dst_vma,
+>>>>>>     		struct vm_area_struct *src_vma, unsigned long *pfn);
+>>>>>>     extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
+>>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>>>> index fdcf0a6049b9f..b8ae5e1493315 100644
+>>>>>> --- a/mm/huge_memory.c
+>>>>>> +++ b/mm/huge_memory.c
+>>>>>> @@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+>>>>>>     			return VM_FAULT_OOM;
+>>>>>>     	}
+>>>>>> -	track_pfn_insert(vma, &pgprot, pfn);
+>>>>>> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
+>>>>>> +		return VM_FAULT_FALLBACK;
+>>>>>
+>>>>> Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
+>>>>> trigger, though.
+>>>>>
+>>>>> Maybe we could have a "void pfnmap_sanitize_pgprot_pfn(&pgprot, pfn)" to
+>>>>> replace track_pfn_insert() and never fail?  Dropping vma ref is definitely
+>>>>> a win already in all cases.
+>>>>
+>>>> It could be a simple wrapper around pfnmap_sanitize_pgprot(), yes. That's
+>>>> certainly helpful for the single-page case.
+>>>>
+>>>> Regarding never failing here: we should check the whole range. We have to
+>>>> make sure that none of the pages has a memory type / caching mode that is
+>>>> incompatible with what we setup.
+>>>
+>>> Would it happen in real world?
+>>>> IIUC per-vma registration needs to happen first, which checks for
+>> memtype
+>>> conflicts in the first place, or reserve_pfn_range() could already have
+>>> failed.
+>>>> Here it's the fault path looking up the memtype, so I would expect it is
+>>> guaranteed all pfns under the same vma is following the verified (and same)
+>>> memtype?
+>>
+>> The whole point of track_pfn_insert() is that it is used when we *don't* use
+>> reserve_pfn_range()->track_pfn_remap(), no?
+>>
+>> track_pfn_remap() would check the whole range that gets mapped, so
+>> track_pfn_insert() user must similarly check the whole range that gets
+>> mapped.
+>>
+>> Note that even track_pfn_insert() is already pretty clear on the intended
+>> usage: "called when a _new_ single pfn is established"
+> 
+> We need to define "new" then..  But I agree it's not crystal clear at
+> least.  I think I just wasn't the first to assume it was reserved, see this
+> (especially, the "Expectation" part..):
+> 
+> commit 5180da410db6369d1f95c9014da1c9bc33fb043e
+> Author: Suresh Siddha <suresh.b.siddha@intel.com>
+> Date:   Mon Oct 8 16:28:29 2012 -0700
+> 
+>      x86, pat: separate the pfn attribute tracking for remap_pfn_range and vm_insert_pfn
+>      
+>      With PAT enabled, vm_insert_pfn() looks up the existing pfn memory
+>      attribute and uses it.  Expectation is that the driver reserves the
+>      memory attributes for the pfn before calling vm_insert_pfn().
+
+It's all confusing.
+
+We do have the following functions relevant in pat code:
+
+(1) memtype_reserve(): used by ioremap and set_memory_XX
+
+(2) memtype_reserve_io(): used by iomap
+
+(3) reserve_pfn_range(): only remap_pfn_range() calls it
+
+(4) arch_io_reserve_memtype_wc()
+
+
+Which one would perform the reservation for, say, vfio?
+
+
+I agree that if there would be a guarantee/expectation that all PFNs 
+have the same memtype (from previous reservation), it would be 
+sufficient to check a single PFN, and we could document that. I just 
+don't easily see where that reservation is happening.
+
+So a pointer to that would be appreciated!
+
+-- 
+Cheers,
+
+David / dhildenb
+
