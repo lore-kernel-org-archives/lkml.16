@@ -1,50 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic305-21.consmr.mail.ne1.yahoo.com (sonic305-21.consmr.mail.ne1.yahoo.com [66.163.185.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AD320ED;
-	Mon, 28 Apr 2025 16:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB4120ED
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.185.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745858207; cv=none; b=mqO5CETi+i10rpe6lP1iqns2527SZs7Tns9oaY5zdu9bwzAZKFtF7FPKdy+zH6KF6Gh40CvGcL2hOZ4Nkn0/4fw1I5W0Lor8h1nE9MYnAbYlafo4NkZTyaFNuX1sQSs6lsu5McPc5DVeZqzUmTtFNEUQrysUxnXIS5Fj0985Iv8=
+	t=1745858243; cv=none; b=Cu9hETLNWSkwUj1u33oxDaAqdbf4NCmWTK0EitBZoGKOkdkA+i4ztzZgyTDmA2va71KBMqHC+gi197aCHYITep0UHczFTHfrpgxQSM63YhHL/LtJoNO6GPjGzpi9tMsMM28J1zRfOMhGhYdEKav7ooI/VI3nxDLyPea2DBnCFds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745858207; c=relaxed/simple;
-	bh=UySdE4TPlecqxBiv4V8h6ZcS2TekfFhhH3Gx4Ou6UC8=;
+	s=arc-20240116; t=1745858243; c=relaxed/simple;
+	bh=0VvQeNVU4UgdbwYBHvilrt2m+ijy4wdKBUUD2tIDmIg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Db9p5ZkRmVkWRsy+Ez6YmbC4SZLDrTLOdhhHPICRyiK2DBz0RxEf4n5J4IPU37JbixQC9PALrKrErSxHKOcGvFot4HMNEsjOIvs/K5Tyfl/0B4rKtLs8H9AiGw8xQxrflkMn8s1M68cx4WxcnVR8aobipqeKhZP63+tgGt73DAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LenyeSmo; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=HRAXapHFmt+qIR4MzsbPjKkIQhkUvjBvDSNAkq17R+nmNBNQ/iM82BLkqrm4LvnxM0K6s/57vvQuVRqn/nss/ZJ1cNL5xZGCvElorSSCWJ5KsQXF5iahxnGibbhVz/a4HDQ3PVhVOj4oIem1cTLUTmkATVG2INw+ox7qdx6gWHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ccoNQalv; arc=none smtp.client-ip=66.163.185.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LenyeSmo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745858206; x=1777394206;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UySdE4TPlecqxBiv4V8h6ZcS2TekfFhhH3Gx4Ou6UC8=;
-  b=LenyeSmomUCzKgAYlvkEav8NLPDtVv2nsmwqyAbzBAGTvFCQApoV22Fj
-   Uu0mhtrcm1tsEeYJg+yInVBnk+z+3+2KrlDNnu1avpEjidKKQBN0tV8EY
-   SulNTB/CmYQPR8pTpIzg++SvlZu17cqVlf79dm4GY4V4TaGQcsmqEig9J
-   p/yumRSV4Azd4Cl0kDGSV9VEpTPxzRlPByC5HYVnf0x6JpB1hj3I+uVDK
-   e1A0huH/kd78/x+g28mOMVJr2EUp0V4xEjx1rAroSn4aff7Y2FDAH2r45
-   LW6WwpqlFypWvZOzBoB7RnWQfeQsRJ3yJzHWbi+n6skvxhDMt/B3l0UXs
-   w==;
-X-CSE-ConnectionGUID: sEKz1XoORQekLuhWpQip5A==
-X-CSE-MsgGUID: UfDnRSz7SWuoq6cIsIT/iw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47590507"
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="47590507"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 09:36:45 -0700
-X-CSE-ConnectionGUID: dxFdpX51SrCzWcLbYI5D4g==
-X-CSE-MsgGUID: SCbQKQ0QTkibrdRRjPlpew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="134521731"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.222.199]) ([10.124.222.199])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 09:36:43 -0700
-Message-ID: <74d7d392-82ce-46b1-81ad-a5f1c1bdf62c@intel.com>
-Date: Mon, 28 Apr 2025 09:36:42 -0700
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ccoNQalv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745858241; bh=Bv8soi9tACJn9WGewxRVBUl8fgiOJi3nT89t8VKibUs=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=ccoNQalvhr50TrnL1wDoFAjJBwOsiLi6QCeQGbSn8OFwqWMbXKN6fkKXJAgBN9f+LxYK9QhKvuKjFQlTZhkZ9SZM17MvbLuoQxJKf96LlFBAS3XxnFB9iH7BWuKV3KzD5pWgtf2dTwBRaVEZS/L3S8Ed98lsE6jp5drCME+F1gZEW+UIZt4H5NtQNmoUQt9FzS0P0QAGyU6X6taB17+bFjEdFRxe6fGkiIEXMD9V8blGs3V8v2EKXOGdBu5YZefVEZB1X2EdndeXKR6RMf0R5l78aDNIwqOAzV4026SBpleGp40mpFiVI20kiyjksdvRgQFgmN3jyVxAEY/hHF093w==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745858241; bh=MqEA5VPPhYvOFEQEwh8YTykhNYDRY8Sw2lg0EOi3CO3=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=jlrWiUeC1L1K8kra5Uht2Mz/QzeLeSIulDs2R3qlNhksfqRufUAAqY7yeXG4yjXXvM2cG/qxED+3iJSfa38EFtHgmFeCfnCCCOQGwdYJWTmbvGkunI5iQGujrvb2vHmZzZlh0q+r/bF/pMFzsQylMeZRDIRCrBWTVfUjzds7YXBjAUF9iJ7lqI0DqIBgQRYEeSsZyk4Z56JOlfAs2tSDIcuDI6qtt7frD4gLH4fNRFnbY8wsswdOAxT4A8anI9S9+FOF122MiDg3YhbQZldAoueQGBnIy+wEuMWjE73I3aK3vjnn77B2SlVrhS33k5KSf/i2lqEL4AksUqXlsku/6w==
+X-YMail-OSG: iMY2u.gVM1l90gKJDkm7xWJB9KcK486jGS.kVjAk2Fb207glp6iGi_9UMrEMMWT
+ vMg8Gh3004OqDAC39tU0WargmSDGDeEXcoCss2RstxZR_bqC7fx_kFsw25ie.qMVI_ncxxFUeyxQ
+ T09IeQJFBk5SnMb0RpZp.prpvs7kvkIyT7atvPI2WWAzqJlGTt9b71oziCTrXCcJSM2Lhf8DQ7Mi
+ P4B1Z.Lv7UzsoI8ukACgq5C0E7qcx17ZjTOTLlBDu2qOmmPNCQqdhXDE6EmcdOUdewaizr0v5FgR
+ B3DMeaZS6F3N2Bmnzq4AfiQdtY.3760ojRfgWxqtsHNaaDm5Qcgdwc..9m7FYOpDZU6uOx1NH2O1
+ .uCePu50linOGtN2TrQYTn24soqboODqufgsV8bX0E3TFKfRrbaA0ZL.bmPAxOk7fpurCZ6vGsGC
+ zAX9xk5fJ1Ou4SoahjqI65noOacynhHnwrnbseX17xCTO1BEzp6TD1Doh0qLyhHACk9DNIdAekzj
+ dzwKWn.MVqXcibFaHnR8FO5RwCW95ZXYH6mj77dxWrICPTaNlm7vIOMfsfJi4qeq3KeLpmlghGaB
+ 4Z5HBFGKK5q2om4gssXIhss97DDSfgbokxUAmwBj2s7yYf6Q6vI85JZsNEWDGNUPZ5gdMRSC04Fd
+ .kxGLKIIeckOGtp_8Kja0TDk0c6dnhLlfleLP4JX2.acbTY6YmRnByhX0NymWSOw3n2EVx2GBlDa
+ 1QGF1WY2yGIi1obHji6Z9kaIRqH665oYz3e9bvQaAAPeV3CGU0Imnw3HdPZx_g3TFP75q3daepbP
+ LrHiB2l.0VmJAZG6wXNoUWS8uAhhicPJCIsPbMP7qdpTGZ8_U3SyAp6z3TpMzD42xIDhKa_IG2WA
+ v4JWsfRVbSm2RB6flqBl0BKJlj5sxiOcUI0RC_TtEFS3mXrw1AKKROBsK8x1o9jptLmvh6_fJ76l
+ 4URHUtDayI1SsPy4GZZnoZ5w92KjXnaC6b2OvlxEW3HZetgb0zn4KTpDiNxX8Db.I9llyaq3wMB9
+ QlogKDH9IgKm0yNOR8FCvvczZBb1ZA9wiViedi22_UD9V9IRY2gsc.PsNB2kskq6TzdJsdAsSa8i
+ XE2Gt7kRavMsL73amiOrbceWP_.vNpcNlDY2Ur33cK.KccCYXgI.aJzGhPDsANfBDY4aBz3n.h4w
+ CM3W_ryojATmbn_o3atofJH8GU353CeRtbFv3oKXmfWSDugzML5pYaej.KIT8Qq5Xxlw8XqDZzVz
+ p5MzLN.4HCQfClnH_I8tZiZzMilzYz2qEz_IkJmb1BPUBHx3agdCJ6IeQ4jrxEDWTt.aerS13qng
+ V32OMbRtC0yMBm0iKi4MODI.lWqk5EAvaUi6OhOQvXxY39FAaGhVi2jSYyQk9nUGvrwwP0vT91Yr
+ 0k2eh21fBpApm9_HUq0RSNoL7kD7DUysgP4nH4tSTCMiPGYir9MUOiSJxtWSR.UAJUxgY5gcK0uP
+ 6HWsjNugCiWzrums8IEAUgKgycA0hqFH5zIVmPvzZt9oTUVUAd5r8wiPLRhq5ouE92vD5RWq.SGF
+ CO0fD.zzq8yJlAg1E5FE2dcGcgoauRh2H97t9uWamKwHXNYJ.WTd7tIjjR376dWLkHBeh4BKjC.Z
+ fxdymB4NyX0EajG93qZ1TiLdI6H4y1ojdGX.xB7iUinZP73H3FZNMSHxCh1Aj3bNNClR.2V9GW4w
+ VBkemrq5EhSHhojiiT8_SpJJH5ZCzu7of6lbRjHX6rBseah0aonGdwDt8j4YyrYXcEPT_Ptu5UmU
+ hp..3CHP.HRbS7sBG6b_UKvwo7jVUIyhi4Y5wAAa3K7D3T5MQLjqgi8hI9VfMZFpHF0FsjksfpDp
+ SIIVrLK9Za0SFvjW9L6v6KdsFxmz3LtVmUbQC8jZG0jcrowP3c4gXKFGjZulo62nSkDOIKxEWYhc
+ aHgm4lg9kcTX_hfdsQsv2TtTJC0AenCXP3G0UJt74O5IcDVZykIm2.KtsdW85.KSBtkoZd2bYaPv
+ 28_pTZYoHI.924vOLysEgI0lXaSIGeSgszQ--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 6a7dbf5d-0d04-426f-a172-733de4aba77a
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ne1.yahoo.com with HTTP; Mon, 28 Apr 2025 16:37:21 +0000
+Received: by hermes--production-gq1-74d64bb7d7-w6q4t (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID ee4682840e2fd9fd638ea25af20b289c;
+          Mon, 28 Apr 2025 16:17:05 +0000 (UTC)
+Message-ID: <988adabb-4236-4401-9db1-130687b0d84f@schaufler-ca.com>
+Date: Mon, 28 Apr 2025 09:17:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,85 +60,258 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] x86/devmem: Drop /dev/mem access for confidential
- guests
-To: Jianxiong Gao <jxgao@google.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com,
- x86@kernel.org, Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Naveen N Rao <naveen@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Kirill Shutemov <kirill.shutemov@linux.intel.com>,
- Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
- <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
- <9a4b347f-9a18-4578-9031-0d1bc98e668d@intel.com>
- <CAMGD6P0ORZF6Tbkuedv99jEpk+6HjG=pyqCwTHKU5dVxt+kRCQ@mail.gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH] security,fs,nfs,net: update security_inode_listsecurity()
+ interface
+To: Stephen Smalley <stephen.smalley.work@gmail.com>, paul@paul-moore.com
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Ondrej Mosnacek <omosnace@redhat.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ netdev@vger.kernel.org, selinux@vger.kernel.org,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20250428155535.6577-2-stephen.smalley.work@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <CAMGD6P0ORZF6Tbkuedv99jEpk+6HjG=pyqCwTHKU5dVxt+kRCQ@mail.gmail.com>
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20250428155535.6577-2-stephen.smalley.work@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.23737 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On 4/28/25 09:30, Jianxiong Gao wrote:
-> On Mon, Apr 28, 2025 at 8:53 AM Dave Hansen <dave.hansen@intel.com> wrote:
->> Would most developers reading this know what an "SEPT violation" is or
->> what its implications are?
->>
->> This results in an immediate exit from and termination of the TDX guest,
->> right?
->>
-> In most cases yes but it depends on the settings.
+On 4/28/2025 8:55 AM, Stephen Smalley wrote:
+> Update the security_inode_listsecurity() interface to allow
+> use of the xattr_list_one() helper and update the hook
+> implementations.
+>
+> Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
+>
+> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> ---
+> This patch is relative to the one linked above, which in theory is on
+> vfs.fixes but doesn't appear to have been pushed when I looked.
+>
+>  fs/nfs/nfs4proc.c             |  9 +++++----
+>  fs/xattr.c                    | 20 ++++++++------------
+>  include/linux/lsm_hook_defs.h |  4 ++--
+>  include/linux/security.h      |  5 +++--
+>  net/socket.c                  |  8 +-------
+>  security/security.c           | 16 ++++++++--------
+>  security/selinux/hooks.c      | 10 +++-------
+>  security/smack/smack_lsm.c    | 13 ++++---------
+>  8 files changed, 34 insertions(+), 51 deletions(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 970f28dbf253..a1d7cb0acb5e 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -8023,12 +8023,13 @@ static int nfs4_xattr_get_nfs4_label(const struct xattr_handler *handler,
+>  static ssize_t
+>  nfs4_listxattr_nfs4_label(struct inode *inode, char *list, size_t list_len)
+>  {
+> -	int len = 0;
+> +	ssize_t len = 0;
+> +	int err;
+>  
+>  	if (nfs_server_capable(inode, NFS_CAP_SECURITY_LABEL)) {
+> -		len = security_inode_listsecurity(inode, list, list_len);
+> -		if (len >= 0 && list_len && len > list_len)
+> -			return -ERANGE;
+> +		err = security_inode_listsecurity(inode, &list, &len);
+> +		if (err)
+> +			len = err;
+>  	}
+>  	return len;
+>  }
+> diff --git a/fs/xattr.c b/fs/xattr.c
+> index 2fc314b27120..fdd2f387bfd5 100644
+> --- a/fs/xattr.c
+> +++ b/fs/xattr.c
+> @@ -492,9 +492,12 @@ vfs_listxattr(struct dentry *dentry, char *list, size_t size)
+>  	if (inode->i_op->listxattr) {
+>  		error = inode->i_op->listxattr(dentry, list, size);
+>  	} else {
+> -		error = security_inode_listsecurity(inode, list, size);
+> -		if (size && error > size)
+> -			error = -ERANGE;
+> +		char *buffer = list;
+> +		ssize_t len = 0;
+> +
+> +		error = security_inode_listsecurity(inode, &buffer, &len);
+> +		if (!error)
+> +			error = len;
+>  	}
+>  	return error;
+>  }
+> @@ -1469,17 +1472,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+>  	if (err)
+>  		return err;
+>  
+> -	err = security_inode_listsecurity(inode, buffer, remaining_size);
+> -	if (err < 0)
+> +	err = security_inode_listsecurity(inode, &buffer, &remaining_size);
+> +	if (err)
+>  		return err;
+>  
+> -	if (buffer) {
+> -		if (remaining_size < err)
+> -			return -ERANGE;
+> -		buffer += err;
+> -	}
+> -	remaining_size -= err;
+> -
+>  	read_lock(&xattrs->lock);
+>  	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
+>  		xattr = rb_entry(rbp, struct simple_xattr, rb_node);
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index bf3bbac4e02a..3c3919dcdebc 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -174,8 +174,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct mnt_idmap *idmap,
+>  	 struct inode *inode, const char *name, void **buffer, bool alloc)
+>  LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
+>  	 const char *name, const void *value, size_t size, int flags)
+> -LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
+> -	 size_t buffer_size)
+> +LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffer,
+> +	 ssize_t *remaining_size)
 
-There's also disable_sept_ve() in the kernel.
+How about "rem", "rsize" or some other name instead of the overly long
+"remaining_size_"? 
 
-So perhaps I should have said:
-
-	This <normally*> results in an immediate exit from and
-	termination of the TDX guest right?
-
-	 * Ignoring debug and other non-production silliness
-
-
+>  LSM_HOOK(void, LSM_RET_VOID, inode_getlsmprop, struct inode *inode,
+>  	 struct lsm_prop *prop)
+>  LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index cc9b54d95d22..0efc6a0ab56d 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -457,7 +457,7 @@ int security_inode_getsecurity(struct mnt_idmap *idmap,
+>  			       struct inode *inode, const char *name,
+>  			       void **buffer, bool alloc);
+>  int security_inode_setsecurity(struct inode *inode, const char *name, const void *value, size_t size, int flags);
+> -int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size);
+> +int security_inode_listsecurity(struct inode *inode, char **buffer, ssize_t *remaining_size);
+>  void security_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop);
+>  int security_inode_copy_up(struct dentry *src, struct cred **new);
+>  int security_inode_copy_up_xattr(struct dentry *src, const char *name);
+> @@ -1077,7 +1077,8 @@ static inline int security_inode_setsecurity(struct inode *inode, const char *na
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> -static inline int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
+> +static inline int security_inode_listsecurity(struct inode *inode,
+> +					char **buffer, ssize_t *remaining_size)
+>  {
+>  	return 0;
+>  }
+> diff --git a/net/socket.c b/net/socket.c
+> index 9a0e720f0859..52e3670dc89b 100644
+> --- a/net/socket.c
+> +++ b/net/socket.c
+> @@ -562,15 +562,9 @@ static ssize_t sockfs_listxattr(struct dentry *dentry, char *buffer,
+>  	ssize_t len;
+>  	ssize_t used = 0;
+>  
+> -	len = security_inode_listsecurity(d_inode(dentry), buffer, size);
+> +	len = security_inode_listsecurity(d_inode(dentry), &buffer, &used);
+>  	if (len < 0)
+>  		return len;
+> -	used += len;
+> -	if (buffer) {
+> -		if (size < used)
+> -			return -ERANGE;
+> -		buffer += len;
+> -	}
+>  
+>  	len = (XATTR_NAME_SOCKPROTONAME_LEN + 1);
+>  	used += len;
+> diff --git a/security/security.c b/security/security.c
+> index fb57e8fddd91..3985d040d5a9 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2710,22 +2710,22 @@ int security_inode_setsecurity(struct inode *inode, const char *name,
+>  /**
+>   * security_inode_listsecurity() - List the xattr security label names
+>   * @inode: inode
+> - * @buffer: buffer
+> - * @buffer_size: size of buffer
+> + * @buffer: pointer to buffer
+> + * @remaining_size: pointer to remaining size of buffer
+>   *
+>   * Copy the extended attribute names for the security labels associated with
+> - * @inode into @buffer.  The maximum size of @buffer is specified by
+> - * @buffer_size.  @buffer may be NULL to request the size of the buffer
+> - * required.
+> + * @inode into *(@buffer).  The remaining size of @buffer is specified by
+> + * *(@remaining_size).  *(@buffer) may be NULL to request the size of the
+> + * buffer required. Updates *(@buffer) and *(@remaining_size).
+>   *
+> - * Return: Returns number of bytes used/required on success.
+> + * Return: Returns 0 on success, or -errno on failure.
+>   */
+>  int security_inode_listsecurity(struct inode *inode,
+> -				char *buffer, size_t buffer_size)
+> +				char **buffer, ssize_t *remaining_size)
+>  {
+>  	if (unlikely(IS_PRIVATE(inode)))
+>  		return 0;
+> -	return call_int_hook(inode_listsecurity, inode, buffer, buffer_size);
+> +	return call_int_hook(inode_listsecurity, inode, buffer, remaining_size);
+>  }
+>  EXPORT_SYMBOL(security_inode_listsecurity);
+>  
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index b8115df536ab..e6c98ebbf7bc 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -3612,16 +3612,12 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
+>  	return 0;
+>  }
+>  
+> -static int selinux_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
+> +static int selinux_inode_listsecurity(struct inode *inode, char **buffer,
+> +				ssize_t *remaining_size)
+>  {
+> -	const int len = sizeof(XATTR_NAME_SELINUX);
+> -
+>  	if (!selinux_initialized())
+>  		return 0;
+> -
+> -	if (buffer && len <= buffer_size)
+> -		memcpy(buffer, XATTR_NAME_SELINUX, len);
+> -	return len;
+> +	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SELINUX);
+>  }
+>  
+>  static void selinux_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop)
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 99833168604e..3f7ac865532e 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -1619,17 +1619,12 @@ static int smack_inode_getsecurity(struct mnt_idmap *idmap,
+>   * smack_inode_listsecurity - list the Smack attributes
+>   * @inode: the object
+>   * @buffer: where they go
+> - * @buffer_size: size of buffer
+> + * @remaining_size: size of buffer
+>   */
+> -static int smack_inode_listsecurity(struct inode *inode, char *buffer,
+> -				    size_t buffer_size)
+> +static int smack_inode_listsecurity(struct inode *inode, char **buffer,
+> +				    ssize_t *remaining_size)
+>  {
+> -	int len = sizeof(XATTR_NAME_SMACK);
+> -
+> -	if (buffer != NULL && len <= buffer_size)
+> -		memcpy(buffer, XATTR_NAME_SMACK, len);
+> -
+> -	return len;
+> +	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SMACK);
+>  }
+>  
+>  /**
