@@ -1,107 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363FF70831;
-	Mon, 28 Apr 2025 23:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771E7212FB8
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745884201; cv=none; b=VQJdzn8fY5drjYclcayvJZACahRIdeWMKqyrta0IxX51u/prNDgJQyKroekNFjUtda2pKalVOu5FbI2iCVOvLj2wDLaMfKosxzQAK4U+/rWNg8wtM4mYaLQTUFJLL3bg+XDMrB3y0+eIa35I62z+YXsIdY0qCzDQIUpr9q2YZt8=
+	t=1745884531; cv=none; b=WZMe4dLILQhZusLxKCKugyLzX96O2+u2B20Iu1HVv4SBN3zGpyCaFmRJfG1sL+fqLDp1hOK9CvRJhdoWM8rr5mBrx+F/eJtNcS54sL5OrZPQArOCpshUpA3qUWNy5JzkaFeRxw4Rbwr/3pdVrRmbAgHXILqkO73Wl6lKXRUezlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745884201; c=relaxed/simple;
-	bh=vsCYRJOu2+7O/vaGXslstlkjSpMCXUDLAHK65Ew0rG0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Xpmro3vUSm6tUYe5s2e9Bv6M75be7CG9elwNLbbjZ4pnZG1fjJ4+aI7fn9MM2cdRLTqvS+HlXizfJ81U8oFV7ftcSf9xfYFHOdrkvpPgj/maAoxIURUL95BiHV8c4JpzgTOFxm5ilWp9IqkSN3zVsAcmeszeNVmhRIcLkkFke3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGJP4i/u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745884531; c=relaxed/simple;
+	bh=LJobFLI9bUS7cIOXH6lW9QHErDLL0/CVqlV/7NhJ0Ck=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X7uPh7wAGBeurBN++jssL0geNJfZSDGnKiP6AxqZA0xD5WC8AIn5Ull8efUoUTfp5ulEgDrwfWp9iJdpEYOFxXpk4mdGXyKQ8a1/ykQy1Un+uuiHSeFCd0RWNGwDHPUyBB1qEA0X1cmRuULzV3MIO7kIiXvIE1n4PbqprDKdcWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nTGi+hhG; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGJP4i/u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A6AC4CEE4;
-	Mon, 28 Apr 2025 23:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745884200;
-	bh=vsCYRJOu2+7O/vaGXslstlkjSpMCXUDLAHK65Ew0rG0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aGJP4i/u7wVlXy+99f3czCJoOsn4bi4HjuC4uYD0eZ7DUNidJen8244Hc5WgthPof
-	 xDwv5RreNyi0aZOIMyRC0qnk154UIAX0cN4yZyR+N+53PRCBLF/xwrkAaBRRr1vZVU
-	 iCSP7q8GciiXf1yZIym1xY6MU1eLTJrfZgBJMQ8YbqEg6CFYVrI3WAoY888ZQWJm4E
-	 NTcCeUS2nIA84m0TuKhDRddrr3YXCJkzd+Eic63sX4vhsCHEPjgzPqKgBtzefarWMo
-	 ERTHZYuurxiVhCgkHMwUYhls6WP/8qcPEUACvh1fDucevmJcB4Qx8V8D5NyhzPwJAi
-	 Is1By8WOGx3jw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADEC83822D4A;
-	Mon, 28 Apr 2025 23:50:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nTGi+hhG"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c922169051so292018385a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745884528; x=1746489328; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LJobFLI9bUS7cIOXH6lW9QHErDLL0/CVqlV/7NhJ0Ck=;
+        b=nTGi+hhGTm2sh/Y3PlnAGmImJphWmL37M8RcAmWcF8Op4Z/M0iPEm2M8QUeGKA8LfG
+         WrEC0LHNUtYYiufme7KNydxn1I483kLRoyBG8r/P2HL0sOl9SRiSHJkuzrZDJw9r+bWg
+         A5oJ3kdmkD8HX+RgVrQg74Pnm49QKHbh4QNLI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745884528; x=1746489328;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LJobFLI9bUS7cIOXH6lW9QHErDLL0/CVqlV/7NhJ0Ck=;
+        b=Y1aWtYOg9te9Y+kCaKAiK+3TyjhWFCnLAQY0T6RzbSUjofay3dbxfqLHAPKPC3RSBC
+         XDJuhEVZW3MLenU1gIxaEjdC7xCcdYP0in41phzkNcK+peeLAmDTCtoCOp96doDby+iw
+         mJfW4NlMR9TjcoKETHAx8x/rEaVgdyLqR2TthNV6VPa8ut3N6wGWEdbMYuysB0xH81ZY
+         DqjpglL0XxgZgZF9T9cmR1DahfEgcPKCK9/UtkdVErF3ybsdAB4oQLctUL7iNoCGOLsU
+         U5d99epnyYYpzuYZdpB7UL/YyGCKCM3dbbBA1L6YHJsnQVrjNfj8uJJMd1TWznCILnnW
+         eHkw==
+X-Gm-Message-State: AOJu0YytXCGJdDtAJDhszdBXsPLt83cUPS6faaccLocFx3HD4UlbpL//
+	BIvpanrfXn/+cFhFNwT116vL70fbj8GFbejezK91PgjVUazlRLdPDOsdZHh97SMfkaEpt4LOoxc
+	dbItizW8JmW6YdWvqLnmRLdYTYG3U/HUHdgh8
+X-Gm-Gg: ASbGncvo4TRdunApNAwaFsKxqu4i+sQ+lHud3UjGLehM14S9lO0MHtHtcxaPzP8eEZO
+	MocdgvsuWujEL8U9o5UF53KuVEubz1wRowWeUxNm9o5JEtlC1gCVDkFWHo/6dkpKjZxCdVE9Xi+
+	q5AACNq37hZJM7Lz12KstZdxgwi7vnnzDVuvEtQ8+Y1bkIt5kSqRBViC7UXK6h
+X-Google-Smtp-Source: AGHT+IEoQ9Mtpgq6IV7o2myPZsE3iTvANfEmqsxJiZUsKgJmcwAzipipK3XToxVL1xycDMjbiz/L+FlGLzhvF5FKt7E=
+X-Received: by 2002:a05:620a:2610:b0:7c5:5e5b:2fdb with SMTP id
+ af79cd13be357-7cabddaf1cfmr245880985a.41.1745884528355; Mon, 28 Apr 2025
+ 16:55:28 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 28 Apr 2025 16:55:27 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 28 Apr 2025 16:55:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/8] Phase out hybrid PCI devres API
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174588423950.1081621.6688170836136857875.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Apr 2025 23:50:39 +0000
-References: <20250425085740.65304-2-phasta@kernel.org>
-In-Reply-To: <20250425085740.65304-2-phasta@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: sgoutham@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, gakula@marvell.com,
- sbhatta@marvell.com, hkelam@marvell.com, bbhushan2@marvell.com,
- taras.chornyi@plvision.eu, venza@brownhat.org, hkallweit1@gmail.com,
- linux@armlinux.org.uk, deller@gmx.de, horms@kernel.org,
- jacob.e.keller@intel.com, mingo@kernel.org, tglx@linutronix.de,
- viro@zeniv.linux.org.uk, shannon.nelson@amd.com, sd@queasysnail.net,
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+In-Reply-To: <6eeb7bca-6018-46de-a7db-7189d60c0942@oss.qualcomm.com>
+References: <20250416000208.3568635-1-swboyd@chromium.org> <20250416000208.3568635-2-swboyd@chromium.org>
+ <6eeb7bca-6018-46de-a7db-7189d60c0942@oss.qualcomm.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.12.dev8+g17a99a841c4b
+Date: Mon, 28 Apr 2025 16:55:27 -0700
+X-Gm-Features: ATxdqUHpAwR2wd_47EUgCGBgUk1wdQDezy5iMkujDq5bA3ST_h6HrhmS7YUoEN4
+Message-ID: <CAE-0n53ypGBXAt3frrbfAsbJZEkxK4BCB0+3MWOFRxZ9E+6P9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/7] platform/chrome: cros_ec_typec: No pending status
+ means attention
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev, 
+	Pin-yen Lin <treapking@chromium.org>, 
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>, 
+	Jameson Thies <jthies@google.com>, Andrei Kuchynski <akuchynski@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Quoting Dmitry Baryshkov (2025-04-22 06:38:17)
+> On 16/04/2025 03:02, Stephen Boyd wrote:
+> > If we aren't expecting a status update when
+> > cros_typec_displayport_status_update() is called then we're handling an
+> > attention message, like HPD high/low or IRQ. Call
+> > typec_altmode_attention() in this case so that HPD signaling works in
+> > the DP altmode driver.
+>
+> Fixes?
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+I didn't put a fixes because it only matters to make the displayport
+altmode driver work with the typec port which isn't used so far on DT
+platforms. I view it as a new feature, not a fix for an existing
+feature, because we don't use the altmode driver.
 
-On Fri, 25 Apr 2025 10:57:33 +0200 you wrote:
-> Changes in v2:
->   - Rename error path. (Jakub)
->   - Apply some RBs
-> 
-> Fixes a number of minor issues with the usage of the PCI API in net.
-> Notbaly, it replaces calls to the sometimes-managed
-> pci_request_regions() to the always-managed pcim_request_all_regions(),
-> enabling us to remove that hybrid functionality from PCI.
-> Philipp Stanner (8):
->   net: prestera: Use pure PCI devres API
->   net: octeontx2: Use pure PCI devres API
->   net: tulip: Use pure PCI devres API
->   net: ethernet: natsemi: Use pure PCI devres API
->   net: ethernet: sis900: Use pure PCI devres API
->   net: mdio: thunder: Use pure PCI devres API
->   net: thunder_bgx: Use pure PCI devres API
->   net: thunder_bgx: Don't disable PCI device manually
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2,1/8] net: prestera: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/66ada7471155
-  - [v2,2/8] net: octeontx2: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/48217b834529
-  - [v2,3/8] net: tulip: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/adc36d0914f6
-  - [v2,4/8] net: ethernet: natsemi: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/2a5a74947a2b
-  - [v2,5/8] net: ethernet: sis900: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/6e5f7a5b5e0c
-  - [v2,6/8] net: mdio: thunder: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/fad4d94d9ae5
-  - [v2,7/8] net: thunder_bgx: Use pure PCI devres API
-    https://git.kernel.org/netdev/net-next/c/06133ddc3590
-  - [v2,8/8] net: thunder_bgx: Don't disable PCI device manually
-    https://git.kernel.org/netdev/net-next/c/1549bd06e340
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+It also seems like it was intentional on ACPI systems to only handle
+mode entry/exit and not HPD signaling per my reading of the mailing
+list.
