@@ -1,252 +1,191 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D64026E15A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B69E86323
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846202; cv=none; b=ALIfGmpXOOQhs/s9Ug4LM1tY6PEnKk4Xq3jvPVnEohO5D/R64+XevTkpU7bIXiKB2A3aufqVhTCPagX3EpVv4LJ/mYY9wSWdT06f5uRHisFSzFRnR358pUPOfz1LU9ANkTuHALzHIWIStkgMAZX8G+1zn38SH5OGKfRHogDnFmE=
+	t=1745846318; cv=none; b=OubHbK4Nlg9m2q8cPIb/0OxU+z2RnmvzcPOJpdb59VgIH2ufC2NDwQz8pCmoc7Uzi+ulxkiKSAUge2T84C7i+FxaDGZgVsFRPG8zt7oRupuipFEP3SvoBOJwnIXQEX7kLinuNjn6wIxsnsDjxEztLPNLhJUUxBCgFLIxD/367Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846202; c=relaxed/simple;
-	bh=aqHvc6wsgEuHFCjS9WoGJAep4wKuzU0Fsy21Owez9Ao=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NMC1IR4f9s+rqpgatxp302IC8Pi8usp+Nh+Lk4ifmlKLPoTz5h2Al4oZ5+g/FSlzLDRHDEgbvp6zrvC3VGvgbp2Jdop141cLkGhzbsEJ7SrWgapfaFzZ5JuQIMMsIbIQ5CZyNpOUhfyoiClTfqfC9oTPWJPqOGurtzju5kfz/eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IRbRJrde; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745846318; c=relaxed/simple;
+	bh=cgGOdJdQKd3Sd5NLjSW5tNE5E8ySLu8H4Y6uiXifc/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fCuqJSxWtMlc2ureHFV7ljha4xxR0swhiJ7ZtN2nmdEjJhIX5Q3fkhpTiD3S477wEXe25VPq0ay3lXGFDTYA1HL1LHViIF+65dYrcTwfM1AA6To3HrlOi/m1Q7xOMYbvTmwxIO8NvkC//XB69Cvr+f4a5xng/Ru9SXlvJHEz9J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vKjNnPZu; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IRbRJrde"
-Message-ID: <29c70c06-42c2-4bc0-a56e-443a1200fde0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745846196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZDpYjstdd/DhgHEufcBds9bwNo3Lzx1GtED2qA5h/CM=;
-	b=IRbRJrdeO0WfMYiAZuGndCEUziv3aIyli9DwyUUonpjfGgCWLCpIDGDqWqQdrOhRbsjA4D
-	t8wNN1hTguxQA+36bugJrqOpBYh1m9X+HQIAQhQMMBjkALjwcztCFD80XfmQUmQ1x3oXSh
-	mYWN98Eim6j2eqABxeIac0bJhrWG8Nk=
-Date: Mon, 28 Apr 2025 21:16:16 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vKjNnPZu"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-440685d6afcso47087015e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745846314; x=1746451114; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QLjtDonXd6nOPiRG5veDBiA9DDAtKfzTU28EI3o9QMU=;
+        b=vKjNnPZuUMWCMgarIuUnftlQ9fHDwAUQOpv4x2zGvZHrn0+9wge39X8AqAU9dg2O0G
+         0yx1kCJ6ILZw88U9NhGFqXlUTU8AMXzqyPy2L0TgVCtrqSzIGSo5xx+cAlRf4WJIUYse
+         UpwB0mXZ5r3qs1tgZCy5SoNZgXEHPt23RyTmicDc0Ba2VFXZyi9lmJzwCND6YYGD/ZPc
+         V7LF0dMuddTAPdz3k5NZXt5YsdMnEH2Jq2CFUFKR5UBRFaAPj4CxLQkeKLFlvCLV6Xto
+         /pDzFKCH0zbbh3R4DWdZMurEinVgCO05cVzaFL2juaijasPj0nX2Ln0EI5K1y8/CbOC6
+         bwBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745846314; x=1746451114;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QLjtDonXd6nOPiRG5veDBiA9DDAtKfzTU28EI3o9QMU=;
+        b=kKT+Sw0u+rVdFPex3PMoTMC4KBdbKNGe6L0PYXFuuNGL9x5T2t/Iy+eX3oG/JF/5VD
+         +5o6iC/K0hhqVDFTWqkib1URyTRLAwnFd4guUqkySQCMe54Ae2uGTa8XpmblFqOXKPL/
+         DljEMgK3cJRYRGwiXhdcZQFdWh/0Whq3VpJ5O27lQqYiR2K7ufL0xTEYaOZk/sSrd0/A
+         TEXxCtPB8HE14SLLKBMsbIFFsOxC4S67e3JNsz7Gu7oqKMGq/xN2xPzB/tHBqQXf9OIF
+         /Wd+ODbDGbCucXWHdQOQHiXOU3n6GooTE/9Dql56j6yYklTtf3S1Jtq99PvdKS+9C6lH
+         B0uA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdDsZc/GjCfAfpX76LpRbv4TMgG16NbbVX4sIyCPnq1VwIsIkj6KUJto+IyjsHjtiF1Z04sViENpIyOO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2CabZw4y4TZkfbbvcyjPFdIyVKcrHIViU9mJGiwAClV1y4W74
+	VJAaEShji97zULvK2PmldpesxplITodVgXYzVwg9UvoefsWoS4e5Z4lMcwQdwdU=
+X-Gm-Gg: ASbGncvifZInynP6k2lseIgxJof+bNAn5Rk7l1TaQ4nwCl8qUbZb0JuqZuronNhvG3V
+	+yOU3UQ/k1DRjyq1pipvyjH0Kdsvt43PXKkyNGmIK11QoaG05+XbeRl/4t7W3mVTZOkesQsFXPL
+	ZNdC59Oa/nZYxT2aNg3B8Yf6WVcdSsMinl5kZsgb2IR52b8LpgQijYUHwG/7BBp8mmXYwCOqlVV
+	1F1GyNuYQSqRNNlZyNL5zLTVRRQNcCo0bRPFFVdn8LfGrTW2Yy7nSVuTFd/6TvMQMraIM0lvU5h
+	EHZH/gqWfvIibduILeU2uVoeYCbHArxcxdbXBDz90sAFxet7lA==
+X-Google-Smtp-Source: AGHT+IEstSuLcp0r6LTE8DVYxX00SLEy2jiuNAsyGuZuIWabf9Oo9L//GavpHSs2zltChGRSJdTLVA==
+X-Received: by 2002:a05:600c:a181:b0:43d:fa59:be38 with SMTP id 5b1f17b1804b1-440abe464eamr46893135e9.32.1745846314445;
+        Mon, 28 Apr 2025 06:18:34 -0700 (PDT)
+Received: from [192.168.0.14] ([82.76.212.167])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a538f4aasm122672975e9.38.2025.04.28.06.18.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 06:18:34 -0700 (PDT)
+Message-ID: <d8b619d7-6480-411d-95cb-496411b47ff8@linaro.org>
+Date: Mon, 28 Apr 2025 14:18:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 6/7] mm: Batch around can_change_pte_writable()
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
+ the future
+To: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>
+Cc: Joe Damato <jdamato@fastly.com>, linux-fsdevel@vger.kernel.org,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Sridhar Samudrala <sridhar.samudrala@intel.com>,
+ Alexander Duyck <alexander.h.duyck@intel.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250416185826.26375-1-jdamato@fastly.com>
+ <20250426-haben-redeverbot-0b58878ac722@brauner>
+ <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
- will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
- peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
- baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250428120414.12101-1-dev.jain@arm.com>
- <20250428120414.12101-7-dev.jain@arm.com>
- <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
-In-Reply-To: <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2025/4/28 20:50, Lance Yang wrote:
-> Hey Dev,
-> 
-> On 2025/4/28 20:04, Dev Jain wrote:
->> In preparation for patch 7, we need to properly batch around
->> can_change_pte_writable(). We batch around pte_needs_soft_dirty_wp() by
->> the corresponding fpb flag, we batch around the page-anon exclusive check
->> using folio_maybe_mapped_shared(); modify_prot_start_ptes() collects the
->> dirty and access bits across the batch, therefore batching across
->> pte_dirty(): this is correct since the dirty bit on the PTE really
->> is just an indication that the folio got written to, so even if
->> the PTE is not actually dirty (but one of the PTEs in the batch is),
->> the wp-fault optimization can be made.
+On 4/28/25 1:14 PM, Jan Kara wrote:
+> On Sat 26-04-25 14:29:15, Christian Brauner wrote:
+>> On Wed, Apr 16, 2025 at 06:58:25PM +0000, Joe Damato wrote:
+>>> Avoid an edge case where epoll_wait arms a timer and calls schedule()
+>>> even if the timer will expire immediately.
+>>>
+>>> For example: if the user has specified an epoll busy poll usecs which is
+>>> equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
+>>> unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
+>>> consumed the entire timeout duration so it is unnecessary to induce
+>>> scheduling latency by calling schedule() (via schedule_hrtimeout_range).
+>>>
+>>> This can be measured using a simple bpftrace script:
+>>>
+>>> tracepoint:sched:sched_switch
+>>> / args->prev_pid == $1 /
+>>> {
+>>>   print(kstack());
+>>>   print(ustack());
+>>> }
+>>>
+>>> Before this patch is applied:
+>>>
+>>>   Testing an epoll_wait app with busy poll usecs set to 1000, and
+>>>   epoll_wait timeout set to 1ms using the script above shows:
+>>>
+>>>      __traceiter_sched_switch+69
+>>>      __schedule+1495
+>>>      schedule+32
+>>>      schedule_hrtimeout_range+159
+>>>      do_epoll_wait+1424
+>>>      __x64_sys_epoll_wait+97
+>>>      do_syscall_64+95
+>>>      entry_SYSCALL_64_after_hwframe+118
+>>>
+>>>      epoll_wait+82
+>>>
+>>>   Which is unexpected; the busy poll usecs should have consumed the
+>>>   entire timeout and there should be no reason to arm a timer.
+>>>
+>>> After this patch is applied: the same test scenario does not generate a
+>>> call to schedule() in the above edge case. If the busy poll usecs are
+>>> reduced (for example usecs: 100, epoll_wait timeout 1ms) the timer is
+>>> armed as expected.
+>>>
+>>> Fixes: bf3b9f6372c4 ("epoll: Add busy poll support to epoll with socket fds.")
+>>> Signed-off-by: Joe Damato <jdamato@fastly.com>
+>>> Reviewed-by: Jan Kara <jack@suse.cz>
+>>> ---
+>>>  v2: 
+>>>    - No longer an RFC and rebased on vfs/vfs.fixes
+>>>    - Added Jan's Reviewed-by
+>>>    - Added Fixes tag
+>>>    - No functional changes from the RFC
+>>>
+>>>  rfcv1: https://lore.kernel.org/linux-fsdevel/20250415184346.39229-1-jdamato@fastly.com/
+>>>
+>>>  fs/eventpoll.c | 10 +++++++++-
+>>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>>> index 100376863a44..4bc264b854c4 100644
+>>> --- a/fs/eventpoll.c
+>>> +++ b/fs/eventpoll.c
+>>> @@ -1996,6 +1996,14 @@ static int ep_try_send_events(struct eventpoll *ep,
+>>>  	return res;
+>>>  }
+>>>  
+>>> +static int ep_schedule_timeout(ktime_t *to)
+>>> +{
+>>> +	if (to)
+>>> +		return ktime_after(*to, ktime_get());
+>>> +	else
+>>> +		return 1;
+>>> +}
+>>> +
+>>>  /**
+>>>   * ep_poll - Retrieves ready events, and delivers them to the caller-supplied
+>>>   *           event buffer.
+>>> @@ -2103,7 +2111,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+>>>  
+>>>  		write_unlock_irq(&ep->lock);
+>>>  
+>>> -		if (!eavail)
+>>> +		if (!eavail && ep_schedule_timeout(to))
+>>>  			timed_out = !schedule_hrtimeout_range(to, slack,
+>>>  							      HRTIMER_MODE_ABS);
 >>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>   include/linux/mm.h | 4 ++--
->>   mm/gup.c           | 2 +-
->>   mm/huge_memory.c   | 4 ++--
->>   mm/memory.c        | 6 +++---
->>   mm/mprotect.c      | 9 ++++++---
->>   5 files changed, 14 insertions(+), 11 deletions(-)
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 5eb0d77c4438..ffa02e15863f 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -2710,8 +2710,8 @@ int get_cmdline(struct task_struct *task, char 
->> *buffer, int buflen);
->>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
->>                           MM_CP_UFFD_WP_RESOLVE)
->> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
->> long addr,
->> -                 pte_t pte);
->> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
->> long addr,
->> +                 pte_t pte, struct folio *folio, unsigned int nr);
->>   extern long change_protection(struct mmu_gather *tlb,
->>                     struct vm_area_struct *vma, unsigned long start,
->>                     unsigned long end, unsigned long cp_flags);
->> diff --git a/mm/gup.c b/mm/gup.c
->> index 84461d384ae2..6a605fc5f2cb 100644
->> --- a/mm/gup.c
->> +++ b/mm/gup.c
->> @@ -614,7 +614,7 @@ static inline bool can_follow_write_common(struct 
->> page *page,
->>           return false;
->>       /*
->> -     * See can_change_pte_writable(): we broke COW and could map the 
->> page
->> +     * See can_change_ptes_writable(): we broke COW and could map the 
->> page
->>        * writable if we have an exclusive anonymous page ...
->>        */
->>       return page && PageAnon(page) && PageAnonExclusive(page);
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 28c87e0e036f..e5496c0d9e7e 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -2032,12 +2032,12 @@ static inline bool 
->> can_change_pmd_writable(struct vm_area_struct *vma,
->>           return false;
->>       if (!(vma->vm_flags & VM_SHARED)) {
->> -        /* See can_change_pte_writable(). */
->> +        /* See can_change_ptes_writable(). */
->>           page = vm_normal_page_pmd(vma, addr, pmd);
->>           return page && PageAnon(page) && PageAnonExclusive(page);
->>       }
->> -    /* See can_change_pte_writable(). */
->> +    /* See can_change_ptes_writable(). */
->>       return pmd_dirty(pmd);
->>   }
->> diff --git a/mm/memory.c b/mm/memory.c
->> index b9e8443aaa86..b1fda3de8d27 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -750,7 +750,7 @@ static void restore_exclusive_pte(struct 
->> vm_area_struct *vma,
->>           pte = pte_mkuffd_wp(pte);
->>       if ((vma->vm_flags & VM_WRITE) &&
->> -        can_change_pte_writable(vma, address, pte)) {
->> +        can_change_ptes_writable(vma, address, pte, NULL, 1)) {
->>           if (folio_test_dirty(folio))
->>               pte = pte_mkdirty(pte);
->>           pte = pte_mkwrite(pte, vma);
->> @@ -5767,7 +5767,7 @@ static void numa_rebuild_large_mapping(struct 
->> vm_fault *vmf, struct vm_area_stru
->>               ptent = pte_modify(ptent, vma->vm_page_prot);
->>               writable = pte_write(ptent);
->>               if (!writable && pte_write_upgrade &&
->> -                can_change_pte_writable(vma, addr, ptent))
->> +                can_change_ptes_writable(vma, addr, ptent, NULL, 1))
->>                   writable = true;
->>           }
->> @@ -5808,7 +5808,7 @@ static vm_fault_t do_numa_page(struct vm_fault 
->> *vmf)
->>        */
->>       writable = pte_write(pte);
->>       if (!writable && pte_write_upgrade &&
->> -        can_change_pte_writable(vma, vmf->address, pte))
->> +        can_change_ptes_writable(vma, vmf->address, pte, NULL, 1))
->>           writable = true;
->>       folio = vm_normal_folio(vma, vmf->address, pte);
->> diff --git a/mm/mprotect.c b/mm/mprotect.c
->> index 33eabc995584..362fd7e5457d 100644
->> --- a/mm/mprotect.c
->> +++ b/mm/mprotect.c
->> @@ -40,8 +40,8 @@
->>   #include "internal.h"
->> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
->> long addr,
->> -                 pte_t pte)
->> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
->> long addr,
->> +                  pte_t pte, struct folio *folio, unsigned int nr)
->>   {
->>       struct page *page;
->> @@ -67,6 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct 
->> *vma, unsigned long addr,
->>            * write-fault handler similarly would map them writable 
->> without
->>            * any additional checks while holding the PT lock.
->>            */
->> +        if (unlikely(nr != 1))
->> +            return !folio_maybe_mapped_shared(folio);
->> +
->>           page = vm_normal_page(vma, addr, pte);
->>           return page && PageAnon(page) && PageAnonExclusive(page);
->>       }
+>> Isn't this buggy? If @to is non-NULL and ep_schedule_timeout() returns
+>> false you want to set timed_out to 1 to break the wait. Otherwise you
+>> hang, no?
 > 
-> IIUC, As mentioned in the comment above, we should do the same anonymous 
-> check
-> to large folios. And folio_maybe_mapped_shared() already handles both 
-> order-0
-> and large folios nicely, so we could simplify the logic as follows:
+> Yep, looks like that. Good spotting!
+> 
 
-Forget to add:
+I second that. Also, isn't ep_schedule_timeout buggy too? It compares a
+timeout value with the current time, that has to be reworked as well.
 
-Note that the exclusive flag is set only for non-large folios or the head
-page of large folios during mapping, so PageAnonExclusive() will always
-return false for tail pages of large folios, IIUC.
+I see this patch already queued for stable/linux-6.14.y. What's the plan
+with it?
 
 Thanks,
-Lance
-
-> 
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index 1605e89349d2..df56a30bb241 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -43,8 +43,6 @@
->   bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
-> long addr,
->                                pte_t pte, struct folio *folio, unsigned 
-> int nr)
->   {
-> -       struct page *page;
-> -
->          if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
->                  return false;
-> 
-> @@ -67,11 +65,7 @@ bool can_change_ptes_writable(struct vm_area_struct 
-> *vma, unsigned long addr,
->                   * write-fault handler similarly would map them 
-> writable without
->                   * any additional checks while holding the PT lock.
->                   */
-> -               if (unlikely(nr != 1))
-> -                       return !folio_maybe_mapped_shared(folio);
-> -
-> -               page = vm_normal_page(vma, addr, pte);
-> -               return page && PageAnon(page) && PageAnonExclusive(page);
-> +               return folio_test_anon(folio) && ! 
-> folio_maybe_mapped_shared(folio);
->          }
-> 
->          VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
-> -- 
-> 
-> Thanks,
-> Lance
-> 
->> @@ -222,7 +225,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>                */
->>               if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
->>                   !pte_write(ptent) &&
->> -                can_change_pte_writable(vma, addr, ptent))
->> +                can_change_ptes_writable(vma, addr, ptent, folio, 1))
->>                   ptent = pte_mkwrite(ptent, vma);
->>               ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
-> 
-
+ta
