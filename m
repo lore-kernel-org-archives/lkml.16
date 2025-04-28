@@ -1,246 +1,158 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBF528F937
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E606294A0C
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745870153; cv=none; b=HEjvpPNPrbA/HaMjxcBWlNJ7At27CwcGcfTQ4lGKT0bi3gbUJNCkVbi4fx3RHqwlKpAR49cNmzOUW4N8s2TZjaSXHoEXSY7bYaVMVP3KUJxLrjPfz/VP6ks35iHOwMO7WSVb+QIuCQQLPt+CRqoz8+Ub4/xDqkxrWjZAIXhGr6E=
+	t=1745870236; cv=none; b=kXd5DcWEqjw0EAfFoaFEUMelJYHE4qB9l7BOdc09LPJEOYVnvbK3peOjcpf8u711XAAmBFC1gV/gHPhYqn7Qwrt6ebe/M7QMV5GEy9UF9uz5Jk+AFqQHAxvYQpKkMd5Qe2p/JwHw/0+lEgZdDKHrEBR6ne5cT60lI/odJDiLZ/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745870153; c=relaxed/simple;
-	bh=MaA81J+3HtofT3J1tOR6wMfPW9HqOJsPPsy7qd6wKiU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uVDi4DrjJLQZQCjneDZzwjoHtBEaZnGIa0s8YEjCVj+9ae7N1jMu9Av6bqubVA+vo2VycfURx6gE9SCSFgBBhe5ri4c9B2JPRC4QjFTwlYvk5CV1dBk/TCxf986VmQY6JfM7G7K3B49qKwfVd1k1YZnOBwj2EvNlL+WUu/40mok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--brianvv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yxv0FS0C; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1745870236; c=relaxed/simple;
+	bh=0MR+x5RCKtHn9xBhZphcnfg1mkJUMUmGnpKVvObhpFQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AlC6lDZtktrOTNxmKbAM59LpZxF2ur3ks9wOYtdQ3V8V95okiJ/yo8scOa8levIO65+0kgv1f03O/CMFaJiyAjlXthZHAb+pYqsw0+/igfJhzClLAO1YcFf9jPLDQmMLbNvLhtz/V9WQct8RxKjZmOaWkQ4ZHLAqw3BK7x6uq18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WqSO9uIk; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--brianvv.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yxv0FS0C"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1c122308dcso2302943a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:55:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WqSO9uIk"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47666573242so85051cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745870150; x=1746474950; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WF1rdyAsoL1EvhWVSLVqE87e6m1CGCQ1ONSXKdBqozE=;
-        b=Yxv0FS0C8oW7Q+cTSSiVaFQtW1pGKzXw+jspheiK7MTQCyMrNVDjEal3Zm07WLPs6K
-         IywT32VR3Zn+2jYTx97T9IKMvGldz14Ztio+NuZ9K6D4cl8YjhAIJX3Aq87JkAeXyuDN
-         4IgF3huZYydXsZk/3nmlV811gi+oLkFMcg3vDoAxhGsjlvDU3TzLRw0MjV2h+vbIEvKd
-         pjl7BvzGDl63saNVXzLukonOH5kuxfXQX2/L6JXGn/jnmFtdGyaAmnjFqpW0uOH6DpRn
-         RLdrOod1Gu9QffK++CMTMkb0GCdfjzfKAZtLIaPlSCTXGNskr2yDELo1lr3jBONEdejI
-         GLVQ==
+        d=google.com; s=20230601; t=1745870233; x=1746475033; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUGna70WQpCWkTeNNt6g447tdKBI53CPsya1LM9jehw=;
+        b=WqSO9uIknx9gC0PYwxfBFd10Y1aVgzWSsscVzUWEdMebrTiaa7AroxoICVGiD3y1gj
+         Um1aGkaXQvi0ejgRKkEfpg4EdtVANlcWYGVXoBOv0fV/aTexu/aAxcJQ+EwPoeHKBm29
+         o7TyVx518cM01sXArvPSbw2/so7nFb+V9A4o5E2gJl82j8p8L+wGLfzld3wKM4rgjC/5
+         khi0XnSkRLX4vD9L4YyMqGqHFZq2WkeDGtrfadWWSQkIRUrufdERnqGl0iwEtIz20RSX
+         ElYfneRkVA6Qxplz/VQVFV0mx7BNwM5nCHJEIBK+u3kNIqBtamErvXbBACcYXyojoipN
+         z9kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745870150; x=1746474950;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WF1rdyAsoL1EvhWVSLVqE87e6m1CGCQ1ONSXKdBqozE=;
-        b=JmUvWI9daMsuOW51fOWyxCDQKDc2jQocOgc7aP4yDpaTRfd8FcnQXA3ZzyuijsFEl6
-         0/PNJYkopX7mQFidzvfWnjkBYvIBNCcTsphFQ1DdlYbKMp4J+MczN6/IQeEGsEq4nDkP
-         q8FXdSB5HmPwzr7RdsNzW3XGLaXonzwhhLy8PPdejNY33h4xNIb5d6OsVXGG+ZitK5nu
-         91z0oQDvmyWIma83ft/8X0ppMLtxqY0k75JODBG0w2VhWhv47VNgVGHnFKyG5Zs4MWpz
-         w+FB2q0pwh7W1JBmMcYrDmap0qWzdfN1cxEcNKKK6o8/eBWOcieOvH7uYXdyEuwzUbP0
-         J/tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFVXRaJLIt/6djceCBeUlklcD2+hgv5FgwFpXeKvFprSCKmQSKN38jb2MGQhuG8GSQxWOxmcaEGLn4O9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytDRbq0+txuO2Igjjza2mWM1cSpkD96hfT/P8aqLdzfjU+ASZV
-	g+UQqeuxSPD9GGk6iGUb9QDCgDrlNEXtmKJlRdH6aIt54GXRyH5nb/BICmsJgYY8O2qzkWY9spS
-	WihVmpA==
-X-Google-Smtp-Source: AGHT+IGgzi/mmJ2yTIATM1jhnypep6TvOgCGYfDJkP79jyyBpEEK6EumSZueXfXDpyYjfteBqr8NEmlR8IGO
-X-Received: from pfbcl15.prod.google.com ([2002:a05:6a00:32cf:b0:740:65f:220a])
- (user=brianvv job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:cfa4:b0:1f5:58b9:6d97
- with SMTP id adf61e73a8af0-2093e52803amr1192392637.35.1745870150677; Mon, 28
- Apr 2025 12:55:50 -0700 (PDT)
-Date: Mon, 28 Apr 2025 19:55:32 +0000
+        d=1e100.net; s=20230601; t=1745870233; x=1746475033;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KUGna70WQpCWkTeNNt6g447tdKBI53CPsya1LM9jehw=;
+        b=Qfw7w6EllUTmf5ArUhjcS0Ao5MGW5zTZc8rMXxV6Pow4+T5dXtg2CC8y0rJM2Cmd2v
+         u4EYrtClaN/mcpfMlsRudEPlbzB/2pLK4WqJ0P9M6RLu/zlIRpg44RtMN/2QjSgihs6S
+         NKgLuCAESX2wQzstblqSIq3hq+TKHm+7wdAnRIcjq3Uq+yqWb8k+D+CnVnpBzsDnRE1m
+         YluMS8NAILKt/pdfwKq/nZjq/zMcjUfzkwdZEibfx3sqxk/MbzR797GfKDmb10p15hLH
+         lrVgOpho+TMG0wrJzet7yt6GlWoasyAw2kC5uDHgm+OQYlFn8qlWSIHrvJ3oiD6Eb/vW
+         7skA==
+X-Forwarded-Encrypted: i=1; AJvYcCU82bZN5P4/fs78hqoGoKTJKd39pDB/QI3pUcgAIyEwSkSESN8PwuuVSEV0Zo6d+5Z0jLvuOdTaWcPXnSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr6vE3Qz4i7uwIcT9BLC91WSdhgA4fsgiuyl4tDuNaaM/f0y9H
+	ZksozuHWhmvcE/7BqzargqX0WP0inGYltvUEPn1RvghyBtqNrQ08kr9wGfM1tk7+UPv2LrJide5
+	N10JSZGxJTgLnQSREE9iqbOC1UTCjsTb1mJ7A
+X-Gm-Gg: ASbGnctjl91VRmDg2DrfIVGF7/gOEnByjdk18zKklfPxtxH6elRE4aCqO1hjAgJsXXk
+	RYdast6MECYwbbMwWChpVjxnOwAeAFT8UvaHtVNvoNY8fXv8pe29jH+1pfFN5zQs/vs5O50qTaI
+	x1M/WMqye+5DDYArgz+3CY
+X-Google-Smtp-Source: AGHT+IEhejaHFThaKwhJCfo8/xHV6yGo88io+XsVdICYQukFeW24MAIkT6Fi1xOMkVwdW/FKQmmwSk2eKpS9NWkWZlM=
+X-Received: by 2002:a05:622a:452:b0:480:1561:837f with SMTP id
+ d75a77b69052e-4885aacab9cmr871171cf.8.1745870232933; Mon, 28 Apr 2025
+ 12:57:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250428195532.1590892-1-brianvv@google.com>
-Subject: [iwl-net PATCH v2] idpf: fix a race in txq wakeup
-From: Brian Vazquez <brianvv@google.com>
-To: Brian Vazquez <brianvv.kernel@gmail.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	intel-wired-lan@lists.osuosl.org
-Cc: David Decotigny <decot@google.com>, Anjali Singhai <anjali.singhai@intel.com>, 
-	Sridhar Samudrala <sridhar.samudrala@intel.com>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, emil.s.tantilov@intel.com, 
-	Brian Vazquez <brianvv@google.com>, Josh Hay <joshua.a.hay@intel.com>, 
-	Luigi Rizzo <lrizzo@google.com>
+MIME-Version: 1.0
+References: <20250425081715.1341199-1-david@redhat.com> <20250425081715.1341199-6-david@redhat.com>
+ <aAvvQ1h9bg11hiqI@x1.local> <bbadf008-9ffc-4628-9809-2d8cf104a424@redhat.com>
+ <aA-n9hvSX9JLsRM-@x1.local> <7a26e29c-d889-450a-a5e1-ce671f09e4c8@redhat.com>
+ <aA-rtji7ujQgckbM@x1.local> <884fab29-e16a-4663-8e33-885bc70ca2f7@redhat.com> <f08118b3-0736-4a5d-b780-8e3d88f45c02@lucifer.local>
+In-Reply-To: <f08118b3-0736-4a5d-b780-8e3d88f45c02@lucifer.local>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 28 Apr 2025 12:57:02 -0700
+X-Gm-Features: ATxdqUFN4dSm5xUeBut-iPBeU1VBNXf3LtoK4Lvt9a17IgRXhS8pQBx8VXvr8KE
+Message-ID: <CAJuCfpEtnBrAkSV-6PDv4Au5gs02vWYeMNHo3OxZb8NB0sy8cw@mail.gmail.com>
+Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to pfnmap_track()
+ + pfnmap_untrack()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>, Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, x86@kernel.org, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a helper function to correctly handle the lockless
-synchronization when the sender needs to block. The paradigm is
+On Mon, Apr 28, 2025 at 12:37=E2=80=AFPM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> On Mon, Apr 28, 2025 at 07:23:18PM +0200, David Hildenbrand wrote:
+> > On 28.04.25 18:24, Peter Xu wrote:
+> > > On Mon, Apr 28, 2025 at 06:16:21PM +0200, David Hildenbrand wrote:
+> > > > > Probably due to what config you have.  E.g., when I'm looking min=
+e it's
+> > > > > much bigger and already consuming 256B, but it's because I enable=
+d more
+> > > > > things (userfaultfd, lockdep, etc.).
+> > > >
+> > > > Note that I enabled everything that you would expect on a productio=
+n system
+> > > > (incld. userfaultfd, mempolicy, per-vma locks), so I didn't enable =
+lockep.
+> > >
+> > > I still doubt whether you at least enabled userfaultfd, e.g., your pr=
+evious
+> > > paste has:
+> > >
+> > >    struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     0 */
+> > >
+> > > Not something that matters.. but just in case you didn't use the expe=
+cted
+> > > config file you wanted to use..
+> >
+> > You're absolutely right. I only briefly rechecked for this purpose here=
+ on
+> > my notebook, and only looked for the existence of members, not expectin=
+g
+> > that we have confusing stuff like vm_userfaultfd_ctx.
+> >
+> > I checked again and the size stays at 192 with allyesconfig and then
+> > disabling debug options.
+>
+> I think a reasonable case is everything on, except CONFIG_DEBUG_LOCK_ALLO=
+C and I
+> don't care about nommu.
 
-        if (no_resources()) {
-                stop_queue();
-                barrier();
-                if (!no_resources())
-                        restart_queue();
-        }
+I think it's safe to assume that production systems would disable
+lockdep due to the performance overhead. At least that's what we do on
+Android - enable it on development branches but disable in production.
 
-netif_subqueue_maybe_stop already handles the paradigm correctly, but
-the code split the check for resources in three parts, the first one
-(descriptors) followed the protocol, but the other two (completions and
-tx_buf) were only doing the first part and so race prone.
-
-Luckily netif_subqueue_maybe_stop macro already allows you to use a
-function to evaluate the start/stop conditions so the fix only requires
-the right helper function to evaluate all the conditions at once.
-
-The patch removes idpf_tx_maybe_stop_common since it's no longer needed
-and instead adjusts separately the conditions for singleq and splitq.
-
-Note that idpf_rx_buf_hw_update doesn't need to check for resources
-since that will be covered in idpf_tx_splitq_frame.
-
-To reproduce:
-
-Reduce the threshold for pending completions to increase the chances of
-hitting this pause by changing your kernel:
-
-drivers/net/ethernet/intel/idpf/idpf_txrx.h
-
--#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> 1)
-+#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> 4)
-
-Use pktgen to force the host to push small pkts very aggressively:
-
-./pktgen_sample02_multiqueue.sh -i eth1 -s 100 -6 -d $IP -m $MAC \
-  -p 10000-10000 -t 16 -n 0 -v -x -c 64
-
-Fixes: 6818c4d5b3c2 ("idpf: add splitq start_xmit")
-Signed-off-by: Josh Hay <joshua.a.hay@intel.com>
-Signed-off-by: Brian Vazquez <brianvv@google.com>
-Signed-off-by: Luigi Rizzo <lrizzo@google.com>
----
-v2:
-- Fix typos
-- Fix RCT in singleq function
-- No inline in c files
-- Submit to iwl-net and add Fixes tag
-
- .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  9 ++--
- drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 45 +++++++------------
- drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  8 ----
- 3 files changed, 22 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
-index eae1b6f474e6..6ade54e21325 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
-@@ -362,17 +362,18 @@ netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
- {
- 	struct idpf_tx_offload_params offload = { };
- 	struct idpf_tx_buf *first;
-+	int csum, tso, needed;
- 	unsigned int count;
- 	__be16 protocol;
--	int csum, tso;
- 
- 	count = idpf_tx_desc_count_required(tx_q, skb);
- 	if (unlikely(!count))
- 		return idpf_tx_drop_skb(tx_q, skb);
- 
--	if (idpf_tx_maybe_stop_common(tx_q,
--				      count + IDPF_TX_DESCS_PER_CACHE_LINE +
--				      IDPF_TX_DESCS_FOR_CTX)) {
-+	needed = count + IDPF_TX_DESCS_PER_CACHE_LINE + IDPF_TX_DESCS_FOR_CTX;
-+	if (!netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
-+				       IDPF_DESC_UNUSED(tx_q),
-+				       needed, needed)) {
- 		idpf_tx_buf_hw_update(tx_q, tx_q->next_to_use, false);
- 
- 		u64_stats_update_begin(&tx_q->stats_sync);
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-index bdf52cef3891..a6ca2f55b5d5 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-@@ -2132,6 +2132,19 @@ void idpf_tx_splitq_build_flow_desc(union idpf_tx_flex_desc *desc,
- 	desc->flow.qw1.compl_tag = cpu_to_le16(params->compl_tag);
- }
- 
-+/* Global conditions to tell whether the txq (and related resources)
-+ * has room to allow the use of "size" descriptors.
-+ */
-+static int idpf_txq_has_room(struct idpf_tx_queue *tx_q, u32 size)
-+{
-+	if (IDPF_DESC_UNUSED(tx_q) < size ||
-+	    IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
-+		IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq) ||
-+	    IDPF_TX_BUF_RSV_LOW(tx_q))
-+		return 0;
-+	return 1;
-+}
-+
- /**
-  * idpf_tx_maybe_stop_splitq - 1st level check for Tx splitq stop conditions
-  * @tx_q: the queue to be checked
-@@ -2142,29 +2155,11 @@ void idpf_tx_splitq_build_flow_desc(union idpf_tx_flex_desc *desc,
- static int idpf_tx_maybe_stop_splitq(struct idpf_tx_queue *tx_q,
- 				     unsigned int descs_needed)
- {
--	if (idpf_tx_maybe_stop_common(tx_q, descs_needed))
--		goto out;
--
--	/* If there are too many outstanding completions expected on the
--	 * completion queue, stop the TX queue to give the device some time to
--	 * catch up
--	 */
--	if (unlikely(IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
--		     IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq)))
--		goto splitq_stop;
--
--	/* Also check for available book keeping buffers; if we are low, stop
--	 * the queue to wait for more completions
--	 */
--	if (unlikely(IDPF_TX_BUF_RSV_LOW(tx_q)))
--		goto splitq_stop;
--
--	return 0;
--
--splitq_stop:
--	netif_stop_subqueue(tx_q->netdev, tx_q->idx);
-+	if (netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
-+				      idpf_txq_has_room(tx_q, descs_needed),
-+				      1, 1))
-+		return 0;
- 
--out:
- 	u64_stats_update_begin(&tx_q->stats_sync);
- 	u64_stats_inc(&tx_q->q_stats.q_busy);
- 	u64_stats_update_end(&tx_q->stats_sync);
-@@ -2190,12 +2185,6 @@ void idpf_tx_buf_hw_update(struct idpf_tx_queue *tx_q, u32 val,
- 	nq = netdev_get_tx_queue(tx_q->netdev, tx_q->idx);
- 	tx_q->next_to_use = val;
- 
--	if (idpf_tx_maybe_stop_common(tx_q, IDPF_TX_DESC_NEEDED)) {
--		u64_stats_update_begin(&tx_q->stats_sync);
--		u64_stats_inc(&tx_q->q_stats.q_busy);
--		u64_stats_update_end(&tx_q->stats_sync);
--	}
--
- 	/* Force memory writes to complete before letting h/w
- 	 * know there are new descriptors to fetch.  (Only
- 	 * applicable for weak-ordered memory model archs,
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.h b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-index b029f566e57c..c192a6c547dd 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-+++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-@@ -1037,12 +1037,4 @@ bool idpf_rx_singleq_buf_hw_alloc_all(struct idpf_rx_queue *rxq,
- 				      u16 cleaned_count);
- int idpf_tso(struct sk_buff *skb, struct idpf_tx_offload_params *off);
- 
--static inline bool idpf_tx_maybe_stop_common(struct idpf_tx_queue *tx_q,
--					     u32 needed)
--{
--	return !netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
--					  IDPF_DESC_UNUSED(tx_q),
--					  needed, needed);
--}
--
- #endif /* !_IDPF_TXRX_H_ */
--- 
-2.49.0.901.g37484f566f-goog
-
+>
+> So:
+>
+> CONFIG_PER_VMA_LOCK
+> CONFIG_SWAP
+> CONFIG_MMU (exclude the nommu vm_region field)
+> CONFIG_NUMA
+> CONFIG_NUMA_BALANCING
+> CONFIG_PER_VMA_LOCK
+> CONFIG_ANON_VMA_NAME
+> __HAVE_PFNMAP_TRACKING
+>
+> So to be clear - allyesconfig w/o debug gives us this yes? And we don't a=
+dd a
+> cache line? In which case all good :)
+>
+>
+> >
+> > --
+> > Cheers,
+> >
+> > David / dhildenb
+> >
+>
