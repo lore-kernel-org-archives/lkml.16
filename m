@@ -1,109 +1,111 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F66E264604
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88B2265CC8;
+	Mon, 28 Apr 2025 11:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840350; cv=none; b=OEr4qU6gL4I08AjOiycCVF18MmsgdNUd7p061o/Dj0jFyZHv45PFjUNfn6ETFfyWZyQj0orN1bAeAnnyy7sodzEVrWE/PGHTbH+AqcBzGeNHKyS5JeMjMTWpQ5Z9qM7PAhYIp95mPWKNeTQ2akyU3D59sMVUuTYTq8Ra4R/aNek=
+	t=1745840366; cv=none; b=nO5hLtzilMOgNnWaA9HymfvPm0n20JRinfBovyl9/eDz36tbHOJIgSGXtQ5Un2YlOwrec/ysEquB+jKXWr9prys55WlArPQJFNYTOe6XYHYU4Q+9aiZLTEb6bdc7W5oNx5+6Hv9ctnG+WZSIHmmsxp0FgRSW2FB0P7ES5AlCuo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840350; c=relaxed/simple;
-	bh=r+bKtVRMoREgbBikFSIQumk3XCPBbJ1IWQQriCVNGRc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Jg2qCyTrSHNYo+si6qjnTpVSkXFBYhG1HlXyx3c7AIF6eyzW4M3MvPvFHuhrkzQxY18ZEdFQrM/2uyiVhHcEMerVolWRkx0Fh8PQuhA3OZC4v+uvEG1ZhzmFTgfEXA2PouXEHbLaZBFNSdWF92zdlD0rWyoxc6uV8J/8qF9lIS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TsNvLvQ1; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745840366; c=relaxed/simple;
+	bh=Ej44d3HYVlonJrSjsWIukJSaPhl3M6jkQ+SB3SSTJ0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHBVB0XD1xPnnsMAHWFacW9iOQ+huAgwahL3oTLIWEqtxO1VlwMMVH1nkfUsNmPoyyfIqK3GjsPsMjAQuQd5aV4me06O+/x+gvl/84t1dT4RZ5tSX7EmvpJDWSA3AjKvTl1pSLMUaZA+2VuMep3qJIauNDb++5/z4t7CYaEdFV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kv5vEYW7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TsNvLvQ1"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c1389so3365455f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745840346; x=1746445146; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=r+bKtVRMoREgbBikFSIQumk3XCPBbJ1IWQQriCVNGRc=;
-        b=TsNvLvQ1u+UXkVCmI1VitBomvGa+pCVfZhgyAnXLdyFEdrvqzwCP1wLM8lnYqFGpsi
-         kGH1VuVd8MvxqP7vW/fQq1Jv78my6C3QnMLKDzNhb5XrhPXl1UVgBcUbyYX+VBz4j3Ry
-         wHsxsE3EI1RjV3XkttJG6J2L4d4KUQntuQG3J8C0g7e0LYDAPcJlYTJUKpu9le/IpwmQ
-         4rgwg9vmENmO6eWNMbZg3phpcgtycZFPQ0/CrYjtl2DcP/5rg8QZ8Tyxechz37v9Ozi/
-         DQOufDDHzwCwWx6kh60N8DFV6lTj0L0Ej7PEOpi0kcf4yGU+/P0RTxSkFmoeJ4R25WgW
-         /IQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745840346; x=1746445146;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r+bKtVRMoREgbBikFSIQumk3XCPBbJ1IWQQriCVNGRc=;
-        b=YfvzC/WIIpP/2GQq/KXeU9HuvMQWt3Of365h+CcUoD3LxvRNySCrPUZYsvioaSh/JJ
-         nG1fdl2Q5Bp9FjP8eoMhZuJXtK3VQNfE18DaCvk0NX5TFEkgoP4CYbbJd2NhQBot/Lwz
-         nV+n1r9oTeIeIGZPoL7Q+r4n/hGB1osVoKexSnUe+PvgMlosuM5gQ8cSrU5V4J6zaqHn
-         Ogv4ZIeKMmZkHEusN5R+u3zUfQJfaLlEi93F/dZtcsE0/0QKVryw04CzNq83MySoW/KR
-         MppguQvzhg3REB07JtErk+epGcHpQ1l4DoclmM/0Zz9Bp+ei0RCuOCVRzQSe2DUUCtHF
-         5jsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWe128I3aQVSaG9KOHopI5nsuBgHrqZflXy1sLLNPFJd60wW47XWOgXv1Ef1KlupMESd8BCuK9CyCl6oKw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZlzHKvhWJZZ1pJs58Zo3mvt8mjmOQ+cgWordsl247CjlNNtkO
-	rsOFqbNTFRxQl7aNTB3iN9o69FZBZpVoUvwJhmK2qMIKpvFEwRh+aYJAhWg/2jc=
-X-Gm-Gg: ASbGncsyYqqxdfzXofz1J+boW4bLSVJvkrZnaBpug03bYKzhYEYA4DIzducsdT3zeSu
-	YUZjSKRy6dJFHpYPNgJvrzNR2ky0UIsYWPFtpPDkXn7Ig9ZjDKsSGWlNmeuk7yj+U7kuTZTozPQ
-	VjbgNJ7vSOlDTAzARlGvRZTb3Ky+JPLC7eofbTekFxYdmNnXujBuoOIxRYdhpYiuSqWKfTHgD9q
-	R2v1RfHADJqHqPPXxPUSqNOupzMDRKsjrL+++4t6jrIDILgUIR93gr7ER277m0tvbe6xNQcgHHZ
-	s+pVE60xvVrI0QkrgnvMATZ76glMXY4EhdkQG2vb0rAT
-X-Google-Smtp-Source: AGHT+IEHc9Zu/+wGVNqphD8k46BwlK1q8MygLAL16FZGjby9AUt0bgrJdeoGeu53URCQ7olNvcu9og==
-X-Received: by 2002:a05:6000:1ace:b0:3a0:8712:5983 with SMTP id ffacd0b85a97d-3a0871259cdmr1278905f8f.51.1745840346615;
-        Mon, 28 Apr 2025 04:39:06 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073c8d495sm10655161f8f.2.2025.04.28.04.39.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:39:05 -0700 (PDT)
-Message-ID: <4ab9946d0fe17c825657ed04f7d76047ac7f8167.camel@linaro.org>
-Subject: Re: [PATCH v6 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
- Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin	
- <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
- McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org, Bartosz
- Golaszewski	 <bartosz.golaszewski@linaro.org>
-Date: Mon, 28 Apr 2025 12:39:03 +0100
-In-Reply-To: <20250410091924.GR372032@google.com>
-References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
-	 <20250410091924.GR372032@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3-2+build1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kv5vEYW7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B08E5C4CEE4;
+	Mon, 28 Apr 2025 11:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745840366;
+	bh=Ej44d3HYVlonJrSjsWIukJSaPhl3M6jkQ+SB3SSTJ0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kv5vEYW72D5xWIDAHxidcS9oCPJI44A8/ATQTf4ndN6qOsRqnp47tGXt9HvXJ/fQX
+	 3iRGABjyVGdhzFevrJ/SKs1Tn/HzL+ntZXhZ5I1oZh84TTNujKuXIYiSDMBZKDmg+y
+	 AZfXDlw/mqs0mSwnN/keOFUJawtzrADt0D2HQYrOGgjrUXRSD84c7R7w7ycC/jTcSm
+	 x5DFNVaWHIOalypJx7V9K0lMtgehomF12uxSSBqBSLV7GPuCCodkBNURuekRYK6SrF
+	 nsCQ8roU5zy+dQ7EL1D9afZHfQm0EFsh/r0zRlmzrK5FfE/2zo1iP9Ttr0hP07NjcV
+	 75neqPgVXdgzA==
+Date: Mon, 28 Apr 2025 13:39:23 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Douglas Anderson <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Hui Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250428-wild-condor-of-defiance-cadf60@houat>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-34-8f91a404d86b@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="xfc7ogpscqj7tsh5"
+Content-Disposition: inline
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-34-8f91a404d86b@bootlin.com>
 
-Hi Lee,
 
-On Thu, 2025-04-10 at 10:19 +0100, Lee Jones wrote:
-> On Tue, 25 Mar 2025, Andr=C3=A9 Draszik wrote:
+--xfc7ogpscqj7tsh5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
+ devm_drm_bridge_alloc() API
+MIME-Version: 1.0
+
+On Thu, Apr 24, 2025 at 10:05:49PM +0200, Luca Ceresoli wrote:
+> This is the new API for allocating DRM bridges.
 >=20
-> > Hi,
-> >=20
-> > This series improves support for the Maxim Integrated MAX77759
-> > companion PMIC for USB Type-C applications using the MFD framework.
-> >=20
-> > [...]
+> The devm lifetime management of this driver is peculiar. The underlying
+> device for the panel_bridge is the panel, and the devm lifetime is tied t=
+he
+> panel device (panel->dev). However the panel_bridge allocation is not
+> performed by the panel driver, but rather by a separate entity (typically
+> the previous bridge in the encoder chain).
 >=20
+> Thus when that separate entoty is destroyed, the panel_bridge is not
+> removed automatically by devm, so it is rather done explicitly by calling
+> drm_panel_bridge_remove(). This is the function that does devm_kfree() the
+> panel_bridge in current code, so update it as well to put the bridge
+> reference instead.
 >=20
-> Didn't apply cleanly.=C2=A0 Please rebase onto v6.15-rc1.
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-I've rebased against next-20250424 in=20
-https://lore.kernel.org/r/20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.or=
-g
+This looks fine, but we need a TODO entry to clean this up later on, and
+a comment on devm_drm_put_bridge that this is inherently unsafe and
+must not be used.
 
-Cheers,
-Andre'
+Maxime
 
+--xfc7ogpscqj7tsh5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaA9o4wAKCRAnX84Zoj2+
+dte3AX9ZTgylvSMOA8QF8MhOvEEJnfPIVewZiCH2yJknukV+y7S53MU2E4s0YFaN
+fsm4AaQBgIRYfqhWPjcnqXHC20V8llKYAK0QvK8ijj3k2G8LjbRoIfmGL11UOfGM
+QmUfHGyQeA==
+=AGTY
+-----END PGP SIGNATURE-----
+
+--xfc7ogpscqj7tsh5--
