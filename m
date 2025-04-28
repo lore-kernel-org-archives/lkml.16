@@ -1,215 +1,210 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC8118FC92
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859E142056
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855127; cv=none; b=VQkPuqHMcTua0J9A9p94+mJCCZ4Jo8CDdlW0OTqUpeoqNJRwB82FyDLSdjTg6kWkZVmTznXlnq51gz6gzuE6ZMOUUGsHqhG17H7TdUcTkDeNou4L/RMCK/pi3dCx/DxfvI9LgznfUmiqwXm8ujaxk6+KKowURdUHEj+zc5iEA/Y=
+	t=1745855147; cv=none; b=kiAF962kf3sKtbEQiIEyaBTK4p13RsGAyHqMnFjWDDF36pV1eEBf0w9uLONd/HknVbGZxM3dGrkE2eRIhWItirERHpfkdtJw/lmA+qPzJ9LzTtOzQ2clvHhLIDqHZDC2WPIUtzRf3jyYh5ZM0dYv+sP/NEK3X/6xWX3R3wrYJ8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855127; c=relaxed/simple;
-	bh=dwgYOym45oyNAdQ44afULSTNmEmOJnzMpDMS/yioqQY=;
+	s=arc-20240116; t=1745855147; c=relaxed/simple;
+	bh=UOhzb10991S9XN+3taEGso7/UZgUlO2UjrD9ZO6lDo0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oq5GKkH2fga28zXU4UbJ0+Y8d/nu0RXxxITUcoUPIjJI1fEJ3w2CrmmIiJ9GTwi3axXrkxVIIXySy3KCoS2XvJIaoMpwUaiDKZnHrU635pKhH/EP6Lh2JEBlmZnzC6PBVJrkLrxl+9DetHD55obdRojF41J5PNp3KtbUpmyGTGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=j5baIypc; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	 To:Cc:Content-Type; b=DseGV8sCclyyadHDZwpTOlZKkx/FDXyWobY3PTbr9v2awSkpAu5NxyM0jLvZXUcp3VOmASJHf2mFxn3kjXo96Nxq3q75j14M8EIOoeUwBnyasCIvBVM+1hRcguhGppSlBtNysq6XBVRagv+NYxT/qcfB57K4Y4DzHzAhximFQGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DwP307/e; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="j5baIypc"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso3478715276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1745855125; x=1746459925; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PU/sixtY71LvEi4Fz6DQo24QLlRpV93TUetQH3mfBu0=;
-        b=j5baIypc9i0K05RdO5/l5gRBUgEUeMq61cNw9dtP/9FCbgmHNBsKy/Pcm4Zi9BnPNy
-         9HbzMAY0RVj+QjPwlII6QHZ7j0Mr1QZDok24o0gYW/2wfZp9KNHYpwwgwUhFgC/eZ87h
-         keJnKSsoArCQlrOJ6ScrhmbW1LBGFbQFrXQDQiV75U2OfHNaHrUWYrTWBJiKzoLgkXnS
-         J9/ceWK/yk/dAvGSjomzx1g5KJ9E3VMVl1QuiCRccA102Ege/PyOy4xibceml3NB8QmX
-         9ek86APh13k3BUAxhwWuKq4nff+TEW/qsOfm8HiKAbGWjPCHJ6EEbRQmdfU6t02MadpI
-         QMUw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DwP307/e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745855144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rYC5lCzUJr828076fhqqA1lyRrr2Ujsiu+eNA9UjptU=;
+	b=DwP307/e6Xph5FWg/CykslD5vN6fCFcbUiR9gJORXqaXcWJ1NgLGeAoi0nfdXvJFRz3K9M
+	zMqV8MFMNRAmeF2uD+B+SNVdzim+3AHwhwgbSNhFK6tQTblzwmi7/A60EyfsfgKn8GHnUW
+	caG4yKcwUd2BELyHajSdtu4sMJZ69Fs=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-471-T1ZJ5ZvMNdeuK0mdu7iDMQ-1; Mon, 28 Apr 2025 11:45:43 -0400
+X-MC-Unique: T1ZJ5ZvMNdeuK0mdu7iDMQ-1
+X-Mimecast-MFC-AGG-ID: T1ZJ5ZvMNdeuK0mdu7iDMQ_1745855142
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-703b59731e3so68578357b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:45:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745855125; x=1746459925;
+        d=1e100.net; s=20230601; t=1745855142; x=1746459942;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PU/sixtY71LvEi4Fz6DQo24QLlRpV93TUetQH3mfBu0=;
-        b=QWFDFF5HoV+M+0hB/O2iFkumAPPHJl6oTRu/NxpzgxX99lG3GTBdkPg8/fJYsZfRgf
-         45ZN3LlAUghWKx+eItJaac1rfSon2qC9JuLPR5H5YMCUPvoMJM6nsYQpbwC+pAWm7Dwk
-         riskf6HoDavZI4AdB2jHyoV3Z+o77mbZSXZFQKfeZPrJymEh4dSzB8bfW6xzwvPibLnm
-         2INRS10i00tVV84l3ruW8A7OMBELpdL0J9gK/QYr9ePimTHmj93aW6JMOoBccJNftNRk
-         0OvAOVVBrfZTUwluvvn5gMhZxQ87IFn8XSphQAZa0JdUl6pQ1jIcoRXyln0Q9Y1UR+TJ
-         pDYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXczolqtXCZTqNjxQ7zbvFf8sH/3hFgltRgrh+1iG9+UdSZa3F4VQYERGWsHl91XE3Fb1/nLz/Eixz6CPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDftgrfAY8yN6lk9hv+tJmnkhXV/b192ZDjNYhW0nQ0XyTsY/r
-	ZvXt6HO7OcV6BnT3Y2VHg95vpKF89022v5MJjULs7Gq0BhSWXvRkGkrYAAZ6VMWiwMcJnjl5Ezf
-	4Mscvw/TwnjzTQRBXeJGLuVu/5CMtqV96eBnjrg==
-X-Gm-Gg: ASbGncvhZ/VOFwgjv1q3cv01M9n3AX2RRD3WIhqiLlsmgAiioJcdfLeeKZPaOye4kCH
-	y+wf4DREF2esl4EF2+62oAuC3W7CXGzRxlNSmBD/eIYSJNZ7TNOUkCQkD2Pd3He6hr7YkvX6NP3
-	qgiJBKHcfYGDjCPaaU97xFoLZVUNaZaqRLIo7DRVLwtt30AECOAehrPAtXs1US7fI=
-X-Google-Smtp-Source: AGHT+IEF9MSlc844cuGTIRN/jaSQKExcmjeU1UeJwf54mw2x30vI+iBpqqWrdgOqbrjU+FD8mBfkUxmgGRAbgf2Y+6M=
-X-Received: by 2002:a05:6902:2701:b0:e72:d88e:7a9a with SMTP id
- 3f1490d57ef6-e73500e777emr136870276.45.1745855124717; Mon, 28 Apr 2025
- 08:45:24 -0700 (PDT)
+        bh=rYC5lCzUJr828076fhqqA1lyRrr2Ujsiu+eNA9UjptU=;
+        b=R+loNPEBcHxeByuIC3kksSFeM+5TpvSJHRW3rEDYM25GIUOQea3zZLZ1A1ZdpLkErf
+         xsxhgZbWDlKIcVdToOEcgZ6jIyV1fb3j1TLflPGF6HlEJzg9qYcdV0DHBreGGP7C64F5
+         1ntQQZb3Cm2Y+sP/8jzfzd8mfnQJ5hEwT8s9P3rNPonjh1D/Gqh+xaBbdppEMhjZPZWQ
+         2s6HxeJHAIateM7bJv7RvIOxwSzxgDWynY1gfPa26vwt3DHv/mTASffXoWp5sLsZBJiY
+         n1sd1oSaqZtQaXBNUDs+xnYtrxtgmHloeS7C55CCBJ16cFY63+Is/f2Y35gWBz79t28i
+         4TqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZM5AGHJUMDWAbRKBkvPIZprR/8bQaIFpdzscZvsNt3yA4lkPa+XvOb6IkPPcgEhRT7nNUYSFaZHx3ZHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeEpH0lIkQrTf7PMi6f+0UHB6wG3ThWJ+0dksPRjALqRdOTTID
+	/cAB7W+v3VxWgs9uaX1Zfln08Wrs7kNvT3InpBuq0irRFIoIwyyEF4fcE78ylxZxQxMIHaGyNMK
+	DyOO0s2bjctsTNFiRibxGU9tI8VKop1Y1d15N6erk9Md/5I6gmh/KU8DKx+Zp4EMU+F1qYYRyia
+	J2CQHJBZ0goig2ed/mum2q9MJDTjbcv/rTUMSp
+X-Gm-Gg: ASbGncsjFhJOth0xQyw5g5Qmn7mF0B0KLebcO0oF6/fvSoB5xeV3vnEQdgonzdPNMBW
+	JvWmqd+trOme0Sw7oLbBGHH1zo9L/H7gyOW7DRYZ/5QNXR4dGDFuvzqKX0yBbXosVrMhUd8cT7x
+	aa0iwYEu4=
+X-Received: by 2002:a05:690c:67c3:b0:700:a61d:a2f1 with SMTP id 00721157ae682-708540d9052mr161522007b3.7.1745855142307;
+        Mon, 28 Apr 2025 08:45:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFGFih3ozZEKsj4xm/6JhtLUCRC/M6E+ETCg/hOWn66Licdp+qRA1ykpxrKLnhfUjlB4pAeRTiinQgQqPRcl0=
+X-Received: by 2002:a05:690c:67c3:b0:700:a61d:a2f1 with SMTP id
+ 00721157ae682-708540d9052mr161521327b3.7.1745855141849; Mon, 28 Apr 2025
+ 08:45:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <20250424-drm-bridge-convert-to-alloc-api-v2-27-8f91a404d86b@bootlin.com>
-In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-27-8f91a404d86b@bootlin.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 28 Apr 2025 16:45:08 +0100
-X-Gm-Features: ATxdqUF8zRJ18UCRRqpYogjOFDok1I-AvafpDPPJcxH-STXodhofR9H1CLM8tQg
-Message-ID: <CAPY8ntDwK0DZ6sThryDRBUgjTb+muNHtRNp+LohTs6+FWeB5TQ@mail.gmail.com>
-Subject: Re: [PATCH v2 27/34] drm/vc4: convert to devm_drm_bridge_alloc() API
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
+References: <20250417000238.74567-1-npache@redhat.com> <20250417000238.74567-12-npache@redhat.com>
+ <30180bde-d813-40dd-83f4-0cc04daf6df6@linux.alibaba.com>
+In-Reply-To: <30180bde-d813-40dd-83f4-0cc04daf6df6@linux.alibaba.com>
+From: Nico Pache <npache@redhat.com>
+Date: Mon, 28 Apr 2025 09:45:14 -0600
+X-Gm-Features: ATxdqUFKz94UIef8hpmrNssfBw-E2fCsLaNro0qnCT1DayYdhi5zln_WMT_m0JA
+Message-ID: <CAA1CXcAJfMimBBa+2TrhvBoubsLiCsmZWRLjWt1KK69Tu1BLTw@mail.gmail.com>
+Subject: Re: [PATCH v4 11/12] khugepaged: add per-order mTHP khugepaged stats
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
+	baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org, 
+	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
+	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
+	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
+	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
+	rdunlap@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 24 Apr 2025 at 20:01, Luca Ceresoli <luca.ceresoli@bootlin.com> wro=
-te:
+On Thu, Apr 24, 2025 at 1:58=E2=80=AFAM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
 >
-> This is the new API for allocating DRM bridges.
 >
-> This driver already implements refcounting of the struct vc4_dsi, which
-> embeds struct drm_bridge. Now this is a duplicate of the refcounting
-> implemented by the DRM bridge core, so convert the vc4_dsi_get/put() call=
-s
-> into drm_bridge_get/put() calls and get rid of the driver-specific
-> refcounting implementation.
 >
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
-Acked-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-Thanks.
-
-> ---
->
-> Cc: "Ma=C3=ADra Canal" <mcanal@igalia.com>
-> Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
->
-> Changed in v2:
-> - fix error code checking
-> ---
->  drivers/gpu/drm/vc4/vc4_dsi.c | 34 +++++-----------------------------
->  1 file changed, 5 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.=
-c
-> index efc6f6078b026764c59cfb2a33b28a88b7018c3a..458e5d9879645f18bcbcaeeb7=
-1b5f1038f9581da 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -552,8 +552,6 @@ struct vc4_dsi {
->         struct vc4_encoder encoder;
->         struct mipi_dsi_host dsi_host;
->
-> -       struct kref kref;
-> -
->         struct platform_device *pdev;
->
->         struct drm_bridge *out_bridge;
-> @@ -1622,29 +1620,11 @@ static void vc4_dsi_dma_chan_release(void *ptr)
->         dsi->reg_dma_chan =3D NULL;
->  }
->
-> -static void vc4_dsi_release(struct kref *kref)
-> -{
-> -       struct vc4_dsi *dsi =3D
-> -               container_of(kref, struct vc4_dsi, kref);
-> -
-> -       kfree(dsi);
-> -}
-> -
-> -static void vc4_dsi_get(struct vc4_dsi *dsi)
-> -{
-> -       kref_get(&dsi->kref);
-> -}
-> -
-> -static void vc4_dsi_put(struct vc4_dsi *dsi)
-> -{
-> -       kref_put(&dsi->kref, &vc4_dsi_release);
-> -}
-> -
->  static void vc4_dsi_release_action(struct drm_device *drm, void *ptr)
->  {
->         struct vc4_dsi *dsi =3D ptr;
->
-> -       vc4_dsi_put(dsi);
-> +       drm_bridge_put(&dsi->bridge);
->  }
->
->  static int vc4_dsi_bind(struct device *dev, struct device *master, void =
-*data)
-> @@ -1655,7 +1635,7 @@ static int vc4_dsi_bind(struct device *dev, struct =
-device *master, void *data)
->         struct drm_encoder *encoder =3D &dsi->encoder.base;
->         int ret;
->
-> -       vc4_dsi_get(dsi);
-> +       drm_bridge_get(&dsi->bridge);
->
->         ret =3D drmm_add_action_or_reset(drm, vc4_dsi_release_action, dsi=
+> On 2025/4/17 08:02, Nico Pache wrote:
+> > With mTHP support inplace, let add the per-order mTHP stats for
+> > exceeding NONE, SWAP, and SHARED.
+> >
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >   include/linux/huge_mm.h |  3 +++
+> >   mm/huge_memory.c        |  7 +++++++
+> >   mm/khugepaged.c         | 16 +++++++++++++---
+> >   3 files changed, 23 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> > index 55b242335420..782d3a7854b4 100644
+> > --- a/include/linux/huge_mm.h
+> > +++ b/include/linux/huge_mm.h
+> > @@ -139,6 +139,9 @@ enum mthp_stat_item {
+> >       MTHP_STAT_SPLIT_DEFERRED,
+> >       MTHP_STAT_NR_ANON,
+> >       MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
+> > +     MTHP_STAT_COLLAPSE_EXCEED_SWAP,
+> > +     MTHP_STAT_COLLAPSE_EXCEED_NONE,
+> > +     MTHP_STAT_COLLAPSE_EXCEED_SHARED,
+> >       __MTHP_STAT_COUNT
+> >   };
+> >
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index 7798c9284533..de4704af0022 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -633,6 +633,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLI=
+T_FAILED);
+> >   DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+> >   DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
+> >   DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PAR=
+TIALLY_MAPPED);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXC=
+EED_SWAP);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXC=
+EED_NONE);
+> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_E=
+XCEED_SHARED);
+> > +
+> >
+> >   static struct attribute *anon_stats_attrs[] =3D {
+> >       &anon_fault_alloc_attr.attr,
+> > @@ -649,6 +653,9 @@ static struct attribute *anon_stats_attrs[] =3D {
+> >       &split_deferred_attr.attr,
+> >       &nr_anon_attr.attr,
+> >       &nr_anon_partially_mapped_attr.attr,
+> > +     &collapse_exceed_swap_pte_attr.attr,
+> > +     &collapse_exceed_none_pte_attr.attr,
+> > +     &collapse_exceed_shared_pte_attr.attr,
+> >       NULL,
+> >   };
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index 67da0950b833..38643a681ba5 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -604,7 +604,10 @@ static int __collapse_huge_page_isolate(struct vm_=
+area_struct *vma,
+> >                               continue;
+> >                       } else {
+> >                               result =3D SCAN_EXCEED_NONE_PTE;
+> > -                             count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+> > +                             if (order =3D=3D HPAGE_PMD_ORDER)
+> > +                                     count_vm_event(THP_SCAN_EXCEED_NO=
+NE_PTE);
+> > +                             else
+> > +                                     count_mthp_stat(order, MTHP_STAT_=
+COLLAPSE_EXCEED_NONE);
+> >                               goto out;
+> >                       }
+> >               }
+> > @@ -633,8 +636,14 @@ static int __collapse_huge_page_isolate(struct vm_=
+area_struct *vma,
+> >               /* See khugepaged_scan_pmd(). */
+> >               if (folio_maybe_mapped_shared(folio)) {
+> >                       ++shared;
+> > -                     if (order !=3D HPAGE_PMD_ORDER || (cc->is_khugepa=
+ged &&
+> > -                         shared > khugepaged_max_ptes_shared)) {
+> > +                     if (order !=3D HPAGE_PMD_ORDER) {
+> > +                             result =3D SCAN_EXCEED_SHARED_PTE;
+> > +                             count_mthp_stat(order, MTHP_STAT_COLLAPSE=
+_EXCEED_SHARED);
+> > +                             goto out;
+> > +                     }
+> > +
+> > +                     if (cc->is_khugepaged &&
+> > +                             shared > khugepaged_max_ptes_shared) {
+> >                               result =3D SCAN_EXCEED_SHARED_PTE;
+> >                               count_vm_event(THP_SCAN_EXCEED_SHARED_PTE=
 );
->         if (ret)
-> @@ -1810,15 +1790,12 @@ static int vc4_dsi_dev_probe(struct platform_devi=
-ce *pdev)
->         struct device *dev =3D &pdev->dev;
->         struct vc4_dsi *dsi;
+> >                               goto out;
+> > @@ -1060,6 +1069,7 @@ static int __collapse_huge_page_swapin(struct mm_=
+struct *mm,
+> >
+> >               /* Dont swapin for mTHP collapse */
+> >               if (order !=3D HPAGE_PMD_ORDER) {
+> > +                     count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_=
+SHARED);
 >
-> -       dsi =3D kzalloc(sizeof(*dsi), GFP_KERNEL);
-> -       if (!dsi)
-> -               return -ENOMEM;
-> +       dsi =3D devm_drm_bridge_alloc(&pdev->dev, struct vc4_dsi, bridge,=
- &vc4_dsi_bridge_funcs);
-> +       if (IS_ERR(dsi))
-> +               return PTR_ERR(dsi);
->         dev_set_drvdata(dev, dsi);
+> Should be MTHP_STAT_COLLAPSE_EXCEED_SWAP?
+Yes! Thank you, I will fix this :)
 >
-> -       kref_init(&dsi->kref);
-> -
->         dsi->pdev =3D pdev;
-> -       dsi->bridge.funcs =3D &vc4_dsi_bridge_funcs;
->  #ifdef CONFIG_OF
->         dsi->bridge.of_node =3D dev->of_node;
->  #endif
-> @@ -1836,7 +1813,6 @@ static void vc4_dsi_dev_remove(struct platform_devi=
-ce *pdev)
->         struct vc4_dsi *dsi =3D dev_get_drvdata(dev);
+> >                       result =3D SCAN_EXCEED_SWAP_PTE;
+> >                       goto out;
+> >               }
 >
->         mipi_dsi_host_unregister(&dsi->dsi_host);
-> -       vc4_dsi_put(dsi);
->  }
->
->  struct platform_driver vc4_dsi_driver =3D {
->
-> --
-> 2.49.0
->
+
