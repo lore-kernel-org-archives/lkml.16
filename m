@@ -1,117 +1,202 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7063E3232;
-	Mon, 28 Apr 2025 01:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416855684;
+	Mon, 28 Apr 2025 02:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745805434; cv=none; b=el97nkBzXyPvqNe2dgoWz7zs4N/xT9MvAv2NzBWG1wAi+uaDQtPjNIsrw+4L4a4A4TM6RCuStIA3JNk8aLwEihC3Q9rHZoGpoXrxongjetoVGsuqY93IrxPvp5K9I5fwcnzgEGecomhKrw4pXDCuzizQJntTuMxpkwiH0j/IMgA=
+	t=1745805769; cv=none; b=p4RR00gIVNZ4DSy3KjPUlzTRWirDpZoY6lIyTgV12EbVO2nqdyUAhsXtNltawMvym0vF5tLoUGlP9tAFvAogS+Zt4e19eGv6ykbMHBaIipQs0eI/GKkNAQ7DBDajMf8aG/2J09QHa2VsVTx/q1VwvZI1lLplQbpZHlLi/Q5BizU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745805434; c=relaxed/simple;
-	bh=VeHo1+aFAnjzYXeatcFmvX7+OzhzSDeo7ETstgLJBzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mVoQyMjZ0+mOarXr44HcVyM/A2Xlyn5jZVD6desqigRtPIkMbCPMvCVBfBv2ncVCkgABoYPl9Hm1cdQN3QmjJvcekzWRstvl97d9bcNETL5vb1gaanyAge2qmVsn7SjWj7x6XAgB9n4kDm93QyWewLtq0lb2zndM3LSWTmqAwJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Zb3cxNj/; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745805769; c=relaxed/simple;
+	bh=DCMxUV6dX20mSSL3i2v8r0AeC9taHPlfwabBfcmx5+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VsJ/8xhfrfdnBa3Qhk8pLeOHJfqeVJqqjUCoL4QlGGyfZP6xxSXPgbQpjrtnQIf6WOMdwWf+4fki6O7j9hmpFKgEGIyvZqVbmLo2cVDXNVh2OLH4kREUQsoOxwe2BxbU/Ehe3hrrmL8gdoIEJ5PBPx/PUb5d9831J05LNSUJ+dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhjBQR7B; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zb3cxNj/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745805425;
-	bh=VBdhPLJItsSVgBV86GnCXyb1fY8WlT9bHY+yhqApIAA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Zb3cxNj/ZyP8PWUbKUJ/aBCf0dO6e+AiPQXINPFE/BSlL52+jNHu9TjJ72gSPEp6z
-	 +oTV9ZF02KU+/wfRh+nfzLyO+D3DA/WsCi4Ke6KJqBFbAL589FMjhaTwDIhVSzwlVJ
-	 J01pWPsGtXoNH8l6Qc27IiLvJ0xC5TK5jlSDger9KCni0jrWF81l/gWTMy3Oh1ehYV
-	 S2MtCdrF2waR/i4iPg28ONFfgAdyF/hQeUH0MxqgA79vumjRjGm6hMIoGMDgHuwBbC
-	 6Kr8w0gwjXK4L0zFiDySGWZTxyRF5xmklQ6hxGZd37xLtdwFOwclCyMMPU18gzsctm
-	 F1WUQCou39rqA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm65F5mr4z4wy6;
-	Mon, 28 Apr 2025 11:57:05 +1000 (AEST)
-Date: Mon, 28 Apr 2025 11:57:04 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the cpufreq-arm tree
-Message-ID: <20250428115704.46e31d9c@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhjBQR7B"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22c33677183so42928055ad.2;
+        Sun, 27 Apr 2025 19:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745805767; x=1746410567; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7CvA9rPJDY9mWPFla5C2Yb++zkc3I+YZAklp33A2++s=;
+        b=fhjBQR7BbTg0GtBLdiPWQR1DkpC0ElXTZnRIpsZoEwFVT0b9boudewslqfOuHdbt6X
+         0wMHOz+SAAiYDN1Je8oB56aVio04LVTM2kUmc6sFd3KErnjpmR3USUWSyfvroM486GJ3
+         TINkQNVaDLdmVNOFvvxXUZOL2dqEoINGYS7IFJBIjeAVirzqR0WmA3/Ab4sDTS1kKEus
+         nVi4IuROZ1z3s5Z4R+yXoeQj4KJOO/JpQ5xweyOoaOHoQhVEhNaXlCVn5OpAUQCnqXJ/
+         c+9ORUs27JLuuj+QM4uAFKOyEXpmIEGTqxpodf+dxMg7uXFNkKs7rKefX2qWYgay42xC
+         R3gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745805767; x=1746410567;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7CvA9rPJDY9mWPFla5C2Yb++zkc3I+YZAklp33A2++s=;
+        b=lTZBuz9I1jbwj8v8RD9ouDO30WRXAoA5J7MP7CKHWKM77D5MO2f53fw2N+fIpxBwJr
+         0Eb/rUx7OQjklgphkPvWRn1fa+96JYBrg0oHLPv1QjxBYL4EwYzblX1mykGoLPh3pvgy
+         +CNbbiZNPxnwEROT66wqMVQCJZ4S0fy5/5o2eSzy8+0SmlJen3ydUaaWlS/Ootve7cEo
+         177gLNNVIRYQ4HtT3R/l0J7PnL63CBa8SOsbmbdd1254Q90eXnd4ioaVBBpOhFJ2ZwSF
+         zvcc4LS0puSXs7XLVW6SSHk2hxkUaRuqRXQz8CTOkExastcoAI+l0dukE/LaVX3pzUq3
+         +/sw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2dZpOeuANI0Rf4HzEP5QWNZwh0VWSNpN7t6zvsLCDwCU60we6M6eW86ELtxPd2bEtKbZWL0tkWl1jQec=@vger.kernel.org, AJvYcCVpsoQyc6alVqXaYPhE+UTGk+mQDgNkGtD2mFwL6RkozVZnnrtU2ZOSLW+fibGilS/tTOPETbc/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWjl9jVnodhNrVGLcvaG0lTHL43mkNqf4TbklCLyOfkaRFMUwa
+	PH6J/Van3GtznbdLFuHVJ6sIKvRJEB49NJJwkF1smlZdbTqdAJbw
+X-Gm-Gg: ASbGncuSXu9GDHHjOctz5pwuwnlz6Zb3GtXwI8qSA2F28J4YEQoeeZjFVF6VddAfn2k
+	FpcPYGw/wSqurmKT96huNiBhRyF3jvN0SWHFfX1zrZI3YH4nrz/7D1n6/Rc1Dz5CfrktWe2Dy17
+	uTqe/76DVzbuX0R+jBmLpX7IlldUXzHaIcMCfXLCHBUFMdcdtls20QthR3rhqBqAW5UOn9cKuRz
+	QAd3POe/Cg3NI+GyX/WjR9lV6xzOJyRoakRva1UZLXTY3ZY6RZw9i2ZafEQwWfmF8T60BnY44zY
+	ay0wslO1e85Kor2BgZjXYOtOoAGTMZx798sZn2REcu/YVg==
+X-Google-Smtp-Source: AGHT+IE8pdSnJtrq62dkbclKPqe2AcUe+Xlxu8UQ+JJDlx6obZtvFZLPYXgn2MEq1NvIBWYqRr4b/A==
+X-Received: by 2002:a17:902:c945:b0:224:194c:694c with SMTP id d9443c01a7336-22dc6a0f2ebmr117743375ad.28.1745805767371;
+        Sun, 27 Apr 2025 19:02:47 -0700 (PDT)
+Received: from fedora ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22dd9530465sm8887785ad.10.2025.04.27.19.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 19:02:46 -0700 (PDT)
+Date: Mon, 28 Apr 2025 02:02:40 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Wang Liang <wangliang74@huawei.com>
+Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, jv@jvosburgh.net, andrew+netdev@lunn.ch,
+	linux-kernel@vger.kernel.org,
+	syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Subject: Re: [PATCH net v2] bonding: hold ops lock around get_link
+Message-ID: <aA7hwMhd3kyKpvUu@fedora>
+References: <20250410161117.3519250-1-sdf@fomichev.me>
+ <11fb538b-0007-4fe7-96b2-6ddb255b496e@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pEz_Gj.tOQyyylCL7SZcaYO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <11fb538b-0007-4fe7-96b2-6ddb255b496e@huawei.com>
 
---Sig_/pEz_Gj.tOQyyylCL7SZcaYO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Apr 27, 2025 at 11:06:32AM +0800, Wang Liang wrote:
+> 
+> 在 2025/4/11 0:11, Stanislav Fomichev 写道:
+> > syzbot reports a case of ethtool_ops->get_link being called without
+> > ops lock:
+> > 
+> >   ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:63
+> >   bond_check_dev_link+0x1fb/0x4b0 drivers/net/bonding/bond_main.c:864
+> >   bond_miimon_inspect drivers/net/bonding/bond_main.c:2734 [inline]
+> >   bond_mii_monitor+0x49d/0x3170 drivers/net/bonding/bond_main.c:2956
+> >   process_one_work kernel/workqueue.c:3238 [inline]
+> >   process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+> >   worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+> >   kthread+0x7b7/0x940 kernel/kthread.c:464
+> >   ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+> >   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> > 
+> > Commit 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+> > changed to lockless __linkwatch_sync_dev in ethtool_op_get_link.
+> > All paths except bonding are coming via locked ioctl. Add necessary
+> > locking to bonding.
+> > 
+> > Reviewed-by: Hangbin Liu <liuhangbin@gmail.com>
+> > Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
+> > Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> > ---
+> > v2:
+> > - move 'BMSR_LSTATUS : 0' part out (Jakub)
+> > ---
+> >   drivers/net/bonding/bond_main.c | 13 +++++++++----
+> >   1 file changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> > index 950d8e4d86f8..8ea183da8d53 100644
+> > --- a/drivers/net/bonding/bond_main.c
+> > +++ b/drivers/net/bonding/bond_main.c
+> > @@ -850,8 +850,9 @@ static int bond_check_dev_link(struct bonding *bond,
+> >   			       struct net_device *slave_dev, int reporting)
+> >   {
+> >   	const struct net_device_ops *slave_ops = slave_dev->netdev_ops;
+> > -	struct ifreq ifr;
+> >   	struct mii_ioctl_data *mii;
+> > +	struct ifreq ifr;
+> > +	int ret;
+> >   	if (!reporting && !netif_running(slave_dev))
+> >   		return 0;
+> > @@ -860,9 +861,13 @@ static int bond_check_dev_link(struct bonding *bond,
+> >   		return netif_carrier_ok(slave_dev) ? BMSR_LSTATUS : 0;
+> >   	/* Try to get link status using Ethtool first. */
+> > -	if (slave_dev->ethtool_ops->get_link)
+> > -		return slave_dev->ethtool_ops->get_link(slave_dev) ?
+> > -			BMSR_LSTATUS : 0;
+> > +	if (slave_dev->ethtool_ops->get_link) {
+> > +		netdev_lock_ops(slave_dev);
+> > +		ret = slave_dev->ethtool_ops->get_link(slave_dev);
+> > +		netdev_unlock_ops(slave_dev);
+> > +
+> > +		return ret ? BMSR_LSTATUS : 0;
+> > +	}
+> >   	/* Ethtool can't be used, fallback to MII ioctls. */
+> >   	if (slave_ops->ndo_eth_ioctl) {
+> 
+> 
+> Hello, I find that a WARNING still exists:
+> 
+>   RTNL: assertion failed at ./include/net/netdev_lock.h (56)
+>   WARNING: CPU: 1 PID: 3020 at ./include/net/netdev_lock.h:56
+> netdev_ops_assert_locked include/net/netdev_lock.h:56 [inline]
+>   WARNING: CPU: 1 PID: 3020 at ./include/net/netdev_lock.h:56
+> __linkwatch_sync_dev+0x30d/0x360 net/core/link_watch.c:279
+>   Modules linked in:
+>   CPU: 1 UID: 0 PID: 3020 Comm: kworker/u8:10 Not tainted
+> 6.15.0-rc2-syzkaller-00257-gb5c6891b2c5b #0 PREEMPT(full)
+>   Hardware name: Google Compute Engine, BIOS Google 02/12/2025
+>   Workqueue: bond0 bond_mii_monitor
+>   RIP: 0010:netdev_ops_assert_locked include/net/netdev_lock.h:56 [inline]
+> 
+> It is report by syzbot (link:
+> https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086).
+> 
+> Because ASSERT_RTNL() failed in netdev_ops_assert_locked().
+> 
+> I wonder if should add rtnl lock in bond_check_dev_link()?
+> 
+> Like this:
+> 
+>   +++ b/drivers/net/bonding/bond_main.c
+>   @@ -862,10 +862,12 @@  static int bond_check_dev_link(struct bonding
+> *bond,
+> 
+>        /* Try to get link status using Ethtool first. */
+>        if (slave_dev->ethtool_ops->get_link) {
+>   -        netdev_lock_ops(slave_dev);
+>   -        ret = slave_dev->ethtool_ops->get_link(slave_dev);
+>   -        netdev_unlock_ops(slave_dev);
+>   -
+>   +        if (rtnl_trylock()) {
+>   +            netdev_lock_ops(slave_dev);
+>   +            ret = slave_dev->ethtool_ops->get_link(slave_dev);
+>   +            netdev_unlock_ops(slave_dev);
+>   +            rtnl_unlock();
+>   +        }
+>            return ret ? BMSR_LSTATUS : 0;
+>        }
+> 
 
-Hi all,
+What if rtnl_trylock() failed? This will return ret directly.
+Maybe
+	if (slave_dev->ethtool_ops->get_link && rtnl_trylock()) {
+		netdev_lock_ops(slave_dev);
+		ret = slave_dev->ethtool_ops->get_link(slave_dev);
+		netdev_unlock_ops(slave_dev);
+		rtnl_unlock();
+		return ret ? BMSR_LSTATUS : 0;
+	}
 
-After merging the cpufreq-arm tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-error[E0308]: mismatched types
-   --> rust/kernel/cpufreq.rs:950:18
-    |
-950 |             Some(Self::update_limits_callback)
-    |             ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected fn pointer, fo=
-und fn item
-    |             |
-    |             arguments to this enum variant are incorrect
-    |
-    =3D note: expected fn pointer `unsafe extern "C" fn(*mut bindings::cpuf=
-req_policy)`
-                  found fn item `extern "C" fn(u32) {cpufreq::Registration:=
-:<T>::update_limits_callback}`
-help: the type constructed contains `extern "C" fn(u32) {cpufreq::Registrat=
-ion::<T>::update_limits_callback}` due to the type of the argument passed
-   --> rust/kernel/cpufreq.rs:950:13
-    |
-950 |             Some(Self::update_limits_callback)
-    |             ^^^^^----------------------------^
-    |                  |
-    |                  this argument influences the type of `Some`
-note: tuple variant defined here
-   --> /usr/lib/rustlib/src/rust/library/core/src/option.rs:580:5
-    |
-580 |     Some(#[stable(feature =3D "rust1", since =3D "1.0.0")] T),
-    |     ^^^^
-
-error: aborting due to 1 previous error
-
-For more information about this error, try `rustc --explain E0308`.
-
-Caused by commit
-
-  c490d1f07bec ("rust: cpufreq: Extend abstractions for driver registration=
-")
-
-I have used the cpufreq-arm tree from next-20250424 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pEz_Gj.tOQyyylCL7SZcaYO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgO4HAACgkQAVBC80lX
-0GzAVwf+Nk4oM8nAQ0jVM3LEg6XnJ15tWk92Kg9lsQROSYAkoCoMkF+gHYItBdAr
-PGivqwZN7vrV0Tj2nUzIryf/mXmtK0/4ibHU/8JcArY9o6jE+7ucXeeGHgtDbXdp
-nll6Uxx7HPSUg9v1vmBwq/PJeMm/uKaFlIv6OTohfb0sg53WP5fAnXaCZlOvyOD8
-A0Q6FwJCNviJ494iERXBD1cRwd1k2a69c8a2/uG+T4ETS+ORqP5qoHdnk2QQrvsk
-3YOHWEMxJRSyRa2zStsUpVgGAitpwo2SayW5T+aQEX6BG0THJeew+5CUvTtdvxmJ
-TE/6A9MOxiXIhTw5wdA4Zt8v0s6fqw==
-=Xe77
------END PGP SIGNATURE-----
-
---Sig_/pEz_Gj.tOQyyylCL7SZcaYO--
+Thanks
+Hangbin
