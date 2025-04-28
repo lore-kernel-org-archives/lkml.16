@@ -1,92 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FF8263C71;
-	Mon, 28 Apr 2025 14:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3EA2F29;
+	Mon, 28 Apr 2025 14:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745849601; cv=none; b=r3hXDzksbuXEnmmSTjW5YibBAlhMKAjepxGh06GHU7YS9zJN6/dhIvEaW7u9H4NhOnmW4VaVK27/eVWuGMqFR6Y4kpomqMIu9v2LFsExpxd6xqUToiU4oOgoLmN6PC2h3ucfkaaEH904ZsJOtjX8rrZe3bmr6rmzb3QwVbPKsfY=
+	t=1745849759; cv=none; b=hZ5qWqQZV149CC1Ke+sWHT7o/oQC8e3yygLG4S4i27L94iX1s4h3R9C9ETS6p3/YJ5xYIfS89xWJtLm1gO4qRAXl/kIXNEr1ygSi75xIUC2/ON3jaH6cF9jQ/Ap8K0kc469irA22Bq5ydlGkoRQix3FcC4JCJGVSqdBra2GOUlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745849601; c=relaxed/simple;
-	bh=AJ7996YeGnN3pDpQTHfdu0iEi13QtLhDnx96lZGurbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sCmPFk7mrhSHgi99PDUuBaDsSXpgkO2Px3P2nqBmVQHL2vCtT3IRjdpUTyNcbhuy3aHR4n+jslwdeduOw1WLfjDSqfvr4H8gfM7igGsXLIzI7FFuAXhWNQgRNnsXHQMs9/RmBRQRXh9CXKlyYFxGdKPdzp3oKFAY0a34KXkY4Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P44KaIKv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P44KaIKv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46917C4CEE4;
-	Mon, 28 Apr 2025 14:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745849600;
-	bh=AJ7996YeGnN3pDpQTHfdu0iEi13QtLhDnx96lZGurbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P44KaIKvprhRx0fbq1ZkL3uFBu9tEGNrtNekHu8H4Zt5gcI6c1NYx8BAf1hBgDxjC
-	 ifgds64BNZbKMqc6XzPSStrHJaqFsvhUfwHatHfQRoetnuBW9PZq2aF2lphpJyjTrA
-	 MzPX7ydiLNc6aTU6yjYlFUnwV3Sv6KwdlmkRBgV8GHO02o3HsLbMhsAbgtubX0yy2j
-	 fCkVAcEw+IFYgt0hw8/3wlUn5yptxTUoI+wXolbNcTseodYqn0WlBGX4qoSG67KVDV
-	 l9xi8ZFoUGeaaEtqDaWzYwozoO58wmUF4V6FA/79WC3RXkKVG+1yHKjoSzGCVxM+3N
-	 yassLV0XiZTSw==
-Date: Mon, 28 Apr 2025 09:13:18 -0500
-From: Seth Forshee <sforshee@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
- with vCPU's value.
-Message-ID: <aA-M_kT6qr5xM7u4@do-x1carbon>
-References: <20250426001355.1026530-1-seanjc@google.com>
+	s=arc-20240116; t=1745849759; c=relaxed/simple;
+	bh=CdY+cIeg1FgAwQ7kpo+CRDFaQy0LFC7gh5Gu2uEZak4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BY/FU1eDpl2TwAE3QvU4nEx/G+GKZCC4uriM0YT83zHq3/jm8WAFrkCefpVBozzt0moKPiGThMhdPDcHjEI5HvOOJMbC1gMtSxgJfErP094Ba1rQgEXSpMq7oY/kOEMmdO6UEIvorle6IHueZrx8U17rW22lACEYKHRjxAio2yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SA1TJE023835;
+	Mon, 28 Apr 2025 14:15:49 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 468pf93133-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 28 Apr 2025 14:15:49 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 28 Apr 2025 07:15:47 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 28 Apr 2025 07:15:45 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <hch@infradead.org>
+CC: <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <ming.lei@redhat.com>,
+        <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: [PATCH V4] loop: Add sanity check for read/write_iter
+Date: Mon, 28 Apr 2025 22:15:44 +0800
+Message-ID: <20250428141544.3279719-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aA-HSxKfbM6WCgek@infradead.org>
+References: <aA-HSxKfbM6WCgek@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426001355.1026530-1-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 6ae_ElCPFn3Ruwk847cF5EN3yD1tWAMN
+X-Authority-Analysis: v=2.4 cv=EavIQOmC c=1 sm=1 tr=0 ts=680f8d95 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=-zdqMli4Fx4ttb73DeEA:9 a=DcSpbTIhAlouE1Uv7lRv:22
+ a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDExNyBTYWx0ZWRfXwnZWVEew/fqx +ZRA8pu5IG2SurvLjjJtCcD82Jeu3Yg3tD6jPJdoAZcgHblJcwvC5IvNoQ5je+lbyYNpZkjjBDB ctuOCTtL/tu6eq471dtl0ubzwDafHCccyZz+kU5resfJ4BQ9bCAjcrJ0BhnpbAXxznTRYxEcNaZ
+ 7j1es0impZV/iWVohLNyo4pJTuImy+NV+vV99ozGmwgjgzEfQkh9G1OxQuolTMgefwu9kDnGhAJ PmeCVRek7JQ8+X0DyveH3YkOGJTHNZvVxAst2i2EnkpBVrSlm4PH/h+k2BXrnVeZUFWQlrTUj1J OaoAADV53qFLhDZBDBX3OJ/7TNCO71z54vPakB5IWSFNKCnoummHDnE1rt5q9Jtr4c9wO49i1rV
+ itN4DcI/YFvLtJgui2+iI8VxdFVni7CMTVhBwNtai1HgGYCp0QuwHHJKI+9Oyb+mdAg8iCrW
+X-Proofpoint-ORIG-GUID: 6ae_ElCPFn3Ruwk847cF5EN3yD1tWAMN
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 phishscore=0 mlxscore=0 clxscore=1015
+ mlxlogscore=990 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2504280117
 
-On Fri, Apr 25, 2025 at 05:13:55PM -0700, Sean Christopherson wrote:
-> When generating the MSR_IA32_PEBS_ENABLE value that will be loaded on
-> VM-Entry to a KVM guest, mask the value with the vCPU's desired PEBS_ENABLE
-> value.  Consulting only the host kernel's host vs. guest masks results in
-> running the guest with PEBS enabled even when the guest doesn't want to use
-> PEBS.  Because KVM uses perf events to proxy the guest virtual PMU, simply
-> looking at exclude_host can't differentiate between events created by host
-> userspace, and events created by KVM on behalf of the guest.
-> 
-> Running the guest with PEBS unexpectedly enabled typically manifests as
-> crashes due to a near-infinite stream of #PFs.  E.g. if the guest hasn't
-> written MSR_IA32_DS_AREA, the CPU will hit page faults on address '0' when
-> trying to record PEBS events.
-> 
-> The issue is most easily reproduced by running `perf kvm top` from before
-> commit 7b100989b4f6 ("perf evlist: Remove __evlist__add_default") (after
-> which, `perf kvm top` effectively stopped using PEBS).	The userspace side
-> of perf creates a guest-only PEBS event, which intel_guest_get_msrs()
-> misconstrues a guest-*owned* PEBS event.
-> 
-> Arguably, this is a userspace bug, as enabling PEBS on guest-only events
-> simply cannot work, and userspace can kill VMs in many other ways (there
-> is no danger to the host).  However, even if this is considered to be bad
-> userspace behavior, there's zero downside to perf/KVM restricting PEBS to
-> guest-owned events.
-> 
-> Note, commit 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily
-> in two rare situations") fixed the case where host userspace is profiling
-> KVM *and* userspace, but missed the case where userspace is profiling only
-> KVM.
-> 
-> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-> Reported-by: Seth Forshee <sforshee@kernel.org>
-> Closes: https://lore.kernel.org/all/Z_VUswFkWiTYI0eD@do-x1carbon
-> Cc: stable@vger.kernel.org
-> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+Some file systems do not support read_iter/write_iter, such as selinuxfs
+in this issue.
+So before calling them, first confirm that the interface is supported and
+then call it.
 
-Tested-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+It is releavant in that vfs_iter_read/write have the check, and removal
+of their used caused szybot to be able to hit this issue.
+
+Fixes: f2fed441c69b ("loop: stop using vfs_iter__{read,write} for buffered I/O")
+Reported-by: syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=6af973a3b8dfd2faefdc
+Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+---
+V1 -> V2: move check to loop_configure and loop_change_fd
+V2 -> V3: using helper for this check
+V3 -> V4: remove input parameters change and mode
+
+ drivers/block/loop.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 46cba261075f..655d33e63cb9 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -505,6 +505,17 @@ static void loop_assign_backing_file(struct loop_device *lo, struct file *file)
+ 	lo->lo_min_dio_size = loop_query_min_dio_size(lo);
+ }
+ 
++static int loop_check_backing_file(struct file *file)
++{
++	if (!file->f_op->read_iter)
++		return -EINVAL;
++
++	if ((file->f_mode & FMODE_WRITE) && (!file->f_op->write_iter))
++		return -EINVAL;
++
++	return 0;
++}
++
+ /*
+  * loop_change_fd switched the backing store of a loopback device to
+  * a new file. This is useful for operating system installers to free up
+@@ -526,6 +537,10 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 	if (!file)
+ 		return -EBADF;
+ 
++	error = loop_check_backing_file(file);
++	if (error)
++		return error;
++
+ 	/* suppress uevents while reconfiguring the device */
+ 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 1);
+ 
+@@ -963,6 +978,14 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+ 
+ 	if (!file)
+ 		return -EBADF;
++
++	if ((mode & BLK_OPEN_WRITE) && (!file->f_op->write_iter))
++		return -EINVAL;
++
++	error = loop_check_backing_file(file);
++	if (error)
++		return error;
++
+ 	is_loop = is_loop_device(file);
+ 
+ 	/* This is safe, since we have a reference from open(). */
+-- 
+2.43.0
+
