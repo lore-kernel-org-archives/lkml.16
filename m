@@ -1,62 +1,136 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F9611C5D46;
-	Mon, 28 Apr 2025 06:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CF719AD5C;
+	Mon, 28 Apr 2025 06:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745821998; cv=none; b=oXcdlAcr57uELFO15IU+9ekjlj3nzRj4Sf0f01rXpDSygxvEUNFPCe1kk7M5Ug66xKNwobLVeK9g9BXiNAitFsDxp6v+IlIX/OgtFptcwYxfMLaINaethqrK4Cr45L82cpINkm3O68zdUAE3uoh5c+8GkYANgBkv3BPRuFx9BZs=
+	t=1745822220; cv=none; b=Cpm5s+a/2zNu9RXPcdOWI9V3lNvvwY7BiESbwgIw3AZt1+B01iGohP+H0WubXufHRtklcKtchCB5YUGIAb+erhOaEy9zRG3dWkgbcFgyVfGBpwWIwVQVCoo0XzXAuvT1HmZ/T9X6ahiPVwxOcZNfy6DAtkH4GDz3Lo+4CS/gNYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745821998; c=relaxed/simple;
-	bh=o3qXcMq9W9bqc0A6DllhRLlFvOzRBCr9VypF08Ya9TY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LarnGItOHoOPmUIWeIOHcZBb34lasommpVLg+TUdz13RlLqGJpJR3dxDG2bYLViHLpTu/sQ/95te3cGqAuW+gTP5BQqEFrocC1Lgq4l8VjrZaXroNkeqPjOUvRu/kY9nKvtz0SBWDanaxux88u2CDBvgBnLEP4PgyutUzHDCLds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx63EfIQ9ojSDIAA--.3857S3;
-	Mon, 28 Apr 2025 14:33:03 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxDcUdIQ9oTM6aAA--.59312S2;
-	Mon, 28 Apr 2025 14:33:02 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Christian Brauner <brauner@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Fix compile-time and run-time issues for pid_namespace
-Date: Mon, 28 Apr 2025 14:32:58 +0800
-Message-ID: <20250428063300.7137-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1745822220; c=relaxed/simple;
+	bh=Am3ATgqCXM7Z1F6TVuGcXo9TdrT/FcOarhjRMiPCh3g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gUXCXEvcMf0tA7AltVVfjI5cdcOd72BuMVTYEDO8nOKR5TTKnjVx7uPEfdrI8+zseec+frQ2XFECV92WpuNoX3aL+R51aK4tY09ix4ocv44hEZh2uRg8wrRqjTASslbr/Wp9lRXtJe0PRpwe/of1T0J23cyWSSMoXyr7BlkXMBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1744651241.1;
+        Sun, 27 Apr 2025 23:36:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745822213; x=1746427013;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4HxYx13nksu5xy2CnHaN8inhIAqufNq0pgtm+B7CBB0=;
+        b=toGcj6SMoqNISv51bLdmL5FzIFUuIhNx4htUeYUUpk9ietwH62Yly77/aiHzCCNnDC
+         8FYuKRXG2kPKhyrXXZ9uK469B4KwIvAXYy6mSGu4bTwEFQ2G7A2MKGgqLfvVhGIyllTA
+         i7h1AscXv40PJEzeRE6sNAYLjI7+bpM1oMHUR7MSJkuaZM64daESpnDmIFQV39UZGfGZ
+         E4ge2/WiwUQuVkgmD7CNvq0QPrPYM++eN6nIg2rueL1v9J/9GlKOLD2dV9zzk+NlOK2y
+         2ioZki1QwW6cSFBAuGManQ1P4g5qmj1hl3K2ngZ/z5rVkpNc2+UOowpXYADzLPREKYd0
+         chuw==
+X-Forwarded-Encrypted: i=1; AJvYcCV84LG14XLYXfmGzvPpxA6j20p1kNjSxBts7rs+JsfHlorWcO21cdFMjBYWcIf0NHPkvrRGczeMk4JCYFy8@vger.kernel.org, AJvYcCXsFp3bLRsmrJfAXk2koMbceq5HHUq0KRZSGTtTotlshQinleWxhUzRfJKfelC5lmDQ2Cwwk71w5LGbrw==@vger.kernel.org, AJvYcCXyu0ta7+ZAh1rdMVZZeDh4xUcbB23jK4bfGBfL3afD7HAdjqlT3T4Qu41XLphm53B9Ci5JKzdzx+NuqS+etqgv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBM0/6TVfrPbdB8EUKbZXL1pZvDEk8znUZWnOGoeaZWN5Qr1Kh
+	qzKN+iUPSvEKp2e2FR8affuQ5YexPEST2FvyS5LL6eguVy3iDPhCawtdz0Fa
+X-Gm-Gg: ASbGnctTqvcNPREmo7rQbIwD9lxKI5XubIXbeufhNsrBjexz8vcXjlTM/BTmwcLbNR1
+	oO4yKAZGb6zwi2C9+JJYVhh82x1Zuf8aVOoWZREjHzCtVTZBOe0Vyh+LrEwON6LPYWU5Bylzldy
+	6TQMclpsEQLZbHqo2CryxLE8Pq5ySJCUhyghsqGw5mPkyywaJTOkzuqp31mE/LJiIup+Lazh1ct
+	uz+Vq72anxcPBeDCvAoacArwCbtquh6fTncyONrd1cfIQ7H6dLXDmKb6CgNldX73kLqb+E4D7zN
+	Brei/1XhDG5NnBaJVEdywVqqc8ch4xAJujKkgNhpGl2SmCRIVquoCNYFlzDcrOWUnXe+X9TfKp2
+	Dmdg=
+X-Google-Smtp-Source: AGHT+IEPTqWYz3bezSuvlBSjtra/w8wLuQXmDuFE8sHZ2XmylGgU1c3DARkidytYE/KTDopn4TLc8Q==
+X-Received: by 2002:a05:6102:15ab:b0:4c4:fdb9:2ea with SMTP id ada2fe7eead31-4d640698094mr5235709137.7.1745822213301;
+        Sun, 27 Apr 2025 23:36:53 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4d3d5662e5dsm1756433137.18.2025.04.27.23.36.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Apr 2025 23:36:52 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1744645241.1;
+        Sun, 27 Apr 2025 23:36:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgl8XbjL7+wtgktsxTSj8Em/3o62Z8ioj7meeZKbIIkyXEhrR2mxLwZBk57FNX1riXfrc9TiCoA6b/9Q==@vger.kernel.org, AJvYcCW6PaKSbYhPAhl+bNXZlp+tDIdOILARxjUTC8Y8FzkbVTM8nnaUj2d1A8nm1REipRpz3isgsNFvQ2uieFAE@vger.kernel.org, AJvYcCWdG/6wtAXmi+s0fI5+yKt5vJplncF77BQabwLa3rYtcjAJOT2NtQutoN6q0aercSuQz+3/5s6IEo3I0jiUgRdz@vger.kernel.org
+X-Received: by 2002:a05:6102:32d4:b0:4c4:e414:b4eb with SMTP id
+ ada2fe7eead31-4d640d802fcmr4616539137.12.1745822212499; Sun, 27 Apr 2025
+ 23:36:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxDcUdIQ9oTM6aAA--.59312S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
-	14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
+References: <20250426062305.work.819-kees@kernel.org> <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
+In-Reply-To: <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 28 Apr 2025 08:36:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
+X-Gm-Features: ATxdqUETGiqKKLP9sekTsuKQhnr5eXZt4XYi72gcVaTSzgLI84_ILYIl_9rFvl8
+Message-ID: <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
+To: Kees Cook <kees@kernel.org>
+Cc: Javier Martinez Canillas <javierm@redhat.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Zheyu Ma <zheyuma97@gmail.com>, Samuel Thibault <samuel.thibault@ens-lyon.org>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Helge Deller <deller@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Tiezhu Yang (2):
-  selftests: pid_namespace: Include sys/mount.h
-  selftests: pid_namespace: Skip tests if not root
+Hi Kees,
 
- tools/testing/selftests/pid_namespace/pid_max.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+On Sat, 26 Apr 2025 at 13:33, Helge Deller <deller@gmx.de> wrote:
+> On 4/26/25 08:23, Kees Cook wrote:
+> > In preparation for making the kmalloc family of allocators type aware,
+> > we need to make sure that the returned type from the allocation matches
+> > the type of the variable being assigned. (Before, the allocator would
+> > always return "void *", which can be implicitly cast to any pointer type.)
+> >
+> > The assigned type is "struct dac_info *" but the returned type will be
+> > "struct ics5342_info *", which has a larger allocation size. This is
+> > by design, as struct ics5342_info contains struct dac_info as its first
+> > member. Cast the allocation type to match the assignment.
+> >
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+
+Thanks for your patch, which is now commit 8d2f0f5bbac87b9d ("fbdev:
+arkfb: Cast ics5342_init() allocation type") in fbdev/for-next.
+
+> I applied your patch, but wouldn't this untested patch be cleaner and fulfill the
+> same purpose to match a kzalloc return type?
+>
+> diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
+> index 7d131e3d159a..a57c8a992e11 100644
+> --- a/drivers/video/fbdev/arkfb.c
+> +++ b/drivers/video/fbdev/arkfb.c
+> @@ -431,7 +431,8 @@ static struct dac_ops ics5342_ops = {
+>
+>   static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_regs_t dwr, void *data)
+>   {
+> -       struct dac_info *info = (struct dac_info *)kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+> +       struct ics5342_info *ics_info = kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+
+sizeof(*ics_info)?
+
+> +       struct dac_info *info = &ics_info->dac;
+
+Exactly my thought when I noticed this commit.  Adding casts makes
+it harder to notice any future discrepancies.
+
+> > --- a/drivers/video/fbdev/arkfb.c
+> > +++ b/drivers/video/fbdev/arkfb.c
+> > @@ -431,7 +431,7 @@ static struct dac_ops ics5342_ops = {
+> >
+> >   static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_regs_t dwr, void *data)
+> >   {
+> > -     struct dac_info *info = kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+> > +     struct dac_info *info = (struct dac_info *)kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+> >
+> >       if (! info)
+> >               return NULL;
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.42.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
