@@ -1,123 +1,229 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY4PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19010007.outbound.protection.outlook.com [52.103.7.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE6B136658
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848031; cv=none; b=OAzjXbgo7rK1NhfUlsKxyg6Dxf1yYVwhcBS70HGEuc16rk4B7TAU+CH6xI80BsJ5Mg3vqBgYeQySfWeN2GngDU0pJRNuYVa19kAOHUM6jr/Q/jQUQZJU+/dRVHDrtKjS7KPhyCcqaYHa1szHhfSrfMXbWAz0acidSpXBJdknGKM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848031; c=relaxed/simple;
-	bh=8Ze9MKPRr2ibTiFbLm3WcNCVvEbM/ekMvV4s7tGQnxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CMHOs4mJzFZkOY49nbZkOtajXRmP9W+s9t3+LpruNapOy63sPHOPBYlhBCx3HhqSL6D7eZYpOV08te9B2DEvZfJrNjCsypkLQBf7QbLVB8hhqpbZkWEfOtHJLf2h3O0EdQr0DjEZQR232OhiEbSBjZWfFZpDIJWrNZOqSIP7XT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fbfAri0D; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA03186349;
+	Mon, 28 Apr 2025 13:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745848048; cv=fail; b=CCgwdepEYDNcs8AGzcyqdo+ZJc+SLhLMspqs72shfO6Hx6AuXRF8iLYUvaAGOwn/8v7vKQw20Y6MB4cVdAxChLMXrGSt0WF7sqYJx+WhhC8xjGnyFgyQq0eLzJyrRyX0BF2laX3e4ywcFG5SlJB/P0TsWeL+YsuuqnPbHGgfpKk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745848048; c=relaxed/simple;
+	bh=gj07RSXROiLzns5Yvuxgh7CcNekeYPXZEwb/xHzHI+M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sw0kPEEnX7PKJcal9F3jVjkQ+o8qVilrQgFZumEeZmd3pDZB4wdnUS9tWzZKcHDzhlE4bv/fGFy7zyhVVu2YiLLgL8NcUME+NnPuAZ8DYS3OnfRazYHBccjyet+H37a1cYsoidTi6d9Ku21kyxvCCXdxeC1dQvUfYnEFEXbEl2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ntTClD3+; arc=fail smtp.client-ip=52.103.7.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fbfAri0D"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac25520a289so754558266b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745848027; x=1746452827; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JsbHP9q7QPdde2LygIdicngaffCZ7TvF689TrjkFFsw=;
-        b=fbfAri0DEJAiPZ1Y4eVLbzkIU7dOwOwHXz3h42i6v+8xhJhUwW3/sAE5vaiBM34cdl
-         65InoTPgb0jTjSifXnd4jdCD/EHMlLaMFCtRGev8ZDvMYtGjJ0sOXp40ZM7UZC6zDEry
-         EbW1oNg9M0iq0mhPOOREnQH4vEhmWJDJfV3zdTuUkmGVFf2Sd6DVHAZsKRnbz0Bt21uc
-         lZuz6R5SlDdR1pcamkzv4u4aKr76szotKqnT+uSySlRPPZmyCQkoKrVrMUOgnE2NLNl7
-         GqnfYhMZdl6XYmNhJM+SOnf51cpGuhVZ9pxYqQ7jyUg8u3qDbJf5sL/n2yKdbChrKPlw
-         mCmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745848027; x=1746452827;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsbHP9q7QPdde2LygIdicngaffCZ7TvF689TrjkFFsw=;
-        b=v4ZPBRdlcry66fFoVJFIWvS8eeI8t0ZDYJEl0H9SBgfiK6RqfHf1RKtFt8Mm9MuBGE
-         LH0XvdK9J1ccGn507F+h4eosChhgtczrFpfxOI2ty1cBa6A+7mYavN8IXBrcX75AopD1
-         OVXbYIzu6HDM9g1bZep7OvFy/GF6QwC729lncHD10sy1fT44+NyS0o5xav14Wf4iLCRJ
-         z5iD+ccOTRKBI5aGK0YnsFzjwKGoAywPIo3+OpsKYi4bqSHCoA98anw5NxhQB6pa85E6
-         J2ThrR4e22ZwjHqRy+wEyjwvCwsu4N+uuT63cDwS+VZmjmpRTDtSON/Teo+QQRCQl3B2
-         eAmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxiaPDyxcPpRDxh19zFbQFyj8xqrDCCr0XGCkeN4ZI0uO1JSd8y7bsX+jPkd50XCggqeKLsdcohuwPf9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7JzZB4eHVeDkAl2211Kn7KzlQQ5YAoIjHnlko9XDMeuh6JJxW
-	jV6xrEbcicsIzAZRhiq65yMYn8pUAOhXoIOXkaa3WiCYOMWDYj6Nsu3C6iuooMo=
-X-Gm-Gg: ASbGncuNTHiolzTP7iO/cwATKKCqDAcF/JTotGC0LGwqqhP4Oz9YMOqr7vnwj5/xv/2
-	A8Lj/mEX5xOzqhxbtirYSTYvumqA/FGvIXejoiDV3wkvYeGTmFrgdKpJbmr3hToHFLr7JI3ZDTu
-	d4tNmYCAi8IWI0wxQMzHQI7yhjeYmWIbgvMkzMDz5SSWAR2Z3VKiPSc5BA/YsqK/6mOCcqJ9omd
-	3152D8nXGLAtZFQWQI35m9c7Fu9XgXtBvHeRp+6xu+2aiEiw5/WUWAFieMLr/pU0pZHXaEa71Vi
-	w+sOsS2QBbnt0cPJPj3jhijbpIAQL7z0JDHq3VlgQeQZtiRX0ZF9BQ==
-X-Google-Smtp-Source: AGHT+IGqzwh1ITeNsAX9KP5aHUN5/8acCZdGikSmJ/7V9wS42pujwbYDhXZIt1HuZsg7+acKpE7tzg==
-X-Received: by 2002:a17:907:1b22:b0:aca:a687:a409 with SMTP id a640c23a62f3a-ace71098d4bmr1176725166b.17.1745848027469;
-        Mon, 28 Apr 2025 06:47:07 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bc36sm622902966b.33.2025.04.28.06.47.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 06:47:07 -0700 (PDT)
-Message-ID: <65c912cc-3a27-4b0b-913e-784ff6d07221@suse.com>
-Date: Mon, 28 Apr 2025 15:47:06 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ntTClD3+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=f6BPf1ChnRnWkT1VxMmvTBnS0MB7TF15j5MrANXmvPUHI7iJsNb0LauX+aB8+JwTzUTspqHP51hFZRE3qFsUgMQq+LgxRlAmsZwIaLL6FmLD8oziIlGronqMz/Pf4B3oVw92jTKMae6sdlk/8M2Sw6abn87LmGz6jkI1wGZLd76kPlHFbI8Tuw4aypSnpp07cLPWqttLVqDP6ZrXkY82xiZTCENc+UbAx9zmu5i/s2K4hF1Q6qhjNkXkrpeorKQUZWy1uL3VPhiImnzUO/lg/3tuXHJUcvuPP4tJV2rZJX0o/lHIO02JAvK6q2q3HXKnm4HVCtLYXMLM5s3N8h+Bsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S80nHl413On0YZ5v2eD0P/XGRuFBHKYLaXyF1ox7N0Q=;
+ b=QCv776nwi9JCQGyVhDXSStxFpYd+Blj4dzUeGirGsjdiIfPCH7FzSnZZeN9LQZhoo6lz7g7KwYJbm5icbewcb7Y3KgFH6GEvXLJcZlbRW7vK2MvYthBXHIv5VEyFkSvvc/mFeauzK+S8V2MwCDJE7/Z8f7XRU5hVgCC6GuehN0I8IZdnvbRZOpTVkJLKIqsv6uhXHBThuRaiFzG0QBZviUB2YCQNeVcNZFDanrQiu1NI/I0RV4p7xoFeTgcOuTYqj4Ynmmg5hvQZ4vhpNZkf2dE4J8W5xcIL+gqAfxuwwOQvZfkc45cw5xouWxnGdOOM8KQPYdejID0GgG8vtSF86g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S80nHl413On0YZ5v2eD0P/XGRuFBHKYLaXyF1ox7N0Q=;
+ b=ntTClD3+iHIL7QEXDxQrpGPdfSsXMMBppiQhbJKAoblk8zAFlGTBnOVXXbwzJRkM08Lcr0qdakrkKn28mTmCxYm2yaU6Thpw3UW9WhHPG9kLRfNJmQBHtqBXpW5MPDpLEMXlhVW7chNJEjRpTjy9FmOPry9fPaM03OM73f2h/20VME1/doXg60K5+o9SXHM4a8PrsNjsSNl7uxEjpjGMfUoolP36WIVZE/kzu0Bmg3QtXGbjGAN8jXhFhhj9ceYNJynZ5f7KpandixtWoKccvILbRW/MTg6xLJDTaToXKQbBMBvKHOoa4i6dktDGwZH/gp9RP3BiwhE5xyKS2Zre0A==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA1PR02MB9496.namprd02.prod.outlook.com (2603:10b6:208:3f0::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.15; Mon, 28 Apr
+ 2025 13:47:22 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Mon, 28 Apr 2025
+ 13:47:22 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nipun Gupta
+	<nipun.gupta@amd.com>, Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Jonathan Cameron <Jonathan.Cameron@huwei.com>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long
+ Li <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn
+ Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Dexuan Cui <decui@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
+ Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni Sri
+ Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
+	<peterz@infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, Paul Rosswurm
+	<paulros@microsoft.com>
+CC: Shradha Gupta <shradhagupta@microsoft.com>
+Subject: RE: [PATCH v2 2/3] PCI: hv: Allow dynamic MSI-X vector allocation
+Thread-Topic: [PATCH v2 2/3] PCI: hv: Allow dynamic MSI-X vector allocation
+Thread-Index: AQHbtdCWRcDvObzyf0yxeG1Lt72g1rO31mow
+Date: Mon, 28 Apr 2025 13:47:22 +0000
+Message-ID:
+ <SN6PR02MB4157247E1BCF02CEED0B23BCD4812@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1745578459-15084-1-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To:
+ <1745578459-15084-1-git-send-email-shradhagupta@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA1PR02MB9496:EE_
+x-ms-office365-filtering-correlation-id: 3fe03602-e7f7-46b2-6ea4-08dd865b33bc
+x-ms-exchange-slblob-mailprops:
+ 70qbaZjg4mvbis83qL2U5WvEmRMBS6OgzCHaEno8A2kkpmDgZwK5XsVusQuXWRDSGoNmyPowv3rVxG2Hhga2HCNNJ8mDZHmpQnvAe9xKALe96XiD4y2wmwpU9urXSs7mLk35pJLhrizE2KaN4ljcs44iWUAQ3kVXiRbZ5/Qm/sKWvzTfJvNU0Cz3aETNjthEKaKM+oBZez3sBeEi2KOcR2cpGH5CL0zc0Ggi7qvTI609MUayaZ89oppH0iEWIsF/r5rOz6IPlDrtWClSd7ilWR/FIXvs09y1XEAABrhl/GaSE/3Wy5OFbWfLulRwmyzfLrzuUWHfFkLX4b+55H0AJie6Qeug14/bwSiSaB5uTLpjcI6fnd6P2sx8uFjpZL1dgD+FqpFFo86f03ejdQ0K0C2O+qrpuFu+1dE8WJn4ZDiJ7dtMknZc6jysWP63a9hRwgGAaQMTyRlobL2/jP5hWNtfZTKU9OkJZiNAYk/+32chkTutr05LIcLtYB9tftQDKP7ltrD103uD2XPvApaUnSaIFesT5MRieVhmjiDhsQe8MxyRZ/316pcAsFiWj1OyLsuT7LTmZ1zeZ6OC0E/nbO0myxaEtli+Bywo8S5n5b3okX5gfFl/jmcjLobZz7xhoAcZ0YmqsdgxKOoTF4f+uXtugN70WJpU1gTn6NO0FuoTv3rQiY8qY6f+Ev0YjH+Kl5BoS3cCFfdsyFLH4f6E56IzNjaWEeoKHGTv6nmVkjLErh/S6EYxbA==
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|19110799003|461199028|15080799006|8060799006|102099032|3412199025|440099028|41001999003|12091999003;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?NLvHZrlOAlUjf2eI2KdDnbCrMklBkueLGyTczfLx+DQsGiBThX1N3b5PvN?=
+ =?iso-8859-2?Q?R9Uq75vTdk86duVEUI17Kv08YtUbHIvfYWw4ayV1iqKeMpNbQLlnnT0MZd?=
+ =?iso-8859-2?Q?BDHIPfMGcGfZ6Vx4wbTFR8STVgj1T9WPnIUTQy6c8yCh5WJfWjHoMOHOFJ?=
+ =?iso-8859-2?Q?JZ+zdTFQxjUOfZoVQZoL5RezdsxRiBSvn+SN2kZ6xmj5EQG1LO/nxt6Oue?=
+ =?iso-8859-2?Q?hv3iLPU5AE8DGkmw1Nl2vfSx/didYzbwkqIG7fIgJc1Wsj/HT3ROiI8+Cb?=
+ =?iso-8859-2?Q?BcQYtE5TDMXe6xzqmz24KYjUInLZaiXZelE4viB3Zp+Wl98ECPk7WrB+/p?=
+ =?iso-8859-2?Q?DvFe5fdp44lyiGE4eAgNmEv1+3GnbZVkndqSo3l3Sk9WxnaXBL6k9Cd15D?=
+ =?iso-8859-2?Q?WkYm4nN35O6llAAGP4pKiCe7uGXI1z6Fi/T5MUoMOr59wTXoH9tD3fYq3m?=
+ =?iso-8859-2?Q?/MuiYHHp2HyjJpin43tlRbWiC8yhbPeK6B1pfx7tkrETyjPeNP4UUbdObY?=
+ =?iso-8859-2?Q?jX8FQZsG3zIc7Hy7t9zG+I2zwmFQKeEzghl9Bg20zfKVy+sYL83O40a+2H?=
+ =?iso-8859-2?Q?zNvMC3oqaIM0OfygLsMJW5CJUxtyFrk1fJ3+G48RMT+qLYRFIk83y7NKSb?=
+ =?iso-8859-2?Q?tvq+6k/f0XV66Yy58kr1GoWef2Xs2iJE9dddWZywH+R93w138baPIeMcqt?=
+ =?iso-8859-2?Q?i2dfXdsqmhFFe+/Is4HXXe/96n3ipIvoSED3ic6Fb2cgURNxKuhM91vq3T?=
+ =?iso-8859-2?Q?YwLoiHtY/8sz4BYLrtPbkshuEQayolH6care1k3KH5qCLTaijz/j0+P40i?=
+ =?iso-8859-2?Q?moat+4UzQcZ4nfaicFSxu32oT60XLJTJ6Cm6C9EX6OlpzfbQte5LIbP2sM?=
+ =?iso-8859-2?Q?7/Ml+THEG01BtyXAzmJjPZLaJdg10NG5ZXo7TYbqgj6UG/ZX/hKBAVnxuj?=
+ =?iso-8859-2?Q?tkOLxeQdu7RzVurq2yAKaHz7aYRHEP0ccIG8e0V+Vj6LCEcZ3xbOjJH1rj?=
+ =?iso-8859-2?Q?WDkjcCJZwN8ysuda1pBi0obrbnX3lxZUeyXk68LX8bVC5Mg+XMkCoZcxDz?=
+ =?iso-8859-2?Q?YyBV7Mrcd6yXV5/Qw+7Z37wfIdbX+MxmhfSMjflOgNcgxdc2G6Tshv46XX?=
+ =?iso-8859-2?Q?XUertk180I4IjQzoZdYf2WH7JvBYyHMT29ZM8XiMdGrkIT0fDcezcT84dK?=
+ =?iso-8859-2?Q?8KuUCv0lM+jtUA=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?1hlTdcNEAjG2KI4zpjAfj3pGD6t6Wq/PgHEFao26y9JuGCCJERBuDN7Umd?=
+ =?iso-8859-2?Q?fMadfKrK8jBWcq+xSFjoRt1kjQL7yrU98C7g8qzYorwYwm6j4nOZinMcqd?=
+ =?iso-8859-2?Q?SznGHl8Gxj12x9hQjrnK7zzW6RWFKqzyV8m74++hCXl4d3CXyfTlAeTbUd?=
+ =?iso-8859-2?Q?MTPvpftILbXv+7nl6Y3NLFGaiKB0vFRLpZFkBB2WP3sF+QvdYfaXN/fFP/?=
+ =?iso-8859-2?Q?UeZPd+76mrKhNE1/v9etrZFQIHRI4+eKo3xR+fDagB/r569aClRnbtclxg?=
+ =?iso-8859-2?Q?ENSxH7ZxjMT3+cLYoa2KpaYyVhzvPNAhu5zZxGY81SfqI5HLBreFz/8hWq?=
+ =?iso-8859-2?Q?vqfas7ZytQ3aHB+G6zU5ATEMcwvBNpDeHQ2zzPD/6sawqPEB4VV8wYcwe7?=
+ =?iso-8859-2?Q?G3pL/538Y3HiEBxMTCMLed/AX71ijCxPFu38ECa/T3aBcb72vrIIHUvzmk?=
+ =?iso-8859-2?Q?HqqDlMXn4+zDOOCI47vTQhmO52x6IAiCLOPoTXtlM7LSKtYBzLtM9hBcl+?=
+ =?iso-8859-2?Q?xtYI7yVOgbDH7ukzJoBKAyRgYH4j5q7TwRne4lLMMFmII0p/c+ZcKbePZp?=
+ =?iso-8859-2?Q?y7rryLzFAIR5j26SQcKH9eSS81w1uhu3JrT/sBKh5midQ5vlzOOXbySEMa?=
+ =?iso-8859-2?Q?YR31rTbhUTobVteackD/Ms8rZ5flCDZbd6nvVOvOn8eLFFMIgrxL3f2jrB?=
+ =?iso-8859-2?Q?tz+St0dUx5mIF5SKbfTY1zWE506SDj3nEUzYvO7BOrfy8wBb66jACoKs42?=
+ =?iso-8859-2?Q?rctBdqqL6VDbDDi5tJJ6kl1e9DckjkKhPK/2ldk334jcR4SB56lKiKCczs?=
+ =?iso-8859-2?Q?wvlLrq42RRd6U6DLhiZO1YwYSJn91nzmkrdqDvPAZzRiFXTjGql/eEhd6w?=
+ =?iso-8859-2?Q?X/RuW0gMAumLjahu0f5a7xCgx+Fnihegzd6Ch+FFI0RU7A5FwxVNtEW0Ve?=
+ =?iso-8859-2?Q?pcYkgMKOMi6aP0jhk5S6XyTV8KctT8Xii8gk4XorL39A8sveLUji0zzXQd?=
+ =?iso-8859-2?Q?Ne1L8Ov38q6OXX+suqKjxGIMlhuT59Inj5JFwURPN+yDCJC1YBscw/Vrfd?=
+ =?iso-8859-2?Q?VXP8kTRvz6LxPKLfYZliOSLEvclp59/uV0VsNbCnn+Hrd0uftZeUA8vEfA?=
+ =?iso-8859-2?Q?sZllytMcDHB/97TYwy5TRWGwIQBUhliBpGcxbCSH/l0W49q85RPWIAcpZD?=
+ =?iso-8859-2?Q?pvBQ/rQn9CP7cTPxD8UkSbHBfTahOyS1cVUCfr+0rgabqc1c/O3yC7l6gT?=
+ =?iso-8859-2?Q?not9mns1+AtLj5WdEra0iU+qxFTFdrlBhK0X0Kubs=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/7] Add generated modalias to modules.builtin.modinfo
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <cover.1745591072.git.legion@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <cover.1745591072.git.legion@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fe03602-e7f7-46b2-6ea4-08dd865b33bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2025 13:47:22.4569
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR02MB9496
 
-On 4/26/25 18:16, Alexey Gladkov wrote:
-> The modules.builtin.modinfo file is used by userspace (kmod to be specific) to
-> get information about builtin modules. Among other information about the module,
-> information about module aliases is stored. This is very important to determine
-> that a particular modalias will be handled by a module that is inside the
-> kernel.
-> 
-> There are several mechanisms for creating modalias for modules:
-> 
-> The first is to explicitly specify the MODULE_ALIAS of the macro. In this case,
-> the aliases go into the '.modinfo' section of the module if it is compiled
-> separately or into vmlinux.o if it is builtin into the kernel.
-> 
-> The second is the use of MODULE_DEVICE_TABLE followed by the use of the
-> modpost utility. In this case, vmlinux.o no longer has this information and
-> does not get it into modules.builtin.modinfo.
-> 
-> For example:
-> 
-> $ modinfo pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
-> modinfo: ERROR: Module pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30 not found.
-> 
-> $ modinfo xhci_pci
-> name:           xhci_pci
-> filename:       (builtin)
-> license:        GPL
-> file:           drivers/usb/host/xhci-pci
-> description:    xHCI PCI Host Controller Driver
-> 
-> The builtin module is missing alias "pci:v*d*sv*sd*bc0Csc03i30*" which will be
-> generated by modpost if the module is built separately.
+From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, April =
+25, 2025 3:54 AM
+>=20
+> Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
+> by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
+> pci_msix_prepare_desc() to prepare the descriptors.
 
-Could you explain what is currently broken because the device-table
-alias information isn't available? I think adding this information is
-reasonable, both for consistency and so kmod can display accurate
-information, but is there more that I'm missing?
+I'm unclear from the code below whether the intent is to support dynamic
+allocation only x86, or on both x86 and arm64. On arm64, you've defined
+hv_msi_prepare_desc as NULL, but hv_msi_prepare is also defined as NULL
+on arm64, so I'm not sure what to conclude. MSI_FLAG_PCI_MSIX_ALLOC_DYN
+is being set for both architectures.
 
--- 
-Thanks,
-Petr
+In any case, please be explicit about your intent in the commit message.
+If the intent is to not support arm64, why is that?
+
+Michael
+
+>=20
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  Changes in v2:
+>  * split the patch to keep changes in PCI and pci_hyperv controller
+>    seperate
+>  * replace strings "pci vectors" by "MSI-X vectors"
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index ac27bda5ba26..f2fa6bdb6bb8 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_=
+data *data)
+>  	return cfg->vector;
+>  }
+>=20
+> -#define hv_msi_prepare		pci_msi_prepare
+> +#define hv_msi_prepare			pci_msi_prepare
+> +#define hv_msix_prepare_desc		pci_msix_prepare_desc
+>=20
+>  /**
+>   * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
+> @@ -727,6 +728,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+>  #define FLOW_HANDLER		NULL
+>  #define FLOW_NAME		NULL
+>  #define hv_msi_prepare		NULL
+> +#define hv_msix_prepare_desc	NULL
+>=20
+>  struct hv_pci_chip_data {
+>  	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+> @@ -2063,6 +2065,7 @@ static struct irq_chip hv_msi_irq_chip =3D {
+>  static struct msi_domain_ops hv_msi_ops =3D {
+>  	.msi_prepare	=3D hv_msi_prepare,
+>  	.msi_free	=3D hv_msi_free,
+> +	.prepare_desc	=3D hv_msix_prepare_desc,
+>  };
+>=20
+>  /**
+> @@ -2084,7 +2087,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus=
+_device *hbus)
+>  	hbus->msi_info.ops =3D &hv_msi_ops;
+>  	hbus->msi_info.flags =3D (MSI_FLAG_USE_DEF_DOM_OPS |
+>  		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+> -		MSI_FLAG_PCI_MSIX);
+> +		MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN);
+>  	hbus->msi_info.handler =3D FLOW_HANDLER;
+>  	hbus->msi_info.handler_name =3D FLOW_NAME;
+>  	hbus->msi_info.data =3D hbus;
+> --
+> 2.34.1
+>=20
+
