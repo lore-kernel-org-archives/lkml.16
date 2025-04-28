@@ -1,52 +1,45 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F521527B4;
-	Mon, 28 Apr 2025 14:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC392AD04;
+	Mon, 28 Apr 2025 14:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745850189; cv=none; b=Avi0XkBu0R5H6G02w28xPZ446G6xfPYZea8Hkvzt8HOoNRPKB9d6SIfAIKE8rSDIExTgqizw7zU4HE/7Tlk6+jQP05f/3KB1HCMEOBPPcEvirJ5vRp3qQK3RAP4ogu6j95o1rfTDtNYIgCbGSAJo7j5qQFK/25cItmVVn5B/8Fw=
+	t=1745850378; cv=none; b=uQSLeblyypMqsjoeYub4IMWlC5XqzrS4/pH9iSmR/IQsBphLhEE8JFDbibSQKZzqR/OWWxyNrdWHvLMjoVBR3fFBKCYEQRa5BmmbBinjFimdz0aS88xl4nj0aHFf8h0dqUk7Cx4pB9K8YW1ZYea5glGRhpMALwNRPfR2rx4NFD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745850189; c=relaxed/simple;
-	bh=pkWJKi2o7+wr978ci73S7Jnm3yZMHVsqZR/8sngjnNY=;
+	s=arc-20240116; t=1745850378; c=relaxed/simple;
+	bh=M5jhyk8OZfFi0e7dOmDS8y73QuDIvDKgRT6GWdirDns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSrF6GZVIArmDQlfsDnijfYy7xutKzJOICtzMtkMWOSFHnY6rc3ddqM8on4FRnmiBpwGdrRZT8sfZFiIArVxf90QsvVT5TSr487CNxXZF6A+0XvwiGnL9fMUt97Y1cAU6e0DigkilyHaRIvNfs66QER/zAJ7oHT376vr/2tdZeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Un5qawjW; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=MsBxvGOg0ALSqDR1X9vjj1HZUGoGaPSkHeTYDEMkCswoeF2u/W9tA+Imc0FR2ZfNaJUZycngHYlHD6s2/Ipsh2flvFFRI5UtrEzhmq28ap86H/obsLU96LqIurOl/rAljbk2iRDlnNB7az7avQy0vqKgvT2oo93mi+R0R5z9O9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Fi/GhwFl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Un5qawjW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=KgWHsUCUBEFv7Ycjxi4yK47joNYceiEjUCO7mVk084w=; b=Un5qawjWiRpBR2oqejia2d9Kj/
-	xECAGDlhKTvArROD6H9+JryYC0fxjNWD9oZitkfGUwAdn/SV5iv060Pep1TabLnggefqREufbzmH3
-	JUZbiAHQ/cfufXb8dNwg2sgOb07ukMIm/J6qv1J0tIjtOaoOKldhb93bWuFUKUxqyeXQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9PNr-00AqV3-I3; Mon, 28 Apr 2025 16:22:59 +0200
-Date: Mon, 28 Apr 2025 16:22:59 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
-	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 5/5] net: ch9200: avoid triggering NWay restart on
- non-zero PHY ID
-Message-ID: <3a84b8a8-f295-472c-8c3f-0655ff53f5cc@lunn.ch>
-References: <20250412183829.41342-1-qasdev00@gmail.com>
- <20250412183829.41342-6-qasdev00@gmail.com>
- <b49e6c21-8e0a-4e54-86eb-c18f1446c430@lunn.ch>
- <20250415205230.01f56679@kernel.org>
- <20250415205648.4aa937c9@kernel.org>
- <aAD-RDUdJaL_sIqQ@gmail.com>
- <b492cef9-7cdd-464e-80fe-8ce3276395a4@lunn.ch>
- <aAtgOLMnsmuukU42@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fi/GhwFl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kxbJqAzVqokVubs/URCncLC3hU3iVwX70RG3BUsaee8=; b=Fi/GhwFlB9DwJVBZ9ZhVoee+MC
+	3CaJaJn48L+/jzo0ITrK6ENtoGBt1gy7DzCJXso8oWEr6stsHDn2am++e2YNVoR+gCHbWVvFAe7OT
+	QfoVdUbZkuBZzHyPRtZ10gC0QvRXSu1CxAoK6paTdnr5O5l7kcLr/qhlUYr3XQpcxD5G782mpkHnH
+	FsqhfNU47C+mPyHQVSh5PlW7Jp4S9vfq55zBeA1x0MNp8GzesLyJ7C7KCe33t/Ac6V2MslQ1P8U3C
+	Mht9wrbuCx+0kr4Jx6aB4jNQhZo5eo7QvZGctuXJ8QTTsEg8GTkwyFMR7+QjrZVG7tLGT8NiL8h3v
+	RDrvhUsQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9PR1-00000006dAN-0Ckc;
+	Mon, 28 Apr 2025 14:26:15 +0000
+Date: Mon, 28 Apr 2025 07:26:15 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: hch@infradead.org, axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ming.lei@redhat.com,
+	syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH V4] loop: Add sanity check for read/write_iter
+Message-ID: <aA-QB7Iu6u9PdgHg@infradead.org>
+References: <aA-HSxKfbM6WCgek@infradead.org>
+ <20250428141544.3279719-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,16 +48,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAtgOLMnsmuukU42@gmail.com>
+In-Reply-To: <20250428141544.3279719-1-lizhi.xu@windriver.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Apr 25, 2025 at 11:13:12AM +0100, Qasim Ijaz wrote:
-> Hi Andrew, Jakub
-> 
-> Just pinging on my last message. Any thoughts on how to proceed with
-> this patch series, I left my thoughts in the previous message.
+On Mon, Apr 28, 2025 at 10:15:44PM +0800, Lizhi Xu wrote:
+> +	if ((file->f_mode & FMODE_WRITE) && (!file->f_op->write_iter))
 
-I would suggest you do the minimum, low risk changes. Don't be driven
-to fix all the syzbot warnings just to make syzbot quiet. What really
-matters is you don't break the driver for users. syzbot is secondary.
+No need for the braces around !file->f_op->write_iter.
 
-	Andrew
+> +	if ((mode & BLK_OPEN_WRITE) && (!file->f_op->write_iter))
+
+Same here.  Otherwise looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
