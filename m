@@ -1,85 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590778F4A;
-	Mon, 28 Apr 2025 04:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783F2154BF5;
+	Mon, 28 Apr 2025 04:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745813249; cv=none; b=TPB9E0kP8bpWnL/E1YTn6mUc39Pu9tI4zzLILHHxrroyywC8ZRMgE0t2cTXPmGbBe92ti50G8Vgvufvwg7cudQOl60jE5Ej5BDGquxijG29VHiW0VHB889tb8ogs05eHtcVyRiS08D6/VvVVnz7gWWvgZJqJQx/pPgSvOGMM/0U=
+	t=1745813505; cv=none; b=u/umLepY33azeCrZlt1jI0nC1tZ8dL3wclP6MLpSydIYJwYt7mu2GQFLcmW/cSggbaIKaWjn/sILpGvSnKftxfwtfQ1vXD3JXcm++pi0trGtMjBDGdAEj6nnOYjhI9d6nDun+ZT35WSBXn5M7Hx6aid8t7lUo86VeAVJiqTQfUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745813249; c=relaxed/simple;
-	bh=FDa3IY0GgwpkF7KII9NWs+I70tvBHTz6uJWecx+X7OA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N1TewGrICPa+D6fRCJM5NuerCNGYXaqeOnJ7tiVFipt/WIKifMtSBd+T6TnVqX/DgYW7SOnehyH3gnjWfV0c9k5zAWUwR1SMs1F84yWdOwI8jJFYQcbjLsTbl8s0K1va50FPZOLB+OrzfuTzy624BQWqAuD9vnDsPVAT/E3oYUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IG8o1cN6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745813505; c=relaxed/simple;
+	bh=GszICtC1MKlps1qqdTEdVMPJeZvJMbnebtbXxO/B+0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FxrCWx8eyAanPgI/uFHhq44I4SSX4qToOuQzhHqxHl25j+Q1U5iDo/eTl91L4UZ22jIsYEp8f9HjahWwDhI2naBxCW0Z5+PWaeRbl0/+Py3hKATtBIMMQIT5ccQssxEu4CS9qSzz+jFIon8ZGfSErRFI9OOCYKbAme+w3TokW8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3sblYlh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IG8o1cN6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A25C4CEE4;
-	Mon, 28 Apr 2025 04:07:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3sblYlh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA4E6C4CEEE;
+	Mon, 28 Apr 2025 04:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745813248;
-	bh=FDa3IY0GgwpkF7KII9NWs+I70tvBHTz6uJWecx+X7OA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IG8o1cN67tq0dKLWnlT8s7Rf5RBJGfD+afA9CvH08IgW3loK4I000b6fHyuDln+Cn
-	 LOJSjOaWvLAZnq7OLRbB9R64rQJRSzBRcw1qhaCa9rFjRJhIiLcnBKWcwpL61b2jaT
-	 P3qi621fZSrczSR3en4WDWOb47csHNloUZDK+/fHryFgRDvtoQ60ZxKSO7R1Rlf/RU
-	 k2MO9A1obwx7MydCXj6lbC/x5jCFTIskDmIDcbwkPVUPPDPFcjdVUL5IEo0fh2AvLd
-	 FhZTd5lBnrh8XV+615p+LTS96cmw+H4A9vYsS78PcCyZPrmVWOH2CeDrmwXHWvJ+nK
-	 6hZwRGzAHxFpw==
-Date: Sun, 27 Apr 2025 21:07:28 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-block@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	netdev@vger.kernel.org
-Cc: Zach Brown <zab@zabbo.net>, Matthew Wilcox <willy@infradead.org>
-Subject: Re: Call for Proposals for fossy.us 2025
-Message-ID: <20250428040728.GA1035866@frogsfrogsfrogs>
-References: <20250422033344.GI25700@frogsfrogsfrogs>
+	s=k20201202; t=1745813503;
+	bh=GszICtC1MKlps1qqdTEdVMPJeZvJMbnebtbXxO/B+0o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g3sblYlhLjF5UWWfLgeX2cFERxnwlmlPie4h+P3rjlNoXbsfzQiGwHieehD6ngCsn
+	 rhmdhc4wLx2GaS5nsg/p1UMEYzqqKtjebbmGfMPoq8dHbDIL3JSoPBksvWOFO0p/At
+	 bj9UKsXLZTXIBzDGt11qhSB05dB9Xm1dQEkkmKes+kXzF+wuoc2Vg9mYMdjFDNEASE
+	 bZ2oLLPxGCRg7Cx7S3QUcjvaW1tNNEXvEoO20tg5T+I7x+89wFR0iJWtvfnVkq7fsl
+	 c7XuaoEoWwUuwlmbr/W53BK2uVzid57CEDG9HFT1y4JOSxGw7OyTtASppQbngmzL8S
+	 bxc+XFclcYiKg==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso676577966b.3;
+        Sun, 27 Apr 2025 21:11:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUR+poA8s32Yy828ofXUqp/E/ZGCZHMMiXwyfs3w0D9hK5W1TdvzYLJK1e4MihIJ5PQjnzmEU1H9wtrQzk=@vger.kernel.org, AJvYcCX0t8ua/W1hBW2Nl9hxl7da3UL4jUzO/W9HNi7APlrFXbt672bXJixGcAGoV21cpDpxr/UJltOdUMTXKA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDVWubv4vn3ARFY4/I5Ubwc8RDeFjnqEiNl1c4TmGDZNjmTRQt
+	0JgRpUzLP0JFKtz/Cwd/X58PaqLmCuPCgOm4QwTlDN/c/r1GSaZeMyiNkNwObcZBgq4Yz8Rvdyd
+	b2sZO8hl7e1xdRVmn4M2Y26y9SA0=
+X-Google-Smtp-Source: AGHT+IHEisNdcWaw/fa8CtjrqP+A9U573RipRQlnpt73lvgPkuqTvPP8Otp3QP5r8cS0Nu+FjQV1RTDk3ZbWZtygK+Y=
+X-Received: by 2002:a17:907:9409:b0:ac3:446d:142 with SMTP id
+ a640c23a62f3a-ace7104eb61mr1012669166b.2.1745813502266; Sun, 27 Apr 2025
+ 21:11:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422033344.GI25700@frogsfrogsfrogs>
+References: <20250403161143.361461-1-marco.crivellari@suse.com>
+ <20250403161143.361461-3-marco.crivellari@suse.com> <CAAhV-H4dQ8hRfBm2JWmgMzYH5tuy4ph6hyOSXQBLOvtCQ+K9dQ@mail.gmail.com>
+ <alpine.DEB.2.21.2504280426010.31828@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2504280426010.31828@angie.orcam.me.uk>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 28 Apr 2025 12:11:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4WTrYecBj0wev8AUi_of_qAnvHCk4heTU5P_3pMZv4fA@mail.gmail.com>
+X-Gm-Features: ATxdqUHBB9HeyK51drCDtyHy2AilTn3f7w5Xk9U32-mNgPMKOwyo1ild44o6QyE
+Message-ID: <CAAhV-H4WTrYecBj0wev8AUi_of_qAnvHCk4heTU5P_3pMZv4fA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] MIPS: Move r4k_wait() to .cpuidle.text section
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Marco Crivellari <marco.crivellari@suse.com>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 08:33:44PM -0700, Darrick J. Wong wrote:
-> Hi folks,
-> 
-> I'd like to (very belatedly) invite you all to the 2025 fossy.us
-> conference that's being put on by Software Freedom Conservancy:
-> 
-> https://2025.fossy.us/
-> 
-> This is their third year of operation, and this time they've added a
-> track for Linux kernel topics!  Originally the track was going to be run
-> by willy and I, but he had to drop out for various reasons.  zab has
-> stepped up to fill the gap.
-> 
-> We're looking for people to propose sessions for the track.  These can
-> be informal presentations, discussion sections, or even a panel.  In the
-> past two editions, the attendees have ranged from technical folks from
-> userspace projects to free software advocates who operate in the
-> political and legal spheres.  I think the most interesting topics would
-> involve the kernel <-> userspace barrier, or technical deep-dives into
-> how do the more complex parts of the kernel actually work, but I
-> obviously have kernel-tinted glasses and welcome any strong proposal.
-> 
-> Anyhow, the CfP deadline is April 28th, so please lob whatever proposals
+On Mon, Apr 28, 2025 at 11:28=E2=80=AFAM Maciej W. Rozycki <macro@orcam.me.=
+uk> wrote:
+>
+> On Mon, 28 Apr 2025, Huacai Chen wrote:
+>
+> > > diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+> > > index 46d975d00298..2cf312d9a3b0 100644
+> > > --- a/arch/mips/kernel/genex.S
+> > > +++ b/arch/mips/kernel/genex.S
+> > > @@ -104,6 +104,7 @@ handle_vcei:
+> > >
+> > >         __FINIT
+> > >
+> > > +       .section .cpuidle.text,"ax"
+> > If you submit a new version, adding a space before "ax" will be a littl=
+e better.
+>
+>  We use no space across our port though, which is why I haven't requested
+> that before.
 
-...and has now been extended until May 5th.  We've gotten a few
-proposals and look forward to the rest! ;)
+Current status:
+arch/mips/include/asm/ftrace.h:         ".section .fixup, \"ax\"\n"
+         \
+arch/mips/include/asm/ftrace.h:         ".section .fixup, \"ax\"\n"     \
+arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+                 \n"     \
+arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+                 \n"     \
+arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+                         \n"
+arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+                         \n"
+arch/mips/include/asm/paccess.h:        ".section\t.fixup,\"ax\"\n"
+                                 \
+arch/mips/include/asm/paccess.h:        ".section\t.fixup,\"ax\"\n"
+                                 \
 
---D
+So there are a few files which have spaces.
 
-> you have soon.  The conference is in Portland, Oregon (USA) at the end
-> of July, which ... I know is going to be problematic for a lot of
-> people.  This is a tough year for conferences (both planning and
-> attending) so if you have questions, please feel free to ask them here
-> or privately.
-> 
-> --Darrick (and Zach)
-> 
+Huacai
+
+
+>
+>   Maciej
