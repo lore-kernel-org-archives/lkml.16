@@ -1,143 +1,173 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D4027CCDA
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ED491FF60A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857331; cv=none; b=pUuBb+BvNvjRJ7aldJaIK7nWRw2ybX0tqkLkP93T98tOlJWXsP8DIwTLWyVmCfBY5cTWwVqqhx4uab0bs4lIMHxKuyj1Wmn6/1syet4aLRFPDbP0S2BtMTBD1+1GqoPubh6nad7oYXfwUGsHg82ZopdKeAnvXcT2BZ2iVPsiSdc=
+	t=1745857342; cv=none; b=gykPh2PZmZvsnlrYNhQiCtdYFr6h0KfNY0OmhFNijRh3a3Pa/Cd4gzTqfE4txkw/fTAnPLxsoxNnqGXUyKpJHV/+XGDeq7y9nQ8pDI6h7Z2EZLlSRKoDgSfLucf1m2r+6sriLX00Mq0k7M6XQfiuHPzDbz199ZIQBrH1n9lcgyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857331; c=relaxed/simple;
-	bh=Vw4DlImvgesrbSAsVdwb6vTeImKi0Z4LGtqXAOAB+Nk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ux0/RAxd9XaRgsjpAz9OjsAgqzvLHNtX/ZSxAwojzvj4BDqlKlVlu6oLNymDGGwZVVh6Nw0P+ZfJe8x4jSYCFGXNA2Rja89ZDf8G7x4BalQXsLTbLbW0Pc0XGsl0bniUGFQu/7gbZsJ/bFitcbcZ7yu4PjRSbMHHRE9AlYSK8P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VstnMOO9; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VstnMOO9"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70427fb838cso40942817b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745857326; x=1746462126; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjtfgNYAyQgaIv+6+gwAi/DXzlNfZQv9vmE2wR+LnUU=;
-        b=VstnMOO9OIpDzRVxGmD9lmKOmGsdXuocbVU9WCF4GNr0cPoaTl+FvxFER6+gxTX01g
-         l0lPgxqzmL4GI0JX2UiIFXcAiIS68xq+DKCjIKxCbmShJ71tf7eFQmLqy1OOwC5ZqDYz
-         zsKcS742SGFGoG5pLeeNUgEUQ28vlxoWIQa7wjfNDKi/ALdT3FLf6nIpQcw1FnW5H55G
-         6L/vMsGOdDkcpUMzmI3uLgqcHkhrY2S8ZeRgkF+AJZBbdJqT77kL0zGKpLFWCm3PHB+a
-         E1qqVEe0tr6wcHtDoZAR8pMkiR4kpbeZqwXtzijE3XqLWKv99PcQujVmOdxowxweiEl2
-         H5XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745857326; x=1746462126;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kjtfgNYAyQgaIv+6+gwAi/DXzlNfZQv9vmE2wR+LnUU=;
-        b=my//Gng2T2KQQvgxnZabSOu20v+mO96Erwga3HltQhdNmYx3JnWS68tbFKh9daqGkO
-         rHaeT/YIn7hzp+J7XSjEcJM92V0QNXkk4SOUCFn7jPSGpX1TPT59TWhr8VdPni3Msni2
-         59CftGJUG3rZtLgzEQNexRL4/hAmrl+3DFhRYxYE24o6QK9ZsxjSczElxfswaIWhNo5v
-         cJHs8lc2LWHVRjb97PRKJP5XZNY9ZD8lQJGlC3iq3X+nzexiiuhAAwYgn2TdpWvhr0QY
-         dtfbmYYibfEfhPJIs6fPMgVsU1Mmvp2i2o0ufN+nn5hveJPNdPA6E/JzsiT4f0nlfcw3
-         wPXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk2nz9IBDfacckbUnvohOTP8dPhQ1ksNW9PQ8tE2+bPCdf2atbt3DhJEPGPgvk7bvkPu/xKmx4/2H4Af4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPzAA63fJse4EnfneNQmaLp2wbgwD5+hh+oGaUPFutWICXE51V
-	bAft9GI19ISD2ugdHY46FJU55sHJo1fAuNbIOq6zi+hzcJt1pwjywbV/R1pKh8qYmVE7mf+BuRS
-	O7kA+nj+zgvmM3HUjO/MyC1eI4BroVNBlUiGFTw==
-X-Gm-Gg: ASbGncsB+ENbFz4Eq7lcwcxIf/wjqkSvuIIq2Dc5CZKtZ4owZxYmSudJ5RmqBDEU2hE
-	cxbnQ/c4TFs9jCzHmXn3wE8XJsNvCxoJCXmp3iO/QcuNZyxYhV/93DT1SJNrmN3GEkHtFR2rnDA
-	nDCejjWI2mKn/LwN6/yeTI7sT91Lv3MbGxZw==
-X-Google-Smtp-Source: AGHT+IHJ8fzCsar22nWRrLuqubA/nW5PD6Isexezh6U72gKuIl5N70HEwT9JTNXKPWmpqHrpu7bpAGC2DT3kmga/dpo=
-X-Received: by 2002:a05:690c:67c6:b0:708:3532:ec94 with SMTP id
- 00721157ae682-70853f752e9mr174343137b3.0.1745857326167; Mon, 28 Apr 2025
- 09:22:06 -0700 (PDT)
+	s=arc-20240116; t=1745857342; c=relaxed/simple;
+	bh=FIJXx2gCEHGBvPacIp3M6Xrashazp6M6jGAoWWtkKGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cVoOdiIRaiwNdMKTO3y+FZ0KXHQ+tXTeYrw+5LXXUFqKCWbfts2oDmXqMXGxyVr4KjzO+ClPAmDtSbHCQoXcY9bMCpcnsKZsai1p94x7IaSGb8MpMbnrmhnUEOucMAA27UaxCM7fV6h3rqdsLXYI4Ct+vQ3vHMWo8kEkKvwcjZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E9F11516;
+	Mon, 28 Apr 2025 09:22:13 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 370683F66E;
+	Mon, 28 Apr 2025 09:22:19 -0700 (PDT)
+Date: Mon, 28 Apr 2025 17:22:14 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] coresight: prevent deactivate active config while
+ enabling the config
+Message-ID: <20250428162214.GG551819@e132581.arm.com>
+References: <20250324191740.64964-1-yeoreum.yun@arm.com>
+ <20250325151803.GD604566@e132581.arm.com>
+ <Z+OuATAe31GbcKZ2@e129823.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com> <20250422-sm7150-upstream-v1-11-bf9a9081631d@jiaxyga.com>
-In-Reply-To: <20250422-sm7150-upstream-v1-11-bf9a9081631d@jiaxyga.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 28 Apr 2025 18:21:30 +0200
-X-Gm-Features: ATxdqUFknbhFgOKvNVOI3-s43pP4YH55pKLNf_KwLrUaeaEizalUr2MLUM3sfs8
-Message-ID: <CAPDyKFqPpqDj+DKT=nJrTS8iDUx_8scnLreUQ99byDHEdBeiww@mail.gmail.com>
-Subject: Re: [PATCH 11/33] dt-bindings: mmc: sdhci-msm: Add the SM7150 compatible
-To: Danila Tikhonov <danila@jiaxyga.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Rajendra Nayak <quic_rjendra@quicinc.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Georgi Djakov <djakov@kernel.org>, 
-	Loic Poulain <loic.poulain@oss.qualcomm.com>, Robert Foss <rfoss@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
-	Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
-	Imran Shaik <quic_imrashai@quicinc.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Kees Cook <kees@kernel.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	David Wronek <david@mainlining.org>, Jens Reidel <adrian@mainlining.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
-	linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-hardening@vger.kernel.org, linux@mainlining.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+OuATAe31GbcKZ2@e129823.arm.com>
 
-On Tue, 22 Apr 2025 at 22:24, Danila Tikhonov <danila@jiaxyga.com> wrote:
->
-> Add compatible for the SDHCI block found in SM7150.
->
-> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+Hi Levi,
 
-Applied for next, thanks!
+On Wed, Mar 26, 2025 at 07:34:25AM +0000, Yeoreum Yun wrote:
 
-Kind regards
-Uffe
+[...]
 
+> > > --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > > +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> > > @@ -1020,6 +1020,9 @@ static void etm4_disable_sysfs(struct coresight_device *csdev)
+> > >  	smp_call_function_single(drvdata->cpu, etm4_disable_hw, drvdata, 1);
+> > >
+> > >  	raw_spin_unlock(&drvdata->spinlock);
+> > > +
+> > > +	cscfg_csdev_disable_active_config(csdev);
+> > > +
+> >
+> > In general, we need to split changes into several patches if each
+> > addresses a different issue.  From my understanding, the change above is
+> > to fix missing to disable config when disable Sysfs mode.
+> >
+> > If so, could we use a seperate patch for this change?
+> >
+> 
+> It's not a differnt issue. Without this line, the active count wouldn't
+> decrese and it raise another issue -- unloadable moudle for active_cnt :(
+> So I think it should be included in this patch.
 
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> index eed9063e9bb352b5c8dac10ae2d289c5ca17f81b..2b2cbce2458b70b96b98c042109b10ead26e2291 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> @@ -60,6 +60,7 @@ properties:
->                - qcom,sm6125-sdhci
->                - qcom,sm6350-sdhci
->                - qcom,sm6375-sdhci
-> +              - qcom,sm7150-sdhci
->                - qcom,sm8150-sdhci
->                - qcom,sm8250-sdhci
->                - qcom,sm8350-sdhci
->
-> --
-> 2.49.0
->
+I read the code again and concluded the change above is not related to
+locking and would be a separate issue: when we close a Sysfs session,
+we need to disable a config on a CoreSight device.
+
+Could you clarify what is meaning "unloadable moudle for active_cnt"?
+I only saw "cscfg_mgr->sys_active_cnt" is used for module unloading,
+but have no clue why "active_cnt" impacts module unloading.
+
+> > >  	cpus_read_unlock();
+> > >
+> > >  	/*
+> > > diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > > index a70c1454b410..6d8c212ad434 100644
+> > > --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> > > +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > > @@ -391,14 +391,17 @@ static void cscfg_owner_put(struct cscfg_load_owner_info *owner_info)
+> > >  static void cscfg_remove_owned_csdev_configs(struct coresight_device *csdev, void *load_owner)
+> > >  {
+> > >  	struct cscfg_config_csdev *config_csdev, *tmp;
+> > > +	unsigned long flags;
+> > >
+> > >  	if (list_empty(&csdev->config_csdev_list))
+> > >  		return;
+> > >
+> > > +	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+> >
+> > I think we should use spinlock to guard the condition checking
+> > list_empty().
+> >
+> > Here the race condition is the 'config_csdev_list' list and
+> > configurations on the list.  For atomicity, we should use lock to
+> > protect any operations on the list (read, add, delete, etc).
+> 
+> Interesting... Would you let me know which race it is?
+> here to check list_empty(), it already guarded with "cscfg_mutex".
+
+Thanks for pointing out this.  I read the code and understood that in
+some scenarios the list is protected by the mutex "cscfg_mutex".
+
+I would argue for using locking, we need to make clear for two thigns:
+
+- What is the race condition;
+- What locking is used to protect the race condition.
+
+For current case, a CoreSight device has a config list, the race
+condition is the config list will be manipulated by multiple places
+(e.g., for module loading / unloading, opening or closing a perf or
+SysFS session).  So a spinlock is used to to protect the config list.
+
+"cscfg_mutex" is a high level lock, my understanding is to protect the
+high level operations from the Sysfs knobs, though sometimes it can
+mitigate the race condition on configuration list mentioned above, but
+the spinlock is the locking mechanism for the low level's config list
+on a CoreSight device.
+
+> However list_del() is special case because iterating config_csdev_list
+> can be done without cscfg_mutex -- see
+> cscfg_csdev_enable_active_config().
+> This gurad with spinlock purpose to guard race unloading and
+> get the config in cscfg_csdev_enable_active_config()
+> (Please see my response below...).
+> 
+> the emptiness of config_csdev_list is guarded with cscfg_mutex.
+> therefore, It seems enough to guard iterating part with spinlock :)
+
+Mixed using cscfg_mutex and spinlock get code complexity, and I am a bit
+concerned this is not best practice.
+
+At a glance, I would say 'cscfg_mutex' is purposed to protect the global
+'cscfg_mgr', per CoreSight device's config list should be protected by
+'cscfg_csdev_lock'.
+
+> > A side topic, as here it adds locks for protecting 'config_csdev_list',
+> > I am wandering why we do not do the same thing for
+> > 'feature_csdev_list' (See cscfg_remove_owned_csdev_features() and
+> > cscfg_get_feat_csdev()).
+> 
+> In case of feature, It's okay since it couldn't be accessed when it
+> gets failed to get related config.
+
+I looked at cscfg_load_feat_csdev(), it uses 'cscfg_csdev_lock' to
+protect the feature list.  This is why I thought the feature list also
+need to be protected by the lock.  Now it is only partially protected.
+
+> When we see cscfg_csdev_enable_active_config(), the config could be
+> accessed without cscfg_mutex lock. so the config need to be guarded with
+> spin_lock otherwise it could be acquired while unload module
+> (after get active_cnt in search logic cscfg_csdev_enable_active_config()
+> and other running unloading process)
+
+To make things more clear, I have a questions.
+
+'cscfg_mgr->sys_active_cnt' is used in the cscfg_unload_config_sets()
+function to decide if can unload module, if any configuration is
+active, why this variable cannot prevent unloading module?
+
+Sorry for late replying.
+
+Leo
+
+> But feature list is depends on config, If config is safe from
+> load/unload, this is not an issue so we don't need it.
+> 
+> Thanks for your review!
