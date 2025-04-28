@@ -1,167 +1,230 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F35A254863
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600972CCC0;
+	Mon, 28 Apr 2025 16:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745858977; cv=none; b=Evk6Vmed/HhBZJIuQKcO8YHSm7DtJayNHKkvqAz9lXHVQK3WhncFcsaWJ3v//2SvDxZ26YPW4QpBT0WrMxbGouzX8se09xbdRn3XmTX0RGXCSbNN+Lb+65rttGxwqhKgpDWjEaOvcuZu7zIcZpM/iH2PYxqH632Va+W4+Hua5CY=
+	t=1745858996; cv=none; b=LdGPO3I6Dg2lko5nYURrc8nk/8r+hGZZbSbx2+m5pMzS9gz4ZCrw4NJYVBHG8/N0A9ZsOC4456UdlKtah3MWpxNF/RrNOQJGRre6RY8OPOuW4INCQraclDndnstEgZLVOlCUp6+FWGVpNQKHNp7+VdO6Y/fp9aDFPeWp2hIKJZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745858977; c=relaxed/simple;
-	bh=OJJ+6bcq7xHuiJnWwZOf89AsHChdipRGp8KVr1g9RHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPExX/ZzSSYCUsEgh7vkJYLxWBJ3NHt0bdG1k6zs3qsOPQWky+jkv8uJSLvhNhb4xvVDAmzkspP2g9KSr0cDnfrM+Uzhimmzb4eLFVLFfeWHYe9KbDDSfzjyPCN8Qv1v02PVecLPk1S+dkLXlF8yq1G7rxyQiYBeIZ9GQwSk+Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NlYg/XK/; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745858996; c=relaxed/simple;
+	bh=PNVESParaTXWsmP+JHkLHUMZWi4KYr64YnTUoIRoYSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K1Cu9mcqXBpZbwAwRYFg66Yk1m5urcfW39wZ5lcV0HIKQfzqE4hqK4mND3rK1JYtZG5XoKWaWwszo1fkd0Hnzd7uvEW7myIf2YIg7MP1j2CHCNeisOMwCrRj+sJObT60PzkX1tI/jXN+JxschYUOAWgvRUdvN64Xie+3ajZmi8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MYeM9g6C; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NlYg/XK/"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3031354f134so4209215a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745858975; x=1746463775; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sgUhPrW3pZPMoUmmVNbIH37mhjHyGadhBg8JhGzQp78=;
-        b=NlYg/XK/n3RJLtWxUxSIFsvvF8YJgdhfb0An61DDbv8REXYnNaLQ3ZXjFXAntE0M16
-         5dteLscL7qn17q0kfcS1TYYICzQCMb8hZTcPQfMCUM+aoKr5OH8uRx+hjru8YKjQTRMI
-         /uDI0MNoLP8eVqnv8/PJqYxR60wLvB3ozowxRzYiqPXI0K5UTX8uPbXrf7ehwosAvwfQ
-         bEIavg5dV1LLpuX3eBeCjRS0P/7Aw2vxDuIu4ngRBDkEMlarIHrN/4ievm7l7p7nD6YO
-         IZCK2uBRnY/8RNqwkCX9l0SOn2j1NuEoQu+pZfIczdzPIKbtdOP1OzwkbqLhz8jp8YhV
-         Jfog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745858975; x=1746463775;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sgUhPrW3pZPMoUmmVNbIH37mhjHyGadhBg8JhGzQp78=;
-        b=cF25TygfA6seftkvQmbT2lh7Xdowt7r3v7qPm75u7ptTTLVdS9ds1wPZgU8Nsc57fL
-         mq9VY6VYJiP7kQ5UrWkzAWftoWQ2mVXYPyYGM0q7+ZwT+GzlNH0fkRJCILrBwm/mNCGv
-         D6Pt/PLtfybvEylxVrCY+JbIwZZWvfzGe5zgI37RYHdyVqtXKXSb82av8r76SxfQV6YZ
-         L2P7Vj1+cQvbNXm7+dORatMMlfz9PcbWGSpXF2Os+2hZILFB/Ftz1JtPtdKt+kcKXZYI
-         8YPyfuv09BLqLN3faHAiOwxsNpAKyYswlB/saRpcio0P/AURlI5pu6vH/f2J0b1atKQM
-         8Meg==
-X-Forwarded-Encrypted: i=1; AJvYcCXHuTlmccrF2UFkRb1FKPO9KWMXwIchEfxRVb6PwJ1FaYQIiTbVcuehmhd7IBCCLHPjX07uZZv6gELXwqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrqmnB+IlqpnyurTAzi8s+9bYeRGkznRKvVlaNbraEA5XV03OC
-	TgT2sWSxoFAYb396p+0jV7dYmlRkU5VWwK1J32u76bOqez96dvY7Iq1TYIyBDpo=
-X-Gm-Gg: ASbGncvfwEnYxjs/Wb8IT+Fv01sHSFtKlGwUneSjg0KDrqBYjIjryvi3bePcgmtGyD/
-	LVj4MvA/I2rIXeQq0j0ciQ4z7OhNYEtyUEhI00ZrM8zwq5nvkIfJyfqRxTANNDzvQ5ywb2Fsx6I
-	tPkmmO/EeR1MobJAJdzHCL8omziZD5DOLavOvH7IJiSZBfk7FUo1cTMT12Cb+GWt/DiriSflSoP
-	Q2UeqOdQsZvRGBBbVsPuGyEFByz0HgfQZNHKoWG/F4l3WpF4slOUOeSPKsrL5vsft5GZs95cuEF
-	v3eRd5v0XbGo7SJZbE9b2v01BndkBGyMZ7KIAMVfBx9N
-X-Google-Smtp-Source: AGHT+IGzMOhPgDfCKAp04nSjoWIJJPOKZvS99BrJ9oTEUG+UpqUfA4eSpR+xL5SbBU/UdauqUlNn0w==
-X-Received: by 2002:a17:90b:4d08:b0:2f9:c144:9d13 with SMTP id 98e67ed59e1d1-30a2158ed10mr712782a91.24.1745858975414;
-        Mon, 28 Apr 2025 09:49:35 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:b816:4cd3:148d:1922])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f782d4d6sm7467577a91.38.2025.04.28.09.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:49:34 -0700 (PDT)
-Date: Mon, 28 Apr 2025 10:49:32 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc: andersson@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] remoteproc: imx_rproc: release carveout under
- imx_rproc after rproc_attach() fails
-Message-ID: <aA-xnA_zFn8UlTDQ@p14s>
-References: <20250426065348.1234391-1-xiaolei.wang@windriver.com>
- <20250426065348.1234391-2-xiaolei.wang@windriver.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MYeM9g6C"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAwLvB003967;
+	Mon, 28 Apr 2025 16:49:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ygTqjY
+	J03RIKTAhwuPR9emo/CxF/ClTtTaFmG2r3wo0=; b=MYeM9g6C9vGxWHYGP93kb4
+	7Ti6MDDwnT6wM6bRr66yC6Z+6whMfJ6NrANS+XaD2DzNDtqPceMW/RgGtXm9pPXK
+	Y5jstlJpHpaC3VuIGl2FSBDsR5DYJnjjuCQRnCGhwXajerOtuwsN7z8jza3QRGua
+	AYyzgSHdSBrOM9Cb8dn7ONJcKYswG5GPV/0jLzJ9950dz8lctgQAXZ58W2H1e7R/
+	u2iMTzg0ygca1YuiOh6pOH5aPFJvtorGvvzMBwR9oQzF5v3EOAhLKSIr1ITPZ0bd
+	tDYKv23Q/3qxY1riQak5skENJ1VQwQAOUVZ2x7xs5uEiHm8Rb002iadDcPq0TPgA
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469xj0v2xs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 16:49:36 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SFakuI000678;
+	Mon, 28 Apr 2025 16:49:35 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469atp7c41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 16:49:35 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SGnX5L22479518
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 16:49:34 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE38D58061;
+	Mon, 28 Apr 2025 16:49:33 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 43A5D58043;
+	Mon, 28 Apr 2025 16:49:30 +0000 (GMT)
+Received: from [9.61.244.200] (unknown [9.61.244.200])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Apr 2025 16:49:29 +0000 (GMT)
+Message-ID: <a1d2c51c-7959-4446-81b7-bfc48ced606e@linux.ibm.com>
+Date: Mon, 28 Apr 2025 22:19:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426065348.1234391-2-xiaolei.wang@windriver.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests/mm: Fix a build failure on powerpc
+Content-Language: en-GB
+To: "Nysal Jan K.A." <nysal@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250428131937.641989-1-nysal@linux.ibm.com>
+ <20250428131937.641989-2-nysal@linux.ibm.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250428131937.641989-2-nysal@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: J6ksxhAtcHshXhJfcAb6W-WApMO61Lob
+X-Authority-Analysis: v=2.4 cv=GJYIEvNK c=1 sm=1 tr=0 ts=680fb1a0 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=NIXEo0iNHiUJsitbC-UA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEzNiBTYWx0ZWRfX7zvjH1N22yRZ MQHKqthnSgK9mU/PNzj6VgZGReWR/Mh/SzooAI3qWaUEeUAgrEk4cdGsICEzYCYzVPz8vsJU1Qj eH92pWxMPQuGMamil1p42avJWmKz1a0E6KrFL+CgTsCvaxRORJ7prLmtoiWo2mBV4aXrY+7CBL9
+ 09NZvYcq17bCqcxqr48iner7oH6kE6kOU0cuD1bMYQmEFdt8xZOTsG/0MTwPmeDncrM+J/Y3zJR C9hpqo7jrc1TxGlwIEUVOab4ghq1HOkF7QYIsA6eE1qm5t22Smx03J+4oaXBPHWaBQUXDRaFaSS 0H9O9gR2y3V1CCl/yqkOFaDcOdtMqXoCXcY0TK7qauvypPQsb8fuTeVJ7vXLZgiIK3mULNthjIX
+ sHb8ic+HuLvA9slHfV2pRDNVgHNtvK9Ot+OUKDhNAalJ2E9qhOH0cCdTmiVcI9jbC+ftJq32
+X-Proofpoint-ORIG-GUID: J6ksxhAtcHshXhJfcAb6W-WApMO61Lob
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxscore=0 phishscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280136
 
-Hi Xiaolei,
 
-On Sat, Apr 26, 2025 at 02:53:47PM +0800, Xiaolei Wang wrote:
-> When rproc->state = RPROC_DETACHED and rproc_attach() is used
-> to attach to the remote processor, if rproc_handle_resources()
-> returns a failure, the resources allocated by rproc_prepare_device()
-> should be released, otherwise the following memory leak will occur.
-> 
-> Therefore, add imx_rproc_unprepare() to imx_rproc to release the
-> memory allocated in imx_rproc_prepare().
-> 
-> unreferenced object 0xffff0000861c5d00 (size 128):
-> comm "kworker/u12:3", pid 59, jiffies 4294893509 (age 149.220s)
-> hex dump (first 32 bytes):
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-> 00 00 02 88 00 00 00 00 00 00 10 00 00 00 00 00 ............
-> backtrace:
->  [<00000000f949fe18>] slab_post_alloc_hook+0x98/0x37c
->  [<00000000adbfb3e7>] __kmem_cache_alloc_node+0x138/0x2e0
->  [<00000000521c0345>] kmalloc_trace+0x40/0x158
->  [<000000004e330a49>] rproc_mem_entry_init+0x60/0xf8
->  [<000000002815755e>] imx_rproc_prepare+0xe0/0x180
->  [<0000000003f61b4e>] rproc_boot+0x2ec/0x528
->  [<00000000e7e994ac>] rproc_add+0x124/0x17c
->  [<0000000048594076>] imx_rproc_probe+0x4ec/0x5d4
->  [<00000000efc298a1>] platform_probe+0x68/0xd8
->  [<00000000110be6fe>] really_probe+0x110/0x27c
->  [<00000000e245c0ae>] __driver_probe_device+0x78/0x12c
->  [<00000000f61f6f5e>] driver_probe_device+0x3c/0x118
->  [<00000000a7874938>] __device_attach_driver+0xb8/0xf8
->  [<0000000065319e69>] bus_for_each_drv+0x84/0xe4
->  [<00000000db3eb243>] __device_attach+0xfc/0x18c
->  [<0000000072e4e1a4>] device_initial_probe+0x14/0x20
-> 
-> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+On 28/04/25 6:49 pm, Nysal Jan K.A. wrote:
+> The compiler is unaware of the size of code generated by the ".rept"
+> assembler directive. This results in the compiler emitting branch
+> instructions where the offset to branch to exceeds the maximum allowed
+> value, resulting in build failures like the following:
+>
+>    CC       protection_keys
+>    /tmp/ccypKWAE.s: Assembler messages:
+>    /tmp/ccypKWAE.s:2073: Error: operand out of range (0x0000000000020158
+>    is not between 0xffffffffffff8000 and 0x0000000000007ffc)
+>    /tmp/ccypKWAE.s:2509: Error: operand out of range (0x0000000000020130
+>    is not between 0xffffffffffff8000 and 0x0000000000007ffc)
+>
+> Fix the issue by manually adding nop instructions using the preprocessor.
+>
+> Fixes: 46036188ea1f5 ("selftests/mm: build with -O2")
+> Reported-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Signed-off-by: Nysal Jan K.A. <nysal@linux.ibm.com>
 > ---
->  drivers/remoteproc/imx_rproc.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 74299af1d7f1..c489bd15ee91 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -595,6 +595,19 @@ static int imx_rproc_prepare(struct rproc *rproc)
->  	return  0;
->  }
->  
-> +static int imx_rproc_unprepare(struct rproc *rproc)
-> +{
-> +	struct rproc_mem_entry *entry, *tmp;
+>   tools/testing/selftests/mm/pkey-powerpc.h | 12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/mm/pkey-powerpc.h b/tools/testing/selftests/mm/pkey-powerpc.h
+> index d8ec906b8120..17bf2d1b0192 100644
+> --- a/tools/testing/selftests/mm/pkey-powerpc.h
+> +++ b/tools/testing/selftests/mm/pkey-powerpc.h
+> @@ -104,8 +104,18 @@ static inline void expect_fault_on_read_execonly_key(void *p1, int pkey)
+>   	return;
+>   }
+>   
+> +#define REPEAT_8(s) s s s s s s s s
+> +#define REPEAT_64(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) \
+> +		     REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s)
+> +#define REPEAT_512(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) \
+> +		      REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s)
+> +#define REPEAT_4096(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) \
+> +		       REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s)
+> +#define REPEAT_16384(s) REPEAT_4096(s) REPEAT_4096(s) \
+> +			REPEAT_4096(s) REPEAT_4096(s)
 > +
-> +	rproc_coredump_cleanup(rproc);
-> +	/* clean up carveout allocations */
-> +	list_for_each_entry_safe(entry, tmp, &rproc->carveouts, node) {
-> +		list_del(&entry->node);
-> +		kfree(entry);
-> +	}
-> +	return  0;
-> +}
-> +
+>   /* 4-byte instructions * 16384 = 64K page */
+> -#define __page_o_noops() asm(".rept 16384 ; nop; .endr")
+> +#define __page_o_noops() asm(REPEAT_16384("nop\n"))
+>   
+>   static inline void *malloc_pkey_with_mprotect_subpage(long size, int prot, u16 pkey)
+>   {
 
-I have reflected long and hard on this.  The problem with the above approach is
-that we do almost the same thing in imx_rproc_prepare() and
-rproc_resource_cleanup().  Function rproc_resource_cleanup() is able to deal
-with empty lists so I think it is better to fix the "goto" statements in
-rproc_attach().  More specifically, replace the "unprepare_device" goto
-statement with "clean_up_resources" and get rid of the "unprepare_device" label.  
 
-Please see if that works on your side.  I am good with 2/2 of this series.
+Tested this patch by applying on top of mainline kernel v6.15-rc4, and 
+it fixes the build issue. Hence,
 
-Thanks,
-Mathieu
 
->  static int imx_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
->  {
->  	int ret;
-> @@ -675,6 +688,7 @@ imx_rproc_elf_find_loaded_rsc_table(struct rproc *rproc, const struct firmware *
->  
->  static const struct rproc_ops imx_rproc_ops = {
->  	.prepare	= imx_rproc_prepare,
-> +	.unprepare	= imx_rproc_unprepare,
->  	.attach		= imx_rproc_attach,
->  	.detach		= imx_rproc_detach,
->  	.start		= imx_rproc_start,
-> -- 
-> 2.25.1
-> 
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Without this Patch:
+
+
+  CC       protection_keys
+/tmp/ccG0zLKW.s: Assembler messages:
+/tmp/ccG0zLKW.s:1694: Error: operand out of range (0x0000000000020138 is 
+not between 0xffffffffffff8000 and 0x0000000000007ffc)
+/tmp/ccG0zLKW.s:2577: Error: operand out of range (0x0000000000020110 is 
+not between 0xffffffffffff8000 and 0x0000000000007ffc)
+In file included from pkey_util.c:5:
+
+
+With this patch:
+
+
+make -j 33
+/bin/sh ./check_config.sh gcc
+   CC       cow
+   CC       compaction_test
+   CC       gup_longterm
+   CC       gup_test
+   CC       hmm-tests
+   CC       hugetlb-madvise
+   CC       hugetlb-read-hwpoison
+   CC       hugetlb-soft-offline
+   CC       hugepage-mmap
+   CC       hugepage-mremap
+   CC       hugepage-shm
+   CC       hugepage-vmemmap
+   CC       khugepaged
+   CC       madv_populate
+   CC       map_fixed_noreplace
+   CC       map_hugetlb
+   CC       map_populate
+   CC       migration
+   CC       mkdirty
+   CC       mlock-random-test
+   CC       mlock2-tests
+   CC       mrelease_test
+   CC       mremap_dontunmap
+   CC       mremap_test
+   CC       mseal_test
+   CC       on-fault-limit
+   CC       pagemap_ioctl
+   CC       thuge-gen
+   CC       transhuge-stress
+   CC       uffd-stress
+   CC       uffd-unit-tests
+   CC       uffd-wp-mremap
+   CC       split_huge_page_test
+   CC       ksm_tests
+   CC       ksm_functional_tests
+   CC       hugetlb_fault_after_madv
+   CC       hugetlb_madv_vs_map
+   CC       mdwe_test
+   CC       hugetlb_dio
+   CC       droppable
+   CC       guard-regions
+   CC       soft-dirty
+   CC       protection_keys
+   CC       va_high_addr_switch
+   CC       virtual_address_range
+   CC       write_to_hugetlbfs
+   CC [M]  page_frag_test.o
+   MODPOST Module.symvers
+   CC [M]  page_frag_test.mod.o
+   CC [M]  .module-common.o
+   LD [M]  page_frag_test.ko
+
+
+Regards,
+
+Venkat.
+
+
+
