@@ -1,118 +1,173 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596F48615A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C264AEE2
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745862346; cv=none; b=t0NFdzlalJ7aVPWC3YIeJ35iBfttSWlcmxrwnzL5LZEdDxtGWqerl9a9oT80YBtOtCO29vzV9OO0YsaOBEUb0f7u1/wrQLrn6SmesUoZnNri8YG9rvO4Sb09xBm2HhUM0Sa/0UICRxL/EzRCGQxLYhIglENIwUDJjcrRJhP3Rhs=
+	t=1745862497; cv=none; b=BAWKbA0j0TzBEbzSt6ZPyV+FKmpO8VN+PjgFlkewDxZrl1YEJVtaKuGTkpdp4iJy4BqzVw6dwtlzGRhdllSURUBb3kihOLYW+BRnx/8BWLJu/8SupAQfWHEU8T55PlZrKOt8kYqZbtP/W+KCgRipo8IS+WSOTmsiYEMzsxcSOEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745862346; c=relaxed/simple;
-	bh=lSCgDLFkm+uTp6BBbwhp0BqZSIhLiEfIj/xbmsFVQEQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=QfL1G82auYKK1CQIH1YizSF1ZnEPV38GYmRCo22kT/BIcnXdsJvdCgCGUqIA42nEyrXbSLpyYjF1eSexuqMR3ivb+Buv6ZLeC1vUKdrWOuxK9t05Tp1tUsopbdz13ltVTOCNq+CpRqsi4ypitjPquI2gqR4l2mzlIL1bxO9Vxc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Hwt3GJtH; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745862497; c=relaxed/simple;
+	bh=jWXOCVZkFHj/VcDgv2xU9asu2w3m/3zaM/fO1ILaYV8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nrRlUhWUBYJljc03NyQdpNvadY7fur645NpAdJ+pY+YUqT+ymXvOmueyoHCZ6smqEy/TcBG9+uefZauHJ3E5t/sAlAFFcHeHTYsl45L24RJbf1y0aV2QPiuuUno7WWZle+k5Pv08Qy7TCdOUf8D6IaC4CzddWOu0T895tf/aKdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=ndt4JKgI; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Hwt3GJtH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so5724525e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:45:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="ndt4JKgI"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ff4faf858cso35804467b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745862342; x=1746467142; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v/CANhKWFmJawB0p8jQ/NyjybjgGkYzY/3LSqUuDHX0=;
-        b=Hwt3GJtHh4j5IJHmVgpYNdakLAlsIO87ZYX7XBNZtOLvgv0Io1+LZ01V6ua2QFtNaJ
-         GvJ+qWQ8FtildThMCkmoWnT4i9Prb3kb2senYv/F75eZGghFscWJJj/KZhOB3vq4fLOf
-         ktzof6xBZtngYUPqjvzo4XTqq2CXyOeIi0HpT4r0CWvAzhjoBGXesjI0H91JmseEAfmt
-         kbn8KUutFLahP5xWtAaF12BNxgqf05+Jz1IoYlQGlRuU3bd5dunBzK2hp3lgLrB+MUG3
-         ZFjq/vwZc4O+oiy9OD/B92Q18vhh8jE43SqnAF+n4VqyBjw5XjHr8iOF5t/ugSHy/o09
-         mKPA==
+        d=raspberrypi.com; s=google; t=1745862494; x=1746467294; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Br89HP6MhUe/ahwBGiB5/BbIYpp/iTR1g5Mpqa7I33k=;
+        b=ndt4JKgIzhVXVKP9AIQoYHmcr0mUqiiyOVxK1wNfIy4eCvk3P6PVh83Adnt7YJA2MD
+         ePM6v/EwwYPYdq4ynj9rZxJ/Sx+XLJoHmp9eYQJWM74yQ0BZEOy1QEbjFKoEyO2A/jXe
+         Tg+ISlO8xgZCFjqv7hn7sR/w2uoBdxrZhcuJNeNQul1mv6jsTHvKp8i26MPEqdHynKEG
+         eDKo6OlLdyVIR6MYiZ+wn/5h+6uJNuhfr2af4uY+i5mjG/IvJ44Rl0AYxhwe45TnNQDm
+         xaa+UihRsAFaDdmkVfCEdCPGGtzE+l+S/v5Ob3BjN0USNhI+tBSSHKdoDTiBZ3ZJUxqF
+         oh4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745862342; x=1746467142;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v/CANhKWFmJawB0p8jQ/NyjybjgGkYzY/3LSqUuDHX0=;
-        b=tgd4WHiOq2OCl+pZMC156eGamOhBCbvzhPQsZi/zhq1iRCu5iMu671wZWlpPOV/2+9
-         TXzQ02MlJRWNPWbPtYwJMxZkPKpJrWRfjrWQVFKihd3KZNtfA2m3wzAafgshqVqoD6vI
-         qb+fo1H2P6lZrEusxZ4L/YzVcRgP/rygGaSWhjmKEcFNVAp+VWBwCoxyGVt3cbCab3ZF
-         EJKrNDYTvv4E0aRIXdH7PVTMv0+PCDVh4m4W2qCGTAFHnSGmhoxm8rMqDqCA5uSueGsD
-         LNEXPsPqN9A9YuwS7kUtLPMfv5JQb0t08TAeC9fcX1QXDoU+mgTz/Hw7/UGBIrdAYPKb
-         +/OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWADM7CUhoZS2KXxFAYm5lAGMnk93n8OJv3hyaMmqE6NOOYAbbQHF6H3ks912rskOAHR7vUbVAs6yEfzmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLkUEe48eGM1HWGWZ3/XLJaMt9wT8HFFBmzBWdTjqj6fkaVjgE
-	62cxte1eBP3p7fbyWVa+FAnRNqWyjhQNJdE2Zxkf1bSkqRkVjF3ptH6hejtfimQ=
-X-Gm-Gg: ASbGncuCAJ4uJywMw0yJ5A3rN4azmQLe+y4lIgbq9WG+lab1kg80g9eAjnVj2bx5Ig/
-	Tqc5t+JivX4CylTjRCEWY/V0YkNLRyC2lZQJ8go87zVKCkdm/Z2pM+gszdYJuRtGTzDwOaBYWTO
-	P7CwldQRAH0m1J2DRiPSN671ibLPJYyiEfYcexAWdoSW1sUgOJbAI+BNbOs0xjG5GQ9gUBgpfDF
-	1/IMsuqWurF2T/tj1kpU7kMFrR2ddsQqm5/eLEvzKe5KgxJ0Wftt1dma7OhvBhbA1mGDYyCEQLD
-	kr/srCPenx1VwVN8ffQOvDBzamdmrT9REQbvrE+Y/SdacT8=
-X-Google-Smtp-Source: AGHT+IEvyyRwv+siNkS/+KKa7cPTZaQ24k7dR1L6NM8zAaZ/ZacC5UiUMQME2xFD4O4sKzfsTBeP0Q==
-X-Received: by 2002:a05:600c:3b82:b0:439:9fde:da76 with SMTP id 5b1f17b1804b1-440a634912dmr44268285e9.0.1745862342603;
-        Mon, 28 Apr 2025 10:45:42 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:785:f3a7:1fbb:6b76])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46a54sm11977490f8f.67.2025.04.28.10.45.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:45:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745862494; x=1746467294;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Br89HP6MhUe/ahwBGiB5/BbIYpp/iTR1g5Mpqa7I33k=;
+        b=cyeT3j23ps+j2GCAijQ72X6ZbbfOTfLArdv6bZwmej7Q2hqoDlcJwiFuCQxjYy8eLG
+         2JhAeh6yI8P0fhVJ2xFCkF9xrXIg+aR2RhF9O09JPG2nk+Fg9tF8Lj8B67f3YcAOejqg
+         WWwt7hmtqJfzit1z7vIfIX3DEaRiaTrCRrYlDBydxgR52ib59xQcbtxKDpUTDtERFBzD
+         LqflBX8qQUmhfdW24sCmUKtesvoF0yR2v5PY3mz0bkXmzPHNBPYvmMYgdTuhizciVpxc
+         XnO1MAHhMSzAnbY2UMvDuTJwR8df0JTM2Jsz9FH7EPEDcvcDzPRZ+vL/4LlvCrQ+HPBk
+         WXYA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3fQ3Bi30QkwMT5bk1T+d7dOcwoKbYAA5e6aaJJW0X77oIc622B50n/PppYVRTyp5rn0QU9SrS2waE2Bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMn/zFZomD0UToCsDxGxFN+GreixGGL0RBUqHdpjrEEcYFwyrm
+	XTlK9bsJeXzaWzxcdUaVM0U4Bcith1WAeJyoWvdme4ezry6TBHF5hONJAfsybnd0h9NUd6Mq//R
+	IrkCn144ytUm3uDD7SBjjSR4dh9jmvMCt27abSA==
+X-Gm-Gg: ASbGncsqZWGxmttJVpjALMzCvQxYePbv3VGRoQ/ZdwBsY6POdlh3kXI4DkTG15Wk6Fh
+	mQYB8X3g4ALkS5ddgRgeusazniOGCXagVb4ysXctkhZUlcVNI5RDS8CsVvc2YGKU9zUQs2xg+Gg
+	dgffbgdkQsIfUWRBpFTuKw/Rr7oxDb1ngowC8NFUrwf9QhV8cxFI5p
+X-Google-Smtp-Source: AGHT+IGqT38ux5vaBWGblzcdGmBhZyaMpSO70W/U+56Y5rFaiMiEKupGmQkwT4XDzj6P2STWaAz7Pgso32FQ1wf1fIw=
+X-Received: by 2002:a05:690c:6d01:b0:708:3a47:3d2c with SMTP id
+ 00721157ae682-7089965c286mr10536507b3.13.1745862494536; Mon, 28 Apr 2025
+ 10:48:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Apr 2025 19:45:41 +0200
-Message-Id: <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming
- runnable
-Cc: <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Atish
- Patra" <atishp@atishpatra.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Alexandre Ghiti" <alex@ghiti.fr>, "Andrew Jones"
- <ajones@ventanamicro.com>, "Mayuresh Chitale" <mchitale@ventanamicro.com>
-To: "Anup Patel" <anup@brainfault.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
- <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
-In-Reply-To: <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
+MIME-Version: 1.0
+References: <20250426-vc4-audio-inf-probe-v1-1-a500785b71df@gmail.com>
+In-Reply-To: <20250426-vc4-audio-inf-probe-v1-1-a500785b71df@gmail.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Mon, 28 Apr 2025 18:47:58 +0100
+X-Gm-Features: ATxdqUGhyN8MsnmzldLq3CrZVM8rsc0UmD66HlBXP3YuWCGQVL9or9qwouRQw84
+Message-ID: <CAPY8ntDqKBBt-uOb9m58jKhCn79RE26890X0EdxKiwWrypXN4Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/vc4: fix infinite EPROBE_DEFER loop
+To: Gabriel Dalimonte <gabriel.dalimonte@gmail.com>
+Cc: Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Dmitry Baryshkov <lumag@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-2025-04-28T17:52:25+05:30, Anup Patel <anup@brainfault.org>:
-> On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcm=
-ar@ventanamicro.com> wrote:
->> For a cleaner solution, we should add interfaces to perform the KVM-SBI
->> reset request on userspace demand.  I think it would also be much better
->> if userspace was in control of the post-reset state.
+Hi Gabriel
+
+On Sat, 26 Apr 2025 at 07:23, Gabriel Dalimonte
+<gabriel.dalimonte@gmail.com> wrote:
 >
-> Apart from breaking KVM user-space, this patch is incorrect and
-> does not align with the:
-> 1) SBI spec
-> 2) OS boot protocol.
+> `vc4_hdmi_audio_init` calls `devm_snd_dmaengine_pcm_register` which may
+> return EPROBE_DEFER. Calling `drm_connector_hdmi_audio_init` adds a
+> child device. The driver model docs[1] state that adding a child device
+> prior to returning EPROBE_DEFER may result in an infinite loop.
 >
-> The SBI spec only defines the entry state of certain CPU registers
-> (namely, PC, A0, and A1) when CPU enters S-mode:
-> 1) Upon SBI HSM start call from some other CPU
-> 2) Upon resuming from non-retentive SBI HSM suspend or
->     SBI system suspend
+> [1] https://www.kernel.org/doc/html/v6.14/driver-api/driver-model/driver.html
 >
-> The S-mode entry state of the boot CPU is defined by the
-> OS boot protocol and not by the SBI spec. Due to this, reason
-> KVM RISC-V expects user-space to set up the S-mode entry
-> state of the boot CPU upon system reset.
+> Signed-off-by: Gabriel Dalimonte <gabriel.dalimonte@gmail.com>
+> ---
+> Starting with v6.14, my Raspberry Pi 4B on the mainline kernel started seeing
+> the vc4 driver looping during probe with:
+>
+> vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops [vc4])
+> Registered IR keymap rc-cec
+> rc rc0: vc4-hdmi-0 as /devices/platform/soc/fef00700.hdmi/rc/rc0
+> input: vc4-hdmi-0 as /devices/platform/soc/fef00700.hdmi/rc/rc0/input3503
+> vc4_hdmi fef00700.hdmi: Could not register PCM component: -517
+>
+> repeating several times per second.
+>
+> From my understanding, this happens due to the mainline kernel missing the
+> patches to support audio portion of the HDMI interface. In this case, or
+> other cases where the sound subsystem can't create a device, it returns
+> -517 (EPROBE_DEFER). All of this is consistent with what I experienced prior
+> to 6.14 as well. However, prior to 6.14 it did not try to probe infinitely.
 
-We can handle the initial state consistency in other patches.
-What needs addressing is a way to trigger the KVM reset from userspace,
-even if only to clear the internal KVM state.
+Mainline should have all the bits for HDMI audio on Pi4.
+It doesn't have the bits for Pi5 as it needs the newer DMA controller.
 
-I think mp_state is currently the best signalization that KVM should
-reset, so I added it there.
+> Bisecting 6.13 -> 6.14, it looks like
+> 9640f1437a88d8c617ff5523f1f9dc8c3ff29121 [1] moved HDMI audio connector
+> initialization from audio vc4 audio initialization to vc4 connector
+> initialization. If my understanding is correct, this change causes a child
+> device to be added before EPROBE_DEFER is returned and queues the device probe
+> to happen when a new device is added, which happens immediately because the
+> audio child device was added earlier in the probe.
 
-What would be your preferred interface for that?
+cc Dmitry as the author of that patch.
 
-Thanks.
+However I don't see an issue with moving the init back to vc4_hdmi_audio_init.
+I'm not an expert on the sequencing of things around the audio side
+though, so I wonder if Dmitry or Maxime could comment.
 
+The patch could do with a Fixes: tag if 9640f1437a88 if it is
+definitely the commit that breaks things.
+
+Thanks
+  Dave
+
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9640f1437a88d8c617ff5523f1f9dc8c3ff29121
+> ---
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index a29a6ef266f9a5952af53030a9a2d313e2ecdfce..163d092bd973bb3dfc5ea61187ec5fdf4f4f6029 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -560,12 +560,6 @@ static int vc4_hdmi_connector_init(struct drm_device *dev,
+>         if (ret)
+>                 return ret;
+>
+> -       ret = drm_connector_hdmi_audio_init(connector, dev->dev,
+> -                                           &vc4_hdmi_audio_funcs,
+> -                                           8, false, -1);
+> -       if (ret)
+> -               return ret;
+> -
+>         drm_connector_helper_add(connector, &vc4_hdmi_connector_helper_funcs);
+>
+>         /*
+> @@ -2291,6 +2285,12 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
+>                 return ret;
+>         }
+>
+> +       ret = drm_connector_hdmi_audio_init(&vc4_hdmi->connector, dev,
+> +                                           &vc4_hdmi_audio_funcs, 8, false,
+> +                                           -1);
+> +       if (ret)
+> +               return ret;
+> +
+>         dai_link->cpus          = &vc4_hdmi->audio.cpu;
+>         dai_link->codecs        = &vc4_hdmi->audio.codec;
+>         dai_link->platforms     = &vc4_hdmi->audio.platform;
+>
+> ---
+> base-commit: b60301774a8fe6c30b14a95104ec099290a2e904
+> change-id: 20250426-vc4-audio-inf-probe-f67a8aa2a180
+>
+> Best regards,
+> --
+> Gabriel Dalimonte <gabriel.dalimonte@gmail.com>
+>
