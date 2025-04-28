@@ -1,704 +1,243 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011011.outbound.protection.outlook.com [40.107.74.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF60267AF6
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840176; cv=none; b=dBAI1BtBBnY7xcMO9eAu/349EfKCehlN2PqtOvWiY/2JraEM6LLzca39wBqwASMDCx1Oq5b/yhfB9weDqh4+XVgmeIygF3GGZhbqjydtGoSOvIDIzUMsh6IVe97X3hYSIRY9LTRCdY3HkTvqUsY1HlIZM4bcqLB7dhk8gWV95rI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840176; c=relaxed/simple;
-	bh=XyNvxHnB/PUwPDNvfHYgExTxSFiaRZGSU0Wz4h3ddm0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hSAg66LCUoQIM9szbsjDy0o9+kSu7RHPRwaeCwdrFoRli8lQHljWKH5iXYqtm47Ay6QB0as3CNKASDdXmCruFk1wIkAPSJxEGDvAhSEe5Ed3TmfVVa/cklqygULZUPUNnz0wun0DH7ffr4GEQsCo0p2IEHncNVxbYsbNj50uee0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qcXGx+t8; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53432267B06;
+	Mon, 28 Apr 2025 11:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745840179; cv=fail; b=defqL96kgNw5DIrp3NhYEhVSQxLaxPq0wCzAj9LkHtQTkW9Lau1df4YsuCeZ7LI7RXg8dAa/LExCUU87/+NABObW8Ude+j+UmrYXb/lqwWwworph97c00vo+Gc1LWhTnzBPO6xnNPIqlpAy0OcMld5OINNbFN6MX/qyY677YYsk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745840179; c=relaxed/simple;
+	bh=uE4vhH5NJgYTyqAWzmgPqEMpr85xFII87KbxFt7NVoM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LfH3VY5TAthJLB1fxtfLLADpRtVg3rioUiZo5uKABjE5I83pI6asc+J1GN7saOJsptgJmuLICS4SeVAbKty7bJQUtPZBsAwVPTZ4ZSMJ3sRJx/0kVpsAveEaZQZWY1gatygsEOL2zPzOtmjkZnPKGntW94TAqQSqd5OD3h5kwP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=KgbvxFyx; arc=fail smtp.client-ip=40.107.74.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qcXGx+t8"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac34257295dso793489666b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745840170; x=1746444970; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wlmXsLPTvTC55KpNUdY8vaigZc8QVDvQGQci8hOP1Fw=;
-        b=qcXGx+t8uke1HI8qWc1aKbxz7ikkVoQOzBZ+3OEQ/QrYS4fWzSFcZPIGTsNDBzBsM3
-         utXR6GaUMB7ZqW+n3ATzpjaAu0naVwSnAYZAndio274TF760S6t7B8OrL3tA/r1O+8SO
-         jJmnrtaZgT6QW+4XJ53/KE/Gzd+GUy0v31ubBkbNku2UOu1RRNQhKH9YWux5wm3r+oe1
-         TXGqS7UAx1vqufoGESleMhRjrga8nIUr2Z2nxIPxPRFN0iXtKLC7Auv2pwg/cfvksziU
-         0MgmpqLV8mhxE8tI1p5VwNusMDIu9tq9GwstT+syOa0vtXWObh3zTZHMnos7qvYiRHvJ
-         cQkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745840170; x=1746444970;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wlmXsLPTvTC55KpNUdY8vaigZc8QVDvQGQci8hOP1Fw=;
-        b=JS9YiQokFYNedPZkUZ2rvVnujUZuaqF8XcEyWtMx/k0/NsKB8ww/mfurnuj0Uu/u8K
-         S2F8GL/Oip5AbgtazvIxvJw1jlTJLDSF30xvN1CdfbFtqydozcGyVMDapu330MyZjm9Y
-         qAnU+D02K0sVUpt8IPXlxEDDzhWAaWHqe0LMb5leK6QyeAjhN4s6LaLk4gVO3xw4CMeC
-         eWNS/6xuFJH9Y2g8yRH7YvbUrv1v8HAsvTmPusGCO1Qok12D4MlHgjC3oScp9Pgwmo/0
-         7prtzVG4APbKZdqWM4BEhTK+dBNiitYCt+hBrePsrGl7E7h6+1j7zoAX8vNX1vom6iTn
-         yVxg==
-X-Forwarded-Encrypted: i=1; AJvYcCVatyNCzVBM6gbBG+BSMWtxJZhiA5dzEpI2B6AXHGzolX07Zj5fIv/ELlxMow1XsdQ87cQJWuOksWQ9Mx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzZaF/06L3MeANM3NhTWfezPorh3tZ/F1hVrW8RjMo+NnABcYZ
-	xZgQvZXxQLEaDjYLbsjxQRwrbDwXZZno1vPCLSKD77Ge6peQ6adKsYlNZVh6cgM=
-X-Gm-Gg: ASbGncsYvmmeLaez0IPHERRKNEfb2on5WJ27YH0xsoh3cgXjSE9aCyIQbSJ5PT61ze8
-	O1mVjsRPHneHfvA0Pc6xG5BpZ1yPb0e8578q2/cLHy6M4tYOSTccvKHvZ9D+Lo1MNZA5VSB0mmj
-	6QzHdnZeYKTv9wjpHLh6fLWs/u00nT1YkQvtXKW0WWZ4nS+KPR2Mm2lZq2D0D3vNgcl/wxA7KvI
-	tFvGNQeoWxeqX65cntgDWz8yp84j0p5dkWhFGq6G+Z8BduBw6nG7sdPxndRXZW9DXmbWmCYHmGV
-	E5vqLq4i8NRyhIFIhJ7X7gt1CrhWAwStdHqbxL+EMUCM7dHFfEL1QDoeDaQA6eUy6o9EgVXy3jP
-	F6OHB7YpmYLloLiHDkdSPiLbk
-X-Google-Smtp-Source: AGHT+IGIHiNHKJekY/wM4UV4Zz5ICJ8vY/cXtlCv3nQ5hKl701WSu8uKvMDcQbX9hPCsyLG0YfWJhw==
-X-Received: by 2002:a17:907:86a4:b0:aca:d2f0:d291 with SMTP id a640c23a62f3a-ace7104d411mr1005606066b.5.1745840170186;
-        Mon, 28 Apr 2025 04:36:10 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb1580sm619937766b.175.2025.04.28.04.36.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:36:09 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 28 Apr 2025 12:36:08 +0100
-Subject: [PATCH v7 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="KgbvxFyx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dyzUWTNjXamGnI8WHJxw1uohWBUJECzebex+HBf9wjK+0NUIVVN+YmicGnlaPBxfhoNV8pmj5HQk5ta9Em4o10WGG6YAKC+VelZTCoHOlg6Y5jsMg1DTyVeQ5gWC8APA8lDjFn8u872+6Uh4dk7dfE3FThXNt6M2bc+OjoLNqPexifjdupAQgQglY6aLEHJ8VUzZOd05MrLDL0V02Kw8YqzIORcZ7LO7aXKUHsakOfE/ECyz0DB+ZoCyxaVWrS9KcVqr7B9T93IbbfzZPHn6Gx7U7EIKzGmMpws/7QytmLdR7KlDF8qIbZTGAGhjmxg7j9MxENw3BFWDgpkjLWDL2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uE4vhH5NJgYTyqAWzmgPqEMpr85xFII87KbxFt7NVoM=;
+ b=zJe+LwZKAw/X+schFGfyEYR6oBjiNXe75xYBwpfwlBIOxjAkI5bs+jaWut3B63qDMNioq72KCszl+/MMbQ4nuoHWZu3HrYCwHa409fSIDD19nb+acREqVKOy/aq1rc6TQdq1dLfeWnTMH3djMHekbJfqpXnSUCcPp7SjoBLWwZHi0eUzPSlqtvHORE6Xo7IMGegbbIIVo0djgj5oIL1hfrQEmA7MeIPi7QKFsILxA3ZvunFidPoYd02Ms0QIrWz5uvEJ0sDFI8aI7zodv//K7gAzGOAH1YWOfQ+gbxfZU4v6+eldClTIk6CREkKtD45Oynn+4LffrIdHGEOelu5iTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uE4vhH5NJgYTyqAWzmgPqEMpr85xFII87KbxFt7NVoM=;
+ b=KgbvxFyxdKkWKQ1yFBny6UCKz6ZIPl6JXO9h8LyaORbJ2mf9NosOVFgG7YkkkiQXaIFF8d9yKgrjqX2YMjPCekGtrXc9Rx5giFIjjUsNBM2Z/eRsUELY+gom0ejBs0T86z/nlK+sJHRpBaD5ESX1V+u2EX0sjSvQfL1RvIZ6NXU=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by OS0PR01MB6404.jpnprd01.prod.outlook.com (2603:1096:604:104::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
+ 2025 11:36:08 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
+ 11:36:08 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, laurent.pinchart
+	<laurent.pinchart@ideasonboard.com>
+CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+	<hverkuil@xs4all.nl>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, Fabrizio Castro
+	<fabrizio.castro.jz@renesas.com>, Tommaso Merciai
+	<tommaso.merciai.xr@bp.renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, Dan Carpenter
+	<dan.carpenter@linaro.org>
+Subject: RE: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
+Thread-Topic: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
+Thread-Index: AQHbuCM8dWr8bhFWIEa51Pi0ZPlXAbO42D0AgAAV2wCAAAIPAIAAAiiAgAAAoVA=
+Date: Mon, 28 Apr 2025 11:36:08 +0000
+Message-ID:
+ <TY3PR01MB11346E57A3DF8D8A90A405E4686812@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250428095940.GE3371@pendragon.ideasonboard.com>
+ <CA+V-a8taFdmCgiUAwmDG93OA+P9UH-FEw3PeMFW4sLQ2KPnEPQ@mail.gmail.com>
+ <20250428112516.GG3371@pendragon.ideasonboard.com>
+ <CA+V-a8vDDLZ422nZds7pEEW+gZ1n7s-U3eJjmG8DsOJT9uJygQ@mail.gmail.com>
+In-Reply-To:
+ <CA+V-a8vDDLZ422nZds7pEEW+gZ1n7s-U3eJjmG8DsOJT9uJygQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS0PR01MB6404:EE_
+x-ms-office365-filtering-correlation-id: 4fec30e0-2c72-4481-e0ff-08dd8648de66
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?aFc0SGxqY0hkNGhqWXU4UTREdHF1dXcyTDB4ZUV4Y0MxeVZWNmY4UXp0S1hH?=
+ =?utf-8?B?dkZESUNrb2tOUXVkeWgzUHNsa2NzTG9paUl0WS90MDVSZDhHYk1KMFNONlVi?=
+ =?utf-8?B?ZTRna2RuaWdYejBhTXIwekxKWWQxYkR1bFlva3hsY3pyMXVRaVhxN1I2MUZT?=
+ =?utf-8?B?SVd0MnkySUxnV0JNR2RHWmwrb0hjQ05JYTlEWTVxOGJ0bFUrQ2dmVWhaTXJU?=
+ =?utf-8?B?OWZmVzRWUjNQblJoTG5oN3FCSXZPN0tBeFE5dGFuUlFIemRBYk0xOXRoS3J2?=
+ =?utf-8?B?cUcwVGhpMndoYzhKVkhJb3dGVmg5MTBKM3ZSRzJ1OHBSSTNNR3RMdC81VDdy?=
+ =?utf-8?B?ZitTR3dPUmZNbytRdG5YR01JNC9ONWtSdlo3QWhZTWRrMnJPcTJ2VG0wVXNl?=
+ =?utf-8?B?NTk3cUhZbUU2V1krd2ZLRWxhZUU4NHY5MVhYelkzNGsvNS9oUk1UZmwxclk4?=
+ =?utf-8?B?RVNoZEl2U2hTQ2VIeDFpRGxaMnR2K1loSU1tNnNEMmhSSU5GSmZ2bDlVcGYv?=
+ =?utf-8?B?VDF2OXM5NUp1d2d3dFhTSWJhc3ZXV1RiczExbFBYMHUyTEVFd1M1dWdOTVAv?=
+ =?utf-8?B?V2w5Vmd5RHlFNzA4M25aWFA4cmt4UTRzVG9HRjU5dFgxN21NUUdoL3E5ZUJ4?=
+ =?utf-8?B?M24vYVEreVFNaHVxcTVRcGlWbGxrdnVaOEJnc2JCaFo2Rk1IemprazFLdnZZ?=
+ =?utf-8?B?Q3BwRlJvSVp4Z09IU1NJbXVGOHJjZGdBRGdML3lyU2JXWDFpczdGcEtkUjY0?=
+ =?utf-8?B?WVhyVXU4NTRHZ25BQTVYUnlQOWdBU1JpU0tyb2Nldlp6ZmZ5ZXIyRkF1WFZJ?=
+ =?utf-8?B?c3lQZERiaC9pZXJtNnhSVG9GN0ZBazBKR3Z2MVEzemdRRjBhckNKcVVYczdF?=
+ =?utf-8?B?bklZMFdvbk0xWGFUOFpUbkZJRThEY052SWE3bGpiQmNGalF2OGJ5b2h3S0tW?=
+ =?utf-8?B?ZnVsY2lVVUMxcGlLRTl2ODNOTGhSUkZxb1luWGc0QVo3V0RveC9VYmNsVWNo?=
+ =?utf-8?B?MUxIY3lRSWttUmw5NE10Wk1GQVF6YjBQdGhwSWNyRk41ZVFaOTF4WDkyWUto?=
+ =?utf-8?B?dzk5dEtPaGVyYXdlYlh4VW9CenV6N2k5WDg4SUdxNEQyUzA1MDV2Z1Y3aXRZ?=
+ =?utf-8?B?Z0lsUm9zQ1NLZ0VwTzlaVEVXTTJEZnR6b2NTTVFZRm5wWWtFNTZDdDdFT1JM?=
+ =?utf-8?B?aTV1ampTWUY0THdCZnpWZDMyWUplTlJ6cXkrdjhST0ptVGVKRHQybXIwWnlK?=
+ =?utf-8?B?aU5RZ2YxQldjQ0xvK1ZPaS92Q0tRZzEyZnJ3ZmlUbzVsNU1wQmJ4YURXN0d4?=
+ =?utf-8?B?dDBMZ0svRWM5eG9kcnhUVVJ3SExrUkZkWmkwWTZXVTJWaHF1Qk1NaUpMU0xK?=
+ =?utf-8?B?dERMbnNqbEw4TFYrenhFZlNFNnY0Z2V6dW8weFFTRS8rYWdGbVE2K3oxUTFE?=
+ =?utf-8?B?RUxDcnlYTlY3Z0NKZnU3aEZ1UXNyekxKZjF3RDQwRVNnTE9iRllLVmI0UGFL?=
+ =?utf-8?B?aFk0NmIwRWl2cFh4S2d6MVZ4TXNtelhlbUYrTTl3SWVYU3F5N2FOMGVWTXQ4?=
+ =?utf-8?B?RWxVZmRVZWE4MFpua3IxOE9PVEhFdkREM2twOEdHbTRoUEV2SmhuTEFOQ2cx?=
+ =?utf-8?B?c3VvNkpRMW1HYXFKT1U5TmovV3FtdDE1cndNbSs0ZGNiRlJXZnpzbStiOHVO?=
+ =?utf-8?B?YjFpWDl5R1k5OThaeFpNSjEyUmpnWnBQYTlWNUdRRUNPR09mS21ISU5vQmdv?=
+ =?utf-8?B?UnVOcy9kN3lBdFdITmczUVRDdEpjNGVveUd4MTE2c05kUkt6alhiak5BNUc2?=
+ =?utf-8?B?b1YvK29tZ3liRTNQVzJpUCt3c1RPMk5sYlJtSmQyKzdnaWVMbk5BWmRNa2Nz?=
+ =?utf-8?B?clEwOUh0TjRMOGN6VXNMK1BiUVFNUFdoKzJJMUg5dkRBR0k4R3BTZkNWYngw?=
+ =?utf-8?B?d0UyWkV3MGFFK2lyeFd1TmlKdHczTDZ6KzBTV3BaeHRlcThKVTZMbmRSWDI5?=
+ =?utf-8?Q?pKVQz93L+t2F/Ls2B3GFEDlOxVDoZo=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?VWQ4QmRqT1l2UE45NDRhelZ5V05CYmwvbUJwcm5hS2hQQVFxQkxYSmxnUU1v?=
+ =?utf-8?B?UkRPTnBZN1BvRGt3U21uMTF5Z0p3a0EvSGc2aWhHMklVOWlDM0t6K3VMcWZQ?=
+ =?utf-8?B?WVV1cUJFWlkxZDUvNkROOVN6NmFjRCtkTWxPRk1abnpSWDF0QUJhN24wZXZq?=
+ =?utf-8?B?MmkzU3JVRkZjZUltWkxjN2NZOGpKSmNlZ2pVdnpnbmN3ZStNMEVOTEc5c0N6?=
+ =?utf-8?B?NnJ0dWM1My8rbURrMzBsYWpmV0hiREFmMTVod1oyOFYraCtSM3Z2SVNtMkdX?=
+ =?utf-8?B?SXk1QktMSEJMMGhxc21CdWdZRGFGUkJhTUY5L0NkSEtCS1dYbGNEUkRPMnZS?=
+ =?utf-8?B?eWh0czhuRm5ZNm43ZGpsWmpkWW9wVmdaaGNaSDFBRysxMnZGTE0vZkE0SnRY?=
+ =?utf-8?B?ZG5WalZJQldQTzYrclZ4akhlT3V5eUttQlQyZldTNFJRTFB5clRDTDFteVhO?=
+ =?utf-8?B?dHRVdVN4YXlTTEhlRTB1K2dKOE5paGFiaktGTHVxT3FIc3ZJalp6K0VDT0tT?=
+ =?utf-8?B?cWFjWnZjVWoxajRaYnlmNkFSL0d5WmQvcSs2NU96Nk56Y1FEbE4zdkNZSkFV?=
+ =?utf-8?B?TzlvQTE3Q0E4YThZN1FLMGlBclduaVdvZHBnejlnNTJtYUlnL1VTYkZXVXdr?=
+ =?utf-8?B?d0IzRVFDSDBLNXg1TThQNWZ4Tk9naG50NkU2dEZVaFhUUU9UZkZRWWtsS0x3?=
+ =?utf-8?B?YWJteGpZZjJIdzZ0SFFiRDYzS1hzWjVvbk42b01JeG4xMHluMnpoQmJqZThG?=
+ =?utf-8?B?M3d2ZG42VkpZZnBxb1RKY1FPRzhtbzlXUnNSVkVOdGI4UlVGUXQ2YW1JaGhu?=
+ =?utf-8?B?ckxBYk1vVWpBTVMyWDZrK2N2S1l6TVlXZkRTM3g4TEZ0czFkUmY2ZWZvT0Vi?=
+ =?utf-8?B?TmE0U0hNZW1nbVpEWmZjTjZ6Wk9mRURwSGV3V1lKT3JlVHl6TlpxT0l6S05P?=
+ =?utf-8?B?bjl5Lzhzc1hibXFGYXFXYU8xVFY3SnZ4Q3Y1TUQyb2FSRGRQT2NTZVRTaU1p?=
+ =?utf-8?B?ZmVzMTltYndHSGNNUEdxYWZTNVF1MGtoS2ZFOFAxTUZCWVJkckJ3UGJPNzZS?=
+ =?utf-8?B?Vjl1NzA4QUF5Z3hBWFJybGR2UEF2QUJoWjhFdlY1MnJVYjM0YVc1Z2E4K0R4?=
+ =?utf-8?B?MmJ2Y0hia2t0K3BhU3AyWGc5QXBtNE5ZZXp2TnhMbDlWV0U0MWYxVUdrTmJm?=
+ =?utf-8?B?ZWg4WHZyUnFCRlMvbmM1Mk9xWHZJeDVQNVcwUUUrWGN4b1hQK012cWU1T0R4?=
+ =?utf-8?B?MEVhTngwUGpKTTJKb0ZQZGc3dlVha3ZtY2xMN3dRK0JjUGd4b0NXUUpRdlpS?=
+ =?utf-8?B?M1VkY0pORnFjSzJXZEViZWdEWVVreTNGS2x1Zi9KMFN3dkVDcmQrVW5WYisx?=
+ =?utf-8?B?c2lBS3BUL0RoNUR4MWFscmJ4bTVLbTQ4MmZhQ2c1RTcvODBQZDdacWhvcTQ1?=
+ =?utf-8?B?U0VXRDFjZjdtY3RFL21WT0doUzRGM0t3N1RQUytrSmJCVkZUODEvTUJMcm52?=
+ =?utf-8?B?T1lhS05Lczc0aUtsSnEwZFNqQUNIRmZnU25pcDh0aFo4dER6SEhQZjJ6UVhh?=
+ =?utf-8?B?RlZUZXpxQlFQS0FudzJtWkJEd1luNUxEVXpYOUNod2RYd092Z0lmRXJxaGJT?=
+ =?utf-8?B?VlVINk5KMmhqZUJxQUo2RGw3NzdjNWFGUXVGMlhtVWhwbVY0MkJzbW9PRXpk?=
+ =?utf-8?B?dXVIVWxIdGpqQzZTOUlNSWRQTUJ6UFVINllBK05yVjlqVjBjWlRkZk9oNTJZ?=
+ =?utf-8?B?b0d1SVoybmdCNy9qdHVPR3lxVmd0bHNaVzE0alg0d2dYQWh4cnZvdTBIYVdM?=
+ =?utf-8?B?R3o4ZHplVm1pWXN4Njc3Qm03NU83bFNxNHFWT3JyeS9xTk43bHZyLzlmVllC?=
+ =?utf-8?B?eE9mOWg4OU02cFJ4SDlqWTZCWm8rN3FUOWdSQmswVlJuSG5FMWRpenZBSWJ2?=
+ =?utf-8?B?MVc0ZE5vWGhSRDRMYy81L3JMNVowdUFDbnU0N1JkRk15bHpCOE1Cd0RWWGJQ?=
+ =?utf-8?B?eTBEdDFLZ29KQzhJNm9pb2g5L3o0ZURJWWtTRUpUaTF3Nld4OVFPWG1kNmNS?=
+ =?utf-8?B?VCs5c2tETFF6cytkckdMNExJcFNlcSsxVCsxYnhQRHl3UnYyZUhFaE5MM0dn?=
+ =?utf-8?B?YW5IbXA4ZjZjdDF2NnB4ZHRaMWNVeTkzWDFUdndtOG5PVUNteUtteS9mcjUv?=
+ =?utf-8?B?TWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
-In-Reply-To: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Srinivas Kandagatla <srini@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fec30e0-2c72-4481-e0ff-08dd8648de66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2025 11:36:08.3141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PuA05cExYFOXDs762axjKsLNN8sX4hQ8jvhVhjhbk63pTcqoGGPKd2E25Xx/zkOb0dDBqd4DLDX7F0loVjOynuwUmq5jhLb8caQ54xlWJxc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0PR01MB6404
 
-The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-Port Controller (TCPC), NVMEM, and a GPIO expander.
-
-This driver supports the GPIO functions using the platform device
-registered by the core MFD driver.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
-v5:
-* follow API updates of max77759 core driver
-
-v3:
-* drop duplicate init of 'handled' variable in irq handler
-* use boolean with IRQ_RETVAL() (Linus)
-* drop 'virq' variable inside irq handler to avoid confusion (Linus)
-* drop assignment of struct gpio_chip::owner (Linus)
-
-v2:
-* fix max77759_gpio_direction_from_control()
-* add missing error handling of devm_mutex_init() (Christophe)
-* align sentinel in max77759_gpio_of_id[] with other max77759 drivers
-  (Christophe)
----
- MAINTAINERS                  |   1 +
- drivers/gpio/Kconfig         |  13 ++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-max77759.c | 524 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 539 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 64b77fd6be4fe2e994822eb7e071c95a15bd4a97..8ec9a09bed546fd9033a7cb977ac3c0533edbb30 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14661,6 +14661,7 @@ M:	André Draszik <andre.draszik@linaro.org>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
-+F:	drivers/gpio/gpio-max77759.c
- F:	drivers/mfd/max77759.c
- F:	include/linux/mfd/max77759.h
- 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 9ae806f45e19c1494d156b7f04b1882be68d3e3f..bbc71cdde9ed66b2fe69dcbc7508d51690d2cfa4 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1483,6 +1483,19 @@ config GPIO_MAX77650
- 	  GPIO driver for MAX77650/77651 PMIC from Maxim Semiconductor.
- 	  These chips have a single pin that can be configured as GPIO.
- 
-+config GPIO_MAX77759
-+	tristate "Maxim Integrated MAX77759 GPIO support"
-+	depends on MFD_MAX77759
-+	default MFD_MAX77759
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  GPIO driver for MAX77759 PMIC from Maxim Integrated.
-+	  There are two GPIOs available on these chips in total, both of
-+	  which can also generate interrupts.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called gpio-max77759.
-+
- config GPIO_PALMAS
- 	bool "TI PALMAS series PMICs GPIO"
- 	depends on MFD_PALMAS
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 9aabbb9cb4c61ea57833adf2edb265c204b42cdf..1abae4477ed76b88aff08e83f6d41e58d0b71ff5 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -106,6 +106,7 @@ obj-$(CONFIG_GPIO_MAX730X)		+= gpio-max730x.o
- obj-$(CONFIG_GPIO_MAX732X)		+= gpio-max732x.o
- obj-$(CONFIG_GPIO_MAX77620)		+= gpio-max77620.o
- obj-$(CONFIG_GPIO_MAX77650)		+= gpio-max77650.o
-+obj-$(CONFIG_GPIO_MAX77759)		+= gpio-max77759.o
- obj-$(CONFIG_GPIO_MB86S7X)		+= gpio-mb86s7x.o
- obj-$(CONFIG_GPIO_MC33880)		+= gpio-mc33880.o
- obj-$(CONFIG_GPIO_MENZ127)		+= gpio-menz127.o
-diff --git a/drivers/gpio/gpio-max77759.c b/drivers/gpio/gpio-max77759.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..09423ad5ae22d1046189bcda961ca35c828c6f21
---- /dev/null
-+++ b/drivers/gpio/gpio-max77759.c
-@@ -0,0 +1,524 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// Copyright 2020 Google Inc
-+// Copyright 2025 Linaro Ltd.
-+//
-+// GPIO driver for Maxim MAX77759
-+
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/device/driver.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqreturn.h>
-+#include <linux/lockdep.h>
-+#include <linux/mfd/max77759.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/overflow.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/seq_file.h>
-+
-+#define MAX77759_N_GPIOS   ARRAY_SIZE(max77759_gpio_line_names)
-+static const char * const max77759_gpio_line_names[] = { "GPIO5", "GPIO6" };
-+
-+struct max77759_gpio_chip {
-+	struct regmap *map;
-+	struct max77759 *max77759;
-+	struct gpio_chip gc;
-+	struct mutex maxq_lock; /* protect MaxQ r/m/w operations */
-+
-+	struct mutex irq_lock; /* protect irq bus */
-+	int irq_mask;
-+	int irq_mask_changed;
-+	int irq_trig;
-+	int irq_trig_changed;
-+};
-+
-+#define MAX77759_GPIOx_TRIGGER(offs, val) (((val) & 1) << (offs))
-+#define MAX77759_GPIOx_TRIGGER_MASK(offs) MAX77759_GPIOx_TRIGGER(offs, ~0)
-+enum max77759_trigger_gpio_type {
-+	MAX77759_GPIO_TRIGGER_RISING = 0,
-+	MAX77759_GPIO_TRIGGER_FALLING = 1
-+};
-+
-+#define MAX77759_GPIOx_DIR(offs, dir) (((dir) & 1) << (2 + (3 * (offs))))
-+#define MAX77759_GPIOx_DIR_MASK(offs) MAX77759_GPIOx_DIR(offs, ~0)
-+enum max77759_control_gpio_dir {
-+	MAX77759_GPIO_DIR_IN = 0,
-+	MAX77759_GPIO_DIR_OUT = 1
-+};
-+
-+#define MAX77759_GPIOx_OUTVAL(offs, val) (((val) & 1) << (3 + (3 * (offs))))
-+#define MAX77759_GPIOx_OUTVAL_MASK(offs) MAX77759_GPIOx_OUTVAL(offs, ~0)
-+
-+#define MAX77759_GPIOx_INVAL_MASK(offs) (BIT(4) << (3 * (offs)))
-+
-+static int max77759_gpio_maxq_gpio_trigger_read(struct max77759_gpio_chip *chip)
-+{
-+	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length, 1);
-+	DEFINE_FLEX(struct max77759_maxq_response, rsp, rsp, length, 2);
-+	int ret;
-+
-+	cmd->cmd[0] = MAX77759_MAXQ_OPCODE_GPIO_TRIGGER_READ;
-+
-+	ret = max77759_maxq_command(chip->max77759, cmd, rsp);
-+	if (ret < 0)
-+		return ret;
-+
-+	return rsp->rsp[1];
-+}
-+
-+static int max77759_gpio_maxq_gpio_trigger_write(struct max77759_gpio_chip *chip,
-+						 u8 trigger)
-+{
-+	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length, 2);
-+
-+	cmd->cmd[0] = MAX77759_MAXQ_OPCODE_GPIO_TRIGGER_WRITE;
-+	cmd->cmd[1] = trigger;
-+
-+	return max77759_maxq_command(chip->max77759, cmd, NULL);
-+}
-+
-+static int max77759_gpio_maxq_gpio_control_read(struct max77759_gpio_chip *chip)
-+{
-+	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length, 1);
-+	DEFINE_FLEX(struct max77759_maxq_response, rsp, rsp, length, 2);
-+	int ret;
-+
-+	cmd->cmd[0] = MAX77759_MAXQ_OPCODE_GPIO_CONTROL_READ;
-+
-+	ret = max77759_maxq_command(chip->max77759, cmd, rsp);
-+	if (ret < 0)
-+		return ret;
-+
-+	return rsp->rsp[1];
-+}
-+
-+static int max77759_gpio_maxq_gpio_control_write(struct max77759_gpio_chip *chip,
-+						 u8 ctrl)
-+{
-+	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length, 2);
-+
-+	cmd->cmd[0] = MAX77759_MAXQ_OPCODE_GPIO_CONTROL_WRITE;
-+	cmd->cmd[1] = ctrl;
-+
-+	return max77759_maxq_command(chip->max77759, cmd, NULL);
-+}
-+
-+static int
-+max77759_gpio_direction_from_control(int ctrl, unsigned int offset)
-+{
-+	enum max77759_control_gpio_dir dir;
-+
-+	dir = !!(ctrl & MAX77759_GPIOx_DIR_MASK(offset));
-+	return ((dir == MAX77759_GPIO_DIR_OUT)
-+		? GPIO_LINE_DIRECTION_OUT
-+		: GPIO_LINE_DIRECTION_IN);
-+}
-+
-+static int max77759_gpio_get_direction(struct gpio_chip *gc,
-+				       unsigned int offset)
-+{
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	int ctrl;
-+
-+	ctrl = max77759_gpio_maxq_gpio_control_read(chip);
-+	if (ctrl < 0)
-+		return ctrl;
-+
-+	return max77759_gpio_direction_from_control(ctrl, offset);
-+}
-+
-+static int max77759_gpio_direction_helper(struct gpio_chip *gc,
-+					  unsigned int offset,
-+					  enum max77759_control_gpio_dir dir,
-+					  int value)
-+{
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	int ctrl, new_ctrl;
-+
-+	guard(mutex)(&chip->maxq_lock);
-+
-+	ctrl = max77759_gpio_maxq_gpio_control_read(chip);
-+	if (ctrl < 0)
-+		return ctrl;
-+
-+	new_ctrl = ctrl & ~MAX77759_GPIOx_DIR_MASK(offset);
-+	new_ctrl |= MAX77759_GPIOx_DIR(offset, dir);
-+
-+	if (dir == MAX77759_GPIO_DIR_OUT) {
-+		new_ctrl &= ~MAX77759_GPIOx_OUTVAL_MASK(offset);
-+		new_ctrl |= MAX77759_GPIOx_OUTVAL(offset, value);
-+	}
-+
-+	if (new_ctrl == ctrl)
-+		return 0;
-+
-+	return max77759_gpio_maxq_gpio_control_write(chip, new_ctrl);
-+}
-+
-+static int max77759_gpio_direction_input(struct gpio_chip *gc,
-+					 unsigned int offset)
-+{
-+	return max77759_gpio_direction_helper(gc, offset,
-+					      MAX77759_GPIO_DIR_IN, -1);
-+}
-+
-+static int max77759_gpio_direction_output(struct gpio_chip *gc,
-+					  unsigned int offset, int value)
-+{
-+	return max77759_gpio_direction_helper(gc, offset,
-+					      MAX77759_GPIO_DIR_OUT, value);
-+}
-+
-+static int max77759_gpio_get_value(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	int ctrl, mask;
-+
-+	ctrl = max77759_gpio_maxq_gpio_control_read(chip);
-+	if (ctrl < 0)
-+		return ctrl;
-+
-+	/*
-+	 * The input status bit doesn't reflect the pin state when the GPIO is
-+	 * configured as an output. Check the direction, and inspect the input
-+	 * or output bit accordingly.
-+	 */
-+	mask = ((max77759_gpio_direction_from_control(ctrl, offset)
-+		 == GPIO_LINE_DIRECTION_IN)
-+		? MAX77759_GPIOx_INVAL_MASK(offset)
-+		: MAX77759_GPIOx_OUTVAL_MASK(offset));
-+
-+	return !!(ctrl & mask);
-+}
-+
-+static void max77759_gpio_set_value(struct gpio_chip *gc,
-+				    unsigned int offset, int value)
-+{
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	int ctrl, new_ctrl;
-+
-+	guard(mutex)(&chip->maxq_lock);
-+
-+	ctrl = max77759_gpio_maxq_gpio_control_read(chip);
-+	if (ctrl < 0)
-+		return;
-+
-+	new_ctrl = ctrl & ~MAX77759_GPIOx_OUTVAL_MASK(offset);
-+	new_ctrl |= MAX77759_GPIOx_OUTVAL(offset, value);
-+
-+	if (new_ctrl == ctrl)
-+		return;
-+
-+	max77759_gpio_maxq_gpio_control_write(chip, new_ctrl);
-+}
-+
-+static void max77759_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	chip->irq_mask &= ~MAX77759_MAXQ_REG_UIC_INT1_GPIOxI_MASK(hwirq);
-+	chip->irq_mask |= MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(hwirq, 1);
-+	chip->irq_mask_changed |= MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(hwirq, 1);
-+
-+	gpiochip_disable_irq(gc, hwirq);
-+}
-+
-+static void max77759_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	gpiochip_enable_irq(gc, hwirq);
-+
-+	chip->irq_mask &= ~MAX77759_MAXQ_REG_UIC_INT1_GPIOxI_MASK(hwirq);
-+	chip->irq_mask |= MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(hwirq, 0);
-+	chip->irq_mask_changed |= MAX77759_MAXQ_REG_UIC_INT1_GPIOxI(hwirq, 1);
-+}
-+
-+static int max77759_gpio_set_irq_type(struct irq_data *d, unsigned int type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	chip->irq_trig &= ~MAX77759_GPIOx_TRIGGER_MASK(hwirq);
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		chip->irq_trig |= MAX77759_GPIOx_TRIGGER(hwirq,
-+						MAX77759_GPIO_TRIGGER_RISING);
-+		break;
-+
-+	case IRQ_TYPE_EDGE_FALLING:
-+		chip->irq_trig |= MAX77759_GPIOx_TRIGGER(hwirq,
-+						MAX77759_GPIO_TRIGGER_FALLING);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	chip->irq_trig_changed |= MAX77759_GPIOx_TRIGGER(hwirq, 1);
-+
-+	return 0;
-+}
-+
-+static void max77759_gpio_bus_lock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+
-+	mutex_lock(&chip->irq_lock);
-+}
-+
-+static int max77759_gpio_bus_sync_unlock_helper(struct gpio_chip *gc,
-+						struct max77759_gpio_chip *chip)
-+					       __must_hold(&chip->maxq_lock)
-+{
-+	int ctrl, trigger, new_trigger, new_ctrl;
-+	unsigned long irq_trig_changed;
-+	int offset;
-+	int ret;
-+
-+	lockdep_assert_held(&chip->maxq_lock);
-+
-+	ctrl = max77759_gpio_maxq_gpio_control_read(chip);
-+	trigger = max77759_gpio_maxq_gpio_trigger_read(chip);
-+	if (ctrl < 0 || trigger < 0) {
-+		dev_err(gc->parent, "failed to read current state: %d / %d\n",
-+			ctrl, trigger);
-+		return (ctrl < 0) ? ctrl : trigger;
-+	}
-+
-+	new_trigger = trigger & ~chip->irq_trig_changed;
-+	new_trigger |= (chip->irq_trig & chip->irq_trig_changed);
-+
-+	/* change GPIO direction if required */
-+	new_ctrl = ctrl;
-+	irq_trig_changed = chip->irq_trig_changed;
-+	for_each_set_bit(offset, &irq_trig_changed, MAX77759_N_GPIOS) {
-+		new_ctrl &= ~MAX77759_GPIOx_DIR_MASK(offset);
-+		new_ctrl |= MAX77759_GPIOx_DIR(offset, MAX77759_GPIO_DIR_IN);
-+	}
-+
-+	if (new_trigger != trigger) {
-+		ret = max77759_gpio_maxq_gpio_trigger_write(chip, new_trigger);
-+		if (ret) {
-+			dev_err(gc->parent,
-+				"failed to write new trigger: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (new_ctrl != ctrl) {
-+		ret = max77759_gpio_maxq_gpio_control_write(chip, new_ctrl);
-+		if (ret) {
-+			dev_err(gc->parent,
-+				"failed to write new control: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	chip->irq_trig_changed = 0;
-+
-+	return 0;
-+}
-+
-+static void max77759_gpio_bus_sync_unlock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct max77759_gpio_chip *chip = gpiochip_get_data(gc);
-+	int ret;
-+
-+	scoped_guard(mutex, &chip->maxq_lock) {
-+		ret = max77759_gpio_bus_sync_unlock_helper(gc, chip);
-+		if (ret)
-+			goto out_unlock;
-+	}
-+
-+	ret = regmap_update_bits(chip->map,
-+				 MAX77759_MAXQ_REG_UIC_INT1_M,
-+				 chip->irq_mask_changed, chip->irq_mask);
-+	if (ret) {
-+		dev_err(gc->parent,
-+			"failed to update UIC_INT1 irq mask: %d\n", ret);
-+		goto out_unlock;
-+	}
-+
-+	chip->irq_mask_changed = 0;
-+
-+out_unlock:
-+	mutex_unlock(&chip->irq_lock);
-+}
-+
-+static void max77759_gpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	seq_puts(p, dev_name(gc->parent));
-+}
-+
-+static const struct irq_chip max77759_gpio_irq_chip = {
-+	.irq_mask		= max77759_gpio_irq_mask,
-+	.irq_unmask		= max77759_gpio_irq_unmask,
-+	.irq_set_type		= max77759_gpio_set_irq_type,
-+	.irq_bus_lock		= max77759_gpio_bus_lock,
-+	.irq_bus_sync_unlock	= max77759_gpio_bus_sync_unlock,
-+	.irq_print_chip		= max77759_gpio_irq_print_chip,
-+	.flags			= IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
-+static irqreturn_t max77759_gpio_irqhandler(int irq, void *data)
-+{
-+	struct max77759_gpio_chip *chip = data;
-+	struct gpio_chip *gc = &chip->gc;
-+	bool handled = false;
-+
-+	/* iterate until no interrupt is pending */
-+	while (true) {
-+		unsigned int uic_int1;
-+		int ret;
-+		unsigned long pending;
-+		int offset;
-+
-+		ret = regmap_read(chip->map, MAX77759_MAXQ_REG_UIC_INT1,
-+				  &uic_int1);
-+		if (ret < 0) {
-+			dev_err_ratelimited(gc->parent,
-+					    "failed to read IRQ status: %d\n",
-+					    ret);
-+			/*
-+			 * If !handled, we have looped not even once, which
-+			 * means we should return IRQ_NONE in that case (and
-+			 * of course IRQ_HANDLED otherwise).
-+			 */
-+			return IRQ_RETVAL(handled);
-+		}
-+
-+		pending = uic_int1;
-+		pending &= (MAX77759_MAXQ_REG_UIC_INT1_GPIO6I
-+			    | MAX77759_MAXQ_REG_UIC_INT1_GPIO5I);
-+		if (!pending)
-+			break;
-+
-+		for_each_set_bit(offset, &pending, MAX77759_N_GPIOS) {
-+			/*
-+			 * ACK interrupt by writing 1 to bit 'offset', all
-+			 * others need to be written as 0. This needs to be
-+			 * done unconditionally hence regmap_set_bits() is
-+			 * inappropriate here.
-+			 */
-+			regmap_write(chip->map, MAX77759_MAXQ_REG_UIC_INT1,
-+				     BIT(offset));
-+
-+			handle_nested_irq(irq_find_mapping(gc->irq.domain,
-+							   offset));
-+
-+			handled = true;
-+		}
-+	}
-+
-+	return IRQ_RETVAL(handled);
-+}
-+
-+static int max77759_gpio_probe(struct platform_device *pdev)
-+{
-+	struct max77759_gpio_chip *chip;
-+	int irq;
-+	struct gpio_irq_chip *girq;
-+	int ret;
-+	unsigned long irq_flags;
-+	struct irq_data *irqd;
-+
-+	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->map = dev_get_regmap(pdev->dev.parent, "maxq");
-+	if (!chip->map)
-+		return dev_err_probe(&pdev->dev, -ENODEV, "Missing regmap\n");
-+
-+	irq = platform_get_irq_byname(pdev, "GPI");
-+	if (irq < 0)
-+		return dev_err_probe(&pdev->dev, irq, "Failed to get IRQ\n");
-+
-+	chip->max77759 = dev_get_drvdata(pdev->dev.parent);
-+	ret = devm_mutex_init(&pdev->dev, &chip->maxq_lock);
-+	if (ret)
-+		return ret;
-+	ret = devm_mutex_init(&pdev->dev, &chip->irq_lock);
-+	if (ret)
-+		return ret;
-+
-+	chip->gc.base = -1;
-+	chip->gc.label = dev_name(&pdev->dev);
-+	chip->gc.parent = &pdev->dev;
-+	chip->gc.can_sleep = true;
-+
-+	chip->gc.names = max77759_gpio_line_names;
-+	chip->gc.ngpio = MAX77759_N_GPIOS;
-+	chip->gc.get_direction = max77759_gpio_get_direction;
-+	chip->gc.direction_input = max77759_gpio_direction_input;
-+	chip->gc.direction_output = max77759_gpio_direction_output;
-+	chip->gc.get = max77759_gpio_get_value;
-+	chip->gc.set = max77759_gpio_set_value;
-+
-+	girq = &chip->gc.irq;
-+	gpio_irq_chip_set_chip(girq, &max77759_gpio_irq_chip);
-+	/* This will let us handle the parent IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->parents = NULL;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_simple_irq;
-+	girq->threaded = true;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to add GPIO chip\n");
-+
-+	irq_flags = IRQF_ONESHOT | IRQF_SHARED;
-+	irqd = irq_get_irq_data(irq);
-+	if (irqd)
-+		irq_flags |= irqd_get_trigger_type(irqd);
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-+					max77759_gpio_irqhandler, irq_flags,
-+					dev_name(&pdev->dev), chip);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to request IRQ\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id max77759_gpio_of_id[] = {
-+	{ .compatible = "maxim,max77759-gpio", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max77759_gpio_of_id);
-+
-+static struct platform_driver max77759_gpio_driver = {
-+	.driver = {
-+		.name = "max77759-gpio",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+		.of_match_table = max77759_gpio_of_id,
-+	},
-+	.probe = max77759_gpio_probe,
-+};
-+
-+module_platform_driver(max77759_gpio_driver);
-+
-+MODULE_AUTHOR("André Draszik <andre.draszik@linaro.org>");
-+MODULE_DESCRIPTION("GPIO driver for Maxim MAX77759");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:max77759-gpio");
-
--- 
-2.49.0.850.g28803427d3-goog
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGFkLCBQcmFiaGFrYXIg
+PHByYWJoYWthci5jc2VuZ2dAZ21haWwuY29tPg0KPiBTZW50OiAyOCBBcHJpbCAyMDI1IDEyOjMz
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIG1lZGlhOiByZW5lc2FzOiByemcybC1jcnU6IFNpbXBs
+aWZ5IEZJRk8gZW1wdHkgY2hlY2sNCj4gDQo+IEhpIExhdXJlbnQsDQo+IA0KPiBPbiBNb24sIEFw
+ciAyOCwgMjAyNSBhdCAxMjoyNeKAr1BNIExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIEFwciAyOCwgMjAy
+NSBhdCAxMjoxNzo1NFBNICswMTAwLCBMYWQsIFByYWJoYWthciB3cm90ZToNCj4gPiA+IE9uIE1v
+biwgQXByIDI4LCAyMDI1IGF0IDEwOjU54oCvQU0gTGF1cmVudCBQaW5jaGFydCB3cm90ZToNCj4g
+PiA+ID4gT24gTW9uLCBBcHIgMjgsIDIwMjUgYXQgMTA6NTI6MDhBTSArMDEwMCwgUHJhYmhha2Fy
+IHdyb3RlOg0KPiA+ID4gPiA+IEZyb206IExhZCBQcmFiaGFrYXIgPHByYWJoYWthci5tYWhhZGV2
+LWxhZC5yakBicC5yZW5lc2FzLmNvbT4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpbXBsaWZ5IHRo
+ZSBgcnpnMmxfZmlmb19lbXB0eSgpYCBoZWxwZXIgYnkgcmVtb3ZpbmcgdGhlDQo+ID4gPiA+ID4g
+cmVkdW5kYW50IGNvbXBhcmlzb24gaW4gdGhlIHJldHVybiBwYXRoLiBOb3cgdGhlIGZ1bmN0aW9u
+DQo+ID4gPiA+ID4gZXhwbGljaXRseSByZXR1cm5zIGB0cnVlYCBpZiB0aGUgRklGTyB3cml0ZSBh
+bmQgcmVhZCBwb2ludGVycw0KPiA+ID4gPiA+IG1hdGNoLCBhbmQgYGZhbHNlYCBvdGhlcndpc2Us
+IGltcHJvdmluZyByZWFkYWJpbGl0eSB3aXRob3V0IGNoYW5naW5nIGJlaGF2aW9yLg0KPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gUmVwb3J0ZWQtYnk6IERhbiBDYXJwZW50ZXIgPGRhbi5jYXJwZW50ZXJA
+bGluYXJvLm9yZz4NCj4gPiA+ID4gPiBDbG9zZXM6DQo+ID4gPiA+ID4gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvYWxsL2FBdFFUaENpYlpDUk9FVHhAc3RhbmxleS5tb3VudGFpbi8NCj4gPiA+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBMYWQgUHJhYmhha2FyDQo+ID4gPiA+ID4gPHByYWJoYWthci5tYWhh
+ZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiAgZHJp
+dmVycy9tZWRpYS9wbGF0Zm9ybS9yZW5lc2FzL3J6ZzJsLWNydS9yemcybC12aWRlby5jIHwgMiAr
+LQ0KPiA+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24o
+LSkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gPiBhL2RyaXZlcnMv
+bWVkaWEvcGxhdGZvcm0vcmVuZXNhcy9yemcybC1jcnUvcnpnMmwtdmlkZW8uYw0KPiA+ID4gPiA+
+IGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9yZW5lc2FzL3J6ZzJsLWNydS9yemcybC12aWRlby5j
+DQo+ID4gPiA+ID4gaW5kZXggMDY3YzZhZjE0ZTk1Li45N2ZhZWZjZDYwMTkgMTAwNjQ0DQo+ID4g
+PiA+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9yZW5lc2FzL3J6ZzJsLWNydS9yemcy
+bC12aWRlby5jDQo+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9yZW5lc2Fz
+L3J6ZzJsLWNydS9yemcybC12aWRlby5jDQo+ID4gPiA+ID4gQEAgLTM0OCw3ICszNDgsNyBAQCBi
+b29sIHJ6ZzJsX2ZpZm9fZW1wdHkoc3RydWN0IHJ6ZzJsX2NydV9kZXYgKmNydSkNCj4gPiA+ID4g
+PiAgICAgICBpZiAoYW1uZmlmb3BudHJfdyA9PSBhbW5maWZvcG50cl9yX3kpDQo+ID4gPiA+ID4g
+ICAgICAgICAgICAgICByZXR1cm4gdHJ1ZTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC0gICAgIHJl
+dHVybiBhbW5maWZvcG50cl93ID09IGFtbmZpZm9wbnRyX3JfeTsNCj4gPiA+ID4gPiArICAgICBy
+ZXR1cm4gZmFsc2U7DQo+ID4gPiA+DQo+ID4gPiA+IFNvIHRoZSBmdW5jdGlvbiBhbHdheXMgcmV0
+dXJuZWQgdHJ1ZS4gVGhpcyBzZWVtcyB0byBiZSBhIGJ1ZyBmaXgsDQo+ID4gPiA+IHBsZWFzZSBh
+ZGQgYSBGaXhlczogdGFnLiBUaGUgY29tbWl0IG1lc3NhZ2Ugc2hvdWxkIGFsc28gbWFrZSBpdA0K
+PiA+ID4gPiBjbGVhciB0aGF0IHlvdSdyZSBmaXhpbmcgYW4gaXNzdWUsIG5vdCBqdXN0IHNpbXBs
+aWZ5aW5nIHRoZSBjb2RlLg0KPiA+ID4NCj4gPiA+IE5vLCB0aGUgZnVuY3Rpb24gcmV0dXJuZWQg
+dHJ1ZSBvbmx5IGlmIHRoZSBwb2ludGVycyBtYXRjaGVkOw0KPiA+ID4gb3RoZXJ3aXNlLCBhbW5m
+aWZvcG50cl93ID09IGFtbmZpZm9wbnRyX3JfeSB3b3VsZCByZXR1cm4gZmFsc2UuIEkNCj4gPiA+
+IHdhcyBzaW1wbHkgcmVtb3ZpbmcgdGhlIHJlcGV0aXRpdmUgcG9pbnRlciBjaGVjayBhbmQgZGly
+ZWN0bHkNCj4gPiA+IHJldHVybmluZyBmYWxzZSBhdCB0aGUgZW5kIG9mIHRoZSBmdW5jdGlvbiwg
+YXMgd2UgY2FuIGJlIGNlcnRhaW4gYXQgdGhhdCBwb2ludC4NCj4gPiA+IEhlbmNlLCBJIGRpZCBu
+b3QgYWRkIGEgRml4ZXMgdGFnLiBBbSBJIG1pc3Npbmcgc29tZXRoaW5nPw0KPiA+DQo+ID4gT29w
+cywgeW91J3JlIHJpZ2h0LCBteSBiYWQuDQo+ID4NCj4gPiA+ID4gUGVyc29uYWxseSBJJ2QgaGF2
+ZSB3cml0dGVuDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gYS9kcml2ZXJz
+L21lZGlhL3BsYXRmb3JtL3JlbmVzYXMvcnpnMmwtY3J1L3J6ZzJsLXZpZGVvLmMNCj4gPiA+ID4g
+Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3JlbmVzYXMvcnpnMmwtY3J1L3J6ZzJsLXZpZGVvLmMN
+Cj4gPiA+ID4gaW5kZXggMDY3YzZhZjE0ZTk1Li4zZDA4MTBiM2MzNWUgMTAwNjQ0DQo+ID4gPiA+
+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vcmVuZXNhcy9yemcybC1jcnUvcnpnMmwtdmlk
+ZW8uYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3JlbmVzYXMvcnpnMmwt
+Y3J1L3J6ZzJsLXZpZGVvLmMNCj4gPiA+ID4gQEAgLTM0NSw4ICszNDUsNiBAQCBib29sIHJ6ZzJs
+X2ZpZm9fZW1wdHkoc3RydWN0IHJ6ZzJsX2NydV9kZXYgKmNydSkNCj4gPiA+ID4gICAgICAgICBh
+bW5maWZvcG50cl93ID0gYW1uZmlmb3BudHIgJiBBTW5GSUZPUE5UUl9GSUZPV1BOVFI7DQo+ID4g
+PiA+ICAgICAgICAgYW1uZmlmb3BudHJfcl95ID0NCj4gPiA+ID4gICAgICAgICAgICAgICAgIChh
+bW5maWZvcG50ciAmIEFNbkZJRk9QTlRSX0ZJRk9SUE5UUl9ZKSA+PiAxNjsNCj4gPiA+ID4gLSAg
+ICAgICBpZiAoYW1uZmlmb3BudHJfdyA9PSBhbW5maWZvcG50cl9yX3kpDQo+ID4gPiA+IC0gICAg
+ICAgICAgICAgICByZXR1cm4gdHJ1ZTsNCj4gPiA+ID4NCj4gPiA+ID4gICAgICAgICByZXR1cm4g
+YW1uZmlmb3BudHJfdyA9PSBhbW5maWZvcG50cl9yX3k7ICB9DQo+ID4gPiA+DQo+ID4gPiA+IGJ1
+dCB0aGF0J3MgYWxzbyBhIGJpdCBvZiBhIHN0eWxlIHByZWZlcmVuY2UuDQo+ID4gPg0KPiA+ID4g
+SSB3YW50ZWQgdG8ga2VlcCB0aGlzIGNvbnNpc3RlbnQgd2l0aCB0aGUgcnozZV9maWZvX2VtcHR5
+KCkuIElmIHlvdQ0KPiA+ID4gcHJlZmVyIHRoZSBhYm92ZSBJJ2xsIGRvIHRoYXQgaW4gdjIuDQo+
+ID4NCj4gPiBVcCB0byB5b3UuDQo+ID4NCj4gVGhhbmtzLiBPSywgbGV0J3Mga2VlcCB0aGlzIHBh
+dGNoIGFzIGlzIHRvIHN0YXkgY29uc2lzdGVudCB3aXRoIHJ6M2VfZmlmb19lbXB0eSgpLg0KDQpM
+b29rcyBhIHR5cG8gcnozZV9maWZvX2VtcHR5KCktPnJ6ZzNlX2ZpZm9fZW1wdHkoKS4gQWJvdmUg
+YXMgd2VsbC4NCg0KQ2hlZXJzLA0KQmlqdQ0K
