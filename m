@@ -1,83 +1,85 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0776F25E81D;
-	Mon, 28 Apr 2025 13:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CA61FFC45
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846679; cv=none; b=dF6WS5AvZB00PUszLp2Cz+h6MhXYQ9lskMUFQcGCZE0rsGnP9Jcan1TGZtJ1LYIkGpDxuOPOtQ7gBNlXb+S3IYTp8rVD+dZ1DtxPiQtOI0CcGuGdl0zlGNf6cJnlK3P0VbQhR2jMqSQLaVs/0f1dEntIwvnYZm5AV+CBsgp4Tuw=
+	t=1745846700; cv=none; b=skVzYxmvhhAUyYUV/uAknJVfDYWNn3u8AETUuJch/GcbW3BZ+Yo4Bh0IoQuVUSkq31dnu7GexYMYvh03kRQrhgpe5pT7ZJq93ZEazjIv8JGg5iojbNgb8+A+1mV00PflR1yRGJ7e9MXPUKogvUmKH3cwFmb7zaTnhl+DZ9CqO44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846679; c=relaxed/simple;
-	bh=M1B6PSqs3mLHM3mvD6fg7uTHF8T8whmyA7TzpyvoU5w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKk1/vl0be42dWsC4sBRdFpvdnazk96CRmIVNQB1VxdlM+by3IVXFsQVTQZf4zF8J+3qZdkHvGWV5PVjwWYQn5VVKiCsncMqdLd4NupG/dfBdl6w/v0ou4T6Nr75BHOCmIUtD9gfPP/1QvdyOWfTfr5j7knZPQf/R0wArqYvu9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mq97mzZx; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745846700; c=relaxed/simple;
+	bh=WMDF+xF8cv9egZiq3dKhKzV9V89Oqq0Xru+OujRAu9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WT6g85Zv3uWK/q1kfAGIVVzFNdelVmz9oJLts6hvOfVjNMli17QHFSiD/T/YvmuMuD6IxaGX+NcEffSrns8Y0TUn+CdRa1JHewbEkezJnaI3Vmq+HarViPV0zKyTn4xrhHZXeXHPQLHGyrh2mDjeq9y3BqAMpCgcLqeI5Mdccyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=a8/rmBUs; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mq97mzZx"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso6905493a12.0;
-        Mon, 28 Apr 2025 06:24:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="a8/rmBUs"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0ad744811so35370196d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745846676; x=1746451476; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1745846697; x=1746451497; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dk+rQdyPHf5M/l5Mo66idLyM+oouzc6qIFIoc5ERgDI=;
-        b=Mq97mzZx3EBC65z+NwmlagGytU20J1HaNF0lATWzGLEmuztqsHlTQtShIGQSK3iz6f
-         vTKuymmvx66t5Q2ngSZplC8geXBoKsJt7R4YvXSY74epm9Q00ZyJxEEkOQVq6LwBdyV7
-         /q2MY6vAIkWjJjCVOv5PYt/rWdd/iezOP9Hzc9r7NwQ+nv7BxX7r0Aey3YtuV4Wzds1C
-         A6qey5NP41im0c6ZmEewjRsUateGojmaiRZ+YkZvNvYLNiiaT28nfO1SLU7r7vALEBBz
-         /IPZK2B23tqDnyGn+2/G4Z59krTmkWp3ji1tYxBfdm+ha9g2aWeY1XLwMMSPlJ/L5h/f
-         Ml5Q==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TghuZvI1NqWY2rKkKrKVWO9Hy4Hhr0amNahvHhrH2wo=;
+        b=a8/rmBUst1R9TjBHzyC3Rl7He+DPBljFvXOcSbBhR/iXiGfg8dhPtUruErD1PurwRF
+         4iIwOaP5OEoCakNzjmeJrvaTZi9rKQw8WWQOzq+RLwEU44e6S/zd6vaZKKYRvDLRFUjr
+         pvR/iim0F6OwB1KDOxLWgXP/kpivOnv1Rk4OXflqTxOB6tuOwQG731NTd4W1nJozoNZg
+         2KOHnJRBLn2XPFftZMmZnSTSop5FBFFrARRX8XTgI4OSNdISm2YRr5l9HaOi6HoMUqgH
+         /FAu8Cz46qvmwCc42MtXg2LBI7o+UDjBcMbBCmay0+Efgt/eItjoiv4MpYat6yJUj8wK
+         wNxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745846676; x=1746451476;
+        d=1e100.net; s=20230601; t=1745846697; x=1746451497;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dk+rQdyPHf5M/l5Mo66idLyM+oouzc6qIFIoc5ERgDI=;
-        b=hkHaWcLSYD8vxMkF8hO3AQ84IdjnWucsEBhV9FcNEYkJa0KTtWJOSd2n9pXf9sI0s1
-         ENfYBjn4hst322eAaKYvsNfo7qPQI6htRKx69dwCAs+n7oT85LEBGxFMNXnFviq0EoHg
-         mJCeoy4qC9Efz5irMt31jAQv+4ZYe1Pjzwce2NL9QNbrinnyqrSd7Ixb2J7NyrWokkIz
-         DXOJL4+oh7Byqjd3vxHVxM/VORRPYKZgCZ5YFh0QNbXn3rBYhHsvmox6YQ2pjAM8zGco
-         oHtGpg+zo/tl32qmR5WyGcy1MtjClPFHkECFu1he3QWcepbM+6cbqp8cp2HUvEJPZ1jz
-         e4nA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpMzZ7CV07+5KFV9L1nMAV1hA9p9c21UmKJ9PNPlO8AjoOwdfX46SI7TIu1cCX6euUrmM=@vger.kernel.org, AJvYcCUvr2po5lmOQaZ4NrmNv3Th1tO17XZRoxoUf3/cuy6cRIsc/L3SIXhR2NFiixwZUcLDA82sfxaE70FIuT2tUTWDhroU@vger.kernel.org, AJvYcCXPFVub7RFZWa3iCa24TC66ZslV25WkBrPuLfVv6FJLE5Wx1WvUIUD/ZRE6tfVZ6H7qbU1NzFXsNfdiZYqG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1a7W7/qk+kwjwHNSTnSzYWipMuBP1XKH6YJDL/eQ8QF3NENE8
-	7gqv4PSKrS5Cw58UWQEiLueIRoZd3C12JzHPFSEcGmkvTE2vwqf8
-X-Gm-Gg: ASbGncvU6Wkhp9ke0ng61Y1yNPlTECKyAyiST1Mg7mixdBj+ykeav7omW0Dp2cH/WHX
-	RUnZOFGPn7EBujYDnFurLyEN40FXZNVq5bYQoiLw/CVZAuGGEvM8XRVCFxcWXo9/8rGz1f4jLvs
-	4tGJklLyNoxfB6xbhBYqAG3BWT1bv3gLiQFiSkxxeDtiM5Sp44RVOyWtQI0M9d6e4s6/dErUGL4
-	tE3xW7DUCamts0BvPRbiWeg416r4sv3OONWqB2j/HkC5ImeN3ZxJzRUdT5RXD2SIPd/gPNfwe/s
-	RALCx2QuQnDIFBbopY//UNH/75I=
-X-Google-Smtp-Source: AGHT+IE5N/b2/FeEm/redeb6VyMziOkFUUGinKYlPihlM88gzw8Jgsm1pH2eGnQazv8Sl68tqkvv4A==
-X-Received: by 2002:a05:6402:2b96:b0:5ee:497:67d7 with SMTP id 4fb4d7f45d1cf-5f723b1be6dmr9912967a12.34.1745846676052;
-        Mon, 28 Apr 2025 06:24:36 -0700 (PDT)
-Received: from krava ([173.38.220.34])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f6424sm6011635a12.42.2025.04.28.06.24.35
+        bh=TghuZvI1NqWY2rKkKrKVWO9Hy4Hhr0amNahvHhrH2wo=;
+        b=xDCpFHquxUGm7Q+7eoYuiNHAvDNTe3a+J0c6t0fX2xkhVIPY7Fht64HEGrA5qzSkBl
+         KwXMYHnOfsY4sk+pc+r68XbPAT8xcpTDKFQmtK0L+555pu7z+JUb90WYqSdm2oE8BCg+
+         AwDnb1d2eB0JLYvMiGgy8NCP9leKKdXequZYZzsiDjiHmbl+DKcz/ogPr6lh6TjfC/o+
+         QPLe04H71iqPDhVt+3IiAqsHtWeBGMSTPfjN2uNKiIDouLOXE7BLwxfZIs5xZRCduIlU
+         0TVu1c7oAoad0xdvGOsr7ttr7J3f9iRtNtfmAHo9r4Ws9jhR2wcwrBszlSomYofqglOo
+         z9vg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnWNeHbvkkEQkRhrGmcZf5XdS6EJ3cMVBpJofdmzFXVgUnSgeEPEkswR5oGbYgMh1hOvrlB/MvEUZIlwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG34ijvEIgpsCxZs4M4zRYZ4H6QboftLOLgTdKZ32b3eX/gBCH
+	C2Vc89xx6k9Nm7yXuyDHqpknn+fQSaE+ujSHCHsf4ZEVOMSzelU7HYXj1NFZxjY=
+X-Gm-Gg: ASbGncsTDiXLTC7r1o15YBTok45VTwdEyMYbjCXQdOaMK2Q6PrN45MDXZ8hrWsHvmGJ
+	71tDHs+6QdCduNLgM4pFxjJYl7L2N1B3gC1oATY3wpnoUKue3H+AZ4k7NU0ENWujjFWUhcKOG5C
+	mxKAUKAPR0L+LPkVfita9S29VFSR/x+KZ6J6nPsSaZzT1OVvYVxGhU2f2M1gySnQ9GV6eXmy4v5
+	NNDhUwTacpJXizi+ZPn/4+FUPlMzhlV6YX8QOaQXvROBsHKY/H66frn1pDsYuphkrS2XR+UGsBg
+	KmisbaQg9KKOvrDH93U2gxrXn3I5eNexfRb8vY7zT8Q3xf+6u7NhSkNkacK7X4j+7M1lbK/59Lt
+	Fm4nJEr5YzxAoID3s1CI=
+X-Google-Smtp-Source: AGHT+IHS+LiKPwUgJdOq9cWDDSpsQLmT0n1tW9M/V5tmDv3MAmBTgvwZIZ3Uzue2gsWFtJHsf7k49Q==
+X-Received: by 2002:ad4:5746:0:b0:6eb:1e80:19fa with SMTP id 6a1803df08f44-6f4cb99d537mr193763226d6.1.1745846696983;
+        Mon, 28 Apr 2025 06:24:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0968a44sm61218186d6.60.2025.04.28.06.24.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:24:35 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 28 Apr 2025 15:24:33 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 10/22] uprobes/x86: Add support to optimize
- uprobes
-Message-ID: <aA-BkV6drOEY8KaC@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-11-jolsa@kernel.org>
- <20250427171143.GA27775@redhat.com>
+        Mon, 28 Apr 2025 06:24:56 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u9OTf-00000009Tsv-49gX;
+	Mon, 28 Apr 2025 10:24:56 -0300
+Date: Mon, 28 Apr 2025 10:24:55 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
+Cc: kvm@vger.kernel.org, Chathura Rajapaksha <chath@bu.edu>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Xin Zeng <xin.zeng@intel.com>, Yahui Cao <yahui.cao@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Yunxiang Li <Yunxiang.Li@amd.com>,
+	Dongdong Zhang <zhangdongdong@eswincomputing.com>,
+	Avihai Horon <avihaih@nvidia.com>, linux-kernel@vger.kernel.org,
+	audit@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] vfio/pci: Block and audit accesses to unassigned
+ config regions
+Message-ID: <20250428132455.GC1213339@ziepe.ca>
+References: <20250426212253.40473-1-chath@bu.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,57 +88,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427171143.GA27775@redhat.com>
+In-Reply-To: <20250426212253.40473-1-chath@bu.edu>
 
-On Sun, Apr 27, 2025 at 07:11:43PM +0200, Oleg Nesterov wrote:
+On Sat, Apr 26, 2025 at 09:22:47PM +0000, Chathura Rajapaksha wrote:
+> Some PCIe devices trigger PCI bus errors when accesses are made to
+> unassigned regions within their PCI configuration space. On certain
+> platforms, this can lead to host system hangs or reboots.
 
-SNIP
+Do you have an example of this? What do you mean by bus error?
 
-> > +void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
-> > +{
-> > +	struct mm_struct *mm = current->mm;
-> > +	uprobe_opcode_t insn[5];
-> > +
-> > +	/*
-> > +	 * Do not optimize if shadow stack is enabled, the return address hijack
-> > +	 * code in arch_uretprobe_hijack_return_addr updates wrong frame when
-> > +	 * the entry uprobe is optimized and the shadow stack crashes the app.
-> > +	 */
-> > +	if (shstk_is_enabled())
-> > +		return;
+I would expect the device to return some constant like 0, or to return
+an error TLP. The host bridge should convert the error TLP to
+0XFFFFFFF like all other read error conversions.
+
+Is it a device problem or host bridge problem you are facing?
+
+> 1. Support for blocking guest accesses to unassigned
+>    PCI configuration space, and the ability to bypass this access control
+>    for specific devices. The patch introduces three module parameters:
 > 
-> Not sure I fully understand the comment/problem, but ...
+>    block_pci_unassigned_write:
+>    Blocks write accesses to unassigned config space regions.
+> 
+>    block_pci_unassigned_read:
+>    Blocks read accesses to unassigned config space regions.
+> 
+>    uaccess_allow_ids:
+>    Specifies the devices for which the above access control is bypassed.
+>    The value is a comma-separated list of device IDs in
+>    <vendor_id>:<device_id> format.
+> 
+>    Example usage:
+>    To block guest write accesses to unassigned config regions for all
+>    passed through devices except for the device with vendor ID 0x1234 and
+>    device ID 0x5678:
+> 
+>    block_pci_unassigned_write=1 uaccess_allow_ids=1234:5678
 
-the issue is that sys_uprobe adjusts rsp to skip the uprobe trampoline stack frame
-(which is call + 3x push), so the uprobe consumers see expected stack
+No module parameters please.
 
-then if we need to hijack the return address we:
-  - update the return value on actual stack (updated rsp)
-  - we update shadow stack with shstk_update_last_frame (last shadow stack frame)
-    which will cause mismatch and the app crashes on trampoline's ret instruction
+At worst the kernel should maintain a quirks list to control this,
+maybe with a sysfs to update it.
 
-I think we could make that work, but to make it simple I think it's better
-to skip it for now
-
-
-> what if
-> prctl(ARCH_SHSTK_ENABLE) is called after arch_uprobe_optimize() succeeds?
-
-so that would look like this:
-
-  foo:
-    [int3 -> call tramp] hijack foo's return address
-    ...
-
-    prctl(ARCH_SHSTK_ENABLE)
-    ...
-    prctl(ARCH_SHSTK_DISABLE)
-
-    ret -> jumps to uretprobe trampoline
-
-at the time 'prctl(ARCH_SHSTK_ENABLE)' is called the return address is already
-hijacked/changed in any case IIUC you need to disable shadow stack before
-'foo' returns
-
-thanks,
-jirka
+Jason
