@@ -1,40 +1,67 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D61C211476;
-	Mon, 28 Apr 2025 08:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D48419CC02
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745827923; cv=none; b=GgLGbzjysoZnHa8hnBECwuTf1pVvptB1lbwWgdMN2e1RzG7HKxt6SlcStTyMV+1sifzvyRLqcWOmn9ZcNQF5aVttC1gwI87wOEqGkdwvKcs4shwln2USPuPdLUxXKT7G7oMny7PXQyiq06h7gKeBCHq1ZbyM6PRIhCblhGW2rBI=
+	t=1745827987; cv=none; b=qEinvgj/qKrpLEQTxRSOjiywdtq0m5w0Zs5JjR7/+iUC2M2RpT4cp7IjP9oT7iymDex4GlJvET+NPG5e/oJHDJ/HfA01qfHWK/SG73GyRp0q2zScfZdy5zN1kECGbIQwwZv0T5Ohat9ffzb4HAR+ThF/5tkX89x56fV2K9I1TrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745827923; c=relaxed/simple;
-	bh=erak0Nrp6DhDn+xkrc0QqINceh4o0C6lMu4363PZjVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i4Apc3q6bp1hhLGJca63cZS3+Efm6AdPukYPTTmik6nWUQa9+rpJJTaklRMwnnYZ3+6HjgMvGV3VdQskkFquxJgxSOYNsGgH0w6RkGQktwOvsT8p+daD0fomz7rLeormnRvEs5xyPW9Eqk+4oPnPd9ON3cHc62d8LU3tyLxhCik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZI9/Ub1Z; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745827987; c=relaxed/simple;
+	bh=bVaq8ds7GrlFWe7h9Sp7Cj+/V1lazxrirLTIbwjo2I8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=c5C1vr/Qlo40BaPcFQXfbMGPc1H4KfIVBYFyhFwUdhZGLP7/IexOVVnK+DvVbh6MMlzo1pjsUurmOyzs+tDor9y+cZnIHhQ4oewuYaMe6boOlwQq71iTpC7+Za9JdF7rNr9MLaGejpbRUCh22e+bhnL5QBmdg3rkOcazUNA6HF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CqGfqF2f; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZI9/Ub1Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745827913;
-	bh=erak0Nrp6DhDn+xkrc0QqINceh4o0C6lMu4363PZjVE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZI9/Ub1ZC1O0XFComKyXBcHXXZLXK3tmTPFC3myp+dtz71rnW5XXb8ZEdsAuxCS9B
-	 QQQNtLqv59Vi5EgcB0qaYDCE0L2x4fxHwz8QN1bodxeYUDRcJiqK/TqLNStA0ilSY4
-	 b7Aq1o1ilMzg6UBFTLZITqdfiQf77C+rCDv9QlE+h1yYHmYfkWitQ2QUV3iNXBy/eO
-	 ierDVOp1Pd3Qlzr3PaZInaLrZbE0yGcOMzAnKJ6At9gmGljroPXh9URrh0Ul93QvtC
-	 RX0HGMfBfHY13Ge+OvzXeArdEEiZhFh53kbSMm9cd1yL4d955KH/Cfw1LNy3nNozgL
-	 BiZLhnw7eC82A==
-Received: from [IPV6:2a05:1141:1cc:8600:1cd7:9a7e:17d7:cd2c] (unknown [IPv6:2a05:1141:1cc:8600:1cd7:9a7e:17d7:cd2c])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mriesch)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1C0CC17E0F93;
-	Mon, 28 Apr 2025 10:11:52 +0200 (CEST)
-Message-ID: <4a1e5834-df52-43d2-ab19-e3117840a001@collabora.com>
-Date: Mon, 28 Apr 2025 10:11:51 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CqGfqF2f"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso5232051f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 01:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745827983; x=1746432783; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A2BE4IFNraf2nwb+gMN6BrLPdvxjK4GMRcC/zeJ//7Y=;
+        b=CqGfqF2fiSwH5xKoGgXv7jHxLbeeubslDlEJgIvEZ0DcPQ+AjMQGWdL58NpuENYaDC
+         NfUkLb9Vi6iF6vI1jVJ/pDtPlVGY5bvf8qGmuNwecbsaylmzwz0XNNELAiCCLwLiHq/i
+         HklXVGRdRCEHD2CgEB88RIvknbnzr6ODhaUzFmumxNxF7o1DNSup5SzmtHNyrMeXF0G2
+         dx/Mnvz52LHRJGEAKR8m3Ko7St2nic3G0LoERy8Q1+LLmAWUMGz+bAkUZKs2wkVa2HeP
+         NByOIfLw7xDbPxD1y2zeefs9tHet0MPKysk9gexzWk2O+dvkXucDjSYIGXE99DU54iaI
+         KVEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745827983; x=1746432783;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A2BE4IFNraf2nwb+gMN6BrLPdvxjK4GMRcC/zeJ//7Y=;
+        b=ZbZ1HxiiS1lqEoqLlXnrRdtJGy3JV5VDYNN5SOgUJLp0g0PWFyaEph5Uon7YHgGYSN
+         RVoWYsbcufJdJjrmR5BNMZZcRCre+OcXWth68334ymHiuQkw2Ugj7eZlv4MnyLzRj5Tx
+         FpGW7ZU1znUftKqt/SEXT5/Fkk81V0Xgal85L0MbHJ3Zlm6MXa70A2/v/b0d2VBZJrOb
+         Xsv1Ga58BregPI9xgHFYlf3H4agt3ofmrMDD7QsL9kVk/YZtCBYtV5FVBzujudeWNwlu
+         iDFJFPH5kv7X/ZzbRTcGfGzjpOT07tCHvk7JBSdjAvQH6aDvRjACiEB8VRBmNQ2B7d7h
+         bhIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUh5tHxSkw+Y3eg+gA4AGFMUPfLz6RyCIrxTDqt/2H+HFG5mLtlnQw8qZhqMaNTigHjvm5CPD1a0sOhd1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTLFsTh+6Uk9b6hoshYRZpUG54BbWLpn6jtfoCsxN11TikIGkE
+	iIgBwwDeTvTUiRXvpiO3r5zEb7RJSwear+wUy3rw9JFOpasD6lPqisWwIwwR5JI=
+X-Gm-Gg: ASbGncvcJcH7AABIPMOQqr5uzDqVKUw6kKugd/rSAnp3TTPFLgMsKC9G8VNMOQzjiYA
+	YpVh/uCZ5N6zmeooF65G2CfMlsYFoXE4ALFu5JiH1s99pI4M7KOyaFY7QAHr5TZrd25rnPn0g3C
+	3GqGWDa7uGlaoTrCnQWSpF956euikNSVKpUhAO+KPSD2PfwCgp9Ej/O2zjeebUnOg4A5CTw6Y/X
+	r9cTCs212qFhwAwxFKxgSIxUQHWxKlHf8SSDNtmAKVKWGdikfsaq1ok5ehcYbsYLQ539c85PvPe
+	gXFMSVqJ9Bma2AO0yufBmsc7rbucGyfwqsQJZdCLiunVrSycyLVAv6KarXR3nLSfhhJSLaDC+gE
+	fWok+yNx41vLwEUPuTg==
+X-Google-Smtp-Source: AGHT+IFirYO+R6cxa4E/PxDKxv2Eoalg7DNOh3n5z36BXYljdt+Ef5dXthwTwXbfPkkn6KEjfC0prQ==
+X-Received: by 2002:a05:6000:1ac5:b0:390:f0ff:2c11 with SMTP id ffacd0b85a97d-3a074e146c6mr6922171f8f.2.1745827983497;
+        Mon, 28 Apr 2025 01:13:03 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:e2bb:d0cc:c4c9:4442? ([2a01:e0a:3d9:2080:e2bb:d0cc:c4c9:4442])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d264sm10609868f8f.95.2025.04.28.01.13.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 01:13:03 -0700 (PDT)
+Message-ID: <449cc46e-fab8-401a-b887-51d621695a1c@linaro.org>
+Date: Mon, 28 Apr 2025 10:13:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,225 +69,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 03/11] media: dt-bindings: media: add bindings for
- rockchip rk3568 vicap
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mehdi Djait <mehdi.djait@linux.intel.com>,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Gerald Loacker <gerald.loacker@wolfvision.net>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Kever Yang <kever.yang@rock-chips.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Sebastian Fricke <sebastian.fricke@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Paul Kocialkowski <paulk@sys-base.io>,
- Alexander Shiyan <eagle.alexander923@gmail.com>,
- Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250306-v6-8-topic-rk3568-vicap-v5-0-f02152534f3c@wolfvision.net>
- <20250306-v6-8-topic-rk3568-vicap-v5-3-f02152534f3c@wolfvision.net>
- <20250307-pink-dalmatian-of-kindness-f87ad2@krzk-bin>
- <Z8rBGHK9Tjx7D1D2@kekkonen.localdomain>
-Content-Language: en-US
-From: Michael Riesch <michael.riesch@collabora.com>
-In-Reply-To: <Z8rBGHK9Tjx7D1D2@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 0/7] Baisc devicetree support for Amlogic S6 S7 and S7D
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org
+References: <20250317-s6-s7-basic-v1-0-d653384e41f3@amlogic.com>
+ <a175ed1d-9e57-4150-af8f-7ca785203108@amlogic.com>
+ <e3229c42-b322-447a-ad1e-86c6f20dd54e@linaro.org>
+ <be8b7874-1251-4ba8-9243-a615517861ab@amlogic.com>
+ <eb1c3442-6b86-42e9-a672-eaba7de8b375@linaro.org>
+ <32473413-b2fb-471b-b2d5-b4fd7914b57f@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <32473413-b2fb-471b-b2d5-b4fd7914b57f@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof, Sakari,
-
-Thanks for your feedback! Also, sorry for the delayed response, but as
-the e-mail address indicates, there has been a job change in between
-that kept me busy :-)
-
-On 3/7/25 10:49, Sakari Ailus wrote:
-> Hi Krzysztof, Michael,
+On 28/04/2025 09:57, Xianwei Zhao wrote:
+> Hi Neil,
+>     Thanks for your reply.
 > 
-> On Fri, Mar 07, 2025 at 08:51:54AM +0100, Krzysztof Kozlowski wrote:
->> On Thu, Mar 06, 2025 at 05:56:04PM +0100, Michael Riesch wrote:
->>> Add documentation for the Rockchip RK3568 Video Capture (VICAP) unit.
+> On 2025/4/23 15:23, neil.armstrong@linaro.org wrote:
+>> [ EXTERNAL EMAIL ]
+>>
+>> Hi,
+>>
+>> On 23/04/2025 08:15, Xianwei Zhao wrote:
+>>> Hi Neil,
+>>>     Thanks for your reply.
 >>>
->>> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
->>
->> subject: only one media prefix, the first
->>
->> A nit, subject: drop second/last, redundant "bindings". The
->> "dt-bindings" prefix is already stating that these are bindings.
->> See also:
->> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
-Ack. Plain "media: dt-bindings: add rockchip rk3568 vicap" it is, then.
-
->>
->>> ---
->>>  .../bindings/media/rockchip,rk3568-vicap.yaml      | 169 +++++++++++++++++++++
->>>  MAINTAINERS                                        |   1 +
->>>  2 files changed, 170 insertions(+)
+>>> On 2025/4/22 21:49, Neil Armstrong wrote:
+>>>> [ EXTERNAL EMAIL ]
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 22/04/2025 13:45, Xianwei Zhao wrote:
+>>>>> Hi Neil,
+>>>>>     A gentle ping, thanks.
+>>>>
+>>>> I'll apply them this week except patch 4,
+>>>>
+>>>> so can you send patch 4 separately since it goes via the tty tree ?
+>>>>
 >>>
+>>> I will send patch 4 separately.
+>>> The following patches(5 6 7) can be not included for now. Without the patch 4, the command "make ARCH=arm64 dtbs_check W=1" will fail to execute.
 >>
->> ...
->>
->>> +  clocks:
->>> +    items:
->>> +      - description: ACLK
->>> +      - description: HCLK
->>> +      - description: DCLK
->>> +      - description: ICLK
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: aclk
->>> +      - const: hclk
->>> +      - const: dclk
->>> +      - const: iclk
->>> +
->>> +  rockchip,cif-clk-delaynum:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    minimum: 0
->>> +    maximum: 127
->>> +    description:
->>> +      Delay the DVP path clock input to align the sampling phase, only valid
->>> +      in dual edge sampling mode. Delay is zero by default and can be adjusted
->>> +      optionally.
->>
->> default: 0
-
-Ack.
-
-> 
-> And this is technically specific to the DVP port (0). Should (or could?) it
-> be located there?
-
-"Should"? Yes, makes sense to me.
-"Could"? I guess, as we are referencing port-base here it should be
-feasible. Not an expert opinion, mind you.
-
-> 
->>
->>> +
->>> +  iommus:
->>> +    maxItems: 1
->>> +
->>> +  resets:
->>> +    items:
->>> +      - description: ARST
->>> +      - description: HRST
->>> +      - description: DRST
->>> +      - description: PRST
->>> +      - description: IRST
->>> +
->>> +  reset-names:
->>> +    items:
->>> +      - const: arst
->>> +      - const: hrst
->>> +      - const: drst
->>> +      - const: prst
->>> +      - const: irst
->>> +
->>> +  rockchip,grf:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>> +    description: Phandle to general register file used for video input block control.
->>> +
->>> +  power-domains:
->>> +    maxItems: 1
->>> +
->>> +  ports:
->>> +    $ref: /schemas/graph.yaml#/properties/ports
->>> +
->>> +    properties:
->>> +      port@0:
->>> +        $ref: /schemas/graph.yaml#/$defs/port-base
->>> +        unevaluatedProperties: false
->>> +        description: The digital video port (DVP, a parallel video interface).
->>> +
->>> +        properties:
->>> +          endpoint:
->>> +            $ref: video-interfaces.yaml#
->>> +            unevaluatedProperties: false
->>> +
->>> +            properties:
->>> +              bus-type:
->>> +                enum: [5, 6]
->>> +
->>> +            required:
->>> +              - bus-type
->>> +
->>> +      port@1:
->>> +        $ref: /schemas/graph.yaml#/properties/port
->>> +        description: Internal port connected to a MIPI CSI-2 host.
->>> +
->>> +        properties:
->>> +          endpoint:
->>> +            $ref: video-interfaces.yaml#
->>> +            unevaluatedProperties: false
->>
->> Hm, does it actually work? graph/port does not allow any other
->> properties. You should use graph/port-base and probably still narrow
->> lanes for both of port@0 and port@1.
-> 
-> I'd list the relevant properties for both DVP and CSI-2, either as
-> mandatory or with defaults (could be reasonable for DVP signal polarities
-> but not e.g. on number of CSI-2 lanes).
-
-Not sure whether we are on the same page here. As pointed out in the
-last round of feedback
-(https://lore.kernel.org/all/0b19c544-f773-435e-9829-aaaa1c6daf7a@wolfvision.net/),
-port@1 is not MIPI CSI, but some internal interface.
-
-I tried to clarify this by changing the description of this port to
-"Internal port connected to a MIPI CSI-2 host." The host (see
-rockchip,rk3568-mipi-csi.yaml) has a port that is actually MIPI CSI and
-one port that is the other end of port@1 here.
-
-As to port@1 here, I am not aware of any properties that can be set. Not
-even very peculiar ones similar to rockchip,cif-clk-delaynum. Should I
-have overlooked something, I think we can relax the constraints, but we
-should start strict, right?
-
-> 
->>
->>
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - interrupts
->>> +  - clocks
->>> +  - ports
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/clock/rk3568-cru.h>
->>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>> +    #include <dt-bindings/power/rk3568-power.h>
->>> +    #include <dt-bindings/media/video-interfaces.h>
->>> +
->>> +    parent {
->>
->> soc {
-
-Ack.
-
-Best regards,
-Michael
-
->>
->>> +        #address-cells = <2>;
->>> +        #size-cells = <2>;
->>
->> Best regards,
->> Krzysztof
+>> I know, but since it's reviewed, Greg KH will pick it for the next release so it's fine.
 >>
 > 
+> I have already sent patch 4 separately. From Rob's reply, do you think it can be picked up together?
+> 
+> https://lore.kernel.org/all/CAL_JsqKD=yespd0WM90VBr_XWdppimzDzecmwNfGMV+hNSHuRA@mail.gmail.com/
+
+
+Greg KH picked it already.
+
+Neil
+
+> 
+>> Neil
+>>
+>>>
+>>>> Thanks,
+>>>> Neil
+>>>>
+>>>>>
+>>>>> On 2025/3/17 15:16, Xianwei Zhao via B4 Relay wrote:
+>>>>>> [ EXTERNAL EMAIL ]
+>>>>>>
+>>>>>> Amlogic S6 S7 and S7D are application processors designed for
+>>>>>> hybrid OTT/IP Set Top Box and high-end media box applications.
+>>>>>>
+>>>>>> Add the new S6 SoC/board device tree bindings.
+>>>>>> Add the new S7 SoC/board device tree bindings.
+>>>>>> Add the new S7D SoC/board device tree bindings.
+>>>>>>
+>>>>>> Add basic support for the S6 based Amlogic BL209 board, which describes
+>>>>>> the following components: CPU, GIC, IRQ, Timer and UART. These are capable of
+>>>>>> booting up into the serial console.
+>>>>>>
+>>>>>> Add basic support for the S7 based Amlogic BP201 board, which describes
+>>>>>> the following components: CPU, GIC, IRQ, Timer and UART. These are capable of
+>>>>>> booting up into the serial console.
+>>>>>>
+>>>>>> Add basic support for the S7D based Amlogic BM202 board, which describes
+>>>>>> the following components: CPU, GIC, IRQ, Timer and UART. These are capable of
+>>>>>> booting up into the serial console.
+>>>>>>
+>>>>>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>>>> ---
+>>>>>> Xianwei Zhao (7):
+>>>>>>        dt-bindings: arm: amlogic: add S6 support
+>>>>>>        dt-bindings: arm: amlogic: add S7 support
+>>>>>>        dt-bindings: arm: amlogic: add S7D support
+>>>>>>        dt-bindings: serial: amlogic,meson-uart: Add compatible string for S6/S7/S7D
+>>>>>>        arm64: dts: add support for S6 based Amlogic BL209
+>>>>>>        arm64: dts: add support for S7 based Amlogic BP201
+>>>>>>        arm64: dts: add support for S7D based Amlogic BM202
+>>>>>>
+>>>>>>   Documentation/devicetree/bindings/arm/amlogic.yaml | 18 ++++
+>>>>>>   .../bindings/serial/amlogic,meson-uart.yaml        |  3 +
+>>>>>>   arch/arm64/boot/dts/amlogic/Makefile               |  3 +
+>>>>>>   .../boot/dts/amlogic/amlogic-s6-s905x5-bl209.dts   | 42 +++++++++
+>>>>>>   arch/arm64/boot/dts/amlogic/amlogic-s6.dtsi        | 97 +++++++++++++++++++++
+>>>>>>   .../boot/dts/amlogic/amlogic-s7-s805x3-bp201.dts   | 41 +++++++++
+>>>>>>   arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi        | 99 ++++++++++++++++++++++
+>>>>>>   .../boot/dts/amlogic/amlogic-s7d-s905x5m-bm202.dts | 41 +++++++++
+>>>>>>   arch/arm64/boot/dts/amlogic/amlogic-s7d.dtsi       | 99 ++++++++++++++++++++++
+>>>>>>   9 files changed, 443 insertions(+)
+>>>>>> ---
+>>>>>> base-commit: 73e4ffb27bb8a093d557bb2dac1a271474cca99c
+>>>>>> change-id: 20250221-s6-s7-basic-f300c30877e6
+>>>>>>
+>>>>>> Best regards,
+>>>>>> -- 
+>>>>>> Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>>>>
+>>>>>>
+>>>>
+>>
 
