@@ -1,155 +1,135 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7D527E1A7
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAF127E1A7;
+	Mon, 28 Apr 2025 17:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745862590; cv=none; b=fkh14AGwk7VvmbbCvot+JkjyDazUqbVHICy748V303IKmuoP0KkpykbuArs3kmQ4djk6obiaJKGha7NEl0/zwmtXSkpCb2FxmN69P1vbM3tJSzq8FotrFbIUxhUkZDJM+B6FxFYoMi7NA0vGpu/6UoEEuRp5Rp3nJs/mkwrZn6c=
+	t=1745862612; cv=none; b=UgbXq06U3URlXX49wKEUvlsh/ysMhjJ3vMFf6+A495Nnbjls3eZjsN//Mec44Y2BmrXpG1ZZ23U33KmsWgMMU9QDkK+xzChP+7G45s9PcEMsqPE8GBoWu1IR0Q5s1Y1dNW3IP6IzJf5pD3Uuxa4wPPsOxzab9virSOHeF9ta4o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745862590; c=relaxed/simple;
-	bh=wZPqYWODFsYuiIl8N6gdjeJeN+6mXmrSPnEmhtzTRCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFFLfUDEl1lbxDYBWn4kOaX+dvtmKxO9zFV9DxgYgVXoq06nMyzu+UNEc5bZ4qQqM1Fhy7yuLoVZ1ijIlCyCdPruZKgEvCxgTHX2QS0Hdwc267BBKl4MF0TzrdLR4IbDkDaWxFdyTy366a4lgacibepVdD8UVNX6O+bit/2+fK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wBwXz74w; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745862612; c=relaxed/simple;
+	bh=9nRDz+uGGkaLJotj1jMAe4EMlZOjXI+3UxsVUphfD8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uIn1HbKH/F4j3+jTw5E4o6QBm/AEKAWuOCQ4HBMnncHetFlv40I3yBQQOdN8+3DGJ+skC9vO5UfCMx+JZu160hkkLnXXWXNqj0M/hSO8PnGpaJL96xmnOtaRB3MfqxlZN+LuYgUnzCXQ+cxJKB+R2OykPWogBZ578S1tTOLizTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxi+GL2R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wBwXz74w"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2255003f4c6so56393785ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745862588; x=1746467388; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kSyHc84AnpHkvPh5lf7rVEarManM/+eKBGwMXNUKGRw=;
-        b=wBwXz74w/pu07o31MNwrZArJjY8wyDLF/5ITf0OFtOtfnuXCgFLCpd2x33vpMinipE
-         qDUM3J/CDyZCsGvDx39umi3pI86bJcyE7UbknlfpS/V1wn4kdvA+dWEevVhwO9/QLiw1
-         qNk+q3l2r8exvZUiepa6k10pyU3MfeoX20BpqG7jELq5UhR0OPv/JwMtd+YtIyAXI0PY
-         LqIssypJDwfwJrYS53k/uimYlknMvOmZcWlPoR97n5edamSKxnCTOq53uBWuPreY5olY
-         hUIjIBSNXn61gQYP/jPg7VkKLXkaGYwqr4rVNcMw9L1D+tyKu1C3hfEQnFL8bmi3lGN2
-         tn5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745862588; x=1746467388;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kSyHc84AnpHkvPh5lf7rVEarManM/+eKBGwMXNUKGRw=;
-        b=B6tuxNCGgT5h13TL5LEleiL6l9OBjcYuZ1x54MZ/7Qvd/i3flGBtsdklXet2V3AZwi
-         OAwoQ9uOKPdHdAhG3eJNfvfXEUlwX5EeySC1FStjeYjnCouRn5FWZUXycL/cM8UxRuEK
-         ui187yysw6MkS4/vZo2olc3XE5whF2NAMnJDafIQ0W7zFmvXYpEwNeZaH6BCvXg0pxyX
-         dgcIB23bm/IxP6h0lfzYsEXOPzk6muRDCGJlT5x7KagbIpppRWgiw+Mgn0bNDTjZS516
-         00tV5+lCpIXNttI6n79JY+4fHuFXt6YfMmgEZqLJmObxKZOE1UcfUQMvXQcQxRuQ9AZI
-         V7lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVl+aKQoaS0YpLzBnQUaVnVQIW09Xvd9suADK9yeF0wkc8y+271YZtE0xkfKJRETT95V9XA+nMyuYt11xQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlPZK3V68i+rIF/uqHsjIJaZpO88yzrjWWa0SfZ3zRKdlmOzIC
-	bbk8BCO/Z4N07vbaMhNEp7/bvhgTrMjkj325a5dd6STwDqL1bd2UUTcSfocnCw==
-X-Gm-Gg: ASbGncujkAht7Q56MO8R4BV0mCCF0qxGNdKl3nfpe9LDFJDiFYKjRLgHtXPubsUDFGw
-	d7xFKuqVbSHl7mQ9QFIteAJl++8IGGIqw+j5dL1zFEYAkC6kqw+gMgLKXzxXKa8y18unlw7+Tio
-	g9wzi0Hm8etdF+qbo86quHVh8O3FekJpuyquVGYPSe5alZp6DyP8ww6d1MtoBr+T1htRig0gwsh
-	+09yzR5wJP89XqhGFymJZPAu3BZWa2HS8iBP+33Lupag93sEQyja2/aHMAnHEimjix4Q9rNKZoT
-	NqSuadojWADW42CIqTRf0w7BSeG/rTsXPxhRVK3woT+FhP8/PwyDhyap5yt2yoI3bPQXLqLplA=
-	=
-X-Google-Smtp-Source: AGHT+IFB4ZJyQ88dUHU7N9YKwJhwPRMBp+llMDskZSUApRruyoBdw1o31YpMz40Wv7kngIiJmA7gXg==
-X-Received: by 2002:a17:903:98d:b0:223:653e:eb09 with SMTP id d9443c01a7336-22de6e93a1cmr415405ad.7.1745862588006;
-        Mon, 28 Apr 2025 10:49:48 -0700 (PDT)
-Received: from google.com (28.67.125.34.bc.googleusercontent.com. [34.125.67.28])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76ce1sm86414745ad.40.2025.04.28.10.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:49:46 -0700 (PDT)
-Date: Mon, 28 Apr 2025 17:49:42 +0000
-From: Benson Leung <bleung@google.com>
-To: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, jthies@google.com,
-	akuchynski@chromium.org, tzungbi@kernel.org,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	sukoo@google.com
-Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Set Pin Assignment E in
- DP PORT VDO
-Message-ID: <aA-_tpJp7Nh2pm3J@google.com>
-References: <20250426024810.3876884-1-bleung@chromium.org>
- <CANFp7mWQPy2z1dWtHSw1uzMnUCcRJfaqJvGayyjmEvVjnM3KXQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxi+GL2R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36732C4CEE4;
+	Mon, 28 Apr 2025 17:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745862610;
+	bh=9nRDz+uGGkaLJotj1jMAe4EMlZOjXI+3UxsVUphfD8s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lxi+GL2RkyOjjP5I5EeSFvbjdp0S4foY+W2Bm/A04k+3ZARivluMmGkXigFXGlzXx
+	 RF1PkLnypHjahjVxDE+Z1nnkESKcLtiaXpA1X/GcccibVgU67IBx9GRrhgni8akuJA
+	 eWIXgPZA1tiYYmZAcVgFi+kgUmBJs/sfEOBya8eIvcOTMXOgrSZgB2/R/jgAyKcQLz
+	 3Pa5LzT0fG9IGC09L2RwrfyQl+7yZdgr4riBiWzOhMI7A9QqZsnDMHZThdHTONOHYP
+	 u+AXRITlBzFirKY3/WWJQuzuh5mOBwKCZ5GHvnlhlYD5u3fY9gmgX2O5QeBg3Lv/ID
+	 hq9MfizvSfjJQ==
+Message-ID: <676324e0-43a7-4227-8b6f-3fec97a484b0@kernel.org>
+Date: Mon, 28 Apr 2025 19:50:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qJ3DhvBIT9BsNZ/n"
-Content-Disposition: inline
-In-Reply-To: <CANFp7mWQPy2z1dWtHSw1uzMnUCcRJfaqJvGayyjmEvVjnM3KXQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/11] Revert "dt-bindings: mfd: syscon: Add
+ qcom,apq8064-mmss-sfpb"
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+ Lee Jones <lee@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+ David Heidelberg <david@ixit.cz>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+References: <20250425-fix-nexus-4-v3-0-da4e39e86d41@oss.qualcomm.com>
+ <20250425-fix-nexus-4-v3-1-da4e39e86d41@oss.qualcomm.com>
+ <20250428-prudent-hasty-pheasant-aecec4@kuoka>
+ <29d15e93-8f5e-4cec-97b8-8592beb01d6a@kernel.org>
+ <CAO9ioeUo_vO+-wuC4JGi4JfSMZx+JZkvLvsi=ppBD_LvuV2ZLA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAO9ioeUo_vO+-wuC4JGi4JfSMZx+JZkvLvsi=ppBD_LvuV2ZLA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 28/04/2025 12:49, Dmitry Baryshkov wrote:
+> On Mon, 28 Apr 2025 at 10:09, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 28/04/2025 09:07, Krzysztof Kozlowski wrote:
+>>> On Fri, Apr 25, 2025 at 08:47:01PM GMT, Dmitry Baryshkov wrote:
+>>>> For some reason Lee has mis-squashed two commits, picking up one chunk
+>>>> from the first patch and one chunk from the second one. Rather than
+>>>> trying to fix it, revert commit 2c8de7df7418 ("dt-bindings: mfd: syscon:
+>>>> Add qcom,apq8064-mmss-sfpb").
+>>>
+>>> I don't understand: that commit looks like direct, proper result for
+>>> https://lore.kernel.org/all/20250318-fix-nexus-4-v2-5-bcedd1406790@oss.qualcomm.com/
+>>> so where is squashing two commits? The diff markers have offset by few
+>>> lines, but it's still just few lines and they do not matter - there is
+>>> no diff/patch mismatch from that point of view.
+>>
+>> Ah, difference in compatibles. I see the error. Anyway, I don't think
+>> revert is correct. Just add missing compatibles.
+> 
+> Why? The commit that went in is invalid, didn't come from my patches
+> and was produced in some weird way.
+And revert is pointless if you immediately add the same changes. Just
+make the changes.
 
---qJ3DhvBIT9BsNZ/n
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When we see a bug, we do not revert the feature and then re-add that
+feature corrected.
 
-Hi Abhishek,
+Instead we correct the feature.
 
-On Mon, Apr 28, 2025 at 09:24:08AM -0700, Abhishek Pandit-Subedi wrote:
-> On Fri, Apr 25, 2025 at 7:48=E2=80=AFPM Benson Leung <bleung@chromium.org=
-> wrote:
-> >
-> > Pin C and D are used on C-to-C cable applications including docks,
-> > and for USB-C adapters that convert from DP over USB-C to other
-> > video standards.
-> >
-> > Pin Assignment E is intended to be used with adapter from USB-C to DP
-> > plugs or receptacles.
-> >
-> > All Chromebook USB-C DFPs support DisplayPort Alternate Mode as the DP
-> > Source with support for all 3 pin assignments. Pin Assignment E is requ=
-ired
-> > in order to support if the user attaches a Pin E C-to-DP cable.
-> >
-> > Without this, the displayport.c alt mode driver will error out of
-> > dp_altmode_probe with an -ENODEV, as it cannot find a compatible matchi=
-ng
-> > pin assignment between the DFP_D and UFP_D.
-> >
-> > Signed-off-by: Benson Leung <bleung@chromium.org>
-> > ---
-> >  drivers/platform/chrome/cros_ec_typec.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform=
-/chrome/cros_ec_typec.c
-> > index d2228720991f..7678e3d05fd3 100644
-> > --- a/drivers/platform/chrome/cros_ec_typec.c
-> > +++ b/drivers/platform/chrome/cros_ec_typec.c
-> > @@ -22,8 +22,10 @@
-> >
-> >  #define DRV_NAME "cros-ec-typec"
-> >
-> > -#define DP_PORT_VDO    (DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | =
-BIT(DP_PIN_ASSIGN_D)) | \
-> > -                               DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
-> > +#define DP_PORT_VDO    (DP_CAP_DFP_D | DP_CAP_RECEPTACLE | \
-> > +                        DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | \
-> > +                                               BIT(DP_PIN_ASSIGN_D) | \
-> > +                                               BIT(DP_PIN_ASSIGN_E)))
-> >
-> >  static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
-> >  {
-> > --
-> > 2.49.0.850.g28803427d3-goog
-> >
->=20
-> Please add a Fixes: dbb3fc0ffa95788e00e50ffc6501eb0085d48231
-
-Done, Thanks!
-
---qJ3DhvBIT9BsNZ/n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCaA+/tgAKCRBzbaomhzOw
-wqsfAP93but+Y7oDTucGSmBf08Sb+w3b4c7TcFB3NmXnSRqW3gEAsZwyhTexrI7j
-W6kNrTSVbuh4F9QabifIzEf2krSK9Aw=
-=R5cf
------END PGP SIGNATURE-----
-
---qJ3DhvBIT9BsNZ/n--
+Best regards,
+Krzysztof
