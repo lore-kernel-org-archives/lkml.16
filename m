@@ -1,204 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEB425EF8E;
-	Mon, 28 Apr 2025 13:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459E526988A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745847549; cv=none; b=T46vCPz8iM+pPa6iz6umrUckEIMqS5v5+7H0kQJzN9OgFPAe+/1uhHL65Xlvgx5zFUB1fc+Bd83jlEGYAG5cPWslYEVCnG8U8niBIUtxwdbEyJgdmugUXuJQgLqoGdxIYZLNdgFfru1idyLasm5kFjPV0GHlCDYUPB7/7gBs5og=
+	t=1745847732; cv=none; b=ll+XDgYCRrrnKaAbYmoOPFjG6CmwMLRQb1khOw0BuczBLtCqDU82cSgB4Ru/CJCi4ukyGSJJViHrWQ8VswvzrHfg1gKo0DXaQdpCEfrkeirgf7+kemtlwME2/5DWOSvX/Tby3buJd6NIF05Sy2YBPOTzfylZN9X7XMsvmZ3mDAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745847549; c=relaxed/simple;
-	bh=dj5RefpECVDBZI7owexGLlmhzK/Ar+sqUa2Oqy0YLd8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HkSQqVbNsSyMyM6dsenhBCksNH0Uge1bDQtRL2eR8NQqQZoITK/64/aL7nDM0MXByEIjqYI2mELZuoYWt0TTJksjsEr1B3VQ2cHs3rIzHltNf3tpqzFsW/LB9XB+anYiM1zuQuFHaFMmh25YwhxAF9aOtQXz/hOadHMVEfV8tGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SaD2hFnT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745847732; c=relaxed/simple;
+	bh=L5imQO0qcFG4QdZ72jpgSy7QTYRj+EgAQUNi2zrRdQo=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=kNIHCd2TJ4cwdSMP4vtZ/4YKRiHW6Ttvn5ioi/uScWSrTJSBBDbxmkwzx2Xzc49AAQWzNxGAWURjMh9erAyOoubJ5BjuV83yzOWB1gHKstknokpEA+Rn9EItZueRe7bQOz9LtiE+g+ACo3wftbr7kmApO0kh3BnyKCmSS17tZ7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=d5coOTOb; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SaD2hFnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75136C4CEE4;
-	Mon, 28 Apr 2025 13:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745847548;
-	bh=dj5RefpECVDBZI7owexGLlmhzK/Ar+sqUa2Oqy0YLd8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SaD2hFnThE2JLBYABHXqUadywgIeGw/6wKJi5fyg1tvifpzGkoLorDJkAg+AqoVmp
-	 HxDSR9Mi6GK9DEKyjtE0+UWFD3PWCTatoHiLOP5qmQyvkNVvpRoca95thhcI0+ZTRq
-	 Ne2XlICsxQf0VCNTCnOHNdRWoM6s7l3Rq2WgdHZ58fgQpHZZJu77V/+zLKAwU1j9rn
-	 TUTcZgjMnJx6Mun4Sm6O6OOzwvshvA6GE3IMyQ6whJWN1fWoP8ZwlEMP/Ifw39CxDH
-	 0DTU6SfpWuMCaYN/4BeWUcDQAsH5r63WTkJJN16Q8GcEBcTSq73X8G63iXt+b7folz
-	 S4l7bxCCytECg==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6049acb776bso2519385eaf.3;
-        Mon, 28 Apr 2025 06:39:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUCR2+d48rpqY5r+VFgbQPrFabSDV9RpZd8oh9vFP5xyn3KodipSqzLA/7HqfklSmeW8xwz+IfH0lE=@vger.kernel.org, AJvYcCXQ40q4ZciWDKo1RQzhZ+srbM1vXJvC6srR9/GAXE5ejvwiXfILN1gFMmTmDWIJX6MtOc3m+wLcWWcI7nc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPYQ7MvyHvNZ8Eqr9RoSTe1Z5Uobaq+uTYheprjm3kjtY9V+YK
-	jbBsALXri6cPYw1Gd5saMOy44g/PkfEDEl8qrHqW6OkHfFTHY1j1CUR+haVXxRxeGHm+02VWrKx
-	47ltLyoNgfBVL3pwjHw6lL+HRkSg=
-X-Google-Smtp-Source: AGHT+IGkcp/j9FjbRcGSYJNMQ/R+l+8CISytvDs7uysDHP4XWDQeyaAXy9djfuohP33ZKUpFgNEF+8HdT4mg3KXuvwo=
-X-Received: by 2002:a05:6870:b14d:b0:2bc:716c:4622 with SMTP id
- 586e51a60fabf-2d99de7e298mr6100774fac.38.1745847547775; Mon, 28 Apr 2025
- 06:39:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d5coOTOb"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53SDfBUB3511020
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 28 Apr 2025 06:41:12 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53SDfBUB3511020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745847673;
+	bh=3fiGytVgsyIVAVWo//vH0oNLU1kTYSiRQ5TfaW8qnQE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=d5coOTOb40CjM5j3IjHJXijGHQ0hfWuJeFrZwI3hcyWuQbSQVQp6mGhhACmu/uRXU
+	 lKV3NMeTU/CvOXmxYu+o1kPJ9lt+/eXDXE0O5pntTxNltYkJGcgYRuPeTicyR8y+hE
+	 wwbc35YWb4az+82gOXbk+SyxUgH/gJfOJ4flelYDLMyTJ11X+e6T6zI8xyMldqJM0V
+	 AV3rS5lFI23vazOqZKGjj9M9lkYUYAhFx/II5GFWBnA+g0RxDgaowN95jjrnva39go
+	 mPWCSIlCKCOb3MkX1vYlQD0mzhkQ8aMeJKvG1Owl2cbvpHXfWRttAx0rKwRb/rP/ZN
+	 zd8yxPBa8VWmQ==
+Date: Mon, 28 Apr 2025 06:41:09 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC: Andrew Cooper <andrew.cooper3@citrix.com>, Arnd Bergmann <arnd@arndb.de>,
+        Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+        Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_bitops/32=3A_Convert_variable?=
+ =?US-ASCII?Q?=5Fffs=28=29_and_fls=28=29_zero-case_handling_to_C?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aA8q4Ot-1zTzv_Kt@gmail.com>
+References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com> <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com> <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com> <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com> <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com> <aA8q4Ot-1zTzv_Kt@gmail.com>
+Message-ID: <8E8C8B78-2D92-4D34-BA89-909F7F2FEA55@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250420-fix_power-v2-1-9b938d2283aa@quicinc.com>
-In-Reply-To: <20250420-fix_power-v2-1-9b938d2283aa@quicinc.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 28 Apr 2025 15:38:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jjCt-rDUVbHh1=Ngg_f_RZnNCUFGixLEe2ScRx1CtF2w@mail.gmail.com>
-X-Gm-Features: ATxdqUHhk1lXOtwe5dQ_gfcv_FNxe3TG8JBqHxH2vOdCQJgkJ6FY-b-hm9DOR6Y
-Message-ID: <CAJZ5v0jjCt-rDUVbHh1=Ngg_f_RZnNCUFGixLEe2ScRx1CtF2w@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: wakeup: Do not expose 4 device wakeup source APIs
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 20, 2025 at 6:19=E2=80=AFAM Zijun Hu <zijun_hu@icloud.com> wrot=
-e:
+On April 28, 2025 12:14:40 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
 >
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>* Ingo Molnar <mingo@kernel=2Eorg> wrote:
 >
-> The following 4 APIs are only used by drivers/base/power/wakeup.c
-> internally.
+>> And once we remove 486, I think we can do the optimization below to=20
+>> just assume the output doesn't get clobbered by BS*L in the=20
+>> zero-case, right?
+>>=20
+>> In the text size space it's a substantial optimization on x86-32=20
+>> defconfig:
+>>=20
+>>         text	   data	       bss	     dec	    hex	filename
+>>   16,577,728    7598826    1744896      25921450        18b87aa vmlinux=
+=2Evanilla      # CMOV+BS*L
+>>   16,577,908	7598838	   1744896	25921642	18b886a	vmlinux=2Elinus_patch =
+ # if()+BS*L
+>>   16,573,568	7602922	   1744896	25921386	18b876a	vmlinux=2Enoclobber   =
+ # BS*L
 >
-> - wakeup_source_create()
-> - wakeup_source_destroy()
-> - wakeup_source_add()
-> - wakeup_source_remove()
+>And BTW, *that* is a price that all of non-486 x86-32 was paying for=20
+>486 support=2E=2E=2E
 >
-> Do not expose them by making them as static functions.
+>And, just out of intellectual curiosity, I also tried to measure the=20
+>code generation price of the +1 standards-quirk in the fls()/ffs()=20
+>interface as well:
 >
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
-> Changes in v2:
-> - Remove 3 more APIs, correct tile and commit message.
-> - Link to v1: https://lore.kernel.org/r/20250420-fix_power-v1-1-1454cf1dc=
-534@quicinc.com
-> ---
->  drivers/base/power/wakeup.c | 12 ++++--------
->  include/linux/pm_wakeup.h   | 15 ---------------
->  2 files changed, 4 insertions(+), 23 deletions(-)
+>         text	   data	       bss	     dec	    hex	filename
+>   16,577,728   7598826    1744896      25921450        18b87aa vmlinux=
+=2Evanilla      # CMOV+BS*L
+>   16,577,908	7598838	   1744896	25921642	18b886a	vmlinux=2Elinus_patch  =
+# if()+BS*L
+>   16,573,568	7602922	   1744896	25921386	18b876a	vmlinux=2Enoclobber    =
+# BS*L
+>   =2E=2E=2E=2E=2E=2E=2E=2E=2E=2E
+>   16,573,552	7602922	   1744896	25921370	18b875a	vmlinux=2Ebroken       =
+# BROKEN: 0 baseline instead of 1
 >
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 63bf914a4d4467dcf6c42e50951b91677fb9c46d..27505dea7c1b454e7f124637a=
-f1834f558e0d022 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -77,7 +77,7 @@ static DEFINE_IDA(wakeup_ida);
->   * wakeup_source_create - Create a struct wakeup_source object.
->   * @name: Name of the new wakeup source.
->   */
-> -struct wakeup_source *wakeup_source_create(const char *name)
-> +static struct wakeup_source *wakeup_source_create(const char *name)
->  {
->         struct wakeup_source *ws;
->         const char *ws_name;
-> @@ -106,7 +106,6 @@ struct wakeup_source *wakeup_source_create(const char=
- *name)
->  err_ws:
->         return NULL;
->  }
-> -EXPORT_SYMBOL_GPL(wakeup_source_create);
+>=2E=2E=2E and unless I messed up the patch, it seems to have a surprising=
+ly=20
+>low impact - maybe because the compiler can amortize its cost by=20
+>adjusting all dependent code mostly at build time, so the +1 doesn't=20
+>end up being generated most of the time?
 >
->  /*
->   * Record wakeup_source statistics being deleted into a dummy wakeup_sou=
-rce.
-> @@ -149,7 +148,7 @@ static void wakeup_source_free(struct wakeup_source *=
-ws)
->   *
->   * Use only for wakeup source objects created with wakeup_source_create(=
-).
->   */
-> -void wakeup_source_destroy(struct wakeup_source *ws)
-> +static void wakeup_source_destroy(struct wakeup_source *ws)
->  {
->         if (!ws)
->                 return;
-> @@ -158,13 +157,12 @@ void wakeup_source_destroy(struct wakeup_source *ws=
-)
->         wakeup_source_record(ws);
->         wakeup_source_free(ws);
->  }
-> -EXPORT_SYMBOL_GPL(wakeup_source_destroy);
+>Thanks,
 >
->  /**
->   * wakeup_source_add - Add given object to the list of wakeup sources.
->   * @ws: Wakeup source object to add to the list.
->   */
-> -void wakeup_source_add(struct wakeup_source *ws)
-> +static void wakeup_source_add(struct wakeup_source *ws)
->  {
->         unsigned long flags;
+>	Ingo
 >
-> @@ -179,13 +177,12 @@ void wakeup_source_add(struct wakeup_source *ws)
->         list_add_rcu(&ws->entry, &wakeup_sources);
->         raw_spin_unlock_irqrestore(&events_lock, flags);
->  }
-> -EXPORT_SYMBOL_GPL(wakeup_source_add);
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D>
 >
->  /**
->   * wakeup_source_remove - Remove given object from the wakeup sources li=
-st.
->   * @ws: Wakeup source object to remove from the list.
->   */
-> -void wakeup_source_remove(struct wakeup_source *ws)
-> +static void wakeup_source_remove(struct wakeup_source *ws)
->  {
->         unsigned long flags;
+>This broken patch is broken: it intentionally breaks the ffs()/fls()=20
+>interface in an attempt to measure the code generation effects of=20
+>interface details=2E
 >
-> @@ -204,7 +201,6 @@ void wakeup_source_remove(struct wakeup_source *ws)
->          */
->         ws->timer.function =3D NULL;
->  }
-> -EXPORT_SYMBOL_GPL(wakeup_source_remove);
+>NOT-Signed-off-by: <anyone@anywhere=2Eanytime>
+>---
+> arch/x86/include/asm/bitops=2Eh | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
 >
->  /**
->   * wakeup_source_register - Create wakeup source and add it to the list.
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index 51e0e8dd5f9e50d928db6efa2e3232a117d7e012..c838b4a30f876ef5a66972d16=
-f461cfba9ff2814 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -95,10 +95,6 @@ static inline void device_set_wakeup_path(struct devic=
-e *dev)
->  }
->
->  /* drivers/base/power/wakeup.c */
-> -extern struct wakeup_source *wakeup_source_create(const char *name);
-> -extern void wakeup_source_destroy(struct wakeup_source *ws);
-> -extern void wakeup_source_add(struct wakeup_source *ws);
-> -extern void wakeup_source_remove(struct wakeup_source *ws);
->  extern struct wakeup_source *wakeup_source_register(struct device *dev,
->                                                     const char *name);
->  extern void wakeup_source_unregister(struct wakeup_source *ws);
-> @@ -129,17 +125,6 @@ static inline bool device_can_wakeup(struct device *=
-dev)
->         return dev->power.can_wakeup;
->  }
->
-> -static inline struct wakeup_source *wakeup_source_create(const char *nam=
-e)
-> -{
-> -       return NULL;
-> -}
-> -
-> -static inline void wakeup_source_destroy(struct wakeup_source *ws) {}
-> -
-> -static inline void wakeup_source_add(struct wakeup_source *ws) {}
-> -
-> -static inline void wakeup_source_remove(struct wakeup_source *ws) {}
-> -
->  static inline struct wakeup_source *wakeup_source_register(struct device=
- *dev,
->                                                            const char *na=
-me)
->  {
->
-> ---
+>diff --git a/arch/x86/include/asm/bitops=2Eh b/arch/x86/include/asm/bitop=
+s=2Eh
+>index e3e94a806656=2E=2E21707696bafe 100644
+>--- a/arch/x86/include/asm/bitops=2Eh
+>+++ b/arch/x86/include/asm/bitops=2Eh
+>@@ -318,7 +318,7 @@ static __always_inline int variable_ffs(int x)
+> 	    : "=3Dr" (r)
+> 	    : ASM_INPUT_RM (x), "0" (-1));
+>=20
+>-	return r + 1;
+>+	return r;
+> }
+>=20
+> /**
+>@@ -362,7 +362,7 @@ static __always_inline int fls(unsigned int x)
+> 	    : "=3Dr" (r)
+> 	    : ASM_INPUT_RM (x), "0" (-1));
+>=20
+>-	return r + 1;
+>+	return r;
+> }
+>=20
+> /**
 
-Applied as 6.16 material with some edits in the subject and changelog, than=
-ks!
+My recollection was that you can't assume that even for 586; that it is on=
+ly safe for 686, but it has been a long time=2E=2E=2E
