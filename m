@@ -1,140 +1,190 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682F0268698;
-	Mon, 28 Apr 2025 13:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3632F86323
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846453; cv=none; b=MS6pGPnJT24u814vThGyg2FUUV3TEjave8HHENExcfdH+v7ZkVx1/gSb0n8IWgoM/UGl2l+F4ghLfrFISbH+HaqXH8vrK2x8g5aGNnm7J7H37rHS8FQIz+gof6hTgo20KKpYQX1SnQ3V2m2LAcUYs4T0Bge4drTtlcOfCNHN9s8=
+	t=1745846482; cv=none; b=K8hAQl4XJW4SB3k8+sTYa3EFrC9+xHDFYBOwT3xoh7wsws+bEAtDgrmt9Jq1rPgmAenWndIkwE6Y4hw45RrWYEpH1/70N4FYZs5Az7XUcfAviyBc+t8en0caU8X2GGTkM1AIol2IovEvkfxjXDtnsogkzMIjO+YpW56vLhnAd4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846453; c=relaxed/simple;
-	bh=a1t7bCBBT1JqFXgoLpLPIzAFz5gO1F7ujmkJJ0Hkl5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rc5TCcZaZXG5ZjMV+PfmLQ0f7pSirtkagWgjS18hKm4ARfMUvIG2jQRTpdfJ3G6/xYTOXId61VAYZkPwTxHWBy/sPuRPaM8RTHQxI/3ibL44fyMSAT78fkky+RKYlXnuaqJxQ00360OTVVaoDQXA/SGadtI6Ck49ZTsnIFzwqr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OPPXYSvF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745846482; c=relaxed/simple;
+	bh=T3rtYr3RqTLgly4xse6CBiPIQEj61xZdAIQ7m0HvvOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HatDPUq+/E73iMHHaf2ifuMB0EYdFzIMpnqw4v0aV1YXGGxEbof6CoOygLjtDpxpu0aOjOEDCyumJSGvwHWTjJB60fLRIoGB13tWC6Q+N2x+kt0HFkr1sF+Km8LkJCWi8cCBZlrY3EL3bSjx+Dsx+Ep405eZt+6L7+Pn/I6g3TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dFdSM1hX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ds0IHOTw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dFdSM1hX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ds0IHOTw; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OPPXYSvF"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAefKA022824;
-	Mon, 28 Apr 2025 13:20:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=seDaDRAvts/ybRbfT
-	6WMEYoOYh8mM6UN+9cj9JMviUI=; b=OPPXYSvFureZeDPfUYkpg2ZphpQJWYHIg
-	muUzzRUn+IS8ohSg0tgQKFf/GzwD3mld4INOqAdkmZ+CHj/uKCMLzYBCSl+qfElW
-	kuYmE57CemecZRTlBOtdDIB+2K6P1gs8Aci4ly2mJKObteksZYKITT1ySdbnxfhj
-	Lz47MnWfyhFcbVX6hM8qgz+hZBMai7j1CeD61AagMaFFEMxBUeplTPRo0nuamwei
-	OAA9Plo+hTMzfQTCWKI8E4a2gCZ4IvDaFAl60SFTxlxcxAvyLpzcUp1/8t5KBC6E
-	3XAVggsVW5aKSH+g7H9dEcSu5HMQz31p4gxY9f2gRWd/4FFYe9sBQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46a84s0qgr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 13:20:24 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SBZD1F001799;
-	Mon, 28 Apr 2025 13:20:23 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469bamegag-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 13:20:23 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SDKJQY50397596
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 13:20:19 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C0E8620040;
-	Mon, 28 Apr 2025 13:20:19 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6F7D20043;
-	Mon, 28 Apr 2025 13:20:15 +0000 (GMT)
-Received: from li-80eaad4c-2afd-11b2-a85c-af8123d033e3.ibm.com (unknown [9.124.219.50])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 28 Apr 2025 13:20:15 +0000 (GMT)
-From: "Nysal Jan K.A." <nysal@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, "Nysal Jan K.A." <nysal@linux.ibm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] selftests/mm: Fix a build failure on powerpc
-Date: Mon, 28 Apr 2025 18:49:35 +0530
-Message-ID: <20250428131937.641989-2-nysal@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250428131937.641989-1-nysal@linux.ibm.com>
-References: <20250428131937.641989-1-nysal@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dFdSM1hX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ds0IHOTw";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dFdSM1hX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ds0IHOTw"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 332161F390;
+	Mon, 28 Apr 2025 13:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745846479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LKCfsUSiVgaMGLYlRKMuDqRi+jxJnou69nt3LDKwSkY=;
+	b=dFdSM1hXoQ/DErZ4LG7lSkry0rA/fgCYFkaoBc2RiJf4m1k+EEmCspgKpu6/C+YaRlExAX
+	HV+7xysk2dNcMbQTsn4YhrXZAHD5sS4ZSSOUcRJKvjV/pfIIyMQBOHPBr43t8fsJGhrzti
+	eoR/1FINAXmDDzdd+fsX2FNuemi2YHE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745846479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LKCfsUSiVgaMGLYlRKMuDqRi+jxJnou69nt3LDKwSkY=;
+	b=Ds0IHOTwBrmtL9+kBlcqWdlfdH0ryq2b4FpcVnfjdrwA0NaRod110CF8WThug4H3+eBr+s
+	NM4y6ImOwJvap4Bw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745846479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LKCfsUSiVgaMGLYlRKMuDqRi+jxJnou69nt3LDKwSkY=;
+	b=dFdSM1hXoQ/DErZ4LG7lSkry0rA/fgCYFkaoBc2RiJf4m1k+EEmCspgKpu6/C+YaRlExAX
+	HV+7xysk2dNcMbQTsn4YhrXZAHD5sS4ZSSOUcRJKvjV/pfIIyMQBOHPBr43t8fsJGhrzti
+	eoR/1FINAXmDDzdd+fsX2FNuemi2YHE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745846479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LKCfsUSiVgaMGLYlRKMuDqRi+jxJnou69nt3LDKwSkY=;
+	b=Ds0IHOTwBrmtL9+kBlcqWdlfdH0ryq2b4FpcVnfjdrwA0NaRod110CF8WThug4H3+eBr+s
+	NM4y6ImOwJvap4Bw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 12A7113A25;
+	Mon, 28 Apr 2025 13:21:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id blcPBM+AD2ikYAAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 28 Apr 2025 13:21:19 +0000
+Message-ID: <9763c4cf-8ca5-45d4-b723-270548ca1001@suse.de>
+Date: Mon, 28 Apr 2025 15:21:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
+To: Daniel Wagner <dwagner@suse.de>, Guenter Roeck <linux@roeck-us.net>
+Cc: Daniel Wagner <wagi@kernel.org>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, James Smart <james.smart@broadcom.com>,
+ Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
+ <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
+ <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
+ <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Mchsu4/f c=1 sm=1 tr=0 ts=680f8098 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=eIFaomMv7K_DaQaFpIwA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEwOCBTYWx0ZWRfX9cHEmT6RPkmt ULlIMp7J8N67EZZRn6YjvouXN1NecTs93kQx0CYtEpWO1ithBn6qlGoscJj85CSPjnpdjMdQFsX kso9E+w0Jv9BT+HjfjPDd6krV119bAWk8HMwcQQSYORuStzlXdepzd5v69qUr/hthr/9ivRWVit
- 4auy2DRbPhfP+876HGUlZxPBWayrwOvwo9bsah3IuW70JON/vy2woJTMEZTqIdUpzBT4O8Px/Z+ frq7QhdXfYGrYBS/KFRK2vJicHGuvgDjPQ/1z65CNanQ47NviMvQqGJvxyGQV7fw1zXXyHb8jU8 C0lImHInMPqt+P6kk1XHqsBoFOEsqq5FqmgrLlvJKb/oSI2f8ZZUMehCNjNwQqp+oaM767xIGF6
- WzLjuoQr4oGmlJQNCpRW0uRGGy5qpEPLbR3pyiJGUvdL/wmn4IhoQjvCChgP/tFXe3BHGorE
-X-Proofpoint-ORIG-GUID: NWPF_M0em3vCenetzMbNZhpYx1xdGHLc
-X-Proofpoint-GUID: NWPF_M0em3vCenetzMbNZhpYx1xdGHLc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=853 impostorscore=0 bulkscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280108
+X-Spam-Level: 
+X-Spamd-Result: default: False [-8.30 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
+X-Spam-Score: -8.30
+X-Spam-Flag: NO
 
-The compiler is unaware of the size of code generated by the ".rept"
-assembler directive. This results in the compiler emitting branch
-instructions where the offset to branch to exceeds the maximum allowed
-value, resulting in build failures like the following:
+On 4/28/25 14:44, Daniel Wagner wrote:
+> On Sun, Apr 27, 2025 at 08:59:13AM -0700, Guenter Roeck wrote:
+>> Hi,
+>>
+>> On Fri, Feb 14, 2025 at 09:02:03AM +0100, Daniel Wagner wrote:
+>>> The fabric transports and also the PCI transport are not entering the
+>>> LIVE state from NEW or RESETTING. This makes the state machine more
+>>> restrictive and allows to catch not supported state transitions, e.g.
+>>> directly switching from RESETTING to LIVE.
+>>>
+>>> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+>>
+>> nvme_handle_aen_notice(), when handling NVME_AER_NOTICE_FW_ACT_STARTING,
+>> sets the state to RESETTING and and triggers a worker. This worker
+>> waits for firmware activation to complete and then tries to set the
+>> state back to LIVE. This step now fails.
+>>
+>> Possibly the handling of NVME_AER_NOTICE_FW_ACT_STARTING needs to be
+>> improved. However, leaving the NVME in RESETTING state after an
+>> NVME_AER_NOTICE_FW_ACT_STARTING event is worse.
+>>
+>> I think this patch should be reverted at least for the time being until
+>> the handling of NVME_AER_NOTICE_FW_ACT_STARTING no longer relies on a
+>> direct state change from RESETTING to LIVE.
+> 
+> ee59e3820ca9 ("nvme-fc: do not ignore connectivity loss during connecting")
+> f13409bb3f91 ("nvme-fc: rely on state transitions to handle connectivity loss")
+> 
+> are depending on the fact that is not possible to switch from
+> NEW/RESETTING directly into LIVE.
+> 
+> I think it would be better to fix the worker instead dropping this patch
+> and the above fix for the fc transport.
+> 
+> What about:
+> 
+> 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index b502ac07483b..d3c4eacf607f 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
+>                  msleep(100);
+>          }
+> 
+> -       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
+> +       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
+> +           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
+>                  return;
+> 
+>          nvme_unquiesce_io_queues(ctrl);
 
-  CC       protection_keys
-  /tmp/ccypKWAE.s: Assembler messages:
-  /tmp/ccypKWAE.s:2073: Error: operand out of range (0x0000000000020158
-  is not between 0xffffffffffff8000 and 0x0000000000007ffc)
-  /tmp/ccypKWAE.s:2509: Error: operand out of range (0x0000000000020130
-  is not between 0xffffffffffff8000 and 0x0000000000007ffc)
+I would rather have a separate state for firmware activation.
+(Ab-)using the 'RESETTING' state here has direct implications
+with the error handler, as for the error handler 'RESETTING'
+means that the error handler has been scheduled.
+Which is not true for firmware activation.
 
-Fix the issue by manually adding nop instructions using the preprocessor.
+Cheers,
 
-Fixes: 46036188ea1f5 ("selftests/mm: build with -O2")
-Reported-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-Signed-off-by: Nysal Jan K.A. <nysal@linux.ibm.com>
----
- tools/testing/selftests/mm/pkey-powerpc.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/mm/pkey-powerpc.h b/tools/testing/selftests/mm/pkey-powerpc.h
-index d8ec906b8120..17bf2d1b0192 100644
---- a/tools/testing/selftests/mm/pkey-powerpc.h
-+++ b/tools/testing/selftests/mm/pkey-powerpc.h
-@@ -104,8 +104,18 @@ static inline void expect_fault_on_read_execonly_key(void *p1, int pkey)
- 	return;
- }
- 
-+#define REPEAT_8(s) s s s s s s s s
-+#define REPEAT_64(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) \
-+		     REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s)
-+#define REPEAT_512(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) \
-+		      REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s)
-+#define REPEAT_4096(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) \
-+		       REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s)
-+#define REPEAT_16384(s) REPEAT_4096(s) REPEAT_4096(s) \
-+			REPEAT_4096(s) REPEAT_4096(s)
-+
- /* 4-byte instructions * 16384 = 64K page */
--#define __page_o_noops() asm(".rept 16384 ; nop; .endr")
-+#define __page_o_noops() asm(REPEAT_16384("nop\n"))
- 
- static inline void *malloc_pkey_with_mprotect_subpage(long size, int prot, u16 pkey)
- {
+Hannes
 -- 
-2.47.0
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
