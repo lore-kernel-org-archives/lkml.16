@@ -1,104 +1,130 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D30B1DA4E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C59525FA0E
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745833209; cv=none; b=ex61p0InRdRGhyIR+lCadV9mQgncbqWLYqLBTDLCNhCQxq1wXjWL+weM5bz2sBHstd1FE2UrfQe1zeMxrzDwf0LQIE6KKtXI+B4K9dxd5jb2wtmWXWbOHp9cah9lS7wodbm47B5ycUBzescinDNp3EyaKTjexlpPuUuetylpUkI=
+	t=1745833221; cv=none; b=VON2Wvub9ZplDfbSDOoHgBh9//sKmmYjLcfOf97JBcLGY8IcQNhxwjGuUWMFMD17xv7lRqR89/Fi/eYfQTlBroytWWmEV8hngVZykGUcMzvtXhRWZ/uw5fbbcV9MSXkjU7RdWJNdczUm8XxBfIbJtdRzBq12v3H585pnaDqLhUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745833209; c=relaxed/simple;
-	bh=YYDzdQ4+9LmtvJGRvACyqrQyMsoxiDd42ng2vwZOOoU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LgNgDrQY7ELXKWlXctzluwZnwZ5Vs7pu5kFDMnj+Hi/Uzy0TBbDqsoSVNV7SKrNKvPhDkXBdtmAmBpGD1+FN58ort1mrNJXJW/GYdRnx23tjjtZoMJfPdzcsQtXaLLJSMDUzQiY4kGlSEI6Jcus3xKdWyHZrN8/JeHnRJzJGhbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YGqy89vm; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1745833221; c=relaxed/simple;
+	bh=p4kNQdwzmDnZta4PbgZFZq/U7oDnPl8MzQlY6H2Scpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOlKaj1KHbGfMuRjRXBRzbXCPuPVa/k/H8RJEC3rFGCO0xoTPVgiKV3QkY1W+m3FtN9edQshYF6XSaB+tc0shTOyFdMfrLm+DtUspKj1J57HtRAWrcJqroodlNdsiZIyy+mNp1N7u4OIO0YLS8CbbCVHXx98Y5Oxcz7Fxe+aTfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KfL2A6KF; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YGqy89vm"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39c1b1c0969so2826564f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:40:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KfL2A6KF"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c0dfba946so3288089f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745833206; x=1746438006; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mMZGDDxvxQMJiy4e9TQRfyVCY4DEWRSO+vNpcZ0cNtk=;
-        b=YGqy89vmwUKBj2O7jYREWWX663R+Op4tNUze3GYoa37bDAvpI443aNCcT5OUGjGDo5
-         oEge0gtwauA3bRgQB75E0ADkYB/5HSxBRBMwJMZBSbCjhgDjBSG8StuUMyfYjgQGf+nk
-         ce/82ym5w0jx4m0k7J7G1p1MP/OkCfn4ks2vvoOj+p+NlxAO5wXpGP1bK1jwY1uFBqm7
-         0FiVeu6eKH6pgaICrkZ9gUEpWvxdoT6uvaSOm82srjmT/X7cCX4RRg7ZuEq20DI1YQbQ
-         3rr6J+zkmmDe16wi5i0djhFupdw9jIE7CI3HJpiTIHG2DCNNCmA+W4CEfvmMzqBNYzT6
-         /Lsg==
+        d=linaro.org; s=google; t=1745833216; x=1746438016; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/tZd4Ypk5BJk00OTo7JvTXUhxLykKpGhTfHWhdUsfHI=;
+        b=KfL2A6KFL3AMx8D59wiXmSEln9e363SZI7GhY2v0eq0EjdfZk2Ru6wFuUIFTmv6yFV
+         B3NXKlGnXjtPBtp/kaFtMVovlJ1xbqOY9V28wpsZh/+YSMgScR+4GkGkDtqSt29dqrSX
+         MK4eXdXV7s86RvywP+QLar1+/rOHHe52egXH/hcJZFl/E7mmoowGtBDmMe5imkx8shl6
+         rmN3kr8hLVJTSbMi1ajwQl1cPkjkRzE3T6ljayNsdJA0nwkGHjYhbV+pcPJqFazMB2Qa
+         BbzSZOnGcn8OFmDMQHvOHW6JCeA8dRXc5V9V/UMrXh0xxHq5XzsgngPJLXoTDXgTAqdp
+         pUZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745833206; x=1746438006;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mMZGDDxvxQMJiy4e9TQRfyVCY4DEWRSO+vNpcZ0cNtk=;
-        b=QMHK4MdzQwPFJ8B4RQJDSzmjqD4pJEL4cmPRo0KKfNH8YlGKL49bc0gcLs0Hp3Wjva
-         MRPO5QhKFXK9lWZvwogd+P0FYoMdvSwfa+AXFaXHyAekB85eT1dn6PZj/1cEVSLEHB64
-         bfej3RM08KLR8SK/8WmCv9ZgwMWh/1Vr4nuuYqSWwvRmO22O0XWrPDSnL9Xo75ndQafp
-         CpaxvyiBt1QHryZ5UtRTV2XXB/0BtJ9RlExuB5Vz0hnp8PzWoJOzDrvbi9spdYfYzsvm
-         WEcdlVkWPZrXPwJDS/2JLuf+t/Z3iSXDmR9ChfiJFtjrHEggZRx8UD0Cx+iSiwo2Pytf
-         OYlA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzHwJ05NooSEcw5GlKo742zIGX5YwUr78jVrt5c/vwr8DhCLZYX5Ler5Eryti5GJ3CB5riaY1UtGFQYHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOGYvU0FQKDzkXL2NMx4roqo2zPhOUJ5uXj/uVCGdSJy7pg2uU
-	2SAf+R2lop1feXxv2qIfxJcDaEd9m4qJ9FZlqehjLWx9vFJmZaRgU1pq6F9j93GbbfVrPuHHfck
-	V1mylnKJgbnPb1g==
-X-Google-Smtp-Source: AGHT+IHCr2s5xiTt7CkQmPotck1vag0zHrz5ZRimKIOKYP/sR0cvWeb8z+qSIsoUmCLdrGB+tQ4JLc9fAW4i0ic=
-X-Received: from wrbck9.prod.google.com ([2002:a5d:5e89:0:b0:391:3ebd:4782])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:178f:b0:391:3049:d58d with SMTP id ffacd0b85a97d-3a07a9c3830mr6315668f8f.0.1745833206521;
- Mon, 28 Apr 2025 02:40:06 -0700 (PDT)
-Date: Mon, 28 Apr 2025 09:40:03 +0000
-In-Reply-To: <34457c78-fdcd-4f1b-a349-4ca9bcc2febc@nvidia.com>
+        d=1e100.net; s=20230601; t=1745833216; x=1746438016;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/tZd4Ypk5BJk00OTo7JvTXUhxLykKpGhTfHWhdUsfHI=;
+        b=vpDssqUXHuggyL/tceOzNsI4s2Uf1UNDoie7PAwfYxKevkkkxEgjTVq05wvI8pywAP
+         z8ZY4QB+K0eL72UeE1NgQk8Q8Y9NSE36HbW+SCzJeCgH7K91Hi8wFT0RzUGPJOwE9Lu4
+         DStPjYL2b6RMBYsX4Yd5UMxLmT7vup1jM4UOT+4xL+V/RnFW5BvNYgRY/pvWP1J2hO0j
+         QdtrrLW9PAbGyJcWufb3B48n6tnwYqo1N6zIslJm+hlloCMC+HKtvqmc+FGPEwFwFENt
+         eyh50vB6OaI4lyEC41q4fN8mWwONXErY5opPrnmpHzgRgmZ3ySeluP4aHqqVHsQ1ksdL
+         JpFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYBXM8hYORytHRjuz3MhmYHt/q1OqjF/DXinzKWwPD67//6j0q9keYrVNwecyX0cJlcoB9KS6H3k7+8Ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjOM8C1eScU3qXjhxTkg+nKLQBLRBYNC02IQZpwBs8ki2yESDV
+	/B4s45HX8pKXTRw3o9ta8qGr09PAL7bG+iYbsqJQGmdNuV8761xgfjq13dEWXS8=
+X-Gm-Gg: ASbGncuQU7s9vKE/UlDfGpACade3mu0wDIrBBzEbTZbKBOkF8o7CvW/n368On90a8Zk
+	IYotq9dNCx9qcapGEVPcXEqmVRlw2DILS8T8BJC3eidU3HD3LAQbZ2bpZgSBYcViJdvew5x96iA
+	vPc41zvQFX2FmAJws1W+XLotUNzBLjSpTYut987/2WMwutAvoI9jVjBrWIwlm+aRdqg7AWyVAAM
+	52UsOX98ksbEu00xqtR9hw7YlS48U5i7hhn2dZ+CvQXbGm+4BpJMcjP0JoJBlyzTBWmQWEz0o/g
+	V0bFYcUu1T2Pa86lGfjyMOj8P3bAfX/6PptUcnuRqrjQIg==
+X-Google-Smtp-Source: AGHT+IEmllBzyXjLLf+kiGyB+WclUcZwpuBSk7Lzu0+1JVWeTqkNy2mJ6U8hjuYfUNsLgR1qBxihEA==
+X-Received: by 2002:adf:ec87:0:b0:39c:1257:c96f with SMTP id ffacd0b85a97d-3a07adb1766mr4500559f8f.59.1745833216549;
+        Mon, 28 Apr 2025 02:40:16 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073ca543bsm10716844f8f.34.2025.04.28.02.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 02:40:16 -0700 (PDT)
+Date: Mon, 28 Apr 2025 12:40:12 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Stefan Schmidt <stefan.schmidt@linaro.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+	20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 14/23] media: iris: Fix NULL pointer dereference
+Message-ID: <7f37ec27-0221-4bb2-91f9-182244014b5a@stanley.mountain>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-14-3a6013ecb8a5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com> <34457c78-fdcd-4f1b-a349-4ca9bcc2febc@nvidia.com>
-Message-ID: <aA9M8_K0MQfWg52t@google.com>
-Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
-From: Alice Ryhl <aliceryhl@google.com>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-14-3a6013ecb8a5@quicinc.com>
 
-On Sun, Apr 27, 2025 at 03:59:48PM -0700, John Hubbard wrote:
-> On 4/23/25 10:40 AM, Tamir Duberstein wrote:
-> ...
-> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index 1df11156302a..d14ed86efb68 100644
-> > --- a/rust/kernel/lib.rs
-> > +++ b/rust/kernel/lib.rs
-> > @@ -198,9 +198,15 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
-> >   /// ```
-> >   #[macro_export]
-> >   macro_rules! container_of {
-> > -    ($ptr:expr, $type:ty, $($f:tt)*) => {{
-> > -        let offset: usize = ::core::mem::offset_of!($type, $($f)*);
-> > -        $ptr.byte_sub(offset).cast::<$type>()
-> > +    ($field_ptr:expr, $Container:ty, $($fields:tt)*) => {{
-> > +        let offset: usize = ::core::mem::offset_of!($Container, $($fields)*);
-> > +        let field_ptr = $field_ptr;
-> > +        let container_ptr = field_ptr.byte_sub(offset).cast::<$Container>();
-> > +        if false {
+On Mon, Apr 28, 2025 at 02:59:02PM +0530, Dikshita Agarwal wrote:
+> A warning reported by smatch indicated a possible null pointer
+> dereference where one of the arguments to API
+> "iris_hfi_gen2_handle_system_error" could sometimes be null.
 > 
-> This jumped out at me. It's something that I'd like to recommend NOT
-> doing, here or anywhere else, because:
+> To fix this, add a check to validate that the argument passed is not
+> null before accessing its members.
 > 
->     a) Anything of the form "if false" will get removed by any compiler
->        worthy of the name, especially in kernel builds.
+> Cc: stable@vger.kernel.org
+> Fixes: fb583a214337 ("media: iris: introduce host firmware interface with necessary hooks")
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/linux-media/634cc9b8-f099-4b54-8556-d879fb2b5169@stanley.mountain/
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> index 1ed798d31a3f..cba71b5db943 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> @@ -267,7 +267,8 @@ static int iris_hfi_gen2_handle_system_error(struct iris_core *core,
+>  {
+>  	struct iris_inst *instance;
+>  
+> -	dev_err(core->dev, "received system error of type %#x\n", pkt->type);
+> +	if (pkt)
+> +		dev_err(core->dev, "received system error of type %#x\n", pkt->type);
 
-The `if false` branch is used to trigger a compilation failure when the
-macro is used incorrectly. The intent is that the compiler should
-optimize it out. I don't think there's anything wrong with that pattern.
+I feel like it would be better to do:
 
-Alice
+	dev_err(core->dev, "received system error of type %#x\n", pkt ? pkt->type: -1);
+
+regards,
+dan carpenter
+
