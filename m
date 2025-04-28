@@ -1,59 +1,104 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0855684
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E635684;
+	Mon, 28 Apr 2025 13:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745847427; cv=none; b=PUcr0EP4y0u+1szNJKAlLvBWdJ85ozXWQTAZiyyzkBXdegw7lbI67R0RMFPgfGoCZpUMtGvHLNf+lm1gGmtOBbfUMP8UEyCEfBo5Or37kTF7WygCiyupz90eV6GADOeG9QiXEbISOzfz/lqs1RKsIJeAd2zjwwlEYIcXbUSBB/8=
+	t=1745847481; cv=none; b=N03Lj94xD5bC70tvbginZ/EoQ+JmTRhlIJQv9+052lTpJAf0BT0E0dI/NMMXyvKHyUyJdby0rw4GuK2lrMDjZoXRjVDgxYHeBZP4a66TGHDggikCo5mTCnvdjse8sAb6akjVDc7EPMGWpdFDNE7zivtfqtFus04zYxHHLPM7IBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745847427; c=relaxed/simple;
-	bh=AETgfjfdLm1cc3dIDIhiBDrptA/K0C0uD7Zn5WK7IXs=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=KVYScWbHWgsvwlZn9mG7BJgoxnpQy1V5H+2smRNdzmROrnmEKxFrf0R4Q4mXJhgxf6yCAMcAR1TsP1cayaIlVW413vqQTME+VsrYbJXkjXTMuRZyvEgZnH9genWwoctb3Y+FugKwujrfqwccv1sa55ffXiOVnuVC4Dw+8AQyn+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=KsetULGd; arc=none smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="KsetULGd"
-Message-ID: <5b7ecad7c0c363efc9bb8d56b193fc1f@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1745847417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yDYLL+IK8QDF/vvYy5uamVDzKiGTqC3H0Qwjjv6JLYg=;
-	b=KsetULGdHdRflzfCs4PXmAod5REH5Uxa17LtbZk1qbTPT62pKMTGs7U8E8WBwUGb5g9l68
-	xZF6V2b14M/qH6HDl9GB71pr0A9jeZoO/YBX0YSzn6niK6pY4rzfHr5BYLqTkibApm6nbU
-	3cCMgbCE/CpoIY+PH5wogE3wkxjWV0kPDJ9VrzXVByaRER/K6AY/xO+mZ8RmhtVbCNzXgc
-	slqPpSoc09uYhhrq/eZJJxmBYcuW2WCAmoJbXJx3+Zmgh8XEDPYsSutxN6YlByGg7pujsn
-	iR/vPunQk2iEZjaVRqT3AyiF/rg38fJPqAyorDM9M+5xak4nClLzna3qbyoAcw==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Max Kellermann <max.kellermann@ionos.com>, dhowells@redhat.com,
- netfs@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: Re: [PATCH] fs/netfs/read_collect: remove duplicate line
-In-Reply-To: <20250428114842.3180169-1-max.kellermann@ionos.com>
-References: <20250428114842.3180169-1-max.kellermann@ionos.com>
-Date: Mon, 28 Apr 2025 10:36:53 -0300
+	s=arc-20240116; t=1745847481; c=relaxed/simple;
+	bh=M6Rg0zKulNc6IXpnDsEVE7uz+vhsGFcLQO0KqpPQnCo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NZURX6f4PEBSoH6a0538zwf5ItvTuNkuDFd3qoj7D1F2B96Gy+D5js5E9mpH1JWuieO/1dS1Yinfa62DsnxVfdAtZncIFg8GhAhvn60EtUVVBnYJttFk6+IlTaEKyAMgi2yuyft/wqiI4xRhRyu2L2iE2aG+lqGqZP9NUHnxH3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C6F71516;
+	Mon, 28 Apr 2025 06:37:52 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C79D3F673;
+	Mon, 28 Apr 2025 06:37:56 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH] libperf: Grant write permission for user page
+Date: Mon, 28 Apr 2025 14:37:45 +0100
+Message-Id: <20250428133745.1435742-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Max Kellermann <max.kellermann@ionos.com> writes:
+When perf runs in overwrite mode, the ring buffer is mapped read-only.
 
-> @@ -653,7 +653,6 @@ ssize_t netfs_wait_for_read(struct netfs_io_request *rreq)
->  		switch (rreq->origin) {
->  		case NETFS_DIO_READ:
->  		case NETFS_READ_SINGLE:
-> -			ret = rreq->transferred;
->  			break;
->  		default:
->  			if (rreq->submitted < rreq->len) {
+On the other hand, the first page in the ring buffer is for user page,
+which is used for exchanging parameters between the kernel and the
+userspace.  The read-only permission causes Segmentation fault with
+command:
 
-This is wrong.  @ret is expected to have the amount of bytes
-successfully read if no error.
+  $ perf record --overwrite -a -e cs_etm//
+    perf: Segmentation fault
+
+This patch grants write permission for the mapped user page so the
+userspace tool can update info properly.
+
+Fixes: d1a177595b3a ("libperf: Adopt perf_evlist__mmap()/munmap() from tools/perf")
+Reported-by: Tomas Glozar <tglozar@redhat.com>
+Closes: https://lore.kernel.org/linux-perf-users/20250428124727.GE551819@e132581.arm.com/T/#t
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/lib/perf/mmap.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+index c1a51d925e0e..7c0748a9d79f 100644
+--- a/tools/lib/perf/mmap.c
++++ b/tools/lib/perf/mmap.c
+@@ -4,6 +4,7 @@
+ #include <asm/bug.h>
+ #include <errno.h>
+ #include <string.h>
++#include <unistd.h>
+ #include <linux/ring_buffer.h>
+ #include <linux/perf_event.h>
+ #include <perf/mmap.h>
+@@ -45,6 +46,21 @@ int perf_mmap__mmap(struct perf_mmap *map, struct perf_mmap_param *mp,
+ 		return -1;
+ 	}
+ 
++	/*
++	 * In overwrite mode, pages are mapped as read-only.  Fix the permission
++	 * to make the user page writable, as the tool needs to update
++	 * information (e.g., aux_offset/aux_size) into it.
++	 */
++	if (mp->prot == PROT_READ) {
++		const long page_sz = sysconf(_SC_PAGE_SIZE);
++
++		if (mprotect(map->base, page_sz, mp->prot | PROT_WRITE) < 0) {
++			munmap(map->base, perf_mmap__mmap_len(map));
++			map->base = NULL;
++			return -1;
++		}
++	}
++
+ 	map->fd  = fd;
+ 	map->cpu = cpu;
+ 	return 0;
+-- 
+2.34.1
+
