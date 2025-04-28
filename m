@@ -1,82 +1,159 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188BD25E81D;
-	Mon, 28 Apr 2025 13:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80BE86323;
+	Mon, 28 Apr 2025 13:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846414; cv=none; b=oyqlom4hQl/yLClTpLhF/tZzXv1UoybezamheQOFwlCXUpeZ7ROBzZFQ+ry+i2tIq1V35HsVYQglk8EygestM6qFlq+RS2/LHjSicipPI/sGonUGmQJs8kjn0SbFhIDFml97C3u/Jm9T2nyK2YaVjwBdWY0NPHHZ/RBig5b7D8A=
+	t=1745846429; cv=none; b=dfjHmOqSrRBbru1s/KMYC9wsJrj7pa7cbiCoBshcKWnJoEWx1cfIlHh4ReeU4W9yv3a6zfV+4P/USbh8sW/h3SzNbRVBLgEJDSanvJp3Hs4pdfdmWIMUfOClf7KTeC4YWKHWSI1qKthaRV/3qEJ+nXuNdN7OCYe1tWqFyHjDtJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846414; c=relaxed/simple;
-	bh=j5yKBIk0ChsBmEbxwXBtdSmj61Lr30e37k9LA8CJ3MA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVZgzqss5BFSrOXfupaVOBZEjUu7cNZt4UQf62uYCh3GS394BoMID9F4dPDIvYX8n8ZcF/FOnQ2B+Ou9PYAL01ZgI+b1u6PUPY0t6Jwhr233aP940SUdsC1vti47sNkKv2nf4cjJXA+mAoDPCwK/voLANh8MN+bCs3iak35vfGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 3A2B668C4E; Mon, 28 Apr 2025 15:20:06 +0200 (CEST)
-Date: Mon, 28 Apr 2025 15:20:06 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 07/24] dma-mapping: Implement link/unlink ranges API
-Message-ID: <20250428132006.GA30966@lst.de>
-References: <cover.1745394536.git.leon@kernel.org> <2d6ca43ef8d26177d7674b9e3bdf0fe62b55a7ed.1745394536.git.leon@kernel.org> <aA1iRtCsPkuprI-X@bombadil.infradead.org> <20250427081312.GE5848@unreal>
+	s=arc-20240116; t=1745846429; c=relaxed/simple;
+	bh=VNjy3RmJ0lOp0z/XLQWKz5ZhB98dzUQwS+M+YnrWGOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HQmtQLJP66dqY6+kT8iXCU+dVx2QtxiUh0s/gnaqt3bDqR2k1AHmW0JZH7zDmcWNQoq2F9NO8m10epfQ0KGRs8TwkJ94K5rIMnC0d6HAtlwtg0HZDuF3nTYyc3G9iNGgmpd4YVi9vsXDiiq6Jap3a/uX981Am7vxsq7BodFlhw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gwIgcoDE; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gwIgcoDE"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SA4m0H029204;
+	Mon, 28 Apr 2025 13:20:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=mom3Z6GCnmxCCrmh/s8u73ghH34c
+	GZTax8lhSWhcWjc=; b=gwIgcoDE4fFjLtfmY/Ge1IvvbTHw+7Dda/qjEZ8MfqlO
+	wSzVO3Flf3K5cS4v80UXaAWi4UB7SFijWfUPuyTc0qaXTm/dtdteJA/SZb0JZL7n
+	VH0mWrTeaR9MKJM/wY/8OC2FmUBKVw2Fxhrv+LN/kOELtmCuxbqIQjJwEVnjLynX
+	t6tqJqbwWICfPKLl4CHXNsiKQDmUlQsECdo+2zbxBiAeZVgjW4LUoU4qYzePFycC
+	2ZNf0PhFtxiVJOfHdM8j24JaDSuUwa5bRDGE/LTChAk1BjcBAXbdRZSpRTHiUYAJ
+	YcNrRrTIFPHW+5wiaWwcssXfgeCCDafOC6x+Hy6AQg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46a7kk0vd5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 13:20:04 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAZjga016174;
+	Mon, 28 Apr 2025 13:20:03 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a706pet-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 13:20:02 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SDJxK943057470
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 13:19:59 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F13C420043;
+	Mon, 28 Apr 2025 13:19:58 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6053620040;
+	Mon, 28 Apr 2025 13:19:55 +0000 (GMT)
+Received: from li-80eaad4c-2afd-11b2-a85c-af8123d033e3.ibm.com (unknown [9.124.219.50])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Apr 2025 13:19:55 +0000 (GMT)
+From: "Nysal Jan K.A." <nysal@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, "Nysal Jan K.A." <nysal@linux.ibm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] selftests/mm: Fix build break when compiling pkey_util.c
+Date: Mon, 28 Apr 2025 18:49:34 +0530
+Message-ID: <20250428131937.641989-1-nysal@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427081312.GE5848@unreal>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=OYSYDgTY c=1 sm=1 tr=0 ts=680f8084 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=obKkJqyyVAjaa7KXnx4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: nexDyk0xDNlDCevnYb_Fu1jgIGHhDnee
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEwOCBTYWx0ZWRfXxHGyuOKchSar B9IHLyd97mmtUQOyze8E4YvwwGwlaQC6DIaTheSGzkK3EtwK/f75LN1WQJYML6Jgz7DUR6Nja7p eKFvGIzOZaiQoNoJUVfmtZHdqIO7/WKSnk7svY9cE9MP9Gzzk8+A+TYy14tAL9llPM6qP04b5ZN
+ TsTP4I3DQygvNKItbD784sY4CsXvbkP3DhlD8pJOxANRKpso0+tLact/7ITlMTdUqhuajwSrYwH uxOxs0q3RuIAUWkpvX4isJHxX+uWcHWP9yKDPSSlR/vFCDSbam0jLPUFWg6wI7f2IVlZ+VQXJx8 StzLHwLHh2Ord9qJv9TcXJXR/ajRyvToxrsxMt2MLkd+1zr0yHlpH6t2/jYWKQZrbAzwIjiMA8T
+ 4zkslazeMp9tfkEhMICPStl4e+3d9MR/3ahVkA73+LfBwPT5fBlk9ZvXsJZf0OI8L9MN0/i9
+X-Proofpoint-ORIG-GUID: nexDyk0xDNlDCevnYb_Fu1jgIGHhDnee
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0 malwarescore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280108
 
-On Sun, Apr 27, 2025 at 11:13:12AM +0300, Leon Romanovsky wrote:
-> > So arch_sync_dma_for_device() is a no-op on some architectures, notably x86.
-> > So since you're doing this work and given the above pattern is common on
-> > the non iova case, we could save ourselves 2 branches checks on x86 on
-> > __dma_iova_link() and also generalize savings for the non-iova case as
-> > well. For the non-iova case we have two use cases, one with the attrs on
-> > initial mapping, and one without on subsequent sync ops. For the iova
-> > case the attr is always consistently used.
-> 
-> I want to believe that compiler will discards these "if (!coherent &&
-> !(attrs & DMA_ATTR_SKIP_CPU_SYNC)))" branch if case is empty.
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
 
-Yes, it is the poster child for dead code elimination using the
-IS_ENABLED() helper.
+Commit 50910acd6f615 ("selftests/mm: use sys_pkey helpers consistently")
+added a pkey_util.c to refactor some of the protection_keys functions accessible
+by other tests. But this broken the build in powerpc in two ways,
 
-> checks are scattered over all dma-iommu.c file with different
-> combinations. While we can do new static functions for small number of
-> use cases, it will be half-solution.
+pkey-powerpc.h: In function ‘arch_is_powervm’:
+pkey-powerpc.h:73:21: error: storage size of ‘buf’ isn’t known
+   73 |         struct stat buf;
+      |                     ^~~
+pkey-powerpc.h:75:14: error: implicit declaration of function ‘stat’; did you mean ‘strcat’? [-Wimplicit-function-declaration]
+   75 |         if ((stat("/sys/firmware/devicetree/base/ibm,partition-name", &buf) == 0) &&
+      |              ^~~~
+      |              strcat
 
-Don't bother.
+Since pkey_util.c includes pkeys-helper.h, which in turn includes pkeys-powerpc.h,
+stat.h including is missing for "struct stat". This is fixed by adding "sys/stat.h"
+in pkeys-powerpc.h
+
+Secondly,
+
+pkey-powerpc.h:55:18: warning: format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 3 has type ‘u64’ {aka ‘long unsigned int’} [-Wformat=]
+   55 |         dprintf4("%s() changing %016llx to %016llx\n",
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                          __func__, __read_pkey_reg(), pkey_reg);
+      |                                    ~~~~~~~~~~~~~~~~~
+      |                                    |
+      |                                    u64 {aka long unsigned int}
+pkey-helpers.h:63:32: note: in definition of macro ‘dprintf_level’
+   63 |                 sigsafe_printf(args);           \
+      |                                ^~~~
+
+These format specifier related warning are removed by adding
+"__SANE_USERSPACE_TYPES__" to pkeys_utils.c.
+
+Fixes: 50910acd6f615 ("selftests/mm: use sys_pkey helpers consistently")
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Signed-off-by: Nysal Jan K.A. <nysal@linux.ibm.com>
+---
+ tools/testing/selftests/mm/pkey-powerpc.h | 2 ++
+ tools/testing/selftests/mm/pkey_util.c    | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/tools/testing/selftests/mm/pkey-powerpc.h b/tools/testing/selftests/mm/pkey-powerpc.h
+index 1bad310d282a..d8ec906b8120 100644
+--- a/tools/testing/selftests/mm/pkey-powerpc.h
++++ b/tools/testing/selftests/mm/pkey-powerpc.h
+@@ -3,6 +3,8 @@
+ #ifndef _PKEYS_POWERPC_H
+ #define _PKEYS_POWERPC_H
+ 
++#include <sys/stat.h>
++
+ #ifndef SYS_pkey_alloc
+ # define SYS_pkey_alloc		384
+ # define SYS_pkey_free		385
+diff --git a/tools/testing/selftests/mm/pkey_util.c b/tools/testing/selftests/mm/pkey_util.c
+index ca4ad0d44ab2..255b332f7a08 100644
+--- a/tools/testing/selftests/mm/pkey_util.c
++++ b/tools/testing/selftests/mm/pkey_util.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
++#define __SANE_USERSPACE_TYPES__
+ #include <sys/syscall.h>
+ #include <unistd.h>
+ 
+-- 
+2.47.0
 
