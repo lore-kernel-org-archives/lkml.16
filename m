@@ -1,53 +1,135 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B38BEAF1;
-	Mon, 28 Apr 2025 01:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D402BD04
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 01:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745804633; cv=none; b=jVsI2fFmZPidWNUGIxdNAXURBI6dpm8C/mhIcLGnJVa61k0giqo/9GQ+80iK5EfN9ycVEaX5/gTRFW6TI4T/y8vwtfzW7efMA4kHKBlg0nwg0EAvebBe0uuCnHq7t3xG8zBI+RRsbgnPqsnRtNjoBw07nqDx/2Oyp+xmhiqbxEQ=
+	t=1745804644; cv=none; b=mqrulp5SMw7sW8BP3FpKbuLirzH9tElgOTTRMXGa1waPVT8usneXzzDnA8dGr+NEsVe0tFrUG/md6xgMyAyI/lsuDfzachktXT7S0oUD11j2VHUxcrb55UPmy5VxcdajaHqY/1I167lBNR2U0FyZUpvjJunYlvFW+bP8wpK7zlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745804633; c=relaxed/simple;
-	bh=OtlmkEkbNGzcTzcluHrptih4SZgW0i/zchiqxekC/Js=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UXxkfZ3jEUcerEDk7WUPx2J4dUg+wtL7ecl26CI6DsNZq+EHmT9jn4cpZGKZilOlJJ0q8LWWzR0T0jCOfXVhtQtUTpRRLvMCo1hewdCHoVyW7Qsx7fM/M83GB+X4MQMAlPVQoHJF26zzPHS9DRWMeaabmRcHJ6v1I3tMXXhA6Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 259B292009C; Mon, 28 Apr 2025 03:43:50 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 1820192009B;
-	Mon, 28 Apr 2025 02:43:50 +0100 (BST)
-Date: Mon, 28 Apr 2025 02:43:50 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Huacai Chen <chenhuacai@kernel.org>
-cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Thorsten Blum <thorsten.blum@linux.dev>, Oleg Nesterov <oleg@redhat.com>, 
-    linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] MIPS: Fix MAX_REG_OFFSET
-In-Reply-To: <CAAhV-H5A_xFMXOXPJFz6FyD_FixDW2msGM1fRe-FdDSq=anS8w@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2504280235440.31828@angie.orcam.me.uk>
-References: <20250427113423.67040-2-thorsten.blum@linux.dev> <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com> <aA4oag9MAXT3y0t8@alpha.franken.de> <CAAhV-H5A_xFMXOXPJFz6FyD_FixDW2msGM1fRe-FdDSq=anS8w@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1745804644; c=relaxed/simple;
+	bh=+z8s4NRg+vluVW0bANv1ENerc7PuASiqv1WqBf6olv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rU+R71XBz9raBntSCzQ70nQjlCQzcvz5kujkwDYjMRaQVYx7NbMPXxYpxU/UzgGMo2/H1iPA4ngWvWphTwJ4ohRIaXF2Vlfgj9Nkj/xwdRaA9lE7qMkRTVF2vgUV6B1FrDPiKkUJXMEuElvAer7e4KSvBIoHLJvDDbxoB3LRmig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xs3Y1uxg; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xs3Y1uxg"
+Date: Sun, 27 Apr 2025 21:43:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745804629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VMhrp+exMrjPtRykhMgVAHxGjayNq4JxRu9e/LqfsE0=;
+	b=Xs3Y1uxgJTQiU/M6jPzlTXWeXVJkDsRMGYt+B6bnu6sM/iVo6Eo5oS9pkWhVC8u5e8Vyx8
+	sQYWWee6tJzLr5j/seKSbIUIumxR//CTglVSYWujHieLXGGIXECaCIeMEQzE3w5dbI3vW2
+	cdzZGX9Rww6jgiJVqFrYNZ8MgAD2/4c=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Theodore Ts'o <tytso@mit.edu>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <ytjddsxe5uy4swchkn2hh56lwqegv6hinmlmipq3xxinqzkjnd@cpdw4thi3fqq>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <aAvlM1G1k94kvCs9@casper.infradead.org>
+ <ahdxc464lydwmyqugl472r3orhrj5dasevw5f6edsdhj3dm6zc@lolmht6hpi6t>
+ <20250428013059.GA6134@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428013059.GA6134@sol.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 27 Apr 2025, Huacai Chen wrote:
+On Sun, Apr 27, 2025 at 06:30:59PM -0700, Eric Biggers wrote:
+> On Sun, Apr 27, 2025 at 08:55:30PM -0400, Kent Overstreet wrote:
+> > The thing is, that's exactly what we're doing. ext4 and bcachefs both
+> > refer to a specific revision of the folding rules: for ext4 it's
+> > specified in the superblock, for bcachefs it's hardcoded for the moment.
+> > 
+> > I don't think this is the ideal approach, though.
+> > 
+> > That means the folding rules are "whatever you got when you mkfs'd".
+> > Think about what that means if you've got a fleet of machines, of
+> > different ages, but all updated in sync: that's a really annoying way
+> > for gremlins of the "why does this machine act differently" variety to
+> > creep in.
+> > 
+> > What I'd prefer is for the unicode folding rules to be transparently and
+> > automatically updated when the kernel is updated, so that behaviour
+> > stays in sync. That would behave more the way users would expect.
+> > 
+> > But I only gave this real thought just over the past few days, and doing
+> > this safely and correctly would require some fairly significant changes
+> > to the way casefolding works.
+> > 
+> > We'd have to ensure that lookups via the case sensitive name always
+> > works, even if the casefolding table the dirent was created with give
+> > different results that the currently active casefolding table.
+> > 
+> > That would require storing two different "dirents" for each real dirent,
+> > one normalized and one un-normalized, because we'd have to do an
+> > un-normalized lookup if the normalized lookup fails (and vice versa).
+> > Which should be completely fine from a performance POV, assuming we have
+> > working negative dentries.
+> > 
+> > But, if the unicode folding rules are stable enough (and one would hope
+> > they are), hopefully all this is a non-issue.
+> > 
+> > I'd have to gather more input from users of casefolding on other
+> > filesystems before saying what our long term plans (if any) will be.
+> 
+> Wouldn't lookups via the case-sensitive name keep working even if the
+> case-insensitivity rules change?  It's lookups via a case-insensitive name that
+> could start producing different results.  Applications can depend on
+> case-insensitive lookups being done in a certain way, so changing the
+> case-insensitivity rules can be risky.
 
-> > > There is no 80 columns limit now, so no new line needed here.
-> >
-> > but not forbidden to care about it. I still prefer this limit.
-> Of course you are free to choose. But in my opinion "force to long
-> lines" and "force to short lines" are both bad, code readability is
-> the first thing to be considered.
+No, because right now on a case-insensitive filesystem we _only_ do the
+lookup with the normalized name.
 
- Correct, and I start getting lost when lines are wrapped by overrunning 
-the width of my screen.  NB in the old days some terminals would actually 
-truncate lines instead; at least it does not happen anymore, or at least 
-you can tell your terminal not to do it via a suitable stty(1) invocation.
+> Regardless, the long-term plan for the case-insensitivity rules should be to
+> deprecate the current set of rules, which does Unicode normalization which is
+> way overkill.  It should be replaced with a simple version of case-insensitivity
+> that matches what FAT does.  And *possibly* also a version that matches what
+> NTFS does (a u16 upcase_table[65536] indexed by UTF-16 coding units), if someone
+> really needs that.
+> 
+> As far as I know, that was all that was really needed in the first place.
+> 
+> People misunderstood the problem as being about language support, rather than
+> about compatibility with legacy filesystems.  And as a result they incorrectly
+> decided they should do Unicode normalization, which is way too complex and has
+> all sorts of weird properties.
 
-  Maciej
+Believe me, I do see the appeal of that.
+
+One of the things I should really float with e.g. Valve is the
+possibility of providing tooling/auditing to make it easy to fix
+userspace code that's doing lookups that only work with casefolding.
+
+And, another thing I'd like is a way to make casefolding per-process, so
+that it could be opt-in for the programs that need it - so that new code
+isn't accidentally depending on casefolding.
+
+That's something we really should have, anyways.
+
+But, as much as we might hate it, casefolding is something that users
+like and do expect in other contexts, so if casefolding is going to
+exist (as more than just a compatibility thing for legacy code) - it
+really ought to be unicode, and utf8 really has won at this point.
+
+Mainly though, it's not a decision I care to revisit, I intend to stick
+with casefolding that's compatible with how it's done on our other
+filesystems where it's widely used.
