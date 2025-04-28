@@ -1,213 +1,402 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020102.outbound.protection.outlook.com [52.101.189.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4498E4AEE2;
-	Mon, 28 Apr 2025 17:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745863020; cv=none; b=KtqhnvW61GATquIaq+N3UDuX5kEffxrEEFGHJBgJyxD1+f7rHrm4zXChb8Rog2pT3Pi3oRaQ12sjimfK3rEBziehIEpbIzNwf9aer1HOub6GUt1WBkBT4hpWhjynX50YS8LNhNH2YT3VwR03G6OVnfBtEbtn0T9jQU227SJpFUY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745863020; c=relaxed/simple;
-	bh=6sSqIjjMb5dgxnnth90EefvvkhjjHWZTx2JaVDNrCME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J7HkOlm18d+iHWkmUTa1B+17jhXCE3N8ItqIOnG8Nye9DqiIB5WuxHZgh7Zh2dO5cD4NPZJvMVPRG/TNLeAJ4uAkftZAf2x7As+1w5etXwtOixOjihUi0Us7MjYnKLxjNEnVTXN1rWJdl6bYLO8YBZ47lv4Cl7eizw3SlY8WnOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LR62Am6W; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA351A5BA3;
+	Mon, 28 Apr 2025 18:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745863218; cv=fail; b=dcQZd/IygoTWWkyydseQdoiR2CzJ/ECWsS29MKFKL+Ly9N2e2OfMIObafTMxUFm7WRaZXak+yRVRpla2KNANSSfpJbtYZeCMeoSYKl4Ws01OYDp4uck67r4XHXlaYUqOiZCfJdRltHIhz6YZnPxfXvHloQSdewcEKTpYHTgMenc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745863218; c=relaxed/simple;
+	bh=Jmg8LssqZdeUwGuHAx1rFvL8dqHX7JeveMw0hnLbYN8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cgPSGggrEFvVrgSvfgYdnTmEC+GLY+M+PeYimwkflX1XR75UAhsw7z54dtWoL81k4k9h38Zu+XeKKhYr90xhr0mNN0GpRbIWblTPo83gGdacjHmKHBWDh0PCMNcXUFj56MB9UBb6iTSkm4s/IlpR7eUQ+GiYItVP0rsXV9Uk6Mk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rhnwcmRu; arc=fail smtp.client-ip=52.101.189.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LR62Am6W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A20EFC4CEE4;
-	Mon, 28 Apr 2025 17:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745863019;
-	bh=6sSqIjjMb5dgxnnth90EefvvkhjjHWZTx2JaVDNrCME=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LR62Am6WKH/7SD0zqaWk8+1x0EHWCDdALwrUvN7WCkuj04hamMrzB3gzXyIgiIPkr
-	 wFSU3WSkieVz/gJXkzYfJ5FnkXA3sGag83KtuEkGPjEDAKLfXVp+5NWo8Id12AW/eg
-	 ztWMadJFxmNEYayDBnkP/80B1JJ0UfJrJ+yQGNebdpWnSi+AZlge+w5vGa0fOh7hSb
-	 sLzYhMv/QJlrd8RNyypLDRu/0p6A9szUro77UcIOrO/rhSFZT1RHl508UDjn7ztoWT
-	 KSWXpsTdG54YbjRey0Pu4g0g9DQukZG7/Ro5dtOiCjTm0EVZtb6A6vj9FECx2Q4KIR
-	 BUTSnjoDvaZwA==
-Message-ID: <e00ec6f8-479e-46c4-9c99-7de4c9fa1c27@kernel.org>
-Date: Mon, 28 Apr 2025 19:56:53 +0200
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rhnwcmRu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L+cHysvUh3fLasqlNkPcr9p0XrFg74nh7JrU4P/SUf6X4vSsrGuX1vuHBWj10X3cSwMnN/4Q7ADJ31ANRk0vydIUO/qnwbWURNPtm++c82841dVYGGvSxjyaJaNlcTLXKG7mLVS+6mB6UseY3A5/z/92Z25YjEoFiHEqSwCI4qHPttTjDhh72Sf1PnnwTHisSMayJe4qXbfBO04Zk9R1SxcAJ9t0IO1Shp0accvVJKvnX4MwuJ2bsn4xY4A6Nf+1/W/25WDUkEuI4gey/2B1QujbIkU84E8MDHpK2EHPphaZtMY7wf27iILW0eEqSbnMV4o7VvoCskQ2BeZQqkm4sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KxK6u4k0cV9Ef/i/y5nr+UpBpJQFCg0KCgZrlCWjzu8=;
+ b=D48XICQH4KktWoPE5rWbgheOSdwDQzpXysvlBtJpsY1XZWjCr2jacgkrRQKlEmVZHNjmxw220Fqa5pqx1CxnPaLteqSdw5tLEu8VBqRfbWvc0+3G/Pnd7opYokZ+44WQWYTGa/FSYm6FpFj10upxG2czQAGAzATWKvF1j6g1boLriRzztbMjmDTSfUpxruPxNWgjMKW+KT512GbRpw+m1Uk3FIC7fTXs0+HjLyZk/W+880MeVhtE6FNzHa8J4FDbLABqjqKsjSY9sv3TI7z/a+hoJwPFguFWRVvwscROAI/ztwr7MhivPF1qW5WQhcXJeIsXsnhaCNo6PVhjqXu++w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxK6u4k0cV9Ef/i/y5nr+UpBpJQFCg0KCgZrlCWjzu8=;
+ b=rhnwcmRuV2QmiFL9hnK/xg5s4YAYTOEHD66swH0hl2PAy9LYIrs/Ujb4h8bNLte6VDODPnMnYTp7Jbe9dBsr9/R3JQiiCKkBtIbCXeh69XKwJNFSd6aS6869EkXObYB6pZiPjUiqlVJHuZAio5mJQK/FeTMmNhAqUpSEAmQXOcQ82ZOM+648UMqbmjg245sxCcbhQk072EjgK0khcdbfx2sCCkVXkEWNI3t+EGKAtWwaEsZo5ZIUsW2JDfLfv5gd4ScB/0Pn6WC84l9CT5d/XcdpdPYBv+yo2Td0EG0PQ3mOZEJsdJgAhSi7hLHJicPNyiCkRYRatLqNg+YiIvO/Jg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT1PPF1572B6ADA.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b08::50a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
+ 2025 18:00:10 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4%7]) with mapi id 15.20.8678.025; Mon, 28 Apr 2025
+ 18:00:10 +0000
+Message-ID: <ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com>
+Date: Mon, 28 Apr 2025 14:00:07 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/9] unwind deferred: Use bitmask to determine which
+ callbacks to call
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>, "Jose E. Marchesi"
+ <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
+References: <20250424192456.851953422@goodmis.org>
+ <20250424192612.844558089@goodmis.org>
+ <02339b93-de9a-49e4-8dbb-137d02fc6ea8@efficios.com>
+ <20250428125600.1f50f476@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20250428125600.1f50f476@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR01CA0015.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01::23)
+ To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] media: dt-bindings: media: Add binding for the
- Raspberry Pi HEVC decoder
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, John Cox
- <john.cox@raspberrypi.com>, Dom Cobley <dom@raspberrypi.com>,
- review list <kernel-list@raspberrypi.com>,
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, John Cox
- <jc@kynesim.co.uk>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20250423-media-rpi-hevc-dec-v3-0-8fd3fad1d6fb@raspberrypi.com>
- <20250423-media-rpi-hevc-dec-v3-3-8fd3fad1d6fb@raspberrypi.com>
- <20250425-inescapable-beagle-of-bliss-8ae3ff@kuoka>
- <CAPY8ntCWzp9cRKwLg44G20jG17q2KhavZa_8qpodhGUGS2Bc7Q@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAPY8ntCWzp9cRKwLg44G20jG17q2KhavZa_8qpodhGUGS2Bc7Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT1PPF1572B6ADA:EE_
+X-MS-Office365-Filtering-Correlation-Id: cefc0f86-9fc3-45c7-bba7-08dd867e8423
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eHh5NWhBMS85bE5PdHY3UElhVTI1dEx6NkhCeWtpS2NIOUd5MDJOZTlmODM4?=
+ =?utf-8?B?d3FhRzdwQlU3SlpPRmpRVFIwNDRFQUdNcEVIRU5oNTNKaWJxM2sxdi90MDFI?=
+ =?utf-8?B?QWg0eVRiN041MWlDcWd4cDY2UnlXeEc3akNSWHlGWVMyUzdNNW9hUndsZTJW?=
+ =?utf-8?B?bVFNUExxSXFWNlRGNHN3Q0JmOXZoRzE3a0xzV1RCTGI1MlFvN3lLcU44TTZU?=
+ =?utf-8?B?QWxGTGZoSmdEMjQzVTZwQW1RenlTRTFjVlpVb2VnUlRtMkVGSzZvbXNBMWpE?=
+ =?utf-8?B?WExIUkxpcVFEU2xFSVBqVGJMTXFaMTF3WVRBZjQxK0NqYXhDTVhzU1JOanRl?=
+ =?utf-8?B?OFBWaHU3c1lmQkQrVENlbDBqbzRERGdhQ0hRSWZBSGFITW1hUGNKK2xUcW1G?=
+ =?utf-8?B?R0I3Vm0zc1greXA1V3Y4TUxveUFOZm00eXJZMTBGSkhlMk53bFdkQTJUaEpC?=
+ =?utf-8?B?bUl4NXdiZDJwVlJxSG5JblUzTzdGU1pvUnEreTAwNnhFWGVyYVhwL05nWnlM?=
+ =?utf-8?B?ZDB3VzVLRFRvMll2RS9Gck0zZUV3RTh0bnh4bC9kbHBCdVV6NXk5S20wbFJm?=
+ =?utf-8?B?aS9IRjJXNDNpeGdwd21XaEl6NHdQa3VydHN2b2E0dXFuSHNUM3gweDVPTVd0?=
+ =?utf-8?B?bjBSWjVCSE5tOFlEYjNvbTR0QjZUaDRjemNhTFBUNjFJdGdZdFlScDFRNENF?=
+ =?utf-8?B?UlpSTUpwZnVrMDJJa0Zhb3ZwWGtCd0h1TFh2emNyT0pBdHRObXJBSXV2T05I?=
+ =?utf-8?B?SkFFSTI0MHRtQkk1RzFWUzUrY3Z3bDN2b1krSVV5bHRYejZwZTNBcXdaQUF2?=
+ =?utf-8?B?bFh1Z0RKOEhEYzVpb043Z0c5MjdCSkpOQURyVmZNKzJMaVlhOElFNk8zNXo1?=
+ =?utf-8?B?dnhKQ3FpUHVidjU2b1M4YkRZUTRsZG95Y0NFRFRwUWg2eWw3SFUySGx2blNj?=
+ =?utf-8?B?RzEzaTM3R2Zld3p0V3JnQStURnpiWG5hUnlLdFJVb3FLUFNkckdmOFdjaWJD?=
+ =?utf-8?B?aWtpZHVjekovNnFZYTd6RitMN0lmcU8rVmt3ZmgzSHM5K05DT2NLeVlua1M3?=
+ =?utf-8?B?dmt3Y2NaZGhCNTU5ZVhQZUk5OER2YVRGam4yQXd0c21kcThWQUdDdXhMUUJ6?=
+ =?utf-8?B?YUtHNCttTmxvQk5SZ2dFcTQvb3NpYzg1cGRpNlp1OW1JUGJDcTFxRE9WdGhv?=
+ =?utf-8?B?Q080NkQreS9DYnMyMng4ZWp3bWNhZlcrbEp0ZDZxSmtTRVQzZnYwdVlWSnFS?=
+ =?utf-8?B?Vnpmd0hpNWZIV2hUM01WeDlKa2h1SEpDVVhRdVlsVjQ5MThQZE0rUVhqZHUy?=
+ =?utf-8?B?YytnTExQdFpuUVF6WEFLL09BSE1ETFQrUER5eTlSdXM5bnJpNTlPbjBGeVhn?=
+ =?utf-8?B?VHk4WVp2ajV3TURDTGRkNE8waHl6andnVTJvaGljRGN5M0V1YmUzRnkrOEV1?=
+ =?utf-8?B?T09lVXVJY0JhTWR0dUlzelYyNllFdEpoVGw1QTNiYWVmUjFneVFlOFJjT2Ni?=
+ =?utf-8?B?cDBHR0xmSGNLK3k4QTNwNnlhZ0pIa012ckZ0am5rRjdFRU5PU2JMTHcrMXNZ?=
+ =?utf-8?B?bnlMbjkwSnJPOG5rRFhXSUFidzlLYmx0ampaTTJhdnlidFFkdXNGaVgwV2F6?=
+ =?utf-8?B?cm1yVlJXcjU2YVI5Y3JGSnU3eWRtbFcrc3ZjaXRrS0lwOGFPSTZydGsvd2N4?=
+ =?utf-8?B?RzhsU2gyVkpmVnhPMk92Y1lScXo0ckE2RGR3OVFMYm5tNHRVKzNuUHpTbWJV?=
+ =?utf-8?B?WkdZNk1wenVheC81MzNqRFpsNEorUVFram5jNHpUVW9WcmRWUWRBUzJTNHdu?=
+ =?utf-8?Q?0s4jaCSHNsg/rUFlHZ17Sqzguk1vjslMYZXKI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bE9pWHZQUlp3eFcyY2kxVGNNSmlZbFhjRGIvU0hWTjhBdnVvUW5RTHJqb01S?=
+ =?utf-8?B?NmRvdVBrSFYwUlVxN2Zlb2V6RkhyNXB2a0FHakxtUlhCVzRQM0wzWXBNSytZ?=
+ =?utf-8?B?TEd5dndhSFJ4T3hIMlh4QUFERFc2aDJFVGtxZ0J4SmYveTF6RnJGR1BBWW9W?=
+ =?utf-8?B?VEY1eUJEMDZsdU5Zc2phOGZsMFRsR2kvbWxqUWIxczRlWm01bVJFNHZBUUx5?=
+ =?utf-8?B?U1QzU2o5TUZWTFhURExPZDlLcTNYWGlsR0M5dDdBdVFnaWt2U3d0ZWdOY1NE?=
+ =?utf-8?B?YkZGc2hRM0tQQ0hUbGc5YlBQZzNiUHFCeUs0VWJHOGJ3OFlqT0RPcXpSbFJT?=
+ =?utf-8?B?T2JxQTBSVnRvazU4TWxtQlRvMHZudFRKYzZYMnNCL3hycmVoSmE0RlJrTWI5?=
+ =?utf-8?B?bVg3K1dMQVZWaGk2WXBEcldZK2hjWUNOaW5iamRjNVBvZWNHa1BuVS90aUtj?=
+ =?utf-8?B?REJ0WVQxVmFrZzlKUzNpdE52K3FydDJpUWhKU1N1MDRLazBiTEJXQU15MWNy?=
+ =?utf-8?B?UzZhVHFGVmRoQ0ZoNDlSRFhwTjlQZ0FsaWk2QjNyemJNVU1HelJsVUtXYmk1?=
+ =?utf-8?B?NjJjZGRSbTFZVDhURDhrOExjZWt6c0VZVnBoaDNMZUthUUxMUkJMT2w1WHN1?=
+ =?utf-8?B?SkxlMjJ1U1VwV3NVQVl4ZkZoMEJiOGpEcWlTb0pLQ2RndmpPQ2tIdEZYdGdo?=
+ =?utf-8?B?RjZQYWNGamFzamJYbmwvRi82L3hBSENQRmE2ckxic1FoaUthWXJ2VVFyZVBH?=
+ =?utf-8?B?VEN2cklrZ09Bdm1vQ3J5eTdzc2NKVDN3ME5xYWtvQVRMUlo3UHRqNndCMlk3?=
+ =?utf-8?B?QkV4UFZ0MmUwUUh1Vmw4OXVEbFoyeGh1QWxxTzJ2SmJQcEt3c1Zlci9LQVA2?=
+ =?utf-8?B?NHhWaW4wL2xId3FZVjlTVjdYRlRGS2w0YUlEOGhlMDZWNFZyRHRyMXBac0dk?=
+ =?utf-8?B?aFNKb09nUXNxVE1BRkxmYWx3b1lzT0JyV2orRURPRkRJVHBzZUhnSEYyQlFL?=
+ =?utf-8?B?M1FtVTJWUXZ3TWZVbFZtNXhNd09QNXd5ZDhLRTZubk4yWCtUVWZFekRDWHN3?=
+ =?utf-8?B?S0hlUzBDcklVMzA1bTZVTmVDSnFEOUxzSkZVclF4R3VtUFpuVXMrcGNuN2ZB?=
+ =?utf-8?B?OFNXbkM3TG55TGUrclZSaytLb1dpdUZ6WGowN3gwY3Q2U1R0bHNhMHlHc0Fn?=
+ =?utf-8?B?VU9vWUt3TFNxRUNNODM3cnhWNW1YMCs2VW4yNlQ3UUJic0xoQVBHckdTVDcr?=
+ =?utf-8?B?a0JZVklOTnJEMlI0VjlvWit1YkV0eE1xMmUyb1RXQVdOcFJwUi9tVjVNaVJN?=
+ =?utf-8?B?dDV0dGxsTXAyc0FTdXdtR3JmTVp1VXV2M2d0bTFmdVZ3NG5qSFFYUTdGMjZv?=
+ =?utf-8?B?QlZiZkRFbFBYN3dQbFBSQlord0pYQlg5OFVzK08vYXRGeXZJQXVkbngxYXAw?=
+ =?utf-8?B?WjBnaFc0MWlYZnRDakRWZnV0Q2dvbFJodFdtOTA5aW8yRUlCZGVjTXBGT2dC?=
+ =?utf-8?B?VFV6VFhsZTJRUzNKRU04TFU4VFBpOFY3VGhKa0ZXdnFES3UvbmowU0sxVGd3?=
+ =?utf-8?B?VTY1ckRDKzhpa3kvSGcwcmVFUkg3SmZCTldlSkJLeVpjZ2lWQmhqdEdUVktG?=
+ =?utf-8?B?VldyUUorUlRraWdCNHVuY1Jqb2ZORkZVbThtS0d0bmRnelZ3RklzdXJaV09q?=
+ =?utf-8?B?U3FISktxQ3d1a0ZCSnBIUy9RaGV1ajEra1kzT0NST0JRY08ybUNicHpGdjQw?=
+ =?utf-8?B?TG5xbUNubEZ2Y3hHTEM4dnI2Zm1uejd5enZBRmlZcE40RXM1c01ualhsZjg0?=
+ =?utf-8?B?NXlaVU5oSDI5N3hDL3pCQW5nQlNoaFBKS0p0SWs4dTFncDdsMDhvNTNENWN0?=
+ =?utf-8?B?YS9NM2FRK3o0UXJGam4xQ3V1ODJWSzVoVktCbzQ1V0wzR1hTNnRSdmw0L05p?=
+ =?utf-8?B?d3Y2dDVZSU1oVTFPbk1FRG1DVWxXSjhDeFhZeFFyS0tlOGlLRDlTaHBDVEFD?=
+ =?utf-8?B?ODFiRFhSY1NteCtHYmE0czZuaTdlbHNaSjhuZ09uZUcrcUlaM2NDVmVoc1BU?=
+ =?utf-8?B?NGs2SU15Ky9kbTlEUnd2MVVhSCtWYkY5d0ZIUGFnRy8zYUFUZFRUKzBXb2kv?=
+ =?utf-8?B?NXBjbkM5QWMySDRJb2p6SUI2b0RWQ0paYjNoM2pPTkJXcktVVlM0TUtVeVhD?=
+ =?utf-8?Q?6S1BT42SFaWPVagvY6TG924=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cefc0f86-9fc3-45c7-bba7-08dd867e8423
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 18:00:10.0579
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x+tRIJnI4hDxyg6TM8DZsOM6fmI0GC9Sq1i3ecm0AnODlN7oem74HVw87adN0d+Im9yl1pZokBig3vzmF+UHDjJGAABtRImW5AY2YzHe8fo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT1PPF1572B6ADA
 
-On 28/04/2025 12:03, Dave Stevenson wrote:
-> Hi Krzysztof
+On 2025-04-28 12:56, Steven Rostedt wrote:
+> On Mon, 28 Apr 2025 12:33:50 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> On Fri, 25 Apr 2025 at 08:53, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 2025-04-24 15:24, Steven Rostedt wrote:
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> In order to know which registered callback requested a stacktrace for when
+>>> the task goes back to user space, add a bitmask for all registered
+>>> tracers. The bitmask is the size of log, which means that on a 32 bit
 >>
->> On Wed, Apr 23, 2025 at 06:20:20PM GMT, Dave Stevenson wrote:
->>> Adds a binding for the HEVC decoder found on th +maintainers:
->>> +  - John Cox <john.cox@raspberrypi.com>
->>> +  - Dom Cobley <dom@raspberrypi.com>
->>> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
+>> size of long
 >>
->>> +  - Raspberry Pi internal review list <kernel-list@raspberrypi.com>
->>
->> Drop, no mailing lists in bindings maintainers. These must be people.
 > 
-> Ack
+> Sure
 > 
+> 
+>>> --- a/include/linux/unwind_deferred.h
+>>> +++ b/include/linux/unwind_deferred.h
+>>> @@ -13,6 +13,7 @@ typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stackt
+>>>    struct unwind_work {
+>>>    	struct list_head		list;
+>>>    	unwind_callback_t		func;
+>>> +	int				bit;
+>>
+>> int or unsigned int ?
+>>
+>> Rename "bit" to "requester_id" ?
+> 
+> Perhaps just "id", as this is only internal and shouldn't be touched.
+> 
+>>
+>>>    };
+>>>    
+>>>    #ifdef CONFIG_UNWIND_USER
+>>> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+>>> index 2afd197da2ef..f505cb1766de 100644
+>>> --- a/kernel/unwind/deferred.c
+>>> +++ b/kernel/unwind/deferred.c
+>>> @@ -26,6 +26,7 @@ static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
+>>>    /* Guards adding to and reading the list of callbacks */
+>>>    static DEFINE_MUTEX(callback_mutex);
+>>>    static LIST_HEAD(callbacks);
+>>> +static unsigned long unwind_mask;
+>>
+>> Perhaps "reserved_unwind_mask" ?
+> 
+> Sure.
+> 
+>>
+>>>    
+>>>    /*
+>>>     * The context cookie is a unique identifier that is assigned to a user
+>>> @@ -135,6 +136,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+>>>    	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
+>>>    	struct unwind_stacktrace trace;
+>>>    	struct unwind_work *work;
+>>> +	struct task_struct *task = current;
+>>>    	u64 cookie;
+>>>    
+>>>    	if (WARN_ON_ONCE(!info->pending))
+>>> @@ -156,7 +158,10 @@ static void unwind_deferred_task_work(struct callback_head *head)
+>>>    
+>>>    	guard(mutex)(&callback_mutex);
+>>>    	list_for_each_entry(work, &callbacks, list) {
+>>> -		work->func(work, &trace, cookie);
+>>> +		if (task->unwind_mask & (1UL << work->bit)) {
+>>> +			work->func(work, &trace, cookie);
+>>> +			clear_bit(work->bit, &current->unwind_mask);
+>>> +		}
+>>
+>> You could change this list of callbacks for an array of pointers,
+>> indexed by "requester_id".
+>>
+>> Then you can do a for each bit on task->unwind_mask, and all bits
+>> that match end up calling the callback for the matching array index.
+> 
+> Yeah, I thought of this, but that's just an optimization, and something I
+> probably will add as a separate patch.
+> 
+>>> @@ -244,14 +254,18 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+>>>    
+>>>    	*cookie = get_cookie(info);
+>>>    
+>>> +	/* This is already queued */
+>>> +	if (current->unwind_mask & (1UL << work->bit))
+>>> +		return 0;
 >>> +
->>> +description:
->>> +  The Raspberry Pi HEVC decoder is a hardware video decode accelerator block
->>> +  found in the BCM2711 and BCM2712 processors used on Raspberry Pi 4 and 5
->>> +  boards respectively.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    items:
->>> +      - enum:
->>> +          - brcm,bcm2711-hevc-dec
->>> +          - brcm,bcm2712-hevc-dec
->>> +      - const: raspberrypi,hevc-dec
+>>>    	/* callback already pending? */
+>>>    	pending = READ_ONCE(info->pending);
+>>>    	if (pending)
+>>> -		return 0;
+>>> +		goto out;
+>>>    
+>>>    	/* Claim the work unless an NMI just now swooped in to do so. */
+>>>    	if (!try_cmpxchg(&info->pending, &pending, 1))
 >>
->> Not what Rob asked. You should use specific SoC compatible as fallback.
+>> Not that it necessarily matters performance wise here, but can this be a
+>> try_cmpxchg_local if we're working on the task struct and only expecting
+>> interruption from NMIs ?
 > 
-> In which case I don't understand what Rob was asking for.
-> I asked for clarification in [1], but got no reply. Sending a new
-> version has at least got an answer, but I'm none the wiser.
+> Hmm, sure.
 > 
-> Staring at this trying to work out your meaning, you want the generic
-> first, and SoC specific second? ie
-> +  compatible:
-> +    items:
-> +      - const: raspberrypi,hevc-dec
-
-Drop
-
-> +      - enum:
-
-That's enum, not fallback.
-
-> +          - brcm,bcm2711-hevc-dec
-> +          - brcm,bcm2712-hevc-dec
+>>
+>>> -		return 0;
+>>> +		goto out;
+>>>    
+>>>    	/* The work has been claimed, now schedule it. */
+>>>    	ret = task_work_add(current, &info->work, TWA_RESUME);
+>>> @@ -260,16 +274,29 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+>>>    		return ret;
+>>>    	}
+>>>    
+>>> + out:
+>>> +	set_bit(work->bit, &current->unwind_mask);
+>>> +
+>>>    	return 0;
+>>>    }
+>>>    
+>>>    void unwind_deferred_cancel(struct unwind_work *work)
+>>>    {
+>>> +	struct task_struct *g, *t;
+>>> +
+>>>    	if (!work)
+>>>    		return;
+>>>    
+>>>    	guard(mutex)(&callback_mutex);
+>>>    	list_del(&work->list);
+>>> +
+>>> +	clear_bit(work->bit, &unwind_mask);
+>>> +
+>>> +	guard(rcu)();
+>>> +	/* Clear this bit from all threads */
+>>> +	for_each_process_thread(g, t) {
+>>> +		clear_bit(work->bit, &t->unwind_mask);
+>>> +	}
+>>
+>> It is enough to guard with RCU ? See syscall_regfunc() from
+>> tracepoint.c where we do:
+>>
+>>                   read_lock(&tasklist_lock);
+>>                   for_each_process_thread(p, t) {
+>>                           set_task_syscall_work(t, SYSCALL_TRACEPOINT);
+>>                   }
+>>                   read_unlock(&tasklist_lock);
+>>
+>> To prevent concurrent fork from adding threads while we
+>> iterate, thus opening the possibility of missing a clear
+>> due to a concurrent fork + set bit.
 > 
->> You referred to file "raspberrypi,pisbe.yaml" before, but there is no
->> such file in the next.
+> A set_bit only would happen if the callback was live and accepting new
+> callback requests. It's a bug for a tracer to call unwind_deferred_cancel()
+> and then call unwind_deferred_request() (which would set the bit). We could
+> possibly set the tracer's unwind descriptor id to -1, and do an
+> WARN_ON_ONCE() in unwind_deferred_request() if the tracer's id is negative.
 > 
-> Typo.
-> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/media/raspberrypi%2Cpispbe.yaml
-> Reviewed by Rob only just over a year ago [2]
+> The loop is called under the callback_mutex, where no new tracer could
+> register and be assigned that bit.
 
-There were some discussions and reasons with explanations.
+Ah, that's the piece I missed. The callback_mutex prevents reallocation
+of the ID by unwind_deferred_init while iterating on the tasks.
 
-Feel free to use same arguments and accurately describe the hardware, so
-we won't be needing to ask usual questions.
+One more comment: if we change the linked list for an array (or make the 
+linked list an RCU list), can we remove the callback_mutex from
+unwind_deferred_task_work by turning it into an RCU read-side ?
 
-Anyway, we asked for fallback, so you need items, just like every SoC
-compatible (see also example schema).
+Then we just need to wait for a grace period before returning from
+unwind_deferred_cancel, which then allows the caller to reclaim "work".
 
+Taking the callback_mutex in unwind_deferred_task_work will end up being
+the single thing that does a lot of cache line bouncing across CPUs when
+hit heavily by tracers.
+
+Thanks,
+
+Mathieu
 
 > 
->> Before you reply that there is a binding using different rules: well,
->> there is always poor code. Above two comments are repeated, especially
->> this about specific compatible - all the time, so these are not new
->> rules. These are given in reviews since some years.
+> The RCU lock is just to make sure the current tasks that existed when the
+> loop started doesn't disappear before the loop ends.
 > 
-> My Google-foo is totally failing with the only directly relevant
-> mention of "fallback compatible" I find is [3], which just says to use
-> them.
+> -- Steve
 > 
-> You're effectively saying I can't take anything in the kernel tree as
-> being a valid example as it could be poor code, and a layman such as
-> myself has no way of telling.
-
-No, I am saying that argument "I saw someone doing this, so I am allowed
-to do the same" is not correct. There are good and bad examples. For
-example in my talks I mentioned good examples. The list of good examples
-was not accepted to the kernel so well... I just use as an example any
-recent Qcom binding using specific compatibles.
-
-> Could you please point me at documentation and examples I can rely on,
-> or educate me with what is wanted in this situation to avoid me having
-> to guess?
 > 
-> A further mailing list search has brought up [4] which is a thread
-> with yourself from 2 years ago which looks to be a very similar
-> situation. Other than missing the const on the SoC strings (although
-> that isn't in the merged version of cnm,wave521c.yaml), and two SoC
-> specific strings, I'm not seeing an obvious difference between there
-> and here either.
+> 
+>>
+>> Thanks,
+>>
+>> Mathieu
+>>
+>>>    }
+>>>    
+>>>    int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+>>> @@ -277,6 +304,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+>>>    	memset(work, 0, sizeof(*work));
+>>>    
+>>>    	guard(mutex)(&callback_mutex);
+>>> +
+>>> +	/* See if there's a bit in the mask available */
+>>> +	if (unwind_mask == ~0UL)
+>>> +		return -EBUSY;
+>>> +
+>>> +	work->bit = ffz(unwind_mask);
+>>> +	unwind_mask |= 1UL << work->bit;
+>>> +
+>>>    	list_add(&work->list, &callbacks);
+>>>    	work->func = func;
+>>>    	return 0;
+>>> @@ -288,6 +323,7 @@ void unwind_task_init(struct task_struct *task)
+>>>    
+>>>    	memset(info, 0, sizeof(*info));
+>>>    	init_task_work(&info->work, unwind_deferred_task_work);
+>>> +	task->unwind_mask = 0;
+>>>    }
+>>>    
+>>>    void unwind_task_free(struct task_struct *task)
+>>
+>>
+> 
 
-How is the [4] relevant? That's IP block from other vendor.
 
-https://www.kernel.org/doc/html/latest/devicetree/bindings/writing-bindings.html#properties
-
-https://elixir.bootlin.com/linux/v6.3-rc6/source/Documentation/devicetree/bindings/sound/nvidia,tegra210-ope.yaml#L31
-
-Best regards,
-Krzysztof
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
