@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C0826561B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A4926280A;
 	Mon, 28 Apr 2025 11:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840247; cv=none; b=hs1FXvv4HE2IOvy8clY6yCOCFRQ31zVQ7L3OJxPLG6IEA3l5N66/JxGme7D9qn6aAly7zOCk4H9Olda3y+DRIaST0htvVcfJNhU9EV+RkybyKNIf9as0B+tkFOYF99FjM/FDhHDh1Po4J9L4xn0hkba35GZ5C/4e0bPX7GESsmM=
+	t=1745840247; cv=none; b=qF+brIHXeRKGaX0gaydA5C0AWnPIwl9mpb+hSDd6ju3C5BFTY9BX+19cZlzLqL4uuJphVru8kY2JbW13p1hrQ+F2RUpgBz2GXxkRNiiU0/LVbiAj3JXoXuYJH0HcYCwXS4Hd5z8Vv3OgBLx1xSKWdzUDS5WzyJaNfhm8+JY+NXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745840247; c=relaxed/simple;
-	bh=IofKI39NDhxf7HuzObpShh2CpeUa6PSNIa4EbF6DU0k=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Vq02nsHvyjs85nEiC6RFCkpQh+Nsox80Qz9qAcJFfIh8w4psMREET+MwMfasesOBIkZg/nohZQlPzCJtudVjp6bNt1b9ugpxNXVr+L3sWnyj6ESd4Z7kSHZJVYJL4dwa6MBQjzhxkbQmqexr1f6xLYTUrvsdOVfeSoclp5EbEzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jaAHkhM3; arc=none smtp.client-ip=10.30.226.201
+	bh=IxjXTM9kj8ITtc0FwtP8nv2xzfLRQnUHbIjARwy65ks=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g8KiinzZ67pW7UDwYyjUo2jgkQqhpmuRtPcfHouInPZINp1aDpllzvejJASq/isG/Y3X2yug+Z13KTBR8eKj8il2lsdCURM+lK21+nxZm/RhUZmSQhCbkN5ahWbSBYALc9kzu+IwHbAeZmS2YAXAtukb57CuIzpPweMWibLOYZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rx0XyJEV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jaAHkhM3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9657BC4CEE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rx0XyJEV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B2082C4CEED;
 	Mon, 28 Apr 2025 11:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745840246;
-	bh=IofKI39NDhxf7HuzObpShh2CpeUa6PSNIa4EbF6DU0k=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=jaAHkhM3iBA0KrRnHURhWtkPOCFgPDI3Up05rHTG4t8xHT0gX8Owngh+911TAtrGK
-	 0xc42qaM3JrY9luQxcsevc52f7r0G3j+ZpYx+p4BKWAM96uv7gWFDyBarBgHd51PhL
-	 tft0Romq20XGzU3cgs2R0zOGx20aai7d8I7k4LIolU9YhcQtZQd0AvPtTNRk6+KKFL
-	 /NsHeJhheNeDhI3T3yA32m6mXNvqw6r+dinL7BVLmz6zEoLD20VL05GOAhvamp078n
-	 37WcLBq5cfCjD1o2j9y8vL32SJEzQd4YyIr9embqtf540GGuDKnumIRc+6JNkNHa3E
-	 hWgNr51TaQsgg==
+	bh=IxjXTM9kj8ITtc0FwtP8nv2xzfLRQnUHbIjARwy65ks=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=rx0XyJEVuHKz3haMwjKAj4KQHPYnxUsBx4hgeUW3xkdnaCB+7NXVs4YoECd9O2aso
+	 bXfMPJYL5RnSV28KykFrpUJgwgI2oHM2TKM+sLD7P9TUWQPc0jBDAL8wzBIqTLgF34
+	 djJ/lttcNa0efAeu/7hR6INTDC64LUpmMWnFKfR1hXpUplQ3f1bBmufK+gKwkf+3KA
+	 y6I6nFEZHZdBuv/ymngcaYb83dnowGeYozc0xWvUjIAqXyZ3xqyW2lfrxU0B06D3eu
+	 d5LMGlkez9/VSW1MxAY2gj8e1AsW1hvYGgE1U+Jit8aStSCBorpRNBGMpPeIr8V10i
+	 dEdp2mO5qGlHQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EAAC369DC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2943C3ABA5;
 	Mon, 28 Apr 2025 11:37:26 +0000 (UTC)
 From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
-Subject: [PATCH v2 0/4] Apple Display Pipe driver fixes
-Date: Mon, 28 Apr 2025 13:37:12 +0200
-Message-Id: <20250428-drm_adp_fixes-v2-0-912e081e55d8@jannau.net>
+Date: Mon, 28 Apr 2025 13:37:14 +0200
+Subject: [PATCH v2 2/4] drm: adp: Handle drm_crtc_vblank_get() errors
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGhoD2gC/3WMQQ6CMBBFr0JmbU2nIKSuvIchpNKpjImFtNhoS
- O9uZe/y/Z/3NogUmCKcqw0CJY48+wLqUME4GX8nwbYwKKlOssFW2PAcjF0Gx2+KAs3N2YYsjY6
- gOEug/SjKtS88cVzn8NnzCX/rv1JCIUXXqVZrh7XS9eVhvDevo6cV+pzzF3M2QnGrAAAA
-X-Change-ID: 20250416-drm_adp_fixes-1abfd4edecfe
+Message-Id: <20250428-drm_adp_fixes-v2-2-912e081e55d8@jannau.net>
+References: <20250428-drm_adp_fixes-v2-0-912e081e55d8@jannau.net>
+In-Reply-To: <20250428-drm_adp_fixes-v2-0-912e081e55d8@jannau.net>
 To: Sasha Finkelstein <fnkl.kernel@gmail.com>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
@@ -53,78 +52,104 @@ To: Sasha Finkelstein <fnkl.kernel@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2674; i=j@jannau.net;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3657; i=j@jannau.net;
  s=yk2024; h=from:subject:message-id;
- bh=IofKI39NDhxf7HuzObpShh2CpeUa6PSNIa4EbF6DU0k=;
- b=owGbwMvMwCW2UNrmdq9+ahrjabUkhgz+jBIWNvGnBccrWwtka58+dPjuZF92OrRciMvxkpCNj
- 8w9Ib2OUhYGMS4GWTFFliTtlx0Mq2sUY2ofhMHMYWUCGcLAxSkAE5H/wvA//++ajKIDJu/Nn/DX
- fz50NFdl07512y+12hew3vtlk3b7CsN/t6se4TZdAmdEXibK8Up0X1y4N/aZ0HbjbYwBDcK/1q7
- nAgA=
+ bh=S2S57facW1xFgxZeuc4im1/AAPnKrPNAP85dlm5EOsE=;
+ b=owGbwMvMwCW2UNrmdq9+ahrjabUkhgz+jBKLEEnFrc5nVGY0XzVb8iFGrLP6FONys+cTfUI1j
+ t/d4MvVUcrCIMbFICumyJKk/bKDYXWNYkztgzCYOaxMIEMYuDgFYCKT4hgZtl79uHPPGwNtCdkp
+ 8X+at+85pVB08jvnYaOucxu1f3z+KMjIcH5hu4PdB9EW19NrVl80jL1mlMry7g2rd3xZUarc/cV
+ 7mQE=
 X-Developer-Key: i=j@jannau.net; a=openpgp;
  fpr=8B336A6BE4E5695E89B8532B81E806F586338419
 X-Endpoint-Received: by B4 Relay for j@jannau.net/yk2024 with auth_id=264
 X-Original-From: Janne Grunau <j@jannau.net>
 Reply-To: j@jannau.net
 
-While looking at a suspend issue in the Asahi downstream kernel I
-noticed several issues in the the ADP driver. This series fixes those
-issue.
+From: Janne Grunau <j@jannau.net>
 
-The root cause of the issue was that the device is unexpectedly powered
-down on suspend. The driver relies on initialization done by the boot
-loader and can not bring the device up from reset. The change in [1]
-annotates the power-domain used by ADP as always-on. This ensure the
-touchbar is useable when the adpdrm module is loaded after boot.
+drm_crtc_vblank_get() may fail when it's called before
+drm_crtc_vblank_on() on a resetted CRTC. This occurs in
+drm_crtc_helper_funcs' atomic_flush() calls after
+drm_atomic_helper_crtc_reset() for example directly after probe.
+Send the vblank event directly in such cases.
+Avoids following warning in the subsequent drm_crtc_vblank_put() call
+from the vblank irq handler as below:
 
-The device comes out of reset firing interrupts with a rate of 60Hz even
-if vblank interrupts are disabled. This itself is not an issue.
-The event_lock outside of the irq handler is locked with spin_lock()
-resulting in a deadlock if the irq fires while the lock is held and
-processed on the same CPU core. This happens eventually and results in a
-soft-locked CPU. [Patch 1/4] "drm: adp: Use spin_lock_irqsave for drm
-device event_lock" addresses this.
+adp 228200000.display-pipe: [drm] drm_WARN_ON(atomic_read(&vblank->refcount) == 0)
+WARNING: CPU: 5 PID: 1206 at drivers/gpu/drm/drm_vblank.c:1247 drm_vblank_put+0x158/0x170
+Modules linked in: uinput nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat videodev drm_dma_helper mc apple_soc_cpufreq drm_display_helper leds_pwm phram
+CPU: 5 UID: 0 PID: 1206 Comm: systemctl Not tainted 6.14.2-asahi+ #asahi-dev
+Hardware name: Apple MacBook Pro (13-inch, M2, 2022) (DT)
+pstate: 614000c5 (nZCv daIF +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+pc : drm_vblank_put+0x158/0x170
+lr : drm_vblank_put+0x158/0x170
+sp : ffffc00082aa7e70
+x29: ffffc00082aa7e70 x28: ffff80003419e000 x27: ffff80003419e000
+x26: 0000000000000001 x25: 0000000000012400 x24: 0000000000000066
+x23: ffff800033fc8800 x22: 0000000000000000 x21: ffff800029688e70
+x20: ffff800029688000 x19: ffff800029688000 x18: 0000000000000000
+x17: ffffc0015c868000 x16: 0000000000000020 x15: 0000000000000004
+x14: 0000000000000000 x13: 0000000000000001 x12: ffffc000825b3a90
+x11: ffffc00082960e88 x10: ffffc00081b0ec88 x9 : ffffc0008017d0ec
+x8 : 000000000002ffe8 x7 : fefefefefefefefe x6 : ffffc00081bbec88
+x5 : ffff8001de237548 x4 : 0000000000000000 x3 : ffffc0015c868000
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff80003419e000
+Call trace:
+ drm_vblank_put+0x158/0x170 (P)
+ drm_crtc_vblank_put+0x24/0x38
+ adp_fe_irq+0xd8/0xe8 [adpdrm]
+ __handle_irq_event_percpu+0x94/0x318
+ handle_irq_event+0x54/0xd0
+ handle_fasteoi_irq+0xa8/0x240
+ handle_irq_desc+0x3c/0x68
+ generic_handle_domain_irq+0x24/0x40
 
-In addition I noticed that the driver does not use drm_crtc_vblank_on()
-and instead enables HW vblank interrupts in probe(). This may have been
-done to avoid errors from drm_crtc_vblank_get() after crtc reset. 
-drm_crtc_vblank_reset() intentionally leaves struct drm_vblank_crtc in
-state where drm_crtc_vblank_get() cannot enable vblank interrupts.
-Handle this case explictly in [Patch 2/4] "drm: adp: Handle
-drm_crtc_vblank_get() errors".
+Signed-off-by: Janne Grunau <j@jannau.net>
 
-[Patch 3/4] "drm: adp: Enable vblank interrupts in crtc's
-.atomic_enable" then uses the expected drm_crtc_vblank_on() call to
-enable vblank interrupts.
-
-[Patch 4/4] "drm: adp: Remove pointless irq_lock spinlock" removes an
-unnecessary spinlock protecting the irq handler from itself.
-
-[1] https://lore.kernel.org/asahi/20250416-arm64_dts_apple_touchbar-v1-1-e1c0b53b9125@jannau.net/
-
----
+------------------------ >8 ------------------------
 Changes in v2:
-- Clarified cover letter
-- updated [Patch 2/4] "drm: adp: Handle drm_crtc_vblank_get() errors"
-  based on the comments
-- clarify `crtc->state->event` locking reqirements as change annotation
-- import R-b: tags
-- Link to v1: https://lore.kernel.org/r/20250416-drm_adp_fixes-v1-0-772699f13293@jannau.net
+- clear `crtc->state->event` only if non-NULL
+- use a temporary variable to clear `crtc->state->event` before sending
+  it
 
+Modifying `crtc->state->event` here is fine as crtc->mutex is locked by
+the non-async atomic commit. In retrospect this looks so obvious that it
+doesn't warrant a comment in the file.
 ---
-Janne Grunau (4):
-      drm: adp: Use spin_lock_irqsave for drm device event_lock
-      drm: adp: Handle drm_crtc_vblank_get() errors
-      drm: adp: Enable vblank interrupts in crtc's .atomic_enable
-      drm: adp: Remove pointless irq_lock spin lock
+ drivers/gpu/drm/adp/adp_drv.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
- drivers/gpu/drm/adp/adp_drv.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250416-drm_adp_fixes-1abfd4edecfe
+diff --git a/drivers/gpu/drm/adp/adp_drv.c b/drivers/gpu/drm/adp/adp_drv.c
+index 157298a8ff42b95275411dd4a7a0c70780fd86fd..bdf27ee742ea01759b5d571a21b527687ffcada7 100644
+--- a/drivers/gpu/drm/adp/adp_drv.c
++++ b/drivers/gpu/drm/adp/adp_drv.c
+@@ -331,13 +331,19 @@ static void adp_crtc_atomic_flush(struct drm_crtc *crtc,
+ 	}
+ 	writel(ADBE_FIFO_SYNC | frame_num, adp->be + ADBE_FIFO);
+ 	//FIXME: use adbe flush interrupt
+-	spin_lock_irqsave(&crtc->dev->event_lock, flags);
+ 	if (crtc->state->event) {
+-		drm_crtc_vblank_get(crtc);
+-		adp->event = crtc->state->event;
++		struct drm_pending_vblank_event *event = crtc->state->event;
++
++		crtc->state->event = NULL;
++		spin_lock_irqsave(&crtc->dev->event_lock, flags);
++
++		if (drm_crtc_vblank_get(crtc) != 0)
++			drm_crtc_send_vblank_event(crtc, event);
++		else
++			adp->event = event;
++
++		spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
+ 	}
+-	crtc->state->event = NULL;
+-	spin_unlock_irqrestore(&crtc->dev->event_lock, flags);
+ }
+ 
+ static const struct drm_crtc_funcs adp_crtc_funcs = {
 
-Best regards,
 -- 
-Janne Grunau <j@jannau.net>
+2.49.0
 
 
