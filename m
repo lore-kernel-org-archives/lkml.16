@@ -1,95 +1,99 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680581D5176
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E0F26B975;
+	Mon, 28 Apr 2025 13:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745847147; cv=none; b=K7y//RHXHcs5zD3cIKOaQ6nXIYCfN15Krln+xb/nOrPn7kHXrrMcN5NZOzrGg54Leh9DwQdOq8H2C3DLJNb9lOaXAULNV3RLpVkj/smvJe9eDT8U605wzbtcaeVueYCWob1jdFuxvq0dbYsK7g1U1fRSakP91grRIULTvlnESZ8=
+	t=1745847150; cv=none; b=FP1CVuG/066XhbTr45VbhDJXr8uM27Z4GeP1ImtpEbOH+2NQFMX2vFSA8hCdyGBDwPzafpMsy8BMmEN77AMV8ULy4wpXZ4MRg2OjcQJe7Aep2ilBwAizFRDFBQjwV2kjXk0oK/K31RRH0ehlOB+Ih7c6N48nIH1k1fFb0lwG+7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745847147; c=relaxed/simple;
-	bh=5MvNb/9mCMrhQgQHkqWPTGjqBmv+a8XigpUBb2+aOuY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Idg2wAUFK9eHaSEgN7DdpSVVGjx+oO7AFXvnZXuE5+XwbVzhUV9Nlk/vO4NZR5xUYPTp+Hlfr41ww0SxuVT7nTLvHIYItyCRvTw+ac4b0babOBzOI5S7iGKenxrExPktSTjvQGEh93j4aBy8BupZ/ufacXSR0adPT7BHgOJ6lMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YKE4D/n9; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745847150; c=relaxed/simple;
+	bh=8jtRb1Hh/0Vm82dhFZQWZkgaVHK4NRx2LMCvM6Taf3I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=u1k0o8r61RFiOg9TNCNnt6lz0HpjlTNkTsbdUu+RTB4qW7ORm8sSXBlm5iZNeTrretr+RIHfipJIDdjOLD7R4fbsEy1B5OM4RIIkOWmfZh4rBONWB37CpdFLh/kCAadakQRsrAiC6kqLZjKFwMD4q6PhpfaeiXZ5ZBHUg8i8m7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ei4ohMHO; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YKE4D/n9"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso5157693a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745847144; x=1746451944; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5MvNb/9mCMrhQgQHkqWPTGjqBmv+a8XigpUBb2+aOuY=;
-        b=YKE4D/n9kPzq6nn8H2VjQiFWdqeo7N2fwVuk9rm2xZU51paqrat2ECCQ+pGmxyjmVE
-         WtYJsAJBvOhvNkcXr1DPZa2OW6mp1FDdEhqZsLpydAQU7a5s+zbyPhmcNrCGu7c8a1IP
-         pzP/ImAbmg70vHDWV/lYL9UJTN/4UQdMqe1muOVqQv05onQyvXhqJYkj1PXAmC29Hm4O
-         +aDIAxy5xPzSLZCe914eWo2xiPLmmk7fWGLpqCha2Xqq7Wgb3nOTwbqiU1Pul7DX2eR8
-         nsOP0iEk2uspa8dweLapZ48GAv2tJ4BGGk3eUnnu7oOx5ci40fIYk2ry/eAKTCus9+i/
-         1IfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745847144; x=1746451944;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5MvNb/9mCMrhQgQHkqWPTGjqBmv+a8XigpUBb2+aOuY=;
-        b=sLEH6HzqL1ifgaG6QFHkbnCu+6BI3n9FP0Z5LA+evhveoRcTLauSZqwjSoUv+QnnSy
-         uZZpxNB9XT6T5ii/Oj8wvYUrkTUgpyodmVGy3fjkv6hCbsM/8IufY/FYQnMeajlf1znc
-         +NqJ1RmLjbo3CQuUEshbGlqVjW/Dv4lB9UIdq4eKj/kFcFrT5OnoFjW/visXl9nwjpM1
-         LCmphlaE/jXnyu5xIiGsePZE1IW9ygp3TwfQ4lsnR05pKrWGntyRdBDQIpKa1U/mmq0A
-         bANpXefbQnIeKK8G/FzuGS6XuDsT3wXZ9SaDUpBOrUTQqBcN35c+GQxdl4g+FBgu2D+C
-         M1rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgkksN2Rdqkq5EBg/4lCGPj9TMLZ6acL4cDmah8LTnbMvlyuzd87XSq10sf5qN5Qf35gG6ipu34NO7pNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmgE0RYp1B9QAQhjWW+Nu7nL8bBPk5YtJrI3h8hi2tHSAtU9VW
-	SuJn2/Jarm0XNningX9tLE3CJN9U/zdocAY+seeJ6Uk5RXZAJ/RQC6Af7FfcMPI=
-X-Gm-Gg: ASbGncu2K0oyA5NeTujMgwEL3UJte73VRKHy2/BR95ztMBs16tNoEtRre5rhmKncBft
-	VrpPUHVkQ73qF0Qgg/Tjnd7MElzbD1+fwil5S4Fy8QGil4cHZK1gqvc5cDB53UEmWyw2Eud8pux
-	OnIml7hCPgwXijVY3eVrMw0K5mD2B8P5cvTfsHPfpik9ZxZVVnGpQHxREo9tAHPEAUB460GD8mt
-	jkxg3uJJZUIj27G/4UYHBztRELdlEXAEYmNNFkB9WXyA+lcEkHHI5OtFwUMFAV007m8hffxmWZ7
-	ry7UE/xMdXO2p2y0/F/OoxEMQEvgAcS7XbPMP2ey9qwuWMnJwg==
-X-Google-Smtp-Source: AGHT+IHrxlEz75uA2xoO8NiazZPDyBHo8KIErfu3S0qRJ+KrGilQraL9G/JLdgOOp+3H5oDKT3nshQ==
-X-Received: by 2002:a05:6402:3506:b0:5f6:22ca:8aae with SMTP id 4fb4d7f45d1cf-5f6ef1a35b3mr13928007a12.2.1745847143543;
-        Mon, 28 Apr 2025 06:32:23 -0700 (PDT)
-Received: from [192.168.0.14] ([82.76.212.167])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7286bb2e1sm5599115a12.36.2025.04.28.06.32.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 06:32:23 -0700 (PDT)
-Message-ID: <7122fe72-ebc2-4798-8a1d-d905debab092@linaro.org>
-Date: Mon, 28 Apr 2025 14:32:21 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ei4ohMHO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745847146;
+	bh=8jtRb1Hh/0Vm82dhFZQWZkgaVHK4NRx2LMCvM6Taf3I=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ei4ohMHOIFbtKhh4oTI7xfWQRZ5ltVT7NXtGKkG3CGViMwP4578NSzCGhv+Jd2Kn2
+	 kCDu/vI+lC/MCVUPmHYR9hX5/pKJa0fxC2WfV1X3wsSFGYLDXrzLcW7XaiK3nh0IZ6
+	 jrCRCyRN2QyK/PdYNivQ6k8ROXUDh2/cUQmubTq/WDBOe4z1GVLOT+qc8OPd2EvSi3
+	 5Bfnsi/xeoEb7DiE7Qk9RdMrMw5pTy1m8n6p8TtzmW3+htVtA5P/q53KXCQwn8pnRH
+	 Ox5yCULFR0iWqxIt6jD7JIRaqVV+eOOH7NDj444FMv0kLSE8Mv4oTcAxISruy0zB4v
+	 YUL2TMf03Ab3Q==
+Received: from apertis-1.home (2a01cb0892F2d600C8F85Cf092d4aF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B1CBB17E0DD0;
+	Mon, 28 Apr 2025 15:32:25 +0200 (CEST)
+From: Julien Massot <julien.massot@collabora.com>
+Date: Mon, 28 Apr 2025 15:32:24 +0200
+Subject: [PATCH v2] ASoC: SOF: topology: Fix null pointer dereference
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
- the future
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>
-Cc: Joe Damato <jdamato@fastly.com>, linux-fsdevel@vger.kernel.org,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Sridhar Samudrala <sridhar.samudrala@intel.com>,
- Alexander Duyck <alexander.h.duyck@intel.com>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250416185826.26375-1-jdamato@fastly.com>
- <20250426-haben-redeverbot-0b58878ac722@brauner>
- <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
- <d8b619d7-6480-411d-95cb-496411b47ff8@linaro.org>
-Content-Language: en-US
-In-Reply-To: <d8b619d7-6480-411d-95cb-496411b47ff8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250428-fixup-of-sof-topology-v2-1-7966515a81b7@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAGeDD2gC/4WNTQ6DIBCFr2Jm3WmACpKuvEfjggIqiXUMWFJjv
+ HupF+jiLb6X97ND8jH4BPdqh+hzSIHmAuJSgR3NPHgMrjAIJiSrhcY+fN4LUo+paKWFJho2lEx
+ rJZU2jZZQukv0JXjuPrrCY0grxe28yfzn/lvMHDk6y+tbo5wRUreWpsk8KZqrpRd0x3F8AeaaO
+ jy+AAAA
+X-Change-ID: 20250428-fixup-of-sof-topology-50886568a785
+To: kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: Liam Girdwood <liam.r.girdwood@intel.com>, 
+ sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Julien Massot <julien.massot@collabora.com>
+X-Mailer: b4 0.14.2
 
+Prevent null pointer dereference in snd_sof_load_topology()
 
+Signed-off-by: Julien Massot <julien.massot@collabora.com>
+Fixes: 6d5997c412cc ("ASoC: SOF: topology: load multiple topologies")
+---
+Changes in v2:
+- Better commit message as suggested
+- Link to v1: https://lore.kernel.org/r/20250428-fixup-of-sof-topology-v1-1-dc14376da258@collabora.com
+---
+ sound/soc/sof/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 4/28/25 2:18 PM, Tudor Ambarus wrote:
-> isn't ep_schedule_timeout buggy too? It compares a
-> timeout value with the current time, that has to be reworked as well.
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index e19ba94f2c80a43731b90351bacfde2720db50ed..5d3ee3a86392c5a3fbfd05f83acc99b102c8cf61 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -2481,7 +2481,7 @@ int snd_sof_load_topology(struct snd_soc_component *scomp, const char *file)
+ 	if (!tplg_files)
+ 		return -ENOMEM;
+ 
+-	if (sof_pdata->machine->get_function_tplg_files) {
++	if (sof_pdata->machine && sof_pdata->machine->get_function_tplg_files) {
+ 		tplg_cnt = sof_pdata->machine->get_function_tplg_files(scomp->card,
+ 								       sof_pdata->machine,
+ 								       tplg_filename_prefix,
 
-Ah, I see the timeout is relative to ktime_get_ts64() in
-SYSCALL_DEFINE6(epoll_pwait2, ...), please ignore.
+---
+base-commit: 80626102e730787e2cdcab0e36d267bedcd1a63e
+change-id: 20250428-fixup-of-sof-topology-50886568a785
+
+Best regards,
+-- 
+Julien Massot <julien.massot@collabora.com>
+
