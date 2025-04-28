@@ -1,147 +1,149 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9232673A4
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69067267729
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840167; cv=none; b=q9Cm3dBzCTUdzWh+eCAhh6KsOm8B03twCCfS5HoQhMB9OahDx1mdzpo2hCZC3P8QH389peXAsK+ZyGAgYSd9zSwLc1NiJYHgX9OIXCPIeKvc6hkhbEoorkZdp4XQUjQDYVdcK3Y6cYQbGu57FsQRx01UGqf0mId4Y+vipJlWDG4=
+	t=1745840173; cv=none; b=fuWwKr6BwhjliXE9Ogf2ZCeiOVu5rVOnn6ZSBtL7KPD2oJB0f/hwcqwytX0zoPN+zb2UYoJYfhUOsLFFWXUbAD06JSIndLGyyf82CQdPEVVGdkQla5SlPC1YOHHlXclMuGV7bu2hpeqS+7dXi7bvfX9QvMamNRmyqPU4qLkwqYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840167; c=relaxed/simple;
-	bh=iFzGuACWvPdMTtprDZH7JP48uol6IThkiaU/81eK7TE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=gNpNJSrWAcDU3A0dmLiR+bsqIZIKo1/WmRrpDE4y+rsxWRQu95ayXeD84cn4N+Yn0ZvCGn8WneIooHpdYQZnIzQqZzX//9cuzbas9dtP1C+9gBh6IpCTrt/SQ9ZgeyPeL2hSLMr+ntvc7ijC9yTe1QqwoK/jeAtRDmy1smdzdEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lPpCZLDI; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745840173; c=relaxed/simple;
+	bh=U6P6ZeSrPYv97XE+r6V4N7rXLoprPzfswXE2mWXxNIc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SUxT+K1LVoAin5r0JYqXBK7lR2E84zgi5pwi0i/EgxCCWG6+nCbwPTGhNfiOvXfB9n8DU1QAulG1H6is3XBbWUgAMPICRwShBYGfe+dDmD9ZCzgXuKUjmi2sGKBTCsB923/mw94Bw3PT92TSW5Ib7AGLVp3vPb77xXiPXiBuQb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QIzvOetu; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lPpCZLDI"
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250428113604epoutp02c967533979f9d936e5582feff15315cc~6eGEkZ8qW3276732767epoutp02S
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:36:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250428113604epoutp02c967533979f9d936e5582feff15315cc~6eGEkZ8qW3276732767epoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745840164;
-	bh=kwb6sfk/OTplMs5Q5TACguVNBchZ6pfP8g0wZXekkjI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lPpCZLDIff1q2oKnuSmDHtO8V42DTn+TP/uzSfVE/kKhA16aixdcpat8OFXEh1Fsn
-	 72TvxUnRi54A7WjoVMAliNFPpKIDYyABzfZl/bl32hg8AUtEKink8qfsVt8MW+neJ4
-	 ontBljpLB7D4nDpCZGsyQROo0RpTmL4nOlvWtF0o=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250428113603epcas2p13937f174d10c6c05cc45520937c39e4b~6eGD75Q4j2806628066epcas2p1Q;
-	Mon, 28 Apr 2025 11:36:03 +0000 (GMT)
-Received: from epcas2p4.samsung.com (unknown [182.195.36.97]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZmLxH15qcz3hhT4; Mon, 28 Apr
-	2025 11:36:03 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250428113601epcas2p11d09d84944957018da75aa548d3ecb2c~6eGCaGrX92806628066epcas2p1I;
-	Mon, 28 Apr 2025 11:36:01 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250428113601epsmtrp1483b9611127238a5c9ac08eb6fb2dbf0~6eGCYm6R13238632386epsmtrp1G;
-	Mon, 28 Apr 2025 11:36:01 +0000 (GMT)
-X-AuditID: b6c32a52-f0cb424000004c16-e5-680f6821b457
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	69.BF.19478.1286F086; Mon, 28 Apr 2025 20:36:01 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.60]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250428113601epsmtip1f20bfdd6b40288a13924357ae4dc7945~6eGCLAJIa2519925199epsmtip14;
-	Mon, 28 Apr 2025 11:36:01 +0000 (GMT)
-From: Shin Son <shin.son@samsung.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
-	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
-Cc: Shin Son <shin.son@samsung.com>, linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: dts: exynosautov920: add cpucl1/2 clock DT
- nodes
-Date: Mon, 28 Apr 2025 20:35:17 +0900
-Message-ID: <20250428113517.426987-5-shin.son@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250428113517.426987-1-shin.son@samsung.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QIzvOetu"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac25520a289so727414866b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745840168; x=1746444968; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NBA5CuIc8YCbS4yzG+KOg86MsWIMfhXd5TGhL3Zsn8A=;
+        b=QIzvOetu2zQNGBnY6qQ10Hd0E2cuXjR3yEknUr4z1FLnwaXDRKbM19Z5ZcAU8wm9M6
+         lS9tLZJ19BvARJta5dYONz47toSyzpXr8C/EkCaZDalPz3aKqz13iePB1O/OVOX9USre
+         o+EXG+Rq28vJy7hISuwU6UnYMG3tYs+RoYuFlIZUYBKmR0ZwXX38VRtzqSCN3v2jwMrn
+         esWXADdmjmuGKxM3exWpDG8l1iQS/N3Ansdjjv6GL66QuBrBHsd+rLq71vRENBBFDIsP
+         kxothbp/p6gsTA0v7Lro3gFRIEyyaR0bGhcCPIVqEuPGXiAt+c4EzKBv+KlwQzEHR8qb
+         QTtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745840168; x=1746444968;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NBA5CuIc8YCbS4yzG+KOg86MsWIMfhXd5TGhL3Zsn8A=;
+        b=m5jovAIYrs3mmvvrayvOBf+4LA2NmDhIySwrbJssYGQmU41u4g97gDju1/GFAtykfn
+         KE4OB3b0JdLd9/hav3v0a2Sb5hm9hVii8/hweXVGGZxYKaPks932doB//YBFtkU0cpQ4
+         UTlXoj8lgpjztbOLJSpuzguHZy1yONPR/6DS+i6R0fiid7PYLzxUjStKlS1svs/pVUbQ
+         O0xpIUial++1tq3ardziTEx4tofsrB8ggeMc4IOBU4eIcgDcVN3GwqeYTJVJBrCzP+LE
+         GEWpuAlYx+qNJ6b5quKbekYafpGrxaCOVa6GlVlSFrR2RXGhnMnto2wtDfCeLQ5pGHIS
+         kGkg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5mgKEE4P1ChspRuATsyYFHtld7tiKtrInBcFeryLYbCcfOkn2h5D8LxRmK5kc/WHXeOFksrWExXy9dQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJlXbUzuv8tequVyhzbPUYiXEqNPsJG9cokZlvfgYWpfTyLqrv
+	MnzNKxOXd0lo504qyycpZAgxXkaGTTsebLlI54Nghgcj6jxZPBf3EV4Vvk+f5OE=
+X-Gm-Gg: ASbGncsInyVj+sCsSWf6x03Cbuh+PqHq8blfE0ZgbD1gbPRcQ96p26W838vENnH6tj/
+	8/WPxn5man5P4Q7YBobzsAQVmUwhbwSsoBHvoQSoQpU4vvPwPMM4cDmpf5iIIF29n+s1CxPruYC
+	yZNVBIeDm0lvz2YCEkYsebZJxHBX+8YVio4QDV/yTPS49kxx48mOqe0BPAXfjRQ5m1NVeBkV96x
+	A0M99JQDZDEZWBF1PZ0rI2oHMToPgmkhAARw/Ui0tXcNPM+qH9rjtx3D1oHiC5uBDT7fy0WTBru
+	XxPKr6SyQRgP1/pxjomPTXxmE3hJkwHwaePMFqXFLdrBBaolFLG1iOlONNUxvK7/mmNaxJwunpv
+	VEAfhbmWlyUnAoBhR0ISdRmqM
+X-Google-Smtp-Source: AGHT+IEg+c7X+Ta+5FJs9im5JHBiLsTS2tROmBMx41A+5pPg9TXu3iCXPaGd3tUwOuhF2Ei4yP46AQ==
+X-Received: by 2002:a17:906:9fc6:b0:acb:5583:6fe0 with SMTP id a640c23a62f3a-ace71095745mr954872166b.15.1745840168498;
+        Mon, 28 Apr 2025 04:36:08 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb1580sm619937766b.175.2025.04.28.04.36.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 04:36:08 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Mon, 28 Apr 2025 12:36:05 +0100
+Subject: [PATCH v7 2/6] dt-bindings: nvmem: add max77759 binding
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsWy7bCSnK5iBn+GwYRLOhYP5m1js1iz9xyT
-	xfUvz1kt5h85x2px/vwGdotNj6+xWnzsucdqcXnXHDaLGef3MVlcPOVq8X/PDnaLw2/aWS3+
-	XdvIYjH5+FpWi6Zl65kc+D3e32hl99i0qpPNY/OSeo++LasYPT5vkgtgjeKySUnNySxLLdK3
-	S+DKeHFKqOAtV8XOxslsDYwnOLoYOTkkBEwkJu6exdrFyMUhJLCdUeLH5p9sEAkJicMzJjBC
-	2MIS91uOQBW9Z5RYMv0ZSxcjBwebgKrEpt/yIHERgbdMEsv/H2ACaWAWOM0osfOMDIgtLOAv
-	8fn5RlYQmwWo/tbOG8wgNq+AlcTr18fYQOZICMhL9HdIgIQ5BawlPl1cB1YiBFQy4fEZNohy
-	QYmTM5+wQIyXl2jeOpt5AqPALCSpWUhSCxiZVjGKphYU56bnJhcY6hUn5haX5qXrJefnbmIE
-	x4VW0A7GZev/6h1iZOJgPMQowcGsJMJbZcCfIcSbklhZlVqUH19UmpNafIhRmoNFSZxXOacz
-	RUggPbEkNTs1tSC1CCbLxMEp1cBkeOLauWO6Z2yq+ma0sYRtsOo1/HnWS8zWcoHAOfUZ+RxX
-	Quos2wQ37V359oyt4OSzi0T5wjc90Ft40YinNWpS0L2i8mj2FkHNP3an7sXmb3i7yvJJxdz1
-	S2Z4RaafuLMhu7t/huq+nWkrOGZ9eHZIs0ytL4+bJV19b/WRWu64bCn+Utn+d/a3b9XsquQ4
-	vfDo7IC5Iezt25yS5nf4vGYOl9g2a89+g6eaz5zrlZeedM6buLjGtkeTIUXH7tteKc6Pya8j
-	gucf63929sYThlldxezz3spJlguJdstwT5l48qeb14aVFzieL/Q8vZtnhcu0sypBhyTYg9sl
-	dabJxB9em3dyuqfQO59ZN79v3btPiaU4I9FQi7moOBEA1wK8afoCAAA=
-X-CMS-MailID: 20250428113601epcas2p11d09d84944957018da75aa548d3ecb2c
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250428113601epcas2p11d09d84944957018da75aa548d3ecb2c
-References: <20250428113517.426987-1-shin.son@samsung.com>
-	<CGME20250428113601epcas2p11d09d84944957018da75aa548d3ecb2c@epcas2p1.samsung.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250428-max77759-mfd-v7-2-edfe40c16fe8@linaro.org>
+References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
+In-Reply-To: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Srinivas Kandagatla <srini@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-Add cmu_cpucl1/2(CPU Cluster 1 and CPU Cluster 2) clocks
-for switch, cluster domains respectively.
+The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+Port Controller (TCPC), NVMEM, and a GPIO expander.
 
-Signed-off-by: Shin Son <shin.son@samsung.com>
+This describes its storage module (NVMEM).
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- .../arm64/boot/dts/exynos/exynosautov920.dtsi | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+v2:
+* drop example as the MFD binding has a complete one (Rob)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-index 9350c53f935e..2cb8041c8a9f 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-@@ -1090,6 +1090,32 @@ cmu_cpucl0: clock-controller@1ec00000 {
- 				      "cluster",
- 				      "dbg";
- 		};
+Note: MAINTAINERS doesn't need updating, the binding update for the
+first leaf device (gpio) adds a wildcard matching all max77759 bindings
+---
+ .../bindings/nvmem/maxim,max77759-nvmem.yaml       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..1e3bd4433007341a11040f513bf444866b9e38a8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/nvmem/maxim,max77759-nvmem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		cmu_cpucl1: clock-controller@1ed00000 {
-+			compatible = "samsung,exynosautov920-cmu-cpucl1";
-+			reg = <0x1ed00000 0x8000>;
-+			#clock-cells = <1>;
++title: Maxim Integrated MAX77759 Non Volatile Memory
 +
-+			clocks = <&xtcxo>,
-+				 <&cmu_top DOUT_CLKCMU_CPUCL1_SWITCH>,
-+				 <&cmu_top DOUT_CLKCMU_CPUCL1_CLUSTER>;
-+			clock-names = "oscclk",
-+				      "switch",
-+				      "cluster";
-+		};
++maintainers:
++  - André Draszik <andre.draszik@linaro.org>
 +
-+		cmu_cpucl2: clock-controller@1ee00000 {
-+			compatible = "samsung,exynosautov920-cmu-cpucl2";
-+			reg = <0x1ee00000 0x8000>;
-+			#clock-cells = <1>;
++description: |
++  This module is part of the MAX77759 PMIC. For additional information, see
++  Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
 +
-+			clocks = <&xtcxo>,
-+				 <&cmu_top DOUT_CLKCMU_CPUCL2_SWITCH>,
-+				 <&cmu_top DOUT_CLKCMU_CPUCL2_CLUSTER>;
-+			clock-names = "oscclk",
-+				      "switch",
-+				      "cluster";
-+		};
- 	};
- 
- 	timer {
++  The MAX77759 is a PMIC integrating, amongst others, Non Volatile Memory
++  (NVMEM) with 30 bytes of storage which can be used by software to store
++  information or communicate with a boot loader.
++
++properties:
++  compatible:
++    const: maxim,max77759-nvmem
++
++  wp-gpios: false
++
++required:
++  - compatible
++
++allOf:
++  - $ref: nvmem.yaml#
++
++unevaluatedProperties: false
+
 -- 
-2.49.0
+2.49.0.850.g28803427d3-goog
 
