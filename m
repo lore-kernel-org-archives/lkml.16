@@ -1,44 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21691262FD9;
-	Mon, 28 Apr 2025 12:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C7D269806;
+	Mon, 28 Apr 2025 12:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844012; cv=none; b=RuLOxvpq4uTAwdN7c99iKcD1cjT38AZeTmgEVekPmIhzDiQYIxCBQJzFaZzWVtfFTPB24pUbV5eOeT8dNPkoUtAoqTcNHy4wOJKtuzUB8sYpUSbYNbalzFEn3pg0FPZCkvrbBSV726elCOH0ktLraTAJHFIqJEbCQQ862RIFROs=
+	t=1745844012; cv=none; b=bP4ZvSqQLFRM4kb9WnXI/8mIKylMxcIEC9dN1tzt05wKKgPTrQ5uDS5FA9VvM92HL/DQn+UPBL3QG5jD2zX8UM2q9+5IPuP3WycjrScgkwg50ihqF9B8IhmaW8g7JSxTZCe3dfvtSpcCWyE76i2kd1BeNqgsZdeW1zwvBwQAtyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745844012; c=relaxed/simple;
-	bh=6+1wE/rDVGwb0zByatbK820UomdrOqcUZVOhk1n2Upg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BZTnKjagjBn112AJoX9bY6Bp6yxNO5gzMDK+qHbJxPsr908jwV5K04S+A8UY091wf14b16M4ZzQlHgFgpE0zSbqneoEhWft7p2YvvdMVg69914aBYOuaS27XxcBnU3WtGzs0LqhfvQ/5eSf0KRfKYfBH+7XxFeo/QUtQnJI98MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GHG2QpPl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cPmn7BHM; arc=none smtp.client-ip=193.142.43.55
+	bh=Vq4SFsSgvfFXkCLM/1TQB88Lq9bzobGeGU1hpdpPaFA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UoYWSsz8XbFGfEFpdZzGjY6kZq9jgV7tRPdDW+rmYN4HCE0mFy4ndBH6TJT1eU1zQyK1qDFqZwL0Y1O5yTTy/omu3TYcZuwUthETXftNGpCCqnSOXqzpHMYWQmhWB7KtiUBI/G4KMSrps8EUStOpPBUZNYFXLb0kH8ZyG/17rRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4WMwG53Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6LzyQtiB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GHG2QpPl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cPmn7BHM"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4WMwG53Q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6LzyQtiB"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745844008;
+	s=2020; t=1745844009;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=A89t9NwmZgyjxocPG+k4LYkN3pxNO1DzYtqfbEeToIo=;
-	b=GHG2QpPlEyQrIYfHRTF1WeAa4x1pVhZr7ThF7+pf+4nJKdoatsSbDOAjNVA9iLPICYIQ+S
-	YY/jTJ79gfiJzL44ZkGcKYx22wYfT3QmjeefPGOdnLm3ASNduTyhl8RlhY1uipIaGTtpzI
-	xf3UPYd2SK59gzq5OgU5dCp+c4g343j77ggdXsGLWvEwX2To1xMLUpr2OrCwYfEGTwHE7N
-	aHBSgHqqy89cCawad3ubEAFoLNv4SNNQnMfRJuKhm3A3PKR7jB1OzdT7KicZGIP3IZDnRR
-	58HR+NGUJ4JIe9kypPe8/KMHFJyq7DIcjkIzM8vZA84QUpurKbXQK/ZMpmJlkg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PEFTUn4BS38AAuPwQQHUG5575AdUi7Dnv0iae5/KCck=;
+	b=4WMwG53QcdWARNCImm+LjGRvsameEd0JAI8BGQWeamxRJ+4Sx9nzBu1c8Mhyg3RLnH6d1M
+	VcuHl64i77IeWWZsFJg0MhmImcgOOY9rNyyW83Q0c9Sk2FY5R9MIkOEFURq5LNO+o5ym9s
+	QPAWaFVMkCV38iPoDjjv90e92Rtu1mW8Wmn2onILIn6CQuF54GTG4env3+Ne5KwDncJc5N
+	bTIe3v6gG9y3P90UzEyEB/FMzWOd1wOnXrapyQ6bOQh1AfmTUvaFp0KfmizRwy+EqH3Gee
+	jidtnK3/Q0Bl7CiXQ+Bofv6lQrijnbLrXr52SICONn4cO61tUSVgna3qdNLlPg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745844008;
+	s=2020e; t=1745844009;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=A89t9NwmZgyjxocPG+k4LYkN3pxNO1DzYtqfbEeToIo=;
-	b=cPmn7BHMCPaIESNxGWsT2OuHnSggh0o+3cK326EJ7792ZMwD73QS+C4M71KEBUO33O6nzu
-	6mxYERp6B6byQgDQ==
-Subject: [PATCH v2 00/15] tools/nolibc: various new functions
-Date: Mon, 28 Apr 2025 14:40:01 +0200
-Message-Id: <20250428-nolibc-misc-v2-0-3c043eeab06c@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PEFTUn4BS38AAuPwQQHUG5575AdUi7Dnv0iae5/KCck=;
+	b=6LzyQtiBwO2xchRtfZOJHLZjutdwbX8amfd4RIBCnRMqAjahWYnu/3rdeCP+KmoI5FpVmM
+	v6SYsC6rU2kT10Dg==
+Date: Mon, 28 Apr 2025 14:40:03 +0200
+Subject: [PATCH v2 02/15] tools/nolibc: add %m printf format
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,83 +49,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIACF3D2gC/1XMQQ6CMBCF4auQWVvTjjSKK+9hWNBhkEmwJS0SD
- OHuVuLG5f+S962QOAonuBYrRJ4lSfA58FAA9Y1/sJI2N6BGq0tjlQ+DOFJPSaQ6tOWFiCyxgfw
- YI3ey7Nq9zt1LmkJ87/hsvuvPwdOfMxulVVOhdV2psTq72yD+NcXgZTm2DPW2bR8FErMSqgAAA
- A==
-X-Change-ID: 20250415-nolibc-misc-f2548ccc5ce1
+Message-Id: <20250428-nolibc-misc-v2-2-3c043eeab06c@linutronix.de>
+References: <20250428-nolibc-misc-v2-0-3c043eeab06c@linutronix.de>
+In-Reply-To: <20250428-nolibc-misc-v2-0-3c043eeab06c@linutronix.de>
 To: Willy Tarreau <w@1wt.eu>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
  Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745844007; l=2714;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745844007; l=2425;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=6+1wE/rDVGwb0zByatbK820UomdrOqcUZVOhk1n2Upg=;
- b=PGkhWbZQZ/6k2LXhU8DRuWwRhLnl5enHVaEfRd1dWG646AmlZUloetKjYzhw1H8YiiF13ye+T
- AKLchE1zy6CCN3rqIHPl2/pYkNrA7pBSXgkBioMHUk/UkSNnRuHORJP
+ bh=Vq4SFsSgvfFXkCLM/1TQB88Lq9bzobGeGU1hpdpPaFA=;
+ b=PuC5di+9lSy4fE6RdSoe/5UBiHNOw/jzW0kLP8zmbSHFnUOW/ZkWzpLlsjj6th+T8RQXq9V9d
+ 5ExH1qhSP14AlJLpbtSYU7Fn1jeT8Uba/sxya5w1/n98S4iXabLnmT4
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-A few functions used by different selftests.
-Adding them now avoids later conflicts between different selftest serieses.
-
-Also add full support for nolibc-test.c on riscv32.
-All unsupported syscalls have been replaced.
+The %m format can be used to format the current errno.
+It is non-standard but supported by other commonly used libcs like glibc and
+musl, so applications do rely on them.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Acked-by: Willy Tarreau <w@1wt.eu>
 ---
-Changes in v2:
-- Rebase onto latest nolibc next branch
-- Move #include "nolibc.h" to the top of the headers
-- Include linux/random.h from sys/random.h
-- Don't block on missing entropy in getrandom() selftest
-- Also test negative result of difftime()
-- Simplify fopen()
-- Link to v1: https://lore.kernel.org/r/20250423-nolibc-misc-v1-0-a925bf40297b@linutronix.de
+ tools/include/nolibc/stdio.h                 |  7 +++++++
+ tools/testing/selftests/nolibc/nolibc-test.c | 18 ++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
----
-Thomas Weißschuh (15):
-      tools/nolibc: add strstr()
-      tools/nolibc: add %m printf format
-      tools/nolibc: add more stat() variants
-      tools/nolibc: add mremap()
-      tools/nolibc: add getrandom()
-      tools/nolibc: add abs() and friends
-      tools/nolibc: add support for access() and faccessat()
-      tools/nolibc: add clock_getres(), clock_gettime() and clock_settime()
-      tools/nolibc: add timer functions
-      tools/nolibc: add timerfd functionality
-      tools/nolibc: add difftime()
-      tools/nolibc: add namespace functionality
-      tools/nolibc: add fopen()
-      tools/nolibc: fall back to sys_clock_gettime() in gettimeofday()
-      tools/nolibc: implement wait() in terms of waitpid()
+diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
+index 8fa98abab2127c2cd175201d2f50d71b78d03559..df5717d591826c8468e3473581ac0d6e76629aa3 100644
+--- a/tools/include/nolibc/stdio.h
++++ b/tools/include/nolibc/stdio.h
+@@ -20,6 +20,8 @@
+ #include "string.h"
+ #include "compiler.h"
+ 
++static const char *strerror(int errnum);
++
+ #ifndef EOF
+ #define EOF (-1)
+ #endif
+@@ -292,6 +294,11 @@ int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, size_t n, const char
+ 				if (!outstr)
+ 					outstr="(null)";
+ 			}
++#ifndef NOLIBC_IGNORE_ERRNO
++			else if (c == 'm') {
++				outstr = strerror(errno);
++			}
++#endif /* NOLIBC_IGNORE_ERRNO */
+ 			else if (c == '%') {
+ 				/* queue it verbatim */
+ 				continue;
+diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+index 3e15a25ccddf5135db1f59bce1eefdff2ffe57f6..b7440a667db6b541a2548bdf5182bee0277100ed 100644
+--- a/tools/testing/selftests/nolibc/nolibc-test.c
++++ b/tools/testing/selftests/nolibc/nolibc-test.c
+@@ -1393,6 +1393,23 @@ static int test_scanf(void)
+ 	return 0;
+ }
+ 
++int test_strerror(void)
++{
++	char buf[100];
++	ssize_t ret;
++
++	memset(buf, 'A', sizeof(buf));
++
++	errno = EINVAL;
++	ret = snprintf(buf, sizeof(buf), "%m");
++	if (is_nolibc) {
++		if (ret < 6 || memcmp(buf, "errno=", 6))
++			return 1;
++	}
++
++	return 0;
++}
++
+ static int run_printf(int min, int max)
+ {
+ 	int test;
+@@ -1421,6 +1438,7 @@ static int run_printf(int min, int max)
+ 		CASE_TEST(number_width); EXPECT_VFPRINTF(10, "         1", "%10d", 1); break;
+ 		CASE_TEST(width_trunc);  EXPECT_VFPRINTF(25, "                    ", "%25d", 1); break;
+ 		CASE_TEST(scanf);        EXPECT_ZR(1, test_scanf()); break;
++		CASE_TEST(strerror);     EXPECT_ZR(1, test_strerror()); break;
+ 		case __LINE__:
+ 			return ret; /* must be last */
+ 		/* note: do not set any defaults so as to permit holes above */
 
- tools/include/nolibc/Makefile                |   4 +
- tools/include/nolibc/math.h                  |  31 ++++
- tools/include/nolibc/nolibc.h                |   4 +
- tools/include/nolibc/sched.h                 |  50 +++++
- tools/include/nolibc/stdio.h                 |  27 +++
- tools/include/nolibc/stdlib.h                |  18 ++
- tools/include/nolibc/string.h                |  20 ++
- tools/include/nolibc/sys/mman.h              |  19 ++
- tools/include/nolibc/sys/random.h            |  34 ++++
- tools/include/nolibc/sys/stat.h              |  25 ++-
- tools/include/nolibc/sys/time.h              |  15 +-
- tools/include/nolibc/sys/timerfd.h           |  87 +++++++++
- tools/include/nolibc/sys/wait.h              |  12 +-
- tools/include/nolibc/time.h                  | 185 ++++++++++++++++++
- tools/include/nolibc/types.h                 |   3 +
- tools/include/nolibc/unistd.h                |  28 +++
- tools/testing/selftests/nolibc/Makefile      |   2 +
- tools/testing/selftests/nolibc/nolibc-test.c | 268 ++++++++++++++++++++++++++-
- 18 files changed, 820 insertions(+), 12 deletions(-)
----
-base-commit: 2051d3b830c0889ae55e37e9e8ff0d43a4acd482
-change-id: 20250415-nolibc-misc-f2548ccc5ce1
-
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.49.0
 
