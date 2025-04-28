@@ -1,257 +1,289 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAFB1FECB4;
-	Mon, 28 Apr 2025 09:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797C71FECB4;
+	Mon, 28 Apr 2025 09:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745832163; cv=none; b=fYd6dwA6D9RpNsJCUOnfs4BbrptbxDxv61LBW7jQAQbXrFq7wiStSom9xtal1AmdVl+YogQ8h+IiBljg/CovvdEmM1wlKDBeC/1kW5WwzYobKhH2wDSgtgnQECCj0jB6vSsorEg+nN5F7Mt3Uqq1G/SFnsWL6DGyyAk/TqSjX+A=
+	t=1745832167; cv=none; b=WFk/DuUhv7GAJSFzlRpvDz4IhfFH392ZK1QHdqRGNA53JF8e5Jg0kjRVRyZnx6r/Cd3Dk1LC0CSiVU/ecwY34nnna+al0VVj9v21E4pRFH2E8gY80ukIm6zNtZ6vUjG5PAdmhMZqS8UGk6qVS3MmEUhq3hfMH0Th7cU40kR7k3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745832163; c=relaxed/simple;
-	bh=NY/33MR9wfSNfzTcGXyyEDpLjwV3dc9w3keIJgd0PrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZ5r2sGDpQrzWWmCQYPrTz6xRluN+t9Ro3PMHlcu31HqQkOMPsZ8tAuGLNGjiE7NFOWuaGFj8UHY1GcloI1aRlnduPNtuNFD4M+zUCymKoj4IRBUy9ehb++jfdAb0714sU3wpxiznFhOVYjbgk0FQAnQ1RDW+2vnOjO+PmZfS1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KuZykKAp; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745832167; c=relaxed/simple;
+	bh=+JZhbba6Y94p5DrBaAJ0+6gqrs2ChpJomt6vlounvho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TXm1ub3OYgQXy6WsrT23q5KR0YQAmtxMF5zqSd4u6So0rPUgq0TNhI3VznkWaDBMT5WVv1bsRIBMhRlKgrHQvL39afzlF9r/tgo4kdg3fZwfYsLTsi3y6D1eJFfZek2+o8kvwpizgBBCeRuf3+cT7kEzXBbvXYnjIxYGjImZf6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3HAKl3o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KuZykKAp"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 22ADC475;
-	Mon, 28 Apr 2025 11:22:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745832153;
-	bh=NY/33MR9wfSNfzTcGXyyEDpLjwV3dc9w3keIJgd0PrI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KuZykKApfPKPCcLx822+/Vfr0vTuqQO0py4EQJ3h3F6veI9WAG61Z5QHrIYYDZHXn
-	 MPCOIyQ7524Hsv8DRnD2dWjg8+Hp42PmxKWQ7cT0E2fqGOPJXfCp5YHUy2huerdEZX
-	 6xt048WplYGxYMMcLth80hfar/aSE88EG6NjSdL4=
-Date: Mon, 28 Apr 2025 12:22:32 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Michael Riesch <michael.riesch@collabora.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mehdi Djait <mehdi.djait@linux.intel.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>,
-	Gerald Loacker <gerald.loacker@wolfvision.net>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	Alexander Shiyan <eagle.alexander923@gmail.com>,
-	Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v5 03/11] media: dt-bindings: media: add bindings for
- rockchip rk3568 vicap
-Message-ID: <20250428092232.GC3371@pendragon.ideasonboard.com>
-References: <20250306-v6-8-topic-rk3568-vicap-v5-0-f02152534f3c@wolfvision.net>
- <20250306-v6-8-topic-rk3568-vicap-v5-3-f02152534f3c@wolfvision.net>
- <20250307-pink-dalmatian-of-kindness-f87ad2@krzk-bin>
- <Z8rBGHK9Tjx7D1D2@kekkonen.localdomain>
- <4a1e5834-df52-43d2-ab19-e3117840a001@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3HAKl3o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB19FC4CEE9;
+	Mon, 28 Apr 2025 09:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745832166;
+	bh=+JZhbba6Y94p5DrBaAJ0+6gqrs2ChpJomt6vlounvho=;
+	h=From:To:Cc:Subject:Date:From;
+	b=L3HAKl3oxYp9ViZOT2gWLHXwJ+u36OWmAs8LS5VBGRfJxKvy5NC5yJr7YsNwlgGGS
+	 MLBspboMpGjITWJIcTBNcp6LcPaEkm5XiPNilr+4gLacsrsWQ1MRW+eI5f1AsgWmNp
+	 nvCqmAxpxtB25cHGYQbvnI/NFQQ8aMyCrpTUyW/L59P1JPrYmpwbN5iikoKaLHNQlC
+	 6/c0N/dYulh+hxBW16Pz7WcPPnU9PVcgtWPElEoO8f4L965rNh3s7GOuUZ1Xv+Gzcb
+	 nkYnWFrknpIV+0wlW3vXgylx9WDQ+mt12psyVlQ/1YP5AUSRb2Nxa+sHaFuzM8wiIm
+	 xdZgUvlls6wUQ==
+From: Leon Romanovsky <leon@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>
+Cc: Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: [PATCH v10 00/24] Provide a new two step DMA mapping API
+Date: Mon, 28 Apr 2025 12:22:06 +0300
+Message-ID: <cover.1745831017.git.leon@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4a1e5834-df52-43d2-ab19-e3117840a001@collabora.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 10:11:51AM +0200, Michael Riesch wrote:
-> Hi Krzysztof, Sakari,
-> 
-> Thanks for your feedback! Also, sorry for the delayed response, but as
-> the e-mail address indicates, there has been a job change in between
-> that kept me busy :-)
-> 
-> On 3/7/25 10:49, Sakari Ailus wrote:
-> > Hi Krzysztof, Michael,
-> > 
-> > On Fri, Mar 07, 2025 at 08:51:54AM +0100, Krzysztof Kozlowski wrote:
-> >> On Thu, Mar 06, 2025 at 05:56:04PM +0100, Michael Riesch wrote:
-> >>> Add documentation for the Rockchip RK3568 Video Capture (VICAP) unit.
-> >>>
-> >>> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> >>
-> >> subject: only one media prefix, the first
-> >>
-> >> A nit, subject: drop second/last, redundant "bindings". The
-> >> "dt-bindings" prefix is already stating that these are bindings.
-> >> See also:
-> >> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-> 
-> Ack. Plain "media: dt-bindings: add rockchip rk3568 vicap" it is, then.
-> 
-> >>
-> >>> ---
-> >>>  .../bindings/media/rockchip,rk3568-vicap.yaml      | 169 +++++++++++++++++++++
-> >>>  MAINTAINERS                                        |   1 +
-> >>>  2 files changed, 170 insertions(+)
-> >>>
-> >>
-> >> ...
-> >>
-> >>> +  clocks:
-> >>> +    items:
-> >>> +      - description: ACLK
-> >>> +      - description: HCLK
-> >>> +      - description: DCLK
-> >>> +      - description: ICLK
-> >>> +
-> >>> +  clock-names:
-> >>> +    items:
-> >>> +      - const: aclk
-> >>> +      - const: hclk
-> >>> +      - const: dclk
-> >>> +      - const: iclk
-> >>> +
-> >>> +  rockchip,cif-clk-delaynum:
-> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>> +    minimum: 0
-> >>> +    maximum: 127
-> >>> +    description:
-> >>> +      Delay the DVP path clock input to align the sampling phase, only valid
-> >>> +      in dual edge sampling mode. Delay is zero by default and can be adjusted
-> >>> +      optionally.
-> >>
-> >> default: 0
-> 
-> Ack.
-> 
-> > 
-> > And this is technically specific to the DVP port (0). Should (or could?) it
-> > be located there?
-> 
-> "Should"? Yes, makes sense to me.
-> "Could"? I guess, as we are referencing port-base here it should be
-> feasible. Not an expert opinion, mind you.
-> 
-> > 
-> >>
-> >>> +
-> >>> +  iommus:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  resets:
-> >>> +    items:
-> >>> +      - description: ARST
-> >>> +      - description: HRST
-> >>> +      - description: DRST
-> >>> +      - description: PRST
-> >>> +      - description: IRST
-> >>> +
-> >>> +  reset-names:
-> >>> +    items:
-> >>> +      - const: arst
-> >>> +      - const: hrst
-> >>> +      - const: drst
-> >>> +      - const: prst
-> >>> +      - const: irst
-> >>> +
-> >>> +  rockchip,grf:
-> >>> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >>> +    description: Phandle to general register file used for video input block control.
-> >>> +
-> >>> +  power-domains:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  ports:
-> >>> +    $ref: /schemas/graph.yaml#/properties/ports
-> >>> +
-> >>> +    properties:
-> >>> +      port@0:
-> >>> +        $ref: /schemas/graph.yaml#/$defs/port-base
-> >>> +        unevaluatedProperties: false
-> >>> +        description: The digital video port (DVP, a parallel video interface).
-> >>> +
-> >>> +        properties:
-> >>> +          endpoint:
-> >>> +            $ref: video-interfaces.yaml#
-> >>> +            unevaluatedProperties: false
-> >>> +
-> >>> +            properties:
-> >>> +              bus-type:
-> >>> +                enum: [5, 6]
-> >>> +
-> >>> +            required:
-> >>> +              - bus-type
-> >>> +
-> >>> +      port@1:
-> >>> +        $ref: /schemas/graph.yaml#/properties/port
-> >>> +        description: Internal port connected to a MIPI CSI-2 host.
-> >>> +
-> >>> +        properties:
-> >>> +          endpoint:
-> >>> +            $ref: video-interfaces.yaml#
-> >>> +            unevaluatedProperties: false
-> >>
-> >> Hm, does it actually work? graph/port does not allow any other
-> >> properties. You should use graph/port-base and probably still narrow
-> >> lanes for both of port@0 and port@1.
-> > 
-> > I'd list the relevant properties for both DVP and CSI-2, either as
-> > mandatory or with defaults (could be reasonable for DVP signal polarities
-> > but not e.g. on number of CSI-2 lanes).
-> 
-> Not sure whether we are on the same page here. As pointed out in the
-> last round of feedback
-> (https://lore.kernel.org/all/0b19c544-f773-435e-9829-aaaa1c6daf7a@wolfvision.net/),
-> port@1 is not MIPI CSI, but some internal interface.
-> 
-> I tried to clarify this by changing the description of this port to
-> "Internal port connected to a MIPI CSI-2 host." The host (see
-> rockchip,rk3568-mipi-csi.yaml) has a port that is actually MIPI CSI and
-> one port that is the other end of port@1 here.
+Following recent on site LSF/MM 2025 [1] discussion, the overall
+response was extremely positive with many people expressed their
+desire to see this series merged, so they can base their work on it.
 
-I'd write "Port connected to the MIPI CSI-2 receiver output". We use
-"receiver" instead of "host".
+It includes, but not limited:
+ * Luis's "nvme-pci: breaking the 512 KiB max IO boundary":
+   https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
+ * Chuck's NFS conversion to use one structure (bio_vec) for all types
+   of RPC transports:
+   https://lore.kernel.org/all/913df4b4-fc4a-409d-9007-088a3e2c8291@oracle.com
+ * Matthew's vision for the world without struct page:
+   https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
+ * Confidential computing roadmap from Dan:
+   https://lore.kernel.org/all/6801a8e3968da_71fe29411@dwillia2-xfh.jf.intel.com.notmuch
 
-> As to port@1 here, I am not aware of any properties that can be set. Not
-> even very peculiar ones similar to rockchip,cif-clk-delaynum. Should I
-> have overlooked something, I think we can relax the constraints, but we
-> should start strict, right?
-> 
-> >>> +
-> >>> +required:
-> >>> +  - compatible
-> >>> +  - reg
-> >>> +  - interrupts
-> >>> +  - clocks
-> >>> +  - ports
-> >>> +
-> >>> +additionalProperties: false
-> >>> +
-> >>> +examples:
-> >>> +  - |
-> >>> +    #include <dt-bindings/clock/rk3568-cru.h>
-> >>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>> +    #include <dt-bindings/interrupt-controller/irq.h>
-> >>> +    #include <dt-bindings/power/rk3568-power.h>
-> >>> +    #include <dt-bindings/media/video-interfaces.h>
-> >>> +
-> >>> +    parent {
-> >>
-> >> soc {
-> 
-> Ack.
-> 
-> >>> +        #address-cells = <2>;
-> >>> +        #size-cells = <2>;
+This series is combination of effort of many people who contributed ideas,
+code and testing and I'm gratefully thankful for them.
+
+[1] https://lore.kernel.org/linux-rdma/20250122071600.GC10702@unreal/
+-----------------------------------------------------------------------
+Changelog:
+v10:
+ * Rebased on top v6.15-rc3
+ * Added Luis's tags
+ * Addressed review comments from Luis about DMA patches
+ * Removed segment size check from single-segment SGL optimization code
+ * Changed NVMe unmap data code as was suggested by Christoph
+v9: https://lore.kernel.org/all/cover.1745394536.git.leon@kernel.org/
+ * Added tested-by from Jens.
+ * Replaced is_pci_p2pdma_page(bv.bv_page) check with if
+   "(IS_ENABLED(CONFIG_PCI_P2PDMA) && (req->cmd_flags & REQ_P2PDMA))"
+   which is more aligned with the goal (do not access struct page) and
+   more efficient. This is the one line only that was changed in Jens's
+   performance testing flow, so I kept his tags as is.
+ * Restored single-segment optimization for SGL path.
+ * Added forgotten unmap of metdata SGL multi-segment flow.
+ * Split and squashed optimization patch from Kanchan.
+ * Converted "bool aborted" flag to use newly introduced flag variable.
+v8: https://lore.kernel.org/all/cover.1744825142.git.leon@kernel.org/
+ * Rebased to v6.15-rc1
+ * Added NVMe patches which are now patches and not RFC. They were in
+   RFC stage because block iterator caused to performance regression
+   for very extreme case scenario (~100M IOPS), but after Kanchan fixed
+   it, the code started to be ready for merging.
+ * @Niklas, i didn't change naming in this series as it follows iommu
+   naming format.
+v7: https://lore.kernel.org/all/cover.1738765879.git.leonro@nvidia.com/
+ * Rebased to v6.14-rc1
+v6: https://lore.kernel.org/all/cover.1737106761.git.leon@kernel.org
+ * Changed internal __size variable to u64 to properly set private flag
+   in most significant bit.
+ * Added comment about why we check DMA_IOVA_USE_SWIOTLB
+ * Break unlink loop if phys is NULL, condition which we shouldn't get.
+v5: https://lore.kernel.org/all/cover.1734436840.git.leon@kernel.org
+ * Trimmed long lines in all patches.
+ * Squashed "dma-mapping: Add check if IOVA can be used" into
+   "dma: Provide an interface to allow allocate IOVA" patch.
+ * Added tags from Christoph and Will.
+ * Fixed spelling/grammar errors.
+ * Change title from "dma: Provide an  ..." to be "dma-mapping: Provide
+   an ...".
+ * Slightly changed hmm patch to set sticky flags in one place.
+v4: https://lore.kernel.org/all/cover.1733398913.git.leon@kernel.org
+ * Added extra patch to add kernel-doc for iommu_unmap and iommu_unmap_fast
+ * Rebased to v6.13-rc1
+ * Added Will's tags
+v3: https://lore.kernel.org/all/cover.1731244445.git.leon@kernel.org
+ * Added DMA_ATTR_SKIP_CPU_SYNC to p2p pages in HMM.
+ * Fixed error unwind if dma_iova_sync fails in HMM.
+ * Clear all PFN flags which were set in map to make code.
+   more clean, the callers anyway cleaned them.
+ * Generalize sticky PFN flags logic in HMM.
+ * Removed not-needed #ifdef-#endif section.
+v2: https://lore.kernel.org/all/cover.1730892663.git.leon@kernel.org
+ * Fixed docs file as Randy suggested
+ * Fixed releases of memory in HMM path. It was allocated with kv..
+   variants but released with kfree instead of kvfree.
+ * Slightly changed commit message in VFIO patch.
+v1: https://lore.kernel.org/all/cover.1730298502.git.leon@kernel.org
+ * Squashed two VFIO patches into one
+ * Added Acked-by/Reviewed-by tags
+ * Fix docs spelling errors
+ * Simplified dma_iova_sync() API
+ * Added extra check in dma_iova_destroy() if mapped size to make code more clear
+ * Fixed checkpatch warnings in p2p patch
+ * Changed implementation of VFIO mlx5 mlx5vf_add_migration_pages() to
+   be more general
+ * Reduced the number of changes in VFIO patch
+v0: https://lore.kernel.org/all/cover.1730037276.git.leon@kernel.org
+
+----------------------------------------------------------------------------
+ LWN coverage:
+Dancing the DMA two-step - https://lwn.net/Articles/997563/
+----------------------------------------------------------------------------
+
+Currently the only efficient way to map a complex memory description through
+the DMA API is by using the scatterlist APIs. The SG APIs are unique in that
+they efficiently combine the two fundamental operations of sizing and allocating
+a large IOVA window from the IOMMU and processing all the per-address
+swiotlb/flushing/p2p/map details.
+
+This uniqueness has been a long standing pain point as the scatterlist API
+is mandatory, but expensive to use. It prevents any kind of optimization or
+feature improvement (such as avoiding struct page for P2P) due to the
+impossibility of improving the scatterlist.
+
+Several approaches have been explored to expand the DMA API with additional
+scatterlist-like structures (BIO, rlist), instead split up the DMA API
+to allow callers to bring their own data structure.
+
+The API is split up into parts:
+ - Allocate IOVA space:
+    To do any pre-allocation required. This is done based on the caller
+    supplying some details about how much IOMMU address space it would need
+    in worst case.
+ - Map and unmap relevant structures to pre-allocated IOVA space:
+    Perform the actual mapping into the pre-allocated IOVA. This is very
+    similar to dma_map_page().
+
+In this series, examples of three different users are converted to the new API
+to show the benefits and its versatility. Each user has a unique
+flow:
+ 1. RDMA ODP is an example of "SVA mirroring" using HMM that needs to
+    dynamically map/unmap large numbers of single pages. This becomes
+    significantly faster in the IOMMU case as the map/unmap is now just
+    a page table walk, the IOVA allocation is pre-computed once. Significant
+    amounts of memory are saved as there is no longer a need to store the
+    dma_addr_t of each page.
+ 2. VFIO PCI live migration code is building a very large "page list"
+    for the device. Instead of allocating a scatter list entry per allocated
+    page it can just allocate an array of 'struct page *', saving a large
+    amount of memory.
+ 3. NVMe PCI demonstrates how a BIO can be converted to a HW scatter
+    list without having to allocate then populate an intermediate SG table.
+
+To make the use of the new API easier, HMM and block subsystems are extended
+to hide the optimization details from the caller. Among these optimizations:
+ * Memory reduction as in most real use cases there is no need to store mapped
+   DMA addresses and unmap them.
+ * Reducing the function call overhead by removing the need to call function
+   pointers and use direct calls instead.
+
+This step is first along a path to provide alternatives to scatterlist and
+solve some of the abuses and design mistakes.
+
+The whole series can be found here:
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git dma-split-Apr-27
+
+Thanks
+
+Christoph Hellwig (12):
+  PCI/P2PDMA: Refactor the p2pdma mapping helpers
+  dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+  iommu: generalize the batched sync after map interface
+  iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+  dma-mapping: add a dma_need_unmap helper
+  docs: core-api: document the IOVA-based API
+  block: share more code for bio addition helper
+  block: don't merge different kinds of P2P transfers in a single bio
+  blk-mq: add scatterlist-less DMA mapping helpers
+  nvme-pci: remove struct nvme_descriptor
+  nvme-pci: use a better encoding for small prp pool allocations
+  nvme-pci: convert to blk_rq_dma_map
+
+Leon Romanovsky (12):
+  iommu: add kernel-doc for iommu_unmap_fast
+  dma-mapping: Provide an interface to allow allocate IOVA
+  dma-mapping: Implement link/unlink ranges API
+  mm/hmm: let users to tag specific PFN with DMA mapped bit
+  mm/hmm: provide generic DMA managing logic
+  RDMA/umem: Store ODP access mask information in PFN
+  RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+    linkage
+  RDMA/umem: Separate implicit ODP initialization from explicit ODP
+  vfio/mlx5: Explicitly use number of pages instead of allocated length
+  vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+  vfio/mlx5: Enable the DMA link API
+  nvme-pci: store aborted state in flags variable
+
+ Documentation/core-api/dma-api.rst   |  71 +++
+ block/bio.c                          |  83 ++--
+ block/blk-merge.c                    | 180 ++++++-
+ drivers/infiniband/core/umem_odp.c   | 252 ++++------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+ drivers/infiniband/hw/mlx5/odp.c     |  65 ++-
+ drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+ drivers/infiniband/sw/rxe/rxe_odp.c  |  18 +-
+ drivers/iommu/dma-iommu.c            | 482 +++++++++++++++---
+ drivers/iommu/iommu.c                |  84 ++--
+ drivers/nvme/host/pci.c              | 699 +++++++++++++++------------
+ drivers/pci/p2pdma.c                 |  38 +-
+ drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++-------
+ drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+ drivers/vfio/pci/mlx5/main.c         |  87 ++--
+ include/linux/blk-mq-dma.h           |  63 +++
+ include/linux/blk_types.h            |   2 +
+ include/linux/dma-map-ops.h          |  54 ---
+ include/linux/dma-mapping.h          |  85 ++++
+ include/linux/hmm-dma.h              |  33 ++
+ include/linux/hmm.h                  |  24 +-
+ include/linux/iommu.h                |   4 +
+ include/linux/pci-p2pdma.h           |  85 ++++
+ include/rdma/ib_umem_odp.h           |  25 +-
+ kernel/dma/direct.c                  |  44 +-
+ kernel/dma/mapping.c                 |  18 +
+ mm/hmm.c                             | 263 +++++++++-
+ 27 files changed, 2115 insertions(+), 1078 deletions(-)
+ create mode 100644 include/linux/blk-mq-dma.h
+ create mode 100644 include/linux/hmm-dma.h
 
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
