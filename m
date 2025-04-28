@@ -1,177 +1,132 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4CA21CFEC;
-	Mon, 28 Apr 2025 10:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501B31AC44D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745837524; cv=none; b=TCs0ct/IwfL9braOpt1bzWaOZXtKtwAlnUkYpXd0OCgT79q0nMuTUMEL0GxQbEik3IwTcEvtdjfxeCbA91GC1FPZzVVuQHjhTY1Lb73SygJJ7xNeGBY/fJ7K2lK/++rB7n34ngf1GHzjxvmGqaywDsIdUSDXwKXDd31cDVHBXCE=
+	t=1745837591; cv=none; b=IxE028rzD2QCd4MIUZit1BFQXWIlctpR+om2PZJy7SpZWfkxBiVJkCxqTbY/VaWhOjjLw5c3aLk+qYiRP8mFOMLeqmzw/m0F7+L/mNuiujvzZhVepziWtWyTCSOAz7vy0ba63Es5YwIRs9aKyHzlCLEZPGeqBVhdqmb47DHhvaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745837524; c=relaxed/simple;
-	bh=mw0D9zQX1oRSEtyFlBwwdZmRItnM/xZXA4SnPpvEEL4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EozIOrcfdSwQA0CjCRz/v0mnFxUQjtrWbokxHzwXkTAAHVwrNRoSBELFcGhi4TTQR+G8b4v4RslrFl352ed60q/ZWXn1aosED4OfeXDr1NnWpf/Ixntk0oducBIrA+4O2A1IF/hTJv8JZa5AHh9LQ69U3xnckNddDczVU8j5/QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yb3Fzh5p; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745837591; c=relaxed/simple;
+	bh=LVQ136RWyYRc2fD+t9t3p/5kJXBOfZ/prV2pR22/y8I=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=K5QEe5dXI+R5x/E0MQG2nICZyu0EFETRCGL6Yjm83UFN2P/tKAMX+ovL5HktsvUmREa2GG16dOIgwd2C2x7NenhUBzwiBYYz3oJCTzvjWhxenK3A0mP3tgppjzkd438BTvFapK4f9SjOf1EsQsRG6DEdghBiUljGwTi4O5l9MXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UIfkN/8d; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yb3Fzh5p"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so893376866b.2;
-        Mon, 28 Apr 2025 03:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745837521; x=1746442321; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dDlSIXcZYsXdswkPgH/mSCPqgNz8GWfJkAS+sQHHkxU=;
-        b=Yb3Fzh5peHajhSYJ08mkNjV/TyHcNutCxVJWjRFahWrvGHBXSrNrBgLaTcS0mPAjhN
-         l+7znCmfOfUAtJY1+nVkvWB0dz4LzcrqPVxRQo6k1kZ3FJxTdpOrf1G7/rtj9b82IXYu
-         Fera7oi1zqHifPwZtTH0yAcBR5HFo52wg69JUDrZao/Nm2ygxfqTiLkrvMnogD62gItQ
-         f9c2w8FLaTegeJADK1fmht2iGtb0y1dyDF6oy9/Xr0WNBHLjVNR2m+HMvdvcm6c00zft
-         7InyuZEdH0ICB+OysQWj4rf+VkRzGl8xSXFmI1VkQfwI39NkMZEtgZf/vLb8rylx7lAM
-         H8pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745837521; x=1746442321;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dDlSIXcZYsXdswkPgH/mSCPqgNz8GWfJkAS+sQHHkxU=;
-        b=MJZlUZgN35a7TznqvmFFvdN87RhylKPAViquEBesxA2I092QBQhNTEPbAWKITwm6jJ
-         HEKOvNjnu2l5/g8EyovfhjH17C9G2R9VfjCcAB82o3dJsjnAOX6UVGc3t7k9Px28U7om
-         V4kTe0VT5/+RccfkDiHmid2HFRu5Qof5s7nG5xsuK7gaP2GwS8DLGUJO6qpleGJszrG+
-         P6fO4hkn4Xo0ideR9pSRP34EQtXLGXnvb57lCSZofmupeeRO0uyKDAkrDnpwb3oQPRO4
-         uK6kEViicdp7IqcWkj+wBQ2hZf038wTzxQlQ+jlqnx3m5vZoS3aboSbu1uv6dB/M+k8O
-         nVdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9HIQdjs+IcrZTl4MM/ZE5mDM58m6hfcVMOfA9PxVoXNSsdEB4QfEOpQDdSWjVQgwLG1U=@vger.kernel.org, AJvYcCVCUSu/DqETLEpdXO9XlOCYhCGknWBbpBbZJbtRtSyTiVERk3Qmq4cn9jAjedO2uBiG0XdTOEChL5qeVAjm@vger.kernel.org, AJvYcCX7zLiXbKdSGxSIB9WtKTyU8ZcB5WYC4nOla7MLG5UcNTyyEWDFKQrIYEHcbhFh+6/i7Wsw68yams7xnUd6E+kdH18r@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1R8kP5ArGzbJ78rQnGFTlYQjLWrmPOvdNI+ynkXHUmfyM5IVA
-	cEdwNgIVyHBDazTCKtnGRlihjDG+GTorC8krkywYY1JpijrlwvKd
-X-Gm-Gg: ASbGncsOZBbkdaACxK9yfoGtu9bTu0j3g3jDYZndSeJiT/N0dUhJyxMndDfXpiWvKbG
-	73KvDh5gW4MbFN0/FI2NAcgNUg0ktUXQW5wUEo94tSC4pxNKd3dMsDhG0FaFk+geWIGZHXUED3F
-	4MWu5Dg/M3sACwhKuPeXnFqQR8kXNGu3j7JS62GVZZ47Lf011pGFDw8spKHdn04rN9hXAQHlvjS
-	IDUywt2Ivh0KG9ITob3VSpdORIhYzq1rftyWMhUl+okGd41CJEfCI8RiuavSxzOgZPAGFScLNdT
-	ir2yCAEeEGKQcsvsnNJzOl8VO+g=
-X-Google-Smtp-Source: AGHT+IED735y/DVouY58/CpuYdElpBSWhTf9ssVaXxwOmzb6cS/Xzk9bZkLWBVO7jdqhFWsApiu3dg==
-X-Received: by 2002:a17:907:3d52:b0:ac4:2ae:c970 with SMTP id a640c23a62f3a-ace73a45d67mr899962366b.21.1745837520648;
-        Mon, 28 Apr 2025 03:52:00 -0700 (PDT)
-Received: from krava ([173.38.220.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e7ccbsm616081566b.59.2025.04.28.03.51.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 03:52:00 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 28 Apr 2025 12:51:57 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
- of uprobe_write_opcode
-Message-ID: <aA9dzY-2V3dCpMDq@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-4-jolsa@kernel.org>
- <20250427141335.GA9350@redhat.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UIfkN/8d"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250428105307epoutp02f8eea1988d88875268741ac778578373~6dgkm6qZU2676426764epoutp02D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:53:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250428105307epoutp02f8eea1988d88875268741ac778578373~6dgkm6qZU2676426764epoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745837587;
+	bh=ZpOykj4NyH8OeDmsrqGV4eLwknuE5Llb0rONDyJLoLM=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=UIfkN/8dbmzA7aDQcVeanqNL6SDCSC8EpNW+N+dQuyzNDzCGv2RCnmvP+OuUhwc8J
+	 bKdb5RWEKGJl3raj2/tJDUW8d/JYGW+hEDHesJVYCwm8XDqN+DGY78ROocoRIfAUD6
+	 KRjGJAJta39e+WRlODxnnss6GI3QmyoH/A9k+u+w=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250428105306epcas5p10398f853ddd88927a174a6dba33abfe8~6dgkLeGqC3228032280epcas5p1O;
+	Mon, 28 Apr 2025 10:53:06 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZmKzj2Jhdz3hhTC; Mon, 28 Apr
+	2025 10:53:05 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250428100738epcas5p3eb82b4ea94b229634f9319d23d7d7e14~6c425zY3r1485614856epcas5p3z;
+	Mon, 28 Apr 2025 10:07:38 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250428100738epsmtrp23a2e80870d794866303e307fb14311ae~6c425FNh62525625256epsmtrp29;
+	Mon, 28 Apr 2025 10:07:38 +0000 (GMT)
+X-AuditID: b6c32a2a-d63ff70000002265-7f-680f53698ae6
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	14.FA.08805.9635F086; Mon, 28 Apr 2025 19:07:37 +0900 (KST)
+Received: from green245.sa.corp.samsungelectronics.net (unknown
+	[107.99.41.245]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250428100736epsmtip11694115ac09e75b0c4231033e257f9a3~6c41j-q6U0417804178epsmtip1A;
+	Mon, 28 Apr 2025 10:07:36 +0000 (GMT)
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, Christian Brauner
+	<brauner@kernel.org>, Keith Busch <kbusch@kernel.org>
+Cc: gost.dev@samsung.com, nitheshshetty@gmail.com, Nitesh Shetty
+	<nj.shetty@samsung.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] iov_iter: Use iov_offset for length calculation in
+ iov_iter_aligned_bvec
+Date: Mon, 28 Apr 2025 15:28:48 +0530
+Message-Id: <20250428095849.11709-1-nj.shetty@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprALMWRmVeSWpSXmKPExsWy7bCSnG5WMH+Gwc0kiznr17BZrL7bz2bx
+	+vAnRoubB3YyWUw6dI3R4vKuOWwWO540Mlps+z2f2eL83+OsDpweO2fdZfe4fLbUY9OqTjaP
+	EzN+s3j0bVnF6PF5k5zHpidvmQLYo7hsUlJzMstSi/TtErgypq76ylrwl6vi90vJBsY/HF2M
+	nBwSAiYSs97tY+pi5OIQEtjNKPH85nY2iISkxLK/R5ghbGGJlf+es0MUNTNJLG2fAuRwcLAJ
+	aEuc/s8BEhcROMYo8XPJZkaQBmaBGoktfW3sILawQIzEvok7wIayCKhKtG44CTaUV8BK4s2b
+	DnaIBfISqzccYJ7AyLOAkWEVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZwoGlp7WDc
+	s+qD3iFGJg7GQ4wSHMxKIrxVBvwZQrwpiZVVqUX58UWlOanFhxilOViUxHm/ve5NERJITyxJ
+	zU5NLUgtgskycXBKNTDV3D6cNzVrjpZy+OKTx8Ij/5+WifXoM83d8f79kb7uJW/5qtWjmarZ
+	Kr6vvMZ1Watn+b9ktwPpESXvM7a03TKa86T9lv6Lj9I3ORovNdfecC73vps3pbJtb+KsrVum
+	evZ95dl0a/7F+vQbs6vKfyz+avHDc35V+0yT1xK3hT+m7srT0Nqn1a8jVfe5sSt++++IO1zb
+	l15VsRecpPhrXkTtpj2zl5WkKvd4/U0o6XSaLdH38Pe9gxfZL6bbi2zOyxHJDHmV8KKCYUv/
+	hbsbf4f2xcUEla6Rn7Zt5cnNn2b55LVodUhLlu0yLNgQLSy/nuuIPlf86eQGG9fABwVJ2VM7
+	HTVT1xpy50W9XLZMbbYSS3FGoqEWc1FxIgDsv7BFowIAAA==
+X-CMS-MailID: 20250428100738epcas5p3eb82b4ea94b229634f9319d23d7d7e14
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250428100738epcas5p3eb82b4ea94b229634f9319d23d7d7e14
+References: <CGME20250428100738epcas5p3eb82b4ea94b229634f9319d23d7d7e14@epcas5p3.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427141335.GA9350@redhat.com>
 
-On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
-> On 04/21, Jiri Olsa wrote:
-> >
-> > +static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
-> > +{
-> > +	struct mm_struct *mm = vma->vm_mm;
-> > +	int err;
-> > +
-> > +	/* We are going to replace instruction, update ref_ctr. */
-> > +	if (uprobe->ref_ctr_offset) {
-> > +		err = update_ref_ctr(uprobe, mm, 1);
-> > +		if (err)
-> > +			return err;
-> > +	}
-> > +
-> > +	err = set_swbp(&uprobe->arch, vma, vaddr);
-> > +
-> > +	/* Revert back reference counter if instruction update failed. */
-> > +	if (err && uprobe->ref_ctr_offset)
-> > +		update_ref_ctr(uprobe, mm, -1);
-> > +	return err;
-> >  }
-> ...
-> > +static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
-> > +{
-> > +	int err = set_orig_insn(&uprobe->arch, vma, vaddr);
-> > +
-> > +	/* Revert back reference counter even if instruction update failed. */
-> > +	if (uprobe->ref_ctr_offset)
-> > +		update_ref_ctr(uprobe, vma->vm_mm, -1);
-> > +	return err;
-> >  }
-> 
-> This doesn't look right even in the simplest case...
-> 
-> To simplify, suppose that uprobe_register() needs to change a single mm/vma
-> and set_swbp() fails. In this case uprobe_register() calls uprobe_unregister()
-> which will find the same vma and call set_orig_refctr(). set_orig_insn() will
-> do nothing. But update_ref_ctr(uprobe, vma->vm_mm, -1) is wrong/unbalanced.
-> 
-> The current code updates ref_ctr after the verify_opcode() check, so it doesn't
-> have this problem.
+If iov_offset is non-zero, then we need to consider iov_offset in length
+calculation, otherwise we might pass smaller IOs such as 512 bytes, in
+below scenario[1].
+This issue is reproducible using lib-uring test/fixed-seg.c application
+with fixed buffer on a 512 LBA formatted device.
 
-ah right :-\
+[1]
+At present we pass the alignment check,
+for 512 LBA formatted devices, len_mask = 511
+when IO is smaller, i->count = 512
+has an offset, i->io_offset = 3584
+with bvec values, bvec->bv_offset = 256, bvec->bv_len = 3840.
+In short, the first 256 bytes are in the current page,
+next 256 bytes are in the another page.
+Ideally we expect to fail the IO.
 
-could set_swbp/set_orig_insn return > 0 in case the memory was actually updated?
-and we would update the refctr based on that, like:
+Fixes: 2263639f96f2 ("iov_iter: streamline iovec/bvec alignment iteration")
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
+Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+---
+ lib/iov_iter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-+static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
-+{
-+       struct mm_struct *mm = vma->vm_mm;
-+       int err;
-+
-+       err = set_swbp(&uprobe->arch, vma, vaddr);
-+       if (err > 0 && uprobe->ref_ctr_offset)
-+               update_ref_ctr(uprobe, mm, 1);
-+       return err;
-+}
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index bc9391e55d57..9ce83ab71bac 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -820,7 +820,7 @@ static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned addr_mask,
+ 	size_t size = i->count;
+ 
+ 	do {
+-		size_t len = bvec->bv_len;
++		size_t len = bvec->bv_len - skip;
+ 
+ 		if (len > size)
+ 			len = size;
 
-+static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
-+{
-+       int err = set_orig_insn(&uprobe->arch, vma, vaddr);
-+
-+       /* Revert back reference counter even if instruction update failed. */
-+       if (err > 0 && uprobe->ref_ctr_offset)
-+               update_ref_ctr(uprobe, vma->vm_mm, -1);
-+       return err;
-+}
+base-commit: 02ddfb981de88a2c15621115dd7be2431252c568
+-- 
+2.43.0
 
-but then what if update_ref_ctr fails..
-
-> 
-> -------------------------------------------------------------------------------
-> OTOH, I think that the current logic is not really correct too,
-> 
-> 	/* Revert back reference counter if instruction update failed. */
-> 	if (ret < 0 && is_register && ref_ctr_updated)
-> 		update_ref_ctr(uprobe, mm, -1);
-> 
-> I think that "Revert back reference counter" logic should not depend on
-> is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
-> uprobe_unregister() fails, then another uprobe_register() comes at the
-> same address, and after that uprobe_unregister() succeeds.
-
-sounds good to me
-
-jirka
