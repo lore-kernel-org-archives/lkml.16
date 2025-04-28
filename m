@@ -1,385 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECCA2356BC;
-	Mon, 28 Apr 2025 10:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4CA21CFEC;
+	Mon, 28 Apr 2025 10:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745837434; cv=none; b=IqLgqodl6akxskVt+egtz3zIgij0l9XOos+Rf/DAhkD/4cmoRsKo63KnEb1/61sgdhuleatJ5xB+z7+Au/D2EC+0QYwC+2qLJ1Ik/3p2wHl0MEjDQks0MZLS2B5UcVeDPCZqnvts0/2wAOzeX2FEt5bTvv92y8kJSotcwBiAmvw=
+	t=1745837524; cv=none; b=TCs0ct/IwfL9braOpt1bzWaOZXtKtwAlnUkYpXd0OCgT79q0nMuTUMEL0GxQbEik3IwTcEvtdjfxeCbA91GC1FPZzVVuQHjhTY1Lb73SygJJ7xNeGBY/fJ7K2lK/++rB7n34ngf1GHzjxvmGqaywDsIdUSDXwKXDd31cDVHBXCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745837434; c=relaxed/simple;
-	bh=hMeNKiOKKFWOmvzql0ooVumxoWM7K7FV4b1JMI801XA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=owixTTNDvyRl0/K9VG3jYmzvLCqEICFTe1rLkv4aPu/HBSpCxQSxChLh+Yo1Bvsb6q5OH+8knoHh1SitESGWRkB2kYc71on4Qg1mccVv2vIgYwHKBya4tdjQNI7zLNSj3t64CG8kxYgD6HwN4zqQ6aPemTM/cD4igkm7icYxKAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+C7nyFg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745837524; c=relaxed/simple;
+	bh=mw0D9zQX1oRSEtyFlBwwdZmRItnM/xZXA4SnPpvEEL4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EozIOrcfdSwQA0CjCRz/v0mnFxUQjtrWbokxHzwXkTAAHVwrNRoSBELFcGhi4TTQR+G8b4v4RslrFl352ed60q/ZWXn1aosED4OfeXDr1NnWpf/Ixntk0oducBIrA+4O2A1IF/hTJv8JZa5AHh9LQ69U3xnckNddDczVU8j5/QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yb3Fzh5p; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+C7nyFg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CCC4C4CEE9;
-	Mon, 28 Apr 2025 10:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745837434;
-	bh=hMeNKiOKKFWOmvzql0ooVumxoWM7K7FV4b1JMI801XA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=L+C7nyFgVezISuRI+54TCYyo9/kjGgdQjBYVh0HoOJDDIE0OoDgcz0qqxBjkRDvlu
-	 zHmDfGcTFi8MxA4Vz5sgw54m6ATbokob8oTngnJB/CimNAgYtfTRGG0bw7+wPph5vo
-	 Oa8ltQgGwXvq6sAV590dkn4ziu/aTcaBqMD5OWh/+yevlu4SsfbwcSxQ9h8SXCSXI9
-	 KTYy62Ta4YJLRzCiGknXEjKKCmb/zV/8elRRZ9ebr6VZeN9rsDEn0e3EW1+S8KvEY0
-	 fzXJVsFM56IeN/4j0Ugq26tRHu9iQWU3QaTngGMw1BHp2Qqvdk2TG0RLrI7YOrA4MR
-	 g4OcBT1e8Tg8A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8EAC3ABA3;
-	Mon, 28 Apr 2025 10:50:34 +0000 (UTC)
-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
-Date: Mon, 28 Apr 2025 12:50:14 +0200
-Subject: [PATCH 2/2] iio: chemical: Add driver for SEN0322
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yb3Fzh5p"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so893376866b.2;
+        Mon, 28 Apr 2025 03:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745837521; x=1746442321; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dDlSIXcZYsXdswkPgH/mSCPqgNz8GWfJkAS+sQHHkxU=;
+        b=Yb3Fzh5peHajhSYJ08mkNjV/TyHcNutCxVJWjRFahWrvGHBXSrNrBgLaTcS0mPAjhN
+         l+7znCmfOfUAtJY1+nVkvWB0dz4LzcrqPVxRQo6k1kZ3FJxTdpOrf1G7/rtj9b82IXYu
+         Fera7oi1zqHifPwZtTH0yAcBR5HFo52wg69JUDrZao/Nm2ygxfqTiLkrvMnogD62gItQ
+         f9c2w8FLaTegeJADK1fmht2iGtb0y1dyDF6oy9/Xr0WNBHLjVNR2m+HMvdvcm6c00zft
+         7InyuZEdH0ICB+OysQWj4rf+VkRzGl8xSXFmI1VkQfwI39NkMZEtgZf/vLb8rylx7lAM
+         H8pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745837521; x=1746442321;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dDlSIXcZYsXdswkPgH/mSCPqgNz8GWfJkAS+sQHHkxU=;
+        b=MJZlUZgN35a7TznqvmFFvdN87RhylKPAViquEBesxA2I092QBQhNTEPbAWKITwm6jJ
+         HEKOvNjnu2l5/g8EyovfhjH17C9G2R9VfjCcAB82o3dJsjnAOX6UVGc3t7k9Px28U7om
+         V4kTe0VT5/+RccfkDiHmid2HFRu5Qof5s7nG5xsuK7gaP2GwS8DLGUJO6qpleGJszrG+
+         P6fO4hkn4Xo0ideR9pSRP34EQtXLGXnvb57lCSZofmupeeRO0uyKDAkrDnpwb3oQPRO4
+         uK6kEViicdp7IqcWkj+wBQ2hZf038wTzxQlQ+jlqnx3m5vZoS3aboSbu1uv6dB/M+k8O
+         nVdw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9HIQdjs+IcrZTl4MM/ZE5mDM58m6hfcVMOfA9PxVoXNSsdEB4QfEOpQDdSWjVQgwLG1U=@vger.kernel.org, AJvYcCVCUSu/DqETLEpdXO9XlOCYhCGknWBbpBbZJbtRtSyTiVERk3Qmq4cn9jAjedO2uBiG0XdTOEChL5qeVAjm@vger.kernel.org, AJvYcCX7zLiXbKdSGxSIB9WtKTyU8ZcB5WYC4nOla7MLG5UcNTyyEWDFKQrIYEHcbhFh+6/i7Wsw68yams7xnUd6E+kdH18r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1R8kP5ArGzbJ78rQnGFTlYQjLWrmPOvdNI+ynkXHUmfyM5IVA
+	cEdwNgIVyHBDazTCKtnGRlihjDG+GTorC8krkywYY1JpijrlwvKd
+X-Gm-Gg: ASbGncsOZBbkdaACxK9yfoGtu9bTu0j3g3jDYZndSeJiT/N0dUhJyxMndDfXpiWvKbG
+	73KvDh5gW4MbFN0/FI2NAcgNUg0ktUXQW5wUEo94tSC4pxNKd3dMsDhG0FaFk+geWIGZHXUED3F
+	4MWu5Dg/M3sACwhKuPeXnFqQR8kXNGu3j7JS62GVZZ47Lf011pGFDw8spKHdn04rN9hXAQHlvjS
+	IDUywt2Ivh0KG9ITob3VSpdORIhYzq1rftyWMhUl+okGd41CJEfCI8RiuavSxzOgZPAGFScLNdT
+	ir2yCAEeEGKQcsvsnNJzOl8VO+g=
+X-Google-Smtp-Source: AGHT+IED735y/DVouY58/CpuYdElpBSWhTf9ssVaXxwOmzb6cS/Xzk9bZkLWBVO7jdqhFWsApiu3dg==
+X-Received: by 2002:a17:907:3d52:b0:ac4:2ae:c970 with SMTP id a640c23a62f3a-ace73a45d67mr899962366b.21.1745837520648;
+        Mon, 28 Apr 2025 03:52:00 -0700 (PDT)
+Received: from krava ([173.38.220.34])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e7ccbsm616081566b.59.2025.04.28.03.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 03:52:00 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 28 Apr 2025 12:51:57 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
+ of uprobe_write_opcode
+Message-ID: <aA9dzY-2V3dCpMDq@krava>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-4-jolsa@kernel.org>
+ <20250427141335.GA9350@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250428-iio-chemical-sen0322-v1-2-9b18363ffe42@gmail.com>
-References: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
-In-Reply-To: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745837433; l=7866;
- i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
- bh=z/iKIdGo85HiWXBMjUced4yjKpzR3DKHdB+pOCkYBQ8=;
- b=DlsEdiWp/qZ1z5NCPzuU4VaF+5OHiNfxo+kiqZttbUOSVBduVmrbysWNI0VNS7IZiKq69t+3H
- UbyyIIpKv+MAgnUONxRDEI60qeJe2MY6Aink3AVk+SakzwgqcpkChxc
-X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
- pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
-X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
- auth_id=60
-X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
-Reply-To: gomba007@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427141335.GA9350@redhat.com>
 
-From: Tóth János <gomba007@gmail.com>
+On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
+> On 04/21, Jiri Olsa wrote:
+> >
+> > +static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
+> > +{
+> > +	struct mm_struct *mm = vma->vm_mm;
+> > +	int err;
+> > +
+> > +	/* We are going to replace instruction, update ref_ctr. */
+> > +	if (uprobe->ref_ctr_offset) {
+> > +		err = update_ref_ctr(uprobe, mm, 1);
+> > +		if (err)
+> > +			return err;
+> > +	}
+> > +
+> > +	err = set_swbp(&uprobe->arch, vma, vaddr);
+> > +
+> > +	/* Revert back reference counter if instruction update failed. */
+> > +	if (err && uprobe->ref_ctr_offset)
+> > +		update_ref_ctr(uprobe, mm, -1);
+> > +	return err;
+> >  }
+> ...
+> > +static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
+> > +{
+> > +	int err = set_orig_insn(&uprobe->arch, vma, vaddr);
+> > +
+> > +	/* Revert back reference counter even if instruction update failed. */
+> > +	if (uprobe->ref_ctr_offset)
+> > +		update_ref_ctr(uprobe, vma->vm_mm, -1);
+> > +	return err;
+> >  }
+> 
+> This doesn't look right even in the simplest case...
+> 
+> To simplify, suppose that uprobe_register() needs to change a single mm/vma
+> and set_swbp() fails. In this case uprobe_register() calls uprobe_unregister()
+> which will find the same vma and call set_orig_refctr(). set_orig_insn() will
+> do nothing. But update_ref_ctr(uprobe, vma->vm_mm, -1) is wrong/unbalanced.
+> 
+> The current code updates ref_ctr after the verify_opcode() check, so it doesn't
+> have this problem.
 
-Add support for the DFRobot SEN0322 oxygen sensor.
+ah right :-\
 
-Datasheet:
-	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
+could set_swbp/set_orig_insn return > 0 in case the memory was actually updated?
+and we would update the refctr based on that, like:
 
-To instantiate (assuming device is connected to I2C-2):
-	echo 'sen0322 0x73' > /sys/class/i2c-dev/i2c-2/device/new_device
-
-To read the oxygen concentration (assuming device is iio:device0):
-	cat /sys/bus/iio/devices/iio:device0/in_concentration_input
-
-Signed-off-by: Tóth János <gomba007@gmail.com>
----
- MAINTAINERS                    |   6 ++
- drivers/iio/chemical/Kconfig   |  10 ++
- drivers/iio/chemical/Makefile  |   1 +
- drivers/iio/chemical/sen0322.c | 238 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 255 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..6fda7a2f1248 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6852,6 +6852,12 @@ L:	linux-rtc@vger.kernel.org
- S:	Maintained
- F:	drivers/rtc/rtc-sd2405al.c
- 
-+DFROBOT SEN0322 DRIVER
-+M:	Tóth János <gomba007@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/chemical/sen0322.c
-+
- DH ELECTRONICS DHSOM SOM AND BOARD SUPPORT
- M:	Christoph Niedermaier <cniedermaier@dh-electronics.com>
- M:	Marek Vasut <marex@denx.de>
-diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-index 330fe0af946f..60a81863d123 100644
---- a/drivers/iio/chemical/Kconfig
-+++ b/drivers/iio/chemical/Kconfig
-@@ -166,6 +166,16 @@ config SCD4X
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called scd4x.
- 
-+config SEN0322
-+	tristate "SEN0322 oxygen sensor"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Say Y here to build support for the DFRobot SEN0322 oxygen sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called sen0322.
-+
- config SENSIRION_SGP30
- 	tristate "Sensirion SGPxx gas sensors"
- 	depends on I2C
-diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-index 4866db06bdc9..deeff0e4e6f7 100644
---- a/drivers/iio/chemical/Makefile
-+++ b/drivers/iio/chemical/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_SCD30_CORE) += scd30_core.o
- obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
- obj-$(CONFIG_SCD30_SERIAL) += scd30_serial.o
- obj-$(CONFIG_SCD4X) += scd4x.o
-+obj-$(CONFIG_SEN0322)	+= sen0322.o
- obj-$(CONFIG_SENSEAIR_SUNRISE_CO2) += sunrise_co2.o
- obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
- obj-$(CONFIG_SENSIRION_SGP40)	+= sgp40.o
-diff --git a/drivers/iio/chemical/sen0322.c b/drivers/iio/chemical/sen0322.c
-new file mode 100644
-index 000000000000..5f1f4528401e
---- /dev/null
-+++ b/drivers/iio/chemical/sen0322.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for the DFRobot SEN0322 oxygen sensor.
-+ *
-+ * Datasheet:
-+ *	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
-+ *
-+ * Possible I2C slave addresses:
-+ *	0x70
-+ *	0x71
-+ *	0x72
-+ *	0x73
-+ *
-+ * Copyright (C) 2025 Tóth János <gomba007@gmail.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/iio.h>
-+
-+#define DRIVER_NAME "sen0322"
-+
-+#define SEN0322_REG_DATA	0x03
-+#define SEN0322_REG_COEFF	0x0A
-+
-+#define FIXED_FRAC_BITS		18
-+#define FIXED_INT(x)		((fixed_t)((x) << FIXED_FRAC_BITS))
-+
-+typedef u32 fixed_t;
-+
-+struct sen0322 {
-+	struct i2c_client	*client;
-+	struct regmap		*regmap;
-+	fixed_t			coeff;
-+};
-+
-+static fixed_t fixed_mul(fixed_t a, fixed_t b)
++static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
 +{
-+	u64 tmp;
++       struct mm_struct *mm = vma->vm_mm;
++       int err;
 +
-+	tmp = (u64)a * (u64)b;
-+	tmp = (tmp >> FIXED_FRAC_BITS) + ((tmp >> FIXED_FRAC_BITS) & 1);
-+
-+	if (tmp > U32_MAX)
-+		return (fixed_t)U32_MAX;
-+	else
-+		return (fixed_t)tmp;
++       err = set_swbp(&uprobe->arch, vma, vaddr);
++       if (err > 0 && uprobe->ref_ctr_offset)
++               update_ref_ctr(uprobe, mm, 1);
++       return err;
 +}
-+
-+static fixed_t fixed_div(fixed_t a, fixed_t b)
-+{
-+	u64 tmp;
-+
-+	tmp = (uint64_t)a << FIXED_FRAC_BITS;
-+	tmp += (b >> 1);
-+
-+	return (fixed_t)(div_u64(tmp, b));
-+}
-+
-+static int sen0322_read_coeff(struct sen0322 *sen0322)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read(sen0322->regmap, SEN0322_REG_COEFF, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (val)
-+		sen0322->coeff = fixed_div(FIXED_INT(val), FIXED_INT(1000));
-+	else
-+		sen0322->coeff = fixed_div(FIXED_INT(209), FIXED_INT(1200));
-+
-+	dev_dbg(&sen0322->client->dev, "coeff: %08X\n", sen0322->coeff);
-+
-+	return 0;
-+}
-+
-+static int sen0322_read_data(struct sen0322 *sen0322)
-+{
-+	u8 data[4] = { 0 };
-+	int ret;
-+
-+	ret = regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data, 3);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = data[0] * 100 +  data[1] * 10 + data[2];
-+
-+	dev_dbg(&sen0322->client->dev, "raw data: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int sen0322_read_prep_data(struct sen0322 *sen0322)
-+{
-+	fixed_t val;
-+	int ret;
-+
-+	if (!sen0322->coeff) {
-+		ret = sen0322_read_coeff(sen0322);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	ret = sen0322_read_data(sen0322);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = fixed_mul(sen0322->coeff, FIXED_INT(ret));
-+
-+	dev_dbg(&sen0322->client->dev, "prep data: %08X\n", val);
-+
-+	return val >> FIXED_FRAC_BITS;
-+}
-+
-+static int sen0322_read_raw(struct iio_dev *iio_dev,
-+			    const struct iio_chan_spec *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct sen0322 *sen0322 = iio_priv(iio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		switch (chan->type) {
-+		case IIO_CONCENTRATION:
-+			ret = sen0322_read_data(sen0322);
-+			if (ret < 0)
-+				return ret;
-+
-+			*val = ret;
-+			return IIO_VAL_INT;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	case IIO_CHAN_INFO_PROCESSED:
-+		switch (chan->type) {
-+		case IIO_CONCENTRATION:
-+			ret = sen0322_read_prep_data(sen0322);
-+			if (ret < 0)
-+				return ret;
-+
-+			*val = ret;
-+			return IIO_VAL_INT;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->type) {
-+		case IIO_CONCENTRATION:
-+			*val = 1;
-+			*val2 = 100;
-+			return IIO_VAL_FRACTIONAL;
-+
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info sen0322_info = {
-+	.read_raw = sen0322_read_raw,
-+};
-+
-+static const struct regmap_config sen0322_regmap_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static const struct iio_chan_spec sen0322_channels[] = {
-+	{
-+		.type = IIO_CONCENTRATION,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_PROCESSED) |
-+				      BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static int sen0322_probe(struct i2c_client *client)
-+{
-+	struct sen0322 *sen0322;
-+	struct iio_dev *iio_dev;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -ENODEV;
-+
-+	iio_dev = devm_iio_device_alloc(&client->dev, sizeof(*sen0322));
-+	if (!iio_dev)
-+		return -ENOMEM;
-+
-+	sen0322 = iio_priv(iio_dev);
-+	sen0322->client = client;
-+	sen0322->coeff = 0;
-+
-+	sen0322->regmap = devm_regmap_init_i2c(client, &sen0322_regmap_conf);
-+	if (IS_ERR(sen0322->regmap))
-+		return PTR_ERR(sen0322->regmap);
-+
-+	i2c_set_clientdata(client, sen0322);
-+
-+	iio_dev->info = &sen0322_info;
-+	iio_dev->name = DRIVER_NAME;
-+	iio_dev->channels = sen0322_channels;
-+	iio_dev->num_channels = ARRAY_SIZE(sen0322_channels);
-+	iio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, iio_dev);
-+}
-+
-+static const struct of_device_id sen0322_of_match[] = {
-+	{ .compatible = "dfrobot,sen0322" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, sen0322_of_match);
-+
-+static struct i2c_driver sen0322_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.of_match_table = sen0322_of_match,
-+	},
-+	.probe = sen0322_probe,
-+};
-+module_i2c_driver(sen0322_driver);
-+
-+MODULE_AUTHOR("Tóth János <gomba007@gmail.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SEN0322 oxygen sensor driver");
 
--- 
-2.34.1
++static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
++{
++       int err = set_orig_insn(&uprobe->arch, vma, vaddr);
++
++       /* Revert back reference counter even if instruction update failed. */
++       if (err > 0 && uprobe->ref_ctr_offset)
++               update_ref_ctr(uprobe, vma->vm_mm, -1);
++       return err;
++}
 
+but then what if update_ref_ctr fails..
 
+> 
+> -------------------------------------------------------------------------------
+> OTOH, I think that the current logic is not really correct too,
+> 
+> 	/* Revert back reference counter if instruction update failed. */
+> 	if (ret < 0 && is_register && ref_ctr_updated)
+> 		update_ref_ctr(uprobe, mm, -1);
+> 
+> I think that "Revert back reference counter" logic should not depend on
+> is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
+> uprobe_unregister() fails, then another uprobe_register() comes at the
+> same address, and after that uprobe_unregister() succeeds.
+
+sounds good to me
+
+jirka
