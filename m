@@ -1,36 +1,32 @@
 Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4DC8BF8;
-	Mon, 28 Apr 2025 01:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B38BEAF1;
+	Mon, 28 Apr 2025 01:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745804312; cv=none; b=jTDR8AcYsYyROyGmVFlYCLKfAW9c/wUMwViku7TvOcQY74r/z1vkcoheKxqszstNPqil+P2LJsPhDCCzujyziq6q12+6xShBQx54IZNFX0nFU1XD+jPfD2retfpLY2TFhRJ3mlM/m1nXACexeBmQp9TzC38WfjkMUnpGTBTOKoU=
+	t=1745804633; cv=none; b=jVsI2fFmZPidWNUGIxdNAXURBI6dpm8C/mhIcLGnJVa61k0giqo/9GQ+80iK5EfN9ycVEaX5/gTRFW6TI4T/y8vwtfzW7efMA4kHKBlg0nwg0EAvebBe0uuCnHq7t3xG8zBI+RRsbgnPqsnRtNjoBw07nqDx/2Oyp+xmhiqbxEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745804312; c=relaxed/simple;
-	bh=2kFp7r6fupdWFFANCr/4/j7ojmTs3iFY/1TiMfvtOE4=;
+	s=arc-20240116; t=1745804633; c=relaxed/simple;
+	bh=OtlmkEkbNGzcTzcluHrptih4SZgW0i/zchiqxekC/Js=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=js7qyHyWOfEXxGPqgCVvYIbaScFMXf0tMABWjHH2ga1Q0qMaECiwEJekRfkYLXueYlwQM7BPon5xJ4NVYWvnhtgnRQTb7cMdia2I587CN1RtpdjLfTfuTumX2uhpLOxunMyacu62gI4ge3GSV3XOY6aYl8zIMUwe5PW2Gfvv7cQ=
+	 MIME-Version:Content-Type; b=UXxkfZ3jEUcerEDk7WUPx2J4dUg+wtL7ecl26CI6DsNZq+EHmT9jn4cpZGKZilOlJJ0q8LWWzR0T0jCOfXVhtQtUTpRRLvMCo1hewdCHoVyW7Qsx7fM/M83GB+X4MQMAlPVQoHJF26zzPHS9DRWMeaabmRcHJ6v1I3tMXXhA6Zk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
 Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 5634092009C; Mon, 28 Apr 2025 03:32:55 +0200 (CEST)
+	id 259B292009C; Mon, 28 Apr 2025 03:43:50 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 531F292009B;
-	Mon, 28 Apr 2025 02:32:55 +0100 (BST)
-Date: Mon, 28 Apr 2025 02:32:55 +0100 (BST)
+	by angie.orcam.me.uk (Postfix) with ESMTP id 1820192009B;
+	Mon, 28 Apr 2025 02:43:50 +0100 (BST)
+Date: Mon, 28 Apr 2025 02:43:50 +0100 (BST)
 From: "Maciej W. Rozycki" <macro@orcam.me.uk>
 To: Huacai Chen <chenhuacai@kernel.org>
-cc: Marco Crivellari <marco.crivellari@suse.com>, linux-mips@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v7 1/2] MIPS: Fix idle VS timer enqueue
-In-Reply-To: <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2504280224110.31828@angie.orcam.me.uk>
-References: <20250403161143.361461-1-marco.crivellari@suse.com> <20250403161143.361461-2-marco.crivellari@suse.com> <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
+cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Thorsten Blum <thorsten.blum@linux.dev>, Oleg Nesterov <oleg@redhat.com>, 
+    linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] MIPS: Fix MAX_REG_OFFSET
+In-Reply-To: <CAAhV-H5A_xFMXOXPJFz6FyD_FixDW2msGM1fRe-FdDSq=anS8w@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2504280235440.31828@angie.orcam.me.uk>
+References: <20250427113423.67040-2-thorsten.blum@linux.dev> <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com> <aA4oag9MAXT3y0t8@alpha.franken.de> <CAAhV-H5A_xFMXOXPJFz6FyD_FixDW2msGM1fRe-FdDSq=anS8w@mail.gmail.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,20 +38,16 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sun, 27 Apr 2025, Huacai Chen wrote:
 
-> > +r4k_wait_exit:
-> > +       .set    mips0
-> > +       local_irq_disable
-> >         jr      ra
-> > -        nop
-> > -       .set    pop
-> > -       END(__r4k_wait)
-> > +       END(r4k_wait)
-> > +       .previous
-> I'm very sorry for the late response, but I think ".previous" should
-> be moved to the second patch.
+> > > There is no 80 columns limit now, so no new line needed here.
+> >
+> > but not forbidden to care about it. I still prefer this limit.
+> Of course you are free to choose. But in my opinion "force to long
+> lines" and "force to short lines" are both bad, code readability is
+> the first thing to be considered.
 
- Indeed; does it even assemble?  Correctness aside I'd rather it didn't 
-cause someone a problem with bisecting sometime.  NB I had no opportunity 
-either to look at this version earlier.
+ Correct, and I start getting lost when lines are wrapped by overrunning 
+the width of my screen.  NB in the old days some terminals would actually 
+truncate lines instead; at least it does not happen anymore, or at least 
+you can tell your terminal not to do it via a suitable stty(1) invocation.
 
   Maciej
