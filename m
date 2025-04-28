@@ -1,202 +1,251 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278B928D82A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BB9223338;
+	Mon, 28 Apr 2025 17:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860339; cv=none; b=blJHMuc04OqP2dBoMWMVZP6V4wOmUwYi7zf/WJTDKpIUnXQ92WlFpQ+qng5h7lnwTq62jncgysi0gKVyBPplH6+KEy/ZaMSUV2TeYF+h7/EAtSHlvnbRzF00iUzKXMSMJz38IdrvG0FkdkLE2ZYQWmYyUyM9TOqZsDXbq00/B10=
+	t=1745860386; cv=none; b=mmfz3mnlN7R2u1x+Eo983l0SisUNKSExIUZnAWoSIkoRHfP4H7LJCzThEHHIzwRBRSO3CzSSWv/ZEhOCr6fxMgG1ZOnkSVjHGjrtAEPGJuB96045DApy/L6VzllWFsdPnD2DMemfNyLJBe9pcx113OFk27JJxvYx7WYI8PxYdCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860339; c=relaxed/simple;
-	bh=jULmZlWn/2/Vo/wWa1N1sU9KO7XMrfNbc0iy0j8QOUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M0UrNcRLGHGac92/NcB1vRZaN9hP91dckk1q5oaJvWeS04QyQnixjUSAV9ZRpV+T9/u9NXTQte9gemHuBTcQt34fD2ykyLo2e1WwxHTuqWivL69+0M6FH3Rn4L7wcFNF9JEEmmY4lGe10zRRC3sRfjYkC66JYw8//9spuGgIkN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AgKVSsdl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745860386; c=relaxed/simple;
+	bh=yPImR2FR7PHscbj8FO5MYpY++3jeaaS6t1jVeZ0eY/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LSPaazvIL8gj89VT/zCVSTvK1VMXNChjbfNBWy1jWeE6Ak/UJ8Z04FGSQIRdWm8dA6n+/yOokDhBKpBgK6nRIXxsJ+Ldn1qKgbqrIbiDlnrXA7gJBnqMs5DjHpbyrXxiffzWXfmKqOhVPVRRhQkZmOa+nLAgtzFgNH0pqECPhwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9DhL1HR; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AgKVSsdl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745860336;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YlBurcqbe64ISpcElqVnUgzueWYOv8LWsAS36SHmzGE=;
-	b=AgKVSsdlXwp0uaNd0vgFjTUoDSAYAG7ta7rtRhLUURb07p5NXR0AGb3tMrVIYHrS0slmwm
-	H5gbOCQqUf1CFih+HCR3QWejzM4rZEbUBcbLvjkCVfL6a7P9m62ie1lVs8bj5e8Cqh6Hch
-	vazkP/zJEZTHwqnArTRguT29f4yA/nk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-549-01CX6NJ6Pb-zs2aR2-pH5A-1; Mon, 28 Apr 2025 13:12:14 -0400
-X-MC-Unique: 01CX6NJ6Pb-zs2aR2-pH5A-1
-X-Mimecast-MFC-AGG-ID: 01CX6NJ6Pb-zs2aR2-pH5A_1745860333
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d5ca7c86aso29543005e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:12:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9DhL1HR"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-309fac646adso2843063a91.1;
+        Mon, 28 Apr 2025 10:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745860384; x=1746465184; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0aWcmtL95uQeYsQHUGFsCmGq4ARE/rjVxbyBKZAibqk=;
+        b=H9DhL1HRq8dNv7TTGnDbDPQWBl9XFlC5s2Gb8KyO52TxLG/Lj24dyPqkxvboHaPFds
+         g2F9xrsjs14IsxSx9oiFqBEoB5n1sJk181iZKOZ2y1Afa/pYotF+ErW7GFNf2H2S6qML
+         aSOdpWgN4f/p+65KrB4hb6y3ouSnu+F9y58PZFvORNa7jCcH7jF5i732yFeR8+13tiPh
+         fBIbFg+zSVd3AgbIZMpGqGkA2fVTnbFYtAUt7fQl113nD2MeTjlmwqc3uapG/Gdw5FLW
+         FnVAtYtq8doiFyRQuTqZrQKOLCT/KQou0OTFfVPe4WjqbBHDTihuVAqtyTcXMdOAJHMZ
+         CNTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745860333; x=1746465133;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YlBurcqbe64ISpcElqVnUgzueWYOv8LWsAS36SHmzGE=;
-        b=kObkACiDbquLLecDc0xKUkBUsdeQRLUlviKWIRvApJAewGE9gkZIOYbOcJEvW/iKaC
-         86NNN7vzWbcpbGWcw9A/rOhElMfYH9nN7+CkMJn2+aSFfn2fhOx9oqr/FpdaT0jW/U+Z
-         jjFHme6FF/cEQ1YcIZ0SDjN7nzvmHDO6lqdhRyhS64vWd6/2EfE2uzxC1FUWVEbZ2ufK
-         JEccq5qf0zMnUlp0t6QWmP6WSimu+PndjFSG6x+hNzQ90P0lgMv+DIECH0Jl9cyRJrxp
-         gdMyIZaVIhGM53zQTUwPG4OBk8e21iPht9d+JtgvMMpjtW5DgAB2yKomP+tZU5q57XaR
-         /DDQ==
-X-Gm-Message-State: AOJu0YwrjyTpuwXpS+Pl8b9guPsRqPGsZ0KcchJ12Kl5lrbQA7YynCzp
-	MutelrC/KNLzEmycVmXWFNPjHBOCfqmlWiw9V5Tu3ApOX5ixypxnWJOP+GU7Mk2cCAq/90HKHSM
-	ESigkCbrUH8Qqe0ZnbdovYe2/SxpQOwu3+63nNkMXZwGn0TdDdZR7nIiiz2HKDA==
-X-Gm-Gg: ASbGncvoPC5nD+wRui2H/1AG3SYkkzzzMfi5qIVthxxDbQtw0H1pqClDS66ZwotHQBf
-	16BwcBb6tloeqDzkXeL5NjJ7APRRkm9XbCWzYi3JsBsufa7oKRbEXXEgoV2g8gbzR363sp9hLSw
-	Gs4XlJ6a43XSsMjJoOnyA3vp0LYrSfb5fxJOv368rPuWY8SmruCfn+qvKw109+nQEMJ3l+23Uoq
-	88YU/3PKU7iq/cg4g34z7kzQCjAaIvxdTFkKx6Otu04o5QjQtR6XzqcO3bP836s/+FYZTTGzXZq
-	ONzm76+F0kDoTFvfwUAygXCcjJBOXfrkYuKuroKyYVDb3LTH9aQRld5kQRqRHsGXUIP9/BvhhTe
-	9R539OKfxZ0cIyuSQboEbLDuoO3WV+9hdiTF/lA==
-X-Received: by 2002:a05:600c:4e4b:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-441ac8eb213mr763645e9.11.1745860333369;
-        Mon, 28 Apr 2025 10:12:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGI3eEGBKgI0g/a7m3l8hddD1u69DnS0ugwSS0KDQtTLhljvtnZJ97Ojpq6J+GchDMn+0V3FA==
-X-Received: by 2002:a05:600c:4e4b:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-441ac8eb213mr763265e9.11.1745860332996;
-        Mon, 28 Apr 2025 10:12:12 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f32:c200:9add:4a7a:46aa:f740? (p200300d82f32c2009add4a7a46aaf740.dip0.t-ipconnect.de. [2003:d8:2f32:c200:9add:4a7a:46aa:f740])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d0a7802sm127236275e9.1.2025.04.28.10.12.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 10:12:12 -0700 (PDT)
-Message-ID: <fc8117d9-57f8-4c28-9c46-328e4a3c4613@redhat.com>
-Date: Mon, 28 Apr 2025 19:12:11 +0200
+        d=1e100.net; s=20230601; t=1745860384; x=1746465184;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0aWcmtL95uQeYsQHUGFsCmGq4ARE/rjVxbyBKZAibqk=;
+        b=nVXOUv68xS0sKsvmhlPigCz3sDMZXi5zfSi+sdkXzNOqaFtTKs5hsHYb+JwzyOU0w0
+         Rp0BYoOB91eaETZ3i83C04n6F+sGNVfEUZ2UOXK1YSNYQhlhd0jU6DlvhCKcTr2fuYYS
+         tmnTpaFTxHDgto54rI1yMDr4XDd1RyJY3maKRD+L/r5Xu7D4mixl4/lX/rzwgW7Tr4i1
+         IyxGbtb9KkQNI4kvlA3byz1MbQPrhniJ7Ovh1uBP0cKANZe4gbC9TmpbuFxE/d9KQp8D
+         0pmmADLCmlfoSgcWSxeTn6RJnqpn8d2IqgGpwKE5xE51AYRDCQSuyS6j58BKkzBE40ei
+         HKQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGWKkY3wn+HklSm1FUWvMpRqbT+gYPx9YVM7YXX1tuVbSU5C6ewpJHNtgdylV0LQSa2WnE1Tdq70cLs+uiAjRjEg==@vger.kernel.org, AJvYcCVV7maQksHZ7XTfiXTDwys0ELGok7/WcuVxmSGW2SXcM39yJwABMdlmfpsCAKpPjTLIllMnOx9jy2bjYKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm1ruOxhe5menIQbBDdDrclZDBSgfIK9uxCIlgpUmyiq3PskG0
+	Ll581xM9vjzNWnDD+ia7ioDMiT1KzJ9pFsHTqPBbn2uZBnbddHtS
+X-Gm-Gg: ASbGnctMaVTgLKhP4RbOx3/sjoC2GRD7z/VqDD2lNclbzNPIeuWq/uvlxHMR/GfCky9
+	4W1QOhoLi5TyNMFjKHhlbANMW688HB/GNuRpnPUDAK8tTQcSOXmZRuetABprqtG7JbD1skafOxX
+	HWdR4HLcxpPuhC57egCAM8/H81m9P3UYMO3ck9nFrWPeiseR5R8NNTP6A8I2dHiiyshtGJKlmJS
+	QiyxVlHr/2JM4VJMVzlnN5LceqL/jg8Bay8BM7t9vLK06f+Xkqdzw4YKy6bmvvEqif2hRQAp5pC
+	snwewjpgxCFAAJW8FlMyaidIyM0++nqUFHWvAYU=
+X-Google-Smtp-Source: AGHT+IHWOIDd9y6vr7huqtxupJfN3hpUaBQLaUlNnozyWv6aH7mSCdhg1ZQngv1XQveJdMkPOacF4g==
+X-Received: by 2002:a17:90b:2550:b0:308:2945:3842 with SMTP id 98e67ed59e1d1-309f8a24cc1mr19035414a91.15.1745860383598;
+        Mon, 28 Apr 2025 10:13:03 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef1475c1sm9321785a91.45.2025.04.28.10.12.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 10:13:02 -0700 (PDT)
+Date: Mon, 28 Apr 2025 14:12:57 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com, linux-remoteproc@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
+ devm_clk_get_optional()
+Message-ID: <20250428171257.276bqhaupe4ksu5l@hiago-nb>
+References: <20250423155131.101473-1-hiagofranco@gmail.com>
+ <aAkf6bxBLjgFjvIZ@p14s>
+ <20250423192156.b44wobzcgwgojzk3@hiago-nb>
+ <20250426134958.GB13806@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/11] x86/mm/pat: introduce pfnmap_track() and
- pfnmap_untrack()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-4-david@redhat.com>
- <554a6063-268c-49a7-883b-c39cf541c146@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <554a6063-268c-49a7-883b-c39cf541c146@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250426134958.GB13806@nxa18884-linux>
 
-
->>
->> +int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot)
->> +{
->> +	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
->> +
->> +	return reserve_pfn_range(paddr, size, prot, 0);
+On Sat, Apr 26, 2025 at 09:49:58PM +0800, Peng Fan wrote:
+> On Wed, Apr 23, 2025 at 04:21:56PM -0300, Hiago De Franco wrote:
+> >Hi Mathieu,
+> >
+> >On Wed, Apr 23, 2025 at 11:14:17AM -0600, Mathieu Poirier wrote:
+> >> Good morning,
+> >> 
+> >> On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
+> >> > From: Hiago De Franco <hiago.franco@toradex.com>
+> >> > 
+> >> > The "clocks" device tree property is not mandatory, and if not provided
+> >> > Linux will shut down the remote processor power domain during boot if it
+> >> > is not present, even if it is running (e.g. it was started by U-Boot's
+> >> > bootaux command).
+> >> 
+> >> If a clock is not present imx_rproc_probe() will fail, the clock will remain
+> >> unused and Linux will switch it off.  I think that is description of what is
+> >> happening.
+> >> 
+> >> > 
+> >> > Use the optional devm_clk_get instead.
+> >> > 
+> >> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> >> > ---
+> >> >  drivers/remoteproc/imx_rproc.c | 2 +-
+> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> > 
+> >> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> >> > index 74299af1d7f1..45b5b23980ec 100644
+> >> > --- a/drivers/remoteproc/imx_rproc.c
+> >> > +++ b/drivers/remoteproc/imx_rproc.c
+> >> > @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+> >> >  	if (dcfg->method == IMX_RPROC_NONE)
+> >> >  		return 0;
+> >> >  
+> >> > -	priv->clk = devm_clk_get(dev, NULL);
+> >> > +	priv->clk = devm_clk_get_optional(dev, NULL);
+> >> 
+> >> If my understanding of the problem is correct (see above), I think the real fix
+> >> for this is to make the "clocks" property mandatory in the bindings.
+> >
+> >Thanks for the information, from my understanding this was coming from
+> >the power domain, I had a small discussion about this with Peng [1],
+> >where I was able to bisect the issue into a scu-pd commit. But I see
+> >your point for this commit, I can update the commit description.
+> >
+> >About the change itself, I was not able to find a defined clock to use
+> >into the device tree node for the i.MX8QXP/DX, maybe I am missing
+> >something? I saw some downstream device trees from NXP using a dummy
+> >clock, which I tested and it works, however this would not be the
+> >correct solution.
 > 
-> Nitty, but a pattern established by Liam which we've followed consistently
-> in VMA code is to prefix parameters that might be less than obvious,
-> especially boolean parameters, with a comment naming the parameter, e.g.:
- > > 	return reserve_pfn_range(paddr, size, prot, /*strict_prot=*/0);
+> The clock should be "clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;" for
+> i.MX8QX. This should be added into device tree to reflect the hardware truth.
 
-Not sure I like that. But as this parameter goes away patch #8, I'll 
-leave it as is in this patch and not start a bigger discussion on better 
-alternatives (don't use these stupid boolean variables ...) ;)
+Is this correct? I added this clock entry and also updated the clk
+drivers to handle this option:
 
-[...]
+diff --git a/drivers/clk/imx/clk-imx8qxp-rsrc.c b/drivers/clk/imx/clk-imx8qxp-rsrc.c
+index 585c425524a4..69c6f1711667 100644
+--- a/drivers/clk/imx/clk-imx8qxp-rsrc.c
++++ b/drivers/clk/imx/clk-imx8qxp-rsrc.c
+@@ -58,6 +58,7 @@ static const u32 imx8qxp_clk_scu_rsrc_table[] = {
+        IMX_SC_R_NAND,
+        IMX_SC_R_LVDS_0,
+        IMX_SC_R_LVDS_1,
++       IMX_SC_R_M4_0_PID0,
+        IMX_SC_R_M4_0_UART,
+        IMX_SC_R_M4_0_I2C,
+        IMX_SC_R_ELCDIF_PLL,
+diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
+index 3ae162625bb1..be6dfe0a5b97 100644
+--- a/drivers/clk/imx/clk-imx8qxp.c
++++ b/drivers/clk/imx/clk-imx8qxp.c
+@@ -142,6 +142,7 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
+        imx_clk_scu("a35_clk", IMX_SC_R_A35, IMX_SC_PM_CLK_CPU);
+        imx_clk_scu("a53_clk", IMX_SC_R_A53, IMX_SC_PM_CLK_CPU);
+        imx_clk_scu("a72_clk", IMX_SC_R_A72, IMX_SC_PM_CLK_CPU);
++       imx_clk_scu("cm40_clk", IMX_SC_R_M4_0_PID0, IMX_SC_PM_CLK_CPU);
 
->> +
->> +/**
->> + * pfnmap_track - track a pfn range
+        /* LSIO SS */
+        imx_clk_scu("pwm0_clk", IMX_SC_R_PWM_0, IMX_SC_PM_CLK_PER);
+
+
+However I am seeing a permission denied (-13) from the imx_rproc:
+
+root@colibri-imx8x-07308754:~# dmesg | grep rproc
+[    0.489113] imx-rproc imx8x-cm4: Failed to enable clock
+[    0.489644] imx-rproc imx8x-cm4: probe with driver imx-rproc failed with error -13
+[    0.489708] remoteproc remoteproc0: releasing imx-rproc
+
+	imx8x-cm4 {
+		compatible = "fsl,imx8qxp-cm4";
+		clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;
+		mbox-names = "tx", "rx", "rxdb";
+		mboxes = <&lsio_mu5 0 1
+			  &lsio_mu5 1 1
+			  &lsio_mu5 3 1>;
+		memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>,
+				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
+		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+				<&pd IMX_SC_R_M4_0_MU_1A>;
+		fsl,entry-address = <0x34fe0000>;
+		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
+	};
+
+Am I missing something?
+
 > 
-> To risk sounding annoyingly pedantic and giving the kind of review that is
-> annoying, this really needs to be expanded, I think perhaps this
-> description is stating the obvious :)
+> But there are several working configurations regarding M4 on i.MX8QM/QX/DX/DXL.
 > 
-> To me the confusing thing is that the 'generic' sounding pfnmap_track() is
-> actually PAT-specific, so surely the description should give a brief
-> overview of PAT here, saying it's applicable on x86-64 etc. etc.
+> 1. M4 in a separate SCFW partition, linux has no permission to configure
+>   anything except building rpmsg connection.
+> 2. M4 in same SCFW partition with Linux, Linux has permission to start/stop M4
+>    In this scenario, there are two more items:
+>    -(2.1) M4 is started by bootloader
+>    -(2.2) M4 is started by Linux remoteproc.
 > 
-> I'm not sure there's much use in keeping this generic when it clearly is
-> not at this point?
-
-Sorry, is your suggestion to document more PAT stuff or what exactly?
-
-As you know, I'm a busy man ... so instructions/suggestions please :)
-
 > 
->> + * @pfn: the start of the pfn range
->> + * @size: the size of the pfn range
+> Current imx_rproc.c only supports 1 and 2.2,
+> Your case is 2.1.
 > 
-> In what units? Given it's a pfn range it's a bit ambiguous as to whether it
-> should be expressed in pages/bytes.
-
-Agreed. It's bytes. (not my favorite here, but good enough)
-
-
--- 
-Cheers,
-
-David / dhildenb
-
+> There is a clk_prepare_enable which not work for case 1 if adding a real
+> clock entry.
+> 
+> So need move clk_prepare_enable to imx_rproc_start, not leaving it in probe?
+> But for case 2.1, without clk_prepare_enable, kernel clk disable unused will
+> turn off the clk and hang M4. But even leaving clk_prepare_enable in probe,
+> if imx_rproc.c is built as module, clk_disable_unused will still turn
+> off the clk and hang M4.
+> 
+> So for case 2.1, there is no good way to keep M4 clk not being turned off,
+> unless pass "clk_ignore_unused" in bootargs.
+> 
+> 
+> For case 2.2, you could use the clock entry to enable the clock, but actually
+> SCFW will handle the clock automatically when power on M4.
+> 
+> If you have concern on the clk here, you may considering the various cases
+> and choose which to touch the clk, which to ignore the clk, but not 
+> "clk get and clk prepare" for all cases in current imx_rproc.c implementation.
+> 
+> Regards,
+> Peng
+> 
+> 
+> >
+> >[1] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+> >
+> >Cheers,
+> >Hiago.
+> >
+> >> 
+> >> Daniel and Iuliana, I'd like to have your opinions on this.
+> >> 
+> >> Thanks,
+> >> Mathieu
+> >> 
+> >> >  	if (IS_ERR(priv->clk)) {
+> >> >  		dev_err(dev, "Failed to get clock\n");
+> >> >  		return PTR_ERR(priv->clk);
+> >> > -- 
+> >> > 2.39.5
+> >> > 
