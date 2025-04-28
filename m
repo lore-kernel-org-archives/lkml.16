@@ -1,162 +1,114 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F3238F9C;
-	Mon, 28 Apr 2025 10:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD80D25EF9F;
+	Mon, 28 Apr 2025 10:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745836865; cv=none; b=RPUQ3+MpOFLjDqxjT3gl4rkpt49imw8Fye7W+Tw2Bsqw85sO9hZPl85PdJS4/j8hidEIqMqZ3Vndo8ApQTVGH/Zhp0XDr3WLkgURuq6wNlEqWdZg+Amk3TTQ94VRnL3cPNiYWx3bRFb0J2hnpfoxXwVNUcAnzPMG1prLhooTZes=
+	t=1745836883; cv=none; b=u6V/z1kFEPCJSY+RnagtX2gwG/xeE/frEzW883ciqjx2n+lI8WwjpTetErawUGyQW/vW5cmRB7Rm030NAcHld3zlsqSvPqeoBpApBB357n9KkPyBXW4+aORPnbDyS6SrLTrkA9r0UYcr+Jp2ici/5X5ksQ1KNSRmHt0+ezRcjvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745836865; c=relaxed/simple;
-	bh=PMBvLS3NVHJ/ZDWYVnxFM6aJG4Z0dOe09lzY9xEGW68=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eXXCz9itaJkzxL80dDVJZ4eG/eh5OvtzL27F7TO+KbMJnptUjMwCLBQLDUd083rWlH0087EeUVnTG5KeHIlfCmVr4RR0nbRO2zH6ZIfwZ4pDfj/8c585XIZLXi3ViCPH5KesRWGGSpOiFXyvTJ1e7JnXh7J9dOlwyN1RqZh0Ejk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NfuYgoI+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745836883; c=relaxed/simple;
+	bh=iJBBvAmJmalamc+8YOZLp2zXk2ztuI8xnZZR9+nzW0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uGdu9scRbn6Hd3gO7cg4JwmOlckEGf49iYMWnolye0FUV19fO13ryn18AEbJqVjD1eibdCLStEN4NFfGMhWeTEmtPPidbhrXYI8R27dvKYGBLAjmn37c4ruWFoda16bdQmi4xZHQRj9W6O9pb+VGHWRZgmMB/1PsNdGuHdE9zW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a+uiKmJJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HVCoze0X; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NfuYgoI+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745836862;
-	bh=LN6OprujhlffQ3dP86stsT+uKyfbXf3NGXxVcRnucAU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NfuYgoI+FIrT2eX6FEIfLPjYm2iN1snmlNQ4krOQVSdg4IHZhTCfddERXeK5LY8Lp
-	 Y5aufoiikI/R7srV6jTq6xrJSdgdbIERW3bxdjTUtPsmgdsPoVZgXPsjufnKWM7chw
-	 bD5F52UC1sxynHRqM/MJb4YGDQVPPxslzDqAkqgeI6pCVj0z28ETqg1Jabmvmhbv+L
-	 skdcfA12kdCPldJjx+if412iY4hmAnb6k1vC08/KLhbjmzwXUS6STTU45C6CJ4q9du
-	 LQjPPUs6uUCO9gfSul+PiTmyNbfIa6AtSiZKAXaWB4BnsXoFi32ppV6oYaJqPbRfpB
-	 mz7p3BikUSgSg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmKjp13cSz4wbv;
-	Mon, 28 Apr 2025 20:41:02 +1000 (AEST)
-Date: Mon, 28 Apr 2025 20:41:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andreas Hindborg <a.hindborg@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rust-xarray tree
-Message-ID: <20250428204101.40a35c07@canb.auug.org.au>
-In-Reply-To: <20250428203943.51dd39d5@canb.auug.org.au>
-References: <20250428203943.51dd39d5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a+uiKmJJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HVCoze0X"
+Date: Mon, 28 Apr 2025 12:41:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745836879;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+I2M0UkWdhpD96ij43HQHPTOpq526vcHcH8seBMuv5E=;
+	b=a+uiKmJJD344kWYLHrbbGopPCCDKEox1g7IWpQlS2xEgq0B0NfjoL3kJ+IbbhP+60Ty/uo
+	042QnYLTPdhHkl0w7+fMdAfWpDQJmObl+/h5ngxcpAsWH4XirOaviwEMEu0V67f6nRiq+6
+	RUeBTTnzbGOInd1JhakyGRyfi/iDJ/YPQBdBg+DLnFHtxShlkxESVhVdlTrIuKkFeIKBvS
+	+Q9pNnjp4wi4JQlOu9cDmpdxm2b8o8fXyvFO9F1d80hPGQZgDMxZUnWPoS+cNwurgZLNEM
+	yoI8IJ1uaRN5jmyPn3tK6OFlYF5QUul5wQMu7Zei/T6AoPtRjERIxxdzGDvxeQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745836879;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+I2M0UkWdhpD96ij43HQHPTOpq526vcHcH8seBMuv5E=;
+	b=HVCoze0XnnmUQXGZXedsPZT/MhsrCNToZNgIwOtJtSN26Oh26v/3FjjQh1eaeV2mX1MHkz
+	w8g+c6paAAXtUsDg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 11/15] tools/nolibc: add difftime()
+Message-ID: <20250428123809-70bb912e-51e0-4b4b-9870-a02e41a079fe@linutronix.de>
+References: <20250423-nolibc-misc-v1-0-a925bf40297b@linutronix.de>
+ <20250423-nolibc-misc-v1-11-a925bf40297b@linutronix.de>
+ <20250426104520.GD17549@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/s=muqbsDHtO+QuD2OBv2cc1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250426104520.GD17549@1wt.eu>
 
---Sig_/s=muqbsDHtO+QuD2OBv2cc1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Apr 26, 2025 at 12:45:20PM +0200, Willy Tarreau wrote:
+> On Wed, Apr 23, 2025 at 05:01:41PM +0200, Thomas Weiﬂschuh wrote:
+> > This is used in various selftests and will be handy when integrating
+> > those with nolibc.
+> > 
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > ---
+> >  tools/include/nolibc/time.h                  | 7 +++++++
+> >  tools/testing/selftests/nolibc/nolibc-test.c | 1 +
+> >  2 files changed, 8 insertions(+)
+> > 
+> > diff --git a/tools/include/nolibc/time.h b/tools/include/nolibc/time.h
+> > index 28a1549adb14e2087fa8fbdb7e9c35e1c3f22c2a..760133c574ece97165e3bba5616a387deaf07aff 100644
+> > --- a/tools/include/nolibc/time.h
+> > +++ b/tools/include/nolibc/time.h
+> > @@ -105,6 +105,13 @@ int clock_settime(clockid_t clockid, struct timespec *tp)
+> >  }
+> >  
+> >  
+> > +static __inline__
+> > +double difftime(time_t time1, time_t time2)
+> > +{
+> > +	return time1 - time2;
+> > +}
+> 
+> Thanks for making me discover difftime(). I've never heard about it, and
+> seeing it return a double looks totally weird, but that's how it is indeed.
+> 
+> In case time_t would be unsigned, this would return a large unsigned
+> value. I think it could be more robust to explicitly cast the two
+> inputs to long:
+> 
+> 	return (long)time1 - (long)time2;
 
-Hi all,
+time_t is explicitly defined as "signed long" in nolibc's std.h.
+If we change it at some time in the future we will have to audit any usage site
+of time_t in any case.
 
-On Mon, 28 Apr 2025 20:39:43 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the rust-xarray tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+> > diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+> > index aed71de4b4f3dd1f183c7fc25e5a5cee466600ed..fd8bab42e75157967658690005bc9142360fc135 100644
+> > --- a/tools/testing/selftests/nolibc/nolibc-test.c
+> > +++ b/tools/testing/selftests/nolibc/nolibc-test.c
+> > @@ -1423,6 +1423,7 @@ int run_stdlib(int min, int max)
+> >  		CASE_TEST(toupper_noop);            EXPECT_EQ(1, toupper('A'), 'A'); break;
+> >  		CASE_TEST(abs);                     EXPECT_EQ(1, abs(-10), 10); break;
+> >  		CASE_TEST(abs_noop);                EXPECT_EQ(1, abs(10), 10); break;
+> > +		CASE_TEST(difftime);                EXPECT_EQ(1, difftime(200., 100.), 100.); break;
+> 
+> Then here maybe test it in reverse to make sure the types don't cause trouble:
 
-error[E0308]: mismatched types
-  --> rust/kernel/auxiliary.rs:76:73
-   |
-55 | impl<T: Driver + 'static> Adapter<T> {
-   |      - found this type parameter
-...
-76 |                 unsafe { bindings::auxiliary_set_drvdata(adev.as_raw()=
-, data.into_foreign()) };
-   |                          -------------------------------              =
-  ^^^^^^^^^^^^^^^^^^^ expected `*mut c_void`, found `*mut T`
-   |                          |
-   |                          arguments to this function are incorrect
-   |
-   =3D note: expected raw pointer `*mut c_void`
-              found raw pointer `*mut T`
-note: function defined here
-  --> rust/bindings/bindings_helpers_generated.rs:5:12
-   |
-5  |     pub fn auxiliary_set_drvdata(adev: *mut auxiliary_device, data: *m=
-ut ffi::c_void);
-   |            ^^^^^^^^^^^^^^^^^^^^^
+Ack.
 
-error[E0308]: mismatched types
-  --> rust/kernel/auxiliary.rs:92:47
-   |
-55 | impl<T: Driver + 'static> Adapter<T> {
-   |      - expected this type parameter
-...
-92 |         drop(unsafe { KBox::<T>::from_foreign(ptr) });
-   |                       ----------------------- ^^^ expected `*mut T`, f=
-ound `*mut c_void`
-   |                       |
-   |                       arguments to this function are incorrect
-   |
-   =3D note: expected raw pointer `*mut T`
-              found raw pointer `*mut c_void`
-note: associated function defined here
-  --> rust/kernel/types.rs:63:15
-   |
-63 |     unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self;
-   |               ^^^^^^^^^^^^
-
-error[E0308]: mismatched types
-   --> rust/kernel/miscdevice.rs:256:66
-    |
-256 |         let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(pr=
-ivate) };
-    |                               ---------------------------------- ^^^^=
-^^^ expected `*mut <... as ForeignOwnable>::PointedTo`, found `*mut c_void`
-    |                               |
-    |                               arguments to this function are incorrect
-    |
-    =3D note: expected raw pointer `*mut <<T as MiscDevice>::Ptr as Foreign=
-Ownable>::PointedTo`
-               found raw pointer `*mut c_void`
-    =3D help: consider constraining the associated type `<<T as MiscDevice>=
-::Ptr as ForeignOwnable>::PointedTo` to `c_void` or calling a method that r=
-eturns `<<T as MiscDevice>::Ptr as ForeignOwnable>::PointedTo`
-    =3D note: for more information, visit https://doc.rust-lang.org/book/ch=
-19-03-advanced-traits.html
-note: associated function defined here
-   --> rust/kernel/types.rs:98:15
-    |
-98  |     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> Self::Borrowed=
-<'a>;
-    |               ^^^^^^
-
-error: aborting due to 3 previous errors
-
-For more information about this error, try `rustc --explain E0308`.
-
-> I don't know what caused this, but it is presumably an interaction
-> between this tree and the mm-unstable and drm-nova trees.
->=20
-> I have dropped the rust-xarray tree for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/s=muqbsDHtO+QuD2OBv2cc1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPWz0ACgkQAVBC80lX
-0GzSWggAoBG9ti+FfCoaqjh6jm57n/bqlzeOpqqJJceruvYLIPY+oFr2HSKn07T4
-MJ1+lliggTO2N1U9VBHyD5Ko3b/X7CZqaMsOrQipYZPwUbXR/+xgfmawQqM9O2Rq
-y9b81viLQkMmK2zamJKaRouovLSDrBoqlVcidBW69QURAcLvTDpHzgFZkzseLW8a
-0TvBw6FEwoCmDyCczOgi9ZQWiy5b47f4izA7BD8VeA+JeTzIOOvhf6tEnoihi+xE
-956YOVTNToWhZm6mMhbmhRf8yvNtFXt4QURVUh6XfwfFsXI/1/INezAtGK9UveIs
-InY19LJTD835+KDDBSYV7TPmMe81oQ==
-=iSoR
------END PGP SIGNATURE-----
-
---Sig_/s=muqbsDHtO+QuD2OBv2cc1--
+> 		CASE_TEST(difftime);                EXPECT_EQ(1, difftime(100., 200.), -100.); break;
