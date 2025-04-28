@@ -1,233 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164F52973BB;
-	Mon, 28 Apr 2025 19:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A464C296D25
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745866938; cv=none; b=n6OIpzh9kc+SV3Thq0JdmJUKBsFRBDBwFjial7SsBne6vcBNZYY72bF5DWWe9DoGxNskDHm2C9cMWDH0CcVp5AsSf1DRDTWzHEc8ON4JApRu+Mgvxjg+CvNaYMTWndrFJY6ATn3DDdGwg9qJ6gC1tEnXCYF9i39o5Yailkvin6Q=
+	t=1745866976; cv=none; b=FpHzpU/ahivfiwTbE9pMAa6Me2mAyagL7qQ6nOOGsMlDBRJucNR9wHxT2/HkPa+ANuPGK63kfROBXTbzTeHZzBSQTSKryX+luC0G5tpjoJG8fORSMiZvz1eCkuEtdU9uGkE0Q5pzm8/R6OwYcx3kfmbLlwuESMEG6+CdY6wKF7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745866938; c=relaxed/simple;
-	bh=LKxsD25S1RJIfuOP84cut1U1IiJUdfmmJCtJq9tjz3A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oiobBujUlzXgUukSXY+uTku2LRObcNdYB5OhtzLPG9JIW85+bQjjs5OndzAIbLNhDIFh9WfueFUWAzXE/SfwoM2YKZNmM7BjRBJzHngyO7L5qlk0ucaZrAOXtiV1pc+CUi8QSqSomhszriS2JV0f/i3nPznlJAjw2qow8NB4qI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kevOHOL0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745866976; c=relaxed/simple;
+	bh=81G08v+RqUNeKeO9J3EQnr/p4nVDb1PF8OFcGNlg19g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L9gSM0HcrEnEY80PlC+zPb/JNYgCfzYPqBvaaxMhFeKznhhRlR5WhVXuao7AtRk4K9iJGTXeMqPSvMgrV6qAGOU9pLCB9dQ4T1caImeS4LLr9G+plueUP1uAOgsoA7izSfnMXJs7k/q/PkQnnzIdecJRv3sQHf7LVBjpCtAYZDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IatgPgZc; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kevOHOL0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A7FC4CEED;
-	Mon, 28 Apr 2025 19:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745866937;
-	bh=LKxsD25S1RJIfuOP84cut1U1IiJUdfmmJCtJq9tjz3A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kevOHOL05wuhU4XapdR7a5W8fdNeJBUdmX/SNAWukxCVNMECnef+Chj3YLMwhf/y8
-	 Ym+3n0cXW7m4+SxIrNEH7iSJqX5Ad3FDIi5JcKM+06yKhyLqXbfhE9MzaiIqh+aAj/
-	 +f12uwgUeMGDmj/WGrk3KJu0wV6PwTvNBAN2euhtq5HgqJOk8yxIL4zQpGh1ibYQsd
-	 uK7Tk+4tP28DpklxwsKFImtcThnOYWjGFpBdytrKRQcRR9adr56ekV3TkAzO+69yJd
-	 E5xFfHa1KYCFbhTiDX2WzcAypxPah5qmQ74LvpfT/1eUwyAVayJvii3GQxnQ3T3or1
-	 c8bw06YEtmLjA==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2d9b61e02d1so680121fac.2;
-        Mon, 28 Apr 2025 12:02:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW3l6ODG10q5e0U4ypA5CnaYHeOhDeHtX5pRoWJPl2QlzoxLnOh8kh2yZXn10XvUGkgSTE/ZozhR1DZCwUPaANIxSOuoA==@vger.kernel.org, AJvYcCW6noUlhznrs0EAS7V9jZtuw1mYS74qOTjjcS2cachdfzDIdhy0b/k7hdn+u+jkcayBon2i6joByQ4P@vger.kernel.org, AJvYcCWARENICJE6zhakXPmnks+8cy/zr/kAnt3UcvFj0qo/nSvB3y7+nxuzcljAyWi7XHZ1q4otlR51mNQ6aQyp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3ZGn+khe1ftyc0KQAllIYY2aqzb/2Kh3REcSzR+zRCCsAF674
-	qESGLJu7Gwvzj7tYsg++AEV0JomX2hnEMWAcxPoK6FPmy+65zkFP380cC4cw68i8wLoo4OhwOIy
-	g7VoqmkMTiOXkh85Nv9CP1fQpqGc=
-X-Google-Smtp-Source: AGHT+IEcCgkMxWE97j27UCN9qkmL5Lr4PXGLmDAQswD4XACT8Z/diUgye1oNcWXiZY+C3ItQ76vFotE5iqeDBguJjl0=
-X-Received: by 2002:a05:6870:4790:b0:2c2:2f08:5e5b with SMTP id
- 586e51a60fabf-2d9be58d47dmr5756642fac.13.1745866937129; Mon, 28 Apr 2025
- 12:02:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IatgPgZc"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2264c9d0295so37295ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745866974; x=1746471774; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FYyPt2jR26wCNvi6PxzFs+Tv2/OybZasQ+Gm5GQ685c=;
+        b=IatgPgZcpx9LGQO7xF0DFR9STLGpf1zp1BD1GOElpq0WBOrId31gxfAbI5zwFGeKch
+         NuWo6JsH29yFGxzR3AH/UBYh2Z/sF2/D/4X5DZM2GKa/pzVv6GcbrjTwcckOAqC/Fxrn
+         0235kUOh+hERRW8OUetA3YcpTn3S1YEJzQomScKiM+N7fK4wseiTTs7Rtkbam7vpmGLW
+         Kc9l6RF0SDeolNajlGcauQRGN4GCtKTUa2/w13+lO/MoX5KrWoHRZk4riqCuWIaNesM1
+         fbtIVSyFKn/U3l98jJ8q9GJmbFmfNqwrqMl/cmoNCeHR/wVy7IcOu52/DkE3FCyUjuUJ
+         65VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745866974; x=1746471774;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FYyPt2jR26wCNvi6PxzFs+Tv2/OybZasQ+Gm5GQ685c=;
+        b=N6R9QfzUhuJUhTB5ejJUOm0E8wPTacbLtLQUXa6xdAQG1Jk7XoCnc4ZGh5RM8oTa4L
+         9wkiYIyDcFp+KGOQGuT0HB3GIxnG+9UWItysHU3mI/k1FNlVxXDDSzHojR9rb4efehH+
+         mb0Eu+6u2cYdp79JEwVU1JiXz51atKu4aKr9mXjPKYbnFjHtlzIiy2FGUALaGGDb03jo
+         RuamnFc//nIrReqXrwCvnkFVYoyDAy63S61vKYv4C9c0+uVyP3/Hsm2K4Ko7xN2T95Gr
+         XmIH5hkw9zSZ2ls9VZgujECA4oZH0P+MJ7W52HaxVMbfg4aZyJals/qcVOAlB4BAV3/3
+         VEzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpbOGaGkuCkJ3LSagL1+01KJOE8lQ4ST/D6rZMP8iDt7zsBpLvCoyxhPlMCHqm4tcjTRpk6/gX6KC2lfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLi36RzgySDY7L16fiuQy4u1kvB6s+7FTk4tyIuM+9HBik0GBt
+	VGh87XK/SkscZGQDBftqVE+BUzd2Z6/TSrpFUAx/4YKjbOmDxSGmfL21mPQ1MA==
+X-Gm-Gg: ASbGncuAdlTuf5kihD/8r4emf1pztG999dSR9d/FNR7DC9a/eU1p+K5amnnDevpdheb
+	aTG4frT67+O94GgZ6IshCvsUytpHO06/E8UzgYp3R/X2xpqBq4PrXYaYuZQqFPtldo6fWZkwJu1
+	nmQAUNgQsZhgzgyjNQWhPxKeZHR4N0vtVMvYYdpcL4T1J0UX0Ng5VeK1LU7kB/TaJKcrggqsh5F
+	GFZIUnvJE/gzjScwcUVM0NrBU2bcMF1zR0JjNtbZC/l3eWgzlliZr+nMRB0lWOE2ORRzqopcpx9
+	twAQl0Ll7VKrMrSr9KBF18FUl7P3a3QvJNoy3uixvMQLfoQ8WmdwngIz6b0PdBH9nBHHfTHc
+X-Google-Smtp-Source: AGHT+IEJGsiJDrtJlEO2nY+Xes9iIUQJtfbQGQMK+W7yiK5m4Ms2rwNKriCBn3CEAxNgqNLQt8mwbw==
+X-Received: by 2002:a17:903:32cc:b0:21f:3f5c:d24c with SMTP id d9443c01a7336-22de6bc7c32mr473905ad.0.1745866973500;
+        Mon, 28 Apr 2025 12:02:53 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309eef7cc58sm9392543a91.0.2025.04.28.12.02.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 12:02:52 -0700 (PDT)
+Date: Mon, 28 Apr 2025 19:02:42 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 07/22] iommufd/selftest: Add covearge for viommu data
+Message-ID: <aA_Q0o74AySmRM2G@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <acb47bf56f1b03df9f6fca26f511529354be3caa.1745646960.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f5dd019ad4506.2100bf0f83374@gmail.com> <445f6320-698f-4d29-8556-665366668e4d@gmail.com>
- <b6fc4e66-b35a-41ce-a633-db3d660b88a2@amd.com> <106bd256-2c08-463f-8498-b68f2d5ccaca@amd.com>
- <9de18953-3f6d-447a-8274-c953bae64039@gmail.com> <a2747306-447c-432a-a926-e9d0473d9a0e@amd.com>
- <CAJOrcgV-5tr66YbDd_mCL00YHg7nPVdJUon9Az7pZQXpNtwUoA@mail.gmail.com> <e8129e3c-aba9-427e-ad63-bc1ea1bdf0f5@amd.com>
-In-Reply-To: <e8129e3c-aba9-427e-ad63-bc1ea1bdf0f5@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 28 Apr 2025 21:02:05 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jS+gdHqW3pB1awZ7LHHWsFBQMp86tNwPMVBzOfot-sZw@mail.gmail.com>
-X-Gm-Features: ATxdqUHHBaekJ57BrjZ2a74PkNR6gV7ExWlFCialFGkGs0hqLBdaafSDn1dwxsM
-Message-ID: <CAJZ5v0jS+gdHqW3pB1awZ7LHHWsFBQMp86tNwPMVBzOfot-sZw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: EC: Fix CPU frequency limitation on AMD platforms
- after suspend/resume
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Marcus Bergo <marcusbergo@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, mark.pearson@lenovo.com, 
-	linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	lenb@kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acb47bf56f1b03df9f6fca26f511529354be3caa.1745646960.git.nicolinc@nvidia.com>
 
-On Mon, Apr 28, 2025 at 8:23=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 4/28/2025 4:51 AM, Marcus Bergo wrote:
-> > Yes, it does.
-> >
->
-> OK thanks for confirming.  Considering your finding with this patch
-> you've shared and knowing there is a timing dependency that delaying the
-> next s2idle cycle helps I do wonder if we should keep exploring.
->
-> Rafael, do you have thoughts here?  Specifically do you think it's worth
-> revisiting if b5539eb5ee70 was the correct move.
+On Fri, Apr 25, 2025 at 10:58:02PM -0700, Nicolin Chen wrote:
+> Extend the existing test_cmd/err_viommu_alloc helpers to accept optional
+> user data. And add a TEST_F for a loopback test.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
 
-Well, it was done for a reason that is explained in its changelog.  I
-think that the problem addressed by it is genuine, isn't it?
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
-> > On Sun, Apr 27, 2025 at 11:06=E2=80=AFPM Mario Limonciello
-> > <mario.limonciello@amd.com <mailto:mario.limonciello@amd.com>> wrote:
-> >
-> >     On 4/27/2025 1:34 PM, M. Bergo wrote:
-> >      > It does make it work fine for me, I saw the clock/timing
-> >     interference
-> >      > and this sane this problem for Lenovo as well.
-> >
-> >     Huh?  I think you have a typo; but I don't know what you actually m=
-eant.
-> >
-> >     So you're saying the timing patch helps your system as well?
-> >
-> >     Thanks,
-> >
-> >      >
-> >      > On 4/24/25 11:11 AM, Mario Limonciello wrote:
-> >      >> On 4/19/2025 1:03 PM, Mario Limonciello wrote:
-> >      >>> On 4/19/2025 4:28 AM, M. Bergo wrote:
-> >      >>>>  From 881e57c87b9595c186c2ca7e6d35d0a52c1a10c2 Mon Sep 17
-> >     00:00:00 2001
-> >      >>>> From: Marcus Bergo <marcusbergo@gmail.com
-> >     <mailto:marcusbergo@gmail.com>>
-> >      >>>> Date: Sat, 19 Apr 2025 05:19:05 -0300
-> >      >>>> Subject: [PATCH] ACPI: EC: Fix CPU frequency limitation on AM=
-D
-> >      >>>> platforms after
-> >      >>>>   suspend/resume
-> >      >>>>
-> >      >>>> Several AMD-based laptop models (Lenovo P15v Gen 3, P16v Gen
-> >     1, HP
-> >      >>>> EliteBook 845 G10)
-> >      >>>> experience a CPU frequency limitation issue where the
-> >     processor gets
-> >      >>>> stuck at
-> >      >>>> approximately 544MHz after resuming from suspend when the
-> >     power cord
-> >      >>>> is unplugged
-> >      >>>> during sleep. This issue makes the systems practically unusab=
-le
-> >      >>>> until a full
-> >      >>>> power cycle is performed.
-> >      >>>>
-> >      >>>> The root cause was traced to commit b5539eb5ee70 ("ACPI: EC: =
-Fix
-> >      >>>> acpi_ec_dispatch_gpe()") which restored the behavior of
-> >     clearing the
-> >      >>>> GPE
-> >      >>>> in acpi_ec_dispatch_gpe() function to prevent GPE storms.
-> >     While this
-> >      >>>> fix is
-> >      >>>> necessary for most platforms to prevent excessive power
-> >     consumption
-> >      >>>> during
-> >      >>>> suspend-to-idle, it causes problems on certain AMD platforms =
-by
-> >      >>>> interfering
-> >      >>>> with the EC's ability to properly restore power management
-> >     settings
-> >      >>>> after resume.
-> >      >>>>
-> >      >>>> This patch implements a targeted workaround that:
-> >      >>>> 1. Adds DMI-based detection for affected AMD platforms
-> >      >>>> 2. Adds a function to check if we're in suspend-to-idle mode
-> >      >>>> 3. Modifies the acpi_ec_dispatch_gpe() function to handle AMD
-> >      >>>> platforms specially:
-> >      >>>>     - For affected AMD platforms during suspend-to-idle, it
-> >     advances
-> >      >>>> the
-> >      >>>>       transaction without clearing the GPE status bit
-> >      >>>>     - For all other platforms, it maintains the existing
-> >     behavior of
-> >      >>>> clearing
-> >      >>>>       the GPE status bit
-> >      >>>>
-> >      >>>> Testing was performed on a Lenovo P16v Gen 1 with AMD Ryzen 7=
- PRO
-> >      >>>> 7840HS and
-> >      >>>> confirmed that:
-> >      >>>> 1. Without the patch, the CPU frequency is limited to 544MHz
-> >     after the
-> >      >>>>   suspend/unplug/resume sequence
-> >      >>>> 2. With the patch applied, the CPU properly scales up to its
-> >     maximum
-> >      >>>> frequency
-> >      >>>>     (5.1GHz) after the same sequence
-> >      >>>> 3. No regressions were observed in other EC functionality
-> >     (battery
-> >      >>>> status,
-> >      >>>>     keyboard backlight, etc.)
-> >      >>>> 4. Multiple suspend/resume cycles with different power states
-> >     were
-> >      >>>> tested
-> >      >>>>     without issues
-> >      >>>>
-> >      >>>> The patch was also verified not to affect the behavior on Int=
-el-
-> >      >>>> based systems,
-> >      >>>> ensuring that the GPE storm prevention remains effective wher=
-e
-> >     needed.
-> >      >>>>
-> >      >>>> Fixes: b5539eb5ee70 ("ACPI: EC: Fix acpi_ec_dispatch_gpe()")
-> >      >>>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D21855=
-7
-> >     <https://bugzilla.kernel.org/show_bug.cgi?id=3D218557>
-> >      >>>> Reported-by: Mark Pearson <mark.pearson@lenovo.com
-> >     <mailto:mark.pearson@lenovo.com>>
-> >      >>>> Signed-off-by: Marcus Bergo <marcusbergo@gmail.com
-> >     <mailto:marcusbergo@gmail.com>>
-> >      >>>
-> >      >>> Great finding with this being a potential root cause of this
-> >     behavior
-> >      >>> (at least from a Linux perspective).
-> >      >>>
-> >      >>> Although this helps, I'm not really a fan of the tech debt
-> >      >>> accumulated by needing to quirk this on a system by system
-> >     basis as a
-> >      >>> bandage.
-> >      >>>
-> >      >>> At least for HP someone said that this commit happens to help =
-them
-> >      >>> for the same issue you're describing:
-> >      >>>
-> >      >>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform=
--
-> >     <https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform->
-> >      >>> drivers- x86.git/commit/?
-> >      >>> h=3Dfixes&id=3D9f5595d5f03fd4dc640607a71e89a1daa68fd19d
-> >      >>>
-> >      >>> That was surprising to me, but it must be changing the timing
-> >     of some
-> >      >>> of the code running in HP's EC.  Since you happen to have a Le=
-novo
-> >      >>> system does it happen to help the Lenovo EC too?
-> >      >>>
-> >      >>> Mark, comments please?
-> >      >>>
-> >      >> Someone just reported that the timing delay patch helped their
-> >     Lenovo
-> >      >> system as well.  Can you see if it helps you too?
-> >
-> >
-> >
-> > --
-> >
-> >
-> > *
-> > *
-> > *
-> > Marcus Bergo*
->
->
+> ---
+>  tools/testing/selftests/iommu/iommufd_utils.h | 21 +++++++++-----
+>  tools/testing/selftests/iommu/iommufd.c       | 29 +++++++++++++++----
+>  .../selftests/iommu/iommufd_fail_nth.c        |  5 ++--
+>  3 files changed, 39 insertions(+), 16 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/iommu/iommufd_utils.h b/tools/testing/selftests/iommu/iommufd_utils.h
+> index 72f6636e5d90..a5d4cbd089ba 100644
+> --- a/tools/testing/selftests/iommu/iommufd_utils.h
+> +++ b/tools/testing/selftests/iommu/iommufd_utils.h
+> @@ -897,7 +897,8 @@ static int _test_cmd_trigger_iopf(int fd, __u32 device_id, __u32 pasid,
+>  					    pasid, fault_fd))
+>  
+>  static int _test_cmd_viommu_alloc(int fd, __u32 device_id, __u32 hwpt_id,
+> -				  __u32 type, __u32 flags, __u32 *viommu_id)
+> +				  __u32 flags, __u32 type, void *data,
+> +				  __u32 data_len, __u32 *viommu_id)
+>  {
+>  	struct iommu_viommu_alloc cmd = {
+>  		.size = sizeof(cmd),
+> @@ -905,6 +906,8 @@ static int _test_cmd_viommu_alloc(int fd, __u32 device_id, __u32 hwpt_id,
+>  		.type = type,
+>  		.dev_id = device_id,
+>  		.hwpt_id = hwpt_id,
+> +		.data_uptr = (uint64_t)data,
+> +		.data_len = data_len,
+>  	};
+>  	int ret;
+>  
+> @@ -916,13 +919,15 @@ static int _test_cmd_viommu_alloc(int fd, __u32 device_id, __u32 hwpt_id,
+>  	return 0;
+>  }
+>  
+> -#define test_cmd_viommu_alloc(device_id, hwpt_id, type, viommu_id)        \
+> -	ASSERT_EQ(0, _test_cmd_viommu_alloc(self->fd, device_id, hwpt_id, \
+> -					    type, 0, viommu_id))
+> -#define test_err_viommu_alloc(_errno, device_id, hwpt_id, type, viommu_id) \
+> -	EXPECT_ERRNO(_errno,                                               \
+> -		     _test_cmd_viommu_alloc(self->fd, device_id, hwpt_id,  \
+> -					    type, 0, viommu_id))
+> +#define test_cmd_viommu_alloc(device_id, hwpt_id, type, data, data_len,      \
+> +			      viommu_id)                                     \
+> +	ASSERT_EQ(0, _test_cmd_viommu_alloc(self->fd, device_id, hwpt_id, 0, \
+> +					    type, data, data_len, viommu_id))
+> +#define test_err_viommu_alloc(_errno, device_id, hwpt_id, type, data,        \
+> +			      data_len, viommu_id)                           \
+> +	EXPECT_ERRNO(_errno,                                                 \
+> +		     _test_cmd_viommu_alloc(self->fd, device_id, hwpt_id, 0, \
+> +					    type, data, data_len, viommu_id))
+>  
+>  static int _test_cmd_vdevice_alloc(int fd, __u32 viommu_id, __u32 idev_id,
+>  				   __u64 virt_id, __u32 *vdev_id)
+> diff --git a/tools/testing/selftests/iommu/iommufd.c b/tools/testing/selftests/iommu/iommufd.c
+> index 1a8e85afe9aa..8ebbb7fda02d 100644
+> --- a/tools/testing/selftests/iommu/iommufd.c
+> +++ b/tools/testing/selftests/iommu/iommufd.c
+> @@ -2688,7 +2688,7 @@ FIXTURE_SETUP(iommufd_viommu)
+>  
+>  		/* Allocate a vIOMMU taking refcount of the parent hwpt */
+>  		test_cmd_viommu_alloc(self->device_id, self->hwpt_id,
+> -				      IOMMU_VIOMMU_TYPE_SELFTEST,
+> +				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL, 0,
+>  				      &self->viommu_id);
+>  
+>  		/* Allocate a regular nested hwpt */
+> @@ -2727,24 +2727,27 @@ TEST_F(iommufd_viommu, viommu_negative_tests)
+>  	if (self->device_id) {
+>  		/* Negative test -- invalid hwpt (hwpt_id=0) */
+>  		test_err_viommu_alloc(ENOENT, device_id, 0,
+> -				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL);
+> +				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL, 0,
+> +				      NULL);
+>  
+>  		/* Negative test -- not a nesting parent hwpt */
+>  		test_cmd_hwpt_alloc(device_id, ioas_id, 0, &hwpt_id);
+>  		test_err_viommu_alloc(EINVAL, device_id, hwpt_id,
+> -				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL);
+> +				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL, 0,
+> +				      NULL);
+>  		test_ioctl_destroy(hwpt_id);
+>  
+>  		/* Negative test -- unsupported viommu type */
+>  		test_err_viommu_alloc(EOPNOTSUPP, device_id, self->hwpt_id,
+> -				      0xdead, NULL);
+> +				      0xdead, NULL, 0, NULL);
+>  		EXPECT_ERRNO(EBUSY,
+>  			     _test_ioctl_destroy(self->fd, self->hwpt_id));
+>  		EXPECT_ERRNO(EBUSY,
+>  			     _test_ioctl_destroy(self->fd, self->viommu_id));
+>  	} else {
+>  		test_err_viommu_alloc(ENOENT, self->device_id, self->hwpt_id,
+> -				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL);
+> +				      IOMMU_VIOMMU_TYPE_SELFTEST, NULL, 0,
+> +				      NULL);
+>  	}
+>  }
+>  
+> @@ -2791,6 +2794,20 @@ TEST_F(iommufd_viommu, viommu_alloc_nested_iopf)
+>  	}
+>  }
+>  
+> +TEST_F(iommufd_viommu, viommu_alloc_with_data)
+> +{
+> +	struct iommu_viommu_selftest data = {
+> +		.in_data = 0xbeef,
+> +	};
+> +
+> +	if (self->device_id) {
+> +		test_cmd_viommu_alloc(self->device_id, self->hwpt_id,
+> +				      IOMMU_VIOMMU_TYPE_SELFTEST, &data,
+> +				      sizeof(data), &self->viommu_id);
+> +		assert(data.out_data == data.in_data);
+> +	}
+> +}
+> +
+>  TEST_F(iommufd_viommu, vdevice_alloc)
+>  {
+>  	uint32_t viommu_id = self->viommu_id;
+> @@ -3105,7 +3122,7 @@ TEST_F(iommufd_device_pasid, pasid_attach)
+>  
+>  	/* Allocate a regular nested hwpt based on viommu */
+>  	test_cmd_viommu_alloc(self->device_id, parent_hwpt_id,
+> -			      IOMMU_VIOMMU_TYPE_SELFTEST,
+> +			      IOMMU_VIOMMU_TYPE_SELFTEST, NULL, 0,
+>  			      &viommu_id);
+>  	test_cmd_hwpt_alloc_nested(self->device_id, viommu_id,
+>  				   IOMMU_HWPT_ALLOC_PASID,
+> diff --git a/tools/testing/selftests/iommu/iommufd_fail_nth.c b/tools/testing/selftests/iommu/iommufd_fail_nth.c
+> index e11ec4b121fc..f7ccf1822108 100644
+> --- a/tools/testing/selftests/iommu/iommufd_fail_nth.c
+> +++ b/tools/testing/selftests/iommu/iommufd_fail_nth.c
+> @@ -688,8 +688,9 @@ TEST_FAIL_NTH(basic_fail_nth, device)
+>  				 IOMMU_HWPT_DATA_NONE, 0, 0))
+>  		return -1;
+>  
+> -	if (_test_cmd_viommu_alloc(self->fd, idev_id, hwpt_id,
+> -				   IOMMU_VIOMMU_TYPE_SELFTEST, 0, &viommu_id))
+> +	if (_test_cmd_viommu_alloc(self->fd, idev_id, hwpt_id, 0,
+> +				   IOMMU_VIOMMU_TYPE_SELFTEST, NULL, 0,
+> +				   &viommu_id))
+>  		return -1;
+>  
+>  	if (_test_cmd_vdevice_alloc(self->fd, viommu_id, idev_id, 0, &vdev_id))
+> -- 
+> 2.43.0
+> 
