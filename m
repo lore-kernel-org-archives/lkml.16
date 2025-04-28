@@ -1,132 +1,91 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8852676C1
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC581CD213;
+	Mon, 28 Apr 2025 11:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841302; cv=none; b=e8/HHvX/yX9zPPsCa36jjJyUHRqOVa+XoqoV7HnfoACP3RcNVtZXlaoV47TPkP+aDTTKjL6ZqaMvqN/n0oybh43ONZt9Qr0oBSHAzEaSjYig/rETqy/vTfs678lVxU28A7pnhrmxfw+bxMArBmnq1vI7gkPXemdlkw/RO8QEFZM=
+	t=1745841348; cv=none; b=iQzsI2xnSsn6hCDW470DS90WQsApQth6rGzOmcqCOQC2J5CCv52Vyxq9w0fSUmpA/pkSGYNbYvqkqy5iElzOXe4fVqP8CqSdY9qVep5nCZ8jL0fcdCJw2lFB6vDmaGMG13EoZ7eSylrgPjcuHkqZbfG4zLdGCMYEBHMIdwspEFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841302; c=relaxed/simple;
-	bh=dF1jVHWmjbKqqo+EJfyQwXDZ3U69f8KTOGtxyvNJ0mg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HNfizTfkEG1OKUNFvHjBzxMuWudE5PoBr87jaslB65LCaPOUFrzu8SYhBbizjByt7qNdPsPLYHM5JdxZCOw30sy/bNK1FCZMQ1/1Kn9XJg6G3SVP4mPVnFk4Jdf6LK9UwPnH4vqCRsc4AjijhXRP40Qqgmd4EhHWOctZkUyHER8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ba1DLWn0; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745841348; c=relaxed/simple;
+	bh=uaEA6pWLd7zO9kB+Ij+W9eNAWss67fvBBpYzFtPxK2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=t7pzRN9DGiruw5JTU0w6+hq1CIIK3eZqA21vi6Uv6puB5RfYu0DjYFBkeZoJgjv6R7GcIRiJVD/mOz3xi1cjrfuR+Y9xfIXjGnZNKVmEVF8yqltHa2mIj56NqiVjDosuTxHjfr4ECGfUzrhiaTzqk5MrsmahA9oEIWLOpKCkRBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ESXWN6YT; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ba1DLWn0"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0618746bso33742685e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745841298; x=1746446098; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dF1jVHWmjbKqqo+EJfyQwXDZ3U69f8KTOGtxyvNJ0mg=;
-        b=ba1DLWn08sYg1j7byJwZnLxbDxPtd51mzWKTGURkLUxAbcRrd2MaPTP1+y6tWChmSz
-         vxf3ka9WNUKi1g+wvCEOq7ZJ5A1yyq7bwwpALnnxeDcVxMS1emvEq7kGiVM/UyqG/3yV
-         VKphvi1G7gPG3Xs+Nx6vUtzFUp0sxVcaA5+OsAj7RoN9WIq3pmrgbqDvT+x6eKrwMDse
-         SvqipAxT9X0dLtAOzVWWJGvwzlEF+hU5ZZnDKVQY0kH1sYDQpA1LJ4t0YxALtU1fU4pd
-         jx/Q059OrnH3kFssZgY5yelKwkIBaNI4AhSf5yFgXLLQlBHE/icXZBaJK7E3biBjBhyd
-         VkJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745841298; x=1746446098;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dF1jVHWmjbKqqo+EJfyQwXDZ3U69f8KTOGtxyvNJ0mg=;
-        b=CkLxMPYhkYs3PtQb4tb5DdaPfiCr0f1SQ6X+iN7HWxViU87bLhDu4G7wMbutKHN83h
-         756g8upRta4fzOP+ZhvG/ZMHvvBe4eAbj94iaMG2BL7X3kTeVhNqrvkaKPPoKNgsh5AV
-         8gcSAPEW+hax5/hnt9Pt7uP3VzDWiARcAo7ZXKzxGqhK1iEvKCjtah+6EKdmugc7JLF8
-         8osZH+IWXA6cRh69OMEzQxxZZnHEQga3Ej0CwJ+/Hga0i8A1Aclrqk4tND4q660gfV3A
-         MrCFtc57Izwr3WmCQXJeU7j436+aiPtGnMDGrIyIStfsGfAJCPJV53oeeb5aiheZN2wT
-         RCpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzBhbtuojJld1IdFzFB2TY1Dx93RGl95GFd3X/aZ+4nqoNOJ667IupLuodGT2C2EMuc6Brd8S8dSEH9S0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ/PxsbrSmt4NvQCR39EnedIqpgLTWYoZ2sEVokr+TUOpng+dA
-	z/WJ0iO93AHJLqtJpdoYkxQUmn+FSnXvhAj1Ol7i+RSkyacCbVQl1tDO1kQEqcM=
-X-Gm-Gg: ASbGncuZ69RUTgptsxJnaOZTp27BJR7YEqiSBaazPJSVGuoM+A5AZd7/LUymApK3qpx
-	y392+hXw8rrAiGnik13XkS1nvqWi7oOe0OcRZ3JWlTaFh7YJpeRt/1SSOH0FpneO2Quwgzbu2ui
-	WiO8jj1JRq90ZXtfOL3YtlDjeFyh8HHJ/pmLPG48bedhxMgJy/19EPKNRy3r70f6Hxfr3LzZtjQ
-	aF/EAs/6uejQSEeiqy9jbhmbmfGyptTK9W/ADpI2ZXG7203KCwi3oKqjLsv0nC19Vm0gfbCjBFU
-	kfYPqylNdG5AV/kv9nBS6HzxF31TrdTII+qgxbl8Lst+
-X-Google-Smtp-Source: AGHT+IEBcPzlcTmJtEtdW5Ozka0R7E2yC2SNtOU96655gZWCsIYU9mMeiYm5x9urXTEOXj7XnSxR1w==
-X-Received: by 2002:a05:600c:1e04:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-440ab846cecmr67580645e9.22.1745841298305;
-        Mon, 28 Apr 2025 04:54:58 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a536a1ddsm122802275e9.30.2025.04.28.04.54.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:54:56 -0700 (PDT)
-Message-ID: <a365be041bab36fe20e1e5d34b583d3b350a488d.camel@linaro.org>
-Subject: Re: [PATCH v7 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus
- Walleij	 <linus.walleij@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo
- A. R. Silva"	 <gustavoars@kernel.org>, Srinivas Kandagatla
- <srini@kernel.org>, Peter Griffin	 <peter.griffin@linaro.org>, Tudor
- Ambarus <tudor.ambarus@linaro.org>, Will McVicker
- <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org, Bartosz
- Golaszewski	 <bartosz.golaszewski@linaro.org>
-Date: Mon, 28 Apr 2025 12:54:55 +0100
-In-Reply-To: <CAMRc=MdDH7UPkhjBKr6hO-j2J158_u4Mp=++hjh=V0OtoJHX1g@mail.gmail.com>
-References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
-	 <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-	 <CAMRc=MdDH7UPkhjBKr6hO-j2J158_u4Mp=++hjh=V0OtoJHX1g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3-2+build1 
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ESXWN6YT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745841340;
+	bh=P0cP1f2bp5b7RDDr9nu9/PvYz1uVlIN7GI4ZTwx8CXk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ESXWN6YTZqTvysZNyLN9x2fCO3JilCPV7LnSJ8APJRjb7KLFr61YGPUdAt363AK3p
+	 7bzJvZrHNlcGjk0s8Pncbyh9Fhy0eMhZTxu7UtpEvCz6q+gR74OJJ0k1RWqJpIrPYS
+	 kxE7F2zTvQBrSfOcFJUC34aySMfAAkKSdTVwJLwUB5Lz82vJJ3Hfk8Q3GW4IYvTDDP
+	 keo6eeBSrfvUa/x/PnJs8eWFUNHh3vLOrviJaEGP1zgimQrtpEKyLJ/nro5nir84t/
+	 tG4LSmgSf7Y/clRctKBVImcA0rzVk1Llo3Xh4wRfrTV7INIl0xSlgmZyg6beu4GAoa
+	 PAcXJyGyXYRsg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmMMw2CXZz4wcd;
+	Mon, 28 Apr 2025 21:55:39 +1000 (AEST)
+Date: Mon, 28 Apr 2025 21:55:39 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Heiko Stuebner <heiko.stuebner@cherry.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the rockchip tree
+Message-ID: <20250428215539.0ce8d1a0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/X61jZK7u+NJ=mW2D5gPtM7Y";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Bartosz,
+--Sig_/X61jZK7u+NJ=mW2D5gPtM7Y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-04-28 at 13:43 +0200, Bartosz Golaszewski wrote:
-> On Mon, Apr 28, 2025 at 1:36=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik=
-@linaro.org> wrote:
-> >=20
-> > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> > Port Controller (TCPC), NVMEM, and a GPIO expander.
-> >=20
-> > This driver supports the GPIO functions using the platform device
-> > registered by the core MFD driver.
-> >=20
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > ---
->=20
-> [snip]
->=20
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.names =3D max77759_gpio_=
-line_names;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.ngpio =3D MAX77759_N_GPI=
-OS;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.get_direction =3D max777=
-59_gpio_get_direction;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.direction_input =3D max7=
-7759_gpio_direction_input;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.direction_output =3D max=
-77759_gpio_direction_output;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.get =3D max77759_gpio_ge=
-t_value;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chip->gc.set =3D max77759_gpio_se=
-t_value;
->=20
-> Please use the set_rv variant now, the old set is deprecated. Until
-> that's changed, my Ack is revoked.
+Hi all,
 
-Thanks Bartosz for pointing this out, will update.
+After merging the rockchip tree, today's linux-next build (arm64
+defconfig) failed like this:
 
+make[4]: *** No rule to make target 'arch/arm64/boot/dts/rockchip/rk3588-ti=
+ger-haikou-video-demo.dtb', needed by 'arch/arm64/boot/dts/rockchip/'.  Sto=
+p.
+
+Caused by commit
+
+  14e506dcf3b0 ("arm64: dts: rockchip: add overlay for tiger-haikou video-d=
+emo adapter")
+
+I have reverted that commit for today.
+
+--=20
 Cheers,
-Andre'
+Stephen Rothwell
 
+--Sig_/X61jZK7u+NJ=mW2D5gPtM7Y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPbLsACgkQAVBC80lX
+0GyNkAf+O4Cup5zYUIt07Kd4yJpyP+vkn0jX3DECwL7OAJzvwJX3ebPeZP27c7a+
+XcN6iQPuR43NI2EzngLEq9F38WS3iJDCFluShjnn5JxVGsn4KJ2Rn6D7ZqQw9/WV
+1OXx9rnnOHc9JYnLUVyEecC72s7GtQdnFypjEH5Mpd6gBBvlg1Rr1q/Jp9/3D8zb
+/s317TDfvKL72QSMGY5Yhu9vCOq/QINJzOub8hirYgNgtv2FB8ie+p0mT1dBcMQW
+eceTXBRNUyuAfRfO/wxebjiiW7r6sCq8Z53ymCU0TGiEmnDnqe2vm8D2V+RSsYkU
+i9uIO4Oh2h5Yw5wC75laaZLxd2SXJg==
+=yXL/
+-----END PGP SIGNATURE-----
+
+--Sig_/X61jZK7u+NJ=mW2D5gPtM7Y--
