@@ -1,136 +1,175 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E19126D4D1
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861077; cv=none; b=pU1dqL91NSYbfeb4c4El17ejUhd9vOmZbxPfjLedBnKwygpRlR0SzSpxCdsS8ED02Moz/YH7b4pbquWTCCdtIs3Jywsq3a71wphh7U4uxnGj2HYgIYxeEhDCRCBS+Sm0WcGT2uqTMqaEw4Zqq51xwD+NW3i4JGLZrBjiZRgjMm8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861077; c=relaxed/simple;
-	bh=Qru/N5etYMDgKDbGqQ8YMJgmR5v/nrj+QFG5OB41UY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ybla8+jg44z8VsOuNYoQl1VsE8Dk2EFvtigPQOc0wmn3/WA0BFPtRg4jmmkY8TRVEr1lscaziyFZLW+qPk10QXlPMZ7WteKUtLypi5lLapO3TGJN+Ml6pXvoBSMoiPoXf2QGUT/rVnV4UxUZNHDuzN46TB7YivaHZblM6Osm6/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TpvR1GjV; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C53184E;
+	Mon, 28 Apr 2025 17:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745861112; cv=fail; b=ajfFn8FSSksi7YR+h7lzQJmraKO46UThP8vNno7836fQW6KYe6Ey+r4d7V2qxO5yaJl0qwCzUkp//ms2HtALbQH5efxo272FJbSjMyLHxLG5JOGPLpTSeuhFH3k8wCXgms8/lbGW9W0rKGtwQR0vDdry3AJrMhijdKdZrUZbhBY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745861112; c=relaxed/simple;
+	bh=eaYrJrJgP8Fas88PdSvM0DbNmV2gOebulJbUVrxl+G0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPCDSnbfUEoLwXLz7yGU6FauyREMUrL4EqNOHwv1gLsyYWd+g3n+943K+3sSIhMxDCjMD2XMfr6F9yfxnLMz16aR9NlFnRPLYsVxYNERnCQn0rWiHlRK1sI3h51KI2DiAWT7KDTabqRyVVThzRImtD6ywP70jzFXgCubdho+E3g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=E8KsKcnW; arc=fail smtp.client-ip=40.107.236.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TpvR1GjV"
-Date: Mon, 28 Apr 2025 17:24:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745861072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3N6Gu9hVtB/Cv1roQIKXZF1bYSRyAou66/1fwioQv54=;
-	b=TpvR1GjVHTYzAAjnpsn9UT708g+KuvwgX8A+fvoaPVW7p1Kjym9fxKNnbAUXsurKIoirwH
-	yH5nFUe8Wn1wwYedGua5HhjZ/nyNTsi+53pPt+zwzVsJuLTFJ/Bquk5fnhCJPkw4I0DX0g
-	MufBgO4yz4HDaKopHiQpLY2uInLz48A=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Matt Bobrowski <mattbobrowski@google.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Suren Baghdasaryan <surenb@google.com>,
-	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, bpf@vger.kernel.org
-Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
-Message-ID: <aA-5xX10nXE2C2Dn@google.com>
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
- <aA9bu7UJOCTQGk6L@google.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="E8KsKcnW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s/0fwJM3siqwi636oF+NCuKFYZCFWALmKMKKxH3B7EauZlHbaRtMoDoVEBLUmTXYILxpM3VZ0v8vXtN2p2tc/u+E3zJf0CKLjJdeE07lhGlZcLdyj6obp6J85k87n3+vJcq4nN1ZqjAySlIweokxMU3jZzHb0QkqkgOcnPqoM+kViF1CcK8NALsXj00Nuaeox66kWVmmXaWGvzndALjdpvmOZZnT4oR3GauJd3UNL/rmesUMLOZu6iFK/zHA28zWYo1UmV9a2z4tnSxzXmFnBoEm02wuaPaSCIIEXF/aOP1ZTqNPxuaUakRXTnujGwl2bmFImbvYlgTCip9SVKj7JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lLnyjLZBE+plR+ovFWLaYuB23tx6Vk0luZbAwhu1Xkw=;
+ b=tEPf1TNabEbrSxGgSeHnOEtRPxGtmE4A3kZCx8iWBsL4mAzZwTq3OwA/eYKIiRpb+Ksltkvr0BXBIe25OnFfQfQqzdtuakfhKzyV/mHTKf6lF3FagsKB7Tx8Xvn02YNCiYNJh6Qh0/hbLVMuZzpwbisMYZtdbCP4fBCOLybWJYYceW6pncZ6PMsAEmVhYjhTcD2yG1KM7CXo+orImDOd0GIQGhrOR1ZqIVfqg8J6ivvcIGRDubDi2HlLgrgwTZlSq/7dpqzoT68tb/QjAOgEqVlvecvL9xWZbkZrRqfur/AUVoNzu62gVdejGceaaNS4eImu3Z6ofsLRHxJn1Z9vOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lLnyjLZBE+plR+ovFWLaYuB23tx6Vk0luZbAwhu1Xkw=;
+ b=E8KsKcnWft5hgO9gAGgH+8vjGpm7spjapW86rwmRwnR7TNvFdV7VXCwxPzQ5M/GkINooclHs/X577/IIKsxckBR0iq+qGCsXpD5jQ0JNEAzcOdziLTD5txwBnv5rWX2UoILPDVBZwXPJ4AFUZnf87eFc/cuqyekarkvyBH6USx/1gIWmNLGeQ59MSnDHgdCzAxu/CcRIwoymVk9S9681agN9E1QYJ2T13Ao+mUNaWOPr82hGa1tuXWipWxKY+zLFIIoSCdFFtBx6FQzHWr1+icLacWZ2cTO2JR8VyRY9eFx1H9pBohOoyQhYJjvSsJHJy54shoSF+Nd8ZvUBlLJG3w==
+Received: from SJ0PR13CA0016.namprd13.prod.outlook.com (2603:10b6:a03:2c0::21)
+ by DS5PPF5A66AFD1C.namprd12.prod.outlook.com (2603:10b6:f:fc00::64d) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
+ 2025 17:25:05 +0000
+Received: from SJ5PEPF000001EA.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c0:cafe::45) by SJ0PR13CA0016.outlook.office365.com
+ (2603:10b6:a03:2c0::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.22 via Frontend Transport; Mon,
+ 28 Apr 2025 17:25:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SJ5PEPF000001EA.mail.protection.outlook.com (10.167.242.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.33 via Frontend Transport; Mon, 28 Apr 2025 17:25:05 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 28 Apr
+ 2025 10:24:39 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 28 Apr 2025 10:24:39 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 28 Apr 2025 10:24:37 -0700
+Date: Mon, 28 Apr 2025 10:24:35 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <praan@google.com>, <zhangzekun11@huawei.com>,
+	<iommu@lists.linux.dev>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<patches@lists.linux.dev>, <mochs@nvidia.com>, <alok.a.tiwari@oracle.com>,
+	<vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 05/22] iommufd: Add iommufd_struct_destroy to revert
+ iommufd_viommu_alloc
+Message-ID: <aA+5009M6QTjjIpO@Asurada-Nvidia>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <3d8c60fe9f1cdaecd59ce3e395eb6ca029ca8ded.1745646960.git.nicolinc@nvidia.com>
+ <9737606f-d3af-4c20-b1ce-7c705a7c8590@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <aA9bu7UJOCTQGk6L@google.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <9737606f-d3af-4c20-b1ce-7c705a7c8590@linux.intel.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EA:EE_|DS5PPF5A66AFD1C:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9725e643-e74f-45f5-8339-08dd86799dbe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?QoO+AgFx2JijW7X4Z027Yo0lp3zgvl3naK5RtatDnSaIijNwBI0g99UyEC6u?=
+ =?us-ascii?Q?wnsmpB9rD6Hy68YPSfxGECUsU+zF5EsGHkqS9WlRWkKY7OaICh8f3WBkraV+?=
+ =?us-ascii?Q?id8sYY4gUhA6lNAJoYR9pkgZmqVbZYRs8c6GB2pD//74N1BO/PfObcUG/Hxc?=
+ =?us-ascii?Q?LzRW1M/UsVhFv2/p6jxUF2KmX7iIhLd8yGIvPQz8QhDAtuSykIGqPrWHd2PN?=
+ =?us-ascii?Q?9hd9/jE+uL1Kg3U0IOZlXzHeHOtD/0iOX9z6EQaSjGmi4FgvyRWbci63IFnY?=
+ =?us-ascii?Q?/ZvrOAuQCqyA4n1JnHT7BywkztQoOllbqK8BCJrFhXVQey9F+RPl7UbwQOWh?=
+ =?us-ascii?Q?F2wAxDHCItC3gV/MnPdRZMQEUFGcBfgcrpsKXXejUFP/z6DcPZx7cl8RlO0p?=
+ =?us-ascii?Q?SppVN+4PQBi7Oj41vNTP1fAC5Ikm5J5vdmRLWlhSt168FKHNi3JuIc3xIvk6?=
+ =?us-ascii?Q?zCxxqXlLau+VzqGyeOnPfOjFH6k2bVQOkdM4pB7quxHehPiFin2xOInmhVL9?=
+ =?us-ascii?Q?L0JUAu1UFvh8aHhkl+tFWMx79d6li9qcxm+/nfU5aioIXBtEgd7XCyJVV40V?=
+ =?us-ascii?Q?gWgVEro7G7Vka1rIN4Oj7SNrXsmPrE95ufcccVWfxD+8EjAUtGSVSsBCnj2C?=
+ =?us-ascii?Q?l9nVywP7tMzffVlFC2mT0EtGu6cbPsOUvf9Mamn8YpCcm30MEXhw+Onvii3J?=
+ =?us-ascii?Q?/GbC8MqpuOgDxapL1lDWstByhxxvFBsxOS0BL0VT3wSM5kE2tvdOIHH524uY?=
+ =?us-ascii?Q?ZHmrJQbjcdof6sI6ABV/M5APwM9WqEy6rIBSPoMhNmCsaLe+7C8rFEh59inm?=
+ =?us-ascii?Q?aUYwzHNg5kwlcM22N4VaaIA+HeTbdoD7gkd96wsf7nE2XD86gfUBH5t2FG6k?=
+ =?us-ascii?Q?hIs0ba8PcyYUXz5ya0ANB6ELA/oEzw6lu9V56d/7iOlk5HlOQogsCeWb+bnH?=
+ =?us-ascii?Q?g3lokM3syuuHBzArZVt+J/C10W0TcVF5ngKVjURk6w3+VoZKA+yTsGMG5CTW?=
+ =?us-ascii?Q?w7mb1qZc7pIOzBNwIPOgNMedJUL2UfhWctthKYnH+iQtfTxo/DiToNPu9bAd?=
+ =?us-ascii?Q?BCGowgNoMAvSAwt5caMGWBSufE5J5LNFVQcEHtF9Eu8heXz7RIZnYUciW4aq?=
+ =?us-ascii?Q?d6HXRUFdy5/FcJiIms1NUViLACpCfwxsM0CJFi6CLc+eqdIqq3JEl/5JUXe9?=
+ =?us-ascii?Q?XZ+0Ap6w9okPc28v8OCmAQfCZSgmKsg2LTmlFPCu6bHzEdMcGKOlzcwPLpbs?=
+ =?us-ascii?Q?RI/GhyPjm2vdDzNfUfLmfY2Ms2mRJL3XAK1s2HeZhVUo3ufHhKTU2fS4X/vI?=
+ =?us-ascii?Q?YcPiPJSbgavaF9rfNxaV0P05n4dvLNy+WqeedrRgtV6A8rys5v/3XaYWi6Nu?=
+ =?us-ascii?Q?O3jzkZVYmu0xiuVIottdNwWvv/37uA0kj9J5SEy0UjexBqAHJFUzNtLHYfxY?=
+ =?us-ascii?Q?87Cy91Udbdu4yxJtoYqGYySPDJQlnva1Zuh2q5m/ww2HDiNmJAHC+IE1nzFO?=
+ =?us-ascii?Q?mJ+YDRqM6rrx72wPZU0Neb2Qsg5d0fW//ICd?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 17:25:05.1988
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9725e643-e74f-45f5-8339-08dd86799dbe
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001EA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF5A66AFD1C
 
-On Mon, Apr 28, 2025 at 10:43:07AM +0000, Matt Bobrowski wrote:
-> On Mon, Apr 28, 2025 at 03:36:05AM +0000, Roman Gushchin wrote:
-> > This patchset adds an ability to customize the out of memory
-> > handling using bpf.
-> > 
-> > It focuses on two parts:
-> > 1) OOM handling policy,
-> > 2) PSI-based OOM invocation.
-> > 
-> > The idea to use bpf for customizing the OOM handling is not new, but
-> > unlike the previous proposal [1], which augmented the existing task
-> > ranking-based policy, this one tries to be as generic as possible and
-> > leverage the full power of the modern bpf.
-> > 
-> > It provides a generic hook which is called before the existing OOM
-> > killer code and allows implementing any policy, e.g.  picking a victim
-> > task or memory cgroup or potentially even releasing memory in other
-> > ways, e.g. deleting tmpfs files (the last one might require some
-> > additional but relatively simple changes).
-> > 
-> > The past attempt to implement memory-cgroup aware policy [2] showed
-> > that there are multiple opinions on what the best policy is.  As it's
-> > highly workload-dependent and specific to a concrete way of organizing
-> > workloads, the structure of the cgroup tree etc, a customizable
-> > bpf-based implementation is preferable over a in-kernel implementation
-> > with a dozen on sysctls.
-> > 
-> > The second part is related to the fundamental question on when to
-> > declare the OOM event. It's a trade-off between the risk of
-> > unnecessary OOM kills and associated work losses and the risk of
-> > infinite trashing and effective soft lockups.  In the last few years
-> > several PSI-based userspace solutions were developed (e.g. OOMd [3] or
-> > systemd-OOMd [4]). The common idea was to use userspace daemons to
-> > implement custom OOM logic as well as rely on PSI monitoring to avoid
-> > stalls. In this scenario the userspace daemon was supposed to handle
-> > the majority of OOMs, while the in-kernel OOM killer worked as the
-> > last resort measure to guarantee that the system would never deadlock
-> > on the memory. But this approach creates additional infrastructure
-> > churn: userspace OOM daemon is a separate entity which needs to be
-> > deployed, updated, monitored. A completely different pipeline needs to
-> > be built to monitor both types of OOM events and collect associated
-> > logs. A userspace daemon is more restricted in terms on what data is
-> > available to it. Implementing a daemon which can work reliably under a
-> > heavy memory pressure in the system is also tricky.
-> > 
-> > [1]: https://lwn.net/ml/linux-kernel/20230810081319.65668-1-zhouchuyi@bytedance.com/
-> > [2]: https://lore.kernel.org/lkml/20171130152824.1591-1-guro@fb.com/
-> > [3]: https://github.com/facebookincubator/oomd
-> > [4]: https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
-> > 
-> > ----
-> > 
-> > This is an RFC version, which is not intended to be merged in the current form.
-> > Open questions/TODOs:
-> > 1) Program type/attachment type for the bpf_handle_out_of_memory() hook.
-> >    It has to be able to return a value, to be sleepable (to use cgroup iterators)
-> >    and to have trusted arguments to pass oom_control down to bpf_oom_kill_process().
-> >    Current patchset has a workaround (patch "bpf: treat fmodret tracing program's
-> >    arguments as trusted"), which is not safe. One option is to fake acquire/release
-> >    semantics for the oom_control pointer. Other option is to introduce a completely
-> >    new attachment or program type, similar to lsm hooks.
+On Sun, Apr 27, 2025 at 02:55:40PM +0800, Baolu Lu wrote:
+> On 4/26/25 13:58, Nicolin Chen wrote:
+> > An IOMMU driver that allocated a vIOMMU may want to revert the allocation,
+> > if it encounters an internal error after the allocation. So, there needs a
+> > destroy helper for drivers to use.
 > 
-> Thinking out loud now, but rather than introducing and having a single
-> BPF-specific function/interface, and BPF program for that matter,
-> which can effectively be used to short-circuit steps from within
-> out_of_memory(), why not introduce a
-> tcp_congestion_ops/sched_ext_ops-like interface which essentially
-> provides a multifaceted interface for controlling OOM killing
-> (->select_bad_process, ->oom_kill_process, etc), optionally also from
-> the context of a BPF program (BPF_PROG_TYPE_STRUCT_OPS)?
+> A brief explanation or a small code snippet illustrating a typical
+> allocation and potential abort scenario would be helpful.
 
-It's certainly an option and I thought about it. I don't think we need a bunch
-of hooks though. This patchset adds 2 and they belong to completely different
-subsystems (mm and sched/psi), so Idk how well they can be gathered
-into a single struct ops. But maybe it's fine.
+Will add the followings:
 
-The only potentially new hook I can envision now is one to customize
-the oom reporting.
+"
+For instance:
 
-Thanks for the suggestion!
+static my_viommu_alloc()
+{
+	...
+	my_viommu = iommufd_vcmdq_alloc(viomm, struct my_viommu, core);
+	...
+	ret = init_my_viommu();
+	if (ret) {
+		iommufd_struct_destroy(viommu->ictx, my_viommu, core);
+		return ERR_PTR(ret);
+	}
+	return &my_viommu->core;
+}
+"
 
+Thanks
+Nicolin
