@@ -1,357 +1,382 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2E919938D
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7704206B;
+	Mon, 28 Apr 2025 04:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745815069; cv=none; b=Hre/9S5qTyI9cYVNTK5hCpl82fcfHi+x0p8+fWx7R6xjcHqD4HPTcdjsFLEDb1pb1SuVdnbx5nU1n+iBJQSe9C3FlymHD9XbEKNw749zVdz5eDRax49PFUGbRRR1UsFKqMGzR0K8ruaIA+F7gQEl66Q0vYr4PTPamp7pqWojNIo=
+	t=1745815339; cv=none; b=SGkEW3D3xU2Reg/UOsy3+uHaa1WXijTC40HkaR6h5CS9Lhg/4HooD6te5SyzZG/1eXh0h2sFh7kiOsJcb/wQ2TyU3theQhslhJG7M3w3JTpxZxVdmDrBIr0KdeOqWkpToTmTvuL4x3UurpTAVFgI6ZIzyuIgZ9XNAobf6U5lTt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745815069; c=relaxed/simple;
-	bh=NhO2H0cKPYwxGv1qBFmaXlYHTDG2SluKTcvDhT31XcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M8HoFpa8VWj3m/L/+Vqzglq4NaFixlWijLdJdb6i7oAsNQ60eV+c8+6yNyMMzkfsXlmkZORr1kOs86DCWkLl/2msKrNpYzHyC5UUv+SBZn5MhXbs2GTKZ4h82Y2dbXTXzUq8SEF92pi3oR+Z5h3dgjjbn9yNFo0p7wnwL+BG4r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ci8uMuXy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745815339; c=relaxed/simple;
+	bh=QmzgfQ06maqti9OHW1JK8Xk6tJKbHqxNWnVy975oDjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSrutYNbJFkQoH3TDb08bkKj6BZ4ywarjNa1jXDyMWfYIorocIXylDJanEBbZ3ynVzufD8nCFJFGzI5MiTA6P8xbhldusZdRGPwmRXFW3iW8oO3Rdp/loMNXT8Od8dWgoSYbGZ9G4oOZ82Uz8SULJlxly1bQUCjhx35Dhsfosrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jM7S0HBK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ci8uMuXy"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S3fDKX009831
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:37:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tbOEKIUYrgKQBQSPnnyUCbHgYPfMPVYUlQhqefBUiK8=; b=ci8uMuXyCgyou2J2
-	jxDbkJBrZqQ6k0Oc9CdA4h8otp4LAnUqChqSXkU3mfCM/AYlp5TjpJUnCaeiKd7P
-	S9UCcIsPFP2YDFSUFwoohVbpJ/Yn3wLaAd0rbXiLxteJqig7Xdvo6huRzrQ8zr91
-	wQaA0C8iZ89xRg5sMSQaytbxdxOq1Yd9Q6BbglVszW/Wc370SzdkiJksCzSBJQRh
-	J0UuC4S1ZsPDMAfcdxoBg8palueH+DgpeaS0wZw5NgrIlLmDOvQUGYd2/9Xkk/9y
-	46uICetjd0bbNz1ahz7CxvcK18XBS35EUrj8TfGgoPOY4N+iltmqtUWvHtYFezLT
-	BvsI+A==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468n6je530-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:37:46 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b0ae9e87fe2so3830465a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 21:37:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745815066; x=1746419866;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tbOEKIUYrgKQBQSPnnyUCbHgYPfMPVYUlQhqefBUiK8=;
-        b=avMTuUlYDzTJwgUkNWV1jogm0n+wxu0pC9HvXn40awQ1dLDN4lshcKsw/PstfZZdkp
-         jgKDbc84V138RLvlrwR25LkJ/uCkOnBbC3M283MP0PYvK2pt9md0em1kB2++AJuiTQ2U
-         45ajf9fG0TSo2Wsq6Mg9uOcG2ROhf4dPpBe73dhVLWHUQIqEgvU/8UUD4uECDkoV8X42
-         aVcZJrlwWCbVtgcY9hH1KE8rjoGrNzpZq466I2buWnuNe1Gks+0WO+ClmimppF8ceNpz
-         NOFHhDbomNd7r4Ace5HKLpgmwVEZGm2IvkujdJWPflF5sVrxuXtieQSv45Yibc8YNOii
-         l1gw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLCuwVxXbcwskMDb0xzuZoRn9LgjdjiogePkU+eI6GwjJs08sy6r/QYyMsperfSzVw4AHTOLxFZN21m4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzebQbmpFsCU/kuqyLlXUN67PZcox7S1wO+MHIKBU3ya3PvK+pD
-	2fB/9mnPvJIMB5QdSTj1TuYwztpSt9J6y19Ahvlh+4X9XQjnNq8gmWyqifwwY3wYI2oHVWsp8eA
-	oBGlDY6h35d09aM7CxhV4dzEoJ4xebaojgLMLSH5O6FsTmtHVkXOQnnv0ImFg6Q==
-X-Gm-Gg: ASbGncvh2pDk59pVvDpWuh21tI7Ml7ZjSOSw9F0xzaOJwnkwcSTu1t/tyx3aji9z5ci
-	sFOx7A21AgARBUODZhorNnJPt7xrKa93U10saCeeeAqVgtYZfa7NsGF3244JesUPlAMSCzCDhXB
-	I5cGVlzoBSEnrXoJGhl47tGlMTWW6XtShtGgbQAi+/ivRp3ObcLnimBhevlFtw886+pe3n7DV/9
-	pvz0FgN88+HeyNP2K2xamegdXnOFm6gV9ZMetzp1h/BVsMihGsClV/2PUNbSbjC5e8C1WHx4GDx
-	7K1SBYt76ZIyD3SX/sBeYf8z47UPIjOV5LvxWLKG92wTEOCUHmW4Y9IDVOZ+LCj5tBalVEnl/NW
-	esfNS3ci9rw==
-X-Received: by 2002:a17:902:ebd1:b0:224:3994:8a8c with SMTP id d9443c01a7336-22db47f40c9mr200585235ad.8.1745815065554;
-        Sun, 27 Apr 2025 21:37:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH/Ab5a1MLclt9sIvwOqJogk3wzXJajD95HZWDLi2rS6V6ZvOh4pjzpI1zsryM7YXx//DLdpA==
-X-Received: by 2002:a17:902:ebd1:b0:224:3994:8a8c with SMTP id d9443c01a7336-22db47f40c9mr200584845ad.8.1745815065099;
-        Sun, 27 Apr 2025 21:37:45 -0700 (PDT)
-Received: from [192.168.0.74] (n1-41-240-65.bla22.nsw.optusnet.com.au. [1.41.240.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221c8dsm72067675ad.259.2025.04.27.21.37.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Apr 2025 21:37:44 -0700 (PDT)
-Message-ID: <82bdb9e3-dee1-4705-b6a7-2b163f8bdcfa@oss.qualcomm.com>
-Date: Mon, 28 Apr 2025 14:37:37 +1000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jM7S0HBK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D20C4CEE4;
+	Mon, 28 Apr 2025 04:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745815337;
+	bh=QmzgfQ06maqti9OHW1JK8Xk6tJKbHqxNWnVy975oDjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jM7S0HBKSlCf3cCWhBzzFT3jcZxFtOggm2CxVmEU1A7dcRWRvWzYiz5DVZoK0c7bh
+	 MC7jm+WHJcxrk2A/jWpzUUwQVCyumJnlZC1jmUg6O1nmLeSd8uUlxACtI08106QBLS
+	 NRcZ8FuafWW2kxuQgWL6457ifOGHMA6FxZW+jwkhrlqMWcr9QcNv8g9VmV+ewQNA8T
+	 9MERD8rqNE5Nr6t6FRu9JTv80HLh1PTY2zEvWbUadGWNRD08TOJWqHEJppjuk8WpZo
+	 V7tOtIS5L3FNPckOUKkKCIHnh+1CFj02wSAKZUGy1b3sHTuxD4zMKMKJWLlIkefsNH
+	 RYBBBuvMlgTeg==
+Date: Sun, 27 Apr 2025 21:42:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] perf lock contention: Symbolize zone->lock using BTF
+Message-ID: <aA8HImKeUutpFoeD@google.com>
+References: <20250401063055.7431-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/11] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu <quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-doc@vger.kernel.org
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
- <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-3-7f457073282d@oss.qualcomm.com>
- <CAHUa44GRBiRr6CsFWxJhyzf1cRSEP66m5K7uFntOv3oYWTHWgQ@mail.gmail.com>
- <5de2a378-77cf-4373-b3ae-faeebb931e2d@oss.qualcomm.com>
- <CAHUa44F-t29Hu0o3+0vFLjtrnA8ZGycPFcUTXEOmms9B=cZ6XA@mail.gmail.com>
- <db3e8182-99ae-4a63-96ca-5d7ebeeb170f@oss.qualcomm.com>
- <aAZFhlLv9GzHqUZc@sumit-X1>
-Content-Language: en-US
-From: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-In-Reply-To: <aAZFhlLv9GzHqUZc@sumit-X1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDAzNyBTYWx0ZWRfXw4PGUqFdCeCp TNCdM5+1bNH+ywPc3iv510GMk1KhOYhZl576xXTsGN3xRkgspVgwBIQNTal8uGTBvJti+cvsZnH xDAUXkJ2mPLSIPOopQAB256t2FRSfSQDjAdvIBk2lybu6THaTrLQ8bD24mORX9RDmBWaNxOLTPw
- vrYlJB6NKtxtaD5l86NhoPY1cIIYpHyEmR+QKCcXwzI0KIA3JUXq/vUHP0DUVRgwASQRnvYr1Ko fsf8dSzPXz5+eFpC15V8yeG5zNdmw3MsE17ZvOw41FiVe/A2hnwCFitDzdzFU7kCCQadRkAYpzv W2XGP/jGLmX7hLPZjqaw7AQKb93s6a9Saebo7p7n8JNA6ZDeEiXzHbtSVSLHhEijCGzOjVGweV+
- Kggt2n4d8/L22wPqv4Wqm3kPaKfdvT6d4kd22E8kJhPqBzpu+D6bLpA7Czg2GKzSE9XAcJwX
-X-Proofpoint-GUID: jrcSxjUpbx-FemJcix2pKF9XH_gQJs-e
-X-Proofpoint-ORIG-GUID: jrcSxjUpbx-FemJcix2pKF9XH_gQJs-e
-X-Authority-Analysis: v=2.4 cv=C8fpyRP+ c=1 sm=1 tr=0 ts=680f061a cx=c_pps a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=hi51d+lTLNy/RbqRqnOomQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=4h-e5YJLMSmWdqdMP0UA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=999 priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280037
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250401063055.7431-1-namhyung@kernel.org>
 
-Hi Sumit,
+Ping!
 
-On 4/21/2025 11:17 PM, Sumit Garg wrote:
-> On Wed, Apr 09, 2025 at 05:20:08PM +1000, Amirreza Zarrabi wrote:
->>
->>
->> On 4/9/2025 4:41 PM, Jens Wiklander wrote:
->>> Hi Amirreza,
->>>
->>> On Wed, Apr 9, 2025 at 2:28 AM Amirreza Zarrabi
->>> <amirreza.zarrabi@oss.qualcomm.com> wrote:
->>>>
->>>> Hi jens,
->>>>
->>>> On 4/8/2025 10:19 PM, Jens Wiklander wrote:
->>>>
->>>> Hi Amirreza,
->>>>
->>>> On Fri, Mar 28, 2025 at 3:48 AM Amirreza Zarrabi
->>>> <amirreza.zarrabi@oss.qualcomm.com> wrote:
->>>>
->>>> For drivers that can transfer data to the TEE without using shared
->>>> memory from client, it is necessary to receive the user address
->>>> directly, bypassing any processing by the TEE subsystem. Introduce
->>>> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
->>>> userspace buffers.
->>>>
->>>> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
->>>> ---
->>>>  drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
->>>>  include/linux/tee_drv.h  |  6 ++++++
->>>>  include/uapi/linux/tee.h | 22 ++++++++++++++++------
->>>>  3 files changed, 55 insertions(+), 6 deletions(-)
->>>>
->>>> Is this patch needed now that the QCOMTEE driver supports shared
->>>> memory? I prefer keeping changes to the ABI to a minimum.
->>>>
->>>> Cheers,
->>>> Jens
->>>>
->>>> Unfortunately, this is still required. QTEE supports two types of data transfer:
->>>> (1) using UBUF and (2) memory objects. Even with memory object support, some APIs still
->>>> expect to receive data using UBUF. For instance, to load a TA, QTEE offers two interfaces:
->>>> one where the TA binary is in UBUF and another where the TA binary is in a memory object.
->>>
->>> Is this a limitation in the QTEE backend driver or on the secure side?
->>> Can it be fixed? I don't ask for changes in the ABI to the secure
->>> world since I assume you haven't made such changes while this patch
->>> set has evolved.
->>>
->>> Cheers,
->>> Jens
->>
->> The secure-side ABI supports passing data using memcpy to the same
->> buffer that contains the message for QTEE, rather than using a memory
->> object. Some services tend to use this approach for small data instead
->> of allocating a memory object. I have no choice but to expose this support.
+On Mon, Mar 31, 2025 at 11:30:55PM -0700, Namhyung Kim wrote:
+> The struct zone is embedded in struct pglist_data which can be allocated
+> for each NUMA node early in the boot process.  As it's not a slab object
+> nor a global lock, this was not symbolized.
 > 
-> Okay, I can see how QTEE supports embedding user buffers in fixed size
-> shared memory buffers allocated by the driver with maximum size limits.
+> Since the zone->lock is often contended, it'd be nice if we can
+> symbolize it.  On NUMA systems, node_data array will have pointers for
+> struct pglist_data.  By following the pointer, it can calculate the
+> address of each zone and its lock using BTF.  On UMA, it can just use
+> contig_page_data and its zones.
 > 
-> OP-TEE also have support for temporary shared memory where the user
-> space client directly passes the buffer to share with OP-TEE. Then the
-> libteec [1] handles the underneath copy to and from the shared memory
-> allocation automatically.
+> The following example shows the zone lock contention at the end.
 > 
-> So is there a limitation for QCOMTEE user space library [2] to do the
-> same? This way we will be able to retain the user-space ABI as well as
-> simplicify the kernel driver.
+>   $ sudo ./perf lock con -abl -E 5 -- ./perf bench sched messaging
+>   # Running 'sched/messaging' benchmark:
+>   # 20 sender and receiver processes per group
+>   # 10 groups == 400 processes run
 > 
-> [1] https://github.com/OP-TEE/optee_client/blob/master/libteec/src/tee_client_api.c#L365
-> [2] https://github.com/quic/quic-teec
+>        Total time: 0.038 [sec]
+>    contended   total wait     max wait     avg wait            address   symbol
 > 
-> -Sumit
+>         5167     18.17 ms     10.27 us      3.52 us   ffff953340052d00   &kmem_cache_node (spinlock)
+>           38     11.75 ms    465.49 us    309.13 us   ffff95334060c480   &sock_inode_cache (spinlock)
+>         3916     10.13 ms     10.43 us      2.59 us   ffff953342aecb40   &kmem_cache_node (spinlock)
+>         2963     10.02 ms     13.75 us      3.38 us   ffff9533d2344098   &kmalloc-rnd-08-2k (spinlock)
+>          216      5.05 ms     99.49 us     23.39 us   ffff9542bf7d65d0   zone_lock (spinlock)
 > 
-
-Unfortunately, I do not have control over the TA's API. If a TA expects
-to receive data in the embedded buffer, then I cannot use a memory
-object. To maintain the ABI and avoid the UBUF, I need two copies:
-(1) the user data passed to the library is copied to memory allocated
-using TEE_ALLOC, (2) in the driver, the data is copied from the tee_shm to
-the embedded buffer as expected by QTEE.
-
-- Amir
-
->>
->> Throughout the patchset, I have not made any change to the ABI but
->> tried to provide support for the memory object in a separate,
->> independent commit, distinct from the UBUF.
->>
->> Best regards,
->> Amir
->>
->>>
->>>>
->>>> Best Regards,
->>>> Amir
->>>>
->>>> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
->>>> index 22cc7d624b0c..bc862a11d437 100644
->>>> --- a/drivers/tee/tee_core.c
->>>> +++ b/drivers/tee/tee_core.c
->>>> @@ -404,6 +404,17 @@ static int params_from_user(struct tee_context *ctx, struct tee_param *params,
->>>>                         params[n].u.value.b = ip.b;
->>>>                         params[n].u.value.c = ip.c;
->>>>                         break;
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->>>> +                       params[n].u.ubuf.uaddr = u64_to_user_ptr(ip.a);
->>>> +                       params[n].u.ubuf.size = ip.b;
->>>> +
->>>> +                       if (!access_ok(params[n].u.ubuf.uaddr,
->>>> +                                      params[n].u.ubuf.size))
->>>> +                               return -EFAULT;
->>>> +
->>>> +                       break;
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->>>> @@ -472,6 +483,11 @@ static int params_to_user(struct tee_ioctl_param __user *uparams,
->>>>                             put_user(p->u.value.c, &up->c))
->>>>                                 return -EFAULT;
->>>>                         break;
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->>>> +                       if (put_user((u64)p->u.ubuf.size, &up->b))
->>>> +                               return -EFAULT;
->>>> +                       break;
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->>>>                         if (put_user((u64)p->u.memref.size, &up->b))
->>>> @@ -672,6 +688,13 @@ static int params_to_supp(struct tee_context *ctx,
->>>>                         ip.b = p->u.value.b;
->>>>                         ip.c = p->u.value.c;
->>>>                         break;
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->>>> +                       ip.a = (u64)p->u.ubuf.uaddr;
->>>> +                       ip.b = p->u.ubuf.size;
->>>> +                       ip.c = 0;
->>>> +                       break;
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->>>> @@ -774,6 +797,16 @@ static int params_from_supp(struct tee_param *params, size_t num_params,
->>>>                         p->u.value.b = ip.b;
->>>>                         p->u.value.c = ip.c;
->>>>                         break;
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
->>>> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
->>>> +                       p->u.ubuf.uaddr = u64_to_user_ptr(ip.a);
->>>> +                       p->u.ubuf.size = ip.b;
->>>> +
->>>> +                       if (!access_ok(params[n].u.ubuf.uaddr,
->>>> +                                      params[n].u.ubuf.size))
->>>> +                               return -EFAULT;
->>>> +
->>>> +                       break;
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
->>>>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
->>>>                         /*
->>>> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
->>>> index ce23fd42c5d4..d773f91c6bdd 100644
->>>> --- a/include/linux/tee_drv.h
->>>> +++ b/include/linux/tee_drv.h
->>>> @@ -82,6 +82,11 @@ struct tee_param_memref {
->>>>         struct tee_shm *shm;
->>>>  };
->>>>
->>>> +struct tee_param_ubuf {
->>>> +       void * __user uaddr;
->>>> +       size_t size;
->>>> +};
->>>> +
->>>>  struct tee_param_value {
->>>>         u64 a;
->>>>         u64 b;
->>>> @@ -92,6 +97,7 @@ struct tee_param {
->>>>         u64 attr;
->>>>         union {
->>>>                 struct tee_param_memref memref;
->>>> +               struct tee_param_ubuf ubuf;
->>>>                 struct tee_param_value value;
->>>>         } u;
->>>>  };
->>>> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
->>>> index d0430bee8292..3e9b1ec5dfde 100644
->>>> --- a/include/uapi/linux/tee.h
->>>> +++ b/include/uapi/linux/tee.h
->>>> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
->>>>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT        6
->>>>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT 7       /* input and output */
->>>>
->>>> +/*
->>>> + * These defines userspace buffer parameters.
->>>> + */
->>>> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT   8
->>>> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT  9
->>>> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT   10      /* input and output */
->>>> +
->>>>  /*
->>>>   * Mask for the type part of the attribute, leaves room for more types
->>>>   */
->>>> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
->>>>  /**
->>>>   * struct tee_ioctl_param - parameter
->>>>   * @attr: attributes
->>>> - * @a: if a memref, offset into the shared memory object, else a value parameter
->>>> - * @b: if a memref, size of the buffer, else a value parameter
->>>> + * @a: if a memref, offset into the shared memory object,
->>>> + *     else if a ubuf, address of the user buffer,
->>>> + *     else a value parameter
->>>> + * @b: if a memref or ubuf, size of the buffer, else a value parameter
->>>>   * @c: if a memref, shared memory identifier, else a value parameter
->>>>   *
->>>> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is used in
->>>> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
->>>> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE_NONE
->>>> - * indicates that none of the members are used.
->>>> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or value is
->>>> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
->>>> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_TYPE_UBUF_*
->>>> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of the members
->>>> + * are used.
->>>>   *
->>>>   * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
->>>>   * identifier representing the shared memory object. A memref can reference
->>>>
->>>> --
->>>> 2.34.1
->>>>
->>
->>
-
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_lock_contention.c         | 88 +++++++++++++++++--
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 64 ++++++++++++++
+>  tools/perf/util/bpf_skel/lock_data.h          |  1 +
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |  9 ++
+>  tools/perf/util/lock-contention.h             |  1 +
+>  5 files changed, 157 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 5af8f6d1bc952613..98395667220e58ee 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -12,6 +12,7 @@
+>  #include "util/lock-contention.h"
+>  #include <linux/zalloc.h>
+>  #include <linux/string.h>
+> +#include <api/fs/fs.h>
+>  #include <bpf/bpf.h>
+>  #include <bpf/btf.h>
+>  #include <inttypes.h>
+> @@ -35,28 +36,26 @@ static bool slab_cache_equal(long key1, long key2, void *ctx __maybe_unused)
+>  
+>  static void check_slab_cache_iter(struct lock_contention *con)
+>  {
+> -	struct btf *btf = btf__load_vmlinux_btf();
+>  	s32 ret;
+>  
+>  	hashmap__init(&slab_hash, slab_cache_hash, slab_cache_equal, /*ctx=*/NULL);
+>  
+> -	if (btf == NULL) {
+> +	con->btf = btf__load_vmlinux_btf();
+> +	if (con->btf == NULL) {
+>  		pr_debug("BTF loading failed: %s\n", strerror(errno));
+>  		return;
+>  	}
+>  
+> -	ret = btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
+> +	ret = btf__find_by_name_kind(con->btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT);
+>  	if (ret < 0) {
+>  		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
+>  		pr_debug("slab cache iterator is not available: %d\n", ret);
+> -		goto out;
+> +		return;
+>  	}
+>  
+>  	has_slab_iter = true;
+>  
+>  	bpf_map__set_max_entries(skel->maps.slab_caches, con->map_nr_entries);
+> -out:
+> -	btf__free(btf);
+>  }
+>  
+>  static void run_slab_cache_iter(void)
+> @@ -109,6 +108,75 @@ static void exit_slab_cache_iter(void)
+>  	hashmap__clear(&slab_hash);
+>  }
+>  
+> +static void init_numa_data(struct lock_contention *con)
+> +{
+> +	struct symbol *sym;
+> +	struct map *kmap;
+> +	char *buf = NULL, *p;
+> +	size_t len;
+> +	long last = -1;
+> +	int ret;
+> +
+> +	/*
+> +	 * 'struct zone' is embedded in 'struct pglist_data' as an array.
+> +	 * As we may not have full information of the struct zone in the
+> +	 * (fake) vmlinux.h, let's get the actual size from BTF.
+> +	 */
+> +	ret = btf__find_by_name_kind(con->btf, "zone", BTF_KIND_STRUCT);
+> +	if (ret < 0) {
+> +		pr_debug("cannot get type of struct zone: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	ret = btf__resolve_size(con->btf, ret);
+> +	if (ret < 0) {
+> +		pr_debug("cannot get size of struct zone: %d\n", ret);
+> +		return;
+> +	}
+> +	skel->rodata->sizeof_zone = ret;
+> +
+> +	/* UMA system doesn't have 'node_data[]' - just use contig_page_data. */
+> +	sym = machine__find_kernel_symbol_by_name(con->machine,
+> +						  "contig_page_data",
+> +						  &kmap);
+> +	if (sym) {
+> +		skel->rodata->contig_page_data_addr = map__unmap_ip(kmap, sym->start);
+> +		map__put(kmap);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * The 'node_data' is an array of pointers to struct pglist_data.
+> +	 * It needs to follow the pointer for each node in BPF to get the
+> +	 * address of struct pglist_data and its zones.
+> +	 */
+> +	sym = machine__find_kernel_symbol_by_name(con->machine,
+> +						  "node_data",
+> +						  &kmap);
+> +	if (sym == NULL)
+> +		return;
+> +
+> +	skel->rodata->node_data_addr = map__unmap_ip(kmap, sym->start);
+> +	map__put(kmap);
+> +
+> +	/* get the number of online nodes using the last node number + 1 */
+> +	ret = sysfs__read_str("devices/system/node/online", &buf, &len);
+> +	if (ret < 0) {
+> +		pr_debug("failed to read online node: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	p = buf;
+> +	while (p && *p) {
+> +		last = strtol(p, &p, 0);
+> +
+> +		if (p && (*p == ',' || *p == '-' || *p == '\n'))
+> +			p++;
+> +	}
+> +	skel->rodata->nr_nodes = last + 1;
+> +	free(buf);
+> +}
+> +
+>  int lock_contention_prepare(struct lock_contention *con)
+>  {
+>  	int i, fd;
+> @@ -218,6 +286,8 @@ int lock_contention_prepare(struct lock_contention *con)
+>  
+>  	bpf_map__set_max_entries(skel->maps.slab_filter, nslabs);
+>  
+> +	init_numa_data(con);
+> +
+>  	if (lock_contention_bpf__load(skel) < 0) {
+>  		pr_err("Failed to load lock-contention BPF skeleton\n");
+>  		return -1;
+> @@ -505,6 +575,11 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+>  				return "rq_lock";
+>  		}
+>  
+> +		if (!bpf_map_lookup_elem(lock_fd, &key->lock_addr_or_cgroup, &flags)) {
+> +			if (flags == LOCK_CLASS_ZONE_LOCK)
+> +				return "zone_lock";
+> +		}
+> +
+>  		/* look slab_hash for dynamic locks in a slab object */
+>  		if (hashmap__find(&slab_hash, flags & LCB_F_SLAB_ID_MASK, &slab_data)) {
+>  			snprintf(name_buf, sizeof(name_buf), "&%s", slab_data->name);
+> @@ -743,6 +818,7 @@ int lock_contention_finish(struct lock_contention *con)
+>  	}
+>  
+>  	exit_slab_cache_iter();
+> +	btf__free(con->btf);
+>  
+>  	return 0;
+>  }
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 69be7a4234e076e8..6f12c7d978a2e015 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -11,6 +11,9 @@
+>  /* for collect_lock_syms().  4096 was rejected by the verifier */
+>  #define MAX_CPUS  1024
+>  
+> +/* for collect_zone_lock().  It should be more than the actual zones. */
+> +#define MAX_ZONES  10
+> +
+>  /* lock contention flags from include/trace/events/lock.h */
+>  #define LCB_F_SPIN	(1U << 0)
+>  #define LCB_F_READ	(1U << 1)
+> @@ -801,6 +804,11 @@ int contention_end(u64 *ctx)
+>  
+>  extern struct rq runqueues __ksym;
+>  
+> +const volatile __u64 contig_page_data_addr;
+> +const volatile __u64 node_data_addr;
+> +const volatile int nr_nodes;
+> +const volatile int sizeof_zone;
+> +
+>  struct rq___old {
+>  	raw_spinlock_t lock;
+>  } __attribute__((preserve_access_index));
+> @@ -809,6 +817,59 @@ struct rq___new {
+>  	raw_spinlock_t __lock;
+>  } __attribute__((preserve_access_index));
+>  
+> +static void collect_zone_lock(void)
+> +{
+> +	__u64 nr_zones, zone_off;
+> +	__u64 lock_addr, lock_off;
+> +	__u32 lock_flag = LOCK_CLASS_ZONE_LOCK;
+> +
+> +	zone_off = offsetof(struct pglist_data, node_zones);
+> +	lock_off = offsetof(struct zone, lock);
+> +
+> +	if (contig_page_data_addr) {
+> +		struct pglist_data *contig_page_data;
+> +
+> +		contig_page_data = (void *)(long)contig_page_data_addr;
+> +		nr_zones = BPF_CORE_READ(contig_page_data, nr_zones);
+> +
+> +		for (int i = 0; i < MAX_ZONES; i++) {
+> +			__u64 zone_addr;
+> +
+> +			if (i >= nr_zones)
+> +				break;
+> +
+> +			zone_addr = contig_page_data_addr + (sizeof_zone * i) + zone_off;
+> +			lock_addr = zone_addr + lock_off;
+> +
+> +			bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+> +		}
+> +	} else if (nr_nodes > 0) {
+> +		struct pglist_data **node_data = (void *)(long)node_data_addr;
+> +
+> +		for (int i = 0; i < nr_nodes; i++) {
+> +			struct pglist_data *pgdat = NULL;
+> +			int err;
+> +
+> +			err = bpf_core_read(&pgdat, sizeof(pgdat), &node_data[i]);
+> +			if (err < 0 || pgdat == NULL)
+> +				break;
+> +
+> +			nr_zones = BPF_CORE_READ(pgdat, nr_zones);
+> +			for (int k = 0; k < MAX_ZONES; k++) {
+> +				__u64 zone_addr;
+> +
+> +				if (k >= nr_zones)
+> +					break;
+> +
+> +				zone_addr = (__u64)(void *)pgdat + (sizeof_zone * k) + zone_off;
+> +				lock_addr = zone_addr + lock_off;
+> +
+> +				bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>  SEC("raw_tp/bpf_test_finish")
+>  int BPF_PROG(collect_lock_syms)
+>  {
+> @@ -830,6 +891,9 @@ int BPF_PROG(collect_lock_syms)
+>  		lock_flag = LOCK_CLASS_RQLOCK;
+>  		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+>  	}
+> +
+> +	collect_zone_lock();
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+> index 15f5743bd409f2f9..28c5e5aced7fcc91 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -67,6 +67,7 @@ enum lock_aggr_mode {
+>  enum lock_class_sym {
+>  	LOCK_CLASS_NONE,
+>  	LOCK_CLASS_RQLOCK,
+> +	LOCK_CLASS_ZONE_LOCK,
+>  };
+>  
+>  struct slab_cache_data {
+> diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> index 7b81d3173917fdb5..a59ce912be18cd0f 100644
+> --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> @@ -203,4 +203,13 @@ struct bpf_iter__kmem_cache {
+>  	struct kmem_cache *s;
+>  } __attribute__((preserve_access_index));
+>  
+> +struct zone {
+> +	spinlock_t lock;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct pglist_data {
+> +	struct zone node_zones[6]; /* value for all possible config */
+> +	int nr_zones;
+> +} __attribute__((preserve_access_index));
+> +
+>  #endif // __VMLINUX_H
+> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+> index b5d916aa49df6424..d331ce8e3caad4cb 100644
+> --- a/tools/perf/util/lock-contention.h
+> +++ b/tools/perf/util/lock-contention.h
+> @@ -142,6 +142,7 @@ struct lock_contention {
+>  	struct lock_filter *filters;
+>  	struct lock_contention_fails fails;
+>  	struct rb_root cgroups;
+> +	void *btf;
+>  	unsigned long map_nr_entries;
+>  	int max_stack;
+>  	int stack_skip;
+> -- 
+> 2.49.0
+> 
