@@ -1,136 +1,104 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A20825E804
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D30B1DA4E
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745833111; cv=none; b=Se9LznNKWoleFaN7RkniyqpTEjrqsmfaIq0nwfgKr+nu22Di1z6+2eRL53/w0/l7hIknoydgXq2kmjx9zjXQWZZA1eAfOf5TcnDc582Pi6JR36mZgEBvsGepLjNq4KZIPVRQZ1kXLfAvM4ZsEaQonkjD8MLia5dWmmoJ0Xk4UHE=
+	t=1745833209; cv=none; b=ex61p0InRdRGhyIR+lCadV9mQgncbqWLYqLBTDLCNhCQxq1wXjWL+weM5bz2sBHstd1FE2UrfQe1zeMxrzDwf0LQIE6KKtXI+B4K9dxd5jb2wtmWXWbOHp9cah9lS7wodbm47B5ycUBzescinDNp3EyaKTjexlpPuUuetylpUkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745833111; c=relaxed/simple;
-	bh=mn+t/RacBxME/p1WkOJ7gtkz/AVEfXFenCy1kgWUAFc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=DSOhr+Bsk67bQtUwzAnHNckbMWjHgLgMOQxa9hlu4X0k9X14mvJPZqPAEpRiowQOFyFCmF9WimulZAmIDkkstmLzY2q3WnA98Fgt1x/hdd4hQF1GxR8zDW/tuAnsSjkSHP9+LPQD62p4ikYVhkNWr0PkjKjhhX90Z4xm9rnk/xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b41b906b3so516835439f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:38:29 -0700 (PDT)
+	s=arc-20240116; t=1745833209; c=relaxed/simple;
+	bh=YYDzdQ4+9LmtvJGRvACyqrQyMsoxiDd42ng2vwZOOoU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LgNgDrQY7ELXKWlXctzluwZnwZ5Vs7pu5kFDMnj+Hi/Uzy0TBbDqsoSVNV7SKrNKvPhDkXBdtmAmBpGD1+FN58ort1mrNJXJW/GYdRnx23tjjtZoMJfPdzcsQtXaLLJSMDUzQiY4kGlSEI6Jcus3xKdWyHZrN8/JeHnRJzJGhbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YGqy89vm; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YGqy89vm"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39c1b1c0969so2826564f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745833206; x=1746438006; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mMZGDDxvxQMJiy4e9TQRfyVCY4DEWRSO+vNpcZ0cNtk=;
+        b=YGqy89vmwUKBj2O7jYREWWX663R+Op4tNUze3GYoa37bDAvpI443aNCcT5OUGjGDo5
+         oEge0gtwauA3bRgQB75E0ADkYB/5HSxBRBMwJMZBSbCjhgDjBSG8StuUMyfYjgQGf+nk
+         ce/82ym5w0jx4m0k7J7G1p1MP/OkCfn4ks2vvoOj+p+NlxAO5wXpGP1bK1jwY1uFBqm7
+         0FiVeu6eKH6pgaICrkZ9gUEpWvxdoT6uvaSOm82srjmT/X7cCX4RRg7ZuEq20DI1YQbQ
+         3rr6J+zkmmDe16wi5i0djhFupdw9jIE7CI3HJpiTIHG2DCNNCmA+W4CEfvmMzqBNYzT6
+         /Lsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745833108; x=1746437908;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iMTnP6AIsjjPpmrQ+G1mFdxyIFOKyDG0YgiEfdQ8gfI=;
-        b=Gwgbhh3poQledgHc2ZgLR+mTpp4ZXhlz5qETa6+FNVvTJBuUg9sBgv7rxDTuPWbIJt
-         cUofzhRvo0w5C8eSAyXtjdiEsIVKFBa9Rca6CHsuCMXkJWvsjHoq8wJnZxOSreRAPfyD
-         0Gq9nJ2NNytysSsFNmCWNlB1FWlslvoaGriqsx+/Ram1yU8wrVHZ7l7JcYP6KzmWk8zb
-         Lh9RbKiOthnB73x8LWp+09t/UWCmmqLxVJzHwtaSwVkiYudQkL1dA0Ub/eS78JqXLDvP
-         lF/mRiUM9/r1G1YcjbK87RTJ5mm2sFoGpiSKtshWIU00KAMYxXg7jxP6Wwj1dLa6jXxJ
-         tUHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVafrKqZQxFB6mcQKbkML+pqG1Fw7EwBxHOywPNU/1HS7OdAaMsmjbAepddgzKPmGLEK2XRaB0zdgGljp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNmJP5rvafSmnHAovRzvttO/r4PuDBFk/peJx5vIIxaBbFRbWc
-	WA9c0EfH9h4LWgkHS/jFM6WJhFsO4hq9dJCESASOIWjbEejZWEG7OIf0BtEARBFJUGcxUwp+JzU
-	w3spzb42GD0hEo6GjDOod/2/MNCtB8C3XShVbc0/GGC3/H5x1yxTtgd4=
-X-Google-Smtp-Source: AGHT+IHo5S0y/4Gw8E/UVyBmpcTYAQMN+ue1sq5sfpoafxKP9FdmUl50C1Ato7sVRi0TAzi1wWePzYbTqkmH+r5xWqv5r2vhuLP2
+        d=1e100.net; s=20230601; t=1745833206; x=1746438006;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mMZGDDxvxQMJiy4e9TQRfyVCY4DEWRSO+vNpcZ0cNtk=;
+        b=QMHK4MdzQwPFJ8B4RQJDSzmjqD4pJEL4cmPRo0KKfNH8YlGKL49bc0gcLs0Hp3Wjva
+         MRPO5QhKFXK9lWZvwogd+P0FYoMdvSwfa+AXFaXHyAekB85eT1dn6PZj/1cEVSLEHB64
+         bfej3RM08KLR8SK/8WmCv9ZgwMWh/1Vr4nuuYqSWwvRmO22O0XWrPDSnL9Xo75ndQafp
+         CpaxvyiBt1QHryZ5UtRTV2XXB/0BtJ9RlExuB5Vz0hnp8PzWoJOzDrvbi9spdYfYzsvm
+         WEcdlVkWPZrXPwJDS/2JLuf+t/Z3iSXDmR9ChfiJFtjrHEggZRx8UD0Cx+iSiwo2Pytf
+         OYlA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzHwJ05NooSEcw5GlKo742zIGX5YwUr78jVrt5c/vwr8DhCLZYX5Ler5Eryti5GJ3CB5riaY1UtGFQYHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOGYvU0FQKDzkXL2NMx4roqo2zPhOUJ5uXj/uVCGdSJy7pg2uU
+	2SAf+R2lop1feXxv2qIfxJcDaEd9m4qJ9FZlqehjLWx9vFJmZaRgU1pq6F9j93GbbfVrPuHHfck
+	V1mylnKJgbnPb1g==
+X-Google-Smtp-Source: AGHT+IHCr2s5xiTt7CkQmPotck1vag0zHrz5ZRimKIOKYP/sR0cvWeb8z+qSIsoUmCLdrGB+tQ4JLc9fAW4i0ic=
+X-Received: from wrbck9.prod.google.com ([2002:a5d:5e89:0:b0:391:3ebd:4782])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:178f:b0:391:3049:d58d with SMTP id ffacd0b85a97d-3a07a9c3830mr6315668f8f.0.1745833206521;
+ Mon, 28 Apr 2025 02:40:06 -0700 (PDT)
+Date: Mon, 28 Apr 2025 09:40:03 +0000
+In-Reply-To: <34457c78-fdcd-4f1b-a349-4ca9bcc2febc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:340e:b0:85e:2e8b:602 with SMTP id
- ca18e2360f4ac-86467a4dfa5mr711592639f.2.1745833108651; Mon, 28 Apr 2025
- 02:38:28 -0700 (PDT)
-Date: Mon, 28 Apr 2025 02:38:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680f4c94.050a0220.2b69d1.035b.GAE@google.com>
-Subject: [syzbot] [io-uring] KMSAN: uninit-value in putname
-From: syzbot <syzbot+9b12063ba8beec94f5b8@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, brauner@kernel.org, 
-	io-uring@vger.kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com> <34457c78-fdcd-4f1b-a349-4ca9bcc2febc@nvidia.com>
+Message-ID: <aA9M8_K0MQfWg52t@google.com>
+Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
+From: Alice Ryhl <aliceryhl@google.com>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hello,
+On Sun, Apr 27, 2025 at 03:59:48PM -0700, John Hubbard wrote:
+> On 4/23/25 10:40 AM, Tamir Duberstein wrote:
+> ...
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index 1df11156302a..d14ed86efb68 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -198,9 +198,15 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+> >   /// ```
+> >   #[macro_export]
+> >   macro_rules! container_of {
+> > -    ($ptr:expr, $type:ty, $($f:tt)*) => {{
+> > -        let offset: usize = ::core::mem::offset_of!($type, $($f)*);
+> > -        $ptr.byte_sub(offset).cast::<$type>()
+> > +    ($field_ptr:expr, $Container:ty, $($fields:tt)*) => {{
+> > +        let offset: usize = ::core::mem::offset_of!($Container, $($fields)*);
+> > +        let field_ptr = $field_ptr;
+> > +        let container_ptr = field_ptr.byte_sub(offset).cast::<$Container>();
+> > +        if false {
+> 
+> This jumped out at me. It's something that I'd like to recommend NOT
+> doing, here or anywhere else, because:
+> 
+>     a) Anything of the form "if false" will get removed by any compiler
+>        worthy of the name, especially in kernel builds.
 
-syzbot found the following issue on:
+The `if false` branch is used to trigger a compilation failure when the
+macro is used incorrectly. The intent is that the compiler should
+optimize it out. I don't think there's anything wrong with that pattern.
 
-HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f77fac580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fca45111586bf9a6
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b12063ba8beec94f5b8
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e23fd3b01d5c/disk-a33b5a08.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d39e4ee184b3/vmlinux-a33b5a08.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4117549249f/bzImage-a33b5a08.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9b12063ba8beec94f5b8@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in putname+0x8f/0x1d0 fs/namei.c:285
- putname+0x8f/0x1d0 fs/namei.c:285
- io_statx_cleanup+0x57/0x80 io_uring/statx.c:70
- io_clean_op+0x154/0x690 io_uring/io_uring.c:411
- io_free_batch_list io_uring/io_uring.c:1424 [inline]
- __io_submit_flush_completions+0x1b00/0x1cd0 io_uring/io_uring.c:1465
- io_submit_flush_completions io_uring/io_uring.h:165 [inline]
- io_fallback_req_func+0x28e/0x4e0 io_uring/io_uring.c:260
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xc1d/0x1e80 kernel/workqueue.c:3319
- worker_thread+0xea3/0x1500 kernel/workqueue.c:3400
- kthread+0x6ce/0xf10 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4167 [inline]
- slab_alloc_node mm/slub.c:4210 [inline]
- kmem_cache_alloc_noprof+0x926/0xe20 mm/slub.c:4217
- getname_flags+0x102/0xa20 fs/namei.c:146
- getname_uflags+0x3a/0x50 fs/namei.c:222
- io_statx_prep+0x26f/0x430 io_uring/statx.c:39
- io_init_req io_uring/io_uring.c:2140 [inline]
- io_submit_sqe io_uring/io_uring.c:2187 [inline]
- io_submit_sqes+0x10c1/0x2f50 io_uring/io_uring.c:2342
- __do_sys_io_uring_enter io_uring/io_uring.c:3402 [inline]
- __se_sys_io_uring_enter+0x410/0x4db0 io_uring/io_uring.c:3336
- __x64_sys_io_uring_enter+0x11f/0x1a0 io_uring/io_uring.c:3336
- x64_sys_call+0x2dbb/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:427
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 0 UID: 0 PID: 10442 Comm: kworker/0:3 Tainted: G        W           6.15.0-rc3-syzkaller-00008-ga33b5a08cbbd #0 PREEMPT(undef) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: events io_fallback_req_func
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Alice
