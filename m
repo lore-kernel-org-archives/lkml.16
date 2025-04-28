@@ -1,133 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536661FDE3D;
-	Mon, 28 Apr 2025 15:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA79778F54
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855458; cv=none; b=RKKWaMW/uqu0R6Os9ogatc/72f9lOV3ph4x9qptvaE8db3H4DRte7ILSdXm50AlDmJSZHeSjW1Pig7X11H40UxvclYDIFSt3UAXrobBjyXsZegjWpdalss/5huESsfUNc1WdWhEt+9OkBe917mCd/x82LdbDWqsQTQhJIToyBo8=
+	t=1745855577; cv=none; b=pk896DoWYi8oWeM7a96CXkDhQrJzJRtwYAR4doBDSLPFNlVR5a+ZAuN+O8PaTsv5zZ/rQmoFursw68yffHwbch8qqsZZqFbB6txHN1HFncxmLGbh7TFgW/fa2Wgw/zs71vBlOOWUE1sw5y6cZCvg0weU7e86WSo/OnUf7AyUqeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855458; c=relaxed/simple;
-	bh=HPzTibUimbKCKSaMHfkVi7iFxMCrYt8zearjdhZcOGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sXg88ydf53/nASCYGYKdKrurgDJyg022gyxknsLERwiSN1XDJv/d7hxfWoudlm53AUtJwEcRBq01w8+rSUe0qTUJ6RyVuvznFnO6mk+9yc9VxB4AGHBeX4ZQ9sO6LBHHDXrotKMW4NS92bvCXnnbEW6CqEw4CF4W3Ujwrkkbvww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFIUOir0; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745855577; c=relaxed/simple;
+	bh=GE/n0ZKza8bYUuY3tD7XojmR+actx0vXpI1pJopvR50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKw7OpWUpGy5aoeshSPyarEVrHjz5YrX4vjXM8EOws3v6EXKU9jDenjzG/IepYX8Kt58KOQ4CDDqLfBCdniD8woMaiQuuQnEkiVxuqBuCNe35V70FMhYtoUNRdeDBE1p3IQRYu/fs+VisIjspaBkbbcM6KMQNAgfDLrWHTyGhzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OU3oqtHO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFIUOir0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745855457; x=1777391457;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HPzTibUimbKCKSaMHfkVi7iFxMCrYt8zearjdhZcOGY=;
-  b=BFIUOir0bI0rpNRT3TucLKHA7x8vFjNrOxSAKgeqRHdZPmYdHw2XLRqW
-   nLAZHoTsCbBeVVerlhqFMo2t5M0UkvAbyFqYPRU1xt7Kwh0YYD2JFVhE5
-   z2INaqlh6Vqfy9nyEpahCjDXZztD2QaM0hriGLKO7ZpU2YEdRmC7PBXxW
-   lMvnzpcRciKSMZOyvec/+RtCjhoA4rrsA9yvsKz47Q4/gHNxkpF0rl1sr
-   k+/j4Y1ev5E+V1zWTHE1zp/RyQOno9uhHkln8cvdFL/EXLBqj+tQ0f0WB
-   qzA8bvLFK2kS38lNFXdqwA3S0DU+mOxeR9MqY6sFH6nGAO09QT8liBsNr
-   A==;
-X-CSE-ConnectionGUID: WM1VOATCS9CqQjY6TMRqxA==
-X-CSE-MsgGUID: NP8Jf1w9TdGk5DkpfvExZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58442024"
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="58442024"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 08:50:54 -0700
-X-CSE-ConnectionGUID: qR6VQAIKRr6xAaclZE+sOA==
-X-CSE-MsgGUID: nGZrgAQdQcWHh4jMryuyZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="170779782"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.222.199]) ([10.124.222.199])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 08:50:53 -0700
-Message-ID: <63bb3383-de43-4638-b229-28c33c1582be@intel.com>
-Date: Mon, 28 Apr 2025 08:50:50 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OU3oqtHO"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAmGNx003209;
+	Mon, 28 Apr 2025 15:52:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=CwSj7ypTHGZPElQRVKae0+WBdkejDB
+	t4rF+btde+lEw=; b=OU3oqtHOLX5VWUofyB0UI82vl8imRkKL3HZO0BWMXZc9GB
+	6mSpASMIWTkVVLw2ogFd1RzWAhfZFFe3ikMvpnrusz7ZyGXCCiVh2LVo2brMxCHh
+	MhesD8PlTNjykZuMIcVoVyHKhBT8qJT6VoqmJ5/2nnYMp2EOQ9lTrsl89PmJsMSe
+	REDU5hdzKVY5HDKm1gF3VfR4ZifbOo+aHmUY8vX3ZzrzjHS89fnUm50IMCtA86zK
+	zccMH95+/qEER5ITrVSKq6HnpJTAyyoleNjVrjH9Cwemq57z8Mnjm5vASUyvpzcF
+	t0VOLIz+y7LM18wANXGsa1Nc1kiRHzg0+8qj9WVA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5km6vg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 15:52:29 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53SFZKio016120;
+	Mon, 28 Apr 2025 15:52:28 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5km6vb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 15:52:28 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SC5SDp001803;
+	Mon, 28 Apr 2025 15:52:27 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469bamf291-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 15:52:27 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SFqNNu40370470
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 15:52:23 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 82E4920040;
+	Mon, 28 Apr 2025 15:52:23 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C51BD20049;
+	Mon, 28 Apr 2025 15:52:17 +0000 (GMT)
+Received: from li-e1dea04c-3555-11b2-a85c-f57333552245.ibm.com (unknown [9.39.16.25])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 28 Apr 2025 15:52:17 +0000 (GMT)
+Date: Mon, 28 Apr 2025 21:22:15 +0530
+From: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org,
+        neeraj.upadhyay@kernel.org, vschneid@redhat.com, tglx@linutronix.de,
+        frederic@kernel.org, ankur.a.arora@oracle.com, sshegde@linux.ibm.com,
+        bigeasy@linutronix.de, kees@kernel.org, oleg@redhat.com,
+        peterz@infradead.org, tzimmermann@suse.de, namcao@linutronix.de,
+        kan.liang@linux.intel.com, mcgrof@kernel.org, rppt@kernel.org,
+        atrajeev@linux.vnet.ibm.com, anjalik@linux.ibm.com,
+        coltonlewis@google.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC V1 0/6] Generic Entry/Exit support for ppc64
+Message-ID: <tuylzfyyxfexl4fqid4xqo3bkxc25kkr3kah72ndexfw7qradv@xdqz7qxaliyf>
+References: <20250428152225.66044-2-mchauras@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Restrict devmem for confidential VMs
-To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com
-Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>,
- Vishal Annapurve <vannapurve@google.com>, Kees Cook <kees@kernel.org>,
- stable@vger.kernel.org, x86@kernel.org,
- Nikolay Borisov <nik.borisov@suse.com>, Naveen N Rao <naveen@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
- linux-coco@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <174491711228.1395340.3647010925173796093.stgit@dwillia2-xfh.jf.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <174491711228.1395340.3647010925173796093.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428152225.66044-2-mchauras@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: O9lXcAocXti5-2NdzVKePAyxxUL8PtxU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEyOCBTYWx0ZWRfX/RzOgR4IFVmE nTSW5QbW9RwkVa+aQDUS/CxCYvzMnThTf+nRaTwC/LmYcCANWb88QUsa1liG0MeQhnCh70AmlXU BHgIJeOypTRvi4TpphsG3pO0981V/9SVHvWPShNbqtZGokJe8S3ePd4f8CArz4LpA7X50ARdQ/0
+ VGU0OGYyfWVnFbIr1QxYWuTm0pFjwbT7z1+6s7+5tIaXyWYBpnWGzwdqLk6VuBuOZ2rfMMhV0xv Ftv2fxeq5qjj5KstmDcX3FrIlSPPvduCzqPbuBolzaBD2mrOQj0DWIWh5GQfRuALM1SereyNHdv 8mObKnvjqG/ranE7oMBJkuh2LTja4Z8Dnmzw/fvf+f0iEKlgoPrxhUVQsDfkxk27F7Eib6edQx3
+ f7E3faYoltfFdVPTSRrlj8z/6TGATFYvFeN0HbycudUbxvxFIdXe+pW/KvXRuqGdrA0EVW9l
+X-Proofpoint-GUID: CUej1cs9APT6IM5K8RiNlp_52PD6H-gr
+X-Authority-Analysis: v=2.4 cv=DvxW+H/+ c=1 sm=1 tr=0 ts=680fa43d cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=lkT6MX_KWXG3DhZVOTYA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=885 phishscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280128
 
-On 4/17/25 12:11, Dan Williams wrote:
->  arch/x86/Kconfig          |    4 ++++
->  arch/x86/mm/pat/memtype.c |   31 ++++---------------------------
->  drivers/char/mem.c        |   27 +++++++++------------------
->  include/linux/io.h        |   21 +++++++++++++++++++++
->  4 files changed, 38 insertions(+), 45 deletions(-)
+On Mon, Apr 28, 2025 at 08:52:20PM +0530, Mukesh Kumar Chaurasiya wrote:
 
-This looks like a good idea on multiple levels. We can take it through
-tip, but one things that makes me nervous is that neither of the "CHAR
-and MISC DRIVERS" supporters are even on cc.
+Few corrections in the commit message:
+> This is a syscall only implementation of generic entry/exit framework
+> for framework for ppc. IRQ handling is not done in this RFC. 
+>
+s/framework for framework/framework
+> This will break the ppc32 build as of now which will be fixed along with
+> IRQ handling.
+> 
+> Below are the performance benchmarks from perf bench basic syscall.
+> This is for 1,00,00,000 getppid() calls
+> 
+> | Metric     | Without Generic Framework | With Generic Framework |
+> | ---------- | ------------------------- | ---------------------- |
+> | Total time | 0.904 [sec]               | 0.856 [sec]            |
+> | usecs/op   | 0.090403                  | 0.085638               |
+> | ops/sec    | 1,10,61,579               | 1,16,77,086            |
+>
+The coloums are reversed here
 
-> Arnd Bergmann <arnd@arndb.de> (supporter:CHAR and MISC DRIVERS)
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS)
+| Metric     | With Generic Framework    | Without Generic Framework |
+| ---------- | ------------------------- | ------------------------- |
+| Total time | 0.904 [sec]               | 0.856 [sec]               |
+| usecs/op   | 0.090403                  | 0.085638                  |
+| ops/sec    | 1,10,61,579               | 1,16,77,086               |
 
-I guess arm and powerpc have cc_platform_has() so it's not _completely_
-x86 only, either. Acks from those folks would also be appreciated since
-it's going to affect them most immediately.
-
-Also, just to confirm, patch 2 can go to stable@ without _any_
-dependency on patch 1, right?
+> That's ~5% degradation as of now.
+> 
+> Mukesh Kumar Chaurasiya (6):
+>   powerpc: rename arch_irq_disabled_regs
+>   powerpc: Prepare to build with genreic entry/exit framework
+>   powerpc: introduce arch_enter_from_user_mode
+>   powerpc: Add flag in paca for register restore state
+>   powerpc: Introduce syscall exit arch functions
+>   powerpc: Enable Generic Entry/Exit for syscalls.
+> 
+>  arch/powerpc/Kconfig                    |   1 +
+>  arch/powerpc/include/asm/entry-common.h | 158 ++++++++++++++++++++++++
+>  arch/powerpc/include/asm/hw_irq.h       |   4 +-
+>  arch/powerpc/include/asm/interrupt.h    | 117 +++++++++++++++++-
+>  arch/powerpc/include/asm/paca.h         |   1 +
+>  arch/powerpc/include/asm/stacktrace.h   |   8 ++
+>  arch/powerpc/include/asm/syscall.h      |   5 +
+>  arch/powerpc/include/asm/thread_info.h  |   1 +
+>  arch/powerpc/kernel/interrupt.c         | 153 ++++++-----------------
+>  arch/powerpc/kernel/ptrace/ptrace.c     | 103 ---------------
+>  arch/powerpc/kernel/signal.c            |   8 ++
+>  arch/powerpc/kernel/syscall.c           | 117 +-----------------
+>  arch/powerpc/kernel/traps.c             |   2 +-
+>  arch/powerpc/kernel/watchdog.c          |   2 +-
+>  arch/powerpc/perf/core-book3s.c         |   2 +-
+>  15 files changed, 336 insertions(+), 346 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/entry-common.h
+> 
+> -- 
+> 2.49.0
+> 
