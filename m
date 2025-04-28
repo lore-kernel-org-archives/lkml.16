@@ -1,233 +1,67 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBE92356BC
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F5125DD15;
+	Mon, 28 Apr 2025 08:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745828353; cv=none; b=WXu1FKDqoZordvDgsF3ye12j2LFeooeJplWiIWgod/sgGh/h9kN3a0lSBRo10ny5h8sC/kb/jf8aM8mqt1OVHuxFLsS4NIzo/rAEccEPGkYPa8OfE/JlXkmjoxC/+4ARnjHNkaZ2cjUcSA8a7t6eZAZ0TmLKTbY+Qr5XMqyu7K4=
+	t=1745828385; cv=none; b=FKId2rE5DsY1AleJBCUtsGtwYQ4q4WJsCxFpxcv10ZuGgfF/w8sjClpMGb4//gt4CVsAk+THmIyfRvdKzVW0QtDiBqxEglPqqQZw4dUtZIVfUZUuze+5hEdFO4Qg5RHKrXqRfg+cyacjoTWMT9UyvbDCFoCWwOOqJksMto4zIO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745828353; c=relaxed/simple;
-	bh=0sGaXTtD20xzhNz4rmeWyme7BvH88i16MX9d4W1Y3CQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ekMglyPJrSpsGA4u1+snH1PBiO8DS7XRZTQCmWFsqtXlVcpcz0AYyAFnyUrDIqrMPAwP//x3wK+cjcyGdcQ45FW+sdK31pBwON4CV+ivIir/VJJtw+6f49qV7ni5p11adplSm2PlZMAq5u9nqcfMiqKhIvNsaPfKhY7duSQvQbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mFJK0/iX; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745828385; c=relaxed/simple;
+	bh=8QkfODvIJOjNNWPTtgvsu1hFRwnn7oWSy32ayB+5V2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V56ZN2Jhasca/7foZdyQHHmPHHnXflbxqC+1jv/FM74l81pVi1M1ayhnn9b4usBAsh6J06wf/W2SwTeAbZfgfwg1mqf9tgNdUIW5sm9Hr1DdjwaXo62pP0vQ7MbVVHnPzQMW9kYhb1yKE9hOuS6/H34AG4cwKHaT4NXWx19s7aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yiI+DqgE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mFJK0/iX"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745828349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fg/btEvaUcqT4NM4dYYa4R9u9WjGLVmndHIgtbzlFXc=;
-	b=mFJK0/iXSOt5fj3xjadJLjSr81Jzb3GynBBFsr5KHqT0x5plfJlh+zMBgV6u+BWLX6J/on
-	Z1DQYEu83m7V578FTrWJZp3poMihriyfGZvrhL3orFlBxG7S2JNcZZI4eCKIVrvRQeXBfN
-	tQVSe3DLCCJKPkD/jCVFYI8t/3rq36M=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	linux-doc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yiI+DqgE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7113C4CEEC;
+	Mon, 28 Apr 2025 08:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745828385;
+	bh=8QkfODvIJOjNNWPTtgvsu1hFRwnn7oWSy32ayB+5V2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yiI+DqgE4tgMtK7WasGBdYQu0kzWKmm+GL2cWKKfSoNfrhkPvL9OJSvbYpuxgQK9C
+	 76PSn26UcfxAXEu8BTUxGj1IPSpwfGViYxArq6/LcXdeXLdRqkIZwuoIrPgnDklal4
+	 0FnIGDexYMihIVesJTWdZh9u1SqwK6CTFJ3vHx6I=
+Date: Mon, 28 Apr 2025 10:19:42 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Raag Jadav <raag.jadav@intel.com>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v1 3/3] selftest/bpf/benchs: Add cpu-affinity for sockmap bench
-Date: Mon, 28 Apr 2025 16:16:54 +0800
-Message-ID: <20250428081744.52375-4-jiayuan.chen@linux.dev>
-In-Reply-To: <20250428081744.52375-1-jiayuan.chen@linux.dev>
-References: <20250428081744.52375-1-jiayuan.chen@linux.dev>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [GIT PULL] gpio: immutable tag for the driver core for v6.16-rc1
+Message-ID: <2025042821-campsite-fidgety-023b@gregkh>
+References: <20250428074550.16190-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428074550.16190-1-brgl@bgdev.pl>
 
-Add cpu-affinity for sockmap bench. Also add no-verify args to avoid
-validating data for performance enhancements.
+On Mon, Apr 28, 2025 at 09:45:50AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Here is the tag containing the driver core dependencies pulled into the
+> GPIO tree to enable picking up the final commit from Andy's series[0].
+> 
+> Bart
+> 
+> [0] https://lore.kernel.org/all/20250220162238.2738038-4-andriy.shevchenko@linux.intel.com/
+> 
+> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+> 
+>   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpiod-devm-is-action-added-for-v6.16-rc1
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- .../selftests/bpf/benchs/bench_sockmap.c      | 35 +++++++++++++++++--
- tools/testing/selftests/bpf/bpf_kfuncs.h      |  6 ++++
- .../selftests/bpf/progs/bench_sockmap_prog.c  |  7 ++++
- 3 files changed, 45 insertions(+), 3 deletions(-)
+Thanks for this, now pulled into the driver-core tree as well.
 
-diff --git a/tools/testing/selftests/bpf/benchs/bench_sockmap.c b/tools/testing/selftests/bpf/benchs/bench_sockmap.c
-index 8ebf563a67a2..e004a618822a 100644
---- a/tools/testing/selftests/bpf/benchs/bench_sockmap.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_sockmap.c
-@@ -43,6 +43,8 @@ enum SOCKMAP_ARG_FLAG {
- 	ARG_FW_TX_VERDICT_INGRESS,
- 	ARG_FW_TX_VERDICT_EGRESS,
- 	ARG_CTL_RX_STRP,
-+	ARG_CTL_CPU_AFFINITY,
-+	ARG_CTL_NO_VERIFY,
- 	ARG_CONSUMER_DELAY_TIME,
- 	ARG_PRODUCER_DURATION,
- };
-@@ -109,6 +111,8 @@ static struct socmap_ctx {
- 	int		delay_consumer;
- 	int		prod_run_time;
- 	int		strp_size;
-+	int		cpu_affinity;
-+	int		skip_verify;
- } ctx = {
- 	.prod_send	= 0,
- 	.user_read	= 0,
-@@ -118,6 +122,8 @@ static struct socmap_ctx {
- 	.delay_consumer = 0,
- 	.prod_run_time	= 0,
- 	.strp_size	= 0,
-+	.cpu_affinity	= 0,
-+	.skip_verify	= 0,
- };
- 
- static void bench_sockmap_prog_destroy(void)
-@@ -235,11 +241,18 @@ static int create_sockets(void)
- static void validate(void)
- {
- 	if (env.consumer_cnt != 2 || env.producer_cnt != 1 ||
--	    !env.affinity)
-+	    !env.affinity) {
-+		fprintf(stderr, "argument '-c 2 -p 1 -a' is necessary\n");
- 		goto err;
-+	}
-+
-+	if (!ctx.cpu_affinity && env.nr_cpus < 4) {
-+		fprintf(stderr, "4 CPU are needed to test cpu-affinity\n");
-+		goto err;
-+	}
-+
- 	return;
- err:
--	fprintf(stderr, "argument '-c 2 -p 1 -a' is necessary");
- 	exit(1);
- }
- 
-@@ -327,6 +340,9 @@ static void setup(void)
- 		exit(1);
- 	}
- 
-+	if (ctx.cpu_affinity)
-+		ctx.skel->data->redir_cpu = 3;
-+
- 	if (create_sockets()) {
- 		fprintf(stderr, "create_net_mode error\n");
- 		goto err;
-@@ -367,9 +383,12 @@ static void measure(struct bench_res *res)
- 
- static void verify_data(int *check_pos, char *buf, int rcv)
- {
-+	if (ctx.skip_verify)
-+		return;
-+
- 	for (int i = 0 ; i < rcv; i++) {
- 		if (buf[i] != snd_data[(*check_pos) % DATA_REPEAT_SIZE]) {
--			fprintf(stderr, "verify data fail");
-+			fprintf(stderr, "verify data fail\n");
- 			exit(1);
- 		}
- 		(*check_pos)++;
-@@ -553,6 +572,10 @@ static const struct argp_option opts[] = {
- 		"delay consumer start"},
- 	{ "producer-duration", ARG_PRODUCER_DURATION, "SEC", 0,
- 		"producer duration"},
-+	{ "cpu-affinity", ARG_CTL_CPU_AFFINITY, NULL, 0,
-+		"set cpu-affinity for sockmap backlog thread"},
-+	{ "no-verify", ARG_CTL_NO_VERIFY, NULL, 0,
-+		"skip data validation for performance enhancements"},
- 	{},
- };
- 
-@@ -571,6 +594,12 @@ static error_t parse_arg(int key, char *arg, struct argp_state *state)
- 	case ARG_CTL_RX_STRP:
- 		ctx.strp_size = strtol(arg, NULL, 10);
- 		break;
-+	case ARG_CTL_CPU_AFFINITY:
-+		ctx.cpu_affinity = 1;
-+		break;
-+	case ARG_CTL_NO_VERIFY:
-+		ctx.skip_verify = 1;
-+		break;
- 	default:
- 		return ARGP_ERR_UNKNOWN;
- 	}
-diff --git a/tools/testing/selftests/bpf/bpf_kfuncs.h b/tools/testing/selftests/bpf/bpf_kfuncs.h
-index 8215c9b3115e..173329c5d034 100644
---- a/tools/testing/selftests/bpf/bpf_kfuncs.h
-+++ b/tools/testing/selftests/bpf/bpf_kfuncs.h
-@@ -92,4 +92,10 @@ extern int bpf_set_dentry_xattr(struct dentry *dentry, const char *name__str,
- 				const struct bpf_dynptr *value_p, int flags) __ksym __weak;
- extern int bpf_remove_dentry_xattr(struct dentry *dentry, const char *name__str) __ksym __weak;
- 
-+/* Description
-+ *  Set sockmap redir cpu
-+ * Returns
-+ *  Error code
-+ */
-+extern int bpf_sk_skb_set_redirect_cpu(struct __sk_buff *skb, int redir_cpu) __ksym;
- #endif
-diff --git a/tools/testing/selftests/bpf/progs/bench_sockmap_prog.c b/tools/testing/selftests/bpf/progs/bench_sockmap_prog.c
-index 079bf3794b3a..dd1a11cb4f48 100644
---- a/tools/testing/selftests/bpf/progs/bench_sockmap_prog.c
-+++ b/tools/testing/selftests/bpf/progs/bench_sockmap_prog.c
-@@ -2,11 +2,15 @@
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
- #include <bpf/bpf_endian.h>
-+#include <stdbool.h>
-+#include "bpf_kfuncs.h"
- 
- long process_byte = 0;
- int  verdict_dir = 0;
- int  dropped = 0;
- int  pkt_size = 0;
-+int  redir_cpu = -1;
-+
- struct {
- 	__uint(type, BPF_MAP_TYPE_SOCKMAP);
- 	__uint(max_entries, 20);
-@@ -33,6 +37,9 @@ int prog_skb_verdict(struct __sk_buff *skb)
- 	int one = 1;
- 	int ret =  bpf_sk_redirect_map(skb, &sock_map_rx, one, verdict_dir);
- 
-+	if (redir_cpu != -1)
-+		bpf_sk_skb_set_redirect_cpu(skb, redir_cpu);
-+
- 	if (ret == SK_DROP)
- 		dropped++;
- 	__sync_fetch_and_add(&process_byte, skb->len);
--- 
-2.47.1
-
+greg k-h
