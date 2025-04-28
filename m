@@ -1,81 +1,137 @@
-Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFBA26FD8D
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7542A26FA62;
+	Mon, 28 Apr 2025 14:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745850611; cv=none; b=M54UQWf54s3DH0AC3shdwcG6pa8VUkvNzOCV0+xAjR4fkQcmTow4A+ExKMlnCXLvDydA4V+EV3aeyhJcsZ6PK81mxt+LceC3iQLIfHQLdr08om6r6Gb6WN/Ok6uC9VKxuYGPreTec4YwKzHWzEeHbJweERHIxZ4B7SL8Fw28WP0=
+	t=1745850621; cv=none; b=S9D/JkLqgP7i0Uyj3IFJmwZ50uFx1Vc5u/+lTkAx5UT5xJZZs3ods+90g7/hEcYFPc5VHPk0tsr9eBc7t5woT9+FM8kT0bSPpClO5eqKOikMzvQccCo9vnhSba4pKq9Wqq9xg8cR2I9vFr9QPl30SJcSLea/CFtF0FKb3CRJXrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745850611; c=relaxed/simple;
-	bh=zEMdjIk8RW3nE7SZBprDXtmorPtx/9VQt+qnPKRkz8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KVK5kRXmS/X1C6R18sADEXv0xHwQvvqjVTZCqwDD1YsPFB8ztp7QXhi2gD8CfTTHwv72DGEPImW0meCsEI7p/tEGYMkGVyQceSQffHsq1q44eD7TYuqkgIoyImnA5vYrWWfJ9lrmbrUXraqCDodIMKcDHmSKv+akUmHwIlvhTEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=TYThmJvT; arc=none smtp.client-ip=185.26.156.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
+	s=arc-20240116; t=1745850621; c=relaxed/simple;
+	bh=pdkiB/5QfzJxhVIzvoJiil+KsQVT8r4iWGwRltuAm70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hZR++yEtnrDPxXPVfpgel2RgF2OMbmgSsNfcSxxPQ9WudiyhyCQmZzmtgjSrPB6QqV4lAXJOYt7yvZgu+tYrgmqIKX2jLPjxm5NBZ4UIW/dLtrzbl0nA2oPys5Sma6k2deUkAJNVANoAGI8MybZdYA5P+rsohbmQnF9GZXJYAQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPVDyV26; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="TYThmJvT"
-Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
-	by mailgate02.uberspace.is (Postfix) with ESMTPS id 0386E17FF6C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:23:04 +0200 (CEST)
-Received: (qmail 10346 invoked by uid 988); 28 Apr 2025 14:23:03 -0000
-Authentication-Results: phoenix.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 28 Apr 2025 16:23:03 +0200
-From: Illia Ostapyshyn <illia@yshyn.com>
-To: linux-kernel@vger.kernel.org
-Cc: Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Illia Ostapyshyn <illia@yshyn.com>
-Subject: [PATCH] scripts/gdb: Use d_shortname instead of d_iname
-Date: Mon, 28 Apr 2025 16:21:17 +0200
-Message-ID: <20250428142117.3455683-1-illia@yshyn.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPVDyV26"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E66C4CEE4;
+	Mon, 28 Apr 2025 14:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745850619;
+	bh=pdkiB/5QfzJxhVIzvoJiil+KsQVT8r4iWGwRltuAm70=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DPVDyV26yf6fwVOiARF+887TxNkdYLQe8qdG3Vbb3Pu+PColLPaeKRRs9GlSvsy/a
+	 C1olcKKWRfsY+H6Hxr0ivzODgW+TFeSS0HHpwQzAQ3JiplFCIGMn24BLSbYKCv0GrD
+	 dUgeNAjHwnNuLdneNpKLssXaPbxSG7bcZxmkTAjR9PnTeBkjf94h+I+gdWOE5O3jMi
+	 yZZmdn++ZqjIj/s2lu6i8Luocd4QcXH9ZYPjQ+iypJ3sFnxr9iYK/bqOLRvAvm0/FC
+	 ifNsBQcEV0dmCfYuHO3jCfhZfiENbaoC9daqrsxoHud6CV6p/14UZ9kr9zMKRLwcDr
+	 J4mZKeAjynZsQ==
+Message-ID: <9463c3b0-ce67-4c67-a8e9-91b4ffd09a58@kernel.org>
+Date: Mon, 28 Apr 2025 16:30:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: Document SEN0322
+To: gomba007@gmail.com, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
+ <20250428-iio-chemical-sen0322-v1-1-9b18363ffe42@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250428-iio-chemical-sen0322-v1-1-9b18363ffe42@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: -
-X-Rspamd-Report: MID_CONTAINS_FROM(1) BAYES_HAM(-2.783733) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: -1.383733
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=yshyn.com; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=zEMdjIk8RW3nE7SZBprDXtmorPtx/9VQt+qnPKRkz8g=;
-	b=TYThmJvThWI8EHelpB/26MgIUQHSM6MBUJvfeZJUdhrcaOSkgcJCwXGvbfCAeEL1OIq7Ux/hVq
-	k5xi7bY1EO2dSgnXD6Xk20iHgAjezlnEe4WAanVIbYqzHVBEKffNMgM0kmmRWvwskT2aRA8x2n/G
-	0wEUxKsA1BupGiM+VG2pQB2HCjqALQtkib3ffhOxQ2aIprO3kkgJTWgkE+QFmy9yt3SSPXoYW+o7
-	k9mO8Lz/8ofrjL3GYCxsFAAppDziOYVaMF/LLFADnciy5yAjwlrhTlzPMjUEztgQjTdoT4MiBfOx
-	gkMBohujSV6q7QWF/iECMU9JTh5RqjSQbAopgS8g==
 
-Commit 58cf9c383c5c68666808 ("dcache: back inline names with a
-struct-wrapped array of unsigned long") introduced a d_shortname union
-in place of d_iname.  However, the gdb scripts for vfs still reference
-the old field.  Update the scripts to reference the correct field and
-union member.
+On 28/04/2025 12:50, Tóth János via B4 Relay wrote:
+> +
+> +description: >
+> +  DFRobot SEN0322 is an oxygen sensor. It supports I2C for communication.
+> +
+> +  Datasheet:
+> +    https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
+> +
+> +properties:
+> +  compatible:
+> +    const: dfrobot,sen0322
+> +
+> +  reg:
+> +    maxItems: 1
 
-Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
----
- scripts/gdb/linux/vfs.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No other properties like supplies or configuration? If so, this could go
+to trivial-devices.
 
-diff --git a/scripts/gdb/linux/vfs.py b/scripts/gdb/linux/vfs.py
-index c77b9ce75f6d..b5fbb18ccb77 100644
---- a/scripts/gdb/linux/vfs.py
-+++ b/scripts/gdb/linux/vfs.py
-@@ -22,7 +22,7 @@ def dentry_name(d):
-     if parent == d or parent == 0:
-         return ""
-     p = dentry_name(d['d_parent']) + "/"
--    return p + d['d_iname'].string()
-+    return p + d['d_shortname']['string'].string()
- 
- class DentryName(gdb.Function):
-     """Return string of the full path of a dentry.
--- 
-2.47.2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      sen0322@73 {
 
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+Choose something from above or similar devices.
+
+
+
+Best regards,
+Krzysztof
