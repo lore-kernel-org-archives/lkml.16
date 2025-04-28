@@ -1,674 +1,609 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178A7289341
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861934; cv=none; b=WHno9W/SxwY0DULOKQNgwH3Uhcs7r1TO3/+DGTaRtKLfHDprpBdYAZb9KZrFSrt/9KVUSB/8zvTF/cRNaiOKtKKVOp8dpwzshZ573ked1820GeHULSyWGpvrP8iet8ToQOzKEa+ZA2OalPEfoEuWtU3xQRYrUuX5/WMcV6SxpFk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861934; c=relaxed/simple;
-	bh=n8oKZicxJFZMH/KS41frj/jCM+F8w+pD+mXUWTs4KQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oQBWV6yIqhjHKFKwdX67JLBfaTAC4qAlgpk+iSXybwBR6IS8NaJjZwCUEDu+I6R/6WcKH5xp204rNMYF5hRi9G5j28mdcL7xuH/fiZO/2kAinUWQ7Otj4JKILD3pYEJRR3VwT7TzhLnayzTQ7oJSOQiAZix+yUe+teZp4sfCbVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net; spf=pass smtp.mailfrom=amacapital.net; dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b=0Jp7WMpb; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amacapital.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C1027CCD3;
+	Mon, 28 Apr 2025 17:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745861940; cv=fail; b=OBxb8pfgVjWv+s5aUK2DkVoDFWJ9k3gk5GatEKNpjd3FtmxDVyYkxnidKwS5rw6sQCqefWmLWrlr6tTzA5OKTEw1Kb/4JQ9u/VJjvalN5W2fyE59JDV7jwfLVC5nHz6V9AiNn3vujIs4YJ/OpTkwCcNTTqRiWhcV40SnyweG36w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745861940; c=relaxed/simple;
+	bh=COXOJ3xceGRDTliTgdl1akHwKm5IrwrxEERfiaG3l9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pw0xvlZic/Jjkm1kTKWqeLe1ydajm/YFmYMksF0aqk2fglgzBr4VFtYZ9a/6kn3h/cg7XxzzR3GwY0WTou4BIZurqSH6WtHxDey0wWrY7xZGhWs2UwPp7JkjjD5DVXWm5rGfVNcAH9RbQaPV+4KbbhPZKjqdIrW0vBTr/qtMrrY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=p0PZm5A6; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=hsZEi3Gd; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b="0Jp7WMpb"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54ac9d57173so6133220e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:38:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="p0PZm5A6";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="hsZEi3Gd"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S81SYt013255;
+	Mon, 28 Apr 2025 12:38:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=clzNn3YuII1L3ICe0tS3iDVykcNPHIrRn/UqA6iEmjE=; b=
+	p0PZm5A6EkzzcqxxCeakRTEL7h5yQB7lpdzg5gu7pquVd/cSEFuZW3ITBjxdlMRE
+	rool4axKBKl9Nz7cWHs0VmJHI20c4U3mizz6XYq30Y+jHC20ZvZl2GptrWlRwN5V
+	3AIVUJs0ILXgJPOS5lzQT0Ghu5sCtVbErqjMKvtbs26dO6Qo8IPeKYc9UFu72dCI
+	o7lRc1XzgvSWuBztZ4VyenVBe90mNUmRksxKqthgIqrHkTuoHRQEysVtOB01Ihqv
+	rBbj/Qc8b9rFwKRPHXzi6UiCiK/kH5IFTfAzJAevtnK55SYrQ1Wr83uyQNsxobfA
+	PKsfWlokyhWt0Lal3sg3zg==
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2174.outbound.protection.outlook.com [104.47.73.174])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 468vw1ajck-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 12:38:53 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uiCJqrFCM2t9hc76hg+OOWAl+jcLc2LxATHEvsSlkmPXA2N4t2KEE9KeMUBxO1PbUMmIA0aRqb98LGDOtDdZUBHkOumu9jrOvycACfPLsYga7DRzkykgnT5iKYw7+Ui4vyCDILghX7gihBHj0iTkuzFTL50eTSjAWMSBZLHJ2638MgfeYhtsOjkMnVfozia6sVOwZAL990WzFM+/P8idVmozyV3muqxxfIjj9gILqWEzrNGZq2e/61SzeZfeLjA5WBjqQ4Kv0ymT84gtdV4VBrs+BKrZyYo1dibJ+pDN0h3jAKUv81GzJj/VNFDuNnJDy/TDo0r+esuZORphcmRuHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=clzNn3YuII1L3ICe0tS3iDVykcNPHIrRn/UqA6iEmjE=;
+ b=Ujt8BmN4OdHQSqrz5MUu4lLgNDjr2p4KZKyLsO7UFVaFVe5uoD4LkmW12hlzaVIi+i9iOL/YylF9TH91yu+1Fn99B6W8gWXGO+ReS1PCH9KYMtTSR5eKIl2Gf+4XsR+EukbpaaEIkXh++Y+t/JjTEdG5POysUiyHh535vXqHQ2epIiLuoBy0M56h/M5Hf7oz/hgQde9Lc5fuT2tR4UN7G0nYrMcVqOLtqyzbjhYnyfqHc3w3jnNva7Ep2eFhbXMt5tSRhFkNE2Io6HN1eCSCtZOrSnw350c9mrqHvln1YxS7L1euhjSv/v0IjhFYTjC2njRBGCBJy7l/JilFqYW/UA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20230601.gappssmtp.com; s=20230601; t=1745861929; x=1746466729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S3lY2EODpSWf7PbFeYDoT7dall85uxisFJtIG+o9gPU=;
-        b=0Jp7WMpbZFIM95k4vhvCSQvCsu+Vpnvx9rr+AfmTTGu2tynRMwdfioEGlAqdQxHYEC
-         RzIu7xto56HG2DlXl2xYm+rE8NO5OkeBPLHrbTxwQiPXeT0dwE6DKSrYlmgTFMravIey
-         K07yJ5P3ZmeAHqJGME7t07mXFpXNIrnzt1OyvAwLci+HHRv6a3jnhGsmLkpahOY3E1LR
-         vvad3KbB3ejzdpf7kKSwKfjmODt7zNytNzhozaBJnz03c1d/7wbZjLt/n3m/lTLlGv1b
-         jp0BG9IUgTYx8JsnouuT8F2SRVgmWHuK5UJ6k/QYNS8BIo2cQkU83gDdTqLE6MyyOfz1
-         fSiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745861929; x=1746466729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S3lY2EODpSWf7PbFeYDoT7dall85uxisFJtIG+o9gPU=;
-        b=AzZ3zHgfXkttxxTlsYvHE27NbFHpLdurIlgaxn9ZPera9zvTWaRi+2BYNZoiawnUsa
-         wdbvJSXlmq1c9HUVbzpN1Q27PTMCOsJr/Jey+aqUuPoaY4jpiRZC2WrJCPYJXVPPnndg
-         L1q7Iaq/hve8Ekfi10ZSV2FMdOqtI750kaRFKr0/1quJnMhQt27rqighm7csLEYFJa3f
-         A0J6DzNw+RcQSZe3Q7F9IG9p795B4Pgu4//3k0owuZ2uJRsdQ1UqRTQAiop1mIfqZsqi
-         1+EMYghtvq9m+mY67k+y7axnLh08v9aV3IsJnxQzQ5GH8A4gUJVk8iOHZjUZySWgUZJ1
-         AphA==
-X-Gm-Message-State: AOJu0YziS73pbwMDIr96E3zIeilrAATURRWmCsmq1zXNbsv6dkKMh/kK
-	nUAfRE8ydnVcUFVMIT/L4dhcdYoerhuRH/qvTTIhC+WmCMpInIRnvjuXGAyXR1/R+jov6kA8EHg
-	NzPK5tY5MhE7Q/RUo2GyH6mKWyxBp6sC0sxgs
-X-Gm-Gg: ASbGnctti2NVwXMiXjFFbsl3t2xyXswT4ywWfs3eizwtDsgnwLq7v5Vqc7L8OxNCwSq
-	BdjkYpPeT8p5XSmPTysGJRKx/bJU8Mgc+XUOrwq3MYmDK8WCaUXZ7/eAwDL30xC6wDH/FbT6cMN
-	0hTJU6Qjd+DUHiWJc39Iyo
-X-Google-Smtp-Source: AGHT+IFN43fQ9hbOpQBxgucI4grGKEwBuZUMjbsIm9KdgzOVZQUB596Q0XnHklWpWPJ5/jhcVObbJzWmVsLYy44QUGg=
-X-Received: by 2002:a05:6512:1111:b0:54a:fe25:43d1 with SMTP id
- 2adb3069b0e04-54e9e16ac82mr14004e87.10.1745861928812; Mon, 28 Apr 2025
- 10:38:48 -0700 (PDT)
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=clzNn3YuII1L3ICe0tS3iDVykcNPHIrRn/UqA6iEmjE=;
+ b=hsZEi3GdIN+Ypyj6IKVBW6FQ1Ie7pfdt8971OoNXrwf6QzplrR2EWcZxtkkbc15s82oEcYl11Jmhqv5TNoAWrhZRnpCV6Aoo9g0E13kU3NgIkGGFGo+9zbiKDZaSsce1a9EAy+CiiAnw8542cx/6u9m5s3QRmagQPsOebKWWBCQ=
+Received: from DS7PR05CA0025.namprd05.prod.outlook.com (2603:10b6:5:3b9::30)
+ by PH7PR19MB6532.namprd19.prod.outlook.com (2603:10b6:510:1f4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
+ 2025 17:38:44 +0000
+Received: from DS1PEPF0001708E.namprd03.prod.outlook.com
+ (2603:10b6:5:3b9:cafe::b3) by DS7PR05CA0025.outlook.office365.com
+ (2603:10b6:5:3b9::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.33 via Frontend Transport; Mon,
+ 28 Apr 2025 17:38:44 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ DS1PEPF0001708E.mail.protection.outlook.com (10.167.17.134) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8678.33
+ via Frontend Transport; Mon, 28 Apr 2025 17:38:42 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 5B9B8406543;
+	Mon, 28 Apr 2025 17:38:41 +0000 (UTC)
+Received: from [198.61.68.186] (EDIN4L06LR3.ad.cirrus.com [198.61.68.186])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id C6D6D820259;
+	Mon, 28 Apr 2025 17:38:40 +0000 (UTC)
+Message-ID: <74422acd-258c-415e-8dad-751437e114bf@opensource.cirrus.com>
+Date: Mon, 28 Apr 2025 18:38:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421162712.77452-1-ross.philipson@oracle.com> <20250421162712.77452-19-ross.philipson@oracle.com>
-In-Reply-To: <20250421162712.77452-19-ross.philipson@oracle.com>
-From: Andy Lutomirski <luto@amacapital.net>
-Date: Mon, 28 Apr 2025 10:38:37 -0700
-X-Gm-Features: ATxdqUEEZeo1CfYqdUjIC7TdnT0JrgIlsLJvYgh7ENhGmufQJu2KPSjPRY2cVks
-Message-ID: <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
-Subject: Re: [PATCH v14 18/19] x86: Secure Launch late initcall platform module
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org, 
-	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
-	jarkko@kernel.org, jgg@ziepe.ca, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
-	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
-	trenchboot-devel@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/5] ASoC: cs35l56: Add initial support for CS35L63 for
+ I2C and SoundWire
+To: Stefan Binding <sbinding@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com
+References: <20250407151842.143393-1-sbinding@opensource.cirrus.com>
+ <20250407151842.143393-5-sbinding@opensource.cirrus.com>
+Content-Language: en-US
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20250407151842.143393-5-sbinding@opensource.cirrus.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001708E:EE_|PH7PR19MB6532:EE_
+X-MS-Office365-Filtering-Correlation-Id: d42c6838-3163-4b7e-bb21-08dd867b8538
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|61400799027;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VHBWZnI4L0hCTWZkMUVoRGF2OThTZytVSTRuT0lmOW9udEF3ZUJPUnEwQklR?=
+ =?utf-8?B?dnVHUUc4dnV1aGo4R1B4K3Nzc2syLzNweFN0Q2VlMUE2QlphVm85TzIvRnFl?=
+ =?utf-8?B?Y2YyTmNuL045ZnBXRmhLTkZscDd6S28wbDF0bldYL243MFFmenlQeDNGcmJC?=
+ =?utf-8?B?ZEhET2F5czc2YkdUL0dEZSt2ZE5BcXhYSWxMdU9YczhzWG5OQlo4RnFFOWVp?=
+ =?utf-8?B?RmlBaWFoQUJSaTJJSWJGWEhyRnV5QWkzdmg4aFN4T0V4YlZTbUIyc0w3dUdu?=
+ =?utf-8?B?YUNJT2hEenBqa2pHaEVOSTlBNm9HeXZVREViVWJxbFd5NVQ3M3owclk3RVQz?=
+ =?utf-8?B?a2cxU1d3c2N0U1JzNTNpSTBuSEFSdUEwS1lYYW9VWTNhWktQY3pVVnMxbXV5?=
+ =?utf-8?B?V0s1ekRSbXBuTmliWW44T2Fuay9vbituNmRmRDNKcjBLSkZ6YTJxWlZFcTlS?=
+ =?utf-8?B?Y0FWQVVCRFpGblc0U3FLdE5MSDJZblN4TGpxTDE3YWFjc0RvWlIvMjNyOE1E?=
+ =?utf-8?B?cVRLSTEyTFBYd1Q5d1pVZnBBSFpVbW9UQ1Z3eTlvdlBSb3RyaStab0lnL2Iv?=
+ =?utf-8?B?dXFiTVVmSlNCWXVvTG1zeERKN3FnanVCbkpsOWk4L05VU25sYlByWDRWcnl4?=
+ =?utf-8?B?UFRSYTF5cnJzbHRjZkJYRVk0Ny94UzFkMThjdTJiK0xVcjJid2JTVUZzVW9o?=
+ =?utf-8?B?QnlCa1dwKy9idjhtTGpsYmZEL3JjR0RqUjRIM0FpMnFrOHBPU3VZNWJWUzBm?=
+ =?utf-8?B?aVB1L3E4b09mSXIrckRQZVdOT2doSjlsWWo4cDEyNUJIb2duRkdya3FmV0Nk?=
+ =?utf-8?B?MFloOXRibVNFY3VobE1mUEc3SWQ0dGYyU05ad2NTTjVtanpDWEsxaDdQK0J0?=
+ =?utf-8?B?eDJQRGFRV01jaSs2YTNLNVltR2kwbEM5YTJHQW9GWUF0b2VnT0hqT082N2Fl?=
+ =?utf-8?B?WGtpNFRWallpYjV2ZkhVRTdrZ2ZudXNIQXZjeW1qYkVqaVc3ZThEZ3l4MUxN?=
+ =?utf-8?B?U21hN0dNVXFodUFEME9OM0p1VktCZzZsbE51U2RsY0tMemRqTXg0M0FHdjlY?=
+ =?utf-8?B?d1plWDdvamxCekJjS2tTMlpBRENvcm1HZndnNVF3UkIyUHBYZEhBbkNYR2g3?=
+ =?utf-8?B?NXRUNGhYOXVET0Jvc3NEWW5XV1AwTWcrbTVOdE8zY3Q1S216NFNaTXZmSDdB?=
+ =?utf-8?B?V2xjWk5KMk1LZnNkd3FEWWVUWVdNT0QvUEJsMGdycEJJTFdDbEVmdHcxNStw?=
+ =?utf-8?B?MGVTa3lBSlhzY2pxTEZrM1d2VlZiblJWOXBKQ0t6TDN4WU5HVDhXcVpmMVlW?=
+ =?utf-8?B?cTZkWGNaeHZwSVBoVDNlTXpRWGhib3YxZkhwSHN5TEZ2Mi8xb05qL3p3WDl2?=
+ =?utf-8?B?YXBIS0NHZWxzbUVoK0dsWnZhTmJUaGRKSGlBTkxzMzdRaEJDY1JxVnE4Nmpx?=
+ =?utf-8?B?STM4TURYZHNXWkxZTnU2VndWNXE3QXVqNWdJMW0raVlObldxQ0tWa0E5OVBZ?=
+ =?utf-8?B?ME1KZldzMCtocTU1emJNR2ZnczNvUjhuMmJZMFVQa3Jic3g3VUVrM1hsTEs3?=
+ =?utf-8?B?RXEydVBWU1hhWXlaYzRzYkpOazlxQWkvQUxjNjZPUmtaOE5CZjUrbVRYMVZt?=
+ =?utf-8?B?UmdUd2VrY1RnK3dJdWZuVlpOeTFBL24vcjVFR2pNYmJTNmtUNDc5eERDOFlt?=
+ =?utf-8?B?TG5HeWx6NlR5ak9nWFBEYmtHN25UKzhKL05adVdLM3VaekZmVFF0NGxDYk1i?=
+ =?utf-8?B?dnNIWFlqdlVPSzdRdE1lVWlwMGR5aTg4RjNycjZQVmZHaEFXbmlkVEk0QVJR?=
+ =?utf-8?B?VjhxMnlxQWQ1OU5rM0IzUUdBRDRsdWJobkV3a2pTN3ZjdW1KUnUvRWRNRTNt?=
+ =?utf-8?B?NlFvYnN0WjJyYW5NRFZXVUIxR0hlWFpsUlp5c0tHVjFNVUlqRGpwa2Y2bk5a?=
+ =?utf-8?B?TDNBSjRRQTZKZExPOHllbnh0NjFZOWFjdFdQNnd6ekZWUTY0MDFhVXJoRFBm?=
+ =?utf-8?B?cnNuK0loN2UzMkZZSnRKcW1GQ0F0cXNMUy9kMFR3SklabTRnd1F6TTVtTGJO?=
+ =?utf-8?Q?qhl8gF?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(61400799027);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 17:38:42.7885
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d42c6838-3163-4b7e-bb21-08dd867b8538
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001708E.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB6532
+X-Proofpoint-GUID: vFfGgzevbokIzQii97RuuMiEPnRxEBK3
+X-Proofpoint-ORIG-GUID: vFfGgzevbokIzQii97RuuMiEPnRxEBK3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE0MiBTYWx0ZWRfX8QN0GAe8tBtk 4+e9gllWObLSWpXW16qAvI9V2U7dI1dZDkuCxAauorQf1D0xQDIsiwGkjuIyt0jPa2s7wiUqoJB Gz5h5KIz3CD0u7xSqe5CEsNcfzpX/kfHvQKAzpa/aw1mXlEvIzGE3p3uDCdgKUFTTH4wU309FI8
+ nKb4I6p35r5mmI/2kgQnmrj8AiYR2/ra0SwIyG4450B14fJZox4KGM3/tZ8dnPZGMAFW8jj2bhJ zTXqJiNoitjeYNibC8L2EYQOOUCHX8Yj0Hp2bnOqlnEJ8tj5LCaT9gimsnDAo3ukS8nTgk2hUiV pBWVXTOUv7YdLzpJqKd99l6CIoo4Vrv8ifWnr3+jj1JyWO8sDZVcsxlyiquLrN4Z7vnp1o/6mAn
+ po6a6a0VAbBE2l2B6yOcAQGtU6kj06odi4E0ddN9O3Vc2uaeITkiFdUegUaLJFiu1aJNvLOY
+X-Authority-Analysis: v=2.4 cv=Dd4XqutW c=1 sm=1 tr=0 ts=680fbd2d cx=c_pps a=yneE0G6ieORTwLKR6pgPXw==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10
+ a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=Z8BDXhKzdqwPZSzAG48A:9 a=QEXdDO2ut3YA:10 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-> On Apr 21, 2025, at 9:36=E2=80=AFAM, Ross Philipson <ross.philipson@oracl=
-e.com> wrote:
->
-> =EF=BB=BFFrom: "Daniel P. Smith" <dpsmith@apertussolutions.com>
->
-> The Secure Launch platform module is a late init module. During the
-> init call, the TPM event log is read and measurements taken in the
-> early boot stub code are located. These measurements are extended
-> into the TPM PCRs using the mainline TPM kernel driver.
-
-I read through some of the TPM and TXT docs, and I haven=E2=80=99t found a
-clear explanation of exactly what gets hashed into which PCR.  (Mostly
-because the docs are full of TXT-specific terms.)
-
-But I=E2=80=99m really struggling to understand how the security model ends=
- up
-being consistent with this late_initcall thing. We measure some state
-into the event log, and then we do a whole bunch of things (everything
-from the very beginning of loading the kernel proper to the whenever
-in the late_initcall stage this code runs), and then we actually
-extend the PCRs.  It seems to me that this may involve a whole lot of
-crossing fingers that an attacker can=E2=80=99t find a way to get the kerne=
-l
-to execute code that changes the event log in memory prior to
-extending PCRs such that attacker-controlled values get written.  Even
-if the design is, in principle, sound, the attack surface seems much,
-much larger than it deserves to be.
-
-Is there some reason for all this complexity instead of extending the
-PCRs at the early stage when the measurements are taken?
-
-
->
-> The platform module also registers the securityfs nodes to allow
-> access to TXT register fields on Intel along with the fetching of
-> and writing events to the late launch TPM log.
->
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+On 7/4/25 16:16, Stefan Binding wrote:
+> CS35L63 uses a similar control interface to CS35L56 so support for
+> it can be added into the CS35L56 driver.
+> New regmap configs have been added to support CS35L63.
+> CS35L63 only has SoundWire and I2C control interfaces.
+> 
+> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
 > ---
-> arch/x86/kernel/Makefile   |   1 +
-> arch/x86/kernel/slmodule.c | 508 +++++++++++++++++++++++++++++++++++++
-> 2 files changed, 509 insertions(+)
-> create mode 100644 arch/x86/kernel/slmodule.c
->
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index a7ca7ca16174..bed87b1c49a2 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -83,6 +83,7 @@ obj-$(CONFIG_IA32_EMULATION)    +=3D tls.o
-> obj-y                +=3D step.o
-> obj-$(CONFIG_INTEL_TXT)        +=3D tboot.o
-> obj-$(CONFIG_SECURE_LAUNCH)    +=3D slaunch.o
-> +obj-$(CONFIG_SECURE_LAUNCH)    +=3D slmodule.o
-> obj-$(CONFIG_ISA_DMA_API)    +=3D i8237.o
-> obj-y                +=3D stacktrace.o
-> obj-y                +=3D cpu/
-> diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
-> new file mode 100644
-> index 000000000000..64010bac038c
-> --- /dev/null
-> +++ b/arch/x86/kernel/slmodule.c
-> @@ -0,0 +1,508 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Secure Launch late validation/setup, securityfs exposure and finaliza=
-tion.
-> + *
-> + * Copyright (c) 2025 Apertus Solutions, LLC
-> + * Copyright (c) 2025 Assured Information Security, Inc.
-> + * Copyright (c) 2025, Oracle and/or its affiliates.
-> + */
+>   include/sound/cs35l56.h           |  12 +++
+>   sound/soc/codecs/cs35l56-i2c.c    |   6 ++
+>   sound/soc/codecs/cs35l56-sdw.c    |  74 ++++++++++++++++++
+>   sound/soc/codecs/cs35l56-shared.c | 123 +++++++++++++++++++++++++++++-
+>   sound/soc/codecs/cs35l56.c        |  23 ++++++
+>   sound/soc/codecs/cs35l56.h        |   1 +
+>   6 files changed, 237 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/sound/cs35l56.h b/include/sound/cs35l56.h
+> index 3abe4fbd2085..e16e1a94c8a1 100644
+> --- a/include/sound/cs35l56.h
+> +++ b/include/sound/cs35l56.h
+> @@ -104,6 +104,15 @@
+>   #define CS35L56_DSP1_PMEM_0				0x3800000
+>   #define CS35L56_DSP1_PMEM_5114				0x3804FE8
+>   
+> +#define CS35L63_DSP1_FW_VER				CS35L56_DSP1_FW_VER
+> +#define CS35L63_DSP1_HALO_STATE				0x280396C
+> +#define CS35L63_DSP1_PM_CUR_STATE			0x28042C8
+> +#define CS35L63_PROTECTION_STATUS			0x340009C
+> +#define CS35L63_TRANSDUCER_ACTUAL_PS			0x34000F4
+> +#define CS35L63_MAIN_RENDER_USER_MUTE			0x3400020
+> +#define CS35L63_MAIN_RENDER_USER_VOLUME			0x3400028
+> +#define CS35L63_MAIN_POSTURE_NUMBER			0x3400068
 > +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>   /* DEVID */
+>   #define CS35L56_DEVID_MASK				0x00FFFFFF
+>   
+> @@ -322,8 +331,11 @@ static inline bool cs35l56_is_spi(struct cs35l56_base *cs35l56)
+>   extern const struct regmap_config cs35l56_regmap_i2c;
+>   extern const struct regmap_config cs35l56_regmap_spi;
+>   extern const struct regmap_config cs35l56_regmap_sdw;
+> +extern const struct regmap_config cs35l63_regmap_i2c;
+> +extern const struct regmap_config cs35l63_regmap_sdw;
+>   
+>   extern const struct cs35l56_fw_reg cs35l56_fw_reg;
+> +extern const struct cs35l56_fw_reg cs35l63_fw_reg;
+>   
+>   extern const struct cirrus_amp_cal_controls cs35l56_calibration_controls;
+>   
+> diff --git a/sound/soc/codecs/cs35l56-i2c.c b/sound/soc/codecs/cs35l56-i2c.c
+> index 38c391d11c78..073f1796ae29 100644
+> --- a/sound/soc/codecs/cs35l56-i2c.c
+> +++ b/sound/soc/codecs/cs35l56-i2c.c
+> @@ -37,6 +37,10 @@ static int cs35l56_i2c_probe(struct i2c_client *client)
+>   		regmap_config = &cs35l56_regmap_i2c;
+>   		cs35l56->base.fw_reg = &cs35l56_fw_reg;
+>   		break;
+> +	case 0x3563:
+> +		regmap_config = &cs35l63_regmap_i2c;
+> +		cs35l56->base.fw_reg = &cs35l63_fw_reg;
+> +		break;
+>   	default:
+>   		return -ENODEV;
+>   	}
+> @@ -69,6 +73,7 @@ static void cs35l56_i2c_remove(struct i2c_client *client)
+>   
+>   static const struct i2c_device_id cs35l56_id_i2c[] = {
+>   	{ "cs35l56", 0x3556 },
+> +	{ "cs35l63", 0x3563 },
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(i2c, cs35l56_id_i2c);
+> @@ -76,6 +81,7 @@ MODULE_DEVICE_TABLE(i2c, cs35l56_id_i2c);
+>   #ifdef CONFIG_ACPI
+>   static const struct acpi_device_id cs35l56_asoc_acpi_match[] = {
+>   	{ "CSC355C", 0x3556 },
+> +	{ "CSC356C", 0x3563 },
+>   	{},
+>   };
+>   MODULE_DEVICE_TABLE(acpi, cs35l56_asoc_acpi_match);
+> diff --git a/sound/soc/codecs/cs35l56-sdw.c b/sound/soc/codecs/cs35l56-sdw.c
+> index 2e0422b41385..13f602f51bf3 100644
+> --- a/sound/soc/codecs/cs35l56-sdw.c
+> +++ b/sound/soc/codecs/cs35l56-sdw.c
+> @@ -393,6 +393,74 @@ static int cs35l56_sdw_update_status(struct sdw_slave *peripheral,
+>   	return 0;
+>   }
+>   
+> +static int cs35l63_sdw_kick_divider(struct cs35l56_private *cs35l56,
+> +				    struct sdw_slave *peripheral)
+> +{
+> +	unsigned int curr_scale_reg, next_scale_reg;
+> +	int curr_scale, next_scale, ret;
 > +
-> +#include <linux/fs.h>
-> +#include <linux/init.h>
-> +#include <linux/linkage.h>
-> +#include <linux/mm.h>
-> +#include <linux/io.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/security.h>
-> +#include <linux/memblock.h>
-> +#include <linux/tpm.h>
-> +#include <asm/segment.h>
-> +#include <asm/sections.h>
-> +#include <crypto/sha2.h>
-> +#include <linux/slr_table.h>
-> +#include <linux/slaunch.h>
+> +	if (!cs35l56->base.init_done)
+> +		return 0;
 > +
-> +/*
-> + * The macro DECLARE_TXT_PUB_READ_U is used to read values from the TXT
-> + * public registers as unsigned values.
-> + */
-> +#define DECLARE_TXT_PUB_READ_U(size, fmt, msg_size)            \
-> +static ssize_t txt_pub_read_u##size(unsigned int offset,        \
-> +        loff_t *read_offset,                    \
-> +        size_t read_len,                    \
-> +        char __user *buf)                    \
-> +{                                    \
-> +    char msg_buffer[msg_size];                    \
-> +    u##size reg_value =3D 0;                        \
-> +    void __iomem *txt;                        \
-> +                                    \
-> +    txt =3D ioremap(TXT_PUB_CONFIG_REGS_BASE,                \
-> +            TXT_NR_CONFIG_PAGES * PAGE_SIZE);        \
-> +    if (!txt)                            \
-> +        return -EFAULT;                        \
-> +    memcpy_fromio(&reg_value, txt + offset, sizeof(u##size));    \
-> +    iounmap(txt);                            \
-> +    snprintf(msg_buffer, msg_size, fmt, reg_value);            \
-> +    return simple_read_from_buffer(buf, read_len, read_offset,    \
-> +            &msg_buffer, msg_size);                \
+> +	if (peripheral->bus->params.curr_bank) {
+> +		curr_scale_reg = SDW_SCP_BUSCLOCK_SCALE_B1;
+> +		next_scale_reg = SDW_SCP_BUSCLOCK_SCALE_B0;
+> +	} else {
+> +		curr_scale_reg = SDW_SCP_BUSCLOCK_SCALE_B0;
+> +		next_scale_reg = SDW_SCP_BUSCLOCK_SCALE_B1;
+> +	}
+> +
+> +	/*
+> +	 * Current clock scale value must be different to new value.
+> +	 * Modify current to guarantee this. If next still has the dummy
+> +	 * value we wrote when it was current, the core code has not set
+> +	 * a new scale so restore its original good value
+> +	 */
+> +	curr_scale = sdw_read_no_pm(peripheral, curr_scale_reg);
+> +	if (curr_scale < 0) {
+> +		dev_err(cs35l56->base.dev, "Failed to read current clock scale: %d\n", curr_scale);
+> +		return curr_scale;
+> +	}
+> +
+> +	next_scale = sdw_read_no_pm(peripheral, next_scale_reg);
+> +	if (next_scale < 0) {
+> +		dev_err(cs35l56->base.dev, "Failed to read next clock scale: %d\n", next_scale);
+> +		return next_scale;
+> +	}
+> +
+> +	if (next_scale == CS35L56_SDW_INVALID_BUS_SCALE) {
+> +		next_scale = cs35l56->old_sdw_clock_scale;
+> +		ret = sdw_write_no_pm(peripheral, next_scale_reg, next_scale);
+> +		if (ret < 0) {
+> +			dev_err(cs35l56->base.dev, "Failed to modify current clock scale: %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	cs35l56->old_sdw_clock_scale = curr_scale;
+> +	ret = sdw_write_no_pm(peripheral, curr_scale_reg, CS35L56_SDW_INVALID_BUS_SCALE);
+> +	if (ret < 0) {
+> +		dev_err(cs35l56->base.dev, "Failed to modify current clock scale: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(cs35l56->base.dev, "Next bus scale: %#x\n", next_scale);
+> +
+> +	return 0;
 > +}
 > +
-> +DECLARE_TXT_PUB_READ_U(8, "%#04x\n", 6);
-> +DECLARE_TXT_PUB_READ_U(32, "%#010x\n", 12);
-> +DECLARE_TXT_PUB_READ_U(64, "%#018llx\n", 20);
+> +static int cs35l56_sdw_bus_config(struct sdw_slave *peripheral,
+> +				  struct sdw_bus_params *params)
+> +{
+> +	struct cs35l56_private *cs35l56 = dev_get_drvdata(&peripheral->dev);
 > +
-> +#define DECLARE_TXT_FOPS(reg_name, reg_offset, reg_size)        \
-> +static ssize_t txt_##reg_name##_read(struct file *flip,            \
-> +        char __user *buf, size_t read_len, loff_t *read_offset)    \
-> +{                                    \
-> +    return txt_pub_read_u##reg_size(reg_offset, read_offset,    \
-> +            read_len, buf);                    \
-> +}                                    \
-> +static const struct file_operations reg_name##_ops =3D {            \
-> +    .read =3D txt_##reg_name##_read,                    \
+> +	if ((cs35l56->base.type == 0x63) && (cs35l56->base.rev < 0xa1))
+> +		return cs35l63_sdw_kick_divider(cs35l56, peripheral);
+> +
+> +	return 0;
 > +}
 > +
-> +DECLARE_TXT_FOPS(sts, TXT_CR_STS, 64);
-> +DECLARE_TXT_FOPS(ests, TXT_CR_ESTS, 8);
-> +DECLARE_TXT_FOPS(errorcode, TXT_CR_ERRORCODE, 32);
-> +DECLARE_TXT_FOPS(didvid, TXT_CR_DIDVID, 64);
-> +DECLARE_TXT_FOPS(e2sts, TXT_CR_E2STS, 64);
-> +DECLARE_TXT_FOPS(ver_emif, TXT_CR_VER_EMIF, 32);
-> +DECLARE_TXT_FOPS(scratchpad, TXT_CR_SCRATCHPAD, 64);
-> +
-> +/*
-> + * Securityfs exposure
-> + */
-> +struct memfile {
-> +    char *name;
-> +    void *addr;
-> +    size_t size;
+>   static int __maybe_unused cs35l56_sdw_clk_stop(struct sdw_slave *peripheral,
+>   					       enum sdw_clk_stop_mode mode,
+>   					       enum sdw_clk_stop_type type)
+> @@ -408,6 +476,7 @@ static const struct sdw_slave_ops cs35l56_sdw_ops = {
+>   	.read_prop = cs35l56_sdw_read_prop,
+>   	.interrupt_callback = cs35l56_sdw_interrupt,
+>   	.update_status = cs35l56_sdw_update_status,
+> +	.bus_config = cs35l56_sdw_bus_config,
+>   #ifdef DEBUG
+>   	.clk_stop = cs35l56_sdw_clk_stop,
+>   #endif
+> @@ -528,6 +597,10 @@ static int cs35l56_sdw_probe(struct sdw_slave *peripheral, const struct sdw_devi
+>   		regmap_config = &cs35l56_regmap_sdw;
+>   		cs35l56->base.fw_reg = &cs35l56_fw_reg;
+>   		break;
+> +	case 0x3563:
+> +		regmap_config = &cs35l63_regmap_sdw;
+> +		cs35l56->base.fw_reg = &cs35l63_fw_reg;
+> +		break;
+>   	default:
+>   		return -ENODEV;
+>   	}
+> @@ -575,6 +648,7 @@ static const struct dev_pm_ops cs35l56_sdw_pm = {
+>   static const struct sdw_device_id cs35l56_sdw_id[] = {
+>   	SDW_SLAVE_ENTRY(0x01FA, 0x3556, 0x3556),
+>   	SDW_SLAVE_ENTRY(0x01FA, 0x3557, 0x3557),
+> +	SDW_SLAVE_ENTRY(0x01FA, 0x3563, 0x3563),
+>   	{},
+>   };
+>   MODULE_DEVICE_TABLE(sdw, cs35l56_sdw_id);
+> diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
+> index da982774bb4d..76ddb1cf6889 100644
+> --- a/sound/soc/codecs/cs35l56-shared.c
+> +++ b/sound/soc/codecs/cs35l56-shared.c
+> @@ -47,6 +47,13 @@ static const struct reg_sequence cs35l56_patch_fw[] = {
+>   	{ CS35L56_MAIN_POSTURE_NUMBER,		0x00000000 },
+>   };
+>   
+> +static const struct reg_sequence cs35l63_patch_fw[] = {
+> +	/* These are not reset by a soft-reset, so patch to defaults. */
+> +	{ CS35L63_MAIN_RENDER_USER_MUTE,	0x00000000 },
+> +	{ CS35L63_MAIN_RENDER_USER_VOLUME,	0x00000000 },
+> +	{ CS35L63_MAIN_POSTURE_NUMBER,		0x00000000 },
 > +};
 > +
-> +static struct memfile sl_evtlog =3D {"eventlog", NULL, 0};
-> +static void *txt_heap;
-> +static struct txt_heap_event_log_pointer2_1_element *evtlog21;
-> +static DEFINE_MUTEX(sl_evt_log_mutex);
-> +static struct tcg_efi_specid_event_head *efi_head;
+>   int cs35l56_set_patch(struct cs35l56_base *cs35l56_base)
+>   {
+>   	int ret;
+> @@ -64,6 +71,10 @@ int cs35l56_set_patch(struct cs35l56_base *cs35l56_base)
+>   		ret = regmap_register_patch(cs35l56_base->regmap, cs35l56_patch_fw,
+>   					    ARRAY_SIZE(cs35l56_patch_fw));
+>   		break;
+> +	case 0x63:
+> +		ret = regmap_register_patch(cs35l56_base->regmap, cs35l63_patch_fw,
+> +					    ARRAY_SIZE(cs35l63_patch_fw));
+> +		break;
+>   	default:
+>   		break;
+>   	}
+> @@ -102,6 +113,36 @@ static const struct reg_default cs35l56_reg_defaults[] = {
+>   	{ CS35L56_MAIN_POSTURE_NUMBER,		0x00000000 },
+>   };
+>   
+> +static const struct reg_default cs35l63_reg_defaults[] = {
+> +	/* no defaults for OTP_MEM - first read populates cache */
 > +
-> +static ssize_t sl_evtlog_read(struct file *file, char __user *buf,
-> +                  size_t count, loff_t *pos)
-> +{
-> +    ssize_t size;
-> +
-> +    if (!sl_evtlog.addr)
-> +        return 0;
-> +
-> +    mutex_lock(&sl_evt_log_mutex);
-> +    size =3D simple_read_from_buffer(buf, count, pos, sl_evtlog.addr,
-> +                       sl_evtlog.size);
-> +    mutex_unlock(&sl_evt_log_mutex);
-> +
-> +    return size;
-> +}
-> +
-> +static ssize_t sl_evtlog_write(struct file *file, const char __user *buf=
-,
-> +                   size_t datalen, loff_t *ppos)
-> +{
-> +    ssize_t result;
-> +    char *data;
-> +
-> +    if (!sl_evtlog.addr)
-> +        return 0;
-> +
-> +    /* No partial writes. */
-> +    result =3D -EINVAL;
-> +    if (*ppos !=3D 0)
-> +        goto out;
-> +
-> +    data =3D memdup_user(buf, datalen);
-> +    if (IS_ERR(data)) {
-> +        result =3D PTR_ERR(data);
-> +        goto out;
-> +    }
-> +
-> +    mutex_lock(&sl_evt_log_mutex);
-> +    if (evtlog21)
-> +        result =3D tpm2_log_event(evtlog21, sl_evtlog.addr,
-> +                    sl_evtlog.size, datalen, data);
-> +    else
-> +        result =3D tpm_log_event(sl_evtlog.addr, sl_evtlog.size,
-> +                       datalen, data);
-> +    mutex_unlock(&sl_evt_log_mutex);
-> +
-> +    kfree(data);
-> +out:
-> +    return result;
-> +}
-> +
-> +static const struct file_operations sl_evtlog_ops =3D {
-> +    .read =3D sl_evtlog_read,
-> +    .write =3D sl_evtlog_write,
-> +    .llseek    =3D default_llseek,
+> +	{ CS35L56_ASP1_ENABLES1,		0x00000000 },
+> +	{ CS35L56_ASP1_CONTROL1,		0x00000028 },
+> +	{ CS35L56_ASP1_CONTROL2,		0x18180200 },
+> +	{ CS35L56_ASP1_CONTROL3,		0x00000002 },
+> +	{ CS35L56_ASP1_FRAME_CONTROL1,		0x03020100 },
+> +	{ CS35L56_ASP1_FRAME_CONTROL5,		0x00020100 },
+> +	{ CS35L56_ASP1_DATA_CONTROL1,		0x00000018 },
+> +	{ CS35L56_ASP1_DATA_CONTROL5,		0x00000018 },
+> +	{ CS35L56_ASP1TX1_INPUT,		0x00000000 },
+> +	{ CS35L56_ASP1TX2_INPUT,		0x00000000 },
+> +	{ CS35L56_ASP1TX3_INPUT,		0x00000000 },
+> +	{ CS35L56_ASP1TX4_INPUT,		0x00000000 },
+> +	{ CS35L56_SWIRE_DP3_CH1_INPUT,		0x00000018 },
+> +	{ CS35L56_SWIRE_DP3_CH2_INPUT,		0x00000019 },
+> +	{ CS35L56_SWIRE_DP3_CH3_INPUT,		0x00000029 },
+> +	{ CS35L56_SWIRE_DP3_CH4_INPUT,		0x00000028 },
+> +	{ CS35L56_IRQ1_MASK_1,			0x8003ffff },
+> +	{ CS35L56_IRQ1_MASK_2,			0xffff7fff },
+> +	{ CS35L56_IRQ1_MASK_4,			0xe0ffffff },
+> +	{ CS35L56_IRQ1_MASK_8,			0x8c000fff },
+> +	{ CS35L56_IRQ1_MASK_18,			0x0760f000 },
+> +	{ CS35L56_IRQ1_MASK_20,			0x15c00000 },
+> +	{ CS35L63_MAIN_RENDER_USER_MUTE,	0x00000000 },
+> +	{ CS35L63_MAIN_RENDER_USER_VOLUME,	0x00000000 },
+> +	{ CS35L63_MAIN_POSTURE_NUMBER,		0x00000000 },
 > +};
 > +
-> +struct sfs_file {
-> +    const char *name;
-> +    const struct file_operations *fops;
+>   static bool cs35l56_is_dsp_memory(unsigned int reg)
+>   {
+>   	switch (reg) {
+> @@ -199,7 +240,7 @@ static bool cs35l56_precious_reg(struct device *dev, unsigned int reg)
+>   	}
+>   }
+>   
+> -static bool cs35l56_volatile_reg(struct device *dev, unsigned int reg)
+> +static bool cs35l56_common_volatile_reg(unsigned int reg)
+>   {
+>   	switch (reg) {
+>   	case CS35L56_DEVID:
+> @@ -237,12 +278,32 @@ static bool cs35l56_volatile_reg(struct device *dev, unsigned int reg)
+>   	case CS35L56_DSP1_SCRATCH3:
+>   	case CS35L56_DSP1_SCRATCH4:
+>   		return true;
+> +	default:
+> +		return cs35l56_is_dsp_memory(reg);
+> +	}
+> +}
+> +
+> +static bool cs35l56_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+>   	case CS35L56_MAIN_RENDER_USER_MUTE:
+>   	case CS35L56_MAIN_RENDER_USER_VOLUME:
+>   	case CS35L56_MAIN_POSTURE_NUMBER:
+>   		return false;
+>   	default:
+> -		return cs35l56_is_dsp_memory(reg);
+> +		return cs35l56_common_volatile_reg(reg);
+> +	}
+> +}
+> +
+> +static bool cs35l63_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case CS35L63_MAIN_RENDER_USER_MUTE:
+> +	case CS35L63_MAIN_RENDER_USER_VOLUME:
+> +	case CS35L63_MAIN_POSTURE_NUMBER:
+> +		return false;
+> +	default:
+> +		return cs35l56_common_volatile_reg(reg);
+>   	}
+>   }
+>   
+> @@ -405,6 +466,11 @@ static const struct reg_sequence cs35l56_system_reset_seq[] = {
+>   	REG_SEQ0(CS35L56_DSP_VIRTUAL1_MBOX_1, CS35L56_MBOX_CMD_SYSTEM_RESET),
+>   };
+>   
+> +static const struct reg_sequence cs35l63_system_reset_seq[] = {
+> +	REG_SEQ0(CS35L63_DSP1_HALO_STATE, 0),
+> +	REG_SEQ0(CS35L56_DSP_VIRTUAL1_MBOX_1, CS35L56_MBOX_CMD_SYSTEM_RESET),
 > +};
 > +
-> +#define SL_TXT_ENTRY_COUNT    7
-> +static const struct sfs_file sl_txt_files[] =3D {
-> +    { "sts", &sts_ops },
-> +    { "ests", &ests_ops },
-> +    { "errorcode", &errorcode_ops },
-> +    { "didvid", &didvid_ops },
-> +    { "ver_emif", &ver_emif_ops },
-> +    { "scratchpad", &scratchpad_ops },
-> +    { "e2sts", &e2sts_ops }
+>   void cs35l56_system_reset(struct cs35l56_base *cs35l56_base, bool is_soundwire)
+>   {
+>   	/*
+> @@ -426,6 +492,11 @@ void cs35l56_system_reset(struct cs35l56_base *cs35l56_base, bool is_soundwire)
+>   						cs35l56_system_reset_seq,
+>   						ARRAY_SIZE(cs35l56_system_reset_seq));
+>   		break;
+> +	case 0x63:
+> +		regmap_multi_reg_write_bypassed(cs35l56_base->regmap,
+> +						cs35l63_system_reset_seq,
+> +						ARRAY_SIZE(cs35l63_system_reset_seq));
+> +		break;
+>   	default:
+>   		break;
+>   	}
+> @@ -844,6 +915,9 @@ int cs35l56_hw_init(struct cs35l56_base *cs35l56_base)
+>   	case 0x35A56:
+>   	case 0x35A57:
+>   		break;
+> +	case 0x35A630:
+> +		devid = devid >> 4;
+> +		break;
+>   	default:
+>   		dev_err(cs35l56_base->dev, "Unknown device %x\n", devid);
+>   		return ret;
+> @@ -1080,6 +1154,39 @@ const struct regmap_config cs35l56_regmap_sdw = {
+>   };
+>   EXPORT_SYMBOL_NS_GPL(cs35l56_regmap_sdw, "SND_SOC_CS35L56_SHARED");
+>   
+> +const struct regmap_config cs35l63_regmap_i2c = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.reg_base = 0x8000,
+> +	.reg_format_endian = REGMAP_ENDIAN_BIG,
+> +	.val_format_endian = REGMAP_ENDIAN_BIG,
+> +	.max_register = CS35L56_DSP1_PMEM_5114,
+> +	.reg_defaults = cs35l63_reg_defaults,
+> +	.num_reg_defaults = ARRAY_SIZE(cs35l63_reg_defaults),
+> +	.volatile_reg = cs35l63_volatile_reg,
+> +	.readable_reg = cs35l56_readable_reg,
+> +	.precious_reg = cs35l56_precious_reg,
+> +	.cache_type = REGCACHE_MAPLE,
+> +};
+> +EXPORT_SYMBOL_NS_GPL(cs35l63_regmap_i2c, "SND_SOC_CS35L56_SHARED");
+> +
+> +const struct regmap_config cs35l63_regmap_sdw = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.reg_format_endian = REGMAP_ENDIAN_LITTLE,
+> +	.val_format_endian = REGMAP_ENDIAN_BIG,
+> +	.max_register = CS35L56_DSP1_PMEM_5114,
+> +	.reg_defaults = cs35l63_reg_defaults,
+> +	.num_reg_defaults = ARRAY_SIZE(cs35l63_reg_defaults),
+> +	.volatile_reg = cs35l63_volatile_reg,
+> +	.readable_reg = cs35l56_readable_reg,
+> +	.precious_reg = cs35l56_precious_reg,
+> +	.cache_type = REGCACHE_MAPLE,
+> +};
+> +EXPORT_SYMBOL_NS_GPL(cs35l63_regmap_sdw, "SND_SOC_CS35L56_SHARED");
+> +
+>   const struct cs35l56_fw_reg cs35l56_fw_reg = {
+>   	.fw_ver = CS35L56_DSP1_FW_VER,
+>   	.halo_state = CS35L56_DSP1_HALO_STATE,
+> @@ -1092,6 +1199,18 @@ const struct cs35l56_fw_reg cs35l56_fw_reg = {
+>   };
+>   EXPORT_SYMBOL_NS_GPL(cs35l56_fw_reg, "SND_SOC_CS35L56_SHARED");
+>   
+> +const struct cs35l56_fw_reg cs35l63_fw_reg = {
+> +	.fw_ver = CS35L63_DSP1_FW_VER,
+> +	.halo_state = CS35L63_DSP1_HALO_STATE,
+> +	.pm_cur_stat = CS35L63_DSP1_PM_CUR_STATE,
+> +	.prot_sts = CS35L63_PROTECTION_STATUS,
+> +	.transducer_actual_ps = CS35L63_TRANSDUCER_ACTUAL_PS,
+> +	.user_mute = CS35L63_MAIN_RENDER_USER_MUTE,
+> +	.user_volume = CS35L63_MAIN_RENDER_USER_VOLUME,
+> +	.posture_number = CS35L63_MAIN_POSTURE_NUMBER,
+> +};
+> +EXPORT_SYMBOL_NS_GPL(cs35l63_fw_reg, "SND_SOC_CS35L56_SHARED");
+> +
+>   MODULE_DESCRIPTION("ASoC CS35L56 Shared");
+>   MODULE_AUTHOR("Richard Fitzgerald <rf@opensource.cirrus.com>");
+>   MODULE_AUTHOR("Simon Trimmer <simont@opensource.cirrus.com>");
+> diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
+> index a4a1d09097fc..cdb283ed938c 100644
+> --- a/sound/soc/codecs/cs35l56.c
+> +++ b/sound/soc/codecs/cs35l56.c
+> @@ -84,6 +84,25 @@ static const struct snd_kcontrol_new cs35l56_controls[] = {
+>   		       cs35l56_dspwait_get_volsw, cs35l56_dspwait_put_volsw),
+>   };
+>   
+> +static const struct snd_kcontrol_new cs35l63_controls[] = {
+> +	SOC_SINGLE_EXT("Speaker Switch",
+> +		       CS35L63_MAIN_RENDER_USER_MUTE, 0, 1, 1,
+> +		       cs35l56_dspwait_get_volsw, cs35l56_dspwait_put_volsw),
+> +	SOC_SINGLE_S_EXT_TLV("Speaker Volume",
+> +			     CS35L63_MAIN_RENDER_USER_VOLUME,
+> +			     CS35L56_MAIN_RENDER_USER_VOLUME_SHIFT,
+> +			     CS35L56_MAIN_RENDER_USER_VOLUME_MIN,
+> +			     CS35L56_MAIN_RENDER_USER_VOLUME_MAX,
+> +			     CS35L56_MAIN_RENDER_USER_VOLUME_SIGNBIT,
+> +			     0,
+> +			     cs35l56_dspwait_get_volsw,
+> +			     cs35l56_dspwait_put_volsw,
+> +			     vol_tlv),
+> +	SOC_SINGLE_EXT("Posture Number", CS35L63_MAIN_POSTURE_NUMBER,
+> +		       0, 255, 0,
+> +		       cs35l56_dspwait_get_volsw, cs35l56_dspwait_put_volsw),
 > +};
 > +
-> +/* sysfs file handles */
-> +static struct dentry *slaunch_dir;
-> +static struct dentry *event_file;
-> +static struct dentry *txt_dir;
-> +static struct dentry *txt_entries[SL_TXT_ENTRY_COUNT];
-> +
-> +static long slaunch_expose_securityfs(void)
-> +{
-> +    long ret =3D 0;
-> +    int i;
-> +
-> +    slaunch_dir =3D securityfs_create_dir("slaunch", NULL);
-> +    if (IS_ERR(slaunch_dir))
-> +        return PTR_ERR(slaunch_dir);
-> +
-> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
-> +        txt_dir =3D securityfs_create_dir("txt", slaunch_dir);
-> +        if (IS_ERR(txt_dir)) {
-> +            ret =3D PTR_ERR(txt_dir);
-> +            goto remove_slaunch;
-> +        }
-> +
-> +        for (i =3D 0; i < ARRAY_SIZE(sl_txt_files); i++) {
-> +            txt_entries[i] =3D securityfs_create_file(
-> +                        sl_txt_files[i].name, 0440,
-> +                        txt_dir, NULL,
-> +                        sl_txt_files[i].fops);
-> +            if (IS_ERR(txt_entries[i])) {
-> +                ret =3D PTR_ERR(txt_entries[i]);
-> +                goto remove_files;
-> +            }
-> +        }
-> +    }
-> +
-> +    if (sl_evtlog.addr) {
-> +        event_file =3D securityfs_create_file(sl_evtlog.name, 0440,
-> +                            slaunch_dir, NULL,
-> +                            &sl_evtlog_ops);
-> +        if (IS_ERR(event_file)) {
-> +            ret =3D PTR_ERR(event_file);
-> +            goto remove_files;
-> +        }
-> +    }
-> +
-> +    return 0;
-> +
-> +remove_files:
-> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
-> +        while (--i >=3D 0)
-> +            securityfs_remove(txt_entries[i]);
-> +        securityfs_remove(txt_dir);
-> +    }
-> +
-> +remove_slaunch:
-> +    securityfs_remove(slaunch_dir);
-> +
-> +    return ret;
-> +}
-> +
-> +static void slaunch_teardown_securityfs(void)
-> +{
-> +    int i;
-> +
-> +    securityfs_remove(event_file);
-> +    if (sl_evtlog.addr) {
-> +        memunmap(sl_evtlog.addr);
-> +        sl_evtlog.addr =3D NULL;
-> +    }
-> +    sl_evtlog.size =3D 0;
-> +
-> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
-> +        for (i =3D 0; i < ARRAY_SIZE(sl_txt_files); i++)
-> +            securityfs_remove(txt_entries[i]);
-> +
-> +        securityfs_remove(txt_dir);
-> +
-> +        if (txt_heap) {
-> +            memunmap(txt_heap);
-> +            txt_heap =3D NULL;
-> +        }
-> +    }
-> +
-> +    securityfs_remove(slaunch_dir);
-> +}
-> +
-> +static void slaunch_intel_evtlog(void __iomem *txt)
-> +{
-> +    struct slr_entry_log_info *log_info;
-> +    struct txt_os_mle_data *params;
-> +    struct slr_table *slrt;
-> +    void *os_sinit_data;
-> +    u64 base, size;
-> +
-> +    memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
-> +    memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
-> +
-> +    /* now map TXT heap */
-> +    txt_heap =3D memremap(base, size, MEMREMAP_WB);
-> +    if (!txt_heap)
-> +        slaunch_txt_reset(txt, "Error failed to memremap TXT heap\n",
-> +                  SL_ERROR_HEAP_MAP);
-> +
-> +    params =3D (struct txt_os_mle_data *)txt_os_mle_data_start(txt_heap)=
-;
-> +
-> +    /* Get the SLRT and remap it */
-> +    slrt =3D memremap(params->slrt, sizeof(*slrt), MEMREMAP_WB);
-> +    if (!slrt)
-> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
-> +                  SL_ERROR_SLRT_MAP);
-> +    size =3D slrt->size;
-> +    memunmap(slrt);
-> +
-> +    slrt =3D memremap(params->slrt, size, MEMREMAP_WB);
-> +    if (!slrt)
-> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
-> +                  SL_ERROR_SLRT_MAP);
-> +
-> +    log_info =3D slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
-> +    if (!log_info)
-> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
-> +                  SL_ERROR_SLRT_MISSING_ENTRY);
-> +
-> +    sl_evtlog.size =3D log_info->size;
-> +    sl_evtlog.addr =3D memremap(log_info->addr, log_info->size,
-> +                  MEMREMAP_WB);
-> +    if (!sl_evtlog.addr)
-> +        slaunch_txt_reset(txt, "Error failed to memremap TPM event log\n=
-",
-> +                  SL_ERROR_EVENTLOG_MAP);
-> +
-> +    memunmap(slrt);
-> +
-> +    /* Determine if this is TPM 1.2 or 2.0 event log */
-> +    if (memcmp(sl_evtlog.addr + sizeof(struct tcg_pcr_event),
-> +            TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
-> +        return; /* looks like it is not 2.0 */
-> +
-> +    /* For TPM 2.0 logs, the extended heap element must be located */
-> +    os_sinit_data =3D txt_os_sinit_data_start(txt_heap);
-> +
-> +    evtlog21 =3D tpm2_find_log2_1_element(os_sinit_data);
-> +
-> +    /*
-> +     * If this fails, things are in really bad shape. Any attempt to wri=
-te
-> +     * events to the log will fail.
-> +     */
-> +    if (!evtlog21)
-> +        slaunch_txt_reset(txt, "Error failed to find TPM20 event log ele=
-ment\n",
-> +                  SL_ERROR_TPM_INVALID_LOG20);
-> +
-> +    /* Save pointer to the EFI SpecID log header */
-> +    efi_head =3D (struct tcg_efi_specid_event_head *)(sl_evtlog.addr + s=
-izeof(struct tcg_pcr_event));
-> +}
-> +
-> +static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem=
- *txt,
-> +                      struct tcg_pcr_event2_head *event)
-> +{
-> +    u16 *alg_id_field =3D (u16 *)((u8 *)event + sizeof(*event));
-> +    struct tpm_digest *digests;
-> +    u8 *dptr;
-> +    int ret;
-> +    u32 i;
-> +
-> +    /*
-> +     * Early SL code ensured the TPM algorithm information passed via
-> +     * the log is valid. Small sanity check here.
-> +     */
-> +    if (event->count !=3D efi_head->num_algs)
-> +        slaunch_txt_reset(txt, "Event digest count mismatch with event l=
-og\n",
-> +                  SL_ERROR_TPM_EVENT_COUNT);
-> +
-> +    digests =3D kzalloc(efi_head->num_algs * sizeof(*digests), GFP_KERNE=
-L);
-> +    if (!digests)
-> +        slaunch_txt_reset(txt, "Failed to allocate array of digests\n",
-> +                  SL_ERROR_GENERIC);
-> +
-> +    for (i =3D 0; i < event->count; i++) {
-> +        dptr =3D (u8 *)alg_id_field + sizeof(u16);
-> +
-> +        /* Setup each digest for the extend */
-> +        digests[i].alg_id =3D efi_head->digest_sizes[i].alg_id;
-> +        memcpy(&digests[i].digest[0], dptr,
-> +            efi_head->digest_sizes[i].digest_size);
-> +
-> +        alg_id_field =3D (u16 *)((u8 *)alg_id_field + sizeof(u16) +
-> +                efi_head->digest_sizes[i].digest_size);
-> +    }
-> +
-> +    ret =3D tpm_pcr_extend(tpm, event->pcr_idx, digests);
-> +    if (ret) {
-> +        pr_err("Error extending TPM20 PCR, result: %d\n", ret);
-> +        slaunch_txt_reset(txt, "Failed to extend TPM20 PCR\n",
-> +                  SL_ERROR_TPM_EXTEND);
-> +    }
-> +
-> +    kfree(digests);
-> +}
-> +
-> +static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
-> +{
-> +    struct tcg_pcr_event *event_header;
-> +    struct tcg_pcr_event2_head *event;
-> +    int start =3D 0, end =3D 0, size;
-> +
-> +    event_header =3D (struct tcg_pcr_event *)(sl_evtlog.addr +
-> +                        evtlog21->first_record_offset);
-> +
-> +    /* Skip first TPM 1.2 event to get to first TPM 2.0 event */
-> +    event =3D (struct tcg_pcr_event2_head *)((u8 *)event_header + sizeof=
-(*event_header) +
-> +                           event_header->event_size);
-> +
-> +    while ((void  *)event < sl_evtlog.addr + evtlog21->next_record_offse=
-t) {
-> +        size =3D __calc_tpm2_event_size(event, event_header, false);
-> +        if (!size)
-> +            slaunch_txt_reset(txt, "TPM20 invalid event in event log\n",
-> +                      SL_ERROR_TPM_INVALID_EVENT);
-> +
-> +        /*
-> +         * Marker events indicate where the Secure Launch early stub
-> +         * started and ended adding post launch events. As they are
-> +         * encountered, switch the event type to NO_ACTION so they
-> +         * ignored in when the event log is processed since they are
-> +         * not really measurements.
-> +         */
-> +        if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_END) {
-> +            event->event_type =3D NO_ACTION;
-> +            end =3D 1;
-> +            break;
-> +        } else if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_START) {
-> +            event->event_type =3D NO_ACTION;
-> +            start =3D 1;
-> +            goto next;
-> +        }
-> +
-> +        if (start)
-> +            slaunch_tpm2_extend_event(tpm, txt, event);
-> +
-> +next:
-> +        event =3D (struct tcg_pcr_event2_head *)((u8 *)event + size);
-> +    }
-> +
-> +    if (!start || !end)
-> +        slaunch_txt_reset(txt, "Missing start or end events for extendin=
-g TPM20 PCRs\n",
-> +                  SL_ERROR_TPM_EXTEND);
-> +}
-> +
-> +static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
-> +{
-> +    struct tpm_event_log_header *event_header;
-> +    struct tcg_pcr_event *event;
-> +    struct tpm_digest digest;
-> +    int start =3D 0, end =3D 0;
-> +    int size, ret;
-> +
-> +    event_header =3D (struct tpm_event_log_header *)sl_evtlog.addr;
-> +    event =3D (struct tcg_pcr_event *)((u8 *)event_header +
-> +                sizeof(*event_header));
-> +
-> +    while ((void  *)event < sl_evtlog.addr + event_header->next_event_of=
-fset) {
-> +        size =3D sizeof(*event) + event->event_size;
-> +
-> +        /*
-> +         * See comments in slaunch_tpm2_extend() concerning these specia=
-l
-> +         * event types.
-> +         */
-> +        if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_END) {
-> +            event->event_type =3D NO_ACTION;
-> +            end =3D 1;
-> +            break;
-> +        } else if (event->event_type =3D=3D TXT_EVTYPE_SLAUNCH_START) {
-> +            event->event_type =3D NO_ACTION;
-> +            start =3D 1;
-> +            goto next;
-> +        }
-> +
-> +        if (start) {
-> +            memset(&digest.digest[0], 0, TPM_MAX_DIGEST_SIZE);
-> +            digest.alg_id =3D TPM_ALG_SHA1;
-> +            memcpy(&digest.digest[0], &event->digest[0],
-> +                   SHA1_DIGEST_SIZE);
-> +
-> +            ret =3D tpm_pcr_extend(tpm, event->pcr_idx, &digest);
-> +            if (ret) {
-> +                pr_err("Error extending TPM12 PCR, result: %d\n", ret);
-> +                slaunch_txt_reset(txt, "Failed to extend TPM12 PCR\n",
-> +                          SL_ERROR_TPM_EXTEND);
-> +            }
-> +        }
-> +
-> +next:
-> +        event =3D (struct tcg_pcr_event *)((u8 *)event + size);
-> +    }
-> +
-> +    if (!start || !end)
-> +        slaunch_txt_reset(txt, "Missing start or end events for extendin=
-g TPM12 PCRs\n",
-> +                  SL_ERROR_TPM_EXTEND);
-> +}
-> +
-> +static void slaunch_pcr_extend(void __iomem *txt)
-> +{
-> +    struct tpm_chip *tpm;
-> +    int rc;
-> +
-> +    tpm =3D tpm_default_chip();
-> +    if (!tpm)
-> +        slaunch_txt_reset(txt, "Could not get default TPM chip\n",
-> +                  SL_ERROR_TPM_INIT);
-> +
-> +    rc =3D tpm_chip_set_locality(tpm, 2);
-> +    if (rc)
-> +        slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
-> +                  SL_ERROR_TPM_INIT);
-> +
-> +    if (evtlog21)
-> +        slaunch_tpm2_extend(tpm, txt);
-> +    else
-> +        slaunch_tpm_extend(tpm, txt);
-> +}
-> +
-> +static int __init slaunch_module_init(void)
-> +{
-> +    void __iomem *txt;
-> +
-> +    /* Check to see if Secure Launch happened */
-> +    if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=3D
-> +        (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
-> +        return 0;
-> +
-> +    txt =3D ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
-> +              PAGE_SIZE);
-> +    if (!txt)
-> +        panic("Error ioremap of TXT priv registers\n");
-> +
-> +    /* Only Intel TXT is supported at this point */
-> +    slaunch_intel_evtlog(txt);
-> +    slaunch_pcr_extend(txt);
-> +    iounmap(txt);
-> +
-> +    return slaunch_expose_securityfs();
-> +}
-> +
-> +static void __exit slaunch_module_exit(void)
-> +{
-> +    slaunch_teardown_securityfs();
-> +}
-> +
-> +late_initcall(slaunch_module_init);
-> +__exitcall(slaunch_module_exit);
-> --
-> 2.39.3
->
+>   static SOC_VALUE_ENUM_SINGLE_DECL(cs35l56_asp1tx1_enum,
+>   				  CS35L56_ASP1TX1_INPUT,
+>   				  0, CS35L56_ASP_TXn_SRC_MASK,
+> @@ -886,6 +905,10 @@ static int cs35l56_component_probe(struct snd_soc_component *component)
+>   		ret = snd_soc_add_component_controls(component, cs35l56_controls,
+>   						     ARRAY_SIZE(cs35l56_controls));
+>   		break;
+> +	case 0x63:
+> +		ret = snd_soc_add_component_controls(component, cs35l63_controls,
+> +						     ARRAY_SIZE(cs35l63_controls));
+> +		break;
+>   	default:
+>   		ret = -ENODEV;
+>   		break;
+> diff --git a/sound/soc/codecs/cs35l56.h b/sound/soc/codecs/cs35l56.h
+> index 8a987ec01507..200f695efca3 100644
+> --- a/sound/soc/codecs/cs35l56.h
+> +++ b/sound/soc/codecs/cs35l56.h
+> @@ -51,6 +51,7 @@ struct cs35l56_private {
+>   	u8 asp_slot_count;
+>   	bool tdm_mode;
+>   	bool sysclk_set;
+> +	u8 old_sdw_clock_scale;
+>   };
+>   
+>   extern const struct dev_pm_ops cs35l56_pm_ops_i2c_spi;
+Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
