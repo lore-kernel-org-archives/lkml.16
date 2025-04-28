@@ -1,219 +1,126 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2055.outbound.protection.outlook.com [40.107.92.55])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996BEFBF6;
-	Mon, 28 Apr 2025 04:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745814870; cv=fail; b=HwXh5qHdx3SRRlj34EbvV8CvV2AiRYzSlxv2wIuhxpBQxpm8W/qykG0Q1T2QjIaQ/IrFICo5pE74lZtIcjEM0KqgQo3gAMDj/+rSjYrdXdXiTKC2V2WN3eMj3zhFuUWUNxVQji1aBkwgS2aYCvTyeL4cA8ii8veqYewiRaykjgc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745814870; c=relaxed/simple;
-	bh=p9gPTGxjSSpRyJCWuYPCeJu/4cS6rlrp7ohvW5a7Zwk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=C2Qy8zJ05R2JM3FbqbzrgmQgIwFaTeEIXsd+WjytOfRoq71YNw3/OHcRQyhUfoyddnK10lS5wHbYURqUb3YCAJV92TtlFpGjWwvQk2a5hDxdGVSIV9G1p51p7HzeMzXQe+alr1NsT+GqBcQtOvLBSxec5+rwJ40gV+PzFzzve4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ABm7rFgO; arc=fail smtp.client-ip=40.107.92.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ABm7rFgO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L7gG5NpQwPszLV+Qv12ZZ8uyXNv4pX/XSivNGyYX2XRMSaQkTUMAJIHjaPhytfT1IxSEiOtQXgh2IzzHJXdcxCD6urPLKwOGzdoJ+VpCksQkEmz3RZwCcm87PjCEb1t8covFAu6M/rGAxXFPJuHZgPeY8WDgWeefraip6vzquSB0wN++8yp1a/W/vgQUY9CByHYI4H1IXDTECm6mG/tMzy9hfIYuG48pDzdhqkhJXBBpBvf8UFaCZg/FmM7EgZ6QQC0fv1pvhzXne7MWQIfx4SX7W9eK9FwCFo07Yoj3UejaDvZ6RfkA0d3AxT7Xm3zNiCZ4d2mEFpmUqNdjaPO8sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=namc4BZg0I7+Ot9q5pL1eXy+cjorM2YQORFIehBisQs=;
- b=pbIYkd1cvShGOJkwoLEBZgL202BmRBAcXINBR7c92lA2MVIz/HzX7VjpB1texbNU/j779YFSNQv+07GAAJkiTB4Tf7aRYTs5z7MqWVCudztyhG/Bwq/4H5Ggq6PYQIuljpOabdq0/ROSCgw2eTYpQrvMTHQIGZU+X5Jk8l24h42jSEaBoAHZFGfPVqpSFLFu1FhuAQMDw2ucEOAKm9x8QBUB1ff6qGcPLA9TT7lWMQ205cUNIObebgSZ1ykLukKWxLeylzUj10LZmW0QGnyzBoxZCy1DrgD3E9ZwtwSzS4g80zXPNwYH4BClERQWgWOHkET5owWyGdTq/4psiGsn9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=namc4BZg0I7+Ot9q5pL1eXy+cjorM2YQORFIehBisQs=;
- b=ABm7rFgOlPm+A6h7666S4aHzd0FSc6KB/kRmfjHLKOZnaGiiToHB8mftc33hbupTA5U1acAUoHKAmtnygLFWvMAOukioYv7iwaiVyghXBQSkW9Fy0DiMf8ajVxHrl/JXWZGr8pA6wQVs2LEViOz3IrlmJdBeIK2uHTCK3zmCRmU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com (2603:10b6:208:3a8::19)
- by MW4PR12MB7263.namprd12.prod.outlook.com (2603:10b6:303:226::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
- 2025 04:34:24 +0000
-Received: from IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3]) by IA1PR12MB9064.namprd12.prod.outlook.com
- ([fe80::1f25:d062:c8f3:ade3%6]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 04:34:24 +0000
-Message-ID: <4335f6ee-8e22-84f4-4836-552ea09f1df5@amd.com>
-Date: Mon, 28 Apr 2025 10:04:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH 08/14] RDMA/ionic: Register auxiliary module for ionic
- ethernet adapter
-Content-Language: en-US
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, shannon.nelson@amd.com,
- brett.creeley@amd.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net, andrew+netdev@lunn.ch,
- allen.hubbe@amd.com, nikhil.agarwal@amd.com, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Boyer <andrew.boyer@amd.com>
-References: <20250423102913.438027-1-abhijit.gangurde@amd.com>
- <20250423102913.438027-9-abhijit.gangurde@amd.com>
- <20250424130813.GZ1213339@ziepe.ca>
- <ab361812-566e-5454-ab2c-40757a8808da@amd.com>
- <20250425171005.GU48485@unreal>
-From: Abhijit Gangurde <abhijit.gangurde@amd.com>
-In-Reply-To: <20250425171005.GU48485@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN4P287CA0044.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:271::14) To IA1PR12MB9064.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B047A19B3CB;
+	Mon, 28 Apr 2025 04:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745814873; cv=none; b=rnQYpCyN2CCoD6D49m4GoyDJ6WgeKsuWwL05xGfxmb9HoiluPjbdQiGu4QKOvCaF22MSTDk7Kb7kU5bK3bkiUVLd0vv9ihTShOiaWToScLHjl6lI6V4VU3rAZJlp4o/T5eswACHaWrbaa4x72F1HgkA1a0CN5A1F47tB4vLE2oE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745814873; c=relaxed/simple;
+	bh=YgYp62UqQEYf4XBik3kZic3wxkJmHyo/wSwqGIZg4DM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zijn1Xt8l1xWYUyqs0hGH7jf26rZwTN68AXRGvwybJMGks8mlJ5lO2pxmTkVZ3+G57owOeg91MkysEyqjtUdbwJ7EiOh2ZJ8REx24/Q1T0YGeqQSWwf44My0uHh3cP1ErDv1k20wLJwTKBUL0OxQdi3RVoBOV8iJqGOnRsSENts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zm9ZK5ghFz4f3kvh;
+	Mon, 28 Apr 2025 12:34:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6EF841A19C3;
+	Mon, 28 Apr 2025 12:34:27 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgB3219SBQ9oYaMoKw--.53973S3;
+	Mon, 28 Apr 2025 12:34:27 +0800 (CST)
+Message-ID: <01c1241e-9f80-44fc-8b04-c219aeacfc08@huaweicloud.com>
+Date: Mon, 28 Apr 2025 12:34:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9064:EE_|MW4PR12MB7263:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9378c109-592b-4691-31be-08dd860df3c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MElXbk4vZCtHVWNmL1p1OVBkd09DSU44aExGK1BEdWRIejNNcmRyNFVRcWVO?=
- =?utf-8?B?RDJqQTVmRTgxU0NhRGIwSmlmRFBLaE5lUEFVWG04Y1FYaUxhNCsxeGtGMmVE?=
- =?utf-8?B?K1FsZ3ROeTg4NTRsMTFmWFNGMWZJWENsN1dReFJZYW9kSzRjTDBEODkyK2h6?=
- =?utf-8?B?L2U4ei91VGJ0Z2JRTmZvQ3NOVmZaanNHaWRIRVlVZUVlb3FTanJTTVozNEtX?=
- =?utf-8?B?SzV3bjUxcTdvWmF4Y0JrQ0FqelJRYW9QZ1Zmei9xSFc4SGkveWpZZVY4R0FN?=
- =?utf-8?B?Nm5OdjJibmxXOFRHRFpWN3Zsbmx6Yi9DeTRHd2lrNHdNcVhKYUIwUnltMDkv?=
- =?utf-8?B?UGxkV2s2cWFxd1psYm5DWTdaT1JYZVVmNW9kcjU4S3RKZzJkQUhQNGd3cmxE?=
- =?utf-8?B?Z2R5Q0N0T3lkY2ZBaEpacXg3ZlIremh5eVkwSUNSeGFNME9WTUdiL2RLSVZK?=
- =?utf-8?B?VnB0MlU2a2VnZlBnNkhXUTdsdVR6WnhMRjFDN0wwR0VwYVJDZk54Z0l0bFUy?=
- =?utf-8?B?M1VPMk8xS1F2Vm5RT0tGNDdZaThUQmVmRkh0SmdCQldXRktIRnYvZnZGdDdr?=
- =?utf-8?B?VkV3UUVhQjk3VFpQTkVhc29RZ1R2YXVYVWNZaVpjS3ZxRlphakV0WDB2ZmZp?=
- =?utf-8?B?WkxvcHpnVGVEL0dUdUJyOWlZWEpySmdJYlg0a2NwWWxSS2VoS2xIaS9haEhQ?=
- =?utf-8?B?Q3lKS0JrV0lTd0VyUjV2ZkVlMW9PSm5iSlR3M1MwSUZkQWZ1Mi9lTVplZytB?=
- =?utf-8?B?cCtFN0hKT0MrNFF3RkNmUzFGWkRISjg4VlZaWmIwTFFEV2xjK3pwZ2hrbHQ0?=
- =?utf-8?B?dW5tWlJoY2NNSk8wSyt3WC9rQWkyYlVFcGt3NkRXRGdnYVdQUG9mTHd0TWQ3?=
- =?utf-8?B?MzFRblNDWjFqWEhNc0FabkxXVk10K2UxczFpY3JtMzlXcUtvb2FoTHVGVHU3?=
- =?utf-8?B?RzhEWVRlMGdOZ01VRzBNc0pXcTV5VE00SngyYVNleXZ4aU1GR1VrQTdWWlc4?=
- =?utf-8?B?aFp2SGYvbFczSUhTWVBzQm1YeVBaYTh6TkNkMDJQMXgwSTlQUHVUMHVySkJB?=
- =?utf-8?B?YkYyc0cwVG1VNFNVT29lT25XdjF1QkpaRFRLc0xGbTNHeVBNRWN2L2JzT2Ey?=
- =?utf-8?B?b0NmWVF4Zk5aVW5tbCthY3lhOCs0amdZVzZUaVd1dFRFMmVRU3hxV05yL0p5?=
- =?utf-8?B?NHkwd0wxL0xrTDJKMDFXa2poQ0ovTFhMN3B0NFhtMnFrRkthcW02V2hva3ZN?=
- =?utf-8?B?L29VK290UW1wc3NSR3c4dGpYcVpBQm8wY1h1WndoeU9uaGpUL2U2cUxXaWZD?=
- =?utf-8?B?MlZ1TnBhenNqbGw1WlBHQkF2OS9SSHRvZFU5Z0N0UjdNMXUxS2lhRzlteVlq?=
- =?utf-8?B?bGZodkwrTEFzZnQ5MUJSSGpVcjlJSTdLMXdsNVIwNWxlWk0vSFoxMWJWajBO?=
- =?utf-8?B?WmExK2xOMFlKNlYwMGxTY0hMcGQraW41cTNjTm4xODFkSEZ1Zkt2Nmx3ODZZ?=
- =?utf-8?B?S0RGSHRRWDJma1pyQlJUd0NPOG5WMExncjdFck9XSkpEZFhSSzZ2WmpiOFJ1?=
- =?utf-8?B?R1BDV2ROZys2WGdESThPVDdYT2ViejhFSFU4eGNVSnpLVjB3bTJzbFpYSzhD?=
- =?utf-8?B?M1djOUpRektwclhMSXNQR25oK1JJL1dVS1l0cEVXRkdqQUNjL3pidHZKQlVw?=
- =?utf-8?B?cVMwdFZYcFJxMFBSRmYrR1Q0ZHdsSXJ4elBPR3pJcDlJVU9wSEpTdXFOc0hC?=
- =?utf-8?B?MWhPZFF3QXBGbkg0WmwrSFhQRElZcTNWNkRpNHM2MTBWcDFNY2hLNmNMZk1p?=
- =?utf-8?B?UmJBNFkwZHpGaUVsTlFyZ1NnREQ1Y3lXa2xIRnM2b084K2p4OTNsWnRjVmgy?=
- =?utf-8?B?S3hncEtGSXV0TFNGa2x5RG5wVDAwS0s0cjdoeHl4Z0RRY29XenBoZWZ2UVN0?=
- =?utf-8?Q?uyLx2ZhgvvI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9064.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bEpwRzh0eTQ4cklFS1kvUU1WNGJUNXVISnVPOGtKaGhRUmxtU3EvUnIrS1B3?=
- =?utf-8?B?MjlEODhpV3cyRHBnVUp3ZHBOTlBKRnRacWNtSGlObjJlODhnU1UwN3VVY0Q4?=
- =?utf-8?B?eG12cmMzZEdCM1ZLOGdRTWFteDZjd2w1eWhvVjY4S2xNSGEvWm5rZzFxWTAz?=
- =?utf-8?B?U2Y4ZkxHa291SWlZWWFIUDgrcy9XWFY4bGh6dE1lcDQ3REMxZkErSnFKV2Jo?=
- =?utf-8?B?c2JEOG14TVFPWElOTEV6WnlPeGRwUjhZbnd2cVo5ZEhZZEcwTHh1dGlwOVAy?=
- =?utf-8?B?NTF3RCtWZStBcUFEVVBpemhkR0hUUUY4dUcyUk4zalFCUlNsNjYxWjBoNkFr?=
- =?utf-8?B?bkxkeUc4N1lFR0VudGlNZDhGU1VLeWxrTEZvN0U3Wjl1amVucjAxb0Fza2tz?=
- =?utf-8?B?VGUrRzltdXgyckJJRVNoMWhMNEd1M2pwcE4vUG83Y25QN05JMDByUTlNZzdl?=
- =?utf-8?B?VCtrVFJUV3FIS3o1SWxGcGJpZkhqblJBSGdlWmRQaWwvbmdQQTBKZ2ppY1RB?=
- =?utf-8?B?emNleEo3RFFxMGlhOVNWa2RCemVFSWExZmRHTTQ5ZzZGRi9KQUFMRW44akw4?=
- =?utf-8?B?ekJhUjdqR2NPNW9rVC9YV2g3WFRFd0lkMlY2ODJVNzBvdDY5ZWhyQlJzeTRD?=
- =?utf-8?B?aitMVVpsN283M3BBR1lXZzl4VXRwb0JmZWZZSVFlTDRXUEgraWVLUEFoaU85?=
- =?utf-8?B?czdFZ2lhL0tyaFByeUxFc21DZlVuaG0yVG9qUGJoTjlycHIyb1prN2NlQ1lQ?=
- =?utf-8?B?Y3Evb0xHM3lMQkFPbTg2RlhMRlRwOFhPczlyZ3o4d2pyenZrayt4QllqVDJ1?=
- =?utf-8?B?OFNRdEovdlhGa1YyTmIyZ2V6dGpLcnNoM0IxbE56OXBMQ1owVkl4bTRUM05m?=
- =?utf-8?B?eXBFWkwyOFJMRGsvZ2kxVW8yYzRDcDJLZ1loNlFWSHVqVHJ1Y1YvV2xWQjdL?=
- =?utf-8?B?dkR4eE1FMHNIVG1Rb252RHhuWVhRNDBNSy9NRTFrODdhNmJyOGwvdFpPREI0?=
- =?utf-8?B?L2NTVHEzVnRGNVRTU2d2Ny9oV2Z5WnUwU2Q5VzhJR0E2b3IxNWVQSWNLc3ds?=
- =?utf-8?B?N3lFNWdJTlp6eUw3RENuK0I0S0pyeXZqc0Zrc3FzSmErUnBDVTVaUzRKOUp4?=
- =?utf-8?B?b0dwYzl0aFlRbWQ4LzFxa0hZK1RJWTdveC9vZC9tWXl3YllTeW1jVWhRb1lF?=
- =?utf-8?B?K1NHZHJld2tqcjhFVnUxZW5IcXVaSnJuM0o3L3dYajZBV2FHSlhBWlZpN2ov?=
- =?utf-8?B?aVJPZ2J1MmUxN1g5T1JqZnhLUXdlcHBXVG5Ec3crZGZMSXZPMDY1RUJoaXdh?=
- =?utf-8?B?UzNkQ0RLMHQyTGF2UmsrbkZZblZDOERtNXo2dTRFdWN2ZFVPUWEyandJZzNW?=
- =?utf-8?B?cWNraXVYZWkyS0dva21KbURCZW9zNWx6RStQVkN1aTlsV1FrTmo0RU1ZSGx1?=
- =?utf-8?B?ZWJaWGVZZ2dsYlJ2Z0Z4c1hmZHYzZlVxajNvVTJNU0xWVGJxNUU4L1R2TWUx?=
- =?utf-8?B?Qm82WmFwSmpNSUxnemM4SUJWUUtZTE42Mlc4ckhCNnFXYzA3T2ZPaE9FbXBZ?=
- =?utf-8?B?S2VqRkJRNmw3MDN4bXFJQnlrN2VBOVFUbis0M2M3clJjUElieEozelZQa2dn?=
- =?utf-8?B?Y0Z5WTJFUlF5WlZ0aHpiOXpaT0FnK2VFcG1uaExGVjJHVGFYWG9BVGluTE96?=
- =?utf-8?B?Q0xIR0VRUjg2ekpPeWttMSs2RVBSV2E5dDlzRlNXTTYzcjB2WUlMSm9LNEl4?=
- =?utf-8?B?R3ArN3h0TUZITlQyME1FUFZJR2k0KzJhcGFqZVoxdDVJcUVyeTRyYVM5QUIr?=
- =?utf-8?B?ZFFsL3VBYlU1RTRkMW45THVVT2VkVjJmSStoalNTT0Uxbmk1YVg4d09pNjJK?=
- =?utf-8?B?eGdZN3o5ZU1FVVdPYk1MUGlSbEhhcUFyU3gyY05QOVphWTh5Y1NNcC93Ymxq?=
- =?utf-8?B?NHF4Vk14ZmZ3VVlmTEQwTUZsek5oYStCQTd0b09GKzFEenlRdElGaENIamlm?=
- =?utf-8?B?WDRvKytHTDVSN3lBTW5pS24yZ3FHYlZuL0RrTzJSWHdkVlFteGNVOWhvdFZx?=
- =?utf-8?B?Y0p3T3duMGNUaXFmRytLVms3d1lqNEJ2TkZzMnFEM1Q4ajE0Q3ZLbDFvZVdD?=
- =?utf-8?Q?weHZ3V8F3d6NeGnlIt9eqTMGn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9378c109-592b-4691-31be-08dd860df3c6
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9064.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 04:34:24.2082
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Kq4J2Zhp00MH5OpgjriAnnv88IL2cKInVvD7s37l7evYxhy8RhKZ/Xk6qSsb8EqHZ7Mifu7Xw+muR5jS/sUsAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7263
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH blktests 0/3] blktest: add unmap write zeroes tests
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
+ "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ hch <hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>,
+ "djwong@kernel.org" <djwong@kernel.org>,
+ "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
+ "bmarzins@redhat.com" <bmarzins@redhat.com>,
+ "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>,
+ "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
+ "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
+ "yukuai3@huawei.com" <yukuai3@huawei.com>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>
+References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
+ <yxfbr3na7iyci7rs3rk4m7zmjrfw3zdccrnur2nkk2lddlowmx@wy32rpgrlzoh>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <yxfbr3na7iyci7rs3rk4m7zmjrfw3zdccrnur2nkk2lddlowmx@wy32rpgrlzoh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgB3219SBQ9oYaMoKw--.53973S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWxAFyrJFyrKrW5Jry8uFg_yoW8tr13pF
+	1rAa40yr4fKFnFg3W09FZIqr15Ars3Aay5Ars5Gr10krn8ZF1a9ryjg3yjywsFgr13W3Z2
+	yay2ga4S9ayUAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	bAw3UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 4/25/25 22:40, Leon Romanovsky wrote:
-> On Fri, Apr 25, 2025 at 03:46:06PM +0530, Abhijit Gangurde wrote:
->> On 4/24/25 18:38, Jason Gunthorpe wrote:
->>> On Wed, Apr 23, 2025 at 03:59:07PM +0530, Abhijit Gangurde wrote:
->>>> +static int ionic_aux_probe(struct auxiliary_device *adev,
->>>> +			   const struct auxiliary_device_id *id)
->>>> +{
->>>> +	struct ionic_aux_dev *ionic_adev;
->>>> +	struct net_device *ndev;
->>>> +	struct ionic_ibdev *dev;
->>>> +
->>>> +	ionic_adev = container_of(adev, struct ionic_aux_dev, adev);
->>>> +	ndev = ionic_api_get_netdev_from_handle(ionic_adev->handle);
->>> It must not do this, the net_device should not go into the IB driver,
->>> like this that will create a huge complex tangled mess.
->>>
->>> The netdev(s) come in indirectly through the gid table and through the
->>> net notifiers and ib_device_set_netdev() and they should only be
->>> touched in paths dealing with specific areas.
->>>
->>> So don't use things like netdev_err, we have ib_err/dev_err and
->>> related instead for IB drivers to use.
->> Sure. Will remove storing of net_device in the IB driver and its
->> references in the next spin. Will wait for some more feedback
->> before rolling out v2.
-> The problem is that coupling with net_device is so distracting that
-> both of us are not really invested time into deep review of this series.
->
-> Another problematic pattern is usage of "void *handle" to convey
-> information between aux devices. Please use struct pointer instead of
-> void for that.
->
-> Thanks
-
-Thanks. Will address these in v2.
-
-Abhijit
-
-
->
->> Thanks,
->> Abhijit
+On 2025/4/3 15:55, Shinichiro Kawasaki wrote:
+> On Mar 18, 2025 / 15:28, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
 >>
->>>> +struct ionic_ibdev {
->>>> +	struct ib_device	ibdev;
->>>> +
->>>> +	struct device		*hwdev;
->>>> +	struct net_device	*ndev;
->>> Same here, this member should not exist, and it didn't hold a
->>> refcount for this pointer.
->>>
->>> Jason
+>> The Linux kernel is planning to support FALLOC_FL_WRITE_ZEROES in
+>> fallocate(2). Add tests for the newly added BLK_FEAT_WRITE_ZEROES_UNMAP
+>> feature flag on the block device queue limit. These tests test block
+>> device unmap write zeroes sysfs interface
+>>
+>>         /sys/block/<disk>/queue/write_zeroes_unmap
+>>
+>> with various SCSI/NVMe/device-mapper devices.
+>>
+>> The /sys/block/<disk>/queue/write_zeroes_unmap interface should return
+>> 1 if the block device supports unmap write zeroes command, and it should
+>> return 0 otherwise.
+>>
+>>  - scsi/010 test SCSI devices.
+>>  - dm/003 test device mapper stacked devices.
+>>  - nvme/060 test NVMe devices.
+> 
+> Zhang, thank you again for the patches. The test contents look meaningful
+> for me :)  When the kernel side changes get ready, I will run the test cases
+> and do further review.
+> 
+> One thing I noticed is that the patches trigger shellcheck warnings. When you
+> respin the patches, please run "make check" and address the warnings.
+> 
+> $ make check
+> shellcheck -x -e SC2119 -f gcc check common/* \
+>         tests/*/rc tests/*/[0-9]*[0-9] src/*.sh
+> common/rc:624:7: note: Use $(...) notation instead of legacy backticks `...`. [SC2006]
+> common/rc:626:7: note: Double quote to prevent globbing and word splitting. [SC2086]
+> common/rc:632:7: warning: Quote this to prevent word splitting. [SC2046]
+> common/rc:632:7: note: Useless echo? Instead of 'echo $(cmd)', just use 'cmd'. [SC2005]
+> common/rc:632:7: note: Use $(...) notation instead of legacy backticks `...`. [SC2006]
+> common/rc:632:17: warning: Quote this to prevent word splitting. [SC2046]
+> common/rc:632:29: note: Double quote to prevent globbing and word splitting. [SC2086]
+> tests/dm/003:28:8: warning: Declare and assign separately to avoid masking return values. [SC2155]
+> tests/nvme/060:32:8: warning: Declare and assign separately to avoid masking return values. [SC2155]
+> make: *** [Makefile:21: check] Error 1
+
+Sure, I'll do this check in my next iteration.
+
+Thanks,
+Yi,
+
