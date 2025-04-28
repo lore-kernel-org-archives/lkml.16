@@ -1,161 +1,231 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429A370810;
-	Mon, 28 Apr 2025 13:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4897B70810;
+	Mon, 28 Apr 2025 13:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846572; cv=none; b=A2FltpBpTzIUnfPG+Fw9Dvsrr2nHQsEZCN4/d+zj5BAv/9zP3e38eYaSkw1vsfdjdKflNbRaM14hw4rRQRmbdBqViowtRNXcLIrGsJgD3sgEqLurrjI0n/EeWcMBJ+C6hxoyeGuvPfKxAqsH2Xp639Uf505SQJ5IGD3wL1NRvaw=
+	t=1745846614; cv=none; b=k+wYGHzrmb5QqpACKxtObagVFSJwusgOaTnQ5lf5AOKgV3NAXPa8ykMtGTcHpIH+6CKPXSADCKX++vZiYvtdxxRwRTxsh/lTkyafZlVBYymlUchKgf1xapNOunzScT9aqWXS3TqNDHjKzBnOEmUCDHO5EgpWhTGVajAbAPD9VFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846572; c=relaxed/simple;
-	bh=b/sI8ny/1+dJG7v18IC78jCyibWHPy6Xs6Lki9wiTLg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qV8p23RWJ1Gxi7LsYfOyeY3vcIbpxShPk2nJ51AvBxq6nAIPT0p71EBaHxaJlmrUOzcvdnDeou/QVumgWlTEuRoEAinq5D2iq8mHE+UfrvVpvg01MR/pKik53a/lqxzZwcwxkcAYMk9qqhC+sf9FlzhvyXwtMXSFt8gwnFsjItg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAO0C17A; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745846614; c=relaxed/simple;
+	bh=335MrcHvnvENFyHo54UTERg/dHu7eoyK/wd1W1y27ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SI6OfGZORkp4G7N1Jri9Irdb7y8quC5uPlNLDPJ4EudkuoN38RSZ/Zf72tsXyrdT7wwZx6jYm49qeAMZf4B8I8Kp0sxeVCTikzKcu/KufAJiMtIiGlGJ+ZBkkSd3Z08Isvr2+aMKS8cH69fkluRxmuGVY7zNiETjUs7YNuRb9Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+VNtlt7; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAO0C17A"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so5418505f8f.3;
-        Mon, 28 Apr 2025 06:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745846569; x=1746451369; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6uQD3Z3ld0wBx1gp1tlW/rooQP2uSiyFFIJlOXb+tkI=;
-        b=eAO0C17AlOTuj3IewN6Bu6oJZW1neN+wmgzpP5eP77u4bi0l7aKf4K//WfoLqkAAYW
-         40JKgUui97pVjBDbbRPR6XZhQqwZGhksXbgI+cVWTakexuFRwraB5zJsXM0h4jlKSsl9
-         sh/XzKygv1yuffcVE1k/4q9iuI0pgUUY/p3htJ7RY4eXtB8L1VGiHGqFBBbqiK2g1wh8
-         6RFacPoOdTEd9N7hadC2H9tveYcumXbkMypCcr4x3SkKEejjW3g3/aae4s5ijeyVGvZB
-         /SWnV3XyN6JolcVwnkGzDI7DxenYuiAX6BfKD5cQngUD/taCCmssJSz2Y1tkM1LU1dro
-         hwbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745846569; x=1746451369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6uQD3Z3ld0wBx1gp1tlW/rooQP2uSiyFFIJlOXb+tkI=;
-        b=hm3tOAuUP003IsbMYAuyeGCpIaRApaJQHkgb7sgLobVwshRhV3nMX5ZclCJ8fIqSGr
-         E2stXYNprIbFxwjILxaaj7WYulIrura5EC/TRVobnopGrwg+Fq6dixzkGCb5LG9hV9UI
-         xBQAfDcTRWdfzh+mXd//kdJ336BzWf8xFskC90zWNpqp3f2iFApnmEx6Kx0ookloBh96
-         gBi7N2Ytuv+9CkvKnAYMLJSw1ctgCVUU8Ue5pFrxcspz0r/EmG5Fn5CoQMhzAnMeYBiq
-         RWf6TLofis02oqH5+yzeHFVd9UWb3uThMeuOI77CkrV4qpCwd4BE5Bcjp3NGmVL+vQRQ
-         VqJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSQInbRbOtxtjDbMOlAzJ06BgYVkiV7rsw6roKQtcprg8rQGPbmnTve1Ue4U7AR5LtHSpp9ZF2b1HxvFtY@vger.kernel.org, AJvYcCUTK6HPH7uS09bPDDvJQpAapY/LC5xb8T9S9IYKjyGXOGI8fLgmeJx7zuECLoESBKJ1W9u/lWLfriM/SGwdUp2rLaw=@vger.kernel.org, AJvYcCVFAgu72bmKyLKG6uFlkzV8enV3SzBQOWe3hlj6Ya+z/tkbdOJDL5R1TsHAwRKCWcmF6a32HoPh6vRB@vger.kernel.org, AJvYcCX6cInAkaVtzIDCzOAarOeltgjIe1/11Ich3Q+YgW1FdOcUkhn6Ow857fLiOi4A866ANzfltGSKRNxM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTxZ8mf7d0D2p6QeuOwO+m0fGzrBHEkLsyJ7e1c75Z8Z8zxaFT
-	Mc9Ij/GZQyQHQCqEzukh3CL6KfYfbfpyldvWv1Np/VRsaoptT8CFOfUSJ5B/InQd+0MimtoZU49
-	R6KynI39+da8MB24whhqAxpriXTanGJEn91Y=
-X-Gm-Gg: ASbGncsp/z/O/4oAOQLX+C4H0KmfNdc/nRf+h/bvwTgNrqsWyL6MAl/73tO6vduxgnJ
-	WhjVxpsigo/p+oR3UULkhOwfgJY/yfZH4yRnmfotBZj6Sdf2VRHKHLoHB8XAKSYpzUoKD/LyFLN
-	evNs1hQ+1ajC2LGlv1xCFFs1k=
-X-Google-Smtp-Source: AGHT+IECsoGJlitMQgTg9Yd74BH9tfW/LZtEL6LR1B1ajgMHjvjVmPHyMUY+AE/jae62SSGy6KDQJyw9PXs89FygP94=
-X-Received: by 2002:a05:6000:1889:b0:390:f358:85db with SMTP id
- ffacd0b85a97d-3a074e4200dmr8006896f8f.30.1745846569222; Mon, 28 Apr 2025
- 06:22:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+VNtlt7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745846612; x=1777382612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=335MrcHvnvENFyHo54UTERg/dHu7eoyK/wd1W1y27ug=;
+  b=n+VNtlt7ZACCOGriZCkXBVlMtobkdKKBJWDkonwcpymNhbLd1B/qX2Hv
+   GJtc9wgnDO4e+m2mGNsb6wJLyEEiE4MFICeZrBvluIXZpeAHadEfLVu6Y
+   icDV5XiTyL0UsmKD2avru8hNAyaAdhF/HkrV5dPhRQb8X/LyP6nQh4m0w
+   Iws5rO2QfX/kNFufN0uj8qIHDj3QKlWFWGMk++qMQkVSx6qnIWKZMZcYt
+   XKuy/C4IzbGc463q4l29m74OIEPQ35Km9MMicHxvOg0Ki+U8wmekFpDm+
+   xjj+sbrNpWr8fSElLYgfzpVQdzLqXF8Jd1tAtv0ibKqJOtNQNphOUlKXT
+   w==;
+X-CSE-ConnectionGUID: DBAqw15jTKGSzPy1AGGHQA==
+X-CSE-MsgGUID: ASY64+tcQSWG4NvVzZ5Z6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="58422018"
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="58422018"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 06:23:31 -0700
+X-CSE-ConnectionGUID: CcSuqomNR++Tkv1FqcBimw==
+X-CSE-MsgGUID: qUzk6fo9TuKy8UWhQBuc7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="164483064"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa002.jf.intel.com with SMTP; 28 Apr 2025 06:23:28 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 28 Apr 2025 16:23:26 +0300
+Date: Mon, 28 Apr 2025 16:23:26 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Andrei Kuchynski <akuchynski@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jameson Thies <jthies@google.com>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
+	Pooja Katiyar <pooja.katiyar@intel.com>,
+	Madhu M <madhu.m@intel.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] usb: typec: ucsi: displayport: Fix deadlock
+Message-ID: <aA-BTrunTaYxtrps@kuha.fi.intel.com>
+References: <20250424084429.3220757-1-akuchynski@chromium.org>
+ <20250424084429.3220757-2-akuchynski@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXtfzp81V4uAk-oULoBz2BtipyPvc9V8oV=kDXmX90GxA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXtfzp81V4uAk-oULoBz2BtipyPvc9V8oV=kDXmX90GxA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 28 Apr 2025 14:22:21 +0100
-X-Gm-Features: ATxdqUG_Timr8RqYhtsM__Ht9BrCGNqwUpwPEzWj7Hw7UUsVhS2mmze8RoP9oUU
-Message-ID: <CA+V-a8sMOnKZjNGW2=Y+TcF9itvC4a1LeEQ+eAKvjhWvEL_K+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] clk: renesas: r9a09g057: Add clock and reset
- entries for GBETH0/1
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424084429.3220757-2-akuchynski@chromium.org>
 
-Hi Geert,
+On Thu, Apr 24, 2025 at 08:44:28AM +0000, Andrei Kuchynski wrote:
+> This patch introduces the ucsi_con_mutex_lock / ucsi_con_mutex_unlock
+> functions to the UCSI driver. ucsi_con_mutex_lock ensures the connector
+> mutex is only locked if a connection is established and the partner pointer
+> is valid. This resolves a deadlock scenario where
+> ucsi_displayport_remove_partner holds con->mutex waiting for
+> dp_altmode_work to complete while dp_altmode_work attempts to acquire it.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: af8622f6a585 ("usb: typec: ucsi: Support for DisplayPort alt mode")
+> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
 
-On Tue, Apr 15, 2025 at 3:55=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote=
-:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add clock and reset entries for GBETH instances. Include core clocks fo=
-r
-> > PTP, sourced from PLLETH, and add PLLs, dividers, and static mux clocks
-> > used as clock sources for the GBETH IP.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/clk/renesas/r9a09g057-cpg.c | 72 +++++++++++++++++++++++++++++
-> >  drivers/clk/renesas/rzv2h-cpg.h     | 11 +++++
-> >  2 files changed, 83 insertions(+)
-> >
-> > diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/renesas/=
-r9a09g057-cpg.c
-> > index 3c40e36259fe..057bfa0e2a57 100644
-> > --- a/drivers/clk/renesas/r9a09g057-cpg.c
-> > +++ b/drivers/clk/renesas/r9a09g057-cpg.c
->
-> > @@ -115,6 +138,17 @@ static const struct cpg_core_clk r9a09g057_core_cl=
-ks[] __initconst =3D {
-> >         DEF_DDIV(".pllvdo_cru2", CLK_PLLVDO_CRU2, CLK_PLLVDO, CDDIV4_DI=
-VCTL1, dtable_2_4),
-> >         DEF_DDIV(".pllvdo_cru3", CLK_PLLVDO_CRU3, CLK_PLLVDO, CDDIV4_DI=
-VCTL2, dtable_2_4),
-> >
-> > +       DEF_FIXED(".plleth_250_fix", CLK_PLLETH_DIV_250_FIX, CLK_PLLETH=
-, 1, 4),
-> > +       DEF_FIXED(".plleth_125_fix", CLK_PLLETH_DIV_125_FIX, CLK_PLLETH=
-_DIV_250_FIX, 1, 2),
-> > +       DEF_CSDIV(".plleth_gbe0", CLK_CSDIV_PLLETH_GBE0,
-> > +                 CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL0, dtable_2_100)=
-,
-> > +       DEF_CSDIV(".plleth_gbe1", CLK_CSDIV_PLLETH_GBE1,
-> > +                 CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL1, dtable_2_100)=
-,
-> > +       DEF_SMUX(".smux2_gbe0_txclk", CLK_SMUX2_GBE0_TXCLK, SSEL0_SELCT=
-L2, smux2_gbe0_txclk),
-> > +       DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_SELCT=
-L3, smux2_gbe0_rxclk),
-> > +       DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_SELCT=
-L0, smux2_gbe1_txclk),
-> > +       DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_SELCT=
-L1, smux2_gbe1_rxclk),
-> > +
-> >         DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV3_DI=
-VCTL1, dtable_2_64),
-> >
-> >         /* Core Clocks */
->
-> > @@ -233,6 +271,38 @@ static const struct rzv2h_mod_clk r9a09g057_mod_cl=
-ks[] __initconst =3D {
-> >                                                 BUS_MSTOP(7, BIT(10))),
-> >         DEF_MOD("usb2_0_pclk_usbtst1",          CLK_PLLDTY_ACPU_DIV4, 1=
-1, 7, 5, 23,
-> >                                                 BUS_MSTOP(7, BIT(11))),
-> > +       DEF_MOD_EXTERNAL("gbeth_0_clk_tx_i",    CLK_SMUX2_GBE0_TXCLK, 1=
-1, 8, 5, 24,
-> > +                                               BUS_MSTOP(8, BIT(5)),
-> > +                                               0x300, 8, 1),
->
-> CPG_SSEL0
->
-> I'm wondering if you really have to store and duplicate this info here.
-> Can't you infer it from the parent's smux description?
->
-To clarify, you mean to get the parent of the mod clock and then get
-the clk_mux to get the base?
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Cheers,
-Prabhakar
+> ---
+>  drivers/usb/typec/ucsi/displayport.c | 19 +++++++++-------
+>  drivers/usb/typec/ucsi/ucsi.c        | 34 ++++++++++++++++++++++++++++
+>  drivers/usb/typec/ucsi/ucsi.h        |  2 ++
+>  3 files changed, 47 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/displayport.c b/drivers/usb/typec/ucsi/displayport.c
+> index 420af5139c70..acd053d4e38c 100644
+> --- a/drivers/usb/typec/ucsi/displayport.c
+> +++ b/drivers/usb/typec/ucsi/displayport.c
+> @@ -54,7 +54,8 @@ static int ucsi_displayport_enter(struct typec_altmode *alt, u32 *vdo)
+>  	u8 cur = 0;
+>  	int ret;
+>  
+> -	mutex_lock(&dp->con->lock);
+> +	if (!ucsi_con_mutex_lock(dp->con))
+> +		return -ENOTCONN;
+>  
+>  	if (!dp->override && dp->initialized) {
+>  		const struct typec_altmode *p = typec_altmode_get_partner(alt);
+> @@ -100,7 +101,7 @@ static int ucsi_displayport_enter(struct typec_altmode *alt, u32 *vdo)
+>  	schedule_work(&dp->work);
+>  	ret = 0;
+>  err_unlock:
+> -	mutex_unlock(&dp->con->lock);
+> +	ucsi_con_mutex_unlock(dp->con);
+>  
+>  	return ret;
+>  }
+> @@ -112,7 +113,8 @@ static int ucsi_displayport_exit(struct typec_altmode *alt)
+>  	u64 command;
+>  	int ret = 0;
+>  
+> -	mutex_lock(&dp->con->lock);
+> +	if (!ucsi_con_mutex_lock(dp->con))
+> +		return -ENOTCONN;
+>  
+>  	if (!dp->override) {
+>  		const struct typec_altmode *p = typec_altmode_get_partner(alt);
+> @@ -144,7 +146,7 @@ static int ucsi_displayport_exit(struct typec_altmode *alt)
+>  	schedule_work(&dp->work);
+>  
+>  out_unlock:
+> -	mutex_unlock(&dp->con->lock);
+> +	ucsi_con_mutex_unlock(dp->con);
+>  
+>  	return ret;
+>  }
+> @@ -202,20 +204,21 @@ static int ucsi_displayport_vdm(struct typec_altmode *alt,
+>  	int cmd = PD_VDO_CMD(header);
+>  	int svdm_version;
+>  
+> -	mutex_lock(&dp->con->lock);
+> +	if (!ucsi_con_mutex_lock(dp->con))
+> +		return -ENOTCONN;
+>  
+>  	if (!dp->override && dp->initialized) {
+>  		const struct typec_altmode *p = typec_altmode_get_partner(alt);
+>  
+>  		dev_warn(&p->dev,
+>  			 "firmware doesn't support alternate mode overriding\n");
+> -		mutex_unlock(&dp->con->lock);
+> +		ucsi_con_mutex_unlock(dp->con);
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+>  	svdm_version = typec_altmode_get_svdm_version(alt);
+>  	if (svdm_version < 0) {
+> -		mutex_unlock(&dp->con->lock);
+> +		ucsi_con_mutex_unlock(dp->con);
+>  		return svdm_version;
+>  	}
+>  
+> @@ -259,7 +262,7 @@ static int ucsi_displayport_vdm(struct typec_altmode *alt,
+>  		break;
+>  	}
+>  
+> -	mutex_unlock(&dp->con->lock);
+> +	ucsi_con_mutex_unlock(dp->con);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+> index e8c7e9dc4930..01ce858a1a2b 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> @@ -1922,6 +1922,40 @@ void ucsi_set_drvdata(struct ucsi *ucsi, void *data)
+>  }
+>  EXPORT_SYMBOL_GPL(ucsi_set_drvdata);
+>  
+> +/**
+> + * ucsi_con_mutex_lock - Acquire the connector mutex
+> + * @con: The connector interface to lock
+> + *
+> + * Returns true on success, false if the connector is disconnected
+> + */
+> +bool ucsi_con_mutex_lock(struct ucsi_connector *con)
+> +{
+> +	bool mutex_locked = false;
+> +	bool connected = true;
+> +
+> +	while (connected && !mutex_locked) {
+> +		mutex_locked = mutex_trylock(&con->lock) != 0;
+> +		connected = UCSI_CONSTAT(con, CONNECTED);
+> +		if (connected && !mutex_locked)
+> +			msleep(20);
+> +	}
+> +
+> +	connected = connected && con->partner;
+> +	if (!connected && mutex_locked)
+> +		mutex_unlock(&con->lock);
+> +
+> +	return connected;
+> +}
+> +
+> +/**
+> + * ucsi_con_mutex_unlock - Release the connector mutex
+> + * @con: The connector interface to unlock
+> + */
+> +void ucsi_con_mutex_unlock(struct ucsi_connector *con)
+> +{
+> +	mutex_unlock(&con->lock);
+> +}
+> +
+>  /**
+>   * ucsi_create - Allocate UCSI instance
+>   * @dev: Device interface to the PPM (Platform Policy Manager)
+> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+> index 3a2c1762bec1..9c5278a0c5d4 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.h
+> +++ b/drivers/usb/typec/ucsi/ucsi.h
+> @@ -94,6 +94,8 @@ int ucsi_register(struct ucsi *ucsi);
+>  void ucsi_unregister(struct ucsi *ucsi);
+>  void *ucsi_get_drvdata(struct ucsi *ucsi);
+>  void ucsi_set_drvdata(struct ucsi *ucsi, void *data);
+> +bool ucsi_con_mutex_lock(struct ucsi_connector *con);
+> +void ucsi_con_mutex_unlock(struct ucsi_connector *con);
+>  
+>  void ucsi_connector_change(struct ucsi *ucsi, u8 num);
+>  
+> -- 
+> 2.49.0.805.g082f7c87e0-goog
+
+-- 
+heikki
