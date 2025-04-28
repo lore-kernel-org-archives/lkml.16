@@ -1,174 +1,166 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A8A2AEED
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0632AEED;
+	Mon, 28 Apr 2025 14:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745850501; cv=none; b=bSL28U/O9cy9F5znZUOAVpv2Z9PoBn/dyR00wtslG8VBQiVzkSsk1fnCCQFmqffdLKMulhGRAxPhYgmFKvi5Lp1UkOeR1sWKzbtD5B1PgvmxEAbTg3MyHSgAqVbVtinN9X0KfPrsUue5PO4+SB8cfcCz3Hz4uug8vfyb1xfBnNI=
+	t=1745850530; cv=none; b=YWlLAklgmnFeznoVxmFdIMVJPBfcSW3rEDzMgiHdLA8LBumSwECZVikxeQQUPkeHVVLeXKp3iSmK+n6d7a3Iri0LG43QddYp1bYuIi7cF+ymojcT7DrwUbonp0QomOia0ExvcOjeF0UXacC5SyxdsKkRfNqoI3UVLBNrw2ITcsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745850501; c=relaxed/simple;
-	bh=Q1rwHvBu4qxAJ3au0VkVzcq1N7TF2axF0QJN7r0M3bs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jI3QvPYCu/WGpZ5Qd3fAjnyid3Ixej4Q8oL3G+m1LveBsEu/1ph3O2LdrwOGkNNqijehrTWnScapB5pnnOcI0Q/H2tONLaesQfLZAU3fd/F73xMl/zuoFLQA2Sc+evfKGcw8q9MWZC4cqENi8uRa8M2JUMcxgjNq8ODuy67m4IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=b8sJHIWt; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1745850530; c=relaxed/simple;
+	bh=hdCOCV4zJWl4/oxtxfJhrg/z+ro0EzkOCQTyZRBms4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtEN4udL74PSxs4JWgrAp4NjsIH3t70FDTfKTEJ7BVXEvEMRi/qmmcQO2x3KESoJ7rQmmPPrVdzgbIjOk8NfdRWDaMcTgEFY4pR1ZmnaPvnQaMYGpzL4jmHpn8HUN7dcg62epKxoru5x7AdvMpOfwSj0RLz8unvhMo8/rP26OGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k4CWfVAR; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="b8sJHIWt"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b0b229639e3so520881a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:28:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4CWfVAR"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2295d78b433so51540325ad.2;
+        Mon, 28 Apr 2025 07:28:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745850499; x=1746455299; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GDr5IGzdbQjvzsBJWEvUjA0SpBUuryn1nv5p9QOyO0I=;
-        b=b8sJHIWtQc5JoraZk97g4oZzB3Qmye0+Curyoo/K6BY0yrlkgzNhxTToPRaKN7whzK
-         ej9RhS36t2ouBDXGn4LjxbqxZKLyLY0lPVSPLtUDWLGt+snkMKiYkL3oAUdlncqMbZIK
-         X+xRioJGAK/Vz/oTKPOaUG2/qsKtca4XDjMEf/AszscVmT18wHBU4KlRIneVlXhM98Hw
-         4gpFOmxzMkWLk2KPSIdbZYDsF9xlwAhpp2asRYoX9x+jCaHYtTv7T2fNEm6tPZRwBUvz
-         rmqA9U9PjtC0XP2Q/U0WeB9lAQWPeuIHmDBz8mOFbQEy3kL9qas09vnvdGsdeAlkJx/c
-         zHTg==
+        d=gmail.com; s=20230601; t=1745850528; x=1746455328; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5g4Z4+GwIKYIpvt4NVYWM9yg9MYntd/UapAZZileFbw=;
+        b=k4CWfVARjH/tf1QkBIw9VXWnCsEarw9zy7aefV6uoJzlsRNGi6sGGUXa2ikbVXuJ4G
+         27HbeRq827FY/BNIAQH27sx+ubHCAWd4EYUeG8OGdA1tTjJ3QlUsJvh3LrXUKiHfPnof
+         FB+OCaESldsbp6NZ+MWS16VeubS6HsjocLhz49uAm3k4ZKafv/Lqt72MjzQhVkBRHoV/
+         23QAxg+18ETyEjwHX3gSDhlB0kZB/SNlaNWgQJpVmFtZN4pa+PkuiXZttSlFEbvMk0Gm
+         N6Km7lyclOILyy8oo28A0lZsDi3RK5s7OlEGduJ5hK6zidR7xXBXJRJkwjupInkrhKFg
+         jWkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745850499; x=1746455299;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GDr5IGzdbQjvzsBJWEvUjA0SpBUuryn1nv5p9QOyO0I=;
-        b=MQaXjOPWTv2fc5lssp9b4Y3UcdURwJBTiIQq2gaMR4UdbAfQvDs8aJkQGc7F5DSPG6
-         eGGumLWS5AH0sbaj4B9T74NeWVTqK6EkdUW7n4TyRV06i8qpt5RfVrKsq5Gxow/CH+/6
-         MN1BHpsQeYIBpm9cdpMLhKhKF6Fq08eMkhIT5+YS59V4H5f7IOXQD9To85DHnOEldgKl
-         SzsM4ayya7GhLPoRP1S25B7dQLTBiaae7b8loR3R3W3LfL5iP8wyQ12AAumwi01EiOVX
-         IfcSLqEPpho5/5GViYEZ8f7smYeQ5+zq4EEaO5xzR6QttY2jTaXwoX/Zh6qr35lKMqlq
-         lcVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLI/aej9eKF6iNJL0iFn0fQyWe44zyq2/x0L03qOs7XUm4sl4jSJTnxpDSlxHvtdCaeEQFxk1kOct0Pv4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx267OZXWdh8anxl3hJ7EY/etwoIg8Qn8tRxf+GHyEX7GtaxOZ
-	fgxlNzdDY+DVxXXETcL7aGjsEba9gJuY4bkbuyVUxHQRE3yu1aNaIr7loVus4ZP2+zS6FMhkaiT
-	fAA2zxgOmQvkAbOBnif6I0oHqDqibTF5FCtDyrA==
-X-Gm-Gg: ASbGncth+ztOKKqNf3UgnCtbanvPJCLf94H0mTQRtPPf9r3vUUjqyoQ6jkz7vh321jk
-	oSD7/nYk5Xdj4w7Jw71Iv6YZcNBRUBFs3JBjAjUUImaAfXSLc50HUj88r+G+MVu2fBZ2p8O3VDZ
-	dM4s9AEqldR5Rq8zwZlUAeWg==
-X-Google-Smtp-Source: AGHT+IFK0QLC6BCqnPQEezaBSjWk6KdQCSE5+Gfet1RkZ2FmHbJ+YhxaEeLLuvKg+wmx+n353gipyz4JSkMSRj0+L4M=
-X-Received: by 2002:a17:90b:1c91:b0:306:b593:4551 with SMTP id
- 98e67ed59e1d1-309f7ebaff5mr6351648a91.6.1745850498795; Mon, 28 Apr 2025
- 07:28:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745850528; x=1746455328;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5g4Z4+GwIKYIpvt4NVYWM9yg9MYntd/UapAZZileFbw=;
+        b=l+a6c1K95R12DHn3UgomiXjIxqWpx4fBKhGJcEp7dzBG7YXhMN2kw6zn150hT+ZOOK
+         M2+J1XZMVF6zy7rkz7AbFqQS8ryJPIfL/qrooVMC98Sjm09rYlKzlmpBNoFsKlXq+oet
+         8zHgrJEcUthJkjyyuSl3wZhbKRhy3pcXEWjWnfsTwSbBwSQaY4OL0oWeUEV1fQPpYLtD
+         4/ha85m5B9JvEpWJyFq2X6jpci9TiLF69X92B9YSRAxtEQpV8V1E0ZwvT2ihvBZlOeTa
+         mzdkfLkz1i3r3k6xSI+kse+bO3YwR40IMOHZexbgAGLQoYBGFwpcb76wZ7Ni1YjMt5br
+         16cA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSFLeblP+y10hR4Ow3fikpYeaGe3cXsFZpD32lU3WS1d2XNudqPn8SDZFgWxk4NcW122KAi3Zy1yY=@vger.kernel.org, AJvYcCXaM1a7bobwBovc4v7GGGch3iRF09qAXx1c0ll6Kg60Tfxn5NYFzuxk0DY56agyW1AOVSzmER6r7T8DCgWC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKQn+7HPVLm+8c6kruniV9sbJRMN4o+nmbHWwEiipR7FVih6U8
+	rzIm9HOqqQMXuBjqsfbjX49fuc+Y/3oLzGlvHdMQuBm/tHUInws9vfquYQ==
+X-Gm-Gg: ASbGncu52tA15hVUMvrKvt9PlI6qBUtzt8Kr+0R0laNa84t6Vz6rByQ0D0soYSdv5dY
+	BXe35xIZDhv/zVXhFQs7YYl8GpZQann2FuFcEQ+Cn85mACUXzmvfcY+/9lIQuaa3RudGsDwcviF
+	51qbFrQlFBDO1cm4/T7i0tEp7jInnpTB+FV6BDsioq2j3CqwtrUfsyp2g1HTWe7tsjuDtTVn0mK
+	t8onRbnA5iYHFEunFbKh6ygko5d3/1Hyatj0WnfgBX2twV/fOdgNXWUfaQ9vnV1tN/HZ+YddE8u
+	jf8SQ3YnlQdsDRXwGHkqxZmGx48XKeE3f7EC2JGp
+X-Google-Smtp-Source: AGHT+IHxqvG0AoPIk/6X9dVmJO7yaPKXmViUWOKnkpMryMvDFuF/uEWC1LrJWibExT6XT2YdzOFqcg==
+X-Received: by 2002:a17:902:d54a:b0:220:f151:b668 with SMTP id d9443c01a7336-22dc6a00185mr115680765ad.20.1745850527727;
+        Mon, 28 Apr 2025 07:28:47 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbd432sm83410805ad.90.2025.04.28.07.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 07:28:46 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 0DCA950790E2; Mon, 28 Apr 2025 21:28:44 +0700 (WIB)
+Date: Mon, 28 Apr 2025 21:28:43 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] docs: namespace: Tweak and reword resource control doc
+Message-ID: <aA-Qm9dWSLTOqcNk@archie.me>
+References: <20250421161723.1138903-1-jsavitz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427045803.772972-1-csander@purestorage.com>
- <20250427045803.772972-6-csander@purestorage.com> <aA4rqcpC01SzUn_g@fedora>
-In-Reply-To: <aA4rqcpC01SzUn_g@fedora>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Mon, 28 Apr 2025 07:28:07 -0700
-X-Gm-Features: ATxdqUHtsQExf7Ca3a6na1mNH0B2aXQMhUfJn0rd5iFTOraQL3F8E_fyTkhvdRo
-Message-ID: <CADUfDZpEGVLzEZJtPiScWgf6PVroQvKKhGed1cb8AJiyUr_RYg@mail.gmail.com>
-Subject: Re: [PATCH 5/8] ublk: factor out ublk_start_io() helper
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Uday Shankar <ushankar@purestorage.com>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pgt4JicpTY9IIAZU"
+Content-Disposition: inline
+In-Reply-To: <20250421161723.1138903-1-jsavitz@redhat.com>
+
+
+--pgt4JicpTY9IIAZU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 27, 2025 at 6:05=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
-e:
->
-> On Sat, Apr 26, 2025 at 10:58:00PM -0600, Caleb Sander Mateos wrote:
-> > In preparation for calling it from outside ublk_dispatch_req(), factor
-> > out the code responsible for setting up an incoming ublk I/O request.
-> >
-> > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> > ---
-> >  drivers/block/ublk_drv.c | 53 ++++++++++++++++++++++------------------
-> >  1 file changed, 29 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > index 01fc92051754..90a38a82f8cc 100644
-> > --- a/drivers/block/ublk_drv.c
-> > +++ b/drivers/block/ublk_drv.c
-> > @@ -1151,17 +1151,44 @@ static inline void __ublk_abort_rq(struct ublk_=
-queue *ubq,
-> >               blk_mq_requeue_request(rq, false);
-> >       else
-> >               blk_mq_end_request(rq, BLK_STS_IOERR);
-> >  }
-> >
-> > +static void ublk_start_io(struct ublk_queue *ubq, struct request *req,
-> > +                       struct ublk_io *io)
-> > +{
-> > +     unsigned mapped_bytes =3D ublk_map_io(ubq, req, io);
-> > +
-> > +     /* partially mapped, update io descriptor */
-> > +     if (unlikely(mapped_bytes !=3D blk_rq_bytes(req))) {
-> > +             /*
-> > +              * Nothing mapped, retry until we succeed.
-> > +              *
-> > +              * We may never succeed in mapping any bytes here because
-> > +              * of OOM. TODO: reserve one buffer with single page pinn=
-ed
-> > +              * for providing forward progress guarantee.
-> > +              */
-> > +             if (unlikely(!mapped_bytes)) {
-> > +                     blk_mq_requeue_request(req, false);
-> > +                     blk_mq_delay_kick_requeue_list(req->q,
-> > +                                     UBLK_REQUEUE_DELAY_MS);
-> > +                     return;
-> > +             }
-> > +
-> > +             ublk_get_iod(ubq, req->tag)->nr_sectors =3D
-> > +                     mapped_bytes >> 9;
-> > +     }
-> > +
-> > +     ublk_init_req_ref(ubq, req);
-> > +}
-> > +
-> >  static void ublk_dispatch_req(struct ublk_queue *ubq,
-> >                             struct request *req,
-> >                             unsigned int issue_flags)
-> >  {
-> >       int tag =3D req->tag;
-> >       struct ublk_io *io =3D &ubq->ios[tag];
-> > -     unsigned int mapped_bytes;
-> >
-> >       pr_devel("%s: complete: qid %d tag %d io_flags %x addr %llx\n",
-> >                       __func__, ubq->q_id, req->tag, io->flags,
-> >                       ublk_get_iod(ubq, req->tag)->addr);
-> >
-> > @@ -1204,33 +1231,11 @@ static void ublk_dispatch_req(struct ublk_queue=
- *ubq,
-> >               pr_devel("%s: update iod->addr: qid %d tag %d io_flags %x=
- addr %llx\n",
-> >                               __func__, ubq->q_id, req->tag, io->flags,
-> >                               ublk_get_iod(ubq, req->tag)->addr);
-> >       }
-> >
-> > -     mapped_bytes =3D ublk_map_io(ubq, req, io);
-> > -
-> > -     /* partially mapped, update io descriptor */
-> > -     if (unlikely(mapped_bytes !=3D blk_rq_bytes(req))) {
-> > -             /*
-> > -              * Nothing mapped, retry until we succeed.
-> > -              *
-> > -              * We may never succeed in mapping any bytes here because
-> > -              * of OOM. TODO: reserve one buffer with single page pinn=
-ed
-> > -              * for providing forward progress guarantee.
-> > -              */
-> > -             if (unlikely(!mapped_bytes)) {
-> > -                     blk_mq_requeue_request(req, false);
-> > -                     blk_mq_delay_kick_requeue_list(req->q,
-> > -                                     UBLK_REQUEUE_DELAY_MS);
-> > -                     return;
-> > -             }
->
-> Here it needs to break ublk_dispatch_req() for not completing the
-> uring_cmd, however ublk_start_io() can't support it.
+[Cc'ing Eric, Mauro, and memcg folks]
 
-Good catch. How about I change ublk_start_io() to return a bool
-indicating whether the I/O was successfully started?
+On Mon, Apr 21, 2025 at 12:17:23PM -0400, Joel Savitz wrote:
+> Fix the document title and reword the phrasing to active voice.
+>=20
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+> Changes since v2:
+> - Fix another typo
+> Changes since v1:
+> - Fix spelling of resource
+>=20
+>  .../namespaces/resource-control.rst           | 24 +++++++++----------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/Documentation/admin-guide/namespaces/resource-control.rst b/=
+Documentation/admin-guide/namespaces/resource-control.rst
+> index 369556e00f0c..553a44803231 100644
+> --- a/Documentation/admin-guide/namespaces/resource-control.rst
+> +++ b/Documentation/admin-guide/namespaces/resource-control.rst
+> @@ -1,17 +1,17 @@
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> -Namespaces research control
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +User namespaces and resource control
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -There are a lot of kinds of objects in the kernel that don't have
+> -individual limits or that have limits that are ineffective when a set
+> -of processes is allowed to switch user ids.  With user namespaces
+> -enabled in a kernel for people who don't trust their users or their
+> -users programs to play nice this problems becomes more acute.
+> +The kernel contains many kinds of objects that either don't have
+> +individual limits or that have limits which are ineffective when
+> +a set of processes is allowed to switch their UID. On a system
+> +where the admins don't trust their users or their users' programs,
+> +user namespaces expose the system to potential misuse of resources.
+> =20
+> -Therefore it is recommended that memory control groups be enabled in
+> -kernels that enable user namespaces, and it is further recommended
+> -that userspace configure memory control groups to limit how much
+> -memory user's they don't trust to play nice can use.
+> +In order to mitigate this, we recommend that admins enable memory
+> +control groups on any system that enables user namespaces.
+> +Furthermore, we recommend that admins configure the memory control
+> +groups to limit the maximum memory usable by any untrusted user.
+> =20
+>  Memory control groups can be configured by installing the libcgroup
+>  package present on most distros editing /etc/cgrules.conf,
 
-Thanks,
-Caleb
+Looks good, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--pgt4JicpTY9IIAZU
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaA+QlwAKCRD2uYlJVVFO
+o7/ZAP9oWQHSgwNIJsXWK5L2ohjr2wvXaOpCzc+Q10NdAEeL3QEA/gCwf0OB8Hj+
+zHhuqXi8a5rRf5+8b8HMOc1aPBeQBw4=
+=DtNU
+-----END PGP SIGNATURE-----
+
+--pgt4JicpTY9IIAZU--
