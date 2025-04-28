@@ -1,114 +1,146 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC46149C64;
-	Mon, 28 Apr 2025 15:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208F0269B0B
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745853527; cv=none; b=qqsRhataGg2rbYLkaTinf6Q1FCtFxiMYCL9ek8WdxK4eau3nyEqr07D8tG9EZmBQ2zTq5LpJ8cui8jyLBbkGnKQ0JA/RW3JKpYXz5zefoOYVElm3+kR1/ZzsTW+bpIkBkLI0akRgyNpBTucmy5BvcW6UEHrsuJTbK34IYaaYsac=
+	t=1745853829; cv=none; b=EiWufV54IVDhloXJCkswv/3pwY+bibooXcEG+TfjZsN1rcJttqvKG0RacRdTW4XsJf/z3TZkbBTTmsIP4P7OPTXc9UdMGrp5YzvFD2En0AQsJILwb8NF/0T1dgPx9x8G4Az96/MHxExbsnWEDcPXk8VgVqasunHdth8RzdVYPVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745853527; c=relaxed/simple;
-	bh=S5kZANsls9MU1jQapT7zNFbxF7EWA8i0Z3uUdx0AWh4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d9UCXfgifcamS81RV8moj+Hd7DRa/VyZ01oAut6CvIEET7FrCdzdipxw8i2GHRXLEbZtq2IKWS+sIMwoAyi3UKBV0YaA2zklYCQIethlcJAvcUX1x5qdCPGm/FrMf65PvKtpJnh6staXP6+dJwKSqaWk8ZBE7GZCbO1CiLFhiSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kqLSa4iZ; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745853829; c=relaxed/simple;
+	bh=DlngDrpSAJU1CgBcg6saWcOelaYTUbK5pSWA+0iQIFE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ocvW+paLL2MMaFz+kfIDInT8cDPsH+XQLhHNcW9JM0nmKV+EpqayYd6EQsOe5zXWngx8dXhW94NjB6+d4JGm0djJFvWP6QEiccgrc2YhnTPW04mqT/iQFrhnySJ5+Uyu8ulcsRumcn5RCLPOZQ5iAzzV89kjdGu94xJhIAP6NJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VcVquC4R; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqLSa4iZ"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3105ef2a071so48617411fa.1;
-        Mon, 28 Apr 2025 08:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745853523; x=1746458323; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O5KI4iCYzUE4mcEDBVLQLUdVyhSyVSWFm4H2BuphI+Y=;
-        b=kqLSa4iZr3+PwjwqWq2ATZZHQ6wvsUImIKSWKfBUBUhTmd/KDozKMcO1NA7wYG4Cz1
-         idCwHGr1HClgLoxEoTTu4BU+OOH5OzmovP6IlViigbNZ3JllHxY2qai6DeQOBFpR8iXi
-         2kb6VkV/869Ao8/dDICUAALZnJgAFLkW55El83hmGxVZ/wgDNdH3WfAt9owUEBqUMtL/
-         axzTWXeIyvqWiMKYA5S0ZD8ZUbA/lScAIhqMaGRmM/J/F5EgSrcapJfBwCqg0HvKVuDA
-         VhpJ2P+xS97xwGReG1cHaDoDfZh1cs6t2whXj6wgxlsFrHeY8AfQSUEHo17ZW0riJGis
-         CzMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745853523; x=1746458323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O5KI4iCYzUE4mcEDBVLQLUdVyhSyVSWFm4H2BuphI+Y=;
-        b=j04blJrilr2XrIEPfHvHncTI2DPtsjFAKsGvPkUODjiPUqt3slSOfY4j6Y+7RnyCu1
-         l2bRZatz2VfF8d4h68RB6XFZbWX0gAth6Z3v3IfIP3eBIS/QgO/48auycvLmwFGyTqgH
-         nlJYEtilu8vQXV3fWbAVeHzbEqJQRnnowzxdEG63cftYbnpSjNpA1vy3IRWKhxCMcoqJ
-         3OKp4JvZ++MVEx2Yx+1Oi8V/Vsy4y/R/E/kw/b/JuT96XufFvqLk0PmjCHF1TqR+Xb+F
-         +h9junJlxWbCqXW53A8Lu8FEzOAtSN5H7d2JlO8mvM/GcyOVMksZKnSvUBuQmAHQs41Z
-         yiXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0QNHxJE3kdWGbbdt2yysCim1/fbflJxZImkY1995kw1PgYX9QZA7k1VFfCUZKefAYQa5mn3yNVqquNA==@vger.kernel.org, AJvYcCVvy+MuABVk7IE2Ugbilu8+wTA+hfJ2CWiSPIDELP6CzoqSO4hXaIKyD1upY+JYnJ9XKbMnsY1oRJG39jI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0BVqbxNuKsk2dcCvQGa0i9IWgFjfxlBgy9DptjNA8Hr/Xra49
-	eE7W6ZKwnv2/HaWLewa37Xt6YzoPqlbyE9BiDdp6aW2kj+zSpTB8/ym8EPFs
-X-Gm-Gg: ASbGncsIJdn4+A5v114CHLwYZMVb+EIZ8n9pvcV5zpNFKf+8ITgmGazOvWysdHxoprj
-	hjJXxUIo3KR7ByfDvWlc+zq0RO04ryjJoAxCt3LaC9p44A+pKnBNf7Oy8TRGXtE/fq9jtcPkKA9
-	6L5OxruWWPK6NkpHoT3KFeLoBFzRxKZkhHRmlL2F+a4Ws4wufRv3uK8IfQgXzc74sDqE4cu6vAv
-	3ZaIZd9fDxeeD+gHjm5eRvyNk/l3sgd+nK11JWxqfiGoruDTnmTSkzA+mpCLbCjUgSfrHeCCIIP
-	11eRL/7S11SEBp29f8fqmj96Xy5j1W/pQbR+njrFMXBY690zZvA9HSNO9mq/iYiR99loGhHO/E/
-	QEXs=
-X-Google-Smtp-Source: AGHT+IFH9kBa3gbYhE+I/QfTW2KgG031/GHYhbw2sykrAzVlr2hwLhgjIl2l51QIZCAFm/Sbh6U1nQ==
-X-Received: by 2002:a2e:b888:0:b0:310:85ba:115f with SMTP id 38308e7fff4ca-319ddd667c7mr37026941fa.33.1745853522855;
-        Mon, 28 Apr 2025 08:18:42 -0700 (PDT)
-Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317cf659c4fsm21262841fa.21.2025.04.28.08.18.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 08:18:42 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 28 Apr 2025 17:18:40 +0200
-To: Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: linux-next: duplicate patch in the paulmck tree
-Message-ID: <aA-cUPL6NZEms1ZY@pc636>
-References: <20250428175438.0209858e@canb.auug.org.au>
- <aA-RAjmhvIbI_z9b@Mac.home>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VcVquC4R"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAed4A022802;
+	Mon, 28 Apr 2025 15:23:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=NREGAPGQsiBxhVraNlIqNTVtWZA576N2w2dMZUE1N
+	AY=; b=VcVquC4RRooloBZ2a7LKxpGmWTmntiIkKHp5BVZVwC1yhf5Q27HzOa0uK
+	zTzc4krTZakiA3hxqZ7nTu+YDC2rlsSJtQvJ7gk+FHdCtidgYE/T2mNQ2tSE1XCZ
+	s3YpueF1S8WIHlNSG0FKcDMK/dbAihd3jBzvXU5RPMgCr0glJ6X0Z0M3bEOgOFom
+	BcWyK1Ahpp4No7BBblUQDHM7FuC+OlZ+nASmPo9ww541dSM+U+R4n//eo5SSdgbK
+	N4QT/O+D7fKm/PIa7Vr0ZEX1v6W/Yb+N2OLnVBFXVeJ5fjP3cgcKja153AUzBuQX
+	FojBG0QG8jhvYACilJThH8sKPuGnA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46a84s1bvy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 15:23:08 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53SFN8fg024180;
+	Mon, 28 Apr 2025 15:23:08 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46a84s1bvv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 15:23:08 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SBZDV1001799;
+	Mon, 28 Apr 2025 15:23:07 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469bamexx2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 15:23:07 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SFN3oL31064542
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 15:23:03 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 109B220043;
+	Mon, 28 Apr 2025 15:23:03 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 37F9220040;
+	Mon, 28 Apr 2025 15:22:57 +0000 (GMT)
+Received: from li-e1dea04c-3555-11b2-a85c-f57333552245.ibm.com.com (unknown [9.39.30.54])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Apr 2025 15:22:56 +0000 (GMT)
+From: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org,
+        neeraj.upadhyay@kernel.org, vschneid@redhat.com, tglx@linutronix.de,
+        frederic@kernel.org, ankur.a.arora@oracle.com, sshegde@linux.ibm.com,
+        bigeasy@linutronix.de, kees@kernel.org, oleg@redhat.com,
+        peterz@infradead.org, tzimmermann@suse.de, namcao@linutronix.de,
+        kan.liang@linux.intel.com, mcgrof@kernel.org, rppt@kernel.org,
+        atrajeev@linux.vnet.ibm.com, anjalik@linux.ibm.com,
+        coltonlewis@google.com, linuxppc-dev@lists.ozlabs.org,
+        Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+Subject: [RFC V1 0/6] Generic Entry/Exit support for ppc64
+Date: Mon, 28 Apr 2025 20:52:20 +0530
+Message-ID: <20250428152225.66044-2-mchauras@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA-RAjmhvIbI_z9b@Mac.home>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Mchsu4/f c=1 sm=1 tr=0 ts=680f9d5c cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=XR8D0OoHHMoA:10 a=DsuCdF12KTDp4NqqrKwA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEyNCBTYWx0ZWRfX+rPuy6ApPZAw 9oXxxxHmPcxnEPoQO2Xw17aWeFQj5Th2YG2L5fQYhYQiB/XOFpNhcETqkRBQ1VNhoHPHcIAvvri xxNAF85ettyP7AWfFmAyMwXqwwIi8cO3YQnRIj3qX1mYtd7OeQsrOK4MjFei8B8unU1WTzu1/XS
+ PVf3wexZ3GfozRoGpyvwu+wNnV1DV8hBc+TGWR8RlL+/YnPGPNkOfO+6mQbYclLHa3IBQSs5xAc oe72f4KN0kx+DoxTfj7cFijaUL1I2D5efuhRUxlwyYmrYZMe9STEHsyi/FAhov3nxl99Zqb1p4G nhdCTWEJLEDGhF2ZAyV/RkDvQHlcjMBKYyRTqDSsJegnrj6DHmwgarcw8D7tNL8C4fuXQeynRS4
+ HRDvRiE/HeNpSYz+DFWfsThsmQsxWZ1XoOgGGHpRDvzYhlaSMfhrinoiC0wMjqQgnD0HuScu
+X-Proofpoint-ORIG-GUID: cloEjq8kPuPb_0w3RuAky1WIVkphzUGU
+X-Proofpoint-GUID: 6cilolTtHhyjrqOQgKnE3NJ23TppTuz9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=734 impostorscore=0 bulkscore=0
+ malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280124
 
-On Mon, Apr 28, 2025 at 07:30:26AM -0700, Boqun Feng wrote:
-> [Cc Joel]
-> 
-> On Mon, Apr 28, 2025 at 06:08:45PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > The following commit is also in the rcu tree as a different commit
-> > (but the same patch):
-> > 
-> >   5c9e0062989e ("tools/memory-model/Documentation: Fix SRCU section in explanation.txt")
-> > 
-> > This is commit
-> > 
-> >   8e40035aab95 ("tools/memory-model/Documentation: Fix SRCU section in explanation.txt")
-> > 
-> > in the rcu tree.
-> > 
-> 
-> @Joel, should we drop this commit from rcu?
-> 
-IMO, it should be dropped from the RCU tree as soon as it is from
-another kernel part.
+This is a syscall only implementation of generic entry/exit framework
+for framework for ppc. IRQ handling is not done in this RFC. 
 
-Paul was about to deliver this via another track. But it can be that
-plans have been changed.
+This will break the ppc32 build as of now which will be fixed along with
+IRQ handling.
 
---
-Uladzislau Rezki
+Below are the performance benchmarks from perf bench basic syscall.
+This is for 1,00,00,000 getppid() calls
+
+| Metric     | Without Generic Framework | With Generic Framework |
+| ---------- | ------------------------- | ---------------------- |
+| Total time | 0.904 [sec]               | 0.856 [sec]            |
+| usecs/op   | 0.090403                  | 0.085638               |
+| ops/sec    | 1,10,61,579               | 1,16,77,086            |
+
+That's ~5% degradation as of now.
+
+Mukesh Kumar Chaurasiya (6):
+  powerpc: rename arch_irq_disabled_regs
+  powerpc: Prepare to build with genreic entry/exit framework
+  powerpc: introduce arch_enter_from_user_mode
+  powerpc: Add flag in paca for register restore state
+  powerpc: Introduce syscall exit arch functions
+  powerpc: Enable Generic Entry/Exit for syscalls.
+
+ arch/powerpc/Kconfig                    |   1 +
+ arch/powerpc/include/asm/entry-common.h | 158 ++++++++++++++++++++++++
+ arch/powerpc/include/asm/hw_irq.h       |   4 +-
+ arch/powerpc/include/asm/interrupt.h    | 117 +++++++++++++++++-
+ arch/powerpc/include/asm/paca.h         |   1 +
+ arch/powerpc/include/asm/stacktrace.h   |   8 ++
+ arch/powerpc/include/asm/syscall.h      |   5 +
+ arch/powerpc/include/asm/thread_info.h  |   1 +
+ arch/powerpc/kernel/interrupt.c         | 153 ++++++-----------------
+ arch/powerpc/kernel/ptrace/ptrace.c     | 103 ---------------
+ arch/powerpc/kernel/signal.c            |   8 ++
+ arch/powerpc/kernel/syscall.c           | 117 +-----------------
+ arch/powerpc/kernel/traps.c             |   2 +-
+ arch/powerpc/kernel/watchdog.c          |   2 +-
+ arch/powerpc/perf/core-book3s.c         |   2 +-
+ 15 files changed, 336 insertions(+), 346 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/entry-common.h
+
+-- 
+2.49.0
+
