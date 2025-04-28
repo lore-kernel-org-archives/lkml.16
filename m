@@ -1,147 +1,113 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107AC1F4631
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2D81FFC5B
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826352; cv=none; b=UJ51uScX0nipdhxekEAED2Qk6q3QuJM8B4tc1BgJwvRrwBp1MXvxBJYI89Kinx14kUcWsbuaDPzVGlPO7y8aG1hc3OyhJZdKA1Ue+uB+Sh9+7Qpwf0Mu85mJeHwlHGqMOoh94lxN22wR18NqQvgl49qBwslYJkM7Ecbbf8YE2SI=
+	t=1745826357; cv=none; b=WocIcwZD3DYuyAC2yHs4DR1nFhTZ6GUoJDG+spC/7GK1AwnuA0BKstp3jH98OaPakSjSuryA630NaqxS5Xji8PLoGy9Lfd4uY2y7WJlNfKJ4TISMuF1lJ3RRZabjtT5UQo6hoxlmRSyh4KteTVQryPleSkB25o+YEwMq/N1R/QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826352; c=relaxed/simple;
-	bh=dKdwld1K15qYqC7KADuP8DoNmglOc6igkyzr/XL0LKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HlQcKdypZrC/1xliumhHvC5OpD1sF6srqx8IaG32Un33+5ySr/LBQYZenjJHv13Qx8apX5JrhRHyqX48UAacfbFQ2UoPp6RSgi8jABt+6v0TD6kO1pzrOeIP/v3zPqFUjATp/oXHBBGVJnJP027R9qLO/GkD4a2ewq07sUNsNNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZRH9g+Oa; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745826357; c=relaxed/simple;
+	bh=A9JZF2x0XBPNe0xhvFBjMVJ04N3DDFd23ten+mIE6ZM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+dKQ0fYkvBl81Sc6pw4HGitpMLUAsIOo4l/excr8W60f9CiQesRD+DOO+Ct2A0pRtjF0OgPPrIG7OAvnIW3jWtc61H4Nh+S6WlAUIVxS2pX9eHFfmkqgXH8NIh01/RefONDRqZsDc25G+TNZUwBnf8DJAd9vbNJY/F/9giV1Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RBbJO0bL; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRH9g+Oa"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d6f933152so5980527e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:45:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RBbJO0bL"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so29197665e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:45:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745826349; x=1746431149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dKdwld1K15qYqC7KADuP8DoNmglOc6igkyzr/XL0LKQ=;
-        b=ZRH9g+OaoAaKEMW9eiISvITJdHnx33OGA/dj/DM2wB/MsBtyaxBB9bvABdB2u/r3kW
-         oUvW3XoFOdwLHS97YkaONHoTNJHlY08QimH4FpgKJCf9q6XgQIbUeHRUo90kep7uHT+3
-         oqFl6QW6CMgwkvh4P9L+MjZ8X4NUp5NP9yNS7axEtmDIn788wpCaiOuxbkNWGwE+szL3
-         tZXdOuZDrDLcz2s3nbT3DcfiTIVOlz5hGGmQfGCjBXuKPbgMRMS/uwy+dXoZWuQyXOrm
-         TkJcmwrJO8skPiiDr4S9WZFcH7AU157ANdcAaJb6ub2PH1OMYSWNVLgirOyScCqG1S+z
-         kpgg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745826353; x=1746431153; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cn3fzPLnrYDZ8b8q63yC0G6po3q9MyCtc16aUo0tzk0=;
+        b=RBbJO0bLPqiovucsfsoHIgzN6gC9ETDcQaWadaot+VSdpBc+8HV/C2iF2veZ6jBFJc
+         zVqnmoqOktwmiAVC0xMOf4cELe42E8+mbkW5oEma4l9K5lh8ARpg3Kc3LA5Gee1X81vp
+         OpW/15eb/MnCS9wvFUe5XSkS2/XZ4TuC8fq7JhIVCl/jDdugipQBH93Iveb5Tl9+QH2w
+         HvsNo/g+4MeBmvgQbxMywLD/S4eHqkvDPnluoREpumK8En4Ar71h9dKp1qyaUHosdcDK
+         m3iHIVlzrZZzalrhYlWHnwSsTuViIazrmKou4QsCD5hZKFAAgcXORlZtXuA8qfM+TNA+
+         E/CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745826349; x=1746431149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dKdwld1K15qYqC7KADuP8DoNmglOc6igkyzr/XL0LKQ=;
-        b=RMLsaG2Lj6wN+uf/RST8ICa3K8EV7WlAx4sjDRcAdJr54WKJzDDhZYtpNPXGHRUXkJ
-         V+tXGBTYsL3Pesl9Dflj11oFvwzHRKNa3qi3zS3E3v10djER0ukSC1J3Zc4yxBoJh/AB
-         tTBUPy0YI2fYtUMGf7Ee4eGUr7SXTCL7oRtU+QjwCi1KufJet9GqPQO/xMFn8U4OiEme
-         ry8vyaun6e0EEvN1gtX4xUOh+wDplI4Oz4Io3MgJOUZckah/M/S9snY3NL5sx6C6Mcaa
-         K6CzmSoAeUsNAkGj4t2BuxO+tr5SBn1jo165nTkq+MmxhQlmnZSW3lWzNdvnz4n55QUH
-         /RiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUq2Mu9dT4POuzowDGdZGFclKXOuCFEAgQLNBV7pQrWgw9Tt1vX8qEka5RbxDrm0fHzD7WxfV0+05/JgPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4hxyeULuLejU62gmw7lgSV7OVuW1c8W7j7AJD24xnVl6oEIt1
-	FlwPrWpahf5/CdyzlmCmjYzUdKOdmaszmh35Hxr12drSKkb7R1QH
-X-Gm-Gg: ASbGncuqX3ByoQnPlQENWYlPYInIzfqQr5VnQlzccSyPwkIar4WQVAOaxNhpziyRcuK
-	ayeNDEsvDdIASw6ln/Vzq2OPamffiw+iSXZsXLnX/7liP4Ca+ITjMODcs3KZn7Pq7ywaes6PAv3
-	waieUGmKMt4Bf/h6ElxTu4SIDyV1/wDxEQIZTHpn23FGgM5n97SmDbR5SjVn2r0FVX4KSLAo70d
-	apQz/9kKRFzcNHIos+ndBiCb09m5QumYv+U7GZo/XaIXf0O+jtNgxhs/raASKyX7AvfbcarTbWP
-	zOW1fpO4Gegx9WvJpkCrU4SvAWJ4f/5RNt8m7h7sd0ptP+Di8ikEn19pU5WIghsJlYnT7alKgxd
-	Kmw==
-X-Google-Smtp-Source: AGHT+IEWTkLzNXmtUJ1cyJ6I8VC5CcRe2grkI2qhYbv567ugil6j6yVGJUpuggrbLqJgyixmX+oOIA==
-X-Received: by 2002:a05:6512:3b22:b0:54a:cc75:3d81 with SMTP id 2adb3069b0e04-54e8ffb7fdbmr2198951e87.4.1745826348821;
-        Mon, 28 Apr 2025 00:45:48 -0700 (PDT)
-Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb803fsm1582164e87.228.2025.04.28.00.45.47
+        d=1e100.net; s=20230601; t=1745826353; x=1746431153;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cn3fzPLnrYDZ8b8q63yC0G6po3q9MyCtc16aUo0tzk0=;
+        b=YMoVl0WWXqc+X91vra+tgOVU1kiKd/zMydxJAzYgYDtSz+ZHZK12BcyraErMHclkK/
+         zxGmIwiln1ICbJCV4cUJkmuw9Uyz4VvzYQC7IIF+hK/NNcTVEfZ2OZFwNUB5gg+3by8f
+         f87dBvyBTZABUUOpM9UQIu7XiBbMRMtLBG/9nlkQzZCCHl9ugT5FneWPbPrmzMPY8kcy
+         6gw7POUGZ0O8PFkZbx+L41qkmrSEI1rBuH3IP5PDkrd/M9rbPmJXlgT0IPjoxclNrC9D
+         XnENOfWgBNKgzAOalBRR1vfPgTqJ73r7TBgi4rXUVWpCh4q5G2IKxnVaBdZhjYwbSk4D
+         FI4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWOl1ZudcJu9PEVdXtxjJP1B3SO9RiaMvssHvEjT+ZiHNtv6MAApdxQunHr7BVgqNjX6JK1tVfx/TpckSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8S4qBCnUSCyPHJ+f6GEF3kmHOK61bYKsJOENy88Ms44cxRKqq
+	7mwUE/Yx09EPIoWwKqWcpnKGzKsqAqQMgsgBeeQgY4ewUqQa2HPQb93Ftv79flc=
+X-Gm-Gg: ASbGncurgdpqax5yJwkswVAYCtsenEE8qmRzDgXvLT3YDa6xi1erDIard54Phi16ID+
+	3sZv3pPlAmJ1o/klVMY1mkziO4toKb29Mv/tKOtPLRLwB2y2I7gPiB9NzFQ/BmkEJGL866+Y6kV
+	eMxVw321Mj7SmkFECs8GQNZrE/DVcs6geg4fNI5KdstPXrrgNtGTt21F8ornOtjlolN8uTxxW/s
+	TdXTZ7DX9R9P/ZceMtVItMsPfhIrPiQ4up92wH7M/lPRjPYAezf1zkIuwhOJCMTCskPvpLm69nI
+	D7M06Der5k2LjDA1DHJJDYoeo/J2kumP1LpQHnC4JA0CNBgtkmA=
+X-Google-Smtp-Source: AGHT+IFXl+ZQU0ypFUQJa+vOS+GCJuZ5zXtYcKI1hR5mhmtP9vTQGxLja6fjO+0lItJcB6b/6fvuwg==
+X-Received: by 2002:a7b:c305:0:b0:440:67d4:ec70 with SMTP id 5b1f17b1804b1-4409c48b0e9mr101655345e9.8.1745826353516;
+        Mon, 28 Apr 2025 00:45:53 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:96f1:a768:3c75:f123])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8909sm120179695e9.2.2025.04.28.00.45.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 00:45:48 -0700 (PDT)
-Date: Mon, 28 Apr 2025 09:45:46 +0200
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	David Lechner <david@lechnology.com>, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/sitronix: move tiny Sitronix drivers to their own
- subdir
-Message-ID: <aA8yKi0QDCg1k8mS@gmail.com>
-References: <20250428-sitronix-v1-1-4e7cc0a8195a@gmail.com>
- <877c3421tb.fsf@minerva.mail-host-address-is-not-set>
+        Mon, 28 Apr 2025 00:45:53 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Raag Jadav <raag.jadav@intel.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: immutable tag for the driver core for v6.16-rc1
+Date: Mon, 28 Apr 2025 09:45:50 +0200
+Message-ID: <20250428074550.16190-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3/OfVP2ovH6knViW"
-Content-Disposition: inline
-In-Reply-To: <877c3421tb.fsf@minerva.mail-host-address-is-not-set>
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---3/OfVP2ovH6knViW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here is the tag containing the driver core dependencies pulled into the
+GPIO tree to enable picking up the final commit from Andy's series[0].
 
-Hello Javier,
-On Mon, Apr 28, 2025 at 09:16:32AM +0200, Javier Martinez Canillas wrote:
-> Marcus Folkesson <marcus.folkesson@gmail.com> writes:
->=20
-> Hello Marcus,
->=20
-> > We start to have support many Sitronix displays in the tiny directory,
-> > and we expect more to come.
-> >
-> > Move them to their own subdirectory.
-> >
-> > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> > ---
->=20
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->=20
-> You can also include the following if you feel like it:
->=20
-> Suggested-by: Javier Martinez Canillas <javierm@redhat.com>
+Bart
 
-Oh, yes of course, sorry for that.
+[0] https://lore.kernel.org/all/20250220162238.2738038-4-andriy.shevchenko@linux.intel.com/
 
-To whoever applies this patch, please add the Suggested-by tag.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
->=20
-> --=20
-> Best regards,
->=20
-> Javier Martinez Canillas
-> Core Platforms
-> Red Hat
->=20
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-Best regards,
-Marcus Folkesson
+are available in the Git repository at:
 
---3/OfVP2ovH6knViW
-Content-Type: application/pgp-signature; name=signature.asc
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpiod-devm-is-action-added-for-v6.16-rc1
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to e383bb8f958444620d96386811aacf6a49757996:
 
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmgPMiUACgkQiIBOb1ld
-UjKEmA/+Ns0AjP3rVWn0ZDwzM7oCpcYNsMQAloJuJBGEQlKWShRXkhUkMf3OwVl2
-pnb7joWHLWqDtbqWk5zwnRAiY5aHp9LNOIicmWSyt/dJaVr8afICTL1Z/s87JmSu
-ygcxv96iAwPu07CSTAh4F0vySz6nEHVbX6lOzcTIQqPQKBohbuJ5pFPeA79qoryY
-xdWVdPhAm9Y1TxtBMAZnkxrzharn8WCzmIMWwMtbEh3a7kef78qAbQuSdjofJyGx
-/H6LiVtMvr0MV71VOuyY9jFo3DtL/KgJrj1/URLJajhL2nREv+4FNer7KHZp8u31
-TEQR8EL8Xf99rOjrPjsCfdcHKjRIkNcwciuq8j12rWKSIuw2+lPuWRuihe4oLWYf
-h+O516gXx7CYwGrk1ZVc9MvSfI2EgXI4jC4SP9wtyCBgYdYsZ/v48hzw25tD7aTg
-30GLWM06dmJuNwoVx5ihqL6piT37bpZ4KaNE+09f0DmQNOp4Ht4YqfTV7KrvOY6f
-oMH3Jp4ANO8/cUCbrnfVRsmAIakKQRiGmkbqXVJ+G9euuCfbfVJ7K+U82zPLZY8m
-Yk/SMKr6JBHN1ofvZRoJTqdkqXnqpBxIrFeAY23SdHmbel/ImnSyQWvj2PbWmPo+
-nz4HeRzDGyL5p265VB7X1OqJGr/C80XnKzA9Tmf6LcoQwjRjaQE=
-=dBye
------END PGP SIGNATURE-----
+  devres: Add devm_is_action_added() helper (2025-04-28 09:30:41 +0200)
 
---3/OfVP2ovH6knViW--
+----------------------------------------------------------------
+Immutable tag for the driver core tree to pull from
+
+devres: Move devm_*_action*() APIs to devres.h
+devres: Add devm_is_action_added() helper
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      devres: Move devm_*_action*() APIs to devres.h
+      devres: Add devm_is_action_added() helper
+
+ drivers/base/devres.c         | 11 +++++++++++
+ include/linux/device.h        | 38 --------------------------------------
+ include/linux/device/devres.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+), 38 deletions(-)
