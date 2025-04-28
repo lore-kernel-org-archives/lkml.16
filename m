@@ -1,120 +1,95 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F6D207A0C;
-	Mon, 28 Apr 2025 07:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B961DE8BE;
+	Mon, 28 Apr 2025 07:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826308; cv=none; b=ZL2fzXuxDD9AattgZZYDobt3zgPhvIavi+E5ACUrHL+nM7C+H44Q/jEZf3Ikfvem0WVnMSA/rsS7LTI/OpzrmNFGm2vzdFQvdPWtvy8Q4dEEw2xGA0jVHR6VSBm+yaaT1y9zmkkJers+RfrgM6wqQtWTph660O6+IaPrgk4cQGc=
+	t=1745826324; cv=none; b=tR5n2ZFmwG3s6WbINeSYAASh/55xoZb54tKIvGWbYJ6RCKUv3gsPN1y/oyrRkLjWEiT2xTOkZJNGx5zy59lqefFO55ZhIxzRtTq7+Vc6bhyQeSyKjVu8LhD0Dn1AkPdkFAxlNKXjLCa87QwRPC8RTvemdz9g9RtX6QxPESn6CUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826308; c=relaxed/simple;
-	bh=sYQ6B7NzsfvqX0//BLuWeqyxFo/2GSTdIjJU9ka+AVo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QGprM3GCEx9juCgp1vS7wMIqhgYE1k/AK2K05i+xoIs+zYyihVLC701J3ZEeU/CH5DKWgv9rZ3Z2KtSKdT2twA+jiMTAbRAbVl9e8LFNABrchbyevXbybYQoJXGR0Aq6i8IUqH8j9k80wk0dKPN0am8jOVEmJMDhI/lqBbAmP0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=G8WL59Q8; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1745826324; c=relaxed/simple;
+	bh=t0Da91DWrbzujPj1g6eKoWgpJ0WoF4h007/WWJU4frk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l5YNIforn1TsV1mg0Q0azQfa0Z8oYyVSwyjHEFMy3RjYQJi8YECmZHSpJ1R0i1Isqou7+uHSI14rqjH48LfFQgxDfIjEnmF+uksQTqXHCYOMZvk9BxcXXOhO1C+8EvayMEBXpC7J71DL9TMQz+yB8paPQ2ra875U9pnlswLiOqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hddJxAKF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="G8WL59Q8"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D536A1026E031;
-	Mon, 28 Apr 2025 09:45:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745826304; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=VN3o0wFrWc57zwxhcG8RbbscKVODx7qIHApQnCHyMCM=;
-	b=G8WL59Q8+75X4Y2yXfprCsSM5C1bmMhplw49Cm/ImjpWNHUxrA542VF6TNkvqaRQmaEbql
-	Hw+nuguCj/kq3wP0XOchR9mb1OaxgHmMeqDLoC79zFOkfdgokA/4AZct/emv/lV3FlAJUZ
-	iWf1Y0ajdfdWjvDC6nCCwo0LZiI8Tcn9KSAJWd6IZpNEE1EBWLkfoCFOgwBdTBlXGDfOm4
-	He7Lp8uiDKu3uhQkKYvxJcQoihLUjFA6a3DcWcb01j5kCfvK0bh960YY5sATa0ZGadSgzs
-	ZxKKmNVglMRBhjHGjOiFmX2K51zWGIQt6N8DPj9BH1Xi+gWXNwRsRBIDbvC1LA==
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next v8 7/7] ARM: mxs_defconfig: Enable CONFIG_FEC_MTIP_L2SW to support MTIP L2 switch
-Date: Mon, 28 Apr 2025 09:44:24 +0200
-Message-Id: <20250428074424.3311978-8-lukma@denx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250428074424.3311978-1-lukma@denx.de>
-References: <20250428074424.3311978-1-lukma@denx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hddJxAKF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B8FC4CEE4;
+	Mon, 28 Apr 2025 07:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745826323;
+	bh=t0Da91DWrbzujPj1g6eKoWgpJ0WoF4h007/WWJU4frk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hddJxAKFJISn2zWBvXWpe1bcwMG1Bww03EhSUYat2xtGuVjmbgrwIntzPhyCCrgiS
+	 cYmxEfK2NNIHTvDlr2qg1U1Jk2rWeSJXf70ViBJ88dsFGuSFapG8lwRwuX7HXVTr89
+	 7TXSJB5eyt3X7uOQpQkJzmjY7/JtFQBgkvWc9kmPZEGxhkGEWvu3vG67vRokCrQkaC
+	 b5wDioRo90sKLnMQVxcRwqSbEvTniIb6etAYizIV6WPW5W/Oo03Fr7bOJM4xECu6vW
+	 es9P4uj9BUYolIcqqxSnPLFkWMR5hynxvveh71EjF2NDMcld/6VQc4UQ47ZuHF4Mrf
+	 G+KKVTDXJRZQQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u9JB6-000000004zK-0H1W;
+	Mon, 28 Apr 2025 09:45:24 +0200
+Date: Mon, 28 Apr 2025 09:45:24 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	laurentiu.tudor1@dell.com, abel.vesa@linaro.org
+Subject: Re: drm/msm/dp: Introduce link training per-segment for LTTPRs
+Message-ID: <aA8yFI2Bvm-lFJTl@hovoldconsulting.com>
+References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417021349.148911-1-alex.vinarskis@gmail.com>
 
-This patch enables support for More Than IP L2 switch available on some
-imx28[7] devices.
+On Thu, Apr 17, 2025 at 04:10:31AM +0200, Aleksandrs Vinarskis wrote:
+> Recently added Initial LTTPR support in msm/dp has configured LTTPR(s)
+> to non-transparent mode to enable video output on X1E-based devices
+> that come with LTTPR on the motherboards. However, video would not work
+> if additional LTTPR(s) are present between sink and source, which is
+> the case for USB Type-C docks (eg. Dell WD19TB/WD22TB4), and at least
+> some universal Thunderbolt/USB Type-C monitors (eg. Dell U2725QE).
 
-Moreover, it also enables CONFIG_SWITCHDEV and CONFIG_BRIDGE required
-by this driver for correct operation.
+Does this mean that the incomplete LTTPR support in 6.15-rc1 broke
+adapters or docks with retimers in transparent mode?
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
----
-Changes for v4:
-- New patch
+You describe at least one of this patches as a fix but I'm not seeing
+any Fixes tags or indication that these need to go into 6.15-rc to fix
+a regression.
 
-Changes for v5:
-- Apply this patch on top of patch, which updates mxs_defconfig to
-  v6.15-rc1
-- Add more verbose commit message with explanation why SWITCHDEV and
-  BRIDGE must be enabled as well
+> Changes in v3:
+> - Split 1st patch into 3
+> - Simplified handling of max_lttpr_lanes/max_lttpr_rate
+> - Moved lttpr_common_caps to msm_dp_link (not msm_dp_panel, as LTTPRs
+>   are link related, not panel related)
+> - Picked Stefan's T-b tag (last patch only, as 1st one is getting split)
+> - Droped Abel's R-b tags from 1st patch that got split due to high diff
+> - Fixed alignment issues, initialization of variables, debug prints
+> - Moved lttpr_count to avoid ugly pointer
+> - Link to v2: https://lore.kernel.org/all/20250311234109.136510-1-alex.vinarskis@gmail.com/
 
-Changes for v6:
-- None
+I tested v2 due to the dependencies in msm-next and DP altmode still
+works on my X13s and T14s (while not using any docks):
 
-Changes for v7:
-- None
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
 
-Changes for v8:
-- None
----
- arch/arm/configs/mxs_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+> Aleksandrs Vinarskis (4):
+>   drm/msm/dp: Fix support of LTTPR initialization
+>   drm/msm/dp: Account for LTTPRs capabilities
+>   drm/msm/dp: Prepare for link training per-segment for LTTPRs
+>   drm/msm/dp: Introduce link training per-segment for LTTPRs
 
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index b1a31cb914c8..ef4556222274 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -34,6 +34,8 @@ CONFIG_IP_PNP_DHCP=y
- CONFIG_SYN_COOKIES=y
- # CONFIG_INET_DIAG is not set
- # CONFIG_IPV6 is not set
-+CONFIG_BRIDGE=y
-+CONFIG_NET_SWITCHDEV=y
- CONFIG_CAN=m
- # CONFIG_WIRELESS is not set
- CONFIG_DEVTMPFS=y
-@@ -52,6 +54,7 @@ CONFIG_EEPROM_AT24=y
- CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- CONFIG_NETDEVICES=y
-+CONFIG_FEC_MTIP_L2SW=y
- CONFIG_ENC28J60=y
- CONFIG_ICPLUS_PHY=y
- CONFIG_MICREL_PHY=y
--- 
-2.39.5
-
+Johan
