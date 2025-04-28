@@ -1,99 +1,121 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF34268C51;
-	Mon, 28 Apr 2025 16:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED76027A121;
+	Mon, 28 Apr 2025 16:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745859036; cv=none; b=CnxAZeKdihO0rbc9KQuORb9rSayigg6zHjTlwCG1BqSMJsFpkzlAUL3o4/t55CPErI4oecxS7+TZEHqxA48b3N/sEjWSWeWeKbeU4d0hgMEUt5uqKr/b8PMaRsck6zSiaVP/SQmemEUk3cilf7u5WL+JisdGfEHlGB7H563yCr4=
+	t=1745859055; cv=none; b=cBXI5RG0ElL8gx6s9k64Ij7jMvHE0LBwlEjyV4Gw3jH8NiZv0ISG5pUahj3vDm7a9hTPmKGP7VthevX/+FJeVA63zUcZ+cYb5jBIXm6fEnQG6sUoxKU/KUUnEImFF7cEe1uvaKMvurVeqlVg3o/dT/OJxVmTisUx0oOrdi48tGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745859036; c=relaxed/simple;
-	bh=jDCO39/hs+ZwMillcnuEdfEDY+rJe1BnRJvppt32CF0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eZSPee2S3pH3EYwHxc1C0GEFuMoGEtSLitGqs71ZBF7H68KW0yEsQfZ5m5n2VY9Nq2JKvNoV7VUjSdYkCfeFU/Iz4M3UsxWbpPta3DLK4AjIzOvG11dJom5bQJNHPKE8Gm25sAi5uAyTc11s9Q0l2xAhvb/SJHAwxiKdH4vKSuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YpD1hQQj; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745859055; c=relaxed/simple;
+	bh=w8GeZnfKH54B+v/IYdcqkdWVdQCakOpqtic13lGX4Zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N0/ulx63MpS1VXG2KDAtRFi4k7cHttKCFFLbiAOFaXKyX+u1jesN/p92yxlVsJ9myE6bpK69wHUcWNshFm/YP4PgiCiU8i7Uv5V2mMuYITZyT8gK9jD/UCpqHgSOcTHy9mgPwnF5HeWcmwm+2scelj7ZA9mbwQaIb97IWRxRx14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl1YQ7se; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpD1hQQj"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so3017517a12.1;
-        Mon, 28 Apr 2025 09:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745859032; x=1746463832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jDCO39/hs+ZwMillcnuEdfEDY+rJe1BnRJvppt32CF0=;
-        b=YpD1hQQj0X65SKOSDPm2WKk7V0Gdd13jCcShqT4cIUau5DMAE0oHu+F0NHqOn7i+Do
-         fzxB2pU2+z00mQ+lz9fosf4Of9H69yOSBXkDCJS2Q/S8bz0fbGxeuKbCod0x0krKhm2V
-         Kh6gNvgQ+XHg47swrB8Im96md2qrZkL9D+nXD+au9xy846mZFkZufnracH+SbwxVzfLD
-         O83E7UL7Nx9X0k4xKUbfEmXZzF4d03tC2y3pn85720BZCe7rH2K1WTh1fgPZpKfzjgCX
-         3TqExBVpYBSS9AzbhEGSJQnCum/vE2fDBAeuKbvxn5QUnOmAnKJommQ9OGKK2BXn0Mjl
-         aLMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745859032; x=1746463832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jDCO39/hs+ZwMillcnuEdfEDY+rJe1BnRJvppt32CF0=;
-        b=HQLoYXF2zk4CIkMpK+zaI37k27TDeK2CMSh6LPgwc7/9QgOoP18dvAXN+R2jr0N0RP
-         Tu2vTiPBaVGGJWAEAtgDl4Hbz9WqmtnXjd8A2yPfsFDQlBUd+MtZHPF2sET61wiiT4VK
-         l/TmwOF54d/1UaEksJ1azZeJe+lhxGTo0s+AU2G5tsqL4lMNaxNKG9ts+dqAwp8ek4x6
-         UWWanT+W6wAKt+TnoklNxtpP6EsMW4VmtiPeow9W+ZZfBnabXFlKE/5NTgnnpj9r1x31
-         SSvf1fUgfDXTuVRLVbC+sle8gvKqxVijSrf6aLKCmrEMRYQzhGj+6AzObfgWgQZj2M0m
-         OjZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxQ4K2FOQAbMc1D0SOAPnR11ReFEpE1Jkm7NZc5fev51BBHSj8BIg3883EFRx7HvGawjMhABXOz5AxgY8=@vger.kernel.org, AJvYcCW/N9hz/v+O6Wntdpn4AyWWfWVXVprR7cATgKKWBPQ/kTdag7rsYHY07PMv/d2VL21fj1oPYBLvAPdV3oA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzauUgEXfpTWbcb98h/CN3mUGomj1dEh/B9qDY3Ru9QkZgE0kMv
-	NRPMwfNXdeVy2kjAHv9aJukAyLNjZAr1iRSlzJGJZlqN6rdcZ1BcGc4eJkonbgUw0PnFCClClD+
-	wvURQwhEg8A15Vec3m5Twe+UqLBk=
-X-Gm-Gg: ASbGncu5hoa8CV+hPGO6YyaZygc2R1sEuK5HuZWQnAhCyBSyGILm0wcTuJ44OQ+vUvo
-	1O1BlWMvoxeihvhn/M8z1NSNHPvr4uh0W74NQ8Gq28+j54cj+Rt7XjcpVWupsE+4Wq8Jk4FprwX
-	nEhV/geF/NADUgimAXBLHk8dc=
-X-Google-Smtp-Source: AGHT+IGI8v7PDHY/Lp1BHCcSAppZx37v1ebO95EwXmrWNUcOgw1ylwg5FVKqNvX10dP+azameA3ze2h9GEqyI9hzmew=
-X-Received: by 2002:a17:906:6db:b0:ace:4ed9:a8c1 with SMTP id
- a640c23a62f3a-ace711175e8mr827843666b.30.1745859032158; Mon, 28 Apr 2025
- 09:50:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl1YQ7se"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D10C4CEE4;
+	Mon, 28 Apr 2025 16:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745859054;
+	bh=w8GeZnfKH54B+v/IYdcqkdWVdQCakOpqtic13lGX4Zw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zl1YQ7seWqYm7DELGZwOo1oAwoe1+S11syjyi5Ia9aq4xVSUQhxNm6VSwt05ST0Hb
+	 Xu1Qr2lGagi56zAKiit6UXOL1+VoEQ8Md5ExCthQ7PEbMqCpb4+i9KsLEIqE/LjlKr
+	 CYEbuwa72PAOsdXw0LbeRvQHfD9tAAkJTtJVsl9nQOfdNpoAJ7dS75FBEhW82ZcZ8E
+	 MBWjpGfg1obcuiL4/UHesWK/cCREy9znXg9jY2bXKgLDXT3Iqugyo8I7yKpauAXuxF
+	 ACcXKVDEV4KbSJzxapAUF8uQdvGPWWz0IbVXa5GWVTn3roiYIMNCIyGP4PJ/7EM4pC
+	 pjJQmgLqz06AA==
+Date: Mon, 28 Apr 2025 17:50:49 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt: bindings: arm: add bindings for TQMa95xxSA
+Message-ID: <20250428-scalding-coffee-70507d952247@spud>
+References: <20250428135915.520432-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428161236.126200-1-laurentiumihalcea111@gmail.com>
-In-Reply-To: <20250428161236.126200-1-laurentiumihalcea111@gmail.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Mon, 28 Apr 2025 19:50:10 +0300
-X-Gm-Features: ATxdqUFmw4_SpJjE_h3pfWCT_7xaVQP1K-2_RunOVPd4ywM1CYGZQMncxadN-Vc
-Message-ID: <CAEnQRZByMFrDoPsQ+aoqfS7+1eDuiLGZYYywf+Cn=hGjRm-BzA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: SOF: topology: check if machine is NULL during tplg load
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>, julien.massot@collabora.com
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
-	Bard Liao <yung-chuan.liao@linux.intel.com>, 
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	Mark Brown <broonie@kernel.org>, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Nhw6v3yNy4dTm1za"
+Content-Disposition: inline
+In-Reply-To: <20250428135915.520432-1-alexander.stein@ew.tq-group.com>
+
+
+--Nhw6v3yNy4dTm1za
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 7:16=E2=80=AFPM Laurentiu Mihalcea
-<laurentiumihalcea111@gmail.com> wrote:
->
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->
-> Check if "sof_pdata->machine" is NULL before calling the machine-specific
-> "get_function_tplg_files()". Otherwise, for OF-based machines (which set
-> the "of_machine" instead of the "machine" field), the operation will
-> result in a NULL pointer dereference fault.
->
-> Fixes: 6d5997c412cc ("ASoC: SOF: topology: load multiple topologies")
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On Mon, Apr 28, 2025 at 03:59:08PM +0200, Alexander Stein wrote:
+> TQMa95xxSA is a SOM using NXP i.MX95 CPU. MB-SMARC-2 is a carrier
+> reference design.
+>=20
+> [1] https://www.tq-group.com/en/products/tq-embedded/arm-architecture/tqm=
+a95xxsa/
+>=20
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-I think same patch was sent by Julien, but this one has better explanation.
+> ---
+> Changes in v2:
+> * None
+>=20
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentati=
+on/devicetree/bindings/arm/fsl.yaml
+> index 447054b52ea39..a6cf65e10d43f 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -1419,6 +1419,16 @@ properties:
+>            - const: kontron,imx93-osm-s    # Kontron OSM-S i.MX93 SoM
+>            - const: fsl,imx93
+> =20
+> +      - description:
+> +          TQMa95xxSA is a series of SOM featuring NXP i.MX95 SoC variant=
+s.
+> +          It has the SMARC form factor and is designed to be placed on
+> +          different carrier boards. MB-SMARC-2 is a carrier reference de=
+sign.
+> +        items:
+> +          - enum:
+> +              - tq,imx95-tqma9596sa-mb-smarc-2 # TQ-Systems GmbH i.MX95 =
+TQMa95xxSA SOM on MB-SMARC-2
+> +          - const: tq,imx95-tqma9596sa         # TQ-Systems GmbH i.MX95 =
+TQMa95xxSA SOM
+> +          - const: fsl,imx95
+> +
+>        - description:
+>            Freescale Vybrid Platform Device Tree Bindings
+> =20
+> --=20
+> 2.43.0
+>=20
 
-Julien, I think you can add your S-o-B tag here.
+--Nhw6v3yNy4dTm1za
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Daniel.
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaA+x6QAKCRB4tDGHoIJi
+0gVvAP0YmLaFnU0LzkqbM1C1p2Iq6QSPxnYt3l/wmcpd2kus0wEAiAs1v+vcr16G
+FoAD7cwjXSKih7VMnauIiYZDgL4bigw=
+=RYkS
+-----END PGP SIGNATURE-----
+
+--Nhw6v3yNy4dTm1za--
