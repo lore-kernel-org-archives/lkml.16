@@ -1,164 +1,136 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10CD14A60F;
-	Mon, 28 Apr 2025 12:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E70269AE7;
+	Mon, 28 Apr 2025 12:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843283; cv=none; b=YWgqlAoTP0d/Uk1rHpn+dr9GpD1A45wObdcY11Cm+1vNvFJ/39a7oJfAFwWOWhpVktnpaSWtoHMFHhOaRt0PoEZm8YdsWGhbRFtfKNj+mRTxNnO/MCvGkyjK2q/2lw1ak2y5hK1v62icONpqVhXMS4npY89K7PW42IT/ssqyBX8=
+	t=1745843307; cv=none; b=KH1SC/MKMzWprh/jxNAwuRNws4cREFyhqpuMwVdXSJVFaaL3mY86tek5/e9SdD/PnKSSTXWhkO+zAtKmEluzUlQPu4MNm1LRoi5P0oF8dWMMIr1LDjZIO1fJjiB0fM4YACapy5mt7VdTCFCqs4YtgtaFUJxnuOBFJ8PYXQILzZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843283; c=relaxed/simple;
-	bh=mA2O10h2DhxbKsKifzYq26kOHcscLaXYq0rxvzf5vVI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ScgZwNrjWbkD4M0Af7I/hdczsuEPIZwp3jbosMn0qqWRsIISR5ZSGoQmnqLN/lS5ooaTkcNzBkBVH0AEe9rghJGIOgslp9MISxsaLeASh7rQEHArya9ytX1QPWzN4Z20I3qfdFXlyZ58AWXZW9NvE7XTOK9CLI8g47hEge2Yer8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=1UyBz6m9; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="1UyBz6m9"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SCD0R7027668;
-	Mon, 28 Apr 2025 08:27:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=OCYzhg4KxQU44Ntv7FHWMgpswkJ
-	Hr55hJBOBLcQVCFc=; b=1UyBz6m9nkY7mgqW9+snsGm+YIhpVSXSEOP7DwBq/fz
-	ziLJOfQK08ca1STKQJys6WCWYeNPCbJaFGMdaEnVi1RZClCPNZe9CewqJqHzAtfi
-	iY0KehBYCk2j2n2y1o9ctuJd6szUIQNtSMitygPAvtMSPNuipZumfzHWfrNjOdYx
-	I2R8Dh5Wkh1Z+JIZx1h61OL1FADEB4IDse+w4CiRvv6LcgiOt67eri5GyE3hHlE0
-	LyRKn45xHGjkX/Yvu9wjirHabdZ0gV5rqDaB4uwqaRjrWtQ9/IvRihq+DUJICag5
-	4Y+r+TT+iYPfsIMmIwdoNIkRVkymb4dpyJ4jXBIMVxg==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 469dtgh6a7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 08:27:45 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53SCRh2t011765
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 28 Apr 2025 08:27:43 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 28 Apr 2025 08:27:43 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 28 Apr 2025 08:27:43 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Mon, 28 Apr 2025 08:27:43 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53SCROG0032497;
-	Mon, 28 Apr 2025 08:27:26 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v2 0/7] iio: adc: Add support for AD4170 series of ADCs
-Date: Mon, 28 Apr 2025 09:27:21 -0300
-Message-ID: <cover.1745841276.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1745843307; c=relaxed/simple;
+	bh=hYE/FFn1Zx/Bkgve92oN5dvvbZLRI9e7+gvkZnj8Ys4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Dc5PYZEJ8GrV5cPZu5yzZb6dzRVIcKc8+Ip0zs6oj+RfvmbbadnKR0+LDvtE0qwSrIt4T6b/LvQSNT2P/xgB0nSMY23I3b0He7msiuVZsxtwLWfIHNoxH8Qp91ong9J7hsqOsW9f+Moqb5skZDwOtoC3EPNiCSevoFm6+029YAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
+	by mail.itouring.de (Postfix) with ESMTPSA id E1214103765;
+	Mon, 28 Apr 2025 14:28:14 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 919566018BE80;
+	Mon, 28 Apr 2025 14:28:14 +0200 (CEST)
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "Alan J. Wylie" <alan@wylie.me.uk>, Jamal Hadi Salim <jhs@mojatatu.com>,
+ regressions@lists.linux.dev, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+ =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+ stable@vger.kernel.org
+References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+ <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+ <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+ <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+ <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+ <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+ <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+ <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <2025042831-professor-crazy-ad07@gregkh>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <c8110ec8-a868-b531-a230-f4b645f5ac73@applied-asynchrony.com>
+Date: Mon, 28 Apr 2025 14:28:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2025042831-professor-crazy-ad07@gregkh>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEwMiBTYWx0ZWRfXwxX6zTCgfNGs RcyNnswjx2W8t2M3JqUjGfspVoxNWf8Kk3BwFcRrreKJoidnmgi319CFRoTMDg5z1cRlIMIHKRr WPIXOj+yCH1wMVh+8SodQuXbY1NKW3jM6CkOQcgZb1x7lAp2ILjGSDZkgEzy58x6Uy7xY6Ffd2k
- z/GK6DA3LGNHjVneqTZKWGfE7S4R1ArA1gI2tiLaWE9gCIVAXKz5atzmaTfPONoSS2exTFT/JTe KceWeCG9jhSkkFQHANxngCP2H/BEJixSpAUfc23rITMhzhwwEwzHtyfFyVRjyVB6WeM767iFsHe S6nUenCuohm/qxmcoER1SfKbqj1A5VbNHbaxVkRvueQaUzfBDHqRw+M7SNP3gJl37vDKM6adLb1
- PNcOhuHOA0VEs8s6oeGIDXk1t5YmV1wPdGAKMEFVzGoofUZSecFUCULhpurZ3cLblhRirtgD
-X-Proofpoint-ORIG-GUID: tvShJ6Mu8I9NDtrhWKlinpEneVUvnxE1
-X-Proofpoint-GUID: tvShJ6Mu8I9NDtrhWKlinpEneVUvnxE1
-X-Authority-Analysis: v=2.4 cv=crybk04i c=1 sm=1 tr=0 ts=680f7441 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=uC2PzzgbNJLNdZvJMSYA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=994
- malwarescore=0 clxscore=1015 impostorscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2504280102
 
-This patch set adds support for Analog Devices AD4170 and similar sigma-delta ADCs.
+On 2025-04-28 13:45, Greg KH wrote:
+> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffstätte wrote:
+>> (cc: Greg KH)
+>>
+>> On 2025-04-22 18:51, Alan J. Wylie wrote:
+>>> On Mon, 21 Apr 2025 21:09:27 +0100
+>>> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
+>>>
+>>>> On Mon, 21 Apr 2025 21:47:44 +0200
+>>>> Holger Hoffstätte <holger@applied-asynchrony.com> wrote:
+>>>>
+>>>>>> I'm afraid that didn't help. Same panic.
+>>>>>
+>>>>> Bummer :-(
+>>>>>
+>>>>> Might be something else missing then - so for now the only other
+>>>>> thing I'd suggest is to revert the removal of the qlen check in
+>>>>> fq_codel.
+>>>>
+>>>> Like this?
+>>>>
+>>>> $ git diff  sch_fq_codel.c
+>>>> diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
+>>>> index 6c9029f71e88..4fdf317b82ec 100644
+>>>> --- a/net/sched/sch_fq_codel.c
+>>>> +++ b/net/sched/sch_fq_codel.c
+>>>> @@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct
+>>>> Qdisc *sch) qdisc_bstats_update(sch, skb);
+>>>>           flow->deficit -= qdisc_pkt_len(skb);
+>>>> -       if (q->cstats.drop_count) {
+>>>> +       if (q->cstats.drop_count && sch->q.qlen) {
+>>>>                   qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
+>>>>                                             q->cstats.drop_len);
+>>>>                   q->cstats.drop_count = 0;
+>>>> $
+>>>>
+>>>
+>>> It's been about 21 hours and no crash yet. I had an excellent day down
+>>> a cave, so there's not been as much Internet traffic as usual, but
+>>> there's a good chance the above patch as at least worked around, if not
+>>> fixed the issue.
+>>
+>> Thought so .. \o/
+>>
+>> I guess now the question is what to do about it. IIUC the fix series [1]
+>> addressed some kind of UAF problem, but obviously was not applied
+>> correctly or is missing follow-ups. It's also a bit mysterious why
+>> adding the HTB patch didn't work.
+>>
+>> Maybe Cong Wang can advise what to do here?
+>>
+>> So unless someone else has any ideas: Greg, please revert:
+>>
+>> 6.14.y/a57fe60ef4cf96bfbb6b58397ec28bdb5a5c6b31
+>> ("codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()")
+>>
+>> and probably from 6.12 as well.
+> 
+> Why only those 2 branches?  What about all others, and mainline?
 
-Patch 1 adds device tree documentation for the parts.
-Patch 2 adds basic device support.
-Patch 3 adds support for buffered ADC reading.
-Patch 4 adds clock provider support
-Patch 5 adds GPIO controller support.
-Patch 6 adds internal temperature sensor support.
-Patch 7 adds support for external RTD and bridge circuit sensors.
+All branches that received upstream 342debc12183 aka
+"codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()"
+should be reverted for now. I previously didn't check them all.
 
-I believe to have updated the series according to all suggestions offered during
-v1 review. The exceptions should be the IOVDD (discussed below) and regmap bulk
-access which I decided to replace by a custom regmap_read/write implementation
-instead.
+It was part of a series, and the rest of the series is missing (not
+picked by autosel). Luckily that does not matter because mainline
+is apparently also buggy, so applying the rest of the series
+would not help. This is currently still being debugged/worked on.
 
-Thank you for providing your insights and help.
+Just reverting this one commit provably fixes the crash for people
+using -stable in e.g. gateway/router setups, with a htb->fq_codel chain.
+The crash does not affect people using fq_codel as root qdisc.
 
-Change log v1 -> v2
+Reverting is not the greatest solution since it reintroduces a potential
+UAF, which has been there since fq_codel was first committed.
+IIUC this potential UAF can only be induced with admin privileges.
 
-[IIO driver changes]
-- Call gpio_set() at begining of gpio_direction_output() instead of at the end of it.
-- Return -EPERM if try to set a GPIO configured for input.
-- Now locking on state mutex before setting output GPIO values.
-- Used gpiochio init_valid_mask() to only init available GPIOs.
-- Replaced 3 regmap configs by regmap with custom reg_read/write implementation.
-- Improved to support more than one external sensor connected.
-- A few other minor improvements.
+I don't know how to explain this any better; all I did was try to
+help Alan. :-(
 
-Previously, I thought IOVDD supply could be optional but it seems to be required.
-I have only remote access to a setup with EVAL-AD4170-4 but am pretty sure the
-link in the eval board was set to provide 3.3V to IOVDD pin.
-Datasheet sais 'This supply sets the interface logic levels on the SPI interface
-and powers an internal regulator for operation of the digital processing.'
-Since IOVDD supply will presumably be enabled, I kept reading it's voltage
-even though ADC channels might not use that info.
-
-[device tree changes]
-- Referenced adc.yaml from sensor-node.
-- Merged property descriptions to reduce doc duplication.
-- Every child node type is now in the example.
-- Better described sensor-type property with a list of possible types.
-- Updated adi,excitation-pins description to cover a use case I had overlooked.
-- Added default to interrupt-names and to clock-names.
-- Added support for clock-output-names
-- Dropped '|' from descriptions when not needed.
-- Added extra example
-
-Link to v1: https://lore.kernel.org/linux-iio/cover.1744200264.git.marcelo.schmitt@analog.com/
-
-
-Marcelo
-
-Ana-Maria Cusco (1):
-  iio: adc: Add basic support for AD4170
-
-Marcelo Schmitt (6):
-  dt-bindings: iio: adc: Add AD4170
-  iio: adc: ad4170: Add support for buffered data capture
-  iio: adc: ad4170: Add clock provider support
-  iio: adc: ad4170: Add GPIO controller support
-  iio: adc: ad4170: Add support for internal temperature sensor
-  iio: adc: ad4170: Add support for weigh scale and RTD sensors
-
- .../bindings/iio/adc/adi,ad4170.yaml          |  554 ++++
- MAINTAINERS                                   |    8 +
- drivers/iio/adc/Kconfig                       |   16 +
- drivers/iio/adc/Makefile                      |    1 +
- drivers/iio/adc/ad4170.c                      | 2846 +++++++++++++++++
- 5 files changed, 3425 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
- create mode 100644 drivers/iio/adc/ad4170.c
-
-
-base-commit: 1c2409fe38d5c19015d69851d15ba543d1911932
--- 
-2.47.2
-
+-h
