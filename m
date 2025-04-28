@@ -1,70 +1,84 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105F266B67;
-	Mon, 28 Apr 2025 13:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2975B1A072A;
+	Mon, 28 Apr 2025 13:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846928; cv=none; b=i2pYEkaFA8QdOHUca6zq2VCOFsqq6EUmFtXxLaE29LtqOHZAuZX6TRPJpxuBU0ZDp+nazpS0TmBAIdXq9qysysmmXV7YKagc7kaKmMgpU3cg12XDbEvOZIQHNL2n3MhtUltBc6qSbtrjLk1qtH91NMFIqzmztf64pXKDTzwe6ns=
+	t=1745846994; cv=none; b=tRBudqP2nXs8TqXCNzlKkwe6xffNrX18c01airQ8kprz5vpfrd0jY51ZgyLdXVtOF7ie4hoXA2bKIOl8y4j+KyaSGs+Q6lsINedmRTufsVH82Z+iY2fngDiPkUhpOVUPoNgOz6LrJxkqQeg3N6Zj0nBFhx0XE/aqIdaAIL2uqME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846928; c=relaxed/simple;
-	bh=7ME4el9W1EryrG+ff6X+K6a1q5k92r1S8gNYARZtph8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=g2sqNE29FuEqqFoXzND+MDCTxWCdHvP/Q7ltmRzfLqdUVEbnL9FqtI0WGKbbQnqPTzfMNoYCP6p969nwB6P6vEF1EFxjc+ki3qC8EN5pZIHAGFS+9lCkuVjGsakb5qFYtrjseRvXFd9HYKjBRye7pyQ6SJQWV2DP7NqqUfhzfYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=X5weSPrx; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745846994; c=relaxed/simple;
+	bh=elk4Zqa+3hCtmUiNsAt9MfBksCuGpsquiK6zsRxydTQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=WSx3OxkujX7yIn/vX3F894RxHrYsErfeNiyZAILdcFqKHvdX+5PzlvoRGbvZdGEW37B977NgXYcZbIACdnmkohZwjrzPZUHDunSWs6FaXBLnyFAtDzsNCvaXCC8FbA7iOjLCPRkn9Bv1AJK9yVrgxSsQBTnZH29akHCrmyQWYO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TD7QBfDg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="X5weSPrx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745846924;
-	bh=7ME4el9W1EryrG+ff6X+K6a1q5k92r1S8gNYARZtph8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=X5weSPrx2BaUXCD/qFq0fbGpZDLwypIgAaFEE8y3S/XpnvzJBHSswH8X3Es98GLV1
-	 WYbHhfmG/y4oYifKVf3/I49Zcj6JcQYQ4+IyOaloYQVAnYvTTeOiWO/XGOehlrB4Zg
-	 vVxnT8gfdR9ChumHoEKlw4zEyHbDrGqiYD1i41p7NH2npqejQkepMgKseHdMLFdjN8
-	 2NOR12wXflrORWbY7BithdfdIhfbxO1exnlFYINmw1+D20gi6l9BsC4MKu6HhYvTK9
-	 8TURjNcGpjmCFEzDHZNuquqN1iLRSchy4U6efjfm5TxpcY+ldyiC1RlAAsB2f0CHOF
-	 X8fSe+ENH+KKQ==
-Received: from apertis-1.home (2a01cb0892f2d600c8F85cF092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D8F1817E0657;
-	Mon, 28 Apr 2025 15:28:43 +0200 (CEST)
-Message-ID: <3810c1bc4a968fa037b76601636e4c13aa4a5b52.camel@collabora.com>
-Subject: Re: [PATCH] ASoC: SOF: topology: Fix null pointer derefence
-From: Julien Massot <julien.massot@collabora.com>
-To: Markus Elfring <Markus.Elfring@web.de>, linux-sound@vger.kernel.org, 
-	sound-open-firmware@alsa-project.org
-Cc: kernel@collabora.com, LKML <linux-kernel@vger.kernel.org>, Bard Liao	
- <yung-chuan.liao@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
- Jaroslav Kysela	 <perex@perex.cz>, Kai Vehmanen
- <kai.vehmanen@linux.intel.com>, Liam Girdwood	 <liam.r.girdwood@intel.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown	 <broonie@kernel.org>,
- =?ISO-8859-1?Q?P=E9ter?= Ujfalusi	 <peter.ujfalusi@linux.intel.com>,
- Pierre-Louis Bossart	 <pierre-louis.bossart@linux.dev>, Ranjani Sridharan	
- <ranjani.sridharan@linux.intel.com>, Takashi Iwai <tiwai@suse.com>
-Date: Mon, 28 Apr 2025 15:28:43 +0200
-In-Reply-To: <2583415c-6338-47ba-9688-eae9d5ae6736@web.de>
-References: <20250428-fixup-of-sof-topology-v1-1-dc14376da258@collabora.com>
-	 <2583415c-6338-47ba-9688-eae9d5ae6736@web.de>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TD7QBfDg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0EBC4CEE4;
+	Mon, 28 Apr 2025 13:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745846993;
+	bh=elk4Zqa+3hCtmUiNsAt9MfBksCuGpsquiK6zsRxydTQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TD7QBfDg6kXdOzjRs6gtAIizZopWFFNqcvzVQOUhE4adYd3tKK9ZWRiOnvUE6xSVd
+	 jqwrYMQ8+CvdekMObGo0NgaCNDmpuD0w0cXxKLSIz47iIeS/A+QYeABeLViatbJfgl
+	 WYuFL3DJJsVzqm0ssKDEWQxyOqyy4bbuIUxmpfwxhdut/618sWFo6Maqz94oacg6/C
+	 PFGArhwz0OFSGUVyUCsQRZIPi4wGKLvIrlI/LJUOfHZ/1qnX4nKj5+7grom/3aVSVM
+	 0hcg7j0y6Ieg1gwWvMRkF6+1AoV5y9QGkFI2DE13pzJZ78Bj3EwkJ7EatPc+D16aoT
+	 QizlVzaNHtOoQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BF93822D43;
+	Mon, 28 Apr 2025 13:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/3] net: stmmac: socfpga: 1000BaseX support and
+ cleanups
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174584703225.917720.8866587140005702000.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Apr 2025 13:30:32 +0000
+References: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
+In-Reply-To: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, andrew@lunn.ch, linux@armlinux.org.uk,
+ kuba@kernel.org, edumazet@google.com, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, horms@kernel.org, alexis.lothore@bootlin.com,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
 
-Hi,
-On Mon, 2025-04-28 at 15:10 +0200, Markus Elfring wrote:
-> Prevent null pointer dereference in snd_sof_load_topology
-It sounds better indeed, I will send a v2.
+Hello:
 
-Thanks,
-Julien
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 24 Apr 2025 09:12:19 +0200 you wrote:
+> Hi everyone,
+> 
+> This V3 is simply a re-send of V2, targeting net-next instead of net as
+> the V2 did by mistake.
+> 
+> No other changes besides a rebase on net-next were made.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v3,1/3] net: stmmac: socfpga: Enable internal GMII when using 1000BaseX
+    https://git.kernel.org/netdev/net-next/c/6fba40e7f610
+  - [net-next,v3,2/3] net: stmmac: socfpga: Don't check for phy to enable the SGMII adapter
+    https://git.kernel.org/netdev/net-next/c/3bf19459da62
+  - [net-next,v3,3/3] net: stmmac: socfpga: Remove unused pcs-mdiodev field
+    https://git.kernel.org/netdev/net-next/c/8fb33581bb8a
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
