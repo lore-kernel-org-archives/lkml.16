@@ -1,64 +1,67 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404CF1C1F07;
-	Tue, 29 Apr 2025 01:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500BE1C7007
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745889585; cv=none; b=meTEc+RkJDvbRXsTEtz3ZfFfz1dsesmLsPibEgjv3VBbdnyUl1CY0TUkZOlXG2NepqjHQNU42JlCWbm+zPKCs6fCKQIfUcg5SbWPmZDh+pXgJicBydhlk/eWn5jkXgw1/rVyJNYFjY1TC3/o/rwRyhMN3XwzTa/PjXgYZNlvIV8=
+	t=1745889587; cv=none; b=NKVPa4GJKqUao1Zgn8KoB9aIQgOsVUYhLwCBkM3Fp/i6sy0s4LlZ4zkmk0a1K0dOZS971HmBhGexSGlxuEsF+YIJGOtBH1WywvVuLMWnOfTO2FGUQr/ZvJIDVIFZDh3ku9EBbX3jj0ERiVfwW1POg9y4/VCShBqBsp50EOP6Wv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745889585; c=relaxed/simple;
-	bh=R3UAhkpOPCmKmxNTzkcTSJ8pqpaUKXLkVbgY8NNMnek=;
+	s=arc-20240116; t=1745889587; c=relaxed/simple;
+	bh=Pu2wLgfGRRq8hrC3IwkTdD3V5uw2TWb1PcFwwrUwlGw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLx8iG55nHURkkjB4qC3RdLN12RoEeMxHp8rHDiP9MPIlNfiHRRtohswdKE5u5gT7pagRlw6CX/EV0iBLHfqy+RAsuRodk7GbrC62fKI1YO/+TIIf5xUKvRkpJsZ3WTCpnlVtL0DG9sBZT3XJC1kfiDDShqjS3n428fIkT0MBLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lRraj1R+; arc=none smtp.client-ip=198.175.65.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yk0m9H3FBCckLASUA7rZuUaCvYUCCRHxkcb/7IxmRZWMFN3BY81CSWlpsjiTeRbVBFaNSQ4qe7xD0ydWCbU/s731VROeEnyTaelM20qt8dETsEUB6SQAPnLDHGJDiS8EeNyjro6uMrzUYeOdHwZvgwMz68LUlfuSzdB+UkpJf0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bil1vEEc; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lRraj1R+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bil1vEEc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745889583; x=1777425583;
+  t=1745889585; x=1777425585;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=R3UAhkpOPCmKmxNTzkcTSJ8pqpaUKXLkVbgY8NNMnek=;
-  b=lRraj1R+ehvFb3Au8U5K/nfXd6G5tWEY8wiy2yh91DIj+PeWIlJImIzA
-   ZicndxjSJtl/5Q3vC4vLkh05qyV72wJD4Fo60OLrlEGuHovxNU9AEwLs1
-   ykC/o/0FZ5sadgbEfBjay2zFWyTpunkj5lkJ0suvbWSPMZCNO1HH7NM0Q
-   p003/scP9xsF/NyfMmLb/0CxaexABEH1bW3mchEEwdxLrG7zpr2I+OUj7
-   kgxtwKMZTV9a44t+fgsb3kykT2phk9LmYh2CW28pmrCnGcXsO+ZyYwDQG
-   HGUkE6baXyGQGwO58cxCf8be+eepJx76gO0t+kahJjcqPyMG8eW23xTAZ
+  bh=Pu2wLgfGRRq8hrC3IwkTdD3V5uw2TWb1PcFwwrUwlGw=;
+  b=Bil1vEEcXVXsDqGie60LIAmr34YhNvv9eUNYCCn1OG4mFghNJRzxEuen
+   jXZM+ZxpPnpYegJ9c0iHFLiJjfwuTWixRbHQbbYkzu60V4TQ3gT6Oydg6
+   sj2JZDFEq4fChwiw+EG2ZsNA6XVopRiy7VibNAMHHq6Z4/6eh+j/xuVym
+   j5HnJbVINK4F9fjz9IvEEt87EX/5cg4PegV6vvputzHRmQo95UxSsd/DB
+   XMBEljqBWDocN5jTdrqe4KJzfSI9MH6KFB3T/QqzANuqa4UyJ5soya0+H
+   bGezNFZu32ZkpPvxEwFvgQYB7IwBvEAsnxUQfACK26YtvMPcXhG5/vwo6
    Q==;
-X-CSE-ConnectionGUID: HVecENgfSt6YGszfYVGtWw==
-X-CSE-MsgGUID: vUHwlYcsSc+9MSnmJYJX+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51165287"
+X-CSE-ConnectionGUID: CP5/mOHKRTGUZ0h+9GxUqQ==
+X-CSE-MsgGUID: G6TKP1YuScmhl9T6IFrQwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51165279"
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="51165287"
+   d="scan'208";a="51165279"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
   by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 18:19:35 -0700
-X-CSE-ConnectionGUID: NL+2JPk/QSatszxG4Hf86A==
-X-CSE-MsgGUID: SgVXDWYzSQ2Krf65Z8hqvw==
+X-CSE-ConnectionGUID: lkC3NN5QQKu5gK1cmNNkwA==
+X-CSE-MsgGUID: Xt1DrXtvTW+qYMXWaPwTCg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="164775790"
+   d="scan'208";a="164775792"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
   by fmviesa001.fm.intel.com with ESMTP; 28 Apr 2025 18:19:28 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u9Zd7-00001R-1V;
+	id 1u9Zd7-00001Y-1n;
 	Tue, 29 Apr 2025 01:19:25 +0000
-Date: Tue, 29 Apr 2025 02:45:46 +0800
+Date: Tue, 29 Apr 2025 01:10:04 +0800
 From: kernel test robot <lkp@intel.com>
-To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, peter.ujfalusi@gmail.com,
-	vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	praneeth@ti.com, vigneshr@ti.com, u-kumar1@ti.com, a-chavda@ti.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 5/8] drivers: soc: ti: k3-ringacc: handle absence of tisci
-Message-ID: <202504290207.ct0tnV56-lkp@intel.com>
-References: <20250428072032.946008-6-s-adivi@ti.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, thomas.petazzoni@bootlin.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Mark Yacoub <markyacoub@google.com>,
+	Louis Chauvet <louis.chauvet@bootlin.com>
+Subject: Re: [PATCH] drm: writeback: Fix drm_writeback_connector_cleanup
+ signature
+Message-ID: <202504290021.ZR6XX2Sc-lkp@intel.com>
+References: <20250428-drm-fix-writeback-cleanup-v1-1-e4c723868b73@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,88 +70,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250428072032.946008-6-s-adivi@ti.com>
+In-Reply-To: <20250428-drm-fix-writeback-cleanup-v1-1-e4c723868b73@bootlin.com>
 
-Hi Sai,
+Hi Louis,
 
 kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on linus/master v6.15-rc4]
-[cannot apply to next-20250428]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[auto build test WARNING on b848cd418aebdb313364b4843f41fae82281a823]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Sree-Kartheek-Adivi/dt-bindings-dma-ti-Add-document-for-K3-BCDMA-V2/20250428-152616
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20250428072032.946008-6-s-adivi%40ti.com
-patch subject: [PATCH 5/8] drivers: soc: ti: k3-ringacc: handle absence of tisci
-config: arm64-randconfig-001-20250428 (https://download.01.org/0day-ci/archive/20250429/202504290207.ct0tnV56-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250429/202504290207.ct0tnV56-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Louis-Chauvet/drm-writeback-Fix-drm_writeback_connector_cleanup-signature/20250428-163254
+base:   b848cd418aebdb313364b4843f41fae82281a823
+patch link:    https://lore.kernel.org/r/20250428-drm-fix-writeback-cleanup-v1-1-e4c723868b73%40bootlin.com
+patch subject: [PATCH] drm: writeback: Fix drm_writeback_connector_cleanup signature
+config: arm-randconfig-002-20250428 (https://download.01.org/0day-ci/archive/20250429/202504290021.ZR6XX2Sc-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250429/202504290021.ZR6XX2Sc-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504290207.ct0tnV56-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504290021.ZR6XX2Sc-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> drivers/soc/ti/k3-ringacc.c:214: warning: Function parameter or struct member 'cfg' not described in 'k3_ring'
->> drivers/soc/ti/k3-ringacc.c:214: warning: Function parameter or struct member 'intr' not described in 'k3_ring'
+>> drivers/gpu/drm/drm_writeback.c:354: warning: Function parameter or struct member 'data' not described in 'drm_writeback_connector_cleanup'
+>> drivers/gpu/drm/drm_writeback.c:354: warning: Excess function parameter 'wb_connector' description in 'drm_writeback_connector_cleanup'
 
 
-vim +214 drivers/soc/ti/k3-ringacc.c
+vim +354 drivers/gpu/drm/drm_writeback.c
 
-6b3da0b475b877 Peter Ujfalusi          2020-07-24  168  
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  169  /**
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  170   * struct k3_ring - RA Ring descriptor
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  171   *
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  172   * @rt: Ring control/status registers
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  173   * @fifos: Ring queues registers
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  174   * @proxy: Ring Proxy Datapath registers
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  175   * @ring_mem_dma: Ring buffer dma address
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  176   * @ring_mem_virt: Ring buffer virt address
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  177   * @ops: Ring operations
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  178   * @size: Ring size in elements
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  179   * @elm_size: Size of the ring element
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  180   * @mode: Ring mode
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  181   * @flags: flags
-50883affe17e11 Lee Jones               2020-11-21  182   * @state: Ring state
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  183   * @ring_id: Ring Id
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  184   * @parent: Pointer on struct @k3_ringacc
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  185   * @use_count: Use count for shared rings
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  186   * @proxy_id: RA Ring Proxy Id (only if @K3_RINGACC_RING_USE_PROXY)
-8c42379e40e2db Peter Ujfalusi          2020-10-25  187   * @dma_dev: device to be used for DMA API (allocation, mapping)
-d782298c6f6b85 Grygorii Strashko       2020-12-08  188   * @asel: Address Space Select value for physical addresses
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  189   */
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  190  struct k3_ring {
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  191  	struct k3_ring_rt_regs __iomem *rt;
-babdc2c3524293 Sai Sree Kartheek Adivi 2025-04-28  192  	struct k3_ring_cfg_regs __iomem *cfg;
-babdc2c3524293 Sai Sree Kartheek Adivi 2025-04-28  193  	struct k3_ring_intr_regs __iomem *intr;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  194  	struct k3_ring_fifo_regs __iomem *fifos;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  195  	struct k3_ringacc_proxy_target_regs  __iomem *proxy;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  196  	dma_addr_t	ring_mem_dma;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  197  	void		*ring_mem_virt;
-d9483b44c94eba Christophe JAILLET      2024-07-09  198  	const struct k3_ring_ops *ops;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  199  	u32		size;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  200  	enum k3_ring_size elm_size;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  201  	enum k3_ring_mode mode;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  202  	u32		flags;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  203  #define K3_RING_FLAG_BUSY	BIT(1)
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  204  #define K3_RING_FLAG_SHARED	BIT(2)
-d782298c6f6b85 Grygorii Strashko       2020-12-08  205  #define K3_RING_FLAG_REVERSE	BIT(3)
-6b3da0b475b877 Peter Ujfalusi          2020-07-24  206  	struct k3_ring_state state;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  207  	u32		ring_id;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  208  	struct k3_ringacc	*parent;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  209  	u32		use_count;
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  210  	int		proxy_id;
-8c42379e40e2db Peter Ujfalusi          2020-10-25  211  	struct device	*dma_dev;
-d782298c6f6b85 Grygorii Strashko       2020-12-08  212  	u32		asel;
-d782298c6f6b85 Grygorii Strashko       2020-12-08  213  #define K3_ADDRESS_ASEL_SHIFT	48
-3277e8aa2504d9 Grygorii Strashko       2020-01-15 @214  };
-3277e8aa2504d9 Grygorii Strashko       2020-01-15  215  
+935774cd71fe60 Brian Starkey 2017-03-29  342  
+1914ba2b91ea8e Louis Chauvet 2025-01-16  343  /**
+1914ba2b91ea8e Louis Chauvet 2025-01-16  344   * drm_writeback_connector_cleanup - Cleanup the writeback connector
+1914ba2b91ea8e Louis Chauvet 2025-01-16  345   * @dev: DRM device
+1914ba2b91ea8e Louis Chauvet 2025-01-16  346   * @wb_connector: Pointer to the writeback connector to clean up
+1914ba2b91ea8e Louis Chauvet 2025-01-16  347   *
+1914ba2b91ea8e Louis Chauvet 2025-01-16  348   * This will decrement the reference counter of blobs and destroy properties. It
+1914ba2b91ea8e Louis Chauvet 2025-01-16  349   * will also clean the remaining jobs in this writeback connector. Caution: This helper will not
+1914ba2b91ea8e Louis Chauvet 2025-01-16  350   * clean up the attached encoder and the drm_connector.
+1914ba2b91ea8e Louis Chauvet 2025-01-16  351   */
+1914ba2b91ea8e Louis Chauvet 2025-01-16  352  static void drm_writeback_connector_cleanup(struct drm_device *dev,
+928d313d023526 Louis Chauvet 2025-04-28  353  					    void *data)
+1914ba2b91ea8e Louis Chauvet 2025-01-16 @354  {
+1914ba2b91ea8e Louis Chauvet 2025-01-16  355  	unsigned long flags;
+1914ba2b91ea8e Louis Chauvet 2025-01-16  356  	struct drm_writeback_job *pos, *n;
+928d313d023526 Louis Chauvet 2025-04-28  357  	struct drm_writeback_connector *wb_connector = data;
+1914ba2b91ea8e Louis Chauvet 2025-01-16  358  
+1914ba2b91ea8e Louis Chauvet 2025-01-16  359  	delete_writeback_properties(dev);
+1914ba2b91ea8e Louis Chauvet 2025-01-16  360  	drm_property_blob_put(wb_connector->pixel_formats_blob_ptr);
+1914ba2b91ea8e Louis Chauvet 2025-01-16  361  
+1914ba2b91ea8e Louis Chauvet 2025-01-16  362  	spin_lock_irqsave(&wb_connector->job_lock, flags);
+1914ba2b91ea8e Louis Chauvet 2025-01-16  363  	list_for_each_entry_safe(pos, n, &wb_connector->job_queue, list_entry) {
+1914ba2b91ea8e Louis Chauvet 2025-01-16  364  		list_del(&pos->list_entry);
+ff3881cc6a588f Dan Carpenter 2025-02-12  365  		drm_writeback_cleanup_job(pos);
+1914ba2b91ea8e Louis Chauvet 2025-01-16  366  	}
+1914ba2b91ea8e Louis Chauvet 2025-01-16  367  	spin_unlock_irqrestore(&wb_connector->job_lock, flags);
+1914ba2b91ea8e Louis Chauvet 2025-01-16  368  }
+1914ba2b91ea8e Louis Chauvet 2025-01-16  369  
 
 -- 
 0-DAY CI Kernel Test Service
