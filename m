@@ -1,92 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CE94CE08;
-	Mon, 28 Apr 2025 18:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB95288B1;
+	Mon, 28 Apr 2025 18:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745865077; cv=none; b=Mmkuvqal2vHpFfc9Y7DVSH2kam8Kt4dbOlgCZGdB1V9FFQrqOYLpDrLzzfjWpB9v+v9x7WN4tno8zyGZECCahEBOCE35k0bxkqbaYs52RgXfc0bsI3gCtL6gJ9xRWT7K1//zzb4m4nmOwTOOgKfFJ472NxR7hotmuF2VgM3oCpk=
+	t=1745865287; cv=none; b=LKY9nb9vAh+jn8+6A130d87qkAnX+7cv8Zncp6DVGZUSkPHPSRlKSXibWGfTMdvt5Hds0JZAOHtAKhw0jLfZv/le8xMfTQj0H4nyQfpCd9MogVSrRboNKjJEsQQP8fcJZMSKk+jxrUgIQU4dgJQ/9pFOcR72JVRxFs4UCgI/wGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745865077; c=relaxed/simple;
-	bh=u/UEZ2LwoTe0u9ORsoPmYNUt+dowE6a64WYG1PeQFbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q552ukYqrH2a2wLGTQcvRoQ7v5dFBFt38pW+cqXPkq2zm7QTS9X6jjxu0Jn6em3amA7hAsDmiWnuN2e2UgkXB+kILeBy3xCNTc83MXvDA0vdT81hpefV+hW4jwQ0t39vGiB0HBUDL9tiBrMinuyAA4AgFnORooNTXOpgM1qKzks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cc+mBvSU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745865287; c=relaxed/simple;
+	bh=kdC5V1GJVf0AYNDVDpETfg7feyFeCkn1u5NP5gc8Adk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T6MCnT1cpm1EgtwDh/xLy6sYlhhiOn+T3hkzM2i00ix40nkUNrjXXXv/whmaY1NghYzKdly5zyFW0LIbeKw8XzFSEt2M0aYX0ZxaxDcqeDQN0wxz9wxB5cU/gr4xbV16J9z0Rc+9e0NQb0ZY/YTQs7yCS2sSbSTGOUclKVOqU+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBFt5NT+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cc+mBvSU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB59C4CEF0;
-	Mon, 28 Apr 2025 18:31:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBFt5NT+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8AFC4CEE4;
+	Mon, 28 Apr 2025 18:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745865076;
-	bh=u/UEZ2LwoTe0u9ORsoPmYNUt+dowE6a64WYG1PeQFbE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Cc+mBvSUUZe+z9eDqVN+ZtvZI6oNlF1nhdRuSvRvCY3AyK0A0tFfLsrffwsYiuu3R
-	 npMBys7Nm1A3TpenPLIkMhAGjNbXs3HKkxOgSE0rMuUkjG1Ud7DSFB866eesYESWzk
-	 WlbJNx0z+uFN4vfxfG6ahTJY1dytoI7bRIeXcsckyllRI1Z2NTCdiRaDKbkum3Bnaf
-	 nC9WanMzdWDufv++bU1bFtn+wIf1+1JvqUW5jzORoOVPl5GToxZsa90m+ac/YdOce6
-	 8c/sHqyEI5P4koYYy6YSLEO2hN/MwSJUni2a6+FB35bisun2FeVh8tejsTjXZ0xNgv
-	 2GLWv1qMRISzw==
-From: Eric Biggers <ebiggers@kernel.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] x86/microcode/AMD: Use sha256() instead of init/update/final
-Date: Mon, 28 Apr 2025 11:30:06 -0700
-Message-ID: <20250428183006.782501-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1745865286;
+	bh=kdC5V1GJVf0AYNDVDpETfg7feyFeCkn1u5NP5gc8Adk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QBFt5NT+Xr6LNbnOLRU/DXvOKowZJdVbMDR8bHSIaucTRowUy9MOTiIKO/QkbLJcY
+	 VzmRl72a4FnZWlxXbTIz3qaUPQC9vF++rfclh3CAyzJKG6f2q1s1fWyogug9fe/yaX
+	 VPgd/aiyeCEDipyz0CJ40OA23IhEESoWXSuRfQ4OUrf/OIcMIqPV72KRPQg9na0uCW
+	 XEp85y3vkTFjxWz9G0Jc2noseWWxcbwHVgQHBga4lYtn1t5DEWDmMIzg3EmHp33aqd
+	 JHgNtHctCLC1XKRMlKtfg1PPNGsdgJbBdU9PHRz1s7aHVLRFCEV1nfLDvZjqAZn141
+	 NyRm6WcVWLS+w==
+Date: Mon, 28 Apr 2025 08:34:45 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+	bpf <bpf@vger.kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
+Subject: Re: [RFC][PATCH 2/2] treewide: Have the task->flags & PF_KTHREAD
+ check use the helper functions
+Message-ID: <aA_KRQQXt646y37K@slm.duckdns.org>
+References: <20250425204120.639530125@goodmis.org>
+ <20250425204313.784243618@goodmis.org>
+ <202504251558.AA50716@keescook>
+ <CAADnVQKdWSuDm52GmNor75rFZGNBLcoCto3oecA3D3QHD_MyCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQKdWSuDm52GmNor75rFZGNBLcoCto3oecA3D3QHD_MyCQ@mail.gmail.com>
 
-From: Eric Biggers <ebiggers@google.com>
+On Fri, Apr 25, 2025 at 08:22:59PM -0700, Alexei Starovoitov wrote:
+> > >  tools/sched_ext/scx_central.bpf.c          |  2 +-
+> > >  tools/sched_ext/scx_flatcg.bpf.c           |  2 +-
+> > >  tools/sched_ext/scx_qmap.bpf.c             |  2 +-
+> >
+> > I think these are fine. The Makefile is pulling in standard kbuild
+> > Makefiles, so I think the correct include directories (outside of
+> > tools/) are being used.
+> 
+> I suspect they are not fine.
+> I don't think they #include linux/sched.h
+> I would drop them for now.
 
-Just call sha256() instead of doing the init/update/final sequence.
+Oh, this won't work. Those get all the kernel defs from the BTF generated
+vmlinux.h file which doesn't include any inline functions or macros, so
+please don't include them in this conversion.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
+Thanks.
 
-This patch is targeting the x86 tree.
-
- arch/x86/kernel/cpu/microcode/amd.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 1798a6c027f89..f1fae6e282215 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -215,11 +215,10 @@ static bool need_sha_check(u32 cur_rev)
- 
- static bool verify_sha256_digest(u32 patch_id, u32 cur_rev, const u8 *data, unsigned int len)
- {
- 	struct patch_digest *pd = NULL;
- 	u8 digest[SHA256_DIGEST_SIZE];
--	struct sha256_state s;
- 	int i;
- 
- 	if (x86_family(bsp_cpuid_1_eax) < 0x17)
- 		return true;
- 
-@@ -233,13 +232,11 @@ static bool verify_sha256_digest(u32 patch_id, u32 cur_rev, const u8 *data, unsi
- 	if (!pd) {
- 		pr_err("No sha256 digest for patch ID: 0x%x found\n", patch_id);
- 		return false;
- 	}
- 
--	sha256_init(&s);
--	sha256_update(&s, data, len);
--	sha256_final(&s, digest);
-+	sha256(data, len, digest);
- 
- 	if (memcmp(digest, pd->sha256, sizeof(digest))) {
- 		pr_err("Patch 0x%x SHA256 digest mismatch!\n", patch_id);
- 
- 		for (i = 0; i < SHA256_DIGEST_SIZE; i++)
-
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
 -- 
-2.49.0
-
+tejun
