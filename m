@@ -1,108 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BD82951C9
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481837083A;
+	Mon, 28 Apr 2025 19:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745869823; cv=none; b=NRhQBlHGlqs8S5d+322/2WFOhaqs/ImOSbOdVbg2iOLNQD4/X2M/e0//X8B1TJ11CaDHmJN6YldzoHQIM6pQtBlwDHHvIRW+oCJO8IUSIem5Gu4YPh7quPs8CcSeRm0QOwJpxcymEKSjg27PoXF8644O5W9XR7zNp/40TGuAh1o=
+	t=1745869822; cv=none; b=TQU/8IXcI0uRdby+/RNOUsPDgaBIMqEWDQDtJ1AyKOlrYoYjMV0slZYaquS/D0GZ9NgqGdObZhyXv7GwSWECFqExfxJXWnuodkev9RULvShmyo/ElZbRxbFpUDk+NgpDcrvbotwTbADS3/IMM3unJqSdo/vG6Cxc9bUjQHAqVU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745869823; c=relaxed/simple;
-	bh=wNv4+HsrbuDw/xdscKbBplWOTn27Py1sjb/TUhIp228=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ETmng3W+ISrKrmM4p19xuwb8VGUZh0OdxwVnQajPT/BvTaAJH5y3g2YSJoOQgqYw5EaUj642Zkg9ZuMD4NChxfjduKuxxLFbSy0J5501lqg6y6WpYvXxxNHFoDVF+60/W6KnzIFgIpgMKHMa36njed8lYg+vPgF5BfEGDFg4BDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlyESqYZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745869822; c=relaxed/simple;
+	bh=rH7/HZOg7f1c+2LCP+NbsDn3L5NWlRBCV/YsyucQqgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Um0mqmw31vOhI55PQkw8+yOYgZEpwyLvHcz9AbMwunk3IWTyhYFpa8BVcMADk+brycP4rr6RiOuUeKqmCGH0inhNPrYM5K23cQlgvXlibvhmX2wgvn5zbTHKAyr1qyEPImYiOKs3dFyWa5iFZJdGUkRbR6mA67xztd7azwdWAUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=MKzT0PgA; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlyESqYZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF95C4CEE4;
-	Mon, 28 Apr 2025 19:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745869822;
-	bh=wNv4+HsrbuDw/xdscKbBplWOTn27Py1sjb/TUhIp228=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=OlyESqYZRLy2oeYp8lSpnakkbRM7j8wRjugtmquiPGD/Fk8DIDAsSFLnZiwYZ64xI
-	 rcKYElbZb0vZd88ZqGpEs4aHgw7LYiVwM6AMSz+T5/ss7F11tej6AoSV0h05ev3oT8
-	 KjxbFHCxbuPoV7jvre29tvMDMXj66oXfLqdUvw8FQiI45US05ZM0KhfZ2xZinz1aKF
-	 Nco5R1gEsOA1yDYy7cbmKQYQqIkjUmWiblQtF0MJ52gj5L1tDbYt6ojFMV1wu9vcnD
-	 eLUQes17qebixQPLwSx3ltDmfwIlHpJd+2kRRWG52Jep4fPj7ydjujRz//Th8hm1vi
-	 9NVt/Omi77eOg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 99433CE0838; Mon, 28 Apr 2025 12:50:20 -0700 (PDT)
-Date: Mon, 28 Apr 2025 12:50:20 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Bert Karwatzki <spasswolf@web.de>,
-	"Aithal, Srikanth" <sraithal@amd.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 10/20] ratelimit: Allow zero ->burst to disable
- ratelimiting
-Message-ID: <0ba74a65-a17c-43bb-8bf8-5b4dff68abd5@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <20250425002826.3431914-10-paulmck@kernel.org>
- <aA-Xb89sgQd5ZaGO@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="MKzT0PgA"
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 75F5566509C;
+	Mon, 28 Apr 2025 21:50:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1745869808;
+	bh=rH7/HZOg7f1c+2LCP+NbsDn3L5NWlRBCV/YsyucQqgI=;
+	h=From:Subject:Date;
+	b=MKzT0PgAJ4hSY2XBtf0JmfdNzpA2j45RxysfZm5APE3hZnytAkmhOHdcLUfeNemcK
+	 F4Pspqp+cYmoNxklzy1VFoNdXpMLmH2yJw3YV0rGa+dqM4Jkw4+gFf9eF/uhPCPydP
+	 2fPbNIlWaQRzfnyxKeQnxXZMl4OSZHrW2ixuIoYPGx1llq1C/tjFwJQ0nSVX+gGBFV
+	 Lf/MR7BQvW42lyTh4IBWp8EcFd4BSao9HL1zHFllyT3Oc98uF/mS1nuSrfXlMcBFVK
+	 aUCe/rOzGw5OvgtCc0cTVLwfrs9D9Yh4lFudwWHgdnYmQpB7drtpr87YYV1u+2LHdb
+	 GuRX9PVGGtJeA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Vinod Koul <vkoul@kernel.org>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
+Subject:
+ [PATCH v2] soundwire: intel_auxdevice: Fix system suspend/resume handling
+Date: Mon, 28 Apr 2025 21:50:07 +0200
+Message-ID: <12680420.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA-Xb89sgQd5ZaGO@pathway.suse.cz>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedukeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppedvudejrdduudegrdefgedrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddujedruddugedrfeegrdduledphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehpihgvrhhrvgdqlhhouhhishdrsghoshhsrghrtheslhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeihuhhnghdqtghhuhgrnhdrlhhirghosehlihhnuhigrdh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-On Mon, Apr 28, 2025 at 04:57:51PM +0200, Petr Mladek wrote:
-> On Thu 2025-04-24 17:28:16, Paul E. McKenney wrote:
-> > If ->interval is zero, then rate-limiting will be disabled.
-> > Alternatively, if interval is greater than zero and ->burst is zero,
-> > then rate-limiting will be applied unconditionally.
-> > 
-> > Therefore, make this classification be lockless.
-> > 
-> > Note that although negative ->interval and ->burst happen to be treated
-> > as if they were zero, this is an accident of the current implementation.
-> > The semantics of negative values for these fields is subject to change
-> > without notice.  Especially given that Bert Karwatzki determined that
-> > current calls to ___ratelimit() currently never have negative values
-> > for these fields.
-> >
-> > This commit replaces an earlier buggy versions.
-> 
-> If there was another revision then it would be nice to explicitly
-> describe also the reason why both zero ->interval and ->burst never
-> rate-limits. It is the state when the structure is zeroed. Some
-> existing code relied in this behavior.
-> 
-> If I get it correctly then this is the difference between this and
-> the previous version of this patch. And the previous version
-> caused regressions described by the Links...
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Very good, I will update the commit log on my next rebase.
+Before commit bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND
+conditionally") the runtime PM status of the device in intel_resume()
+had always been RPM_ACTIVE because setting DPM_FLAG_SMART_SUSPEND had
+caused the core to call pm_runtime_set_active() for that device during
+the "noirq" resume phase.  For this reason, the pm_runtime_suspended()
+check in intel_resume() had never triggered and the code depending on
+it had never run.  That had not caused any observable functional issues
+to appear, so effectively the code in question had never been needed.
 
-> > Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> > Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> > Reported-by: Bert Karwatzki <spasswolf@web.de>
-> > Reported-by: "Aithal, Srikanth" <sraithal@amd.com>
-> > Closes: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> > Reported-by: Mark Brown <broonie@kernel.org>
-> > Closes: https://lore.kernel.org/all/257c3b91-e30f-48be-9788-d27a4445a416@sirena.org.uk/
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Tested-by: "Aithal, Srikanth" <sraithal@amd.com>
-> 
-> Otherwise, it looks good to me:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+After commit bca84a7b93fd the core does not call pm_runtime_set_active()
+for all devices with DPM_FLAG_SMART_SUSPEND set any more and the code
+depending on the pm_runtime_suspended() check in intel_resume() runs if
+the device is runtime-suspended prior to a system-wide suspend
+transition.  Unfortunately, when it runs, it breaks things due to the
+attempt to runtime-resume bus->dev which most likely is not ready for a
+runtime resume at that point.
 
-Thank you!!!  And I will also apply this on my next rebase.
+It also does other more-or-less questionable things.  Namely, it
+calls pm_runtime_idle() for a device with a nonzero runtime PM usage
+counter which has no effect (all devices have nonzero runtime PM
+usage counters during system-wide suspend and resume).  It also calls
+pm_runtime_mark_last_busy() for the device even though devices cannot
+runtime-suspend during system-wide suspend and resume (because their
+runtime PM usage counters are nonzero) and an analogous call is made
+in the same function later.  Moreover, it sets the runtime PM status
+of the device to RPM_ACTIVE before activating it.
 
-							Thanx, Paul
+For the reasons listed above, remove that code altogether.
+
+On top of that, add a pm_runtime_disable() call to intel_suspend() to
+prevent the device from being runtime-resumed at any point after
+intel_suspend() has started to manipulate it because the changes
+made by that function would be undone by a runtime-suspend of the
+device.
+
+Next, once runtime PM has been disabled, the runtime PM status of the
+device cannot change, so pm_runtime_status_suspended() can be used
+instead of pm_runtime_suspended() in intel_suspend().
+
+Finally, make intel_resume() call pm_runtime_set_active() at the end to
+set the runtime PM status of the device to "active" because it has just
+been activated and re-enable runtime PM for it after that.
+
+Additionally, drop the setting of DPM_FLAG_SMART_SUSPEND from the
+driver because it has no effect on devices handled by it.
+
+Fixes: bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally")
+Reported-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Tested-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+v1 -> v2: New changelog
+
+Since it fixes a recent regression in 6.15-rc, I can route it through the
+PM tree unless that would be a major concern.
+
+---
+ drivers/soundwire/intel_auxdevice.c |   36 +++++++++++++-----------------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
+
+--- a/drivers/soundwire/intel_auxdevice.c
++++ b/drivers/soundwire/intel_auxdevice.c
+@@ -353,9 +353,6 @@
+ 	/* use generic bandwidth allocation algorithm */
+ 	sdw->cdns.bus.compute_params = sdw_compute_params;
+ 
+-	/* avoid resuming from pm_runtime suspend if it's not required */
+-	dev_pm_set_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
+-
+ 	ret = sdw_bus_master_add(bus, dev, dev->fwnode);
+ 	if (ret) {
+ 		dev_err(dev, "sdw_bus_master_add fail: %d\n", ret);
+@@ -640,7 +637,10 @@
+ 		return 0;
+ 	}
+ 
+-	if (pm_runtime_suspended(dev)) {
++	/* Prevent runtime PM from racing with the code below. */
++	pm_runtime_disable(dev);
++
++	if (pm_runtime_status_suspended(dev)) {
+ 		dev_dbg(dev, "pm_runtime status: suspended\n");
+ 
+ 		clock_stop_quirks = sdw->link_res->clock_stop_quirks;
+@@ -648,7 +648,7 @@
+ 		if ((clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET) ||
+ 		    !clock_stop_quirks) {
+ 
+-			if (pm_runtime_suspended(dev->parent)) {
++			if (pm_runtime_status_suspended(dev->parent)) {
+ 				/*
+ 				 * paranoia check: this should not happen with the .prepare
+ 				 * resume to full power
+@@ -715,7 +715,6 @@
+ 	struct sdw_cdns *cdns = dev_get_drvdata(dev);
+ 	struct sdw_intel *sdw = cdns_to_intel(cdns);
+ 	struct sdw_bus *bus = &cdns->bus;
+-	int link_flags;
+ 	int ret;
+ 
+ 	if (bus->prop.hw_disabled || !sdw->startup_done) {
+@@ -724,23 +723,6 @@
+ 		return 0;
+ 	}
+ 
+-	if (pm_runtime_suspended(dev)) {
+-		dev_dbg(dev, "pm_runtime status was suspended, forcing active\n");
+-
+-		/* follow required sequence from runtime_pm.rst */
+-		pm_runtime_disable(dev);
+-		pm_runtime_set_active(dev);
+-		pm_runtime_mark_last_busy(dev);
+-		pm_runtime_enable(dev);
+-
+-		pm_runtime_resume(bus->dev);
+-
+-		link_flags = md_flags >> (bus->link_id * 8);
+-
+-		if (!(link_flags & SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE))
+-			pm_runtime_idle(dev);
+-	}
+-
+ 	ret = sdw_intel_link_power_up(sdw);
+ 	if (ret) {
+ 		dev_err(dev, "%s failed: %d\n", __func__, ret);
+@@ -761,6 +743,14 @@
+ 	}
+ 
+ 	/*
++	 * Runtime PM has been disabled in intel_suspend(), so set the status
++	 * to active because the device has just been resumed and re-enable
++	 * runtime PM.
++	 */
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
++	/*
+ 	 * after system resume, the pm_runtime suspend() may kick in
+ 	 * during the enumeration, before any children device force the
+ 	 * master device to remain active.  Using pm_runtime_get()
+
+
+
