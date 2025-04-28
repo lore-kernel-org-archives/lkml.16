@@ -1,125 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682FA14F90;
-	Mon, 28 Apr 2025 01:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4DC8BF8;
+	Mon, 28 Apr 2025 01:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745804183; cv=none; b=gWibSbQNRqrE4Mi1cEKZtN+tAKUpBsya0b+9bz5+6s51SFmAgyROPyBZlTzUiwOTcA+zfynyEBuM4lj+8KzFnV6WgjqeAuM5jnBrV550YEhl2V8SamO4kZGyIPJ++8D0rGzkfjYJ9QmQOV4Ar+QXCWLc2GQrbyKrXw9+N8h3qoQ=
+	t=1745804312; cv=none; b=jTDR8AcYsYyROyGmVFlYCLKfAW9c/wUMwViku7TvOcQY74r/z1vkcoheKxqszstNPqil+P2LJsPhDCCzujyziq6q12+6xShBQx54IZNFX0nFU1XD+jPfD2retfpLY2TFhRJ3mlM/m1nXACexeBmQp9TzC38WfjkMUnpGTBTOKoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745804183; c=relaxed/simple;
-	bh=ka5i6kOXSNGQcxxbduG/8nuC65hLt6QpSbzaVuD2Wr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b3XjUrunau+81CgUYdrRKb2SgVcNV7+Tc2ZoVj5et/SVxk2rLgTf2QM8Cx2jNrd4OssItFN7Y8k/e4fRp0r+thmiKdtOQ8T2uvykNonzGnfk4yPEBhr0PyOV1UMlRR4krTeXUpQ0Lz6fuH3b2MsrGhOBaLjACadzw0v3B6QTDbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pem8HCV4; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pem8HCV4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745804182; x=1777340182;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ka5i6kOXSNGQcxxbduG/8nuC65hLt6QpSbzaVuD2Wr0=;
-  b=Pem8HCV4UxyX+kLsW6WDADxP+ZZlpoXyPwuIm5bfVbOtlP6T6mlGnPxA
-   0SIj2s40zDUBIQbth/pl4gnYYTOrST/SD0WJ5KI3zBEv1w+ihwavf7AB0
-   raqXegQsd+0KUwn+mKzMZLuj4JtnPD6jNyy8yyFBCwDRLOTjFpjRhHczZ
-   /qER2kF9xPqUG2XVDNYyuK/gp1TZbEIiz3I2cY89Pi6+bakgXIMVsrI/o
-   7IEZsNO1JwmDqXtdr/KDf8otYARP+IOYCfGsaMr/IbpmGA92HUMgUucPn
-   ik5uTAvs7kecQXARXVd3bPNcYdxxCrGTcNEhDzlLNdKgw1HJXg/uWeSZJ
-   g==;
-X-CSE-ConnectionGUID: uPDbWgNIRaC9Lzq3hCKFoQ==
-X-CSE-MsgGUID: WU36sraISXupnaYWOgStbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47511603"
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="47511603"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 18:36:21 -0700
-X-CSE-ConnectionGUID: ks4dRZHRQR2z+gA9bUZEsQ==
-X-CSE-MsgGUID: 3TSRWkChRnOLfY4dm9t51g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="137427362"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 18:36:14 -0700
-Message-ID: <dcfd9bfc-44db-4fd8-a49c-0c96c68f6b88@linux.intel.com>
-Date: Mon, 28 Apr 2025 09:32:04 +0800
+	s=arc-20240116; t=1745804312; c=relaxed/simple;
+	bh=2kFp7r6fupdWFFANCr/4/j7ojmTs3iFY/1TiMfvtOE4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=js7qyHyWOfEXxGPqgCVvYIbaScFMXf0tMABWjHH2ga1Q0qMaECiwEJekRfkYLXueYlwQM7BPon5xJ4NVYWvnhtgnRQTb7cMdia2I587CN1RtpdjLfTfuTumX2uhpLOxunMyacu62gI4ge3GSV3XOY6aYl8zIMUwe5PW2Gfvv7cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 5634092009C; Mon, 28 Apr 2025 03:32:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 531F292009B;
+	Mon, 28 Apr 2025 02:32:55 +0100 (BST)
+Date: Mon, 28 Apr 2025 02:32:55 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Huacai Chen <chenhuacai@kernel.org>
+cc: Marco Crivellari <marco.crivellari@suse.com>, linux-mips@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, 
+    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Frederic Weisbecker <frederic@kernel.org>, 
+    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v7 1/2] MIPS: Fix idle VS timer enqueue
+In-Reply-To: <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2504280224110.31828@angie.orcam.me.uk>
+References: <20250403161143.361461-1-marco.crivellari@suse.com> <20250403161143.361461-2-marco.crivellari@suse.com> <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
- ioctl
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
- corbet@lwn.net, will@kernel.org
-Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
- thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
- shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
- peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
- praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
- linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
- alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 4/26/25 13:58, Nicolin Chen wrote:
-> diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-> index a65153458a26..02a111710ffe 100644
-> --- a/drivers/iommu/iommufd/viommu.c
-> +++ b/drivers/iommu/iommufd/viommu.c
-> @@ -170,3 +170,97 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
->   	iommufd_put_object(ucmd->ictx, &viommu->obj);
->   	return rc;
->   }
-> +
-> +void iommufd_vcmdq_destroy(struct iommufd_object *obj)
-> +{
-> +	struct iommufd_vcmdq *vcmdq =
-> +		container_of(obj, struct iommufd_vcmdq, obj);
-> +	struct iommufd_viommu *viommu = vcmdq->viommu;
-> +
-> +	if (viommu->ops->vcmdq_destroy)
-> +		viommu->ops->vcmdq_destroy(vcmdq);
-> +	iopt_unpin_pages(&viommu->hwpt->ioas->iopt, vcmdq->addr, vcmdq->length);
-> +	refcount_dec(&viommu->obj.users);
-> +}
-> +
-> +int iommufd_vcmdq_alloc_ioctl(struct iommufd_ucmd *ucmd)
-> +{
-> +	struct iommu_vcmdq_alloc *cmd = ucmd->cmd;
-> +	struct iommufd_viommu *viommu;
-> +	struct iommufd_vcmdq *vcmdq;
-> +	struct page **pages;
-> +	int max_npages, i;
-> +	dma_addr_t end;
-> +	int rc;
-> +
-> +	if (cmd->flags || cmd->type == IOMMU_VCMDQ_TYPE_DEFAULT)
+On Sun, 27 Apr 2025, Huacai Chen wrote:
 
-I don't follow the check of 'cmd->type == IOMMU_VCMDQ_TYPE_DEFAULT'
-here. My understanding is that it states that "other values of type are
-not supported". If so, shouldn't it be,
+> > +r4k_wait_exit:
+> > +       .set    mips0
+> > +       local_irq_disable
+> >         jr      ra
+> > -        nop
+> > -       .set    pop
+> > -       END(__r4k_wait)
+> > +       END(r4k_wait)
+> > +       .previous
+> I'm very sorry for the late response, but I think ".previous" should
+> be moved to the second patch.
 
-	if (cmd->flags || cmd->type != IOMMU_VCMDQ_TYPE_DEFAULT)
+ Indeed; does it even assemble?  Correctness aside I'd rather it didn't 
+cause someone a problem with bisecting sometime.  NB I had no opportunity 
+either to look at this version earlier.
 
-?
-
-> +		return -EOPNOTSUPP;
-> +	if (!cmd->addr || !cmd->length)
-> +		return -EINVAL;
-> +	if (check_add_overflow(cmd->addr, cmd->length - 1, &end))
-> +		return -EOVERFLOW;
-
-Thanks,
-baolu
+  Maciej
