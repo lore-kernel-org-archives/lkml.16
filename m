@@ -1,91 +1,79 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646038C1E;
-	Mon, 28 Apr 2025 19:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057DD8C1E;
+	Mon, 28 Apr 2025 19:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745868812; cv=none; b=jKsrYSt44mkI38jNNLXnNvUYbm8W33XowRPGzp1XCR2EMVifnEzRGkj8j32vZaIRHWtg5x98GukbE+6FrEHPxLdz5vtpq5JBby1GbDe84Z37ufajBiP9fjiT5b3cprV+6FuWou32YTNQO9v0ljD0NUtgiYLahIPj3QlssiSHQCk=
+	t=1745868873; cv=none; b=cmZQHQesfqIFUwC4XeieLULfxELs71vqz0WYihBfIINKupfxSEfBsxTIDhl8Kx6q3ci/MLMKY+GjcfRMrsAJ36UNarteoahhcf6JDH6Hd1NiIobmzChIvYidn7K3KHfXJJLPYxcZ42pd1gP690TDKpnVrD43Q5w6XYSf5KW07ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745868812; c=relaxed/simple;
-	bh=fX3wJzMvCpmppQx9eX7xDgMDyv3PO2lJW4kBkq2APOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KH9t1BHsIYcH2SaBRsm6jbpqCWGxlsjBHvCQdZOY5NVrRL3QrYCYvsTk6syRzwkhxxRjds5iAYyCjRfD6mYS2G1dfXA07NCTlF/c9OSKhedpGzl0GctEDV+B0cMAjFkiUZ4y3WOy7QVwpWM0OmNCMBHtOvWOvf2u4LeVNuyWJOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSoMrtCG; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745868873; c=relaxed/simple;
+	bh=O/XhKiRRyl6IGflfhMQsm6qz0jvPQrFNNodz6FocBek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mNdb1Um4m+zCXGQjWiE2i54w4cJRcb83M9LuB17jqbfK9GJpprZ2iZLF2C1/Www3p4tF1SvFbFdEgkvyi8N9rErTFAtUsuBoja9MYQD9CcHCsR+znf65d3A4Ndn3mlCulX/uzCg6hopBT0OENrd/URkR3ahrOTGVEGEYyo59bDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhB5gZ5j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSoMrtCG"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2cc57330163so3446007fac.2;
-        Mon, 28 Apr 2025 12:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745868810; x=1746473610; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fX3wJzMvCpmppQx9eX7xDgMDyv3PO2lJW4kBkq2APOo=;
-        b=QSoMrtCGNdtBduhY3i7WilJQWhs4BW8XVZBTg8CaMrpPTyk9xnluZMpPECzEc6HKPn
-         Y/CtmXS1CYqT69jk4CfyH0Voob6JsvluS2l8kA7cKnkL7IJT8LWTbAnXB6TGm89r5F3b
-         B8bW7X65/7Gcs81GFTNXMa7Nsu8xSOHn+5U0AXdv2r/JcPKRtO+WJZgKhbXccr6L3mCY
-         Sff3+bByKaw1kHnSFTHKXO1dwcLtW1sDAbIaW7OhF/8rbYMRKuywunLAXKZHmQ5ihp6t
-         B9ZniXwl7E2TWhNTX+vO5QiLOX26+yJt7ubi9+9buXoso58dA+MMkhVUNB8zvLm7/7nv
-         SZDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745868810; x=1746473610;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fX3wJzMvCpmppQx9eX7xDgMDyv3PO2lJW4kBkq2APOo=;
-        b=bu7shPUZfKS+EQn7LIruBAmu3JYJAb2od1E3QyzkfRW6ZSjjtblbPI4rmkwSvXaA4a
-         X64L9vKgrprNT/lu3PMl7SN1Eoprt95BGklYXCXhcuyCyjawQxMuDaucSBPeR3wr9Fds
-         XGX70E8kMxKv6x6Ir703Nd6a0fH78ksM1746qA9TFN8HsiSSOihwHYkI0y5XVQYmLh62
-         6iLgKvDFCZCz2pZ9RmjROtB/w8uR04GNxUhOtyUeljw5IhJd6JBZagFTWrPxFu3nLYyC
-         ng8y14XEQ/x6+wBprKBMbS/s1esSPhLJVipfQbVECKZ9/3Yy/atLtd/uWbNMGiw8hOui
-         2Tpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUusY3tlHe82ITnDvm6uNLnGdfADzXcBTSWbiyzVlyZiFcgOmUdbE4AC1l9nk4i8NED/KRPqZQY/ws=@vger.kernel.org, AJvYcCXQQWtScJM1c+xCQg0CgxrWhSr0x2ThiRWg9DMNDeEGF7drYzbAzlBO8D+jt2CbNISvpXZUHDsaL4gVOTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp9OLSrvZZsX+RZz2K21sj3DP+ncD1Y82uyNWyAzmuG67cHlFF
-	+tJ2UGnLRG4oHQR01Gsvc+I9DzPSQ9WLsPBNTVBGm6Uu2h1+b44x1K5J9g==
-X-Gm-Gg: ASbGncsuBbWPUAQT/t2fL37Z8lH/y2n8V/T/Dl61cP8RSckju+LPdvfOTY9iWQ1ewBu
-	WMWuHxvYmH5z58oSi0xR+VYT60vBgtfTMYIK0LRIxZKmAzDollofoQrggpCxqA/kBPqNp1wYtJc
-	Y34XqdaOLXpbhnYD/x0ajachFYFC0rOCUvg7LQFJ9CR2pq/uBPbC6Hhef+b65LaSly5C36CR+LE
-	Sd/CDsqMj1obq1o2Ny6OmI5pChozqvxbuxUCMBzMBCYsmpyOab06y1hVuYZ9IeOfVOk2bNfNW51
-	+RPfgRd67TE24eJmSCkjFgURA0002N9LTAgBpm9RtA==
-X-Google-Smtp-Source: AGHT+IFucS+go6LKq+JUwgvoDuptmo8PyOjo7aYF+zk9OasgwvP/cfm1kll04Xv8npNY6Lsr5M4vWA==
-X-Received: by 2002:a05:6871:33a0:b0:2d4:d820:6d82 with SMTP id 586e51a60fabf-2da486a7c1bmr53271fac.26.1745868809865;
-        Mon, 28 Apr 2025 12:33:29 -0700 (PDT)
-Received: from debian ([200.92.175.161])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d973736065sm2447490fac.16.2025.04.28.12.33.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 12:33:29 -0700 (PDT)
-Date: Mon, 28 Apr 2025 13:34:01 -0600
-From: Your Name <kike.correo99.f@gmail.com>
-To: daniel.lezcano@linaro.org
-Cc: glaroque@baylibre.com, rafael@kernel.org, rui.zhang@intel.com,
-	lukasz.luba@arm.com, linux-pm@vger.kernel.org,
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND][PATCH] thermal: amlogic: Rename Uptat to uptat to follow
- kernel coding style
-Message-ID: <aA_YKeU45ZTXYUes@debian.debian>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhB5gZ5j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3237EC4CEE4;
+	Mon, 28 Apr 2025 19:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745868872;
+	bh=O/XhKiRRyl6IGflfhMQsm6qz0jvPQrFNNodz6FocBek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XhB5gZ5jpUtXOkQUxZ9HB55IbOy2S3tX+HspcrduA4GmoTsOBT2auIqcDLx03kRfd
+	 7iF0evJUDCpFd/i94ISdPqS9Mj64Xxi9uHqcrtGGPUQE+edo2W9sLFWLK7qFecLU/U
+	 5McoESeglGSxrcn0bYQuJ3V62XLl8qH64bQx5EQ5aRO8PAagGlrl71YwmP1xX3Zock
+	 BIBQpoeNXKAy4QJLhhr6XxJReo9SpRRKLfa+4TncDFx2/o07UOLbM02Hn2yObuQ7NI
+	 qeQ1QfWUdptNkswKbvqfMP8e1f6Op0j2e77qRintQwc871mCswxzAwvBX3OyT6XV++
+	 er9HMLsinSuUQ==
+Date: Mon, 28 Apr 2025 12:34:30 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, linux-sgx@vger.kernel.org,
+	Jarkko Sakkinen <jarkko@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] x86/sgx: Use SHA-256 library API instead of crypto_shash
+ API
+Message-ID: <20250428193430.GB1606@sol.localdomain>
+References: <20250428183838.799333-1-ebiggers@kernel.org>
+ <ae48d190-03fd-4f4d-ab6f-969301e8b96e@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ae48d190-03fd-4f4d-ab6f-969301e8b96e@intel.com>
 
-Hi Daniel,
+On Mon, Apr 28, 2025 at 12:19:50PM -0700, Dave Hansen wrote:
+> On 4/28/25 11:38, Eric Biggers wrote:
+> > -static int sgx_get_key_hash(const void *modulus, void *hash)
+> > -{
+> > -	struct crypto_shash *tfm;
+> > -	int ret;
+> > -
+> > -	tfm = crypto_alloc_shash("sha256", 0, CRYPTO_ALG_ASYNC);
+> > -	if (IS_ERR(tfm))
+> > -		return PTR_ERR(tfm);
+> > -
+> > -	ret = __sgx_get_key_hash(tfm, modulus, hash);
+> > -
+> > -	crypto_free_shash(tfm);
+> > -	return ret;
+> > -}
+> 
+> Let's just say, theoretically, that there was some future hardware that
+> also supported SHA384.  There doesn't seem to be a SHA-384 library API.
+> 
+> Would you leave the crypto_shash() in place if that were to be
+> happening? Theoretically of course.
 
-Apologies for my previous email being sent in an incorrect format.
-Thank you for applying my patch! I’m trying to verify where it was merged.
-Could you confirm if my commit below was merged into the `staging-testing` branch or another tree?
+Currently SHA-384 is only available via crypto_shash, but I'm planning to add a
+library API for that too.  (Well, I actually want SHA-512, but it's
+straightforward to support SHA-384 alongside that.)  It's up to you if you'd
+then want to use crypto_shash vs. the library functions for both, but I'd lean
+towards just using the library functions.
 
-Commit hash: 84fe0cc6fddb6afcdca838d80756080f84cf9ecd
-
-Best regards,
-Enrique Vazquez
-
----
-Signed-off-by: Enrique Vazquez <tu-correo@gmail.com>
+- Eric
