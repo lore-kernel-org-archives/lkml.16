@@ -1,294 +1,505 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F75A22DF91;
-	Mon, 28 Apr 2025 15:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3711325B687
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745854594; cv=none; b=ICGEMSvbfAJNLlbVtGAKi6daYtsw7TlCKP2FQio1jOkqJHuQ57QwxE69pkf/srvySQUV1ef//JVolh6y2kXdiXR5rfecm1yPu1xJHrvKtkcS7Pnk8benGGWhVaF2GFC3I/8pHRRSMqPwaoR01HeEodIVNzwaw4oLy4EGxUr2rIc=
+	t=1745854596; cv=none; b=GceHyjM5OZKnxjkKeA9IzRI3SZIhCu+3F7m/bUrIzYQxJ9Vxcy6235h//lohwiWf7c54F7Tz1/sMIHXgUUeMRONs1ZTd0Alt45inRQcgIx3rfwLYv7vPxbxfESSdlOFSyQstX7nXWVtH3yYCv7K2bVBFsgbrxU6xPg9ET1jLXG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745854594; c=relaxed/simple;
-	bh=ba/1nG2iMi8FRfQ+ntQJ3SDVhwOTuJmdWB5JrunUOIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hXp301/nt3fMK+X9dgIpbW74pYHq5nC+q53vKtrSyFc85Lsu/QOuYzvb9x/IA5UUH3be0amjUztyedw/isOkm4L1X9cHDg6IpoGR3P7xO/ujJjmtHt7WusBPzamyXi/G0S4dCGkgDJi5s6w1LxN0LB6ibrVY2cQE+bLPEX79jso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC7DE1595;
-	Mon, 28 Apr 2025 08:36:23 -0700 (PDT)
-Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10FCA3F673;
-	Mon, 28 Apr 2025 08:36:25 -0700 (PDT)
-From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-To: ryan.roberts@arm.com,
-	suzuki.poulose@arm.com,
-	yang@os.amperecomputing.com,
-	corbet@lwn.net,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	jean-philippe@linaro.org,
-	robin.murphy@arm.com,
-	joro@8bytes.org,
-	akpm@linux-foundation.org,
-	paulmck@kernel.org,
-	mark.rutland@arm.com,
-	joey.gouly@arm.com,
-	maz@kernel.org,
-	james.morse@arm.com,
-	broonie@kernel.org,
-	oliver.upton@linux.dev,
-	baohua@kernel.org,
-	david@redhat.com,
-	ioworker0@gmail.com,
-	jgg@ziepe.ca,
-	nicolinc@nvidia.com,
-	mshavit@google.com,
-	jsnitsel@redhat.com,
-	smostafa@google.com,
-	kevin.tian@intel.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev
-Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-Subject: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
-Date: Mon, 28 Apr 2025 15:35:14 +0000
-Message-ID: <20250428153514.55772-4-miko.lenczewski@arm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250428153514.55772-2-miko.lenczewski@arm.com>
-References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+	s=arc-20240116; t=1745854596; c=relaxed/simple;
+	bh=T+0zUwFG34pf1XDFY5WUwG4Hdkp0ZBanQkoXkUoVhwg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X7IXFouKO/PFEfAaa9SNEDxbhw2wgXIS36l9foAIuE2btC1XILhPRKm6jbeeJUaw+fvqxgV6fRTtgFFZY0t3Y8sb0O7/bAKSHZ/3KjuWyQUrZ1gRRGVpRwY0P6GtvUqnnnjR+U7wo8FuE3wyFJZfSPny5DRE9RrnBU95HYl9jbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=t4tLLXug; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="t4tLLXug"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e900a7ce55so90765016d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745854593; x=1746459393; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4s77mP+aXHVnwDrJa9wz0BjHNRnKSn8vcA3GIllhh7k=;
+        b=t4tLLXugLNSMT9zl9+PCyILZyvoTOBlfn2ALV629fEI0f6ZubwBgekDjmIlY51MBn+
+         qaHoYJM+1GebVhKFR6wLKxYj26A+e1+rZ+qxpjWN26JiL5VSrYJnpH0c/8D6iWNBKbVo
+         nQgmFbBquv5FC1q/crGp3pg5tLDTFDNKGqZbbGQOT7SamjLIqFJ8w+RlWmktMQJS81tt
+         vLjGvr0kvCvX5YGk+2jXFLlOsEGBeDOA+Q50OkLHiQmgR0WTq5ehP6ScBhwn8FAPU6tZ
+         APstgnAp10n6UydIEBGR7Diiqx0HhdlY7B0q7QJnL0f48oHkX1oyhzE/sIWasg+2J/9t
+         nQcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745854593; x=1746459393;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4s77mP+aXHVnwDrJa9wz0BjHNRnKSn8vcA3GIllhh7k=;
+        b=mmhulxwAClt+qUP7/9tZWMA6TgWTNWGzOx+hjMlgjDxCytOSXG1lVgAt+KhCPJG6KA
+         OGYTMjMNTtsVwHbApjOnoom0zJqW+eZag1nzTxGyhs+ZEOUujARzzD4qUo3r1YQee4e4
+         Psjd/5A3WfkPQjCAhltzuVfQwem53c1GmGdEveVPIap5lKOtwIcQVn9Kaj3AjcXPpqWC
+         6TU7UcQQv5cchgjL2t9q7bwQkQBWsja1Iy1CU2EIzJdT2TKoE8oG1yGFW2DItb0hyvfo
+         Bq1rLIgScva1roTs1zSYDME0YyLWLND6SfzMPUNzz21tFigMeGPKp8GcEQUdz6bAcVg1
+         5JfA==
+X-Forwarded-Encrypted: i=1; AJvYcCV82OPGy62cgg0kwM3J2v9kBTMC+xK92yQTaRnezTKxOackrMLxNVuZIPc0j+My6BfsmSmc8zYV2dNSkl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhXvz0mEq58DgwowrNC3yncH1oham7U2TP77tMtvsrZWnUXBbk
+	RBRBnZYSscNXBhUvZOqSAAA8LXHdKjlkiL6LFoeEF3juSL2b4ZrMmirUQtS5WM8=
+X-Gm-Gg: ASbGnctV74rrLXrEzOrIpgZwqwkQzp5Rbo9Uv2cDBCX6zDZFOjilxwLMpImli/FmYnK
+	H3PVr1sFxfmLKR26pgmx2GuAm0eAMSXf/wo2FjHjDCvAkJbzzwgMKlBdPEmUCvYTwW59cIdRvyn
+	2cP2fakveeXOddn15o6pgFdg2OLqNOkLG8lMVgmj+lZxSb/4deaV1Le2tItetaDDIzsbbzrJla0
+	7+lGHwXXUNoSuYqUY2m30UmYwICGJl0Tj7EGW2Hq26bh6qbmTPCaGT/Zw94+rvuyiULJAWbd/tU
+	59cfo8r0E9b5SmN7GZ54U4IeR4jZozCpdi/hjcOoy8Rqlg==
+X-Google-Smtp-Source: AGHT+IFydyQgt8+hX6oHv7I3+R5vxYQo32+nBN0WWoJP83EwPy05Rm+1efR0rfQFgn/GZ1An5Oq7oA==
+X-Received: by 2002:a05:6214:d4e:b0:6f4:c8cd:abcc with SMTP id 6a1803df08f44-6f4d1dc90b8mr178871376d6.0.1745854592768;
+        Mon, 28 Apr 2025 08:36:32 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::c41? ([2606:6d00:15:9913::c41])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aaf904sm62513926d6.101.2025.04.28.08.36.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 08:36:32 -0700 (PDT)
+Message-ID: <833134215fcd22360cf8aceb61539c7c03dcaa02.camel@ndufresne.ca>
+Subject: Re: [PATCH v2] media: amphion: Add H264 and HEVC profile and level
+ control
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Ming Qian <ming.qian@nxp.com>, "mchehab@kernel.org"
+ <mchehab@kernel.org>,  "hverkuil-cisco@xs4all.nl"	
+ <hverkuil-cisco@xs4all.nl>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org"	
+ <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
+ "kernel@pengutronix.de"	 <kernel@pengutronix.de>, "festevam@gmail.com"
+ <festevam@gmail.com>, "X.H. Bao"	 <xiahong.bao@nxp.com>, Eagle Zhou
+ <eagle.zhou@nxp.com>, "imx@lists.linux.dev"	 <imx@lists.linux.dev>,
+ "linux-media@vger.kernel.org"	 <linux-media@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"	
+ <linux-arm-kernel@lists.infradead.org>
+Date: Mon, 28 Apr 2025 11:36:31 -0400
+In-Reply-To: <AS8PR04MB824782B77E0253BF2C82823EE7862@AS8PR04MB8247.eurprd04.prod.outlook.com>
+References: <20241210093337.3779686-1-ming.qian@oss.nxp.com>
+	 <74eb0589ae54855db1d2024591d501989e30027a.camel@ndufresne.ca>
+	 <a60b84d8-a179-4c33-aed0-1f2ad1857f7b@oss.nxp.com>
+	 <caaa10071d063069a4f479862b38f304c89da21e.camel@ndufresne.ca>
+	 <AS8PR04MB824782B77E0253BF2C82823EE7862@AS8PR04MB8247.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
-and this commit adds a dedicated BBML2 cpufeature to test against
-support for, as well as a kernel commandline parameter to optionally
-disable BBML2 altogether.
+Hi,
 
-This is a system feature as we might have a big.LITTLE architecture
-where some cores support BBML2 and some don't, but we want all cores to
-be available and BBM to default to level 0 (as opposed to having cores
-without BBML2 not coming online).
+Le dimanche 27 avril 2025 =C3=A0 01:44 +0000, Ming Qian a =C3=A9crit=C2=A0:
+> Hi Nicolas,
+>=20
+> On 2025/4/26 3:53, Nicolas Dufresne wrote:
+> > Le vendredi 25 avril 2025 =C3=A0 10:33 +0800, Ming Qian(OSS) a =C3=A9cr=
+it=C2=A0:
+> > >=20
+> > > Hi Nicolas,
+> > >=20
+> > > On 2025/4/23 4:15, Nicolas Dufresne wrote:
+> > > > Hi Ming,
+> > > >=20
+> > > > Le mardi 10 d=C3=A9cembre 2024 =C3=A0 18:33 +0900, Ming Qian a =C3=
+=A9crit :
+> > > > > From: Ming Qian <ming.qian@nxp.com>
+> > > > >=20
+> > > > > For format H264 and HEVC, the firmware can report the parsed prof=
+ile idc
+> > > > > and level idc to driver, the information may be useful.
+> > > > > Implement the H264 and HEVC profile and level control to report t=
+hem.
+> > > > >=20
+> > > > > Signed-off-by: Ming Qian <ming.qian@nxp.com>
+> > > > > ---
+> > > > > v2
+> > > > > -- add support for V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASEL=
+INE
+> > > > >=20
+> > > > > =C2=A0=C2=A0 drivers/media/platform/amphion/vdec.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 61 +++++++++++++
+> > > > > =C2=A0=C2=A0 drivers/media/platform/amphion/vpu_defs.h=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 1 +
+> > > > > =C2=A0=C2=A0 drivers/media/platform/amphion/vpu_helpers.c | 93 ++=
+++++++++++++++++++
+> > > > > =C2=A0=C2=A0 drivers/media/platform/amphion/vpu_helpers.h |=C2=A0=
+ 5 ++
+> > > > > =C2=A0=C2=A0 drivers/media/platform/amphion/vpu_malone.c=C2=A0 |=
+=C2=A0 3 +-
+> > > > > =C2=A0=C2=A0 5 files changed, 162 insertions(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/drivers/media/platform/amphion/vdec.c b/drivers/medi=
+a/platform/amphion/vdec.c
+> > > > > index ca8f7319503a..61d5598ee6a1 100644
+> > > > > --- a/drivers/media/platform/amphion/vdec.c
+> > > > > +++ b/drivers/media/platform/amphion/vdec.c
+> > > > > @@ -232,6 +232,37 @@ static int vdec_ctrl_init(struct vpu_inst *i=
+nst)
+> > > > > =C2=A0=C2=A0=C2=A0			=C2=A0 V4L2_CID_MPEG_VIDEO_DEC_DISPLAY_DELAY=
+_ENABLE,
+> > > > > =C2=A0=C2=A0=C2=A0			=C2=A0 0, 1, 1, 0);
+> > > > > =C2=A0=C2=A0=20
+> > > > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_H264=
+_PROFILE,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_PRO=
+FILE_MULTIVIEW_HIGH,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~((1 << V4L2_MPEG_VIDEO_=
+H264_PROFILE_BASELINE) |
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE) |
+> > > >=20
+> > > > You've added it here, but you will never report it, see my comment
+> > > > below.
+> > > Yes, you're right,
+> > > firmware can't report the sps_constraint_set1_flag yet,
+> > > so we need to request a firmware interface change to report the
+> > > sps_constraint_set1_flag.
+> > >=20
+> > > If we remove PROFILE_CONSTRAINED_BASELINE here, then these streams wi=
+ll
+> > > failed to play with gstreamer.
+> > > If we keep it here, then these stremas can be played, but driver will
+> > > report wrong profile.
+> > >=20
+> > > Maybe we need to change the firmware interface firstly.
+> >=20
+> > Well, all software have bugs, even the firm ones. Just comment about
+> > it.
+> >=20
+> > Perhaps you already said, but does Amphion really support ASO/FMO ?
+> > Since if you don't really support it, you may just drop BASELINE and
+> > always report CONSTRAINED_BASELINE. Accuracy will come with a firmware
+> > update.
+> >=20
+>=20
+> I'm not sure whether Amphion malone decoder can support ASO or not.
+> But the firmware does not filter out this feature.
+> And firmware do filter out the FMO, so FMO is not supported.
+>=20
+> The CONSTRAINED_BASELINE is subset of BASELINE, some streams maybe=20
+> encoded with BASELINE profile, without enabling ASO or FMO. This is=20
+> probably not uncommon. For these streams, I think we still need to=20
+> support, so driver can't drop BASELINE profile.
 
-To support BBML2 in as wide a range of contexts as we can, we want not
-only the architectural guarantees that BBML2 makes, but additionally
-want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
-us having to prove that no recursive faults can be induced in any path
-that uses BBML2, allowing its use for arbitrary kernel mappings.
-Support detection of such CPUs.
+In the past we had agreed that userspace should handle that, so that
+drivers don't have to lie about it. That being said, for stateful it
+means the firmware must not immediately reject it, and only fail when
+it notices an unsupported feature. So in some ways, it have to have
+some support for it. For ASO, it is detected while parsing VCL, can't
+be seen in the SPS or PPS, so that makes it the hardest. A constrained
+decoder, will imediatly ail if the mb offset of the first VCL is not 0.
+An baseline decoder is suppose to accumulate until it see the start of
+the next VCL (pic_num change mostly) and then reorder.
 
-Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
----
- .../admin-guide/kernel-parameters.txt         |  3 +
- arch/arm64/Kconfig                            | 19 +++++
- arch/arm64/include/asm/cpucaps.h              |  2 +
- arch/arm64/include/asm/cpufeature.h           |  5 ++
- arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
- arch/arm64/kernel/pi/idreg-override.c         |  2 +
- arch/arm64/tools/cpucaps                      |  1 +
- 7 files changed, 103 insertions(+)
+Short story, for stateful, I'm fine either way, so feel free to keep it
+that way.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index d9fd26b95b34..2749c67a4f07 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -449,6 +449,9 @@
- 	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
- 			32 bit applications.
- 
-+	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
-+			2 support
-+
- 	arm64.nobti	[ARM64] Unconditionally disable Branch Target
- 			Identification support
- 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index a182295e6f08..613b4925ca06 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -2070,6 +2070,25 @@ config ARM64_TLB_RANGE
- 	  The feature introduces new assembly instructions, and they were
- 	  support when binutils >= 2.30.
- 
-+config ARM64_BBML2_NOABORT
-+	bool "Enable support for Break-Before-Make Level 2 detection and usage"
-+	default y
-+	help
-+	  FEAT_BBM provides detection of support levels for break-before-make
-+	  sequences. If BBM level 2 is supported, some TLB maintenance requirements
-+	  can be relaxed to improve performance. We additonally require the
-+	  property that the implementation cannot ever raise TLB Conflict Aborts.
-+	  Selecting N causes the kernel to fallback to BBM level 0 behaviour
-+	  even if the system supports BBM level 2.
-+
-+	  To enable detection of BBML2 support, and to make use of it, say Y.
-+
-+	  Detection of and support for BBM level 2 can optionally be overridden
-+	  at runtime via the use of the arm64.nobbml2 kernel commandline
-+	  parameter. If your system claims support for BBML2, but is unstable
-+	  with this option enabled, either say N or make use of the commandline
-+	  parameter override to force BBML0.
-+
- endmenu # "ARMv8.4 architectural features"
- 
- menu "ARMv8.5 architectural features"
-diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-index 9d769291a306..413eec6e2438 100644
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -23,6 +23,8 @@ cpucap_is_possible(const unsigned int cap)
- 		return IS_ENABLED(CONFIG_ARM64_PAN);
- 	case ARM64_HAS_EPAN:
- 		return IS_ENABLED(CONFIG_ARM64_EPAN);
-+	case ARM64_HAS_BBML2_NOABORT:
-+		return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT);
- 	case ARM64_SVE:
- 		return IS_ENABLED(CONFIG_ARM64_SVE);
- 	case ARM64_SME:
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index c4326f1cb917..8f36ffa16b73 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -848,6 +848,11 @@ static inline bool system_supports_pmuv3(void)
- 	return cpus_have_final_cap(ARM64_HAS_PMUV3);
- }
- 
-+static inline bool system_supports_bbml2_noabort(void)
-+{
-+	return alternative_has_cap_unlikely(ARM64_HAS_BBML2_NOABORT);
-+}
-+
- int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
- bool try_emulate_mrs(struct pt_regs *regs, u32 isn);
- 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9c4d6d552b25..7a85a1bdc6e9 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2200,6 +2200,70 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
- 	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
- }
- 
-+static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
-+{
-+	/*
-+	 * We want to allow usage of bbml2 in as wide a range of kernel contexts
-+	 * as possible. This list is therefore an allow-list of known-good
-+	 * implementations that both support bbml2 and additionally, fulfill the
-+	 * extra constraint of never generating TLB conflict aborts when using
-+	 * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
-+	 * kernel contexts difficult to prove safe against recursive aborts).
-+	 *
-+	 * Note that implementations can only be considered "known-good" if their
-+	 * implementors attest to the fact that the implementation never raises
-+	 * TLBI conflict aborts for bbml2 mapping granularity changes.
-+	 */
-+	static const struct midr_range supports_bbml2_noabort_list[] = {
-+		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
-+		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
-+		{}
-+	};
-+
-+	return is_midr_in_range_list(cpu_midr, supports_bbml2_noabort_list);
-+}
-+
-+static inline unsigned int cpu_read_midr(int cpu)
-+{
-+	WARN_ON_ONCE(!cpu_online(cpu));
-+
-+	return per_cpu(cpu_data, cpu).reg_midr;
-+}
-+
-+static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int scope)
-+{
-+	if (!IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT))
-+		return false;
-+
-+	if (scope & SCOPE_SYSTEM) {
-+		int cpu;
-+
-+		/*
-+		 * We are a boot CPU, and must verify that all enumerated boot
-+		 * CPUs have MIDR values within our allowlist. Otherwise, we do
-+		 * not allow the BBML2 feature to avoid potential faults when
-+		 * the insufficient CPUs access memory regions using BBML2
-+		 * semantics.
-+		 */
-+		for_each_online_cpu(cpu) {
-+			if (!cpu_has_bbml2_noabort(cpu_read_midr(cpu)))
-+				return false;
-+		}
-+	} else if (scope & SCOPE_LOCAL_CPU) {
-+		/*
-+		 * We are a hot-plugged CPU, so must only check our MIDR.
-+		 * If we have the correct MIDR, but the kernel booted on an
-+		 * insufficient CPU, we will not use BBML2 (this is safe). If
-+		 * we have an incorrect MIDR, but the kernel booted on a
-+		 * sufficient CPU, we will not bring up this CPU.
-+		 */
-+		if (!cpu_has_bbml2_noabort(read_cpuid_id()))
-+			return false;
-+	}
-+
-+	return has_cpuid_feature(caps, scope);
-+}
-+
- #ifdef CONFIG_ARM64_PAN
- static void cpu_enable_pan(const struct arm64_cpu_capabilities *__unused)
- {
-@@ -2960,6 +3024,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_cpuid_feature,
- 		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, EVT, IMP)
- 	},
-+	{
-+		.desc = "BBM Level 2 without conflict abort",
-+		.capability = ARM64_HAS_BBML2_NOABORT,
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.matches = has_bbml2_noabort,
-+		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, BBM, 2)
-+	},
- 	{
- 		.desc = "52-bit Virtual Addressing for KVM (LPA2)",
- 		.capability = ARM64_HAS_LPA2,
-diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
-index c6b185b885f7..803a0c99f7b4 100644
---- a/arch/arm64/kernel/pi/idreg-override.c
-+++ b/arch/arm64/kernel/pi/idreg-override.c
-@@ -102,6 +102,7 @@ static const struct ftr_set_desc mmfr2 __prel64_initconst = {
- 	.override	= &id_aa64mmfr2_override,
- 	.fields		= {
- 		FIELD("varange", ID_AA64MMFR2_EL1_VARange_SHIFT, mmfr2_varange_filter),
-+		FIELD("bbm", ID_AA64MMFR2_EL1_BBM_SHIFT, NULL),
- 		{}
- 	},
- };
-@@ -246,6 +247,7 @@ static const struct {
- 	{ "rodata=off",			"arm64_sw.rodataoff=1" },
- 	{ "arm64.nolva",		"id_aa64mmfr2.varange=0" },
- 	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=1" },
-+	{ "arm64.nobbml2",		"id_aa64mmfr2.bbm=0" },
- };
- 
- static int __init parse_hexdigit(const char *p, u64 *v)
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index 772c1b008e43..80ec2d9859a2 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -14,6 +14,7 @@ HAS_ADDRESS_AUTH_ARCH_QARMA5
- HAS_ADDRESS_AUTH_IMP_DEF
- HAS_AMU_EXTN
- HAS_ARMv8_4_TTL
-+HAS_BBML2_NOABORT
- HAS_CACHE_DIC
- HAS_CACHE_IDC
- HAS_CNP
--- 
-2.49.0
+>=20
+> By the way, amphion firmware doesn't check the sps_constraint_set1_flag=
+=20
+> to tell CONSTRAINED_BASELINE or BASELINE. I'll request a firmware change=
+=20
+> firstly.
 
+This would be nice at least for accurate reporting, as it can help
+debugging. Meanwhile, we should also support existing firmware.
+
+Nicolas
+
+>=20
+> Regards,
+> Ming
+>=20
+>=20
+> > >=20
+> > > >=20
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_MAIN) |
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_HIGH) |
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH) |
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH)),
+> > > >=20
+> > > > Shall we advertise multiview and stereo ? My impression is that we =
+lack
+> > > > a mechanism to actually signal the stereo layout, or which view eac=
+h
+> > > > buffers came from. I'm thinking, you can can't test it, we should j=
+ust
+> > > > fail on these ?
+> > > >=20
+> > >=20
+> > > You're right, they're not tested, I will remove them.
+> > >=20
+> > >=20
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_PRO=
+FILE_BASELINE);
+> > > > > +
+> > > > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_H264=
+_LEVEL,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEV=
+EL_6_2,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEV=
+EL_4_0);
+> > > > > +
+> > > > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_HEVC=
+_PROFILE,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PRO=
+FILE_MAIN_10,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~((1 << V4L2_MPEG_VIDEO_=
+HEVC_PROFILE_MAIN) |
+> > > > > +				 (1 << V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_10)),
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PRO=
+FILE_MAIN);
+> > > > > +
+> > > > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_HEVC=
+_LEVEL,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEV=
+EL_6_2,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0,
+> > > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEV=
+EL_4);
+> > > > > +
+> > > > > =C2=A0=C2=A0=C2=A0	ctrl =3D v4l2_ctrl_new_std(&inst->ctrl_handler=
+, &vdec_ctrl_ops,
+> > > > > =C2=A0=C2=A0=C2=A0				 V4L2_CID_MIN_BUFFERS_FOR_CAPTURE, 1, 32, 1=
+, 2);
+> > > > > =C2=A0=C2=A0=C2=A0	if (ctrl)
+> > > > > @@ -1166,6 +1197,35 @@ static void vdec_clear_slots(struct vpu_in=
+st *inst)
+> > > > > =C2=A0=C2=A0=C2=A0	}
+> > > > > =C2=A0=C2=A0 }
+> > > > > =C2=A0=C2=A0=20
+> > > > > +static void vdec_update_v4l2_ctrl(struct vpu_inst *inst, u32 id,=
+ u32 val)
+> > > > > +{
+> > > > > +	struct v4l2_ctrl *ctrl =3D v4l2_ctrl_find(&inst->ctrl_handler, =
+id);
+> > > > > +
+> > > > > +	if (ctrl)
+> > > > > +		v4l2_ctrl_s_ctrl(ctrl, val);
+> > > > > +}
+> > > > > +
+> > > > > +static void vdec_update_v4l2_profile_level(struct vpu_inst *inst=
+, struct vpu_dec_codec_info *hdr)
+> > > > > +{
+> > > > > +	switch (inst->out_format.pixfmt) {
+> > > > > +	case V4L2_PIX_FMT_H264:
+> > > > > +	case V4L2_PIX_FMT_H264_MVC:
+> > > > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+> > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_h264_v4l2_profile(hdr=
+->profile_idc));
+> > > > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_H264_LEVEL,
+> > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_h264_v4l2_level(hdr->=
+level_idc));
+> > > > > +		break;
+> > > > > +	case V4L2_PIX_FMT_HEVC:
+> > > > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_HEVC_PROFILE,
+> > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_hevc_v4l2_profile(hdr=
+->profile_idc));
+> > > > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_HEVC_LEVEL,
+> > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_hevc_v4l2_level(hdr->=
+level_idc));
+> > > > > +		break;
+> > > > > +	default:
+> > > > > +		return;
+> > > > > +	}
+> > > > > +}
+> > > > > +
+> > > > > =C2=A0=C2=A0 static void vdec_event_seq_hdr(struct vpu_inst *inst=
+, struct vpu_dec_codec_info *hdr)
+> > > > > =C2=A0=C2=A0 {
+> > > > > =C2=A0=C2=A0=C2=A0	struct vdec_t *vdec =3D inst->priv;
+> > > > > @@ -1189,6 +1249,7 @@ static void vdec_event_seq_hdr(struct vpu_i=
+nst *inst, struct vpu_dec_codec_info
+> > > > > =C2=A0=C2=A0=C2=A0	vdec_init_crop(inst);
+> > > > > =C2=A0=C2=A0=C2=A0	vdec_init_mbi(inst);
+> > > > > =C2=A0=C2=A0=C2=A0	vdec_init_dcp(inst);
+> > > > > +	vdec_update_v4l2_profile_level(inst, hdr);
+> > > > > =C2=A0=C2=A0=C2=A0	if (!vdec->seq_hdr_found) {
+> > > > > =C2=A0=C2=A0=C2=A0		vdec->seq_tag =3D vdec->codec_info.tag;
+> > > > > =C2=A0=C2=A0=C2=A0		if (vdec->is_source_changed) {
+> > > > > diff --git a/drivers/media/platform/amphion/vpu_defs.h b/drivers/=
+media/platform/amphion/vpu_defs.h
+> > > > > index 428d988cf2f7..606f9d61a265 100644
+> > > > > --- a/drivers/media/platform/amphion/vpu_defs.h
+> > > > > +++ b/drivers/media/platform/amphion/vpu_defs.h
+> > > > > @@ -134,6 +134,7 @@ struct vpu_dec_codec_info {
+> > > > > =C2=A0=C2=A0=C2=A0	u32 decoded_height;
+> > > > > =C2=A0=C2=A0=C2=A0	struct v4l2_fract frame_rate;
+> > > > > =C2=A0=C2=A0=C2=A0	u32 dsp_asp_ratio;
+> > > > > +	u32 profile_idc;
+> > > > > =C2=A0=C2=A0=C2=A0	u32 level_idc;
+> > > > > =C2=A0=C2=A0=C2=A0	u32 bit_depth_luma;
+> > > > > =C2=A0=C2=A0=C2=A0	u32 bit_depth_chroma;
+> > > > > diff --git a/drivers/media/platform/amphion/vpu_helpers.c b/drive=
+rs/media/platform/amphion/vpu_helpers.c
+> > > > > index d12310af9ebc..108b75ceb4ae 100644
+> > > > > --- a/drivers/media/platform/amphion/vpu_helpers.c
+> > > > > +++ b/drivers/media/platform/amphion/vpu_helpers.c
+> > > > > @@ -509,3 +509,96 @@ const char *vpu_codec_state_name(enum vpu_co=
+dec_state state)
+> > > > > =C2=A0=C2=A0=C2=A0	}
+> > > > > =C2=A0=C2=A0=C2=A0	return "<unknown>";
+> > > > > =C2=A0=C2=A0 }
+> > > > > +
+> > > > > +struct codec_id_mapping {
+> > > > > +	u32 id;
+> > > > > +	u32 v4l2_id;
+> > > > > +};
+> > > > > +
+> > > > > +static struct codec_id_mapping h264_profiles[] =3D {
+> > > > > +	{66,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE},
+> > > > > +	{77,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_MAIN},
+> > > > > +	{88,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED},
+> > > > > +	{100, V4L2_MPEG_VIDEO_H264_PROFILE_HIGH},
+> > > > > +	{118, V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH},
+> > > > > +	{128, V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH}
+> > > > > +};
+> > > > > +
+> > > > > +static struct codec_id_mapping h264_levels[] =3D {
+> > > > > +	{10,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_0},
+> > > > > +	{9,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1B},
+> > > > > +	{11,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_1},
+> > > > > +	{12,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_2},
+> > > > > +	{13,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_3},
+> > > > > +	{20,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_0},
+> > > > > +	{21,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_1},
+> > > > > +	{22,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_2},
+> > > > > +	{30,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_0},
+> > > > > +	{31,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_1},
+> > > > > +	{32,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_2},
+> > > > > +	{40,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_0},
+> > > > > +	{41,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_1},
+> > > > > +	{42,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_2},
+> > > > > +	{50,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_0},
+> > > > > +	{51,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_1},
+> > > > > +	{52,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_2},
+> > > > > +	{60,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_0},
+> > > > > +	{61,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_1},
+> > > > > +	{62,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_2}
+> > > > > +};
+> > > > > +
+> > > > > +static struct codec_id_mapping hevc_profiles[] =3D {
+> > > > > +	{1,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN},
+> > > > > +	{2,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_10}
+> > > > > +};
+> > > > > +
+> > > > > +static struct codec_id_mapping hevc_levels[] =3D {
+> > > > > +	{30,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_1},
+> > > > > +	{60,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_2},
+> > > > > +	{63,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_2_1},
+> > > > > +	{90,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_3},
+> > > > > +	{93,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_3_1},
+> > > > > +	{120, V4L2_MPEG_VIDEO_HEVC_LEVEL_4},
+> > > > > +	{123, V4L2_MPEG_VIDEO_HEVC_LEVEL_4_1},
+> > > > > +	{150, V4L2_MPEG_VIDEO_HEVC_LEVEL_5},
+> > > > > +	{153, V4L2_MPEG_VIDEO_HEVC_LEVEL_5_1},
+> > > > > +	{156, V4L2_MPEG_VIDEO_HEVC_LEVEL_5_2},
+> > > > > +	{180, V4L2_MPEG_VIDEO_HEVC_LEVEL_6},
+> > > > > +	{183, V4L2_MPEG_VIDEO_HEVC_LEVEL_6_1},
+> > > > > +	{186, V4L2_MPEG_VIDEO_HEVC_LEVEL_6_2}
+> > > > > +};
+> > > > > +
+> > > > > +static u32 vpu_find_v4l2_id(u32 id, struct codec_id_mapping *arr=
+ay, u32 array_sz)
+> > > > > +{
+> > > > > +	u32 i;
+> > > > > +
+> > > > > +	if (!array || !array_sz)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	for (i =3D 0; i < array_sz; i++) {
+> > > > > +		if (id =3D=3D array[i].id)
+> > > > > +			return array[i].v4l2_id;
+> > > > > +	}
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +u32 vpu_get_h264_v4l2_profile(u32 idc)
+> > > > > +{
+> > > > > +	return vpu_find_v4l2_id(idc, h264_profiles, ARRAY_SIZE(h264_pro=
+files));
+> > > > > +}
+> > > > > +
+> > > > > +u32 vpu_get_h264_v4l2_level(u32 idc)
+> > > > > +{
+> > > > > +	return vpu_find_v4l2_id(idc, h264_levels, ARRAY_SIZE(h264_level=
+s));
+> > > > > +}
+> > > > > +
+> > > > > +u32 vpu_get_hevc_v4l2_profile(u32 idc)
+> > > > > +{
+> > > > > +	return vpu_find_v4l2_id(idc, hevc_profiles, ARRAY_SIZE(hevc_pro=
+files));
+> > > > > +}
+> > > > > +
+> > > > > +u32 vpu_get_hevc_v4l2_level(u32 idc)
+> > > > > +{
+> > > > > +	return vpu_find_v4l2_id(idc, hevc_levels, ARRAY_SIZE(hevc_level=
+s));
+> > > > > +}
+> > > > > diff --git a/drivers/media/platform/amphion/vpu_helpers.h b/drive=
+rs/media/platform/amphion/vpu_helpers.h
+> > > > > index 0eaddb07190d..dc5fb1ca2d33 100644
+> > > > > --- a/drivers/media/platform/amphion/vpu_helpers.h
+> > > > > +++ b/drivers/media/platform/amphion/vpu_helpers.h
+> > > > > @@ -70,4 +70,9 @@ int vpu_color_get_default(u32 primaries, u32 *p=
+transfers, u32 *pmatrix, u32 *pfu
+> > > > > =C2=A0=C2=A0=20
+> > > > > =C2=A0=C2=A0 int vpu_find_dst_by_src(struct vpu_pair *pairs, u32 =
+cnt, u32 src);
+> > > > > =C2=A0=C2=A0 int vpu_find_src_by_dst(struct vpu_pair *pairs, u32 =
+cnt, u32 dst);
+> > > > > +
+> > > > > +u32 vpu_get_h264_v4l2_profile(u32 idc);
+> > > > > +u32 vpu_get_h264_v4l2_level(u32 idc);
+> > > > > +u32 vpu_get_hevc_v4l2_profile(u32 idc);
+> > > > > +u32 vpu_get_hevc_v4l2_level(u32 idc);
+> > > > > =C2=A0=C2=A0 #endif
+> > > > > diff --git a/drivers/media/platform/amphion/vpu_malone.c b/driver=
+s/media/platform/amphion/vpu_malone.c
+> > > > > index 4769c053c6c2..5c6b2a841b6f 100644
+> > > > > --- a/drivers/media/platform/amphion/vpu_malone.c
+> > > > > +++ b/drivers/media/platform/amphion/vpu_malone.c
+> > > > > @@ -889,7 +889,8 @@ static void vpu_malone_unpack_seq_hdr(struct =
+vpu_rpc_event *pkt,
+> > > > > =C2=A0=C2=A0=C2=A0	info->frame_rate.numerator =3D 1000;
+> > > > > =C2=A0=C2=A0=C2=A0	info->frame_rate.denominator =3D pkt->data[8];
+> > > > > =C2=A0=C2=A0=C2=A0	info->dsp_asp_ratio =3D pkt->data[9];
+> > > > > -	info->level_idc =3D pkt->data[10];
+> > > > > +	info->profile_idc =3D (pkt->data[10] >> 8) & 0xff;
+> > > >=20
+> > > > The data should normally also include the sps_constraint_set1_flag,
+> > > > which differentiate baseline from constrained-baseline. I would als=
+o be
+> > > > very surprised if the decoders supports ASO/FMO.
+> > > >=20
+> > > > Nicolas
+> > > >=20
+> > >=20
+> > > As mentioned above, I'll try to request a firmware change to report
+> > > sps_constraint_set1_flag, then driver can report
+> > > PROFILE_CONSTRAINED_BASELINE correctly.
+> >=20
+> > Ack.
+> >=20
+> > regards,
+> > Nicolas
+> >=20
+> > >=20
+> > > Regards,
+> > > Ming
+> > >=20
+> > > > > +	info->level_idc =3D pkt->data[10] & 0xff;
+> > > > > =C2=A0=C2=A0=C2=A0	info->bit_depth_luma =3D pkt->data[13];
+> > > > > =C2=A0=C2=A0=C2=A0	info->bit_depth_chroma =3D pkt->data[14];
+> > > > > =C2=A0=C2=A0=C2=A0	info->chroma_fmt =3D pkt->data[15];
