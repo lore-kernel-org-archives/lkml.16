@@ -1,241 +1,163 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CCE191F94;
-	Mon, 28 Apr 2025 07:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E13F191F94
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745823902; cv=none; b=NQiVkc0hj7E3hOiGVcmA3lXXUIIyxUn8/kLVVxLeB0P2qWyB/TGgBEO8Pz78/AzBKgUlcY05pp2hEGNLUZZkY23j0XDL2EebS7uznZGlw/ZgKngCriLJ8akTncdnuxIlR7J2nfOMu/hu6QGF5ORVJVeD1SweJ7bQUCTct0Gafm0=
+	t=1745823921; cv=none; b=fmf+J6+jzEzTgaW/7FOdNypch0mr0JZmVQJsfUbWyN7U5/9JwMagm/sQIrHdvdh4lT6vTlGgycRqKiqm08CgQkyk9TBaXRKwM5uAordyoDVQgKrFPKhcVPlyv3HCXLDxoPbyjMOutXJh0ccEhm/rb0VDVzgKJma+/HqmJU69qiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745823902; c=relaxed/simple;
-	bh=7NHDbXVYZkKVsgdRvpnNE6uy6uOLayDsajznmv2GS/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p0qhhx/fZqt6aIqDqmCbXUFJt/9jp0Wl9Ue4nw/oQW9RbXycrUfjIHDCnC9XIO1WkazUXjkW/m9+UVIPSoaU4MIevpYUQu2ZNkCOJzWcheN6dpAxP6+/fR2zx0mYUEHAts+xrkjKp9kbn2fRskKXqpoSZBxcvA/oURCpBB6JMSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdWQaAo/; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745823921; c=relaxed/simple;
+	bh=ZR+51/a7SRTRGqwOHXRQQygxFCEZLSQcgVb51P3cI3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vpt4UhZelNy3WeVbiqW62Vr64+2bLwrOXJP0Zim3zb+K6pbltlvYYh1W05XqUGpMAd9EsV9/eVn50k2QGG4B5es8nYvCInAdi5ol9JjUoMEWLTbpESiO/uYV2Uf6dAy00k7uHZGe6+FVIlz37crFjDXnLN4CssVKBYAElVC0jjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nn0CTW7m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdWQaAo/"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac289147833so778885066b.2;
-        Mon, 28 Apr 2025 00:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745823899; x=1746428699; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dFug2l7i4RVR+IYDsgOgLdi8rZQpSCoOK9KVvixJP/I=;
-        b=BdWQaAo/+I/oPSa++wRYi40UpsY1172f1vgZF7U7bhWzgfNfB1QDhGxWnnTEMds9OK
-         xZ+495wgC2EC9L+cn97AduVmEtNKt4lLGVpnFJoAGx8/dR26UBFuWjQ88owqTZ7Bra1W
-         zqM+La3yL0rNBDWXd9R843UDJoZzkUwFDASH4Yw8do69eo3eDuoBzcaEsmxv+WMUBc6r
-         DCyUvUb3WzWRiInMJfSacZwiplo7rVk+tZ2NbO5wG69qiTSG55ptMtmzi1YxjC4QlDep
-         n39YHno0jzJn7vVXUYScVq3vX9xieDn/iw1f8MWO5sLkB+FiHxc2DjpHqfFJbJm9Tuhu
-         tqfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745823899; x=1746428699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dFug2l7i4RVR+IYDsgOgLdi8rZQpSCoOK9KVvixJP/I=;
-        b=BIY7QDMM49jvtdNApKIm6VIgBc6aKAsm3OMJ2lKTHYUgF9Jbjxzuk8b0776N/s6eEj
-         e/BlblLrUa0xi0QyxhM7xAQvguWwrPr5jO+JZBTDvfqGLCV3rBmu/e9CBd/hdUKYJyN5
-         5VV3AjDZ/Vanh7rsil4fkUcd1SLmWPIYygVse2zfwoJzIbelnQhjC2d0g9mOW//oBIFn
-         m0nDQEksBH2nc3lHitWfQUA8V/6z0t3bGnjzxHVUlYCsZiRqRkpatWtHxtATxYnUzvyc
-         /enlY20zrQ7PrrWFytej4F4H9gm9gTQr7FT//hBAojd1iLEITUfNXDIZZ0rZprJGape5
-         3uVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJsx3lgv9ursSFWluqrAL2QvFQjhxRsrHPOQ90f9w5jQpRXWc43Dc5Wu/9Xhse1h5pmGDNpQtSnf8QeGM5@vger.kernel.org, AJvYcCWNQYCKisxjFFboo79FlPRQcsFdkMFroDinVaog5mJUE5okR3GIORP6Vggf7rX4FaOLxqKyYiyZ/r8q8g==@vger.kernel.org, AJvYcCXnGps7M2ygI5jgzxkJ7a9wQMZUm7j9dQzVdMc+xyK/FockgiP5kyE3mR/rQO/te+zQQeYD98wDy3W7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIgoByvLxOKMMitOkDg3cQh0VuYDYFRZZBYklVxh0T2yEmYi/C
-	cQi7P1kiAbq7HsTAe3Vnk68kU9rTLCl70pAzCIXJLKgdylCnuiezhpOntphs2jrpbz8RRJGI/br
-	JC5CCW9Ff2EgSwci0OrmO1LblWSc=
-X-Gm-Gg: ASbGncsITRH0sNKZBYiCSoQOHbPysZgJw/N0AggQ/v4l4hcRz+Ey+HUmMgiSCjlUBGu
-	TXAtWCpTjoTihAGqMYR06CB8bu5ZGEBtfSmi+6KJf9f+nItHVdmO5U3alARmgW+Na7dNGgzYFrf
-	5gh5BKVqQhW06wbOUzBd323/vq
-X-Google-Smtp-Source: AGHT+IG+BXrTALiy8ip+X07daV4bi+92ZdgkSR3MY/GK9RV0CTMTYQ+H6sJMufc7bShBSiA215YRly8Ku/rIZJVXZU8=
-X-Received: by 2002:a17:907:3f0e:b0:ac8:1798:a796 with SMTP id
- a640c23a62f3a-ace84b27e18mr773066566b.54.1745823898815; Mon, 28 Apr 2025
- 00:04:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nn0CTW7m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4868C4CEE4;
+	Mon, 28 Apr 2025 07:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745823918;
+	bh=ZR+51/a7SRTRGqwOHXRQQygxFCEZLSQcgVb51P3cI3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nn0CTW7mOuzrRxZANBCgZkQkHaRHLYrAdgAGn4DoDQIEzUJHMPgLbHjEoQ1u2gQa1
+	 n0U1Gxbc4LOxpyQAlH2jGTbGvxi0D4T0bL9J4Alg+olwo6qCF6V3sv54uhNBGBXjQQ
+	 8XJz69xiKZXFXNoyY52aCXZG/JPfpkMf0omtbRGxtjCUupqdLiCyrLwjR3e3Mp2VhN
+	 Og5dbJzOwOo3hf3jDCmUUzo/FUMiLeNcfEv9ieVnwEdBWO28S2stAC54fxJSx5bYbT
+	 odBHjud3aYX7F7kVQ2PYr6Wc6dNXzBHyxAkOpqNroqGgexyuhEsTKmKzmSI36hCL+l
+	 7qw7NoFQPZBLA==
+Date: Mon, 28 Apr 2025 09:05:12 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
+ handling to C
+Message-ID: <aA8oqKUaFU-0wb-D@gmail.com>
+References: <20250425141740.734030-1-arnd@kernel.org>
+ <aAyiganPp_UsNlnZ@gmail.com>
+ <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
+ <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
+ <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
+ <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
+ <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
+ <aA8nF0moBYOIgC5J@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745605382.git.Jonathan.Santos@analog.com> <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
-In-Reply-To: <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 28 Apr 2025 10:04:22 +0300
-X-Gm-Features: ATxdqUHFAFmL9ZTtZPxBtKZFjukTHC9F3xQuY99Q83kaUvbAzsd5GjhbSlsQk3A
-Message-ID: <CAHp75VdNymzseF7Dt9kL8GBPLM0MGBQg-YQabKUKxEryM8nxOQ@mail.gmail.com>
-Subject: Re: [PATCH v6 08/11] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, andy@kernel.org, 
-	nuno.sa@analog.com, Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, 
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	marcelo.schmitt1@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	lgirdwood@gmail.com, broonie@kernel.org, jonath4nns@gmail.com, 
-	dlechner@baylibre.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aA8nF0moBYOIgC5J@gmail.com>
 
-On Mon, Apr 28, 2025 at 3:14=E2=80=AFAM Jonathan Santos
-<Jonathan.Santos@analog.com> wrote:
->
-> The synchronization method using GPIO requires the generated pulse to be
-> truly synchronous with the base MCLK signal. When it is not possible to
-> do that in hardware, the datasheet recommends using synchronization over
-> SPI, where the generated pulse is already synchronous with MCLK. This
-> requires the SYNC_OUT pin to be connected to SYNC_IN pin.
 
-to the SYNC_IN
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-> Use trigger-sources property to enable device synchronization over SPI
-> and multi-device synchronization, as an alternative to adi,sync-in-gpios
-> property.
+> > UNTESTED patch applied in case somebody wants to play with this. It
+> > removes 10 lines of silly code, and along with them that 'cmov' use.
+> > 
+> > Anybody?
+> 
+> Makes sense - it seems to boot here, but I only did some very light 
+> testing.
+> 
+> There's a minor text size increase on x86-32 defconfig, GCC 14.2.0:
+> 
+>       text       data        bss         dec        hex    filename
+>   16577728    7598826    1744896    25921450    18b87aa    vmlinux.before
+>   16577908    7598838    1744896    25921642    18b886a    vmlinux.after
+> 
+> bloatometer output:
+> 
+>   add/remove: 2/1 grow/shrink: 201/189 up/down: 5681/-3486 (2195)
 
-...
+And once we remove 486, I think we can do the optimization below to 
+just assume the output doesn't get clobbered by BS*L in the zero-case, 
+right?
 
-> +static int ad7768_send_sync_pulse(struct ad7768_state *st)
-> +{
-> +       if (st->en_spi_sync)
-> +               return regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x=
-00);
+In the text size space it's a substantial optimization on x86-32 
+defconfig:
 
-> +       if (st->gpio_sync_in) {
+        text	   data	       bss	     dec	    hex	filename
+  16,577,728    7598826    1744896      25921450        18b87aa vmlinux.vanilla      # CMOV+BS*L
+  16,577,908	7598838	   1744896	25921642	18b886a	vmlinux.linus_patch  # if()+BS*L
+  16,573,568	7602922	   1744896	25921386	18b876a	vmlinux.noclobber    # BS*L
 
-Dup check, the following have already it.
+Thanks,
 
-> +               gpiod_set_value_cansleep(st->gpio_sync_in, 1);
+	Ingo
 
-Yes, I see the original code, but still the Q is why no delay. Perhaps
-a comment explaining that the GPIO op is slow enough (?) to add.
+---
+ arch/x86/include/asm/bitops.h | 20 ++------------------
+ 1 file changed, 2 insertions(+), 18 deletions(-)
 
-> +               gpiod_set_value_cansleep(st->gpio_sync_in, 0);
-> +       }
-> +
-> +       return 0;
-> +}
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 6061c87f14ac..e3e94a806656 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -308,24 +308,16 @@ static __always_inline int variable_ffs(int x)
+ {
+ 	int r;
+ 
+-#ifdef CONFIG_X86_64
+ 	/*
+ 	 * AMD64 says BSFL won't clobber the dest reg if x==0; Intel64 says the
+ 	 * dest reg is undefined if x==0, but their CPU architect says its
+ 	 * value is written to set it to the same as before, except that the
+ 	 * top 32 bits will be cleared.
+-	 *
+-	 * We cannot do this on 32 bits because at the very least some
+-	 * 486 CPUs did not behave this way.
+ 	 */
+ 	asm("bsfl %1,%0"
+ 	    : "=r" (r)
+ 	    : ASM_INPUT_RM (x), "0" (-1));
+-#else
+-	if (!x)
+-		return 0;
+-	asm("bsfl %1,%0" : "=r" (r) : "rm" (x));
+-#endif
++
+ 	return r + 1;
+ }
+ 
+@@ -360,24 +352,16 @@ static __always_inline int fls(unsigned int x)
+ 	if (__builtin_constant_p(x))
+ 		return x ? 32 - __builtin_clz(x) : 0;
+ 
+-#ifdef CONFIG_X86_64
+ 	/*
+ 	 * AMD64 says BSRL won't clobber the dest reg if x==0; Intel64 says the
+ 	 * dest reg is undefined if x==0, but their CPU architect says its
+ 	 * value is written to set it to the same as before, except that the
+ 	 * top 32 bits will be cleared.
+-	 *
+-	 * We cannot do this on 32 bits because at the very least some
+-	 * 486 CPUs did not behave this way.
+ 	 */
+ 	asm("bsrl %1,%0"
+ 	    : "=r" (r)
+ 	    : ASM_INPUT_RM (x), "0" (-1));
+-#else
+-	if (!x)
+-		return 0;
+-	asm("bsrl %1,%0" : "=r" (r) : "rm" (x));
+-#endif
++
+ 	return r + 1;
+ }
+ 
 
-...
-
-> +static struct gpio_desc *ad7768_trigger_source_get_gpio(struct device *d=
-ev,
-> +                                                       struct fwnode_han=
-dle *fwnode)
-> +{
-> +       const char *value;
-> +       int ret;
-> +
-> +       ret =3D fwnode_property_read_string(fwnode, "compatible", &value)=
-;
-> +       if (ret)
-> +               return ERR_PTR(ret);
-> +
-> +       if (strcmp("gpio-trigger", value))
-> +               return ERR_PTR(-EINVAL);
-
-Reinvention of fwnode_device_is_compatible().
-
-> +       return devm_fwnode_gpiod_get_index(dev, fwnode, NULL, 0,
-> +                                          GPIOD_OUT_LOW, "sync-in");
-> +}
-
-...
-
-> +static int ad7768_trigger_sources_get_sync(struct device *dev,
-> +                                          struct ad7768_state *st)
-> +{
-> +       struct fwnode_reference_args args;
-> +       struct fwnode_handle *fwnode =3D NULL;
-
-Redundant assignment AFAICS.
-
-> +       int ret;
-> +
-> +       /*
-> +        * The AD7768-1 allows two primary methods for driving the SYNC_I=
-N pin
-> +        * to synchronize one or more devices:
-> +        * 1. Using an external GPIO.
-> +        * 2. Using a SPI command, where the SYNC_OUT pin generates a
-> +        *    synchronization pulse that drives the SYNC_IN pin.
-> +        */
-> +       if (!device_property_present(dev, "trigger-sources")) {
-> +               /*
-> +                * In the absence of trigger-sources property, enable sel=
-f
-> +                * synchronization over SPI (SYNC_OUT).
-> +                */
-> +               st->en_spi_sync =3D true;
-> +               return 0;
-> +       }
-> +
-> +       ret =3D fwnode_property_get_reference_args(dev_fwnode(dev),
-
-In this case the above is better to be also fwnode_property_present().
-You save a double call to dev_fwnode().
-
-> +                                                "trigger-sources",
-> +                                                "#trigger-source-cells",
-> +                                                0,
-> +                                                AD7768_TRIGGER_SOURCE_SY=
-NC_IDX,
-> +                                                &args);
-> +       if (ret)
-> +               return ret;
-> +
-> +       fwnode =3D args.fwnode;
-> +       /*
-> +        * First, try getting the GPIO trigger source and fallback to
-> +        * synchronization over SPI in case of failure.
-> +        */
-> +       st->gpio_sync_in =3D ad7768_trigger_source_get_gpio(dev, fwnode);
-> +       if (IS_ERR(st->gpio_sync_in)) {
-> +               /*
-> +                * For this case, it requires one argument, which indicat=
-es the
-> +                * output pin referenced.
-> +                */
-> +               if (args.nargs < 1)
-> +                       goto err_not_supp;
-> +
-> +               if (args.args[0] !=3D AD7768_TRIGGER_SOURCE_SYNC_OUT)
-> +                       goto err_not_supp;
-> +
-> +               /*
-> +                * Only self trigger is supported for now, i.e.,
-> +                * external SYNC_OUT is not allowed.
-> +                */
-> +               if (fwnode->dev =3D=3D dev) {
-
-?!?! What is this?!
-
-For the reference:
-https://elixir.bootlin.com/linux/v6.15-rc3/source/include/linux/fwnode.h#L5=
-1
-
-> +                       st->en_spi_sync =3D true;
-> +                       goto out_put_node;
-> +               }
-> +
-> +               goto err_not_supp;
-> +       }
-> +
-> +       goto out_put_node;
-> +
-> +err_not_supp:
-> +       ret =3D dev_err_probe(dev, -EOPNOTSUPP,
-> +                           "Invalid synchronization trigger source");
-
-Missing \n, and can be one line anyway (we don't complain about long
-strings ending with string literals for ages, way before the 100
-character limit).
-
-> +out_put_node:
-> +       fwnode_handle_put(args.fwnode);
-> +       return ret;
-> +}
-
---=20
-With Best Regards,
-Andy Shevchenko
