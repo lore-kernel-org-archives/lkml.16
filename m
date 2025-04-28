@@ -1,92 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B9218F2FC;
-	Mon, 28 Apr 2025 17:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9467A266EE8;
+	Mon, 28 Apr 2025 17:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860224; cv=none; b=dTN6kcdAmt0GJsXHIQ/6KjKBfGsD+i38NMCja7hWkpE+1sV4vHQYVv8uLGu3R7/WlFKInT84C/mhkHqZ/TyqNf88MBmGEAqJ38j7IvD/jUFVvYEDlWf3oCq+u2hOyCogPOponVxeCYXUiof3ltcy6pXg2HYa+DGLcodKMvT3iKc=
+	t=1745860245; cv=none; b=TxjHB9yXKM2sSYqrLlA0tBF+6TQD9qdbGSyISD4zUk1ktlvMSkChXPpKZ7SAE6mTYTII1JpFXY7xFlZD1FWrv5H+6hX7s+VfjozUH4hwbSLRF6zaUERHOnKrhaUYLIVOwAYMPUUeopQvgZfctvl9Zk0B7gOaeqeYmVh+h/Oi40A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860224; c=relaxed/simple;
-	bh=vEsR4ZoZHVFT1r5XJ/2XpS3u/EiMbzkKg8Uk1QA3N88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o7ZTkXt+k+7+4RmH7pGS9/WEpd/btA8lL6na9KOQAhcVduRFJQCByJ9sTg8QG19w4MgYPIZv0t+7GgPt/lO3LPjSoOonVzF66qvkUf53YwZKP2s5endWntRYyqY8JGzQ/xx6SGfKaSNBBeZIPwuof5k/6cVmugAdollw5fENCaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kcLaacM9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745860245; c=relaxed/simple;
+	bh=5AgkR+22VDjIBm+J00qc5j3ln4mZEAFE46+wzRtBSgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBw3cVXcBl9wVeIU68cY5W9E+gKJOd0ZZKFMr1RJrThLZjxfYLrWTIJBtrcYuJyP2JJTZm92rjzsNw4SJs8ErJ5G+73gC23Eo8WsIAX/ShBK7Stsz7gqUNl8ajYDs9IgfPI5mkqDRombvARVS1+/KQvuelYdX0ZtZ57+1itoL/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tY3G8aUU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcLaacM9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9596DC4CEEF;
-	Mon, 28 Apr 2025 17:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745860223;
-	bh=vEsR4ZoZHVFT1r5XJ/2XpS3u/EiMbzkKg8Uk1QA3N88=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kcLaacM9dSPst3MiSqP7Zm8O+JfMHZjeRGZ39rlcN7LBHq0GLMJ+EEUyQFuEtSvtm
-	 bcY9cbZ3Hg9S6nfROUh3IjTDLsIUYHiD5w1KjnpdM1b5JiuxdsUGqD/efTJGEKReeB
-	 rcyFVIaC/JXRlvck7+893uvSqhaPNoT+FvbooRlQw45tJ4cR7D14PoNqwNDLzMxh54
-	 x7nmNsNp1OG1byl3jEVbi6BI+n53SgLojOhbRy6cww91XNB9kpI7TaOu5jIGlFshQ3
-	 0i9Tun+q2sO5IYIa8ko0aJrMFZViov7BADgr21gx2zGYNG4VizlpJU2bWElAy6Tm1i
-	 skQ1jyXWiy+Qw==
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-702599fa7c5so47538427b3.1;
-        Mon, 28 Apr 2025 10:10:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCULtAaDU7Id5kBs72I+ZxpsnRm/PFWYVPdgKV1G72ys9tzL4KT4iGn3YXAPbeQYMz63qWvNlspeJXIm@vger.kernel.org, AJvYcCXBS4NVevTnGfrvSskKJlPsHi8pCTRPxpfcuER1t7V6cyZpjMnpgo5ZouAsZaz4PfTt6EcJWeq18LUuWG/R@vger.kernel.org, AJvYcCXKdxglZZ2S4KcA3nBFlCnH90mVA5P+xdovBPKi0AFhnYDh9tke4aWTLtv5n901C4Xbmaw1NPD0cuZ9OINDhn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7gICgBkxTjB6tDIpQiV+9sD9J8aca0tPLnHFGUzXVI+y26svx
-	pM3NJudBbDtnbjFVdScYIM26y/hnXSsArza3xanTb74wQS1trKlF6ByCU4u7mq2tyfJ0Om5CNjH
-	gSruPBwoLWyJZ3XhbyrUb3nVuD/8=
-X-Google-Smtp-Source: AGHT+IEKXHx9WNrCJ8KbJwQVZLUmzNLo67P14iS+1D+DGqi2anctCFi1gSHert1yRUEn+tb5hg3VJLd15RlOg72/DNw=
-X-Received: by 2002:a05:690c:95:b0:6fe:5dba:b190 with SMTP id
- 00721157ae682-708418f3551mr216219627b3.11.1745860222795; Mon, 28 Apr 2025
- 10:10:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tY3G8aUU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF00C4CEE4;
+	Mon, 28 Apr 2025 17:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745860245;
+	bh=5AgkR+22VDjIBm+J00qc5j3ln4mZEAFE46+wzRtBSgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tY3G8aUU7JZKmsYWpxRE1JAAsUEtYAgG3SSxEKSFzK4Q5ZNILSy/8AXziYAqsmV6T
+	 CAWnasTLDNL5BDx37i72roQIJoULZbs27Kw1vmZXX1gAvGbsgIQN6bSmNM2/Q/bdQ3
+	 OuwV2QlZ2uc01mW3mdUvK5A7+khDu+oI7lCc6zO8=
+Date: Mon, 28 Apr 2025 19:10:42 +0200
+From: 'Greg KH' <gregkh@linuxfoundation.org>
+To: Faraz Ata <faraz.ata@samsung.com>
+Cc: 'Krzysztof Kozlowski' <krzk@kernel.org>, alim.akhtar@samsung.com,
+	jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, dev.tailor@samsung.com,
+	rosa.pila@samsung.com
+Subject: Re: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
+Message-ID: <2025042829-heroics-deskwork-e74d@gregkh>
+References: <CGME20250417042427epcas5p2df3d35803adcb24da7d83e5df586380d@epcas5p2.samsung.com>
+ <20250417043427.1205626-1-faraz.ata@samsung.com>
+ <d350841c-3560-4511-a866-9490737e48f7@kernel.org>
+ <06cb01dbaf5a$1ea1a8b0$5be4fa10$@samsung.com>
+ <2025042508-statute-pleading-df6f@gregkh>
+ <0ce801dbb837$19706530$4c512f90$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422175918.585022-1-artur@conclusive.pl> <4854f6a248fdc501d4157339fdb21f9a3ca3097d.camel@sipsolutions.net>
- <9a657c02-b688-4f2f-bb0b-fd25d19a54be@broadcom.com>
-In-Reply-To: <9a657c02-b688-4f2f-bb0b-fd25d19a54be@broadcom.com>
-From: Josh Boyer <jwboyer@kernel.org>
-Date: Mon, 28 Apr 2025 13:10:11 -0400
-X-Gmail-Original-Message-ID: <CA+5PVA76ZT_NEe_xeoc55V0p7M4W8KneAPjUR78ja0q3aBUZ8A@mail.gmail.com>
-X-Gm-Features: ATxdqUG6CPojcKu3jjyuLJcZ_srrjoBPqUF0xD-D_e-j-2vGQSSJSpQ2NkABa2Y
-Message-ID: <CA+5PVA76ZT_NEe_xeoc55V0p7M4W8KneAPjUR78ja0q3aBUZ8A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/2] wifi: Nordic nRF70 series
-To: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Artur Rojek <artur@conclusive.pl>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, linux-wireless@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jakub Klama <jakub@conclusive.pl>, Wojciech Kloska <wojciech@conclusive.pl>, 
-	Ulf Axelsson <ulf.axelsson@nordicsemi.no>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ce801dbb837$19706530$4c512f90$@samsung.com>
 
-On Mon, Apr 28, 2025 at 4:46=E2=80=AFAM Arend van Spriel
-<arend.vanspriel@broadcom.com> wrote:
->
-> + Josh
->
-> On 4/25/2025 8:11 PM, Johannes Berg wrote:
-> > On Tue, 2025-04-22 at 19:59 +0200, Artur Rojek wrote:
-> >> 1) Nordic gave us permission to upstream the firmware blob [1] require=
-d
-> >>     to use this driver. As that needs to go through separate
-> >>     linux-firmware repository and is subject to different licensing,
-> >>     should I try to upstream it in parallel with this series, or does =
-it
-> >>     need to wait until the kernel driver gets in?
-> >
-> > I have no idea. Chicken and egg, I guess.
+On Mon, Apr 28, 2025 at 05:44:21PM +0530, Faraz Ata wrote:
+> HI Greg
+> 
+> > Subject: Re: [PATCH v3] tty: serial: samsung_tty: support 18 uart ports
+> > 
+> > On Thu, Apr 17, 2025 at 11:02:24AM +0530, Faraz Ata wrote:
+> > > Hello Krzysztof
+> > >
+> > > > -----Original Message-----
+> > > > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > Sent: Thursday, April 17, 2025 10:50 AM
+> > > > To: Faraz Ata <faraz.ata@samsung.com>; alim.akhtar@samsung.com;
+> > > > gregkh@linuxfoundation.org; jirislaby@kernel.org
+> > > > Cc: linux-arm-kernel@lists.infradead.org; linux-samsung-
+> > > > soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > > > serial@vger.kernel.org; dev.tailor@samsung.com;
+> > > > rosa.pila@samsung.com
+> > > > Subject: Re: [PATCH v3] tty: serial: samsung_tty: support 18 uart
+> > > > ports
+> > > >
+> > > > On 17/04/2025 06:34, Faraz Ata wrote:
+> > > > > ExynosAutov920 SoC supports 18 UART ports, update the value of
+> > > > UART_NR
+> > > > > to accommodate the same.
+> > > > >
+> > > > > Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
+> > > > > ---
+> > > > > Changes in v3:
+> > > > > - Fixed review comments from Krzysztof
+> > > >
+> > > > Which ones? What changed?
+> > > >
+> > > While sending v2  change log was missed unintentionally.
+> > > Added missed change log in v3.
+> > 
+> > Can you add this properly and send a v4?
+> > 
+> This was a clarification given to Krzysztof.
+> The complete change-log was missed in v2, This was pointed out by Krzysztof.
+> Added those missed changes in v3.
+> Do you want me to add this clarification as well and send v4 ?
 
-Parallel is fine.
-
-> It used to be a check by the linux-firmware maintainer if the firmware
-> blob is referenced in kernel module info. I assume the main linux tree
-> is checked and not linux-next.
-
-Eh.  We check for net-new firmware just to make sure we aren't growing
-the repo for something that will never be used by an in-tree driver,
-but if the driver is in linux-next that's good enough.
-
-josh
+Yes please.
