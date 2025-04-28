@@ -1,167 +1,98 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00F14A11;
-	Mon, 28 Apr 2025 03:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35CF24431;
+	Mon, 28 Apr 2025 03:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745811181; cv=none; b=ca4CWR0fwazAo/JDw5/ZGlow81shiXUpeqjjeCd/lyh3H1fAZGL5BBoU1vCS7q9z0jfR9vXwBFhEwQ1dPkfqXbZ0e3XdpDZE8gspg0YNb1FSdcbnYhjxQhl1Dl7/PYEDEiWFP5L8fHK8NUmc9JfOxyQ81aDsksi4Ivpcv8aL9h4=
+	t=1745811348; cv=none; b=oyyWI34K0cS1rA0lOHUG1IEOxQvRptRZ2HqQi7W7I8zT+oftTYg46en4hu/vdo1uj3Bjn4emXW6QcgxmyeCeAE8vsXS2DCkPCjZn5L9gYCXQ6JJeAM+YUPYQ/9sTzXA2P4TjdZVOISJ84KrWW0kfPipAEoBoURKI84zqB+RMAnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745811181; c=relaxed/simple;
-	bh=rZPb+nYyN6fqWnBmjxisPyPRLgUVCz2sdtg+z7gQqTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YrMNRzSPwh6WMIfgOgD/o4RBGxiibJAuwgdVb7OUg/GsqXpN+Id62Rlhu7nPh9R8bNOjKWBUBTRnBPCF6bz5Z+w/91HZ7wb6ncDHx/OSZ6MqrrpMhheG13MSgjPvbxjPTYPzSCnQvjE5k8gM76nE92L5xfsP718gxyYvpmaaWSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zm8CB3ynMz4f3kvw;
-	Mon, 28 Apr 2025 11:32:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 344901A1AF2;
-	Mon, 28 Apr 2025 11:32:48 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBXu1_d9g5ov1YkKw--.49750S3;
-	Mon, 28 Apr 2025 11:32:47 +0800 (CST)
-Message-ID: <6db8d3e6-44ce-4b2b-b496-ec0104aee997@huaweicloud.com>
-Date: Mon, 28 Apr 2025 11:32:45 +0800
+	s=arc-20240116; t=1745811348; c=relaxed/simple;
+	bh=Vl74lbaPxao4i+PKCKAVwlqXBb7lIiZC8DAbfSaqGA0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mQJhVGFIR+6L5BiaeRzfkK4LE4oboBGof35unVSNrN3heLkCgwuWJxeEtxCGyusKjJXXhiGdNLI6ObXy8wkEzZMsMNAJyDFRwuKT+svJ5ph1b5GYh6QZH7zQo8+75M8upkp3laCX63uKGh+oYQUPvBtYwiAG5Kdb6bYUctpmpBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=D1gnxgpq; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="D1gnxgpq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xC0ns
+	2DS1YSWPkq7hRW07GpUN9EJ9rep06tDSrSrHRQ=; b=D1gnxgpq5LIoNHemUJeAd
+	bM6TKh9m2vCtmObDVHmkZ0rsmizvA88rnx7ZcWWq9SrKJW3Zq+rS61GcjMk5e+P3
+	WWB/r/T3HebG9ZnVuZ+aFoC+aLZDTe5kvuRIjhgj77RE3xzMEib21a3VmnGYD5fU
+	hcj0RhVIRFXjkmS7I8ViE4=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDX5pZV9w5oNYEeAQ--.47989S2;
+	Mon, 28 Apr 2025 11:34:48 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mykolal@fb.com,
+	shuah@kernel.org,
+	toke@redhat.com,
+	amery.hung@bytedance.com
+Cc: bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] selftests/bpf: Fix compilation errors
+Date: Mon, 28 Apr 2025 11:34:45 +0800
+Message-Id: <20250428033445.58113-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH blktests 1/3] scsi/010: add unmap write zeroes tests
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- hch <hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>,
- "djwong@kernel.org" <djwong@kernel.org>,
- "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
- "bmarzins@redhat.com" <bmarzins@redhat.com>,
- "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>,
- "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
- "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
- "yukuai3@huawei.com" <yukuai3@huawei.com>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
- <20250318072835.3508696-2-yi.zhang@huaweicloud.com>
- <krhbty6cnaj3zv4bka4jmpwmm74v7k3cts6csp6yoc7xjexoyu@6yrwd7rr2rip>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <krhbty6cnaj3zv4bka4jmpwmm74v7k3cts6csp6yoc7xjexoyu@6yrwd7rr2rip>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXu1_d9g5ov1YkKw--.49750S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFy8Cw48GryUuFyUZFWrXwb_yoW5Gry5pF
-	WxGa9Ykr1ktr17G3WSvF45Wr13J3yfAr47AFWxCw1UCr98Zryakr1IgrWUWa4fGrZ8Gw1F
-	y3WUXFySkryUt3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-CM-TRANSID:PygvCgDX5pZV9w5oNYEeAQ--.47989S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrWxJFyrtr18Zr1xWw13XFb_yoW8Aw1fpa
+	4DZw1DCr1Fgr4UWry7trW5u3WI9ws5Wry7Ca1UJ34Ikrn8XaykXr1IgayxWa4agrWY9wsx
+	ZasF9a43Zr1kCFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jerWrUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTQY8eGgN0ZzHBgABsn
 
-Hello Shinichiro！
+From: Feng Yang <yangfeng@kylinos.cn>
 
-I apologize for the significant delay, and I greatly appreciate your
-review and suggestions.
+If the CONFIG_NET_SCH_BPF configuration is not enabled,
+the BPF test compilation will report the following error:
+In file included from progs/bpf_qdisc_fq.c:39:
+progs/bpf_qdisc_common.h:17:51: error: declaration of 'struct bpf_sk_buff_ptr' will not be visible outside of this function [-Werror,-Wvisibility]
+   17 | void bpf_qdisc_skb_drop(struct sk_buff *p, struct bpf_sk_buff_ptr *to_free) __ksym;
+      |                                                   ^
+progs/bpf_qdisc_fq.c:309:14: error: declaration of 'struct bpf_sk_buff_ptr' will not be visible outside of this function [-Werror,-Wvisibility]
+  309 |              struct bpf_sk_buff_ptr *to_free)
+      |                     ^
+progs/bpf_qdisc_fq.c:309:14: error: declaration of 'struct bpf_sk_buff_ptr' will not be visible outside of this function [-Werror,-Wvisibility]
+progs/bpf_qdisc_fq.c:308:5: error: conflicting types for '____bpf_fq_enqueue'
 
-On 2025/4/3 15:26, Shinichiro Kawasaki wrote:
-> Hello Zhang, thank you for the patches.
-> 
-> On Mar 18, 2025 / 15:28, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> Test block device unmap write zeroes sysfs interface with various SCSI
->> debug devices. The /sys/block/<disk>/queue/write_zeroes_unmap interface
->> should return 1 if the SCSI device enable the WRITE SAME command with
->> unmap functionality, and it should return 0 otherwise.
->>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
->> ---
->>  tests/scsi/010     | 56 ++++++++++++++++++++++++++++++++++++++++++++++
->>  tests/scsi/010.out |  2 ++
->>  2 files changed, 58 insertions(+)
->>  create mode 100755 tests/scsi/010
->>  create mode 100644 tests/scsi/010.out
->>
->> diff --git a/tests/scsi/010 b/tests/scsi/010
->> new file mode 100755
->> index 0000000..27a672c
->> --- /dev/null
->> +++ b/tests/scsi/010
->> @@ -0,0 +1,56 @@
->> +#!/bin/bash
->> +# SPDX-License-Identifier: GPL-3.0+
->> +# Copyright (C) 2025 Huawei.
->> +#
->> +# Test block device unmap write zeroes sysfs interface with various scsi
->> +# devices.
->> +
->> +. tests/scsi/rc
->> +. common/scsi_debug
->> +
->> +DESCRIPTION="test unmap write zeroes sysfs interface with scsi devices"
->> +QUICK=1
->> +
->> +requires() {
->> +	_have_scsi_debug
->> +}
->> +
->> +device_requries() {
->> +	_require_test_dev_sysfs queue/write_zeroes_unmap
->> +}
-> 
-> The device_requries() hook does not work for test cases which implement test().
-> It is rather dirty, but I think we need to delay the check for
-> write_zeroes_unmap sysfs attribute availability until test() gets called.
-> See below for my idea.
-> 
+Fixes: 11c701639ba9 ("selftests/bpf: Add a basic fifo qdisc test")
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ tools/testing/selftests/bpf/progs/bpf_qdisc_common.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Indeed, I completely missed that.
-
->> +
->> +test() {
->> +	echo "Running ${TEST_NAME}"
->> +
->> +	# disable WRITE SAME with unmap
->> +	if ! _configure_scsi_debug lbprz=0; then
->> +		return 1
->> +	fi
-> 
-> I suggest to check queue/write_zeroes_unmap here. If it's not available, set
-> SKIP_REASONS and return like this (totally untested):
-> 
-> 	if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
-> 		_exit_scsi_debug
-> 		SKIP_REASONS+=("kernel does not support unmap write zeroes sysfs interface")
-> 		return 1
-> 	fi
-> 
-
-Yeah, I agree with you. For now, there is no helper available for
-checking the sysfs interface of the SCSI debugging device.
-
-I will add a new helper setup_test_device() in this test as the
-following two patches do, and put this check into that helper.
-
-Thanks,
-Yi.
+diff --git a/tools/testing/selftests/bpf/progs/bpf_qdisc_common.h b/tools/testing/selftests/bpf/progs/bpf_qdisc_common.h
+index 65a2c561c0bb..7e7f2fe04f22 100644
+--- a/tools/testing/selftests/bpf/progs/bpf_qdisc_common.h
++++ b/tools/testing/selftests/bpf/progs/bpf_qdisc_common.h
+@@ -12,6 +12,8 @@
+ 
+ #define private(name) SEC(".data." #name) __hidden __attribute__((aligned(8)))
+ 
++struct bpf_sk_buff_ptr;
++
+ u32 bpf_skb_get_hash(struct sk_buff *p) __ksym;
+ void bpf_kfree_skb(struct sk_buff *p) __ksym;
+ void bpf_qdisc_skb_drop(struct sk_buff *p, struct bpf_sk_buff_ptr *to_free) __ksym;
+-- 
+2.43.0
 
