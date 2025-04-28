@@ -1,142 +1,145 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBB41DD88F
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34F982866;
+	Mon, 28 Apr 2025 07:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745825671; cv=none; b=Vo8rKPM5MijZed/thqm6e8rsI3i7ze7fphH90s2FHT7uaXvv8D8CSKyXSrv00xlzZtNOEPZTaMCVTqT8IUHB9lZU1eQ9MBRqAi49yaxVwEJlgAFxxV48A98RSIkuubtwpdwZMOHIIVU08/mvZaa/tP3GHlfpyJL4jfxFoHfBjtc=
+	t=1745825727; cv=none; b=Ote06Oc9hPQTPUe+sdDwFyR0iBnRa14kczG/dt696pn5bUkDgmvj8hCJQ6RgDC4fHyFNxMijLOfB0lBdvuPJsrYyFwSe3XRfIcoBOJi9trNtSDOBU3nG7PGtwkqfdPwWRxqkhenzsMDs8goIL9qBBp+vaNo3DI+Kw53lp+1mbM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745825671; c=relaxed/simple;
-	bh=eft2JoylGrB+ciB4KeCOT35p4mm0t9TkaDvaqE5nOyM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=kfQf9YBnU6SlUfiNcDjZ+EeIEEVVojs0n6w5R1gioMuegxa2D+TjeJAPybCOd20bbPH4HOftPYaiZEUaKi2RfcVN2tvIVKwjqDisThe1IM+SRlsJRNKxUqbSNMxuztsCAEIHIQZCqJD0cJyoPc46nioruGT3Jq1EnrLl83Stoe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=qlcAOjVY; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1745825727; c=relaxed/simple;
+	bh=mxdki93guRrPUqMnNg4vPPRG6mXLaz09PPXd+0S8V6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YLNibOVDvuxfTln550qTIflM5NkQJdaA377rYCqE+t9pDfcI8zov/LX7KDP+xIAaJe06CWFaUr+hGRLe4eZJzGELL+EM7aXniM4Hi3jwe2gHQ4wQ6K9xrpideK6/3Mp6wm7CZUDTMk06Xb64w1k+Ngxo/3AdyLLsD96RFXZ4lGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/o+5q3/; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="qlcAOjVY"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso3468922f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1745825666; x=1746430466; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3by7P9uqNKQnnEqWzZ9SaEm5TrOyLTIcc/CCu2Gerdg=;
-        b=qlcAOjVYVuRyZOM5jF92lVIQdyZrbKBVmOu65ROJsMkImeA4sLwJQ6M9T6fUbKrUpn
-         nkJIsrdV5RhOdhca5PYnt2c+wCF2eqYrrH+9HZQlSjr5uP3bXxFr7iK9Af8z5RG9EETu
-         w6tS4YXGOl/+fV+5z7FUJhdQUNeTQkJPlgRnwYE1+0E+jMYbYH/Z2KM+LzhDqWXAx8Qz
-         4M66117P0vdig6qJUpGl2TKSrk4stX6V2hbLnLey3Gb9BK/tBr8jgq9qhm5HljTLreTa
-         ArnddgCiH+A+8drZVuAczugeCUiEa4h1Q32exmW44PEYbmuDE1sTH4szP9uRRPjT/mRs
-         MrbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745825666; x=1746430466;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3by7P9uqNKQnnEqWzZ9SaEm5TrOyLTIcc/CCu2Gerdg=;
-        b=Ixrn/VRpies5tdx0AkPD7pG4b+4E6rpGjKuvozAtpKtqcQ2Gkwv+bbnWqEVvprWsRU
-         IfqVzM/meBloABb1a3VxMhDZSTPJ1Xb5vzzTVdRoBbnBxzM72CJnjdau7wuPcI3ZomRe
-         27wwPoCDKBxyJgdLEd0tCxTlRfgIWRiHvlm4ZiFSY+zqSe4F1nggutwLD6+/Qrkx7HJL
-         EuKdGyWYKfwylqPlr++SFmqmkMdyLdsBrKmfq5Z85gd3QU/TdNxCfiVm7jj7essUSJFj
-         QKSd4zOOephui8Wl4DPjsD5mIlLbwuO8zP+580clnwTgRAgWRSE2RUPRxwyhycOob/L+
-         ykDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3npRp6WMyu7Jz6+U1XbcDDp88r/pPXimoR33AU0xk/+0VBx0OLoUEdkrUchZwozkQ5jVjWcQ54uFERG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5uFAtdzL/InHA+jSWsDjOLr2s5gsZVfxhWLpUi42eaQnutbHM
-	Jb46nqjLRZW6WYKGw1mfBt1q1DZsrO+MpQ7KWIsKs3SfN+V/xQ9CC8nxIGs+kdk=
-X-Gm-Gg: ASbGnctE+XU+qA9FPPvIzhUjNJ+8GO3fAYE+ZRBABZV3dH802gPbdCt5a3a0LedO7n2
-	YJ6womNgMUCDfGBhVrccqXMoiUxdwblwNdOfZ11oSqmJ2YwlT/y4GdATNZE2hMHDHx4gnYii/KI
-	AgLps5G+UJEXI5GX8Q99UnuIj+lv8JZabhMldY+vGN+wRe/If5/vYeCJyBVttydDLPDl2lL/YgU
-	RmrGTCyfJFHee/+CJQ9iWveV9J/CLZFBSMYAz2Ag33YYBYmZxT0BEJbwTSVZ0mlWSaYTqwtNZGI
-	WjeLAqq0S+4YQ4ME7LqpJkauK5heCJ6XjfALKAQ=
-X-Google-Smtp-Source: AGHT+IG6mQ0mWvZUOVVdCR4TtZrofNh7QSmslDahUY667QO2MOymPlIMBngYJDdrDo3lzJhhVfpRTw==
-X-Received: by 2002:a05:6000:2505:b0:39c:30d8:32a4 with SMTP id ffacd0b85a97d-3a06d6dd524mr11640891f8f.26.1745825666481;
-        Mon, 28 Apr 2025 00:34:26 -0700 (PDT)
-Received: from localhost ([41.66.99.1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e461casm10504935f8f.74.2025.04.28.00.34.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 00:34:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/o+5q3/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745825726; x=1777361726;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mxdki93guRrPUqMnNg4vPPRG6mXLaz09PPXd+0S8V6E=;
+  b=K/o+5q3/oZSZ9H2GvLBUCgsdkIhrr7HyGZSiYuhvZJpMHF61piITfezC
+   6PTJXhm/EY6HscEGeMpWku0d+EylG+7DAqiUE6HxhQe2bFtraR4hhnU0P
+   M0t3goahERIA3ioUvKmqQwAbF8WIG4y07OyuhUoxZ16mUlcrjwX8ME7ug
+   lX6LJFk3Spn6IJQTbsvlXDr3gdeeJfL32PZYtewemEbYYWqTk6ZVNg4hG
+   /K3BNFt+/4drPHLb9vbPtW5iMNDfhg8stsijFlNe0Kkjxdh2AkC4tZWmZ
+   AJvA2QpWUS+/fXtrmwgITvjzjfgW4ualidysPT9mJn8HiOxsfElkk4lUI
+   Q==;
+X-CSE-ConnectionGUID: jcHnSpGGT5G2SK6lT6dfAA==
+X-CSE-MsgGUID: pY3iLgfvTimKgtxNqFkubg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="50058862"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="50058862"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:35:24 -0700
+X-CSE-ConnectionGUID: tFG6ORSjTd2nkwZlwgLrJA==
+X-CSE-MsgGUID: vdPhjXp7RgOB/g6AJCI/RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="137491544"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:35:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u9J1I-000000011Cw-0lnE;
+	Mon, 28 Apr 2025 10:35:16 +0300
+Date: Mon, 28 Apr 2025 10:35:15 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Akira Yokosawa <akiyks@gmail.com>, airlied@gmail.com, corbet@lwn.net,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+	masahiroy@kernel.org, mripard@kernel.org, nathan@kernel.org,
+	nicolas.schier@linux.dev, rodrigo.vivi@intel.com, simona@ffwll.ch,
+	tursulin@ursulin.net, tzimmermann@suse.de
+Subject: Re: [PATCH v4 0/4] Don't create Python bytecode when building the
+ kernel
+Message-ID: <aA8vs8gw75aAfwYb@smile.fi.intel.com>
+References: <cover.1745453655.git.mchehab+huawei@kernel.org>
+ <22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
+ <20250426205708.4f90a83d@sal.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Apr 2025 09:34:11 +0200
-Message-Id: <D9I3JK9RAP0C.NT3K81FYMLCR@fairphone.com>
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Wesley Cheng" <quic_wcheng@quicinc.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Felipe Balbi" <balbi@kernel.org>, "Srinivas Kandagatla"
- <srini@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown"
- <broonie@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai"
- <tiwai@suse.com>, "Bjorn Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Stephan Gerhold" <stephan.gerhold@linaro.org>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski@linaro.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-sound@vger.kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: usb: dwc3: Document usb-soc-be
- property
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250425-fp4-usb-audio-offload-v1-0-f90f571636e4@fairphone.com>
- <20250425-fp4-usb-audio-offload-v1-1-f90f571636e4@fairphone.com>
- <bcca2d97-2092-42f0-951d-f09f144e515d@quicinc.com>
-In-Reply-To: <bcca2d97-2092-42f0-951d-f09f144e515d@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250426205708.4f90a83d@sal.lan>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri Apr 25, 2025 at 11:39 PM CEST, Wesley Cheng wrote:
->
->
-> On 4/25/2025 3:44 AM, Luca Weiss wrote:
->> The property usb-soc-be is used by the new SoC USB layer which is used
->> for USB audio offloading on Qualcomm SoCs.
->
-> Hi Luca,
->
-> This property can be dropped now, as in the latest revision I added
-> utilizing the auxiliary device/bus now between the Q6USB backend DAI and
-> the vendor USB offload driver.  Reduces the need to add more properties.
+On Sat, Apr 26, 2025 at 08:57:08PM +0800, Mauro Carvalho Chehab wrote:
+> Em Sat, 26 Apr 2025 11:39:05 +0900
+> Akira Yokosawa <akiyks@gmail.com> escreveu:
+> 
+> > Bothering with might-become-incompatilbe-in-the-future python environment
+> > variables in kernel Makefiles looks over-engineering to me.
+> > Also, as Mauro says in 3/4, it is incomplete in that it does not cover
+> > the cases where those scripts are invoked outside of kernel build.
+> > And it will interfere with existing developers who want the benefit of
+> > bytecode caching.
+> > 
+> > I'm not precluding the possibility of incoherent bytecode cache; for example
+> > by using a shared kernel source tree among several developers, and only
+> > one of them (owner) has a write permission of it.  In that case, said
+> > owner might update the tree without running relevant python scripts.
+> > 
+> > I don't know if python can notice outdated cache and disregard it.
+> > 
+> > In such a situation, setting PYTHONPYCACHEPREFIX as an environment
+> > variable should help, for sure, but only in such special cases.
+> > 
+> > Andy, what do you say if I ask reverts of 1/4, 2/4/, and 3/4?
+> 
+> Patches 1 and 2 are, IMO, needed anyway, as they fix a problem:
+> KERNELDOC environment is not used consistently.
+> 
+> Now, patch 3 is the one that may require more thinking.
+> 
+> I agree with Andy that, when O=<dir> is used, nothing shall be
+> written to source dir.
+> 
+> There are a couple of reasons for that:
+> 
+> 1. source dir may be read only;
+> 2. one may want to do cross compilation and use multiple output
+>    directories, one for each version;
+> 3. the source dir could be mapped via NFS to multiple machines
+>    with different architectures.
+> 
+> For (3), it could mean that multiple machines may have different
+> Python versions, so, sharing the Python bytecode from source dir doesn't
+> sound a good idea. Also, I'm not sure if the pyc from different archs
+> would be identical.
+> 
+> With that, there are two options:
+> 
+> a. disable cache;
+> b. set PYTHONCACHEPREFIX.
 
-Great, thanks for letting me know! Will remove it in v2.
+Thanks, Mauro, for replying. I'm with you on all of it.
 
-I see the code in sound/soc/soc-usb.c is still parsing 'usb-soc-be', is
-that now kept for other use cases or should that be removed as well?
+> We're currently doing (a). I guess everybody agrees that this is
+> is not ideal.
 
-Regards
-Luca
+Yes, I also prefer to have cache working if it's possible. The only BUT here is
+that users should not suffer from it.
 
->
-> Thanks
-> Wesley Cheng
->
->>=20
->> Cc: Wesley Cheng <quic_wcheng@quicinc.com>
->> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->> ---
->>  Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml | 4 ++++
->>  1 file changed, 4 insertions(+)
->>=20
->> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml=
- b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
->> index 6c0b8b6538246adf746fe7ccd6df936131c61444..07549dec0f74234465fa9b6a=
-b21871762a2f5127 100644
->> --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
->> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
->> @@ -38,6 +38,10 @@ properties:
->>        - description: USB2/HS PHY
->>        - description: USB3/SS PHY
->> =20
->> +  usb-soc-be:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description: Link to the USB SoC sound backend
->> +
->>    phys:
->>      minItems: 1
->>      maxItems: 19
->>=20
+> So, ideally, we should move to (b). For Spinx, the easiest solution
+> is just to place it under Documentation/output, but this is not
+> generic enough: ideally, we should revert patch 3 and set
+> PYTHONCACHEPREFIX when O is used. Eventually, we can apply my
+> patch for Documentation/output, while we craft such logic.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
