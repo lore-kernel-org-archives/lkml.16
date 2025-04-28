@@ -1,130 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DEA25F7A2
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D84691AC44D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745835743; cv=none; b=d2yNjMcAq+oU9WrpF68zbC1YzfAjG1Y31pyKKwiILKwgUXn0Zy/23xpKm6EpjDA+PNI0+CPlKX+fEB/CmmF1kFUZCjpfB59mHTXW5aE5191900nKtmoh4xcdeu+0xOf7u6ayOFt8Vem8piifFbK2EHxoEzc4n6Il/0YvKWgQHzs=
+	t=1745835820; cv=none; b=JwrBHQhhXxy/QXYzHat564O9F3NRDPgodncKaeKMwwG2dfOJ1itROOYAkudAboIwgItZv/DDP77y3JDRbtmcwem6nSbBHbM2mVgRcbtxC45mpOUXc6CFneUfNp970qsi+dvfpaK/YX9beSVp3WVo/J8UNHOkcniY+YVA1pniowo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745835743; c=relaxed/simple;
-	bh=RqdM6tQLULttWm7Qo9KtY2xD21nhVT3B5OXxTPkQ95A=;
-	h=To:cc:Subject:MIME-Version:Content-Type:From:Date:Message-ID; b=gcgQPw4afeiNXoZrIWZvgQLDeRiCjHTr2QJs/LyRRs9adxE1O3oJQo73FJR4K8VmjggJTxz4Tw5S+YqiXJtVObdIp/WhbL0cNvkNBJ107bqVofKzgfy1YmwKJFT2I00SrpJhuI4eyVuu6SJ+yPa6kN21/nPHpOBpZQ5LkbbI2iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OrEblxjZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OrEblxjZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745835740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=XZR60ryduJ6qSqqolVECpQBm6DPYshoNtZhT2Jgpp+U=;
-	b=OrEblxjZBzdeN47Qtl/RR87kOf3XLzRqXmfymrA9ildTdauAcM/u2PMieFNRHmiYU0cK09
-	ozNtJDzCHITN4MzYxmb8fhexCAqO4Yr8Hwub5AUlAPgq/oZcCunT+zHrUltqbdV//CD12p
-	gUdjbNv0p2whA2rQHL/sW6aaGwKaTjo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-491-uYhzPZYtOZicjZElV4RmHQ-1; Mon,
- 28 Apr 2025 06:22:16 -0400
-X-MC-Unique: uYhzPZYtOZicjZElV4RmHQ-1
-X-Mimecast-MFC-AGG-ID: uYhzPZYtOZicjZElV4RmHQ_1745835734
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D183319560A6;
-	Mon, 28 Apr 2025 10:22:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7E1901800367;
-	Mon, 28 Apr 2025 10:22:07 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-To: netdev@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
-    Jakub Kicinski <kuba@kernel.org>,
-    "David S. Miller" <davem@davemloft.net>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Simon Horman <horms@kernel.org>, linux-afs@lists.infradead.org,
-    linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] crypto/krb5: Fix change to use SG miter to use offset
+	s=arc-20240116; t=1745835820; c=relaxed/simple;
+	bh=VvqfnSYSI+u9mgJBtP5Bos4sR0waRhV6DE0yqdFGNVQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EkSGLzvKyrW99/l0BLVHLnzdyhcJNqppnX/dZUny3RdqR3FsmoZsYo8bVUVKL3hEpkgsV/+QAOSI2VLOYORBMbP9HnSyCy1dcvU5unLMhlHHBRzQWRqeSqKm0HIjQN2hcpPlA4e01xKSVKu5WM869grAzH7I/JouWuv79tQaRtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D1991515;
+	Mon, 28 Apr 2025 03:23:31 -0700 (PDT)
+Received: from [10.57.90.155] (unknown [10.57.90.155])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C9873F66E;
+	Mon, 28 Apr 2025 03:23:36 -0700 (PDT)
+Message-ID: <9f1cd31f-8e85-4ae6-9fa5-85db7a96d2fe@arm.com>
+Date: Mon, 28 Apr 2025 11:23:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3823907.1745835655.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-From: David Howells <dhowells@redhat.com>
-Date: Mon, 28 Apr 2025 11:22:06 +0100
-Message-ID: <3824017.1745835726@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/testing/selftests: fix guard region test tmpfs
+ assumption
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250425162436.564002-1-lorenzo.stoakes@oracle.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250425162436.564002-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-[Note: Nothing in linus/master uses the krb5lib, though the bug is there,
- but it is used by AF_RXRPC's RxGK implementation in net-next, so can it g=
-o
- through the net-next tree rather than directly to Linus or through
- crypto?]
+On 25/04/2025 17:24, Lorenzo Stoakes wrote:
+> The current implementation of the guard region tests assume that /tmp is
+> mounted as tmpfs, that is shmem.
+> 
+> This isn't always the case, and at least one instance of a spurious test
+> failure has been reported as a result.
+> 
+> This assumption is unsafe, rushed and silly - and easily remedied by simply
+> using memfd, so do so.
+> 
+> We also have to fixup the readonly_file test to explicitly only be
+> applicable to file-backed cases.
+> 
+> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+> Closes: https://lore.kernel.org/linux-mm/a2d2766b-0ab4-437b-951a-8595a7506fe9@arm.com/
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-The recent patch to make the rfc3961 simplified code use sg_miter rather
-than manually walking the scatterlist to hash the contents of a buffer
-described by that scatterlist failed to take the starting offset into
-account.
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-This is indicated by the selftests reporting:
-
-    krb5: Running aes128-cts-hmac-sha256-128 mic
-    krb5: !!! TESTFAIL crypto/krb5/selftest.c:446
-    krb5: MIC mismatch
-
-Fix this by calling sg_miter_skip() before doing the loop to advance by th=
-e
-offset.
-
-This only affects packet signing modes and not full encryption in RxGK
-because, for full encryption, the message digest is handled inside the
-authenc and krb5enc drivers.
-
-Fixes: da6f9bf40ac2 ("crypto: krb5 - Use SG miter instead of doing it by h=
-and")
-Reported-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Chuck Lever <chuck.lever@oracle.com>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: netdev@vger.kernel.org
----
- crypto/krb5/rfc3961_simplified.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/crypto/krb5/rfc3961_simplified.c b/crypto/krb5/rfc3961_simpli=
-fied.c
-index 79180d28baa9..e49cbdec7c40 100644
---- a/crypto/krb5/rfc3961_simplified.c
-+++ b/crypto/krb5/rfc3961_simplified.c
-@@ -89,6 +89,7 @@ int crypto_shash_update_sg(struct shash_desc *desc, stru=
-ct scatterlist *sg,
- =
-
- 	sg_miter_start(&miter, sg, sg_nents(sg),
- 		       SG_MITER_FROM_SG | SG_MITER_LOCAL);
-+	sg_miter_skip(&miter, offset);
- 	for (i =3D 0; i < len; i +=3D n) {
- 		sg_miter_next(&miter);
- 		n =3D min(miter.length, len - i);
+> ---
+>  tools/testing/selftests/mm/guard-regions.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/guard-regions.c b/tools/testing/selftests/mm/guard-regions.c
+> index c39dd26c47a3..0cd9d236649d 100644
+> --- a/tools/testing/selftests/mm/guard-regions.c
+> +++ b/tools/testing/selftests/mm/guard-regions.c
+> @@ -272,12 +272,16 @@ FIXTURE_SETUP(guard_regions)
+>  	self->page_size = (unsigned long)sysconf(_SC_PAGESIZE);
+>  	setup_sighandler();
+>  
+> -	if (variant->backing == ANON_BACKED)
+> +	switch (variant->backing) {
+> +	case ANON_BACKED:
+>  		return;
+> -
+> -	self->fd = open_file(
+> -		variant->backing == SHMEM_BACKED ? "/tmp/" : "",
+> -		self->path);
+> +	case LOCAL_FILE_BACKED:
+> +		self->fd = open_file("", self->path);
+> +		break;
+> +	case SHMEM_BACKED:
+> +		self->fd = memfd_create(self->path, 0);
+> +		break;
+> +	}
+>  
+>  	/* We truncate file to at least 100 pages, tests can modify as needed. */
+>  	ASSERT_EQ(ftruncate(self->fd, 100 * self->page_size), 0);
+> @@ -1697,7 +1701,7 @@ TEST_F(guard_regions, readonly_file)
+>  	char *ptr;
+>  	int i;
+>  
+> -	if (variant->backing == ANON_BACKED)
+> +	if (variant->backing != LOCAL_FILE_BACKED)
+>  		SKIP(return, "Read-only test specific to file-backed");
+>  
+>  	/* Map shared so we can populate with pattern, populate it, unmap. */
 
