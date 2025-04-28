@@ -1,197 +1,153 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF55D26ACD;
-	Mon, 28 Apr 2025 20:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CBD186284;
+	Mon, 28 Apr 2025 20:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745872887; cv=none; b=rC1zcXEIdRfw8tVUjfJFV5oWlDu2cF6a2Gs+v9cDYHmdo1zqXsJeg17nER9gAo0Brx0H1wpeF9hpAsiAE9Wcb+op9nKhebGXCcy2uh5b+pIJp2rJDBPYbVtILdCMsTk7Nm42LwQ5byp6YKRA91vUjepC6EC4xOT/9SbXZoo4EE4=
+	t=1745872940; cv=none; b=YanC3nQGNuz3ZFVQOs5NJWXVk5Di9MVHuvfH9SpweHNJz8bI4DA7/jPwhXOyRsG/0Fh6V2cK8UpiumGo9/H0g8aLmLYn++hWXpFXf0zN5yLy3UIwrU1g3Qlyb9V8kgR6eaSrNrpLs9p2J6xqWSDJMuL0jzx3V8PuzBtiSyhFJWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745872887; c=relaxed/simple;
-	bh=VZuoH/BIy2GmMf+g7ruDVxRX6lVlZmL2+nfgqE32ly8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=cIgk2xy5bQFEe++SsuVasMCiZEuUGlRdbcgn1EE/7mxjR/znj44YNENDklmT6o9S451vrkE1p6/vSIj1d4HxNrQi/EwWYpk//vPcwqOgMjQoc/HBxisjWscr9qWmOnZbUAPsJ5nZj9MS+TtTBBIQL9ONykukO0GaOC+1S/ABRfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aKaQLhaI; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745872940; c=relaxed/simple;
+	bh=V0uWzclMr2r/WAwDMRAdUM4T2DZ/rdMtbW/axAzMidY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6f5iC+7mfTKFplDwIkYZk34r4sSjOsrBcmgo4ciewGjW0l52pti3eOEjhOMbCqn4Vo0yP4KGZuy38uYkofV4ZBh2Oza4kQxa0flnOtHRcvOMo/UgvEcRgJVsiDOpyIM5gK7+kRtGbnIGTnjQm7/Athcw/wHRTIughsby+PUIWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sm9EWizy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aKaQLhaI"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B548438B9;
-	Mon, 28 Apr 2025 20:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745872876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b4S5NohzcZt8hjZWHfp8WHteVctUQSoPl0lKofU3tDA=;
-	b=aKaQLhaISwSMkAlavm0KAhgbL2bv1f7sjgQSBKhWkB3EbQh+EF8u7bEF4eAVxMVarACoFw
-	xFdlkcS3HVdC9Xqk7e/Bby0QzpfLuppbosJROUureXUuEzaXySDxfm2SC7blF/WcjwaFY5
-	4JWfDaNu9g1yK3AOxPq5ZbYZazSAng+4Dn9TCwM7YhGabMo+iT/zE0Og4JCTK+lFypYNqP
-	sWvVj0apUgJpkdZgbzLKpMw+yFUXoFw1wfNEDwuGlmGBiWoxUBjno0DyVJ7ENZ8cQt8QyH
-	I63KthotL9d/f85B4/Da4IaFzVzGAcdpqvc5CiQj5Ryvcmx8qCOlftgukfq+ZA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sm9EWizy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CB0C4CEE4;
+	Mon, 28 Apr 2025 20:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745872938;
+	bh=V0uWzclMr2r/WAwDMRAdUM4T2DZ/rdMtbW/axAzMidY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sm9EWizyaC+EPmMkIokOwSgMmHtKXllVhpWHjjfuF8ul9YSnOc3D8iKL7jte0m9g0
+	 F/3LjKi5p0yf6ov+fi4hHI2Y46xmoZ0FpGgyTazaP9g/14gDaI9c/x9fipZS6YbyaN
+	 HJ2qeIGnT8nPB7oNwPS1Yb7Sd8lOqBZX8a4oJePJkL038MsHbV6Q96W9yvt/TPur0a
+	 M0mx+VxVBTnL9eL2jIFF/EI4oiXkl3gmYMSG635T5orCP+8917RbmOQNFzMVeOfa+u
+	 WBWjrOol3x5/4dJ+ukk/Fq5bzww/JHqtm0P2fl9CmuqBtf06GieGbVWJaxJivjVocn
+	 wGqJJjRbgiWVA==
+Date: Mon, 28 Apr 2025 13:42:15 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+	Blake Jones <blakejones@google.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
+Message-ID: <aA_oJ7tgGv-H4ocX@google.com>
+References: <20250424162529.686762589@goodmis.org>
+ <20250424162633.390748816@goodmis.org>
+ <aAupP56jOM_wul_8@google.com>
+ <20250425125815.5c5b33be@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 28 Apr 2025 22:41:13 +0200
-Message-Id: <D9IKA5K8PFAO.21V0PXVU6VPF1@bootlin.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Song Liu" <song@kernel.org>, "Yonghong Song"
- <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>, "Stanislav
- Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>, "Xu Kuohai"
- <xukuohai@huaweicloud.com>, "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah
- Khan" <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
- <revest@chromium.org>, "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH RFC bpf-next 3/4] bpf/selftests: add tests to validate
- proper arguments alignment on ARM64
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Eduard Zingerman" <eddyz87@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-3-0a32fe72339e@bootlin.com>
- <3a16fae0346d4f733fb1a67ae6420d8bf935dbd8.camel@gmail.com>
- <D9I6TQN2I6B1.QC4FFHEWAURZ@bootlin.com> <m21ptcmdnw.fsf@gmail.com>
-In-Reply-To: <m21ptcmdnw.fsf@gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieduleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffvddufffhieffheetfffggeeugedtieduheeilefguddvheegvdeuffeuveeltdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvledprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvn
- hgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvh
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250425125815.5c5b33be@gandalf.local.home>
 
-On Mon Apr 28, 2025 at 6:52 PM CEST, Eduard Zingerman wrote:
-> Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com> writes:
->
-> [...]
->
->>> The function listened to is defined as accepting 'struct bpf_testmod_st=
-ruct_arg_7',
->>> at the same time this function uses 'struct bpf_testmod_struct_arg_5'.
->>
->> That's not an accidental mistake, those are in fact the same definition.
->> bpf_testmod_struct_arg_7 is the kernel side definition in bpf_testmod.c:
->>
->> struct bpf_testmod_struct_arg_7 {
->> 	__int128 a;
->> };
->>
->> and struct bpf_testmode_struct_arg_5 is the one defined in the bpf test
->> program:
->>
->> struct bpf_testmod_struct_arg_5 {
->> 	__int128 a;
->> };
->
-> Apologies, but I'm still confused:
-> - I apply this series on top of:
->   224ee86639f5 ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/bpf/=
-bpf after rc4")
->
-> - line 12 of tracing_struct_many_args.c has the following definition:
->
->   struct bpf_testmod_struct_arg_5 {
->          char a;
->          short b;
->          int c;
->          long d;
->   };
->
-> - line 135 of the same file has the following definition:
->
->    SEC("fentry/bpf_testmod_test_struct_arg_11")
->    int BPF_PROG2(test_struct_many_args_9, struct bpf_testmod_struct_arg_5=
-, a,
->                  struct bpf_testmod_struct_arg_5, b,
->                  struct bpf_testmod_struct_arg_5, c,
->                  struct bpf_testmod_struct_arg_5, d, int, e,
->                  struct bpf_testmod_struct_arg_5, f)
->
-> - line 70 of tools/testing/selftests/bpf/test_kmods/bpf_testmod.c:
->
->    struct bpf_testmod_struct_arg_7 {
->          __int128 a;
->    };
->
-> - line 152 of the same file:
->
->   noinline int bpf_testmod_test_struct_arg_11(struct bpf_testmod_struct_a=
-rg_7 a,
->                                               struct bpf_testmod_struct_a=
-rg_7 b,
->                                               struct bpf_testmod_struct_a=
-rg_7 c,
->                                               struct bpf_testmod_struct_a=
-rg_7 d,
->                                               short e,
->                                               struct bpf_testmod_struct_a=
-rg_7 f)
->
-> Do I use a wrong base to apply the series?
+On Fri, Apr 25, 2025 at 12:58:15PM -0400, Steven Rostedt wrote:
+> On Fri, 25 Apr 2025 08:24:47 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
+> > > +/*
+> > > + * Returns:
+> > > +*     > 0 : if already queued.
+> > > + *      0 : if it performed the queuing
+> > > + *    < 0 : if it did not get queued.
+> > > + */
+> > > +static int deferred_request(struct perf_event *event)
+> > > +{
+> > > +	struct callback_head *work = &event->pending_unwind_work;
+> > > +	int pending;
+> > > +	int ret;  
+> > 
+> > I'm not sure if it works for per-CPU events.  The event is shared so any
+> > task can request the deferred callchains.  Does it handle if task A
+> > requests one and scheduled out before going to the user mode, and task B
+> > on the CPU also requests another after that?  I'm afraid not..
+> 
+> I was afraid of that.
+> 
+> This is no different that what Josh did in his last set in v4. I'm guessing
+> the issue is running with "-a", correct?
 
-Argh, no, no, you are right, I checked again and I made some confusions
-between progs/tracing_struct.c and progs/tracing_struct_many_args.c. I
-initially did most of the work in tracing_struct.c, and eventually moved
-the code to tracing_struct_many_args.c before sending my series, but I
-apparently forgot to move bpf_testmod_struct_arg_5 declaration in
-tracing_struct_many_args.c (and so, to rename it, since this name is
-already used in there). As a consequence the bpf program is actually using
-the wrong struct layout. So thanks for insisting and spotting this issue !
+Yes.
 
-I fixed my mess locally in order to re-run the gdb analysis mentioned in my
-previous mail, and the bug seems to be the same (unexpected t11:f: actual
-35 !=3D expected 43), with the same layout issue on the bpf context passed =
-on
-the stack ("lucky" mistake ?). However, thinking more about this, I feel
-like there is still something that I have missed:
+> 
+> Could we just not use deferred when running with "-a" for now? Or could we
+> possibly just make the deferred stacktrace its own event? Have it be
+> possible that perf just registers a signal instance with the deferred
+> unwinding logic, and then perf can handle where to write the information. I
+> don't know perf well enough to implement that.
 
-0xffffc900001dbce8:     38      0       0       0       0       0       0  =
-     0
-0xffffc900001dbcf0:     0       0       0       0       0       0       0  =
-     0
-0xffffc900001dbcf8:     39      0       0       0       0       0       0  =
-     0
-0xffffc900001dbd00:     0       0       0       0       0       0       0  =
-     0
-0xffffc900001dbd08:     40      0       0       0       0       0       0  =
-     0
-0xffffc900001dbd10:     0       0       0       0       0       0       0  =
-     0
-0xffffc900001dbd18:     41      0       0       0       0       0       0  =
-     0
-0xffffc900001dbd20:     0       0       0       0       0       0       0  =
-     0
-0xffffffffc04016a6:     42      0       0       0       0       0       0  =
-     0
-0xffffc900001dbd30:     35      0       0       0       0       0       0  =
-     0
-0xffffc900001dbd38:     43      0       0       0       0       0       0  =
-     0
-0xffffc900001dbd40:     37      0       0       0       0       0       0  =
-     0
+Even if it excludes per-CPU events, per-task events also can attach to a
+CPU and that's the default behavior of the perf record IIRC.  In that
+case, it needs to be careful when it accesses the event since the task
+can migrate to another CPU.  So I'm not sure if it's a good idea to
+track event that requested the deferred callchains.
 
-If things really behaved correctly, f would not have the correct value but
-would still be handled as a 16 bytes value, so the test would not fail with
-"actual 35 !=3D 43", but something like "actual
-27254487904906932132179118915584 !=3D 43" (43 << 64 | 35) I guess. I still
-need to sort this out.
+Also it doesn't need to emit duplicate deferred callchains if a task
+has multiple events and they are requesting callchains.  Unfortunately,
+the kernel cannot know which events are related or profiled together.
 
-Alexis
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Hmm.. maybe we can add a cookie to the event itself (by ioctl or
+something) in order to group events in a profiling session and then use
+that for deferred callchains?  Task should maintain a list of active
+cookies (or sessions) somehow but then perf can check if the current CPU
+has events with matching cookies and emit a deferred callchain.
+
+> 
+> Josh's code had it call the unwind_deferred_init() and just used its own
+> event to callback to and that was called on hundreds of events when I ran:
+> 
+>   perf record -g <whatever>
+> 
+> Same if I added the "-a" option.
+> 
+> The above function return values came from Josh's code:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/tree/kernel/unwind/deferred.c?h=sframe#n173
+> 
+> I just moved it out of deferred.c and into perf itself, and removed the
+> cookie logic.
+> 
+> > 
+> > > +
+> > > +	if (!current->mm || !user_mode(task_pt_regs(current)))
+> > > +		return -EINVAL;  
+> > 
+> > Does it mean it cannot use deferred callstack when it's in the kernel
+> > mode like during a syscall?
+> 
+> task_pt_regs(current) will return the regs from when the task entered the
+> kernel. So the answer is no, it will still trace if an interrupt happened
+> while a task is in a system call.
+
+Ok, thanks for the explanation.  The the user_mode check was for kernel
+threads, right?
+
+Thanks,
+Namhyung
 
