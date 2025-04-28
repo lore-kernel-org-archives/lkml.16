@@ -1,119 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6337026ACB;
-	Mon, 28 Apr 2025 00:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B867D2701C4;
+	Mon, 28 Apr 2025 00:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745801318; cv=none; b=eVDozvXccdI0qdNxjHkz2ADIaP8PRu6HsrbsiO8A+8lvhazcwDceJTkq9iTZme3tWEHGIuGZ/S+uj63DU7JdzyE2QQPRiuF8sMb/xN500te1Tu5rwtBlKflQKTRUcgm5T4+7c74IbXAq5Cs3KV6uAnORzTQQDV7wcOiu5TuOvaI=
+	t=1745801357; cv=none; b=YtVtzdBg2Upr62rgjxG4TWzxxXI5xOSN5ZU/wMQ+bwWfhFpM2FXkjtckS8GJisw+L55Csz3PrwAF3jooS8u97ATPQRPAc654lWFQxmcrtgDze0EgIOpBntCg8kEx4BpV095RBCyE5tYWCICUE3PV3woZCSRdSJ3oadhZd5wDmZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745801318; c=relaxed/simple;
-	bh=fkCESRWZBQKZ/tI+AA4cusg+RxlFdjJUD489HgwnmNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tWSZ7ufp97kT1m1RLRpoEPf+a2hmtQ1wy5fma5CDVoSnKGdlD0YMxqFtZOzxtld2kU+J5TzYP8W0l9ZcWYxrvXnilFjx/A9T08BafP8POfsEfdvam0ueOR0mh+AGKXmmmXdDJhuauiU6VIasO6tXLjqat0FtCKRnk6945rggaR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/3nVo38; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745801357; c=relaxed/simple;
+	bh=GRtExQoSpMDcN8m4JjjhTmCB0KpOhfqC0Ukd4yA43No=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k1+GYzS0rkG+SmdNdcyQj+i33gGsLHR2Ym3WOBCW/jXi2lhh8W7pShyyzoIj2O65bN7xV1Y1aF3+l778W+E7VONW68gfoYdr2+HjVzi9OMopMelTT580PCAgTQv+ZEFUaMoEllf8DGB4tXVET2nTwPzlTcS0ikpC5S4XDxc0mYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CKqHoe2X; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/3nVo38"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66467C4CEE9;
-	Mon, 28 Apr 2025 00:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745801317;
-	bh=fkCESRWZBQKZ/tI+AA4cusg+RxlFdjJUD489HgwnmNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D/3nVo38xBDCgIsChGqD9Ls5LNxsrlZoe1bGUiz6CuiaG/xfac6Z/iJno/LyDIRnc
-	 L9/VqShP0vtaznhtiIY2SnsK0rp4Hwg6wBmO32U87u9j9N00syNecDbBqW5cfBIGS+
-	 0rR4mj5+82AuW7l8woAi0ZWNpF7FJFOlyv6giEdfhrRslGDv86DFhjIrSnyA9pctEs
-	 nUWuifM1tk5NGxcDu74xTOmarMcsQRaaSBRvlTwvOMXKd4GVObjlXcaZWf6mqGkKV1
-	 Oy9k6TKiiSrWTlGdpZ6ugI4GMUul6IlmBnZNB7epwpM3EHZMMUvBGJt+cgRMT9FSDO
-	 q1s1bmhZdw0Vg==
-Date: Mon, 28 Apr 2025 00:48:36 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Roman Kisel <romank@linux.microsoft.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"mikelley@microsoft.com" <mikelley@microsoft.com>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"tiala@microsoft.com" <tiala@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"apais@microsoft.com" <apais@microsoft.com>,
-	"benhill@microsoft.com" <benhill@microsoft.com>,
-	"bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP ID confusion
- in hv_snp_boot_ap()
-Message-ID: <aA7QZPFS7WWOsahp@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250424215746.467281-1-romank@linux.microsoft.com>
- <SN6PR02MB4157E849025C4A6B64933150D4842@SN6PR02MB4157.namprd02.prod.outlook.com>
- <8a235e4f-f4ce-445e-9714-380573033455@linux.microsoft.com>
- <SN6PR02MB41577E8A06C9F8BA66A8D68AD4842@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CKqHoe2X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745801350;
+	bh=dceDVVW3ewLIvRvDPLJmclWQJzCUYkKLgP9Kl7VZ5NM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CKqHoe2XspupgcNO+T478S5gjmOOduyezpvqS5uL95ZLhwErDIhBpS7ihHSlZzCe4
+	 1L0UB1K+gEJQVIZzebvTNtD1jwrowdZE8UJ124rvtvhb6+4I69x7aLomLoFTPhSKbf
+	 hL00S45RAvQDjhrboNHZ/rHuSWX2CPK4RRXlAB0qAQSEU/HMYpisJWli3hdCBTDuPp
+	 qnOQ0/sbjRCPqT0wN4HFYfwDkJ7BVQlX5ayTHT5uT4ClJrizSMHnEDZFmTGaqCyyH/
+	 nd1VGonrWIHeELxuVs6eLjU+ypombshU0BnEYdubNLZJ0lMri+cq+F9aEOu9N4yEe7
+	 NzCC1vUv7CjUw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm4Zq4Wlmz4wj2;
+	Mon, 28 Apr 2025 10:49:07 +1000 (AEST)
+Date: Mon, 28 Apr 2025 10:49:05 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Wolfram Sang
+ <wsa@the-dreams.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Jai Luthra
+ <jai.luthra@ideasonboard.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Romain Gantois <romain.gantois@bootlin.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>
+Subject: linux-next: manual merge of the v4l-dvb tree with the i2c tree
+Message-ID: <20250428104905.2b54643f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41577E8A06C9F8BA66A8D68AD4842@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: multipart/signed; boundary="Sig_/Iu8MMAuifCK8izLOpQ_sltl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Apr 25, 2025 at 04:55:42PM +0000, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, April 25, 2025 9:36 AM
-> > 
-> > On 4/25/2025 8:12 AM, Michael Kelley wrote:
-> > > From: Roman Kisel <romank@linux.microsoft.com> Sent: Thursday, April 24, 2025 2:58 PM
-> > >>
-> > >> To start an application processor in SNP-isolated guest, a hypercall
-> > >> is used that takes a virtual processor index. The hv_snp_boot_ap()
-> > >> function uses that START_VP hypercall but passes as VP ID to it what
-> > >> it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
-> > >>
-> > >> As those two aren't generally interchangeable, that may lead to hung
-> > >> APs if VP IDs and APIC IDs don't match, e.g. APIC IDs might be sparse
-> > >> whereas VP IDs never are.
-> > >
-> > > I agree that VP IDs (a.k.a. VP indexes) and APIC IDs don't necessary match,
-> > > and that APIC IDs might be sparse. But I'm not aware of any statement
-> > > in the TLFS about the nature of VP indexes, except that
-> > >
-> > >     "A virtual processor index must be less than the maximum number of
-> > >     virtual processors per partition."
-> > >
-> > > But that maximum is the Hyper-V implementation maximum, not the
-> > > maximum for a particular VM. So the statement does not imply
-> > > denseness unless the number of CPUs in the VM is equal to the
-> > > Hyper-V implementation max. In other parts of Linux kernel code,
-> > > we assume that VP indexes might be sparse as well.
-> > >
-> > > All that said, this is just a comment about the precise accuracy of
-> > > your commit message, and doesn't affect the code.
-> > >
-> > 
-> > I appreciate your help with the precision. I used loose language,
-> > agreed, would like to fix that. The patch was applied though but not yet
-> > sent to the Linus'es tree as I understand. I'd appreciate guidance on
-> > the process! Should I send a v2 nevertheless and explain the situation
-> > in the cover letter?
-> > 
-> > IOW, how do I make this easier for the maintainer(s)?
-> 
-> Wei Liu should give his preferences. But in the past, I think he has
-> just replaced a patch that was updated. If that's the case, you can 
-> send a v2 without a lot of additional explanation.
-> 
+--Sig_/Iu8MMAuifCK8izLOpQ_sltl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Normally if you need to send a new version because the original
-patch is buggy, you can just update your patch.
+Hi all,
 
-If only a commit message or comment needs to be updated, I will let the
-submitter know either to send a new version or not. Sometimes I will
-just make the changes myself to save the submitter some time.
+Today's linux-next merge of the v4l-dvb tree got a conflict in:
 
-Wei.
+  drivers/media/i2c/ds90ub960.c
+
+between commits:
+
+  3ec29d51b546 ("media: i2c: ds90ub960: Protect alias_use_mask with a mutex=
+")
+  818bd489f137 ("i2c: use client addresses directly in ATR interface")
+
+from the i2c tree and commits:
+
+  24868501a744 ("media: i2c: ds90ub9xx: Add err parameter to read/write fun=
+cs")
+  2ca499384e98 ("media: i2c: ds90ub960: Add RX port iteration support")
+
+from the v4l-dvb tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/media/i2c/ds90ub960.c
+index 5a4d5de110bd,1877eb735cc7..000000000000
+--- a/drivers/media/i2c/ds90ub960.c
++++ b/drivers/media/i2c/ds90ub960.c
+@@@ -1056,11 -1271,10 +1274,12 @@@ static int ub960_atr_attach_addr(struc
+  	struct ub960_rxport *rxport =3D priv->rxports[chan_id];
+  	struct device *dev =3D &priv->client->dev;
+  	unsigned int reg_idx;
++ 	int ret =3D 0;
+ =20
+ -	for (reg_idx =3D 0; reg_idx < ARRAY_SIZE(rxport->aliased_clients); reg_i=
+dx++) {
+ -		if (!rxport->aliased_clients[reg_idx])
+ +	guard(mutex)(&rxport->aliased_addrs_lock);
+ +
+ +	for (reg_idx =3D 0; reg_idx < ARRAY_SIZE(rxport->aliased_addrs); reg_idx=
+++) {
+ +		if (!rxport->aliased_addrs[reg_idx])
+  			break;
+  	}
+ =20
+@@@ -1069,15 -1283,18 +1288,18 @@@
+  		return -EADDRNOTAVAIL;
+  	}
+ =20
+ -	rxport->aliased_clients[reg_idx] =3D client;
+ +	rxport->aliased_addrs[reg_idx] =3D addr;
+ =20
+  	ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ID(reg_idx),
+- 			   addr << 1);
+ -			   client->addr << 1, &ret);
+++			   addr << 1, &ret);
+  	ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ALIAS(reg_idx),
+- 			   alias << 1);
++ 			   alias << 1, &ret);
++=20
++ 	if (ret)
++ 		return ret;
+ =20
+  	dev_dbg(dev, "rx%u: client 0x%02x assigned alias 0x%02x at slot %u\n",
+ -		rxport->nport, client->addr, alias, reg_idx);
+ +		rxport->nport, addr, alias, reg_idx);
+ =20
+  	return 0;
+  }
+@@@ -1089,11 -1306,10 +1311,12 @@@ static void ub960_atr_detach_addr(struc
+  	struct ub960_rxport *rxport =3D priv->rxports[chan_id];
+  	struct device *dev =3D &priv->client->dev;
+  	unsigned int reg_idx;
++ 	int ret;
+ =20
+ -	for (reg_idx =3D 0; reg_idx < ARRAY_SIZE(rxport->aliased_clients); reg_i=
+dx++) {
+ -		if (rxport->aliased_clients[reg_idx] =3D=3D client)
+ +	guard(mutex)(&rxport->aliased_addrs_lock);
+ +
+ +	for (reg_idx =3D 0; reg_idx < ARRAY_SIZE(rxport->aliased_addrs); reg_idx=
+++) {
+ +		if (rxport->aliased_addrs[reg_idx] =3D=3D addr)
+  			break;
+  	}
+ =20
+@@@ -1103,12 -1319,18 +1326,18 @@@
+  		return;
+  	}
+ =20
+ -	rxport->aliased_clients[reg_idx] =3D NULL;
+ +	rxport->aliased_addrs[reg_idx] =3D 0;
+ =20
+- 	ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ALIAS(reg_idx), 0);
++ 	ret =3D ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ALIAS(reg_idx),
++ 				 0, NULL);
++ 	if (ret) {
++ 		dev_err(dev, "rx%u: unable to fully unmap client 0x%02x: %d\n",
++ 			rxport->nport, client->addr, ret);
++ 		return;
++ 	}
+ =20
+  	dev_dbg(dev, "rx%u: client 0x%02x released at slot %u\n", rxport->nport,
+ -		client->addr, reg_idx);
+ +		addr, reg_idx);
+  }
+ =20
+  static const struct i2c_atr_ops ub960_atr_ops =3D {
+@@@ -3231,21 -4370,12 +4376,14 @@@ static void ub960_txport_free_ports(str
+ =20
+  static void ub960_rxport_free_ports(struct ub960_data *priv)
+  {
+- 	unsigned int nport;
+-=20
+- 	for (nport =3D 0; nport < priv->hw_data->num_rxports; nport++) {
+- 		struct ub960_rxport *rxport =3D priv->rxports[nport];
+-=20
+- 		if (!rxport)
+- 			continue;
+-=20
+- 		fwnode_handle_put(rxport->source.ep_fwnode);
+- 		fwnode_handle_put(rxport->ser.fwnode);
++ 	for_each_active_rxport(priv, it) {
++ 		fwnode_handle_put(it.rxport->source.ep_fwnode);
++ 		fwnode_handle_put(it.rxport->ser.fwnode);
+ =20
+ +		mutex_destroy(&rxport->aliased_addrs_lock);
+ +
+- 		kfree(rxport);
+- 		priv->rxports[nport] =3D NULL;
++ 		kfree(it.rxport);
++ 		priv->rxports[it.nport] =3D NULL;
+  	}
+  }
+ =20
+
+--Sig_/Iu8MMAuifCK8izLOpQ_sltl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgO0IEACgkQAVBC80lX
+0GwuxQf8CDRUDUhUkSEtnRMzezwxTCxy6hBsfytMQIjQJ5MeAjktp2VoTGlAr+KQ
+Pzp2MVLRiOYYYOZ+/TYCN4LJaPLbMAB3pTKSg6lN0TahsuFUwXnLgy9M7JO/3REn
+uuE7H/AkngqMCCyWpG7CN2Rxf/IbkwkzM/mEzZLqUAbpV+fN26glXuMxGK71jYJ0
+D2cX5y7YI0Sy4UGrDSmQmaWoWbOMIqTg/PXYmH/+M/pGZ46pcToxwviivh8btClB
+BqZIPPY1rbYS1aXk/XgLor4pFY6IFfrQnDkSKzIdkhEy62ALAw8Iidmg0fYKl/f3
+bqpMuw1CzanAx689gtSLQYO4iZ7SLw==
+=V1Pt
+-----END PGP SIGNATURE-----
+
+--Sig_/Iu8MMAuifCK8izLOpQ_sltl--
