@@ -1,89 +1,122 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFACE1DA4E;
-	Mon, 28 Apr 2025 02:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BB82AEFE
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 03:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745809197; cv=none; b=NHUqwg5VxwCA61GGJAPiUk80nTcQjFV+TVu7EdV586GQxIOhWNZQvGnqRw54w2ZN6I4FmuY05KRbQwz6aJrjwGfRw7VQLTAZCbqhKTXrrpmV7vmshSc+qRTUhrMUDFClXuuH5dB5h79lyIV9yaEOkagAuM+oeKq34oT+fF9aMT0=
+	t=1745809299; cv=none; b=FHlDbpcFngK7OeaMrfCvawngW3UEOsyIdugLaQfGuEOfIIDKsVU4h8L7Zcnbv4Q4dAoNRw3kEqxn0isrBUWbM9PDG8rDu6ZEtQHE98RZWvRn+meuD/EU0CGXdgnCkt8iWGmHRZVEBTjrIpaJI/0p7eHuOSp4FFxYcAZyBckfZcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745809197; c=relaxed/simple;
-	bh=/QcFu8jTMwn4D7EBmAXB8sLko0XzPZNY3u8sLFMOwlc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=eT5QmMwu2do/7XLMQhLe+n/RZ5NnUUyoQWqdYm6KFnO/ZiriQuYg0G0Ntm7x6OqW7a6ZKszluABNK/FVKAdMIFxkmDolNMvJysVRZZv+I0HxIjYHJGJp3sm9bbBsk3EGA5LOtfbvwTcLgwE4rldVQBKyyY9tcz5OpKisXr1VBNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: zesmtpgz1t1745809183t446ab101
-X-QQ-Originating-IP: yt5W9iMGYhv6nhUbpzCKD90bJXJC/iXzbFaZIaC4rV8=
-Received: from localhost.localdomain ( [175.9.43.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 28 Apr 2025 10:59:42 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 10774730210279231519
-From: Liu Dalin <liudalin@kylinsec.com.cn>
-To: alexandre.belloni@bootlin.com,
-	linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc: loongson: Add missing alarm notifications for ACPI RTC events
-Date: Mon, 28 Apr 2025 10:59:40 +0800
-Message-Id: <20250428025940.980313-1-liudalin@kylinsec.com.cn>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1745809299; c=relaxed/simple;
+	bh=bTIYGjUEfWV91UOUEaa0bpz8MCd2i8xgNSwVExTVcyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YDUzSBfLj/MOFiKrCJh2rdRLkxxAL02R5KWoErj/ZzjZOSCIshvB52cxBuFzqH9U+v4796HbV6+RxD+kSZPaD66KGEinI4sf8/M13rkZqGYctjnEpRV4h6JQdhVZjO4M0M+Rh7Gmn5vL82+V2M71rJ+EljjSYKRFN4k9aIfzW/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c0H3fLlt; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c0H3fLlt"
+Date: Sun, 27 Apr 2025 23:01:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745809285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U5Tq6qv8wJ8+w6x70ZkxVFQ2witQoKaLCUGBtBocj7Q=;
+	b=c0H3fLlt+HVbqw1MRHAa+qRYdBeomy4zGslAcdQDQsE+Sp/pAkozSzCt0pJyrh8wFpFTTY
+	0DsOX4GTR8U4WMIxXRk1kCmKka0Ss0JEO6VMW3Ag5XFxdlVJVZMmp6H3zfJwJBqVvdbKEC
+	ewm8Wp6dtzDzCZ//dITwc8L0faiX93A=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, Autumn Ashton <misyl@froggi.es>, 
+	Matthew Wilcox <willy@infradead.org>, Theodore Ts'o <tytso@mit.edu>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <yarkxhxub75z3vj47cidpe4vfk5b6cdx5mip2ummgyi6v6z4eg@rnfiud3fonxs>
+References: <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <aAvlM1G1k94kvCs9@casper.infradead.org>
+ <ahdxc464lydwmyqugl472r3orhrj5dasevw5f6edsdhj3dm6zc@lolmht6hpi6t>
+ <20250428013059.GA6134@sol.localdomain>
+ <ytjddsxe5uy4swchkn2hh56lwqegv6hinmlmipq3xxinqzkjnd@cpdw4thi3fqq>
+ <5ea8aeb1-3760-4d00-baac-a81a4c4c3986@froggi.es>
+ <20250428022240.GC6134@sol.localdomain>
+ <CAHk-=wjGC=QF0PoqUBTo9+qW_hEGLcgb2ZHyt9V8xo5pvtj3Ew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: M8BaT0GEeXPxg5nrbAvk+UCRcnUxWSxI+pVua2GjS5uSb3Ck2wbqch5J
-	UxHh9z4FvGYZw7jE594J2gXbe8D5eGwpeulyTaQ4RSV0wsgmh5JpxrvGVkGy/qQcHh6d0mB
-	1z7wLJOavE/mrOFIFrrV8ieBvd7HHWD49ZFuD0ey1zg0TX794sJlEPzsRDJVvEC1E5uc3he
-	EY0/uNbbMyrRUHWMIUImHBa4TrONMCZAjaTSuJuiWW1FcpZHrZMLQwxTA8GyMSeoCgsd/aL
-	ptCgUrHIIxo7nSQ7RoNKWWdTU+IdWaADmqJji6il0MiNC2PPj2DBbDUMWAKAvnigDFpBIM2
-	uXwkEfrXb83JUmLMoKJyIWWGXPFqtr/End5P4DI69ToJGzs1fnzcdAXoFKU6896EiM9ezl0
-	KvG94lNPJc20laN1M6MKJ+t4dwbAewRaVT8PnkHYubi6Q00j9IwnlMiufy5+ZZOSbVJH8R0
-	Sgyr6q/YsWwybbCF4BHfNwVXKUs8NzU49AIZYXY2ScW2X1tiJGWBL/tONNoVVfCoMNg3Jn3
-	kv7YP9hsf8d4z55llCLyOjawK3FBc0C/PBDN/WUZlQO5ky6LpJh9HeQ1X6PD05bXNj1g3WP
-	kpwhBnkgMCkjTWDxTDHtXvjH34Ri/sSs2zT4ZxQfQNipOVBa1V6856THIMy0VE4GfCBtfqg
-	5ttN0bX9qzrFd268IjMbZhifvnjuYvdR10XeuRSjG2U6ePyNJzTeCRWdOO27tCghX0g0fdM
-	o3mH+n3t67RkYvx8QORM1/cOAGT8IVIcG+Ow3Pn88dEYnd5U1z9qqnPaY795V3s+v0gC4fa
-	oEAL3Esr+ynkHrlm8yqIqx0kr9/ZH3nopPzdJfZF9hiUMjYulnPXWPuxMaPyfFLwuI8VAZ1
-	PWP3q5JWcCST+/pyBCg5ETpYQsYZg+8coKHczkt/2YFI8Tb/YQqwJqDL5wRuEUgIpkr0oKl
-	1GIo44kOUxcnLmH74cWPdbwzJjOfpSiaMJ//wqtYxaigb2A9I6VijSQDXE2pqiIalBFoN90
-	ftCpX0m/rWyMI6XvTN8J1RatoA/PvhFXZn71qHlNRFHx92Gg2DzoeOxhEaEAB/Kz7xmOe/z
-	kYTniAnCLdz9GIQoY1qV5chHrRQILECvQ==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <CAHk-=wjGC=QF0PoqUBTo9+qW_hEGLcgb2ZHyt9V8xo5pvtj3Ew@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-When an application sets and enables an alarm on Loongson RTC devices,
-the alarm notification fails to propagate to userspace because the
-ACPI event handler omits calling rtc_update_irq().
+On Sun, Apr 27, 2025 at 07:39:46PM -0700, Linus Torvalds wrote:
+> On Sun, 27 Apr 2025 at 19:22, Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > I suspect that all that was really needed was case-insensitivity of ASCII a-z.
+> 
+> Yes. That's my argument. I think anything else ends up being a
+> mistake. MAYBE extend it to the first 256 characters in Unicode (aka
+> "Latin1").
+> 
+> Case folding on a-z is the only thing you could really effectively
+> rely on in user space even in the DOS times, because different
+> codepages would make for different rules for the upper 128 characters
+> anyway, and you could be in a situation where you literally couldn't
+> copy files from one floppy to another, because two files that had
+> distinct names on one floppy would have the *same* name on another
+> one.
+> 
+> Of course, that was mostly a weird corner case that almost nobody ever
+> actually saw in practice, because very few people even used anything
+> else than the default codepage.
+> 
+> And the same is afaik still true on NT, although practically speaking
+> I suspect it went from "unusual" to "really doesn't happen EVER in
+> practice".
 
-As a result, processes waiting via select() or poll() on RTC device
-files fail to receive alarm notifications.
+I'm having trouble finding anything authoritative, but what I'm seeing
+indicates that NTFS does do Unicode casefolding (and their own
+incompatible version, at that).
 
-Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family chips")
-Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
----
- drivers/rtc/rtc-loongson.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Extending those mistakes to full unicode and mixing in things like
+> nonprinting codes and other things have only made things worse.
+> 
+> And dealing with things like ß and ss and trying to make those compare
+> as equal is a *horrible* mistake. People who really need to do that
+> (usually for some legalistic local reason) tend to have very specific
+> rules for sorting anyway, and they are rules specific to particular
+> situations, not something that the filesystem should even try to work
+> with.
 
-diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
-index 97e5625c064c..0c573f198f63 100644
---- a/drivers/rtc/rtc-loongson.c
-+++ b/drivers/rtc/rtc-loongson.c
-@@ -129,6 +129,8 @@ static u32 loongson_rtc_handler(void *id)
- {
- 	struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
- 
-+	rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
-+
- 	spin_lock(&priv->lock);
- 	/* Disable RTC alarm wakeup and interrupt */
- 	writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
--- 
-2.33.0
+Well, casefolding is something that's directly exposed to users. So I do
+think that if casefolding is going to exist at all, there is a strong
+argument for it to be unicode and handling things like ß to ss.
 
+(Can you imagine being the user that gets used to typing in filenames
+and ignoring capitalization, except whenever an accented letter is part
+of the filename, and then your muscle-memeory breaks? That sort of thing
+is maddening).
+
+BUT:
+
+I'm becoming more and more convinced that I want more separation between
+casefolded lookups and non casefolded lookups, the potential for
+casefolding rule changes to break case-sensitive lookups is just bad.
+
+If we do a "casefolding version 2" in bcachefs, we'll just have a
+separate btree for casefolded dirents, and casefolded directories will
+have their dirents indexed twice.
+
+That's trivially extensible to multiple versions if - god forbid - we
+ever end up needing to support multiple "locales", and more importantly
+it'd let us support a mode where it's only certain pids that get
+casefolded lookups, so you don't e.g. get casefolding dependencies
+creeping into your makefiles as can happen today.
