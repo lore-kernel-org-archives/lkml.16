@@ -1,132 +1,210 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA01D1CAA7B
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C7E1CAA7B;
+	Mon, 28 Apr 2025 06:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745823078; cv=none; b=JxRkb9yMEczXAIeGcqOyWMjztcJ+DNDds7eWssefa76Fco8u8O6ixo0RHMONafXmTA25LFllUsGnEMpkY5GWZiasVfm7QaUotTiLYSpBgydw+oiI1zZTI0nye0uLL51l/exSWg7VPedSVe4ydePyx3QV6y9EdezAmJlHYdfiQew=
+	t=1745823084; cv=none; b=sagyGtXYR3hSRgJoILoqo7BhuCo1AE9ldI9oAiTJcrc9NCGjCPj8ZvH4VciYeKyvKhtHtn5mKi8T7JlifLoduxcjtkZjetCNMyida+CGAJndwQk6SdUTHqlrWss2fC0Nc12aaszLa595iTB3S7/o3WZflcTawQk55coTtxKyouA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745823078; c=relaxed/simple;
-	bh=yPwiv3LIPXq7QwC+Z6qeGGumORWMUcAQ8Rt34+S+TqA=;
+	s=arc-20240116; t=1745823084; c=relaxed/simple;
+	bh=0Pld1a2MzJofAsOTCHr+Q+IIwwPYL7BMWNwta9Ubkk0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eyUhaQJgiRnr1dgShBrPxYOAgqGjqeGsji7tDUX0nLVJGwelcEdD+vvDTt48ptNlmmiXTJsT39hdDIQB3CKdTrcu+22cug4yTQXQc0LfmZQU/3gGeySX8T6Sfpyn0d1XzAR5OE8enZAp9yWsJK84lhCZf+zcxB2PIdn6olTiE1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=1K6otC4L; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	 To:Cc:Content-Type; b=W5dpHuZ5t2jg6frhYfipthbDuOKRfAAvVtR5EtXnptAwRP8Ttpa+DuPQOKpQq1SoYNA+u5KMbUQfydAoyofimfDDB7KyAYvgJHgKuewTgaz3ELZLj4NpWSRZFfl+PTzX9rC6TznCjcoiZ2J0qOi2XSC+XHOpKzWiNQ9RTBYlx54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkz8lfxH; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="1K6otC4L"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso947826266b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 23:51:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkz8lfxH"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso8358760a12.3;
+        Sun, 27 Apr 2025 23:51:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745823074; x=1746427874; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745823081; x=1746427881; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=olp7njR9Ybm79qV02JWYfEZZNtFSE8MfHDfoR2yiSUc=;
-        b=1K6otC4LVS8Mr2e6mKhawp9VCVtNjoaiXCOU8gPOnpx/XLl/euBLq5mV+dzC8MRa9u
-         xyD/rBCRFZ2eOrfwngfGPbTYBhMA7O4xaJ8h9GQKDMiLIN6zKbjHtVBA72pG8tc4wNy8
-         r93ENVJB9hSzfvDyd+6Ogdx+48I7BRzwGceuOtj4aGnt5SI1tBwletGkBUsg1AcM1mx+
-         yau5zc/m4KGbPKUZdH50LBq7TvHx+k1jM8yNY28SWcZHZx0KZOWzjthAEhJ0xGhKYU7K
-         lWqSlyZDLLff1ywCcDvWOXXJ/EOPC/Gzo2G7WILW5jiyPDSDcQZerUA97EgJHHUllxdt
-         tFtA==
+        bh=hi43n4IcBdhVLvOaOx+3iA/0eX/Szd+TDDCfcl8t5Wg=;
+        b=nkz8lfxHJ6Ye+bWRMx87WwCsglQh0muZzSXnTQ6fS+ID5tiK+b/anRxurYkzLwr43d
+         YoV291U/brDQQ4rZZTJb26t+JCL8is1nVo6AxKyGoq74CddxyCaP4SPh/138j///Ax19
+         44ybWR6FIQmLqLbRj3b55H2ipOW8oB1ESvifjgVyRsqyiwz6qUxPVwZYa7FhkKiGEvFL
+         iWkbJpN8yqWDplga+K5xHaMgMSRV2ctmD6vso03OI0OG1HFInM/GMlpA/g5RfRKB5/xx
+         tKW1It7/OZdsvRra02f4cw6XvZUQilm8Jsi7WIrd0/Itsb7YruVaaLBN8FvqVkJQGbd7
+         c07w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745823074; x=1746427874;
+        d=1e100.net; s=20230601; t=1745823081; x=1746427881;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=olp7njR9Ybm79qV02JWYfEZZNtFSE8MfHDfoR2yiSUc=;
-        b=rs3RfY+ApTeEbfqXSTArpuYvVSO4Bb22YP8ueZkoiylmkKBiaA3pUND8g0KBcCV7mF
-         aUWktW7Vvef9PNbSbfEtaZBF8446ysdyipVEnb6Tq0ob+vwgS4XKBZ85bPZg49pRa//4
-         7xCcSkwby0wGQ9ORg5a+y7ip+395OXGD34Kay+7XMpXDXo6J38q/zGAzDyYDEI2fbMcq
-         KTG3khUNl+NeYd1IYQwj7uMQd17BIIJLTPs3cf0rcqG6Zpsgksx2TliXbzK1ZGpY6cNO
-         TITMJlG2ntIKm/NzV09zA2iW3eM5rv1MEUVfpSZnzAlxuZrCFpnos+OaMb4nJ17Pb/98
-         R0PA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMwv4KMiaO2F40mYEpnAWBiwqw6raFL8SKV93JEXtKV/+pCcG/ysVWkGxOuc0KAeAijwuWtHiQhLqyVEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypS+Uhqm6ixUZSc4lXol63LSRWLl1yM+xav4XEOiBCQMbq7VmD
-	/fYQomzwhxH3VEqSKsrxFQ1aaU4FilSi4Wo5+GAuOLqsqDLAH2XIbqpSnEv9TYbvO/p5otFKqlS
-	4psdDsOnAHMSyQnEBHh4QtydrXCXI09WozwuGIw==
-X-Gm-Gg: ASbGnctspINbJGqhK3VimMynE9KBMh/htSiZEB+wEPpbL/dzeH7+fvBhdTMe8GJDt3d
-	pCReCAr9dvzHIjPwFMjrdsTw4w16c8a9Zl83QeH4uFkcIDYsYlKVcNCfx7LJbZ1U2fgZDlNPG9L
-	zSlWfcXkKFoYSLzv3wdG3W6yQ=
-X-Google-Smtp-Source: AGHT+IEtEaxs9n/fqGJEuZ8Xotr69RVdjbKFMaVctCQmuSvnkMpXaGIdiMr0ZU582rbQFSZfQks/8XyJ+CzfPm0I+P0=
-X-Received: by 2002:a17:907:1b0b:b0:ac7:4d45:f13e with SMTP id
- a640c23a62f3a-ace710a0eacmr947603266b.13.1745823074048; Sun, 27 Apr 2025
- 23:51:14 -0700 (PDT)
+        bh=hi43n4IcBdhVLvOaOx+3iA/0eX/Szd+TDDCfcl8t5Wg=;
+        b=S8foysDNOdegJXUEmDOtllQHfcYGbtyK2HKrvtf9aDA2vcG3MsItL/k/Kj81joDEUM
+         idBKmodalGMT2954vLMQDssC7Mx//9h2JhXoVCOb0kjBCnNGuuPwxJptL2D6HLqrMfSS
+         WBiRY1mvdrCr5nO6q3imYMf3pBdplupbXVtr4CTyHOYBuFkX1OIn7w2O+pvlrsGfk+0f
+         pYMQKGF6PtaEFpyK2mbaB7JJDbuj7V6UTVzN6FDnybXeiFBXfmqeZ3t7/D48qczKk4Cy
+         Wt3k5uMR8/dc0TSHzjD/y+jNv7Eb+xFJRtqzL/ca9RVPJ5Ll42r1euqjGzWDFAiC2Pks
+         7/zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhJWwJg4qqDSmKC462cK2jTW/5Tm9m4z8uk0mUMLNJBQ0afcbstFG115WqVd15RvGPOOLLIqGG8Ctd@vger.kernel.org, AJvYcCV2soyz6M5BJbZ9u6I9P4R8763S8kO0nD87QQ/1zT9cwGMHBbTk6iLS+5B8FdNrGkk06V9H8fPBSeOIuQ==@vger.kernel.org, AJvYcCXEXZQNNl1L+hbW4n/NX1Pkcr+jijliYU7QCKB8JQ5CwSdtBIEuw/ZdSIoHka6ze9m4tuW/LxcFUF4tLrF7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQoLMJCJCBtRBfMkglT0tvyZiSkvdtcGx3SLmnmnnUogx3L7MU
+	APP+wxWuEywQacJmIlq/NyJHY/Px43yFvrJBCAG781ZvnrqW7yC08CJdz/47I+IkuBJP8LH/1Qx
+	lYyiKPEOA5eMxxqBPj3goqV82U7A=
+X-Gm-Gg: ASbGncvh8J6RXSRiqJKQduqcgHfdY0jKrGivPbhGAvmroxv34WdGDSdsDEnDbTJsKjG
+	jdb77vrUtam44QGra8eMtJz1IYvanef4+c2jLPo6KjaqyunOIKcAjBLWvJcfhEtuSuqNKT1u3J0
+	PYXsEaTsC5yoPoAxEc1aJztujy
+X-Google-Smtp-Source: AGHT+IEkASV0hxNvYb5ls5XU6N8PiOuOxkodobZeYhl/S2nbHHdlz3AJ68sH/k9QmanKndXp09dW/wEfCx6omY9vxHE=
+X-Received: by 2002:a17:907:f509:b0:aca:c532:cf07 with SMTP id
+ a640c23a62f3a-ace711655e5mr928400766b.35.1745823080557; Sun, 27 Apr 2025
+ 23:51:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250420070251.378950-1-guodong@riscstar.com> <20250420070251.378950-3-guodong@riscstar.com>
- <mzfiyc2me2smqrrmiymzkzxvsyjmst6ggy7scq4wxz2yfj2ef5@np3h3k467mbl>
-In-Reply-To: <mzfiyc2me2smqrrmiymzkzxvsyjmst6ggy7scq4wxz2yfj2ef5@np3h3k467mbl>
-From: Guodong Xu <guodong@riscstar.com>
-Date: Mon, 28 Apr 2025 14:50:52 +0800
-X-Gm-Features: ATxdqUER8JSTuuOTantCFeixTZRLC93zvf7G5uIviwPU2QmuQNBr7asOpX-Fl3I
-Message-ID: <CAH1PCMZ4hqYo9SLCnzHYp_EiQKs5nhgW3XpxwqLEk4eX8=vWPw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] pwm: pxa: add optional reset control
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, 
-	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, 
-	tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com, 
-	duje.mihanovic@skole.hr, elder@riscstar.com, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <cover.1745605382.git.Jonathan.Santos@analog.com> <2a8a327e589703ee53dbfb5190d20680ac3b350f.1745605382.git.Jonathan.Santos@analog.com>
+In-Reply-To: <2a8a327e589703ee53dbfb5190d20680ac3b350f.1745605382.git.Jonathan.Santos@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 28 Apr 2025 09:50:43 +0300
+X-Gm-Features: ATxdqUEBba2M8zExxClBxVqYkvVQ1NpU-dNtSsRR8YiWUveJwNaf_wH1l9SpSQA
+Message-ID: <CAHp75VdbD4HTonEZT8O-3bsqQ70_XRnZd7vS7gdyrG2gKYBHPA@mail.gmail.com>
+Subject: Re: [PATCH v6 06/11] iio: adc: ad7768-1: Add GPIO controller support
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, andy@kernel.org, nuno.sa@analog.com, 
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, jic23@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	lgirdwood@gmail.com, broonie@kernel.org, jonath4nns@gmail.com, 
+	dlechner@baylibre.com, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 3:30=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
-nel.org> wrote:
+On Mon, Apr 28, 2025 at 3:13=E2=80=AFAM Jonathan Santos
+<Jonathan.Santos@analog.com> wrote:
 >
-> Hello,
+> The AD7768-1 has the ability to control other local hardware (such as gai=
+n
+> stages),to power down other blocks in the signal chain, or read local
+> status signals over the SPI interface.
 >
-> On Sun, Apr 20, 2025 at 03:02:47PM +0800, Guodong Xu wrote:
-> > @@ -49,10 +50,10 @@ MODULE_DEVICE_TABLE(platform, pwm_id_table);
-> >  #define PWMDCR_FD    (1 << 10)
-> >
-> >  struct pxa_pwm_chip {
-> > -     struct device   *dev;
-> > -
-> > -     struct clk      *clk;
-> > -     void __iomem    *mmio_base;
-> > +     struct device           *dev;
-> > +     struct clk              *clk;
-> > +     void __iomem            *mmio_base;
-> > +     struct reset_control    *reset;
+> Add direct mode conditional locks in the gpio callbacks to prevent regist=
+er
+> access when the device is in buffered mode.
 >
-> Changes like these are the reason I prefer to not align the member
-> names. Luckily reset is a write only variable and you can just drop this
-> hunk if you use a local variable for it in pwm_probe() below.
->
+> This change exports the AD7768-1's four gpios and makes them accessible
+> at an upper layer.
 
-Thanks Uwe for the suggestion, I agree.
-I will update it in v3 by dropping this hunk and using a local variable for
-reset in pwm_probe() as you recommended.
+...
 
-BR,
-Guodong
+> +#include <linux/gpio.h>
 
-> >  };
-> >
-> >  static inline struct pxa_pwm_chip *to_pxa_pwm_chip(struct pwm_chip *ch=
-ip)
-> > @@ -179,6 +180,11 @@ static int pwm_probe(struct platform_device *pdev)
-> >       if (IS_ERR(pc->clk))
-> >               return PTR_ERR(pc->clk);
-> >
-> > +     pc->reset =3D devm_reset_control_get_optional_exclusive_deasserte=
-d(
-> > +                     &pdev->dev, NULL);
-> > +     if (IS_ERR(pc->reset))
-> > +             return PTR_ERR(pc->reset);
-> > +
-> >       chip->ops =3D &pxa_pwm_ops;
-> >
-> >       if (IS_ENABLED(CONFIG_OF))
->
-> Best regards
-> Uwe
+No way. This header must not be in any of the code. (Yes, there are
+leftovers in the kernel, but work is ongoing to clean that up)
+
+> +#include <linux/gpio/driver.h>
+>  #include <linux/gpio/consumer.h>
+
+>  #include <linux/kernel.h>
+
+And since you are doing the big series for the driver, please drop
+this header and replace it (if required) with what is used. No driver
+code should use kernel.h.
+
+>  #include <linux/module.h>
+
+...
+
+> struct ad7768_state {
+
+>         struct regulator_dev *vcm_rdev;
+>         unsigned int vcm_output_sel;
+>         struct clk *mclk;
+> +       struct gpio_chip gpiochip;
+>         unsigned int mclk_freq;
+>         unsigned int samp_freq;
+>         struct completion completion;
+
+Btw, have you run `pahole`? Is this the best place for a new field in
+accordance with its output?
+
+...
+
+> +static int ad7768_gpio_set(struct gpio_chip *chip, unsigned int offset, =
+int value)
+> +{
+> +       struct iio_dev *indio_dev =3D gpiochip_get_data(chip);
+> +       struct ad7768_state *st =3D iio_priv(indio_dev);
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       if (!iio_device_claim_direct(indio_dev))
+> +               return -EBUSY;
+> +
+> +       ret =3D regmap_read(st->regmap, AD7768_REG_GPIO_CONTROL, &val);
+> +       if (ret)
+> +               goto err_release;
+> +
+> +       if (val & BIT(offset))
+> +               ret =3D regmap_update_bits(st->regmap, AD7768_REG_GPIO_WR=
+ITE,
+> +                                        BIT(offset), value << offset);
+
+And if value happens to be > 1?
+Also consider the use of regmap_assign_bits().
+
+> +err_release:
+> +       iio_device_release_direct(indio_dev);
+> +
+> +       return ret;
+> +}
+
+...
+
+> +static int ad7768_gpio_init(struct iio_dev *indio_dev)
+> +{
+> +       struct ad7768_state *st =3D iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       ret =3D regmap_write(st->regmap, AD7768_REG_GPIO_CONTROL,
+> +                          AD7768_GPIO_UNIVERSAL_EN);
+> +       if (ret)
+> +               return ret;
+> +
+> +       st->gpiochip =3D (struct gpio_chip) {
+
+> +               .label =3D "ad7768_1_gpios",
+
+What is '_1' for?
+Also, what will happen if the device has two or more such ADCs
+installed? Will they all provide _the same_ label?!
+
+> +               .base =3D -1,
+> +               .ngpio =3D 4,
+> +               .parent =3D &st->spi->dev,
+> +               .can_sleep =3D true,
+> +               .direction_input =3D ad7768_gpio_direction_input,
+> +               .direction_output =3D ad7768_gpio_direction_output,
+> +               .get =3D ad7768_gpio_get,
+> +               .set_rv =3D ad7768_gpio_set,
+> +               .owner =3D THIS_MODULE,
+> +       };
+> +
+> +       return devm_gpiochip_add_data(&st->spi->dev, &st->gpiochip, indio=
+_dev);
+> +}
+
+...
+
+> +       /* Only create a Chip GPIO if flagged for it */
+> +       if (device_property_read_bool(&st->spi->dev, "gpio-controller")) =
+{
+> +               ret =3D ad7768_gpio_init(indio_dev);
+> +               if (ret < 0)
+
+Why ' < 0'?
+
+> +                       return ret;
+> +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
