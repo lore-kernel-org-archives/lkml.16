@@ -1,298 +1,294 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71308C1E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745868913; cv=none; b=I+xyyJQ83/zPneBV+sSyUWOmsphpNSEuZEMONr5K2yVxOCOrfWrvcBnSplh5Z7CCDqkdP2ieJ0A0WQakPrfcSiu8l6vAWnTPJJw5x1iKr6ttkpH/mJRxhp0hkn7sW3xtadjbLSzfuTtfCsNnPrwmM38fgxom89eIotjVyKCCFq4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745868913; c=relaxed/simple;
-	bh=fGPt7x9MqrSLkVqMjGu8QKUROezXbB6lZfHpJG1XKCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s2AKqFR7jkqob44nB5NvEp41H3O8/I1l4B3z4ZeeGA96RhLY23JgYf/7d2zeua7hESmo5q+n8kpTtxmQgXaF3zf9b4JHSJjr7+noxcDRZPUBPXHzmc4qftd1ZRhDQ9Y2vI5qpmomKlHvAIIdEJVyYIHTo1dLs3xScZzJVgKbxWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cEZT/bSb; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E50C8C1E;
+	Mon, 28 Apr 2025 19:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745869013; cv=fail; b=WXkcT0ylQwy0b4ZnyVvojo7A53ba7Wa1d8RhZrVfF+22VGiP9ka/344yd7Bg2zPnRAdJX9VQVbjUDbqP17/UQq/xPAM3/cqWdAk0Vgh1s/iOyHupkONKlgTelu/GdzIVZizZc/O+1lrCe8jjDen0ZC5CXtcR5aPBCsLFaY7lhoc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745869013; c=relaxed/simple;
+	bh=dTSTl0A/LHUijEuzj+o3a02TqcWSc+T0+lrKc8rb9S8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hQmd22CJvVhOITUbpyKBlvYNX3n/BIG8PzycKgHN/41pPDsltTxmtbU5eORh4VfqoXzXKRxa0G1ELAkH9haXFjJIlzSXA66M42k56RkbBHHVN2nUxSFcXK36edE4xVxCIrl0NSmfdQjQLH4i9eTfTtmJ9ihhQlxzUn9GMIXDjXM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NQZoz5KK; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=PFYi6qmV; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cEZT/bSb"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so4620820f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:35:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NQZoz5KK";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="PFYi6qmV"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SIXHrX009076;
+	Mon, 28 Apr 2025 19:36:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=W5xeNkUfrA4mkMhs20TqURInp2jnTgEoS+hZfSDh/Sk=; b=
+	NQZoz5KKTZcQ6OrEExWkNKd9mOL3p6wBM9GExFsGzdsN3qKUCnB2kUv7iUq3pFVO
+	JacgNJwQ43BWPoo5yVIrJIlh0UoJTSUoxECLbbzjp2tq4UGm+2G6vZ3zXiJyx42i
+	ZeTpUuGzKoou0+GD4eNXQcerCHgN1v6TKN2kACFm1uA1pcQAfbuuMUYJ3ogEoj3u
+	07D9+LCkscQABFag2vEGLalG+5g14y652cPiukvXCnyHRd1J9l4QE9vdxoxAYqFi
+	vqtEBYAYfpEhovrasbuP/qproSpUN09I1U5aoeIQorQuQFDiBavH8mSMvOJpN9tD
+	gIF+eUd/5iuXjl3qKO/mOA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46aentr6dw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 19:36:32 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53SINmgR013775;
+	Mon, 28 Apr 2025 19:36:17 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazlp17012039.outbound.protection.outlook.com [40.93.6.39])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nx8vxya-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 19:36:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MAhJlFyn1Rnz5NTYwfPcH/vVKeuXq5rDOgoqNUaCqp689IDlmT6kmh6iziOkecejKZVQ59zP4ckqPDrTVVoLinQNKAU0yiHnkDxgtXf3tap++Q00ks1hGnIF4s1oaLOdksQSxVQjpPqDk1ylpKQ8mgZVs0pVUKBZaRzRRYTHd7/bRXtL41nW3HJjcG9txqh5imJlGRrQvwRn+al4D1IUqVl0WRRW90b6gBXSHpZct79pNl9RFswIhg5klhB7lq+dECywo2eXCpUca4t8S8kwaLIs6C37sR/HNh1aLPROym9/q4VoXKGn6sylP5yUExaYFikYLBaiNigrT3Mqyd3sag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W5xeNkUfrA4mkMhs20TqURInp2jnTgEoS+hZfSDh/Sk=;
+ b=CLjD50T4didWJb4Bit3tQvlG+K6ZeFNHKBpdXeToh0QcMCbzSNr9ORSW9v7devmnqjiL6q5xKBOuUKQ+m76cSpauIEd1D4PyyA5RjHaCxZrWXdKI5/68yJn2TrqtrfNLENLLeXL1370KvtnWIvCWmSzhY7rYRHnsWSkZW4n2Blcqztg6NklwKa5IFjcc6ivDUGaZHrkTVmITnODAfbO7H5hRrFeiqNuhOz+uD9wuI+ck3Md51ybVpaKstL/z5u5kSXj2lmBLxhmM3prtrBkGYls5QNC4+2CKlLT76gHvDP5zOaAUxhBy6u9I9cXe6sITtHPEyyBKCtk6bQNh8nyHDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745868910; x=1746473710; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=az0Zt6Dv53GMDteM9JS2CU4K7aTSPI6l1A4/TfLXRTs=;
-        b=cEZT/bSb437gDZtt/Xz/DGCJEOMpEXCIqD+b1VtOpoPKv882Mv8IP84Bw6Z8JiSr1B
-         tyw82uqJjPyZskuiY7g2xad0mkA13fJdAzaR6tV+mAP6OMkWIGMoRIajfauyR4Xy1EOZ
-         j3hEcc2XGlxPQxnIahIVX2Z0qc4UapV5vulzdCAbY/p8WaiYW5Y2d/dH8/fCE7HIzqdJ
-         FgsiIWJ3Kmcl6hfa8oLpAEBQGOGveb2TOSLLQm/o3p82g110gHaiPMgD/3eQBstw7H52
-         WyiE+M4LBl3UaWOlOI8ns+gUA3IL52yrarbDr/gNTbfYGgxcMv8mG1Vxh0Aoh0PwzAYT
-         sbRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745868910; x=1746473710;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=az0Zt6Dv53GMDteM9JS2CU4K7aTSPI6l1A4/TfLXRTs=;
-        b=RIsbyA3mr1RLVgxPnlBVVzqGHwZz2mhbEOLq/Emmm/4w/ToTgXuN1hX2gnXzXGx/2d
-         mCPYawaeDmvnToQBRuvKQFddhBmDIIEXF3YdwBirL54BvVKLYm1Yu1/gnVatLNQ00jbA
-         09gKXpEHmosycG71y3XKiEBGqUVWXYXSyhMxmh1BKxzGSSRpN/gzwiOYh0qPodf/9shP
-         9O3gV6x9BTqM6e6BNAD/Go3lzs1P5bRh9BQA97TEazZoNuzjO2D6jJMdwzsYuhYlotu+
-         /CseUTIZ+e9ouU/t9IHyNYB7lV1jMqz3wzLuYGl31B5LVRNjSR9Ty3j/qsmb2xjop+V5
-         2trA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGEXtmJ2TBMO5mfUdr2pWkjMJGBg2xkc1/0ZIgzChO9y2CcJ+s04ha9zI6sHUrk4Q0DefXZlAU/limAas=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4MhcSrGnZwxm1r31E3Z0YdJK5/Nm+4ZT8uLeSdufgqbef71Fu
-	DNbnBJOkEoQIu2NJI+ipEJGKM5B9+VxMBx+RrRlQrgiRdTngvI+f9AldTcuH4YkBwxAoXB4rpz0
-	BwSF6xk38upN/C9BzyFi0HpEiioTRvQGKm63J
-X-Gm-Gg: ASbGncu3ACCw74Bj+bPvRctM4xkf14bko1gvYo6YxNKa+pBNKFSzNL+/sEFPZNIl8Ps
-	a+TdAVqPchtcfiVt6PgiaFzS/vpBlH5soRwsycK+345lFLfBFL1O9edzDapp50F7BqJ3yJI8ngN
-	UL/bH1/TKPgXLVI3STxjyBbwbntT4WXPxP0g==
-X-Google-Smtp-Source: AGHT+IGbHz28kSa8vHoOTd/l/acaF9F4oaD/q+3RLp606gkzTUyaTORECWIL76C56s/+ZfTYoLC4yvl4k8VGhV/lCw4=
-X-Received: by 2002:adf:ed52:0:b0:39e:db6a:4744 with SMTP id
- ffacd0b85a97d-3a07aa6ff6amr5641500f8f.32.1745868909888; Mon, 28 Apr 2025
- 12:35:09 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W5xeNkUfrA4mkMhs20TqURInp2jnTgEoS+hZfSDh/Sk=;
+ b=PFYi6qmVr+5Wy1BfDhU+wYmHxYhchDBFkjQG4jFZhCXDfgHsqU5lUGdfc9jSp73z9ATmbNA2zXddDSk7MjEsxyh5AJ4KnStDhD691JcjRQOe/ihvz3jA8l2aGQ4rdeL5MPLF1gadEAHZB/XijYD7B75x/2BrKT/L3pCjDJEEgcM=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by PH0PR10MB5756.namprd10.prod.outlook.com (2603:10b6:510:146::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.26; Mon, 28 Apr
+ 2025 19:36:15 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
+ 19:36:15 +0000
+Message-ID: <b9db2d5f-2169-454f-a4e8-719342ef74cc@oracle.com>
+Date: Tue, 29 Apr 2025 01:06:03 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/6] platform/x86: Add Lenovo WMI Helpers
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+        Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>,
+        Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
+        Mia Shao <shaohz1@lenovo.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        "Cody T . -H . Chiu" <codyit@gmail.com>,
+        John Martens <johnfanv2@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@amd.com>
+References: <20250428012029.970017-1-derekjohn.clark@gmail.com>
+ <20250428012029.970017-3-derekjohn.clark@gmail.com>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <20250428012029.970017-3-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYCPR01CA0103.jpnprd01.prod.outlook.com
+ (2603:1096:405:4::19) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425175426.3353069-1-brianvv@google.com> <a1d7a46f-184e-4c01-8613-6cc5d35d2545@intel.com>
-In-Reply-To: <a1d7a46f-184e-4c01-8613-6cc5d35d2545@intel.com>
-From: Brian Vazquez <brianvv@google.com>
-Date: Mon, 28 Apr 2025 15:34:58 -0400
-X-Gm-Features: ATxdqUHn7b7wMIuppd6jBPFRmU76m3L0oBF3otS7iF7IADHM_tILaAq92Y5FTZc
-Message-ID: <CAMzD94TrjqQYVEp57h41VLB2+5RRoicT774gzvv2xq6gDEVuPA@mail.gmail.com>
-Subject: Re: [iwl-next PATCH] idpf: fix a race in txq wakeup
-To: Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: Brian Vazquez <brianvv.kernel@gmail.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	intel-wired-lan@lists.osuosl.org, David Decotigny <decot@google.com>, 
-	Anjali Singhai <anjali.singhai@intel.com>, Sridhar Samudrala <sridhar.samudrala@intel.com>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	emil.s.tantilov@intel.com, Josh Hay <joshua.a.hay@intel.com>, 
-	Luigi Rizzo <lrizzo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|PH0PR10MB5756:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4da24ecd-3f05-4e6f-5855-08dd868bef0c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WVc5aTlUS0VYdy9KTXRMYmQxdU4xaEcwb1EyRlhreEJoNkllTEdNcmtKU21p?=
+ =?utf-8?B?OGE5b1ZjNkZEbDZ0dEt5dm5meVhpSUJsMXJBR016WUlienR4OHdGZWlNSTlk?=
+ =?utf-8?B?L1ZkUG9TME1UaVhwQlM2QXJoaC9OdDFvMUkzVnNPV0xtLzR5U0pjZ3NZSzBK?=
+ =?utf-8?B?bU5uOUVpNkVFejlyZ1dzbjVhZUUyRjZEaHJWLzZIMnhIQjRTQk1zeEJWSXNS?=
+ =?utf-8?B?M3RPN0RBNEtxUER4Z2FvbWxlcHVXWHNEWnRJZis1SzJFdmtpbWwzVXhIZm5i?=
+ =?utf-8?B?b0NsV1BNYVNUdEQyNUVNdFhseStUL1F3djRPZUJzcjdvQVhNK3ZrN1JBMEVC?=
+ =?utf-8?B?R3hYakllTFVodlN5Ny92MjV2MjhvTmVhMUdHMng3YkJYVHJucThZbVZsKzBS?=
+ =?utf-8?B?SzVCc0hEcWxLbEMxV210bVhFSWhDV05UanFzeHUzMGZWWEJ6bU5CSExTR3J1?=
+ =?utf-8?B?MkwrYitOaE51ZFpUZHhQTXJydHgvNFdWWCtpK0pMRTNZVGRNellnNEhvR2NM?=
+ =?utf-8?B?aUp6bTErcFp4VGcrQzF4eUtuWVhuVEpoUUxaQUsyemw2Qkt1ZzlBTW95bHRO?=
+ =?utf-8?B?KzdQd0t0MFY3QU1JUk44RW5WR0MwTE5FK3E1cC9WQjRlY1VRUHg1TFdNaHo2?=
+ =?utf-8?B?QzJHeVlTazc3eWNIL2ZqUGJROENjY2hmckIxUGtjTXNXM0lrMHA0SndjdHVv?=
+ =?utf-8?B?aThjNE0rZVQyYXRXWHVDZmJVaEgrVHVScjArSU9WVHI5WnpkcTFSOStucEQ2?=
+ =?utf-8?B?L2QzYU9oU2dhUVg5amY1YzdyMDkwdVpoc01tYlI0MTN6Qkg5TFpHem92Z0tH?=
+ =?utf-8?B?VlhpNVpHUnd3TEs1OTlkaXoxK25NT0lwN2tPNXZEQXozS05PaFRUaFZVM09R?=
+ =?utf-8?B?eWhBOEppRzlOeHZ6WEU2QVRHazlRa3NRQkwvc0dWOE54aVBveittMXErMkdq?=
+ =?utf-8?B?aXN6VHk1K2NDWUZsYlV5QnRIZSsyRFlwdDRkcEQ3MytkTE5DdGhtdWhmakRE?=
+ =?utf-8?B?a1M1THBrQjJZZnQzMWxrWm1BWHBGUlMxWHQxQ0tFM0dzSmN4ZGUvZlJtd0tX?=
+ =?utf-8?B?TDQ5TEtqR1E0TmZhZ0xPWTBXYWwrOGl2R1FkcmQvSkVIRUhiMHpzMmRKaGlM?=
+ =?utf-8?B?OC82SWMrdU1VSm1ESlBCdlBodU1ISUQydkJmZWVMeGJ6bXBBeFpvUnFyL25t?=
+ =?utf-8?B?WEZSeUlmUEwrTW9MNy81Y2ZyU2EweDl6aU43bHY1S3h3cjE3TzRQQVlGaWFR?=
+ =?utf-8?B?MXFmUCtmY0grNmVPNVkwVkJ5bERiUWxtemlLeGdseGo1UDVMblBieGJaTTRC?=
+ =?utf-8?B?S29aNEdXM3NycnRka3ZyZ3JsUW5EL0J5Ryt6eFhIdEErWnlRWU9qcko4RFpr?=
+ =?utf-8?B?c1UvaE95T3lNQ0F0OWVLbnBCL1F2VlozVmJ5NmhkMkRqci9Zd0dvVWx0Tjlv?=
+ =?utf-8?B?WDlKWFk0dlVJbmllRlVoZXJBWDB5cDZhMUJ0U3hWMWpibldEeFYwaCsrUFFG?=
+ =?utf-8?B?VWY3Q2lTU01tOE5kY2dyN29PajhiV1ppaGtVSEhGQ3pxSWZubGpvajVkOFVs?=
+ =?utf-8?B?enA3eDJ3Mnl6Q1Q3TUxmUkFpOTc1TTJwVVYzSFV5d28zUzNxbDJ5Q0dzQW1k?=
+ =?utf-8?B?ckUyVnBaZkF0QU5JdU9DOXpiZHR2L3g4bTgvYi9xdk9BemtPajI0WVE0Q04r?=
+ =?utf-8?B?V09rTVBXOGVSalBRZWVnNEx5cWhpQVhyUWJZQWltNVAxYkt2bG9RMG1jNzFw?=
+ =?utf-8?B?V0JoNU9IVXB6MTM2WjNWbjNZMTd6L0JCcTZuaml2V2lQVG4xbWc3RTZRQVZU?=
+ =?utf-8?B?ZUluTFFZQ0x6NWk1eHU5QWN2QlRJNjFmWklnWG5XQTkvL2xaanZvUEhRMmkx?=
+ =?utf-8?B?OHY3TmM5SGVlTmJLTnRIK3FWb3REdUZ1QXY5RHRoY1lTNmc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bVFnS1NiQkVHY0lFdG1FZzBncFNvbm94bHVONFZxaFprQ3p6M2xwcmJCUEJL?=
+ =?utf-8?B?QXJnSzNpZjVIWkRDQ2pzK3hzd1doZlJMUVlvT1d5dkNWTms0aHFOSzB4Q2NY?=
+ =?utf-8?B?enpvdjZtNFV1MlR0SXFReXo2aURWcHFYRUV1MithenU3V29LTSt4ZlJiSmpo?=
+ =?utf-8?B?ZXlJajdoc2pWM0NGa1ZXTjJHVElueDZuSzdlQlRrOFhQTUVZOFdrWHBPVDZX?=
+ =?utf-8?B?NUNVUEdpZDFLanVmb1M4V1V0a01oTjV4MHY5N0pVOGNEclQ0aVlGTGhhZElq?=
+ =?utf-8?B?R1BvbFpZSy9zU2p1OUlWS05FTzFFNTNxVzBkUU1YZGhCc1ZZOW5mQWp3N0xC?=
+ =?utf-8?B?cHJmcEVjSWFIM25ab3FWMm1uZ1p5NGxycmJFaExnTVpsZ3FnTHdiZE9hdHQ3?=
+ =?utf-8?B?RkVUaFh5T1d4Qk9NOTEvZGR3cll1SjYwdmdsRnBYbEYyL3ZZVGJScTRLZ1h6?=
+ =?utf-8?B?MndpRGxjb0I1Zy9iMWo3cDd3TGFOdzBjU1lVUWpTWFREbUlpVzJySWZDc3o4?=
+ =?utf-8?B?M2ZhOTd5ZDhQT3crQmpXWCtqSURyamtEL3NjcHVUZ2laRHdWcFkraS80VkhC?=
+ =?utf-8?B?NDVjWmRyeHo3bW9qSVA0cnZ0ZnVDUC9GSDJQdi93L1NWYnEzTFV0V1czNkJp?=
+ =?utf-8?B?bVY0S0RsU2JLUzVvN0x6K3dENFhZUk9BU0ZUZGw4SVErSnNJRkxXck9GblB5?=
+ =?utf-8?B?NGs4SXYrOGFsKy9Td3ZCdlBxY3FieDY2YmEvVFkwMUlJUTNpM3VWdVlwbVBH?=
+ =?utf-8?B?OEUzMWVpaDlaUmZLMndjd1V1QkNuVHUvY2g4TjFpclZOc3cyRjdnb0d5emsz?=
+ =?utf-8?B?Um9sZE1SUy96TWhEWGxiMEQ2azhhbXIyMllCb2dSNG5ZYThVQyt5TTRoN2dL?=
+ =?utf-8?B?VytHYmh5QXN4YjA1bXVLMzZHNUFYaG1HTlV3Qms4L3poMjM5amZpN3Q1ZVkv?=
+ =?utf-8?B?bFptU0RBdzQ0TW5hdXZXb3dLYnh5NzVnbUQrOWJLZXR2QUhKMjBjN3dLT2pO?=
+ =?utf-8?B?SFlGQ1dNU09EVFY1SzB5dStwVzRWWW9kMkFKNkU2QnhUQjBqd2ZUQUtXVmVT?=
+ =?utf-8?B?dWNjZnJ5MVpDWSs5a2JCYllXcmxxQUx1QWFEUTN4dld0endybFUxWm9Pcmxk?=
+ =?utf-8?B?Sk1vSTNJd3J1NkwrTHJEMGttc2pRWk9YSWpDK21zbmtRMUpLMUdWSWdWeWpW?=
+ =?utf-8?B?Q3VrM1VkRHNGbExrRjRhLzRvMVRPTUM0NVVyMS9LRmVlT0JZWlZGRDEwd1FY?=
+ =?utf-8?B?Qy9LZlRhWk83R1d4QlVwWTZPeXF6TTF2bzAvREQvQlZnTzN3UUJMRGNNVFJa?=
+ =?utf-8?B?TytCeGg1RSs2eksrUC9XV1p5SnMrNzNvb01MNk5xdDM3WkpXZXY0TFRFNERT?=
+ =?utf-8?B?VkdpMVB0NW1nTzI5MGdoeXVWNXFORGNzbEtTMUszUHo5V2g5N3pZSUx5TWEz?=
+ =?utf-8?B?dTVSZzhmdkRCTyt0SGlrOVpBY2RVbXFYbzNOckxKb1g3S3N1K25sSjkrcGh2?=
+ =?utf-8?B?S1FSUER2VCtXUEdUN1YxMlhMMzFDV0lWNk0xYUtBUDRrc2VnbzczWkROa2dR?=
+ =?utf-8?B?OUZYSDB4NWo5T2xsZVRFbXZ1L2FuTE93M3E1R2dSa0diVmRNRW5CczZqUW96?=
+ =?utf-8?B?amgrUjNaVUs0OVhXUFNjMlk2USttQ2NPNjRlam9yaWFvRzFNanhiWXI5QWVN?=
+ =?utf-8?B?UmtsVjZVY1Q1UlRibHdKRDlTb0hxeE1oUEcxaUNDY1JWMklnN1hpR0ltZ05m?=
+ =?utf-8?B?NDFCL3Y5cUxKNmUxOUsrN3dEM2UydmR4YkxHd2dFWGdTT1BLQkpFK1VEOE1Z?=
+ =?utf-8?B?ZjhsNnZMVlNQVDMrSVVhMS9VUkZmNmJJa0Mxd3NML04wOS84cXhKRVdlMk03?=
+ =?utf-8?B?ZmxQaWE1dmtQM3VsWFFaeFFTaXpYam92SlNYK2pTMWpiZkI2QktTenNTL1R4?=
+ =?utf-8?B?TzVESm1LVWp0UGxocDkwRHMzMXBadGVSbVArNmxJWmQ4ZHZXN1hZdjRNaWpR?=
+ =?utf-8?B?Tk9KL3FhT2FXb09meE5RbDZMTHZjajUxZVdmZDhLd2t2Y0w1ZTZhclV6ek5W?=
+ =?utf-8?B?QW9za1FqRlhoZEJRU3h1cFFzajB3YWUrZDNFME83WGRkd081ZitSdkNQLy83?=
+ =?utf-8?B?ZGFXWFNGWjQxS3lrTXA1RjBVTlhCaEpGVzg3WVRTWjhIbStxdXlGNzBQMndv?=
+ =?utf-8?B?Ymc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	vChNYEc9e7bnd1szmBxDz0el5pDOLNYpzoj4id0/ow0z+kuZHB/uxsidGGPVYPdG19Pp1/Fmf/C52oifPiKDs+Zd3fDUYTaCz2cMEVkgB/aPQrxeh65aQsQYK+xx+zK1mniA+eOydG6LvCeVBzXY/fmQVdYRFieMfZeUCtjxtisIKDwg7/aQHu3AC7gsLGBqw7AgFRl9iG2WdlODs6GWbsvjCRmy9VK2Xvc+Oj4kxe0VskbGdClN0XP9LoVyV9DBRDG2048K9436gCfYBYso2IpMDP8405IAbzr1coAVF/CDis8Xn+7+kmBNOw9PsvcJYG87SBRlb826yo1tnOmfAMPfKtIa9wwRQl7csAwNfPGMYDK11nFJcbHtZ4xodtQlVSuFGHFlOjmqoqbLQ3lvfOM1M2XQh7CrACznPxDu2Aaq+Czav61ERx4xzcSbcwvM0n5PFvAXpp8vcms+MHp6OUDJUw8+iAM63NQ0qa4M6wxbN8vxoyUVb4U/Tc4PYg+09GnE67rhe2OZdVKragc/CIJY+fGXwWEfzyUv/oOGLfCRQQFhCDYUy1Ud+lr9m1W/moWn0OnivklgmeTlaWn6Glam0b1QHXDfPxRRGhinhI8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4da24ecd-3f05-4e6f-5855-08dd868bef0c
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 19:36:15.2661
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H4xoDZN4tYgToYMTfZEzOfHhqL3XccSYUY7hl+qbr3y7aQ+u8iUC6ZfJ+1Tw6ZlwRsETJZvVARqUNmLrR71lNk7CQXpbI9DNHUXkn//NFGU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5756
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_07,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504280157
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE1OCBTYWx0ZWRfX5yjR0odK9RL+ l+839H1BJSnOvmaARDI8GnPd0ZF40ThHxAzzFeNwJTtKKHXf7VViQb4DHkGcNPgY0ko3XJN0iK8 fjv71s9aGY1RN5Et7+YyYDWf3OBMAnXJtUNR+L6DlSBWbFUZQS3NYsTFy5dun9JxwqTIbzbUwqJ
+ sPq162YnlvFCo/dMVKWUVojsi92IxOmQveqbk2OdrAMxWsl2SgMRDFDMFCq+gz+uLwWqKbdXh0g zhiyCPv5PBjA4IkobpxZst42QM5713yR6eWEP0iyZgM8O+poo/7Nv2MkQEGcLXMUhecf3h6TGPp IMfXk4CJnmrpP2xRqh8JjeOKhzLctdBKSVUFN2ZxvQxWFML3tEEvyumGLTqwGGeU3YySO8uU8hg AFuX6tfh
+X-Proofpoint-GUID: x7GPQb4G-D43TcMlz_dvPHS4FypSvGhz
+X-Proofpoint-ORIG-GUID: x7GPQb4G-D43TcMlz_dvPHS4FypSvGhz
 
-Thanks for the quick review Tony!
+> diff --git a/drivers/platform/x86/lenovo-wmi-helpers.c b/drivers/platform/x86/lenovo-wmi-helpers.c
+> new file mode 100644
+> index 000000000000..2df0408e2a9c
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-helpers.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo Legion WMI helpers driver.
+> + *
+> + * The Lenovo Legion WMI interface is broken up into multiple GUID interfaces
+> + * that require cross-references between GUID's for some functionality. The
+> + * "Custom Mode" interface is a legacy interface for managing and displaying
+> + * CPU & GPU power and hwmon settings and readings. The "Other Mode" interface
+> + * is a modern interface that replaces or extends the "Custom Mode" interface
+> + * methods. The "Gamezone" interface adds advanced features such as fan
+> + * profiles and overclocking. The "Lighting" interface adds control of various
+> + * status lights related to different hardware components. Each of these
+> + * drivers uses a common procedure to get data from the WMI interface,
+> + * enumerated here.
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
 
-On Fri, Apr 25, 2025 at 6:41=E2=80=AFPM Tony Nguyen <anthony.l.nguyen@intel=
-.com> wrote:
->
-> On 4/25/2025 10:54 AM, Brian Vazquez wrote:
->
-> Should this be a bug fix going to iwl-net/net? If yes, you'll need to
-> add a Fixes: as well
->
+add a space after "Copyright" before "(C)".
+Copyright (C) 2025
 
-Correct, will send to iwl-net then and add the Fixes tag.
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#include "lenovo-wmi-helpers.h"
+> +
+> +/**
+> + * lwmi_dev_evaluate_int() - Helper function for calling WMI methods that
+> + * return an integer.
+> + * @wdev: Pointer to the WMI device to be called.
+> + * @instance: Instance of the called method.
+> + * @method_id: WMI Method ID for the method to be called.
+> + * @buf: Buffer of all arguments for the given method_id.
+> + * @size: Length of the buffer.
+> + * @retval: Pointer for the return value to be assigned.
+> + *
+> + * Calls wmidev_valuate_method for Lenovo WMI devices that return an ACPI
+> + * integer. Validates the return value type and assigns the value to the
+> + * retval pointer.
 
-> > Add a helper function to correctly handle the lockless
-> > synchronization when the sender needs to block. The paradigm is
-> >
-> >          if (no_resources()) {
-> >                  stop_queue();
-> >                  barrier();
-> >                  if (!no_resources())
-> >                          restart_queue();
-> >          }
-> >
-> > netif_subqueue_maybe_stop already handles the paradigm correctly, but
-> > the code split the check for resources in three parts, the first one
-> > (descriptors) followed the protocol, but the other two (completions and
-> > tx_buf) were only doing the first part and so race prone.
-> >
-> > Luckly netif_subqueue_maybe_stop macro already allows you to use a
->
-> s/Luckly/Luckily
->
-> > function to evaluate the start/stop conditions so the fix only requires
-> > to pass the right helper function to evaluate all the conditions at onc=
-e.
-> >
-> > The patch removes idpf_tx_maybe_stop_common since it's no longer needed
-> > and instead adjusts separetely the conditions for singleq and splitq.
->
-> s/separetely/separately
->
-> >
-> > Note that idpf_rx_buf_hw_update doesn't need to check for resources
-> > since that will be covered in idpf_tx_splitq_frame.
-> >
-> > To reproduce:
-> >
-> > Reduce the threshold for pending completions to increase the chances of
-> > hitting this pause by locally changing the kernel:
-> >
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.h
-> >
-> > -#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> =
-1)
-> > +#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> =
-4)
-> >
-> > Use pktgen to force the host to push small pkts very aggresively:
->
-> s/aggresively/aggressively
->
-> >
-> > ./pktgen_sample02_multiqueue.sh -i eth1 -s 100 -6 -d $IP -m $MAC \
-> >    -p 10000-10000 -t 16 -n 0 -v -x -c 64
-> >
-> > Signed-off-by: Josh Hay <joshua.a.hay@intel.com>
-> > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > Signed-off-by: Luigi Rizzo <lrizzo@google.com>
-> > ---
-> >   .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  9 ++--
-> >   drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 44 +++++++-----------=
--
-> >   drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  8 ----
-> >   3 files changed, 21 insertions(+), 40 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c b/driv=
-ers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
-> > index c6b927fa9979..fb85270c69d6 100644
-> > --- a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
-> > +++ b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
-> > @@ -364,15 +364,16 @@ netdev_tx_t idpf_tx_singleq_frame(struct sk_buff =
-*skb,
-> >       struct idpf_tx_buf *first;
-> >       unsigned int count;
-> >       __be16 protocol;
-> > -     int csum, tso;
-> > +     int csum, tso, needed;
->
-> This should be moved to be RCT; longest declaration to shortest.
+assuming you meant to refer to wmidev_evaluate_method, the real function
+typo wmidev_valuate_method -> wmidev_evaluate_method
 
-acked
+> + *
+> + * Return: 0 on success, or an error code.
+> + */
+> +int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+> +			  unsigned char *buf, size_t size, u32 *retval)
+> +{
+> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *ret_obj __free(kfree) = NULL;
+> +	struct acpi_buffer input = { size, buf };
+> +	acpi_status status;
+> +
+> +	status = wmidev_evaluate_method(wdev, instance, method_id, &input,
+> +					&output);
+> +
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	if (retval) {
+> +		ret_obj = output.pointer;
+> +		if (!ret_obj)
+> +			return -ENODATA;
+> +
+> +		if (ret_obj->type != ACPI_TYPE_INTEGER)
+> +			return -ENXIO;
+> +
+> +		*retval = (u32)ret_obj->integer.value;
+> +	}
+> +	return 0;
+> +};
 
-> >       count =3D idpf_tx_desc_count_required(tx_q, skb);
-> >       if (unlikely(!count))
-> >               return idpf_tx_drop_skb(tx_q, skb);
-> >
-> > -     if (idpf_tx_maybe_stop_common(tx_q,
-> > -                                   count + IDPF_TX_DESCS_PER_CACHE_LIN=
-E +
-> > -                                   IDPF_TX_DESCS_FOR_CTX)) {
-> > +     needed =3D count + IDPF_TX_DESCS_PER_CACHE_LINE + IDPF_TX_DESCS_F=
-OR_CTX;
-> > +     if (!netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
-> > +                                    IDPF_DESC_UNUSED(tx_q),
-> > +                                    needed, needed)) {
-> >               idpf_tx_buf_hw_update(tx_q, tx_q->next_to_use, false);
-> >
-> >               u64_stats_update_begin(&tx_q->stats_sync);
-> > diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/=
-ethernet/intel/idpf/idpf_txrx.c
-> > index 970fa9e5c39b..cb41b6fcf03f 100644
-> > --- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-> > +++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-> > @@ -2184,6 +2184,19 @@ void idpf_tx_splitq_build_flow_desc(union idpf_t=
-x_flex_desc *desc,
-> >       desc->flow.qw1.compl_tag =3D cpu_to_le16(params->compl_tag);
-> >   }
-> >
-> > +/* Global conditions to tell whether the txq (and related resources)
-> > + * has room to allow the use of "size" descriptors.
-> > + */
-> > +static inline int txq_has_room(struct idpf_tx_queue *tx_q, u32 size)
->
-> no 'inline' in c files please. Also, it's preferred to prepend driver
-> name to the function i.e. idpf_txq_has_room()
-
-will fix in v2
->
-> Thanks,
-> Tony
->
-> > +{
-> > +     if (IDPF_DESC_UNUSED(tx_q) < size ||
-> > +         IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
-> > +             IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq) ||
-> > +         IDPF_TX_BUF_RSV_LOW(tx_q))
-> > +             return 0;
-> > +     return 1;
-> > +}
-> > +
-> >   /**
-> >    * idpf_tx_maybe_stop_splitq - 1st level check for Tx splitq stop con=
-ditions
-> >    * @tx_q: the queue to be checked
-> > @@ -2194,29 +2207,10 @@ void idpf_tx_splitq_build_flow_desc(union idpf_=
-tx_flex_desc *desc,
-> >   static int idpf_tx_maybe_stop_splitq(struct idpf_tx_queue *tx_q,
-> >                                    unsigned int descs_needed)
-> >   {
-> > -     if (idpf_tx_maybe_stop_common(tx_q, descs_needed))
-> > -             goto out;
-> > -
-> > -     /* If there are too many outstanding completions expected on the
-> > -      * completion queue, stop the TX queue to give the device some ti=
-me to
-> > -      * catch up
-> > -      */
-> > -     if (unlikely(IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
-> > -                  IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq=
-)))
-> > -             goto splitq_stop;
-> > -
-> > -     /* Also check for available book keeping buffers; if we are low, =
-stop
-> > -      * the queue to wait for more completions
-> > -      */
-> > -     if (unlikely(IDPF_TX_BUF_RSV_LOW(tx_q)))
-> > -             goto splitq_stop;
-> > -
-> > -     return 0;
-> > -
-> > -splitq_stop:
-> > -     netif_stop_subqueue(tx_q->netdev, tx_q->idx);
-> > +     if (netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
-> > +                                   txq_has_room(tx_q, descs_needed), 1=
-, 1))
-> > +             return 0;
-> >
-> > -out:
-> >       u64_stats_update_begin(&tx_q->stats_sync);
-> >       u64_stats_inc(&tx_q->q_stats.q_busy);
-> >       u64_stats_update_end(&tx_q->stats_sync);
-> > @@ -2242,12 +2236,6 @@ void idpf_tx_buf_hw_update(struct idpf_tx_queue =
-*tx_q, u32 val,
-> >       nq =3D netdev_get_tx_queue(tx_q->netdev, tx_q->idx);
-> >       tx_q->next_to_use =3D val;
-> >
-> > -     if (idpf_tx_maybe_stop_common(tx_q, IDPF_TX_DESC_NEEDED)) {
-> > -             u64_stats_update_begin(&tx_q->stats_sync);
-> > -             u64_stats_inc(&tx_q->q_stats.q_busy);
-> > -             u64_stats_update_end(&tx_q->stats_sync);
-> > -     }
-> > -
-> >       /* Force memory writes to complete before letting h/w
-> >        * know there are new descriptors to fetch.  (Only
-> >        * applicable for weak-ordered memory model archs,
-> > diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.h b/drivers/net/=
-ethernet/intel/idpf/idpf_txrx.h
-> > index c779fe71df99..36a0f828a6f8 100644
-> > --- a/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-> > +++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-> > @@ -1049,12 +1049,4 @@ bool idpf_rx_singleq_buf_hw_alloc_all(struct idp=
-f_rx_queue *rxq,
-> >                                     u16 cleaned_count);
-> >   int idpf_tso(struct sk_buff *skb, struct idpf_tx_offload_params *off)=
-;
-> >
-> > -static inline bool idpf_tx_maybe_stop_common(struct idpf_tx_queue *tx_=
-q,
-> > -                                          u32 needed)
-> > -{
-> > -     return !netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
-> > -                                       IDPF_DESC_UNUSED(tx_q),
-> > -                                       needed, needed);
-> > -}
-> > -
-> >   #endif /* !_IDPF_TXRX_H_ */
->
+Thanks,
+Alok
