@@ -1,133 +1,235 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F06086323
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745816984; cv=none; b=eNAVRsyTWS7n9dkVpo28zi6MFbvHXczGgdnxAQTH2Uyp2IYEflGvtjDqrJ1LcSkU7wBa9spNbfkPWKPQ3dpWGaFqIPWNZ/7LUqHRGR+gmy6SsK3i3Zma47u4iKXtijhAa1ptiR5BJ4uH8wLleAvFfiFGoxhWd66+muNigzlvGzo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745816984; c=relaxed/simple;
-	bh=pwplAq7sR73Eedfj5RJgT6LHKNqYmF7wSl7fGsYpndA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=YtftuTGOwie4DoqqZrr9Rj8MtsmVDG7YnngD179ZzI2bhEEAqQRSfTS62gVKtmTNb2DLv7w6yYh1YwxUlYNb0O38F8jQXtZVzN/xtfhN1TBPiIm3ai02Kz31MjBrBiMG7V/0cmgeHCL70n/DVxn3cCD0wZvpPDc93h9PcByf1Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ndiZNUkv; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEF127462
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745817226; cv=fail; b=fPJMD/tIq3ksHAmFvT0OWgyEScUQvB5BmDhxn02yFniMCO3usy6PHTgXKSvilT5zpdFVTbTlnbAHjZSMb+B7v9ExRAZyx8ZECtUbjH7k5EYIA7elLPYPc6PFs7bDxSYXqY1Jtu4cg3XKdKggzUW39GemJ8LjT3NyhJSPAyN/rx0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745817226; c=relaxed/simple;
+	bh=0YTnJ7pAlRueDwXMCyYrx2X5n20kaEiajktC8/yVU3o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UesXZ/WhA+j7S4Vm7//kJa2ks1S3arcKY1WXzfeJZwor5BirleMcksuZ/MZfTP7B11R8KqpWz/WIi0KywrYxeutb4NqMa9Yd2YYlY+v7TFYQISe+4g8sYn4wOO1Cg69oI5emW4YOi4iDW2+7ITpsD8aoip62Sg0WIHQ+Eni9oWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aaSW04H+; arc=fail smtp.client-ip=40.107.93.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ndiZNUkv"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S4SFqt002962;
-	Mon, 28 Apr 2025 05:09:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Mr1poo
-	bggn6JY8NgFJGQfnnwZCaRBg6+TJ+LyBuoOiI=; b=ndiZNUkv31ukPWvnc8SRFF
-	jzva+dfLrhX6v/9d651ai3T/jBaJFa1qI76XUuUPRmy9K1VsXEUwSMLTIykLAOU6
-	ZgHaZRRyBAlrylB5dVNJq1XClQtEQze3iGSTeUPskemWz7v+izjdvdctDrdTch7R
-	74jLQ0Koq3Hz8DKdek2WdONGzSM78g3x5QfOnQ2qa3Hgtr54dR01H3mIXnnkU4Bl
-	O6gBYUlSYSqNDi7kQ2RATUi7/87qfP7mhl0evtSHh8AszF1zE2MCc6WfqGL1F70w
-	/mJ6lUg/XvfJXzh1J9/H/LyoHgx+EvJUpIQeLv1ydOhk5Q+rBFUMYm7p5dU2/P3Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469jgjav2u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 05:09:20 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53S59Iuh002999;
-	Mon, 28 Apr 2025 05:09:20 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469jgjav2r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 05:09:20 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53S49v1P024595;
-	Mon, 28 Apr 2025 05:09:19 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1kvm4r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 05:09:19 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53S59H1L2228850
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 05:09:18 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9268B58064;
-	Mon, 28 Apr 2025 05:09:17 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 224875805E;
-	Mon, 28 Apr 2025 05:09:17 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 28 Apr 2025 05:09:17 +0000 (GMT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aaSW04H+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P2PzQEgVeesAIVEJFbbV2SmOoXp4GFc/0aSBfbaWNBSznZf3hjb/5P+v7KDv96BLpmV/QUyLn/54LvyVUapVxRIopjpGEZGk64ReyIyCdmBGupkBbaDGw5p6kK7BOYPEzveyt5twpXnzrbmP0dGLNlEXQ8x92wkU4/03e/HKyb37GJ87RM3Quk2fekf/8xakc7d3NvlajqFBJy6SDeb0bk06uV92P0dzU3rE3YcvQ/m79jcl5KMPrnDnou1HLVq0NeexNytFgcrYoBuOIHLFpqBk/L4SYRuFgzVU+Q0SbZJdi2Bc31ILmOwYgS3a5oEyEV+L5ychGO1sBs9h694avg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=leXFxjYQxpYqSr4USVaTyljyqQK19M/Gcoc9O3tPqeM=;
+ b=UDmEeU4p6iX3HJB5Y3dhsI0btjdlHYw1ne/TU32AxBoiTvDxoK6eg0WmokIffq336LnMSCdzkP6Hzpy7J5rhDZM0HUqdIH06NedNNRWDtw3IgXCKrvu80KO2cjDOm6dMJkpdvrK9Myv/u+r0r2oIA17vld9diO4H7kcbS2MwCuSslNzq2J8rGXpLt1BFJIVpNMrzCU7WWHE16ckBrzgceSgN/hXBFJPC6XGVR2scfVi8dzRTwmO1TCMkUj56hG8RNdM03EqqfHrNobTuVRdPgz7HrxeSDlufoOcCHcGmBwibtSxwT6jfrJg5DxCMGOzbRhzDG8K889B9u3awAYsGWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=leXFxjYQxpYqSr4USVaTyljyqQK19M/Gcoc9O3tPqeM=;
+ b=aaSW04H+z8qGR503GKoTAO9OasQEeKH/AYJmEQYdd3nTXXJ4pUiJJKPgd40LBkp5El14kt3KiKTQn1S/khLoTts38w+kvIF7Qgskk97Qi2mvCMz3iEcnAvGZPCZJ6bf/3Lr3KsbU+jv1cEkHssFwy+aL1IsZWfmCDV3gezCSZa0=
+Received: from CH5PR04CA0003.namprd04.prod.outlook.com (2603:10b6:610:1f4::12)
+ by MW6PR12MB8759.namprd12.prod.outlook.com (2603:10b6:303:243::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Mon, 28 Apr
+ 2025 05:13:37 +0000
+Received: from DS3PEPF000099E0.namprd04.prod.outlook.com
+ (2603:10b6:610:1f4:cafe::df) by CH5PR04CA0003.outlook.office365.com
+ (2603:10b6:610:1f4::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.40 via Frontend Transport; Mon,
+ 28 Apr 2025 05:13:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099E0.mail.protection.outlook.com (10.167.17.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8678.33 via Frontend Transport; Mon, 28 Apr 2025 05:13:36 +0000
+Received: from [10.136.42.115] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
+ 2025 00:13:31 -0500
+Message-ID: <1d6574dd-ece9-4826-95a3-1ce6a84f7d77@amd.com>
+Date: Mon, 28 Apr 2025 10:43:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 28 Apr 2025 10:39:16 +0530
-From: Misbah Anjum N <misanjum@linux.ibm.com>
-To: Ritesh Harjani <riteshh@linux.ibm.com>
-Cc: christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        mpe@ellerman.id.au, naveen@kernel.org, npiggin@gmail.com
-Subject: Re: [BUG][powerpc] OOPs: Kernel access of bad area during zram swap
- write - kswapd0 crash
-In-Reply-To: <87ldrujhr5.fsf@gmail.com>
-References: <89bfdedb74416156423d36d28c5b92e9@linux.ibm.com>
- <87ldrujhr5.fsf@gmail.com>
-Message-ID: <bcec125a551e086911f82cef7bd632fd@linux.ibm.com>
-X-Sender: misanjum@linux.ibm.com
-Organization: IBM
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH v2] sched/core: Tweak wait_task_inactive() to force
+ dequeue sched_delayed tasks
+To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+	<kernel-team@android.com>, <peter-yc.chang@mediatek.com>
+References: <20250425195757.2139558-1-jstultz@google.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250425195757.2139558-1-jstultz@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wsIDt46e0tVfdjVz3Zr7Uo-7ay9M-Yen
-X-Authority-Analysis: v=2.4 cv=C4/pyRP+ c=1 sm=1 tr=0 ts=680f0d81 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=NEAV23lmAAAA:8 a=09Uxs5wTwXsWUI50y4oA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: o_Ee4r_eH4VpeaGAGKu0gvRZHrPdlGhU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA0MSBTYWx0ZWRfXyPTdSNEfU8ST hup4A1NYpNG0OsEtWzTLFajrs+swh095bfGS6z/uvvzEkq9jKClNEgDQqoAkBCFf7Erfe4nNIiA ca/BXl4A3ww7M4yUPkoBT45re6CnD7IjRPnW6IMXX3ysvZCiG5ukZqSyi4+c9cnjcfXuYfycEt4
- sNLV7qp77Jkwilzq4VCSjypW4EDJXFww6LBPf6tlg2yisWUwUfOWnfhMGrdeEaLYlZPCQ2copr+ M1hg/0uD8/8ypDlxfXiopz2xjWZ+3+COnOpHinAMD9JmKUJpe7PAFHwqh494VBkh0GtcJOiS6Ja QvTxMFtKhe056C3hjLwU5VsaRw4hTJ9ZJuVJiFIUrahTA6pSzpYmuswByhQWzejAExG4aBgQGC+
- ucJIYpj9BoAH4FmluPq8VzDAJdzNP5yJH8HNWZkkuCw0un1vfrh/nuXlnwP/6MIw6Q7lgICm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 adultscore=0 phishscore=0
- clxscore=1011 priorityscore=1501 mlxscore=0 suspectscore=0 bulkscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280041
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E0:EE_|MW6PR12MB8759:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab4b9e59-26bc-4f72-a170-08dd86136e21
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?amZwVjdFdDdHUVNQVFc3ZklkSHVZRWc5MXVDR3Bncm5EWUZnSTJ0eWRSdHN3?=
+ =?utf-8?B?ZEFWd1lkS2xmeFBwcmZYSGc4ZERTM0E0MG40b3Vyc1hqVXcyclJRZnhiSy9E?=
+ =?utf-8?B?VXI1b2ZXaGpkR0ZTRklrK0svSmxMT2VUdUhsWko3Q2I5UDMzTFFSNHhTNk5v?=
+ =?utf-8?B?RlNmWTA4NVYvME55emQreGlYZVNQOTlydGZFQjRqaGZHYWljWHZGeVhWUE5H?=
+ =?utf-8?B?YzM2K2hEZmw2R0ZmL2tXMVltRXF2Vk5GWTE0TjRTem1uOGZoWWhMejR6WWVs?=
+ =?utf-8?B?Wmg2UEJCa2U4Vy9HYzUxekh4b00wOWtUS09NNTBwOW5JVVdSWHJheFNqRDhv?=
+ =?utf-8?B?OG9pTTYwNW1QVGhPV01tZVpPU2J6Y3hUR2ZySDR5eDQyVHg5LytWQmFUbVpI?=
+ =?utf-8?B?NUswL0ZuV005OXVlZE4xc2o0eU1UZG4zY0FBL2RDcDJabFhmVGRCald5Zjds?=
+ =?utf-8?B?UndhVXZWdjMzMDdmVXVmMmF1RkxOUWxteWJ3Q0FOd21GOXFqdEVxNjJvMzBk?=
+ =?utf-8?B?RnFDQVVFMERJcnh3QjZkbFRDaVlKRGN5K3NEZUI2b0diNHdWSCt0eHNud2tP?=
+ =?utf-8?B?VlppbnFOQnFQRWE0UmJIMWh2eGtvQXRNRllJVVVaOWdUUVpZLzAzbXU3Wm0z?=
+ =?utf-8?B?eFpOalN4T3d0bzNnekozZ1Bmeldsc210cDVFMTZHOW5hcmlpNi9MZWhWT1Vo?=
+ =?utf-8?B?VzhVQU90S2JSSnBhMnpCWGpCY0YrL2RvVVgrUE0wbzhyN3JKRDZzMHJQbDky?=
+ =?utf-8?B?b3VhNlBIRm03TGVEVXkvcEJvcWRZV2lHQXgrMXlUWFpyTnczMlU0VXgwdFlr?=
+ =?utf-8?B?TXJRMUFtWm5haG8yNDJORTdPVGM1anZJSlY1disyMTZFZDUrSkRpNjNYYkxB?=
+ =?utf-8?B?SHZYRUs1VVBITXYzTW5TLzlNVXZFQThLdnpmZkozYWp2Z2NqOWRXQ2NMWmt0?=
+ =?utf-8?B?UmlwZHNudjNXd0NEZWcyYlJVSTk1aHVod0VQczVGZzR1blZTak5NaXk0WDhP?=
+ =?utf-8?B?NU1ZdVRhT0RWNVdaVkFadjI1WHlxdlhpajNxMHE0UXdOeE9VL3F1YVlGUU56?=
+ =?utf-8?B?VXZKQjNUeHl5NHpiU1JzZnZCZ3p1czlyQ2N2WU9zd3lzK0xUd1FVUFp0RUNX?=
+ =?utf-8?B?ZkpQN2pma2h1WFhQdTJjYUhvdEpVTlNZUWV3cU9NOHU3Z2NvN3dSY0syKzR0?=
+ =?utf-8?B?enI3ZCtWZ3pBazRMVytMcTNSMVRwK09ra2ZmNGppS0F6RGQ3aVFBTlZHb2NS?=
+ =?utf-8?B?NW5GaDZJM1YvTkhPaTJOOGZUNzI1c2VkcnY4Y3RldG1TVW5RazNYOVkwUHFm?=
+ =?utf-8?B?NzNUNUVxYVhnVnpRTlBzdTYxaGJXbW16aXRPbzFPd09PZ2p2SDBVdmxxTXNl?=
+ =?utf-8?B?OUF6VUhsYTNXdnlMblJJeXVwTlltbnhsSDVMSTlPRzJnbC9sSnkwWlBkUFVD?=
+ =?utf-8?B?VDNpRk9rNjVRTlZYK3B2TmJicWtiYTBQMFRqMTBtamRxOVpZQUROby9rT0RL?=
+ =?utf-8?B?QXBHNU13WjRUL0pvR3pvWVIvSnVLM2k0SlVPWlpVTlg0bFk4RHRwN2NETVNV?=
+ =?utf-8?B?RFVNbkFxYUtIb1dwVnVSdTgzeHdYdW5ZMGk0cmhQRG50bjFhamNoR1ozWk0x?=
+ =?utf-8?B?MCtNdDFacFdBWjZsTDhMcWhZVUlWaFpnQkpSVmdBSnRDUzJiUVU0bWR3eGVB?=
+ =?utf-8?B?WmJsZEtRVUQ4WW4rM2R0RXNIblozak9aZEZVSHo1c0JsNUc1enJFTDlFbUNw?=
+ =?utf-8?B?MitseDUyRWd5SFJMRVFEd2FhRDR6UTY5bzNKWE1Xb25jZVU1aSs1OHpzcC9a?=
+ =?utf-8?B?NkM1ZzVwUDRXR3U3dnZidFF2NjlzUkdnOGlmcHliL2ZiQ1UzREFCckRFUDU1?=
+ =?utf-8?B?UE1NSmhEZktmbHpQMkVWNVpiczgrQ2U5MVhlNkRZa2oySVlaSmUxbXZEZ29x?=
+ =?utf-8?B?Q3EvaUUwQ2F5RTJuUkFnSGRSWTN6anB4bzd3TG9wZGl3dHlJV2dJU3YyWGox?=
+ =?utf-8?B?T2dPVkE4YlBqRWluSmZJdGFvNHJ6RFpyYm5KR2thR2NicnlGYVBTSkRQeVV1?=
+ =?utf-8?B?WllBdXdkZ1hXWEQ1dG1peURITVhPck0yR1NqQT09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 05:13:36.5895
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab4b9e59-26bc-4f72-a170-08dd86136e21
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099E0.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8759
 
-On 2025-04-21 09:19, Ritesh Harjani wrote:
+Hello John,
 
-> Looks like the issue is happening on 6.15-rc2. Did git bisect revealed 
-> a
-> faulty commit?
+On 4/26/2025 1:27 AM, John Stultz wrote:
+> It was reported that in 6.12, smpboot_create_threads() was
+> taking much longer then in 6.6.
 > 
-> Looks like zsmalloc new object mapping API being called, which was
-> merged in rc1?  But let's first confirm from git bisect, unless someone
-> from linux-mm who knows zsmalloc subsystem better and can point on what
-> could be going wrong here.
+> I narrowed down the call path to:
+>   smpboot_create_threads()
+>   -> kthread_create_on_cpu()
+>      -> kthread_bind()
+>         -> __kthread_bind_mask()
+>            ->wait_task_inactive()
 > 
-> -ritesh
+> Where in wait_task_inactive() we were regularly hitting the
+> queued case, which sets a 1 tick timeout, which when called
+> multiple times in a row, accumulates quickly into a long
+> delay.
+> 
+> I noticed disabling the DELAY_DEQUEUE sched feature recovered
+> the performance, and it seems the newly create tasks are usually
+> sched_delayed and left on the runqueue.
+> 
+> So in wait_task_inactive() when we see the task
+> p->se.sched_delayed, manually dequeue the sched_delayed task
+> with DEQUEUE_DELAYED, so we don't have to constantly wait a
+> tick.
+> 
+> This seems to work, but I've only lightly tested it, so I'd love
+> close review and feedback in case I've missed something in
+> wait_task_inactive(), or if there is a simpler alternative
+> approach.
+> 
+> NOTE: Peter did highlight[1] his general distaste for the
+> kthread_bind() through wait_task_inactive() functions, which
+> suggests a deeper rework might be better, but I'm not familiar
+> enough with all its users to have a sense of how that might be
+> done, and this fix seems to address the problem and be more
+> easily backported to 6.12-stable, so I wanted to submit it
+> again, as a potentially more short-term solution.
+> 
+> [1]: https://lore.kernel.org/lkml/20250422085628.GA14170@noisy.programming.kicks-ass.net/
+> 
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: kernel-team@android.com
+> Reported-by: peter-yc.chang@mediatek.com
 
-Hi,
+Perhaps a Fixes tag to help with backporting:
 
-Regarding the issue, I am currently running tests by removing the 
-suspected faulty commit. Unfortunately, git bisect is not feasible in 
-this case because recreating the bug requires running the avocado bucket 
-for approximately two days. Hence, I am resetting the kernel to the 
-commit prior to: 44f76413496ec343da0d8292ceecdcabe3e6ec16 and manually 
-running the bucket to come to conclusions.
+Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
 
-The commit in question: 44f76413496ec343da0d8292ceecdcabe3e6ec16 
-introduces zsmalloc - new object mapping API
-More information: 
-https://github.com/torvalds/linux/commit/44f76413496ec343da0d8292ceecdcabe3e6ec16
+other than thank, feel free to include:
 
-I will update the upstream bug report with this information after 
-performing the tests.
-Thank you,
-Misbah Anjum N
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+-- 
+Thanks and Regards,
+Prateek
+
+> Signed-off-by: John Stultz <jstultz@google.com>> ---
+> v2:
+> * Rework & simplify the check as suggested by K Prateek Nayak
+> * Added Reported-by tag for proper attribution
+> ---
+>   kernel/sched/core.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index c81cf642dba05..b986cd2fb19b7 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2283,6 +2283,12 @@ unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state
+>   		 * just go back and repeat.
+>   		 */
+>   		rq = task_rq_lock(p, &rf);
+> +		/*
+> +		 * If task is sched_delayed, force dequeue it, to avoid always
+> +		 * hitting the tick timeout in the queued case
+> +		 */
+> +		if (p->se.sched_delayed)
+> +			dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
+>   		trace_sched_wait_task(p);
+>   		running = task_on_cpu(rq, p);
+>   		queued = task_on_rq_queued(p);
+
+
