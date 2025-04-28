@@ -1,107 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F411478F51;
-	Mon, 28 Apr 2025 02:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A5078F51;
+	Mon, 28 Apr 2025 02:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745807194; cv=none; b=g85uiFUpeywBfZfHOrIltqDWFpmHNSiW3HS9VbZIRYAT2/fdB8jYeWb6a81x+vmovZPeD/NuhEp6kgNV4LmoPgCxbdGtWvPYEEXtH8jhslolojx2LoM7VuUcxpj3Sa58YCqt833BJLqs8AAtujjVGxd1iRggweiyiQoJYJfWUTY=
+	t=1745807223; cv=none; b=hLJ6gvptx6MBPoS/WQHwdvk4CVLGh9OtEgNPnwvRA+BleiY1EQXu8hwUmc8OLQHHxL2iKrmO5JX6MbltxTWwFePF39xtUidYk41t032pUVgJ5LR8czymgB5jNzd/TJttECFKoKi0PvHYJhKHrbCCTmyba/Qmxt0a5z8fX6abLIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745807194; c=relaxed/simple;
-	bh=9o6ImY5Xhg/iIM1ggLLapPernE+0oRf+mt/tMBdeno8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q3FZlfRkzM9P/0xZJF2BesvpjSosGwbsU4F/NIhWokKTnECaxWFr4epC/5uY3vQEwcb6dY7vUvM3PurLSVXKkd4BifOTAMySgU1C/NlvXs4CxYPjMDNRsRmsPu+u0bhWvKI/a6K3Kl+aBo1CFg/ceZiQrvMRBaN7V0LWSjUs2vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJ7W2R1M; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745807223; c=relaxed/simple;
+	bh=ARUogu1KWOl8XAQWf/Oqsl0rAq6eejDgKlCFeI2WThM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zld2N2S4IDy19+i30WbxhUPacaI3tpodYoU/M364SfYyIZ6cyuHmxkV34kyLvCSwIy3HfZ+pk7mRd1r6PzIkmKNWQO3DD8P7VpKPCECIvIZcurr9sUObDblkz6Ixpe2X49PsOnK5KMA3S9XdxxA0ryMKf7TzHpUpB5LPC2mmQSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uj/r+mHa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJ7W2R1M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745807193; x=1777343193;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9o6ImY5Xhg/iIM1ggLLapPernE+0oRf+mt/tMBdeno8=;
-  b=YJ7W2R1MjuRJt8Ic6e1cpfuoSLgczl3SOdeHSDrWOFY6vzgBKc24wj1J
-   nRQA05GB2Juy0HJN5zlQPCD1fCluSMdMtIa4s7hQIRVZnFEsEiy6hnGZl
-   n/OTxxgurB3CnBOGDDlWaathopS4chZ2EN9gDGPmQkPltb00zR5bfupH5
-   vxW8NuVWZmQ+UN5rvqVHr/tq1iX9miLLJKfsLyWEJOIY48DDD+gTS1H2H
-   xcUzyVwfM7bk9R2XxOGvlrgrpZuYGcVYYfyC7BrtUaqDixc/vec8wvF+i
-   yrYpDrO3GS3+7DZhL5OPzAXXxqtLdR1wH4WnW9lR2OwvnJKw7zfNSVvmJ
-   g==;
-X-CSE-ConnectionGUID: 3NAFNt6fS/er8ncgqqQWbA==
-X-CSE-MsgGUID: y9+8i0zbSranr7uMsN4Zbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="64919028"
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="64919028"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 19:26:32 -0700
-X-CSE-ConnectionGUID: G2C/+PsgREWc8VydJw7YEA==
-X-CSE-MsgGUID: tr8P1+CuTbep0lh7HWgq6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="133362707"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 19:26:20 -0700
-Message-ID: <bfb7dd4a-0597-4b6c-ba53-1e4ee3b733b0@linux.intel.com>
-Date: Mon, 28 Apr 2025 10:22:09 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uj/r+mHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B149C4CEED;
+	Mon, 28 Apr 2025 02:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745807223;
+	bh=ARUogu1KWOl8XAQWf/Oqsl0rAq6eejDgKlCFeI2WThM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uj/r+mHaLAIYEdBKV11mPlqzYr3AkOvpV/eb6cT09N3H8dcpDCm5+48VHg4vFwt1S
+	 8e/1ZmladmjfWzh2Dy0hHmbjhtAnii/Hp8ZUMsLlU/kSirk2+3Tl14+JIrkn92UNuH
+	 XzHho2qWM8m6ERjpiqPyU3WjL0OvGxWF/fzyUYaUSonZu3ijPgqftyw+7HlLYWXbF5
+	 J8b2Vi6VtH794+3kEwj6q+QXaiF8nr007SzECXw4mIVzslxfQk2bZqv1o6mRblY88x
+	 ZavwOvmI+xq9GxZ7keyloDU5E8P56/eHy7rvISQwsUvVPuINvAnNfYLaXSr2aar3Xt
+	 2zRsWuTqDKiuQ==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aca99fc253bso626966566b.0;
+        Sun, 27 Apr 2025 19:27:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW418YgarSRIz88J9+GI3smzrfxcZ+whf+wLhpTejQ639AmyqXxtcY36ZyCrAkiTW+5xANjgf0wNSkXGd4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8HH1OSRZE/0yp6Uo0NAWgAFpPk9ZafqBYbw09FgmgU2q3lDyw
+	LydWTe4XjrZCV5FGOHd5y7SwkCgnGcDdpK7vnOdYwat++a+C+74rBxjBWIbVDN/BVxMTnl2hggV
+	PzcKB6jo3VY5b+ejUzeRPBOk4Lfs=
+X-Google-Smtp-Source: AGHT+IFrzxa51ihXg7aydgBMfAxORsS7IiZgQWV17nIFgI4LvEhmAWQY2i4M/0v8LH8m4JiIn7pMROdDqgeFvRal8sA=
+X-Received: by 2002:a17:907:7daa:b0:acb:5f9a:7303 with SMTP id
+ a640c23a62f3a-ace8493c1e3mr608073566b.35.1745807221613; Sun, 27 Apr 2025
+ 19:27:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/22] iommufd: Add for-driver helpers
- iommufd_vcmdq_depend/undepend()
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
- corbet@lwn.net, will@kernel.org
-Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
- thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
- shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
- peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
- praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
- linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
- alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <a25c9454c17663f9e79b37bc2908bf3a99856be6.1745646960.git.nicolinc@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <a25c9454c17663f9e79b37bc2908bf3a99856be6.1745646960.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250403161143.361461-1-marco.crivellari@suse.com> <20250403161143.361461-3-marco.crivellari@suse.com>
+In-Reply-To: <20250403161143.361461-3-marco.crivellari@suse.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 28 Apr 2025 10:26:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4dQ8hRfBm2JWmgMzYH5tuy4ph6hyOSXQBLOvtCQ+K9dQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGost9qNZ7QpU2DF1a0CWnWmGGt-lR5NOpVjzH5-3nUd4ENdD94Ymse94c
+Message-ID: <CAAhV-H4dQ8hRfBm2JWmgMzYH5tuy4ph6hyOSXQBLOvtCQ+K9dQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] MIPS: Move r4k_wait() to .cpuidle.text section
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, "Maciej W . Rozycki" <macro@orcam.me.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/26/25 13:58, Nicolin Chen wrote:
-> NVIDIA Virtual Command Queue is one of the iommufd users exposing vIOMMU
-> features to user space VMs. Its hardware has a strict rule when mapping
-> and unmapping multiple global CMDQVs to/from a VM-owned VINTF, requiring
-> mappings in ascending order and unmappings in descending order.
-> 
-> The tegra241-cmdqv driver can apply the rule for a mapping in the LVCMDQ
-> allocation handler, however it can't do the same for an unmapping since
-> the destroy op returns void.
+Hi, Marco,
 
-The key point is that unmapping happens during object destroy. These
-depend/undepend helpers ensure a vCMDQ is not destroyed (and therefore
-unmapped) before any vCMDQs that depend on it. Do I get it right?
+On Fri, Apr 4, 2025 at 12:12=E2=80=AFAM Marco Crivellari
+<marco.crivellari@suse.com> wrote:
+>
+> Fix missing .cpuidle.text section assignment for r4k_wait() to correct
+> backtracing with nmi_backtrace().
+>
+> Fixes: 97c8580e85cf ("MIPS: Annotate cpu_wait implementations with __cpui=
+dle")
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> Acked-by: Frederic Weisbecker <frederic@kernel.org>
+> ---
+>  arch/mips/kernel/genex.S | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+> index 46d975d00298..2cf312d9a3b0 100644
+> --- a/arch/mips/kernel/genex.S
+> +++ b/arch/mips/kernel/genex.S
+> @@ -104,6 +104,7 @@ handle_vcei:
+>
+>         __FINIT
+>
+> +       .section .cpuidle.text,"ax"
+If you submit a new version, adding a space before "ax" will be a little be=
+tter.
 
-> 
-> Add iommufd_vcmdq_depend/undepend() for-driver helpers, allowing LVCMDQ
-> allocator to refcount_inc() a sibling LVCMDQ object and LVCMDQ destroyer
-> to refcount_dec().
-> 
-> This is a bit of compromise, because a driver might end up with abusing
-> the API that deadlocks the objects. So restrict the API to a dependency
-> between two driver-allocated objects of the same type, as iommufd would
-> unlikely build any core-level dependency in this case.
-> 
-> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
+Huacai
 
-... if that's right,
-
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Thanks,
-baolu
+>         /* Align to 32 bytes for the maximum idle interrupt region size. =
+*/
+>         .align  5
+>  LEAF(r4k_wait)
+> --
+> 2.49.0
+>
