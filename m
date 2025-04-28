@@ -1,66 +1,57 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53A526A098;
-	Mon, 28 Apr 2025 12:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EDE52673B7
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841940; cv=none; b=X8hrCfA9o/x5mm7MLMBBhuA2ntr0aH86o7j9E3zYwh1RU8/aoAx7Z36B3KP9YVFjTdmOjBzvJl/IBqAHoWUZZ/3w4pKAMUjuNSwdz+Xp1FNEUQ719yZdN6bB4KxiwuJkv3BdGLFI5ZlpenYXEUr8BlywsOPR/bLuOrj0X96lmdc=
+	t=1745841950; cv=none; b=FLy59Rhr9e6/giX470es5s3uigK+yep9V1UzCgQYP8Vb8Dv0PhHK44iCGXKjCa2ay45gBVoqd5yi5O6PL/RYPB6MXE/BXVFFScSXRHU3rUHyXZyO/rIQ+aBA24/Mb8P8lnpdTsdrQcV5AKv9zjrgKt/iBCLpQue6aLBqmQ7s5fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841940; c=relaxed/simple;
-	bh=8Gw7PZxetBy1RCwUT9rI04H1JYafJVt7sfEm7hf2k8I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=biL18CVfpyVfzYn9Ki7zqXaEA2+xPSFJEhYEbAv0spUgykP0ZbzExwRi/jUOudM7zSawtzS5eK1zERzqlUiQyZfauY8Nx0bQvwrCAhwE7XPmOT89NpaNKTsgrtXoYTTA1RvmFtnAlXcp+ris+fKwDx4tIXY6VW2bPDXjNQ0dU9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DTiiK5OT; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DTiiK5OT"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SC5IvP3393357
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 07:05:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745841918;
-	bh=UOnsX2khC4QQb5DzauQ7MTn2WKff96OYmxGALdbK5CM=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=DTiiK5OTcuPZ7OW1xtZa+Ig0wRwTCT/hRNr354wkAlhVPgAP62gLS0hDK/8/nz1RW
-	 c/3LWpMjWGDhyAYtsZI6BQqEoJdSxJCqhEIoELehC21TSm6EAx3vHl2f712kebwXCB
-	 4a1P8WSNmXQuuldUIpoQR7C/E/5SKsJcUgrTS1eY=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SC5IpX038345
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 28 Apr 2025 07:05:18 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
- Apr 2025 07:05:17 -0500
-Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 28 Apr 2025 07:05:17 -0500
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SC5H95098287;
-	Mon, 28 Apr 2025 07:05:17 -0500
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 53SC5G1B016903;
-	Mon, 28 Apr 2025 07:05:17 -0500
-From: Meghana Malladi <m-malladi@ti.com>
-To: <dan.carpenter@linaro.org>, <m-malladi@ti.com>, <john.fastabend@gmail.com>,
-        <hawk@kernel.org>, <daniel@iogearbox.net>, <ast@kernel.org>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net 4/4] net: ti: icssg-prueth: Fix kernel panic during concurrent Tx queue access
-Date: Mon, 28 Apr 2025 17:34:59 +0530
-Message-ID: <20250428120459.244525-5-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250428120459.244525-1-m-malladi@ti.com>
-References: <20250428120459.244525-1-m-malladi@ti.com>
+	s=arc-20240116; t=1745841950; c=relaxed/simple;
+	bh=uhhb/WbjTvfi31f7EFPTIbVN0sxli/jwpt1FYquhYkE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=N4CQbOHuXT6vR+EqDsKox0Gt3WIYbduRz5V2F7sahgZ6mXRiPSf6OcZeCk8OP3UAWIw510Hrzlhka+r+MVnai+yyqGXXbq6xSKU1DJ+u2s4FFoxTVvkCrt5IS3pMQN588Q1XtMYxqKFDizfdby6S1Kx78vEL+vgkjmuILyTxcCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C17122D7;
+	Mon, 28 Apr 2025 05:05:41 -0700 (PDT)
+Received: from K4MQJ0H1H2.arm.com (unknown [10.163.78.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 57D683F66E;
+	Mon, 28 Apr 2025 05:05:38 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com,
+	david@redhat.com,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com,
+	vbabka@suse.cz,
+	jannh@google.com,
+	anshuman.khandual@arm.com,
+	peterx@redhat.com,
+	joey.gouly@arm.com,
+	ioworker0@gmail.com,
+	baohua@kernel.org,
+	kevin.brodsky@arm.com,
+	quic_zhenhuah@quicinc.com,
+	christophe.leroy@csgroup.eu,
+	yangyicong@hisilicon.com,
+	linux-arm-kernel@lists.infradead.org,
+	namit@vmware.com,
+	hughd@google.com,
+	yang@os.amperecomputing.com,
+	ziy@nvidia.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH 7/7] mm: Optimize mprotect() through PTE-batching
+Date: Mon, 28 Apr 2025 17:34:14 +0530
+Message-Id: <20250428120414.12101-8-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250428120414.12101-1-dev.jain@arm.com>
+References: <20250428120414.12101-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,88 +59,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Add __netif_tx_lock() to ensure that only one packet is being
-transmitted at a time to avoid race conditions in the netif_txq
-struct and prevent packet data corruption. Failing to do so causes
-kernel panic with the following error:
+The common pte_present case does not require the folio. Elide the overhead of
+vm_normal_folio() for the small folio case, by making an approximation:
+for arm64, pte_batch_hint() is conclusive. For other arches, if the pfns
+pointed to by the current and the next PTE are contiguous, check whether
+a large folio is actually mapped, and only then make the batch optimization.
+Reuse the folio from prot_numa case if possible. Since modify_prot_start_ptes()
+gathers access/dirty bits, it lets us batch around pte_needs_flush()
+(for parisc, the definition includes the access bit).
 
-[ 2184.746764] ------------[ cut here ]------------
-[ 2184.751412] kernel BUG at lib/dynamic_queue_limits.c:99!
-[ 2184.756728] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-
-logs: https://gist.github.com/MeghanaMalladiTI/9c7aa5fc3b7fb03f87c74aad487956e9
-
-The lock is acquired before calling emac_xmit_xdp_frame() and released after the
-call returns. This ensures that the TX queue is protected from concurrent access
-during the transmission of XDP frames.
-
-Fixes: 62aa3246f462 ("net: ti: icssg-prueth: Add XDP support")
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- drivers/net/ethernet/ti/icssg/icssg_common.c | 7 ++++++-
- drivers/net/ethernet/ti/icssg/icssg_prueth.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ mm/mprotect.c | 49 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index a120ff6fec8f..e509b6ff81e7 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -660,6 +660,8 @@ static u32 emac_run_xdp(struct prueth_emac *emac, struct xdp_buff *xdp,
- 			struct page *page, u32 *len)
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 362fd7e5457d..d382d57bc796 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -131,7 +131,7 @@ static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
+ 	return false;
+ }
+ 
+-static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
++static struct folio *prot_numa_avoid_fault(struct vm_area_struct *vma,
+ 		unsigned long addr, pte_t *pte, pte_t oldpte, int target_node,
+ 		int max_nr, int *nr)
  {
- 	struct net_device *ndev = emac->ndev;
-+	struct netdev_queue *netif_txq;
-+	int cpu = smp_processor_id();
- 	struct bpf_prog *xdp_prog;
- 	struct xdp_frame *xdpf;
- 	u32 pkt_len = *len;
-@@ -679,8 +681,11 @@ static u32 emac_run_xdp(struct prueth_emac *emac, struct xdp_buff *xdp,
- 			goto drop;
- 		}
+@@ -141,25 +141,37 @@ static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
  
--		q_idx = smp_processor_id() % emac->tx_ch_num;
-+		q_idx = cpu % emac->tx_ch_num;
-+		netif_txq = netdev_get_tx_queue(ndev, q_idx);
-+		__netif_tx_lock(netif_txq, cpu);
- 		result = emac_xmit_xdp_frame(emac, xdpf, page, q_idx);
-+		__netif_tx_unlock(netif_txq);
- 		if (result == ICSSG_XDP_CONSUMED) {
- 			ndev->stats.tx_dropped++;
- 			goto drop;
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index ee35fecf61e7..b31060e7f698 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -1075,20 +1075,25 @@ static int emac_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frame
- {
- 	struct prueth_emac *emac = netdev_priv(dev);
- 	struct net_device *ndev = emac->ndev;
-+	struct netdev_queue *netif_txq;
-+	int cpu = smp_processor_id();
- 	struct xdp_frame *xdpf;
- 	unsigned int q_idx;
- 	int nxmit = 0;
- 	u32 err;
- 	int i;
+ 	/* Avoid TLB flush if possible */
+ 	if (pte_protnone(oldpte))
+-		return true;
++		return NULL;
  
--	q_idx = smp_processor_id() % emac->tx_ch_num;
-+	q_idx = cpu % emac->tx_ch_num;
-+	netif_txq = netdev_get_tx_queue(ndev, q_idx);
+ 	folio = vm_normal_folio(vma, addr, oldpte);
+ 	if (!folio)
+-		return true;
++		return NULL;
  
- 	if (unlikely(flags & ~XDP_XMIT_FLAGS_MASK))
- 		return -EINVAL;
+ 	ret = prot_numa_skip(vma, folio, target_node);
+ 	if (ret) {
+ 		if (folio_test_large(folio) && max_nr != 1)
+ 			*nr = folio_pte_batch(folio, addr, pte, oldpte,
+ 					      max_nr, flags, NULL, NULL, NULL);
+-		return ret;
++		return NULL;
+ 	}
+ 	if (folio_use_access_time(folio))
+ 		folio_xchg_access_time(folio,
+ 			jiffies_to_msecs(jiffies));
+-	return false;
++	return folio;
+ }
  
- 	for (i = 0; i < n; i++) {
- 		xdpf = frames[i];
-+		__netif_tx_lock(netif_txq, cpu);
- 		err = emac_xmit_xdp_frame(emac, xdpf, NULL, q_idx);
-+		__netif_tx_unlock(netif_txq);
- 		if (err != ICSSG_XDP_TX) {
- 			ndev->stats.tx_dropped++;
- 			break;
++static bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
++{
++	pte_t *next_ptep, next_pte;
++
++	if (pte_batch_hint(ptep, pte) != 1)
++		return true;
++
++	next_ptep = ptep + 1;
++	next_pte = ptep_get(next_ptep);
++
++	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == PAGE_SIZE);
++}
+ static long change_pte_range(struct mmu_gather *tlb,
+ 		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
+ 		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
+@@ -190,19 +202,28 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 		oldpte = ptep_get(pte);
+ 		if (pte_present(oldpte)) {
+ 			int max_nr = (end - addr) >> PAGE_SHIFT;
++			const fpb_t flags = FPB_IGNORE_DIRTY;
++			struct folio *folio = NULL;
+ 			pte_t ptent;
+ 
+ 			/*
+ 			 * Avoid trapping faults against the zero or KSM
+ 			 * pages. See similar comment in change_huge_pmd.
+ 			 */
+-			if (prot_numa &&
+-			    prot_numa_avoid_fault(vma, addr, pte,
+-						  oldpte, target_node,
+-							  max_nr, &nr))
++			if (prot_numa) {
++				folio = prot_numa_avoid_fault(vma, addr, pte,
++					oldpte, target_node, max_nr, &nr);
++				if (!folio)
+ 					continue;
++			}
+ 
+-			oldpte = ptep_modify_prot_start(vma, addr, pte);
++			if (!folio && (max_nr != 1) && maybe_contiguous_pte_pfns(pte, oldpte)) {
++				folio = vm_normal_folio(vma, addr, oldpte);
++				if (folio_test_large(folio))
++					nr = folio_pte_batch(folio, addr, pte,
++					oldpte, max_nr, flags, NULL, NULL, NULL);
++			}
++			oldpte = modify_prot_start_ptes(vma, addr, pte, nr);
+ 			ptent = pte_modify(oldpte, newprot);
+ 
+ 			if (uffd_wp)
+@@ -225,13 +246,13 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 			 */
+ 			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+ 			    !pte_write(ptent) &&
+-			    can_change_ptes_writable(vma, addr, ptent, folio, 1))
++			    can_change_ptes_writable(vma, addr, ptent, folio, nr))
+ 				ptent = pte_mkwrite(ptent, vma);
+ 
+-			ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
++			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr);
+ 			if (pte_needs_flush(oldpte, ptent))
+-				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+-			pages++;
++				tlb_flush_pte_range(tlb, addr, nr * PAGE_SIZE);
++			pages += nr;
+ 		} else if (is_swap_pte(oldpte)) {
+ 			swp_entry_t entry = pte_to_swp_entry(oldpte);
+ 			pte_t newpte;
 -- 
-2.43.0
+2.30.2
 
