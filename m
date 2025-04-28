@@ -1,78 +1,100 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF061F4720;
-	Mon, 28 Apr 2025 23:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBC88F6C;
+	Mon, 28 Apr 2025 23:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745882020; cv=none; b=Hf0ZhDy5N14hRKBCGNDGFyvOedAj/3dBOcmRiXOBwfhTSuexdv0NRyLE5szDRu155EECcPsaGNbAWhf3zDTrBM/AS2T316Z9Qlm/a488MghtEOPwlsw9A7Uli9fUPYanbkK9nUkka72Xz9I6KFxycK6o0e7fSqxKYhY0vvctHQc=
+	t=1745882080; cv=none; b=jr5l1knX4HGp/1mtejJXz13H4mLsgmUNjQ48QSJLNlRsigvN7mxWN5qQRHMjHsObUVpPsUCTFjB9EdhZZgYrAeujzQ5UbNDj8VbqCnLpnxIWwhifMuIwsEw7/U1bFCGyUM6M1O7mKE1KlfuIO4+DOKb/gbHN22Y25kqAH7UlkdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745882020; c=relaxed/simple;
-	bh=mfcjVtVchCTujbGAMs19wl9GY6gb3/+JgDiu/lQnIkU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nbCnpBh8py5DqaxxjyMNx8AVtPR46yvkx3E7ZySkv590DuwRGCaHuLZy5cnek7XYm2mBM9MGmIFmnXXEi1FChv4IS3umEzTz6UkX9VRfUxvnm6/hw6b0GqHT/he7LYIIN0SQIArvGpPTi0n2k2L/HsnjA61KGsYugBy5zgap+3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=WqEVrLYH; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1745882080; c=relaxed/simple;
+	bh=SXcmkAUWKUFrMwdZpJHL1BdwMNMzuRh9nAdrBZzzvLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WAsDCM4hal/0VimlNGc6sV5Gm2Yr50SyPScARCo8RBOWy5QPjL/0lS7SzZXj053FngXGO8viOzKtAYgeCMPBvE8s2r73z4EPnTn9eKxnbnqsNs1xxwrwqJveg45KYPzgSXlDT2jnB3TsweUvepFrfGC5BX52T9I/f9Aa8B5vHHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AKaE5cfu; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="WqEVrLYH"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EC1B841060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1745882018; bh=ozM+kmYZmDmnjvLsopANwPE6pE8blnoCbPhurrb17/Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=WqEVrLYHjL6KUtg7mdghmalhI70wlQVX8EMYBHhMcUpPIvh18ccaLe285eW8VTAJ/
-	 l1cyWtF/IVU6077+rW21l09IoieAqrmGjRwPFkSbZguYI/wXtbl8bVSHfAZut61tSP
-	 EyPHnb63OCLyl8r4qLMkSpCaQkuMYNgSo0KA4nrtEPUP1NyGsWEkK8w0P/nCz4Vd0D
-	 Ko16f5O1Wl8K0iCgMf6JvWsdcm7x3Jh0u/DNgdCqzkKL2WfnPTaJf1x1RKQDqY77Dj
-	 lRkZTcq7PthjCz4dLRXKYZ2ABJqUo5lKp9EsEncuxJenVpX6pVWmCrxVsFaYhWNVYE
-	 12gttC1gtt/bw==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AKaE5cfu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745882072;
+	bh=99A6Fxife3hY7RgFVHWUrtXFA6ZaEBevx64/fimsX0w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AKaE5cfuqijJLRQdYosQrSROswjhn6SSIsYi1YWZXCxDqQYASIU27zRnMkrcYK+LY
+	 Ix/HuoQVe7OOoBRnKWgKU3yibnkB0KKPkpxbX9EtpcoXRKNfoK1YLiJXU4f0nuYhht
+	 GusTUb/hrdvPbIKGvQB6MwRjJ0U6iHb6EXrY9+avBbIv3LgC3107NOMunlnp5dG0GJ
+	 HVMeTIDUX1pexjKETMFtAI6CAuNNDRNkmA7i79fJT3aMBRXNO9bbYsCBgZh2tP7CIk
+	 f1XkoRAB70gRPeksDxKvRDeEV9+Bdaz+Lhfy3sQS/eIfE5j+dm1Ra+RGCqO1P5hR4b
+	 T82WvJtnH79FQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id EC1B841060;
-	Mon, 28 Apr 2025 23:13:37 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: chris.wei.cui@gmail.com, linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Cui Wei <chris.wei.cui@gmail.com>
-Subject: Re: [PATCH] Documentation: fix speculation.rst chapter
-In-Reply-To: <20250426135609.735-1-chris.wei.cui@gmail.com>
-References: <20250426135609.735-1-chris.wei.cui@gmail.com>
-Date: Mon, 28 Apr 2025 17:13:37 -0600
-Message-ID: <874iy7swv2.fsf@trenco.lwn.net>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmfRD4PLpz4x5k;
+	Tue, 29 Apr 2025 09:14:32 +1000 (AEST)
+Date: Tue, 29 Apr 2025 09:14:32 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the input-current tree with Linus' tree
+Message-ID: <20250429091432.4d8181a9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/H=+VRrNqq94JmuVrm3nYNWS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-chris.wei.cui@gmail.com writes:
+--Sig_/H=+VRrNqq94JmuVrm3nYNWS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> From: Cui Wei <chris.wei.cui@gmail.com>
->
-> 'Mitigating speculation side-channels' should be a chapter rather
-> than title.
->
-> Signed-off-by: Cui Wei <chris.wei.cui@gmail.com>
-> ---
->  Documentation/staging/speculation.rst | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/Documentation/staging/speculation.rst b/Documentation/staging/speculation.rst
-> index 8045d99bcf12..0d526ba55d14 100644
-> --- a/Documentation/staging/speculation.rst
-> +++ b/Documentation/staging/speculation.rst
-> @@ -63,7 +63,6 @@ of an out-of-bounds address, while the second call will influence
->  microarchitectural state dependent on this value. This may provide an
->  arbitrary read primitive.
->  
-> -====================================
->  Mitigating speculation side-channels
->  ====================================
+Hi all,
 
-Applied, thanks (though, in truth, I'm not sure this document needs to
-be kept).
+Today's linux-next merge of the input-current tree got a conflict in:
 
-jon
+  drivers/input/joystick/magellan.c
+
+between commit:
+
+  05e8d261a34e ("gcc-15: add '__nonstring' markers to byte arrays")
+
+from Linus' tree and commit:
+
+  936a25ef11f5 ("input/joystick: magellan: Mark __nonstring look-up table")
+
+from the input-current tree.
+
+I fixed it up (I just osed the latter - as it also marked the look-up
+table as const) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted
+for merging. You may also want to consider cooperating with the
+maintainer of the conflicting tree to minimise any particularly complex
+conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/H=+VRrNqq94JmuVrm3nYNWS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQC9gACgkQAVBC80lX
+0GyUzAgAgYZcIZSTGRW6evYuX532S56AoiY7TFL8wlb60pZtDCt8t8Znl9DByo7Z
+5qrSAOd3obarwiLERwDsavUWi7Ka4DmJUbG8LLVhD2jkW+bbAPdhxaQV07V03MIW
+EIeD86zrptHYA7zRtBipBnDYhNsxbY0391Zc8hK9PPRcj/A+EWmTefw96mlJgPuy
+lIsT/RJsDPQIjDKyFimjS8r7MfIcPmCq8AnVwk8kts4uWxYVreeHrokcGEk13iFn
+ox3LLsFTExF53lMXlbcAMoNEszVBXNG7OgZORS1cMmEWZzyeSNEEIjoweu9+BxIP
+B8uS6DCBBPj5y3Ed+7sn0GLYS9xjkA==
+=aRdQ
+-----END PGP SIGNATURE-----
+
+--Sig_/H=+VRrNqq94JmuVrm3nYNWS--
