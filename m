@@ -1,165 +1,131 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E0A20968E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17B2153808;
+	Mon, 28 Apr 2025 13:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845916; cv=none; b=csOTiDYxU7LVMtTau702kZs4AZm9fVOAkcWRBkIp92mvPPQwyJVh7MxpM7KKU7VnNLUvtLVYINfXbt8z7/P6AyL7xQ3VlqzGxDhiQhyo23/HBo6Zakd4yD8inLf90dzuUWCJUhAE5jYbH2SJ9Yjys6MXYyifm+ALEOXBMw/Tx0w=
+	t=1745846027; cv=none; b=qsLiOEiCGsLpv4N+rgGwzBO58nSZVgWffoAKuQ9cujREKV33fGqMOIJ3KWBh9cdnUJS3kgFgPdzexBdZrCICBN+vaahzuaVMK/bc6Klfx9egdXmxymAsvkMwxTgKZXSMexD4AKsAhekjmy6uykoxMp+Ki6Hab2gktAm+yIKYofk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845916; c=relaxed/simple;
-	bh=vmT2BPuNeQMRR4MvPACHB6GbxLQA/K2IZKLlEqetco4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tjK8U2i73X3u2rlajA5l3UDWICvSxEuQCenDBATp7jFdlQ/0lt3UmPE7+gQ59kHsu9otpJEfSLwQFz5IugszSgcNxa2TqNlpCUD71l5ptLc9MZn4r9gJSRP2FhNoSsrS23TpkQLBNfSZ0Uujt3x7JoyAxih6656eB7/wsk2A/k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=XcCIlJRv; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1745846027; c=relaxed/simple;
+	bh=fBDkrtcHnWOZRMjsb2EAjVcZfiBrFGHx5/fX8YtVxug=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ypux4GPXvGVQ/yxWguBZHZO40obgXymkxtfpqJy4byWV9dAK+4yb4PozCxqpIBo0sVeeGfhLfvbfIQqufR8I+gZD6XdGCQV9udBf1wIqcOTXKgV2rA/rxEqWohQV8RptF4CGnY90JB+PVDlcVb8QSXw/vvC+59apVwGlwtQcCz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jgzq8SU4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VQsuJICz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="XcCIlJRv"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac56756f6so4832874f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1745845912; x=1746450712; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q4J207YyuAGkV1CbUzAQtkN//0ZWB3j4SQpv1vFi2Uk=;
-        b=XcCIlJRvzgEFaTv5NCN0bG5EKOCfMVKGEJwv6uAceDzjKQusRAe0HgAe89jvS/uG2G
-         NeH7go/wzkwnOhv1AyyhIy1aRFo2tN9SFW0qrrj/iZoln969PfuOIKu/Id4gGTKD4LYZ
-         SIarSVFdtDohwnEt6ToHSkadMoVZats3yYCpu9IQY6DlG3jEkc+dfHFrFUBNxzK4BJT6
-         1fNK9CJSR0QHKvkSAmdTdpo4CalzYG1Mes2bEP3Gyx6P3svqBH1jQSesjcVorJzj6tar
-         f/elkHBclhhUb1Plz0TxlfmE8Cpuhm1PpnKnmIv+fAZDNZ2a3bHnSk/xJoEMycTxg1qO
-         VSvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745845912; x=1746450712;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q4J207YyuAGkV1CbUzAQtkN//0ZWB3j4SQpv1vFi2Uk=;
-        b=VOoA08Sc1uC8mY7QYQxzg1n4Tdlf+tx5vhEOsdoOnTM+npJ8yUNfqBUL1gQ5un+V21
-         1rdjXc2FJRDBcSeyvL2YZOFOqXG2+rddCcBQo9tBB0cN64XSjMinEG0uCk4R4LIcW/K2
-         DoB6ZEwHSA7jprVwG8suxiA7n008o8q2+hCcCZZwguBr0sGpqFMg2q7DRfuwg9delEa8
-         nXs3/F1kpYG8QFMBCLUuOsM25SkzI04anaGU5tW30OxVfba1Ex76dMVKBth/g4B2q06y
-         B/dgGZMkrn38l5eg7GzG0AKItZoAr2RU2CXeA3wU/L4bJwOkRdVP3/2F6MKs9SvUwY5Z
-         /VHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjZmtyCiHKkVdjiJLYuzpLXjc3fvJQNtjOybvQY3IDjIg+G1wxlt/o72xwNhVT1ZwhmcSdPpjV3lrBHtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWx67uQR/X7BmLk+BkYz/ya45jxR3X1+SjwJUm/8LTABVY9CQ/
-	a0g883Ujk4Vgz9MsY0HId/4AnZ+TCtXHtAIS/X3b+KOIDoMO70m4bYSH+6FlLHQ=
-X-Gm-Gg: ASbGncvlSzZqEEXegGQ803zM2yu/mVcBvSbQgR06PtWzNlOpY+1zttGy8M9NeGou1Xd
-	Mod48ewPucCmGy3Z/4wzE7js7HFNhb/BaudMENhzEfhOJ4i+oxoDvc5yoxQgHv/E4tKyAAhtvMU
-	7hrPPz/wQV6lbUX3bAz4Ih+c0wHNunWbH2cyVbS5fOVjgv+3D/pfefvyA5nB3/hZcwrnD0NCBbZ
-	ejTg9A40NbVUPRdIxysZ36++sgJNnz4I78S/Sm0khOv/4qhbl997LZEn3RW9YuwAPXoNg161YXO
-	q99vUXMsM9M/R4apUrxPeG2VrPjfFSNDp/cyAme7Q7PruAQnIWTs14TIKnoqNcY9bqzxh1my3LF
-	PtLV3MfMGPZK6erKlnyyh4xYAuCuIuntKQKLa8Lhm
-X-Google-Smtp-Source: AGHT+IFeEs3neKdh4mQxt/dEhTHmRuQ9dywG7AxB1fh+tdreaTzRhkNeBWh/xRaAkPWiQL9l+gfCpw==
-X-Received: by 2002:a05:6000:2405:b0:39e:cbde:8889 with SMTP id ffacd0b85a97d-3a07aa5fe38mr6168054f8f.6.1745845912502;
-        Mon, 28 Apr 2025 06:11:52 -0700 (PDT)
-Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a53031acsm122256695e9.9.2025.04.28.06.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:11:52 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: dhowells@redhat.com,
-	netfs@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] fs/netfs: remove unused netfs_io_request flags
-Date: Mon, 28 Apr 2025 15:11:49 +0200
-Message-ID: <20250428131149.3195399-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jgzq8SU4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VQsuJICz"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745846024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4p2KNGoH4RpXnHApo5XcQ+MmbzVaxHkwzaFjw95U/Pg=;
+	b=jgzq8SU44nSuBffQa7MjG7Bum3OHasBmml6dTTxWJ7GwP3hJWsr5pFFPa4EK4h5GufXm2F
+	L94zdH8Z8byyCl+XOssrd19YiR0vWUrUDRs6jOOtY7hELfwVqg4X0n+TjOrncI8XiFvmqJ
+	41aC5wr8bLbwLl7jkKrXk2+vri+KJ5ObbAN0kYtooRXyG+nZdNyc17x8ea0Kh5iCPZ6vVU
+	EzhcwDZ4C8gV4Upiv44lFojwQMsPmNfPe5dD/MF8rbn9qadHQsLpAlA8wPqxDMpsK8CHOz
+	+1ddKOxb/mDdfbC84AyKV+HKn376dKHt8tc75eGbca4xhDaugEE4zi4YIYyj4A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745846024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4p2KNGoH4RpXnHApo5XcQ+MmbzVaxHkwzaFjw95U/Pg=;
+	b=VQsuJICzLB11hhy2zHUeeH4u0hUUdZzYJ9oKfrpOAajI2YIz7TKQkQUtPgPEBlQw7ghPOZ
+	VbPlK2rmeMDGikAQ==
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: IRQ domain logging?
+In-Reply-To: <aAijgnvHRYu_Dlqe@wunner.de>
+References: <20250422210705.GA382841@bhelgaas> <aAijgnvHRYu_Dlqe@wunner.de>
+Date: Mon, 28 Apr 2025 15:13:43 +0200
+Message-ID: <87frhsqvi0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-NETFS_RREQ_DONT_UNLOCK_FOLIOS has never been used ever since it was
-added by commit 3d3c95046742 ("netfs: Provide readahead and readpage
-netfs helpers").
+On Wed, Apr 23 2025 at 10:23, Lukas Wunner wrote:
+> On Tue, Apr 22, 2025 at 04:07:05PM -0500, Bjorn Helgaas wrote:
+>> This from an arm64 system is even more obscure to me:
+>> 
+>>   NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+>>   GICv3: 256 SPIs implemented
+>>   Root IRQ handler: gic_handle_irq
+>>   GICv3: GICv3 features: 16 PPIs
+>>   kvm [1]: vgic interrupt IRQ18
+>>   xhci-hcd xhci-hcd.0.auto: irq 67, io mem 0xfe800000
+>> 
+>> I have no clue where irq 67 goes.
+>
+> There's quite a bit of information available in /proc/interrupts,
+> /proc/irq/ and /sys/kernel/irq/, I guess that's what most people use.
 
-NETFS_RREQ_BLOCKED was added by commit 016dc8516aec ("netfs: Implement
-unbuffered/DIO read support") but has never been used either.  Without
-NETFS_RREQ_BLOCKED, NETFS_RREQ_NONBLOCK makes no sense, and thus can
-be removed as well.
+/sys/kernel/debug/irq/....
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- fs/netfs/direct_read.c  |  3 ---
- fs/netfs/objects.c      |  2 --
- fs/netfs/read_collect.c | 14 ++++++--------
- include/linux/netfs.h   |  3 ---
- 4 files changed, 6 insertions(+), 16 deletions(-)
+Gives the most comprehensive insight into the domain hierarchy.
 
-diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
-index 5e3f0aeb51f3..f11a89f2fdd9 100644
---- a/fs/netfs/direct_read.c
-+++ b/fs/netfs/direct_read.c
-@@ -106,9 +106,6 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
- 			netfs_wait_for_pause(rreq);
- 		if (test_bit(NETFS_RREQ_FAILED, &rreq->flags))
- 			break;
--		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
--		    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
--			break;
- 		cond_resched();
- 	} while (size > 0);
- 
-diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-index dc6b41ef18b0..d6f8984f9f5b 100644
---- a/fs/netfs/objects.c
-+++ b/fs/netfs/objects.c
-@@ -64,8 +64,6 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
- 	}
- 
- 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
--	if (file && file->f_flags & O_NONBLOCK)
--		__set_bit(NETFS_RREQ_NONBLOCK, &rreq->flags);
- 	if (rreq->netfs_ops->init_request) {
- 		ret = rreq->netfs_ops->init_request(rreq, file);
- 		if (ret < 0) {
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 23c75755ad4e..173433d61ea6 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -83,14 +83,12 @@ static void netfs_unlock_read_folio(struct netfs_io_request *rreq,
- 	}
- 
- just_unlock:
--	if (!test_bit(NETFS_RREQ_DONT_UNLOCK_FOLIOS, &rreq->flags)) {
--		if (folio->index == rreq->no_unlock_folio &&
--		    test_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags)) {
--			_debug("no unlock");
--		} else {
--			trace_netfs_folio(folio, netfs_folio_trace_read_unlock);
--			folio_unlock(folio);
--		}
-+	if (folio->index == rreq->no_unlock_folio &&
-+	    test_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags)) {
-+		_debug("no unlock");
-+	} else {
-+		trace_netfs_folio(folio, netfs_folio_trace_read_unlock);
-+		folio_unlock(folio);
- 	}
- 
- 	folioq_clear(folioq, slot);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index c86a11cfc4a3..e0c3a63f4f86 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -268,13 +268,10 @@ struct netfs_io_request {
- 	unsigned long		flags;
- #define NETFS_RREQ_OFFLOAD_COLLECTION	0	/* Offload collection to workqueue */
- #define NETFS_RREQ_NO_UNLOCK_FOLIO	2	/* Don't unlock no_unlock_folio on completion */
--#define NETFS_RREQ_DONT_UNLOCK_FOLIOS	3	/* Don't unlock the folios on completion */
- #define NETFS_RREQ_FAILED		4	/* The request failed */
- #define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes */
- #define NETFS_RREQ_FOLIO_COPY_TO_CACHE	6	/* Copy current folio to cache from read */
- #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
--#define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
--#define NETFS_RREQ_BLOCKED		10	/* We blocked */
- #define NETFS_RREQ_PAUSE		11	/* Pause subrequest generation */
- #define NETFS_RREQ_USE_IO_ITER		12	/* Use ->io_iter rather than ->i_pages */
- #define NETFS_RREQ_ALL_QUEUED		13	/* All subreqs are now queued */
--- 
-2.47.2
+# cat /sys/kernel/debug/irq/irqs/204
+handler:  handle_edge_irq
+device:   0000:01:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x1d401200
+            IRQD_ACTIVATED
+            IRQD_IRQ_STARTED
+            IRQD_SINGLE_TARGET
+            IRQD_AFFINITY_SET
+            IRQD_AFFINITY_ON_ACTIVATE
+            IRQD_CAN_RESERVE
+            IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 50
+effectiv: 50
+pending:  
+domain:  PCI-MSIX-0000:01:00.0-12
+ hwirq:   0x65
+ chip:    PCI-MSIX-0000:01:00.0
+  flags:   0x1430
+             IRQCHIP_SKIP_SET_WAKE
+             IRQCHIP_ONESHOT_SAFE
+             IRQCHIP_MOVE_DEFERRED
 
+  address_hi: 0x00000000
+  address_lo: 0xfee32000
+  msg_data:   0x00000023
+ parent:
+    domain:  VECTOR
+     hwirq:   0xcc
+     chip:    APIC
+      flags:   0x0
+     Vector:    35
+     Target:    50
+     move_in_progress: 0
+     is_managed:       0
+     can_reserve:      1
+     has_reserved:     0
+     cleanup_pending:  0
+
+It shows the complete domain hierarchy for each interrupt an
+irq/domains/.... gives extra information about the domains.
+
+You need to enable GENERIC_IRQ_DEBUGFS.
+
+Exposing this in dmesg in a comprehensible and condensed form might be
+possible, but needs some thought.
+
+So far I survived pretty good with the debugfs data.
+
+Thanks,
+
+        tglx
