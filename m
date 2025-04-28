@@ -1,110 +1,86 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9D2BE67
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2C541760
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745825214; cv=none; b=rJEApF795+ptjVcskeKU5w5yJhcblNQky/YTHjRm1CfaaxbjY8WfM4oKVS5/1QoJQLCPhUs1ISqyYrSTI54akNtNWpp9FuYK/TRaWHjd50yU8mpyLZesAdsHFtYqisftczJXER1h+heyaGZ6gboF9iA9YRFRV6EdXywaly7x83Q=
+	t=1745825242; cv=none; b=F62gVog0OcN5mcgav1m11w5OPmwqKof5XQOp4Vhkyr5vaLBCdorm6LBVEiXiMgbZMsqS06y2REgEq4XHx9IkDweV25kN261okA6d2Spujnv/9OTXcVaAcZqmWhPrx17HXBFDgZj+/4VRb/edXOH6u1LgxEnnnI+DSsGeb9VSzrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745825214; c=relaxed/simple;
-	bh=nDBkBJAdWu/ACY86EyWr8Sx3/0ngI6TPK6V9GBIUBiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sA5NzaAGOscOc9ywYFqR6M4Y1RwyKdsWECfwt/Lc5eScRL6F+OdMJKF0C5xpHyCv/W4tNaQzAH3v7iOxUCFts10ibc7fnKOpLNkjUNTQmKtuHjm0P2NT1WGVX1ig1NHSg9vaoyOcu+jEviEih1uDywSZqUQEFSAkviR1RoCeS9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=BOcE2IqS; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1745825242; c=relaxed/simple;
+	bh=uuLa9PuejMEFVOYGkNw6Lcd+L7bwy0itJA8DqgQSQgY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Nifqk4TXWNZs2rUlATFsQGshKPARVThuBE8Of3w+i6ykmI2F3HNjVsHsYKP/Nz9HYy2yXbZVcmdxlgeGICRnuFDwrJKCrA9wsAhAqpJzzKrMJf4MOJx5msjQI+A789FkF+UJ5djiTIr9t0+ouTr0+aDiaENlaukUxb2LMEIrK9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oao1ojIp; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="BOcE2IqS"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 99A4E240027
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:26:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1745825205; bh=nDBkBJAdWu/ACY86EyWr8Sx3/0ngI6TPK6V9GBIUBiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=BOcE2IqSE0aj4vSs00NcAdlFm8ATmFEhh9teUyMmf0JirIaIWhgwB1vb2PndV51Xs
-	 DeOwScmMKSPH4wtviibnNMzL1gBjlrmeWAo7YWmOy9GH59FrZwhqj3/u548KECG1Fn
-	 UTrRW8YU2WWYkc+rrFqL12G1f+FJiDHnBnzAhVh20btLU4XT6l84J1O8rHrL8xsyxE
-	 NNKOO1THUDZahjCzlAucJlX4qtQdrgWTXJuPevlaS8hmOqzM8Pg3PYZOwHbPdi/+xU
-	 kzTbPBhNVrcUdj7xjTBlu1pA7oiSdaqZK8YGTapplJdQeeNKFx+6u9JjzqT50Yoke5
-	 5tNdOFlnxVVrg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZmFPZ1fG3z9rxG;
-	Mon, 28 Apr 2025 09:26:42 +0200 (CEST)
-Date: Mon, 28 Apr 2025 07:26:41 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: j.ne@posteo.net, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oao1ojIp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745825240; x=1777361240;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uuLa9PuejMEFVOYGkNw6Lcd+L7bwy0itJA8DqgQSQgY=;
+  b=Oao1ojIpqo1x9potXoWqO6QtvqLoHbCvWWhUKBqcIZSIm8qsEKjT+nIH
+   dyCQeZXpyJ1ItAbXzhglHcEVksJlGspucKHODwhliBqZ3qvwqCHd7o/ZS
+   MW45sZvObzRd26LfGDt3UaAw7FfsKbyw8XEy9YpQB4MeBvew5uZuR9bG/
+   VhN/ChMIZkexiJFw0SAhIKPmAQiijRp+nS/Lbgp6Zp39sRFefNy01CdVh
+   yuMl67JPHrtpX5I17tO9QxAeFxNagrAuBMJnj/f/FToT9o034WRH4EpNp
+   H8AoEKDCmF2H9I58d5PBiW3j4Rmb+X+L0sHsUtnrF/TdCJYBxcXN/iuKM
+   g==;
+X-CSE-ConnectionGUID: Z5KWAXZnSFmFFURoWsZ0qg==
+X-CSE-MsgGUID: UYhxFXWbTxSQtcYAqkMJEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="50057608"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="50057608"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:27:19 -0700
+X-CSE-ConnectionGUID: ZKkk4cEbSl6cjQGobNcf2A==
+X-CSE-MsgGUID: 7fyyZ4DrTE+um7OAPTQjWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="133409728"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 28 Apr 2025 00:27:18 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D16FD1BC; Mon, 28 Apr 2025 10:27:16 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Alexandru Ardelean <aardelean@baylibre.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: allwinner: orangepi-zero: Enable audio codec
-Message-ID: <aA8tsao6hhW50k4e@probook>
-References: <20250418-opz-audio-v1-1-4e86bb5bc734@posteo.net>
- <CAGb2v67-1tk0uAmYL-y6479itUxBJua76qhjn+0tTsN+Ni_a1w@mail.gmail.com>
+Subject: [PATCH v1 1/1] util_macros.h: Fix the reference in kernel-doc
+Date: Mon, 28 Apr 2025 10:27:15 +0300
+Message-ID: <20250428072715.3265168-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGb2v67-1tk0uAmYL-y6479itUxBJua76qhjn+0tTsN+Ni_a1w@mail.gmail.com>
 
-On Sun, Apr 27, 2025 at 01:28:58PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Apr 18, 2025 at 7:32 AM J. Neuschäfer via B4 Relay
-> <devnull+j.ne.posteo.net@kernel.org> wrote:
-> >
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
-> >
-> > Line out playback and microphone capture work, after enabling the
-> > corresponding ALSA controls. Tested with the Orange Pi Zero interface
-> > board, which is a (mostly) passive adapter from the 13-pin header to
-> > standard connectors (2x USB A, 1x Audio/Video output, 1x built-in
-> > microphone).
-> >
-> >   https://orangepi.com/index.php?route=product/product&product_id=871
-> 
-> What about the USB ports?
+In PTR_IF() description the text refers to the parameter as (ptr)
+while the kernel-doc format asks for @ptr. Fix this accordingly.
 
-Good point, I could test these. I have not mentioned them because they
-are not related to audio.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/util_macros.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> In any case, we don't enable peripherals on "headers" by default. That's
-> up to the end user. The description for the whole adapter board could be
-> an overlay that users can then apply directly.
+diff --git a/include/linux/util_macros.h b/include/linux/util_macros.h
+index 93b30c1dce60..dcb836ef0cc3 100644
+--- a/include/linux/util_macros.h
++++ b/include/linux/util_macros.h
+@@ -88,7 +88,7 @@
+  * @ptr: A pointer to assign if @cond is true.
+  *
+  * PTR_IF(IS_ENABLED(CONFIG_FOO), ptr) evaluates to @ptr if CONFIG_FOO is set
+- * to 'y' or 'm', or to NULL otherwise. The (ptr) argument must be a pointer.
++ * to 'y' or 'm', or to NULL otherwise. The @ptr argument must be a pointer.
+  *
+  * The macro can be very useful to help compiler dropping dead code.
+  *
+-- 
+2.47.2
 
-For features such as pinmuxed UARTs (already present and disabled in the
-dts), I fully agree, because they could as well be used as GPIO, and
-that's for the user to decide.
-
-For the audio pins, there's nothing else one can do with them, as far as
-I understand it. It is possible to use at the least the Line Out pins
-with very minimal setup, e.g. just connecting the pins to headphones or
-something else.
-
-I'll clarify the following points in a comment in the next version:
-
- - The audio signals are exposed on the 1x13 header described in
-   https://linux-sunxi.org/Xunlong_Orange_Pi_Zero
-
- - The pins can't be used for anything else according to section
-   3.1. Pin Characteristics of the Allwinner H3 Datasheet.
-
-Although I would prefer to enable the audio pins by default (because
-they are present on the Orange Pi Zero board), I would also be ok with
-adding them as status = "disabled", as is the case with uart1 and uart2.
-Please let me know your opinion.
-
-I will test the USB ports and write a devicetree overlay at
-arch/arm/boot/dts/allwinner/orangepi-zero-interface-board.dtso
-
-
-Best regards,
-J. Neuschäfer
