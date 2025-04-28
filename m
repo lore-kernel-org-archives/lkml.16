@@ -1,104 +1,62 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18C98BF8
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB838BF8
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745800395; cv=none; b=hfhS4mUamVleIa6wSLGVZbnODBUaPu3Ka/L4oi7JLXmorpaSN5kd4eG/xME7v0dPXA5wVjDWjQV5CxdiQhsTWtSxiFzP65OJ6jFUbqHxIzJ8m7O5GLsZGMURKoS1EtTZClrC59J+7NaQZvOqzQ0CocIEtwwclA59bzteiuFAal4=
+	t=1745800498; cv=none; b=W/keWrpPRkgM6cKwBaKCH2+3SLR4YjAeQ9y35+pCdbt/dpaSyuhFJ7MxvT1sqcPgeUgYRhqxdTPsBLWrsmlWUkDUg4YoaprhSYvEOjlKp1nHt+p6o7jFEVU771wQfvL51EwzZEdlNXxQ29yfqjEX4d8pp0MxF6xbg1KM3YOBXP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745800395; c=relaxed/simple;
-	bh=KWlpZNyqBeUzgA6DRPgaYYjLPVFnqWdLvr6QQNXuNZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5/4PO7tkd4iiyPCimy7A7ot6q6LDKTgTQ5knLrOjtue3I9Rvo0V/b69/ITjo83aCGsppIeOsvVIx+yzJgArdIZ6DmYD0p6xMIrmXQcArEcaXO2gPajZGs6j0w2INJbHF0TGSiQQqwJOFrekAqmxj50QoGX7qzS9EwSinVZ4KlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=utGJtFf1; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1745800498; c=relaxed/simple;
+	bh=U0PCGX0LkHuJdJA3tqVgvghEi79nAtIOgo4xexwYPfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDCG0KVMUp7wJw8X9EUtdo2cva6Gzc+t8ckK4wtcY/CXxmULv/+ZGXQ/7sEN32pkcaSnX3YD5wst+SKZCDLoblH75S3tQpDIEHD794XXjsqvOc02jXYI+WJqsm0dYBz1A1OKu312uhCJqZU2AAT+kxL51QYyd6V0STaEDxMNXhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OWsHx8oe; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="utGJtFf1"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2DDF92C0276;
-	Mon, 28 Apr 2025 12:33:09 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1745800389;
-	bh=o47hT6+3qTo3CkIy0WeqsTTIvKyfouf/pNOV0L8cppE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=utGJtFf1gfE7NrsaoEJKTZuBmLgs45VfiXXIL+MC+AkuVG6YeXcT2j1ptdY12EHfC
-	 l9ynjHp6XIq2MnvfCDbIOVBCEn+lovVNymWQ22NZB9jbg+VKgVYcBoefjTqWtQno7J
-	 kM+rGs3O/DQcfM73QqwIaorMR1leq5c7wAI0kOCqEiBLvEA4CLiMTiIZGrWrK2X5bH
-	 I4Ke2nCbib+waYvWZHqfWMyuHwTWL/N3SxJ6nlD7FQbgi1oQj3teXY06XhA36Q+6Im
-	 JoCyZF1uiDrOXM6ieg/DtH6la27C0iQGg+KMDEyzacN1QgWg90Qicja+D0MOfhtNMq
-	 QsVUPw147/k2g==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B680eccc40000>; Mon, 28 Apr 2025 12:33:08 +1200
-Received: from aryans-dl.ws.atlnz.lc (aryans-dl.ws.atlnz.lc [10.33.22.38])
-	by pat.atlnz.lc (Postfix) with ESMTP id 9BCDD13EDDC;
-	Mon, 28 Apr 2025 12:33:08 +1200 (NZST)
-Received: by aryans-dl.ws.atlnz.lc (Postfix, from userid 1844)
-	id 96FB62A0B24; Mon, 28 Apr 2025 12:33:08 +1200 (NZST)
-From: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Hans-Frieder Vogt <hfdevel@gmx.net>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v0] net: phy: aquantia: fix commenting format
-Date: Mon, 28 Apr 2025 12:32:48 +1200
-Message-ID: <20250428003249.2333650-1-aryan.srivastava@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OWsHx8oe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+ohg2r1VBieAEnu8IhniUM/lCTz2XNcoEngopih93fU=; b=OWsHx8oenb7Ey+keHkr/mXePLl
+	BAcaYFrmwYgT7MmqQTsuhRKOLk9Dd/uuk0NPegKhmwbsgu+NWwyHHRdpZBeQe9JBNkzebKuNGQSzn
+	LJwMTd4/CDOd+JxS8ZwLrsAVhef8V3X93SdG2VBfQqkmvs2gGMA5Pgdx7W6AdApRPER3Qd7MXlBWJ
+	iW+vFpROMXxNuPk2ePNsZdHUnZaqcKi8qezG/XUOiKuhFOytdfVLpborXT/hgQTuUqw/PRiBpEWIL
+	z9p+VrMdyvX79DD5p1UmJfvLXdvVIIX/Gb4ES4O07mKj5cuscVmfddEfQ/GVuZDFmvkCaK8SmplWn
+	UQL+mAoQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9CSG-00000004bdn-1wjs;
+	Mon, 28 Apr 2025 00:34:40 +0000
+Date: Mon, 28 Apr 2025 01:34:40 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] mm, swap: clean up swap cache mapping helper
+Message-ID: <aA7NIOumlu4d6HgX@casper.infradead.org>
+References: <20250427185908.90450-1-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=680eccc4 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=4pPyy3GM_lJK_al_TTsA:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427185908.90450-1-ryncsn@gmail.com>
 
-Comment was erroneously added with /**, amend this to use /* as it is
-not a kernel-doc.
+On Mon, Apr 28, 2025 at 02:59:02AM +0800, Kairui Song wrote:
+> This series removes usage of folio_index usage in fs/, and remove swap
+> cache checking in folio_contains.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504262247.1UBrDBVN-lkp@i=
-ntel.com/
-Fixes: 7e5b547cac7a ("net: phy: aquantia: poll status register")
-Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
----
- drivers/net/phy/aquantia/aquantia_main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/a=
-quantia/aquantia_main.c
-index 08b1c9cc902b..77a48635d7bf 100644
---- a/drivers/net/phy/aquantia/aquantia_main.c
-+++ b/drivers/net/phy/aquantia/aquantia_main.c
-@@ -516,8 +516,7 @@ static int aqr105_read_status(struct phy_device *phyd=
-ev)
- 	if (!phydev->link || phydev->autoneg =3D=3D AUTONEG_DISABLE)
- 		return 0;
-=20
--	/**
--	 * The status register is not immediately correct on line side link up.
-+	/* The status register is not immediately correct on line side link up.
- 	 * Poll periodically until it reflects the correct ON state.
- 	 * Only return fail for read error, timeout defaults to OFF state.
- 	 */
-@@ -634,8 +633,7 @@ static int aqr107_read_status(struct phy_device *phyd=
-ev)
- 	if (!phydev->link || phydev->autoneg =3D=3D AUTONEG_DISABLE)
- 		return 0;
-=20
--	/**
--	 * The status register is not immediately correct on line side link up.
-+	/* The status register is not immediately correct on line side link up.
- 	 * Poll periodically until it reflects the correct ON state.
- 	 * Only return fail for read error, timeout defaults to OFF state.
- 	 */
---=20
-2.49.0
+Thanks.  I've been removing them as I've come across them (eg
+fcd4904e2f69), but I haven't gone all out to try to remove it
+from all filesystems.
 
