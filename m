@@ -1,110 +1,81 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE6B27A90A;
-	Mon, 28 Apr 2025 16:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B54714EC5B;
+	Mon, 28 Apr 2025 16:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745856770; cv=none; b=YQnbi6XMLVqdQFDRRPvZNfAqLUdVAs5ozkd4jqEhNePkb6MigGPtvly9y9J+ktlLCxQelrFR/BPIgQVfRvnuukluZBHPFrjY8b8Q1ySWEAYpg2gtd+f3lGTS6ka5SxUb4TKAoJjr5SQvRtJh+BqzYTDNstskASZVj1EraHSiyYY=
+	t=1745856855; cv=none; b=RmyX4V7MuV03Wg0x8TzUdDUjmL14giuRKn4lANJHc7jMrqkxw86FIJwC+fF4ItPF/290fK1m56AhPlm1oGtUkJisOUqWqQP9zc0OLwWuEAa1WuvnV9ldb3htvQy9tDLJArEKfBDmOz5GENlkGckoHOMaN33cMIqdkZP09GKBVfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745856770; c=relaxed/simple;
-	bh=ByRxh52fka9P9JRSeYUSXOGXCFjMN0BA0b7fy8L5J5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZenEJ+y+dvtYov4+ZDMIKH785WS1pmnXOrgnegTuVVy6Foh6v3wKGPec+rEgA6dbjGBKpHealmcOzuXumXZSdXmIQKO6ERHqQPK59KwuejHdb1+ao1a1/S8mbI03OKC6hKmm5Wh7tmoIH9LEfeJwrdiEP+qhmSKHMr2tf1aZVmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3MPVIkG; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745856855; c=relaxed/simple;
+	bh=dieXJtGrsIb7S0Z/o5b2skI3aa8C+cWrhhwXmEj18w4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hWIJ/x+O3suYHqyc4x3EzeJIa4GUP9lT6oOpoXoPU5/C1++7NZ6vzIYFNvThTZzH3Wd/ZAwq48fPgzmk2h/AQnHGmvh/WIuU4nTusKSrIpyRL1hoL6WcYfaCN2ThwB4fNBXqPGzb9XfBkl52QZ2T3JUFg+26d0k+PPiEPZnQDvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaZyEU+a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3MPVIkG"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so7869263a12.1;
-        Mon, 28 Apr 2025 09:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745856766; x=1746461566; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJ6LdQEoc6+Eq/+8hw96j8E1cLvu8eynjDejEQpx0P8=;
-        b=c3MPVIkGrhShKrFRR3d3nAn96ezG0/TESRSGPQtlpJ/KmTqTea8tG7WLcObrxBm7PG
-         cyRafX+ItIDjSRrLWDatzqFWVIRCzHBRAGPAwkXFHHwVYxDjEz+jzo8JZ49twTfkB3ws
-         mZq6TRAeIZ01uQnOhwfgCa+34QXRL+1BaVPwJXWQtJf81Fc+w4uTTEegwK/Z9xBQgN6+
-         TVpWQ0rkQLsPHdP6gsfVu5hOPooJKB8PhaoUC7s9GC6h/YlXCb1n9m5ojUFRyCgF4JPv
-         bv/xfOD2+sj4IMHf9xsYaTMhljqHQtDyD6aCmaoEK3WXYo6Ya2srPpbsY4FKXHDv1Yqu
-         ixlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745856766; x=1746461566;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tJ6LdQEoc6+Eq/+8hw96j8E1cLvu8eynjDejEQpx0P8=;
-        b=RXQbeP7+9iUZRMwzaQEndk9aTWMlbW6cvUagFdudyerrDHxgnDCjRBAVkpJ0XAnM75
-         q/+7RT19dgiMA0hl1QkWz+KL90OUFPavNQb1HOLG73g6YVK987RTFHvOWS3MRXhQrx3S
-         gJPByF4yqkNTJodRkORi+ImWYdPl3bJ6YWlsbq/eIsiD8tGf4XYcpnU+5EpTbwhettuD
-         wWL9v8fU+gqvFCExK/SVkZVNCfQY3QyxfBFBRvUgOLs1Y6037HwDKapUD39cH0ag7xe6
-         mDKIJyU3rOo2U87wRhMzd8UAfGhm8MmQZgEVc24/p7qR7GExv75T8S5jCOUG0bBKAWVL
-         /TuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoZ+P/hCgCRnkj5raiO58IFM6cEiX7mTlPd6uhoC9FE0hIqbqBOcd+eM6DoUP40IWUGBGX9noDSBwy4Tk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDDMVg22NjpxJykdCuZlZxDyvukRh/Myl2N8NCK1PyzZ1VkEWs
-	shUevpnXPrImhFaDKoGm7+7PU/mIY2gud/suesR2fXNs0iQMhkhn
-X-Gm-Gg: ASbGnctinHU/qR9k964E2WEAcwDjxDfAF9B9R2BYWSlhCj5udzDqp46agMZSA7ghJ0Y
-	d9UVP/ZdDDIddAKdpLDFLKeoZdyxEBQINOz1v8J/forsrR0Ouawx2BoBudgTCUGuX9sgVZtGBw3
-	FIJRnKKdMhOeUQort3rS3YgS7E7cmYXq5DTCIMLa9eW4fryPqsD6l+sq10ioGuhhGHFobOKqqyd
-	Ef+D2oSVPvq0OntA8/yAF0MP91lU/kfkXu2c0SyW8dKeD6mZO5jBTNJf4EAA7Q9t9H3tWrXDbQ7
-	A7hZGAumX9DFdc0SBLovEMgluU8XSX9TGjynQFXG/R7sutq+D4513uVtUNdFGJSmRUDYn2D+6+a
-	EBMLPBBdu+1qIlA==
-X-Google-Smtp-Source: AGHT+IGlL+aSuwZFAf7ef5SH8B09/XSBqPd7PuCHqe4A2eNjIlK/w5Rq0KLs+zc2T078YQ1ntWDF0A==
-X-Received: by 2002:a17:907:7daa:b0:acb:5f9a:7303 with SMTP id a640c23a62f3a-ace8493c1e3mr829040766b.35.1745856766249;
-        Mon, 28 Apr 2025 09:12:46 -0700 (PDT)
-Received: from playground.localdomain ([82.79.237.157])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bc36sm640429266b.33.2025.04.28.09.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:12:45 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Mark Brown <broonie@kernel.org>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: topology: check if machine is NULL during tplg load
-Date: Mon, 28 Apr 2025 12:12:36 -0400
-Message-Id: <20250428161236.126200-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaZyEU+a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C3DC4CEE4;
+	Mon, 28 Apr 2025 16:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745856854;
+	bh=dieXJtGrsIb7S0Z/o5b2skI3aa8C+cWrhhwXmEj18w4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aaZyEU+ave1e6P7101soHdSaiB3jtUwSkxF2MqNcRUCnSi5RvjV34OoRqVvrZQmZC
+	 EL9LSSPOCGHLT7U8lDmj5xaCrZiqkKZd8lg4wmomn+ndjJ4fD7qCW/1dbgZOfxWuD0
+	 yJyyxYsGP56eeJGjepr/XCphxMq1cJy/IOYja5GWbgmc2LjeUamaUZfkPyzK//siBU
+	 5WB2Folb7/dJtPFkqJfgXHkq4rdT2MjwkbudqINKQ/ownhjiCiVy35Y1acfZ0Sevzj
+	 73m2vS6TOZXh+5zXCJLRJI07RBrXegkOqCIbmbXp8/kG+nVdi9RkJjK6FqWep5QqfX
+	 RhT2uwGofrOjw==
+Message-ID: <9d8abfc3-062e-4566-bf2f-42881ad36402@kernel.org>
+Date: Mon, 28 Apr 2025 11:14:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] AMD Zen debugging documentation
+To: Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <87frhysyyp.fsf@trenco.lwn.net>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <87frhysyyp.fsf@trenco.lwn.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On 4/23/2025 10:02 AM, Jonathan Corbet wrote:
+> Mario Limonciello <superm1@kernel.org> writes:
+> 
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> Introduce documentation for debugging some issues on AMD zen hardware.
+>> As one of the debugging techniques read and add information for
+>> S5_RESET_STATUS register.
+> 
+> I've been assuming that this work will go through the x86 tree; please
+> let me know if you'd like me to pick it up instead.
+> 
+> Thanks,
+> 
+> jon
 
-Check if "sof_pdata->machine" is NULL before calling the machine-specific
-"get_function_tplg_files()". Otherwise, for OF-based machines (which set
-the "of_machine" instead of the "machine" field), the operation will
-result in a NULL pointer dereference fault.
+I think that's probably easier, patch 5 needs patch 1.
 
-Fixes: 6d5997c412cc ("ASoC: SOF: topology: load multiple topologies")
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
----
- sound/soc/sof/topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
-index e19ba94f2c80..5d3ee3a86392 100644
---- a/sound/soc/sof/topology.c
-+++ b/sound/soc/sof/topology.c
-@@ -2481,7 +2481,7 @@ int snd_sof_load_topology(struct snd_soc_component *scomp, const char *file)
- 	if (!tplg_files)
- 		return -ENOMEM;
- 
--	if (sof_pdata->machine->get_function_tplg_files) {
-+	if (sof_pdata->machine && sof_pdata->machine->get_function_tplg_files) {
- 		tplg_cnt = sof_pdata->machine->get_function_tplg_files(scomp->card,
- 								       sof_pdata->machine,
- 								       tplg_filename_prefix,
--- 
-2.34.1
-
+Can you drop a tag for patch 1 and patch 5 (from doc perspective) so 
+that Ingo can pull them through?
