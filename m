@@ -1,137 +1,125 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABD125DD1D;
-	Mon, 28 Apr 2025 17:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4811B29115F
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861215; cv=none; b=EKLyw3UZHIRqyM6w7OWe4NTu6W1Mvu+30W8PIcLS+czvIvdbqEtd2DB94//cogVE2c1x3VkgBnOiUp0Vc21i/B+XOJWMVnyZORtMcx5wMFFLys5V+iEwNushpaf+5uOm1LKBlRYh+Sz8fAopMcYEA6+GCMZxMbqa94sgal/J6hU=
+	t=1745861340; cv=none; b=XnddKAx8cOqdNkuC4lXmMap6QNvuh2Ti+QgY0bh3R0+7BA47hrjjxb+EiQKk9aemdffc7YLeOHpj33rwR5muNlIqQOqf6sGRXmpsDpiqTGLUOIcGt+Zn1tvBODLMKkjBH5xCpEzTeQOWpEXg+Jo+yK5Gm6o5G9AluoWVCpf/x1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861215; c=relaxed/simple;
-	bh=BAE0xjLoAFsLw6DzMRireTSZNToUHrdgumSFpIR1FzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ePyZ9HUKH5zpCfE5iNUrnUF9r3mhVDjgFE+szrARDIKw/Qq2OOtcaXEVl8NNasJ8EyIDzZECCbsAN8SWE+so2C0/vyHCoRjWdZVwYucC/Aa0fXCBodZZ5C3wXxigqzcQduJ2GMPLsHET7ngxlGVzJ3Di50L8MUH0xfOe+nxDpZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k5c2Io/X; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745861340; c=relaxed/simple;
+	bh=hvj8x3HVmp9P+1p1D0eDo1pbK3RjBLaMP05027S3Y0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kt3hQcQ57pAdPi8fQVnWBVhLY/pjVw8ou5hNHIndXdbIs9RXAjXOHk9HEgWTm3XSim0TVLMwcVHEIaBanS52fn5/Z4varY8xMHPT28gR2+8YAf555e/EGSId2YP62pA5ot1XN4wq0/Iqx1mp/ilFMmyOvTzi7/mTxPnfKrKHQ4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S5JB1327; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5c2Io/X"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30363975406so677979a91.0;
-        Mon, 28 Apr 2025 10:26:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S5JB1327"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240aad70f2so15705ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745861213; x=1746466013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vRRpRkZSvOkRGfLbThuRN6s/DKswi9Znb1ZKqEIbpb4=;
-        b=k5c2Io/Xvsfc40BnvKoicP0a98scV3YYmQpmgC1sgdN8mTxOQupuX/PhKYuYSEm7D4
-         8xWkEwqjBmVZiWi1otgGKAU4DBXaA0mF3zVBQiXo3AMQxLRg5b88MhszmjkYxZUCOvcU
-         WnS13vS2Os1huBHoXZJyz+MpJuq24z2MJPALXqqxzm7qpBvFz2XEqfOJV5l93JWim6Dy
-         ouP1LQAVm7BjLQzZZoSJvtEBp4uxjlL9vMDKeFEjLCJCAplK1kpiMXtth7nyXkm3CThv
-         UVSiWuygjNNtnThay9lkraNBNlNM88xiUVL6a80vGF/c0GVGRfEsmbzkvDDkLb6Vp7ji
-         bQCA==
+        d=google.com; s=20230601; t=1745861338; x=1746466138; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0r7+wCllJmaKxCe01hHV/d2aOrZfvhrAsuNMyHCgYc=;
+        b=S5JB1327JpJxaMmLXm5NYrTJfpPRRsFYe8t1MsMX+g9eo/hWOYhsJFIDjGpiGZJ+Tw
+         Z5dOGM/O/RADOG5X2JnhKBjkp0dsG9DGbAVqPHVHkFZhJKwtYegN9ReqK7kU9QZG75tu
+         83RGNj8AxSp5xemBFUBeylMeuO8FbMzw8SHAvfNleUz2CUA1uSXsco4Bzli/va3N77Rm
+         vCAxyo2xUHI2E9OwLe3x8Fd5KSIhnoqYslZAxFrLq1qFxEZ0sVXl2vZ5EQWdB2lrqMuf
+         dGTNrcUACF9khh3UA/XeSQrMsh5hPyPrlP/HUceBlX7dOJmj0WR06R5K/OpdcPmqx7KQ
+         uXng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745861213; x=1746466013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vRRpRkZSvOkRGfLbThuRN6s/DKswi9Znb1ZKqEIbpb4=;
-        b=JmqWzMzWn/l0um8ATfeKWuq/8Hf0dSqWrVoF7y4B6PCP8/TfQQ6J6S25FLLxlQ/YQI
-         xBxKLic6xE0l11v9Bm1h14Nqqf2byV92Zk/3Ap5EP+wz+5JSSwnIYlpEq6tk1g1Ehz0O
-         YMdQ7HRuBrbv7BlkRduEglhY9crJ3+cnHDtALLZDMDnxwVjhN/TKyIZjkV6mhXota3RC
-         o2vbP973O/zMfIhq+gcc65bKLlhqhd07OH8M1TUCH8VJmWqob/etItT0BTOW1THXf2Ki
-         1awtqScs4kmeRYOYi5J5E3Vjk+9nB8X1EFLZpZbHm9/Xy6ONMoQVq1yJS63spEnyiZof
-         4oVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMfVaHMXG26apBJmdK5P5Yyf7QO2/akiR8p1OVpWClgxo9mDLXp3wUnjSc5NYEtHKvgh+DRDTxHQA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9tDC7L/yi01Sa0DKQ6gWXI0IQG6Io8J73X3B2YKLDUtUtZPY1
-	myDmBPW7vUYebP03joneZ+Efg83+ocxWvN5PUIfLtKjSd72QQSHMWtO1zAtoVDzaARlXuDbvNzF
-	wEyZRtFMPJYnRU1R0OHQmKIOg3cY=
-X-Gm-Gg: ASbGncsIEXK3R/sW5aeSLSjcNY1Sq4cZW7B2FGo82vTmifY748u6RwejKWc8nfCc3UK
-	Tlimr+igQDh3MlOuW3F/7EJAZCxODbeeqVdf/1M53uifMLe60m/U6Ot76fV4qzKTkhTYb8ZsZhR
-	0mqBzSc6/A1+0E2Ppwjj0dFg==
-X-Google-Smtp-Source: AGHT+IHqDjJkfJR4DtyStA8z8/DstOOvTIwPHnHU+nlRgn190Mwia3pBgMb6g4BVjMeJDnyZ9gmvCov+/FaAprE4xPk=
-X-Received: by 2002:a17:90b:38c9:b0:2ff:4be6:c5bd with SMTP id
- 98e67ed59e1d1-309f7ec76f5mr6947847a91.8.1745861212890; Mon, 28 Apr 2025
- 10:26:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745861338; x=1746466138;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l0r7+wCllJmaKxCe01hHV/d2aOrZfvhrAsuNMyHCgYc=;
+        b=Yz/v6Ix3BoylX9MCRBe93Bah8InqZcShh77fnHXOxcAMd1JtAsTolcz2inGQA5FWz3
+         guUCZy7xOII/HqfyT1IdEEokTe1pEaUZiwv/+3xpIqJu2wn8ggkOcI5UAM7QYj/bM/24
+         ZhAqpMHAswbut16Jf/pSQyL/T2jE57/6yBsuvvLnjenPSz0rJVQjc1Y0onC7P4hlBYu6
+         5T4OZWV0kWU4OuZOl+ruuujuRRQSKmNkPxRuLtw6hO787XTx+p22vQkMMYqBXtd0s292
+         uKASjXQs/D26T4S79d0DscuQt0nLImd99WkXO2+LKpiyFmE+DYJCz0uE4wWq4IpqvGdl
+         0f3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWjHNuAdJQjQymKW08D0czYp8oid4rhYFwZ+t/uwIM3nuxd75k0Q/RYS/ocrl+lfJEKagXmdg/HOoKJXCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOTe7dCDQscf4e5dyaRT5LNFtp2lQyRb7u/Q6ESWq5FTLEGhIX
+	ob18PDeKe3Vkhzgex5DNMYC9wCUw1Adiy+/mNmKGLLoIJPKAhAgwcQqxFKnNlQ==
+X-Gm-Gg: ASbGncuAe6Ez/DLw08fCMzebTSM64BOp4xldw7VcaYevBhtN09c1zBDOIhS59ldnV8C
+	BXyYHUEKBErftv1bQnufNVaY63vjwm9eFLaDu1IYaZXScQxo35lGT/5JyfpvwN8xRNEEk/61RV3
+	iawN6IuWOKuN7Flui514zFvxqKdhrOqpWDEGJAQz3cbJx+on0RXYBHEaXXtE+KQQ5cON0wZ/BCX
+	jqoqDwgnbGgbogBntCFm9kiSwY3T9DSsA95UDBvRU2q66vj9a+WQ1RGHFs61mmA8iIcif1d8D+A
+	1Q0ZigWPKSQZ1H2in9uA5VAFW86kTOz2RFkkzhlS0IA7xsIWBWYphqbFJ6gI5cbhjznmgqLm
+X-Google-Smtp-Source: AGHT+IFvvbXqVLW7M7K4eTP2s1tq5nZj/xJsE94cw7osWMiH1XhKOhdmN98bqT0YcPcDS66bSCITtg==
+X-Received: by 2002:a17:902:ea01:b0:21f:2ded:bfa0 with SMTP id d9443c01a7336-22de586f035mr708455ad.25.1745861337961;
+        Mon, 28 Apr 2025 10:28:57 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef061bccsm9296497a91.18.2025.04.28.10.28.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 10:28:57 -0700 (PDT)
+Date: Mon, 28 Apr 2025 17:28:46 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Baolu Lu <baolu.lu@linux.intel.com>, jgg@nvidia.com,
+	kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 02/22] iommu: Pass in a driver-level user data
+ structure to viommu_alloc op
+Message-ID: <aA-6zlZNQ6NsrUqw@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <f985e2802a50b5867c9d4d3182ae7b4944a989c5.1745646960.git.nicolinc@nvidia.com>
+ <e569c927-65ff-4c0f-8922-45e404fefc5e@linux.intel.com>
+ <aA+4mRrGuUnpG/dB@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427023625.14327-2-bagasdotme@gmail.com>
-In-Reply-To: <20250427023625.14327-2-bagasdotme@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 28 Apr 2025 13:26:41 -0400
-X-Gm-Features: ATxdqUHOPGCxsMpNTL-FiIUGq0AA51NTliFGGx7x0GccxVRPmLRNZoEaL_D7Qas
-Message-ID: <CADnq5_ONJ0wyExs33aSt_jWZQ9RmL2q=nE6OkzN_4HoS3vZ9+w@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu/userq: fix user_queue parameters list
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Documentation <linux-doc@vger.kernel.org>, Linux AMDGPU <amd-gfx@lists.freedesktop.org>, 
-	Linux DRI Development <dri-devel@lists.freedesktop.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Lijo Lazar <lijo.lazar@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Ramesh Errabolu <Ramesh.Errabolu@amd.com>, 
-	Arvind Yadav <Arvind.Yadav@amd.com>, Sunil Khatri <sunil.khatri@amd.com>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aA+4mRrGuUnpG/dB@Asurada-Nvidia>
 
-Applied.  Thanks.
+On Mon, Apr 28, 2025 at 10:19:21AM -0700, Nicolin Chen wrote:
+> On Sun, Apr 27, 2025 at 02:31:54PM +0800, Baolu Lu wrote:
+> > On 4/26/25 13:57, Nicolin Chen wrote:
+> > > The new type of vIOMMU for tegra241-cmdqv needs to pass in a driver-level
+> > > data structure from user space via iommufd, so add a user_data to the op.
+> > > 
+> > > Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+> > > Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
+> > 
+> > It would be better to add some words explaining what kind of user data
+> > can be passed when allocating a vIOMMU object and the reason why this
+> > might be necessary.
+> > 
+> > Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> 
+> Sure. Will do something like this:
+> 
+> The new type of vIOMMU for tegra241-cmdqv allows user space VM to use one
+> of its virtual command queue HW resources exclusively. This requires user
+> space to mmap the corresponding MMIO page from kernel space for direct HW
+> control.
+> 
+> To forward the mmap info (vm_pgoff and size), iommufd should add a driver
+> specific data structure to the IOMMUFD_CMD_VIOMMU_ALLOC ioctl, for driver
+> to output the info (during the allocation) back to user space.
+> 
+> Similar to the existing ioctls and their IOMMU handlers, add a user_data
+> to viommu_alloc op to bridge between iommufd and drivers.
+> 
 
-Alex
+Ack, with this change (addressing Lu's nit).
 
-On Sat, Apr 26, 2025 at 10:37=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.co=
-m> wrote:
->
-> Sphinx reports htmldocs warning:
->
-> Documentation/gpu/amdgpu/module-parameters:7: drivers/gpu/drm/amd/amdgpu/=
-amdgpu_drv.c:1119: ERROR: Unexpected indentation. [docutils]
->
-> Fix the warning by using reST bullet list syntax for user_queue
-> parameter options, separated from preceding paragraph by a blank
-> line.
->
-> Fixes: fb20954c9717 ("drm/amdgpu/userq: rework driver parameter")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/linux-next/20250422202956.176fb590@canb.a=
-uug.org.au/
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/am=
-d/amdgpu/amdgpu_drv.c
-> index b9a1ef343c79cf..ec8057597c5aad 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> @@ -1115,11 +1115,12 @@ module_param_named(rebar, amdgpu_rebar, int, 0444=
-);
->
->  /**
->   * DOC: user_queue (int)
-> - * Enable user queues on systems that support user queues.
-> - * -1 =3D auto (ASIC specific default)
-> - *  0 =3D user queues disabled
-> - *  1 =3D user queues enabled and kernel queues enabled (if supported)
-> - *  2 =3D user queues enabled and kernel queues disabled
-> + * Enable user queues on systems that support user queues. Possible valu=
-es:
-> + *
-> + * - -1 =3D auto (ASIC specific default)
-> + * -  0 =3D user queues disabled
-> + * -  1 =3D user queues enabled and kernel queues enabled (if supported)
-> + * -  2 =3D user queues enabled and kernel queues disabled
->   */
->  MODULE_PARM_DESC(user_queue, "Enable user queues (-1 =3D auto (default),=
- 0 =3D disable, 1 =3D enable, 2 =3D enable UQs and disable KQs)");
->  module_param_named(user_queue, amdgpu_user_queue, int, 0444);
->
-> base-commit: 127e612bf16726620e431b6e0f771424916492be
-> --
-> An old man doll... just what I always wanted! - Clara
->
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
+
+> Thanks
+> Nicolin
