@@ -1,160 +1,84 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA79778F54
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC1B25D8F7
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855577; cv=none; b=pk896DoWYi8oWeM7a96CXkDhQrJzJRtwYAR4doBDSLPFNlVR5a+ZAuN+O8PaTsv5zZ/rQmoFursw68yffHwbch8qqsZZqFbB6txHN1HFncxmLGbh7TFgW/fa2Wgw/zs71vBlOOWUE1sw5y6cZCvg0weU7e86WSo/OnUf7AyUqeA=
+	t=1745855599; cv=none; b=KE1qtD0YeK5zXjFOVd5Vx96fTlBLiuYyczClobmMJwJ+Zjp1tU+UQxNFbxzv3q1h9/kSXJ9evIXMhGBTm5hG8+ncJMF/URssF7U+wCSf6E3I9Rg1MTsmi9t2qgaGro4goD7iFIFX4Vle5nbOAiAnncyGL+Yhk9xnL6ELSwes0yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855577; c=relaxed/simple;
-	bh=GE/n0ZKza8bYUuY3tD7XojmR+actx0vXpI1pJopvR50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CKw7OpWUpGy5aoeshSPyarEVrHjz5YrX4vjXM8EOws3v6EXKU9jDenjzG/IepYX8Kt58KOQ4CDDqLfBCdniD8woMaiQuuQnEkiVxuqBuCNe35V70FMhYtoUNRdeDBE1p3IQRYu/fs+VisIjspaBkbbcM6KMQNAgfDLrWHTyGhzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OU3oqtHO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745855599; c=relaxed/simple;
+	bh=5cYNNf4wFqNqtaNOjGR5cKHx09Edg/U4QkNplcm9KN0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=URBScAu6uUnJjtKrKM+Bw+4enbUBjF24PY0Ftyk60P+6bjBiwrdwfsct2vzGVtApeRRz22Gn4oG5TBWP32szMj9+xjxtfi+J9Atd64LGCax8SU4uIpuhyaaVIF51zjr5jR/eUiZJlVn8PnR3ddFdVq71+e31eOjtuxwYC7yTUSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ENr6ALrE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OU3oqtHO"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SAmGNx003209;
-	Mon, 28 Apr 2025 15:52:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=CwSj7ypTHGZPElQRVKae0+WBdkejDB
-	t4rF+btde+lEw=; b=OU3oqtHOLX5VWUofyB0UI82vl8imRkKL3HZO0BWMXZc9GB
-	6mSpASMIWTkVVLw2ogFd1RzWAhfZFFe3ikMvpnrusz7ZyGXCCiVh2LVo2brMxCHh
-	MhesD8PlTNjykZuMIcVoVyHKhBT8qJT6VoqmJ5/2nnYMp2EOQ9lTrsl89PmJsMSe
-	REDU5hdzKVY5HDKm1gF3VfR4ZifbOo+aHmUY8vX3ZzrzjHS89fnUm50IMCtA86zK
-	zccMH95+/qEER5ITrVSKq6HnpJTAyyoleNjVrjH9Cwemq57z8Mnjm5vASUyvpzcF
-	t0VOLIz+y7LM18wANXGsa1Nc1kiRHzg0+8qj9WVA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5km6vg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 15:52:29 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53SFZKio016120;
-	Mon, 28 Apr 2025 15:52:28 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5km6vb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 15:52:28 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SC5SDp001803;
-	Mon, 28 Apr 2025 15:52:27 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469bamf291-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 15:52:27 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SFqNNu40370470
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 15:52:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82E4920040;
-	Mon, 28 Apr 2025 15:52:23 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C51BD20049;
-	Mon, 28 Apr 2025 15:52:17 +0000 (GMT)
-Received: from li-e1dea04c-3555-11b2-a85c-f57333552245.ibm.com (unknown [9.39.16.25])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 28 Apr 2025 15:52:17 +0000 (GMT)
-Date: Mon, 28 Apr 2025 21:22:15 +0530
-From: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org,
-        neeraj.upadhyay@kernel.org, vschneid@redhat.com, tglx@linutronix.de,
-        frederic@kernel.org, ankur.a.arora@oracle.com, sshegde@linux.ibm.com,
-        bigeasy@linutronix.de, kees@kernel.org, oleg@redhat.com,
-        peterz@infradead.org, tzimmermann@suse.de, namcao@linutronix.de,
-        kan.liang@linux.intel.com, mcgrof@kernel.org, rppt@kernel.org,
-        atrajeev@linux.vnet.ibm.com, anjalik@linux.ibm.com,
-        coltonlewis@google.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC V1 0/6] Generic Entry/Exit support for ppc64
-Message-ID: <tuylzfyyxfexl4fqid4xqo3bkxc25kkr3kah72ndexfw7qradv@xdqz7qxaliyf>
-References: <20250428152225.66044-2-mchauras@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ENr6ALrE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745855595;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yFNAMhuU+PWVZiK9ijY/9ml9G6ViTLQrWpp9ndl8SK4=;
+	b=ENr6ALrESh8YSU71DB7KFnO3uMgTp+dNSvIY7vudIBd7yzD+mFMj/+uhH211vXuSeNi/vD
+	CYi5c54AYrKMstj1wgkYvzR8Ll8AC5H6KyDCX0a947GZtvaA8LGKVhJoCkfU3iw05C95t7
+	CrrWbfcHMWNW0fHTC+nNF7iH9/XYqdU=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-594-cV2W3rH7O5-TbKlPdw-rTg-1; Mon,
+ 28 Apr 2025 11:53:14 -0400
+X-MC-Unique: cV2W3rH7O5-TbKlPdw-rTg-1
+X-Mimecast-MFC-AGG-ID: cV2W3rH7O5-TbKlPdw-rTg_1745855593
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5639919560B1;
+	Mon, 28 Apr 2025 15:53:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 49648180045C;
+	Mon, 28 Apr 2025 15:53:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250428131149.3195399-1-max.kellermann@ionos.com>
+References: <20250428131149.3195399-1-max.kellermann@ionos.com>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: dhowells@redhat.com, netfs@lists.linux.dev,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/netfs: remove unused netfs_io_request flags
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428152225.66044-2-mchauras@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: O9lXcAocXti5-2NdzVKePAyxxUL8PtxU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEyOCBTYWx0ZWRfX/RzOgR4IFVmE nTSW5QbW9RwkVa+aQDUS/CxCYvzMnThTf+nRaTwC/LmYcCANWb88QUsa1liG0MeQhnCh70AmlXU BHgIJeOypTRvi4TpphsG3pO0981V/9SVHvWPShNbqtZGokJe8S3ePd4f8CArz4LpA7X50ARdQ/0
- VGU0OGYyfWVnFbIr1QxYWuTm0pFjwbT7z1+6s7+5tIaXyWYBpnWGzwdqLk6VuBuOZ2rfMMhV0xv Ftv2fxeq5qjj5KstmDcX3FrIlSPPvduCzqPbuBolzaBD2mrOQj0DWIWh5GQfRuALM1SereyNHdv 8mObKnvjqG/ranE7oMBJkuh2LTja4Z8Dnmzw/fvf+f0iEKlgoPrxhUVQsDfkxk27F7Eib6edQx3
- f7E3faYoltfFdVPTSRrlj8z/6TGATFYvFeN0HbycudUbxvxFIdXe+pW/KvXRuqGdrA0EVW9l
-X-Proofpoint-GUID: CUej1cs9APT6IM5K8RiNlp_52PD6H-gr
-X-Authority-Analysis: v=2.4 cv=DvxW+H/+ c=1 sm=1 tr=0 ts=680fa43d cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=lkT6MX_KWXG3DhZVOTYA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=885 phishscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280128
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <88830.1745855591.1@warthog.procyon.org.uk>
+Date: Mon, 28 Apr 2025 16:53:11 +0100
+Message-ID: <88831.1745855591@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 28, 2025 at 08:52:20PM +0530, Mukesh Kumar Chaurasiya wrote:
+Max Kellermann <max.kellermann@ionos.com> wrote:
 
-Few corrections in the commit message:
-> This is a syscall only implementation of generic entry/exit framework
-> for framework for ppc. IRQ handling is not done in this RFC. 
->
-s/framework for framework/framework
-> This will break the ppc32 build as of now which will be fixed along with
-> IRQ handling.
-> 
-> Below are the performance benchmarks from perf bench basic syscall.
-> This is for 1,00,00,000 getppid() calls
-> 
-> | Metric     | Without Generic Framework | With Generic Framework |
-> | ---------- | ------------------------- | ---------------------- |
-> | Total time | 0.904 [sec]               | 0.856 [sec]            |
-> | usecs/op   | 0.090403                  | 0.085638               |
-> | ops/sec    | 1,10,61,579               | 1,16,77,086            |
->
-The coloums are reversed here
+> NETFS_RREQ_DONT_UNLOCK_FOLIOS has never been used ever since it was
+> added by commit 3d3c95046742 ("netfs: Provide readahead and readpage
+> netfs helpers").
 
-| Metric     | With Generic Framework    | Without Generic Framework |
-| ---------- | ------------------------- | ------------------------- |
-| Total time | 0.904 [sec]               | 0.856 [sec]               |
-| usecs/op   | 0.090403                  | 0.085638                  |
-| ops/sec    | 1,10,61,579               | 1,16,77,086               |
+I'm fine with removing DONT_UNLOCK_FOLIOS.
 
-> That's ~5% degradation as of now.
-> 
-> Mukesh Kumar Chaurasiya (6):
->   powerpc: rename arch_irq_disabled_regs
->   powerpc: Prepare to build with genreic entry/exit framework
->   powerpc: introduce arch_enter_from_user_mode
->   powerpc: Add flag in paca for register restore state
->   powerpc: Introduce syscall exit arch functions
->   powerpc: Enable Generic Entry/Exit for syscalls.
-> 
->  arch/powerpc/Kconfig                    |   1 +
->  arch/powerpc/include/asm/entry-common.h | 158 ++++++++++++++++++++++++
->  arch/powerpc/include/asm/hw_irq.h       |   4 +-
->  arch/powerpc/include/asm/interrupt.h    | 117 +++++++++++++++++-
->  arch/powerpc/include/asm/paca.h         |   1 +
->  arch/powerpc/include/asm/stacktrace.h   |   8 ++
->  arch/powerpc/include/asm/syscall.h      |   5 +
->  arch/powerpc/include/asm/thread_info.h  |   1 +
->  arch/powerpc/kernel/interrupt.c         | 153 ++++++-----------------
->  arch/powerpc/kernel/ptrace/ptrace.c     | 103 ---------------
->  arch/powerpc/kernel/signal.c            |   8 ++
->  arch/powerpc/kernel/syscall.c           | 117 +-----------------
->  arch/powerpc/kernel/traps.c             |   2 +-
->  arch/powerpc/kernel/watchdog.c          |   2 +-
->  arch/powerpc/perf/core-book3s.c         |   2 +-
->  15 files changed, 336 insertions(+), 346 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/entry-common.h
-> 
-> -- 
-> 2.49.0
-> 
+> NETFS_RREQ_BLOCKED was added by commit 016dc8516aec ("netfs: Implement
+> unbuffered/DIO read support") but has never been used either.  Without
+> NETFS_RREQ_BLOCKED, NETFS_RREQ_NONBLOCK makes no sense, and thus can
+> be removed as well.
+
+I'm less fine with removing the NONBLOCK handling I might need it for the ceph
+conversion, so I think I'll split the patch in two.
+
+David
+
