@@ -1,161 +1,168 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B428825E46C;
-	Mon, 28 Apr 2025 08:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F4A25E47E;
+	Mon, 28 Apr 2025 08:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745828327; cv=none; b=OAtY0oi7YEQkRQnXaRKPUiROsEhHvF98WKQrq2L9nfMF+QbnJDINV3icWYiwTMh+ozTH4T1qDawZyTF6LpSTExGj2z2Nxu0QsNPDP/xvr1042w+0DRTOaph6fIT396FCxCv7N65Izo8/euQZVMZlsGE6SFlOkwJTFwutpjiaGsc=
+	t=1745828326; cv=none; b=lZlF8+Njuc1GN1pK+HuqG+Ta4Bgn1J/RSSlZilGDsV+uwyLcf2Hy9tPdM4DynOkBjum8DLgFG4FAiSAnzMyKZhntpAZDjE/9Gs7Ixu0oRwZ7T6k4xCjoN/Slen+07HDhuwVHIKOKgBYSMYeP890cGsq5k0cOC6bw9uqfOVvMXXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745828327; c=relaxed/simple;
-	bh=shrVW23MJmXPTGr7Fi7hfalJrHhCvaQGn7EfPJfZHaM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SutkgpnJJqvrMasdS6TE2cVyfUjGEHrBQjilQECXJ2qT+WN1C0twIEkHs3Gl8Zn2Pe9uoWQW7uQfyFr2jbCOrCZ5n27k44ufwHsvPhB1YZRIvownL867W474U2zOb53nrDF9l7m+8Q6mUHBysLnwLMU68kc0eYXimEBJh++VNFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BgXCvYfE; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745828326; c=relaxed/simple;
+	bh=ciRTzwTD6czKOCbSsZO7wWnRwr4FT1Ezx9ne3KWUQgA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0Au++5dg805yAoDuKhjICWtTngfJq2KTAShgFCO/1XdGVaiLo/MyO1LRICEWY/nCXk2gz02e8fuvDoCL2K0NVyMcwgpc1D9w3DsaAwrTO+roWNv4JIleTgxHd4WeYjsZT6u74flSWRD2jQzhuyTF3MwCeGKwLoPK5ZRdW+kPXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ce08QcIo; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BgXCvYfE"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745828323;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ce08QcIo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F37481FD42;
+	Mon, 28 Apr 2025 08:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745828316;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lDD4f3PJohVRbIgegKL4gSaxyAoWqWwnyjgGj9h1ygw=;
-	b=BgXCvYfEYOgYlLJ1CvN2ual2TU/chQyaWi5wpad8tR3nAaFu7FsOpzpDnCkM1r5iD1nYuz
-	DEfR8J8CpxP5bRA4HrjZeSA3QvIzZWgzZ7QGvQgyQYNJBZb733wqORpCqt/GeuuQ5r/AfA
-	DEUcrhF7AxAa0GiFgJDIMCP0TT/DpIw=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v1 2/3] bpf, sockmap: Affinitize workqueue to a specific CPU
-Date: Mon, 28 Apr 2025 16:16:53 +0800
-Message-ID: <20250428081744.52375-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20250428081744.52375-1-jiayuan.chen@linux.dev>
-References: <20250428081744.52375-1-jiayuan.chen@linux.dev>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fBChbg8ZivUvBoE28brXLCEm1yU6k3LPyQKRm49KqPU=;
+	b=ce08QcIopAUYMleYELqXIL0FTG4h4DUyl9NOGFXVa2nxWyN+3WY0ZijwkFuvGqWuiCo4Ii
+	VlWalZw3gJciSnkT5DlgaiDRPNtybtFW7x8Dp5lgzUZVgBXMuD847+AUcpedQtja+fC0kp
+	ee1xvIfAzLFA7x+b3FPURcZaqOR2iBiR1QWKN0Arv4kVfj4NhM0Oyk+q1cnXTm04FhAFUe
+	KADa9UnKz88r+TtKmF3zONBxPZProdPgbCTvYvdhvFPkkMK0EZ6T/E5lAREpJDDYOFUX3E
+	69SkzjUaG+d2bW25Tc5AK7CPw/kMtp8l25oXXUDHTtYJTPT3pTAuZxUwndZpGA==
+Message-ID: <823d4d24-da80-4834-95ca-d5698edfe18f@bootlin.com>
+Date: Mon, 28 Apr 2025 10:18:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/vkms: Adjust vkms_state->active_planes allocation
+ type
+To: Kees Cook <kees@kernel.org>
+Cc: Haneen Mohammed <hamohammed.sa@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Melissa Wen <melissa.srw@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250426061431.work.304-kees@kernel.org>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <20250426061431.work.304-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrn
+ hhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Introduce a sk_psock_schedule_delayed_work() wrapper function, which calls
-schedule_delayed_work_on() to specify the CPU for running the workqueue if
-the BPF program has set the redirect CPU using
-bpf_sk_skb_set_redirect_cpu(). Otherwise, it falls back to the original
-logic.
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- include/linux/skmsg.h | 12 ++++++++++++
- net/core/skmsg.c      |  9 +++++----
- 2 files changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
-index b888481a845d..21c7dd47186f 100644
---- a/include/linux/skmsg.h
-+++ b/include/linux/skmsg.h
-@@ -396,6 +396,18 @@ static inline void sk_psock_report_error(struct sk_psock *psock, int err)
- 	sk_error_report(sk);
- }
- 
-+static inline void sk_psock_schedule_delayed_work(struct sk_psock *psock,
-+						  int delay)
-+{
-+	s32 redir_cpu = psock->redir_cpu;
-+
-+	if (redir_cpu != BPF_SK_REDIR_CPU_UNSET)
-+		schedule_delayed_work_on(redir_cpu, &psock->work,
-+					 delay);
-+	else
-+		schedule_delayed_work(&psock->work, delay);
-+}
-+
- struct sk_psock *sk_psock_init(struct sock *sk, int node);
- void sk_psock_stop(struct sk_psock *psock);
- 
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index 292752c783b5..af00c09263a8 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -689,7 +689,7 @@ static void sk_psock_backlog(struct work_struct *work)
- 					 * other work that might be here.
- 					 */
- 					if (sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED))
--						schedule_delayed_work(&psock->work, 1);
-+						sk_psock_schedule_delayed_work(psock, 1);
- 					goto end;
- 				}
- 				/* Hard errors break pipe and stop xmit. */
-@@ -940,6 +940,7 @@ static int sk_psock_skb_redirect(struct sk_psock *from, struct sk_buff *skb)
- 		sock_drop(from->sk, skb);
- 		return -EIO;
- 	}
-+	psock_other->redir_cpu = from->redir_cpu;
- 	spin_lock_bh(&psock_other->ingress_lock);
- 	if (!sk_psock_test_state(psock_other, SK_PSOCK_TX_ENABLED)) {
- 		spin_unlock_bh(&psock_other->ingress_lock);
-@@ -949,7 +950,7 @@ static int sk_psock_skb_redirect(struct sk_psock *from, struct sk_buff *skb)
- 	}
- 
- 	skb_queue_tail(&psock_other->ingress_skb, skb);
--	schedule_delayed_work(&psock_other->work, 0);
-+	sk_psock_schedule_delayed_work(psock_other, 0);
- 	spin_unlock_bh(&psock_other->ingress_lock);
- 	return 0;
- }
-@@ -1027,7 +1028,7 @@ static int sk_psock_verdict_apply(struct sk_psock *psock, struct sk_buff *skb,
- 			spin_lock_bh(&psock->ingress_lock);
- 			if (sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED)) {
- 				skb_queue_tail(&psock->ingress_skb, skb);
--				schedule_delayed_work(&psock->work, 0);
-+				sk_psock_schedule_delayed_work(psock, 0);
- 				err = 0;
- 			}
- 			spin_unlock_bh(&psock->ingress_lock);
-@@ -1059,7 +1060,7 @@ static void sk_psock_write_space(struct sock *sk)
- 	psock = sk_psock(sk);
- 	if (likely(psock)) {
- 		if (sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED))
--			schedule_delayed_work(&psock->work, 0);
-+			sk_psock_schedule_delayed_work(psock, 0);
- 		write_space = psock->saved_write_space;
- 	}
- 	rcu_read_unlock();
+Le 26/04/2025 à 08:14, Kees Cook a écrit :
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+> 
+> The assigned type is "struct vkms_plane_state **", but the returned type
+> will be "struct drm_plane **". These are the same size (pointer size), but
+> the types don't match. Adjust the allocation type to match the assignment.
+
+I think this is an issue, can you add the proper Fixup tag in this commit?
+
+With this:
+
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Louis Chauvet <louis.chauvet@bootlin.com>
+> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: Melissa Wen <melissa.srw@gmail.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: <dri-devel@lists.freedesktop.org>
+> ---
+>   drivers/gpu/drm/vkms/vkms_crtc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index 12034ec12029..8c9898b9055d 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -194,7 +194,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+>   		i++;
+>   	}
+>   
+> -	vkms_state->active_planes = kcalloc(i, sizeof(plane), GFP_KERNEL);
+> +	vkms_state->active_planes = kcalloc(i, sizeof(*vkms_state->active_planes), GFP_KERNEL);
+>   	if (!vkms_state->active_planes)
+>   		return -ENOMEM;
+>   	vkms_state->num_active_planes = i;
+
 -- 
-2.47.1
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
