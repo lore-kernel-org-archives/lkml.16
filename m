@@ -1,142 +1,228 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4117B262FCA
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3303920CCDF
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848621; cv=none; b=PdenafBCf+3ZFlFZuQiqR87lgV5tTw7FXO9NQx1B8wbfUWJAjJrexi+QB6G8/aB6I2mA8xSM3QL6fY7fAhzBhmNHtAw72xbFHdAR59BnolfJVLIvMc0zFSCT8ECCejxX8+w1upO8tfpYUsvSDn50sXcI9WtTc14mm3LNvMdtU+g=
+	t=1745848761; cv=none; b=j0NSxDnC9d++cOzTvUCcJ1V1DmaIaqSTVEtwpHsITqf+8Al1qkgVgIKyu61DFwXp8S3U6sRWjgAafQlKw59OO0MmtCEY12zAiPQ+PDLi0gB4rqpx2sHP3gFgYfXun7gBEs/+tf1XCONkCUEt+09UrWuVxmSq5M9mArAS3W1TJW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848621; c=relaxed/simple;
-	bh=70lfu/B2ib3SJpO5ooGMaAt1QBpRSWIEV/Np9sKATMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VzQslkKRodH+He4nt9ig1xF0aTJ5s/JCBvNtHPVSrf5jmqvBt0PERBtffe18334HXM/0L320wLjyUjSGSBpoi+G7MBzGv6jeVaYeNVU3p2R85WEBn35nvLZE0ConCAdD+GLyVku8Me4NZl4PzEIN/guWAXmKEHFXyA9jDLUyvyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SjeRAvqr; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1745848761; c=relaxed/simple;
+	bh=Uq7kDaLQsiq2DVlLpdXKCNusHlTn4Pn7KrFEwPNnZ5s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GCh1nf3dkxse9NMnKWrJX9DPzsO/ZEWSPGYl8SjB+V0oHzUfBncTqu29c2dbVyh7CBPFw390txHFeDPM9hda//3WmwNuIx69zaf0xDXNw5IJ0YEuz6eHf+wjvSaF6bMeEaO2i6s+3sF9ZLfNzDU+8p0qhesRRFhJ5MDUfEyqOJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UvJNgDk7; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SjeRAvqr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UvJNgDk7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745848619;
+	s=mimecast20190719; t=1745848757;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UHyYAaJAMEZKibWtlyqh2W6HZtpo9zi498VVY4y0rAg=;
-	b=SjeRAvqroFS6XltalVLoQhkO0cXVeoI1CmmDqrL4SeNSITFcowaHG8L2CtedWD58dj0Pc6
-	yfoJG3CoYzOai1eBv4oTr2gq7EWSKVeBitCljVIROSdZQnfOAvuen7EBN4iCXWJPgnkbgy
-	k/wWbZ6bga3BnaXuA3sI01a7WFLFlUE=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XxlG6puHlddyEhXPEk0h0FDZBy95ZPaOFka0D29IyD0=;
+	b=UvJNgDk726UiMjvQq/ifr416atkvlxk9QTs0trstNrJgpo1/bsaBOxim4fWpMEItu2y/Mc
+	Y2Ax/LjzpfGLKIiMbKTGy/d44ASec2KI8BbW32zJ6dcwVRJBPhKgPEjUBTKWRtRVZxy9pR
+	ET62oOdkykO+qcekDk0Fa/4zgNnRjCQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-354-igm4VrrxOuy36hbbI65Yiw-1; Mon, 28 Apr 2025 09:56:57 -0400
-X-MC-Unique: igm4VrrxOuy36hbbI65Yiw-1
-X-Mimecast-MFC-AGG-ID: igm4VrrxOuy36hbbI65Yiw_1745848617
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c54e9f6e00so937115885a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:56:57 -0700 (PDT)
+ us-mta-45-Bps4Mvx_OlS-ok6J1Zj7Og-1; Mon, 28 Apr 2025 09:59:11 -0400
+X-MC-Unique: Bps4Mvx_OlS-ok6J1Zj7Og-1
+X-Mimecast-MFC-AGG-ID: Bps4Mvx_OlS-ok6J1Zj7Og_1745848750
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39d9243b1c2so1497164f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:59:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745848617; x=1746453417;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UHyYAaJAMEZKibWtlyqh2W6HZtpo9zi498VVY4y0rAg=;
-        b=EtGjMlurvhauHLQiaKjLjKCAchuetMYlFL7bQQA5J3y47idioTa5JsoXZ2K9+Ws9d2
-         1E7w2ghKMjy7TcBXJXO2XLowC/8ZzlCpkfKVMaLAFhFmDRY047jgw2lzY1gZxVOH1bRL
-         vra9/9UGib6ZWT/8Xf8afsssxGtzAwAB1BXUCMg7g4yIGXS6q+ukrC3dZL3zs88bdWdf
-         rvAVPTuCCycjeYtj9xh4+3PMVPdJIgPuo0N0OLj6CkHfjpIQPg5UdO+sSce73Kkk06Rk
-         ZNbM0IAenqffY5dg9lnWQmz6tOr6eoquW/vgP5CrKJ9CD4OpJe/eqkoYP9ZkxIFjD0yw
-         j3oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrtRwC0EcRcXDkvlquAXnUWn0wwb8FNPGtB23mUAEBruKFlbtvmavXMvOFZs6VPyV6yrhInz7/uaTUUfA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznE7TuItCe5DNQodu9uZLTxIiiOSTOxg3u9DLLuMs0CqAjuRyR
-	dl2TyGPEA53o4lQb6J7jxuXN2+p3vTKBa/LOwiDewJiVRhDGNlo8VrCr3IM4NcABm5urpb9xxLG
-	B/yKsjj0OZXIJgYbNfvSbOV9wuSNeFHX3AvIR0+XEihgiteXEdcLHEzXDWxulUQ==
-X-Gm-Gg: ASbGncsx/auctMnddgapwZ1Sgl5fcL48lr/HEbK4uu/gwcpK/NKzn6t4vFVK7PKehmQ
-	D1R9ipL16+4i1I9H27dhf5BZHpWdy6iq8mxmfTpfgHkdR6GHe+bnrYtZVU5NJyNl7PGD/wxByuL
-	W4IwyL+20pG0xigqCbe1nwy6uzVvsRjxcCgqHvbahw/IZShdAnVnQ3po0TVcZvoPIjoOmkzEFu1
-	mdhE2snoT/rgimKOfzNuhK9zD+jq9klYjhr95RfYn2+dQyeYxS216t2MOW8cngziI6h2w27L3mJ
-	e16+yfGn5bBeqpxZ
-X-Received: by 2002:a05:620a:2887:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c9585c5877mr2487230185a.11.1745848616976;
-        Mon, 28 Apr 2025 06:56:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFF77QtEVSxz59mKWcWmWXJCMGCmi0uBQwkt5f3Bu+dckdVzt5kbvV5X2qwCObb0VZdyOuwAw==
-X-Received: by 2002:a05:620a:2887:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c9585c5877mr2487224585a.11.1745848616412;
-        Mon, 28 Apr 2025 06:56:56 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.205.27])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958cbd048sm623795385a.43.2025.04.28.06.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:56:55 -0700 (PDT)
-Date: Mon, 28 Apr 2025 15:56:38 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: Luigi Leonardi <leonardi@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
-Message-ID: <wff4t4owsukm2jynm2dhju4rrtegyjjlrhu7o5xppsxfqrcus4@wmsvcwkdtdat>
-References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
- <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co>
- <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
- <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
- <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co>
- <wnonuiluxgy6ixoioi57lwlixfgcu27kcewv4ajb3k3hihi773@nv3om2t3tsgo>
- <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
- <CAGxU2F6YSwrpV4wXH=mWSgK698sjxfQ=zzXS8tVmo3D84-bBqw@mail.gmail.com>
- <81940d67-1a9b-42e1-8594-33af86397df6@rbox.co>
+        d=1e100.net; s=20230601; t=1745848750; x=1746453550;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XxlG6puHlddyEhXPEk0h0FDZBy95ZPaOFka0D29IyD0=;
+        b=wsQ57M/wOXxoFaHMlLGCpcrYZTPug6Q1Cn2T5xFwL9Bz45Cfs1n/MezEVsAA/CRTnC
+         X/z8/ZJiltTqxTzuG4UaOPcJvu6oomATBxjRvwqC16cMfKjO2Xecd9xVO5n1OOBCW7lo
+         oQJMozp/Fqe7BoQZ3WTkuU4U8jUt4Mj+9+Ddcbnd+AnRexwkuKwwrWhCk3ugFAGGTTMa
+         Re9xzFRmTh+5yJIEtqXTThhfMLotwxWfRtGgj4EanX2NGA4zSk/nOkIpOFK6l+9gep2P
+         SECULq1aqX91mO7P7zV0JQ4ohdX8tO+pqW4Rg56uLfQkkQauwH5a4PPmcJstq6x9qLdl
+         ya2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUF6+ixM52+FH9lfc+GZlCbDB0ZXYHFJNRKYcD5pnOTaFYMoRFw8PfXfxKB7mcgLrheBxGiIOpO0P9npRg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWR6Co3vtKvdo9pFEMnQha0lgmk9KZfwyN6WS3wwz0rnX5AzcD
+	DmQWuq4ZS9urHB0YF4hBM87fIULBvf8WX6I/GPpy4Mnv0LI1OrAZuWBy2rPfkdJ3GrU2AHsPlTu
+	w8WeT877XBUfGzvIMXktZlFADNiaL7dNEcNkIBn84U+HyUO8CNWCUVsQzvrm1rw==
+X-Gm-Gg: ASbGncuxOAlRcRkyHYstFoNBXqXAtygpCmsxPX/38ozmAbOOS7dYtIrcq4bbefkyXfJ
+	ev5D97QqQpOOxURqmCnt5PmJ+kutNyS+mdKccfOhHcqCDhcFVwhzDcxryX5giE3XhK3zHfQ45RE
+	8+wWTk6i/hObU3W0MXdsQspT8u1QyV7z8QUDKyA34sjY5uiqXFl/FMepUrv9VU4ab4zAqWASbdc
+	mtT5p4Sa5O7Sbh7pXk4eeQnDTLwjOzYTCd+NEYk3J4Q8+BFP13TWYSLXFQ8XiPLh88lDV6xOjNu
+	o0V381w3uhLr1Mg0ZMG1b21cSvfQv3fIwjCJTkLHnFShIlnniNRcMkROjPDLe7oU4+5BYBQdgAO
+	yyKDecN9tahKFDZ8Hy7XJdYFGEy61ePpcQ9s8ehM=
+X-Received: by 2002:a5d:64e3:0:b0:391:3aaf:1d5f with SMTP id ffacd0b85a97d-3a07ab8c44cmr7296439f8f.52.1745848750139;
+        Mon, 28 Apr 2025 06:59:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGc4EgiPLN0E8wkd8kmozObQHNGClSAizw2DP7oZtiM0G6tDkJn+fCD8h1dQkAsLcgb1C1V0Q==
+X-Received: by 2002:a5d:64e3:0:b0:391:3aaf:1d5f with SMTP id ffacd0b85a97d-3a07ab8c44cmr7296409f8f.52.1745848749740;
+        Mon, 28 Apr 2025 06:59:09 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f32:c200:9add:4a7a:46aa:f740? (p200300d82f32c2009add4a7a46aaf740.dip0.t-ipconnect.de. [2003:d8:2f32:c200:9add:4a7a:46aa:f740])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca42cdsm11068682f8f.22.2025.04.28.06.59.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 06:59:09 -0700 (PDT)
+Message-ID: <f34bf704-6eb1-4591-ad0e-93641a2f1ad4@redhat.com>
+Date: Mon, 28 Apr 2025 15:59:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <81940d67-1a9b-42e1-8594-33af86397df6@rbox.co>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: remove useless code
+To: Barry Song <21cnbao@gmail.com>
+Cc: Feng Lee <379943137@qq.com>, akpm@linux-foundation.org,
+ ryan.roberts@arm.com, libang.li@antgroup.com, peterx@redhat.com,
+ maobibo@loongson.cn, lance.yang@linux.dev, anshuman.khandual@arm.com,
+ trivial@kernel.org, linux-kernel@vger.kernel.org
+References: <tencent_C263C0783702591C464F887E3D3C496E6B08@qq.com>
+ <CAGsJ_4wWK6B8GSc=cxPGnPU0Jt_o0YB55yk4+VNOm_hY_iditA@mail.gmail.com>
+ <d8228c02-b5c0-47cd-927f-9054d412c7ea@redhat.com>
+ <CAGsJ_4zn158TQV7Nc+vK-kmu6S4kOiFSZyUO7aK9dhwhrEq2cw@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAGsJ_4zn158TQV7Nc+vK-kmu6S4kOiFSZyUO7aK9dhwhrEq2cw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 01:24:59PM +0200, Michal Luczaj wrote:
->On 4/24/25 10:36, Stefano Garzarella wrote:
->> On Thu, 24 Apr 2025 at 09:53, Michal Luczaj <mhal@rbox.co> wrote:
->>> On 4/24/25 09:28, Stefano Garzarella wrote:
-
-[...]
-
->>> You're right, it was me who was confused. VMCI and Hyper-V have their own
->>> vsock_transport::release callbacks that do not call
->>> virtio_transport_wait_close().
+On 28.04.25 13:03, Barry Song wrote:
+> On Mon, Apr 28, 2025 at 7:17 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 27.04.25 10:22, Barry Song wrote:
+>>> On Sun, Apr 27, 2025 at 2:16 PM Feng Lee <379943137@qq.com> wrote:
+>>>>
+>>>> Remove unused conditional macros.
+>>>>
+>>>> Signed-off-by: Feng Lee <379943137@qq.com>
+>>>> ---
+>>>>    include/linux/pgtable.h | 2 --
+>>>>    1 file changed, 2 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>> index b50447ef1c92..47c5a54b7551 100644
+>>>> --- a/include/linux/pgtable.h
+>>>> +++ b/include/linux/pgtable.h
+>>>> @@ -1164,9 +1164,7 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
+>>>>    }
+>>>>    #endif
+>>>>
+>>>> -#ifndef __HAVE_ARCH_PGD_OFFSET_GATE
+>>>>    #define pgd_offset_gate(mm, addr)      pgd_offset(mm, addr)
+>>>> -#endif
 >>>
->>> So VMCI and Hyper-V never lingered anyway?
+>>> Do you know who else had pgd_offset_gate() before except ia64?
+>>>
+>>> /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
+>>>      resides in the kernel-mapped segment, hence we use pgd_offset_k()
+>>>      here.  */
+>>> #define pgd_offset_gate(mm, addr) pgd_offset_k(addr)
+>>>
+>>> btw, do we still
+>>> need pgd_offset_gate() given that nobody needs it now?
+>>>
+>>>      1   1168  include/linux/pgtable.h <<GLOBAL>>
+>>>                #define pgd_offset_gate(mm, addr) pgd_offset(mm, addr)
+>>>
+>>>      2   1112  mm/gup.c <<get_gate_page>>
+>>>                pgd = pgd_offset_gate(mm, address);
+>>>
 >>
->> I think so.
+>> Right, we should just remove pgd_offset_gate() completely in this patch
+>> and simply make the single caller use pgd_offset().
+> 
+> Yes, exactly. The original patch doesn’t seem to be appropriate.
+> 
 >>
->> Indeed I was happy with v1, since I think this should be supported by
->> the vsock core and should not depend on the transport.
->> But we can do also later.
->
->OK, for now let me fix this nonsense in comment and commit message.
+>> I think we can even do:
+>>
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index 84461d384ae2b..05dd87ccce155 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -1106,10 +1106,7 @@ static int get_gate_page(struct mm_struct *mm,
+>> unsigned long address,
+>>           /* user gate pages are read-only */
+>>           if (gup_flags & FOLL_WRITE)
+>>                   return -EFAULT;
+>> -       if (address > TASK_SIZE)
+>> -               pgd = pgd_offset_k(address);
+>> -       else
+>> -               pgd = pgd_offset_gate(mm, address);
+>> +       pgd = pgd_offset(address);
+>>           if (pgd_none(*pgd))
+>>                   return -EFAULT;
+>>           p4d = p4d_offset(pgd, address);
+>>
+>> Unless I am missing something important :)
+> 
+> Technically, it appears to be correct. However, it seems that
+> pgd_offset_k is primarily used to improve readability by
+> distinguishing between kernel space and user space?
 
-Thanks!
+Yeah, but this is GUP ... ("user") ... looks like that check/handling 
+was in there ever since git happened.
 
->
->But I'll wait for your opinion on [1] (drop, squash, change order of
->patches?) before posting v3.
+get_gate_vma() only exists on x86-64 and uml.
 
-I'm fine with a second patch to fix the indentation and the order looks 
-fine.
+I wonder if that could ever actually reside > TASK_SIZE such that we 
+would even need that.
 
-BTW I'm thinking if it makes sense to go back on moving the lingering in 
-the core. I mean, if `unsent_bytes` is implemented, support linger, if 
-not, don't support it, like now.
+But this whole gate stuff is confusing ... IIRC it's a single VMA shared 
+by all processes, and not actually linked in the maple tree etc.
 
-That said, this should be implemented in another patch (or eventually 
-another series if you prefer), so my idea is the following split:
-- use unsent_bytes() just in virtio
-- move linger support in af_vsock.c (depending on transports 
-   implementing unsent_bytes())
-- implement unsent_bytes() in other transports (in the future)
+-- 
+Cheers,
 
-WDYT?
-
-Thanks,
-Stefano
+David / dhildenb
 
