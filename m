@@ -1,179 +1,254 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A042621325A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB850215040
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745873989; cv=none; b=Ui4bdVJTLM05woaB8QyzEU7EpuL+SyrZOd4qmw5nowcjRxnbuejBhgRA3kVsPQxthig7a1dJ/N9bazA7+Uim4mh5eJEz4u74uNrnAJHm3P3ZBUO0w1i77/Ov4AOv2vWaQvXDyG5mKM5Kqfahz8hLR/g6zPl3ou6Ptj0rr5p98Vk=
+	t=1745874005; cv=none; b=JjTgklXEdtFgdxXKjOhaiyTOEe44wDPnZK8/Rp9Gmv0aV1hosLfxqC8ekzh9J6HevX7vl4DI3il2qah/hTEndlZW4+KeyPRD2n/TRcXOaMArkAS2QG7/mZeUtjsVM9sHIMrm3XBMOSFPyUNk221YKs+wIvUXFGgXmcy4xCZqhMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745873989; c=relaxed/simple;
-	bh=ARaJN/laTWSSwP+pW1ygay2pt+8PIw/fbx6nDgGq5XQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mUGEaG3Gsuh7IxE7Pnqz6PGDdvLymZlI6pVPv5yFec1QIEQNFrX6aqtmbzj8elET0FVPsxE3/oEb7QaXxxYaw28qwGoeR87W3NHUd9e79trhE2H8MLHJ4hob9l/X/fpVez55YbcBMUW3daMbl47ypW8rAsjJmtDIjBf42Gt37ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VZp/b/zH; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745874005; c=relaxed/simple;
+	bh=sehDf/wz1Jc2NfNVJoDIU1m599/TWswRXczsp9U/qmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=anYGmhV4HtD2X1j7zMQDtZKksGpgsxwEXAhUk+AE9H8341Y+o4cM92T6lJFdJcd3kHRzCesZhw47/84ItbFqSPcgLpvO+C2GmPkrjjgJqC/v9pS0inv7C/jYgO2RcZbGjDbHVCXLEgVK/0yJ94YpdpExiSEIuzcR/mPqAU4+UQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TQUxzz02; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VZp/b/zH"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7302a769534so3673610a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:59:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TQUxzz02"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2279915e06eso60181745ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745873985; x=1746478785; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EPm/vbZvGk/XMsHbJko6sUgnPY0qOBeRTAo3Ld3TAjY=;
-        b=VZp/b/zHE/IG86D6caMqm5lx+/raSCj2sXRTtWuG7wtXVOtAbawsEa0KRHazppsNhM
-         +f9TQOfWO8bGZob2RkYETSgjXpe+C3p6cmIqvwMIfgtzKdJN3g7wbDeALKulw/viu9aY
-         X/JUM1N74bUlskgSD7cno/siCWXbI5Fc6X33TmKUbZ88oGZb7brvzkbKP4U9ids1m3TA
-         TzqvSAKf94y6qqm2s9atxoB1dm167YNkQwT/TZbdeh3OfLMppZr8QqY0ebNMKbX8yIzR
-         inmU1btuJ5Xk7Nd/bh7f1OL3eARG/dlaIFZ9fOi6JUxPq3yl0JYBZogX9cOSZRX3/91r
-         p2dw==
+        d=chromium.org; s=google; t=1745874003; x=1746478803; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0HZyp8budJTYWJ9MOmTZnBjDzB8PV0g52ckHb+nyRQs=;
+        b=TQUxzz020MzDVuIb0uO4mHR8l8h9m6for5Kg6hHyN0KvXC6163Q4PW8ZK49hywFtrt
+         i6RST2EcJna1He2vEoRGei/d4tpMmwVA0ShEW2r7VTq8vm8+XzBuRORreTl4I8u6mmK7
+         pe80hRbgYz9qCqN7CzF1K4GrPJlnr1cLBP40Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745873985; x=1746478785;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745874003; x=1746478803;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EPm/vbZvGk/XMsHbJko6sUgnPY0qOBeRTAo3Ld3TAjY=;
-        b=eVG5xMx0+x4rVDSbC1kcVdqLp2QTbFC3Bnb27uVGas4y40eqtaH37MS98qtg24+k+A
-         gj+IN/FxwkxFSqpS023mFOfy4KEC1v+AXsce79NrOGcvmbFfo9xFQ6fpvk32oSOFLqm+
-         M+r6beECaTzLeWHbTyBAWl5CqMfnFnD7kDr2WzAh8y7p0T38upGkJgo83o/5Vjoh8TXb
-         DCTmGyvxfxbivhC44oAxym39CLd8vDainZ/TacXNg604kW8eiqvxmGkOLbrYO0lFLKmj
-         pR/DhkrEX6pQSDwir8Q268jMpaE1PXgBXse7sbaRgkKlPpNyqp6zWoDaBQxajOfI9/26
-         jQhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXadjHK18ffnD+io9ypVbWjlxnbPe1ei6t+l0P4FCFT6P00m7OtVw9jrrGySIQuqulqZWCnp8cZqyshCcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrpun8Al4D7V86zU0GtR6O4UW9ujnliX6htHDb7+LJQloYCExl
-	YF+aL56nIVFEDbmVrYACUZxT5XlbLtx0pFwS09fBotGu18OxoVoD0FgBzCTI5nQ=
-X-Gm-Gg: ASbGncsZYc1BdEP/CdWmF687XWbexUVAI3AEn+loceiUIQtjkzJJDJMODqlbi/+K2x7
-	1DmajtI6jvQ6fBC6TRzRlT4FhDONLoJ/b321U1Wc7IKvqLWLV5GLaC0QQtNUN66exxsnKSF7JK7
-	I7MaTWmcM8afy4Vvy4RuJjhdBQ7lyMFIUe0oZ3q7oidGmL3Cwuqfa4A3sHBqKkS8quh0vSMl2Ls
-	NSgRfOjP9Sgp0P/mpAWho5wvtiB62GDnqzX2Zvzi2igjgQL/D088MhEWtCg6oAnaX4r49O2Ms1i
-	ga5vDaGcQX+/rUrxTRXcGV/4b4x64pimoInKn63mYEM8Krg=
-X-Google-Smtp-Source: AGHT+IGtUrL0vdxDI0xO+GerII96y3Pa4pSQsQzyvLDIuSbvj5q60OHBh+zIXpgdsShHxvLkTCZG4A==
-X-Received: by 2002:a05:6830:6014:b0:72b:a9f0:55 with SMTP id 46e09a7af769-7308a4f12f8mr150300a34.6.1745873985641;
-        Mon, 28 Apr 2025 13:59:45 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:cff6:9ed0:6e45:1ff9])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7304f056ed8sm1907614a34.0.2025.04.28.13.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:59:45 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 28 Apr 2025 15:58:58 -0500
-Subject: [PATCH 3/4] spi: axi-spi-engine: optimize bits_per_word for
- offload
+        bh=0HZyp8budJTYWJ9MOmTZnBjDzB8PV0g52ckHb+nyRQs=;
+        b=iJP426hiN5TIln5liy0aCzmb4sVa9oDuF4eCbu2nNgl4wXJ3gO3HBXKTsjheqvlvlb
+         I1MomIqk3AoGJ19XsmUCOxfwcUaJF8iW4TSKwdeh8cATrNLkBNbqNC2YKfEyPVhi4HNU
+         cKWWzsiyXPF9liOhdnr9/qYo+D/7kOiw0+b4tFOskfLE2b931BOgodqWBG9V92ki1xcK
+         SzsExyFdwS53LY+U+mxGumWStbvlWA2uKKzvYRWDbZ4gFcZBR7UYhA2TMRFbM9FHq5PU
+         MVfAD8tFmX5aorTzL5Cfeu9KuczyyC7vewBzHhzfLr3lLjqg8lLLMUsCb3x2SBffZz8O
+         XCfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkcNTHqauVQQNIZ9j0U8qElixwV9bAYvG9nITYNYauusj03y9dPkb6wh8OW6zv5dE4AxjTmidR0i9K2sU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkI+WOZX3LLfJzzk9t6UYL/Wd+RBvKbAkjZ2q3Kt/JL9SkZVIB
+	6gNvtsJ4wiotvfJh/Ryjizl9JzFWSYcusFk4e3Vu19DkALZ5Jxvio/Y2wm0TossIDosu4pYzdnE
+	=
+X-Gm-Gg: ASbGncvDy1YlWHL/Auhp4CMCmI/0590pE4hrY5gF6Oe9vtY6trquPObxrlFqBAB553T
+	KbaI3zaY5Nx3kK40vGuCYzW6e8ubc2Px+I4skyIXiXK4Gv1tT59ZXcC5iNfp7T4zrP878PQaoyi
+	s76UnIBYI74d05DVNqKwecP+OMB5FFZj8gd9LuvwpFQBVwdu8D9+PdPuprvZZafzYvi96tdJmbR
+	1xJFqrLOzuNZwKxxhUyEvwZVzUNJLClPyQn1FayjtMd3PRe9RM+AwTLbKvzJO2Fw9s3Ni+jCn4c
+	WUTRKr6FU1FzVHwNI654miBQE0YOAbsDEvUQBc3Np7NYEUm8IZZkTQ7f+P4ROMAwcEQth98Arn+
+	6IRsB
+X-Google-Smtp-Source: AGHT+IEVMYocYOgy7ppjzZ24dgJjG2cS85f8o0riwUXC/hRmYeqiE5NSrAQUur6zgaLbWXdJgioCSA==
+X-Received: by 2002:a17:902:c412:b0:223:66bc:f1de with SMTP id d9443c01a7336-22dc6a04765mr167475875ad.21.1745874002884;
+        Mon, 28 Apr 2025 14:00:02 -0700 (PDT)
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com. [209.85.216.47])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76d12sm88291485ad.25.2025.04.28.14.00.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 14:00:02 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-306b78ae2d1so4361206a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:00:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWgZFcwUIwcZFmWTKzVB/xWkQbKYrGzS+CyHiWw23VPMIJViFYHswABG6wh2jddRqMDUjWyTlrzidUc4Q0=@vger.kernel.org
+X-Received: by 2002:a17:90b:2e03:b0:2fa:1a23:c01d with SMTP id
+ 98e67ed59e1d1-30a0132e771mr15291417a91.21.1745874002058; Mon, 28 Apr 2025
+ 14:00:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-adi-main-v1-3-4b8a1b88a212@baylibre.com>
-References: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
-In-Reply-To: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
-To: Michael Hennerich <michael.hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3108; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=ARaJN/laTWSSwP+pW1ygay2pt+8PIw/fbx6nDgGq5XQ=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoD+wtKbrM87Br0iUTrX8PmS0qoypqR5/xwfFbx
- 5+1urDsIZ+JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaA/sLQAKCRDCzCAB/wGP
- wGOQB/4lpOzs4u45Rj068DI3+3h1J80plwy9Pty6NFrRY9Tw+fylYlbbZcG11h3z4W0ivm+bt9U
- x7tzdi4H1R9LVPUoKkHEvKTPcQopzKNVPbdJNFJJG9+X80j9p08y4hplGSG/xTnKrOdS++xBaED
- KoSd4sjkHF10JeIpSjwmSiu5eACx1tVzYeVvM++RzPAPe5epKUVh3u1jCX240afaIaW2SKSamaF
- 3YGTeZFT+gufYSO7CQ9jI56iAKKmtw5Yu4GCmfzbpytdEaoTWAgfOhT4THS07n56yee8uqZOg7f
- mZsMRlY8B2orYX9vUvAzxAiF+IIpcZOUXdcEnAdYrRwYaYN9
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 28 Apr 2025 13:59:50 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VmV5yb0HWWGTiKyyC8+WNPJpM7vE9PQGh5_=KPk6+HCg@mail.gmail.com>
+X-Gm-Features: ATxdqUFp3e4vRAA9U9jS3-gUD9FhwChMaNCvlfej-PAqltrXksVDq12UxaUaXqM
+Message-ID: <CAD=FV=VmV5yb0HWWGTiKyyC8+WNPJpM7vE9PQGh5_=KPk6+HCg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/34] drm: convert many bridge drivers from
+ devm_kzalloc() to devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com, Adam Ford <aford173@gmail.com>, 
+	Adrien Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin <amishin@t-argos.ru>, 
+	Andy Yan <andy.yan@rock-chips.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Christoph Fritz <chf.fritz@googlemail.com>, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+	Detlev Casanova <detlev.casanova@collabora.com>, 
+	Dharma Balasubiramani <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>, 
+	Kevin Hilman <khilman@baylibre.com>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>, 
+	Manikandan Muralidharan <manikandan.m@microchip.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Phong LE <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+	Sugar Zhang <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, 
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan <mordan@ispras.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add an optimization to avoid repeating bits_per_word instructions in
-each message when using SPI offload. This only applies when all data
-xfers in a message have the same bits_per_word. In this case, we can
-execute the instruction that sets bits_per_word when the offload trigger
-is enabled. This is useful e.g. for obtaining higher sample rates on
-ADCs since each message takes less time to execute.
+Hi,
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/spi/spi-axi-spi-engine.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+On Thu, Apr 24, 2025 at 11:59=E2=80=AFAM Luca Ceresoli
+<luca.ceresoli@bootlin.com> wrote:
+>
+> devm_drm_bridge_alloc() is the new API to be used for allocating (and
+> partially initializing) a private driver struct embedding a struct
+> drm_bridge.
+>
+> For many drivers having a simple code flow in the probe function, this
+> commit does a mass conversion automatically with the following semantic
+> patch. The changes have been reviewed manually for correctness as well as
+> to find any false positives.
+>
+>   @@
+>   type T;
+>   identifier C;
+>   identifier BR;
+>   expression DEV;
+>   expression FUNCS;
+>   @@
+>   -T *C;
+>   +T *C;
+>    ...
+>   (
+>   -C =3D devm_kzalloc(DEV, ...);
+>   -if (!C)
+>   -    return -ENOMEM;
+>   +C =3D devm_drm_bridge_alloc(DEV, T, BR, FUNCS);
+>   +if (IS_ERR(C))
+>   +     return PTR_ERR(C);
+>   |
+>   -C =3D devm_kzalloc(DEV, ...);
+>   -if (!C)
+>   -    return ERR_PTR(-ENOMEM);
+>   +C =3D devm_drm_bridge_alloc(DEV, T, BR, FUNCS);
+>   +if (IS_ERR(C))
+>   +     return PTR_ERR(C);
+>   )
+>    ...
+>   -C->BR.funcs =3D FUNCS;
+>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>
+> ---
+>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: Adrien Grassein <adrien.grassein@gmail.com>
+> Cc: Aleksandr Mishin <amishin@t-argos.ru>
+> Cc: Andy Yan <andy.yan@rock-chips.com>
+> Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Biju Das <biju.das.jz@bp.renesas.com>
+> Cc: Christoph Fritz <chf.fritz@googlemail.com>
+> Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> Cc: Detlev Casanova <detlev.casanova@collabora.com>
+> Cc: Dharma Balasubiramani <dharma.b@microchip.com>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Janne Grunau <j@jannau.net>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Jesse Van Gavere <jesseevg@gmail.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Cc: Liu Ying <victor.liu@nxp.com>
+> Cc: Manikandan Muralidharan <manikandan.m@microchip.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Phong LE <ple@baylibre.com>
+> Cc: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> Cc: Sugar Zhang <sugar.zhang@rock-chips.com>
+> Cc: Sui Jingfeng <sui.jingfeng@linux.dev>
+> Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> Cc: Vitalii Mordan <mordan@ispras.ru>
+>
+> Changed in v2:
+> - added missing PTR_ERR() in the second spatch alternative
+> ---
+>  drivers/gpu/drm/adp/adp-mipi.c                      |  8 ++++----
+>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c        |  9 ++++-----
+>  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c  |  9 ++++-----
+>  drivers/gpu/drm/bridge/aux-bridge.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/aux-hpd-bridge.c             |  9 +++++----
+>  drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c |  8 ++++----
+>  drivers/gpu/drm/bridge/chipone-icn6211.c            |  9 ++++-----
+>  drivers/gpu/drm/bridge/chrontel-ch7033.c            |  8 ++++----
+>  drivers/gpu/drm/bridge/cros-ec-anx7688.c            |  9 ++++-----
+>  drivers/gpu/drm/bridge/fsl-ldb.c                    |  7 +++----
+>  drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c      |  9 ++++-----
+>  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c        | 10 ++++------
+>  drivers/gpu/drm/bridge/imx/imx8qxp-pixel-link.c     |  8 ++++----
+>  drivers/gpu/drm/bridge/imx/imx8qxp-pxl2dpi.c        |  8 ++++----
+>  drivers/gpu/drm/bridge/ite-it6263.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/ite-it6505.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/ite-it66121.c                |  9 ++++-----
+>  drivers/gpu/drm/bridge/lontium-lt8912b.c            |  9 ++++-----
+>  drivers/gpu/drm/bridge/lontium-lt9211.c             |  8 +++-----
+>  drivers/gpu/drm/bridge/lontium-lt9611.c             |  9 ++++-----
+>  drivers/gpu/drm/bridge/lvds-codec.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/microchip-lvds.c             |  8 ++++----
+>  drivers/gpu/drm/bridge/nwl-dsi.c                    |  8 ++++----
+>  drivers/gpu/drm/bridge/parade-ps8622.c              |  9 ++++-----
+>  drivers/gpu/drm/bridge/parade-ps8640.c              |  9 ++++-----
+>  drivers/gpu/drm/bridge/sii9234.c                    |  9 ++++-----
+>  drivers/gpu/drm/bridge/sil-sii8620.c                |  9 ++++-----
+>  drivers/gpu/drm/bridge/simple-bridge.c              | 10 ++++------
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c        |  8 ++++----
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c       |  8 ++++----
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c      |  8 ++++----
+>  drivers/gpu/drm/bridge/tc358762.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/tc358764.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/tc358768.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/tc358775.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/thc63lvd1024.c               |  8 ++++----
+>  drivers/gpu/drm/bridge/ti-dlpc3433.c                |  9 ++++-----
+>  drivers/gpu/drm/bridge/ti-tdp158.c                  |  8 ++++----
+>  drivers/gpu/drm/bridge/ti-tfp410.c                  |  9 ++++-----
+>  drivers/gpu/drm/bridge/ti-tpd12s015.c               |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_dp.c                   |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_dpi.c                  |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_dsi.c                  |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c                 |  9 ++++-----
+>  drivers/gpu/drm/meson/meson_encoder_cvbs.c          | 12 ++++++------
+>  drivers/gpu/drm/meson/meson_encoder_dsi.c           | 12 ++++++------
+>  drivers/gpu/drm/meson/meson_encoder_hdmi.c          | 12 ++++++------
+>  drivers/gpu/drm/renesas/rcar-du/rcar_lvds.c         |  9 ++++-----
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c      | 10 ++++------
+>  49 files changed, 201 insertions(+), 237 deletions(-)
 
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index 05ef2589f8dc0bdaa1b3bb3a459670d174f821a2..b54d2e1437c9993d251aa2842d9040ec0949a78d 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -142,6 +142,7 @@ struct spi_engine_offload {
- 	unsigned long flags;
- 	unsigned int offload_num;
- 	unsigned int spi_mode_config;
-+	u8 bits_per_word;
- };
- 
- struct spi_engine {
-@@ -267,6 +268,8 @@ static int spi_engine_precompile_message(struct spi_message *msg)
- {
- 	unsigned int clk_div, max_hz = msg->spi->controller->max_speed_hz;
- 	struct spi_transfer *xfer;
-+	u8 min_bits_per_word = U8_MAX;
-+	u8 max_bits_per_word = 0;
- 
- 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
- 		/* If we have an offload transfer, we can't rx to buffer */
-@@ -275,6 +278,24 @@ static int spi_engine_precompile_message(struct spi_message *msg)
- 
- 		clk_div = DIV_ROUND_UP(max_hz, xfer->speed_hz);
- 		xfer->effective_speed_hz = max_hz / min(clk_div, 256U);
-+
-+		if (xfer->len) {
-+			min_bits_per_word = min(min_bits_per_word, xfer->bits_per_word);
-+			max_bits_per_word = max(max_bits_per_word, xfer->bits_per_word);
-+		}
-+	}
-+
-+	/*
-+	 * If all xfers in the message use the same bits_per_word, we can
-+	 * provide some optimization when using SPI offload.
-+	 */
-+	if (msg->offload) {
-+		struct spi_engine_offload *priv = msg->offload->priv;
-+
-+		if (min_bits_per_word == max_bits_per_word)
-+			priv->bits_per_word = min_bits_per_word;
-+		else
-+			priv->bits_per_word = 0;
- 	}
- 
- 	return 0;
-@@ -306,6 +327,12 @@ static void spi_engine_compile_message(struct spi_message *msg, bool dry,
- 	if (msg->offload) {
- 		priv = msg->offload->priv;
- 		priv->spi_mode_config = spi_engine_get_config(spi);
-+
-+		/*
-+		 * If all xfers use the same bits_per_word, it can be optimized
-+		 * in the same way.
-+		 */
-+		bits_per_word = priv->bits_per_word;
- 	} else {
- 		spi_engine_program_add_cmd(p, dry,
- 			SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_CONFIG,
-@@ -862,6 +889,11 @@ static int spi_engine_trigger_enable(struct spi_offload *offload)
- 					    priv->spi_mode_config),
- 		       spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
- 
-+	if (priv->bits_per_word)
-+		writel_relaxed(SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_XFER_BITS,
-+						    priv->bits_per_word),
-+			       spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
-+
- 	writel_relaxed(SPI_ENGINE_CMD_SYNC(1),
- 		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
- 
-
--- 
-2.43.0
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org> # parade-ps8640
+Tested-by: Douglas Anderson <dianders@chromium.org> # parade-ps8640
