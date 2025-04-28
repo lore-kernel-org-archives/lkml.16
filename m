@@ -1,254 +1,200 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C7B26982E;
-	Mon, 28 Apr 2025 14:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B4F268C5D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745849434; cv=none; b=t6JO1QsU5EaZjHA/7RdLNo4ZUFZmIIj3SI2wKzG3Mn46A0HhKmkf0kpZ30rK8Ml0OJqSBVFD5HdeMq7Q+LHIKT5C6uehuUzGut+caXCaetXTtOgO1mhwyPUm51/gQqYo48E1HrpCHKGR4NTTJNYw2QeRx+78wRaoSn+yxZTv0jU=
+	t=1745849459; cv=none; b=mraNE/5xyYbwwknOxz30v8vOqmaK4t0PVFDjxit5CawmEK9OlMbwcfYZ5UHJiIZrji6Ygd65cnlBugn//3PynY7749mK0Pk+B7Nwp0TL9WK95O3E3NJU0c0tNtolsnkzzn3eMFn7yf1kha2MS8JTBSmwD1YjqGrR9uUok9ZK49E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745849434; c=relaxed/simple;
-	bh=BOuEWK+UmYfg4VYZdZhbRi1314+0MdlONTfS2GDO590=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b8Q/WvOGHDNh9G4AHuGrVihu9yUl1Z6N5H19fuDF+bJ7+dPD57t3qAsaQta+KsoBgtIffa1eje27RhFTlGJNWas+u+R6cE5HdZbNKkJqmx2/Pc5Nn53aJ2fCS62KldxUNgoZVx+GqUImrrJjsbWqKhEPST6Iqy/AzXcHsYRRSk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXoPNepp; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745849459; c=relaxed/simple;
+	bh=3h2EMGfvu+UctStWx0bIwV5H/Jn0gdVbSF2DccNcs84=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OhRP1aH+MJT1eDEmkhR5M4mdkxlZlyHhUayP/iPURaY5TQ/YYbopTlfdgy5sX2pWOaKx7Lrn5uYQaNqIKPISWQ2ZuBSSqXmtNWlnjPmBeKc215mlH56Xs1bL+RP2+ElKSrQtZ2gBOTTYgX7vUai+GycnZmZKAj3fGhaeDGZNwvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c+l6hOth; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXoPNepp"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736a72220edso4792725b3a.3;
-        Mon, 28 Apr 2025 07:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745849432; x=1746454232; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GEvTqKjHd/gxofN54tYASAmooBFL0e/b3JPxl2GoRUQ=;
-        b=EXoPNeppOu7B/N8Wu+AhlRh05xFXtWErbGzfQKN3X094s598m5LnoCqcV8P5zKpXRD
-         Y20HB35i3sLUz1v1Ed8HJP4qPV/1ppBffdOI26Vl+xMoKnPVY7OB0YCGzOBgGiZblZ0v
-         0cLoZxuOkk1HtGFD8CbANvnysI70UMRdTBwCrAskFss001Fy7u/9WVUCoQCXGLeBb3U9
-         OVxlJb24QeT0uwnTKKTb51AT/50HPX0UR+/GcfG8FMHB9NZPivnaNVsJXVdc4BIF7qug
-         bdostMv6nj9nDu/u3MLNKTkMYMhtwUAhKwJpKxT2kL/13UjZGXo2aGWSyuEMXhS5peC0
-         yUNA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+l6hOth"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745849457;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G+uPdzRwnIP87DAfoRjnEpqTaAiojdHq3g26uxoE7Gc=;
+	b=c+l6hOthoA062FLLkBU5WPLzG7LQv7ySeq44TMpjFSwC+dPiFNTE4Gub9mytoXYy8u1rAA
+	Bpsx06YhZhd+rzfZl8McZYbZBk0stqmxn6wTHIgr5AVr2AwGLJGk41SeNqLz4uGG2TEMuj
+	AaMtbhoFHDrTcOCTiQWrw9qaQ3j6zcM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-o1dZczlWN5mLSaxgVkZ6ZA-1; Mon, 28 Apr 2025 10:10:55 -0400
+X-MC-Unique: o1dZczlWN5mLSaxgVkZ6ZA-1
+X-Mimecast-MFC-AGG-ID: o1dZczlWN5mLSaxgVkZ6ZA_1745849454
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac287f28514so405923966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:10:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745849432; x=1746454232;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GEvTqKjHd/gxofN54tYASAmooBFL0e/b3JPxl2GoRUQ=;
-        b=KpdGzgd9BP/yXSWlzb1P8mFBMmFtASInhARFE09/f0FdCkGf5+JYTMsTUvhiAV1/WG
-         r/nywgp3T5xVv9F6Xmx5kyz1niHDBbA+mFNTeMRSV28cGtJ00Sfyd2yXYnuvZrW1aDW3
-         Ts6x/68EqCb6MUTyzxPHqNdWNPRk+KwUiYfr8bgpuoVq4Hqt5TL4ShByQzQpMhsUuI3r
-         RaAUygrLfArRtqbyczAKsi7KNgj8vnA9ophUEsxmH9mdB3u9eRu/241fipOAq0NIoLIA
-         yxzBN3x2RfdUy0uuPlA1i/9Q488ZhZBddWWyb8qsrPpoc6kuJKgpYQne4LT3EfaaoCCV
-         65SA==
-X-Forwarded-Encrypted: i=1; AJvYcCUT+GPvR8xR64WhMh/+bjoPx8X6n7EjgnL6vxXzG4m4yDhlZfjJeRDjOoAJ+dvVZ6eGXqQPtF23boO+41M=@vger.kernel.org, AJvYcCXbPdKwgGBu2U8nFLhuMM8w7+xckGyxXudlgMAOXBLy8Qjuf2UtWpsAhCrSzD0X9ZkEmCef8Y3YnltghQ9GKA4S/w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD8OGPzYMyo5SwSQHAj1ou/jbWWUKelNhdwZyRsI3T68hawW+a
-	mukEyn/P4ZtrOfPTi5Oe+JNxaS40v04fGH0QsYmROXeRVEdrZLHK
-X-Gm-Gg: ASbGnctdD9P98YiB4xb43nonmED8zZrzZBtXyTb61qyatZoctU+4ZaQgvEH0BnplsZs
-	SSZkCWMRCC9oluUBV6vret0k6FCYCNXG4Yht5KG1Uf3hQZPzAe+4ArHuQ+vE+YVuKJ5mHvMY7Yd
-	Q12NZu+vrGTNiJkmL3N5XXHBYxh2qsCyGRooPzY5PafmmiQJnpvBtx8xNBfhMJJrHduS0eZophc
-	Nmbqvi/WZz7+JtDvscMOJ0VrqWJqnP7A7YGJq7oqbz+D2Rbpcfk2Zx72y+nV8QqFjJ7BjtYyJ04
-	5rlPhDE/nDzdpwotH/rcHAcP5WGOVJ3coA/ce3A=
-X-Google-Smtp-Source: AGHT+IFPQFBivSHKCoihIOXfE6lIJJ5LhZaUT+yQbp62PbM2nBEezYpi5ZMGrhr3CBfTWdfDJQ3wig==
-X-Received: by 2002:a05:6a00:2382:b0:730:99cb:7c2f with SMTP id d2e1a72fcca58-73fd6fdd3aemr14893591b3a.6.1745849431973;
-        Mon, 28 Apr 2025 07:10:31 -0700 (PDT)
-Received: from hiago-nb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e2593f621sm8002237b3a.39.2025.04.28.07.10.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 07:10:31 -0700 (PDT)
-Date: Mon, 28 Apr 2025 11:10:26 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com, linux-remoteproc@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
- devm_clk_get_optional()
-Message-ID: <20250428141026.pvbk5qrgflv4wkak@hiago-nb>
-References: <20250423155131.101473-1-hiagofranco@gmail.com>
- <aAkf6bxBLjgFjvIZ@p14s>
- <20250423192156.b44wobzcgwgojzk3@hiago-nb>
- <20250426134958.GB13806@nxa18884-linux>
- <CANLsYkzLZKHpwv+Zz7YqtU4NCy7ZmapuzpgtfxsRfoV=Ve8rVg@mail.gmail.com>
- <20250427020825.GC13806@nxa18884-linux>
+        d=1e100.net; s=20230601; t=1745849454; x=1746454254;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+uPdzRwnIP87DAfoRjnEpqTaAiojdHq3g26uxoE7Gc=;
+        b=LuZqN/6g1raTx5i4NFu89Ay8LHTQXgK0v0T7C803P7E/g88Ta9MCkav2Ta/yJiPgNs
+         qJ1lK+UeZtUadkaZV2c+GQO7ERW4IDjNa55qNJ2Elatpny1VBy50qAiqA2j38eNR+TH2
+         QAclQXeHD3VndrKPOXFWUkL7834YN/jDE4gyHCi3eHEeC/3SmPIOIHQrV89tiat1CVqU
+         PFuvu94RGNICBWrj7fgDatJCQFLCDvHKSBtCD+fk4THejwgaLsQiLGs8ajx/a5dzy4uV
+         gGMGCVaclxvkGCrCBHP2tlKG871BJcqmlT/nl+TUdlqNlSNLxrfMkSlIUekss29MjjyI
+         3aaw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1PyqpPVCqzJ2smRWD4PykXprkSKLi4/t9uq52EXSLst0wg1PlrZ07T6VriMUgHz9xcLiBTWrh8OScJRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNSFLr335Ip83iQr44TQlLs3NMTyNhnZNce23/bWugd9owlZ3+
+	VuDrpG5oXOFpkIiKSdNGmmV8KTqiVYD8UGzymAb0IRpbB2ieCQdUbFazQlGjMNxgXP3ARtTEQcw
+	FrIVIzLYno3ChaRlUdTiY83piSHdp0OGWYFINSSbjSwFMaxsU9qKBT/GutSGFoQ==
+X-Gm-Gg: ASbGnctzMwFauaax2BAeRTV5S8112P63S0ZvDmTNxG6ZJaN4vKYRWEE2JstxpVNMHjL
+	MyZBhWRvxPwFncsb5TS0OPmmVPkZc4lFmF+FZnAnpvF1yWVtPMMTlPeE2qw/MAVOl4vEA+lKJN8
+	UfOXVolHOVNTVlfrBCK5tXoICHIE4HyO2uZ01IQrfVAfbAqgfAt8FsHR0rhLH+DzySIwMV+m3Q6
+	EFrpOQ1kMESkFuw65+FCmyY5QIT0hFmAbmSqDVNXwQKK2j1GI72Ubv0T7GY/UDfqFNx1ZV517rq
+	NawQiMuDYdliDUM=
+X-Received: by 2002:a17:907:9449:b0:ace:6fa7:5ed3 with SMTP id a640c23a62f3a-ace848c0470mr711016766b.4.1745849454259;
+        Mon, 28 Apr 2025 07:10:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDhqLGdlz5ExTdegQGYB8SKbnk9MuRrjtYF3bvcdYMyl0xaJNQdZAaKvtae1celGjHMZAYPg==
+X-Received: by 2002:a17:907:9449:b0:ace:6fa7:5ed3 with SMTP id a640c23a62f3a-ace848c0470mr711012366b.4.1745849453831;
+        Mon, 28 Apr 2025 07:10:53 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecfb35bsm633212366b.100.2025.04.28.07.10.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 07:10:53 -0700 (PDT)
+Message-ID: <98ffacc8-d13a-49b6-bcfd-f3cc35224b79@redhat.com>
+Date: Mon, 28 Apr 2025 16:10:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427020825.GC13806@nxa18884-linux>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+To: Mario Limonciello <superm1@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+ <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+ <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
+ <aA3KXNCKKH17mb+a@duo.ucw.cz>
+ <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
+ <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
+ <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
+ <a7e82a84-2610-4132-90a8-42b371f57fb0@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <a7e82a84-2610-4132-90a8-42b371f57fb0@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 27, 2025 at 10:08:25AM +0800, Peng Fan wrote:
-> On Sat, Apr 26, 2025 at 03:47:50PM -0600, Mathieu Poirier wrote:
-> >On Sat, 26 Apr 2025 at 06:41, Peng Fan <peng.fan@oss.nxp.com> wrote:
-> >>
-> >> On Wed, Apr 23, 2025 at 04:21:56PM -0300, Hiago De Franco wrote:
-> >> >Hi Mathieu,
-> >> >
-> >> >On Wed, Apr 23, 2025 at 11:14:17AM -0600, Mathieu Poirier wrote:
-> >> >> Good morning,
-> >> >>
-> >> >> On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
-> >> >> > From: Hiago De Franco <hiago.franco@toradex.com>
-> >> >> >
-> >> >> > The "clocks" device tree property is not mandatory, and if not provided
-> >> >> > Linux will shut down the remote processor power domain during boot if it
-> >> >> > is not present, even if it is running (e.g. it was started by U-Boot's
-> >> >> > bootaux command).
-> >> >>
-> >> >> If a clock is not present imx_rproc_probe() will fail, the clock will remain
-> >> >> unused and Linux will switch it off.  I think that is description of what is
-> >> >> happening.
-> >> >>
-> >> >> >
-> >> >> > Use the optional devm_clk_get instead.
-> >> >> >
-> >> >> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> >> >> > ---
-> >> >> >  drivers/remoteproc/imx_rproc.c | 2 +-
-> >> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >> >
-> >> >> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> >> >> > index 74299af1d7f1..45b5b23980ec 100644
-> >> >> > --- a/drivers/remoteproc/imx_rproc.c
-> >> >> > +++ b/drivers/remoteproc/imx_rproc.c
-> >> >> > @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
-> >> >> >    if (dcfg->method == IMX_RPROC_NONE)
-> >> >> >            return 0;
-> >> >> >
-> >> >> > -  priv->clk = devm_clk_get(dev, NULL);
-> >> >> > +  priv->clk = devm_clk_get_optional(dev, NULL);
-> >> >>
-> >> >> If my understanding of the problem is correct (see above), I think the real fix
-> >> >> for this is to make the "clocks" property mandatory in the bindings.
-> >> >
-> >> >Thanks for the information, from my understanding this was coming from
-> >> >the power domain, I had a small discussion about this with Peng [1],
-> >> >where I was able to bisect the issue into a scu-pd commit. But I see
-> >> >your point for this commit, I can update the commit description.
-> >> >
-> >> >About the change itself, I was not able to find a defined clock to use
-> >> >into the device tree node for the i.MX8QXP/DX, maybe I am missing
-> >> >something? I saw some downstream device trees from NXP using a dummy
-> >> >clock, which I tested and it works, however this would not be the
-> >> >correct solution.
-> >>
-> >> The clock should be "clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;" for
-> >> i.MX8QX. This should be added into device tree to reflect the hardware truth.
-> >>
-> >> But there are several working configurations regarding M4 on i.MX8QM/QX/DX/DXL.
-> >>
-> >> 1. M4 in a separate SCFW partition, linux has no permission to configure
-> >>   anything except building rpmsg connection.
-> >> 2. M4 in same SCFW partition with Linux, Linux has permission to start/stop M4
-> >>    In this scenario, there are two more items:
-> >>    -(2.1) M4 is started by bootloader
-> >>    -(2.2) M4 is started by Linux remoteproc.
-> >>
-> >>
-> >> Current imx_rproc.c only supports 1 and 2.2,
-> >> Your case is 2.1.
-> >
-> >Remoteproc operations .attach() and .detach() are implemented in
-> >imx_rproc.c and as such, 2.1 _is_ supported.
-> 
-> For i.MX8QM/QXP/DX/DXL, attach/detach is for case 1.
-> 
-> To support case 2.1, more code needs to be added in imx_rproc_detect_mode,
-> 
-> Something as below(no test, no build, just write example):
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 09d02f7d9e42..eeb1cd19314c 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -1019,6 +1019,9 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
->                         if (of_property_read_u32(dev->of_node, "fsl,entry-address", &priv->entry))
->                                 return -EINVAL;
-> 
-> +                       if (imx_sc_cpu_is_started(M4X))
-> +                               priv->rproc->state = RPROC_DETACHED;
-> +
->                         return imx_rproc_attach_pd(priv);
->                 }
-> 
-> 
-> When we let uboot to start M4(case 1), we(NXP) only wanna to add some test
-> code in U-Boot. Not intended to make it for remoteproc
-> 
-> But if there are users wanna case 1 in their product, we could support it,
-> 1. adding cpu state detection in drivers/firmware/imx/
-> 2. Use the cpu state API in imx_rproc.c to detect cpu is started by bootloader
->    when the cpu is owned by linux.
+Hi Mario,
 
-Thanks for the information Peng. I think the way forward is clear now, I
-will prepare the patches to address the 2.1 use case (bootaux).
+On 28-Apr-25 15:50, Mario Limonciello wrote:
+> On 4/28/2025 12:51 AM, Dmitry Torokhov wrote:
+>> On Sun, Apr 27, 2025 at 10:30:24PM -0700, Dmitry Torokhov wrote:
+>>> Apologies for extended absence...
+>>>
+>>> On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
+>>>>
+>>>>
+>>>> On 4/27/25 01:10, Pavel Machek wrote:
+>>>>> Hi!
+>>>>>
+>>>>>>>>>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+>>>>>>>>>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+>>>>>>>>>> to lock the screen. Modern hardware [2] also sends this sequence of
+>>>>>>>>>> events for keys with a silkscreen for screen lock.
+>>>>>>>>>>
+>>>>>>>>>> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+>>>>>>>>>> emitted by driver to META + L.
+>>>>>>>>>
+>>>>>>>>> Fix gnome and kde, do not break kernel...
+>>>>>>>>
+>>>>>>>> I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+>>>>>>>>
+>>>>>>>> That's going to break modern hardware lockscreen keys.  They've all
+>>>>>>>> obviously moved to META+L because that's what hardware today uses.
+>>>
+>>> Vendors do all kind of weird things. They want to ship their
+>>> peripherals here and now and they do not care of shortcuts will change a
+>>> few years down the road.
+>>>
+>>> FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
+>>> do not emit any shortcurts. Anything that is "Woks with Chromebooks"
+>>> will use KEY_SCREENLOCK.
+>>>
+>>>
+>>>>>>>
+>>>>>>> Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+>>>>>>> screen locking, no?
+>>>
+>>> KDE by default recognizes Meta+L combination (which used to be
+>>> Alt+Ctrl+L), Screensaver key, and allows users to define their custom
+>>> shortcuts.
+>>>
+>>> I also wonder how many other DEs beside Gnome do not recognize
+>>> KEY_SCREENLOCK.
+>>
+>> So I poked around Gnome a bit. According to the gnome-settings-daemon
+>> source code KEY_SCREENLOCK should be recognized. It is set up as
+>> "screensaver-static" key which is hidden and shoudl not be changed by
+>> user:
+>>
+>> https://github.com/GNOME/gnome-settings-daemon/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in#L504
+>>
+>>      <key name="screensaver-static" type="as">
+>>        <default>['XF86ScreenSaver']</default>
+>>        <summary>Lock screen</summary>
+>>        <description>Static binding to lock the screen.</description>
+>>      </key>
+>>
+>>
+>>
+>>>
+>>>>>>
+>>>>>> This was actually the first path I looked down before I even started the
+>>>>>> kernel patch direction for this problem.
+>>>>>>
+>>>>>> GNOME doesn't support assigning more than one shortcut key for an action.
+>>
+>> It sure does even if it is not shown in UI. Poke around with
+>> dconf-editor and look in /org/gnome/settings-daemon/plugins/media-keys/
+>> and you will see plenty of "*-static" keys with multiple
+>> keycodes/shortcuts assigned.
+>>
+>> "touchpad-toggle-static" - ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
+>> "rotate-video-lock-static" - ['<Super>o', 'XF86RotationLockToggle']
+>>
+>> and so on...
+>>
+>> Maybe Gnome broke screen lock key in recent release?
+>>
+>> Thanks.
+>>
+> 
+> Thanks for your feedback and looking into what GNOME is doing.  It sure /sounds/ like this should have worked with no kernel changes and GNOME has a bug with the lock screen key.
 
-> 
-> >
-> >>
-> >> There is a clk_prepare_enable which not work for case 1 if adding a real
-> >> clock entry.
-> >>
-> >> So need move clk_prepare_enable to imx_rproc_start, not leaving it in probe?`
-> >> But for case 2.1, without clk_prepare_enable, kernel clk disable unused will
-> >> turn off the clk and hang M4. But even leaving clk_prepare_enable in probe,
-> >> if imx_rproc.c is built as module, clk_disable_unused will still turn
-> >> off the clk and hang M4.
-> >>
-> >> So for case 2.1, there is no good way to keep M4 clk not being turned off,
-> >> unless pass "clk_ignore_unused" in bootargs.
-> >>
-> >
-> >Isn't there something like an "always on" property for clocks?
-> 
-> There is CLK_IS_CRITICAL flag that could be added in clk driver, but this
-> is harcoded in clk driver. Using this flag means for case 2.2, there is no
-> chance to disable the clock when stop M4.
-> 
-> There is no device tree property to indicate a clk is always on as I know.
-> 
-> Regards,
-> Peng
-> >
-> >>
-> >> For case 2.2, you could use the clock entry to enable the clock, but actually
-> >> SCFW will handle the clock automatically when power on M4.
-> >>
-> >> If you have concern on the clk here, you may considering the various cases
-> >> and choose which to touch the clk, which to ignore the clk, but not
-> >> "clk get and clk prepare" for all cases in current imx_rproc.c implementation.
-> >>
-> >> Regards,
-> >> Peng
-> >>
-> >>
-> >> >
-> >> >[1] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
-> >> >
-> >> >Cheers,
-> >> >Hiago.
-> >> >
-> >> >>
-> >> >> Daniel and Iuliana, I'd like to have your opinions on this.
-> >> >>
-> >> >> Thanks,
-> >> >> Mathieu
-> >> >>
-> >> >> >    if (IS_ERR(priv->clk)) {
-> >> >> >            dev_err(dev, "Failed to get clock\n");
-> >> >> >            return PTR_ERR(priv->clk);
-> >> >> > --
-> >> >> > 2.39.5
-> >> >> >
+My guess is that maybe at some point the lock-key (combo) handling has moved from
+gnome-settings-daemon into mutter and maybe things broke at that point ?
+ 
+> I'll abandon the kernel series.
 
-Cheers,
-Hiago.
+Agreed, the GNOME bug needs to be fixed regardless of AMD PMF use.
+
+Regards,
+
+Hans
+
+
