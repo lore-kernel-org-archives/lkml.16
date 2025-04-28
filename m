@@ -1,32 +1,39 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D9618DB0A;
-	Mon, 28 Apr 2025 19:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D66293B6A;
+	Mon, 28 Apr 2025 19:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745868187; cv=none; b=oZ9tDkqDGFHw7rfIYWxX7GUOwkPnpJCWXE057Pvltv2kYme9dVpGG+1q+62bA0fONVwGj+9pqmlHpy5tXtKqvTmRqjdVZ1PRlXyZ3uLw7BqjQ3KbnjiYwWEzLK7lFwKpIp75jcEQ31vBp1DU7OGKbm6w8Pud0YCePOS42PiMvGk=
+	t=1745868249; cv=none; b=mR4R9yEElxL6ilXCNfQkkqEtnfkOpdid01DaeZMmta2b8DV7wx0GTBGbhVVJXhf53Bd9MwYLdmHqXQOGCX9JF+sNAn9YFh9GFjQxJId60GNh6z/oa6byxnFOBQ0bSGzsG2J6KJ1y9JEnlURTQsR+EvXcsj4s+y/16DpPXvOjs+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745868187; c=relaxed/simple;
-	bh=ZvDoC81kFt4cDoyxtRck1vxVOGNhZRLiwTxrGEZGnvo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UZjBUQdduy/LR9nOMvcW0JnoCBgfJtFRqtRMzXKQEFGW5MqLlDKVUTfCc042luLJHfQYFX681vC0C9Y+i8LGJCVSjVxojObE6V/vImGa0rC7Q78acOERynFE3dxAfWBSm8OvFJ0COUJEneUYoPo04OhjIecPcnI8mVLSGLS/zXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fbo+7dHL; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745868249; c=relaxed/simple;
+	bh=ukZGbYHvylISOm2wikgcSrTFayBuY5PwwwA5MqvAmRM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=IvvxDPaOomstd/T790zbA0FXEMueFAtrnUPNlz0Dcy9Xo1Vmo6xXam55LmrA1iGgQiJZoav+ugskheKlCN0nTRrydlHfdCFuDr9OXGl2Wbh3vLTdl6FrPLa+aSXiaN4udBah6SHqavGtUw/e7LA23fh/1m7zNVcFB04qQun1xt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=AbTbbDYR; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fbo+7dHL"
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 698AE211AD01;
-	Mon, 28 Apr 2025 12:23:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 698AE211AD01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745868184;
-	bh=jGVkN1hybuqThviIpy5Yd0rlklDTmHHqQY1gOTTQ/aU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fbo+7dHLY2ZtqfyjtlaCC5jw3uqw6PD289mAPFW3y9leIqksoAj8pWNCIrbN3bTir
-	 t8IVF7ly+J9ECgXB/qJQ+LMth9i++CMUSEVRhbLOpC8MUWohTAzFbArmXIyjUraZ4l
-	 Qq5vCgAWx1+qCJmiI7PVXDfKUtWQvPmpyy6Pg9L8=
-Message-ID: <5cdb2703-2b94-4f38-a440-8f5c9a4c66be@linux.microsoft.com>
-Date: Mon, 28 Apr 2025 12:23:04 -0700
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="AbTbbDYR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1745868244; x=1746473044; i=markus.elfring@web.de;
+	bh=WxND/54K1k9Lc6QWwai2eS+JTZ03ZFV5RKUVe8NbtAo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=AbTbbDYR3ZCaoM6ytCAqCJWzeAOUvBVFPo7AzCFwNluTbbInXiNtS7pLdwiElUQQ
+	 DxCaxd4Xiz4B73U78rVbmnRqJ1A+9JUp2B9vdSKAsr9dl40HXQqdjniCKEPsQ2zgh
+	 EiFBxjXmCsDDWJOhQ7hcmBBIFQRXOijzapxWJUyL2ubQ6SObTlJuFbZOoux8t+M4/
+	 a7/voPBxQo8IkpzUdrXrUlP0LVCF3bzjvs2MVMjczGevz+5UvgOQEIC4+JpsWMPvJ
+	 pGQzzeu0QasW1gl8IqQNrSs/DaOdgqQNo2OPcGo3uQkn3rjbj2e46TP5bDwkgvDAM
+	 sUt14sNToKg7SQsv8w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.68]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mvsq5-1uy95v2Ipr-00ywz5; Mon, 28
+ Apr 2025 21:24:04 +0200
+Message-ID: <d431f727-894a-48e3-bca6-3f2aa971d7be@web.de>
+Date: Mon, 28 Apr 2025 21:23:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,116 +41,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v8 02/11] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
- <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
- "rafael@kernel.org" <rafael@kernel.org>, "robh@kernel.org"
- <robh@kernel.org>, "rafael.j.wysocki@intel.com"
- <rafael.j.wysocki@intel.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
- "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
- <will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-References: <20250414224713.1866095-1-romank@linux.microsoft.com>
- <20250414224713.1866095-3-romank@linux.microsoft.com>
- <SN6PR02MB41576A5C3C0F5911A308E804D4BC2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41576A5C3C0F5911A308E804D4BC2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-input@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, Qasim Ijaz <qasdev00@gmail.com>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] HID: thrustmaster: Use scope-based resource management in
+ thrustmaster_interrupts()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:UoUgiAshSxeLZHSday19ijFln7vTlDcjGC++EyjCoB2Lbt1emJU
+ mkgR9m8BYYfADwdPPw6/hk0u3i1NaZpJISWLJ5Qr8WulKpxIlGLW/DgWRCPbviKP36P7xqF
+ Yp1bVqqriqPkyOpX7gDO8oXRvMQmrQo/JJjgSG/mTUU1RaOuxsFJ1lpiIMZBIQWNmzAGJiI
+ HPmoQLdcPNV817X6U9zsw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XSFitPko9qY=;nv2ERlI4XC8GYye4i4o7gpCT9zh
+ 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
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 28 Apr 2025 21:12:14 +0200
 
+Scope-based resource management became supported for some
+programming interfaces by contributions of Peter Zijlstra on 2023-05-26.
+See also the commit 54da6a0924311c7cf5015533991e44fb8eb12773 ("locking:
+Introduce __cleanup() based infrastructure").
 
-On 4/17/2025 8:27 AM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, April 14, 2025 3:47 PM
-[...]
-> I had previously given my Reviewed-by: on v5 of this patch. But
-> looking at it again, it would be nice if this UUID were defined in
-> include/linux/arm-smccc.h alongside the definition of
-> ARM_SMCCC_VENDOR_HYP_UID_KVM. The UUID values are
-> are independent of each other, but it's a bit asymmetric to have
-> the KVM UUID defined centrally while the Hyper-V UUID is
-> buried in Hyper-V specific code. But I'm OK with the current code
-> if there's nothing else to respin for.
-> 
+* Thus use the attribute =E2=80=9C__free(kfree)=E2=80=9D.
 
-As I saw that, KVM is special in the kernel as the kernel provides
-both the host side code and the kernel side code so the UUID has
-to be shared in the header file.
+* Omit four kfree() calls accordingly.
 
-In the Hyper-V case, we have only the guest side code so it seemed
-more economical to have that tucked into the function rather than
-adding to the arch-wide header and including the header.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/hid/hid-thrustmaster.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-
->> +
->> +	return arm_smccc_hypervisor_has_uuid(&hyperv_uuid);
->> +}
->> +
->>   static int __init hyperv_init(void)
->>   {
->>   	struct hv_get_vp_registers_output	result;
->> @@ -36,13 +78,11 @@ static int __init hyperv_init(void)
->>
->>   	/*
->>   	 * Allow for a kernel built with CONFIG_HYPERV to be running in
->> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
->> +	 * a non-Hyper-V environment.
->> +	 *
->>   	 * In such cases, do nothing and return success.
->>   	 */
->> -	if (acpi_disabled)
->> -		return 0;
->> -
->> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
->> +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
->>   		return 0;
->>
->>   	/* Setup the guest ID */
->> --
->> 2.43.0
->>
-> 
-> My UUID comment notwithstanding,
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> 
-> 
-
--- 
-Thank you,
-Roman
+diff --git a/drivers/hid/hid-thrustmaster.c b/drivers/hid/hid-thrustmaster=
+.c
+index 0bf70664c35e..c4d74c1d5ddd 100644
+=2D-- a/drivers/hid/hid-thrustmaster.c
++++ b/drivers/hid/hid-thrustmaster.c
+@@ -150,7 +150,7 @@ static const struct usb_ctrlrequest change_request =3D=
+ {
+ static void thrustmaster_interrupts(struct hid_device *hdev)
+ {
+ 	int ret, trans, i, b_ep;
+-	u8 *send_buf =3D kmalloc(256, GFP_KERNEL);
++	u8 *send_buf __free(kfree) =3D kmalloc(256, GFP_KERNEL);
+ 	struct usb_host_endpoint *ep;
+ 	struct device *dev =3D &hdev->dev;
+ 	struct usb_interface *usbif =3D to_usb_interface(dev->parent);
+@@ -162,7 +162,6 @@ static void thrustmaster_interrupts(struct hid_device =
+*hdev)
+ 	}
+=20
+ 	if (usbif->cur_altsetting->desc.bNumEndpoints < 2) {
+-		kfree(send_buf);
+ 		hid_err(hdev, "Wrong number of endpoints?\n");
+ 		return;
+ 	}
+@@ -174,7 +173,6 @@ static void thrustmaster_interrupts(struct hid_device =
+*hdev)
+ 	u8 ep_addr[2] =3D {b_ep, 0};
+=20
+ 	if (!usb_check_int_endpoints(usbif, ep_addr)) {
+-		kfree(send_buf);
+ 		hid_err(hdev, "Unexpected non-int endpoint\n");
+ 		return;
+ 	}
+@@ -191,12 +189,9 @@ static void thrustmaster_interrupts(struct hid_device=
+ *hdev)
+=20
+ 		if (ret) {
+ 			hid_err(hdev, "setup data couldn't be sent\n");
+-			kfree(send_buf);
+ 			return;
+ 		}
+ 	}
+-
+-	kfree(send_buf);
+ }
+=20
+ static void thrustmaster_change_handler(struct urb *urb)
+=2D-=20
+2.49.0
 
