@@ -1,180 +1,151 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B27111AD
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AE01F561C
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745874931; cv=none; b=c3qTR+LN5/tj9/TiHLRo6XVzf8DaY32JGt4vdUUvRj8E7UOpSBnIshcO8b1o0Bs3FLSxJBzNYrfOmEcwAdaMNHifJdq1ARWjcOfIFhsLexZXrYLEa7FG1Tap8r95UNbro7KqWPfnRVuQ0Jsp1nftZyLyBgBc6ta0WZS2F6RKcUs=
+	t=1745875180; cv=none; b=f7CBtuGbrbijgLON2bF7FiXBQIvoHvMJZMh4yWIZhVOO12uRc3lfixYCiUdJtF9CoyrtzxIXixThp91CHb8GYP8MnOoqn7Gu3cRbjFamsQINirqmQEWKWgLIV3hCULrDTAQAmFvpYbhVCNToOaprISv8g1JG46iGd1/X6hK8xYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745874931; c=relaxed/simple;
-	bh=8KOQPgIx5iLX94Vf3h+wdeh8fAqvL6vQXESoj0bi9KM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hUxHjTefowpS7e274Kn+H18z22Kca4INTGhrp5+s6z+5lAuCLfMCnbL8i91QpagFZneJq+YG9eG+o8NFHdChTViqD07ijaacT3Z7VeTZE6bAhh6pBTmYsEZorKLty4ACj/5cADGscV93XKGWEpcWCl1+EIAlegc/SHFQU+HJf1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a2thdrcD; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745875180; c=relaxed/simple;
+	bh=bJ/gzAeGT4ZbtCzt+JdrNTwkoS1y+gkxREhjPG/Ab9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ioqCW9pYm8LBXo3MOaqj/0gUemjpEJtf9nyAt93ImGn0iPqHi7QLKau5NTEzMLFFtkDppEX1yMBpp2F4mQW6z4eP/kxFyruMIV9PvnXmXS/8sM0zcqEp5ZrL2qMb56ameYY1hyDF/ijZjMaXJN8FkBZCGOns0qB5XhtKh2MvAiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eNTaQp8O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a2thdrcD"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-225477548e1so56288365ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745874928; x=1746479728; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hanN27KZoqo0z82RNW8lpqnAS/vBC+tork2hH91F48I=;
-        b=a2thdrcDyupeLV4vhDv2BbpjqbHaC0dNAWPIAFCF9/9c5KDbx/fTM+FWJ12xT4zqoa
-         ZuW7mOfjsJcIHMDZtzmDryHRE84awSYG1TSoCmDtbCb8ZZOMB98K+qmUpo18qccIaQJC
-         myu1W7LFSTLDyLDJk8c3cGQes6SNO8H09FSpQ=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eNTaQp8O"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SL35tC027135
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:19:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1p0DQQl3Uv/CeewEIX8WmFJDpqWu+zknhFq+jDxcqzs=; b=eNTaQp8OWPZ8bjaJ
+	siO4gZnXx47CjAcBmt71c18UjDCk4ZVh/jMyqSEZUJzIvyn/7fefYAXn/pYrF1bl
+	p2KMxaJaRMThp2AKhC59qPuHUKcQGa4trnmhLTtIiY/T6e3EOD5T/a1bIHPuplle
+	XPySL3CsCCVI21Q0dsmwg8TjaTRk3d2xk+CDoE2Wmci0cdhAR0yNWZtf8sYTQ4CV
+	0RiX4tWV2+LjX2zdXzHlspi9TvxrvSPJkeaddZ5dALUxBNAif1H2ySlaJ0MlfiKW
+	LSV5Ro3kfMHAOT55MgOnsnVtbBSI234SnKXf1Ns8JdkigwMqJCWzaxtOFUfhwIHS
+	h6fGvQ==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qjwtccc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:19:37 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-477608e8e4aso7457251cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:19:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745874928; x=1746479728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hanN27KZoqo0z82RNW8lpqnAS/vBC+tork2hH91F48I=;
-        b=IoqoCVRH0W9D17y+GIxNlamj3AuZO1hMjNccK+J8sejIxdibGzsocdJuZ0F2f05pa4
-         I5bJLBpCnZS6beVyaMRYzScxMBWK2CZGenUcjF1VwPvhvnMC7ugeRTdSfXQS6JKHODrS
-         AemzoBNHAl4qke6Mcd6xvE3YiwxJBcmGGBj+snSFPUqW+Y6Ut8nfvIOlyW7zfvm6qAGF
-         N2lwUWp04d3pSFwV0j0UHkqC6eA3kgtsWsUCUy4AyKZFN9lSyS3yZtSFqT2OBgAeikJh
-         zWXPaiFkqGLwheUTkat6bmn8cSM6GPXaQBShLry8K+OjEp6JAy6ADyh46SUbgIIc6WZq
-         W4lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSevXdiYNa7l2lZYiz16yqrRHXh/6Z4aKRQkamwbuYfA8/FWR85xJJ7YWFefNhTEqMi5B5dfGefACXAn0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVzy6W9vDbpHpSRx6kvtjQ6cIxoTDGmv4yR+FgvVp+p0uAqgcl
-	MNGr1B8cM7+HqcRvIdYBE8hwIaDeGJSJNoAkxF+cZrs93W4Gx5QO5yYpae5eWgv6j+HyJKk61/A
-	=
-X-Gm-Gg: ASbGncuFlXkpqfHVjo0w2saomqrwjBW1VoQf4N1AuTIdgdYu9qNkEdMw+eBrA7As5GW
-	tSSyKI51LoSVpesvhoYIw3uqduAl3+NoNEjeM6b8dvpnZnIB5Doaxph/Nhyy+1oAxanvp2i0yJI
-	JsyW75YwgBpvUfj3eJfO7bMg8s1q6LPpPbTPuudJNDfiObXe7n/vuY8gxh6p2JkPieADJETj2Ai
-	jhLutS0P5x8MTHvEjcPLRQB9f/P6CCyCQE3vJqcVdkCojMYMiJIngzG9VPT9gREnZzkmF0F0VOp
-	9DqPM90zTOfy4CJy4rgJiKEyolv/MIr1Lhq0KI6ZHwA58v0hvDjPvagYfAcH5DlWA9D6MvgjfM0
-	mHOBu2LP7
-X-Google-Smtp-Source: AGHT+IHNZ4lP/O/dmFxQiNjrS+n3rVQC5mqQhWq/m6cvQba50GQKst29EjUHeN3GePmqp+YMJK33SQ==
-X-Received: by 2002:a17:902:db02:b0:223:fabd:4f99 with SMTP id d9443c01a7336-22de5ec17aamr16743355ad.5.1745874927890;
-        Mon, 28 Apr 2025 14:15:27 -0700 (PDT)
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com. [209.85.214.174])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dc7d5fsm87986915ad.103.2025.04.28.14.15.26
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1745875177; x=1746479977;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1p0DQQl3Uv/CeewEIX8WmFJDpqWu+zknhFq+jDxcqzs=;
+        b=rhNfl8TNVTU21EGCLXJw/QYUA8GpzY2Vbk3WGlaej1K6YAkAZfTR+PRk2kKcfw/Btn
+         yUgD0x4mIbMcwQ4A1tBMOqKVQYRWAWlN29A/bpXMxdKL3wjmPnY6vW7oSR6R+okSwKr4
+         /iOMBtJi2JOf8bXVwEGY256+O/4CFm+f7ivF3ipZFEVDUCMTCECASwioFkN2cCdQL5Hj
+         /DEAxLbIxhbax+k+OtdvX6IHJmgbe8FSjIYElNcaCIAYI9C4wkFonUYFJ7lXdlkNbljJ
+         tFMxaAlFXKBrgiwXlpnXlZA7glCrkrh2fbZGGNJOt2DH6rcH084PHoQId+DBtNB/bFgM
+         bdFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGxaO2xqADRQS3xGer3VgIv5Wlj/UqmYc4OzPfN0IDGyLaGrVesTL5VZdcsXGR6oOiaoyAlIL5uM8Ev9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmMXhCdjqU+J2V7UHc76ZbZul60tnWK86UWRMWt/AfH6LN+hX9
+	iDSx8DC/ueW0kRUaA4LhqGVGu7c2ly0WK/9FV7u/5BRaLuk5OhwwJP/fW762GnzTbRwS1XDBm5V
+	12gLg5nFtdBaqlAhL8f/KbFjwG4sPmcMlP6M7hkvcUcZONj6bJGuImQhDX6NIP80=
+X-Gm-Gg: ASbGnctB1aif+VVAzHLehGw3iWGU+XLv2kdBTNxtPqrYR9ByEQtxnRsft7LqJvaQ6FY
+	ftoOKMrKwGHmn1qWrScIl2dJi6aaMJEO3FvL+u6m4j/kndy2IyR1IlqPG3xYHpFQ80Cy2mltlm7
+	HcSkKoj9MT0meu1uei+A3hQILqQp2MJ8WwkSQ7S/UgMfJR5vAPQtpSJlyuigH2tB5QnEPUbfTQw
+	TLGNeIxoIoVPpgZjqtF+er3A8StjPffBvYhQiTPr0DotSQy7oVHt9cidBBo3eGQVNS043CzKF9f
+	X/oCZ8kdem8Pkwrhf/aH3Qz1mtx07in4VJ2D/nQT5FUqrLK9yeEmBUmQHJloFMJMEQ==
+X-Received: by 2002:ac8:5d43:0:b0:47a:e81b:cca6 with SMTP id d75a77b69052e-4801e5ef61bmr86239991cf.10.1745875177215;
+        Mon, 28 Apr 2025 14:19:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHGM4Gsyyf3DoqVCxTr5c/Fx29SX0hifWAwRSJIcxlPqb02dtB8cwcCNR+5BkrZ9k/UWtLcg==
+X-Received: by 2002:ac8:5d43:0:b0:47a:e81b:cca6 with SMTP id d75a77b69052e-4801e5ef61bmr86239641cf.10.1745875176771;
+        Mon, 28 Apr 2025 14:19:36 -0700 (PDT)
+Received: from [192.168.65.47] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41c431sm693197766b.18.2025.04.28.14.19.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 14:15:26 -0700 (PDT)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-225477548e1so56287905ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:15:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXcUtAt1tL3zX9oNnSnlV9sTb1qyF97QOMj98JrwFnAufL47cW79ttTs42F7j2JwJ+sYFIbL8PG3abPM4Q=@vger.kernel.org
-X-Received: by 2002:a17:90b:3a44:b0:309:f67c:aa8a with SMTP id
- 98e67ed59e1d1-30a21546738mr1846179a91.5.1745874925916; Mon, 28 Apr 2025
- 14:15:25 -0700 (PDT)
+        Mon, 28 Apr 2025 14:19:36 -0700 (PDT)
+Message-ID: <41df5398-79f6-484a-8ad3-f3488eb1b71c@oss.qualcomm.com>
+Date: Mon, 28 Apr 2025 23:19:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424105432.255309-1-j-choudhary@ti.com> <3f44ec0b-216c-4534-a6de-7b17929cb9e1@ti.com>
-In-Reply-To: <3f44ec0b-216c-4534-a6de-7b17929cb9e1@ti.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 28 Apr 2025 14:15:12 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WytPZCF-jcWFgXoAOoXOV61bw2_ftJbdbWZviHQqap5w@mail.gmail.com>
-X-Gm-Features: ATxdqUFuySNI3rOAaMe62mEHPq2JIyed3obe4-5b7857UFDyYpkL2fq2SDRRguQ
-Message-ID: <CAD=FV=WytPZCF-jcWFgXoAOoXOV61bw2_ftJbdbWZviHQqap5w@mail.gmail.com>
-Subject: Re: [RFC PATCH] drm/bridge: ti-sn65dsi86: Enable HPD functionality
-To: "Kumar, Udit" <u-kumar1@ti.com>
-Cc: Jayesh Choudhary <j-choudhary@ti.com>, andrzej.hajda@intel.com, neil.armstrong@linaro.org, 
-	rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	dri-devel@lists.freedesktop.org, tomi.valkeinen@ideasonboard.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/6] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+To: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jie Zhang <quic_jiezh@quicinc.com>
+References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
+ <20250228-a623-gpu-support-v2-5-aea654ecc1d3@quicinc.com>
+ <e22daaae-57fc-4523-b594-87d202d255f3@oss.qualcomm.com>
+ <aa8ebd50-683b-4043-9494-5675a2d9a01e@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <aa8ebd50-683b-4043-9494-5675a2d9a01e@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: oicjORJw4CY4fxYyA7jLYHygsVEGgEQz
+X-Proofpoint-GUID: oicjORJw4CY4fxYyA7jLYHygsVEGgEQz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE3MCBTYWx0ZWRfXye0kNegk9jp2 tVGMfulQBS4dXjdwsKLRouBN8sn82DroDIp46OQgjlb5DV+/FXY4X9PYISVgURCw3ayN/sQsu0O PLKjrBxO3fg02J1/mDa7jmG+7AHob7wKmPDgkVBrRtIyNvVvdSmp8D5/XKDVCtso24RzagRdrBU
+ a/3rzgTtlOOfEni2mSa27LoLI7JT/N6dmgbJSjSWVlz5ZwLEKb9HfkDhqmJfLTWNcYtq+9MuU98 Kq6qbTjkdq81uINCM+R1lMjWq00oohhWUtN8heMSM9SO8h0ggzHdQfe2C4jAI0tgnqKSvj7xaL0 jIvdfoYy+RTwpAcVirxduPG91abxTWOurlvJg5rTwjw8wPFVpzqXJ0iYe0txXCJPqXsBj+J2vdR
+ /botB27kgt50t67nXmVsWVa+9J/8Uu3rEkYE0eK2K2aihGaRuVUv3iFZfohrvq/thKw4y9ep
+X-Authority-Analysis: v=2.4 cv=c/urQQ9l c=1 sm=1 tr=0 ts=680ff0e9 cx=c_pps a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=dalwKpVopYczjXflRRgA:9 a=QEXdDO2ut3YA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_08,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=665
+ phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 malwarescore=0
+ clxscore=1015 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280170
 
-Hi,
+On 4/28/25 12:44 PM, Akhil P Oommen wrote:
+> On 4/14/2025 4:31 PM, Konrad Dybcio wrote:
+>> On 2/27/25 9:07 PM, Akhil P Oommen wrote:
+>>> From: Jie Zhang <quic_jiezh@quicinc.com>
+>>>
+>>> Add gpu and gmu nodes for qcs8300 chipset.
+>>>
+>>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
+>>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+>>> ---
+>>
+>> [...]
+>>
+>>> +		gmu: gmu@3d6a000 {
+>>> +			compatible = "qcom,adreno-gmu-623.0", "qcom,adreno-gmu";
+>>> +			reg = <0x0 0x03d6a000 0x0 0x34000>,
+>>
+>> size = 0x26000 so that it doesn't leak into GPU_CC
+> 
+> We dump GPUCC regs into snapshot!
 
-On Thu, Apr 24, 2025 at 6:32=E2=80=AFPM Kumar, Udit <u-kumar1@ti.com> wrote=
-:
->
-> Hello Jayesh,
->
-> On 4/24/2025 4:24 PM, Jayesh Choudhary wrote:
-> > For TI SoC J784S4, the display pipeline looks like:
-> > TIDSS -> CDNS-DSI -> SN65DSI86 -> DisplayConnector -> DisplaySink
-> > This requires HPD to detect connection form the connector.
-> > By default, the HPD is disabled for eDP. So enable it conditionally
-> > based on a new flag 'keep-hpd' as mentioned in the comments in the
-> > driver.
-> >
-> > Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> > ---
-> >
-> > Hello All,
-> >
-> > Sending this RFC patch to get some thoughts on hpd for sn65dsi86.
-> >
-> > Now that we have a usecase for hpd in sn65dsi86, I wanted to get
-> > some comments on this approach to "NOT DISABLE" hpd in the bridge.
-> > As the driver considers the eDP case, it disables hpd by default.
-> > So I have added another property in the binding for keeping hpd
-> > functionality (the name used is still debatable) and used it in
-> > the driver.
-> >
-> > Is this approach okay?
-> > Also should this have a "Fixes" tag?
->
-> >
-> >   .../bindings/display/bridge/ti,sn65dsi86.yaml      |  6 ++++++
-> >   drivers/gpu/drm/bridge/ti-sn65dsi86.c              | 14 +++++++++----=
--
-> >   2 files changed, 15 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65ds=
-i86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.ya=
-ml
-> > index c93878b6d718..5948be612849 100644
-> > --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yam=
-l
-> > +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yam=
-l
-> > @@ -34,6 +34,12 @@ properties:
-> >         Set if the HPD line on the bridge isn't hooked up to anything o=
-r is
-> >         otherwise unusable.
-> >
-> > +  keep-hpd:
-> > +    type: boolean
-> > +    description:
-> > +      HPD is disabled in the bridge by default. Set it if HPD line mak=
-es
-> > +      sense and is used.
-> > +
->
-> Here are my suggestions
->
-> 1) use interrupt in binding as optional instead of keep-hpd
->
-> 2) use interrupt field (if present to enable of disable HPD functions in
-> driver)
+Right, that's bad.. the dt heuristics are such that each region
+is mapped by a single device that it belongs to, with some rare
+exceptions..
 
-Officially we've already got a "no-hpd" specified in the device tree.
-You're supposed to be specifying this if HPD isn't hooked up. It would
-be best if we could use that property if possible. If we think that
-using the lack of "no-hpd" will break someone then we should be
-explicit about that.
+Instead, the moderately dirty way would be to expose gpucc as
+syscon & pass it to the GPU device, or the clean way would be
+to implement an API within the clock framework that would dump
+the relevant registers
 
-I'd also note that unless you've figured out a way to turn off the
-awful debouncing that ti-sn65dsi86 does on HPD that using HPD (at
-least for initial panel power on) only really makes sense for when
-we're using ti-sn65dsi86 in "DP" mode. For initial eDP panel poweron
-it was almost always faster to just wait the maximum delay of the
-panel than to wait for ti-sn65dsi86 to finally report that HPD was
-asserted.
-
-I could also note that it's possible to use the ti-sn65dsi86's "HPD"
-detection even if the interrupt isn't hooked up, so I don't totally
-agree with Udit's suggestion.
-
-I guess the summary of my thoughts then: If you want to enable HPD for
-eDP, please explain why in the commit message. Are you using this to
-detect "panel interrupt"? Somehow using it for PSR? Using it during
-panel power on? If using it for panel power on, have you confirmed
-that this has a benefit compared to using the panel's maximum delay?
-
--Doug
+Konrad
