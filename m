@@ -1,117 +1,133 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F79538F9C;
-	Mon, 28 Apr 2025 11:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0803B25F7AA;
+	Mon, 28 Apr 2025 11:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745838678; cv=none; b=PUZzb+3/rPNTdCGK2udwR3AAh0a5uR48PSGEP1VwATEm7hS0NTIBuNhGE1sqQA7K1o3Pe3pluDd9pJz4PEtbQsVH1iucwZFQGxw3mlJZB9FLRwFOyHxNkMhRXEiRq33Bw7J17MH5RexdXxy150hoGhKMeuXKpC0ZZQbTFCHFVW4=
+	t=1745838703; cv=none; b=LqEPOqu3TaciLwunUAIw0KQyUPghzXd4sv2hd4eV99/hPyzw6E506piqCQ1Z3KBxy0WS4fSutQNlVkNK/Wq6N0mIX3uYVP8VTQ13YOMZYnV7mmtQLKOpp22iev9BplUGBxKrNrdl6StUZnCYBNKoYIwunGPAho530lj2+iUgpug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745838678; c=relaxed/simple;
-	bh=ya758ZWdrlfF0MXIIyijqnANJPeLkKx1Qs1taaDd8Ps=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cdw3eQVftpP5bJQ4le17riAtokX0p4oWKkat1xia+duyDYpbb7y9oSGA2fWIvCJfQK3xFLtQOeqs7fUfBN+uzDDERjJdgurz2U9J9cm/1voXysDH5lonyeHkssdE0FhnvSfFRKvWpxhxGA8XCLVSEJW53R+DXCWJAJcoMCuL+I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gfbYl1u8; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfbYl1u8"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb5ec407b1so764273966b.1;
-        Mon, 28 Apr 2025 04:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745838675; x=1746443475; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RxwsILxiYRvwgdcm5gcrIrdErYNKCXrz6yyo8LoOi8Q=;
-        b=gfbYl1u89spcw8t5aJvzLJQRn311MxdJXIzmtZ3LbCjuPiUQ8mwI0p2IjlYn2rmNhi
-         /peJTFgg7u++gl6GRnLBG0AgMoYMfQwSPi7Y+0ejnkZdkZ4mhCGkH7YSerBG/pPhSI3t
-         KVYsR+rqyR+m7T8+4SMXaf8FjeEfZETmPRkPg3j0o+6GA2AibtSsXj7B0WTzmGBlNvZu
-         yQk0JCcB84cMT409O+AVoLUveUB1jc1BEzJvx6bG5cY2lkyRFNWDj2YfLy6QxmvyOZ0p
-         Wqt8sUAWFUEgzwmFzSpKZDGDDqiCfMGP/0dT6e4MjlT0jlzNv4HbUA3YWU43qw05wGAG
-         rKQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745838675; x=1746443475;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RxwsILxiYRvwgdcm5gcrIrdErYNKCXrz6yyo8LoOi8Q=;
-        b=U0mZr6gk34kMd+uKQPKLMgBI6mKtjBEu4202/YWimf2dUs0uW1R1PKLcYZAh9tEwB3
-         CKWYLFjgHMyjq1xuRSHDMA2WzEBNScPZ8GNBtWh9Xj9cRcJ8529lkdzGpWSol01FXCcC
-         wiOBJggLbops3/Qr8nyjSu2Z9mlk054/f8TvPp4NTAP2d9NDXu3lLkdhQCF97+8N8LOq
-         eTBhlnVzJM222grshUxLUoHumcAoNGulyAfaAL9EXJele0PV3fFzRN7eY2iHQ7NNasFZ
-         /BHds6eWqziLdUIdT9HkECSnNT9H0xsoCykgGVMOx2y4fFnq+2UJBYL13o9jqWPaRESk
-         LAXg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/KO7t89b5QxHgLOdZyI16ZIo+KvPVAt14vY2tte4zVWmCkdHeQAo6AtSY1bXJMxexxYDewuMqb5IlbXNj@vger.kernel.org, AJvYcCWT+pHjqzO7vtVECKJrvrn9oP6uvQAeUGxTC6VQ4B8rR6y22TqDKAwjqVJJxD5Xm4PSLP8=@vger.kernel.org, AJvYcCXfk4MoJrzEnMp3QdjdpVV5TUN++icIQON8HN885ZEexbWCY+FzFgn89S3NOFLxYEJ8vjQ1iKKCztEAIUCzQZBi6Oh5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQmwK8/caKNBxg0U/Zyz82nSkBXrPR/kDX3RKigrx9dMbvycpU
-	v+g9B3pfNZ2o4GEHO43bVZ37JWAGbQRyBnSGI8dPPG+FYa5B1R8X
-X-Gm-Gg: ASbGnct3R8P/r5sTCdoyxhA5b9BPesY4wluLNQTIFHhSdNlJFAWaW3WwpUSeIRIxSE/
-	wkF4aCPZJ7H17fX7B/r0nHO/6HO/j1VGJs+d/1JGvo1Fqcm2imVhXRDjK5L69tV41XpVIN2VgAf
-	mMFqEyn8CHOdf56CUY1G0F3d2mWqhYgX5vNJC5KFJQ0H99AGgakdIKc7ILconfDw0ML12tHKii6
-	RXrduJKS1HP2yvU0XFFoedJXGWtwnmouNogGTcwuMZCSw3gsRFS8REKlrkHT3Yf/nYMMLVV14ua
-	iQgOQkL6ueTKeXCvL+TgoEWOogA=
-X-Google-Smtp-Source: AGHT+IFhEPkmm9QV39yT7PwGUYrcLhyifatGwU1Z8qAoge6/anjqIKn++nprL27Dbet9RM6guC4rwA==
-X-Received: by 2002:a17:907:3e95:b0:ac3:ccf7:3a11 with SMTP id a640c23a62f3a-ace84a91569mr649620866b.44.1745838674606;
-        Mon, 28 Apr 2025 04:11:14 -0700 (PDT)
-Received: from krava ([173.38.220.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bbc3sm609170966b.3.2025.04.28.04.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:11:14 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 28 Apr 2025 13:11:12 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 07/22] uprobes: Remove breakpoint in
- unapply_uprobe under mmap_write_lock
-Message-ID: <aA9iUIsdiWfrFcRR@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-8-jolsa@kernel.org>
- <20250427142400.GB9350@redhat.com>
+	s=arc-20240116; t=1745838703; c=relaxed/simple;
+	bh=McOM0VUTJ+DdjGmhVBpGrxjCfpAB0KF9ke7LVj13w84=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W9VsZ9MLiirAazpRng73U70cAj5QvfD2lBJRhX9iJoyaOfoX80UiVXsy8mOio0OoqucXu3wMVIElHtpxMdO/m8DgWc1MO6frjdT9UdciF/3kpOSw6WMqLaIjtJIeIlmUlWX1TpfotCy9E+mCdEkxhnEBVVJS8pxRQLEx1rbnGRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZmLJc5nXcz69c9;
+	Mon, 28 Apr 2025 19:07:44 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 632361401F3;
+	Mon, 28 Apr 2025 19:11:38 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 28 Apr
+ 2025 19:11:37 +0800
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+To: <miklos@szeredi.hu>, <amir73il@gmail.com>
+CC: <linux-unionfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH] overlayfs: fix potential NULL pointer dereferences in file handle code
+Date: Mon, 28 Apr 2025 19:11:36 +0800
+Message-ID: <20250428111136.290004-1-wangzhaolong1@huawei.com>
+X-Mailer: git-send-email 2.34.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427142400.GB9350@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Sun, Apr 27, 2025 at 04:24:01PM +0200, Oleg Nesterov wrote:
-> On 04/21, Jiri Olsa wrote:
-> >
-> > @@ -1483,7 +1483,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
-> >  	struct vm_area_struct *vma;
-> >  	int err = 0;
-> >
-> > -	mmap_read_lock(mm);
-> > +	mmap_write_lock(mm);
-> 
-> So uprobe_write_opcode() is always called under down_write(), right?
-> Then this
-> 
-> 	* Called with mm->mmap_lock held for read or write.
-> 
-> comment should be probably updated.
+Several locations in overlayfs file handle code fail to check if a file
+handle pointer is NULL before accessing its members. A NULL file handle
+can occur when the lower filesystem doesn't support export operations,
+as seen in ovl_get_origin_fh() which explicitly returns NULL in this case.
 
-yes
+The following locations are vulnerable to NULL pointer dereference:
 
-> 
-> And perhaps the comment above mmap_write_lock() in register_for_each_vma()
-> should be updated too... or even removed.
+1. ovl_set_origin_fh() accesses fh->buf without checking if fh is NULL
+2. ovl_verify_fh() uses fh->fb members without NULL check
+3. ovl_get_index_name_fh() accesses fh->fb.len without NULL check
 
-hum, not sure now how it's related to this change, but will stare at it bit more
+Fix these potential NULL pointer dereferences by adding appropriate NULL
+checks before accessing the file handle structure members.
 
-thanks,
-jirka
+Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
+---
+ fs/overlayfs/copy_up.c | 4 ++--
+ fs/overlayfs/namei.c   | 8 +++++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+index d7310fcf3888..9b45010d4a7d 100644
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -489,12 +489,12 @@ int ovl_set_origin_fh(struct ovl_fs *ofs, const struct ovl_fh *fh,
+ 	int err;
+ 
+ 	/*
+ 	 * Do not fail when upper doesn't support xattrs.
+ 	 */
+-	err = ovl_check_setxattr(ofs, upper, OVL_XATTR_ORIGIN, fh->buf,
+-				 fh ? fh->fb.len : 0, 0);
++	err = ovl_check_setxattr(ofs, upper, OVL_XATTR_ORIGIN,
++				 fh ? fh->buf : NULL, fh ? fh->fb.len : 0, 0);
+ 
+ 	/* Ignore -EPERM from setting "user.*" on symlink/special */
+ 	return err == -EPERM ? 0 : err;
+ }
+ 
+diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+index be5c65d6f848..5acc13c012c1 100644
+--- a/fs/overlayfs/namei.c
++++ b/fs/overlayfs/namei.c
+@@ -496,10 +496,13 @@ static int ovl_verify_fh(struct ovl_fs *ofs, struct dentry *dentry,
+ 			 enum ovl_xattr ox, const struct ovl_fh *fh)
+ {
+ 	struct ovl_fh *ofh = ovl_get_fh(ofs, dentry, ox);
+ 	int err = 0;
+ 
++	if (!fh)
++		return -ENODATA;
++
+ 	if (!ofh)
+ 		return -ENODATA;
+ 
+ 	if (IS_ERR(ofh))
+ 		return PTR_ERR(ofh);
+@@ -516,11 +519,11 @@ int ovl_verify_set_fh(struct ovl_fs *ofs, struct dentry *dentry,
+ 		      bool is_upper, bool set)
+ {
+ 	int err;
+ 
+ 	err = ovl_verify_fh(ofs, dentry, ox, fh);
+-	if (set && err == -ENODATA)
++	if (set && err == -ENODATA && fh)
+ 		err = ovl_setxattr(ofs, dentry, ox, fh->buf, fh->fb.len);
+ 
+ 	return err;
+ }
+ 
+@@ -702,10 +705,13 @@ int ovl_verify_index(struct ovl_fs *ofs, struct dentry *index)
+ 
+ int ovl_get_index_name_fh(const struct ovl_fh *fh, struct qstr *name)
+ {
+ 	char *n, *s;
+ 
++	if (!fh)
++		return -EINVAL;
++
+ 	n = kcalloc(fh->fb.len, 2, GFP_KERNEL);
+ 	if (!n)
+ 		return -ENOMEM;
+ 
+ 	s  = bin2hex(n, fh->buf, fh->fb.len);
+-- 
+2.34.3
+
