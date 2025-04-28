@@ -1,274 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785BE27978B;
-	Mon, 28 Apr 2025 15:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4C627978C;
+	Mon, 28 Apr 2025 15:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745852425; cv=none; b=KOVEeCPTmvT1URdboh+/pE8VEFuIlCfTooomzl3YXjXcAXFvEVn0b+SM0HSX6zJH8f16R0GWiU6OM8bqkifUju9vf6VatZFtv7kyyq7zOaEowoHTiwHRwadVGv1MdbUQeSAJ6XURAGplJhU6XpkTX9sI5tg3l2Ju/ijg6BSrpNg=
+	t=1745852461; cv=none; b=IT/YkFExOTgjBR2Zo+b0h/VIsC1H93XyIbAreng7y0KWjIEQfhQe4DdXTs4wpeMudzYmBdcLU7quHxc7mJYqsve5RGptPJ7Th1MoRqvgeVTTbCu0Ho2l2W4o0Xb7qp4QBJWoheRnmpmGR2iBWH2f/jwgLVwBCIktbGzYnvks5MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745852425; c=relaxed/simple;
-	bh=WAq2iabc990w1Qi0DDPIDDUC0WKvIFPY3pDowPsJQMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=M936+de9gPc04iik+hjqzUQ2iIPrXzOJXfDZFjfV0qHDt4vcC9ds1pAdWEZPKpPPcm2fPZDExY0D5FMNsCfrNmY0A9lB14YPipjJuAMdklR4z8rKG2M6KVK1nO8kPstMNF3E2k/5HEyRaFDYs/ArEyFaeoovsJYPv+/vbYddUnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQp2+ZJW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745852461; c=relaxed/simple;
+	bh=Jj0NuGJcZPP++kkBPoUGzVvz6UYG/ryJu2VBn3xv4s4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pEhKuh0NXoy2s6cdsGRX7/QxRN+t2ZXDIVRH0A22Poc44RXAF6Bf4aeSG+5y/uelFX/Ak0kI/kDt+Z2NpO0whAVExvufTcJ13sFp24EK4q3VCgWWbtkc6/J1Xuih3/27C1JimCyP6hq7HjYB399FMQd+cp2yplUs//cIpC7sfpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cTAHqyDf; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQp2+ZJW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62DAC4CEE4;
-	Mon, 28 Apr 2025 15:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745852424;
-	bh=WAq2iabc990w1Qi0DDPIDDUC0WKvIFPY3pDowPsJQMw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kQp2+ZJW/+MDSHEWo+O6QFPsCfeB+qokVPiGOpZMvh+VJXhZ+Ml7rl8WqSIRJEgOz
-	 c5OivtOlJYD22hJ8yegza6zImUfXt7BlKNF/ChKHnYY/gNXfeyUXtVauvsq0NgWUIR
-	 2IZCVxl8WwgSBo0YkNbmlf1sQvV56/6CwSkz59keS/SHojIOwwZghrmtlPtrf24l6D
-	 BlXjnL+2CSPuVOlkqHnwdSE4eRMX9D0g1xr/Ub1WPr3UdrFw0UNFRM4h7TjBaEV7Oq
-	 NOr/kjzSdWzE65uCYubv4jeVfiFi3f4+kSSyniqm7SoMXVkY1vRQq3d4lqUVhklag+
-	 sK/zOLkNRiNNw==
-Date: Mon, 28 Apr 2025 10:00:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
-Cc: kvm@vger.kernel.org, Chathura Rajapaksha <chath@bu.edu>,
-	William Wang <xwill@bu.edu>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-	Xin Zeng <xin.zeng@intel.com>, Yahui Cao <yahui.cao@intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Yunxiang Li <Yunxiang.Li@amd.com>,
-	Dongdong Zhang <zhangdongdong@eswincomputing.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Avihai Horon <avihaih@nvidia.com>, linux-kernel@vger.kernel.org,
-	audit@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] block accesses to unassigned PCI config regions
-Message-ID: <20250428150023.GA670069@bhelgaas>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cTAHqyDf"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4F84F4397F;
+	Mon, 28 Apr 2025 15:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745852455;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l/KM50XoeWonitoxoMaOHFeoOtZjamWkVO4Sfztxz2s=;
+	b=cTAHqyDfWqZQRajnA0jCJJTRWgntMZ9qCGKU473NOxESwutCLvKkGP9L3GMlUIUf1TVfoJ
+	rSml0e13bS9W5xL7vpWnRG/Gf8DwWyNIkXZ07glmnEui2hZC2Xoq/8/xjrvJp5r3ePSFuU
+	njtoTq8LUpcrENa9NLXi3tWAr4COusan12TyNUvMZQZfaHrdfuVf/DcDoxsqC3HUZd6Oxa
+	xFrGUT/PhDw09LZJgn+fTcnrJMlbI4kHX39u8mbqL16gwmh6HE2DuFmuNLvVbhBpuVI1WK
+	hOs5l7kG8ZpIdaFhDwnEIRvdHjqsZaRpzN9lTpgipOlJKjv7cuiqF1qRk9Zf2g==
+Date: Mon, 28 Apr 2025 17:00:45 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Andy Yan" <andyshrk@163.com>
+Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Andrzej
+ Hajda" <andrzej.hajda@intel.com>, "Neil Armstrong"
+ <neil.armstrong@linaro.org>, "Robert Foss" <rfoss@kernel.org>, "Laurent
+ Pinchart" <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman"
+ <jonas@kwiboo.se>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jagan
+ Teki" <jagan@amarulasolutions.com>, "Shawn Guo" <shawnguo@kernel.org>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>, "Pengutronix Kernel Team"
+ <kernel@pengutronix.de>, "Fabio Estevam" <festevam@gmail.com>, "Douglas
+ Anderson" <dianders@chromium.org>, "Chun-Kuang Hu"
+ <chunkuang.hu@kernel.org>, "Krzysztof Kozlowski" <krzk@kernel.org>, "Anusha
+ Srivatsa" <asrivats@redhat.com>, "Paul Kocialkowski" <paulk@sys-base.io>,
+ "Dmitry Baryshkov" <lumag@kernel.org>, "Hui Pu" <Hui.Pu@gehealthcare.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
+ "Adam Ford" <aford173@gmail.com>, "Adrien Grassein"
+ <adrien.grassein@gmail.com>, "Aleksandr Mishin" <amishin@t-argos.ru>, "Andy
+ Yan" <andy.yan@rock-chips.com>, "AngeloGioacchino Del Regno"
+ <angelogioacchino.delregno@collabora.com>, "Benson Leung"
+ <bleung@chromium.org>, "Biju Das" <biju.das.jz@bp.renesas.com>, "Christoph
+ Fritz" <chf.fritz@googlemail.com>, "Cristian Ciocaltea"
+ <cristian.ciocaltea@collabora.com>, "Detlev Casanova"
+ <detlev.casanova@collabora.com>, "Dharma Balasubiramani"
+ <dharma.b@microchip.com>, "Guenter Roeck" <groeck@chromium.org>, "Heiko
+ Stuebner" <heiko@sntech.de>, "Jani Nikula" <jani.nikula@intel.com>, "Janne
+ Grunau" <j@jannau.net>, "Jerome Brunet" <jbrunet@baylibre.com>, "Jesse Van
+ Gavere" <jesseevg@gmail.com>, "Kevin Hilman" <khilman@baylibre.com>,
+ "Kieran Bingham" <kieran.bingham+renesas@ideasonboard.com>, "Liu Ying"
+ <victor.liu@nxp.com>, "Manikandan Muralidharan"
+ <manikandan.m@microchip.com>, "Martin Blumenstingl"
+ <martin.blumenstingl@googlemail.com>, "Matthias Brugger"
+ <matthias.bgg@gmail.com>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Phong
+ LE" <ple@baylibre.com>, "Sasha Finkelstein" <fnkl.kernel@gmail.com>, "Sugar
+ Zhang" <sugar.zhang@rock-chips.com>, "Sui Jingfeng"
+ <sui.jingfeng@linux.dev>, "Tomi Valkeinen"
+ <tomi.valkeinen+renesas@ideasonboard.com>, "Vitalii Mordan"
+ <mordan@ispras.ru>
+Subject: Re: [PATCH v2 01/34] drm: convert many bridge drivers from
+ devm_kzalloc() to devm_drm_bridge_alloc() API
+Message-ID: <20250428170045.5ca315ce@booty>
+In-Reply-To: <656e493e.a551.1967c6d0c53.Coremail.andyshrk@163.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
+	<656e493e.a551.1967c6d0c53.Coremail.andyshrk@163.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426212253.40473-2-chath@bu.edu>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieduvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepieelpdhrtghpthhtoheprghnugihshhhrhhkseduieefrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hint: observe subject line conventions for the file you're changing.
-See "git log --oneline drivers/vfio/pci/vfio_pci_config.c".
+Hallo Andy,
 
-On Sat, Apr 26, 2025 at 09:22:48PM +0000, Chathura Rajapaksha wrote:
-> Some PCIe devices trigger PCI bus errors when accesses are made to
-> unassigned regions within their PCI configuration space. On certain
-> platforms, this can lead to host system hangs or reboots.
+On Mon, 28 Apr 2025 20:44:03 +0800 (CST)
+"Andy Yan" <andyshrk@163.com> wrote:
 
-1) Define "unassigned regions".  From the patch, I infer that the
-64-byte header, capabilities, and extended capabilities are considered
-"assigned," and anything else would be "unassigned."
+> Hi ,
+> 
+> At 2025-04-25 02:59:08, "Luca Ceresoli" <luca.ceresoli@bootlin.com> wrote:
+> >devm_drm_bridge_alloc() is the new API to be used for allocating (and
+> >partially initializing) a private driver struct embedding a struct
+> >drm_bridge.
+> >
+> >For many drivers having a simple code flow in the probe function, this
+> >commit does a mass conversion automatically with the following semantic
+> >patch. The changes have been reviewed manually for correctness as well as
+> >to find any false positives.
+> >
+> >  @@
+> >  type T;
+> >  identifier C;
+> >  identifier BR;
+> >  expression DEV;
+> >  expression FUNCS;
+> >  @@
+> >  -T *C;
+> >  +T *C;
+> >   ...
+> >  (
+> >  -C = devm_kzalloc(DEV, ...);
+> >  -if (!C)
+> >  -    return -ENOMEM;
+> >  +C = devm_drm_bridge_alloc(DEV, T, BR, FUNCS);
+> >  +if (IS_ERR(C))
+> >  +     return PTR_ERR(C);
+> >  |
+> >  -C = devm_kzalloc(DEV, ...);
+> >  -if (!C)
+> >  -    return ERR_PTR(-ENOMEM);
+> >  +C = devm_drm_bridge_alloc(DEV, T, BR, FUNCS);
+> >  +if (IS_ERR(C))
+> >  +     return PTR_ERR(C);
+> >  )
+> >   ...
+> >  -C->BR.funcs = FUNCS;
+> >
+> >Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-2) Can you expand on what these certain platforms are and the details
-of what these errors are and how they're reported?  You mention
-"PCIe," but I suppose this is not really PCIe-specific.  I suppose the
-hang or reboot would be a consequence of the error being reported as
-SERR# or a platform-specific System Error (PCIe r6.0, sec 6.2.6)?
+[...]
 
-In conventional PCI, we may not have control over SERR# assertion and
-the effect on the system.  In PCIe, bits in the Root Control register
-should control SERR# assertion.
+> >diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
+> >index 5e5f8c2f95be1f5c4633f1093b17a00f9425bb37..9b1dfdb5e7ee528c876c01916c9821d550cad679 100644
+> >--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
+> >+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c
+> >@@ -1045,9 +1045,10 @@ struct dw_hdmi_qp *dw_hdmi_qp_bind(struct platform_device *pdev,
+> > 		return ERR_PTR(-ENODEV);
+> > 	}
+> > 
+> >-	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
+> >-	if (!hdmi)
+> >-		return ERR_PTR(-ENOMEM);
+> >+	hdmi = devm_drm_bridge_alloc(dev, struct dw_hdmi_qp, bridge,
+> >+				     &dw_hdmi_qp_bridge_funcs);
+> >+	if (IS_ERR(hdmi))
+> >+		return PTR_ERR(hdmi);  
+> 
+>            This should return hdmi or ERR_CAST(hdmi);
 
-> The current vfio-pci driver allows guests to access unassigned regions
-> in the PCI configuration space. Therefore, when such a device is passed
-> through to a guest, the guest can induce a host system hang or reboot
-> through crafted configuration space accesses, posing a threat to
-> system availability.
-> 
-> This patch introduces support for blocking guest accesses to unassigned
-> PCI configuration space, and the ability to bypass this access control
-> for specific devices. The patch introduces three module parameters:
+Indeed, thanks!
 
-We already know which patch this refers to (so "this patch" is
-unnecessary) and typical style is to use imperative mood:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.14#n94
+My coccinelle patch is clearly not clever enough. I'll see whether I
+can fix it, otherwise I'll handle these 3 special cases manually, along
+with another similar one (imx/imx-legacy-bridge.c) I just spotted after
+your report.
 
->    block_pci_unassigned_write:
->    Blocks write accesses to unassigned config space regions.
-> 
->    block_pci_unassigned_read:
->    Blocks read accesses to unassigned config space regions.
-> 
->    uaccess_allow_ids:
->    Specifies the devices for which the above access control is bypassed.
->    The value is a comma-separated list of device IDs in
->    <vendor_id>:<device_id> format.
-> 
->    Example usage:
->    To block guest write accesses to unassigned config regions for all
->    passed through devices except for the device with vendor ID 0x1234 and
->    device ID 0x5678:
-> 
->    block_pci_unassigned_write=1 uaccess_allow_ids=1234:5678
-> 
-> Co-developed by: William Wang <xwill@bu.edu>
-> Signed-off-by: William Wang <xwill@bu.edu>
-> Signed-off-by: Chathura Rajapaksha <chath@bu.edu>
-> ---
->  drivers/vfio/pci/vfio_pci_config.c | 122 ++++++++++++++++++++++++++++-
->  1 file changed, 121 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index 8f02f236b5b4..cb4d11aa5598 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -120,6 +120,106 @@ struct perm_bits {
->  #define	NO_WRITE	0
->  #define	ALL_WRITE	0xFFFFFFFFU
->  
-> +static bool block_pci_unassigned_write;
-> +module_param(block_pci_unassigned_write, bool, 0644);
-> +MODULE_PARM_DESC(block_pci_unassigned_write,
-> +		 "Block write accesses to unassigned PCI config regions.");
-> +
-> +static bool block_pci_unassigned_read;
-> +module_param(block_pci_unassigned_read, bool, 0644);
-> +MODULE_PARM_DESC(block_pci_unassigned_read,
-> +		 "Block read accesses from unassigned PCI config regions.");
-> +
-> +static char *uaccess_allow_ids;
-> +module_param(uaccess_allow_ids, charp, 0444);
-> +MODULE_PARM_DESC(uaccess_allow_ids, "PCI IDs to allow access to unassigned PCI config regions, format is \"vendor:device\" and multiple comma separated entries can be specified");
-> +
-> +static LIST_HEAD(allowed_device_ids);
-> +static DEFINE_SPINLOCK(device_ids_lock);
-> +
-> +struct uaccess_device_id {
-> +	struct list_head slot_list;
-> +	unsigned short vendor;
-> +	unsigned short device;
-> +};
-> +
-> +static void pci_uaccess_add_device(struct uaccess_device_id *new,
-> +				   int vendor, int device)
-> +{
-> +	struct uaccess_device_id *pci_dev_id;
-> +	unsigned long flags;
-> +	int found = 0;
-> +
-> +	spin_lock_irqsave(&device_ids_lock, flags);
-> +
-> +	list_for_each_entry(pci_dev_id, &allowed_device_ids, slot_list) {
-> +		if (pci_dev_id->vendor == vendor &&
-> +		    pci_dev_id->device == device) {
-> +			found = 1;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!found) {
-> +		new->vendor = vendor;
-> +		new->device = device;
-> +		list_add_tail(&new->slot_list, &allowed_device_ids);
-> +	}
-> +
-> +	spin_unlock_irqrestore(&device_ids_lock, flags);
-> +
-> +	if (found)
-> +		kfree(new);
-> +}
-> +
-> +static bool pci_uaccess_lookup(struct pci_dev *dev)
-> +{
-> +	struct uaccess_device_id *pdev_id;
-> +	unsigned long flags;
-> +	bool found = false;
-> +
-> +	spin_lock_irqsave(&device_ids_lock, flags);
-> +	list_for_each_entry(pdev_id, &allowed_device_ids, slot_list) {
-> +		if (pdev_id->vendor == dev->vendor &&
-> +		    pdev_id->device == dev->device) {
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +	spin_unlock_irqrestore(&device_ids_lock, flags);
-> +
-> +	return found;
-> +}
-> +
-> +static int __init pci_uaccess_init(void)
-> +{
-> +	char *p, *id;
-> +	int fields;
-> +	int vendor, device;
-> +	struct uaccess_device_id *pci_dev_id;
-> +
-> +	/* add ids specified in the module parameter */
-> +	p = uaccess_allow_ids;
-> +	while ((id = strsep(&p, ","))) {
-> +		if (!strlen(id))
-> +			continue;
-> +
-> +		fields = sscanf(id, "%x:%x", &vendor, &device);
-> +
-> +		if (fields != 2) {
-> +			pr_warn("Invalid id string \"%s\"\n", id);
-> +			continue;
-> +		}
-> +
-> +		pci_dev_id = kmalloc(sizeof(*pci_dev_id), GFP_KERNEL);
-> +		if (!pci_dev_id)
-> +			return -ENOMEM;
-> +
-> +		pci_uaccess_add_device(pci_dev_id, vendor, device);
-> +	}
-> +	return 0;
-> +}
-> +
->  static int vfio_user_config_read(struct pci_dev *pdev, int offset,
->  				 __le32 *val, int count)
->  {
-> @@ -335,6 +435,18 @@ static struct perm_bits unassigned_perms = {
->  	.writefn = vfio_raw_config_write
->  };
->  
-> +/*
-> + * Read/write access to PCI unassigned config regions can be blocked
-> + * using the block_pci_unassigned_read and block_pci_unassigned_write
-> + * module parameters. The uaccess_allow_ids module parameter can be used
-> + * to whitelist devices (i.e., bypass the block) when either of the
-> + * above parameters is specified.
-> + */
-> +static struct perm_bits block_unassigned_perms = {
-> +	.readfn = NULL,
-> +	.writefn = NULL
-> +};
-> +
->  static struct perm_bits virt_perms = {
->  	.readfn = vfio_virt_config_read,
->  	.writefn = vfio_virt_config_write
-> @@ -1108,6 +1220,9 @@ int __init vfio_pci_init_perm_bits(void)
->  	ecap_perms[PCI_EXT_CAP_ID_VNDR].writefn = vfio_raw_config_write;
->  	ecap_perms[PCI_EXT_CAP_ID_DVSEC].writefn = vfio_raw_config_write;
->  
-> +	/* Device list allowed to access unassigned PCI regions */
-> +	ret |= pci_uaccess_init();
-> +
->  	if (ret)
->  		vfio_pci_uninit_perm_bits();
->  
-> @@ -1896,7 +2011,12 @@ static ssize_t vfio_config_do_rw(struct vfio_pci_core_device *vdev, char __user
->  	cap_id = vdev->pci_config_map[*ppos];
->  
->  	if (cap_id == PCI_CAP_ID_INVALID) {
-> -		perm = &unassigned_perms;
-> +		if (((iswrite && block_pci_unassigned_write) ||
-> +		     (!iswrite && block_pci_unassigned_read)) &&
-> +		    !pci_uaccess_lookup(pdev))
-> +			perm = &block_unassigned_perms;
-> +		else
-> +			perm = &unassigned_perms;
->  		cap_start = *ppos;
->  	} else if (cap_id == PCI_CAP_ID_INVALID_VIRT) {
->  		perm = &virt_perms;
-> -- 
-> 2.34.1
-> 
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
