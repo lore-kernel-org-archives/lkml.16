@@ -1,79 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDA4279905;
-	Mon, 28 Apr 2025 17:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B57F327978F;
+	Mon, 28 Apr 2025 17:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860256; cv=none; b=fHtxCHGiTBFgXMh02QhJWj3Akmbu+o+t1V6fYnPEKlYbVJg7JbO2hqQraAfSO7oUkq7AK5o16uWYjcjrOZLQzgDesDe076WTKdGiLF2zVcc3hXPe3iFEDLRvTh2P4KzO+SMgI2mROgvbWDYz7GQwrAiJx9K3vXI8s2C/9MDJA8g=
+	t=1745860312; cv=none; b=XYOBWq1kxdB/T7PnGqywc1jhNRwOJvD9y3g4A0G/Qt4Nz+gdgWwW7hY4vSsskgIq1RTD0ewD7t5d6clSCNmS8n/k+2F4B3rze1/7FdHEYB/ut572TFc776bQ/gFXo4+xa13LaL+kcp88r6+va4JUtkU4eAy1ApiexYWicwUd1l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860256; c=relaxed/simple;
-	bh=sZHRZhyj5pMp4MRhzvMj2XffQ6Wzn+Qml49c4H6YtrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OdxRAfcjFuikVEQ5gXoyDsE+OHx7LUGNROe4A0Z/n2ZUSbsBqj3FP6zT4RW0vO8Gadybm5FLdbT4NfHKAnn0bFOo/5r+owOYEgcyPflffh/nIVe5SiaNX+hWRxv9oz9o4SGdR0PXjK4uNqJE8+wilVFmnGI7uT/no+Mb+KbI6eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHL9DDcv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745860312; c=relaxed/simple;
+	bh=ClPZna7i5122Wr09xYbtgoqUCmhyRpCbBMozYYurono=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YgTQZc6n5gEnHIzBnhfupnjmou1/FoLcvkLgW+DpMHNWdXoGAnlVNpBDRgs4fb8Cxz8IYUxxMUai/yx49csx8mtu4ikPc5Y4XhqYlRk1QP6cr/D33sjnvLOSlb4d2xPmDBc+aw3dCgVUjmL3hFuTlz/Cdv8s0DDepS9wmt+ppvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qRfgSULg; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHL9DDcv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92C6C4CEE4;
-	Mon, 28 Apr 2025 17:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745860255;
-	bh=sZHRZhyj5pMp4MRhzvMj2XffQ6Wzn+Qml49c4H6YtrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gHL9DDcv3Z5JecpwuZopOxwhjqrMd9+3UrYFq/trcF5sG7ix8vo4153oibvw0nZds
-	 pvC4ddXhDoMzVUUHML/sB4nDb+zBOBLmdMFffDzHybcDSvVGkeKb8dsnw15BKZfLOb
-	 0Y7uQCp37jDbPATKC3MOsGLhhFcTyyt25n9/k+NaokDa/AASUoRFGsCydn70IIBGJ+
-	 E7EnECyIPKK+6w0V2baIKK6+OT9gOhWmQdyccEeWDi9tZ+0yEkNOJ+bBvj8BNmuBn0
-	 IQkJSEyKrvSX8NwtFY/cMYL3thUJkiuzexCYR2LfOuHsIGIVoMMK2MX3qeXoj7/S0b
-	 4Mbn9+NG4/m6A==
-Date: Mon, 28 Apr 2025 10:10:52 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 5/6] x86/vdso: Use CFI macros in
- __vdso_sgx_enter_enclave()
-Message-ID: <btzpfx5l43y5sp2j6zco4yh74g6zafo3jtmqumbjggjrwcoscn@vaorx7xtcmye>
-References: <20250425023750.669174660@goodmis.org>
- <20250425024023.000117829@goodmis.org>
- <2d81ea94-e46e-497c-bbfb-8db38203e57c@oracle.com>
- <nl5qjjmdqgd6hrxefkhihjmzzdzt6lsjsil74pemlrywvsezkr@syb6jbpc2fav>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qRfgSULg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=0l6Sm
+	MR9BzhKNVS+UMt/7W8m+RHOtktucSCIuVkRrGU=; b=qRfgSULgVssfAF7kJPd3D
+	ZITouP3cQhBbn3eqhGgRdFYM5bm5XaUukMRrFff/uQG9xJp1Tm+cds+Kfx5WLjKD
+	pPKV/XgRT0fygzyGa8iPpGf5tvYO2K5gOLfMw1Zoh80F7HIpXRQc3856SNPlb14Q
+	6SOR/Qrzwg/25gNgXBEtDY=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCH4haitg9otPCfDA--.1694S5;
+	Tue, 29 Apr 2025 01:11:01 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org
+Cc: cassel@kernel.org,
+	robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH 3/3] PCI: cadence: Simplify j721e link status check
+Date: Tue, 29 Apr 2025 01:10:27 +0800
+Message-Id: <20250428171027.13237-4-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250428171027.13237-1-18255117159@163.com>
+References: <20250428171027.13237-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nl5qjjmdqgd6hrxefkhihjmzzdzt6lsjsil74pemlrywvsezkr@syb6jbpc2fav>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCH4haitg9otPCfDA--.1694S5
+X-Coremail-Antispam: 1Uf129KBjvdXoWruryDKrWxAr1kJF15ZFW5ZFb_yoWDArc_ZF
+	1rZF4IyFsrurZIkFy2yF4ayFyrAayIva12ga93tF15AFyxJr4UCF1UZrWDWa4xua15AFn8
+	Aw1qqFn8AryjyjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjoUq5UUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwM9o2gPr6StOAAAs-
 
-On Mon, Apr 28, 2025 at 09:17:01AM -0700, Josh Poimboeuf wrote:
-> On Fri, Apr 25, 2025 at 04:22:22PM -0700, Indu Bhagat wrote:
-> > On 4/24/25 7:37 PM, Steven Rostedt wrote:
-> > > From: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > 
-> > > Use the CFI macros instead of the raw .cfi_* directives to be consistent
-> > > with the rest of the VDSO asm.  It's also easier on the eyes.
-> > > 
-> > > No functional changes.
-> > > 
-> > 
-> > Although unrelated to the current intent of the patch, a question:
-> > 
-> >   Why does the stub after .Linvoke_userspace_handler in vsgs.S not have CFI
-> > directives ?
-> 
-> Yeah, looks like that stack alignment code needs some CFI.
+Replace explicit if-else condition with direct return statement in
+j721e_pcie_link_up(). This reduces code verbosity while maintaining
+the same logic for detecting PCIe link completion.
 
-Actually, this function uses a frame pointer so I think the stack
-pointer alignment shouldn't affect the CFI?
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/cadence/pci-j721e.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index ef1cfdae33bb..bea1944a7eb2 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -153,11 +153,7 @@ static bool j721e_pcie_link_up(struct cdns_pcie *cdns_pcie)
+ 	u32 reg;
+ 
+ 	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_LINKSTATUS);
+-	reg &= LINK_STATUS;
+-	if (reg == LINK_UP_DL_COMPLETED)
+-		return true;
+-
+-	return false;
++	return (reg & LINK_STATUS) == LINK_UP_DL_COMPLETED;
+ }
+ 
+ static const struct cdns_pcie_ops j721e_pcie_ops = {
 -- 
-Josh
+2.25.1
+
