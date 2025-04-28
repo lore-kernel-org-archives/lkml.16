@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCEB213E7E;
-	Mon, 28 Apr 2025 22:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE792144A4
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745880018; cv=none; b=gL5gVr6BTge9OWmm3ZOA4bPJvFIA7IFZoA8hjFyIlWYHm6GCahwpKUuFdVeUghy/blvXDe3jJCcAetKyZd7pp6PSLkpckCJ7+mhUBVxZ4LMUTvdOXtanSpkaMgy27qMVbqUMQhOT2fcWvm/4KHHMyDyXCTJc5oYU/V07ySdCB/0=
+	t=1745880019; cv=none; b=JFZOWXGwse+8vx/ltmD0t1kLkJAl5QJrX/Ia2Z2sRLB3lg5GZT95YI6Da2H+db+HTRQMGI1weZEkUsJFmieNa902tTp0Vm4r8b/uk2GLtnyMr1ohzRKVZg+smEVPyiimP14grdIaaEBPXyalekqXtkcUEGyzlF/H227iA75fCPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745880018; c=relaxed/simple;
-	bh=BFR43jbgHotYY1eutbh4BBrxebdbMJ29xjEmR45iP/M=;
+	s=arc-20240116; t=1745880019; c=relaxed/simple;
+	bh=hW8OBlEtNhGteY8BD89YhPa5txGl0BrBpZfLGBY/d7A=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=AgFL5dIk/X9Z13FVZTOvs64qLa4ztuER3D6OlGS1+UEBl/FBhzPD7mrlT5r7YapDX3XheVMpkCZrh5X5gHnFrAEMdKRkDv15ocoW7IaIWoco8uoeC+AhDRaauzSZGu9A5MHCl6IiojtP2FpoDXdMEjcpWsRnR8QKPkxOYPqior0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnsMzU6o; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=J8kpgDfEMHhXdz7Tf7eI+jB+IxEq6Lpbkc/6/TtBxw+onNZx7W6WxJuIwE3g8Ia/BxR1RnX4a+CRCbxFUzWPB8oFU1jNfY9eRFH3PwGJ16I0JtHusaVPtrxhk2ZFWsCcPMhOtXlEAzWSM7uNCDviML8uRVhiUaJBbQeTH5zmLys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIRmMbgH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnsMzU6o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95727C4CEE4;
-	Mon, 28 Apr 2025 22:40:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIRmMbgH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48802C4CEEE;
+	Mon, 28 Apr 2025 22:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745880016;
-	bh=BFR43jbgHotYY1eutbh4BBrxebdbMJ29xjEmR45iP/M=;
+	s=k20201202; t=1745880019;
+	bh=hW8OBlEtNhGteY8BD89YhPa5txGl0BrBpZfLGBY/d7A=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gnsMzU6ouEJDEXlU0SfMnpQH9Dwre4NjybN2lFvke/koLw3n/hC1EQ1TIN8UASbVL
-	 RnRwsSrNCeAnnSQ6MEd2d50OxKZiFZDOfM2nTxjH7zUrzh+/OgsvwfQfrehWWdhHIa
-	 PXsykTwY9uxIqsqYZMZNJ89z0lHWqh/xU17z5DwsGC5x63CMABdb4JKAonn/7xQptc
-	 eRQ5QDDKeCy2xvMraQU/eEM7eWN38Xi/7ihMtaaM4InWj1AipOFIopR0afbT99eYp6
-	 oj4BWJ9UQEfOv9xgHTyjegcCEpj/JMpSW8KPmsKpolbJAQqXm816Kha5C5/fI1AlyD
-	 vbf3nPEweKaIQ==
+	b=lIRmMbgH90LNqQELKn/Ngr6Upt/UUJxwIUtHrjqPgugfamIJF1AL5FQcF2d4HfhNe
+	 fW7k1ZyHFwE8dTAxXS0ppCdOwividCqjAm/4iPkGhO5Zjx2xLgHI/LJ/x591fpBaYQ
+	 7kN7zsScKHBsS2bRjU0vb2hsz/MlB2WN4nuUjL/lBiFz3kGQiGx+3/OrEAGUsBogY7
+	 dIxaEhnsjK5jaIDQz+sZoj1HYIiZ1Prs/3S1Je/qJl3RG+53tGU4JDVXJ2k/Sxrt3n
+	 fSdczVIUHpxQcB5Q4DjTC6IksugcdbNOdjaJgS1dU+hmYV47a3rm3skSqi7CCH0xoa
+	 WHicYTqlkTXPw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADB013822D43;
-	Mon, 28 Apr 2025 22:40:56 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BFD3822D43;
+	Mon, 28 Apr 2025 22:40:59 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,38 +37,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity check on sit_bitmap_size
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: handle error cases of memory donation
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <174588005523.1067750.16774699673521378545.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Apr 2025 22:40:55 +0000
-References: <20250414105520.729616-1-chao@kernel.org>
-In-Reply-To: <20250414105520.729616-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+ <174588005823.1067750.16743465439008922626.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Apr 2025 22:40:58 +0000
+References: <20250423204935.2335000-1-daeho43@gmail.com>
+In-Reply-To: <20250423204935.2335000-1-daeho43@gmail.com>
+To: Daeho Jeong <daeho43@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ kernel-team@android.com, daehojeong@google.com
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Mon, 14 Apr 2025 18:55:20 +0800 you wrote:
-> w/ below testcase, resize will generate a corrupted image which
-> contains inconsistent metadata, so when mounting such image, it
-> will trigger kernel panic:
+On Wed, 23 Apr 2025 13:49:34 -0700 you wrote:
+> From: Daeho Jeong <daehojeong@google.com>
 > 
-> touch img
-> truncate -s $((512*1024*1024*1024)) img
-> mkfs.f2fs -f img $((256*1024*1024))
-> resize.f2fs -s -i img -t $((1024*1024*1024))
-> mount img /mnt/f2fs
+> In cases of removing memory donation, we need to handle some error cases
+> like ENOENT and EACCES (indicating the range already has been donated).
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to do sanity check on sit_bitmap_size
-    https://git.kernel.org/jaegeuk/f2fs/c/5db0d252c64e
+  - [f2fs-dev,v2] f2fs: handle error cases of memory donation
+    https://git.kernel.org/jaegeuk/f2fs/c/ad5291e2c1e5
 
 You are awesome, thank you!
 -- 
