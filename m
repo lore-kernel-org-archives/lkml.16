@@ -1,200 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7256A33F;
-	Mon, 28 Apr 2025 20:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB64A101C8
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745873322; cv=none; b=sW5Tef2gKJL54GbD5J+dfZvPD5zyMbL2BubxVvoqv/nAXb720y9Bmvlp817MQyr/xFXvnxOd0yIuh/p6ZmwFs6/wSr1uoZUqvgTE+5xel9DomW7+ZKQD4Zsu60sKO0I8akWrwQJGC5Db00GO8WeZBiGro4piSZkw4SgmnjUlEVU=
+	t=1745873384; cv=none; b=JIKXCGE7GEo8Oq60da2gEnZqX7rmnqJfRTA0VSj83RL6yoKPOKsMLkb6Yay652i0HJLfX+2QmIfp2iAysDgwBsx/hbFzWZoBI7dCfysfLRgAa9httvEVMi+O3iSQIDuYQaxen5qWY/TS746LgsAgyb3IgQwEtIwIKHos5lwedAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745873322; c=relaxed/simple;
-	bh=0HoWU3q4+qyiDoIEkIcqHAS0oyqLX985Vg5lAD6tTmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N62cw2iIPj22y+Nfx3d78FKhzrXK9o2AVF2cGbqMXL/F5JdNvNqgJGz07g00BpQVl0th/1NN0iGsFrqaeuMzikUZFsNuWqQLLGpTRCHQlqzMi4B7oMc4Bb9Hp4KMqhGcXl+rEY/CZfRSlFF4BFo12uw5Yrp3INCx6tIXBhtC9WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/jtwGJn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745873384; c=relaxed/simple;
+	bh=j477d02MFhTA0VKjmSb3Mkuwa1XV5mkgC0IzVtZX8LQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CooywLD+zoI3VkZopK6usWVO5FndqATTJn/I06+3Nnqm7+1DcS3UYrOqeuaqSlfQqWP0JCHy/tqQkw8LKF8BQZ/XBCLUxzyFK/6HLx+sgeyiTL3hTa5lukTD8/66hhJVO0ShsLZxhV1WYT4ii4lOrvdNb8F+Ei5PHrT/nyW4d1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cInFyfn2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/jtwGJn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996D7C4CEE4;
-	Mon, 28 Apr 2025 20:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745873321;
-	bh=0HoWU3q4+qyiDoIEkIcqHAS0oyqLX985Vg5lAD6tTmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K/jtwGJnE0Vw1NW5I1IfjrgKmtFOWIVVc8aLyuZRgrx5W/6/AGacYMvaBrZd9THCY
-	 P3yIQ4MVWUj7fpbyB5/TRrA2xlC/EWRwNLb6d1U9wt4ncRzcoLjbh1Dqb65ZbRpNDk
-	 znFuoZdiTKtAGF0FRa49eBrGwLqwr4e5SfNWWOAtkbpKUDwQp+yoVPBDV+XCUNhVKd
-	 R78cmCmgT52ZBtkHTMPqASZ+TxrAlto2za3iNcTTkHbReYwLItSxflXVpH9QspRV3M
-	 VtI91+N5f3WO+e7uAcoPveaW0ELknRdVtuKSi0b2vHIZfTLPrLLjL4oomuJBOs0z26
-	 IxegNejYhDPxA==
-Date: Mon, 28 Apr 2025 15:48:40 -0500
-From: Rob Herring <robh@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Dirk Behme <dirk.behme@gmail.com>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-Message-ID: <20250428204840.GB1572343-robh@kernel.org>
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-4-remo@buenzli.dev>
- <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
- <aAyyR5LyhmGVNQpm@pollux>
- <0756503c-02e7-477a-9e89-e7d4881c8ce6@gmail.com>
- <aA4ht5sUic39mnHj@pollux>
- <ee888c8f-4802-48a1-bd08-b454b782fff4@de.bosch.com>
- <aA-oQAol8rAU7vzg@cassiopeiae>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cInFyfn2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745873379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=XDREKvD453rHlhe5WUMHEFcR2HjACN++SAUbuPpVueo=;
+	b=cInFyfn2ZgZYc12/QJrMimrGPJLv/xfl6+zAT2Vh6FA4h5aWlgFKQokSYvyWNR5EhuuiPM
+	PLl8kAxQL2QjHylW336flJiEgfQKnjp4Tu+YAZJU5oAOCCZ+sCwexZ1ftpKWIAUn4XGZId
+	pKE1v58HdP6jNkyD4lrEYHs/Kp4bcrU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-30-MM16buRuPOGLLMXINA_Zzw-1; Mon, 28 Apr 2025 16:49:38 -0400
+X-MC-Unique: MM16buRuPOGLLMXINA_Zzw-1
+X-Mimecast-MFC-AGG-ID: MM16buRuPOGLLMXINA_Zzw_1745873377
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so26821735e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:49:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745873376; x=1746478176;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XDREKvD453rHlhe5WUMHEFcR2HjACN++SAUbuPpVueo=;
+        b=RhCcsyqEfTlsKu6bbo2BwWPKXXkpz89PoPtnLFEem4E+yR/P4b7e0k9Khczau+j4XF
+         W9bnG9qGd4F682//GxBJjgUVTF++h6zGdoYlZHBchRCLAy820o9OEg153SZAvmvwk6H0
+         5sdf7nbOly3mEEuY+n/O8xoXBBlFJ5e7tz+jzD0ky9+qT3eWjQMvy/9qc0nGu5exE+nD
+         HAu0DTau2yZtLDiOpqRy/6v2C+C+g4P14FKjae7UIZd0PZDGIQb4dxPn9TJfndfGsl8J
+         sqpVvEi6e3AMhYPIoaF+w2CPTb4vzUTH2XK8eennehWyIcEb9nI+MQG60hD78RBzxuXa
+         PJjg==
+X-Forwarded-Encrypted: i=1; AJvYcCU12fu3oddrDUWPNKpTGw1UulotED377shSECphrvC1aV0QiQSlcpEHN6x5Ax2Lntir0Z6atevCNfaQkrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNHdKUBWJcj2XsMw8uMIHxUymvzRL62VI9gvK+jStjaCwtCoe5
+	OMier2RXxhQs9cJ+TJ43gMRi0xHQShDY+/YQu6mjGZX4PTzx/NL3Lyz65kECv0xvszoAEdR2scf
+	xHCwuJ0MHobN5D4OYWW4RA8VkB8jkt+FNgOMAxD0OhrCeVr+CocCZexMpopxEIA==
+X-Gm-Gg: ASbGncshFAanZa8X6VOFZaaqFfzjsEdmZ0uBdEfGDSgU4BtNMdc/j3Y1crE1UdRNoix
+	Maxk9osiq9WQeoIcKgsVhyMeEiEmeh82Jcb0v95xMwtLPELh5j7SAy+UNeU8gDHQDXcoNKPQRuX
+	1jymX34V4WWID66n6Bihkxy/D3N/Og/Az1An96/nD1Wu5yGQdZ4kpWsU4Ea6ratsV+KI0KeAWba
+	xgZzY/SVN9p5ZD2SYabfiNukIUi6chTrwImKq7eiIbX7T+sRVCMiYeS7OhRMpwiJ/mdRU9NXU0i
+	1yV6FT9b2YmZFnMtzLwdGohccWrcB1jJ18m2oEY3LdgAhPARcIJefZsrKoJ2YUorAxIlvMuAInQ
+	gonXlE0lbBw3XJO9oI4qfl/D85U0f4uJBmCX8aww=
+X-Received: by 2002:a05:600c:1c09:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-440ab872047mr97282755e9.30.1745873376517;
+        Mon, 28 Apr 2025 13:49:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgxq7yM+IFHvgV+3GvDjIgDCmyftucp+mtct+ZPAabueLHdRHuIJiXkiFR/NAW3ehnJrkiGg==
+X-Received: by 2002:a05:600c:1c09:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-440ab872047mr97282605e9.30.1745873376186;
+        Mon, 28 Apr 2025 13:49:36 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea? (p200300cbc72fea002f00e7e58875a0ea.dip0.t-ipconnect.de. [2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a1dc3sm165299915e9.13.2025.04.28.13.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 13:49:35 -0700 (PDT)
+Message-ID: <bf27625f-e97c-4d9a-b491-1afb350f6d07@redhat.com>
+Date: Mon, 28 Apr 2025 22:49:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA-oQAol8rAU7vzg@cassiopeiae>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] mm/hugetlb: Pass folio instead of page to
+ unmap_ref_private()
+To: nifan.cxl@gmail.com, muchun.song@linux.dev, willy@infradead.org
+Cc: mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
+ akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Fan Ni <fan.ni@samsung.com>, Sidhartha Kumar <sidhartha.kumar@oracle.com>
+References: <20250428171608.21111-3-nifan.cxl@gmail.com>
+ <20250428171608.21111-4-nifan.cxl@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250428171608.21111-4-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 06:09:36PM +0200, Danilo Krummrich wrote:
-> On Mon, Apr 28, 2025 at 07:03:07AM +0200, Dirk Behme wrote:
-> > On 27/04/2025 14:23, Danilo Krummrich wrote:
-> > > On Sun, Apr 27, 2025 at 08:11:58AM +0200, Dirk Behme wrote:
-> > >> On 26.04.25 12:15, Danilo Krummrich wrote:
-> > >>> On Sat, Apr 26, 2025 at 08:19:09AM +0200, Dirk Behme wrote:
-> > >>>> On 25.04.25 17:35, Danilo Krummrich wrote:
-> > >>>>> On Fri, Apr 25, 2025 at 05:01:26PM +0200, Remo Senekowitsch wrote:
-> > >>>>>> +impl<T> PropertyGuard<'_, '_, T> {
-> > >>>>>> +    /// Access the property, indicating it is required.
-> > >>>>>> +    ///
-> > >>>>>> +    /// If the property is not present, the error is automatically logged. If a
-> > >>>>>> +    /// missing property is not an error, use [`Self::optional`] instead.
-> > >>>>>> +    pub fn required(self) -> Result<T> {
-> > >>>>>> +        if self.inner.is_err() {
-> > >>>>>> +            pr_err!(
-> > >>>>>> +                "{}: property '{}' is missing\n",
-> > >>>>>> +                self.fwnode.display_path(),
-> > >>>>>> +                self.name
-> > >>>>>> +            );
-> > >>>>>
-> > >>>>> Hm, we can't use the device pointer of the fwnode_handle, since it is not
-> > >>>>> guaranteed to be valid, hence the pr_*() print...
-> > >>>>>
-> > >>>>> Anyways, I'm not sure we need to print here at all. If a driver wants to print
-> > >>>>> that it is unhappy about a missing required property it can do so by itself, I
-> > >>>>> think.
-> > >>>>
-> > >>>> Hmm, the driver said by using 'required' that it *is* required. So a
-> > >>>> missing property is definitely an error here. Else it would have used
-> > >>>> 'optional'. Which doesn't print in case the property is missing.
-> > >>>>
-> > >>>> If I remember correctly having 'required' and 'optional' is the result
-> > >>>> of some discussion on Zulip. And one conclusion of that discussion was
-> > >>>> to move checking & printing the error out of the individual drivers
-> > >>>> into a central place to avoid this error checking & printing in each
-> > >>>> and every driver. I think the idea is that the drivers just have to do
-> > >>>> ...required()?; and that's it, then.
-> > >>>
-> > >>> Yes, I get the idea.
-> > >>>
-> > >>> If it'd be possible to use dev_err!() instead I wouldn't object in this specific
-> > >>> case. But this code is used by drivers from probe(), hence printing the error
-> > >>> without saying for which device it did occur is a bit pointless.
-> > >>
-> > >> Thinking a little about this, yes, we don't know the device here. But:
-> > >> Does the device matter here?
-> > > 
-> > > If the above fails it means that for a (specific) device a driver expects that
-> > > a specific property of some firmware node is present. So, yes, I think it does
-> > > matter.
-> > > 
-> > >> There is nothing wrong with the (unknown)
-> > >> device, no? What is wrong here is the firmware (node). It misses
-> > >> something.
-> > > 
-> > > How do we know the firmware node is wrong? Maybe the driver has wrong
-> > > expectations for this device?
-> > > 
-> > >> And this is exactly what the message tells: "There is an
-> > >> error due to the missing node 'name' in 'path', please fix it". That
-> > >> should be sufficient to identify the firmware/device tree description
-> > >> and fix it.
-> > > 
-> > > I think we can't always fix them, even if they're wrong. How do we fix ACPI
-> > > firmware nodes for instance?
-> > 
-> > So the argument here is that the device (driver) is expecting something
-> > to be "required" is wrong and might need to be fixed. Not the firmware.
-> > Yes, ok, that is a valid argument. I have a device tree background and
-> > there in 99% of the cases the device tree needs a fix ;)
-> > 
-> > But let me ask the other way around, then: What will it hurt or break if
-> > we keep the pr_err() like Remo did? Even knowing that its not perfect?
-> > But knowing that it will give at least a note that something is wrong
-> > with at least a starting point for searching what needs to be fixed. I
-> > mean even if we don't get the device, we will get the affected node we
-> > can search for which device uses it as "required".
-> > 
-> > Could we somehow agree that in 90% of the cases this should be catched
-> > at device (driver) development time, already?
+On 28.04.25 19:11, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> I don't see why *catching* such errors needs pr_err() in core code; without it
-> you still get a Result as return value that you need to handle in some way.
-> 
-> > And therefore it should be
-> > beneficial if we don't require each and every driver to be "bloated"
-> > with checking this individually?
-> 
-> I guess you mean "bloated with *printing* this individually", rather than
-> "checking".
-> 
-> This is where we disagree: I think it is "bloating" the core kernel instead if
-> we start adding error prints to core code, where a proper error code is
-> propagated up to the driver.
+> The function unmap_ref_private() has only user, which passes in
 
-1 or more error strings in every single driver is what bloats the 
-kernel, not 1 string. It's all kernel code and memory usage whether it's 
-core or drivers.
+"only a single user"
 
-> I did say that I would agree to a certain extend with this specific one if we
-> could print it properly, since it is designed to leave no doubt that returning
-> an error code from required() is fatal for the driver. But I'm not even sure
-> about this anymore.
-> 
-> I still haven't read a reason why this one is so crucial to print from core
-> code, while for other things that are always fatal (e.g. request_irq()) we
-> don't.
+> &folio->page. Let it take folio directly.
 
-request_irq() is not always fatal. Some drivers fallback to polling. In 
-general, we've been adding _optional() variants of functions to return 
-NULL rather than errors which is handled silently by subsequent API 
-calls. Secondarily, those print errors in the non-optional case. It's 
-not real consistent in this area, but something we should improve.
+"the folio"
 
-> However, if you really think we need a common helper that prints something in
-> the error case, maybe we can add an *additional* helper
-> 
-> 	pub fn required_by(self, dev: &Device) -> Result<T>
-> 
-> and document that it is the same as required(), with an additional error print
-> in case of failure for the given device.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-One thing that's really hard to debug in C drivers is where an 
-error came from. You can for example turn on initcall_debug and see that 
-a driver probe returned an error. It's virtually impossible to tell 
-where that originated from. The only way to tell is with prints. That is 
-probably the root of why probe has so many error prints. I think we can 
-do a lot better with rust given Result can hold more than just an int. 
-We obviously can't get back to the origin if that was C code, but just 
-if we know exactly which call from probe failed that would be a huge 
-improvement.
+-- 
+Cheers,
 
-Rob
+David / dhildenb
+
