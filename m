@@ -1,121 +1,86 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51A859B71;
-	Mon, 28 Apr 2025 10:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F4A38F9C;
+	Mon, 28 Apr 2025 10:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745836682; cv=none; b=EsL6qd+7wDWRtAyxXMqTxEF7p3ekwwvMUAGAGrWugzCpIgBl7P5j7yDcDAbms3F9fqPOYu406rpTh6QCeoq5MTQ4kzO9kL+SdHpq7c3Rig6AobSFQzk/9ICt8yfZ+6zHErQH/RdJ34IIY9azkPR06rrdgkW6hNzyk2xiApdU3XA=
+	t=1745836792; cv=none; b=VVdpa4pXkBvWSu0dR35db5DiYkWPpCma3uYI9ETxe1xAmV4NYPY2YEPG5uQr03pe0tleZb/Kypd1Ygn0aiPkxNRPHQyBZEesIR1HcI/fJ8gFaabMja619yng0grNOKRKuDmsKiQITvUERzLDQzhCeM20pRQ7dYnK7cOU8STACf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745836682; c=relaxed/simple;
-	bh=WoZL5HEhMwBHyoarRPvzuD3TwlCDLSI3iqbnOfyvxCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pCZOkBPWqJwKEkkDCIpgp5/qQK78YtAcpcJc6XVvzCf8bRkMWbNL4s4mNByRhGgzDoUMlMAd6m3arYXEMo8GyBjLu2Wxd+inHcs1GWJ+p9OS1kjthvDviW9lnM5PKTZGm1q/fq4SxG9cnAm1UuRjcfLNBVZptU+1Vpy3DuDD0wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D+Xef+fk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RoAGxEqF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745836792; c=relaxed/simple;
+	bh=o0ugUElhtzi4mDPakapnZlKEjEHXVD5/Lj9xvWJvslk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=USVdlSybYGhdnIdnzr3bQQj9KtW7QgYMt029k1qzDSTGqafYmthrNbCperAPmddCzFdkou58TJsNBeJBuN3N7qBkk1QrFm+mKWxymIOdokq2wsCfe78gsjeMmJbsTztmfsksdraq7F4bWqzPf5AMieQLlkUjka6luS0MTTHETgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=n9A2Aq2h; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D+Xef+fk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RoAGxEqF"
-Date: Mon, 28 Apr 2025 12:37:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745836678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oui8+LNRwcXO1Zn4z4VtdqdM4FZxrSBQ2h3snYKGyMg=;
-	b=D+Xef+fktKbV94I67WR30FMjeSHwGPo7oWQG2cITzaJrFmlS/FljEr1RN+0rfrfhK3Xx67
-	LOk3jqPXdvyVcQ5ScNzC8WwfS1EEHwEShjgIfFuSOaZGwHaBNBQvxMPOwDGVPDhEirZ8uN
-	Ju4RQ2ijRdKH8sKQEdiqbUhCZgJqTJPR6SQesmr8GI813fGTk2557PiLWFC83wnUSkCxZR
-	/FCqDTPC8Qv0HBv2ifMON9ulYe6hGAAnOlEnhe5exjS2GG9kSlQxttc/G4vgGqer6+cqsV
-	REOedYMHHzolIh7F6GUIX/6uVO/9SMen4u8NZ0Ivyh7r88OVyhdUmMQysPMOMg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745836678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oui8+LNRwcXO1Zn4z4VtdqdM4FZxrSBQ2h3snYKGyMg=;
-	b=RoAGxEqFDeHcKPMOEiquHd51z6QTPJlYNbUVVca6Hszt34bHnn0RKsDfIPyIC33zK2QkW2
-	uY7QoWjpkypOqZBA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 05/15] tools/nolibc: add getrandom()
-Message-ID: <20250428123554-5071c41c-5189-4087-80ca-488948365010@linutronix.de>
-References: <20250423-nolibc-misc-v1-0-a925bf40297b@linutronix.de>
- <20250423-nolibc-misc-v1-5-a925bf40297b@linutronix.de>
- <20250426103158.GB17549@1wt.eu>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n9A2Aq2h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745836785;
+	bh=o0ugUElhtzi4mDPakapnZlKEjEHXVD5/Lj9xvWJvslk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=n9A2Aq2hfdpR3K03lG9yQfluvFoDbYqM8szThzOX6pu4L/w4jvXv4ThQJzQ5NjGCf
+	 Y1n46PE9NthquD0WxUcHGIneUqKsfyeZpKqCwEI4uWfPLKXEEfQErhYJYm215cZXbH
+	 FP6PXMmkpifgoDAU6d6JVaYpBKpvmC8KN699Ffp012dwNgOC2a/6MBC6joujWKZRSo
+	 EcfPOkHoDQCI3cMSHyP8bbbvgu46c2p3P8JDgfUgR8JYXrltUr1O8eBGTrRa5Sr5FE
+	 7/82C1VbLWTMJqNHHiUVTZ8fd/c1FpnhFtKprdRueVeOhMbYP1nVJ2CaIe2n+NjvR2
+	 RzsWkedS18B3Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmKhK0l2hz4wj2;
+	Mon, 28 Apr 2025 20:39:45 +1000 (AEST)
+Date: Mon, 28 Apr 2025 20:39:43 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andreas Hindborg <a.hindborg@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the rust-xarray tree
+Message-ID: <20250428203943.51dd39d5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250426103158.GB17549@1wt.eu>
+Content-Type: multipart/signed; boundary="Sig_/wBBwTJKS+U3MH+tQ=lqWmxG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Sat, Apr 26, 2025 at 12:31:58PM +0200, Willy Tarreau wrote:
-> Hi Thomas,
-> 
-> On Wed, Apr 23, 2025 at 05:01:35PM +0200, Thomas Weiﬂschuh wrote:
-> > --- /dev/null
-> > +++ b/tools/include/nolibc/sys/random.h
-> > @@ -0,0 +1,32 @@
-> > +/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-> > +/*
-> > + * random definitions for NOLIBC
-> > + * Copyright (C) 2025 Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > + */
-> > +
-> 
-> Note: don't forget to add your nolibc include here from the other series.
+--Sig_/wBBwTJKS+U3MH+tQ=lqWmxG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ack. This series was sent before I got the idea about moving "#include nolibc.h".
-I'll fix it up for v2.
+Hi all,
 
-> > +#ifndef _NOLIBC_SYS_RANDOM_H
-> > +#define _NOLIBC_SYS_RANDOM_H
-> > +
-> > +#include "../arch.h"
-> > +#include "../sys.h"
-> (...)
-> 
-> > diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-> > index abe0ae794208762f6d91ad81e902fbf77253a1c1..95d08e9ccf5b3be924548100e9621cd47f39e8c2 100644
-> > --- a/tools/testing/selftests/nolibc/nolibc-test.c
-> > +++ b/tools/testing/selftests/nolibc/nolibc-test.c
-> (...)
-> > +int test_getrandom(void)
-> > +{
-> > +	uint64_t rng = 0;
-> > +	ssize_t ret;
-> > +
-> > +	ret = getrandom(&rng, sizeof(rng), 0);
-> > +	if (ret != sizeof(rng))
-> > +		return ret;
-> > +
-> > +	if (!rng) {
-> > +		errno = EINVAL;
-> > +		return -1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> 
-> Just a thought about this one: in a not-so-distant past, getrandom()
-> could hang forever when lacking entropy (classical problem when booting
-> a headless machine having no RNG), and since a recent kernel it turned
-> to "only" multiple seconds. I'm not seeing any easy solution to this,
-> but we need to keep an eye on this one, and in case of bad reports,
-> maybe have this test as an opt-in or something like this. Anyway the
-> best way to know is to have it right now and wait for reports to
-> arrive.
+After merging the rust-xarray tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-What about using GRND_NONBLOCK and mark the test as skipped if no entropy is
-available?
+
+I don't know what caused this, but it is presumably an interaction
+between this tree and the mm-unstable and drm-nova trees.
+
+I have dropped the rust-xarray tree for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wBBwTJKS+U3MH+tQ=lqWmxG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPWu8ACgkQAVBC80lX
+0Gx+FAf+MGVQWcNjetkaLJrRtqI9KQ9RYs/yB9Mc0+saf9BgmHmVwWCl8AL2kKWH
+Lwdt31JzdssAUTTndOcdquFtqI39eBsqUPM9PABlpeh3LHX02v21+cEPDNdu3mBR
+a45775mNjJY7LGeZd6PTIfEV3abBX0QgecB6JjXuO0qB8OLFktaOAloSwqlf55Vt
+N1k+SB3GvINhxTuRseD4u+FI6TcPi/MjjnzM1qivcCru5t0+C1KUxAqfe2BpvkDS
+Tz51xw8np3S35rZKbn6xuum69SXw0csm0bHqRYEYiWNW4ziWkFrgVFV+bHybp+5r
+XuAigBaFhoPxByk1fMjV1ELFRA7dAA==
+=thNZ
+-----END PGP SIGNATURE-----
+
+--Sig_/wBBwTJKS+U3MH+tQ=lqWmxG--
