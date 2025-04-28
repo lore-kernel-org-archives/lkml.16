@@ -1,186 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EDE52673B7
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41572641F9;
+	Mon, 28 Apr 2025 12:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841950; cv=none; b=FLy59Rhr9e6/giX470es5s3uigK+yep9V1UzCgQYP8Vb8Dv0PhHK44iCGXKjCa2ay45gBVoqd5yi5O6PL/RYPB6MXE/BXVFFScSXRHU3rUHyXZyO/rIQ+aBA24/Mb8P8lnpdTsdrQcV5AKv9zjrgKt/iBCLpQue6aLBqmQ7s5fY=
+	t=1745842066; cv=none; b=mtL9xMmhNJpH4i2s0UQu3sKEVXpEW6vbAjrRqusPDm9K8VAOITReCyq5XzOIcmAd+eL/KrAPQoJeFYds2cgR24aQ+6o55Gr+1LLoL+Qok5EZFJQoDqZU5C3QtD5BXYcWQ46XhIDhC2WJqSCq1rXHh804C2UFdcsarx9/993+zgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841950; c=relaxed/simple;
-	bh=uhhb/WbjTvfi31f7EFPTIbVN0sxli/jwpt1FYquhYkE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N4CQbOHuXT6vR+EqDsKox0Gt3WIYbduRz5V2F7sahgZ6mXRiPSf6OcZeCk8OP3UAWIw510Hrzlhka+r+MVnai+yyqGXXbq6xSKU1DJ+u2s4FFoxTVvkCrt5IS3pMQN588Q1XtMYxqKFDizfdby6S1Kx78vEL+vgkjmuILyTxcCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C17122D7;
-	Mon, 28 Apr 2025 05:05:41 -0700 (PDT)
-Received: from K4MQJ0H1H2.arm.com (unknown [10.163.78.210])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 57D683F66E;
-	Mon, 28 Apr 2025 05:05:38 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com,
-	david@redhat.com,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com,
-	vbabka@suse.cz,
-	jannh@google.com,
-	anshuman.khandual@arm.com,
-	peterx@redhat.com,
-	joey.gouly@arm.com,
-	ioworker0@gmail.com,
-	baohua@kernel.org,
-	kevin.brodsky@arm.com,
-	quic_zhenhuah@quicinc.com,
-	christophe.leroy@csgroup.eu,
-	yangyicong@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	namit@vmware.com,
-	hughd@google.com,
-	yang@os.amperecomputing.com,
-	ziy@nvidia.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH 7/7] mm: Optimize mprotect() through PTE-batching
-Date: Mon, 28 Apr 2025 17:34:14 +0530
-Message-Id: <20250428120414.12101-8-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250428120414.12101-1-dev.jain@arm.com>
-References: <20250428120414.12101-1-dev.jain@arm.com>
+	s=arc-20240116; t=1745842066; c=relaxed/simple;
+	bh=eQtIGT9U58sYfYlwdS7kdqkW0CpTUXCGNtUB/drHi18=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cI9BX0HHgWcmh0qONgOXGxUaxvz6AOjYwlcRUf82dyjbSkSFmhS25HpKx/ybKcMG7u3mBy6W1H2qEfrBJQI3S0tvr8tddyodg0hGFWJVRb9zK/R5pEExXFewGxmC5LvPDu0dxEc0MFE54KDu4CiiS00XATeAsfKBcgM5zx4TxGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=YeI7lezo; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="YeI7lezo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1745842062;
+	bh=eQtIGT9U58sYfYlwdS7kdqkW0CpTUXCGNtUB/drHi18=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=YeI7lezo0OSKZzHOnepzjGBczouAFBj4DKGhFLF7OjcF7S7F0PXEoMi8zk7kl3lgz
+	 jJ/Bp+YUedddZtDQQSHMl0E5jpp7i7HA8FYw4O2m1SlaBiP70Ez4zkdUznNsU6jo7K
+	 vTvbnO54W7p3juMkmRZxaZVi+EPC1yurE7kxCDeI=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 6AF241C0384;
+	Mon, 28 Apr 2025 08:07:42 -0400 (EDT)
+Message-ID: <a9c3ed6d6fac804a2f146288039228a9745d70bb.camel@HansenPartnership.com>
+Subject: Re: [PATCH 6.1 v2 0/3] aic79xx: Add some non-NULL checks
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Boris Belyavtsev <bbelyavtsev@usergate.com>, hare@suse.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org
+Date: Mon, 28 Apr 2025 08:07:41 -0400
+In-Reply-To: <D9HZOMWGZGA4.2IADJWTQC9M6W@usergate.com>
+References: <20250421081604.655282-1-bbelyavtsev@usergate.com>
+	 <c3fc938af6662c00b57e93f2cc7e48d62e6572df.camel@HansenPartnership.com>
+	 <D9HZOMWGZGA4.2IADJWTQC9M6W@usergate.com>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The common pte_present case does not require the folio. Elide the overhead of
-vm_normal_folio() for the small folio case, by making an approximation:
-for arm64, pte_batch_hint() is conclusive. For other arches, if the pfns
-pointed to by the current and the next PTE are contiguous, check whether
-a large folio is actually mapped, and only then make the batch optimization.
-Reuse the folio from prot_numa case if possible. Since modify_prot_start_ptes()
-gathers access/dirty bits, it lets us batch around pte_needs_flush()
-(for parisc, the definition includes the access bit).
+On Mon, 2025-04-28 at 11:32 +0700, Boris Belyavtsev wrote:
+> On Mon Apr 21, 2025 at 7:12 PM +07, James Bottomley wrote:
+> > On Mon, 2025-04-21 at 15:16 +0700, Boris Belyavtsev wrote:
+> > > Add non-NULL checks for ahd_lookup_scb return value.
+> > >=20
+> > > scb could be NULL if faulty hardware return certain incorrect
+> > > values to the driver.
+> >=20
+> > It's a general principle that we trust values coming from the card
+> > ... you are, after all, trusting it with your data.=C2=A0 If there's a
+> > fault in the way the card is operating, we can work around that, so
+> > if you have a card which is producing these NULLs, can you provide
+> > details so we can investigate?
+> >=20
+> > Regards,
+> >=20
+> > James
+>=20
+> Well, to be honest, I do not have such a device/card which would
+> represent the problem. These checks are more about defensive
+> programming (in case of an accident fault in a card for example).
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- mm/mprotect.c | 49 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 14 deletions(-)
+We don't program defensively against adapters: they're part of our
+trust domain.  We only program defensively against input from untrusted
+domains (like user space).  The problem with defensively programming
+drivers was nicely demonstrated by the driver hardening project:
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 362fd7e5457d..d382d57bc796 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -131,7 +131,7 @@ static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
- 	return false;
- }
- 
--static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
-+static struct folio *prot_numa_avoid_fault(struct vm_area_struct *vma,
- 		unsigned long addr, pte_t *pte, pte_t oldpte, int target_node,
- 		int max_nr, int *nr)
- {
-@@ -141,25 +141,37 @@ static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
- 
- 	/* Avoid TLB flush if possible */
- 	if (pte_protnone(oldpte))
--		return true;
-+		return NULL;
- 
- 	folio = vm_normal_folio(vma, addr, oldpte);
- 	if (!folio)
--		return true;
-+		return NULL;
- 
- 	ret = prot_numa_skip(vma, folio, target_node);
- 	if (ret) {
- 		if (folio_test_large(folio) && max_nr != 1)
- 			*nr = folio_pte_batch(folio, addr, pte, oldpte,
- 					      max_nr, flags, NULL, NULL, NULL);
--		return ret;
-+		return NULL;
- 	}
- 	if (folio_use_access_time(folio))
- 		folio_xchg_access_time(folio,
- 			jiffies_to_msecs(jiffies));
--	return false;
-+	return folio;
- }
- 
-+static bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
-+{
-+	pte_t *next_ptep, next_pte;
-+
-+	if (pte_batch_hint(ptep, pte) != 1)
-+		return true;
-+
-+	next_ptep = ptep + 1;
-+	next_pte = ptep_get(next_ptep);
-+
-+	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == PAGE_SIZE);
-+}
- static long change_pte_range(struct mmu_gather *tlb,
- 		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
- 		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
-@@ -190,19 +202,28 @@ static long change_pte_range(struct mmu_gather *tlb,
- 		oldpte = ptep_get(pte);
- 		if (pte_present(oldpte)) {
- 			int max_nr = (end - addr) >> PAGE_SHIFT;
-+			const fpb_t flags = FPB_IGNORE_DIRTY;
-+			struct folio *folio = NULL;
- 			pte_t ptent;
- 
- 			/*
- 			 * Avoid trapping faults against the zero or KSM
- 			 * pages. See similar comment in change_huge_pmd.
- 			 */
--			if (prot_numa &&
--			    prot_numa_avoid_fault(vma, addr, pte,
--						  oldpte, target_node,
--							  max_nr, &nr))
-+			if (prot_numa) {
-+				folio = prot_numa_avoid_fault(vma, addr, pte,
-+					oldpte, target_node, max_nr, &nr);
-+				if (!folio)
- 					continue;
-+			}
- 
--			oldpte = ptep_modify_prot_start(vma, addr, pte);
-+			if (!folio && (max_nr != 1) && maybe_contiguous_pte_pfns(pte, oldpte)) {
-+				folio = vm_normal_folio(vma, addr, oldpte);
-+				if (folio_test_large(folio))
-+					nr = folio_pte_batch(folio, addr, pte,
-+					oldpte, max_nr, flags, NULL, NULL, NULL);
-+			}
-+			oldpte = modify_prot_start_ptes(vma, addr, pte, nr);
- 			ptent = pte_modify(oldpte, newprot);
- 
- 			if (uffd_wp)
-@@ -225,13 +246,13 @@ static long change_pte_range(struct mmu_gather *tlb,
- 			 */
- 			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
- 			    !pte_write(ptent) &&
--			    can_change_ptes_writable(vma, addr, ptent, folio, 1))
-+			    can_change_ptes_writable(vma, addr, ptent, folio, nr))
- 				ptent = pte_mkwrite(ptent, vma);
- 
--			ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
-+			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr);
- 			if (pte_needs_flush(oldpte, ptent))
--				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
--			pages++;
-+				tlb_flush_pte_range(tlb, addr, nr * PAGE_SIZE);
-+			pages += nr;
- 		} else if (is_swap_pte(oldpte)) {
- 			swp_entry_t entry = pte_to_swp_entry(oldpte);
- 			pte_t newpte;
--- 
-2.30.2
+https://lore.kernel.org/all/20230119170633.40944-1-alexander.shishkin@linux=
+.intel.com/
+
+In that there are so many ways that drivers could be used to attack the
+OS, defending against all of them would dramatically impact the fast
+path.  Which is also the reason we don't imagine card faults and then
+program for them without first finding the problem in the field.
+
+Regards,
+
+James
+
+
 
