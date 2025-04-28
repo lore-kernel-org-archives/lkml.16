@@ -1,209 +1,240 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B57D26980C;
-	Mon, 28 Apr 2025 12:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC40269D1B
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843504; cv=none; b=Ko7U0h1a32aToDBhNyti7ynT7sxcZYwazPwzd0TOMwEHo3Jrkn8Pr6LBZzMJwtglDvlmzbNdj+Liof1qRQP+c4e5UIQrhuYymjCW8vF8JYNCIYNCNz7kRTjCkRfoXa7TvwI1sCWroTgaRuGkxRGn8Kk6E6s3vbiRyvinlXf4jbM=
+	t=1745843520; cv=none; b=Uvq6RVT2iCGxeBYZsIiI76oiuhYQeazgl6FRFCpw0ERMN4IZ16Sng90V15Eac37gpgqCvlSryT/Sah7wE06kyI/je9893mvIL/2YSAkLENbKWlz7+AOg5sTo7tcDxdd48nI7ycO5gMdirogZjLSAUFn7JZX7J54QePSNK2JpFB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843504; c=relaxed/simple;
-	bh=+MFy1w5ko1BnlhgwQggqrGmfo2TiEUrkCf7tpV8VbU8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dHbQ87kSB2R5CRiqHkkaXjeIqcL3WA+p2I70H+0FvCFMg8MpfAflNBhKOEEha6vIiawuSYqmmTbUdxgf5fNObASlXR8qk7skse6i+q6NMUChyo9+VKj5pk5ufF/DFVZhYCliSTAc+gJigGYPSRDt2yYzOjMc2X6nfVM0H62tsng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VAa0YTtr; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1745843520; c=relaxed/simple;
+	bh=fIsldRXJHtOduBXo5WJXIS0zF9dXfot0bSDlw/ZfcIE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fg538CEhrEh0HIctRJkmU1ODHcF6C1iCvR5rqsxsllaAz3/9hbBn5u1Y63wEPNA9hEtFmBGj/cnuzV1yINvj4byp412F/mpnrE/xixgAe2a1R7a79ILxV5rht3AuQ2TSTDPz75Gki207V4Ip49F5XfQXc6jelGC7W5A2OuOkdpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=KPe374Ng; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=KPe374Ng; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VAa0YTtr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745843491; x=1746448291; i=w_armin@gmx.de;
-	bh=4qp5WmomQxHRqjEXNzrGLpgiq2kVcm0cPmMJBTxzq8g=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=VAa0YTtrLqDIncil+E5RO7AeOspXxgPUTrbgSf+pfhai0zBHVd5DBuLzfJS+JNN9
-	 NpHoH/9jG7WPBhMDbX7R6yWk0+ydbG1LVRy5DnWe5VGfsAwpBUmjpXeWzj3US7fpW
-	 9EdqoQ3DMWe0/ZJSpCHS+FvecRrO+x+4prJiVUzLGgbIvoq7ZGggfsCou+ukCijff
-	 Mk5dgoRSlBr6u0ej/5z2hv45/kTAGG9aKIgMTN3WzeLJA+mx9WSNzABnJ82cl/Bxz
-	 vvzS+rhe6zfX0FoGqqKKJD4gBkRd5VkahacRjdZ0ZUOVACIMoNM0oWJ5u/lXFZMad
-	 Novdha7hgcMz4+weTA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.16.87] ([141.76.8.183]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M9FnZ-1uBpp742Xn-007oiQ; Mon, 28
- Apr 2025 14:31:31 +0200
-Message-ID: <c8127d88-194a-4a23-b22e-040e2c6b3e9b@gmx.de>
-Date: Mon, 28 Apr 2025 14:31:28 +0200
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="KPe374Ng";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="KPe374Ng"
+Received: from pathway.suse.cz (unknown [10.100.208.146])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 461731F390;
+	Mon, 28 Apr 2025 12:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745843516; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=c32GfN1M6jy6lPZhfI3nWdiah8gmqNWObTWuqruve7M=;
+	b=KPe374NgBy6SsaIHYLFji58sS3HaoXo2ZNo/GPjH4Qm+JwkKDauDkXFZ5X//OpZdL8r8Qa
+	uPqvvJxa0J37jUn6Xvbj5cXxGnNFtQFGBH+45j0bNRXj7SHbuwkNCFdjWUvrymeJewQ6lP
+	4uH/5g6fMP1iv2ntx45YTeNIASncDZ0=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745843516; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=c32GfN1M6jy6lPZhfI3nWdiah8gmqNWObTWuqruve7M=;
+	b=KPe374NgBy6SsaIHYLFji58sS3HaoXo2ZNo/GPjH4Qm+JwkKDauDkXFZ5X//OpZdL8r8Qa
+	uPqvvJxa0J37jUn6Xvbj5cXxGnNFtQFGBH+45j0bNRXj7SHbuwkNCFdjWUvrymeJewQ6lP
+	4uH/5g6fMP1iv2ntx45YTeNIASncDZ0=
+From: Petr Mladek <pmladek@suse.com>
+To: alyssa@rosenzweig.io,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>,
+	airlied@redhat.com,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	apw@canonical.com,
+	joe@perches.com,
+	dwaipayanray1@gmail.com,
+	lukas.bulwahn@gmail.com,
+	Kees Cook <kees@kernel.org>,
+	tamird@gmail.com
+Cc: Aditya Garg <gargaditya08@live.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] vsprintf: Use %p4chR instead of %p4cn for reading data in reversed host ordering
+Date: Mon, 28 Apr 2025 14:31:32 +0200
+Message-ID: <20250428123132.578771-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] ACPI: thermal: Properly support the _SCP control
- method
-From: Armin Wolf <W_Armin@gmx.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: rui.zhang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250410165456.4173-1-W_Armin@gmx.de>
- <91ea8aed-5f98-4e4e-b3ee-fdc86d54f787@gmx.de>
- <CAJZ5v0jOR9=jA=8XASBpxJyXaB4TvXmxcZQWq1qUgq1J4h_tEg@mail.gmail.com>
- <90cba8fa-e6a9-4dab-a4ea-fa96d570a870@gmx.de>
-Content-Language: en-US
-In-Reply-To: <90cba8fa-e6a9-4dab-a4ea-fa96d570a870@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4uu09lOy+qLQjskvy0zMYaFJeYOLBuEBAIpdoNpk2y4MuOvlrEj
- bwBYB6xX7Qmy8DrT/hqeB0HR7iHhBcp2UG4JxYa2sEwtxHoyikTE9J49ibBpLUmUw3cTnVB
- Y+Gjgt2OjmfqiIStDI0xMu3sxCiLvITUIPmOEdZyODBWqcak2mmXpG+Q0UF1znQRYObA5lx
- znga07yZeM7u21U9rVd0g==
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.30
+X-Spamd-Result: default: False [-1.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	FREEMAIL_TO(0.00)[rosenzweig.io,suse.com,linux.intel.com,svenpeter.dev,suse.de,kodeit.net,kernel.org,redhat.com,ffwll.ch,goodmis.org,rasmusvillemoes.dk,chromium.org,lwn.net,linux-foundation.org,canonical.com,perches.com,gmail.com];
+	FREEMAIL_CC(0.00)[live.com,vger.kernel.org,lists.freedesktop.org,marcan.st,lists.linux.dev,linux-m68k.org];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	R_RATELIMIT(0.00)[to_ip_from(RL6udr6oaa7zotqtfep1wg7ccg)];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com]
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KhOOFIHrYP8=;Nma9kIm5rvY52i899ChaWACDRKq
- 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
+X-Spam-Level: 
 
-Am 27.04.25 um 00:52 schrieb Armin Wolf:
+The generic FourCC format always prints the data using the big endian
+order. It is generic because it allows to read the data using a custom
+ordering.
 
-> Am 26.04.25 um 15:12 schrieb Rafael J. Wysocki:
->
->> On Sat, Apr 26, 2025 at 1:20=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wro=
-te:
->>> Am 10.04.25 um 18:54 schrieb Armin Wolf:
->>>
->>>> The ACPI specification defines an interface for the operating system
->>>> to change the preferred cooling mode of a given ACPI thermal zone.
->>>> This interface takes the form of a special ACPI control method called
->>>> _SCP (see section 11.4.13 for details) and is already supported by th=
-e
->>>> ACPI thermal driver.
->>>>
->>>> However this support as many issues:
->>>>
->>>> =C2=A0=C2=A0 - the kernel advertises support for the "3.0 _SCP Extens=
-ions"=20
->>>> yet the
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 ACPI thermal driver does not support those e=
-xtensions. This may
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 confuse the ACPI firmware.
->>>>
->>>> =C2=A0=C2=A0 - the execution of the _SCP control method happens after=
- the driver
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 retrieved the trip point values. This confli=
-cts with the ACPI
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 specification:
->>>>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "OSPM will automatically evaluat=
-e _ACx and _PSV objects after
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 executing _SCP."
->>>>
->>>> =C2=A0=C2=A0 - the cooling mode is hardcoded to active cooling and ca=
-nnot be
->>>> =C2=A0=C2=A0=C2=A0=C2=A0 changed by the user.
->>>>
->>>> Those issues are fixed in this patch series. In the end the user
->>>> will be able to tell the ACPI firmware wether he prefers active or
->>>> passive cooling. This setting will also be interesting for
->>>> applications like TLP (https://linrunner.de/tlp/index.html).
->>>>
->>>> The whole series was tested on various devices supporting the _SCP
->>>> control method and on a device without the _SCP control method and
->>>> appears to work flawlessly.
->>> Any updates on this? I can proof that the new interface for setting=20
->>> the cooling mode
->>> works. Additionally the first two patches fix two issues inside the=20
->>> underlying code
->>> itself, so having them inside the mainline tree would be beneficial=20
->>> to users.
->> Sure.
->>
->> I'm going to get to them next week, probably on Monday.
->
-> Ok, thanks.
->
-> Armin Wolf
->
-I am a bit ashamed of myself but i think we need to put this patch series =
-on hold after all :(.
+The current code uses "n" for reading data in the reverse host ordering.
+It makes the 4 variants [hnbl] consistent with the generic printing
+of IPv4 addresses.
 
-The reason of this is that i am confused by the ACPI specification regardi=
-ng _SCP:
+Unfortunately, it creates confusion on big endian systems. For example,
+it shows the data &(u32)0x67503030 as
 
-	11.1.2.1. OSPM Change of Cooling Policy
+	%p4cn	00Pg (0x30305067)
 
-	When OSPM changes the platform=E2=80=99s cooling policy from one cooling =
-mode to the other, the following occurs:
+But people expect that the ordering stays the same. The network ordering
+is a big-endian ordering.
 
-     	1. OSPM notifies the platform of the new cooling mode by running the=
- Set Cooling Policy (_SCP) control method in all thermal zones and invokin=
-g the OS-specific Set Cooling Policy interface to all participating device=
-s in each thermal zone.
+The problem is that the semantic is not the same. The modifiers affect
+the output ordering of IPv4 addresses while they affect the reading order
+in case of FourCC code.
 
-     	2. Thresholds are updated in the hardware and OSPM is notified of th=
-e change.
+Avoid the confusion by replacing the "n" modifier with "hR", aka
+reverse host ordering. It is inspired by the existing %p[mM]R printf
+format.
 
-     	3. OSPM re-evaluates the active and passive cooling temperature trip=
- points for the zone and all devices in the zone to obtain the new tempera=
-ture thresholds.
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Closes: https://lore.kernel.org/r/CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+Hi,
 
-This section of the ACPI specification tells me that we need to evaluate t=
-he _SCP control method of all ACPI thermal zones
-at the same time, yet section 11.4.13. tells me that each _SCP control met=
-hods belongs to the individual thermal zone.
+I am sending this as a proper patch. It would be nice to queue it
+together with the other patches adding the generic printf modifiers.
 
-The reason why i am concerned by this is because Windows adheres to sectio=
-n 11.1.2.1. and only exposes this setting
-as a global tunable. This might cause device manufacturers to depend on th=
-is behavior and lead to strange things
-should two thermal zones have different _SCP settings.
+Best Regards,
+Petr
+---
+Documentation/core-api/printk-formats.rst | 10 +++++-----
+ lib/tests/printf_kunit.c                  |  4 ++--
+ lib/vsprintf.c                            | 11 ++++++++---
+ 3 files changed, 15 insertions(+), 10 deletions(-)
 
-I will ask the UEFI mailing list which behavior is expected by the ACPI sp=
-ecification. Until then i suggest that
-we put this patch series on hold.
-
-Thanks,
-Armin Wolf
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 125fd0397510..f531873bb3c9 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -652,7 +652,7 @@ Generic FourCC code
+ -------------------
+ 
+ ::
+-	%p4c[hnlb]	gP00 (0x67503030)
++	%p4c[h[R]lb]	gP00 (0x67503030)
+ 
+ Print a generic FourCC code, as both ASCII characters and its numerical
+ value as hexadecimal.
+@@ -660,23 +660,23 @@ value as hexadecimal.
+ The generic FourCC code is always printed in the big-endian format,
+ the most significant byte first. This is the opposite of V4L/DRM FourCCs.
+ 
+-The additional ``h``, ``n``, ``l``, and ``b`` specifiers define what
++The additional ``h``, ``hR``, ``l``, and ``b`` specifiers define what
+ endianness is used to load the stored bytes. The data might be interpreted
+-using the host byte order, network byte order, little-endian, or big-endian.
++using the host, reversed host byte order, little-endian, or big-endian.
+ 
+ Passed by reference.
+ 
+ Examples for a little-endian machine, given &(u32)0x67503030::
+ 
+ 	%p4ch	gP00 (0x67503030)
+-	%p4cn	00Pg (0x30305067)
++	%p4chR	00Pg (0x30305067)
+ 	%p4cl	gP00 (0x67503030)
+ 	%p4cb	00Pg (0x30305067)
+ 
+ Examples for a big-endian machine, given &(u32)0x67503030::
+ 
+ 	%p4ch	gP00 (0x67503030)
+-	%p4cn	00Pg (0x30305067)
++	%p4chR	00Pg (0x30305067)
+ 	%p4cl	00Pg (0x30305067)
+ 	%p4cb	gP00 (0x67503030)
+ 
+diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
+index b1fa0dcea52f..bc54cca2d7a6 100644
+--- a/lib/tests/printf_kunit.c
++++ b/lib/tests/printf_kunit.c
+@@ -726,7 +726,7 @@ static void fourcc_pointer(struct kunit *kunittest)
+ 	static const struct fourcc_struct try_ch[] = {
+ 		{ 0x41424344, "ABCD (0x41424344)", },
+ 	};
+-	static const struct fourcc_struct try_cn[] = {
++	static const struct fourcc_struct try_chR[] = {
+ 		{ 0x41424344, "DCBA (0x44434241)", },
+ 	};
+ 	static const struct fourcc_struct try_cl[] = {
+@@ -738,7 +738,7 @@ static void fourcc_pointer(struct kunit *kunittest)
+ 
+ 	fourcc_pointer_test(kunittest, try_cc, ARRAY_SIZE(try_cc), "%p4cc");
+ 	fourcc_pointer_test(kunittest, try_ch, ARRAY_SIZE(try_ch), "%p4ch");
+-	fourcc_pointer_test(kunittest, try_cn, ARRAY_SIZE(try_cn), "%p4cn");
++	fourcc_pointer_test(kunittest, try_chR, ARRAY_SIZE(try_chR), "%p4chR");
+ 	fourcc_pointer_test(kunittest, try_cl, ARRAY_SIZE(try_cl), "%p4cl");
+ 	fourcc_pointer_test(kunittest, try_cb, ARRAY_SIZE(try_cb), "%p4cb");
+ }
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 2c5de4216415..34587b2dbdb1 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1804,9 +1804,8 @@ char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+ 	orig = get_unaligned(fourcc);
+ 	switch (fmt[2]) {
+ 	case 'h':
+-		break;
+-	case 'n':
+-		orig = swab32(orig);
++		if (fmt[3] == 'R')
++			orig = swab32(orig);
+ 		break;
+ 	case 'l':
+ 		orig = (__force u32)cpu_to_le32(orig);
+@@ -2396,6 +2395,12 @@ early_param("no_hash_pointers", no_hash_pointers_enable);
+  *       read the documentation (path below) first.
+  * - 'NF' For a netdev_features_t
+  * - '4cc' V4L2 or DRM FourCC code, with endianness and raw numerical value.
++ * - '4c[h[R]lb]' For generic FourCC code with raw numerical value. Both are
++ *	 displayed in the big-endian format. This is the opposite of V4L2 or
++ *	 DRM FourCCs.
++ *	 The additional specifiers define what endianness is used to load
++ *	 the stored bytes. The data might be interpreted using the host,
++ *	 reversed host byte order, little-endian, or big-endian.
+  * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
+  *            a certain separator (' ' by default):
+  *              C colon
+-- 
+2.49.0
 
