@@ -1,162 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C607418E02A;
-	Mon, 28 Apr 2025 16:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4D010785
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745856950; cv=none; b=VlTQPLEm9jf2KOoCdvJqkiMYX5WZwwezQ1OhlXA7mOyyepmEv38wVpjcd6fpuAmPqH3holDpibOBLnGzFm/zcdv3B9pAqBvaUNr0xFj3S3eghjh9e27eLslbY7tQT8WiEWk7PcdJT3PaIPtueDfuse2FrEz3PsEwXwxyGOgsjuA=
+	t=1745856990; cv=none; b=dLVgZ99++lQz29ZN3sBqWeJMooC27XH3oVCay0lB+BHDs5+dB1t5r4zfzDr+xybqCQuVXsZiIVaTjZDIYN20cObfVsrhkedvWL9cdWYyGWM91k3FxXdNWgPgHkI2YVbFGtqJkojyca5z3shkUNHMymJJsbx6Fxza5beHOL1/Mso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745856950; c=relaxed/simple;
-	bh=iqNP0hU3IjnWmgdEg95YCQHUyyxU09ifoxYOSrBliRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jd6/H4dCpNnZU4M9YRnI250s7I1baO3K1jNe1dfF1jDznVkTfDT+PPdrEWTfiBULLg5FbBpvqM8prCUlALkaQUL3nd+DBC22ZJHC8F8wloG+hfshUPK5ZT+QVZd6KQsTRqHN0MaIWMKZpn6tvejJA0oW71PvjOHw3inatat0vVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W97oK6cg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745856990; c=relaxed/simple;
+	bh=gYjUoLo4zfggGOmIysLdwHC6JtsaobvREnXVuQeaggE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VMzJ5gwtWV57gDUU5rsVGFBZ/lou0diTXqqioWG9Nzp7Sqbsl3Iig36HExZs1RAvVBPx8Jo7IezqLNU8d1aY1vMEDY4jzGkyj6H/FO5bd+NfLDMRW/D1fu2wjLHDR7dEPpCiHYjzO4I6qix4F6uPww4RCIc01NMB6Tgtq92PjpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OGv5yTIc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W97oK6cg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80881C4CEE4;
-	Mon, 28 Apr 2025 16:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745856950;
-	bh=iqNP0hU3IjnWmgdEg95YCQHUyyxU09ifoxYOSrBliRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W97oK6cgtJNEwz7oFlcr70nFNj4Po9ZAS/hCsNrAudkGxxsu8wN7r5SRbb0MqaZCY
-	 k662rjsyf+P9yksDWy1s/nsOrs2LP/rHhxXa8nbjBPvqvYgo8TQELXMQ4arsKiSWpY
-	 IbcrSbi0efDBZ9wUiMc/ft/XQxflEkhvv/KB8nP8Ty7qrTJ2LxBT2JEF5HVwNiiG0T
-	 2rN7zHKP1GPzgYiqPDtVSYjL+/sEgcB15zMPScEaMtaJA22jVo1YRT5TizQjOILy+l
-	 NnQxEBJhNNsMF2EqOXYHgufBJyLyBYxI6c7UYkaciAwQi1NXYOwdslL3nvLkYlqXtd
-	 XudoKVyVepEWw==
-Date: Mon, 28 Apr 2025 17:15:42 +0100
-From: Simon Horman <horms@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>
-Subject: Re: [PATCH iwl-next v2 01/14] virtchnl: create 'include/linux/intel'
- and move necessary header files
-Message-ID: <20250428161542.GD3339421@horms.kernel.org>
-References: <20250424113241.10061-1-larysa.zaremba@intel.com>
- <20250424113241.10061-2-larysa.zaremba@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGv5yTIc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745856987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LSBCFCBONXHckZIZ52LuoO+2BI59EZkDvF6TeRKrYmY=;
+	b=OGv5yTIcCHpiqRH6YV8yBS8PcZWWdRpTSP9KjLG+P+4fwLbh2E88S0sVliwX14fjhLJLpe
+	fW2zm8sV8r929lDNDXFjzyxSTGo5O3IEEp6DUW1N1oOOdQEQw6tmtWusAQt7SUaJQmzH8O
+	u6ggKr3N861BXSNOrWv33P/+iXkG0Os=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-NvC4_LgAO2KTl1YwOQnRNg-1; Mon, 28 Apr 2025 12:16:25 -0400
+X-MC-Unique: NvC4_LgAO2KTl1YwOQnRNg-1
+X-Mimecast-MFC-AGG-ID: NvC4_LgAO2KTl1YwOQnRNg_1745856984
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so27944485e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:16:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745856984; x=1746461784;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LSBCFCBONXHckZIZ52LuoO+2BI59EZkDvF6TeRKrYmY=;
+        b=pZioshYS81ov8aJX3hIHFfANFlbbiUJYKBJk5fL8IjmwVmamrlGNyyVt/z4jL6PCqa
+         14z10wfi0QXeWhTQFmv4/EDb6sFa8Uzlmd6nxpRFMwws/MjsO1xDfvzN8amPPk9GmYCH
+         6Ou0oZNGuYmmVoNLRhuQnZp/tiUaU/CwDhoTlosd2AcW2aRorgouKfDUhYmCJAQghpik
+         S0CKOxHxg9UCl+gm88b2mv6Wr88fvbJW9WWmIc4+rQdv46uMc4UaggVgm/Vym/o3TNsk
+         tFN5O8382ERVpjBhS9OD5XYqpo9NmNS/zbJUC5r10uUvreSpehY2z+zscTXvGDJWoLME
+         HpZQ==
+X-Gm-Message-State: AOJu0Yw/0kJ/0C+7UoukJGQeT02OFGnzmsLOV8IW/0q1GzjoCsjiDFkz
+	zwtM3DY0nKaCJLvtoMYTkEL1iKbfWMRXsw4/w64jjNYBuZoxkaKloDdRJuWdSffPd6fIulYN957
+	g+X7lyYY1zK4tu4HYDBEQCPzEM2027Y+y1eQ7ueWuAYBActqbeiN2t3+TGaNr8g==
+X-Gm-Gg: ASbGncsJnGUO04eLpvtfWDHPeyiKIzHd8VLBCQDgdJw/Nk+Z/LRpAz3EdSGzAQZkNYs
+	bN8rhPhBrT2lgeu+Ye4Meq2KtnxrN0x+OuIjs7G8+4wdfEuYlSOrrkTGn8Ccur158g0unDE8+zi
+	rwpNVRK5Psfy5SvNSQML+zPvyJCKd7TegKTLpkQxRDNiqJxSho+bGsWeelYykJz/pLxdbyD944m
+	TNM4DvRaQ7fH6vQnn8gssULirDfqhDO0Vn+DfWCXEqGQEn1NaO4TMu6jCvoq3zhfq2hmpHVTfMl
+	koZGRYZFzKuTkMM6hOjujKVqMVE65VrebrfQ55ExlAZMG7/qJx1FIoGXciB1jDIONLZng7NQMop
+	1/pFvkInI2vbhsFpGEnJ+fbmFEWgp6M9Bk0IkiA==
+X-Received: by 2002:a05:600c:3c91:b0:43c:fabf:9146 with SMTP id 5b1f17b1804b1-440ab7e8c1amr95666095e9.17.1745856984359;
+        Mon, 28 Apr 2025 09:16:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJ3tmkKQRgcbOe1thvkYMOwxvDkqDKaZa592PEuEMSy3W4S5JaiopHPKIlRfxSC6ElBCcvTA==
+X-Received: by 2002:a05:600c:3c91:b0:43c:fabf:9146 with SMTP id 5b1f17b1804b1-440ab7e8c1amr95665265e9.17.1745856983789;
+        Mon, 28 Apr 2025 09:16:23 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f32:c200:9add:4a7a:46aa:f740? (p200300d82f32c2009add4a7a46aaf740.dip0.t-ipconnect.de. [2003:d8:2f32:c200:9add:4a7a:46aa:f740])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a530a6e9sm128836965e9.16.2025.04.28.09.16.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 09:16:23 -0700 (PDT)
+Message-ID: <7a26e29c-d889-450a-a5e1-ce671f09e4c8@redhat.com>
+Date: Mon, 28 Apr 2025 18:16:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424113241.10061-2-larysa.zaremba@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to pfnmap_track()
+ + pfnmap_untrack()
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-6-david@redhat.com> <aAvvQ1h9bg11hiqI@x1.local>
+ <bbadf008-9ffc-4628-9809-2d8cf104a424@redhat.com> <aA-n9hvSX9JLsRM-@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aA-n9hvSX9JLsRM-@x1.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 01:32:24PM +0200, Larysa Zaremba wrote:
-> From: Victor Raj <victor.raj@intel.com>
+On 28.04.25 18:08, Peter Xu wrote:
+> On Fri, Apr 25, 2025 at 10:36:55PM +0200, David Hildenbrand wrote:
+>> On 25.04.25 22:23, Peter Xu wrote:
+>>> On Fri, Apr 25, 2025 at 10:17:09AM +0200, David Hildenbrand wrote:
+>>>> Let's use our new interface. In remap_pfn_range(), we'll now decide
+>>>> whether we have to track (full VMA covered) or only sanitize the pgprot
+>>>> (partial VMA covered).
+>>>>
+>>>> Remember what we have to untrack by linking it from the VMA. When
+>>>> duplicating VMAs (e.g., splitting, mremap, fork), we'll handle it similar
+>>>> to anon VMA names, and use a kref to share the tracking.
+>>>>
+>>>> Once the last VMA un-refs our tracking data, we'll do the untracking,
+>>>> which simplifies things a lot and should sort our various issues we saw
+>>>> recently, for example, when partially unmapping/zapping a tracked VMA.
+>>>>
+>>>> This change implies that we'll keep tracking the original PFN range even
+>>>> after splitting + partially unmapping it: not too bad, because it was
+>>>> not working reliably before. The only thing that kind-of worked before
+>>>> was shrinking such a mapping using mremap(): we managed to adjust the
+>>>> reservation in a hacky way, now we won't adjust the reservation but
+>>>> leave it around until all involved VMAs are gone.
+>>>>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>> ---
+>>>>    include/linux/mm_inline.h |  2 +
+>>>>    include/linux/mm_types.h  | 11 ++++++
+>>>>    kernel/fork.c             | 54 ++++++++++++++++++++++++--
+>>>>    mm/memory.c               | 81 +++++++++++++++++++++++++++++++--------
+>>>>    mm/mremap.c               |  4 --
+>>>>    5 files changed, 128 insertions(+), 24 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
+>>>> index f9157a0c42a5c..89b518ff097e6 100644
+>>>> --- a/include/linux/mm_inline.h
+>>>> +++ b/include/linux/mm_inline.h
+>>>> @@ -447,6 +447,8 @@ static inline bool anon_vma_name_eq(struct anon_vma_name *anon_name1,
+>>>>    #endif  /* CONFIG_ANON_VMA_NAME */
+>>>> +void pfnmap_track_ctx_release(struct kref *ref);
+>>>> +
+>>>>    static inline void init_tlb_flush_pending(struct mm_struct *mm)
+>>>>    {
+>>>>    	atomic_set(&mm->tlb_flush_pending, 0);
+>>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>>>> index 56d07edd01f91..91124761cfda8 100644
+>>>> --- a/include/linux/mm_types.h
+>>>> +++ b/include/linux/mm_types.h
+>>>> @@ -764,6 +764,14 @@ struct vma_numab_state {
+>>>>    	int prev_scan_seq;
+>>>>    };
+>>>> +#ifdef __HAVE_PFNMAP_TRACKING
+>>>> +struct pfnmap_track_ctx {
+>>>> +	struct kref kref;
+>>>> +	unsigned long pfn;
+>>>> +	unsigned long size;
+>>>> +};
+>>>> +#endif
+>>>> +
+>>>>    /*
+>>>>     * This struct describes a virtual memory area. There is one of these
+>>>>     * per VM-area/task. A VM area is any part of the process virtual memory
+>>>> @@ -877,6 +885,9 @@ struct vm_area_struct {
+>>>>    	struct anon_vma_name *anon_name;
+>>>>    #endif
+>>>>    	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
+>>>> +#ifdef __HAVE_PFNMAP_TRACKING
+>>>> +	struct pfnmap_track_ctx *pfnmap_track_ctx;
+>>>> +#endif
+>>>
+>>> So this was originally the small concern (or is it small?) that this will
+>>> grow every vma on x86, am I right?
+>>
+>> Yeah, and last time I looked into this, it would have grown it such that it would
+>> require a bigger slab. Right now:
 > 
-> Move intel specific header files into new folder
-> include/linux/intel.
-> 
-> Suggested-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> Signed-off-by: Victor Raj <victor.raj@intel.com>
-> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> ---
->  MAINTAINERS                                                 | 6 +++---
->  drivers/infiniband/hw/irdma/i40iw_if.c                      | 2 +-
->  drivers/infiniband/hw/irdma/main.h                          | 2 +-
->  drivers/infiniband/hw/irdma/osdep.h                         | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e.h                      | 4 ++--
->  drivers/net/ethernet/intel/i40e/i40e_client.c               | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e_common.c               | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e_prototype.h            | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e_txrx.c                 | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.h          | 2 +-
->  drivers/net/ethernet/intel/iavf/iavf.h                      | 2 +-
->  drivers/net/ethernet/intel/iavf/iavf_common.c               | 2 +-
->  drivers/net/ethernet/intel/iavf/iavf_main.c                 | 2 +-
->  drivers/net/ethernet/intel/iavf/iavf_prototype.h            | 2 +-
->  drivers/net/ethernet/intel/iavf/iavf_txrx.c                 | 2 +-
->  drivers/net/ethernet/intel/iavf/iavf_types.h                | 4 +---
->  drivers/net/ethernet/intel/iavf/iavf_virtchnl.c             | 2 +-
->  drivers/net/ethernet/intel/ice/ice.h                        | 2 +-
->  drivers/net/ethernet/intel/ice/ice_common.h                 | 2 +-
->  drivers/net/ethernet/intel/ice/ice_idc_int.h                | 2 +-
->  drivers/net/ethernet/intel/ice/ice_txrx_lib.c               | 2 +-
->  drivers/net/ethernet/intel/ice/ice_vf_lib.h                 | 2 +-
->  drivers/net/ethernet/intel/ice/ice_virtchnl.h               | 2 +-
->  drivers/net/ethernet/intel/idpf/idpf.h                      | 2 +-
->  drivers/net/ethernet/intel/idpf/idpf_txrx.h                 | 2 +-
->  drivers/net/ethernet/intel/libie/rx.c                       | 2 +-
->  include/linux/{net => }/intel/i40e_client.h                 | 0
->  include/linux/{net => }/intel/iidc.h                        | 0
->  include/linux/{net => }/intel/libie/rx.h                    | 0
->  include/linux/{avf => intel}/virtchnl.h                     | 0
->  .../ethernet/intel/idpf => include/linux/intel}/virtchnl2.h | 0
->  .../intel/idpf => include/linux/intel}/virtchnl2_lan_desc.h | 0
->  32 files changed, 29 insertions(+), 31 deletions(-)
->  rename include/linux/{net => }/intel/i40e_client.h (100%)
->  rename include/linux/{net => }/intel/iidc.h (100%)
->  rename include/linux/{net => }/intel/libie/rx.h (100%)
->  rename include/linux/{avf => intel}/virtchnl.h (100%)
->  rename {drivers/net/ethernet/intel/idpf => include/linux/intel}/virtchnl2.h (100%)
->  rename {drivers/net/ethernet/intel/idpf => include/linux/intel}/virtchnl2_lan_desc.h (100%)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 657a67f9031e..2e2a57dfea8f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11884,8 +11884,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/next-queue.git
->  F:	Documentation/networking/device_drivers/ethernet/intel/
->  F:	drivers/net/ethernet/intel/
->  F:	drivers/net/ethernet/intel/*/
-> -F:	include/linux/avf/virtchnl.h
-> -F:	include/linux/net/intel/iidc.h
-> +F:	include/linux/intel/iidc.h
-> +F:	include/linux/intel/virtchnl.h
+> Probably due to what config you have.  E.g., when I'm looking mine it's
+> much bigger and already consuming 256B, but it's because I enabled more
+> things (userfaultfd, lockdep, etc.).
 
-I'm not sure that I understand the motivation for moving files out of
-include/linux/net, but I guess the answer is that my suggestion, which
-would be to move files into include/linux/net, is somehow less good.
+Note that I enabled everything that you would expect on a production 
+system (incld. userfaultfd, mempolicy, per-vma locks), so I didn't 
+enable lockep.
 
-But if file are moving out of include/linux/net then I think it would
-make sense to make a corresponding update to NETWORKING DRIVERS.
+Thanks for verifying!
 
-Also, include/linux/intel, does feel a bit too general. These files
-seem to relate to NICs (of some sort of flavour or another). But Intel
-does a lot more than make NICs.
+-- 
+Cheers,
 
->  
->  INTEL ETHERNET PROTOCOL DRIVER FOR RDMA
->  M:	Mustafa Ismail <mustafa.ismail@intel.com>
-> @@ -13534,7 +13534,7 @@ L:	netdev@vger.kernel.org
->  S:	Maintained
->  T:	git https://github.com/alobakin/linux.git
->  F:	drivers/net/ethernet/intel/libie/
-> -F:	include/linux/net/intel/libie/
-> +F:	include/linux/intel/libie/
->  K:	libie
->  
->  LIBNVDIMM BTT: BLOCK TRANSLATION TABLE
+David / dhildenb
 
-...
