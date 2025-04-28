@@ -1,179 +1,147 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEE527A911;
-	Mon, 28 Apr 2025 17:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC093294A1F
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861963; cv=none; b=XJjkqA7mDsleLo8pGNXAoQRhagmvxywO6TUN7AW83ozC7ARTjby/5biF+JqJY4PpUYlMbBaxyfOvYLK2O+EMET3hjQfUkuOtezdoegWT0wAeg5khcJw9wI0AW2EPgOi0zOJWRNW2ldHZmx/ZFjSuvrQKBQzGhpFEpf1vbIDqo1U=
+	t=1745861966; cv=none; b=gcxQ5WytUj7Ewvs+7zOiZx1+S/EQtcajKQcMxGaoePTS5JZWtYlLiU9NjUEXtaINeqxsVmWla3vWGmGinF7xTMjNXQNVmslOxWoxcA5XT4atysa7niuxOST6A4YC5reCX6FeBwKQb/VRhgrhDVpSSSo/FuHyqlkbXx7wLW5mSbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861963; c=relaxed/simple;
-	bh=fQMNSjnB4gVshimuVVYOR1fmCiWCDutclLSx2h4MeLc=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smszF5hnSWEYuP7DzwUxLb+jvHVdwvoAPxKrXLjq3y4uIxz1jpmzesCMjfI6nZ9ng6xRENdnoHcuCi6kv7ta/dPnEQusE5/J58M3ZzQNbmVgh+FsfzUhiGNOL54ocvpsrJm9jty5w3D9f91y5ksBmQGcqC3o9YKWq7N0qEpbw+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IkH1lf/X; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745861966; c=relaxed/simple;
+	bh=rMdgH1z5b0XG645DmwX7UvsPvQa6FdO63A/yWAGC49A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GiBwA2j/Qh26ylkHnelemGxPbFZFCNrby/1YJWZx43NsNWAuXMuOszWR8agj2P0FjVuEG0TyHvbYDpHn5FqtAd5JzYCZtrkgVezQZ7oU6wzHSNFSITAEc5SSML95FqvDlXSXFUTWSuhHBM0/zWtvGs+EXo9KdcDmQhfhMxlnRW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XRn34Tw6; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkH1lf/X"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c08fc20194so1174305185a.2;
-        Mon, 28 Apr 2025 10:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745861961; x=1746466761; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IDDLCOEVMpC0X/vw5gShRSSSgzF0jyB8R6+odx3QnJs=;
-        b=IkH1lf/XzAp+1laraHickaotwFBDJJU1TZaDN2urkIE7gL+Cz9DNKGPtQAONqj+3eD
-         2RiuVZyJix86JZRxq/kf5zipV9L6EwAARR27ewdjFiJ7/5wasjYLyk9RmgpRwXxurL7Z
-         3xOcX3puXhcMfB5qJZP35ihCTKkTdkE3/YdTRMdvrJ+7wT58xuHYvI2yBT6hJ2RiarX0
-         AbZu77HpZQOFJREJvwpfDQFv+5CzhWWi6cYdAqaiWDjXMhdD7pYnUR6kj1p7LjRimhVA
-         uHhKA6fO8+mbl1W+jtVQ+rsiU8LIA/ruF6C01p2B08zW6gwBh86It6W8HcrYR5Mo4XXa
-         hyMQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XRn34Tw6"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S9GRQC024699
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:39:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mI/HiKaz9KZWlPThwibrKI2Qv9tQ/yegSAkRcgBvHnw=; b=XRn34Tw6gst9RdeJ
+	WRCDsskTUaVVsaraYKEiEir6D1c1Tm2kuXswuytZ3MrWZIyA9OK3GnxAGvSBjqXe
+	hVKaud5gZJi61BobRXh2aowP0CzI/0NAmquMIzoWvNDa68WRpy2AseZhQCBVtqlI
+	m4bb4q+62IqeNJentXx0RH4cgprsupH8p66kKk2paZ+x1LBE14FOpZXqJsh+PfoW
+	chxayRC/FfciaMYTlcaVPpD438D7UNJrsKbCzwK3wQEA3QXaEXvDd0kRx/Kd4myF
+	rmPq36JDPhgvo5+XupUotSGrYwAE5fJrQwG74UzE8INacgyAEXiMCY1L/XuOjkAm
+	bW354Q==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnn0uug-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:39:24 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-30566e34290so4630406a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:39:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745861961; x=1746466761;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IDDLCOEVMpC0X/vw5gShRSSSgzF0jyB8R6+odx3QnJs=;
-        b=sYDM2BMzBu0Cp6LIcbOUgVxfKWBTUxnY7dBOI3enbs5nIOb4i7y1ofFzTzlZQKLK7p
-         MB+PfXOXqztyJ8UHoiZkepMykPyLPEwS1esjlkaBM9vD5UJg3eftklE7DIossgC826iM
-         UZFXMcHVG5WYMsQWlNFdo4recn82RusSjp2QpBdBSPtRv/QxyOk4CA/adfZApViQMMAj
-         sZl9Etgodw9LWequHZpiZmiQpMYfvMgYOie6739sFdg7ZfBTM94yammsJ7Oe4sigCKsS
-         8KYV5zIbYDcY+IBtlzSdLeZqeoqZlq6ZexnbH3f76XZspWHowvxOT2T1htluS6XQz5+o
-         Divg==
-X-Forwarded-Encrypted: i=1; AJvYcCUl0gmLnU3PiXy1BTlEuUSfmMoNZ9tGFxgBeV1CCC6C/GibR/lhnUbffmt0+KVyJuvKm79fvcr76a+8@vger.kernel.org, AJvYcCWim7TI8xvI1Pbd8x3Yhd9qx2PUmUeoVOKkgxGS7FYjtu4vGJpC35l2BSnfIeMsLQEWXHcmEgy4LEaGDBKekRk=@vger.kernel.org, AJvYcCXmKh9FFtJ2/H5ox0meODEauP5k2bXJTgXrKfm3vPKY4B8+rvm+jquv1xTbUj0JFRAHvQmPIEiPqO2wEsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbAR1hSET0T2fFTOWtH3gYuc6/OtA8Nx3CH3+5ZYjlLp6QtRvD
-	k1zzNQt3Dq8iVzvRwfJ+hj+IgNzEyVhfl1QvGDIYOFSHToryl+9q
-X-Gm-Gg: ASbGnctIXx6gkEK9K2PJJLgBuQ9wulVl6fO2VSunEJKSj20n7c7PtfM77SPIhEd+z+/
-	FXHZ24SxslS5UhkiM7JOgjpyYJCilPNU0Cv2vsB/YYGDhS/K2GuAFBI1KqCm/UDjum1TdE5Ubqd
-	GM1riivnOx0mygi6w5pCloGcHucNeWTdhakdEcVENsFeWrCCF4Kqhrry/winqeqqPEj8G188o1i
-	Sz/WCIWn4WfVdTE24dEhTUAEUm2r1f/DEBik5Z7OqO3fiZDSNnvsflKfvFX6vmFpeCG6ZLgRtau
-	By8JefcXWwb1FmJuq8R6upZrjbMbL/ltlnjMq9Y7lNA3Clz9HB0TayBjKXnjw9YiLLlIyGnJ7Rm
-	xQ8Vr3ODDcm3ahFM2DUZcDHOmtyDcJEE=
-X-Google-Smtp-Source: AGHT+IH8kUVfdao2rGXfuoDXWWd+N2vEWt284kqBnLyotdB5n1Qqi+nNZclc699xuoD5NGd26yVfmA==
-X-Received: by 2002:a05:620a:1a22:b0:7c5:4f6f:3d13 with SMTP id af79cd13be357-7c9668bfd98mr1472535385a.42.1745861960497;
-        Mon, 28 Apr 2025 10:39:20 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958ce3cf6sm647137585a.64.2025.04.28.10.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:39:20 -0700 (PDT)
-Message-ID: <680fbd48.050a0220.398eb0.7d07@mx.google.com>
-X-Google-Original-Message-ID: <aA-9RTcNkmsui4cG@winterfell.>
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1B2541200079;
-	Mon, 28 Apr 2025 13:39:19 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Mon, 28 Apr 2025 13:39:19 -0400
-X-ME-Sender: <xms:Rr0PaFQ5nGvbTV3pc3MjKAUTmfSu1BWWuBRdWVWFeA2oBZlsx7LkNQ>
-    <xme:Rr0PaOz8ayYSoM4e2kF-qy7kb7JU3DceaKtadvJUbphE384YT07fC2gH6V3i9PfUi
-    XJQ8WqWSWcJcw5R3w>
-X-ME-Received: <xmr:Rr0PaK0QJyptFHZex5-3aOOoy8ypuPN1G0jhxm7SmaKRLe27AOohJffYvEo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieduheejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
-    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
-    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
-    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
-    nhgrmhgvpdhnsggprhgtphhtthhopedvhedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhi
-    nhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdp
-    rhgtphhtthhopehkfihilhgtiiihnhhskhhisehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopeiihhhifiesnhhvihguihgrrdgtohhmpdhrtghpthhtoheptghjihgrsehnvhhiughi
-    rgdrtghomhdprhgtphhtthhopehjhhhusggsrghrugesnhhvihguihgrrdgtohhmpdhrtg
-    hpthhtohepsghskhgvghhgshesnhhvihguihgrrdgtohhm
-X-ME-Proxy: <xmx:R70PaNDz_LW0h2wuoWmqE7U-CpV10pVudlDlSwLihi0-bD9gqrJXFg>
-    <xmx:R70PaOhzxB84pJLlzFYewW5qa44AEW4yf_sZTiu7bx_C8CgXK8nS0g>
-    <xmx:R70PaBpmjpFPnNXMIXreU7sVnOqUn9hSparyilg2eDghC_f-0teTbQ>
-    <xmx:R70PaJhm8gdWKE7YnxDg6g4xxmiTYpfxGO69BUr-vN_I9XxuhVYMWw>
-    <xmx:R70PaJQLM5dX9cL2ndiyBe_Dha-fNEW0m70566vG9fKbbnAVtwuCagT4>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Apr 2025 13:39:18 -0400 (EDT)
-Date: Mon, 28 Apr 2025 10:39:17 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Devres optimization with bound devices
-References: <20250428140137.468709-1-dakr@kernel.org>
+        d=1e100.net; s=20230601; t=1745861963; x=1746466763;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mI/HiKaz9KZWlPThwibrKI2Qv9tQ/yegSAkRcgBvHnw=;
+        b=udcdulF6RaHPl9RUQws3iyadxfdl2ePHI1w54PHepZu1SVm5eEH/9gDNwMm1bJk7jC
+         r3UdG6CB/iC4gEi748RNUTceuBgjDS1YeDLnf02Bf/3eJIvekgw0EMhXKycmXx2nubS3
+         WuMXm3ev/5oShKxthuMgvmYa4GXRBiMey815F+0oYtGE7vlnb7CuVUSyinJy1IRjd5dW
+         fxtLAulbRBBSL2/mL8vswWzwggwvXhh55XR2X6vDRq+yZ2mI3PQQFCQ4L1lthWGDSmyK
+         QYKyiAUVYSdU2LLTGxL6NOW5VU6B0bNKvhrVgJ4YdRyuSO1qR7uGp3he1IydOaj9wm6r
+         +fVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYZSumFzb+RSpwL7QLTJnjSuf48y3J18g8FU9UxUwwA3AKOUG9fV5xZyC6FC0STVffp/2USnkaBkQrim8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFBAvKSfRRCR2wgGFoOedayezBUI/PZ+nsVmhTSzpmmzYj3HCm
+	De2u+zcWlq8cS9+eNT/A0dQJGoGAYH10PV6FAVmbve6dfUL3OembMN7UbcdoxeTSCxKeJ4W5D62
+	ER0dxNw4OgojtfXuyv0NC3S98k1WLbx7vd7ryqhP9FwlTew6EUsLtzT7ywapDDCg=
+X-Gm-Gg: ASbGncvcrE7nmfEKjrw0aP+ckRPJOhp/5tWwYn/Qe/V3LWB2GG0ULbxP1B8KobXx+HO
+	FWYLLElxUbYTMDh4IbkTzgvoOzdEMOKc0Z9QNYvgJW3KUhkrkFV62Qiqzusmq/YS/SiibRD6udR
+	9JaL17+HkYdfw2nodoDK//uLxB+KZHQBG25Uuy7XLIs0pA+Glu9QjuZ5F+VwRfmMkBh9KucgrZA
+	f9msNW9eq6kPw/RApHiev+7Y15hU9jfsPWHIievG0ysWKOBF3pCuWryhoQlZF/tuYy7P51r2pEq
+	FF6YwWCyJVTmVAGec/j8gb3TiFaEDifSxCLNV12c
+X-Received: by 2002:a17:90b:2750:b0:2ff:784b:ffe with SMTP id 98e67ed59e1d1-30a220c47c6mr285893a91.11.1745861963249;
+        Mon, 28 Apr 2025 10:39:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFR7p2L8d/2GX19iNf1giRAg/eaumctlcwhuhNojkhH3I0ZDBZ89gVbUpJkpWFzmeY2sqOP2Q==
+X-Received: by 2002:a17:90b:2750:b0:2ff:784b:ffe with SMTP id 98e67ed59e1d1-30a220c47c6mr285857a91.11.1745861962896;
+        Mon, 28 Apr 2025 10:39:22 -0700 (PDT)
+Received: from [192.168.0.195] ([49.204.26.142])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76cfasm86047575ad.47.2025.04.28.10.39.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 10:39:22 -0700 (PDT)
+Message-ID: <59c49a34-5bf3-4f10-a98b-bb63dfd58f40@oss.qualcomm.com>
+Date: Mon, 28 Apr 2025 23:09:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428140137.468709-1-dakr@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] clk: qcom: dispcc-sm6350: Add *_wait_val values for
+ GDSCs
+To: Luca Weiss <luca.weiss@fairphone.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250425-sm6350-gdsc-val-v1-0-1f252d9c5e4e@fairphone.com>
+ <20250425-sm6350-gdsc-val-v1-2-1f252d9c5e4e@fairphone.com>
+Content-Language: en-US
+From: Taniya Das <taniya.das@oss.qualcomm.com>
+In-Reply-To: <20250425-sm6350-gdsc-val-v1-2-1f252d9c5e4e@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: TmDU_KEebs2SxZOGWAWrMGHqbzX5M_Oo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE0MiBTYWx0ZWRfX6TYMzMDtFLBO 0ZZIlxjI23zrRsg5H6RG2bB21Qah54IYYij1mCgBv6EPfzfQ8EMpcqxQseikd8qHYksAigugvPx sLoaWwFBc3TbVHcE+3U/kS1acp7I9+SIdebtdhANmIb8sontH6LHxccGp+RyBHBvd1QUMR29tjP
+ d5Sqwqgu1BCYSd3U0PF9jFFMqypV/I3MNpXxy+X4h1teVfePfq7QIAehNbO+2PE+ZgNVGQCiqkA Oa24FAYmydgaGo3WHZ+yPmd+kVAUd2EXhStZN5LYBndV4jJ/hMvuQmnoYdy49+dkdFsXgAcdymw HssgAKtYfuHvu1uuDK2qLs6fejQ5byMhM6KhqCw8k2UE0uiC/opnie71IUZmpffdpXBeRjrQ1A1
+ rXvSk+Oc9Cs5KaMg+Q2psKvTL/chDIN65x/bnOEn77Qe60j9GFKPkvpmg2rAKJIHXUFQrMpD
+X-Proofpoint-GUID: TmDU_KEebs2SxZOGWAWrMGHqbzX5M_Oo
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=680fbd4c cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=Svr01UFivMFfsnZ9dZkWgg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=6H0WHjuAAAAA:8 a=COk6AnOGAAAA:8 a=6dQnf3u2Ryt8jKbU0REA:9 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22 a=Soq9LBFxuPC4vsCAQt-j:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_07,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280142
 
-On Mon, Apr 28, 2025 at 04:00:26PM +0200, Danilo Krummrich wrote:
-> This patch series implements a direct accessor for the data stored within
-> a Devres container for cases where we can prove that we own a reference
-> to a Device<Bound> (i.e. a bound device) of the same device that was used
-> to create the corresponding Devres container.
+
+
+On 4/25/2025 5:42 PM, Luca Weiss wrote:
+> Compared to the msm-4.19 driver the mainline GDSC driver always sets the
+> bits for en_rest, en_few & clk_dis, and if those values are not set
+> per-GDSC in the respective driver then the default value from the GDSC
+> driver is used. The downstream driver only conditionally sets
+> clk_dis_wait_val if qcom,clk-dis-wait-val is given in devicetree.
 > 
-> Usually, when accessing the data stored within a Devres container, it is
-> not clear whether the data has been revoked already due to the device
-> being unbound and, hence, we have to try whether the access is possible
-> and subsequently keep holding the RCU read lock for the duration of the
-> access.
+> Correct this situation by explicitly setting those values. For all GDSCs
+> the reset value of those bits are used.
 > 
-> However, when we can prove that we hold a reference to Device<Bound>
-> matching the device the Devres container has been created with, we can
-> guarantee that the device is not unbound for the duration of the
-> lifetime of the Device<Bound> reference and, hence, it is not possible
-> for the data within the Devres container to be revoked.
+> Fixes: 837519775f1d ("clk: qcom: Add display clock controller driver for SM6350")
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  drivers/clk/qcom/dispcc-sm6350.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Therefore, in this case, we can bypass the atomic check and the RCU read
-> lock, which is a great optimization and simplification for drivers.
+> diff --git a/drivers/clk/qcom/dispcc-sm6350.c b/drivers/clk/qcom/dispcc-sm6350.c
+> index e703ecf00e440473156f707498f23cde53fb7e22..b0bd163a449ccd2b27751e32eb17a982facf07d8 100644
+> --- a/drivers/clk/qcom/dispcc-sm6350.c
+> +++ b/drivers/clk/qcom/dispcc-sm6350.c
+> @@ -681,6 +681,9 @@ static struct clk_branch disp_cc_xo_clk = {
+>  
+>  static struct gdsc mdss_gdsc = {
+>  	.gdscr = 0x1004,
+> +	.en_rest_wait_val = 0x2,
+> +	.en_few_wait_val = 0x2,
+> +	.clk_dis_wait_val = 0xf,
+>  	.pd = {
+>  		.name = "mdss_gdsc",
+>  	},
 > 
 
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
-
-You would need to, however, change the titles for patch #2 and #3
-because there is no `Devres::access_with()` any more.
-
-Regards,
-Boqun
-
-> The patches of this series are also available in [1].
-> 
-> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/devres
-> 
-> Changes in v2:
->   - Revocable::access(): remvoe explicit lifetimes; don't refer to 'a in
->     the safety requirement
->   - Devres::access()
->     - rename Devres::access_with() to Devres::access()
->     - add missing '```' at the end of the example
->     - remove 's lifetime
->     - add # Errors section
-> 
-> Danilo Krummrich (3):
->   rust: revocable: implement Revocable::access()
->   rust: devres: implement Devres::access_with()
->   samples: rust: pci: take advantage of Devres::access_with()
-> 
->  rust/kernel/devres.rs           | 38 +++++++++++++++++++++++++++++++++
->  rust/kernel/revocable.rs        | 12 +++++++++++
->  samples/rust/rust_driver_pci.rs | 12 +++++------
->  3 files changed, 56 insertions(+), 6 deletions(-)
-> 
-> 
-> base-commit: 3be746ebc1e6e32f499a65afe405df9030153a63
-> -- 
-> 2.49.0
-> 
+Reviewed-by: Taniya Das <quic_tdas@quicinc.com>
