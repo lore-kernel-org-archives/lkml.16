@@ -1,131 +1,116 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA8327A10D
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C34269CFA;
+	Mon, 28 Apr 2025 16:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857629; cv=none; b=r2sfNFnGV/bcy1LXMz1jy+AGNir1gkQUuYolRPJJebEt0k7RdWe2EAsPjjy5rpiE90mn56Bt1RBz4FWioGDKN+2NfWggFggpSsPyRGoxxvvA7yAoZDUzeblIC3FnmG0bQciwA1cBjSqf+TGLAYy2LL74S7wbfvsJ1aWF00BOknc=
+	t=1745857714; cv=none; b=soZBdYeWmIeN2KzTjfGP+VtT0CQ5TbgLcva0GbcFeXqK1ztpCQvFHtuWz9L/bd1qXonLhA7VOB9qD52r0+QTgLaFInCiBzT3Bjrgl2hKLbSFs1vHeP0WM0SB0UZ9kZgfipLZK7O/sT3YOATQxZC7baAIYOXCcapKuY7pUuZt03U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857629; c=relaxed/simple;
-	bh=NEz+7HnlSD9gBpRqA1Xm5hcc+9kBO2HYG+echiMcxYU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZLaYPBaKthWjtkZCj8EvsE7il9PQyMKlPR4ALv5daIyoTkH/uN1emcY22kplmOo5JlgtqfLE5ctYeXE/Y4BIVk3AhjeAD/3pe16f9Uow5cai8yJHx2xx/xJmXmTQ4AEZAj3myK5a4Ra3nkNmpEdxtpPPE8Ssww3co3+lZqv/TUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKPgrRqH; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745857714; c=relaxed/simple;
+	bh=fDw2gzzM83ZYTDixpGlU/gACzK5/CA2xabsIEj/d/9c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LhZ0ENLmeKNk6zp1UegQ26ydkv1UoDsDybNaf1TPzC8xYuCclPXw9yYofVHo5rmlvUWJh+QIcvEUuBcf3LjGYtcR2+uJw2qViMc2qxXVWvikReMh3rr5VLI2CSeDcA/3tp49T6NTGyx5A4nZu3HsXjshyXOnVh65ZHhWqwVwN34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qDV8X6Iz; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKPgrRqH"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54998f865b8so5100248e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745857626; x=1746462426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NEz+7HnlSD9gBpRqA1Xm5hcc+9kBO2HYG+echiMcxYU=;
-        b=MKPgrRqH66QBcrudCaXTDpmsngKLrO4fQ5XzkGlWRC/pj4IwhWesbEEDvowrJ5a6tC
-         5WrhQ9aMIuZTahe1LV6E7E/NxhSbpkG4rV8E5zNel0ZGneix2oYxUfKRBIYocJwkke9P
-         1oof3ul/YySCTHGATJaPlaN1sHQoKeRIN5qsmIbUYtO4MEuy4txV8fDeGnj59mv8vqP/
-         aI0KswYiLX0cZDmtdZEree1ApAaO/wiGo81K6+seckxMN8npF+mwzkyxPG2k1qb7izm+
-         g68yLfV3Y8xUnz5y0xP7si80QTgA8Wr7ohJYgbFP3bqU9M3UVbJIj++DxqTUiwAWV8iP
-         jDKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745857626; x=1746462426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NEz+7HnlSD9gBpRqA1Xm5hcc+9kBO2HYG+echiMcxYU=;
-        b=gNAXCGgovTX4EQ7AQyrbWgyPKprT3PAQ8Y+wqEK6SlbDVQOQNlawc3ZtNuK1xtvN0M
-         JYfFEXu6M9t4LCnLDdMFG7AYXG6MJA3ijmIIsTTYbtB4LcOY3iZoWM6vmRMscH4s/XMc
-         p0I0tW01gysn6GvX3/dcgrFE7BBMQy/9W5dhaC4Xb5wJAz2ejC6VRWhqs943RvDOV9iX
-         qwKLwrAgvgLCIhDRNKltPnsiHh7ye6Urg/wgDMvHeFUC2tmlfcj2/rgemzK8JZa8YmX6
-         bYWioMh5qhpcAMENy0BWt8LiRoVwBkIlZs6Ycag17chxCudlv71IpvSOddXqc5nUxK0G
-         Sw9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWTXvaX1yVuXdFxccs6e4JUDKvQ5e/A7cKJO1BFPm9EIGefDK8vztEJoFZmlGNniE/VN4zIoyW0Ls/G9kU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvsnqZGlq3ovOTnTcC6Y3wSWI6qfELfIvE2csAtIlpYUSqbsg8
-	mMHC2MF+9v86PNqEHrObwAKfFPkMefCN18zr0oRLDXUdRyRNAPjy
-X-Gm-Gg: ASbGncvafJgxp3M+1NaY9f1LRb9+SdnVRJ+ASxXUZdAQMXIgt1YoVG7TU6krmdhgm1Y
-	O4td6cjnrX7VcybsRMfn/h1NyoeG/c1cebodzNAqRcpr91jeXfU6gfhFRjwJRLc5aO4mB+26+ae
-	orO1NDabqZaUuiXr3zC3ay1nTzVZOhLqE7IlxuhzKs2QkEyxBiDYi5Pt19SxoDyRl75ciFt4aVM
-	HYgE77BRTDDKD2+hQ0mszVgipQ+EgfshV14kijxyv6fer0tlHZkebqwrMrMAGRo4HLSPFLa9NUM
-	y2Mds7icymxoYknAAkv2gS6uk7CUE1PekkpdJP6ZwNRg2yKWqnDpOCw8ytvniXNMl9UNLKa0NBQ
-	/Vw==
-X-Google-Smtp-Source: AGHT+IGr6BX7don/g6ZzfnnNUrD4Fex9BPlhWoDzwbCr+DZza31LV5r8+5jBFKfRTAtrCQtlTb7OFA==
-X-Received: by 2002:a19:6458:0:b0:54d:6aa1:8f5a with SMTP id 2adb3069b0e04-54e8cbd5b23mr2738532e87.13.1745857625379;
-        Mon, 28 Apr 2025 09:27:05 -0700 (PDT)
-Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb7cf7sm1648779e87.214.2025.04.28.09.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:27:04 -0700 (PDT)
-Date: Mon, 28 Apr 2025 18:27:02 +0200
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>, David Lechner <david@lechnology.com>,
-	Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-	Alex Lanzano <lanzano.alex@gmail.com>,
-	Kerem Karabay <kekrby@gmail.com>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/st7571-i2c: select CONFIG_DRM_CLIENT_SELECTION
-Message-ID: <aA-sVpH4JprVJfvi@gmail.com>
-References: <20250428150752.3970145-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qDV8X6Iz"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SGSQ6C2821463
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 11:28:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745857706;
+	bh=PH8LqPmdzTiyEIRldLyF2ISfaZauzPwN6cosQsO86rM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=qDV8X6IzH1PUAHkhmVrfhtoObnZWlDkppcKErvmxXxjYVqtbOvT6h2QNCnZ03WwtC
+	 W/WDPUTdPSv6VykJ5uNdHmglIhSGoT81YbKXxoy9Epup9XYdRJd7OGvw26d+kHDfvD
+	 m54ZRX/DzE6DihLbFJjq49di4VwjCDdZB78LcxCs=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SGSQB4025096
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 28 Apr 2025 11:28:26 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
+ Apr 2025 11:28:26 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 28 Apr 2025 11:28:26 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SGSPa9001778;
+	Mon, 28 Apr 2025 11:28:25 -0500
+Message-ID: <31b0b9ed-859b-44f7-89b0-26cc6384356d@ti.com>
+Date: Mon, 28 Apr 2025 11:28:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o3c6wV1GzZxPmN44"
-Content-Disposition: inline
-In-Reply-To: <20250428150752.3970145-1-arnd@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 09/11] arm64: dts: ti: k3-am62a7-sk: Reserve
+ main_timer2 for C7x DSP
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+        Beleswar
+ Prasad <b-padhi@ti.com>,
+        Markus Schneider-Pargmann <msp@baylibre.com>,
+        Devarsh Thakkar <devarsht@ti.com>
+References: <20250415153147.1844076-1-jm@ti.com>
+ <20250415153147.1844076-10-jm@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250415153147.1844076-10-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On 4/15/25 10:31 AM, Judith Mendez wrote:
+> From: Hari Nagalla <hnagalla@ti.com>
+> 
+> C7x DSP uses main_timer2, so mark it as reserved in linux DT.
+> 
 
---o3c6wV1GzZxPmN44
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The set of peripherals used by this C7x core depends on the firmware
+running on the core. Long term we should think on a better way of
+communicating this from firmware to Linux. Same goes for the next
+two patches.
 
-On Mon, Apr 28, 2025 at 05:07:45PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The newly added driver calls drm_client_setup(), but that is not
-> always built in:
->=20
-> x86_64-linux-ld: vmlinux.o: in function `st7571_probe':
-> st7571-i2c.c:(.text+0x7b7119): undefined reference to `drm_client_setup'
->=20
-> Select the appropriate Kconfig symbol.
->=20
-> Fixes: 4b35f0f41ee2 ("drm/st7571-i2c: add support for Sitronix ST7571 LCD=
- controller")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+For now since these timers are always used by all firmware, this
+will be safe to do, but for other peripherals we will need that
+better solution.
 
-Reviewed-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Reviewed-by: Andrew Davis <afd@ti.com>
 
-
---o3c6wV1GzZxPmN44
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmgPrFIACgkQiIBOb1ld
-UjLJRg/+OXeqfy4JHuaJu1E/9ak8qieFsIFnvYtHXHj42ZXnyeaMV8lrdx/MYlA7
-ci/Ql/XnIA4Dh9qFMNPBrfRw5zRs7pSXBQY2Ic61ocvTtVS3XRATYKLSIcCDRhFF
-owscA1AZMXAMru6+jOg43b4L2TqRMT+OGa7Xj3m3oUW+atlnRDPGRxrnOHKDjZmI
-9X1g+vm36QkLFIoVoMTrPp/oa4kgKxr+ZRRdqIfPtsr5MyG/yLBgrr1IOI2fF9kX
-wsWEuaBDEQtLgPmBo4iK8FLLeQHkYOBNKmR2za3ItOZEe2d1OKCHqXk4T1nbit4I
-8DqMAV2mc19hM7mHGE0/+DfBAmhvJhduJJ5aln+lacYJsUZotJZP2oSI9qqEpygw
-JvQb44d1JLoVIETuqC5tyNtKo9nuQD4ylingsy/1BIul0FcSqtBVIADoNSpY2Ed7
-iyT4+GV1dX16AjGPJx4kJEGGk7uoL6KX4jG1muWHkSGqEDrJNIfc3egDCkZziHJ6
-Mgm+uD8gphzFh6Q7SIAYpm4lxY/Mcidk7slhow+QtRvsEfkQ6peeU4csUkUjfCfg
-zy/plSitlaVAARLzF6jJ8oWXa4267Ve1ivpkxC4cFebYSajCRABHW4NN8rqJfaRF
-XGr2EZCdk3Q5CzJq61QQFJAwF/ZncTY/N6N9xxheYeiDNS7fTB4=
-=WotX
------END PGP SIGNATURE-----
-
---o3c6wV1GzZxPmN44--
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> index 7d817b447c1d0..8d7645bb90337 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> @@ -682,6 +682,11 @@ &main_uart1 {
+>   	status = "reserved";
+>   };
+>   
+> +/* main_timer2 is used by C7x DSP */
+> +&main_timer2 {
+> +	status = "reserved";
+> +};
+> +
+>   &usbss0 {
+>   	status = "okay";
+>   	ti,vbus-divider;
