@@ -1,64 +1,25 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F68E25E81C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43BB420E32F;
+	Mon, 28 Apr 2025 08:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745830608; cv=none; b=JihR2GLNoFRxFzezdXXfDbaJiIGVYKk3nstudfUDIqa5FIlcDsexfZZVyXJEybnEV80NUx9cZ0U/QpNayOAg/9+XaIALNsibwp7T4IVqRq5X6vZPCC437aFkCXGMCOw1bWGhWxWgM0oP/y3FIKY9t+33H3oBwqMvkWOGNo00jWI=
+	t=1745830705; cv=none; b=BxMrYPdcNKWowUe1HtGsAbdEHu4bdfVO0K81Fqns/CxBtYKrYR2JPl+sRZ32zY4I7rn06SzrJ8/rD53+879PKDQNJdMH+KVxzJMvhQLdwY1kkbfVYvjjXuQnI8K8YgLYrV53dRFr/nlUK0fly8Cw1VW4nq4CMysfleKoz4xQ+Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745830608; c=relaxed/simple;
-	bh=SbDkUeMbMWy7d2cvvkwhlenq11GJmlAJAeJUSWm1BHM=;
+	s=arc-20240116; t=1745830705; c=relaxed/simple;
+	bh=hBhlveHVYfdqh7hjf/loO1kscPH9CqqgworRHqmeYSs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=erE30vao6SoiDLRjfYRjleWrHY9bbGV2cP72jYa0kYctKq/dJhzHQuRst6qB1KVgrmEXEuDbikNZpujcWE0NHPRLyNeKDiTHacJqG61MWIi69XWELmJb7LwFOcfTvJfo95D7Qsfg9paP60Ytf5fjORrHt4UgdImPw+N/KMKJ/Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQ3XQkdt; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQ3XQkdt"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf257158fso25412575e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 01:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745830604; x=1746435404; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wlcZn0CPj7R0ttEruwhiQMdrF075DvIb6xYHf7nikhA=;
-        b=jQ3XQkdtyFCsJWs5w8mDr/p99VxwF45t4Me9QZN/ZGxG3s69WoApj0SHFtNTCSDX1c
-         rBo7y58sGw7ktvE0+K9BKzo5rMmAi5t4cwaXeNXRs0Nv+Pt39EqNlOT+vV7526vR5TFe
-         gimPnsRa01/NaKnwurBJVFaWsjCb/cD+vLq2pSEaTZj7IMQaOOKVBZhXIRxRXM39I3kt
-         fggF2TFOOXr1zXcngT7x2N7XRKoA/3eyoEkFXtxLLDuqGOQfDL0aSKXGr75pl3ATdh6/
-         bUdnagVNF/H05u6Ebmcvjl34MRlpRLC/pFGzP6lM3ai+7Fib+KXRa5Vb09Ub8c+9vbr8
-         9zLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745830604; x=1746435404;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlcZn0CPj7R0ttEruwhiQMdrF075DvIb6xYHf7nikhA=;
-        b=RP/DTdsHcnHZRedwobBzvxd8eNEZagQD7xRnuzr4k4T5x1Xazge+g7MUcvWTk5MPTo
-         vV81q5uqTusq1GMwf6Q8RIEbmqYATZK52KLAxor4YRFy6OhT6m6vy3eqV88UhY3yxhFg
-         ayBN0w9QiOzQT/ToUd8QTkLXMlnmwHrbhYZZ2r58JOdK4BTYYHUm7+dj5jk4Al1uWywF
-         YtrQztEW6+iYLmvHTb/fCyaVuD5G4AjVNGx/Lisby0gYROOqnI5A99CRBQV/i21kobR2
-         jNIat8c84seMXOIiIviEkkwbrAv8Bb2sdIekZZNTzPOg8PKUu0CcN225419EKVm+zeH7
-         6Zgw==
-X-Forwarded-Encrypted: i=1; AJvYcCU05iIdyVuvyXxciArBLB2om1hQSh6TSFE4pkBc45bL5TRLkWKmoBWu8bBj1vR0V5mf2QT4GLet3QMrrbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybq3JD1LtPRmRVFUolvS+7Sr0Eh1+NXRpAkUmeVg5g1Y69YSjK
-	RY/DK4JlrE2yugWZtWIAV5VQNijFBYY//wzf53Tn4Ew/iwZaNSK5Fq3tJ5OvDyM=
-X-Gm-Gg: ASbGncsEuFgmiIu00Rgvwkuzo5uA2ed696039id/VIMfuYcFVi19xEvMv2JualxUKwd
-	/OCC2jDF/HCD9kzBN0vWfF4fW138FK3fyZBrTsZG8yEyI5+hCaT3mIbM7A4NOJUwnfrgaP5nK07
-	qAg7mB2FerCQkeVvZ74NBY9Z62cqocQoEHPRz1nowFC95BClpsVRNU41ZlZt7nuUXqxyFtgO7TJ
-	gVNDweuMoARujCTiVFKMV4zAExVHNL4QNGN5XpGc5cr4fO6pizIQpJzC2Lqj12u2rW9Wm6gWtvQ
-	sktQe/sS/xmPX67sV6wmEPKsoT7dCP/fMdEg2h4Sp2k=
-X-Google-Smtp-Source: AGHT+IGu1qPPHs8pclY4hh3uvAZNqEG6T4suIydOxG89FHHVlJPyRkl6PrbVo2UzUBPlfWOSb+09bQ==
-X-Received: by 2002:a05:600c:1e04:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-440ab848c1amr63152085e9.22.1745830604497;
-        Mon, 28 Apr 2025 01:56:44 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a538f4e3sm116621855e9.36.2025.04.28.01.56.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 01:56:44 -0700 (PDT)
-Message-ID: <f03715ac-a4ac-415d-8daa-1914384319fb@linaro.org>
-Date: Mon, 28 Apr 2025 09:56:42 +0100
+	 In-Reply-To:Content-Type; b=YvoSqZGNXnM3hkXzmMSy+YUsLsF0cS6rJhYy4H1tyUCY4uYYKdWuzv3N2anTYz/K98g62yhy3k05Y313lezLlzuCBIcOaeO1jCDBi36TIoJ7PM/HCu5SsuZSyVDOFYFXr9woKP/vCMGL/JlqWXHDTLxwlYX41OgGRjCTH8FzkFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F6591595;
+	Mon, 28 Apr 2025 01:58:15 -0700 (PDT)
+Received: from [10.1.37.44] (Suzukis-MBP.cambridge.arm.com [10.1.37.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 29A013F673;
+	Mon, 28 Apr 2025 01:58:19 -0700 (PDT)
+Message-ID: <35a91f8c-cdf6-4595-9ed2-c792a8e9d679@arm.com>
+Date: Mon, 28 Apr 2025 09:58:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,120 +27,282 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU
- capability
-To: Yabin Cui <yabinc@google.com>, Leo Yan <leo.yan@arm.com>,
- Ingo Molnar <mingo@redhat.com>
-Cc: Ingo Molnar <mingo@kernel.org>, coresight@lists.linaro.org,
+Subject: Re: [PATCH v8 06/43] arm64: RME: Define the user ABI
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Liang Kan <kan.liang@linux.intel.com>
-References: <20250421215818.3800081-1-yabinc@google.com>
- <20250421215818.3800081-2-yabinc@google.com>
- <48640298-effa-42d4-9137-a18a51637f03@linaro.org>
- <aAeQcgmL-iqGbG_g@gmail.com> <20250422141026.GH28953@e132581.arm.com>
- <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-7-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250416134208.383984-7-steven.price@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Hi Steven
 
-
-On 23/04/2025 8:52 pm, Yabin Cui wrote:
-> On Tue, Apr 22, 2025 at 7:10 AM Leo Yan <leo.yan@arm.com> wrote:
->>
->> On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
->>
->> [...]
->>
->>>> Hi Yabin,
->>>>
->>>> I was wondering if this is just the opposite of
->>>> PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default
->>>> for all devices to solve the issue you describe. Because we already
->>>> have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages.
->>>> Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high order
->>>> allocations for AUX buffers optimistically") that explains that the
->>>> current allocation strategy is an optimization.
->>>>
->>>> Your change seems to decide that for certain devices we want to
->>>> optimize for fragmentation rather than performance. If these are
->>>> rarely used features specifically when looking at performance should
->>>> we not continue to optimize for performance? Or at least make it user
->>>> configurable?
->>>
->>> So there seems to be 3 categories:
->>>
->>>   - 1) Must have physically contiguous AUX buffers, it's a hardware ABI.
->>>        (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
->>>
->>>   - 2) Would be nice to have continguous AUX buffers, for a bit more
->>>        performance.
->>>
->>>   - 3) Doesn't really care.
->>>
->>> So we do have #1, and it appears Yabin's usecase is #3?
+On 16/04/2025 14:41, Steven Price wrote:
+> There is one (multiplexed) CAP which can be used to create, populate and
+> then activate the realm.
 > 
-> Yes, in my usecase, I care much more about MM-friendly than a little potential
-> performance when using PMU. It's not a rarely used feature. On Android, we
-> collect ETM data periodically on internal user devices for AutoFDO optimization
-> (for both userspace libraries and the kernel). Allocating a large
-> chunk of contiguous
-> AUX pages (4M for each CPU) periodically is almost unbearable. The kernel may
-> need to kill many processes to fulfill the request. It affects user
-> experience even
-> after using PMU.
+> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v7:
+>   * Add documentation of new ioctls
+>   * Bump the magic numbers to avoid conflicts
+> Changes since v6:
+>   * Rename some of the symbols to make their usage clearer and avoid
+>     repetition.
+> Changes from v5:
+>   * Actually expose the new VCPU capability (KVM_ARM_VCPU_REC) by bumping
+>     KVM_VCPU_MAX_FEATURES - note this also exposes KVM_ARM_VCPU_HAS_EL2!
+> ---
+>   Documentation/virt/kvm/api.rst    | 70 +++++++++++++++++++++++++++++++
+>   arch/arm64/include/uapi/asm/kvm.h | 49 ++++++++++++++++++++++
+>   include/uapi/linux/kvm.h          | 10 +++++
+>   3 files changed, 129 insertions(+)
 > 
-> I am totally fine to reuse PERF_PMU_CAP_AUX_NO_SG. If PMUs don't want to
-> sacrifice performance for MM-friendly, why support scatter gather mode? If there
-> are strong performance reasons to allocate contiguous AUX pages in
-> scatter gather
-> mode, I hope max_order is configurable in userspace.
-> 
-> Currently, max_order is affected by aux_watermark. But aux_watermark
-> also affects
-> how frequently the PMU overflows AUX buffer and notifies userspace.
-> It's not ideal
-> to set aux_watermark to 1 page size. So if we want to make max_order user
-> configurable, maybe we can add a one bit field in perf_event_attr?
-> 
->>
->> In Yabin's case, the AUX buffer work as a bounce buffer.  The hardware
->> trace data is copied by a driver from low level's contiguous buffer to
->> the AUX buffer.
->>
->> In this case we cannot benefit much from continguous AUX buffers.
->>
->> Thanks,
->> Leo
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 1f8625b7646a..99ba6c82cf37 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -3527,6 +3527,11 @@ Possible features:
+>   	      - the KVM_REG_ARM64_SVE_VLS pseudo-register is immutable, and can
+>   	        no longer be written using KVM_SET_ONE_REG.
+>   
+> +	- KVM_ARM_VCPU_REC: Allocate a REC (Realm Execution Context) for this
+> +	  VCPU. This must be specified on all VCPUs created in a Realm VM.
+> +	  Depends on KVM_CAP_ARM_RME.
+> +	  Requires KVM_ARM_VCPU_FINALIZE(KVM_ARM_VCPU_REC).
+> +
+>   4.83 KVM_ARM_PREFERRED_TARGET
+>   -----------------------------
+>   
+> @@ -5098,6 +5103,7 @@ Recognised values for feature:
+>   
+>     =====      ===========================================
+>     arm64      KVM_ARM_VCPU_SVE (requires KVM_CAP_ARM_SVE)
+> +  arm64      KVM_ARM_VCPU_REC (requires KVM_CAP_ARM_RME)
+>     =====      ===========================================
+>   
+>   Finalizes the configuration of the specified vcpu feature.
+> @@ -6452,6 +6458,30 @@ the capability to be present.
+>   
+>   `flags` must currently be zero.
+>   
+> +4.144 KVM_ARM_VCPU_RMM_PSCI_COMPLETE
+> +------------------------------------
+> +
+> +:Capability: KVM_CAP_ARM_RME
+> +:Architectures: arm64
+> +:Type: vcpu ioctl
+> +:Parameters: struct kvm_arm_rmm_psci_complete (in)
+> +:Returns: 0 if successful, < 0 on error
+> +
+> +::
+> +
+> +  struct kvm_arm_rmm_psci_complete {
+> +	__u64 target_mpidr;
+> +	__u32 psci_status;
+> +	__u32 padding[3];
+> +  };
+> +
+> +Where PSCI functions are handled by user space, the RMM needs to be informed of
+> +the target of the operation using `target_mpidr`, along with the status
+> +(`psci_status`). The RMM v1.0 specification defines two functions that require
+> +this call: PSCI_CPU_ON and PSCI_AFFINITY_INFO.
+> +
+> +If the kernel is handling PSCI then this is done automatically and the VMM
+> +doesn't need to call this ioctl.
+>   
+>   .. _kvm_run:
+>   
+> @@ -8280,6 +8310,46 @@ aforementioned registers before the first KVM_RUN. These registers are VM
+>   scoped, meaning that the same set of values are presented on all vCPUs in a
+>   given VM.
+>   
+> +7.38 KVM_CAP_ARM_RME
+> +--------------------
+> +
+> +:Architectures: arm64
+> +:Target: VM
+> +:Parameters: args[0] provides an action, args[1] points to a structure in
+> +	     memory for some actions.
+> +:Returns: 0 on success, negative value on error
+> +
+> +Used to configure and set up the memory for a Realm. The available actions are:
+> +
+> +================================= =============================================
+> + KVM_CAP_ARM_RME_CONFIG_REALM     Takes struct arm_rme_config as args[1] and
+> +                                  configures realm parameters prior to it being
+> +                                  created.
+> +
+> +                                  Options are ARM_RME_CONFIG_RPV to set the
+> +                                  "Realm Personalization Value" and
+> +                                  ARM_RME_CONFIG_HASH_ALGO to set the hash
+> +                                  algorithm.
+> +
+> + KVM_CAP_ARM_RME_CREATE_REALM     Request the RMM create the realm. The realm's
 
-Hi Yabin,
+minor nit: s/RMM create/RMM to create/
 
-So after doing some testing it looks like there is 0 difference in 
-overhead for max_order=0 vs ensuring the buffer is one contiguous 
-allocation for Arm SPE, and TRBE would be exactly the same. This makes 
-sense because we're vmapping pages individually anyway regardless of the 
-base allocation.
+Or may be rephrase it:
 
-Seems like the performance optimization of the optimistically large 
-mappings is only for devices that require extra buffer management stuff 
-other than normal virtual memory. Can we add a new capability 
-PERF_PMU_CAP_AUX_PREFER_LARGE and apply it to Intel PT and BTS? Then the 
-old (before the optimistic large allocs change) max_order=0 behavior 
-becomes the default again, and PREFER_LARGE is just for those two 
-devices. Other and new devices would get the more memory friendly 
-allocations by default, as it's unlikely they'll benefit from anything 
-different.
+Request the RMM to create the Realm with the configured parameters.
 
 
-Thanks
-James
+> +                                  configuration parameters must be set first.
+> +
+> + KVM_CAP_ARM_RME_INIT_RIPAS_REALM Takes struct arm_rme_init_ripas as args[1]
+> +                                  and sets the RIPAS (Realm IPA State) to
+> +                                  RIPAS_RAM of a specified area of the realm's
+> +                                  IPA.
+> +
+> + KVM_CAP_ARM_RME_POPULATE_REALM   Takes struct arm_rme_init_ripas as args[1]
+
+nit: struct arm_rme_populate_realm
+
+> +                                  and populates a region of protected address
+> +                                  space by copying the data from the shared
+> +                                  alias.
+> +
+> + KVM_CAP_ARM_RME_ACTIVATE_REALM   Request the RMM activate the realm. No
+
+s/the RMM/the RMM to/
+
+> +                                  further changes can be made to the realm's
+> +                                  configuration, and VCPUs are not permitted to
+> +                                  enter the realm until it has been activated.
+
+minor nit: this sounds as if "configurations" (of parameters)  are
+possible after the CREATE_REALM and before ACTIVATE_REALM ? Could we
+also make it clear that the VCPUs must have been created before ACTIVATE ?
+
+
+May be rephrase it to:
+
+No changes can be made to Realm's memory (including the IPA state). No 
+new VCPUs can be created after this step.
+
+
+> +================================= =============================================
+> +
+>   8. Other capabilities.
+>   ======================
+>   
+> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+> index af9d9acaf997..b57712880605 100644
+> --- a/arch/arm64/include/uapi/asm/kvm.h
+> +++ b/arch/arm64/include/uapi/asm/kvm.h
+> @@ -106,6 +106,7 @@ struct kvm_regs {
+>   #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
+>   #define KVM_ARM_VCPU_HAS_EL2		7 /* Support nested virtualization */
+>   #define KVM_ARM_VCPU_HAS_EL2_E2H0	8 /* Limit NV support to E2H RES0 */
+> +#define KVM_ARM_VCPU_REC		9 /* VCPU REC state as part of Realm */
+>   
+>   struct kvm_vcpu_init {
+>   	__u32 target;
+> @@ -429,6 +430,54 @@ enum {
+>   #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
+>   #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
+>   
+> +/* KVM_CAP_ARM_RME on VM fd */
+> +#define KVM_CAP_ARM_RME_CONFIG_REALM		0
+> +#define KVM_CAP_ARM_RME_CREATE_REALM		1
+> +#define KVM_CAP_ARM_RME_INIT_RIPAS_REALM	2
+> +#define KVM_CAP_ARM_RME_POPULATE_REALM		3
+> +#define KVM_CAP_ARM_RME_ACTIVATE_REALM		4
+> +
+> +/* List of configuration items accepted for KVM_CAP_ARM_RME_CONFIG_REALM */
+> +#define ARM_RME_CONFIG_RPV			0
+> +#define ARM_RME_CONFIG_HASH_ALGO		1
+> +
+> +#define ARM_RME_CONFIG_MEASUREMENT_ALGO_SHA256		0
+> +#define ARM_RME_CONFIG_MEASUREMENT_ALGO_SHA512		1
+
+minor nit:
+May be we could rename this to CONFIG_HASH_ALGO_* to align with the
+RMM spec (btw which also moved from measurement to hash) and the
+parameter.
+
+
+Suzuki
+
+
+> +
+> +#define ARM_RME_CONFIG_RPV_SIZE 64
+> +
+> +struct arm_rme_config {
+> +	__u32 cfg;
+> +	union {
+> +		/* cfg == ARM_RME_CONFIG_RPV */
+> +		struct {
+> +			__u8	rpv[ARM_RME_CONFIG_RPV_SIZE];
+> +		};
+> +
+> +		/* cfg == ARM_RME_CONFIG_HASH_ALGO */
+> +		struct {
+> +			__u32	hash_algo;
+> +		};
+> +
+> +		/* Fix the size of the union */
+> +		__u8	reserved[256];
+> +	};
+> +};
+> +
+> +#define KVM_ARM_RME_POPULATE_FLAGS_MEASURE	(1 << 0)
+> +struct arm_rme_populate_realm {
+> +	__u64 base;
+> +	__u64 size;
+> +	__u32 flags;
+> +	__u32 reserved[3];
+> +};
+> +
+> +struct arm_rme_init_ripas {
+> +	__u64 base;
+> +	__u64 size;
+> +	__u64 reserved[2];
+> +};
+> +
+>   /* Device Control API on vcpu fd */
+>   #define KVM_ARM_VCPU_PMU_V3_CTRL	0
+>   #define   KVM_ARM_VCPU_PMU_V3_IRQ	0
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index b6ae8ad8934b..0b8479985581 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -930,6 +930,7 @@ struct kvm_enable_cap {
+>   #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
+>   #define KVM_CAP_X86_GUEST_MODE 238
+>   #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
+> +#define KVM_CAP_ARM_RME 240
+>   
+>   struct kvm_irq_routing_irqchip {
+>   	__u32 irqchip;
+> @@ -1582,4 +1583,13 @@ struct kvm_pre_fault_memory {
+>   	__u64 padding[5];
+>   };
+>   
+> +/* Available with KVM_CAP_ARM_RME, only for VMs with KVM_VM_TYPE_ARM_REALM  */
+> +struct kvm_arm_rmm_psci_complete {
+> +	__u64 target_mpidr;
+> +	__u32 psci_status;
+> +	__u32 padding[3];
+> +};
+> +
+> +#define KVM_ARM_VCPU_RMM_PSCI_COMPLETE	_IOW(KVMIO, 0xd6, struct kvm_arm_rmm_psci_complete)
+> +
+>   #endif /* __LINUX_KVM_H */
 
