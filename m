@@ -1,112 +1,378 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mail-m19731119.qiye.163.com (mail-m19731119.qiye.163.com [220.197.31.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB941FF603;
-	Mon, 28 Apr 2025 09:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0999BEEAA;
+	Mon, 28 Apr 2025 10:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745834390; cv=none; b=O8Z0yNvYwJDXUnsGWS9A/0oLI/gkZmFy0ZXngQsr+tJTC+ur1kwwCQlwoubTW6n8flWteguWntrHhGA88cyYMQqh8bHpF+Z/nsaWR17MGnZ/0TGThqcQbfDQV0NbJlkUNiHJjLtVuXjAXCArqo7w+CUPMRATudsr88frb1CXddc=
+	t=1745834531; cv=none; b=qqa6OC2qo2VZOXL3gR7yy2keXthtCaDIyLBfNnIh0P51mCaVNyOC9URZtjAwQYKRjDWMA65HSeJflYv8wtWEsU5oYPpPNcINFphYSsmI1BJRyrVIoSNnT1ezzZsPstmNIcf6WCd1L4Cke/aea6uQRna18ypr+ffiXOvWLLfXyms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745834390; c=relaxed/simple;
-	bh=EPOS8/hUSRgLG5pgNDvPwGT/K+RasiEz9VDnATpjYe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D4jGYhVCoVNJPIDfEW4bCTZgnr02A9YbrcU4l8BXSe9C4f3Sn5AQLKablhQ5bZf7glf7S5lJGQebDsJtudgAaeIlhzG4VOkLZxHXFIUQoyRa8oiotgPWC9T0dkfD84AJX99uMCHP9I0dT2ArNDJzgry0+EJ3pq+wQSUtgbU5JnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dozLBtUq; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745834531; c=relaxed/simple;
+	bh=/XtTCFABOxSDPYqB/TpLDCSy5GtdVGuDeJGuqGtBvUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A2/47Xqq/M8agJrpgXJEUjgVNrN9+tT1EX6ugNLPLrGGQzggShOlQMVUpMdP9oNUC86OtmMa4VIyw9c173NMpLp5Pzwgv3kHCQLhvTE8m8cDknFZw2xSTNKbh88J3zniujztI2HdWpzkIyr14BiO4zIYzTiABKIYhdN1n9oxoPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Mr1+vSMz; arc=none smtp.client-ip=220.197.31.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dozLBtUq"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3C25E475;
-	Mon, 28 Apr 2025 11:59:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745834381;
-	bh=EPOS8/hUSRgLG5pgNDvPwGT/K+RasiEz9VDnATpjYe8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dozLBtUqQg/0oXPxVSIMu3TaB4fzBpzjr2o3tHWbbas3U0SsINLoPp3PqU3+dVw4K
-	 a+ZBz1Ih76D8JTv493HMLCI2CYmHCZ9LCS6cpgabHB6P0yqdruEJESLMZGFx9Rexv7
-	 /9fepj6Z1Xg2meodj7FVdZhu807ay8Y88PgmAzhM=
-Date: Mon, 28 Apr 2025 12:59:40 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
-Message-ID: <20250428095940.GE3371@pendragon.ideasonboard.com>
-References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Mr1+vSMz"
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1365c5568;
+	Mon, 28 Apr 2025 18:01:56 +0800 (GMT+08:00)
+Message-ID: <cc0dd83c-a9f6-4c3d-b45f-29ce5480ae2c@rock-chips.com>
+Date: Mon, 28 Apr 2025 18:01:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add rk3399-evb-ind board
+To: Quentin Schulz <quentin.schulz@cherry.de>, Chaoyi Chen
+ <kernel@airkyi.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+ Jimmy Hon <honyuenkwun@gmail.com>, FUKAUMI Naoki <naoki@radxa.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Alexey Charkov <alchark@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250427094211.246-1-kernel@airkyi.com>
+ <20250427094211.246-3-kernel@airkyi.com>
+ <561d13ec-c487-4695-b50f-af8f2a65c61c@cherry.de>
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+In-Reply-To: <561d13ec-c487-4695-b50f-af8f2a65c61c@cherry.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh9ITlZCGklKTR1PHk9IHkpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a967bd8a0e003abkunm1365c5568
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBQ6Pww6TjJOETRNDxE#KTMw
+	LDMwFBNVSlVKTE9OQ0hPTklPS05DVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBQk1PQjcG
+DKIM-Signature:a=rsa-sha256;
+	b=Mr1+vSMz1G1xqTNpa9kwj4mUF55N7iHA8PK+o9pSC/I2WBm/FAYsSodLTYiHFRwCBB1okowcpMitz98rSEThsGXOaa+RuO8AumPy3m6kGAmsC3+BBkFCDXBpfNCMu4wyOfZ9bnTvuWThnZqxLVUJqZELTNjHjU4YfN8bscfoBik=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=NL7rXic5Deq/XuNvQqdkSaO2B07wh3fSCUtIWJkyaKo=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi Prabhakar,
+Hi Quentin,
 
-Thank you for the patch.
+On 2025/4/28 16:19, Quentin Schulz wrote:
+> Hi Chaoyi,
+>
+> On 4/27/25 11:42 AM, Chaoyi Chen wrote:
+>> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+>>
+>> General feature for rk3399 industry evaluation board:
+>> - Rockchip RK3399
+>> - 4GB LPDDR4
+>> - emmc5.1
+>> - SDIO3.0 compatible TF card
+>> - 1x HDMI2.0a TX
+>> - 1x HDMI1.4b RX with TC358749XBG HDMI to MIPI CSI2 bridge chip
+>> - 1x type-c DisplayPort
+>> - 3x USB3.0 Host
+>> - 1x USB2.0 Host
+>> - 1x Ethernet / USB3.0 to Ethernet
+>>
+>
+> Are there publicly available schematics by any chance?
 
-On Mon, Apr 28, 2025 at 10:52:08AM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Simplify the `rzg2l_fifo_empty()` helper by removing the redundant
-> comparison in the return path. Now the function explicitly returns `true`
-> if the FIFO write and read pointers match, and `false` otherwise, improving
-> readability without changing behavior.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mountain/
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> index 067c6af14e95..97faefcd6019 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> @@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
->  	if (amnfifopntr_w == amnfifopntr_r_y)
->  		return true;
->  
-> -	return amnfifopntr_w == amnfifopntr_r_y;
-> +	return false;
+Sorry, there is no publicly available information at present.
 
-So the function always returned true. This seems to be a bug fix, please
-add a Fixes: tag. The commit message should also make it clear that
-you're fixing an issue, not just simplifying the code.
 
-Personally I'd have written
+>
+>> Tested with HDMI/GPU/USB2.0/USB3.0/Ethernet/TF card/emmc.
+>>
+>> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>>   .../boot/dts/rockchip/rk3399-evb-ind.dts      | 222 ++++++++++++++++++
+>>   2 files changed, 223 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile 
+>> b/arch/arm64/boot/dts/rockchip/Makefile
+>> index 3e8771ef69ba..8a3adb7482ca 100644
+>> --- a/arch/arm64/boot/dts/rockchip/Makefile
+>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>> @@ -40,6 +40,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-eaidk-610.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb-ind.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-ficus.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts 
+>> b/arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
+>> new file mode 100644
+>> index 000000000000..a995d4ff202d
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
+>> @@ -0,0 +1,222 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2025 Rockchip Electronics Co., Ltd.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "rk3399-base.dtsi"
+>> +
+>> +/ {
+>> +    model = "Rockchip RK3399 EVB IND LPDDR4 Board";
+>> +    compatible = "rockchip,rk3399-evb-ind", "rockchip,rk3399";
+>> +
+>> +    aliases {
+>> +        ethernet0 = &gmac;
+>> +        mmc0 = &sdhci;
+>> +        mmc1 = &sdmmc;
+>> +    };
+>> +
+>> +    chosen {
+>> +        stdout-path = "serial2:1500000n8";
+>> +    };
+>> +
+>> +    clkin_gmac: external-gmac-clock {
+>> +        compatible = "fixed-clock";
+>> +        clock-frequency = <125000000>;
+>> +        clock-output-names = "clkin_gmac";
+>> +        #clock-cells = <0>;
+>> +    };
+>> +
+>> +    vcc5v0_sys: regulator-vcc5v0-sys {
+>> +        compatible = "regulator-fixed";
+>> +        enable-active-high;
+>> +        gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+>> +        regulator-name = "vcc5v0_sys";
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +        regulator-max-microvolt = <5000000>;
+>> +        regulator-min-microvolt = <5000000>;
+>> +    };
+>> +
+>> +    vcc_phy: regulator-vcc-phy {
+>> +        compatible = "regulator-fixed";
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +        regulator-name = "vcc_phy";
+>> +    };
+>> +};
+>> +
+>> +&emmc_phy {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&gmac {
+>> +    assigned-clocks = <&cru SCLK_RMII_SRC>;
+>> +    assigned-clock-parents = <&clkin_gmac>;
+>> +    pinctrl-names = "default";
+>> +    pinctrl-0 = <&rgmii_pins>;
+>> +    clock_in_out = "input";
+>> +    phy-supply = <&vcc_phy>;
+>> +    phy-mode = "rgmii";
+>> +    snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+>> +    snps,reset-active-low;
+>> +    snps,reset-delays-us = <0 10000 150000>;
+>> +    tx_delay = <0x22>;
+>> +    rx_delay = <0x23>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&gpu {
+>> +    mali-supply = <&vdd_gpu>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&hdmi {
+>> +    pinctrl-names = "default";
+>> +    pinctrl-0 = <&hdmi_i2c_xfer>, <&hdmi_cec>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&hdmi_in_vopl {
+>> +    status = "disabled";
+>> +};
+>> +
+>
+> Why disabled?
+Will fix this on v2.
+>
+>> +&hdmi_sound {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&i2c0 {
+>> +    clock-frequency = <400000>;
+>> +    i2c-scl-falling-time-ns = <4>;
+>> +    i2c-scl-rising-time-ns = <168>;
+>> +    status = "okay";
+>> +
+>> +    vdd_gpu: tcs4526@10 {
+>> +        compatible = "tcs,tcs4525";
+>> +        reg = <0x10>;
+>> +        pinctrl-names = "default";
+>> +        pinctrl-0 = <&vsel2_gpio>;
+>> +        fcs,suspend-voltage-selector = <1>;
+>> +        vin-supply = <&vcc5v0_sys>;
+>> +        vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+>> +        regulator-compatible = "fan53555-reg";
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +        regulator-initial-state = <3>;
+>> +        regulator-max-microvolt = <1500000>;
+>> +        regulator-min-microvolt = <712500>;
+>> +        regulator-name = "vdd_gpu";
+>> +        regulator-ramp-delay = <1000>;
+>> +        regulator-state-mem {
+>> +            regulator-off-in-suspend;
+>> +        };
+>
+> No RK80x PMIC on this board?
 
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-index 067c6af14e95..3d0810b3c35e 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-@@ -345,8 +345,6 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
- 	amnfifopntr_w = amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
- 	amnfifopntr_r_y =
- 		(amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
--	if (amnfifopntr_w == amnfifopntr_r_y)
--		return true;
+It has a RK809 PMIC on this board.  I will add this on v2.
 
- 	return amnfifopntr_w == amnfifopntr_r_y;
- }
 
-but that's also a bit of a style preference.
+>
+>> +    };
+>> +};
+>> +
+>
+> Missing io_domains here no? I guess it'll rely on the addition of the 
+> RK80x PMIC for this to work?
 
->  }
->  
->  void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
+Yes, I will add this on v2.
 
--- 
-Regards,
 
-Laurent Pinchart
+>
+>> +&sdmmc {
+>> +    bus-width = <4>;
+>> +    cap-mmc-highspeed;
+>> +    cap-sd-highspeed;
+>> +    cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+>> +    disable-wp;
+>> +    max-frequency = <150000000>;
+>
+> It's already defaulting to that frequency in rk3399-base.dtsi so no 
+> need to duplicate the info here.
+Will fix this on v2.
+>
+>> +    pinctrl-names = "default";
+>> +    pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&sdhci {
+>> +    bus-width = <8>;
+>> +    keep-power-in-suspend;
+>> +    mmc-hs400-1_8v;
+>> +    mmc-hs400-enhanced-strobe;
+>> +    no-sdio;
+>> +    no-sd;
+>> +    non-removable;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&tcphy0 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&tcphy1 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy0 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy0_host {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy0_otg {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy1 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy1_host {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy1_otg {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&uart2 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usbdrd_dwc3_0 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usbdrd3_0 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usbdrd3_1 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usbdrd_dwc3_1 {
+>> +    dr_mode = "host";
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb_host0_ehci {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb_host0_ohci {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb_host1_ehci {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb_host1_ohci {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&pinctrl {
+>> +    pmic {
+>> +        vsel2_gpio: vsel2-gpio {
+>> +            rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
+>> +        };
+>> +    };
+>> +};
+>> +
+>> +&vopb {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&vopb_mmu {
+>> +    status = "okay";
+>> +};
+>
+> Why no vopl?
+Will enable vopl in v2.
+>
+> Cheers,
+> Quentin
+>
+>
+
+
+
