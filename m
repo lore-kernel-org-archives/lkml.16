@@ -1,99 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E73A4AEE2;
-	Mon, 28 Apr 2025 18:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1CE289343;
+	Mon, 28 Apr 2025 18:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745863935; cv=none; b=VS/9AQVLGmCdzgLLy4HbD3T7HHSeuUHdYD2mdqw+THBj2KWp1f/YayYhEPn2F1foiq/xIb78mr+3r/5E9+7a/utd8ZiLQoxRjyWYmk9W0pITvNGzfnv0kEV133twmuQWyJKqVny3Xx0+LuFXtksSZDdISGTNMl4BsNndymcNFlY=
+	t=1745863968; cv=none; b=A6Mn/msF7YuD39LvriyJrVxZ1ij/pPHujyLFewCeUAZ58dKOWZw+iDcWBf5hGspSnUHwbSyL1UziscYatllU/1zUFKvHSF8C+zzkjjk6Bq7hH9ykAR8yLw8ZGJ9JmnZXv6iR8UL7GXDyi/58cIJeTULXdQuKAK/I7YheHXU6WJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745863935; c=relaxed/simple;
-	bh=baR8yuZ+DKQ7vAMklIhbgweOPRiTcktqr21Q2I4keIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S396FAXMgPZCaOtQ5OE/Vx5xe3oylLcvz48l49dE/kJfHYoFNU0jm3+ffGVMlJYF1eym7pQSNc27Mt2JRuLnbBBruDHylw0EO/GhhLm0yOl2lPrreOqVZg3zPO0Z1u0DImnQ8zylKuDvVKVk5m9KaUsjGLD0abqI17ly8DTFgAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D130C4CEE4;
-	Mon, 28 Apr 2025 18:12:12 +0000 (UTC)
-Date: Mon, 28 Apr 2025 14:12:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens
- Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>, Andy
- Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, Blake Jones
- <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
-Subject: Re: [PATCH v5 3/9] unwind deferred: Use bitmask to determine which
- callbacks to call
-Message-ID: <20250428141210.6ef945c6@gandalf.local.home>
-In-Reply-To: <ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com>
-References: <20250424192456.851953422@goodmis.org>
-	<20250424192612.844558089@goodmis.org>
-	<02339b93-de9a-49e4-8dbb-137d02fc6ea8@efficios.com>
-	<20250428125600.1f50f476@gandalf.local.home>
-	<ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745863968; c=relaxed/simple;
+	bh=KTqQYLBw1XS55ajrDgXBIWQeeAlb817N/mkPEkK6Xfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZhedhKKJllvru5sbBSYQezANLHkbSBizEno013uSn50WJq+NYgYr2bGTyX/t2IcijaapmddPxADOHxAccHp8rEuMCdx+LHOfGP2HufpphVT7Epl7cUThDoYo+O2npX7++83UIgmdNcUsEHB0ai2aEo9PqSEPS8WEa7Z43eCVvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWIuA4pe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWIuA4pe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C13C4CEEC;
+	Mon, 28 Apr 2025 18:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745863967;
+	bh=KTqQYLBw1XS55ajrDgXBIWQeeAlb817N/mkPEkK6Xfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QWIuA4peX9ZsjZC1m/7A/fpkdxquCZ50ltGIQwsvl5bPQXH6/fG73jq8dNkv3sNui
+	 9nXcFpAcjM4s+axJKSCs6FKBzGrFnw/+CllMT95PkfTUroNAchm/SjoihsJ4CW7H3G
+	 KY5jNIpRIN+m1dXf+VIuOgNWlOUTAV1n9a+at9yE/XO45hJr+rPtjnbCia6HsoT3V9
+	 JOlKkYVPwCMRtxWXyCeGQNB+gAb9BT/SpDdLoA2o2J9xCqE6AbN/22vJ8bKEq69fAM
+	 A4ljOqumSo96/ynTfEkG7txH+ZEXs27JJtQFQR1uMIbO/7qNlCBXl0drB0hKzosK/I
+	 cRf1JI1duM30A==
+Date: Mon, 28 Apr 2025 19:12:42 +0100
+From: Simon Horman <horms@kernel.org>
+To: Da Xue <da@libre.computer>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Christian Hewitt <christianshewitt@gmail.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3] net: mdio: mux-meson-gxl: set reversed bit when using
+ internal phy
+Message-ID: <20250428181242.GG3339421@horms.kernel.org>
+References: <20250425192009.1439508-1-da@libre.computer>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425192009.1439508-1-da@libre.computer>
 
-On Mon, 28 Apr 2025 14:00:07 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Fri, Apr 25, 2025 at 03:20:09PM -0400, Da Xue wrote:
+> This bit is necessary to receive packets from the internal PHY.
+> Without this bit set, no activity occurs on the interface.
+> 
+> Normally u-boot sets this bit, but if u-boot is compiled without
+> net support, the interface will be up but without any activity.
+> 
+> The vendor SDK sets this bit along with the PHY_ID bits.
 
-> >>
-> >> It is enough to guard with RCU ? See syscall_regfunc() from
-> >> tracepoint.c where we do:
-> >>
-> >>                   read_lock(&tasklist_lock);
-> >>                   for_each_process_thread(p, t) {
-> >>                           set_task_syscall_work(t, SYSCALL_TRACEPOINT);
-> >>                   }
-> >>                   read_unlock(&tasklist_lock);
-> >>
-> >> To prevent concurrent fork from adding threads while we
-> >> iterate, thus opening the possibility of missing a clear
-> >> due to a concurrent fork + set bit.  
-> > 
-> > A set_bit only would happen if the callback was live and accepting new
-> > callback requests. It's a bug for a tracer to call unwind_deferred_cancel()
-> > and then call unwind_deferred_request() (which would set the bit). We could
-> > possibly set the tracer's unwind descriptor id to -1, and do an
-> > WARN_ON_ONCE() in unwind_deferred_request() if the tracer's id is negative.
-> > 
-> > The loop is called under the callback_mutex, where no new tracer could
-> > register and be assigned that bit.  
-> 
-> Ah, that's the piece I missed. The callback_mutex prevents reallocation
-> of the ID by unwind_deferred_init while iterating on the tasks.
-> 
-> One more comment: if we change the linked list for an array (or make the 
-> linked list an RCU list), can we remove the callback_mutex from
-> unwind_deferred_task_work by turning it into an RCU read-side ?
-> 
-> Then we just need to wait for a grace period before returning from
-> unwind_deferred_cancel, which then allows the caller to reclaim "work".
-> 
-> Taking the callback_mutex in unwind_deferred_task_work will end up being
-> the single thing that does a lot of cache line bouncing across CPUs when
-> hit heavily by tracers.
+I'd like to clarify that:
+Without this patch the writel the patch is modifying will clear the PHY_ID bit.
+But despite that the system works if at some point (uboot) set the PHY_ID bit?
 
-I'm not against this, but again, that's an optimization. I want to keep the
-initial code simple. And then add the more complex optimizations when this
-is stable.
+> 
+> Fixes: 9a24e1ff4326 ("net: mdio: add amlogic gxl mdio mux support");
 
--- Steve
+I don't think you need to resend because of this,
+but the correct syntax is as follows. (No trailing ';'.)
+
+Fixes: 9a24e1ff4326 ("net: mdio: add amlogic gxl mdio mux support")
+
+> Signed-off-by: Da Xue <da@libre.computer>
+> ---
+> Changes since v2:
+> * Rename REG2_RESERVED_28 to REG2_REVERSED
+> 
+> Link to v2:
+> https://patchwork.kernel.org/project/linux-amlogic/patch/20250331074420.3443748-1-christianshewitt@gmail.com/
+
+...
