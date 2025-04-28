@@ -1,89 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AF6747F;
-	Mon, 28 Apr 2025 00:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4795820ED;
+	Mon, 28 Apr 2025 00:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745798456; cv=none; b=PBAvgLz6FOuur6ZZe6Umdv0G4maHD9kg2TUG97MEUeloTaoWnME+4xaCrwQhCMUKyFL2p4JjWiPAsxncXtnI6Y+tqTtFb0eZ42sJFC30WxzwLffyhocUUvOhtwdmcpbffdVcJkB9M3p4NcgflVzsPmUAGJdkZgvCtuR8lpTt95g=
+	t=1745799149; cv=none; b=UrmvgOoDXq5MufgtoMLiOdBADyD/2nwD/izT/xK8cZLWQ7/XAAzotN2OVmZ630ePlrGR5bkGJ45ISmFl7Gx1QIemtAqh7DRmuKFtYltDJWYkq5FfYXOmLUA63/4Ob1qjfCgjjZ0y1kZmazBdjaHNqnM/lfw4xPXXhq58HtT0TSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745798456; c=relaxed/simple;
-	bh=W5vRtCF/3ch2I435tyzUXFE8e9gPD0WPo89DsXN3yFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aIl/d7fT7TBul/X4IDYKDQtWuB7J2ras3NfixkI884OGQJ7BEq8CGMfOmrUsHA/W7pS/TVbqhG+l40IrvmcC7XLOGhS2d8KVeUFofI5cc3wYIylGEo7Vce0Haom/zOgN0zMMu4dAr6n4nGShwt2goDJPuvFou8xr1wWimvSQfgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNIe+crx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745799149; c=relaxed/simple;
+	bh=GT+WQnvNNEN6721EGzHFkAi4PLcYrbMnuLuout5y8xo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=myEdNsKOX4HjrTJaVvccE8iIWvmJ+lj+0sTi30AyZfJTP+LmDDjtWEIEPTrINAmnrBeIBAQJDd338GDPAwzQwNrGxJzJ1FN7XWi/0KDCqLW5LxfXrkxKD+Asv5/BhEgmWCqYopnj8rnA03vlqPV+jS0IYb/bH+V6IZSaz7ljmws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=TYfgUh59; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNIe+crx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27541C4CEE3;
-	Mon, 28 Apr 2025 00:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745798455;
-	bh=W5vRtCF/3ch2I435tyzUXFE8e9gPD0WPo89DsXN3yFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fNIe+crxuzWWQRBF09HOLl0icswmAE5ZEhB1btylcw3BdeE0++Wn6ufkvXhoPdvtC
-	 rsZuelEPoRGVas5xWrkiOY92X3+In1cuEQYEiSaA9Ijfc8QYN6gJJ2VT1saTaTSPJF
-	 XpJMeO0FqTTs7K9QBVygu/cSbE4EoXn3kWS3wLxeD5xAMqoBrDVJRP4SiXyJEEUbZP
-	 ER9CFd4/S9bPByfXXwsyTeySFfDN5gxF3fvAcvq1Wnijpq7kAjujMu/lEc1wPnSKDf
-	 n/mIT+CFvlO0z4WvORTyHw2bLE2iqIILGi4yiqzMmqKsB+3WPh37669kw4KvELhCvB
-	 xDtwN7hFdA0Nw==
-Date: Sun, 27 Apr 2025 20:00:53 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-	Vinod Koul <vkoul@kernel.org>, kishon@kernel.org, lumag@kernel.org,
-	abel.vesa@linaro.org, neil.armstrong@linaro.org,
-	quic_qianyu@quicinc.com, quic_ziyuzhan@quicinc.com,
-	quic_devipriy@quicinc.com, quic_krichai@quicinc.com,
-	manivannan.sadhasivam@linaro.org, johan+linaro@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 6.14 08/31] phy: qcom: qmp-pcie: Add X1P42100
- Gen4x4 PHY
-Message-ID: <aA7FNcDNbb1H4Jis@lappy>
-References: <20250407181054.3177479-1-sashal@kernel.org>
- <20250407181054.3177479-8-sashal@kernel.org>
- <Z_dt0F-XzGIJWhnz@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="TYfgUh59"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53RLOfEj014124;
+	Sun, 27 Apr 2025 20:12:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=onoZF
+	iGyH7WrKj3UBxI4sFijeVjxOr1kEzUqsPijvH4=; b=TYfgUh59APwDs3oksx2cB
+	jCYDhxbC0xW7ClLvBP/frP6H9JjFq+Uz17a877FZcX2Q2wPHhvQNERtlNU5DkJpd
+	Zu9mmjnXNarMN8rQP6ac4vJvgsAVmu4gl2ODbdHBWK8fBTIBgxAGLuEfS578AoOL
+	kV0Q+jGwGU3hx6ml+vOQlJTzHZYO1/PjoEycTh3a1vmCFhdiEIolzHVZmabUq6bY
+	IQHBjpIoYlP8IJk28Fa3q4EEybj60tt+h6ZxAYrBDdBtxNjoC+XLC8AJWxOIJcx6
+	Cls6BZFYS5ix+hw13M/pf92+s9Az+WYXjdNeBhDfm5RyZd7kFwn8RBjoOlXkJYJc
+	w==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 468sb7272g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 27 Apr 2025 20:12:21 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 53S0CKMp028783
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 27 Apr 2025 20:12:20 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Sun, 27 Apr 2025 20:12:20 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Sun, 27 Apr 2025 20:12:20 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Sun, 27 Apr 2025 20:12:20 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53S0C3hW014421;
+	Sun, 27 Apr 2025 20:12:05 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
+        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH v6 01/11] dt-bindings: trigger-source: add generic GPIO trigger source
+Date: Sun, 27 Apr 2025 21:12:02 -0300
+Message-ID: <f76579f8aa040125568c044c86761211a2e2f5ae.1745605382.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1745605382.git.Jonathan.Santos@analog.com>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z_dt0F-XzGIJWhnz@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: F7kClBVzU12lb3L9ItWmqvlX5b3BHDsa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI3MDIwMiBTYWx0ZWRfX/ZtrlEO5AO0i dMP3PBX5sgujWFFAGKW79KDpdH69fU3d2BwaEijo2rX7LQvMEseOwwDNpBP/1hbdDJC1YT/Gx2Z hp17chMuA4Iixy90TXRFp9wSzYt+545Mgyp9qlNOyKWFp/d0op41g+uAyECkpcE2RC0eR6yowkY
+ L0nlSKFRXhqamqbuLuOWC2FAsWwjlKfSlkfLrSfGnIBMdt0rh5C6b9kmDkmL2yI3fegVamM1TJw wJwL2fAW6boBEpbxLC8U0ts2N1OA9xsCTXu66B09HgFFulQ5ntGHNegX4RRETlybbEcsOl3Fwsg JFLKwntq/n5pW71aderbNstds+8ITXixP6zBSXrE53bqme/jzVjfmSNy9InduUozpXrJ8piEKZ1
+ ineFvvsz1r0jIcKr1h3OT4nnWPBPAUkWNVvVQG2pylHPW28s1DQpgBkTk4WCwvs4YPSOaS/o
+X-Proofpoint-ORIG-GUID: F7kClBVzU12lb3L9ItWmqvlX5b3BHDsa
+X-Authority-Analysis: v=2.4 cv=HPzDFptv c=1 sm=1 tr=0 ts=680ec7e5 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=IpJZQVW2AAAA:8 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8 a=HlNMbzSOJvU92ae2w24A:9
+ a=IawgGOuG5U0WyFbmm1f5:22 a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-27_08,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 clxscore=1011
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504270202
 
-On Thu, Apr 10, 2025 at 09:05:52AM +0200, Johan Hovold wrote:
->On Mon, Apr 07, 2025 at 02:10:24PM -0400, Sasha Levin wrote:
->> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>
->> [ Upstream commit 0d8db251dd15d2e284f5a6a53bc2b869f3eca711 ]
->>
->> Add a new, common configuration for Gen4x4 V6 PHYs without an init
->> sequence.
->>
->> The bootloader configures the hardware once and the OS retains that
->> configuration by using the NOCSR reset line (which doesn't drop
->> register state on assert) in place of the "full reset" one.
->>
->> Use this new configuration for X1P42100's Gen4x4 PHY.
->>
->> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->> Link: https://lore.kernel.org/r/20250203-topic-x1p4_dts-v2-3-72cd4cdc767b@oss.qualcomm.com
->> Signed-off-by: Vinod Koul <vkoul@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->Support for this SoC is not even in mainline yet so there is really no
->need to backport this one.
->
->Please drop from all stable queues.
+Inspired by pwm-trigger, create a new binding for using a GPIO
+line as a trigger source.
 
-Will do, thanks!
+Link: https://lore.kernel.org/linux-iio/20250207-dlech-mainline-spi-engine-offload-2-v8-3-e48a489be48c@baylibre.com/
+Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+---
+v6 Changes:
+* Changed description.
+* Fixed typos and replaced GPIO pin with GPIO line.
+* Added link reference for pwm-trigger.
 
+v5 Changes:
+* New patch in v5.
+---
+ .../bindings/trigger-source/gpio-trigger.yaml | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+
+diff --git a/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+new file mode 100644
+index 000000000000..1331d153ee82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/trigger-source/gpio-trigger.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic trigger source using GPIO
++
++description: A GPIO used as a trigger source.
++
++maintainers:
++  - Jonathan Santos <Jonathan.Santos@analog.com>
++
++properties:
++  compatible:
++    const: gpio-trigger
++
++  '#trigger-source-cells':
++    const: 0
++
++  gpios:
++    maxItems: 1
++    description: GPIO to be used as a trigger source.
++
++required:
++  - compatible
++  - '#trigger-source-cells'
++  - gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    trigger {
++        compatible = "gpio-trigger";
++        #trigger-source-cells = <0>;
++        gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++    };
 -- 
-Thanks,
-Sasha
+2.34.1
+
