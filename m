@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA54269D18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A78026A1A3
 	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845552; cv=none; b=kGLvxfQbGbhxHXmZE27f4t5BbOj38RpVA9G5WdZkkMsIdwF1PCuoZlwS2y9IQRUUPpT3upI2TccPkA0jCsDuRI5hzuft/OwBqJOK/GLw103zUiHTUU5ghlVvbu73wZyRb7LQZDEGN6nzsKdzklmIWfPv1bOGefAUyUXAYZk06kc=
+	t=1745845553; cv=none; b=sUCQcXgMTrlGO9ubhcT+CvzeXXDWgx/h+PfWXro3/1cQ6Q9TO77CJQYLSpy614qxQvpbNIr20tMDH38Q1svBJrp8cBvELnAPLbaYxVn5Cc9PIkqRrkKqGXTdsviztSfu9LDFTRxzQCbShn2aAWt7b08fmzZoSiPwCefysKFJ0Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845552; c=relaxed/simple;
-	bh=CywE26rgas3evbSjo68DaIxIX7NCR5wqWdWiofqIa3Y=;
+	s=arc-20240116; t=1745845553; c=relaxed/simple;
+	bh=czQrwqSOCU4ro8+9cqoU25PAcGWoBynUwIf9q024yyM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IVLbhWrZAS84dsez1MxOv5tmnORIM0yQpuRIRxNdLxNly6VVFT3JWnGjhNCs5OfRZZy7axWmH3Kc2XpyIzE2ftv1aEGbNWqIKfu+oxFdegMEzUbZ4Tqk5Mz9WzUZcswxbBxB+SqlEbPb02ktyjS+PaTxFworud+FAGY4rtlSFxI=
+	 MIME-Version; b=YgbubdtvK4k20AJoLqHzWusW2HnGya8R6nt86ivWSp40ar8AUrJFz+miNMh7eL5VwDJ9kS1c/fH6U5v4MSIdBjLJytGIVBpAbjyuwASlnxuNGQdmqpGIxhalnJ2oMzFUlXoenWWM/jNqCRloMhdF8cRXJdrahXNdLUklnAn+xTs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9OB7-0000MT-L6; Mon, 28 Apr 2025 15:05:45 +0200
+	id 1u9OB7-0000MX-L6; Mon, 28 Apr 2025 15:05:45 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9OB6-0006FN-0e;
+	id 1u9OB6-0006FO-19;
 	Mon, 28 Apr 2025 15:05:44 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9OB6-00GJ7t-0N;
+	id 1u9OB6-00GJ8e-0Q;
 	Mon, 28 Apr 2025 15:05:44 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Phil Elwell <phil@raspberrypi.org>,
 	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v7 04/12] net: usb: lan78xx: move LED DT configuration to helper
-Date: Mon, 28 Apr 2025 15:05:34 +0200
-Message-Id: <20250428130542.3879769-5-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v7 05/12] net: usb: lan78xx: Extract PHY interrupt acknowledgment to helper
+Date: Mon, 28 Apr 2025 15:05:35 +0200
+Message-Id: <20250428130542.3879769-6-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250428130542.3879769-1-o.rempel@pengutronix.de>
 References: <20250428130542.3879769-1-o.rempel@pengutronix.de>
@@ -65,109 +65,54 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Extract the LED enable logic based on the "microchip,led-modes"
-property into a new helper function lan78xx_configure_leds_from_dt().
+Move the PHY interrupt acknowledgment logic from lan78xx_link_reset()
+to a new helper function lan78xx_phy_int_ack(). This simplifies the
+code and prepares for reusing the acknowledgment logic independently
+from the full link reset process, such as when using phylink.
 
-This simplifies lan78xx_phy_init() and improves modularity.
-No functional changes intended.
+No functional change intended.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
 changes v6:
 - this patch is added in v6
 ---
- drivers/net/usb/lan78xx.c | 72 +++++++++++++++++++++++++--------------
- 1 file changed, 46 insertions(+), 26 deletions(-)
+ drivers/net/usb/lan78xx.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 7f1ecc415d53..07530eef82cb 100644
+index 07530eef82cb..de2b429e906e 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -2649,6 +2649,49 @@ static int lan78xx_mac_prepare_for_phy(struct lan78xx_net *dev)
- 	return 0;
+@@ -1636,6 +1636,20 @@ static int lan78xx_mac_reset(struct lan78xx_net *dev)
+ 	return ret;
  }
  
 +/**
-+ * lan78xx_configure_leds_from_dt() - Configure LED enables based on DT
-+ * @dev: LAN78xx device
-+ * @phydev: PHY device (must be valid)
++ * lan78xx_phy_int_ack - Acknowledge PHY interrupt
++ * @dev: pointer to the LAN78xx device structure
 + *
-+ * Reads "microchip,led-modes" property from the PHY's DT node and enables
-+ * the corresponding number of LEDs by writing to HW_CFG.
++ * This function acknowledges the PHY interrupt by setting the
++ * INT_STS_PHY_INT_ bit in the interrupt status register (INT_STS).
 + *
-+ * This helper preserves the original logic, enabling up to 4 LEDs.
-+ * If the property is not present, this function does nothing.
-+ *
-+ * Return: 0 on success or a negative error code.
++ * Return: 0 on success or a negative error code on failure.
 + */
-+static int lan78xx_configure_leds_from_dt(struct lan78xx_net *dev,
-+					  struct phy_device *phydev)
++static int lan78xx_phy_int_ack(struct lan78xx_net *dev)
 +{
-+	struct device_node *np = phydev->mdio.dev.of_node;
-+	u32 reg;
-+	int len, ret;
-+
-+	if (!np)
-+		return 0;
-+
-+	len = of_property_count_elems_of_size(np, "microchip,led-modes",
-+					      sizeof(u32));
-+	if (len < 0)
-+		return 0;
-+
-+	ret = lan78xx_read_reg(dev, HW_CFG, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	reg &= ~(HW_CFG_LED0_EN_ | HW_CFG_LED1_EN_ |
-+		 HW_CFG_LED2_EN_ | HW_CFG_LED3_EN_);
-+
-+	reg |= (len > 0) * HW_CFG_LED0_EN_ |
-+	       (len > 1) * HW_CFG_LED1_EN_ |
-+	       (len > 2) * HW_CFG_LED2_EN_ |
-+	       (len > 3) * HW_CFG_LED3_EN_;
-+
-+	return lan78xx_write_reg(dev, HW_CFG, reg);
++	return lan78xx_write_reg(dev, INT_STS, INT_STS_PHY_INT_);
 +}
 +
- static int lan78xx_phy_init(struct lan78xx_net *dev)
+ static int lan78xx_link_reset(struct lan78xx_net *dev)
  {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(fc) = { 0, };
-@@ -2704,32 +2747,9 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
+ 	struct phy_device *phydev = dev->net->phydev;
+@@ -1644,7 +1658,7 @@ static int lan78xx_link_reset(struct lan78xx_net *dev)
+ 	u32 buf;
  
- 	phy_support_eee(phydev);
- 
--	if (phydev->mdio.dev.of_node) {
--		u32 reg;
--		int len;
--
--		len = of_property_count_elems_of_size(phydev->mdio.dev.of_node,
--						      "microchip,led-modes",
--						      sizeof(u32));
--		if (len >= 0) {
--			/* Ensure the appropriate LEDs are enabled */
--			ret = lan78xx_read_reg(dev, HW_CFG, &reg);
--			if (ret < 0)
--				return ret;
--
--			reg &= ~(HW_CFG_LED0_EN_ |
--				 HW_CFG_LED1_EN_ |
--				 HW_CFG_LED2_EN_ |
--				 HW_CFG_LED3_EN_);
--			reg |= (len > 0) * HW_CFG_LED0_EN_ |
--				(len > 1) * HW_CFG_LED1_EN_ |
--				(len > 2) * HW_CFG_LED2_EN_ |
--				(len > 3) * HW_CFG_LED3_EN_;
--			ret = lan78xx_write_reg(dev, HW_CFG, reg);
--			if (ret < 0)
--				return ret;
--		}
--	}
-+	ret = lan78xx_configure_leds_from_dt(dev, phydev);
-+	if (ret)
-+		goto free_phy;
- 
- 	genphy_config_aneg(phydev);
+ 	/* clear LAN78xx interrupt status */
+-	ret = lan78xx_write_reg(dev, INT_STS, INT_STS_PHY_INT_);
++	ret = lan78xx_phy_int_ack(dev);
+ 	if (unlikely(ret < 0))
+ 		return ret;
  
 -- 
 2.39.5
