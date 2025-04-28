@@ -1,120 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000FE1D618E;
-	Mon, 28 Apr 2025 07:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6DD1DC9B8;
+	Mon, 28 Apr 2025 07:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745824177; cv=none; b=LU1CcbcDvOBceHmULRbESzrBf5pL236AgPG5qqMSUX3SDHzpz/vrGHaFBKLtkItSGzieVyJ1pGEUAsGe+w4tPx5g9tqoaSKdSbv3OBmcG9NK/KQbRWEpnCQCCoqBNT4X54iZ5N29R6pudjjseK1UElrmajpGssF9hjp+gDO9pu8=
+	t=1745824179; cv=none; b=UjaVTyleb2XwzVu91MLQggO4PHGHlOnbIWpRr5ytbFQzU3mehsVMjbQVfG/NfEjlAQ2H35P7sZx2mwjnXhEI3e6u3OpyqAW2ejiCIO5S/x6Iv1xwa2ZNs9Kx4dw9mxxv+QH4X7ViNjxyG+n0IwFmRvn2PXVSnchjmtVDy+iCiaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745824177; c=relaxed/simple;
-	bh=2NroVqnCUojLm7PmYzSH3L0VUYy1xB7XW4ZAk3Qjbx0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mRpPqxODbSlB6fmSrR9zu5zgn+RofzGO2dMIp2mcaR9EFh/AYQ4qzqZ/XJX3UASUrO6cBLNK7TTpo92NrEt9IB+yHE50ULxLABPN8iwN9Odkb3feCWxJUWPoGO1/j9JOTmXY3QHuVitB9Q40hHvQzBT/on7yP77XqmC1c6EUFKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2LNUhtk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745824179; c=relaxed/simple;
+	bh=SGAP2U+4RvvXOSS+DtJ1gO8DuvWPLFnMBHZaP25912k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bk5+1cVU4xMTikawlzRvrmwj+rjPrKznlHA1RzTYN/wa2G4VbUQiWxwW+etzi1RvgpsbgKd+dqnHZyeDpGJyZXIPBUE3AqyuYe1fiYDQR+stgrdr7M+aee2TRmOFH/in1L3/pos2esK2TxWZWTj9RRbEuYMtgEbzoYobkaWNwRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ji2r3HBs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2LNUhtk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0582EC4CEF6;
-	Mon, 28 Apr 2025 07:09:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ji2r3HBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EE127C4CEED;
+	Mon, 28 Apr 2025 07:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745824176;
-	bh=2NroVqnCUojLm7PmYzSH3L0VUYy1xB7XW4ZAk3Qjbx0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=F2LNUhtkJHSCKYmQBt8hdlGB57Appn9vSqHkHtJXZkSsSrdT/YrAC4eYBAyqT6xrt
-	 u4VnGvHf+2cqnPBbmN/WbG3G8yFm1U3iRD0fBbAFOFO67GAfbW/LNY/PMuje2yyCs4
-	 m+NOpEw07BsAQy3aXZf2GrFj0afPalQZV5OUoU5XaG0mJlgINdxirgmYknN/AeaSPd
-	 zaPg1xKN/sSP7vZVjG2QKQpPk3xUrQoXggtnexBIJDJhOuGLpoqOV7E+O9smYVNyOG
-	 FxGINj153mquccSuUIQFuFa3DkHvF008fOnGVD2Gb/UBg3fTCHgwGAjXJMG9IjY5bm
-	 Ls4OUBaLcjWMQ==
-Message-ID: <29d15e93-8f5e-4cec-97b8-8592beb01d6a@kernel.org>
-Date: Mon, 28 Apr 2025 09:09:29 +0200
+	s=k20201202; t=1745824179;
+	bh=SGAP2U+4RvvXOSS+DtJ1gO8DuvWPLFnMBHZaP25912k=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=ji2r3HBshrqZEZWZoCRzNUy9lH6rzm3eMBBX9EKyRHhF+AFfCOBn+0HS6v7neKlnv
+	 TiZbLT47gBBmHpB6q4g2/2Kfga15hhuLJztWHE11bvNZPQmKKxoo0iqnRy1/rdsPyZ
+	 1BsafDh0+uh7b3YvaWuZerNSq7h9xduvWHiVarS/jhNAk7LcsjoRbI0/3WQjmmFA+1
+	 6UepAltDDDUEZnuSNQZSOS0W5w9pLkHs9OzYW4H18Q1scb3hrfhJjQKydOJXYjcvoq
+	 uy36TMNT0KSr/kz/xvt1OG+u4YdOwTWuWep1VooTVU+S8/9gqn4XW4VjBaDUvzaKor
+	 R90CUKqI6UK8g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD672C36005;
+	Mon, 28 Apr 2025 07:09:38 +0000 (UTC)
+From: Daniel Braunwarth via B4 Relay <devnull+daniel.braunwarth.kuka.com@kernel.org>
+Date: Mon, 28 Apr 2025 09:09:07 +0200
+Subject: [PATCH net-next] net: phy: realtek: Add support for WOL magic
+ packet on RTL8211F
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/11] Revert "dt-bindings: mfd: syscon: Add
- qcom,apq8064-mmss-sfpb"
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>,
- Lee Jones <lee@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- David Heidelberg <david@ixit.cz>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20250425-fix-nexus-4-v3-0-da4e39e86d41@oss.qualcomm.com>
- <20250425-fix-nexus-4-v3-1-da4e39e86d41@oss.qualcomm.com>
- <20250428-prudent-hasty-pheasant-aecec4@kuoka>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250428-prudent-hasty-pheasant-aecec4@kuoka>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250428-realtek_wol-v1-1-15de3139d488@kuka.com>
+X-B4-Tracking: v=1; b=H4sIAJMpD2gC/x3M0QpAMBSH8VfRubbihORVJC3+40SjbbGSd7dc/
+ i6+7yEPJ/DUZQ85XOLlsAllntG0artAyZxMXHBdVFwrB70HbON97KoBz6aFbifDlIrTwUj8bz1
+ ZBGURAw3v+wGUun0/ZwAAAA==
+X-Change-ID: 20250425-realtek_wol-6e2df8ea8cf2
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Daniel Braunwarth <daniel.braunwarth@kuka.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745824177; l=3620;
+ i=daniel.braunwarth@kuka.com; s=20250425; h=from:subject:message-id;
+ bh=gwVptqcSBToB7LxapLAcdpkwFvRzQXaqfiCXknN+ioA=;
+ b=aAVHeljm7rXfuaeD+CRsjGEUjPEMIKxdF078yC+p/gTJpu9UzyKz9FJhSpwdFUf4Ohq7SUQb3
+ nXyrXk0y3ToC6k5LKYsG77hr67h8Qllu1iHiLVFlb5OJwemO1LoCIN/
+X-Developer-Key: i=daniel.braunwarth@kuka.com; a=ed25519;
+ pk=fTSYKvKU5SCGGLHVz5NaznQ2MbXNWUZzdqPihgCfYms=
+X-Endpoint-Received: by B4 Relay for daniel.braunwarth@kuka.com/20250425
+ with auth_id=388
+X-Original-From: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+Reply-To: daniel.braunwarth@kuka.com
 
-On 28/04/2025 09:07, Krzysztof Kozlowski wrote:
-> On Fri, Apr 25, 2025 at 08:47:01PM GMT, Dmitry Baryshkov wrote:
->> For some reason Lee has mis-squashed two commits, picking up one chunk
->> from the first patch and one chunk from the second one. Rather than
->> trying to fix it, revert commit 2c8de7df7418 ("dt-bindings: mfd: syscon:
->> Add qcom,apq8064-mmss-sfpb").
-> 
-> I don't understand: that commit looks like direct, proper result for
-> https://lore.kernel.org/all/20250318-fix-nexus-4-v2-5-bcedd1406790@oss.qualcomm.com/
-> so where is squashing two commits? The diff markers have offset by few
-> lines, but it's still just few lines and they do not matter - there is
-> no diff/patch mismatch from that point of view.
+From: Daniel Braunwarth <daniel.braunwarth@kuka.com>
 
-Ah, difference in compatibles. I see the error. Anyway, I don't think
-revert is correct. Just add missing compatibles.
+The RTL8211F supports multiple WOL modes. This patch adds support for
+magic packets.
+
+The PHY notifies the system via the INTB/PMEB pin when a WOL event
+occurs.
+
+Signed-off-by: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+---
+ drivers/net/phy/realtek/realtek_main.c | 58 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index 893c824796715a905bab99646a474c3bea95ec11..ed2fd6a0d7466e9638ab988efb03934556f52794 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -10,6 +10,7 @@
+ #include <linux/bitops.h>
+ #include <linux/of.h>
+ #include <linux/phy.h>
++#include <linux/netdevice.h>
+ #include <linux/module.h>
+ #include <linux/delay.h>
+ #include <linux/clk.h>
+@@ -38,6 +39,10 @@
+ 
+ #define RTL8211F_INSR				0x1d
+ 
++#define RTL8211F_WOL_MAGIC			BIT(12)
++#define RTL8211F_WOL_CLEAR			(BIT(15) | 0x1fff)
++#define RTL8211F_WOL_INT_ENABLE			BIT(5)
++
+ #define RTL8211F_LEDCR				0x10
+ #define RTL8211F_LEDCR_MODE			BIT(15)
+ #define RTL8211F_LEDCR_ACT_TXRX			BIT(4)
+@@ -123,6 +128,7 @@ struct rtl821x_priv {
+ 	u16 phycr2;
+ 	bool has_phycr2;
+ 	struct clk *clk;
++	u32 saved_wolopts;
+ };
+ 
+ static int rtl821x_read_page(struct phy_device *phydev)
+@@ -354,6 +360,56 @@ static irqreturn_t rtl8211f_handle_interrupt(struct phy_device *phydev)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void rtl8211f_get_wol(struct phy_device *dev, struct ethtool_wolinfo *wol)
++{
++	struct rtl821x_priv *priv = dev->priv;
++
++	wol->supported = WAKE_MAGIC;
++	wol->wolopts = priv->saved_wolopts;
++}
++
++static int rtl8211f_set_wol(struct phy_device *dev, struct ethtool_wolinfo *wol)
++{
++	struct rtl821x_priv *priv = dev->priv;
++	const u8 *mac_addr = dev->attached_dev->dev_addr;
++	int oldpage;
++
++	oldpage = phy_save_page(dev);
++	if (oldpage < 0)
++		goto err;
++
++	if (wol->wolopts & WAKE_MAGIC) {
++		/* Store the device address for the magic packet */
++		rtl821x_write_page(dev, 0xd8c);
++		__phy_write(dev, 16, mac_addr[1] << 8 | (mac_addr[0]));
++		__phy_write(dev, 17, mac_addr[3] << 8 | (mac_addr[2]));
++		__phy_write(dev, 18, mac_addr[5] << 8 | (mac_addr[4]));
++
++		/* Clear WOL status and enable magic packet matching */
++		rtl821x_write_page(dev, 0xd8a);
++		__phy_write(dev, 16, RTL8211F_WOL_MAGIC);
++		__phy_write(dev, 17, RTL8211F_WOL_CLEAR);
++
++		/* Enable the WOL interrupt */
++		rtl821x_write_page(dev, 0xd40);
++		__phy_set_bits(dev, 0x16, RTL8211F_WOL_INT_ENABLE);
++	} else {
++		/* Disable the WOL interrupt */
++		rtl821x_write_page(dev, 0xd40);
++		__phy_clear_bits(dev, 0x16, RTL8211F_WOL_INT_ENABLE);
++
++		/* Clear WOL status and disable magic packet matching */
++		rtl821x_write_page(dev, 0xd8a);
++		__phy_write(dev, 16, 0x0);
++		__phy_write(dev, 17, RTL8211F_WOL_CLEAR);
++	}
++
++	priv->saved_wolopts = wol->wolopts;
++
++err:
++	return phy_restore_page(dev, oldpage, 0);
++}
++
+ static int rtl8211_config_aneg(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -1400,6 +1456,8 @@ static struct phy_driver realtek_drvs[] = {
+ 		.read_status	= rtlgen_read_status,
+ 		.config_intr	= &rtl8211f_config_intr,
+ 		.handle_interrupt = rtl8211f_handle_interrupt,
++		.set_wol	= rtl8211f_set_wol,
++		.get_wol	= rtl8211f_get_wol,
+ 		.suspend	= rtl821x_suspend,
+ 		.resume		= rtl821x_resume,
+ 		.read_page	= rtl821x_read_page,
+
+---
+base-commit: 4acf6d4f6afc3478753e49c495132619667549d9
+change-id: 20250425-realtek_wol-6e2df8ea8cf2
 
 Best regards,
-Krzysztof
+-- 
+Daniel Braunwarth <daniel.braunwarth@kuka.com>
+
+
