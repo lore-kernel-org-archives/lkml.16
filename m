@@ -1,121 +1,112 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9EF25E466
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB941FF603;
+	Mon, 28 Apr 2025 09:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745834351; cv=none; b=qxSEzruSedqTzoR3durPYgySBqGIBAiO1pY3/SxKujejc/BsNFgM6bxFRak769I3zOw6C8Ix+BTyRsZHrDD+SECvvOiQNNIkZMJpHuDBWrbRRuXjW/8bGl2rushwvaE2jNTQFt2StREXZcMQ6zZXFHa0l+q9zmQmX0XbKlR091w=
+	t=1745834390; cv=none; b=O8Z0yNvYwJDXUnsGWS9A/0oLI/gkZmFy0ZXngQsr+tJTC+ur1kwwCQlwoubTW6n8flWteguWntrHhGA88cyYMQqh8bHpF+Z/nsaWR17MGnZ/0TGThqcQbfDQV0NbJlkUNiHJjLtVuXjAXCArqo7w+CUPMRATudsr88frb1CXddc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745834351; c=relaxed/simple;
-	bh=J3q7+ERLGGMYNzcLUoAdfmlz8C/A9OhMRW6zKx/4oqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nU2AXut8Wyq4VVmLozJpzVKPHBx+Cc4lQP8umYHZ411Vy60SKagilIUSr8sMN9LGsMKNuB/J+gfED/21eYbiq/HsJtm70R1wWY/V2Wg7ThhLOfg0c8mvTuKSPJYtKn+8xAzwv/xzUL8CftLJwVeQjtlKP90pESabq+K1/9KPX6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=gyx3AxP1; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1745834390; c=relaxed/simple;
+	bh=EPOS8/hUSRgLG5pgNDvPwGT/K+RasiEz9VDnATpjYe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D4jGYhVCoVNJPIDfEW4bCTZgnr02A9YbrcU4l8BXSe9C4f3Sn5AQLKablhQ5bZf7glf7S5lJGQebDsJtudgAaeIlhzG4VOkLZxHXFIUQoyRa8oiotgPWC9T0dkfD84AJX99uMCHP9I0dT2ArNDJzgry0+EJ3pq+wQSUtgbU5JnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dozLBtUq; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="gyx3AxP1"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f623af283fso536356a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:59:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1745834346; x=1746439146; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rINvUOH68ih2WYNJ2sZFwzY5douH3ogOju4in3oWC7g=;
-        b=gyx3AxP1LbAFzwF1G67ZZIxLvOdeieULCRh/p20zfKIl8cG638HuNQnZDD0MO5nZwA
-         S5gnQ9C7u+GBk6jK9xCEJ5rsAe1Povnp1AdqgBL5KlbHk27IDKluZXthYbX62I8T82Gh
-         f7pv6gxiAdG/lEQ7lsYKT43EHtWgjPFYNw9jkjn5d7guqwKEzgWPPwps/PFhCGjUJET9
-         T7Z9GPsMFSS37t2/MJ7+eShvmo81EdwMZ6xsJAI6sq5e1lXvze0dQkmSztoSv4kBMjEQ
-         JeQ8BJ/mtOv7DU5aJJAfwBeCq508AxGTg9Kd0arwJZ97zcTMNHW/zG/Hig4dMOYzDPKS
-         I2aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745834346; x=1746439146;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rINvUOH68ih2WYNJ2sZFwzY5douH3ogOju4in3oWC7g=;
-        b=Mzd+fdM/3//l5+HMhQpsUosB6JDnko/SFtMN6+frmo90f9I8fki3js4Jru3OC4z4Oo
-         L2UbVY4X2v+DiS3v4L9EWtdqXtW7nNLLTp4/g8OJ5vuzQT1KqY6BcWQWXP5mJTpQSsjm
-         LhDrMW2ou4+kTucx5koSmb3Rx3ovDyHqtcgD78FNvxj2KSKkeStU9JKa+LfTRw3F8SUA
-         fQgBFYOedeEKG73TdlwR6sLsUbXTzIHmlheiLZJykpmqzURnSiMt4w5xo8WAda86tD2V
-         JHcxDPFnMR5kxuBoDr8OLTbsxrbQd7YI+l3JSBudOt6elLcdGHWbuvBmoOtHPMRxaAXU
-         0hXw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8zcBPonZQrSosRy6jv4EH4Bwn/HZDvR5ggkbwXXpidHYUvN8P4QAuZ4QosTZsKluurv8r2+kgwywchMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBNAgKW7AKJuO+vSpQAM7ViPmHvfziTH3B3V6gphrHgXj+kQDY
-	FVmbnDYKnjlpydW8zxmnLaFBVQpD7h6fZkmRATZjkjvcqKoyY61snS29ljo8QPPicJQ32qETaWu
-	Gf/iKrmyT6QPuXyGK5yZQ11Yw7r1HV6GmmnCJNQ==
-X-Gm-Gg: ASbGncsEPvHjhxjvZjmkiFeO4xxpOKQFlJKtUgGjxFtdX+2HF4X4UiFY+0FGA7Wqfke
-	If+Kd0uPfDsC99JgW3Ea22iUJz8iXjZjrXpM9qUK4mtGbX2ab1Dyl9X92XPaCxfjtyaj6OZ8O/Q
-	mSdvcPQXjQTpeIDOHejUcBeA==
-X-Google-Smtp-Source: AGHT+IHHy6cjJLCZOHoKD0Vir+Tlj+84pXwRNtT9CfC5vOM1rZhJdWTi3FlcQ1xaGBYFZ0wYE7qauMRO4rQ0F79VUm0=
-X-Received: by 2002:a05:6402:1d4a:b0:5f4:d131:dbef with SMTP id
- 4fb4d7f45d1cf-5f723a137cbmr3068606a12.8.1745834345736; Mon, 28 Apr 2025
- 02:59:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dozLBtUq"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3C25E475;
+	Mon, 28 Apr 2025 11:59:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745834381;
+	bh=EPOS8/hUSRgLG5pgNDvPwGT/K+RasiEz9VDnATpjYe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dozLBtUqQg/0oXPxVSIMu3TaB4fzBpzjr2o3tHWbbas3U0SsINLoPp3PqU3+dVw4K
+	 a+ZBz1Ih76D8JTv493HMLCI2CYmHCZ9LCS6cpgabHB6P0yqdruEJESLMZGFx9Rexv7
+	 /9fepj6Z1Xg2meodj7FVdZhu807ay8Y88PgmAzhM=
+Date: Mon, 28 Apr 2025 12:59:40 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
+Message-ID: <20250428095940.GE3371@pendragon.ideasonboard.com>
+References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aA5Rzse_xM5JWjgg@pc>
-In-Reply-To: <aA5Rzse_xM5JWjgg@pc>
-From: Jinpu Wang <jinpu.wang@ionos.com>
-Date: Mon, 28 Apr 2025 11:58:55 +0200
-X-Gm-Features: ATxdqUG1FpHJ7ywPwQYIG1Fv3071Xq963wpMBqS0BrlJJM0d8JjCStD9cCOICTU
-Message-ID: <CAMGffEnT+C2xSNXuEFzGm9Yh_f=sRVrPsFO=tSasLMWciqKPhw@mail.gmail.com>
-Subject: Re: [PATCH] block: rnbd: add .release to rnbd_dev_ktype
-To: Salah Triki <salah.triki@gmail.com>
-Cc: "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi,
+Hi Prabhakar,
 
-On Sun, Apr 27, 2025 at 5:48=E2=80=AFPM Salah Triki <salah.triki@gmail.com>=
- wrote:
->
-> Every ktype must provides a .release function that will be called after
-> the last kobject_put.
->
-> Signed-off-by: Salah Triki <salah.triki@gmail.com>
-This change cause crashing during unmap device.
-We already have rnbd_client_release from rnbd_client_ops, so no memleak.
+Thank you for the patch.
 
-Nacked.
-
-Thx!
+On Mon, Apr 28, 2025 at 10:52:08AM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Simplify the `rzg2l_fifo_empty()` helper by removing the redundant
+> comparison in the return path. Now the function explicitly returns `true`
+> if the FIFO write and read pointers match, and `false` otherwise, improving
+> readability without changing behavior.
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mountain/
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  drivers/block/rnbd/rnbd-clt-sysfs.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnb=
-d-clt-sysfs.c
-> index 6ea7c12e3a87..144aea1466a4 100644
-> --- a/drivers/block/rnbd/rnbd-clt-sysfs.c
-> +++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
-> @@ -475,9 +475,17 @@ void rnbd_clt_remove_dev_symlink(struct rnbd_clt_dev=
- *dev)
->         }
+>  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> index 067c6af14e95..97faefcd6019 100644
+> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> @@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
+>  	if (amnfifopntr_w == amnfifopntr_r_y)
+>  		return true;
+>  
+> -	return amnfifopntr_w == amnfifopntr_r_y;
+> +	return false;
+
+So the function always returned true. This seems to be a bug fix, please
+add a Fixes: tag. The commit message should also make it clear that
+you're fixing an issue, not just simplifying the code.
+
+Personally I'd have written
+
+diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+index 067c6af14e95..3d0810b3c35e 100644
+--- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
++++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+@@ -345,8 +345,6 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
+ 	amnfifopntr_w = amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
+ 	amnfifopntr_r_y =
+ 		(amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
+-	if (amnfifopntr_w == amnfifopntr_r_y)
+-		return true;
+
+ 	return amnfifopntr_w == amnfifopntr_r_y;
+ }
+
+but that's also a bit of a style preference.
+
 >  }
->
-> +static void rnbd_dev_release(struct kobject *kobj)
-> +{
-> +       struct rnbd_clt_dev *dev =3D container_of(kobj, struct rnbd_clt_d=
-ev, kobj);
-> +
-> +       kfree(dev);
-> +}
-> +
->  static const struct kobj_type rnbd_dev_ktype =3D {
->         .sysfs_ops      =3D &kobj_sysfs_ops,
->         .default_groups =3D rnbd_dev_groups,
-> +       .release        =3D rnbd_dev_release,
->  };
->
->  static int rnbd_clt_add_dev_kobj(struct rnbd_clt_dev *dev)
-> --
-> 2.43.0
->
+>  
+>  void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
+
+-- 
+Regards,
+
+Laurent Pinchart
