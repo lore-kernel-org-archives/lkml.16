@@ -1,122 +1,165 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76ADF266B67;
-	Mon, 28 Apr 2025 12:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF08D269CFA
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844291; cv=none; b=svVmoj4izGUr+sQ0CxUz0yIhx0qFXGOn/ktpzOM9WxQwaIb6VMEgUEbCqw/klfKcbXrUMDS4msrOjENlWSqNHpQvllZzbLTGHz1zb8YfRAMxuMKZq0i0q2Ve4vnwKnZR6t2OtS8gYEttoIdLZpN1uWHHlxz5ZS/qKmMaVZBzTqw=
+	t=1745844296; cv=none; b=EYCOUHgA/8RJuM2AN+QIm25Svpe32ncqpA02/Q8ILAOO79G67gfegytYAxRnazBLEIg8ZGYuCPJ2auJds+dYMUWx51F7UdgZlZu4h4ZBK/xh4Pd+J56nq94bnMiS/P1ZWSSaBH2HkdbzXQGiqke5tHxANag7Kk6BoKos+R7VjFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844291; c=relaxed/simple;
-	bh=69u4x2iVX3CML3z65mNSFOpfvvJMY1UtVIYXajlF58c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BSinGpThjptCgUMGjc9VGvf2q3u/HgMHfY6kkTXIQbnX7GtN7qwcxCQpeh71bT2rGqsIDnJRMFnqAGFw9C/h8Ce8PHkIr4MxpZhzGMWKVyFfiynVWkMP5Pe35pvtWTfBo3jrUM1OB5KWsK7ugbogz9dB6btQmdp1ISFYAFzXQaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4285E1516;
-	Mon, 28 Apr 2025 05:44:41 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B9463F66E;
-	Mon, 28 Apr 2025 05:44:45 -0700 (PDT)
-Date: Mon, 28 Apr 2025 13:44:35 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Yixun Lan <dlan@gentoo.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Corentin Labbe <clabbe.montjoie@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: sram: sunxi-sram: Add A523
- compatible
-Message-ID: <20250428134435.76e19d29@donnerap.manchester.arm.com>
-In-Reply-To: <20250428122156-GYA56330@gentoo>
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
-	<20250424-01-sun55i-emac0-v2-1-833f04d23e1d@gentoo.org>
-	<20250428-vegan-stoic-flamingo-1d1a2a@kuoka>
-	<20250428122156-GYA56330@gentoo>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1745844296; c=relaxed/simple;
+	bh=+ZzCd82rRUyZnXENVjxEksDMseHIbSNrxKtFRkJ07lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PaZIUoWlBAoyl7ilgLSdk/DxmdgapaeVZBRJoCXGqPrM1yrbqu7bCoxWLUxcizidlXaVt55ClsdzQPL484XIEg+G+6+9UnUTPnmrsI8gb0pqGb1cirsq6iIf0AAWpRQ/d9DC8WmOud6kCuP5wYNnGDg9aFoZDSZjGK8PzDT5+iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pe+YRST1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TvPH6gN6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pe+YRST1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TvPH6gN6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pe+YRST1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TvPH6gN6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pe+YRST1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TvPH6gN6"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CB3E02126D;
+	Mon, 28 Apr 2025 12:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745844292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JUOzAxXpKBY4ook23eb1wMZSaBWWaCk1yZbynmV9x3o=;
+	b=pe+YRST1OP+34LABw2QHHeQ7zKy8Ya5MQa8F1VIbo0Yk7df4af1pWAa+iCN7rXK5FvC1Jz
+	3ouWIFeFyi4r7bIEsqrvhpthaCir6RaijyXTbUOoikB6O4dXzh1al/7Uk9A/ni7e6X3hch
+	BdRk/Jusyz5cmGRuPDni8qKfT0syHMk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745844292;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JUOzAxXpKBY4ook23eb1wMZSaBWWaCk1yZbynmV9x3o=;
+	b=TvPH6gN6ocZjlPq4K+9umzWp/IMG5ctz2c5iQ0W38gIe3xELhCcQ4k/njRW/zmiklER13z
+	CqnYeUzsXDk6mXCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745844292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JUOzAxXpKBY4ook23eb1wMZSaBWWaCk1yZbynmV9x3o=;
+	b=pe+YRST1OP+34LABw2QHHeQ7zKy8Ya5MQa8F1VIbo0Yk7df4af1pWAa+iCN7rXK5FvC1Jz
+	3ouWIFeFyi4r7bIEsqrvhpthaCir6RaijyXTbUOoikB6O4dXzh1al/7Uk9A/ni7e6X3hch
+	BdRk/Jusyz5cmGRuPDni8qKfT0syHMk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745844292;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JUOzAxXpKBY4ook23eb1wMZSaBWWaCk1yZbynmV9x3o=;
+	b=TvPH6gN6ocZjlPq4K+9umzWp/IMG5ctz2c5iQ0W38gIe3xELhCcQ4k/njRW/zmiklER13z
+	CqnYeUzsXDk6mXCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B84BA13A25;
+	Mon, 28 Apr 2025 12:44:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WzURLER4D2juVAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Mon, 28 Apr 2025 12:44:52 +0000
+Date: Mon, 28 Apr 2025 14:44:48 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Daniel Wagner <wagi@kernel.org>, Keith Busch <kbusch@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	James Smart <james.smart@broadcom.com>, Hannes Reinecke <hare@suse.de>, 
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
+Message-ID: <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
+References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
+ <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
+ <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, 28 Apr 2025 12:21:56 +0000
-Yixun Lan <dlan@gentoo.org> wrote:
+On Sun, Apr 27, 2025 at 08:59:13AM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> On Fri, Feb 14, 2025 at 09:02:03AM +0100, Daniel Wagner wrote:
+> > The fabric transports and also the PCI transport are not entering the
+> > LIVE state from NEW or RESETTING. This makes the state machine more
+> > restrictive and allows to catch not supported state transitions, e.g.
+> > directly switching from RESETTING to LIVE.
+> > 
+> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> 
+> nvme_handle_aen_notice(), when handling NVME_AER_NOTICE_FW_ACT_STARTING,
+> sets the state to RESETTING and and triggers a worker. This worker
+> waits for firmware activation to complete and then tries to set the
+> state back to LIVE. This step now fails.
+> 
+> Possibly the handling of NVME_AER_NOTICE_FW_ACT_STARTING needs to be
+> improved. However, leaving the NVME in RESETTING state after an
+> NVME_AER_NOTICE_FW_ACT_STARTING event is worse.
+> 
+> I think this patch should be reverted at least for the time being until
+> the handling of NVME_AER_NOTICE_FW_ACT_STARTING no longer relies on a
+> direct state change from RESETTING to LIVE.
 
-> Hi Krzysztof,
->=20
-> On 09:21 Mon 28 Apr     , Krzysztof Kozlowski wrote:
-> > On Thu, Apr 24, 2025 at 06:08:39PM GMT, Yixun Lan wrote: =20
-> > > The Allwinner A523 family of SoCs have their "system control" registe=
-rs
-> > > compatible to the A64 SoC, so add the new SoC specific compatible str=
-ing.
-> > >=20
-> > > Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > > ---
-> > >  .../devicetree/bindings/sram/allwinner,sun4i-a10-system-control.yaml=
-     | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/sram/allwinner,sun4i-a=
-10-system-control.yaml b/Documentation/devicetree/bindings/sram/allwinner,s=
-un4i-a10-system-control.yaml
-> > > index a7236f7db4ec34d44c4e2268f76281ef8ed83189..e7f7cf72719ea884d48ff=
-f69620467ff2834913b 100644
-> > > --- a/Documentation/devicetree/bindings/sram/allwinner,sun4i-a10-syst=
-em-control.yaml
-> > > +++ b/Documentation/devicetree/bindings/sram/allwinner,sun4i-a10-syst=
-em-control.yaml
-> > > @@ -50,6 +50,7 @@ properties:
-> > >            - enum:
-> > >                - allwinner,sun50i-a100-system-control
-> > >                - allwinner,sun50i-h6-system-control
-> > > +              - allwinner,sun55i-a523-system-control
-> > >            - const: allwinner,sun50i-a64-system-control =20
-> >=20
-> > No update for the children (sram)?
-> >  =20
-> No, I don't think there is sub node for sram
-> From address map of A527, there is total 4KB size space of
-> this section which unlikely has sram available.
+ee59e3820ca9 ("nvme-fc: do not ignore connectivity loss during connecting")
+f13409bb3f91 ("nvme-fc: rely on state transitions to handle connectivity loss")
 
-That's something else, though. This system controller here *also* contains
-a register to switch access to SRAM blocks between the CPU and the devices.
-The actual SRAM blocks are somewhere else (hence the empty ranges;
-property), check the H616 for instance:
-	syscon: syscon@3000000 {
-		compatible =3D "allwinner,sun50i-h616-system-control";
-		reg =3D <0x03000000 0x1000>;
-		#address-cells =3D <1>;
-		#size-cells =3D <1>;
-		ranges;
+are depending on the fact that is not possible to switch from
+NEW/RESETTING directly into LIVE.
 
-		sram_c: sram@28000 {
-			compatible =3D "mmio-sram";
-			reg =3D <0x00028000 0x30000>;
+I think it would be better to fix the worker instead dropping this patch
+and the above fix for the fc transport.
 
-Krzysztof, we haven't worked out the SRAM regions yet, we typically add
-them only when we need them. I think the display engine is a prominent
-user, and support for that is quite a bit out at the moment.
+What about:
 
-=46rom a compatibility standpoint it should be fine to leave this empty for
-now, if I am not mistaken?
 
-Cheers,
-Andre
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index b502ac07483b..d3c4eacf607f 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
+                msleep(100);
+        }
 
-> but I do see some BROM/SRAM space from 0x0000 0000 - 0x0006 3FFF ..
-> (which should not be relavant to this patch series..)
->=20
+-       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
++       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
++           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
+                return;
 
+        nvme_unquiesce_io_queues(ctrl);
