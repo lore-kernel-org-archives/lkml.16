@@ -1,105 +1,58 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD005D530
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2BE149C7B;
+	Mon, 28 Apr 2025 08:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745829038; cv=none; b=u9Lh3mPpcCUaSaYxkw3+rKFQw+BOgO4MSRHGSmUHHnBkFSRWgmfJ9i7N4meP7BWMNihauUdoXWZf9Epc2ZPeytwrGktIKmltq7suIHieMM7K3f0KDcvU6XVqPje4sd7izbwkAV48HmF4B4vX+q5oVGLzgr5ndLhr7wuC0xjTl6w=
+	t=1745829069; cv=none; b=sw0N6UlEjIXI931QOlxigmYnKLssYrBLjcTiXbphhsV5mKMzc0iuJEqqpg2tiltZsf3WGpdFeAv75eXiCgysZEcaEhUNv7G14xBIVZKVI2sy/sTY9nn8+2dvQQVnAOXqU4zVFZVWPLyNeuCQck5iy8D2jmAw6CEw+YEA8c7dnME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745829038; c=relaxed/simple;
-	bh=XnizB9100UNA68Nhrc/NPH0GHRaRUl3WPQShtsDYwHI=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=FGDq8ze7HZ18dHHqyWboHZMu4hYuQW6VAn4sQoyjM2KWwd3288AsKq/yOCs4NwkGr6V3qZDTfCaWNhKPCanLJtYO1uBaYytTyhJYh2d7kwkT3FQPRV1BcfzJUeBay2lfeOwZ1gDLBqRq0hEG5z5PycNtgTY4odh+Vr/v4OkfdKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q/87Crtp; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q/87Crtp"
+	s=arc-20240116; t=1745829069; c=relaxed/simple;
+	bh=VU29eTm0Z6mnwXT2zqfxSiDNfA5A30dMv0wEVt/g5S0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NwoLeq/knCjKmTehM0ZDau3ZMHrf4hY5SgWD6XvSCSuwhWyneyRV6hmRxmyWcnlXGKHuVFfLG9LxOeBERk4/QSWa9tdeioZ+SqW56/xj6yvApx6XRICMgALUGoBNakROPSDAA2qTac1l9e3dZ6n74Q7cgBVeyI9Ugkz6NR56RpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D674C4CEEC;
+	Mon, 28 Apr 2025 08:31:08 +0000 (UTC)
+Date: Mon, 28 Apr 2025 10:31:06 +0200
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Wesley Cheng <quic_wcheng@quicinc.com>, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH 3/6] ASoC: dt-bindings: qcom,sm8250: Add Fairphone 4
+ sound card
+Message-ID: <20250428-tungsten-skunk-of-domination-6eee9b@kuoka>
+References: <20250425-fp4-usb-audio-offload-v1-0-f90f571636e4@fairphone.com>
+ <20250425-fp4-usb-audio-offload-v1-3-f90f571636e4@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745829034;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OfSbmzDs/o0LQ7Atw6SIKmR3v4ivn9bHhtZs1yGAZZA=;
-	b=q/87CrtpsyJ8M2YC/zH4KQ/bpMf4u2N4OXQdJCZQ68guxuzAhOq+mymE1jGMGPn1dCgYoA
-	C8HpXLjVkQjixc5ZqNPmJ+B7Eaog6h98GW1ISN0ZX8hOpQmVk8K3AhgFwSW9gcnSfRAUB3
-	VvF89ZUwE3hxL8M+/drxRQTIOZ2lEg4=
-Date: Mon, 28 Apr 2025 08:30:24 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <7adb633683ed40587a379260857c7a48ce69638c@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v2] pid: annotate data-races around pid_ns->pid_allocated
-To: "=?utf-8?B?TWljaGFsIEtvdXRuw70=?=" <mkoutny@suse.com>
-Cc: linux-kernel@vger.kernel.org, mrpre@163.com,
- syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com,
- syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com,
- syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com, "Andrew Morton"
- <akpm@linux-foundation.org>, "Christian Brauner" <brauner@kernel.org>,
- "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, "Suren Baghdasaryan" <surenb@google.com>, "Wei
- Yang" <richard.weiyang@gmail.com>, "David Hildenbrand"
- <david@redhat.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Mateusz Guzik"
- <mjguzik@gmail.com>, "Oleg Nesterov" <oleg@redhat.com>, "Joel Granados"
- <joel.granados@kernel.org>, "Bill O'Donnell" <bodonnel@redhat.com>,
- "Darrick J. Wong" <djwong@kernel.org>, "Frederic Weisbecker"
- <frederic@kernel.org>
-In-Reply-To: <fo436hdqzkevk7jqszyprjjwehqge7rrqxz6gqbmgoqqsqwdxl@efe2r5jeouwl>
-References: <20250425055824.6930-1-jiayuan.chen@linux.dev>
- <fo436hdqzkevk7jqszyprjjwehqge7rrqxz6gqbmgoqqsqwdxl@efe2r5jeouwl>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250425-fp4-usb-audio-offload-v1-3-f90f571636e4@fairphone.com>
 
-April 25, 2025 at 17:25, "Michal Koutn=C3=BD" <mkoutny@suse.com> wrote:
+On Fri, Apr 25, 2025 at 12:44:53PM GMT, Luca Weiss wrote:
+> Document the bindings for the sound card on Fairphone 4 which uses the
+> older non-audioreach audio architecture.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  Documentation/devicetree/bindings/sound/qcom,sm8250.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
->=20
->=20On Fri, Apr 25, 2025 at 01:58:14PM +0800, Jiayuan Chen <jiayuan.chen@=
-linux.dev> wrote:
->=20
->=20>=20
->=20> Suppress syzbot reports by annotating these accesses using data_rac=
-e().
-> >=20
->=20
-> Thanks for trying this approach.
->=20
->=20scripts/checkpatch.pl has quite some remarks about the current form :=
--)
->=20
->=20I mean, the data_race annotation should document why the race is
->=20
->=20harmless. I only glanced over this so I can't tell myself whether it'=
-s a
->=20
->=20bug or OK.
->=20
->=20>=20
->=20> Reported-by: syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com
-> >=20
->=20>  Reported-by: syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com
-> >=20
->=20>  Reported-by: syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com
-> >=20
->=20
-> How can I get to see full syzbot reports? (Stacktrace would be helpful,
->=20
->=20I cannot resolve those as message-ids on (LK)ML.)
->=20
->=20Thanks,
->=20
->=20Michal
->
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hi Michal,
+Best regards,
+Krzysztof
 
-We can find such reports at https://syzkaller.appspot.com/upstream/s/kern=
-el
