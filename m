@@ -1,416 +1,513 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592BE297A62
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90E297A5D
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745871274; cv=none; b=eDxJ+4UU4LYBUlpeqjrk/7VRmiVFNtHUEHZeODNEkWi7sTcHOJy8QuRM6x43MQOsUBYvSLoRIkec+Xh4k/zPkV4lnO+LpfEgHJFKdkoE++lbZSpNZgNdZJkAheJpvBoEKf2VOMyJLDfoCbsgKP9HyQC/L59jAV9MhTWRz80HOYo=
+	t=1745871286; cv=none; b=c9Qg4rPbSGQ5LKO3miAbcSsqn75sxdB4MARUZVq7aiTYTJBOLZDUPQtFXeYkBw3xS3C2OC9V2g2YryGG8dKYH7Ni3ZHsOWnuAaoAySbE58JBQm1sa1g3lge6FnqEMZTDZn8Eyd5lXZP3ni8RqQssSZKP0i1gIdB0YYl/VJsj2Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745871274; c=relaxed/simple;
-	bh=npEaUa9y7aoYDxWJKVP6eFuSAM+GuqK8BYJKktzo5Io=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=atJZkF2V3ZHMPK4ycF/oJDTixNxKBQtm1S0dmf7Sh8kzz3XhAsD2nwVAYu3/OOZL+ANGZIxma2GEgw3AIqiG926wy1I/JVZfRSxh7vSTy7vdqa1mr5gwO0lEShtmkZiopPDUteB9aRjFlA7819yW+rf+nDH7U04L1fIb/GmDjbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ky2cGoSa; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1745871286; c=relaxed/simple;
+	bh=bxfY+Ioo9ZWQo5CfpHE0LzqrqASPOVNFyMvpTkPt2Fs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=QHNtqaRhJ/Q8mChJpAbhVE/F0+6bkdVvQNvqZTkBBSQGeomufrqBej2ZV7XKsLh6RivZGRzNa3OaYHx9li0z39wxWQOsBBiJXwknFNuUNJ68tw+MSeCS9/FK1tfKEz8dk/SeW7rAv/Vnn0e3/o3/eeQiRmkD00DhExSLo4Bcz6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M6JX74vw; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ky2cGoSa"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2263428c8baso5675ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:14:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M6JX74vw"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4774611d40bso66441cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745871271; x=1746476071; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sF3TQXTjTwLlsmEr6Vx8Y4aN4YqmuAbAC+QoJEmyUXM=;
-        b=Ky2cGoSaaB94ucItZQTd8HpETrdWhBbW74LEj+4o9FkVJFX71BW0sMsHS1/EhtAirH
-         KIAnGUGFk1HsXe+yWJMaAWKOkGppqI2a/CdYfq5SSuk9fWJ28G2RqkRScSNlny+A21qz
-         epNBDcIuA4sF6zBjV5+r/suWCnMArCKByBM/7sFQboueXmGKdjFg77jeGJfuoTY+Bv49
-         3tKSurPXYXEoUXID8jKymBo4hGCl0FTsNbcFodMZZOujmANPv7HvwKIAXCWSMUbRK3uo
-         xh68iPcqOmHo3Aml390PpkTWb149DraQ9uSWY+QV6thmuLn7r41H8GFKwf+12wN/8QUU
-         oCew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745871271; x=1746476071;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1745871283; x=1746476083; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sF3TQXTjTwLlsmEr6Vx8Y4aN4YqmuAbAC+QoJEmyUXM=;
-        b=safyfKglASsh6D+tgPGgEymH7r6QwSZDIopkl4Nw8gELZut0VkuC1HKlUJf6x7RTNI
-         /bKp7zriQPnTcv+d/53JtY+3AHd8NM3WhMuBjVwPmWdYDT1AfhKOgqt4ObF7vuR5Q7vp
-         bDjKT6XS5reDd5ZO37AFKR+ITXTUsP+k3qZ0hn4YP7nXFHllGMcmtS6gbmUSjI7j90cQ
-         jl7jlOH28wLE0lhVsiMlRwVrzdD15oVXoTxQ7BN7tO8Xjya0n8UYXXcQNVDxAgijawaR
-         I1PdJYP4sXQvCiw2VCvFBiuar81GoFlNH1+eZR/VZuPrU91mXS7IKuIUW0GcBdqenX5e
-         Bq2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX/cPtoimu5TfIIAzCvW2N3i1v2zyXvx3aae6OzUq8iFfppNIiz+SMPRC7z3wmvpNEvz3Cr3pLihogxrpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyU093RRPR7GhSewSgd1c2j74yeBHG/x8hTtH9MVUQfLBl2Qmr
-	caM3XByV2H0HyInKxXJdmhmAQO3q/O08v2wgB6Jx0I3VzZGo9Ali6D8TY6whgw==
-X-Gm-Gg: ASbGncs0VOMv12HylEFlCLusvU+b0DlJuSnWqpxjlsNCDFKetqigygdzY6zAFgdrhWN
-	2NXJIfsv9nP5yIb7tHbtcqJFcxVwIhcHnoEurOIV5lW2Y9mml9s94AA/aTyXqWFXPVGHoTARjfr
-	eyKYKSeuEAimEz6tH/18BRHBFCLdWLyWNbXuMv+0fyWbYZzBBd2WprPCA0UPJ6sVNlGarn5ilUS
-	m9mn/JIwIIr7XClZH3t2wxHGsZ64BAmYVUoHG7fTDySkSyjyKNcnetrE+VWLv4B36PYnW1ExCQZ
-	zS/EOCn2TZxCtBLaXKIo1pcVf1ildUvqolgW9KwLWoIFnrT/jYXkW5RwLpCAgE+IPZqS68SX
-X-Google-Smtp-Source: AGHT+IGmtl/Kj7Dfb3LKwjogpzMnxm1K7d+HjcHQ0Rw+sVKLpRXDlU7ddaIuIujt0mHKuRlgJFYRhQ==
-X-Received: by 2002:a17:902:ce0d:b0:21f:4986:c7d5 with SMTP id d9443c01a7336-22de6c488fcmr714075ad.8.1745871271079;
-        Mon, 28 Apr 2025 13:14:31 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15fadea8d8sm7669029a12.64.2025.04.28.13.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:14:30 -0700 (PDT)
-Date: Mon, 28 Apr 2025 20:14:19 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 08/22] iommufd: Abstract iopt_pin_pages and
- iopt_unpin_pages helpers
-Message-ID: <aA_hm_AD4Xzm3qJZ@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
+        bh=5S2govk0YTCyl2KstM3ifkgIwBCMVYbty/KI+EWa3eA=;
+        b=M6JX74vwvOsiaajH75Tk3x3DUfXhsV7+0x9t4V344aBuDKlwYOZWkbzUNCgZYOsX5H
+         rB1Ue4yIWPDhh763jd5+uztyjqcgSJlzLm3Bgcp4xTOnYzwYoSwgvCkiyKkc3DrUC/v2
+         POJAV6qdi5uNszImCcaIqLNq8aOU7mOJWiwuidlFl3irESmii96HMLrzB/P9zbTBg7Dh
+         62p5dQWNAAZ9oWoP4DhLbNWxjIJHZdmSx8ZOMiJUHn6/gzWi6Pq8+/0huLf5mHHNjf/l
+         jkgv5ff5pLmylA2zxo+yXkhSXl1ajM28KSZBekG5udA+ZDw6SqM13sVMNbLMM7jJXkOc
+         8OBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745871283; x=1746476083;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5S2govk0YTCyl2KstM3ifkgIwBCMVYbty/KI+EWa3eA=;
+        b=PBJJo44JpAg7+6Fa8D9UIMscYTBEQgnKlen4/scwmsPBvATa09ZsKzEqr2s716ToeG
+         PUyVILVcQa2U4wYZcm0GelkYUu+GhgT2q4Mj75Lhe07W+f6mTO9ulhZndz/QSp8u7KuT
+         liq0F3o786vZ9Fa2DMC9/mBYNSez56h+igNoPur9WEj20oJSr6zgdEvXt2U35+G4W/Fy
+         SrXBadGchNYQinIFGInOH7BZb7juDm14LuYmAueA7GKkYuuYpKCjkCKlXjG33RXjyeFZ
+         ktQO3SMWBKU9Gc2QV2+LXNdXPk8+E5cgkhfPAtk64rVFEOzFHM+THDFwFyrSaS7PhA9i
+         2eaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkH8jxrc6AMjD7gusqc6LkBUXBqRkVHKlVftJSY76/5VsIUupP0HTBsySAh7uJ5qupbJJF4GLal8xFAV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3aQuSWD3dgLZ5raIOlQ1qC5yka+xw/IOs3zCq1LnZ1X7NAg4F
+	TuKKwXZ3o2eHkteFgTt5tozZQYoJw5z5B7TLANrdQO4XrxpyXr23O9EfISB8mVG63TYfJs8w2Qd
+	SwTAhqy66LaF7y7LZimeTs4ju3POio+SLSSIW
+X-Gm-Gg: ASbGncsHsSouXuHarhVDatOoXjfNCRdlXA9gfEh3QBiqIkwk687dTWMy2w4IEZNgCAJ
+	oHDXlmxN+YU/oQddw+tfI6WiV+GN/tFVTCoH/5b+KI25/G/VdIqNP9ch2ygTKbxlyKG/A8yew8J
+	javnjf50Md7FxyXW0i4T1T
+X-Google-Smtp-Source: AGHT+IESI645f2qHrcanEzoqJYbRkEi/qXg20FUnpK+Mrmj56B6+m7fdLzaHim/GJodJsJa9F9OUIIFtZEKaj9hH10U=
+X-Received: by 2002:a05:622a:1487:b0:486:8711:19af with SMTP id
+ d75a77b69052e-48855985193mr976651cf.0.1745871282558; Mon, 28 Apr 2025
+ 13:14:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
+References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
+ <91f2cee8f17d65214a9d83abb7011aa15f1ea690.1745853549.git.lorenzo.stoakes@oracle.com>
+ <p7nijnmkjljnevxdizul2iczzk33pk7o6rjahzm6wceldfpaom@jdj7o4zszgex>
+In-Reply-To: <p7nijnmkjljnevxdizul2iczzk33pk7o6rjahzm6wceldfpaom@jdj7o4zszgex>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 28 Apr 2025 13:14:31 -0700
+X-Gm-Features: ATxdqUEvLSPpzrB5CbS4RjadJagAjogPm_l6Zq1i9YQssAsWOKs-X7DJhKk_xvM
+Message-ID: <CAJuCfpHomWFOGhwBH8e+14ayKMf8VGKapLP1QBbZ_fumMPN1Eg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] mm: establish mm/vma_exec.c for shared exec/mm VMA functionality
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 10:58:03PM -0700, Nicolin Chen wrote:
-> The new vCMDQ object will be added for HW to access the guest memory for a
-> HW-accelerated virtualization feature. It needs to ensure the guest memory
-> pages are pinned when HW accesses them and they are contiguous in physical
-> address space.
-> 
-> This is very like the existing iommufd_access_pin_pages() that outputs the
-> pinned page list for the caller to test its contiguity.
-> 
-> Move those code from iommufd_access_pin/unpin_pages() and related function
-> for a pair of iopt helpers that can be shared with the vCMDQ allocator. As
-> the vCMDQ allocator will be a user-space triggered ioctl function, WARN_ON
-> would not be a good fit in the new iopt_unpin_pages(), thus change them to
-> use WARN_ON_ONCE instead.
-> 
-> Rename check_area_prot() to align with the existing iopt_area helpers, and
-> inline it to the header since iommufd_access_rw() still uses it.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/iommufd/io_pagetable.h    |   8 ++
->  drivers/iommu/iommufd/iommufd_private.h |   6 ++
->  drivers/iommu/iommufd/device.c          | 117 ++----------------------
->  drivers/iommu/iommufd/io_pagetable.c    |  95 +++++++++++++++++++
->  4 files changed, 117 insertions(+), 109 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommufd/io_pagetable.h b/drivers/iommu/iommufd/io_pagetable.h
-> index 10c928a9a463..4288a2b1a90f 100644
-> --- a/drivers/iommu/iommufd/io_pagetable.h
-> +++ b/drivers/iommu/iommufd/io_pagetable.h
-> @@ -114,6 +114,14 @@ static inline unsigned long iopt_area_iova_to_index(struct iopt_area *area,
->  	return iopt_area_start_byte(area, iova) / PAGE_SIZE;
->  }
->  
-> +static inline bool iopt_area_check_prot(struct iopt_area *area,
-> +					unsigned int flags)
-> +{
-> +	if (flags & IOMMUFD_ACCESS_RW_WRITE)
-> +		return area->iommu_prot & IOMMU_WRITE;
-> +	return area->iommu_prot & IOMMU_READ;
-> +}
-> +
->  #define __make_iopt_iter(name)                                                 \
->  	static inline struct iopt_##name *iopt_##name##_iter_first(            \
->  		struct io_pagetable *iopt, unsigned long start,                \
-> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-> index 8d96aa514033..79160b039bc7 100644
-> --- a/drivers/iommu/iommufd/iommufd_private.h
-> +++ b/drivers/iommu/iommufd/iommufd_private.h
-> @@ -130,6 +130,12 @@ int iopt_cut_iova(struct io_pagetable *iopt, unsigned long *iovas,
->  void iopt_enable_large_pages(struct io_pagetable *iopt);
->  int iopt_disable_large_pages(struct io_pagetable *iopt);
->  
-> +int iopt_pin_pages(struct io_pagetable *iopt, unsigned long iova,
-> +		   unsigned long length, struct page **out_pages,
-> +		   unsigned int flags);
-> +void iopt_unpin_pages(struct io_pagetable *iopt, unsigned long iova,
-> +		      unsigned long length);
-> +
->  struct iommufd_ucmd {
->  	struct iommufd_ctx *ictx;
->  	void __user *ubuffer;
-> diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-> index 2111bad72c72..a5c6be164254 100644
-> --- a/drivers/iommu/iommufd/device.c
-> +++ b/drivers/iommu/iommufd/device.c
-> @@ -1240,58 +1240,17 @@ void iommufd_access_notify_unmap(struct io_pagetable *iopt, unsigned long iova,
->  void iommufd_access_unpin_pages(struct iommufd_access *access,
->  				unsigned long iova, unsigned long length)
->  {
-> -	struct iopt_area_contig_iter iter;
-> -	struct io_pagetable *iopt;
-> -	unsigned long last_iova;
-> -	struct iopt_area *area;
-> -
-> -	if (WARN_ON(!length) ||
-> -	    WARN_ON(check_add_overflow(iova, length - 1, &last_iova)))
-> -		return;
-> -
-> -	mutex_lock(&access->ioas_lock);
-> +	guard(mutex)(&access->ioas_lock);
->  	/*
->  	 * The driver must be doing something wrong if it calls this before an
->  	 * iommufd_access_attach() or after an iommufd_access_detach().
->  	 */
-> -	if (WARN_ON(!access->ioas_unpin)) {
-> -		mutex_unlock(&access->ioas_lock);
-> +	if (WARN_ON(!access->ioas_unpin))
->  		return;
-> -	}
-> -	iopt = &access->ioas_unpin->iopt;
-> -
-> -	down_read(&iopt->iova_rwsem);
-> -	iopt_for_each_contig_area(&iter, area, iopt, iova, last_iova)
-> -		iopt_area_remove_access(
-> -			area, iopt_area_iova_to_index(area, iter.cur_iova),
-> -			iopt_area_iova_to_index(
-> -				area,
-> -				min(last_iova, iopt_area_last_iova(area))));
-> -	WARN_ON(!iopt_area_contig_done(&iter));
-> -	up_read(&iopt->iova_rwsem);
-> -	mutex_unlock(&access->ioas_lock);
-> +	iopt_unpin_pages(&access->ioas_unpin->iopt, iova, length);
->  }
->  EXPORT_SYMBOL_NS_GPL(iommufd_access_unpin_pages, "IOMMUFD");
->  
-> -static bool iopt_area_contig_is_aligned(struct iopt_area_contig_iter *iter)
-> -{
-> -	if (iopt_area_start_byte(iter->area, iter->cur_iova) % PAGE_SIZE)
-> -		return false;
-> -
-> -	if (!iopt_area_contig_done(iter) &&
-> -	    (iopt_area_start_byte(iter->area, iopt_area_last_iova(iter->area)) %
-> -	     PAGE_SIZE) != (PAGE_SIZE - 1))
-> -		return false;
-> -	return true;
-> -}
-> -
-> -static bool check_area_prot(struct iopt_area *area, unsigned int flags)
-> -{
-> -	if (flags & IOMMUFD_ACCESS_RW_WRITE)
-> -		return area->iommu_prot & IOMMU_WRITE;
-> -	return area->iommu_prot & IOMMU_READ;
-> -}
-> -
->  /**
->   * iommufd_access_pin_pages() - Return a list of pages under the iova
->   * @access: IOAS access to act on
-> @@ -1315,76 +1274,16 @@ int iommufd_access_pin_pages(struct iommufd_access *access, unsigned long iova,
->  			     unsigned long length, struct page **out_pages,
->  			     unsigned int flags)
->  {
-> -	struct iopt_area_contig_iter iter;
-> -	struct io_pagetable *iopt;
-> -	unsigned long last_iova;
-> -	struct iopt_area *area;
-> -	int rc;
-> -
->  	/* Driver's ops don't support pin_pages */
->  	if (IS_ENABLED(CONFIG_IOMMUFD_TEST) &&
->  	    WARN_ON(access->iova_alignment != PAGE_SIZE || !access->ops->unmap))
->  		return -EINVAL;
->  
-> -	if (!length)
-> -		return -EINVAL;
-> -	if (check_add_overflow(iova, length - 1, &last_iova))
-> -		return -EOVERFLOW;
-> -
-> -	mutex_lock(&access->ioas_lock);
-> -	if (!access->ioas) {
-> -		mutex_unlock(&access->ioas_lock);
-> +	guard(mutex)(&access->ioas_lock);
-> +	if (!access->ioas)
->  		return -ENOENT;
-> -	}
-> -	iopt = &access->ioas->iopt;
-> -
-> -	down_read(&iopt->iova_rwsem);
-> -	iopt_for_each_contig_area(&iter, area, iopt, iova, last_iova) {
-> -		unsigned long last = min(last_iova, iopt_area_last_iova(area));
-> -		unsigned long last_index = iopt_area_iova_to_index(area, last);
-> -		unsigned long index =
-> -			iopt_area_iova_to_index(area, iter.cur_iova);
-> -
-> -		if (area->prevent_access ||
-> -		    !iopt_area_contig_is_aligned(&iter)) {
-> -			rc = -EINVAL;
-> -			goto err_remove;
-> -		}
-> -
-> -		if (!check_area_prot(area, flags)) {
-> -			rc = -EPERM;
-> -			goto err_remove;
-> -		}
-> -
-> -		rc = iopt_area_add_access(area, index, last_index, out_pages,
-> -					  flags);
-> -		if (rc)
-> -			goto err_remove;
-> -		out_pages += last_index - index + 1;
-> -	}
-> -	if (!iopt_area_contig_done(&iter)) {
-> -		rc = -ENOENT;
-> -		goto err_remove;
-> -	}
-> -
-> -	up_read(&iopt->iova_rwsem);
-> -	mutex_unlock(&access->ioas_lock);
-> -	return 0;
-> -
-> -err_remove:
-> -	if (iova < iter.cur_iova) {
-> -		last_iova = iter.cur_iova - 1;
-> -		iopt_for_each_contig_area(&iter, area, iopt, iova, last_iova)
-> -			iopt_area_remove_access(
-> -				area,
-> -				iopt_area_iova_to_index(area, iter.cur_iova),
-> -				iopt_area_iova_to_index(
-> -					area, min(last_iova,
-> -						  iopt_area_last_iova(area))));
-> -	}
-> -	up_read(&iopt->iova_rwsem);
-> -	mutex_unlock(&access->ioas_lock);
-> -	return rc;
-> +	return iopt_pin_pages(&access->ioas->iopt, iova, length, out_pages,
-> +			      flags);
->  }
->  EXPORT_SYMBOL_NS_GPL(iommufd_access_pin_pages, "IOMMUFD");
->  
-> @@ -1431,7 +1330,7 @@ int iommufd_access_rw(struct iommufd_access *access, unsigned long iova,
->  			goto err_out;
->  		}
->  
-> -		if (!check_area_prot(area, flags)) {
-> +		if (!iopt_area_check_prot(area, flags)) {
->  			rc = -EPERM;
->  			goto err_out;
->  		}
-> diff --git a/drivers/iommu/iommufd/io_pagetable.c b/drivers/iommu/iommufd/io_pagetable.c
-> index 8a790e597e12..160eec49af1b 100644
-> --- a/drivers/iommu/iommufd/io_pagetable.c
-> +++ b/drivers/iommu/iommufd/io_pagetable.c
-> @@ -1472,3 +1472,98 @@ int iopt_table_enforce_dev_resv_regions(struct io_pagetable *iopt,
->  	up_write(&iopt->iova_rwsem);
->  	return rc;
->  }
-> +
-> +static bool iopt_area_contig_is_aligned(struct iopt_area_contig_iter *iter)
-> +{
-> +	if (iopt_area_start_byte(iter->area, iter->cur_iova) % PAGE_SIZE)
-> +		return false;
-> +
-> +	if (!iopt_area_contig_done(iter) &&
-> +	    (iopt_area_start_byte(iter->area, iopt_area_last_iova(iter->area)) %
-> +	     PAGE_SIZE) != (PAGE_SIZE - 1))
-> +		return false;
-> +	return true;
-> +}
-> +
-> +int iopt_pin_pages(struct io_pagetable *iopt, unsigned long iova,
-> +		   unsigned long length, struct page **out_pages,
-> +		   unsigned int flags)
-> +{
-> +	struct iopt_area_contig_iter iter;
-> +	unsigned long last_iova;
-> +	struct iopt_area *area;
-> +	int rc;
-> +
-> +	if (!length)
-> +		return -EINVAL;
-> +	if (check_add_overflow(iova, length - 1, &last_iova))
-> +		return -EOVERFLOW;
-> +
-> +	down_read(&iopt->iova_rwsem);
-> +	iopt_for_each_contig_area(&iter, area, iopt, iova, last_iova) {
-> +		unsigned long last = min(last_iova, iopt_area_last_iova(area));
-> +		unsigned long last_index = iopt_area_iova_to_index(area, last);
-> +		unsigned long index =
-> +			iopt_area_iova_to_index(area, iter.cur_iova);
-> +
-> +		if (area->prevent_access ||
+On Mon, Apr 28, 2025 at 12:20=E2=80=AFPM Liam R. Howlett
+<Liam.Howlett@oracle.com> wrote:
+>
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250428 11:28]:
+> > There is functionality that overlaps the exec and memory mapping
+> > subsystems. While it properly belongs in mm, it is important that exec
+> > maintainers maintain oversight of this functionality correctly.
+> >
+> > We can establish both goals by adding a new mm/vma_exec.c file which
+> > contains these 'glue' functions, and have fs/exec.c import them.
+> >
+> > As a part of this change, to ensure that proper oversight is achieved, =
+add
+> > the file to both the MEMORY MAPPING and EXEC & BINFMT API, ELF sections=
+.
+> >
+> > scripts/get_maintainer.pl can correctly handle files in multiple entrie=
+s
+> > and this neatly handles the cross-over.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-Nit:
-Shouldn't we return -EBUSY or something if (area->prevent_access == 1) ?
-IIUC, this just means that an unmap attempt is in progress, hence avoid
-accessing the area.
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
-> +		    !iopt_area_contig_is_aligned(&iter)) {
-> +			rc = -EINVAL;
-> +			goto err_remove;
-> +		}
-> +
-> +		if (!iopt_area_check_prot(area, flags)) {
-> +			rc = -EPERM;
-> +			goto err_remove;
-> +		}
-> +
-> +		rc = iopt_area_add_access(area, index, last_index, out_pages,
-> +					  flags);
-> +		if (rc)
-> +			goto err_remove;
-> +		out_pages += last_index - index + 1;
-> +	}
-> +	if (!iopt_area_contig_done(&iter)) {
-> +		rc = -ENOENT;
-> +		goto err_remove;
-> +	}
-> +
-> +	up_read(&iopt->iova_rwsem);
-> +	return 0;
-> +
-> +err_remove:
-> +	if (iova < iter.cur_iova) {
-> +		last_iova = iter.cur_iova - 1;
-> +		iopt_for_each_contig_area(&iter, area, iopt, iova, last_iova)
-> +			iopt_area_remove_access(
-> +				area,
-> +				iopt_area_iova_to_index(area, iter.cur_iova),
-> +				iopt_area_iova_to_index(
-> +					area, min(last_iova,
-> +						  iopt_area_last_iova(area))));
-> +	}
-> +	up_read(&iopt->iova_rwsem);
-> +	return rc;
-> +}
-> +
-> +void iopt_unpin_pages(struct io_pagetable *iopt, unsigned long iova,
-> +		      unsigned long length)
-> +{
-> +	struct iopt_area_contig_iter iter;
-> +	unsigned long last_iova;
-> +	struct iopt_area *area;
-> +
-> +	if (WARN_ON_ONCE(!length) ||
-> +	    WARN_ON_ONCE(check_add_overflow(iova, length - 1, &last_iova)))
-> +		return;
-> +
-> +	down_read(&iopt->iova_rwsem);
-> +	iopt_for_each_contig_area(&iter, area, iopt, iova, last_iova)
-> +		iopt_area_remove_access(
-> +			area, iopt_area_iova_to_index(area, iter.cur_iova),
-> +			iopt_area_iova_to_index(
-> +				area,
-> +				min(last_iova, iopt_area_last_iova(area))));
-> +	WARN_ON_ONCE(!iopt_area_contig_done(&iter));
-> +	up_read(&iopt->iova_rwsem);
-> +}
-> -- 
-> 2.43.0
-> 
+>
+> > ---
+> >  MAINTAINERS                      |  2 +
+> >  fs/exec.c                        |  3 ++
+> >  include/linux/mm.h               |  1 -
+> >  mm/Makefile                      |  2 +-
+> >  mm/mmap.c                        | 83 ----------------------------
+> >  mm/vma.h                         |  5 ++
+> >  mm/vma_exec.c                    | 92 ++++++++++++++++++++++++++++++++
+> >  tools/testing/vma/Makefile       |  2 +-
+> >  tools/testing/vma/vma.c          |  1 +
+> >  tools/testing/vma/vma_internal.h | 40 ++++++++++++++
+> >  10 files changed, 145 insertions(+), 86 deletions(-)
+> >  create mode 100644 mm/vma_exec.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index f5ee0390cdee..1ee1c22e6e36 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8830,6 +8830,7 @@ F:      include/linux/elf.h
+> >  F:   include/uapi/linux/auxvec.h
+> >  F:   include/uapi/linux/binfmts.h
+> >  F:   include/uapi/linux/elf.h
+> > +F:   mm/vma_exec.c
+> >  F:   tools/testing/selftests/exec/
+> >  N:   asm/elf.h
+> >  N:   binfmt
+> > @@ -15654,6 +15655,7 @@ F:    mm/mremap.c
+> >  F:   mm/mseal.c
+> >  F:   mm/vma.c
+> >  F:   mm/vma.h
+> > +F:   mm/vma_exec.c
+> >  F:   mm/vma_internal.h
+> >  F:   tools/testing/selftests/mm/merge.c
+> >  F:   tools/testing/vma/
+> > diff --git a/fs/exec.c b/fs/exec.c
+> > index 8e4ea5f1e64c..477bc3f2e966 100644
+> > --- a/fs/exec.c
+> > +++ b/fs/exec.c
+> > @@ -78,6 +78,9 @@
+> >
+> >  #include <trace/events/sched.h>
+> >
+> > +/* For vma exec functions. */
+> > +#include "../mm/internal.h"
+> > +
+> >  static int bprm_creds_from_file(struct linux_binprm *bprm);
+> >
+> >  int suid_dumpable =3D 0;
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 21dd110b6655..4fc361df9ad7 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -3223,7 +3223,6 @@ void anon_vma_interval_tree_verify(struct anon_vm=
+a_chain *node);
+> >  extern int __vm_enough_memory(struct mm_struct *mm, long pages, int ca=
+p_sys_admin);
+> >  extern int insert_vm_struct(struct mm_struct *, struct vm_area_struct =
+*);
+> >  extern void exit_mmap(struct mm_struct *);
+> > -int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)=
+;
+> >  bool mmap_read_lock_maybe_expand(struct mm_struct *mm, struct vm_area_=
+struct *vma,
+> >                                unsigned long addr, bool write);
+> >
+> > diff --git a/mm/Makefile b/mm/Makefile
+> > index 9d7e5b5bb694..15a901bb431a 100644
+> > --- a/mm/Makefile
+> > +++ b/mm/Makefile
+> > @@ -37,7 +37,7 @@ mmu-y                       :=3D nommu.o
+> >  mmu-$(CONFIG_MMU)    :=3D highmem.o memory.o mincore.o \
+> >                          mlock.o mmap.o mmu_gather.o mprotect.o mremap.=
+o \
+> >                          msync.o page_vma_mapped.o pagewalk.o \
+> > -                        pgtable-generic.o rmap.o vmalloc.o vma.o
+> > +                        pgtable-generic.o rmap.o vmalloc.o vma.o vma_e=
+xec.o
+> >
+> >
+> >  ifdef CONFIG_CROSS_MEMORY_ATTACH
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index bd210aaf7ebd..1794bf6f4dc0 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -1717,89 +1717,6 @@ static int __meminit init_reserve_notifier(void)
+> >  }
+> >  subsys_initcall(init_reserve_notifier);
+> >
+> > -/*
+> > - * Relocate a VMA downwards by shift bytes. There cannot be any VMAs b=
+etween
+> > - * this VMA and its relocated range, which will now reside at [vma->vm=
+_start -
+> > - * shift, vma->vm_end - shift).
+> > - *
+> > - * This function is almost certainly NOT what you want for anything ot=
+her than
+> > - * early executable temporary stack relocation.
+> > - */
+> > -int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)
+> > -{
+> > -     /*
+> > -      * The process proceeds as follows:
+> > -      *
+> > -      * 1) Use shift to calculate the new vma endpoints.
+> > -      * 2) Extend vma to cover both the old and new ranges.  This ensu=
+res the
+> > -      *    arguments passed to subsequent functions are consistent.
+> > -      * 3) Move vma's page tables to the new range.
+> > -      * 4) Free up any cleared pgd range.
+> > -      * 5) Shrink the vma to cover only the new range.
+> > -      */
+> > -
+> > -     struct mm_struct *mm =3D vma->vm_mm;
+> > -     unsigned long old_start =3D vma->vm_start;
+> > -     unsigned long old_end =3D vma->vm_end;
+> > -     unsigned long length =3D old_end - old_start;
+> > -     unsigned long new_start =3D old_start - shift;
+> > -     unsigned long new_end =3D old_end - shift;
+> > -     VMA_ITERATOR(vmi, mm, new_start);
+> > -     VMG_STATE(vmg, mm, &vmi, new_start, old_end, 0, vma->vm_pgoff);
+> > -     struct vm_area_struct *next;
+> > -     struct mmu_gather tlb;
+> > -     PAGETABLE_MOVE(pmc, vma, vma, old_start, new_start, length);
+> > -
+> > -     BUG_ON(new_start > new_end);
+> > -
+> > -     /*
+> > -      * ensure there are no vmas between where we want to go
+> > -      * and where we are
+> > -      */
+> > -     if (vma !=3D vma_next(&vmi))
+> > -             return -EFAULT;
+> > -
+> > -     vma_iter_prev_range(&vmi);
+> > -     /*
+> > -      * cover the whole range: [new_start, old_end)
+> > -      */
+> > -     vmg.middle =3D vma;
+> > -     if (vma_expand(&vmg))
+> > -             return -ENOMEM;
+> > -
+> > -     /*
+> > -      * move the page tables downwards, on failure we rely on
+> > -      * process cleanup to remove whatever mess we made.
+> > -      */
+> > -     pmc.for_stack =3D true;
+> > -     if (length !=3D move_page_tables(&pmc))
+> > -             return -ENOMEM;
+> > -
+> > -     tlb_gather_mmu(&tlb, mm);
+> > -     next =3D vma_next(&vmi);
+> > -     if (new_end > old_start) {
+> > -             /*
+> > -              * when the old and new regions overlap clear from new_en=
+d.
+> > -              */
+> > -             free_pgd_range(&tlb, new_end, old_end, new_end,
+> > -                     next ? next->vm_start : USER_PGTABLES_CEILING);
+> > -     } else {
+> > -             /*
+> > -              * otherwise, clean from old_start; this is done to not t=
+ouch
+> > -              * the address space in [new_end, old_start) some archite=
+ctures
+> > -              * have constraints on va-space that make this illegal (I=
+A64) -
+> > -              * for the others its just a little faster.
+> > -              */
+> > -             free_pgd_range(&tlb, old_start, old_end, new_end,
+> > -                     next ? next->vm_start : USER_PGTABLES_CEILING);
+> > -     }
+> > -     tlb_finish_mmu(&tlb);
+> > -
+> > -     vma_prev(&vmi);
+> > -     /* Shrink the vma to just the new range */
+> > -     return vma_shrink(&vmi, vma, new_start, new_end, vma->vm_pgoff);
+> > -}
+> > -
+> >  #ifdef CONFIG_MMU
+> >  /*
+> >   * Obtain a read lock on mm->mmap_lock, if the specified address is be=
+low the
+> > diff --git a/mm/vma.h b/mm/vma.h
+> > index 149926e8a6d1..1ce3e18f01b7 100644
+> > --- a/mm/vma.h
+> > +++ b/mm/vma.h
+> > @@ -548,4 +548,9 @@ int expand_downwards(struct vm_area_struct *vma, un=
+signed long address);
+> >
+> >  int __vm_munmap(unsigned long start, size_t len, bool unlock);
+> >
+> > +/* vma_exec.h */
+
+nit: Did you mean vma_exec.c ?
+
+> > +#ifdef CONFIG_MMU
+> > +int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)=
+;
+> > +#endif
+> > +
+> >  #endif       /* __MM_VMA_H */
+> > diff --git a/mm/vma_exec.c b/mm/vma_exec.c
+> > new file mode 100644
+> > index 000000000000..6736ae37f748
+> > --- /dev/null
+> > +++ b/mm/vma_exec.c
+> > @@ -0,0 +1,92 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +/*
+> > + * Functions explicitly implemented for exec functionality which howev=
+er are
+> > + * explicitly VMA-only logic.
+> > + */
+> > +
+> > +#include "vma_internal.h"
+> > +#include "vma.h"
+> > +
+> > +/*
+> > + * Relocate a VMA downwards by shift bytes. There cannot be any VMAs b=
+etween
+> > + * this VMA and its relocated range, which will now reside at [vma->vm=
+_start -
+> > + * shift, vma->vm_end - shift).
+> > + *
+> > + * This function is almost certainly NOT what you want for anything ot=
+her than
+> > + * early executable temporary stack relocation.
+> > + */
+> > +int relocate_vma_down(struct vm_area_struct *vma, unsigned long shift)
+> > +{
+> > +     /*
+> > +      * The process proceeds as follows:
+> > +      *
+> > +      * 1) Use shift to calculate the new vma endpoints.
+> > +      * 2) Extend vma to cover both the old and new ranges.  This ensu=
+res the
+> > +      *    arguments passed to subsequent functions are consistent.
+> > +      * 3) Move vma's page tables to the new range.
+> > +      * 4) Free up any cleared pgd range.
+> > +      * 5) Shrink the vma to cover only the new range.
+> > +      */
+> > +
+> > +     struct mm_struct *mm =3D vma->vm_mm;
+> > +     unsigned long old_start =3D vma->vm_start;
+> > +     unsigned long old_end =3D vma->vm_end;
+> > +     unsigned long length =3D old_end - old_start;
+> > +     unsigned long new_start =3D old_start - shift;
+> > +     unsigned long new_end =3D old_end - shift;
+> > +     VMA_ITERATOR(vmi, mm, new_start);
+> > +     VMG_STATE(vmg, mm, &vmi, new_start, old_end, 0, vma->vm_pgoff);
+> > +     struct vm_area_struct *next;
+> > +     struct mmu_gather tlb;
+> > +     PAGETABLE_MOVE(pmc, vma, vma, old_start, new_start, length);
+> > +
+> > +     BUG_ON(new_start > new_end);
+> > +
+> > +     /*
+> > +      * ensure there are no vmas between where we want to go
+> > +      * and where we are
+> > +      */
+> > +     if (vma !=3D vma_next(&vmi))
+> > +             return -EFAULT;
+> > +
+> > +     vma_iter_prev_range(&vmi);
+> > +     /*
+> > +      * cover the whole range: [new_start, old_end)
+> > +      */
+> > +     vmg.middle =3D vma;
+> > +     if (vma_expand(&vmg))
+> > +             return -ENOMEM;
+> > +
+> > +     /*
+> > +      * move the page tables downwards, on failure we rely on
+> > +      * process cleanup to remove whatever mess we made.
+> > +      */
+> > +     pmc.for_stack =3D true;
+> > +     if (length !=3D move_page_tables(&pmc))
+> > +             return -ENOMEM;
+> > +
+> > +     tlb_gather_mmu(&tlb, mm);
+> > +     next =3D vma_next(&vmi);
+> > +     if (new_end > old_start) {
+> > +             /*
+> > +              * when the old and new regions overlap clear from new_en=
+d.
+> > +              */
+> > +             free_pgd_range(&tlb, new_end, old_end, new_end,
+> > +                     next ? next->vm_start : USER_PGTABLES_CEILING);
+> > +     } else {
+> > +             /*
+> > +              * otherwise, clean from old_start; this is done to not t=
+ouch
+> > +              * the address space in [new_end, old_start) some archite=
+ctures
+> > +              * have constraints on va-space that make this illegal (I=
+A64) -
+> > +              * for the others its just a little faster.
+> > +              */
+> > +             free_pgd_range(&tlb, old_start, old_end, new_end,
+> > +                     next ? next->vm_start : USER_PGTABLES_CEILING);
+> > +     }
+> > +     tlb_finish_mmu(&tlb);
+> > +
+> > +     vma_prev(&vmi);
+> > +     /* Shrink the vma to just the new range */
+> > +     return vma_shrink(&vmi, vma, new_start, new_end, vma->vm_pgoff);
+> > +}
+> > diff --git a/tools/testing/vma/Makefile b/tools/testing/vma/Makefile
+> > index 860fd2311dcc..624040fcf193 100644
+> > --- a/tools/testing/vma/Makefile
+> > +++ b/tools/testing/vma/Makefile
+> > @@ -9,7 +9,7 @@ include ../shared/shared.mk
+> >  OFILES =3D $(SHARED_OFILES) vma.o maple-shim.o
+> >  TARGETS =3D vma
+> >
+> > -vma.o: vma.c vma_internal.h ../../../mm/vma.c ../../../mm/vma.h
+> > +vma.o: vma.c vma_internal.h ../../../mm/vma.c ../../../mm/vma_exec.c .=
+./../../mm/vma.h
+> >
+> >  vma: $(OFILES)
+> >       $(CC) $(CFLAGS) -o $@ $(OFILES) $(LDLIBS)
+> > diff --git a/tools/testing/vma/vma.c b/tools/testing/vma/vma.c
+> > index 7cfd6e31db10..5832ae5d797d 100644
+> > --- a/tools/testing/vma/vma.c
+> > +++ b/tools/testing/vma/vma.c
+> > @@ -28,6 +28,7 @@ unsigned long stack_guard_gap =3D 256UL<<PAGE_SHIFT;
+> >   * Directly import the VMA implementation here. Our vma_internal.h wra=
+pper
+> >   * provides userland-equivalent functionality for everything vma.c use=
+s.
+> >   */
+> > +#include "../../../mm/vma_exec.c"
+> >  #include "../../../mm/vma.c"
+> >
+> >  const struct vm_operations_struct vma_dummy_vm_ops;
+> > diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_i=
+nternal.h
+> > index 572ab2cea763..0df19ca0000a 100644
+> > --- a/tools/testing/vma/vma_internal.h
+> > +++ b/tools/testing/vma/vma_internal.h
+> > @@ -421,6 +421,28 @@ struct vm_unmapped_area_info {
+> >       unsigned long start_gap;
+> >  };
+> >
+> > +struct pagetable_move_control {
+> > +     struct vm_area_struct *old; /* Source VMA. */
+> > +     struct vm_area_struct *new; /* Destination VMA. */
+> > +     unsigned long old_addr; /* Address from which the move begins. */
+> > +     unsigned long old_end; /* Exclusive address at which old range en=
+ds. */
+> > +     unsigned long new_addr; /* Address to move page tables to. */
+> > +     unsigned long len_in; /* Bytes to remap specified by user. */
+> > +
+> > +     bool need_rmap_locks; /* Do rmap locks need to be taken? */
+> > +     bool for_stack; /* Is this an early temp stack being moved? */
+> > +};
+> > +
+> > +#define PAGETABLE_MOVE(name, old_, new_, old_addr_, new_addr_, len_) \
+> > +     struct pagetable_move_control name =3D {                         =
+ \
+> > +             .old =3D old_,                                           =
+ \
+> > +             .new =3D new_,                                           =
+ \
+> > +             .old_addr =3D old_addr_,                                 =
+ \
+> > +             .old_end =3D (old_addr_) + (len_),                       =
+ \
+> > +             .new_addr =3D new_addr_,                                 =
+ \
+> > +             .len_in =3D len_,                                        =
+ \
+> > +     }
+> > +
+> >  static inline void vma_iter_invalidate(struct vma_iterator *vmi)
+> >  {
+> >       mas_pause(&vmi->mas);
+> > @@ -1240,4 +1262,22 @@ static inline int mapping_map_writable(struct ad=
+dress_space *mapping)
+> >       return 0;
+> >  }
+> >
+> > +static inline unsigned long move_page_tables(struct pagetable_move_con=
+trol *pmc)
+> > +{
+> > +     (void)pmc;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static inline void free_pgd_range(struct mmu_gather *tlb,
+> > +                     unsigned long addr, unsigned long end,
+> > +                     unsigned long floor, unsigned long ceiling)
+> > +{
+> > +     (void)tlb;
+> > +     (void)addr;
+> > +     (void)end;
+> > +     (void)floor;
+> > +     (void)ceiling;
+> > +}
+> > +
+> >  #endif       /* __MM_VMA_INTERNAL_H */
+> > --
+> > 2.49.0
+> >
