@@ -1,108 +1,174 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011034.outbound.protection.outlook.com [52.103.68.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F034526A0F8;
-	Mon, 28 Apr 2025 13:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846505; cv=none; b=GrPnw4WCHcWcBjF/wM0clT9sE8pEYyCAR+QF4ncf6JMO03FWmbUDkk3NIdUXT2LCrfzHQFcKwCoozvkWhFffc1KPVyMto4K4A7+DziBeA11UEIOz1ejVcczA31KaZyrqJe8Cb2xaDXIh1eAMA6JYbxP/Dtzpdc6MmnjFWYKv3GY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846505; c=relaxed/simple;
-	bh=Iwk/V72KJjPlUhVkDR+gh/HtiPiCbHuuonOziHgeuWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChWe12pt+tXskSIjcbzow4r7tRM/eOC1/noGfE8jyHpHmnA70iB2btOhSqkRmbDXf3m/N6vhMSsn0NSORcqNAo0gAvuawzcFkK6G3CAI2VLbXxUgDj2vOmZm1jI0t2OBpW5V/VX/ruYpl/v1J6d+veQMPSYE8SN9uoe0qgvOQnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3p4zbn7; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA5626A1C7
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745846508; cv=fail; b=nzXcKMnzawYabZ7zw8YpMd+Y9yzhtQUhzKtssX4rHRjp8JpKNGLjnG9iRaGJbN4nqFF3TYwKKaUte0Bza7z31ujugKNZ86ErR0UlGf/xevgAVT1Dw0/+msDjrO5tlhVPicxu01zvMH7L1qUcE+qhhDOryPRaydF4ZPqsUaWaAUw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745846508; c=relaxed/simple;
+	bh=UU2hIPurDXGu5nXqpz5PA8H7J6bESWSmfQHwOjMP04g=;
+	h=Message-ID:Date:Subject:From:To:References:Cc:In-Reply-To:
+	 Content-Type:MIME-Version; b=jZV/gIFtzaL6WyOlVCI/RtzVp7laW3gv0iiP5gn/nSNFp21mN+npNq03bc/uCdJ/wSB5/uqoI45o9lXvZZOL+qzXI37tj+cWM9EfgMEgGLAgG1iMGPhnDFrFBTJYUmtAKVn6Ei95gkUmkCiYPddD50kByWvDT0+Rv0hO+sffXSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Pjgf20Ef; arc=fail smtp.client-ip=52.103.68.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3p4zbn7"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c062b1f5so3940816b3a.0;
-        Mon, 28 Apr 2025 06:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745846503; x=1746451303; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uo+OVR5gNb3M4bxwFw5fjMkuNkzRB/QXTwOVVFcFS1k=;
-        b=V3p4zbn7ntmbif3dwG0ZdpJR/0hWlxW6NmI53C6kRYAhFUjsAUM6rVKSgLfbzoAtzS
-         uOqf5nw+1smmnJtZYxXd5V0V61T/jBJun4NP1v5zxDA4orrSamfZGMRHXDG9fV+7uJkV
-         2cH+yn6mLVIfM4zHmVYucWC+eFJubYOsh5rgrfL7a8h3FkoIkpoHTuI7xnQphImgFlHU
-         FyAmx35L9wOen8LNWOa4J+KjsXp9lT9XQI68+AWd2Mp6x9MZi0E66wyEBMtdwt07gSXt
-         z+B9zRglKGHvObjPrbQ66L3XG6UKhxXDF+imVOVPDrkjsQ25PfdlC0NuPkjel1m6c9E5
-         +Wag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745846503; x=1746451303;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uo+OVR5gNb3M4bxwFw5fjMkuNkzRB/QXTwOVVFcFS1k=;
-        b=QlwNoFlwmkvWSBUDVbEchb54mlTQ7PVhIS0F9ITUzCDmeoGoWqeJbrxjW1ys+sr6oF
-         zfbw4szuJOXUSDhOAZ9YnUB4kMeyCHP3S8eQntBB6BOILzXgeNT3FBI5cOtRjduK94/l
-         9y9F/OIKAY0sB2Cymq9VugLyXUal/25Y/hrC5/VbGSrbsZSUsFC6qPFkE++1j4TibXWp
-         7q0QQP3X7kJWQOhqBXGdxAEhfDEz1Z9MeoRF/coRMYCkIW4oMAixB48ozEvcmFbOQEYN
-         RU4qjZ9YydTJWXp0KkTnXIexBe5mbxCWPsjmqYp34tlvlLC0OfKvloYyZvMsVTTJtwwC
-         mX9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVf6fwINthys9BlTGN5d7DzUSZEOy/upqpd3JrfI6C/uOCB96EJno5ZmFMl3IJZCKNZIxyZCo5fIkM4QRw8d6o=@vger.kernel.org, AJvYcCX61rxpOED8GXksE0VfbNSHw+RqCzVfsL1/Rc0WV2V07K09lpYql9o8qdMTTdPy03Z4ATUOYvngCa6uz4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYnJCgHy3GNr6yEi0mGJencBKUKw85e9TWCNQle0TG6LbpTFkW
-	XcWHxDXyjVlpNHL5h47iyyXFLbeqpDkygoLnE2LpMY+AZL3zrEBB
-X-Gm-Gg: ASbGncu1JvGhAtQKKuGoervldvdMXT7ymGathuwVHF3f70tx8gDQFo6aCl0B2GwOIN8
-	SpqeqR0WRfz8BjJP1vAmnVD00As6RcRhtUVnBGb1dxnL9CBXv+U7oc+OkX0YqpQTqzDVzBIW3Fz
-	DVdT9qac7cThKSSxe75uKiyKDDAiWIg5NX/Zqg4XhPrz3EXIkoAtNAxBsxuqiw/A8WymQhxH3vf
-	XVtk7Uqt82r77OvpzlsVjfRUeD9nybCq+qDWNZj+20wyRKv7TCKV3akJhAuFZXVS3FTlbuZA67O
-	DONJXPP2+pXkvWCPYXCY3YZKJ5dz0k2SmbC/oi77
-X-Google-Smtp-Source: AGHT+IFAnL1TYjzsmT0s1ApIsmTStAceBR5fCU2o/evdSc2z6KesSKaISIoJmuvDfVUbIR6LuK4Gaw==
-X-Received: by 2002:a05:6a00:4fca:b0:72f:590f:2859 with SMTP id d2e1a72fcca58-73fd73c847fmr15118376b3a.13.1745846503023;
-        Mon, 28 Apr 2025 06:21:43 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6ab48sm8206675b3a.91.2025.04.28.06.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:21:42 -0700 (PDT)
-Date: Mon, 28 Apr 2025 09:21:40 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Burak Emir <bqe@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Rong Xu <xur@google.com>
-Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
-Message-ID: <aA-A5ERYLP7r5zK7@yury>
-References: <20250423134344.3888205-2-bqe@google.com>
- <20250423134344.3888205-6-bqe@google.com>
- <aAkbw0jEp_IGzvgB@yury>
- <CACQBu=XaOohewMnLj9PvgR5rYBxzYSXf2OAjCzUY=GFTJ9L=+Q@mail.gmail.com>
- <680a6b54.d40a0220.27afd9.5e84@mx.google.com>
- <680abbce.050a0220.144721.78ac@mx.google.com>
- <CACQBu=VEATxHmFvt0TKbb+Hx5jeEGO8SL733=0m8LNnX6S+ZKw@mail.gmail.com>
- <aAuR_0om4FI5Pb_F@Mac.home>
- <CACQBu=VkFT5yDuDz098L+S+tGvtGHMvm4FaZ6p3sr9VCp88jww@mail.gmail.com>
- <aA9MDH8RjOH9hQ2E@google.com>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Pjgf20Ef"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bhfGezglWBPK1UrZ+MZo+zbevqMMxubnrQXaGndrUedscvrKU592dnzj6VxqHKLLpdp7gOIkLr/aLSKrUqD/IG5zLWDfbANnIsJr1a8KqqqzWuIYzUyYzOx2RlDIFwcH+T8UIVC49/PUXIgZ9kVX4RbStMKDAocjF2QazgKDi5h3uL7BvC1+0FFvjKDcv0B/STskR3rVQ6jnZSAt8mAPYVH68RZnxMxmfP0bQ/2fRwVd0Oxbk+1NOhbM0YeWgn5NiZoBcp6KgqZO8gZxT2L3SCR9bho7isQfIDHMndc4rv9hDy6uAgIQQz6a2LdyeuAkbGUCEHGlq1Dtjw7P2ZgdWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wi++58aweF6lUhWXjIZkLPNXcNXU5IKP2H/9muuuKF8=;
+ b=R4mRDHRzBbteMviR1QtaPO4WudNpltEEs67JPiIMJKvUDZBQn4JBO0ACVZVG6D2mvnSegfs0tZnSvZi43xx25rF2JTTwswEM2GOq6WhRQnhAKx47YqMXIw49+TpKgnlGVLfZbLHquNuBZmplbAmSZh7sXkN3BM3kZYIdqEeEeTJi7N3k9IWXp2VurminCJ2yfcvMiR14PkAXmArQfLjGfGVJbh1UEwre5cgR79W2vGfarJzuRyxhzvnM2yYQM6xR2/ETunXZUU1eyuO6aBGlYvd7j5+5eWm2KUCtdejr84gBjMILHYta9eGVGyStB90F1IVCHkdnMEF7+1GmCxUN/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wi++58aweF6lUhWXjIZkLPNXcNXU5IKP2H/9muuuKF8=;
+ b=Pjgf20EfgAN3FDDUnSyBCyUz3MyWJWnhYRaBRbqkij8g1k1JVJKAgqHNgAPVg580x5pJsIfE7RvAqpXJaKukUkbDYIe0U5vsJxcTmnI8AXACDHDbRSrCgrXLsgcObld/7oomFDByEjkrA98b7R88sy1qUoqur2JL2WUtJfmBVoL6WJpzxwv6IEcN2ZK9x7o2oBthP7kfNHbWXtpqVePYLz5T1x1XIYs2tdfij95ONxq+UDZFjBSS25eSXfwoBABdwkX5gVbxOUbuYb8PMeh0AVthTD7OGrx+8/60oU5NdmJTp9ZHwXw+ewhGM/PZ6UogTOqD0PY1YO6uUJnS5IO95Q==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by MAZPR01MB6353.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:4d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Mon, 28 Apr
+ 2025 13:21:39 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
+ 13:21:39 +0000
+Message-ID:
+ <PN3PR01MB95971490B4D66F9CB2393E55B8812@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 28 Apr 2025 18:51:35 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] drm/appletbdrm: Make appletbdrm depend on X86
+From: Aditya Garg <gargaditya08@live.com>
+To: "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+ Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+ Lizhi Hou <lizhi.hou@amd.com>, Aun-Ali Zaidi <admin@kodeit.net>
+References: <PN3PR01MB9597FC692410388F94BE6981B8812@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Language: en-US
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <PN3PR01MB9597FC692410388F94BE6981B8812@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0243.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:21a::6) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <eb1aff1c-81a9-41f4-9f34-a615bcc321fa@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA9MDH8RjOH9hQ2E@google.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|MAZPR01MB6353:EE_
+X-MS-Office365-Filtering-Correlation-Id: f815570a-e2bc-47f8-70ef-08dd86579c08
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799006|19110799003|5072599009|6090799003|461199028|15080799006|7092599003|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bjd0RGxPZ3F4LzcwaWJsYnNJWlRUVU5vaW1JeTNYYkZ3YmlLQXVSS01ISWdp?=
+ =?utf-8?B?ZmpibVFQYWE3YWh3N282TXVOL1lvd0tOSmFaSjJMd1pqaFpmSkd5V1pmM3JW?=
+ =?utf-8?B?Zi92VEcwSVlTSkJZZHo1V1dIWmc0NTdCUFd3dXFUUlhRV0k4czk1VnpQblYy?=
+ =?utf-8?B?alFqM0RLQlV1bmtVUXJTeWhpcDRyR3hUMi91L2c4eU11TytHSVRBMFhOQSti?=
+ =?utf-8?B?VlMrVXNUU2NScHJPZnV3RXhGTzFkZlA5eXJEaXpaL1JYYUFGcDJYWlVJb3F6?=
+ =?utf-8?B?cFd3TUlSTXBIK1R5b25uUm9ZSDZSSStoQjRnZlRJbHZ5SzBkNUNWRTRXb0FE?=
+ =?utf-8?B?RWxOQTFxTDl1WjRsSlRiemhPOFRJYkd2c1dzS1JyeDVrQVFpaStFRjlPTmNC?=
+ =?utf-8?B?Y0RIcE1LUCtpYVpyMDlEbVg2Y2lMRUNVbHB6Y2Y3UVhOVkVzOG0raHQ5VHd6?=
+ =?utf-8?B?ajRtakU4alc0clhMMGFNZXdTRk15U3Y3bzNHUTF3WmtEUm42Z1U5SnZIcm1T?=
+ =?utf-8?B?dWtCQzdKdUdUREJUbTc1bGxHNjQzR09BZzQvY0hDaUkvMzFoT0tyYWJrYTB5?=
+ =?utf-8?B?d0g0SU8xY1N5WFUvblV5a2ZERG1hb2t4S1pRRGpibWN1U3lvOWxWeXQ0cUNq?=
+ =?utf-8?B?eTdxK3I1S1dTS2pQY3RNMGtVVXd1SDY3bnQ2NTIzWkNOK0hDNmRtVk1KMjVR?=
+ =?utf-8?B?N2phd2NRS24yY1Nzd0tINkwwckFjZWxpODhNZm91enEzODZ5M2hLOTlWVExo?=
+ =?utf-8?B?N0tpbFkwL09NdmdZSUk1SmFLcmgyN1pJdVZvdUtzaXh3dTZIWmdqN0xUbk9C?=
+ =?utf-8?B?UzFmdCtmZmlvQmdndm5YQnVzdW5qL1ROVXpSSHZuTzgyNlg1d0tsa0QwYXNq?=
+ =?utf-8?B?UzFTeStsdmhEcXJXa1ZaRU00MzlhWi8ybitHTGJhc3YxdE83dERwQis3Z1Ra?=
+ =?utf-8?B?Mk1hblFDcHhCWUwzWVZaWGJ5M0pGQytBdWQraXI2ZDZSaVZYMXlkSkZnWkpi?=
+ =?utf-8?B?WmtLY2JONEVZcFV4cUgzWm5YNTlwS2FKWjByK0RQd3ppa1gvNnBpTnZVVGc0?=
+ =?utf-8?B?NW5wN1M5MW82NUlBNTY3T2RtdEtqc05OMWx3Wk13eXdhUFBwbkJoZFY0clVG?=
+ =?utf-8?B?bTJiczFERXdLMXA1Ym83ZlJ4dkwrM3RCNzBBNVF2UUtQWWdSQmszM3dhUWVL?=
+ =?utf-8?B?V0MydjdOMlRBMGtBdkN3QnVWS09FczFVQ1JtVC9SY1pacElwM0NYVGpaN3pE?=
+ =?utf-8?B?Qzh6eU9iMXlXYWtjOUdOK20wR3dtd0ZkemxZMThOLzUzSWk1SG41a0RTbEU2?=
+ =?utf-8?B?MU9naWhzbm9xUmFvZ0pOb1hDSjRwYlB2OXhPSUlwZlQwb3F4WWozMEVCUCtR?=
+ =?utf-8?B?Y0lML0hOamtRSzFaVzlaa2ltcy9lczlwQ0o3UFU5TFlUVWQvRGdpcWNzRjZ2?=
+ =?utf-8?B?eE1LcjY3QUdiY1dZQ1NzUFQvY3U1ekRSYitVMld4dm1MWnJSa09wL1pGZ0pK?=
+ =?utf-8?B?N1ZPYVU5cHFqSEJyTFZiT2VMbkxtOVZieFFXck9JM2JQaHRBbWNhQ00vTjNZ?=
+ =?utf-8?B?M3lvdz09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dTQzb3R0VDJua0VDMjFrNGI5Y0tVYWhOclhERDRDY3A1ajI4V1RLUEpaTlBH?=
+ =?utf-8?B?UDVnVzVGSlNsUjRTV25oNVk1ZmRIRFluKzdHSWlub3NCcGE2RjU3N2dYcXJh?=
+ =?utf-8?B?eFQybTZFMVFrM0lnWVFUVHYvMjkvMzNWa2dCMExtdkIyZGxrelQvMHVCU1N3?=
+ =?utf-8?B?SWRyR1FOT3hkd0tVY3ZFb1FFbnFXUW0xU1BiOHpnLzZqNnRGZldGVmxSNWJv?=
+ =?utf-8?B?aUtQdmtTN3B5TG5TTmFWR1dxbmlZUFZzUTNwU1g0UEl6VkF4Y051YkMzc2Fz?=
+ =?utf-8?B?NFNDTXY4RlpzQ1dld01uZUFjZWwvVERLOXY5aTBBalhxV20zckFNK0dycWhn?=
+ =?utf-8?B?NExvaEo3RFd0ZmdkYmE0ekV3Nnd3SzV2aHhSR2IvSjlNSHZLTWU5d0JnMVp4?=
+ =?utf-8?B?Q1Vjai95YXZqQ05USWlFQ0xUZkpSazJFdlZPSW9LcXZvZk0wZUNzblBFVnZ2?=
+ =?utf-8?B?NENyOHdvMU5nRGdhM3QxNDIwNXJlZ2l2WGRGNFVJS3oyM2VPd0lCUWR1cDJ5?=
+ =?utf-8?B?MGE0QzVhY1dnK0hQM05QSy8vRWdPdEVUbUxPSUNzYTUzYmtzS0FCc0N6WkRx?=
+ =?utf-8?B?SDJGSzhqWXAwQTBhZHNrNXlDcTRleXNuTnFwcDZZRmVLYlR6NXk3NU55dkZ5?=
+ =?utf-8?B?ZEJTeTNQSVRCYlcxdjVJYVExNktsOUt3ZDRxdzc4UncrZkpsQ2h4dEVkN3I0?=
+ =?utf-8?B?ejVnazVqajFibWFydUZsOENSMnJuQmlvbXdJUmd0YXo2WHJaNzUvN3QvRHNy?=
+ =?utf-8?B?eUs5QlAvVDNXc0lYR29ub2djc2ZkVnd5U25NdW4xRlFzQnAwKzlwb0lqcDln?=
+ =?utf-8?B?bWR0cGZrZ2twZERsOEoyWE1SRkJ6SHNsRVhMN0N6K3NRVENGeVZzaDBKRGl0?=
+ =?utf-8?B?Qy9lNW5QbjVsVUhSSExycVJQVWR5N3Z5SUZXeWlVaUp2THNzLzh2UDlwVXZ1?=
+ =?utf-8?B?VDlMTm51WXhiUkJVRzNRcFpCTGtDOXFFSnF2RldIRE8xVTNoUXRMSUlsOElT?=
+ =?utf-8?B?MStpbVNCY1lRQ2lLVm1rcDdpSTBPWUEvdmNsZ0Rzc1oxUWpnckpaMENOR1RS?=
+ =?utf-8?B?amRtSytGanJQMDlSMUpvbEJiWkxkUHZOUnYvNzdVTi9kWmVaNVVYY0NXS2hP?=
+ =?utf-8?B?M01OU05UT2hrTWk4MFpUdVhPTTdBbE11ekV3TzR6ZmE4anVxM2g0clRSZlNW?=
+ =?utf-8?B?NHBhQ2tXVHA3RmtSZDM5WXJ6WEx3MjNxREhJWGxVRXB3OEVTaDFDYTlSNTVu?=
+ =?utf-8?B?bnA1Zk51aVNEeUgxUWN6NzVZUlJtYmI5TVlCMUozd1VvT2Y1VXQ3WE5UQzM0?=
+ =?utf-8?B?M2IxVzdQb04vQjZYRkgwN3RybkNOUkc2Sjc0bFkxQkhpZncxQWZySnhDSTZY?=
+ =?utf-8?B?RlFXdjJGQTFjMmtRUmpyc216TEl0Q0FPSzNjaEJJTjBUTm4rNS9adWpwQmRY?=
+ =?utf-8?B?cWFGVGJPRTJuT2VnRWJ6Q25iZldTRm1IamVaSGxYMndWNHRnMFM1VERmT01z?=
+ =?utf-8?B?OFExVEQrNStlbnFmaWhNY05LVVF1RWlCTjlHZHU3NFc5NURGRkI0OGQzT3Zh?=
+ =?utf-8?B?ZkgrZlZBNFV3QytYUW5IRnlLRE84L0JlZE9RVWNxMU5rN1BHaFkycG9DVlNY?=
+ =?utf-8?B?dS92Tk5BekhWcnlmdG8vc2M0UHM5UUIzSXhMRGdjc2hvNkVURE5sRkIyWFEr?=
+ =?utf-8?B?SE0yYmVTQjZPVmdtd0tBZ2NiWXMvYzJEczFlenZTZjIvTzdBY3lCcWRUMXZY?=
+ =?utf-8?Q?jLXWPvj2iyIsAkqPrIiz90A89j8bAxgkJyszEM4?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: f815570a-e2bc-47f8-70ef-08dd86579c08
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 13:21:39.6797
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB6353
 
-> By the way, if you add assert_eq!(bitmap.len(), BITMAP_LEN) before the
-> loop you may get the bounds checks optimized out.
+Ccing the mailing lists> From: Aditya Garg <gargaditya08@live.com>
+> 
+> The appletbdrm driver is exclusively for Touch Bars on x86 Intel Macs.
+> The M1 Macs have a separate driver. So, lets avoid compiling it for
+> other architectures.
+> 
+> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> ---
+>  drivers/gpu/drm/tiny/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+> index 95c1457d7..d66681d0e 100644
+> --- a/drivers/gpu/drm/tiny/Kconfig
+> +++ b/drivers/gpu/drm/tiny/Kconfig
+> @@ -3,6 +3,7 @@
+>  config DRM_APPLETBDRM
+>  	tristate "DRM support for Apple Touch Bars"
+>  	depends on DRM && USB && MMU
+> +	depends on X86 || COMPILE_TEST
+>  	select DRM_GEM_SHMEM_HELPER
+>  	select DRM_KMS_HELPER
+>  	help
 
-That sounds cheating, isn't?
-
-I think nobody will reject this series because of +15% in performance
-test, neither +25%, or whatever reasonable number.
-
-Let's just measure fair numbers and deliver clear maintainable code. 
-There's a single user for bitmaps in rust so far, and it's you. So
-you're to call if performance is bad for you, not me. I just want
-to make sure that your numbers are withing the sane boundaries.
-
-Thanks,
-Yury
