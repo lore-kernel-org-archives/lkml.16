@@ -1,145 +1,139 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598BE26F458;
-	Mon, 28 Apr 2025 14:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33354207DEE;
+	Mon, 28 Apr 2025 14:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745850632; cv=none; b=NlaCEiuDU1fl1AtBn7svHMIOXVAEeHw5/QijmXZVFo6FUQp4Gtb0/zAF8EKJYIZV7dy21RyqmSl9QHUMvmPhEkBIpZyM0b5UK17JlWoLsXjPXRjJg6YJd7uIuio9FpUTbwHiiclC3FcGIzIcfDQL9HMu6ZHgD/rugKX/oAfYRNA=
+	t=1745850697; cv=none; b=UBf03MSHCaBX69Szi1Oi+CyrWV0W2OgunfJH2Th/MOiXfuW8yGMBHkg3hmeoz5vx+svEsquxIqESc/EfgGNXI3enQ166r7Gymq6jPIyw/+Ke/vKk4nlos/wwcWPxs6opIzcRulpGm+F1a31+j4QObgprPYratDXyJA5NciYk4hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745850632; c=relaxed/simple;
-	bh=5Tul0UgKqEItZ9l0IeEA7LfntoTS/n68SZqcy9BrzRY=;
+	s=arc-20240116; t=1745850697; c=relaxed/simple;
+	bh=NHhnqNyU+X9x0PgjbHhqdTx3NWTApQzLscPiWXWZPWU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIec4HIdmJ4brb922XLfGm6LHKvvrrN370cMrDPP3a3RrgsVlAnqdHtCZLkMQBia5r3uQq0mv9Gvl67DbpLMN452OYDwnmNCNpSczYpov6XlqdCCkqTjCi/POxA6vCX6QzSNOcD+uNn2bmLOoYhwdzJcdFpQwUvXUNOfPQONXbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c9d1jUpF; arc=none smtp.client-ip=209.85.219.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmarWhr87CMJX9l+aq2aHQjQmTWbQB0TkIwi7TKiuTPtbORX796jmOqtqgSyArxk0cj7k5eNGOJhTZFYsHCbOTO1YPQDdgVB1MLd23cYSEX3rKqmyXiEPWg97z+bDXFA7VP48kDuuTM9wPAw8du0w81Wsn2GbcztkOy81oloK5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqPswbcY; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9d1jUpF"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6f2b05f87bcso52632946d6.3;
-        Mon, 28 Apr 2025 07:30:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqPswbcY"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so4136927b3a.3;
+        Mon, 28 Apr 2025 07:31:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745850630; x=1746455430; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745850694; x=1746455494; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g6qLGoEJQPdzq4IJgvyxvY6FUlbaKt7CiOREYYADEK4=;
-        b=c9d1jUpFPMQwXgnT5XAf8nvxWBXt6E1caDisORgThTwmprnHffhvyDKhpwt8Dhhzxg
-         G99ZJuTu1oMtDQnsw5noFgjcrba5nE+EmzMakZoul6mTbr/euJK/+g7ACHfNmU3PZn0H
-         2fvfR8ubDY4KOOj259jWY/5Oad6N5R2XfkTM241kpcHrWyt/uYGODZvTOX+OGkIs+cD2
-         XMGt4EKqvGaeZN6qNMcL7Z8nXAY2hCjnP7JTgjCeXI9ZvpAazs9c/2y8sBMIu68NZ0pg
-         QOEiOxyrpqVK2qEtKqXFMCdXfqtC2M7ydgy9FLfFMtwxXsEAqKyql3Dlgv0PaJ/kxvc7
-         HD8A==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EGHvgmXuRyhO4FY9ie5ulcZe9dpbfqVfa/omQpTJU54=;
+        b=mqPswbcYGg8sVn/7UDHvK5aAU+GEZrHkNnDthCw2icPQ7KjEovPnUlDSSW26nIykjp
+         3xfkL6dqIbtgIHkv3WIKl52NB5LTN1qLOFKc1EmAYwXzmDA/mGQDSMLPgXk7v1F1tvDR
+         HLr27MY4PvU4GsYkB6iUS85k0d/0stQ9CgAIthmj7KJjtNysqvipGUMTHciBtE1aTn73
+         tdF64fplQ/eF1E1bhJdoPZLleKFYOI8F6eay7cL7p5BrZyBl29p5+rIFNZvCqiJpnM4s
+         K4LvYxS5F6kW8HXWg00Q0kiDCNCXqxjINBaEDYCAyiDAYaLm5WT4Dbuj1ALdCsu5ioR1
+         90Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745850630; x=1746455430;
+        d=1e100.net; s=20230601; t=1745850694; x=1746455494;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g6qLGoEJQPdzq4IJgvyxvY6FUlbaKt7CiOREYYADEK4=;
-        b=syDFbXo2obR5L778iRrY8NQ+lwUG0SuS7hR9jwAZBvtVukMAGxV3RyEPUKCO6roW6u
-         67C3Cml5NBNXW+BO82P6YKA5XqLR8qT+FbmdfKWBf59C81391CmJvZeWBiYW2zRpKZ8Y
-         BxXJ1PWEzClW0q0Z3cXPxJkOBkqPKQ+OSRNAGNitW1xNMA5sGOOaHkEEwdeL+AN4Oy2Q
-         ZnGv41VKOu+svACyav5/2M7XZ/5MwrntAI5GKysveBuno/xsDkqdOOXMmwt/gK6Y2ndl
-         i6IrlPjOJ0X/ksIOcspjap2qyJzIrqSGt4bPiwmZUbcsh4DHoQ5S8omGpHV84YEkVFVm
-         YZgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfVCKcJ8KFPuI8iPYvp3KYiDG3nxCelK5fIR2CYvjNQgBz5IqXLNSvljyZzQf/m5v3JL4WLtR9Pp6vxA==@vger.kernel.org, AJvYcCXK6QSQd8qKV1hrbMggCOnuT6YO7qOWcSlyeu22idIcnDQs+EZY1lrm+Jzq77RK4VAxD6uQ+8zxZU9RW0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtQ3PggH9CflvKtDV1uXzDR8ROan/Ks9xiedmEyTjkoedDV1nF
-	fxBK4L88uws5lAA4feKwzosi9NRsfbOc9I3ulZpcY1vSAcdLSisi
-X-Gm-Gg: ASbGncuQ2ZP46hrfksGAtGoU72h0MyRrrAgaAfAlbulJ65K2o+XmwX9wm6BkyV4hf8V
-	qYaz+fy21BsZFS5Olbg6cy/fIkYuJvej59FJFT0unqhrObFXOaPb+S6e/feUPS0LeUZj8a9I0WY
-	TW+V751Fft8voJLDi//KdW6bgm/OZFhVRY12IQZPRJw3NZAb+0bLAS6KrkC/io4ZILuO05vwuC6
-	H5weUkLl9/bl+Vg4H6syDuJl9hWVCBnlhIbNXvw3krFY2nuFURW5aBT6+X3uMvEFuHSKzYnW09V
-	60YoJ3DmLrkOvgUrII6Og9fC0Ul7dh0jdUXWQsKlBOGqgE1YQGHQby+PMCHWr+SAuhn58axYCmm
-	BJ3MvEhGNnMuYWIaM+c/F1EzL4j581Pw=
-X-Google-Smtp-Source: AGHT+IEobRjicM02uOFuHp85zQemUY1rWw1tmoVyDNr1mIrHBQvYSAKQJxLzyWJgTbC/BbdK9ujfzg==
-X-Received: by 2002:a05:6214:202d:b0:6ea:d393:962a with SMTP id 6a1803df08f44-6f4f052eb25mr684556d6.1.1745850629689;
-        Mon, 28 Apr 2025 07:30:29 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4cbbb9de6sm47577906d6.3.2025.04.28.07.30.29
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EGHvgmXuRyhO4FY9ie5ulcZe9dpbfqVfa/omQpTJU54=;
+        b=GAfwMC42Fwu1G88qhvBv1DnzDqz+06qqwmL8O9oLd85jrU5h92uWGSth07FEjmiLUD
+         LzdIkzvRNY4VTECkkXKVcuaFeyKmIF68EaibMgtTitwRLXBR54Ceu6UB74H4FWa1G1yU
+         wWIy+kvkrEUIrPSHlinQUvhSOWnBgnvBhwBPDRxMaGxNKb/sPqU/hv3LsYnlvwNhqM5d
+         J5EPtUmuzJGElIsVhRzm1rgHfcadtxY4eOTcSLnE74hvMYwu3rG9+xg5cKM5GEnDDwos
+         faK9v5Qi1mSUGYyz8MwooUZHuLXThZN23zZb+tX78x7lNXJqnewp5iwmHlTocMyDbPCa
+         +u9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWSYcI9SFBjsjQJd/F76kBSvCao3Rab7Ze5snKsYFcBNP1dra4LSRuDVJ3aa3lL8v2vRVESs4JOuavMLMDfJOal@vger.kernel.org, AJvYcCXAu8L0hFaFy6HkSgEea2Of2P2V5XCSTtA7ha+mAOzxbgS4/69pT78prIMgDN3EVjxNVMUDLmRJffhk2Lg=@vger.kernel.org, AJvYcCXFGlBNqBgulh51rhVEXpvjTEe3bN3y/6FeyT+kVrF84l1XqvKGIxIjZGJG4Ag8sdzHt2Se6ZrDJ73UY14U@vger.kernel.org, AJvYcCXwk4zrlVfhX+QFR9e1qoL1JRZUWJPn6ohd5lB4s8+BL9Ga6GXtMVY9ABMmIDs2kkhfeClyIV9BGJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQRj8XSHfZFNsb1TeSY1/Q5S6quL+2J9VmpNHVzUtvZbNPTPeo
+	0AgPhtYhlnpMprmzy7obftqLOXbZZp3Bt78iIeHFwpI45RcSeM7D
+X-Gm-Gg: ASbGnct1HIBuunopt/7OCJSsv76rf5FyVKcjZVIMBlfRxQnOG6uvIp9ukYyWAoBEsVN
+	x1OdwNiE82L5AuAim3Lb3JCiTO8tIEKZHP5pOIoWqECDfFouWFDklB733PDm/3HVJmnLiswHcSw
+	afOmS1Iia8TyjGysmaG7LeTU8xOtpheviBJ2pqXTVgfc+amCYps3JlPF4jdq/DB4g6b8P49zOKq
+	sT2QBPOZfx9omaEDIOmyyfEoM5bzH3dUi/dKofjDvUm187/p36F+FbGC4Q0ED+gOiRyP71MmBmg
+	Jr7HdLGOaHqgDpfHfvFuoP1MDWV6d03eeeihhtNo
+X-Google-Smtp-Source: AGHT+IGZk7PlsdCZr/j/ecR8nUYCM0KRmxVw7bgRrpwVPA2oV8otwvEl5YVA/3glGzlDDrcVC80bqA==
+X-Received: by 2002:a05:6a00:114a:b0:736:a540:c9ad with SMTP id d2e1a72fcca58-73fd9047c3fmr18100251b3a.20.1745850694197;
+        Mon, 28 Apr 2025 07:31:34 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a995sm8016677b3a.112.2025.04.28.07.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 07:30:29 -0700 (PDT)
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfauth.phl.internal (Postfix) with ESMTP id BC6AF1200043;
-	Mon, 28 Apr 2025 10:30:28 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Mon, 28 Apr 2025 10:30:28 -0400
-X-ME-Sender: <xms:BJEPaPp6xkdywihycKXQSi991J7IbaRZKijZP-4_XhsI7At97dSnQg>
-    <xme:BJEPaJoUbVQx6StiMZLvdn2TEu1dn1yO3YnuCthSCqkDb_e5PIC0FM5B0jCMAIlR0
-    I1TgjeLWha_BReaDg>
-X-ME-Received: <xmr:BJEPaMN5THSLIPs3Z69j9RPuGTolvqSq6WAU1-fcJAzMsz78YByaDz-d>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieduudelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepledpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrgh
-    drrghupdhrtghpthhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepfhhrvgguvghrihgtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvggvrhgrjh
-    druhhprgguhhihrgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehurhgviihkihes
-    ghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehjohgvlhesjhhovghlfhgvrhhnrghnuggvsh
-    drohhrghdprhgtphhtthhopegsohhquhhnsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:BJEPaC52nNj6evnGiAU3lW0SxexUgcbpV8J-6LJY13mc8YtaS8zJxA>
-    <xmx:BJEPaO5pd98c2ustORLaffssmdXp7dAWPYhfegi7OxzrwiQBWm8_2g>
-    <xmx:BJEPaKiKUvt4PfUwG6s-6kbmP4x4stGA4JMgyLgHUm8TVKvzXuZVGw>
-    <xmx:BJEPaA6LNSBS8oVfNXEvJFiVcznYeNU3He0QA7gBrIz-8EnT1OZB2w>
-    <xmx:BJEPaNKVUy887xBHegHyhbeSAeROrXzmM1tWbFNu5KWA6V2Ucu35XaZi>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Apr 2025 10:30:28 -0400 (EDT)
-Date: Mon, 28 Apr 2025 07:30:26 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: linux-next: duplicate patch in the paulmck tree
-Message-ID: <aA-RAjmhvIbI_z9b@Mac.home>
-References: <20250428175438.0209858e@canb.auug.org.au>
+        Mon, 28 Apr 2025 07:31:33 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 6E52850790E2; Mon, 28 Apr 2025 21:31:31 +0700 (WIB)
+Date: Mon, 28 Apr 2025 21:31:31 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com,
+	kevin.tian@intel.com, corbet@lwn.net, will@kernel.org
+Cc: robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
+	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
+	yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 15/22] Documentation: userspace-api: iommufd: Update
+ vCMDQ
+Message-ID: <aA-RQwyTS1m4CuPw@archie.me>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <820dfdee121292fe4cf891feb86f82ceea521e22.1745646960.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vD4TXIxpca4CWbLZ"
 Content-Disposition: inline
-In-Reply-To: <20250428175438.0209858e@canb.auug.org.au>
-
-[Cc Joel]
-
-On Mon, Apr 28, 2025 at 06:08:45PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> The following commit is also in the rcu tree as a different commit
-> (but the same patch):
-> 
->   5c9e0062989e ("tools/memory-model/Documentation: Fix SRCU section in explanation.txt")
-> 
-> This is commit
-> 
->   8e40035aab95 ("tools/memory-model/Documentation: Fix SRCU section in explanation.txt")
-> 
-> in the rcu tree.
-> 
-
-@Joel, should we drop this commit from rcu?
-
-Regards,
-Boqun
-
-> -- 
-> Cheers,
-> Stephen Rothwell
+In-Reply-To: <820dfdee121292fe4cf891feb86f82ceea521e22.1745646960.git.nicolinc@nvidia.com>
 
 
+--vD4TXIxpca4CWbLZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 25, 2025 at 10:58:10PM -0700, Nicolin Chen wrote:
+> +- IOMMUFD_OBJ_VCMDQ, representing a hardware queue as a subset of a vIOM=
+MU's
+> +  virtualization feature for a VM to directly execute guest-issued comma=
+nds to
+> +  invalidate HW cache entries holding the mappings or translations of a =
+guest-
+> +  owned stage-1 page table. Along with this queue object, iommufd provid=
+es the
+> +  user space an mmap interface for VMM to mmap a physical MMIO region fr=
+om the
+> +  host physical address space to a guest physical address space, to excl=
+usively
+> +  control the allocated vCMDQ HW. Thus, when allocating a vCMDQ, the VMM=
+ must
+> +  request a pair of VMA info (vm_pgoff/size) for a later mmap call. The =
+length
+> +  argument of an mmap call could be smaller than the given size for a pa=
+ritial
+> +  mmap, but the given vm_pgoff (as the addr argument of the mmap call) s=
+hould
+"... partial mmap, ..."
+> +  never be offsetted, which also implies that the mmap will always start=
+ from
+> +  the beginning of the physical MMIO region.
+> +
+=20
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--vD4TXIxpca4CWbLZ
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaA+RQwAKCRD2uYlJVVFO
+o1eFAQCh6j1PsCslXzfPWuS46AzQ1o7ZR1WP481iUjIyZLhY3QEAixFoHFuftiEx
+UNcaIuEJ2lZEhZxTyJA7ccrRXFyIfQo=
+=VsW/
+-----END PGP SIGNATURE-----
+
+--vD4TXIxpca4CWbLZ--
