@@ -1,164 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695AB19C54B
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DB025E803
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745831260; cv=none; b=sXibjRY48skgnYQzAmoig012rNv4hzAMp73VSkWJjB+DBrDjgiOBhG5gCqb0v8oMSq7AmwHx3Ax+XEk/x9jsU19xOynAK5tOEcxH0qjtkMCjGWFbXkBViwi8JVMCSQDpC3Yh/+r0akNUl/pfMdqMYpmt1A9iyz0yo8iSQ/Y++dk=
+	t=1745831276; cv=none; b=Hp75rsf8Spk9r4rzwE+UlAj+TDrhETzSEEyfHal3VCmZRW6paY3aZoy9hLthSmte1vROwc7m/Gqh/yFYnouFCc6lo5yJ39KvWGGCcMMirouSuaWfWGeeMvM8iGTlEYfws19yQj96tw8zA4pEJ7CaHsp4aJnJvBCGGYJQmIb0FRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745831260; c=relaxed/simple;
-	bh=UybRkzn8WVqdE1THG5SNswNLOWS8DckJhCs42e2ygxw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Mv4u//Rj3j+kJfGjcRjpCgaFBNyw9YZw+ufWV9To7dSvurZrL16c7zGUqbfP/hb8RkvOzHH973rfcxu30dyzkm0gpZEIxzRIPGkj+ZytYeJKfNRQz1RfJKWCvo/XbGHTJGoYmk9WvzVSKLtingzpfyKjrLiZbMhLrUDoHfQ7SAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OtuJiFnU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745831276; c=relaxed/simple;
+	bh=mmWGWyNu5GI9Xq1r/l6L2WkN5VluL5OW/zDyVIAd1us=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=Gj8HSwYYQvtxv6s45ra2+mYB65p33tOXPusaf/T5Dara+zZeP08ZwmkK6tfwjpo4V1FrY6s/G9IhfgWps6QPeYA8FKccwa/GNewBzlE/Utn7H0gke+dGYN2ijfWevNkEgzYWIj+fsCfvyhCgGrxwg78ly3QttpHEItMO9uOHUhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=D/R04iqN; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OtuJiFnU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745831257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=U83a+nTlEFAKC2Rdyrq3VHyIzU428c5fHiV27cVYo1k=;
-	b=OtuJiFnURzqC6qvya7jIZw2FU1FBsC9i8mhVMToUA8rU1SqhYaqLrXB3rs2+NmN5Q6y2zw
-	D1SjHPTgUe0pFOAXxGrfFY9yUaCJyM8ohVs5SL+rZ/FvBOcZh3Igh30to04cWyfpDSWxxB
-	/Wuf6b3WVEefjpvfZDcErV2oeVu2wrE=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-cSVR0qFzN0iYK4lki_pmoA-1; Mon, 28 Apr 2025 05:07:35 -0400
-X-MC-Unique: cSVR0qFzN0iYK4lki_pmoA-1
-X-Mimecast-MFC-AGG-ID: cSVR0qFzN0iYK4lki_pmoA_1745831254
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-acbbb0009aeso321533066b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:07:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745831254; x=1746436054;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U83a+nTlEFAKC2Rdyrq3VHyIzU428c5fHiV27cVYo1k=;
-        b=vyuAVFZixj0YRSN412Gy/aErBmPQCVyVef33WgivcGjgZmhfLGvvMEiZ4zS/7Hvqh9
-         HJRAhbifG2/ODmPNbkY0yd97E+2dxqL4aVk/ZobygGDwZ5pM69KWDYnNiSExDAy68B92
-         iHu0eDWJpEveiQbhQ34O9AqqfNU0rneQzrD23r7AZVcTCn57Ue82vwq2qJfw6SgXYa6C
-         1sSRl/JI0YcsBNKn6kdu8FRLHCiGUsoXf7Q10crgad44iBP7vgJ7j8qkrnGYGiBk2ZmH
-         tLawW5hyQ8KN5q4Y0ODXflW9+cA4hhoGVoCbyWLD39GzgjfaGtxKWl/vSPB8Zv4jxzNf
-         95HA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwIuNlxh0CxP5OT4fJ/2plTOaNqTAdYj00IPrYSyBOXSNpkl8qbH6a8YzRTnM6+1C3VeDnLePVBzb9XiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfYXWn7Xax79+G808tEkpOP4DN6548aePDY/fNBIY9cwa19Eyj
-	itKrDfjPBdOgQ1TmAgkXPT0o0jsg7F+vu72un0HuiKVKVQVKsgVzLM+glkk8kODtSQTz26XsiHO
-	bhrkg82DyDH36rW1quEXM6E+Oxww5ySTJ5tdkhji4Gj41Y9e2YGpFu4HxEGMJxx2zhreCNVE83Z
-	5laSPXzfS4UoYDjJ6Z5sgHPG/0bb6fxWTCa8o/1aox/xXA7eo=
-X-Gm-Gg: ASbGnctsuKhXLY3HzD2cTfHqhTqQaCauF2aEXNAR8o+aLMSijrVmYu45puiwLm83XG9
-	i0VJb7z5LI3LhoFXFp4c9g0OHbq2OMneMWidNKpQo+YeFzpKFYRb5EvLTlIvHCc4dIOUQQA4cU5
-	hsYuOy1hWcVs3DmfrdeSTuOp0=
-X-Received: by 2002:a17:907:1b22:b0:aca:a687:a409 with SMTP id a640c23a62f3a-ace71098d4bmr1075264166b.17.1745831253636;
-        Mon, 28 Apr 2025 02:07:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFgYwmPlIC7YgpE+PSFxKMe//ba9PVWCueXky1f4Hyp24q1RjJNcmUjYtJUZ28R0eTkQQ9mALmDyYJsqSo+HHM=
-X-Received: by 2002:a17:907:1b22:b0:aca:a687:a409 with SMTP id
- a640c23a62f3a-ace71098d4bmr1075261666b.17.1745831253261; Mon, 28 Apr 2025
- 02:07:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D/R04iqN"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250428090751epoutp026da7dc29947ee853da09063d50be6534~6cEqh4Bl-2573025730epoutp02H
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:07:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250428090751epoutp026da7dc29947ee853da09063d50be6534~6cEqh4Bl-2573025730epoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745831271;
+	bh=51/ZZ7aoRYnjl1i6DeK0bjOpfpPJs7RRD3ou2v+0554=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D/R04iqNIU6cKH0TGGBfw/sjzZv4eNuzf7T6oPYa8yP4g1UhwupUvoEMInbcpzt1R
+	 /45wjXi+I8/z+SzaRJLjKqWuzsqnVJ5AMAVR01UYCQnh9hRsRBgysuJ0ETAdzdyH/n
+	 O30QHyvMPEtseCAv8O7hD+b24K5rqGQRHPbkTjyY=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250428090751epcas5p3c75c964b99c0d9b3378afd3835ff7602~6cEqSWWHv0827908279epcas5p3-;
+	Mon, 28 Apr 2025 09:07:51 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZmHf92Z5Nz6B9m7; Mon, 28 Apr
+	2025 09:07:45 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250428063537epcas5p1589b2e85cd0afa32b813fd2c76a6abc5~6Z-vv5oHw2684226842epcas5p1u;
+	Mon, 28 Apr 2025 06:35:37 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250428063537epsmtrp1b7ae5b0a7b662eb637f003e668f33292~6Z-vvPhUK1752217522epsmtrp1T;
+	Mon, 28 Apr 2025 06:35:37 +0000 (GMT)
+X-AuditID: b6c32a2a-d63ff70000002265-41-680f21b946c1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	49.93.08805.9B12F086; Mon, 28 Apr 2025 15:35:37 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250428063536epsmtip2e94897597348f0785bac2cb2acc4289a~6Z-uolV-A2352323523epsmtip2o;
+	Mon, 28 Apr 2025 06:35:35 +0000 (GMT)
+Date: Mon, 28 Apr 2025 11:57:07 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: Nitesh Shetty <nj.shetty@samsung.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton
+	<akpm@linux-foundation.org>, axboe@kernel.dk, gost.dev@samsung.com,
+	nitheshshetty@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iov_iter: Use iov_offset for length calculation in
+ iov_iter_aligned_bvec
+Message-ID: <20250428062707.GA26271@green245>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 28 Apr 2025 11:07:21 +0200
-X-Gm-Features: ATxdqUGbtYEpyFOd5glkWz-aR-UH1QxYr3tYPCWdrrc_cIW_rAu4Jj2afo2Hfp8
-Message-ID: <CAP4=nvTab7BnT4uu0iCuFJpZ-_MdY-MYU+Q25QnpygEZKmsQ8A@mail.gmail.com>
-Subject: [BUG] perf segfaults when combining --overwrite and intel_pt event
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Wander Costa <wcosta@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20250426075310.6597-1-nj.shetty@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSvO5ORf4Mg6/3eS3mrF/DZrH6bj+b
+	xc0DO5ksLu+aw2ax40kjo8W23/OZLc7/Pc7qwO6xc9Zddo/LZ0s9Tsz4zeLRt2UVo8fnTXIe
+	m568ZQpgi+KySUnNySxLLdK3S+DKePtnGmvBfpaKKduusTQw3mXuYuTkkBAwkVjbf4K1i5GL
+	Q0hgN6PEtas3oRISEqdeLmOEsIUlVv57zg5iCwk8YZR49DsCxGYRUJVY8XAXC4jNJqAuceR5
+	K1i9iICmxIc/HSwgQ5lBhq54fIYNJCEskCSx9/QUsEG8AroSfW3T2SE29zJKrNt0jAUiIShx
+	cuYTMJtZQEdi59Y7QM0cQLa0xPJ/HBBheYnmrbPBDuUUsJKYeXAb2HxRAWWJA9uOM01gFJqF
+	ZNIsJJNmIUyahWTSAkaWVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwdGjpbWDcc+q
+	D3qHGJk4GA8xSnAwK4nwLrXmzhDiTUmsrEotyo8vKs1JLT7EKM3BoiTO++11b4qQQHpiSWp2
+	ampBahFMlomDU6qBKeL736N/Vy3n539t5R6uNuv9gznV35ZearScambCrq9laccyL2bXjRNv
+	t51ze3fRZsnC0Nfsfg/cIn5rbL5m5RW7eOWhmoOuoqzJ+18m6exh/SRv4ifjVc59Rlc0bpHC
+	W6lfE66nxC2QTG1pT9xZfn9Oz0M19VtT3317VfEkyX4H58zbUWZmnz3qZl0ovPbi3ellinz5
+	zPn9X3lCpxesUrr8/EPi00e9PCfd9i2L0/TeYNZ1qLvjrlPdiSibhwvyT+bnB4W9vfmC/6k8
+	lxf//dSgmZzZxpKMsf2qTEqndX1Y37KraJ0V+xE7MSdgxu/3mzROtty5PsMyzLAoarveo0Wl
+	j9hPtid5c5YmyfW8V2Ipzkg01GIuKk4EAF4gKoANAwAA
+X-CMS-MailID: 20250428063537epcas5p1589b2e85cd0afa32b813fd2c76a6abc5
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----phGwStdGrn.o.mGc.dCyK2i.8QRAbABCRe5GKllaKmyJLcXK=_2b59e_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250426080212epcas5p2d0c592a4bd539eed242d5ac31d23b323
+References: <CGME20250426080212epcas5p2d0c592a4bd539eed242d5ac31d23b323@epcas5p2.samsung.com>
+	<20250426075310.6597-1-nj.shetty@samsung.com>
 
-Dear maintainers,
+------phGwStdGrn.o.mGc.dCyK2i.8QRAbABCRe5GKllaKmyJLcXK=_2b59e_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 
-I would like to report a bug in perf I ran into when trying to combine
---overwrite and intel_pt on latest perf from 6.15-rc4:
+On Sat, Apr 26, 2025 at 01:23:10PM +0530, Nitesh Shetty wrote:
+> If iov_offset is non-zero, then we need to consider iov_offset in length
+> calculation, otherwise we might pass smaller IOs such as 512 bytes, in
+> below scenario[1].
+> This issue is reproducible using lib-uring test/fixed-seg.c application
+> with fixed buffer on a 512 LBA formatted device.
+> Fixes â3639f96f24a121ec9f037981b81daf5a8d60a
+> 
+This needs a proper fixes tag format
+Fixes: <12 characters of the SHA-1 ID> ("commit description")
+With that
+Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
 
-$ perf --version
-perf version 6.15.rc4.gb4432656b36e
-$ perf record --overwrite -a -e intel_pt/cyc,noretcomp/k
-perf: Segmentation fault
-Obtained 16 stack frames.
-perf() [0x59aab7]
-perf() [0x59ab97]
-perf() [0x41a9db]
-/lib64/libc.so.6(+0x1a050) [0x7f7fc2e27050]
-perf() [0x61bb16]
-perf() [0x55fee9]
-perf() [0x54a790]
-perf() [0x469c92]
-perf() [0x46a09f]
-perf() [0x46a317]
-perf() [0x54ac83]
-perf() [0x41c61c]
-perf() [0x41c92c]
-perf() [0x41cc65]
-perf() [0x41ff41]
-perf() [0x424015]
-Segmentation fault (core dumped)
+------phGwStdGrn.o.mGc.dCyK2i.8QRAbABCRe5GKllaKmyJLcXK=_2b59e_
+Content-Type: text/plain; charset="utf-8"
 
-GDB gives the following backtrace:
 
-(gdb) bt
-#0  0x000000000061bb16 in auxtrace_mmap__mmap (mm=0x7c9fa0,
-mp=0x7fffffff9008, userpg=0x7ffff7cff000, fd=7) at util/auxtrace.c:136
-#1  0x000000000055fee9 in mmap__mmap (map=0x7c9f40, mp=0x7fffffff8ff0,
-fd=7, cpu=...) at util/mmap.c:312
-#2  0x000000000054a790 in perf_evlist__mmap_cb_mmap (_map=0x7c9f40,
-_mp=0x7fffffff8ff0, output=7, cpu=...) at util/evlist.c:825
-#3  0x0000000000469c92 in mmap_per_evsel (evlist=0x78f190,
-ops=0x7fffffff8fd0, idx=0, mp=0x7fffffff8ff0, cpu_idx=0, thread=0,
-   _output=0x7fffffff8f10, _output_overwrite=0x7fffffff8f14,
-nr_mmaps=0x7fffffff8f0c) at evlist.c:527
-#4  0x000000000046a09f in mmap_per_cpu (evlist=0x78f190,
-ops=0x7fffffff8fd0, mp=0x7fffffff8ff0) at evlist.c:620
-#5  0x000000000046a317 in perf_evlist__mmap_ops (evlist=0x78f190,
-ops=0x7fffffff8fd0, mp=0x7fffffff8ff0) at evlist.c:679
-#6  0x000000000054ac83 in evlist__mmap_ex (evlist=0x78f190,
-pages=4294967295, auxtrace_pages=1024, auxtrace_overwrite=false,
-   nr_cblocks=0, affinity=0, flush=1, comp_level=0) at util/evlist.c:977
-#7  0x000000000041c61c in record__mmap_evlist (rec=0x764de0 <record>,
-evlist=0x78f190) at builtin-record.c:1310
-#8  0x000000000041c92c in record__mmap (rec=0x764de0 <record>) at
-builtin-record.c:1359
-#9  0x000000000041cc65 in record__open (rec=0x764de0 <record>) at
-builtin-record.c:1413
-#10 0x000000000041ff41 in __cmd_record (rec=0x764de0 <record>, argc=0,
-argv=0x7fffffffe0f0) at builtin-record.c:2492
-#11 0x0000000000424015 in cmd_record (argc=0, argv=0x7fffffffe0f0) at
-builtin-record.c:4285
-#12 0x0000000000461133 in run_builtin (p=0x769260 <commands+288>,
-argc=5, argv=0x7fffffffe0f0) at perf.c:351
-#13 0x00000000004613a2 in handle_internal_command (argc=5,
-argv=0x7fffffffe0f0) at perf.c:404
-#14 0x00000000004614f1 in run_argv (argcp=0x7fffffffdedc,
-argv=0x7fffffffded0) at perf.c:448
-#15 0x00000000004617d7 in main (argc=5, argv=0x7fffffffe0f0) at perf.c:556
-
-Further investigation shows the range associated with userpg, to which
-the statement at util/auxtrace.c:136 attempts to write to, is mapped
-read-only:
-
-(gdb) info proc mappings
-...
-0x00007ffff7cff000 0x00007ffff7d80000 0x81000            0x0
-     r--s  anon_inode:[perf_event]
-...
-
-Compare to a run without --overwrite, where the memory is writable and
-everything is good:
-
-(gdb) info proc mappings
-...
-0x00007ffff7cff000 0x00007ffff7d80000 0x81000            0x0
-     rw-s  anon_inode:[perf_event]
-...
-
-Let me know if you need any more information.
-
-Tomas
-
+------phGwStdGrn.o.mGc.dCyK2i.8QRAbABCRe5GKllaKmyJLcXK=_2b59e_--
