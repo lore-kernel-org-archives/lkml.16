@@ -1,178 +1,186 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B92566E2;
-	Mon, 28 Apr 2025 15:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0478728E0F
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855695; cv=none; b=U8VNKM87CB2KAf8xVUJg7O/ugXrVQ6iJEt6sLLDNYr5pjdVvU5e5A9UCC6m3gtHjbcnjTJluhRdQNt6219XBg5TKL1IK26tV2m8uy5WgoG9WPF0hFcfm2FmpWeULjk8UkyDQn3Fs6sKgRFkg0SW42HcWhV3rEFK/uzgBhWwg+Ag=
+	t=1745855854; cv=none; b=WKzOu+4IWKOYaLTBtMtgo/6suepFiVKhhmilPTOlpSZ1fytXSgYTPoKjP6P64DiFl0+FxSPkerdrXXguTy2fqLRAZrbvJPXyyh/7AHkWlzQqDrvvYUPJoqyYzNTXNuv/Piw6p782bOQ/LsTVwFgsYjOy6NPPGarh+2Cc/cF1/fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855695; c=relaxed/simple;
-	bh=T30cwNjEyi+9OgUhLR/przC9ZWD7wLfG/sp5mfOndCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LLtrXfunBCtJ0tXpE7gYruyC5goFPVh/zYkteKy8wq13Zq5I8K9wrt9WQ7NvsHTK0z++U2y+xEGJs6VEXJurFdyZnYwLHwVUJVG5Is9k78RyKTkw57hZYxmLF8kkokDctVyBLIAAdOnLzJNfLwjQ/6y03iVwhDPCd8y0xY/QKR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcpN7R2w; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745855854; c=relaxed/simple;
+	bh=/+ElyNpYM8zyHS9izkAr7mmwS9VGIpfHbMxX+MIunwc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzjEIdD+7Hg1qA8QYzd892VC4l/G/UovIQxwvRVj2pCpE0rUtcFZMPhDOncFJ342MAryoe9STs+jdrP67xB+AFMd5sq9gZME1F4GbO8yUCfG1ybp3gZEiiErG5JEUAdAKaCqcTSY57MKeF7hnVhdOjfZcvEkgczij+XwPqgRrNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=HY3YA+Uk; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcpN7R2w"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a07a7b4ac7so1271209f8f.2;
-        Mon, 28 Apr 2025 08:54:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="HY3YA+Uk"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so32928345e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745855691; x=1746460491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k0FRMB/2DQwc8kqqfNvJspFCxHUfwt6gte9tlexlAOo=;
-        b=TcpN7R2wsci5AJXMcKKRnPCt26f48QHK1I6XiiKnEp2pAtb1fLQZxURJgU0tBGdej9
-         AhDrgsbCMdt5TcF8UZbKA2u9Bw/5OryqKONN6MBH171CYkrF04rWP8yQ3atjKisvRXjO
-         Sfg6q0SNLhH82yuQBRuRg2+rJbIw27+nKJQgtkoWqKFM+w1Xo3CCnmsk17Q7OYjQNcvA
-         mEFKmF1vJLJCOEJiXI59LSJK394oI/WFdGoJ7HqqWdy0d0Ml+KO5eRlg0klMytywHgrs
-         k3abiqOYiZn3YWpOv+oZqXZq1CQA3tmmHq0Ni0nnEnn8M1i7mkbyf1uqBdlN7XahLr7Y
-         MceQ==
+        d=ionos.com; s=google; t=1745855850; x=1746460650; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h8k8GbusSWoHhblzsaJpqJaQkqdvemo/Ic1QZvAiFIU=;
+        b=HY3YA+UkHlLcjUBi0+rFi+XchRCSPBixP4Lb8AJ8BKR54liJiPnGGI9TyJnhe2G1s8
+         y0bDZsQUrCNH/NgkVaGWYLs7O1ztL8BPX69sruQpbCfEKo6EHWu7QPiqV8FOO6jlD3XO
+         Mmo9ySh+KeeN4KmUWEBpa7wauCkCf7OzufZJs0dOF158QhIlvN3NsmY9IQhMMXgm3Vfn
+         9qjzRMCHPQ3fHWCioU1sUguDgQwtwnfzy+Xb8wi3FTfnx+P+5qh5HBxCou43QmRT9T6h
+         O1wg3sQjxrQbar6hSODTz3q0ckHVNjIq146zMUZ1ecEN2uCJABL4oequfgiP0GyP+o9O
+         AFfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745855691; x=1746460491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k0FRMB/2DQwc8kqqfNvJspFCxHUfwt6gte9tlexlAOo=;
-        b=Dp73f1bd4sUV8bOzUI8N0s/NiHvXEEoTsAWpDE5IpBBKP2s79GeJFsBq4ybTQiEv9J
-         y78CptN6syu8ExTzRF9YY9vm5Zc3m/TFpgQvcm2WMZQxSs/aVs3gq3Plrg+4P4LAvUZH
-         IMbDMoEUdNlVS0tpqGRyNGD5uDlY7fx4Z+jYYoH5qRXZSFjjY0s2SZgK1c9SHhpfLBd4
-         ucGjAYciaxfCPSC0nbOjj/tFFsLqrkcF2WWW5ygHsEy9ZnaOcyBVJ28QwDt5YUh8J2E7
-         fnbmLfnoUKPKwWzllXLW8COy2mXb3TmkNuwJTe8x7bsmDsh+j9asj5YO7GQEmjoUkQ9m
-         Ob5A==
-X-Forwarded-Encrypted: i=1; AJvYcCU/Hnvzuse7aIobR3E4keizVneB76+sqqDx/Ll9r3RJryqcjfhO/ydWwyvntTTWs8j/iCiMUjZkTzn8@vger.kernel.org, AJvYcCUUP4oNVc5bmMZ14e5Dxb3prB9Tby+kiYCWQFCc5/UuaelFMC8gxzdjXVS8HzBQLWZut3QgsmMW+facOhNPMrdfGFE=@vger.kernel.org, AJvYcCVYOpymSse3wmCjCqSLfukY7tVVqwjDTwaIFwRoaWFDR7MHkZe/ONUN4UcCnZc5ssOpGJbNtKXJNVxu@vger.kernel.org, AJvYcCVsJkx7tiv63RalXGMSzv1ESYIt1aspL8nUX5gavgH+wPHpISqIrsD5TfHvJPCkygebRs0qiWtgN4UVHJ/j@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBEzLy6cXUKl2wi/4MWCwa+KbVp1TZmaZJHDUSHP6pmr0qFafE
-	q32ZDhdC/H6LMWf5w2x6gWe9uNbufHTW2NhxuhajYVdXoZJ59Dvj9RwSSG7luTDBjUyxKnbLb+C
-	t1127d7ofUme5b0Olu6Sa2chMBbg=
-X-Gm-Gg: ASbGncsL1O+bSF+0hYnDcdlYtivUS6QilQFZ0ao/5dHMmqYQTiiKlcTbDEB9sKiSqDi
-	OONEJYdauxnS22wjNEkbdULnUAS0CTK6L9zVA8pekS9AaPS66NWHwLS8gKFf6WZXSCi6n3s5Jsc
-	y1+ZvVpLPzrqTxHqKHEn+jQg==
-X-Google-Smtp-Source: AGHT+IFntGK5lSDb8irDCuaYzRBYnVhqMQyX6NyZEOb7L/OBjRhxSN+3ZnBViJ66Z16/9zrd4Y8cNzafDkkcON8ilz4=
-X-Received: by 2002:a05:6000:1889:b0:39c:1257:dbaa with SMTP id
- ffacd0b85a97d-3a0894a3da8mr283905f8f.58.1745855691012; Mon, 28 Apr 2025
- 08:54:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745855850; x=1746460650;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h8k8GbusSWoHhblzsaJpqJaQkqdvemo/Ic1QZvAiFIU=;
+        b=PzVi7S8zMkSGnFo98hb7pKJe6ntJ9ehC7w8+MAYlXPiP5LBF7NiAMlSZqrQ5eVwHd7
+         BalHe3k52MPOAEGIjbbZjBG2GdDeFV2UVyqc0yRBjFBYTd/L4R+SYc10ksV8G1e7/0zg
+         40SuEbSO1blnN2PU0tDPY7fKQIakTLirxq3hdFB/XFH8vqsnskLK20XHqw/LmqkTA7kW
+         CSyZCLW4mPKfbRxnyyZ6NQDPOZB6QDXSCZWCI5yP3IqEh3RcGqHG9CVs2xfApCJW1zTk
+         LqULvuRoFyCOdIR5bsZChAYr+bvHT27R5gVeKT0hjC/P9XBPv2fQ1L8Pc1GnX5UssjWK
+         o6WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa4OCax705OJ+Tv/Ci/x/ubHXTfnFI6aVanSh7GyQDfSAd9lsd6VaqVkZTj5WImAWmubNYmhrJh8lW37M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUgrgW7gPzIbwi0Q18/EqInRab77lSKpwNqUAmqjvN8uf+O2Ay
+	J43T9rR0n7+EedNWJAF2ekXZwxmpvo3ZC/rUDer/gWebySb8LUIDARZN0N323ghZ0uZqySSxIY5
+	O
+X-Gm-Gg: ASbGncvEfFeucyY+2gSmeg+hw7/Rmsp/ThlV6m/qCIiZfv0fnLpeBY/0Lsg/YXOt9/o
+	9eRT4/xNf0jTJhqkR6q3K6NR6+K430WcwLOGjOLjM+wkr3G65V0AAtb2pxuXP8h+/HGJL2UDXfT
+	YpFA+XZP9xd+VdgVO+altLfvyuJwf83iRFxxRGTaAgKriP7hJ89i3mK8SH3Rsb6QIuSAQmoZdkT
+	UkbVf8dSa4Hv4xRUvUtTnA9GYktIO7MrGZqPVq8O1x7VwmFt2QwB/a8l08jmY1+0COHX74g9Lff
+	JKCA+T79iM5oc4F4j4H65+B6AgC45VC854CzPo+B6S3v1qBm8u/q5yR/bUWOkuJZcmivVmJIb/s
+	D/GF60fVmp1/NwFxGHNvCOU6Skc53IbxG72wUfQrf
+X-Google-Smtp-Source: AGHT+IHgzKEUKO80zi/b004bjiVYBj1oQPb9A/FB2EBufBGzxcyqRgqJT39mMOKpdJ8YmxsiPshzyw==
+X-Received: by 2002:a05:600c:3d05:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-440a65c5643mr108737965e9.2.1745855850327;
+        Mon, 28 Apr 2025 08:57:30 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5a74314sm132398955e9.4.2025.04.28.08.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 08:57:30 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: brauner@kernel.org,
+	dhowells@redhat.com,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] folio_queue: remove unused field `marks3`
+Date: Mon, 28 Apr 2025 17:57:25 +0200
+Message-ID: <20250428155725.3231451-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXtfzp81V4uAk-oULoBz2BtipyPvc9V8oV=kDXmX90GxA@mail.gmail.com>
- <CA+V-a8sMOnKZjNGW2=Y+TcF9itvC4a1LeEQ+eAKvjhWvEL_K+Q@mail.gmail.com> <CAMuHMdXEwbn2i9PJ9qzcFkHxNfaQFQ53SU_rOPJZHZskQvT3xw@mail.gmail.com>
-In-Reply-To: <CAMuHMdXEwbn2i9PJ9qzcFkHxNfaQFQ53SU_rOPJZHZskQvT3xw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 28 Apr 2025 16:54:24 +0100
-X-Gm-Features: ATxdqUFxNCYBOsoh1ZJ6fagkv9r2rDgfFsZnYAqVunmDATR1S3ML5ON7itzkA1A
-Message-ID: <CA+V-a8sp7LsJru-CEgv_Y-o5_SmE1ZKnshvYe6x37=+=y1pzMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] clk: renesas: r9a09g057: Add clock and reset
- entries for GBETH0/1
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+The last user was removed by commit e2d46f2ec332 ("netfs: Change the
+read result collector to only use one work item").
 
-On Mon, Apr 28, 2025 at 2:36=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 28 Apr 2025 at 15:22, Lad, Prabhakar <prabhakar.csengg@gmail.com>=
- wrote:
-> > On Tue, Apr 15, 2025 at 3:55=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> w=
-rote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Add clock and reset entries for GBETH instances. Include core clock=
-s for
-> > > > PTP, sourced from PLLETH, and add PLLs, dividers, and static mux cl=
-ocks
-> > > > used as clock sources for the GBETH IP.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > > > ---
-> > > >  drivers/clk/renesas/r9a09g057-cpg.c | 72 +++++++++++++++++++++++++=
-++++
-> > > >  drivers/clk/renesas/rzv2h-cpg.h     | 11 +++++
-> > > >  2 files changed, 83 insertions(+)
-> > > >
-> > > > diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/rene=
-sas/r9a09g057-cpg.c
-> > > > index 3c40e36259fe..057bfa0e2a57 100644
-> > > > --- a/drivers/clk/renesas/r9a09g057-cpg.c
-> > > > +++ b/drivers/clk/renesas/r9a09g057-cpg.c
-> > >
-> > > > @@ -115,6 +138,17 @@ static const struct cpg_core_clk r9a09g057_cor=
-e_clks[] __initconst =3D {
-> > > >         DEF_DDIV(".pllvdo_cru2", CLK_PLLVDO_CRU2, CLK_PLLVDO, CDDIV=
-4_DIVCTL1, dtable_2_4),
-> > > >         DEF_DDIV(".pllvdo_cru3", CLK_PLLVDO_CRU3, CLK_PLLVDO, CDDIV=
-4_DIVCTL2, dtable_2_4),
-> > > >
-> > > > +       DEF_FIXED(".plleth_250_fix", CLK_PLLETH_DIV_250_FIX, CLK_PL=
-LETH, 1, 4),
-> > > > +       DEF_FIXED(".plleth_125_fix", CLK_PLLETH_DIV_125_FIX, CLK_PL=
-LETH_DIV_250_FIX, 1, 2),
-> > > > +       DEF_CSDIV(".plleth_gbe0", CLK_CSDIV_PLLETH_GBE0,
-> > > > +                 CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL0, dtable_2_=
-100),
-> > > > +       DEF_CSDIV(".plleth_gbe1", CLK_CSDIV_PLLETH_GBE1,
-> > > > +                 CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL1, dtable_2_=
-100),
-> > > > +       DEF_SMUX(".smux2_gbe0_txclk", CLK_SMUX2_GBE0_TXCLK, SSEL0_S=
-ELCTL2, smux2_gbe0_txclk),
-> > > > +       DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_S=
-ELCTL3, smux2_gbe0_rxclk),
-> > > > +       DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_S=
-ELCTL0, smux2_gbe1_txclk),
-> > > > +       DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_S=
-ELCTL1, smux2_gbe1_rxclk),
-> > > > +
-> > > >         DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV=
-3_DIVCTL1, dtable_2_64),
-> > > >
-> > > >         /* Core Clocks */
-> > >
-> > > > @@ -233,6 +271,38 @@ static const struct rzv2h_mod_clk r9a09g057_mo=
-d_clks[] __initconst =3D {
-> > > >                                                 BUS_MSTOP(7, BIT(10=
-))),
-> > > >         DEF_MOD("usb2_0_pclk_usbtst1",          CLK_PLLDTY_ACPU_DIV=
-4, 11, 7, 5, 23,
-> > > >                                                 BUS_MSTOP(7, BIT(11=
-))),
-> > > > +       DEF_MOD_EXTERNAL("gbeth_0_clk_tx_i",    CLK_SMUX2_GBE0_TXCL=
-K, 11, 8, 5, 24,
-> > > > +                                               BUS_MSTOP(8, BIT(5)=
-),
-> > > > +                                               0x300, 8, 1),
-> > >
-> > > CPG_SSEL0
-> > >
-> > > I'm wondering if you really have to store and duplicate this info her=
-e.
-> > > Can't you infer it from the parent's smux description?
-> > >
-> > To clarify, you mean to get the parent of the mod clock and then get
-> > the clk_mux to get the base?
->
-> Indeed.
->
-Thank you for the clarification.
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ Documentation/core-api/folio_queue.rst |  3 --
+ include/linux/folio_queue.h            | 42 --------------------------
+ 2 files changed, 45 deletions(-)
 
-Cheers,
-Prabhakar
+diff --git a/Documentation/core-api/folio_queue.rst b/Documentation/core-api/folio_queue.rst
+index 1fe7a9bc4b8d..83cfbc157e49 100644
+--- a/Documentation/core-api/folio_queue.rst
++++ b/Documentation/core-api/folio_queue.rst
+@@ -151,19 +151,16 @@ The marks can be set by::
+ 
+ 	void folioq_mark(struct folio_queue *folioq, unsigned int slot);
+ 	void folioq_mark2(struct folio_queue *folioq, unsigned int slot);
+-	void folioq_mark3(struct folio_queue *folioq, unsigned int slot);
+ 
+ Cleared by::
+ 
+ 	void folioq_unmark(struct folio_queue *folioq, unsigned int slot);
+ 	void folioq_unmark2(struct folio_queue *folioq, unsigned int slot);
+-	void folioq_unmark3(struct folio_queue *folioq, unsigned int slot);
+ 
+ And the marks can be queried by::
+ 
+ 	bool folioq_is_marked(const struct folio_queue *folioq, unsigned int slot);
+ 	bool folioq_is_marked2(const struct folio_queue *folioq, unsigned int slot);
+-	bool folioq_is_marked3(const struct folio_queue *folioq, unsigned int slot);
+ 
+ The marks can be used for any purpose and are not interpreted by this API.
+ 
+diff --git a/include/linux/folio_queue.h b/include/linux/folio_queue.h
+index 45ad2408a80c..adab609c972e 100644
+--- a/include/linux/folio_queue.h
++++ b/include/linux/folio_queue.h
+@@ -34,7 +34,6 @@ struct folio_queue {
+ 	struct folio_queue	*prev;		/* Previous queue segment of NULL */
+ 	unsigned long		marks;		/* 1-bit mark per folio */
+ 	unsigned long		marks2;		/* Second 1-bit mark per folio */
+-	unsigned long		marks3;		/* Third 1-bit mark per folio */
+ #if PAGEVEC_SIZE > BITS_PER_LONG
+ #error marks is not big enough
+ #endif
+@@ -58,7 +57,6 @@ static inline void folioq_init(struct folio_queue *folioq, unsigned int rreq_id)
+ 	folioq->prev = NULL;
+ 	folioq->marks = 0;
+ 	folioq->marks2 = 0;
+-	folioq->marks3 = 0;
+ 	folioq->rreq_id = rreq_id;
+ 	folioq->debug_id = 0;
+ }
+@@ -178,45 +176,6 @@ static inline void folioq_unmark2(struct folio_queue *folioq, unsigned int slot)
+ 	clear_bit(slot, &folioq->marks2);
+ }
+ 
+-/**
+- * folioq_is_marked3: Check third folio mark in a folio queue segment
+- * @folioq: The segment to query
+- * @slot: The slot number of the folio to query
+- *
+- * Determine if the third mark is set for the folio in the specified slot in a
+- * folio queue segment.
+- */
+-static inline bool folioq_is_marked3(const struct folio_queue *folioq, unsigned int slot)
+-{
+-	return test_bit(slot, &folioq->marks3);
+-}
+-
+-/**
+- * folioq_mark3: Set the third mark on a folio in a folio queue segment
+- * @folioq: The segment to modify
+- * @slot: The slot number of the folio to modify
+- *
+- * Set the third mark for the folio in the specified slot in a folio queue
+- * segment.
+- */
+-static inline void folioq_mark3(struct folio_queue *folioq, unsigned int slot)
+-{
+-	set_bit(slot, &folioq->marks3);
+-}
+-
+-/**
+- * folioq_unmark3: Clear the third mark on a folio in a folio queue segment
+- * @folioq: The segment to modify
+- * @slot: The slot number of the folio to modify
+- *
+- * Clear the third mark for the folio in the specified slot in a folio queue
+- * segment.
+- */
+-static inline void folioq_unmark3(struct folio_queue *folioq, unsigned int slot)
+-{
+-	clear_bit(slot, &folioq->marks3);
+-}
+-
+ /**
+  * folioq_append: Add a folio to a folio queue segment
+  * @folioq: The segment to add to
+@@ -318,7 +277,6 @@ static inline void folioq_clear(struct folio_queue *folioq, unsigned int slot)
+ 	folioq->vec.folios[slot] = NULL;
+ 	folioq_unmark(folioq, slot);
+ 	folioq_unmark2(folioq, slot);
+-	folioq_unmark3(folioq, slot);
+ }
+ 
+ #endif /* _LINUX_FOLIO_QUEUE_H */
+-- 
+2.47.2
+
