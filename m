@@ -1,46 +1,77 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B00267B6F;
-	Mon, 28 Apr 2025 14:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9860F2AD04;
+	Mon, 28 Apr 2025 14:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745851001; cv=none; b=FbMrxAnrko59yshJz1CCNtplN+fYwkMjD5GuikBiRXhLwf2t1GwE5k94H/CWKBHnCskHC8gBJifn4WGUm4MvYBtMprnfO4CRZJd3EGksBl2ztHNZTIlMMdcQnLsGS+0pzQidQwU133SiNcNBSK5H9pkGMNGMVs4S51jabMAN77c=
+	t=1745851075; cv=none; b=aGjLxhWvotHRqTzV3w0iacfmS8rBhkNUahOAsF3SnqKmS49QBJ9Tv84uOHi+FZCwxnTr9WiZUKl+R5OClr1z8ExduDBSmgkQ7IIfawCYWVtfwBLJWy/dx/x7fwaepdUNvfVfwB0r+jnlQDYL8AKuqKhO51IICj5aTC+XpQU98II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745851001; c=relaxed/simple;
-	bh=eRJ32s+d626xp2LcU1QZZ530a+v5i3bNHCiXe1GEmKs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DE4L0KOlvBtDFFrvxjlFSKM8qlJLVvl77TKXRBARDK+UTs06xJGyjB7GvztrpXjN7hN0DGtDRVzHEkLRBg0pbLnmpdfaM6yOfqMT6Ar3zpNifSK0XW34n62HgiXgXeDyh2CgCjHC6RgipMZS7Su8uq5x13IE6OyYYdbTfDYgdB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SACpON002698;
-	Mon, 28 Apr 2025 07:36:30 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 468ts3rsdk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 28 Apr 2025 07:36:30 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Mon, 28 Apr 2025 07:36:29 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 28 Apr 2025 07:36:27 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <hch@infradead.org>
-CC: <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
-        <ming.lei@redhat.com>,
-        <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: [PATCH V5] loop: Add sanity check for read/write_iter
-Date: Mon, 28 Apr 2025 22:36:26 +0800
-Message-ID: <20250428143626.3318717-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <aA-QB7Iu6u9PdgHg@infradead.org>
-References: <aA-QB7Iu6u9PdgHg@infradead.org>
+	s=arc-20240116; t=1745851075; c=relaxed/simple;
+	bh=qhiJHmvq/h1O3rSh0hFmw9xUAqGBAw76cWWrdYXMcVI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iWCZhk573spI88rhFHcR2UbVWJgzUFX7NJhmTHm73hNfZcy+QsmUZ00AARhJgSaHfNSxBSWDcz05d7SKrtSBEF9J8nA2cp6hhirZGVlRWn/8TNvjJmcdVMrs6wcMFQ0XAYtqj4aBhXXGpcxwcdBKz9/gv9Rpia5xjr1YpgXviAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=afurVaKN; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afurVaKN"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c14016868so4789457f8f.1;
+        Mon, 28 Apr 2025 07:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745851072; x=1746455872; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yPsbDhWZfsOKqBhPh+jFl4b8m8zfI36AQ589ehHefDk=;
+        b=afurVaKNtq9k70pJaCUcwol1DDezgLB+nTzTkDfzod7YjqnDzSlfIIOFAbnygczRKT
+         jR+xoQSYRN6j+pjMwL4x4srgHp9lxUn0n2jdtsxaaVR8FFvRF/dTVXXgSpkp+BA3yxBa
+         PRP0bwxBB8xFpJ075J0Z02QnhIfLeuOe9vMJX9xmpXoWXxsOsGzeSyxIt1UJ7Z1ENqBG
+         pgo9FwdkICl0evLWODxuOODboo8lbllgz9qYdJZDxZkDVdyLIP4vcZh8RQi3dVX5PXau
+         KDlIw1pDWOZa4/7jsq0ckNY0nalbMEZpZEe85qgr2BDIVaqV3W0zdBYNF8XHZiJIIJyE
+         szZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745851072; x=1746455872;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yPsbDhWZfsOKqBhPh+jFl4b8m8zfI36AQ589ehHefDk=;
+        b=MCkR1uSzjjFRqOOYGYASmC9MySc+1oNTOo9S3fE/wvUYXIUDoECQu4sELEmgYqvh2a
+         s5xy80ThhP3Hyra1V/H6c5RDq0UthXHAqZoUM+GWsXX+jWJ1uPtS6M1+nHtYGryix05E
+         BczoT8BhEIRfVyCSBo6KPQWkiBJFTSuQcQXIkXNhaaodDmG+xT4XESMJwNDArpr+21T1
+         yfTxi2mhlhI9DKjSIGVa2j4x10QKeQlPCVrm9ynTkYf5DGVHerDprA5MRTUPzQaXyCBk
+         dysE5KY+S65Kfm4TovO1W6adZRlV1q3ZWbNzJdrKtgyaGaJHnVk7I3ZKxxHTtUpmbki8
+         ie9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVFb/CSv/mQQ9pRDj8/To9pCFHBjorKtQ9kQWVFo5IWNwyPYJWLrO0gynv6v3xf1BFmX/LTsQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl8ogi89qwy1aj6eQ/BzXcYc+6wDB2bBJpDVVkfmX9b2xYMHWc
+	4ZhzlgbxonafqlFBqRQGM5ARUP6DQLYfWdL3b16YrIiqs9oFqFHQ
+X-Gm-Gg: ASbGncsrn7s4yyWiwTD3SQuGebbvQ5BoY1nP7CQqti3akvuNsoqWr3QodzbINE9IFJy
+	NmL2oIrSb/6XfriSv44twB+ReaFC4ymJkDufu62WIrzoEwNr10HB6iDrypFY++Fko4jFUGCDP2K
+	YzmFt1BvpTynKbDp0M0fWw2q/ERGh52odZTteXaT/CZjmSgd2NB4kr8rF+dHFcD4D0SXnlp5JWu
+	mjP2/44Jm0xBDbkeVNVdJ1OqPvPeLIC+XnFZoX60ZGfKegp88qS/lnQnQ9C4tqSBf4mrOjYL1ut
+	IiZVvKNkT0U8RiYmECPm2acCU9aAEmPGvNWk2dfpSdjNnUQ7B9xjusOl5U1DcRyc6gi4HIkpPD5
+	GAR43SIsaWIc3
+X-Google-Smtp-Source: AGHT+IFfntNktdRd8CwwMBeEQhy7wRP4s5cqglUULBxqzShP6dIfvoAMRL0fKgGew7yHEFPB4KebuA==
+X-Received: by 2002:a5d:50c8:0:b0:39e:f89b:85e2 with SMTP id ffacd0b85a97d-3a0891abd99mr44703f8f.26.1745851071598;
+        Mon, 28 Apr 2025 07:37:51 -0700 (PDT)
+Received: from fedora.advaoptical.com ([82.166.23.19])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cbdb78sm11128465f8f.41.2025.04.28.07.37.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 07:37:51 -0700 (PDT)
+From: Sagi Maimon <maimon.sagi@gmail.com>
+To: jonathan.lemon@gmail.com,
+	vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Sagi Maimon <sagi.maimon@adtran.com>
+Subject: [PATCH v1] ptp: ocp: Fix NULL dereference in Adva board SMA sysfs operations
+Date: Mon, 28 Apr 2025 17:37:48 +0300
+Message-ID: <20250428143748.23729-1-maimon.sagi@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,95 +79,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEyMCBTYWx0ZWRfX9dfyde8x5nki CY3ZLvWuxLdj42OarYcNSYKdCy+NS187KP2vG9hOaoxfMCoY5z7GTUKg8Wc8nxmdemvxSBKRM3B sIvGbEaO0pISMGe1qflhX6qXVqbvxFj/4atiMR5lYDabhydQ3LNjrFjHN6/AZSCFcCZtN7cbxW/
- OhMlddX7ihQ3cyojEyV+SaexS1oYz2RyI7Yv3EKNJR6x946u1naeMivw9v8dNmKmB0aoo7SyzGV 3UrsGWRNfDm6KQme3d/rHFFFPSzeRZ6WIM3wARvUgXjuJwINJ0L2RZa6w8w40TlCfntEgbYCWmf DfAxBhOtgWF0K0Q7PvryxrckwrG+qqG5tDArdPql22/LJMxZJGSXnY3b2/hsHq6fFc7x3jW2Cmp
- BrMEE9qqQpFhpa6eFF0m1/Mn4bi0ZJ5Qw3Wy/GF1s8jWbHzE3gkFalzbjDGOnvOR3W276HWD
-X-Proofpoint-GUID: 9VEYUVOuDzyBhUEUgr43TLOVLILbv1xt
-X-Proofpoint-ORIG-GUID: 9VEYUVOuDzyBhUEUgr43TLOVLILbv1xt
-X-Authority-Analysis: v=2.4 cv=YJifyQGx c=1 sm=1 tr=0 ts=680f926e cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=rNDPuYlyMNBSQ_icSEMA:9 a=DcSpbTIhAlouE1Uv7lRv:22
- a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 phishscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=988 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.21.0-2504070000 definitions=main-2504280120
 
-Some file systems do not support read_iter/write_iter, such as selinuxfs
-in this issue.
-So before calling them, first confirm that the interface is supported and
-then call it.
+From: Sagi Maimon <sagi.maimon@adtran.com>
 
-It is releavant in that vfs_iter_read/write have the check, and removal
-of their used caused szybot to be able to hit this issue.
+On Adva boards, SMA sysfs store/get operations can call
+__handle_signal_outputs() or __handle_signal_inputs() while the `irig`
+and `dcf` pointers are uninitialized, leading to a NULL pointer
+dereference in __handle_signal() and causing a kernel crash. Add
+Adva-specific callbacks ptp_ocp_sma_adva_set_outputs() and
+ptp_ocp_sma_adva_set_inputs() to the ptp_ocp driver, and include NULL
+checks for `irig` and `dcf` to prevent crashes.
 
-Fixes: f2fed441c69b ("loop: stop using vfs_iter__{read,write} for buffered I/O")
-Reported-by: syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=6af973a3b8dfd2faefdc
-Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: ef61f5528fca ("ptp: ocp: add Adva timecard support")
+Signed-off-by: Sagi Maimon <sagi.maimon@adtran.com>
 ---
-V1 -> V2: move check to loop_configure and loop_change_fd
-V2 -> V3: using helper for this check
-V3 -> V4: remove input parameters change and mode
-V4 -> V5: remove braces around !file->f_op->write_iter
+ drivers/ptp/ptp_ocp.c | 62 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 60 insertions(+), 2 deletions(-)
 
- drivers/block/loop.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 46cba261075f..655d33e63cb9 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -505,6 +505,17 @@ static void loop_assign_backing_file(struct loop_device *lo, struct file *file)
- 	lo->lo_min_dio_size = loop_query_min_dio_size(lo);
- }
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index faf6e027f89a..3eaa2005b3b2 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -2578,12 +2578,70 @@ static const struct ocp_sma_op ocp_fb_sma_op = {
+ 	.set_output	= ptp_ocp_sma_fb_set_output,
+ };
  
-+static int loop_check_backing_file(struct file *file)
++static int
++ptp_ocp_sma_adva_set_output(struct ptp_ocp *bp, int sma_nr, u32 val)
 +{
-+	if (!file->f_op->read_iter)
-+		return -EINVAL;
++	u32 reg, mask, shift;
++	unsigned long flags;
++	u32 __iomem *gpio;
 +
-+	if ((file->f_mode & FMODE_WRITE) && !file->f_op->write_iter)
-+		return -EINVAL;
++	gpio = sma_nr > 2 ? &bp->sma_map1->gpio2 : &bp->sma_map2->gpio2;
++	shift = sma_nr & 1 ? 0 : 16;
++
++	mask = 0xffff << (16 - shift);
++
++	spin_lock_irqsave(&bp->lock, flags);
++
++	reg = ioread32(gpio);
++	reg = (reg & mask) | (val << shift);
++
++	if (bp->irig_out)
++		ptp_ocp_irig_out(bp, reg & 0x00100010);
++	if (bp->dcf_out)
++		ptp_ocp_dcf_out(bp, reg & 0x00200020);
++
++	iowrite32(reg, gpio);
++
++	spin_unlock_irqrestore(&bp->lock, flags);
 +
 +	return 0;
 +}
 +
- /*
-  * loop_change_fd switched the backing store of a loopback device to
-  * a new file. This is useful for operating system installers to free up
-@@ -526,6 +537,10 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 	if (!file)
- 		return -EBADF;
- 
-+	error = loop_check_backing_file(file);
-+	if (error)
-+		return error;
++static int
++ptp_ocp_sma_adva_set_inputs(struct ptp_ocp *bp, int sma_nr, u32 val)
++{
++	u32 reg, mask, shift;
++	unsigned long flags;
++	u32 __iomem *gpio;
 +
- 	/* suppress uevents while reconfiguring the device */
- 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 1);
- 
-@@ -963,6 +978,14 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
- 
- 	if (!file)
- 		return -EBADF;
++	gpio = sma_nr > 2 ? &bp->sma_map2->gpio1 : &bp->sma_map1->gpio1;
++	shift = sma_nr & 1 ? 0 : 16;
 +
-+	if ((mode & BLK_OPEN_WRITE) && !file->f_op->write_iter)
-+		return -EINVAL;
++	mask = 0xffff << (16 - shift);
 +
-+	error = loop_check_backing_file(file);
-+	if (error)
-+		return error;
++	spin_lock_irqsave(&bp->lock, flags);
 +
- 	is_loop = is_loop_device(file);
++	reg = ioread32(gpio);
++	reg = (reg & mask) | (val << shift);
++
++	if (bp->irig_in)
++		ptp_ocp_irig_in(bp, reg & 0x00100010);
++	if (bp->dcf_in)
++		ptp_ocp_dcf_in(bp, reg & 0x00200020);
++
++	iowrite32(reg, gpio);
++
++	spin_unlock_irqrestore(&bp->lock, flags);
++
++	return 0;
++}
++
+ static const struct ocp_sma_op ocp_adva_sma_op = {
+ 	.tbl		= { ptp_ocp_adva_sma_in, ptp_ocp_adva_sma_out },
+ 	.init		= ptp_ocp_sma_fb_init,
+ 	.get		= ptp_ocp_sma_fb_get,
+-	.set_inputs	= ptp_ocp_sma_fb_set_inputs,
+-	.set_output	= ptp_ocp_sma_fb_set_output,
++	.set_inputs	= ptp_ocp_sma_adva_set_inputs,
++	.set_output	= ptp_ocp_sma_adva_set_output,
+ };
  
- 	/* This is safe, since we have a reference from open(). */
+ static int
 -- 
-2.43.0
+2.47.0
 
