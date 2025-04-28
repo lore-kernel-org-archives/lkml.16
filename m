@@ -1,84 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E347920E6EC;
-	Mon, 28 Apr 2025 22:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F34210F4B;
+	Mon, 28 Apr 2025 22:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745878800; cv=none; b=QEPBA61aINYlnZpIpdh6khThC490mFSfjhy3CPN3+EoIVjBFCSTc/ZFDixOmBqdzybhkUNksHYTpJnMPJdCXMCPWpFRWh9dUTIbOOEOPfD+I2p7QSdkT533sFtbae5ZG8RygvGuSzMAVThn5ZD7xL0WZmKHC4nI26f1I9zLgsaA=
+	t=1745878862; cv=none; b=VFRJJd6FCA56o+3jEMh3zZpBfp5vA5mn5/i88LcNVi19ndXn7TeWpJu24WftfDmbxO+x6kvyp41dOeOuIGPRIUFNt5PR+lROUOBByeUFA0NacF+8BN2cy6DALi6GZW4uvTnGQW8pYdEv4Qu5Hbw7xn264Z9j0bHtsSFZQ5A4TC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745878800; c=relaxed/simple;
-	bh=6pcse9wbskV004iMqoCcdC1PU1qixiW4k4E9ldYBJxM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=V5dlX8+aca9B/fuubvhtvx3BrtVgpqJLwGXn/nAWr9GH2x0w7OEB1+bl3+ZbwAUAtWoDVTBv7gIzy+G09YxRR8/nCazXMk7tMzuEHTeIJKS1nlKzHBWbNilvP+IYwOJRQV1KgBTf4+Vv1bMEMtfxxAv9UK+L6fPgBXJEr3oFGBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr4FWUkF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745878862; c=relaxed/simple;
+	bh=qnSAkG9hqAC+/p1UOTzSEP0v82VdoVH2Vq1AfQ7JzWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bCBlvGL///elPb9u0ziHQEADHiKEoLyV4cFqOH37So5avWBiVYJyk/gmNn2IuU9B+yDRWNv3zh0+NZ9f+TQPPakh8GkSPODcf8wh0zgJNMHSUdsM7rkUMMBHQwwgHaFkE1OpgUAjwTtM4mjAWD3097n8PuSadSBUx2RbqXBb82c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=aONZ45E1; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr4FWUkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51911C4CEE4;
-	Mon, 28 Apr 2025 22:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745878799;
-	bh=6pcse9wbskV004iMqoCcdC1PU1qixiW4k4E9ldYBJxM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rr4FWUkFYW3WnHWdUzvr68F09StbPoytD50/gmmVB6SOfCQSyK5yVEpOXQPM5e/R7
-	 YQ1LU/PNdizypiKpoCNsXQuAqqoAP/QjNrvJs1SGnsR1Zb+8PymAINM9vb2VBfp7Bs
-	 QG5OEuXFRKDhk+wtXspVzXe5DaEUc0ePCPo2wSC1+PhQa6+MwS3HqQGn3g+l3pkwQD
-	 tIWnWmu6pC3oe1YgYnIiSUbyVc/HTq8M5fbxeqH2Ra00guMsMyhOwssUwOCq7tgzig
-	 1meqGeeim+2s4ydqjIFvaup3gfyVPwc5Q3dzC6BCPudRYV2lAHlW2NslvbAOOICrJp
-	 KcXtvuPamciYQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CB23822D43;
-	Mon, 28 Apr 2025 22:20:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aONZ45E1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745878848;
+	bh=qnSAkG9hqAC+/p1UOTzSEP0v82VdoVH2Vq1AfQ7JzWE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aONZ45E1AZMWPvyyFaRrj54CoaRQZhV6hER3kJATwNc6F77JSnp9tNNKlGxNprMCJ
+	 bhRJQ0//uLoxDGfCsRoEnOezdLflARSe9m1tZeyZnqVREPTYz95SNmaKra2FvrJbj2
+	 pkcuRbkLBISKBvB4Ue7WYdk4SCaXWVBfvfO9dQuVcsUiGSHX3TPoufKKvAYKaZ/pAu
+	 qszy4wr+yw/fK5u5DjWlI+Dm8DJGy+WdBZcddb+iKt3gsJhPLSXTxn0xLis/eTa9rh
+	 GZeDNFkSl6H8UOiYHN2GcEhMAEiRUjrCAi+njmREemjLNu0VYtxBKEPdlmRIjotvVe
+	 VBnNe5I+miocA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmdFD2b9Mz4wj2;
+	Tue, 29 Apr 2025 08:20:48 +1000 (AEST)
+Date: Tue, 29 Apr 2025 08:20:47 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: error trying to fetch the clockevents tree
+Message-ID: <20250429082047.4af75695@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] mdio: fix CONFIG_MDIO_DEVRES selects
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174587883799.1063939.6255098697937333955.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Apr 2025 22:20:37 +0000
-References: <20250425112819.1645342-1-arnd@kernel.org>
-In-Reply-To: <20250425112819.1645342-1-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, hkallweit1@gmail.com,
- jacob.e.keller@intel.com, chris.packham@alliedtelesis.co.nz, arnd@arndb.de,
- claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, wei.fang@nxp.com,
- xiaoning.wang@nxp.com, linux@armlinux.org.uk, Frank.Li@nxp.com,
- imx@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/mNn1+HX42sPOH5zMzRkw94v";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello:
+--Sig_/mNn1+HX42sPOH5zMzRkw94v
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Hi all,
 
-On Fri, 25 Apr 2025 13:27:56 +0200 you wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The newly added rtl9300 driver needs MDIO_DEVRES:
-> 
-> x86_64-linux-ld: drivers/net/mdio/mdio-realtek-rtl9300.o: in function `rtl9300_mdiobus_probe':
-> mdio-realtek-rtl9300.c:(.text+0x941): undefined reference to `devm_mdiobus_alloc_size'
-> x86_64-linux-ld: mdio-realtek-rtl9300.c:(.text+0x9e2): undefined reference to `__devm_mdiobus_register'
-> Since this is a hidden symbol, it needs to be selected by each user,
-> rather than the usual 'depends on'. I see that there are a few other
-> drivers that accidentally use 'depends on', so fix these as well for
-> consistency and to avoid dependency loops.
-> 
-> [...]
+Fetching the clockevents tree produces this error:
 
-Here is the summary with links:
-  - mdio: fix CONFIG_MDIO_DEVRES selects
-    https://git.kernel.org/netdev/net-next/c/ccc25158c22b
+fatal: unable to access 'https://git.linaro.org/people/daniel.lezcano/linux=
+.git/': The requested URL returned error: 503
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/mNn1+HX42sPOH5zMzRkw94v
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgP/z8ACgkQAVBC80lX
+0GwEyAgAhQjUa4RN7EfPRQjh987F60/zbLrvpsn/Df5W5TbaHdAzblMVdDDKtbA+
+QbCsZJDOox8CggvdkqGnTl0djCGZij+WCwBsZgqg/mjrsXypwVOvBJcrlXyY7O2S
+FNglja2giYNfhagwf+etB+JPE+xBvV+KgXGMlhnBSxeF9s8O31JMmAHZ1R0GRp8W
+Ka2kPTBl1/SiHFElSLHFRwryjZpcjTLOkgs/tLlPZkstYQl1Us7BdPyVxh+gOyXI
+AO67+EJXABf5DB13k0QnESdgc4pIUcQIWQwEZZNynWWsp3PKrcyviCwBVEaxNQAy
+nUpttYm/AZ/uZzCRDwyZ3trtZUtAoA==
+=Hjs8
+-----END PGP SIGNATURE-----
+
+--Sig_/mNn1+HX42sPOH5zMzRkw94v--
