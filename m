@@ -1,351 +1,216 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2051.outbound.protection.outlook.com [40.107.241.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D9D269D1B;
-	Mon, 28 Apr 2025 12:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842464; cv=fail; b=ptwH3Dacm/YRVah9Uu4lPRjJsHBYb0sT30vGUW4ZR/1FwNSJK3wQzP4sYbBoOwg7hi5BVptv/uBbZHjPXRlJCc9SNfrUxT8bl8V/u51s4CV1IccbwQvIQVrQjmed5CoKdgoA2UvxDzXgpXO6E1hjqp2EW/sZyk+qqWzUhPLXbp8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842464; c=relaxed/simple;
-	bh=vWIyUU7p4ttEkVsaBk+yOfTwpj4hus5fzbGbrZaI0co=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=OjzUoUc8xjbOeTLtA4pOIq+7YeGX9lY77byWUGAmVaqYjFGrSVH/zKTzYNcJ3dfwsTt82mxVnpa++BgJgpo55WcM28B37selOUquiMXDpmiM1pUqPMq16BlZumThNqiQJuRJd24Hrn2MHG7yG76llEXvhmgIDaIJA1dN1LXrQfg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Z4XbgkSO; arc=fail smtp.client-ip=40.107.241.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0544268FF0
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745842493; cv=none; b=Usie19O7V9Lyrep8zAiff5JWe5vuj/Awyy9ipmd48naqWgHOCeMuVF6qRJfuMHIjnjddEyASMV6+NU58yBhRuOm+sDerdwApIWJO1caXP+WeO4QwVKaDaQ+H7f8edKKNVXV8exln/ckPMPwFy/2SS/M2Qp9LWK01D2M/dxKGS/k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745842493; c=relaxed/simple;
+	bh=aMHNCdM1B1YlVmqJsC2X9YtwGoK0CghHtIKw9Du8ts8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjZSf/48cAtgXpajo1faLOm862soErO+wS/Xoayxh2tDjexqx0m54wpv/MaMGNRG21sV6bfFLGtzyda8oFeS/opkRjLUYQDM/YCuY/AsQRO1ltjsJkRxKxo1dnn9rHi4MUyreTxbW4srGhtvQuYQryF0Cod4WdPubg8QIPOS3xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bxAQkRVr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=twh4wyhw; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bxAQkRVr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=twh4wyhw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Z4XbgkSO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wawcHT0b+qndVn1+FZRHXDyfzvmKKAu3sEnhvLdTxKCXdOaPumixj/any/Sc11FfaG9OK1cpfHph+mpDfl7Q+PIxoNBycG6Px1GiX9J+HEdgcbkvAN/58E9u6rgP9qQz949x57GLYHhQVtrW0zeYWecwnaKgC9UVp5QabDIPpbsvIPGNSTiioV06sI7C2yoEdFeehHdedrSf1rgR++KpGrf8VUBmZ8n5F39UddkaUOYTOfa55bGNwHnCekt1nxSatg+NYQXOpW9wBJJoJpIaoPSku2HffmbW+wodhhxDwfmQJKGg0dLuUiZd7Xxp4AXg0UoWAIj9rtnHqV8QDF9tUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UbVYJckMehHqW7pMrSFoU9XLJnov49IfXL+OR0P0xXc=;
- b=XyDagOay5ZoaZ3xPGumnNiWbbIuYsYrm4Cs6n9JD6tNZTKyGaT0AL0A5scg3lDjDvvJWNCOydgoDxxMjWCtuZCADzmK/wz44MBfQEsQDUiqjT0E76wd/I8tP52TkyaUjHGEbU2AMyUs3EYgal/toKxxIANk3SGqoNfNKxlZQvKcRYSGIyZmuzDDPG+pKyz99SDzZ/qOW0tJ4W7PjRNVtqozIjLicazIfPPv/v/hQz69fzEUkaCCYvYJqJJMbk/mMWNbEwMKYm/qqyQu+jLVeSr0LtkMmOgX/z/ZGQL0RA7Dc+i47NrHSZlqnYpDhZ/wishW8WSxKbyaFNxer+HS5NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UbVYJckMehHqW7pMrSFoU9XLJnov49IfXL+OR0P0xXc=;
- b=Z4XbgkSOcBJMXCjZpTqf0lFsWEJTm9vtq1ScZbyUQXX2C4TkYZ0tiPnDm7zis19nJTHuAmASXjXPJBD58m9/vM0+t/Hkp+xho4hSrkFxyaNssLYZs4U4Gdnggq/TmS+tty1tewGUMPgAbraz2hK61jM1lApF3/rV1DkN3BajumBPWh697RsTQ9OAFkHiSWm6mEqoq/kln+z10BqY1uKF9hKTIp29LgY+UjH4TVvmV+C2NHY6MwbTls/f/vAFMfaAgVuOBQaWpdeYz/0cIEAvR/VtQah1CRh6Spo4sAAy/YOiJXzNvb38jRH/mSeyHxpKFuGg/G9j3YWLU561NkeCxw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DB9PR04MB8236.eurprd04.prod.outlook.com (2603:10a6:10:245::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
- 2025 12:14:18 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 12:14:18 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Mon, 28 Apr 2025 20:12:47 +0800
-Subject: [PATCH v2 2/2] ASoC: codec: twl4030: Convert to GPIO descriptors
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-twl4030-v2-2-868d0d572f12@nxp.com>
-References: <20250428-twl4030-v2-0-868d0d572f12@nxp.com>
-In-Reply-To: <20250428-twl4030-v2-0-868d0d572f12@nxp.com>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
- Tony Lindgren <tony@atomide.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745842378; l=6355;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=zRutLP2gVhiHvVKI0d7pUXtSI4FotQXNYo50xKP5Ktg=;
- b=d+JgcUgc1CYEOcvAOsWeFOHaQf0GAqj8R4zzoE0EO3VAg5/swejySJF6QlcldqaHfeXWDyCZT
- QSOOTaqRhxHCaNr8CFCGyh3aayuhFdUYZ2wYBqZiPv7IsVkrRde+/9O
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: SG2PR01CA0121.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::25) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bxAQkRVr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="twh4wyhw";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bxAQkRVr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="twh4wyhw"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A6B7621202;
+	Mon, 28 Apr 2025 12:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745842489; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y+mMo7uk5RmaOGiC0vVI1M/VdXJrx2bD5Y8WN/ZyEgE=;
+	b=bxAQkRVrEjcDA3Bc0g09UJpaspspCSwvxc5dVOHXSHPd/0von1KPy7XBOR3levpJB4e+jB
+	ya11PrwjzkiI0p69ccjIMXZphqhy7D6B1fjeylseDI2bpjV1/0JO/RDC+srMQaOXgxlgwb
+	WOPyX+83TfCfC6ETD4EEWXL9FaviWEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745842489;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y+mMo7uk5RmaOGiC0vVI1M/VdXJrx2bD5Y8WN/ZyEgE=;
+	b=twh4wyhwkdZUAE/vGn23FosDZylyMRjmCF0BvcbWmwLnC+zsoKiejnpt1p85QlonWcUrqD
+	6HNgGWeh6XgqYoBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745842489; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y+mMo7uk5RmaOGiC0vVI1M/VdXJrx2bD5Y8WN/ZyEgE=;
+	b=bxAQkRVrEjcDA3Bc0g09UJpaspspCSwvxc5dVOHXSHPd/0von1KPy7XBOR3levpJB4e+jB
+	ya11PrwjzkiI0p69ccjIMXZphqhy7D6B1fjeylseDI2bpjV1/0JO/RDC+srMQaOXgxlgwb
+	WOPyX+83TfCfC6ETD4EEWXL9FaviWEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745842489;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y+mMo7uk5RmaOGiC0vVI1M/VdXJrx2bD5Y8WN/ZyEgE=;
+	b=twh4wyhwkdZUAE/vGn23FosDZylyMRjmCF0BvcbWmwLnC+zsoKiejnpt1p85QlonWcUrqD
+	6HNgGWeh6XgqYoBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 957621336F;
+	Mon, 28 Apr 2025 12:14:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jf9/JDlxD2iqSwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 28 Apr 2025 12:14:49 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 4011AA0AD5; Mon, 28 Apr 2025 14:14:45 +0200 (CEST)
+Date: Mon, 28 Apr 2025 14:14:45 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Joe Damato <jdamato@fastly.com>, linux-fsdevel@vger.kernel.org, 
+	jack@suse.cz, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Sridhar Samudrala <sridhar.samudrala@intel.com>, Alexander Duyck <alexander.h.duyck@intel.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
+ the future
+Message-ID: <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
+References: <20250416185826.26375-1-jdamato@fastly.com>
+ <20250426-haben-redeverbot-0b58878ac722@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DB9PR04MB8236:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ca02309-7d50-4c9c-65fe-08dd864e3351
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|52116014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aDd2MjNJcmVLREdkTnQxdnRkQVhEREVkQW9uc2VYUFZpY2ZXNWxIZWFOKzFF?=
- =?utf-8?B?ZEQzM2x1UFpRRW9GLzRSandENmw5SzhwOFp2VDAxT1gwU3JBM2FXQmg0cmFV?=
- =?utf-8?B?eWdZcm84RGE3eVpUbjIzQThobTZOUEdRemdEVWxDOXI5bzJiR0Foc0RrY1JB?=
- =?utf-8?B?OGJ1Q2FhbXd6aFBhemhLclFMeE5PN0h1WjhkNzZJaVdldHF5UTBKRmZVRVVn?=
- =?utf-8?B?a3V0RjNWUC9IbXlEVjJVVnE3NUovT0FhSDN5ZWNjVDdBSEZFVGZ6K3o0SE9s?=
- =?utf-8?B?Y0Z6OUJrMndwMVZ4V1BocEtlMUU0cVRrVExvU3NlZ3JWS093Y0I4Q0xYYmlu?=
- =?utf-8?B?ZGlia3BTbkpHVzR3ZmRvNURiNG9NYlZjQlU2N0t0cWZzMFJsSmdLRmwzOEhh?=
- =?utf-8?B?anlzUExlOGRicHo4R2FHemZ3dXV3bzBEaUEraXI2U2dLL24yZmE2RUVIaTVu?=
- =?utf-8?B?U3FqVzhFL3VqL0lKOFNIREJ6Sk1SRFFDSUVTRnJxUTMyNHI1MTk3VDlFdEJS?=
- =?utf-8?B?Uk44MDdQS3g5UStoQmVVN3N1SFZ2MDZwQUl0eW9XSlFLNlJlK1V5VG9IRzZX?=
- =?utf-8?B?SG1YKzQvMWZtNHhqdXJKbC9tc2tEd0VXR3VacUV3Z1BHT1hVVEpud21YM1Qv?=
- =?utf-8?B?aXVDaEtxcnd0SEQvWmxUbXFKbUticlpzeC8zMXVkOUtmNU5zelNRZHZXOFRX?=
- =?utf-8?B?MCt4cVNpQUJ6RVBkRTRISTFSU3YxZUxCYU9iUk5DNG1HTnVIYU5idGFucXBE?=
- =?utf-8?B?MjhSWDcyWDVub3FOSGFnc1VNUHpiMUdEZDd6UC9rODdzc3B0SzZxQkV2Ulh0?=
- =?utf-8?B?ZWxlVDA1YkdNZmJvL1R4a3pjamZZR0RnQ2dWK0FsK2dIaUt2eDdQU1pzWlh0?=
- =?utf-8?B?M3dFODNuZkloYzNyYWdTVnZQeDJtMm1mOFN5K1ROSjBDY1Vjb0VPNUowNmwy?=
- =?utf-8?B?ckxKRmZURnlLQUxOTU1BNWFBS200YWlYYnJ5cjJHMlFrY0VOMDc1QktSamdZ?=
- =?utf-8?B?TStZMm8waytraHFOYjBkazVDRHVjUGkvV1lIUnlyakhvQXZpQnZiVTlnK3VE?=
- =?utf-8?B?NU1SZjM3RVNCdVNYOHRSTDZwUUtySkFmTG12U1NXQmMwaGlZbWdtbmEzUFBI?=
- =?utf-8?B?a1ZMQkdjY3VzclI4dEMwdGNLZFVuaUw5blpSRE1EeHJVcFRsNGl0ZEVRN2x1?=
- =?utf-8?B?Qktpb2VuVDJGQURkTEh2N0RNQkNMdk9vVlY0d2p1Vm1NN2Fpc2lZY3ZJbFZa?=
- =?utf-8?B?aVlsYWRVdzg5VTVRSjE3V0pTNDJERWR6dXZqMFJ1SnRkYXEzQzBRMmJJdTkz?=
- =?utf-8?B?UHpXcThjZ3dqU0NEaVo5UzB0dks5M3QrSkxhSFduTzExOWNhenNYMURUeWh3?=
- =?utf-8?B?ak15TXYyZW84NGl2LzRsL0ZHelUzMW9Pa2FmNTNVYzkxMlB6TzdVY3J1UElN?=
- =?utf-8?B?OUFEWDZaRVlINStDKzhLYlp4ZEh0TkJtR1BlWElkTytPZFVUL2xZcUhWdjVM?=
- =?utf-8?B?NXdVb3k1dURaTEtmQlBrSmtyTk5Lcis0VXoxTkNiMHVxVEJtTTljRTFTR0dr?=
- =?utf-8?B?QzluNWYwR2F1anFpQTFOT0YzRHBuempvV3RCejFiWjBxejNSRmxvWUJZY29Z?=
- =?utf-8?B?aVJNYzl3TDl2NW9YdzdqdlQzamNlVnluRGlmVk8zU2V2ZzZHQlNhMmxUSUxC?=
- =?utf-8?B?bEJLaFRnZDRHVFRzSkVxQ1RVek9SbU5qamZ1VmVlV0RCUVd4M2NGRmhXTml3?=
- =?utf-8?B?YVpDbEVFMGs5WnV6T3hNUzV6ZjFFUTQrbWRRNXFXaVZqL3NTWmJGc0REY1RR?=
- =?utf-8?B?eFYyd3VzZ0RxNDk4a1JnaERUSVZvYWlOVVNXS2h4T1BmcDVqNXoramk3SWtO?=
- =?utf-8?B?MjZDTms3WEJya2xFMDRmYmZGUm5SOGNMQTJsMk14Z1JSWUJ3N1NmQkFwU0d6?=
- =?utf-8?B?bWZrRVZUSGNRSDJPVE1mTjYwOVUzdXFQaWk5cnNPQ1p5MnFNUTNJRXFSRWRl?=
- =?utf-8?B?bFRJbUtSZFVBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eHNVb1FxMlp5Z1B4UnppSmp0RDY3Qmw0cmVBeklmeXh6Uk1PMmpFS0tMb2sr?=
- =?utf-8?B?T2RoVUsxNEJxbGszbldIYUF5bDJmdkIrQVFGc3hQSjVJTEpVRDd0VWdDOFl5?=
- =?utf-8?B?S1pFcjQxdHJLSG9JT1Q5WHJxeDBuWG1zYkROUVFZN0kyb0RvcitRU1BDKy9r?=
- =?utf-8?B?Q09qMWVhdHJNem9qTVBGeXdmcEZpTStGN1ZQYzhwYnAzdWMrUXd6RVdWZ0N1?=
- =?utf-8?B?RmVXN0FLdUFLRWdQL3Z4ZExBaTFRRUZudHhTUnpnWVZnd2dlYjl0RWZTMEtZ?=
- =?utf-8?B?YStndmprYmZ5SDRtbVo3T1diWUYyK3BKbjMyWlhwdEUvcUpRV2RrMDFVbmlQ?=
- =?utf-8?B?akVwWVNHMDVERkdFLzNsSTd0Q3hGWEpzWFJ1MUt1S1p3cm8rczU3VndqM1Fz?=
- =?utf-8?B?Vk44RUFGYWJHT3hjTzh3ZkxUR014aWtiL2VVQ3FuUGprd2p3cGZlWk13dmRQ?=
- =?utf-8?B?c0w1ZDk4dExVaHhYa1dpekxwcnFLYjdKTERQaG8yRjBHVlJCSmQwUkFnNzEz?=
- =?utf-8?B?K1N6eE1MQlVZVXZlNzMrK3ppOHQ2T1AzaFpQSDZwNi9kWmVPYjJhajNtYjNI?=
- =?utf-8?B?UWlpZnAwNjdIUWMwdDRJUmRDNEkzWlNnUG1kQ09kU0pWYkJxTE1rVGZFU3hO?=
- =?utf-8?B?b1RpOENMUTB6THFKb3RHa0diSEtwZm9xQTNaR1JWOTdpS3JkbHBwTjQ0VG5P?=
- =?utf-8?B?NDNOa0gzL1V3UWpEOXNkNkppL0FjU0lXRkRpN3pDbU5xanRqcU9OZjFEbDlB?=
- =?utf-8?B?b1l0UGV4bVRyTTI2TjJoZVBoMTltb1I2SE0vVzhzWDhETFFKZEFVdDF0QVpm?=
- =?utf-8?B?WjkyYmgyakVDOW1YMzhkMnVWeDg1UFVqQ2FERk04dHFvMTBPMFNZVE5mRHIr?=
- =?utf-8?B?QWYzaDlOR0lDRmtxTzNySVpsNnF0S2UvTHpraXN6TWRjWXVqT05wT1JteFUx?=
- =?utf-8?B?U25UNC93d0taSEF3UVduR1FyMWgzVlBieHVIRmdRTkE0SDJnOTFSbWpscEFp?=
- =?utf-8?B?ck1ocVI2R0Uyd2FpcjJvTGJKcTFhSzhlOHVEdVlEZ2dqb29TcHMvMlJVSGZs?=
- =?utf-8?B?OE4xa09IRGVwQVF6enZ6RElMTFhVbjJMZ2dsSksvOGJvQTBZR0Q3QW5EekF3?=
- =?utf-8?B?SjZXZ2dhNUZXZ3F2NGpwZUQ3NHRHL0R0VGVFazBEKzJ4cGlSZFlsbUc0Um1X?=
- =?utf-8?B?TW5zRE9HRHJZclZLL1IyeFVmOEFnNVEyUGJhMVZIaldiY0IrYkg1NSs0YTJq?=
- =?utf-8?B?VTRVQ3dnZzlFT0gyOThFdmZBWlhMVzRyOVNhTFZkaHFEanptSjZ2WjNDenpa?=
- =?utf-8?B?Y29xakRxR3VuU25hU2dtRlhNMUxHTkV5emZBV28yS254Q2xGb0QwWndnQWZY?=
- =?utf-8?B?TFJIa2QwZWh6QWFueUl6YnFXVzhsUGtPTHpkV2ZETlZxN3VpVXhQWnlaZW1D?=
- =?utf-8?B?eUVrZVdxcEZyaWpSMXBsMjNGRVZxZTI2VTQ2N3VhQ3poazA0Q2szcjRKZ3BD?=
- =?utf-8?B?TlVGTSszai9xNklGcUN5Q3VTNTZOS2RNQ0tKYnhUNUd4VlJMaUQ3OTFicVFX?=
- =?utf-8?B?dmcxa25heVFMOWxneXpIS1BRQ1VyZkd0bFYvTlZtUUNLdG4zNnRjaEZlQ1R3?=
- =?utf-8?B?WTZ6dWtMVG5HSVp2WDhLSm13NXFTZFBtZFNhU0dkWDFCS3lhN3FiZXlHSG9R?=
- =?utf-8?B?RDJNOUZ1UFQzL2d6NGovVmVVOGV5cTFjSzVTUW4rSmtRb1UyWjl1dmxIR3o2?=
- =?utf-8?B?M0xtMnpMQ3NlKzBYdjJ1TkFzUHRITE85UG94TEhoWk5xcFhUY0ZGdkVWTlN4?=
- =?utf-8?B?bnJNWEpEUjFOY2trRm9XWXJ2ei9VNUwxVklnTkY4eko5Zm52MVozM3dGSG1l?=
- =?utf-8?B?UWd5a2JQbGlLVlJaUFdoSHo1S3VDYTJFdGhUZWZ6VEFvZHArTXJYRXZhMlpv?=
- =?utf-8?B?ZG41aHhweVRIek1pc1VHOFJUWmtjMnVEVHJhckJKV1MySk1UQmE2V2xpdXZm?=
- =?utf-8?B?UndDaHpVaWVtWGtoL0Ezbmx0ZmZCMDJsOXM4d1dsOUN0dE1wTElUdVNJTFBm?=
- =?utf-8?B?Y2ZISFBZTHNZSlBPMmJHSnpXcC82SEdWR1ZNMWVaek1UYkNjaFdjby9laGpO?=
- =?utf-8?Q?Ktpn3IMnEVPTBRRIMrP1utuQs?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ca02309-7d50-4c9c-65fe-08dd864e3351
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 12:14:18.4619
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wqzF1H7XZSorfb8AJZaggA9gpjQpxgDuoo/qg682Q5Yu54Ev4sPPKuEdYpqPCc5JUFUhptiCtmx1jYDeiq7t5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8236
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250426-haben-redeverbot-0b58878ac722@brauner>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-From: Peng Fan <peng.fan@nxp.com>
+On Sat 26-04-25 14:29:15, Christian Brauner wrote:
+> On Wed, Apr 16, 2025 at 06:58:25PM +0000, Joe Damato wrote:
+> > Avoid an edge case where epoll_wait arms a timer and calls schedule()
+> > even if the timer will expire immediately.
+> > 
+> > For example: if the user has specified an epoll busy poll usecs which is
+> > equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
+> > unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
+> > consumed the entire timeout duration so it is unnecessary to induce
+> > scheduling latency by calling schedule() (via schedule_hrtimeout_range).
+> > 
+> > This can be measured using a simple bpftrace script:
+> > 
+> > tracepoint:sched:sched_switch
+> > / args->prev_pid == $1 /
+> > {
+> >   print(kstack());
+> >   print(ustack());
+> > }
+> > 
+> > Before this patch is applied:
+> > 
+> >   Testing an epoll_wait app with busy poll usecs set to 1000, and
+> >   epoll_wait timeout set to 1ms using the script above shows:
+> > 
+> >      __traceiter_sched_switch+69
+> >      __schedule+1495
+> >      schedule+32
+> >      schedule_hrtimeout_range+159
+> >      do_epoll_wait+1424
+> >      __x64_sys_epoll_wait+97
+> >      do_syscall_64+95
+> >      entry_SYSCALL_64_after_hwframe+118
+> > 
+> >      epoll_wait+82
+> > 
+> >   Which is unexpected; the busy poll usecs should have consumed the
+> >   entire timeout and there should be no reason to arm a timer.
+> > 
+> > After this patch is applied: the same test scenario does not generate a
+> > call to schedule() in the above edge case. If the busy poll usecs are
+> > reduced (for example usecs: 100, epoll_wait timeout 1ms) the timer is
+> > armed as expected.
+> > 
+> > Fixes: bf3b9f6372c4 ("epoll: Add busy poll support to epoll with socket fds.")
+> > Signed-off-by: Joe Damato <jdamato@fastly.com>
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > ---
+> >  v2: 
+> >    - No longer an RFC and rebased on vfs/vfs.fixes
+> >    - Added Jan's Reviewed-by
+> >    - Added Fixes tag
+> >    - No functional changes from the RFC
+> > 
+> >  rfcv1: https://lore.kernel.org/linux-fsdevel/20250415184346.39229-1-jdamato@fastly.com/
+> > 
+> >  fs/eventpoll.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> > index 100376863a44..4bc264b854c4 100644
+> > --- a/fs/eventpoll.c
+> > +++ b/fs/eventpoll.c
+> > @@ -1996,6 +1996,14 @@ static int ep_try_send_events(struct eventpoll *ep,
+> >  	return res;
+> >  }
+> >  
+> > +static int ep_schedule_timeout(ktime_t *to)
+> > +{
+> > +	if (to)
+> > +		return ktime_after(*to, ktime_get());
+> > +	else
+> > +		return 1;
+> > +}
+> > +
+> >  /**
+> >   * ep_poll - Retrieves ready events, and delivers them to the caller-supplied
+> >   *           event buffer.
+> > @@ -2103,7 +2111,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+> >  
+> >  		write_unlock_irq(&ep->lock);
+> >  
+> > -		if (!eavail)
+> > +		if (!eavail && ep_schedule_timeout(to))
+> >  			timed_out = !schedule_hrtimeout_range(to, slack,
+> >  							      HRTIMER_MODE_ABS);
+> 
+> Isn't this buggy? If @to is non-NULL and ep_schedule_timeout() returns
+> false you want to set timed_out to 1 to break the wait. Otherwise you
+> hang, no?
 
-of_gpio.h is deprecated, update the driver to use GPIO descriptors.
- - Use of_property_present to check "ti,hs_extmute_gpio" to set hs_extmute
- - if returned value is true.
- - Use devm_gpiod_get_optional to get GPIO descriptor, set consumer name.
- - Use gpiod_set_value to configure output value.
+Yep, looks like that. Good spotting!
 
-While at here
- - drop remove hook after switching to use devm_gpiod_get_optional
- - Add return value for twl4030_init_chip to propagate value to parent
-   in case defer probe happens
-
-Checking the only user logicpd-som-lv.dtsi that uses polarity
-GPIO_ACTIVE_HIGH, so all should work as expected.
-
-Cc: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- sound/soc/codecs/twl4030.c | 63 +++++++++++++++++-----------------------------
- 1 file changed, 23 insertions(+), 40 deletions(-)
-
-diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
-index dbd2a0ce7dede26c302b7e30bb68c40ff6e3790a..92194579e15beb452b63c8f00800b50724f63ba5 100644
---- a/sound/soc/codecs/twl4030.c
-+++ b/sound/soc/codecs/twl4030.c
-@@ -6,7 +6,7 @@
-  */
- 
- #include <linux/delay.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/mfd/twl.h>
-@@ -14,7 +14,6 @@
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -37,7 +36,7 @@ struct twl4030_board_params {
- 	unsigned int ramp_delay_value;
- 	unsigned int offset_cncl_path;
- 	unsigned int hs_extmute:1;
--	int hs_extmute_gpio;
-+	struct gpio_desc *hs_extmute_gpio;
- };
- 
- /* codec private data */
-@@ -211,8 +210,7 @@ twl4030_get_board_param_values(struct twl4030_board_params *board_params,
- 	if (!of_property_read_u32(node, "ti,hs_extmute", &value))
- 		board_params->hs_extmute = value;
- 
--	board_params->hs_extmute_gpio = of_get_named_gpio(node, "ti,hs_extmute_gpio", 0);
--	if (gpio_is_valid(board_params->hs_extmute_gpio))
-+	if (of_property_present(node, "ti,hs_extmute_gpio"))
- 		board_params->hs_extmute = 1;
- }
- 
-@@ -240,7 +238,7 @@ twl4030_get_board_params(struct snd_soc_component *component)
- 	return board_params;
- }
- 
--static void twl4030_init_chip(struct snd_soc_component *component)
-+static int twl4030_init_chip(struct snd_soc_component *component)
- {
- 	struct twl4030_board_params *board_params;
- 	struct twl4030_priv *twl4030 = snd_soc_component_get_drvdata(component);
-@@ -250,24 +248,20 @@ static void twl4030_init_chip(struct snd_soc_component *component)
- 	board_params = twl4030_get_board_params(component);
- 
- 	if (board_params && board_params->hs_extmute) {
--		if (gpio_is_valid(board_params->hs_extmute_gpio)) {
--			int ret;
--
--			if (!board_params->hs_extmute_gpio)
--				dev_warn(component->dev,
--					"Extmute GPIO is 0 is this correct?\n");
--
--			ret = gpio_request_one(board_params->hs_extmute_gpio,
--					       GPIOF_OUT_INIT_LOW,
--					       "hs_extmute");
--			if (ret) {
--				dev_err(component->dev,
--					"Failed to get hs_extmute GPIO\n");
--				board_params->hs_extmute_gpio = -1;
--			}
-+		board_params->hs_extmute_gpio = devm_gpiod_get_optional(component->dev,
-+									"ti,hs_extmute",
-+									GPIOD_OUT_LOW);
-+		if (IS_ERR(board_params->hs_extmute_gpio))
-+			return dev_err_probe(component->dev, PTR_ERR(board_params->hs_extmute_gpio),
-+					     "Failed to get hs_extmute GPIO\n");
-+
-+		if (board_params->hs_extmute_gpio) {
-+			gpiod_set_consumer_name(board_params->hs_extmute_gpio, "hs_extmute");
- 		} else {
- 			u8 pin_mux;
- 
-+			dev_info(component->dev, "use TWL4030 GPIO6\n");
-+
- 			/* Set TWL4030 GPIO6 as EXTMUTE signal */
- 			twl_i2c_read_u8(TWL4030_MODULE_INTBR, &pin_mux,
- 					TWL4030_PMBR1_REG);
-@@ -295,7 +289,7 @@ static void twl4030_init_chip(struct snd_soc_component *component)
- 
- 	/* Machine dependent setup */
- 	if (!board_params)
--		return;
-+		return 0;
- 
- 	twl4030->board_params = board_params;
- 
-@@ -330,6 +324,8 @@ static void twl4030_init_chip(struct snd_soc_component *component)
- 		  TWL4030_CNCL_OFFSET_START));
- 
- 	twl4030_codec_enable(component, 0);
-+
-+	return 0;
- }
- 
- static void twl4030_apll_enable(struct snd_soc_component *component, int enable)
-@@ -712,8 +708,8 @@ static void headset_ramp(struct snd_soc_component *component, int ramp)
- 	/* Enable external mute control, this dramatically reduces
- 	 * the pop-noise */
- 	if (board_params && board_params->hs_extmute) {
--		if (gpio_is_valid(board_params->hs_extmute_gpio)) {
--			gpio_set_value(board_params->hs_extmute_gpio, 1);
-+		if (board_params->hs_extmute_gpio) {
-+			gpiod_set_value(board_params->hs_extmute_gpio, 1);
- 		} else {
- 			hs_pop |= TWL4030_EXTMUTE;
- 			twl4030_write(component, TWL4030_REG_HS_POPN_SET, hs_pop);
-@@ -748,8 +744,8 @@ static void headset_ramp(struct snd_soc_component *component, int ramp)
- 
- 	/* Disable external mute */
- 	if (board_params && board_params->hs_extmute) {
--		if (gpio_is_valid(board_params->hs_extmute_gpio)) {
--			gpio_set_value(board_params->hs_extmute_gpio, 0);
-+		if (board_params->hs_extmute_gpio) {
-+			gpiod_set_value(board_params->hs_extmute_gpio, 0);
- 		} else {
- 			hs_pop &= ~TWL4030_EXTMUTE;
- 			twl4030_write(component, TWL4030_REG_HS_POPN_SET, hs_pop);
-@@ -2166,24 +2162,11 @@ static int twl4030_soc_probe(struct snd_soc_component *component)
- 	/* Set the defaults, and power up the codec */
- 	twl4030->sysclk = twl4030_audio_get_mclk() / 1000;
- 
--	twl4030_init_chip(component);
--
--	return 0;
--}
--
--static void twl4030_soc_remove(struct snd_soc_component *component)
--{
--	struct twl4030_priv *twl4030 = snd_soc_component_get_drvdata(component);
--	struct twl4030_board_params *board_params = twl4030->board_params;
--
--	if (board_params && board_params->hs_extmute &&
--	    gpio_is_valid(board_params->hs_extmute_gpio))
--		gpio_free(board_params->hs_extmute_gpio);
-+	return twl4030_init_chip(component);
- }
- 
- static const struct snd_soc_component_driver soc_component_dev_twl4030 = {
- 	.probe			= twl4030_soc_probe,
--	.remove			= twl4030_soc_remove,
- 	.read			= twl4030_read,
- 	.write			= twl4030_write,
- 	.set_bias_level		= twl4030_set_bias_level,
-
+								Honza
 -- 
-2.37.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
