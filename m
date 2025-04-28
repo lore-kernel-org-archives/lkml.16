@@ -1,84 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042BD26AF6;
-	Mon, 28 Apr 2025 18:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF37B1B3934;
+	Mon, 28 Apr 2025 18:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745864200; cv=none; b=LIX+TFR0OPRaYL1hKpoHY47o+WoXALpy0tXHCQ3DtvjNxTW6SwF4q2IucRNfaZCI0A7UHUUALU9NNQhuVFcswtf8RDQ5er29o1BQta3SSOo/mqc9k/0ytYsMRT61MaWBxMYBfCXTLnoEnjyDObG9VYYAUTEr1KxtiLPjDg9Bw2w=
+	t=1745864224; cv=none; b=Hcx2XDu61oER/LuOZ4NaLPuneJh7pvFn5J1oIyH1vR4BX6sWFeKGCFKxCxrje+XZIb40QwOcJ1oGZAGkKUg2OUd+bqm1m1XeZ6P8GJzacEHnyCe40KiCmIq9xCNIO0iJzuyAmNjSYB2iIkQJjiKAxHzlK2mE0fcdWZ24xmCaGwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745864200; c=relaxed/simple;
-	bh=LTWucmA5QArXmJiKqCaHcfaGujpFrEweYB221Xdig9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AFpZOle2oB2PWNG47faRFQ3XErERPpYB1XXuVGDfuziGn1t6zSE/fwr7u3rcu33eo4xMngkQZ7DjG3E26QMpOY5pw1emInOmPZebdwrahxB3815/niZdXrR+z5aJ9aaDNW4JmbFXyaS0fQ9XSKov+nqf8g0AIt1a6D+StgNzl3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8A1tUd6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745864224; c=relaxed/simple;
+	bh=3eJ7+1F6vKndxynrgWcSaZggI3ByYlMFxo9DcAdV4jQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=pBVvYwcepGRADjGi08o94sMs6qmRosrunfaXiOTKhntPITNpsJNSJdjXqpuX4aWHK2LFTZyBCEOD4IPr/sObM242S0hDCPWxQSOFp/iKxvhVP7/zuMJE8Nw7243/G115xJQgZkJXudnHkY5eXjsExKaP9zlYQAy3NzIYy9DajR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=disterhof.eu; spf=pass smtp.mailfrom=disterhof.eu; dkim=pass (2048-bit key) header.d=disterhof.eu header.i=@disterhof.eu header.b=dbhdAvtE; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=disterhof.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disterhof.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8A1tUd6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1E1C4CEEE;
-	Mon, 28 Apr 2025 18:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745864199;
-	bh=LTWucmA5QArXmJiKqCaHcfaGujpFrEweYB221Xdig9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F8A1tUd6vekn0150oPD3r7iCDzXFxcxozbBlK4ubr2loaK8uSlCF5Wi6+2Kl+6Iu/
-	 iVn5p4rA5qmomQD/OjD37QPMu5F8cFOFfXkAz+cXYbhsegS3Fc2qmHj8Uyuhl3BVHL
-	 ggIz4YqfK7pfv4ZqEatUZzSEdYIXZDei/Vwp3bwRjDDxBMF63979359Ab29E66xeci
-	 OJMf6nkI2An0BF4W0Wftaxx2KUeBkqjwiT2iIXOgIHmx7ejFMAcGIqOFwqAoaJjmtN
-	 BJ548IUOVpGL2tStjxg/Yl0+IE0FnlrZQMqvC16ZeSw5Wig1mvY2Sok+bWUTpyoAnR
-	 MIkBPIUSbGbiQ==
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c559b3eb0bso305234885a.1;
-        Mon, 28 Apr 2025 11:16:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3c60BGEyHG8DXAdA0WopyoSrwXUnkuFike1NbwmkkBvy1q7WRNsox0OciZD+lEK1+iVVhjJYKdhc9evm0@vger.kernel.org, AJvYcCVKdS72NMBZpJnTBWtoJYf8v932uroBR9b/H5n5wyqb5iv4U0iR6Fk1D5NgNl7JOiOUCUBIxOc4zCJpBCruYsm+@vger.kernel.org, AJvYcCVzSVKjYOMY1g50dtEK6Ysx0NzT2j89en79QcPHwxNNOzNMFJGRFDdLlff+U3KU71CSvsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhGwFn5WqaSDgSy86yeTd6IRolEnKEiHAy7bnjSHmLaCKkD0ie
-	xWaVbqAJM3nepzcpGyEXWotFu+GFVvPZMRwZaaoWIm+ejZhsESCm5fMt2PFsgTaASjzFPyScuKH
-	xK7vszxvbMhFJqv73MJZJZi5/oes=
-X-Google-Smtp-Source: AGHT+IEG76nmyhkuJhZJM1YlhssBhIEISbVFYcNrAKVYzp5llD/EZQUCazNjmvrM0m4H32FVhUnXAkWHvufEX6CwBsE=
-X-Received: by 2002:a05:620a:4590:b0:7c0:9f12:2b7e with SMTP id
- af79cd13be357-7cabdd6f780mr104404385a.11.1745864198561; Mon, 28 Apr 2025
- 11:16:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disterhof.eu header.i=@disterhof.eu header.b="dbhdAvtE"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZmWqm3ql7z9tX4;
+	Mon, 28 Apr 2025 20:16:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=disterhof.eu;
+	s=MBO0001; t=1745864212;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:autocrypt:autocrypt;
+	bh=RBU3Rxa/SeWrdolSbblILy8+ZXtT8fErI4neuezE2pw=;
+	b=dbhdAvtEN4/lllBI4NhtqRkilnpOwGXWQx00tKIgBhRU15ZirnWByvf7M/Sxi8WQSKBziA
+	Wi7EkOOc7gJNGoom2bssEtU8YxoN0is5IYMMUojGswVvi+J3uEc2wZcPCKa6++K9crIYqE
+	Oqd7bRt69J64K8LDapvQYoeLCIVC2NghIplMbn0QawrYvJW/vwjaTPohysjS/Z2GB/Un5L
+	hVCbKyTs18f5XpkxMzC/IOl9t+pxH8A03ClNyXtCPtbMEjsy1uuK3GT2FaVg7IsS6iHsOU
+	IpxhmhiZYEaS44eBVOUbIVQk/JkUMUqWdGAwshCh86BXxRuuPJrKLjLTkM3NfA==
+Message-ID: <dd4693d2-3ecb-4081-8227-35e4e89ec7d4@disterhof.eu>
+Date: Mon, 28 Apr 2025 20:16:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428180256.1482899-1-tjmercier@google.com>
-In-Reply-To: <20250428180256.1482899-1-tjmercier@google.com>
-From: Song Liu <song@kernel.org>
-Date: Mon, 28 Apr 2025 11:16:26 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5m32t2-7f6EH+A35-htHcL-kQToJ=_Z2BEBe8dK9xyOg@mail.gmail.com>
-X-Gm-Features: ATxdqUEfqMGxBKalVPnccR6NYIdAiyLCB71Tw9QjYzbC0c75PUlTpGO5qpjNSRM
-Message-ID: <CAPhsuW5m32t2-7f6EH+A35-htHcL-kQToJ=_Z2BEBe8dK9xyOg@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: Fix kmem_cache iterator draining
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mchehab@kernel.org, hverkuil@xs4all.nl
+From: Ludwig Disterhof <ludwig@disterhof.eu>
+Autocrypt: addr=ludwig@disterhof.eu; keydata=
+ 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
+Subject: [PATCH] media: usbtv: Lock resolution while streaming
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 11:03=E2=80=AFAM T.J. Mercier <tjmercier@google.com=
-> wrote:
->
-> The closing parentheses around the read syscall is misplaced, causing
-> single byte reads from the iterator instead of buf sized reads. While
-> the end result is the same, many more read calls than necessary are
-> performed.
->
-> $ tools/testing/selftests/bpf/vmtest.sh  "./test_progs -t kmem_cache_iter=
-"
-> 145/1   kmem_cache_iter/check_task_struct:OK
-> 145/2   kmem_cache_iter/check_slabinfo:OK
-> 145/3   kmem_cache_iter/open_coded_iter:OK
-> 145     kmem_cache_iter:OK
-> Summary: 1/3 PASSED, 0 SKIPPED, 0 FAILED
->
-> Fixes: a496d0cdc84d ("selftests/bpf: Add a test for kmem_cache_iter")
-> Signed-off-by: T.J. Mercier <tjmercier@google.com>
+When an program is streaming (ffplay) and another program (qv4l2)
+changes the TV standard from NTSC to PAL, the kernel crashes due to trying
+to copy to unmapped memory.
 
-Acked-by: Song Liu <song@kernel.org>
+Changing from NTSC to PAL increases the resolution in the usbtv struct,
+but the video plane buffer isn't adjusted, so it overflows.
+
+Fixes: 0e0fe3958fdd13d ("[media] usbtv: Add support for PAL video source")
+
+Signed-off-by: Ludwig Disterhof <ludwig@disterhof.eu>
+---
+ drivers/media/usb/usbtv/usbtv-video.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/media/usb/usbtv/usbtv-video.c b/drivers/media/usb/usbtv/usbtv-video.c
+index be22a9697197..965a8ae82afe 100644
+--- a/drivers/media/usb/usbtv/usbtv-video.c
++++ b/drivers/media/usb/usbtv/usbtv-video.c
+@@ -73,6 +73,10 @@ static int usbtv_configure_for_norm(struct usbtv *usbtv, v4l2_std_id norm)
+ 	}
+ 
+ 	if (params) {
++		if (vb2_is_streaming(&usbtv->vb2q) &&
++		    (usbtv->width != params->cap_width ||
++		     usbtv->height != params->cap_height))
++			return -EBUSY;
+ 		usbtv->width = params->cap_width;
+ 		usbtv->height = params->cap_height;
+ 		usbtv->n_chunks = usbtv->width * usbtv->height
+-- 
+2.43.0
