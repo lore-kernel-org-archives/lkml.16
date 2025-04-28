@@ -1,115 +1,126 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8249A2135CD
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC302040B2;
+	Mon, 28 Apr 2025 23:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881398; cv=none; b=tHYX4Lwf7T/UKACEHHgPhRvGZKszW4Aef26qE05ud6MUaH9R1+6yTBh6SOO9Mm0CerofkKFbxDc6nmc+gIWwlau2fFZjE564mNLgXxzMsSf+Wx9dT1X/CpO00GwjccardVD1W0HviJm2FBWobiqww8lkufsMj4A+5R9vK7GiFPM=
+	t=1745881415; cv=none; b=qan9eTE6YnE82OSQIb86c/6rrPEw6SDyJ2y+5ucqWfBf3DYrbNpByAy8YAKNIT2qTmI+gtosdjSCHiKSJ1l4RsLjky6bq1DLtlOyaFo6kYaY7NHfPWK2OP74bZRca41qbcEo2ABDFnlFK9i7iUo29c9ctQCJIWO2WNfu9OVDeVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881398; c=relaxed/simple;
-	bh=ifZB0XxQ0LBxb5yPwSPFoOBaXqiiKtifiTmyWdrRR54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tMbjP7Om/s/wHbLOvDjmizb3q5UrRmk4qEH+M48dTzy7jQC10zCo4bEecHgD8t8lF8z0tAAGxYuPwqbl1YOKwNyBLnEzr+mq1ztTsUQqfmXNts+u6L2F2x3ypV5dfeFzWIDZ18iffG27fTEXxj4HKLhE9K4qVnOzjiTD3HdMhNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eTso/PJY; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745881415; c=relaxed/simple;
+	bh=d96J7/O94xadSvA6zuIRLFQTYEw18yGoq0qlApnvezw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZhPjXy88qwktjlJfrOKR99slVm2RS9haVCiYtYIGQbB2k1iMdi7b7XEwgOWfDT7Zql713WSE/9iE3TozlOMZlAmzweNCMmYRmi7HqGcqIaLFtRBCH/p7BEOOwvvqAL8/Bgird45KEsLJAv1iluU4VYK/l7yYFBTAxvI+mjDZiLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JCZRLrjM; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTso/PJY"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso54652211fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745881394; x=1746486194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z2baWr1r86mfMgf+6fAn39he6bRXAkhTm3Zmck7aQZ0=;
-        b=eTso/PJYefkQggqtI3iDfqqTtBq4z91iMwT+fzdyFHpL5kHCHveWiQLynJJX6AdZ6Z
-         Dm1+rlLPd8kTNvnq+AnCJAQlNyXQ+H5iHBlqhKSSkyHCdmi6NC8iTsyssG1IQAiZShHk
-         9TyEsCfgozsop0waKxIPYnSnkcovto/Q5oLTCQfD/vl4vHRDHS7XLeDVkL3DHUgk5EgS
-         zbiDGcSvPIjZJ+nW7RrkTSO1IG8uLOI7oD0Kzomv3G2EhRUI/u+2SD3idLhNQpDWgEbX
-         Zc6LN5hvUvwb544U5KFp3pKcCNcaBKs4ONC0NvQ3dROjKWYwOnMbqIz22bkyykZuic5A
-         ownA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745881394; x=1746486194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z2baWr1r86mfMgf+6fAn39he6bRXAkhTm3Zmck7aQZ0=;
-        b=nt+Ff6hKwGIupAS/nsWutl/fCHWfC4tWS6oX3f/C+PgiD4ZgUIXYZaEtJNLT29Tuxu
-         tU2mXqAUU2KhmHpgUOJ60se9+MXLOEZtctYmfD/ToM452IC1VtZuawvXV2i8pzKD9Fb+
-         JJSe72mnD7Cra28GAZo4Q6HnPog+jrh3wqj904uy9i+JeYZVVm5IC4fJkMC8gIVqVwl5
-         won8dq2AIvQm7FAqvEZ4zd6XRG0lcmPn9t80ZmRKScXoUmI1sT32WMD1t7YitjreC8wc
-         ntB5cMARaPrOx394WE7vFKwvF/DfUHSdvNz5xwHNHbVMVlNSF5zSgZqR9H+mk9LHViwt
-         cFOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVB0QozQQBO9Go6Wqs32Fp4OfjndBcNF5nIsOQf61pg0esi8J5yrVValohsa3qEQFcXhlT5A6qITUGJfSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtz3HYB8bAxqMu5b9G1ilKQSqyP3emZtt9JS+BIZls3vwULYDn
-	Sx/fMgEHRl6H8a95mg+NJJtIy1P72ZCnhd+kojWTdctNbZx7fw1JzCn48bVAAmc7kxxIoz+MB22
-	RIvaVvlYToyC24hywsUExXFEEQVNypUIgaQE=
-X-Gm-Gg: ASbGncuakhtdaKqfZVzO1EVwjhfT4rQZlMqyjFQ+0di96he4SEWfBooLED6a3jZem/E
-	fRtCJAUyL8CDJFUuMX6K4GJDDe77E31O+b0AvGwn8jKc0eLDvO2W47cTrg+4o52ZOwaEW9Sycuz
-	k27P9cYpEDHm1avYMwDCdAu0eCruBuxqBpskDAsgNyhdbcAV9NuUM=
-X-Google-Smtp-Source: AGHT+IHwFApzT/UzmA3YCn8cEHBS4b5lVrF686awyhHQQ2UfU2Ve8s3/TLvH71R1vJnrvKRkk0vG0VC+612VtmSi+Ho=
-X-Received: by 2002:a2e:ab0b:0:b0:30b:eb0a:ed63 with SMTP id
- 38308e7fff4ca-31d46be2ab5mr2685801fa.18.1745881394150; Mon, 28 Apr 2025
- 16:03:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JCZRLrjM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745881411; x=1777417411;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=d96J7/O94xadSvA6zuIRLFQTYEw18yGoq0qlApnvezw=;
+  b=JCZRLrjM8cLlF7od4a4k2gEr2kqZesAicEHUNopUX76ZDsisSXDl+52j
+   qyjlWWNNLYho0SoYGhAd+IRjrzvoMmKVohz7N2VraZxF2qN6H+Pux+7wk
+   JmN1K92xW6gFNnjgK2FbpNv3p0RtHek3BKr3PQh07Se4QZXbgiVV03IVc
+   ctr3E93llKPn22swK4cRctv6VxTYvuGDyFom0geUhQF2rGd+Ixq2LTrrw
+   GZXWTnCzYF/SomTNJCx0c7X8eyFSCJRY4t5/Jzastrbrdi1a0rzjJsgm4
+   mp+EBnh31AY5kboX1TKoPWe7GXvgyFCPfvfUm311pW6Aw9GH3Bfiklk1q
+   A==;
+X-CSE-ConnectionGUID: /dw6Ff4sTSGydc+dqJHzKw==
+X-CSE-MsgGUID: hlD2nsnaSYCBh4hvkx3q6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51156506"
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="51156506"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 16:03:30 -0700
+X-CSE-ConnectionGUID: NXDABcl3Sx6lL3EUtd9DpQ==
+X-CSE-MsgGUID: dR1Atr8eRkalc7zlpmDo+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="138841492"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.95]) ([10.125.109.95])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 16:03:28 -0700
+Message-ID: <f6ad2f58-4bd6-4238-8baf-a185d58e497d@intel.com>
+Date: Mon, 28 Apr 2025 16:03:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427113529.1473800-1-suhui@nfschina.com> <20250427113529.1473800-3-suhui@nfschina.com>
-In-Reply-To: <20250427113529.1473800-3-suhui@nfschina.com>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 28 Apr 2025 16:03:01 -0700
-X-Gm-Features: ATxdqUFSTPwOWBywb-mVi7Ms1oTyduGxGimkPSsi2gzPVL1nqYUQBZLjNOwIpYo
-Message-ID: <CANDhNCpBpwVd2vHf8PVxxcyaxEZqof92tgF3QxYXp3c+WAwLDA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] alarmtimer: remove dead return value in clock2alarm()
-To: Su Hui <suhui@nfschina.com>
-Cc: tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/14] cxl/port: Replace put_cxl_root() by a cleanup
+ helper
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250428214318.1682212-1-rrichter@amd.com>
+ <20250428214318.1682212-9-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250428214318.1682212-9-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 27, 2025 at 4:35=E2=80=AFAM Su Hui <suhui@nfschina.com> wrote:
->
-> 'clockid' only can be ALARM_REALTIME and ALARM_BOOTTIME. It's impossible
-> to return -1 and callers never check the value of -1.
->
-> Only alarm_clock_get_timespec(), alarm_clock_get_ktime(),
-> alarm_timer_create() and alarm_timer_nsleep() call clock2alarm(). These
-> callers using clockid_to_kclock() to get 'struct k_clock', this ensures
-> clock2alarm() never returns -1.
->
-> Signed-off-by: Su Hui <suhui@nfschina.com>
+
+
+On 4/28/25 2:43 PM, Robert Richter wrote:
+> Function put_cxl_root() is only used by its cleanup helper. Remove the
+> function entirely and only use the helper.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
-> v2:
->  - No Change.
->  kernel/time/alarmtimer.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-> index 0ddccdff119a..e5450a77ada9 100644
-> --- a/kernel/time/alarmtimer.c
-> +++ b/kernel/time/alarmtimer.c
-> @@ -515,9 +515,9 @@ static enum alarmtimer_type clock2alarm(clockid_t clo=
-ckid)
+>  drivers/cxl/core/port.c | 9 ---------
+>  drivers/cxl/cxl.h       | 4 ++--
+>  2 files changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index c9087515d743..e325f08aaf32 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1037,15 +1037,6 @@ struct cxl_root *find_cxl_root(struct cxl_port *port)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(find_cxl_root, "CXL");
+>  
+> -void put_cxl_root(struct cxl_root *cxl_root)
+> -{
+> -	if (!cxl_root)
+> -		return;
+> -
+> -	put_device(&cxl_root->port.dev);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
+> -
+>  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
 >  {
->         if (clockid =3D=3D CLOCK_REALTIME_ALARM)
->                 return ALARM_REALTIME;
-> -       if (clockid =3D=3D CLOCK_BOOTTIME_ALARM)
-> -               return ALARM_BOOTTIME;
-> -       return -1;
+>  	struct cxl_dport *dport;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 960efcc60476..ea06850ecaea 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -737,10 +737,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+>  struct cxl_root *devm_cxl_add_root(struct device *host,
+>  				   const struct cxl_root_ops *ops);
+>  struct cxl_root *find_cxl_root(struct cxl_port *port);
+> -void put_cxl_root(struct cxl_root *cxl_root);
+> -DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_cxl_root(_T))
+>  
+> +DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
+>  DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
 > +
-> +       /* CLOCK_BOOTTIME_ALARM case */
-> +       return ALARM_BOOTTIME;
+>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+>  void cxl_bus_rescan(void);
+>  void cxl_bus_drain(void);
 
-So, I think your change is a good one, as the error case of -1 is never che=
-cked.
-But it might be worth adding a WARN_ON_ONCE() if the clockid isn't
-CLOCK_REALTIME_ALARM or CLOCK_BOOTTIME_ALARM, just so there aren't any
-surprises if someone misuses the function.
-
-thanks
--john
