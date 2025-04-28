@@ -1,126 +1,92 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ksmg02.maxima.ru (ksmg02.mt-integration.ru [81.200.124.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5298D2561AF;
-	Mon, 28 Apr 2025 15:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F0625D54B;
+	Mon, 28 Apr 2025 15:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745854868; cv=none; b=ALBOCAhXXJOYzrnSZ+vif/E1Z2V8kKqOEQxRIfPnurqe5NWOa8mj3+aKuIZs3TGBQ1dbNJxs4duLBD+mYHWwrActOpb+oxtafm9STZBBAnEwuV5Lnho5FzRPE+hBIrCXUlUmDAxTd699CQ4X8n+i0lxclvVX9nc5+qrBVkTAXEg=
+	t=1745854890; cv=none; b=kLAx0eZEQz7idQHYPi1JBHMXVTPo2jxuSFsCGjscdaINwQ4Yy9OpPqTINF3p90lluvUeSDtPNm1aO+YAT6+zX05GfSb5rSCVb4c+rZ2/B1ZTXzmCDUMvUDD6puwFVKe33ergEiWCUh7kFqgWRQRnx+YxPL9q0GwKxSEtFTgISrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745854868; c=relaxed/simple;
-	bh=K6/TSIu0i4G62nwC3J/EYkcZS/BBLoIYHCR/dA0hZXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rNiod+DCOozNACHqODDxX8w/c39R5eEdqHNaArrLiVvDXj3sMydwfYVdAUG4eZnUnfY2hSABgFLKzlaMiVNzGEJ5oIcPIjdAipj5aXrqYeHyIIt7F9LgO82adDPORfBlu/M/+ckOo/z88BwwLiApYyYAtx9BmlKaBZasJRi6sGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ir3GTvIY; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745854890; c=relaxed/simple;
+	bh=0NFN/7ts5W1DCTgPaUMeIVw8qEUxSvWKMMoVpxYiz/o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NIPDLCZ40KmPJd9Z9+fMCN1d+9wjAdxdgh35/o69WD7ad5rUQawv2/ca7+Ts8ywAgApWFiiOv6BeO3Ep/nFoZe47Elj7zMMrdXDjJlA+wo9SGc308mQPOdJJ+8zPvLn9zMevFcrY7cCOOJscJlqYZAXmA4nHk0O90ESUIk6YMR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=DWfcei5e; arc=none smtp.client-ip=81.200.124.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ir3GTvIY"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso9471683a12.0;
-        Mon, 28 Apr 2025 08:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745854864; x=1746459664; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WvufXHGh12wQHgjzBmUfISsVxoz5jVjmGbgcqId9HAk=;
-        b=Ir3GTvIY4u3qeOOtpYdbxyXrNjo/HEfYIVPp8UBqlJ7KkBlVLm/noH0Se1Y7HbDfZH
-         TjfZdpIEYbRYjbIKUKf2rmi96hTYpi8rIxs9xEAMToJJUpSn51FhAAyoKzma0en7jjEB
-         PAbZeQwYFomqWr/wfcBzfIaTypJ6ubeX0gKai6ffJwGbK1DhA+SSuev3+SbrCob0iDNB
-         TGucjYmidBUAf/IoyqRAg6Pzu6j35Ye/nX3qjSl89dAY90Yw8k8sqMjcUd5MbB6+k2H0
-         3i1EyjypbYTjeIDeg1L71JIt+W0Hg897dzDP7dSBkLRLOm13/DqVp46EfIsZoy7lR5SW
-         pStg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745854864; x=1746459664;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WvufXHGh12wQHgjzBmUfISsVxoz5jVjmGbgcqId9HAk=;
-        b=NLAhHOVtUV6LC3Y3cg9OWhFVFWFtoDYyrMV4Dc2t+7RY7YiLCVkiCiEN3Vq6XRVY3O
-         jMOvCEEwTjwbdh3ngFyffZrmMk+Q1s4go2JcSwOTrXRYfyHKEb9fKc33tXHUaBQLMrnT
-         wr1SE/abpfpDFBOBbg0ZuyxuSxmyYxN8Ua4O8/Xp9BjtBRRfD3GuG40mwBAGCjR98sn2
-         2XwSh5bKFg3zKdqaRoEUYEuszLAQxFgigirlzQRppa9nhYJrkWEqBBZRXofWvE0WThDm
-         ZxKdvlRxG2M6rj9R3Ak5j5N5ZYu81JnMtLMD7LhJveOkho6bkvg9TD6w8tGLh6slBy2o
-         FV7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUBejnQEI2HQfHwMzrXo63o8mceyBPhK3SBWIVAWJdDFTxsP3DM2sdJfpy+GXoY8U7HXNOG8ZmVWsJa55OX5g==@vger.kernel.org, AJvYcCXldH4osycc2fII/zsuNV0LnT2ZZgcJGuND8lmmPwQ4R5UMOog76HnGabaINAKadEAsQRR2vcYClb6yiKar@vger.kernel.org, AJvYcCXowsuRf2yJiEaK4uiF/e38BZnmz0TWyRUlY+NkNYcexE/fflc8lMINPVzmhY8WHAz7fep9iPMSoIna@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4j79M4XVJd1omx9aAEPGY+HVOkaSry0klDkNGmYj+/k5TM8+S
-	zwRab8YAWS7TwLyMc8GYRgkZFGkmwQoUd+LZvbHvudxG00PFLSLLloF//0g8fVNKdqusP46golf
-	OvojQOSWreQ2AHPOWeVkWWCAYMrI=
-X-Gm-Gg: ASbGncsI8bzThT/ABo/JaEmeOG8EgJnRS6SCfVGep7T73RtBajrbnynZynwGLECbTdg
-	LydYSwSzeP7ZeFYYwYwRoqwI/97j9mlVAkgZ5VnlOg1gLhl3b4vyGMQuw22Z8OuYDrVunNWPLNF
-	0nK3rGLYMTrvcWI8C8eSX19xF1
-X-Google-Smtp-Source: AGHT+IFhLzE27vgSK4ERJvEKbxq2DCn8cB2x4uLyWSEziEtTs8e8qlO5UNLI7zouE014oKd82Co4iaD88PMd4xBtcTU=
-X-Received: by 2002:a05:6402:2155:b0:5f8:36b2:dc07 with SMTP id
- 4fb4d7f45d1cf-5f836b2dc52mr589411a12.16.1745854864251; Mon, 28 Apr 2025
- 08:41:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="DWfcei5e"
+Received: from ksmg02.maxima.ru (localhost [127.0.0.1])
+	by ksmg02.maxima.ru (Postfix) with ESMTP id F27A01E003E;
+	Mon, 28 Apr 2025 18:34:57 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg02.maxima.ru F27A01E003E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1745854497; bh=ZS+sfkXfHx9Y98t0ndNQwB5Sc2zKSAG59d8lpKp8Eac=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=DWfcei5eLVpu/QXTHelhU91zktJBecVvWLZie56ybCSppJ8E4MdXl9JmyZA9Ny/Fu
+	 BgumBPyDz5m+SPr+OaYgvvHHkh+K36Le6fReLA4Sj4V3p1nL2iyzKrA+5bk38u3zZy
+	 tvmX1/Wiy4tWhfdXSUVWhm/OGiAtJoZwMLlxe8WZXS+OGBV0GTtuOqrbtBz3yu4kSp
+	 6uCxtz6onlUzDcNNLPE1LW+gJepNFPzRXcZPeFh6V4hk8yQHsS13LTIsdCqfPVoXiR
+	 hzGmt2qodUxDuE56PnhRCSSIm8HRaoZL+ZUFrmHsfKSKsVHCg+XFrrupj6cbNRxfx/
+	 ML4B+FjRHoqtw==
+Received: from ksmg02.maxima.ru (autodiscover.maxima.ru [81.200.124.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (not verified))
+	by ksmg02.maxima.ru (Postfix) with ESMTPS;
+	Mon, 28 Apr 2025 18:34:57 +0300 (MSK)
+Received: from deb16-01-masimov-t-build.mti-lab.com (172.25.20.25) by
+ mmail-p-exch02.mt.ru (81.200.124.62) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 28 Apr 2025 18:34:56 +0300
+From: Murad Masimov <m.masimov@mt-integration.ru>
+To: Simona Vetter <simona@ffwll.ch>
+CC: Helge Deller <deller@gmx.de>, Murad Masimov <m.masimov@mt-integration.ru>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	<linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH 0/2] fbdev: Prevent null-ptr-deref in fb_videomode_to_var
+Date: Mon, 28 Apr 2025 18:34:05 +0300
+Message-ID: <20250428153407.3743416-1-m.masimov@mt-integration.ru>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425-miix-630-venus-v2-1-cdfca385a0c8@oss.qualcomm.com>
-In-Reply-To: <20250425-miix-630-venus-v2-1-cdfca385a0c8@oss.qualcomm.com>
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date: Mon, 28 Apr 2025 09:40:52 -0600
-X-Gm-Features: ATxdqUEL74T1cOG8x0vvh7KTkwIQBy8-5lGlhbpHJlzgMv0_fInhzrhYRfPduoU
-Message-ID: <CAOCk7NrcpwAnUKcVsc5D03Aazt=qWLZB034xa2FH2PF9LuL6ZA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: msm8998-lenovo-miix-630: add Venus node
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mmail-p-exch01.mt.ru (81.200.124.61) To
+ mmail-p-exch02.mt.ru (81.200.124.62)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: m.masimov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 56 0.3.56 52db7f275cc9b6820389ba9ab2ac225370e1c244, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mt-integration.ru:7.1.1;81.200.124.62:7.1.2;ksmg02.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.62
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192977 [Apr 28 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/04/28 14:14:00 #27936619
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-On Fri, Apr 25, 2025 at 12:28=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
->
-> Enable Venus on Lenovo Miix 630 and specify corresponding firmware file.
+These patches fix the bug that leads to a null-ptr-deref if
+fb_videomode_to_var() fails to allocate memory. This bug is present in
+do_register_framebuffer() and fb_ser_var().
 
-I'm curious, how did this get validated?  I didn't think there was
-enough infrastructure enabled on this platform to check that the
-lights were even on on in Venus.
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
->
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
-> Changes in v2:
-> - Rebasde on top of linux-next
-> - Link to v1: https://lore.kernel.org/r/20250408-miix-630-venus-v1-1-771c=
-330ee279@oss.qualcomm.com
-> ---
->  arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/=
-arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> index f160ba562b0af505bdc1357731f75a394b5eeeeb..c11b972771c3881a57ba5a4df=
-bdcea487da7c6f1 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> @@ -100,6 +100,12 @@ i2c5_hid_active: i2c5-hid-active-state {
->         };
->  };
->
-> +&venus {
-> +       firmware-name =3D "qcom/msm8998/LENOVO/81F1/qcvss8998.mbn";
-> +
-> +       status =3D "okay";
-> +};
-> +
->  &wifi {
->         qcom,calibration-variant =3D "Lenovo_Miix630";
->  };
->
-> ---
-> base-commit: 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
-> change-id: 20250408-miix-630-venus-7a0b4f1f3788
->
-> Best regards,
-> --
-> Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->
->
+Murad Masimov (2):
+  fbdev: Fix do_register_framebuffer to prevent null-ptr-deref in
+    fb_videomode_to_var
+  fbdev: Fix fb_ser_var to prevent null-ptr-deref in fb_videomode_to_var
+
+ drivers/video/fbdev/core/fbmem.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+--
+2.39.2
+
