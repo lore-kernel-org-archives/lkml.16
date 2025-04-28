@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ECE1CD15;
-	Mon, 28 Apr 2025 23:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D912165E7;
+	Mon, 28 Apr 2025 23:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881204; cv=none; b=JrRB/M4EbS+7V1nvdn0vjzA6qmFGTif4MSt7WSwgMdQfjSpCG5bffEDxsQO0JRKQG3947yCs2eshk4HmXmmJovZw9zEZcb/6933EnsiRSYsNYmICrxJnpBIwqTlXHT9y2VVM9QrrovzDjz4xa3hLgBlN+1Cnp3rfPgFFEuqN444=
+	t=1745881207; cv=none; b=mevnbBBMRmsWYDhEOp0xML1xzOH1lNCddwRrE+MUDEAioy+QWQEcd4nhUar23VStTqabaoPs6tZdx4xbJi7P5Q/nQwcDLjynUjhHt44NN7XgWO9QkXd2K6XkGk25h8e8hJms/pTccDSI4tOi6OQ/PpYDyEKtJGe+IFOGIgj6W2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881204; c=relaxed/simple;
-	bh=Hyqk3hXF8RoDZe0RFSQDUQvXvCQhaScYWf9CTGFhpzY=;
+	s=arc-20240116; t=1745881207; c=relaxed/simple;
+	bh=+jr1pXW8/0vwyUPzbw2kYLE7uX67prwhm7CwUieZEIA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MILryQ3wubUtSNs4f3n51StX1dOyfRcbRlPyuvIp0JJDSZtWrME37+cGqriU6aXNFWufwuPNkFye0uSQGHdEotgXqo1Z+6nuCB0hs9oclrK2IL6tmDOTxRdIyL4YbbE6EUSGUU3H9WEPEd9NH/Yv1Q65Dt8vJC1UziX0EwHfqtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCpATGTS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=SlsyilTH4uSW1xjUw0GiUvgJ0txuo19KysCz63j6RDByzfmg5Lsi+B3SlMfRfA+wgXrwIWXQdyr/CPMgrbm7AgceGxb7Kvgk2Beb/K4WVuiUWkrP/CdGz+1G0X/XsMHq9qs+6F7hVm1e1vTsKFckEz77HiWs0C34iUaK1DsOqUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOblO8pn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCpATGTS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A836C4CEE4;
-	Mon, 28 Apr 2025 23:00:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOblO8pn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9BBAC4CEE4;
+	Mon, 28 Apr 2025 23:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745881204;
-	bh=Hyqk3hXF8RoDZe0RFSQDUQvXvCQhaScYWf9CTGFhpzY=;
+	s=k20201202; t=1745881206;
+	bh=+jr1pXW8/0vwyUPzbw2kYLE7uX67prwhm7CwUieZEIA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BCpATGTSbTD45BRbQPhiWumhcdVHFVaxEMh6XEmJAPmdPwgdtAZObQFRm9wv1ybYc
-	 FlQoeU+iUAZWDqxIxHEV7c8d9THU19F0i5/Gcqu4dZOqwEZ/c9ZnS1J8J/3So+WP2Z
-	 jLk40MOE9ZQ5TJWjJEG5ttwI2V1LNbKjWd2H/bwMa5gawZi8bGAST0PaClmzTNNA02
-	 DduD/gK397EkP1O6KYKhb2ET7cPvxe2tC5l3b4iCd32oOnUEcD5hUiGi+YGn3W9PP3
-	 52WpIF/uijbqOslqhRkqJGCicDVNgB5myQYdako4p8vEAP5JnsQSg9+Vdsbi+fl7n2
-	 D2QV7Iw0gJj/g==
+	b=IOblO8pn09UiUSeXaEg7HuFrw71RZxTB8jLXHATdn0uZt7nCQ/HcNXwh4BINhRetX
+	 iXoLeB5craQ/FM1E/dPelNvuc2HyBklhfcdG2OGfKsjYmsVLVbLM7Zi3D3DZBl3WYU
+	 ryCOTzXATxzmULF0T0xZgBlZrqatVGqPS0587hi76f28RTCL2hSn2VLp3bjRCpmOLg
+	 tlSxNd2JrSc5x5WfIlU+97HHCP/WwOYxQblxrbkwUaQ4FBtqQ9Po32XOP7BNyiE/cD
+	 9lp5qOOMzhsfm6K1TR6bqlbwZ2KvKrPWnIPAmISs7UBzaB0neHiAJmpV1EPTcoipkv
+	 rhXUIATSGBuaQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BC03822D43;
-	Mon, 28 Apr 2025 23:00:44 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB1463822D43;
+	Mon, 28 Apr 2025 23:00:46 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,39 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] netlink: specs: ethtool: Remove UAPI duplication of
- phy-upstream enum
+Subject: Re: [PATCH net] pds_core: remove write-after-free of client_id
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174588124275.1071900.5630286475181995503.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Apr 2025 23:00:42 +0000
-References: <20250425171419.947352-1-kory.maincent@bootlin.com>
-In-Reply-To: <20250425171419.947352-1-kory.maincent@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- maxime.chevallier@bootlin.com, thomas.petazzoni@bootlin.com, andrew@lunn.ch,
- kuba@kernel.org, donald.hunter@gmail.com, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, horms@kernel.org
+ <174588124556.1071900.9575309402812835802.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Apr 2025 23:00:45 +0000
+References: <20250425203857.71547-1-shannon.nelson@amd.com>
+In-Reply-To: <20250425203857.71547-1-shannon.nelson@amd.com>
+To: Nelson@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org,
+	Shannon <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, brett.creeley@amd.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 25 Apr 2025 19:14:18 +0200 you wrote:
-> The phy-upstream enum is already defined in the ethtool.h UAPI header
-> and used by the ethtool userspace tool. However, the ethtool spec does
-> not reference it, causing YNL to auto-generate a duplicate and redundant
-> enum.
+On Fri, 25 Apr 2025 13:38:57 -0700 you wrote:
+> A use-after-free error popped up in stress testing:
 > 
-> Fix this by updating the spec to reference the existing UAPI enum
-> in ethtool.h.
+> [Mon Apr 21 21:21:33 2025] BUG: KFENCE: use-after-free write in pdsc_auxbus_dev_del+0xef/0x160 [pds_core]
+> [Mon Apr 21 21:21:33 2025] Use-after-free write at 0x000000007013ecd1 (in kfence-#47):
+> [Mon Apr 21 21:21:33 2025]  pdsc_auxbus_dev_del+0xef/0x160 [pds_core]
+> [Mon Apr 21 21:21:33 2025]  pdsc_remove+0xc0/0x1b0 [pds_core]
+> [Mon Apr 21 21:21:33 2025]  pci_device_remove+0x24/0x70
+> [Mon Apr 21 21:21:33 2025]  device_release_driver_internal+0x11f/0x180
+> [Mon Apr 21 21:21:33 2025]  driver_detach+0x45/0x80
+> [Mon Apr 21 21:21:33 2025]  bus_remove_driver+0x83/0xe0
+> [Mon Apr 21 21:21:33 2025]  pci_unregister_driver+0x1a/0x80
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] netlink: specs: ethtool: Remove UAPI duplication of phy-upstream enum
-    https://git.kernel.org/netdev/net/c/10c34b7d71a4
+  - [net] pds_core: remove write-after-free of client_id
+    https://git.kernel.org/netdev/net/c/dfd76010f8e8
 
 You are awesome, thank you!
 -- 
