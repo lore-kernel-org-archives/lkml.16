@@ -1,136 +1,88 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E3125F79B;
-	Mon, 28 Apr 2025 08:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB2AD530;
+	Mon, 28 Apr 2025 08:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745829794; cv=none; b=D7s4GACFh/NgBMw2g1nh6EhXGYsR30PGrIhEAfL+hcThl88rOS7EtZNgcNkiDWb+NvNv3ME2c5rd5v+45pADzuM00+XYtfVsc08Xh7WkwHHG/Ilu5PIjqo9KUjH9vW3cczxA5NQUSQTUxE8ipmutZg/Ds6ldx3z/cB5BGy0/ENQ=
+	t=1745829883; cv=none; b=UAoxJeF2NzcfDnDp19VpU98P0V5iQg8oLOAwUFROZLJyESHjypScQ5xI+LmRkDhQ6hSnmCdS9OL/ScmvMyD6PdRLaYFa8aLqzrUNWn1nnC0xmXHtyVbk8PFrawDVpV9xWWvKOBN0bacR24F/UQmt9X3cDiOTqQd2lDl22KzWaY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745829794; c=relaxed/simple;
-	bh=Gcds0uGVhApI2OBDfQK2o4mQTitj8FZo+k89iEOc5ZE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=LMjhqmgfbMfsEMpQ+8uQYIMcaSeJuFcZKYZz4BT9Y/LaYF/yUdmSw+f4a9Bn0B3gxb/SqHQPS8El/NDw3vpGlR1gOCTxEjbxA9ZbjC8mGpAqs2o6vwCUdOrSIHaRJJ4ky+sX2Y6FRzQCgf/UbpTqYX2YsOkSoodo1Jiv01Sb6vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=D0fLs7gs; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1745829883; c=relaxed/simple;
+	bh=kDOOlpn4hGdk871V+vnkWTEeaPJnfV7z1o0lIRv9PQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jYoaPE0VkO0gYAJvm6dGVtauaxS80t+lE1jzGkN1X0GP1pqc0IH4ns9Dq3PddqomvaO5acEFOuX8FU7mKZNVQx4JjXcabam5ozfFAjjWwU4NO0kwaQ+iXTXGO+BYJGJelAlttn+qBcLMsUsDhHWWfViK6pR59VWRDXuNljtw4yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=K35f0nYN; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="D0fLs7gs"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S10tV6012525;
-	Mon, 28 Apr 2025 10:42:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	sUoE004pjadBnoyOzbjhr4dsGQzt+uhGUkn+RUm/jfg=; b=D0fLs7gsxTlr5vFe
-	bsaxeq5KDUpHSQk/ga/QFmyYpn1ugJA5w7vupcWL0iYO4T/lOMVGUubA5RMbu8xI
-	UCJY2KGjHxML5SyOhnAYZ8zJI5FFmFPg/x9j4QeoXKrdsdzMW+VvinPd1skBTnuX
-	YRZm/i9C8aPtO0+Bn/G/44FTcWuTu1o72ixKOaoUckrwONEhR6G2YIDRbgWEqKgq
-	nsc3L+w5hyfs668Y8fAQNjWPloj/uuoaWH+3TJDjjCHA7cXGGQkBoMbpXeG/6VES
-	v6AwH9DsLxxVT7Oy0AABnOPs8zyMeXIWqR6xJfBDPn3wTGNP5DOjIxzJw0xYOfBz
-	SlxLsw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 468mwkx3pu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 10:42:57 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0115640051;
-	Mon, 28 Apr 2025 10:41:59 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 150F5A3D5A7;
-	Mon, 28 Apr 2025 10:40:47 +0200 (CEST)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
- 2025 10:40:46 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 28 Apr 2025 10:40:23 +0200
-Subject: [PATCH v9 3/3] arm64: dts: st: Add SPI NOR flash support on
- stm32mp257f-ev1 board
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="K35f0nYN"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 16E47A06AB;
+	Mon, 28 Apr 2025 10:44:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=wxyYoBi3DgL4L83PBPGH
+	n8OH+IryRzFYeqAsCylOSvo=; b=K35f0nYNDFT1Y4R6KNbrf7God9fUefsg/NU/
+	lJAzVssoQE/gfdvfu1j1qWPHA/j0EbtInFVCmZeoVKlILUPNKNgcM3+u9T65Bsm3
+	gbNCUrifGBZCgAX/oRnX/k3IR98iMcTVFGn2I4jgSv3fEg3/HmYlvRIO3sq885sL
+	foz9rpvtJEXMLLV69BbWDPCZzLAFCeof2LcZxe46u0Al1bfjUTDgYIRKEd3/aE/E
+	JN0XBZR2tEmu1ezpE5OhHJn80Fzzoo5OpkkCpBSY6FbmhFGcuvXTdILDIyc1/+IP
+	tnuZ8l88auW8+Q8zoj7YC2yiiG8CpTbINO54XmUJICqxrc0AtU76Q22xen+bC6PC
+	8aRRVwOIglvUpKR8WZkziLLKJdHP7XMy9xJZL+feht5+Z9HNvQcKRcvXuppKSJFs
+	nt70fA9RSNOJqb24hmU9dTwSNC372qzFBweuHxfskG0O+QVE1K0yynAlvN1mxPTi
+	X7pgxVB4vZ5gjOOzEJYZbDnKTBz3X+iBRcXqUQPycgSbYtqpeSnHmhn1j9FzcM9o
+	tZ81VCViEavhaSmg7NDqdGBEhPaoDxbWKM5IGclh3dcRK3NXag9pIE2Z17KdcNv8
+	27/jK0l1/89VnRjw66Fevo6LrcNzIhyvy9hId+bPMYwIAiq2Zgaxrl3tIyWYTe37
+	44mHwgc=
+Message-ID: <b38b27d4-c3d3-450c-8634-2e07f393a76c@prolan.hu>
+Date: Mon, 28 Apr 2025 10:44:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250428-upstream_omm_ospi_dts-v9-3-62522b1b0922@foss.st.com>
-References: <20250428-upstream_omm_ospi_dts-v9-0-62522b1b0922@foss.st.com>
-In-Reply-To: <20250428-upstream_omm_ospi_dts-v9-0-62522b1b0922@foss.st.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] pm: runtime: Add new devm functions
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Varshini
+ Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>, Mark Brown <broonie@kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Len
+ Brown" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, "Alexander
+ Dahl" <ada@thorsis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>, Pavel Machek <pavel@kernel.org>
+References: <20250327195928.680771-2-csokas.bence@prolan.hu>
+ <20250327195928.680771-3-csokas.bence@prolan.hu>
+ <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94853677366
 
-Add SPI NOR flash nor support on stm32mp257f-ev1 board.
+Hi,
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 32 ++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+On 2025. 04. 09. 19:43, Rafael J. Wysocki wrote:
+> On Thu, Mar 27, 2025 at 8:59 PM Bence Csókás <csokas.bence@prolan.hu> wrote:
+>>
+>> Add `devm_pm_runtime_set_active_enabled()` and
+>> `devm_pm_runtime_get_noresume()` for simplifying common cases in drivers.
+>>
+>> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> 
+> I can apply this one alone if you want me to do that, but I could also
+> apply the other patch in the series if it got an ACK from the driver
+> maintainer.
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 1b88485a62a1f837770654eee6c970208fef6edc..9d1a1155e36ccc283cb73e51b91f3200ee54a4aa 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -80,6 +80,11 @@ fw@80000000 {
- 			reg = <0x0 0x80000000 0x0 0x4000000>;
- 			no-map;
- 		};
-+
-+		mm_ospi1: mm-ospi@60000000 {
-+			reg = <0x0 0x60000000 0x0 0x10000000>;
-+			no-map;
-+		};
- 	};
- };
- 
-@@ -190,6 +195,33 @@ &i2c8 {
- 	status = "disabled";
- };
- 
-+&ommanager {
-+	memory-region = <&mm_ospi1>;
-+	pinctrl-0 = <&ospi_port1_clk_pins_a
-+		     &ospi_port1_io03_pins_a
-+		     &ospi_port1_cs0_pins_a>;
-+	pinctrl-1 = <&ospi_port1_clk_sleep_pins_a
-+		     &ospi_port1_io03_sleep_pins_a
-+		     &ospi_port1_cs0_sleep_pins_a>;
-+	pinctrl-names = "default", "sleep";
-+	status = "okay";
-+
-+	spi@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		memory-region = <&mm_ospi1>;
-+		status = "okay";
-+
-+		flash0: flash@0 {
-+			compatible = "jedec,spi-nor";
-+			reg = <0>;
-+			spi-rx-bus-width = <4>;
-+			spi-tx-bus-width = <4>;
-+			spi-max-frequency = <50000000>;
-+		};
-+	};
-+};
-+
- &rtc {
- 	status = "okay";
- };
+Did this end up being applied?
 
--- 
-2.25.1
+Bence
 
