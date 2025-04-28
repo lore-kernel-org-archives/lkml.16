@@ -1,35 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2975B1A072A;
-	Mon, 28 Apr 2025 13:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F3826B96B
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846994; cv=none; b=tRBudqP2nXs8TqXCNzlKkwe6xffNrX18c01airQ8kprz5vpfrd0jY51ZgyLdXVtOF7ie4hoXA2bKIOl8y4j+KyaSGs+Q6lsINedmRTufsVH82Z+iY2fngDiPkUhpOVUPoNgOz6LrJxkqQeg3N6Zj0nBFhx0XE/aqIdaAIL2uqME=
+	t=1745847007; cv=none; b=laPVQg0kTjspYjoxZ0+e82FHbfoX9hPIwvyo80SnMzuUJeJlpcFdMzpAwOwWshXXIAh/gogvvZJjjm0keDDcnJmj9p/Op12WoKm805S4IN9TbsZc4fihCwnqAHQExCl/iODSUNkA+KJH917NJaoMFt7HQKGUK8o3NiqlTT2tb1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846994; c=relaxed/simple;
-	bh=elk4Zqa+3hCtmUiNsAt9MfBksCuGpsquiK6zsRxydTQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=WSx3OxkujX7yIn/vX3F894RxHrYsErfeNiyZAILdcFqKHvdX+5PzlvoRGbvZdGEW37B977NgXYcZbIACdnmkohZwjrzPZUHDunSWs6FaXBLnyFAtDzsNCvaXCC8FbA7iOjLCPRkn9Bv1AJK9yVrgxSsQBTnZH29akHCrmyQWYO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TD7QBfDg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745847007; c=relaxed/simple;
+	bh=Vq/h9KhZcA9eirkQVo2w4gLd0E7LXCueQL2GdN/mYMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=li7q6w7eDLclnaXHxDOiUuwQxhcJqf3wsfjmfIAHu6G2WviUpAT+O7HyAjI98k8cUWkDmN6O7A+r53iZLGvcvFjZdR9w5HlU+ReoZ6lvsjy2TzEXAWPDvtVdF+TumQD1siAGSvfT37sjpstcu75fUCtnY99HwzSFINwaLchXPzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=KH2/gudT; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TD7QBfDg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0EBC4CEE4;
-	Mon, 28 Apr 2025 13:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745846993;
-	bh=elk4Zqa+3hCtmUiNsAt9MfBksCuGpsquiK6zsRxydTQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TD7QBfDg6kXdOzjRs6gtAIizZopWFFNqcvzVQOUhE4adYd3tKK9ZWRiOnvUE6xSVd
-	 jqwrYMQ8+CvdekMObGo0NgaCNDmpuD0w0cXxKLSIz47iIeS/A+QYeABeLViatbJfgl
-	 WYuFL3DJJsVzqm0ssKDEWQxyOqyy4bbuIUxmpfwxhdut/618sWFo6Maqz94oacg6/C
-	 PFGArhwz0OFSGUVyUCsQRZIPi4wGKLvIrlI/LJUOfHZ/1qnX4nKj5+7grom/3aVSVM
-	 0hcg7j0y6Ieg1gwWvMRkF6+1AoV5y9QGkFI2DE13pzJZ78Bj3EwkJ7EatPc+D16aoT
-	 QizlVzaNHtOoQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BF93822D43;
-	Mon, 28 Apr 2025 13:30:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="KH2/gudT"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso20718375e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1745847003; x=1746451803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4n7WimzNe3yrtmY+n2a9ONyzIrADFV93Pw9AJqzK5yQ=;
+        b=KH2/gudTriXTmHzNm7abSSdqkSCoDham0G0VtcrwLGSRyggObQrSGkT8GFmWyckCeC
+         GSKLJYbA3xkEaFQ/GFtcPLYOOT2FPyO85J5mV+SyK3yo0qycCOlC2ASDk7CYm9YVYt0k
+         kJhcGfMik+1jIihcb6/b06eTnGZxOQIWW1z5vNubS/hsnFp82lr8sQrGkmebcCv9sYQn
+         wXw5VX3Ocpr2gnQyVyiK8S9NXP8p2KPprEVIJaswyTAxceKFPQIFivva7xAM+7rfaPvA
+         gJm7jx2X+ATxZaa0hVAeqCmYXls7xnRK0Dh1bpAmEIcOIYGpZ/5dxXttERPbYNxR4kRV
+         Tqrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745847003; x=1746451803;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4n7WimzNe3yrtmY+n2a9ONyzIrADFV93Pw9AJqzK5yQ=;
+        b=vZvTQGvduhxQTWuZpgaawPiLl7xESMqvUUWiv6kbzK7MD+5XV6+007SJ0yZmJ1Z0q0
+         weYoW1f4vjL4sM0Nrf5rp7jydEdhmzbgo7xlmazQ7+wevRP4HMT5zX6seYZxm7HvqfvC
+         Cb81kMnsKPDpKWe7vWyITGvvzzLYpahDzg61Lj7DlXFr/4kuOPLdxwFZn2Y2sW8P3mA3
+         9R1RCVTX22v7S2WXyAJf1OWwo+GxKRdwQQQjTGOJiqYutFbpdBAoW0fAVmU1J1DDmgu7
+         ZrJRjyLBm87QDzqs0blCUyeCp26TYumZwepBwp6I4hvEgi3aGzFL5CEOEHPDoYBNhc1O
+         W9kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVgs3rNpwI1usafLOI7pqEGnmleJUcGs2gX/5zUVMBc+LTGOSRJL6xwLabiR4DFyktYSXIk0/fmu8cRAfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9D3P+wmDj1uIlubbAwkpVyS6gO3bI946XLsE7ELmDAoMCxmj+
+	YnYHdFdEvoeCwC/VUStWadrI62dIbEmxulzQdtGQ4ye5N2/tZtRnwJ82MKtA3jU=
+X-Gm-Gg: ASbGncv/hwJnvZ+ggu1egnq8aFCovScEUUsY+suLq/EVb8pJXQw+ICLIYazn/3IfZ8D
+	oxmAu3tdTYcITIykUVWs7qLoWxI/hVwq4GPNqf1Tr3HvHw/9C+gbSxLnZqf86q9JJBA/tWwQHOn
+	HrooY8Mbe3TBP+laQNl8LcdrQG62R3iLLhKNDCEu7psVyrPBWZFtQ9ilXYTswaTMFHSXI6Kfn8c
+	vxzAdfWt6yBdmX1RN1Lwkav/MCKKz8SLnPpcYPiROho61xaEh/Z94G0gsZq1zXSVUAGKqCbxcwI
+	i6EpU0ZJhaydVm2fK83mqQ3pB667aOUCcwl46K+jYol24N5Ook6Be+bQfOw9mKB3UnQ0Csz5rdu
+	wTXA1n8k6sUdFejYgtGk2tvpz3vs9VtkJQzKgvG/9
+X-Google-Smtp-Source: AGHT+IHzI5EcHrMeuZrsyAK5ccQBf+Ek+CN3wywl5J/YYH7X91D2dg9mc+ls3jyduRP3SI61g86XOA==
+X-Received: by 2002:a05:600c:1d86:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-440a6347fe3mr104964505e9.0.1745847003302;
+        Mon, 28 Apr 2025 06:30:03 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e06d8sm159783145e9.39.2025.04.28.06.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 06:30:03 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: dhowells@redhat.com,
+	netfs@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] fs/netfs: remove unused flag NETFS_SREQ_SEEK_DATA_READ
+Date: Mon, 28 Apr 2025 15:30:00 +0200
+Message-ID: <20250428133000.3199729-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,48 +72,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 0/3] net: stmmac: socfpga: 1000BaseX support and
- cleanups
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174584703225.917720.8866587140005702000.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Apr 2025 13:30:32 +0000
-References: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
-In-Reply-To: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, andrew@lunn.ch, linux@armlinux.org.uk,
- kuba@kernel.org, edumazet@google.com, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, horms@kernel.org, alexis.lothore@bootlin.com,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
 
-Hello:
+This flag was added by commit 3d3c95046742 ("netfs: Provide readahead
+and readpage netfs helpers") but its only user was removed by commit
+86b374d061ee ("netfs: Remove fs/netfs/io.c").
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ Documentation/filesystems/netfs_library.rst | 5 -----
+ include/linux/netfs.h                       | 1 -
+ 2 files changed, 6 deletions(-)
 
-On Thu, 24 Apr 2025 09:12:19 +0200 you wrote:
-> Hi everyone,
-> 
-> This V3 is simply a re-send of V2, targeting net-next instead of net as
-> the V2 did by mistake.
-> 
-> No other changes besides a rebase on net-next were made.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v3,1/3] net: stmmac: socfpga: Enable internal GMII when using 1000BaseX
-    https://git.kernel.org/netdev/net-next/c/6fba40e7f610
-  - [net-next,v3,2/3] net: stmmac: socfpga: Don't check for phy to enable the SGMII adapter
-    https://git.kernel.org/netdev/net-next/c/3bf19459da62
-  - [net-next,v3,3/3] net: stmmac: socfpga: Remove unused pcs-mdiodev field
-    https://git.kernel.org/netdev/net-next/c/8fb33581bb8a
-
-You are awesome, thank you!
+diff --git a/Documentation/filesystems/netfs_library.rst b/Documentation/filesystems/netfs_library.rst
+index 3886c14f89f4..7d380648e131 100644
+--- a/Documentation/filesystems/netfs_library.rst
++++ b/Documentation/filesystems/netfs_library.rst
+@@ -275,11 +275,6 @@ handle falling back from one source type to another.  The members are:
+      This can be set to indicate that the remainder of the slice, from
+      transferred to len, should be cleared.
+ 
+-   * ``NETFS_SREQ_SEEK_DATA_READ``
+-
+-     This is a hint to the cache that it might want to try skipping ahead to
+-     the next data (ie. using SEEK_DATA).
+-
+  * ``debug_index``
+ 
+    A number allocated to this slice that can be displayed in trace lines for
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index c86a11cfc4a3..d315d86d0ad4 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -191,7 +191,6 @@ struct netfs_io_subrequest {
+ 	unsigned long		flags;
+ #define NETFS_SREQ_COPY_TO_CACHE	0	/* Set if should copy the data to the cache */
+ #define NETFS_SREQ_CLEAR_TAIL		1	/* Set if the rest of the read should be cleared */
+-#define NETFS_SREQ_SEEK_DATA_READ	3	/* Set if ->read() should SEEK_DATA first */
+ #define NETFS_SREQ_MADE_PROGRESS	4	/* Set if we transferred at least some data */
+ #define NETFS_SREQ_ONDEMAND		5	/* Set if it's from on-demand read mode */
+ #define NETFS_SREQ_BOUNDARY		6	/* Set if ends on hard boundary (eg. ceph object) */
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.2
 
