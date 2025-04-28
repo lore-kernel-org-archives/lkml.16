@@ -1,178 +1,122 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C3C25F97D;
-	Mon, 28 Apr 2025 16:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5448810785;
+	Mon, 28 Apr 2025 16:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857386; cv=none; b=V6UBFzMbTZ5YxdCNP5dE3qn3MCAewVTGXkx+zn0kgfp25lEWfJFoPmkA0Bh1hul1RHt5aMl+ftQjBTtBGDdPfn1VJL/q8z4xn4kswYs/4NMD0o9iCdBY+B14E9UMPz5H++/R7oW94q3rM/i/oNOnaJA/mbsd5ickTjfgDqrvA5g=
+	t=1745857411; cv=none; b=A8MkmM8lFaX8YAepA5K3jNyWTZURiVNF+kA3nTraHbANpjyZbLkZSq5udlhFqjwN03o/s+CZT3wC8Artd9AW1/Reu2wLvSyqL6K8o2qmIKSFsRaEn+89aQ5NSzHj0eXd5xrCcXOjT/T9K4ZCfKJjXJ8VEat29xZ7R7T/KfEdaqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857386; c=relaxed/simple;
-	bh=A5Dee5PQdaN7xIaILyq3TBHSqiMRKdnh3vDw28nj2ps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AVcOiziyn3iJHbc/ZTP6tkr09GKhpsCmvCgJTN4H8scpRZgHoUimq2WLCow6A7aXPHhRaF+n1u6SlJIodw31FiHRSl5KHHN1M0ItwzfGl/QDS4jYiDRoSLdE5V21lkfXWbchokWQbRk9LWppEeW7aDGAO1y8MYRD0wZmYQ8CY/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nTIF2imE; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745857411; c=relaxed/simple;
+	bh=5qPKUfvfWBm6GDPq3AacRMyFRllAqsEUiTvBhrcqlew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MUIm+mnco1WILdZlMuA1PV0jZDqNK5CxZLFMDkn46Rg4AVmB+Pk/ANtj4GuC42yi8bKvcJWQClkAjYFQRZxIP1k1pPzc2ui8kzsqUand94U4ZRZBJ1wkKlaI7W3HVcq4q3v4oGlj2HpTj+jvcGOXMy4se4cU6XueLSNqqlpZ6Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S3xmTi2e; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nTIF2imE"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SGMuNC3443258
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 11:22:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745857376;
-	bh=6sopdPzxBrsv7gyGIR0sec5UUj1FEvIaNqj0jbpbgo8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=nTIF2imESXweQqcWqi30qcEa2puSO/ASPRlz3r3z6TabhqCKGu6EKiKmEGHvyR4UR
-	 ZbZrgfFzwDT4cP5gzQBJlFRL4Zp0ypUHp1hcvB211mlTWeiWu5I9aKPdq9bIvwo2uD
-	 kPDpZrvuzVDc/w640rQ7zU5nWuPiWZAjH08Rwd2g=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SGMu3r107578
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 28 Apr 2025 11:22:56 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
- Apr 2025 11:22:56 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 28 Apr 2025 11:22:55 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SGMsuj126290;
-	Mon, 28 Apr 2025 11:22:55 -0500
-Message-ID: <dbb5e793-a7b9-43ab-a54e-28d5205fd0db@ti.com>
-Date: Mon, 28 Apr 2025 11:22:54 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3xmTi2e"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b0b2ce7cc81so5016096a12.3;
+        Mon, 28 Apr 2025 09:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745857409; x=1746462209; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IikIezFwS89Wg3f8ZovJv1bvPqR36SxG1IC6QNm/m7U=;
+        b=S3xmTi2emi2uVV73vzqgGrjtJ6y2RC1pII6vtVpfegMArXE9bEPY/2TrV0kTRE/OVL
+         Bu1S14DqYsatljZNDmWU6SCvRrSM2i0oz/5vZnBxcpa7CCp4tk5vIrTqqd84vsQ/oS3o
+         EJkrZfzsFpECFqmNEx+spEpHtvDIKoer1YhvaJBlgFQoqdYyvbhNDCRTCPB3p9Od6zEZ
+         q4cJZvbbK3yTKnOvnBVSgrfGs+vby+dGJV2bp++HDxw4BkpBilWN6eIGC2AVCdpIO+pN
+         1m8RTlukxs9NCZ16lW6Vvh74KBwUkult/DMsylgxygiyvo9npPOqPUrO9NwklWcQncIr
+         ZcVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745857409; x=1746462209;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IikIezFwS89Wg3f8ZovJv1bvPqR36SxG1IC6QNm/m7U=;
+        b=m6XT8sYzUbJnz7uWqO67B44+M+ooY+8shyKBMOQ5V+7f1pzGMFYvO1OlKOnaV4jT1w
+         9s4NSe+J1pJl2rXibRufDcvQW0CkI2N7pyi2AgkYQ4RkEygdnHkQ6fQKDyXsaRpsF9KZ
+         v/yDPBbshWecHkJdc3BlRqHOKqtuxbI7JoS8tfuip8ywf40m3Zk7pv/nJo6pwPeGEVl9
+         NVHILCSrWoEdFVIHwB29goYDFJkPoC20yOsVMbNWrqF1IWCpFPoqQNYpXvG5lvcf9d3k
+         E6b9tLf1I6Q1x94W074DfRcBql4uO5ZoUjFNW72a/IHMVhsrQ7GuQPdpkPLfMjXxDeYg
+         AbLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVB+nzLjgkROz1cOkXbWWmdvnb5Z5RLGXvwq9ptWZf8Qof4Xek66FpoG6crl5AqK9Xgy2y7pMOeDLCy@vger.kernel.org, AJvYcCVmwVncjIzyJIVk1Pk3pVWt34a5tpfxPlu4APcYpTkW4OOxDmzOHhtvZris3AR/Eshn2MM15RUVYsA/VSlQ@vger.kernel.org, AJvYcCVqFfbHV76jKHZ0wzdJC52kJ77SYd+FiInjY8WrVddqKNyHeYy9C7Lz6QAzQ9JssEZsEk/DCFnStBkFNUwEXOjo36hugEQn@vger.kernel.org, AJvYcCWGWdRVOdw0e////aMYvIIvYp7P1DxJEg5p9gk+X5RFXqoOpZLSo6YOuHM7emo+FW2g0/I3Ctva@vger.kernel.org, AJvYcCWOWbuVsSMXIecWqrQ7M3PJr0X7QEwvBcDb1hgX6H0Vul2P5P4fJO/vT4TtRpNgnmv8Y7oXGNAhxA==@vger.kernel.org, AJvYcCXYGO6f+Y68yswdb7loflPqcp1X0abZyiVE8+2NA+on0CEecTYD5/mvMCKZuxLSx4j7XR3v9bRPHqAZK5Rw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU8gQBZElx2Ru4zUHgwdl/otVvfC1bbkM2PKRAYQkJsvJN8iau
+	WsSGDPg32GfjmIJxUEZk+j/YRezN+h5erCRmBT4fqBGswJrhczhraPezS7Wsc9Yc4tdVw/TtOss
+	Uot3ii5cmKure33H6S7icqQeTsVc=
+X-Gm-Gg: ASbGncurJHmTwT5vHo/pZUjqd9NPlrx+VjrD6+iT0SXTH1nlgxOtkB46bEiBlpDWx96
+	H5tAIzgoru/PwiMP6PSYx2PMK5tD3TLKs1hsFeLfZ+fuJZjYiT7co5RiX4Fjh2eiPguRowkmIMS
+	EAGp2EQ/Nm2hdb2WUDdhWhAg==
+X-Google-Smtp-Source: AGHT+IGzIEjc2lvkceZlDKdm2qY/zCu5A+pl3TXC8mVuaushCwPL9MM4wk7xfNznoiPPQU3PG4rSQ+WeKOpp8Qro3dI=
+X-Received: by 2002:a17:90b:2652:b0:2ee:53b3:3f1c with SMTP id
+ 98e67ed59e1d1-30a21546d64mr698661a91.5.1745857409488; Mon, 28 Apr 2025
+ 09:23:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 07/11] arm64: dts: ti: k3-am62p5-sk: Enable IPC with
- remote processors
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar
- Prasad <b-padhi@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>,
-        Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>
-References: <20250415153147.1844076-1-jm@ti.com>
- <20250415153147.1844076-8-jm@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250415153147.1844076-8-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250428155535.6577-2-stephen.smalley.work@gmail.com> <988adabb-4236-4401-9db1-130687b0d84f@schaufler-ca.com>
+In-Reply-To: <988adabb-4236-4401-9db1-130687b0d84f@schaufler-ca.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Mon, 28 Apr 2025 12:23:17 -0400
+X-Gm-Features: ATxdqUGDgVX_7NlepqnAy9kBPPKZopkYefb_TkriK5U4tyArOVv0xUT4dPx2siw
+Message-ID: <CAEjxPJ66vErSdqaMkdx8H2xcYXQ1hrscLpkWDSQ906q8c2VTFQ@mail.gmail.com>
+Subject: Re: [PATCH] security,fs,nfs,net: update security_inode_listsecurity() interface
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: paul@paul-moore.com, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/15/25 10:31 AM, Judith Mendez wrote:
-> From: Devarsh Thakkar <devarsht@ti.com>
-> 
-> For each remote proc, reserve memory for IPC and bind the mailbox
-> assignments. Two memory regions are reserved for each remote processor.
-> The first region of 1MB of memory is used for Vring shared buffers
-> and the second region is used as external memory to the remote processor
-> for the resource table and for tracebuffer allocations.
-> 
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 50 ++++++++++++++++++++++---
->   1 file changed, 44 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> index d29f524600af0..05760507da4ed 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> @@ -49,6 +49,30 @@ reserved-memory {
->   		#size-cells = <2>;
->   		ranges;
->   
-> +		mcu_r5fss0_core0_dma_memory_region: mcu-r5fss-dma-memory-region@9b800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9b800000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		mcu_r5fss0_core0_memory_region: mcu-r5fss-memory-region@9b900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9b900000 0x00 0xf00000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9c800000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_memory_region: r5f-memory@9c900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9c900000 0x00 0xf00000>;
+On Mon, Apr 28, 2025 at 12:17=E2=80=AFPM Casey Schaufler <casey@schaufler-c=
+a.com> wrote:
+>
+> On 4/28/2025 8:55 AM, Stephen Smalley wrote:
+> > Update the security_inode_listsecurity() interface to allow
+> > use of the xattr_list_one() helper and update the hook
+> > implementations.
+> >
+> > Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.sma=
+lley.work@gmail.com/
+> >
+> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > ---
+> > This patch is relative to the one linked above, which in theory is on
+> > vfs.fixes but doesn't appear to have been pushed when I looked.
+>
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_def=
+s.h
+> > index bf3bbac4e02a..3c3919dcdebc 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -174,8 +174,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struc=
+t mnt_idmap *idmap,
+> >        struct inode *inode, const char *name, void **buffer, bool alloc=
+)
+> >  LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
+> >        const char *name, const void *value, size_t size, int flags)
+> > -LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer=
+,
+> > -      size_t buffer_size)
+> > +LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffe=
+r,
+> > +      ssize_t *remaining_size)
+>
+> How about "rem", "rsize" or some other name instead of the overly long
+> "remaining_size_"?
 
-Since this size did change we should keep an eye out for any existing firmware
-that made use of the top part of this DDR range. I haven't found any yet, but please
-do work with the MCU+SDK folks to get this fixed here[0] so no one ever runs into
-issues over this someday.
-
-Reviewed-by: Andrew Davis <afd@ti.com>
-
-[0] https://github.com/TexasInstruments/mcupsdk-core-k3/blob/93978d24d1224b43a898e9bc5182569b9abd1545/.project/templates/am62px/common/linker_wkup-r5f.cmd.xdt#L294
-
-> +			no-map;
-> +		};
-> +
->   		secure_tfa_ddr: tfa@9e780000 {
->   			reg = <0x00 0x9e780000 0x00 0x80000>;
->   			no-map;
-> @@ -58,12 +82,6 @@ secure_ddr: optee@9e800000 {
->   			reg = <0x00 0x9e800000 0x00 0x01800000>; /* for OP-TEE */
->   			no-map;
->   		};
-> -
-> -		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
-> -			compatible = "shared-dma-pool";
-> -			reg = <0x00 0x9c900000 0x00 0x01e00000>;
-> -			no-map;
-> -		};
->   	};
->   
->   	vmain_pd: regulator-0 {
-> @@ -640,6 +658,26 @@ mbox_mcu_r5_0: mbox-mcu-r5-0 {
->   	};
->   };
->   
-> +&wkup_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&wkup_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-> +			<&wkup_r5fss0_core0_memory_region>;
-> +};
-> +
-> +&mcu_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&mcu_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster1 &mbox_mcu_r5_0>;
-> +	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
-> +			<&mcu_r5fss0_core0_memory_region>;
-> +};
-> +
->   &main_uart0 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&main_uart0_pins_default>;
+I don't especially care either way but was just being consistent with
+the xattr_list_one() code.
