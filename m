@@ -1,112 +1,149 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21822957CB;
-	Mon, 28 Apr 2025 19:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D9618DB0A;
+	Mon, 28 Apr 2025 19:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745868126; cv=none; b=GKfuMSyefPHJ/5MYr2DnIkc+p1jZUg4n4BJPRpmwm2zZ5QlnTVIoTuZ+5EysK7smI5IHfUMPGF6DD2pgsjL+jMrIh5SpkfQmACulL3GseAPZCzMZnftDTqvW92hbZibrNxKMpl4fEdOl2km1lZs6i3m7nKAI5cNM1swCVny2UH8=
+	t=1745868187; cv=none; b=oZ9tDkqDGFHw7rfIYWxX7GUOwkPnpJCWXE057Pvltv2kYme9dVpGG+1q+62bA0fONVwGj+9pqmlHpy5tXtKqvTmRqjdVZ1PRlXyZ3uLw7BqjQ3KbnjiYwWEzLK7lFwKpIp75jcEQ31vBp1DU7OGKbm6w8Pud0YCePOS42PiMvGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745868126; c=relaxed/simple;
-	bh=HtfokJNJj34J3mCE9iyrn/maZxeUZcOgwla6przObF8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=BP+uDhIm50WtTIESvMhJxd+guLB92CKECBSf50qUdfke7dpekP3fDskA81VzHLhKiR9Pia5qu6YRbFyA+2yhBa4j5XClMP9KfpEdBppCyYOdaHQ4DQMeSNZcIXJziBiAJ+dTfUIHaRUfypgpiomdstTTeLyfvxAptLPXMQF/f08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GWpOuszU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mJ9R/yS4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745868187; c=relaxed/simple;
+	bh=ZvDoC81kFt4cDoyxtRck1vxVOGNhZRLiwTxrGEZGnvo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UZjBUQdduy/LR9nOMvcW0JnoCBgfJtFRqtRMzXKQEFGW5MqLlDKVUTfCc042luLJHfQYFX681vC0C9Y+i8LGJCVSjVxojObE6V/vImGa0rC7Q78acOERynFE3dxAfWBSm8OvFJ0COUJEneUYoPo04OhjIecPcnI8mVLSGLS/zXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fbo+7dHL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GWpOuszU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mJ9R/yS4"
-Date: Mon, 28 Apr 2025 19:21:56 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745868122;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YO5xSfRZ5ebwM14pT4QlhcVHgpjwsTo17OmxMSnITnc=;
-	b=GWpOuszUrIGYXHQ4cVVg8uRxZzQnYhepkbzlQUaDEcDBxovWzLahlqvJNxgLaxKKFJhFMv
-	+xttQ71fXv0kyqZgaVAtiLKpYQmGlWD9oYax6Y2vK77TSk1Cfk6XMQYocuM+fqHPOvnW97
-	Bj19NC2SUqkNpq+L/cYE0nB7SIWgqq4urP+Ms2xIuk2PiSHBmTNjm8HRDbSKs4uhfaGQT2
-	4B9Z5Td2amF3ft4lzDk99ddIGefUtgPHe28mgAzHNf9beuscHbuhBzfV/OjCsx7W+3NcZc
-	zNRCX6UtK3GQWGNzzoZXevJOc2w6fSBtFoUKC6XksnR8CjsTfFJfsHFBjl/7oQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745868122;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YO5xSfRZ5ebwM14pT4QlhcVHgpjwsTo17OmxMSnITnc=;
-	b=mJ9R/yS4O4+wL7UHxb9jgpcB9SaU1kvo5Z0XBlTB2Icca6Z0mpG4zzpQMVcSyeWAbb1j41
-	n4nJGZQtpjzwIYCw==
-From: "tip-bot2 for Eric Biggers" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/microcode] x86/microcode/AMD: Use sha256() instead of
- init/update/final
-Cc: Eric Biggers <ebiggers@google.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250428183006.782501-1-ebiggers@kernel.org>
-References: <20250428183006.782501-1-ebiggers@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fbo+7dHL"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 698AE211AD01;
+	Mon, 28 Apr 2025 12:23:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 698AE211AD01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745868184;
+	bh=jGVkN1hybuqThviIpy5Yd0rlklDTmHHqQY1gOTTQ/aU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fbo+7dHLY2ZtqfyjtlaCC5jw3uqw6PD289mAPFW3y9leIqksoAj8pWNCIrbN3bTir
+	 t8IVF7ly+J9ECgXB/qJQ+LMth9i++CMUSEVRhbLOpC8MUWohTAzFbArmXIyjUraZ4l
+	 Qq5vCgAWx1+qCJmiI7PVXDfKUtWQvPmpyy6Pg9L8=
+Message-ID: <5cdb2703-2b94-4f38-a440-8f5c9a4c66be@linux.microsoft.com>
+Date: Mon, 28 Apr 2025 12:23:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174586811655.22196.14930925796793997721.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v8 02/11] arm64: hyperv: Use SMCCC to detect
+ hypervisor presence
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
+ "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
+ <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
+ "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
+ <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>,
+ "maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+ "rafael@kernel.org" <rafael@kernel.org>, "robh@kernel.org"
+ <robh@kernel.org>, "rafael.j.wysocki@intel.com"
+ <rafael.j.wysocki@intel.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+ "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
+ <will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <20250414224713.1866095-1-romank@linux.microsoft.com>
+ <20250414224713.1866095-3-romank@linux.microsoft.com>
+ <SN6PR02MB41576A5C3C0F5911A308E804D4BC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB41576A5C3C0F5911A308E804D4BC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/microcode branch of tip:
 
-Commit-ID:     c0a62eadb6fd158e4d6d4d47d806109e7ae32e8b
-Gitweb:        https://git.kernel.org/tip/c0a62eadb6fd158e4d6d4d47d806109e7ae32e8b
-Author:        Eric Biggers <ebiggers@google.com>
-AuthorDate:    Mon, 28 Apr 2025 11:30:06 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 28 Apr 2025 21:03:58 +02:00
 
-x86/microcode/AMD: Use sha256() instead of init/update/final
+On 4/17/2025 8:27 AM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, April 14, 2025 3:47 PM
+[...]
+> I had previously given my Reviewed-by: on v5 of this patch. But
+> looking at it again, it would be nice if this UUID were defined in
+> include/linux/arm-smccc.h alongside the definition of
+> ARM_SMCCC_VENDOR_HYP_UID_KVM. The UUID values are
+> are independent of each other, but it's a bit asymmetric to have
+> the KVM UUID defined centrally while the Hyper-V UUID is
+> buried in Hyper-V specific code. But I'm OK with the current code
+> if there's nothing else to respin for.
+> 
 
-Just call sha256() instead of doing the init/update/final sequence.
+As I saw that, KVM is special in the kernel as the kernel provides
+both the host side code and the kernel side code so the UUID has
+to be shared in the header file.
 
-No functional changes.
+In the Hyper-V case, we have only the guest side code so it seemed
+more economical to have that tucked into the function rather than
+adding to the arch-wide header and including the header.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250428183006.782501-1-ebiggers@kernel.org
----
- arch/x86/kernel/cpu/microcode/amd.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 57bd61f..b2bbfc4 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -211,7 +211,6 @@ static bool verify_sha256_digest(u32 patch_id, u32 cur_rev, const u8 *data, unsi
- {
- 	struct patch_digest *pd = NULL;
- 	u8 digest[SHA256_DIGEST_SIZE];
--	struct sha256_state s;
- 	int i;
- 
- 	if (x86_family(bsp_cpuid_1_eax) < 0x17 ||
-@@ -230,9 +229,7 @@ static bool verify_sha256_digest(u32 patch_id, u32 cur_rev, const u8 *data, unsi
- 		return false;
- 	}
- 
--	sha256_init(&s);
--	sha256_update(&s, data, len);
--	sha256_final(&s, digest);
-+	sha256(data, len, digest);
- 
- 	if (memcmp(digest, pd->sha256, sizeof(digest))) {
- 		pr_err("Patch 0x%x SHA256 digest mismatch!\n", patch_id);
+>> +
+>> +	return arm_smccc_hypervisor_has_uuid(&hyperv_uuid);
+>> +}
+>> +
+>>   static int __init hyperv_init(void)
+>>   {
+>>   	struct hv_get_vp_registers_output	result;
+>> @@ -36,13 +78,11 @@ static int __init hyperv_init(void)
+>>
+>>   	/*
+>>   	 * Allow for a kernel built with CONFIG_HYPERV to be running in
+>> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
+>> +	 * a non-Hyper-V environment.
+>> +	 *
+>>   	 * In such cases, do nothing and return success.
+>>   	 */
+>> -	if (acpi_disabled)
+>> -		return 0;
+>> -
+>> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
+>> +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
+>>   		return 0;
+>>
+>>   	/* Setup the guest ID */
+>> --
+>> 2.43.0
+>>
+> 
+> My UUID comment notwithstanding,
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> 
+> 
+
+-- 
+Thank you,
+Roman
+
