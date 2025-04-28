@@ -1,141 +1,134 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFBA1B4236;
-	Mon, 28 Apr 2025 09:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB954206B;
+	Mon, 28 Apr 2025 09:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745834120; cv=none; b=lW3/qk6dfdK7RM9wUj+2TlHsDM6jEiQ+Qqi7TBu9YumLN0a38TpW1AI0gFY+737JRAPh0Eda0aKGnKig09jXCVQEDsoCTr6NetdAHC9OCJ4MZQ4Pr1EPxgWaSG7c5xxnJOGHoU0cKsOTs/fwkBoMgu8Rxv3I+S52afeCHjtG3hY=
+	t=1745834127; cv=none; b=MzrplM+lkYDOFHR6nXZiohrnUlHis7guq5OX22F73eQIQgndbd1749J9VEOuBxjN97Drjz3J8XW2SZb4tYWE/Ow1F717LZkErH8B6jynjFZscewEoDSiOqnw9pIak2bvscOieyOIsv1yBBXuLGAl4bn5EuafbV7JtViVd/jCrtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745834120; c=relaxed/simple;
-	bh=xyIvObuf466q/Dg9johj2Od5IvIphpCmwp+0bLxSAbo=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Cnu9uws1xT/3OyHJjxXCu8l0mWRPmd0T746ynnurjKQ60LHn4IPxM+FNTJ48hSSduA8InjkaBEWsCtNlD2Wa/fmS4Zjfo4WJVL5ofppdSC8D6PqzxgedoCKZTwhCI85PLWNdFSKs2q1IqWRlpiCTEDuIalGN4bjcfvXDova1iKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAYWEyF4; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745834127; c=relaxed/simple;
+	bh=5gJA+Muqll+Py6HxdXCmp70DGvso8EIkCA2rMU7/Xzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CAfwn+P3tvXqG9SCpff6FvQXBzOmOfen8JWHbv+dwjvvUYnjzi2AM8QTRxNdnHwozo81pXpLpdDSwjbfurjUU/4Fv4F9DEDq4/hnK6UHgs37wAwf4wUSglkbyZcqoMZsI9yEWvCClKGZl+eC9EcpV+0cA7xoHEe56yJb8Xkyq4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFfNwySD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAYWEyF4"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2264aefc45dso68546305ad.0;
-        Mon, 28 Apr 2025 02:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745834117; x=1746438917; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OvzHoJ0Ig62smTnWPhMoLx7Hm5DP7D6a933RmPwdRgU=;
-        b=EAYWEyF4nw3lrcnwFOCWxSkawphcHYGtLWuh8xZ6y/+3UX7SIL0OFIoGCzArYH7y3q
-         GxmxABw8ryz+DLsknoojatevPTwASWSJVqr8zuNfhmec5pP8khKiSC7lBPpLU/1/0bP4
-         Az7EJNgQ9rwUkRmnISONVYkjXlo9SIGV1QgsDZu9u+Cquf81hRG84C/pyObiVKAQ7mZD
-         AHSGwkX+KFBr/iIVMJbcfWeTO7DslTgnYfsv+NXueuWken55aVpoNyjweo1IxyOo+Z/d
-         EE0c5SXf6niFjxrtATIM9JvD6thW/Q5HB+tPkQL4Tj3f6bCS3VoCgn0dWZb75zgL9sb1
-         rb8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745834117; x=1746438917;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OvzHoJ0Ig62smTnWPhMoLx7Hm5DP7D6a933RmPwdRgU=;
-        b=DEsOX+/QuqvCbjRYRewhQZImm0mZfkvCO/7DT335m9P+nW8hY+BN+XqnxJP8jq2TRW
-         R6PAdU2yg5j8VFm/wZNmxQ1F/si//IIFvhZI5nyyl+PV8ZVaANbnHbXwOx7Dpjs9PVN6
-         8fe6nMSBzCi/ivr0pIzI/17lsblJthpLO1tf31jfiT2V+9dQArW55BJaixE3SPD7HmB3
-         eD+f6kYb1QxnI02LFFvR0FVMxbWqVCwT7SoauVnQSYhpI5WH4Rfs4zZqHNK1exAsA2cf
-         XnzlldM89cLM4usNgsIiGtkCCIjpQXK1VANr+B0Z85wccgTKIKAo4OYeq/9CdYhcgehi
-         Rn3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXQfTUGuYpljnlOLVPla6GGKWuKj1aV9TU92Df2Y5wUCHZeml42XkyNfuzdphRvEojwcIlCGdr6VCUoWnE=@vger.kernel.org, AJvYcCXXlgC8CrXcNGVSbjcrOLg7TfFYEVokUV2zne1OXBTHdcKMn2VRAAxdc13qDK9gaMUEI8+X@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhDcbfJDDRpsDeDlNrwv++YYU+QxVshR76HjvNTv71rIbfliB6
-	3OS7K+G0pdrrtYpc/Y0WIpZB3iNaPLlO4YvWRaaj3FmL800JXF3G
-X-Gm-Gg: ASbGncvaSzJQWejTRh6VYpy1DUwqz08TXsdE2YsdulweYehp2kGmXUYMlf7oAvNB55b
-	kYU1pp7sKAY3SyTWmZWOSnQst6Dqnfk/OAw5Rtuzc0TZ4TsKk5vMIcx7Cl9rLf7NkXlqcGftKwW
-	3DyUKOBICPaiuhWreaiL75PSeH0BkZ1ehINhh9DD/YMuJ7dQOYW2EQqfm4R4dUwxlssly7ELJ4I
-	UmHC+HSwBYE7Sv9/UbSlQNf+J+mUgL0eO8Lz5sMtxhEw7gpIdbM06sbc8h0FjmxzaCJfTbfJONW
-	iFAXKFCpEoT99Tq1psnuEnnocUGPX4DWpAAZ9lpJ/hhrF7pEEQKGl6Crec/lyOCeIpDjKM5Zjw=
-	=
-X-Google-Smtp-Source: AGHT+IFsue0xtwZLyJ/6qImCX3DmJZDmvXNo/K8GCO5Eg0FZO8GoZSJJEPXmea+5HX6VJR5ZVc0GoQ==
-X-Received: by 2002:a17:903:2987:b0:220:c813:dfcc with SMTP id d9443c01a7336-22dbf73671amr172511035ad.40.1745834117077;
-        Mon, 28 Apr 2025 02:55:17 -0700 (PDT)
-Received: from MSCND1355B05.fareast.nevint.com ([117.128.58.94])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51062casm77958605ad.208.2025.04.28.02.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 02:55:16 -0700 (PDT)
-From: Zqiang <qiang.zhang1211@gmail.com>
-To: paulmck@kernel.org,
-	frederic@kernel.org,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org,
-	urezki@gmail.com,
-	boqun.feng@gmail.com
-Cc: qiang.zhang1211@gmail.com,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rcu/nocb: Add Safe checks for access offloaded rdp
-Date: Mon, 28 Apr 2025 17:54:03 +0800
-Message-Id: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFfNwySD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F40FC4CEE4;
+	Mon, 28 Apr 2025 09:55:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745834126;
+	bh=5gJA+Muqll+Py6HxdXCmp70DGvso8EIkCA2rMU7/Xzk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rFfNwySDl4TQQ0LCzt1/Po19Kl+L3qYQdIcPV/Ug8CF36BZlj9bIWugG7SsPfEQOO
+	 n9aLOUws1fn4ibSUxfUNNHHM/dGtWkZuNqgN8tT7qQgAgnsSOmLFxNnWecSnOVCYA9
+	 89oEEHwFyOvNsA4UoUjHu4Zcz/jHXWnhQ+nobQG4s5wf75Do5SqBcoFILkMxfBQTLg
+	 RtBK/gIS36pNQgjwcJ0EeVZpRUXa5h2UnvKwg47ysLPz8bUyRrDlaWYnRQ92zTGVIF
+	 2+nNe8AMC6kpNmt0um6rCYGQvUVF1F3b3Angf8/7TKOJS1yTtGK1DUzBxSBHnEFui/
+	 uWfJE4towXILA==
+Message-ID: <26981b75-16d6-4b1f-83de-c642ac0e342f@kernel.org>
+Date: Mon, 28 Apr 2025 11:55:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND ath-next 1/2] dt-bindings: net: wireless: ath12k:
+ describe firmware-name property
+To: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: jjohnson@kernel.org, johannes@sipsolutions.net, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, ath12k@lists.infradead.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250424005703.2479907-1-quic_miaoqing@quicinc.com>
+ <20250424005703.2479907-2-quic_miaoqing@quicinc.com>
+ <20250428-ruddy-bold-macaw-9ffd28@kuoka>
+ <bfd1be89-cb03-4426-ad7e-93b6774a68a7@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <bfd1be89-cb03-4426-ad7e-93b6774a68a7@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-For Preempt-RT kernel, when enable CONFIG_PROVE_RCU Kconfig,
-disable local bh in rcuc kthreads will not affect preempt_count(),
-this resulted in the following splat:
+On 28/04/2025 11:48, Miaoqing Pan wrote:
+> 
+> 
+> On 4/28/2025 4:25 PM, Krzysztof Kozlowski wrote:
+>> On Thu, Apr 24, 2025 at 08:57:02AM GMT, Miaoqing Pan wrote:
+>>> Introduce 'firmware-name' property to allow end-users and/or integrators
+>>> to decide which usecase-specific firmware to run on the WCN7850 platform.
+>>> This is necessary due to resource limitations such as memory capacity and
+>>> CPU capability, or performance and power optimization for different
+>>> application scenarios.
+>>>
+>>> Two firmwares are supported: 'WCN7850/hw2.0' and 'WCN7850/hw2.0/ncm825'.
+>>> The former is the default firmware, suitable for most WiFi 7 STA
+>>> functions. The latter adds support for commercial-quality SAP and
+>>> optimizes power consumption for IoT applications.
+>>>
+>>> Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
+>>> ---
+>>>   .../devicetree/bindings/net/wireless/qcom,ath12k.yaml       | 6 ++++++
+>>>   1 file changed, 6 insertions(+)
+>>
+>> <form letter>
+>> This is a friendly reminder during the review process.
+>>
+>> It looks like you received a tag and forgot to add it.
+>>
+> 
+> I don't find any tags on previous version: 
+> https://patchwork.kernel.org/project/linux-wireless/patch/20250423054152.2471568-2-quic_miaoqing@quicinc.com/.
+> 
+> Do you mean I should add 'Reviewed-by: Krzysztof Kozlowski 
+> <krzk@kernel.org>' ?
 
-WARNING: suspicious RCU usage
-kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
-stack backtrace:
-CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
-Call Trace:
-[    0.407907]  <TASK>
-[    0.407910]  dump_stack_lvl+0xbb/0xd0
-[    0.407917]  dump_stack+0x14/0x20
-[    0.407920]  lockdep_rcu_suspicious+0x133/0x210
-[    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
-[    0.407939]  rcu_core+0x471/0x900
-[    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
-[    0.407954]  rcu_cpu_kthread+0x25f/0x870
-[    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
-[    0.407966]  smpboot_thread_fn+0x34c/0xa50
-[    0.407970]  ? trace_preempt_on+0x54/0x120
-[    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
-[    0.407982]  kthread+0x40e/0x840
-[    0.407990]  ? __pfx_kthread+0x10/0x10
-[    0.407994]  ? rt_spin_unlock+0x4e/0xb0
-[    0.407997]  ? rt_spin_unlock+0x4e/0xb0
-[    0.408000]  ? __pfx_kthread+0x10/0x10
-[    0.408006]  ? __pfx_kthread+0x10/0x10
-[    0.408011]  ret_from_fork+0x40/0x70
-[    0.408013]  ? __pfx_kthread+0x10/0x10
-[    0.408018]  ret_from_fork_asm+0x1a/0x30
-[    0.408042]  </TASK>
+No, probably I mixed up the patches.
 
-Currently, triggering an rdp offloaded state change need the
-corresponding rdp's CPU goes offline, and at this time the rcuc
-kthreads has already in parking state. this means the corresponding
-rcuc kthreads can safely read offloaded state of rdp while it's
-corresponding cpu is online.
-
-This commit therefore add rdp->rcu_cpu_kthread_task check for
-Preempt-RT kernels.
-
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
----
- kernel/rcu/tree_plugin.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 003e549f6514..fe728eded36e 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -31,7 +31,9 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
- 		  lockdep_is_held(&rcu_state.nocb_mutex) ||
- 		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
- 		   rdp == this_cpu_ptr(&rcu_data)) ||
--		  rcu_current_is_nocb_kthread(rdp)),
-+		  rcu_current_is_nocb_kthread(rdp) ||
-+		  (IS_ENABLED(CONFIG_PREEMPT_RT) &&
-+		   current == rdp->rcu_cpu_kthread_task)),
- 		"Unsafe read of RCU_NOCB offloaded state"
- 	);
- 
--- 
-2.17.1
-
+Best regards,
+Krzysztof
