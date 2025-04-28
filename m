@@ -1,110 +1,194 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C58B38F9C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D51D2798E6
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745856910; cv=none; b=OgbTWsjNIgPo0sc1RJjHlW7QDuh7oTbbUQmt8/YGe9/2IncSsFO0Pb8VKj0VX2wTL07FYvMv4VkV1HVI0FqODfM1v4xogY0FjmpRvHFOv9Rm9YlUZGBnHmI8LRSwjWiu3qYO/svXBPbGOtOFVRo/MeW9+7smw0a2Jukg4fIOdO0=
+	t=1745856910; cv=none; b=sMvcxyL2iErYjNdI2ulKSQmZi94yoouitEHlAa1uoM8hTmT/YvWHYASUpa2I1gA0bfmEa8GOFUqBmonV3uAha/iPnOj/GhhSt32dClPBt6M1O/Kz3x+j+1aPZiSf949IJEg3ibujO5xsD7udh3dFMKzXcVeQCiF4sByyMJuFo3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745856910; c=relaxed/simple;
-	bh=/4WEADGTxXovLUfxXrmVaoT+Q6fIuK56MLUUKJPFAjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q81Km0l0alnyJnxPbcqP6pD8UlufHU43mQtmlSVC0sRYsh9xyZVJZJKQJDbPzrN2UetzxNTFabZKiESrR5sagA5gVYOZxbfWc2qsVAOEiR/B+lErjSfDO0A7hTv2IZ9XJyc7gSRiSRio0NNWbkFkMJxKaXB20Sn74wjxyYmWcp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AB8FvPfl; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	bh=Rq9gbpQXJ9fZGX8usBgFaaJ8SOHAqKL50LuYqNIUibM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DdYkVJue0hDlhVWEE7pF2xuL1EP/7Bz/N5w729Zvjip1GeH9qzRRmbT4ACJqk5vhMtVYe12oi966cTNJmLe2gYAwY9fhChz2kxdyoJrIi3+/ksccd6YJJVAQJ+O0Q+d1I/Z9zWOFdZNcipVvNIGY+esAJdN3/TaqVb+gaAJVKPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=if/7w/vw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AB8FvPfl"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so2937227a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745856904; x=1746461704; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AF1KZ463/zoTgYMZNz+2yImgi273kMcd/qUiFYdEgdw=;
-        b=AB8FvPflIefKb4fL/CCTg2yen599XuseYDIvL24wGvpmoXmCdZsRh57X8LrdExcZzC
-         RJEXbdV4FKOChooE5yFYpECTYQmONxaCrkHJvj9n7p/onna9pNEtH85jFeDeGz6Yu406
-         bddesp4NWMrU7yKr0MxSQQXEE4fkh3k/iXsTE=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="if/7w/vw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745856904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mjJ99tBsBuWDC/A8a87VaJBRW/3oANaQLfcx6YawuMA=;
+	b=if/7w/vwQmNUKtBkxqXDS9x2WjWuzZgYvu8cT1lcRSAtdZnl3IMLdp36WpSl4yKSQJjHkb
+	XiPeXuufho7kRbxHTkqKuxqXcSziyFjZbFAMie+dfxwaA06j2PKGIW2P3vWkNBIAHhYEyv
+	287jUEZk+jN3ngLKvK54OBsO5FV/kYA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-108-jAfgEWwaME2xiLVFk4taoQ-1; Mon, 28 Apr 2025 12:15:03 -0400
+X-MC-Unique: jAfgEWwaME2xiLVFk4taoQ-1
+X-Mimecast-MFC-AGG-ID: jAfgEWwaME2xiLVFk4taoQ_1745856902
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so24923685e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:15:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745856904; x=1746461704;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AF1KZ463/zoTgYMZNz+2yImgi273kMcd/qUiFYdEgdw=;
-        b=La4IWqt3yoHrgoNV5l0oPSQV+HzKZvoF16WVudyfUd8auPXUPyPkn9jNrFvGDj5sJo
-         1zR4NVro8oH2SK5GLKrdBlN/wbiw6D6fcm6i98OeUq9b+uKEI8s5k3A7bhcTtlBrqT5Q
-         CvRFk+hjb1GKq7Vfc0N1alaopt2dD4Zwf55TSoAQ89IijcoTX7QXBrJexjMg/tSYHuu4
-         O5oqviornrf1YxH+WEkMyePnTv/XbSbGdHzCebaN/kUOlS+v3OkjCWAxLMjQ9AmUPQzv
-         JI+H6wUHGNtIyMXmp7e0PK+cfgUWgUhmrLzWjhd16p/lTTYLFavey8tdUwZG0l+MeXGK
-         FJGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbJhl70/3CZeuPElMv5CNRGQZDsJaSp5nhhFNFOEBqlTX12NZThamz1DP+YpNErs8NVCSOrR2WGqiy4Lc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+ReFZWOqESemKz+9pUfAh6vBhYu/7CMGxmd9b4p2Qf79Ab64Q
-	mBjzYTO3GQZ9ApcraZ7LapPcYUmZLed3PsWuy5sUcYnfq2Qti2nSY8ca6pqA3cpVftlOKPYLMci
-	J+NY=
-X-Gm-Gg: ASbGnct8XxfrJp4btETsbVvZdyu94INijNJTS5jm2p7GIZRrmo5dXC/BcV++L4J2TbG
-	dxR8bmbks4g5dfeqO+SmMKehz8tYvu5gJEveYmzY+y97MeBqCvs34QTB6VUiOA0t8tDwXBWouNm
-	BuTTKMrULOiLScbvQVFz/MosixNknDkzme/KTlRe5y0b/PCRMU4WD5yuzAlEWT7Fx+AwIUjDLxP
-	NOwMxlSbFz2Bt8804IlGP0rx/KEDUj8dER2qUJC++bj29Yz6GCpHYcaTN+4xBHwI3+dK9f8+gLO
-	vQ0T3iIJ9v+kkfMItgLJ8T/yaY9D5upzjQzUxYZaZ4rGqWAmiyGvetUAB84d+foAdHnanhNvS/r
-	aRvdP+bdOCk+s3ik=
-X-Google-Smtp-Source: AGHT+IFKr+/5Xy/dZyVHTc57VeQB1s3rG/G2NO/ekVGy5QmeC/05Dq5mNAffCjT6WC4S3zDnX9tAfw==
-X-Received: by 2002:a05:6402:35cd:b0:5f6:c5e3:faab with SMTP id 4fb4d7f45d1cf-5f722672a7emr10016015a12.1.1745856904551;
-        Mon, 28 Apr 2025 09:15:04 -0700 (PDT)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f70383296esm6036364a12.69.2025.04.28.09.15.02
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1745856902; x=1746461702;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mjJ99tBsBuWDC/A8a87VaJBRW/3oANaQLfcx6YawuMA=;
+        b=EXPXJvzG1hr2hRtFnxKktiCYxt5k356vGE19nfiV72tZD/XspJOIGRRUe6S7O0Lm8p
+         ekfS8LY5pdQln1dZZwcrnWetx+gn6gQ/5wRsfbV12s/P4ePRNyYyY873Xl0SOfopmDyx
+         sotsGQ65RTxLzTP/a3vDxXgW9dM4iFtdg0BgPrI8kPf00YNXxLXnqxEpXPf16tOuPrRl
+         chzASoHrlOffTcRu7gSquxLqWPMMBBxAcSvn61n0TWmecguJfdkc81YU8GYKkTC2TiRJ
+         upa6MLDfG2RZ3p2zl32AqZ9vQbWqy9mOgadmjaos6rzw261xqW2fLe81I0+2jzn2NHB7
+         HZZQ==
+X-Gm-Message-State: AOJu0Ywed2q+9V7pOzu+jABpA/pXaiVoKQ47jKV1deHbmzSdeZH7ehjf
+	l3bIOIIR+6xvFrDq2h6Q/Sw0yXtDopiROEF0jH4n0/NLGDX3eFqt/U/0/loXZePjc/p7cCvlPgZ
+	nabVo2fW0+vLU8dGUIR4U05saOP768E+eFq9roMV9+SjfcvMaETZBAA/GJ9ZyVw==
+X-Gm-Gg: ASbGncv0qt3EFloafTZ/mGEq4cWYBDVy/akksQ1P5Xh9j+E7kTX5W+T7t32C2w+pgPW
+	iX0Rx/lWILVVB7kiCTaMxItHBUVIdcyDWrQzVqb1RA4Ic3E2RZl1QsWv0y6/8SP8KMqmmJqol+X
+	yoUBgCtNK2QLLJEvATgLGY4v66yurpZw4JCt7nCGJ/meNcLVT2SnT7RcleoJf0/4TZOiVxayQzK
+	DL0EYTAX1Af6AqLqKRAtfHJXQ5UdgeZtxU0Ubbzhn/ZHi7wSCyfagubz/AFSw0oFiXDorz8VvkZ
+	TQVTfzctRyPZpuZKGOp9wOFejPITVVP/iu0iUz9n326dsuyV6xQ8HJ2pUL3IxpJe3cnuZANVrQc
+	6AJhtx1JnreF2T6G1n0/zLb4gDjqT2l1DW1MByg==
+X-Received: by 2002:a05:600c:4f81:b0:43c:efed:732c with SMTP id 5b1f17b1804b1-440ab8722e8mr62094635e9.28.1745856902016;
+        Mon, 28 Apr 2025 09:15:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHf7xoVWGe8POH6/bAu4Zm1T2P/Ns6FQlhV/6P/Tg1uN3kkn8wReO0mmLvPeggLU1mpCqiyHw==
+X-Received: by 2002:a05:600c:4f81:b0:43c:efed:732c with SMTP id 5b1f17b1804b1-440ab8722e8mr62094425e9.28.1745856901631;
+        Mon, 28 Apr 2025 09:15:01 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f32:c200:9add:4a7a:46aa:f740? (p200300d82f32c2009add4a7a46aaf740.dip0.t-ipconnect.de. [2003:d8:2f32:c200:9add:4a7a:46aa:f740])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e00d8sm159297655e9.35.2025.04.28.09.14.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 09:15:04 -0700 (PDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ace98258d4dso331180566b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:15:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXMWrFSiYQlWSCS/567CKOUKRbq8IfsJogtMBqSLYvdoYxqGcCyCvR+xMRcuFIeavJ86rngKFPAJnbbVAY=@vger.kernel.org
-X-Received: by 2002:a17:906:9fd1:b0:ace:3a3d:7e35 with SMTP id
- a640c23a62f3a-ace713deef8mr1136725066b.53.1745856902085; Mon, 28 Apr 2025
- 09:15:02 -0700 (PDT)
+        Mon, 28 Apr 2025 09:15:01 -0700 (PDT)
+Message-ID: <d9b32bb8-fe69-48d2-9b9b-c1a4af231f93@redhat.com>
+Date: Mon, 28 Apr 2025 18:14:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
- <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
- <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
- <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com>
-In-Reply-To: <aA8oqKUaFU-0wb-D@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 28 Apr 2025 09:14:45 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgJfWfWa2NTiTmev+Xr=e8Uo=aFkrXujLAQBVAVN-VigQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGS9kvWc-L4SzJnxgACgdDJk4h_LSvRVKtfYkcRU-1jXGpVN9caYxF5bEk
-Message-ID: <CAHk-=wgJfWfWa2NTiTmev+Xr=e8Uo=aFkrXujLAQBVAVN-VigQ@mail.gmail.com>
-Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
- handling to C
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Alexander Usyskin <alexander.usyskin@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>, 
-	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 11/11] mm/io-mapping: track_pfn() -> "pfnmap tracking"
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-12-david@redhat.com>
+ <07a780ee-b2fa-4eb3-a340-175d7c18a0fe@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <07a780ee-b2fa-4eb3-a340-175d7c18a0fe@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 28 Apr 2025 at 00:05, Ingo Molnar <mingo@kernel.org> wrote:
->
-> And once we remove 486, I think we can do the optimization below to
-> just assume the output doesn't get clobbered by BS*L in the zero-case,
-> right?
+On 28.04.25 18:06, Lorenzo Stoakes wrote:
+> On Fri, Apr 25, 2025 at 10:17:15AM +0200, David Hildenbrand wrote:
+>> track_pfn() does not exist, let's simply refer to it as "pfnmap
+>> tracking".
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> LGTM, so:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+>> ---
+>>   mm/io-mapping.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/io-mapping.c b/mm/io-mapping.c
+>> index 01b3627999304..7266441ad0834 100644
+>> --- a/mm/io-mapping.c
+>> +++ b/mm/io-mapping.c
+>> @@ -21,7 +21,7 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
+>>   	if (WARN_ON_ONCE((vma->vm_flags & expected_flags) != expected_flags))
+>>   		return -EINVAL;
+>>
+>> -	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
+>> +	/* We rely on prevalidation of the io-mapping to skip pfnmap tracking. */
+>>   	return remap_pfn_range_notrack(vma, addr, pfn, size,
+>>   		__pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
+>>   			 (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK)));
+>> --
+>> 2.49.0
+>>
+> 
+> However this doesn't apply after commit b8d8f1830bab ("mm/io-mapping:
+> precompute remap protection flags for clarity"), so will need a rebase :)
+> seems this was cleaned up to separate the __pgprot() bit from the
+> remap_pfn_range_notrack().
 
-We probably can't, because who knows what "Pentium" CPU's are out there.
+Yeah, I reviewed that just today. Trivial conflict :)
 
-Or even if Pentium really does get it right. I doubt we have any
-developers with an original Pentium around.
+Thanks!
 
-So just leave the "we don't know what the CPU result is for zero"
-unless we get some kind of official confirmation.
+-- 
+Cheers,
 
-          Linus
+David / dhildenb
+
