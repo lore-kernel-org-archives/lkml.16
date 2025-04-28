@@ -1,84 +1,45 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB752686B7;
-	Mon, 28 Apr 2025 13:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2177626D4CA;
+	Mon, 28 Apr 2025 13:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848138; cv=none; b=J7L6WRvq+jiQIQd5kP00IXET9faYP6wd7Sut5lg4uDtXStXOOLSufp8bzaWdzG+fHw8gz2vqjcNA9B/qYpzVU7YpF0hQzKP4XD3TLkHHd+us8JSkqn8NCkXcs2EVhI7ZNuRl4ER/usqyZc5dPxjEdHGKt4A/fBVo0F4/STOWGlI=
+	t=1745848142; cv=none; b=KtiR4uirKDYx9vxtQvu9mmfpqIGEqLD3Rjrxze75p/kwp61+6vZnHubBLqL62PsfFSfk0XcNoDPK5CWas++B7ON9tyTfzNWIpRFSItKK0e2ScCoemDgUNYUkgDUrdfu7tmhec4xk7aKw8nukyhrKf6PTz0XwIwxxsCxEPKcl9Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848138; c=relaxed/simple;
-	bh=HLTxekg6SxOcOsK/qGp+Wm+ZPRgavbtD8xBy8iyQaAI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVhFR0BFT/4MwPSpzmPDac47E1rNa/2EaiLe2jrbFxPz870iCrFTerFFF7OEgR1MVjHmrJ+9KHYf/JnCI37cElXGpR0aJAXVpLFPd53tBe1iROS4UTdXoXtMd+YiV/lyBYNwhBPxM8Kgj+W09DT+Pybo+v02hD8xP1dzrFlMiu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JIrEO5hK; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745848142; c=relaxed/simple;
+	bh=Khe/Y7na+S2+8ZLqPv3RSW6SrBL7l+Fz0deKc0jwBoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FF3/cHkYSUR2DtzI0KKxT7nYUjCdN6/1OcUP7MTPx8SIPA1KiGrivBOju00qYzMw4dMjfyqBk9N5ekYuvVcA5X1rwAtNNFUCP5hBMyhKMSl7D/4Th/Mt3OxD1jM3BN8+lDNRrgwdWt7xiyGPy+6Osug6dwtv58gHtGhTTCF0/+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qPZv55Ab; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIrEO5hK"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so687292466b.0;
-        Mon, 28 Apr 2025 06:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745848135; x=1746452935; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ot7zGl3RuBf7IRpQhd5mY289ZLMwSwI/eG9Lq7KXLoQ=;
-        b=JIrEO5hKmCz1QHHKHCgvq4bPnUKhIrSHnOEsDX2U3pSF7dnS3C79+EIDjK83DRE84y
-         2ET1FHZUPr48vEroHSvLxL9lUuTE/33gPT16VR7pX9mjl0C5FhsWFi4Fy2Lfj9Nr6yGS
-         u2TMVZ1u9en7c1xTgJbZPp5CO3K8D5uOzdrvFfmfuv0Dn9xS0O+011oiY/d/lX6eJXPZ
-         8hpPhouCu4/2400NEq6WqZjqD4vbk9bfgY0x7+5Ln3LRaoPLBBQX08hDUFTi1fGSOEHa
-         8iYwyaKbE/8o8uA8TkLHE1/YGoXzpIYXCRtRBIXaonnASlTwMQv45PcVkhFuQDSte38A
-         Rozw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745848135; x=1746452935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ot7zGl3RuBf7IRpQhd5mY289ZLMwSwI/eG9Lq7KXLoQ=;
-        b=Ojw+lrtXyY6UNezJT6qHyXnjeeoHJrSAkNYZ1xTv76e9aKl9JsVaBMNuRsez8Fp6tA
-         T5DuktZR0EoVxzzHytzDe+tmXiUOhgRAFlKuV/o0uiYd+aY1bg41B2KTXZyycD5kREgW
-         k0l+qsBMluve3A/z7XKEGAvqoMLWf6Up4wlyWMzW1Cn2IZmq25gpVNvEKkgCE8dvvfDH
-         0ADSRQ039vAqf4zmof9PGc0QCEN6cnXi/XAEnvh4IVtZxcpna6RefrjlfLb6t2YBRIqJ
-         o7ww7wXzzMD83CmumeMyJZlvJT/aueut8fY1qQtj/A1D7PGmi9fnemiNJqecHBiV8Dcu
-         XcQA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3FjYy1uuwTBv60oBYb9g3SLiDxWAHD9f71qtIUtFlOYImYUhRSCjk1LiJsmEItl11Y09OnBV1XyFQQjv2@vger.kernel.org, AJvYcCXf1N92agAbv1WzS+8/Es84j2wtfvzm/6fEGliPekHWZOGZbWRIjJFM9rHQw1dVDqTCXtw=@vger.kernel.org, AJvYcCXgWG5xVocZYCK7L5AKbLDWwA3g+J+X8WCiwH9eWRfTV1zB8W+sTBK82zr5TLuFMYX1lNiaVRkfO0hSVEiLRXANlxq9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8iC72xROQsgA24SMjLRnoGJxR8mZdFnfGVjtcIJfqtJF3fGwM
-	PiZDDg7CdtFCxOOWDPDRozTLqj38VBn+Wp8+aBFu1sfQJtdMGa9+
-X-Gm-Gg: ASbGncsqiClTTmhsWkyZbSBP8/1sBchrT+cro4L3CaWeMvc/ZD/0gwQ5btmZhl6lyki
-	4uLWHrrEHdqoGaDqg1LoJ3wn2AW9lHWvR+1oeYgnoh/A3lqYznVwNiN2XSd0bBHV7N9UvQOIn4l
-	pIAs3DujP4kFUzmSTg6M2HphskJhwBq56bK33Lx19z/mFWVRIqPvh7oqulPMszEH8I/Gc/ZVofd
-	CC6ayol1u5RfzIQTHf60oH2iz5EhRG0L2ihQ+vUPOEU6CJOITE8BL2reo27qzizXJn4MSeqSADP
-	gjqqXGlAfxPs2dJCmZ4O3vcNnB8=
-X-Google-Smtp-Source: AGHT+IF2RIymO56/j4PaaIVUU5hWd33q98hmsID+T/QUTfZAQNdifbnv4XI4o7FGCL6y7RRKdXRf/A==
-X-Received: by 2002:a17:907:2cc2:b0:acb:5583:6fdd with SMTP id a640c23a62f3a-ace71048406mr802061866b.11.1745848134448;
-        Mon, 28 Apr 2025 06:48:54 -0700 (PDT)
-Received: from krava ([173.38.220.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acec3933a0dsm6497166b.21.2025.04.28.06.48.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:48:54 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 28 Apr 2025 15:48:51 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-Message-ID: <aA-HQ3YfLz28MnhZ@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-9-jolsa@kernel.org>
- <20250427145606.GC9350@redhat.com>
- <20250427173456.GB27775@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qPZv55Ab"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hYyDWO4UiVdBFgSSIMh4S+1GtwQdko2AoZG0evm59qQ=; b=qPZv55Ab+i7pbYcSBXVuvJioJG
+	MdhJZTTpK63PaAJ786mDAY0M34PPIQb0YxmA/8cr553o2dBixG+sxs5ZOaDK0mW/bZkcQdhh7oqcD
+	L+XCQoivwv9NoP0GklLoF88IQEeaTD2+9vp8yBiifSuUugyQ0a+mkpRaXd6qpha2NE2J1BggFtoDd
+	T7Lh8532rEOHYmlH60Dior/RJbDXw37NOLMtKZZJ1kftncg+s0R4sx28Nut2YYO2bBZFtvFazS/+4
+	WYiPGw1K738FWZWqrQ1d3OF05a5tToUglx0eAGOx1DvR2eFbHh7XotGgvNOCfotqOmIYjQlN6r4Fs
+	f1UIGtvg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9Oqx-00000006XPJ-2Oae;
+	Mon, 28 Apr 2025 13:48:59 +0000
+Date: Mon, 28 Apr 2025 06:48:59 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: hch@infradead.org, axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ming.lei@redhat.com,
+	syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH V3] loop: Add sanity check for read/write_iter
+Message-ID: <aA-HSxKfbM6WCgek@infradead.org>
+References: <aA95UNX_BHq7GtP9@infradead.org>
+ <20250428134231.3215496-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,80 +48,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427173456.GB27775@redhat.com>
+In-Reply-To: <20250428134231.3215496-1-lizhi.xu@windriver.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sun, Apr 27, 2025 at 07:34:56PM +0200, Oleg Nesterov wrote:
-> On 04/27, Oleg Nesterov wrote:
-> >
-> > On 04/21, Jiri Olsa wrote:
-> > >
-> > > +static unsigned long find_nearest_page(unsigned long vaddr)
+On Mon, Apr 28, 2025 at 09:42:31PM +0800, Lizhi Xu wrote:
+> On Mon, 28 Apr 2025 05:49:20 -0700, Christoph Hellwig wrote:
+> > > +static int loop_check_backing_file(struct file *file, blk_mode_t mode, bool change)
 > > > +{
-> > > +	struct vm_area_struct *vma, *prev = NULL;
-> > > +	unsigned long prev_vm_end = PAGE_SIZE;
-> > > +	VMA_ITERATOR(vmi, current->mm, 0);
+> > > +	if (!file->f_op->read_iter)
+> > > +		return -EINVAL;
 > > > +
-> > > +	vma = vma_next(&vmi);
-> > > +	while (vma) {
-> > > +		if (prev)
-> > > +			prev_vm_end = prev->vm_end;
-> > > +		if (vma->vm_start - prev_vm_end  >= PAGE_SIZE) {
-> > > +			if (is_reachable_by_call(prev_vm_end, vaddr))
-> > > +				return prev_vm_end;
-> > > +			if (is_reachable_by_call(vma->vm_start - PAGE_SIZE, vaddr))
-> > > +				return vma->vm_start - PAGE_SIZE;
-> > > +		}
-> > > +		prev = vma;
-> > > +		vma = vma_next(&vmi);
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> >
-> > This can be simplified afaics... We don't really need prev, and we can
-> > use for_each_vma(),
-> >
-> > 	static unsigned long find_nearest_page(unsigned long vaddr)
-> > 	{
-> > 		struct vm_area_struct *vma;
-> > 		unsigned long prev_vm_end = PAGE_SIZE;
-> > 		VMA_ITERATOR(vmi, current->mm, 0);
-> >
-> > 		for_each_vma(vmi, vma) {
-> > 			if (vma->vm_start - prev_vm_end  >= PAGE_SIZE) {
-> > 				if (is_reachable_by_call(prev_vm_end, vaddr))
-> > 					return prev_vm_end;
-> > 				if (is_reachable_by_call(vma->vm_start - PAGE_SIZE, vaddr))
-> > 					return vma->vm_start - PAGE_SIZE;
-> > 			}
-> > 			prev_vm_end = vma->vm_end;
-> > 		}
-> >
-> > 		return 0;
-> > 	}
-> 
-> Either way it doesn't look nice. If nothing else, we should respect
-> vm_start/end_gap(vma).
-> 
-> Can't we do something like
-> 
-> 	struct vm_unmapped_area_info info = {};
-> 
-> 	info.length = PAGE_SIZE;
-> 	info.low_limit  = vaddr - INT_MIN + 5;
-> 	info.high_limit = vaddr + INT_MAX;
-> 	
-> 	info.flags = VM_UNMAPPED_AREA_TOPDOWN; // makes sense?
+> > > +	if (((file->f_mode & FMODE_WRITE) ||
+> > > +	     (!change && (mode & BLK_OPEN_WRITE))) &&
+> > > +	    (!file->f_op->write_iter))
+> > > +		return -EINVAL;
+> > 
+> > This looks a bit odd.  Both callers have the open struct file, so
+> > we should be able to check f_mode for both cases and not need the
+> > change flag as far as I can tell.  Or did I miss something/
+> Changing flags? What are you talking about?
 
-so this would return highest available space right? current code goes from
-bottom now, not sure what's preffered
+About the 'bool change' function argument used as a flag.
 
-> 
-> 	return vm_unmapped_area(&info);
-> 
-> instead ?
+> The helper function does not pass fmode, but passes 'blk_mode_t mode',
+> because it is used when executing LOOP_SET_FD or LOOP_CONFIGURE, but not
+> when executing LOOP_CHANGE_FD.
+> I think the purpose of this helper function is just to facilitate code
+> management and facilitate similar problems later.
 
-yes, I did not realize we could use this, looks better, will try that
-
-thanks,
-jirka
+But you can just check file->f_mode unconditionally instead of passing
+the blk_mode_t.  The BLK_OPEN_WRITE check is only needed for force
+the read-only flag separately, and can be kept in the caller before
+the call to the helper.
