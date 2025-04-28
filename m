@@ -1,266 +1,178 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E085378F54
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B92566E2;
+	Mon, 28 Apr 2025 15:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855693; cv=none; b=iby8N9ywZ/4FhHVfNaD06EEMYwoXlSTON88ovQVHTBjxnBFEYCjAGUF8Z1KRQz+xNND8hU4+7kC7kqG0GvR2j2uas2FeMz0h8LoFHJH2DnjW+AM9O3BdurzvzOBKV22NS+tZnqgDAHFBUCn/bYgC6dKvUdrQX3uB050Ca5oSGSs=
+	t=1745855695; cv=none; b=U8VNKM87CB2KAf8xVUJg7O/ugXrVQ6iJEt6sLLDNYr5pjdVvU5e5A9UCC6m3gtHjbcnjTJluhRdQNt6219XBg5TKL1IK26tV2m8uy5WgoG9WPF0hFcfm2FmpWeULjk8UkyDQn3Fs6sKgRFkg0SW42HcWhV3rEFK/uzgBhWwg+Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855693; c=relaxed/simple;
-	bh=xeqXr4SqaI/eLOe3InrD2GKGIhXdG8NG8Y/PDv70Mr0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=arF39SODepmXudtjT7yybaJGvfxr878tj1A6xeIe8Z1dS1Ah7DFLkL9/8Y4OMuiiGxxnOQP5OyQvn8aawwP4UIyfeNn1QCYyOZSfnXk/5A408d6h18wtNXaRq6DYPNk3iqgU/IUpDLLDEsvi0s/RPmB4fTkDbXahlnq+CGzVlUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FaA0Twe5; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745855695; c=relaxed/simple;
+	bh=T30cwNjEyi+9OgUhLR/przC9ZWD7wLfG/sp5mfOndCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LLtrXfunBCtJ0tXpE7gYruyC5goFPVh/zYkteKy8wq13Zq5I8K9wrt9WQ7NvsHTK0z++U2y+xEGJs6VEXJurFdyZnYwLHwVUJVG5Is9k78RyKTkw57hZYxmLF8kkokDctVyBLIAAdOnLzJNfLwjQ/6y03iVwhDPCd8y0xY/QKR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcpN7R2w; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FaA0Twe5"
-Message-ID: <6a0b4d81-a1b8-4533-8b4e-de270e39c5aa@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745855688;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dawl8i88r8gHM8GMLkwVV5hNLqE1msotfeeEvyM0UGg=;
-	b=FaA0Twe5lUPFZNu4Y8Ll6qulwKqptD919xn9eQA4GemadbkvSp/kBtsBN6cXgzPo6c5Bys
-	0vMyUWz47EYj2SSEgpHpVWO2bEjAKyuDU58SILPTrWX76GLpW6uVnLbhjNNtDoNYSOtu3f
-	obX5tmczNYhctTAqE69zHyFgFSiNFjo=
-Date: Mon, 28 Apr 2025 23:54:34 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcpN7R2w"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a07a7b4ac7so1271209f8f.2;
+        Mon, 28 Apr 2025 08:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745855691; x=1746460491; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k0FRMB/2DQwc8kqqfNvJspFCxHUfwt6gte9tlexlAOo=;
+        b=TcpN7R2wsci5AJXMcKKRnPCt26f48QHK1I6XiiKnEp2pAtb1fLQZxURJgU0tBGdej9
+         AhDrgsbCMdt5TcF8UZbKA2u9Bw/5OryqKONN6MBH171CYkrF04rWP8yQ3atjKisvRXjO
+         Sfg6q0SNLhH82yuQBRuRg2+rJbIw27+nKJQgtkoWqKFM+w1Xo3CCnmsk17Q7OYjQNcvA
+         mEFKmF1vJLJCOEJiXI59LSJK394oI/WFdGoJ7HqqWdy0d0Ml+KO5eRlg0klMytywHgrs
+         k3abiqOYiZn3YWpOv+oZqXZq1CQA3tmmHq0Ni0nnEnn8M1i7mkbyf1uqBdlN7XahLr7Y
+         MceQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745855691; x=1746460491;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k0FRMB/2DQwc8kqqfNvJspFCxHUfwt6gte9tlexlAOo=;
+        b=Dp73f1bd4sUV8bOzUI8N0s/NiHvXEEoTsAWpDE5IpBBKP2s79GeJFsBq4ybTQiEv9J
+         y78CptN6syu8ExTzRF9YY9vm5Zc3m/TFpgQvcm2WMZQxSs/aVs3gq3Plrg+4P4LAvUZH
+         IMbDMoEUdNlVS0tpqGRyNGD5uDlY7fx4Z+jYYoH5qRXZSFjjY0s2SZgK1c9SHhpfLBd4
+         ucGjAYciaxfCPSC0nbOjj/tFFsLqrkcF2WWW5ygHsEy9ZnaOcyBVJ28QwDt5YUh8J2E7
+         fnbmLfnoUKPKwWzllXLW8COy2mXb3TmkNuwJTe8x7bsmDsh+j9asj5YO7GQEmjoUkQ9m
+         Ob5A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Hnvzuse7aIobR3E4keizVneB76+sqqDx/Ll9r3RJryqcjfhO/ydWwyvntTTWs8j/iCiMUjZkTzn8@vger.kernel.org, AJvYcCUUP4oNVc5bmMZ14e5Dxb3prB9Tby+kiYCWQFCc5/UuaelFMC8gxzdjXVS8HzBQLWZut3QgsmMW+facOhNPMrdfGFE=@vger.kernel.org, AJvYcCVYOpymSse3wmCjCqSLfukY7tVVqwjDTwaIFwRoaWFDR7MHkZe/ONUN4UcCnZc5ssOpGJbNtKXJNVxu@vger.kernel.org, AJvYcCVsJkx7tiv63RalXGMSzv1ESYIt1aspL8nUX5gavgH+wPHpISqIrsD5TfHvJPCkygebRs0qiWtgN4UVHJ/j@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBEzLy6cXUKl2wi/4MWCwa+KbVp1TZmaZJHDUSHP6pmr0qFafE
+	q32ZDhdC/H6LMWf5w2x6gWe9uNbufHTW2NhxuhajYVdXoZJ59Dvj9RwSSG7luTDBjUyxKnbLb+C
+	t1127d7ofUme5b0Olu6Sa2chMBbg=
+X-Gm-Gg: ASbGncsL1O+bSF+0hYnDcdlYtivUS6QilQFZ0ao/5dHMmqYQTiiKlcTbDEB9sKiSqDi
+	OONEJYdauxnS22wjNEkbdULnUAS0CTK6L9zVA8pekS9AaPS66NWHwLS8gKFf6WZXSCi6n3s5Jsc
+	y1+ZvVpLPzrqTxHqKHEn+jQg==
+X-Google-Smtp-Source: AGHT+IFntGK5lSDb8irDCuaYzRBYnVhqMQyX6NyZEOb7L/OBjRhxSN+3ZnBViJ66Z16/9zrd4Y8cNzafDkkcON8ilz4=
+X-Received: by 2002:a05:6000:1889:b0:39c:1257:dbaa with SMTP id
+ ffacd0b85a97d-3a0894a3da8mr283905f8f.58.1745855691012; Mon, 28 Apr 2025
+ 08:54:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 6/7] mm: Batch around can_change_pte_writable()
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
- will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
- peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
- baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250428120414.12101-1-dev.jain@arm.com>
- <20250428120414.12101-7-dev.jain@arm.com>
- <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
- <29c70c06-42c2-4bc0-a56e-443a1200fde0@linux.dev>
-In-Reply-To: <29c70c06-42c2-4bc0-a56e-443a1200fde0@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXtfzp81V4uAk-oULoBz2BtipyPvc9V8oV=kDXmX90GxA@mail.gmail.com>
+ <CA+V-a8sMOnKZjNGW2=Y+TcF9itvC4a1LeEQ+eAKvjhWvEL_K+Q@mail.gmail.com> <CAMuHMdXEwbn2i9PJ9qzcFkHxNfaQFQ53SU_rOPJZHZskQvT3xw@mail.gmail.com>
+In-Reply-To: <CAMuHMdXEwbn2i9PJ9qzcFkHxNfaQFQ53SU_rOPJZHZskQvT3xw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 28 Apr 2025 16:54:24 +0100
+X-Gm-Features: ATxdqUFxNCYBOsoh1ZJ6fagkv9r2rDgfFsZnYAqVunmDATR1S3ML5ON7itzkA1A
+Message-ID: <CA+V-a8sp7LsJru-CEgv_Y-o5_SmE1ZKnshvYe6x37=+=y1pzMQ@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] clk: renesas: r9a09g057: Add clock and reset
+ entries for GBETH0/1
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Geert,
 
+On Mon, Apr 28, 2025 at 2:36=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 28 Apr 2025 at 15:22, Lad, Prabhakar <prabhakar.csengg@gmail.com>=
+ wrote:
+> > On Tue, Apr 15, 2025 at 3:55=E2=80=AFPM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> > > On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Add clock and reset entries for GBETH instances. Include core clock=
+s for
+> > > > PTP, sourced from PLLETH, and add PLLs, dividers, and static mux cl=
+ocks
+> > > > used as clock sources for the GBETH IP.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
+om>
+> > > > ---
+> > > >  drivers/clk/renesas/r9a09g057-cpg.c | 72 +++++++++++++++++++++++++=
+++++
+> > > >  drivers/clk/renesas/rzv2h-cpg.h     | 11 +++++
+> > > >  2 files changed, 83 insertions(+)
+> > > >
+> > > > diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/rene=
+sas/r9a09g057-cpg.c
+> > > > index 3c40e36259fe..057bfa0e2a57 100644
+> > > > --- a/drivers/clk/renesas/r9a09g057-cpg.c
+> > > > +++ b/drivers/clk/renesas/r9a09g057-cpg.c
+> > >
+> > > > @@ -115,6 +138,17 @@ static const struct cpg_core_clk r9a09g057_cor=
+e_clks[] __initconst =3D {
+> > > >         DEF_DDIV(".pllvdo_cru2", CLK_PLLVDO_CRU2, CLK_PLLVDO, CDDIV=
+4_DIVCTL1, dtable_2_4),
+> > > >         DEF_DDIV(".pllvdo_cru3", CLK_PLLVDO_CRU3, CLK_PLLVDO, CDDIV=
+4_DIVCTL2, dtable_2_4),
+> > > >
+> > > > +       DEF_FIXED(".plleth_250_fix", CLK_PLLETH_DIV_250_FIX, CLK_PL=
+LETH, 1, 4),
+> > > > +       DEF_FIXED(".plleth_125_fix", CLK_PLLETH_DIV_125_FIX, CLK_PL=
+LETH_DIV_250_FIX, 1, 2),
+> > > > +       DEF_CSDIV(".plleth_gbe0", CLK_CSDIV_PLLETH_GBE0,
+> > > > +                 CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL0, dtable_2_=
+100),
+> > > > +       DEF_CSDIV(".plleth_gbe1", CLK_CSDIV_PLLETH_GBE1,
+> > > > +                 CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL1, dtable_2_=
+100),
+> > > > +       DEF_SMUX(".smux2_gbe0_txclk", CLK_SMUX2_GBE0_TXCLK, SSEL0_S=
+ELCTL2, smux2_gbe0_txclk),
+> > > > +       DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_S=
+ELCTL3, smux2_gbe0_rxclk),
+> > > > +       DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_S=
+ELCTL0, smux2_gbe1_txclk),
+> > > > +       DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_S=
+ELCTL1, smux2_gbe1_rxclk),
+> > > > +
+> > > >         DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV=
+3_DIVCTL1, dtable_2_64),
+> > > >
+> > > >         /* Core Clocks */
+> > >
+> > > > @@ -233,6 +271,38 @@ static const struct rzv2h_mod_clk r9a09g057_mo=
+d_clks[] __initconst =3D {
+> > > >                                                 BUS_MSTOP(7, BIT(10=
+))),
+> > > >         DEF_MOD("usb2_0_pclk_usbtst1",          CLK_PLLDTY_ACPU_DIV=
+4, 11, 7, 5, 23,
+> > > >                                                 BUS_MSTOP(7, BIT(11=
+))),
+> > > > +       DEF_MOD_EXTERNAL("gbeth_0_clk_tx_i",    CLK_SMUX2_GBE0_TXCL=
+K, 11, 8, 5, 24,
+> > > > +                                               BUS_MSTOP(8, BIT(5)=
+),
+> > > > +                                               0x300, 8, 1),
+> > >
+> > > CPG_SSEL0
+> > >
+> > > I'm wondering if you really have to store and duplicate this info her=
+e.
+> > > Can't you infer it from the parent's smux description?
+> > >
+> > To clarify, you mean to get the parent of the mod clock and then get
+> > the clk_mux to get the base?
+>
+> Indeed.
+>
+Thank you for the clarification.
 
-On 2025/4/28 21:16, Lance Yang wrote:
-> 
-> 
-> On 2025/4/28 20:50, Lance Yang wrote:
->> Hey Dev,
->>
->> On 2025/4/28 20:04, Dev Jain wrote:
->>> In preparation for patch 7, we need to properly batch around
->>> can_change_pte_writable(). We batch around pte_needs_soft_dirty_wp() by
->>> the corresponding fpb flag, we batch around the page-anon exclusive 
->>> check
->>> using folio_maybe_mapped_shared(); modify_prot_start_ptes() collects the
->>> dirty and access bits across the batch, therefore batching across
->>> pte_dirty(): this is correct since the dirty bit on the PTE really
->>> is just an indication that the folio got written to, so even if
->>> the PTE is not actually dirty (but one of the PTEs in the batch is),
->>> the wp-fault optimization can be made.
->>>
->>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>> ---
->>>   include/linux/mm.h | 4 ++--
->>>   mm/gup.c           | 2 +-
->>>   mm/huge_memory.c   | 4 ++--
->>>   mm/memory.c        | 6 +++---
->>>   mm/mprotect.c      | 9 ++++++---
->>>   5 files changed, 14 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>> index 5eb0d77c4438..ffa02e15863f 100644
->>> --- a/include/linux/mm.h
->>> +++ b/include/linux/mm.h
->>> @@ -2710,8 +2710,8 @@ int get_cmdline(struct task_struct *task, char 
->>> *buffer, int buflen);
->>>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
->>>                           MM_CP_UFFD_WP_RESOLVE)
->>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
->>> long addr,
->>> -                 pte_t pte);
->>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
->>> long addr,
->>> +                 pte_t pte, struct folio *folio, unsigned int nr);
->>>   extern long change_protection(struct mmu_gather *tlb,
->>>                     struct vm_area_struct *vma, unsigned long start,
->>>                     unsigned long end, unsigned long cp_flags);
->>> diff --git a/mm/gup.c b/mm/gup.c
->>> index 84461d384ae2..6a605fc5f2cb 100644
->>> --- a/mm/gup.c
->>> +++ b/mm/gup.c
->>> @@ -614,7 +614,7 @@ static inline bool can_follow_write_common(struct 
->>> page *page,
->>>           return false;
->>>       /*
->>> -     * See can_change_pte_writable(): we broke COW and could map the 
->>> page
->>> +     * See can_change_ptes_writable(): we broke COW and could map 
->>> the page
->>>        * writable if we have an exclusive anonymous page ...
->>>        */
->>>       return page && PageAnon(page) && PageAnonExclusive(page);
->>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>> index 28c87e0e036f..e5496c0d9e7e 100644
->>> --- a/mm/huge_memory.c
->>> +++ b/mm/huge_memory.c
->>> @@ -2032,12 +2032,12 @@ static inline bool 
->>> can_change_pmd_writable(struct vm_area_struct *vma,
->>>           return false;
->>>       if (!(vma->vm_flags & VM_SHARED)) {
->>> -        /* See can_change_pte_writable(). */
->>> +        /* See can_change_ptes_writable(). */
->>>           page = vm_normal_page_pmd(vma, addr, pmd);
->>>           return page && PageAnon(page) && PageAnonExclusive(page);
->>>       }
->>> -    /* See can_change_pte_writable(). */
->>> +    /* See can_change_ptes_writable(). */
->>>       return pmd_dirty(pmd);
->>>   }
->>> diff --git a/mm/memory.c b/mm/memory.c
->>> index b9e8443aaa86..b1fda3de8d27 100644
->>> --- a/mm/memory.c
->>> +++ b/mm/memory.c
->>> @@ -750,7 +750,7 @@ static void restore_exclusive_pte(struct 
->>> vm_area_struct *vma,
->>>           pte = pte_mkuffd_wp(pte);
->>>       if ((vma->vm_flags & VM_WRITE) &&
->>> -        can_change_pte_writable(vma, address, pte)) {
->>> +        can_change_ptes_writable(vma, address, pte, NULL, 1)) {
->>>           if (folio_test_dirty(folio))
->>>               pte = pte_mkdirty(pte);
->>>           pte = pte_mkwrite(pte, vma);
->>> @@ -5767,7 +5767,7 @@ static void numa_rebuild_large_mapping(struct 
->>> vm_fault *vmf, struct vm_area_stru
->>>               ptent = pte_modify(ptent, vma->vm_page_prot);
->>>               writable = pte_write(ptent);
->>>               if (!writable && pte_write_upgrade &&
->>> -                can_change_pte_writable(vma, addr, ptent))
->>> +                can_change_ptes_writable(vma, addr, ptent, NULL, 1))
->>>                   writable = true;
->>>           }
->>> @@ -5808,7 +5808,7 @@ static vm_fault_t do_numa_page(struct vm_fault 
->>> *vmf)
->>>        */
->>>       writable = pte_write(pte);
->>>       if (!writable && pte_write_upgrade &&
->>> -        can_change_pte_writable(vma, vmf->address, pte))
->>> +        can_change_ptes_writable(vma, vmf->address, pte, NULL, 1))
->>>           writable = true;
->>>       folio = vm_normal_folio(vma, vmf->address, pte);
->>> diff --git a/mm/mprotect.c b/mm/mprotect.c
->>> index 33eabc995584..362fd7e5457d 100644
->>> --- a/mm/mprotect.c
->>> +++ b/mm/mprotect.c
->>> @@ -40,8 +40,8 @@
->>>   #include "internal.h"
->>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
->>> long addr,
->>> -                 pte_t pte)
->>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
->>> long addr,
->>> +                  pte_t pte, struct folio *folio, unsigned int nr)
->>>   {
->>>       struct page *page;
->>> @@ -67,6 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct 
->>> *vma, unsigned long addr,
->>>            * write-fault handler similarly would map them writable 
->>> without
->>>            * any additional checks while holding the PT lock.
->>>            */
->>> +        if (unlikely(nr != 1))
->>> +            return !folio_maybe_mapped_shared(folio);
->>> +
->>>           page = vm_normal_page(vma, addr, pte);
->>>           return page && PageAnon(page) && PageAnonExclusive(page);
->>>       }
->>
->> IIUC, As mentioned in the comment above, we should do the same 
->> anonymous check
->> to large folios. And folio_maybe_mapped_shared() already handles both 
->> order-0
->> and large folios nicely, so we could simplify the logic as follows:
-> 
-> Forget to add:
-> 
-> Note that the exclusive flag is set only for non-large folios or the head
-> page of large folios during mapping, so PageAnonExclusive() will always
-> return false for tail pages of large folios, IIUC.
-
-Correction: the exclusive flag would be set for all sub pages of large 
-folios
-during mapping.
-
-Thanks,
-Lance
-
-> 
-> Thanks,
-> Lance
-> 
->>
->> diff --git a/mm/mprotect.c b/mm/mprotect.c
->> index 1605e89349d2..df56a30bb241 100644
->> --- a/mm/mprotect.c
->> +++ b/mm/mprotect.c
->> @@ -43,8 +43,6 @@
->>   bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
->> long addr,
->>                                pte_t pte, struct folio *folio, 
->> unsigned int nr)
->>   {
->> -       struct page *page;
->> -
->>          if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
->>                  return false;
->>
->> @@ -67,11 +65,7 @@ bool can_change_ptes_writable(struct vm_area_struct 
->> *vma, unsigned long addr,
->>                   * write-fault handler similarly would map them 
->> writable without
->>                   * any additional checks while holding the PT lock.
->>                   */
->> -               if (unlikely(nr != 1))
->> -                       return !folio_maybe_mapped_shared(folio);
->> -
->> -               page = vm_normal_page(vma, addr, pte);
->> -               return page && PageAnon(page) && PageAnonExclusive(page);
->> +               return folio_test_anon(folio) && ! 
->> folio_maybe_mapped_shared(folio);
->>          }
->>
->>          VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
->> -- 
->>
->> Thanks,
->> Lance
->>
->>> @@ -222,7 +225,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>>                */
->>>               if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
->>>                   !pte_write(ptent) &&
->>> -                can_change_pte_writable(vma, addr, ptent))
->>> +                can_change_ptes_writable(vma, addr, ptent, folio, 1))
->>>                   ptent = pte_mkwrite(ptent, vma);
->>>               ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
->>
-> 
-
+Cheers,
+Prabhakar
