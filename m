@@ -1,179 +1,115 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BD923DE;
-	Mon, 28 Apr 2025 05:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2B723DE;
+	Mon, 28 Apr 2025 05:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745818229; cv=none; b=NFYRY8UUUW8FrvFNunSSEWckEaORLnjqqyrySlPkkjOW6Tb6gnkLcu85DswYskm2702z9gwSq0z/12IttEBdSUhFGyXKTDivM+wyPTRU7vRlUnb7zv4PZKX4cTOXiv89pin4Bhwr/X4SQ2wLsWd4Cju/o8/v/gUPu9VKyH/AZL0=
+	t=1745818369; cv=none; b=UTyzTsXbkIBNzzuYk40F5YfsuEbqEunC+XqFRS8PbexNypJE03AIX8mAb7SUqek7iULzrQUalgjkDe0DxXAKCntD4LCQzi7apiLgN/FE2npQhP45rMA0cx/BmfYyPowkRvEQeB51m3ueMNmUYyc1ppNhlRvY3jKesnAqFxAjr7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745818229; c=relaxed/simple;
-	bh=RV+6d3vBAxJN1ELCPGKND9EjSArrhTlq6/VIyBYsyZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AHEeQXtGEoPIxsNVwStW5ruyTb189J4Qhmz+Bt6AILbSi9aFmWh1vcCeXLm26E99K4dhs5zqt/TX+yvEMz2LT6w7E3i7/idXyqhyukwP8+MIcXfJ2cYdu+lWv0lmGutbun91+tfYUHqlk39q3CqG4xSk2sUSL2UDhhSVcAcnCkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrlKUGxm; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745818369; c=relaxed/simple;
+	bh=WqlTrqTnP3sRfpfQDefyTSZ0RpYgQ6Kb7CveinahaG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pWXabjcTNV4E5CMdKYHfHW6AhcN+1bbGJ2ltYwm8AxBtFXbqoAsrU6n9DOsXcjbmto6LkG6nXqSELsL53hcEuj54bUTTVrMDvyrNskyJYKxNHQfxXwuMVu9j+EAimeCWZ/MHu3oM99eKEulORh3Xh6xdHWoeSwZEgTrBEp1R6k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovp+iv7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrlKUGxm"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so3016629a12.3;
-        Sun, 27 Apr 2025 22:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745818227; x=1746423027; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GxEmjasGq7pyNh4crl/y6uvWlzIOvpEG1gyWf0NOUEw=;
-        b=GrlKUGxm3kEye54RNH45cP8QfNlvzDTWE72/8/sfCCn4nm8TTvvhJWmrUZDgSZ9+ad
-         qzdE5Ht26F8l3RwiHycI9+ybGz2A5SeFbUxMIkd40mQMQXMLe7WRBkxaMSnBCKRXzOIA
-         fHb4sCqk2O5bIow35TlSIZ4S/KuSVWGArtX18KYHjM/4BEVSKiZi420rMCpS3V4TvOO9
-         nb8eXgmBuZz/GMjNTbqM+HhJIsHvIgEwr1JReseArksuEWOA7Uv2jO6UUHqujX2c5k42
-         HKCc2gR8lVxuNddnB2ptwKaGuQ70B9midGnFYonnB3BAnGcZj9A2l7yUE5YSDsmlvjxk
-         8IEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745818227; x=1746423027;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GxEmjasGq7pyNh4crl/y6uvWlzIOvpEG1gyWf0NOUEw=;
-        b=ODd/tk60ksPHtAVBfZbl6I1E4O4zSWjf8Jz0aeiCd7Qu7A4eYlTWw2AIG20p9N9xOr
-         RK/emU64z3VIpBbZYghAbdI+IIRJJ48ZuAVrMRkwZ+k85JXGEWsAvzHWauofQRF4uRGy
-         kHDkbX4UmMdh+aUQowiSP3T/emzmm7bSadzvG3dGc+O1OsA+U4NnFtnWpTTwGaQppJBc
-         BoR3pKsFLBaZ36osqVObhksJi74vKPokMO/9HNYbu3tlr0eOln6qUBMsKeWyouTsbjT/
-         8XCKeXRDPHNWXUEIWtbyFAsM5qvEEc7pacqAzmeBC1EsWp8JMl4Rwt+KOLNH2X+Crlnu
-         /YHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVF01ct7ISKZCJcs7Tea5oRqmeJadYVtbqU95uAXZu6Py1XQ9GNz2yHYglQf8s9fmvAy/DCNEeRriKQIiGP@vger.kernel.org, AJvYcCXNgm1CmGatvrv7/tCeeqp/1+QFl8DEiWTmvPimDizuDdoXXxGnR3bgcj5YTsulov+b7YLCB0a5r5BiuSuRyMyp6C7kgw==@vger.kernel.org, AJvYcCXZdC5hKdJc0bHN/n2ry9sCKZ/mjXGBoh/a5CdJ2W2LqEwYW7pMiti/BtX2K7LUeGr+6uEaemC8xy+0XQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB7JpQTiINgNenR4RlsqD9PY4z6c9jjvmJ+4/NQl1pliryR9al
-	KQ1m6OuD8sBnG4cZsvieygAxnvBES3Yl1ftZr2nLCstReOBF05ib
-X-Gm-Gg: ASbGncvCjh333dFF+/j0ImSNc8IrA7w1+0+ogaVWngBBrA4//DQe+01ASshu2uW/oG8
-	9mo7HnJj5MOgV4i737LK1ii4B403vghtHOVIjjQ+kauC3tV+0gIa6ECSE3u4mXR41G+80dZ6O1j
-	4i8nyoSrv+ZOEiSs2VxEKP7QI7x8MCo08EVDVoL+Rm5tEjXfrd7VKDqSxqPEHx4FPmgkUs6JzbZ
-	yn4hhzqiUKPcrxi3hlif675wnJBxPpZ2WMrB1Bt4T8W50kPs92jqkyHgaTIHKSu0PosZKD+IKbF
-	HJX9IBdT+HMQHv5Nngohcrpk83vFEJDPy1JCEsiO
-X-Google-Smtp-Source: AGHT+IFxeCckgDAxwSP5wKRWrr/r2XG1A/wLGdPDm4FZKGt8MDYuIBQVnSfXYlzvxngWGiR/7mDiOw==
-X-Received: by 2002:a05:6a20:2d22:b0:1f5:82ae:69d1 with SMTP id adf61e73a8af0-2045b754682mr15117186637.20.1745818227473;
-        Sun, 27 Apr 2025 22:30:27 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:67d:4372:d1e6:def0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941eecsm7327900b3a.54.2025.04.27.22.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 22:30:26 -0700 (PDT)
-Date: Sun, 27 Apr 2025 22:30:24 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hdegoede@redhat.com>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-Message-ID: <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
-References: <20250425162949.2021325-1-superm1@kernel.org>
- <aAyWFI+o/kU9hDVs@duo.ucw.cz>
- <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
- <aA0o2SWGtd/iMYM2@duo.ucw.cz>
- <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
- <aA3KXNCKKH17mb+a@duo.ucw.cz>
- <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovp+iv7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4895C4CEE4;
+	Mon, 28 Apr 2025 05:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745818369;
+	bh=WqlTrqTnP3sRfpfQDefyTSZ0RpYgQ6Kb7CveinahaG4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ovp+iv7e8Iv4JQ3dqbWJ3I79hsyNxvzf0ihAhmp1QCyCNNctmdi4D1I7Oc4lN4rlx
+	 c0+cQ47zHfuS8NyhaxWanNMU8iNVsTRcwJekP7hJr3BENjxsKsqRZo/R+50f2R8EzT
+	 Yk8eoZWSwZpWtkPirS+nPXEMF0pBuSjFDL4G3JM8KsCg5FKQiVElTOOXJnF3FqDDTd
+	 wiB6ZNP+fZsGxqbd/VFnx9pcwswiUCgOJgYgs7AlcnxAFyFh8na/c2w/6D2EqJpE2X
+	 K6RLe5L8xuafJErrudGFzuOvxPFVjZ5wZRyTEnk01c4lG8n7Oz+X2BM4SnOgNdzbpe
+	 TgxKrXSB8tAvg==
+Message-ID: <ac37802c-65d3-48b8-9d98-fde35986692a@kernel.org>
+Date: Mon, 28 Apr 2025 07:32:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] serdev: Refine several error or debug messages
+To: Zijun Hu <zijun_hu@icloud.com>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250425-fix_serdev-v3-1-2e4ea8261640@quicinc.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250425-fix_serdev-v3-1-2e4ea8261640@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Apologies for extended absence...
-
-On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
+On 25. 04. 25, 14:48, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
 > 
+> Refine several dev_err() and dev_dbg() messages to solve:
 > 
-> On 4/27/25 01:10, Pavel Machek wrote:
-> > Hi!
-> > 
-> > > > > > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
-> > > > > > > to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
-> > > > > > > to lock the screen. Modern hardware [2] also sends this sequence of
-> > > > > > > events for keys with a silkscreen for screen lock.
-> > > > > > > 
-> > > > > > > Introduced a new Kconfig option that will change KEY_SCREENLOCK when
-> > > > > > > emitted by driver to META + L.
-> > > > > > 
-> > > > > > Fix gnome and kde, do not break kernel...
-> > > > > 
-> > > > > I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
-> > > > > 
-> > > > > That's going to break modern hardware lockscreen keys.  They've all
-> > > > > obviously moved to META+L because that's what hardware today uses.
-
-Vendors do all kind of weird things. They want to ship their
-peripherals here and now and they do not care of shortcuts will change a
-few years down the road.
-
-FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
-do not emit any shortcurts. Anything that is "Woks with Chromebooks"
-will use KEY_SCREENLOCK.
-
-
-> > > > 
-> > > > Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
-> > > > screen locking, no?
-
-KDE by default recognizes Meta+L combination (which used to be
-Alt+Ctrl+L), Screensaver key, and allows users to define their custom
-shortcuts.
-
-I also wonder how many other DEs beside Gnome do not recognize
-KEY_SCREENLOCK.
-
-> > > 
-> > > This was actually the first path I looked down before I even started the
-> > > kernel patch direction for this problem.
-> > > 
-> > > GNOME doesn't support assigning more than one shortcut key for an action.
-> > 
-> > So if I want to start calculator on meta+c on internal keyboard, and
-> > have calculator button on USB keyboard, I'm out of luck?
+> // hardcoded device name
+> dev_dbg(dev, "...dev_name_str...")
 > 
-> Yeah AFAICT that's the case.
+> // repeated device name since dev_dbg() also prints it as prefix
+> dev_err(dev, "...%s...", dev_name(dev))
 > 
-> > 
-> > Sounds that should be fixed :-).
+> // not concise as dev_err(dev, "...%d...", err)
+> dev_err(dev, "...%pe...", ERR_PTR(err))
 > 
-> GNOME is commonly known to try to have a very simplistic UX instead of
-> exposing more knobs and buttons.
-> 
-> Adding support for multiple key combinations in a UX means convincing the
-> GNOME design team to support this, followed by actual changes.
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 
-So there is a simple and wrong way of fixing this (introducing a
-hardcoded combination for  shortcut du jour in the kernel) and
-complicated one of making one of poplar DEs behave better and be more
-flexible. We will not be adding the wrong one to the kernel.
+This LGTM.
 
-If someone wants to do this kind of translation they are free to have a
-tiny uinput daemon.
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-> 
-> > 
-> > Alternatively, you can just turn KEY_SCREENLOCK into META+L inside
-> > Gnome.
-> > 
-> > BR,
-> > 									Pavel
-> 
-> Or I can just go back to changing this locally in the PMF driver and it
-> works everywhere without needing to convince every userspace to make a
-> change to add special mappings.
-> 
-> As there isn't appetite from input maintainers to have a mapping in the
-> input layer I think I'll go that direction for a v5.
-
-I think this would be a mistake. I'll mention that on the other posting.
-
-Thanks.
 
 -- 
-Dmitry
+js
+suse labs
