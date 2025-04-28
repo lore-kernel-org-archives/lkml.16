@@ -1,77 +1,70 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9860F2AD04;
-	Mon, 28 Apr 2025 14:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2055525C712
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745851075; cv=none; b=aGjLxhWvotHRqTzV3w0iacfmS8rBhkNUahOAsF3SnqKmS49QBJ9Tv84uOHi+FZCwxnTr9WiZUKl+R5OClr1z8ExduDBSmgkQ7IIfawCYWVtfwBLJWy/dx/x7fwaepdUNvfVfwB0r+jnlQDYL8AKuqKhO51IICj5aTC+XpQU98II=
+	t=1745851145; cv=none; b=tmJrUKAi24Iq+xMlpDQOFFVhIX588obLMX3od/+sz1O7ra0kIQart/QNjIkveQImzDhZ/vtlRr/p6bPJW7IlnC1ml2NcoLnCH+caD2NKjErfFubFwWy9hcNm/Gd1L6qVBL3o9OP0T+Xaxybw6HdqZf0gR3AYc1F+ucw1UTxBrdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745851075; c=relaxed/simple;
-	bh=qhiJHmvq/h1O3rSh0hFmw9xUAqGBAw76cWWrdYXMcVI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iWCZhk573spI88rhFHcR2UbVWJgzUFX7NJhmTHm73hNfZcy+QsmUZ00AARhJgSaHfNSxBSWDcz05d7SKrtSBEF9J8nA2cp6hhirZGVlRWn/8TNvjJmcdVMrs6wcMFQ0XAYtqj4aBhXXGpcxwcdBKz9/gv9Rpia5xjr1YpgXviAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=afurVaKN; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745851145; c=relaxed/simple;
+	bh=0NkDHACqleW6reI4Vv7RYU8PfSu6tmBLb35jFPL2ZjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K1NHXrLpwxJSq03xmZXiAT3sR+uYz77LDU2cJqGlwG99Auv7aFmUvvNypf+SLHq41s2FlSIT2+4GyWRzwd41y8XSP0VOVRzAEnzDOM9RWx1XBg48cWAcw/fnJB7dT+tTXaDWw7v4VH2F+ezDmoJo15JqezC/PuoOg1lo3lgi8M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UpSobJPh; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afurVaKN"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c14016868so4789457f8f.1;
-        Mon, 28 Apr 2025 07:37:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UpSobJPh"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so32826385e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745851072; x=1746455872; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1745851141; x=1746455941; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yPsbDhWZfsOKqBhPh+jFl4b8m8zfI36AQ589ehHefDk=;
-        b=afurVaKNtq9k70pJaCUcwol1DDezgLB+nTzTkDfzod7YjqnDzSlfIIOFAbnygczRKT
-         jR+xoQSYRN6j+pjMwL4x4srgHp9lxUn0n2jdtsxaaVR8FFvRF/dTVXXgSpkp+BA3yxBa
-         PRP0bwxBB8xFpJ075J0Z02QnhIfLeuOe9vMJX9xmpXoWXxsOsGzeSyxIt1UJ7Z1ENqBG
-         pgo9FwdkICl0evLWODxuOODboo8lbllgz9qYdJZDxZkDVdyLIP4vcZh8RQi3dVX5PXau
-         KDlIw1pDWOZa4/7jsq0ckNY0nalbMEZpZEe85qgr2BDIVaqV3W0zdBYNF8XHZiJIIJyE
-         szZA==
+        bh=rBCzcr8ajh54REQAx5tYqo576zUyQ0mpJURQTfjVOMk=;
+        b=UpSobJPhho9ckso5BYR2GWsIAGYFXX04u9mMA+O2nf83hUzhzlOcp6mMFulEn3vJHH
+         TPdYYwhEgMtKAF7GmA/MRMqJoMaGsP20DeXL+Qea6TTAtOLJEIA3ISTWOD2SEgjN76sY
+         kMxmvXnYBQYik/LBCIlP3+fXjZa8WaOoIgBrU6dZwYSpOtxeb+30KHsOGftUOcwqkmV4
+         fD0XkJIyvMu6YAy38azRoGJLcNeWCRJxw1YqjWnnJHyTeTPvkNbDDYlRQtGIBBkOGEU7
+         vR/iWvvRPpZICyk8WX1FAaLDEQiQLOcPgWp9i6N+Ga+vJZpwfhWCgCQNMXAMfQi13ciD
+         80SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745851072; x=1746455872;
+        d=1e100.net; s=20230601; t=1745851141; x=1746455941;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yPsbDhWZfsOKqBhPh+jFl4b8m8zfI36AQ589ehHefDk=;
-        b=MCkR1uSzjjFRqOOYGYASmC9MySc+1oNTOo9S3fE/wvUYXIUDoECQu4sELEmgYqvh2a
-         s5xy80ThhP3Hyra1V/H6c5RDq0UthXHAqZoUM+GWsXX+jWJ1uPtS6M1+nHtYGryix05E
-         BczoT8BhEIRfVyCSBo6KPQWkiBJFTSuQcQXIkXNhaaodDmG+xT4XESMJwNDArpr+21T1
-         yfTxi2mhlhI9DKjSIGVa2j4x10QKeQlPCVrm9ynTkYf5DGVHerDprA5MRTUPzQaXyCBk
-         dysE5KY+S65Kfm4TovO1W6adZRlV1q3ZWbNzJdrKtgyaGaJHnVk7I3ZKxxHTtUpmbki8
-         ie9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVFb/CSv/mQQ9pRDj8/To9pCFHBjorKtQ9kQWVFo5IWNwyPYJWLrO0gynv6v3xf1BFmX/LTsQA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl8ogi89qwy1aj6eQ/BzXcYc+6wDB2bBJpDVVkfmX9b2xYMHWc
-	4ZhzlgbxonafqlFBqRQGM5ARUP6DQLYfWdL3b16YrIiqs9oFqFHQ
-X-Gm-Gg: ASbGncsrn7s4yyWiwTD3SQuGebbvQ5BoY1nP7CQqti3akvuNsoqWr3QodzbINE9IFJy
-	NmL2oIrSb/6XfriSv44twB+ReaFC4ymJkDufu62WIrzoEwNr10HB6iDrypFY++Fko4jFUGCDP2K
-	YzmFt1BvpTynKbDp0M0fWw2q/ERGh52odZTteXaT/CZjmSgd2NB4kr8rF+dHFcD4D0SXnlp5JWu
-	mjP2/44Jm0xBDbkeVNVdJ1OqPvPeLIC+XnFZoX60ZGfKegp88qS/lnQnQ9C4tqSBf4mrOjYL1ut
-	IiZVvKNkT0U8RiYmECPm2acCU9aAEmPGvNWk2dfpSdjNnUQ7B9xjusOl5U1DcRyc6gi4HIkpPD5
-	GAR43SIsaWIc3
-X-Google-Smtp-Source: AGHT+IFfntNktdRd8CwwMBeEQhy7wRP4s5cqglUULBxqzShP6dIfvoAMRL0fKgGew7yHEFPB4KebuA==
-X-Received: by 2002:a5d:50c8:0:b0:39e:f89b:85e2 with SMTP id ffacd0b85a97d-3a0891abd99mr44703f8f.26.1745851071598;
-        Mon, 28 Apr 2025 07:37:51 -0700 (PDT)
-Received: from fedora.advaoptical.com ([82.166.23.19])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cbdb78sm11128465f8f.41.2025.04.28.07.37.50
+        bh=rBCzcr8ajh54REQAx5tYqo576zUyQ0mpJURQTfjVOMk=;
+        b=jVydNYiQl6sTzXfvfkP+WiSAgR2w1VDh9lgvQ0IHdeQJFf47R6EWdXU3gK4l8BqnD7
+         VUND/Ki5TzfHctEcIFzBva8Gk2vd9ybHcwTbyX4JPX2sAFI/3Vd27WyVNLPdv6dfNIBU
+         xwoTt/E+NOoS4YDRohwA1leATxgcOcoxoR7sb4vtkObfkImB1+f+2je7c6wvmHbmEBNw
+         dhT9Qou+3psfM1vSAqrFxo9Deel5wZSC80+zvvMWhJp5ElY2dzHBBcBMbZWbSG9uyVhJ
+         aA+AhulfTcV4VFH1PL8/OPS0KKrn341RLwD5c7TFcCc0C4oMhpXRDln2Kf2Z5u1SYZ8i
+         V/Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0tGpgzsxZxZIZZOMCcNjIc+5Obaj0Ms7UZSxEHZ7aIsQN63WOw406r6dVNHvsv2RwgiXdIshyNQdvpew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN18TynT8EE+uILqUTExjY8aAVsI1Cf8dcsAOEhRyksCVhV1hc
+	w0rE4WZOHjFb+UNguDg6kuVNyE55uVo8bwT0dU1GX8QEf2Xy0rRRq4R/t45Dty0=
+X-Gm-Gg: ASbGncu2jhp3qsv0AxQQN+EqtqXqAQIUTpxdlnAeW5yleoEZZ+mYqUqHkCrS7BSZr2r
+	p5sURmEJUjKURT1g86wdY0XhJrEdQKSTfEFjPeQme6cULmpvx1qK/blq+mtw4/AM0gEUQljmnSc
+	Ds40/PefvWm/TgCG36FpXZ4q0KK//LDZFPbcw3ISsyPfgvEXdWNWUQg9sPWMbjDLInEiSv9bJVn
+	OqsfaTUtuoENfdKWBj3Mh8a1zIGzxTez+8zB/fC2fRXlCEcDJCce7BLPLZiNkkQlXOEwr79ZH2o
+	LEoguFLmAWFI4l62M6o1kxOs8/qw4mhDt9FJr8lyy7ysaeDr0j6F98Ik4QCbqbnpLEogyYXn2Ic
+	dvjlN1aBQu1Fe1lB2PavzOIdUoLicuuHBaHgYQHCS
+X-Google-Smtp-Source: AGHT+IEsI2tKNcN8RrWxjF8JifLNV7R3TyH9+atKe855qmLQ6QAhvksJgkeh136stStXy9yNo0rwmQ==
+X-Received: by 2002:a05:600c:2203:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-4409c512d58mr134362435e9.15.1745851141454;
+        Mon, 28 Apr 2025 07:39:01 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07a5ed2e0sm8793118f8f.39.2025.04.28.07.39.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 07:37:51 -0700 (PDT)
-From: Sagi Maimon <maimon.sagi@gmail.com>
-To: jonathan.lemon@gmail.com,
-	vadim.fedorenko@linux.dev,
-	richardcochran@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Sagi Maimon <sagi.maimon@adtran.com>
-Subject: [PATCH v1] ptp: ocp: Fix NULL dereference in Adva board SMA sysfs operations
-Date: Mon, 28 Apr 2025 17:37:48 +0300
-Message-ID: <20250428143748.23729-1-maimon.sagi@gmail.com>
-X-Mailer: git-send-email 2.47.0
+        Mon, 28 Apr 2025 07:39:01 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: dhowells@redhat.com,
+	netfs@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] fs/netfs: remove unused flag NETFS_ICTX_WRITETHROUGH
+Date: Mon, 28 Apr 2025 16:38:59 +0200
+Message-ID: <20250428143859.3210257-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,99 +73,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sagi Maimon <sagi.maimon@adtran.com>
+This flag was added by commit 41d8e7673a77 ("netfs: Implement a
+write-through caching option") but it was never used.
 
-On Adva boards, SMA sysfs store/get operations can call
-__handle_signal_outputs() or __handle_signal_inputs() while the `irig`
-and `dcf` pointers are uninitialized, leading to a NULL pointer
-dereference in __handle_signal() and causing a kernel crash. Add
-Adva-specific callbacks ptp_ocp_sma_adva_set_outputs() and
-ptp_ocp_sma_adva_set_inputs() to the ptp_ocp driver, and include NULL
-checks for `irig` and `dcf` to prevent crashes.
-
-Fixes: ef61f5528fca ("ptp: ocp: add Adva timecard support")
-Signed-off-by: Sagi Maimon <sagi.maimon@adtran.com>
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- drivers/ptp/ptp_ocp.c | 62 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 2 deletions(-)
+ fs/netfs/buffered_write.c | 3 +--
+ include/linux/netfs.h     | 1 -
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index faf6e027f89a..3eaa2005b3b2 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -2578,12 +2578,70 @@ static const struct ocp_sma_op ocp_fb_sma_op = {
- 	.set_output	= ptp_ocp_sma_fb_set_output,
- };
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index b4826360a411..26a789c8ce18 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -115,8 +115,7 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct iov_iter *iter,
+ 	size_t max_chunk = mapping_max_folio_size(mapping);
+ 	bool maybe_trouble = false;
  
-+static int
-+ptp_ocp_sma_adva_set_output(struct ptp_ocp *bp, int sma_nr, u32 val)
-+{
-+	u32 reg, mask, shift;
-+	unsigned long flags;
-+	u32 __iomem *gpio;
-+
-+	gpio = sma_nr > 2 ? &bp->sma_map1->gpio2 : &bp->sma_map2->gpio2;
-+	shift = sma_nr & 1 ? 0 : 16;
-+
-+	mask = 0xffff << (16 - shift);
-+
-+	spin_lock_irqsave(&bp->lock, flags);
-+
-+	reg = ioread32(gpio);
-+	reg = (reg & mask) | (val << shift);
-+
-+	if (bp->irig_out)
-+		ptp_ocp_irig_out(bp, reg & 0x00100010);
-+	if (bp->dcf_out)
-+		ptp_ocp_dcf_out(bp, reg & 0x00200020);
-+
-+	iowrite32(reg, gpio);
-+
-+	spin_unlock_irqrestore(&bp->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int
-+ptp_ocp_sma_adva_set_inputs(struct ptp_ocp *bp, int sma_nr, u32 val)
-+{
-+	u32 reg, mask, shift;
-+	unsigned long flags;
-+	u32 __iomem *gpio;
-+
-+	gpio = sma_nr > 2 ? &bp->sma_map2->gpio1 : &bp->sma_map1->gpio1;
-+	shift = sma_nr & 1 ? 0 : 16;
-+
-+	mask = 0xffff << (16 - shift);
-+
-+	spin_lock_irqsave(&bp->lock, flags);
-+
-+	reg = ioread32(gpio);
-+	reg = (reg & mask) | (val << shift);
-+
-+	if (bp->irig_in)
-+		ptp_ocp_irig_in(bp, reg & 0x00100010);
-+	if (bp->dcf_in)
-+		ptp_ocp_dcf_in(bp, reg & 0x00200020);
-+
-+	iowrite32(reg, gpio);
-+
-+	spin_unlock_irqrestore(&bp->lock, flags);
-+
-+	return 0;
-+}
-+
- static const struct ocp_sma_op ocp_adva_sma_op = {
- 	.tbl		= { ptp_ocp_adva_sma_in, ptp_ocp_adva_sma_out },
- 	.init		= ptp_ocp_sma_fb_init,
- 	.get		= ptp_ocp_sma_fb_get,
--	.set_inputs	= ptp_ocp_sma_fb_set_inputs,
--	.set_output	= ptp_ocp_sma_fb_set_output,
-+	.set_inputs	= ptp_ocp_sma_adva_set_inputs,
-+	.set_output	= ptp_ocp_sma_adva_set_output,
- };
+-	if (unlikely(test_bit(NETFS_ICTX_WRITETHROUGH, &ctx->flags) ||
+-		     iocb->ki_flags & (IOCB_DSYNC | IOCB_SYNC))
++	if (unlikely(iocb->ki_flags & (IOCB_DSYNC | IOCB_SYNC))
+ 	    ) {
+ 		wbc_attach_fdatawrite_inode(&wbc, mapping->host);
  
- static int
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index c86a11cfc4a3..e1c224d50894 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -71,7 +71,6 @@ struct netfs_inode {
+ 	unsigned long		flags;
+ #define NETFS_ICTX_ODIRECT	0		/* The file has DIO in progress */
+ #define NETFS_ICTX_UNBUFFERED	1		/* I/O should not use the pagecache */
+-#define NETFS_ICTX_WRITETHROUGH	2		/* Write-through caching */
+ #define NETFS_ICTX_MODIFIED_ATTR 3		/* Indicate change in mtime/ctime */
+ #define NETFS_ICTX_SINGLE_NO_UPLOAD 4		/* Monolithic payload, cache but no upload */
+ };
 -- 
-2.47.0
+2.47.2
 
