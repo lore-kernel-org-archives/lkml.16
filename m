@@ -1,301 +1,163 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E8E2566DC
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EB122423C;
+	Mon, 28 Apr 2025 17:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860420; cv=none; b=f/dujsfm1uyZkoxy1PjiX3uyb7kNCD1+Y0639RYxoaiK/41kD94csd+Xls5C5OXr/npoCdvEmQeZ/iZ2KWLl5SobjNnZwu0YEcW/LUqcCG7TbY0LsrKPdjm+xVFkl/FaK1axROYLoRyiMkeasn7nirwoTCxC3dqPmr9ycpFzMEY=
+	t=1745860448; cv=none; b=qglzuSoAoHIQvalB5LvZ+d8K/IFZR9vlLDue8d3FaDE3gdOUCIFPA2v6+XOq8JoRT/p5OrVMGTv4dvjSif/SLGqr8Lo7i4i9p0e6o8NYEOOTe6ems7blzIt7Quo9GemnwHyaVN33FJVcxhDheoXuNn0rwiNSCICu3U2gtyVWP0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860420; c=relaxed/simple;
-	bh=nWgWzlUJa06MxNgJOwVP/WXg4pkgTp6oaZEytmQAVYw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=F5iLqB4JNiM6dtnt0C2dk2pbVR6KePioPnncE/8z74GOKgNRbNKWJ5fSbkgmRZ/k6zgOyS7Z9KyC+G/cgaIJ3wFQ/IZ162F/7JWu/4PARe5ZIZNm+zNDvulGw1fyd1UKjohDX+L1qGFYld6sH/mJUzrVV413iQh/n675GgTiRBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LXoBnbXi; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745860448; c=relaxed/simple;
+	bh=W6IEM/f2KLWUWLMtVhJuB467m5kJa8dSv7xFJFYzvzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kB4eI5ALsi/zUsnk+VQlQ71AxCtqfWlMnA8htpe2BH1YRB3R6FGf/xy1oaQViNK/L09ahB6jzGTgCkVGR4QoclKQi9lme0LKj2a03mi9fDulSAz0EYMTgUYo0ejYOxloS/jsdC/S1UbDXUH56PIfmggsgf/HwMpIWyHb5dG4yJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lxsnSifw; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LXoBnbXi"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so4586051a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745860418; x=1746465218; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tLXoOx9yRCTvvCd0BrHtncY5tgqACMNmODA1lhD+RGg=;
-        b=LXoBnbXiKvfGk1QIMY/LcN49Uo6CtG4UWARBfzJTa8FgCkjNxiBqgIp8c1qJjp91qP
-         CwpmgLnz5XGv//BNbExWFy8bpgwQngMFsidtowz8F7Ddlx12Qc3YKu77PCl1rMNeCCwP
-         lENSSL25aTu/nbAeRIKYJlIPNQJB/zDCxp3evcEHoBngLiARSiIw8tKtCyp32FCv/9Uk
-         lVOY21CEQE/SJ2mFJpRzFpYFDNw8bURNlaMxaclIQYYpWLSD3FczTkt0hjreDcF8LORb
-         P521/x4rQDqyqNiU95BH9hE2/ydT2oE3KndYxNK+K36eABaj5264p5JT/Ye0qV7bm9Md
-         U3Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745860418; x=1746465218;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tLXoOx9yRCTvvCd0BrHtncY5tgqACMNmODA1lhD+RGg=;
-        b=dV0LBPg8jtpnOk7N05OUCY6VaokjEnTSe7BE947Ew1KdnbnxV7LxO55v0tFAFGKMy0
-         dGCq4+mztDG1voK1icCOhh/XnJjXQDQ3hPuJ9VQU4ZarL1UsDyGk9rGW/XN7whlPB4zb
-         ecxVeM9CRhpKB7FZIkbOKBztME6SPklHYYfO+dxD8k+8tIhTlt3YTcY4c1ZlMDMw1G/F
-         tfKzI9BbrrwAV4XVkkLLwmWvqkPPMHQGGNUN7Pfo0IoMHZTCm+t3SXiOOHrzxQYWEMCK
-         1Kf6e9GDeXwhlyOTroM43TuQnmhJTa2i4d72ZRabqHFPrlnyPFjJzQnvL5R2Axe7hlRJ
-         L5WA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2PcLUPaMRHirI97Oq83MPJXhuxN6NAYq9pucGWIuIO8HirLLqHhD7jblsvZIf748I+BwYnTjUa5DE3rw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznfdbXu8DJ1yARviRkJnoRwPIc7rA98EJlaQWgNRb+vyp4ggAh
-	EJO4safYAe1kPG7YmLvf+Kmy78kO5/DjbSB5WZ6b1YCwgtxmxSEvrBc6Qwevm9wiuJXgxK+1rwZ
-	k1A==
-X-Google-Smtp-Source: AGHT+IE+4L5c7j0EkfxyQmlwMTl0MgYW7wuchNMYU9Od+v/iLDBMMA3J9+5+fhqGN0g7cJa/S4ImSoG6YW8=
-X-Received: from pjyr15.prod.google.com ([2002:a17:90a:e18f:b0:309:f831:28e0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2681:b0:2ff:5e4e:864
- with SMTP id 98e67ed59e1d1-30a013995dcmr14048612a91.25.1745860418000; Mon, 28
- Apr 2025 10:13:38 -0700 (PDT)
-Date: Mon, 28 Apr 2025 10:13:31 -0700
-In-Reply-To: <20250426100134.GB4198@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lxsnSifw"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S8vRI4011968;
+	Mon, 28 Apr 2025 17:13:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=KomaKd
+	ZjhofElzsKOtg4I+kL2PS3yimbP7HbLJSlulQ=; b=lxsnSifwoJMmlWz8KjinGm
+	pyb3sVziw0856i6roV0tj3wCP9PhAxQVQEPxpr2ZGmNUC+JS79cPAhyuCqU58WrC
+	BYYiNIjTGgnGR6pn+jYvPSXt27JpZEUMlO0bBXFYIBGfQn6ZFVLHbAYCigwowZ5M
+	y9Qn/q+kf1lSkMyhXDUb44g9D9AQUeYDEEmqwt6PnM6FBqo4QjP+oTFd0OdgfdHn
+	ixfvzBdxmXPMm48N1Sb65hVDmKw6InGQUEzENJNUwZzWHa5ON8yeRqnVPl14/k+U
+	6HRIt0P6OBJZ56KrtENGAXE+zxM+FH8/q7ZSd3uYCLBjS55VrqGUdKQHng8wsL1g
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5kmm69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 17:13:46 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SG4hau001803;
+	Mon, 28 Apr 2025 17:13:45 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469bamfcyt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 17:13:45 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SHDiwS31785558
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 17:13:44 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7054C58059;
+	Mon, 28 Apr 2025 17:13:44 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 762E658058;
+	Mon, 28 Apr 2025 17:13:40 +0000 (GMT)
+Received: from [9.39.16.18] (unknown [9.39.16.18])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Apr 2025 17:13:40 +0000 (GMT)
+Message-ID: <f23608eb-3f4e-453c-bcfc-032f963d310c@linux.ibm.com>
+Date: Mon, 28 Apr 2025 22:43:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414111140.586315004@infradead.org> <20250414113754.172767741@infradead.org>
- <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
- <20250415074421.GI5600@noisy.programming.kicks-ass.net> <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
- <20250416083859.GH4031@noisy.programming.kicks-ass.net> <20250426100134.GB4198@noisy.programming.kicks-ass.net>
-Message-ID: <aA-3OwNum9gzHLH1@google.com>
-Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com, 
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, 
-	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
-	samitolvanen@google.com, ojeda@kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests/mm: Fix a build failure on powerpc
+To: "Nysal Jan K.A." <nysal@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250428131937.641989-1-nysal@linux.ibm.com>
+ <20250428131937.641989-2-nysal@linux.ibm.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <20250428131937.641989-2-nysal@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: KbhYiEFmmP_tUzB4rpXFNi3_j7M0PyVQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEzNiBTYWx0ZWRfX8vQd+r/NVdK9 fVj89Nk81fj93yIB2WK4uyLM7M2mHWCc2/y4CfPB3vhVEHD61xJsc2tkwaYLeMAo1yZPGG2x6dm N6/occobZIF5tvvDpMBVNLKqwuD0ILpj3AhpKOro+gHjepSmyAR3zwBl4jwSjOC0XFRdJO78IvF
+ 63cjTo0OVdK2T0jqwU+mT4ZrZpKUZ9IXT4LlK8EaJ5rjawUKpt/6t0aslWBLVTDSR3Q/Oij9URI gbRM6RAky3R5e1w7XWGL+4tZoNYi5BSFK5TvAt5U5U/yjvaXvZL1jx9fj4NrvENMq7KyXXgLXUW eu3eugR/BYKbxdOp951n729X4QIrTsbuJG0jJmbMjsVpG946nf+Pkcdvxipk9dHdfgIAGhD47QW
+ 8Z7aBlg4v4J8yzNtx5fmE2j6pB8oC35I7r8W4BNQsUCCmMki2/wpZhW72L+YobWf0ODzjd9E
+X-Proofpoint-GUID: KbhYiEFmmP_tUzB4rpXFNi3_j7M0PyVQ
+X-Authority-Analysis: v=2.4 cv=DvxW+H/+ c=1 sm=1 tr=0 ts=680fb74b cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=QUTIWzIZJQuvQjQnFLoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=906 phishscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280136
 
-On Sat, Apr 26, 2025, Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
-> 
-> > Yeah, I finally got there. I'll go cook up something else.
-> 
-> Sean, Paolo, can I once again ask how best to test this fastop crud?
 
-Apply the below, build KVM selftests, enable forced emulation in KVM, and then
-run fastops_test.  It's well past time we had a selftest for this.  It won't
-detect bugs that are specific to 32-bit kernels, e.g. b63f20a778c8 ("x86/retpoline:
-Don't clobber RFLAGS during CALL_NOSPEC on i386"), since KVM selftests are 64-bit
-only, but for what you're doing, it should suffice.
+On 4/28/25 6:49 PM, Nysal Jan K.A. wrote:
+> The compiler is unaware of the size of code generated by the ".rept"
+> assembler directive. This results in the compiler emitting branch
+> instructions where the offset to branch to exceeds the maximum allowed
+> value, resulting in build failures like the following:
+>
+>    CC       protection_keys
+>    /tmp/ccypKWAE.s: Assembler messages:
+>    /tmp/ccypKWAE.s:2073: Error: operand out of range (0x0000000000020158
+>    is not between 0xffffffffffff8000 and 0x0000000000007ffc)
+>    /tmp/ccypKWAE.s:2509: Error: operand out of range (0x0000000000020130
+>    is not between 0xffffffffffff8000 and 0x0000000000007ffc)
+>
+> Fix the issue by manually adding nop instructions using the preprocessor.
+>
+> Fixes: 46036188ea1f5 ("selftests/mm: build with -O2")
+> Reported-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Signed-off-by: Nysal Jan K.A. <nysal@linux.ibm.com>
+> ---
+>   tools/testing/selftests/mm/pkey-powerpc.h | 12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/mm/pkey-powerpc.h b/tools/testing/selftests/mm/pkey-powerpc.h
+> index d8ec906b8120..17bf2d1b0192 100644
+> --- a/tools/testing/selftests/mm/pkey-powerpc.h
+> +++ b/tools/testing/selftests/mm/pkey-powerpc.h
+> @@ -104,8 +104,18 @@ static inline void expect_fault_on_read_execonly_key(void *p1, int pkey)
+>   	return;
+>   }
+>   
+> +#define REPEAT_8(s) s s s s s s s s
+> +#define REPEAT_64(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) \
+> +		     REPEAT_8(s) REPEAT_8(s) REPEAT_8(s) REPEAT_8(s)
+> +#define REPEAT_512(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) \
+> +		      REPEAT_64(s) REPEAT_64(s) REPEAT_64(s) REPEAT_64(s)
+> +#define REPEAT_4096(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) \
+> +		       REPEAT_512(s) REPEAT_512(s) REPEAT_512(s) REPEAT_512(s)
+> +#define REPEAT_16384(s) REPEAT_4096(s) REPEAT_4096(s) \
+> +			REPEAT_4096(s) REPEAT_4096(s)
+> +
 
-For 32-bit kernels, it requires a 32-bit QEMU and KVM-Unit-Tests (or maybe even
-a full blown 32-bit guest image; I forget how much coverage KUT provides).
-Regardless, I don't see any reason to put you through that pain, I can do that
-sanity testing.
 
-I'll post a proper patch for the new selftest after testing on AMD.  The test
-relies on hardware providing deterministic behavior for undefined output (RFLAGS
-and GPRs); I don't know if that holds true on AMD.
+Hi Nysal,
 
-To enable forced emulation, set /sys/module/kvm/parameters/force_emulation_prefix
-to '1' (for the purposes of this test, the value doesn't matter).  The param is
-writable at runtime, so it doesn't matter if kvm.ko is built-in or a module. 
+This change looks good to me. I tested in on power and the error is not seen.
 
----
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 28 Apr 2025 08:55:44 -0700
-Subject: [PATCH] KVM: selftests: Add a test for x86's fastops emulation
+   CC       droppable
+   CC       guard-regions
+   CC       soft-dirty
+   CC       protection_keys
+   CC       va_high_addr_switch
+   CC       virtual_address_range
+   CC       write_to_hugetlbfs
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../testing/selftests/kvm/x86/fastops_test.c  | 165 ++++++++++++++++++
- 2 files changed, 166 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86/fastops_test.c
+Reviewed-by:Donet Tom <donettom@linux.ibm.com>
+Tested-by: Donet Tom <donettom@linux.ibm.com>
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index f62b0a5aba35..411c3d5eb5b1 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -66,6 +66,7 @@ TEST_GEN_PROGS_x86 += x86/cr4_cpuid_sync_test
- TEST_GEN_PROGS_x86 += x86/dirty_log_page_splitting_test
- TEST_GEN_PROGS_x86 += x86/feature_msrs_test
- TEST_GEN_PROGS_x86 += x86/exit_on_emulation_failure_test
-+TEST_GEN_PROGS_x86 += x86/fastops_test
- TEST_GEN_PROGS_x86 += x86/fix_hypercall_test
- TEST_GEN_PROGS_x86 += x86/hwcr_msr_test
- TEST_GEN_PROGS_x86 += x86/hyperv_clock
-diff --git a/tools/testing/selftests/kvm/x86/fastops_test.c b/tools/testing/selftests/kvm/x86/fastops_test.c
-new file mode 100644
-index 000000000000..c3799edb5d0c
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86/fastops_test.c
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+
-+/*
-+ * Execute a fastop() instruction, with or without forced emulation.  BT bit 0
-+ * to set RFLAGS.CF based on whether or not the input is even or odd, so that
-+ * instructions like ADC and SBB are deterministic.
-+ */
-+#define guest_execute_fastop_1(FEP, insn, type_t, __val, __flags)			\
-+do {											\
-+	__asm__ __volatile__("bt $0, %[val]\n\t"					\
-+			     FEP insn " %[val]\n\t"					\
-+			     "pushfq\n\t"						\
-+			     "pop %[flags]\n\t"						\
-+			     : [val]"+r"(__val), [flags]"=r"(__flags)			\
-+			     : : "cc", "memory");					\
-+} while (0)
-+
-+#define guest_test_fastop_1(insn, type_t, __val)					\
-+do {											\
-+	type_t val = __val, ex_val = __val, input = __val;				\
-+	uint64_t flags, ex_flags;							\
-+											\
-+	guest_execute_fastop_1("", insn, type_t, ex_val, ex_flags);			\
-+	guest_execute_fastop_1(KVM_FEP, insn, type_t, val, flags);			\
-+											\
-+	__GUEST_ASSERT(val == ex_val,							\
-+		       "Wanted 0x%lx for '%s 0x%lx', got 0x%lx",			\
-+		       (uint64_t)ex_val, insn, (uint64_t)input, (uint64_t)val);		\
-+	__GUEST_ASSERT(flags == ex_flags,						\
-+			"Wanted flags 0x%lx for '%s 0x%lx', got 0x%lx",			\
-+			ex_flags, insn, (uint64_t)input, flags);			\
-+} while (0)
-+
-+#define guest_execute_fastop_2(FEP, insn, type_t, __input, __output, __flags)		\
-+do {											\
-+	__asm__ __volatile__("bt $0, %[output]\n\t"					\
-+			     FEP insn " %[input], %[output]\n\t"			\
-+			     "pushfq\n\t"						\
-+			     "pop %[flags]\n\t"						\
-+			     : [output]"+r"(__output), [flags]"=r"(__flags)		\
-+			     : [input]"r"(__input) : "cc", "memory");			\
-+} while (0)
-+
-+#define guest_test_fastop_2(insn, type_t, __val1, __val2)				\
-+do {											\
-+	type_t input = __val1, input2 = __val2, output = __val2, ex_output = __val2;	\
-+	uint64_t flags, ex_flags;							\
-+											\
-+	guest_execute_fastop_2("", insn, type_t, input, ex_output, ex_flags);		\
-+	guest_execute_fastop_2(KVM_FEP, insn, type_t, input, output, flags);		\
-+											\
-+	__GUEST_ASSERT(output == ex_output,						\
-+		       "Wanted 0x%lx for '%s 0x%lx 0x%lx', got 0x%lx",			\
-+		       (uint64_t)ex_output, insn, (uint64_t)input,			\
-+		       (uint64_t)input2, (uint64_t)output);				\
-+	__GUEST_ASSERT(flags == ex_flags,						\
-+			"Wanted flags 0x%lx for '%s 0x%lx, 0x%lx', got 0x%lx",		\
-+			ex_flags, insn, (uint64_t)input, (uint64_t)input2, flags);	\
-+} while (0)
-+
-+#define guest_execute_fastop_cl(FEP, insn, type_t, __shift, __output, __flags)		\
-+do {											\
-+	__asm__ __volatile__("bt $0, %[output]\n\t"					\
-+			     FEP insn " %%cl, %[output]\n\t"				\
-+			     "pushfq\n\t"						\
-+			     "pop %[flags]\n\t"						\
-+			     : [output]"+r"(__output), [flags]"=r"(__flags)		\
-+			     : "c"(__shift) : "cc", "memory");				\
-+} while (0)
-+
-+#define guest_test_fastop_cl(insn, type_t, __val1, __val2)				\
-+do {											\
-+	type_t output = __val2, ex_output = __val2, input = __val2;			\
-+	uint8_t shift = __val1;								\
-+	uint64_t flags, ex_flags;							\
-+											\
-+	guest_execute_fastop_cl("", insn, type_t, shift, ex_output, ex_flags);		\
-+	guest_execute_fastop_cl(KVM_FEP, insn, type_t, shift, output, flags);		\
-+											\
-+	__GUEST_ASSERT(output == ex_output,						\
-+		       "Wanted 0x%lx for '%s 0x%x, 0x%lx', got 0x%lx",			\
-+		       (uint64_t)ex_output, insn, shift, (uint64_t)input,		\
-+		       (uint64_t)output);						\
-+	__GUEST_ASSERT(flags == ex_flags,						\
-+			"Wanted flags 0x%lx for '%s 0x%x, 0x%lx', got 0x%lx",		\
-+			ex_flags, insn, shift, (uint64_t)input, flags);			\
-+} while (0)
-+
-+static const uint64_t vals[] = {
-+	0,
-+	1,
-+	2,
-+	4,
-+	7,
-+	0x5555555555555555,
-+	0xaaaaaaaaaaaaaaaa,
-+	0xfefefefefefefefe,
-+	0xffffffffffffffff,
-+};
-+
-+#define guest_test_fastops(type_t, suffix)						\
-+do {											\
-+	int i, j;									\
-+											\
-+	for (i = 0; i < ARRAY_SIZE(vals); i++) {					\
-+		guest_test_fastop_1("dec" suffix, type_t, vals[i]);			\
-+		guest_test_fastop_1("inc" suffix, type_t, vals[i]);			\
-+		guest_test_fastop_1("neg" suffix, type_t, vals[i]);			\
-+		guest_test_fastop_1("not" suffix, type_t, vals[i]);			\
-+											\
-+		for (j = 0; j < ARRAY_SIZE(vals); j++) {				\
-+			guest_test_fastop_2("add" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("adc" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("and" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("bsf" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("bsr" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("bt" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("btc" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("btr" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("bts" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("cmp" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("imul" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("or" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("sbb" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("sub" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("test" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_2("xor" suffix, type_t, vals[i], vals[j]);	\
-+											\
-+			guest_test_fastop_cl("rol" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_cl("ror" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_cl("rcl" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_cl("rcr" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_cl("sar" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_cl("shl" suffix, type_t, vals[i], vals[j]);	\
-+			guest_test_fastop_cl("shr" suffix, type_t, vals[i], vals[j]);	\
-+		}									\
-+	}										\
-+} while (0)
-+
-+static void guest_code(void)
-+{
-+	guest_test_fastops(uint16_t, "w");
-+	guest_test_fastops(uint32_t, "l");
-+	guest_test_fastops(uint64_t, "q");
-+
-+	GUEST_DONE();
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+
-+	TEST_REQUIRE(is_forced_emulation_enabled);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
-+
-+	vcpu_run(vcpu);
-+	TEST_ASSERT_EQ(get_ucall(vcpu, NULL), UCALL_DONE);
-+
-+	kvm_vm_free(vm);
-+}
 
-base-commit: 661b7ddb2d10258b53106d7c39c309806b00a99c
--- 
+>   /* 4-byte instructions * 16384 = 64K page */
+> -#define __page_o_noops() asm(".rept 16384 ; nop; .endr")
+> +#define __page_o_noops() asm(REPEAT_16384("nop\n"))
+>   
+>   static inline void *malloc_pkey_with_mprotect_subpage(long size, int prot, u16 pkey)
+>   {
