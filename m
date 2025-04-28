@@ -1,124 +1,223 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA161D5176
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E63425F7BA;
+	Mon, 28 Apr 2025 14:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745851825; cv=none; b=SOY8Ot1gKlaHW3fHRm23Hop1Vee1KGUeUdjybBR4IuhwRSdLx+3dL40rEl2hauWkYYJUNNuabB9EaueHMGJOmsNhihgFOrfSNQDJf/8NQEo8m0q5PeNgePn7iA47rLxfo2SqzF4BF4JoXddYMfigwRE5T7KIE8eGNP0DyoCqJO0=
+	t=1745851922; cv=none; b=tYcAOZ+lub+j4jwis19Tc2Jovq+rSS1APIYYFw9M4RdgtoQOPy5NLFhtjrn8vTGZxH4Uz+SqVhQd1xZVwHIBGYNXRpTGE6BrX64uHRMjyeSsiSvRCs4SmjzPKWoaDTv5KZ6gjsZYhrXrvHNkIt2PTRJNAcpHXu7O8vxL4y3DaxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745851825; c=relaxed/simple;
-	bh=/QzN4Vr/NcaXAsSbQScZ6XL3r5+GmaNle2Xta12UJfg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lOQr823JItLvf6Bc3vX6R4RvTxjaIqr4aAOFenS5GhJ2Qg6lDczCSvUQBZnqlQaQ+X2tzfFlvTEb1VA9bbFgDWEJzZfq51Psa9PiB7ytu6I4TQEW2me/kfDl/22i4Yy1ejYGPOql1U84zSfJY5FiXAlBPvkIJKW0huuYOYsBkDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e1A9Ms5J; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745851922; c=relaxed/simple;
+	bh=SZ88ynsrxyycASOHhheCX/iwl8zgTZHYGYj+3bNOJx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OTlD2JIk4RKPDAjtWPMsj4rkjesRGmEHejqh2xo4NfSXgtkn9BUrg+qwBtIXIMpvIx7CEO7k8LrcKHlGNFNwznlG+wo53M0B41AUT3XG/k3dSFElNjz3WBPArNWfkTqWvo7n2pxOQ3y+qjicSVWLsuCPNHVsM60jtYAN3rNUHls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2MK7vRc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e1A9Ms5J"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b0e5f28841dso2978934a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745851823; x=1746456623; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tlkIIua290wjyF4yv5seaaLpfJU0PyT90x6Uavs/1R8=;
-        b=e1A9Ms5JZeun7I1pVycPcG4H96CIsfBs4gcBg4Kf8An0UIM5d3srOrJd3WW3IFCrAX
-         hXQBzjZgPAkGwSFDxQOPcx00++5hSVZA0cMjA5M29SZZEwu7z1uVSa5aXfIO6G1t1BCI
-         6S7vpdD8kod2y2pLb6z+nL4BP8CpSZhEo2Zw4KCeN/rxQzhGZC2MglU8aoJze+48dFKL
-         UMauftybdAQ1mzaS+7LvEMNhohe7sMPcCTfXwT21pYrEhKihXcAW6OUpx1pwCGPSm4Uj
-         CS9tVStwDk10qqPP49BIup5GiCgnN+Z/sSc/C/es9Q43cI/+RSt0I7n3hj6xbpQfqux4
-         CFbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745851823; x=1746456623;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tlkIIua290wjyF4yv5seaaLpfJU0PyT90x6Uavs/1R8=;
-        b=dveJZuq/QO7RXX/0GnH6bAQ0fpY71w9McBRjg7q9Rrx2dirJEHuk7ve42pn7c77i9a
-         AqJKA6dArk6vga8iMgThNx3rpwxuae3eoriGzjTiLUa/DDVhJXykoDfQaNdleKEmqDGa
-         hqlif0cU1RSWpgod6fikJBunOSFSGHrcp9TTTLxZR77QZmN9rjMJsXKRzkZRYEXLLMUa
-         NFDx7tuSWI48DPNxnsTfkV3pnpvAedwgab96HDoTpsTyrwK4oRIMsXava8RlBgcx57f3
-         vI+vAYOw7nGv4p0oW2Q7GMRPJgwaaKuYaRIf/aixu2OUVKYzQiXM7aYB7fYqKa66Eajs
-         T3bA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWGTeaXen6LH7AWSRwIkCy/yfvABdFAmPYNNag9Dyiv21D0lz6cLUGprOpjJSzDb1Lo+YGTbFqrlj4KBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yylj4UpUVXVStWQiY0jXo5rtI8kvl8cruRi4LiuW1hJ/GVBIJEX
-	7yK1l0CKOta1E9kWsx/ZNX2NN622HVCBakWOzhA9ND/sdzdjPXm8gwZsS9q8c06PrlWgl9aqH92
-	mAQ==
-X-Google-Smtp-Source: AGHT+IGQjBWCOydWNE/ttxALHJHboxteEbJ/N0QmJX6WBLFIUaxsEbVZDdieG5LwZ6lGMEcgL1Mtm1LEsuc=
-X-Received: from pgbcp12.prod.google.com ([2002:a05:6a02:400c:b0:b0d:b491:d415])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:32a9:b0:1f5:77ed:40b9
- with SMTP id adf61e73a8af0-2045b9f4009mr20352644637.40.1745851823200; Mon, 28
- Apr 2025 07:50:23 -0700 (PDT)
-Date: Mon, 28 Apr 2025 07:50:21 -0700
-In-Reply-To: <aA7aozbc1grlevOm@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2MK7vRc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D7CAC4CEE4;
+	Mon, 28 Apr 2025 14:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745851921;
+	bh=SZ88ynsrxyycASOHhheCX/iwl8zgTZHYGYj+3bNOJx4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V2MK7vRcY1dlL1+EZ1NoZxP268+GNpFW3Ocb8LPN7Yho6nLoAaaXufXwx5XaLAbYR
+	 6zPVK5hyb6Jf25WzBeSpMyXbLEDodvvjRqSvXP5GJ4m9lMT3IZTcmm6+5Rz3X+W2MD
+	 e815HEh/S03UXEZDcH+Ri2VhCgWcvowtURogNlBNZGuVRl42HhPlu1cq3jTlWLOaEM
+	 J8bu8qMesc4jRWKYH6rEI97pjDBrlOAfnaD4vDOj/9JlQBE+ckM+Q2fu+zYJuuYFbN
+	 nvO/iKk9W95uGjmgDHW1+MHW662Wu2n98EvjpLPoqRWKzrgGPqZpSpR74RcwQovTe0
+	 iWkaLaFC1Ymkw==
+Date: Mon, 28 Apr 2025 16:51:59 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: John Stultz <jstultz@google.com>
+Cc: Jared Kangas <jkangas@redhat.com>, sumit.semwal@linaro.org, 
+	benjamin.gaignard@collabora.com, Brian.Starkey@arm.com, tjmercier@google.com, 
+	christian.koenig@amd.com, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dma-buf: heaps: Give default CMA heap a fixed name
+Message-ID: <20250428-greedy-vivid-goldfish-5abb35@houat>
+References: <20250422191939.555963-1-jkangas@redhat.com>
+ <20250422191939.555963-3-jkangas@redhat.com>
+ <20250424-sassy-cunning-pillbug-ffde51@houat>
+ <CANDhNCqfsUbN3aavAH5hi4wdcKuUkjLX4jqhKzy-q+jCEqpoow@mail.gmail.com>
+ <20250425-savvy-chubby-alpaca-0196e3@houat>
+ <CANDhNCroe6ZBtN_o=c71kzFFaWK-fF5rCdnr9P5h1sgPOWSGSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250426001056.1025157-1-seanjc@google.com> <aA7aozbc1grlevOm@yzhao56-desk.sh.intel.com>
-Message-ID: <aA-VrWyCkFuMWsaN@google.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Prevent installing hugepages when mem
- attributes are changing
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Roth <michael.roth@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="63qayjjnrzawfdlj"
+Content-Disposition: inline
+In-Reply-To: <CANDhNCroe6ZBtN_o=c71kzFFaWK-fF5rCdnr9P5h1sgPOWSGSw@mail.gmail.com>
 
-On Mon, Apr 28, 2025, Yan Zhao wrote:
-> On Fri, Apr 25, 2025 at 05:10:56PM -0700, Sean Christopherson wrote:
-> > @@ -7686,6 +7707,37 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
-> >  	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
-> >  		return false;
-> >  
-> > +	if (WARN_ON_ONCE(range->end <= range->start))
-> > +		return false;
-> > +
-> > +	/*
-> > +	 * If the head and tail pages of the range currently allow a hugepage,
-> > +	 * i.e. reside fully in the slot and don't have mixed attributes, then
-> > +	 * add each corresponding hugepage range to the ongoing invalidation,
-> > +	 * e.g. to prevent KVM from creating a hugepage in response to a fault
-> > +	 * for a gfn whose attributes aren't changing.  Note, only the range
-> > +	 * of gfns whose attributes are being modified needs to be explicitly
-> > +	 * unmapped, as that will unmap any existing hugepages.
-> > +	 */
-> > +	for (level = PG_LEVEL_2M; level <= KVM_MAX_HUGEPAGE_LEVEL; level++) {
-> > +		gfn_t start = gfn_round_for_level(range->start, level);
-> > +		gfn_t end = gfn_round_for_level(range->end - 1, level);
-> > +		gfn_t nr_pages = KVM_PAGES_PER_HPAGE(level);
-> > +
-> > +		if ((start != range->start || start + nr_pages > range->end) &&
-> > +		    start >= slot->base_gfn &&
-> > +		    start + nr_pages <= slot->base_gfn + slot->npages &&
-> > +		    !hugepage_test_mixed(slot, start, level))
-> Instead of checking mixed flag in disallow_lpage, could we check disallow_lpage
-> directly?
-> 
-> So, if mixed flag is not set but disallow_lpage is 1, there's no need to update
-> the invalidate range.
-> 
-> > +			kvm_mmu_invalidate_range_add(kvm, start, start + nr_pages);
-> > +
-> > +		if (end == start)
-> > +			continue;
-> > +
-> > +		if ((end + nr_pages) <= (slot->base_gfn + slot->npages) &&
-> > +		    !hugepage_test_mixed(slot, end, level))
-> if ((end + nr_pages > range->end) &&
->     ((end + nr_pages) <= (slot->base_gfn + slot->npages)) &&
->     !lpage_info_slot(gfn, slot, level)->disallow_lpage)
-> 
-> ?
 
-No, disallow_lpage is used by write-tracking and shadow paging to prevent creating
-huge pages for a write-protected gfn.  mmu_lock is dropped after the pre_set_range
-call to kvm_handle_gfn_range(), and so disallow_lpage could go to zero if the last
-shadow page for the affected range is zapped.  In practice, KVM isn't going to be
-doing write-tracking or shadow paging for CoCo VMs, so there's no missed optimization
-on that front.
+--63qayjjnrzawfdlj
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/2] dma-buf: heaps: Give default CMA heap a fixed name
+MIME-Version: 1.0
 
-And if disallow_lpage is non-zero due to a misaligned memslot base/size, then the
-start/end checks will skip this level anyways.
+Hi John,
+
+On Fri, Apr 25, 2025 at 12:39:40PM -0700, John Stultz wrote:
+> On Thu, Apr 24, 2025 at 11:58=E2=80=AFPM Maxime Ripard <mripard@kernel.or=
+g> wrote:
+> > On Thu, Apr 24, 2025 at 05:13:47PM -0700, John Stultz wrote:
+> > > On Thu, Apr 24, 2025 at 1:34=E2=80=AFAM Maxime Ripard <mripard@kernel=
+=2Eorg> wrote:
+> > > > I appreciate this is kind of bikeshed-color territory, but I think =
+"cma"
+> > > > would be a better option here. There's nothing "default" about it.
+> > >
+> > > I disagree.  It very much is "default" as it's returning the
+> > > dma_contiguous_default_area.
+> >
+> > My main concern here is that it's "default" as opposed to what, exactly?
+> > We have a single CMA allocator. We could have multiple buffer
+> > attributes, but then "cached_cma" would make more sense to me if we
+> > expect to have uncached CMA allocations at some point.
+>=20
+> Well, there may be one CMA allocator, but there can be multiple CMA regio=
+ns.
+>=20
+> So in the kernel, cma_alloc() always takes the cma area as an
+> argument.  And dma_alloc_contiguous() lets you do allocations against
+> a device, which may reference a specific cma area. Or if the device
+> doesn't specify a region it will utilize the default region.
+>=20
+> > > There can be multiple CMA areas, and out of tree, vendors do reserve
+> > > separate areas for specific purposes, exposing multiple CMA dmabuf
+> > > heaps.
+> >
+> > By "CMA areas", I guess you mean carved-out memory regions? If so, how
+> > is it relevant to userspace if we use CMA or any other implementation to
+> > expose a carved-out region, and thus that we carry that implemenattion
+> > detail in the name?
+>=20
+> So, no, I don't mean carve-out regions.  It's more about dealing with
+> competition between multiple CMA users. In some cases, where there are
+> known fixed buffer sizes, say camera buffers, it's much easier to
+> reserve a separate specific sized region to allocate from so that you
+> know it will always succeed and you don't need to waste much on safety
+> margins. Having this added as a separate CMA region makes it a lot
+> easier to account or reason about, and the kernel can still make
+> (limited) use of the CMA space when it's idle. Then you don't have to
+> worry about some other device having a short term cma allocation that
+> pushes back the alignment for your large allocation, possibly
+> impacting some other devices larger allocations.
+>=20
+> And unlike with just using a carveout, you don't end up just wasting
+> all that space when it is unused.
+
+The way I see it, it's an implementation detail and is abstracted away
+=66rom userspace. That's what I meant by carved-out I guess: a region
+dedicated to a (set of) devices(s) that the rest of the system won't
+use from userspace point of view.
+
+> So userland may want to allocate contiguous memory, but it may also be
+> relevant to userland to be able to allocate contiguous memory from a
+> purpose specific pool.
+>=20
+> And while not used in Android, you could imagine having separate
+> purpose reserved cma heaps with different permissions on the heap
+> devnodes, allowing less trusted applications to allocate cma from a
+> small pool without having the potential to DoS the system.
+
+Yeah... I don't think it's the right approach for that. If Android
+doesn't use it, and if it's the only Linux distro with 1 app / 1 user
+policy, then the only permissions we'll effectively have is one for the
+whole use, trusted and untrusted apps alike.
+
+cgroups look like a much better path forward, and wouldn't require
+multiple heaps.
+
+Anyway... It's not really important at this point I guess.
+
+> > > There have been patches to expose multiple CMA heaps, but with no
+> > > upstream drivers using those purpose specific regions, we haven't
+> > > taken them yet.
+> > > I do hope as the drivers that utilize these purpose focused heaps go
+> > > upstream, we can add that logic, so I think being specific that this
+> > > is default CMA is a good idea.
+> >
+> > If heaps names are supposed to carry the region it exposes, then it
+> > should be default_cma_region/area. If heap names are supposed to expose
+> > the allocator (but I don't think it's a good idea), it should be cma. If
+> > they are meant to carry all that plus some policy,
+> > cached_default_cma_region should be used.
+> >
+> > Either way, default_cma seems to me either too specific or not specific
+> > enough. And we should really document what the policy for those heaps
+> > are supposed to be.
+>=20
+> I don't see it as such a problem. It is clear it is cma, it also is
+> clear conceptually that it is the "default" region that the kernel
+> uses when devices aren't specific.
+> But I wouldn't object to cma_default_region/area as a name either, but
+> I don't see it as particularly improved over cma_default.
+>=20
+> To your larger point about policy, I do get the tension that you want
+> to be able to programmatically derive or evaluate heap names, so that
+> applications can consistently derive a pathname to get what they want.
+
+We've discussed it in the past, I don't really want to. But it was clear
+=66rom the last discussion that you (plural) wanted to infer heap
+semantics from the names. I'm ok with that, but then if we want to make
+it work we need to have well defined names.
+
+And it's actually what I really want to discuss here: we've discussed at
+length how bad the heaps name are (and not only here), but I don't think
+we have any documented policy on what makes a good name?
+
+For example, I'm not sure exposing the allocator name is a good idea:
+it's an implementation detail and for all userspace cares about, we
+could change it every release if it provided the same kind of buffers.
+
+Taking your camera buffers example before, then we could also expose a
+memory region id, and let the platform figure it out, or use the usecase
+as the name.
+
+But if we don't document that, how can we possibly expect everyone
+including downstream to come up with perfect names every time. And FTR,
+I'm willing to write that doc down once the discussion settles.
+
+> But I also think that there is so much variety in both the devices and
+> uses that there is no way that all use cases and all devices can be
+> satisfied with such a static or even programmatic mapping. From my
+> perspective, there just is going to have to be some device specific
+> glue logic that maps use->heap name. Same reason we have fstab and the
+> passwd file.
+
+fstab and passwd can be generated at (first) boot time / install. fstab
+is also being somewhat less important with the auto-partition discovery.
+How would you generate that configuration file at boot?
+
+I'm not really asking this as a theoretical question. Being able to
+auto-discover which heap a driver/device would allocate from is central
+for the cgroup work I mentioned earlier.
+
+And I'm really not sure how distros or applications developpers are
+supposed to keep up with the raw volume of devices that go out every
+year, each and every one of them having different heap names, etc.
+Possibly different from one version of the firmware to another.
+
+> That said, I think advocating for naming conventions is definitely
+> useful, but I'm wary of trying to enforce too specific a schema on the
+> names as the incompleteness theorem will bite us.
+
+--63qayjjnrzawfdlj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaA+WCgAKCRAnX84Zoj2+
+dtAdAX490+iTTwDqyILjSOEVCA8RChLdm0moya2/lu4SN1P1TfZ7XV7zi3X4jh0S
+5VdaV+IBgL+thiZgE/SuZsHWgo1vstjGkPj1WnOIESpeFXh4Q59WDtafcqWPQU8T
+rxMeOC+VsQ==
+=9b8o
+-----END PGP SIGNATURE-----
+
+--63qayjjnrzawfdlj--
