@@ -1,134 +1,96 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D046932C85;
-	Mon, 28 Apr 2025 23:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745882711; cv=pass; b=fCzvv2qTSTxZeqQVySVdFhGATlPKlnXms/Gx920mXfEQASDrIlPE8zj29xeM3qHewQNiiFwctP5hk1g8ZWCRgolozGe05IMx+c6Ptrlsw5PCtkAuew5duILwKaFcufdta81tLEMW/xiqsAhy4yZ+IK1YxiIAe2E9PGQO0WZ62/I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745882711; c=relaxed/simple;
-	bh=9swaiTY6yV/zG0GpHuMdlUbuRjORf82CYkhdSDQ4y34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=peWqRGAqlJNVeHdwnz5GIN6Nue09s3jtNCWjayVPzCyRYgTn20d0d4dEm6QNP00XeYEvCsN/BPuQFmIo8miGWckGMjfWn+GI+USP6d3P+T/TB59AKmWkimzkhTAJgRcT6GPY/LTTWQOZyeTS0PPfRTXpt5j5xn1sM512JxzRTF0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=KoryJbu0; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1FE175D53;
+	Mon, 28 Apr 2025 23:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745882815; cv=none; b=OeyiKohUcghtfh3qPIhT3pQSwwEbtaT85Y0K6U2pYTR3Fu+TQR7An7Wac90eF+qd4OCfCOigqG8uKiIdNcYOm8r986XyXG//0EkkAtrd5vyRZNd7UNw7OEyA0sXKBv6pROHENVKmZsHJHeC5X8fX5TkF+wcTvsIyN5n1FFnWrLM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745882815; c=relaxed/simple;
+	bh=tSupbkPLoEUjBl47ljsupVe+uF7srFMA2Qm7WgdsX50=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=tWJQaXNCVKEpMJuoFRvPFnaM6EO9f4ULCyg1M3tyOblW2b6ArC8rr0X4CwaRI6nj7ZcRH12Gu79/lDxaApMSbiKnjwl/cL5QzqOpN0+MCqtlv4dgrzffYXquId2dGg8/xLlCghxbAIz0KsFYephPAW3vDp9wsCzZoE/2rKrJdd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grWEeJHa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="KoryJbu0"
-ARC-Seal: i=1; a=rsa-sha256; t=1745882702; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=W8fljC7hgj9FYJ6hxkH/a2hOb0r7W8XNN1SlLVPn60/EXS8XBBQ9DCWfK9yNDY20ygAe5uDGd4gsmV0zdD0NNej8og2MWxJu1JO6pwLJiHK2fZgCwb3UduIkZxwjb3sB+gEJ32UA/KfB/tUKi9H9biGqGNAeYlk/OLs3rzGAlMs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745882702; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TV+1WXDql3Yy0rUyeqOIIEEZCuNdt8kcb49LSNvsIbA=; 
-	b=l7QbZ6NMr6YpNvCx7hhhDXe8IUZsNBQvIlQW+I0DXv86UextXiYYO9b7BR4EAt5Yr95ar02VZlHCh0HXTjWwid8kP66597X7uArYd79+0jLRpd6QCQ7of3/xZPsGkKmfx3WoAFHOjPnqy8zHZIFAbgkLnqNz2PbhT4n/rH2qPxg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745882702;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=TV+1WXDql3Yy0rUyeqOIIEEZCuNdt8kcb49LSNvsIbA=;
-	b=KoryJbu059VxG+ppyJ0uyJNV8z+hFiH5zAZu/wwvJln7TmzD+TvdtSSAWxLad/wj
-	D3Gr8jUCQScxts8289VUO5jp9rAsm+yz15BDSWxXOXWXsBIGvPe/EUGhk1BV0Pa2m6+
-	1xJKXxN19s4ePS9mUX/y3gSEQxndLApstLjs1f4A=
-Received: by mx.zohomail.com with SMTPS id 1745882700740725.2340711569357;
-	Mon, 28 Apr 2025 16:25:00 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 382C61806F3; Tue, 29 Apr 2025 01:24:58 +0200 (CEST)
-Date: Tue, 29 Apr 2025 01:24:58 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] power: supply: core: Add additional health status
- values
-Message-ID: <3nrolexijte4c2bax5soumid5hb7easvpmvcnzx55p5un33xmu@dxo3xecgt355>
-References: <20250425231518.16125-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grWEeJHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC14C4CEE4;
+	Mon, 28 Apr 2025 23:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745882815;
+	bh=tSupbkPLoEUjBl47ljsupVe+uF7srFMA2Qm7WgdsX50=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=grWEeJHaG7xbQAJy64KJvdm9x6W8lXK+MF76InLvLoiep/L1MU764zaPAu6IF583X
+	 RhXUSEKoitBHoyF6rIRalO1s1yTSt1CBfI/sDy0to1tdOr2DjRsGg9k51ytaDBaJYQ
+	 FcdpThd2xlOWeGJ3XQMvqEeU3xjy8KB+TJjQ/0jJMveowGndUKEj4u/8w1aLDxOTlp
+	 nXzYD+wVTUsKpJ6I6pCBSLo0uKXOmA98XI/LJqGx07O2sRkYk9km7BMbFK+BY7caRu
+	 uor6xaRpmBWOyzBe4wF75auE1q+91fVp5MhTPFmYCeFpRTqabK4bALpd1zolvbF8ij
+	 F7pyaJtECGhDw==
+Date: Mon, 28 Apr 2025 18:26:53 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fhg3kgndsc3rfmji"
-Content-Disposition: inline
-In-Reply-To: <20250425231518.16125-1-W_Armin@gmx.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/244.214.33
-X-ZohoMailClient: External
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Jean Delvare <jdelvare@suse.com>, Charles Hsu <ythsu0511@gmail.com>, 
+ linux-hwmon@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Greg KH <gregkh@linuxfoundation.org>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
+ Guenter Roeck <linux@roeck-us.net>, Shen Lichuan <shenlichuan@vivo.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+In-Reply-To: <20250428221420.2077697-6-paweldembicki@gmail.com>
+References: <20250428221420.2077697-1-paweldembicki@gmail.com>
+ <20250428221420.2077697-6-paweldembicki@gmail.com>
+Message-Id: <174588281340.1841112.12342859635067816713.robh@kernel.org>
+Subject: Re: [PATCH 5/5] dt-bindings: hwmon: Add bindings for mpq8785
+ driver
 
 
---fhg3kgndsc3rfmji
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/4] power: supply: core: Add additional health status
- values
-MIME-Version: 1.0
-
-Hi,
-
-On Sat, Apr 26, 2025 at 01:15:15AM +0200, Armin Wolf wrote:
-> Some batteries can signal when an internal fuse was blown. In such a
-> case POWER_SUPPLY_HEALTH_DEAD is too vague for userspace applications
-> to perform meaningful diagnostics.
->=20
-> Additionally some batteries can also signal when some of their
-> internal cells are imbalanced. In such a case returning
-> POWER_SUPPLY_HEALTH_UNSPEC_FAILURE is again too vague for userspace
-> applications to perform meaningful diagnostics.
->
-> Add new health status values for both cases.
->=20
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+On Tue, 29 Apr 2025 00:13:35 +0200, Pawel Dembicki wrote:
+> Add device tree bindings for Monolithic Power Systems MPQ8785, MPM82504
+> and MPM3695 PMBus-compliant voltage regulators.
+> 
+> These bindings also documents the optional "voltage-scale-loop" property.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 > ---
->  Documentation/ABI/testing/sysfs-class-power | 2 +-
->  drivers/power/supply/power_supply_sysfs.c   | 2 ++
->  include/linux/power_supply.h                | 2 ++
->  3 files changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/=
-ABI/testing/sysfs-class-power
-> index 2a5c1a09a28f..e84a7349f55f 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -456,7 +456,7 @@ Description:
->  			      "Over voltage", "Under voltage", "Unspecified failure", "Cold",
->  			      "Watchdog timer expire", "Safety timer expire",
->  			      "Over current", "Calibration required", "Warm",
-> -			      "Cool", "Hot", "No battery"
-> +			      "Cool", "Hot", "No battery", "Fuse blown", "Cell imbalanced"
+>  .../bindings/hwmon/pmbus/mps,mpq8785.yaml     | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.yaml
+> 
 
-I think it would be better to have it named "Blown fuse" and "Cell
-imbalance" (without the d) or "Imbalanced cells". Otherwise LGTM.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Greetings,
+yamllint warnings/errors:
 
--- Sebastian
+dtschema/dtc warnings/errors:
+Warning: Duplicate compatible "mps,mpq8785" found in schemas matching "$id":
+	http://devicetree.org/schemas/hwmon/pmbus/mps,mpq8785.yaml#
+	http://devicetree.org/schemas/trivial-devices.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/pmbus/mps,mpq8785.example.dtb: pmic@30 (mps,mpm82504): False schema does not allow {'compatible': ['mps,mpm82504'], 'reg': [[48]], 'voltage-scale-loop': 600, '$nodename': ['pmic@30']}
+	from schema $id: http://devicetree.org/schemas/hwmon/pmbus/mps,mpq8785.yaml#
 
---fhg3kgndsc3rfmji
-Content-Type: application/pgp-signature; name="signature.asc"
+doc reference errors (make refcheckdocs):
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250428221420.2077697-6-paweldembicki@gmail.com
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgQDkYACgkQ2O7X88g7
-+pqQhA//cb78/0QH5CFOuHSYr8xizlHUnU4EILB62hhkRRv+jAQqkVsIKyJQ0G1x
-MGYIwLaTsJQnHW4ilQq2HGQXg5QGRTJuHM8BJzC9365T+xhN/Xs2oB+gzGmu1w9H
-VFZqQEumajBkW9J06s732bRvo7VLaeL54yrC3uuwOU4WV9nAKz4K6OOG01GoIU21
-N4haRg2E/n21HheEADHjKXUqtJjae5Z/UI0m0Asj573ZNxlgdYMdZ8tlPDJTDlST
-KqZ0aLLfSSFuZ4PKD/p/T0gOvifY13lF6pOQObX91SvgOoGooZdLMQJYROZ1ucRp
-6GPugT7BsJ1yonzJbphRQjvI9p2SkLaqN7O4Bqa2aooXV7h+DC98qxknDl013yuC
-agfhiCOnxr46K7dKaVnt27f6RsfZofBugAIz7zUaPYd6GrUfa6cf20Niw9kSfCTj
-9Ax5knhh4lnJjW1OoUFvx5dT9jD5RLp5GET83d0039qrM5kLuPZeGlPpUp2NnLzZ
-fB8VBNqAIRjEwiHETN/W3Z/ngmO9FKQIEs6aXPebfB5hZYkOOyMOeR1cbila0YdZ
-C9ZqyoyOTtLO83udUDD23BwtSI0givdBOuBjD9qS3soHaRKSib4gor8i4SSq6KFa
-+NPs1K1/ofUiQQSlA3Q7NVCwyggr3m/wMQ1fiUPStG0/Cilxdbw=
-=RVGI
------END PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
---fhg3kgndsc3rfmji--
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
