@@ -1,64 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837501925AF
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71734A00;
+	Mon, 28 Apr 2025 04:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745815800; cv=none; b=b4lXFINRmB9d15B3xonehEsg/OStTCJMvTP2yxcd9ChiZexyrfIStnmPy/k+ZWB2DadDdzM+OugSzz1DwXAX76clj6NDZGUIzcKbRC0iL72mGAPHuSVmdP2Hfd8iDtMaZ8lz/91U8at2ZPPiXs35YyyWyW+cD9H3DY7DhUE6khw=
+	t=1745816281; cv=none; b=bKrX1x499RUnZ44FcSaX5IR0U1EZd07nYfUP4zT+0kNS33yUcH2PO+zy/yWxJR0ut0/wuYQl1yZJ6OS9J9fQ1erekPb7AEDVtxVEdGIoHyF0ToFI9fdCqZE/EqVrQNuLzKC5QVBhR2iQSIff/a4dP50JDDW0HDa0p+JNE81DeQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745815800; c=relaxed/simple;
-	bh=qasftPJJ9ofW89eezvOfY1ztpyU1IcZwTY6Q/QZj2OE=;
+	s=arc-20240116; t=1745816281; c=relaxed/simple;
+	bh=1Pd7BEe/5QE2amsE/bVBdnxt7TNs1q6JsqYcbWm4USg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZMdPx0QTNJQPTQo1aNM14HA6wrikZvl1jknSfqVyeOstXK0O/fDaHB4mKYsbCWqzT5+IVVga0E9fM9upe82JN+vEdK5AcaFLWokEaToQ1IJyMsWOcGZB2Hq1YIOz/Dx0dG7F/sXZWMHPEfa84Quz2lQ0juImGHxq/gZnsaLmqaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ST/deP2D; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=E043Cy9s5ysUKPYU//PcsWbUVaHuv5zcl2zAAjnixoL1SPS1MkG3wg7HaQvONL5fpy1We9NfH22nLJulBUr0caBiXENyZTrWTYgV3hM2EG0lpjHT7IZ6NEjxKwrHQARWCSD6JfJiMYofFYOf9xXp0nZ1Df9CeQyLU/xsy5sV0H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hnHHXPYj; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ST/deP2D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745815799; x=1777351799;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qasftPJJ9ofW89eezvOfY1ztpyU1IcZwTY6Q/QZj2OE=;
-  b=ST/deP2DEN1txX3RFR8m3/I1+Nd2S+5rKrr7UvAJDlMXd1eKQByNiT5X
-   uNJqNig4aBE70/t5b34cKI2+lyYv7i3mXP2rky8+rzQCfyW/7MFN2zLz9
-   CDrR2VqqlxgRjjelA3YVrYTNT7hlEN9WXokrCFxL12TFEAvtqedbV7211
-   iQWe7vVBQ/7pXPCtzZg+QFNJMjaAkvHlEpOC8SLshfTBzNG4NLR6jo8H3
-   mm83M62aDAdM0YrIVvUdpj0jzj8OEASmxkEBpZuCipnhXQt00iy61YBDB
-   Lu+F/h1OIWCuG7RgHMjZfk8lArWTEnyh052ncBL+PrPF4bc5qLUtVzqln
-   A==;
-X-CSE-ConnectionGUID: /H4NPUipRQKOrDXJjQ9BMw==
-X-CSE-MsgGUID: OcIfXCvDRjyEyffFx8GQhw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="50045671"
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="50045671"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 21:49:58 -0700
-X-CSE-ConnectionGUID: eB45a0U4TLKy/X1ScOxe9Q==
-X-CSE-MsgGUID: aaOfsjEhR0KUOGebgCUIPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="138223219"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 27 Apr 2025 21:49:55 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u9GRD-0006dF-2U;
-	Mon, 28 Apr 2025 04:49:51 +0000
-Date: Mon, 28 Apr 2025 12:48:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vitaly Wool <vitaly.wool@konsulko.se>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-	hannes@cmpxchg.org, minchan@kernel.org, nphamcs@gmail.com,
-	senozhatsky@chromium.org, shakeel.butt@linux.dev,
-	yosry.ahmed@linux.dev, Igor Belousov <igor.b@beldev.am>,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: Re: [PATCH mm-new] mm/zblock: add debugfs
-Message-ID: <202504281254.YFJgfUac-lkp@intel.com>
-References: <20250427201958.491806-1-vitaly.wool@konsulko.se>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnHHXPYj"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-af579e46b5dso2980586a12.3;
+        Sun, 27 Apr 2025 21:57:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745816279; x=1746421079; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iPBvAyUU311bbG2aZ0BYl5mxeYY4FqGUEKf9879Dmxk=;
+        b=hnHHXPYj/X6vLTGIVEpVhjeLP9AXDWTMFaZmWAxBGiYzYQQmE0ENrXz9fdIvn99EnF
+         KrYg/T/S6Y4973gCxZGtED1vRpotTxR0iYFATW0JuO3qx/LJOXmGKH9ql8ZTH1Y+P0As
+         HbKROSeCuNNGRE2xr8wSFGDe4LsV5bLBc9uUiFxLd0u1Pnbjd9uPAPWxAy0cToXrKjW+
+         2SIUuQ9xytA9x+4Z2QtRmDfPVi7y5Ix9z2CY3cWgVvsN9DfGH/2EiFDu9eT303fB1Eg5
+         Jaqcom9m8+c6MsVuZyLmJsERFStUUePnUkmY108+685y3GUs43TpkNs2fQT01Odlbl7s
+         ZEkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745816279; x=1746421079;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iPBvAyUU311bbG2aZ0BYl5mxeYY4FqGUEKf9879Dmxk=;
+        b=L+1vP3zpzDPoFlJJtSnFn2Dm7ZO0Kfij/E7oGz8pBXO/R9J4xoACpH8j330HzWc4qz
+         XkaH7RYj+X7SK+7KO4SLanEFwWCYU21Cu3i6YbgbsU96u6SCJf/35WmNdC1zKeExvaID
+         RY0x7WmzFqL5Ug+h1jj5ULrWWlBkmF22a05TX9DK7ll08hiLXQ9yxuF5XrI/p1Sib2uJ
+         ZU2SwB4cyLpmyrYMuAYTg2nTcCg+1ZzahF2UkEcmAXxiBDqWJwhgw1nMAD1TIrb2pCZd
+         n7i1I64L2ocHkUdd9wP9eQrl+p+M/pSvYLdpDhE5jnGq1C8wxwTIIv9tLUkTatBbGH8z
+         l5mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXc8IXTjDaNuBM8xif3VGfbEQ/OJQpbSDl+zTZktFf8Zh9i0y+/Me//y3GQAoQjzmsSnDX75P9bqYGEJU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBo44Y7L6cYskb3DpDL3fvX1y6K7xEDmxBwC0KYdiBKmYbkTEL
+	Tn+L4KawPNQBiSGradAIk0K7CqDp3Lq5Qj9cpcS3nfxIXfD6rG7b
+X-Gm-Gg: ASbGncvHZkqpGW4dlgAY3txrDbyK+/MAapGHEvsWKR7EYOCwjxMiBFnhqRB6QuBGMrW
+	3skFqbYTC84yqReuBjk4pLKkv1pBxpSiCedBrnQnBoVnJPjDgG+9JPNNBQl8k2Wtdl7JOAbD63A
+	KgGlaPCMUhDbLt1s+7G2QGgKaPGIjkKD+Fy/AKZPM3X1N9Ur2QRl/Uh0gyQK1W4IB68wHPkozf4
+	y9K7xxKKJ0T5FNcPGUa90ylpVWgJ1XLXTmpCMlsUkd+NDYu6uqpNTUYBGFKr6E9iXEF9QW3ZVEY
+	MBtOZkNx9mZU48sWoK7v0Q==
+X-Google-Smtp-Source: AGHT+IHPWV68kDNnvcDOp3GF0LPKpG/CEzy0Pv2JiYWY15R9zmn4YM/P6w+2bnJu6lNJanewXlFw5g==
+X-Received: by 2002:a05:6a20:9d94:b0:204:4573:d855 with SMTP id adf61e73a8af0-2045b6b0383mr14404423637.9.1745816278754;
+        Sun, 27 Apr 2025 21:57:58 -0700 (PDT)
+Received: from localhost ([2a0d:2683:c100::bf])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1b82c7adedsm2775300a12.75.2025.04.27.21.57.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 21:57:58 -0700 (PDT)
+Date: Mon, 28 Apr 2025 12:57:54 +0800
+From: Troy Mitchell <troymitchell988@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>, Troy Mitchell <troymitchell988@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Yongchao Jia <jyc0019@gmail.com>, Frank Li <frank.li@nxp.com>
+Subject: Re: [PATCH v2 1/2] i2c: imx: use guard to take spinlock
+Message-ID: <20250428045754.glgyfhp2zn3l7wkj@troy-wujie14-pro>
+References: <20250427-i2c-imx-update-v2-0-d312e394b573@gmail.com>
+ <20250427-i2c-imx-update-v2-1-d312e394b573@gmail.com>
+ <PAXPR04MB8459E722812D2B11D57AA17F88812@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,86 +82,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427201958.491806-1-vitaly.wool@konsulko.se>
+In-Reply-To: <PAXPR04MB8459E722812D2B11D57AA17F88812@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-Hi Vitaly,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on akpm-mm/mm-everything]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vitaly-Wool/mm-zblock-add-debugfs/20250428-042209
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250427201958.491806-1-vitaly.wool%40konsulko.se
-patch subject: [PATCH mm-new] mm/zblock: add debugfs
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20250428/202504281254.YFJgfUac-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250428/202504281254.YFJgfUac-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504281254.YFJgfUac-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from mm/zblock.c:28:
-   mm/zblock.h:24:2: error: #error Unsupported PAGE_SIZE
-      24 | #error Unsupported PAGE_SIZE
-         |  ^~~~~
-   In file included from include/vdso/const.h:5,
-                    from include/linux/const.h:4,
-                    from include/linux/bits.h:5,
-                    from include/linux/ratelimit_types.h:5,
-                    from include/linux/printk.h:9,
-                    from include/asm-generic/bug.h:22,
-                    from arch/alpha/include/asm/bug.h:23,
-                    from include/linux/bug.h:5,
-                    from include/linux/vfsdebug.h:5,
-                    from include/linux/fs.h:5,
-                    from include/linux/debugfs.h:15,
-                    from mm/zblock.c:20:
-   mm/zblock.h:44:40: error: 'SLOT_BITS' undeclared here (not in a function); did you mean 'SLOT_SIZE'?
-      44 |         DECLARE_BITMAP(slot_info, 1 << SLOT_BITS);
-         |                                        ^~~~~~~~~
-   include/uapi/linux/const.h:51:40: note: in definition of macro '__KERNEL_DIV_ROUND_UP'
-      51 | #define __KERNEL_DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
-         |                                        ^
-   include/linux/types.h:11:28: note: in expansion of macro 'BITS_TO_LONGS'
-      11 |         unsigned long name[BITS_TO_LONGS(bits)]
-         |                            ^~~~~~~~~~~~~
-   mm/zblock.h:44:9: note: in expansion of macro 'DECLARE_BITMAP'
-      44 |         DECLARE_BITMAP(slot_info, 1 << SLOT_BITS);
-         |         ^~~~~~~~~~~~~~
-   mm/zblock.c: In function 'zblock_blocks_show':
->> mm/zblock.c:125:66: error: 'const struct block_desc' has no member named 'num_pages'
-     125 |                         i, block_list->block_count, block_desc[i].num_pages,
-         |                                                                  ^
-   mm/zblock.c:126:64: error: 'const struct block_desc' has no member named 'num_pages'
-     126 |                         block_list->block_count * block_desc[i].num_pages);
-         |                                                                ^
-
-
-vim +125 mm/zblock.c
-
-   115	
-   116	static int zblock_blocks_show(struct seq_file *s, void *v)
-   117	{
-   118		struct zblock_pool *pool = s->private;
-   119		int i;
-   120	
-   121		for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
-   122			struct block_list *block_list = &pool->block_lists[i];
-   123	
-   124			seq_printf(s, "%d: %ld blocks of %d pages (total %ld pages)\n",
- > 125				i, block_list->block_count, block_desc[i].num_pages,
-   126				block_list->block_count * block_desc[i].num_pages);
-   127		}
-   128		return 0;
-   129	}
-   130	DEFINE_SHOW_ATTRIBUTE(zblock_blocks);
-   131	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Mon, Apr 28, 2025 at 12:55:48AM +0000, Peng Fan wrote:
+> > Subject: [PATCH v2 1/2] i2c: imx: use guard to take spinlock
+> > 
+> > Use guard to automatically release the lock after going out of scope
+> > instead of calling it manually.
+> > 
+> > i2c_imx_slave_handle() can safely be entered with the lock held.
+> > 
+> > Refactored the i2c_imx_isr function so that i2c_imx_master_isr does
+> > not participate in the guard scope
+> > 
+> > So Using guard(spinlock_irqsave) simplifies the control flow by
+> > ensuring consistent and automatic unlock, which improves readability
+> > without affecting correctness.
+> > 
+> > Co-developed-by: Yongchao Jia <jyc0019@gmail.com>
+> > Signed-off-by: Yongchao Jia <jyc0019@gmail.com>
+> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+> > ---
+> >  drivers/i2c/busses/i2c-imx.c | 39 ++++++++++++++++++---------------------
+> >  1 file changed, 18 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> > index 9e5d454d8318..a98bf01c5dde 100644
+> > --- a/drivers/i2c/busses/i2c-imx.c
+> > +++ b/drivers/i2c/busses/i2c-imx.c
+...
+> > @@ -1125,32 +1126,28 @@ static irqreturn_t i2c_imx_isr(int irq, void
+> > *dev_id)  {
+> >  	struct imx_i2c_struct *i2c_imx = dev_id;
+> >  	unsigned int ctl, status;
+> > -	unsigned long flags;
+> > 
+> > -	spin_lock_irqsave(&i2c_imx->slave_lock, flags);
+> > -	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> > -	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+> > +	{
+> > +		guard(spinlock_irqsave)(&i2c_imx->slave_lock);
+> 
+> Use 
+> scoped_guard(spinlock_irqsave, & i2c_imx->slave_lock) {
+>  ...
+> }
+>
+Ok, I'll use it in the next version,
+and if no one has other suggestions, I'll send v3 ASAP.
+> 
+> Regards,
+> Peng
