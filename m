@@ -1,109 +1,149 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19671EA65
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF03433A4;
+	Mon, 28 Apr 2025 02:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745808382; cv=none; b=mTILg1WcM9WotSq91sbnbzfN5jJnXaNUpToO5M5qC8LmbhxOK+IuRB0M9x20By+qScGXsgPpMFaQPAPz2t6Y9b+rTYocwkie0huauxkJcwyx6ASgqeovqhtf7f6PN8Gj84dcFzJP+9RRakrAkseZ7lvAZ23mnRKxgDkYNUK+ezU=
+	t=1745808588; cv=none; b=OL/5g3Y2lHwzgcg3xZACdLy/zWpLhj0+NPm4sTaIZhvgkYkMqzUmb8oVF4kVfYQeW+Msu5+GOI3YfOPQjr+5/12wh2hF2y4SvaEf74qMleg7E/H7k9bHLMviPNNK6wBQIgbhVgnRZaG7ceS7nrRD/WYsbqMMzf/ZunDnAltSp2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745808382; c=relaxed/simple;
-	bh=IfKzZySM9EUQJqp8130gsM0h0TRncUUI3ZQ+y8xX3+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U/RUIt+YkHditgvY4FBsTv0DiM24kvCfawsSAvSNA2Bz2p5kuI06sEnDCNOt+Z2v/DLzVWQOnejP7V3UAhkjCHzsKkgoKjXfKB5jE232mdMQufci1vfTsiq0ehYk6gzUBKSujpTspcc7P8KK3Cyb4F8vGpqAFgc1UYRXh4U7OcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com; spf=pass smtp.mailfrom=lessconfused.com; dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b=BdF9VBkW; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lessconfused.com
+	s=arc-20240116; t=1745808588; c=relaxed/simple;
+	bh=98HfE2dlq4WpfSJg1ONEisZcjBEtV62vo0nBKsafKPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCnLuJLwzkOQvG72mTOcYDLnh5EjiaEWAj9ZVFRxx6m4G1hdiALLzbIe2GbK7Ibfs9xZz1n/DvU1xh2nGAN2xkuNHXNNG/cjFeVgoflnI8E34Eojyfmsal5wp0/zjMVF271MP028oLBunjSaSf7cFqjK9jyZbpKPXYRT3/mjCB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiI9H4TQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b="BdF9VBkW"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so5786817a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 19:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lessconfused.com; s=lessconfused; t=1745808379; x=1746413179; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IfKzZySM9EUQJqp8130gsM0h0TRncUUI3ZQ+y8xX3+w=;
-        b=BdF9VBkWdKw+1BagUbbp5tNHDs26sfsUdiU8uiiRiR5qIGuvAc3uNoz5HiFkT2PTXa
-         zY06/bRY7Tv60JzLbXDCQbXlOBeUz6dvqzk1ZP6FS0b4eALUiF3VW2VukbP147J9vEls
-         +Dpk6KKwaQdPf/+9kkvqS/kU0d923tl29zsnE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745808379; x=1746413179;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IfKzZySM9EUQJqp8130gsM0h0TRncUUI3ZQ+y8xX3+w=;
-        b=r38rlN9mSaS18zfGQZFPiYu9rkeayyaM/5EkujsGVPzVMuMBXNz0M4rqQh090AvvuF
-         kf7OzKlIOHleHsKfjrzYfaja7fEDIHAFVKoOv0g0r9Jcs5kUh/col8vjIqffjlNVWiOV
-         bH2a9/xSjuy2MyyyfS5A203AbmybRnQKFDB+I21ae39i9Q3XtkK5S439tJJWAbef2bgV
-         l7GGd7jfBaQgE/PG7F5yE17LbXOi6n+hRGn6AIqgClPI0AP1wriohrfPGBlEETmBJb1J
-         nT55nrZ9/+hJSLMU32UR5XriRfFB5dCEPpI9EEkZfHwOe2oGX4NUKQ+dCU8A/psO3cWk
-         iq4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVLbv4BdaRxDIrRlHqeljJhbSlypOIRtCGbCBWW2Sh1MNnHoKyLMkZPm9M8YqtNOPSaf4z5V1f8SZx9FtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWrEK2psnhw9cHU7+L3skguuvtDB/DvMGULRH8aYEnUtKz7Q76
-	mN9FOXsrj5DEsCq7L0JGPcZahZpTkCjBFeDRcjgW4hpyS3zx8x0ZHPqej5TX+rxRbQvW68Hj5qY
-	fkuhxskAl2q769A4Do/8ZElh8ayXLJryj1vnBNg==
-X-Gm-Gg: ASbGncuTd1euACdkf7hB2np5ewIKD4/211j+laV/ZglgvYcGB3nxscDLhO8jgrKlePP
-	ldSh1azaluyojXyrzjFbi0noXSwLvzxGY0xmCbgdq9QEgUID72xZUlOA7KAJ7QmnQqLayqLAdbs
-	DoCetnpEw0FAQJ4BvH1fgjGQ0SUrfwf0OS+hmxuDC94XDX3eoM3atr7NI=
-X-Google-Smtp-Source: AGHT+IFnzBUOX899hEhTQB+VFNRLl+PxXCq+IL10Ns4KASmw7qSvMl53RlFdnCNy3FuGcz9Ynut9j1cIj9JyY2lnZPI=
-X-Received: by 2002:a17:90b:3944:b0:301:98fc:9b5a with SMTP id
- 98e67ed59e1d1-309f7da6d2fmr14756992a91.6.1745808378981; Sun, 27 Apr 2025
- 19:46:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiI9H4TQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CC99C4CEE3;
+	Mon, 28 Apr 2025 02:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745808587;
+	bh=98HfE2dlq4WpfSJg1ONEisZcjBEtV62vo0nBKsafKPI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WiI9H4TQDt8j82A0Le+ljUnpZ6NNXsYQgnQ/u0OGoL6Dgd5u+qNvIb+G/vyiXAd2g
+	 WQMbAlKyYKs1zjhAkrplxdrtRuYTeuE/zKQv58EOB6BVIn7Zi8CQ/LducZAWsh91F6
+	 VoYbhoJ6dyTO3xUGLfiBOcnwGo0oKSmQYa0MOlTld0T20wQY0+xt1YoBHjgQbq/iHA
+	 mUckhk1eZ7cJBy9KekB49jKyAkbbM0UAntHDCu6Jkqbm+HRVVt4HeXotiesoe6FIhT
+	 JqVkMO7Jn2sZUC+biMF6K3r376tk2tbPe5L3BLtugDSJL/vAIlprf5FjzpEt5wqNst
+	 JJ+Hyv3bt4gkA==
+Date: Sun, 27 Apr 2025 19:49:45 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Matthew Wilcox <willy@infradead.org>, Theodore Ts'o <tytso@mit.edu>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <20250428024945.GD6134@sol.localdomain>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <aAvlM1G1k94kvCs9@casper.infradead.org>
+ <ahdxc464lydwmyqugl472r3orhrj5dasevw5f6edsdhj3dm6zc@lolmht6hpi6t>
+ <20250428013059.GA6134@sol.localdomain>
+ <ytjddsxe5uy4swchkn2hh56lwqegv6hinmlmipq3xxinqzkjnd@cpdw4thi3fqq>
+ <20250428021514.GB6134@sol.localdomain>
+ <ogtnxaeyjldd6lapfbhwj3ptpvwkjpn66e3gejawdjs7s7hg2v@pksyrq3gzwal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425203118.1444481-1-da@libre.computer> <CAFBinCCUQizs=XWq7knm-4=3=hzPDNee9RZj9LDD2Mi6DHYBrQ@mail.gmail.com>
-In-Reply-To: <CAFBinCCUQizs=XWq7knm-4=3=hzPDNee9RZj9LDD2Mi6DHYBrQ@mail.gmail.com>
-From: Da Xue <da@lessconfused.com>
-Date: Sun, 27 Apr 2025 22:46:07 -0400
-X-Gm-Features: ATxdqUGWEOGuPy-ymNWEfY9-YxSHKLuGJnDXSl4c3NrXQIsa-1uCWVa4Pkv940Q
-Message-ID: <CACdvmAhn_25GWtOwGsChU-U3PV481_h6-pC3o3G4p7T0Z5dHog@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: amlogic: gxl: set i2c bias to pull-up
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Da Xue <da@libre.computer>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ogtnxaeyjldd6lapfbhwj3ptpvwkjpn66e3gejawdjs7s7hg2v@pksyrq3gzwal>
 
-On Sun, Apr 27, 2025 at 5:11=E2=80=AFPM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> On Fri, Apr 25, 2025 at 10:31=E2=80=AFPM Da Xue <da@libre.computer> wrote=
-:
-> >
-> > GXL I2C pins need internal pull-up enabled to operate if there
-> > is no external resistor. The pull-up is 60kohms per the datasheet.
-> >
-> > We should set the bias when i2c pinmux is enabled.
-> >
-> > Signed-off-by: Da Xue <da@libre.computer>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
-> +Xianwei Zhao (who has recently upstreamed Amlogic A4 pinctrl support).
-> I suspect we need a similar change for all other (Meson8, Meson8b,
-> GXBB, G12A, ...) SoCs as well.
-> Can you confirm this? And if not, why does only GXL need this special tre=
-atment?
+On Sun, Apr 27, 2025 at 10:33:29PM -0400, Kent Overstreet wrote:
+> On Sun, Apr 27, 2025 at 07:15:14PM -0700, Eric Biggers wrote:
+> > On Sun, Apr 27, 2025 at 09:43:43PM -0400, Kent Overstreet wrote:
+> > > On Sun, Apr 27, 2025 at 06:30:59PM -0700, Eric Biggers wrote:
+> > > > On Sun, Apr 27, 2025 at 08:55:30PM -0400, Kent Overstreet wrote:
+> > > > > The thing is, that's exactly what we're doing. ext4 and bcachefs both
+> > > > > refer to a specific revision of the folding rules: for ext4 it's
+> > > > > specified in the superblock, for bcachefs it's hardcoded for the moment.
+> > > > > 
+> > > > > I don't think this is the ideal approach, though.
+> > > > > 
+> > > > > That means the folding rules are "whatever you got when you mkfs'd".
+> > > > > Think about what that means if you've got a fleet of machines, of
+> > > > > different ages, but all updated in sync: that's a really annoying way
+> > > > > for gremlins of the "why does this machine act differently" variety to
+> > > > > creep in.
+> > > > > 
+> > > > > What I'd prefer is for the unicode folding rules to be transparently and
+> > > > > automatically updated when the kernel is updated, so that behaviour
+> > > > > stays in sync. That would behave more the way users would expect.
+> > > > > 
+> > > > > But I only gave this real thought just over the past few days, and doing
+> > > > > this safely and correctly would require some fairly significant changes
+> > > > > to the way casefolding works.
+> > > > > 
+> > > > > We'd have to ensure that lookups via the case sensitive name always
+> > > > > works, even if the casefolding table the dirent was created with give
+> > > > > different results that the currently active casefolding table.
+> > > > > 
+> > > > > That would require storing two different "dirents" for each real dirent,
+> > > > > one normalized and one un-normalized, because we'd have to do an
+> > > > > un-normalized lookup if the normalized lookup fails (and vice versa).
+> > > > > Which should be completely fine from a performance POV, assuming we have
+> > > > > working negative dentries.
+> > > > > 
+> > > > > But, if the unicode folding rules are stable enough (and one would hope
+> > > > > they are), hopefully all this is a non-issue.
+> > > > > 
+> > > > > I'd have to gather more input from users of casefolding on other
+> > > > > filesystems before saying what our long term plans (if any) will be.
+> > > > 
+> > > > Wouldn't lookups via the case-sensitive name keep working even if the
+> > > > case-insensitivity rules change?  It's lookups via a case-insensitive name that
+> > > > could start producing different results.  Applications can depend on
+> > > > case-insensitive lookups being done in a certain way, so changing the
+> > > > case-insensitivity rules can be risky.
+> > > 
+> > > No, because right now on a case-insensitive filesystem we _only_ do the
+> > > lookup with the normalized name.
+> > 
+> > Well, changing the case-insensitivity rules on an existing filesystem breaks the
+> > directory indexing, so when the filesystem does an indexed lookup in a directory
+> > it might no longer look in the right place.  But if the dentry were to be
+> > examined regardless, it would still match.  (Again, assuming that the lookup
+> > uses a name that is case-sensitively the same as the name the file was created
+> > with.  If it's not case-sensitively the same, that's another story.)  ext4 and
+> > f2fs recently added a fallback to a linear search for dentries in "casefolded"
+> > directories, which handle this by no longer relying solely on the directory
+> > indexing.  See commits 9e28059d56649 and 91b587ba79e1b.
+> 
+> bcachefs stores the normalized d_name, in addition to the
+> un-normalized version, so our low level directory indexing works just
+> fine if the normalization rules change.
+> 
+> That is, bcachefs could be changed to always load the latest unicode
+> normalization table, and internally everything will work completely
+> fine.
+> 
+> BUT:
+> 
+> If the normalization rules change for an existing dirent, then looking up
+> the un-normalized name with the new rules gives you a different
+> normalization than what's on disk and would return -ENOENT. You'd have
+> to look up the old normalized name, or something that normalized to the
+> old normalized name, to find it. Obviously, that's broken.
+> 
+> IOW: bcachefs doesn't have the linear search fallback, and that's not
+> something I'd ever add. That effectively means a silent fallback to
+> O(n^2) algorithms, and I don't want the bug reports that would someday
+> generate.
 
-We've only tested this extensively on GXL (S805X, S905D, S905X). I
-think we should enable it for all SoCs if this patch doesn't cause any
-issues. I don't see most Amlogic boards implement pull-ups but I
-haven't tested that as extensively as I've done for these.
+Is there a reason why you don't just do what ext4 and f2fs does and store (only)
+the case-preserved original name on-disk?
 
->
->
-> Best regards,
-> Martin
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+Note that generic_ci_match() has a fast path that compares the bytes of the
+on-disk name to the bytes of the user-requested name.  Only if they don't match
+is the "casefolded" comparison done.  It's true that if the filesystem were to
+store the "casefolded" name on-disk too, then it wouldn't have to be computed
+for each "casefolded" comparison with that dentry.  But that's already the "slow
+path" that is executed only when the name wasn't case-sensitively the same.
+
+- Eric
