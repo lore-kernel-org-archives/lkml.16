@@ -1,249 +1,142 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A951262FCA;
-	Mon, 28 Apr 2025 13:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4117B262FCA
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848551; cv=none; b=Chq+npscWYBjww39FWAyHDya6M2J5wnT2dkzkp+yN13YAS3ajZJlotlofI2n1aHCsA+5MnhlVl+ZjX7RsicdjtfjHIFi7EJEZyD+hCOhgTL/AtTiSzmuCejoXNPZUpglbTdCNVJkaoXdeJzKiyeyF31Ddz8buqYTxdjnjv8/sOA=
+	t=1745848621; cv=none; b=PdenafBCf+3ZFlFZuQiqR87lgV5tTw7FXO9NQx1B8wbfUWJAjJrexi+QB6G8/aB6I2mA8xSM3QL6fY7fAhzBhmNHtAw72xbFHdAR59BnolfJVLIvMc0zFSCT8ECCejxX8+w1upO8tfpYUsvSDn50sXcI9WtTc14mm3LNvMdtU+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848551; c=relaxed/simple;
-	bh=2wDSomBKx4zZNDuqvc7GRdEVnF9G4IW/tpgoVrJAAEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gk57X0rFuCHgzfyF4KaBcw92hmglJ9HnviV7/v1MB14qizaysQ38MY1XHmMINcuSKrfYhefoGEFNeWTKbWxiJy1uEGJ2bB+DCGWUJkA6+ohIXX8mJW2PHTCoyIC4mS41zTLdemq2mI/9ArhEn748Jpl4vmZyeafPfMpSTEqUP6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZmQ2V4x3qzKHMXc;
-	Mon, 28 Apr 2025 21:55:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A16A11A0EC8;
-	Mon, 28 Apr 2025 21:55:45 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl_fiA9o2mtPKw--.49456S3;
-	Mon, 28 Apr 2025 21:55:45 +0800 (CST)
-Message-ID: <58f1e9e2-8c4f-42a0-800e-cefe17a7faaa@huaweicloud.com>
-Date: Mon, 28 Apr 2025 21:55:43 +0800
+	s=arc-20240116; t=1745848621; c=relaxed/simple;
+	bh=70lfu/B2ib3SJpO5ooGMaAt1QBpRSWIEV/Np9sKATMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VzQslkKRodH+He4nt9ig1xF0aTJ5s/JCBvNtHPVSrf5jmqvBt0PERBtffe18334HXM/0L320wLjyUjSGSBpoi+G7MBzGv6jeVaYeNVU3p2R85WEBn35nvLZE0ConCAdD+GLyVku8Me4NZl4PzEIN/guWAXmKEHFXyA9jDLUyvyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SjeRAvqr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SjeRAvqr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745848619;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UHyYAaJAMEZKibWtlyqh2W6HZtpo9zi498VVY4y0rAg=;
+	b=SjeRAvqroFS6XltalVLoQhkO0cXVeoI1CmmDqrL4SeNSITFcowaHG8L2CtedWD58dj0Pc6
+	yfoJG3CoYzOai1eBv4oTr2gq7EWSKVeBitCljVIROSdZQnfOAvuen7EBN4iCXWJPgnkbgy
+	k/wWbZ6bga3BnaXuA3sI01a7WFLFlUE=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-354-igm4VrrxOuy36hbbI65Yiw-1; Mon, 28 Apr 2025 09:56:57 -0400
+X-MC-Unique: igm4VrrxOuy36hbbI65Yiw-1
+X-Mimecast-MFC-AGG-ID: igm4VrrxOuy36hbbI65Yiw_1745848617
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c54e9f6e00so937115885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:56:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745848617; x=1746453417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UHyYAaJAMEZKibWtlyqh2W6HZtpo9zi498VVY4y0rAg=;
+        b=EtGjMlurvhauHLQiaKjLjKCAchuetMYlFL7bQQA5J3y47idioTa5JsoXZ2K9+Ws9d2
+         1E7w2ghKMjy7TcBXJXO2XLowC/8ZzlCpkfKVMaLAFhFmDRY047jgw2lzY1gZxVOH1bRL
+         vra9/9UGib6ZWT/8Xf8afsssxGtzAwAB1BXUCMg7g4yIGXS6q+ukrC3dZL3zs88bdWdf
+         rvAVPTuCCycjeYtj9xh4+3PMVPdJIgPuo0N0OLj6CkHfjpIQPg5UdO+sSce73Kkk06Rk
+         ZNbM0IAenqffY5dg9lnWQmz6tOr6eoquW/vgP5CrKJ9CD4OpJe/eqkoYP9ZkxIFjD0yw
+         j3oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWrtRwC0EcRcXDkvlquAXnUWn0wwb8FNPGtB23mUAEBruKFlbtvmavXMvOFZs6VPyV6yrhInz7/uaTUUfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznE7TuItCe5DNQodu9uZLTxIiiOSTOxg3u9DLLuMs0CqAjuRyR
+	dl2TyGPEA53o4lQb6J7jxuXN2+p3vTKBa/LOwiDewJiVRhDGNlo8VrCr3IM4NcABm5urpb9xxLG
+	B/yKsjj0OZXIJgYbNfvSbOV9wuSNeFHX3AvIR0+XEihgiteXEdcLHEzXDWxulUQ==
+X-Gm-Gg: ASbGncsx/auctMnddgapwZ1Sgl5fcL48lr/HEbK4uu/gwcpK/NKzn6t4vFVK7PKehmQ
+	D1R9ipL16+4i1I9H27dhf5BZHpWdy6iq8mxmfTpfgHkdR6GHe+bnrYtZVU5NJyNl7PGD/wxByuL
+	W4IwyL+20pG0xigqCbe1nwy6uzVvsRjxcCgqHvbahw/IZShdAnVnQ3po0TVcZvoPIjoOmkzEFu1
+	mdhE2snoT/rgimKOfzNuhK9zD+jq9klYjhr95RfYn2+dQyeYxS216t2MOW8cngziI6h2w27L3mJ
+	e16+yfGn5bBeqpxZ
+X-Received: by 2002:a05:620a:2887:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c9585c5877mr2487230185a.11.1745848616976;
+        Mon, 28 Apr 2025 06:56:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFF77QtEVSxz59mKWcWmWXJCMGCmi0uBQwkt5f3Bu+dckdVzt5kbvV5X2qwCObb0VZdyOuwAw==
+X-Received: by 2002:a05:620a:2887:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c9585c5877mr2487224585a.11.1745848616412;
+        Mon, 28 Apr 2025 06:56:56 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.205.27])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958cbd048sm623795385a.43.2025.04.28.06.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 06:56:55 -0700 (PDT)
+Date: Mon, 28 Apr 2025 15:56:38 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: Luigi Leonardi <leonardi@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
+Message-ID: <wff4t4owsukm2jynm2dhju4rrtegyjjlrhu7o5xppsxfqrcus4@wmsvcwkdtdat>
+References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
+ <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co>
+ <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
+ <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
+ <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co>
+ <wnonuiluxgy6ixoioi57lwlixfgcu27kcewv4ajb3k3hihi773@nv3om2t3tsgo>
+ <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
+ <CAGxU2F6YSwrpV4wXH=mWSgK698sjxfQ=zzXS8tVmo3D84-bBqw@mail.gmail.com>
+ <81940d67-1a9b-42e1-8594-33af86397df6@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH blktests 2/3] dm/003: add unmap write zeroes tests
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- hch <hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>,
- "djwong@kernel.org" <djwong@kernel.org>,
- "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
- "bmarzins@redhat.com" <bmarzins@redhat.com>,
- "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>,
- "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
- "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
- "yukuai3@huawei.com" <yukuai3@huawei.com>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
- <20250318072835.3508696-3-yi.zhang@huaweicloud.com>
- <t4vmmsupkbffrp3p33okbdjtf6il2ahp5omp2s5fvuxkngipeo@4thxzp4zlcse>
- <7b0319ac-cad4-4285-800c-b1e18ee4d92b@huaweicloud.com>
- <6p2dh577oiqe7lfaexv4fzct4aqhc56lxrz2ecwwctvbuxrjx3@oual7hmxfiqc>
- <a5d847d1-9799-4294-ac8f-e78d73e3733d@huaweicloud.com>
- <pbuxtmwqk5bdmxckwwkjob3lh6mg3et52w3xdvsnjjwmofschm@pkotcbnp4ypt>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <pbuxtmwqk5bdmxckwwkjob3lh6mg3et52w3xdvsnjjwmofschm@pkotcbnp4ypt>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl_fiA9o2mtPKw--.49456S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFWrKw1xuF1UAr17ur45KFg_yoWrKF1kpr
-	yfAFyktrWUKF17tr1jvF13Zr1ay3y5Gw17Xw15Jry8A34qvr13KFZ7GF4Uuas7XrW3ZF40
-	vayUXa9I9r15tFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <81940d67-1a9b-42e1-8594-33af86397df6@rbox.co>
 
-On 2025/4/28 17:25, Shinichiro Kawasaki wrote:
-> On Apr 28, 2025 / 17:04, Zhang Yi wrote:
->> On 2025/4/28 16:13, Shinichiro Kawasaki wrote:
->>> On Apr 28, 2025 / 12:32, Zhang Yi wrote:
->>>> On 2025/4/3 15:43, Shinichiro Kawasaki wrote:
->>> [...]
->>>>>> +
->>>>>> +setup_test_device() {
->>>>>> +	if ! _configure_scsi_debug "$@"; then
->>>>>> +		return 1
->>>>>> +	fi
->>>>>
->>>>> In same manner as the 1st patch, I suggest to check /queue/write_zeroes_unmap
->>>>> here.
->>>>>
->>>>> 	if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
->>>>> 		_exit_scsi_debug
->>>>> 		SKIP_REASONS+=("kernel does not support unmap write zeroes sysfs interface")
->>>>> 		return 1
->>>>> 	fi
->>>>>
->>>>> The caller will need to check setup_test_device() return value.
->>>>
->>>> Sure.
->>>>
->>>>>
->>>>>> +
->>>>>> +	local dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
->>>>>> +	local blk_sz="$(blockdev --getsz "$dev")"
->>>>>> +	dmsetup create test --table "0 $blk_sz linear $dev 0"
->>>>>
->>>>> I suggest to call _real_dev() here, and echo back the device name.
->>>>>
->>>>> 	dpath=$(_real_dev /dev/mapper/test)
->>>>> 	echo ${dpath##*/}
->>>>>
->>>>> The bash parameter expansion ${xxx##*/} works in same manner as the basename
->>>>> command. The caller can receive the device name in a local variable. This will
->>>>> avoid a bit of code duplication, and allow to avoid _short_dev().
->>>>>
->>>>
->>>> I'm afraid this approach will not work since we may set the
->>>> SKIP_REASONS parameter. We cannot pass the device name in this
->>>> manner as it will overlook the SKIP_REASONS setting when the caller
->>>> invokes $(setup_test_device xxx), this function runs in a subshell.
->>>
->>> Ah, that's right. SKIP_REASONS modification in subshell won't work.
->>>
->>>>
->>>> If you don't like _short_dev(), I think we can pass dname through a
->>>> global variable, something like below:
->>>>
->>>> setup_test_device() {
->>>> 	...
->>>> 	dpath=$(_real_dev /dev/mapper/test)
->>>> 	dname=${dpath##*/}
->>>> }
->>>>
->>>> if ! setup_test_device lbprz=0; then
->>>> 	return 1
->>>> fi
->>>> umap="$(< "/sys/block/${dname}/queue/write_zeroes_unmap")"
->>>>
->>>> What do you think?
->>>
->>> I think global variable is a bit dirty. So my suggestion is to still echo back
->>> the short device name from the helper, and set the SKIP_REASONS after calling
->>> the helper, as follows:
->>>
->>> diff --git a/tests/dm/003 b/tests/dm/003
->>> index 1013eb5..e00fa99 100755
->>> --- a/tests/dm/003
->>> +++ b/tests/dm/003
->>> @@ -20,13 +20,23 @@ device_requries() {
->>>  }
->>>  
->>>  setup_test_device() {
->>> +	local dev blk_sz dpath
->>> +
->>>  	if ! _configure_scsi_debug "$@"; then
->>>  		return 1
->>
->> Hmm, if we encounter an error here, the test will be skipped instead of
->> returning a failure. This is not the expected outcome.
-> 
-> Ah, rigth. That's not good.
-> How about to return differnt values for the failure case above,
-> 
->>
->> Thanks,
->> Yi.
->>
->>>  	fi
->>>  
->>> -	local dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
->>> -	local blk_sz="$(blockdev --getsz "$dev")"
->>> +        if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
->>> +		_exit_scsi_debug
->>> +                return 1
-> 
-> and this "should skip" case?
-> 
-> 
-> diff --git a/tests/dm/003 b/tests/dm/003
-> index 1013eb5..5e617fd 100755
-> --- a/tests/dm/003
-> +++ b/tests/dm/003
-> @@ -19,14 +19,26 @@ device_requries() {
->  	_require_test_dev_sysfs queue/write_zeroes_unmap
->  }
->  
-> +readonly TO_SKIP=255
-> +
->  setup_test_device() {
-> +	local dev blk_sz dpath
-> +
->  	if ! _configure_scsi_debug "$@"; then
->  		return 1
->  	fi
->  
-> -	local dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
-> -	local blk_sz="$(blockdev --getsz "$dev")"
-> +        if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
-> +		_exit_scsi_debug
-> +		return $TO_SKIP
-> +	fi
-> +
-> +	dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
-> +	blk_sz="$(blockdev --getsz "$dev")"
->  	dmsetup create test --table "0 $blk_sz linear $dev 0"
-> +
-> +	dpath=$(_real_dev /dev/mapper/test)
-> +	echo "${dpath##*/}"
->  }
->  
->  cleanup_test_device() {
-> @@ -38,17 +50,25 @@ test() {
->  	echo "Running ${TEST_NAME}"
->  
->  	# disable WRITE SAME with unmap
-> -	setup_test_device lbprz=0
-> -	umap="$(cat "/sys/block/$(_short_dev /dev/mapper/test)/queue/write_zeroes_unmap")"
-> +	local dname
-> +	dname=$(setup_test_device lbprz=0)
-> +	ret=$?
-> +	if ((ret)); then
-> +		if ((ret == TO_SKIP)); then
-> +			SKIP_REASONS+=("kernel does not support unmap write zeroes sysfs interface")
-> +		fi
-> +		return 1
-> +	fi
-> +	umap="$(cat "/sys/block/${dname}/queue/zoned")"
->  	if [[ $umap -ne 0 ]]; then
->  		echo "Test disable WRITE SAME with unmap failed."
->  	fi
->  	cleanup_test_device
->  
+On Thu, Apr 24, 2025 at 01:24:59PM +0200, Michal Luczaj wrote:
+>On 4/24/25 10:36, Stefano Garzarella wrote:
+>> On Thu, 24 Apr 2025 at 09:53, Michal Luczaj <mhal@rbox.co> wrote:
+>>> On 4/24/25 09:28, Stefano Garzarella wrote:
 
-Yeah, I believe this will work, and it looks good to me. Thank you for
-the suggestion！
+[...]
+
+>>> You're right, it was me who was confused. VMCI and Hyper-V have their own
+>>> vsock_transport::release callbacks that do not call
+>>> virtio_transport_wait_close().
+>>>
+>>> So VMCI and Hyper-V never lingered anyway?
+>>
+>> I think so.
+>>
+>> Indeed I was happy with v1, since I think this should be supported by
+>> the vsock core and should not depend on the transport.
+>> But we can do also later.
+>
+>OK, for now let me fix this nonsense in comment and commit message.
+
+Thanks!
+
+>
+>But I'll wait for your opinion on [1] (drop, squash, change order of
+>patches?) before posting v3.
+
+I'm fine with a second patch to fix the indentation and the order looks 
+fine.
+
+BTW I'm thinking if it makes sense to go back on moving the lingering in 
+the core. I mean, if `unsent_bytes` is implemented, support linger, if 
+not, don't support it, like now.
+
+That said, this should be implemented in another patch (or eventually 
+another series if you prefer), so my idea is the following split:
+- use unsent_bytes() just in virtio
+- move linger support in af_vsock.c (depending on transports 
+   implementing unsent_bytes())
+- implement unsent_bytes() in other transports (in the future)
+
+WDYT?
 
 Thanks,
-Yi.
-
+Stefano
 
