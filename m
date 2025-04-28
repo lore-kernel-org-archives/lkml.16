@@ -1,39 +1,50 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6025ABA34;
-	Mon, 28 Apr 2025 01:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0520FBA34;
+	Mon, 28 Apr 2025 01:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745802664; cv=none; b=DUTAq2gcPnxR3g+KZ5GYNPRWoI22b0w8PJ3L2EtPjmA2F0COLzWKuax3mp9i2S+dorhrL/zMvrR3UtdUHGygJgXT1oPRzaxCyNaBjj8SG/mK/isTQopxMJv0DffE9fcdhum0i3k3A3Xvo4Pb+aIMml6ENcwrdQfR7DrVFQL/UJw=
+	t=1745802822; cv=none; b=DTYU/Yydfu+PFkvQm4N5HP4gKmLn/kCvsiE/khw/Y/UskvFcgFF6kcc2EGFmL1pl06qw5e8L8fFulmUP93yocmEPgnarLnjaz3hKA7QwRzFmvsR/ey3KQCsSSxaLtc7v0duoW90aYYjqvTNuuC+TWv3mMOhH3KHm2d41kwvuaK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745802664; c=relaxed/simple;
-	bh=IMMIDmFa3UMALM7fdEh6J0tlE+FKchJw1hmYUHyXTY0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MAOW6KMUwCAdKW8V1muFysPcMWGo3I1e1qAIwdwRfZTnT9LimztG0DrElmhSBhdOkPID9GsQMh/3W3Oe5sajpN2wwvIYNHox1i49u8xXwUgXodiY2S5hPeTeYH42p8521sO6R1vnrZt47M8XPwruDL2Hw81ovyotOC/4a3guXlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KV47ZM7x; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1745802822; c=relaxed/simple;
+	bh=SzVEkDhgS3lNLKaxMmkzixB0NkfENpwp720ZSDFOdIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L8i4JEtZuzK7q/kK3c5wxAgB3LK+NMv0MgR7CwGNuj44GU/7yha1lRIN/C+mP0KfDGNgal0ayqqu6dweMubl9V8UOfDPIAPs556Ne2UP+dxG/cdVsnU8ONQ02gf2TZA4gcAuTNfrb8eZhUPQ4tmMhJhLbej1KHZZRl8yPaH5jtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mrs5LmCD; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KV47ZM7x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=mrKYzgU8FxJu3b8G1k5DeIokIS/xjOzAdBB2TEWWtk4=; b=KV47ZM7xvUmB8VGPVF2r7RRfN2
-	/8qlpzDRE5dUEJxiVOsf6oB7fZLf/AcgfvibcVRq0DgI4RypXNXcdW2usVMro8vP40cl8uioQ7W5U
-	+VdGGFIUq19j7B6QHC9FuyegVjkm79zfrp+bYekcXBJQ/4ltZRlOKkMRB2vAv6kmnck1w0RyhprMC
-	N59+venV0bAxJNs4pKAvPq9xCTnOePcnVamqhHUAgqWbRtPyHgBkTVTkYpvw0tTatzcTE6DIYA/D4
-	X5PEQ3v6XCyPfMuvZzkDvB5aXyl0iuFBIcZW6qTZhPVDqQ/49jjCTFyyVcMIpwDJT73F5LN+nzkkW
-	lq0YQPkA==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u9D1D-009Z1B-Ao; Mon, 28 Apr 2025 03:10:47 +0200
-Message-ID: <d77ac703-2fa8-48f8-846a-fb88d45b9287@igalia.com>
-Date: Mon, 28 Apr 2025 10:10:41 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mrs5LmCD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745802821; x=1777338821;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SzVEkDhgS3lNLKaxMmkzixB0NkfENpwp720ZSDFOdIQ=;
+  b=Mrs5LmCDBZV51VbYkQuIrvFI9VEMIBpM3KQAnNgf1I+Gs9PqRy6yGa0Z
+   BGxrAAYoptSQHCO6Da3XOzZlRDOXldiP8ozlt4kuu9z4F6I0MdxFaA0LG
+   0xMLgdCgnEFwL5uKp9zlbxQiRKVMdOBM00IbvHFl4lzop8nhQ/b5FQASO
+   xm8o3Z8npaIUmQf0pVtgkY0YqPQEDOWxjjKNCePPMdLwlDwpoRXymILIr
+   RGRrcXD/1/LG+XtkxXczOWr4FtolyqnfI64p8y1wD4738xWXGxn5V0DQs
+   5YcrkIcfkdwjwPULfdelI6nxtEGWtSOTPclQJc+bHe+/K16vv/6JaxobE
+   Q==;
+X-CSE-ConnectionGUID: Vw8OCtMdSs6wmIstyIePEw==
+X-CSE-MsgGUID: umwdTVxgQbOejdHAge0+wQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47469189"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="47469189"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 18:13:34 -0700
+X-CSE-ConnectionGUID: kCEJNONXT+mMJ2UwL1Mdjw==
+X-CSE-MsgGUID: 1gUHhF4hT5y9Cgd2z9Awrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="133265254"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 18:13:29 -0700
+Message-ID: <28e513ec-4d8b-4967-a241-d6f63d533050@linux.intel.com>
+Date: Mon, 28 Apr 2025 09:09:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,289 +52,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PM: EM: Add inotify support when the energy model is
- updated.
-From: Changwoo Min <changwoo@igalia.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
-Cc: christian.loehle@arm.com, tj@kernel.org, len.brown@intel.com,
- kernel-dev@igalia.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, pavel@kernel.org
-References: <20250415004215.48757-1-changwoo@igalia.com>
- <d29e4ea6-2bfe-4017-b7c8-0d77613959f4@arm.com>
- <CAJZ5v0jx44heAgXPwCDriGo-xyjX2pUP+PG1cQwjme_=EHo3rg@mail.gmail.com>
- <f7e388e0-331f-43b3-a1e1-d0c14818e3ad@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <f7e388e0-331f-43b3-a1e1-d0c14818e3ad@igalia.com>
+Subject: Re: [PATCH v2 09/22] iommufd/viommu: Introduce IOMMUFD_OBJ_VCMDQ and
+ its related struct
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
+ corbet@lwn.net, will@kernel.org
+Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+ thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+ shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+ peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+ praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
+ alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <8bab0069503fa21b48298ed2ffe29a06963f71f5.1745646960.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <8bab0069503fa21b48298ed2ffe29a06963f71f5.1745646960.git.nicolinc@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Gentle ping as it reaches around 1.5 weeks.
+On 4/26/25 13:58, Nicolin Chen wrote:
+> Add a new IOMMUFD_OBJ_VCMDQ with an iommufd_vcmdq structure, representing
+> a command queue type of physical HW passed to a user space VM. This vCMDQ
+> object, is a subset of vIOMMU resources of a physical IOMMU's, such as:
+>   - NVIDIA's virtual command queue
+>   - AMD vIOMMU's command buffer
+> 
+> Inroduce a struct iommufd_vcmdq and its allocator iommufd_vcmdq_alloc().
+> Also add a pair of viommu ops for iommufd to forward user space ioctls to
+> IOMMU drivers.
+> 
+> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
 
-Regards,
-Changwoo Min
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-On 4/17/25 22:28, Changwoo Min wrote:
-> Hi Lukasz and Rafael,
-> 
-> Thank you super much for the comments!
-> 
-> On 4/16/25 02:05, Rafael J. Wysocki wrote:
->> On Tue, Apr 15, 2025 at 10:31 AM Lukasz Luba <lukasz.luba@arm.com> wrote:
->>>
->>> Hi Changwoo,
->>>
->>> Thanks for the patch.
->>>
->>> On 4/15/25 01:42, Changwoo Min wrote:
->>>> The sched_ext schedulers [1] currently access the energy model 
->>>> through the
->>>> debugfs to make energy-aware scheduling decisions [2]. The userspace 
->>>> part
->>>> of a sched_ext scheduler feeds the necessary (post-processed) 
->>>> energy-model
->>>> information to the BPF part of the scheduler.
->>>
->>> This is very interesting use case!
->>>
->>>>
->>>> However, there is a limitation in the current debugfs support of the 
->>>> energy
->>>> model. When the energy model is updated (em_dev_update_perf_domain), 
->>>> there
->>>> is no way for the userspace part to know such changes (besides 
->>>> polling the
->>>> debugfs files).
->>>>
->>>> Therefore, add inotify support (IN_MODIFY) when the energy model is
->>>> updated. With this inotify support, the sched_ext scheduler can 
->>>> monitor the
->>>> energy model change in userspace using the regular inotify interface 
->>>> and
->>>> feed the updated energy model information to make energy-aware 
->>>> scheduling
->>>> decisions.
->>>>
->>>> [1] https://lwn.net/Articles/922405/
->>>> [2] https://github.com/sched-ext/scx/pull/1624
->>>>
->>>> Signed-off-by: Changwoo Min <changwoo@igalia.com>
->>>> ---
->>>>    kernel/power/energy_model.c | 47 ++++++++++++++++++++++++++++++++ 
->>>> +++++
->>>>    1 file changed, 47 insertions(+)
->>>>
->>>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
->>>> index d9b7e2b38c7a..0c06e0278df6 100644
->>>> --- a/kernel/power/energy_model.c
->>>> +++ b/kernel/power/energy_model.c
->>>> @@ -14,6 +14,7 @@
->>>>    #include <linux/cpumask.h>
->>>>    #include <linux/debugfs.h>
->>>>    #include <linux/energy_model.h>
->>>> +#include <linux/fsnotify.h>
->>>>    #include <linux/sched/topology.h>
->>>>    #include <linux/slab.h>
->>>>
->>>> @@ -156,9 +157,53 @@ static int __init em_debug_init(void)
->>>>        return 0;
->>>>    }
->>>>    fs_initcall(em_debug_init);
->>>> +
->>>> +static void em_debug_update_ps(struct em_perf_domain *em_pd, int i,
->>>> +                            struct dentry *pd)
->>>> +{
->>>> +     static const char *names[] = {
->>>> +             "frequency",
->>>> +             "power",
->>>> +             "cost",
->>>> +             "performance",
->>>> +             "inefficient",
->>>> +     };
->>>> +     struct em_perf_state *table;
->>>> +     unsigned long freq;
->>>> +     struct dentry *d, *cd;
->>>> +     char name[24];
->>>> +     int j;
->>>> +
->>>> +     rcu_read_lock();
->>>> +     table = em_perf_state_from_pd(em_pd);
->>>> +     freq = table[i].frequency;
->>>> +     rcu_read_unlock();
->>>> +
->>>> +     snprintf(name, sizeof(name), "ps:%lu", freq);
->>>> +     d = debugfs_lookup(name, pd);
->>>> +
->>>> +     for (j = 0; j < ARRAY_SIZE(names); j++) {
->>>> +             cd = debugfs_lookup(names[j], d);
->>>> +             if (!cd)
->>>> +                     return;
->>>> +             fsnotify_dentry(cd, FS_MODIFY);
->>>> +             cond_resched();
->>>> +     }
->>>> +}
->>>> +
->>>> +static void em_debug_update(struct device *dev)
->>>> +{
->>>> +     struct dentry *d;
->>>> +     int i;
->>>> +
->>>> +     d = debugfs_lookup(dev_name(dev), rootdir);
->>>> +     for (i = 0; i < dev->em_pd->nr_perf_states; i++)
->>>> +             em_debug_update_ps(dev->em_pd, i, d);
->>>> +}
->>>>    #else /* CONFIG_DEBUG_FS */
->>>>    static void em_debug_create_pd(struct device *dev) {}
->>>>    static void em_debug_remove_pd(struct device *dev) {}
->>>> +static void em_debug_update(struct device *dev) {}
->>>>    #endif
->>>>
->>>>    static void em_release_table_kref(struct kref *kref)
->>>> @@ -323,6 +368,8 @@ int em_dev_update_perf_domain(struct device *dev,
->>>>
->>>>        em_table_free(old_table);
->>>>
->>>> +     em_debug_update(dev);
->>>> +
->>>
->>> I would move this out of the locked section, below the mutex
->>> unlock. Looking at the code in em_debug_update() you are trying
->>> to send such notification for each EM's table entry * number of
->>> fields, which is heavy. The RCU copy that you get will make sure
->>> you have consistent view on the data and you don't have to
->>> be under the mutex lock.
-> 
-> That makes sense. I will change it in the next version as you suggested.
-> 
->>>
->>> A different question would be if the notification has to be
->>> that heavy?
-> 
-> This is a good question. In this version, I tried to mimic the situation
-> such that all the files under a performance domain are updated, so I
-> sent inotify for all files.
-> 
-> However, that is *not* necessary considering how a userspace code
-> monitors the update of the energy model. Now, I think it will be better
-> to inotify just the directory of a performance domain (e.g., /sys/
-> kernel/debug/energy_model/cpu0). A userspace application just monitors
-> '/sys/kernel/debug/energy_model' to get a notification for an update on
-> any performance domain.
-> 
-> The change will be minimal as follows:
-> 
-> @@ -14,6 +14,7 @@
->   #include <linux/cpumask.h>
->   #include <linux/debugfs.h>
->   #include <linux/energy_model.h>
-> +#include <linux/fsnotify.h>
->   #include <linux/sched/topology.h>
->   #include <linux/slab.h>
-> 
-> @@ -156,9 +157,18 @@ static int __init em_debug_init(void)
->       return 0;
->   }
->   fs_initcall(em_debug_init);
-> +
-> +void em_debug_update(struct device *dev)
-> +{
-> +    struct dentry *d;
-> +
-> +    d = debugfs_lookup(dev_name(dev), rootdir);
-> +    fsnotify_dentry(d, FS_MODIFY);
-> +}
->   #else /* CONFIG_DEBUG_FS */
->   static void em_debug_create_pd(struct device *dev) {}
->   static void em_debug_remove_pd(struct device *dev) {}
-> +static void em_debug_update(struct device *dev) {}
->   #endif
-> 
->   static void em_destroy_table_rcu(struct rcu_head *rp)
-> @@ -335,6 +345,8 @@ int em_dev_update_perf_domain(struct device *dev,
->       em_table_free(old_table);
-> 
->       mutex_unlock(&em_pd_mutex);
-> +
-> +    em_debug_update(dev);
->       return 0;
->   }
->   EXPORT_SYMBOL_GPL(em_dev_update_perf_domain);
-> 
->>> Can we just 'ping' the user-space that there is a change and ask to read
->>> the new values?
-> 
-> Besides the inotify, another 'ping' mechanism that I can think of is
-> using kprobe/kretprobe. The BPF code hooks em_dev_update_perf_domain()
-> using kprobe/kretprobe. When the function is called, the BPF code tells
-> the userspace to re-read the energy model.
-> 
-> This is pretty ad-hoc and has two (or more) problems. Firstly, it
-> requires another communication mechanism (maybe BPF ring buffer) from
-> the BPF code to the userspace. This will eventually mimic what inotify
-> does. More importantly, the BPF code has a dependency on the function
-> name. The changes in the function name/prototype will break the  BPF
-> code. We may consider adding a tracepoint to em_dev_update_perf_domain()
-> to avoid this, but to me, it feels like another bandage over a bandage.
-> 
-> Due to this, I think inotify is the right solution to the problem.
-> 
-> @Lukasz -- If you have anything particular in mind other than kprobe and
-> inotify, please let me know.
-> 
->>>
->>> Another question, but this time to Rafael would be if for such use case
->>> we can use debugfs, or we need a sysfs?
->>
->> debugfs is not really suitable for this IMV and the problem at hand is
->> a symptom of that (but there will be more issues in the future
->> AFAICS).
-> 
-> I agree debugfs is not ideal in the sense that it is not considered as a
-> stable interface. We can consider moving from the debugfs to the sysfs
-> if there is a consensus. In my view, moving to sysfs is reasonable since
-> there is no major change in the debugfs hierarchy since its inception.
-> If necessary, I will add the sysfs implementation (dropping the debugfs
-> code) to the next version.
-> 
-> @Rafael -- Could you elaborate a bit more about 'the problem at hand'
-> and 'more issues in the future'? Once inotify-ing only the performance
-> domain directory as described above, I think overhead is no longer a
-> problem. Do you have anything particular concerning about?
-> 
->>
->> Before starting to invent new interfaces for user space, though, I'm
->> wondering why the BPF code cannot obtain the energy model information
->> from the kernel?
-> 
-> First of all, we prefer a userspace interface over adding new BPF kfuncs
-> to access the energy model. The user space has much more freedom than
-> the BPF code (e.g., using external libraries and floating point
-> arithmetics). For instance, one sched_ext scheduler may leverage the
-> energy model information to find the best subset of CPUs given the
-> workload using machine learning or some numerical optimization
-> techniques. Such approaches are infeasible (if not impossible) in the
-> BPF/kernel code.
-> 
-> Secondly,  I am unsure if the current energy model data structures are
-> accessible without any modifications through new BPF kfuncs. In
-> particular, there are two flexible array members (cpus[] in
-> em_perf_domain and state[] in em_perf_table). I guess that the BPF
-> verifier may not be able to know the bounds of the arrays.
-> 
-> Finally, even if the current EM data structures are accessible without
-> any modifications, I still think adding new BPF kfuncs is not ideal
-> because that creates dependencies between the EM data structures and the
-> BPF code. If the EM data structures change (e.g., struct name change,
-> field name change), the BPF code will break. While there is a BPF
-> compatibility feature (CO-RE), managing such changes in the BPF code
-> will be painful.
-> 
-> Regards,
-> Changwoo Min
->>
->>>>        mutex_unlock(&em_pd_mutex);
->>>>        return 0;
->>>>    }
->>
->>
-> 
+with a small nit below ...
 
+> ---
+>   include/linux/iommufd.h | 35 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+> 
+> diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
+> index ef0d3c4765cf..e91381aaec5a 100644
+> --- a/include/linux/iommufd.h
+> +++ b/include/linux/iommufd.h
+> @@ -37,6 +37,7 @@ enum iommufd_object_type {
+>   	IOMMUFD_OBJ_VIOMMU,
+>   	IOMMUFD_OBJ_VDEVICE,
+>   	IOMMUFD_OBJ_VEVENTQ,
+> +	IOMMUFD_OBJ_VCMDQ,
+>   #ifdef CONFIG_IOMMUFD_TEST
+>   	IOMMUFD_OBJ_SELFTEST,
+>   #endif
+> @@ -112,6 +113,14 @@ struct iommufd_vdevice {
+>   	u64 id; /* per-vIOMMU virtual ID */
+>   };
+>   
+> +struct iommufd_vcmdq {
+> +	struct iommufd_object obj;
+> +	struct iommufd_ctx *ictx;
+> +	struct iommufd_viommu *viommu;
+> +	dma_addr_t addr;
+
+It's better to add a comment to state that @addr is a guest physical
+address. Or not?
+
+> +	size_t length;
+> +};
+
+Thanks,
+baolu
