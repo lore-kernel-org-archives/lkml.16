@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC821E766F
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEE41D63EF
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745873522; cv=none; b=S7ZqJttByQ70ao6Ip2zkoc8hjfmzwXhqb8tc7DhAbHxrtTcwfiOq78DmXqAouFZqlRhKZsv0C0gFwypnUpAvAjd3Y7d/hYaWHcbdBMO58AchA2DPAbJsDTen+RGhxxjhD2KucQ8gvtXz1mEICc5Ywti/zsI8lnQ+YYUchEwwric=
+	t=1745873627; cv=none; b=dCiLI+9itoGUWZxTDg3BzhUhYD+gz7RPVYJVwa56CXeuE1OeNpie4lNz1fyFf7uFIYty784ebrDHaEcNSYAvEDn9AHPUHg0yFnYXb3s9wJXf4kFTPr6OU6RPnEFNCxHyk6ujAk370Wi5r0lwLhLE6YtXaKXaHX6MhlArIm1uMsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745873522; c=relaxed/simple;
-	bh=ixwehTVloGmiznSYdDso7usHvoH3uUehr+1KrijfpHo=;
+	s=arc-20240116; t=1745873627; c=relaxed/simple;
+	bh=0Fz+KFVjki+7GHjBdQM/8ARtD1OUF3BfWhwHqC7O7p4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KKp6s17t82Wki4FOr98Ur4M7uvKtlZAo9hC1o+CinTgm7PF5w5djIXL/mroyeRpXNfl7y9xtMxe9R3F+mrDImGp3LdZw96VmTcZlcxUUEg6PISxYdz5k6Cc8hEysr8fm5WOq4JiS3zlMCdBUrSBKvGPwzcnl5uyRvKNs3X7NBE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QzLzYUrF; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=YQVyXRmqrUISdwk1H/rM0rc2FwGL2okCXk/csF2p6ecbwZEdPUXAGzGYIY/dc/KnqwXk25HwDM4pzhoKNiXCLWGYqX/c7QtCj5Shix/wQmMBBeewdLTqgNGA9kzBqv8jMsuaylhCjefzqECyCZ/jAAp+s6EX/+id0ShZokJnhtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a+D5Wmb3; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QzLzYUrF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a+D5Wmb3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745873518;
+	s=mimecast20190719; t=1745873623;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=j2bUXPd239Gbe+nQ3lTe/eSsnuhadeHIHUfplu2vSg4=;
-	b=QzLzYUrFyZpCoiG+88xf9rC2bhEnAHl+v9Jxke/mKbxIjSmb673sVJktvM8GcZmC/3xxt/
-	dSoqZZQ2d3MmlX42o/lMvh4MZdAdyDOoMKDQhuJhSElWIWWjW+LBH69YBULNLJk1SsvwHQ
-	jBh8ypOJ26F/ZQFh6zpop3fs0VidI4A=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9NrijACrVI0d46In4Ef/eZDIzQK/apI7tktcFwphNAA=;
+	b=a+D5Wmb37cF7dVb+D3ISlAgTmJ88vt3QhF+6/G64mbuBptEHnUIpYnqUUAvMOpIxFHRZJC
+	EPJk32UlesOKun6OGBM1MfoTSKUNw73SsYGDV2HUGOCcDbCKVRRVXoQMHkyyqweakSFMku
+	QmjpGqwnXZWToZATcPyw9aPvdnDeC2Q=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638--pJHDk2QMUaC70lip3bYhA-1; Mon, 28 Apr 2025 16:51:56 -0400
-X-MC-Unique: -pJHDk2QMUaC70lip3bYhA-1
-X-Mimecast-MFC-AGG-ID: -pJHDk2QMUaC70lip3bYhA_1745873516
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3978ef9a284so1632937f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:51:56 -0700 (PDT)
+ us-mta-164-_n5Ul8Y4MN2PltNR_Gtjvg-1; Mon, 28 Apr 2025 16:53:42 -0400
+X-MC-Unique: _n5Ul8Y4MN2PltNR_Gtjvg-1
+X-Mimecast-MFC-AGG-ID: _n5Ul8Y4MN2PltNR_Gtjvg_1745873621
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d6c65dc52so37265135e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:53:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745873515; x=1746478315;
+        d=1e100.net; s=20230601; t=1745873621; x=1746478421;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=j2bUXPd239Gbe+nQ3lTe/eSsnuhadeHIHUfplu2vSg4=;
-        b=vkYXQm3hBbYfC8BPiInr10dQQkMPSJUZ4Bz4mDB6AwkdsjedccM0H3vCfFdaZ9yJbk
-         kmo+xuPn7Vu8GTXTKdx7tHdxKBWrHk4fPr0cC2HQepuRtT4JBHyY+F6djxeEXNohnXh0
-         43iUV54+rgNobKKpaW3M3babPtFjC1voqnFXvFYuvn4RnKqakaAX6OgF8Jf9q02BOp/4
-         cOiAVYM2ehObF4FXAS1lPJkwJkokZJqi6c6S3K0watZi2F7RdYA1ULUfhC2V8m8UKF31
-         7JKeiTMKL6t3o3qvLqdxDrx350YuyBMy70Deb8k0UeivsJaB//wKbSsQP/gxHqVMsy2b
-         224A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcWTbacKKjISZWd0PsLh9NjSnt5n/AN80kF4CLLvm+2oUhSocTeVZKfRW10ZWPUhSUfbbzfGEdq66DEZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7CZ00UaoVAoQmo3M5OX4PqQQnOhAcJQ64++L+8zd7MH8067rx
-	R8PMVpVYCUZccnQDuccgRkFVlyq4xbv9UUIBjRtGJh11d4mXhNCzUX5U5BGif2M3mEpKO4qbd27
-	//F7koF+6GOJF6d02Q7JbNB2nlwGmhFhYHpWZMZKZg3biy+ZfML/lev/JmRARWg==
-X-Gm-Gg: ASbGncuKL9DjnB5ESNBAXDTM2VN3u0IIrH7JxFPFB2KzHDeGQ3XTSO7hgvAJF1dGuzY
-	2Exu99N47GXo5NTeRMHkY4m/E7tsrPhfIn9FllsZU8Zq3xJ2pE55/pJcgIDweYMYMywr7DRoZuD
-	AQOVDVL95d91NN/arZrHbDWivStf9rq2mBaKGoRUp77rHGqciGdiHIfenk+yyQJDGa79y9NABgi
-	lM4j2/EVf6EyQhElMaWHi2jA+JKw1ujYTz4Gh6z8L81MIY8QfI3gT4g3yLjpfQmcdlrEwWPq/qm
-	aAVgXFbJZ5yp6eJQPJ340S05pLK4RvLgvrGkUHn4+sDyAOLCEPjjVxGx58T9rVg0b2cngh8v5Vx
-	6tTIUDc2tArsWcglph71QasuZZCIQ/MwqSL/VU/0=
-X-Received: by 2002:adf:ec87:0:b0:39c:1257:c96f with SMTP id ffacd0b85a97d-3a07adb1766mr5885054f8f.59.1745873515620;
-        Mon, 28 Apr 2025 13:51:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGg/ZdNPM76QotVNqWHb1vX5+E7w/bMZCMD5F0ePmlXfZOfXKaNazuQwa6Th8wuWGKYYPw0XA==
-X-Received: by 2002:adf:ec87:0:b0:39c:1257:c96f with SMTP id ffacd0b85a97d-3a07adb1766mr5885041f8f.59.1745873515309;
-        Mon, 28 Apr 2025 13:51:55 -0700 (PDT)
+        bh=9NrijACrVI0d46In4Ef/eZDIzQK/apI7tktcFwphNAA=;
+        b=skTvJ3iPAg9koVahVyWEfY8JP+t/CBAT2r6cD8LlJQ8XyrGx8H7iXWr+cv8E3fzotO
+         0aoS13JwgYCqEuE6AYN8ZpUVDC+Lj26W+m/gxMLigCl7vWnMSOtYl8ao9oQn7FSLHVrh
+         bIelQfVJGZes5+6mR+X+a+wnWlE/QDpYK6sVD/klaYbuiNEymle5tBMk9FUVrUgnl1FK
+         ul3vnGPPi8sUd/C2NMR+F4FNXb52CsTXqYpyJJ6SVyUEuoqE2zD0+Uceivp/TvCVzz21
+         0mccaFE7oIhe7cKIz4zIiBcUcFrMHko+gxyVLCxxx4GwW0AwGz+UYfJ44ayyQbBwWFHZ
+         hUFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzRe4YyCcI2comWMDTlsZqiUjd/+Cy0Jn/JlhUUgZfhL6j1qdL+07qwDO3Y83zo/cBFaMxbVK/n97+jkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa7zdeEFZez2EnGhAIX3A90/qdKq/IvjwK4xJfPtnmWuc3y1QJ
+	FoasNYpNb54qyqQaaEsPbg3xF7Dym+nu0AKFMump+yfjWTeLHik+4Agmdg5BgkF7efOSqbjQ9v+
+	e7VAMs9nKpuBLNEOsWE9JgwBA7fzMtgWNmGmp5pzHYW7KrSpfJDhFtEnPSsLqsg==
+X-Gm-Gg: ASbGnct64wJ/wUtLe5yj3IQ00XmwXr7lk7InfA25pA4KxGLTqtYVrWvAkVaeuct16+L
+	xjzUeeFygsc6PBIT3RVmz+jvjNH4xXhN24UkFR4UIBGnZxcGJ7W4fJ1P4XEQySlUK5CBUWuuzS9
+	beX+nAqU3/0btW1dvt//1XaORi6qIaxEJSau56gImNvbjWUrP9XmThIQhy7THVWHR57w27od6fs
+	r8p79s7UuXOlzdmhWCvGGVKypTSfMuG2xjDRbGa/raEpm733VZuzg7zpNXok7vlcDwcUlmQrzQE
+	Iq5ElXGR0FJM4r2Mmr76N3iMdj+1Ji7F5/xK/WZDRjPQCXXMlv+V12pf0m33WVda/lyTPRjuo90
+	ntHPqVx3Dg/T6sBrqpK9ns+K0TmtuvoefPkk7WUk=
+X-Received: by 2002:a05:600c:8112:b0:43c:f78d:82eb with SMTP id 5b1f17b1804b1-441ad3c708dmr1746265e9.15.1745873620924;
+        Mon, 28 Apr 2025 13:53:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEw24C6HKQcRQnuzF0GizlWJ2/kyYEzORcRGXEVbHeQEcXEI1mVjEfDrlAfYscrdW/qBLTTAQ==
+X-Received: by 2002:a05:600c:8112:b0:43c:f78d:82eb with SMTP id 5b1f17b1804b1-441ad3c708dmr1746155e9.15.1745873620606;
+        Mon, 28 Apr 2025 13:53:40 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea? (p200300cbc72fea002f00e7e58875a0ea.dip0.t-ipconnect.de. [2003:cb:c72f:ea00:2f00:e7e5:8875:a0ea])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07dbd6ea1sm8050593f8f.7.2025.04.28.13.51.54
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d868asm166551305e9.26.2025.04.28.13.53.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 13:51:54 -0700 (PDT)
-Message-ID: <ced78ba0-8ba0-44e3-bbc7-e2ba82894639@redhat.com>
-Date: Mon, 28 Apr 2025 22:51:53 +0200
+        Mon, 28 Apr 2025 13:53:40 -0700 (PDT)
+Message-ID: <ba576520-3bec-45e6-8ae8-d36ea0a0e00d@redhat.com>
+Date: Mon, 28 Apr 2025 22:53:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,14 +75,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] mm/hugetlb: Refactor __unmap_hugepage_range() to
- take folio instead of page
+Subject: Re: [PATCH v3 4/4] mm/hugetlb: Convert use of struct page to folio in
+ __unmap_hugepage_range()
 To: nifan.cxl@gmail.com, muchun.song@linux.dev, willy@infradead.org
 Cc: mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
  akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  Fan Ni <fan.ni@samsung.com>
 References: <20250428171608.21111-3-nifan.cxl@gmail.com>
- <20250428171608.21111-6-nifan.cxl@gmail.com>
+ <20250428171608.21111-7-nifan.cxl@gmail.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -130,25 +130,63 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250428171608.21111-6-nifan.cxl@gmail.com>
+In-Reply-To: <20250428171608.21111-7-nifan.cxl@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 28.04.25 19:11, nifan.cxl@gmail.com wrote:
 > From: Fan Ni <fan.ni@samsung.com>
 > 
-> The function __unmap_hugepage_range() has two kinds of users:
-> 1) unmap_hugepage_range(), which passes in the head page of a folio.
->     Since unmap_hugepage_range() already takes folio and there are no other
->     uses of the folio struct in the function, it is natural for
->     __unmap_hugepage_range() to take folio also.
-> 2) All other uses, which pass in NULL pointer.
-> 
-> In both cases, we can pass in folio. Refactor __unmap_hugepage_range() to
-> take folio.
+> In __unmap_hugepage_range(), the "page" pointer always points to the
+> first page of a huge page, which guarantees there is a folio associating
+> with it.  Convert the "page" pointer to use folio.
 > 
 > Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > ---
+>   mm/hugetlb.c | 24 +++++++++++++-----------
+>   1 file changed, 13 insertions(+), 11 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 6696206d556e..293c2afa724b 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -5815,12 +5815,12 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   	pte_t *ptep;
+>   	pte_t pte;
+>   	spinlock_t *ptl;
+> -	struct page *page;
+>   	struct hstate *h = hstate_vma(vma);
+>   	unsigned long sz = huge_page_size(h);
+>   	bool adjust_reservation = false;
+>   	unsigned long last_addr_mask;
+>   	bool force_flush = false;
+> +	const bool folio_provided = !!folio;
+
+I would but that all the way to the top.
+
+>   		}
+> @@ -5943,16 +5944,17 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   				 * count will not be incremented by free_huge_folio.
+>   				 * Act as if we consumed the reservation.
+>   				 */
+> -				folio_clear_hugetlb_restore_reserve(page_folio(page));
+> +				folio_clear_hugetlb_restore_reserve(folio);
+>   			else if (rc)
+>   				vma_add_reservation(h, vma, address);
+>   		}
+>   
+> -		tlb_remove_page_size(tlb, page, huge_page_size(h));
+> +		tlb_remove_page_size(tlb, folio_page(folio, 0),
+> +				     folio_size(folio));
+>   		/*
+>   		 * Bail out after unmapping reference page if supplied
+>   		 */
+
+
+I wonder if we want to adjust that comment while at it.
+
+/* If we were instructed to unmap a specific folio, we're done. */
+
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
