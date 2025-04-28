@@ -1,115 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1D625D1EC
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2399C1FF603;
+	Mon, 28 Apr 2025 08:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745830389; cv=none; b=RbaacPXg1jNu7gSw/E5r+VJWFyIRzfspxNvsfg1e9kYRRPNVhNTchv/D9pBVzb3teNsRWOqBwV+yqC+8GnZflXK1ZrVOoSZfJsdmwmQyjVO4a3UCxp/a+yg2y2CKbUxvBR/DRk9VA+TnhkzLCqNsSk728VNBKZ2cO8lSr/cX2vg=
+	t=1745830423; cv=none; b=YIaQZOGhkkhv/DZ+8yIx0REpA5MXlPyMPQPZFIkC6eSETmBB2qMHkXeLaRnQyFWYfJUGfDGUSAQP6W3DfCrtUXOj0JO02BH8EuQ5+8BU5eu3zOhSIqAQaQ339X/JLHbz07/h/XPpc0EdyhbefYPmX+OvS0bSbazi1Y33A+27hzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745830389; c=relaxed/simple;
-	bh=hXXBsFE8riXQa5TAdgOA67GWKs4Sj0+TLCvhE8tlHO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WBoiXI8TzyPp0uKtkEK4CEc8hAxuzbI+grZ/do5KtYbZLU2GUTTnVmgHmZV89IvQQV1x4edUZOxojEv0he0zLZUAvd4HlLECfo7nNrR0txjx2dF0mtamoiYd2oBGC6BJE2Zgim5C90+6kaGw+U16Btvnc/bro0nw61svXmlqLTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79B881595;
-	Mon, 28 Apr 2025 01:52:59 -0700 (PDT)
-Received: from [10.57.19.90] (unknown [10.57.19.90])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7B203F673;
-	Mon, 28 Apr 2025 01:53:03 -0700 (PDT)
-Message-ID: <1ae2f636-2695-4349-8590-c9893ff813ec@arm.com>
-Date: Mon, 28 Apr 2025 09:53:01 +0100
+	s=arc-20240116; t=1745830423; c=relaxed/simple;
+	bh=QwVhdKsroLTp3FXZMREUKf/LpAJC0pz0HM4iDFUkBQI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EBs0sbxZ0zOcnRf2GkIO3Ixj2NAplg9v6mguct008MK3Pr3M12ycYRZKekJNMYG/0ssrsIKEgsSNVaQHORzr9cRwITgLKiNFCVjVoIgLbEwzTPho0jxb0o6Y+aPr9xVfq4UOKwZBRqzwh96lK3T096WInsczBBn7n7eYPL2ttok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+eWZCic; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+eWZCic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D10C4CEE4;
+	Mon, 28 Apr 2025 08:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745830422;
+	bh=QwVhdKsroLTp3FXZMREUKf/LpAJC0pz0HM4iDFUkBQI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=o+eWZCicC0F8jF170nW3k/LltqhThvrzCacDuQAaI9RbyXViJBAN3A3/eYFSk2mqb
+	 E+E36JuRb3gEmplT2s9If1GIQ3aK4eCJvvO8jwE5jssRMKXHWi93WTytnsYDIcSURS
+	 +kqgiyw7fBHeNFqRxEoKZdyag3JMqMcfN4JiD7ltJjQM/A1HeRRIM3KY2V8ZSZkOrd
+	 Hjib4ufXzVN8pu85TsaECDZWJEUGO+yEyz89aGIZGJbv7+7jpsdJr2qDoHu8oXkDOy
+	 3SDNU8eYQfF8M4ZUtXMLjO0W0vZPSUoNGlIqDrLz9JK/fB1GAm5tN447qbyZ+JmvS4
+	 QZV52S5CZIT5Q==
+From: Christian Brauner <brauner@kernel.org>
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	paul@paul-moore.com,
+	omosnace@redhat.com,
+	selinux@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list to always include security.* xattrs
+Date: Mon, 28 Apr 2025 10:53:33 +0200
+Message-ID: <20250428-vermummen-klumpen-2131561ba55f@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
+References: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/panthor: Fix build warning when DEBUG_FS is disabled
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org
-References: <20250424184041.356191-1-adrian.larumbe@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250424184041.356191-1-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1555; i=brauner@kernel.org; h=from:subject:message-id; bh=QwVhdKsroLTp3FXZMREUKf/LpAJC0pz0HM4iDFUkBQI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTwOwnYdxvzmkzVmuz7/Za/jt/BV6+qf/1u8tOQ+vshm befryS3o5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCIr5RgZPpbv94k5lDpvWW3j /rPHA0r31m7amD9vYdL1yLmv93gx5DAyrGb/0nn+2UaJwGtdVvfS/KbW7DWa7LO5Re3MRoWrdfW NbAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On 24/04/2025 19:40, Adrián Larumbe wrote:
-> Commit a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM
-> objects over DebugFS") causes a build warning and linking error when
-> built without support for DebugFS, because of a non-inline non-static
-> function declaration in a header file.
+On Thu, 24 Apr 2025 11:28:20 -0400, Stephen Smalley wrote:
+> The vfs has long had a fallback to obtain the security.* xattrs from the
+> LSM when the filesystem does not implement its own listxattr, but
+> shmem/tmpfs and kernfs later gained their own xattr handlers to support
+> other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
+> filesystems like sysfs no longer return the synthetic security.* xattr
+> names via listxattr unless they are explicitly set by userspace or
+> initially set upon inode creation after policy load. coreutils has
+> recently switched from unconditionally invoking getxattr for security.*
+> for ls -Z via libselinux to only doing so if listxattr returns the xattr
+> name, breaking ls -Z of such inodes.
 > 
-> On top of that, the function is only being used inside a single
-> compilation unit, so there is no point in exposing it as a global
-> symbol.
-> 
-> This is a follow-up from Arnd Bergmann's first fix.
-> Also move panthor_gem_debugfs_set_usage_flags() into panthor_gem.c and
-> declare it static.
-> 
-> Fixes: a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM objects over DebugFS")
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Closes: https://lore.kernel.org/dri-devel/20250424142419.47b9d457@collabora.com/T/#t
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> [...]
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-> ---
->  drivers/gpu/drm/panthor/panthor_gem.c | 5 +++++
->  drivers/gpu/drm/panthor/panthor_gem.h | 8 --------
->  2 files changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-> index 2dcf308094b2..7c00fd77758b 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-> @@ -42,11 +42,16 @@ static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
->  	mutex_unlock(&ptdev->gems.lock);
->  }
->  
-> +static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
-> +{
-> +	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-> +}
->  #else
->  static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
->  				       struct panthor_gem_object *bo)
->  {}
->  static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
-> +static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {}
->  #endif
->  
->  static void panthor_gem_free_object(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-> index 4641994ddd7f..4dd732dcd59f 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -212,14 +212,6 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
->  #ifdef CONFIG_DEBUG_FS
->  void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
->  				   struct seq_file *m);
-> -static inline void
-> -panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
-> -{
-> -	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-> -}
-> -
-> -#else
-> -void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
->  #endif
->  
->  #endif /* __PANTHOR_GEM_H__ */
-> 
-> base-commit: 3a2b7389feea9a7afd18d58cda59b7a989445f38
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] fs/xattr.c: fix simple_xattr_list to always include security.* xattrs
+      https://git.kernel.org/vfs/vfs/c/8b0ba61df5a1
