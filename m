@@ -1,115 +1,162 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D831FFC45
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897331DF24F
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745837196; cv=none; b=REUtaNK34WR/1ehphKZHxIodM0BdROrFtpVimm3kiUmGN5AGAuzIbe9WUDg2hykcYiLNeBz84fH93s468qiLG627tUWCN76lzSxQygIFjuAVJ5qUq1PuD7+bS5TTCIlOFMbNih4SfW7Hp1FE7ZF23d50AeL3jP6RW1NoA/tKG1Q=
+	t=1745837276; cv=none; b=k3ALEyaEBknlAIz0k4WH9U3EmdG+xOtZZj2m4DxF1FACMoBZnqCVUX6G72J/HYGgCz5QoJhqQHPm+kWTsDChwX879kEfL9sfRgiCD++lldlOyQHxkS74x831XZG6fKFgCoSmhYBDe8w/jjCOkznf99wzfzPBiCb4EvgRMwFvGqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745837196; c=relaxed/simple;
-	bh=VNKA28iLQZN/MlLgYJZk7spEJvKVGzWWO/bzEPlz1L8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AlBQ7eQmjV26RyN9laFrCBul6RkSLn1Pu3Wq8aaFGNBgRV0BPKF/wUEdWv7+a41bbkg1A248LgGqnZI0ekw8IwcKkdtVakl/RhzTeRRZQgCircju/59UxF4e8bGJn4HgrEL1kgcAPirLKkuuYW1VtIDSJQXlFyiSN/IEOw2CJPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B+fn5uJR; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745837276; c=relaxed/simple;
+	bh=QVj572gl1UZs0yo7wu2GkDp7uDGfaDZCRXtBr1Ehiho=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=Vb21ftvki8TJPpAu6FJ0SMw6eByc7lT2n8Jni7BBDEGK1CgIs/1LpmVmh9jTe+NK3ID4JApCxeJwD3dBcy+pzR7mEKGQiQTzPviIthp40AtgrRs5k9tvFgM+mazipvaCpvB8hrc4z0+i4jXhNaCw7kvl8IpCxx5dmBTbLO3WA2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IkmTug4G; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+fn5uJR"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso791549666b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 03:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745837193; x=1746441993; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wvbdr0JNuifyk5uUnYe0etbSIhAeqsQMJ4amy8aWMqQ=;
-        b=B+fn5uJRMe75B6NXNp5bSithuAwa54zDdaCtIC7bK1oBlLHwSDtiU9l76cLp0y/qHM
-         zt0GC7ok+uFpe24Ds5hErao/36e3oF5cH5EMKsL5KwCBqbf9ZWEhuv8ASpGYoeapKn+Z
-         0TkuRUzqTG5d5YKKoEhXwWCwxmBqjYR54C5HJHYQNyT4KiPzVRNh61z6rviDP57usgZx
-         EXDCmogOCQqo9bQKd08prwplDruThu+1PzzFMRteP5Ek1sNYwg21hmPJb+5nwd14nlO/
-         T0rkKLbfQQz0SGcryfZubeOXU6dx/9Slwt0ARbxfT5eWIU+qLWYi+z5j0O2rpvwetmsE
-         EE/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745837193; x=1746441993;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wvbdr0JNuifyk5uUnYe0etbSIhAeqsQMJ4amy8aWMqQ=;
-        b=o/QFQwpRXnWSzN1+4wP0xQdJYXvPWyRFq94UBEeGn0JbbxbzwJy9y0vxwXawMvG0VE
-         q3krc31bSrKCBsh8u9T6r1fRX80afho0NlQhI+LUExeu8b4ddE+XeYaw1Mo/qIrJhUzd
-         Q894g9Z8En6lLnZlHHNCILunlFSO/X5KLzjQrKxlt/UqOhBrDE/Q8NPBcgSC71BN51wr
-         ywHCQb7Kty+S/Iun6GdCjOlU4Pnr2ieR/q9TULzG0pu4+OBRbvPTa0jkZAyHAadre40O
-         irsjPfc3Nl99U+GLJA0oxvHNYPq2TLE2jQRZJTzEoUZ4PHu91hW9h7P8Tetrj657WcY3
-         FUEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKdSXd9Rn2wspIBKSvxy/IwHws0duFdE6mmNjG7v7/0Z712wErHyyc0G0yfwPB4tR4HMhrgfyndt6m8Ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmbtsqENb7sxbQHrxEEk3933Is9EuzGQBieNtWnbCkNJvf8lmk
-	IqgOmsDy13F8iZZo+7v8TLP8SI6RqeoOUXCRpPEBhZhSWBIJTd4BLF5U83ElWWU=
-X-Gm-Gg: ASbGncvWmF85e1rBGtt1hNxKc2Sjg2b3zzm4vhKmNeYK59FUQTYTiLquaBSzeFD9k2c
-	gzZlC+LPMbWHD8VkRFyiVHxKsce9O7sOQ7VHi0+kJSEFfAPA0qYSk0e4jCiYA3GnMbLKHVwhafy
-	+P/0MRyCXvLxui4fb4T3ZlNR2t6QDIVGOEmBaGLaNU1bhgoSCYoq4K2XOyAoU7BoU6tKh87/pEs
-	Bu7nOuI/eaBLhB3cXsiE49+937MHtgB3iKxZRP3P4yqXLTUyLOo++LZyeaps9F4+aINEoPb+axt
-	aKdYQiQNV0zqcS1BKk/BMCcYs2f0Cr8RYOtdZP/Cfhy0Jg==
-X-Google-Smtp-Source: AGHT+IHwRoOppXIpij71zjuWnJJzu0zh59DkRNeg5ulYk+IyTgFGTV8x2J19ySlX5bz0MCG5VQ7icA==
-X-Received: by 2002:a17:907:3e03:b0:ace:3a27:9413 with SMTP id a640c23a62f3a-ace739dd0b1mr912614666b.11.1745837192384;
-        Mon, 28 Apr 2025 03:46:32 -0700 (PDT)
-Received: from noctura.suse.cz ([103.210.134.84])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ace6ed70b1fsm602497066b.157.2025.04.28.03.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 03:46:32 -0700 (PDT)
-From: Brahmajit Das <brahmajit.xyz@gmail.com>
-X-Google-Original-From: Brahmajit Das <listout@listout.xyz>
-To: 
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sunil Khatri <sunil.khatri@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Boyuan Zhang <boyuan.zhang@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Dominik Kaszewski <dominik.kaszewski@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] drm/amd: Fix malformed kerneldoc comment
-Date: Mon, 28 Apr 2025 16:16:14 +0530
-Message-ID: <20250428104620.12699-1-listout@listout.xyz>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IkmTug4G"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250428104750epoutp023df4f5ee3f16f4d456c2e3e0138bad46~6db9i9vXx2018920189epoutp02S
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:47:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250428104750epoutp023df4f5ee3f16f4d456c2e3e0138bad46~6db9i9vXx2018920189epoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745837270;
+	bh=8/hDEvTARkekh8PU2IM8Bbc0ycSsnAaU7M9v86mcb9g=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=IkmTug4GWjDS0jquDtpySwCDmHQU9T77BLnYrn5D8s4arZiqsQY3Y6BEJHQiLrBh0
+	 V6oqQxBlmvgqNtEdjw6P0UkvkdnpeK0yTARAcWjOzR41z2mCC+24jXjnIU0qkj1aYw
+	 am1co3wuqJk9zeTnmfzyPCcQYK9ErVqo0N8+SR+o=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250428104749epcas2p33b751cc01acf6536b552f3033408d2f2~6db9Dodrm1471414714epcas2p3L;
+	Mon, 28 Apr 2025 10:47:49 +0000 (GMT)
+Received: from epcas2p4.samsung.com (unknown [182.195.36.70]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZmKsd43pZz6B9m4; Mon, 28 Apr
+	2025 10:47:49 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250428104748epcas2p30878b575c575cf1643e18c5a3262bdf2~6db8BcP2V1471414714epcas2p3J;
+	Mon, 28 Apr 2025 10:47:48 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250428104748epsmtrp25e9dc72661f9d5c0aa2e9aa4a42d17a0~6db8AhQj_1596115961epsmtrp2U;
+	Mon, 28 Apr 2025 10:47:48 +0000 (GMT)
+X-AuditID: b6c32a29-55afd7000000223e-6f-680f5cd49a7b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2C.2E.08766.4DC5F086; Mon, 28 Apr 2025 19:47:48 +0900 (KST)
+Received: from KORCO115296 (unknown [12.36.150.221]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250428104748epsmtip266684e1bd6f04a2318d1a81135e35c24~6db7zResW1682516825epsmtip2B;
+	Mon, 28 Apr 2025 10:47:48 +0000 (GMT)
+From: =?UTF-8?B?7IaQ7Iug?= <shin.son@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Sylwester Nawrocki'"
+	<s.nawrocki@samsung.com>, "'Chanwoo Choi'" <cw00.choi@samsung.com>, "'Alim
+ Akhtar'" <alim.akhtar@samsung.com>, "'Michael Turquette'"
+	<mturquette@baylibre.com>, "'Stephen Boyd'" <sboyd@kernel.org>, "'Rob
+ Herring'" <robh@kernel.org>, "'Conor Dooley'" <conor+dt@kernel.org>,
+	"'Sunyeal Hong'" <sunyeal.hong@samsung.com>
+Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+In-Reply-To: <a3438b8b-0fd2-454f-a539-39aa7cfcd57b@kernel.org>
+Subject: RE: [PATCH 2/3] clk: samsung: exynosautov920: add cpucl1/2 clock
+ support
+Date: Mon, 28 Apr 2025 19:47:48 +0900
+Message-ID: <02d901dbb82a$fb7493a0$f25dbae0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJbASRnoWq0F4GjHT9tcwPYQHtTxAJlNrzkAk/ocBIDccya67J5G+NQ
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsWy7bCSvO6VGP4Mg9cPNC0ezNvGZrFm7zkm
+	i+tfnrNazD9yjtXi/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrV4v+eHewWh9+0s1r8
+	u7aRxaJp2XomBz6P9zda2T02repk89i8pN6jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mt40
+	TGEtaBasWL/nGmsD42S+LkZODgkBE4kJJzaydTFycQgJ7GaUaPuynAUiISFxeMYERghbWOJ+
+	yxFWiKLnjBILf95kA0mwCRhKrPqxnQkkISIwkVni0ocLLCAOs8AmRolzu29CzX3PKHHpxn6w
+	uZwCdhKL5qwEs4UFAiVadx9jBbFZBFQl7v85CmbzClhKPFnbxAZhC0qcnPkErJ5ZQFui92Er
+	I4QtL7H97RxmiPsUJHZ/gugVEXCTeL1sJVS9iMTszjbmCYzCs5CMmoVk1Cwko2YhaVnAyLKK
+	UTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4LrU0dzBuX/VB7xAjEwfjIUYJDmYlEd4q
+	A/4MId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rziL3pThATSE0tSs1NTC1KLYLJMHJxSDUzRS2Uf
+	Xkvny2mt6b25QHLRLvN9MUET3Y07hE4q53C94fsa1fX4v7fqQcfa6SunO+Tnx9+0Kbx7WC7R
+	WWXdiaUJmY+Su1af9Ph/+mO9t+FCxxZ+z/kOXzzO7dR02lKzvTGzuunOl/vh4gcuzjqgWu60
+	VCpI7FWFcO4u60fXEtP776hx81r/OPNYnWPj+q3KRxfFnBc22FgTcqHB5GZ1jcDK2M9Kj+KZ
+	Z65LqLo4QcB6o/wB7+0tLocOl4Qf9S77UxnqzcylvCJ4xdnTP67tjvhqI2qfdf6leAyzn4rh
+	yfUuS9Z9nN3Nezxi+o00/swrXgK6RzYFM3w6+btefzZLE091Qf2MSKFnRSos0+tLFymxFGck
+	GmoxFxUnAgB3Cq3qOgMAAA==
+X-CMS-MailID: 20250428104748epcas2p30878b575c575cf1643e18c5a3262bdf2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250428084728epcas2p17a0253f04de15c23ab6362113a0d47bb
+References: <20250428084721.3832664-1-shin.son@samsung.com>
+	<CGME20250428084728epcas2p17a0253f04de15c23ab6362113a0d47bb@epcas2p1.samsung.com>
+	<20250428084721.3832664-3-shin.son@samsung.com>
+	<a3438b8b-0fd2-454f-a539-39aa7cfcd57b@kernel.org>
 
-One kerneldoc commets in amd_shared.h failed to adhere to required
-format, resulting in these doc-build warnings:
+Hello, Krzysztof Kozlowski.
 
-./drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of kernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
-./drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of kernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
-./drivers/gpu/drm/amd/include/amd_shared.h:373: warning: Enum value 'DC_HDCP_LC_ENABLE_SW_FALLBACK' not described in enum 'DC_DEBUG_MASK'
+> -----Original Message-----
+> From: Krzysztof Kozlowski [mailto:krzk@kernel.org]
+> Sent: Monday, April 28, 2025 6:15 PM
+> To: Shin Son <shin.son@samsung.com>; Sylwester Nawrocki
+> <s.nawrocki@samsung.com>; Chanwoo Choi <cw00.choi@samsung.com>; Alim
+> Akhtar <alim.akhtar@samsung.com>; Michael Turquette
+> <mturquette@baylibre.com>; Stephen Boyd <sboyd@kernel.org>; Rob Herring
+> <robh@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Sunyeal Hong
+> <sunyeal.hong@samsung.com>
+> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH 2/3] clk: samsung: exynosautov920: add cpucl1/2 clock
+> support
+> 
+> On 28/04/2025 10:47, Shin Son wrote:
+> > Register compatible and cmu_info data to support clock CPUCL1/2 (CPU
+> > Cluster 1 and CPU Cluster 2), these provide clock for
+> > CPUCL1/2_SWTICH/CLUSTER.
+> >
+> > These clocks are required early during boot for the CPUs, so they are
+> > declared using CLK_OF_DECLARE instead of being registered through a
+> > platform driver.
+> >
+> > Signed-off-by: Shin Son <shin.son@samsung.com>
+> > ---
+> >  drivers/clk/samsung/clk-exynosautov920.c | 208
+> > ++++++++++++++++++++++-
+> >  1 file changed, 207 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clk/samsung/clk-exynosautov920.c
+> > b/drivers/clk/samsung/clk-exynosautov920.c
+> > index 8021e0912e50..f8168eed4a66 100644
+> > --- a/drivers/clk/samsung/clk-exynosautov920.c
+> > +++ b/drivers/clk/samsung/clk-exynosautov920.c
+> > @@ -18,7 +18,9 @@
+> >
+> >  /* NOTE: Must be equal to the last clock ID increased by one */
+> >  #define CLKS_NR_TOP			(DOUT_CLKCMU_TAA_NOC + 1)
+> > -#define CLKS_NR_CPUCL0			(CLK_DOUT_CLUSTER0_PERIPHCLK + 1)
+> > +#define CLKS_NR_CPUCL0			(CLK_DOUT_CPUCL0_NOCP + 1)
+> 
+> 
+> You just added that line a week ago and it is already incorrect? Then it
+> needs patch on its own explaining what are you fixing.
+> 
+> 
+> Best regards,
+> Krzysztof
 
-Adding missing colon symbol and making kernel doc happy :)
+Understood. I will separate the fix into its own patch and resend it.
 
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
----
- drivers/gpu/drm/amd/include/amd_shared.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/include/amd_shared.h b/drivers/gpu/drm/amd/include/amd_shared.h
-index 4c95b885d1d0..c8eccee9b023 100644
---- a/drivers/gpu/drm/amd/include/amd_shared.h
-+++ b/drivers/gpu/drm/amd/include/amd_shared.h
-@@ -366,7 +366,7 @@ enum DC_DEBUG_MASK {
- 	DC_HDCP_LC_FORCE_FW_ENABLE = 0x80000,
- 
- 	/**
--	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
-+	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK: If set, upon HDCP Locality Check FW
- 	 * path failure, retry using legacy SW path.
- 	 */
- 	DC_HDCP_LC_ENABLE_SW_FALLBACK = 0x100000,
--- 
-2.49.0
+Best regards,
+Shin Son
 
