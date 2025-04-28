@@ -1,41 +1,75 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45280270EBC
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886A022DFAD
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860641; cv=none; b=TgT6KdQowC8/aIFFIqZQqx8N06p+pI3KSFk0CJDa7eu0Fo6XacVQOxzdPC+R/DkBEUw41UJDd9Sc2aWzExGMdPjHxd+n2Ij4nLcsx8tw1e4iSD3AcXYFGTSMsTMMgRW9fecqCrDrGMc8SG/TapzNpXUKcouNx8HFFxiGSlh7AJM=
+	t=1745860699; cv=none; b=M15OqmbdYSP5Qjliri9Jx7WgOd6Hn9RY5/lttvSf0HDVMKPIbEaMn6kSvqzL+UYdYAxktAYoP4qG64yBDQsL9+vHQk3ntkeGHdQvSLvvoGMDo2Kf6e0sCyjKlsi/s8U1hqpJkNPduCb38k8cCRL2DqZUwW+DdIyWB2RSIA4pFfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860641; c=relaxed/simple;
-	bh=Q44nlAzJAWRtcbuLv7vRmsMflaRgSG13S50QWb/l6v8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KTgmzQaP0ssl1sx1FA7IFVCie/UjmDVCdpxAK0Z5RcVlfYcoD6GQOFIjiJv1AlYfnl7cN7LZUMU1ScM82ozKi51py5CopRDnaGHvKiKEUAlb6ew1GWQ4Vw9kCryv+KwT0rPt566Z2jmMqMTtyGUV7ndCFP5qGr21SHvWQnBf5E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g2Zla/yz; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745860699; c=relaxed/simple;
+	bh=x6dCvDwBdWMQqkN2difLApc7JovzDp4a08IlqHJzszk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YN/wyteNZhnz281sDFfoJ8thpwCKynr6Q/vE5qlWxU8B5CwEeurN5eqkJayGbmdVGXsEIdLTYezmi3e7zgvx0WDZEls+ZOOj6I7EoEva55utPw75NyIKx9xqfSFYDDBrgm4+Nbm4QqlmlFS6NaJgjQ0BPvH+yFaWHY5/FEZJsp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ayYo8egu; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g2Zla/yz"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745860635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8R0RWxWmLIRk6b3UDexAAn0Iao0D6NIuoSCe7Qbxh8s=;
-	b=g2Zla/yz3sd4i7MJBgkX4D03yzYugMIQsDGcdxEA6L0g60MnsNsiKj0iryCd+oEGj8tu8e
-	ptWoUF0nExLXURtV8uHOH/tgOa8xB1ui51UfHPhcIOoysiYHrVll44Fs2FwoxTzi/Shs19
-	LeqgDUfVPjDppNhJyo/qzFrkxTtEMdE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: James Smart <james.smart@broadcom.com>,
-	Dick Kennedy <dick.kennedy@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: lpfc: Use secs_to_jiffies() instead of msecs_to_jiffies()
-Date: Mon, 28 Apr 2025 19:16:26 +0200
-Message-ID: <20250428171625.2499-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayYo8egu"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476977848c4so67160771cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745860696; x=1746465496; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lbxsh/Yif/43iY1bV6mUQP730uiCDJATgv2naYcKhtQ=;
+        b=ayYo8eguGYMg3FyTjTdQC0n8mXl+pI7ozU6ipXx40CABt7gVVANvBaIGyudTGI4nYY
+         RaF824P5XDXkhV2joWKwcHS87QBhj9xbsY+8h3RfDINvXDp0aYHRynfNGhHddSOpJLzB
+         7tRgSh5d7OtQTk9Dxg3qvFOtuGo+hqe+buC1ZhrGhKqKboXSICHwRBrbpCvdmRtiLLPm
+         acJ2Ag850nZI7c36fbPy2uTfA+IhWfBalRLmudBheHwA0Iqfnd+ufJl/zZ6xVAEtwU4s
+         ZEKgroyZZfC+pD8fJqQ2IePPMCfM6PZO96651j5jNKVvO1E7DoCwlB84SA0uiqTkZWb0
+         hImw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745860696; x=1746465496;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Lbxsh/Yif/43iY1bV6mUQP730uiCDJATgv2naYcKhtQ=;
+        b=usSAa16KYVtq5ffOSt1Za4aO+7djJZGEj/2nZIZDR0EB+ABvd9BFux/YGLXodv3qNh
+         /h3Ulv7NIS4uZUTa4SDH2PUtuJ3WBfSL4r8ws0hJ3L9B2KLIeVKkMjB7VhLhc2Vi7o0D
+         smQXXgbjbJHFkW+HRgIkFRVFrjt0X7EPnrvB81HzX4z7KbmYOI9EUvZEtzU9nFc2Ub1z
+         c6/m5lw95qlMPe5A5DszWeJXhXZBbqAnabGziidxFrDGYyBjJSkD5n1RTdYIZkA005c4
+         vsHiq6xyxctOAGQMvCFT+cKdwJokth5QBsqQ1gIip7b0w9rQzWZwxcA9vk8MhYw7xrcB
+         CNiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdYZAyPK7GCEd37wcsQovMgNrZEQEDYmTA2kKayuYYCd1N26ceGEtVmF1Cwz4CfrYWx6muDzxFWEb1ug0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5XcLU6ptZGJE44DMd4dLNXL5nTkmUkE2XDmQLVZjW+DHUwTNw
+	Lraoleu+TgByYVZK3TQsbADFZC9GqPLcZ2gHE3lkVjLgoPHqtAy6
+X-Gm-Gg: ASbGncsBcbbYXW4UNAh7guf+Az2vU3d0jYAMGQMBFt12jtJCf323KX6t1LWYLF7UiCb
+	Qzj6+E1KlramsIzG4iDdgJzCSlJoxzS6/m2de3J9MBlFLP62hRCFmlVpQfzXagpbRiZ/YrXkICe
+	XdFgyM7EWqwbjvLIbkpP8KUTNA/dC2u9DjvASHqxBKMij0q2DZoKgZbKGFm4ztg8yAvADdTXL7K
+	drDwkaKDuWhQEY38PIb6kYX/YGs0KUiHEUxBQGMpSI+8fLJuDN5cNprasedk+rbz9Z3HV6EZ6hH
+	EUkaCNpAoSUrFA2z6KDQXieq3J/XHLD8Q/OEcfR1R5cHhc1HWbr9uIFuEg==
+X-Google-Smtp-Source: AGHT+IGn+hetddh7FaUugLPfhtn1QRDpLVHqUk7O+/RfsDrYs60YQ8myoJgLo1IVs/zaNA1YTC8VxA==
+X-Received: by 2002:a05:622a:98a:b0:471:b8dd:6411 with SMTP id d75a77b69052e-488167129e5mr8406271cf.47.1745860696194;
+        Mon, 28 Apr 2025 10:18:16 -0700 (PDT)
+Received: from localhost.localdomain ([2607:fb90:8ee2:8c9a:73d0:fe8a:86bb:e664])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c08ef3e7sm63443436d6.6.2025.04.28.10.18.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 10:18:15 -0700 (PDT)
+From: nifan.cxl@gmail.com
+To: muchun.song@linux.dev,
+	willy@infradead.org
+Cc: mcgrof@kernel.org,
+	a.manzanares@samsung.com,
+	dave@stgolabs.net,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Fan Ni <fan.ni@samsung.com>
+Subject: [PATCH v3 0/4] mm/hugetlb: Let unmap_hugepage_range() and
+Date: Mon, 28 Apr 2025 10:11:43 -0700
+Message-ID: <20250428171608.21111-3-nifan.cxl@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,65 +77,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Use secs_to_jiffies() instead of msecs_to_jiffies() and avoid scaling
-the timeouts to milliseconds.
+From: Fan Ni <fan.ni@samsung.com>
 
-No functional changes intended.
+Changes compared to v2,
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/scsi/lpfc/lpfc_bsg.c   | 6 ++----
- drivers/scsi/lpfc/lpfc_vport.c | 4 ++--
- 2 files changed, 4 insertions(+), 6 deletions(-)
+Patch 1: 
+1) Update the commit log subject; 
+2) Use &folio->page instead of folio_page(folio) in unmap_ref_private()
+  when calling unmap_hugepage_range();
 
-diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
-index c8f8496bbdf8..d61d979f9b77 100644
---- a/drivers/scsi/lpfc/lpfc_bsg.c
-+++ b/drivers/scsi/lpfc/lpfc_bsg.c
-@@ -2687,8 +2687,7 @@ static int lpfcdiag_loop_get_xri(struct lpfc_hba *phba, uint16_t rpi,
- 	evt->wait_time_stamp = jiffies;
- 	time_left = wait_event_interruptible_timeout(
- 		evt->wq, !list_empty(&evt->events_to_see),
--		msecs_to_jiffies(1000 *
--			((phba->fc_ratov * 2) + LPFC_DRVR_TIMEOUT)));
-+		secs_to_jiffies(phba->fc_ratov * 2 + LPFC_DRVR_TIMEOUT));
- 	if (list_empty(&evt->events_to_see))
- 		ret_val = (time_left) ? -EINTR : -ETIMEDOUT;
- 	else {
-@@ -3258,8 +3257,7 @@ lpfc_bsg_diag_loopback_run(struct bsg_job *job)
- 	evt->waiting = 1;
- 	time_left = wait_event_interruptible_timeout(
- 		evt->wq, !list_empty(&evt->events_to_see),
--		msecs_to_jiffies(1000 *
--			((phba->fc_ratov * 2) + LPFC_DRVR_TIMEOUT)));
-+		secs_to_jiffies(phba->fc_ratov * 2 + LPFC_DRVR_TIMEOUT));
- 	evt->waiting = 0;
- 	if (list_empty(&evt->events_to_see)) {
- 		rc = (time_left) ? -EINTR : -ETIMEDOUT;
-diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
-index cc56a7334319..2797aa75a689 100644
---- a/drivers/scsi/lpfc/lpfc_vport.c
-+++ b/drivers/scsi/lpfc/lpfc_vport.c
-@@ -505,7 +505,7 @@ lpfc_send_npiv_logo(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
- 		wait_event_timeout(waitq,
- 				   !test_bit(NLP_WAIT_FOR_LOGO,
- 					     &ndlp->save_flags),
--				   msecs_to_jiffies(phba->fc_ratov * 2000));
-+				   secs_to_jiffies(phba->fc_ratov * 2));
- 
- 		if (!test_bit(NLP_WAIT_FOR_LOGO, &ndlp->save_flags))
- 			goto logo_cmpl;
-@@ -703,7 +703,7 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
- 				wait_event_timeout(waitq,
- 				   !test_bit(NLP_WAIT_FOR_DA_ID,
- 					     &ndlp->save_flags),
--				   msecs_to_jiffies(phba->fc_ratov * 2000));
-+				   secs_to_jiffies(phba->fc_ratov * 2));
- 			}
- 
- 			lpfc_printf_vlog(vport, KERN_INFO, LOG_VPORT | LOG_ELS,
+Patch 2:
+1) Update the declaration of unmap_hugepage_range() in hugetlb.h;
+2) Use &folio->page instead of folio_page(folio) in unmap_hugepage_range()
+  when calling __unmap_hugepage_range();
+
+Patch 3: 
+1) Update the declaration of __unmap_hugepage_range() in hugetlb.h;
+2) Rename ref_folio to folio;
+3) compare folio instead of page in __unmap_hugepage_range() when folio is
+  provided when calling __unmap_hugepage_range();
+
+Patch 4:
+1) Pass folio size instead of huge_page_size() when calling
+  tlb_remove_page_size() by Matthew;
+2) Update the processing inside __unmap_hugepage_range() when folio
+  is provided as sugguested by David Hildenbrand;
+3) Since there is some functional change in this patch, we do not pick up the
+  tags;
+
+v2:
+https://lore.kernel.org/linux-mm/20250418170834.248318-2-nifan.cxl@gmail.com
+
+Fan Ni (4):
+  mm/hugetlb: Pass folio instead of page to unmap_ref_private()
+  mm/hugetlb: Refactor unmap_hugepage_range() to take folio instead of
+    page
+  mm/hugetlb: Refactor __unmap_hugepage_range() to take folio instead of
+    page
+  mm/hugetlb: Convert use of struct page to folio in
+    __unmap_hugepage_range()
+
+ include/linux/hugetlb.h |  8 ++++----
+ mm/hugetlb.c            | 39 +++++++++++++++++++++------------------
+ 2 files changed, 25 insertions(+), 22 deletions(-)
+
 -- 
-2.49.0
+2.47.2
 
