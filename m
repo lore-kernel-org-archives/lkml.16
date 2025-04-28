@@ -1,70 +1,72 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic308-8.consmr.mail.gq1.yahoo.com (sonic308-8.consmr.mail.gq1.yahoo.com [98.137.68.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9CB4501A;
-	Mon, 28 Apr 2025 00:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D24C1F5F6
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.68.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745799194; cv=none; b=L0u3tdV0VPuKhRofmIdO5MCwJlCUwAZ019m56D1BGc7+50K716A2O3pPZdsZXUOXc48mN/6kFMBFPVnykNQPl9d3BydUvIBAKLSzgybFBNJb/SN+e/qHVoMkJiMlxPUrMVYH7QJISWXlZ0YGjLl5JgHyXgBwbjmgpDorzHdRClg=
+	t=1745799204; cv=none; b=eYjTXCY60KOMemehFtobcF/tEr5RBQQDKaM/bP30BCPiQFEBLbTQRYTixU14wIAYZLFsg0xcjbqOY6/mwAQWpK3tbg5KGPJqbPRZ5+Eonc2C4I4Wy3AGSW4grQKrERTEo2ZTDtDpg1Ri0Uo7ynGtX09y4ixDxncIGb6EL5+ZacI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745799194; c=relaxed/simple;
-	bh=1u2Qy+yfL0XNwcg1JwOUXV5irKiepNA+03eEBJ7lC3M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L8An2FRDIZpwo4QgoM4kRnoR+QEfPA/vg/U/0clBMRxmtAAoeCI9HrKheu0hJandDsTeIHb6kNo0VZNeKyEQKInkJ5QE/OAYJiPlnFluCnauHcLFpzIkpDwqa6ffk4hDj4svCJkXzHcPldkXKR4gg3CbNXPWZPkM6pXbICbCKvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Nr1EHmm6; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1745799204; c=relaxed/simple;
+	bh=mHnvI2R/w2FsCin/DhkPBIzrFA2jbHNh1/8YE7ApAxY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=opJMlbuKe3cm+aMJ7pCP1Ji7hiiNU35L8LHa1RysCPSEY6sQs0Ri8J4HIt6cCigJzJeMk3yeyw+njOnuDCM43pbOPjZMrtJHvN4RykH2rqmpe7Ft7iEmn+kwfQHJjt5AW7HKgA1/W/BSmNBi9Qq+CQAWYVO6zydy2MUYxZODhcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=pg3E5aas; arc=none smtp.client-ip=98.137.68.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Nr1EHmm6"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53RLTG9f027668;
-	Sun, 27 Apr 2025 20:13:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=kTusN
-	vISkcvb2x2u5tzWxYcSP/Ay0hpzNe89SY7NmcQ=; b=Nr1EHmm6/FIMOggmAj1oC
-	ZJUr3fUlfWGZlEZ49DJVWu8C+xl3z94/tNIlBNGIAb0n7cd6WSMyQ5MwqzPhrm5b
-	gEeW3Fd2Bm5/TZSH6wpv6gqhgO6PmddT3q5hoxbXVjzoK4bmGXVTsIOkBXWLqY/M
-	YIb9kuZaSmAbWtNUVuJ80dfS+/uNEk5txhwOUE5QdzV8jOM2jJoegjmEOWNWyzC1
-	lSnKXNl4ETN43zkui6EL5F56lgUIk8A/DhoHp5+mFQjANDYEU977u+6orHD/lzpB
-	SnPPCNNebjcJptSwoxrv2T4lPzM6QzmWBQZ+50cjWUGkj9Gqf/DebDOeCm7XRV8t
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 469dtgcmcy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 27 Apr 2025 20:13:05 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 53S0D4Tq028879
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 27 Apr 2025 20:13:04 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Sun, 27 Apr
- 2025 20:13:04 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Sun, 27 Apr 2025 20:13:04 -0400
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53S0CkSR014602;
-	Sun, 27 Apr 2025 20:12:49 -0400
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
-        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
-        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <jonath4nns@gmail.com>, <dlechner@baylibre.com>,
-        Conor
- Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v6 04/11] dt-bindings: iio: adc: ad7768-1: document regulator provider property
-Date: Sun, 27 Apr 2025 21:12:46 -0300
-Message-ID: <1122a27e8b467009733d36a5872ea817f6ce905f.1745605382.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1745605382.git.Jonathan.Santos@analog.com>
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="pg3E5aas"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1745799196; bh=DF9z8g3ELh3rYm+ScI/lIKOfXKc+J5W8OXc1AfTyS6c=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=pg3E5aasTlLXN2BpIugIWB6OEotKNrLbdeiNilrT/W3o3M4RLACNvhj2fz/dw8g5dc5MsMrFk1LLMWYgG9by+hhR9oQIVc4luUUS1Y651NcB8O6UKSFrU78QkICAJ0mL+7aIz08mlSJCkTZQhOt12hFmipVn3g2xmRPK+wtp8PtG0ll6Y0znL85W5gmfHYouJyGYnYA1umeXi2WCEsFD4r0tX/f1/dOTw9MnDlg0+MYjyesZ9r2xAKI+irveCYuXLJBo1FktVqgu7xUZNIxvgMm4lA8fUY8TMSFg2tLlzzqlymDcT/fyjopRs+5PGoSZenwocq6yuYmsf8EqPfUsEA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745799196; bh=s+GiVYuOhn+1H+0WqbMAiAaLfOP/laNx5qtlNyw8xEA=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=GxO/S36WtVWg6HJc1JHrozuTX1VHQyp6OGsC/sytS0R33oS/n1FTs3RFC8esXfTEVRQudV4nZ04bmOOIY2ThiCDKTFxNJ3j7NyLcWfCEXaGSLJpFGepo4GjRJlh6X1v/R5htnTBY90YAin7pDMSF2qROWJl60Q8SRwT+5b3Jrwdi4APU0b7HWD2faJACT8ThKsPBrZf9JbtltS2UeQY3da8MBbFyTRxiktypzpruCIyKlQIYWoGAVDh3WT+q4TvJWtNhq3CAyr9ePP8ngLrnm42EPzgTi1W/L7iTZruZq+pI9RXL/ahoDqP56kWwO7a4G1tS4B9o3pf2Ry2FcG9K/w==
+X-YMail-OSG: 2ks_.3sVM1mLMBHdHiARRGnn9w1SGOER5iKrfMQzcDSAcslH9Iidgk5YteTtm8n
+ c1ENQkeCGEJkyRvGicolZjT4fNzOHnLpTLQuEj0O.vRyrQGkuzF6ySYXb0GWX4c_L6mBAe3wfuzR
+ fmJ3I9SK4hXWoGjdRTz5G7u3kArIeza27B06NdMWOQHUJTjL9VDe90xf_04XRwxNivlsk7Py0wJc
+ zv.QXIRe65oaY.FaKnDlYoOA8VNvk3IP5E1QldKeE4QiYaaZMZmroRTlzTYLm85z1FfUBwCp2Mef
+ DFmd8XgBBENdQHUeZX1C9iGJBgVCaDZE_73zOTuTziB2pl3WLd9EyF_InhNm2x8DrtHNZ5g5TcHZ
+ RTc9XEKK3yMPJfGNIEe7xeHn5WTZu2p9_7Lo7oOVDDhd1oPybPF7mLTv0wOYbCl4NXrBRIq8oiWG
+ oBC8lJmbLfVymIeM037mXnMm9kMPHeb2YADSme6gOFlmr2l0nmlwQrJGNaYiuwrbImDJZ9ahWNmV
+ DuLo71jm4zAZvE4YRoGZYzfcywxjzljX3xjsXUGPmNl8ABvJoIrBLgA1.gB7F72m0EDIjpkCnOG8
+ p2FJfSY1h6B83s10ecNXUVGI6yerCP8sqc5EfsUb7py.d52eaKTrCic_uBNwELKH7ClDzGVIrdbH
+ l1kU9EKuhKzFtWQeHBEzviTF56GbeXped_5MF5XETViI1EAYBzabCdB30_P6TKyJpNadhUlrqC3q
+ 5CCioZoEOxz0jEMvXA00XH5igo7BxvGB2KIDHVvg6iZk1bJzTdZvulsfflvhkU0VpQjvvmGbFzF_
+ WejEbdfCGtJ9QK59rBkSZLFDQu2x2gdVzkHECJkOcXExX7ccqwmQYobGRmMb3k0eZUZusaEVsMRw
+ IBpuT_iLnL1oNim936lhsU.Em8pn3xfb9eXIBOpscVwH_TbIrz1sqGQGXVRFWlHa6onvKIacM_NT
+ Q59yLVKzhz5tP7cVidhTh5NZfBsVMXaCjd9EQ9z.D_m77MDeNjEeeTPe8kK26crr8IH.WU50L9HM
+ xNPJyZiVnz90UnIZRBp02rYnpwa5irDamERAoK8UlhoKqFGYMN9pLVN5u3lGgvLjcWsASQSFmTob
+ HF_iLdsqc3P37u6il1fUFnP0tNtTQuYW.8POv_TiXu_YsdsZrvxHH97_H.wIvNlBQWBPxYk7vZiz
+ ThGBZAMouXcsGiRl_Hgn6z1GuaeR9d2YAgAoR5.Kp9GaNon1I.5DT0IIll4qYtsF_FF8Jq9rWrx5
+ 2v1TCfpzHl7oLp5mtTt2ZTtS1hW3PW6eACqI7intk2a9cbdczOJkziQ.12T8yv2hKbJGqsTKcm8X
+ ILOzrYBeXpzNRWNBlDYjadYbx0YhMzSfZpmrUoieKVqVcvOP6V1Dc1y.8mVZoBdH3EwiIsaC2O15
+ 7UKV5fsoH76psxLGm18z5aucM6ymx98.HWb0DseBKWMRO7CoFcriLg7SrldJfvnoGhnPjlPeLjav
+ eBJj6CAwIU4J.82ZsqcMiSOw7zXUIxVtrnjtzPFKKaK2dm7g2aKp29KGDWwnsLNQSmA55lD8c0gz
+ kvfJ_naB5jAJ36iqkkRNrVRSenqcPfHoNIVMx1MryXlX19BhRnN.1hh6RhxIKyCPtS2hd4DvW9Am
+ eBs_meRTEP0YXvw5Pi_k7KnUROCtQ8i3xmTj7tQTPpv3a332NvVaM7mDZma7VQoU8BZKZxy_Gz2a
+ BUKv3s9XErfW8PAip37A3h9_6gAdKue7XCqdcGcDtVqu0p0HjlyzFdIUJ980NQFcLFZaY1HcGwM6
+ NW41ltdD4NQ3bUmgjDpKWGX.kJagNxtn7liD0FWGluBdHWFiytTbaHS1JxFZf1JT5POS_KbZi8sN
+ rqE2qU46oF5TRYUIR8r9hqFrnjzrU4OnrTJB75IdxaGalZFNVnbsIN3DWmkvJfE4HBitHaBXndiV
+ Wy1nUZ9J2Y3L130xI7WNKc5rZ.y47v8IAs9mU0EAqCqEXPkhGwu13o1AuZ1oI4BoWw74gg76rmuZ
+ L_DKWyE1NAQFWosbAknKbac07RBuFnqV68bOtsncOGcWkmnov2dI2eWh8.gFcYiqgCMaE5Lnlk_C
+ cTgK.rnqVNfRsHlMw298TUjQ_bcqsDDSS12We_6zN6YLymSzIjpyH3WU8vGZ1TI81yhqz0wrWoZK
+ 1Wi4fga_VlZU.lhNsx9GUW97QWorNLQEX80Eu9ciMfBCOCFXE7I99hWspTVfozQkZiOdMadfk6Ej
+ dKrzq8hVM_zxx9Sg9UMkGqUM1kM6S2FxcXangRPf8wwnSU7.8L8Nv.bSkojAr.Wk-
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: fe44ec52-cdfc-49ed-a407-917767beb6ca
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Mon, 28 Apr 2025 00:13:16 +0000
+Received: by hermes--production-ir2-858bd4ff7b-w59v5 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 81a470d268a14c51f0195e2f259f2ce4;
+          Mon, 28 Apr 2025 00:13:15 +0000 (UTC)
+From: Ruben Wauters <rubenru09@aol.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Ruben Wauters <rubenru09@aol.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: fix unexpected indentation in docs
+Date: Mon, 28 Apr 2025 01:01:41 +0100
+Message-ID: <20250428001249.112238-1-rubenru09@aol.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,89 +74,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI3MDIwMiBTYWx0ZWRfX2AQP5nWbay1f NB9Nc9lj0/+NfnKImJPnUKZkA1fWj5YkTlGilnoD0ZyMNc9Fa4XGMSVCOhmJFKGkQlB5kb1fz/R 2QUUXTLCwFp3SDKyvlg2CjUWIsPUgezofaXdr+tbEDwH14VRJE/wXHscXY2bpPHhIGezwwut/RJ
- Exu+zxRIOO1gbMmzfVupaAxmlHMzVFL0cwj+JbTUJHwiIXaV2ZmXElZnuWh6EQ4GfllFOb7Jpni hdFqyjwdGXf9csxAT+JilC891rcnwi3/QklP1yQOZT4G1rcisWN0K+xjIMgeU2LyikuPsQOuF8W qRHIgYBaueev3K9FionaASSmnG7iUWxq0vRmshVLYwEt320OH8b1vMOnJ+utAP2KA8SPWkHiOFU
- 0gQ5Bmj4/jsizC458WsEhVbVFYvYjHDfUmkagZsPlj233Elanwd0fpTADNrNAJRn7AI7f59S
-X-Proofpoint-ORIG-GUID: 04y4FBFcLDqTWv1QPRuhPK4-scezXdyW
-X-Proofpoint-GUID: 04y4FBFcLDqTWv1QPRuhPK4-scezXdyW
-X-Authority-Analysis: v=2.4 cv=crybk04i c=1 sm=1 tr=0 ts=680ec811 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=XR8D0OoHHMoA:10 a=XYAwZIGsAAAA:8 a=gAnH3GRIAAAA:8 a=J1-tWBq05h-qFn0eaeUA:9 a=E8ToXWR_bxluHZ7gmE-Z:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-27_08,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 clxscore=1011 impostorscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2504270202
+References: <20250428001249.112238-1-rubenru09.ref@aol.com>
 
-The AD7768-1 provides a buffered common-mode voltage output
-on the VCM pin that can be used to bias analog input signals.
+make htmldocs reports unexpected indentation on line 1119 in the kernel
+doc comment. This was due to alignment of numbers (except the minus)
+which caused indentation. This also had unintended effects on the
+compiled documentation, with breaks and indentation after the -1 option.
 
-Add regulators property to enable the use of the VCM output,
-referenced here as vcm-output, by any other device.
+This patch fixes the error, and changes the format of the options to be
+more in line with others in the file, while still keeping it readable on
+the code side.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+Signed-off-by: Ruben Wauters <rubenru09@aol.com>
 ---
-v6 Changes:
-* None.
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-v5 Changes:
-* removed `regulator-min-microvolt` and `regulator-max-microvolt`. 
-
-v4 Changes:
-* replace "vcm_output" property name for "vcm-output". 
-
-v3 Changes:
-* VCM is now provided as a regulator within the device, instead of a 
-  custom property.
-
-v2 Changes:
-* New patch in v2.
----
- .../bindings/iio/adc/adi,ad7768-1.yaml        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-index 25d4995c63a5..5083ee7c0256 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
-@@ -68,6 +68,19 @@ properties:
-       in any way, for example if the filter decimation rate changes.
-       As the line is active low, it should be marked GPIO_ACTIVE_LOW.
- 
-+  regulators:
-+    type: object
-+    description:
-+      list of regulators provided by this controller.
-+
-+    properties:
-+      vcm-output:
-+        $ref: /schemas/regulator/regulator.yaml#
-+        type: object
-+        unevaluatedProperties: false
-+
-+    additionalProperties: false
-+
-   reset-gpios:
-     maxItems: 1
- 
-@@ -159,6 +172,12 @@ examples:
-                 reg = <0>;
-                 label = "channel_0";
-             };
-+
-+            regulators {
-+              vcm_reg: vcm-output {
-+                regulator-name = "ad7768-1-vcm";
-+              };
-+            };
-         };
-     };
- ...
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index b9a1ef343c79..6ddfd3ace2ba 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -1116,10 +1116,10 @@ module_param_named(rebar, amdgpu_rebar, int, 0444);
+ /**
+  * DOC: user_queue (int)
+  * Enable user queues on systems that support user queues.
+- * -1 = auto (ASIC specific default)
+- *  0 = user queues disabled
+- *  1 = user queues enabled and kernel queues enabled (if supported)
+- *  2 = user queues enabled and kernel queues disabled
++ * (-1 = auto (ASIC specific default),
++ * 0 = user queues disabled,
++ * 1 = user queues enabled and kernel queues enabled (if supported),
++ * 2 = user queues enabled and kernel queues disabled)
+  */
+ MODULE_PARM_DESC(user_queue, "Enable user queues (-1 = auto (default), 0 = disable, 1 = enable, 2 = enable UQs and disable KQs)");
+ module_param_named(user_queue, amdgpu_user_queue, int, 0444);
 -- 
-2.34.1
+2.48.1
 
