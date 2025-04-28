@@ -1,199 +1,233 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B650296159
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164F52973BB;
+	Mon, 28 Apr 2025 19:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745866934; cv=none; b=I8xLssO3D3pEQ3AkHAbXRJazL4Lyy7tK+i+ZL3iG3fL2CeG5FkHea4znzYyoXHUBMvHLhK56JrhHa/EFRnhu+jn4FNtM01jplSsENant+2ZeEgFrjRuEXE19IDjhVSPC1pvBAjntOiQ/ALbYHGSrMZu2d5HyCi7c239dBJzToYE=
+	t=1745866938; cv=none; b=n6OIpzh9kc+SV3Thq0JdmJUKBsFRBDBwFjial7SsBne6vcBNZYY72bF5DWWe9DoGxNskDHm2C9cMWDH0CcVp5AsSf1DRDTWzHEc8ON4JApRu+Mgvxjg+CvNaYMTWndrFJY6ATn3DDdGwg9qJ6gC1tEnXCYF9i39o5Yailkvin6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745866934; c=relaxed/simple;
-	bh=dPbGPFboill6iT76EBtr4PZn6lvH5BMhMgDL2shmMZs=;
+	s=arc-20240116; t=1745866938; c=relaxed/simple;
+	bh=LKxsD25S1RJIfuOP84cut1U1IiJUdfmmJCtJq9tjz3A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LcGi9hRe4X2CTRNHO3HcqVdhDakv9B3uVTwzwUZhWGgz0iMesDcFGNpZYdPDJdwXt1ofPl4N0b79FD+4/brl1/EgSDx8FKxjrtn8OShqqD5lbLtig9hndnI5tKtIpV/nf8sCt8+56IszVg9Ie/CxODMKGwKHqux27qnmYaSPTdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iQuiPrLy; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=oiobBujUlzXgUukSXY+uTku2LRObcNdYB5OhtzLPG9JIW85+bQjjs5OndzAIbLNhDIFh9WfueFUWAzXE/SfwoM2YKZNmM7BjRBJzHngyO7L5qlk0ucaZrAOXtiV1pc+CUi8QSqSomhszriS2JV0f/i3nPznlJAjw2qow8NB4qI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kevOHOL0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iQuiPrLy"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2242ac37caeso23285ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745866932; x=1746471732; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0d6vKqkeMQuJL7A/bSp8ZFP6OrnkpLdgBb2QvNCbFNU=;
-        b=iQuiPrLyQzMczzwkfGmQLBxtixjLOSO60zomBAo3cMFOsYCE41n7K6w6BPAce4HVCy
-         fOuSoCs9U1wkhZv7qSaW/AFiiJhNh9cimvtaHIZl8k0+qkWFiGyWPjFBY4yn7TnGR+Kw
-         grmEA62eDz5ttqA9WgxqZ1WDP6zwdOiBNpHaxjIt/PTtID/oEcnzAvAoK7eTkVW+PJyn
-         DJD/x3SWCu/atUoh4ITJjdkMnnYVt/mJ+ZsIG374vsm2GnF/bzIap0DQmOVKbvFs5daQ
-         +mr+QJk1LTuVQm9teLn4N5sNTWL+P29YiXmczoguTi5axlJhyWMsxj6egiuxezujIVUu
-         XohQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745866932; x=1746471732;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0d6vKqkeMQuJL7A/bSp8ZFP6OrnkpLdgBb2QvNCbFNU=;
-        b=xPDB+038dyZCwfqXBLkkQtY8SpCW0eM03ZW7v9SSBHvUI2LeTSZgjbwmhy2cc6x0Ag
-         4Hj0hht/Ha2VwZLPC4x6aTBF05ri3accNP1VnEtg4fHaV/iZxY+Z5u9seQy0vKbdHnLn
-         WjjsMDbj/+E5htyo1B85l6DCtjA6Tr/AkYtpTxdXgR9FmRc8RJ0d0QxbQcUFriNKl0/x
-         VW0WZyqCx/HDOXon05E2ox9gZKi08L5Ph041E6rb9B2WHgZp4k52R/NDfi6b4xWV7K6O
-         yy8hfBOx4+mEwYLgkrYiiYyJJ0Vu7p5Ga64umi27HG6iLCfL8Wxh09I4qEfhuLJFOQa1
-         C2vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrwIxSiba/zV9IhSfZzuMaGIpslzeSGbydp6h0TB7FnKoDDfcORA1ckIhD/2bhEl9xCF5QCBVITbxJbTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB5mrRAAIxrVAoSXxu3CC03qcG8b2tDcVJJ/w6im0iM2A49uM4
-	wL6BOlRitji1msBwHaQrgpCRZlrjbtjjnUAi+x+xraMuYEtgGm3DsVOpf+NipBJGPDiJDaXGpdl
-	WX919E+TdzXxMEx/J8Bmoo7RJFuMM9egzCWR9
-X-Gm-Gg: ASbGncsWFG5o2MIG+iQNUB+9wFKUs9kApeAxu59o05etLvy2+1ag+zbCbW6/h1ijaib
-	WdYsBl9WIwdts2moaySoySAQ/P562Lpc5Dfray7VU/5FGDBwr4RF1AvfRPYRbpvFmkC2y2QbNMU
-	yLrYo5/gXd189eTocKwUtytLYxAQaHDKH/0K3Pl8bm02GjDMRsguNsoM/enCs56Us=
-X-Google-Smtp-Source: AGHT+IGHVt/gKeNNEkBuiDZ/WNCdhRReTsGIQqOMd5cCX92xfcbOewQ1LqrEb8wI4CAhtx4rSrkAMWhGeINdBb7YCZY=
-X-Received: by 2002:a17:902:f54c:b0:215:65f3:27ef with SMTP id
- d9443c01a7336-22de6c47e20mr422765ad.12.1745866932074; Mon, 28 Apr 2025
- 12:02:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kevOHOL0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A7FC4CEED;
+	Mon, 28 Apr 2025 19:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745866937;
+	bh=LKxsD25S1RJIfuOP84cut1U1IiJUdfmmJCtJq9tjz3A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kevOHOL05wuhU4XapdR7a5W8fdNeJBUdmX/SNAWukxCVNMECnef+Chj3YLMwhf/y8
+	 Ym+3n0cXW7m4+SxIrNEH7iSJqX5Ad3FDIi5JcKM+06yKhyLqXbfhE9MzaiIqh+aAj/
+	 +f12uwgUeMGDmj/WGrk3KJu0wV6PwTvNBAN2euhtq5HgqJOk8yxIL4zQpGh1ibYQsd
+	 uK7Tk+4tP28DpklxwsKFImtcThnOYWjGFpBdytrKRQcRR9adr56ekV3TkAzO+69yJd
+	 E5xFfHa1KYCFbhTiDX2WzcAypxPah5qmQ74LvpfT/1eUwyAVayJvii3GQxnQ3T3or1
+	 c8bw06YEtmLjA==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2d9b61e02d1so680121fac.2;
+        Mon, 28 Apr 2025 12:02:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW3l6ODG10q5e0U4ypA5CnaYHeOhDeHtX5pRoWJPl2QlzoxLnOh8kh2yZXn10XvUGkgSTE/ZozhR1DZCwUPaANIxSOuoA==@vger.kernel.org, AJvYcCW6noUlhznrs0EAS7V9jZtuw1mYS74qOTjjcS2cachdfzDIdhy0b/k7hdn+u+jkcayBon2i6joByQ4P@vger.kernel.org, AJvYcCWARENICJE6zhakXPmnks+8cy/zr/kAnt3UcvFj0qo/nSvB3y7+nxuzcljAyWi7XHZ1q4otlR51mNQ6aQyp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3ZGn+khe1ftyc0KQAllIYY2aqzb/2Kh3REcSzR+zRCCsAF674
+	qESGLJu7Gwvzj7tYsg++AEV0JomX2hnEMWAcxPoK6FPmy+65zkFP380cC4cw68i8wLoo4OhwOIy
+	g7VoqmkMTiOXkh85Nv9CP1fQpqGc=
+X-Google-Smtp-Source: AGHT+IEcCgkMxWE97j27UCN9qkmL5Lr4PXGLmDAQswD4XACT8Z/diUgye1oNcWXiZY+C3ItQ76vFotE5iqeDBguJjl0=
+X-Received: by 2002:a05:6870:4790:b0:2c2:2f08:5e5b with SMTP id
+ 586e51a60fabf-2d9be58d47dmr5756642fac.13.1745866937129; Mon, 28 Apr 2025
+ 12:02:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z+6AGxEvBRFkN5mN@yzhao56-desk.sh.intel.com> <diqzh62ezgdh.fsf@ackerleytng-ctop.c.googlers.com>
- <aAmPQssuN9Zba//b@yzhao56-desk.sh.intel.com> <aAm9OHGt6Ag7ztqs@yzhao56-desk.sh.intel.com>
- <c4dae65f-b5e6-44fa-b5ab-8614f1d47cb5@intel.com> <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
- <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
- <diqz7c39zas0.fsf@ackerleytng-ctop.c.googlers.com> <aAsJZuLjOAYriz8v@yzhao56-desk.sh.intel.com>
- <diqzwmb7yi67.fsf@ackerleytng-ctop.c.googlers.com> <aA7UXI0NB7oQQrL2@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aA7UXI0NB7oQQrL2@yzhao56-desk.sh.intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 28 Apr 2025 12:02:00 -0700
-X-Gm-Features: ATxdqUFfs0t7N5eWmI-1jNaKWhFko9iPatrQfOG5_SqVZrK0K5YoR1PgPQdgCTU
-Message-ID: <CAGtprH8o=vE+_4maevXmFv4REg2+Ls-kKK8i0vjc7D6OYDCRkw@mail.gmail.com>
-Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
- HugeTLB page
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, Chenyi Qiang <chenyi.qiang@intel.com>, tabba@google.com, 
-	quic_eberman@quicinc.com, roypat@amazon.co.uk, jgg@nvidia.com, 
-	peterx@redhat.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
-	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
-	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
-	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
-	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
-	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
-	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
-	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <f5dd019ad4506.2100bf0f83374@gmail.com> <445f6320-698f-4d29-8556-665366668e4d@gmail.com>
+ <b6fc4e66-b35a-41ce-a633-db3d660b88a2@amd.com> <106bd256-2c08-463f-8498-b68f2d5ccaca@amd.com>
+ <9de18953-3f6d-447a-8274-c953bae64039@gmail.com> <a2747306-447c-432a-a926-e9d0473d9a0e@amd.com>
+ <CAJOrcgV-5tr66YbDd_mCL00YHg7nPVdJUon9Az7pZQXpNtwUoA@mail.gmail.com> <e8129e3c-aba9-427e-ad63-bc1ea1bdf0f5@amd.com>
+In-Reply-To: <e8129e3c-aba9-427e-ad63-bc1ea1bdf0f5@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 28 Apr 2025 21:02:05 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jS+gdHqW3pB1awZ7LHHWsFBQMp86tNwPMVBzOfot-sZw@mail.gmail.com>
+X-Gm-Features: ATxdqUHHBaekJ57BrjZ2a74PkNR6gV7ExWlFCialFGkGs0hqLBdaafSDn1dwxsM
+Message-ID: <CAJZ5v0jS+gdHqW3pB1awZ7LHHWsFBQMp86tNwPMVBzOfot-sZw@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: EC: Fix CPU frequency limitation on AMD platforms
+ after suspend/resume
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Marcus Bergo <marcusbergo@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, mark.pearson@lenovo.com, 
+	linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	lenb@kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 27, 2025 at 6:08=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wro=
-te:
+On Mon, Apr 28, 2025 at 8:23=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 >
-> On Fri, Apr 25, 2025 at 03:45:20PM -0700, Ackerley Tng wrote:
-> > Yan Zhao <yan.y.zhao@intel.com> writes:
-> > ...
-> > >
-> > > For some memory region, e.g., "pc.ram", it's divided into 2 parts:
-> > > - one with offset 0, size 0x80000000(2G),
-> > >   positioned at GPA 0, which is below GPA 4G;
-> > > - one with offset 0x80000000(2G), size 0x80000000(2G),
-> > >   positioned at GPA 0x100000000(4G), which is above GPA 4G.
-> > >
-> > > For the second part, its slot->base_gfn is 0x100000000, while slot->g=
-mem.pgoff
-> > > is 0x80000000.
-> > >
+> On 4/28/2025 4:51 AM, Marcus Bergo wrote:
+> > Yes, it does.
 > >
-> > Nope I don't mean to enforce that they are equal, we just need the
-> > offsets within the page to be equal.
-> >
-> > I edited Vishal's code snippet, perhaps it would help explain better:
-> >
-> > page_size is the size of the hugepage, so in our example,
-> >
-> >   page_size =3D SZ_2M;
-> >   page_mask =3D ~(page_size - 1);
-> page_mask =3D page_size - 1  ?
 >
-> >   offset_within_page =3D slot->gmem.pgoff & page_mask;
-> >   gfn_within_page =3D (slot->base_gfn << PAGE_SHIFT) & page_mask;
-> >
-> > We will enforce that
-> >
-> >   offset_within_page =3D=3D gfn_within_page;
-> For "pc.ram", if it has 2.5G below 4G, it would be configured as follows
-> - slot 1: slot->gmem.pgoff=3D0, base GPA 0, size=3D2.5G
-> - slot 2: slot->gmem.pgoff=3D2.5G, base GPA 4G, size=3D1.5G
+> OK thanks for confirming.  Considering your finding with this patch
+> you've shared and knowing there is a timing dependency that delaying the
+> next s2idle cycle helps I do wonder if we should keep exploring.
 >
-> When binding these two slots to the same guest_memfd created with flag
-> KVM_GUEST_MEMFD_HUGE_1GB:
-> - binding the 1st slot will succeed;
-> - binding the 2nd slot will fail.
->
-> What options does userspace have in this scenario?
+> Rafael, do you have thoughts here?  Specifically do you think it's worth
+> revisiting if b5539eb5ee70 was the correct move.
 
-Userspace can create new gmem files that have aligned offsets. But I
-see your point, enforcing alignment at binding time will lead to
-wastage of memory. i.e. Your example above could be reworked to have:
-- slot 1: slot->gmem.pgoff=3D0, base GPA 0, size=3D2.5G, gmem_fd =3D x, gme=
-m_size =3D 3G
-- slot 2: slot->gmem.pgoff=3D0, base GPA 4G, size=3D1.5G, gmem_fd =3D y,
-gmem_size =3D 2G
+Well, it was done for a reason that is explained in its changelog.  I
+think that the problem addressed by it is genuine, isn't it?
 
-This will waste 1G of memory as gmem files will have to be hugepage aligned=
-.
-
-> It can't reduce the flag to KVM_GUEST_MEMFD_HUGE_2MB. Adjusting the gmem.=
-pgoff
-> isn't ideal either.
+> > On Sun, Apr 27, 2025 at 11:06=E2=80=AFPM Mario Limonciello
+> > <mario.limonciello@amd.com <mailto:mario.limonciello@amd.com>> wrote:
+> >
+> >     On 4/27/2025 1:34 PM, M. Bergo wrote:
+> >      > It does make it work fine for me, I saw the clock/timing
+> >     interference
+> >      > and this sane this problem for Lenovo as well.
+> >
+> >     Huh?  I think you have a typo; but I don't know what you actually m=
+eant.
+> >
+> >     So you're saying the timing patch helps your system as well?
+> >
+> >     Thanks,
+> >
+> >      >
+> >      > On 4/24/25 11:11 AM, Mario Limonciello wrote:
+> >      >> On 4/19/2025 1:03 PM, Mario Limonciello wrote:
+> >      >>> On 4/19/2025 4:28 AM, M. Bergo wrote:
+> >      >>>>  From 881e57c87b9595c186c2ca7e6d35d0a52c1a10c2 Mon Sep 17
+> >     00:00:00 2001
+> >      >>>> From: Marcus Bergo <marcusbergo@gmail.com
+> >     <mailto:marcusbergo@gmail.com>>
+> >      >>>> Date: Sat, 19 Apr 2025 05:19:05 -0300
+> >      >>>> Subject: [PATCH] ACPI: EC: Fix CPU frequency limitation on AM=
+D
+> >      >>>> platforms after
+> >      >>>>   suspend/resume
+> >      >>>>
+> >      >>>> Several AMD-based laptop models (Lenovo P15v Gen 3, P16v Gen
+> >     1, HP
+> >      >>>> EliteBook 845 G10)
+> >      >>>> experience a CPU frequency limitation issue where the
+> >     processor gets
+> >      >>>> stuck at
+> >      >>>> approximately 544MHz after resuming from suspend when the
+> >     power cord
+> >      >>>> is unplugged
+> >      >>>> during sleep. This issue makes the systems practically unusab=
+le
+> >      >>>> until a full
+> >      >>>> power cycle is performed.
+> >      >>>>
+> >      >>>> The root cause was traced to commit b5539eb5ee70 ("ACPI: EC: =
+Fix
+> >      >>>> acpi_ec_dispatch_gpe()") which restored the behavior of
+> >     clearing the
+> >      >>>> GPE
+> >      >>>> in acpi_ec_dispatch_gpe() function to prevent GPE storms.
+> >     While this
+> >      >>>> fix is
+> >      >>>> necessary for most platforms to prevent excessive power
+> >     consumption
+> >      >>>> during
+> >      >>>> suspend-to-idle, it causes problems on certain AMD platforms =
+by
+> >      >>>> interfering
+> >      >>>> with the EC's ability to properly restore power management
+> >     settings
+> >      >>>> after resume.
+> >      >>>>
+> >      >>>> This patch implements a targeted workaround that:
+> >      >>>> 1. Adds DMI-based detection for affected AMD platforms
+> >      >>>> 2. Adds a function to check if we're in suspend-to-idle mode
+> >      >>>> 3. Modifies the acpi_ec_dispatch_gpe() function to handle AMD
+> >      >>>> platforms specially:
+> >      >>>>     - For affected AMD platforms during suspend-to-idle, it
+> >     advances
+> >      >>>> the
+> >      >>>>       transaction without clearing the GPE status bit
+> >      >>>>     - For all other platforms, it maintains the existing
+> >     behavior of
+> >      >>>> clearing
+> >      >>>>       the GPE status bit
+> >      >>>>
+> >      >>>> Testing was performed on a Lenovo P16v Gen 1 with AMD Ryzen 7=
+ PRO
+> >      >>>> 7840HS and
+> >      >>>> confirmed that:
+> >      >>>> 1. Without the patch, the CPU frequency is limited to 544MHz
+> >     after the
+> >      >>>>   suspend/unplug/resume sequence
+> >      >>>> 2. With the patch applied, the CPU properly scales up to its
+> >     maximum
+> >      >>>> frequency
+> >      >>>>     (5.1GHz) after the same sequence
+> >      >>>> 3. No regressions were observed in other EC functionality
+> >     (battery
+> >      >>>> status,
+> >      >>>>     keyboard backlight, etc.)
+> >      >>>> 4. Multiple suspend/resume cycles with different power states
+> >     were
+> >      >>>> tested
+> >      >>>>     without issues
+> >      >>>>
+> >      >>>> The patch was also verified not to affect the behavior on Int=
+el-
+> >      >>>> based systems,
+> >      >>>> ensuring that the GPE storm prevention remains effective wher=
+e
+> >     needed.
+> >      >>>>
+> >      >>>> Fixes: b5539eb5ee70 ("ACPI: EC: Fix acpi_ec_dispatch_gpe()")
+> >      >>>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D21855=
+7
+> >     <https://bugzilla.kernel.org/show_bug.cgi?id=3D218557>
+> >      >>>> Reported-by: Mark Pearson <mark.pearson@lenovo.com
+> >     <mailto:mark.pearson@lenovo.com>>
+> >      >>>> Signed-off-by: Marcus Bergo <marcusbergo@gmail.com
+> >     <mailto:marcusbergo@gmail.com>>
+> >      >>>
+> >      >>> Great finding with this being a potential root cause of this
+> >     behavior
+> >      >>> (at least from a Linux perspective).
+> >      >>>
+> >      >>> Although this helps, I'm not really a fan of the tech debt
+> >      >>> accumulated by needing to quirk this on a system by system
+> >     basis as a
+> >      >>> bandage.
+> >      >>>
+> >      >>> At least for HP someone said that this commit happens to help =
+them
+> >      >>> for the same issue you're describing:
+> >      >>>
+> >      >>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform=
+-
+> >     <https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform->
+> >      >>> drivers- x86.git/commit/?
+> >      >>> h=3Dfixes&id=3D9f5595d5f03fd4dc640607a71e89a1daa68fd19d
+> >      >>>
+> >      >>> That was surprising to me, but it must be changing the timing
+> >     of some
+> >      >>> of the code running in HP's EC.  Since you happen to have a Le=
+novo
+> >      >>> system does it happen to help the Lenovo EC too?
+> >      >>>
+> >      >>> Mark, comments please?
+> >      >>>
+> >      >> Someone just reported that the timing delay patch helped their
+> >     Lenovo
+> >      >> system as well.  Can you see if it helps you too?
+> >
+> >
+> >
+> > --
+> >
+> >
+> > *
+> > *
+> > *
+> > Marcus Bergo*
 >
-> What about something similar as below?
 >
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index d2feacd14786..87c33704a748 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -1842,8 +1842,16 @@ __kvm_gmem_get_pfn(struct file *file, struct kvm_m=
-emory_slot *slot,
->         }
->
->         *pfn =3D folio_file_pfn(folio, index);
-> -       if (max_order)
-> -               *max_order =3D folio_order(folio);
-> +       if (max_order) {
-> +               int order;
-> +
-> +               order =3D folio_order(folio);
-> +
-> +               while (order > 0 && ((slot->base_gfn ^ slot->gmem.pgoff) =
-& ((1 << order) - 1)))
-
-This sounds better. Userspace will need to avoid this in general or
-keep such ranges short so that most of the guest memory ranges can be
-mapped at hugepage granularity. So maybe a pr_warn could be spewed
-during binding that the alignment is not optimal.
-
-> +                       order--;
-> +
-> +               *max_order =3D order;
-> +       }
->
->         *is_prepared =3D folio_test_uptodate(folio);
->         return folio;
->
->
-> > >> Adding checks at binding time will allow hugepage-unaligned offsets =
-(to
-> > >> be at parity with non-guest_memfd backing memory) but still fix this
-> > >> issue.
-> > >>
-> > >> lpage_info will make sure that ranges near the bounds will be
-> > >> fragmented, but the hugepages in the middle will still be mappable a=
-s
-> > >> hugepages.
-> > >>
-> > >> [1] https://lpc.events/event/18/contributions/1764/attachments/1409/=
-3706/binding-must-have-same-alignment.svg
