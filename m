@@ -1,112 +1,146 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95FD61AC44D;
-	Mon, 28 Apr 2025 10:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3037925DD1A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745835636; cv=none; b=q60TGXVeFhf2llCatX0hsLvJcQK7BZe5VqSLKQVq/nv6ShMiX2i+Wa3kof/q4ZyQHokGmWbg4ZGawqgPIB8pRGYR4UooEwttIgAaD1ZrHrjpfmkCPsXIh3nKQJE31UFKfGsY/Sd31l5NQt6sC2PEwkJjJPg+XjEj0usmC5DhBSM=
+	t=1745835647; cv=none; b=o7vwbMeGrnyPMAizLuwXhkH6EXokUZDjxLO4Rz1HV6KKUNOU90KWI+ZyHQ+gRx2c0RtcSC514mzXsPWw7t7O9xyKdLtHzjiuwjHVSDZiYMHgrDnjeOkDK/0WCVrVMhQvAEW6G74Ejj/54ekV/88yuE+kQcBJggHh29L7vdNBsfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745835636; c=relaxed/simple;
-	bh=awsLbnE+lM4r/IQKorSBx0YVy7B01bk3OUhbrujOP+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=szaDd1b+NQOUb3TybwMTPMkLeduiAhPx2F/k5R8nv27kFIp8tHQR7TQgAZ46yQlMXe0xANQnw5bMtqylg/ynrl1fsBl0g6MwoL/i8idhlee2yXXBAOFvEP+MFMTRS5eBwpOUoDp1SbfzmsKzP1MltkNarb4/YFjdn7FuaThEWwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4ZmHx70jzTz9s2l;
-	Mon, 28 Apr 2025 11:20:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id vzOENPXM0yv2; Mon, 28 Apr 2025 11:20:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZmHx6757fz9s28;
-	Mon, 28 Apr 2025 11:20:42 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id ED06D8B766;
-	Mon, 28 Apr 2025 11:20:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id txsmwIS9nDw7; Mon, 28 Apr 2025 11:20:42 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E6FD8B763;
-	Mon, 28 Apr 2025 11:20:42 +0200 (CEST)
-Message-ID: <4b42c00a-0ef5-4121-9e40-9214bf9a1197@csgroup.eu>
-Date: Mon, 28 Apr 2025 11:20:42 +0200
+	s=arc-20240116; t=1745835647; c=relaxed/simple;
+	bh=6y3GJQkg3WO6HZVx8AbKk9AKup+Iuho9Ws+zs6rdbvQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F8K48me7/3WxDnhAVziY+/UCQW5uQEcx3gaDmmog5PZT+Bcs2aAv9G2h0i1JeNsJIksaqKW+QsdNINNjtSAaQgGLMHDGSGAk4xzYGMKxKs+FEqF/ypDm9HiB8zUNDtpCxQq34S+UkQ9F/Tgb7GhQWqHMZthVevCjzkSgJqdH0rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=T7w5VshK; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="T7w5VshK"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bfca745c7so41431771fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 03:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745835642; x=1746440442; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4sK5PIgmZ1Mpik4wrEId0UQH2tIcaV83eQP9njHyGcE=;
+        b=T7w5VshK4RzwpVIjbJ27iY1o0pnOA5jHWAH4IPn7YkGWOpLbmziT+KSN+IbaHX3PlQ
+         inEuHLyDtbIVIxKUQ8HxNt5CNP8Lk57OP+T0DsjPgEr2I7fydmR0PRR5d0tSc/2TnFHl
+         FECSB8JX8BNm3X/QvtdpZV+LSwtpHW9bx5tdfUdanUg+iXqqeZEKAsMjrfY92e7JC83z
+         5nBGIMg4tI3Ffb2fwnYTmADWN8Gyrm/D6XQaXGxXw/YFm4Vpa8SbhZ3I58iDhwy5MfKB
+         dzy5mUGZzBdIZ8h1S2JrKjYsQUuuwtYJ8zP1Y/er4yRYQ7/aoJAWH8fMuO9aZ0TW4n0Y
+         h7NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745835642; x=1746440442;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4sK5PIgmZ1Mpik4wrEId0UQH2tIcaV83eQP9njHyGcE=;
+        b=SJv5//QY/1dVWP3L39RSEQMnEGnUAqgKbOnsuYwKmXaMbgR7xv3BZttEJncn5QSxY1
+         0JmzDE8FY4h5EF+VLGnZKeVIifnAPUm3bLfyso1ibn82PYx/OVCHI1V+tFL9NHHW8uul
+         HqMwzvfK4dfcaT/JPR4+uZN+1IWgqvXud9Cx+nNIG3bszRRqxYVvJlOXSKyxW4V3y0nB
+         4ToWnuh5EAchv/smFe2F4FgJl/Us8GVl0wSNvYYXS+IKgqkp+VBtfM6MWE4SQfkiszhj
+         2zM9g0eN8aZc4BHrZo0n4Md4PZ2W2CVgi2N+KD8hwv6y6G/B+CukC5AhwlcIZ1wh5X7d
+         +ASg==
+X-Forwarded-Encrypted: i=1; AJvYcCXunLStLCM0o7mBP1YEutZWBMPwr15GwWa0o9RgOuOCXrihjgruN+sr/hscDi2rp3izCJHe9pR4tW3kTIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCqY8+vF+WdINxt0dlhxK0xfSGxrU/n2JZhpSKGvTcFz547Gv9
+	VjkfEtDyE4T4k4mK5YmNuSejlXt2osCas8IbKkM9fsCsRYu+9bJjnT/CZ2V3XHQiMOEebxOgw2y
+	8+AGrIixrmjTr02XCiTc46cZla8AZPfzo+CQrSA==
+X-Gm-Gg: ASbGncvc0fMokpOeAVnc8aSFpC7XGqQXEhVqWAPS9X9/NU9dEQJDhogh5/Wuw5njOQR
+	QVcIYWPtV4LSCa5x5GpLCJJoojREPeO4w43x1O9YMnJb7Hs5GDTYVowqk0QcaLBPAHuX+6osy+y
+	j0Qk7D+RS97tEJJeC2g9mbFNbnVTCIX/KqNSkp01GgGXU8DXAHOGoQwnY=
+X-Google-Smtp-Source: AGHT+IFxSYOh5ACpZ7FmM+wW1wuiew0INq7bJoRMxvSARAwFZSyWC46QwXnSDBXQD+ntiOOavQU0/IWYQ9ZRT/nnGII=
+X-Received: by 2002:a2e:be1b:0:b0:30b:b9e4:13cd with SMTP id
+ 38308e7fff4ca-31905b6a701mr38067671fa.2.1745835642321; Mon, 28 Apr 2025
+ 03:20:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: fsl: fsl_qmc_audio: Reset audio data pointers on
- TRIGGER_START event
-To: Mark Brown <broonie@kernel.org>, Shengjiu Wang <shengjiu.wang@gmail.com>,
- Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
- Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Herve Codina <herve.codina@bootlin.com>
-Cc: linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
-References: <20250410091643.535627-1-herve.codina@bootlin.com>
- <174429282080.80887.6648935549042489213.b4-ty@kernel.org>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <174429282080.80887.6648935549042489213.b4-ty@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250403161143.361461-1-marco.crivellari@suse.com>
+ <20250403161143.361461-3-marco.crivellari@suse.com> <CAAhV-H4dQ8hRfBm2JWmgMzYH5tuy4ph6hyOSXQBLOvtCQ+K9dQ@mail.gmail.com>
+ <alpine.DEB.2.21.2504280426010.31828@angie.orcam.me.uk> <CAAhV-H4WTrYecBj0wev8AUi_of_qAnvHCk4heTU5P_3pMZv4fA@mail.gmail.com>
+In-Reply-To: <CAAhV-H4WTrYecBj0wev8AUi_of_qAnvHCk4heTU5P_3pMZv4fA@mail.gmail.com>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Mon, 28 Apr 2025 12:20:31 +0200
+X-Gm-Features: ATxdqUFj9iVuicJaDf0xifwnqp09kIdWJ30vAMX4UW7_WZ6gAcWBeXZTcI6VmEE
+Message-ID: <CAAofZF4J6H5jgqKu=KUowBrwfHJyGEzL5ThC_DOs-XPdgm497A@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] MIPS: Move r4k_wait() to .cpuidle.text section
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
+Hi,
+
+If it sounds good also to Maciej, I will submit the new version with the
+space before "ax" (and of course, the ".previous").
+
+Thank you.
+
+On Mon, Apr 28, 2025 at 6:11=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> On Mon, Apr 28, 2025 at 11:28=E2=80=AFAM Maciej W. Rozycki <macro@orcam.m=
+e.uk> wrote:
+> >
+> > On Mon, 28 Apr 2025, Huacai Chen wrote:
+> >
+> > > > diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+> > > > index 46d975d00298..2cf312d9a3b0 100644
+> > > > --- a/arch/mips/kernel/genex.S
+> > > > +++ b/arch/mips/kernel/genex.S
+> > > > @@ -104,6 +104,7 @@ handle_vcei:
+> > > >
+> > > >         __FINIT
+> > > >
+> > > > +       .section .cpuidle.text,"ax"
+> > > If you submit a new version, adding a space before "ax" will be a lit=
+tle better.
+> >
+> >  We use no space across our port though, which is why I haven't request=
+ed
+> > that before.
+>
+> Current status:
+> arch/mips/include/asm/ftrace.h:         ".section .fixup, \"ax\"\n"
+>          \
+> arch/mips/include/asm/ftrace.h:         ".section .fixup, \"ax\"\n"     \
+> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+>                  \n"     \
+> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+>                  \n"     \
+> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+>                          \n"
+> arch/mips/include/asm/futex.h:          "       .section .fixup,\"ax\"
+>                          \n"
+> arch/mips/include/asm/paccess.h:        ".section\t.fixup,\"ax\"\n"
+>                                  \
+> arch/mips/include/asm/paccess.h:        ".section\t.fixup,\"ax\"\n"
+>                                  \
+>
+> So there are a few files which have spaces.
+>
+> Huacai
+>
+>
+> >
+> >   Maciej
 
 
-Le 10/04/2025 à 15:47, Mark Brown a écrit :
-> On Thu, 10 Apr 2025 11:16:43 +0200, Herve Codina wrote:
->> On SNDRV_PCM_TRIGGER_START event, audio data pointers are not reset.
->>
->> This leads to wrong data buffer usage when multiple TRIGGER_START are
->> received and ends to incorrect buffer usage between the user-space and
->> the driver. Indeed, the driver can read data that are not already set by
->> the user-space or the user-space and the driver are writing and reading
->> the same area.
->>
->> [...]
-> 
-> Applied to
-> 
->     https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fbroonie%2Fsound.git&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C438de093b4c04d4c0a8f08dd78362e30%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638798896267382068%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=d%2FuL%2FFAOcpRY2v9YtxTMdiX%2B3GgHKDE7y5TMTc9cK94%3D&reserved=0 for-next
 
-Would it be possible to get this patch into one of the v6.15 rc as it is 
-a bug fix ?
+--=20
 
-Thanks
-Christophe
+Marco Crivellari
 
-> 
-> Thanks!
-> 
-> [1/1] ASoC: fsl: fsl_qmc_audio: Reset audio data pointers on TRIGGER_START event
->        commit: 9aa33d5b4a53a1945dd2aee45c09282248d3c98b
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-> 
-> Thanks,
-> Mark
-> 
+L3 Support Engineer, Technology & Product
 
+
+
+
+marco.crivellari@suse.com
