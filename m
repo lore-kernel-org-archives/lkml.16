@@ -1,175 +1,246 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B5C28F937
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBF528F937
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745870121; cv=none; b=kQFLVAibJWsHNlTMkx4Qcpns4Ra4MgAwdrkx1S1P03KVs6JdvXVSzoDGrlw9RWKjidJ7TL6KMTl1NmYLpTmzRGFWV8uO56rDG22cqqcQ3+2D6iCirtdaZLun0bk/rbOTXcGB3lfFF8GtvYeOHKczuyTToPc2AEB55O5YJufYS04=
+	t=1745870153; cv=none; b=HEjvpPNPrbA/HaMjxcBWlNJ7At27CwcGcfTQ4lGKT0bi3gbUJNCkVbi4fx3RHqwlKpAR49cNmzOUW4N8s2TZjaSXHoEXSY7bYaVMVP3KUJxLrjPfz/VP6ks35iHOwMO7WSVb+QIuCQQLPt+CRqoz8+Ub4/xDqkxrWjZAIXhGr6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745870121; c=relaxed/simple;
-	bh=Ul2mCutafIkcCO47yAMR6kqOc2J45J0V3vs2YNHmMwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MZURDgZtVO9DMt7levIu0iCgSMN85wLdhCZo8rU+6lKpDlp8RK9erkf4O4lwo9toeLe67djq3gFlWT7Y49eywy1tomrjVKJosU1/c9eOAOYPJUMfQGHM67tZJ7QcVWVSGWwbaufRUwJ+CPmcd9mNBfnltZTeqteqojZieAl+mgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3KKFYV3+; arc=none smtp.client-ip=209.85.219.171
+	s=arc-20240116; t=1745870153; c=relaxed/simple;
+	bh=MaA81J+3HtofT3J1tOR6wMfPW9HqOJsPPsy7qd6wKiU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uVDi4DrjJLQZQCjneDZzwjoHtBEaZnGIa0s8YEjCVj+9ae7N1jMu9Av6bqubVA+vo2VycfURx6gE9SCSFgBBhe5ri4c9B2JPRC4QjFTwlYvk5CV1dBk/TCxf986VmQY6JfM7G7K3B49qKwfVd1k1YZnOBwj2EvNlL+WUu/40mok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--brianvv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yxv0FS0C; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--brianvv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3KKFYV3+"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e733a6ff491so1504199276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:55:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yxv0FS0C"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1c122308dcso2302943a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745870117; x=1746474917; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sfHwTscWO/jloUEDudbJlwyzGCxdwaIO+zKhNAi9qAo=;
-        b=3KKFYV3+p3v2jSotn8S17qNg6iLfFORgrecvlTs+F5PXcg3qYHRkP+rkOpwB4Zcgu8
-         EGrXOBlVNHj4qNBjxRbUUBTvDzQn/D0nMSdiJCfRjfpNNO5EczooJ5nOZIJ3Qi1E1YR7
-         ttqujG29KAMjVSQilHTNUi0vsk7hmJxXme5Szn73wM4/eOMr4s2YvH/a89vUmF6kJvCc
-         7pXsjJHngHJD+AA3p0cL/0aYRsT+uz4UdOvcL0wcf4yk/rBHiv7cek36resku5ov9gg+
-         bgklrDEDQnwZTY+uf2+yYqZ4AKvkRjjMMwybUicw7IrIzAPq2bkA1yB2COkVYw3io9Cr
-         VoYQ==
+        d=google.com; s=20230601; t=1745870150; x=1746474950; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WF1rdyAsoL1EvhWVSLVqE87e6m1CGCQ1ONSXKdBqozE=;
+        b=Yxv0FS0C8oW7Q+cTSSiVaFQtW1pGKzXw+jspheiK7MTQCyMrNVDjEal3Zm07WLPs6K
+         IywT32VR3Zn+2jYTx97T9IKMvGldz14Ztio+NuZ9K6D4cl8YjhAIJX3Aq87JkAeXyuDN
+         4IgF3huZYydXsZk/3nmlV811gi+oLkFMcg3vDoAxhGsjlvDU3TzLRw0MjV2h+vbIEvKd
+         pjl7BvzGDl63saNVXzLukonOH5kuxfXQX2/L6JXGn/jnmFtdGyaAmnjFqpW0uOH6DpRn
+         RLdrOod1Gu9QffK++CMTMkb0GCdfjzfKAZtLIaPlSCTXGNskr2yDELo1lr3jBONEdejI
+         GLVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745870117; x=1746474917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sfHwTscWO/jloUEDudbJlwyzGCxdwaIO+zKhNAi9qAo=;
-        b=rjrgRy2Ftxb+GSe2O1vP3klOAU4qD1ixAtoYM0hJ2G1D3GMrdMuqQzbwnS+aSK9NHs
-         Ekt9ym26P7O49ERCFqxVh8xVSHPdHrigVQpNg24d7z4/e+LEzEr76/MlukeX4XCQtLcO
-         J61SvSMhf2tQjZjR4P0yX4jLhWja/nHeVOoOjCYdHE+m6XMbHUD7bEqygkZ57uK6244f
-         baBYFN8e8pdlFk9HfsMt0ieszG5zWZiVvfvfXC1nMnAz2uOkHIgSb5E23ZeZN+QFTdrT
-         KZWkJvBy10JaYcRWrZ06zKKoyjR6C0dgA4QpsCHJrQ/7mtu3hNuPH1OCmTHiwydaqzP5
-         glNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXd5e/bNwqFpR4MYG4GCG39dx15I6OXWJphOmMAkmxpqQbv8Eq0cpeR1mUT4iEE9dOr3CohzXwyuBy4AHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgbMQt8fSL4Gm/+Ve5spv261tzObLSGyG4Jhqx2BltKr04NVBl
-	yxlILbANoON6G5vtGmKTKbJnCka5pRZTNab1WybpfXJmCvSKgJIdF4kbr9TW7Tczq/y2hDK8/oz
-	HjCeisUfKpES0zI8zb+yfdpWsFrBDmntaNJKC
-X-Gm-Gg: ASbGnctfoYsh32c1qBL8y4u3PNRw4IVyqqH0WchiloX042H8ZVkptq71Noqd8DJoN0Q
-	I1s7/IP5xE9XIu1WU6gJRiHvhnWqfvJq7TjgNNW15L7HKC+9BKGVwOvNj47SsJTFwYVDc6H9BNs
-	i53E1Nt3e1Wgwm7NJxokF488j9xsAehSfrkQKrYuorY2dtg02043q+CR+IpsIrnfLhjxI=
-X-Google-Smtp-Source: AGHT+IF5bOE8NaQox434M5XmykiOoFpfiOOstY8512J8SiE44O+53iDRI95fhIJQcDKl1pHA+A5H/zkhcUhoVNEAjiw=
-X-Received: by 2002:a05:6902:158e:b0:e6e:667:911d with SMTP id
- 3f1490d57ef6-e73233a6dc2mr13962923276.21.1745870117123; Mon, 28 Apr 2025
- 12:55:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745870150; x=1746474950;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WF1rdyAsoL1EvhWVSLVqE87e6m1CGCQ1ONSXKdBqozE=;
+        b=JmUvWI9daMsuOW51fOWyxCDQKDc2jQocOgc7aP4yDpaTRfd8FcnQXA3ZzyuijsFEl6
+         0/PNJYkopX7mQFidzvfWnjkBYvIBNCcTsphFQ1DdlYbKMp4J+MczN6/IQeEGsEq4nDkP
+         q8FXdSB5HmPwzr7RdsNzW3XGLaXonzwhhLy8PPdejNY33h4xNIb5d6OsVXGG+ZitK5nu
+         91z0oQDvmyWIma83ft/8X0ppMLtxqY0k75JODBG0w2VhWhv47VNgVGHnFKyG5Zs4MWpz
+         w+FB2q0pwh7W1JBmMcYrDmap0qWzdfN1cxEcNKKK6o8/eBWOcieOvH7uYXdyEuwzUbP0
+         J/tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFVXRaJLIt/6djceCBeUlklcD2+hgv5FgwFpXeKvFprSCKmQSKN38jb2MGQhuG8GSQxWOxmcaEGLn4O9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytDRbq0+txuO2Igjjza2mWM1cSpkD96hfT/P8aqLdzfjU+ASZV
+	g+UQqeuxSPD9GGk6iGUb9QDCgDrlNEXtmKJlRdH6aIt54GXRyH5nb/BICmsJgYY8O2qzkWY9spS
+	WihVmpA==
+X-Google-Smtp-Source: AGHT+IGgzi/mmJ2yTIATM1jhnypep6TvOgCGYfDJkP79jyyBpEEK6EumSZueXfXDpyYjfteBqr8NEmlR8IGO
+X-Received: from pfbcl15.prod.google.com ([2002:a05:6a00:32cf:b0:740:65f:220a])
+ (user=brianvv job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:cfa4:b0:1f5:58b9:6d97
+ with SMTP id adf61e73a8af0-2093e52803amr1192392637.35.1745870150677; Mon, 28
+ Apr 2025 12:55:50 -0700 (PDT)
+Date: Mon, 28 Apr 2025 19:55:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250414200929.3098202-1-jthoughton@google.com>
- <20250414200929.3098202-6-jthoughton@google.com> <aAwpWwMIJEjtL5F9@google.com>
-In-Reply-To: <aAwpWwMIJEjtL5F9@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Mon, 28 Apr 2025 15:54:41 -0400
-X-Gm-Features: ATxdqUFyYu3QFWzs4o008gMYEtq4uvUsSn7Emn7MJoROAS3_0BzmZZrNMQlZ_Ss
-Message-ID: <CADrL8HX03P1f2E7NzufXU3enW1EXz2Bk2qNh5KQg-X1KFQed8g@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] KVM: selftests: access_tracking_perf_test: Use
- MGLRU for access tracking
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+Message-ID: <20250428195532.1590892-1-brianvv@google.com>
+Subject: [iwl-net PATCH v2] idpf: fix a race in txq wakeup
+From: Brian Vazquez <brianvv@google.com>
+To: Brian Vazquez <brianvv.kernel@gmail.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	intel-wired-lan@lists.osuosl.org
+Cc: David Decotigny <decot@google.com>, Anjali Singhai <anjali.singhai@intel.com>, 
+	Sridhar Samudrala <sridhar.samudrala@intel.com>, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, emil.s.tantilov@intel.com, 
+	Brian Vazquez <brianvv@google.com>, Josh Hay <joshua.a.hay@intel.com>, 
+	Luigi Rizzo <lrizzo@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 8:31=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Mon, Apr 14, 2025, James Houghton wrote:
-> > By using MGLRU's debugfs for invoking test_young() and clear_young(), w=
-e
-> > avoid page_idle's incompatibility with MGLRU, and we can mark pages as
-> > idle (clear_young()) much faster.
-> >
-> > The ability to use page_idle is left in, as it is useful for kernels
-> > that do not have MGLRU built in. If MGLRU is enabled but is not usable
-> > (e.g. we can't access the debugfs mount), the test will fail, as
-> > page_idle is not compatible with MGLRU.
-> >
-> > cgroup utility functions have been borrowed so that, when running with
-> > MGLRU, we can create a memcg in which to run our test.
-> >
-> > Other MGLRU-debugfs-specific parsing code has been added to
-> > lru_gen_util.{c,h}.
->
-> This fails on my end due to not being able to find the cgroup.  I spent a=
-bout 15
-> minutes poking at it and gave it.  FWIW, this is on our devrez hosts, so =
-it's
-> presumably similar hardware to what you tested on.
+Add a helper function to correctly handle the lockless
+synchronization when the sender needs to block. The paradigm is
 
-Ah sorry, yes, this selftest needs to be patched when running the
-devrez userspace, which uses a combination of cgroup-v1 and cgroup-v2.
-Simply hard-coding the root to "/dev/cgroup/memory" (which is in fact
-a cgroup-v1 mount) should be what you need if you want to give it
-another go.
+        if (no_resources()) {
+                stop_queue();
+                barrier();
+                if (!no_resources())
+                        restart_queue();
+        }
 
-> Even if this turns out to be PEBKAC or some CONFIG_XXX incompatibility, t=
-here
-> needs to be better hints provided to the user of how they can some this.
+netif_subqueue_maybe_stop already handles the paradigm correctly, but
+the code split the check for resources in three parts, the first one
+(descriptors) followed the protocol, but the other two (completions and
+tx_buf) were only doing the first part and so race prone.
 
-Yeah this can be better. I should at least check that the found
-cgroup-v2 root's cgroup.controllers contains "memory". In your case,
-it did not.
+Luckily netif_subqueue_maybe_stop macro already allows you to use a
+function to evaluate the start/stop conditions so the fix only requires
+the right helper function to evaluate all the conditions at once.
 
-(cgroup.controllers is not available for cgroup-v1 -- because it
-doesn't make sense -- so if I patch the selftest to check this file,
-using cgroup-v1 mounts will stop working. So, again, you'd need to
-patch the test to work on devrez.)
+The patch removes idpf_tx_maybe_stop_common since it's no longer needed
+and instead adjusts separately the conditions for singleq and splitq.
 
-> And this would be a perfect opportunity to clean up this:
->
->         __TEST_REQUIRE(page_idle_fd >=3D 0,
->                        "CONFIG_IDLE_PAGE_TRACKING is not enabled");
+Note that idpf_rx_buf_hw_update doesn't need to check for resources
+since that will be covered in idpf_tx_splitq_frame.
 
-I think the change I've already made to this string is sufficient
-(happy to change it further if you like):
-> > +               __TEST_REQUIRE(page_idle_fd >=3D 0,
-> > +                              "Couldn't open /sys/kernel/mm/page_idle/=
-bitmap. "
-> > +                              "Is CONFIG_IDLE_PAGE_TRACKING enabled?")=
-;
+To reproduce:
 
-> I can't count the number of times I've forgotten to run the test with roo=
-t
-> privileges, and wasted a bunch of time remembering it's not that the kern=
-el
-> doesn't have CONFIG_IDLE_PAGE_TRACKING, but that /sys/kernel/mm/page_idle=
-/bitmap
-> isn't accessible.
->
-> I mention that, because on a kernel with MGRLU available but disabled, an=
-d
-> CONFIG_IDLE_PAGE_TRACKING=3Dn, the user has no idea that they _can_ run t=
-he test
-> without mucking with their kernel.
+Reduce the threshold for pending completions to increase the chances of
+hitting this pause by changing your kernel:
 
-Fair enough, I'll change the output from the test for that
-configuration to say something like: "please either enable the missing
-MGLRU features (e.g. `echo 3 > /sys/kernel/mm/lru_gen/enabled`) or
-recompile your kernel with CONFIG_IDLE_PAGE_TRACKING=3Dy."
+drivers/net/ethernet/intel/idpf/idpf_txrx.h
 
-> =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
->   lib/lru_gen_util.c:229: stats->memcg_id > 0
->   pid=3D423298 tid=3D423298 errno=3D2 - No such file or directory
->      1  0x0000000000408b45: lru_gen_read_memcg_stats at lru_gen_util.c:22=
-9
->      2  0x0000000000402e4c: run_test at access_tracking_perf_test.c:421
->      3  0x0000000000403694: for_each_guest_mode at guest_modes.c:96
->      4  0x00000000004023dd: run_test_in_cg at access_tracking_perf_test.c=
-:467
->      5  0x000000000041ba65: cg_run at cgroup_util.c:362
->      6  0x0000000000402042: main at access_tracking_perf_test.c:583
->      7  0x000000000041c753: __libc_start_call_main at libc-start.o:?
->      8  0x000000000041e9ac: __libc_start_main_impl at ??:?
->      9  0x0000000000402280: _start at ??:?
->   Couldn't find memcg: access_tracking_perf_test
-> Did the memcg get created in the proper mount?
-> Destroying cgroup: /sys/fs/cgroup/access_tracking_perf_test
+-#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> 1)
++#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> 4)
 
-Thanks for taking a look!
+Use pktgen to force the host to push small pkts very aggressively:
+
+./pktgen_sample02_multiqueue.sh -i eth1 -s 100 -6 -d $IP -m $MAC \
+  -p 10000-10000 -t 16 -n 0 -v -x -c 64
+
+Fixes: 6818c4d5b3c2 ("idpf: add splitq start_xmit")
+Signed-off-by: Josh Hay <joshua.a.hay@intel.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+---
+v2:
+- Fix typos
+- Fix RCT in singleq function
+- No inline in c files
+- Submit to iwl-net and add Fixes tag
+
+ .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  9 ++--
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 45 +++++++------------
+ drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  8 ----
+ 3 files changed, 22 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+index eae1b6f474e6..6ade54e21325 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+@@ -362,17 +362,18 @@ netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
+ {
+ 	struct idpf_tx_offload_params offload = { };
+ 	struct idpf_tx_buf *first;
++	int csum, tso, needed;
+ 	unsigned int count;
+ 	__be16 protocol;
+-	int csum, tso;
+ 
+ 	count = idpf_tx_desc_count_required(tx_q, skb);
+ 	if (unlikely(!count))
+ 		return idpf_tx_drop_skb(tx_q, skb);
+ 
+-	if (idpf_tx_maybe_stop_common(tx_q,
+-				      count + IDPF_TX_DESCS_PER_CACHE_LINE +
+-				      IDPF_TX_DESCS_FOR_CTX)) {
++	needed = count + IDPF_TX_DESCS_PER_CACHE_LINE + IDPF_TX_DESCS_FOR_CTX;
++	if (!netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
++				       IDPF_DESC_UNUSED(tx_q),
++				       needed, needed)) {
+ 		idpf_tx_buf_hw_update(tx_q, tx_q->next_to_use, false);
+ 
+ 		u64_stats_update_begin(&tx_q->stats_sync);
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
+index bdf52cef3891..a6ca2f55b5d5 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
+@@ -2132,6 +2132,19 @@ void idpf_tx_splitq_build_flow_desc(union idpf_tx_flex_desc *desc,
+ 	desc->flow.qw1.compl_tag = cpu_to_le16(params->compl_tag);
+ }
+ 
++/* Global conditions to tell whether the txq (and related resources)
++ * has room to allow the use of "size" descriptors.
++ */
++static int idpf_txq_has_room(struct idpf_tx_queue *tx_q, u32 size)
++{
++	if (IDPF_DESC_UNUSED(tx_q) < size ||
++	    IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
++		IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq) ||
++	    IDPF_TX_BUF_RSV_LOW(tx_q))
++		return 0;
++	return 1;
++}
++
+ /**
+  * idpf_tx_maybe_stop_splitq - 1st level check for Tx splitq stop conditions
+  * @tx_q: the queue to be checked
+@@ -2142,29 +2155,11 @@ void idpf_tx_splitq_build_flow_desc(union idpf_tx_flex_desc *desc,
+ static int idpf_tx_maybe_stop_splitq(struct idpf_tx_queue *tx_q,
+ 				     unsigned int descs_needed)
+ {
+-	if (idpf_tx_maybe_stop_common(tx_q, descs_needed))
+-		goto out;
+-
+-	/* If there are too many outstanding completions expected on the
+-	 * completion queue, stop the TX queue to give the device some time to
+-	 * catch up
+-	 */
+-	if (unlikely(IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
+-		     IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq)))
+-		goto splitq_stop;
+-
+-	/* Also check for available book keeping buffers; if we are low, stop
+-	 * the queue to wait for more completions
+-	 */
+-	if (unlikely(IDPF_TX_BUF_RSV_LOW(tx_q)))
+-		goto splitq_stop;
+-
+-	return 0;
+-
+-splitq_stop:
+-	netif_stop_subqueue(tx_q->netdev, tx_q->idx);
++	if (netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
++				      idpf_txq_has_room(tx_q, descs_needed),
++				      1, 1))
++		return 0;
+ 
+-out:
+ 	u64_stats_update_begin(&tx_q->stats_sync);
+ 	u64_stats_inc(&tx_q->q_stats.q_busy);
+ 	u64_stats_update_end(&tx_q->stats_sync);
+@@ -2190,12 +2185,6 @@ void idpf_tx_buf_hw_update(struct idpf_tx_queue *tx_q, u32 val,
+ 	nq = netdev_get_tx_queue(tx_q->netdev, tx_q->idx);
+ 	tx_q->next_to_use = val;
+ 
+-	if (idpf_tx_maybe_stop_common(tx_q, IDPF_TX_DESC_NEEDED)) {
+-		u64_stats_update_begin(&tx_q->stats_sync);
+-		u64_stats_inc(&tx_q->q_stats.q_busy);
+-		u64_stats_update_end(&tx_q->stats_sync);
+-	}
+-
+ 	/* Force memory writes to complete before letting h/w
+ 	 * know there are new descriptors to fetch.  (Only
+ 	 * applicable for weak-ordered memory model archs,
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.h b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
+index b029f566e57c..c192a6c547dd 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_txrx.h
++++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
+@@ -1037,12 +1037,4 @@ bool idpf_rx_singleq_buf_hw_alloc_all(struct idpf_rx_queue *rxq,
+ 				      u16 cleaned_count);
+ int idpf_tso(struct sk_buff *skb, struct idpf_tx_offload_params *off);
+ 
+-static inline bool idpf_tx_maybe_stop_common(struct idpf_tx_queue *tx_q,
+-					     u32 needed)
+-{
+-	return !netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
+-					  IDPF_DESC_UNUSED(tx_q),
+-					  needed, needed);
+-}
+-
+ #endif /* !_IDPF_TXRX_H_ */
+-- 
+2.49.0.901.g37484f566f-goog
+
