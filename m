@@ -1,48 +1,43 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10C6269899;
-	Mon, 28 Apr 2025 13:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE41C26F466;
+	Mon, 28 Apr 2025 13:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845635; cv=none; b=LFJ90XcuymuZMW3WCnRTy3v/8bod21cbzCiLyKBRHSwdVd5+fqBZK6jj9Jo9yJObPgAiyt9EQ8fOMcd+xCvEkt28LB3TLxq+3n1z33/LoeHZ5NNzBjR5s5IFCF5j4XmIlT8hN2gTXn2AfIBsl7WdJR4P+mg7inpOi5xIGS5T2Mk=
+	t=1745845644; cv=none; b=HY4THS1gmqwVvUrhhmvnfMEstYERPjIYnDAGhtrj36qZnj1kzwglTn/ucKizoEL/XuzByefNkQjKzvQdxVTmSEvnL05tbP310BYaisJal6po3y4HybpMPuel2kBm2w1vWQ9DH0wIMJjtbFHX8kF0UyALglOuTje/2EMfllKKHCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845635; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1745845644; c=relaxed/simple;
+	bh=Ax891Nox1a2xec8/ZkKufmRYmTPkJZe4DC1uvxb1cAg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvDqPtUH4mX3vZvV9TRakmbjsbH9O+WW+uhVA5cd8eqYotUlGuqF9ACgJ0BCtJDdLJ6Zk/7b8TqOnXcNAUWqPqW4z3hQ16fDmmgYMaHlwJBd8FpqAORhxzd5wpuEGbb9k6h5gJvVt/SSh1XSYBlnX88q5ys3Pa+GKX8D1pw/Q3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Hg7jGyN1; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQn5BNJhxGS62Gj42oNmG+JmYMYUACiFemNjaUk0qazCmU6n3eOob6c363t5+EZ74ycFE/E1S9fRhzvCYUqkD6grYSOxX9s59s6UiSR68qKC959F/hpg/HoLaAhYvjUA+W34XsJcXMS2SqhuH/6rAz6RydpEK6sNrdWGl3IxmWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=UHDq3OKX; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hg7jGyN1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=Hg7jGyN11rAgZN+HlHtncHmaHN
-	WZzFeXeL6SUeQsE7XCwHQUft1t3uZQkqN1Ouk64RavKfCyYI9MlwNDEO3THJVlSokCH3TDi26S2Y3
-	IkMiUCUixC26oVXHWVlciszuE1qWPl2lZjVXlT9+vi3Pj6xmcwRecHsPFFeBdB8KbB10Vm9lq4m2b
-	Obgmid5CE3l3DnidTt09EiI5lwO+s56QYeAWOVHfkjPFcw5vUz53WHe/oGy2ZwfuKfNpmbi+jFn9x
-	a0dl6eQOOhH83G9yo1tBK9n6gWEHkaszMJ3AF/s8LkuYWwx6R8chd27I3Zu209FyVz0yYeXQ8KwXL
-	yo7C30xA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9OCT-00000006Mvm-2Cpb;
-	Mon, 28 Apr 2025 13:07:09 +0000
-Date: Mon, 28 Apr 2025 06:07:09 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@infradead.org, axboe@kernel.dk, xni@redhat.com, agk@redhat.com,
-	snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
-	yukuai3@huawei.com, cl@linux.com, nadav.amit@gmail.com,
-	ubizjak@gmail.com, akpm@linux-foundation.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH v2 3/9] block: WARN if bdev inflight counter is negative
-Message-ID: <aA99fd7ErYm64h4h@infradead.org>
-References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
- <20250427082928.131295-4-yukuai1@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UHDq3OKX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=7Qyt7PxI9KUj05U+lBS44OxK0DlxvfZjT7Dm3aqvak0=; b=UHDq3OKXHzpa6ys65nE3S88D0j
+	9eNZR0UCJWMkO4tqTOmrzicJohICgz+9CbP4r8naHbYZleQUaZflFGpOxNhuMdz5InVDGGbskznyu
+	HhR+5fWTYiJjmGOKhLI9frE/Yggri3A19pIw26xZBf63aDkvKvvAx2p53UdxumRZvw7Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u9OCY-00Aq7R-J8; Mon, 28 Apr 2025 15:07:14 +0200
+Date: Mon, 28 Apr 2025 15:07:14 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: mattiasbarthel@gmail.com
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wei.fang@nxp.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mattias Barthel <mattias.barthel@atlascopco.com>
+Subject: Re: [PATCH net] fec: Workaround for ERR007885 on
+ fec_enet_txq_submit_skb()
+Message-ID: <e17a1459-c388-4ad2-b79c-ba158edf340c@lunn.ch>
+References: <20250428114920.3051153-1-mattiasbarthel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,10 +46,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427082928.131295-4-yukuai1@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250428114920.3051153-1-mattiasbarthel@gmail.com>
 
-Looks good:
+On Mon, Apr 28, 2025 at 01:49:20PM +0200, mattiasbarthel@gmail.com wrote:
+> From: Mattias Barthel <mattias.barthel@atlascopco.com>
+> 
+> Activate workaround also in fec_enet_txq_submit_skb()
+> when TSO is not enbabled.
+> 
+> Errata: ERR007885
+> Symptoms: NETDEV WATCHDOG: eth0 (fec): transmit queue 0 timed out
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This is rather brief. I had to look at the reference commit to
+understand what this patch is doing. Ideally the commit message should
+to sufficient on its own. Please consider cut/paste some of the commit
+message from 37d6017b84f7/
+> 
+> Fixes: 53bb20d1faba ("net: fec: add variable reg_desc_active to speed things up")
+> Signed-off-by: Mattias Barthel <mattias.barthel@atlascopco.com>
 
+Please wait at least 24 hours between posts.
+
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+
+    Andrew
+
+---
+pw-bot: cr
