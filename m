@@ -1,90 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C56D155A4E;
-	Tue, 29 Apr 2025 18:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38CD24E4BF
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745950596; cv=none; b=iDQPBpi6fi2DiNohUFiq5SgrugsefhChQSTPUUqqqh5O/ZVx1BOQW1TM6GnCH7+BvmyWFzc3OGtp5hCRGTCqvepALBtO5SrEOeGaX0aMgXS/UBGDToIqIXPmuYNEn4AL4ZwIaXnIhbMJTjtPWhpQrWxE4EEtoY3jxBX+yFV5DsI=
+	t=1745950752; cv=none; b=TDY7o8oJdP8v3qhcoUIUgWeB4zxZeY+Ujac0u61eeRm91dQ1a1NDMAAK4tYb7ZgbnGiS7Lo1JKhD1cPkhFCOmBBT2ZkC3plSl0ARvqo/c+jm+C01+GBVLUHT9w1Yb6QNf7L6ga0/UNRMQgQ44vHLXMd9ggvjx8sifMRpVdqi0gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745950596; c=relaxed/simple;
-	bh=X0uzYo7MqdZcxbZI0RKlEiQj1M9penRmqIMBo+SPXLI=;
+	s=arc-20240116; t=1745950752; c=relaxed/simple;
+	bh=pDtPY5G1bgPWWMsc5mRyVdova/GQU5G1vxe50KbA6tI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eQpkRsABIQj2ByBvAG4ncTCZMpbrvsAsXhSZ8NcPpvS4964Pfo44WEs+S+Y+mxU/thsb9RispMvTXcm2ow5iTFBC+Tf84oLz1+OqWlZk2Eq7TS/EKc2BjF8DryTiA4IRMgJ/UiZQtgDRnrWIWl+7EmblaG9mrUoRnFJsYXQnqX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gjk0uBpd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=re1PFxgIWqw5Z9NXu0Q/didFr9GxVSP3+Q3m6H9ro2DSXzV1LUB8l3jcx8k8kOhPCNl32keWHRatzBjyjeqJeLuzK46DoW+TFkqOP5n4XIc0xYKvdjbH4dX6HpZg4jRPA3G7jrf48GX9naZFyVfu5YHpx6HXr4K1wfbxIlI1+Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=h7Plhp3r; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=p1HLQ60f; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IUrPCMto; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VkGIEqrB; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gjk0uBpd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B8BC4CEE3;
-	Tue, 29 Apr 2025 18:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745950596;
-	bh=X0uzYo7MqdZcxbZI0RKlEiQj1M9penRmqIMBo+SPXLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gjk0uBpd+L5Q98AN6nUI2N0SyZNHKHXkunnqhpGzfKzPoOMrsemnLtdbzXky3Uub5
-	 rjumDY4C5kVW2SS21+lrWOZs9BdmP/cNAePfLSH95RuSjLbPuwlRQKqkliTSQBY2Bq
-	 srgLcEJGZ35fIP23YECJAaRyegwOUPkhiGdgqfzo=
-Date: Tue, 29 Apr 2025 20:14:54 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: hoff.benjamin.k@gmail.com
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: gadget: hid: allow dynamic interval
- configuration via configfs
-Message-ID: <2025042929-activate-easter-77ae@gregkh>
-References: <20250429180128.806780-1-hoff.benjamin.k@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="h7Plhp3r";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="p1HLQ60f";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IUrPCMto";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VkGIEqrB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E6AAA211AC;
+	Tue, 29 Apr 2025 18:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745950749; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nnw5ae/HO1yyHSgwf2xuM2bVdUNSuja2EqHtH5v8DhM=;
+	b=h7Plhp3r7VEPw6qUeGtTJklvC/POKMbNrDkeZedgLFtzUkJ1Ded7Ip+43vJ2ZyI5u1R9Qw
+	UtFhvynUDMGvO65azn4xG+hNFitvKBFGGvVQPyytcXjWbyrVERRa6r+sI6x2/FhpTaWPET
+	9xVPu9/ELCoLB+NHnXXp3dzrHydevoA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745950749;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nnw5ae/HO1yyHSgwf2xuM2bVdUNSuja2EqHtH5v8DhM=;
+	b=p1HLQ60fdTGtKNNGq+qpfns/cSkk4CdfHNtoiYO2mQOybFRPlc7z7KwI2mhPF6Y3ZSzoj8
+	5huTUUe/Re7yLpBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745950748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nnw5ae/HO1yyHSgwf2xuM2bVdUNSuja2EqHtH5v8DhM=;
+	b=IUrPCMtoHh2NyKtRxU15vuKNfnHQQKXyCeRHhnI6zVAks/kpX7pjztEnEQfjB4+BzkyE5p
+	ZFzNeWnbd7rj9gIWVZ2P+ZEiGWhRj1Vh1WWTyqbis7RRYEZ2F71jCzhYvxa5EXqB2sV+gv
+	AI8Aqp2kU2KnR07NAfKTwD2uYSM0U9I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745950748;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nnw5ae/HO1yyHSgwf2xuM2bVdUNSuja2EqHtH5v8DhM=;
+	b=VkGIEqrBjSI19CoPXKnO+RmdS7IMwT76ohiXaL8sFvYenXxau1RWLepRDEh4pp0BSFdcyd
+	JFLmJcUmNx/YKuAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB67D13931;
+	Tue, 29 Apr 2025 18:19:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4xd0LRwYEWgbPQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 29 Apr 2025 18:19:08 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id BD7ACA0AF0; Tue, 29 Apr 2025 20:19:03 +0200 (CEST)
+Date: Tue, 29 Apr 2025 20:19:03 +0200
+From: Jan Kara <jack@suse.cz>
+To: Joe Damato <jdamato@fastly.com>
+Cc: linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, 
+	Mike Pagano <mpagano@gentoo.org>, Carlos Llamas <cmllamas@google.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH vfs.fixes] eventpoll: Prevent hang in epoll_wait
+Message-ID: <a5t4wx72g3mnyz6h7ko5joairx6zjycdt5jkfdfgmvbrfwhlus@jtsewowpwsxd>
+References: <20250429153419.94723-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429180128.806780-1-hoff.benjamin.k@gmail.com>
+In-Reply-To: <20250429153419.94723-1-jdamato@fastly.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-On Tue, Apr 29, 2025 at 02:01:28PM -0400, hoff.benjamin.k@gmail.com wrote:
-> From: Ben Hoff <hoff.benjamin.k@gmail.com>
+On Tue 29-04-25 15:34:19, Joe Damato wrote:
+> In commit 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the
+> future"), a bug was introduced causing the loop in ep_poll to hang under
+> certain circumstances.
 > 
-> This patch enhances the HID gadget driver to support dynamic configuration
-> of the interrupt polling interval (bInterval) via configfs.  A new
-> ‘interval’ attribute is exposed under each HID function’s configfs
-> directory, and any write to it will adjust the poll rate for all endpoints
-> without requiring a rebuild.
+> When the timeout is non-NULL and ep_schedule_timeout returns false, the
+> flag timed_out was not set to true. This causes a hang.
 > 
-> When the attribute has never been written, legacy defaults are preserved:
->   • Full-Speed (FS) endpoints (IN & OUT) poll every 10 ms
->   • High-Speed (HS) endpoints (IN & OUT) poll every 4 micro-frames
->     (~1 ms)
+> Adjust the logic and set timed_out, if needed, fixing the original code.
 > 
-> To implement this cleanly:
->   • Add two new fields to f_hid_opts and f_hidg:
->       – unsigned char interval
->       – bool           interval_user_set
->   • Introduce dedicated f_hid_opts_interval_show/store functions.
->     The store routine parses into an unsigned int, bounds‐checks against
->     UCHAR_MAX, assigns to opts->interval, and sets
->     opts->interval_user_set = true.
->   • Remove the string-compare hack from the generic F_HID_OPT macro.
->   • Initialize opts->interval = 4 and opts->interval_user_set = false in
->     hidg_alloc_inst(), then copy both into the live f_hidg instance in
->     hidg_alloc().
->   • In hidg_bind(), set each endpoint’s bInterval based on whether the
->   user has written the attribute:
->       – If interval_user_set == false, use FS=10 / HS=4
->       – If interval_user_set == true, use the user’s value for both FS
->         & HS
->   • Add <limits.h> to support UCHAR_MAX in the store helper.
+> Reported-by: Christian Brauner <brauner@kernel.org>
+> Closes: https://lore.kernel.org/linux-fsdevel/20250426-haben-redeverbot-0b58878ac722@brauner/
+> Reported-by: Mike Pagano <mpagano@gentoo.org>
+> Closes: https://bugs.gentoo.org/954806
+> Reported-by: Carlos Llamas <cmllamas@google.com>
+> Closes: https://lore.kernel.org/linux-fsdevel/aBAB_4gQ6O_haAjp@google.com/
+> Fixes: 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the future")
+> Tested-by: Carlos Llamas <cmllamas@google.com>
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/eventpoll.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Changes since v1:
->   - Added dedicated interval_show/store helpers instead of macro hack.
->   - Restored original default values (FS=10 ms, HS=4 µ-frame) for both
->     IN and OUT when unset.
-
-The "changes" stuff goes below the --- line as per the documentation, as
-that's not needed in the changelog.
-
-Send a v3?
-
-thanks,
-
-greg k-h
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 4bc264b854c4..1a5d1147f082 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -2111,7 +2111,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+>  
+>  		write_unlock_irq(&ep->lock);
+>  
+> -		if (!eavail && ep_schedule_timeout(to))
+> +		if (!ep_schedule_timeout(to))
+> +			timed_out = 1;
+> +		else if (!eavail)
+>  			timed_out = !schedule_hrtimeout_range(to, slack,
+>  							      HRTIMER_MODE_ABS);
+>  		__set_current_state(TASK_RUNNING);
+> 
+> base-commit: f520bed25d17bb31c2d2d72b0a785b593a4e3179
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
