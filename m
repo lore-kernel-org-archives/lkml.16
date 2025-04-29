@@ -1,140 +1,124 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1791F8ADB;
-	Tue, 29 Apr 2025 09:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0642BE0EC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919002; cv=none; b=cKbHBPULQ/pvBDsh7ogvjgrIngjeSRmQy9oroYX1D/wOs+gAFGYoqkuPdejYOVvcASVPSy28qNkugACNe/pAECvczIfZCxmpPhdvMaR1kjF6x/4fOaxqDFPS0Eb1Gz1M3SIdze+TIJyQr+1jVPap9KR75W3//FikYZmOklbOV3k=
+	t=1745919042; cv=none; b=T32MYoxhkVTdt+tefTe7y6tQN/akDqEjaDtewMzHYKamLp44sOv4hG7VLbUQ0VcAeMz3q6xd2i7IJ0carf9/6XxBXZDhTsRnws+/agI+VkEmNHX3OOdFBy5fMh3ZXqWidFmQv7rstbgUltBRya5rX18wQdx3FUAe7o/3HSYSM9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919002; c=relaxed/simple;
-	bh=rV3fNVF+RKVHDBR8b7t97VqNHhu8U4tlBBKQxYXBgaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sZPRkqzugZ3sKaM/mbbaH1hLKym243Am/NDONrrnQiajDtSd0imiNW7dSOvnGLZhDGppmyEZX/Pdx3i3T9aSWya9cZIHLmvzdAWyNVDL6ky5CfphlACqn2nW7EKIWbDFs5FE4dryH59WQLkPySrZvoNYVlgF1GaHa4a82vOBHfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TLL21DKP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745919042; c=relaxed/simple;
+	bh=hXonJzExV6f/cYOmpVW4RG/5EKao+OkAqFLmiQh/hcM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZZQO4/EaASibd2bYCmZloBIZI8Si6Th8lRbpnsfJOdlL+uK+NlpK6xMHYpqXp9bHlit4zSG+HR4+LkkesDuZ4YUALaGZLZYI9dErFm08ilal4mA/nPH+9IjVvIkz/l2M/JLZc3RAhWp22a5u/Y97kQFWrt3v2eiDCNggisCzk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzLecNAs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TLL21DKP"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq4xJ006066;
-	Tue, 29 Apr 2025 09:29:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tKsxwwTwrcojaoVm46oV1mFUk1zTWS6GX8b+TdqJTmM=; b=TLL21DKP6f/RsQhI
-	9NSR6PH61MsqA2gz06smFXA1K/2H1+NqZRiVi3e27OpS4IL6UnzUvHVBgbROWBvj
-	q1yczdjk8iHEa9r5Ic0u0UQeGXhDBrM87wYJdtClAKTTRcF2up+Np/oxjlbj+qRM
-	NrN/wo/1GyfCynCWchG6qy9wxzZjPLdI0q56lGRnDkPjGD19cHY3hMSr2vmS+x4Q
-	Jg+T7zNdXrjdnvUi6D1GizlOxxDF3zeJPNBVVJ2cyg3loQTc0gAB/I7IbAudj87S
-	u8mx8SIEE2/4v7U8P705fiZmO/zOeAduw/zggXMgWkZ/GgIOOO9FSe7Ffak1PShm
-	fwMksQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468ptmm0tu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 09:29:54 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T9TrtC020860
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 09:29:53 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 02:29:48 -0700
-Message-ID: <a8d49fc0-ade3-6793-d7b6-aa16a7501f31@quicinc.com>
-Date: Tue, 29 Apr 2025 14:59:45 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzLecNAs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745919038;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aKFEHdgHcLwRfGZHvxEjeWO9rZ2vSungJ+/BDNwcd7k=;
+	b=hzLecNAsInqcDTm4hEwQkwkh2u4bak60DKiQNVjmHwaoiFBURZM4qDrInNKmzqzQ0l6xeW
+	6BgxRdjcK3w/YXkWJyvrE1N8AO0aMjIzAVLxEaGnqPs3gniA2ob0shuFD6eru12oKzZ10S
+	pBCmpvW8ITCSDq+SARo+qDNXUelYhxs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-127-YIwONv6sMfOyPAo2Ar94zQ-1; Tue, 29 Apr 2025 05:30:36 -0400
+X-MC-Unique: YIwONv6sMfOyPAo2Ar94zQ-1
+X-Mimecast-MFC-AGG-ID: YIwONv6sMfOyPAo2Ar94zQ_1745919036
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5c1bb6a23so1397158a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:30:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745919036; x=1746523836;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aKFEHdgHcLwRfGZHvxEjeWO9rZ2vSungJ+/BDNwcd7k=;
+        b=R73vGagNb6JeToRp0x9j2ax3NTXB6NTPL3M7Oi88cczo1i6bRrKtvCZTS59sGSxGws
+         hcr2NXLjh9d+yn+XQwP3p97K6bLcpIsr41cPpotqb4YaFZ1aVbc5syDhXegmUwt+u9Nk
+         EgGyYf7GnXvwwPlT7isaiXrwrvM6k1cCpS4+ylBJJUFp6XgteCju0LE3ngyMQh/NN6h/
+         Z9353ByOIZjf+U2uafTjCqkEUiPvli605ZKibe1UbiyQcAPYIZchq+X/B2FYyG3onBwB
+         wWc+QSnFkOe1HISWzgAahv80McsUSpzbdfWyBujFvzkgEZFmQh6CGpOTOqw22rWGKWff
+         cbTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXybSVHd8uP56NcrNmuRoW2661lx3yygquTgjswB+UKIpgj+KJvTqTGgHQDEP1blXYfGtvZthxMSMJxEfI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZs/se/jyieOlKyBM0R0gqD0Z76fHwBYHUxW/lrzrPzDbhAPZs
+	W3zjRe6Y2oAl48f2IDjwOAxP0C32+PTPoJQrngeTZElDmJeH1/XcydiBxisqzwq3o7RkgNRFEay
+	RqImSx/mROjrVSqJZHdvWrXdOKgqLu8IDu9UMGbX5RYs+IyMww8SwuvzKimNl2w==
+X-Gm-Gg: ASbGncv4SPWnXnXOilcJcFeygUdCl66L2ZIK4qgcogpcxKVFtU56QpzlZTC2N8C3fQ4
+	Oe4XebWTMxc5NZxtZyxP2x0kk4SkwVa6wIBv4bnRqpL2c05GztCfmAOweF3SqYC0LxV7JYqANyX
+	HMd2+Pqjk+zBt6yyxeqzidXzpGHWsjr+xW2Pe/Z+ZJMIzkr7seW3VMR87riM6x4M4gAK6xqqvCB
+	7raCBf7Uskm4G0LNb5jQTdbfHD1k5HaR6m/HLzyYTHRGkow+SLr8/IAbr23y0W1+wjb+oJOChJC
+	bAhmRK9yzSx1B3KqkUUTVvwWdHSkcjpRwHfULsn5q8u4sX4sKrDSvcVfuu8=
+X-Received: by 2002:a05:6402:1e94:b0:5f4:c7b5:fd16 with SMTP id 4fb4d7f45d1cf-5f839224a59mr1942335a12.6.1745919035695;
+        Tue, 29 Apr 2025 02:30:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFS2Aal7Wz+dVWPGKPbDkIqlChFVLqNPD6xjJGGYetpQ28hV8efTZJRlGmop13TtQQ6QsChxw==
+X-Received: by 2002:a05:6402:1e94:b0:5f4:c7b5:fd16 with SMTP id 4fb4d7f45d1cf-5f839224a59mr1942313a12.6.1745919035327;
+        Tue, 29 Apr 2025 02:30:35 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897? ([2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5db6sm7332402a12.44.2025.04.29.02.30.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 02:30:34 -0700 (PDT)
+Message-ID: <60643797-2466-4200-9abe-9956bfdeaa73@redhat.com>
+Date: Tue, 29 Apr 2025 11:30:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 02/23] media: iris: Update CAPTURE format info based on
- OUTPUT format
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 07/13] net: pse-pd: Add support for budget
+ evaluation strategies
+To: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Donald Hunter <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>,
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
+ Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
+ <20250422-feature_poe_port_prio-v9-7-417fc007572d@bootlin.com>
 Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-2-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-2-3a6013ecb8a5@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250422-feature_poe_port_prio-v9-7-417fc007572d@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tpEl32C9Lv8nZezt8AZHUiLbOgiMehD2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3MCBTYWx0ZWRfX4yhIkF4+a6D1 q8yfd+9+doEEJ2Lj2R0J33/+8Qdte224VNI4uzpF8Ow8yBQIy9GC/ol1o9/LPFOxDrmbsbkqcN0 1zIaC/HCVfk4IJHYdKSwZvSQDa13SFh0E0y5da4pHtn3rMAr0xG3TMqQdhDzpSYMEyyQm3myGNg
- YMEXPsRggQyR2Lsy9PPailKTo8u1BgCLR5jhR3QybOIM41FjnUBiehfw7U0iku+zrekWBBmBArz yi8hJQy7IMQ/MIa6o4BXmDXnPvqA3XM/vHd8+fUNNw4Z04NbQM0Ldma4o+0+X/kCiyYECRh7vQA RlORiw0tqTNJU9I+6M8lf4UaYgKH6Zd8hGfNSuER6ovpnBonBbE5132cxNJAjmQH6Lw26i0UF8O
- EU3eLnqODtSoZuGIeeGlBU8tpti0LRvxKc6ZER100p2Tllw9jxznyYx386jJNPA9IRR/QFo8
-X-Proofpoint-GUID: tpEl32C9Lv8nZezt8AZHUiLbOgiMehD2
-X-Authority-Analysis: v=2.4 cv=DKWP4zNb c=1 sm=1 tr=0 ts=68109c13 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=tp3-aCPLWCMtretvahIA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0
- phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290070
 
+On 4/22/25 4:56 PM, Kory Maincent wrote:
+> @@ -223,6 +237,17 @@ struct pse_pi_pairset {
+>   * @rdev: regulator represented by the PSE PI
+>   * @admin_state_enabled: PI enabled state
+>   * @pw_d: Power domain of the PSE PI
+> + * @prio: Priority of the PSE PI. Used in static budget evaluation strategy
+> + * @isr_pd_detected: PSE PI detection status managed by the interruption
+> + *		     handler. This variable is relevant when the power enabled
+> + *		     management is managed in software like the static
+> + *		     budget evaluation strategy.
+> + * @pw_allocated_mW: Power allocated to a PSE PI to manage power budget in
+> + *		     static budget evaluation strategy.
+> + * @_isr_counter_mismatch: Internal flag used in PSE core in case of a
+> + *			   counter mismatch between regulator and PSE API.
+> + *			   This is caused by a disable call in the interrupt
+> + *			   context handler.
 
+The name itself of this field is somewhat concerning, and I don't see it
+set to any nonzero value here or in later patches.
 
-On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
-> Update the width, height and buffer size of CAPTURE based on the
-> resolution set to OUTPUT via VIDIOC_S_FMT. This is required to set the
-> updated capture resolution to firmware when S_FMT is called only for
-> OUTPUT.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: b530b95de22c ("media: iris: implement s_fmt, g_fmt and try_fmt ioctls")
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/iris/iris_vdec.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
-> index 2c1a7162d2da..71751365b000 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
-> @@ -171,6 +171,11 @@ int iris_vdec_s_fmt(struct iris_inst *inst, struct v4l2_format *f)
->  		output_fmt->fmt.pix_mp.ycbcr_enc = f->fmt.pix_mp.ycbcr_enc;
->  		output_fmt->fmt.pix_mp.quantization = f->fmt.pix_mp.quantization;
->  
-> +		/* Update capture format based on new ip w/h */
-> +		output_fmt->fmt.pix_mp.width = ALIGN(f->fmt.pix_mp.width, 128);
-> +		output_fmt->fmt.pix_mp.height = ALIGN(f->fmt.pix_mp.height, 32);
-> +		inst->buffers[BUF_OUTPUT].size = iris_get_buffer_size(inst, BUF_OUTPUT);
-> +
->  		inst->crop.left = 0;
->  		inst->crop.top = 0;
->  		inst->crop.width = f->fmt.pix_mp.width;
-> 
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Possibly it should be removed entirely???
+
+/P
+
