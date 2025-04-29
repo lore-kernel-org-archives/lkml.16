@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCBE3987D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:34:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E248C1494C3
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745886854; cv=none; b=Mu2UAzF6F6unuMAI4fTLI0fYMqs97ev6MzSDOs8X20lwldlQKZeM9pO+ogiEseNJIOVlmWh3mZcIDGgxrq/66g01ELqJANzYFIZQ7tKh+HeJZhzNqQOoaj8ujdt3vqWLUquaHFmVw56yyWjRcSRSVhv4VY6U+dLD/n8tGBCfW5w=
+	t=1745886855; cv=none; b=s+3hDriVkZD1N1qs+62moLGls6StH5qD3KXmp665nYnWApb8G4/JFftthJb9n0i4pFyPDqp1vz0WRUMgi3ZkIs0qoxler3czZhh1DIxsRRSSkYkq5nBr9k3JXu0MaxgZulMdGqnhgUIVoekG1PwyFz8l8c3aKeMxeJkpvCRwHwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745886854; c=relaxed/simple;
-	bh=wBb9GwKHIUYlO1CDbQXU4jruUv6TDbNAHBV1Nlfa4UE=;
+	s=arc-20240116; t=1745886855; c=relaxed/simple;
+	bh=DXuP7E9E2VzfYvHSOVvcEpbDHa6++ujfagg1yqnmz3E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ft6BF8i6ySdpnmoYreanu9ONoBH7fHwliNQ0Kv4fTTSyDxnHacKB9quhkEGOFStzeWRKH7IQ890KqTihAHkdrGmYQQs+QDqSeLk0rkodQQnxBy7QcWpmhxOg3K+lM2Lnye/9aIatLrpk2BBT4VFMlDRShl3vOglDGAIOE7TI/VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CbwXZE7v; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=jepwud+v1b0TVPXO66P5mTmb6sXWdikcOmkXJhmCA7+BxwkBZdwQB+r/CNKvkwOm/oxsllsCdsWtyhrkPa7A4FmAAHbrRgTvBzpwU4o7PITRaIF0S4ZF001+GH/n/+TJb7ej8p4trGcd8ZbzfcTB23rsL9fg+2PAJXGgKOcI2BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l86WYI7z; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CbwXZE7v"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l86WYI7z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745886853; x=1777422853;
+  t=1745886854; x=1777422854;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wBb9GwKHIUYlO1CDbQXU4jruUv6TDbNAHBV1Nlfa4UE=;
-  b=CbwXZE7vOtgoGUCqVRCHZa9Yp11/QID+XexcsjrbI7t5qGW2Wy3oyfMc
-   Rrd4uw5YhpdjeAkLxgC6IWCgRuzKu6/XuGRURCAInLwcOzsaOXWXT44KK
-   4N2qWGkkWMYeS2piFw6gCnYCMmuUFj3turEd9M1NLPorjyd8+aE0vkgr+
-   bmUINX7Co9rvW3eZm30/4+UW3PaRGtTyNhE+GSRx+IRkeZsS5d/nO5Hs2
-   pnb1dKJwrjnU4G4KQUFulpTzePoG0b3cfruZUZtSEO3+xF/U4+MmDvlkC
-   laqlJ2gHefX7UAXyP0hWXrA7RfXgrsoNnD4cGHTLHKE0dNvY4ypAD8wCo
+  bh=DXuP7E9E2VzfYvHSOVvcEpbDHa6++ujfagg1yqnmz3E=;
+  b=l86WYI7zil8aAd/HLV0LwS6qKPwkuI/jS89dy0dHI096KsTpmD67xucM
+   hhULVhwBFwr3Z8CRc9CiVniijwzxSV0nXV/esHDSqe+Leq8AvTR3M18OB
+   K1werTx8Fwd681h2H+MlCxnf8nj96A7ySYuOLWlXBBYaMJVVBdI/ZnaBv
+   d4HT4c5NyD24hx/4hrVUbb0z1quUXLGtQbE2YcEhpjqzNZGTO13MunMzl
+   L3gwE899L9WE4P8QOASupdTEK9Ps187Uz05Zv5qEF1nutZhXag3Tz6scZ
+   ozNFk9i9+P+VbOM/9+MRG1ed8lSx3KWCro0F9lbwgUdJaNNJLHXDaWhSF
    Q==;
-X-CSE-ConnectionGUID: NX//nJXtTUqjvRVasspxSg==
-X-CSE-MsgGUID: TSyuiP7wRCKGXu7LOsmRXg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58148084"
+X-CSE-ConnectionGUID: OS3OrHdiTUW2MJxfFkkNpw==
+X-CSE-MsgGUID: 8AobsLB1RKKuhKagAaHI4g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58148106"
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="58148084"
+   d="scan'208";a="58148106"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:34:10 -0700
-X-CSE-ConnectionGUID: 24uJGXMNT/KJ2ZOnrrWqFg==
-X-CSE-MsgGUID: 9dxU1AMqRm2CpbClZVMBDw==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:34:11 -0700
+X-CSE-ConnectionGUID: g2/CXFh+S/e4IzNkvsvsog==
+X-CSE-MsgGUID: 9Dfxd0bVTdSVw4ic/XwhvQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="133393970"
+   d="scan'208";a="133393981"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:34:09 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:34:11 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -58,9 +58,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v4 06/31] x86/rectrl: Fake OOBMSM interface
-Date: Mon, 28 Apr 2025 17:33:32 -0700
-Message-ID: <20250429003359.375508-7-tony.luck@intel.com>
+Subject: [PATCH v4 08/31] x86/resctrl: Move L3 initialization out of domain_add_cpu_mon()
+Date: Mon, 28 Apr 2025 17:33:34 -0700
+Message-ID: <20250429003359.375508-9-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250429003359.375508-1-tony.luck@intel.com>
 References: <20250429003359.375508-1-tony.luck@intel.com>
@@ -72,214 +72,212 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Real version is coming soon ... this is here so the remaining parts
-will build (and run ... assuming a 2 socket system that supports RDT
-monitoring ... only missing part is that the event counters just
-report fixed values).
+To prepare for additional types of monitoring domains, move all the
+L3 specific initialization into a helper function.
 
-Just for ease of testing and RFC discussion.
+Rename several functions to mark that they are specific to the L3 path.
+
+arch_mon_domain_online	-> arch_l3_mon_domain_online
+mon_domain_free		-> free_l3_mon_domain
+arch_mon_domain_online	-> arch_l3_mon_domain_online
+domain_setup_mon_state	-> domain_setup_l3_mon_state
+
+resctrl_online_mon_domain() is going to share some code with new
+reources, so keeps the same name, but include a check for
+RDT_RESOURCE_L3.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- .../cpu/resctrl/fake_intel_aet_features.h     | 73 ++++++++++++++
- .../cpu/resctrl/fake_intel_aet_features.c     | 95 +++++++++++++++++++
- arch/x86/kernel/cpu/resctrl/Makefile          |  1 +
- 3 files changed, 169 insertions(+)
- create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
- create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
+ arch/x86/kernel/cpu/resctrl/internal.h |  2 +-
+ arch/x86/kernel/cpu/resctrl/core.c     | 69 +++++++++++++++-----------
+ arch/x86/kernel/cpu/resctrl/monitor.c  |  2 +-
+ fs/resctrl/rdtgroup.c                  | 11 ++--
+ 4 files changed, 50 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
-new file mode 100644
-index 000000000000..c835c4108abc
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Bits stolen from OOBMSM VSEC discovery code */
-+
-+enum pmt_feature_id {
-+	FEATURE_INVALID			= 0x0,
-+	FEATURE_PER_CORE_PERF_TELEM	= 0x1,
-+	FEATURE_PER_CORE_ENV_TELEM	= 0x2,
-+	FEATURE_PER_RMID_PERF_TELEM	= 0x3,
-+	FEATURE_ACCEL_TELEM		= 0x4,
-+	FEATURE_UNCORE_TELEM		= 0x5,
-+	FEATURE_CRASH_LOG		= 0x6,
-+	FEATURE_PETE_LOG		= 0x7,
-+	FEATURE_TPMI_CTRL		= 0x8,
-+	FEATURE_RESERVED		= 0x9,
-+	FEATURE_TRACING			= 0xA,
-+	FEATURE_PER_RMID_ENERGY_TELEM	= 0xB,
-+	FEATURE_MAX			= 0xB,
-+};
-+
-+/**
-+ * struct oobmsm_plat_info - Platform information for a device instance
-+ * @cdie_mask:       Mask of all compute dies in the partition
-+ * @package_id:      CPU Package id
-+ * @partition:       Package partition id when multiple VSEC PCI devices per package
-+ * @segment:         PCI segment ID
-+ * @bus_number:      PCI bus number
-+ * @device_number:   PCI device number
-+ * @function_number: PCI function number
-+ *
-+ * Structure to store platform data for a OOBMSM device instance.
-+ */
-+struct oobmsm_plat_info {
-+	u16 cdie_mask;
-+	u8 package_id;
-+	u8 partition;
-+	u8 segment;
-+	u8 bus_number;
-+	u8 device_number;
-+	u8 function_number;
-+};
-+
-+enum oobmsm_supplier_type {
-+	OOBMSM_SUP_PLAT_INFO,
-+	OOBMSM_SUP_DISC_INFO,
-+	OOBMSM_SUP_S3M_SIMICS,
-+	OOBMSM_SUP_TYPE_MAX
-+};
-+
-+struct oobmsm_mapping_supplier {
-+	struct device *supplier_dev[OOBMSM_SUP_TYPE_MAX];
-+	struct oobmsm_plat_info plat_info;
-+	unsigned long features;
-+};
-+
-+struct telemetry_region {
-+	struct oobmsm_plat_info	plat_info;
-+	void __iomem		*addr;
-+	size_t			size;
-+	u32			guid;
-+	u32			num_rmids;
-+};
-+
-+struct pmt_feature_group {
-+	enum pmt_feature_id	id;
-+	int			count;
-+	struct kref		kref;
-+	struct telemetry_region	regions[];
-+};
-+
-+struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
-+
-+void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
-diff --git a/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
-new file mode 100644
-index 000000000000..22b7c02a538c
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/cleanup.h>
-+#include <linux/minmax.h>
-+#include <linux/slab.h>
-+#include "fake_intel_aet_features.h"
-+#include <linux/intel_vsec.h>
-+#include <linux/resctrl.h>
-+
-+#include "internal.h"
-+
-+/*
-+ * Amount of memory for each fake MMIO space
-+ * Magic numbers here match values for XML ID 0x26696143 and 0x26557651
-+ * 576: Number of RMIDs
-+ * 2: Energy events in 0x26557651
-+ * 7: Perf events in 0x26696143
-+ * 3: Qwords for status counters after the event counters
-+ * 8: Bytes for each counter
-+ */
-+
-+#define ENERGY_QWORDS	((576 * 2) + 3)
-+#define ENERGY_SIZE	(ENERGY_QWORDS * 8)
-+#define PERF_QWORDS	((576 * 7) + 3)
-+#define PERF_SIZE	(PERF_QWORDS * 8)
-+
-+static long pg[4 * ENERGY_QWORDS + 2 * PERF_QWORDS];
-+
-+/*
-+ * Fill the fake MMIO space with all different values,
-+ * all with BIT(63) set to indicate valid entries.
-+ */
-+static int __init fill(void)
-+{
-+	u64 val = 0;
-+
-+	for (int i = 0; i < sizeof(pg); i += sizeof(val)) {
-+		pg[i / sizeof(val)] = BIT_ULL(63) + val;
-+		val++;
-+	}
-+	return 0;
-+}
-+device_initcall(fill);
-+
-+#define PKG_REGION(_entry, _guid, _addr, _size, _pkg, _num_rmids)	\
-+	[_entry] = { .guid = _guid, .addr = (void __iomem *)_addr, \
-+		     .num_rmids = _num_rmids, \
-+		     .size = _size, .plat_info = { .package_id = _pkg }}
-+
-+/*
-+ * Set up a fake return for call to:
-+ *   intel_pmt_get_regions_by_feature(FEATURE_PER_RMID_ENERGY_TELEM);
-+ * Pretend there are two aggregators on each of the sockets to test
-+ * the code that sums over multiple aggregators.
-+ */
-+static struct pmt_feature_group fake_energy = {
-+	.count = 4,
-+	.regions = {
-+		PKG_REGION(0, 0x26696143, &pg[0 * ENERGY_QWORDS], ENERGY_SIZE, 0, 64),
-+		PKG_REGION(1, 0x26696143, &pg[1 * ENERGY_QWORDS], ENERGY_SIZE, 0, 64),
-+		PKG_REGION(2, 0x26696143, &pg[2 * ENERGY_QWORDS], ENERGY_SIZE, 1, 64),
-+		PKG_REGION(3, 0x26696143, &pg[3 * ENERGY_QWORDS], ENERGY_SIZE, 1, 64)
-+	}
-+};
-+
-+/*
-+ * Fake return for:
-+ *   intel_pmt_get_regions_by_feature(FEATURE_PER_RMID_PERF_TELEM);
-+ */
-+static struct pmt_feature_group fake_perf = {
-+	.count = 2,
-+	.regions = {
-+		PKG_REGION(0, 0x26557651, &pg[4 * ENERGY_QWORDS + 0 * PERF_QWORDS], PERF_SIZE, 0, 576),
-+		PKG_REGION(1, 0x26557651, &pg[4 * ENERGY_QWORDS + 1 * PERF_QWORDS], PERF_SIZE, 1, 576)
-+	}
-+};
-+
-+struct pmt_feature_group *
-+intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-+{
-+	switch (id) {
-+	case FEATURE_PER_RMID_ENERGY_TELEM:
-+		return &fake_energy;
-+	case FEATURE_PER_RMID_PERF_TELEM:
-+		return &fake_perf;
-+	default:
-+		return ERR_PTR(-ENOENT);
-+	}
-+}
-+
-+/*
-+ * Nothing needed for the "put" function.
-+ */
-+void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
-+{
-+}
-diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
-index d8a04b195da2..28ae1c88b2ac 100644
---- a/arch/x86/kernel/cpu/resctrl/Makefile
-+++ b/arch/x86/kernel/cpu/resctrl/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= core.o rdtgroup.o monitor.o
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= ctrlmondata.o
-+obj-$(CONFIG_INTEL_AET_RESCTRL)		+= fake_intel_aet_features.o
- obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 02b535c828f3..b563406b4996 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -122,7 +122,7 @@ static inline struct rdt_hw_resource *resctrl_to_arch_res(struct rdt_resource *r
  
- # To allow define_trace.h's recursive include:
+ extern struct rdt_hw_resource rdt_resources_all[];
+ 
+-void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d);
++void arch_l3_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d);
+ 
+ /* CPUID.(EAX=10H, ECX=ResID=1).EAX */
+ union cpuid_0x10_1_eax {
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index bdd4d08a3912..d48cdc85a86d 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -362,7 +362,7 @@ static void ctrl_domain_free(struct rdt_hw_ctrl_domain *hw_dom)
+ 	kfree(hw_dom);
+ }
+ 
+-static void mon_domain_free(struct rdt_hw_mon_domain *hw_dom)
++static void free_l3_mon_domain(struct rdt_hw_mon_domain *hw_dom)
+ {
+ 	for (int i = 0; i < QOS_NUM_MBM_EVENTS; i++)
+ 		kfree(hw_dom->arch_mbm_states[i]);
+@@ -493,33 +493,12 @@ static void domain_add_cpu_ctrl(int cpu, struct rdt_resource *r)
+ 	}
+ }
+ 
+-static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
++static void setup_l3_mon_domain(int cpu, int id, struct rdt_resource *r, struct list_head *add_pos)
+ {
+-	int id = get_domain_id_from_scope(cpu, r->mon_scope);
+-	struct list_head *add_pos = NULL;
+ 	struct rdt_hw_mon_domain *hw_dom;
+-	struct rdt_domain_hdr *hdr;
+ 	struct rdt_mon_domain *d;
+ 	int err;
+ 
+-	lockdep_assert_held(&domain_list_lock);
+-
+-	if (id < 0) {
+-		pr_warn_once("Can't find monitor domain id for CPU:%d scope:%d for resource %s\n",
+-			     cpu, r->mon_scope, r->name);
+-		return;
+-	}
+-
+-	hdr = resctrl_find_domain(&r->mon_domains, id, &add_pos);
+-	if (hdr) {
+-		if (check_domain_header(hdr, RESCTRL_MON_DOMAIN, r->rid))
+-			return;
+-		d = container_of(hdr, struct rdt_mon_domain, hdr);
+-
+-		cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
+-		return;
+-	}
+-
+ 	hw_dom = kzalloc_node(sizeof(*hw_dom), GFP_KERNEL, cpu_to_node(cpu));
+ 	if (!hw_dom)
+ 		return;
+@@ -531,15 +510,15 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+ 	d->ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
+ 	if (!d->ci) {
+ 		pr_warn_once("Can't find L3 cache for CPU:%d resource %s\n", cpu, r->name);
+-		mon_domain_free(hw_dom);
++		free_l3_mon_domain(hw_dom);
+ 		return;
+ 	}
+ 	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
+ 
+-	arch_mon_domain_online(r, d);
++	arch_l3_mon_domain_online(r, d);
+ 
+ 	if (arch_domain_mbm_alloc(r->num_rmid, hw_dom)) {
+-		mon_domain_free(hw_dom);
++		free_l3_mon_domain(hw_dom);
+ 		return;
+ 	}
+ 
+@@ -549,7 +528,41 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+ 	if (err) {
+ 		list_del_rcu(&d->hdr.list);
+ 		synchronize_rcu();
+-		mon_domain_free(hw_dom);
++		free_l3_mon_domain(hw_dom);
++	}
++}
++
++static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
++{
++	int id = get_domain_id_from_scope(cpu, r->mon_scope);
++	struct list_head *add_pos = NULL;
++	struct rdt_domain_hdr *hdr;
++	struct rdt_mon_domain *d;
++
++	lockdep_assert_held(&domain_list_lock);
++
++	if (id < 0) {
++		pr_warn_once("Can't find monitor domain id for CPU:%d scope:%d for resource %s\n",
++			     cpu, r->mon_scope, r->name);
++		return;
++	}
++
++	hdr = resctrl_find_domain(&r->mon_domains, id, &add_pos);
++	if (hdr) {
++		if (check_domain_header(hdr, RESCTRL_MON_DOMAIN, r->rid))
++			return;
++		d = container_of(hdr, struct rdt_mon_domain, hdr);
++
++		cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
++		return;
++	}
++
++	switch (r->rid) {
++	case RDT_RESOURCE_L3:
++		setup_l3_mon_domain(cpu, id, r, add_pos);
++		break;
++	default:
++		WARN_ON_ONCE(1);
+ 	}
+ }
+ 
+@@ -640,7 +653,7 @@ static void domain_remove_cpu_mon(int cpu, struct rdt_resource *r)
+ 		resctrl_offline_mon_domain(r, d);
+ 		list_del_rcu(&d->hdr.list);
+ 		synchronize_rcu();
+-		mon_domain_free(hw_dom);
++		free_l3_mon_domain(hw_dom);
+ 
+ 		return;
+ 	}
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index bf7fde07846b..d1f659dd6109 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -271,7 +271,7 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+  * must adjust RMID counter numbers based on SNC node. See
+  * logical_rmid_to_physical_rmid() for code that does this.
+  */
+-void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d)
++void arch_l3_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	if (snc_nodes_per_l3_cache > 1)
+ 		msr_clear_bit(MSR_RMID_SNC_CONFIG, 0);
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index e66dc041be5f..a0d2be84832c 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -4063,7 +4063,7 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+ }
+ 
+ /**
+- * domain_setup_mon_state() -  Initialise domain monitoring structures.
++ * domain_setup_l3_mon_state() -  Initialise domain monitoring structures.
+  * @r:	The resource for the newly online domain.
+  * @d:	The newly online domain.
+  *
+@@ -4075,7 +4075,7 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+  *
+  * Returns 0 for success, or -ENOMEM.
+  */
+-static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
++static int domain_setup_l3_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+ 	size_t tsize = sizeof(struct mbm_state);
+@@ -4126,11 +4126,14 @@ int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d
+ 
+ int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+-	int err;
++	int err = -EINVAL;
+ 
+ 	mutex_lock(&rdtgroup_mutex);
+ 
+-	err = domain_setup_mon_state(r, d);
++	if (r->rid != RDT_RESOURCE_L3)
++		goto out_unlock;
++
++	err = domain_setup_l3_mon_state(r, d);
+ 	if (err)
+ 		goto out_unlock;
+ 
 -- 
 2.48.1
 
