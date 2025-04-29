@@ -1,402 +1,255 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1AE2DAF8C
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95A62DCB40
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745967919; cv=none; b=ukGCU0AyZj2PfavOh5cUhSVxH1PjI8gN1GXk8gPtR8h+34xhfMjItUmdjRO55VwW0h6QLakx7lmFJDPOTy6tCo7v3O2dIAsKW7l+XMx7KYMZyERHsT9JF2StUT0CrPK4NkaYcRE/k/N1tOGznHbql/B/A/IPkz2O2SmnHvoUetk=
+	t=1745967921; cv=none; b=ALGTfmT4s9bgsZwgn3KKiBz/fDhQa9i8XIjyUEInYbrhy/Wy1cu+LBovOws6l69GuwtW2OgiSN9XG7K0dGieRd/lxdBRI3fpvWEjEz+DdIBSJf++ZVfIG1WLCsYeoyVuYrG5pF3lAdpCd+oPiBVbos5JUYSc4u6ZJTwBdK59G3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745967919; c=relaxed/simple;
-	bh=tc1hDU/aNFse50dE45m+egZ3DV40eZ5vCsllZ7YkfCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EM4pXpjiRtFb5KRiYii12fXWP2EKThLZU5lCmfrCIfPLOiAleZ1ONhBL/RztYgUU0r9FPOHo4TI7eKbHqgUTR7jxZOggSfhT7R30GPfaZQiYnIhZTlKMpFIbjbvNyUAhiDhwX6u3cSVlniA7jrnt7p0l9AcH1XXsNZQVtR6l3A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IJEydHmr; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745967921; c=relaxed/simple;
+	bh=wKpQ2zpAHbQxRjpmRKw2Q6HoFTAs9gaEa2OoClEUtco=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gcwbCSpT7EdZmlHmnFNFH8Big+zkO1VbLV7ancvZnRMmwOnnHX42Ouw6bTLL08g9ArNyd9oH6pKGYYWuEHbc08Uif/lTTsgKkucBpXjGRShLvlBZTcL+n/A/K27gtNkGxgc6TLKrdESxKRpnPvuI4jY/6ni5qqulYJ5UNF5uHL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LEi8J/fT; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IJEydHmr"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745967914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b4Ke4mWiw6e2yd7F2kAgGNNr9fqMvIIVtrgaLg/X10w=;
-	b=IJEydHmrcZdZVB0Q8zMHbUaZmDAS0Lgwa0Q3gwzahmwQQcKGpy1WoG0vGKd6dUxvqyUxJQ
-	+h8zZbGJMB1R4d5rVF3BgQi9FpqrlhyDEERvxBVFPfsuwdgFwxovCwjDXciEvOKw2CfXMh
-	hOPIbrtjhNh3qoxjYzasEklbu5JYAFM=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 3/4] memcg: completely decouple memcg and obj stocks
-Date: Tue, 29 Apr 2025 16:04:27 -0700
-Message-ID: <20250429230428.1935619-4-shakeel.butt@linux.dev>
-In-Reply-To: <20250429230428.1935619-1-shakeel.butt@linux.dev>
-References: <20250429230428.1935619-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LEi8J/fT"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b19226b5f7dso215116a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745967919; x=1746572719; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9GFiJRsSYTyPAXrhNaWQT1b/jnx69ee7FboyvHeBQWw=;
+        b=LEi8J/fTEd/e3xQLVK0Z2lc+pCVlyQCII4aY8Cm9QhXjxd7Y+LbtK3UTp0kxJnEQPg
+         aEu+CHJRzOSm+Ehm4WA3heDbeSqdxyNzpdvyAxX6ydqwPtilZpB8gteZRA7wb+6RAGhM
+         K3wY4Z4Fqjg0IquVwWvFY46X96dudlyYLWvCTiFhDo3tXti4RRpACeX3MPO4vo2H2Ys2
+         pD4erpCJKS4JHpSFj0SngBjgNp8i7c/Sv2KxgoVBCsPWrM5Po+VBHFLwmScYCsW6D4LX
+         4sHiFpEZx9C2YumfpgI6M6mrGAvwYO8ETBrl0F/3gQUTwrSnBilsgw0GkBb+Cf5SVaf/
+         LLGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745967919; x=1746572719;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9GFiJRsSYTyPAXrhNaWQT1b/jnx69ee7FboyvHeBQWw=;
+        b=usCkr8GncLr5VzcusEscrhizTkitNE9sLBPhXQCo1gl6Dke5iER7rw+vu5wde+wjvh
+         hY1g0WKaBbihKxtC7gXBwzk/E9rebNhGBpkDeu4kgjdwoP4zjjcS+b3tjITtvlPTQ0qq
+         +jGSRi1zl9ag1Ml1sCjewA6T5hpSf/phPNQr3PS29eOaNnK7Fpo2dgOVoM5LrBCzGcxq
+         bCxnLqlCpziavOQA5uMUl9dx+2yQ7Xuj3NCckaP3F9Aa2AtRoMqKmBYmP5tafgQPjHsZ
+         voJcjrbq17mFiBCJqHBY3xMyeRT94aTQNw5W6xL5nvrBR1BfYWnXKXQudAId/+OPSKs0
+         Gsgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjCbvgLEmh3byw4jruwWkINJfy9rs2uTJyr+RuxcRxdQ3s3PxN3jac4t0uDtYEdhEiucFdirtUYDi6aXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOtsYe9FamOshI8nfdggSec0V/mdiGHRjV8y7YHqUR094ZsFm5
+	j1Nx1VCubqN+0vr5zM/0rtxEyART88SAHJE1ZTunmgAXR/gxE+q8tQXSBFbGaU33EpRgS+d/UEp
+	R
+X-Google-Smtp-Source: AGHT+IE0PWA7WS7Lu00x6+TazDT2LPv2nCnsOi9/Lrjv+V/EJAq9DaNIm6TCSJBFMF+6b3GjArs3Y5cEKfA=
+X-Received: from pgba24.prod.google.com ([2002:a63:4d18:0:b0:aee:900e:e3d6])
+ (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:439f:b0:1ee:c830:abdc
+ with SMTP id adf61e73a8af0-20a90c09495mr788906637.15.1745967918935; Tue, 29
+ Apr 2025 16:05:18 -0700 (PDT)
+Date: Tue, 29 Apr 2025 16:05:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250429230515.1906253-1-yabinc@google.com>
+Subject: [PATCH v2] coresight: trbe: Save/restore state across CPU low power state
+From: Yabin Cui <yabinc@google.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+	Leo Yan <leo.yan@arm.com>, Jie Gan <quic_jiegan@quicinc.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Let's completely decouple the memcg and obj per-cpu stocks. This will
-enable us to make memcg per-cpu stocks to used without disabling irqs.
-Also it will enable us to make obj stocks nmi safe independently which
-is required to make kmalloc/slab safe for allocations from nmi context.
+Similar to ETE, TRBE may lose its context when a CPU enters low
+power state. To make things worse, if ETE is restored without
+TRBE being restored, we have an enabled source device with no
+enabled sink devices, which can cause CPU hang on some devices
+(Pixel 9).
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+This patch adds sink operations to save and restore state for TRBE,
+and calls them when saving and restoring state for ETE. This is
+to ensure that we always restore the state of TRBE before ETE.
+
+Signed-off-by: Yabin Cui <yabinc@google.com>
 ---
- mm/memcontrol.c | 150 +++++++++++++++++++++++++++++-------------------
- 1 file changed, 91 insertions(+), 59 deletions(-)
+ .../coresight/coresight-etm4x-core.c          | 13 ++++-
+ drivers/hwtracing/coresight/coresight-trbe.c  | 58 +++++++++++++++++++
+ include/linux/coresight.h                     |  6 ++
+ 3 files changed, 76 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 460634e8435f..8f31b35ddcb3 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1775,13 +1775,23 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
- 	pr_cont(" are going to be killed due to memory.oom.group set\n");
- }
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 2b8f10463840..aaabbda97afc 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -1863,6 +1863,7 @@ static int __etm4_cpu_save(struct etmv4_drvdata *drvdata)
+ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+ {
+ 	int ret = 0;
++	struct coresight_device *sink;
  
-+#define FLUSHING_CACHED_CHARGE	0
- #define NR_MEMCG_STOCK 7
- struct memcg_stock_pcp {
--	local_trylock_t memcg_lock;
-+	local_trylock_t lock;
- 	uint8_t nr_pages[NR_MEMCG_STOCK];
- 	struct mem_cgroup *cached[NR_MEMCG_STOCK];
- 
--	local_trylock_t obj_lock;
-+	struct work_struct work;
-+	unsigned long flags;
-+};
-+
-+static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
-+	.lock = INIT_LOCAL_TRYLOCK(lock),
-+};
-+
-+struct obj_stock_pcp {
-+	local_trylock_t lock;
- 	unsigned int nr_bytes;
- 	struct obj_cgroup *cached_objcg;
- 	struct pglist_data *cached_pgdat;
-@@ -1790,16 +1800,16 @@ struct memcg_stock_pcp {
- 
- 	struct work_struct work;
- 	unsigned long flags;
--#define FLUSHING_CACHED_CHARGE	0
- };
--static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
--	.memcg_lock = INIT_LOCAL_TRYLOCK(memcg_lock),
--	.obj_lock = INIT_LOCAL_TRYLOCK(obj_lock),
-+
-+static DEFINE_PER_CPU(struct obj_stock_pcp, obj_stock) = {
-+	.lock = INIT_LOCAL_TRYLOCK(lock),
- };
-+
- static DEFINE_MUTEX(percpu_charge_mutex);
- 
--static void drain_obj_stock(struct memcg_stock_pcp *stock);
--static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
-+static void drain_obj_stock(struct obj_stock_pcp *stock);
-+static bool obj_stock_flush_required(struct obj_stock_pcp *stock,
- 				     struct mem_cgroup *root_memcg);
- 
- /**
-@@ -1822,7 +1832,7 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- 	int i;
- 
- 	if (nr_pages > MEMCG_CHARGE_BATCH ||
--	    !local_trylock_irqsave(&memcg_stock.memcg_lock, flags))
-+	    !local_trylock_irqsave(&memcg_stock.lock, flags))
- 		return ret;
- 
- 	stock = this_cpu_ptr(&memcg_stock);
-@@ -1839,7 +1849,7 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- 		break;
- 	}
- 
--	local_unlock_irqrestore(&memcg_stock.memcg_lock, flags);
-+	local_unlock_irqrestore(&memcg_stock.lock, flags);
- 
+ 	/* Save the TRFCR irrespective of whether the ETM is ON */
+ 	if (drvdata->trfcr)
+@@ -1871,8 +1872,14 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+ 	 * Save and restore the ETM Trace registers only if
+ 	 * the ETM is active.
+ 	 */
+-	if (coresight_get_mode(drvdata->csdev) && drvdata->save_state)
++	if (coresight_get_mode(drvdata->csdev) && drvdata->save_state) {
+ 		ret = __etm4_cpu_save(drvdata);
++		if (ret == 0) {
++			sink = coresight_get_percpu_sink(drvdata->cpu);
++			if (sink && sink_ops(sink)->percpu_save)
++				sink_ops(sink)->percpu_save(sink);
++		}
++	}
  	return ret;
  }
-@@ -1880,7 +1890,7 @@ static void drain_stock_fully(struct memcg_stock_pcp *stock)
- 		drain_stock(stock, i);
+ 
+@@ -1977,6 +1984,10 @@ static void __etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+ 
+ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+ {
++	struct coresight_device *sink = coresight_get_percpu_sink(drvdata->cpu);
++
++	if (sink && sink_ops(sink)->percpu_restore)
++		sink_ops(sink)->percpu_restore(sink);
+ 	if (drvdata->trfcr)
+ 		write_trfcr(drvdata->save_trfcr);
+ 	if (drvdata->state_needs_restore)
+diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
+index fff67aac8418..d94d1a7a2330 100644
+--- a/drivers/hwtracing/coresight/coresight-trbe.c
++++ b/drivers/hwtracing/coresight/coresight-trbe.c
+@@ -115,6 +115,20 @@ static int trbe_errata_cpucaps[] = {
+  */
+ #define TRBE_WORKAROUND_OVERWRITE_FILL_MODE_SKIP_BYTES	256
+ 
++/*
++ * struct trbe_save_state: Register values representing TRBE state
++ * @trblimitr	- Trace Buffer Limit Address Register value
++ * @trbbaser	- Trace Buffer Base Register value
++ * @trbptr	- Trace Buffer Write Pointer Register value
++ * @trbsr	- Trace Buffer Status Register value
++ */
++struct trbe_save_state {
++	u64 trblimitr;
++	u64 trbbaser;
++	u64 trbptr;
++	u64 trbsr;
++};
++
+ /*
+  * struct trbe_cpudata: TRBE instance specific data
+  * @trbe_flag		- TRBE dirty/access flag support
+@@ -123,6 +137,8 @@ static int trbe_errata_cpucaps[] = {
+  * @cpu			- CPU this TRBE belongs to.
+  * @mode		- Mode of current operation. (perf/disabled)
+  * @drvdata		- TRBE specific drvdata
++ * @state_needs_restore	- Whether TRBE state has been saved and can be restored
++ * @save_state		- Saved TRBE state
+  * @errata		- Bit map for the errata on this TRBE.
+  */
+ struct trbe_cpudata {
+@@ -133,6 +149,8 @@ struct trbe_cpudata {
+ 	enum cs_mode mode;
+ 	struct trbe_buf *buf;
+ 	struct trbe_drvdata *drvdata;
++	bool state_needs_restore;
++	struct trbe_save_state save_state;
+ 	DECLARE_BITMAP(errata, TRBE_ERRATA_MAX);
+ };
+ 
+@@ -1187,12 +1205,51 @@ static irqreturn_t arm_trbe_irq_handler(int irq, void *dev)
+ 	return IRQ_HANDLED;
  }
  
--static void drain_local_stock(struct work_struct *dummy)
-+static void drain_local_memcg_stock(struct work_struct *dummy)
- {
- 	struct memcg_stock_pcp *stock;
- 	unsigned long flags;
-@@ -1888,19 +1898,30 @@ static void drain_local_stock(struct work_struct *dummy)
- 	if (WARN_ONCE(!in_task(), "drain in non-task context"))
- 		return;
- 
--	preempt_disable();
-+	local_lock_irqsave(&memcg_stock.lock, flags);
-+
- 	stock = this_cpu_ptr(&memcg_stock);
-+	drain_stock_fully(stock);
-+	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
- 
--	local_lock_irqsave(&memcg_stock.obj_lock, flags);
--	drain_obj_stock(stock);
--	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
-+	local_unlock_irqrestore(&memcg_stock.lock, flags);
-+}
- 
--	local_lock_irqsave(&memcg_stock.memcg_lock, flags);
--	drain_stock_fully(stock);
--	local_unlock_irqrestore(&memcg_stock.memcg_lock, flags);
-+static void drain_local_obj_stock(struct work_struct *dummy)
++static void arm_trbe_cpu_save(struct coresight_device *csdev)
 +{
-+	struct obj_stock_pcp *stock;
-+	unsigned long flags;
- 
-+	if (WARN_ONCE(!in_task(), "drain in non-task context"))
++	struct trbe_cpudata *cpudata = dev_get_drvdata(&csdev->dev);
++	struct trbe_save_state *state;
++
++	if (cpudata->mode == CS_MODE_DISABLED)
 +		return;
 +
-+	local_lock_irqsave(&obj_stock.lock, flags);
++	state = &cpudata->save_state;
++	state->trbbaser = read_sysreg_s(SYS_TRBBASER_EL1);
++	state->trbptr = read_sysreg_s(SYS_TRBPTR_EL1);
++	state->trblimitr = read_sysreg_s(SYS_TRBLIMITR_EL1);
++	state->trbsr = read_sysreg_s(SYS_TRBSR_EL1);
++	cpudata->state_needs_restore = true;
++}
 +
-+	stock = this_cpu_ptr(&obj_stock);
-+	drain_obj_stock(stock);
- 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
--	preempt_enable();
++static void arm_trbe_cpu_restore(struct coresight_device *csdev)
++{
++	struct trbe_cpudata *cpudata = dev_get_drvdata(&csdev->dev);
++	struct trbe_save_state *state;
 +
-+	local_unlock_irqrestore(&obj_stock.lock, flags);
- }
- 
- static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-@@ -1923,10 +1944,10 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- 	VM_WARN_ON_ONCE(mem_cgroup_is_root(memcg));
- 
- 	if (nr_pages > MEMCG_CHARGE_BATCH ||
--	    !local_trylock_irqsave(&memcg_stock.memcg_lock, flags)) {
-+	    !local_trylock_irqsave(&memcg_stock.lock, flags)) {
- 		/*
- 		 * In case of larger than batch refill or unlikely failure to
--		 * lock the percpu memcg_lock, uncharge memcg directly.
-+		 * lock the percpu memcg_stock.lock, uncharge memcg directly.
- 		 */
- 		memcg_uncharge(memcg, nr_pages);
- 		return;
-@@ -1958,23 +1979,17 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
- 		WRITE_ONCE(stock->nr_pages[i], nr_pages);
- 	}
- 
--	local_unlock_irqrestore(&memcg_stock.memcg_lock, flags);
-+	local_unlock_irqrestore(&memcg_stock.lock, flags);
- }
- 
--static bool is_drain_needed(struct memcg_stock_pcp *stock,
--			    struct mem_cgroup *root_memcg)
-+static bool is_memcg_drain_needed(struct memcg_stock_pcp *stock,
-+				  struct mem_cgroup *root_memcg)
- {
- 	struct mem_cgroup *memcg;
- 	bool flush = false;
- 	int i;
- 
- 	rcu_read_lock();
--
--	if (obj_stock_flush_required(stock, root_memcg)) {
--		flush = true;
--		goto out;
--	}
--
- 	for (i = 0; i < NR_MEMCG_STOCK; ++i) {
- 		memcg = READ_ONCE(stock->cached[i]);
- 		if (!memcg)
-@@ -1986,7 +2001,6 @@ static bool is_drain_needed(struct memcg_stock_pcp *stock,
- 			break;
- 		}
- 	}
--out:
- 	rcu_read_unlock();
- 	return flush;
- }
-@@ -2011,15 +2025,27 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
- 	migrate_disable();
- 	curcpu = smp_processor_id();
- 	for_each_online_cpu(cpu) {
--		struct memcg_stock_pcp *stock = &per_cpu(memcg_stock, cpu);
--		bool flush = is_drain_needed(stock, root_memcg);
-+		struct memcg_stock_pcp *memcg_st = &per_cpu(memcg_stock, cpu);
-+		struct obj_stock_pcp *obj_st = &per_cpu(obj_stock, cpu);
- 
--		if (flush &&
--		    !test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
-+		if (!test_bit(FLUSHING_CACHED_CHARGE, &memcg_st->flags) &&
-+		    is_memcg_drain_needed(memcg_st, root_memcg) &&
-+		    !test_and_set_bit(FLUSHING_CACHED_CHARGE,
-+				      &memcg_st->flags)) {
- 			if (cpu == curcpu)
--				drain_local_stock(&stock->work);
-+				drain_local_memcg_stock(&memcg_st->work);
- 			else if (!cpu_is_isolated(cpu))
--				schedule_work_on(cpu, &stock->work);
-+				schedule_work_on(cpu, &memcg_st->work);
++	if (cpudata->state_needs_restore) {
++		/*
++		 * To avoid disruption of normal tracing, restore trace
++		 * registers only when TRBE lost power (TRBLIMITR == 0).
++		 */
++		if (read_sysreg_s(SYS_TRBLIMITR_EL1) == 0) {
++			state = &cpudata->save_state;
++			write_sysreg_s(state->trbbaser, SYS_TRBBASER_EL1);
++			write_sysreg_s(state->trbptr, SYS_TRBPTR_EL1);
++			write_sysreg_s(state->trbsr, SYS_TRBSR_EL1);
++			set_trbe_enabled(cpudata, state->trblimitr);
 +		}
-+
-+		if (!test_bit(FLUSHING_CACHED_CHARGE, &obj_st->flags) &&
-+		    obj_stock_flush_required(obj_st, root_memcg) &&
-+		    !test_and_set_bit(FLUSHING_CACHED_CHARGE,
-+				      &obj_st->flags)) {
-+			if (cpu == curcpu)
-+				drain_local_obj_stock(&obj_st->work);
-+			else if (!cpu_is_isolated(cpu))
-+				schedule_work_on(cpu, &obj_st->work);
- 		}
- 	}
- 	migrate_enable();
-@@ -2028,18 +2054,18 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
- 
- static int memcg_hotplug_cpu_dead(unsigned int cpu)
- {
--	struct memcg_stock_pcp *stock;
-+	struct obj_stock_pcp *obj_st;
- 	unsigned long flags;
- 
--	stock = &per_cpu(memcg_stock, cpu);
-+	obj_st = &per_cpu(obj_stock, cpu);
- 
--	/* drain_obj_stock requires obj_lock */
--	local_lock_irqsave(&memcg_stock.obj_lock, flags);
--	drain_obj_stock(stock);
--	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
-+	/* drain_obj_stock requires objstock.lock */
-+	local_lock_irqsave(&obj_stock.lock, flags);
-+	drain_obj_stock(obj_st);
-+	local_unlock_irqrestore(&obj_stock.lock, flags);
- 
- 	/* no need for the local lock */
--	drain_stock_fully(stock);
-+	drain_stock_fully(&per_cpu(memcg_stock, cpu));
- 
- 	return 0;
- }
-@@ -2836,7 +2862,7 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
- }
- 
- static void __account_obj_stock(struct obj_cgroup *objcg,
--				struct memcg_stock_pcp *stock, int nr,
-+				struct obj_stock_pcp *stock, int nr,
- 				struct pglist_data *pgdat, enum node_stat_item idx)
- {
- 	int *bytes;
-@@ -2887,13 +2913,13 @@ static void __account_obj_stock(struct obj_cgroup *objcg,
- static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 			      struct pglist_data *pgdat, enum node_stat_item idx)
- {
--	struct memcg_stock_pcp *stock;
-+	struct obj_stock_pcp *stock;
- 	unsigned long flags;
- 	bool ret = false;
- 
--	local_lock_irqsave(&memcg_stock.obj_lock, flags);
-+	local_lock_irqsave(&obj_stock.lock, flags);
- 
--	stock = this_cpu_ptr(&memcg_stock);
-+	stock = this_cpu_ptr(&obj_stock);
- 	if (objcg == READ_ONCE(stock->cached_objcg) && stock->nr_bytes >= nr_bytes) {
- 		stock->nr_bytes -= nr_bytes;
- 		ret = true;
-@@ -2902,12 +2928,12 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 			__account_obj_stock(objcg, stock, nr_bytes, pgdat, idx);
- 	}
- 
--	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
-+	local_unlock_irqrestore(&obj_stock.lock, flags);
- 
- 	return ret;
- }
- 
--static void drain_obj_stock(struct memcg_stock_pcp *stock)
-+static void drain_obj_stock(struct obj_stock_pcp *stock)
- {
- 	struct obj_cgroup *old = READ_ONCE(stock->cached_objcg);
- 
-@@ -2968,32 +2994,35 @@ static void drain_obj_stock(struct memcg_stock_pcp *stock)
- 	obj_cgroup_put(old);
- }
- 
--static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
-+static bool obj_stock_flush_required(struct obj_stock_pcp *stock,
- 				     struct mem_cgroup *root_memcg)
- {
- 	struct obj_cgroup *objcg = READ_ONCE(stock->cached_objcg);
- 	struct mem_cgroup *memcg;
-+	bool flush = false;
- 
-+	rcu_read_lock();
- 	if (objcg) {
- 		memcg = obj_cgroup_memcg(objcg);
- 		if (memcg && mem_cgroup_is_descendant(memcg, root_memcg))
--			return true;
-+			flush = true;
- 	}
-+	rcu_read_unlock();
- 
--	return false;
-+	return flush;
- }
- 
- static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 		bool allow_uncharge, int nr_acct, struct pglist_data *pgdat,
- 		enum node_stat_item idx)
- {
--	struct memcg_stock_pcp *stock;
-+	struct obj_stock_pcp *stock;
- 	unsigned long flags;
- 	unsigned int nr_pages = 0;
- 
--	local_lock_irqsave(&memcg_stock.obj_lock, flags);
-+	local_lock_irqsave(&obj_stock.lock, flags);
- 
--	stock = this_cpu_ptr(&memcg_stock);
-+	stock = this_cpu_ptr(&obj_stock);
- 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
- 		drain_obj_stock(stock);
- 		obj_cgroup_get(objcg);
-@@ -3013,7 +3042,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 		stock->nr_bytes &= (PAGE_SIZE - 1);
- 	}
- 
--	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
-+	local_unlock_irqrestore(&obj_stock.lock, flags);
- 
- 	if (nr_pages)
- 		obj_cgroup_uncharge_pages(objcg, nr_pages);
-@@ -5078,9 +5107,12 @@ int __init mem_cgroup_init(void)
- 	cpuhp_setup_state_nocalls(CPUHP_MM_MEMCQ_DEAD, "mm/memctrl:dead", NULL,
- 				  memcg_hotplug_cpu_dead);
- 
--	for_each_possible_cpu(cpu)
-+	for_each_possible_cpu(cpu) {
- 		INIT_WORK(&per_cpu_ptr(&memcg_stock, cpu)->work,
--			  drain_local_stock);
-+			  drain_local_memcg_stock);
-+		INIT_WORK(&per_cpu_ptr(&obj_stock, cpu)->work,
-+			  drain_local_obj_stock);
++		cpudata->state_needs_restore = false;
 +	}
++}
++
+ static const struct coresight_ops_sink arm_trbe_sink_ops = {
+ 	.enable		= arm_trbe_enable,
+ 	.disable	= arm_trbe_disable,
+ 	.alloc_buffer	= arm_trbe_alloc_buffer,
+ 	.free_buffer	= arm_trbe_free_buffer,
+ 	.update_buffer	= arm_trbe_update_buffer,
++	.percpu_save	= arm_trbe_cpu_save,
++	.percpu_restore	= arm_trbe_cpu_restore,
+ };
  
- 	memcg_size = struct_size_t(struct mem_cgroup, nodeinfo, nr_node_ids);
- 	memcg_cachep = kmem_cache_create("mem_cgroup", memcg_size, 0,
+ static const struct coresight_ops arm_trbe_cs_ops = {
+@@ -1358,6 +1415,7 @@ static void arm_trbe_probe_cpu(void *info)
+ 	cpudata->trbe_flag = get_trbe_flag_update(trbidr);
+ 	cpudata->cpu = cpu;
+ 	cpudata->drvdata = drvdata;
++	cpudata->state_needs_restore = false;
+ 	return;
+ cpu_clear:
+ 	cpumask_clear_cpu(cpu, &drvdata->supported_cpus);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index cfcf6e4707ed..098c04c4a59d 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -362,6 +362,10 @@ enum cs_mode {
+  * @alloc_buffer:	initialises perf's ring buffer for trace collection.
+  * @free_buffer:	release memory allocated in @get_config.
+  * @update_buffer:	update buffer pointers after a trace session.
++ * @percpu_save:	saves state when CPU enters idle state.
++ *			Only set for percpu sink.
++ * @percpu_restore:	restores state when CPU exits idle state.
++ *			only set for percpu sink.
+  */
+ struct coresight_ops_sink {
+ 	int (*enable)(struct coresight_device *csdev, enum cs_mode mode,
+@@ -374,6 +378,8 @@ struct coresight_ops_sink {
+ 	unsigned long (*update_buffer)(struct coresight_device *csdev,
+ 			      struct perf_output_handle *handle,
+ 			      void *sink_config);
++	void (*percpu_save)(struct coresight_device *csdev);
++	void (*percpu_restore)(struct coresight_device *csdev);
+ };
+ 
+ /**
 -- 
-2.47.1
+2.49.0.967.g6a0df3ecc3-goog
 
