@@ -1,151 +1,95 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00FF1C8629;
-	Tue, 29 Apr 2025 07:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF043BB44;
+	Tue, 29 Apr 2025 07:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911515; cv=none; b=RApZ3d3+cvjlBKIO/NIRzsxaH6qQGcbTlLZdtNXWtLyYxt9sK97eKrhOPB32eOAE2Hob8NkBoXngzazwHLHGPNgRh7HNKBzfBr39ik5le+ofZaCOoJdJAaIrjss9sfusqAefIfDw7teRpsQXUx7yAo4ipU1nJxd2ILHL0eRkhIA=
+	t=1745911630; cv=none; b=InHrUM+31d4x5N/oPkx8NDCnzKgNqQqFfVkaFd4+/AnYhVIHm0MQJBqqKlFSE8EMi6UaHrOGWliUHT4TpZSZKIjNm4pKfZEQEubAmVkWcoTUkFVp9m3e77Ey8QHQomqaS+3T67MRsgSmocZ/XNeWgleZrFgmDrhPzX3wvGO+C/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911515; c=relaxed/simple;
-	bh=BTTld/avRyX9/xFUVdq/cjPb7ZmIdI1aSwabNE90ZT8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FNRI0aiyPPKueXT3uDl1X6PumCn1nR60yv1mbSLg7/uxAnxnnz277MqjAz4QH2NFfAp4JRy/y3xPAYcyfgtOI2lxjKGBcAVb3P5rx2MTiEfY2k8SiAdAiY4REZi5+He4xdZ/ZSMRAbXS/GT99yifNq4NsfBjPP+xo9gy6KoMXJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=LkCo0zvG; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=UMBk4PSS reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1745911630; c=relaxed/simple;
+	bh=PPmnkQ3JbwLCvSqAb4byxZCPpNnLjebvNe2uLSOWf0E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JJ0wq+cmsmuTIzMANN09egk+V/8xaXmY3apqti0xrY0x8Fx1DWqArd1B65/BUUI1Cyz+Cr6y4kDaAoRVMprWK0KDiTGFWPvVdBRfXEMtZf3J5qhe/j0zsdyEYtwe6NBiWODQH5OIOIV8wILNoV8bTORbybp9qETPvEwfPP/C2wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=deKrmW0C; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="LkCo0zvG";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="UMBk4PSS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1745911511; x=1777447511;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=0HTPHirUqJp7iM6IFbqXNuusghxBtTxmX3QXCCMPY0Q=;
-  b=LkCo0zvG/pzwFIaSerwZ2FJLguAyhlcG5WuaIWH3llgNYsxVc67mcLXs
-   yiyjuaWuRbyW3J8KAzF+D0ohli0eGrggnQJN9rujf13+/dbBepAfWJ8Y9
-   MoK7vO1lONECwNkOjN9J6yF54nVFcXvZ7YbDAzA0MM+SMvQruUuuYLDjL
-   qdEXUgTRfJLCeI+7/HviFVY+rldo0EBzYMDVaIzRpXd/t2H5Varw0Wzpj
-   9bWIVjPE4CVnuGlDkfdNOnjCBb5fzwb9a8bjiPwq1UkWARvdUqNoo9HGk
-   ldfOuTobUsBJQKgOSQYG+VycB+p2S3ZpXfYg3P7ymA06+MPTtEt4Djww7
-   w==;
-X-CSE-ConnectionGUID: mvncbzE7TwS02I9aCObShg==
-X-CSE-MsgGUID: Oo+CuzYXSh2hT+Oi+La46Q==
-X-IronPort-AV: E=Sophos;i="6.15,248,1739833200"; 
-   d="scan'208";a="43772696"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 29 Apr 2025 09:25:01 +0200
-X-CheckPoint: {68107ECD-32-F35B2447-E1635CDE}
-X-MAIL-CPID: 4C6EC668F1D0F19820FBD4C1ED5AF527_1
-X-Control-Analysis: str=0001.0A006376.68107EDB.007D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E4E1E160F78;
-	Tue, 29 Apr 2025 09:24:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1745911497;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0HTPHirUqJp7iM6IFbqXNuusghxBtTxmX3QXCCMPY0Q=;
-	b=UMBk4PSSN3UPAEvH64wlD/DQG63n6qyz8Vno1RD6lID08HbYoSOsULofaTdR5GBIBR3dMC
-	mFpdWkhtUDfnpSseGPOmYzTQTNSYRZ3DnFJZUo7mFx6/bijMtSUSx/fq3o1dVVYvhFNwBY
-	VReTlz6llr68OZdahRTkt+Ae95QczLZHbR+tHmrSa3Ov+pgA5/xelkQS9xi2IR7JUhnW+z
-	aBv77qSBW2cGa4CjsTUon7WSlGvklEDnBkpkK3Evpc+ilIBWeOkJZv2CEfoCLy1VBORQSo
-	1uolbaIQbqdBZjmupkWsKjxAgm+OzCBGDvoZ6yDjacJyW4yCSNwmIFAxVhla2A==
-Message-ID: <b75c6a2cf10e2acf878c38f8ca2ff46708a2c0a1.camel@ew.tq-group.com>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
- <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe
- Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>, Nishanth Menon
- <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli
- <s-vadapalli@ti.com>, Roger Quadros <rogerq@kernel.org>, Tero Kristo
- <kristo@kernel.org>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux@ew.tq-group.com
-Date: Tue, 29 Apr 2025 09:24:49 +0200
-In-Reply-To: <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
-	 <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
-	 <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
-	 <a53b5f22-d603-4b7d-9765-a1fc8571614d@lunn.ch>
-	 <aAe2NFFrcXDice2Z@shell.armlinux.org.uk>
-	 <fdc02e46e4906ba92b562f8d2516901adc85659b.camel@ew.tq-group.com>
-	 <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="deKrmW0C"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7QlpD3785291
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 02:26:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745911607;
+	bh=RyhhKHcQn/OtgTmNOO+AF/jrAuW0rpCyeN4utPF33Kc=;
+	h=From:To:CC:Subject:Date;
+	b=deKrmW0CpxxomB5UltntmFvpnqIFK7vxG9so3tJrwKj3hGGJN8Ld/vxMr3n/aEZT2
+	 vktX/z50+bfRE7UUFpkGBrE+IjvGT0xnz/IiS6wNnp7zIaAynmeEXXCW2esskFYDv0
+	 NehrjlZrn5ddm+QmxIU5fcdKihJHgBRGpkFirKRU=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7QlEE026072
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 29 Apr 2025 02:26:47 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
+ Apr 2025 02:26:46 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 29 Apr 2025 02:26:46 -0500
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53T7QjXR088302;
+	Tue, 29 Apr 2025 02:26:46 -0500
+From: Chintan Vankar <c-vankar@ti.com>
+To: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Tero Kristo
+	<kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon
+	<nm@ti.com>
+CC: <srk@ti.com>, <s-vadapalli@ti.com>, <danishanwar@ti.com>,
+        <c-vankar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v4 0/2] Add bootph-all property to necessary nodes to enable ethernet boot for AM68-SK, J722s and AM62p-SK
+Date: Tue, 29 Apr 2025 12:56:42 +0530
+Message-ID: <20250429072644.2400295-1-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 2025-04-28 at 16:08 +0200, Andrew Lunn wrote:
->=20
-> > > However, with the yaml stuff, if that is basically becoming "DT
-> > > specification" then it needs to be clearly defined what each value
-> > > actually means for the system, and not this vague airy-fairy thing
-> > > we have now.
->=20
-> =20
-> > I agree with Russell that it seems preferable to make it unambiguous wh=
-ether
-> > delays are added on the MAC or PHY side, in particular for fine-tuning.=
- If
-> > anything is left to the implementation, we should make the range of acc=
-eptable
-> > driver behavior very clear in the documentation.
->=20
-> I think we should try the "Informative" route first, see what the DT
-> Maintainers think when we describe in detail how Linux interprets
-> these values.
+This series adds bootph-all property to necessary nodes to enable
+ethernet boot support for AM68-SK, J722s and AM62p-SK.
 
-Oh, we should not be Linux-specific. We should describe in detail how *any =
-OS*
-must interpret values.
+This series is based on linux-next tagged next-20250428.
 
+Link to v3:
+https://lore.kernel.org/r/20250425051055.2393301-1-c-vankar@ti.com/
 
->=20
-> I don't think a whole new set of properties will solve anything. I
-> would say the core of the problem is that there are multiple ways of
-> getting a working system, many of which don't fit the DT binding. But
-> DT developers don't care about that, they are just happy when it
-> works. Adding a different set of properties won't change that.
->=20
-> 	Andrew
+Changes from v3 to v4:
+- As per Nishanth's suggestion, moved nodes which require "bootph-all"
+  property into board specific file for AM68-SK.
 
-Hmm, considering that
+Chintan Vankar (2):
+  arm64: dts: ti: k3-am68-sk-base-board: Add bootph-all property to
+    enable Ethernet boot
+  arm64: dts: ti: k3-am62p*/k3-j722s: Add bootph-all property to enable
+    Ethernet boot
 
-- interpretation of existing properties is inconsistent
-- we could like something with a consistent interpretation
-- we can't change how existing drivers interpret the properties, as that wo=
-uld
-be a breaking change,
+ .../boot/dts/ti/k3-am62p-j722s-common-main.dtsi      |  3 +++
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts              |  2 ++
+ arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts     | 12 ++++++++++++
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts              |  3 +++
+ 4 files changed, 20 insertions(+)
 
-I don't think we really have any options but to introduce something new, or=
- keep
-the inconsistent status quo.
+-- 
+2.34.1
 
-Best,
-Matthias
-
-
-
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
