@@ -1,34 +1,149 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E696A2C179F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9484B2C1793
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745926451; cv=none; b=IbdDIHNtggFBfc7W39nmVpFtKA4ex1Rjmzl2zaFKNhG5eZFo0YMvAIauKDaPJknkWfau/EuCUqnM5we2oIRssXwiMTxtj+84x/t4n7pD0g9p9oRaoOl52t4YZfiLzVkApv5PdszVwUE+1TLYAtfD/2g3OzqP798ch4ByvrDuiw8=
+	t=1745926467; cv=none; b=ixK/0k44LHe4fjpKlFDjyI8EutxGMxAW+sKEdmTBqWeUmP/ybTqATrx/k0txd4BmTmobXqUh+TFg20mTuu+DeuGPLcp8Uhed5/qx1rtIwFRlPiukn/5jfK+JduARnWYVbbvzAx8YtjUEtGKeyqKH3a5tr/rwQbrmKUrSkf1oem4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745926451; c=relaxed/simple;
-	bh=KWEB8PMtnhPIlHb205F+2wsaPBR3GxRNp19huh8bJYo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=laIYN9QcK62GvQSE5lkYo5gMNMSyR0n3bcRksIf6/r5ARmUkmBVah/HNGt9TWynKgt89b+KhCSaBZ3LXhFW9DBDE7UIE+LA+VmeCbAX85TLno0u67k7Bb+lU9k4FxhDjz6RBH8wjkIwN6Qu1MHQO+Mr/4z1rUINiWC/P9i+pCBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8AxbeImuRBoaNHJAA--.33962S3;
-	Tue, 29 Apr 2025 19:33:58 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.10.34])
-	by front1 (Coremail) with SMTP id qMiowMDx_MQmuRBoUcadAA--.896S2;
-	Tue, 29 Apr 2025 19:33:58 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	wanghongliang@loongson.cn,
-	yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH] LoongArch:support CONFIG_SCHED_MC
-Date: Tue, 29 Apr 2025 19:33:56 +0800
-Message-Id: <20250429113356.17929-1-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1745926467; c=relaxed/simple;
+	bh=dZdSzDGgfI6bAYxUORTVtsqgOM9RHNFvz0lZogydzdQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=abK7zZc1+xVicL/d7k/82WgEBmPuY8lLcmd9BQcvlRt762xEN7q5AkrdPpsPmQqzw0djzjGm+bBwdGO2GN23DMmYz674hjkaocPywrxvHfLaIp51beguwCTMuZKV6+bHVKAQqDySEd3+OM/iExUJYl1HvkZqhAW8Usx42AJhUhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QsjuTlNc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QsjuTlNc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745926464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zg58JxmHKhWWUoDaZMgkLto/tyv23WpECMmjdzPtlcw=;
+	b=QsjuTlNc0nEgoSvzdvpRkqRPqFK5+zqHxGmUwhjrsDP5BGZaQJH67g2gPPY/DBgjibxYpF
+	kIJnbdU7QQGPhBs4oS6K3edodb0nPNK9KxYHU+DbbQk5ntAPAmdqU3nT5E3M92HjPv033i
+	L6bkEPjktd3M84VPcD3erehaRZwiXR0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-493-3pHjQIe0MlKhWZ_jNury2w-1; Tue,
+ 29 Apr 2025 07:34:21 -0400
+X-MC-Unique: 3pHjQIe0MlKhWZ_jNury2w-1
+X-Mimecast-MFC-AGG-ID: 3pHjQIe0MlKhWZ_jNury2w_1745926457
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 679A11800264;
+	Tue, 29 Apr 2025 11:34:16 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.225.102])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20ACE19560AB;
+	Tue, 29 Apr 2025 11:33:43 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Daniel Wagner <dwagner@suse.de>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>,
+	Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH v5 01/25] objtool: Make validate_call() recognize indirect calls to pv_ops[]
+Date: Tue, 29 Apr 2025 13:32:18 +0200
+Message-ID: <20250429113242.998312-2-vschneid@redhat.com>
+In-Reply-To: <20250429113242.998312-1-vschneid@redhat.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,186 +151,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx_MQmuRBoUcadAA--.896S2
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ww1kXFWDGrW5Jr13uryDurX_yoW7Wr43pr
-	nruFyrGrW8WFn3A3yYq3yrur95urn7Gry2qa13KFyfAFsrXw1UJr1vqFZxXF1UG395XrWS
-	gr98GFWFgay8X3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-From: wanghongliang <wanghongliang@loongson.cn>
+call_dest_name() does not get passed the file pointer of validate_call(),
+which means its invocation of insn_reloc() will always return NULL. Make it
+take a file pointer.
 
-In order to achieve more reasonable load balancing behavior,
-support for SCHED_MC has been added.
-The LLC distribution of Loongarch now is consistent with numa-node,
-the balancing domain of SCHED_MC can effectively reduce the situation
-where processes are awakened to smt_slibing
+While at it, make sure call_dest_name() uses arch_dest_reloc_offset(),
+otherwise it gets the pv_ops[] offset wrong.
 
-Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
-Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Fabricating an intentional warning shows the change; previously:
+
+  vmlinux.o: warning: objtool: __flush_tlb_all_noinstr+0x4: call to {dynamic}() leaves .noinstr.text section
+
+now:
+
+  vmlinux.o: warning: objtool: __flush_tlb_all_noinstr+0x4: call to pv_ops[1]() leaves .noinstr.text section
+
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/loongarch/Kconfig                |  9 ++++++
- arch/loongarch/include/asm/smp.h      |  1 +
- arch/loongarch/include/asm/topology.h |  8 +++++
- arch/loongarch/kernel/smp.c           | 46 +++++++++++++++++++++++++++
- 4 files changed, 64 insertions(+)
+ tools/objtool/check.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 1a2cf012b..72a142a85 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -493,6 +493,15 @@ config NR_CPUS
- 	  This allows you to specify the maximum number of CPUs which this
- 	  kernel will support.
- 
-+config SCHED_MC
-+	def_bool y
-+	prompt "Multi-core scheduler support"
-+	depends on SMP
-+	help
-+	  Multi-core scheduler support improves the CPU scheduler's decision
-+	  making when dealing with multi-core CPU chips at a cost of slightly
-+	  increased overhead in some places. If unsure say N here.
-+
- config NUMA
- 	bool "NUMA Support"
- 	select SMP
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index b87d1d5e5..13955d726 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -26,6 +26,7 @@ extern int num_processors;
- extern int disabled_cpus;
- extern cpumask_t cpu_sibling_map[];
- extern cpumask_t cpu_core_map[];
-+extern cpumask_t cpu_llc_shared_map[];
- extern cpumask_t cpu_foreign_map[];
- 
- void loongson_smp_setup(void);
-diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/include/asm/topology.h
-index 50273c918..dfaf45d57 100644
---- a/arch/loongarch/include/asm/topology.h
-+++ b/arch/loongarch/include/asm/topology.h
-@@ -36,6 +36,14 @@ void numa_set_distance(int from, int to, int distance);
- #define topology_sibling_cpumask(cpu)		(&cpu_sibling_map[cpu])
- #endif
- 
-+/*
-+ * return cpus that shares the last level cache.
-+ */
-+static inline const struct cpumask *cpu_coregroup_mask(int cpu)
-+{
-+	return &cpu_llc_shared_map[cpu];
-+}
-+
- #include <asm-generic/topology.h>
- 
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 4b24589c0..7b9e996a1 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -50,6 +50,9 @@ EXPORT_SYMBOL(cpu_sibling_map);
- cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
- EXPORT_SYMBOL(cpu_core_map);
- 
-+cpumask_t cpu_llc_shared_map[NR_CPUS] __read_mostly;
-+EXPORT_SYMBOL(cpu_llc_shared_map);
-+
- static DECLARE_COMPLETION(cpu_starting);
- static DECLARE_COMPLETION(cpu_running);
- 
-@@ -66,6 +69,10 @@ static cpumask_t cpu_sibling_setup_map;
- /* representing cpus for which core maps can be computed */
- static cpumask_t cpu_core_setup_map;
- 
-+/* representing cpus for which llc sibling maps can be computed */
-+static cpumask_t cpu_llc_shared_setup_map;
-+
-+
- struct secondary_data cpuboot_data;
- static DEFINE_PER_CPU(int, cpu_state);
- 
-@@ -102,6 +109,42 @@ static inline void set_cpu_core_map(int cpu)
- 	}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 3a411064fa34b..973dfc8fde792 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -3319,7 +3319,7 @@ static inline bool func_uaccess_safe(struct symbol *func)
+ 	return false;
  }
  
-+static inline bool cpus_are_shared_llc(int cpua, int cpub)
-+{
-+	if (cpu_to_node(cpua) != cpu_to_node(cpub))
-+		return false;
-+
-+	return true;
-+}
-+
-+static inline void set_cpu_llc_shared_map(int cpu)
-+{
-+	int i;
-+
-+	cpumask_set_cpu(cpu, &cpu_llc_shared_setup_map);
-+
-+	for_each_cpu(i, &cpu_llc_shared_setup_map) {
-+		if (cpus_are_shared_llc(cpu, i)) {
-+			cpumask_set_cpu(i, &cpu_llc_shared_map[cpu]);
-+			cpumask_set_cpu(cpu, &cpu_llc_shared_map[i]);
-+		}
-+	}
-+}
-+
-+static inline void clear_cpu_llc_shared_map(int cpu)
-+{
-+	int i;
-+
-+	for_each_cpu(i, &cpu_llc_shared_setup_map) {
-+		if (cpus_are_shared_llc(cpu, i)) {
-+			cpumask_clear_cpu(i, &cpu_llc_shared_map[cpu]);
-+			cpumask_clear_cpu(cpu, &cpu_llc_shared_map[i]);
-+		}
-+	}
-+
-+	cpumask_clear_cpu(cpu, &cpu_llc_shared_setup_map);
-+}
-+
- static inline void set_cpu_sibling_map(int cpu)
+-static inline const char *call_dest_name(struct instruction *insn)
++static inline const char *call_dest_name(struct objtool_file *file, struct instruction *insn)
  {
- 	int i;
-@@ -406,6 +449,7 @@ int loongson_cpu_disable(void)
- #endif
- 	set_cpu_online(cpu, false);
- 	clear_cpu_sibling_map(cpu);
-+	clear_cpu_llc_shared_map(cpu);
- 	calculate_cpu_foreign_map();
- 	local_irq_save(flags);
- 	irq_migrate_all_off_this_cpu();
-@@ -573,6 +617,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	loongson_prepare_cpus(max_cpus);
- 	set_cpu_sibling_map(0);
- 	set_cpu_core_map(0);
-+	set_cpu_llc_shared_map(0);
- 	calculate_cpu_foreign_map();
- #ifndef CONFIG_HOTPLUG_CPU
- 	init_cpu_present(cpu_possible_mask);
-@@ -614,6 +659,7 @@ asmlinkage void start_secondary(void)
+ 	static char pvname[19];
+ 	struct reloc *reloc;
+@@ -3328,9 +3328,9 @@ static inline const char *call_dest_name(struct instruction *insn)
+ 	if (insn_call_dest(insn))
+ 		return insn_call_dest(insn)->name;
  
- 	set_cpu_sibling_map(cpu);
- 	set_cpu_core_map(cpu);
-+	set_cpu_llc_shared_map(cpu);
+-	reloc = insn_reloc(NULL, insn);
++	reloc = insn_reloc(file, insn);
+ 	if (reloc && !strcmp(reloc->sym->name, "pv_ops")) {
+-		idx = (reloc_addend(reloc) / sizeof(void *));
++		idx = (arch_dest_reloc_offset(reloc_addend(reloc)) / sizeof(void *));
+ 		snprintf(pvname, sizeof(pvname), "pv_ops[%d]", idx);
+ 		return pvname;
+ 	}
+@@ -3409,17 +3409,19 @@ static int validate_call(struct objtool_file *file,
+ {
+ 	if (state->noinstr && state->instr <= 0 &&
+ 	    !noinstr_call_dest(file, insn, insn_call_dest(insn))) {
+-		WARN_INSN(insn, "call to %s() leaves .noinstr.text section", call_dest_name(insn));
++		WARN_INSN(insn, "call to %s() leaves .noinstr.text section", call_dest_name(file, insn));
+ 		return 1;
+ 	}
  
- 	notify_cpu_starting(cpu);
+ 	if (state->uaccess && !func_uaccess_safe(insn_call_dest(insn))) {
+-		WARN_INSN(insn, "call to %s() with UACCESS enabled", call_dest_name(insn));
++		WARN_INSN(insn, "call to %s() with UACCESS enabled",
++			  call_dest_name(file, insn));
+ 		return 1;
+ 	}
+ 
+ 	if (state->df) {
+-		WARN_INSN(insn, "call to %s() with DF set", call_dest_name(insn));
++		WARN_INSN(insn, "call to %s() with DF set",
++			  call_dest_name(file, insn));
+ 		return 1;
+ 	}
  
 -- 
-2.43.0
+2.49.0
 
