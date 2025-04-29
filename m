@@ -1,107 +1,155 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F236C126BF7
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C20214A73;
+	Tue, 29 Apr 2025 02:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745892068; cv=none; b=PwREUFnCj62TSALrvwr/I+oSjLx0C7vWjGdMl1Yn5TQa9b83Y0NAKOvcmVTWQQTDLzgAbi7zITGfv2O/61uz4njzhrI422ysbXNtYg8nzcCK0tPXtnAst1hXsvSY0rF1/gLsap8EO4we6tigL05Na4x3smbBIb/02vGVWZwGNjI=
+	t=1745892103; cv=none; b=Dolu5/wHgynUsgvV2q3WgcrZGMHzeYCfGVQ6EGkdUhcoH3xVTDYex1qTAiBRuroxboTapcLlIkb4D+p8cSfQSfpuiiMB2n42Cq/FdzsorK4KGvt+qjgyME58O2D1i4PjNuEV3JTEyGYrQb+C18XdX2tFQ6/LE06d7aNvGTJCtbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745892068; c=relaxed/simple;
-	bh=weqfYcB+EDyyw2HNB/6reTaDsnRhflpF5Zrts2EdPtQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=St3pknOP/Rwydj4P8fNsoXE9e/c/JKZpJtFL4cLK9mHFYuN0RsTFnRalYEZpIYSlRAQT/tAQZslfhUjUja5DOU/XkrpOy8rTVK+cZuqc6GB8PMW3DSFhab76zuoMoZPPNj4lNySsWsSpXkiIzRuSgRZ0pgCsEEU2Ye3GGmOzn+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=a/V8ZtRS; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745892103; c=relaxed/simple;
+	bh=zKwVa4Gxl+T60ClLmm/1G5pm0OWgEypuwGYSDNLjjt0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FiWKUI4juZ7/T+80LpB5X3TmiFJoUjTioO5fGmkd5fwCfDlJ7wNZXr/VnscUCCG0tbQnUKxKQ7I/pEv45ULgELwkhyB4NcpYYVL9bYpYOqYCQs3UtxrEePZGcfNY4LknH9ppGhHLg+azD4pyC9rYpCKEpxBf1zjkWjbPJ/2hEeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=doq19GrQ; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="a/V8ZtRS"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53T20D5e084945
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 28 Apr 2025 19:00:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53T20D5e084945
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745892015;
-	bh=Sa3174tDwufid9lYtjnyXVpiRUMqmxxt9iXJ7zEmUGw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=a/V8ZtRSqlR1/BTFZqcrwJRErwApyt0cYqkrfh2z+Y4mu9L5CE5/z/brCDx7IZzHv
-	 6JvXaeOjTLJ5lRiQXf1uUMWrsan6raPI66bYVqHA/ogzrNk2rFeAY/fU9UeCuwSISy
-	 4M2dYVdYZ0/QswbcmPcS3vmpM+IH4Qywv7KacDjPN7voCmNLWeYZnnOC6y9atCR9o9
-	 Pb6q9VWcB/JPm13r0lQrSg3wXo+6S28SWaR76gPs5CSv8gCN7pS9LeXwKi3lMcia6J
-	 efQdlKuuHNceK3YKrJrr+ltxXwZFZWk/E5iUbSS/o/oh636eYfed322wFtf7whVNNz
-	 WWkABNEDI7OZQ==
-Date: Mon, 28 Apr 2025 19:00:12 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Andrew Cooper <andrew.cooper3@citrix.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-        Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_bitops/32=3A_Convert_variable?=
- =?US-ASCII?Q?=5Fffs=28=29_and_fls=28=29_zero-case_handling_to_C?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <67be5eee-b67b-409a-8309-829f891b9944@citrix.com>
-References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com> <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com> <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com> <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com> <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com> <CAHk-=wgJfWfWa2NTiTmev+Xr=e8Uo=aFkrXujLAQBVAVN-VigQ@mail.gmail.com> <B364FF6D-DFCC-42A7-ACA1-6A74E27EE57E@zytor.com> <67be5eee-b67b-409a-8309-829f891b9944@citrix.com>
-Message-ID: <916BD58C-E6A7-495E-9A60-722E130AC7A7@zytor.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="doq19GrQ"
+X-UUID: dc761840249d11f09b6713c7f6bde12e-20250429
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=tuj9BGUeMzegQ0lV1ZfFdTK//nspAIt+974jv6fTnJA=;
+	b=doq19GrQproFjoinsb2/rxU5UbsDXd5+nk4ketEZuCd7cAiuNYxot4tDs1ANElXTgzlE+o5G4L7Fi7l6Iv+tcOiVPRsBqTB7QLQDfWjVSiUhhORd4+PwA9aulMlJZB5PHbUCECfaNcRYfvCFUtQeNM0pq+eeJK0rflGmxQHlslY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:8bb4811a-d7cb-4fd6-88d9-d07dec403c52,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:0ef645f,CLOUDID:0220fa6f-e08c-41ab-89e8-3ba0a33da853,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: dc761840249d11f09b6713c7f6bde12e-20250429
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+	(envelope-from <shiming.cheng@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1754018810; Tue, 29 Apr 2025 10:01:27 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Tue, 29 Apr 2025 10:01:26 +0800
+Received: from mbjsdccf07.gcn.mediatek.inc (10.15.20.246) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Tue, 29 Apr 2025 10:01:25 +0800
+From: Shiming Cheng <shiming.cheng@mediatek.com>
+To: <edumazet@google.com>, <davem@davemloft.net>, <dsahern@kernel.org>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: <shiming.cheng@mediatek.com>, <lena.wang@mediatek.com>, Jibin Zhang
+	<jibin.zhang@mediatek.com>
+Subject: [PATCH v3] net: use sock_gen_put() when sk_state is TCP_TIME_WAIT
+Date: Tue, 29 Apr 2025 09:59:48 +0800
+Message-ID: <20250429020412.14163-1-shiming.cheng@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On April 28, 2025 5:12:13 PM PDT, Andrew Cooper <andrew=2Ecooper3@citrix=2E=
-com> wrote:
->On 28/04/2025 10:38 pm, H=2E Peter Anvin wrote:
->> On April 28, 2025 9:14:45 AM PDT, Linus Torvalds <torvalds@linux-founda=
-tion=2Eorg> wrote:
->>> On Mon, 28 Apr 2025 at 00:05, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->>>> And once we remove 486, I think we can do the optimization below to
->>>> just assume the output doesn't get clobbered by BS*L in the zero-case=
-,
->>>> right?
->>> We probably can't, because who knows what "Pentium" CPU's are out ther=
-e=2E
->>>
->>> Or even if Pentium really does get it right=2E I doubt we have any
->>> developers with an original Pentium around=2E
->>>
->>> So just leave the "we don't know what the CPU result is for zero"
->>> unless we get some kind of official confirmation=2E
->>>
->>>          Linus
->> If anyone knows for sure, it is probably Christian Ludloff=2E However, =
-there was a *huge* tightening of the formal ISA when the i686 was introduce=
-d (family=3D6) and I really believe this was part of it=2E
->>
->> I also really don't trust that family=3D5 really means conforms to undo=
-cumented P5 behavior, e=2Eg=2E for Quark=2E
->
->https://www=2Esandpile=2Eorg/x86/flags=2Ehtm
->
->That's a lot of "can't even characterise the result" in the P5=2E
->
->Looking at P4 column, that is clearly what the latest SDM has
->retroactively declared to be architectural=2E
->
->~Andrew
+From: Jibin Zhang <jibin.zhang@mediatek.com>
 
-Yes, but it wasn't about flags here=2E=20
+It is possible for a pointer of type struct inet_timewait_sock to be
+returned from the functions __inet_lookup_established() and
+__inet6_lookup_established(). This can cause a crash when the
+returned pointer is of type struct inet_timewait_sock and
+sock_put() is called on it. The following is a crash call stack that
+shows sk->sk_wmem_alloc being accessed in sk_free() during the call to
+sock_put() on a struct inet_timewait_sock pointer. To avoid this issue,
+use sock_gen_put() instead of sock_put() when sk->sk_state
+is TCP_TIME_WAIT.
 
-Now, question: can we just use __builtin_*() for these? I think gcc should=
- always generate inline code for these on x86=2E
+mrdump.ko        ipanic() + 120
+vmlinux          notifier_call_chain(nr_to_call=-1, nr_calls=0) + 132
+vmlinux          atomic_notifier_call_chain(val=0) + 56
+vmlinux          panic() + 344
+vmlinux          add_taint() + 164
+vmlinux          end_report() + 136
+vmlinux          kasan_report(size=0) + 236
+vmlinux          report_tag_fault() + 16
+vmlinux          do_tag_recovery() + 16
+vmlinux          __do_kernel_fault() + 88
+vmlinux          do_bad_area() + 28
+vmlinux          do_tag_check_fault() + 60
+vmlinux          do_mem_abort() + 80
+vmlinux          el1_abort() + 56
+vmlinux          el1h_64_sync_handler() + 124
+vmlinux        > 0xFFFFFFC080011294()
+vmlinux          __lse_atomic_fetch_add_release(v=0xF2FFFF82A896087C)
+vmlinux          __lse_atomic_fetch_sub_release(v=0xF2FFFF82A896087C)
+vmlinux          arch_atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C)
++ 8
+vmlinux          raw_atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C)
++ 8
+vmlinux          atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C) + 8
+vmlinux          __refcount_sub_and_test(i=1, r=0xF2FFFF82A896087C,
+oldp=0) + 8
+vmlinux          __refcount_dec_and_test(r=0xF2FFFF82A896087C, oldp=0) + 8
+vmlinux          refcount_dec_and_test(r=0xF2FFFF82A896087C) + 8
+vmlinux          sk_free(sk=0xF2FFFF82A8960700) + 28
+vmlinux          sock_put() + 48
+vmlinux          tcp6_check_fraglist_gro() + 236
+vmlinux          tcp6_gro_receive() + 624
+vmlinux          ipv6_gro_receive() + 912
+vmlinux          dev_gro_receive() + 1116
+vmlinux          napi_gro_receive() + 196
+ccmni.ko         ccmni_rx_callback() + 208
+ccmni.ko         ccmni_queue_recv_skb() + 388
+ccci_dpmaif.ko   dpmaif_rxq_push_thread() + 1088
+vmlinux          kthread() + 268
+vmlinux          0xFFFFFFC08001F30C()
+
+Fixes: c9d1d23e5239 ("net: add heuristic for enabling TCP fraglist GRO")
+Signed-off-by: Jibin Zhang <jibin.zhang@mediatek.com>
+Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+---
+ net/ipv4/tcp_offload.c   | 2 +-
+ net/ipv6/tcpv6_offload.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+index 2308665b51c5..f55026b597ff 100644
+--- a/net/ipv4/tcp_offload.c
++++ b/net/ipv4/tcp_offload.c
+@@ -432,7 +432,7 @@ static void tcp4_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
+ 				       iif, sdif);
+ 	NAPI_GRO_CB(skb)->is_flist = !sk;
+ 	if (sk)
+-		sock_put(sk);
++		sock_gen_put(sk);
+ }
+ 
+ INDIRECT_CALLABLE_SCOPE
+diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
+index a45bf17cb2a1..b1f284e0c15a 100644
+--- a/net/ipv6/tcpv6_offload.c
++++ b/net/ipv6/tcpv6_offload.c
+@@ -42,7 +42,7 @@ static void tcp6_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
+ 					iif, sdif);
+ 	NAPI_GRO_CB(skb)->is_flist = !sk;
+ 	if (sk)
+-		sock_put(sk);
++		sock_gen_put(sk);
+ #endif /* IS_ENABLED(CONFIG_IPV6) */
+ }
+ 
+-- 
+2.45.2
+
