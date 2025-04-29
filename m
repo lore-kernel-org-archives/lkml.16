@@ -1,106 +1,78 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0E024E019
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A89251792;
+	Tue, 29 Apr 2025 16:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945591; cv=none; b=QsHKlWm5Gi0KZdGLiZerfEkQ0ZXmDRldKf8FLJAyXimpf1FwlLMKogg/7gpvwwgOFD/p8ruMsJC5ebN4X17sIg1mIk/V1B9RbUDAlZ4nFAGUr1z0MuKtLlSgu6MPUKEpG5R7WRLFb02G/pKqyRJakrX/zsv6Hrhgq5pGZHeWoP0=
+	t=1745945605; cv=none; b=cv20X80bE1o1nQpAb16ZWQQAkmd434MS6/R/7blHZU08EzMnhk6qONKnYobip44dJe3hjoRVDFfai6ThYUHgK5dCy2SUnUfEe9gyZan2U0kCD7/83vFgHJu6eILjsTtAqZGsXjWmGjCsragd3Kmkhd/4WkWiCtRjBG+3PAvqums=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945591; c=relaxed/simple;
-	bh=rvwMq98Jt3B7MUrEb6li9y6+5IG8nlslNnMRtOYSVD8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nb4ZUIl5NU+z4PKl6wGYmRnSMq90m6Q+Qm7E4D2ancLw1QoigJFIr5y/RthBwKAvi6WcIuaOsUcwLTqct237GhJUx71+acYbDzhXpaRAM6UKAdFnnJmgQ0Bs7TJN8MdLior1EDqt4g8QmtIdzPbXz2SydMUSh2s7ZLhNvK6wrHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VO+7bP1W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+1FCOKXe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745945605; c=relaxed/simple;
+	bh=UGcKKVQF62LQ6hsPGiNLBxAkwhPYxGX2ggkQXxOx59E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c3hsrQNtONAifW4icj4koppS0AApS4VdO2JuG8FsCucoOXn0qKydIAT6vuM8SDWda0/PpGJuouYCQKvr4wwd1OOSvHG+RQg6MsAWzCV2NXCQ6A9m6yGws8mA7U0fKKcvDE5GkR9xrO9875y8VsAKo8L1ylPvlAEcsr1TmYNsiGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Scxr8UDB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VO+7bP1W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+1FCOKXe"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745945587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WwmLgDT1WO4FJ/Bs9AFg3veV+pfKiE4cEwup8QWcbz8=;
-	b=VO+7bP1WdP/OS+2p+GoZn7eBoUerGIbD7HePipSVnm4ogbKWNAHcWb6rmzyNclWyQK06Oi
-	049uSv4E0ZPvswnFRvNe1Fb/0NIq9eaxtvjB/WSTtZ1tJkzseFMNIvmPlF1JzoDwd+5xOF
-	vrYis1NAEA37rOcEjribAA7uY8TDSIdXbfpQ1H/+U+6lYgWYn71WxKLtCktcCynROJGATV
-	59VM9DsyFQ+x9E0yKPbO7CBLYPN8+RHXkCsr2stTtGcaqKpAPrC5LO0dNsDU1EMGdrs6qQ
-	slTb9JZrTjXWjZv3BftR0Vm0jrdMPq4vMxwyol/sbUZBJFtFsnDK0Sa1SZpIUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745945587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WwmLgDT1WO4FJ/Bs9AFg3veV+pfKiE4cEwup8QWcbz8=;
-	b=+1FCOKXeX5IVkra6/CGRF/997U00GhA7QwKWQX0rmv0YFRE+asHHGwF82hcs8ww6g713Ju
-	0NEChJGMO8H8X5CQ==
-To: carlos.bilbao@kernel.org, tglx@linutronix.de, seanjc@google.com,
- jan.glauber@gmail.com
-Cc: bilbao@vt.edu, pmladek@suse.com, akpm@linux-foundation.org,
- jani.nikula@intel.com, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, takakura@valinux.co.jp, Carlos Bilbao
- <carlos.bilbao@kernel.org>
-Subject: Re: [PATCH v2 2/2] x86/panic: Add x86_panic_handler as default
- post-panic behavior
-In-Reply-To: <20250428215952.1332985-3-carlos.bilbao@kernel.org>
-References: <20250428215952.1332985-1-carlos.bilbao@kernel.org>
- <20250428215952.1332985-3-carlos.bilbao@kernel.org>
-Date: Tue, 29 Apr 2025 18:59:07 +0206
-Message-ID: <84ldri7vv0.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Scxr8UDB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4AA5C4CEEA;
+	Tue, 29 Apr 2025 16:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745945605;
+	bh=UGcKKVQF62LQ6hsPGiNLBxAkwhPYxGX2ggkQXxOx59E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Scxr8UDB67KnQvqCCXhbOpKdwm1LeY6NpiVlg5X/yFgLDByBaOWBs47ipLZz3NNDm
+	 HvP37FmsSysPqVU/Qc0mPX0h9ewOew0mwJWSK/CDnMNK6SqemYFECKMvLJxRmhNjJZ
+	 KlffCCx6w7N5Tioo2Smh6ImSxhy0RQwTZrZURImg=
+Date: Tue, 29 Apr 2025 18:51:43 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: stable@vger.kernel.org, Kai Zhang <zhangkai@iscas.ac.cn>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH stable v6.6] riscv: kprobes: Fix wrong lengths passed to
+ patch_text_nosync()
+Message-ID: <2025042957-dazzler-frying-9051@gregkh>
+References: <20250429161418.838564-1-namcao@linutronix.de>
+ <2025042945-financial-rumbling-bcd0@gregkh>
+ <20250429164614.g3w8JJAk@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429164614.g3w8JJAk@linutronix.de>
 
-On 2025-04-28, carlos.bilbao@kernel.org wrote:
-> From: Carlos Bilbao <carlos.bilbao@kernel.org>
->
-> Add function x86_panic_handler() as the default behavior for x86 for
-> post-panic stage via panic_set_handling(). Instead of busy-wait loop, it
-> will halt if there's no console to save CPU cycles.
->
-> Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
-> ---
->  arch/x86/kernel/setup.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 9d2a13b37833..3bfef55e9adb 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -16,6 +16,7 @@
->  #include <linux/initrd.h>
->  #include <linux/iscsi_ibft.h>
->  #include <linux/memblock.h>
-> +#include <linux/panic.h>
->  #include <linux/panic_notifier.h>
->  #include <linux/pci.h>
->  #include <linux/root_dev.h>
-> @@ -837,6 +838,15 @@ static void __init x86_report_nx(void)
->  	}
->  }
->  
-> +
-> +static void x86_panic_handler(void)
-> +{
-> +	if (console_trylock()) {
-> +		console_unlock();
-> +		safe_halt();
-> +	}
+On Tue, Apr 29, 2025 at 06:48:21PM +0200, Nam Cao wrote:
+> On Tue, Apr 29, 2025 at 06:31:09PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 29, 2025 at 06:14:18PM +0200, Nam Cao wrote:
+> > > Unlike patch_text(), patch_text_nosync() takes the length in bytes, not
+> > > number of instructions. It is therefore wrong for arch_prepare_ss_slot() to
+> > > pass length=1 while patching one instruction.
+> > > 
+> > > This bug was introduced by commit b1756750a397 ("riscv: kprobes: Use
+> > > patch_text_nosync() for insn slots"). It has been fixed upstream by commit
+> > > 51781ce8f448 ("riscv: Pass patch_text() the length in bytes"). However,
+> > > beside fixing this bug, this commit does many other things, making it
+> > > unsuitable for backporting.
+> > 
+> > We would almost always want the original commit, why not just send that
+> > instead?  What is wrong with it being in here as-is?
+> 
+> The original commit is probably fine. But I'm paranoid, because it is not
+> completely obvious whether the original commit would break something else
+> in v6.6. Because, as mentioned, it does more than just fixing the bug.
 
-I do not understand what you are trying to accomplish with the
-console_trylock(). At this point in the panic, all the messages are
-already output. The console lock is totally irrelevant.
+You should be more paranoid about creating a one-off change that is NOT
+upstream as in our experience, that almost always causes a new problem.
 
-Also, the console lock is only valid for legacy consoles.
+Please just backport the original and submit it after testing it out.
 
-I see no reason why you don't just use safe_halt() as your panic
-handler.
+thanks,
 
-John Ogness
+greg k-h
