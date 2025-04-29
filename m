@@ -1,169 +1,264 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4448C2D1;
-	Tue, 29 Apr 2025 15:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BE6227E97
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941202; cv=none; b=u2u5OtXRF7PuTda0yiC68nsXmXQ3A1EKLz7X6psddK0LrKAPbrXMc9eOqMN+PL+tBsJJmjmWu59HJ4M6nTf0SzVDBmICEWstH4XoORNFE8cClVfqDPM3Qp+ZzuKeaqFGlLAgkjDNcV3j40oTvHZjVwSLOQrkb9KFFw/083d4+9Y=
+	t=1745941205; cv=none; b=rAr1AQiiIqOaTMvoMV0326nEXzmR9bosYIZN/tkTcv/zkOLnxPckhUfnnO6EuMTlM5rxe9veieSy6p1t6EUX3GyiGO0wEFfRxfkVPZ4aKOyHveCfYdGOXHZuo6VOMtMqOPcTpIOO/W3SJL17SHOPxWfEvNkIHnHVokLgYeRyIuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941202; c=relaxed/simple;
-	bh=CrN6P12JVoXq0VzTYIezovmF77P97iZPbBUkrdCau7s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y5hk+lAozR8gGnFeVKl7pO9bw3o3ylkk4e0yXbsidCcSJSQNQcnS42vmulWyS/eOLzLsbCQA2V2MfnkxYhs7df5r3IFO58JpNWc+sdui6oESiVmYjFGoxBBenTP6stw6NJbJb46L8Ua0eyEHhJgzo88NjdGUCT8esLUTyeX8ers=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJMKZghg; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745941205; c=relaxed/simple;
+	bh=m4RIdnC33T+0DzN2pkMUmi2ZJdkLEyYSorF3bzhZmQI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s+CClPklu3hZNfclLlxNGbLthNHasDUhGDgax0F/xWlzAhapEn9IsVgu4GEU2pkGl0L2P3I5msVkuOCs2DU/K6Ggcrp4UmdQyvB7FVSjecnEZxGkJbQpHF2Q+kQwMw9xav0veULIO/MPbHX4zqIZ07+Sc1lJpgYbIITlMVQJE7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=igkPu5v2; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJMKZghg"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so4046097f8f.3;
-        Tue, 29 Apr 2025 08:40:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="igkPu5v2"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1739a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:40:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745941199; x=1746545999; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uRRV5VQKmG7WVso+6vlqTuY2N9DktX999E0cQzgs5ls=;
-        b=FJMKZghgcZY+pnR3AnxVLdR2Xmoyl/Ni/QAWsOdmyEPb7k5c7cYqer1A1FMAUC6kLG
-         Lqnbv7t697qh2zd8vjCHsbB4Xg5+sdDkCHPbsXcOTD3HSB+vK05+I5E7L+UT8I5aofUQ
-         hI7s38iclle1BoWY1mlMu62rBv48MG0x0csbbnrWs8VsmOTBChTOuur1IlCs/GaGVlyN
-         5UOq9zhylir6zamKiVhOTSHyD0af6Z1KqFEcKBBH65zqGzmVDZmqVXhjhZ8qq1JNykdx
-         lADir4B0v/O+F/8fpTJRGgW3NpKUfawb+kBqSJmCHtNzkSOGkahg5pJvnKd137PoXU8e
-         sJtg==
+        d=google.com; s=20230601; t=1745941202; x=1746546002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nrLjz0SO4NLZaGlZgmJ5ANLBwSUMQ+H6anEYSpKzKcw=;
+        b=igkPu5v2E8TpJbmhkZaYMFhSI1L7Qtv4eKmpWL0Gina+4r8Qxihkactxa3ckTeS4it
+         klnhE32dMbujO+Y1KfmfAdI/redH2erF39k/0T2zCF7m3MkvGKuASkcokX3gsONoO68/
+         LydkD1sZwjDOA3Myo288fcZKl32BA7nsAQGdw849qvnwfoxKWl2XKBwf1ZEEMS+1rCEH
+         RQxTEkCwT10Rh2ceVGJ83RsiN8VL7N0yaJU0Z2JOERwHvrc+VmDTm6UlvuoZ5WyTyTgb
+         nxQstjnbhFD+H81RHNvsjTv55sCMOuTd+eSfh+LS7BQIlxa6CmKS9VqyBsL7/8285pz9
+         0Enw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745941199; x=1746545999;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uRRV5VQKmG7WVso+6vlqTuY2N9DktX999E0cQzgs5ls=;
-        b=j6ii+deqVZ7Qk5yVLQeTiCAR4NWbI6cVxAMz+46tYyr+D1k9EsDAWddgk1HQO0vN6R
-         h8ph/4IFuVWAb7B/pS7TnNJiBSh0yB51Dr+aeMcIgTQW/Q7gvtu23iXEyqgBwUix5+jN
-         JVuNkyMmpa+INH2hugOq3EjaPvlqJHGCLJ7hlFoefeoYl488XxlkUEsC5oBSKb8iAVpu
-         lMxZHHrUifmBoLich4kZ4iYuYS/f6FA496yM8tnMYXQ3l164wD7YmCKPXKLq3ak0T2br
-         62e9x5uXwHYrNv4PXWFVRixr9zHR75+YQs+004YwfLWctRw6L5wGpaHQfqssx3N64TFM
-         IbmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiCaT8N8dpSOx8hTPNhja8TLP1lHsHodH191EI0Mu6v3w66eiIPdwnnJJNtKyFCLReDG/xAMHX9AdE97w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlNs6FTv5Gr2Os/hpAonztKlKdtJWIwMZZEKEcHjBMwrGjpLi6
-	hbY/uPBxaDpJKSCWz3OZ1DbuNXtg8aEt4GIPtXV7MBXJDTPiNuoS8xPndxru
-X-Gm-Gg: ASbGnct317MjVE1l6UPyOnWQ2qtdhDb+xvXNpFhqo3i76ZR68S4H1WmL+zEQjpeyEIg
-	F8SS10gTWrHv0eMai7lTP430r4BrhyaKKCJzT/bu5cU1huJ/ep2qYyIKQkso/osHomFexVnTLa0
-	IAIfkKVmTYHSAUqZvPZ0m/SmEtfBFkn0m/N2yrH5KePWiy95hyxfhHvfAiMID5M6eKC30EhB8Oa
-	MO/oJFEgQWDuz41nKnvSjth6q0HRrng1/tSo1JFJrSUt3tqCA+2F/tJ1lVhwauihMMwC+KQQTfD
-	GuGrIndzRMjrkiz8obTa+d+k8t/bS4kHI/CpV/wRr3+w4onZrouRklSj5LrPMJXbm629s5jy0id
-	PPp1khlYjvyK+
-X-Google-Smtp-Source: AGHT+IEvNOkswmzuTDrFfDXMdU1HhqIZ6y2XMAglm3nMj1C1EkfGRBxuFw3NEa1k/GsIAgd7gHE8Bg==
-X-Received: by 2002:a05:6000:2489:b0:39e:e499:3efd with SMTP id ffacd0b85a97d-3a08ad7764fmr2604535f8f.42.1745941198769;
-        Tue, 29 Apr 2025 08:39:58 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e461casm14562706f8f.74.2025.04.29.08.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 08:39:58 -0700 (PDT)
-Message-ID: <a380702d474e9b1f361f7224e20e40bdfb8a810b.camel@gmail.com>
-Subject: Re: [PATCH 2/4] spi: axi-spi-engine: don't repeat mode config for
- offload
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Michael Hennerich	
- <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 29 Apr 2025 16:40:03 +0100
-In-Reply-To: <f68231bc-6546-4eaf-a8b2-fc31add33a1f@baylibre.com>
-References: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
-	 <20250428-adi-main-v1-2-4b8a1b88a212@baylibre.com>
-	 <ca7708856683596894b5fb9cfd6caa164535a50a.camel@gmail.com>
-	 <f68231bc-6546-4eaf-a8b2-fc31add33a1f@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+        d=1e100.net; s=20230601; t=1745941202; x=1746546002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nrLjz0SO4NLZaGlZgmJ5ANLBwSUMQ+H6anEYSpKzKcw=;
+        b=p9F8pI46Miejo79mE5ER0/8rZAjFtutAGkkNj/szIBblm16zsU6cIebQuaMQ1H1aXI
+         lfCDas6E77Q/0d8VdL8vz8qTf1F8UAcrhjbaidtLRQ2V/70spd5nNwOxCNfA+B2zQPOI
+         n4A2yc+ZjY7BvBROM10adit3y0xsH7efBEJvD3gHVCgOTcUPeebqskOsdIS1hN24VdZ+
+         ZpU6SaRYSVfg9x7xnQhGsXc5AMbQFTC0octSw70XbL5ghKMjmU4ZX9WTt5gQ0Br4GCvm
+         4XH6Vrl1LDBZelzbFsGf9uA+O0dr7LpRqe1WIufI5aFUGr8/+gDC0n8w8V9f2jOuaJwN
+         tyOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7ZxISguUFgaBPliMfWgOPM0D6EC7XU6e1nzIM890abZU7ZdK+P0WuwMAhgePv7tPVmRXRf6UUyi2pLpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0WmBDtM4jWeXSbeT+XrpZhmbMZb3CfOuySm5f8+/08wItTWGL
+	1JJLY9m+utJoF9pDM5qQki6VPu/voRJRPrxg5hOZBKzvpLI3DxfvruZ9sJ+84xbG0z2qsUkpfSr
+	npRM09zJJzN4JoG7yZSqTxkPADdqUsSTMTzFJ
+X-Gm-Gg: ASbGncuQJ/9OXyNw8fiYAys5jFHq/TlZx15V1k5jPZ+NUhVNcHeriPQYiWO0LlxFn26
+	oeFqU4tHoMS4Xl/D3MB8jmn5jPHAb5ySK42yGyFYB9ndtGemLiW5fUSIfDGQOfxaGqaZpRdd9jS
+	NTK5Y9kJzT0QyX8bwf1D6pco4z3MYcZbbdga7uU3NKNBahJGHSVg==
+X-Google-Smtp-Source: AGHT+IGTmRrDj58386rjJZziDq63lizkFMzj1lu/PM65c5dMEelMGMumc3qFR5YFmPkjXr20u694i69kdm2X64XfN50=
+X-Received: by 2002:a50:8713:0:b0:5de:bcd9:4aa with SMTP id
+ 4fb4d7f45d1cf-5f83c1b5a2bmr96410a12.3.1745941201725; Tue, 29 Apr 2025
+ 08:40:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
+In-Reply-To: <20250418174959.1431962-8-surenb@google.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 29 Apr 2025 17:39:25 +0200
+X-Gm-Features: ATxdqUE5eaCYmwGd2V3bpxMHfmJQqwTFsFKw7F4dJMhdfNXiMK8VuoXSkdfNDiE
+Message-ID: <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
+To: Suren Baghdasaryan <surenb@google.com>, Al Viro <viro@zeniv.linux.org.uk>, brauner@kernel.org, 
+	linux-fsdevel@vger.kernel.org
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
+	peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, 
+	shuah@kernel.org, adobriyan@gmail.com, josef@toxicpanda.com, 
+	yebin10@huawei.com, linux@weissschuh.net, willy@infradead.org, 
+	osalvador@suse.de, andrii@kernel.org, ryan.roberts@arm.com, 
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-04-29 at 10:24 -0500, David Lechner wrote:
-> On 4/29/25 4:08 AM, Nuno S=C3=A1 wrote:
-> > Hi David,
-> >=20
-> > The whole series LGTM but I do have a small concern (maybe an hypotheti=
-cal
-> > one)
-> > in this one...
-> >=20
-> >=20
-> > On Mon, 2025-04-28 at 15:58 -0500, David Lechner wrote:
->=20
->=20
-> ...
->=20
-> > > +
-> > > +	writel_relaxed(SPI_ENGINE_CMD_SYNC(0),
-> > > +		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
-> > > +
-> > > +	writel_relaxed(SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_CONFIG,
-> > > +					=C2=A0=C2=A0=C2=A0 priv->spi_mode_config),
-> > > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi_engine->base + SPI_ENGINE=
-_REG_CMD_FIFO);
-> > > +
-> > > +	writel_relaxed(SPI_ENGINE_CMD_SYNC(1),
-> > > +		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
-> > > +
-> >=20
-> > I would assume that SPI_ENGINE_CMD_SYNC(0) + SPI_ENGINE_CMD_SYNC(1) sho=
-uld
-> > be
-> > executed in order by the core? I think all this relaxed API's don't giv=
-e any
-> > guarantee about store completion so, in theory, we could have SYNC(0) a=
-fter
-> > SYNC(1). Even the full barrier variants don't guarantee this I believe =
-[1].
-> > There's ioremap_np() variant but likely not supported in many platforms=
-.
-> > Doing a
-> > read() before SYNC(1) should be all we need to guarantee proper orderin=
-g
-> > here.
-> >=20
-> > Or maybe this is all theoretical and not an issue on the platforms this
-> > driver
-> > is supported but meh, just raising the possibility.
-> >=20
-> >=20
-> > [1]:
-> > https://elixir.bootlin.com/linux/v6.12-rc6/source/Documentation/driver-=
-api/device-io.rst#L299
-> >=20
->=20
-> The way I am reading this, relaxed isn't "no barriers", just "weaker
-> barriers".
+On Fri, Apr 18, 2025 at 7:50=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+> With maple_tree supporting vma tree traversal under RCU and vma and
+> its important members being RCU-safe, /proc/pid/maps can be read under
+> RCU and without the need to read-lock mmap_lock. However vma content
+> can change from under us, therefore we make a copy of the vma and we
+> pin pointer fields used when generating the output (currently only
+> vm_file and anon_name). Afterwards we check for concurrent address
+> space modifications, wait for them to end and retry. While we take
+> the mmap_lock for reading during such contention, we do that momentarily
+> only to record new mm_wr_seq counter. This change is designed to reduce
+> mmap_lock contention and prevent a process reading /proc/pid/maps files
+> (often a low priority task, such as monitoring/data collection services)
+> from blocking address space updates.
+[...]
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index b9e4fbbdf6e6..f9d50a61167c 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+[...]
+> +/*
+> + * Take VMA snapshot and pin vm_file and anon_name as they are used by
+> + * show_map_vma.
+> + */
+> +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_ar=
+ea_struct *vma)
+> +{
+> +       struct vm_area_struct *copy =3D &priv->vma_copy;
+> +       int ret =3D -EAGAIN;
+> +
+> +       memcpy(copy, vma, sizeof(*vma));
+> +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
+> +               goto out;
 
-Yes, sometimes just compiler ones. Bad phrasing from me...
+I think this uses get_file_rcu() in a different way than intended.
 
-> Quoting from the linked doc:
->=20
-> 	On architectures that require an expensive barrier for serializing
-> 	against DMA, these =E2=80=9Crelaxed=E2=80=9D versions of the MMIO access=
-ors only
-> 	serialize against each other, but contain a less expensive barrier
-> 	operation.
->=20
-> So that sounds like we should not have a problem to me. (And if there is =
-a
-> problem, then it would affect other parts of the driver, like when we loa=
-d
-> the fifos with tx data in a loop.)
+As I understand it, get_file_rcu() is supposed to be called on a
+pointer which always points to a file with a non-zero refcount (except
+when it is NULL). That's why it takes a file** instead of a file* - if
+it observes a zero refcount, it assumes that the pointer must have
+been updated in the meantime, and retries. Calling get_file_rcu() on a
+pointer that points to a file with zero refcount, which I think can
+happen with this patch, will cause an endless loop.
+(Just as background: For other usecases, get_file_rcu() is supposed to
+still behave nicely and not spuriously return NULL when the file* is
+concurrently updated to point to another file*; that's what that loop
+is for.)
+(If my understanding is correct, maybe we should document that more
+explicitly...)
 
-Well that just ensures that they are issued by the order you wrote them but=
- it
-does not guarantee that they end up in the same order on the peripheral its=
-elf.
+Also, I think you are introducing an implicit assumption that
+remove_vma() does not NULL out the ->vm_file pointer (because that
+could cause tearing and could theoretically lead to a torn pointer
+being accessed here).
 
-Anyways, likely not an issue on the arches we care and as you mentioned it,
-there are other places of the driver where this could matter. So, I guess n=
-ot
-material for this series.
+One alternative might be to change the paths that drop references to
+vma->vm_file (search for vma_close to find them) such that they first
+NULL out ->vm_file with a WRITE_ONCE() and do the fput() after that,
+maybe with a new helper like this:
 
-- Nuno S=C3=A1
+static void vma_fput(struct vm_area_struct *vma)
+{
+  struct file *file =3D vma->vm_file;
 
+  if (file) {
+    WRITE_ONCE(vma->vm_file, NULL);
+    fput(file);
+  }
+}
+
+Then on the lockless lookup path you could use get_file_rcu() on the
+->vm_file pointer _of the original VMA_, and store the returned file*
+into copy->vm_file.
+
+> +       if (!anon_vma_name_get_if_valid(copy))
+> +               goto put_file;
+> +
+> +       if (!mmap_lock_speculate_retry(priv->mm, priv->mm_wr_seq))
+> +               return 0;
+
+We only check for concurrent updates at this point, so up to here,
+anything we read from "copy" could contain torn pointers (both because
+memcpy() is not guaranteed to copy pointers atomically and because the
+updates to the original VMA are not done with WRITE_ONCE()).
+That probably means that something like the preceding
+anon_vma_name_get_if_valid() could crash on an access to a torn
+pointer.
+Please either do another mmap_lock_speculate_retry() check directly
+after the memcpy(), or ensure nothing before this point reads from
+"copy".
+
+> +       /* Address space got modified, vma might be stale. Re-lock and re=
+try. */
+> +       rcu_read_unlock();
+> +       ret =3D mmap_read_lock_killable(priv->mm);
+> +       if (!ret) {
+> +               /* mmap_lock_speculate_try_begin() succeeds when holding =
+mmap_read_lock */
+> +               mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_seq)=
+;
+> +               mmap_read_unlock(priv->mm);
+> +               ret =3D -EAGAIN;
+> +       }
+> +
+> +       rcu_read_lock();
+> +
+> +       anon_vma_name_put_if_valid(copy);
+> +put_file:
+> +       if (copy->vm_file)
+> +               fput(copy->vm_file);
+> +out:
+> +       return ret;
+> +}
+[...]
+> @@ -266,39 +399,41 @@ static void get_vma_name(struct vm_area_struct *vma=
+,
+>                 } else {
+>                         *path =3D file_user_path(vma->vm_file);
+>                 }
+> -               return;
+> +               goto out;
+>         }
+>
+>         if (vma->vm_ops && vma->vm_ops->name) {
+>                 *name =3D vma->vm_ops->name(vma);
+
+This seems to me like a big, subtle change of semantics. After this
+change, vm_ops->name() will no longer receive a real VMA; and in
+particular, I think the .name implementation special_mapping_name used
+in special_mapping_vmops will have a UAF because it relies on
+vma->vm_private_data pointing to a live object.
+
+I think you'll need to fall back to using the mmap lock and the real
+VMA if you see a non-NULL vma->vm_ops->name pointer.
+
+>                 if (*name)
+> -                       return;
+> +                       goto out;
+>         }
+>
+>         *name =3D arch_vma_name(vma);
+>         if (*name)
+> -               return;
+> +               goto out;
+>
+>         if (!vma->vm_mm) {
+>                 *name =3D "[vdso]";
+> -               return;
+> +               goto out;
+>         }
+>
+>         if (vma_is_initial_heap(vma)) {
+>                 *name =3D "[heap]";
+> -               return;
+> +               goto out;
+>         }
+>
+>         if (vma_is_initial_stack(vma)) {
+>                 *name =3D "[stack]";
+> -               return;
+> +               goto out;
+>         }
+>
+>         if (anon_name) {
+>                 *name_fmt =3D "[anon:%s]";
+>                 *name =3D anon_name->name;
+> -               return;
+>         }
+> +out:
+> +       if (anon_name && !mmap_locked)
+> +               anon_vma_name_put(anon_name);
+
+Isn't this refcount drop too early, causing UAF read? We drop the
+reference on the anon_name here, but (on some paths) we're about to
+return anon_name->name to the caller through *name, and the caller
+will read from it.
+
+Ah, but I guess it's actually fine because the refcount increment was
+unnecessary in the first place, because the vma pointer actually
+points to a copy of the original VMA, and the copy has its own
+refcounted reference to the anon_name thanks to get_vma_snapshot()?
+It might be helpful to have some comments documenting which VMA
+pointers can point to copies.
