@@ -1,285 +1,219 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3D040C03
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CFB22AE68
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745949862; cv=none; b=NZKXtngKsIj4RlHhA9zsjjq49c9vUBdzvyzXgq+dwoRSIkbuJMGPfCvKfVDcE80nbO8fHcG5EHVAPraAWfI55wq+9UxU5P4UFKqE6iPhk9YTsvbW0pgkaHA3rejB4/4qIGHsgxSMml5gFPJ+ueQMwLH2dSUrkBjNKPW97UXvKXM=
+	t=1745949871; cv=none; b=kvjP1riVeo0RmfRa1CK+rR3S8CRPszoES5X0GjAr3s+mJNnhAum0TyAoqmRlSaalsTQhYNod+OHvSmqiGp0d2BIsEzW/W3b3Vx0Vhr/hMnvxHTtTj4CJl/FQqqxOsmYEHTIOwPV9ANKfz0fDo4gPJaKTRgoZUBPDGWmYOrtyGug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745949862; c=relaxed/simple;
-	bh=rAks88TKI5UJtVnpuF6h5jVqqQnNM42d6RJm/OLQMxI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JqVJPSffcvJ2u8bncsQB+bbzVqM2dAPMK2lD9sa7vdeiyFswHVzr34gsYpJ1zKbGrQwcICLM328JzbkfM+OXrpKQmeTd4mo/zYxNQkoySIkPnw0S/Gim6wzcDq/oE0+gwvIdmEd454ZAustlkhnTJ1TJDNoLXOKKoLWDTKZogB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=Fxwj7p23; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+	s=arc-20240116; t=1745949871; c=relaxed/simple;
+	bh=0+Jt6wnHoPe3/Gkun9y2Xjhz+Air4hf4yJp89So0d10=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cpi7oBFW8awwAh5wPeoC97yIhKPzF/V7qZh28Xvy4fpEUPCkrCuOnnBvaO6ZXH3E3asW70X8hnVeOgwLqCe1Fd8klVmm7Xja+yREoE5SmmfinIZlg4e5AZ63OzW69H4pNtdteYQ99SERwmwz0mqA1FC3q6GzRxYwkLHDJrsHDPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gb5mgiqP; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="Fxwj7p23"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7394945d37eso5536550b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:04:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gb5mgiqP"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47666573242so381351cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:04:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1745949859; x=1746554659; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TF5zvq+dwouurJsmOFisci0GfULvxMNmW9FvbbMePLQ=;
-        b=Fxwj7p23ujTAx41E8ObrcpbBLq0sL7mfPhtS7srtaHqgpWTdFUgQKU6vBVFiU2xX4V
-         q0IEPH4CfjGYXgdMYdvSTnqBU2dV8NpfvgYkbiqhSMcZf1Mb9oD5/lVEL5MDS+UUMOMu
-         XeLBtNaiJJ9CZydsV1OPnSBMHoDxuCDOPGpd87s1wLeJx7KP2pHHykhX7hWOUz6KTQNA
-         ude5FjEbhrWmQb5vb5GgfgyOiHMPJp7oW+GLotarH8W6U1f121/xR3LkeGLp2KkekyC9
-         3sbD1KFMlVXAmbbliIE3xarT4tXL9ipAYk03Kg2393V1pGChPPOu6URPuSWJ3zwQ41e8
-         QiLw==
+        d=google.com; s=20230601; t=1745949869; x=1746554669; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bGFBOIYiVFMA2gosF4fAzdDOnh60Gs1cEA/UxI1BGcI=;
+        b=Gb5mgiqP4+8F2I/gxzXjkmR31CUbqviLeocNN7oubhvWNamm8PNIHXehAl7zPqMiX/
+         3GwzpwURSoUi6RaNUwyfk1kWOeJ82eolM37z67lDIGAOc48k92NyIfqRgub5RWJmviPu
+         xXDDgBiwaPrf0htRRtv8YOHxQy4OeOMIGXjaTt4NnpShd75Bl65skYamDCVUdaUU/1iM
+         ym/lsEf1DW6K51r97wG9uPXfeMmSfSkgStSiZw+wsw88e2ONOz3vaSkZQnN+lYd4TuDG
+         Bl+K/DvaO7d1+J7mNPG1os2V3Aawvhzf316oIma8ZK3D8gIBhh6+ffFT+y7Q5e78E7yk
+         IKeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745949859; x=1746554659;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TF5zvq+dwouurJsmOFisci0GfULvxMNmW9FvbbMePLQ=;
-        b=HukyPttyOqCASPZ9dy2J1KuxkkhnHdfnJTOCD57d7pDdqtb60rxBH4m4YrMBVislP5
-         cF05DQ9g51Z+B2+ax1xt+j5HfWPDFX6xFgnKzqilC6WNchGpwbMBsqodyezUtS7+v9Um
-         mLG5EAm2OCssJ81TACTPZH6bDA6w8EDohDnOE3L2Ask3oIy3JZhvpbet0UZ9/aJUkO5/
-         /E8A8OgCfHCftJoCXbb8MSglbyNSPebFY/L6Y06bPwTvY9h/vK9Wn7ny+4PJq/zmkYt8
-         tBjWvUO6BVw6WFp5SvoVawZEGsFMoo1zFBLJSf4akX6sJmke2Srbb+rQSr2dlNZzLUHA
-         h0BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGrPL3Ay545E7pc8vJRTRW82svLiC4Q5ZxUUJgaWOQ+yE+kCOfvTDSxTMjWxXnjN1PanhcJLngcdqebBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+XxcVy+7FrrWpMxRAn5jRgA96NUq9hCIZiYRtOPNptfpHvOmN
-	w5+q2DR1lOWrIHFTuUkOh8OeH7H9C1Kfncp3Z40fZtmVDhEZ98VUs9hOE4mHig==
-X-Gm-Gg: ASbGncuTyQjAo43rDAqkLzePLFnXBTSFt1VHlQOHNuG7oxFY95gzVmqOmFCZSwfrh7y
-	OFAxdoU56tpyjzp8wQNGH11/Tav+9XssDatZ0PCwtXDSk6Hx7XwGdjW3kIYs0YXJSOG7E/hjhyq
-	fU/yHosByj5otbfpC792YpcrjxfL+zWHEHD0w+WNq6FnRL4qFsYHYCkNwO/1u2jU2GbmJwR40Tl
-	+D1lG85KmImEj3XN+FCNEeGBnUmg26DBFH/9alCZhdR7TXkeQTyRyUwFZDWwNvXMLbJRwEIIAyj
-	sKGWWJ7GFNxcgp4QIJD3vDJ71gXteC3fnOeBUoc4WIvxP/FyM/Sgig3zXQ==
-X-Google-Smtp-Source: AGHT+IH6MS3bZbEKvU9ZIkPz0etq8wy02LqJGtPPuVrhlRpUYewJVc/Smzwo8DIrS9bHhVaeokgm0A==
-X-Received: by 2002:a05:6a20:9d93:b0:1f5:7eb5:72dc with SMTP id adf61e73a8af0-2046a3abe8amr17646432637.3.1745949859182;
-        Tue, 29 Apr 2025 11:04:19 -0700 (PDT)
-Received: from [172.16.116.85] ([103.15.228.94])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f580asm7724722a12.2.2025.04.29.11.04.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 11:04:18 -0700 (PDT)
-Message-ID: <6afe226c-4bf4-48be-84be-034261914ee5@beagleboard.org>
-Date: Tue, 29 Apr 2025 23:34:01 +0530
+        d=1e100.net; s=20230601; t=1745949869; x=1746554669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bGFBOIYiVFMA2gosF4fAzdDOnh60Gs1cEA/UxI1BGcI=;
+        b=MSurIP53KQtd+YLWzkVZbXtIvyvN5Ga6gDquAYFEFDs+D3k00wPX3Kad4dlKs+eaMf
+         QjteGaLR5yX9g2dgBw8HLRjjJyqJFi002rcNJMUNmDadZhwpUsHHXH4bRfDjwRRu9GUz
+         52wYaPdN7dHpJ5wiyQjNbopSpP0pltsB6h/DB0u/5EokNPvya/99tYHhN98QTO/NIEaF
+         mIZumP/fkzbASVnOP94IgJzDNaJK1/KHS8CAXcBww1S4DVqk/rm49B4goi7C8Ff9LqFl
+         4QHVbVK703aS51Qo7v4yH80Q6QqhhHkpQItzAW0SiyLYPb+u3JdGoDbjWWbaZ0mAjyk4
+         VPgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTI7Qa1MTRFnK6QNJLdYZsbOb25UZa0vf9cah1M53iaxGDKZPSHNTTc08DGjCqJuikCESorE7XMvGXeHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz28mF0MDEbkM/REAZ9SupAIH6BLkmc6sU3LKh23tKy8PKYbv9h
+	293CLYH/QtwdjhUgfs3FC6qPjLGa0HzZGkpq7FwDBWwCVYuHJnQubxTKC0Z2dEvvd7gY0AlaDoE
+	ciH10GND03t+w9wiqZ0q6DTWbrsVZPaUTsXcp
+X-Gm-Gg: ASbGncuHcblcwAu7dvie3elZYhtRYsuLNKCV8PAvpPFHYShNRtzGTilMu4j6uOEb4ex
+	0RqqZ90Bm+P51umCZmuZXl7UoAx2iAGUQ1GNBqKhHtT+7PoKLoiBrt+f5pGvY3r+7ugqJO2diqn
+	lUWsLmr7D2HMHE+DHJ8BoGhs+HA7uM+BKrkTDJJZgvHBsoPFHxSJ2n
+X-Google-Smtp-Source: AGHT+IGTHdof2vv8tE6oOakqNkRD6qkaYwcU2GMDuR1dry0vZWexciL9KgeFFNdap4sTR6sGZPImbJQwIIPq3LvxJ3k=
+X-Received: by 2002:a05:622a:8e:b0:472:538:b795 with SMTP id
+ d75a77b69052e-489bb19045fmr245541cf.22.1745949868234; Tue, 29 Apr 2025
+ 11:04:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] schemas: i2c: Introduce I2C bus extensions
-To: Herve Codina <herve.codina@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250401081041.114333-1-herve.codina@bootlin.com>
- <20250401081041.114333-3-herve.codina@bootlin.com>
-Content-Language: en-US
-From: Ayush Singh <ayush@beagleboard.org>
-In-Reply-To: <20250401081041.114333-3-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
+ <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
+ <CAJuCfpGGiwTbMeGAeYNtQ5SsFenUw8up6ToLy=VstULM_TSoXA@mail.gmail.com> <CAG48ez15g5n9AoMJk1yPHsDCq2PGxCHc2WhCAzH8B2o6PgDwzQ@mail.gmail.com>
+In-Reply-To: <CAG48ez15g5n9AoMJk1yPHsDCq2PGxCHc2WhCAzH8B2o6PgDwzQ@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 29 Apr 2025 11:04:15 -0700
+X-Gm-Features: ATxdqUEFK_c8BfZNtNDlAtU3sfwm14-hJ5pe2ZNDycq9_J7ILXRelmx3Box4ufQ
+Message-ID: <CAJuCfpG+YjyVE-6TaAQEjwc0iixqN8Epf25jo2awtL=gqY=afA@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
+To: Jann Horn <jannh@google.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, brauner@kernel.org, 
+	linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
+	vbabka@suse.cz, peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, 
+	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/1/25 13:40, Herve Codina wrote:
+On Tue, Apr 29, 2025 at 10:21=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
+:
+>
+> Hi!
+>
+> (I just noticed that I incorrectly assumed that VMAs use kfree_rcu
+> (not SLAB_TYPESAFE_BY_RCU) when I wrote my review of this, somehow I
+> forgot all about that...)
 
-> An I2C bus can be wired to the connector and allows an add-on board to
-> connect additional I2C devices to this bus.
->
-> Those additional I2C devices could be described as sub-nodes of the I2C
-> bus controller node however for hotplug connectors described via device
-> tree overlays there is additional level of indirection, which is needed
-> to decouple the overlay and the base tree:
->
->    --- base device tree ---
->
->    i2c1: i2c@abcd0000 {
->        compatible = "xyz,i2c-ctrl";
->        i2c-bus-extension@0 {
->            i2c-bus = <&i2c_ctrl>;
->        };
->        ...
->    };
->
->    i2c5: i2c@cafe0000 {
->        compatible = "xyz,i2c-ctrl";
->        i2c-bus-extension@0 {
->            i2c-bus = <&i2c-sensors>;
->        };
->        ...
->    };
->
->    connector {
->        i2c_ctrl: i2c-ctrl {
->            i2c-parent = <&i2c1>;
->            #address-cells = <1>;
->            #size-cells = <0>;
->        };
->
->        i2c-sensors {
->            i2c-parent = <&i2c5>;
->            #address-cells = <1>;
->            #size-cells = <0>;
->        };
->    };
->
->    --- device tree overlay ---
->
->    ...
->    // This node will overlay on the i2c-ctrl node of the base tree
->    i2c-ctrl {
->        eeprom@50 { compatible = "atmel,24c64"; ... };
->    };
->    ...
->
->    --- resulting device tree ---
->
->    i2c1: i2c@abcd0000 {
->        compatible = "xyz,i2c-ctrl";
->        i2c-bus-extension@0 {
->            i2c-bus = <&i2c_ctrl>;
->        };
->        ...
->    };
->
->    i2c5: i2c@cafe0000 {
->        compatible = "xyz,i2c-ctrl";
->        i2c-bus-extension@0 {
->            i2c-bus = <&i2c-sensors>;
->        };
->        ...
->    };
->
->    connector {
->        i2c-ctrl {
->            i2c-parent = <&i2c1>;
->            #address-cells = <1>;
->            #size-cells = <0>;
->
->            eeprom@50 { compatible = "atmel,24c64"; ... };
->        };
->
->        i2c-sensors {
->            i2c-parent = <&i2c5>;
->            #address-cells = <1>;
->            #size-cells = <0>;
->        };
->    };
->
-> Here i2c-ctrl (same goes for i2c-sensors) represent the part of I2C bus
-> that is on the hot-pluggable add-on. On hot-plugging it will physically
-> connect to the I2C adapter on the base board. Let's call the 'i2c-ctrl'
-> node an "extension node".
->
-> In order to decouple the overlay from the base tree, the I2C adapter
-> (i2c@abcd0000) and the extension node (i2c-ctrl) are separate nodes.
->
-> The extension node is linked to the I2C bus controller in two ways. The
-> first one with the i2c-bus-extension available in I2C controller
-> sub-node and the second one with the i2c-parent property available in
-> the extension node itself.
->
-> The purpose of those two links is to provide the link in both direction
-> from the I2C controller to the I2C extension and from the I2C extension
-> to the I2C controller.
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->   dtschema/schemas/i2c/i2c-controller.yaml | 67 ++++++++++++++++++++++++
->   1 file changed, 67 insertions(+)
->
-> diff --git a/dtschema/schemas/i2c/i2c-controller.yaml b/dtschema/schemas/i2c/i2c-controller.yaml
-> index 018d266..509b581 100644
-> --- a/dtschema/schemas/i2c/i2c-controller.yaml
-> +++ b/dtschema/schemas/i2c/i2c-controller.yaml
-> @@ -30,6 +30,13 @@ properties:
->       minimum: 1
->       maximum: 5000000
->   
-> +  i2c-parent:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      In case of an I2C bus extension, reference to the I2C bus controller
-> +      this extension is connected to. In other word, reference the I2C bus
-> +      controller on the fixed side that drives the bus extension.
-> +
->     i2c-scl-falling-time-ns:
->       description:
->         Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
-> @@ -159,6 +166,25 @@ allOf:
->           - i2c-scl-has-clk-low-timeout
->   
->   patternProperties:
-> +  'i2c-bus-extension@[0-9a-f]+$':
-> +    type: object
-> +    description:
-> +      An I2C bus extension connected to an I2C bus. Those extensions allow to
-> +      decouple I2C busses when they are wired to connectors.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      i2c-bus:
-> +        $ref: /schemas/types.yaml#/definitions/phandle
-> +        description:
-> +          Reference to the extension bus.
-> +
-> +    required:
-> +      - reg
-> +      - i2c-bus
-> +
->     '@[0-9a-f]+$':
->       type: object
->   
-> @@ -221,3 +247,44 @@ dependentRequired:
->     i2c-digital-filter-width-ns: [ i2c-digital-filter ]
->   
->   additionalProperties: true
-> +
-> +examples:
-> +  # I2C bus extension example involving an I2C bus controller and a connector.
-> +  #
-> +  #  +--------------+     +-------------+     +-------------+
-> +  #  | i2c@abcd0000 |     |  Connector  |     | Addon board |
-> +  #  |    (i2c1)    +-----+ (i2c-addon) +-----+ (device@10) |
-> +  #  |              |     |             |     |             |
-> +  #  +--------------+     +-------------+     +-------------+
-> +  #
-> +  # The i2c1 I2C bus is wired from a I2C controller to a connector. It is
-> +  # identified at connector level as i2c-addon bus.
-> +  # An addon board can be connected to this connector and connects a device
-> +  # (device@10) to this i2c-addon extension bus.
-> +  - |
-> +    i2c1: i2c@abcd0000 {
-> +        compatible = "xyz,i2c-ctrl";
-> +        reg = <0xabcd0000 0x100>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        i2c-bus-extension@0 {
-> +            reg = <0>;
-> +            i2c-bus = <&i2c_addon>;
-> +        };
-> +    };
-> +
-> +    connector {
-> +        i2c_addon: i2c-addon {
-> +            i2c-parent = <&i2c1>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            device@10 {
-> +                compatible = "xyz,foo";
-> +                reg = <0x10>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
+Does this fact affect your previous comments? Just want to make sure
+I'm not missing something...
 
+>
+> On Tue, Apr 29, 2025 at 7:09=E2=80=AFPM Suren Baghdasaryan <surenb@google=
+.com> wrote:
+> > On Tue, Apr 29, 2025 at 8:40=E2=80=AFAM Jann Horn <jannh@google.com> wr=
+ote:
+> > > On Fri, Apr 18, 2025 at 7:50=E2=80=AFPM Suren Baghdasaryan <surenb@go=
+ogle.com> wrote:
+> > > > With maple_tree supporting vma tree traversal under RCU and vma and
+> > > > its important members being RCU-safe, /proc/pid/maps can be read un=
+der
+> > > > RCU and without the need to read-lock mmap_lock. However vma conten=
+t
+> > > > can change from under us, therefore we make a copy of the vma and w=
+e
+> > > > pin pointer fields used when generating the output (currently only
+> > > > vm_file and anon_name). Afterwards we check for concurrent address
+> > > > space modifications, wait for them to end and retry. While we take
+> > > > the mmap_lock for reading during such contention, we do that moment=
+arily
+> > > > only to record new mm_wr_seq counter. This change is designed to re=
+duce
+> > > > mmap_lock contention and prevent a process reading /proc/pid/maps f=
+iles
+> > > > (often a low priority task, such as monitoring/data collection serv=
+ices)
+> > > > from blocking address space updates.
+> > > [...]
+> > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> > > > index b9e4fbbdf6e6..f9d50a61167c 100644
+> > > > --- a/fs/proc/task_mmu.c
+> > > > +++ b/fs/proc/task_mmu.c
+> > > [...]
+> > > > +/*
+> > > > + * Take VMA snapshot and pin vm_file and anon_name as they are use=
+d by
+> > > > + * show_map_vma.
+> > > > + */
+> > > > +static int get_vma_snapshot(struct proc_maps_private *priv, struct=
+ vm_area_struct *vma)
+> > > > +{
+> > > > +       struct vm_area_struct *copy =3D &priv->vma_copy;
+> > > > +       int ret =3D -EAGAIN;
+> > > > +
+> > > > +       memcpy(copy, vma, sizeof(*vma));
+> > > > +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
+> > > > +               goto out;
+> > >
+> > > I think this uses get_file_rcu() in a different way than intended.
+> > >
+> > > As I understand it, get_file_rcu() is supposed to be called on a
+> > > pointer which always points to a file with a non-zero refcount (excep=
+t
+> > > when it is NULL). That's why it takes a file** instead of a file* - i=
+f
+> > > it observes a zero refcount, it assumes that the pointer must have
+> > > been updated in the meantime, and retries. Calling get_file_rcu() on =
+a
+> > > pointer that points to a file with zero refcount, which I think can
+> > > happen with this patch, will cause an endless loop.
+> > > (Just as background: For other usecases, get_file_rcu() is supposed t=
+o
+> > > still behave nicely and not spuriously return NULL when the file* is
+> > > concurrently updated to point to another file*; that's what that loop
+> > > is for.)
+> >
+> > Ah, I see. I wasn't aware of this subtlety. I think this is fixable by
+> > checking the return value of get_file_rcu() and retrying speculation
+> > if it changed.
+>
+> I think you could probably still end up looping endlessly in get_file_rcu=
+().
 
-Reviewed-by: Ayush Singh <ayush@beagleboard.org>
+By "retrying speculation" I meant it in the sense of
+get_vma_snapshot() retry when it takes the mmap_read_lock and then
+does mmap_lock_speculate_try_begin to restart speculation. I'm also
+thinking about Liam's concern of guaranteeing forward progress for the
+reader. Thinking maybe I should not drop mmap_read_lock immediately on
+contention but generate some output (one vma or one page worth of
+vmas) before dropping mmap_read_lock and proceeding with speculation.
 
+>
+> > > (If my understanding is correct, maybe we should document that more
+> > > explicitly...)
+> >
+> > Good point. I'll add comments for get_file_rcu() as a separate patch.
+> >
+> > >
+> > > Also, I think you are introducing an implicit assumption that
+> > > remove_vma() does not NULL out the ->vm_file pointer (because that
+> > > could cause tearing and could theoretically lead to a torn pointer
+> > > being accessed here).
+> > >
+> > > One alternative might be to change the paths that drop references to
+> > > vma->vm_file (search for vma_close to find them) such that they first
+> > > NULL out ->vm_file with a WRITE_ONCE() and do the fput() after that,
+> > > maybe with a new helper like this:
+> > >
+> > > static void vma_fput(struct vm_area_struct *vma)
+> > > {
+> > >   struct file *file =3D vma->vm_file;
+> > >
+> > >   if (file) {
+> > >     WRITE_ONCE(vma->vm_file, NULL);
+> > >     fput(file);
+> > >   }
+> > > }
+> > >
+> > > Then on the lockless lookup path you could use get_file_rcu() on the
+> > > ->vm_file pointer _of the original VMA_, and store the returned file*
+> > > into copy->vm_file.
+> >
+> > Ack. Except for storing the return value of get_file_rcu(). I think
+> > once we detect that  get_file_rcu() returns a different file we should
+> > bail out and retry. The change in file is an indication that the vma
+> > got changed from under us, so whatever we have is stale.
+>
+> What does "different file" mean here - what file* would you compare
+> the returned one against?
+
+Inside get_vma_snapshot() I would pass the original vma->vm_file to
+get_file_rcu() and check if it returns the same value. If the value
+got changed we jump to  /* Address space got modified, vma might be
+stale. Re-lock and retry. */ section. That should work, right?
