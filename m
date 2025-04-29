@@ -1,117 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE0A1FE478
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631551E0DBA
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927819; cv=none; b=ct8Qe0D8Bpn+DIJNQi5vZmZiylc6knKIdzzZqyayAL5wsE09h01507f5cT6/+ns2K4FgnWMqvg5GFSHqiCPUo3TlLOQ+PIskM6u7VTSkED+DjPOIbJRo7UNo/vK/QItg4qiip6WY4B3EJ0bRRXLjo/7kB/Bq3YSX0dEIIe0fYjQ=
+	t=1745927902; cv=none; b=T0PfEK0uEAqTtMEAD7MXLqAGVdg047Y5Cp7WMh9RRQTFHmMVBRtmw9sopfpJqgPf3lH/wJ8TwztVJ2gcWqOMCFXWx/hZ3THCwvNbWwYBWu8vdEhD2PxuW3ixdbdJkNa1I52VuTUvXT9YWyVDTl2X5VWx5Vho9kqRRAJKjlpzXss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927819; c=relaxed/simple;
-	bh=nWH+xT2ovDwUcvgunaecQlN8B7WTLKW1oC/M0WWGFnY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=okpLhmHLAsE1PaRpGRaStDx562hl8u+pSHZxG4cS+fTnm8tRIV83vyQTHYgpTz8NWoCecjSPqqa3mdrpleI5R2NdR2FCXh7cNu/h4G1vGLeBmf2U+XLLLuK2dUc8bAT5sacVAOdjYUqhj87IRRCY7LKN57LgfmTbsvzlLocX774=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkKM5a6Y; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745927902; c=relaxed/simple;
+	bh=MdFbKAOEQYCc1jkBKljdoNZaXqm8BPhMNW5HxkmA/Ac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MkFuBjNhvB2no0atcZ3bwAAJAEg6yWioxnvudoxYXPd+8Eb6s34Oip/9q7LQ/m34b7cw2qKfj3YqzrW9LOkWv7fRgwpzQIBamWPAZclcLfXYaHYcbSS7nqqC+rCz0w4BXwfV2nFIwIfype5a0HKM+RlOOjcwmQDq6OSAeCwK+Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZwScV3bW; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkKM5a6Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745927818; x=1777463818;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=nWH+xT2ovDwUcvgunaecQlN8B7WTLKW1oC/M0WWGFnY=;
-  b=QkKM5a6Yo8gxzoU5fQv0USWm91YO8CYdIof9IEQZqZd0c4cqTmsknMg4
-   UuIxkBohIscJRJ8Q44b2++ByZ8mmpIVMhY/NumHgX9nd3vOCVB3vwlgTx
-   Ad4GlWPiPIrjmGH6m0yTMeJuIUrSlkyTLxMyRBCzKxrv2a9eLZazSECVK
-   SuX+ingO57A8KLAzFWnCL8OxxxxLKyOcrw/m7ZoJghwscHnKSQashOEXT
-   0cv8r6sREGId2T1QGlowwps6CVKi7ctr2njbsy8I74eBE96LbJbcCC/Fm
-   nQtW/qqfLT2J7CQ2QXOqaqgmq/PplZ0U8HH7F7ja9DMIIizdjXItrkG3R
-   Q==;
-X-CSE-ConnectionGUID: LF/yoyhcSgOt+RzuWKA/5Q==
-X-CSE-MsgGUID: umAfPUkjQ4G20gMPZCDfzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="72921149"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="72921149"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 04:56:57 -0700
-X-CSE-ConnectionGUID: lWmI91a3TnKrKmhQK9fY+Q==
-X-CSE-MsgGUID: mH0psiiZSmW8zbUhsIJoTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="164892670"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.9])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 04:56:54 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Harry Austen <hpausten@protonmail.com>, intel-xe@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Harry
- Austen <hpausten@protonmail.com>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
- <thomas.hellstrom@linux.intel.com>
-Subject: Re: [PATCH v3] drm/xe: Allow building as kernel built-in
-In-Reply-To: <20250425115148.12815-1-hpausten@protonmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250425115148.12815-1-hpausten@protonmail.com>
-Date: Tue, 29 Apr 2025 14:56:51 +0300
-Message-ID: <874iy7w58c.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwScV3bW"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e6e2971f79fso4564283276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745927897; x=1746532697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YC2LGGpE70kiPFeCCi72EkYRfCk+pYT/yGe+VdlkBmI=;
+        b=ZwScV3bWffdnhcHL+PtUDFKREP9TBZa0z+8a5ITYu4fq3GCks1m4JMO+cCcMPUPnjr
+         K2ONk0Y/thH+erfVCP6bgtwXciDNP/eKPZgeRg6b4XX/LO7g+//vbrrkQDTqiD2yQQYh
+         b18aGoYbZtNlJCDAsTyDkxyNFm9qXSSgcZzncq1lCIulkddWDYebRVESeo1guA6RVz+5
+         G01jF7qbw5bor3OK5u93HxRLI6j7XLm+/LophWgDFdcWXV4AYeJTXJwzn8FPxLFYK0CL
+         IOs4DEa0UqhS6Y83jxknY952u9r9lHmIJqBFv6ybt6eNEqv7C6FmiTZEfJdEvxKGf+68
+         jgig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745927897; x=1746532697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YC2LGGpE70kiPFeCCi72EkYRfCk+pYT/yGe+VdlkBmI=;
+        b=tGvYX1sBtw9ALEfjW6QndbALFGIWy/+yltAwfeXryFsoxRVTQxY+dlW7XMKWxckR58
+         m2HQbPcuROGXCZvuUq/ytbcao/TuzcFknfB6T4TTKqlh4QXoc7yy1OCyxLZbGWu1yd0d
+         A0OXkv2TPTTKln6PIjUIThW2xJH+Jju2HMPTajh2LFnSKEQKw3EkrUsagUjXopUBLy+i
+         nKQ3yCqr8tYvQ4s3boCN0uvcOUgwmxtbZJHHAEPZAvGMOPs1Jbml85xolYcOsFTrCi9k
+         qiChIqHmh85CDS2uqNz4igTfZRHUOwnwEpCEbh22RbFgzT3NBUuvuq7nFxf/LhffClMk
+         6o3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWCKGY+QCHBZVPBK67YgJDUp5puspbzGehVOQ8YHya8AvUw5Ff1hN6qA/fj0+DjZ8rbcao5MCc8DPmy4kw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKFxb5WiiUGCIu7Fjxx2tXLlhKsotEpBG7ksi3ooPKdpr2gzXb
+	LNzKwrLpziX3xUyYrqLs22JnULJh4c5wBS9ymKtiuqvB3pwttdpwOMxUwg4vjbiqq+Wq6RjGDsE
+	Fp5vKQmSQHhwf/EcX3dxoSasIG1Q=
+X-Gm-Gg: ASbGncvLvf0QPfJjcMeI+pTtXhYkMrrrI3BN8TvVA77i15nQc4BwiHoH75hf26F0ngP
+	JmqGARFwYtrRNMlfogNfhDzUq/iFRpmLl0dlNt2Ft/nGTuc19Lmw1mPfesarROnqu79ZjK4WbjB
+	pERfZS1bk1HuGZCk12CZmqrw==
+X-Google-Smtp-Source: AGHT+IFZuUpUcT0FpWh/xFcN7YV8mTmhhmd1TfDP2Xpd6GzqIj7t/GP6ENv//lBM+JolYrLZVqHMwRl7cIw868ZvG+I=
+X-Received: by 2002:a05:6902:2085:b0:e73:9d0:1823 with SMTP id
+ 3f1490d57ef6-e7323472933mr17628295276.47.1745927897185; Tue, 29 Apr 2025
+ 04:58:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20241119093949.3014-1-SkyLake.Huang@mediatek.com>
+ <871pymtab3.fsf@bootlin.com> <c1e2d8ea-1b37-479d-8239-cb9bf0efdcaf@gmail.com> <87bjsfv0x1.fsf@bootlin.com>
+In-Reply-To: <87bjsfv0x1.fsf@bootlin.com>
+From: Chuanhong Guo <gch981213@gmail.com>
+Date: Tue, 29 Apr 2025 19:58:05 +0800
+X-Gm-Features: ATxdqUFw156jElhjP-eZDXnKLbf_YdyLPXPeNQmy3SBNzsMbmjDF-l2toZGqZGM
+Message-ID: <CAJsYDVKiMeYY2rw_BxuW4BAxvMcq5hDwzhiPoAR=tkXzZpRYiw@mail.gmail.com>
+Subject: Re: [PATCH nand/next] mtd: nand: spi: Use write_cache first and then
+ update_cache in write operation
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Sky Huang <SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Daniel Golle <daniel@makrotopia.org>, 
+	Chia-Lin Kao <acelan.kao@canonical.com>, Cheng Ming Lin <chengminglin@mxic.com.tw>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Pratyush Yadav <pratyush@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	Steven Liu <Steven.Liu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 25 Apr 2025, Harry Austen <hpausten@protonmail.com> wrote:
-> Fix Kconfig symbol dependency on KUNIT, which isn't actually required
-> for XE to be built-in. However, if KUNIT is enabled, it must be built-in
-> too.
->
-> Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
-> isn't, since that results in duplicate symbol errors.
->
-> Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=3Dm")
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Signed-off-by: Harry Austen <hpausten@protonmail.com>
+Hello, Miquel!
 
-I didn't test this, but it makes sense to me.
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-
-> ---
-> v3: Simplify KUNIT dependency, as suggested by Jani Nikula
-> v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
+On Tue, Apr 29, 2025 at 4:15=E2=80=AFPM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
 >
->  drivers/gpu/drm/xe/Kconfig | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Hello,
 >
-> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-> index 9bce047901b22..214f40264fa12 100644
-> --- a/drivers/gpu/drm/xe/Kconfig
-> +++ b/drivers/gpu/drm/xe/Kconfig
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  config DRM_XE
->  	tristate "Intel Xe Graphics"
-> -	depends on DRM && PCI && MMU && (m || (y && KUNIT=3Dy))
-> +	depends on DRM && PCI && MMU
-> +	depends on KUNIT || KUNIT=3Dn
->  	select INTERVAL_TREE
->  	# we need shmfs for the swappable backing store, and in particular
->  	# the shmem_readpage() which depends upon tmpfs
-> @@ -51,7 +52,7 @@ config DRM_XE
->=20=20
->  config DRM_XE_DISPLAY
->  	bool "Enable display support"
-> -	depends on DRM_XE && DRM_XE=3Dm && HAS_IOPORT
-> +	depends on DRM_XE && (DRM_XE=3Dm || DRM_I915!=3Dy) && HAS_IOPORT
->  	select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
->  	select I2C
->  	select I2C_ALGOBIT
+> On 22/04/2025 at 09:38:26 +08, Chuanhong Guo <gch981213@gmail.com> wrote:
+>
+> > Hello!
+> > =E5=9C=A8 2024/12/5 23:32, Miquel Raynal =E5=86=99=E9=81=93:
+> >> Hello,
+> >> On 19/11/2024 at 17:39:49 +08, Sky Huang <SkyLake.Huang@mediatek.com>
+> >> wrote:
+> >>
+> >>> From: Sky Huang <skylake.huang@mediatek.com>
+> >>>
+> >>> According to discussion with Miquel Raynal <miquel.raynal@bootlin.com=
+>
+> >>> and Chuanhong Guo <gch981213@gmail.com> on FORESEE F35SQA002G patch,
+> >>> Chuanhong recommmends that we can use the following sequence in
+> >>> spinand_write_to_cache_op():
+> >>>
+> >>> x1 mode:
+> >>> 02H(program data load) -> 84H(random program data load) -> 84H ...
+> >>>
+> >>> x4 mode:
+> >>> 32H(program data load x4) -> 34H(random program data load x4) -> 34H =
+...
+> >>>
+> >>> 02H or 32H commands will clear cache buffer on SPI-NAND and load
+> >>> data to it. For those SPI controllers which can't finish transmission
+> >>> in single step, 84H or 34H will be triggered for the rest data.
+> >>>
+> >>> We observe that some current SPI-NANDs, including FORESEE F35SQA001G =
+and
+> >>> F35SQA002G, must use 02H or 32H to reset cache buffer in flash before
+> >>> using 84H or 34H. Or users may encounter program failure issue. This =
+issue
+> >>> is not always reproducible, but it may occur and cause system instabi=
+lity.
+> >>>
+> >>> This sequence should work on all SPI-NANDs nowadays. I also check wit=
+h
+> >>> Foresee that the sequence can solve the above program failure issue.
+> >>>
+> >>> On my test platform (MT7988), SPI driver is drivers/spi/spi-mt65xx.c.
+> >>> And I limit MTK_SPI_IPM_PACKET_SIZE to SZ_1K to simulate lightweight =
+SPI
+> >>> controller which can only transmit 1024 bytes.
+> >>>
+> >>> The test step is the following:
+> >>> - mtd erase /dev/mtd2
+> >>> - dd if=3D/dev/zero bs=3D2048 count=3D1 | tr '\0' '\xA5' > output.bin
+> >>> - mtd write output.bin /dev/mtd2
+> >>>
+> >>> Before applying this patch, write operation uses only 34H(update_cach=
+e):
+> >>> [78.937720] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st=
+ byte: 0xa5
+> >>> [78.945297] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1=
+st byte: 0xa5
+> >>> [78.954251] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st=
+ byte: 0xa5
+> >>> [78.962966] OP code: 0x10, addr val: 0x300
+> >>> [78.968816] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st=
+ byte: 0xff
+> >>> [78.977233] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1=
+st byte: 0xff
+> >>> [78.985124] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st=
+ byte: 0xff
+> >>> [78.992527] OP code: 0x10, addr val: 0x301
+> >>> [78.996981] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st=
+ byte: 0xff
+> >>> [79.004416] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1=
+st byte: 0xff
+> >>> [79.012031] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st=
+ byte: 0xff
+> >>> [79.019435] OP code: 0x10, addr val: 0x302
+> >> I am sorry but above you said that we should not perform:
+> >>      0x32, 0x32, 0x32...
+> >> because the second time it would clear the cache again. And here
+> >> you tell us that actually the core already handles that by performing
+> >> instead:
+> >>      0x34, 0x34, 0x34...
+> >> So what is the problem?
+> >> Or maybe I misunderstood the issue, but I think Chuanhong raised an
+> >> issue that is already solved? Isn't it?
+> >>
+> >
+> > The issue is that the FORESEE NANDs require the first cache writing
+> > instruction to be WRITE_CACHE instead of UPDATE_CACHE. i.e. it needs a
+> > command sequence of:
+> >     0x32, 0x34, 0x34, 0x34...
+>
+> So Foresee NANDs do not support update_cache, why are they advertised in
+> the first place? Could you we have a less impacting solution for the
+> other NANDs?
+>
+> > This patch does exactly that, making the first instruction issued 0x32.
+> > It should be applied to fix the issue above.
+>
+> My understanding is that this is very specific to FORESEE NANDs and you
+> are changing this for all NANDs. I have fears that it will break
+> everywhere else.
+
+I just checked a few datasheets of SPI-NANDs from
+Toshiba/Winbond/Etron/ESMT/GigaDevice/Macronix.
+All of them specify the programming sequence to be:
+write_enable->write_cache->update_cache if needed->
+program_execute->poll status.
+Some of them mentions that the only difference between write_cache
+and update_cache is whether the page cache is cleared before
+writing (Winbond), while others don't specifically say that.
+
+The original sequence doesn't seem to be following any manufacturers'
+instructions. We just haven't run into any problems until this FORESEE
+one.
+
+>
+> Overall I understand the problem, but I disagree with the fix. Could you
+> propose something less impacting as hinted above?
+>
+> Thanks and sorry for the delay.
+> Miqu=C3=A8l
 
 --=20
-Jani Nikula, Intel
+Regards,
+Chuanhong Guo
