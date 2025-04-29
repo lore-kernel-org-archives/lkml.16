@@ -1,191 +1,161 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013019.outbound.protection.outlook.com [40.107.159.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA602949F7;
-	Tue, 29 Apr 2025 08:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915154; cv=fail; b=QPcNfzWR/qJOBO+suHOOPmvQMXeDspjCGu3mrmD0pkiKluDvLIMVEpzIEtRvqjzI3WBmze2IouqIlLkt3b8q4OwrXukCHqNx5yjohcC1yJZKdCCxrnWDEJhdZ9avLK5YjoXCZsr0u3gezNDNEfU8PhML31Y9UzEL3ubvEmqfbOQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915154; c=relaxed/simple;
-	bh=vt5kQSK4u0umkEyEjEa3tXHmt45y06Jj4V/i/PNwFSk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=huGh5PcW9c4c7tvAQ5vG+ndXk5jcBZJ+djJ0ah5yikT7ZNJpH69dZ0dXcpk7s5y8YTHMe41CsJ48tW6OBJosXPa7zzRI09QpiO9j+5QAeTKM8FZNXt0S3CsM0jGGM7EiJaAxyqTc/1Dlr9X362X4YmMnIP5ntxemRkQBheH98oE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=McR7zXV4; arc=fail smtp.client-ip=40.107.159.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CA92676FE;
+	Tue, 29 Apr 2025 08:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745915194; cv=none; b=DVGl7ccAOvtZsfUeMIdqVuei97PfyZm4MwVzjsfreqPZH7WfJn297FH4SaTqsefCh7nZJWAT8cqu3eDHiXHZu4++3ZWB4kXvIY/L88JQAdc9jSKM1NU37IGP1SciaaSsMB55dCfwdAhTtWjH3Gee8dDySBrsCerq2sdkPeZCN6I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745915194; c=relaxed/simple;
+	bh=MgTCbs5cTEEDoiK1neJ0UWfJc9MPsWB0Ca3qjvVgPXU=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KGYR/Wx0tdSgxhfvrTDw3cjgeptcDXXuER/6j4+LmmHDIWFcOKaioKMzbVjWWFURVRKkQpe2i4yrsOucZFZ+XGjHf/hhBfn+Ul26Ir3DfVmZOcYugE9ciWP4pWZGy6YDzJPERu6S5Z5EjiIhZvCPD3Zvrg6MLmkBwMPvID+eiKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TEx+asdR; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="McR7zXV4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s0hkYY8BRmEEcfW8QzPhwxPs6dxK2LWcQXU/Ykp/tehD4/DHSDcop0/6zSGl42fJGPxo7bkTA5Juki1W7ePnJLQBIBEPs3msfu8imjSYek8LTDHXzYMtg4k8IKhcXoaKCmb2HEUrY/ULYtZAp3bqL6qMb9zpSyt8tzlNlKpq4eD39v7NvZWMrhzJIR60WL3SNCJirJeGdlGaaWwn0tGtm7ceWYYAbHXGocNtaGwdG9oiodz/jG0PUdvaiNlBac42AXfYzdt74ojKTnRIzUuqz3Ne6UtcBzMw07G5OXrWdyPhSfDv0QBkGyQXxAn0Nm5f+54gxysBb9xkHlQg2D+8Pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vt5kQSK4u0umkEyEjEa3tXHmt45y06Jj4V/i/PNwFSk=;
- b=SXMMI2VVMQwLLo5+BNWMyBnpfUKho6JeOqelKN7l/ga44PIiEZRZ4qbe0MOMH2dT/BQZtGzMXqxoN2YBRj1hFbksasb+A4pv5JzEbY5s5UZ6reMiiUJQOKnyk3cZUq6MCIzM1bcnaRzzoMapoPMnKfZ3bkAUVYP51S5CmTCeVw8El1bbTwxbac7efUSIVdqteaMKplE0PpJxC7L8gZsnOSDxIhAlWB2P0YzwZ0SAJrQmzMIUnTxJkYspAf4Z0sYtpdkSMkCRPEkXbih2jA7CS/s9qtH15CmdjM1yY/tZp27gkgui4N70euCCxEpS/UzdJLl5h3L7xF/qUlxNfAgHHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vt5kQSK4u0umkEyEjEa3tXHmt45y06Jj4V/i/PNwFSk=;
- b=McR7zXV4Xk/JFUgc0RghP2FGAE0UkSyfhA2x2k30k2EkfMoQWZBy72kjTMGvZwy1v+/Smqi2NNcsTWaWFSesvxKEBgnZ3acWO2CshmkseaToGkwJTD6p2GTZshUO+M0WPwoetsEYtvWcLd/lMPyBiadVXiw9Qc29w/t+h5XAaAH7IBgkN7jC8I7dzBb+YvD6N+aYxd0kCbFutn5vGnO0HqtpthJJxaNFAoZlq7AFpNuVKF7hkLiAAsUFC6twa3+6qWuMCHjCVeevjSLfJeqQvPSU/fIWFoyConZjKuRO8NqCj1kpK9+jnFv6POCzrIsjEpoQujLllfbSVXZCJLNJHQ==
-Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
- (2603:10a6:800:293::14) by PA4PR04MB9269.eurprd04.prod.outlook.com
- (2603:10a6:102:2a4::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Tue, 29 Apr
- 2025 08:25:47 +0000
-Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
- ([fe80::75ad:fac7:cfe7:b687]) by VI2PR04MB11147.eurprd04.prod.outlook.com
- ([fe80::75ad:fac7:cfe7:b687%7]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
- 08:25:47 +0000
-From: Carlos Song <carlos.song@nxp.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-CC: Aisheng Dong <aisheng.dong@nxp.com>, Frank Li <frank.li@nxp.com>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
-	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-i2c@vger.kernel.org"
-	<linux-i2c@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Thread-Topic: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Thread-Index: AQHbuOBPK7wvQPUQv0W+RHQ863q5GQ==
-Date: Tue, 29 Apr 2025 08:25:47 +0000
-Message-ID:
- <VI2PR04MB11147A01165E7505FE44BD1BAE8802@VI2PR04MB11147.eurprd04.prod.outlook.com>
-References: <20250421062341.2471922-1-carlos.song@nxp.com>
- <ujjbteer3ripubpgmv5qsvhcoki5ibcp4im7vpnna56mbckacl@xxx52nayhw7e>
-In-Reply-To: <ujjbteer3ripubpgmv5qsvhcoki5ibcp4im7vpnna56mbckacl@xxx52nayhw7e>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI2PR04MB11147:EE_|PA4PR04MB9269:EE_
-x-ms-office365-filtering-correlation-id: 9bd53f56-a0cb-43c7-f57f-08dd86f77188
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?sYfNDTJs9k3kD7OjK38Zt6uDZuzpW4VGvEzmbEhrF/TsQZ72xPv/Z99ewjZl?=
- =?us-ascii?Q?j1h/W/17s38IGyi5UY7r9iLy/HuD/UHCumvP8IR1fixkLKo1+CyEIG/4Oa4y?=
- =?us-ascii?Q?r4eJDRRuSlvghoHknzY5CTF2tg8lP/jkqrWXbTS2fOO4Lx2nq7LPutqC+0C6?=
- =?us-ascii?Q?vJEBn28pc6dqTZEXy3O0wUzdtJs3T/IZwm3fSuzeVnIlrxAEjdRKGqRGBiAF?=
- =?us-ascii?Q?OvKMHrPUYlKOd9bQA+Z4UaVN8p0AUpvEe/jcQ81ZaPilo8nzme+DVo9b6AB9?=
- =?us-ascii?Q?MtlRz81iG2waPccDtdrkGijnn9PDBeQfMawXQDTrcyCElsPvVgA6iFRajnY2?=
- =?us-ascii?Q?gw8yZrBjnYkY+W0vBpl26t9enUUdiEtz3VSfuIqXo7g9MwCB8m+gfvX9q2zq?=
- =?us-ascii?Q?h8MWYOml8zNR68temZ0oZ/ajreQT0ykPxgZgkTbfqb32opuveJZItcJC/9pt?=
- =?us-ascii?Q?nManxdzcoJv2DayJGvcJM/URkwHMZ8PpGvdqpZt8wI2mBtiUR9uwNriRbtfi?=
- =?us-ascii?Q?S4zlh2rvI1COlaaGFCXkUZT3Efr+5g1tPX+jk4vMPaMY0EtiK5Kg4iGKJadz?=
- =?us-ascii?Q?I850k/H4XKtv6eekTomIotoeAjvTpJWNFPfrV/Yfr8cxsmx8Y2UvfbSSXHQu?=
- =?us-ascii?Q?W884GjYVfHvrQ1RyzKaJfhuPHsplniyhmXoAh88HZlgLecrRRkakKbYOByuR?=
- =?us-ascii?Q?esicCuS1jb7iQ2tGKXWPxnENBT3B/gSQbY2fiYNsZJIVFned1pWMwtuWR9qf?=
- =?us-ascii?Q?N3yf6nL++Hu8ulN//l/u0kacaE/lxZESJKvgiJjmID0+ZX7rEOssPrqLbWFn?=
- =?us-ascii?Q?hO9hfwpJk+YA430gjztI7kowvsbPZ/Z6Uw/J2V4vFGoMuPaNXVfHOo6Lx713?=
- =?us-ascii?Q?6jYxn8IziNdW3wL+Y2bsWcdn2XZb4gC1HaV7ORUgPVEBI1O/LIugCIOeOKPj?=
- =?us-ascii?Q?uBS7ehXVJOEMEfevl1OhuJ7DM4g01o3zlcFkEmYEQbHg2r2iTU3Zt2OGQCS+?=
- =?us-ascii?Q?uk8vKU0IOPA8vOC3/V6dNuHa+eqlN/gJ4hjpcCHQz/NNyFrFf3YSWAx+2gD4?=
- =?us-ascii?Q?qt99J96s0ZiMMRkbAE7Y0Z9bxLdQQgJZvqPPZ10wGX63E26vUvTxQyLWZzsm?=
- =?us-ascii?Q?zWe7NJMEDjqDvEZOrcYcZCmzxQgxenzEN639fhtdUx8VKdjEpZDTnkOjYLis?=
- =?us-ascii?Q?BpuDlD8wTLNdaLzq7rPer2jYCZherOnzb4TCZ1sG81uJw3WYbpTShaBOpBgt?=
- =?us-ascii?Q?z+M5+ubn11WSrc2GrpUustyLpnM3DqKDg/HHMafbLkGDpPB9mPZJrEdxMw0A?=
- =?us-ascii?Q?Nv0+3EcJm0b6TJ3V9MUHp8buvgFcB2tY9k+u/g9H7J8DPhFKuA9mWofpmM0X?=
- =?us-ascii?Q?MLnz4aNp47ksyhahScQQ8yFrOZrZ4hsYfOZIwMtPRwm4QforTicgOolJCaAH?=
- =?us-ascii?Q?F2aI3J6fzP7x7TUgXIVqi2Nga8YZ+ndHujod54RvImwHXEvIrcOMl2RfCavX?=
- =?us-ascii?Q?UhkbLENX7eUCyjc=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI2PR04MB11147.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?M+3kSKmiqowFSgjdo13zb/tKdk063OPEVh2S+N1Jf+VFbDbQRe+JRVp0oTuQ?=
- =?us-ascii?Q?IArhzJ+UHHdUUcHrdY225s+l5AkZQ6FpU8nmKjoFss168S0PBFzdkENEvtGd?=
- =?us-ascii?Q?HD3Yo5aMG/HgOCF8cpJpRYzVQmOdjfiX3qdqUe0a6JCk3gma3LCJ6ASUbcrX?=
- =?us-ascii?Q?B9RQqf5N5WULfwE7xFinJhwcN04sSe9zCnH0QrZ8l+6xbgzRpI1dufSUCUnQ?=
- =?us-ascii?Q?ogIdKOqdL89ayjUc1ggVrjyQjGRmhoPyt3Pgd/QID50RTcKnYcAb1E7A2n81?=
- =?us-ascii?Q?KsvfXTC8tuKUweMnevO11fozKOd/syKZiFxi5CrPPT8iD98z3GdNRbjhrlt7?=
- =?us-ascii?Q?+WFm3cYiXqBLelsPDtP5w5CiqQ9n+BQ7HLGwx+O6EXZtl3JZcVtN6lgfb0Ew?=
- =?us-ascii?Q?XDf4TgAtahpyR/5RDgGHKu0cwVnFbS9p3p/OMIzDuYXrZX7BnQ81gE85nR2s?=
- =?us-ascii?Q?rksHqZ0JcMCXnet7InrB1aNmQMqSBV/sT2bzQSJvtccHr+2jmHUz5WKpFnQX?=
- =?us-ascii?Q?j9MbFmruBaxGcJ5+i1tqc+FthFgcaPGKwPbVjnMLLEw+QaAB72IZTzaIl9Ao?=
- =?us-ascii?Q?BRmWXH12e9rzxSlLZU3U9kFXsfbSFuHWO7QlmEDvRoWqI7bMWaj9wFAp5MP7?=
- =?us-ascii?Q?xsVv9X5D8+fUTOdfXplHgI7iJxEApSDtTqVS3n94iZ+GFed2rj0xT76UTL7+?=
- =?us-ascii?Q?CGccKvK3mbbJQWFCPYjmmEWDN9xjId6+AiNOHLwWitpCodR98BKxZlbf3EVI?=
- =?us-ascii?Q?oEd9VC/3yZf4lvas+8BpIyd3JOv9rz/QxYBAAwLyT835n4Kp7rHa4/qes9n7?=
- =?us-ascii?Q?iN/VE0YWAbei6gHqO/YW9erHkg2OeuddJiqBeYS52q0VLTdsu4wg05sVtvXM?=
- =?us-ascii?Q?Ntdm2w9QGnPkatqVoWrhm/cVWMW0Y2OiteCsoA5Z7OXjk1Nq+3/d2MN1QqBc?=
- =?us-ascii?Q?tpgJr22W4HokePempqBnJiL46cGZQJAvSHmPCPCH0btyFHICWqlfNP0N2ZAQ?=
- =?us-ascii?Q?sTw3xJ0eh0KwhDWmfY94MTLii6gjerDlCqiMpG6KtNvYvzs5361QIgH1aBCE?=
- =?us-ascii?Q?fL1z5bvTtGkjOrugrhxm8ZJPFsAGW1FDANMoWCgoxbt7NLJ3mDls76TmfxVK?=
- =?us-ascii?Q?Zp+Po1Yl8y+jNiR7cKO8MaVJTnvyn9VYK6mmgvFOo1Rg83+fuPbRGWYQvWNv?=
- =?us-ascii?Q?08JD4L7k3MpLoD9gmyqLawKXx+yb3xcy9USoJlRTKZic5MOgoMptnBrdNFnp?=
- =?us-ascii?Q?HSL/lPazMStss2w5Np64IPf5XtD7zvZXemM8Tp5yIko7XU79tDw9qL/dix4I?=
- =?us-ascii?Q?p/WPMAi7SUmYXNoqCaYii+C6pK6wcwbGpZA3WjS7eC3nEDenT4S57MSuez1u?=
- =?us-ascii?Q?VepypMJW6GN61dKHb/A4TEaR61rUZf8PEx0GAj/jcbYe/moqvUezQQYilBnw?=
- =?us-ascii?Q?QQOUZPF6ZGJS3/WSkHXDv4pmqS6dnrC0Y/iL/tXAYWD9fWg6AFg2p8IWuxcB?=
- =?us-ascii?Q?zfT2pTilC6xwmac/fOKKvJ6od02v9o6CUECbnWNOtHjjzy8tXTJS4EAPTtX/?=
- =?us-ascii?Q?+l9L8toEvLqCcJnHO7Q=3D?=
-Content-Type: text/plain; charset="us-ascii"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEx+asdR"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so58344595e9.2;
+        Tue, 29 Apr 2025 01:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745915190; x=1746519990; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yZtza8LqfiPrcZDi4cBp1dqLq5EDO64dUlBzh5jaboQ=;
+        b=TEx+asdRZZsUCg9/AhCgqrmUF4lbs01aFk3SdDsaSMaoH3CHWm/IdIEFTJ11K3zV4d
+         JR3pX9STgkWh2HI555+IG293L1yX+lcl5RMk77qKpD7Qe3GZDyD9Ui6fEsOwT8oVrr7W
+         G9/Pgba/0B24GBF7Q4X8XjjIE+nkxufLfuJTq7X7BAKECuGDRf+elF/8afjfGfIieZwB
+         X6C10IRw5Dly1TummaO9F0qVoiOkYZNsmnsFP2e7gCJfv7H2hzsNTy7yLn2DOxk2zgSa
+         NkA2sO0SjbAVbaKa/RugPflEmExm7Gl0OcNCKEy6Wq7oPaBlmBk9Jy80pgoHpaRnrwNd
+         RmqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745915190; x=1746519990;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yZtza8LqfiPrcZDi4cBp1dqLq5EDO64dUlBzh5jaboQ=;
+        b=uTX40863wC1OyIqwAhExSlvSxgsRealwIVHbB9D2cYxdkUdqh/HDH8EjfVEjCaR69l
+         lXwmf845zWy5ZIEm0aH+pHmJqESpfFIT4rgVkvT4T+zq1IgX215a/06lbY0aCr1Fg16L
+         cQw/rxKv48cPKSXivFlhRnaUvMA9nXlt5Q3vEB0tyxplHUidAczY8pFbBX0CmxALan3o
+         Wz9xH5IULszyyrnZSphuf6MTwoG856gamosBxe0z6mndjxDjMJLRi/VtHSGpGqflYq0z
+         rA1KGqxPwSYXvoYhJhvZgajUVehC34GcG7weolFF9ZxcBqJDNmCgVb+MZMh1X8AQe9ZE
+         HsNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUM58ui49T+I2PeeM/reNgBfHqshx18gYa9CMOv+MTK/kv7/Ncv1370ZAcO2zlOqnYGoOdn2LIfWS/A7ed/@vger.kernel.org, AJvYcCX09B0EEBn1W/kwfKqYfOf1IVuuk1gDwHgjBrIq0OKgd9nOZzjFh+4oIr0J31JBnUAy7p9Xs6vGChLK@vger.kernel.org, AJvYcCXZa65UYWw9l7Nw8HkYEUR8giPzmf/nYKwCQ009GCthcCKjG3eW0sYvi6KhwP33Z5/eNTLeDnVEuZxS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2AqsVhUoyLSUbwDeqxxQHG9Ct0eK6VcEIKnfdY9o5gj0LEEP0
+	vD3JGm4sZvD+9BaamK9nXI+yELU3YkJ5v85ernP3weF5jet34ne1LMN0SQoG+qE=
+X-Gm-Gg: ASbGncurFRQLXQ+qS4RJpNBRcZjC1D+fvlM4YZEWtXr3xT06IUFqaclEBqksCUjeE0P
+	yXuGF75dqy5LJ7zIaDWOJHB611R5Mc4nCh81b4OacZsDoA8tjZsw8k/HWG5lP/emgh4kPlANoSV
+	iAi5SIFumeLh2Mgc60D5jwCd6WQhKbQL8HNUdfxuZAxJCkFXnUN/KTyctCIGMhRRJr5V61EamXz
+	Vz7EEAYqEdLahB6uwHrmlMWYaXuNS2tMGlkVRjNP3Jm4pKJG1H74qymwozZXxr67Ev6TBtDOMB0
+	Ra2m8A1yJhwHutQr22Vm+CL8CCdEeoI3ZrVX45H6zlRmsDk6OYq/gapEw7eUiW5RVCQg7A/AQjx
+	oJHqQ86zPe3Me
+X-Google-Smtp-Source: AGHT+IG+jKrI+ngj4ffv+VF0LWzLOPcORFzjGQ0uVNMC4uSce7tVH3neQYe4uoLz6A6MMSC6nQ+iMg==
+X-Received: by 2002:a05:600c:3c86:b0:43e:ee80:c233 with SMTP id 5b1f17b1804b1-441ac8915ebmr15333785e9.32.1745915190269;
+        Tue, 29 Apr 2025 01:26:30 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2aab65sm179544845e9.17.2025.04.29.01.26.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 01:26:29 -0700 (PDT)
+Message-ID: <e2e7d110d8228bb59e43242c1c36b010cef64c07.camel@gmail.com>
+Subject: Re: [PATCH v3 09/11] iio: adc: adi-axi-adc: add num lanes support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 29 Apr 2025 09:26:34 +0100
+In-Reply-To: <20250425112538.59792-10-antoniu.miclaus@analog.com>
+References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
+	 <20250425112538.59792-10-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI2PR04MB11147.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bd53f56-a0cb-43c7-f57f-08dd86f77188
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2025 08:25:47.5877
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /ttI1VfH4cwK51VYfdhNMUE0M4OgRkFhwlF2NuVu3O+F20bZ8S6D9Nd0+Fu9Bk/6XEr2SbXf13jVGrua8p8C3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9269
 
+On Fri, 2025-04-25 at 14:25 +0300, Antoniu Miclaus wrote:
+> Add support for setting the number of lanes enabled.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
 
+Just one small comment below... With that addressed:
 
-> -----Original Message-----
-> From: Andi Shyti <andi.shyti@kernel.org>
-> Sent: Tuesday, April 29, 2025 4:21 PM
-> To: Carlos Song <carlos.song@nxp.com>
-> Cc: Aisheng Dong <aisheng.dong@nxp.com>; Frank Li <frank.li@nxp.com>;
-> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> festevam@gmail.com; linux-i2c@vger.kernel.org; imx@lists.linux.dev;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [EXT] Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe def=
-ers
->=20
-> Caution: This is an external email. Please take care when clicking links =
-or
-> opening attachments. When in doubt, report the message using the 'Report =
-this
-> email' button
->=20
->=20
-> Hi Carlos,
->=20
-> On Mon, Apr 21, 2025 at 02:23:41PM +0800, carlos.song@nxp.com wrote:
-> > From: Clark Wang <xiaoning.wang@nxp.com>
-> >
-> > Deferred probe with pm_runtime_put() may delay clock disable, causing
-> > incorrect clock usage count. Use pm_runtime_put_sync() to ensure the
-> > clock is disabled immediately.
-> >
-> > Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> > Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> > Signed-off-by: Jun Li <jun.li@nxp.com>
-> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
->=20
-> merged to i2c/i2c-host-fixes with all the changes I suggested.
->=20
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-That's good! Thank you very much!
+> no changes in v3.
+> =C2=A0drivers/iio/adc/adi-axi-adc.c | 16 ++++++++++++++++
+> =C2=A01 file changed, 16 insertions(+)
+>=20
+> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.=
+c
+> index bf0155830d87..8ff781ab5ec3 100644
+> --- a/drivers/iio/adc/adi-axi-adc.c
+> +++ b/drivers/iio/adc/adi-axi-adc.c
+> @@ -44,6 +44,7 @@
+> =C2=A0#define=C2=A0=C2=A0 ADI_AXI_ADC_REG_CONFIG_CMOS_OR_LVDS_N	BIT(7)
+> =C2=A0
+> =C2=A0#define ADI_AXI_ADC_REG_CTRL			0x0044
+> +#define=C2=A0=C2=A0=C2=A0 AXI_AD408X_CTRL_NUM_LANES_MSK	GENMASK(12, 8)
+> =C2=A0#define=C2=A0=C2=A0=C2=A0 AXI_AD408X_CTRL_SYNC_MSK		BIT(3)
+> =C2=A0#define=C2=A0=C2=A0=C2=A0 ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
+> =C2=A0
+> @@ -451,6 +452,19 @@ static int axi_adc_sync_status_get(struct iio_backen=
+d
+> *back, bool *sync_en)
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +static int axi_adc_num_lanes_set(struct iio_backend *back,
+> +				 unsigned int num_lanes)
+> +{
+> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
+> +
+> +	if (!num_lanes)
+> +		return -EINVAL;
+> +
+> +	return regmap_update_bits(st->regmap, ADI_AXI_ADC_REG_CTRL,
+> +				=C2=A0 AXI_AD408X_CTRL_NUM_LANES_MSK,
+> +				=C2=A0 FIELD_PREP(AXI_AD408X_CTRL_NUM_LANES_MSK,
+> num_lanes));
+> +}
+> +
+> =C2=A0static struct iio_buffer *axi_adc_request_buffer(struct iio_backend=
+ *back,
+> =C2=A0						 struct iio_dev *indio_dev)
+> =C2=A0{
+> @@ -601,6 +615,7 @@ static const struct iio_backend_ops adi_axi_adc_ops =
+=3D {
+> =C2=A0	.chan_status =3D axi_adc_chan_status,
+> =C2=A0	.interface_type_get =3D axi_adc_interface_type_get,
+> =C2=A0	.sync_status_get =3D axi_adc_sync_status_get,
+> +	.num_lanes_set =3D axi_adc_num_lanes_set,
 
-> Thanks,
-> Andi
+Not sure if we should set this. Although it might be in the regular/default
+register map, I suppose that this not a generic feature all axi-adc backend=
+s
+inherit from the base design... So, if wrongly used, I guess it would resul=
+t in
+a no-op on the backend side.
+
+> =C2=A0	.debugfs_reg_access =3D iio_backend_debugfs_ptr(axi_adc_reg_access=
+),
+> =C2=A0	.debugfs_print_chan_status =3D
+> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+> =C2=A0};
+> @@ -646,6 +661,7 @@ static const struct iio_backend_ops adi_ad408x_ops =
+=3D {
+> =C2=A0	.data_alignment_enable =3D axi_adc_sync_enable,
+> =C2=A0	.data_alignment_disable =3D axi_adc_sync_disable,
+> =C2=A0	.sync_status_get =3D axi_adc_sync_status_get,
+> +	.num_lanes_set =3D axi_adc_num_lanes_set,
+> =C2=A0	.debugfs_reg_access =3D iio_backend_debugfs_ptr(axi_adc_reg_access=
+),
+> =C2=A0	.debugfs_print_chan_status =3D
+> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+> =C2=A0};
