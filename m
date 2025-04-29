@@ -1,111 +1,183 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36352C256D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815BD2D0261
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745926790; cv=none; b=msx4pAiREgjY01jo8XjUTFeBDSIpOLpE23Glsfa1+8qp0ypzZ80NN8Sv8f8Nc5JBKNzCd3/ZHuQNRmnsXe1cAQqelE2L8tVtGEBMf2JNLpo+3Fk7cLqL7JY1y/4Zw3ZPmW8TdgGIhWgifD8GIIAFr7lk7L7CEVJoHvG/GxvmY/g=
+	t=1745926808; cv=none; b=vFRgTZ60ELxtTm1QgoSvb3RP1av7MkTi1gwW3VN9kPhdDkPKcnpCuz2M8Fwq8P2vo3ZhimM+LomZBkhXt18hnFPNpfebH6dfF5MJbCX1+PIu3RPoYcZyU8bA9/6jDz0dB3QQhyC0vwyAOgGMS3sG5IPi35eZ/LO0VX4APO1dJ0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745926790; c=relaxed/simple;
-	bh=BwZDjGnAk1UJgl/brXYK/H4LstIXponojMQGkQ7BN0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtj/827qBolxT2eLYTBi5H7uC8YVj19tO5bQEPebsbebdPQiewr1JMjjMKGFLMwoHfn/UsuANekwoEQNMEo0TxVHDmiCCx7n6CEFaL0nCyFmiQ6Gc/hPoS9B0b9Vbht1OTavrN0eICEJNbvDr3PMb22HgGM+7CRY63V49Xmj9Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=c2giPj6k; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745926808; c=relaxed/simple;
+	bh=VSxb5F7oobkTTJUMt4CqgRfnzE/ukEV83NHiwqK1rGI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=otzDLvOq4E3j0Lny6uusB9UWa5zDitdj3bGwXpbbIgA74/DeFzWMnct89GUNd1b3JMrqlyIZU07b0oM5ukB9sFgSVPbuXLdCE2Xlb9SrSOIWPdMbwcb5kKLs7+BFjtSushyXwtersCrIgQD2YJD5o8WGeF37ZzUqeHBTQN6oSPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VckXLVm2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="c2giPj6k"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acbb48bad09so1098521066b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745926786; x=1746531586; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vjNdZRo+0JKNJCIrNVFAoCGrKjiVgsh/8WizVWXn7Jw=;
-        b=c2giPj6kex5ZlKgncnCuv5Z+k9MUX5UXHI0vzCIbdLoSEVqHm0FbFmsBr6bSJDTXHy
-         JDJMT30q0TQfniOtB1zmUTYJ4VpnRPxDUPG9BdUGFka9Fh1vk3mmopNlEeU+e0PDBWfw
-         X6rEa5w7c9fv+9Mc0WZ+Ht5wlmPQrOsukC+ZzBnEjy5wMv3Y1IiqviFXwTqy6KOIcoJc
-         rH/t+LjCJ8fp9sm2r5F1dYnLgRsopQGM6kLZCs5pdkAZgwz/2qOht1LGWlo8SLpFQYoW
-         6g5DBIeOe4VbaU916SKrM1BDRS/AAkGezr5mAiZ5bVzIhCeGQP856JV2w3IXgVJ4J2mv
-         iBCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745926786; x=1746531586;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vjNdZRo+0JKNJCIrNVFAoCGrKjiVgsh/8WizVWXn7Jw=;
-        b=rfKGS8eSp9J5TeLOg2F8zgEMHnVD5vOpdq3iz0UtllwJJf1+VIzV6rUusJYxyFmjs2
-         ZaIHG9wBgKFwzbSpEjkopXUDzgmONE7DDwAzO70d8XkAY6LWzR3BPFYMfWLMnICJzBXH
-         +HH+4hwjX0ZgH3wFH72VttVDa8lfH9jN5N+HTrFH6Tu+9DDpmWM2eWy8cJeKn8XYGgFx
-         qLFjEfiSlnV8YIj3d0VX/6LVESKFw+/sxpzKQKWzmhzhi4kPxQDmM2CCV1zdmiF4vbls
-         QMpAxWIMleYO5zam1ORf47EpJp5LGkTE92JDsqonn7IuENOBVQmcaPRMUR/3wS8M0uF7
-         FOnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwPYGu9RTvkEq+XAcTxgq1AntOkhKNiUHSmLG7i3kkhhRGgAK/lmbDanM3Ha7VsaGPVbHH6sQKzPizwP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnvG4isNJvHtRKiZcohb4kIzmZ9ZAG7ES+2E0VDmQH60WGa+gO
-	nnmdAtUyU3aCqFPXjQh72gxE32l+kJyeIkMcTetwfzqZh3xs/ltwgg/+t0yn47s=
-X-Gm-Gg: ASbGncscuTLy+RqU/QYhhQHT2PLeiM3dWPYX9hGhdnQpv1jEyZKr1sK52Ul/GgwTT1B
-	iSBsU0dlaopDR/PP69GgMDtBnrpuCvo2YqI0XqoOX6KD2SCj4HPWXQQ3G+sxmyHRUHYQNQ+FTdc
-	gTbRuPM/m8+RVS91LfsCWU0T2Nfcjmpb7FZ+2wiy1gOteTLEB5b3whIF9kwRNxF0t7bDkSfJmLO
-	8CzXQWm3HTfOvWHyMpfnmOmLhdbnqkd7g/QpbC9Br0ZtvRD/CfqfPnMx7YjKUmABwC9G7RyyLbU
-	KLgGxk557kvG49xX4MXGz9J5rtA5iEE1qBTMG8b2
-X-Google-Smtp-Source: AGHT+IEvfTQCJKCNh3qhke/KxsW/y1p2uYXP6K9g5VKxCSG1GBRIRQqV1uYXaafKpVqcupU8bMrCXw==
-X-Received: by 2002:a17:907:86ac:b0:ac2:7f28:684e with SMTP id a640c23a62f3a-ace848c2393mr1062210766b.6.1745926786169;
-        Tue, 29 Apr 2025 04:39:46 -0700 (PDT)
-Received: from pathway.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acec0530c37sm169875066b.136.2025.04.29.04.39.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 04:39:45 -0700 (PDT)
-Date: Tue, 29 Apr 2025 13:39:43 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
-	Simona Vetter <simona@ffwll.ch>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VckXLVm2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745926805;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=keUFEOxzvfEuQuGtzUh6W6JrELfzfZcOEBMj82wu5Js=;
+	b=VckXLVm2rSsO2lHAzibYrA4qCoOsymnlbVE3QjL3JfHiEVBOgsQuVq9m8OFewFxQacl9SJ
+	mZ7jSLd2/RDwQ8utZE872pIQpIeNxMYYdCC1MlN34z2QScnKlaNU1vqtIW0CAFYBstE8Uq
+	N6OQepnSAv17xsrD2ONj/N0rIAr7W/Y=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-480-0KyN8NHVNGesDTy4uiZiQg-1; Tue,
+ 29 Apr 2025 07:40:00 -0400
+X-MC-Unique: 0KyN8NHVNGesDTy4uiZiQg-1
+X-Mimecast-MFC-AGG-ID: 0KyN8NHVNGesDTy4uiZiQg_1745926796
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F100F180010A;
+	Tue, 29 Apr 2025 11:39:55 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.225.102])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A8D619560A3;
+	Tue, 29 Apr 2025 11:39:26 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Daniel Wagner <dwagner@suse.de>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com,
-	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-	Kees Cook <kees@kernel.org>, tamird@gmail.com,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-	Hector Martin <marcan@marcan.st>,
-	Asahi Linux Mailing List <asahi@lists.linux.dev>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] vsprintf: Use %p4chR instead of %p4cn for reading data
- in reversed host ordering
-Message-ID: <aBC6f8Vmlik9ua0K@pathway.suse.cz>
-References: <20250428123132.578771-1-pmladek@suse.com>
- <aA-0MuLxVTueDAhm@blossom>
- <PN3PR01MB959715E4B4C95911A60ED075B8812@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>,
+	Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH v5 12/25] arm64/paravirt: Mark pv_steal_clock static call as __ro_after_init
+Date: Tue, 29 Apr 2025 13:32:29 +0200
+Message-ID: <20250429113242.998312-13-vschneid@redhat.com>
+In-Reply-To: <20250429113242.998312-1-vschneid@redhat.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PN3PR01MB959715E4B4C95911A60ED075B8812@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon 2025-04-28 22:38:13, Aditya Garg wrote:
-> 
-> 
-> On 28-04-2025 10:30 pm, Alyssa Rosenzweig wrote:
-> > Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > 
-> > Since the other patches went thru drm-misc-next, I guess this should
-> > too?
-> 
-> I think yes.
+The static call is only ever updated in
 
-Yes, it would be ideal to add this to drm-misc-next as well.
+  __init pv_time_init()
+  __init xen_time_setup_guest()
 
-Best Regards,
-Petr
+so mark it appropriately as __ro_after_init.
+
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+---
+ arch/arm64/kernel/paravirt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+index aa718d6a9274a..ad28fa23c9228 100644
+--- a/arch/arm64/kernel/paravirt.c
++++ b/arch/arm64/kernel/paravirt.c
+@@ -32,7 +32,7 @@ static u64 native_steal_clock(int cpu)
+ 	return 0;
+ }
+ 
+-DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
++DEFINE_STATIC_CALL_RO(pv_steal_clock, native_steal_clock);
+ 
+ struct pv_time_stolen_time_region {
+ 	struct pvclock_vcpu_stolen_time __rcu *kaddr;
+-- 
+2.49.0
+
