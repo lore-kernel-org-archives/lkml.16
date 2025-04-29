@@ -1,91 +1,162 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E6D278E41;
-	Tue, 29 Apr 2025 07:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896B627933A;
+	Tue, 29 Apr 2025 07:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912697; cv=none; b=b+ERQubKObTExw6Z23wN/V11rN2TqHhHbNmBr6ykpWGV3d/hLlYF9ZYzMFXMY/ZFfTaOuXQXJqPvdEeHmJ13Xy6E3LNdnoeHQYL5E+4oHwfWqSq0w5wuqok56dr9kSh/qiUh5P0Nppv7R1+rbHZQSCFEcj0GEevfxxrtm5KnAD4=
+	t=1745912716; cv=none; b=cwBS6dmBnJInKljlyNeVlPaXO1Mxm293OYrq8GHZB9+O0w97p54hBgX/6fz68MsDvgPBGQbp7DIHTd+lYUO/zo2ksUtF57QpdfI5RDrS6VOCN8dwyasW6+Xo0z6OL22RdxWa92C56NDvpAFQLswhwg0V6V51yPmVChM8p1S/LOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745912697; c=relaxed/simple;
-	bh=Jnsn00uNhHBc7RhB/Fv+ydSFhkmqTFOKl7wAVZSHDcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LnEKGruSN5E2KUHtwfISD9A/dkvdcMNiOCUvitAyLIzJlzIxyp5IZcCD3nKoMs7vwUAowitS0ou+e7+MpfEroAyEf35bYFKMmSK2/YdKBTMV2MGoEou+r4QPdr5S3Uz2wmS6B2+0qnjRclGb/k9XYxXHKJ9dTFf0WVFEakNsPfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cv4j2OAi; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cv4j2OAi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745912692;
-	bh=i4X9oYP5w2Y355tpCdld8pnMZ8xr8WEUhdSWp79vQDQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cv4j2OAiAHAqBeOsGHuG3mUDJcl+hMSEX8Vr7v3Uw4C609UE7IiIJJzgnVy/ZDPfi
-	 iXf61eF4hzW7CBm64Voz4GxOyyCw8DHIjmOMD1DhaFyX/IcxcBfbsPxjC/nL1SO3pd
-	 OKsGWscDNxjZapjOZ9Tz5DXt7jB1uBrCQRR16NH1TdSes2Ji6aMhdbyz4WPSYDCYTc
-	 d991OEayiE1dUtQsNkwxlSm/btBAX5O2uY0rIumHjmfbvUDaQb0aeeZXqu0IfeLceT
-	 5lTUYV75lkKQj2KCkPuY4J6cYoOKgmJPW73+w0JyOlQtSUSDxiITcVr/31cNgSGYff
-	 u5Gqk0quHNh6g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zmsm36Tqyz4xM4;
-	Tue, 29 Apr 2025 17:44:51 +1000 (AEST)
-Date: Tue, 29 Apr 2025 17:44:51 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Linux Kernel Mailing List"
- <linux-kernel@vger.kernel.org>, "Linux Next Mailing List"
- <linux-next@vger.kernel.org>, "Miguel Ojeda"
- <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: linux-next: build failure after merge of the rust-xarray tree
-Message-ID: <20250429174451.42a368af@canb.auug.org.au>
-In-Reply-To: <877c344gmp.fsf@kernel.org>
-References: <tAJ0jyptJ0jLaRp9siDw8y2iw3S7GeuC05Uncum-qihlIKfCfEVhQbGNuTengQ0kWpnNp7OoTITxbEdf6nDTCw==@protonmail.internalid>
-	<20250428203943.51dd39d5@canb.auug.org.au>
-	<877c344gmp.fsf@kernel.org>
+	s=arc-20240116; t=1745912716; c=relaxed/simple;
+	bh=G8dU/8ZraGb4ZDw4STUDdNEQVI98PTS1z3Ot10oXmVU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H2+vmiVCBLwVDCBmJlW9z4EVIh+uaKe2+D6xnOHcB5UhH9P2T9NDWyOGvmK4bgwxxGFTuj2iGGugC6Z5hwfENpcmDxRqm9p+HHg/ymct2ewdSPkAvGZLriJBbg538KnHZ/S5ANWu0t/hwPjYIFWtfa1zPh02phNb91WX6tPUQzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T3kYcd006268;
+	Tue, 29 Apr 2025 00:45:01 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 468y0ksmxx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 29 Apr 2025 00:45:01 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 29 Apr 2025 00:45:00 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 29 Apr 2025 00:44:57 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <jhs@mojatatu.com>,
+        <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <michal.swiatkowski@linux.intel.com>, <zhe.he@windriver.com>
+Subject: [PATCH 6.1.y v3] net/sched: act_mirred: don't override retval if we already lost the skb
+Date: Tue, 29 Apr 2025 15:44:56 +0800
+Message-ID: <20250429074456.3626604-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6oNFtKy05ZIgxfr64B5KfK6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA1NyBTYWx0ZWRfX1Nc8ZcZ8rBQT QBwUzFC1J0xE8XOfxC9iBJn4HgRDdmKMnWfn/FxuvVvlJvxkRGoRect+QTs8bSzVF3xh4D4Q9lk X37auw/naTAmxWvLXbSk518A5FggQGI32rkV0s0uzqDpN01eVf+qaZVTnNSsGAGhWsQI6SrdmK2
+ h90fj3wd7nOgX+wXuD6b246qiZefyW3QnlkzQsg3d+3GoFYo/OY/052VTYhwdenRN75mmzpHp1/ VLz8xMMtezVT2UEyCzMS6BTTOLumqxSwyaYi550DwXcRjBF8/8z8RzhkiT4VTxyly7pi3XzKI+Z cRJSHCsT3T2s35By/3/vbXFsCl3YoaOEzvoF+sBfw+Yu+qu5jxG+Ie8U20GubkwDy1sCojKihXP
+ dvFwUemZRBfBjw9frCKpMXNDQ/CZXPKl/X4nYFm02SL2T0D7WYV/lzNQxM5YvNVWegRfsjsS
+X-Proofpoint-ORIG-GUID: rIVTkqjRQilyT82V_WNgSXcEnFdkaigz
+X-Authority-Analysis: v=2.4 cv=O8A5vA9W c=1 sm=1 tr=0 ts=6810837d cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=QyXUC8HyAAAA:8 a=A7XncKjpAAAA:8 a=J1Y8HTJGAAAA:8 a=t7CeM3EgAAAA:8
+ a=46DbhiKqDBczhwNKROYA:9 a=R9rPLQDAdC6-Ub70kJmZ:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: rIVTkqjRQilyT82V_WNgSXcEnFdkaigz
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0 malwarescore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2504290057
 
---Sig_/6oNFtKy05ZIgxfr64B5KfK6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Jakub Kicinski <kuba@kernel.org>
 
-Hi Andreas,
+[ Upstream commit 166c2c8a6a4dc2e4ceba9e10cfe81c3e469e3210 ]
 
-On Mon, 28 Apr 2025 14:25:50 +0200 Andreas Hindborg <a.hindborg@kernel.org>=
- wrote:
->
-> The diff below should solve the conflict.
+If we're redirecting the skb, and haven't called tcf_mirred_forward(),
+yet, we need to tell the core to drop the skb by setting the retcode
+to SHOT. If we have called tcf_mirred_forward(), however, the skb
+is out of our hands and returning SHOT will lead to UaF.
 
-I have applied that from today and it all builds fine.  Thanks.
+Move the retval override to the error path which actually need it.
 
---=20
-Cheers,
-Stephen Rothwell
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Fixes: e5cf1baf92cb ("act_mirred: use TC_ACT_REINSERT when possible")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+v2: Fix the following issue
+net/sched/act_mirred.c:265:6: error: variable 'is_redirect' is used
+uninitialized whenever 'if' condition is true
+found by the following tuxmake
+(https://lore.kernel.org/stable/CA+G9fYu+FEZ-3ye30Hk2sk1+LFsw7iO5AHueUa9H1Ub=JO-k2g@mail.gmail.com/)
+Verified the build test by cmd(tuxmake --runtime podman --target-arch arm
+ --toolchain clang-20 --kconfig allmodconfig LLVM=1 LLVM_IAS=1)
+---
+ net/sched/act_mirred.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
---Sig_/6oNFtKy05ZIgxfr64B5KfK6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 36395e5db3b4..bbc34987bd09 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -255,31 +255,31 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 
+ 	m_mac_header_xmit = READ_ONCE(m->tcfm_mac_header_xmit);
+ 	m_eaction = READ_ONCE(m->tcfm_eaction);
++	is_redirect = tcf_mirred_is_act_redirect(m_eaction);
+ 	retval = READ_ONCE(m->tcf_action);
+ 	dev = rcu_dereference_bh(m->tcfm_dev);
+ 	if (unlikely(!dev)) {
+ 		pr_notice_once("tc mirred: target device is gone\n");
+-		goto out;
++		goto err_cant_do;
+ 	}
+ 
+ 	if (unlikely(!(dev->flags & IFF_UP)) || !netif_carrier_ok(dev)) {
+ 		net_notice_ratelimited("tc mirred to Houston: device %s is down\n",
+ 				       dev->name);
+-		goto out;
++		goto err_cant_do;
+ 	}
+ 
+ 	/* we could easily avoid the clone only if called by ingress and clsact;
+ 	 * since we can't easily detect the clsact caller, skip clone only for
+ 	 * ingress - that covers the TC S/W datapath.
+ 	 */
+-	is_redirect = tcf_mirred_is_act_redirect(m_eaction);
+ 	at_ingress = skb_at_tc_ingress(skb);
+ 	use_reinsert = at_ingress && is_redirect &&
+ 		       tcf_mirred_can_reinsert(retval);
+ 	if (!use_reinsert) {
+ 		skb2 = skb_clone(skb, GFP_ATOMIC);
+ 		if (!skb2)
+-			goto out;
++			goto err_cant_do;
+ 	}
+ 
+ 	want_ingress = tcf_mirred_act_wants_ingress(m_eaction);
+@@ -321,12 +321,16 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	}
+ 
+ 	err = tcf_mirred_forward(want_ingress, skb2);
+-	if (err) {
+-out:
++	if (err)
+ 		tcf_action_inc_overlimit_qstats(&m->common);
+-		if (tcf_mirred_is_act_redirect(m_eaction))
+-			retval = TC_ACT_SHOT;
+-	}
++	__this_cpu_dec(mirred_nest_level);
++
++	return retval;
++
++err_cant_do:
++	if (is_redirect)
++		retval = TC_ACT_SHOT;
++	tcf_action_inc_overlimit_qstats(&m->common);
+ 	__this_cpu_dec(mirred_nest_level);
+ 
+ 	return retval;
+-- 
+2.34.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQg3MACgkQAVBC80lX
-0Gw/oggAgGpcdEFyHqJMH5NrDh8xL/ZCYTfjGf07Hxk2pB/H19g91SMC7174DgoN
-PKxSJhQ+U7GEOvcHapJjCBsTsIa32udnbThAlWvliVmpUO6nn4lEaMjIizU4thxO
-T8y3uv7YpTq179rFd4PL/OH2Gh9TKINeAonW76pVHZ2c5+aAjJr3+SFFTcYEkpE1
-0T2XO6Xu7t2slJAqM0OXdh509InJliyFmrLaJdg143rIchSJ72Q/QO+i5B2iyY7y
-QBOTngFPLmrBezWrvGsV1oyG6EKk7CMSCnqOspBndwmR7XAfVpwrakTMy8yUWIJJ
-TyBtwlI0Q4nR6RKo6TtcX4bZ57YN2A==
-=h4IB
------END PGP SIGNATURE-----
-
---Sig_/6oNFtKy05ZIgxfr64B5KfK6--
