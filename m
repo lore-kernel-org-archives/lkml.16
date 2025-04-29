@@ -1,125 +1,187 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED2E23E32B;
-	Tue, 29 Apr 2025 15:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E21B21B19D
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941909; cv=none; b=YvTSYmrFSDaxR7KzAsEa1x70deum98EcBNPgkkBpw3aL621ULpgFfRukJSfysX3iO+JajBEXjNgetP7k7KG2An/RDodA8OYFJ2WjIl3jrdJS1MqMoormcnS9PtYRF4U8SLdoe/QF6wSCJJNg5dQQyXa5Ykl7UcMIJYx5W67E9WY=
+	t=1745941987; cv=none; b=ns+L00Un23BAB3TmNz20E6fAUzi8nQepEtJVL3HFccUrR7NW3VnRD6AOudo+rn6H8TMyAoPV8NffHVoeeOYeAyfxOm7n2ucKRtkcUsMfba9lOqSdQTr5BWsvyB0Ci2cWWQDdyEBJVUnpAbLY7B/LQ/Ow9yMywxP7pHrYZ+F/BbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941909; c=relaxed/simple;
-	bh=DnTNSFiQMa982txtTGvepKRlDKUMmvvPua/94CABBlI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=PqdoTR4h/TDKZ0vBO+67ynqB8Pb5ruBoieeZIh1vnyanhTzKaycPrb+DBu8redAS5ouqH8nGJ/+ZZSiH6YMaKwMx+QHTc/z/BKjmUF0a+0Ch2oY1u8JNtCcAGAxrF5DzejTe8FMfh5w2+M0+4XcsLLj3LcdmnEArcO55bISytk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HCmfRlt4; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1745941987; c=relaxed/simple;
+	bh=h/IZQcnfBHT4G86+I5es43VQEQkabF+DsuYFa4wAYeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o7Og10tDp5d1A7+JNCBQ63edd6okpndI3xpLOWnJ2xjRkVCVroKyQIc8jcdb9aOO7IZj0LD7VYg8L0xztLwFaHNvT8XS/qcs+7ow/+AfT2d43vYYVJELO1PA8HCxVSu6VGIDT7k+oNnog31mqb8lhzKkQpqD6xIARIvSb6Fo5q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T09odg57; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HCmfRlt4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1745941586; x=1746546386; i=markus.elfring@web.de;
-	bh=DnTNSFiQMa982txtTGvepKRlDKUMmvvPua/94CABBlI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=HCmfRlt4okoAETCbUqxka3c2+UkhgqQ0TwiXQG5oN1EQcsBBNgpRJ1LWVnBJFYYZ
-	 TmAV9LiflNKPn/z7h+vOFHM6Bmsgi6wXSf/mppmlKG9Hl1HMD5oSUiE8gKq9YB4uk
-	 sbptxTnbsxW3WnV1HyV7v/iVeO0kdxyqlveGK1kpU46l3YNCZfh8NkTvawfX3lJdr
-	 2MJ3x0ri81pyVjKu/xCDiARUeYsVjNV3OWIacmglqBUebfvcwRBK0zrbXxoEwn/9J
-	 LjbV7dFfp93HkBUiG3IV1Z9ZRQqpHPdIP3Frm6jY0izFl4BBcB55blKbUphRw/E5N
-	 h+Wmgo07v7TyXaY6nA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.57]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MXoca-1uYySc3Ccm-00PDIc; Tue, 29
- Apr 2025 17:46:26 +0200
-Message-ID: <b3876ccc-8446-433a-a2e9-caf6faaf1995@web.de>
-Date: Tue, 29 Apr 2025 17:46:23 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T09odg57"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47e9fea29easo40331cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745941984; x=1746546784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tR4G/oE7lDV+SqdB3MLGFRpZBNejLhq+cnMM4fvc76s=;
+        b=T09odg57AXY9EfSVw8uvzkytMQ+UbLC8RpwE9oXC8Rc9+Vz5TUD2fDr+UWjsixh/pr
+         2gd/Csn5Zaxq/xGVg11Yf7zy0o5tyvtgP4FAMJDL/2czQHMdTDrOnOA0hyu6H/qh66sf
+         FsrnZ5zq0OVhk021Z2JLzwIcWHbUGqpF+kzB/9ohGfWRNU/Nrgk/A8Vtnwdqke9RNvUT
+         pudzOPtc3PlsUzNC40vJCWgf/z1ppTUrDqWC4yY9XnNPPdDtYHx9hhwQc0uwtfNohMZG
+         LGYlfsO7rz9jQ8d/Ay9LnFHw/0q86nrBAntaoQLlxmJ0mIaamf6yDBpKtpQZr9YO65wd
+         7x2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745941984; x=1746546784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tR4G/oE7lDV+SqdB3MLGFRpZBNejLhq+cnMM4fvc76s=;
+        b=VXhmsKYZ8Nh7KvI4jOthzf57rIhv5J9dMO++284Rwr4XBMPAjts+8gytobrD6BmpIL
+         3YSxQ8fwpBjD39c1IyRw6Gt8guWm5HvWZlDxe9ieqOcWMHTofKzrFyG9NhqQRV4B1g0d
+         WzGSIVu+TwirOg9wyG6iAEmO9RHV8dfj0xLVadmTyiB7Ryh9etFIuPsfjy9P/rcQj/Dq
+         6XqlbGDbLc5culXhBxSeCe0ztqkHhCTW8jdzQDas3jEaNPiXrqZ3peRuHOQVfDGGbdb3
+         XCxrYsEA+mcgEAxfUOiTx2/Gjh5jYQqOVc8lcCMte0vKWPKvG9uprY7HJ2p69+fsSX+n
+         Rttg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuor3xsz8mf+GLfXymmOH/9okuQNFKZENFeWu9AJ431C3wLIL4jwNEor/LYMLed43h3YquoEX7kjDNinQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy11JOBOq9/a/fl68Cocm4P8+n/+A6cs1QzKwEQqBjo3UoBUmsh
+	aA+ugHIEGn3JZIm3S320T/JiuQXURQR4RJ4G50fvP6sdHiXl/fa6p7k6GQzRCVnZJFGm6PeckGs
+	5Gd0xQNlnnuNgcbLaZF+sbj64R8CWdUoQbDG9
+X-Gm-Gg: ASbGncst+nhw2q6JJb71pKQmfx2Kwp32xXojZYGj+NeiwUahdqityTsYNrF1JTGw3HL
+	4xc3U7OPag1t0FvbOGUlk/qqI1G+OLVpVeoeL1SwQujONdinIv8tKPGtsiA7B4RycTXfoyUi3wb
+	PdTsoZcUGhCSsxq35EniUqCSJ2KBTdlrAOPLGAwRDYWo0ZWnLIz4XsjVDAbsax8rY=
+X-Google-Smtp-Source: AGHT+IGUq0/bI6iWrr9yZSSFf6tf5FG9S03JekqmQqENCmT+EVGlFWDUhQvyd0VduyAxZKvqcwn9zVZ9YpU7aaw47qI=
+X-Received: by 2002:a05:622a:1822:b0:47e:ad75:c1a7 with SMTP id
+ d75a77b69052e-4885f13f423mr5274211cf.18.1745941984053; Tue, 29 Apr 2025
+ 08:53:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zhe Qiao <qiaozhe@iscas.ac.cn>, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Len Brown <lenb@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Sunil V L
- <sunilvl@ventanamicro.com>, Will Deacon <will@kernel.org>
-References: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
-Subject: Re: [PATCH v2] ACPI: PCI: Release excess memory usage.
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
+References: <20250429014754.1479118-1-Liam.Howlett@oracle.com> <de327c4e-67c6-4e7e-a40d-bc0e936de17d@oppo.com>
+In-Reply-To: <de327c4e-67c6-4e7e-a40d-bc0e936de17d@oppo.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 29 Apr 2025 08:52:52 -0700
+X-Gm-Features: ATxdqUFtkPoy459ruNkC4oHR_d__4et9mgSOFxeAb9dS-Stp0Dg4GrMRRqwCwKk
+Message-ID: <CAJuCfpFYEJDC0mypseU+tGDUmE+72jEGjfx-gBRPs3o3y-o7+A@mail.gmail.com>
+Subject: Re: [RFC PATCH v6.6] maple_tree: Fix MA_STATE_PREALLOC flag in mas_preallocate()
+To: Hailong Liu <hailong.liu@oppo.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, maple-tree@lists.infradead.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Zhaoyang Huang <zhaoyang.huang@unisoc.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"zhangpeng . 00 @ bytedance . com" <zhangpeng.00@bytedance.com>, Steve Kang <Steve.Kang@unisoc.com>, 
+	Matthew Wilcox <willy@infradead.org>, Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KzKXQKM8YUun6Mb1+1KnJXUqQVWv4oVsPPY372eaUISzFJlypNh
- fjpIGoUMkmhn6rWA7lKakYsGsV+f/e3tGzLKqBLnVs+HlXVjb8lAHygimUtjqAj01I5o/Ny
- ufv+0iT8F//QfQ0oafQmZpS6lmmM+INXc0Bgpevf4aRYtStShelBrGyI+mp60FLrAm7uea5
- rZFSTqQYmOhqc22HJfljA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Y3c6w/2B9OY=;RMe9UwOCM+FSFzFIluYM7Rg0hhx
- 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
- g==
 
-=E2=80=A6
-> the allocated memory should be released to avoid memory occupation.
+On Tue, Apr 29, 2025 at 12:48=E2=80=AFAM Hailong Liu <hailong.liu@oppo.com>=
+ wrote:
+>
+> On 4/29/2025 9:47 AM, Liam R. Howlett wrote:
+> > Temporarily clear the preallocation flag when explicitly requesting
+> > allocations.  Pre-existing allocations are already counted against the
+> > request through mas_node_count_gfp(), but the allocations will not
+> > happen if the MA_STATE_PREALLOC flag is set.  This flag is meant to
+> > avoid re-allocating in bulk allocation mode, and to detect issues with
+> > preallocation calculations.
+> >
+> > The MA_STATE_PREALLOC flag should also always be set on zero allocation=
+s
+> > so that detection of underflow allocations will print a WARN_ON() durin=
+g
+> > consumption.
+> >
+> > User visible effect of this flaw is a WARN_ON() followed by a null
+> > pointer dereference when subsequent requests for larger number of nodes
+> > is ignored, such as the vma merge retry in mmap_region() caused by
+> > drivers altering the vma flags.
+> >
+> > Reported-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> > Reported-by: Hailong Liu <hailong.liu@oppo.com>
+> > Fixes: 54a611b605901 ("Maple Tree: add new data structure")
+> > Link: https://lore.kernel.org/all/1652f7eb-a51b-4fee-8058-c73af63bacd1@=
+oppo.com/
+> > Link: https://lore.kernel.org/all/20250428184058.1416274-1-Liam.Howlett=
+@oracle.com/
+> > Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Hailong Liu <hailong.liu@oppo.com>
+> > Cc: zhangpeng.00@bytedance.com <zhangpeng.00@bytedance.com>
+> > Cc: Steve Kang <Steve.Kang@unisoc.com>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+> > Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+> > ---
+> >  lib/maple_tree.c | 14 +++++++++-----
+> >  1 file changed, 9 insertions(+), 5 deletions(-)
+> >
+> > Only the MA_STATE_PREALLOC flag needs to be fixed to avoid the vma
+> > iterator issue.  Doing the minimum change here mitigates risk in the
+> > stable kernels.
+> >
+> > If this fixes the issue, I'll resend without the RFC and add Stable to
+> > the Cc list.
+> >
+> > Thanks again, Hailong for the work on this issue.  Your testcase helped
+> > me narrow the bug down in the end.  I appreciate all the work and
+> > support provided by the Android partners, especially the involvement on
+> > the mailing list!
+> That's my pleasure. I also learned a lot from you :)
+> >
+> > diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+> > index 4eda949063602..d9975b870dadc 100644
+> > --- a/lib/maple_tree.c
+> > +++ b/lib/maple_tree.c
+> > @@ -5508,7 +5508,7 @@ int mas_preallocate(struct ma_state *mas, void *e=
+ntry, gfp_t gfp)
+> >       /* At this point, we are at the leaf node that needs to be altere=
+d. */
+> >       /* Exact fit, no nodes needed. */
+> >       if (wr_mas.r_min =3D=3D mas->index && wr_mas.r_max =3D=3D mas->la=
+st)
+> > -             return 0;
+> > +             goto ask_zero;
+> >
+> >       mas_wr_end_piv(&wr_mas);
+> >       node_size =3D mas_wr_new_end(&wr_mas);
+> > @@ -5517,10 +5517,11 @@ int mas_preallocate(struct ma_state *mas, void =
+*entry, gfp_t gfp)
+> >       if (node_size =3D=3D wr_mas.node_end) {
+> >               /* reuse node */
+> >               if (!mt_in_rcu(mas->tree))
+> > -                     return 0;
+> > +                     goto ask_zero;
+> > +
+> >               /* shifting boundary */
+> >               if (wr_mas.offset_end - mas->offset =3D=3D 1)
+> > -                     return 0;
+> > +                     goto ask_zero;
+> >       }
+> >
+> >       if (node_size >=3D mt_slots[wr_mas.type]) {
+> > @@ -5539,10 +5540,13 @@ int mas_preallocate(struct ma_state *mas, void =
+*entry, gfp_t gfp)
+> >
+> >       /* node store, slot store needs one node */
+> >  ask_now:
+> > +     mas->mas_flags &=3D ~MA_STATE_PREALLOC;
+> >       mas_node_count_gfp(mas, request, gfp);
+> > -     mas->mas_flags |=3D MA_STATE_PREALLOC;
+> > -     if (likely(!mas_is_err(mas)))
+> > +     if (likely(!mas_is_err(mas))) {
+> > +ask_zero:
+> > +             mas->mas_flags |=3D MA_STATE_PREALLOC;
+> >               return 0;
+> > +     }
+> >
+> >       mas_set_alloc_req(mas, 0);
+> >       ret =3D xa_err(mas->node);
+> Passed local test, planned to aging test.
 
-Will an imperative wording be more desirable for an improved change descri=
-ption?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.15-rc4#n94
+I also confirmed the issue is not reproducible with your patch. Thanks!
 
-Do you propose to complete the exception handling?
-
-
-How will development interests grow for the application of the attribute =
-=E2=80=9C__free=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.15-rc4/source/include/linux/slab.h#L47=
-6
-
-Regards,
-Markus
+>
+> Brs,
+> Hailong.
+>
