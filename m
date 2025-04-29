@@ -1,102 +1,90 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DF04206B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4D22C2AC2
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745930738; cv=none; b=JXA13IhUOyT37YcAXboNW6uvEu6wNKqNllAbVEjHExegA8EtFbhnosSYxMVw1K0QSAO28RNNWZ+kPf1zl63Z+IItOLGpD/z7SziFWQ1q7rRy9pO0rcJqz6FY1+J3XMyYZVoZ7AchKleKxP56Fn2bkCuadKuiCPwCpZQe+LFKAaI=
+	t=1745930852; cv=none; b=ScgW3LuxF2EkGUYYFLXCXLRu5icVKckFvsKNY62fWC+QtcJfjVXu9e0a+no16U2b8SmDOQPX7WEDJ5ilrSPg7oVZMRR7gOZVCY3eXFq5E59uQsIu9nFtUrDU0UbwcHtMpIT5M4WR4i0kaoj5bl5UXTFYPiXO7lxGwIM9qVZAkyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745930738; c=relaxed/simple;
-	bh=PpAMnzI0kNBjQbY2TRjuBdxKU7zvRVYeg0EDLdXpYhE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=FShQLo4JrjCw9rjKD3DDN2cP34wqolSOYZCrFDyixB2Z3O3WiYRsdUgzBY5bl64WwZDP/5wlIUdNNcdMtF+bsQP7KNFBcWbszWpUpHFo2b8xfOO7sRK17NdwJFHVsEZHTA2nu5anFSmz2XWf+jlUTMGzDa/u++9cjY2WAElQjpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sRqmWhw4; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sRqmWhw4"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745930733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PpAMnzI0kNBjQbY2TRjuBdxKU7zvRVYeg0EDLdXpYhE=;
-	b=sRqmWhw44OjJbRzJ9q8wv20RxoXTswli5MCApnQXx57ToQrdqG4mmujAPwy/MutiGxouUf
-	3XE2EmfyJDkI3rqTIgO9yci7CvAdonCq8EFeJ4AFLy1LJt0KNSoPU1tPgkkSL44fWle9Fp
-	FoDiVVBfiHiqTZ6qh+THYjHJ20naxQ8=
+	s=arc-20240116; t=1745930852; c=relaxed/simple;
+	bh=1XNP89J/Tqy4Sanc4mx5XgSj5XkVC/D5s4Q8Rnmx4LU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ollf3NWw4SaQKb1V1k56Zyv6sO8zFLefy2zmi1StCmyyhDXRs7u+/O8UxQ8YD19G3Ior/tIIuji45X3zfWhRRY3hGh5X1zQsmTR8jz11EVVl4ax0iXE7WJkX72QdHMrEnjQ+RiFPa4hfBUCVNqmU7eQori3BQADbFpVH1prHi8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85e15e32379so501969939f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:47:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745930850; x=1746535650;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p5AG1F/C08qNE+HenMzsOFVcY2WX3zpkUBhTT5RfdXo=;
+        b=qeKrKxdQFlKfQoXHHq8vfh3r/4YZQsKFNPf21dc1SHsnQnbwZQ4RGBFaUo5DUzeOxy
+         dzQBPYoRQFg47mmmjItwlFS9aMngwYnXfWbWj9WYZTvermSJNw66j8IQpNAYo2P5n9UB
+         RVcHFO06rcywFbgPr3jds1AcBAWoMy6+gFq2rg7b5A+4BLJQfrU84RTlDVxVZJBiEAe2
+         rEmTpbxJ7eSuu7cZKLkNNFkkfLiWWSV41jn8r8Yf50gafjOimy3KERRagAIeP3gP2zIq
+         FgdKgVws4ELtrOMaFzRmVlW9P31hymToS7b0sV8bR6JuBOCx9HxzXJE8Ocaktn6B/0kd
+         FDLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXq0Nv66IniKqWmoMiFSbYqNfmmlY+ZxA8eR5ZPdjkLyqOa1tN9CtaJfTN21LvoXdR9FQV6aSJTqJdpl5Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFTcZnTxIHMaKEoH1RsQrqn8XddBRLyzA0pRD8hjHmWei+MIas
+	JyBnHI/vhg3JZ3a8DxY0er+MnhZ0omZAi868Jno91Mm80BB3vHk8tXdNzg+++LK/X1C61PNvJQ/
+	X+rcpgSilStuknOT97WudEskOgLDiYRrXswMNcSgFgDtRjRaAHdOw09Y=
+X-Google-Smtp-Source: AGHT+IG0r/SNe4yPRPAB55ldyDMg+W+0ZNs1beU1qITLOCtfpKtKwVBAUoYjMoKwnMMaLxeJ87cZazC9rk1vWd1KnozqVAunaQ78
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [RESEND PATCH] bus: fsl-mc: Use strscpy() instead of
- strscpy_pad()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <17c35382-36c2-44e6-b553-e66a32a8c47e@csgroup.eu>
-Date: Tue, 29 Apr 2025 14:45:21 +0200
-Cc: Ioana Ciornei <ioana.ciornei@nxp.com>,
- linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9DDEEADA-BD78-4F4D-97AA-DCC683B2C7D0@linux.dev>
-References: <20250429104149.66334-1-thorsten.blum@linux.dev>
- <kko4akbacnugkdughit5ty6vpzg4wjiif3rh4w75hd67v34nre@ngpqhwjb5l4p>
- <17c35382-36c2-44e6-b553-e66a32a8c47e@csgroup.eu>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:1548:b0:862:fc1e:43c4 with SMTP id
+ ca18e2360f4ac-86467d128e5mr1587812839f.7.1745930850367; Tue, 29 Apr 2025
+ 05:47:30 -0700 (PDT)
+Date: Tue, 29 Apr 2025 05:47:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6810ca62.050a0220.16fb2c.0001.GAE@google.com>
+Subject: [syzbot] Monthly f2fs report (Apr 2025)
+From: syzbot <syzbot+listdf8772072a412c2cbcd4@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Christophe,
+Hello f2fs maintainers/developers,
 
-On 29. Apr 2025, at 13:58, Christophe Leroy wrote:
-> Le 29/04/2025 =C3=A0 13:47, Ioana Ciornei a =C3=A9crit:
->> On Tue, Apr 29, 2025 at 12:41:48PM +0200, Thorsten Blum wrote:
->>> Both destination buffers are already zero-initialized, making =
-strscpy()
->>> sufficient for safely copying 'obj_type'. The additional NUL-padding
->>> performed by strscpy_pad() is unnecessary.
->>>=20
->>> If the destination buffer has a fixed length, strscpy() =
-automatically
->>> determines its size using sizeof() when the argument is omitted. =
-This
->>> makes the explicit size arguments unnecessary.
->>>=20
->>> No functional changes intended.
->>>=20
->>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->> Reviewed-by: Ioana Ciornei <ioana.ciornei@nxp.com>
->> Christophe, could you also pick-up this patch when you have a chance?
->=20
-> Sure I will take it when time comes, but again I'd expect an =
-explanation inside the patch (below the ---) for the resend. I now have =
-this patch twice in the list and don't know why, see =
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=3D&submitte=
-r=3D&state=3D&q=3D&archive=3D&delegate=3D61610
+This is a 31-day syzbot report for the f2fs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/f2fs
 
-A "resend" is meant as a "ping" and the patch is always unmodified, at
-least that's my understanding of it. So there's no particular reason
-other than: "Did you see my patch? Let me send it again just to be sure
-you didn't miss it."
+During the period, 3 new issues were detected and 0 were fixed.
+In total, 11 issues are still open and 57 have already been fixed.
 
-=46rom [1]: "Don=E2=80=99t add =E2=80=9CRESEND=E2=80=9D when you are =
-submitting a modified version
-of your patch or patch series - =E2=80=9CRESEND=E2=80=9D only applies to =
-resubmission of
-a patch or patch series which have not been modified in any way from the
-previous submission."
+Some of the still happening issues:
 
-The patches are identical - just pick one.
+Ref Crashes Repro Title
+<1> 1248    Yes   INFO: task hung in f2fs_balance_fs
+                  https://syzkaller.appspot.com/bug?extid=8b85865808c8908a0d8c
+<2> 696     Yes   INFO: task hung in evict (2)
+                  https://syzkaller.appspot.com/bug?extid=65b1e2d8f2d618a93e96
+<3> 372     Yes   kernel BUG in f2fs_evict_inode (4)
+                  https://syzkaller.appspot.com/bug?extid=5c81eb8c0a380fa578b5
+<4> 48      No    kernel BUG in folio_end_read
+                  https://syzkaller.appspot.com/bug?extid=92895fc54ccb69ca6fa9
+<5> 8       Yes   kernel BUG in f2fs_write_end_io
+                  https://syzkaller.appspot.com/bug?extid=803dd716c4310d16ff3a
+<6> 2       Yes   INFO: task hung in f2fs_fallocate (5)
+                  https://syzkaller.appspot.com/bug?extid=d05837bec7673c4a18fe
 
-Thanks,
-Thorsten
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-[1] =
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#don=
--t-get-discouraged-or-impatient
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
