@@ -1,121 +1,107 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2262D47AF;
-	Tue, 29 Apr 2025 23:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0580F2D557F;
+	Tue, 29 Apr 2025 23:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970799; cv=none; b=iOzZT7oean4fSLhXa/jsbxf5A3ImzJYBWqXq15ARLJoigmWQoiO0FkbXrzImEwN5KEqS62Keg0UnCwlLtE0iS7xVCcKXsleQBILsbKC2aB23t8fAegJRZOgfGfATLR3VAznKBEGZzV4Oq+XQCkAfPzzCjKNLSqujwZ33vzWKSjU=
+	t=1745970802; cv=none; b=uE9rAIZe8vrY2pJghT3zBDDpgVHVZPRIG/lb/Sv7ZZrn9twytVMqW0aTPcj38q7OiKvqnrLxFHRe50iv/Zz/WYo+8kOMLP6tlrcVJJeuXHw12BXnRG+E5YvSnDP4+5IogXZ9IycXiYxXxucyuRQuMwayPLyWbOwra+dStGi3JQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970799; c=relaxed/simple;
-	bh=POfxadEkvYP12YbI4Fyv1KnzR9RyFXtL2BGRJZ1OFL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fiAfnJXr1b94RMEKiAcSXmC7nJkQ73npII3vq/J5yl1pdhlp5gJPQ4mhf/Dy1y5svik6GWTXDz4VxWnjDd76QE+Z/F8eUc1PXaQrVmGmfg+WzBHS1zoFj7rEly7y9Tm1LwW3tvpMPlW+GL8Zpu33SnR5MdT/tzX78HbeNvTr1Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jn96014/; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745970802; c=relaxed/simple;
+	bh=qLCS3tCIkyIT4QO76cRxABly/Xab58us3KObZz8eMsc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MjU5E7UEF54WzH54PFd2hIPCMoqzRqqF1w6+tWVTuFuL1VPBWqcMJEojuX68p6ZSM7EwYclrzI+/XHDpZ/agXvWZIa1yrf/JYUl40AeNfjw2whGFt0B+JEUCgvr0fab22RvRlnrS9tFCMVvvEW83nwAoLlK9T7z0llwAowprpbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRMXlB4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn96014/"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39149bccb69so5511379f8f.2;
-        Tue, 29 Apr 2025 16:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745970795; x=1746575595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=POfxadEkvYP12YbI4Fyv1KnzR9RyFXtL2BGRJZ1OFL4=;
-        b=Jn96014/v3nysw1vEhRSJYmRwAc5RWPJLKdjbMjd0ERie2k1x50sRaggqxsuC6kTFg
-         zYb/CHQVA+Dx3QwO0gDoAGfAjGsI5B2kQgzOk7lFpxm1jY+O+24/MV3NZGAbYcEOwuJM
-         gLYdO11/iwLyCFcX3eJbm0knEW5lEQPptNP33l8euzSNct3bQP6zvsgkKxqfaIRmOhzG
-         DnikxUoStRft0AvkHHAbRfpUCRh7UW6iAua8rFnwr3baNsuPH9fyHtDKKJe7XrFPCfhH
-         7sLbpdmd+cx5JF11DnQgU9w18AXyV32z9qAYMgf2FbVD+83Wp6qUDzeL0gpaMduwRaAk
-         vKGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745970795; x=1746575595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=POfxadEkvYP12YbI4Fyv1KnzR9RyFXtL2BGRJZ1OFL4=;
-        b=CXHdoqdLDbaJ7iXCQOrcj4PEWgoyNacAzzuaf6gRqBbSaoUCGhQaCLlO5SNMinBFJZ
-         WlYLtRub/ez4vfM7TDrshdTV2U2czGQryCxYD3aw9x4/epxw4doxCEwKpCakmjVefHvu
-         bZZhUaspGhADaCe6IZ0Qj1+LYZ97PHo2aTje4/o8vy/ZxFEwyDgdXNa2OEMiRzjzo/gL
-         rDumlAuFQeCPZDYlW3i25hDLKczQ9jcRRlvEKtj2oh5N1E6Hsl4Uo1keIYfUqrUMVJ2x
-         2A+E+Ze7CGFFnAlWp1iY41YwgUorurlQiL2BGG8enihuQE9FXahyilmMpUQv30P0iTEi
-         V5Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDliGNQT+DbSgeqOEpIcpKqNtgRSZ8L+9P1mzaW2Zc867IyRF7c/ANpj8tbUyhDbd95iTauaKAkJCAJqLus36E@vger.kernel.org, AJvYcCVjfK7o/OTOEV6Gp/1+kVB2l1RwgCRaZUTgPuA/YkyU4nbTD+BIUE1cFeNfInDHPAP4dt6WG8cS@vger.kernel.org, AJvYcCWWzHIe0+LMxj3kBpOYZ8lMxZ01rH7KrLJ39xQRZqZJ2fbi1eNc0z01IegtJ4ENuHk9i0PDYY2ue/Rvydne@vger.kernel.org, AJvYcCWwxiDHRCAKuNdIET6bJrR/+EEHTEHBajrCDxCWjNvaJVMhql+IZ9s9C7tWbNn6BjMsWIS+imAsIrM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF13oab2XP0bcMperZPMlsHBqtepTsGRjReJ5biyuJ876tdCkm
-	J9Fwg83bFHriNpmX0zGP7STOlNM8sRbFOTaFobSgiWqeE+1ioyocyBRfWsOAB2S7/+Qas6wm5o2
-	qUqH5T9nPgOlDmQgPq/iDsZQC6zY=
-X-Gm-Gg: ASbGncsQpBB2IQnu4ZnpknAEiGJTGNxh5hEOEPOIsK0+rwRdAK/KcX/VKPNipwr+m11
-	lDXyi3HwMcRl7Jqn0VpuJ4pe2MbDiwN7hfJAWGa/hEgAG2wid7mdfqarFtl56GOAdxBw/DUWnld
-	v+nVWyj5FRA86njY2Vj4vOekN+AmgcCM6aa1TZZg==
-X-Google-Smtp-Source: AGHT+IHfQ7021Wi0Od483NxBRwOwlGT8tEpRShkiNypqzqZYLsetUGmXm5nnqFTtQjliYCEyubmVfYYLFsJBvNrlXbI=
-X-Received: by 2002:a5d:584a:0:b0:39c:2c38:4599 with SMTP id
- ffacd0b85a97d-3a08f7a48f6mr963346f8f.48.1745970795091; Tue, 29 Apr 2025
- 16:53:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRMXlB4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178DBC4CEE3;
+	Tue, 29 Apr 2025 23:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745970801;
+	bh=qLCS3tCIkyIT4QO76cRxABly/Xab58us3KObZz8eMsc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fRMXlB4/voqMF+xSsSYCiSkbu/89pDqbWQ4mJ58mDW+QApnswvO6ylqvqEGo2m8QR
+	 Kv/PaIDBZU9J2U4BWbBqEPmOWNpyno8CpcJOQuziGJ2lnAyq4rHrPjMGaCguEu99DQ
+	 zXIEdSoxdvyaQGEPKPphkNm0XTcZHf9UQYCSDAh28tb5MwwFbXEnJISoTWRc/DwSdM
+	 wP97mDbc8khXvc3Y4i/UBFEBBE+irAPDZ5SN3Eo73UN6IT/GwiPCpqGs4V3o3zsFdu
+	 C+yDheaVIop7lokap4086SjITEcVYQCPrZyRFCL1tXuhp/TFzA+SP9jftrY4Xm9l83
+	 6BUgk6WmhTNJA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Dmitry Bogdanov <d.bogdanov@yadro.com>,
+	Maurizio Lombardi <mlombard@redhat.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linux@treblig.org,
+	ebiggers@google.com,
+	ardb@kernel.org,
+	viro@zeniv.linux.org.uk,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 01/10] scsi: target: iscsi: Fix timeout on deleted connection
+Date: Tue, 29 Apr 2025 19:53:06 -0400
+Message-Id: <20250429235316.538129-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428081744.52375-1-jiayuan.chen@linux.dev>
- <CAADnVQLiqHUVZQ7MdqAfnUK+01D5fSt6sDR5nzon83w39ZBohA@mail.gmail.com> <6cc9ccc1339839559710efe94bbd1d61289bdaaf@linux.dev>
-In-Reply-To: <6cc9ccc1339839559710efe94bbd1d61289bdaaf@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 29 Apr 2025 16:53:04 -0700
-X-Gm-Features: ATxdqUGehvH5TBOumxUn713AmXG-enA239BN9cFJ0Osp5Y0ndJxOfXZNQviCb_E
-Message-ID: <CAADnVQJWx9NJPGSrTv=WAwp9Zf8eHGNFwpC5BX5CYjMWBcWoAA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 0/3] bpf, sockmap: Improve performance with
- CPU affinity
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf <bpf@vger.kernel.org>, Jiayuan Chen <mrpre@163.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Jakub Sitnicki <jakub@cloudflare.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.135
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 4:47=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.de=
-v> wrote:
->
-> >
-> > This looks to me like an artificial benchmark.
-> > Surely perf will be higher when wq is executed on free cpu.
-> > In production all cpus likely have work to do, so this whole
-> > approach 'lets ask wq to run on that cpu' isn't going to work.
-> > Looks like RPS helps. Use that. I think it will scale and work
-> > better when the whole server is loaded.
-> > pw-bot: cr
-> >
->
-> Hi Alexei, you're right for requests coming from a remote host, all CPUs
-> are running; in cloud-native scenarios where Sidecars are widely used,
-> they access each other through loopback, but for requests accessing each
-> other through loopback, the wq (workqueue) will definitely run on the CPU
-> where the client is located (based on the implementation of loopback and =
-wq).
-> Since the Sidecar itself is bound to a CPU, which means that in actual
-> scenarios, the CPU bound to the gateway (reverse proxy) program using soc=
-kmap
-> cannot be fully utilized.
->
-> Enabling RPS can alleviate the sockmap issue, but it will introduce an ex=
-tra
-> software calculation, so from a performance perspective, we still expect =
-to
-> have a solution that can achieve the highest performance.
+From: Dmitry Bogdanov <d.bogdanov@yadro.com>
 
-And I think it's wrong to optimize for performance of one particular setup.
-An API that picks a cpu is difficult to get right.
-Too easy to make performance worse.
+[ Upstream commit 7f533cc5ee4c4436cee51dc58e81dfd9c3384418 ]
+
+NOPIN response timer may expire on a deleted connection and crash with
+such logs:
+
+Did not receive response to NOPIN on CID: 0, failing connection for I_T Nexus (null),i,0x00023d000125,iqn.2017-01.com.iscsi.target,t,0x3d
+
+BUG: Kernel NULL pointer dereference on read at 0x00000000
+NIP  strlcpy+0x8/0xb0
+LR iscsit_fill_cxn_timeout_err_stats+0x5c/0xc0 [iscsi_target_mod]
+Call Trace:
+ iscsit_handle_nopin_response_timeout+0xfc/0x120 [iscsi_target_mod]
+ call_timer_fn+0x58/0x1f0
+ run_timer_softirq+0x740/0x860
+ __do_softirq+0x16c/0x420
+ irq_exit+0x188/0x1c0
+ timer_interrupt+0x184/0x410
+
+That is because nopin response timer may be re-started on nopin timer
+expiration.
+
+Stop nopin timer before stopping the nopin response timer to be sure
+that no one of them will be re-started.
+
+Signed-off-by: Dmitry Bogdanov <d.bogdanov@yadro.com>
+Link: https://lore.kernel.org/r/20241224101757.32300-1-d.bogdanov@yadro.com
+Reviewed-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/iscsi/iscsi_target.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index 07e196b44b91d..04d40e76772b3 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4314,8 +4314,8 @@ int iscsit_close_connection(
+ 	spin_unlock(&iscsit_global->ts_bitmap_lock);
+ 
+ 	iscsit_stop_timers_for_cmds(conn);
+-	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
++	iscsit_stop_nopin_response_timer(conn);
+ 
+ 	if (conn->conn_transport->iscsit_wait_conn)
+ 		conn->conn_transport->iscsit_wait_conn(conn);
+-- 
+2.39.5
+
