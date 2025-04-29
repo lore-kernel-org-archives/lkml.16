@@ -1,152 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC8A1F76A5;
-	Tue, 29 Apr 2025 07:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16AF8F49
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745910597; cv=none; b=Pk8mXNEgx0mx48iVWdJpLpqzZx5H7WfI7agHkwrkE754sJZqeSg2lMn/qbBSQkgScahAU+fIBwzpy28uR2VPa+jZejIqxVlHEW92v39Qj2wtyBW1ts5kf7IutmA1su/49ExPzBjdKnSWQG4kLf14Zc4y+i/xNlvPPtGZT9w62/E=
+	t=1745910688; cv=none; b=di4F1BMwFBuABGFZuXKPmgBBnLyDmeQ5cir15wU3yLrupJxIXupOJVln4d3vCm8/ZeZer0h9ls/6d0dh7DNHO3HzEMeOLrwoGU7hxgJRjvzQQ96/GZIYI8X6CcC9v6VXbwCHfQJmhDeXeCxd96V9HxvMglg/YyzqtfrvlE2Y0yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745910597; c=relaxed/simple;
-	bh=XYz3g2B0rvs9Ov2YUd2o2zmJrspxC64MWa2M4SH/gUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ru4z9q68NvzyfXFDwp8a2iBFf4+k9Ja1rO9BvZ4ss60f420FcxX7fryVsvP2JxYRx3g6TNqOfachoM+oedefx30JPP8J+GlucXE7zvsAGaQIkrUXXAvSlMRuzL5rzZRru1o6kOtClO2I8eIpAGkcyRzPl4EE2K1JJYkAmKIYYq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLzBkn7v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745910688; c=relaxed/simple;
+	bh=1Yt/kKdWgyFjVcE3Cz5XZTPFxYqSvfdYHbrAMfAxYRw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tk0QLLhT5lSis8VH4jACX+ssVWQhRm1wf1AlcY4/1pHMy5aTT5NKh2x+rDvNoGJF3xMtnR1MqI2+diN3hRVJwULvXAF4aH13u7UfH9mQ5bMzIn9NzvHCNB3pKoAhZEWBaAOvSiXR24PfhhdCVPGOADDXu2wHmJXzayErfBMVKQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iu2IA8gR; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLzBkn7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 782F9C4CEE3;
-	Tue, 29 Apr 2025 07:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745910596;
-	bh=XYz3g2B0rvs9Ov2YUd2o2zmJrspxC64MWa2M4SH/gUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TLzBkn7vxR3ao/EIan1Ff3uh7sQpmsEwhTyvp5IWbiNtqN50Zz/Xyge++kELaJN0q
-	 kMFpD/jygnIMW5irfCRHI1/OVghY9TyguwAoG6JGFRuLB12fPTTndhMsERnLtxJVI+
-	 wrdDiskFcX7rprpqyAD5jb78XXPmEjOP4woZg3f8UV4ahjmC8sga4B3fg+JZGGbSsz
-	 8VmTcfeSdQfDPyV/QYga3rL+W+deyMnR0DXK8PsAVfjFfbba+7pehYP3BREI1aPGXl
-	 eLCkMiD9L+6FQVeWWGCGc7G102jR3mGdcoBf1JnDrEjP48Wz5un/kPBYmstcawhD9D
-	 ln9Dj+vJkBQ6A==
-Date: Tue, 29 Apr 2025 09:09:54 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/5] pinctrl: mediatek: airoha: use new GPIO line value
- setter callbacks
-Message-ID: <aBB7QkazpVxlUCJc@lore-desk>
-References: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-0-93e6a01855e7@linaro.org>
- <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-1-93e6a01855e7@linaro.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iu2IA8gR"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745910684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=whzbueSM5IFp/0EHZ1SXALhjUlx+PeV3oY2K5xgmepc=;
+	b=iu2IA8gRyZygarg3IPBa8+REnPW9cIchMrXdhp2YOKlJKHVYx6B8azVloaBmrDFIH3b1gw
+	9WG1QWDNJz4MnKeu71hC1F5jG8bQ6UmE196q4B5NOzDcK3NzUw0kOuHFFyUsNsHbJDL3vp
+	B7yOWIgW7udFP2I7dalP4+IuYfPLx9Q=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Weidong Wang <wangweidong.a@awinic.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Zhu Jun <zhujun2@cmss.chinamobile.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: codecs: Use min() to simplify aw_dev_dsp_update_container()
+Date: Tue, 29 Apr 2025 09:10:13 +0200
+Message-ID: <20250429071032.65391-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SzPC/w3b/xBP/t6u"
-Content-Disposition: inline
-In-Reply-To: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-1-93e6a01855e7@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Use min() to simplify aw_dev_dsp_update_container() and improve its
+readability.
 
---SzPC/w3b/xBP/t6u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No functional changes intended.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ sound/soc/codecs/aw88166.c                | 7 ++-----
+ sound/soc/codecs/aw88395/aw88395_device.c | 7 ++-----
+ sound/soc/codecs/aw88399.c                | 7 ++-----
+ 3 files changed, 6 insertions(+), 15 deletions(-)
 
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+diff --git a/sound/soc/codecs/aw88166.c b/sound/soc/codecs/aw88166.c
+index 6c50c4a18b6a..4f76ebe11cc7 100644
+--- a/sound/soc/codecs/aw88166.c
++++ b/sound/soc/codecs/aw88166.c
+@@ -11,6 +11,7 @@
+ #include <linux/firmware.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
++#include <linux/minmax.h>
+ #include <linux/regmap.h>
+ #include <sound/soc.h>
+ #include "aw88166.h"
+@@ -909,11 +910,7 @@ static int aw_dev_dsp_update_container(struct aw_device *aw_dev,
+ 		goto error_operation;
+ 
+ 	for (i = 0; i < len; i += AW88166_MAX_RAM_WRITE_BYTE_SIZE) {
+-		if ((len - i) < AW88166_MAX_RAM_WRITE_BYTE_SIZE)
+-			tmp_len = len - i;
+-		else
+-			tmp_len = AW88166_MAX_RAM_WRITE_BYTE_SIZE;
+-
++		tmp_len = min(len - i, AW88166_MAX_RAM_WRITE_BYTE_SIZE);
+ 		ret = regmap_raw_write(aw_dev->regmap, AW88166_DSPMDAT_REG,
+ 					&data[i], tmp_len);
+ 		if (ret)
+diff --git a/sound/soc/codecs/aw88395/aw88395_device.c b/sound/soc/codecs/aw88395/aw88395_device.c
+index b7ea8be0d0cb..e1430940015d 100644
+--- a/sound/soc/codecs/aw88395/aw88395_device.c
++++ b/sound/soc/codecs/aw88395/aw88395_device.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/crc32.h>
+ #include <linux/i2c.h>
++#include <linux/minmax.h>
+ #include <linux/regmap.h>
+ #include "aw88395_device.h"
+ #include "aw88395_reg.h"
+@@ -1114,11 +1115,7 @@ static int aw_dev_dsp_update_container(struct aw_device *aw_dev,
+ 		goto error_operation;
+ 
+ 	for (i = 0; i < len; i += AW88395_MAX_RAM_WRITE_BYTE_SIZE) {
+-		if ((len - i) < AW88395_MAX_RAM_WRITE_BYTE_SIZE)
+-			tmp_len = len - i;
+-		else
+-			tmp_len = AW88395_MAX_RAM_WRITE_BYTE_SIZE;
+-
++		tmp_len = min(len - i, AW88395_MAX_RAM_WRITE_BYTE_SIZE);
+ 		ret = regmap_raw_write(aw_dev->regmap, AW88395_DSPMDAT_REG,
+ 					&data[i], tmp_len);
+ 		if (ret)
+diff --git a/sound/soc/codecs/aw88399.c b/sound/soc/codecs/aw88399.c
+index ee3cc2a95f85..4b90133e5ab4 100644
+--- a/sound/soc/codecs/aw88399.c
++++ b/sound/soc/codecs/aw88399.c
+@@ -11,6 +11,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/firmware.h>
++#include <linux/minmax.h>
+ #include <linux/regmap.h>
+ #include <sound/soc.h>
+ #include "aw88399.h"
+@@ -872,11 +873,7 @@ static int aw_dev_dsp_update_container(struct aw_device *aw_dev,
+ 		goto error_operation;
+ 
+ 	for (i = 0; i < len; i += AW88399_MAX_RAM_WRITE_BYTE_SIZE) {
+-		if ((len - i) < AW88399_MAX_RAM_WRITE_BYTE_SIZE)
+-			tmp_len = len - i;
+-		else
+-			tmp_len = AW88399_MAX_RAM_WRITE_BYTE_SIZE;
+-
++		tmp_len = min(len - i, AW88399_MAX_RAM_WRITE_BYTE_SIZE);
+ 		ret = regmap_raw_write(aw_dev->regmap, AW88399_DSPMDAT_REG,
+ 					&data[i], tmp_len);
+ 		if (ret)
+-- 
+2.49.0
 
-> ---
->  drivers/pinctrl/mediatek/pinctrl-airoha.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
-mediatek/pinctrl-airoha.c
-> index 5d84a778683d..b97b28ebb37a 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> @@ -2247,15 +2247,16 @@ static int airoha_convert_pin_to_reg_offset(struc=
-t pinctrl_dev *pctrl_dev,
->  }
-> =20
->  /* gpio callbacks */
-> -static void airoha_gpio_set(struct gpio_chip *chip, unsigned int gpio,
-> -			    int value)
-> +static int airoha_gpio_set(struct gpio_chip *chip, unsigned int gpio,
-> +			   int value)
->  {
->  	struct airoha_pinctrl *pinctrl =3D gpiochip_get_data(chip);
->  	u32 offset =3D gpio % AIROHA_PIN_BANK_SIZE;
->  	u8 index =3D gpio / AIROHA_PIN_BANK_SIZE;
-> =20
-> -	regmap_update_bits(pinctrl->regmap, pinctrl->gpiochip.data[index],
-> -			   BIT(offset), value ? BIT(offset) : 0);
-> +	return regmap_update_bits(pinctrl->regmap,
-> +				  pinctrl->gpiochip.data[index],
-> +				  BIT(offset), value ? BIT(offset) : 0);
->  }
-> =20
->  static int airoha_gpio_get(struct gpio_chip *chip, unsigned int gpio)
-> @@ -2280,9 +2281,7 @@ static int airoha_gpio_direction_output(struct gpio=
-_chip *chip,
->  	if (err)
->  		return err;
-> =20
-> -	airoha_gpio_set(chip, gpio, value);
-> -
-> -	return 0;
-> +	return airoha_gpio_set(chip, gpio, value);
->  }
-> =20
->  /* irq callbacks */
-> @@ -2419,7 +2418,7 @@ static int airoha_pinctrl_add_gpiochip(struct airoh=
-a_pinctrl *pinctrl,
->  	gc->free =3D gpiochip_generic_free;
->  	gc->direction_input =3D pinctrl_gpio_direction_input;
->  	gc->direction_output =3D airoha_gpio_direction_output;
-> -	gc->set =3D airoha_gpio_set;
-> +	gc->set_rv =3D airoha_gpio_set;
->  	gc->get =3D airoha_gpio_get;
->  	gc->base =3D -1;
->  	gc->ngpio =3D AIROHA_NUM_PINS;
-> @@ -2715,9 +2714,7 @@ static int airoha_pinconf_set_pin_value(struct pinc=
-trl_dev *pctrl_dev,
->  	if (pin < 0)
->  		return pin;
-> =20
-> -	airoha_gpio_set(&pinctrl->gpiochip.chip, pin, value);
-> -
-> -	return 0;
-> +	return airoha_gpio_set(&pinctrl->gpiochip.chip, pin, value);
->  }
-> =20
->  static int airoha_pinconf_set(struct pinctrl_dev *pctrl_dev,
->=20
-> --=20
-> 2.45.2
->=20
-
---SzPC/w3b/xBP/t6u
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaBB7QgAKCRA6cBh0uS2t
-rH+7AP9aAxct76GnQDHEVxQpxzo251BHKc2c0P+HYX1/qSMfZQD/bQxwhnZGiu8p
-hKaJ4RR5BS1SvzR7LL64CT3ArjhR5A4=
-=KZkz
------END PGP SIGNATURE-----
-
---SzPC/w3b/xBP/t6u--
