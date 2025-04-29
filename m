@@ -1,133 +1,101 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB452C259D;
-	Tue, 29 Apr 2025 14:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA6727CCD7;
+	Tue, 29 Apr 2025 14:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745936629; cv=none; b=gY+oLC4T4BpC5tl/i0KNZZZoCsV+WmR0uhFfQZoQ10ICKnza10KHTpcEAF4ejJYP5KIdMl0UkyKFKJKHcxbdOV+toOs+aom140LuwPl6fpKvzXkcYXZVklwfx6X11+g7flfl4BJD522iytAf12T6rBktrsx/dLCdV+SFFSHNE2Y=
+	t=1745936708; cv=none; b=sLfL8kS22KOK7INKX1NJH0eDtPcqzSzLmXuJByOXybqXR+fCE0ZWpUihLThWOmCZVX0/XKJhK8xaHiT0vLgZBknQFoqpiEFEp9ew2Z+WGMVjshP8a/XYZajnnrHq4gPfzlA3kMildtNRbh5aw9xaAxsHXgGVtj2Gt7ECK/gUEYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745936629; c=relaxed/simple;
-	bh=wnFuWF1qkGD8gtloaR8bZH+fQAddlkDDvUzoHzQnTnw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QOiYF2HFgxHr7kFD0YhkT7j/JoQJZvaQ/NNyWxZlCN2ItCMQONxCWB4yUMIi/MqtQe3atefeMqdhGEp+ReYy7cA+UFW0z5CHYQHOU4Vk0DkCwPXrXfeljK1kQT2sV5ow7miS7/HOcBgAx1ylnQ2p6rF0Nn1e7Rl7tjtklEr7YAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gfOy8uHh; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gfOy8uHh"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TENXi53693953
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 09:23:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745936613;
-	bh=s7MUa9Mrt3b4XrsrztK/DyPSINZDhXWUGMI9GzjPTgU=;
-	h=From:To:CC:Subject:Date;
-	b=gfOy8uHh2rwblj0oTOKmEoadArZo3Qvbn4VZvH5mqyIHYsDYyMZS/2Q+0ZhMxnSQc
-	 klzxFXQmm1s3FqHCgIM7cWj+2p9dCLAis9OCJhzjtLFjyRN+XK6bmNtVsMD/X8IBHD
-	 oa2YJcAGA/XK9gdYtv4+FCHHE6oRAXWfR2UVd7Ik=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TENX18063037
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 09:23:33 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 09:23:33 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 09:23:33 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TENX5U067841;
-	Tue, 29 Apr 2025 09:23:33 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] arm64: dts: ti: k3-am6*: Set eMMC clock parents to default
-Date: Tue, 29 Apr 2025 09:23:32 -0500
-Message-ID: <20250429142333.4140010-1-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745936708; c=relaxed/simple;
+	bh=DX19r16KLz2YlQBtpGqVjz7Hv8n8PkjImtOOoYr43l8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q5rz9hQmOnz3mwJJynG41yvK0dDB1dFqvYDAteotdn6kHg3/iF2Qo4z3C5OHnaOa9ySbWtd1yRIKfj04Zr9YgWfRbWNzPwVbB6ITJrr2XbeTmyPyKMG2ZCh/yoif8aFTWZnpYJLab/kFfy3NVGfp+Np1L1AQ15UYNTc6b1/BrsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c5568355ffso554059285a.0;
+        Tue, 29 Apr 2025 07:25:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745936704; x=1746541504;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kPRdC5iy2IMbXuhbS37MgOLZ/VT/r6x/KR0GknHB3LE=;
+        b=szNrgc3eDC3i7VdZpS32yjFB02aHAGqTUm/knUNT204jOanpdpq+wborRcCJeYr5Yz
+         XQ4GAnWVLTiQOGUtmxVOOBfeOkFFKGo1otNERgezOd1Jj686LAva5vHl+q2CBBYMPGqQ
+         M5ySmo56hBB5eCbL1dTOqQ0fryhBn3Zg4kNRfN2rtzB2aT2IYsnP43S9K9k5n4+XucOG
+         B4sJZL0WqEwTED5+meVEhubz3G2HGiP7i4BkXacIW8e0IwmN/c/4TYTlLMH4V4xBV0GK
+         orEVGiOQOHKdXJ//CKMwa+Uv0FhwGBZGZzrHLm6ylnjuLpb6IyW72qOca8SUxjX3IYYL
+         2ZeA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+McisDgWrwSiINQqe1BzM2f50xn3gdid2HzqrSjj28btgCEfCANw02Ovh2IsS3jtLxqVYFW26pbSNeeE=@vger.kernel.org, AJvYcCUrKDO7XrUrEbT2paFMWF87XPqziOOTJQKhtjkYXfBJVR7gD2XsN4qq3LRkiztgoji7Cf5Fff85g50LHV4=@vger.kernel.org, AJvYcCWbPaBgkPNuX+jlHptf9xRxO7/ZAywp4nNCzIVEUd8+ol77m9+2oCeLnytqcV/DyakByz/c2QFz0YkxIiWVWF1OERw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuhEDna0TDJYs2MdeHWW3HECLuTqBThreGr3Kqb9cKtiag8Y38
+	GQmgfcV9CRvQ8o+w1kKPPk34G79JzzXR6oSBqcht5Dw3gUiPZDNfw0OCOia8
+X-Gm-Gg: ASbGncuon5wKyKini2N3ck/2RyFtksVCB53LzK/BQRZ2s9urfOsVI02hV/9cwnYtJla
+	3mdhz3ghn5m2M3WxLS1nzRPfJjb47yH8U4iQhJcugA67rX17aAn+1gxJhVBRyLaLMAcpTHdP+/s
+	wOdty6P+ZoQuIsNM99Ya/FHrPk6jQBYqRa6GVyJJ3kEgv/S00jHGMDiRg7+PWZaRqRKnvzbGc5r
+	LiTNFcdpgLOGKGHJ+lltr9U0/vqCgDz/TyBQsd/RtyHJ7YnCHUU+SxWNWtgmD3NLBYGdeYxXXEn
+	N5rljhn1J8H+INXZ0YiksBD0SY3TPO0iGiTR4n7gFJqup1jNSY+sA3N2fYh8zpHMZSlDGC5Ur4x
+	iR0l+9ttLkTgP4nPWnw==
+X-Google-Smtp-Source: AGHT+IEfSypkfjJl3AO0hG44VdBvb+wJmWPi4X5qZLgUXKanArekPPbgIRA42HLRqCuJFIdS2OlXcQ==
+X-Received: by 2002:a05:620a:f15:b0:7c5:4b6a:d862 with SMTP id af79cd13be357-7cabe6042d0mr403995485a.33.1745936703520;
+        Tue, 29 Apr 2025 07:25:03 -0700 (PDT)
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958c91a6asm743795485a.17.2025.04.29.07.25.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 07:25:03 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c07cd527e4so655600485a.3;
+        Tue, 29 Apr 2025 07:25:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWxVfzdz6k9tCHVQhVMZHSNpbaO3feSCWBLW5OqJILCGKBSnJPvL9istNaqwwDFCzE88jBxKKHf5dZT2Hg=@vger.kernel.org, AJvYcCX+rnRdNsj9/0uKZSoiHQiJBFNWKSFEM7LKyNo6gjuTIE3kJUrEvywQxzhcNYI4y0NjTewvWHWuZtZuvyg=@vger.kernel.org, AJvYcCXPjIa8paWQyYAcgK//HUXcI8fn0D9/T2xC5i6/CxAAjUq/R+m0Ui4RxefItBtFzj3HDIwlUErtMQQE2jqGZTGC85I=@vger.kernel.org
+X-Received: by 2002:a05:620a:298f:b0:7c5:ccc0:2382 with SMTP id
+ af79cd13be357-7cabe664725mr414807985a.52.1745936702330; Tue, 29 Apr 2025
+ 07:25:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250429091609.9947-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250429091609.9947-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250429091609.9947-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 29 Apr 2025 16:24:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUamzW-EHWGTYkQ6kpd-9MCv--EEPEvLsEcTqhYD0tRKg@mail.gmail.com>
+X-Gm-Features: ATxdqUG_PvP853fKenNijxNbhg8xA687vv2RiNUNugVRz_EZt1svi55PqUibURk
+Message-ID: <CAMuHMdUamzW-EHWGTYkQ6kpd-9MCv--EEPEvLsEcTqhYD0tRKg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] media: renesas: rzg2l-cru: Simplify FIFO empty check
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Set eMMC clock parents to the defaults which is MAIN_PLL0_HSDIV5_CLKOUT
-for eMMC. This change is necessary since DM is not implementing the
-correct procedure to switch PLL clock source for eMMC and we have a
-non-glich-free mux. To remove any potential issues, lets switch back to
-the defaults.
+On Tue, 29 Apr 2025 at 11:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Collapse FIFO empty helper into a single return statement by removing the
+> redundant `if (amnfifopntr_w == amnfifopntr_r_y) return true;` path. Make
+> `rzg2l_fifo_empty()` directly return `amnfifopntr_w == amnfifopntr_r_y`
+> to improve readability without changing behavior.
+>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.mountain/
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Fixes: c37c58fdeb8a ("arm64: dts: ti: k3-am62: Add more peripheral nodes")
-Fixes: d3ae4e8d8b6a ("arm64: dts: ti: k3-am62a-main: Add sdhci0 instance")
-Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more IPs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Judith Mendez <jm@ti.com>
-Acked-by: Udit Kumar <u-kumar1@ti.com>
----
-This patch was split from "Misc MMC udates" patch series [0] to help
-with backporting.
-[0] https://lore.kernel.org/linux-devicetree/20250417233040.3658761-1-jm@ti.com/
----
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi               | 2 --
- arch/arm64/boot/dts/ti/k3-am62a-main.dtsi              | 2 --
- arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 --
- 3 files changed, 6 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-index 7d355aa73ea2..0c286f600296 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-@@ -552,8 +552,6 @@ sdhci0: mmc@fa10000 {
- 		power-domains = <&k3_pds 57 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 57 5>, <&k3_clks 57 6>;
- 		clock-names = "clk_ahb", "clk_xin";
--		assigned-clocks = <&k3_clks 57 6>;
--		assigned-clock-parents = <&k3_clks 57 8>;
- 		bus-width = <8>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-index a1daba7b1fad..455ccc770f16 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-@@ -575,8 +575,6 @@ sdhci0: mmc@fa10000 {
- 		power-domains = <&k3_pds 57 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 57 5>, <&k3_clks 57 6>;
- 		clock-names = "clk_ahb", "clk_xin";
--		assigned-clocks = <&k3_clks 57 6>;
--		assigned-clock-parents = <&k3_clks 57 8>;
- 		bus-width = <8>;
- 		mmc-hs200-1_8v;
- 		ti,clkbuf-sel = <0x7>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-index 7b65538110e8..fa55c43ca28d 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-@@ -573,8 +573,6 @@ sdhci0: mmc@fa10000 {
- 		power-domains = <&k3_pds 57 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 57 1>, <&k3_clks 57 2>;
- 		clock-names = "clk_ahb", "clk_xin";
--		assigned-clocks = <&k3_clks 57 2>;
--		assigned-clock-parents = <&k3_clks 57 4>;
- 		bus-width = <8>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
+Gr{oetje,eeting}s,
 
-base-commit: d864bb528a6725e775d564fd4430762acbb9dd0d
+                        Geert
+
 -- 
-2.49.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
