@@ -1,105 +1,81 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D2D1E25EF
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C4621D3EE
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745952206; cv=none; b=g/00U6n0D0eceMHBPN2hocihtETuvixmB4cAemE8RL2z+pivGa3nSOhFsqKL4dXRMymF/I29cp7W1yXMiUN3fFZXEk3nugxrjDLWBdiAHYJ+VuZHxZUyTKPfdreimi6nWYUyzL+ZiBIGqL2x6K6bv4xB+oWvRCbqP9az7JUgoxk=
+	t=1745952220; cv=none; b=q3F9zgkPM2gr0Sc15nyC5ilh2cwwmpbnzuolSAExpLF8ZxuLHpDc8KU4RdfAsdFz33dk/cRJpqE6EdPvjx5ZuIzjwFYSfAmca8L96L1ywTZk1GIzs1oFmQn7ma85+z0m2/jFVI0ywLXXGRpbX4fwPGkP1yqEhvTlndqsIHN+pVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745952206; c=relaxed/simple;
-	bh=UeSc/5BZh1t4ldehBk5tJa7zSp0X0x4lRUAaopaKMhw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S6B3GjbHbwY/C5Di7J0ZIv0ZXgbY0NICYvLHujjT7T/4S4eymffKNe+CCnWxE58QCZCbWttviCuEOHt1lkjwLcuRD8cMNBI6myK/UcIGrPsxLa36ffRPEAdzzGVAMFSV+L+AqmERqvWBaO+jwCqr9zzfNZJgdN2gEMA91LsFifw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KOqFom8e; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745952220; c=relaxed/simple;
+	bh=CdC9ruIWZ1FfGLg3NH2skEI1pGGNzHOxvsNypspemcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tkthIGnxP8/34g7YLT7oQFJ2l/F/xFCPq3ua7gSSUJdpWNIH/NfNKqPaNWmaCyTRwfNopDj4IoSzapiaxdM4RDqi3L1sw1hNqEpppj1VRhtHBXub/Zb+MUvs9kvZU2H/zLDyv3HGY2udkZ+Fc4wvU15+2BZSQVaIr+dASg5/ls4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=th0mMmCL; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KOqFom8e"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30db3f3c907so61120681fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745952203; x=1746557003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UeSc/5BZh1t4ldehBk5tJa7zSp0X0x4lRUAaopaKMhw=;
-        b=KOqFom8eHb+vQj2eGFSmi+wDJmBDCm/4QWc2IQ4ZXLxzvS88gnMSAZ1y1ZdGNPUB01
-         lU+Iu7OG+cl2vvDw72+gWT2wubM2pxq8LLhDlF3pcTWYRTCw6vDtXFLFTHhgy9UXiEfz
-         hXY06mUnmQUQJo2Xe4LxRXuGqTtedNipVQhtqQOh7UDi+Z3e7tfZU1ntTsC4b6R/ZfSu
-         vFBt1IDvGyz/0bUVzcxRvXydzkUkKKAoHzj6KFzNtOZ+X81nUYUHceINOCj9PpvZVxoN
-         d+1APMhCJRsH0e2ewsa95iKPfxAYVNb6K3qo8cOPMTGI6Osa0spoEF/htfBcrcCMXF4Y
-         rofw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745952203; x=1746557003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UeSc/5BZh1t4ldehBk5tJa7zSp0X0x4lRUAaopaKMhw=;
-        b=vX+AJD8EO2a3ZFVBgYeIp1RIf1+jNqeveaNuUgaBo7qe2Y9jux7nx21kahZS9QyWd9
-         DV3YuKk6lWug+P7A50m+0/cGdsf4MnbzR+SbGw5P49Z8NvlY2EaIk7shQ0dWCdS+deyA
-         T3cL/oCCMGYnQHPrxHDfUShoFvUNTklqCx33mCPnCZULBnXrNIcLUtyii5cLcw3+N2h3
-         55T4pyLQGQN6wgyv/dZpPwl51HpunVyx9iytpy1+iMS9pV7PVbsyuiHdqEprzUBvq/3l
-         Tg1cW1PkUim/rYxwerdO87BKwO2mGIlIadcBck/atnYasjzorn6Cvh0lwvOh9gHPLbBy
-         wIzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrgqmoebAmQwe4YRuDB8FX8vaj8oQcZF5qTd1IV/ilSAcD4NctG8MW1jVYzPv9hiC8+enILnvspl362Kg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhHrYPlwxjJYhYkDfJ2dafp721I8QYZjficxGursgO2ioypISH
-	sG65Fo029eSZgD/z0B0ugYo3vFEtD0SQQg1yzTjWCalSgLG/FyjcKwt4g9tkBFqiBxuHH71cd0G
-	fKdGCEXTGpt+h1emgYv9/Y3V1mUvKa2q3q0AldQ==
-X-Gm-Gg: ASbGncvY3rTNGvMhV967W7DWcDJy4R5H4M5ysat1xBzJo1rRi36XGM8i9lJCO7yw/tt
-	oNNXjPb04Iws6uCMt2/QniUBHEgzaK2WpuesoI8l5QRe/jYvzBgw21iRfm0MxUx2rIbSXJLInKl
-	N/wNuQ8+AHn680Kk16uTdxaiSvX07zSnvcFgVQPR/opdm9VPrflMQcxY9Ae+CxqiZB
-X-Google-Smtp-Source: AGHT+IFW/CX408gyWrfHMdOwoequNQf7BFXdXPyHUXK7j2OMhS6KT7GwMmG2rSXP+wTND/kT7QfmLTIIBSLCzPUbzV0=
-X-Received: by 2002:a2e:be9e:0:b0:309:23ea:5919 with SMTP id
- 38308e7fff4ca-31e6b2c6f0fmr842631fa.31.1745952202951; Tue, 29 Apr 2025
- 11:43:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="th0mMmCL"
+Date: Tue, 29 Apr 2025 11:43:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745952215;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PbGSqBzLNpWlOS59XTKfG+qwmbQZ2wA+xkjLCzhbwfE=;
+	b=th0mMmCLdit+le/j4472txhxqiQcrL+ghmVRPSbgSFWYuubbc7mCKTwcJ/8gtlSNYbV/Cq
+	amWkvQki/LnEQ+Q2e78TSE/02jvxqg6JlAIbTwSlCuMgOjGW700pSlaywf9veMyy7FBwtX
+	sd92hxP6UYYqX6qUnmCuylOhU3Q9wsw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
+	Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <qt5jtbsgjym655tbnoddlo5c7cemndcgsqwy4wp7m7ki3venxz@cfp637s7eqo6>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+ <aBDCXB_Tb2Iaihua@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 29 Apr 2025 20:43:11 +0200
-X-Gm-Features: ATxdqUHJnz3Fduuh7qnUTYN-WgL5KpZt6syl8lZWPYRMAPtml8GzwrHvYI-U59M
-Message-ID: <CAMRc=MfpE6M28P6jxFgs6K6Tf84LRhmaw5U4s8WgciF815M7Bg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/12] Add pinctrl support for the AAEON UP board FPGA
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBDCXB_Tb2Iaihua@tiehlicka>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 29, 2025 at 4:08=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> This is the fourth version of this series.
->
-> The main change is the way the forwarder type is exported, now gpiochip_f=
-wd
-> is an opaque structure.
-> In the forwarder, a valid_mask was added to track registered GPIO
-> descriptors, and it is now possible to remove a GPIO at runtime using the=
- new
-> gpio_fwd_gpio_free() helper.
->
-> Two new patches were added, the first one to remove extern specifier in
-> machine.h, the second one to define new helpers str_input_output() and
-> str_output_input().
->
-> Other minor changes address Andy's comments, see below for more details i=
-n the
-> changelog.
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
+On Tue, Apr 29, 2025 at 02:13:16PM +0200, Michal Hocko wrote:
+> 
+> > Some of the design choices are:
+> > 
+> > 1. Fit all caches memcgs in a single cacheline.
+> 
+> Could you be more specific about the reasoning? I suspect it is for the
+> network receive path you are mentioning above, right?
+> 
 
-This looks pretty good now. Who should take it - Linus or I?
+Here I meant why I chose NR_MEMCG_STOCK to be 7. Basically the first
+cacheline of per-cpu stock has all the cached memcg, so checking if a
+given memcg is cached or not should be comparable cheap as single cached
+memcg. You suggested comment already mentioned this.
 
-Bartosz
+However please note that we may find in future that 2 cachelines worth of
+cached memcgs are better for wider audience/workloads but for simplicity
+let's start with single cacheline worth of cached memcgs.
+
+[...]
+> 
+> Just a minor suggestion below. Other than that looks good to me (with
+> follow up fixes) in this thread.
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Thanks!
+> 
+
+Thanks, I will send a diff for Andrew to squash it into original patch.
