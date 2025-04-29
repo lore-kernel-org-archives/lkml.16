@@ -1,184 +1,183 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B257F25F7AB;
-	Tue, 29 Apr 2025 08:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC1E279780
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745914496; cv=none; b=AimPqsvPAk/jbSBj+pu7Ut9ooAZQmWEsITrgG1s5vVYczRolFXF4QG7Z93w0qAN6Snr7oFrI/WQS7LF/5q5jGCDe8UiZPZu7mvP4/6EFzfkA3sZQpEGPrO09TP1votvXEICirj0eUIpW5guajWJtd9nBL77w/BFoiPHtkzLq2/4=
+	t=1745914538; cv=none; b=unSfBz2K0UGuxvIcW0WcaTjBgvCFXcrixPx6foQEx87rlM9JJpOtfLrGTTM+4iI/w/gCt2Sr6T4k0jqCH2ypgHCNKc9XQheotFlp4HTvqjbcdgQhPfoVEOfaY8ZRE7c7+qkm62ok0ulQuetzatwYLnlDsh9kAcKpqM6wzWPyNVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745914496; c=relaxed/simple;
-	bh=DfuiS9ywp+ZU4Ck3Hk6awbmMjHIGnG3GQm/4fFm6Gw0=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iBm56zW3HSjzQ4h2idRegspqSlVHjDZx9ycBKY96GrDU22kM347zaZzfwMTQtbSXyUIyfyCYcaVRHjttkS0cH831+9N75ZooLacqQ67Ou+M2IMK5ozeqwFu+pQWXfmqtiKID4HYN+Rx4POIlRWtv3PKqRYvWRI2A6/A9pvoilXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0bPOM4x; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1745914538; c=relaxed/simple;
+	bh=7fy6moOOambnFYILYkejWXutptF26xmphS+DWVN/iFU=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=NYR1bRuUbSlv4ZficEcPnP9YysYEhLo+IPj2ZwATRDrCxKgg1KT39laL6fcpcn3TARcQwiUc4dwxCXR+t0R7Rnr1Vl2Ux9wHKAQsRbSV1dDJsA2lqLiMS2moFzZqCd/wAfGxp0lL8TPR5nxvPvnWB31YE26BSROmf/J/Uh2nikI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PUc6aeHg; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0bPOM4x"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so37741855e9.1;
-        Tue, 29 Apr 2025 01:14:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUc6aeHg"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22409077c06so91309345ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745914493; x=1746519293; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sndv3w7Q8kDv9+q7MF+dib355lQod7g3DGJrt36mzys=;
-        b=M0bPOM4xRGb6h6sOYUeCGMOlJksRbau3zfn7NVCbod0VOtr13lfXyR+vUcfBC9Vw92
-         cS3ThgHB2gdaTle3beGm7nKP703a6wzgdly0iN4MJWJQtqqXQ9PopTogQ0OD37V9qfax
-         f6No0jA1/wdnGgVlUm7OIaev7yfnh/B2TkSud9ZCKSVznjJaMqMCXGhyjxZveUAW87Xa
-         m9YevJV7UqUUbD+JPEbXdr1mdIytAPRodQUQFhAziPoABaQhT+Q4QSCmHl+1Hy5j5J9Y
-         ffRM9zlx9bWBatMFKk4Uvzpo5Lta+21Xzq+jonvedgnjaDuQ7VZkME44AJ4UHgQEZPjf
-         jh3A==
+        d=gmail.com; s=20230601; t=1745914534; x=1746519334; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f6fYPjchEVexeVAt+waLr9ZsiEyyniHtVjEF0eju+hU=;
+        b=PUc6aeHg5LA11zgDZzV+q9+ntxCyEEiq/Ql3u7S2xOIMtQmbQ0K7E8TnK9vXLagrKc
+         S1tF3fRb7PYNiSQuXqE8eI27CK+SN+GspKcYTx14f/E11uyP3B90INq3IYo/EfPZnVua
+         n2kuQh7ZwS5CdNY7ZQ+0Yf8fSYIL2UV8n540UQA18vty1BDHsMM+Z97DhrbuKEXIuj0c
+         eye5pQdz7Ecifs6+b+uFYY48QgZi7VMjPtaOxHiGY3xPcn1YXNUTOKzaOMSX2qqrGAlZ
+         HrOPWq5Q5oireAzci0gkOtGtgwqRx8hHQxLHE1Dbpto916ujvsAjuSEG/OwMp5MRUW+d
+         L9RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745914493; x=1746519293;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=sndv3w7Q8kDv9+q7MF+dib355lQod7g3DGJrt36mzys=;
-        b=d8iGaB8VPbFPJe0/E68dEZX8Er7h+R1NEJagi+KiLnvQk4Vz6NrZoNxlg6n2kSXkdM
-         kYZOlvMAKaW8dtnnv5SI6tot2i6btwaWVXH3xOzq7SdQQ6WJKv5q2VEBBr7wypGSTNzI
-         VPFxOv9F5uPCt5FyPMJ/x00KotTZji8tOZhRwln8BUWZakx+KVmHie+tZeCEDxE7O33I
-         3VIjodCsbqywv5QossY1fOCH7GZQHgKFhxinLCd00sd9giEu7acwTYftsUQTSOLOPUqZ
-         +qYAdDwGzC4mczrjLlYDOkWvHL2CQryoxFYdXFpzqzB458pcvaSTgIGutn7ncFaSDrTj
-         w+Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCUa5/as7e2/gRvMEwDlzs36aVEVpU+u4iO6bqPLVIwQbXZXpo1AZo9vbAb7pJ0DwCz4EpwgXI8/bqv2@vger.kernel.org, AJvYcCUhgTK2GwGDHoKhSmUpdWTeOocMz37lCp3tlFpqJV07Uj+l7TqYcW6Q6VNVyaHi3axM8T7A4opTFMVF@vger.kernel.org, AJvYcCVX2G+zOZqAX2ZZzCDq6xVE5QCcQXZ7bw2EbpTqfx9L4oRwDqOAPVClHAepNfyVQcQXtwnSfGsV6yf2thC3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUJUd8QK6SM3n7jMgBlr+3KgslByvlBK/tghGcqDkhlzi0llDo
-	ywKTFWxNjGyGgD+T01zPP0h6ctM2EQrA2KSHv2w+qZw+uOC+VjChEOeG9dOCPJ0=
-X-Gm-Gg: ASbGncuOyEuuO1K3lX8SleNrFU8UFZDcJzqVTfLwxviQyTqPkUaqBUONUC821I8Qgr9
-	6FBHwyvqWd9u6ZdPkL7InwRWr6dBZDZni4n1dA06SD9d9lql/BnfIu6Y85xLVee0eMICqSY17aa
-	dyTQbCH6bDCirWd/cv29/SwDme1bb+UCByxb5DZKS5cHXth1XohGFFZSDtsYD7DANY6PLEGUKHa
-	z2YWAQUHcT6lgFo2oF5OeeY6lw0nY7dEUaXmWuf/Ah9bI1bLs2242YkYk2tiVIfvbl1Ze/AKnVW
-	hEtjWD3gComE+aK6zYdpV7XWIyOEA8A3/Gck7GqpFTfMeOpUjWP+9TWZ/s9yM17+Xoje1KqFgSg
-	L4Jwsc3rP62sT
-X-Google-Smtp-Source: AGHT+IGe/csrIqoHzRat1Mk0BnJwsWnqRjwYWgeJGxhqh7K08fEn/RPFJAlQAfOMl1xpWM90SO2eGQ==
-X-Received: by 2002:a05:600c:19c7:b0:43b:bfa7:c7d with SMTP id 5b1f17b1804b1-441acaa8d45mr16042955e9.2.1745914492757;
-        Tue, 29 Apr 2025 01:14:52 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a53874a9sm148102335e9.34.2025.04.29.01.14.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:14:52 -0700 (PDT)
-Message-ID: <23fbfcd79d2d8c924c84ea8a16ed28697bfd326b.camel@gmail.com>
-Subject: Re: [PATCH v3 01/11] iio: backend: add support for filter config
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 29 Apr 2025 09:14:56 +0100
-In-Reply-To: <20250425112538.59792-2-antoniu.miclaus@analog.com>
-References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
-	 <20250425112538.59792-2-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+        d=1e100.net; s=20230601; t=1745914534; x=1746519334;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f6fYPjchEVexeVAt+waLr9ZsiEyyniHtVjEF0eju+hU=;
+        b=pwiUJoufioV+XU6MkR60uGdkmbc2kXDLjC/4xRGdGf3IUwNNgk/j/rrHFJsOl/vZLJ
+         7EkCpL6Sko7fV/+K+cXm7x3zNQe4o0qXZ4qzI1IE7k/2GJvPcyc2Klrs40vd4FaXlwzk
+         05iKZjwocHSSMLYUbmNyLsSriz3bE5Pj/S8s7ro2HFfMuvaH4e9fX0jb8Oekar60tpPG
+         /4/6XcIKGe6bO2orIs9VpTfNUT2MXS/rkV2ifYzHAUgyc22jrBwt1g9NGaT8Tx8Nr0pZ
+         7B/4ExCYmTIZelB3s4VZHRxWReJ3uYylfIXTqUovyroUV0YmlqzkJPaxP3zyqpnESZgZ
+         0HIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcgRKclERG7S15965sOcoLNKeRtGVjqmsr/0mkcOmOi1g+GGxwKuFVLHyzLn6UXCjZxtKoz+MnV6KB1Gg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNI6HjRDeC8rC/+58E383tYkmdkRcOpYUzwWJrIcYBhOpE/xQX
+	/agmaiQ/cUY+r2jwNqAHwJQRpkdhES1q9NfyPUA//tbXpiZaLpgN
+X-Gm-Gg: ASbGncs5fFzJ7Z+f6vALw5jhVagHXtQCG8TOFwfvhenoG5GjKJL4FKlyUTmWdFKFX93
+	Ju7KsVxN/hdGIvYPk796XgZRDq3tzMGphSKFiFmko7IFvQC7lWlvGQqrAPEhhHkjkl/spKHP/Dh
+	7M+FdBVsGTGnS+OnDk7XwjRHUc1sLJBEHM/g/eQ9v10imxnk5u2CeI+qX39PF7Y9Ok4jIjNSc/0
+	VVWtI264DVoCRkz7VqqxVcx+GrsCHRJF1ax2cUTh26fdhmyrGVfoZSBYigi4hi4DMod4bskgLnJ
+	sBO5utDMs0ONs3sLWmHasShZzxjqQRNNlECsSO7xixrtXMKsVkGb7UgHBuGtjaEmrR/pM8OK3xC
+	ZCC9ZlKB02xgZRTdLT82TlQ==
+X-Google-Smtp-Source: AGHT+IHUQ1jABd3WZ2kcIyr8RG6NPr95Jt4svQvdQVTgytoHii8s0kMkD+dsZoe1QhqDgoj6m8xjCA==
+X-Received: by 2002:a17:902:e804:b0:223:f408:c3f7 with SMTP id d9443c01a7336-22de5ed1414mr39005455ad.16.1745914534288;
+        Tue, 29 Apr 2025 01:15:34 -0700 (PDT)
+Received: from [192.168.1.105] (88-187-52-200.subs.proxad.net. [88.187.52.200])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f7749938sm8703188a91.11.2025.04.29.01.15.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 01:15:32 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------02e6QfW0DSR3Gi4SiTtL2LoH"
+Message-ID: <609e6fe5-2893-4c13-8e52-e9df05146ffb@gmail.com>
+Date: Tue, 29 Apr 2025 10:15:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/topology: clear freecpu bit on detach
+To: Doug Berger <opendmb@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ linux-kernel@vger.kernel.org
+References: <20250422194853.1636334-1-opendmb@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250422194853.1636334-1-opendmb@gmail.com>
 
-On Fri, 2025-04-25 at 14:25 +0300, Antoniu Miclaus wrote:
-> Add backend support for digital filter type selection.
->=20
-> This setting can be adjusted within the IP cores interfacing devices.
->=20
-> The IP core can be configured based on the state of the actual
-> digital filter configuration of the part.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+This is a multi-part message in MIME format.
+--------------02e6QfW0DSR3Gi4SiTtL2LoH
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+
+On 4/22/2025 9:48 PM, Doug Berger wrote:
+> There is a hazard in the deadline scheduler where an offlined CPU
+> can have its free_cpus bit left set in the def_root_domain when
+> the schedutil cpufreq governor is used. This can allow a deadline
+> thread to be pushed to the runqueue of a powered down CPU which
+> breaks scheduling. The details can be found here:
+> https://lore.kernel.org/lkml/20250110233010.2339521-1-opendmb@gmail.com
+> 
+> The free_cpus mask is expected to be cleared by set_rq_offline();
+> however, the hazard occurs before the root domain is made online
+> during CPU hotplug so that function is not invoked for the CPU
+> that is being made active.
+> 
+> This commit works around the issue by ensuring the free_cpus bit
+> for a CPU is always cleared when the CPU is removed from a
+> root_domain. This likely makes the call of cpudl_clear_freecpu()
+> in rq_offline_dl() fully redundant, but I have not removed it
+> here because I am not certain of all flows.
+> 
+> It seems likely that a better solution is possible from someone
+> more familiar with the scheduler implementation, but this
+> approach is minimally invasive from someone who is not.
+> 
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 > ---
 
-This one LGTM:
+FWIW, we were able to reproduce this with the attached hotplug.sh script 
+which would just randomly hot plug/unplug CPUs (./hotplug.sh 4). Within 
+a few hundred of iterations you could see the lock up occur, it's 
+unclear why this has not been seen by more people.
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Since this is not the first posting or attempt at fixing this bug [1] 
+and we consider it to be a serious one, can this be reviewed/commented 
+on/applied? Thanks!
 
-> changes in v3:
-> =C2=A0- update function to set the actual filter type instead of just
-> enable/disable.
-> =C2=A0drivers/iio/industrialio-backend.c | 15 +++++++++++++++
-> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 13 +++++++++++++
-> =C2=A02 files changed, 28 insertions(+)
->=20
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
-o-
-> backend.c
-> index d4ad36f54090..2d28eabb1607 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -778,6 +778,21 @@ static int __devm_iio_backend_get(struct device *dev=
-,
-> struct iio_backend *back)
-> =C2=A0	return 0;
-> =C2=A0}
-> =C2=A0
-> +/**
-> + * iio_backend_filter_type_set - Set filter type
-> + * @back: Backend device
-> + * @type: Filter type.
-> + *
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
-> +int iio_backend_filter_type_set(struct iio_backend *back,
-> +				enum iio_backend_filter_type type)
-> +{
-> +	return iio_backend_op_call(back, filter_type_set, type);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iio_backend_filter_type_set, "IIO_BACKEND");
-> +
-> =C2=A0/**
-> =C2=A0 * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate)=
- mode
-> =C2=A0 * @back: Backend device
-> diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
-> index e45b7dfbec35..5526800f5d4a 100644
-> --- a/include/linux/iio/backend.h
-> +++ b/include/linux/iio/backend.h
-> @@ -76,6 +76,14 @@ enum iio_backend_interface_type {
-> =C2=A0	IIO_BACKEND_INTERFACE_MAX
-> =C2=A0};
-> =C2=A0
-> +enum iio_backend_filter_type {
-> +	IIO_BACKEND_FILTER_TYPE_DISABLED,
-> +	IIO_BACKEND_FILTER_TYPE_SINC1,
-> +	IIO_BACKEND_FILTER_TYPE_SINC5,
-> +	IIO_BACKEND_FILTER_TYPE_SINC5_PLUS_COMP,
-> +	IIO_BACKEND_FILTER_TYPE_MAX
-> +};
-> +
-> =C2=A0/**
-> =C2=A0 * struct iio_backend_ops - operations structure for an iio_backend
-> =C2=A0 * @enable: Enable backend.
-> @@ -100,6 +108,7 @@ enum iio_backend_interface_type {
-> =C2=A0 * @read_raw: Read a channel attribute from a backend device
-> =C2=A0 * @debugfs_print_chan_status: Print channel status into a buffer.
-> =C2=A0 * @debugfs_reg_access: Read or write register value of backend.
-> + * @filter_type_set: Set filter type.
-> =C2=A0 * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
-> =C2=A0 * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
-> =C2=A0 * @data_stream_enable: Enable data stream.
-> @@ -150,6 +159,8 @@ struct iio_backend_ops {
-> =C2=A0					 size_t len);
-> =C2=A0	int (*debugfs_reg_access)(struct iio_backend *back, unsigned int r=
-eg,
-> =C2=A0				=C2=A0 unsigned int writeval, unsigned int
-> *readval);
-> +	int (*filter_type_set)(struct iio_backend *back,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum iio_backend_filter_type typ=
-e);
-> =C2=A0	int (*ddr_enable)(struct iio_backend *back);
-> =C2=A0	int (*ddr_disable)(struct iio_backend *back);
-> =C2=A0	int (*data_stream_enable)(struct iio_backend *back);
-> @@ -190,6 +201,8 @@ int iio_backend_data_sample_trigger(struct iio_backen=
-d
-> *back,
-> =C2=A0int devm_iio_backend_request_buffer(struct device *dev,
-> =C2=A0				=C2=A0=C2=A0=C2=A0 struct iio_backend *back,
-> =C2=A0				=C2=A0=C2=A0=C2=A0 struct iio_dev *indio_dev);
-> +int iio_backend_filter_type_set(struct iio_backend *back,
-> +				enum iio_backend_filter_type type);
-> =C2=A0int iio_backend_ddr_enable(struct iio_backend *back);
-> =C2=A0int iio_backend_ddr_disable(struct iio_backend *back);
-> =C2=A0int iio_backend_data_stream_enable(struct iio_backend *back);
+[1]: https://lkml.org/lkml/2025/1/14/1687
+-- 
+Florian
+
+--------------02e6QfW0DSR3Gi4SiTtL2LoH
+Content-Type: text/plain; charset=UTF-8; name="hotplug.sh"
+Content-Disposition: attachment; filename="hotplug.sh"
+Content-Transfer-Encoding: base64
+
+IyEvYmluL3NoCiMgSG90cGx1ZyB0ZXN0Cgp1c2FnZSgpIHsKCWVjaG8gIlVzYWdlOiAkMCBb
+IyBjcHVzXSIKCWVjaG8gIiAgIElmIG51bWJlciBvZiBjcHVzIGlzIG5vdCBnaXZlbiwgZGVm
+YXVsdHMgdG8gMiIKCWV4aXQKfQoKIyBEZWZhdWx0IHRvIDIgQ1BVcwpOUl9DUFVTPSR7MTot
+Mn0KClsgJE5SX0NQVVMgLWx0IDIgXSAmJiB1c2FnZSAxPiYyCgpNQVhDUFU9JCgoTlJfQ1BV
+Uy0xKSkKTUFYPWBjYXQgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUva2VybmVsX21heGAKClsg
+JE1BWENQVSAtZ3QgJE1BWCBdICYmIGVjaG8gIlRvbyBtYW55IENQVXMiIDE+JjIgJiYgdXNh
+Z2UgMT4mMgoKY3B1X3BhdGgoKSB7CgllY2hvIC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2Nw
+dSQxCn0KCmNoZWNrcG9pbnRfdGVzdCgpIHsKCWlmIFsgJCgoJDEgJSA1MCkpIC1lcSAwIF07
+IHRoZW4KCQllY2hvICIqKioqIEZpbmlzaGVkIHRlc3QgJDEgKioqKiIKCWZpCn0KCmVjaG8g
+JyoqKionCmVjaG8gIlRlc3RpbmcgJE5SX0NQVVMgQ1BVcyIKZWNobyAnKioqKicKClRFU1Q9
+MAp3aGlsZSA6CmRvCglOPSQoKFJBTkRPTSAlIE1BWENQVSArIDEpKQoJT049YGNhdCAkKGNw
+dV9wYXRoICROKS9vbmxpbmVgCgllY2hvICQoKDEtT04pKSA+ICQoY3B1X3BhdGggJE4pL29u
+bGluZQoJVEVTVD0kKChURVNUKzEpKQoJY2hlY2twb2ludF90ZXN0ICRURVNUCmRvbmUK
+
+--------------02e6QfW0DSR3Gi4SiTtL2LoH--
