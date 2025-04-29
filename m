@@ -1,160 +1,171 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160131EB5CE;
-	Tue, 29 Apr 2025 14:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8DB1DD0C7;
+	Tue, 29 Apr 2025 14:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745935921; cv=none; b=OT5D+d/Kz1O1N6ukrQbO99/kBv3AHjmcat7FWrHfQFUkaRvtsgOC7YfwTBqQb/1xxvJbwGNW0CEg2YwrZIZzN/YJDUmj5kBTnz1cOzj6yrhhCeGYcVEmNAumIEb7EctbdbAfaKgijDgUgxdnPrXElGKbHAHWOQS7BLgTRZDPSYc=
+	t=1745935956; cv=none; b=ZVmsgZsxqyk9AHT0vup+hGViG1SNOBf4Jo+qYDwskPAvbWhVw8ayNXtEaCtiVRkWldg6p4H8O9nnxL3anv4lL0kPOBguLaMKLG/Dad2alt0FQeXKmWdLMwIWx1DdIS1bGR1ZQXRt09jVHkCmkfmPvSV7R6/zn8GLp2rJP1VlnPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745935921; c=relaxed/simple;
-	bh=0V9jMahAxYW8zbxd2kGc9AaAI9Gd2wiuBQJ9XabL0Ic=;
+	s=arc-20240116; t=1745935956; c=relaxed/simple;
+	bh=68cW4ZforvOQzheTtZyyFvpW8rkRGsrOL6sivyfyl9U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vi+Y8phtzKo5ahB0jQ4WU//PRIn0opBYkn5lDWRGYV5mUNvTCn2UCgx5soI4k2G6l9CO/ZT/Trr7SygNR6k8XMdMuA8zmqXdwInu4AvUlPSvVHUy6u0MvwF+v7pPPyAVqGskllyz2L1VZApcoT0+0XQEM2n3OPMzpquEgLZh0sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uj/Y042B; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=frpteEkDhFSi5UJqlrJFn4pN7iNf9zWAE2ap4u38BtNaK3aGoANeBerfEGT8qDQLHiJJfvzXRpfq8k9HZGmmUwXCS3f0nphGQ9D5Oyt72ICEHOBK7wmdawB/pEIWXU/vuvscJBnfQukm/bTurgIX43qLtnySYWomrbvU740hjTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7tCl8ad; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uj/Y042B"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30549dacd53so4857674a91.1;
-        Tue, 29 Apr 2025 07:11:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745935919; x=1746540719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ghLO85v0/fKsf8d4D5aFV15vBDjmZGdRu4B7/a9HdgA=;
-        b=Uj/Y042B5zObpZ5beVEXHGQcGoqVDvn62MX3F4YIuIFYNyRHFlQuTkv+rQVrN8Chge
-         YdEz2qgvat0HJg9Wg2eTU7V0GoZJaTaF4NXzFxtpmubEuc/xXZbypMAp7XmMMdd68wB3
-         hcdGHnnpsvh+20y1lwuENU2rPWwjpeBMdF8Bj+lsKUQzSVO/XgnnqG03ZTK2MyeepJ1i
-         5G+mGfxSG+luQV7oRYxrkee1KMWwvTDyjrW5xSMTQt1a/hKgjWPN+m++lARstr3LJwl5
-         v+1JBHsy9guBoY44OkRRP1vsUfPb/OnHPN/5Sdsf6mRin9ctQRh7k895Atq9sSPwoGQu
-         kLzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745935919; x=1746540719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ghLO85v0/fKsf8d4D5aFV15vBDjmZGdRu4B7/a9HdgA=;
-        b=qqNY6ZOkNvVP5OqBVtcM5zFhmlQhugxpmRI2f0hmtk0H4IOlNL64n61cXYKbuBwgcG
-         BirPg+v4h18AlLSVUSPYp+uMtBNkbX82sY2ckQGL6/8WPsKpELrk6zjvmxuwVd1Qbm/4
-         W6J4U/9LTA9UW7lXMx+jbxlM+LOIpxVkS8rxWBd1oqw1av4a/tAWx6jfEUQSnh5itGZw
-         5BiJ9IpGdRrYv2Hn5zbjJm1tXWD2Lm/9CFRDtCpaU3F6asbx+r4awHkS/4KfeDz12l0Z
-         /ca/6T6XZ69iyNgWdqcNvX87BTXD8rClGIinYne0zsywu14WB3x5NHJoSReJX+LZhW6y
-         HG+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUEFXW8R1Hv9lwMfk5ijMQBuYo/HfZmKUToR/4EDUgT6HuhgqVkmVmCcqj6W/fG55a+bGKdwaAaukQB@vger.kernel.org, AJvYcCWVuGPPZnd1BQ6X2+U+IpvhtVA/DNxFAczVVGsXO3Yh7GB7rv2p0Z4GTqTS+KrjOZ2/36viHzIdsHSsYNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3bqgVzkK56QzoL95EV1bwtXQ7VIeONxRxfi66X6Ay2/Lr9DcI
-	/8vfn4b8Y5cVVVjZWmW2L7cW+po+E7hn+RD2fQUy60KwY2XB9MjkD1lB0XXWms9r2Dit8+vaWfP
-	QdgPXqGtaqAhswRiaJVTDBqxoUMr06rzcGFEgDg==
-X-Gm-Gg: ASbGncvRNXoVNj9dnwrf9mDcDsQ1nCdBqjmLDYFZY5WR685mpx+qmmsAbjJBO/tcheM
-	lul4eukdzkAmoBCpd6sdw15gIljFlVABvVKG1ucQgh9vGeu2MYMhTHU1xd3Gs6/D3l7lHhX+vMy
-	vKbpJlxFKJF+3Yv6G7LHreDmS1uOG0t+I=
-X-Google-Smtp-Source: AGHT+IFGIJaXnUPI2CD5vwEPgXqAmwhf+WOG/jajlE048Ga1kc+i4yz/jRP2kw+bf/cOEgkA8sSkOIjBG6LR4KK8qMM=
-X-Received: by 2002:a17:90a:dfcc:b0:30a:1ebb:8dfb with SMTP id
- 98e67ed59e1d1-30a22456bccmr4003881a91.5.1745935919183; Tue, 29 Apr 2025
- 07:11:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7tCl8ad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF984C4CEED;
+	Tue, 29 Apr 2025 14:12:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745935955;
+	bh=68cW4ZforvOQzheTtZyyFvpW8rkRGsrOL6sivyfyl9U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p7tCl8ad5Adz/XjilPNVRg7bc6iNBo6R6g7SeqHC0fXmnjGeYJTYQ4pSpzTGaJi8H
+	 WU8GHdO9vzXyu+jhUCotgSMwJ7MMMlBCZ8Rpm+CWQwtpyUMx97ll7KYjfxu1NsoO6d
+	 VLEO7hg5WudPMap+8QsPlm3FCiOsUfL2/I8mfi/0udGksCMCTt4yTyBcrP98rKe/MY
+	 u6gb6kxz5oBIOyMKCkt+qLYlxjc1rlfSiTQ+2Y+oRMhQL5K3WPqM+KR8f8H3DSDr3r
+	 WibX7oqwpnEjhvSLcXEy0yzuoqMMvTCkbmg/srskbOnwnGi/Q3IY5qASVS/ZLFRVVA
+	 4dEawA1DlLYAg==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f624291db6so10565914a12.3;
+        Tue, 29 Apr 2025 07:12:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWdHNgoDJgEB0m9CRbku8ZNuCjONz7Ws/NT9OZ6Gs+kQzW0PmAWCxqKaSZp/Jra41ffJq2GZKyxCBqz5Ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdOyWRAHomqMM6m2sf97cFb0+MAEPCgxmR80QXFDxNcZumI71I
+	pUewTJyvPJCuwqlN52FlqA4VtIe+f4g0rL2YHAbo1H6oWdQf846zNeBZfGMS6+z8iTqb8JpK/hs
+	IT7AEABmi8UQK2NPcELNmw2PQig==
+X-Google-Smtp-Source: AGHT+IHF9LLsBRnDGdFGg7NcSnHBwKMcpEBwvXfP2vD3nYugY4TaStR4VLwZ3jkNT7pJPSzFOgkU3/lfDYyB91jKoEw=
+X-Received: by 2002:a05:6402:2707:b0:5f6:23b1:ab43 with SMTP id
+ 4fb4d7f45d1cf-5f83801e6b5mr3752497a12.0.1745935953526; Tue, 29 Apr 2025
+ 07:12:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429133310.353977-1-hoff.benjamin.k@gmail.com> <af771944-8236-462f-9097-2bf2336b361c@oss.qualcomm.com>
-In-Reply-To: <af771944-8236-462f-9097-2bf2336b361c@oss.qualcomm.com>
-From: Ben Hoff <hoff.benjamin.k@gmail.com>
-Date: Tue, 29 Apr 2025 10:11:48 -0400
-X-Gm-Features: ATxdqUF7Aep6o1Op5JSRl8mp6bspZ5TAYbHexXD2Kq22HAs9nao-eQuJ7awo2Hs
-Message-ID: <CAMSzxxRfKA0CTi0x_FAohvf8buTJ+eaB-q2+qrnfTd7E6eTwrQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: gadget: hid: allow dynamic interval configuration
- via configfs
-To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org
+References: <20250422084340.457-1-alireza.sanaee@huawei.com> <20250422084340.457-2-alireza.sanaee@huawei.com>
+In-Reply-To: <20250422084340.457-2-alireza.sanaee@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 29 Apr 2025 09:12:21 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+c9ipDNYB8PTc38xThgsMkjk9bp896_=y7a5r3v_muvg@mail.gmail.com>
+X-Gm-Features: ATxdqUGLpxoyUPcs3uqq8T1sfWTnELobJTZA-LgabgMRIzuY3jqy3EEPe1QkbjM
+Message-ID: <CAL_Jsq+c9ipDNYB8PTc38xThgsMkjk9bp896_=y7a5r3v_muvg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] DT: add infra for finding CPU id from phandle.
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: devicetree-spec@vger.kernel.org, mark.rutland@arm.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	jonathan.cameron@huawei.com, shameerali.kolothum.thodi@huawei.com, 
+	linuxarm@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Greg, Krishna,
+On Tue, Apr 22, 2025 at 3:44=E2=80=AFAM Alireza Sanaee
+<alireza.sanaee@huawei.com> wrote:
+>
+> Get CPU id from phandle. Many drivers get do this by getting hold of CPU
+> node first through a phandle and then find the CPU ID using the relevant
+> function. This commit encapsulates cpu node finding and making driver
+> code easier to cleaner.
 
-Thanks for the feedback!
+easier to cleaner?
 
-You're right =E2=80=94 I should not have changed the default bInterval from=
- 4
-to 10 for all endpoints.
-To preserve the original behavior, I'll resend a v2 patch that:
+In the subject, use the prefix of the sub-system (of), and drop the period.
 
-- Sets the global default bInterval to 4 frames, matching the existing
-implementation.
-- Leaves the High-Speed interrupt-out endpoints
-(hidg_hs_descriptors_intout) at their historic 10-frame default unless
-explicitly overridden through configfs.
+>
+> The API interface requires three parameters, 1) node, 2) pointer to CPU
+> node, and 3) property which includes the phandle. API sets the pointer
+> to the CPU node and allows the driver to play with the CPU itself, for
+> logging purposes for instance.
+> ---
+>  drivers/of/cpu.c   | 40 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  3 +++
+>  2 files changed, 43 insertions(+)
+>
+> diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
+> index 5214dc3d05ae..c2d729999a4e 100644
+> --- a/drivers/of/cpu.c
+> +++ b/drivers/of/cpu.c
+> @@ -173,6 +173,46 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
+>  }
+>  EXPORT_SYMBOL(of_cpu_node_to_id);
+>
+> +/**
+> + * of_cpu_phandle_to_id: Get the logical CPU number for a given device_n=
+ode
+> + *
+> + * @node: Pointer to the device_node containing CPU phandle.
+> + * @cpu_np: Pointer to the device_node for CPU.
+> + * @prop: String of property holding the phandle.
+> + *
+> + * Return: The logical CPU number of the given CPU device_node or -ENODE=
+V if
+> + * the CPU is not found. If the property is not found, it returns -1. On
+> + * success, cpu_np will always point to the retrieved CPU device_node.
+> + */
+> +int of_cpu_phandle_to_id(const struct device_node *node,
+> +                        const struct device_node *cpu_np,
 
-Thanks again for reviewing this =E2=80=94 I'll send an updated patch shortl=
-y.
+This needs to 'struct device_node **cpu_np' to actually work.
+
+> +                        const char * prop)
+
+I think prop here is always 'cpus' or 'cpu', so we can just try both
+rather than passing it in. A node is not going to have both. With
+'cpus', you need to provide the index.
+
+> +{
+> +       bool found =3D false;
+> +       int cpu, ret;
+> +       struct device_node *np;
+> +       struct of_phandle_args args;
+> +
+> +       if (!node || !prop)
+> +               return -1;
+> +
+> +       ret =3D of_parse_phandle_with_args(node, prop, NULL, 0, &args);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       cpu_np =3D args.np;
+> +       for_each_possible_cpu(cpu) {
+> +               np =3D of_cpu_device_node_get(cpu);
+> +               found =3D (cpu_np =3D=3D np);
+> +               of_node_put(np);
+> +               if (found)
+> +                       return cpu;
+> +       }
+
+This loop is just of_cpu_node_to_id(), use it here.
 
 
-Ben
+> +
+> +       return -ENODEV;
+> +}
+> +EXPORT_SYMBOL(of_cpu_phandle_to_id);
+> +
+>  /**
+>   * of_get_cpu_state_node - Get CPU's idle state node at the given index
+>   *
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index eaf0e2a2b75c..5e51e57478b1 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -360,6 +360,9 @@ extern const void *of_get_property(const struct devic=
+e_node *node,
+>  extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread=
+);
+>  extern struct device_node *of_cpu_device_node_get(int cpu);
+>  extern int of_cpu_node_to_id(struct device_node *np);
+> +extern int of_cpu_phandle_to_id(const struct device_node *np,
+> +                               const struct device_node *cpu_np,
+> +                               const char *propname);
 
-On Tue, Apr 29, 2025 at 9:50=E2=80=AFAM Krishna Kurapati
-<krishna.kurapati@oss.qualcomm.com> wrote:
+You need an empty static inline version.
+
+>  extern struct device_node *of_get_next_cpu_node(struct device_node *prev=
+);
+>  extern struct device_node *of_get_cpu_state_node(const struct device_nod=
+e *cpu_node,
+>                                                  int index);
+> --
+> 2.43.0
 >
->
->
-> On 4/29/2025 7:03 PM, hoff.benjamin.k@gmail.com wrote:
-> > From: Ben Hoff <hoff.benjamin.k@gmail.com>
-> >
-> > This patch adds support for dynamically configuring the polling interva=
-l
-> > (bInterval) for HID function drivers using configfs. This enables
-> > custom HID gadgets with user-specified poll rates without recompilation=
-.
-> >
-> > Signed-off-by: Ben Hoff <hoff.benjamin.k@gmail.com>
-> > ---
-> >   drivers/usb/gadget/function/f_hid.c | 54 ++++++++++++++--------------=
--
-> >   drivers/usb/gadget/function/u_hid.h |  1 +
-> >   2 files changed, 27 insertions(+), 28 deletions(-)
-> >
->
-> [...]
->
-> > @@ -1468,6 +1462,9 @@ static struct usb_function_instance *hidg_alloc_i=
-nst(void)
-> >       if (!opts)
-> >               return ERR_PTR(-ENOMEM);
-> >       mutex_init(&opts->lock);
-> > +
-> > +     opts->interval =3D 10;
-> > +
->
-> The default value was 10 only for hidg_hs_descriptors_intout.
-> Aren't we now making it 10 for all other ep descriptors as well ?
->
-> Regards,
-> Krishna,
->
-> >       opts->func_inst.free_func_inst =3D hidg_free_inst;
-> >       ret =3D &opts->func_inst;
-> >
-> > @@ -1546,6 +1543,7 @@ static struct usb_function *hidg_alloc(struct usb=
-_function_instance *fi)
-> >       hidg->bInterfaceProtocol =3D opts->protocol;
-> >       hidg->report_length =3D opts->report_length;
-> >       hidg->report_desc_length =3D opts->report_desc_length;
-> > +     hidg->interval =3D opts->interval;
-> >       if (opts->report_desc) {
-> >               hidg->report_desc =3D kmemdup(opts->report_desc,
-> >                                           opts->report_desc_length,
-> > diff --git a/drivers/usb/gadget/function/u_hid.h b/drivers/usb/gadget/f=
-unction/u_hid.h
-> > index 84bb70292855..a29dcb14f738 100644
-> > --- a/drivers/usb/gadget/function/u_hid.h
-> > +++ b/drivers/usb/gadget/function/u_hid.h
-> > @@ -25,6 +25,7 @@ struct f_hid_opts {
-> >       unsigned short                  report_desc_length;
-> >       unsigned char                   *report_desc;
-> >       bool                            report_desc_alloc;
-> > +     unsigned char                   interval;
-> >
-> >       /*
-> >        * Protect the data form concurrent access by read/write
