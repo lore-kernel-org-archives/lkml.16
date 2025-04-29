@@ -1,45 +1,45 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD8D2BEC2F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817FB2BF3C7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745909732; cv=none; b=eZe/SxEWEvECGlkNo2YQhs5b0QbpfgHdCeryGUNhy7UoQpfSEM5u4EJU9xb2z1pNY+phdqfYnKFAYSjewP6Qi3uv6wXOlPMKo/32o1sDK60ck/nWAYuaIx6EMWQAZcUgfXZMxiTObM5gfB+Dn3QM9YZ6fBFnyrQgaTj+TNV3n4k=
+	t=1745909736; cv=none; b=hRfq2k0UBjwuJuRB++T0Hh07qlQGDhhC2Jg2miOwuUD8iE7Ij7tT3gb5DylixtzD+q7mD1jqd7rG+NxePIgNrPCkgzLkt1OwZJLcvh2g5gEr2k9DeBoverzx9kRYgQAymjfSTehNc8hOW6AM6ZdOCfLswwU8tntgwYbe/aPHOcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745909732; c=relaxed/simple;
-	bh=bvApdSitIIcDFjuPFEEzU1FSqU95bWDNnJJJe2q6exs=;
+	s=arc-20240116; t=1745909736; c=relaxed/simple;
+	bh=tuEEFk8TcHvWKFiT97V6fnjqa0MsE28d8fxiVRK083c=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Up5IsOuIGZOXbHmw9kn0StscUnsbYTbqjsiRchh/R6lp69zmQ3WbkFPD4RPbxw/ZG9FfZvQQ1AVDgsZyDWxW4xmPo1fiHKYng2MVAY9JX/z5+imExgzypKXEfR00rprOXVu5bPXRiaWOWisLYaxWLIfqNFno2Q4HIWzv8jEF8PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tjmxrlV8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fffWh6cd; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=oFO+Cwu1yKdWdXW8XsWNI2wtf296grczuBMaPN1/ccCJEejkfMKegMnJ2ncTTa8Jl5OaeujEdo/XLLLuYTL/72E4v0cjsB+vE69Y5lsGZrIPAC9NgazfmNHWKieUpCPDEB25XyTY0uTC8kJ/0qf2veYeCGOLMpyVtepfvLG7DvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ntoeZz9a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l6k2nIz1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tjmxrlV8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fffWh6cd"
-Message-ID: <20250429065421.650454052@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ntoeZz9a";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l6k2nIz1"
+Message-ID: <20250429065421.830357569@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745909728;
+	s=2020; t=1745909733;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=cYWKdRXEr+TFQ30HnuL3MaDMsBDCslh0hKjVi8Z4UC4=;
-	b=tjmxrlV8xiE2BeyDEopWrIP2Sv3gu7LaxVx+ca+cXh7D0HYbRwPCHDRvMNhOH7XjzMa088
-	LlJYfsFxyZWF/yDzf+inzasm3YKo32ZOBOGlFwn12a8QW7cbHryAEMLhRBVOGP/KF90yAl
-	ngnjiza75HG+CZ/5LdRFFTHU3BefQVxOrRVCRl3ahDz+ivOCNrUX7ON1ZnNn+NTtW4KKh6
-	U8r3DxDxL05yn6mSFQtyKiq6P1f9nf7dXzlAYdGs9pDWIUZD6Venfh6lp0CJ4AgSGwdygx
-	fpYSCfPtXqkcE+gF+0BeDOrrCs4gbMr5ViRbcIibbAlBl1a0NjYWa8QYn68zUA==
+	 references:references; bh=bYqokDAXltzvGtNSThKO/zTEdwgjP0tUlXPO/QfeS7o=;
+	b=ntoeZz9aBs83duSRbsgwLsDePRFcNaJF/7bFFRTVLTYXbWHj1WO5k0eQNZt2dNdNbdWvp5
+	1sQShxOVWRpVf+LDoD8zE+MyCYmjrdKAzGT7vPabjo4UEvemwc2uM+vsRZzmsW1pbk0laa
+	4gmFg09bTc0gFXHeerCW2EPkz/hOVY3w/NtV1FsEtWZL30zwjYrX1xr7BF0C1xxI/F81xN
+	42dUvR22cq+utqvj2Rhx5tLuumuf1gMibuuNbSi4YE8GUt562eGKLQ3aan0yIsKJD+3hBE
+	l/hWJxcn4ZBBe1DBQvei/hs5m0/zrCocf26BqmjF8b3LDzdQDrQNwqLyWz9T8g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745909728;
+	s=2020e; t=1745909733;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=cYWKdRXEr+TFQ30HnuL3MaDMsBDCslh0hKjVi8Z4UC4=;
-	b=fffWh6cdHlqftSlCRWyzwsPOYkylD8p9POYyFwhR4Tc6+JNwVpKQQbPwWEYm9aABdjEBBY
-	Ganu2VN+RXPv2cDg==
+	 references:references; bh=bYqokDAXltzvGtNSThKO/zTEdwgjP0tUlXPO/QfeS7o=;
+	b=l6k2nIz1am1Xqa8YFmg+LG+UZZTpLQOp71Bbcw+HTaJTiQFqnV/+d/s8A5+9c84VeSV3qw
+	n+2P1MTg1D1jXgCg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Jiri Slaby <jirislaby@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [patch V2 27/45] genirq/chip: Rework irq_modify_status()
+Subject: [patch V2 30/45] genirq/manage: Rework irq_update_affinity_desc()
 References: <20250429065337.117370076@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,89 +48,113 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 29 Apr 2025 08:55:28 +0200 (CEST)
+Date: Tue, 29 Apr 2025 08:55:32 +0200 (CEST)
 
 Use the new guards to get and lock the interrupt descriptor and tidy up the
 code.
-
-Fixup the kernel doc comment while at it.
 
 No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- kernel/irq/chip.c |   58 +++++++++++++++++++++++++-----------------------------
- 1 file changed, 27 insertions(+), 31 deletions(-)
+ kernel/irq/manage.c |   76 +++++++++++++++++++++-------------------------------
+ 1 file changed, 32 insertions(+), 44 deletions(-)
 
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1004,38 +1004,34 @@ EXPORT_SYMBOL_GPL(irq_set_chip_and_handl
- 
- void irq_modify_status(unsigned int irq, unsigned long clr, unsigned long set)
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -393,14 +393,8 @@ int irq_set_affinity_locked(struct irq_d
+  * an interrupt which is already started or which has already been configured
+  * as managed will also fail, as these mean invalid init state or double init.
+  */
+-int irq_update_affinity_desc(unsigned int irq,
+-			     struct irq_affinity_desc *affinity)
++int irq_update_affinity_desc(unsigned int irq, struct irq_affinity_desc *affinity)
  {
--	unsigned long flags, trigger, tmp;
--	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
-+	scoped_irqdesc_get_and_lock(irq, 0) {
-+		struct irq_desc *desc = scoped_irqdesc;
-+		unsigned long trigger, tmp;
-+		/*
-+		 * Warn when a driver sets the no autoenable flag on an already
-+		 * active interrupt.
-+		 */
-+		WARN_ON_ONCE(!desc->depth && (set & _IRQ_NOAUTOEN));
-+
-+		irq_settings_clr_and_set(desc, clr, set);
-+
-+		trigger = irqd_get_trigger_type(&desc->irq_data);
-+
-+		irqd_clear(&desc->irq_data, IRQD_NO_BALANCING | IRQD_PER_CPU |
-+			   IRQD_TRIGGER_MASK | IRQD_LEVEL);
-+		if (irq_settings_has_no_balance_set(desc))
-+			irqd_set(&desc->irq_data, IRQD_NO_BALANCING);
-+		if (irq_settings_is_per_cpu(desc))
-+			irqd_set(&desc->irq_data, IRQD_PER_CPU);
-+		if (irq_settings_is_level(desc))
-+			irqd_set(&desc->irq_data, IRQD_LEVEL);
-+
-+		tmp = irq_settings_get_trigger_mask(desc);
-+		if (tmp != IRQ_TYPE_NONE)
-+			trigger = tmp;
+-	struct irq_desc *desc;
+-	unsigned long flags;
+-	bool activated;
+-	int ret = 0;
+-
+ 	/*
+ 	 * Supporting this with the reservation scheme used by x86 needs
+ 	 * some more thought. Fail it for now.
+@@ -408,44 +402,38 @@ int irq_update_affinity_desc(unsigned in
+ 	if (IS_ENABLED(CONFIG_GENERIC_IRQ_RESERVATION_MODE))
+ 		return -EOPNOTSUPP;
  
+-	desc = irq_get_desc_buslock(irq, &flags, 0);
 -	if (!desc)
--		return;
+-		return -EINVAL;
+-
+-	/* Requires the interrupt to be shut down */
+-	if (irqd_is_started(&desc->irq_data)) {
+-		ret = -EBUSY;
+-		goto out_unlock;
+-	}
+-
+-	/* Interrupts which are already managed cannot be modified */
+-	if (irqd_affinity_is_managed(&desc->irq_data)) {
+-		ret = -EBUSY;
+-		goto out_unlock;
++	scoped_irqdesc_get_and_buslock(irq, 0) {
++		struct irq_desc *desc = scoped_irqdesc;
++		bool activated;
++
++		/* Requires the interrupt to be shut down */
++		if (irqd_is_started(&desc->irq_data))
++			return -EBUSY;
++
++		/* Interrupts which are already managed cannot be modified */
++		if (irqd_affinity_is_managed(&desc->irq_data))
++			return -EBUSY;
++		/*
++		 * Deactivate the interrupt. That's required to undo
++		 * anything an earlier activation has established.
++		 */
++		activated = irqd_is_activated(&desc->irq_data);
++		if (activated)
++			irq_domain_deactivate_irq(&desc->irq_data);
++
++		if (affinity->is_managed) {
++			irqd_set(&desc->irq_data, IRQD_AFFINITY_MANAGED);
++			irqd_set(&desc->irq_data, IRQD_MANAGED_SHUTDOWN);
++		}
++
++		cpumask_copy(desc->irq_common_data.affinity, &affinity->mask);
++
++		/* Restore the activation state */
++		if (activated)
++			irq_domain_activate_irq(&desc->irq_data, false);
++		return 0;
+ 	}
 -
 -	/*
--	 * Warn when a driver sets the no autoenable flag on an already
--	 * active interrupt.
+-	 * Deactivate the interrupt. That's required to undo
+-	 * anything an earlier activation has established.
 -	 */
--	WARN_ON_ONCE(!desc->depth && (set & _IRQ_NOAUTOEN));
+-	activated = irqd_is_activated(&desc->irq_data);
+-	if (activated)
+-		irq_domain_deactivate_irq(&desc->irq_data);
 -
--	irq_settings_clr_and_set(desc, clr, set);
+-	if (affinity->is_managed) {
+-		irqd_set(&desc->irq_data, IRQD_AFFINITY_MANAGED);
+-		irqd_set(&desc->irq_data, IRQD_MANAGED_SHUTDOWN);
+-	}
 -
--	trigger = irqd_get_trigger_type(&desc->irq_data);
+-	cpumask_copy(desc->irq_common_data.affinity, &affinity->mask);
 -
--	irqd_clear(&desc->irq_data, IRQD_NO_BALANCING | IRQD_PER_CPU |
--		   IRQD_TRIGGER_MASK | IRQD_LEVEL);
--	if (irq_settings_has_no_balance_set(desc))
--		irqd_set(&desc->irq_data, IRQD_NO_BALANCING);
--	if (irq_settings_is_per_cpu(desc))
--		irqd_set(&desc->irq_data, IRQD_PER_CPU);
--	if (irq_settings_is_level(desc))
--		irqd_set(&desc->irq_data, IRQD_LEVEL);
+-	/* Restore the activation state */
+-	if (activated)
+-		irq_domain_activate_irq(&desc->irq_data, false);
 -
--	tmp = irq_settings_get_trigger_mask(desc);
--	if (tmp != IRQ_TYPE_NONE)
--		trigger = tmp;
--
--	irqd_set(&desc->irq_data, trigger);
--
--	irq_put_desc_unlock(desc, flags);
-+		irqd_set(&desc->irq_data, trigger);
-+	}
+-out_unlock:
+-	irq_put_desc_busunlock(desc, flags);
+-	return ret;
++	return -EINVAL;
  }
- EXPORT_SYMBOL_GPL(irq_modify_status);
  
+ static int __irq_set_affinity(unsigned int irq, const struct cpumask *mask,
 
 
 
