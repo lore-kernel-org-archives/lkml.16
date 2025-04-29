@@ -1,111 +1,194 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8801BF37
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA66C79F2;
+	Tue, 29 Apr 2025 02:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745893402; cv=none; b=lQAN/xVkfh+4OXZQKO+8qgKu/AUsYkAsnCsfwWa/7qa9ekGNCh+FoyPVzpjgzlQcVk0v/Bh8HEUiinAH9skUHI8YXFFn37d5P25dadYsRWL3a2cxt2Wj56gWe4sH8wuGz2+0Nz0t0WMR0KiDcWgmj20nbzNjMl2PZU8JEtzBlL0=
+	t=1745893449; cv=none; b=kcwFF5yJ07lHWqiO5+UtU2D8kBA2aAUUc+OWtaudElAZYUivHaPg5YIqPizIuDy3kaVNlSOMnOyTtb5aQiAzrYgQ8ddJq496mnPG2jati8zhIKdCFqHDQ/kem+uNOnjQz3dSSFZbBkRNcZVEiZxXe+aqEw2iBGpNoWBfHc4ORas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745893402; c=relaxed/simple;
-	bh=V8YH+r7xMbMWEj4VSxpV/83K1jvY0jqLxF5+hSyC61U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=keanUxg3EApS+VuARPz4M5OMCZKzjlBvlCdBtr8dw+BX6BGapNssNIAIfKtBeGMWF2uVggjxXlJS9ZR+qKHOgX8Br+ZaolZ/O1i+pxc1kqEPQ7TLU0PRW29TLFRNBQIURj06Aq8+WF5AqXR8JP7FWUxA0444PRDXFZC23KaRUFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XQEnGoFU; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745893449; c=relaxed/simple;
+	bh=6sGMzojzYlJ54g3FQSKtIDOIOOhDQGpN7BZFln60WPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OosZecm9LnBg0mBuzP6MgeZYuVp6SREIE2fdq96Iwlx6nzkgmEqZ8dzKdnrJlof2bwBoy7CBbtMTou1CIksxkBwFsCH72V3kVQals56veGf3H+ZnrMHR+HdKXx1zyhiAQs72EANgU6ZDi0FUZQfmtio58py4/NvMoT0p8nrw9yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eu/VLqjy; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XQEnGoFU"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so857805666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:23:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745893398; x=1746498198; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OnBKvw2kgpkCx0VRoBE8FRrW9svaRVFdZx7JKWWKbs4=;
-        b=XQEnGoFUjRIe58z4fCa7O7XYWQHG8w2E6LVtvqSCbKxKhDKlgM55Ic1U82bClf8ue3
-         0859Fsj+5BixukUnboylhYnoIdck8SHKofMqyKmQSKbWyEDM6Q04n/BxOV9N/iylLDHG
-         E84kG3gsowR9j4UV/Oo/PhYAp5RpYKp4dZz58=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745893398; x=1746498198;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OnBKvw2kgpkCx0VRoBE8FRrW9svaRVFdZx7JKWWKbs4=;
-        b=tmWsPR+tAdyBFVFM4o/SfOKFC9y6t6t3EZq0ONHT4XTmNyF3in9jngz0sKnbGPly+Y
-         Sy98HJeVmhPt35SNbNRVLxQRWoAeQYMe8vS5HVO4uKJ9K+nFosubQWkTwQQkuPvB9r7+
-         BjREkAixUz+U1GdtFv+AAxbAMlKNvHn2xeBEJwf+Hml+Y2kigGZM8EIGJR/6uR9CzwFW
-         DIzq8siqNOpwH4xMeHF7jW27SXf327+UDhI5Aak+XTzoT43BSE46UN5aFbzctT+c1yhM
-         WjWN+FPpzFF0bNUUKPvAV3hzwZWkHPJcYo7vVPVkm7ITwhKGLROKmTlbsH5kX5Mj5w8u
-         erzA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8qn9UK4GQAcRj+mYnaGPqx6RMqZjAJFC6ebXgwwde1jrkdE567Rnq1CQObwTnqojUNmMUF0rGwK1EK2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy30vDqZiQisAdzCKYnR/Nm2OhMZEXHoiqWF+Uy++kt7GWGwfC
-	2Y1S+ZlJZEL2LePA3mrUHdmuC+opM8LsB7sKhPDW3dX+mdUCUJxW9IrDI+iv1BwAQRfAAsQbWVn
-	VaDBU4Q==
-X-Gm-Gg: ASbGncsPa8IOGXOFfLLSW3Rh7vA1O+ogVm4Tkr7OQ44FzhmNqmCBre1SaWec5LljOhW
-	UKmmAbokL/pX4UVUhvTgQCQHEVgrnTCSUy2b6QhKp1eD54id1bpuPqUncaFnXlbNTzGXf5Ma8jI
-	i0L8JhcY8V23gTEHw5c+VtdQvQdbzsDyS2gGs56J5xd1tgUVGvYBYRwPrNK8vrwk+enJKdkpaAE
-	+htSp44d6E93BS4vC9u8mz4WswIZulUvV8xyUVcESbN8qYPTJgS8AHNJbmzNXLMJP9NCcsvUb6f
-	gn5etISZYM0Z3WymN47xhZ9c2vpVE5orqCVu7QAPvCtvMf2jQFgZoLAz330JuJAIcTLLCpk2vK9
-	UTegfmtsBwGsCIIs=
-X-Google-Smtp-Source: AGHT+IEilqnYbV3Snu7rBu3yQkokX6g+dY+6ES57ZoELdpuomdP+TDLKQOHMvUmZW4ftvJLuLz67cg==
-X-Received: by 2002:a17:906:f592:b0:ace:5461:81dd with SMTP id a640c23a62f3a-ace848c219bmr1030591166b.3.1745893398215;
-        Mon, 28 Apr 2025 19:23:18 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edafec7sm704107166b.165.2025.04.28.19.23.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 19:23:16 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-acbb48bad09so1019621966b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:23:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQFgbHNKvaaVUiP7is5vwrphdCwsOYFEpR6NAT3C0eoOrfUeCEWTljChiDF15lFWLXejfiwwNt9kjyVc0=@vger.kernel.org
-X-Received: by 2002:a17:907:94d3:b0:ac3:446d:141 with SMTP id
- a640c23a62f3a-ace84aacbabmr901645166b.47.1745893395747; Mon, 28 Apr 2025
- 19:23:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eu/VLqjy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745893448; x=1777429448;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6sGMzojzYlJ54g3FQSKtIDOIOOhDQGpN7BZFln60WPk=;
+  b=Eu/VLqjyox+WFVF+DSJk7KALGB0hPQxZNaElUOTs/9MHfcfQkMMjvbKA
+   QxV/IKnHvE3G2hOpJzQWN/LRs5BG60dlyNPvvPC+0glutslE21IAjLJa4
+   eCN/kkNUJcaG/j6O8Nj+j/toW+nd7Cm5Wb93GLyjiteEb+2V939km2bjC
+   fo0t3vL4b4CxEbzF9xEwds+5xJKBtwN0heILzn1Us1z5FWbVvMRLM8TYB
+   vYAXIQcIO/0zhu+S5UzEYQ5R+DZ2qhOZSW2vIYkM6YsaqqSiXBJBA58is
+   0XaNgHmT5BQY5l7fQUrik/ys15YT044OXjcq3y4bbs8/TsJsy/IJJbXYO
+   g==;
+X-CSE-ConnectionGUID: xLITgjHoSoi5zUBRHaa20A==
+X-CSE-MsgGUID: T1xMIlc/T5SOx+skZ3Tksg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51319144"
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="51319144"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 19:24:07 -0700
+X-CSE-ConnectionGUID: vvNJFknhTVeWI8A1w+PaZg==
+X-CSE-MsgGUID: xZVcFf42RYGbSOpMJUPKUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="138678340"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 19:23:58 -0700
+Message-ID: <f8d86cde-d485-4e5a-a693-e9323679474f@linux.intel.com>
+Date: Tue, 29 Apr 2025 10:19:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
- <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
- <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
- <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com> <CAHk-=wgJfWfWa2NTiTmev+Xr=e8Uo=aFkrXujLAQBVAVN-VigQ@mail.gmail.com>
- <B364FF6D-DFCC-42A7-ACA1-6A74E27EE57E@zytor.com> <67be5eee-b67b-409a-8309-829f891b9944@citrix.com>
- <916BD58C-E6A7-495E-9A60-722E130AC7A7@zytor.com>
-In-Reply-To: <916BD58C-E6A7-495E-9A60-722E130AC7A7@zytor.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 28 Apr 2025 19:22:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg34q=Mp7abB1zgL1GnXJ9Z_dOoZiBxqyXRtHipCpuyiQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG_ghGMO55z_hupmo__0S_CBd8urm2dTp6Qs-e2EcpEWp5VhXjCeavjAEY
-Message-ID: <CAHk-=wg34q=Mp7abB1zgL1GnXJ9Z_dOoZiBxqyXRtHipCpuyiQ@mail.gmail.com>
-Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
- handling to C
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Ingo Molnar <mingo@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Alexander Usyskin <alexander.usyskin@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>, 
-	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 03/24] iommu: generalize the batched sync after map
+ interface
+To: Leon Romanovsky <leon@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
+Cc: Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org,
+ Niklas Schnelle <schnelle@linux.ibm.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Dan Williams
+ <dan.j.williams@intel.com>, Kanchan Joshi <joshi.k@samsung.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Leon Romanovsky <leonro@nvidia.com>
+References: <cover.1745831017.git.leon@kernel.org>
+ <69da19d2cc5df0be5112f0cf2365a0337b00d873.1745831017.git.leon@kernel.org>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <69da19d2cc5df0be5112f0cf2365a0337b00d873.1745831017.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 28 Apr 2025 at 19:00, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> Now, question: can we just use __builtin_*() for these? I think gcc should always generate inline code for these on x86.
+On 4/28/25 17:22, Leon Romanovsky wrote:
+> From: Christoph Hellwig<hch@lst.de>
+> 
+> For the upcoming IOVA-based DMA API we want to batch the
+> ops->iotlb_sync_map() call after mapping multiple IOVAs from
+> dma-iommu without having a scatterlist. Improve the API.
+> 
+> Add a wrapper for the map_sync as iommu_sync_map() so that callers
+> don't need to poke into the methods directly.
+> 
+> Formalize __iommu_map() into iommu_map_nosync() which requires the
+> caller to call iommu_sync_map() after all maps are completed.
+> 
+> Refactor the existing sanity checks from all the different layers
+> into iommu_map_nosync().
+> 
+> Signed-off-by: Christoph Hellwig<hch@lst.de>
+> Acked-by: Will Deacon<will@kernel.org>
+> Tested-by: Jens Axboe<axboe@kernel.dk>
+> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+> Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
+> Signed-off-by: Leon Romanovsky<leonro@nvidia.com>
+> ---
+>   drivers/iommu/iommu.c | 65 +++++++++++++++++++------------------------
+>   include/linux/iommu.h |  4 +++
+>   2 files changed, 33 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 4f91a740c15f..02960585b8d4 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2443,8 +2443,8 @@ static size_t iommu_pgsize(struct iommu_domain *domain, unsigned long iova,
+>   	return pgsize;
+>   }
+>   
+> -static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -		       phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+> +int iommu_map_nosync(struct iommu_domain *domain, unsigned long iova,
+> +		phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	const struct iommu_domain_ops *ops = domain->ops;
+>   	unsigned long orig_iova = iova;
+> @@ -2453,12 +2453,19 @@ static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+>   	phys_addr_t orig_paddr = paddr;
+>   	int ret = 0;
+>   
+> +	might_sleep_if(gfpflags_allow_blocking(gfp));
+> +
+>   	if (unlikely(!(domain->type & __IOMMU_DOMAIN_PAGING)))
+>   		return -EINVAL;
+>   
+>   	if (WARN_ON(!ops->map_pages || domain->pgsize_bitmap == 0UL))
+>   		return -ENODEV;
+>   
+> +	/* Discourage passing strange GFP flags */
+> +	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
+> +				__GFP_HIGHMEM)))
+> +		return -EINVAL;
+> +
+>   	/* find out the minimum page size supported */
+>   	min_pagesz = 1 << __ffs(domain->pgsize_bitmap);
+>   
+> @@ -2506,31 +2513,27 @@ static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+>   	return ret;
+>   }
+>   
+> -int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -	      phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+> +int iommu_sync_map(struct iommu_domain *domain, unsigned long iova, size_t size)
+>   {
+>   	const struct iommu_domain_ops *ops = domain->ops;
+> -	int ret;
+> -
+> -	might_sleep_if(gfpflags_allow_blocking(gfp));
+>   
+> -	/* Discourage passing strange GFP flags */
+> -	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
+> -				__GFP_HIGHMEM)))
+> -		return -EINVAL;
+> +	if (!ops->iotlb_sync_map)
+> +		return 0;
+> +	return ops->iotlb_sync_map(domain, iova, size);
+> +}
 
-Yeah, I think we can just use __builtin_ffs() directly and get rid of
-all the games.
+I am wondering whether iommu_sync_map() needs a return value. The
+purpose of this callback is just to sync the TLB cache after new
+mappings are created, which should effectively be a no-fail operation.
 
-Not all gcc builtins are great: I did a bugzilla about gcc ctzl some time ago:
+The definition of iotlb_sync_map in struct iommu_domain_ops seems
+unnecessary:
 
-    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106471
+struct iommu_domain_ops {
+...
+         int (*iotlb_sync_map)(struct iommu_domain *domain, unsigned 
+long iova,
+                               size_t size);
+...
+};
 
-but for ffs() that does sound like it's the simplest thing to do.
+Furthermore, currently no iommu driver implements this callback in a way
+that returns a failure. We could clean up the iommu definition in a
+subsequent patch series, but for this driver-facing interface, it's
+better to get it right from the beginning.
 
-               Linus
+Thanks,
+baolu
