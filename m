@@ -1,76 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675562749F4;
-	Tue, 29 Apr 2025 22:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FD92749ED;
+	Tue, 29 Apr 2025 22:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745965636; cv=none; b=RtatZEF74+jE5J1DRJv955jhGmYnft8aLdFLw1dge6KqBf82EgMU1m0037XoLU6xaTTcC/Ae7n+oTqwHb1vxN6tBlIMIIRbh2Hm+ta3RCMD+Ai9X9YxKYNzo/JUu23tJSDLP/JdWqgPRZe8eAR1NfLitxcsWJdiR1bQbuAsN/lg=
+	t=1745965641; cv=none; b=kcwXP2a5LukXJPto3XO6jMiuyh01uM7tcwoDtOoDIoZs7EDfaVk1QfveLZDYXyfIk8zQ9ptLAySA+NqNY4DE+SBzED5M1SGqDOy+QPrynci4qun563tg9PiGH+ME49sBK0xNpQUkHamg9hLDoR6aUxvDkfd55eTsLF1EidgcaN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745965636; c=relaxed/simple;
-	bh=LK4pCfl0K+6c1i+y3R3elNM5ujTGhpTge6xB1wPFtqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wc79skWakNnCzj0chWCgqyRxg17YknAT3wwwrR7eBKE4VpwSjwyln2k7x0Jc+Rgx2TNtBYjYWT0CRubVV9zFV952nPcaErcwGjVDESPo/iMU4KSDPTMRWKSM9knSKVZuoCcN8X3zgPzTEmilzpXvi8RQAnjVuogZbbqga86BgpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Hyx7b01U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745965641; c=relaxed/simple;
+	bh=OtGRqdpcH2U0CtLkLJmpDiCYxHQ/nTJLUL4O01UeOIc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MRj5cxxWGbGcy/Iq6y/xlA5D67Ei/IAU/1SLMWLgvO70WU47irwp/S9v7UX8BiH5wpoTz2MnzUtEnBPHJu4YRBlLTmzHPBoW0bKeA7W91CFp1gHI2ds4XjUPzVfzHzDYS9fmelSuFzLfgBEdd7pPMgRY42/70PexSixQX3qdTpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lJ6KqqbV; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Hyx7b01U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F668C4CEEA;
-	Tue, 29 Apr 2025 22:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745965635;
-	bh=LK4pCfl0K+6c1i+y3R3elNM5ujTGhpTge6xB1wPFtqU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hyx7b01U6NiTLqkMPVPND5d5MO6EMD/iSd7uiuewWF7mc+jhVaCV5iDzJU+XE5Q3P
-	 YgpWXQMdrwa26dBfg3vOET86foct+PXySbD/vmBcohwhdEJs37qGmoT4yylywBQxqh
-	 jwZ/nStVitLyNfwpHEe5AL9rEkgcdfMYIOhN3oEQ=
-From: Shuah Khan <skhan@linuxfoundation.org>
-To: brendan.higgins@linux.dev,
-	davidgow@google.com,
-	rmoar@google.com,
-	corbet@lwn.net
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kunit: add tips to clean source tree to build help message
-Date: Tue, 29 Apr 2025 16:27:12 -0600
-Message-ID: <dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <cover.1745965121.git.skhan@linuxfoundation.org>
-References: <cover.1745965121.git.skhan@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJ6KqqbV"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso1165083366b.0;
+        Tue, 29 Apr 2025 15:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745965638; x=1746570438; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zd9gQCsKJpq8vf5tNDACpW4tnOCKgHHE95O2VfBWGgw=;
+        b=lJ6KqqbVnwOBoeuLZFoL3MQeu6BYOV7II8KbYTTDkM97GSbMsO7aNQFFgteV7lv8Fj
+         34kyMk0F7vmVp4o1AmPsaKdIpoTivsHF2Z92R1SEe7su2Dd0wnQbr98COshv5wx8xuJh
+         xRQObbUx3m3cu3hvplVf4SV8LN6r0O4zQL3xF0nr+14bdzvq8I4aTqvuT42AWWYuZV9u
+         fn8HqJHh8fomlbl8R6dVa0Su8RpH3Yn+4or8I7rKv0svE1HCvHcyHC6MZ/wy/wurDlnw
+         n7N89wiqctqA3qQ9og3xQuA/V0m6mMvkcL+XruWcVjOsUcbyg07uF72nMhWqmYYpkyGR
+         UqMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745965638; x=1746570438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zd9gQCsKJpq8vf5tNDACpW4tnOCKgHHE95O2VfBWGgw=;
+        b=IUe3fZLPpgL4XqxO9Td/YI7q061GQ+F6FKh55Qx4RDj3lmoUNxX17BUqk6+1S4oKCc
+         ehM1BZfAAgACgXjxytJFlCpKlr6CbMUkHNPkD4vnisIr+HFQTF9CJnYxdSG2gVfdZ5hI
+         QsMeBd/OS+qav+zMMD9Sf2nSgytwvWR4YIWdAcBevptngLXpbZukaGp5GNe0CI0nBVYw
+         TPf4qhl9If+OtlXW6c5+Zh2rPjra0Te5A/Jf5m2g7bFu9SauGUa3ewUzq4YuC5ksX/9Z
+         eOPZ84/+wR6uSlz6yoGfIHhkZ0IlKDr+MBKzoqWn61CiaT5cAh3phdx8pbN39xHoQ2d4
+         W1sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNTkoTEZNA1iXIE+Oo4AUf9cwBHDA6G2qTmmvP8z4JcBTKX4T6vwSPKQnKZO+6+Nn+e8eEv3Trw8mW@vger.kernel.org, AJvYcCVdzymBQ7A/LtsrZ0bxNtOAc59CfnXO7kBe093Ae+uaVHH9ZvvomJFS6hEONxlh0KPDiPpWbC/otx+DwJjn@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe6gq3OZCO4njNJIEz8lf94cui1wykurt8nxuB991ag4WeYA7c
+	b2rxZkdMd4HyTqVBxevvgt5PBxdf6QI7zwkXTSgd825svV029fRj4XSQU0X1PcxnvAMTKzSB/ii
+	hjFS4e7aL4uRAeQdGLKaGIpQmMls=
+X-Gm-Gg: ASbGnct72OMHKjFEmWbQXfgwx407kk5mrj2cZ1HQNTJ6MLKcBTiQleZzQZS7+HWy6E7
+	dLhO3IVRttNOAVn261b+U/kq6C/mBgoPvCP+4cFkvxhXJcnD3g7l8NQUNSfFMyfslc5eaevirUt
+	5adO8mDpuxZ1JtbMB4lL+98A==
+X-Google-Smtp-Source: AGHT+IGyPe8/uaDOHmjcGbfNVqIL3Y3TgPPVPT9WBKU8oWu6v5eOMjG3nnoHsGqwoKvwkgL/6GUeyG2HdpbTIWpYj0w=
+X-Received: by 2002:a17:907:1c96:b0:ace:c3a9:81bb with SMTP id
+ a640c23a62f3a-acedc593309mr104325266b.5.1745965637879; Tue, 29 Apr 2025
+ 15:27:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1745841276.git.marcelo.schmitt@analog.com> <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
+In-Reply-To: <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 01:26:41 +0300
+X-Gm-Features: ATxdqUGegN2_s_sjODFS8rtIi860gHJiqkmftv0vqgAn_mQCpAdd8_T7EXvMtwA
+Message-ID: <CAHp75VerW=GnsomWLqUyK6AWU+dVDPxhAVmafuwy4cDpbyPVUA@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] iio: adc: ad4170: Add support for weigh scale and
+ RTD sensors
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add tips to clean source tree to build help message. When user run
-kunit.py after building another kernel for ARCH=foo, it is necessary
-to run 'make ARCH=foo mrproper' to remove all build artifacts generated
-during the build. In such cases, kunit build could fail.
+On Mon, Apr 28, 2025 at 3:30=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
+>
+> The AD4170 design has features to aid interfacing with weigh scale and RT=
+D
+> sensors that are expected to be setup with external circuitry for proper
+> sensor operation. A key characteristic of those sensors is that the circu=
+it
+> they are in must be excited with a pair of signals. The external circuit
+> can be excited either by voltage supply or by AD4170 excitation signals.
+> The sensor can then be read through a different pair of lines that are
+> connected to AD4170 ADC.
+>
+> Configure AD4170 to handle external circuit sensors.
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- tools/testing/kunit/kunit.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 7f9ae55fd6d5..db86a396ed33 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -583,7 +583,7 @@ def main(argv: Sequence[str]) -> None:
- 						'the options in .kunitconfig')
- 	add_common_opts(config_parser)
- 
--	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
-+	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests. Successful build depends on a clean source tree. Run mrproper to clean generated artifcats for prior ARCH=foo kernel build. Run 'make ARCH=foo mrproper')
- 	add_common_opts(build_parser)
- 	add_build_opts(build_parser)
- 
--- 
-2.47.2
+> +static const unsigned int ad4170_iout_current_ua_tbl[] =3D {
+> +       0, 10, 50, 100, 250, 500, 1000, 1500
 
+Leave trailing comma.
+
+> +};
+
+...
+
+> +       if (st->pins_fn[ain_n] & AD4170_PIN_VBIAS) {
+> +               *ain_voltage =3D (st->vrefs_uv[AD4170_AVDD_SUP]
+> +                               - st->vrefs_uv[AD4170_AVSS_SUP]) / 2;
+
+Don't wrap like this, keep the logical split, and looking at this I
+would just put it either on a single line, or use a temporary variable
+for the expression in parentheses.
+
+> +               return 0;
+> +       }
+
+...
+
+> +static int ad4170_validate_excitation_pins(struct ad4170_state *st,
+> +                                          u32 *exc_pins, int num_exc_pin=
+s)
+> +{
+> +       struct device *dev =3D &st->spi->dev;
+> +       int ret, i;
+
+Should 'i' be signed?
+
+> +       for (i =3D 0; i < num_exc_pins; i++) {
+> +               unsigned int pin =3D exc_pins[i];
+> +
+> +               ret =3D ad4170_find_table_index(ad4170_iout_pin_tbl, pin)=
+;
+> +               if (ret < 0)
+> +                       return dev_err_probe(dev, ret,
+> +                                            "Invalid excitation pin: %u\=
+n",
+> +                                            pin);
+> +
+> +               if (pin <=3D AD4170_MAX_ANALOG_PINS) {
+> +                       if (st->pins_fn[pin] !=3D AD4170_PIN_UNASIGNED)
+> +                               return dev_err_probe(dev, -EINVAL,
+> +                                                    "Pin %u already used=
+ with fn %u\n",
+> +                                                    pin, st->pins_fn[pin=
+]);
+> +
+> +                       st->pins_fn[pin] |=3D AD4170_PIN_CURRENT_OUT;
+> +               } else {
+> +                       unsigned int gpio =3D pin - AD4170_CURRENT_SRC_I_=
+OUT_PIN_GPIO0;
+> +
+> +                       if (st->gpio_fn[gpio] !=3D AD4170_GPIO_UNASIGNED)
+> +                               return dev_err_probe(dev, -EINVAL,
+> +                                                    "GPIO %u already use=
+d with fn %u\n",
+> +                                                    gpio, st->gpio_fn[gp=
+io]);
+> +
+> +                       st->gpio_fn[gpio] |=3D AD4170_GPIO_AC_EXCITATION;
+> +               }
+> +       }
+> +       return 0;
+> +}
+
+...
+
+Also consider inverting the conditional in ad4170_setup_bridge() to
+drop indentation level in a lot of LoCs.
+
+...
+
+> +       switch (s_type) {
+> +       case AD4170_ADC_SENSOR:
+> +               ret =3D ad4170_parse_adc_channel_type(dev, child, chan);
+> +               if (ret < 0)
+
+Why ' < 0'?
+
+> +                       return ret;
+> +
+> +               break;
+> +       case AD4170_WEIGH_SCALE_SENSOR:
+> +               fallthrough;
+> +       case AD4170_THERMOCOUPLE_SENSOR:
+> +               fallthrough;
+> +       case AD4170_RTD_SENSOR:
+> +               ret =3D ad4170_parse_external_sensor(st, child, setup, ch=
+an,
+> +                                                  s_type);
+> +               if (ret < 0)
+
+Ditto.
+
+> +                       return ret;
+>
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
