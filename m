@@ -1,192 +1,161 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54892522A0;
-	Tue, 29 Apr 2025 20:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF122522A0
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745959328; cv=none; b=kCBG9vQY/Yot0o1uJaX76uqWA0odWI5ce+OX3OWwY+Rf69opgH1UReyG4a5adQPE1lYt5kEHtCgs+P+SuyO0PZyZ35j3DLsbOrx1Yf/b9fWRzAHRqkNnkOW8d+V8fFxuAeN0VdaM5aYVUxbXN6AwL2BkVjPlv29MCPvkiiI+S84=
+	t=1745959431; cv=none; b=ni9cnVJWuCpLDPSjs4ZPQumyeWk5OCBExSzeQZl/HnzimjN6HCNzcVovoDVjc6M780bgqTa9J8xt21D1eEruZ92E0Pm6Hx69EeVJSr0UZUQ3VgZJf28r0S6y9GvUVlQHxPAoQgHILN7FbiKy6L9UwpEJIKXIgxCqG1sktIfa+wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745959328; c=relaxed/simple;
-	bh=sqw8u468bvWPhnZZvrvFjZOeJJxU6TLriFYsQyHe/Wo=;
+	s=arc-20240116; t=1745959431; c=relaxed/simple;
+	bh=LkyLQBwTJJGrpnl1CxZI8tvol6HSznSH55H78Vjrl60=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TcxCkGn5kkg214biIxNNnACgGOvyyjSGLRia98QiO2iCETLd2UE1qchpQkf1STykAlmBjxg6gu31mdAvrSK+GQ3olWSrJ43SXUyWTocU1/6YcffCXOeP4C4KYlhopNwbq82I4VvevG2F1mc1fZv2QzRLm5/lXLaau98M9xKXZtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NICgK7IJ; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=TsWRX+SmchcB/ENXQFljoy4CQfUB4XyoRkXPpdHBqgskiWDh9jDLRPBm6HBzFr/c4stFDUgjKqDWR/FZesSN5pcYVSvtwwB3DCq3tku5KumRBswhmujdtZMpDij9MJFRLuUk5ZtcCDz+SfRQW9OjluBqtlFIW1hT9HiPob3Q0JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E3XptLNU; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NICgK7IJ"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ace94273f0dso655741766b.3;
-        Tue, 29 Apr 2025 13:42:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E3XptLNU"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso6059a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745959325; x=1746564125; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745959428; x=1746564228; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D1z/mqKv1IeI8pEEU6fVR2jhLi7rY9Y0QGzSV/lMhx0=;
-        b=NICgK7IJSUPINy8cCaeGm81RW5I3/b5wgMm40+0sFEu2gLjK4/7sgfpH1l6QxKKXsH
-         om+l1eqNQi4iJj/ia8Z7HY+bkYZj7u9cWro0fn8Mp7QxVdt4VC/tP4Tnd5gf008avK7W
-         eHVRD22XxTWp5ExNePLs9lp0BGWANvXi3crNe3zoV/7DdhO3BUGsFfRO4MsLM+5iWj8O
-         42cnZGwObX578ogKpGgWVC0eWFBC3g2oirY4WkBX2rZ1r8rdOMGopqv7WzcYvAU0qGsa
-         mbWzlz55dkp4KhYRL1i/NtHmxIbrp04uLsYIGij1ZWIo6yrZeeA0ADNuI9y4TnTbaoXM
-         Kaew==
+        bh=LkyLQBwTJJGrpnl1CxZI8tvol6HSznSH55H78Vjrl60=;
+        b=E3XptLNUg/wymo+FIfGVkQiWi+w8I8L5TP+SWtfvnvUJFJs+KLhmdczklK2HzZK6gg
+         7Y7siAKdD2ZonjAqG0+w9voLPGpm5xHHWzRsDXUhQea87WJhmCXcjxWLx7DjPBIwwBlh
+         G9X/X58rOGqgZCsnRC3JkmzGA7xV+qTJ1yD0Pke16W9I2ZNWuzZWFW9i8zgzEqma98R2
+         doivSSxy73MT8RuVztlEHeJ0isvIorxXW8GY0ADlKxHhz70S2ZhFX8XvXafX84xg5AKl
+         DezH2wJ1WeTGW3tiqZA8kzTqmC+IIUqY5Y6T6KqQpLUv+zOsVi1hM7VDpV3vmqG9LzOq
+         KUBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745959325; x=1746564125;
+        d=1e100.net; s=20230601; t=1745959428; x=1746564228;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D1z/mqKv1IeI8pEEU6fVR2jhLi7rY9Y0QGzSV/lMhx0=;
-        b=jvB3i1qvktSA5/lvKrHUwc4bdmydS0pk18OLEj7qIFVOu6bJv7eNphfHGybHsw41e3
-         3+Ke9l8iPv9kv+cPTJ90ISX2xE+hI9jKRTSxYBy/MpZj9XHYWPUMkNu4pVitA5RI3VFV
-         3p2KjH/I9tenNcSlfTxN0Bv2gpE8GpUWeW83yhhlNV6Y1rC6TvG3F4CXH7AZvVTaHhN9
-         BqoNoAxMJe2hYwaRllzFTPxRUIRZ4TGkdFpUChQSZIenoKXhGdMvbAXAQXfLrkJwS2XR
-         pmlsVnDCin8E5pF4jAFHevRVbp56TwkoX6w+KFKgrlJ0Ey6f/CeHn7enFp6zoi6+b1y9
-         72hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUChlpUHggl7sKKaG6qv5vjg+G4InorRt9gwry2Wi6a9BI3JXTXu5PupkDiqSGtlqlcoz1PXWMo9ph/ChtXvCxV@vger.kernel.org, AJvYcCVPvNKhZAxyGoJJyqstMwEfw+KxWJjwx/P+gChbim4/TlHi5SuzntqsQfFYZRzLloRB/fhmaR/7DC+G@vger.kernel.org, AJvYcCVqWtwnrNufMTbtJtGNnI4SUmix6erWNIC16zc2xuwQxoS04p4HsizsPF0wEzhXKJidSQ0Mjx0wsLY0sAMA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEFPd9Y8gJlnkhqyqyAfUVY7BHOhb9FXQEv1XBOYBtPMs++3UV
-	R31QfEWokZZbIw+QsN6atN4XQ/r9e57PmbAE5H6XMbGi9Ypnj47yk4k+WW/mYSLKULuvipBIW/S
-	WeUyZZCU1vSs3l1vKBMOZSwD/cY0=
-X-Gm-Gg: ASbGncv18n3IKbh72QuUxolLbZv5n2aglGL7S7/Uu9lwNg6V/mvyUb7v3fr65YmQxkS
-	sLmV51c0VjkVXhUPIhpYW5KSCJr/H2JxuGuqytXYbMBWTLgQU2yI3VGt9TRV/lpiLTphEJ3ecUm
-	L9C+s6EGC8tWGrbEK2wzy/3A==
-X-Google-Smtp-Source: AGHT+IE14msetcDvHYj/CK4TchmcNPfTjYNeX1wqV1ziOxtznfOccILX1u8l/ZGo797xJvN0+L0UY0jzsPR+fFwsf1U=
-X-Received: by 2002:a17:907:3f18:b0:ac1:db49:99a3 with SMTP id
- a640c23a62f3a-acedc73396bmr77444066b.40.1745959324967; Tue, 29 Apr 2025
- 13:42:04 -0700 (PDT)
+        bh=LkyLQBwTJJGrpnl1CxZI8tvol6HSznSH55H78Vjrl60=;
+        b=OvsHhwH59npL15rtUSomvOtGoT2Iph84NxZpCCTU2RrR9XsN7oQHivUdL0Te66ynMu
+         Eq+8VXdpBu077l7/7CiJ7L/CaCCoEduq8ITzT5LtBQnxb0/Ye8Dat2oWlJj9ntv/6z9Q
+         cGKfpE7uNASldHs9ZIHEVJR/U7eV4/U55s0n6oNHH8hkhTpfptLA4w13CQ7J9ZbvP5oy
+         iUcWHsNucBt7LOllvNszAnNKEGg9w06wyl7iGej4Nit3opDx942APQYw4id+d/QcdxL2
+         9RSP0z+pAyyw+JBhlaasj0PU/VI81kKGFHOW/2ZEs76Nv6Q9edPgm0rdn56og9Tavi1d
+         b5tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPvFek+5wzfrBIuso3ppUucDcIEZHQ00WmxIH5IVgy3piLzvSa1GC5FptK4tJxDW02MQM44MT0s8cfoks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFIxwKGdc3oBLai9SquD1z7V6teZQuyAXlLHP6HcGs/m6ZPXQ6
+	CtNOndbbIvfu95mjyVFGwsZJy/aXQ0CcdYGOQrzoelVhuRqwWlx2aWjfwT4TrSu1HyWFEadKyY6
+	15RNVZNbAfFjTTpmDvVsZACQ175Ihrd6LVJAU
+X-Gm-Gg: ASbGncs8lewKY0VN2AgWD60raLWLiCMQqeId/UErHmXsyFzq5QuwFmvxyftTgFDzJhG
+	xYRZHtZJ9xCgLB3ohRnOnD5n+tJGn5+sfMFqO7BZx5eeqqEhBrkZ40KNU15Vo3F8JUBezujUsmL
+	GphTPEqgVFrKnROC7rkyuNFsXvdmb+jubpGgaZq7dfi8NyPq/mdg==
+X-Google-Smtp-Source: AGHT+IEIgZvYUxouglxxEc1B25bVszxW3uDj1Plpsi1Xo6RrFU9lPw27AjHq3/sFGlfsqKdKORoMM5aPYW2Otdj+c1I=
+X-Received: by 2002:a05:6402:1d21:b0:5f6:c48e:82bf with SMTP id
+ 4fb4d7f45d1cf-5f89409483amr28294a12.0.1745959428013; Tue, 29 Apr 2025
+ 13:43:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
- <20250429-aaeon-up-board-pinctrl-support-v4-12-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-12-b3fffc11417d@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 23:41:28 +0300
-X-Gm-Features: ATxdqUH6LFL-Q-RdSyhm0fHJzj7z0eKXlWR7xvTBkFx2dpxSM6ZEfA2sxQxPlko
-Message-ID: <CAHp75VfkJ8J=4zmRwjFjq49GRN-=6FCv=uU6+2NUxSW6ZZ+mnQ@mail.gmail.com>
-Subject: Re: [PATCH v4 12/12] pinctrl: Add pin controller driver for AAEON UP boards
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
+ <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
+ <CAJuCfpGGiwTbMeGAeYNtQ5SsFenUw8up6ToLy=VstULM_TSoXA@mail.gmail.com>
+ <CAG48ez15g5n9AoMJk1yPHsDCq2PGxCHc2WhCAzH8B2o6PgDwzQ@mail.gmail.com>
+ <CAJuCfpG+YjyVE-6TaAQEjwc0iixqN8Epf25jo2awtL=gqY=afA@mail.gmail.com>
+ <CAG48ez0ntTH_sOaPiqML715jyTCujwyh3Og1wBq9RNLbu55C5Q@mail.gmail.com> <CAJuCfpFA0Kqt_KOceq6bxbJG80z-RaxcFbC+-59F_sPOXAorQA@mail.gmail.com>
+In-Reply-To: <CAJuCfpFA0Kqt_KOceq6bxbJG80z-RaxcFbC+-59F_sPOXAorQA@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 29 Apr 2025 22:43:11 +0200
+X-Gm-Features: ATxdqUEqqoG4LoIyZ4OwQmz6A4H2tBfAsqh63IM1Om7wtHRV6kYoe8YBb1fcZ7Q
+Message-ID: <CAG48ez0qqFenDtrWu6xB+5voYMYX9VRiEpe3_8NOZjT8Wz4eFg@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
+To: Suren Baghdasaryan <surenb@google.com>, Al Viro <viro@zeniv.linux.org.uk>, brauner@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
+	vbabka@suse.cz, peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, 
+	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
+On Tue, Apr 29, 2025 at 10:33=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+> On Tue, Apr 29, 2025 at 11:55=E2=80=AFAM Jann Horn <jannh@google.com> wro=
+te:
+> > On Tue, Apr 29, 2025 at 8:04=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > > On Tue, Apr 29, 2025 at 10:21=E2=80=AFAM Jann Horn <jannh@google.com>=
+ wrote:
+> > > >
+> > > > Hi!
+> > > >
+> > > > (I just noticed that I incorrectly assumed that VMAs use kfree_rcu
+> > > > (not SLAB_TYPESAFE_BY_RCU) when I wrote my review of this, somehow =
+I
+> > > > forgot all about that...)
+> > >
+> > > Does this fact affect your previous comments? Just want to make sure
+> > > I'm not missing something...
+> >
+> > When I suggested using "WRITE_ONCE(vma->vm_file, NULL)" when tearing
+> > down a VMA, and using get_file_rcu() for the lockless lookup, I did
+> > not realize that you could actually also race with all the other
+> > places that set ->vm_file, like __mmap_new_file_vma() and so on; and I
+> > did not think about whether any of those code paths might leave a VMA
+> > with a dangling ->vm_file pointer.
 >
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
+> So, let me summarize my understanding and see if it's correct.
 >
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
+> If we copy the original vma, ensure that it hasn't changed while we
+> were copying (with mmap_lock_speculate_retry()) and then use
+> get_file_rcu(&copy->vm_file) I think we are guaranteed no UAF because
+> we are in RCU read section. At this point the only issue is that
+> copy->vm_file might have lost its last refcount and get_file_rcu()
+> would enter an infinite loop.
+
+Yeah. (Using get_file_active() would avoid that.)
+
+> So, to avoid that we have to use the
+> original vma when calling get_file_rcu()
+
+Sorry - I originally said that, but I didn't think about
+SLAB_TYPESAFE_BY_RCU when I had that in mind.
+
+> but then we should also
+> ensure that vma itself does not change from under us due to
+> SLAB_TYPESAFE_BY_RCU used for vm_area_struct cache. If it does change
+> from under us we might end up accessing an invalid address if
+> vma->vm_file is being modified concurrently.
+
+Yeah, I think in theory we would have data races, since the file*
+reads in get_file_rcu() could race with all the (plain) ->vm_file
+pointer stores. So I guess it might actually be safer to use the
+copied VMA's ->vm_file for this, with get_file_active(). Though that
+would be abusing get_file_active() quite a bit, so brauner@ should
+probably look over this early and see whether he thinks that's
+acceptable...
+
+> > I guess maybe that means you really do need to do the lookup from the
+> > copied data, as you did in your patch; and that might require calling
+> > get_file_active() on the copied ->vm_file pointer (instead of
+> > get_file_rcu()), even though I think that is not really how
+> > get_file_active() is supposed to be used (it's supposed to be used
+> > when you know the original file hasn't been freed yet). Really what
+> > you'd want for that is basically a raw __get_file_rcu(), but that is
+> > static and I think Christian wouldn't want to expose more of these
+> > internals outside VFS...
+> > (In that case, all the stuff below about get_file_rcu() would be moot.)
+> >
+> > Or you could pepper WRITE_ONCE() over all the places that write
+> > ->vm_file, and ensure that ->vm_file is always NULLed before its
+> > reference is dropped... but that seems a bit more ugly to me.
 >
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
->
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
->
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
->
-> The driver provides also a gpiochip. It requests SoC pins in GPIO mode,
-
-also provides a GPIO chip
-
-> and drives them in tandem with FPGA pins (switch/mux direction).
->
-> This commit adds support only for UP Squared board
-
-Missing period at the end.
-
-...
-
-> +config PINCTRL_UPBOARD
-> +       tristate "AAeon UP board FPGA pin controller"
-> +       depends on MFD_UPBOARD_FPGA
-> +       select PINMUX
-> +       select GENERIC_PINCTRL_GROUPS
-> +       select GENERIC_PINMUX_FUNCTIONS
-> +       select GPIOLIB
-> +       select GPIO_AGGREGATOR
-> +       help
-> +         Pin controller for the FPGA GPIO lines on UP boards. Due to the
-> +         hardware layout, the driver control the FPGA pins in tandem wit=
-h
-
-control --> controls
-
-> +         their corresponding Intel SoC GPIOs.
-> +
-> +         Currently supported:
-> +         - UP Squared
-> +
-> +         To compile this driver as a module, choose M here: the module
-> +         will be called pinctrl-upboard.
-
-...
-
-> +#include <linux/device.h>
-
-> +#include <linux/platform_device.h>
-
-> +#include <linux/stddef.h>
-
-types.h guarantees stddef.h, but having it explicit is not a bad idea,
-so up to you. All the same for device.h included by platform_device.h.
-
-> +#include <linux/types.h>
-
-...
-
-> +static const enum upboard_pin_mode upboard_up2_i2s0_modes[] =3D {
-> +       UPBOARD_PIN_MODE_GPIO_OUT,
-> +       UPBOARD_PIN_MODE_GPIO_OUT,
-> +       UPBOARD_PIN_MODE_GPIO_IN,
-> +       UPBOARD_PIN_MODE_GPIO_OUT
-
-Keep trailing comma.
-
-> +};
-
-...
-
-> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct=
- seq_file *s,
-> +                                    unsigned int offset)
-> +{
-> +       int ret;
-> +
-> +       ret =3D upboard_pinctrl_pin_get_mode(pctldev, offset);
-> +       if (ret =3D=3D UPBOARD_PIN_MODE_FUNCTION)
-> +               seq_puts(s, "mode function ");
-> +       else if (ret =3D=3D UPBOARD_PIN_MODE_DISABLED)
-> +               seq_puts(s, "HIGH-Z");
-
-No space in this line?
-
-
-> +       else
-> +               seq_printf(s, "GPIO (%s) ", str_input_output(ret =3D=3D U=
-PBOARD_PIN_MODE_GPIO_IN));
-> +}
-
---
-With Best Regards,
-Andy Shevchenko
+> Ugh, yes. We either ensure no vma->vm_file tearing or use
+> __get_file_rcu() on a copy of the vma. Or we have to stabilize the vma
+> by locking it... Let me think about all these options. Thanks!
