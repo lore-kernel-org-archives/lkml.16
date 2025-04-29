@@ -1,304 +1,152 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63D02472BC
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A7B1DF73C;
+	Tue, 29 Apr 2025 17:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745946559; cv=none; b=iiXcezoE2ey6BQZw3EayJmBsXQvlvYSUJdQAnQwTnNo6tPuiViQi5Ti9FzU63ggIAhLY27Ykk4OtH/wGHH/p0UuDACDsQ9XnWjwSmT6NoKkm3YUYBxHNwoR0LN5+lV2NXf4LmW92puzYABUPjN4aRO5nQZitlpnxMrwINPpRyYk=
+	t=1745946610; cv=none; b=lwd568FxJQOTJ/YBZ9LIDYZ+zAscZnIylY4x/Maw+TW02mQrbXLpFK4h1vVPKyuxvUrdStO8u3cti1E2fQv9O4RORYZKsF4kGl/Vmz2DOHRakRIUfQ9+F7W3NL+zbxtisDKGvFMdlzL19B9T5S2/fBSbwOibY5AmuN7W1UJF5fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745946559; c=relaxed/simple;
-	bh=otdy+cHDnN0z4MKJuQ50lJc3kGS+4GqL7DVYHyt+3rE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FWBaA6gyVgt0eFVTQqjcDYdllc61iqfJu23hrt7QL55O9CHd8e7zTjgt2Xeo2YRPujoK2XKP6MK42AbzzPcYVnr+HkvjWjcI+TW175+NuG7IlHz5jpfSwEz4834hqXdqvFbKaxaOIHHxNWtyV9Hi08kFSAdK7sXCbArD9jO1TfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p0Y1SOr0; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745946610; c=relaxed/simple;
+	bh=lADPbhiKG0z3i47u2cGgCB0Xa+zoWFmODShud75S2zg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NGubbKUaCDP1I6ZsIG5aFjXJerYvn3jMhbnPQBlt1XPyEuHWechX/Yf4SjI2/M1vnc7eb2UQRaBk7nvkDuF51VJmHNRlhppS177/GXhQYQJIIcHLqbMYDIFeqxdNHqnCUw1fd/dr68Io6Ca//iSF78ZEbMEnOViUw06gEqYjKV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kh7O59n7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p0Y1SOr0"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47666573242so357721cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745946555; x=1746551355; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3wN1T3GMxNDHasA1P1pHfr57BfT4ryZUjRwhWQiFJ1U=;
-        b=p0Y1SOr0CUlCKP+s/+gwo4KXL7wHgqYLjL1M3mGNNtzo+9I6YcdWh2SkbRYTRbOmez
-         k9oqWBTwfwimfybknSFt9J9bIDfJTSGBcLe/3JyU7jLljxNQznPXsEOaFX5Chg3pxyik
-         ZcEhhnjF+29kbtBL3fF0Ss2a8ORcvF5vFi4jIJ6CVL9Ts8ayni6D53nth2MkEv03yHnX
-         s/4tjQlxCI+qaT2QYNfp8wf1vGaVxbrFBgNx0mQ16yNUpg7UKhLXKXGMmzjEeq2xd+RH
-         DqrUPxR7kQWJ5yxhYdMyWslLPd2ug/O2/OrLxydtL2jnQDeQRPUWU7cFblKIk75yWqRc
-         jvgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745946555; x=1746551355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3wN1T3GMxNDHasA1P1pHfr57BfT4ryZUjRwhWQiFJ1U=;
-        b=pk6ysezUHmlpf59FfX9E01pzLJJsUQT8Fyp1iUB1yrp630NJGbd0kksQOnmgRdmQnY
-         mW8IyfwNhH0ujil5W2qQpbUnQSrHJICvgJoAoWlR5bo7ghryja3e1n8EbV66a2zc3qvS
-         RSm0KbpIPphc5RjCym27fs/KRa8yV6eI7wgkxSdm5NBcm7gP75N2Fuwlm+jZ/figB/Tq
-         0l5fZTslwW3YIimK+0umwk6hBNvbVaqie78dMM9daYPULQoIq7L1/H3IQ1F9npGTABru
-         JT7nYt/z7MmllEH20syP4Vt23FMzrC2paQnJpBQ/aYG+ZM9W2GAUuCp1JbjUGKS04vjj
-         +MbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmJe1/Wb1tEDBPj27wTodj5SIMoeWFVvJmiXIfm5blQYSXnekuN8VLST8sFTO1U8GeBPRvo/P9SqbNcyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVBhnRsFr8Q4TwQQj+8KhWPBFiF9u1DNyXax+n7FJ3wXU3IrFR
-	or7IwO4jsbURDdjmRfY7BHBg47NgafhUngBgmKt7BFs9FyC16dUamNMg5MFPnY7rpqu283AK70+
-	fJz95tkBLa3G0ESm/I0+UEtX7FnbMUa4N4GIL
-X-Gm-Gg: ASbGncvoPHw1IO6ZpvtHl/pA2QPSl/lsD5QteUbjLPpMCjyY4WKQbE3ZHoR79haFG1Q
-	UlWF5BPSPLMFmgclxnlfzzteT7V6zH8fDNNKzECsCOR9pR1KlivnVqkhCE172j3A1D5pRQgqiEt
-	YoUKeJI4EIUI1eEZ6yXuTWALZoy38UiVa5IrVAaiStTG6cIiw263pOngJNAvY+0jI=
-X-Google-Smtp-Source: AGHT+IESKitBJO3sZv32xrVdF494ZNH19atUoJKC8GwVG1r2WedLX5sPmIE31lJgcwtfPpfMmDhKELfsvLaZi4LwOy0=
-X-Received: by 2002:ac8:7f4c:0:b0:47d:d252:4873 with SMTP id
- d75a77b69052e-488a5dedc42mr4952881cf.11.1745946555202; Tue, 29 Apr 2025
- 10:09:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kh7O59n7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A909EC4CEE3;
+	Tue, 29 Apr 2025 17:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745946610;
+	bh=lADPbhiKG0z3i47u2cGgCB0Xa+zoWFmODShud75S2zg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Kh7O59n7ztMuvMcvFGSY/DzhpEmkBJOfs8Ol101wAzzn5rztG+Y1GnzkRQSNSWIgK
+	 h9hjr1SZK+xQ8u/R3OPC2X1VcNa8whOLOBL1r+VRjT+78GaHV/aZ9rIJuSItw0+Dy3
+	 Hh47wSIyCfYVx7ht9fE2ZjDuUHCq3fIP5NbniLoI=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Max Grobecker <max@grobecker.info>,
+	Ingo Molnar <mingo@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 012/286] x86/cpu: Dont clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in a virtual machine
+Date: Tue, 29 Apr 2025 18:38:36 +0200
+Message-ID: <20250429161108.358465874@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250429161107.848008295@linuxfoundation.org>
+References: <20250429161107.848008295@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
- <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
-In-Reply-To: <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 29 Apr 2025 10:09:04 -0700
-X-Gm-Features: ATxdqUHykEeEaRUDfVFPrHYAFtv8-ek3ih5pTaKrNuCjWMlHoN1VLkz4YajbEFo
-Message-ID: <CAJuCfpGGiwTbMeGAeYNtQ5SsFenUw8up6ToLy=VstULM_TSoXA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: Jann Horn <jannh@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
-	vbabka@suse.cz, peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
-	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
-	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 8:40=E2=80=AFAM Jann Horn <jannh@google.com> wrote:
->
-> On Fri, Apr 18, 2025 at 7:50=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> > With maple_tree supporting vma tree traversal under RCU and vma and
-> > its important members being RCU-safe, /proc/pid/maps can be read under
-> > RCU and without the need to read-lock mmap_lock. However vma content
-> > can change from under us, therefore we make a copy of the vma and we
-> > pin pointer fields used when generating the output (currently only
-> > vm_file and anon_name). Afterwards we check for concurrent address
-> > space modifications, wait for them to end and retry. While we take
-> > the mmap_lock for reading during such contention, we do that momentaril=
-y
-> > only to record new mm_wr_seq counter. This change is designed to reduce
-> > mmap_lock contention and prevent a process reading /proc/pid/maps files
-> > (often a low priority task, such as monitoring/data collection services=
-)
-> > from blocking address space updates.
-> [...]
-> > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > index b9e4fbbdf6e6..f9d50a61167c 100644
-> > --- a/fs/proc/task_mmu.c
-> > +++ b/fs/proc/task_mmu.c
-> [...]
-> > +/*
-> > + * Take VMA snapshot and pin vm_file and anon_name as they are used by
-> > + * show_map_vma.
-> > + */
-> > +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_=
-area_struct *vma)
-> > +{
-> > +       struct vm_area_struct *copy =3D &priv->vma_copy;
-> > +       int ret =3D -EAGAIN;
-> > +
-> > +       memcpy(copy, vma, sizeof(*vma));
-> > +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> > +               goto out;
->
-> I think this uses get_file_rcu() in a different way than intended.
->
-> As I understand it, get_file_rcu() is supposed to be called on a
-> pointer which always points to a file with a non-zero refcount (except
-> when it is NULL). That's why it takes a file** instead of a file* - if
-> it observes a zero refcount, it assumes that the pointer must have
-> been updated in the meantime, and retries. Calling get_file_rcu() on a
-> pointer that points to a file with zero refcount, which I think can
-> happen with this patch, will cause an endless loop.
-> (Just as background: For other usecases, get_file_rcu() is supposed to
-> still behave nicely and not spuriously return NULL when the file* is
-> concurrently updated to point to another file*; that's what that loop
-> is for.)
+5.10-stable review patch.  If anyone has any objections, please let me know.
 
-Ah, I see. I wasn't aware of this subtlety. I think this is fixable by
-checking the return value of get_file_rcu() and retrying speculation
-if it changed.
+------------------
 
-> (If my understanding is correct, maybe we should document that more
-> explicitly...)
+From: Max Grobecker <max@grobecker.info>
 
-Good point. I'll add comments for get_file_rcu() as a separate patch.
+[ Upstream commit a4248ee16f411ac1ea7dfab228a6659b111e3d65 ]
 
->
-> Also, I think you are introducing an implicit assumption that
-> remove_vma() does not NULL out the ->vm_file pointer (because that
-> could cause tearing and could theoretically lead to a torn pointer
-> being accessed here).
->
-> One alternative might be to change the paths that drop references to
-> vma->vm_file (search for vma_close to find them) such that they first
-> NULL out ->vm_file with a WRITE_ONCE() and do the fput() after that,
-> maybe with a new helper like this:
->
-> static void vma_fput(struct vm_area_struct *vma)
-> {
->   struct file *file =3D vma->vm_file;
->
->   if (file) {
->     WRITE_ONCE(vma->vm_file, NULL);
->     fput(file);
->   }
-> }
->
-> Then on the lockless lookup path you could use get_file_rcu() on the
-> ->vm_file pointer _of the original VMA_, and store the returned file*
-> into copy->vm_file.
+When running in a virtual machine, we might see the original hardware CPU
+vendor string (i.e. "AuthenticAMD"), but a model and family ID set by the
+hypervisor. In case we run on AMD hardware and the hypervisor sets a model
+ID < 0x14, the LAHF cpu feature is eliminated from the the list of CPU
+capabilities present to circumvent a bug with some BIOSes in conjunction with
+AMD K8 processors.
 
-Ack. Except for storing the return value of get_file_rcu(). I think
-once we detect that  get_file_rcu() returns a different file we should
-bail out and retry. The change in file is an indication that the vma
-got changed from under us, so whatever we have is stale.
+Parsing the flags list from /proc/cpuinfo seems to be happening mostly in
+bash scripts and prebuilt Docker containers, as it does not need to have
+additionals tools present – even though more reliable ways like using "kcpuid",
+which calls the CPUID instruction instead of parsing a list, should be preferred.
+Scripts, that use /proc/cpuinfo to determine if the current CPU is
+"compliant" with defined microarchitecture levels like x86-64-v2 will falsely
+claim the CPU is incapable of modern CPU instructions when "lahf_lm" is missing
+in that flags list.
 
->
-> > +       if (!anon_vma_name_get_if_valid(copy))
-> > +               goto put_file;
-> > +
-> > +       if (!mmap_lock_speculate_retry(priv->mm, priv->mm_wr_seq))
-> > +               return 0;
->
-> We only check for concurrent updates at this point, so up to here,
-> anything we read from "copy" could contain torn pointers (both because
-> memcpy() is not guaranteed to copy pointers atomically and because the
-> updates to the original VMA are not done with WRITE_ONCE()).
-> That probably means that something like the preceding
-> anon_vma_name_get_if_valid() could crash on an access to a torn
-> pointer.
-> Please either do another mmap_lock_speculate_retry() check directly
-> after the memcpy(), or ensure nothing before this point reads from
-> "copy".
+This can prevent some docker containers from starting or build scripts to create
+unoptimized binaries.
 
-Ack. I'll add mmap_lock_speculate_retry() check right after memcpy().
+Admittably, this is more a small inconvenience than a severe bug in the kernel
+and the shoddy scripts that rely on parsing /proc/cpuinfo
+should be fixed instead.
 
->
-> > +       /* Address space got modified, vma might be stale. Re-lock and =
-retry. */
-> > +       rcu_read_unlock();
-> > +       ret =3D mmap_read_lock_killable(priv->mm);
-> > +       if (!ret) {
-> > +               /* mmap_lock_speculate_try_begin() succeeds when holdin=
-g mmap_read_lock */
-> > +               mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_se=
-q);
-> > +               mmap_read_unlock(priv->mm);
-> > +               ret =3D -EAGAIN;
-> > +       }
-> > +
-> > +       rcu_read_lock();
-> > +
-> > +       anon_vma_name_put_if_valid(copy);
-> > +put_file:
-> > +       if (copy->vm_file)
-> > +               fput(copy->vm_file);
-> > +out:
-> > +       return ret;
-> > +}
-> [...]
-> > @@ -266,39 +399,41 @@ static void get_vma_name(struct vm_area_struct *v=
-ma,
-> >                 } else {
-> >                         *path =3D file_user_path(vma->vm_file);
-> >                 }
-> > -               return;
-> > +               goto out;
-> >         }
-> >
-> >         if (vma->vm_ops && vma->vm_ops->name) {
-> >                 *name =3D vma->vm_ops->name(vma);
->
-> This seems to me like a big, subtle change of semantics. After this
-> change, vm_ops->name() will no longer receive a real VMA; and in
-> particular, I think the .name implementation special_mapping_name used
-> in special_mapping_vmops will have a UAF because it relies on
-> vma->vm_private_data pointing to a live object.
+This patch adds an additional check to see if we're running inside a
+virtual machine (X86_FEATURE_HYPERVISOR is present), which, to my
+understanding, can't be present on a real K8 processor as it was introduced
+only with the later/other Athlon64 models.
 
-Ah, I see. IOW, vma->vm_private_data might change from under us and I
-don't detect that. Moreover this is just an example and .name() might
-depend on other things.
+Example output with the "lahf_lm" flag missing in the flags list
+(should be shown between "hypervisor" and "abm"):
 
->
-> I think you'll need to fall back to using the mmap lock and the real
-> VMA if you see a non-NULL vma->vm_ops->name pointer.
+    $ cat /proc/cpuinfo
+    processor       : 0
+    vendor_id       : AuthenticAMD
+    cpu family      : 15
+    model           : 6
+    model name      : Common KVM processor
+    stepping        : 1
+    microcode       : 0x1000065
+    cpu MHz         : 2599.998
+    cache size      : 512 KB
+    physical id     : 0
+    siblings        : 1
+    core id         : 0
+    cpu cores       : 1
+    apicid          : 0
+    initial apicid  : 0
+    fpu             : yes
+    fpu_exception   : yes
+    cpuid level     : 13
+    wp              : yes
+    flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
+                      cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdtscp
+                      lm rep_good nopl cpuid extd_apicid tsc_known_freq pni
+                      pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt
+                      tsc_deadline_timer aes xsave avx f16c hypervisor abm
+                      3dnowprefetch vmmcall bmi1 avx2 bmi2 xsaveopt
 
-Yeah, either that or obtain the name and make a copy during
-get_vma_snapshot() using original vma. Will need to check which way is
-better.
+... while kcpuid shows the feature to be present in the CPU:
 
->
-> >                 if (*name)
-> > -                       return;
-> > +                       goto out;
-> >         }
-> >
-> >         *name =3D arch_vma_name(vma);
-> >         if (*name)
-> > -               return;
-> > +               goto out;
-> >
-> >         if (!vma->vm_mm) {
-> >                 *name =3D "[vdso]";
-> > -               return;
-> > +               goto out;
-> >         }
-> >
-> >         if (vma_is_initial_heap(vma)) {
-> >                 *name =3D "[heap]";
-> > -               return;
-> > +               goto out;
-> >         }
-> >
-> >         if (vma_is_initial_stack(vma)) {
-> >                 *name =3D "[stack]";
-> > -               return;
-> > +               goto out;
-> >         }
-> >
-> >         if (anon_name) {
-> >                 *name_fmt =3D "[anon:%s]";
-> >                 *name =3D anon_name->name;
-> > -               return;
-> >         }
-> > +out:
-> > +       if (anon_name && !mmap_locked)
-> > +               anon_vma_name_put(anon_name);
->
-> Isn't this refcount drop too early, causing UAF read? We drop the
-> reference on the anon_name here, but (on some paths) we're about to
-> return anon_name->name to the caller through *name, and the caller
-> will read from it.
->
-> Ah, but I guess it's actually fine because the refcount increment was
-> unnecessary in the first place, because the vma pointer actually
-> points to a copy of the original VMA, and the copy has its own
-> refcounted reference to the anon_name thanks to get_vma_snapshot()?
-> It might be helpful to have some comments documenting which VMA
-> pointers can point to copies.
+    # kcpuid -d | grep lahf
+         lahf_lm             - LAHF/SAHF available in 64-bit mode
 
-If I follow Andrii's suggestion and avoid vma copying I'll need to
-implement careful handling of pointers and allow get_vma_name() to
-fail indicating that vma changed from under us. Let me see if this is
-still doable in the light of your findings.
+[ mingo: Updated the comment a bit, incorporated Boris's review feedback. ]
 
-Thanks for the insightful review and welcome back!
+Signed-off-by: Max Grobecker <max@grobecker.info>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/cpu/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index c10f7dcaa7b7c..5f0bdb53b0067 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -839,7 +839,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
+ 	 * (model = 0x14) and later actually support it.
+ 	 * (AMD Erratum #110, docId: 25759).
+ 	 */
+-	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM)) {
++	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+ 		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
+ 		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
+ 			value &= ~BIT_64(32);
+-- 
+2.39.5
+
+
+
