@@ -1,241 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D930276046;
-	Tue, 29 Apr 2025 06:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DC72741C8
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907534; cv=none; b=MoisXsWJm788O/KUFOo10kvuHfeox3wN4gE4FiirGHOFA7uaqAnfT6SCQwKurb+D1LbIBqGcoaGFdqmOCou+oDBkQ9VQNz+iwXPFYrp7nHDhNOymWARq5aXnw42DrVyQYc8cV1KxsksOtYOcgRBAL9LGB3sej6etg6SJoPlFdAo=
+	t=1745907548; cv=none; b=qut6ldHgAzhVPR1G9BNQF5UbnAIRu30iS5u1i3TcTp3C85zCMji0he+EXk8Qs1SqfrnTYLvEStgSKIkoM6AQrCpI0hMCMI0i9RipZ3fdsa48fLP0wANmnHyXc1+UnriCPutVkSMAw9f2Ae3so+mpI6d/cgSeOF+1mcYtEum69z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907534; c=relaxed/simple;
-	bh=vExQvIRKgBFgSfzxHEyrFALVuzPRUmMmvaWq9RovN60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l1oTR+Lk3dcq0scby1EjfHnjtlDQ23cXHbvslB9GuJDHp11E8eh13kQ1vK81UTit35v4zIqRHl5r+3tcEmJsjAgyL52rEkZ82dxHIB42ZVpsQEX5A9q+VpcbNDuGavsoP9AaKsuBY2oFF1oHpQgj5tYhJ2LGgXDVyS683XjNXPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTGc5PsS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745907548; c=relaxed/simple;
+	bh=Rp3cJHHmTx7PeP2hBYT2wQr82zD5tAALg+YJNXZeNEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rlK08NdPX2dF7WZmR+a+3ExZOiVoMVjQI6PT2ONYDHS7UxjHZ6anAQ5RRPL+yPDgl1Z0q1k8GwbVKdZixXRslr/gpEhVP6YnvXy9maIHVlQ6E6K//sHX8fnBN0Wv8Nt/jskhOmDllRu5g6g2odyiXmlKNYLPDT1ITe8EIIrWLGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PV9bzNe7; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTGc5PsS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F91C4CEE3;
-	Tue, 29 Apr 2025 06:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745907533;
-	bh=vExQvIRKgBFgSfzxHEyrFALVuzPRUmMmvaWq9RovN60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kTGc5PsSm7YoP9EmrE3/tfdAeh2ilrH28OMMhkA1i7TaGCseb+D12f8U4iRskFrE0
-	 RSM+Ykr/eeWEOV3E2nvuETPKv5WgV2r3K5S0fSLkCufCBscRZZxm5uTAwOKKZQ34F/
-	 w5YLetGv0DGVj4FS79jc9/KMtke5/3tgrMHoSQ+QeJcqJgLI/MgFlbbaDFejjar1j7
-	 p+0iatgN6tx2738QkPeIAJSzLkpoG/pCdY9ka1HCzAgLK31eNn58UEn17swH4oZLFI
-	 lBdvSt34FC1+vbqL/TFGUu3Gtp8x21gTZM2GnLCqybPJvtISk7Z3RIRONLDJ0zW3JA
-	 NWZpkM6/vXKLw==
-Date: Tue, 29 Apr 2025 09:18:49 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v10 06/24] iommu/dma: Factor out a iommu_dma_map_swiotlb
- helper
-Message-ID: <20250429061849.GL5848@unreal>
-References: <cover.1745831017.git.leon@kernel.org>
- <f9a6a7874760a2919bea1f255bb3c81c6369ed1c.1745831017.git.leon@kernel.org>
- <8416e94f-171e-4956-b8fe-246ed12a2314@linux.intel.com>
- <20250429055339.GJ5848@unreal>
- <9d1abdbc-4b21-47e2-bcaf-6bc8ca365b01@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PV9bzNe7"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53T6IZbb3603302
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 01:18:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745907515;
+	bh=DabvRdYFWGduGnW6eb29i9SQxqUOvxHEet2tbUqVCSU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=PV9bzNe75ccEsbtETXF8C6hyk2cn4dKQVf4Q45xzanGRw3kWUO36g+BoLsQPe7b3Z
+	 e0hjn7fT/RWZQiJyezcDVK0rkZk2fv8KO7fsY+j4kG78p9I/wbaEgmUECVLR3NNJI1
+	 g+oU+8Lpn2jHOn2eM1TRUW/Q6sNMkGN3XDdlyJGk=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53T6IZVe099945
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 29 Apr 2025 01:18:35 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
+ Apr 2025 01:18:35 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 29 Apr 2025 01:18:35 -0500
+Received: from [172.24.19.207] (lt9560gk3.dhcp.ti.com [172.24.19.207])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53T6ITaV009260;
+	Tue, 29 Apr 2025 01:18:30 -0500
+Message-ID: <5a5584be-670c-46f1-a66a-3b95ef81cf1c@ti.com>
+Date: Tue, 29 Apr 2025 11:48:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d1abdbc-4b21-47e2-bcaf-6bc8ca365b01@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH] arm64: defconfig: Enable XDP socket
+ support for high-performance networking
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <nm@ti.com>,
+        <vigneshr@ti.com>
+CC: <prabhakar.mahadev-lad.rj@bp.renesas.com>, <quic_tdas@quicinc.com>,
+        <nfraprado@collabora.com>, <arnd@arndb.de>, <lumag@kernel.org>,
+        <geert+renesas@glider.be>, <bjorn.andersson@oss.qualcomm.com>,
+        <will@kernel.org>, <catalin.marinas@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, Roger Quadros
+	<rogerq@kernel.org>, <danishanwar@ti.com>
+References: <20250428121025.246119-1-m-malladi@ti.com>
+ <1df9b47a-d20e-4755-9b30-75d8ff150551@linaro.org>
+Content-Language: en-US
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <1df9b47a-d20e-4755-9b30-75d8ff150551@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 29, 2025 at 01:58:06PM +0800, Baolu Lu wrote:
-> On 4/29/25 13:53, Leon Romanovsky wrote:
-> > On Tue, Apr 29, 2025 at 12:58:18PM +0800, Baolu Lu wrote:
-> > > On 4/28/25 17:22, Leon Romanovsky wrote:
-> > > > From: Christoph Hellwig<hch@lst.de>
-> > > > 
-> > > > Split the iommu logic from iommu_dma_map_page into a separate helper.
-> > > > This not only keeps the code neatly separated, but will also allow for
-> > > > reuse in another caller.
-> > > > 
-> > > > Signed-off-by: Christoph Hellwig<hch@lst.de>
-> > > > Tested-by: Jens Axboe<axboe@kernel.dk>
-> > > > Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
-> > > > Signed-off-by: Leon Romanovsky<leonro@nvidia.com>
-> > > 
-> > > Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > > 
-> > > with a nit below ...
-> > > 
-> > > > ---
-> > > >    drivers/iommu/dma-iommu.c | 73 ++++++++++++++++++++++-----------------
-> > > >    1 file changed, 41 insertions(+), 32 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > > > index d3211a8d755e..d7684024c439 100644
-> > > > --- a/drivers/iommu/dma-iommu.c
-> > > > +++ b/drivers/iommu/dma-iommu.c
-> > > > @@ -1138,6 +1138,43 @@ void iommu_dma_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
-> > > >    			arch_sync_dma_for_device(sg_phys(sg), sg->length, dir);
-> > > >    }
-> > > > +static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
-> > > > +		size_t size, enum dma_data_direction dir, unsigned long attrs)
-> > > > +{
-> > > > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-> > > > +	struct iova_domain *iovad = &domain->iova_cookie->iovad;
-> > > > +
-> > > > +	if (!is_swiotlb_active(dev)) {
-> > > > +		dev_warn_once(dev, "DMA bounce buffers are inactive, unable to map unaligned transaction.\n");
-> > > > +		return (phys_addr_t)DMA_MAPPING_ERROR;
-> > > > +	}
-> > > > +
-> > > > +	trace_swiotlb_bounced(dev, phys, size);
-> > > > +
-> > > > +	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
-> > > > +			attrs);
-> > > > +
-> > > > +	/*
-> > > > +	 * Untrusted devices should not see padding areas with random leftover
-> > > > +	 * kernel data, so zero the pre- and post-padding.
-> > > > +	 * swiotlb_tbl_map_single() has initialized the bounce buffer proper to
-> > > > +	 * the contents of the original memory buffer.
-> > > > +	 */
-> > > > +	if (phys != (phys_addr_t)DMA_MAPPING_ERROR && dev_is_untrusted(dev)) {
-> > > > +		size_t start, virt = (size_t)phys_to_virt(phys);
-> > > > +
-> > > > +		/* Pre-padding */
-> > > > +		start = iova_align_down(iovad, virt);
-> > > > +		memset((void *)start, 0, virt - start);
-> > > > +
-> > > > +		/* Post-padding */
-> > > > +		start = virt + size;
-> > > > +		memset((void *)start, 0, iova_align(iovad, start) - start);
-> > > > +	}
-> > > > +
-> > > > +	return phys;
-> > > > +}
-> > > > +
-> > > >    dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> > > >    	      unsigned long offset, size_t size, enum dma_data_direction dir,
-> > > >    	      unsigned long attrs)
-> > > > @@ -1151,42 +1188,14 @@ dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> > > >    	dma_addr_t iova, dma_mask = dma_get_mask(dev);
-> > > >    	/*
-> > > > -	 * If both the physical buffer start address and size are
-> > > > -	 * page aligned, we don't need to use a bounce page.
-> > > > +	 * If both the physical buffer start address and size are page aligned,
-> > > > +	 * we don't need to use a bounce page.
-> > > >    	 */
-> > > >    	if (dev_use_swiotlb(dev, size, dir) &&
-> > > >    	    iova_offset(iovad, phys | size)) {
-> > > > -		if (!is_swiotlb_active(dev)) {
-> > > 
-> > > ... Is it better to move this check into the helper? Simply no-op if a
-> > > bounce page is not needed:
-> > > 
-> > > 	if (!dev_use_swiotlb(dev, size, dir) ||
-> > > 	    !iova_offset(iovad, phys | size))
-> > > 		return phys;
-> > 
-> > Am I missing something? iommu_dma_map_page() has more code after this
-> > check, so it is not correct to return immediately:
-> > 
-> >    1189 dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> >    1190               unsigned long offset, size_t size, enum dma_data_direction dir,
-> >    1191               unsigned long attrs)
-> >    1192 {
-> > 
-> > <...>
-> > 
-> >    1201         /*
-> >    1202          * If both the physical buffer start address and size are page aligned,
-> >    1203          * we don't need to use a bounce page.
-> >    1204          */
-> >    1205         if (dev_use_swiotlb(dev, size, dir) &&
-> >    1206             iova_unaligned(iovad, phys, size)) {
-> >    1207                 phys = iommu_dma_map_swiotlb(dev, phys, size, dir, attrs);
-> >    1208                 if (phys == (phys_addr_t)DMA_MAPPING_ERROR)
-> >    1209                         return DMA_MAPPING_ERROR;
-> >    1210         }
-> >    1211
-> >    1212         if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-> >    1213                 arch_sync_dma_for_device(phys, size, dir);
-> >    1214
-> >    1215         iova = __iommu_dma_map(dev, phys, size, prot, dma_mask);
-> >    1216         if (iova == DMA_MAPPING_ERROR)
-> >    1217                 swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs);
-> >    1218         return iova;
-> >    1219 }
+Hi Krzysztof,
+
+On 4/28/2025 6:18 PM, Krzysztof Kozlowski wrote:
+> On 28/04/2025 14: 10, Meghana Malladi wrote: > From: MD Danish Anwar 
+> <danishanwar@ ti. com> > > Enable CONFIG_XDP_SOCKETS to allow for 
+> eXpress Data Path (XDP) socket > support specifically on TI SoC 
+> platforms such as the AM64x
+> ZjQcmQRYFpfptBannerStart
+> This message was sent from outside of Texas Instruments.
+> Do not click links or open attachments unless you recognize the source 
+> of this email and know the content is safe.
+> Report Suspicious
+> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
+> updqN51OXC2bwCXOvJOJf0uHOQ4u3JTTnIdRY_6gd786E07eEGpwtXIyCGLsDPJV6_rRmpwjb3dBOwY_bDAu4CiUT0pGPU8$>
+> ZjQcmQRYFpfptBannerEnd
 > 
-> static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t
-> phys,
-> 		size_t size, enum dma_data_direction dir, unsigned long attrs)
-> {
-> <...>
-> 	/*
-> 	 * If both the physical buffer start address and size are page aligned,
-> 	 * we don't need to use a bounce page.
-> 	 */
-> 	if (!dev_use_swiotlb(dev, size, dir) ||
-> 	    !iova_offset(iovad, phys | size))
-> 		return phys;
-> <...>
-> }
+> On 28/04/2025 14:10, Meghana Malladi wrote:
+>> From: MD Danish Anwar <danishanwar@ti.com>
+>> 
+>> Enable CONFIG_XDP_SOCKETS to allow for eXpress Data Path (XDP) socket
+>> support specifically on TI SoC platforms such as the AM64x and AM65x.
+>> This enables the use of XDP sockets for high-performance, low-latency
+>> networking applications, allowing for efficient processing of network
+>> packets and improved overall system performance.
 > 
-> Then,
+> High performance, low-latency network applications do not use defconfig.
+> That's a development config.
 > 
-> dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
-> 	unsigned long offset, size_t size, enum dma_data_direction dir,
-> 	unsigned long attrs)
-> {
-> <...>
-> 	phys = iommu_dma_map_swiotlb(dev, phys, size, dir, attrs);
-> 	if (phys == (phys_addr_t)DMA_MAPPING_ERROR)
-> 		return DMA_MAPPING_ERROR;
-> <...>
-> }
 
-Such change will cause to extra function call for everyone who doesn't
-use SWIOTLB (RDMA, HMM e.t.c).
+Oh got it, will drop upstreaming this patch then. Thanks.
 
-In addition, iommu_dma_map_swiotlb() is called through
-dma_iova_link -> 
-	iommu_dma_iova_link_swiotlb -> 
-		iommu_dma_iova_bounce_and_link() -> 
-			iommu_dma_map_swiotlb()
-and dma_iova_link() has this "if (dev_use_swiotlb(dev, size, dir) && iova_unaligned(iovad, phys, size))"
-very early at call stack.
-
-So, in dma_iova_link() we will find ourselves with same check twice.
-
-Thanks
-
+> Best regards,
+> Krzysztof
 > 
-> Thanks,
-> baolu
-> 
+
+-- 
+Thanks,
+Meghana Malladi
+
