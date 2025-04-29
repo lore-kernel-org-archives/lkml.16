@@ -1,208 +1,137 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA8525E47D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E363226E145
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745962516; cv=none; b=rZeFRTn43fvX8QEhd50kuw02Ffai4r1dgWyt+5aegP0AnHeFxmqjsuQYlTgUD7XBwMYJLQZ5qaRF1Vs0o9/3LXZj/p6sqGDjhldTYoFFuqwQURzPnBf1FkuX50VxHMzRhyBbv4Gz4B1fk4mFMP3Ykyw/Bv+hHiUAbHexaZmbua0=
+	t=1745962521; cv=none; b=X8K8K6Uhr809ju5k2E4VW7uCJn17kzk7hXevBZikt+tVCKQ/xnVY5WKG1y8nSlKkHWEvhqsEdD76/FPHuCoSOnHmrNPn4GGDUu+ypThmgjYnvUJk8m8vNOrY5b9rCC3WqO8QC84R3rt0OT32vduyGPXWEmia8mLIJkkfY7V4fQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745962516; c=relaxed/simple;
-	bh=Th8FT/kGvlr9TA9yY+YuPhwVkQ7i6L0YkGhRHWZuh6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VQSawvbr1JO84szhXsDLsTJzPUc73x+1mfrW3pdbutGB7rIUZdq4rzycDfhNaFO3N01CamN2RPYYsV1cuFfi9gK0vs5wkOXaSUEjpcOnCMHBhmo50x3aDmTDAmbBbVcFZvEOQRNHcED8EIhP2oHnqj5xrdNFQQ+V5d9ivbWEbNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sOj3kzS9; arc=none smtp.client-ip=209.85.219.49
+	s=arc-20240116; t=1745962521; c=relaxed/simple;
+	bh=JFtp/04AN6971ALn40g4bC8CVWUHKgt3AbR5wojCJVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o3LNrHe4+EcV4Qrsj1L7ijwAjZVFMqu3b4jdvJ7h2+DA0GAf/Ss5VT6oPrlLyZ4rJ/JLUjbgE24w0xydArRysWxyFcy/9KV6jDnOCcO9eJeaUbyALbsRqYtUOjnUcOvc4cQ88Xq6uHA7aLWGnq46nxKKHwkwJs1zRlNQHqViKwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=fail smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z+Q9eO8x; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sOj3kzS9"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so90172716d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:35:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z+Q9eO8x"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2242ac37caeso74675ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:35:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745962513; x=1746567313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y1nuu73zjClx2psq7xdas0e4BatM4ucgjTEBi/N9T8k=;
-        b=sOj3kzS9RL73f1zsPCO7syubfneUDCEc5y5Obo6vA00Ty8Qf4F8obSfgRqJkSP+WPf
-         fd+hEiyKZrc10gYMwhY1MhlrndLuct4nPamWkMC7utMt1DpbzytM1FJj9+1webwAm0D/
-         IsUbf7X5QLS3cKjjlqUXuZuU3nDvl2piRehgSDAkm1u6unLWDzvl3xACJIKC8Whcqhwv
-         dXlBlLgWQeQqc+YbRerKxnVA8G75tp/k2i1y5wPD9Cylo7benWJKINZDZWybqNmmrOYj
-         MKMtBoM6WhY5dyMLlJKCaolSuPkhk1WCksSWyGxcZ52ntj14xK9yRNBkm8uQyHy7MakE
-         vr4A==
+        d=google.com; s=20230601; t=1745962519; x=1746567319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mpYoUff4tpb7ZnYnv11tnvX2uEPBYr9ascXUqkCwOTE=;
+        b=Z+Q9eO8xeLCUuo/zkudd1dLWzxcNVjezyNiWJnWo5t2NBqP2/gndruzvGck4whmIpf
+         3F7EWJq3FFBl9hBOUZ6HKWb/W5eYowm7m9AfwjHzAIjH8J7WYRkOf8ga8xJEJ1B48knM
+         2oBZ4gSsPJkWa2hDYd/D6lHKh+M6zVIiPBOQAyFMM2Ckqjg0vonp0JuxudO6qK064UmE
+         rrDC29NTut3AJvmXvbOdvOxVwz2dwZkVaim0E6I5vqI4ORZjMVeeN3Su0AMd/XreXuc9
+         33o0z31VlRCe1zcCHkLbgmelIsrI17mvFsQmbkFTH/8lfJzaJvs8i3jS6DFXNGR9vG9/
+         /9rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745962513; x=1746567313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y1nuu73zjClx2psq7xdas0e4BatM4ucgjTEBi/N9T8k=;
-        b=HKVh8KD1aHIeQgWqSM/BeAOXV86p5Eee1jCo8G9FMDR2O7U5LLBm4VEUzFThVHDJyT
-         c7seD9BWk+kWvogH+F5zBiCMBXdkuhsEEZCbYc3guf9DZpN6mwAHg/ywgj3NK5uu1f4H
-         bPD6gXonV07mcg61Aytu7QL6Mtze/4nwFREJ0xnCpT0wVXJ4ieni672O+JLXbkeEp/Or
-         yZ6CcwBFLOGouhAMocY+q9gdzL1/kpAvCWnKhnC00H4KJFDcIywn8EjU0TTT0dAnG6dc
-         wYk1mnesFfY/+XOHDxypxyWG/GW196tHc77lulwrPGnvoV4vl10bYcKkZpNF35jEGdlS
-         CX2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXWNIRtnxcIFi980XlEwvulk4sRl1zBL/+j77knZ5mIc1wArwqMf7/EoPvY0FOgmmqCpGsSbalcuzobXqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwSuOyNUUhzE5CEVKwDbehSMqNuzM6CYZ99CGF/DfBWM8Z1gSk
-	bV0scgXLebv0WGeMArZogDXOXC9Az6nY8jUTqlRA9AyJVf7zpMiCOTw3zDLoAwuu2fdQsNnUorm
-	oVFJTDyWeN/tLJBQQOjVKq8EveeAGV/9nqpc=
-X-Gm-Gg: ASbGncsDNw/jvBUZk5Kk/tBmb1TLxXiTuVpoiR+miARgYaYlgtAnR66S96GakkL6L3q
-	snpLeB1QcZrbUwZaWMULkcdCfGvKX9T7pFDYHgm+xdYrP0o/5N+giPa3kRac1MgrgwxlsGimHHe
-	fNQ3xl+aq4YkF3sbErEj1/nx6HGC0K/5YjOdQo2Ls8iIqyHCmcl2Y=
-X-Google-Smtp-Source: AGHT+IHdGBlsyLmHS0F3JdjDWgppCwC6kObHYfd9Irsj3QIg9RtclmbdpOnv6QueauuKbKvJEGgnE7theqdRIDiBF68=
-X-Received: by 2002:a05:6214:2525:b0:6f2:d25e:8cfc with SMTP id
- 6a1803df08f44-6f4fe03cfccmr6404496d6.9.1745962512631; Tue, 29 Apr 2025
- 14:35:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745962519; x=1746567319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mpYoUff4tpb7ZnYnv11tnvX2uEPBYr9ascXUqkCwOTE=;
+        b=Hd/paMP0PIqNrC0wPO/IrzMEbnkf8EYHsILLQL7oRY5jgYfBAmk69vhdJXcyJW921l
+         T5yB1oq0KGcPXnHM9cHREk91EOebznapJb417Aivg8uj0H0GDSWsHcEs4MCpo87kDFnb
+         8Sp1tiNIHvrVip14mVBPnpHZ/6Nn4HgSFqwHpkXh0ZbA198hA/fIPLBsZdsL4/Jeb+tc
+         QFD5Y7vXG1hjsR3I5wpuJ9x4KDb4Nrgmy5K5+rfSqrfB9RgHR5aCSFe2D5qhFMezMT1O
+         4UIhEltDBtUrznSvRrvnQXZv8cMvvCw17l34XHRpg2+fNXRJ4VOlac+2k8uYLjl1skLt
+         N4Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw7FUv5zouvppbSRhyseX+mh2ACJZlf4OhdYalRb+IwSJpw4L1Az3XkuHU9Moo6ikeXWNLMkbViaCt8+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4z+SuaVjtzw/+RQpUPOBw3ba8xzoqsfPFwivR13FPdQ4O1Lwi
+	0In72WQlgXBJae5fAk0P/b2TNB/b5vR8tC5hj8eYvh9uFskZPBFXHsyaI3WvJQ==
+X-Gm-Gg: ASbGncv5wzLR0tu6ZxeGXPQ27rz9q4oLQRQAw19j8IXamvm/UpjzG+BCgO7MhwQq4Ht
+	T8/f8Y+8RURZiBfGYgXLAU6eTnhOtp+AFd9dU/9oikdlZrqc5wnEDP/X1bjkqe4G2WRYdwu0NgJ
+	a+zhEpO7ik2BD/1k6kwHhCvOfy0DRc7u2Zvd+wJkUC+iPpHniaebCA5E/UcKHTBLZy1pu8ZCXvV
+	OdrhnJK6SKFYJQ9iwImQmSXciNo2AgtCHjH/eI6lbxWPtXjNqjCpsDIuvVvo5w5mgomfnQae1A0
+	JlGCd16xXU8iy+ZPW0C2oiMjjS+8OcO1fdf+2e0EqdtxE4vmI4rLrHEkL8TkT+bZryy/NuRB
+X-Google-Smtp-Source: AGHT+IEiAc8Ows6C4iR4kgPCFAlWxuerupIBpLK64UuYqayp18C/qOLe733Vqo0YiAcQG8JFaBI7KQ==
+X-Received: by 2002:a17:902:f681:b0:200:97b5:dc2b with SMTP id d9443c01a7336-22df54469b2mr228275ad.15.1745962518918;
+        Tue, 29 Apr 2025 14:35:18 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f08csm42489a91.39.2025.04.29.14.35.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 14:35:18 -0700 (PDT)
+Date: Tue, 29 Apr 2025 21:35:07 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 13/22] iommufd: Add mmap interface
+Message-ID: <aBFGCxcTh54pecsk@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <7be26560c604b0cbc2fd218997b97a47e4ed11ff.1745646960.git.nicolinc@nvidia.com>
+ <aBE1gUz9y415EuBQ@google.com>
+ <aBE38GwvGBnpRNLc@google.com>
+ <aBE47aySzDp2lsAz@Asurada-Nvidia>
+ <aBE800DsAOOZ4ybv@google.com>
+ <aBE/CD4Ilbydnmud@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-2-yabinc@google.com>
- <48640298-effa-42d4-9137-a18a51637f03@linaro.org> <aAeQcgmL-iqGbG_g@gmail.com>
- <20250422141026.GH28953@e132581.arm.com> <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
- <f03715ac-a4ac-415d-8daa-1914384319fb@linaro.org> <CALJ9ZPMiJ4oZerKWb4TL8swh8K3tfj70LTL+WibTRN-vB8rqvw@mail.gmail.com>
-In-Reply-To: <CALJ9ZPMiJ4oZerKWb4TL8swh8K3tfj70LTL+WibTRN-vB8rqvw@mail.gmail.com>
-From: Yabin Cui <yabinc@google.com>
-Date: Tue, 29 Apr 2025 14:35:00 -0700
-X-Gm-Features: ATxdqUH8QFOp7_4_6WS0YFJZ66Ou2QkaCWdN15e__QKEKbCxBuIPL53duQQlwB8
-Message-ID: <CALJ9ZPNPDtSy2rSeZ04bzXp+OFDTDJ5_he5e9raBbd022Hr5ig@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU capability
-To: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@arm.com>, Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Mike Leach <mike.leach@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBE/CD4Ilbydnmud@Asurada-Nvidia>
 
-On Tue, Apr 29, 2025 at 10:02=E2=80=AFAM Yabin Cui <yabinc@google.com> wrot=
-e:
->
-> On Mon, Apr 28, 2025 at 1:56=E2=80=AFAM James Clark <james.clark@linaro.o=
-rg> wrote:
-> >
-> >
-> >
-> > On 23/04/2025 8:52 pm, Yabin Cui wrote:
-> > > On Tue, Apr 22, 2025 at 7:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wro=
-te:
-> > >>
-> > >> On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
-> > >>
-> > >> [...]
-> > >>
-> > >>>> Hi Yabin,
-> > >>>>
-> > >>>> I was wondering if this is just the opposite of
-> > >>>> PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default
-> > >>>> for all devices to solve the issue you describe. Because we alread=
-y
-> > >>>> have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages=
-.
-> > >>>> Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high orde=
-r
-> > >>>> allocations for AUX buffers optimistically") that explains that th=
-e
-> > >>>> current allocation strategy is an optimization.
-> > >>>>
-> > >>>> Your change seems to decide that for certain devices we want to
-> > >>>> optimize for fragmentation rather than performance. If these are
-> > >>>> rarely used features specifically when looking at performance shou=
-ld
-> > >>>> we not continue to optimize for performance? Or at least make it u=
-ser
-> > >>>> configurable?
-> > >>>
-> > >>> So there seems to be 3 categories:
-> > >>>
-> > >>>   - 1) Must have physically contiguous AUX buffers, it's a hardware=
- ABI.
-> > >>>        (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
-> > >>>
-> > >>>   - 2) Would be nice to have continguous AUX buffers, for a bit mor=
-e
-> > >>>        performance.
-> > >>>
-> > >>>   - 3) Doesn't really care.
-> > >>>
-> > >>> So we do have #1, and it appears Yabin's usecase is #3?
-> > >
-> > > Yes, in my usecase, I care much more about MM-friendly than a little =
-potential
-> > > performance when using PMU. It's not a rarely used feature. On Androi=
-d, we
-> > > collect ETM data periodically on internal user devices for AutoFDO op=
-timization
-> > > (for both userspace libraries and the kernel). Allocating a large
-> > > chunk of contiguous
-> > > AUX pages (4M for each CPU) periodically is almost unbearable. The ke=
-rnel may
-> > > need to kill many processes to fulfill the request. It affects user
-> > > experience even
-> > > after using PMU.
-> > >
-> > > I am totally fine to reuse PERF_PMU_CAP_AUX_NO_SG. If PMUs don't want=
- to
-> > > sacrifice performance for MM-friendly, why support scatter gather mod=
-e? If there
-> > > are strong performance reasons to allocate contiguous AUX pages in
-> > > scatter gather
-> > > mode, I hope max_order is configurable in userspace.
-> > >
-> > > Currently, max_order is affected by aux_watermark. But aux_watermark
-> > > also affects
-> > > how frequently the PMU overflows AUX buffer and notifies userspace.
-> > > It's not ideal
-> > > to set aux_watermark to 1 page size. So if we want to make max_order =
-user
-> > > configurable, maybe we can add a one bit field in perf_event_attr?
-> > >
-> > >>
-> > >> In Yabin's case, the AUX buffer work as a bounce buffer.  The hardwa=
-re
-> > >> trace data is copied by a driver from low level's contiguous buffer =
-to
-> > >> the AUX buffer.
-> > >>
-> > >> In this case we cannot benefit much from continguous AUX buffers.
-> > >>
-> > >> Thanks,
-> > >> Leo
-> >
-> > Hi Yabin,
-> >
-> > So after doing some testing it looks like there is 0 difference in
-> > overhead for max_order=3D0 vs ensuring the buffer is one contiguous
-> > allocation for Arm SPE, and TRBE would be exactly the same. This makes
-> > sense because we're vmapping pages individually anyway regardless of th=
-e
-> > base allocation.
-> >
-> > Seems like the performance optimization of the optimistically large
-> > mappings is only for devices that require extra buffer management stuff
-> > other than normal virtual memory. Can we add a new capability
-> > PERF_PMU_CAP_AUX_PREFER_LARGE and apply it to Intel PT and BTS? Then th=
-e
-> > old (before the optimistic large allocs change) max_order=3D0 behavior
-> > becomes the default again, and PREFER_LARGE is just for those two
-> > devices. Other and new devices would get the more memory friendly
-> > allocations by default, as it's unlikely they'll benefit from anything
-> > different.
-> >
-> Good suggestion! I will upload a v2 patch for that.
+On Tue, Apr 29, 2025 at 02:05:12PM -0700, Nicolin Chen wrote:
+> On Tue, Apr 29, 2025 at 08:55:47PM +0000, Pranjal Shrivastava wrote:
+> > On Tue, Apr 29, 2025 at 01:39:09PM -0700, Nicolin Chen wrote:
+> > > On Tue, Apr 29, 2025 at 08:34:56PM +0000, Pranjal Shrivastava wrote:
+> > > > On Tue, Apr 29, 2025 at 08:24:33PM +0000, Pranjal Shrivastava wrote:
+> > > > > On Fri, Apr 25, 2025 at 10:58:08PM -0700, Nicolin Chen wrote:
+> > > > > > +	struct iommufd_mmap *immap;
+> > > > > > +	int rc;
+> > > > > > +
+> > > > > > +	if (WARN_ON_ONCE(!immap_id))
+> > > > > > +		return -EINVAL;
+> > > > > > +	if (base & ~PAGE_MASK)
+> > > > > > +		return -EINVAL;
+> > > > > > +	if (!size || size & ~PAGE_MASK)
+> > > > > > +		return -EINVAL;
+> > > > > > +
+> > > > > > +	immap = kzalloc(sizeof(*immap), GFP_KERNEL);
+> > > > > > +	if (!immap)
+> > > > > > +		return -ENOMEM;
+> > > > > > +	immap->pfn_start = base >> PAGE_SHIFT;
+> > > > > > +	immap->pfn_end = immap->pfn_start + (size >> PAGE_SHIFT) - 1;
+> > > > > > +
+> > > > > > +	rc = mtree_alloc_range(&ictx->mt_mmap, immap_id, immap, sizeof(immap),
+> > > > > 
+> > > > > I believe this should be sizeof(*immap) ?
+> > > > 
+> > > > Ugh, Sorry, shouldn't this be size >> PAGE_SHIFT (num_indices to alloc) ?
+> > > 
+> > > mtree_load() returns a "struct iommufd_map *" pointer.
+> > 
+> > I'm not talking about mtree_load. I meant mtree_alloc_range takes in a
+> > "size" parameter, which is being passed as sizeof(imap) in this patch.
+> > IIUC, the mtree_alloc_range, via mas_empty_area, gets a range that is
+> > sufficient for the given "size". 
+> > 
+> > Now in this case, "size" would be the no. of pfns which are mmap-able.
+> > By passing sizeof(immap), we're simply reserving sizeof(ptr) i.e. 8 pfns
+> > for a 64-bit machine. Whereas we really, just want to reserve a range
+> > for size >> PAGE_SHIFT pfns.
+> 
+> But we are not storing pfns but the immap pointer..
 
-Hi everyone,
-I have sent the v2 patch for review, with the title
-"[PATCH v2] perf: Allocate non-contiguous AUX pages by default".
-Please help review it. Thanks!
+Ohh... so we are storing the raw pointer in the mtree.. I got confused
+with the `LONG_MAX >> PAGE_SHIFT`.. Sorry about the confusion!
 
-> >
-> > Thanks
-> > James
-> >
+> 
+> Nicolin
