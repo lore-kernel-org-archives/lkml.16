@@ -1,91 +1,91 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1342BF3F7;
-	Tue, 29 Apr 2025 13:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E052135A4;
+	Tue, 29 Apr 2025 13:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745933894; cv=none; b=Gbvrhpu+h5iTPPlidYxno8ihcluSmLI0UiUZ2ZfHdaPGcBVfdWS7T0VJ7UATaQX17ADbhL3LxkHR4X3j9aYfb23d0XsOogl1aJIfCw7WHg56K6YCBR4OAllc5/FiAyC3rrY52SLGjohmtI4E8gel8625XMhofwUT0v2soaG+caI=
+	t=1745934057; cv=none; b=nRbkIb315VjGL8IluU8XlgXIaAhTuTCD84uThVYqT7UopOeKYLcY4jIUSizbWiiPRlNt8TomGtgzDP5+BcE6BMYw88LLjKZyhQooH6IEQ+5VJa1T7p8x3jJyJDmCp6dJG3wxWZs/j6Rw/vY59dM1C14C2yAi22Hgkvc6kGfhwXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745933894; c=relaxed/simple;
-	bh=P0u5bKOVeiv3vEYAMFrQC5BmOPXNLg3oQQYCtgr8BSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tEyBFmsM7pUBkGY4KHGR+x8tRnBGAW7AGXesyYFN31z3pfE9aYziai6xEHRfnk8O6NGtAdWS05508rayWeTl39W5z/+os+uPACqMduJzEBonGr/V02oOwHfWPcxJ2gXH09bIeUPLk4cWPxLsSIz9JCzQsn1QsCuz3B4d+gb+Xbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXnowBPb; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745934057; c=relaxed/simple;
+	bh=MSR2wRV13Chm7qMvjBrZUPPk8jV++N/soVmQ3bTqXts=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tzskl7bZTgZNxU6Pl2Wvs2XmCmirilHBqakYO/4l1ZVzA7mqZ8iC6Jhw3/Mu8I6iDV1QzXGW4I1jHgD6Kug820GR+Y6TYCm/JcuoMIj/J1NFFyl8OLiHKqwK2HAQNTU0hERDg2+opYDgzxqF3gsybf5yoDwLw3WqwYPBnGgfCMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vN9qfmF8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXnowBPb"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2963dc379so888542066b.2;
-        Tue, 29 Apr 2025 06:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745933891; x=1746538691; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y26J0iAJoKCmJNS38dntVfyxrAVGftlCnn+OgGntO2A=;
-        b=DXnowBPbfjKKyRl1Hcv2Yg2gMaIm9Ue7pWBLElPeE7S6ZHdUwA8T7rI4mmxYHFsMFa
-         NRd2EtsriXOzuSJQcqEzQi848vninQULk/7NkT6Vht1NEjRnw+ethS+Qhua0HWLzkRgh
-         YJMxc9IzHtGbdhy55u+eK5ybwu6DD7YffXpxvh2q+XCfEXnxqmv/1kt/2iTQTZV1Pn0z
-         bMyP6kDZO96J4s+mfonhuBAnRxUVBt/Wvb0RKnkuakWhTUJeYIB7axfWn4ed2q9AE0wT
-         QR9zeLtazFHn0UYxw5TgBUUU9qkvwUKxEW0rOVaxCaniSc+nFlfPdvfNEisr4JJeEnuP
-         w7jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745933891; x=1746538691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y26J0iAJoKCmJNS38dntVfyxrAVGftlCnn+OgGntO2A=;
-        b=gEDjCtl8DN4Xi39sBQXK3ahX09gBofe+CptD734tPYl4kZHYu6uXyyMKqaKb6KK88K
-         NvtU3Ib+5MlqoxTymmYUZub/RyOQlKs7p7q/Q0BvE/AgdyXL5bvSV5ZfzLSD2WQ6EQiD
-         hMMZHX5b3OGMYkzFD9SAtv9WoNDYsOMQbUZVD8KBJEs3InloxruVw77veSSiOWtSmexe
-         F4XRv2uzq6MDJ78YHWQeMvsuuI5ytbjGPUR+0I9RXeg40tm722ZwuP7BZv+xyXzMb3Yx
-         2XZcTFesgQspOQRSiw0/c3gepy9JxVJ2VU0HQMMd9bu4uO/pXmJAgSdv2gFekEQLBL1B
-         aPBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYle87ZITusNgfDPnrBZLvcoUixHV8KQfCh6JKoB44NszVuksYwHVdFnV516OV1l92jnurExxTqnBGnhwK@vger.kernel.org, AJvYcCWfrVe2Nx48tvCEzDFG/WNnmvGJ3JzQWo/08RyYzqCkX5BEm/pis1U1MyadTSrpSX1rPrVAGstPYa2+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym4h6wNa2exz2IU0+NDqR592If7bh1yXk941TlBAwu0Atgl3q5
-	7y3JJ0XTtXqtFlh7WFhjilr131/0kVlUiVp5zG68kw8sForR4udL
-X-Gm-Gg: ASbGncu1WGxAHysMtGfqrKZEF4TBdNa9i13te+b1/Jx8aKW77RSvNNDPZLMX1amZXMN
-	T1JJP3tPoYEMIHj6oiXPyiZ3+7nkDUHKg0sn2sqFqce4oiFvWXBTAf2x7MMeCtgEq6ZfoD5lEYa
-	wJ1b/KcRU3C22BxxSFIh0Uxnp/yOPuhzu7kYq59ux7kB1PL/XwLr+YBILnkeRXZWmReKwSBr4Bd
-	C0zXYeFjWII1ljAGjjHDhmiVDMSD5wp72X5dKUVnIMo0KUtmnWrI7nBu8/M6oQHGv6+w1IKxc13
-	dvRsn0iX9gVzuPfklL61UzrOvATBU5BqIBoT7Co4Z3hM9fcEFvNG3lo=
-X-Google-Smtp-Source: AGHT+IECDUUSwqdQe+jFeZC4zccITFBfdZlwb9V2S+BXUJyiLooaUiYpAnL5q+y3JtdKb9LMa4l5/A==
-X-Received: by 2002:a17:907:97c9:b0:ace:63b0:6f70 with SMTP id a640c23a62f3a-ace84b71607mr1146290666b.61.1745933891105;
-        Tue, 29 Apr 2025 06:38:11 -0700 (PDT)
-Received: from localhost ([217.151.144.138])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ace6ed72826sm778242466b.154.2025.04.29.06.38.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:38:10 -0700 (PDT)
-Date: Tue, 29 Apr 2025 15:37:27 +0200
-From: Oliver Graute <oliver.graute@gmail.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux@ew.tq-group.com
-Subject: Re: [PATCH 6/6] arm64: dts: imx8qm: Add Ethernet aliases
-Message-ID: <aBDWF4-63M60EwX9@graute-macos>
-References: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
- <20250425-dts-imx-aliases-ethernet-v1-6-15b9d5cca611@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vN9qfmF8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4DD6C4CEEB;
+	Tue, 29 Apr 2025 13:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745934056;
+	bh=MSR2wRV13Chm7qMvjBrZUPPk8jV++N/soVmQ3bTqXts=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=vN9qfmF84NbKzn7Z/5xjUCpgCyaZL6Pkeb8qdBJbLPoPfHlFmQTy8J/HRZXFK5k+W
+	 SWpPE3Gsr9AxN5ihDRAM1I8YcqE8iaxAveDcO8+sdIcMWUVURBoVHhhn95Q3EDyKf6
+	 IH6hDcfkVln6QpaUpQuRYQCdSJLywiky35FaQn2b9mpGcwjmbHKWyNzU6O+u3grOoO
+	 GC/KIW9kITnDt9y2CMj+yKIx2rURdd+Md8i58qQ6sZTgR1Ltz9zTLJhsr8Y12hev0O
+	 k41fm9Crfyvz9GUNjC455Lw4tRuDQYY8u4VdsVdb//812Yrv1kD2qCJR/66dBApN8k
+	 xZ+MYsmGpKK5g==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Nathan Chancellor" <nathan@kernel.org>,  "Boqun
+ Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin"
+ <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  <rust-for-linux@vger.kernel.org>,  "Nick
+ Desaulniers" <ndesaulniers@google.com>,  "Bill Wendling"
+ <morbo@google.com>,  "Justin Stitt" <justinstitt@google.com>,
+  <llvm@lists.linux.dev>,  <linux-kernel@vger.kernel.org>,
+  <patches@lists.linux.dev>,  "Aaron Ballman" <aaron@aaronballman.com>,
+  "Bill Wendling" <isanbard@gmail.com>,  "Cole Nixon"
+ <nixontcole@gmail.com>,  "Connor Kuehl" <cipkuehl@gmail.com>,  "Fangrui
+ Song" <i@maskray.me>,  "James Foster" <jafosterja@gmail.com>,  "Jeff
+ Takahashi" <jeffrey.takahashi@gmail.com>,  "Jordan Cantrell"
+ <jordan.cantrell@mail.com>,  "Matthew Maurer" <mmaurer@google.com>,  "Nikk
+ Forbus" <nicholas.forbus@gmail.com>,  "Qing Zhao" <qing.zhao@oracle.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Tim Pugh"
+ <nwtpugh@gmail.com>,  "Kees Cook" <kees@kernel.org>,  "Nicolas Schier"
+ <n.schier@avm.de>
+Subject: Re: [RFC PATCH] rust: allow Clang-native `RANDSTRUCT` configs
+In-Reply-To: <CANiq72mNJrMMbEcfJMLT4kM-_iviM0AR6oeigCyrb5eMWkn3KQ@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Tue, 29 Apr 2025 15:19:13 +0200")
+References: <20241119185747.862544-1-ojeda@kernel.org>
+	<CANiq72n4Fw96hcuqQeorsfH7z4Tb+R1gdf80H_XkD-oA6z5TSA@mail.gmail.com>
+	<PVK5DQh3QRZOFQ4cMasO5h75CnLppaPo_aKbvSjzd0gv-bUIagkLyv1FZG5KvJqSUWnl8qwSmmQdl6BVPEcNKQ==@protonmail.internalid>
+	<CANiq72mNJrMMbEcfJMLT4kM-_iviM0AR6oeigCyrb5eMWkn3KQ@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Tue, 29 Apr 2025 15:40:43 +0200
+Message-ID: <87jz732ihw.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425-dts-imx-aliases-ethernet-v1-6-15b9d5cca611@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 25/04/25, Krzysztof Kozlowski wrote:
-> Add Ethernet aliases for predictable names and for firmware or
-> bootloader to fill up MAC address.
-> 
-> Suggested-by: Francesco Dolcini <francesco@dolcini.it>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Oliver Graute <oliver.graute@kococonnector.com>
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+
+> On Thu, Jan 9, 2025 at 3:51=E2=80=AFPM Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+>>
+>> I may pick this very early next cycle so that we can get some testing
+>> during the -rc's, and just drop it if something breaks for anyone.
+>>
+>> But any other testing beforehand would be still very welcome...
+>
+> I ended up waiting on this one since I think Andreas would be able to
+> try it with some actual workload (the nice benchmarks he has). Anyway,
+> it will go in sooner or later.
+
+It is on my list, sorry for not getting to that yet.
+
+
+Best regards,
+Andreas Hindborg
+
+
