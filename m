@@ -1,113 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46803210F59
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A3920D4E2
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745904283; cv=none; b=uvFNcIaK3swzCLXJ7Ewe39VnlYti2kfsoDrRJoakcIU11RfVoi6hCTCaJtIvOZnK5Amxr1p428sKYEeyCF5PORYH22oP949z2KB9TdeJoJpsuBEz1Rw/AIQaTgmwqDtsqhcC9J37RyAX9KDL1la8UoYmXRnzHgfUCKHIG1O+aDA=
+	t=1745904289; cv=none; b=ULt02JJmawsrzqH5CE5wUBsWaw71ELV3IWJM1MGWGZNW1ER+L1TdidwR2Kebr4Moi1Fcn78ovQFGdGABNHWe+4yeaYsCITUAqIgbX40+JUT6xhmrs3F5uEFYhn4jnQsQenzVjAy0HWxE37JzdiCTfVG/GnZhqNgg5+PT+9zPxUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745904283; c=relaxed/simple;
-	bh=FPC3c1UtZeXKvhNu9xElMb/9OS9+eIdnWELS1tZE6Ww=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bEasQCUs9VKKaW/FyPcWHkRkL82jjTgzKqHQpSRcq8rDl//Auh0l/JWyCA4o50+sqVuWeep+tAGV35YW/RFwlHaX0fFN24rHxox5kk1wI7VckI5jdHNpP/jU1lO+vev0yi0gsW9d6uanP9zBsf/vhmjHK2UmZZOuEnENN8TMGrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8AEE1515;
-	Mon, 28 Apr 2025 22:24:34 -0700 (PDT)
-Received: from K4MQJ0H1H2.arm.com (unknown [10.163.78.253])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C8C03F5A1;
-	Mon, 28 Apr 2025 22:24:32 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com,
-	david@redhat.com,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com,
-	vbabka@suse.cz,
-	jannh@google.com,
-	anshuman.khandual@arm.com,
-	peterx@redhat.com,
-	joey.gouly@arm.com,
-	ioworker0@gmail.com,
-	baohua@kernel.org,
-	kevin.brodsky@arm.com,
-	quic_zhenhuah@quicinc.com,
-	christophe.leroy@csgroup.eu,
-	yangyicong@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	namit@vmware.com,
-	hughd@google.com,
-	yang@os.amperecomputing.com,
-	ziy@nvidia.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 5/7] arm64: Add batched version of ptep_modify_prot_commit
-Date: Tue, 29 Apr 2025 10:53:34 +0530
-Message-Id: <20250429052336.18912-6-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250429052336.18912-1-dev.jain@arm.com>
-References: <20250429052336.18912-1-dev.jain@arm.com>
+	s=arc-20240116; t=1745904289; c=relaxed/simple;
+	bh=/KC233azgY3A1MOqq8JrlK5M7xo9FxTg7CclfxXZFos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKaFQRbDf5boIni2L/s1hsi4NTqE04P50wzgAh6UB/azSZ2NA39LHcfn6Bx4awDRkxd0ym8gpCq2cq7ywwwUmsQ2aAL20k6I7HgJ0byHrCBKbP7ef4Zotgl/eT6hVaAhK6yp38hI872OyyM5XYk/xs12glnua7kZwOL1/rvPSFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E7+Xl6FC; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7+Xl6FC"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7376e311086so7541785b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745904287; x=1746509087; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEG2jELXd9nNPULNYZssLdKsrgNlc7ll4A8WlMh6fPs=;
+        b=E7+Xl6FCajASVSoHt0UJQwDwTAAd26NjQYqa4lw6+yg+N/lS6VEPOlbEYjbLL0CwYT
+         vw9IGKxxClC9tWXo8gjw+Xw1p2oETN/rYMQvkyP5sY7hJcz7NEtcTBG+YFRKSfVWqLpE
+         vcldfbrbTQrQjDdiGkLs55LJV7WfQeBNPhu5NdCS39Q09vCNmyl7YCKBWUBobWSixKCN
+         8lHOogX3XMGKv6qqNDwcZ59NCJz4BRraKrlxgdex087UWOT/EWsHKImigDDZE9UESdIR
+         J1qUtTuEII4f7qEv5hAsNiXZcvDBVtkh743GMINQAJGuQRjiMaPLy4aCgkotTvfzHEZ4
+         3TgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745904287; x=1746509087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AEG2jELXd9nNPULNYZssLdKsrgNlc7ll4A8WlMh6fPs=;
+        b=bxjgt8nj1Mz2fyiVd6X53/nSI/qi6AADXaCJ7unJgymY8MVDfY48dcurxjkXkhjbBR
+         3Olq87uMUkv75XiLpUwhMv+lsw97u3BK7CqKpI50cUC0HzUgeGZtxT5vCWObqA0jJVBp
+         zLEr73qCOEoafZJXSK6/4nH0Qu5I1pRpxXx/IkQfwxIyM/Wk8DA3veaNOfV+YhiQJAm6
+         AKJGglNFjnwW4Nf3YyuNltuh0leuB1Sz7uoxNzzzs5jbC3YfrYEOyXKbsxDmma5PQ+ek
+         uzs+W0jnTChVLj7v6qtaCunoFt/AZvielq6cYbHwwPtFYGPhwoSKSXGvodDzjINF4VY8
+         f+OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPAX1DTbj5OVYHvLj35OGNvm/80qSz6cM5tooU9rOPaApq2kIRbSWXSM5Tk3VZOiOVHUVcVPD32HVuwnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhMjUSZlk7pTy7OAfMS0qipA4ghNNXmbvZmXrlJaZDFPlJbFpN
+	ArmhqOfJzGucoKBzyvvWBege+z2rtS5LX7WtmsVn96C3G83Oo7KSapUi+mDUe3VyCiJ+TduD09E
+	E
+X-Gm-Gg: ASbGncvz0ttqF7zZUgAJ/IHk5dGKAofRtexbckMCejjWEpmWeF0I+cQ0WSeGfu7VJXb
+	AWC+J+OkY1J47G93e/72+Uy//e2O8lEdGuRPSI5bgitbbxW1k6onC3iDubMWTcnXMA1elCu2tgG
+	YWwue7qJG/qQnVucJedaKn78pE33i5SWPAUIkg5f5FcEFU/X+XWF6WcUn3XFFBeNOqPKrcgiFxj
+	5YK6qHmFr3Z4INyi41Uz21kS8+4JPoJjFW2g13fL1vkVZrjjQmdcxGHYCgjeQxU2LFivp9iGiTF
+	zLWpk+GcZhIcyUwWAaHA8AIft9AVVgtOEa8tDrGFTg==
+X-Google-Smtp-Source: AGHT+IGacVDQkA79I4oerLjfSwtP2EnSgzoWaq7vlyI+ukjcLDfb1uzKM/LBC1AotrtWGv/r4XmSrA==
+X-Received: by 2002:a05:6a00:2410:b0:736:5e6f:295b with SMTP id d2e1a72fcca58-7402715dfc9mr3302755b3a.12.1745904287390;
+        Mon, 28 Apr 2025 22:24:47 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6b1e7sm9311484b3a.108.2025.04.28.22.24.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 22:24:46 -0700 (PDT)
+Date: Tue, 29 Apr 2025 10:54:44 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Seyediman Seyedarab <imandevel@gmail.com>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2] cpufreq: fix locking order in store_local_boost to
+ prevent deadlock
+Message-ID: <20250429052444.zfmfzjirkcaq3edh@vireshk-i7>
+References: <20250428171931.1850-1-ImanDevel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428171931.1850-1-ImanDevel@gmail.com>
 
-Override the generic definition to simply use set_ptes() to map the new
-ptes into the pagetable.
+On 28-04-25, 13:19, Seyediman Seyedarab wrote:
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index acf19b004..5464c8487 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -653,10 +653,7 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+>  
+>  	policy->boost_enabled = enable;
+>  
+> -	cpus_read_lock();
+>  	ret = cpufreq_driver->set_boost(policy, enable);
+> -	cpus_read_unlock();
+> -
+>  	if (ret) {
+>  		policy->boost_enabled = !policy->boost_enabled;
+>  		return ret;
+> @@ -1045,11 +1042,17 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
+>  	if (!fattr->store)
+>  		return -EIO;
+>  
+> +	if (fattr == &local_boost)
+> +		cpus_read_lock();
+> +
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- arch/arm64/include/asm/pgtable.h | 5 +++++
- arch/arm64/mm/mmu.c              | 9 ++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+Please add a comment as well to explain why this is required here.
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 8872ea5f0642..0b13ca38f80c 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1558,6 +1558,11 @@ extern pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
- 				    unsigned long addr, pte_t *ptep,
- 				    unsigned int nr);
- 
-+#define modify_prot_commit_ptes modify_prot_commit_ptes
-+extern void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
-+				    pte_t *ptep, pte_t old_pte, pte_t pte,
-+				    unsigned int nr);
-+
- #ifdef CONFIG_ARM64_CONTPTE
- 
- /*
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index fe60be8774f4..5f04bcdcd946 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1543,10 +1543,17 @@ pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte
- 	return modify_prot_start_ptes(vma, addr, ptep, 1);
- }
- 
-+void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
-+			     pte_t *ptep, pte_t old_pte, pte_t pte,
-+			     unsigned int nr)
-+{
-+	set_ptes(vma->vm_mm, addr, ptep, pte, nr);
-+}
-+
- void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
- 			     pte_t old_pte, pte_t pte)
- {
--	set_pte_at(vma->vm_mm, addr, ptep, pte);
-+	modify_prot_commit_ptes(vma, addr, ptep, old_pte, pte, 1);
- }
- 
- /*
+>  	down_write(&policy->rwsem);
+
+And please rebase over PM tree's linux-next branch, your patch won't
+apply anymore due to recent changes.
+
+>  	if (likely(!policy_is_inactive(policy)))
+>  		ret = fattr->store(policy, buf, count);
+>  	up_write(&policy->rwsem);
+>  
+> +	if (fattr == &local_boost)
+> +		cpus_read_unlock();
+> +
+>  	return ret;
+>  }
+
 -- 
-2.30.2
-
+viresh
