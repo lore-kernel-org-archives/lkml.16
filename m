@@ -1,99 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF5E250C0C;
-	Tue, 29 Apr 2025 18:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C56D155A4E;
+	Tue, 29 Apr 2025 18:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745950550; cv=none; b=Tw0X+YE3u9aPbbvEhIeTjevwnAhw0ynUl94rzTY/9C0ze9POGLPUpPRlWiNJ2fe0FEZZJhZQsWwWfTOQnfEkekSD6+DEArBYNmH/jojqFVH0ygSWKL+B5DptuDrOTcMvfV6Yly/0r3004R3uc4VSIeFf4+ghaID6vxm4Y9xmPo0=
+	t=1745950596; cv=none; b=iDQPBpi6fi2DiNohUFiq5SgrugsefhChQSTPUUqqqh5O/ZVx1BOQW1TM6GnCH7+BvmyWFzc3OGtp5hCRGTCqvepALBtO5SrEOeGaX0aMgXS/UBGDToIqIXPmuYNEn4AL4ZwIaXnIhbMJTjtPWhpQrWxE4EEtoY3jxBX+yFV5DsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745950550; c=relaxed/simple;
-	bh=cZo3zRIK2OoxRCc8DP2NAvhQPeEvQnvMCaZrZIodnTo=;
+	s=arc-20240116; t=1745950596; c=relaxed/simple;
+	bh=X0uzYo7MqdZcxbZI0RKlEiQj1M9penRmqIMBo+SPXLI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ob21D6rRPZHji2m/xtpc5lUnhBpNxzqB3QFp+/KW12t52rkamOMMZHIpCtChV4ePpuVYG1op+lWy0nL1ZeFjifUz6VdeMwbXAALf7Fff5BO/KgHXhB+teRFPNZ6vOOJiyDTR5RG5GcJ7bJY4LEzJG9x5WQ52ZhRlRzfuHGHif2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5iyh3hI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQpkRsABIQj2ByBvAG4ncTCZMpbrvsAsXhSZ8NcPpvS4964Pfo44WEs+S+Y+mxU/thsb9RispMvTXcm2ow5iTFBC+Tf84oLz1+OqWlZk2Eq7TS/EKc2BjF8DryTiA4IRMgJ/UiZQtgDRnrWIWl+7EmblaG9mrUoRnFJsYXQnqX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gjk0uBpd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5iyh3hI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EACEC4CEE3;
-	Tue, 29 Apr 2025 18:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745950550;
-	bh=cZo3zRIK2OoxRCc8DP2NAvhQPeEvQnvMCaZrZIodnTo=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gjk0uBpd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B8BC4CEE3;
+	Tue, 29 Apr 2025 18:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745950596;
+	bh=X0uzYo7MqdZcxbZI0RKlEiQj1M9penRmqIMBo+SPXLI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e5iyh3hITc4zQ1/5fIp/NyuDkipQOYyj4RpR1aNk9PmTnUQAc696UkfAlGXKSelfA
-	 5eXhQ3Ex/DASvs2/e6SJO29tg8yRmyYUI1pRFlk2PW4Egu5EtMi0lOZ2Pk13Np55WF
-	 xsWPaMHat3poB082saSEaWN5BDrXvYYMFPVP6q8zBATEJ1HZY0l5RUHcCv3r1tpEiY
-	 cJvWlwi396q+Cur0tDH8tgKPnDOFYuD7N7VMrryeiasoWLJNpAhHcxeFCXkqYg02bf
-	 t3IM33pPU/6vujWZ0T6bKt+I/oUbG8N9UYXzpZhC35d1aJhC4sWqtyUasXxBtCSi88
-	 g8inSOWMtq+5Q==
-Date: Tue, 29 Apr 2025 20:15:44 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH] rust: device: allow `dead_code` for `Device<>::parent()`
-Message-ID: <aBEXUG7QH0ymRuLm@pollux>
-References: <20250429150346.392050-1-ojeda@kernel.org>
+	b=gjk0uBpd+L5Q98AN6nUI2N0SyZNHKHXkunnqhpGzfKzPoOMrsemnLtdbzXky3Uub5
+	 rjumDY4C5kVW2SS21+lrWOZs9BdmP/cNAePfLSH95RuSjLbPuwlRQKqkliTSQBY2Bq
+	 srgLcEJGZ35fIP23YECJAaRyegwOUPkhiGdgqfzo=
+Date: Tue, 29 Apr 2025 20:14:54 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: hoff.benjamin.k@gmail.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: gadget: hid: allow dynamic interval
+ configuration via configfs
+Message-ID: <2025042929-activate-easter-77ae@gregkh>
+References: <20250429180128.806780-1-hoff.benjamin.k@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250429150346.392050-1-ojeda@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250429180128.806780-1-hoff.benjamin.k@gmail.com>
 
-On Tue, Apr 29, 2025 at 05:03:46PM +0200, Miguel Ojeda wrote:
-> When `CONFIG_AUXILIARY_BUS` is disabled, `parent()` is still dead code:
+On Tue, Apr 29, 2025 at 02:01:28PM -0400, hoff.benjamin.k@gmail.com wrote:
+> From: Ben Hoff <hoff.benjamin.k@gmail.com>
 > 
->     error: method `parent` is never used
->       --> rust/kernel/device.rs:71:19
->        |
->     64 | impl<Ctx: DeviceContext> Device<Ctx> {
->        | ------------------------------------ method in this implementation
->     ...
->     71 |     pub(crate) fn parent(&self) -> Option<&Self> {
->        |                   ^^^^^^
->        |
->        = note: `-D dead-code` implied by `-D warnings`
->        = help: to override `-D warnings` add `#[allow(dead_code)]`
+> This patch enhances the HID gadget driver to support dynamic configuration
+> of the interrupt polling interval (bInterval) via configfs.  A new
+> ‘interval’ attribute is exposed under each HID function’s configfs
+> directory, and any write to it will adjust the poll rate for all endpoints
+> without requiring a rebuild.
 > 
-> Thus reintroduce the `expect`, but now as an `allow`, and do so as
-> `dead_code` since that is narrower.
+> When the attribute has never been written, legacy defaults are preserved:
+>   • Full-Speed (FS) endpoints (IN & OUT) poll every 10 ms
+>   • High-Speed (HS) endpoints (IN & OUT) poll every 4 micro-frames
+>     (~1 ms)
 > 
-> Fixes: ce735e73dd59 ("rust: auxiliary: add auxiliary device / driver abstractions")
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> To implement this cleanly:
+>   • Add two new fields to f_hid_opts and f_hidg:
+>       – unsigned char interval
+>       – bool           interval_user_set
+>   • Introduce dedicated f_hid_opts_interval_show/store functions.
+>     The store routine parses into an unsigned int, bounds‐checks against
+>     UCHAR_MAX, assigns to opts->interval, and sets
+>     opts->interval_user_set = true.
+>   • Remove the string-compare hack from the generic F_HID_OPT macro.
+>   • Initialize opts->interval = 4 and opts->interval_user_set = false in
+>     hidg_alloc_inst(), then copy both into the live f_hidg instance in
+>     hidg_alloc().
+>   • In hidg_bind(), set each endpoint’s bInterval based on whether the
+>   user has written the attribute:
+>       – If interval_user_set == false, use FS=10 / HS=4
+>       – If interval_user_set == true, use the user’s value for both FS
+>         & HS
+>   • Add <limits.h> to support UCHAR_MAX in the store helper.
+> 
+> Changes since v1:
+>   - Added dedicated interval_show/store helpers instead of macro hack.
+>   - Restored original default values (FS=10 ms, HS=4 µ-frame) for both
+>     IN and OUT when unset.
 
-Good catch, thanks!
+The "changes" stuff goes below the --- line as per the documentation, as
+that's not needed in the changelog.
 
-I wonder if for such or similar cases we want something like
+Send a v3?
 
-	macro_rules! cfg_expect {
-	    (not($cfg:meta) => $lint:ident, $item:item) => {
-		#[cfg(not($cfg))]
-		#[expect($lint)]
-		$item
+thanks,
 
-		#[cfg($cfg)]
-		$item
-	    };
-	}
-
-which could be used like this:
-
-    cfg_expect!(not(CONFIG_FEATURE) => dead_code,
-        pub(crate) fn foo(&self) {
-            // noop
-        }
-    );
-
-Maybe there is a much better solution I don't know about.
+greg k-h
