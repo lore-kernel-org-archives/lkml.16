@@ -1,141 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE54727816E;
-	Tue, 29 Apr 2025 07:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E891B0435;
+	Tue, 29 Apr 2025 07:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911908; cv=none; b=UJvjJI/Oe5PL0ez/KZJUEo24+GYMHBYoMRmxlnPrFdJd3xQvHF1fZtInnoS5trpapz5qCaNNDq/Jk5PRmhNOXy+XKP8U/Wo/o1Tz6APuy1d2XQX+QCztdmijcqe7Q2W5Qo5/ICMm/8uWrfn7jrgUjlX3Way8tkXZVXvJnkNSBuU=
+	t=1745912001; cv=none; b=c4YypWtK9yYztXNuEVxGLpKPzSchZSs8GX9IDYZK6+0D5FczLXMjxDih9CTh8yjpJ5TtcBk8+u//pL9oBmXmPi1LVFizdeQGyCzOaYKHSwcC7M0KGeZBc5XEFbwArmUxmlEklRYiNRutwsO7RY1Aw5BvnmjLbfJNiSphCI/S58Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911908; c=relaxed/simple;
-	bh=+Ra7eiVnRMvz3bu+XMGnkDoV2DxZqls35juBwjq/aqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=THuXlN4o//gNvf8W7503fX5WuYhriQMJSmNKI7HBRY2byQMaiwMEWNWII3qXxqfiX88LCboORyOfH+dCK6S9gE24cD+5BoaYEKPAJoqI0z92lbBR/OMz2TRubFYw2DMmW9svviBtgxnY9C2qZYWWrdaNnBH6XM4AvCtvXv0H0lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRNfnjM/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745912001; c=relaxed/simple;
+	bh=I7wnBcbNJaYz/fiGTEMW6tHkeDO3AeMTxn9cnFfWXE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXUJ+mOnjvRq+wsz4lR/el5JjPvJ/SwZ3UAqya4hDk1ATaq9NGFExfy3lB8hr8/kyzR0OYLi1CG9ei1urn9H43Wehkd+Wr5Ol1IgRyiU8FJQsbxHvwbNAHs0cbKTKckzzEGb2R91FVbK81ikrKprUoHmxu6QLP0sdUAkPsp/Zf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk7oLHDz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRNfnjM/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB11C4CEED;
-	Tue, 29 Apr 2025 07:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk7oLHDz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6869BC4CEE3;
+	Tue, 29 Apr 2025 07:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745911907;
-	bh=+Ra7eiVnRMvz3bu+XMGnkDoV2DxZqls35juBwjq/aqM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rRNfnjM/15pgy34+JQ9Iy5PoTHpdSnt1B8gg00nnFI2G6Pt0QmlbQkA6sSEGqZnpS
-	 L/unUBvrGxe2ei5UGlPGM+o73p4QqpNX5FVyn4vXFoDQdsZ4tGwA/7HNqb12FA3xy0
-	 4fbKxx5SoShdjBvZLpyOMnnBKM/LbUqhs9XM3GFPlZudq/FeUYPYP/WdOkPrwjAy5o
-	 HCO6YEgFQkFTOOLdKNxm1bu5hdS708ZPGj1uWuP67T7ZWB6LjT87f/spEpuKTVrHTn
-	 D/kj0rJRE6Y9LKxp0cdczQPFS1bLG4ELao+23UFfo9RudyXpBb/H/wANZwWMReATS/
-	 +PVWFxi5pLPrw==
-Message-ID: <8e131fce-12b6-4a5f-8601-c15a0e4290fe@kernel.org>
-Date: Tue, 29 Apr 2025 09:31:42 +0200
+	s=k20201202; t=1745912000;
+	bh=I7wnBcbNJaYz/fiGTEMW6tHkeDO3AeMTxn9cnFfWXE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wk7oLHDzGibPk5SXUyNUk/drmI1JeUjAiBWeKMLJTh+qWX7GsUTB5qjSD+SqB1r1e
+	 KIeGQCUdxMK5puxcy3W8pBq/8Qr/fDbK8XBxcJk4X8brQIw6lu9QLmOCUurPWLK9ef
+	 MBwQu4akkqQpeKfxCSyKpUec5VdaXPSdOL4Ss2x+FyJK6ozxKoeH6LnWQDtipSwwqQ
+	 9yPniLnJicKpeUSZ9TiCs68xScBSHcfKlw+3wpic1iOAbgGGb0VYFYfCrdQ7jMaSsf
+	 dMvb/xKt6D/+5alfY0NEoJ9+mVjnHXv2ZFL60xUi03vv8VRMDSb2g4GOZh2nyj2D1K
+	 lNJW3tsadploQ==
+Date: Tue, 29 Apr 2025 10:33:12 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, linux-mm@kvack.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Michael Roth <michael.roth@amd.com>
+Subject: Re: SNP guest crash in memblock with unaccepted memory
+Message-ID: <aBCAuEJxBp9MPrOm@kernel.org>
+References: <f12f5bd0-135b-91fd-9703-7df98500f9c5@amd.com>
+ <b037ffeb-bfeb-41a6-b200-d8c57076370f@redhat.com>
+ <64c04e6c-43b1-996b-f83d-5fb1751debaa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Emil Renner Berthing <kernel@esmil.dk>,
- Jianlong Huang <jianlong.huang@starfivetech.com>,
- Hal Feng <hal.feng@starfivetech.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250424062017.652969-1-uwu@icenowy.me>
- <20250424062017.652969-2-uwu@icenowy.me>
- <20250428-smiling-azure-sunfish-7c1c25@kuoka>
- <34c92033f4bbf289c6048a85f0f6ba04435e7bf8.camel@icenowy.me>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <34c92033f4bbf289c6048a85f0f6ba04435e7bf8.camel@icenowy.me>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <64c04e6c-43b1-996b-f83d-5fb1751debaa@amd.com>
 
-On 28/04/2025 10:40, Icenowy Zheng wrote:
-> åœ¨ 2025-04-28æ˜ŸæœŸä¸€çš„ 09:20 +0200ï¼ŒKrzysztof Kozlowskiå†™é“ï¼š
->> On Thu, Apr 24, 2025 at 02:20:15PM GMT, Icenowy Zheng wrote:
->>> The JH7110 SoC could support internal GPI signals to be routed to
->>> not
->>> external GPIO but internal low/high levels.
->>>
->>> Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
->>> virtual
->>> "pads" to represent internal GPI sources with fixed low/high
->>> levels.
->>>
->>> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
->>> ---
->>> Â include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 ++++
->>> Â 1 file changed, 4 insertions(+)
->>>
->>> diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
->>> b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
->>> index 3865f01396395..3cca874b2bef7 100644
->>> --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
->>> +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
->>> @@ -126,6 +126,10 @@
->>> Â #defineÂ Â Â Â Â Â Â Â PAD_GMAC0_TXENÂ Â Â Â Â Â Â Â Â Â 18
->>> Â #defineÂ Â Â Â Â Â Â Â PAD_GMAC0_TXCÂ Â Â Â Â Â Â Â Â Â Â 19
->>> Â 
->>> +/* virtual pins for forcing GPI */
->>> +#define PAD_INTERNAL_LOWÂ Â Â Â Â Â Â 254
->>> +#define PAD_INTERNAL_HIGHÂ Â Â Â Â Â 255
->>
->> Why this cannot be 20 and 21? These are not values for registers, but
->> abstract numbers.
+On Mon, Apr 28, 2025 at 01:10:31PM -0500, Tom Lendacky wrote:
+> On 4/28/25 09:04, David Hildenbrand wrote:
+> > On 27.04.25 17:01, Tom Lendacky wrote:
+> >> Hi Kirill,
+> >>
+> >> Every now and then I experience an SNP guest boot failure for accessing
+> >> memory that hasn't been accepted. I managed to get a back trace:
+> >>
+> >>    RIP: 0010:memcpy_orig+0x68/0x130
+> >>    Code: ...
+> >>    RSP: 0000:ffffffff9cc03ce8 EFLAGS: 00010006
+> >>    RAX: ff11001ff83e5000 RBX: 0000000000000000 RCX: fffffffffffff000
+> >>    RDX: 0000000000000bc0 RSI: ffffffff9dba8860 RDI: ff11001ff83e5c00
+> >>    RBP: 0000000000002000 R08: 0000000000000000 R09: 0000000000002000
+> >>    R10: 000000207fffe000 R11: 0000040000000000 R12: ffffffff9d06ef78
+> >>    R13: ff11001ff83e5000 R14: ffffffff9dba7c60 R15: 0000000000000c00
+> >>    memblock_double_array+0xff/0x310
+> >>    memblock_add_range+0x1fb/0x2f0
+> >>    memblock_reserve+0x4f/0xa0
+> >>    memblock_alloc_range_nid+0xac/0x130
+> >>    memblock_alloc_internal+0x53/0xc0
+> >>    memblock_alloc_try_nid+0x3d/0xa0
+> >>    swiotlb_init_remap+0x149/0x2f0
+> >>    mem_init+0xb/0xb0
+> >>    mm_core_init+0x8f/0x350
+> >>    start_kernel+0x17e/0x5d0
+> >>    x86_64_start_reservations+0x14/0x30
+> >>    x86_64_start_kernel+0x92/0xa0
+> >>    secondary_startup_64_no_verify+0x194/0x19b
+> >>
+> >> I don't know a lot about memblock, but it appears that it needs to
+> >> allocate more memory for it's regions array and returns a range of memory
+> >> that hasn't been accepted. When the memcpy() runs, the SNP guest gets a
+> >> #VC 0x404 because of this.
+> >>
+> >> Do you think it is as simple as calling accept_memory() on the memory
+> >> range returned from memblock_find_in_range() in memblock_double_array()?
+> > 
+> > (not Kirill, but replying :) )
+> > 
+> > Yeah, we seem to be effectively allocating memory from memblock ("from
+> > ourselves") without considering that memory must be accepted first.
+> > 
+> > accept_memory() on the new memory (in case of !slab) should be the right
+> > thing to do.
 > 
-> The number must not collide with SYS GPIO pads too.
+> Thanks, David. Let me add a call in for accept_memory in the !slab case
+> and see if that resolves it. May take a bit to repro, but should find
+> out eventually.
 
-There are no SYS GPIO pads here. Do you understand that this is not
-value for registers?
+I think sticking a loop of memblock_alloc() somewhere before mm_core_init()
+should trigger the issue.
+ 
+> I'll submit a patch once I verify.
+> 
+> Thanks,
+> Tom
+> 
+> > 
 
-Best regards,
-Krzysztof
+-- 
+Sincerely yours,
+Mike.
