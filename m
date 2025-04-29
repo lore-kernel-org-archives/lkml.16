@@ -1,49 +1,59 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D6B21771B;
-	Tue, 29 Apr 2025 15:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2DB23ED5A
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941800; cv=none; b=Hkvctj+KvOB9zKaxnjv7Ewl1lfztvePACCU1SGdjR2vUtREteDXfNDi7Z0jw6QotL7VMxy+RNNCBM03N+Gaz4i4vYifVIh1EY6OVyK3fgvVAnXpeUX/BO2LEwDJK6C2+4XJtPmEuNWHhAEh5symDRTnuMjDAzI3FJs0Ftkq9E/I=
+	t=1745941837; cv=none; b=BgbtcGMKHB9KX12O0oT3iqHTm+8QntzWt9Owltp7/mVLeJJDJpT1rc3kdfSBRXYloXvfc6Luioqjo9oebFwdcMNSSRlvo6deVeLtKOSfo+LhTXk4dskkY5VS24HKYmyiNBQDAYttvM8aVkPDV1nNEZzxXKOrUKcrZFL+19VMlBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941800; c=relaxed/simple;
-	bh=SWA30VtLEsbKUxXYuBVojhQkeXIFkAjMhnPUSK81HNk=;
+	s=arc-20240116; t=1745941837; c=relaxed/simple;
+	bh=3Sy9kbsRYuk4QScRSGShkv+SS95vYtgFwONeRuo8LTw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ThKqCPI6M5WQXUBMupaFZ36Eqs9audP549NWWTyN2OSxrVTCQPoclFvamaaWtXFHgRA+0IV/NO6lSy1SMG/i1A2n5q6DDHyWAscMLVSROa70FSiQS2jgsdQwbsDpxMweiF977kJidAEcLOaXqVnuEDn/q/sbbkme5Cb12qRhz7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Voz75BMs; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RnFuXcpCte2YzjDLF5f6jRcverBkfhfLlHPt4RhsBj4CxXOoGH56tIWbA3eMUcoPwXnF1vUNYT7oIz2VUozTLzJBn76i8fPK0obkQtLs3HvCnYAt2YRg2fTOmcIlQkGbjlR5S0Z+3Lx262H4WimboOaFIlStgZoNE/Mpama5eU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ie63ie1i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Voz75BMs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HzDcT6NzZ8VkLqeQVpl0smJGiuB7wxJtJRI/zTXIq3o=; b=Voz75BMsteZL0PPUQ+gTkryk1w
-	BTron6lHlau6SX4sgZF045B6msd1Entzv7YViyHTQi6mIWw+zC8g+xCk2qofpU5AHKKZ84egJ8PCf
-	yjRsR088SEdlP3X/a6G7CsLmv1ZSbDA2j64AAqTpcIAl6c85+T5cksz/NNQY1EdXTUi7eW4SqMSnS
-	tgr03i5IRKr5JGpPNVVOXm1PcN1BtHeDqKDZ+nXbv/U5VoK/JEgzfLZrqGu8cOIjU9RLfJiHCniid
-	JcyOmD53lTuzS8RZNDQrwbP4anvInd14bqybm4Ac7I0OZ4QzwaUM3bsoUAcJu+lhAVvUh1iiQgp9P
-	y0fgdVdg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u9nDP-0000000DSQz-2ynT;
-	Tue, 29 Apr 2025 15:49:47 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 26DD730057C; Tue, 29 Apr 2025 17:49:47 +0200 (CEST)
-Date: Tue, 29 Apr 2025 17:49:46 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jianzhou Zhao <luckd0g@163.com>
-Cc: stable@vger.kernel.org, alexander.shishkin@linux.intel.com,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: possible deadlock in perf_ctx_lock  in  linux6.12.25(longterm
- maintenance)
-Message-ID: <20250429154946.GA4439@noisy.programming.kicks-ass.net>
-References: <77c2ee24.b63e.19681e979ea.Coremail.luckd0g@163.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ie63ie1i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745941834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mzyuIC5lN8iw0yHtCMolMLvXO2aa9rMo4MO2VDH7oxk=;
+	b=ie63ie1ic6GpNnwTHGpmKLM0tJtx/FIc50YsiDorDa47BCDgUkSzUEzNFzJg5pg9lCorOj
+	g3b5U+s/uPZBv076klD7+wwaF7NNCI1xpzroNN8f1kzPmPPfqho+nnUQz6cHHDfyo1ousR
+	2FKMN9Jh1iZ8ogW4ax5mL/I1ME5zAVk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-517-PK0iwh_NP1SddwatWXB-yg-1; Tue,
+ 29 Apr 2025 11:50:30 -0400
+X-MC-Unique: PK0iwh_NP1SddwatWXB-yg-1
+X-Mimecast-MFC-AGG-ID: PK0iwh_NP1SddwatWXB-yg_1745941829
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2315D1800878;
+	Tue, 29 Apr 2025 15:50:29 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.224])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6B435195608D;
+	Tue, 29 Apr 2025 15:50:25 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 29 Apr 2025 17:49:49 +0200 (CEST)
+Date: Tue, 29 Apr 2025 17:49:44 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: brauner@kernel.org, kees@kernel.org, viro@zeniv.linux.org.uk
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	syzkaller-bugs@googlegroups.com, mjguzik@gmail.com,
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] exec: fix the racy usage of fs_struct->in_exec
+Message-ID: <20250429154944.GA18907@redhat.com>
+References: <67dc67f0.050a0220.25ae54.001f.GAE@google.com>
+ <20250324160003.GA8878@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,52 +62,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <77c2ee24.b63e.19681e979ea.Coremail.luckd0g@163.com>
+In-Reply-To: <20250324160003.GA8878@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Apr 29, 2025 at 10:18:04PM +0800, Jianzhou Zhao wrote:
-> Hello, I found a potential bug titled "   possible deadlock in perf_ctx_lock " with modified syzkaller in the Linux6.12.25(longterm maintenance, last updated on April 25, 2025)
+Damn, I am stupid.
 
-Nah, you hit a WARN and then printk being lousy made it explode worse.
+On 03/24, Oleg Nesterov wrote:
+>
+> check_unsafe_exec() sets fs->in_exec under cred_guard_mutex, then execve()
+> paths clear fs->in_exec lockless. This is fine if exec succeeds, but if it
+> fails we have the following race:
+>
+> 	T1 sets fs->in_exec = 1, fails, drops cred_guard_mutex
+>
+> 	T2 sets fs->in_exec = 1
+>
+> 	T1 clears fs->in_exec
 
-> WARNING: CPU: 0 PID: 15835 at kernel/trace/trace_event_perf.c:375 perf_trace_add+0x2da/0x390 kernel/trace/trace_event_perf.c:375
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 15835 Comm: syz.9.499 Not tainted 6.12.25 #3
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> RIP: 0010:perf_trace_add+0x2da/0x390 kernel/trace/trace_event_perf.c:375
-> Code: fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 64 48 89 ab f8 01 00 00 48 89 df e8 b1 ab 26 00 e9 f3 fd ff ff e8 37 87 f6 ff 90 <0f> 0b 90 41 bc ea ff ff ff e9 77 ff ff ff e8 23 c5 56 00 e9 8a fd
-> RSP: 0018:ffffc9000713f7f0 EFLAGS: 00010006
-> RAX: 0000000040000002 RBX: ffff88802a069880 RCX: ffffffff8195a68e
-> RDX: ffff888045ec2500 RSI: ffffffff8195a839 RDI: ffffffff8deabf48
-> RBP: 0000000000000000 R08: 0000000000000001 R09: fffff52000e27eef
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: ffffffff8deabee0 R14: ffff88802a069928 R15: ffff888051237200
-> FS:  00007fe4fec1c640(0000) GS:ffff88802b800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f50219e7bac CR3: 00000000743bc000 CR4: 0000000000752ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 80000000
-> Call Trace:
->  <TASK>
->  event_sched_in+0x434/0xac0 kernel/events/core.c:2629
->  group_sched_in kernel/events/core.c:2662 [inline]
->  merge_sched_in+0x895/0x1570 kernel/events/core.c:3940
->  visit_groups_merge.constprop.0.isra.0+0x6d2/0x1250 kernel/events/core.c:3885
->  pmu_groups_sched_in kernel/events/core.c:3967 [inline]
->  __pmu_ctx_sched_in kernel/events/core.c:3979 [inline]
->  ctx_sched_in+0x5c1/0xa30 kernel/events/core.c:4030
->  perf_event_sched_in+0x5d/0x90 kernel/events/core.c:2760
->  perf_event_context_sched_in kernel/events/core.c:4077 [inline]
->  __perf_event_task_sched_in+0x33a/0x6f0 kernel/events/core.c:4106
->  perf_event_task_sched_in include/linux/perf_event.h:1524 [inline]
->  finish_task_switch.isra.0+0x5f9/0xcb0 kernel/sched/core.c:5201
->  context_switch kernel/sched/core.c:5335 [inline]
->  __schedule+0x1156/0x5b20 kernel/sched/core.c:6710
->  preempt_schedule_irq+0x51/0x90 kernel/sched/core.c:7032
->  irqentry_exit+0x36/0x90 kernel/entry/common.c:354
->  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+When I look at this code again, I think this race was not possible and thus
+this patch (applied as af7bb0d2ca45) was not needed.
 
-Not quite sure which of the WARNs that is, as I don't keep the stable
-trees around and .12 is quite old by now.
+Yes, begin_new_exec() can drop cred_guard_mutex on failure, but only after
+de_thread() succeeds, when we can't race with another sub-thread.
 
-Anyway, if you can reproduce I'll take a look.
+I hope this patch didn't make the things worse so we don't need to revert it.
+Plus I think it makes this (confusing) logic a bit more clear. Just, unless
+I am confused again, it wasn't really needed.
+
+-----------------------------------------------------------------------------
+But. I didn't read the original report from syzbot,
+https://lore.kernel.org/all/67dc67f0.050a0220.25ae54.001f.GAE@google.com/#t
+because I wasn't CC'ed. and then - sorry Kees!!! - I didn't bother to read
+your first reply carefully.
+
+So yes, with or without this patch the "if (fs->in_exec)" check in copy_fs()
+can obviously hit the 1 -> 0 transition.
+
+This is harmless, but should be probably fixed just to avoid another report
+from KCSAN.
+
+I do not want to add another spin_lock(fs->lock). We can change copy_fs() to
+use data_race(), but I'd prefer the patch below. Yes, it needs the additional
+comment(s) to explain READ_ONCE().
+
+What do you think? Did I miss somthing again??? Quite possibly...
+
+Mateusz, I hope you will cleanup this horror sooner or later ;)
+
+Oleg.
+---
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 5d1c0d2dc403..42a7f9b43911 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1495,7 +1495,7 @@ static void free_bprm(struct linux_binprm *bprm)
+ 	free_arg_pages(bprm);
+ 	if (bprm->cred) {
+ 		/* in case exec fails before de_thread() succeeds */
+-		current->fs->in_exec = 0;
++		WRITE_ONCE(current->fs->in_exec, 0);
+ 		mutex_unlock(&current->signal->cred_guard_mutex);
+ 		abort_creds(bprm->cred);
+ 	}
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 4c2df3816728..381af8c8ece8 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1802,7 +1802,7 @@ static int copy_fs(unsigned long clone_flags, struct task_struct *tsk)
+ 		/* tsk->fs is already what we want */
+ 		spin_lock(&fs->lock);
+ 		/* "users" and "in_exec" locked for check_unsafe_exec() */
+-		if (fs->in_exec) {
++		if (READ_ONCE(fs->in_exec)) {
+ 			spin_unlock(&fs->lock);
+ 			return -EAGAIN;
+ 		}
+
