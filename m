@@ -1,163 +1,288 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6611F189B9D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C24274FF0
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745910291; cv=none; b=d9Rh+wehWG/QC29mnMRBlPpllYXTQuufIJs3yGyCcSaqbvcZomDC9WD+6vbMtHSJFiI1jRTCE55qS7dSv2EaqSm7Bqk8C1iKdvUhLDVxxcxyM8BGsoIiNwyA/MwouqvGTsQRTesTZ5ufjN8Dn0O+dzeKLfrBjtuqmCuK5qTFS3I=
+	t=1745910413; cv=none; b=AmUfKqfaHMCMGhQO5JbFrFgsg9KgIh7m7XXrMVDmzWvfRV4SH2qX4V3NqoRwmiaDH5zFCRokeKGaxDZAxUlwUkHC/LLTxDeAkRsug7oqakChxPUH4l9yrM+GDS/VRJVxZvUfIbmbS3XOEtLq584rNu6HWLj73U+k2SmL4eHeWww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745910291; c=relaxed/simple;
-	bh=JtxlWTYotSvpVGuvio3XfF65pDQc1HIbrVH0hrdHEgI=;
+	s=arc-20240116; t=1745910413; c=relaxed/simple;
+	bh=Bwl8OfcRsdcuUAeT2LbTi04Y6tWPstf6LJFl6PdTExc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k8R0SBe+pcAJbmQ0Q00fE0idpvhIV4RcpRzDjuR/FRVYN11iJaorLiSy4Z23x99MTUErYPoPsC/+/CkD+sIwuQ7gVigfsGkVzNfKGWY+msGDDUwLwg4Orao0Tjv9wWd1x1qgvZH0LraeBAjOP1skrT6SpkvYrbWYeNWZKOO06aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=N3+eLKPi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=e0PycWnI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CaoR+gbv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=OQZf30C+; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=dWlfjwp+m8b2OthLiriCRC7H3gc33ik51DjzERMYMbdTVSnkja/XN30p3w2hE7P5/KeOPY5Qx002GGx2BkaDbKZumD99FLp0BEYqSA6k7OVNFnNLsNa4LkE0qmNsqvEPWD7nMhmOYioPZutEET+8RVi62HVI7covR5DMp8ZYE1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fVDMhRWN; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="N3+eLKPi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="e0PycWnI";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CaoR+gbv";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OQZf30C+"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8BFC91F7C4;
-	Tue, 29 Apr 2025 07:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745910288; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fVDMhRWN"
+Message-ID: <ba73873b-1b26-44cd-ac0f-76e33e8fc2cf@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745910407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MqvsRhjnn+RZGEpmIR369oMtuYilqQjlvxG48FFcaPc=;
-	b=N3+eLKPiHk+6Z1e5/cZ1jhgoqKXxatQKwKNT8jA4UzXpe2DGq2pKdbNoL54ht2lEGYn6s4
-	Ojt4KsbNww3y16a+CFGTGZtp0AkyHBI8xQAvHGEwFacIXTuxOhRguokKYrObbNFUFDOfKr
-	OAANUh2eMJ2Dp6xtJnCXCHg6Labun+0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745910288;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqvsRhjnn+RZGEpmIR369oMtuYilqQjlvxG48FFcaPc=;
-	b=e0PycWnI+wqPkcJO95uWgA7G1ItlpnUjgTq8URK12OmFmdx8loJWhlLqvkMdu+SGLu1uft
-	anbK4xz93mN4cQBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=CaoR+gbv;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=OQZf30C+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745910287; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqvsRhjnn+RZGEpmIR369oMtuYilqQjlvxG48FFcaPc=;
-	b=CaoR+gbvIsfOyUE0JKLCpqlSd2oYalS+iwyL1yakadg+eXwtiZp3dixF0vNoIK/pQvM1CP
-	ZAmLSRP7drWuJq5WRAaTVpBkZqZ4dfqBrSCyeIoHnmIBVm6ZOyX5qCkdtIo1G1NgO9omEh
-	VsqqVNAMKcwOp61+wVDeb5Mzutwg78M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745910287;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqvsRhjnn+RZGEpmIR369oMtuYilqQjlvxG48FFcaPc=;
-	b=OQZf30C+m3KDGiZnMver31eip7JBc7O5UeqRfyhJGFgO07TBi9j3O/VlIMUcAi+4TvafQu
-	ZvO3Mb68Lm9EBsBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6AA671340C;
-	Tue, 29 Apr 2025 07:04:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1q05GQ96EGg6agAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 29 Apr 2025 07:04:47 +0000
-Message-ID: <d1fbd13b-b2a4-4725-9676-7c7081230fb2@suse.cz>
-Date: Tue, 29 Apr 2025 09:04:47 +0200
+	bh=M1HJrQJGWIT9AFf/jcCjNDbRZ0ry2drXdhiftJCR3bw=;
+	b=fVDMhRWNp7xitc5a/aioHm5KvwDVTcs6s0xsh7qTE0whrr/+wD0frft+l6OumMnKYiexUe
+	rTXh6TDb3pL9NMCXnx05kZQq0liV5JyWH8SSE2u22wjLZbbODECgHiSQx3AjUYs0hE48jo
+	aizdjveLyaM61eZSFJEEeDl0jtKZkgk=
+Date: Tue, 29 Apr 2025 15:06:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] mm: abstract initial stack setup to mm subsystem
+Subject: Re: [PATCH v2 0/7] Optimize mprotect for large folios
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250429052336.18912-1-dev.jain@arm.com>
 Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
- <118c950ef7a8dd19ab20a23a68c3603751acd30e.1745853549.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <118c950ef7a8dd19ab20a23a68c3603751acd30e.1745853549.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 8BFC91F7C4
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20250429052336.18912-1-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 4/28/25 17:28, Lorenzo Stoakes wrote:
-> There are peculiarities within the kernel where what is very clearly mm
-> code is performed elsewhere arbitrarily.
-> 
-> This violates separation of concerns and makes it harder to refactor code
-> to make changes to how fundamental initialisation and operation of mm logic
-> is performed.
-> 
-> One such case is the creation of the VMA containing the initial stack upon
-> execve()'ing a new process. This is currently performed in __bprm_mm_init()
-> in fs/exec.c.
-> 
-> Abstract this operation to create_init_stack_vma(). This allows us to limit
-> use of vma allocation and free code to fork and mm only.
-> 
-> We previously did the same for the step at which we relocate the initial
-> stack VMA downwards via relocate_vma_down(), now we move the initial VMA
-> establishment too.
-> 
-> Take the opportunity to also move insert_vm_struct() to mm/vma.c as it's no
-> longer needed anywhere outside of mm.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+Hey Dev,
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Hmm... I also hit the same compilation errors:
+
+In file included from ./include/linux/kasan.h:37,
+                  from ./include/linux/slab.h:260,
+                  from ./include/linux/crypto.h:19,
+                  from arch/x86/kernel/asm-offsets.c:9:
+./include/linux/pgtable.h: In function ‘modify_prot_start_ptes’:
+./include/linux/pgtable.h:905:15: error: implicit declaration of 
+function ‘ptep_modify_prot_start’ [-Werror=implicit-function-declaration]
+   905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
+       |               ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pgtable.h:905:15: error: incompatible types when 
+assigning to type ‘pte_t’ from type ‘int’
+./include/linux/pgtable.h:909:27: error: incompatible types when 
+assigning to type ‘pte_t’ from type ‘int’
+   909 |                 tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+       |                           ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pgtable.h: In function ‘modify_prot_commit_ptes’:
+./include/linux/pgtable.h:925:17: error: implicit declaration of 
+function ‘ptep_modify_prot_commit’ [-Werror=implicit-function-declaration]
+   925 |                 ptep_modify_prot_commit(vma, addr, ptep, 
+old_pte, pte);
+       |                 ^~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pgtable.h: At top level:
+./include/linux/pgtable.h:1360:21: error: conflicting types for 
+‘ptep_modify_prot_start’; have ‘pte_t(struct vm_area_struct *, long 
+unsigned int,  pte_t *)’
+  1360 | static inline pte_t ptep_modify_prot_start(struct 
+vm_area_struct *vma,
+       |                     ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pgtable.h:905:15: note: previous implicit declaration of 
+‘ptep_modify_prot_start’ with type ‘int()’
+   905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
+       |               ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pgtable.h:1371:20: warning: conflicting types for 
+‘ptep_modify_prot_commit’; have ‘void(struct vm_area_struct *, long 
+unsigned int,  pte_t *, pte_t,  pte_t)’
+  1371 | static inline void ptep_modify_prot_commit(struct 
+vm_area_struct *vma,
+       |                    ^~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/pgtable.h:1371:20: error: static declaration of 
+‘ptep_modify_prot_commit’ follows non-static declaration
+./include/linux/pgtable.h:925:17: note: previous implicit declaration of 
+‘ptep_modify_prot_commit’ with type ‘void(struct vm_area_struct *, long 
+unsigned int,  pte_t *, pte_t,  pte_t)’
+   925 |                 ptep_modify_prot_commit(vma, addr, ptep, 
+old_pte, pte);
+       |                 ^~~~~~~~~~~~~~~~~~~~~~~
+   CC 
+/home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/libstring.o
+   CC 
+/home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/libctype.o
+   CC 
+/home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/str_error_r.o
+   CC 
+/home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/librbtree.o
+cc1: some warnings being treated as errors
+make[2]: *** [scripts/Makefile.build:98: arch/x86/kernel/asm-offsets.s] 
+Error 1
+make[1]: *** 
+[/home/runner/work/mm-test-robot/mm-test-robot/linux/Makefile:1280: 
+prepare0] Error 2
+make[1]: *** Waiting for unfinished jobs....
+   LD 
+/home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/objtool-in.o
+   LINK 
+/home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/objtool
+make: *** [Makefile:248: __sub-make] Error 2
+
+Well, modify_prot_start_ptes() calls ptep_modify_prot_start(), but x86
+does not define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION. To avoid
+implicit declaration errors, the architecture-independent
+ptep_modify_prot_start() must be defined before modify_prot_start_ptes().
+
+With the changes below, things work correctly now ;)
+
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index 10cdb87ccecf..d9d6c49bb914 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -895,44 +895,6 @@ static inline void wrprotect_ptes(struct mm_struct 
+*mm, unsigned long addr,
+  }
+  #endif
+
+-/* See the comment for ptep_modify_prot_start */
+-#ifndef modify_prot_start_ptes
+-static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+-		unsigned long addr, pte_t *ptep, unsigned int nr)
+-{
+-	pte_t pte, tmp_pte;
+-
+-	pte = ptep_modify_prot_start(vma, addr, ptep);
+-	while (--nr) {
+-		ptep++;
+-		addr += PAGE_SIZE;
+-		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+-		if (pte_dirty(tmp_pte))
+-			pte = pte_mkdirty(pte);
+-		if (pte_young(tmp_pte))
+-			pte = pte_mkyoung(pte);
+-	}
+-	return pte;
+-}
+-#endif
+-
+-/* See the comment for ptep_modify_prot_commit */
+-#ifndef modify_prot_commit_ptes
+-static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, 
+unsigned long addr,
+-		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+-{
+-	for (;;) {
+-		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+-		if (--nr == 0)
+-			break;
+-		ptep++;
+-		addr += PAGE_SIZE;
+-		old_pte = pte_next_pfn(old_pte);
+-		pte = pte_next_pfn(pte);
+-	}
+-}
+-#endif
+-
+  /*
+   * On some architectures hardware does not set page access bit when 
+accessing
+   * memory page, it is responsibility of software setting this bit. It 
+brings
+@@ -1375,6 +1337,45 @@ static inline void ptep_modify_prot_commit(struct 
+vm_area_struct *vma,
+  	__ptep_modify_prot_commit(vma, addr, ptep, pte);
+  }
+  #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
++
++/* See the comment for ptep_modify_prot_start */
++#ifndef modify_prot_start_ptes
++static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
++		unsigned long addr, pte_t *ptep, unsigned int nr)
++{
++	pte_t pte, tmp_pte;
++
++	pte = ptep_modify_prot_start(vma, addr, ptep);
++	while (--nr) {
++		ptep++;
++		addr += PAGE_SIZE;
++		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
++		if (pte_dirty(tmp_pte))
++			pte = pte_mkdirty(pte);
++		if (pte_young(tmp_pte))
++			pte = pte_mkyoung(pte);
++	}
++	return pte;
++}
++#endif
++
++/* See the comment for ptep_modify_prot_commit */
++#ifndef modify_prot_commit_ptes
++static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, 
+unsigned long addr,
++		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
++{
++	for (;;) {
++		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
++		if (--nr == 0)
++			break;
++		ptep++;
++		addr += PAGE_SIZE;
++		old_pte = pte_next_pfn(old_pte);
++		pte = pte_next_pfn(pte);
++	}
++}
++#endif
++
+  #endif /* CONFIG_MMU */
+
+  /*
+--
+
+Thanks,
+Lance
+
+On 2025/4/29 13:23, Dev Jain wrote:
+> This patchset optimizes the mprotect() system call for large folios
+> by PTE-batching.
+> 
+> We use the following test cases to measure performance, mprotect()'ing
+> the mapped memory to read-only then read-write 40 times:
+> 
+> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
+> pte-mapping those THPs
+> Test case 2: Mapping 1G of memory with 64K mTHPs
+> Test case 3: Mapping 1G of memory with 4K pages
+> 
+> Average execution time on arm64, Apple M3:
+> Before the patchset:
+> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
+> 
+> After the patchset:
+> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.2 seconds
+> 
+> Observing T1/T2 and T3 before the patchset, we also remove the regression
+> introduced by ptep_get() on a contpte block. And, for large folios we get
+> an almost 74% performance improvement.
+> 
+> v1->v2:
+>   - Rebase onto mm-unstable (6ebffe676fcf: util_macros.h: make the header more resilient)
+>   - Abridge the anon-exclusive condition (Lance Yang)
+> 
+> Dev Jain (7):
+>    mm: Refactor code in mprotect
+>    mm: Optimize mprotect() by batch-skipping PTEs
+>    mm: Add batched versions of ptep_modify_prot_start/commit
+>    arm64: Add batched version of ptep_modify_prot_start
+>    arm64: Add batched version of ptep_modify_prot_commit
+>    mm: Batch around can_change_pte_writable()
+>    mm: Optimize mprotect() through PTE-batching
+> 
+>   arch/arm64/include/asm/pgtable.h |  10 ++
+>   arch/arm64/mm/mmu.c              |  21 +++-
+>   include/linux/mm.h               |   4 +-
+>   include/linux/pgtable.h          |  42 ++++++++
+>   mm/gup.c                         |   2 +-
+>   mm/huge_memory.c                 |   4 +-
+>   mm/memory.c                      |   6 +-
+>   mm/mprotect.c                    | 165 ++++++++++++++++++++-----------
+>   mm/pgtable-generic.c             |  16 ++-
+>   9 files changed, 198 insertions(+), 72 deletions(-)
+> 
 
