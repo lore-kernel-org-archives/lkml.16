@@ -1,205 +1,156 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC90029E07D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3808176ADB;
+	Tue, 29 Apr 2025 10:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745923596; cv=none; b=L9mhCKmatPOD28mcBRMIDv0gjoSO0b2HufXU7b6EU8ATE185h+0L15VSbm8dAmFLfPMn/HTNkxUYATUV0J8jZLjNJUxGvVniuU+8C6+5+THSenSgLFI5HHjkbRzfF8BH6QeKxyeXZNrPcKZLpWvW5dJGnW2xx9PYR4wA1jiS9T0=
+	t=1745923621; cv=none; b=ENrz4KMpyunRO79LIIon8qneLXpsoWmLmtVVyXTdfh2QsUAfAcBVXENf6rD5fuV2ygZry4hmAgxehajlehXrVLkou8NxJboDnffUaY/dM50lh4mzkHhMNTqzh9DC9jTEaoIH8qUtFsgyUFj6upFJAs02PXprDH/LsCQjwvBN59U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745923596; c=relaxed/simple;
-	bh=29Vbs5Y0eAF/rGCtBtbZtgzKEpWWEjP7RGJQY4FRLVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+xFvDg37Lba4a3VmrCp8EzqNmk0MDd7MjzZ8I1kQLRh51vPW92a0cUzjRTEE4kNNy9ldoaxRt6mx3bSnTKkuhUxjEtmTLXZWttIlnoS1mYTQcQ7qMCKwqBbvPwJPoS9Qy26qxtkIz03lyOxieFPcRFQ5XXiS1Z+XzAzCF6tH3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QWQ4hxkV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1745923621; c=relaxed/simple;
+	bh=Ip+p8O7916rV0wPGHwihsQzqN4X5FJnPhXUEjT016aI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LvGhwgdmDpyCY/WQTh5kRb4pHZpdVUwFFpL377zN5rYXqIkvTNbPUei3cY01o+UtHO1HyBP28tuRZHLxqcjtDDbri+2TOwEJ7/n2b6Ix/IXYXoeD4fLsg5KjPqyGyRWcdnnmQKfQS0b7CmOggTC1SzTaXGdFUU4hc25wzinh7sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NulwpGXw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QWQ4hxkV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A900540E0214;
-	Tue, 29 Apr 2025 10:46:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id EVfmTzIRbtee; Tue, 29 Apr 2025 10:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745923588; bh=hD+R/SbfPTXDMNjsQ9/Rv/rRVMj3K4Ikj7S/IDC0qoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QWQ4hxkV8smlT3g59LQPAvO3OTqX/FklqXt78VFKCx6lFEvVsyIdZWgteye5sx3EN
-	 Gza/yPUHX1S7Fi9y2Lfru86h5ZuliHZIutz4a/gWSkmyHkU99z3x8MokNT+mbgHX0q
-	 n0BqIGVtVXsGNg8jJ9pXqNBenGdwh/9mpEqZR12hmvKpbHI+EbXU+L4xyLgjQ4fO7h
-	 aHgVBH1cB1C39fQzDNUYrVTTIxmLyyIfe0IHxttHxpDSVoEM9rNCoAgYaXJzPX+ak9
-	 /e1tIlMvUOsGXGNvWEh+xoPR3TGAiVnQVBFr6Q8GYzfjj7s5CWUS33KOi5vDnpalN3
-	 77f0AKdDMZsBxo6jTCQY5VcIbfSlKSGWzaeR0eEQTIo0nfauIup54QqEYf+M6F669U
-	 KeaFfODRL9k5Wh1DJ4zzf3eR2BCrUWlftS2jXuQaf+zbRu6MlY6FamxZxCJIbLzHX2
-	 IjKC/IY6V8NNg/O31CIfo6eabL4djnIdAG5PKsWsCO12lmDLNAmuuuYKOKbemVWi6G
-	 g6wawO9D44ZIAKsj0uyl5AL+VCqAWBBd50OYbNXsWUGM4nKce8YnrtmA9v4D/xdp/G
-	 TCE63CCAxZDgC46PNzJ+p9LoQhioXE9usGqSoUaaSPsoaJiranRCc8oxRuDL9jDFhL
-	 eDAYzh0rIlL2AwJ9usQ4aYgc=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D2F1040E0173;
-	Tue, 29 Apr 2025 10:46:17 +0000 (UTC)
-Date: Tue, 29 Apr 2025 12:46:11 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 13/16] x86/bugs: Restructure spectre_v2 mitigation
-Message-ID: <20250429104611.GFaBCt81C5mZwdnqo_@fat_crate.local>
-References: <20250418161721.1855190-1-david.kaplan@amd.com>
- <20250418161721.1855190-14-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NulwpGXw"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TAFtU0015798;
+	Tue, 29 Apr 2025 10:46:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UeMi33mdR+WzE4oHOtk8LqBE6AfpDNDdTGFV/LIPOjo=; b=NulwpGXwL/skLQIx
+	Yf7Jof+YTndedpANcCrW7uFPsz872FY+xFebxWLo+j06gc+d/io3727of9FZ8CEp
+	XLwwVNwldLC3KkFaR8083VzUYpMYX5IrKz5e0eRAKbD2/iMep9Y/rXNdzlYjPdUL
+	FiDOcpXcNck/TO9jo7oE4tq5K5ScBz02+yrhE5UNrruxyPp+3DQFC7kfg3dBUq8O
+	5bOgFOQIZb4YfVKFH1MYcDOrTn/GRBwECek+Ihv773bNHtHxfCyFwWAXtDCJlA4h
+	6QSEfyRXP07WcCb0VqLufM4jnc7Ds+AU86p8qiVPI3kNjbqtOMEGVGK/+eoTSreg
+	Gy0ylQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468q3245wf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:46:54 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TAkrR7027811
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:46:53 GMT
+Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 03:46:47 -0700
+Message-ID: <0f08867b-7724-cb76-d621-0bbe4d5fdc64@quicinc.com>
+Date: Tue, 29 Apr 2025 16:16:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250418161721.1855190-14-david.kaplan@amd.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 18/23] media: iris: Fix buffer preparation failure
+ during resolution change
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
+        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>,
+        <stable@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-18-3a6013ecb8a5@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-18-3a6013ecb8a5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=6810ae1f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=cjVhqke6_UvC8fBLecYA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: ukDstp8FfCRwgCVmTJQUP-0Lmp4bnL_V
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3OSBTYWx0ZWRfX97dKtHj/FVNe XXxHH+LyljR55itq64rzzbGmA5mZ/B4+dBYnmvfPpeASQQOxzpGCcrassrkrzm1QmNu25v2ZOlR MUjFD+wizPiR6iAQwQFW54WqMKNohkibR9naI5AmWOUDwA+CZia7gBu3kkTLd0wjU+EPnwW8MwN
+ qgB8gHeP/r7LPbDbUApaP4NrISQldEDSW/CfMXCCEihH1as40+q+OFMcJIjl1x5gZrcneMq+z5h Vdrdf37TedNE5i6gjjgwkj287NvGj5urgTDOsaW7n/Ei9jRMhfW2przUv++BDJVI/4vpsHM4Bqz +H5cuZIuBc6xqscjAlizSE/HbzW1Cy3w+SiA/GCFwma3yJ1KuE5XrhGDf2faUFIDXpE5lWnW6AU
+ 6rPAzvqEFJveBjNla7CZO4Z8F4CbSv+vh8KHyNOrt7Pxm3YJOwcaSj+YnmoldmjAzbNRS5ia
+X-Proofpoint-ORIG-GUID: ukDstp8FfCRwgCVmTJQUP-0Lmp4bnL_V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=999 spamscore=0 phishscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290079
 
-On Fri, Apr 18, 2025 at 11:17:18AM -0500, David Kaplan wrote:
->  static void __init spectre_v2_select_mitigation(void)
->  {
-> -	enum spectre_v2_mitigation_cmd cmd = spectre_v2_parse_cmdline();
->  	enum spectre_v2_mitigation mode = SPECTRE_V2_NONE;
-> +	spectre_v2_cmd = spectre_v2_parse_cmdline();
->  
->  	/*
->  	 * If the CPU is not affected and the command line mode is NONE or AUTO
->  	 * then nothing to do.
->  	 */
 
-Obvious comment. Lemme zap it.
-
->  	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2) &&
-> -	    (cmd == SPECTRE_V2_CMD_NONE || cmd == SPECTRE_V2_CMD_AUTO))
-> +	    (spectre_v2_cmd == SPECTRE_V2_CMD_NONE || spectre_v2_cmd == SPECTRE_V2_CMD_AUTO))
->  		return;
->  
-> -	switch (cmd) {
-> +	switch (spectre_v2_cmd) {
->  	case SPECTRE_V2_CMD_NONE:
->  		return;
->  
-> @@ -1898,16 +1907,6 @@ static void __init spectre_v2_select_mitigation(void)
->  			break;
->  		}
->  
-> -		if (IS_ENABLED(CONFIG_MITIGATION_IBRS_ENTRY) &&
-> -		    boot_cpu_has_bug(X86_BUG_RETBLEED) &&
-> -		    retbleed_mitigation != RETBLEED_MITIGATION_NONE &&
-> -		    retbleed_mitigation != RETBLEED_MITIGATION_STUFF &&
-> -		    boot_cpu_has(X86_FEATURE_IBRS) &&
-> -		    boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
-> -			mode = SPECTRE_V2_IBRS;
-> -			break;
-> -		}
-> -
->  		mode = spectre_v2_select_retpoline();
->  		break;
->  
-> @@ -1941,10 +1940,32 @@ static void __init spectre_v2_select_mitigation(void)
->  		break;
+On 4/28/2025 2:59 PM, Dikshita Agarwal wrote:
+> When the resolution changes, the driver internally updates the width and
+> height, but the client continue to queue buffers with the older
+> resolution until the last flag is received. This results in a mismatch
+> when the buffers are prepared, causing failure due to outdated size.
+> 
+> Introduce a check to prevent size validation during buffer preparation
+> if a resolution reconfiguration is in progress, to handle this.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 17f2a485ca67 ("media: iris: implement vb2 ops for buf_queue and firmware response")
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>  drivers/media/platform/qcom/iris/iris_vb2.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_vb2.c b/drivers/media/platform/qcom/iris/iris_vb2.c
+> index 23473cbd0b2e..7671df0e1c69 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vb2.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vb2.c
+> @@ -259,13 +259,14 @@ int iris_vb2_buf_prepare(struct vb2_buffer *vb)
+>  			return -EINVAL;
 >  	}
 >  
-> -	if (mode == SPECTRE_V2_EIBRS && unprivileged_ebpf_enabled())
-> +	spectre_v2_enabled = mode;
+> -	if (vb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE &&
+> -	    vb2_plane_size(vb, 0) < iris_get_buffer_size(inst, BUF_OUTPUT))
+> -		return -EINVAL;
+> -	if (vb->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE &&
+> -	    vb2_plane_size(vb, 0) < iris_get_buffer_size(inst, BUF_INPUT))
+> -		return -EINVAL;
+> -
+> +	if (!inst->in_reconfig) {
+Remove the flag and replace with state check. With that
 
-Might as well zap mode here too, like for the others.
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 
-...
-
-Diff ontop:
-
----
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 3b0ffebb8f4b..93d07438eea7 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1887,13 +1887,8 @@ static void __init bhi_apply_mitigation(void)
- 
- static void __init spectre_v2_select_mitigation(void)
- {
--	enum spectre_v2_mitigation mode = SPECTRE_V2_NONE;
- 	spectre_v2_cmd = spectre_v2_parse_cmdline();
- 
--	/*
--	 * If the CPU is not affected and the command line mode is NONE or AUTO
--	 * then nothing to do.
--	 */
- 	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2) &&
- 	    (spectre_v2_cmd == SPECTRE_V2_CMD_NONE || spectre_v2_cmd == SPECTRE_V2_CMD_AUTO))
- 		return;
-@@ -1905,44 +1900,42 @@ static void __init spectre_v2_select_mitigation(void)
- 	case SPECTRE_V2_CMD_FORCE:
- 	case SPECTRE_V2_CMD_AUTO:
- 		if (boot_cpu_has(X86_FEATURE_IBRS_ENHANCED)) {
--			mode = SPECTRE_V2_EIBRS;
-+			spectre_v2_enabled = SPECTRE_V2_EIBRS;
- 			break;
- 		}
- 
--		mode = spectre_v2_select_retpoline();
-+		spectre_v2_enabled = spectre_v2_select_retpoline();
- 		break;
- 
- 	case SPECTRE_V2_CMD_RETPOLINE_LFENCE:
- 		pr_err(SPECTRE_V2_LFENCE_MSG);
--		mode = SPECTRE_V2_LFENCE;
-+		spectre_v2_enabled = SPECTRE_V2_LFENCE;
- 		break;
- 
- 	case SPECTRE_V2_CMD_RETPOLINE_GENERIC:
--		mode = SPECTRE_V2_RETPOLINE;
-+		spectre_v2_enabled = SPECTRE_V2_RETPOLINE;
- 		break;
- 
- 	case SPECTRE_V2_CMD_RETPOLINE:
--		mode = spectre_v2_select_retpoline();
-+		spectre_v2_enabled = spectre_v2_select_retpoline();
- 		break;
- 
- 	case SPECTRE_V2_CMD_IBRS:
--		mode = SPECTRE_V2_IBRS;
-+		spectre_v2_enabled = SPECTRE_V2_IBRS;
- 		break;
- 
- 	case SPECTRE_V2_CMD_EIBRS:
--		mode = SPECTRE_V2_EIBRS;
-+		spectre_v2_enabled = SPECTRE_V2_EIBRS;
- 		break;
- 
- 	case SPECTRE_V2_CMD_EIBRS_LFENCE:
--		mode = SPECTRE_V2_EIBRS_LFENCE;
-+		spectre_v2_enabled = SPECTRE_V2_EIBRS_LFENCE;
- 		break;
- 
- 	case SPECTRE_V2_CMD_EIBRS_RETPOLINE:
--		mode = SPECTRE_V2_EIBRS_RETPOLINE;
-+		spectre_v2_enabled = SPECTRE_V2_EIBRS_RETPOLINE;
- 		break;
- 	}
--
--	spectre_v2_enabled = mode;
- }
- 
- static void __init spectre_v2_update_mitigation(void)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> +		if (vb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE &&
+> +		    vb2_plane_size(vb, 0) < iris_get_buffer_size(inst, BUF_OUTPUT))
+> +			return -EINVAL;
+> +		if (vb->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE &&
+> +		    vb2_plane_size(vb, 0) < iris_get_buffer_size(inst, BUF_INPUT))
+> +			return -EINVAL;
+> +	}
+>  	return 0;
+>  }
+>  
+> 
