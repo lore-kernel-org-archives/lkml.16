@@ -1,109 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2A1280A57;
-	Tue, 29 Apr 2025 09:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C761FCFF8
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745920050; cv=none; b=n+I+fkJBFr0uCHIMhbyrCqubis75mAxZkAlf1xeAtyLn8g1rGSBfV4mlB4n/FItYxef8+HM32u8Df32pGPYBlenzQ6jNNQttujkAOm2mMdH3/c+aacDTnhf7usx5AbwIa/ZdYoqIxHd5MCN8BRRzdHQI7XMytGKsC/LNzuj1QXQ=
+	t=1745920112; cv=none; b=lTPkEyYNaFD9lConmUtHXi+nWtZYKZ5gXcjEWOugJBE4Fx6tVEaaIZAtU47LkzEYKO0YqH+2h+XAncvtLGVnEIOL6xz0zCU2Zj9jX9L5JAqdzoPg17GMu/kUh6RFZXuavNunvF1ui5+AdGtL5xUzK4MkijWoZVpmWAFqecWy9rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745920050; c=relaxed/simple;
-	bh=rCCH7PnwRIKJjuMGwA5M2Oxhs/Vvpj/DTbC2aRuGz9k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lnxC5B0zT/f/FkWrd0sgC3COsy9/X70eyshyAA8mMgt12mRErvTQxYXuCyhy/ijeUs2CG8mIS87zpdeXI21YfXBWuo2/n4ytZrmvHkph6wIRzCVotpQsb26lmrmuG+KDIN0OtolPrgKLOlY5iIWEHkyDLcNWrjkyzcNgnZ7WTNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfCjKN2X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745920112; c=relaxed/simple;
+	bh=RRvqOdmnsZW2eiUxtDi8xpnxYh0WcHRzdztNj8jT2Io=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GBw8Em7LQUpDov1NCOllOeOInAARbCmJaJw/NH3918XDVv58WsHwz5JchORAFm7PmQEWQnSZ4WRneJnX3TFI1Z+21XIFt40g91gqjvFp1fiebQrjvEPajCWsHs8B9OIiFYq5V5eJp3jWLD3svoGmcfRW7mS0+RvqpCA+YF9Tk18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EjLAppLD; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfCjKN2X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A94C4CEE3;
-	Tue, 29 Apr 2025 09:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745920050;
-	bh=rCCH7PnwRIKJjuMGwA5M2Oxhs/Vvpj/DTbC2aRuGz9k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=IfCjKN2XfZ8mjckSmqV4/U6ip7XfuIBKGRU/E/o9GD27Rsg4oRc3kf+WRsptz919Y
-	 c+BZ/BuwuXa1zOQHV7QzHFoaWr6CZtusvjEWViTDN4/D6PtPQSPG/a2dZrKWMGkeDP
-	 TFYJ6t9VuI1uvbcKqFQAi98Y1r0i5evjDMh1gYcXDEWl4K1aFofcSSV3+gEyrc8KpF
-	 ElxgeDn0JyqyCUP+BsS2yv77n9tcQdunJKL48ggtNUU34Yre1Rw0B909l0wuGeEmfk
-	 N4Itlwn25FFebkUA5mwAW7KhDdqr0tViraMiyRgex2RX2Me+qQyhxG+uOFFuaH2hqB
-	 AexSac/P0DrpQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Lyude Paul" <lyude@redhat.com>
-Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  "Boqun Feng" <boqun.feng@gmail.com>,  "FUJITA Tomonori"
- <fujita.tomonori@gmail.com>,  "Frederic Weisbecker" <frederic@kernel.org>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Anna-Maria Behnsen"
- <anna-maria@linutronix.de>,  "John Stultz" <jstultz@google.com>,  "Stephen
- Boyd" <sboyd@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex
- Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin"
- <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v2 2/8] rust: hrtimer: Add HrTimer::raw_forward() and
- forward()
-In-Reply-To: <f7d854d557423be6411ccb7c641aa2ab4c579345.camel@redhat.com>
-	(Lyude Paul's message of "Fri, 25 Apr 2025 16:15:14 -0400")
-References: <20250415195020.413478-1-lyude@redhat.com>
-	<20250415195020.413478-3-lyude@redhat.com> <87frhzm5y5.fsf@kernel.org>
-	<-vfKuS73b0KP2INfq0xBEquddbhqbpDA5pD6X2jc77grCWsjnPE9RKjsIdgFPnfp58Q6PSUSvQjF6dL65NHBew==@protonmail.internalid>
-	<f7d854d557423be6411ccb7c641aa2ab4c579345.camel@redhat.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Tue, 29 Apr 2025 11:43:54 +0200
-Message-ID: <87v7qn2tgl.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjLAppLD"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22d95f0dda4so84397765ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745920110; x=1746524910; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=al7UooysWSzGBv7ZANvZoPIfufPL8+o+HcZmV8bme8A=;
+        b=EjLAppLDLi3wVpq6LyDsBoL+MYLYjATluOu2V/caUaC62n+9nzzQ+n8xGpgMF7qsk/
+         Jij1ZB8J6BHGZzIjVJSgJNHfvMsj5CzxpTElOmYWKeM5V9Sdw3lxntL6YWHbs9yA+kFV
+         PrO32fKWzMtL1D2fZo63CwhyhKNdzeN9DAYW5lbUBOHE914WcD4Vy8APeqdHtCkMXdlN
+         3dOTp9nKHzaR9zl3EcIq0VQ2otiVgZM/F46RrvsHQAvd6N+/+FFLxKEizOEwN4kdMYO3
+         Mc5pK31M0rQcP9PmtpO7l0etCoDpiwZ7FsitoMFEFGaOrDb3kq0C0FPA545BeFA7UvxM
+         hBog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745920110; x=1746524910;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=al7UooysWSzGBv7ZANvZoPIfufPL8+o+HcZmV8bme8A=;
+        b=t+QW57ro3P9f4rAclQ3N4ClFa9G/VRhqjEuFeJyVl1j7zGORglRFmGeOxruIidtRyQ
+         JNj1u3wHQCGSAUS26Zr9/e65OFndS4sEanmAhuNJuiKQ8KjFUVuWFz2UlUbMxCs8ekzX
+         NB+ilHkFIZ23OUXSNpJYFLaLWWjm3yB3V7tSsFhvw7107O4QP+8rFfjTTU4ty9McgBxR
+         kXO+gaYY2mqLjxFUQtcD8R+e8GvtdWp/RqhRI/92skbo017DO8HtYwzx9ZdTscj3g6S7
+         jdUEXlZN2YDRVkz07Bz0HJAkDkuGBXyuPXwxOZpW2cym5aKf0S4zHSwToBh0ZE8PBv6l
+         UAog==
+X-Forwarded-Encrypted: i=1; AJvYcCXCD1kE714XEXGq+MZDzE2oHs4c1poaikg42S6qkLwTk2WU89vKzfLvLKjd2Ru/b17QieF5HOK3M2PuxYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHSnCTJadBJVijM8k72QDzOXX9nCSPtxlDXVRDSpC4mwcp1fDn
+	AjxWsq9DcVAzEb9BvpB2SYi64WYZbfsfOjohVZQkKntIs6VLTcW/
+X-Gm-Gg: ASbGncvkLvWv49oNViztAslqmVhcAxnGtfj3r5KB8Cp0qoJy+/S26behCZfOt5wmua3
+	UhtVvPAd1oJEl3GO/qNVGToRa7XPg77OCeVDN7Q5wc21YFaKVTq2EuBU/8nQP7X649bQCSld0AI
+	sC0Ti69y7ZoDaM+w0hoh7nk/HbiPHUfYCWFpIupRipwBbX+smGuaUA2IZwN1rel/Q275U+Y9lTb
+	29eA8aEG7ZvIWM0aWK6DAej2PTKZr5qjXRZ1oA5eGwWk7J+bAk8ApSwB3sc1iOJJTdbyl0JwLuA
+	N8sQEbjxXUi2heIAbVD8yHoH0C37mFw8ClFAccgVmjgSn84grJKy86skwfMA57AEDopgoDr4o9K
+	aVfCpCw==
+X-Google-Smtp-Source: AGHT+IHNdNB/EDtjtxtUe1la7yZrLwwve4cD0Q9+Zl3JTKWsOTEczdm3s3j9hd4Zz101WX6u+TpMMA==
+X-Received: by 2002:a17:902:e5ce:b0:220:c164:6ee1 with SMTP id d9443c01a7336-22de7012487mr31503435ad.32.1745920110368;
+        Tue, 29 Apr 2025 02:48:30 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4e0cb15sm98432255ad.106.2025.04.29.02.48.28
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 29 Apr 2025 02:48:29 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH] mm, swap: fix false warning for large allocation with !THP_SWAP
+Date: Tue, 29 Apr 2025 17:48:03 +0800
+Message-ID: <20250429094803.85518-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.49.0
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-"Lyude Paul" <lyude@redhat.com> writes:
+From: Kairui Song <kasong@tencent.com>
 
-> On Wed, 2025-04-23 at 14:13 +0200, Andreas Hindborg wrote:
->> Lyude Paul <lyude@redhat.com> writes:
->> >
->> > +};
->> >  use core::marker::PhantomData;
->> >  use pin_init::PinInit;
->> >
->> > @@ -164,6 +168,36 @@ pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
->> >          // handled on the C side.
->> >          unsafe { bindings::hrtimer_cancel(c_timer_ptr) != 0 }
->> >      }
->> > +
->> > +    /// Forward the timer expiry for a given timer pointer.
->> > +    ///
->> > +    /// # Safety
->> > +    ///
->> > +    /// `self_ptr` must point to a valid `Self`.
->>
->> I don't think safety requirements are tight enough. We must also have
->> exclusive ownership of the pointee of `self_ptr`.
->
-> Are we sure "exclusive ownership" is the right term here? We /technically/ can
-> be considered to have unique access over the time expiry since we allow racy
-> reads of it, and we only allow writes in situations where the timer access is
-> exclusive and the timer isn't started - or from the timer callback itself when
-> the timer is started. But we don't have the guarantee of unique access to
-> `Self`, and both context and context-less forward() make use of raw_forward()
-> since otherwise I wouldn't have really added a raw_ variant in the first
-> place.
+The !CONFIG_THP_SWAP check existed before just fine because slot
+cache would reject high order allocation and let the caller split
+all folios and try again.
 
-The function must be safe to call whenever the safety requirements are
-satisfied. `self_ptr` pointing to a valid `Self` is not enough for this.
-We must also satisfy the conditions for calling
-`bindings::hrtimer_forward`, which are a) we are in timer context, or b)
-there are no other threads modifying the timer. a) implies b) because
-the hrtimer framework holds a lock in timer context, if I recall
-correctly.
+But slot cache is gone, so large allocation will directly go
+to the allocator, and the allocator should just fail silently
+to inform caller to do the folio split, this is totally fine
+and expected.
 
-We can satisfy these by requiring exclusive access, right? In timer
-context, it is given by C API contract, outside, we just have to have
-&mut ref to the timer.
+Remove this meaning less warning.
 
+Fixes: 0ff67f990bd4 ("mm, swap: remove swap slot cache")
+Reported-by: Heiko Carstens <hca@linux.ibm.com>
+Closes: https://lore.kernel.org/linux-mm/20250428135252.25453B17-hca@linux.ibm.com/
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ mm/swapfile.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-Best regards,
-Andreas Hindborg
-
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index e727021b8e2c..b86637cfb17a 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1272,13 +1272,22 @@ int folio_alloc_swap(struct folio *folio, gfp_t gfp)
+ 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+ 	VM_BUG_ON_FOLIO(!folio_test_uptodate(folio), folio);
+ 
+-	/*
+-	 * Should not even be attempting large allocations when huge
+-	 * page swap is disabled. Warn and fail the allocation.
+-	 */
+-	if (order && (!IS_ENABLED(CONFIG_THP_SWAP) || size > SWAPFILE_CLUSTER)) {
+-		VM_WARN_ON_ONCE(1);
+-		return -EINVAL;
++	if (order) {
++		/*
++		 * Reject large allocation when THP_SWAP is disabled,
++		 * the caller should split the folio and try again.
++		 */
++		if (!IS_ENABLED(CONFIG_THP_SWAP))
++			return -EAGAIN;
++
++		/*
++		 * Allocation size should never exceed cluster size
++		 * (HPAGE_PMD_SIZE).
++		 */
++		if (size > SWAPFILE_CLUSTER) {
++			VM_WARN_ON_ONCE(1);
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	local_lock(&percpu_swap_cluster.lock);
+-- 
+2.49.0
 
