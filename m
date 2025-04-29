@@ -1,92 +1,110 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5F725E804
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCC51E89C;
+	Tue, 29 Apr 2025 19:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745955644; cv=none; b=DXqW9bZ3Gc7KSHf92CYVw9sioDwqAgnpzTIrk6CvTfdg75bO2qCGid/LU43ned3omKfdVyQ3detmKgCMCte23zAVE6Nq2cyka98uF9rdttcGA/SFHlE2ivRpQt0wFHtczifegKun+DI0s0ocbQX9SI/k4igb/CFnka1WzSBoBQY=
+	t=1745955681; cv=none; b=WM6RjbBC2/EABNe71DksRXn4PK7JfED87vXbGORivyvBmyo3Jb5ZzKpN2kMXhEk56yq3cYQwbGHTCzDgd7Lu3QivLT9XC2KFBnsa6zLmaJJ+LXgdpaYHzOXklfLTWlaJNptV3m0fWTi0zlf/vXq3mBqfbcMQkixs/+6Luhkk36A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745955644; c=relaxed/simple;
-	bh=uyBW2F53VjXt91VxFs8QcOadp66bOPozuITiEZzqW5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OJidJLwPTPD17zZxsJQfS62P+6jCGhgd0/p1ONHOiaGY3b9VnRk6Pu/i7briFlV6o6hLLHhxM7+iF0tvw/BgpGroaIdeyjyPzvZPVrG374VoI1V0WeIND4B9BK61l/VVBC8VyYrQQWX4BMrGaTOo++BUYdYZyozh4MuWDhAJk4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rf0BKcOU; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745955681; c=relaxed/simple;
+	bh=emoQcqlb+HW2sgPwTA9ftx2rqI7sEqj4UbrS4WjRv2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mv4eWWySFmNOR0EwZCH00jhIVO4DkH+OUMDaGMtC7sCnN0/NdXa+FTeRxzo6gxAtx2suOfVKTjZOUKc0S7Ab8NH+Me0+zDKWAApYHE1W/o8yUZ1t8BGaiys7NcWbZCPPIt2796V1okgIy8h1xOv+5ozx+YIbd1N2L65OAeJpD7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RzMg4cFG; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rf0BKcOU"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-391342fc0b5so4716583f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:40:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzMg4cFG"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff67f44fcaso511603a91.3;
+        Tue, 29 Apr 2025 12:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745955640; x=1746560440; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=S0PbBEsPipY0WewKQtcQRsKwmeC5ZS0HYXbMTYUT+Lo=;
-        b=Rf0BKcOUUiwJ/A2Umzhj3/fn8+p3+40lItBl9QGD0Vm1vAgLAgx1mF/Td/SqfWXMXE
-         Iqu7x1f4bcpVIFfRI/WkVaUGfaUGThsOxeu04AE4I1hQ+nTTqWu+Kt1zNoGB/yxDp09k
-         mjMOSwhjIRFwj6l6UBwCJH9jtip+RQ3zlmrns7DsSemYWF1A6SM/sAiUASvwNglyN0JG
-         u8/jj+4EX0nV/kpuSHYCLVk2mr5voM62wgCQhILC/vaG58v6MVUEpTKto1EkcGXVBtVN
-         NmbDSL1ucE5mYzDdqszwLk2VDb7sYHBfTPwiWv8yUlMysi+KpJgroKy7/FhYZXlx+fQU
-         Hn3A==
+        d=gmail.com; s=20230601; t=1745955679; x=1746560479; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=emoQcqlb+HW2sgPwTA9ftx2rqI7sEqj4UbrS4WjRv2c=;
+        b=RzMg4cFGJWX5tVv/R61Nqw+p7bvw2F60YrTU6bQozIwrXN3TMbNSh64/9rcFgz47iu
+         pfcXkmLoYrEK0xrERhu7JU8VjYJ1Iyc2gAEtFGboOCbd9KSRv+La53zdhFkUG55W237Q
+         uCzqv7AkYeRh4dUyw2L34h3dXlB0hwvLIxA9AOYUJvD6v8w2MmoskDulZdjcSsp1ilWF
+         lJPDD/pvtbxayeiBVsHrsWNAUWIFxxi4zfee85BqXKaZGJKn+1nm9TXmZFE19DvvCF7G
+         Le8dUinuHf0ANew0xrPZzA4P8aen3zUPUKfdItP4p6UscMN7PfMHCXSFb1feRevsWzBN
+         unRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745955640; x=1746560440;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S0PbBEsPipY0WewKQtcQRsKwmeC5ZS0HYXbMTYUT+Lo=;
-        b=HQsBNqnQLqjv0vOnV5Ddm5Bi+hOfV4IUop/zJ1cwTKkw504d47W/uvufyEVika0TFk
-         msaK6H+qHTsRFpjxnCUII+Ccbub0ueHQqp+jqtxuh86E+RA5odAZMm8lHJ0NTzxj5M4i
-         Qu46XkvTv1lo+saPd0ZP7rnsH/n2IvWbhz/Yg77+yzMOPwttPfL8b/czx9HsfMDFggZb
-         aCtexahyiylxRnPJ03z1kIPvNf4OP0T8Yw6okSn2dJDGObEMlmpGYjwDMsfa/S/faVbr
-         X2+GD+U5k1atKLv0XNKfddJyqiFTHNNQCjtSZj6qOhW1C4cLoLuKuh7gBsePLRsT87fq
-         o1ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWgST/KpuLUXGZipf7ug9wL4s+ijY3pHSryD5B1+BX0x91KNHyCAaYq7Z3fqRl8Avd6VfMYDpVKKmXacvo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYoymvrKfbiJ55HXk2GkWq3RIzDitwhrebQm+ShhkUutNVVULo
-	sxHP3WpZaO/vSdn7BebIzDyqrkfKUHL34i7ql3Mfybyt6963fHVQyWZ9PesrccU=
-X-Gm-Gg: ASbGncvblE/nWlIdByEGzgV8F07fY/CvfvYtRj1QRuEY1Y0BRCbhxPA4RNLCiGJSjAj
-	kfPOEt3+cnikyJ//fA+tXnjNp9vJhZttUe/Mra2QISiqy3N6bS726cif5/IMXcPkhzX2TXwuo1S
-	/+3KE45F3twiJUzEapal189ZWTEn+JS7hULR7sxtE/RfQU0cmGdDXOOtoxNKJckY9DtwGxiKXDd
-	qubbwwEab47kI01ZFGw5zIWWRFe9E7py+ruOgyEdBu88ph/zvJnFavo11D7Walo+TiuyudPYMm6
-	M+KTRJFnaXKncfPBw/Rg7l2cgBIJHb+2viaJ0Y+43e2l5Qq4b8dORGuJ1gRV6DAX5cre1HpNBOR
-	bl+C6Tg==
-X-Google-Smtp-Source: AGHT+IGdtirTulKWn3yLeBQ9FLdZchJ1HiTAtu6x9e+yU+nlnzwUCocNO4vXYUU28KgjdJMHGmXGhA==
-X-Received: by 2002:a05:6000:1a87:b0:39e:f89b:85ce with SMTP id ffacd0b85a97d-3a08f77c159mr564828f8f.26.1745955640581;
-        Tue, 29 Apr 2025 12:40:40 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441af882ee4sm20920745e9.39.2025.04.29.12.40.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 12:40:40 -0700 (PDT)
-Message-ID: <000934a5-4934-4d21-8859-897fe48474dc@linaro.org>
-Date: Tue, 29 Apr 2025 20:40:39 +0100
+        d=1e100.net; s=20230601; t=1745955679; x=1746560479;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=emoQcqlb+HW2sgPwTA9ftx2rqI7sEqj4UbrS4WjRv2c=;
+        b=Yhf9Gxup3JWV/a2tslLI1cqidqMJ8IDf0CIcqtRWEaA92vyBUcUNLS5WNvpFic8JvW
+         QPHut1mST7HTGwPNNShrR1KP9RqA4JrC9kYnuZCIQL1lknqNXivWmIvivPI0fl5iWdmD
+         4cXJrj//lKn9YXiT87QcZw6FAnWInRi855yfG7yd9O5QK4EP6s2B1kZcrPqMsLLhV1+e
+         2K5ACaSOrco602bfxS8y1+1QRx38KgkD80CcXOnnMYEIB174jOvkma0ytq1ivhd84ucY
+         PtIZGCRnwO0iMdLmRmzAHDbS1nkzoBw5Vw6LBANZ0GBnklw760NONR/0VFQ0YOxv2NcY
+         Qwaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMC/sKG85IGrCdzXzwWn1l38dHdGSrzjmr8sD45QESY3h8zkQvBTF0n42Xw0iI8tTvoyv6k3WBWoSP8Y5I8NBXNQ==@vger.kernel.org, AJvYcCV//kHAiPk+oAVCPiILlD/BCGFa1LiY5sjd1qaoCkVaCpd0amInKlWKj1GwHDJ3hMObwnULqSmD+1BMeKPogJw=@vger.kernel.org, AJvYcCW97Ui2RVbKCYNZN9wBW1u2jb1CzzwkByoROD2UJn0z7jmvqZRD1FMNyZSD8ukSgyEmVoEsBUYA+CSxTuY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPnRJKmvPtYYcoVAPdzQY3WklXGrb7V1Ba16IjWQMAqGacjBU1
+	PjufrCbUNhUdhgKrEyrwp/APyBhQ5Y7Q7knI7xer+Rm0LGEw0arskmWylfENCtou4RAhgm7pbBN
+	r0Ld2qBgP7QeLiDe78Saq5FiVAbE=
+X-Gm-Gg: ASbGncurXGEn//dwz3l0ki6TKVbgNb4rvXzfBqPBCxVwkVzLJkn2C+7ahi0A8t4ko4I
+	dLdv9gy6L5BiOwD3KrU2CAN71GtOdOC8P44Qk22XTVlAQ8LTy0lMwoM4IJup9hRxGA6sHpxnYQt
+	wnRmnsc4vqvrJGDpwjDOU7tP62v0LCcRbm
+X-Google-Smtp-Source: AGHT+IEsz/JWpYHIQB2ND8TAPWjryOqVEs6NcRyR9v4Xj2Udz+EeqWASFStYh1DEZBXGsTgzXSaBNResIErXGEAwKsg=
+X-Received: by 2002:a17:90b:1643:b0:2ff:7b41:c3cf with SMTP id
+ 98e67ed59e1d1-30a333530efmr190898a91.4.1745955679171; Tue, 29 Apr 2025
+ 12:41:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
- version
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250429185839.1807005-1-irogers@google.com> <20250429185839.1807005-5-irogers@google.com>
+In-Reply-To: <20250429185839.1807005-5-irogers@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 29 Apr 2025 21:41:07 +0200
+X-Gm-Features: ATxdqUGjrsQgDER8osuejNAHo00_Sx94goMIQhOsN8FiYorxUkXhdheN2z5OT-A
+Message-ID: <CANiq72kF+XFFMzFYV_O6kVK1oEaWca5iw4r6f8CU9OvSnRMzfg@mail.gmail.com>
+Subject: Re: [PATCH v1 4/6] perf test demangle-rust: Add Rust demangling test
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev, Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29/04/2025 19:08, Krzysztof Kozlowski wrote:
-> -	dev_dbg(vfe->camss->dev, "VFE:%d HW Version = %u.%u.%u\n",
-> -		vfe->id, gen, rev, step);
+On Tue, Apr 29, 2025 at 8:59=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> The test cases are listed examples in:
+> https://doc.rust-lang.org/rustc/symbol-mangling/v0.html
+>
+> This test was previously part of a different Rust v0 demangler:
+> https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
 
-Please just change to dev_dbg_once() instead of entirely removing.
+Hmm... this sounds like it comes from the previous demangler, but it
+isn't in-tree, right?
 
-Same comment with the other patches.
+I don't know if reusing those examples count as "code" or not, but
+just in case: the docs (and the original RFC) seem to be under
+Apache/MIT like the rest.
 
----
-bod
+Thanks!
+
+Cheers,
+Miguel
