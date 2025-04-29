@@ -1,163 +1,100 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7AE1C8630
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5973F267AE4;
+	Tue, 29 Apr 2025 22:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745965081; cv=none; b=QRcnbvcr2APC7dXzV8sZIoV3igkteNQrYeDxSQe22192BwwUkAdAkCZBX0cksKp8yWlVYUyY6K55jOwajlujwsHEm7ADp42U6s+XbFOd3/R/ZSxVmBjU3BgT3nibJt4OQ48rSzzbKp2fbgtGdWOhKKbH626QnquAR7l15tIcvCw=
+	t=1745965178; cv=none; b=KILam6dpM+BfkkhEtLTj23kD4mgNoo8QFVWcTsnyQW5dF86tXTWljgsLbb6II7My2JTBwpniUmg/DRrun1wuycPSVK/BwbcUzufzDAfdaNwdHbbT3GmRTBmUYbUeeMZlxxswnm8pyRQpG/Kro5G26lwBZ9jWarmtjiYWlPSzw5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745965081; c=relaxed/simple;
-	bh=wDpIvk141ZV01NhrIY+JkCqDNYoHd9B0SSs3egxRMkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TMQA+vJ0l/Q6n1h9EAbq4RUdlIR+djwuYcHXvWRGq2oZg2h+EYmNh/u2/54lpRcwuUqxpzvZ4VocrZAyXJAUAAob2j0X1PB2j6+y3Z1o9kD6oHBgD85AJfFUNYc11LTdSNBVtguPwMwfOSsH+Y3N8sj6ztgxXvwxr4iNS2rVvsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G6qOR9Nm; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745965178; c=relaxed/simple;
+	bh=8Eq2V/y9n8X7Wdttukkjp0P5QfxYqZ0fcjewV0ijtlY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cyKmNXzURStAHbxqYJ5HMt7wsqCcpxC5pwJy3cYwL3qKM95jnqG3X+qks2nOP7s4Ygf4vE9V4NH9q3/F7xY4BdbLm072DLCxrhLNdfgBowCi1q+bGhV+G9uhMHq7wlgXTju/fnHEXel2nhyr+6z3TVkBVZ2DDMt+AWvn4djvxBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PGSjX2M2; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G6qOR9Nm"
-Date: Tue, 29 Apr 2025 22:17:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745965076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VQJrRrVaFnBo4XocryJt5anmF0O/r9hN8T59g9L9+bs=;
-	b=G6qOR9Nmd2hZRkjRJSwbebk2ojGNBZjKTHw9Cbq30iktCdJKq2cJddDCl+7skE3ZxiG5Ol
-	YkVX0BUIC+d/kVdjEu6Xx0fbr0tLyechP3c0pYVUSxH1kX1oi4tPMOWBz+N/Zt0i7VM5gM
-	p6eYvL0BqmG+5/n7pnQRRr/WLiA56vU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, bpf@vger.kernel.org
-Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
-Message-ID: <aBFQBUsrTJLwqGXA@google.com>
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
- <aBC7E487qDSDTdBH@tiehlicka>
- <87selrrpqz.fsf@linux.dev>
- <CAJuCfpEToCmf6rdA6tNpWrzw70Er6Q4ZWOwn+ruCWpU=ZEEkmA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGSjX2M2"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so1287868866b.2;
+        Tue, 29 Apr 2025 15:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745965174; x=1746569974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Eq2V/y9n8X7Wdttukkjp0P5QfxYqZ0fcjewV0ijtlY=;
+        b=PGSjX2M2eNTxjIfW5JE3biCLcteSnbYdwl0/4hv1KGhs8FEGLB1nNAv+xekXqBCYat
+         ptZlBEoESdvXHS/LhZa/GrDNgnPpK3v02Qw3KJ5CQZ5Ape7EfG69z8VXYFtPjt1ptsqn
+         peiSbrGBx0bCg320lFMjbIyc+U1FhS4D5N8NoB8GSlWh2n6VPFSZpOpL1IPlMHCHTcEx
+         d3FEXGsH79GSxY9INpUBXUP8zp8m7mrLQPY6lNWHpg19f3qrX/1sLFcHxR2Uw9GZK4j2
+         djYG0ZehwrVaMGPoyhOYUqaELj9mmUUgvQ4b3/EavqfbkE28KP8ivo9Na3dZkZ7Qc5WA
+         yRew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745965174; x=1746569974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Eq2V/y9n8X7Wdttukkjp0P5QfxYqZ0fcjewV0ijtlY=;
+        b=B4d98rc4QrY3Vpo3liGVveVVJBwu2TwPEqGIx+ZgnrWyGzR/JAPvkEdTF6NZLxxpF2
+         UHpVKq4qgG8Z04Dyr/Y6ksGO+bU9Wh6KKil9ivwPSBEhwsbbo+N84ngWHDBk6FA0gLWM
+         rDw2xZDckQc7sq5YZNtRtjeFxBLnNNMeEMzHe2kN53qL6BaMCafVjXCzTnlhEMEnzk18
+         7FyQuKk9zpk70JXtg55TReyKuVB+W7diERddFxAaa4OAbfqGNBIKAWTVzVInxz19bPcg
+         iGr1rGtyi12qaNd00MJOscJZeFWZ5GCNiO2b7Mh5NC1M7G7IQ9aJhiEJM9pcnaIdYUOg
+         LdgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCGyybPycbDWKKyT0cmILWPatAsBeml9WY53sDHToXbdwHz8B5fQnc870x29DhXXWUB5XvoXfT2Kn2D7SA@vger.kernel.org, AJvYcCVTMlZpV7W/c0s120StZ6jxe2hGMQppGLIdtUj0DFDrqqRYeB5Y6YzTEtstHJCzi5iuqTOnRkhQmaxv@vger.kernel.org, AJvYcCXT4atwinnkPfCJFvYmyeSNsgKj887lKz6gWmI0492jFVlg3Ab1P8nxAaQ1P86Pr4upN2KdgtpG2DA9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/znSRMVNXEysD0B6l9gDufyPNEQB/ZO/3qhRDe4CEdyQXcdUq
+	XhHYyMVkzg/3raB7Hj+fp6LNpGOJL3BkGykg7BAFozt+lxEKv1tnUPssXHTOZqvp12ck1B+IU8f
+	PMYd9qvSKsQEFWJ80IV55fFbdm5jyydMi
+X-Gm-Gg: ASbGnctsIvWkfEh9yeqhmuxAKjPpqpcNVy/xmlLfwg4cmCa0LoERdMp33LzpsWyEYTN
+	P4Eqn9qWbOqotRq7j/sHQVNUTX5Ls5KBGH/9GkvWDVjz7J+PW9+5dRTT6U6li+fZd0LHbUPd/c+
+	bKUNBAf3FVsqZLwh7U7pryMw==
+X-Google-Smtp-Source: AGHT+IF87R5uBfJhVBOmxoFOc8IDi9XInq99Sps/vXzEijBd1LQS4tKFX9nEpLNiKeMmOcKgl17Tb1fiJa1RFfqyps0=
+X-Received: by 2002:a17:907:86a2:b0:aca:d831:8fb1 with SMTP id
+ a640c23a62f3a-acedc765e48mr108112966b.51.1745965174255; Tue, 29 Apr 2025
+ 15:19:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpEToCmf6rdA6tNpWrzw70Er6Q4ZWOwn+ruCWpU=ZEEkmA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250429-togreg-v7-0-0af9c543b545@analog.com> <20250429-togreg-v7-3-0af9c543b545@analog.com>
+In-Reply-To: <20250429-togreg-v7-3-0af9c543b545@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 01:18:58 +0300
+X-Gm-Features: ATxdqUHDmZ6_6-5HFx3SVBo9-BjG8swQGKMOhQKOgun95oSGNPbuPZ7x_37xhwg
+Message-ID: <CAHp75VeY_vjS=Ca4L34UMjVyDvG6iLdrW_c-owKWBLK-3Lg0BA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] iio: dac: ad3530r: Add driver for AD3530R and AD3531R
+To: Kim Seer Paller <kimseer.paller@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 02:56:31PM -0700, Suren Baghdasaryan wrote:
-> On Tue, Apr 29, 2025 at 7:45 AM Roman Gushchin <roman.gushchin@linux.dev> wrote:
-> >
-> > Michal Hocko <mhocko@suse.com> writes:
-> >
-> > > On Mon 28-04-25 03:36:05, Roman Gushchin wrote:
-> > >> This patchset adds an ability to customize the out of memory
-> > >> handling using bpf.
-> > >>
-> > >> It focuses on two parts:
-> > >> 1) OOM handling policy,
-> > >> 2) PSI-based OOM invocation.
-> > >>
-> > >> The idea to use bpf for customizing the OOM handling is not new, but
-> > >> unlike the previous proposal [1], which augmented the existing task
-> > >> ranking-based policy, this one tries to be as generic as possible and
-> > >> leverage the full power of the modern bpf.
-> > >>
-> > >> It provides a generic hook which is called before the existing OOM
-> > >> killer code and allows implementing any policy, e.g.  picking a victim
-> > >> task or memory cgroup or potentially even releasing memory in other
-> > >> ways, e.g. deleting tmpfs files (the last one might require some
-> > >> additional but relatively simple changes).
-> > >
-> > > Makes sense to me. I still have a slight concern though. We have 3
-> > > different oom handlers smashed into a single one with special casing
-> > > involved. This is manageable (although not great) for the in kernel
-> > > code but I am wondering whether we should do better for BPF based OOM
-> > > implementations. Would it make sense to have different callbacks for
-> > > cpuset, memcg and global oom killer handlers?
-> >
-> > Yes, it's certainly possible. If we go struct_ops path, we can even
-> > have both the common hook which handles all types of OOM's and separate
-> > hooks for each type. The user then can choose what's more convenient.
-> > Good point.
-> >
-> > >
-> > > I can see you have already added some helper functions to deal with
-> > > memcgs but I do not see anything to iterate processes or find a process to
-> > > kill etc. Is that functionality generally available (sorry I am not
-> > > really familiar with BPF all that much so please bear with me)?
-> >
-> > Yes, task iterator is available since v6.7:
-> > https://docs.ebpf.io/linux/kfuncs/bpf_iter_task_new/
-> >
-> > >
-> > > I like the way how you naturalely hooked into existing OOM primitives
-> > > like oom_kill_process but I do not see tsk_is_oom_victim exposed. Are
-> > > you waiting for a first user that needs to implement oom victim
-> > > synchronization or do you plan to integrate that into tasks iterators?
-> >
-> > It can be implemented in bpf directly, but I agree that it probably
-> > deserves at least an example in the test or a separate in-kernel helper.
-> > In-kernel helper is probably a better idea.
-> >
-> > > I am mostly asking because it is exactly these kind of details that
-> > > make the current in kernel oom handler quite complex and it would be
-> > > great if custom ones do not have to reproduce that complexity and only
-> > > focus on the high level policy.
-> >
-> > Totally agree.
-> >
-> > >
-> > >> The second part is related to the fundamental question on when to
-> > >> declare the OOM event. It's a trade-off between the risk of
-> > >> unnecessary OOM kills and associated work losses and the risk of
-> > >> infinite trashing and effective soft lockups.  In the last few years
-> > >> several PSI-based userspace solutions were developed (e.g. OOMd [3] or
-> > >> systemd-OOMd [4]). The common idea was to use userspace daemons to
-> > >> implement custom OOM logic as well as rely on PSI monitoring to avoid
-> > >> stalls.
-> > >
-> > > This makes sense to me as well. I have to admit I am not fully familiar
-> > > with PSI integration into sched code but from what I can see the
-> > > evaluation is done on regular bases from the worker context kicked off
-> > > from the scheduler code. There shouldn't be any locking constrains which
-> > > is good. Is there any risk if the oom handler took too long though?
-> >
-> > It's a good question. In theory yes, it can affect the timing of other
-> > PSI events. An option here is to move it into a separate work, however
-> > I'm not sure if it worth the added complexity. I actually tried this
-> > approach in an earlier version of this patchset, but the problem was
-> > that the code for scheduling this work should be dynamically turned
-> > on/off when a bpf program is attached/detached, otherwise it's an
-> > obvious cpu overhead.
-> > It's doable, but Idk if it's justified.
-> >
-> > >
-> > > Also an important question. I can see selftests which are using the
-> > > infrastructure. But have you tried to implement a real OOM handler with
-> > > this proposed infrastructure?
-> >
-> > Not yet. Given the size and complexity of the infrastructure of my
-> > current employer, it's not a short process. But we're working on it.
-> 
-> Hi Roman,
-> This might end up being very useful for Android. Since we have a
-> shared current employer, we might be able to provide an earlier test
-> environment for this concept on Android and speed up development of a
-> real OOM handler. I'll be following the development of this patchset
-> and will see if we can come up with an early prototype for testing.
+On Tue, Apr 29, 2025 at 5:20=E2=80=AFAM Kim Seer Paller
+<kimseer.paller@analog.com> wrote:
+>
+> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls, providing full-scale output spans of 2.5V or
+> 5V for reference voltages of 2.5V. These devices operate from a single
+> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disabl=
+ed
+> by default.
+>
+> Support for monitoring internal die temperature, output voltages, and
+> current of a selected channel via the MUXOUT pin using an external ADC
+> is currently not implemented.
 
-Hi Suren,
+LGTM,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Sounds great, thank you!
+--=20
+With Best Regards,
+Andy Shevchenko
