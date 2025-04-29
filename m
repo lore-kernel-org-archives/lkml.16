@@ -1,68 +1,68 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0803F84A35
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1935884A35
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944016; cv=none; b=lD5prAdpItKORC5dEMfCnwYLpWB7qQM/vQQEItU/dbJHysLT0LfUr8gBucuB+RGwV22gOYpkNfSoPfhV4d8CJoKMPAwLjQfKqZX9c+OOKAPff+MKZzUqxmT0H3Qr2rGUgAcIxdZPHVfxbH9nAnOTcZB+19Vr5Qau8dmuTQabih0=
+	t=1745944029; cv=none; b=hZYFonmi1kfHLtOnLGFxrXKDBdZgYyrjKqlNm5/x5VOEroNWTnmhO90wAZP4ZjvlTUH/masiAiM7kjiXhbNrZiFq59/0WeRapkpMRE+poVIAl/gcvw7pRpifIVpxXB9G+O60rPhcErlQZ2T5gCimJwAmQMhsGbiL/+mTzSpe0ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944016; c=relaxed/simple;
-	bh=WEDAzYZiLp7mEV4s/5QMWARAlJt/3C2clXLFrlAvg3s=;
+	s=arc-20240116; t=1745944029; c=relaxed/simple;
+	bh=kaLvdVXI1hoIB7qsGU1EH4dSOo8/D3G1Zuff9ZzKVq4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lD+YgwMc09jW9A30XoMDCeT7bouln6dg7YxSSwlmdOMaTEyxy9d5qHP2cPk164g5cghPLe84KxEedj8wzj7qX7Ba2JS+2xGre7P44np+66rVGKCA48cPvC3xBP57jk+Ltgz5zo2gypLiIVreejNtcinY3tYwCjsr3tuZMphpb3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ePLxXINt; arc=none smtp.client-ip=209.85.216.43
+	 To:Cc:Content-Type; b=DVvKoaWJcyYlmpmFIPnWPxY1u/4t++GTYGwBmsx13zSUU0LKlgOU3I+bluaHH8u0Ec2LOkZxQCccpqVWmANplageH4qxzmETl2r0Xgdg/AZFcehOWiIGHF34QifWHHQZnS8b62mnAZzkVoBhjqaOo7nTGUksJ3rYoy1ue6KbviE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D7k/zvM6; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ePLxXINt"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-309fac646adso3681a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:26:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D7k/zvM6"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30828fc17adso6244740a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745944010; x=1746548810; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1745944025; x=1746548825; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OFSw9zzZmlKdXsKFkYK6Hk2SAswrTv3a4YDDesvzZZw=;
-        b=ePLxXINteWSi8MQxGuZo/CVHYt60LR2h/E+HEBytzpmazJd2sixeXYEjSFIe6dchzH
-         XvlFwD8MTxJGU52VrImKE5o2BjBXEuhO5VSxYstUy/FZUngDPofxA7vmVEHrmLiQdpY7
-         ljdyF16U9BSB93Er0/Cp/SFwrWctDx1UjD0eY=
+        bh=ID3Zt/kcyvy5TQaBJIv/XJ2QG5FvCfrPnhdLxnIVAHE=;
+        b=D7k/zvM6SKCKv3ijV3/sTCwuFIeExKb2Ai5OEmF257llwDcyUXOWrm3vL+pIlimQnu
+         VTEckVqXMpokwJ812jEyaftXSx2Xs8w+ebarmaWbwEOcVjDOZtMGGl+nk2mCnQxh8mCl
+         mtxCIpU0IYixiPLUeX5lvxMUb7ipnSOr5iOfc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745944010; x=1746548810;
+        d=1e100.net; s=20230601; t=1745944025; x=1746548825;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OFSw9zzZmlKdXsKFkYK6Hk2SAswrTv3a4YDDesvzZZw=;
-        b=laIvgO6QYCI16q+s7W9Ec3IL7WmIQzAofohcA0HnnJmr2v1OmaIBq+zydKEKjtpzmT
-         Yc+cSl4gFUHYJol/i7kO4HocMNGh3q42/VfxKakJrRFJCTSFG9LrBMJHLraW5w+xdyTr
-         0g0IbeLDOA37RsFA1YZo9wlCiMGL3RjlCVJ/9MozjNt3QHdX0C8ha8/XQZnBJtsXaOra
-         y8HwKdW8UaHCJVKtzklBKevuMyvlSxX9FEhFlUgibe0DOK5kZlH5guYhz3JyyMkPvh4x
-         oHgBmt7EweBOpaioCmd57kB5VZYpyebV9RqZ2Jb4QVURUUsdUF7tFiccjXjmx629v25y
-         r4kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuZptKvjo41BFm2zgxWoNicAlGqP+QZnpAiIh6oIbGt1hySTlr+MJLAJ43ShHwf9GSfbiDq9ZKbEn+Xro=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl0zAjXd7ChNzBQ3LfqNkd8PBxsFA1WC7lfTzHIDP6IXBYU5U3
-	COOOKLNbhAbyydSS/oOy1UHOiaR6n+cbwxDh2kzsSg1pXEEvw/dIWQWtC+q08F5yWaUV55zEfYI
+        bh=ID3Zt/kcyvy5TQaBJIv/XJ2QG5FvCfrPnhdLxnIVAHE=;
+        b=IdE9bl/+bOEIN/n6AL+WeZwmDINKLA82THKmhP4EE2A12UClQqqHB2/ZdbRcacDHG3
+         9N0bcc3B6UO2gi1DjjHssT70s+VA5pgDVIsKLjfUzrzuYhs6Vc7sDGWac4SCF5AZlkN6
+         /dn3EZmTXkzi/e56NcfvaPyk3bBotwRqScSgx0rD5QsaJfxjptU+K2M989hzhTXZTP2F
+         rZ7Cpj6qjLnqclKfWhE3krCchlXH9dsdt4A+eGXFoyFw+rHIeqEWHWw2RDHbOtvYCt9f
+         uKfzpknbsmhWXcVWidLxU66P15uTt9+R+z/KNAlFOwiFpfP4pbM6WyEDl/n6+lRs2vgY
+         +gSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgMAak5Jn2XfkKDrcx94IteO/DAKPo7FB9SCQYPGDacpqaDjEvOpRcbhgGpGJn0q7DB36v/13NRcumIrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJCMnM58LB2u7rHv9SuLGCgNZpGCkTiacJupknkcWAJMwGvCkH
+	Gy46TJphPVl6impt8KzDh0W4WnQfIoVCTsHJvOEI5+uepC4S6imiDEbyQutMoiTbqVp/J84XXG8
 	=
-X-Gm-Gg: ASbGncvy83t97JvfY76O0ziSMcSS8mD3TFgyjKMNIOSYVbOr/MASFzFB8BeTa5VrrFT
-	mnXYFsm3WY8HKJCl6cxvAx8A60cspAExvBD7Uk4zIsobJdvbRhOe1+Ao3eVmxcMRNMgM1VkGq2M
-	90Tfwbj1w4U9wph0w67m+xzK6lCw6h2D0dgId1Uddc+oRU3NgTWVvyVI9PPWbueIWR0iUA/wC25
-	OLY8DuCTmLa28lR48Ju7PAuqG702toFRQz0gytmJOqnRo1OaqIgHagr04RYnmmeCzPcuvdmgvTh
-	PAcHFrqGomHMsoC2jvjqdpjP3J7HREna/sdI2KEUaQuSDelhCaNlChwy0pmJj0z71Dz51PSRBcr
-	mfhPq
-X-Google-Smtp-Source: AGHT+IF624th4fHGdPPi6HiKhs50DdzcqazjQ1aJ1E6ji9VNlK8PfdcLXM5lEsvUGhVdzuh9O3HmCA==
-X-Received: by 2002:a17:90b:4fd2:b0:2fe:93be:7c9d with SMTP id 98e67ed59e1d1-30a2245d8admr5158768a91.7.1745944010566;
-        Tue, 29 Apr 2025 09:26:50 -0700 (PDT)
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com. [209.85.216.47])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef124cffsm12597109a91.32.2025.04.29.09.26.49
+X-Gm-Gg: ASbGncs+sqPJVolBHPgKqjpRS6DJbooP1AJgJP3kTYHuA+vpa2QMYKSKwlSuKT5et6p
+	3/wSKNabK+pZ1q+nEbo9G51jtwdy5iIfD26AZcdChK9QiUQptMUQcwu8srmUFGQ7mmMYNn36/Ov
+	1adFT7kbte0Ia1f/9W+hNLUJSQI3Ro82iOWfud6jDq6ARmMzF29b/HJw7GFXQ1h/orapIYodHC4
+	KvNUI7Ul5IJzGCGEGudZGSTqqs+FVqX2aSOhZ6y7JWqOjTV8+VVTunuz7rRGtre+NWxcy8d+E4i
+	sfyJFqjtFeFOK7a7nqrWZE+Ltoeg9o/G3/zb8ospykNUn9EfYwmYZQCJ/bzZuiphhkavHe9Euak
+	Li0BQwsJg
+X-Google-Smtp-Source: AGHT+IHA0OwYH6kKViJXdVYL7RdKnBTgSJmtN4o8/UgmAfyB5AZ74yhOeHh6BHHO0Rx5VFlzz04qRA==
+X-Received: by 2002:a17:90b:53d0:b0:301:1bce:c252 with SMTP id 98e67ed59e1d1-30a0139879cmr19930778a91.27.1745944025363;
+        Tue, 29 Apr 2025 09:27:05 -0700 (PDT)
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com. [209.85.215.176])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef099963sm11426180a91.29.2025.04.29.09.27.04
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 09:26:49 -0700 (PDT)
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30820167b47so24001a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:26:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVZMoy1aynG8pTVSeL8N1jaWcskZTLO37UeUpI2ZkG4SRXGEq2W3mBUo7TWUdBoclwUkJ8AekXbOGlfrqk=@vger.kernel.org
-X-Received: by 2002:a17:90b:514c:b0:306:b593:455e with SMTP id
- 98e67ed59e1d1-30a2244ac78mr5519557a91.1.1745944008394; Tue, 29 Apr 2025
- 09:26:48 -0700 (PDT)
+        Tue, 29 Apr 2025 09:27:04 -0700 (PDT)
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b074d908e56so4641597a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4v+dgRbrBB2dEOIihx0a1lby3u2zqn9OrfOnJ+xyLF/rHtmUJrzmjQdJe7Hu2D3m6uZT2ZUAM8KE+f+Y=@vger.kernel.org
+X-Received: by 2002:a17:90a:8c15:b0:30a:255c:9d10 with SMTP id
+ 98e67ed59e1d1-30a255ca186mr3202709a91.8.1745944023558; Tue, 29 Apr 2025
+ 09:27:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,14 +70,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
- <20250429092030.8025-2-xiazhengqiao@huaqin.corp-partner.google.com>
-In-Reply-To: <20250429092030.8025-2-xiazhengqiao@huaqin.corp-partner.google.com>
+ <20250429092030.8025-3-xiazhengqiao@huaqin.corp-partner.google.com>
+In-Reply-To: <20250429092030.8025-3-xiazhengqiao@huaqin.corp-partner.google.com>
 From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 29 Apr 2025 09:26:36 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UsMaXA6aGjG=VxuQqPKT+zXSer8VD7JztpWWw1aq1WGQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHoXvlkOKGwmAYlJRi_2idzUonnocWOsACoF9fazlVz2BlbZKPESPlK8BI
-Message-ID: <CAD=FV=UsMaXA6aGjG=VxuQqPKT+zXSer8VD7JztpWWw1aq1WGQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] drm/panel-edp: Add support for AUO B140QAN08.H panel
+Date: Tue, 29 Apr 2025 09:26:52 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WtRYCM=tzfyfLD8Yv015U2U=tuRMTsSLtxNSm9zAia8g@mail.gmail.com>
+X-Gm-Features: ATxdqUG2rAf0BoOyLmWMpcSnfq6hQrouHip_k1QAJOJNtZxAX5VK0S8UBRBj9Mk
+Message-ID: <CAD=FV=WtRYCM=tzfyfLD8Yv015U2U=tuRMTsSLtxNSm9zAia8g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] drm/panel-edp: Add support for BOE NE140WUM-N6S panel
 To: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
 Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
@@ -91,26 +91,26 @@ Hi,
 On Tue, Apr 29, 2025 at 2:20=E2=80=AFAM Zhengqiao Xia
 <xiazhengqiao@huaqin.corp-partner.google.com> wrote:
 >
-> AUO B140QAN08.H EDID:
+> BOE NE140WUM-N6S EDID:
 > edid-decode (hex):
 >
-> 00 ff ff ff ff ff ff 00 06 af b9 fe 00 00 00 00
-> 00 23 01 04 a5 1e 13 78 03 c1 45 a8 55 48 9d 24
-> 0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-> 01 01 01 01 01 01 18 86 40 a0 b0 08 52 70 30 20
-> 65 00 2d bc 10 00 00 18 00 00 00 0f 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 20 00 00 00 fd 00 28
-> 3c 71 71 22 01 0a 20 20 20 20 20 20 00 00 00 fc
-> 00 42 31 34 30 51 41 4e 30 38 2e 48 20 0a 01 79
+> 00 ff ff ff ff ff ff 00 09 e5 73 0d 00 00 00 00
+> 32 22 01 04 a5 1e 13 78 07 13 45 a6 54 4d a0 27
+> 0c 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 03 3e 80 a0 70 b0 48 40 30 20
+> 36 00 2e bc 10 00 00 1a 00 00 00 fd 00 1e 78 99
+> 99 20 01 0a 20 20 20 20 20 20 00 00 00 fc 00 4e
+> 45 31 34 30 57 55 4d 2d 4e 36 53 0a 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 45
 >
-> 70 20 79 02 00 21 01 1d c2 0b 58 07 40 0b 08 07
-> 88 8b fa 54 7e 24 9d 45 12 0f 02 35 54 40 5e 40
-> 5e 00 44 12 78 22 00 14 ef 3c 05 85 3f 0b 9f 00
-> 2f 80 1f 00 07 07 51 00 05 00 04 00 25 01 09 ef
-> 3c 05 ef 3c 05 28 3c 80 2e 00 06 00 44 40 5e 40
-> 5e 81 00 15 74 1a 00 00 03 00 28 3c 00 00 60 ff
-> 60 ff 3c 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4f 90
+> 70 20 79 02 00 22 00 14 33 d8 04 85 7f 07 9f 00
+> 2f 00 1f 00 af 04 47 00 02 00 05 00 81 00 13 72
+> 1a 00 00 03 01 1e 78 00 00 5a 4a 5a 4a 78 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ad 90
 >
 > Signed-off-by: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com=
 >
@@ -122,5 +122,5 @@ Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
 Pushed to drm-misc-next:
 
-[1/3] drm/panel-edp: Add support for AUO B140QAN08.H panel
-      commit: 5f8f898b14b2401e980b1f206b827d985e040ebe
+[2/3] drm/panel-edp: Add support for BOE NE140WUM-N6S panel
+      commit: 800c2180705a87829f7833df3d9e73b548bf65ff
