@@ -1,84 +1,134 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDA017C21B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7164D17C21B;
+	Tue, 29 Apr 2025 05:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745905694; cv=none; b=LdD2BEEcYZ1E9kG+CJNSTO0J7hrYXbLwHLuaFXfWggAtEshALgxxVtHzZZkBHBl0jK3m2Af5Q0kdcYWv9weEin5sBF/pl7s9y/Cncw4d0rhT0nIqNTtMHsbD49KvNbt7K58J3B4JBYVmkILLyMed6ujZS19oZ10/vTif3Tru8C4=
+	t=1745905760; cv=none; b=VXHh204bSpVEu9cQszb2i0h3+EsvC4TPGz6f637Efav6GwtEFROVhhhLiARDKMkeCFKIzCglAuKQV9/7G6OO1W8W17VeOrV98Ulf1+7qmhPJ37EJjhlb+V/LjzhjvXP8fXM2C1mpBH6CFQLWV86ya8DFBhsjySDMC5Y0G94qgw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745905694; c=relaxed/simple;
-	bh=S2F9cy1P32D1MrCP40MrmJy0aXKoJEYRPzonUjlMoHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iv1Lr8C3xZ6tCfdB4TPOYexVmIulwOSUA+cZRPTAbAEtLGEgS0uD8/vXHrujRyVVdjD33Solf750Tuh+Xo+h0REUEhd5QJoCIVHkdSJApGT8F7y971CSMzoOu6GJsoFy082oyWut97Pn0WwdsIQsewKna6esO76wxFEOT02nWSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hun5pi1i; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745905760; c=relaxed/simple;
+	bh=wTHla6lUkJhpBWGS88wEwpkLEaR75vDhNRcey4lS0wg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rkG5zIGeD/mVY99Wf2EjOyzDwlST/+rKYxQgkdq++nTQV7KeQmjLsO+Um9TOMSe+mya76D2A3Xi2P/FhpOCe6kIY29So5vV8a2YlqCXCzZvlMg5gZFS1waW1haOBDHFBSIE1s92wnn2DUN9W2/S1AUrak3SQCFKGtfPb1XXyDQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m/7IowXR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hun5pi1i"
-Message-ID: <0a25f585-de46-4e3e-8ec2-47df25947df1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745905690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7LZcbrAMfCDd4lnWPi8BBDX0LHsvZTUM8X0yPk05FoE=;
-	b=Hun5pi1iblLS3Eb8YZyho/6ZdLG7pxP4GsGlQWTPl/rtedWkZJ5TejZ4IkSzXvQ4f04waS
-	O5R4upoh2OSNjAoJvLc6f05gDO2cQb0XyotSksGiSoiTf3hkO9ZeTZbw7dRDDpTJB5T465
-	I2y54h4bLxxvk8NCxsXoAHa0jqrBcCI=
-Date: Tue, 29 Apr 2025 13:48:01 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m/7IowXR"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNrr8I014932;
+	Tue, 29 Apr 2025 05:49:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=2mvYhY4cXE3
+	pGemUoOJ2q++sYW/b2dkSXtsse3LCD7U=; b=m/7IowXR4Fir/Uk2yXXGI+5xT0/
+	RDxYbIcXKtGwT0xPBHl7+Qvno3vcipleDmpYIkldZGVe38SzFhDo2U3hvfTSjCdd
+	tAhzukSS1gVBE180zmBNgLjBVst+nN32aImPP0ciSarv1TJBJ3vn82nEY2GgMC5g
+	KsjMCOOlweBZ6UjBkemvVhIzzPPOG4nCFF5IfU7LZVuedzwShIOPWZHWxNltwGfj
+	o53R1nBUXqrZFzu5ewId0fQ8N/YPbtzzmjnZVsxvpkCy9ZwdJWOD1eQCZkhzz4zM
+	jJwswQH2q8Xg1S5XKu2L/XKONXMnwF1rrL5XIjFvSMrRhSSaB9Qv+/gxDVA==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnn29ty-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 05:49:15 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T5nChs030270;
+	Tue, 29 Apr 2025 05:49:12 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 468rjmfqun-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 05:49:12 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53T5nBt0030234;
+	Tue, 29 Apr 2025 05:49:11 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53T5nBs9030226
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 05:49:11 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
+	id 9F2EB50C; Tue, 29 Apr 2025 11:19:10 +0530 (+0530)
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@quicinc.com,
+        kernel@oss.qualcomm.com, Wasim Nazir <quic_wasimn@quicinc.com>
+Subject: [PATCH v6 1/4] dt-bindings: arm: qcom: Add bindings for QCS9075 SOC based board
+Date: Tue, 29 Apr 2025 11:19:01 +0530
+Message-ID: <20250429054906.113317-2-quic_wasimn@quicinc.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250429054906.113317-1-quic_wasimn@quicinc.com>
+References: <20250429054906.113317-1-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] libbpf: remove sample_period init in perf_buffer
-To: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- Namhyung Kim <namhyung@kernel.org>
-References: <20250423163901.2983689-1-chen.dylane@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <20250423163901.2983689-1-chen.dylane@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: chqzamUCceNv8Nk5GfBMlkENHwd32MCB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0MiBTYWx0ZWRfXwAefaWZ0jlqe 4L3qYpANnarr3/q4GnGuiILDV5asdtM+lyNYb/4bgiGa/c7oAUOsDSOlFx+2L/yymZN+6Ak9i09 GtuiW9ZFesV6aOETFFN9nIs6Haco/2RAWDOHcdN+SUtp2hItX0TQJO3+Al/PcrLj+QeZ4LOXeEc
+ OC7ngxHHkWiKcV2NsJA/0gQ74tjKfzq2C1F9Wt7R3EVZvvJ3oXt9CoBEjvhinUrYKOgD6+vNeU6 uGU668mcWBOvXE3Z9PFpnsL2OgrewSRv3yk2Up4qWgvo32YGPWg5PmYQoQpC/+viwyZp+lL5ukk Wge0JtaeKgoqWpmOzwTPuyIyOTQWNFXidEn/i8dMMy+w/oifNGvgvjaLpPD/NrHOhfe4tgNwwDD
+ HX26fzxZoyYmCa0PpdNxxwTpjqxTsv5IicQA1YpcBg5qwisCOXyTk0o0rksrdhMjYoU40q8f
+X-Proofpoint-GUID: chqzamUCceNv8Nk5GfBMlkENHwd32MCB
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=6810685b cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=GSGDit3c0nHYkW1XmsAA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290042
 
-在 2025/4/24 00:39, Tao Chen 写道:
+QCS9075 is compatible Industrial-IOT grade variant of SA8775p SOC.
+Unlike QCS9100, it doesn't have safety monitoring feature of
+Safety-Island(SAIL) subsystem, which affects thermal management.
 
-ping...
+QCS9075M SOM is based on QCS9075 SOC and also it has PMICs, DDR
+along with memory-map updates.
 
-> It seems that sample_period no used in perf buffer, actually only
-> wakeup_events valid about events aggregation for wakeup. So remove
-> it to avoid causing confusion.
-> 
-> Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->   tools/lib/bpf/libbpf.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 194809da5172..1830e3c011a5 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
->   	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
->   	attr.type = PERF_TYPE_SOFTWARE;
->   	attr.sample_type = PERF_SAMPLE_RAW;
-> -	attr.sample_period = sample_period;
->   	attr.wakeup_events = sample_period;
->   
->   	p.attr = &attr;
+qcs9075-iq-9075-evk board is based on QCS9075M SOM.
 
+Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
--- 
-Best Regards
-Tao Chen
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 08c329b1e919..713d7b471883 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -58,6 +58,7 @@ description: |
+         qcs8550
+         qcm2290
+         qcm6490
++        qcs9075
+         qcs9100
+         qdu1000
+         qrb2210
+@@ -960,6 +961,13 @@ properties:
+               - qcom,sa8775p-ride-r3
+           - const: qcom,sa8775p
+
++      - items:
++          - enum:
++              - qcom,qcs9075-iq-9075-evk
++          - const: qcom,qcs9075-som
++          - const: qcom,qcs9075
++          - const: qcom,sa8775p
++
+       - items:
+           - enum:
+               - qcom,qcs9100-ride
+--
+2.49.0
+
