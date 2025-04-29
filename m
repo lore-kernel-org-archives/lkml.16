@@ -1,155 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95545242D73;
-	Tue, 29 Apr 2025 17:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4D5242D6A;
+	Tue, 29 Apr 2025 17:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947786; cv=none; b=JVXMPpqtQwqXfH8YvwTjHzVif4NfIMe+NucvwL+bznWhaebD6TcKTN3Z2/hAO/DqBRJc0oNnk+4EBG/baX36znZSzMkdhqz8nnfkLQDizqLO4v7PqDGc19nZh9fKlfQDpUGSGMvEN+BblhY5NIBb24waO75xybul1mNw8MvvD2g=
+	t=1745947818; cv=none; b=Ct9pIrExFaQ7tdEwQQ9D3kc4Ruay+BzwkxcvRY4sXZAa2TjvNu3j+BkryQSeuyZQML184gPFc5GrLEZZuoat8oIY61RySh4aN8H1ONRWc0LNVlpIDsqVf8Bbt5J5cStpaY2g+g3vhIFZN7ebBMig2ngyEr6RWZjfXMRtOMukkRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947786; c=relaxed/simple;
-	bh=kb1LQkEATwQDObUTfn7dlIuzugD4bFxDOqpPi+yOLKA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=g+i9hHOHPtl4xCzTqu3tYFEiVwohNUv41WyPXuT+Pq9NTY1wM9wWM9reF90kZbqkHYtysVC9sMPp3spMsLYwL27fI7EhgHCTdyPrnZ6o+EPegK4byU+xtx0PhhikZcknvDiogOI+bs7A47FuR1ZCLNXK7nIjKMbv1XhjhgF2VJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnQ/yhe4; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745947818; c=relaxed/simple;
+	bh=aU4Ihy2Y7pgO9xF0xErFt8eStjZq3uMsfde7SZDYEvk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aLN0wlw4vGY0hB6e7uR4f6/9HMWoXrJ+T6/0M/tNkyfI94rPTFS7FOQmcCnnhHsgB0iWBJcHV0txYuJbCvC+Keb59HOSrSu+FLRjxcHtF2sC2Gg8zVUj3I7QhFfGGE1xFl/4gjdbG8sAzxohphOAOteuxwxV705FckKtQq2qhdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=x4fWfTrm; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnQ/yhe4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745947786; x=1777483786;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=kb1LQkEATwQDObUTfn7dlIuzugD4bFxDOqpPi+yOLKA=;
-  b=fnQ/yhe4DL6HOEln7OHLsYulC6SjwkG3idsdSEWzRmgKFRAidqZwix0a
-   fmjKaEfbvw6jWs8PvrGYFzhrvRemcVdBcUeKCIYH6cShYv1iGd0Q3uWEU
-   ZARR+UScz7uJ9ZkgmuXs9OpiVUexuRon4AcYAPdSxDQ7tFHuPE5O041Ha
-   hh7uG6T+7uX/FEWVs+5gkXhXCCfN85zL4V0FRpJK2KhRqPtQ7B1V4LTSP
-   nBWVaUQ7GXsi1gV57LRNdJilvzc3Ac2fXSki3Xs4wMtVs+jso1vQm8wzW
-   00v7cgMwAOmCaF54RZxmJUPPYf8xaO8l3qZfziN7lnCql9/N9orMdMctl
-   w==;
-X-CSE-ConnectionGUID: A540W1YGSIu5Wa5hQslO2g==
-X-CSE-MsgGUID: FIhZjxk2QR2jGx2XBoQmMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="57784002"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="57784002"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:29:45 -0700
-X-CSE-ConnectionGUID: 1MxlXQjRSVSOFrgzSDqt1w==
-X-CSE-MsgGUID: qcN81ltcTty7e55AGrlXng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="137905858"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.167])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:29:44 -0700
-Message-ID: <07604feedc23ae2b404f8e9c0cfc1c19e2eb27e8.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: ISST: Support SST-TF revision 2
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
-Date: Tue, 29 Apr 2025 10:29:44 -0700
-In-Reply-To: <f45da867-1090-51cc-b405-c4a639adb5ab@linux.intel.com>
-References: <20250417170011.1243858-1-srinivas.pandruvada@linux.intel.com>
-	 <20250417170011.1243858-2-srinivas.pandruvada@linux.intel.com>
-	 <f45da867-1090-51cc-b405-c4a639adb5ab@linux.intel.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x4fWfTrm"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53THU95m3729841
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 12:30:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745947809;
+	bh=Nw+GjNesG8s0iltbii8IAJcU7EUcXcVq8Kt/tU/6fC4=;
+	h=From:To:CC:Subject:Date;
+	b=x4fWfTrm6ytx2le62u2Rq9AESEwjV5uANyePOkMqLln+5FAxyFtDnH8ZYfzOtHKf8
+	 Dh1XvghYDFqjQDKC7MrIlJ2Ij9q7fvevUqQUxMbSeeIS6WNDh/IdjTtl27AsZy84Xi
+	 A1k1ot7NdkYZ/MIF/Y3JeGVpl+dCClYg1rZcEwaw=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53THU9Ds054054
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 29 Apr 2025 12:30:09 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
+ Apr 2025 12:30:09 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 29 Apr 2025 12:30:09 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53THU9x3032163;
+	Tue, 29 Apr 2025 12:30:09 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>
+Subject: [PATCH v2] arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+Date: Tue, 29 Apr 2025 12:30:08 -0500
+Message-ID: <20250429173009.33994-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, 2025-04-29 at 17:23 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 17 Apr 2025, Srinivas Pandruvada wrote:
->=20
-> > SST-TF revision 2 supports a higher number of cores per bucket, as
-> > the
-> > current limit of 256 cores may be insufficient. To accommodate
-> > this, a
-> > new offset, "SST_TF_INFO-8," is introduced, allowing for a higher
-> > core
-> > count. Utilize this offset instead of the current "SST_TF_INFO-1"
-> > offset,
-> > based on SST-TF revision 2 or higher, and if there is a non-zero
-> > core
-> > count in any bucket.
-> >=20
-...
+For am65x, add missing ITAPDLYSEL values for Default Speed and High
+Speed SDR modes to sdhci0 node according to the device datasheet [0].
 
-> > +	if (feature_rev >=3D 2) {
-> > +		bool valid =3D false;
-> > +
-> > +		for (i =3D 0; i < SST_TF_INFO_8_BUCKETS; ++i) {
-> > +			_read_tf_level_info("bucket_*_mod_count",
-> > turbo_freq.bucket_core_counts[i],
-> > +					=C2=A0=C2=A0=C2=A0 turbo_freq.level,
-> > SST_TF_INFO_8_OFFSET,
-> > +					=C2=A0=C2=A0=C2=A0 SST_TF_NUM_MOD_0_WIDTH
-> > * i, SST_TF_NUM_MOD_0_WIDTH,
-> > +					=C2=A0=C2=A0=C2=A0 SST_MUL_FACTOR_NONE)
-> > +
-> > +			if (!valid &&
-> > turbo_freq.bucket_core_counts[i])
->=20
-> I'd just drop !valid from this check.
->=20
-> > +				valid =3D true;
-> > +		}
-> > +
-> > +		if (valid)
->=20
->=20
-> Should this be named instead to something like has_tf_info_8 ? (As
-> this is=20
-> not really valid/invalid check but whether this new info exists or
-> not.)
-We can.
+[0] https://www.ti.com/lit/gpn/am6548
 
-Thanks,
-Srinivas
+Fixes: eac99d38f861 ("arm64: dts: ti: k3-am654-main: Update otap-del-sel values")
+Cc: stable@vger.kernel.org
+Signed-off-by: Judith Mendez <jm@ti.com>
+Reviewed-by: Moteen Shah <m-shah@ti.com>
+---
+This patch was split from "Misc MMC updates" patch series [1] to help
+with backporting.
+[1] https://lore.kernel.org/linux-devicetree/20250417233040.3658761-1-jm@ti.com/
 
->=20
-> > +			goto done_core_count;
-> > +	}
-> > +
-> > =C2=A0	for (i =3D 0; i < TRL_MAX_BUCKETS; ++i)
-> > =C2=A0		_read_tf_level_info("bucket_*_core_count",
-> > turbo_freq.bucket_core_counts[i],
-> > =C2=A0				=C2=A0=C2=A0=C2=A0 turbo_freq.level,
-> > SST_TF_INFO_1_OFFSET,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0 SST_TF_NUM_CORE_0_WIDTH * i,
-> > SST_TF_NUM_CORE_0_WIDTH,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0 SST_MUL_FACTOR_NONE)
-> > =C2=A0
-> > +
-> > +done_core_count:
-> > +
-> > =C2=A0	if (copy_to_user(argp, &turbo_freq, sizeof(turbo_freq)))
-> > =C2=A0		return -EFAULT;
-> > =C2=A0
-> >=20
->=20
+Changes since v1:
+- Add stable tag and move fixes tag
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 6d3c467d7038..b085e7361116 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -449,6 +449,8 @@ sdhci0: mmc@4f80000 {
+ 		ti,otap-del-sel-mmc-hs = <0x0>;
+ 		ti,otap-del-sel-ddr52 = <0x5>;
+ 		ti,otap-del-sel-hs200 = <0x5>;
++		ti,itap-del-sel-legacy = <0xa>;
++		ti,itap-del-sel-mmc-hs = <0x1>;
+ 		ti,itap-del-sel-ddr52 = <0x0>;
+ 		dma-coherent;
+ 		status = "disabled";
+
+base-commit: d864bb528a6725e775d564fd4430762acbb9dd0d
+-- 
+2.49.0
 
