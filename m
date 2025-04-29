@@ -1,176 +1,138 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3044211A0B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D7029DB73;
+	Tue, 29 Apr 2025 10:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921959; cv=none; b=O8iz/MiKbd+ZMq9LtXARSXRIueywEqVQ2q7wUbEZhEV5JLkckK4Sb2QZKK0IrRnrw+g/eeKsw5Vmbr0JS3Cqdk2tEJCy/XvATjdgHQbNDCpEahN2YC9U4TxyD9KeuKuTi+2Dl/XD47tCXamC1ChNsfft6Ki/lZNnRk690IP7aco=
+	t=1745921961; cv=none; b=pqtzb7AAVTLb+mEjzg9dEo0cOuo+lKTiEVtc1eO2Xex2C+AOCh4rBi7K2R29Vyq9zijkogxOjx5UL5l7kE/lglzZFOVQX+TGx6IKjF92NoYcuDTRLOQFqJ5yKMCM4GhDOhKufGJcGKmekgszQ+GauOAM0umk6Clp1zdu2TWoLFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921959; c=relaxed/simple;
-	bh=4QzkBVmmHsWN4OZnWCSRRaBIew+nm1KtZg3/1hqRiVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDlsA3iHuyC3wF0ajkUbdEAMS2XSwKtHAEvt0oJ4Yl6cb9FgEatKddvj4xS/05iSmbPTuKt0MRLi4MeSIvRV1htC3rIjhPURu7BkHogP5C/OC5kDkUkpZ/fsQhVkeUKMf+WoFwBHQFNHBomnzt9hPdlBKR5vwAvoP8xt1nGwrmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uEPmOZ5H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MWAXJuoI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uEPmOZ5H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MWAXJuoI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745921961; c=relaxed/simple;
+	bh=sYwcfBc7eQw5TQtTrlW3iOqP7WR4HKRv7C/47ZEs3FQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Vcjc/ktvPGKvOedNy4BBNPyReJDNe74Ce8ukCoVGuexjvm7ffm57w8RZRP1gPHetrAUOCaZyXNuSJootMSWRsdVEhegjg4Ke9Rr1QjoACMBGTpS8KZ+jUfDz//sFScNDSQLnURS/dtfL3sOOBPqUe3pj1eSTp4j5VWX6xX/Chk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O15MKNei; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uEPmOZ5H";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MWAXJuoI";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uEPmOZ5H";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MWAXJuoI"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 166DC1F391;
-	Tue, 29 Apr 2025 10:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745921956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FojJjMlWLIACBAIrNYwWPoVZQRrjQQxZ7P50XQnrvLM=;
-	b=uEPmOZ5HSLeDXHB+/QLxg4hkLqdEVZhQm34yN2cqvajNTyMftZUcLfUcOOz0hopKEAFG1E
-	J/0I4C7WvMcCVGzQGcgps1eVUpnflFRtembc0UofYWdHrPkMfw5aTRWJT/JIxvdMFV16Yc
-	pw5oAtu65gWZSdDGoYjFOtfFTxP51SU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745921956;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FojJjMlWLIACBAIrNYwWPoVZQRrjQQxZ7P50XQnrvLM=;
-	b=MWAXJuoI9N+y0T6Vas3sAOy2gxu3Wyd/APynkhGhk8aoCcBmAdgQVRzaCxn8TEzy8sqCB1
-	gxmYnnOo8dWgMEDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745921956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FojJjMlWLIACBAIrNYwWPoVZQRrjQQxZ7P50XQnrvLM=;
-	b=uEPmOZ5HSLeDXHB+/QLxg4hkLqdEVZhQm34yN2cqvajNTyMftZUcLfUcOOz0hopKEAFG1E
-	J/0I4C7WvMcCVGzQGcgps1eVUpnflFRtembc0UofYWdHrPkMfw5aTRWJT/JIxvdMFV16Yc
-	pw5oAtu65gWZSdDGoYjFOtfFTxP51SU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745921956;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FojJjMlWLIACBAIrNYwWPoVZQRrjQQxZ7P50XQnrvLM=;
-	b=MWAXJuoI9N+y0T6Vas3sAOy2gxu3Wyd/APynkhGhk8aoCcBmAdgQVRzaCxn8TEzy8sqCB1
-	gxmYnnOo8dWgMEDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0989313931;
-	Tue, 29 Apr 2025 10:19:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EnpPAqSnEGihKwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 29 Apr 2025 10:19:16 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B2221A0952; Tue, 29 Apr 2025 12:19:15 +0200 (CEST)
-Date: Tue, 29 Apr 2025 12:19:15 +0200
-From: Jan Kara <jack@suse.cz>
-To: Joe Damato <jdamato@fastly.com>
-Cc: Carlos Llamas <cmllamas@google.com>, Jan Kara <jack@suse.cz>, 
-	Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Sridhar Samudrala <sridhar.samudrala@intel.com>, 
-	Alexander Duyck <alexander.h.duyck@intel.com>, open list <linux-kernel@vger.kernel.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, William McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
- the future
-Message-ID: <zvkvenkysbzves2qzknju5pmaws322r3lugzbstv6kuxcbw23k@mtddhwfxj3ce>
-References: <20250416185826.26375-1-jdamato@fastly.com>
- <20250426-haben-redeverbot-0b58878ac722@brauner>
- <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
- <aA-xutxtw3jd00Bz@LQ3V64L9R2>
- <aBAB_4gQ6O_haAjp@google.com>
- <aBAEDdvoazY6UGbS@LQ3V64L9R2>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O15MKNei"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNrrgH014932;
+	Tue, 29 Apr 2025 10:19:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zrhoqFQdUj475IOpeCgmVsISJMFxfLP3KYtvUVEtIEM=; b=O15MKNeiDfqfLyAn
+	i/N7QCTz5ca2aaRxutyIHezQxoylCw2j8pQBtE2n8BhBggT41V4WHR8ynjbjj6wY
+	AVjneTVxQansZRL8FMO1rzZRZE/4FgPHP7kt6NxNn5hJOw84sr0CPpRSZqOMuJrF
+	XWGV4U6MVZeCNTZ6yNsptPFqI8puIfGKl2/zkFEHIICXaFwQ8GZuhZkVgrrPahpe
+	2Jnw5Z6Y2TgDIGEUaCGAGMj9WqDkiz1imzM8SO0/ZnssLXW+KSMCjkZcYKGkxpn9
+	nuUFsCpv1dAglZN6K3nYgJ+VKuYC1sa6ghjXlaeBkFcZ2KhlQfStvRTE4Bnjj9vq
+	iyDC9g==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnn327y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:19:15 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TAJFJu012885
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:19:15 GMT
+Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 03:19:09 -0700
+Message-ID: <6a80e90c-88f1-48f5-cd6f-7fbd5c736902@quicinc.com>
+Date: Tue, 29 Apr 2025 15:49:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBAEDdvoazY6UGbS@LQ3V64L9R2>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 09/23] media: iris: Skip flush on first sequence change
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
+        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-9-3a6013ecb8a5@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-9-3a6013ecb8a5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: MHe8Whm3TCHJFzDYvoz2bqC6Rwn5i16B
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NiBTYWx0ZWRfX+mDx/iWtWP6W 8sndAFFrtFb/dyD0NCkh6A7MH0maMdecxfpZ1W5ZUEZUboEaU7AtfTnTJF6XPemw3u9fNQ/SGuv nHtkMhodz6L1CaXflFaz4l2Tj/eKVvBsroKxpWpmTEo+/9S1NV3DXA3MxpSQbKPQKIz3sfmV6Bw
+ S5WjkLq4E/M3lV0Ds/P1vNYa7q/jp2hfX3Sv8setKmr5Xm/5MNx3OVcPcfVZq+MRd2HRW78IsJc S1O2/NrHHXV8bAzu2jqU7Gz45TecjpNOfx6iRrA2MhpGKZGhgUu7boy2wi9ve6qnN9xDtVs5Rlp 4B7ORH3V/k8xzagjtQo2g7nKJczXN+yiem8Uvfp0Ko9Ih+y+1OSjmzVshsjSWEYe8HiAn5+AjIJ
+ 59XBx/eOtzCDoXzBf4f+p6beBo+e6hYqJEYn3HzRKzUE9LwZtghV0M9AYnBbYYLYT0VzSq4w
+X-Proofpoint-GUID: MHe8Whm3TCHJFzDYvoz2bqC6Rwn5i16B
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=6810a7a3 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=zSzFtzmdY9N6WmU4nJUA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290076
 
-On Mon 28-04-25 15:41:17, Joe Damato wrote:
-> On Mon, Apr 28, 2025 at 10:32:31PM +0000, Carlos Llamas wrote:
-> > On Mon, Apr 28, 2025 at 09:50:02AM -0700, Joe Damato wrote:
-> > > Thank you for spotting that and sorry for the trouble.
-> > 
-> > This was also flagged by our Android's epoll_pwait2 tests here:
-> > https://android.googlesource.com/platform/bionic/+/refs/heads/main/tests/sys_epoll_test.cpp
-> > They would all timeout, so the hang reported by Christian fits.
-> > 
-> > 
-> > > Christian / Jan what would be the correct way for me to deal with
-> > > this? Would it be to post a v3 (re-submitting the patch in its
-> > > entirety) or to post a new patch that fixes the original and lists
-> > > the commit sha from vfs.fixes with a Fixes tag ?
-> > 
-> > The original commit has landed in mainline already, so it needs to be
-> > new patch at this point. If if helps, here is the tag:
-> > Fixes: 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the future")
-> > 
-> > > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> > > index 4bc264b854c4..1a5d1147f082 100644
-> > > --- a/fs/eventpoll.c
-> > > +++ b/fs/eventpoll.c
-> > > @@ -2111,7 +2111,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
-> > > 
-> > >                 write_unlock_irq(&ep->lock);
-> > > 
-> > > -               if (!eavail && ep_schedule_timeout(to))
-> > > +               if (!ep_schedule_timeout(to))
-> > > +                       timed_out = 1;
-> > > +               else if (!eavail)
-> > >                         timed_out = !schedule_hrtimeout_range(to, slack,
-> > >                                                               HRTIMER_MODE_ABS);
-> > >                 __set_current_state(TASK_RUNNING);
-> > 
-> > I've ran your change through our internal CI and I confirm it fixes the
-> > hangs seen on our end. If you send the fix feel free to add:
-> > 
-> > Tested-by: Carlos Llamas <cmllamas@google.com>
+
+On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
+> Add a condition to skip the flush operation during the first sequence
+> change event. At this point, the capture queue is not streaming, making
+> the flush unnecessary.
 > 
-> Thanks, will do.
+> Additionally, remove the reinit_completion call for the flush completion
+> signal, as it is not needed. This simplifies the code and avoids
+> unnecessary reinitialization.
 > 
-> I was waiting to hear back from Christian / Jan if they are OK with
-> the proposed fix before submitting something, but glad to hear it
-> fixes the issue for you. Sorry for the trouble.
-
-Yep, a new patch submission with proper Fixes tag is needed at this point.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>  drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+> index ba858abab336..dfca45d85759 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+> @@ -201,8 +201,7 @@ static void iris_hfi_gen1_event_seq_changed(struct iris_inst *inst,
+>  
+>  	iris_hfi_gen1_read_changed_params(inst, pkt);
+>  
+> -	if (inst->state != IRIS_INST_ERROR) {
+> -		reinit_completion(&inst->flush_completion);
+> +	if (inst->state != IRIS_INST_ERROR && !(inst->sub_state & IRIS_INST_SUB_FIRST_IPSC)) {
+>  
+>  		flush_pkt.shdr.hdr.size = sizeof(struct hfi_session_flush_pkt);
+>  		flush_pkt.shdr.hdr.pkt_type = HFI_CMD_SESSION_FLUSH;
+> 
+>
+Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
