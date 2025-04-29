@@ -1,99 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF311D61BB;
-	Tue, 29 Apr 2025 08:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2CE274670;
+	Tue, 29 Apr 2025 08:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745913692; cv=none; b=d4YyvnPvcPQaPenVhzZFpi1lhOKqEIRsp5XM8o0XwkhUP4PCUCYNm8fdS0BPio0FLsZ5gkWhaPVKBaHABKuIBIOc3wM2dnejpAlO1FUWicIrKVMWVtMVHskhhKFdjCCgdq5bPuEd0ZgI72XJILooXa4c/mnRpjOeOd0jL66L+zs=
+	t=1745913707; cv=none; b=KoQpuf+Dif5pm4A9nokn+HRGMTGXhy7wZ5Gv5DYOTRDaHwNR13knV/lycxQb0sRpEz7S+jFJ++7nX3Y2vvQ+7eHNuTuGpYEsHYShg0eeLpowtXHtvOL9DUdt57TKbZdbPD7FJRjsrizSb1prVL2tzRz5gJSJNAt6XfpNBBQ1KoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745913692; c=relaxed/simple;
-	bh=49svtWM+2GeOt+mimbaMb6SDg+mNR+ZgQRqnV3/67CE=;
+	s=arc-20240116; t=1745913707; c=relaxed/simple;
+	bh=x9VoDbvoqvFqnT/X3scRFhes5XAkMzFvSdG4jDOS5BQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpHUIFKRl7PqSM/WEKGog5Ngpdbjuqn80ckK0E8DLeJbMqDeUBeR91qHyc0KO4rB6vFozyemALjhbYp9btD3FeF2zajX/b9WVQ69B6i8DtWRDhXcbA89GZxP84gKXFJnmn88+qWTzm4IMPXtkYHemjRVOWlDH64Ic39jpD/f4FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvUVuPtx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPWAWyOru13Xr/VvhCgDXC5TL7FvKCGMwe7rez2oox2Ij+XO3AgDafSEMtQTR1P/GBY5piPAb5zVim+nTR+v/EhNr2giyLwYHPJXJpZQB/wCnQlJoZ9+RR5MltYFF7aJV7a2/a9THAW0m8XOSNcMjG9r2wHkcZlRHs5LkIYnbIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B13+zFI2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvUVuPtx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4A2C4CEE3;
-	Tue, 29 Apr 2025 08:01:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B13+zFI2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE16C4CEEA;
+	Tue, 29 Apr 2025 08:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745913691;
-	bh=49svtWM+2GeOt+mimbaMb6SDg+mNR+ZgQRqnV3/67CE=;
+	s=k20201202; t=1745913706;
+	bh=x9VoDbvoqvFqnT/X3scRFhes5XAkMzFvSdG4jDOS5BQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FvUVuPtxmt/mfErMJF541vpOKveOI7HD+7wWkMP+fH1HS9XJX/eugU1TXt9zxbE5g
-	 D90PH3yLExF91XqvbvpKqLWqQVY4QcMzGi5C9pKvdzkjcE/8CaUkaI4Xlvq2jGTp7O
-	 zyi7og9KJ30uEeL2Zyua1egy75nVGl7ZqlCC7x6+09gK8Tjo1y/6cBDTHbFdpYkUA4
-	 QdH8rotxb6aXpotf0PKObw6CXIaqcyIVmhBev5Oj1AfYxz5RZk0zj2C9ZihOlXbYjF
-	 4gii7N0uda7o0M5lPeOnP/Wtr6AeuApalcy6jBiTdci5WDDEGGam6w5UJiD4U4C0MF
-	 A1dy3m0ZmB0Aw==
-Date: Tue, 29 Apr 2025 10:01:27 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Carlos Song <carlos.song@nxp.com>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Frank Li <frank.li@nxp.com>, 
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
-	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Message-ID: <yk4jxzsraqacrzinn34bvpalmnqxfyxrxch7buz62olt6allcx@rqda6tysnbhh>
-References: <20250421062341.2471922-1-carlos.song@nxp.com>
- <34ally74jbpae6etevqskr4zmcv5xyac46n4hl2j5ybihwtezn@jd2gvr762gs7>
- <VI2PR04MB111474EAC1B4DB8EB6DD32628E8862@VI2PR04MB11147.eurprd04.prod.outlook.com>
- <l7meopd4ny4lbux64w5jgyugza3idt4sabwzojmvrafw67fhsw@uf4xbbajzfrj>
- <VI2PR04MB11147FAC0E3941F672ACCA47CE8802@VI2PR04MB11147.eurprd04.prod.outlook.com>
+	b=B13+zFI2FLbAV3uk06BxtWvdLY89xXuV7vQKdNdEkVH7XUeFXyiLxbQpXJlqA/0ly
+	 2Hik6VuJJeY/+vfUU7m8h4esoK3NIHPnFePj8OjfM83HdzHVROhmqUE+ou0kk4orYu
+	 46ApDRG4grEmAZkq+AE33xs37iMb+0s8P8Rq4pk9H99jfl5/Es+tBv2ovlWJ0NCmsM
+	 nlbvYMAFnzwbtJf2TSxbVCR/VlaHC/p2hAkwv1F/7ucTpZDN6GObDmVGO/Sw9ktbO7
+	 A/ZsMc8oEz7ofhqY1pRJrSPZ8W45HuGOAd/9ax0HyOkEzGvj7BykExfN3iQAmlf2OZ
+	 Kk+ok18Q5ormA==
+Date: Tue, 29 Apr 2025 10:01:44 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, tudor.ambarus@linaro.org, 
+	andre.draszik@linaro.org, willmcvicker@google.com, kernel-team@android.com
+Subject: Re: [PATCH v3 2/5] dt-bindings: soc: samsung: exynos-pmu: gs101: add
+ google,pmu-intr-gen phandle
+Message-ID: <20250429-frigatebird-of-unexpected-feminism-aecb7e@kuoka>
+References: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-0-1bcc44fb1d55@linaro.org>
+ <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-2-1bcc44fb1d55@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <VI2PR04MB11147FAC0E3941F672ACCA47CE8802@VI2PR04MB11147.eurprd04.prod.outlook.com>
+In-Reply-To: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-2-1bcc44fb1d55@linaro.org>
 
-Hi Carlos,
-
-...
-
-> > > > > Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> > > > > Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> > > > > Signed-off-by: Jun Li <jun.li@nxp.com>
-> > > > > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > > >
-> > > > Carlo's SoB should be at the end of the chain. Should be nice to
-> > > > know what these are, though, are they co-developed-by? tested-by?
-> > > > Why so many SoB's?
-> > > >
-> > >
-> > > This patch author is not me and they meet similar issue at some
-> > > boards(Vague history), now I meet this issue at new SOC again. I think this local
-> > patch is helpful and looks reasonable.
-> > > So I send the patch to community adding my SoB.
-> > 
-> > So Clark has authored the patch and you have sent it. And your SoB makes sense
-> > (even though, your SoB shoud be placed at the end, because you sent the
-> > patch).
-> > 
-> > Juan and Haibo have tested it? Reported it?
-> > 
+On Tue, Apr 29, 2025 at 07:19:38AM GMT, Peter Griffin wrote:
+> gs101 requires access to the pmu interrupt generation register region
+> which is exposed as a syscon. Update the exynos-pmu bindings documentation
+> to reflect this.
 > 
-> They are local reviewer. So I change their Reviewed-by: to Signed-off-by:.
-> Simply you can remove Jun and Haibo tags only keep two tags:
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  .../devicetree/bindings/soc/samsung/exynos-pmu.yaml       | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 
-I see. Jun and Haibo are welcome to review in this list, if they
-want.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Best regards,
+Krzysztof
 
-Following the chronological order concept, it would be:
-
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Signed-off-by: Carlos Song <carlos.song@nxp.com>
-
-:-)
-
-I'll take care of it.
-
-Thanks,
-Andi
