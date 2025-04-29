@@ -1,68 +1,68 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1935884A35
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734EA244668
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944029; cv=none; b=hZYFonmi1kfHLtOnLGFxrXKDBdZgYyrjKqlNm5/x5VOEroNWTnmhO90wAZP4ZjvlTUH/masiAiM7kjiXhbNrZiFq59/0WeRapkpMRE+poVIAl/gcvw7pRpifIVpxXB9G+O60rPhcErlQZ2T5gCimJwAmQMhsGbiL/+mTzSpe0ac=
+	t=1745944046; cv=none; b=tk9KetLine6I60JS2kt6txmY6gO2iR7o4DG6ODnsKrCvBGsmi8XTIQht51exrMrteNURwxpV9pmBA1EZI2N14XKtWBWa3xqUDrL2scU2rKpI3jJOz5+xG6ds0sfL2NzPZH5D5l0L9rbczLFElbZhSJFiaW9hiv7ec4GTUAZDPWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944029; c=relaxed/simple;
-	bh=kaLvdVXI1hoIB7qsGU1EH4dSOo8/D3G1Zuff9ZzKVq4=;
+	s=arc-20240116; t=1745944046; c=relaxed/simple;
+	bh=kwlSRx2vVCbaqKQ/e/jgsYXC3+oVAV8fCxRQJbVDDq8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DVvKoaWJcyYlmpmFIPnWPxY1u/4t++GTYGwBmsx13zSUU0LKlgOU3I+bluaHH8u0Ec2LOkZxQCccpqVWmANplageH4qxzmETl2r0Xgdg/AZFcehOWiIGHF34QifWHHQZnS8b62mnAZzkVoBhjqaOo7nTGUksJ3rYoy1ue6KbviE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D7k/zvM6; arc=none smtp.client-ip=209.85.216.49
+	 To:Cc:Content-Type; b=e5nnlOk/VwrTJBC5YyoZRpk/YM5K3pQRnYjpgYMlC2WeIkYjfsTTW+jEzQgzFgwOeDZRRwmtqGiCdREb1cM5YIsgdnxWzVLkJMQMrzxv5sWrbuxfkE8fdPwxFWBBEmKFnoyCeqjoeDodMZfkvd52SixgL4sYbcFEDK8py9+CPSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Olv/ESx7; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D7k/zvM6"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30828fc17adso6244740a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Olv/ESx7"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7376e311086so8447430b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745944025; x=1746548825; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1745944043; x=1746548843; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ID3Zt/kcyvy5TQaBJIv/XJ2QG5FvCfrPnhdLxnIVAHE=;
-        b=D7k/zvM6SKCKv3ijV3/sTCwuFIeExKb2Ai5OEmF257llwDcyUXOWrm3vL+pIlimQnu
-         VTEckVqXMpokwJ812jEyaftXSx2Xs8w+ebarmaWbwEOcVjDOZtMGGl+nk2mCnQxh8mCl
-         mtxCIpU0IYixiPLUeX5lvxMUb7ipnSOr5iOfc=
+        bh=HclVyaYhDkOgSEJP0FWc3iF06F9vTvtmO/KyE9DKqLs=;
+        b=Olv/ESx7/cv0oU20CTXX2jmESMcgAlnYmYZQ0gEaUY9B+xdQfINIfyhAgNVEpKayv2
+         tbyi2+fSezYTeqjwCe2jr84Tt9YMxDJgfqkpe4YtI1FxOsB1xwa5Zz03Z9VxjG1aiicL
+         SGcb1umMzgYndaxhYpA/qn9eDl5+i7yQ0aAyw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745944025; x=1746548825;
+        d=1e100.net; s=20230601; t=1745944043; x=1746548843;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ID3Zt/kcyvy5TQaBJIv/XJ2QG5FvCfrPnhdLxnIVAHE=;
-        b=IdE9bl/+bOEIN/n6AL+WeZwmDINKLA82THKmhP4EE2A12UClQqqHB2/ZdbRcacDHG3
-         9N0bcc3B6UO2gi1DjjHssT70s+VA5pgDVIsKLjfUzrzuYhs6Vc7sDGWac4SCF5AZlkN6
-         /dn3EZmTXkzi/e56NcfvaPyk3bBotwRqScSgx0rD5QsaJfxjptU+K2M989hzhTXZTP2F
-         rZ7Cpj6qjLnqclKfWhE3krCchlXH9dsdt4A+eGXFoyFw+rHIeqEWHWw2RDHbOtvYCt9f
-         uKfzpknbsmhWXcVWidLxU66P15uTt9+R+z/KNAlFOwiFpfP4pbM6WyEDl/n6+lRs2vgY
-         +gSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgMAak5Jn2XfkKDrcx94IteO/DAKPo7FB9SCQYPGDacpqaDjEvOpRcbhgGpGJn0q7DB36v/13NRcumIrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJCMnM58LB2u7rHv9SuLGCgNZpGCkTiacJupknkcWAJMwGvCkH
-	Gy46TJphPVl6impt8KzDh0W4WnQfIoVCTsHJvOEI5+uepC4S6imiDEbyQutMoiTbqVp/J84XXG8
+        bh=HclVyaYhDkOgSEJP0FWc3iF06F9vTvtmO/KyE9DKqLs=;
+        b=k431v0eREbga8P/auTJ3Tazcx7UJWRpAUd9iQKoaZ0dvR7+Pi/zLJS74cgOvcn6YkP
+         YOK5hDUOjMzefoAY03EarBOFIugo/L0zmeLuTO/Bf/r25ac/Ra1J+Of4qxiuf2a55AVB
+         VwpaRf0+dtyaySV+zftx+WLCXpmpgptjK5tlFshbuh4rab6J0y1ZwuA7TFtdNYV4fH+J
+         3Gq8XyX3gvn8gfCxBd48pRgnCUDZW5vHg8ZQWLt43v96LEEUWPArQzBoan2MFl3ZxUMC
+         7jgw2WTUspPw8er13AugofkUdNCJUNUyxJ0NagcGbLLOk3qmmAexFrfVtwTH/sG5YAdm
+         nG8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXyX6eM3fzCxwGpzyo6qHsLOuKxPxIZ/YcQ+UBmsqQ1xr1xZwk9K0hJATh8/UBTASBJUydGHA8MpUmEQ6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOE+N5S1jnCapsb9+0aD50Vv6aMNr0pGCHUAIjAQXQPFkhaW1k
+	feaEonHKxVqdm4Pd/1znkMbBSkasDx29pxylBLsoA8wHgxrRDml9hgA2QUMEZNjE8Dm7u+1QPKU
 	=
-X-Gm-Gg: ASbGncs+sqPJVolBHPgKqjpRS6DJbooP1AJgJP3kTYHuA+vpa2QMYKSKwlSuKT5et6p
-	3/wSKNabK+pZ1q+nEbo9G51jtwdy5iIfD26AZcdChK9QiUQptMUQcwu8srmUFGQ7mmMYNn36/Ov
-	1adFT7kbte0Ia1f/9W+hNLUJSQI3Ro82iOWfud6jDq6ARmMzF29b/HJw7GFXQ1h/orapIYodHC4
-	KvNUI7Ul5IJzGCGEGudZGSTqqs+FVqX2aSOhZ6y7JWqOjTV8+VVTunuz7rRGtre+NWxcy8d+E4i
-	sfyJFqjtFeFOK7a7nqrWZE+Ltoeg9o/G3/zb8ospykNUn9EfYwmYZQCJ/bzZuiphhkavHe9Euak
-	Li0BQwsJg
-X-Google-Smtp-Source: AGHT+IHA0OwYH6kKViJXdVYL7RdKnBTgSJmtN4o8/UgmAfyB5AZ74yhOeHh6BHHO0Rx5VFlzz04qRA==
-X-Received: by 2002:a17:90b:53d0:b0:301:1bce:c252 with SMTP id 98e67ed59e1d1-30a0139879cmr19930778a91.27.1745944025363;
-        Tue, 29 Apr 2025 09:27:05 -0700 (PDT)
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com. [209.85.215.176])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef099963sm11426180a91.29.2025.04.29.09.27.04
+X-Gm-Gg: ASbGncsYe0qVN5pj7weklGspe92ZFNd0ErvQCcqcMn2JvgnJcE8Nnh22Y1M2DsEU5M2
+	ax5TyXmkxlq3ytWNSm9fL37vfjAVcQbtgjVNU98JV8JUCR6sOVwYstCkM7DUkBAlfRoX89eC+0/
+	suI73VeF9gacbBn2wRvEDjfaZokI3vLZt3PnzhSwqJCz8xEsANXXa1DI2xoo/S0GDeRKdzF6YPz
+	t8kbmsgTcvSBH5AJqVmZD81dIXqIKQ6xhv/fx3Z4XaNCRjOr2tACSBIhfqLsUSmJAjL6t6qRxf7
+	bWcQhdAIPnOncLwI5OcNd8EYb0jLipk09ph4opHgilY1ILOle3oTvB+Z4oyBjguotoz94kH5JB5
+	44gzx
+X-Google-Smtp-Source: AGHT+IEZCc+r1Q5vxXzlXQyfKl7PP2nIp7FgvwWh4n+yyznVPCVkPdKmMc3lO/wq328pC+32QswTsw==
+X-Received: by 2002:aa7:888c:0:b0:737:6e1f:29da with SMTP id d2e1a72fcca58-7402722d4b5mr6359721b3a.21.1745944042969;
+        Tue, 29 Apr 2025 09:27:22 -0700 (PDT)
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com. [209.85.216.43])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9a0e5sm10438968b3a.132.2025.04.29.09.27.21
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 09:27:04 -0700 (PDT)
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b074d908e56so4641597a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4v+dgRbrBB2dEOIihx0a1lby3u2zqn9OrfOnJ+xyLF/rHtmUJrzmjQdJe7Hu2D3m6uZT2ZUAM8KE+f+Y=@vger.kernel.org
-X-Received: by 2002:a17:90a:8c15:b0:30a:255c:9d10 with SMTP id
- 98e67ed59e1d1-30a255ca186mr3202709a91.8.1745944023558; Tue, 29 Apr 2025
- 09:27:03 -0700 (PDT)
+        Tue, 29 Apr 2025 09:27:22 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-301302a328bso8650922a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2uSlkquqBGyL0OHII42MhAnlKY7TWeLhQBR4yi8tM7ZO5raQYPJNBvNIGS0YYb31U2VjaxDAG5oiRuRE=@vger.kernel.org
+X-Received: by 2002:a17:90b:5645:b0:2ff:592d:23bc with SMTP id
+ 98e67ed59e1d1-30a21546cf9mr5997284a91.4.1745944041359; Tue, 29 Apr 2025
+ 09:27:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,14 +70,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
- <20250429092030.8025-3-xiazhengqiao@huaqin.corp-partner.google.com>
-In-Reply-To: <20250429092030.8025-3-xiazhengqiao@huaqin.corp-partner.google.com>
+ <20250429092030.8025-4-xiazhengqiao@huaqin.corp-partner.google.com>
+In-Reply-To: <20250429092030.8025-4-xiazhengqiao@huaqin.corp-partner.google.com>
 From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 29 Apr 2025 09:26:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WtRYCM=tzfyfLD8Yv015U2U=tuRMTsSLtxNSm9zAia8g@mail.gmail.com>
-X-Gm-Features: ATxdqUG2rAf0BoOyLmWMpcSnfq6hQrouHip_k1QAJOJNtZxAX5VK0S8UBRBj9Mk
-Message-ID: <CAD=FV=WtRYCM=tzfyfLD8Yv015U2U=tuRMTsSLtxNSm9zAia8g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] drm/panel-edp: Add support for BOE NE140WUM-N6S panel
+Date: Tue, 29 Apr 2025 09:27:09 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V3LsgMkVyUo9ZNq7VBZgRzX-7hVSyvVGXSA7Woyu-R1w@mail.gmail.com>
+X-Gm-Features: ATxdqUHg8RCvWUpfqr7D8JemmnKpizE5FcMLM7GqkurGFB3kpFT_tlqX5YrRVfI
+Message-ID: <CAD=FV=V3LsgMkVyUo9ZNq7VBZgRzX-7hVSyvVGXSA7Woyu-R1w@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] drm/panel-edp: Add support for CSW MNE007QS3-8 panel
 To: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
 Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
@@ -91,36 +91,42 @@ Hi,
 On Tue, Apr 29, 2025 at 2:20=E2=80=AFAM Zhengqiao Xia
 <xiazhengqiao@huaqin.corp-partner.google.com> wrote:
 >
-> BOE NE140WUM-N6S EDID:
+> CSW MNE007QS3-8 EDID:
 > edid-decode (hex):
 >
-> 00 ff ff ff ff ff ff 00 09 e5 73 0d 00 00 00 00
-> 32 22 01 04 a5 1e 13 78 07 13 45 a6 54 4d a0 27
-> 0c 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-> 01 01 01 01 01 01 03 3e 80 a0 70 b0 48 40 30 20
-> 36 00 2e bc 10 00 00 1a 00 00 00 fd 00 1e 78 99
-> 99 20 01 0a 20 20 20 20 20 20 00 00 00 fc 00 4e
-> 45 31 34 30 57 55 4d 2d 4e 36 53 0a 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 45
+> 00 ff ff ff ff ff ff 00 0e 77 57 14 00 00 00 00
+> 34 22 01 04 a5 1e 13 78 07 ee 95 a3 54 4c 99 26
+> 0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 cd 7c 80 a0 70 b0 50 40 30 20
+> 26 04 2e bc 10 00 00 1a cd 7c 80 a0 70 b0 50 45
+> 30 20 26 04 2e bc 10 00 00 1a 00 00 00 fd 00 1e
+> 78 9a 9a 20 01 0a 20 20 20 20 20 20 00 00 00 fc
+> 00 4d 4e 45 30 30 37 51 53 33 2d 38 0a 20 01 3f
 >
-> 70 20 79 02 00 22 00 14 33 d8 04 85 7f 07 9f 00
-> 2f 00 1f 00 af 04 47 00 02 00 05 00 81 00 13 72
-> 1a 00 00 03 01 1e 78 00 00 5a 4a 5a 4a 78 00 00
+> 70 20 79 02 00 21 00 1d c8 0b 5d 07 80 07 b0 04
+> 80 3d 8a 54 cd a4 99 66 62 0f 02 45 54 7c 5d 7c
+> 5d 00 43 12 78 2b 00 0c 27 00 1e 77 00 00 27 00
+> 1e 3b 00 00 2e 00 06 00 43 7c 5d 7c 5d 81 00 20
+> 74 1a 00 00 03 01 1e 78 00 00 5a ff 5a ff 78 00
+> 00 00 00 8d 00 e3 05 04 00 e6 06 01 01 5a 5a ff
 > 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ad 90
+> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 76 90
 >
 > Signed-off-by: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com=
 >
-> ---
->  drivers/gpu/drm/panel/panel-edp.c | 1 +
->  1 file changed, 1 insertion(+)
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+nit: your Signed-off-by should have been _below_ my Reviewed-by. In
+general whenever you send a patch you always move your Signed-off-by
+to the bottom of all the other tags. No need to resend this time, but
+keep in mind for the future.
+
+nit: this is unchanged from v2 when Dmitry added his review on the
+cover letter. You probably should have carried forward his tag. No
+need to resend this time, but keep in mind for the future. I've
+re-added it.
 
 Pushed to drm-misc-next:
 
-[2/3] drm/panel-edp: Add support for BOE NE140WUM-N6S panel
-      commit: 800c2180705a87829f7833df3d9e73b548bf65ff
+[3/3] drm/panel-edp: Add support for CSW MNE007QS3-8 panel
+      commit: 0d607a59a0f6593e72630854a8bcb8b01b8dce40
