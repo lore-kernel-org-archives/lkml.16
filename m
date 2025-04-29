@@ -1,143 +1,152 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0262275843;
-	Tue, 29 Apr 2025 07:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48ED3BB44
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911631; cv=none; b=SpSmmCx6s6MAIrjH6ahMM3EGfuELpGSAhm+uo38hne2GqC3ohTwmwlM7EGE17O1fk7/Wcm9QuWRKq/DdyKYXzZjnZsrr7cewnUBAJQb3vA0+A4BCj7wBXnRiqofy8N7vjvoErfCukqZbdjy0thr4hXK65rickPWqNx/snyC0AiU=
+	t=1745911689; cv=none; b=AHAvPZcFnWHc6z5wfJdvSAMWf4/1JOexDQjhlY48/PjZnkKNSw1Sca1B/lR6FQbTKpUyk0gA620oEEZ0S24CnIxWF6C0lVy9pJmeCs0PBvBB1EjLQJCvYzgSB9J+vuTAt/d12mL6Lk8n6PmGXD/3T1p8yrBNfwjz84zmCKOkTnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911631; c=relaxed/simple;
-	bh=8XcuXsqtdP7qg55CWR/5GbeRh/JwNd8nHN+LIRbylzE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=glG8XK5SKHY+OvL0AUYHd33vXQUSnSpA+bmnZuBx1NUY6YUihlYiIpoqUasNRfbY7fHojM438cmG5FNmjsNEvJXdBZ2kr0jLbN0feWo/snPm1ktE3hUg452uAO9SpIZMXhBBJVK+56ua7CkGODDEUeiR5Za/hmoN1gl1MGPMTSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BM4Nt1N9; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745911689; c=relaxed/simple;
+	bh=46HHIGCzwnNLPpAINs75A8m+fMD3+uz33+iaV8vmgjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oKubk2cqqdurelGWBsljdGKcN7roZMek2ixeU42RSwvNivygSCRBnNlwcdX2Cmu5gyiHw4PjcscvsSPsZcQISMCjYWEvzD1A2G8ijsvMM8qOaya63StCRo4tGpUnWC5/lab1M87+BzzIPlzE5X3x+YDvjlGOrgAYDaguoRpnobA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HhbgTS9i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zLGjcyQa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SpArUjJh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=e/Q+QaS5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BM4Nt1N9"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7Qmx23027162
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 02:26:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745911608;
-	bh=HqqUtqSeeEUdObhDYeko8fTkYHokAWrft4xXwVarOeY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=BM4Nt1N9PrTdV25/hYFQaLrjmQo9SO4cUuP4uEoeNcKXYio9qIiAJKMis71hgDDeC
-	 SrCmjiesPfcyLn4fMFoixHXFU3/nAFKA3a2MIZzGcIB5sRpa6qUvLk3tnh2o1bGeAW
-	 gEdqV5J46YJBEL0xng9YANMvJqepPS1rjpN7QsMk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7QmbT050371
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 02:26:48 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 02:26:47 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 02:26:48 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53T7Qlo8109112;
-	Tue, 29 Apr 2025 02:26:47 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon
-	<nm@ti.com>
-CC: <srk@ti.com>, <s-vadapalli@ti.com>, <danishanwar@ti.com>,
-        <c-vankar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v4 1/2] arm64: dts: ti: k3-am68-sk-base-board: Add bootph-all property to enable Ethernet boot
-Date: Tue, 29 Apr 2025 12:56:43 +0530
-Message-ID: <20250429072644.2400295-2-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250429072644.2400295-1-c-vankar@ti.com>
-References: <20250429072644.2400295-1-c-vankar@ti.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HhbgTS9i";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zLGjcyQa";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SpArUjJh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="e/Q+QaS5"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id F1ACA21C30;
+	Tue, 29 Apr 2025 07:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745911686; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
+	b=HhbgTS9iZ/ZveR6EsfJ+0v8KW9pesTHOmVlkWB3Mn9wNR+Plw9FsfveuOY2h+Pf/0V2ZTZ
+	zJXHXkw3avsUOeyXE4nOiNisAnaVHtIHoiY6FkIhBbaGaDWFTi0F9XmFJgDilxVM9Ok2tz
+	/VzHuhtsQDetteY/7XQfhBRFCSdB9Ds=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745911686;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
+	b=zLGjcyQau3o5t/fSlEsPVia9CsBtIvo797gcHFCITw2aKIAt+LM7rtxu1ZMg1xlcorpsZv
+	6MDJQVUBsSo8MVBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745911685; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
+	b=SpArUjJh55/qe7tZb1aGaFjJRt70ELvKKD5Ha0f10UWBAcnNggkBJ1LOsREnerTlc3MZQL
+	iT1wuaElsLWJbRfrK3tLKmjOtlebv89BBJ6zPsw432mxPIOWoMoZ8BVmVH74h1FAqxkXdc
+	cVkDIDaAm8wWSV2OI3e/K/mQZKrrObY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745911685;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
+	b=e/Q+QaS59zd31uC/opKdcty8jJKZoleO8IXouA1gM62sXwgUI34vGlg2sUwkuAA71Gbmag
+	xwl71RlCXOieMHAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A1391340C;
+	Tue, 29 Apr 2025 07:28:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 9JIiJIV/EGimcQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 29 Apr 2025 07:28:05 +0000
+Message-ID: <044b4684-4b88-4228-9bf6-31491b7738ba@suse.cz>
+Date: Tue, 29 Apr 2025 09:28:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] move all VMA allocation, freeing and duplication
+ logic to mm
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Ethernet boot requires CPSW nodes to be present starting from R5 SPL
-stage. Add bootph-all property to required nodes to enable Ethernet boot
-on AM68-SK.
+On 4/28/25 17:28, Lorenzo Stoakes wrote:
+> Currently VMA allocation, freeing and duplication exist in kernel/fork.c,
+> which is a violation of separation of concerns, and leaves these functions
+> exposed to the rest of the kernel when they are in fact internal
+> implementation details.
+> 
+> Resolve this by moving this logic to mm, and making it internal to vma.c,
+> vma.h.
+> 
+> This also allows us, in future, to provide userland testing around this
+> functionality.
+> 
+> We additionally abstract dup_mmap() to mm, being careful to ensure
+> kernel/fork.c acceses this via the mm internal header so it is not exposed
+> elsewhere in the kernel.
+> 
+> As part of this change, also abstract initial stack allocation performed in
+> __bprm_mm_init() out of fs code into mm via the create_init_stack_vma(), as
+> this code uses vm_area_alloc() and vm_area_free().
+> 
+> In order to do so sensibly, we introduce a new mm/vma_exec.c file, which
+> contains the code that is shared by mm and exec. This file is added to both
+> memory mapping and exec sections in MAINTAINERS so both sets of maintainers
+> can maintain oversight.
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
-
-Link to v3:
-https://lore.kernel.org/r/20250425051055.2393301-2-c-vankar@ti.com/
-
-Changes from v3 to v4:
-- As per Nishanth's suggestion, moved nodes which require "bootph-all"
-  property into board specific file for AM68-SK.
-
- arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-index 5fa70a874d7b..e84c504c87d2 100644
---- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
-@@ -344,6 +344,7 @@ J721S2_WKUP_IOPAD(0x008, PIN_OUTPUT, 0) /* (E22) MCU_RGMII1_TD3 */
- 			J721S2_WKUP_IOPAD(0x018, PIN_OUTPUT, 0) /* (F21) MCU_RGMII1_TXC */
- 			J721S2_WKUP_IOPAD(0x000, PIN_OUTPUT, 0) /* (F22) MCU_RGMII1_TX_CTL */
- 		>;
-+		bootph-all;
- 	};
- 
- 	mcu_mdio_pins_default: mcu-mdio-default-pins {
-@@ -351,6 +352,7 @@ mcu_mdio_pins_default: mcu-mdio-default-pins {
- 			J721S2_WKUP_IOPAD(0x034, PIN_OUTPUT, 0) /* (A21) MCU_MDIO0_MDC */
- 			J721S2_WKUP_IOPAD(0x030, PIN_INPUT, 0) /* (A22) MCU_MDIO0_MDIO */
- 		>;
-+		bootph-all;
- 	};
- 
- 	mcu_mcan0_pins_default: mcu-mcan0-default-pins {
-@@ -412,6 +414,14 @@ J721S2_WKUP_IOPAD(0x000, PIN_INPUT, 7) /* (K26) WKUP_GPIO0_49 */
- 	};
- };
- 
-+&cpsw_mac_syscon {
-+	bootph-all;
-+};
-+
-+&phy_gmii_sel {
-+	bootph-all;
-+};
-+
- &main_gpio0 {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -626,6 +636,7 @@ &mcu_cpsw {
- &davinci_mdio {
- 	phy0: ethernet-phy@0 {
- 		reg = <0>;
-+		bootph-all;
- 		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
- 		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
- 		ti,min-output-impedance;
-@@ -635,6 +646,7 @@ phy0: ethernet-phy@0 {
- &cpsw_port1 {
- 	phy-mode = "rgmii-rxid";
- 	phy-handle = <&phy0>;
-+	bootph-all;
- };
- 
- &mcu_mcan0 {
--- 
-2.34.1
-
+Note that kernel/fork.c itself belongs to no section. Maybe we could put it
+somewhere too, maybe also multiple subsystems? I'm thinking something
+between MM, SCHEDULER, EXEC, perhaps PIDFD?
