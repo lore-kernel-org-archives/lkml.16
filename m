@@ -1,170 +1,131 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387DD278E42
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85792D0297
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928334; cv=none; b=t1QAiXnbhFGDjzOo5r84VEewP7Ei8NHZnusNIU1fkTKmE2vyYBk1JRA7gkvGnyHWZWa4aa5pADFgbIHVo/wLw08n1qjThG+dTuMOGCyWBi13ZMho2ICExI142NemZO8MYfYIaukRcE2C63hsd+B9uUAm+0YQGnjBiQk8NwKjl3g=
+	t=1745928346; cv=none; b=Up4LtNvluh3dOMqPugK1BRqGqNd3h4EG7I+BF4EDYYNXIEOEjDJDtVQ/ms4G88nOCki5hNyXOBoMO6oLj1V46BlRt1ptq6juOst5qi+C7yehn68gxjNOsi3GsaALZhtbqsuV8nrxScioIU7f6iMRjWNS+BWars3BteKWThs4KHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928334; c=relaxed/simple;
-	bh=xbWVDzZ5g6HJz80cAUiarlvB7BVUjAPPal8xwQHunyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YNFtPLov3OY/y2NDtPQHh8gI4Lsz/L1tcMmnfTrD+2+r229R0+EAq9cOSe1BfPch6V+GrEsR3nhtf/cgD9nJjnwW71+cl/0cvuM8q8w1MeqQH+hrq5SoCe1yc0FkiEPXo+cuRYMiM/hVNPrapeVQWSXnQxVMOMS1l2u9EbDTD2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6heo58f; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745928346; c=relaxed/simple;
+	bh=PAAjyCxZGBIUTEBraJHgwf/vjhPZsyRdV+OwUH1P2mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=btvs6z3UVORuCkYA9KcnerOZSvd0YerXt8XPx9sWTQBE3b139zpio9kKi+S6X5BFFsP7h68gUcYYYbkf8hrrg9+IB8yF1kCwFSTeNSlqaper+5P6axfWKcrUYgG3chVljikKNP6RwPSjvU0rEoBO0Xquz3f5OZAZ4zBpYU4wog4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NKJsXX/S; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6heo58f"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so926843466b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:05:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NKJsXX/S"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso6589a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:05:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745928330; x=1746533130; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dqA12izQ8aE3OjQDIJUv3v7OdfJvtiazusPsgaxGXXc=;
-        b=l6heo58fd/qmhzXAQFeDOnGYANav9YRnm49IWGiUaoYfg1FmeGWzxlz60p2LoRGgFh
-         GsiPgfZwvMPzT+v9crNyrjtA5wplF0MFXh+w10zLIt+TzYjwSw3nBR8AHQFXzijsJkmv
-         KphKbaBBHlSukfjmy2wgKTimDq/jQnONl0HNHRqUlLFipfYPIuHPDpKiUYD5FQqMNRdi
-         83L7v/ife5ocxT0t54oWAZN750F0exP1vNO4VQmeAvgYlR/7pfCugTr72VUEDPcJn22O
-         mmuSNrlZGKeL8im3i+p6Jhe6+B8FcIwO/knxQLXNTSsb3Nahx+Q9QrtalreoLJ2Q96CG
-         UH/w==
+        d=suse.com; s=google; t=1745928343; x=1746533143; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9r/4N+f+7PaHLHb2f9S5WBuIucietvGqQf43oEfV+AM=;
+        b=NKJsXX/S4mQpUzYC8hLgeAoYUivbm85cBtVbnBRHElFO5U8pnqYJ3gzrdErCG2/7vw
+         alCkkN5unLXdODOiz1AJojgJANOjE8nQQe4sVH8pHrigW4Mqb4KL+O+kOPYsNsW8x53j
+         cXNK7wb+nbrkIkWcszOxzgBpYn1qEIYLt+GguFMb6IiqClMoOkqioRWa/2WarfV2fIeg
+         NJKzWA1q7j9L3HyrSZtY05j1LCh0HOPOXBRAZJJ2rG7JNt8dWhgXabTdLzqQw8nfC3G1
+         ELQhC7atiF4v2ep+YPIwUR0MEiE5+4YJMlrIte36Cmhl3kduZ3UwG7WDO2trn82EM7SA
+         iXYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745928330; x=1746533130;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dqA12izQ8aE3OjQDIJUv3v7OdfJvtiazusPsgaxGXXc=;
-        b=XmT1Qsc62kkEhwid5Mi4AAfwOBu0AE/FIfKgXBQ+3jxi4aNqXXLonmHoDAep9pHwF5
-         8CkU7Xh3Szg2Qhg+65mTbtk9t7Kb5udnJs6GN+Y2UH5v0PV1DmsDvO8ApVWPOybv0d5L
-         EuIAhBIDn9H3QitLSMz5MFa984hNX76VPHJptoCSPzb9tIn3IDJuX+g5fi1tUJJQlrcb
-         2BxVixIsceGEyyo2zr3nsuOJDuDW50BR6OLPWIGiybhugEUB9mAU6ffqtyGFNr/MCljF
-         w/UlMom+jxPnU8iJOmCLzGgCYavj/KI0qmjKjCLF33pTLZwTsOGERtM01t6dLmjJFf6K
-         u4EA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXym9jE7BEBJKAhnqaD/bEBLR98VN75WlCmDYsn7K0QqYxGxrfFguGe6ew8jlFL8imPbOUc1W6I+oO+D4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDZL+3itM3j7/IHK8Pm5/jztcnUObyBwxJ+jtJscwpf7sjruEV
-	EJL9tNUh5d+VhUmOIENwfQ/qCyN17MNjD0CuvF0OEpGzGF8SADBU
-X-Gm-Gg: ASbGnctO0lsCcnIUA5wT701DqcPmFpM3/eJFWVvTHMf4WpyqCinNdAQdzQWKZ08SJGg
-	Ld2Kpx4c0prUtjg0ZN4Qd51FmWmODLFJxzTQpZN7w+wlD9687zy8lbXBh669zEQekGfJ5ThIF2H
-	9PZFnf6dAbPTRiZXvBj8X0/d5HFASZJaiQ8UEPPmck7ddJqBGY20c3GhkJ5Jx6V0DSbG95lQstO
-	pk7O/YNfJhRE8Gz7la1h3UY43ANY6VLlMWgtCUlpka9iAPUPMvoMTG4c7ohsdb4IkSvnbGLKsr1
-	Mx8Bpup43cnRmK1mzC+ibpNCsjYrO3rBqDOWxw==
-X-Google-Smtp-Source: AGHT+IG+lJCeSHiaebW3KLC7J6BWu/mwu+oXqsKLKScZjzlaQtIaqlzH+NBX52bgpHd8qHbLKbRD9w==
-X-Received: by 2002:a17:907:97c7:b0:ace:4ed4:d428 with SMTP id a640c23a62f3a-ace84b3b270mr1297967766b.57.1745928329721;
-        Tue, 29 Apr 2025 05:05:29 -0700 (PDT)
-Received: from pc.. ([197.155.71.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edafb3fsm782072866b.172.2025.04.29.05.05.23
+        d=1e100.net; s=20230601; t=1745928343; x=1746533143;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9r/4N+f+7PaHLHb2f9S5WBuIucietvGqQf43oEfV+AM=;
+        b=anOpfLOHff6s0WO3TiT2L9/3Kcrq/oy17eSilFKaT/ahFkyIEPOwX/kFH7Uk0NMIHg
+         GNR4zVRXXXEUt3fw64WjJpbgcce6EQii1vIBpJfVMuEUkcbLs0fD+E0OaPt/sKpzNVLf
+         Lcm5NdiEB5j7W4mmMR2UQoGDVkmyUPXpLRiu31a7Irf13ab8i3dzsxCeSEFfuE1AW5Mu
+         Cg3boj+GHwBXUxJ1xAmOJbFxNdzIyFv0K0pqcUozcWkmI6IrlNKlkHcEy/de+A0BaEsf
+         PYxQgVzKSKaeGP0h6sgL6nP+kntOAkk7BxXm628PDVnuysW2uVJoUTAnr319P85oHH8K
+         pMlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSaC9Jl4ArP6/K51391xYSwopGQWNllmxxu1HPiInkhmsSTWEHjv30vAPzJW/eLM0/oxfM9IpCAq6iDyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXfHGYHZczpJfN4bEqboLFFwH9AeL45QzIKD8Y8WSgOc4lPuRx
+	f3J2mJ2K3hEyGEOJinV3PZBBGTLI67gdVC/6IDtYXv09ZJOwiEYKrRfKs++vKCU=
+X-Gm-Gg: ASbGncv6lIR9snu6OcgcqRWJSMiEe2TW+p4XWJhMgckwldPi2t/K8/ghMCECR/RDAF5
+	feTzr2DZ/t4MrT7Bvg2tdgRWGfZu2ekYdDPTQvh34b1t2qbga3QdKT8qXnmzlqCvAtqoV0OqMgP
+	yO1VXzFkfAqp5Yfd5xF8QTjQwXxPSe5k8WPBCykTYtziGRx/f9aEvBzjDDp+YF+l84YCKvvFE85
+	Xd48wvvZERjdsWxKhjy5CiTtcd3uhi9h+Iypm1VyuUwDSC7mbAmcCwHM+5eMQQWCJrFazyHF54s
+	kQj/HypFoB99ww0Jvfe8OaOjU5i5XlcdsDcszrkWQEM=
+X-Google-Smtp-Source: AGHT+IHmuO1Gx5rMmBnuAer3bucqMZAIYa2NRJ4DgmXE88/sxb/L8pifgAqHItutkUFGsnCnWrzcmg==
+X-Received: by 2002:a17:907:1b0e:b0:ac2:842c:8d04 with SMTP id a640c23a62f3a-acec4e0506fmr403932166b.17.1745928342825;
+        Tue, 29 Apr 2025 05:05:42 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e6a05sm778144466b.57.2025.04.29.05.05.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 05:05:29 -0700 (PDT)
-From: Erick Karanja <karanja99erick@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: julia.lawall@inria.fr,
-	karanja99erick@gmail.com,
-	philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: Replace manual mutex handling with scoped_guard()
-Date: Tue, 29 Apr 2025 15:05:13 +0300
-Message-ID: <20250429120513.168674-1-karanja99erick@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Tue, 29 Apr 2025 05:05:42 -0700 (PDT)
+Date: Tue, 29 Apr 2025 14:05:40 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: James Houghton <jthoughton@google.com>, kvm@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] KVM: selftests: Build and link
+ selftests/cgroup/lib into KVM selftests
+Message-ID: <gbuucm74bt32ozem6o2p2kd26xwnwpizbk5ihrwr2swboblfio@jw7pilz2pjjr>
+References: <20250414200929.3098202-1-jthoughton@google.com>
+ <20250414200929.3098202-5-jthoughton@google.com>
+ <aBAlcrTtBDeQCL0X@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="52kytrr5hdefn2m4"
+Content-Disposition: inline
+In-Reply-To: <aBAlcrTtBDeQCL0X@google.com>
 
-This refactor replaces manual mutex lock/unlock with scoped_guard()
-in places where early exits use goto. Using scoped_guard()
-avoids error-prone unlock paths and simplifies control flow.
 
-Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_pwrctrl.c | 52 +++++++++-----------
- 1 file changed, 22 insertions(+), 30 deletions(-)
+--52kytrr5hdefn2m4
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 4/5] KVM: selftests: Build and link
+ selftests/cgroup/lib into KVM selftests
+MIME-Version: 1.0
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
-index 74a8fcf18e84..f3bfd175cf8b 100644
---- a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
-@@ -599,25 +599,21 @@ void cpwm_int_hdl(struct adapter *padapter, struct reportpwrstate_parm *preportp
- 
- 	pwrpriv = adapter_to_pwrctl(padapter);
- 
--	mutex_lock(&pwrpriv->lock);
--
--	if (pwrpriv->rpwm < PS_STATE_S2)
--		goto exit;
-+	scoped_guard(mutex, &pwrpriv->lock) {
-+		if (pwrpriv->rpwm < PS_STATE_S2)
-+			return;
- 
--	pwrpriv->cpwm = PS_STATE(preportpwrstate->state);
--	pwrpriv->cpwm_tog = preportpwrstate->state & PS_TOGGLE;
-+		pwrpriv->cpwm = PS_STATE(preportpwrstate->state);
-+		pwrpriv->cpwm_tog = preportpwrstate->state & PS_TOGGLE;
- 
--	if (pwrpriv->cpwm >= PS_STATE_S2) {
--		if (pwrpriv->alives & CMD_ALIVE)
--			complete(&padapter->cmdpriv.cmd_queue_comp);
-+		if (pwrpriv->cpwm >= PS_STATE_S2) {
-+			if (pwrpriv->alives & CMD_ALIVE)
-+				complete(&padapter->cmdpriv.cmd_queue_comp);
- 
--		if (pwrpriv->alives & XMIT_ALIVE)
--			complete(&padapter->xmitpriv.xmit_comp);
-+			if (pwrpriv->alives & XMIT_ALIVE)
-+				complete(&padapter->xmitpriv.xmit_comp);
-+		}
- 	}
--
--exit:
--	mutex_unlock(&pwrpriv->lock);
--
- }
- 
- static void cpwm_event_callback(struct work_struct *work)
-@@ -642,11 +638,10 @@ static void rpwmtimeout_workitem_callback(struct work_struct *work)
- 	dvobj = pwrctl_to_dvobj(pwrpriv);
- 	padapter = dvobj->if1;
- 
--	mutex_lock(&pwrpriv->lock);
--	if ((pwrpriv->rpwm == pwrpriv->cpwm) || (pwrpriv->cpwm >= PS_STATE_S2))
--		goto exit;
--
--	mutex_unlock(&pwrpriv->lock);
-+	scoped_guard(mutex, &pwrpriv->lock) {
-+		if ((pwrpriv->rpwm == pwrpriv->cpwm) || (pwrpriv->cpwm >= PS_STATE_S2))
-+			return;
-+	}
- 
- 	if (rtw_read8(padapter, 0x100) != 0xEA) {
- 		struct reportpwrstate_parm report;
-@@ -657,17 +652,14 @@ static void rpwmtimeout_workitem_callback(struct work_struct *work)
- 		return;
- 	}
- 
--	mutex_lock(&pwrpriv->lock);
--
--	if ((pwrpriv->rpwm == pwrpriv->cpwm) || (pwrpriv->cpwm >= PS_STATE_S2))
--		goto exit;
--
--	pwrpriv->brpwmtimeout = true;
--	rtw_set_rpwm(padapter, pwrpriv->rpwm);
--	pwrpriv->brpwmtimeout = false;
-+	scoped_guard(mutex, &pwrpriv->lock) {
-+		if ((pwrpriv->rpwm == pwrpriv->cpwm) || (pwrpriv->cpwm >= PS_STATE_S2))
-+			return;
- 
--exit:
--	mutex_unlock(&pwrpriv->lock);
-+		pwrpriv->brpwmtimeout = true;
-+		rtw_set_rpwm(padapter, pwrpriv->rpwm);
-+		pwrpriv->brpwmtimeout = false;
-+	}
- }
- 
- /*
--- 
-2.43.0
+On Mon, Apr 28, 2025 at 06:03:46PM -0700, Sean Christopherson <seanjc@googl=
+e.com> wrote:
+=2E..
+> E.g. slot this is before making cgroup_util.c a library?
+>=20
+> --
+> From: Sean Christopherson <seanjc@google.com>
+> Date: Mon, 28 Apr 2025 17:38:14 -0700
+> Subject: [PATCH] selftests: cgroup: Move memcontrol specific helpers out =
+of
+>  common cgroup_util.c
+>=20
+> Move a handful of helpers out of cgroup_util.c and into test_memcontrol.c
+> that have nothing to with cgroups in general, in anticipation of making
+> cgroup_util.c a generic library that can be used by other selftests.
+>=20
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  tools/testing/selftests/cgroup/cgroup_util.c  | 78 -------------------
+>  tools/testing/selftests/cgroup/cgroup_util.h  |  5 --
+>  .../selftests/cgroup/test_memcontrol.c        | 78 +++++++++++++++++++
+>  3 files changed, 78 insertions(+), 83 deletions(-)
 
+This reorg makes sense to me,
+
+Acked-by: Michal Koutn=FD <mkoutny@suse.com>
+
+--52kytrr5hdefn2m4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaBDAkgAKCRAt3Wney77B
+ScQbAQCK3C6jnGaSeFIPYQcKO55mROcnzexc8fp4M92Ozbpb1wD+PM1uo+nC/F3w
+HBvm09u1g8FO4HnRhVxrvuDQzXj+pAY=
+=SDcj
+-----END PGP SIGNATURE-----
+
+--52kytrr5hdefn2m4--
