@@ -1,121 +1,189 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2075.outbound.protection.outlook.com [40.107.100.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8922451C8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745949944; cv=none; b=aSOSsM88Cyj5B2+D2Ag+On8MOytOpLt9KMiaiPYwDaDLfZ7CNGWomScwrqwPHW7bRR4c7kIT5aW3CaYyzKNoqXbq4kT+2eOASRwByOpCy2RGF1ZrrmXsf0E+uDwKJ3tsYkFiutqcNkU1ETHPWs943PlKtA8r4VzxXDMzS02G1tw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745949944; c=relaxed/simple;
-	bh=Lyq/S1Ycbav0qnNhNcOJVaHIcrRRLEeAl45r12sbYpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B38JrSkBlZQMijdW7haPzFu83b3QtSAX+sUEIXS674cMotnKoCnHu/i3h7QAGVMLd4gseoXsyMaOsXaZMEOEy1L3BmJoRXk9vUCntAeXAJSAGCuvalNd/TK9exEYgxBcTI9dkYAx9sprlkBEPdk12B70dYCUxif7IDAIaDg+u8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L6V/x+QU; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D861A5BBB;
+	Tue, 29 Apr 2025 18:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745950087; cv=fail; b=tTEBxyxhwKOuHVdCTiWsDO+3j/2XCnMuk2SVHyZ5ynkg4f7xqTGa3XLsaFrMeQL/RFH6aT7zkaMjyH+nACtLUVjR7FJJLzP/f1eI9W2ZuTb5NVgiSdq5xe833rumMOea9HGlo4Sj/tLAVGYe740uANjRl8a1Wq4sdXl+uRmtC+8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745950087; c=relaxed/simple;
+	bh=Vy9BXMe31Vjpq2lw4by066RvSjaoPvtnjK+NXrpoDgQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PTGxsY2BujygBltIJ1rwC9JEZzjlWgVhjjfnqSSmMl9mdOS8XYeFk75JL15UFfMoUfAIm4DWLSK4zr7yDOzoMHYSt5KGCRoU/xrZN6hJEz+dIimbZxbL1ePbLpW8k7cZXdUMiOzP/jHB+NvJ5/iPDELm+venCWmo5OxR12HYAvo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XLOM3K7X; arc=fail smtp.client-ip=40.107.100.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L6V/x+QU"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so719676a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745949941; x=1746554741; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mga3Rq70LqXw/l3aYagru3Xh65JFPJSy1XpGB2clVXE=;
-        b=L6V/x+QUz/Rdx5HDssUkkLXQQXe/efUUetOHS4L2VbH5K9chWctN+35tf+WDKLzvHQ
-         Fza0qyMKI1c9sr9pC22HDjQcFdJE/Kr5mwC9WGyt6mpBgt4++am2faatW9hoHnUDqbZv
-         hMb3MqEr6G6mOSxZJ7X3HIbRohtwxLOOULgx4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745949941; x=1746554741;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mga3Rq70LqXw/l3aYagru3Xh65JFPJSy1XpGB2clVXE=;
-        b=arlKu8cQOmcvP206jho1pdVZyi/DIeRq8chBTdZ+ETtlkmqw/SbNC6yl+ozH0skyJ6
-         8ZrtTyRP1BGjm05AscLAXye5Cxen4COm5Q7uX9s/JH+bV0F5Mo6DI6O1b+B86ALOsh4Q
-         BBgle0vHDPavLij1XB5TE7vSfgIscsMDT9yG6EmO+uDkgKm8leIwQ/0966tiOusN0lpj
-         IvS+lFSD+ztMqNJXWE6KCX0v4ntriBlWReFx4Thqw31UHFssZrEP9O6xV0HMBbmhVAuP
-         xen0KGSrc3HvDa7bMAMC8qg9ud4qYZ5VsuuuDeFEWwvXFcd8fWj9I5+eDcXbIqno1J7R
-         sFnw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9Al0blg/jjicTtME6GJMTfn35AIxIq2h5ewGdd/IJK5z3erkgrpXXsBYZhxsNHkpbIBykNgjm/QZpRgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKCnTWKQABD3eDFGmy6LsUEvpDbNUdRqu085A6NukXW5RS3KOT
-	wxESJnbGfpkxJKyFrVQIkP187nHwcYo223db55iUQTc6sGM/OD+F4RNBiWRLTvEymNt0mtE9skC
-	WZZfzEg==
-X-Gm-Gg: ASbGncsMgrwZiBBQhXraNdRLNM99loLUjCSMjK/V+OjQ0BHOhthP+ynJguP+7nasWMS
-	Or4dO07avSuL3+wrO63qnF96fsD0/YMYZW3U9AH+C37URQuQL14I8qfAwndefRMIuOELttbF/sN
-	MipJ0Eip73HIW9KXXJbYQxM6P++HP6YD/jGd0W7/xmwdtYcIjfAzdaEj63NJF/lCMQri2f33cS4
-	87Gu7ccrPSsF0f+wBFh4h0qHDypHZwLGacnopiUPsoReWarQBBKw4Gv9uTl7/7l/tisHfvw8KK8
-	jIIAcAbDrSTqsTDkstNzl6Mm/FatQsV5otZtI79m9rq/7ziR9mWziF40IKI1pSmqIA3pbDGhkn7
-	CBTi6a4ZwWT1sYpo=
-X-Google-Smtp-Source: AGHT+IGDflZkrazHfxd9VnQOCkGUEZEynuBn/a8nLg0AtmIWWTqetPZXqGNrv6li3GD1FUQ2uNYD7A==
-X-Received: by 2002:a17:907:3f18:b0:ac1:db49:99a3 with SMTP id a640c23a62f3a-acedc73396bmr35692566b.40.1745949940775;
-        Tue, 29 Apr 2025 11:05:40 -0700 (PDT)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed71ff2sm820060766b.144.2025.04.29.11.05.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 11:05:39 -0700 (PDT)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac34257295dso1076454266b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:05:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXylaUx561cI4AbIusmITnivbrMiN5ivn74QnacDXaRlI/5z9CB8Ak+YKPkjSUkqtx7897TffSYSRKB08A=@vger.kernel.org
-X-Received: by 2002:a17:907:60d3:b0:ace:c2d1:9761 with SMTP id
- a640c23a62f3a-acedc623882mr34288966b.27.1745949935745; Tue, 29 Apr 2025
- 11:05:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XLOM3K7X"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=etGMzzT+QFgLPQRK+EyJAd3fFondOXZFjVYPDovXaesxHzrubFuD90lDCf/jJLc+Vr4fC5yJ3NJq4dFiCJKu6U+IpvRzFCUzzBFg12ZQjkeQtkqG0G+VdXzsYXjyfQLLk5qs+MbfuoEA53z3CuWLJGXvdK0FhwADLQB0zIfDZeEhebjH4UAtzZnSv4K9L/CH5lJJcut1ZKDSvsyTd7Wm6tGSHL1UTfSRl0hltBLt73/nQQZNzjMihPp5bU0GehKVrFm40pLt2adQk54ve/z7DtLkhYLcXeMEl5d8+N48ifsOt5C9EZ7lXkrFExQWqhbMQ9H37VlJvoFGcNVpI7MxDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VIAa8RR+zLmb/ttWvevJREq2xpQTYD3f65jtS+/vWFA=;
+ b=rFwL7bAe7KkR0vIT+NwQUQ0JP0xthUfr8q8kTjKuR/ltE48vq/Iv1tUDVMmr2oq8hYQQRx7w7NtoO2ABygXizJOOMiU27A9yYeDrt5Su9ADXFJY2NxGFNsdU9DoWz7gVnpnU6wd7A71rxDr5fBnSMrKx26v0QZRlvdjYqJyJAw+F62RyHvmV0kOjjW/DCkmFcrJxIHvSP50pkUMBhmUbpRze9mbJ/UDPQXMPhpJlxwyVlnA5gw+mFwnHAj4SQVp0XTSk2cm18d9kVqHXJR+0SvJZk2H4fFE6XMEJmg6CvhKNy0jRrduwvWJC/gksog/iDDR7y4/lx1N+pbX1ZN0cNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VIAa8RR+zLmb/ttWvevJREq2xpQTYD3f65jtS+/vWFA=;
+ b=XLOM3K7XwMZhjpRn3amBAPWCN57MBkamMBSdFD+Urt0B9fYnTcZI0kMIXDydaUSp+k47gepMoD6XpuoPGC/Y1Sxpd/ZDMsQaezYEWozZb8qlQr/83ggIPJlbu1IVaT0qj42TrNSBJcMwIPH5gedZ7yUMWycqlfzlhYTe2aFfPv8BulZaSTSVjsSH4qBJq+004AcwpfNiJOc+flaGr0aW9U5UmZFQbdXugVh3QqmMfDZ8fxfXDpvUyJMxab90Bvvt8oI9kVRKs7Nepdb69hqfEvuaPS1oMkpPhTRFLaEK9lVMV6l88uTUFr0aDnldWwxOPjY0YIznWdcZfKFZnXAdyA==
+Received: from MW4P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::22)
+ by DS0PR12MB7928.namprd12.prod.outlook.com (2603:10b6:8:14c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.36; Tue, 29 Apr
+ 2025 18:08:00 +0000
+Received: from SJ1PEPF00002315.namprd03.prod.outlook.com
+ (2603:10b6:303:114:cafe::69) by MW4P222CA0017.outlook.office365.com
+ (2603:10b6:303:114::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Tue,
+ 29 Apr 2025 18:08:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SJ1PEPF00002315.mail.protection.outlook.com (10.167.242.169) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Tue, 29 Apr 2025 18:08:00 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 29 Apr
+ 2025 11:07:46 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 29 Apr
+ 2025 11:07:46 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 29 Apr 2025 11:07:44 -0700
+Date: Tue, 29 Apr 2025 11:07:42 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Pranjal Shrivastava <praan@google.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 11/22] iommufd: Add for-driver helpers
+ iommufd_vcmdq_depend/undepend()
+Message-ID: <aBEVboMt0OtZmt4Y@Asurada-Nvidia>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <a25c9454c17663f9e79b37bc2908bf3a99856be6.1745646960.git.nicolinc@nvidia.com>
+ <aBDIpz7w8wxIn_AF@google.com>
+ <aBEIBKdjuecVHgpU@Asurada-Nvidia>
+ <aBEThP2Bn0YDgXfu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
- <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
- <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
- <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com> <CAHk-=wgJfWfWa2NTiTmev+Xr=e8Uo=aFkrXujLAQBVAVN-VigQ@mail.gmail.com>
- <B364FF6D-DFCC-42A7-ACA1-6A74E27EE57E@zytor.com> <67be5eee-b67b-409a-8309-829f891b9944@citrix.com>
- <916BD58C-E6A7-495E-9A60-722E130AC7A7@zytor.com> <e5e97ff8-9670-40d1-a0fa-69504d34c4c4@citrix.com>
- <956DB0ED-F3DB-456D-8D06-6F40DBDB815A@zytor.com> <06d04c13-76e8-45fb-a563-e365e1f19362@citrix.com>
-In-Reply-To: <06d04c13-76e8-45fb-a563-e365e1f19362@citrix.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 29 Apr 2025 11:05:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wig1E4B-e1_6=it1LfVQ64DJsVgO6f6Ytnbzm2qChbAdw@mail.gmail.com>
-X-Gm-Features: ATxdqUFTY5mdGhFc4ArUUSgC4AOenPGa8voKgtO-ChPuKuk16Y4sxjRuZZC2Fww
-Message-ID: <CAHk-=wig1E4B-e1_6=it1LfVQ64DJsVgO6f6Ytnbzm2qChbAdw@mail.gmail.com>
-Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
- handling to C
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Alexander Usyskin <alexander.usyskin@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>, 
-	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aBEThP2Bn0YDgXfu@google.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002315:EE_|DS0PR12MB7928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 163d541c-ca00-4a4e-bae8-08dd8748c6ee
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ppra6eN75TASdIUrhblXnbohqu29kNJ+aeK7/tSM1hAG9dpcbbn48h7hHl6b?=
+ =?us-ascii?Q?yGDRDoqOq0pUZ8F/1A9JJhI+f5fJcnn5T6cqYrgSO5vtkQIg/G0/HfhzCgJ7?=
+ =?us-ascii?Q?rzPSCW+k7IR53YshSTdAbz4Apmyk8HxfKzUpb2K0+Wb4RnNFn+vt56uSkc/g?=
+ =?us-ascii?Q?R3QewYbKdyKXwaVQfOkPtSw0ZXW2MGA5M+5LrC6DASk9Oit2bLPsmNxTDdBT?=
+ =?us-ascii?Q?vFqnNpYYtzWjJhkFs2pTCcVqSMrsWuhEbZlu7B7+1wlKFJbmsBfg+pDaIuVp?=
+ =?us-ascii?Q?9dl/85209rOv2ZY2936hWRzwRXMN18+9Tn/F1EAeoXBUEMklr4RLozuQ5yBy?=
+ =?us-ascii?Q?gYRp+w86DEOvawB6ZHtvlo/g/XzgNIsBDveygY5M5LIcMeii5s9mDlC4IRQm?=
+ =?us-ascii?Q?Qw+uVivOW9I0OuteJF272zX8g3arESZDfHaWilM0ZcjhaaEtad727GDfyyFa?=
+ =?us-ascii?Q?aKlodCdqDQHNStuwl45QDimUolCRBbrX4fbErWEp2L0CuYxeBXz/TCLRPcip?=
+ =?us-ascii?Q?YHfEapjHh6Nilu/8o75FgPp7eJk4Zaqw/8+g26owUDSc1N0Q5zj9cKUmzBca?=
+ =?us-ascii?Q?+68UFlabt5QY/cRyfBDoF1an2ww7/5aiHnxJxdBx4TDI7azgWS0irE4GEJyU?=
+ =?us-ascii?Q?VgrFl/fcFsilpNIvToAjQnfZKycdrRR9DKTBEjwIZS3pznx1OdvUgo2vI154?=
+ =?us-ascii?Q?I8lKmPBSSC+p5LkDdIJrUZnV1snAMa2n4zxcrUzuBFlomZNZzORHXZKgs4KB?=
+ =?us-ascii?Q?56nggJDEQK7j6s+LnbgT69E0VGKB04hsWkFJs5aWAqgHzV15vyZTYUGRlFr1?=
+ =?us-ascii?Q?asmq3+6DZwQ20/06zjqXdlBCvdn4J4GtBMDrYX0aA4kWjn6tZ/BH2+Il+DK4?=
+ =?us-ascii?Q?qs8Qm1/iRXE7B/z1IPmxMTOGnV5qYeCaz3x/STMr5+A/cPsAxPgFPu0lQdVE?=
+ =?us-ascii?Q?mHKAve9pRjUNdR4X5rit+yLN7iu7ZmI6Gdh2yCTI2ID5RSz2ZRY2uB1G+sLr?=
+ =?us-ascii?Q?MtbcuuxmILs0tdSP9jqDMTSNIstrExVHr5psV/NhY7daLHjdGh30/NV5AicO?=
+ =?us-ascii?Q?esZeEwBe0PsvuFlO9RKk5899rlq0nSOayzX9OItbuiM+zG6En4xvLDWeBdCR?=
+ =?us-ascii?Q?lLDLpmfTgI3c8lSey/yRKMhZTQ77jk+nqjYjnwqEGac6oyFs1/82PdLWHtaB?=
+ =?us-ascii?Q?xPh3tZ9iQbeFaADh99d9ZZ8lMovrVp7XVDqk16P7imUEhBBTxgVF8N9H+H4b?=
+ =?us-ascii?Q?Z9irjofWWJgda2YtFwvZCFsbfoor2oJnjxvQg4rkUPxBnn1/cYOdfQtI+Bz5?=
+ =?us-ascii?Q?Z2LdOtiPxCDVBeaqwoZrIQXAbZBRNSPB7Wu4mmNi1AjUeiF7IcixOqwixe7C?=
+ =?us-ascii?Q?nQTozv7F9+SH4b5HLlqxtHeVBTV0roHQI+b0UTFPIj79ST4vNMesRCsfQQZ1?=
+ =?us-ascii?Q?6EDtzU3HkeDlvUxvghn9fdP3BsKA2OiFtkQmZeoSM6DPpwPwDNIjVpatvpP/?=
+ =?us-ascii?Q?59VFcEt9p5LKhG/vyWsNRLxVS8MEfKlYFknl?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 18:08:00.0934
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 163d541c-ca00-4a4e-bae8-08dd8748c6ee
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002315.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7928
 
-On Tue, 29 Apr 2025 at 07:38, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->
-> I tried that.  (The thread started as a question around
-> __builtin_constant_p() but did grow to cover __builtin_ffs().)
+On Tue, Apr 29, 2025 at 05:59:32PM +0000, Pranjal Shrivastava wrote:
+> On Tue, Apr 29, 2025 at 10:10:28AM -0700, Nicolin Chen wrote:
+> > On Tue, Apr 29, 2025 at 12:40:07PM +0000, Pranjal Shrivastava wrote:
+> > > On Fri, Apr 25, 2025 at 10:58:06PM -0700, Nicolin Chen wrote:
+> > > >  /* Caller should xa_lock(&viommu->vdevs) to protect the return value */
+> > > >  struct device *iommufd_viommu_find_dev(struct iommufd_viommu *viommu,
+> > > >  				       unsigned long vdev_id)
+> > > 
+> > > If I'm getting this right, I think we are setting up dependencies like:
+> > > vcmdq[2] -> vcmdq[1] -> vcmdq[0] based on refcounts of each object,
+> > > which ensures that the unmaps happen in descending order..
+> > 
+> > Yes.
+> > 
+> > > If that's right, Is it fair to have iommufd_vcmdq_depend/undepend in the
+> > > core code itself? Since it's a driver-level limitation, I think we
+> > > should just have iommufd_object_depend/undepend in the core code and the
+> > > iommufd_vcmdq_depend/undepend can move into the CMDQV driver?
+> > 
+> > The moment we added iommufd_object_depend/undepend, we already had
+> > a blur boundary here since we had no choice to handle in the driver
+> > but to ask core for help.
+> > 
+> > The iommufd_vcmdq_depend/undepend is just a pair of macros to help
+> > validating the structure inputs that are core defined. It is quite
+> > fair to put next to the raw functions. I also had the notes on top
+> > of the raw functions suggesting callers to use the macros instead.
+> > 
+> 
+> Well, yes.. in that case let's call the macros something else? The
+> current names suggest that the macros only setup dependencies for vcmdq
+> and not any "two sibling structures created by one of the allocators
+> above" as mentioned by the note. Maybe we could rename the macro to
+> something like: `iommufd_container_obj_depend`?
 
-Maybe we could do something like
+That's the intention of the macros: to validate vCMDQ structure
+and help covert a driver-defined vcmdq structure to the required
+core field, as we only have vCMDQ objects using them.
 
-   #define ffs(x) \
-        (statically_true((x) != 0) ? __ffs(x)+1 : __builtin_ffs(x))
+If we have use case for other objects in the future, we should
+add another iommufd_vxxxx_depend/undepend macros.
 
-which uses our "statically_true()" helper that is actually fairly good
-at the whole "let the compiler tell us that it knows that value cannot
-be zero"
-
-I didn't check what code that generated, but I've seen gcc do well on
-that statically_true() thing in the past.
-
-Then we can just remove our current variable_ffs() thing entirely,
-because we now depend on our (good) __ffs() and the builtin being
-"good enough" for the bad case.
-
-(And do the same thing for fls() too, of course)
-
-               Linus
+Nicolin
