@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827E72D1901;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827822D029B;
 	Tue, 29 Apr 2025 12:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931557; cv=none; b=UGmjACTVayfTfgDoFV/rsmS3uvEK3oAXk1krF6YUsC4oWEyhBoAtmz32DpcOUu5xxmOZxc5+JLQ7p9if2nfpvceTBzGb73clF39dhHaJZmLg+5IlAI3ZCkg7ziSqzj5FhV5BI1q+cuG/vyCtQxh9FiWtZinWfDkkPmJuxs86l8o=
+	t=1745931557; cv=none; b=QKSTVkyQvdPgLQS4pE4L08wJYZNDD8qUCK9rD1btLBrqSMyzqkrgwhsb8WVQAWjoatf7192r3yrJvpmSweecJ1VN+Gt9cWW+p6PY+csnJLzAwdi9QZX4Fp5KP4/pci87fs8wdV7ZtqVjr1vDC3bPkMSWDdMCrdrxgxQ95dZCfn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745931557; c=relaxed/simple;
-	bh=XEA7eOKnFQPnS5jigwSOQXrETAAO0hBpVmtM8cu5xnQ=;
+	bh=16N0ehkJWytFD5jx5wDbSTZhtNf5Qf6vx2SOhlkAC1Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RhTQl7y8x+TUAeH6UytlT3HqbeJKugBwT8h1iVXBoG1/7Ifvy8DF/u0sPrbQP4gv7tD6IA+0/R537VVf2QBspOiO+01fz/rWozmTQ49GyYKiiybMaUbReqPPzEzKlHTSs/phw7uZewFHHeAiTimxxcv5UgF1DpI5gpttA17uJfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H5axyzlz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=BJEODbAoGqoS8SbZ6PL0zbvpUhV6AlkCGYy+Je5/VjIrom6HDwPsDxCgM/1xR54u46XCx/O+9Q+djcy+Ux0AqeTJIdFFTAiHRWAs+8U/fU0k/+cOIyaYWK7x3xhHfIMUKApR1Wl9Jc3fgrj7VaqXpuVldJklcExdV0NkpbLKkgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JbekdOJw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H5axyzlz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C1254C2BC9E;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JbekdOJw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 80DD3C19422;
 	Tue, 29 Apr 2025 12:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux.dev; s=korg;
-	t=1745931556; bh=XEA7eOKnFQPnS5jigwSOQXrETAAO0hBpVmtM8cu5xnQ=;
+	t=1745931556; bh=16N0ehkJWytFD5jx5wDbSTZhtNf5Qf6vx2SOhlkAC1Y=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H5axyzlzhcx9TtD2sC3uKQcmAWsDcx2DxglLDHqdqr8XZVcQRDPGHtEnTGR+3MACi
-	 0EuplDnN6ZYfiuoYFdl+E0eRQG8XliK2TBVP0nB0SCgBn9zRhYUWpa5fu71jr6BTgZ
-	 /5LueXIpzQpKcMnMM2Q3n/PLvslSYhxkPAXtU9Hk=
+	b=JbekdOJwB5KkfTAVZnMSOOO6KVy1H6HwF6VKcRVwVXOFunM+3RY6myhhlhg2hU/7F
+	 JdW4B/3S0cZC2c6ghkfiAaysIBglATaik/oewo6ILaWiGne7QN818AixQhkUM9h/+j
+	 BmkflqODYfw3m4/9Pajr0mRPMMWI+jE7VpODF8OQ=
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B9EC3ABB5;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7058EC3ABB2;
 	Tue, 29 Apr 2025 12:59:16 +0000 (UTC)
 From: Richard Leitner <richard.leitner@linux.dev>
-Date: Tue, 29 Apr 2025 14:59:14 +0200
-Subject: [PATCH v3 9/9] media: i2c: ov9282: add strobe_source v4l2 control
+Date: Tue, 29 Apr 2025 14:59:10 +0200
+Subject: [PATCH v3 5/9] Documentation: uAPI: media: add
+ V4L2_CID_FLASH_DURATION
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +36,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-ov9282-flash-strobe-v3-9-2105ce179952@linux.dev>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250429-ov9282-flash-strobe-v3-5-2105ce179952@linux.dev>
 References: <20250429-ov9282-flash-strobe-v3-0-2105ce179952@linux.dev>
 In-Reply-To: <20250429-ov9282-flash-strobe-v3-0-2105ce179952@linux.dev>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
@@ -48,51 +49,36 @@ Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
  Richard Leitner <richard.leitner@linux.dev>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745931554; l=1520;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745931554; l=1038;
  i=richard.leitner@linux.dev; s=20250225; h=from:subject:message-id;
- bh=XEA7eOKnFQPnS5jigwSOQXrETAAO0hBpVmtM8cu5xnQ=;
- b=G943Q5rMrjMVhETxHQsNfxhFguRPkjvBIpdTCRSMAOGxjlQcMv3+Boxr4o2GjWUhOBi9+5JZ6
- Ltei845X9whB6qJ45gzW850L1g4sbaFIqm312RqHYxMIOgZdS6cl8hf
+ bh=16N0ehkJWytFD5jx5wDbSTZhtNf5Qf6vx2SOhlkAC1Y=;
+ b=wDEuqGzuAzAKafp77XME7C+1i7hnGJTO89QyQhr8UWvQwj2gMhQE+C5LSPSBLXfqY3CEcJ1b8
+ ++BLABez+d7B93WWQ0NEdUvzpbCac5Zq0fkIRqX/GwSy7FYbxSW1P9d
 X-Developer-Key: i=richard.leitner@linux.dev; a=ed25519;
  pk=8hZNyyyQFqZ5ruVJsSGBSPIrmJpfDm5HwHU4QVOP1Pk=
 X-Endpoint-Received: by B4 Relay for richard.leitner@linux.dev/20250225
  with auth_id=350
 
-Add read-only V4L2_CID_FLASH_STROBE_SOURCE control. Its value is fixed
-to V4L2_FLASH_STROBE_SOURCE_EXTERNAL as the camera sensor triggers the
-strobe based on its register settings.
+Add the new strobe_duration control to v4l uAPI documentation.
 
 Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
 ---
- drivers/media/i2c/ov9282.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/userspace-api/media/v4l/ext-ctrls-flash.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-index 5ddbfc51586111fbd2e17b739fb3d28bfb0aee1e..34ea903a18dadeeebd497a4a8858abf12b598717 100644
---- a/drivers/media/i2c/ov9282.c
-+++ b/drivers/media/i2c/ov9282.c
-@@ -1367,6 +1367,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 	struct v4l2_ctrl_handler *ctrl_hdlr = &ov9282->ctrl_handler;
- 	const struct ov9282_mode *mode = ov9282->cur_mode;
- 	struct v4l2_fwnode_device_properties props;
-+	struct v4l2_ctrl *ctrl;
- 	u32 hblank_min;
- 	u32 lpfr;
- 	int ret;
-@@ -1446,6 +1447,13 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
- 			  0, 13900, 1, 8);
- 
-+	ctrl = v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
-+				      V4L2_CID_FLASH_STROBE_SOURCE,
-+				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL,
-+				      ~(1 << V4L2_FLASH_STROBE_SOURCE_EXTERNAL),
-+				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
-+	ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-flash.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-flash.rst
+index d22c5efb806a183a3ad67ec3e6550b002a51659a..03a58ef94be7c870f55d5a9bb09503995dbfb402 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-flash.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-flash.rst
+@@ -186,3 +186,8 @@ Flash Control IDs
+     charged before strobing. LED flashes often require a cooldown period
+     after strobe during which another strobe will not be possible. This
+     is a read-only control.
 +
- 	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
- 	if (!ret) {
- 		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
++``V4L2_CID_FLASH_DURATION (integer)``
++    Duration the flash should be on when the flash LED is in flash mode
++    (V4L2_FLASH_LED_MODE_FLASH). The unit should be microseconds (µs)
++    if possible.
 
 -- 
 2.47.2
