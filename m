@@ -1,251 +1,88 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCF12BEC3C;
-	Tue, 29 Apr 2025 09:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1772C1794;
+	Tue, 29 Apr 2025 09:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918844; cv=none; b=MiAhu4J3gC+otubfxGt908GLATNa1YaIuLE6M5n7/xMdLvPe5Ahfb64jCmyljEp+L5j1GHj75y5ch15WKtRADPlWFKsjYyqudwrHxQdCMCM9/S4lXOY5d19o8pfKeqMTaEtxuN33k5HIjG7C7UGdm8UFPJLWhfbF627fTxFTkvU=
+	t=1745918859; cv=none; b=qPPAmbctQdrn67pboX2MOvHTyCUwaUs9cgQrTyh4yhuxK6M4jS+P+OIubL47X4TUMbunAOjFKvjCKQivWafJDrEv4t29YdMy8Kr0pGaiod1023kxNw6ci1UNqS02GKBz+I4txxl8bKvlvaRUaRmLv0KxmNg48ROOgEo0sLy+4rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918844; c=relaxed/simple;
-	bh=3Dl77jr5SLfU1KEb2igdTouAqlmhyUzyHLxmhmFNIbE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=TRAKxz2CRXTL62NY73QmPBZVxsTEQQ7Ohm8IIcIuW+dMAqyRz2BancQleM/VwHNyMhxs/ilEAAYnqh36vEp3Gj7JGlTrr9XQ8I+Icu3h5dvOEl3OErZ1c65cOhi/ATHfSfrvawMCq0z0oeghebjp6wul2BuOGjxg0tF9k9ledAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gNM6lH4H; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745918859; c=relaxed/simple;
+	bh=pKdrAsC78yKJBlRfTV47EWhjNqUPsyLtnbdr254TIak=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=qUDQO5B2qZHnERkX3nzzo/xLtwYl3+8v84DYBzRoJQVswOcHVIW1LPEw/Lddn9RZC+tz8WByJRwVkxtw4/2k9F+wMi4cRY2yVjdfK76NKZ2NQSHduMQd+I2RyHwfmlZEurcB1OuiSQ2PQW61fiGhEAYUvQp82RVkSlsdkv9IVT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=caRYV4q4; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gNM6lH4H"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq38S006058;
-	Tue, 29 Apr 2025 09:27:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Wg/C2ZbS+hxVQAQGuBzu+ofC5VQMI2kL8UMxyjlDl+Y=; b=gNM6lH4H4y6cjnBw
-	n7N7RSzYe3rrlJQIl93S0GIoGQfoXrr7R1VvOT7i93lZF4MZNIaA3HVRT8ZcbI4C
-	46P4BfJdc5hVoMsO+mWWM0FPF2Lj/SG7uqAgB6915/BOM4dCuBpnhYqSe1N/FOHj
-	Tt6rCHfpe9N9MnIVLxuQMQPfQ3eSvkM43nz4ynUnONQXISRtzHehazsGULjuRP4v
-	LTozjnJ8gmOnXprSjhiHUGMNdA4FHMGaHUxfwN/p3iFQcvNNUh0ly98o/B0/we//
-	7Sdcbu9eMZsWKu3rOG/yemHiP1telg64Nxtj/txnaVvhw7kaERaJlq77DkgptSnX
-	DtZcrQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468ptmm0k8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 09:27:16 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T9RFCK028960
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 09:27:15 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 02:27:10 -0700
-Message-ID: <8444f256-6375-82e4-8b89-6a618b02913c@quicinc.com>
-Date: Tue, 29 Apr 2025 14:57:07 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caRYV4q4"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso50965425e9.2;
+        Tue, 29 Apr 2025 02:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745918856; x=1746523656; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pKdrAsC78yKJBlRfTV47EWhjNqUPsyLtnbdr254TIak=;
+        b=caRYV4q4JnXKLHRzvs49gXoDqFG3DZtgRWuPpGitqJXaQkx9Cf/cgaTTbpbWrMwAG6
+         j+cfP/tvjMPz3Ca/S3KIRKiU8betiqkavlp3XGEvPsQRmqj1yZwOimoHVLzywmlr0ucW
+         0po5k2VyVJtcDSVS8MXwABFOM49nGxUmICL2uWBdgDSrlV803rfevkdKxzpv9FJ7kO9M
+         CXIisRyHMjUzTo9M4SiEaA7De6xvMGxo7UQMxSkH27oTIpZZZtO4JTXRCe9gwKdHXNsc
+         OYwJbvsHVlJIU0k5jX8vgsHAbHtV9L4j5tuDH8mDAzg98sYNsNE3nMWDgVhdQHE/bqf4
+         RD+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745918856; x=1746523656;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pKdrAsC78yKJBlRfTV47EWhjNqUPsyLtnbdr254TIak=;
+        b=UFnJwegMbDrXndUfSty25cRwyYXvJz5bXp5jzAtT6Qt9bwtr3zwkYZWLoVrgZ46Bte
+         az/cIxbsYs6zJa82XS2ZGpAfyt+iEZ4+S4hPNCMZkAmMO/6BDyOWKcHb/7JzKuf4/f3T
+         Yxd14VFwc7dOfHU7nHITxaqk3lO1WzDqwWztxNOaqGkYMATCqnWditIJ7Uoc7xlK6KZh
+         HMosz+LTKRALQaiJ99K6hSoeeExMUUOm/9lUmA4lm4O3qsQrw/N7w2vdz4eQb+I2n3pi
+         WuXrw4tff9+Q9Bhs6c346AsUIa6/S2lUvlBP1pXung3b4g0rIucDU34gTNV9I1ItpkOK
+         03cg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR7iL3pbzz15BvMih4ruU6ggAFbwLv9UxSrc/1UA9ZMn3LVl68liEyC9BHzwhhjikbupcoLRiEASF9S5U=@vger.kernel.org, AJvYcCVTejEWfnuuGCrpKf32HcQk1sTrEd9J13on/8JlSlo3y9JMvMK9QkWlzh2ApHvV4IMymDtjhxkB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIY2EJ+X25BikskyGRk8PBtDcHEBzhiE3E6ruGx9D3SdG3cJo1
+	7i0D4EWJRU5QJkiFFu7D0IAUov7lXkpDF8SCzR4GviO0YbV2bSXxNgbvfQ==
+X-Gm-Gg: ASbGnct6oJLRx0lFJPZTapLYkkgFg9uoWcgMaKKWQzFo+p06h9e2tN4t2m6LqAlsZ/Z
+	Ys2FutdfN9RMRdgaUAnE9Pmycvz+62LzIXLwjCjz+NAF3jlRhNX1oRyoxyNv94RzBDtGsCrZC5B
+	PTC2Gmry6a+TAMtdw1xBpgdA1Qke39N/EsKrSiSVxCqysnoEzkFiD2XlzOhTDvUp6GjyPD7vjuH
+	E1+bdRLi8eYluVChu0mk6YIexKMMvDcapvtkl+pXIGYWeE1fnolhqhAs0MUT5vwE7uL7x3tEDSh
+	rlQdpF7fLNucgblEVEqwJgxrt+da9hDBr1aE915BooIic61DKaSASAYe6yR83cws
+X-Google-Smtp-Source: AGHT+IE8JSijoGNvW4HYfi5pARde+mkn5gH6F7xQrm36fW+QYoBBa/pBtyJZpJfc5TEgBKoY19TQcA==
+X-Received: by 2002:a05:6000:3112:b0:3a0:8ac6:d5b8 with SMTP id ffacd0b85a97d-3a08ac6d5d6mr1645390f8f.53.1745918855945;
+        Tue, 29 Apr 2025 02:27:35 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:251e:25a2:6a2b:eaaa])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073c8c973sm13445245f8f.5.2025.04.29.02.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:27:35 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Ruben Wauters <rubenru09@aol.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,  "David S. Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Paolo Abeni
+ <pabeni@redhat.com>,  Simon Horman <horms@kernel.org>,
+  netdev@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] tools: ynl: fix typo in info string
+In-Reply-To: <20250428215541.6029-1-rubenru09@aol.com> (Ruben Wauters's
+	message of "Mon, 28 Apr 2025 22:51:09 +0100")
+Date: Tue, 29 Apr 2025 10:24:52 +0100
+Message-ID: <m2v7qnpbff.fsf@gmail.com>
+References: <20250428215541.6029-1-rubenru09.ref@aol.com>
+	<20250428215541.6029-1-rubenru09@aol.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 01/23] media: iris: Skip destroying internal buffer if
- not dequeued
-Content-Language: en-US
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
- <feb6f710-899c-4a10-3224-d4ad16151b9d@quicinc.com>
-In-Reply-To: <feb6f710-899c-4a10-3224-d4ad16151b9d@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: EV2oO68YQXfZa7-BepAdTs44K5M1pVrX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3MCBTYWx0ZWRfX0qyFbUiC+uh3 a4wo7nB+KKff2C6sEvh57I1XHjliiGdwBQL5qTGLrNSvzQWvNIUa1LJw1EDNsBtprRMz01LJxrn 1nRClpchMdcsPM08tU1XdTNE7SxhrfFuxOdDL9XPdR2wbAq/mfiWQcwFE8mbD8RhiYF36XUEzr7
- 7vMsgDu4UAdE8dwh1VRta39Lqe+0fu2siaevCKLPpCS3Zc2UVO2rf7hmxTlIrk7sv3KAGmH4JVt 3QWoWQDFeWj5dmQsWxaY38Q15T+AE1T4PZAJ1Cb+qe39yfok84AvMWL/ZFuKlua/gY6DBDEtvLe rke/NyTiHXhinTGjJ9rNLJOH8/OX5/aWlj7sG2Grd3zY90JXpOXpwUcQ1y2LJkCvR62f5ZytGO0
- YarTLu1KTr9G723bEVFwAT6oTWf4Nh3ZhP2+H+CtfDYqUnLEa+r2ra/bNjB/AUOcsq1iMUTt
-X-Proofpoint-GUID: EV2oO68YQXfZa7-BepAdTs44K5M1pVrX
-X-Authority-Analysis: v=2.4 cv=DKWP4zNb c=1 sm=1 tr=0 ts=68109b74 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=Lm4sJm2uzP7NxcDb3WwA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0
- phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290070
+Content-Type: text/plain
 
+Ruben Wauters <rubenru09@aol.com> writes:
 
-On 4/29/2025 2:54 PM, Vikash Garodia wrote:
-> 
-> On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
->> Firmware might hold the DPB buffers for reference in case of sequence
->> change, so skip destroying buffers for which QUEUED flag is not removed.
->> Also, make sure that all buffers are released during streamoff.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
->> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
->> ---
->>  drivers/media/platform/qcom/iris/iris_buffer.c | 37 +++++++++++++++++++++++++-
->>  drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
->>  drivers/media/platform/qcom/iris/iris_vdec.c   |  4 +--
->>  drivers/media/platform/qcom/iris/iris_vidc.c   |  6 +++--
->>  4 files changed, 44 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
->> index e5c5a564fcb8..606d76b10be2 100644
->> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
->> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
->> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
->>  	return 0;
->>  }
->>  
->> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
->> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
->>  {
->>  	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
->>  	struct iris_buffer *buf, *next;
->> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
->>  	for (i = 0; i < len; i++) {
->>  		buffers = &inst->buffers[internal_buf_type[i]];
->>  		list_for_each_entry_safe(buf, next, &buffers->list, list) {
->> +			/*
->> +			 * during stream on, skip destroying internal(DPB) buffer
->> +			 * if firmware did not return it.
->> +			 * during close, destroy all buffers irrespectively.
->> +			 */
->> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
->> +				continue;
->> +
->>  			ret = iris_destroy_internal_buffer(inst, buf);
->>  			if (ret)
->>  				return ret;
->> @@ -446,6 +454,33 @@ static int iris_release_input_internal_buffers(struct iris_inst *inst)
->>  	return 0;
->>  }
->>  
->> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
-> name this iris_check_num_queued_internal_buffers..
-> 
->> +{
->> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
->> +	struct iris_buffer *buf, *next;
->> +	struct iris_buffers *buffers;
->> +	const u32 *internal_buf_type;
->> +	u32 internal_buffer_count, i;
->> +	u32 count = 0;
->> +
->> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
->> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
->> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
->> +	} else {
->> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
->> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
->> +	}
->> +
->> +	for (i = 0; i < internal_buffer_count; i++) {
->> +		buffers = &inst->buffers[internal_buf_type[i]];
->> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
->> +			count++;
->> +		if (count)
->> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
->> +				count, internal_buf_type[i]);
->> +	}
->> +}
->> +
->>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst)
->>  {
->>  	struct iris_buffers *buffers = &inst->buffers[BUF_PERSIST];
->> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
->> index c36b6347b077..03a32b91cf21 100644
->> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
->> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
->> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
->>  int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
->>  int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
->>  int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
->> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
->> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force);
->> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane);
-> make this static
+> replaces formmated with formatted
+> also corrects grammar by replacing a with an, and capitalises RST
+>
+> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
 
-With the above changes, you can mark it
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-
-> 
-> Regards,
-> Vikash
->>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
->>  int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
->>  int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
->> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
->> index 4143acedfc57..2c1a7162d2da 100644
->> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
->> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
->> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
->>  
->>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->>  
->> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, false);
->>  	if (ret)
->>  		return ret;
->>  
->> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
->>  
->>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>  
->> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, false);
->>  	if (ret)
->>  		return ret;
->>  
->> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
->> index ca0f4e310f77..56531a7f0dfe 100644
->> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
->> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
->> @@ -233,8 +233,10 @@ int iris_close(struct file *filp)
->>  	iris_session_close(inst);
->>  	iris_inst_change_state(inst, IRIS_INST_DEINIT);
->>  	iris_v4l2_fh_deinit(inst);
->> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, true);
->> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, true);
->> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>  	iris_remove_session(inst);
->>  	mutex_unlock(&inst->lock);
->>  	mutex_destroy(&inst->ctx_q_lock);
->>
+Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
