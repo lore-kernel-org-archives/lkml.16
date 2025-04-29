@@ -1,103 +1,139 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077372D4B51
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4302D4B79;
+	Tue, 29 Apr 2025 11:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927172; cv=none; b=jl3AUKa/z6vEHmh8qW87oR3MZWohUCDFkSQEMNDWHhBSU7w8HvO3eN8dHbSN0pnQDLCseRf2p0bznqluLHMTBqjd3oXnkHYumUtKmDdCFtKc92zL8yW6ixF8nhmKEod/E8FKuMe4ROPMHj6jGf+XMs+olENn6AjvHZyCTC+SkCQ=
+	t=1745927192; cv=none; b=rtpK09U5Z6bvKta6uS3rA/QqrqNKc911jN5ex0yOq1X02fMoaSsYRZyXuYABTLMLxyDT69liUKko6RCpQ3NOMB1br7LxWq6k63YpdoZyeGhLk3AbUHB0ZG5NNh62SW/Yt6OZ2aLTbBfB2PEvFoFgYHJbok/b6ppjL/hzPv3PO+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927172; c=relaxed/simple;
-	bh=ULcK5tqpMbySYpVfeIJT28xVpefLfkaAs7WExUaK2V8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EOOsWgJMEGq1gdqx1BBuF1hLZ3O/ymw20BXCAcmcsGimjc6ZTNZzhzFtjNZ2rFZMVa198Ke3rUE4NIooe+jBHeQHli4xjqu0BNo7JfA1KuWLITMAP43V8No1Gh+HeSs08U0rTUBqJ5UhYh3jLd3MJHXhyN/dDzzMR/MNmXKUHXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=a7C2cKzz; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745927192; c=relaxed/simple;
+	bh=KTAtU4yj15U90cJiCtm0L7dTLDIMSAa27/+94PyZbI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=usIChWZGM5XmQ9H/OrIZu5OsZVDHCPvjMPgNF6iEBfULPDDTrl+2gcYmTDLimWeWbMyBrcqnAJzCJcnetZ8hawZveCbGujNzxp9K1oKHKHUcoI3f1aUzSqJ3bmPObmt4LJoUhLEL7bhyspOMBlYXfEQR2QdkHxVWOCQPjLQeS78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qO0gXZor; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="a7C2cKzz"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so11323670a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745927169; x=1746531969; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=znQpdTxcq5Q59q25hWrDZ7jqcfAs7XVIcl5H5jOTHxU=;
-        b=a7C2cKzzs5yVR2SxJNS71x0+DFcvalG3AghOtS2uiVLM5AZ76PHFlHPLtsu+ES8sed
-         dF3/kWuVEjSlUIFMzEOd6nSF7Vfjm6vI6/iaC3zfpvzaqJhVoSapa0yfYBhifS9YysHR
-         Epy9teKgO4XaTz3RKnVxaNOHW+xfh4m0R3RZqyrl9yJZaXa222G1KsxfJYmOjD8V+tyW
-         ocd1SHaDznCXG0cIoctclzO700ie6+UkRtK6f642d/JD4a4bc0pEyk1KHU6yvSJL9xiN
-         HJHcwE2yCQ8nsdCv65douqA26vAUpeeXtT2busSV/SXz5AluR/fletWR4Q33uH9cibEo
-         l6Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745927169; x=1746531969;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=znQpdTxcq5Q59q25hWrDZ7jqcfAs7XVIcl5H5jOTHxU=;
-        b=I1+GJMi6b2IXyqVBkexnhM0e3WabzW1kB1mh+UZme7k/5LlN3WNtML/+ALPAl6Wf+P
-         AfmJzWVA1IqNmk8mufsJbaaeY3WZ8/NYU/4NrPxYqB7e/naFaN3RLQDgN6y4g1Ry7GDV
-         V0cGRG9QbW/MabZHFiSA+URhs2Cy4QUZNj0QKJR52e3ceYHNu7ztWvNHV+AFeRuOqYNk
-         gcbaKWD/ILQy8tlY9tp/a4RlzH2Wc03Hlcgrwx9uJ43ifmNVWmGWXQNyo36vDxHfPdIc
-         G4YW7zyZ0vaytvqRgpo4gJJ874d6OemU0kfLBxkrap2GEhgbpdPGc4DIZDFKBYh5UQ98
-         Xrbw==
-X-Gm-Message-State: AOJu0YxLeB+LzJKnFeph+zOhtAc5FYgOXuMw8x631O6ltPA12bEHi8rh
-	exXITMWT0ShFVZUj2msZilJXbewslZph2wPOSxJ2gtl4vneymgR29T64DmiO7ls=
-X-Gm-Gg: ASbGnctYJyEQpUUYghuTbwpKn3WxYkaEC7GeVphe1vJvq/X6XyYno2taH12vVnbQEzu
-	ebFjMLEe3BDFUUL+54XZVf/yNN1dBcDOsQuTlLMjfZTNdoU+TO+ZO4cdfdbL8gNkL8adbrTpDda
-	OKkUYhIAziKfBfdkSHJyhharoXTewwc1denSWSzqEWwqvO3MNoeVn2wLCPdm5egPPjr1zg4bywJ
-	KPazX08899nfBPz8+b7zcTplKe+ahi1tuAkoxB9cG8EwRAt08OEhE5S9iw886rqnXIAqYPC6dS5
-	7ZXWMb8Sa0dpRARqGVEO1dGc5J2QJ8iFLrTh24zBIxbKiexjOcU3rA==
-X-Google-Smtp-Source: AGHT+IHdwrLpQIpUiiyBR38B/ZttRSS4g/Wv80xkTkGlVkMPcowVbaa+12lFPhCvhIOfAu66scr/kQ==
-X-Received: by 2002:a17:907:60c9:b0:ac7:cfcc:690d with SMTP id a640c23a62f3a-acec6ab3db1mr282121166b.40.1745927168683;
-        Tue, 29 Apr 2025 04:46:08 -0700 (PDT)
-Received: from localhost (109-81-85-148.rct.o2.cz. [109.81.85.148])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ace6ecfa33csm760681066b.119.2025.04.29.04.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 04:46:08 -0700 (PDT)
-Date: Tue, 29 Apr 2025 13:46:07 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Suren Baghdasaryan <surenb@google.com>,
-	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, bpf@vger.kernel.org
-Subject: Re: [PATCH rfc 10/12] mm: introduce bpf_out_of_memory() bpf kfunc
-Message-ID: <aBC7_2Fv3NFuad4R@tiehlicka>
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
- <20250428033617.3797686-11-roman.gushchin@linux.dev>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qO0gXZor"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4782217D1;
+	Tue, 29 Apr 2025 13:46:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745927182;
+	bh=KTAtU4yj15U90cJiCtm0L7dTLDIMSAa27/+94PyZbI4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qO0gXZorPc1fkwF6rtaGqeEOcPizhAWJh3rjotlLKUkSU1WnL9AdBWwXuwiWDjxRk
+	 UVeFEXn5NUueE0yfBayxotSCDq9PSFHSnZe1eNLGerEQoqNyW0FLPOrqeYulQDfju3
+	 ac1L1b+hNo8XJOzed2UK3j/ve2GOc0wUvZloy84k=
+Message-ID: <9918a4e1-e3fa-4577-ac06-46efeab12507@ideasonboard.com>
+Date: Tue, 29 Apr 2025 14:46:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428033617.3797686-11-roman.gushchin@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: manual merge of the v4l-dvb tree with the i2c tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+ Jai Luthra <jai.luthra@ideasonboard.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Romain Gantois <romain.gantois@bootlin.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+References: <20250428104905.2b54643f@canb.auug.org.au>
+ <20250428112200.6f5cf3bd@canb.auug.org.au>
+ <20250428113052.38cf10da@canb.auug.org.au>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250428113052.38cf10da@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon 28-04-25 03:36:15, Roman Gushchin wrote:
-> Introduce bpf_out_of_memory() bpf kfunc, which allows to declare
-> an out of memory events and trigger the corresponding kernel OOM
-> handling mechanism.
+Hi,
+
+On 28/04/2025 04:30, Stephen Rothwell wrote:
+> Hi all,
 > 
-> It takes a trusted memcg pointer (or NULL for system-wide OOMs)
-> as an argument, as well as the page order.
+> On Mon, 28 Apr 2025 11:22:00 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> On Mon, 28 Apr 2025 10:49:05 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>>
+>>> Today's linux-next merge of the v4l-dvb tree got a conflict in:
+>>>
+>>>    drivers/media/i2c/ds90ub960.c
+>>>
+>>> between commits:
+>>>
+>>>    3ec29d51b546 ("media: i2c: ds90ub960: Protect alias_use_mask with a mutex")
+>>>    818bd489f137 ("i2c: use client addresses directly in ATR interface")
+>>>
+>>> from the i2c tree and commits:
+>>>
+>>>    24868501a744 ("media: i2c: ds90ub9xx: Add err parameter to read/write funcs")
+>>>    2ca499384e98 ("media: i2c: ds90ub960: Add RX port iteration support")
+>>>
+>>> from the v4l-dvb tree.
+>>>
+>>> I fixed it up (see below) and can carry the fix as necessary. This
+>>> is now fixed as far as linux-next is concerned, but any non trivial
+>>> conflicts should be mentioned to your upstream maintainer when your tree
+>>> is submitted for merging.  You may also want to consider cooperating
+>>> with the maintainer of the conflicting tree to minimise any particularly
+>>> complex conflicts.
+>>
+>> The actual resolution is below ...
 > 
-> Only one OOM can be declared and handled in the system at once,
-> so if the function is called in parallel to another OOM handling,
-> it bails out with -EBUSY.
+> I hit the wrong key :-(   Resolution below.
 
-This makes sense for the global OOM handler because concurrent handlers
-are cooperative. But is this really correct for memcg ooms which could
-happen for different hierarchies? Currently we do block on oom_lock in
-that case to make sure one oom doesn't starve others. Do we want the
-same behavior for custom OOM handlers?
+I came up with the same resolution, so looks correct to me.
 
--- 
-Michal Hocko
-SUSE Labs
+  Tomi
+
