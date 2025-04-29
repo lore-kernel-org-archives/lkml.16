@@ -1,186 +1,144 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203542BE0E6
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3390E2BE0F6;
+	Tue, 29 Apr 2025 09:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918753; cv=none; b=t8O3vp5z7lyD7J/gEowIH6CtlIg0KcuH1bJiD7aSQ0ZF1AvMqmHEQOoLhBcHeowmiOJnU9a2M33WelEcSKrkenf6vVniFbjsjP2xHiY8hADRQJxGudBbu7jYP9tcpdaGt1ZKo451e5XEUT+p7pHnPI7qopQQ3bEK5Lh6UYDA4O0=
+	t=1745918756; cv=none; b=SM4AP4I9VVsRFplRgPfyPuKCHAL0XobjR/3RcVGZV5ICMITNhOOqlCDnPu9WAAbrO+e2iqCaGnseLCULWBoYjHsMax6UTI25lKUBs2xeh5GwsfcCtywBX/ZiOlGyG5yCmBED8bhGPt+7Oz1IY4qyJZTVPynBOw9B7mUbrkalT6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918753; c=relaxed/simple;
-	bh=f7pDvu6ECsrsgKYQON9e4/9xdDrHgFQnB0lkO8B+Jvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dIs8vCRhE5cZWQSsBjWKoWnMmW7JWkFEDdTFarxZC2A8cVQoRo5SlenK55wbKbARBbY5nDOQNxj/kXR+4417Hb5MgPgyMiXfvxYwBZSmr0pBIsmreNRH/osDj0CWMRJU3JAc8Ti0DSql3klEHJ9pfKVdmtLtA6wOIh9rv0IGcIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ANFeMDFn; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745918756; c=relaxed/simple;
+	bh=aNHSzTuJO9qrwmXkoGFBppKTK0tfmRMsHjRBAWKQAcU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WM+J88ZPCAjLItAiLLq4emKCSw9NjC2DoF5eOji+HbBCs+KKw0gmuFAhugJIYtQZqfQ9XnoHJuUdg0KMpwUlq8+EYPuGJMOwkM0XJrvf9s9rsa4vaP8BW3zvCyCgtO2tzunHVExr12hk32F8LMqh1PM/OTKGFUHA2etXKuyttNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZ4INpv2; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ANFeMDFn"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aca99fc253bso867034366b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:25:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ4INpv2"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224341bbc1dso61270965ad.3;
+        Tue, 29 Apr 2025 02:25:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745918748; x=1746523548; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5ElOoSWZpM3ikc1lzKjU4ubLyP5Lg55VfCDoToohcAo=;
-        b=ANFeMDFnUZ9pZMC2WwJnUSeW+cB9AbQht4pnAUVrwa75Di0bV4qxEboKarEi3nng+/
-         0dhOhW/zE2BuMCAXXvli9vySzDLi1mxuhhTZK2dqDrSu6hP2ugWwJ69sOgTb44S3Iljs
-         lhKWVhKf2OAcbnBQiBVRU+kLfF+ke3FlG69HGQdVL3yzEBB1KPQWTUmBMhMuBXVMSysp
-         mOyE+XP2sQIgp0IhZvyIxGE8LAO6oarVdRbaU/mgv98EVPE84V4dbGMXqXjAO8al03J/
-         GWv0uCuFl9BSeoQv/FwveK3rZ1+0I1cGYEYiqf39KzC7h8qZfYoDTk3ij/r1Z6LzVEfi
-         Tcxg==
+        d=gmail.com; s=20230601; t=1745918752; x=1746523552; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aNHSzTuJO9qrwmXkoGFBppKTK0tfmRMsHjRBAWKQAcU=;
+        b=YZ4INpv2NkTQga5ysoZspYmc/o3CeU5nDg8wAMfHDM5xgx/YTClN66jKRMHDuZRj0j
+         S/BaVNiuH0CKWr9JJ+Iie1smcTVCL8B8z9KHuV06151wqDpB3Hd6iRJz/W2Y2qXZSyPw
+         TecZj6hDD6AJ0Ee5DlNUErVo2WeaaC1Cr7KCFAfwYK5aE+j7dAaTN5d153AEtA6EKfAv
+         p1BmCtttEu2qpoI65y6W2/zPowURFlwEOJw0L/1I/CLDhRcJcceGwBygpFSDWrnJgVmW
+         i2C4U08NuGAB5B61tC//T2DetD1mxRDJBZWtmvhSZ2E8cKtbEf4PhtzspGIpbtY8p62w
+         pp7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918748; x=1746523548;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ElOoSWZpM3ikc1lzKjU4ubLyP5Lg55VfCDoToohcAo=;
-        b=gE18ythntuxBapp36Cn/xsPqCM5ezb8cMAcfpdggeoT/j2nbpkKlwhbt9NrzQhAb70
-         7TpJ7oKn8Zq80ktTU9f8W4jLZ1sj+2834yEHz8Z5g48SBDCUA9UWeleMUy8kc3te5zk+
-         WUg80kEVQ9NhVV9fERXs8DSquNS4+gVE0prmbcHOaH2pf6VfPZNFE76Ey3XmZZvu9VBa
-         mmk0QigMzscW5Wwg0AjQw4Bn0dPZqA7CXHH4RYWvIFNi0HT/pQtbfOy47DTJ3RfDDMvi
-         b5noW+4gtsOJNTPnCzsGNcvxieILt4oPtiE56WyNU6WeVodp+6jhjE7+gACGiXirqqg3
-         C+pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTMlj/jrTwMAPAwq5mPYmoIuX55/CImlOOTa2eSU/5/CsToDmGF3o7kt2PNgze06nRcg9f2RfSAMdkRJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwidoAIyO5isB8xWHxHgAOD3qXkDFh0/cgQa95qseHGSxJOHjRJ
-	hyoS7er+73aq8T59CioT64T+i+jNREtqj/n7sUFznoNbQrvlJ/OSk+U0tI21QorHG/2qihTRruU
-	t
-X-Gm-Gg: ASbGnctvQ7Gf55TTIevbSfHE82CWz77hxCzJPSr+o+qbFMBZkwmMo3hhM5hZJGRIsq0
-	qJAWBfcmVMxes5hSTlI4gH1OGFC+P3hmMa9v5VktX2haLWaRU9z3k1grq4jr6kn7ZYXtxwueEXI
-	C/8LR05KEei+78NJk4A4KwJx+07IezxU+7F3Y1Y7hEMzbJpS7yoxVChgJdQ+vCExJt7PKb0Affb
-	YnyIkwHr8Hxfyv7Lpgt63htTVFmezIyJz0RQjSipTB/8+KNg9s2jrK0X5KSloPoEZ7O+redVWHB
-	jQkYSwWaQIV7vQcgrHgX3h9s7f4cr6aju1aTTPshYow=
-X-Google-Smtp-Source: AGHT+IFVTRdbb47gFd4dQ11iXGeiIng/kvnJTSM3K0lql6xfI+bbFj82/8CO5oL3FIVEmuzn0vU+WA==
-X-Received: by 2002:a17:907:3e05:b0:ace:8398:b772 with SMTP id a640c23a62f3a-ace848f183amr1218151666b.14.1745918748343;
-        Tue, 29 Apr 2025 02:25:48 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bbc3sm752256966b.3.2025.04.29.02.25.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:25:47 -0700 (PDT)
-Message-ID: <cf3ff619-6177-42e1-8f64-74cf4cbb8672@suse.com>
-Date: Tue, 29 Apr 2025 11:25:47 +0200
+        d=1e100.net; s=20230601; t=1745918752; x=1746523552;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aNHSzTuJO9qrwmXkoGFBppKTK0tfmRMsHjRBAWKQAcU=;
+        b=mn7yL9Kx2TLQdlYXMuJ3myTH56HvH6x2VBvtjTPGlfAks9SqaIdKEp+o92OMBCaODY
+         H72rO9W8ms5gBAT8B/MZODS7zZxsX9iG94YrUNuJPHYmkOxmn7M8KZojSv7aRorXDaDz
+         dtpYbUaZac2DQLULQtmjmuvrK6nctGpYNXHtNL8dxtLqZA+xUDW4251zbERqFUjawfY/
+         W2yonEmLfcfHgZViTJ/Q7KK8rm19wv/9TGcDPp6W3QQMOMItTXzOf/d9+Ah05quHD7si
+         GNH1OGP5D7RySZ5RWXsR3Ar/ZsqrjNlXRxj7NaHWo9smYvwFxPFqER5KOn7yNeZkwU+m
+         tGFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4QDeDBB7u09VAmD7EHD5xZTbnYuFklKna9r3vjo4jSECfxtzCp8BlxKrkB7Hg4kOKHPK4vdU5hq0n@vger.kernel.org, AJvYcCWOnHhtw++g2xeTJayGaFWYI8MzpE7Bm7svPoYi1Wc7jDnq0+GrqUyhR8Sm4aElTm++OyKzVA/D22iJklIn@vger.kernel.org, AJvYcCXW7w6Ww7Uh5k84wyR7DR9ZVyz0N/TrfhSwzGlzCSIIrJuo/pJC+VsDoBeqPZ38ohV5r9hNvfaJHigfiqojlw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUJDnutrJpN9MR8J2+uHMUqYll/MpicPzzl9ycUMHnNS5wiVIB
+	PcjWJ0IrLZmI+M8Fu2hcfEWrWCkLrc0U/esTxW5/CaYKecX5Ikjh
+X-Gm-Gg: ASbGncvk4KU7KLFqtWfY4Y3JyhAw4KDLe1tmwwoILpjsumSMgxkTEvFpxX2AqZnmwcG
+	BuPS9CypWr2LWHLWqiuT4Z96qzL73uyQnHnec+EcNmhh085+I0B7U8IGB6U0L6dEEWGXf8pGKXu
+	i3RR117zE2riFpLslriQmyCwHpfZWfwdknp6rWKOum8mKeHN4MEVARxeYENy5vvf2GOoZJdEcm8
+	QLiJNgnIgtY0VIhnKYeRRQfngscOOCYj4hgeTpBN2wJbr5IDm2/snhD3ABGPIXsSgA0Xre8ZuG2
+	l2/hR+Dy097dpujWRQ9tKsrkAeciZcv8Qhv2bUg=
+X-Google-Smtp-Source: AGHT+IHb3XDR+CIyVLJfE/+/qfZBH7IaetKlrGWMj5W8hWYAtZ5uFrtXFPsJJcx6PAeNDXijkIAQxw==
+X-Received: by 2002:a17:903:28d:b0:223:f408:c3cf with SMTP id d9443c01a7336-22de70276d4mr36675615ad.21.1745918752192;
+        Tue, 29 Apr 2025 02:25:52 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221600sm97440105ad.213.2025.04.29.02.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:25:51 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: dmitry.baryshkov@oss.qualcomm.com
+Cc: abel.vesa@linaro.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	kishon@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	mitltlatltl@gmail.com,
+	robh@kernel.org,
+	sfr@canb.auug.org.au,
+	vkoul@kernel.org
+Subject: Re: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg override handler
+Date: Tue, 29 Apr 2025 17:23:29 +0800
+Message-ID: <20250429092331.53054-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <n5z5atbxkwqllni6cgygcw5nn7z4w3yjznhpkaajw6tggenxb3@kxpk2e6vmvlj>
+References: <n5z5atbxkwqllni6cgygcw5nn7z4w3yjznhpkaajw6tggenxb3@kxpk2e6vmvlj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 5/7] modpost: Create modalias for builtin modules
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, linux-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <cover.1745591072.git.legion@kernel.org>
- <bb0d887760a474e5e7f9db0e9933eee81a5d9ea3.1745591072.git.legion@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <bb0d887760a474e5e7f9db0e9933eee81a5d9ea3.1745591072.git.legion@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/26/25 18:16, Alexey Gladkov wrote:
-> For some modules, modalias is generated using the modpost utility and
-> the section is added to the module file.
-> 
-> When a module is added inside vmlinux, modpost does not generate
-> modalias for such modules and the information is lost.
-> 
-> As a result kmod (which uses modules.builtin.modinfo in userspace)
-> cannot determine that modalias is handled by a builtin kernel module.
-> 
-> $ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
-> pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
-> 
-> $ modinfo xhci_pci
-> name:           xhci_pci
-> filename:       (builtin)
-> license:        GPL
-> file:           drivers/usb/host/xhci-pci
-> description:    xHCI PCI Host Controller Driver
-> 
-> Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
-> modpost if the module is built separately.
-> 
-> To fix this it is necessary to generate the same modalias for vmlinux as
-> for the individual modules. Fortunately '.vmlinux.export.o' is already
-> generated from which '.modinfo' can be extracted in the same way as for
-> vmlinux.o.
-> 
-> Signed-off-by: Alexey Gladkov <legion@kernel.org>
-> ---
->  include/linux/module.h   |  4 ----
->  scripts/mod/file2alias.c | 13 ++++++++++++-
->  scripts/mod/modpost.c    | 21 ++++++++++++++++++---
->  scripts/mod/modpost.h    |  7 ++++++-
->  4 files changed, 36 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 7250b4a527ec..6225793ddcd4 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -257,14 +257,10 @@ extern void cleanup_module(void);
->  	__PASTE(type,			\
->  	__PASTE(__, name)))))))
->  
-> -#ifdef MODULE
->  /* Creates an alias so file2alias.c can find device table. */
->  #define MODULE_DEVICE_TABLE(type, name)			\
->  extern typeof(name) __mod_device_table(type, name)	\
->    __attribute__ ((unused, alias(__stringify(name))))
-> -#else  /* !MODULE */
-> -#define MODULE_DEVICE_TABLE(type, name)
-> -#endif
->  
->  /* Version of form [<epoch>:]<version>[-<extra-version>].
->   * Or for CVS/RCS ID version, everything but the number is stripped.
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index dff1799a4c79..0fa3f031b904 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-> @@ -1471,7 +1471,8 @@ static const struct devtable devtable[] = {
->  /* Create MODULE_ALIAS() statements.
->   * At this time, we cannot write the actual output C source yet,
->   * so we write into the mod->dev_table_buf buffer. */
-> -void handle_moddevtable(struct module *mod, struct elf_info *info,
-> +void handle_moddevtable(struct list_head *modules,
-> +			struct module *mod, struct elf_info *info,
->  			Elf_Sym *sym, const char *symname)
->  {
->  	void *symval;
+On Tue, Apr 29, 2025 at 12:58 AM Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> On Sat, Apr 26, 2025 at 04:14:23PM +0800, Pengyu Luo wrote:
+> > On Sat, Apr 26, 2025 at 3:41 AM Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> > > On Wed, Apr 16, 2025 at 08:02:01PM +0800, Pengyu Luo wrote:
+> > > > In downstream tree, many registers need to be overridden, it varies
+> > > > from devices and platforms, with these registers getting more, adding
+> > > > a handler for this is helpful.
+> > >
+> > > It should be noted that previously all values were applied during _init
+> > > phase, before checking the status etc. Now the overrides are programmed
+> > > from the set_mode. Should you still program sane defaults at the init
+> > > stage too?
+> > >
+> >
+> > I think programming in set_mode is ok. When we init(dwc3_core_init), we
+> > set_mode(dwc3_core_init_mode) later, please check
+> > https://elixir.bootlin.com/linux/v6.14.3/source/drivers/usb/dwc3/core.c#L2287
+>
+> Yes, but that happens after reading status regs, etc.
+>
+> > Actually, in the downstream, all the things are done in init, it
+> > overrides first, then masked write the deaults, finally it set_mode,
+> > you can check here
+> > https://github.com/OnePlusOSS/android_kernel_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/drivers/usb/repeater/repeater-qti-pmic-eusb2.c#L356
+>
+> I'd stick to this approach too. Program everything in init, then
+> program mode-dependent regs in set_mode.
+>
 
-The new modules parameter is unused.
+If so, I don't mind programming the defaults in init, then programming
+overrides in set_mode.
 
-> @@ -1509,6 +1510,16 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
->  	typelen = name - type;
->  	name += strlen("__");
->  
-> +	if (mod->is_vmlinux) {
-> +		struct module *builtin_mod;
-> +
-> +		builtin_mod = new_module(modname, modnamelen);
-> +		builtin_mod->is_vmlinux = mod->is_vmlinux;
-> +		builtin_mod->dump_file = MODULE_BUILTIN_FNAME;
+> >
+> > > BTW, is there a real need to override those for the platform you are
+> > > working on? Could you please provide some details, maybe in the cover
+> > > letter.
+> >
+> > I am not quite sure, recently, I expirenced mode switching failure,
+> > when I `echo device > /sys/kernel/debug/usb/a600000.usb/mode`, Ethernet
+> > Gadget wouldn't work again, my desktop can't connect to it.
+>
+> Do you have at least a list of the properties / registers that
+> downstream programs on your platform? I mean, it's not infrequent that
+> vendor kernel is more versatile than necessary, as it is being used
+> during bringup / etc. I'd suggest to limit supported overrides to those
+> necessary for your platform (and add a comment that there were other
+> available).
+>
 
-The module.dump_file member is described in scripts/mod/modpost.h as
-"path to the .symvers file if loaded from a file". However, that is not
-the case here.
+Yes, I only added the necessary overrides(0x54, and mode handling).
+Please check
 
-Similarly, the module struct in scripts/mod/modpost.h is commented as
-"represent a module (vmlinux or *.ko)", but this patch expands its scope
-to also include builtin modules.
+https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/kernel_platform/qcom/proprietary/devicetree/oplus/oplus_misc/oplus-misc-23926.dtsi#L26
 
-I'm not sure it's best to overload this data in this way. I think mixing
-actual files and "logical" modules in the modules list is somewhat
-confusing.
-
-An alternative would be to keep a single module struct for vmlinux and
-record the discovered aliases under it?
-
--- 
-Thanks,
-Petr
+Best wishes,
+Pengyu
