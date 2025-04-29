@@ -1,113 +1,81 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A076428A408
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D43155333;
+	Tue, 29 Apr 2025 11:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745926143; cv=none; b=ShBjZdTZ5jQp9GRTCAvHppP5V4beOwWJ8w/BnWjkdmFa+sfKXWz5hRxNLaeIUVJTVHOJhIeA5fKglq39+k5M+fhSxPxLrJo2LqSh2+hQtCDib73tnFTQE6lWKsHr0lxGDTxu+ymxtPVjFnvMP9wsfDrpWYEp+q7tFd53vFQQ3xg=
+	t=1745926186; cv=none; b=uS/Ccc7wrzeHu1/RGCoeG7cZt3gZZNFxm/6rAQ7fKR4A2YCVDQVNk43I0M7CHRA09SMT4skrNlRj41YVAlJLMMtayp1mtJz/OteiESIPlw6CUTX3clapDnso07Z7Y/+K9eEva9I/iz+Elh3ZOUZBmLeY3awBH7tB/+bIgrumsDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745926143; c=relaxed/simple;
-	bh=woNcnGyRMngmeBUkRPsajMQzsA3UMnX5RgufC6TFXWs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u3tqQPlSZGf0973MjNqXK0CCV21mrC+x1Uh4g0bKL3e3GZlpB012rhZSB7RAr5sadgTvMaF2/QQ7CPx7dNyDHj2iuHXHFgSbd6Taif5g0I9+0ZZjwhtHOVm9jqXoekfhvBjZUbsHI3Y/rM14sZkY9OyvGlilDbg4ywIC1EUg+Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=K5xxbzUv; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1745926186; c=relaxed/simple;
+	bh=HTn3m6fFq06EtCe3wTDF5t/gvtQLUnvgZ1xSpwDOx7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jPZa2ArJFgstceXxv2nSwWwC2qqQpBJemC90IYx40M+ieOFBpV0feGjoJ9TsX9utMvyrqORR3BazO8HPy8awLg5Eo9rtgb1Pl5ZzHMOxZ/7dEWzGVuCgMlOvEstNqSRDiPoU8qq3yqhA5vCGm8DMDqxwBiF0lcr1HyDxbgDeGNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiG1j8B6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="K5xxbzUv"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so726427166b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:29:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1745926140; x=1746530940; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIoZ3nN0C31ZPTqFel4RMOGDKIa68DpeenYKqk6VfsQ=;
-        b=K5xxbzUvNOOxPX0kbpH1WP0Izxgca+OkXy78x+OrbvgV5v5JxVsOUwjBMZ2dajyr8V
-         yMDr13TzQkTGa3+S7K5dqP16YUCwc/fKWcVEqe37uENtD1JGOdiE3CpRwffgfFL7p+VL
-         TEE8F5+zOJ10C9Y17xj5bhx8gRFQUTRinG7kj9JyioR121CZeU0oQhJJArLB8mL/1XAX
-         f+2jo177ucEyHkwxHpRK1GvR0HKJtDMBwFcNzXHdfPInnp4IYcAiS9C2QIUiegUOGkF5
-         bzIyGGB6t8vnQhXgjNbfFq584aRV9IrLW8/HaSdKKQqiAP3ADpun3L+js1AnQnVT6Xw9
-         RIWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745926140; x=1746530940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIoZ3nN0C31ZPTqFel4RMOGDKIa68DpeenYKqk6VfsQ=;
-        b=ZDwYrD6nYkI8f54m6zkZ2Di4DzRVjmx6q2U2dJZl9r/BKO8aO0dNlJBbVWI44lyh8L
-         i6PtEKaQ1R6/rYoJbr8+fne47Ojij1CwqqY4la+MCMVNt8lNjPcJSLUkKnilr+66t8t8
-         ZAGvyCxJqpN+s0mBf4oQQBHs8z9H9VOhtQQI+4DsKNry5MX+WAo7aUmLaMY2jfTeynpd
-         GOwV9XLMc8U5juruIx+mBgJXODtPgCypBDiErosdqV3eSmX3uwxvbs6TNJdidKOjnp+k
-         YklcQrFptPjgLuXXJdn7u+8eEpdfpDaBrfGaPAI5TfjHY7jq9sArnASZqtjSzsgTlE/a
-         wihg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcKAyyyjDpAg6yWadnQSeXabWLYpuTnv7oRegqxs0pWrg658pUyrgasPmH7LufqG1foDe5mfJIdbANDEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkE8+DdL5ORhI0Tv16WN4mYpZrPatETcJrbcdus6WisknhcB7W
-	fF4jP8sgWxxS9a/YxFTh0YyGzWueqln/tqwW9scQEn7Kdpl0DW39IVWUXTAFaX2vYv/Tt+weevr
-	A5Ol90HkPLwmvKyZSuWUdP7MBxSzZUs+sfWMW2w==
-X-Gm-Gg: ASbGnctFB2cTaC8ReSZ3H2k4QrrO5xD9CLzKfNTMsZkXRrwg32EobwLEkTss4mP+rBl
-	w1goJRhR75VZFoCdwEItaDLHtrVbNHFTIfTdhvsoXibVB1qufrbEt3luYPXIWlizBCO9MWA/sRG
-	TQ+UlEumQyU477/R9i97xVaZ+ljbKq9tV/yUxBx7CuE/aFzo8Rnis=
-X-Google-Smtp-Source: AGHT+IGjoR04h69uMXHDsdBtG074fuZoFntLqbfxBJk9NcMcDj521Y2Up1m3ZJ5XB8Jn6dDlhMY0y/QZHjlufEac2Ok=
-X-Received: by 2002:a17:907:94c8:b0:acb:86f0:feda with SMTP id
- a640c23a62f3a-acec84f5d8cmr195879166b.14.1745926139901; Tue, 29 Apr 2025
- 04:28:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiG1j8B6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FEF0C4CEEB;
+	Tue, 29 Apr 2025 11:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745926186;
+	bh=HTn3m6fFq06EtCe3wTDF5t/gvtQLUnvgZ1xSpwDOx7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IiG1j8B6KSfhPLKnhS1CgFATOXSekJPyfpkNSEG3xDhOscsrCi+SbqMXkYmy01St0
+	 ig1Hq5mkOL8kXAwrangpms8c3gcaSYTU/XGOTjiWE1F/G8bMEq7gqDYX7VlHqPYqUG
+	 lUsom8yb/+CO7q/nqCffM/9hICbG3Vfo8iuRDxIKJmfi47h8Fva3Nq9/xfFkIbvGRl
+	 Juppc5ouNGqXM1B3DlU2Dm4bpB2JRpr8ckR/NLXg1O9j69yI/sQCpo5npSOhe7PU6E
+	 51dcmge9uMxjHsgzZ15OXO3w9FJdExv80UPVVgPPyGiZC2930e8VFBhUzvFb9cwHEl
+	 9nG9Wa+1bmtBg==
+Date: Tue, 29 Apr 2025 13:29:41 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Laxman Dewangan <ldewangan@nvidia.com>, "digetx@gmail.com" <digetx@gmail.com>, 
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, 
+	"wsa@kernel.org" <wsa@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v2 RESEND] i2c: tegra: check msg length in SMBUS block
+ read
+Message-ID: <eetu2jkcnaqvxyvto2vvslmducsecewtcnoktuxczjeaohqm3i@khc33hutl7ac>
+References: <20250424053320.19211-1-akhilrajeev@nvidia.com>
+ <j3jxuuwu2joyn6jsfa63lkkuwqazd2mpeki6gamdpktllhpkhv@tfoqnztsa7zw>
+ <aBBE5mgqGk0yXQWN@shikoro>
+ <PH7PR12MB8178416B09D217B77CC43C04C0802@PH7PR12MB8178.namprd12.prod.outlook.com>
+ <aBBmmNlM3_zjNMC3@shikoro>
+ <PH7PR12MB8178A35A3D51F6BE3D1E6888C0802@PH7PR12MB8178.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429094644.3501450-1-max.kellermann@ionos.com>
- <20250429094644.3501450-2-max.kellermann@ionos.com> <20250429-anpassen-exkremente-98686d53a021@brauner>
-In-Reply-To: <20250429-anpassen-exkremente-98686d53a021@brauner>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Tue, 29 Apr 2025 13:28:49 +0200
-X-Gm-Features: ATxdqUFsLIr3chYss1V6gmvWCU-RFkcmRMl-1ioABEd1mZT4GU4ZyUxUEwy6kZM
-Message-ID: <CAKPOu+8H11mcMEn5gQYcJs5BhTt8J8Cypz73Vdp_tTHZRXgOKg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fs: make several inode lock operations killable
-To: Christian Brauner <brauner@kernel.org>
-Cc: viro@zeniv.linux.org.uk, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR12MB8178A35A3D51F6BE3D1E6888C0802@PH7PR12MB8178.namprd12.prod.outlook.com>
 
-On Tue, Apr 29, 2025 at 1:12=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
-> > --- a/fs/read_write.c
-> > +++ b/fs/read_write.c
-> > @@ -332,7 +332,9 @@ loff_t default_llseek(struct file *file, loff_t off=
-set, int whence)
-> >       struct inode *inode =3D file_inode(file);
-> >       loff_t retval;
-> >
-> > -     inode_lock(inode);
-> > +     retval =3D inode_lock_killable(inode);
->
-> That change doesn't seem so obviously fine to me.
+Hi Akhil,
 
-Why do you think so? And how is this different than the other two.
+On Tue, Apr 29, 2025 at 09:51:14AM +0000, Akhil R wrote:
+> > > Yes. We have had issues where the client device sends '0' as length if
+> > > the
+> > 
+> > Can you reveal which client that is?
+> 
+> The issue came from a downstream change in the file 
+> drivers/char/ipmi/ssif_bmc.c in the OpenBMC Linux tree.
+> 
+> > 
+> > > transfer is terminated abruptly at the client's side. The actual fix
+> > > is in the client's driver, but this check here would ensure that the
+> > > master does not run into trouble either.
 
-> Either way I'd like to see this split in three patches and some
-> reasoning why it's safe and some justification why it's wanted...
+I took it anyway into i2c/i2c-host. Better redundant than sorry.
 
-Sure I can split this patch, but before I spend the time, I'd like us
-first to agree that the patch is useful.
+Other drivers are doing the same check, so for now there is no
+point in being picky.
 
-I wrote this while debugging lots of netfs/nfs/ceph bugs; even without
-these bugs, I/O operations on netfs can take a looong time (if the
-server is slow) and the inode is locked during the whole operation.
-That can cause lots of other processes to go stuck, and my patch
-allows these operations to be canceled. Without this, the processes
-not only remain stuck until the inode is unlocked, but all stuck
-processes have to finish all their I/O before anything can continue.
-I'd like to be able to "kill -9" stuck processes.
+I might try to clean things up later.
 
-A similar NFS-specific patch I wrote was merged last year:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D38a125b31504f91bf6fdd3cfc3a3e9a721e6c97a
-The same patch for Ceph was never merged (but not explicitly
-rejected): https://lore.kernel.org/lkml/20241206165014.165614-1-max.kellerm=
-ann@ionos.com/
-Prior to my work, several NFS operations were already killable.
+Thanks,
+Andi
