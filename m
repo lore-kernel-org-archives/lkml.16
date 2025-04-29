@@ -1,185 +1,184 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163182C1E3E
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705A42C1E37
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745926863; cv=none; b=WDpxtKkVSQLDITXWL1p7px24VX9YuDSZbz+0Udxy3F9Nyf1jKc+Orinpi+sMwf3G2GiIdNPMyWv2FPqSeg65MYE6Nn43wJoRQbVcqn4I9yU2AF0u9A3mBm0rZJuicZOVNHEAX3Tk8sfnoIEVp7B9MpxTApMDMZ6zT52Ub3DHEEA=
+	t=1745926865; cv=none; b=Q2KYsC+oC56zlIHQPH/oT2nrXcSa9zbfhfv0cKkaBUx2R5npjsVZKErNaO1ChzAPqUkviBQsRaYFVZOXuBtDFOFYE3rwiTh11duMI9L58nyAXOBGTgs+1e0W1uzfl2C9mQ7Ack8SqrKm0Z7H8taJqpyAEbOixmpiTT0TQ0EB+go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745926863; c=relaxed/simple;
-	bh=7SGr5L2ykKUQUo0zMXmWvlFQAdQphSQN1gFTLVtW/kQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g2ePLOXKNQ82O9aCcOiFm7xMFaGWCo7CPeGBuDqJJui2PE7v2eTMFoaIdFLyo872kEZUSagDzzdUK0Kmo3aXql5eo5fc0wxB5dlxUiqgUjGPEGHkoQHqwSjmIWbMAByIpEeMSnrkamGVBQZz9Ehj5eNciw/dzfWB7RBIf5q/wCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=UEVQA2J0; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+	s=arc-20240116; t=1745926865; c=relaxed/simple;
+	bh=TiVqVGI533f3wzeq8fPqdhy7aRelt+HSo3KwbCrBdsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bA0f54K/LGlU0IUCqAlikv96r/UnxzndMH06fW11BddRK5aQ6LIHBsLtJg4UGbgS97GBx0LxYyB9FlI3RGNwK4Qs8lTRvqcihacOcv8OnbldQy7+jNRRUucNynJIFLs3/SmfyAD/nGBVM/PKE9fSe9MzV/y1ZxPdbkuuHUC8ljg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TukiGING; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="UEVQA2J0"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22409077c06so93534335ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1745926860; x=1746531660; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IM+UHTytJ9Y87riWBhkcJwJWVcuRu3WOtIkNDsfDBl0=;
-        b=UEVQA2J0mnZ4tltQ6CYZbckQXhSFf1fySIZ7Lk1Dtxnv0CobDX0FbIo3vKWP6M5cf1
-         1CebRUQHB8RsktP2orHf1RomE1mHvoP+DgqAPrD0LJj4jjs7mfqgJx0HHQ4e7p2T1vtn
-         WEGQvUJIWQAxumsvffi3A5yvgWaZx+m8fk5uDe+SiDSrZVZocruf5tHDRaqp+e16V3j1
-         urRlk1HX3+ol+DaGlYVlFV6Ocy7pxUPHqsVWkaHe+D3DcEYufSlUxLJU1FnzpNWdbSoE
-         Nqr8HZyCI7m/4Sc41p3Zudu9KGfleDQv8vxKeDsLTjLdls7Lgu/zXovnNKbISuwsanvn
-         cnWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745926860; x=1746531660;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IM+UHTytJ9Y87riWBhkcJwJWVcuRu3WOtIkNDsfDBl0=;
-        b=I+jCA2fk2aOioXHFsSeM8rGSRnBiAVmtwkOBlRkZIt76kzKv3kq9QCfRgRWMnFhAi5
-         WIOJMPVaXCG2GNU77ad6HaAlK5tW8c0OpWf91zBo/Oq5M/L0mVkXp0CL/m3Ks9Zf8RgY
-         /tE3Vs0FTrwG7rXSYsRTXS+cGD8+NoJeVQMAfz0rOM+TUjyQwIS2iSOhzXMw1y/TXy0i
-         Ct9awb21H7SoeBlp8bjpef74NtU7WGhrb96aBB96evSsOYqdC6MgFlW8PI9qovj02ayT
-         4yhxhJXFzUyliUOPJ13LxBpAClyK4CXmrFOTQlbxnRett0erFOAXVA1NiHFdohg/1WIi
-         0RzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeXxE6R7b0woh2zxRXcASqeXzcQAzTRoLGc1o8pV7zsNqSe6aMdlbe/ukgQVxHq1CjzLbTHFcnyI02HfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIHoPfpTs0cehtqqBzjV5uoZBjWPfHFWs3j9Xwh44a3OkE/Acw
-	q/Xq3tlZEcsMmFPUvOK1Twvtjd6czoYZRhn2KlA1tfgdo3MhmynQy5jkKILDTA==
-X-Gm-Gg: ASbGncvsHfjPgmWQtWuSgHzg3Ho+S+qqnrwIJ01x+jCo/W/Pj4tfmwqcFV2Xc2jj0zG
-	KbXqlABj/HGl4V9BFZYOtPPUIPdU5uhzfRngzXEXvHtEYsK4V1x3gy8CLNIKCzD72nE00Us19xT
-	ximiN5PjALS2nxEj7A2YhFDM7gfSfUE3bOYvYizSjr5qH8b3HBpjwhpki8MRsNIkdBsK5a43E/1
-	FoO8PEgwuSUtqKsCdq5JQz+U+Os+4OaRqgqeALBOQ/oA1zcje48hEATmxaAQPyxI88h5PJxaQDg
-	cKnA43WM/wg8fPHjIUxocOLbJPxPWAmGoHDpvsrqzqOTP24=
-X-Google-Smtp-Source: AGHT+IG6h0HHRXrsi+68eBFAUCkILWGOJ0frcIcsejrUedyFb58NXfg6Bej0I0Y1stpuMX2kzWtw0Q==
-X-Received: by 2002:a17:902:da92:b0:224:2717:7993 with SMTP id d9443c01a7336-22de60703c9mr49480895ad.45.1745926860206;
-        Tue, 29 Apr 2025 04:41:00 -0700 (PDT)
-Received: from [172.16.116.85] ([103.15.228.94])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51051c6sm99984995ad.206.2025.04.29.04.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 04:40:59 -0700 (PDT)
-From: Ayush Singh <ayush@beagleboard.org>
-Date: Tue, 29 Apr 2025 17:09:26 +0530
-Subject: [PATCH v2] rust: kernel: device: Add
- devm_of_platform_populate/depopulate
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TukiGING"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745926862;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NdNHT32JgqwYQgk77xX6uNazS4dT4fyVx5jsWgygqLw=;
+	b=TukiGINGn9wTlIkheN1RCZ5LwHRTV3+Zi9z2XU4XxzyRpBc9eYJ48hhlzAgxpqIbsrAiFr
+	9veC8D/9ntmTSpviadcNCEMRS11GYQNjhfW7uGarlsQlMeztPv+fMf7MbozToxuGSeJnqi
+	QV3i9GT1v/WEI6fv6i+KNCDtbmdqNKE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-187-v0UIYrImOue3gGKMrfhYOA-1; Tue,
+ 29 Apr 2025 07:40:58 -0400
+X-MC-Unique: v0UIYrImOue3gGKMrfhYOA-1
+X-Mimecast-MFC-AGG-ID: v0UIYrImOue3gGKMrfhYOA_1745926854
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E204D1955E7A;
+	Tue, 29 Apr 2025 11:40:53 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.225.102])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B817F19560A3;
+	Tue, 29 Apr 2025 11:40:25 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Daniel Wagner <dwagner@suse.de>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>,
+	Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH v5 14/25] perf/x86/amd: Mark perf_lopwr_cb static call as __ro_after_init
+Date: Tue, 29 Apr 2025 13:32:31 +0200
+Message-ID: <20250429113242.998312-15-vschneid@redhat.com>
+In-Reply-To: <20250429113242.998312-1-vschneid@redhat.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
-X-B4-Tracking: v=1; b=H4sIAG26EGgC/32NTQqDMBSEryJv3RTz08a66j2Ki6jPGBATXqK0S
- O7e1AOUWX0D880BEclhhLY6gHB30fm1gLhUMMxmtcjcWBhELW61Eg2jLSbmJxZ82BaTkPViety
- 5bqRSHMosEE7ufSpfXeHZxeTpcz7s/Nf+ke2clYxSaq2V0IN69mjsgr03NF49Wehyzl+3ODG2t
- gAAAA==
-X-Change-ID: 20250428-rust-of-populate-b2f961783441
-To: Jason Kridner <jkridner@beagleboard.org>, 
- Deepak Khatri <lorforlinux@beagleboard.org>, 
- Robert Nelson <robertcnelson@beagleboard.org>, Dhruva Gole <d-gole@ti.com>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ayush Singh <ayush@beagleboard.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2622; i=ayush@beagleboard.org;
- h=from:subject:message-id; bh=7SGr5L2ykKUQUo0zMXmWvlFQAdQphSQN1gFTLVtW/kQ=;
- b=owEBbQKS/ZANAwAKAQXO9ceJ5Vp0AcsmYgBoELq7qod87HsYICQmfxD37VQj5JMKjlH5zmmss
- sxUP2OTqw6JAjMEAAEKAB0WIQTfzBMe8k8tZW+lBNYFzvXHieVadAUCaBC6uwAKCRAFzvXHieVa
- dPZDEACUNeVD0+9TD2cq2U5DhZLNx2BQL9Rc6QKKvwLvD3ZglCCSZDltWrCoFoC1g8xtzrPOGHP
- HspKUMsTlILXLmmqI9dCyHlDsHDak5UJSDzXm4BWJcr8py2jbZbVKQ0uZ3sQpRK6c4hO3RwZ1NQ
- pYZEE9hHVJFlLutOXvfmC7idYIi+1hvEAVB0XpPcOInkGVdBXhWFxeme19/TxphVDRqeSr3Aq7e
- FodBQ3tM5TB5Ann/Yt4naeTaIU8sHlbFle/4NY9rGJIG/nNFJGkOFdgJQ+kx87N71po1yRIQQXr
- nIVL7qK8811i6BpRXDa7tvM8ZoSRaDlVMo0QvKTs3MhGH01N9bSSAZN2DNFxzIKSdoPPnGkvR2o
- +ZxD1xz6wpztcCKxnWSYiUpsfZoqtADM6yg/83tcmO42AXvgH8o3dppK6hzeOAi/Px7t/8sN3RP
- 0lTHo00JVRYSW2QutKwvsO84Fma7tJHX4B+YNljluR4xYXcZBNxBxCbBLts/MqrhMWd9GW0KGG5
- 8zJXomFwcL+s8SX3RBpYcTmetsxmPwk1y2zDBPyX0o4iQRgeRBn77Sd5Y43SkzUHUmuwJ0qF9Q4
- AwRPdAjeoLD48g7WafqZ9uw21vKZYvUtESTu4wIxpRR0G1vSJ8sPAq0RleCaniGhFvZ5H/RlOH3
- RJJuro8NEDElntw==
-X-Developer-Key: i=ayush@beagleboard.org; a=openpgp;
- fpr=DFCC131EF24F2D656FA504D605CEF5C789E55A74
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Add abstractions for devm_of_platform_populate and
-devm_of_platform_depopulate.
+Later commits will cause objtool to warn about static calls being used in
+.noinstr sections in order to safely defer instruction patching IPIs
+targeted at NOHZ_FULL CPUs.
 
-Can only be used with a bound device.
+perf_lopwr_cb is used in .noinstr code, but is only ever updated in __init
+amd_brs_lopwr_init(), and can thus be marked as __ro_after_init.
 
-Signed-off-by: Ayush Singh <ayush@beagleboard.org>
+Reported-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
-Allow calling platform_populate/depopulate from Rust code.
+ arch/x86/events/amd/brs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-To see how the bindings look in usage, see my working tree [0] for a
-connector driver  I am working on.
-
-[0]: https://github.com/Ayush1325/linux/commits/b4/beagle-cape/
----
-Changes in v2:
-- Rename to devm_of_platform_populate/depopulate.
-- Add SAFETY comments.
-- Implement only for bound device
-- Import to_result
-- Link to v1: https://lore.kernel.org/r/20250428-rust-of-populate-v1-1-1d33777427c4@beagleboard.org
----
- rust/bindings/bindings_helper.h |  1 +
- rust/kernel/device.rs           | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 8a2add69e5d66d1c2ebed9d2c950380e61c48842..51ec0754960377e5fc6bc0703487bf2086eff0e6 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -25,6 +25,7 @@
- #include <linux/mdio.h>
- #include <linux/miscdevice.h>
- #include <linux/of_device.h>
-+#include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/phy.h>
- #include <linux/pid_namespace.h>
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 40c1f549b0bae9fd9aa3f41539ccb69896c2560d..dc52abeb114792fcecce469c11e336c23c4b1c00 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -6,6 +6,7 @@
- 
- use crate::{
-     bindings,
-+    error::to_result,
-     str::CStr,
-     types::{ARef, Opaque},
- };
-@@ -209,6 +210,20 @@ pub fn property_present(&self, name: &CStr) -> bool {
-     }
+diff --git a/arch/x86/events/amd/brs.c b/arch/x86/events/amd/brs.c
+index ec34274633824..218545ffe3e24 100644
+--- a/arch/x86/events/amd/brs.c
++++ b/arch/x86/events/amd/brs.c
+@@ -423,7 +423,7 @@ void noinstr perf_amd_brs_lopwr_cb(bool lopwr_in)
+ 	}
  }
  
-+impl Device<Bound> {
-+    /// Populate platform_devices from device tree data
-+    pub fn devm_of_platform_populate(&self) -> crate::error::Result<()> {
-+        // SAFETY: self is valid bound Device reference
-+        to_result(unsafe { bindings::devm_of_platform_populate(self.as_raw()) })
-+    }
-+
-+    /// Remove devices populated from device tree
-+    pub fn devm_of_platform_depopulate(&self) {
-+        // SAFETY: self is valid bound Device reference
-+        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
-+    }
-+}
-+
- // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
- // argument.
- kernel::impl_device_context_deref!(unsafe { Device });
-
----
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
-change-id: 20250428-rust-of-populate-b2f961783441
-
-Best regards,
+-DEFINE_STATIC_CALL_NULL(perf_lopwr_cb, perf_amd_brs_lopwr_cb);
++DEFINE_STATIC_CALL_NULL_RO(perf_lopwr_cb, perf_amd_brs_lopwr_cb);
+ EXPORT_STATIC_CALL_TRAMP_GPL(perf_lopwr_cb);
+ 
+ void __init amd_brs_lopwr_init(void)
 -- 
-Ayush Singh <ayush@beagleboard.org>
+2.49.0
 
