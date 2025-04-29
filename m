@@ -1,149 +1,210 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3815A208D0
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D2B208D0;
+	Tue, 29 Apr 2025 19:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956066; cv=none; b=s8Lhgny1bp7OqEPxl5jf5hq5zxC8+RBUejaW9fAwFMdiQkGSCn3b8okdi/j61CPPtm1luoulkYB8LZpXH2Bx87RU1Y7QZd5n2km5jgGd/P6nNvxGyJN51lCdVZB0nN0CA2CItu4Bb//cKqiIvq5507rEvqgmS+2VxMuOEqL87h8=
+	t=1745956079; cv=none; b=bk51U+/zatK7FEVGKKuDPD1IcdL/ggnaXT4NSQkoejyX5xQ7umo5VZKXWJHKMP4qcvYNADLmzB2F5ucmNSUfjv18rKMZcYIv2YF4mcN3AEVSabZzB2OmOxVUNsKobQe7EDgdN0pmu1ztDVlvesSOcpWbscaonEM+w5oM4ttso20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956066; c=relaxed/simple;
-	bh=ugjyf/jMyKKt/zcQVDlLaFsLZEJxdrKZne7xK3f5sUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pd7qhwr5ZlTLFdVgCVHp5/QMHhaNTsYWO9uHEEVuOmQ0lkz22zdKBLhwu4mh3O4YmmYn7FxZ60E20pGjckgpAMBPJtVU9Qs8VdVru2/fexYrQytuwJ/3GCB6CyEnepkJz5c0SjFs2LjF2BAgLt7nuxf5dP+tNDufJYz/AZ32cSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gdesoaGn; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745956079; c=relaxed/simple;
+	bh=iO8BQMjsWG8aVmJrmu3RUdpRg/mY29X5nv5NOPh5RGs=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=twCe7NhHNEqHEfluKPz8WktsyQqHgCq+4oYkzC27pB47PboxagEGFxmsc2OkS8TAHRHCrhFYtbb46Mtx4lxVN4PAuCn1V7zJ6Zrao/vZWes6FgIfCSBLCFszjnzinygs0jodAhOQ2Am5eWaZmeBTGCc4VhFv03pq0FlX505Cet8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dBLtxZ8P; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gdesoaGn"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2d071fcd89bso1841299fac.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:47:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBLtxZ8P"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c58974ed57so710929185a.2;
+        Tue, 29 Apr 2025 12:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745956063; x=1746560863; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PNMUgH5uNY4IqYIYRqaJEMyg/HY2VEe42NNCO90DOAc=;
-        b=gdesoaGnaIjkBQMOEMiWnQSmtkpyMRn3qpZSwNEDsPhqZ7kppm7tIXCviOdpJqlVQv
-         bACpzRAZwNkkBNj8TBN2JAiHLCdSqgMP89TnRrlq57hGtL8ntn6kAVCAheqP+ncIzEX9
-         AnSf/NsZ5SR284jJW4QVa21xCDe11O4t4nAWfxiCE/hy/uyZllX2vjhd+BTFrKNLS6cq
-         ya6pZw3FESzLyNkRDvz7yfMi28DdgwpzSUIQ11nrvIesdcgMA1OPsgQeOSNc/jj8SB9N
-         Woq1xyuJvDX9GgSttyVU+oKWirh7x7ben88mKeuXzZwnmdmxt2+7/pO3CvqWC45RM5Wb
-         lA5A==
+        d=gmail.com; s=20230601; t=1745956077; x=1746560877; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=N94/S8f4FA3mT8/S6kAiZQTgDSrbdfUuUxD7gFGGZLM=;
+        b=dBLtxZ8Pw86hObB8n4+RHC44+lIVXarIqHp7V2xmA0fPe//wYxClODoUpP8uILgLYl
+         pkoH2ME5O5zAhk1qxs0y1O5g8Bf46T8vA0P88lgXbN0b+rX8gIzh6BEL311rwVfoIaFc
+         a6m2BoWmmtp+fmcaWW0DwOmdupNymgNn98mx4HxHGQdNzATXLhCgAWAWAzU5tP5byQ8E
+         U+UQSMkfU8Ynhi4rKox/nbo+n8m7hJtmeMeS/Sy58J8YIY2JLnOG83otCMYLs0+zgRiR
+         lKOEpNxyXle9xuJ+D5Goq+Ubx+9kSa5uYn5NnqKKDIwe4TG8sOQmCntkY62WeUzrkblJ
+         8sVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745956063; x=1746560863;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PNMUgH5uNY4IqYIYRqaJEMyg/HY2VEe42NNCO90DOAc=;
-        b=V5iUhHICxv5/sjQn9W2ElTYQZAD/arYMzDbPbUoENw1WxMfhG6sbj+W/SkkdcOt/9n
-         ln3RQ+0+JopryOLAgDFX1aSIGSHjcnAdjdqoKeHWosFcDJZrjd27r6pt937/nV4aEMIF
-         iTNCneaq3cV1LZvnHm0xTyvvv4P6u2Ak1Azt5psVBIrbHnmZ0xTy/Nk5HCmE6CdkSTta
-         pNZRVtaXmfdVCaK5nB7qsv9Prvqi1PUDq1Bqy8kJ//hPXBJKGgEW+RFWGTVE3dtI3Ue4
-         aTuI2AsV4VChMdGXBCFx9AsuMu7jBbOY53bqAJyQ98T6yB5IAjongoaDBtt9WvJ8+6hO
-         XmPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyvjidcJ25NxicF4hp/85d36spn57PqUPYkYYnntxWu9xVSuHV6e3Fm6mUJiW4T/KAeBqyPULH7tDIlSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4hbCtoc+yOQW49rxRfgsSdCRFqdQMi1dx5OaORD0hzqNiu83u
-	QFnQTXXWlD4IPVh/3WX8cVSc1BHQXWTX8pszaza0POonk+6oak9JkKd1HmP7oGs=
-X-Gm-Gg: ASbGncs/0aKxKsJbLA98Axs1ebXd7ZAl07vvW+tbSAjjdB2on5VaauuOXAdQBnvffyD
-	Tx5jxWsjirXfEu8rCMqWChmZOsisFo5QOOTWMlaRM8/7eNEvE3FbnD3q3/Gsa8dXSPA1CFqU2y1
-	wAaGOd2uL236YQnWeJIOeaFwIyCKH8DnHZ/tMa2EUVux70e+ZhK2zm4NpKLzJsrqDYGR8uJ7rA+
-	aqEBgIF/ecgMFzZS8sLTm/OPhnbu/WVGrYYePDTcQfgFtSiaMjl1YfgE3y3Dv/nZRiKCf2iulFN
-	Y9VWzKuxrObql91XaX9oOto6DFvR4HqcmoAjyy/d4zttqHn0dmjDWt0lfTzmaJJjfH99FmITrgt
-	+ALOnN5OuEIsf1GHuuRQzgg6N/FdM
-X-Google-Smtp-Source: AGHT+IF2u4BGVcklS8e42c3uNUIrh7aRuex4nRoeOZeNBykrvHleyFegxvqc61saZCq3sjivYkKrMA==
-X-Received: by 2002:a05:6871:358f:b0:2d0:3078:e72f with SMTP id 586e51a60fabf-2da6a2b0b6fmr225244fac.26.1745956063148;
-        Tue, 29 Apr 2025 12:47:43 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d973c18da5sm2955704fac.47.2025.04.29.12.47.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 12:47:42 -0700 (PDT)
-Message-ID: <38e243b0-e81b-4d4d-97fe-91ea2bec6270@baylibre.com>
-Date: Tue, 29 Apr 2025 14:47:41 -0500
+        d=1e100.net; s=20230601; t=1745956077; x=1746560877;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N94/S8f4FA3mT8/S6kAiZQTgDSrbdfUuUxD7gFGGZLM=;
+        b=g1nGez5NrpueswmStWo7EWtzFoopS6AiV9ZEmcAEDoA7BVfGDUK1UNi90SUaCLVUJo
+         1N0PMoMg8miVjXRHAi6183Z39vnF7VxN8aTnM4aZmuRU75fz0G1o2GqwAHG8DpbqQ8w8
+         ieJM8JA6cBcdms5MgLBR7bR4QKAuXMhOIOH1dQSJfqtgU66QzwgajmkR3O7a4jlWozl9
+         MzsqBOvddOVjgl19m6zySI+gQn6FhEpnVRPKvDUJYWwjSFsWVaYoe8Qer/s+Ox8vcP3A
+         oYL4A14R2eyAOfH9MWa78JV0t+ENgRcf7a5FuHApIxdyaJ53AHR+0hEJUq+YfiHjODA9
+         eRmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuedg/bGmAgFgkiCKcqeyqKN9iMgAOCKhO8ojVc3/rGpixfrgaMBetUdn0TQxLApygCbtgsZ8zz5P61/I=@vger.kernel.org, AJvYcCW+SD+6+nBWvKmG/thBWWfu0rOaybO/CdP5U779wTnLb2sbiVhQbAeuvGsu7xhST4e6dpu7p+LySr8f/F/kbQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrkbywKjL6whk59dSojR3deEqwL6oq/u96uL5KX5xLpwwD+wCi
+	q8p72rgrd8apAgpZTAz2BL4p2GNBF3GzvUUAzjpemGQ5q1MUO4To
+X-Gm-Gg: ASbGncteoji2i9OCtPjq9gxFedgxrJrm6VFzRIiWrh5TcQWIPFMNrcn21gQT72AHytt
+	LUWuYKx8QYsENmcckIIkTkFbiQwm8R8S7tLsDRzKXgY5wPdySB5xcigPv4QOUsyKm7HARnAEcrh
+	kuOpz/hN+QhNcYnomUfzGO1BS9qE/K54ihceg7a1XNgIGlCwXiASKwW0eWQDsphwOz5qD5C66FK
+	UT75yJAd/qKya4ucMnouhPTV2KUqbPu8lScbz5T52IloK3qH/vASnlfXNpvlqVT4GmwcaQgKlaO
+	pRblc1I1JlN1EY/NV+RSW+GZ0CR92bZ3POBQGhviCBC+TIFxj6OicCzj55/4CZ7P3HgE9+zRyDG
+	3QtRk8Y5WfRjU/+YmL0WRWffql5UWY3KQgy9fnLizRQ==
+X-Google-Smtp-Source: AGHT+IFekPV+ZaYBT3WSBsNsZgNSp5wvbAICRIDDUzJn+YCZzzBLVFqbU37dOu46mPM1PbmQMZAjXg==
+X-Received: by 2002:a05:620a:1a0e:b0:7c5:5794:3e66 with SMTP id af79cd13be357-7cac762200cmr66576885a.31.1745956076716;
+        Tue, 29 Apr 2025 12:47:56 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958e9fdfbsm769933185a.94.2025.04.29.12.47.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 12:47:56 -0700 (PDT)
+Message-ID: <68112cec.050a0220.acb70.2c9c@mx.google.com>
+X-Google-Original-Message-ID: <aBEs6pqObHQ2SBiJ@winterfell.>
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E867D1200066;
+	Tue, 29 Apr 2025 15:47:55 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Tue, 29 Apr 2025 15:47:55 -0400
+X-ME-Sender: <xms:6ywRaAF9DQi_fx58yomZvjp0VXGT-VaVdvRK61tfmtikC-1wDsgO1Q>
+    <xme:6ywRaJU77-76Z8kCDXjk79trnJH0WstjkrjlE-gJifnhlNhh45aWG7368OHbW3M8-
+    kwTWEX9XPw6jNDAMA>
+X-ME-Received: <xmr:6ywRaKKUIMZtsDoIMu0tn7mNL5ay29ajcgqdJyOkR-P5BLzDSdMH-16ISA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegjedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
+    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvefghfeuveekudetgfevudeuudejfeel
+    tdfhgfehgeekkeeigfdukefhgfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedugedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglh
+    gvrdgtohhmpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhope
+    hvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepghhrvghg
+    khhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepghgrrhihse
+    hgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhn
+    mhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonh
+    drmhgvpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:6ywRaCFBpGfqjdRkPjU1G-XufRh84WZqJB5Au4uUmwtXjKHI8Los9g>
+    <xmx:6ywRaGUlI5hrHiSaGqNBC8l91GAgVVv73v0IXQc-EMCWKOjH95crvg>
+    <xmx:6ywRaFNGkur3tY--Aq1KVplaNUJjNq-YoP05vavtcyNTDqxUryYfWg>
+    <xmx:6ywRaN0UmIyigHTPW2ht7RFZfQ06KBs1CNdWaUSkKo8XUAG_bKKePA>
+    <xmx:6ywRaPU87GkfMGNnWnX4UKcaCCHQM_i9B4hfGkBJ_hVyQbJrpx6C49h0>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Apr 2025 15:47:55 -0400 (EDT)
+Date: Tue, 29 Apr 2025 12:47:54 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] uaccess: rust: add
+ UserSliceReader::strcpy_into_buf
+References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+ <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
+ <68111422.050a0220.e6713.25af@mx.google.com>
+ <CAH5fLggj-Mfhd3311aKUt9go_+FeAuXdPxditW26QL5VtLD3iQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
- <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
- <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com>
- <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
- <CAHp75VfcmvLhBDjbu6x46wGyzG+i7=rVypzSm11qzWN9Qq_rew@mail.gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <CAHp75VfcmvLhBDjbu6x46wGyzG+i7=rVypzSm11qzWN9Qq_rew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLggj-Mfhd3311aKUt9go_+FeAuXdPxditW26QL5VtLD3iQ@mail.gmail.com>
 
-On 4/29/25 2:36 PM, Andy Shevchenko wrote:
-> On Tue, Apr 29, 2025 at 10:31 PM David Lechner <dlechner@baylibre.com> wrote:
->> On 4/28/25 9:12 PM, David Lechner wrote:
->>> On 4/28/25 3:23 PM, David Lechner wrote:
->>>> Add new macros to help with the common case of declaring a buffer that
->>>> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
->>>> to do correctly because of the alignment requirements of the timestamp.
->>>> This will make it easier for both authors and reviewers.
->>>>
->>>> To avoid double __align() attributes in cases where we also need DMA
->>>> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
+On Tue, Apr 29, 2025 at 09:29:07PM +0200, Alice Ryhl wrote:
+> On Tue, Apr 29, 2025 at 8:02 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > On Tue, Apr 29, 2025 at 09:02:23AM +0000, Alice Ryhl wrote:
+> > > This patch adds a more convenient method for reading C strings from
+> > > userspace. Logic is added to NUL-terminate the buffer when necessary so
+> > > that a &CStr can be returned.
+> > >
+> > > Note that we treat attempts to read past `self.length` as a fault, so
+> > > this returns EFAULT if that limit is exceeded before `buf.len()` is
+> > > reached.
+> > >
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > ---
+> > >  rust/kernel/uaccess.rs | 35 +++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 35 insertions(+)
+> > >
+> > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > > index acb703f074a30e60d42a222dd26aed80d8bdb76a..7cec1b62bd8b816f523c8be12cb29905740789fc 100644
+> > > --- a/rust/kernel/uaccess.rs
+> > > +++ b/rust/kernel/uaccess.rs
+> > > @@ -293,6 +293,41 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut Vec<u8, A>, flags: Flags) -> R
+> > >          unsafe { buf.set_len(buf.len() + len) };
+> > >          Ok(())
+> > >      }
+> > > +
+> > > +    /// Read a NUL-terminated string from userspace and append it to `dst`.
+> >
+> > s/`dst`/`buf`
+> >
+> > ?
 > 
-> ...
+> Hm, append is also wrong. Thanks.
 > 
->>>> +/**
->>>> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
->>>> + * @type: element type of the buffer
->>>> + * @name: identifier name of the buffer
->>>> + * @count: number of elements in the buffer
->>>> + *
->>>> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
->>>> + * to ensure that the buffer doesn't share cachelines with anything that comes
->>>> + * before it in a struct. This should not be used for stack-allocated buffers
->>>> + * as stack memory cannot generally be used for DMA.
->>>> + */
->>>> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count)   \
->>>> +    __IIO_DECLARE_BUFFER_WITH_TS(type, name, count)         \
->>>> +    /* IIO_DMA_MINALIGN may be 4 on some 32-bit arches. */  \
->>>> +    __aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
->>>
->>> I just realized my logic behind this is faulty. It assumes sizeof(s64) ==
->>> __alignof__(s64), but that isn't always true and that is what caused the builds
->>> to hit the static_assert() on v3.
->>>
->>> We should be able to leave this as __aligned(IIO_DMA_MINALIGN)
->>>
->>> And have this (with better error message):
->>>
->>> static assert(IIO_DMA_MINALIGN % __alignof__(s64) == 0);
->>
->> I was working late yesterday and should have saved that reply until morning
->> to think about it more!
->>
->> We do want to align to to sizeof(s64) instead of __alignof__(s64) to avoid
->> issues with, e.g. 32-bit kernel and 64-bit userspace (same reason that
->> aligned_s64 exists and always uses 8-byte alignment).
->>
->> So I think this patch is correct as-is after all.
+> > > +
+> > > +        // We never read more than `self.length` bytes.
+> > > +        if dst.len() > self.length {
+> > > +            dst = &mut dst[..self.length];
+> > > +        }
+> > > +
+> > > +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
+> > > +        if len < dst.len() {
+> > > +            // Add one to include the NUL-terminator.
+> > > +            len += 1;
+> > > +        } else if len < buf.len() {
+> > > +            // We hit the `self.length` limit before `buf.len()`.
+> > > +            return Err(EFAULT);
+> > > +        } else {
+> > > +            // SAFETY: Due to the check at the beginning, the buffer is not empty.
+> > > +            unsafe { *buf.last_mut().unwrap_unchecked() = 0 };
+> > > +        }
+> > > +        self.skip(len)?;
+> > > +
+> >
+> > So if the UserSlice content is "abcdefg" (not tailing NUL), and the buf
+> > size is 4, after a strcpy_into_buf(), the return would be a CStr "abc"
+> > (with a tailing NUL), and the UserSlice would move 4 bytes and become
+> > "edg" (not tailing NUL), is this a desired behavior?
+> >
+> > Alternatively, we can make `dst` always 1 byte less then `buf`, so that
+> > in the above case, UserSlice will only move 3 bytes and become "defg",
+> > and the return CStr is still "abc" (with a tailing NUL).
 > 
-> I'm wondering, shouldn't it be better just to make sure that
-> IIO_DMA_MINALIGN is always bigger or equal to sizeof(s64)?
+> Maybe we just have this method consume the UserSliceReader and avoid
+> thinking about what happens if you use it afterwards.
+> 
+> > The current behavior makes me feel like we can lose some information,
+> > for example, if the user-kernel protocol is that "a userslice that
+> > contains 4 64-byte strings which don't have a tailing NUL", we cannot do
+> > 4 strcpy_into_buf() to get them, right? But of course, the scenario is
+> > completely made up, just food for thoughts.
+> 
+> But then you should probably just read the [u8;64] type four times?
 > 
 
-Sounds reasonable to me. From what I have seen while working on this is that
-there are quite a few drivers using IIO_DMA_MINALIGN expecting it to be
-sufficient for timestamp alignment, which as it seems is not always the case.
+Ah, that makes sense. Seems I was trying to over-task this method ;-)
 
-I'll wait for Jonathan to weigh in though before spinning up a new patch.
+Regards,
+Boqun
+
+> Alice
