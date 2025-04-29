@@ -1,314 +1,382 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9034E84A35
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB942459EC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944666; cv=none; b=KW/Mss5601AVbW3ddLPSMESz7aijOvF6fHheOCDMQQnG4Vtxs5roCu0ik0/S9qM6ikPPoE7wZfUZZOU6LJ21Rj7nQHsxQCwSrw8bU0L6psW8H1TDTD8LQQj2+95i5jetI2x51g68ocCTx+rS/FYivK6mZFyUH88kTPbSzM6qAdE=
+	t=1745944676; cv=none; b=UXUPQYhyjb8/MiyquPnoXBS3fYksAcJQ6DsCm2cFfMhoycAH/dHxRo10dN/Afe87WL5wYk90Y14clvubDTOcZeV/8scWsChJHiUxzuwsuL9r/oB4aLfnHaiqictuQBMfZjAn3g2Hz5t7KxR++lwpF8JNDrEmLJ3XjMiVG7WQ0ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944666; c=relaxed/simple;
-	bh=GTBwZABLBbNP1w6oTnGAs8DazHtwqpwsSWLbCx8V+J0=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=GTHEuHuE7ArN6DVib+W7qvSoCBCnLe2BF2MVmrdEsXwASUyq6rOREppjiHnjDja2CkK0z2RND8ShvEGorEjjVCpZiYY+dMAHrFJkYNAil2yoZVxyoh0f4oBGMzlokAPqOWJ+S4K2onSWSWKJSQCU4UAa+AGOh/X67/uV+mYX79U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SB0VeVp1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745944676; c=relaxed/simple;
+	bh=VLHDyQ3gv+d0/xCunQosPm0u0ghgi9MXHQslBr37jyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNqA1c/ttn18+mdL7/LTzH56tcqCB4mF7ocPpO9lurpM4eIyGH5o9Q0y823IWdgTUOiBfo8wV65d4K/1kW0y2VLg3q56DL2FxDeo5RkXdBA0fVeoAYNgvj7neIaH6O8BoiR4JgCCisgNvxHWMADmM2y6Qt6nkP1HyJQe8i9ICBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R3UdSLzb; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SB0VeVp1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745944661;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v4Z7IYlxZGIUKwJwhWYGYh06tJAodt68SWJ/LkN2PlU=;
-	b=SB0VeVp1TtJKKYnJA+D7TnAoI14DVtlmFcY6u8VwZeGxKCexuK2xpOKMVxbpUb0JoFBvrp
-	pPyBiVyw4ST2gL9W0exuXteaTfnGTGImgaY0eOwxhi/EeQKM3KFdJBtgpC0kOBAS3ozO3B
-	Oqqya1r7xSijlD9I97PgY3Z/T83m4Cw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-152-eRO5V1PWO2ysRFZJIgC9aA-1; Tue,
- 29 Apr 2025 12:37:39 -0400
-X-MC-Unique: eRO5V1PWO2ysRFZJIgC9aA-1
-X-Mimecast-MFC-AGG-ID: eRO5V1PWO2ysRFZJIgC9aA_1745944657
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6F24F1800EC9;
-	Tue, 29 Apr 2025 16:37:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9F810180047F;
-	Tue, 29 Apr 2025 16:37:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-    Christian Brauner <brauner@kernel.org>
-cc: dhowells@redhat.com,
-    Etienne Champetier <champetier.etienne@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jeffrey Altman <jaltman@auristor.com>,
-    Chet Ramey <chet.ramey@case.edu>, Steve French <sfrench@samba.org>,
-    linux-afs@lists.infradead.org, openafs-devel@openafs.org,
-    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R3UdSLzb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745944673; x=1777480673;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VLHDyQ3gv+d0/xCunQosPm0u0ghgi9MXHQslBr37jyA=;
+  b=R3UdSLzb263oAlXrNcrtiwgBsVKtkEts9iDmE6EsiO3lR8PIq0/WJRL/
+   2zkOAe8mF4O39G9o4EgEKGWezEy+nFRh3uXt4XVI8AXGJzurZuT31fimN
+   VH76/YKVGgFJ/J+Uh2mLfSyl9AXdCRzrTCEj0oydweYDEYA8rvBgSpLK+
+   BYTllGZDKKXPogHI9Kryp6Ie158ipGOYemTdSIiVHMhJkPaEfBYQEftS1
+   tlw81L2HUbKUoJ47eKveARgUrAw7JvsJ/e1hgFkPBghyRo2GOCzZybZVJ
+   6eiMrrNL+r/H1cMl3uGTucL+f2a6fDamLd3HMuJOxG86JUu1MbdIt1o0e
+   Q==;
+X-CSE-ConnectionGUID: yXjCyqDcRTezxEA78T+4Cg==
+X-CSE-MsgGUID: nl6i/q6oRgqIcvyMZhCbfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="58215010"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="58215010"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:37:53 -0700
+X-CSE-ConnectionGUID: TGvhxFDySBa9YR8V/Yeb2g==
+X-CSE-MsgGUID: qYG2wNeAR8it1V++ON/tcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="133771195"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 29 Apr 2025 09:37:49 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u9nxq-0000vH-2S;
+	Tue, 29 Apr 2025 16:37:46 +0000
+Date: Wed, 30 Apr 2025 00:37:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Donet Tom <donettom@linux.ibm.com>, Mike Rapoport <rppt@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	Donet Tom <donettom@linux.ibm.com>
+Subject: Re: [PATCH v2 1/2] driver/base: Optimize memory block registration
+ to reduce boot time
+Message-ID: <202504300020.lYdm2Yud-lkp@intel.com>
+References: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <433927.1745944651.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Apr 2025 17:37:31 +0100
-Message-ID: <433928.1745944651@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
 
-    =
+Hi Donet,
 
-Bash has a work around in redir_open() that causes open(O_CREAT) of a file
-in a sticky directory to be retried without O_CREAT if bash was built with
-AFS workarounds configured:
+kernel test robot noticed the following build errors:
 
-        #if defined (AFS)
-              if ((fd < 0) && (errno =3D=3D EACCES))
-            {
-              fd =3D open (filename, flags & ~O_CREAT, mode);
-              errno =3D EACCES;    /* restore errno */
-            }
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on linus/master v6.15-rc4 next-20250429]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-        #endif /* AFS */
+url:    https://github.com/intel-lab-lkp/linux/commits/Donet-Tom/driver-base-Remove-unused-functions/20250429-010442
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom%40linux.ibm.com
+patch subject: [PATCH v2 1/2] driver/base: Optimize memory block registration to reduce boot time
+config: s390-randconfig-001-20250429 (https://download.01.org/0day-ci/archive/20250430/202504300020.lYdm2Yud-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250430/202504300020.lYdm2Yud-lkp@intel.com/reproduce)
 
-This works around the kernel not being able to validly check the
-current_fsuid() against i_uid on the file or the directory because the
-uidspaces of the system and of AFS may well be disjoint.  The problem lies
-with the uid checks in may_create_in_sticky().
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504300020.lYdm2Yud-lkp@intel.com/
 
-However, the bash work around is going to be removed:
+All error/warnings (new ones prefixed by >>):
 
-        https://git.savannah.gnu.org/cgit/bash.git/tree/redir.c?h=3Dbash-5=
-.3-rc1#n733
+   In file included from fs/attr.c:18:
+   In file included from include/linux/security.h:35:
+   In file included from include/linux/bpf.h:30:
+   In file included from include/linux/static_call.h:135:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   1 warning generated.
+--
+   In file included from mm/slub.c:14:
+   In file included from include/linux/swap.h:11:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   mm/slub.c:414:6: warning: unused function 'stat_add' [-Wunused-function]
+     414 | void stat_add(const struct kmem_cache *s, enum stat_item si, int v)
+         |      ^~~~~~~~
+   mm/slub.c:527:21: warning: unused function 'get_freepointer_safe' [-Wunused-function]
+     527 | static inline void *get_freepointer_safe(struct kmem_cache *s, void *object)
+         |                     ^~~~~~~~~~~~~~~~~~~~
+   mm/slub.c:627:1: warning: unused function 'slub_set_cpu_partial' [-Wunused-function]
+     627 | slub_set_cpu_partial(struct kmem_cache *s, unsigned int nr_objects)
+         | ^~~~~~~~~~~~~~~~~~~~
+   mm/slub.c:691:20: warning: unused function '__slab_update_freelist' [-Wunused-function]
+     691 | static inline bool __slab_update_freelist(struct kmem_cache *s, struct slab *slab,
+         |                    ^~~~~~~~~~~~~~~~~~~~~~
+   mm/slub.c:1889:20: warning: unused function 'set_track' [-Wunused-function]
+    1889 | static inline void set_track(struct kmem_cache *s, void *object,
+         |                    ^~~~~~~~~
+   mm/slub.c:3429:19: warning: unused function 'node_match' [-Wunused-function]
+    3429 | static inline int node_match(struct slab *slab, int node)
+         |                   ^~~~~~~~~~
+   7 warnings generated.
+--
+   In file included from mm/mremap.c:12:
+   In file included from include/linux/mm_inline.h:8:
+   In file included from include/linux/swap.h:11:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   mm/mremap.c:288:20: warning: unused function 'arch_supports_page_table_move' [-Wunused-function]
+     288 | static inline bool arch_supports_page_table_move(void)
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   mm/mremap.c:287:39: note: expanded from macro 'arch_supports_page_table_move'
+     287 | #define arch_supports_page_table_move arch_supports_page_table_move
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+--
+   In file included from kernel/jump_label.c:9:
+   In file included from include/linux/memory.h:19:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/jump_label.c:415:20: warning: unused function 'static_key_type' [-Wunused-function]
+     415 | static inline bool static_key_type(struct static_key *key)
+         |                    ^~~~~~~~~~~~~~~
+   kernel/jump_label.c:420:20: warning: unused function 'static_key_linked' [-Wunused-function]
+     420 | static inline bool static_key_linked(struct static_key *key)
+         |                    ^~~~~~~~~~~~~~~~~
+   kernel/jump_label.c:425:20: warning: unused function 'static_key_clear_linked' [-Wunused-function]
+     425 | static inline void static_key_clear_linked(struct static_key *key)
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/jump_label.c:430:20: warning: unused function 'static_key_set_linked' [-Wunused-function]
+     430 | static inline void static_key_set_linked(struct static_key *key)
+         |                    ^~~~~~~~~~~~~~~~~~~~~
+   5 warnings generated.
+--
+   In file included from io_uring/uring_cmd.c:7:
+   In file included from include/linux/security.h:35:
+   In file included from include/linux/bpf.h:30:
+   In file included from include/linux/static_call.h:135:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   io_uring/uring_cmd.c:306:19: warning: unused function 'io_uring_cmd_getsockopt' [-Wunused-function]
+     306 | static inline int io_uring_cmd_getsockopt(struct socket *sock,
+         |                   ^~~~~~~~~~~~~~~~~~~~~~~
+   io_uring/uring_cmd.c:333:19: warning: unused function 'io_uring_cmd_setsockopt' [-Wunused-function]
+     333 | static inline int io_uring_cmd_setsockopt(struct socket *sock,
+         |                   ^~~~~~~~~~~~~~~~~~~~~~~
+   3 warnings generated.
+--
+   In file included from kernel/trace/ftrace.c:17:
+   In file included from include/linux/stop_machine.h:5:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/trace/ftrace.c:4354:19: warning: unused function 'test_for_valid_rec' [-Wunused-function]
+    4354 | static inline int test_for_valid_rec(struct dyn_ftrace *rec)
+         |                   ^~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+--
+   In file included from kernel/sched/fair.c:57:
+   In file included from kernel/sched/sched.h:31:
+   In file included from include/linux/cpufreq.h:12:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/sched/fair.c:484:20: warning: unused function 'list_del_leaf_cfs_rq' [-Wunused-function]
+     484 | static inline void list_del_leaf_cfs_rq(struct cfs_rq *cfs_rq)
+         |                    ^~~~~~~~~~~~~~~~~~~~
+   kernel/sched/fair.c:505:19: warning: unused function 'tg_is_idle' [-Wunused-function]
+     505 | static inline int tg_is_idle(struct task_group *tg)
+         |                   ^~~~~~~~~~
+   kernel/sched/fair.c:6747:20: warning: unused function 'sync_throttle' [-Wunused-function]
+    6747 | static inline void sync_throttle(struct task_group *tg, int cpu) {}
+         |                    ^~~~~~~~~~~~~
+   kernel/sched/fair.c:6771:37: warning: unused function 'tg_cfs_bandwidth' [-Wunused-function]
+    6771 | static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+         |                                     ^~~~~~~~~~~~~~~~
+   kernel/sched/fair.c:6775:20: warning: unused function 'destroy_cfs_bandwidth' [-Wunused-function]
+    6775 | static inline void destroy_cfs_bandwidth(struct cfs_bandwidth *cfs_b) {}
+         |                    ^~~~~~~~~~~~~~~~~~~~~
+   6 warnings generated.
+--
+   In file included from kernel/sched/core.c:14:
+   In file included from include/linux/syscalls_api.h:1:
+   In file included from include/linux/syscalls.h:94:
+   In file included from include/trace/syscall.h:5:
+   In file included from include/linux/tracepoint.h:22:
+   In file included from include/linux/static_call.h:135:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/sched/core.c:6444:1: warning: unused function 'class_core_lock_lock_ptr' [-Wunused-function]
+    6444 | DEFINE_LOCK_GUARD_1(core_lock, int,
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6445 |                     sched_core_lock(*_T->lock, &_T->flags),
+         |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6446 |                     sched_core_unlock(*_T->lock, &_T->flags),
+         |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    6447 |                     unsigned long flags)
+         |                     ~~~~~~~~~~~~~~~~~~~~
+   include/linux/cleanup.h:408:49: note: expanded from macro 'DEFINE_LOCK_GUARD_1'
+     408 | __DEFINE_CLASS_IS_CONDITIONAL(_name, false);                            \
+         |                                                                         ^
+     409 | __DEFINE_UNLOCK_GUARD(_name, _type, _unlock, __VA_ARGS__)               \
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/cleanup.h:387:10: note: expanded from macro '\
+   __DEFINE_UNLOCK_GUARD'
+     387 |                                                                         \
+         |                                                                         ^
+     388 | __DEFINE_GUARD_LOCK_PTR(_name, &_T->lock)
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/cleanup.h:295:23: note: expanded from macro '\
+   __DEFINE_GUARD_LOCK_PTR'
+     295 |         static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
+         |                              ^~~~~~~~~~~~~~~~~~~~~~~~
+   <scratch space>:36:1: note: expanded from here
+      36 | class_core_lock_lock_ptr
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+--
+   In file included from kernel/trace/rv/monitors/snep/snep.c:3:
+   In file included from include/linux/tracepoint.h:22:
+   In file included from include/linux/static_call.h:135:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/trace/rv/monitors/snep/snep.c:21:1: warning: unused function 'da_handle_start_run_event_snep' [-Wunused-function]
+      21 | DECLARE_DA_MON_PER_CPU(snep, unsigned char);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/da_monitor.h:536:48: note: expanded from macro 'DECLARE_DA_MON_PER_CPU'
+     536 | DECLARE_DA_MON_INIT_PER_CPU(name, type)                                                         \
+         |                                                                                                 ^
+     537 | DECLARE_DA_MON_MONITOR_HANDLER_IMPLICIT(name, type)
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/da_monitor.h:438:20: note: expanded from macro '\
+   DECLARE_DA_MON_MONITOR_HANDLER_IMPLICIT'
+     438 | static inline bool da_handle_start_run_event_##name(enum events_##name event)                   \
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   <scratch space>:2:1: note: expanded from here
+       2 | da_handle_start_run_event_snep
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+--
+   In file included from kernel/trace/rv/monitors/scpd/scpd.c:3:
+   In file included from include/linux/tracepoint.h:22:
+   In file included from include/linux/static_call.h:135:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/trace/rv/monitors/scpd/scpd.c:21:1: warning: unused function 'da_handle_start_run_event_scpd' [-Wunused-function]
+      21 | DECLARE_DA_MON_PER_CPU(scpd, unsigned char);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/da_monitor.h:536:48: note: expanded from macro 'DECLARE_DA_MON_PER_CPU'
+     536 | DECLARE_DA_MON_INIT_PER_CPU(name, type)                                                         \
+         |                                                                                                 ^
+     537 | DECLARE_DA_MON_MONITOR_HANDLER_IMPLICIT(name, type)
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/da_monitor.h:438:20: note: expanded from macro '\
+   DECLARE_DA_MON_MONITOR_HANDLER_IMPLICIT'
+     438 | static inline bool da_handle_start_run_event_##name(enum events_##name event)                   \
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   <scratch space>:2:1: note: expanded from here
+       2 | da_handle_start_run_event_scpd
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+--
+   In file included from kernel/trace/rv/monitors/wip/wip.c:3:
+   In file included from include/linux/tracepoint.h:22:
+   In file included from include/linux/static_call.h:135:
+   In file included from include/linux/cpu.h:17:
+>> include/linux/node.h:124:6: warning: no previous prototype for function 'register_memory_blocks_under_node_early' [-Wmissing-prototypes]
+     124 | void register_memory_blocks_under_node_early(int nid)
+         |      ^
+   include/linux/node.h:124:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     124 | void register_memory_blocks_under_node_early(int nid)
+         | ^
+         | static 
+   kernel/trace/rv/monitors/wip/wip.c:20:1: warning: unused function 'da_handle_start_run_event_wip' [-Wunused-function]
+      20 | DECLARE_DA_MON_PER_CPU(wip, unsigned char);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/da_monitor.h:536:48: note: expanded from macro 'DECLARE_DA_MON_PER_CPU'
+     536 | DECLARE_DA_MON_INIT_PER_CPU(name, type)                                                         \
+         |                                                                                                 ^
+     537 | DECLARE_DA_MON_MONITOR_HANDLER_IMPLICIT(name, type)
+         | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/rv/da_monitor.h:438:20: note: expanded from macro '\
+   DECLARE_DA_MON_MONITOR_HANDLER_IMPLICIT'
+     438 | static inline bool da_handle_start_run_event_##name(enum events_##name event)                   \
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   <scratch space>:172:1: note: expanded from here
+     172 | da_handle_start_run_event_wip
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+..
 
-Fix this in the kernel by:
-
- (1) Provide an ->is_owned_by_me() inode op, similar to ->permission(),
-     and, if provided, call that to determine if the caller owns the file
-     instead of checking the i_uid to current_fsuid().
-
- (2) Provide a ->have_same_owner() inode op, that, if provided, can be
-     called to see if an inode has the same owner as the parent on the pat=
-h
-     walked.
-
-For kafs, use the first hook to check to see if the server indicated the
-ADMINISTER bit in the access rights returned by the FS.FetchStatus and
-suchlike and the second hook to compare the AFS user IDs retrieved by
-FS.FetchStatus (which may not fit in a kuid if AuriStor's YFS variant).
-
-This can be tested by creating a sticky directory (the user must have a
-token to do this) and creating a file in it.  Then strace bash doing "echo
-foo >>file" and look at whether bash does a single, successful O_CREAT ope=
-n
-on the file or whether that one fails and then bash does one without
-O_CREAT that succeeds.
-
-Reported-by: Etienne Champetier <champetier.etienne@gmail.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeffrey Altman <jaltman@auristor.com>
-cc: Chet Ramey <chet.ramey@case.edu>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Steve French <sfrench@samba.org>
-cc: linux-afs@lists.infradead.org
-cc: openafs-devel@openafs.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
----
- fs/afs/dir.c       |    2 ++
- fs/afs/file.c      |    2 ++
- fs/afs/internal.h  |    3 +++
- fs/afs/security.c  |   52 +++++++++++++++++++++++++++++++++++++++++++++++=
-+++++
- fs/namei.c         |   22 ++++++++++++++++++----
- include/linux/fs.h |    3 +++
- 6 files changed, 80 insertions(+), 4 deletions(-)
-
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 9e7b1fe82c27..6360db1673b0 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -65,6 +65,8 @@ const struct inode_operations afs_dir_inode_operations =3D=
- {
- 	.permission	=3D afs_permission,
- 	.getattr	=3D afs_getattr,
- 	.setattr	=3D afs_setattr,
-+	.is_owned_by_me	=3D afs_is_owned_by_me,
-+	.have_same_owner =3D afs_have_same_owner,
- };
- =
-
- const struct address_space_operations afs_dir_aops =3D {
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index fc15497608c6..0317f0a36cf2 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -47,6 +47,8 @@ const struct inode_operations afs_file_inode_operations =
-=3D {
- 	.getattr	=3D afs_getattr,
- 	.setattr	=3D afs_setattr,
- 	.permission	=3D afs_permission,
-+	.is_owned_by_me	=3D afs_is_owned_by_me,
-+	.have_same_owner =3D afs_have_same_owner,
- };
- =
-
- const struct address_space_operations afs_file_aops =3D {
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 440b0e731093..fbfbf615abe3 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1495,6 +1495,9 @@ extern struct key *afs_request_key(struct afs_cell *=
-);
- extern struct key *afs_request_key_rcu(struct afs_cell *);
- extern int afs_check_permit(struct afs_vnode *, struct key *, afs_access_=
-t *);
- extern int afs_permission(struct mnt_idmap *, struct inode *, int);
-+int afs_is_owned_by_me(struct mnt_idmap *idmap, struct inode *inode);
-+int afs_have_same_owner(struct mnt_idmap *idmap, struct inode *inode,
-+			struct dentry *dentry);
- extern void __exit afs_clean_up_permit_cache(void);
- =
-
- /*
-diff --git a/fs/afs/security.c b/fs/afs/security.c
-index 6a7744c9e2a2..cc9689fbed47 100644
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@ -477,6 +477,58 @@ int afs_permission(struct mnt_idmap *idmap, struct in=
-ode *inode,
- 	return ret;
- }
- =
-
-+/*
-+ * Determine if an inode is owned by 'me' - whatever that means for the
-+ * filesystem.  In the case of AFS, this means that the file is owned by =
-the
-+ * AFS user represented by the token (e.g. from a kerberos server) held i=
-n a
-+ * key.  Returns 0 if owned by me, 1 if not; can also return an error.
-+ */
-+int afs_is_owned_by_me(struct mnt_idmap *idmap, struct inode *inode)
-+{
-+	struct afs_vnode *vnode =3D AFS_FS_I(inode);
-+	afs_access_t access;
-+	struct key *key;
-+	int ret;
-+
-+	key =3D afs_request_key(vnode->volume->cell);
-+	if (IS_ERR(key))
-+		return PTR_ERR(key);
-+
-+	/* Get the access rights for the key on this file. */
-+	ret =3D afs_check_permit(vnode, key, &access);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* We get the ADMINISTER bit if we own the file. */
-+	ret =3D (access & AFS_ACE_ADMINISTER) ? 0 : 1;
-+error:
-+	key_put(key);
-+	return ret;
-+}
-+
-+/*
-+ * Determine if a file has the same owner as its parent - whatever that m=
-eans
-+ * for the filesystem.  In the case of AFS, this means comparing their AF=
-S
-+ * UIDs.  Returns 0 if same, 1 if not same; can also return an error.
-+ */
-+int afs_have_same_owner(struct mnt_idmap *idmap, struct inode *inode,
-+			struct dentry *dentry)
-+{
-+	struct afs_vnode *vnode =3D AFS_FS_I(inode);
-+	struct dentry *parent;
-+	s64 owner;
-+
-+	/* Get the owner's ID for the directory.  Ideally, we'd use RCU to
-+	 * access the parent rather than getting a ref.
-+	 */
-+	parent =3D dget_parent(dentry);
-+	vnode =3D AFS_FS_I(d_backing_inode(parent));
-+	owner =3D vnode->status.owner;
-+	dput(parent);
-+
-+	return vnode->status.owner !=3D owner;
-+}
-+
- void __exit afs_clean_up_permit_cache(void)
- {
- 	int i;
-diff --git a/fs/namei.c b/fs/namei.c
-index 84a0e0b0111c..79e8ef1b6900 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1318,11 +1318,25 @@ static int may_create_in_sticky(struct mnt_idmap *=
-idmap, struct nameidata *nd,
- =
-
- 	i_vfsuid =3D i_uid_into_vfsuid(idmap, inode);
- =
-
--	if (vfsuid_eq(i_vfsuid, dir_vfsuid))
--		return 0;
-+	if (unlikely(inode->i_op->have_same_owner)) {
-+		int ret =3D inode->i_op->have_same_owner(idmap, inode, nd->path.dentry)=
-;
- =
-
--	if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
--		return 0;
-+		if (ret <=3D 0)
-+			return ret;
-+	} else {
-+		if (vfsuid_eq(i_vfsuid, dir_vfsuid))
-+			return 0;
-+	}
-+
-+	if (unlikely(inode->i_op->is_owned_by_me)) {
-+		int ret =3D inode->i_op->is_owned_by_me(idmap, inode);
-+
-+		if (ret <=3D 0)
-+			return ret;
-+	} else {
-+		if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
-+			return 0;
-+	}
- =
-
- 	if (likely(dir_mode & 0002)) {
- 		audit_log_path_denied(AUDIT_ANOM_CREAT, "sticky_create");
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e..ec278d2d362a 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2236,6 +2236,9 @@ struct inode_operations {
- 			    struct dentry *dentry, struct fileattr *fa);
- 	int (*fileattr_get)(struct dentry *dentry, struct fileattr *fa);
- 	struct offset_ctx *(*get_offset_ctx)(struct inode *inode);
-+	int (*is_owned_by_me)(struct mnt_idmap *idmap, struct inode *inode);
-+	int (*have_same_owner)(struct mnt_idmap *idmap, struct inode *inode,
-+			       struct dentry *dentry);
- } ____cacheline_aligned;
- =
-
- static inline int call_mmap(struct file *file, struct vm_area_struct *vma=
-)
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
