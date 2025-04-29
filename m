@@ -1,127 +1,205 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D48E26F460
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A5820409A
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745906149; cv=none; b=fmanz3lrR4B83Zxw2RX9O2GrO5+PGWxTN0KB8gFBMvSWm3AJp30SEQ4btAX89303oVwJCnBjgLeV42pIszKhvjnsKTR8u4N5P+83VjIhEY6HzsURC/xC7DLRQebDyaciwaHIBM00WEK7BMmWP6/d1he0On+N+JH6W4kPH+Ym82I=
+	t=1745906269; cv=none; b=hrfgx0+GBUyG93yxme4myUci7Q5dr+3PwBtzkvcdiMjd2QgZE8mtbl8uk5MrfYhKs4zLLqMWsEx12VFK1Llzt6+Dnv2MNadvJ+8gzagGpKn50+xJz/pQ/pv1PHzS98tk79NH3cjCraeVO6u7nye/k56gYPMFdovJ2nZWu2/Tpyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745906149; c=relaxed/simple;
-	bh=1kDrlm/fhAKr9mj0zuBg0xIvCaUDFqvgW/xklUwgSOc=;
+	s=arc-20240116; t=1745906269; c=relaxed/simple;
+	bh=T8fcm7eC8YmEpxy3PM36AvU9jbHRvcBo3b5n4O/HwjY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gcJWsk/V9yAP0xFLwtADb45RhSEB/4fn8HPC3K4tzUv1Z/3Bpp0S7bGyQN7PdlCWhXqMCgaH4GgFxISOMqjdNimvrQqVOCTzgRi+qBWzr46pnM3vOKsuJ6mYSvNCTSHmFfnCqEy3UxBOLG2+T40NPrCwF28PMlBH/mjOZz77jYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=O6C4ba0w; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 To:Cc:Content-Type; b=jXUeS5uWFqdgKxIM5TrU5vIJ0NR/kGABR9QYYV4Qi6Snj2URDNSpdb4+9TkTa5suNr7mEoa0Gy0XRd35MSG8tDXef2HzJLW0lOQ42K4o00XwCXY6TP39o+xUfA2v4ulkN+no+MPQCT6EIy50OgqJxyek+orZQwMdI7CEc5rVkl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=LpOEpkyi; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="O6C4ba0w"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549963b5551so5726553e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:55:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LpOEpkyi"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-523de5611a3so2101695e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745906146; x=1746510946; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1745906266; x=1746511066; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d8eFfmotZuLjE/iIngsJ3KVYn6Hy+g0+LpOOBN4vUMQ=;
-        b=O6C4ba0wjnoZwXtiuE7xcR4ETzqGDW+kywyqywRKpHJqqRzJXl1xBnjpTASwj/DkEy
-         Ash4Z7qH+3dn7cGXHdRoLYNLDR3d58uloQ/BjyIifWCTJ+JUrOnDlvP5OcMJTHbEKXsb
-         WaZzzHvnOmy7h4/G8XuoIX+I43pqADRvrB9b33bEnnWLmn545EkLeU2t9Hqh+ww2CAhW
-         d6KRwHM/RLM4ROQ+iEVU89QIjw1xJbi/on+snY1cS/wpqpmlGI205jGvv8F4SumOt3pr
-         RoEHQczBBOzYdtXQJjxjOZTSCA0wYp2TE/0fO9C5KhkshDBECP0tN1GQWHRZEdvhOWIr
-         pM2A==
+        bh=Ddti0n2S/jg8OKWHEcLbUee9AuMJvWjvjNHUetZZSfw=;
+        b=LpOEpkyiyyH0tu6DIukr1bYA1O0sbMudj7fqgK7z2nnQpaE4Dgxtz26GKeIL12YGbA
+         ZE9dvXzwnI6PziTUjiG0XoH3jicZbKA2HlZwGJSSkJqUwqyeaE10OcYcjRYssECyrO+t
+         pA7MpEZcvwG3vXS4gNrrCICjM07LVoyNNxFrzNQIBPd3rZcVY7JBJmioIGXkFbuub0ow
+         /eoWFfN7FFlVmykBx4nGaNbz4Of7dongfAzAL/1kmZWfJNftux6tz2BTzRfC5iaSx3tV
+         j6jVE3WPxs2acXlDUrwPw0xd7RYI6Rqq0se9Z8swVrGBwyHod0qMlQJNGIp/xGs5oaBo
+         ZbXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745906146; x=1746510946;
+        d=1e100.net; s=20230601; t=1745906266; x=1746511066;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d8eFfmotZuLjE/iIngsJ3KVYn6Hy+g0+LpOOBN4vUMQ=;
-        b=KSZ70OBNx3o/yGuRdEWUAFMK5nzmY1gZYx4cWZBAsZdz7z8zFqqaGJ1vfEbHa0XcwY
-         pxMqpBz14UfBoCKZA2VQqdJvXiDMbbpbBFhvWqMmSF/WXrl4135iRCpHoNQigz1KmS5c
-         nlJ/sszfwh8UkSl4oFIXs6p4vZec6MmYVexmHGtu56crJwFB9JJ7VsVfKT3yTP62hdLz
-         Bl4yo4aoyn5BpzGtygynYD2KarLfTKRcaBsVz6q1rKMqd6vlGnHfJKi/JgxoiwPNONPe
-         43gXbA5J5sNGoZx7YSq7mzWaxvfscjdgUXNFvsKyq0RZcjLUdsF4Z/GzrileF0S3k57N
-         pM2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWAMNs+h6WOgf4E/O0BJcLaW8YBe1bVjmnK/jjZvxMzidUr1HidRA/eQgg03GL5py3wadSxFE0GIrjlmfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR0I2ysJPQPrQtYKKOBnI36v0Q+HeuElHdCQEHig7P/EAxbLK0
-	RvdOtDtVq/Hq2LfLkVHuUt8JUfNkeL2dG1VPt65Qo4NC4qcJrwU1jq/Mirt0dqDd34QyKSRx8ZF
-	VDMjFiAT6/AWAbScNQxCnsoMCg9rt1+6GbDa0HQ==
-X-Gm-Gg: ASbGncvXAlPivsEOJ1jhvV7aw+obIY3iRGRU7BM5NFtjWTRbLCdMLn4OLsF0AYK5m9M
-	2kcs20FuPxhDQJZKCHPcSdwJKuOCmZ3MMPVzMvWKhqhjOIfekzYsze3u3Gke5wn6wYsp7++pCGG
-	QZgG0SI+nIFDtLr7sRCJjURKM=
-X-Google-Smtp-Source: AGHT+IFYS//nAhdr5sQ4EKB26kjYn20qv5wR0iA6FrAr+cMy0GIfWIfPM3YUDHi8RlYpm+FL+B8w4CHY3E8C/pwtOoc=
-X-Received: by 2002:a05:6512:6d1:b0:549:9044:94ac with SMTP id
- 2adb3069b0e04-54e9e53e33cmr325134e87.23.1745906146173; Mon, 28 Apr 2025
- 22:55:46 -0700 (PDT)
+        bh=Ddti0n2S/jg8OKWHEcLbUee9AuMJvWjvjNHUetZZSfw=;
+        b=rJZo/HJNH0ZodaYliVMrvPmdIhEuhhdrKnOsd5hzomZLn1kQETF3R9nosgYxojWVkQ
+         2tkvNl+6IDql52J0vrM56GIzl975EiJKdyR0BidQGueNeQSXVyJWNK8A+Vo3byO3zKJ1
+         gpzFvOldouFKfNRSJomYY86wEHO42vPrR3LAuVkP4mmqtRdxBHB2MbaoppiRR+hmD4wP
+         qZajOtOZMcLQtEcxEmTDODyTwtweV3XiygvSzRG1aQPTP5xObPXGyQ0PL4PuRRLtId4L
+         jeVYCF6adREwMskfGDWCAZGrm5sZQBG87Zj8MjN7GHMGr4LeSmYPOr8WqVt4RgEJe2OG
+         KZSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQfyO47CEaLc7ncjZplwYHUYRn34KL0KIX4axjqHDPe04QG9vtIJSvLexNCRuZUMR3QmVCtKdSljO9mUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5BW5PZpJ+WQShE27GwhO7FNkqSdCilgsu2OoMM6vNjBlXSV+H
+	Tdluk32WGK0fh4j44CYVyt7JohhrXg/gfrbPV3jPbW83Bq5pG4qCZTApjuy+kYtzliWz5b1DSha
+	FEDeRYvQHxf0rTa7nJ1I+WQOS6G3ogdX6dTpBIQ==
+X-Gm-Gg: ASbGncsPb4pabRC2GvAFFLLBSO03JaXW6R2lk3izYBvfgRro4lB6m4Syiz0mTC74und
+	rVFimI6QZnQaOurQPrVcVgvWKQ7wJt139CXNfdpOD0uaK48LIVD6JOYM8Ktdn5VaF37kukXB/+t
+	u/7Za4pnZiLiKZsy+aGlj9gjXlRTuTQu2W
+X-Google-Smtp-Source: AGHT+IEn/oEoK2xnjuBCKAEyj5Yho5ISKK7oYum7pkkABBkOq83roFDelFUJbx9DNm+6+i9//ldDZwxd9vW6Vmp0QlI=
+X-Received: by 2002:a05:6102:15a3:b0:4c4:f128:3acf with SMTP id
+ ada2fe7eead31-4d641f63966mr7068795137.16.1745906266057; Mon, 28 Apr 2025
+ 22:57:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com> <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
- <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com>
-In-Reply-To: <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Tue, 29 Apr 2025 11:25:35 +0530
-X-Gm-Features: ATxdqUEiQjMeNUujcFSuwa_LrU9ri9FCJKZ6XmhF2QYcnvi_LFsWj1huKA1q38o
-Message-ID: <CAK9=C2Woc5MtrJeqNtaVkMXWEsGeZPsmUgtFQET=OKLHLwRbPA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming runnable
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Anup Patel <anup@brainfault.org>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>
+References: <20250411073850.3699180-1-nylon.chen@sifive.com>
+ <20250411073850.3699180-3-nylon.chen@sifive.com> <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
+ <22a2c734-b446-4b1e-a2bc-a0080656fe29@ghiti.fr> <f4be063b-f321-45d4-9891-b50f30beb1ef@rivosinc.com>
+In-Reply-To: <f4be063b-f321-45d4-9891-b50f30beb1ef@rivosinc.com>
+From: Nylon Chen <nylon.chen@sifive.com>
+Date: Tue, 29 Apr 2025 13:57:35 +0800
+X-Gm-Features: ATxdqUE3DFeyNUfNMa05FUInNcAHiDlHwf0FR6F-MXEQ4WqvB3Vh02exsh8mq4c
+Message-ID: <CAHh=Yk-jk-KzDK_kJTbGi8HOZqsUPZjdGN8eF_op=HKF2V-Udw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] riscv: misaligned: fix sleeping function called
+ during misaligned access handling
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, charlie@rivosinc.com, jesse@rivosinc.com, 
+	evan@rivosinc.com, zhangchunyan@iscas.ac.cn, samuel.holland@sifive.com, 
+	zong.li@sifive.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 11:15=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcm=
-ar@ventanamicro.com> wrote:
->
-> 2025-04-28T17:52:25+05:30, Anup Patel <anup@brainfault.org>:
-> > On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkr=
-cmar@ventanamicro.com> wrote:
-> >> For a cleaner solution, we should add interfaces to perform the KVM-SB=
-I
-> >> reset request on userspace demand.  I think it would also be much bett=
-er
-> >> if userspace was in control of the post-reset state.
-> >
-> > Apart from breaking KVM user-space, this patch is incorrect and
-> > does not align with the:
-> > 1) SBI spec
-> > 2) OS boot protocol.
-> >
-> > The SBI spec only defines the entry state of certain CPU registers
-> > (namely, PC, A0, and A1) when CPU enters S-mode:
-> > 1) Upon SBI HSM start call from some other CPU
-> > 2) Upon resuming from non-retentive SBI HSM suspend or
-> >     SBI system suspend
-> >
-> > The S-mode entry state of the boot CPU is defined by the
-> > OS boot protocol and not by the SBI spec. Due to this, reason
-> > KVM RISC-V expects user-space to set up the S-mode entry
-> > state of the boot CPU upon system reset.
->
-> We can handle the initial state consistency in other patches.
-> What needs addressing is a way to trigger the KVM reset from userspace,
-> even if only to clear the internal KVM state.
->
-> I think mp_state is currently the best signalization that KVM should
-> reset, so I added it there.
->
-> What would be your preferred interface for that?
->
+Hi Cl=C3=A9ment,
 
-Instead of creating a new interface, I would prefer that VCPU
-which initiates SBI System Reset should be resetted immediately
-in-kernel space before forwarding the system reset request to
-user space. This way we also force KVM user-space to explicitly
-set the PC, A0, and A1 before running the VCPU again after
-system reset.
+Thank you for sharing your patch. I=E2=80=99ve reviewed the changes, but I=
+=E2=80=99m
+not sure I fully grasp the design rationale.
+Could you please briefly explain the main considerations behind this
+modification?
 
-Regards,
-Anup
+We=E2=80=99re also discussing internally the differences between my _nofaul=
+t
+approach and your IRQ-enable approach, and I=E2=80=99d appreciate your
+perspective on the pros and cons of each.
+
+Looking forward to your suggestions!
+
+Nylon
+
+Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com> =E6=96=BC 2025=E5=B9=B44=E6=
+=9C=8811=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:38=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+>
+>
+> On 11/04/2025 10:35, Alexandre Ghiti wrote:
+> > Hi Cl=C3=A9ment,
+> >
+> > On 11/04/2025 09:36, Cl=C3=A9ment L=C3=A9ger wrote:
+> >> Hi Nylon,
+> >>
+> >> I already have a pending fix for that bug which is to reenable
+> >> interrupts while handling misaligned faults. Please see:
+> >> https://lore.kernel.org/linux-riscv/20250317170625.1142870-12-
+> >> cleger@rivosinc.com/
+> >
+> >
+> > Can you extract this fix from the series so that it can be merged in 6.=
+15?
+>
+> Hi Alex,
+>
+> Yes sure, I can send a small series as well. However, I'd like the
+> associated kselftest to be reviewed since it would allow to catch such
+> behavior (there is no test for misaligned delegation yet).
+>
+> Thanks,
+>
+> Cl=C3=A9ment
+>
+> >
+> > Thanks,
+> >
+> > Alex
+> >
+> >
+> >>
+> >> Thanks,
+> >>
+> >> Cl=C3=A9ment
+> >>
+> >> On 11/04/2025 09:38, Nylon Chen wrote:
+> >>> Use copy_from_user_nofault() and copy_to_user_nofault() instead of
+> >>> copy_from/to_user functions in the misaligned access trap handlers.
+> >>>
+> >>> The following bug report was found when executing misaligned memory
+> >>> accesses:
+> >>>
+> >>> BUG: sleeping function called from invalid context at ./include/
+> >>> linux/uaccess.h:162
+> >>> in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 115, name: two
+> >>> preempt_count: 0, expected: 0
+> >>> CPU: 0 UID: 0 PID: 115 Comm: two Not tainted 6.14.0-rc5 #24
+> >>> Hardware name: riscv-virtio,qemu (DT)
+> >>> Call Trace:
+> >>>   [<ffffffff800160ea>] dump_backtrace+0x1c/0x24
+> >>>   [<ffffffff80002304>] show_stack+0x28/0x34
+> >>>   [<ffffffff80010fae>] dump_stack_lvl+0x4a/0x68
+> >>>   [<ffffffff80010fe0>] dump_stack+0x14/0x1c
+> >>>   [<ffffffff8004e44e>] __might_resched+0xfa/0x104
+> >>>   [<ffffffff8004e496>] __might_sleep+0x3e/0x62
+> >>>   [<ffffffff801963c4>] __might_fault+0x1c/0x24
+> >>>   [<ffffffff80425352>] _copy_from_user+0x28/0xaa
+> >>>   [<ffffffff8000296c>] handle_misaligned_store+0x204/0x254
+> >>>   [<ffffffff809eae82>] do_trap_store_misaligned+0x24/0xee
+> >>>   [<ffffffff809f4f1a>] handle_exception+0x146/0x152
+> >>>
+> >>> Fixes: b686ecdeacf6 ("riscv: misaligned: Restrict user access to
+> >>> kernel memory")
+> >>> Fixes: 441381506ba7 ("riscv: misaligned: remove CONFIG_RISCV_M_MODE
+> >>> specific code")
+> >>>
+> >>> Signed-off-by: Zong Li <zong.li@sifive.com>
+> >>> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> >>> ---
+> >>>   arch/riscv/kernel/traps_misaligned.c | 4 ++--
+> >>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/
+> >>> kernel/traps_misaligned.c
+> >>> index d7275dfb6b7e..563f73f88fa8 100644
+> >>> --- a/arch/riscv/kernel/traps_misaligned.c
+> >>> +++ b/arch/riscv/kernel/traps_misaligned.c
+> >>> @@ -455,7 +455,7 @@ static int handle_scalar_misaligned_load(struct
+> >>> pt_regs *regs)
+> >>>         val.data_u64 =3D 0;
+> >>>       if (user_mode(regs)) {
+> >>> -        if (copy_from_user(&val, (u8 __user *)addr, len))
+> >>> +        if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
+> >>>               return -1;
+> >>>       } else {
+> >>>           memcpy(&val, (u8 *)addr, len);
+> >>> @@ -556,7 +556,7 @@ static int handle_scalar_misaligned_store(struct
+> >>> pt_regs *regs)
+> >>>           return -EOPNOTSUPP;
+> >>>         if (user_mode(regs)) {
+> >>> -        if (copy_to_user((u8 __user *)addr, &val, len))
+> >>> +        if (copy_to_user_nofault((u8 __user *)addr, &val, len))
+> >>>               return -1;
+> >>>       } else {
+> >>>           memcpy((u8 *)addr, &val, len);
+> >>
+> >> _______________________________________________
+> >> linux-riscv mailing list
+> >> linux-riscv@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
