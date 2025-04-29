@@ -1,77 +1,86 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5945D1519BF
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420E81EEF9
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928802; cv=none; b=FiQHdVsba1JATSYI3ET9ERisC0VXR7WXHM8fNa/ZgokpjPqJdcuUczeB+5QUCQMYdrzAPwJphMN+K9T8An1qHwRuh5hryY55UzSqEARVYH5APaUwnqHLbeOTMHwpJEA3Qzmk1H1qOlZMKPlO+0xR06rTx1ay4f6D8lYzn7LWI6Q=
+	t=1745928968; cv=none; b=ei+8aSOp6xW93rXPCq7nRASfL18deHEWWEbXdLElcDpJKH8T/9Yy9QIBKMj1OrjDs02ItI8w+NMM3oVSkzQgN/RAjj7Gpp7VlscMRs+IZoDCTKvBrMW09fca+06k44b26MntQxbfRdNG4wQVL8fyBIS+d229j8yZpPt1GsiiW3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928802; c=relaxed/simple;
-	bh=GQiTk/htn7/1BJVac7ftCVKE98dbVakVfVbslKTnr/Q=;
+	s=arc-20240116; t=1745928968; c=relaxed/simple;
+	bh=COQgeNfKJjvwuvOsWE5I+CF+00x3Gj8zrYq55izzgt4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EoGKRcoK5/StR3R1O9Cn6F5Ja1ZS2Z5L8rHZTdRBP4zaz5+trWHUEgUpzN/ADVMycSviaVF4u+698EUN+1ltl/STA6cNcE8nLNR5Bq9LRMrit0Rsol2q7zadux7UfuO726mqzvg0c8ETx42btKaijv+zjuPtuZz3lt5IVj3Yb5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TazUkZnT; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYfcszYLABjTzsCkru6Qims1q3u6Vt/f4HKL5gk5xqcnwTn4JYbgo2Eer3Gl2R7wG4sYneYssTlVlkM8sYdZeyD0GxQi7RYZl2hwOoDEKO7u62wrJ2KGg/2l16lIzQ/C2K6BNdYNRuWIdRg2kCpxvNov3C5cf0bqp47wX2FQE0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TheRa7my; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TazUkZnT"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso7457048a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745928798; x=1746533598; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XGwtrgjfssbRJnnLGAioENkMU7oIKogOgkQ9Ev2GRas=;
-        b=TazUkZnT+3u7GG3XZtebYztPDVTZ2sRpxc52gskp937d5dikBOAFCCWOU6YrS3zjqu
-         gt1whZRuJOBHd9KXPCK65YkuLzcMKTh3GeC+JvTNqZMSDnG6weU1zjfmy4IQaruyOX/r
-         GMxVGUpu4+uxQEQXc+R/mWlegAybsB4Wpdkbq6XEIPhLCAvVp7TPpy0obTQMRe0KK2Wm
-         zARFY8dbXaib5uDeyPnzqKz57vgXxkSWGQZK+xvzBkxH3ZgccEcmJYW/XuhdHsfN2ELX
-         3uB2WD3gbpNBVRrqmtvJrTezgGJJ7R/1qSy00JJOaZUFklZmra5cd/JUV2oNpRhvnOBj
-         hr6A==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TheRa7my"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TABh1r003054
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:16:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=n6neZETVNC342qH7kNDFJ+hG
+	N9sCBDLkRi5kj+90Mz4=; b=TheRa7my7FVsQXnG9WTVOK/1/f0bFVEaQFpTgwHV
+	MKqLclqCxVqMZIPk8S/NSG40+RwsFR6Sx1HdEkn8hhsWj6C7SwY8e4DzFgtffc8Z
+	baYT++07plw7XLAhNNlVTpnN8EkzfNLYwNN0qIXhsd//JuPHI8UmulkyUshIppnn
+	6WFKMpdPOyH+d3H7riRRUE/tWVrokhSOI3ZjGlw2LZA99ehqfftxO7o6HXyauP2B
+	6rkNew9Vkk42c7rAav8CGx0wqvjbaY4lsQOfbiP8s6td7jkBVA0YuX76CLa2/ODC
+	VOSi6ainnKow095XNv1QCSLkwIb85LuiwHZiilPYZ3ITkA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rsbbevv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:16:06 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c955be751aso1013500785a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:16:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745928798; x=1746533598;
+        d=1e100.net; s=20230601; t=1745928965; x=1746533765;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XGwtrgjfssbRJnnLGAioENkMU7oIKogOgkQ9Ev2GRas=;
-        b=pFSK1gWjRUNw4XxyhwWFYHgDU5SNYC7l7dEfN0nqM6YAKGIUFWKWrpf3Kexe99Pxk+
-         dt1gJSUP+cLNwTajlfybyta0a0cu0sJQJULTMJasKPT/qX5xNi+rAp8EO04+Dv5YTiXT
-         50cclLDhrei+e/G0aOBEEN5GK5KFOgtAqxNZ2l/7qnxMNMWMzSN0UmUuLIo4WF0oKRlo
-         8kRMq/6QDvbBN/GZc4csILMOi5MrbalUjV1x+6koNyLC2egvhGmuYAD6gitpCfa0zuvh
-         DQmJcjfTl53BMFHe08tD0BbfDq6v2YRhoVLYJlwx6B8P7Esd3Rgl/0B3Vii2NNNpJxSU
-         8CMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUex3cGtcCWIbrJvw+7mtp3yWhF4Y1rFXdxahrZz2hOXP01Jgnd91zG9RDmN7xKNfAaNGXl4u8gq7Ie/SY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq6uwk8vPisdcSAx20Kkip2tNgsp03wcgsArbGBTVaSP7Dd9s9
-	vLEifWFLArZGk2Tttlf84PZ9vUmqmC8VHXk+j9gaK5q6xmj1kwbSCufXUFyMuRM=
-X-Gm-Gg: ASbGncvIWIIhU6QITy3wWbgXY8yhGgWE2z5FMdqgzu7YIvBjsAWa74QqyHGm9vN5qpM
-	diCVKDm32mJAtPfBWpbJfrbGqFv+vLKIq35gKYEha/bywgCM4u/N+N6+phCExirLzzeJZfahA1Z
-	8T6TRDS30VzBkWG3PeOReb4vVQYhnGx+hKSgFp2FhLbpXn/Lc8cjPRdocJYvFbtwizqYiPkNuRM
-	gtRcCpgJfN9/PKhwQNi0h5s7XkEX8UYMiMtBRgArKJEIU8FQ8aTe1nK48oCgznnvVqmJ6wWvStO
-	PHTKBmr9mVnbiTDEMLyZDQwwMmxsbaaRGUirojCd4+vK12lgWcRL+A==
-X-Google-Smtp-Source: AGHT+IEo5qlskE04ChdYwUfeG14jGRzrfDGg7ko0hloQlCXfAEEdIv4iz53wIbhKxTpKz7/q/ZoqMg==
-X-Received: by 2002:a05:6402:5112:b0:5ed:bab5:3093 with SMTP id 4fb4d7f45d1cf-5f839b24397mr2697613a12.16.1745928797630;
-        Tue, 29 Apr 2025 05:13:17 -0700 (PDT)
-Received: from localhost (109-81-85-148.rct.o2.cz. [109.81.85.148])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5f7038328f1sm7319317a12.70.2025.04.29.05.13.17
+        bh=n6neZETVNC342qH7kNDFJ+hGN9sCBDLkRi5kj+90Mz4=;
+        b=e95iPaEo1uFU3MIE4c4ZGaaGGvsZUUejlnJeD7R++u4Ht3l+h/OGsW6+GEjAc6bcul
+         0MSIWyd8+qW3scoSHKeibKlXX4Yez7Di+HbS9uh5zb9G2uLufbHeBjurvupyhlY7RVd5
+         m2XtJlWQhDvHn99LeeXFKpWSEqn/Qpt01bn4WIIivWY9w7ZBfHiN7CIwLPVbMgk2E9uL
+         9apPlBOHX1rtWphjt+VSCF9iNghhUdxA3ecm6q6UV874Ka3RV/J5Zv0hkJYVGuvlaLOO
+         tPSG/Ro3I7nt4na85T3PU5jXAq9zjBMrYUG685dCHwMpSJsEKvtB/D/h5jTEuEqJ9zEL
+         FC2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVWzi2w8zTXpf6MtJq3cx5wmnON9okkOatNMMlHcL/m0BvuXEElDaIYY218gbJjwTd8rFXhcsGczsn/bKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymHpsuyDwAkZDlFMEwhrUceNPhV6Q0VK0X7MRX6RNKnEHXq/BC
+	tkQYLqaiXye68rlSbe516oo+dG1YsrzzlvyCQ9c6qw851pZz+JshwL/yWXkzg4EHtddYcZgXmRN
+	P10AVc23xSUqMxMZbMhigYbJ4wHNmwfQFFfQ9sjjZFdDRimS+qqKcVmX7vcXvpu0=
+X-Gm-Gg: ASbGncuMfKRmagB+gtX9IXhhZohu1XFTe1s2ti1R98yl8XnRY80CedZQ7LlEl8Q6+Yd
+	kwpDY+sAH1aYhA08fV6b5QMkvJx7kHUdCARs8MqJuhxntyGsk3Tt5TNFbV3Okp8INVOIFPVUTOY
+	I4xajrFZOK6Lt1Rsg9LXVQF3r4YtL45fJLr5Uc//FqOv4lMn+eCOuBQ7ugWAlcp4hjGycusL9xc
+	9FNATodwrnIatRxHGnNrl0SSa9SYc2r8B8GqlRnhbu4DlO1f/K3laYimD3na2XV/AghU/Yl5sQc
+	G8SUItZLXh106qBpNgMts1DZGsJ8Evuz6N2IIX+YRRXHXLcyDOyXIHrYvcYhZLuvM2unBN3pKKk
+	=
+X-Received: by 2002:a05:620a:4104:b0:7c9:5d8f:4d09 with SMTP id af79cd13be357-7cabe60418bmr361511985a.34.1745928964980;
+        Tue, 29 Apr 2025 05:16:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEs8uaXttLX5fbQqqhvFbfdQMse8HccybmzieyiB0uxgppwccpl8V+Gy0PEioLWVPPX8E7lww==
+X-Received: by 2002:a05:620a:4104:b0:7c9:5d8f:4d09 with SMTP id af79cd13be357-7cabe60418bmr361508285a.34.1745928964607;
+        Tue, 29 Apr 2025 05:16:04 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb8979sm1858087e87.257.2025.04.29.05.16.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 05:13:17 -0700 (PDT)
-Date: Tue, 29 Apr 2025 14:13:16 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
-Message-ID: <aBDCXB_Tb2Iaihua@tiehlicka>
-References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+        Tue, 29 Apr 2025 05:16:03 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:16:02 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] drm/msm/dpu: drop TE2 definitions
+Message-ID: <iabwfwus4ze3jwekayyfgwhu5bdoerebp3sehisc7rfeic63xh@552zbik6uvmm>
+References: <20250301-dpu-fix-catalog-v2-0-498271be8b50@linaro.org>
+ <20250301-dpu-fix-catalog-v2-4-498271be8b50@linaro.org>
+ <628f3361-6795-4e69-aac2-f9f3200eb6fe@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,105 +89,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+In-Reply-To: <628f3361-6795-4e69-aac2-f9f3200eb6fe@quicinc.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA5MSBTYWx0ZWRfX8wrwumqRNLJS q1ulPz8DzOr95Om8ZRMmervqjgjsoK8TWVIZzuwVpx01uzLc0LFO8EezJW4Q+mZjFLHzHdEU2Tl sUwOU/DgdWjTERmQqhH5Ksd9m1f6kBJFrdHvriG9/9JVJr8CUxGi3Mjm4+4GggT6ZGKhbFlfuZd
+ FrjVvVBcP/OiuDMnzYZ0ym3yTbxTzYazj8JPSSeoD+Pl5pLKr63Eb0xFK2Q6XaooCrIVbD7IPkf lqB8mqC6jeAfDBzQeCC8+rbAXgrjTTqvI8awIt5SEYrHwrMwLml4rDiTpL8yM6kxVANZqpHM0Er CE/xj2idK4HvuYO1aiLNVZvLM56MurR8leYVyUTXMuIZmO46tWmMshN6Xp9mke1+J4yll2Zm1qO
+ 3akhv3hPD0sk90Xx6XpAoHAl7SMYLyCYby4t87PO2FeSwlLHNqI7PCVikr5T72O9OhoMkmtd
+X-Proofpoint-GUID: xHcb1jz1-WhJEQS1JXL33QzLqlT7GnRM
+X-Proofpoint-ORIG-GUID: xHcb1jz1-WhJEQS1JXL33QzLqlT7GnRM
+X-Authority-Analysis: v=2.4 cv=I8ZlRMgg c=1 sm=1 tr=0 ts=6810c306 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=0er1AAXFZ9cMRBjTt-wA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290091
 
-On Wed 16-04-25 11:02:29, Shakeel Butt wrote:
-> Memory cgroup accounting is expensive and to reduce the cost, the kernel
-> maintains per-cpu charge cache for a single memcg. So, if a charge
-> request comes for a different memcg, the kernel will flush the old
-> memcg's charge cache and then charge the newer memcg a fixed amount (64
-> pages), subtracts the charge request amount and stores the remaining in
-> the per-cpu charge cache for the newer memcg.
+On Mon, Apr 28, 2025 at 06:33:05PM -0700, Abhinav Kumar wrote:
 > 
-> This mechanism is based on the assumption that the kernel, for locality,
-> keep a process on a CPU for long period of time and most of the charge
-> requests from that process will be served by that CPU's local charge
-> cache.
 > 
-> However this assumption breaks down for incoming network traffic in a
-> multi-tenant machine. We are in the process of running multiple
-> workloads on a single machine and if such workloads are network heavy,
-> we are seeing very high network memory accounting cost. We have observed
-> multiple CPUs spending almost 100% of their time in net_rx_action and
-> almost all of that time is spent in memcg accounting of the network
-> traffic.
+> On 3/1/2025 1:24 AM, Dmitry Baryshkov wrote:
+> > Neither DPU driver nor vendor SDE driver do not use TE2 definitions
+> > (and, in case of SDE driver, never did). Semantics of the TE2 feature
+> > bit and .te2 sblk are not completely clear. Drop these bits from the
+> > catalog with the possibility of reintroducing them later if we need to
+> > support ppsplit.
+> > 
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h |  8 ++++----
+> >   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h |  8 ++++----
+> >   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h  |  8 ++++----
+> >   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h  |  4 ++--
+> >   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h  |  8 ++++----
+> >   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c          | 17 -----------------
+> >   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          |  6 +-----
+> >   7 files changed, 19 insertions(+), 40 deletions(-)
+> > 
 > 
-> More precisely, net_rx_action is serving packets from multiple workloads
-> and is observing/serving mix of packets of these workloads. The memcg
-> switch of per-cpu cache is very expensive and we are observing a lot of
-> memcg switches on the machine. Almost all the time is being spent on
-> charging new memcg and flushing older memcg cache. So, definitely we
-> need per-cpu cache that support multiple memcgs for this scenario.
+> <snip>
 > 
-> This patch implements a simple (and dumb) multiple memcg percpu charge
-> cache. Actually we started with more sophisticated LRU based approach but
-> the dumb one was always better than the sophisticated one by 1% to 3%,
-> so going with the simple approach.
+> > @@ -465,22 +459,11 @@ static const struct dpu_dspp_sub_blks sdm845_dspp_sblk = {
+> >   /*************************************************************
+> >    * PINGPONG sub blocks config
+> >    *************************************************************/
+> > -static const struct dpu_pingpong_sub_blks msm8996_pp_sblk_te = {
+> > -	.te2 = {.name = "te2", .base = 0x2000, .len = 0x0,
+> > -		.version = 0x1},
+> > -};
+> >   static const struct dpu_pingpong_sub_blks msm8996_pp_sblk = {
+> >   	/* No dither block */
+> >   };
+> > -static const struct dpu_pingpong_sub_blks sdm845_pp_sblk_te = {
+> > -	.te2 = {.name = "te2", .base = 0x2000, .len = 0x0,
+> > -		.version = 0x1},
+> > -	.dither = {.name = "dither", .base = 0x30e0,
+> > -		.len = 0x20, .version = 0x10000},
+> > -};
+> > -
+> 
+> Agreed about TE2. I do not see even te2 sub-block programming in
+> dpu_hw_pingpong but why do we also need to drop dither?
 
-Makes sense to start simple and go for a more sophisticated (has table
-appraoch maybe) later when a clear gain could be demonstrated.
+sdm845_pp_sblk has the dither block. If you scroll the original patch,
+you'd see PPs being switched to that sblk definition.
 
-> Some of the design choices are:
 > 
-> 1. Fit all caches memcgs in a single cacheline.
+> That one is being used in dpu_hw_pp_setup_dither().
+> 
+> >   static const struct dpu_pingpong_sub_blks sdm845_pp_sblk = {
+> >   	.dither = {.name = "dither", .base = 0x30e0,
+> >   		.len = 0x20, .version = 0x10000},
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> > index 4cea19e1a20380c56ae014f2d33a6884a72e0ca0..07b50e23ee954b96e7e6bd684dc12823f99d630b 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> > @@ -115,7 +115,6 @@ enum {
+> >   /**
+> >    * PINGPONG sub-blocks
+> > - * @DPU_PINGPONG_TE2        Additional tear check block for split pipes
+> >    * @DPU_PINGPONG_SPLIT      PP block supports split fifo
+> >    * @DPU_PINGPONG_SLAVE      PP block is a suitable slave for split fifo
+> >    * @DPU_PINGPONG_DITHER     Dither blocks
+> > @@ -123,8 +122,7 @@ enum {
+> >    * @DPU_PINGPONG_MAX
+> >    */
+> >   enum {
+> > -	DPU_PINGPONG_TE2 = 0x1,
+> > -	DPU_PINGPONG_SPLIT,
+> > +	DPU_PINGPONG_SPLIT = 0x1,
+> >   	DPU_PINGPONG_SLAVE,
+> >   	DPU_PINGPONG_DITHER,
+> >   	DPU_PINGPONG_DSC,
+> > @@ -404,8 +402,6 @@ struct dpu_dspp_sub_blks {
+> >   };
+> >   struct dpu_pingpong_sub_blks {
+> > -	struct dpu_pp_blk te;
+> > -	struct dpu_pp_blk te2;
+> >   	struct dpu_pp_blk dither;
+> >   };
+> > 
+> 
 
-Could you be more specific about the reasoning? I suspect it is for the
-network receive path you are mentioning above, right?
-
-> 2. The cache array can be mix of empty slots or memcg charged slots, so
->    the kernel has to traverse the full array.
-> 3. The cache drain from the reclaim will drain all cached memcgs to keep
->    things simple.
-> 
-> To evaluate the impact of this optimization, on a 72 CPUs machine, we
-> ran the following workload where each netperf client runs in a different
-> cgroup. The next-20250415 kernel is used as base.
-> 
->  $ netserver -6
->  $ netperf -6 -H ::1 -l 60 -t TCP_SENDFILE -- -m 10K
-> 
-> number of clients | Without patch | With patch
->   6               | 42584.1 Mbps  | 48603.4 Mbps (14.13% improvement)
->   12              | 30617.1 Mbps  | 47919.7 Mbps (56.51% improvement)
->   18              | 25305.2 Mbps  | 45497.3 Mbps (79.79% improvement)
->   24              | 20104.1 Mbps  | 37907.7 Mbps (88.55% improvement)
->   30              | 14702.4 Mbps  | 30746.5 Mbps (109.12% improvement)
->   36              | 10801.5 Mbps  | 26476.3 Mbps (145.11% improvement)
-> 
-> The results show drastic improvement for network intensive workloads.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-
-Just a minor suggestion below. Other than that looks good to me (with
-follow up fixes) in this thread.
-Acked-by: Michal Hocko <mhocko@suse.com>
-Thanks!
-
-> ---
->  mm/memcontrol.c | 128 ++++++++++++++++++++++++++++++++++--------------
->  1 file changed, 91 insertions(+), 37 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 1ad326e871c1..0a02ba07561e 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1769,10 +1769,11 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
->  	pr_cont(" are going to be killed due to memory.oom.group set\n");
->  }
->  
-
-/* Make sure nr_pages and cached fit into a single cache line */
-> +#define NR_MEMCG_STOCK 7
->  struct memcg_stock_pcp {
->  	local_trylock_t stock_lock;
-> -	struct mem_cgroup *cached; /* this never be root cgroup */
-> -	unsigned int nr_pages;
-> +	uint8_t nr_pages[NR_MEMCG_STOCK];
-> +	struct mem_cgroup *cached[NR_MEMCG_STOCK];
->  
->  	struct obj_cgroup *cached_objcg;
->  	struct pglist_data *cached_pgdat;
-[...]
 -- 
-Michal Hocko
-SUSE Labs
+With best wishes
+Dmitry
