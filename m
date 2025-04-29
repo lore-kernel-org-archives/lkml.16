@@ -1,170 +1,139 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D432741C6;
-	Tue, 29 Apr 2025 07:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1433A8F49;
+	Tue, 29 Apr 2025 07:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911730; cv=none; b=JI3ry6jgXg3r92mvkZNM+DOzJuGqxOpL6OMDHY5sI90vhyeYLiGtDVu7msofkHR0Jy8q7aTyxp6CZ39xqw6F5px63TYucpm9r/FGJnzijXz+GyemXVet+Boox7UToALm9jBRETPR3BJIu7Zyd2QuhZBYcrXCfNk/fQWYaoCXZVY=
+	t=1745911763; cv=none; b=CoFqTUeSDdRYbQBd+NPVQXh70hTk06y0r0sI8OdKDGurZzTLOVTeNxtA57+pyLF5YMOCXgmDL9c/Pg8jLXxykgVXK7zh/vRweiKtN4Mqjm26lKeOgE8JKYEeYmyNEmer3Ae32OXpSkHrrHsmjCh1qlJM+KILC2z21tagOa20mcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911730; c=relaxed/simple;
-	bh=+vH7I+42geCyCAD8XJgr+tpdYRDIkeIYXAHrLYMdwlw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Nf8srQA5EbTfw8gnuwmtqPypvO9XvuS/QqefhDjjyQBnL4vncbmhn6jBA5H7KFyj7QhoMZtkt/ZdGN5kT3+K8hDE6RhnFcX0nqPIy8wGEmkjcAU/BtHxDCjUajmsSe9kDO8hJyqYI30CgsIkpmoFe4EjaeEDwZxAsZbk69MaaMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=y2zF76gp; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745911763; c=relaxed/simple;
+	bh=nB16d46ObHB8u6nVtTntzLBupJconoj9kwzJ3jXfuGc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AnR7NjjStLtya25qdT48ARkkQo4p5Y9ts0W/nGRx1bX0WCPHhLTTHKyUqTSG6yaivyavf+H1kwW1ezDBH+VywUrNLpGFrJhJPnMJUPxg/2Gv69mJClFmMOs5hK2wS8tYA9NEPUpmhHkDgx+qsSKiFb1wJjmW9dCZ61k+yXA49EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjfb3z7H; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y2zF76gp"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7ShD33027792
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 02:28:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745911723;
-	bh=Xji29AeQrTuafVznn9jEAm/SluSXzCm1zJ/2Vyy1tQc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=y2zF76gpa+SIgv1ror2rHkxg2ODljwtgFqzAZCtzqmexgGqqQdoaD7WqfW+FSE4vg
-	 0FPsUOHM7P6UG9PhGEeUQXHh+y+ErhLeDE1bVk1AzHKbJgAi8njWe33iDrz+wD4H+P
-	 4K9pNAoPlDgS4oJ3jxeNAMKMgisvHgtCElJCoQ6I=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7ShN6051172
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 02:28:43 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 02:28:42 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 02:28:42 -0500
-Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53T7ScOc110802;
-	Tue, 29 Apr 2025 02:28:39 -0500
-Message-ID: <ce025a6f-abf3-44aa-b011-848deea4c309@ti.com>
-Date: Tue, 29 Apr 2025 12:58:38 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjfb3z7H"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a064a3e143so2844631f8f.3;
+        Tue, 29 Apr 2025 00:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745911760; x=1746516560; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nB16d46ObHB8u6nVtTntzLBupJconoj9kwzJ3jXfuGc=;
+        b=cjfb3z7HgVlMwTSZR0xxtVAY8DtxyXxYQmZ/FDFrvM84bDjGXOo2IdSu4EV7cLv2/d
+         csOpQI6azrpIQJxl+MTfTTYU01aZR38Wcg7h8n7aZ5MUlqixidFDsBHuPWTguuY/oFUT
+         Zz5q7fh27/wHN0ZW929ZhyDlNZngBxVtRVGBPss4mKLikVqy6SnJy6OpdO0dhRV0ynaj
+         dYaDc/CSg8URRpDbva2arP8M04Q+wylDc9csQvMymCmwcLRYn0IlChhWHLIBGVGJtly/
+         CyWB4C1lwg129CySWVQ/Tm4gQewTnGMUD3vnl+MfGHLB845eAtfRQedCswaxtQUhKIRR
+         CEvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745911760; x=1746516560;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nB16d46ObHB8u6nVtTntzLBupJconoj9kwzJ3jXfuGc=;
+        b=Q+DZ1xGSLzkm0sHK/AhVTI6HOUgIQdfgHb5hYeyOZMm1tDIqvVHPRUPNk1TRia6xrK
+         On8LhNrq0HHQyqO8aXM7fDJKPyiSLk5DK/pj9X4BfhXkt92dxvCtmOQ3U8YSPlLhwGOZ
+         u6ybSle/r1BwFtgxeyg8cU6l09JWFZaH/hn6KDx9+17RpEPuPXFdNTe+M2WwlgKM2hgM
+         knBrzpKLzfloNqKPKeH9rpok+t4KfILlOYk8tDs7NdzxqU8bSbnsv5rj1LX2CYakHCDv
+         H5P9QlI8/3IpIutN3Z2dkHWXPva0/Fl8ItQCY0rzTRJlYslVV39Z5XuqLa9DacEIPe5y
+         anRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrjJFEQX+WZXnbr3VXiIaHolz+3xTnHWKuwOp2L7IX5GhVfb0F84bUQm1F3htZorufwRAHzCJEYjZgS60q@vger.kernel.org, AJvYcCWHkHZspCQMf6FzWhgrV9qI6cnO8CP8m8r1XdozXKjerHkVJzJVwj8/45pi5bd2UnO4bixsu4S/LiWNGVH+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSVgHPrRnBuZLP/MezfGVUCc/MRGXRzt8vbuT/VylZ3bf55CmT
+	OR+MoNycHagJDTgYIdIfTprNAklQwTbWwSHEpDU9jZFX4K5Ohh0KQiQFREG2/wZlm5gwIpwp+Z5
+	4Byb+S/35aLTq47Pt5YR3UMkZ/Q==
+X-Gm-Gg: ASbGnct2OlNBCC6wbvz4Tz3MDLRGs5P+sLpkA+58eW2DeS74gQvtWS0nINFI4aMK4NP
+	vuV/yG59OvzVjjArlMbfckIA+xxPRRSUjTLLw18oNKCWO7OgljY9yLZTyY3CXajqzTN701dJSWQ
+	ieTTl6dzWJTSKHjC4S+6Lb/A==
+X-Google-Smtp-Source: AGHT+IGYH+/K1GZOU/QSl1r2kiF4KEFaj1inSbQnOFj14BW9qXm19tT4T3PO/rKmu2OgA58JjsRPNok7uGYGfI+sRlY=
+X-Received: by 2002:a05:6000:144b:b0:390:d6b0:b89 with SMTP id
+ ffacd0b85a97d-3a0894a3cbdmr2251940f8f.50.1745911759877; Tue, 29 Apr 2025
+ 00:29:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] arm64: dts: ti: k3-am68-sk/k3-j721s2-mcu: Add
- bootph-all property to enable Ethernet boot
-To: Nishanth Menon <nm@ti.com>
-CC: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250425051055.2393301-1-c-vankar@ti.com>
- <20250425051055.2393301-2-c-vankar@ti.com>
- <20250425212427.vvyocc4mmne5g3vq@vividly>
-Content-Language: en-US
-From: Chintan Vankar <c-vankar@ti.com>
-In-Reply-To: <20250425212427.vvyocc4mmne5g3vq@vividly>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
+ <aA8yFI2Bvm-lFJTl@hovoldconsulting.com> <CAMcHhXpmii=Rc9YVeKXaB17mYv0piSFs02K=0r8kWe5tQGk7eA@mail.gmail.com>
+ <aA94yOjsayZHNDpx@hovoldconsulting.com> <aA+N8YHX0DZ6h9Uj@linaro.org>
+ <CAMcHhXpG-1AP7qP6bAfFcdxtDxsC+_3TYFqwByp5pkFiRYvmJQ@mail.gmail.com> <aBB3ElgEoCF6yYNY@linaro.org>
+In-Reply-To: <aBB3ElgEoCF6yYNY@linaro.org>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Tue, 29 Apr 2025 09:29:08 +0200
+X-Gm-Features: ATxdqUG_WUVY9yNmdKHgJ7MZ0Rv5ZBxNNJhPW4Q15-XQGQ2pSpWhkKi8ojC-FfY
+Message-ID: <CAMcHhXpstN-g5idywuJbUxeKNqMUTTV=HQ6qvo0_Ann+-mEUbA@mail.gmail.com>
+Subject: Re: drm/msm/dp: Introduce link training per-segment for LTTPRs
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com, 
+	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, laurentiu.tudor1@dell.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Nishanth,
+On Tue, 29 Apr 2025 at 08:52, Abel Vesa <abel.vesa@linaro.org> wrote:
+>
+> On 25-04-28 20:23:45, Aleksandrs Vinarskis wrote:
+> > On Mon, 28 Apr 2025 at 16:17, Abel Vesa <abel.vesa@linaro.org> wrote:
+> > >
+> > > The change itself makes sense though and I think makes sense to be marked as a fix.
+> >
+> > Just to confirm, you mean to mark as fix only the 1st patch, correct?
+> > Since it's obvious now that the currently present partial LTTPR
+> > support did not break anything that used to work.
+>
+> Well, the way I see it, the LTTPR support is broken on some specific
+> docks, even if it works in most cases. And since this fix improves
+> the already working cases and fixes broken ones, yes, add the Fixes tag
+> to the 1st patch only.
 
-On 26/04/25 02:54, Nishanth Menon wrote:
-> On 10:40-20250425, Chintan Vankar wrote:
->> Ethernet boot requires CPSW nodes to be present starting from R5 SPL
->> stage. Add bootph-all property to required nodes to enable Ethernet boot
->> on AM68-SK and J721S2-EVM.
->>
->> Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
->> ---
->>
->> Link to v2:
->> https://lore.kernel.org/r/20250302153502.181832-2-c-vankar@ti.com/
->>
->> Changes from v2 to v3:
->> - Removed "bootph-all" property from "mcu_cpsw" node as suggested by
->>    Vignesh since child node already has that.
->>
->>   arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 3 +++
->>   arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 3 +++
-> 
-> Why does every board that uses j721s2 need to have bootph-all for
-> cpsw? Is network boot mandatory boot mode for all boards? That does
-> not sound right. Just do them in the board file please.
-> 
+That is not entirely correct. Current LTTPR initialization [1] does
+properly set LTTPR to transparent, and then non transparent [2]. In
+this case LTTPRs are expected to be trained per link, but are not. It
+is reasonable that LTTPR(s) may not work as expected, as they are not
+link trained as expected, and now they are not in transparent mode
+(anymore).
 
-I have posted next version with your changes at here:
-https://lore.kernel.org/r/20250429072644.2400295-1-c-vankar@ti.com/
+It does work with X1E onboard LTTPR and a simple external display, but
+that is about it. It does not work with _any_ dock that has LTTPR. Or
+basically anything that has yet another LTTPR in its way. Given that
+max length of DP cable at full bandwidth is 2m, and docks typically
+have 50-100cm built in cable for PC connection, not counting outgoing
+video connection, this basically means that any DP1.4 and onwards
+docking station (not an adapter/dongle) does not work.
+Additionally, it appears some fancy monitors with Thundebolt/DP alt
+mode ports instead of just DP alt mode also have a retimer onboard
+(might have to do with particular monitor support DP-Out for MST), and
+also do not work in current setup.
+Additionally, it was recently found out that without this series, rhs
+USB Type-C on Lenovo Yoga Slim7x does not work either, which likely
+implies that IO board on the flex cable for that connector features
+yet another retimer.
 
-Regards,
-Chintan.
+I wouldn't say it's broken on some specific docks, rather the other
+way around, current LTTPR support is limited to 1x LTTPR onboard X1E
+devices and nothing else.
 
->>   2 files changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
->> index 5fa70a874d7b..c402d5e288b0 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
->> @@ -344,6 +344,7 @@ J721S2_WKUP_IOPAD(0x008, PIN_OUTPUT, 0) /* (E22) MCU_RGMII1_TD3 */
->>   			J721S2_WKUP_IOPAD(0x018, PIN_OUTPUT, 0) /* (F21) MCU_RGMII1_TXC */
->>   			J721S2_WKUP_IOPAD(0x000, PIN_OUTPUT, 0) /* (F22) MCU_RGMII1_TX_CTL */
->>   		>;
->> +		bootph-all;
->>   	};
->>   
->>   	mcu_mdio_pins_default: mcu-mdio-default-pins {
->> @@ -351,6 +352,7 @@ mcu_mdio_pins_default: mcu-mdio-default-pins {
->>   			J721S2_WKUP_IOPAD(0x034, PIN_OUTPUT, 0) /* (A21) MCU_MDIO0_MDC */
->>   			J721S2_WKUP_IOPAD(0x030, PIN_INPUT, 0) /* (A22) MCU_MDIO0_MDIO */
->>   		>;
->> +		bootph-all;
->>   	};
->>   
->>   	mcu_mcan0_pins_default: mcu-mcan0-default-pins {
->> @@ -626,6 +628,7 @@ &mcu_cpsw {
->>   &davinci_mdio {
->>   	phy0: ethernet-phy@0 {
->>   		reg = <0>;
->> +		bootph-all;
->>   		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
->>   		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
->>   		ti,min-output-impedance;
->> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
->> index bc31266126d0..218290b1840a 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
->> @@ -154,12 +154,14 @@ mcu_conf: bus@40f00000 {
->>   		cpsw_mac_syscon: ethernet-mac-syscon@200 {
->>   			compatible = "ti,am62p-cpsw-mac-efuse", "syscon";
->>   			reg = <0x200 0x8>;
->> +			bootph-all;
->>   		};
->>   
->>   		phy_gmii_sel: phy@4040 {
->>   			compatible = "ti,am654-phy-gmii-sel";
->>   			reg = <0x4040 0x4>;
->>   			#phy-cells = <1>;
->> +			bootph-all;
->>   		};
->>   
->>   	};
->> @@ -562,6 +564,7 @@ cpsw_port1: port@1 {
->>   				label = "port1";
->>   				ti,syscon-efuse = <&cpsw_mac_syscon 0x0>;
->>   				phys = <&phy_gmii_sel 1>;
->> +				bootph-all;
->>   			};
->>   		};
->>   
->> -- 
->> 2.34.1
->>
->>
-> 
+Not disagrees wrt to Fixes tag, just wanted to clarify current state
+and the impact of this change as it is not limited to just 'specific
+docks'.
+
+[1] https://github.com/torvalds/linux/blob/v6.15-rc4/drivers/gpu/drm/msm/dp/dp_display.c#L378
+[2] https://github.com/torvalds/linux/blob/v6.15-rc4/drivers/gpu/drm/display/drm_dp_helper.c#L2926
+
+>
+> I'd even send that first patch separately to ease the merging, but that's
+> probably just me.
+>
+> >
+> > Thanks,
+> > Alex
+> >
+>
+> Abel
