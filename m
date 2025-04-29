@@ -1,171 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D86B268FF9;
-	Tue, 29 Apr 2025 22:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0341C26B972;
+	Tue, 29 Apr 2025 22:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745964420; cv=none; b=HjXSorIwfkOz3Xlccl33VH7xEt9F9kdy/ix1l09OJFjKUGQOKdiaMxFaD9DumNceDyK7HC8bQbqEplc64Csm+cFMX0o96T6V3WC4xXwDHjUYT7SuB1Zuwuqz+UxmjYq8dw1k9WQaMyc8xU1T2VSRpgwWqS7KTy0P7DCwOKvw8Sc=
+	t=1745964661; cv=none; b=dKRG5YkfbSjxIUSpEaIMsfI2j4oGvZVDceC64032MrcVGRh6iRa6eaaKTM/BQrOY5Q5QSC8jD46BQ5b8q1Gev9FY2fq3CLieVdLYcOz4OpQHxy9c+eenLno5AdN+b/5SpO8Gt8fUZ3q8OXzqYmP/WVDxfRJu+DieftcJGV57xUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745964420; c=relaxed/simple;
-	bh=rbjUHm4vjSzvx1jL+WAkU6QZDtxg0tARkYNO803VokE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TuvmgiK6ALWj5/qgwctTINCTGF8p6fLTAInL45xG/7CLtxle7TIMXJunMaJnEVoXEkGETWRwACoBjN/3jKrnTIjV4ZTWyvzmycfI4UZlRu2do4FBNr9TiP1Do4HQlM/1XJrcUu5VjL+nClAtzTLsrp+PCPykdZWeV7FvM/I6Vbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1FaOVp4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745964661; c=relaxed/simple;
+	bh=GqNTtiTxvSw2B7Od27I5dBawehz/1CBbZiKPhBAXy+g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pG45UezBLR14q52akxFJz88yUJ2zJ+R2kMygdtQCImvFpWxw3+WPP6Lzedd44YFwWXsKe13oBWTpRzYXwe/hJNGZaAMnSxehQvdsvr11Ii0aw8klItHkzDI7S1X+1opiiwOtABNnA76yOFwbTxGT1hNa9F/3GG/44EF+i91SPk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZeTLEOHD; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1FaOVp4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA51AC4CEE3;
-	Tue, 29 Apr 2025 22:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745964419;
-	bh=rbjUHm4vjSzvx1jL+WAkU6QZDtxg0tARkYNO803VokE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W1FaOVp4vPjJOVaFgQpccjGeKpQRbecEknN1GqBvoKOQ6E4P+nz6dbQYNZEXu9IpE
-	 JbcKLRKLakHdWad43gUWHVGnNso8m1GCmEfEIqM9E6TkRF+qDdo89DaJYjLlXqWVfM
-	 2nzBDx99ftFBXBozrFAI4jsCUwwaP4JyKf482eyaRqs+hORdoM39rctNgXC6rYRb7g
-	 dkow2i/PFMI+7XCgvNZh5g/440VEVK+SOhceTnB0roYTnQdfG2xV+96kJcwSStSrYm
-	 xIsP+a81krD7lAB/TWTjwaFfSp+5zIXranaMwrCFST2+gdEdmqrXk0QSjPtrl1Fwc+
-	 ns1LNv2vE+5Qg==
-Date: Tue, 29 Apr 2025 15:06:57 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jason Xing <kernelxing@tencent.com>, Richard Cochran
- <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, "Russell King (Oracle)"
- <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next] net: Add support for providing the PTP
- hardware source in tsinfo
-Message-ID: <20250429150657.1f32a10c@kernel.org>
-In-Reply-To: <20250425-feature_ptp_source-v1-1-c2dfe7b2b8b4@bootlin.com>
-References: <20250425-feature_ptp_source-v1-1-c2dfe7b2b8b4@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeTLEOHD"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac7bd86f637so56584166b.1;
+        Tue, 29 Apr 2025 15:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745964658; x=1746569458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wulbu5u6nmYY7TAEYvPimM4g5rhZn504exzjJnSIs0A=;
+        b=ZeTLEOHDTLlwToDftStZFdTEjVcMMEGDt9Pu08oGEEEGno/8EjGpQ7YMzIkNlAR80y
+         OVoK7hwlROHPoEcb67mF2ul9XoVxj+NEW48JFbccJAzTU1fRp4kgbGzzohfhLLhwjiOP
+         aWSDPrwMTYXVGdGHkcYBf2qIAQ4F6yQb9q97dnnbN41xUQi2wUVy0bOT+sWb/YPJiRIT
+         DUjCCnFW1Yl4fy1UVrotA0gH5bOiXOBhivIDnZYgGhKvnWtPBGLm3QK+y12uzDvkKx/S
+         jFLZtkrpQGHV/jRhEM6ZRoKX6Sz00yVLVI88lF8iD6Ag45UMt0FRh7lKmVebZ1ot9f/N
+         7fkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745964658; x=1746569458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wulbu5u6nmYY7TAEYvPimM4g5rhZn504exzjJnSIs0A=;
+        b=rPqNDtw6ICucMIA9b8/5Epp2qakv+1373N8jM6p80JgO4D6I8KdeaikoAJEGNnzii+
+         lbmIaSTNmkX22700DYYpNFFPuMoa6ntAdnBm+GB1pjC5Tt0c7b0HPPBxsUKNBFbXPCvz
+         Um9p1SA2K3Uqv6a7NWUYGsE6l6+OsD/m9f/lha+kJL2aRqpimZbPR/OrtHXXokIpIOTi
+         pvTK0X2LgcIjRJ3z5SLS+NpZXloxkdPVGuEn0iluiDHkILqdjK+nTevs/rvKgSnoSuo7
+         FGe0YOCytBjuoPpp593lVY8fsRswijpUt1VmzdOxVRtIdJfOq2pFBJLqoHYStJTbobkH
+         jawQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDaZ7DhgepaE0jJh8hexWGs8OpEusD8ElNr2udsQddN5H/BzH1WOM4V0gb/Da6HPdSpThFAOB7jM9v@vger.kernel.org, AJvYcCWiCfNbbIbt8kpWbU5IK8d93P5MqJ/6aUJhKirqNdhIMtsBX8+hR+Hqh1AAwIhMNscJBqSNI0NNi3mSNL6k@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFflwczE1Hx/SvYM2QOoNPb7At0gSeS3LQokuHuHdEYlNm29jx
+	IM0z/HX7drK2hYUX8rSKbNCxWG1Vap+XPkHPyD7ptCL7cPHvABf1AOkwCpBe5AVsPN7ZSzVNj87
+	vd4nzD0rpykWtTFzSddgJM1IdX3iCWUwV
+X-Gm-Gg: ASbGncvH1kMGLFi6v17rrMHJ7NHQyaxuz2AP1FLG2hgnlznk9TmeDbniLzPufJ1fLAi
+	byptNqDWBR/d5f0J86fKWONtwOePBTnoGoNYcnQP7/BidGTPuowQqbewo9drL9N0MGTPM6xc8lZ
+	lkmVigay0bNinnPLq48JjP4Q==
+X-Google-Smtp-Source: AGHT+IEP3NhL/X+HGFkP7T+eVwgBMrq8dKdaULUna2iGfDJHUUpnompPv3eQ5Fa7S3ZoUoLz3Wyc3rWUksCJET0ed1M=
+X-Received: by 2002:a17:907:d7c9:b0:ac8:1bbe:1a5b with SMTP id
+ a640c23a62f3a-acedf68c324mr42633266b.9.1745964658156; Tue, 29 Apr 2025
+ 15:10:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1745841276.git.marcelo.schmitt@analog.com> <bede8227189637568f9425cd6848e21be33c2fd2.1745841276.git.marcelo.schmitt@analog.com>
+In-Reply-To: <bede8227189637568f9425cd6848e21be33c2fd2.1745841276.git.marcelo.schmitt@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 01:10:22 +0300
+X-Gm-Features: ATxdqUE51YLYIJWeU7niHWudQb-M0VRI0qqBX2prqt2-zVx1RvrYKOwtW5zXbFI
+Message-ID: <CAHp75VdtpdfXUG08KytBAtrQC2VoaHnPr0-XL1jeqnXUZ-bgwQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] iio: adc: ad4170: Add clock provider support
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 25 Apr 2025 19:42:43 +0200 Kory Maincent wrote:
-> Multi-PTP source support within a network topology has been merged,
-> but the hardware timestamp source is not yet exposed to users.
-> Currently, users only see the PTP index, which does not indicate
-> whether the timestamp comes from a PHY or a MAC.
-> 
-> Add support for reporting the hwtstamp source using a
-> hwtstamp-source field, alongside hwtstamp-phyindex, to describe
-> the origin of the hardware timestamp.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
-> Not sure moving the hwtstamp_source enum to uapi/linux/net_tstamp.h and
-> adding this header to ynl/Makefile.deps is the best choice. Maybe it is
-> better to move the enum directly to ethtool.h header.
+On Mon, Apr 28, 2025 at 3:28=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
+>
+> The AD4170 chip can use an externally supplied clock at the XTAL2 pin, or
+> an external crystal connected to the XTAL1 and XTAL2 pins. Alternatively,
+> the AD4170 can provide it's 16 MHz internal clock at the XTAL2 pin. Exten=
+d
 
-Weak preference for the YAML and therefore ethtool.h from my side.
-That way the doc strings will propagate to more places, like the HTML
-docs.
+its
 
-> diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
-> index ff0758e88ea1008efe533cde003b12719bf4fcd3..1414aed0b6adeae15b56e7a99a7d9eeb43ba0b6c 100644
-> --- a/include/linux/net_tstamp.h
-> +++ b/include/linux/net_tstamp.h
-> @@ -13,12 +13,6 @@
->  					 SOF_TIMESTAMPING_TX_HARDWARE | \
->  					 SOF_TIMESTAMPING_RAW_HARDWARE)
->  
-> -enum hwtstamp_source {
-> -	HWTSTAMP_SOURCE_UNSPEC,
+> the AD4170 driver so it effectively uses the provided external clock, if
+> any, or supplies it's own clock as a clock provider.
 
-when is unspec used in practice? Only path I could spot that may not
-set it is if we fetch the data by PHC index?
+its
 
-> -	HWTSTAMP_SOURCE_NETDEV,
-> -	HWTSTAMP_SOURCE_PHYLIB,
-> -};
-> -
->  /**
->   * struct hwtstamp_provider_desc - hwtstamp provider description
->   *
+...
 
-> diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
-> index a93e6ea37fb3a69f331b1c90851d4e68cb659a83..bf5fb9f7acf5c03aaa121e0cda3c0b1d83e49f71 100644
-> --- a/include/uapi/linux/net_tstamp.h
-> +++ b/include/uapi/linux/net_tstamp.h
-> @@ -13,6 +13,19 @@
->  #include <linux/types.h>
->  #include <linux/socket.h>   /* for SO_TIMESTAMPING */
->  
-> +/**
-> + * enum hwtstamp_source - Source of the hardware timestamp
-> + * @HWTSTAMP_SOURCE_UNSPEC: Source not specified or unknown
-> + * @HWTSTAMP_SOURCE_NETDEV: Hardware timestamp comes from the net device
+> +static const char *const ad4170_clk_sel[] =3D {
+> +       "ext-clk", "xtal"
 
-We should probably document that netdev here means that the timestamp
-comes from a MAC or device which has MAC and PHY integrated together?
+Keep trailing comma when it's not a oneliner assignment.
 
-> + * @HWTSTAMP_SOURCE_PHYLIB: Hardware timestamp comes from one of the PHY
-> + *			    devices of the network topology
-> + */
-> +enum hwtstamp_source {
-> +	HWTSTAMP_SOURCE_UNSPEC,
-> +	HWTSTAMP_SOURCE_NETDEV,
-> +	HWTSTAMP_SOURCE_PHYLIB,
 > +};
 
-> --- a/net/ethtool/common.c
-> +++ b/net/ethtool/common.c
-> @@ -920,12 +920,20 @@ int ethtool_get_ts_info_by_phc(struct net_device *dev,
->  		struct phy_device *phy;
->  
->  		phy = ethtool_phy_get_ts_info_by_phc(dev, info, hwprov_desc);
-> -		if (IS_ERR(phy))
-> +		if (IS_ERR(phy)) {
->  			err = PTR_ERR(phy);
-> -		else
-> -			err = 0;
-> +			goto out;
-> +		}
+...
+
+> +static int ad4170_register_clk_provider(struct iio_dev *indio_dev)
+> +{
+> +       struct ad4170_state *st =3D iio_priv(indio_dev);
+> +       struct device *dev =3D indio_dev->dev.parent;
+> +       struct clk_init_data init =3D {};
+> +       int ret;
 > +
-> +		info->phc_source = HWTSTAMP_SOURCE_PHYLIB;
-> +		info->phc_phyindex = phy->phyindex;
-> +		err = 0;
-> +		goto out;
+> +       if (!IS_ENABLED(CONFIG_COMMON_CLK))
+> +               return 0;
+> +
+> +       if (device_property_read_string(dev, "clock-output-names", &init.=
+name)) {
+> +               init.name =3D devm_kasprintf(dev, GFP_KERNEL, "%s-clk",
+> +                                          fwnode_get_name(dev_fwnode(dev=
+)));
 
-The goto before the else looks a bit odd now.
-Can we return directly in the error cases?
-There is no cleanup to be done.
+Why not %pfw ?
 
-> +	} else {
-> +		info->phc_source = HWTSTAMP_SOURCE_NETDEV;
->  	}
->  
-> +out:
->  	info->so_timestamping |= SOF_TIMESTAMPING_RX_SOFTWARE |
->  				 SOF_TIMESTAMPING_SOFTWARE;
->  
-> @@ -947,10 +955,14 @@ int __ethtool_get_ts_info(struct net_device *dev,
->  
->  		ethtool_init_tsinfo(info);
->  		if (phy_is_default_hwtstamp(phydev) &&
-> -		    phy_has_tsinfo(phydev))
-> +		    phy_has_tsinfo(phydev)) {
->  			err = phy_ts_info(phydev, info);
-> -		else if (ops->get_ts_info)
-> +			info->phc_source = HWTSTAMP_SOURCE_PHYLIB;
-> +			info->phc_phyindex = phydev->phyindex;
-> +		} else if (ops->get_ts_info) {
->  			err = ops->get_ts_info(dev, info);
-> +			info->phc_source = HWTSTAMP_SOURCE_NETDEV;
+> +               if (!init.name)
+> +                       return -ENOMEM;
+> +       }
+> +
+> +       init.ops =3D &ad4170_int_clk_ops;
+> +
+> +       st->int_clk_hw.init =3D &init;
+> +       ret =3D devm_clk_hw_register(dev, &st->int_clk_hw);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
+> +                                          &st->int_clk_hw);
+> +}
 
-Let's move the assignment before the calls if we can?
-Otherwise someone adding code below may miss the fact that err may
-already be carrying an unhandled error.
+...
 
+> +       ret =3D ad4170_clock_select(indio_dev);
+> +       if (ret < 0)
+
+Why ' < 0' part?
+
+> +               return dev_err_probe(dev, ret, "Failed to setup device cl=
+ock\n");
+> +
+> +       ret =3D regmap_write(st->regmap, AD4170_CLOCK_CTRL_REG, st->clock=
+_ctrl);
+> +       if (ret)
+> +               return ret;
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
