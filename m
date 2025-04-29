@@ -1,49 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893D4250BFE;
-	Tue, 29 Apr 2025 16:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991B4248191;
+	Tue, 29 Apr 2025 16:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945722; cv=none; b=gEYlq17psbOQZl0MPEbYE5QTceLaneb2MECIdfE+id4aOiGuViBOBIQizRR00/hymGKZZdO/VWvZ7zR++I8oTOUPlLztkz+ON2bWMHzMRAYIgezW0OcO34YqxZW7YIrOefuaf5rXd98ehiuYQTAOCoOkBA9FPcP34a/BgZcZuSc=
+	t=1745945780; cv=none; b=Ri9axr/UJj1DLWj16RgES4517PXHG7SzPyU1H0WrDjKkSas+j2ee0lW0u5ZT6jnd+ztAUeIY+ThfG640QObva3OP+X0l7IpX8AvUVNdStxGriEzicoKMSD/jRMgaF1oRABF0hMJnG0wkomit8bJPte807RpBycVDWpDByclZVfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945722; c=relaxed/simple;
-	bh=zOfFyoWEGxCDaELYIHhgqtimzYsmJUad3XFMv+J9Gww=;
+	s=arc-20240116; t=1745945780; c=relaxed/simple;
+	bh=ZBivkq4bsRKPhUyFGxJQG9MmcvXaxlQ9Dd4wSsqIJSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UrcSHM3HMr3nlQT2oJUTLF6I2DQ1guAosaWzxLYiitEc0H2T6tC/cv8UCa/STApHDL2DAZBNmaoIoJvWCJKBxuNr4d6L5QA0BXRsoViuha2xRu8hGrG487wFFCaIT+u4BEG5VpaXp4mnRu5sfjR9ePpAKvp5Hyn1iXcXkvJss28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYga2AQ/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8WKjkMnC/pl3HClMh2B11IHLpcz/e52/6ijQK+93KuzZ3lvyZVufjDOpuYK6b8s8w7eaH0HpjblHr+Mfnr9ywXpKH7VA7N2Q+33GEDqPdsPKf7Qb0W1Vvx4uGduVS3XMN1F1b9C1K+3vRj1OJR0tIZu6Qe+IINU51GyRuoa8ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ho9e5Jmd; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYga2AQ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69EF4C4CEE3;
-	Tue, 29 Apr 2025 16:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745945722;
-	bh=zOfFyoWEGxCDaELYIHhgqtimzYsmJUad3XFMv+J9Gww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYga2AQ/n5CMnGfLO0FrGw4hYy0VS9DZAsGKM8g3JMDjgTvyqNtaCRzsd86TIL2tl
-	 LMq5LcvAYc1YEiGMhkue/+b6Nz7EChrQhsPzOnTdbUDGhtPC7ZjUe9Q7VAU5ufb9qF
-	 EmQByFib7oHXtw1nYB33UXQXD/IJxGTiuNjzHsrqV0drlM/NwrBG1fk4pvaq+Ch4Nz
-	 5B12gH/ch0V0XfCs+y6OBJnjld6CMqzRQOC3X7yEyLFe/i7y5Ox/jwVVlgKMkn4Z/4
-	 GJlzvH5StU9voS8WmcFy9X3YqP2460VMS67lyI3O+uMdhEdoulaiIw5x0UWFRKKue8
-	 usES8/yRhdO2g==
-Date: Tue, 29 Apr 2025 09:55:19 -0700
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] move all VMA allocation, freeing and duplication
- logic to mm
-Message-ID: <202504290954.C391C2B@keescook>
-References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
- <044b4684-4b88-4228-9bf6-31491b7738ba@suse.cz>
- <e5564971-b632-4619-829e-342cdad02e25@lucifer.local>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ho9e5Jmd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=r5rlUDCcvbNorSSfBxhY0Uo2Pju4LLTw7V0kTzWGnw0=; b=Ho9e5JmdTFW+pLmFUi4wNow9wm
+	VXlhmjwcdIcVeswarlOATW52sNWISJ24fB8EbnhqWkVPq5rWXCKE4XW6CCvksmzSNXGu6Rjho0bq/
+	E09xKIHdsgcp/D40bvZt6p8bdcgD1GU2aPoc/q59R6QMlkz38uxPZV9YB6ACDKlDfR3Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u9oFc-00AxlT-0j; Tue, 29 Apr 2025 18:56:08 +0200
+Date: Tue, 29 Apr 2025 18:56:08 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+	Andre Przywara <andre.przywara@arm.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, samuel@sholland.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
+Message-ID: <b98d6bab-d3bb-44d2-9dbf-623dfb673671@lunn.ch>
+References: <20250413134318.66681-1-jernej.skrabec@gmail.com>
+ <6a056bf8-9f39-4204-9378-8cc39be60038@lunn.ch>
+ <4645060.LvFx2qVVIh@jernej-laptop>
+ <4975791.GXAFRqVoOG@jernej-laptop>
+ <2486dae4-c5a5-4df2-8048-87b4b2d46d54@lunn.ch>
+ <CAGb2v66dF8hMmjjJMnpVxM+092q=ZYZ+kT316roZuty6i+rcXQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,46 +51,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5564971-b632-4619-829e-342cdad02e25@lucifer.local>
+In-Reply-To: <CAGb2v66dF8hMmjjJMnpVxM+092q=ZYZ+kT316roZuty6i+rcXQ@mail.gmail.com>
 
-On Tue, Apr 29, 2025 at 11:23:25AM +0100, Lorenzo Stoakes wrote:
-> On Tue, Apr 29, 2025 at 09:28:05AM +0200, Vlastimil Babka wrote:
-> > On 4/28/25 17:28, Lorenzo Stoakes wrote:
-> > > Currently VMA allocation, freeing and duplication exist in kernel/fork.c,
-> > > which is a violation of separation of concerns, and leaves these functions
-> > > exposed to the rest of the kernel when they are in fact internal
-> > > implementation details.
-> > >
-> > > Resolve this by moving this logic to mm, and making it internal to vma.c,
-> > > vma.h.
-> > >
-> > > This also allows us, in future, to provide userland testing around this
-> > > functionality.
-> > >
-> > > We additionally abstract dup_mmap() to mm, being careful to ensure
-> > > kernel/fork.c acceses this via the mm internal header so it is not exposed
-> > > elsewhere in the kernel.
-> > >
-> > > As part of this change, also abstract initial stack allocation performed in
-> > > __bprm_mm_init() out of fs code into mm via the create_init_stack_vma(), as
-> > > this code uses vm_area_alloc() and vm_area_free().
-> > >
-> > > In order to do so sensibly, we introduce a new mm/vma_exec.c file, which
-> > > contains the code that is shared by mm and exec. This file is added to both
-> > > memory mapping and exec sections in MAINTAINERS so both sets of maintainers
-> > > can maintain oversight.
+> > The RX path looks O.K. RGMII-RXID means the PHY should be adding the
+> > 2ns delay. The allwinner,rx-delay-ps = <0> should be redundant, that
+> > should be the driver default. And there are no properties in the PHY
+> > node about RX. All good.
+> 
+> The default action when the property is missing is to leave the hardware
+> settings alone. I admit this doesn't match the bindings.
+
+Please submit a patch fix the binding.
+
+> > TX is the problem. The allwinner,tx-delay-ps = <700> causes the MAC to
+> > add 700ps delay, and 'rgmii-rxid' means the PHY should not add any
+> > delay. But 700ps is too low. It should be around 2000ps. So something
+> > else is adding a delay, or the 700ps is not really 700ps.
+> 
+> Anything is possible. As was raised in a previous reply, it's possible
+> instead of extending the delay range, the decreased the step size and
+> added more steps. The problem is we don't really know.
+
+By poking around with other configuration knobs, i hope we can
+determine if this 700ps actually is 700ps.
+
+> > You say the PHY is a YT8531C. These PHYs also accept
+> > rx-internal-delay-ps and tx-internal-delay-ps properties in their DT
+> > node.
 > >
-> > Note that kernel/fork.c itself belongs to no section. Maybe we could put it
-> > somewhere too, maybe also multiple subsystems? I'm thinking something
-> > between MM, SCHEDULER, EXEC, perhaps PIDFD?
+> > Try setting 'rgmii-id', allwinner,tx-delay-ps = <0>, and both
+> > rx-internal-delay-ps and tx-internal-delay-ps in the PHY node to 1950.
+> > If that does not work, try other values in the PHY node.
 > 
-> Thanks, indeed I was wondering about where this should be, and the fact we can
-> put stuff in multiple places is actually pretty powerful!
-> 
-> This is on my todo, will take a look at this.
+> I don't get why we should ignore the strappings instead of using them
+> as reference or even truth.
 
-Yeah, I'd be interested in having fork.c multi-maintainer-sectioned with
-EXEC/BINFMT too, when the time comes.
+If you don't want the PHY to be reprogrammed pass:
 
--- 
-Kees Cook
+* @PHY_INTERFACE_MODE_NA: Not Applicable - don't touch
+
+rather than one of
+
+ * @PHY_INTERFACE_MODE_RGMII: Reduced gigabit media-independent interface
+ * @PHY_INTERFACE_MODE_RGMII_ID: RGMII with Internal RX+TX delay
+ * @PHY_INTERFACE_MODE_RGMII_RXID: RGMII with Internal RX delay
+ * @PHY_INTERFACE_MODE_RGMII_TXID: RGMII with Internal TX delay
+
+However, if we do pass one of these RGMII modes, i expect the PHY to
+follow them.
+
+> If the strappings worked correctly w/ the
+> generic PHY driver (that doesn't know how to configure the delay mode
+> on the PHY side), isn't it working as intended?
+
+The generic PHY driver is there as a fallback, for when the real PHY
+driver is missing. It is nice if it works, but it often does not in
+current systems.  What we really care about is that the real PHY
+driver works, and the system as a whole follows the DT bindings.
+
+	Andrew
