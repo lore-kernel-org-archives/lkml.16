@@ -1,71 +1,116 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EA2A84E1C;
-	Tue, 29 Apr 2025 22:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4651C8630;
+	Tue, 29 Apr 2025 22:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745964931; cv=none; b=IHchlCCzgGAUZA8JI44/PJRZdhYMIaIPykuocDYKcDKVlVxCUXMKZ3FUks5tR76N2s2A5q48VttRNFRLbL4QCa/I7Wi9UUmlnLlQ+bg+a/l43UAXIqZNmK+K49bIowRG65uvNZMeBwGXBhgweH2M06gx+xD+9lk0Ni/H61p6dew=
+	t=1745965016; cv=none; b=GSdaYCH02rffeNheyK5If7d26pmdFlFBuEDkaIERe9v4gP9e3f/HTKqBajclVdreXq3iNLPlTmG9xhkkH5Zg0zfEEXwR3eVZvrfqaTRExCHVs0UXRrK6uF1uR/QJDZEW5Ov+EOrjgrM5KvxdVpjlMQSUmaYr8fc8S7gvKBPHD10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745964931; c=relaxed/simple;
-	bh=wrBHs/aqHxzTH+bd+y8ax+TSaJ65FScsY+QL7p5N2eY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JyfjyvgOMMQZbplvST/KAkt4Bsc9lw7hFQZXAu7Oz0jc2kKy8QKpzOISbF4wP97l6TewKOgHXn4KwlzGIzQCKpvHHoZKM7hqo4/I8kSWoh+E1tRK+P/D64kgfmBrnnwkTr9kg5E6aVlSDbsrqRxqyJ8cWVstmBy/nckIBOo2OFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD8FE175A;
-	Tue, 29 Apr 2025 15:15:20 -0700 (PDT)
-Received: from beelzebub.ast.arm.com (u203013-lin.austin.arm.com [10.118.28.29])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BBDEE3F66E;
-	Tue, 29 Apr 2025 15:15:27 -0700 (PDT)
-From: Stuart Yoder <stuart.yoder@arm.com>
-To: linux-integrity@vger.kernel.org,
-	jarkko@kernel.org,
-	peterhuewe@gmx.de,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tpm_crb: ffa_tpm: update comment to include 64-bit calling convention
-Date: Tue, 29 Apr 2025 17:15:19 -0500
-Message-Id: <20250429221519.1022170-3-stuart.yoder@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250429221519.1022170-1-stuart.yoder@arm.com>
-References: <20250429221519.1022170-1-stuart.yoder@arm.com>
+	s=arc-20240116; t=1745965016; c=relaxed/simple;
+	bh=m9RrjlA+hLKSFbnlnSAcn5ppzHwNl4WuyjI9nWA63dA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R+2OPla559quIESVmxtc0tsqeQOkhQ19JlYQ9APkKOg+IZHoqSZ46vo1kL1nG+4Xebe1jtK5sHvAiO8ofOtoTqPGzIemVuNTziiFSDo4FP7ulk6n+qskaQMWIw7YQxJi7yYE789E0fEP+184z8gfuscqGwABD1hBEnQFwhtHkb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pn4fgxXB; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn4fgxXB"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25520a289so1046492066b.3;
+        Tue, 29 Apr 2025 15:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745965013; x=1746569813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jWE9Brl0rfnWuNnW+ftgre9u8u4eT9kBgPEjJA4544c=;
+        b=Pn4fgxXBSEX7+jhcNshcLj+Cdr7Mnk1gh3VyyHxmN99Rzg018N5QWc4fkMU0Cn0WJ5
+         cPAZrsMkG6oTItKaO6iaUwSU9CmAobUVriiqy8Z9tgVlIzGkeqk7SB4RMGZbRzjlSCAK
+         /KWLh5GJW7uvTRSzNEf/NbKyvkGNz0gl3cGyQmAN/7j8bpLtu7krECULOhBrCgayVZMZ
+         leCloVpef+3v9dlll41zl8FUT6v2GcGIUqHYDgM0HYmU502FeurwISOPctCxJ6uYOPhm
+         X6vZzFvA4tVWWBRT20dUQRaQR118yGinrtxLHjbQcXmnEI43vFBITO3loqWg+KmJaE5n
+         zwng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745965013; x=1746569813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jWE9Brl0rfnWuNnW+ftgre9u8u4eT9kBgPEjJA4544c=;
+        b=nxLFHRumxMCN+C3RdiXKttq6i/9oYt1jK0LuJeK53ISyg5hm5g5EfEBfsp41zj4sGr
+         rpJwmoi9YzzOaZ3aPafB3ZOMxOWFG6fb74HGdhUFLHPKbdwhiSzGhO4xwZX8TQXf90WG
+         +uz23YSwNCexcub4WuccqqLwEMTKGa1HcuGuhANEfsKFq/B5wxcRpEz+7bA2avalnQDH
+         ftUnJmVZVgfg2cnH7giXxezmVnWuOnIFxRg7q69i26U18ryAC9Ja4+c/CGibFymP4qSi
+         rjLTpFA6Nz1WO6aGIDZ++s7SBH2sPknQVOsMlgRAJ1biIsU5avBlEpgQkN4DkXx05FPg
+         4Q7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWv4v3dMbJTLx2+W37V9nHHHfXnfof9BlrbyZ0yUOZan76I9F1/jf9kdCaja6EiO8nEPKH6FWxdRi7PcBk/@vger.kernel.org, AJvYcCXjRjcahzLegrd/PHt7uznLBDmgIM+ctB3Vr1P/jV15KFBAN6u2glN1oaXWIdKd/arvEqgiP1o/Ld8p@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrUfAvNeix8mpDFvUk7Z1NlL9VQyv4fwuicAz9wC1CBsmp/8ua
+	9rsD4RikI+KNR8O63CPad5rSDKzfwKYbyr96gn+TTjoXllXRNLyfAqPendZ31wTYJBy9eqxkuaT
+	DCr2hMetGQslvY/nopQVZdDpW/o8wJsr7
+X-Gm-Gg: ASbGncvfYfpEo1y4CdupjLbr90iZVWGp9HPihQOcPzaXDB/iAU0oZAjqqcxN7HXeeed
+	ZAz6C9UpSc4LfQ9QwrQc6mPwInWNJAXobz5NousiUyP3ZChNXbykB77wcb259yeWocdyC3YVOrF
+	xVhFoYD6SksK3N/wVRD5vMzg==
+X-Google-Smtp-Source: AGHT+IEb6dTbElip3EmWSrC2X4SHc8Rt6utXcnf8GLabFkhFihwLjXxB/SJlsMV7raaDAm/3PFi30D8huLEx4T1VZOw=
+X-Received: by 2002:a17:907:944a:b0:ace:d442:e3a0 with SMTP id
+ a640c23a62f3a-acedc6ffde9mr91026066b.39.1745965012492; Tue, 29 Apr 2025
+ 15:16:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1745841276.git.marcelo.schmitt@analog.com> <c249f5c7ee07583b65cd40b0fc6f1faa79c3bfe9.1745841276.git.marcelo.schmitt@analog.com>
+In-Reply-To: <c249f5c7ee07583b65cd40b0fc6f1faa79c3bfe9.1745841276.git.marcelo.schmitt@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 01:16:16 +0300
+X-Gm-Features: ATxdqUFdJ9EegEBEA6QqF8ZxYeOXvJ-WRQFYJ3QV1-4y42J2gHYRasVrA_38ug8
+Message-ID: <CAHp75VcCgcOd4z7OYm67ijpad2NjmEBOM5gMJHyWbjd2M9-hkw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] iio: adc: ad4170: Add support for internal
+ temperature sensor
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The comment for DIRECT_REQ and DIRECT_RESP only mentioned AArch32
-and listed 32-bit function IDs.  Update to include 64-bit.
+On Mon, Apr 28, 2025 at 3:29=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
+>
+> The AD4170 has an internal temperature sensor that can be read using the
+> ADC. Whenever possible, configure an IIO channel to provide the chip's
+> temperature.
 
-Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
----
- drivers/char/tpm/tpm_crb_ffa.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+...
 
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-index 65b01a46d4b88..134747911ba38 100644
---- a/drivers/char/tpm/tpm_crb_ffa.c
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -38,9 +38,11 @@
-  * messages.
-  *
-  * All requests with FFA_MSG_SEND_DIRECT_REQ and FFA_MSG_SEND_DIRECT_RESP
-- * are using the AArch32 SMC calling convention with register usage as
-- * defined in FF-A specification:
-- * w0:    Function ID (0x8400006F or 0x84000070)
-+ * are using the AArch32 or AArch64 SMC calling convention with register usage
-+ * as defined in FF-A specification:
-+ * w0:    Function ID
-+ *          -for 32-bit: 0x8400006F or 0x84000070
-+ *          -for 64-bit: 0xC400006F or 0xC4000070
-  * w1:    Source/Destination IDs
-  * w2:    Reserved (MBZ)
-  * w3-w7: Implementation defined, free to be used below
--- 
-2.34.1
+> +               case IIO_TEMP:
+> +                       /*
+> +                        * The scale_tbl converts output codes to mV unit=
+s so
+> +                        * multiply by MILLI to make the factor convert t=
+o =C2=B5V.
+> +                        * Then, apply the temperature sensor change sens=
+itivity
+> +                        * of 477 =CE=BCV/K. Finally, multiply the result=
+ by MILLI
+> +                        * again to comply with milli degrees Celsius IIO=
+ ABI.
+> +                        */
+> +                       *val =3D 0;
+> +                       *val2 =3D DIV_ROUND_CLOSEST(chan_info->scale_tbl[=
+pga][1] * MILLI,
+> +                                                 477) * MILLI;
 
+Do not wrap lines like this. Use a logical approach, i.e. the '477) *'
+part should be on the previous line.
+
+> +                       return IIO_VAL_INT_PLUS_NANO;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+
+--=20
+With Best Regards,
+Andy Shevchenko
