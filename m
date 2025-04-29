@@ -1,104 +1,98 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE072206A3
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77F1D2FB;
+	Tue, 29 Apr 2025 15:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940124; cv=none; b=AcdlR8rIFm1fzTvHNZFTBBCCtEbTBzWqsorfVaGWkCYRiJ4wqgZs5gvOGjWG56l08tw2JmyxeaC2YSvINMbaujA5qhpcUWDCiKGYVRtC5TjriYKsG61He4DjpEWXvaTs+egzJPsjk/coGScabuypdE5Jn7ZAAepY0TKppCMfA58=
+	t=1745940167; cv=none; b=puLXp09J5QFARGM8WzAtErLS518QTj9bf1mK4mB21mic/8Ck+sw0v/AnTGEwN6G+lr110OCq6dMg1RoUQtv37VW+9NGhBtQeI++97VT0iQTMyCGkAITFBXxyw/Ets+IBu9CIMff6XGcVHEdccwUECKQe0VZ0Y+l4E409VPMsG5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940124; c=relaxed/simple;
-	bh=eTm8uUOjEA2yj6gyEF2Wj5Q6fv0haX5JFNB0Clpjs/o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UoTKiC/Zqk88184TmorSdttLy9gMDlDVy/7yBj8ENZACl937TW+swWzRxvDWIntoAiSCv7f2iNx0cYzqLEio9eT/1jlp6ZWRTtW2OktbmTQt2SYmtDDsJCEFtsghv3a6ypkJ/aBWLFDPjF3HxMq7DIMEeosXKHpQ9JHGYAShuVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YSWjDd86; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745940167; c=relaxed/simple;
+	bh=sLZTqkYX+I6t5xbGQiBFcDp6YarT8zcQhgI0CSYOOCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LnVZbKUON/nF56bjIf55csPTa0ZjFWLCHLh7bfo7QMbWzjC+4zRd09UPCzOGYYTEAI3OIoiDFA4/orXGYGqc6dsmgasJTwgSLg6MAx7OBhipWvA+erB1KMKHB9WklhKQnAgCythDPbzOMc4dTbcN/g1RjXRjxg8X0gpVUtGoZzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xz3vLE3Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSWjDd86"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3087a703066so5876615a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745940122; x=1746544922; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aNk7xuT0f0Cef+C938NHaMgqXngD7O4h38pLZxapbNs=;
-        b=YSWjDd86r2ThzV3EF7G4IMgG5Fb2415C5I2rotOspfhWTRxA0vJ37hxPYZHe4gw+wa
-         i6kXHbcEfaiKwnlX8dEo4UAmmzGUBBf29LHYYZ06LpFvnK7WKroeLpQ83muEB0to6wRV
-         lPI6pcGwOhcOadlGmtBWqFUkIJFbQfCotZQFQAi9Y0lH8x8q1d015+Izhjrc6tSVoOJL
-         tFxtivNGgHNsMnn9r3DTMX7VAS+QFPrOZghls354S5w+RF5afgnUxHqtbi6BPGGFpBwC
-         zhuRqqjWRdhC9qhYLn3vzyNyY5wQIaSJsg9NZ7KND6rgDpYQxIX10hHkud2pnrPord1A
-         wlWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745940122; x=1746544922;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aNk7xuT0f0Cef+C938NHaMgqXngD7O4h38pLZxapbNs=;
-        b=wCR6LP+Iiol4Zjpdd8xuehPwQnesyVLMM45VYRVTVj8zVahC4ycjTq9Bmpw+eCNsuZ
-         SnJb29A481VDgOdRrnVQOD04O8kO9Oj9WECVXQqWmgmxRF0cMgwOGvXm7oQGR2IkkErS
-         bRvTsG+a2Dg5JzP2gcfTHrVuzybuKL+KFCrEdPw0jC4UOI4wIF4VSxQ9v6tchCb1SBJT
-         eZ8keEhKYZRot7wp8ghk5UOnX7CIbCUXXwod13Th6YvEof7ebq7RT2xryPoaqOrizq8i
-         u9ni6qyToAspzufxnLJ1CaDseOV6KhfvAqG1P9DDXL0TU1Bav3eTfzbcEw+ZxBt74feT
-         g3hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUizG9F6KsCuGpCVOHXU7eGizhov5WoCGMibaAotUWEoNWMJmcTrbjzjHtAEKh3fzIlKt61+xqJGwyMcbI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynuQJ0Vi+jyagAEhlTU90iEaHctAKp5gpTWWAgzmZzvjg72rIM
-	riSTwIu/RYIP2ZnkoxyJlJKDyFQvnEd9fiT8n0tlKIKJhEfBvbLNejTo5Vx/rFAOUztXYWutYn4
-	1xw==
-X-Google-Smtp-Source: AGHT+IFYXh1I3s4XEFN65uVfk6oHWBn6YIlt2ZFbuISXBnP3zzgosLfAG8nouUaaQl7BdvugXwDdfe4pOcI=
-X-Received: from pjbsg5.prod.google.com ([2002:a17:90b:5205:b0:2f2:e97a:e77f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1e4b:b0:2ff:64c3:3bd9
- with SMTP id 98e67ed59e1d1-30a0139a0b8mr15921485a91.23.1745940122452; Tue, 29
- Apr 2025 08:22:02 -0700 (PDT)
-Date: Tue, 29 Apr 2025 08:22:00 -0700
-In-Reply-To: <8f03878443681496008b1b37b7c4bf77a342b459.1745866531.git.thomas.lendacky@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xz3vLE3Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02CDBC4CEE3;
+	Tue, 29 Apr 2025 15:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745940167;
+	bh=sLZTqkYX+I6t5xbGQiBFcDp6YarT8zcQhgI0CSYOOCQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xz3vLE3YgOtNoghCWwd+di0me0x3CibIHQ6DTZE5k5vBifjscY/i/WSHYvlG+i/Z4
+	 yCUXEGZv0LKOy014aI7FyfqUWvmD9dfmyvu3kSmzlax7y//kLQ6UUItr/8dJi60sIp
+	 vhqdbgXDVYEyPmfxEBD6GTBuHmWaIJBdO1fZbgQL60af5yBx0yl/5k8A3dqOSiTkYl
+	 sRSNUJYGikrZEYts+C1wO8RrlTpepXL3zORcrY8aUJNscuUCdxMmrf4/HfPZxpae05
+	 EekrL2CWwW44KPdkIKp2hQgefenk2N3n/0pS8enatpwTkJcNOEYwmpfx1UMOpKzXvy
+	 rluDQZwMtX0/A==
+Message-ID: <c3855595-d8b4-4b4b-b1fb-0efa44d064b0@kernel.org>
+Date: Tue, 29 Apr 2025 09:22:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <8f03878443681496008b1b37b7c4bf77a342b459.1745866531.git.thomas.lendacky@amd.com>
-Message-ID: <aBDumDW9kWEotu0A@google.com>
-Subject: Re: [PATCH] KVM: SVM: Update dump_ghcb() to use the GHCB snapshot fields
-From: Sean Christopherson <seanjc@google.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next] ipv6: sr: switch to GFP_ATOMIC flag to allocate memory
+ during seg6local LWT setup
+Content-Language: en-US
+To: Andrea Mayer <andrea.mayer@uniroma2.it>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc: Stefano Salsano <stefano.salsano@uniroma2.it>,
+ Paolo Lungaroni <paolo.lungaroni@uniroma2.it>,
+ Ahmed Abdelsalam <ahabdels.dev@gmail.com>
+References: <20250429132453.31605-1-andrea.mayer@uniroma2.it>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20250429132453.31605-1-andrea.mayer@uniroma2.it>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025, Tom Lendacky wrote:
-> @@ -3184,18 +3189,18 @@ static void dump_ghcb(struct vcpu_svm *svm)
->  		return;
->  	}
->  
-> -	nbits = sizeof(ghcb->save.valid_bitmap) * 8;
-> +	nbits = sizeof(svm->sev_es.valid_bitmap) * 8;
+On 4/29/25 6:24 AM, Andrea Mayer wrote:
+> Recent updates to the locking mechanism that protects IPv6 routing tables
+> [1] have affected the SRv6 networking subsystem. Such changes cause
+> problems with some SRv6 Endpoints behaviors, like End.B6.Encaps and also
+> impact SRv6 counters.
+> 
+> Starting from commit 169fd62799e8 ("ipv6: Get rid of RTNL for SIOCADDRT and
+> RTM_NEWROUTE."), the inet6_rtm_newroute() function no longer needs to
+> acquire the RTNL lock for creating and configuring IPv6 routes and set up
+> lwtunnels.
+> The RTNL lock can be avoided because the ip6_route_add() function
+> finishes setting up a new route in a section protected by RCU.
+> This makes sure that no dev/nexthops can disappear during the operation.
+> Because of this, the steps for setting up lwtunnels - i.e., calling
+> lwtunnel_build_state() - are now done in a RCU lock section and not
+> under the RTNL lock anymore.
+> 
+> However, creating and configuring a lwtunnel instance in an
+> RCU-protected section can be problematic when that tunnel needs to
+> allocate memory using the GFP_KERNEL flag.
+> For example, the following trace shows what happens when an SRv6
+> End.B6.Encaps behavior is instantiated after commit 169fd62799e8 ("ipv6:
+> Get rid of RTNL for SIOCADDRT and RTM_NEWROUTE."):
+> 
 
-I'm planning on adding this comment to explain the use of KVM's snapshot.  Please
-holler if it's wrong/misleading in any way.
+...
 
-	/*
-	 * Print KVM's snapshot of the GHCB that was (unsuccessfully) used to
-	 * handle the exit.  If the guest has since modified the GHCB itself,
-	 * dumping the raw GHCB won't help debug why KVM was unable to handle
-	 * the VMGEXIT that KVM observed.
-	 */
+> 
+> To solve this issue, we replace the GFP_KERNEL flag with the GFP_ATOMIC
+> one in those SRv6 Endpoints that need to allocate memory during the
+> setup phase. This change makes sure that memory allocations are handled
+> in a way that works with RCU critical sections.
+> 
+> [1] - https://lore.kernel.org/all/20250418000443.43734-1-kuniyu@amazon.com/
+> 
+> Fixes: 169fd62799e8 ("ipv6: Get rid of RTNL for SIOCADDRT and RTM_NEWROUTE.")
+> Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+> ---
+>  net/ipv6/seg6_local.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
 
->  	pr_err("GHCB (GPA=%016llx):\n", svm->vmcb->control.ghcb_gpa);
->  	pr_err("%-20s%016llx is_valid: %u\n", "sw_exit_code",
-> -	       ghcb->save.sw_exit_code, ghcb_sw_exit_code_is_valid(ghcb));
-> +	       kvm_ghcb_get_sw_exit_code(control), kvm_ghcb_sw_exit_code_is_valid(svm));
->  	pr_err("%-20s%016llx is_valid: %u\n", "sw_exit_info_1",
-> -	       ghcb->save.sw_exit_info_1, ghcb_sw_exit_info_1_is_valid(ghcb));
-> +	       control->exit_info_1, kvm_ghcb_sw_exit_info_1_is_valid(svm));
->  	pr_err("%-20s%016llx is_valid: %u\n", "sw_exit_info_2",
-> -	       ghcb->save.sw_exit_info_2, ghcb_sw_exit_info_2_is_valid(ghcb));
-> +	       control->exit_info_2, kvm_ghcb_sw_exit_info_2_is_valid(svm));
->  	pr_err("%-20s%016llx is_valid: %u\n", "sw_scratch",
-> -	       ghcb->save.sw_scratch, ghcb_sw_scratch_is_valid(ghcb));
-> -	pr_err("%-20s%*pb\n", "valid_bitmap", nbits, ghcb->save.valid_bitmap);
-> +	       svm->sev_es.sw_scratch, kvm_ghcb_sw_scratch_is_valid(svm));
-> +	pr_err("%-20s%*pb\n", "valid_bitmap", nbits, svm->sev_es.valid_bitmap);
->  }
+Reviewed-by: David Ahern <dsahern@kernel.org>
+
