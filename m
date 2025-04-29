@@ -1,92 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5365421883E
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BD515ECD7;
+	Tue, 29 Apr 2025 15:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745939041; cv=none; b=up2hr9CwziTa+/rkcw1LEQdB4oeMjQWsmcrAOLuMnD5WCbT+vUY13zYnuuno3xWWjE/Wh3GfdMDctPUVqu6FHLgOfYLbugOsyEtOUSe4RGQNavLWGBEXIzeccGe59LI9TBQ6kzcSDgRm5DrZg4GtTke+NdS1EVt7o6Fy7XqPvDc=
+	t=1745939073; cv=none; b=jQ8PFy2baGGQKUTZDxvdwPl4ximRggO2knv1c09HSjscmfpQhB/vy2EdexopA4U422jfxZS0OTKHd+KyzajScqu+i5pQtnqvOxpjMHdVGbuOFetYopBDUoWJTCHwiCJMeLtnDDODX2kccHR0Ym2+mmf4eHW76gKyoX553qfasRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745939041; c=relaxed/simple;
-	bh=07G9Y0+nqlY03fvr8srBQeJEfqq0mWj7H4qgzsSSMC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eTXvSXOTdwCV17DtUq8Y5yjd3XIkV7gMizQRevdxymiT1JeddrWy6vLWEkd9+OF5TohNcqJawZE2RvXC/VrT+3NaIUhYWcjPOViGIJQY+3vok3T8Se7Z2GJKjqm9vJWUJp4nOfBfQ5cbslXPGOkMrO93eimEGxQpmb0cH3hIAmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2RSriF1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745939073; c=relaxed/simple;
+	bh=s+dqfUER89a3JkvdwJj38VZEwi2MYDoscKEOg30Hc2k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qtww1vUyoUhLnv/cncyXWXjuSJOTFhH4lhWBb8FFwqRc/8VXaTl/ZAq9Vzz6AV24A4sWOlpkGctr4RdIndAXueWil/VyjoKlNzA5CGZjCk8l18SoJ5/r2PN8lOGwBdDdnFMptIkJOmXJ5164iLiNfFnVKAW04B9vWwRi544axK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNPrl6JG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2RSriF1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA8E5C4CEE3;
-	Tue, 29 Apr 2025 15:03:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNPrl6JG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C86A4C4CEE3;
+	Tue, 29 Apr 2025 15:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745939040;
-	bh=07G9Y0+nqlY03fvr8srBQeJEfqq0mWj7H4qgzsSSMC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2RSriF1PYemUlOEM4eytLR7EQokiggwNpQWL0brlA0py7t88h57IFIcL3nc5JPlr
-	 zCEIvgdOJeWphGywZ/RdE3vyNdiDgxakgkRvo8c5nD9A+l8FFq94QHjjT6CL3E7iQD
-	 +098om27DJSagNnfegkQWkf90HjK3jV2dh7n9xJvapwQSzFEtyQuLE3O+aKosQPIzQ
-	 PWsy1RFZv3tZbkoSWBEeBtLsfLMRcnP+abFPekl8OrQKHAU9m66tMiwhjoC1X6b8EX
-	 KL2W+7To5tAf31adc5+48VNfVCFm1h1z3tMqjdEWqeuGGTOIegkqrdycZSIQPOmxaN
-	 u4KpDbEcNoCrw==
-Date: Tue, 29 Apr 2025 16:03:54 +0100
-From: Will Deacon <will@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: tglx@linutronix.de, ruanjinjie@huawei.com, catalin.marinas@arm.com,
-	oleg@redhat.com, sstabellini@kernel.org, peterz@infradead.org,
-	luto@kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de,
-	paulmck@kernel.org, mingo@redhat.com, dietmar.eggemann@arm.com,
-	linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-	joey.gouly@arm.com, kevin.brodsky@arm.com, dave.martin@arm.com
-Subject: Re: [PATCH -next v6 1/8] entry: Split generic entry into generic
- exception and syscall entry
-Message-ID: <20250429150353.GA26272@willie-the-truck>
-References: <20250213130007.1418890-2-ruanjinjie@huawei.com>
- <20250320142612.396250-1-linus.walleij@linaro.org>
- <CACRpkdZKaUtnv0HfTci1-_WekNkmJyNA3znx7cUgJW5NNDAYVg@mail.gmail.com>
+	s=k20201202; t=1745939072;
+	bh=s+dqfUER89a3JkvdwJj38VZEwi2MYDoscKEOg30Hc2k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XNPrl6JGv+VPNanarkk/lmzMuu6C6MbsA/LPJZquW9xxwX3kaRXRQYY2x0hKn3O7T
+	 ofcUwG30PxA3YlubAEOXm9hFwAOD//lYJ1OZZkZSYYYP9XlWmulhG1lTdqAvstPsDS
+	 FBtaWO3JNFSFvBiZ5Ixz4vMl5YHvp1Qwi9TlgZ9LTOiRTro1Qy5NR7m+gNsE+6/1tz
+	 h9sfv25yRbubVlLko7k9dwwS2reCPYxIrT3PBL0KnwTYXaQtiUzuFrWyEz6YaSrhsi
+	 8g6LECvMGlFyvT1Nt3hiBVHhgKkM7r4+F7HpTTVhjhyRjC4nJCCZZuWcBWHt+6rjfJ
+	 CN81DIHHvvY0Q==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH] rust: device: allow `dead_code` for `Device<>::parent()`
+Date: Tue, 29 Apr 2025 17:03:46 +0200
+Message-ID: <20250429150346.392050-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZKaUtnv0HfTci1-_WekNkmJyNA3znx7cUgJW5NNDAYVg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Apr 28, 2025 at 04:46:02PM +0200, Linus Walleij wrote:
-> Hi Thomas,
-> 
-> On Thu, Mar 20, 2025 at 3:26 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> 
-> > > Currently CONFIG_GENERIC_ENTRY enables both the generic exception
-> > > entry logic and the generic syscall entry logic, which are otherwise
-> > > loosely coupled.
-> > >
-> > > Introduce separate config options for these so that archtiectures can
-> > > select the two independently. This will make it easier for
-> > > architectures to migrate to generic entry code.
-> > >
-> > > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> >
-> > If the generic entry maintainer (hi Thomas) thinks this patch is
-> > OK it would be nice to have it applied because it will also make
-> > the ARM32 transition to generic entry easier as we can work on
-> > exception and syscall entry each in isolation.
-> >
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Do you think this patch is something you could queue on some
-> tip branch for v6.16?
-> 
-> I don't know if either arm64 or arm32 is going anywhere with
-> generic entry for v6.16, but having this in-tree makes it easier
-> to split the task going forward. We can always pull it into some
-> branch or just wait for v6.16-rc1 to get this patch under our
-> patch stacks.
+When `CONFIG_AUXILIARY_BUS` is disabled, `parent()` is still dead code:
 
-Agreed, having the core part merged would be really helpful if possible.
+    error: method `parent` is never used
+      --> rust/kernel/device.rs:71:19
+       |
+    64 | impl<Ctx: DeviceContext> Device<Ctx> {
+       | ------------------------------------ method in this implementation
+    ...
+    71 |     pub(crate) fn parent(&self) -> Option<&Self> {
+       |                   ^^^^^^
+       |
+       = note: `-D dead-code` implied by `-D warnings`
+       = help: to override `-D warnings` add `#[allow(dead_code)]`
 
-Cheers,
+Thus reintroduce the `expect`, but now as an `allow`, and do so as
+`dead_code` since that is narrower.
 
-Will
+Fixes: ce735e73dd59 ("rust: auxiliary: add auxiliary device / driver abstractions")
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+I should have noticed this earlier, sorry. Please feel free to rebase to
+fix it directly there if you prefer.
+
+ rust/kernel/device.rs | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 40c1f549b0ba..e8ab4b9617db 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -68,6 +68,7 @@ pub(crate) fn as_raw(&self) -> *mut bindings::device {
+     }
+
+     /// Returns a reference to the parent device, if any.
++    #[allow(dead_code)]
+     pub(crate) fn parent(&self) -> Option<&Self> {
+         // SAFETY:
+         // - By the type invariant `self.as_raw()` is always valid.
+
+base-commit: ce735e73dd59b169b877cedd0753297c81c2a091
+--
+2.49.0
