@@ -1,206 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD875223;
-	Tue, 29 Apr 2025 08:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745914702; cv=fail; b=lpqIy/SW/Ms0Fpkm69j2uNUjlGhRaMn7NMvFvMCWgDaXd+aYmyx2NlN4d7WSH9yKkdZZgokVwyuIKglXr4CIYfLFYb0mo9RVq2QkEo23weVwIxiuh19JWDpjmNBjSVqCsF66bdSqYXkNQmbE3N9sqMyxxtTug4rcJcKgyzvTRdY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745914702; c=relaxed/simple;
-	bh=0Zkl2BQm32NEuyqUfwPXBmAbJonB/31gkQLWxE51vsk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=JxycBTGTYNseCNjGqdl0rTqtpLGAsTBHenC8QKqBWl1r+BU/arjzEgENeM76XFoMVnk4zWLu54q2R8BimGZEm53e8yPFjKU7/m6hso81CtxTAUg1UdJ+3TsNMNfbUiWY8B2OaB8AXM8EN8G/IMCpjMMLjDTFP5LxdzBhROtFVR0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kJo+CKwF; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ED7279780;
+	Tue, 29 Apr 2025 08:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745914744; cv=none; b=W/KgpcXmmY+fySySZzcW3rC0042kFGYL3YQl31n2Ws7FPrjWDj/NSKA87nNDdsn72oXLnjYP0Z7wiIxuq3rhu8vq9VLgtCl2K/AewvL8Tys3essdWp9x+DCGSK59ksLCEIh1sU8FKr7jSL3H5hhsT1Yy7O4iI/DUY5uRFhCaHzI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745914744; c=relaxed/simple;
+	bh=zdQtr5BpDPtn4WyFu7EVp2u6hZD6bKnsxFgAh2z2mkY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DxKz531ZIGzL2r4cwuneyU1h0PPZIjt83CHEAfI2Zr+2VX5dODn3ybDUnNSypAiI8gvLxZLhjsQer3MLIABMEXKMf9T/M9ADNGiLRlS3zOOuYx5lxVWbdx+uxmu0QoLqs26zYz+1fofBU2QURGtURa83gRfDeCbwr6NcBpS7Fxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/2odkZ8; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kJo+CKwF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745914701; x=1777450701;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=0Zkl2BQm32NEuyqUfwPXBmAbJonB/31gkQLWxE51vsk=;
-  b=kJo+CKwFLd+WfIT6NprpnrkWZuY4dDh4vGA9x7N1CN11gFv2ltnhb7+6
-   uEaZjH+ktyWd0QBSW9Ng3wPw/tXfLHzGFZOkeueCy/C59ly5CuT12mleD
-   TMckCQUeRfhrJVk7O+Y+cY10oIIwAfqC+BSrNCG8gXyRBipcPq0NFNWkY
-   pZl6htpAn18xxGp96/mz4o/rRlNns7k/dmp57auXaFI4RuGYSVsCl9pH0
-   O8y8Nh7wNmx9YAVDUGi9EARIkmYA5YTDzLnsjAqwPEwa9ozJw5OutkSgb
-   jznXZ7Ei31MCFrwB9D7f2qr/QJVcNhis32Uug8BKRXCfkyq7/5helUmBW
-   w==;
-X-CSE-ConnectionGUID: THX/tpsdQ3SxFbcgXGirtA==
-X-CSE-MsgGUID: l7T1L7mrREuPejYbtbwDiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="64946105"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="64946105"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:18:19 -0700
-X-CSE-ConnectionGUID: PrizqI71SCenR9jsF77KHg==
-X-CSE-MsgGUID: Lv8Mi+lFRWq0CaaYw6zrqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="134072754"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:18:19 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 29 Apr 2025 01:18:18 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 29 Apr 2025 01:18:18 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 29 Apr 2025 01:18:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kxCWrn76nIIv/yOu+XwdrXJuTt01WkgqSwa8KXboVm3jrvJN+ggpFqf8aVf21h2dZEUSqSZ7QvYj+zTvdumFx2/EA5ue2dlq1WHBgp//58tCII1m6qjfM/CT7Dya453TMiHRiMwpGg7jXGVU9DbTUsxcgESF6AHVhJqHuyNVF1RjcYLSoYEg91Oc0bOxzsDIYljnOoJX7Sfl73Y6DoKsdlgGq+y5NikdkgoGRVkHM2GtVhrGPatxzLdh5QCFi6tlL2CuMPvajz1VuBB0VJPElAoWisaV3n8Dq93fVPbu37KkeULRCTX127Jb4UF09gjb4dIgzf7bqkbp+w9cP3sNhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HyB40PPj171jp/4rG+DhdE9HDTiW8BzXQTT+iwhTLcg=;
- b=wSmYbPSFTCapHbodKh6yhcCpBRyLoUT2Quaok/KnJFi7JO8r7pVvp4UFSxdOmKlvRe4qe+R9+ETHq0bUw046sbSMDTOdC3kbQV1Nyk8ovSQ07GCSomfA4irKrKGiXolq6OcUcu0xkoLb77vPGXtRSCQyQKdUoEJiekscPOCrcBi40fdv7LHD93/bv6OCGdDmX+oLkZdAUrd/7Q2LRUoPF6440yzrFv84iat2H9ZQ1/efjIDXSJ3JzB6g1DtBj+SnalS86TKRHGFRAX67FJ3/ibNmFFW5wgPRE3DdCJNn3lofKXhkU1WrwhjSSqzzPrxuG5uXNAxQWdiv75GlFtwMfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Tue, 29 Apr
- 2025 08:17:33 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
- 08:17:33 +0000
-Date: Tue, 29 Apr 2025 16:17:24 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Vishal Verma <vishal.l.verma@intel.com>
-CC: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Binbin Wu <binbin.wu@linxu.intel.com>, Rick Edgecombe
-	<rick.p.edgecombe@intel.com>
-Subject: Re: [PATCH v2 2/4] KVM: VMX: Move apicv_pre_state_restore to
- posted_intr.c
-Message-ID: <aBCLFB7BS/vhSAuk@intel.com>
-References: <20250318-vverma7-cleanup_x86_ops-v2-0-701e82d6b779@intel.com>
- <20250318-vverma7-cleanup_x86_ops-v2-2-701e82d6b779@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250318-vverma7-cleanup_x86_ops-v2-2-701e82d6b779@intel.com>
-X-ClientProxiedBy: SI2P153CA0006.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::22) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/2odkZ8"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so47630365e9.1;
+        Tue, 29 Apr 2025 01:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745914741; x=1746519541; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thr7s8KgPtJ22/lvJstaJ+JSkl/4Ybu6j+EVbeRWoxo=;
+        b=X/2odkZ8fQ/xa+dGHfc8L4pCEkTpiktXzP6LCPI3B4ystUvP9Vc/5GsIwNKHlLgbAS
+         D58myk4ND7G3D5c8DnUOBzXqzUJWyQCFjoxOlvL3/x9NDvZncdKoTy9WiZ3TE4OCyEvE
+         u7kib0/tsVg10W2P9eWC0y4YtQ1rDRpEeP2iimEirF0foiLBVL3EEx4HoHQho3RomSaT
+         qA04yLVEbs9RClep384NkuAlWew6QF7bvf6ir8+W/UuqT62U/q6S1reqGJX9bWBKl5kn
+         o5nCwfPApUdGpiuU/mth016flcNOfRemFApcvF9XAXb1KrbeTIb5v8oV4rwqm0I9vhgr
+         9rJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745914741; x=1746519541;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=thr7s8KgPtJ22/lvJstaJ+JSkl/4Ybu6j+EVbeRWoxo=;
+        b=OqtedupjDq/qLSJLY7P+KhKT9+hIwjBVpMJek9uRF9guQ0grJ2h4wZ7YBnf7ynNmHV
+         DJVigfrQf2raynay5HTJ4GxVkP5nbo3p+1bxT649gt5DJojhMZR5jwC0wvtzYu9ZTOpk
+         df88VzMS01pcFkBOiaiCt0Yt3WbtOZvDn8FfGnBN3AwvGltbjMJQD55UUzQzJvHPna+k
+         KeTCCOOtNk385iWuHYBpjgNRXE+LTPPWiAyKqG/oUa6nbz17f/bwzv5ec3r52fyvkZQs
+         w1OBw5tJDepzkp2kp5NPbYEHE7rm4/otXcmcGWPMVfgAIAvjABcVdkWMnWJV9ibm/a1s
+         IdwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Nt+g6HxekqPbxJhqI6GmDYJ3vGsMhujT0dozXULd8ezkBCbfg9ZGTy/rPGTRU8FIu92ZzZc5ItTK@vger.kernel.org, AJvYcCW3iSP4TobDL2kAZTLuwIWemZe3kx0gLtAXyEJNDP7lZIJK6BPP6AnP89MIZ1Thi+/fJBzfQscJM70H@vger.kernel.org, AJvYcCWgQt7Cl11SyawvRSYWnyZC4qMfVgyUPHIsuAdjWFnDk4ZOubUUwFY1GC8mv2bNF4lBulzGueE6bsL39Odf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQiUUbZiMu3Iliy8/DKnwKRddEMqSGNgxZEPe6KFzghS/6bs69
+	yJF6Lp/SKH1VoXT+PAVfwA97rxPKapb+pxshKO0euMI8+gj/+5sh
+X-Gm-Gg: ASbGncsg5WC9DUmYU341imDtNTTWKaOYgrYaPyfVmngFZDN6ujstgLS7KCPyIAX5sz7
+	ORoEtbPM0gAIm3Eve4G3w+7VbBrPW0y62OrWgqeq65rZSb5zVBmIj4WP/QLE6K5JXTLhaH+tF2x
+	U/7PWDBU1SwyO8ng+3UNrdhUQAvHE9Xh6EcZaEmb05jIVYnhgu13CuZahhXCiLWrdLmSH34NKaz
+	jiK9O24PwqlFnkOcRUU4xHPhJUylFV2plp2rLfEAvl3d4vYCmLAINtzM9t7dRB81Be2d1yPAx2a
+	LVL6JvW/0q0xvqI21bENKqub7v2orrqVuLJR3DOhv14ioMagpv3OuYDepELgy7ktkz2VcJw/x5D
+	PA9n9j6cMiGxB
+X-Google-Smtp-Source: AGHT+IG9xrL2a3oUvPs5IPfumvNNsNytaMGFbF33fTsC07NjkBLJzwQI4qV/tm6k4I2C3MF3ub89aA==
+X-Received: by 2002:a7b:cb88:0:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-441acaa8d6amr14442345e9.1.1745914740585;
+        Tue, 29 Apr 2025 01:19:00 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e00e3sm183004705e9.34.2025.04.29.01.18.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 01:19:00 -0700 (PDT)
+Message-ID: <dc2a7cd3bff229dc70255ed1d2def98739754a4c.camel@gmail.com>
+Subject: Re: [PATCH v3 04/11] iio: backend: add support for number of lanes
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 29 Apr 2025 09:19:04 +0100
+In-Reply-To: <20250425112538.59792-5-antoniu.miclaus@analog.com>
+References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
+	 <20250425112538.59792-5-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|IA0PR11MB7185:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cd78073-25a9-4809-6ac9-08dd86f64ac0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SfTa37IA126of2iiHlHE+ILGM8AtWTzI3KJ4NE0pYkPG/11IzMoMhhmyjhWA?=
- =?us-ascii?Q?iqDO20/h0HQz+7hec5hxTBkwm1Ud/j5KO9eGuLxo1Fd5TieBxloVKtZBynhY?=
- =?us-ascii?Q?X2avK25FWoNTGDArxowKv/uTBg8uhGsWXh50OXOw5K1DSgAIGH9TkE28tw1l?=
- =?us-ascii?Q?1b7sgOMdVUXNi1l4+Od6XvoQC1lw+c4JxrYTAihPILxIVLEf7rlriW22vbZ0?=
- =?us-ascii?Q?gVYKsuYF2m5vxkUtxXu+cjoQezoXeVHtP02BoCV0qrmpJZPw/LFC5PNH74Zp?=
- =?us-ascii?Q?PYCgUZvUpHva3n1EQbCAGaaGGGtSckALjEvtMB/XlouJvKTqwNhpmVvrrdZI?=
- =?us-ascii?Q?BuKRB5hDeBINibpBXRZO0GboDNnv0AHWQomfeA+LnlPq1qp+2JTgFldBsAyC?=
- =?us-ascii?Q?nR/xZ/Z41v3tQZHDd8aWAF51zyMq30f+5WxXZu3tMvdrU+t/+2fni6FnSi7g?=
- =?us-ascii?Q?r054Gx9VXFJpskeJBzrDxW8tKx0KiWDkqLytSrZ4OGOYYy2X1R/0O1lVsmTn?=
- =?us-ascii?Q?WBvJWcnxNoQcBOQWzJa4CzzJI6JNPW3XeUb2eAyDoYikRAsyPeDJKrfkD8Yc?=
- =?us-ascii?Q?P0NjXfuczA7oQTKywAJ2X2WdKuUk6YkmNpGI3b/Wspu+d3PiLMQO9wSHZbzv?=
- =?us-ascii?Q?i+wjKy+yvgwyq/4swWj6LUr+m+Bqe8JDYeXx28z8Y0mTo1LBTJxH1y1CaMXD?=
- =?us-ascii?Q?MB5/kUYxxR5L/hwxsxztiQr/o+SnIcqR0ekhdiCsIbYde1FH0m7Xw/W/l/3a?=
- =?us-ascii?Q?IU5K0w31pmRCSA5fk8wWuIgf7k1nwynf3UMqdwklBWWFpaSyBF6+L0y81ynP?=
- =?us-ascii?Q?cDSad8IohCMY9qksWexVwp2BtbMasmJofScbIIgS2bPI2O4ciKIbIq14t3pB?=
- =?us-ascii?Q?vyS/C91Mso1EVQPymHHqZPJ00fX57Pgi/0mqgLJ7G5JmvUNsazqtjMeAUMoZ?=
- =?us-ascii?Q?kcBMjkmGXdQso5zjO7c9cgEOyFYklvNf6eV4/Mktg4KKQeMpmxxWAfT+29rw?=
- =?us-ascii?Q?+RP8dIdy/qWdPpQc76VFfzKu+nxDLhTNCVXh+4VaqtoeXguPsmbiCXjgRWQe?=
- =?us-ascii?Q?+mdcEFvHJwdQiI2BJTZgJPLzBTQZje5ce5cWuQxzFZ7ZSlIyhyBzogaH+EIW?=
- =?us-ascii?Q?0DcFlzY9tcl/giN77zNWuOimqquI8yOfhH8AvsEC1Xn5oIuOJ+HZK27+bnXn?=
- =?us-ascii?Q?hhuLPkoegJg4HGlc5oFQThBiPILQ+DwRMrzeuMBONnOZHaLar6QqymW19iK4?=
- =?us-ascii?Q?7ZLV3CmU/E4RDBQGqJ5oeP1XhLhStvscyJ1hKBThAKk6Z2lvUXXde9/76jcH?=
- =?us-ascii?Q?407SpYGpOfm+iXttIhjQWLVAnMEyWj/QlBbm5cwx0ygkkMYVZMHQsW8+DWgY?=
- =?us-ascii?Q?kSYyLOkgnoxwErS8Jnssmhpnyof62lzsmBvp0FBgus98IuLC0Q=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?05sfK4ZHr87mVTfK74v3h3yuvF/jYuvo8S8kDKbJ6hM0GwiGcH8yMBGo4bh2?=
- =?us-ascii?Q?B2Ww2KoB+Meoby1gx4PnVssyyxHy9ADj2dNMqOSssSOWhXe9+PP6dj6SzoKB?=
- =?us-ascii?Q?qMeKpf9TXjD2tGr3rqcOHoSxgj0JitLDSHFgWQtcFsRl0AODz3K7gOg3troa?=
- =?us-ascii?Q?1JkEe4dTpILfnsCVM0OIj2xVeqFuO+qqSjYPC4AOVZlua0il5zF459JQ50dt?=
- =?us-ascii?Q?fKhWzx1aHqmVkbrpkpCkn1kYT+tVLAcbWgOcpKoAW8f18giJsyXCrzDpXrPy?=
- =?us-ascii?Q?aKzKH6Ahbb8f9E685LvVrB1iviogm/x7qigtQM3QZWDzss9JZnMN/Xt96GxR?=
- =?us-ascii?Q?zdj+LBSfn4WeBXtvkfkv9RGADyVeTNGUBhzQD+pFkS+9tBCUwfEd9ZnzzMuk?=
- =?us-ascii?Q?tFoq3eeWfcGAfUGdANp50mf1xU4OCLULkgC4nTfGnpdstqW8sg+vSO77i4z3?=
- =?us-ascii?Q?LKNIj4dE2jXt2ZXV8bpV1pT2gSIimAxiORmzBVu2EsnOeLUm8kyEFZjeuwUV?=
- =?us-ascii?Q?DF2g9EIstqN7wTZ50scwTnAFN28/+4i9TfdtPJ5oUCdAo2a5C91h4NVfLvvi?=
- =?us-ascii?Q?8IIgRCq2jWoh/O6jhlThdVFa7ZZPqJorrHpwWZIuikzeCtrCWDL7Jlmc2K90?=
- =?us-ascii?Q?cW1Hgd0VDGgmxRzfryK7sdETOvNCs+ntweAlukqadU8RIgvrq1rFAJxsJD+i?=
- =?us-ascii?Q?aHZs0dWJPrPyXNulWBrrrXHdfscCJZyrxwnntiij0T68tIvUANuOEMw8Old9?=
- =?us-ascii?Q?cPPlHUIuDRUPbQ0k0Mo47MbEddwOQD+W5KUA+HzF5GAfKaVENw+Wwk22+lYG?=
- =?us-ascii?Q?3Bhf16dmE8ePyZvVrIgdPBymNIwMzVKPNxwGKbOsgB0+IwHIeE9wZdocGnXO?=
- =?us-ascii?Q?TNyDcOtGlxJjJFlOGlVJZKWLnaRkxfe6Q82YLIY4njfh3GvLRPCX6l9f48rB?=
- =?us-ascii?Q?9ZG6DYxBejVIBq+pdjT3WkMNYVNgbVy0+vqejIWB1ra9F4439B8o1TYIWcSs?=
- =?us-ascii?Q?N2jNE76iwVBo27wClWasvwCzq3wnPEhC/ymy8mxSUeHpBA9Y7E+CIS+dnQIf?=
- =?us-ascii?Q?27CSYJYZK1yqQ98ZrPih8fcyfkdBF4WZ3fSF1xldOeT1G1wCb6RlHtoM71jA?=
- =?us-ascii?Q?8RTPFGoYPnVSth6iESNW5zrMpve5X8nQcoSOMEPTyJlQ1fJR4dKXJMrHIeqP?=
- =?us-ascii?Q?3AioQxs3MvkOT205n1qyUJjngichk59Stnyah+EsIMCIRSiZAA9xIjlWkzpa?=
- =?us-ascii?Q?3j0+oEmSOQSs+XtWvOXmsxksZD0jRkipDV/gnIMH5FeDXbhJAarislgu7bHb?=
- =?us-ascii?Q?kH+A2GYvBWubvUb/3A99rSVByu2frMDCPRVKODSBu0aeCdDVUM/pLH5js06t?=
- =?us-ascii?Q?37u7rTflspqXasvRyqBXrzpy5i4mR1sqIF3VeW0Xb8uIIu7RCgWMOzusPgNG?=
- =?us-ascii?Q?MfaOIzV3BOWVFdGB7CSQ8wSSxpD94pioh75slsPFqGUBgmj/JYRE/l+IqvhA?=
- =?us-ascii?Q?LxCXr5A9iolvDQq4tKMDrY1J0plCfXyjM+tyZc06E6mp0T121lzDa6Y9p+Tz?=
- =?us-ascii?Q?vdaN87fhKcdjkj4nULtOmGWMd7NKux/3cuin/Ano?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cd78073-25a9-4809-6ac9-08dd86f64ac0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 08:17:33.5113
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8LzM4yU3P+idmebK/qogqyxCD11J3GpTidl5+rXCEKNuQHE7nIk69OSqRikX7lPBy8C2RzvH00QZGw3Yc/v+YQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7185
-X-OriginatorOrg: intel.com
 
-On Tue, Mar 18, 2025 at 12:35:07AM -0600, Vishal Verma wrote:
->In preparation for a cleanup of the x86_ops struct for TDX, which turns
->several of the ops definitions to macros, move the
->vt_apicv_pre_state_restore() helper into posted_intr.c.
+On Fri, 2025-04-25 at 14:25 +0300, Antoniu Miclaus wrote:
+> Add iio backend support for number of lanes to be enabled.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
 
-This doesn't explain how the movement is related to that cleanup.
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-how about:
-
-In preparation for a cleanup of the kvm_x86_ops struct for TDX, all vt_*
-functions are expected to act as glue functions that route to either tdx_*
-or vmx_* based on the VM type. Specifically, the pattern is:
-
-vt_abc:
-    if (is_td())
-        return tdx_abc();
-    return vmx_abc();
-
-But vt_apicv_pre_state_restore() does not follow this pattern. To
-facilitate that cleanup, rename and move vt_apicv_pre_state_restore() into
-posted_intr.c.
-
->
->Based on a patch by Sean Christopherson <seanjc@google.com>
-
-You can consider adding his Suggested-by.
-
->-static void vt_apicv_pre_state_restore(struct kvm_vcpu *vcpu)
->-{
->-	struct pi_desc *pi = vcpu_to_pi_desc(vcpu);
-
-With this removal, vcpu_to_pi_desc() is only used within posted_intr.c. no
-need to expose it.
+> no changes in v3.
+> =C2=A0drivers/iio/industrialio-backend.c | 17 +++++++++++++++++
+> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 3 +++
+> =C2=A02 files changed, 20 insertions(+)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index f7c8167a248d..1063935cd808 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -833,6 +833,23 @@ int iio_backend_sync_status_get(struct iio_backend *=
+back,
+> bool *sync_en)
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_NS_GPL(iio_backend_sync_status_get, "IIO_BACKEND");
+> =C2=A0
+> +/**
+> + * iio_backend_num_lanes_set - Number of lanes enabled.
+> + * @back: Backend device
+> + * @num_lanes: Number of lanes.
+> + *
+> + * RETURNS:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_num_lanes_set(struct iio_backend *back, unsigned int
+> num_lanes)
+> +{
+> +	if (!num_lanes)
+> +		return -EINVAL;
+> +
+> +	return iio_backend_op_call(back, num_lanes_set, num_lanes);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_num_lanes_set, "IIO_BACKEND");
+> +
+> =C2=A0/**
+> =C2=A0 * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate)=
+ mode
+> =C2=A0 * @back: Backend device
+> diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+> index e93d1a98e066..c8bcfe96c542 100644
+> --- a/include/linux/iio/backend.h
+> +++ b/include/linux/iio/backend.h
+> @@ -112,6 +112,7 @@ enum iio_backend_filter_type {
+> =C2=A0 * @data_alignment_enable: Enable sync process.
+> =C2=A0 * @data_alignment_disable: Disable sync process.
+> =C2=A0 * @sync_status_get: Get the syncronization status (enabled/disable=
+d).
+> + * @num_lanes_set: Set the number of lanes enabled.
+> =C2=A0 * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
+> =C2=A0 * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
+> =C2=A0 * @data_stream_enable: Enable data stream.
+> @@ -167,6 +168,7 @@ struct iio_backend_ops {
+> =C2=A0	int (*data_alignment_enable)(struct iio_backend *back);
+> =C2=A0	int (*data_alignment_disable)(struct iio_backend *back);
+> =C2=A0	int (*sync_status_get)(struct iio_backend *back, bool *sync_en);
+> +	int (*num_lanes_set)(struct iio_backend *back, unsigned int
+> num_lanes);
+> =C2=A0	int (*ddr_enable)(struct iio_backend *back);
+> =C2=A0	int (*ddr_disable)(struct iio_backend *back);
+> =C2=A0	int (*data_stream_enable)(struct iio_backend *back);
+> @@ -212,6 +214,7 @@ int iio_backend_filter_type_set(struct iio_backend *b=
+ack,
+> =C2=A0int iio_backend_data_alignment_enable(struct iio_backend *back);
+> =C2=A0int iio_backend_data_alignment_disable(struct iio_backend *back);
+> =C2=A0int iio_backend_sync_status_get(struct iio_backend *back, bool *syn=
+c_en);
+> +int iio_backend_num_lanes_set(struct iio_backend *back, unsigned int
+> num_lanes);
+> =C2=A0int iio_backend_ddr_enable(struct iio_backend *back);
+> =C2=A0int iio_backend_ddr_disable(struct iio_backend *back);
+> =C2=A0int iio_backend_data_stream_enable(struct iio_backend *back);
