@@ -1,89 +1,151 @@
-Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65BA21B1A3;
-	Tue, 29 Apr 2025 07:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00FF1C8629;
+	Tue, 29 Apr 2025 07:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911447; cv=none; b=Zsw49rinSIhCqvG85TX3vhobuxRvVmfF334i72kAy8LCQcS6KrvI9CH0hbLwBHi9Jq+dCxtiQAGvncrSv71MlIPgmeWfDZqxqt7vDyaiowl8DOTbxhe6YUJOnALDqImr9XH8NUZlPcfoZqvEvpecm5+uTCjnUZ69Pugz9NEpWxg=
+	t=1745911515; cv=none; b=RApZ3d3+cvjlBKIO/NIRzsxaH6qQGcbTlLZdtNXWtLyYxt9sK97eKrhOPB32eOAE2Hob8NkBoXngzazwHLHGPNgRh7HNKBzfBr39ik5le+ofZaCOoJdJAaIrjss9sfusqAefIfDw7teRpsQXUx7yAo4ipU1nJxd2ILHL0eRkhIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911447; c=relaxed/simple;
-	bh=5SLQJUzlUoUcDCh5g1aEuxv+XpKP2Kwgo3y4seB7O3I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AsMU9w9TmBTqMYGOt95iT37ft8uU/3aEFnUvXUA+D6irIPGmU/SZWN7G9QdLzDB1MKUTL7GAi/0equyd9BMbZIs2BSL+2w5W0Wfg1CA7dLqvr1fUb9kioS1DrlqHgYSbeSIJ62NSebM59SwIeEdpl5fd8+G2zwFcGg+6f6ZDROM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201609.home.langchao.com
-        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202504291522453646;
-        Tue, 29 Apr 2025 15:22:45 +0800
-Received: from localhost.localdomain (10.94.7.67) by
- jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server id
- 15.1.2507.39; Tue, 29 Apr 2025 15:22:46 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>
-CC: <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH] btrfs: Use refcount_t instead of atomic_t for mmap_count
-Date: Tue, 29 Apr 2025 03:20:33 -0400
-Message-ID: <20250429072033.3382-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
+	s=arc-20240116; t=1745911515; c=relaxed/simple;
+	bh=BTTld/avRyX9/xFUVdq/cjPb7ZmIdI1aSwabNE90ZT8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FNRI0aiyPPKueXT3uDl1X6PumCn1nR60yv1mbSLg7/uxAnxnnz277MqjAz4QH2NFfAp4JRy/y3xPAYcyfgtOI2lxjKGBcAVb3P5rx2MTiEfY2k8SiAdAiY4REZi5+He4xdZ/ZSMRAbXS/GT99yifNq4NsfBjPP+xo9gy6KoMXJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=LkCo0zvG; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=UMBk4PSS reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="LkCo0zvG";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="UMBk4PSS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1745911511; x=1777447511;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=0HTPHirUqJp7iM6IFbqXNuusghxBtTxmX3QXCCMPY0Q=;
+  b=LkCo0zvG/pzwFIaSerwZ2FJLguAyhlcG5WuaIWH3llgNYsxVc67mcLXs
+   yiyjuaWuRbyW3J8KAzF+D0ohli0eGrggnQJN9rujf13+/dbBepAfWJ8Y9
+   MoK7vO1lONECwNkOjN9J6yF54nVFcXvZ7YbDAzA0MM+SMvQruUuuYLDjL
+   qdEXUgTRfJLCeI+7/HviFVY+rldo0EBzYMDVaIzRpXd/t2H5Varw0Wzpj
+   9bWIVjPE4CVnuGlDkfdNOnjCBb5fzwb9a8bjiPwq1UkWARvdUqNoo9HGk
+   ldfOuTobUsBJQKgOSQYG+VycB+p2S3ZpXfYg3P7ymA06+MPTtEt4Djww7
+   w==;
+X-CSE-ConnectionGUID: mvncbzE7TwS02I9aCObShg==
+X-CSE-MsgGUID: Oo+CuzYXSh2hT+Oi+La46Q==
+X-IronPort-AV: E=Sophos;i="6.15,248,1739833200"; 
+   d="scan'208";a="43772696"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 29 Apr 2025 09:25:01 +0200
+X-CheckPoint: {68107ECD-32-F35B2447-E1635CDE}
+X-MAIL-CPID: 4C6EC668F1D0F19820FBD4C1ED5AF527_1
+X-Control-Analysis: str=0001.0A006376.68107EDB.007D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E4E1E160F78;
+	Tue, 29 Apr 2025 09:24:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1745911497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0HTPHirUqJp7iM6IFbqXNuusghxBtTxmX3QXCCMPY0Q=;
+	b=UMBk4PSSN3UPAEvH64wlD/DQG63n6qyz8Vno1RD6lID08HbYoSOsULofaTdR5GBIBR3dMC
+	mFpdWkhtUDfnpSseGPOmYzTQTNSYRZ3DnFJZUo7mFx6/bijMtSUSx/fq3o1dVVYvhFNwBY
+	VReTlz6llr68OZdahRTkt+Ae95QczLZHbR+tHmrSa3Ov+pgA5/xelkQS9xi2IR7JUhnW+z
+	aBv77qSBW2cGa4CjsTUon7WSlGvklEDnBkpkK3Evpc+ilIBWeOkJZv2CEfoCLy1VBORQSo
+	1uolbaIQbqdBZjmupkWsKjxAgm+OzCBGDvoZ6yDjacJyW4yCSNwmIFAxVhla2A==
+Message-ID: <b75c6a2cf10e2acf878c38f8ca2ff46708a2c0a1.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe
+ Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli
+ <s-vadapalli@ti.com>, Roger Quadros <rogerq@kernel.org>, Tero Kristo
+ <kristo@kernel.org>, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux@ew.tq-group.com
+Date: Tue, 29 Apr 2025 09:24:49 +0200
+In-Reply-To: <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
+	 <a53b5f22-d603-4b7d-9765-a1fc8571614d@lunn.ch>
+	 <aAe2NFFrcXDice2Z@shell.armlinux.org.uk>
+	 <fdc02e46e4906ba92b562f8d2516901adc85659b.camel@ew.tq-group.com>
+	 <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-tUid: 2025429152245afd561e9c116c9f26a73e47086225e38
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+X-Last-TLS-Session-Version: TLSv1.3
 
-Use an API that resembles more the actual use of mmap_count.
-Found by cocci:
-fs/btrfs/bio.c:153:5-24: WARNING: atomic_dec_and_test variation before object free at line 155
+On Mon, 2025-04-28 at 16:08 +0200, Andrew Lunn wrote:
+>=20
+> > > However, with the yaml stuff, if that is basically becoming "DT
+> > > specification" then it needs to be clearly defined what each value
+> > > actually means for the system, and not this vague airy-fairy thing
+> > > we have now.
+>=20
+> =20
+> > I agree with Russell that it seems preferable to make it unambiguous wh=
+ether
+> > delays are added on the MAC or PHY side, in particular for fine-tuning.=
+ If
+> > anything is left to the implementation, we should make the range of acc=
+eptable
+> > driver behavior very clear in the documentation.
+>=20
+> I think we should try the "Informative" route first, see what the DT
+> Maintainers think when we describe in detail how Linux interprets
+> these values.
 
-Signed-off-by: Bo Liu <liubo03@inspur.com>
----
- fs/btrfs/bio.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Oh, we should not be Linux-specific. We should describe in detail how *any =
+OS*
+must interpret values.
 
-diff --git a/fs/btrfs/bio.c b/fs/btrfs/bio.c
-index a3ee9a976f6f..353c61936cd6 100644
---- a/fs/btrfs/bio.c
-+++ b/fs/btrfs/bio.c
-@@ -23,7 +23,7 @@ static mempool_t btrfs_failed_bio_pool;
- struct btrfs_failed_bio {
- 	struct btrfs_bio *bbio;
- 	int num_copies;
--	atomic_t repair_count;
-+	refcount_t repair_count;
- };
- 
- /* Is this a data path I/O that needs storage layer checksum and repair? */
-@@ -150,7 +150,7 @@ static int prev_repair_mirror(struct btrfs_failed_bio *fbio, int cur_mirror)
- 
- static void btrfs_repair_done(struct btrfs_failed_bio *fbio)
- {
--	if (atomic_dec_and_test(&fbio->repair_count)) {
-+	if (refcount_dec_and_test(&fbio->repair_count)) {
- 		btrfs_bio_end_io(fbio->bbio, fbio->bbio->bio.bi_status);
- 		mempool_free(fbio, &btrfs_failed_bio_pool);
- 	}
-@@ -235,10 +235,10 @@ static struct btrfs_failed_bio *repair_one_sector(struct btrfs_bio *failed_bbio,
- 		fbio = mempool_alloc(&btrfs_failed_bio_pool, GFP_NOFS);
- 		fbio->bbio = failed_bbio;
- 		fbio->num_copies = num_copies;
--		atomic_set(&fbio->repair_count, 1);
-+		refcount_set(&fbio->repair_count, 1);
- 	}
- 
--	atomic_inc(&fbio->repair_count);
-+	refcount_inc(&fbio->repair_count);
- 
- 	repair_bio = bio_alloc_bioset(NULL, 1, REQ_OP_READ, GFP_NOFS,
- 				      &btrfs_repair_bioset);
--- 
-2.31.1
 
+>=20
+> I don't think a whole new set of properties will solve anything. I
+> would say the core of the problem is that there are multiple ways of
+> getting a working system, many of which don't fit the DT binding. But
+> DT developers don't care about that, they are just happy when it
+> works. Adding a different set of properties won't change that.
+>=20
+> 	Andrew
+
+Hmm, considering that
+
+- interpretation of existing properties is inconsistent
+- we could like something with a consistent interpretation
+- we can't change how existing drivers interpret the properties, as that wo=
+uld
+be a breaking change,
+
+I don't think we really have any options but to introduce something new, or=
+ keep
+the inconsistent status quo.
+
+Best,
+Matthias
+
+
+
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
