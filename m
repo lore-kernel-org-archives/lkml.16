@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81C32D81A0;
-	Tue, 29 Apr 2025 23:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC36248F54;
+	Tue, 29 Apr 2025 23:53:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970817; cv=none; b=FcjsWhU9aoZwKz7DIDFYYOz3pBFU3bAjoCgv/vkJ2ldtWZbBgCyMHJBxoq99MwDZs5o6gseJ3d4glXEHBkACC0lts7fVnEnfL1lQ+0Pr7rc4XFa2qhOcgKSXUPzSNxUS6JBgaaq4cxYmKhBgXfzsjihf8I+LrHlZjZXg0iTI5gA=
+	t=1745970825; cv=none; b=HMZnsqAVY7m83YeyOP8cG0x23HyFzU8rTB2eG0oxEKwF8VOseqqbDCq0ARCYmBMrxanmmT79ql890vjMUCT0PQl5+M8+SgfO0RakxlXsn3jVz5MvjRl6CmYT8yzwQHoe3yzP1SS7Q+pxgesQcGh4qtrQzi+ch4M4mr/uVZh9bkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970817; c=relaxed/simple;
-	bh=2lwC8t7cAngkPhM9CWEOePbjKZzinY9vlg4dD5N0xGc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hbJ7RMXCMYU1T6sXoid3SqJdOk7O/2vWhXTuO7PR0KGJwIAF/ACd3Kjo0lLgXhU5FOb/LzBwl2Jz6T/2wBxdwXZ+Nty3/ix7TMkv/rWA8lT7GFYMyUDuUcwZkpzVVRQUyKGOsujDSWMs0waslAjRksNxOKsa86v3MRle8mW67E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ja55T0ns; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745970825; c=relaxed/simple;
+	bh=RRj6F2BZA9TgE0RpxN8xBByEwnh5uXhrZs3u/lfN2W4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UduqmyVCPj0E6Qi21QINCQpuvI+XzkCVzPKz/W045tCy5BVGVCxa9+tr/OgV8ks/iBKsuKXbMi5pSws32C+RmJv/NglvoOoMXNqeQwB1SJ3X2WbeDfICzr0FjOooMiYjYcfyh9U6RxGFZ4pvxIWelO05/2B/tXwI5z+kaEqdI6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lC6jA/bv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ja55T0ns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7332AC4CEE3;
-	Tue, 29 Apr 2025 23:53:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lC6jA/bv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C798C4CEE3;
+	Tue, 29 Apr 2025 23:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970817;
-	bh=2lwC8t7cAngkPhM9CWEOePbjKZzinY9vlg4dD5N0xGc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ja55T0nswkxn8SnXB8nxQ5xmsJYujAPU3voR0n3oUI/bdEJ2/4KTV7sc9oWtMpcMJ
-	 Q1BR6CUyq+OdAahdexN1mtNSytKSDGmkzMzZKroJP3q2sxWuLw2NE3L2Sfb7XGu386
-	 rsxVkMuE1/5G/qQPk/35M4JnApiEjjMRjAD9cYB8H9cr116KATkMQfuX6byBzynARu
-	 sg+MRWCFHYBRZWuF/n/YN4OLGhgF3VHZUC0nK4hzmW3Xh18Y5jU9nb+RUGZgKES0iZ
-	 Hm4rQDA3GV2G4+Pu/Q3gERT/tMgUO9Ll2Z/9c3cHNwL8UNEYwuJYtJLufGnx30vC3y
-	 v2hP24G4c7wUw==
+	s=k20201202; t=1745970825;
+	bh=RRj6F2BZA9TgE0RpxN8xBByEwnh5uXhrZs3u/lfN2W4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lC6jA/bvjDWhCfMQ3iDCO0YPDA3gu6cKUCChclsf7+4Urpa7PYHbG1pnRlPpNw99Y
+	 UXw+6U7+duNjo54wMgYjVxrxzuoieVx0aa24yAPDt0OtbyNCF7wEyF7isU8jKEum+s
+	 vvFewrDLShn7LLXF3TaPhh+0Dc3u+1dI25NN5BD6h4sMGe361Lh9bY/4AJFsMaxuoj
+	 Yaqiq/EDnlAO1/ctHIhAX8sxir0Kjip9mZwqXNZ/s0gJazT5/dAd4c+PaR3vpuZHVo
+	 H+jfpSNGPVu94Kb7UTLqr1X+aywAe5zp2X/HuGK6PAa4g1gvN9JzLdYBYfccqysps5
+	 SP2T6pPNi02EQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Haoran Jiang <jianghaoran@kylinos.cn>,
-	zhangxi <zhangxi@kylinos.cn>,
-	Andrii Nakryiko <andrii@kernel.org>,
+Cc: Dmitry Bogdanov <d.bogdanov@yadro.com>,
+	Maurizio Lombardi <mlombard@redhat.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	nathan@kernel.org,
-	bpf@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 10/10] samples/bpf: Fix compilation failure for samples/bpf on LoongArch Fedora
-Date: Tue, 29 Apr 2025 19:53:15 -0400
-Message-Id: <20250429235316.538129-10-sashal@kernel.org>
+	ardb@kernel.org,
+	linux@treblig.org,
+	viro@zeniv.linux.org.uk,
+	ebiggers@google.com,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 1/7] scsi: target: iscsi: Fix timeout on deleted connection
+Date: Tue, 29 Apr 2025 19:53:32 -0400
+Message-Id: <20250429235339.538269-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250429235316.538129-1-sashal@kernel.org>
-References: <20250429235316.538129-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,59 +50,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.135
+X-stable-base: Linux 5.15.180
 Content-Transfer-Encoding: 8bit
 
-From: Haoran Jiang <jianghaoran@kylinos.cn>
+From: Dmitry Bogdanov <d.bogdanov@yadro.com>
 
-[ Upstream commit 548762f05d19c5542db7590bcdfb9be1fb928376 ]
+[ Upstream commit 7f533cc5ee4c4436cee51dc58e81dfd9c3384418 ]
 
-When building the latest samples/bpf on LoongArch Fedora
+NOPIN response timer may expire on a deleted connection and crash with
+such logs:
 
-     make M=samples/bpf
+Did not receive response to NOPIN on CID: 0, failing connection for I_T Nexus (null),i,0x00023d000125,iqn.2017-01.com.iscsi.target,t,0x3d
 
-There are compilation errors as follows:
+BUG: Kernel NULL pointer dereference on read at 0x00000000
+NIP  strlcpy+0x8/0xb0
+LR iscsit_fill_cxn_timeout_err_stats+0x5c/0xc0 [iscsi_target_mod]
+Call Trace:
+ iscsit_handle_nopin_response_timeout+0xfc/0x120 [iscsi_target_mod]
+ call_timer_fn+0x58/0x1f0
+ run_timer_softirq+0x740/0x860
+ __do_softirq+0x16c/0x420
+ irq_exit+0x188/0x1c0
+ timer_interrupt+0x184/0x410
 
-In file included from ./linux/samples/bpf/sockex2_kern.c:2:
-In file included from ./include/uapi/linux/in.h:25:
-In file included from ./include/linux/socket.h:8:
-In file included from ./include/linux/uio.h:9:
-In file included from ./include/linux/thread_info.h:60:
-In file included from ./arch/loongarch/include/asm/thread_info.h:15:
-In file included from ./arch/loongarch/include/asm/processor.h:13:
-In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
-./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin.h' file not found
-         ^~~~~~~~~~~~~~~
-1 error generated.
+That is because nopin response timer may be re-started on nopin timer
+expiration.
 
-larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
-and the header file location is specified at compile time.
+Stop nopin timer before stopping the nopin response timer to be sure
+that no one of them will be re-started.
 
-Test on LoongArch Fedora:
-https://github.com/fedora-remix-loongarch/releases-info
-
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-Signed-off-by: zhangxi <zhangxi@kylinos.cn>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/20250425095042.838824-1-jianghaoran@kylinos.cn
+Signed-off-by: Dmitry Bogdanov <d.bogdanov@yadro.com>
+Link: https://lore.kernel.org/r/20241224101757.32300-1-d.bogdanov@yadro.com
+Reviewed-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/Makefile | 2 +-
+ drivers/target/iscsi/iscsi_target.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 727da3c5879b2..77bf18cfdae7f 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -434,7 +434,7 @@ $(obj)/%.o: $(src)/%.c
- 	@echo "  CLANG-bpf " $@
- 	$(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
- 		-I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
--		-I$(LIBBPF_INCLUDE) \
-+		-I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
- 		-D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
- 		-D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
- 		-Wno-gnu-variable-sized-type-not-at-end \
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index 686a9e5918e21..b072718701329 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4170,8 +4170,8 @@ int iscsit_close_connection(
+ 	spin_unlock(&iscsit_global->ts_bitmap_lock);
+ 
+ 	iscsit_stop_timers_for_cmds(conn);
+-	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
++	iscsit_stop_nopin_response_timer(conn);
+ 
+ 	if (conn->conn_transport->iscsit_wait_conn)
+ 		conn->conn_transport->iscsit_wait_conn(conn);
 -- 
 2.39.5
 
