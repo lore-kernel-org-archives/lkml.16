@@ -1,47 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC36248F54;
-	Tue, 29 Apr 2025 23:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037D22DFA57;
+	Tue, 29 Apr 2025 23:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970825; cv=none; b=HMZnsqAVY7m83YeyOP8cG0x23HyFzU8rTB2eG0oxEKwF8VOseqqbDCq0ARCYmBMrxanmmT79ql890vjMUCT0PQl5+M8+SgfO0RakxlXsn3jVz5MvjRl6CmYT8yzwQHoe3yzP1SS7Q+pxgesQcGh4qtrQzi+ch4M4mr/uVZh9bkY=
+	t=1745970827; cv=none; b=b3OMr0iPGv3CD3oRus6ko2V6gaPmArTvgjoa0muT+iKdw64JzkQCkRORwN+7h+bdNwZiKEXdoJhYY5BiwUGGKWv2sxp375YYHPZoUZ6oycU95VyJ4tayow7jqbWfnaiQsz/3IwIgi/GOxEZz3R+/LiXYgeyJfFp+DoQtNR7/D6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970825; c=relaxed/simple;
-	bh=RRj6F2BZA9TgE0RpxN8xBByEwnh5uXhrZs3u/lfN2W4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UduqmyVCPj0E6Qi21QINCQpuvI+XzkCVzPKz/W045tCy5BVGVCxa9+tr/OgV8ks/iBKsuKXbMi5pSws32C+RmJv/NglvoOoMXNqeQwB1SJ3X2WbeDfICzr0FjOooMiYjYcfyh9U6RxGFZ4pvxIWelO05/2B/tXwI5z+kaEqdI6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lC6jA/bv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745970827; c=relaxed/simple;
+	bh=01+C2jiaOzO6JrR/lwHRiEWzFD9FgWxyIjm+0KqvVv0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=n3lVfo19WV9gscuMYPpQ0Bhci/TBMPLbDwrGZu5m5QF5dhYXwhbEty7ba3u+Uqzc2Li5n4ethtIX9PzrTgKOPouuJ+y+stOGTzblEnJpP54xr7PHGEELp9hRlb0CME6hCmSRHOu9zOxlLB1xqn86OuZXJP8fFaON4/7yOQ9+VLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncdN7Eox; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lC6jA/bv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C798C4CEE3;
-	Tue, 29 Apr 2025 23:53:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncdN7Eox"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA94C4CEEE;
+	Tue, 29 Apr 2025 23:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970825;
-	bh=RRj6F2BZA9TgE0RpxN8xBByEwnh5uXhrZs3u/lfN2W4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lC6jA/bvjDWhCfMQ3iDCO0YPDA3gu6cKUCChclsf7+4Urpa7PYHbG1pnRlPpNw99Y
-	 UXw+6U7+duNjo54wMgYjVxrxzuoieVx0aa24yAPDt0OtbyNCF7wEyF7isU8jKEum+s
-	 vvFewrDLShn7LLXF3TaPhh+0Dc3u+1dI25NN5BD6h4sMGe361Lh9bY/4AJFsMaxuoj
-	 Yaqiq/EDnlAO1/ctHIhAX8sxir0Kjip9mZwqXNZ/s0gJazT5/dAd4c+PaR3vpuZHVo
-	 H+jfpSNGPVu94Kb7UTLqr1X+aywAe5zp2X/HuGK6PAa4g1gvN9JzLdYBYfccqysps5
-	 SP2T6pPNi02EQ==
+	s=k20201202; t=1745970826;
+	bh=01+C2jiaOzO6JrR/lwHRiEWzFD9FgWxyIjm+0KqvVv0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ncdN7EoxkgUAUxu1/yUYGfxqpRGOJA02xx87rDlCFXLTjQQZRBtayJABd/U7MLzjb
+	 MNQSZOzlMZHnCqLAB7Xe+gpt9W35zaSaZwbHMfF0TDDm7+OcxlomLEdRAZtSU+OTq1
+	 m997pBrItxgk0SY0OaAg9YA76qc4i6+ChwYMW68DVHmkvK4Cs6+r2Jo9rQQFRn8gIa
+	 ++o/MlKnpuBcwoj3ZxTLL6ZTA80fH7us24zKX/2+YZfzns1lp2EcnGjoeTgpKt1xIM
+	 /saIUtPwRxYq169c60FO2zoJ61uUxE4tg0ECs6laoWnqXPMR7vhdgu+nqqxfZyuyLO
+	 27Mdxyn0EExhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Bogdanov <d.bogdanov@yadro.com>,
-	Maurizio Lombardi <mlombard@redhat.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	syzbot+efe683d57990864b8c8e@syzkaller.appspotmail.com,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	ardb@kernel.org,
-	linux@treblig.org,
-	viro@zeniv.linux.org.uk,
-	ebiggers@google.com,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 1/7] scsi: target: iscsi: Fix timeout on deleted connection
-Date: Tue, 29 Apr 2025 19:53:32 -0400
-Message-Id: <20250429235339.538269-1-sashal@kernel.org>
+	virtualization@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.15 2/7] virtio_ring: Fix data race by tagging event_triggered as racy for KCSAN
+Date: Tue, 29 Apr 2025 19:53:33 -0400
+Message-Id: <20250429235339.538269-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250429235339.538269-1-sashal@kernel.org>
+References: <20250429235339.538269-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,55 +52,68 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.180
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Bogdanov <d.bogdanov@yadro.com>
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
 
-[ Upstream commit 7f533cc5ee4c4436cee51dc58e81dfd9c3384418 ]
+[ Upstream commit 2e2f925fe737576df2373931c95e1a2b66efdfef ]
 
-NOPIN response timer may expire on a deleted connection and crash with
-such logs:
+syzbot reports a data-race when accessing the event_triggered, here is the
+simplified stack when the issue occurred:
 
-Did not receive response to NOPIN on CID: 0, failing connection for I_T Nexus (null),i,0x00023d000125,iqn.2017-01.com.iscsi.target,t,0x3d
+==================================================================
+BUG: KCSAN: data-race in virtqueue_disable_cb / virtqueue_enable_cb_delayed
 
-BUG: Kernel NULL pointer dereference on read at 0x00000000
-NIP  strlcpy+0x8/0xb0
-LR iscsit_fill_cxn_timeout_err_stats+0x5c/0xc0 [iscsi_target_mod]
-Call Trace:
- iscsit_handle_nopin_response_timeout+0xfc/0x120 [iscsi_target_mod]
- call_timer_fn+0x58/0x1f0
- run_timer_softirq+0x740/0x860
- __do_softirq+0x16c/0x420
- irq_exit+0x188/0x1c0
- timer_interrupt+0x184/0x410
+write to 0xffff8881025bc452 of 1 bytes by task 3288 on cpu 0:
+ virtqueue_enable_cb_delayed+0x42/0x3c0 drivers/virtio/virtio_ring.c:2653
+ start_xmit+0x230/0x1310 drivers/net/virtio_net.c:3264
+ __netdev_start_xmit include/linux/netdevice.h:5151 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5160 [inline]
+ xmit_one net/core/dev.c:3800 [inline]
 
-That is because nopin response timer may be re-started on nopin timer
-expiration.
+read to 0xffff8881025bc452 of 1 bytes by interrupt on cpu 1:
+ virtqueue_disable_cb_split drivers/virtio/virtio_ring.c:880 [inline]
+ virtqueue_disable_cb+0x92/0x180 drivers/virtio/virtio_ring.c:2566
+ skb_xmit_done+0x5f/0x140 drivers/net/virtio_net.c:777
+ vring_interrupt+0x161/0x190 drivers/virtio/virtio_ring.c:2715
+ __handle_irq_event_percpu+0x95/0x490 kernel/irq/handle.c:158
+ handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
 
-Stop nopin timer before stopping the nopin response timer to be sure
-that no one of them will be re-started.
+value changed: 0x01 -> 0x00
+==================================================================
 
-Signed-off-by: Dmitry Bogdanov <d.bogdanov@yadro.com>
-Link: https://lore.kernel.org/r/20241224101757.32300-1-d.bogdanov@yadro.com
-Reviewed-by: Maurizio Lombardi <mlombard@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+When the data race occurs, the function virtqueue_enable_cb_delayed() sets
+event_triggered to false, and virtqueue_disable_cb_split/packed() reads it
+as false due to the race condition. Since event_triggered is an unreliable
+hint used for optimization, this should only cause the driver temporarily
+suggest that the device not send an interrupt notification when the event
+index is used.
+
+Fix this KCSAN reported data-race issue by explicitly tagging the access as
+data_racy.
+
+Reported-by: syzbot+efe683d57990864b8c8e@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67c7761a.050a0220.15b4b9.0018.GAE@google.com/
+Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Message-Id: <20250312130412.3516307-1-quic_zhonhan@quicinc.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 2 +-
+ drivers/virtio/virtio_ring.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 686a9e5918e21..b072718701329 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4170,8 +4170,8 @@ int iscsit_close_connection(
- 	spin_unlock(&iscsit_global->ts_bitmap_lock);
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 067b68168f93e..b541d861475e6 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -2125,7 +2125,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *_vq)
+ 	struct vring_virtqueue *vq = to_vvq(_vq);
  
- 	iscsit_stop_timers_for_cmds(conn);
--	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
-+	iscsit_stop_nopin_response_timer(conn);
+ 	if (vq->event_triggered)
+-		vq->event_triggered = false;
++		data_race(vq->event_triggered = false);
  
- 	if (conn->conn_transport->iscsit_wait_conn)
- 		conn->conn_transport->iscsit_wait_conn(conn);
+ 	return vq->packed_ring ? virtqueue_enable_cb_delayed_packed(_vq) :
+ 				 virtqueue_enable_cb_delayed_split(_vq);
 -- 
 2.39.5
 
