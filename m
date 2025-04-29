@@ -1,180 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0C82749C5;
-	Tue, 29 Apr 2025 06:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7A626B946
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745908407; cv=none; b=LjSWTbZ0NAyxqUNdYbltN6RpXRqOg0ItdYaohfbwgv6KJmNyrlgxSF8ldqtucv/olUeY8TOrWeFGDgTn7CLDR0nKWi6oj2r2q74Ijw4wLNXLEYSY1wRc5YBNZGVchwoIHNXUfwoMXLXjnFUnR+i0boeuDa2DmlEgsD/mXcHwh6s=
+	t=1745908545; cv=none; b=h9FLC/S3nlY3bPoxH+zlBjRo16V+Y9ttsdC1OxndQcy59jb2fxA/A/jiW10XxDoF27fQ3c5i68SzefiCUxTKEN2zA/xXqdzNxOeobrkUa+ELKdMrMloNDYMu15t23kMKlUjr/2QHmEv7Vd8hAtbW6psZj2PZpLxfWt3gmrku8oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745908407; c=relaxed/simple;
-	bh=3iVu7+tTT8Gvmt0QJt/DmkfY+NZPjNaOC/KGL1a8Pmg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=WG44ckYp0zRYdklAA4ql3TZiQy0q9GBPyNGDy79wqS2IXi6fAl2+ffvKk/RbENl4ddnNE3fU3HtN6Gr/FA7djfARl+xr6IwYIYguo7v2BiS1qvE8y4ls49/s8/PhhOMms+Sfl9ZqXr1dHJ2zTEQWWkAfBB2gnHjgEOyhRdDPJSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dHI5IqZH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HptT/39q; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745908545; c=relaxed/simple;
+	bh=iOcIxw2pw44Xqs/6IxM7qze1a8ftQkyXXG8jHhqVEPo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HDj4yo807L+xfDznSLiLLCULn+TlPx9ds5H+VJ5IaE7+cwbQCZ9xRPaUz89cVrlkYzyBnUl3YCw1ClvEDkB9lWBXi9xH5IHGnJiGqWfCDksN5aElbzTVzj+IxGysKyTfWC6PyWKcwtvYHhSAVHo+T3ywMxB9Q8pzAX1ZwQOuGp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f0f1BPzw; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dHI5IqZH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HptT/39q"
-Date: Tue, 29 Apr 2025 06:33:23 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745908404;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJHm+u5b6jQcx+fXi4PW4N4Y+DdOrABspo9C7Hak+r0=;
-	b=dHI5IqZH+CLgJVQMgjZGTmFIPplghEzDF8GC3kqk6cTBpNpH855uahMpiZ17WZSBZV1Ctd
-	0McdDjh5+C+uP+4H+A4C8Ys1sftUI6p5uumqs28VoKNrYH4Llv/gA5K6RJyr3iQRtq3QQY
-	S2yjRCiTBQx/gz7Bj4lXQ5GNbIkIss+GsghQlkoOEQd+fKCr1VfZZ4EoXcEdCuwAJlt5TA
-	9ePA6CLTnG8dQIIfvWdCGfYI3eH1bGd6ttWCovQml56Y/PqXhRUi52nF8ykGWfBT7YEATZ
-	/ymPgrjMPnkt6x7gQ+44KquSLH9Z0J1nNhV3JYfJIcHBkIZa36or+ITi9pCjyg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745908404;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJHm+u5b6jQcx+fXi4PW4N4Y+DdOrABspo9C7Hak+r0=;
-	b=HptT/39qUoSq5Yloohpk22yxmzj2pvRcvMMF7/f1Jrh8NZltPlx5tKa6qsLysB9Uf8QuMn
-	Cy8BRqkl7QPuBIAQ==
-From: "tip-bot2 for Charlie Jenkins" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: core/entry] riscv: entry: Convert ret_from_fork() to C
-Cc: Charlie Jenkins <charlie@rivosinc.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250320-riscv_optimize_entry-v6-1-63e187e26041@rivosinc.com>
-References: <20250320-riscv_optimize_entry-v6-1-63e187e26041@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f0f1BPzw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745908544; x=1777444544;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iOcIxw2pw44Xqs/6IxM7qze1a8ftQkyXXG8jHhqVEPo=;
+  b=f0f1BPzw1/NMSUJSKjNoQyAtSA9GiZF4ea4u8aspZPlM+gWgVtwx0EDK
+   9VKNFBLoE8hYW/6YBccX8PEVbXsN786CzW0XQAswSb+rtkGXAbxfh5A5f
+   DFNxBbmkUh99nqDdIwvIeEEdMxgFEUskLB32d0r/COIry/kYKcHxX8ouR
+   Dyvfq4nFeD4KmGcBCFQvj6hNVOoBdkVsfaqKJwBq2RleR3GzJpONnaFze
+   2sqbJrC21CNadpzqP/Opyw4v+0fth53c38fHca3iSu0yg6I1StzHTGZp3
+   icd8PVZIA6TyDDPlcGs3bWs4dIoV9CAxFga69jYx/LuVPGAhftXBm/yJg
+   w==;
+X-CSE-ConnectionGUID: lr37EUt6RIK6E/Tyg1AbTQ==
+X-CSE-MsgGUID: fMplJdM+Q2ybaSyYCTH2Lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="64937621"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="64937621"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 23:35:43 -0700
+X-CSE-ConnectionGUID: KXgO75msS0yFwCsDXkPv+w==
+X-CSE-MsgGUID: Ajg2w+LHTG6AgjgydaAMyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="134254067"
+Received: from unknown (HELO CannotLeaveINTEL.bj.intel.com) ([10.238.153.146])
+  by fmviesa010.fm.intel.com with ESMTP; 28 Apr 2025 23:35:39 -0700
+From: Jun Miao <jun.miao@intel.com>
+To: kirill.shutemov@linux.intel.com,
+	dave.hansen@linux.intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de
+Cc: x86@kernel.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	jun.miao@intel.com,
+	fan.du.com,
+	zhiquan1.li@intel.com
+Subject: [V2 PATCH 0/1][Bug Report] and Fix TDX cpuid0x2 #VE causing segment
+Date: Tue, 29 Apr 2025 10:31:13 -0400
+Message-ID: <20250429143114.1724280-1-jun.miao@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174590840374.22196.13222665858567689095.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the core/entry branch of tip:
+Hi
 
-Commit-ID:     f955aa8723a65759e920d4de8e5d076cef412afc
-Gitweb:        https://git.kernel.org/tip/f955aa8723a65759e920d4de8e5d076cef412afc
-Author:        Charlie Jenkins <charlie@rivosinc.com>
-AuthorDate:    Thu, 20 Mar 2025 10:29:21 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 29 Apr 2025 08:27:10 +02:00
+[TDX Bug Report]
 
-riscv: entry: Convert ret_from_fork() to C
+There is a segfault, when boot a upstream kernel as a TDX guest.
+- Boot log:
+[   46.902055] systemd[1]: segfault at 55c974b82650 ip 00007f252eef09c2 sp 00007ffcd94fe7b8 error 4 in libc.so.6[7f252ee28000+175000] likely on CPU 1 (core 1, socket 0)
+[   46.903302] Code: 00 0f 18 8e 00 31 00 00 0f 18 8e 40 31 00 00 0f 18 8e 80 31 00 00 0f 18 8e c0 31 00 00 62 e1 fe 48 6f 06 62 e1 fe 48 6f 4e 01 <62> e1 fe 48 6f 66 40 62 e1 fe 48 6f 6e 41 62 61 fe 48 6f 86 00 20
+[   46.905516] systemd[1]: Caught <SEGV> from PID 1958225488.
+[   46.921256] systemd[1]: Caught <SEGV>, dumped core as pid 346.
+[   46.922056] systemd[1]: Freezing execution.
 
-Move the main section of ret_from_fork() to C to allow inlining of
-syscall_exit_to_user_mode().
+- Guest kernel version:
+  Linux version 6.15.0-rc4
+- Guest qcow2:
+  rhel-guest-image-9.2-20230414.17.x86_64.qcow2
+- TDX module info:
+  TDX module: 1.5.16.00.0869 (build_date 20250219, Production module), TDX_FEATURES0 0x226f3f0fbf
+  TDX_FEATURES0.VE_REDUCTION (bit 30) = 1
+  TDX_FEATURES0.CPUID2_VIRT (bit 29) = 1
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Link: https://lore.kernel.org/all/20250320-riscv_optimize_entry-v6-1-63e187e26041@rivosinc.com
+The root cases:
+Glibc 2.34 and newer segfault if CPUID leaf 0x2 reports zero.
+https://sourceware.org/bugzilla/show_bug.cgi?id=30037
+That is #VE on CPUID leaf 0x2 is handled by returning all-0 to the code which executed CPUID.
+In many cases, an all-0 value is not the correct value, and may cause improper operation.
+Although, the bits of VE_REDUCETION and VIRT_CPUID2 are marked "1" as supported in TDX FEATURES0, their functionality fails during runtime stress tests.
 
----
- arch/riscv/include/asm/asm-prototypes.h |  1 +
- arch/riscv/kernel/entry.S               | 15 ++++++---------
- arch/riscv/kernel/process.c             | 14 ++++++++++++--
- 3 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
-index cd627ec..733ff60 100644
---- a/arch/riscv/include/asm/asm-prototypes.h
-+++ b/arch/riscv/include/asm/asm-prototypes.h
-@@ -52,6 +52,7 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
- DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
- DECLARE_DO_ERROR_INFO(do_trap_break);
- 
-+asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs);
- asmlinkage void handle_bad_stack(struct pt_regs *regs);
- asmlinkage void do_page_fault(struct pt_regs *regs);
- asmlinkage void do_irq(struct pt_regs *regs);
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 33a5a9f..b2dc5e7 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -319,17 +319,14 @@ SYM_CODE_END(handle_kernel_stack_overflow)
- ASM_NOKPROBE(handle_kernel_stack_overflow)
- #endif
- 
--SYM_CODE_START(ret_from_fork)
-+SYM_CODE_START(ret_from_fork_asm)
- 	call schedule_tail
--	beqz s0, 1f	/* not from kernel thread */
--	/* Call fn(arg) */
--	move a0, s1
--	jalr s0
--1:
--	move a0, sp /* pt_regs */
--	call syscall_exit_to_user_mode
-+	move a0, s1 /* fn_arg */
-+	move a1, s0 /* fn */
-+	move a2, sp /* pt_regs */
-+	call ret_from_fork
- 	j ret_from_exception
--SYM_CODE_END(ret_from_fork)
-+SYM_CODE_END(ret_from_fork_asm)
- 
- #ifdef CONFIG_IRQ_STACKS
- /*
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 7c244de..7b0a0bf 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -17,7 +17,9 @@
- #include <linux/ptrace.h>
- #include <linux/uaccess.h>
- #include <linux/personality.h>
-+#include <linux/entry-common.h>
- 
-+#include <asm/asm-prototypes.h>
- #include <asm/unistd.h>
- #include <asm/processor.h>
- #include <asm/csr.h>
-@@ -36,7 +38,7 @@ unsigned long __stack_chk_guard __read_mostly;
- EXPORT_SYMBOL(__stack_chk_guard);
- #endif
- 
--extern asmlinkage void ret_from_fork(void);
-+extern asmlinkage void ret_from_fork_asm(void);
- 
- void noinstr arch_cpu_idle(void)
- {
-@@ -206,6 +208,14 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- 	return 0;
- }
- 
-+asmlinkage void ret_from_fork(void *fn_arg, int (*fn)(void *), struct pt_regs *regs)
-+{
-+	if (unlikely(fn))
-+		fn(fn_arg);
-+
-+	syscall_exit_to_user_mode(regs);
-+}
-+
- int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- {
- 	unsigned long clone_flags = args->flags;
-@@ -242,7 +252,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 	p->thread.riscv_v_flags = 0;
- 	if (has_vector() || has_xtheadvector())
- 		riscv_v_thread_alloc(p);
--	p->thread.ra = (unsigned long)ret_from_fork;
-+	p->thread.ra = (unsigned long)ret_from_fork_asm;
- 	p->thread.sp = (unsigned long)childregs; /* kernel sp */
- 	return 0;
- }
+[Solution]
+
+Add VIRT_CPUID2 virtualization if REDUCE_VE was not successful to avoiding the segfault when glibc invoked the CPUID leaf 0x2.
+Since the enable_cpu_topology_enumeration() doesn't very little and can be integrated into reduce_unnecessary_ve().
+v1-->v2:
+1. checkpatch.pl the patch and adjusted code formatting.
+2. modify code logic:  when configured is ok but REDUCE_VE=false enable
+   ENUM_TOPOLOGY and VIRT_CPUID
+
+***  ***
+
+Zhiquan Li (1):
+  x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE was not
+    successful
+ arch/x86/coco/tdx/tdx.c | 52 +++++++++++++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 18 deletions(-)
+
+-- 
+2.43.0
+
