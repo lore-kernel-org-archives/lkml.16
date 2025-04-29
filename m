@@ -1,122 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFBC216386
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16145216386;
+	Tue, 29 Apr 2025 15:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940797; cv=none; b=oWjPCUtQLDxQEa253HYCcHYdsYDC3aKCJC+qekktKHa5lvgt+zteGNgx2edSiovVdgK3Q7VCL/aoCss1kgpbRsIaMdyZwHaS71a9RHfghIzs/zHHpkS5Aldv7lb8bxG8KzD0lCOM1wIp59qH0YIif0pQYnniAJ71VTV1DPvyKlE=
+	t=1745940826; cv=none; b=RRBq9lCp+uYL3qYDhgW9MV6MagTpT3v3y4Fkp8epd1BeS+7EsLchul1ItM71OW0ilznBgs0phG3v0eGDEICT/iKJp5E3NEzwq+3MLgBNGU1JRh8DP/ypH7NnLwUzVHi5oQpmZx03VOQOlGnnU9lvVLDvUUKojwWaBZiCPnnHhXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940797; c=relaxed/simple;
-	bh=QRc538ahWb8AMl4t/fqcG4itSbaOR0buUFsVMWElxNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NavN6Qj+aUbisEcv82tBOztTBrBm7BgeYrjh+9iA0Nd8FwpLdwLj0jkLxLBat4oHjH+MgMb3F+2ZWZgcteT6JfvqjKVKwZL0ZyVZqMybjqBupCdCDGTZHUjmchVIldsz8ozjJarUkMFrR3hjIMU4EIqB1OxXdEsXTBiI5w6i8CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=As0clNKB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745940826; c=relaxed/simple;
+	bh=A+l+xI7Imok+VPDtns7qlBCebAAix1fE4zfWYe2kV2I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RAkO1Kzlg2a4BtCrXomW3qILH0So8L03cjMc5vl5k7ghPQJQDy6OsTCIeJKPF1fw4UVnk9Qry4NiCw2SyMa5zmjzwJvSFvcEXQH0JxXdYDzhbD4ChHxBM4B4xze21EHMjq4a8n8T5L21sbmMwDQJXTlrxYlpPcKILTsSpmTfDQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwCSOQuG; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="As0clNKB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A17BC4CEE3;
-	Tue, 29 Apr 2025 15:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745940797;
-	bh=QRc538ahWb8AMl4t/fqcG4itSbaOR0buUFsVMWElxNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=As0clNKBo8KGh/FMC2d3vvXI5kA5xPIXGrWZI1QE+A+sN/lm4TiRe6fWTnnBnFOQy
-	 BaT11ATRyz3H5ZS5EMMQfn35ROu5xHIPj2ovzvI2Xomk6nCEzNReWivdAQAQxCh9/h
-	 yA1m9aEOvDFn5y5KVE4mk4f+Pnye510RA9Mj62vMtC44VKLtkpatStAFjYQWO6eWum
-	 0bJeNmOGz0kOa8l6kKYwmpclecEXUvUlzanfVQrAwFesd61DDmJfXL9EytOd2Y0jyA
-	 8HNxw59BRcAkMTNhmc97rtSz3NoV1DVlf4kP5+0ge6TFK0VXS2KjM8iTQrHQnM5MEA
-	 f+tTOHtRnpKtA==
-Date: Tue, 29 Apr 2025 17:33:15 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 03/11] drm/connector: add CEC-related fields
-Message-ID: <20250429-rainbow-jumping-boar-dbbb3c@houat>
-References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
- <20250407-drm-hdmi-connector-cec-v5-3-04809b10d206@oss.qualcomm.com>
- <20250414-augmented-origami-fulmar-acb97b@houat>
- <ac890d36-f61a-456b-9833-4615f691eed6@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwCSOQuG"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0459668101so407052a12.2;
+        Tue, 29 Apr 2025 08:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745940823; x=1746545623; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XZIKiIlFR4DQeDOYxtwwQdiHDCHP+QL8sXp+cVkdBOU=;
+        b=IwCSOQuG8dsGOLW396Z/52JxYX61bixG4DZ2ihJ+2DWnVTixS+6JzZ69Ya9UioGipm
+         7pjO+m5VV6d13e+FTlMSa4Pr0ar2oMS4rkOM59pP4jY0JnTRFMjwESBiLZ+wTRiGhTyK
+         cPvJUJDu9ynwq+J0BvcxJz4zx5vsOiG04urwXzHJOtjEpqNJMvH9D3tBQ+5zuhPDo+oJ
+         Yuvdx7zZcAL9Lyz/UUVQODfPnx3b2sBkTqqdbwuarHQ8/mbYyFUrHkDBkOnY2MAg2G8v
+         R9BZy3dfpQPXXWKxKJoENNd+O59tFUjORhzflt8oBttrnJDiQaI9S+8DU7xpqYBqczP2
+         n5Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745940823; x=1746545623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XZIKiIlFR4DQeDOYxtwwQdiHDCHP+QL8sXp+cVkdBOU=;
+        b=JtAkxlPH/RANYs8K72Orbn1AWSsFcCvCTpx1EIpf0auOJO+oX82ULst+KY5O4Njmch
+         U2Nc06RZHNrzVdAMT+Cu/HGq+1SxuFSGBoZSr7GDSj+Vrj/wTLHAcFaAmzlaDYxX3beZ
+         ZLyxZSkwNi5tomh2Hqe4FY3uhvr8NIhCizzmiZMOSKfUZceBwPM09EFbPg8gwqOuNAjy
+         UxkKM9dzGyahgW3dWW8UkH64fbwMojQU97atZRehz/HtGBLUZWnp3S17XUKX5rEKuaVE
+         onEPe/fslZvQpj+NB/5uQzU60m/2vvWEXWocXPKSkAWP53+l6i/rX59pq8lz4pKJzPSv
+         YvbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmrVh/T4qiw8/zOrD5zFO86jNN5QiLoJ4ufoZFDddervkBzXL4HNskXQxmxGWjeM4Z2nekAePYFx0Pmvc=@vger.kernel.org, AJvYcCXNiYfVVZsCN34pRoaULwdL0zV4ju20S+AFiRYTkTmK1f8qfix1C0pcPOdNUQ2Sal/EafXouxqWP9b8JQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRvkvFzceWTOjvxWSqDSIUNVw2Gc43Nau7RqnJZGiDKppBJ38a
+	gXK+gUa31Q9r/BWhHTbSAeEkdyCGHuqUkCxp5E8p9mRRq+UcXMeo8e+vKRo4SsEZSe0WCIEcUre
+	SCSCbZClbu/uxey97dCkFCAfgPV/96Sg+JagbTg==
+X-Gm-Gg: ASbGncvbIenBYm1qDOk2bXAMa0hUm8m0bTqhinU2M3q2VwVw4Wup3/Vqe/iz8Un/wNq
+	mVflyd33RmxOMzcOP1hfMQLOIK1EWA9bHEUaoekQKbmWyheDgmJpHiMKmIkfGkQlr03AfhjOm8Z
+	VB9G0wSU7gcazyp62pmB0xhmtPgq1RL5hK
+X-Google-Smtp-Source: AGHT+IFjB+MW/kvKyLLyIFXEGRvt8nhF0yNYd8DjBFC2RtS6kaeAW1UsQcta96JBRJllwfrNaV8OrfyIUQVMAE2XXLA=
+X-Received: by 2002:a17:90b:4acb:b0:2ff:5759:549a with SMTP id
+ 98e67ed59e1d1-30a2205ed8dmr2081705a91.1.1745940823331; Tue, 29 Apr 2025
+ 08:33:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="366y4vsvvysta3b6"
-Content-Disposition: inline
-In-Reply-To: <ac890d36-f61a-456b-9833-4615f691eed6@oss.qualcomm.com>
-
-
---366y4vsvvysta3b6
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <tAJ0jyptJ0jLaRp9siDw8y2iw3S7GeuC05Uncum-qihlIKfCfEVhQbGNuTengQ0kWpnNp7OoTITxbEdf6nDTCw==@protonmail.internalid>
+ <20250428203943.51dd39d5@canb.auug.org.au> <877c344gmp.fsf@kernel.org> <20250429174451.42a368af@canb.auug.org.au>
+In-Reply-To: <20250429174451.42a368af@canb.auug.org.au>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 29 Apr 2025 17:33:29 +0200
+X-Gm-Features: ATxdqUF9NEpaCi69-Y7quv9-_Gz4JnLUBrCegSEmODyKPmFo2JEAcqd-gJA7Xxc
+Message-ID: <CANiq72kSReDcMU=eezmgsREL5+1FSnq9_VuEd-8AtU86W6UoNA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the rust-xarray tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 03/11] drm/connector: add CEC-related fields
-MIME-Version: 1.0
 
-On Tue, Apr 15, 2025 at 12:10:06PM +0300, Dmitry Baryshkov wrote:
-> On 14/04/2025 17:52, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Mon, Apr 07, 2025 at 06:11:00PM +0300, Dmitry Baryshkov wrote:
-> > > +/**
-> > > + * struct drm_connector_cec - DRM Connector CEC-related structure
-> > > + */
-> > > +struct drm_connector_cec {
-> > > +	/**
-> > > +	 * @mutex: protects all fields in this structure.
-> > > +	 */
-> > > +	struct mutex mutex;
-> > > +
-> > > +	/**
-> > > +	 * @funcs: CEC Control Functions
-> > > +	 */
-> > > +	const struct drm_connector_cec_funcs *funcs;
-> > > +
-> > > +	/**
-> > > +	 * @data: CEC implementation-specific data
-> > > +	 */
-> > > +	void *data;
-> >=20
-> > Is there a reason we don't just skip that data? The only user I'm seeing
-> > so far are the helpers, and they only put the cec_adapter pointer in
-> > there.
-> >=20
-> > Can't we pass the connector to CEC and make the adapter part of drm_con=
-nector_cec?
->=20
-> It will be either cec_notifier or cec_adapter +
-> drm_connector_hdmi_cec_funcs. Initially I sketched a union here, but then=
- I
-> thought that a void pointer makes more sense. It allows us to make CEC da=
-ta
-> helper-specific. For example, cec-pin might store platform callbacks here.
-> DP CEC might need to store AUX pointer, etc.
+On Tue, Apr 29, 2025 at 9:44=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> I have applied that from today and it all builds fine.  Thanks.
 
-Ah I see, that makes sense.
+It seems a couple spaces got removed when applying, so `rustfmtcheck`
+fails in next-20250429.
+
+Would it be possible to run `make ..... rustfmt` as a merge/build step?
 
 Thanks!
-Maxime
 
---366y4vsvvysta3b6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBDxOgAKCRAnX84Zoj2+
-dl/aAYCik51xsbDezLJo8jlJ5MHP+NTPYmBAZuSpj83lu4TBoUOJKS9aywuMfhJa
-pT0FJZwBgOb3tH0d4pJUW2Ke9bYpnhbnLv5UiQg0UKm9KtB9JLtFM5mFNAu3hWj9
-QwgA3/uQhw==
-=//IR
------END PGP SIGNATURE-----
-
---366y4vsvvysta3b6--
+Cheers,
+Miguel
