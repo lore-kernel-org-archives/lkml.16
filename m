@@ -1,207 +1,211 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EA31EEE0
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62441EEE0
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937752; cv=none; b=g7AOz1uFYyFSimUtS14xMniYKeHTeNHJEAOWoIJOdWnQMKIgMCofX9O+Q8ziyxNdlPl+rEt8OxGfLhO0111fVdZiSD0avCMe5FWpH3oRc7q5aJER7ulMyUIGvM/VyGdh6jv0fa0+UVTjD7CLDUEDXAKrr2qDwYdBPRsydbZefq4=
+	t=1745937765; cv=none; b=keRoWHOAdAR1Dj8HCHwMU4156gIYRGNQH/Cn+T/TjO/UFdvAJQIQIMfub/p2cTbv/eBbObGrWlIDQz4sHDKzrfsiRE5Pb8sRb4IywAuSxq4Y1PXF+ClCIrYZeURtN/lNqXBIQIjQuCoQZEeiiKk3V6rpK7z5DZDjDvbBIyPNBEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937752; c=relaxed/simple;
-	bh=0LxHhShz+iUHtHcykB8wWEuK9Cv+f1D1ki3PQHAv1VQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MDvGH9BXimYGGDO95fTv/EIlGoun49HUHWffcL88nPFVGaYF8+bOZwq9PaZEfONmJp6Rmm6yzKxnBTPBRwQmY524xzccG4iDpUsqQ5oM176k54NAvElt1xYwGI0eUGgjjsjNECI7GswrHYxffKVel9V1B+m7OecOsU75FP7bdVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S68ESh1R; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745937765; c=relaxed/simple;
+	bh=ZdBlqcD7UgXi/cmHBjpAFe6EpoLl9MO34xzM6rTx074=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jXX+E9mL8KCRShSvGdtctHjAikFQkxLe4ZM4VFKKTJnzkwhiAJ8SWBZE5jZkYCSyPITTnIb7TJ9Ufvphwf6I0wQL0eMOh+s9hlOUajpayJC/WLiFnZI0mdaobHSs4e116wi1loeisigeLFnioNcGsWHxCYYreZ93V4y/IoUvni8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WaLLtT5C; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S68ESh1R"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2264e5b2b7cso53844225ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745937750; x=1746542550; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0mQvprBOwUjWra1RcKKsKm0ztaWCfR7Qydgmflcz4E=;
-        b=S68ESh1Rwo1zacNCw4U7AHpScjTnPDblVdY62HaqxlR12R1GJi1+I5G3tneve4FxIJ
-         1EM4cyfxD77uZvsQ8wYaDaP7/KCOsJTnOLtjtOKRFAOqctlThfpxQQlXdZQjOqWkvvDH
-         BEynl3WXI6qaqlsYDuGruI/t8tHkNye5CYGbqUlQAtfNd4pzULvFYt+S5GGjDko42jMn
-         09WWPkJOhqBzQVjtdR52oFIOF+kytNvhapLB97KXpFfZB/F0TJWzngarY/ugI2/1gC8D
-         8KeZPMmTMHpcHujC9V0yJd/G46AdXIMGCt+CfEcmjhI/8zTXAjQnt9JhdNoweQrzhWRp
-         uRmQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WaLLtT5C"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9GRpw028409
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=95T6lUWWSMvDyPMIc22M5eNK
+	HqFKHq2wCTghZ6/oaJE=; b=WaLLtT5C8FQJcBDimbkuPt6TTht/cqWy5fKvWqMW
+	ILpQ4FF1A55IxDrswWlIclW1piFJUsnCWdTYFUGmuQysFPqImmV7yUh6xBE/ilPR
+	bb2G6myBogFm4RPgPQrk+conHuGunajECg0n9cIdzK9XsFIwHOvJ5mFV1RUDGjbs
+	ZNqm9qaxetcA0D+BTMmzHMm8am9RMW5W5xHeAzwGubxvVQ5DwqDd/2+Mf+3fMfTg
+	YZ47bkm9K/StMh6cpwHU8/Epk21WTDsx2zpEdRJiFUZw5CT6/OzmtbcaRFmkse0p
+	jVHxBm/tqOBWWPBV3MuZV4aGW4uImQHirEavkGqJTHITLQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468r8hut9m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:42 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c7c30d8986so768289385a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:42:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745937750; x=1746542550;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0mQvprBOwUjWra1RcKKsKm0ztaWCfR7Qydgmflcz4E=;
-        b=LrA7SOltpqbJwwHIvmbE/gvS6ELM7qofkczl/CswvStseSFu6/987Nf8E2uhmdg/6p
-         2bm0EfP2wWaVlZ1FOzQLnE6kBchHARHf1JDsC4MJTiYePN6ZFq5TovEsKm0w/bzqYSEg
-         FgbbJVn9FzKxCpHTgJyGB3IlK8JBAtOpWH0AcGeyV/UJlQnOmC4gjyFM53LeTTSFYCl7
-         ms+zmQlwqKp/Axs/V5qtjSJqOqfsoIM3Pea+R1UP4Hpy0J6zgGiFGz9C9n5Agdb9xX+q
-         LrhHPy0NAXxc4HS4XSFBkAFhAaEs+ks72orJCqdLPjvxeAPKTVqHRDNiffSl1XUaLMjq
-         te3Q==
-X-Gm-Message-State: AOJu0Yw8FwKRahSr4xJb8xRTChDrs+NPDwe4muwR7FlekcpddN7ALy+B
-	9FzI18q+OyMS7FGIA8pVHxdhrXxc+2F/vaxsR3QJ9C/To6nxz5T1iOE5Q7x0gEYWKY0lVvuwhLH
-	aWg==
-X-Google-Smtp-Source: AGHT+IFaYA2nZjBdonnA/rXpPPoN3V40FiXVQKx/bAbY3JC1cK3nvlrThd1tO3ngtHKoV68eaBM7lXeAEY0=
-X-Received: from plqu14.prod.google.com ([2002:a17:902:a60e:b0:223:6546:744e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:11c8:b0:220:e63c:5aff
- with SMTP id d9443c01a7336-22de607539fmr50951465ad.47.1745937750352; Tue, 29
- Apr 2025 07:42:30 -0700 (PDT)
-Date: Tue, 29 Apr 2025 07:42:28 -0700
-In-Reply-To: <20250429061004.205839-2-Neeraj.Upadhyay@amd.com>
+        d=1e100.net; s=20230601; t=1745937761; x=1746542561;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=95T6lUWWSMvDyPMIc22M5eNKHqFKHq2wCTghZ6/oaJE=;
+        b=Z/CGEwuQehDlraEK/Wt57UUqT7vjuMgS92XlCk91DRpmjuANhkbKdoocJbRr0HdIuo
+         sstTrsA70pQduIzecuVgEtNE/GECMJzv3PF/C1wnDsvFWiNOuSTIs+bz1za4thBkcOiN
+         pjEQ/eHWl9CAOjYy7xsNUebAvghjGxY+SU+dlZr4f9HDq7AIYDGxqaJ4TXOS0x7FsX9t
+         Mj3Kld7/QNcD4gNTViseqPuzg6MKWWdVy1UyNjuAh3PGe9gbFijRsjMjNyOXz3ALobmG
+         lIiwCJ1AvaIL+bmnp6YnZ6ymt3nBg7YRFTnMLZJZnHxIVJ7akzAJy4GCotm4nuG3h9Ow
+         5eVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkz+UfDTKIt53QDf7ekoKZljxbjE7bTiBf5PjfG+o+lHS2BQ0BRgsRAusuSyGSGsftK9oyh+fPG2JtCyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyE3Mome0X5Rku8+ixYLH23ShlJCZIt2GHzNOl2OyOo91htZaIC
+	k5HOZIYxjV1qYnrnRHm9qOUwSihcWH7e0P2MExfjbZ4BDXYPTF4jZX8of+8gw5DTI0vQ1k+Lddz
+	xTjO5GdF/IG50hxntnRoSVgi83FOnjm89KnCpYuqdCm+/5EKvIBWFJCgIJ5LZueo=
+X-Gm-Gg: ASbGncuCaJ597W+UsSDwBgsucSNNkCO5BnjfN3tQMx68vTOh8ZN5x0Dbjs/929Sfn6o
+	JtiGVDyEm95XittxCOuLbQ9G0ix+LkQP7LyFP7h2I9TXVl0Oi5OZPZTEeFYipEVrzDNKKBv83SI
+	CVIX7JmpHf2JBSSGWQjxbCXxNfF3g28Hx5stB4i6+XSPQy7hdfICD6CfvxCrwUYuk8IR5J6Ef4n
+	l5c1Kfn9NIyBMhElVWEgMyHCRhm2p5oRP+DcGtJAplDyNMsp8Gia4AIpHAgrbX2o7SZ84vbc5Fc
+	U4pFZWmyR/O3CGkwJHGoaqxFa0NU/3M9QMCCgo9+quty3p5lEi+Arinqj7QsLaSA9ckJBXW6I48
+	=
+X-Received: by 2002:a05:620a:4609:b0:7c5:6a66:5c1e with SMTP id af79cd13be357-7c9668cdc37mr2109272885a.58.1745937761589;
+        Tue, 29 Apr 2025 07:42:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEDNJAkS5MxDnNhkLq8y60Bm1ZZecLba9P4Zw5IB7TV0UsyjpIf9foZNs6LWwIvq9tQDTlZsQ==
+X-Received: by 2002:a05:620a:4609:b0:7c5:6a66:5c1e with SMTP id af79cd13be357-7c9668cdc37mr2109266985a.58.1745937761023;
+        Tue, 29 Apr 2025 07:42:41 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb26258sm1895708e87.17.2025.04.29.07.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 07:42:40 -0700 (PDT)
+Date: Tue, 29 Apr 2025 17:42:38 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Luca Ceresoli <luca.ceresoli@bootlin.com>,
+        Anusha Srivatsa <asrivats@redhat.com>,
+        Paul Kocialkowski <paulk@sys-base.io>,
+        Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+        linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Adam Ford <aford173@gmail.com>,
+        Adrien Grassein <adrien.grassein@gmail.com>,
+        Aleksandr Mishin <amishin@t-argos.ru>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Christoph Fritz <chf.fritz@googlemail.com>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Detlev Casanova <detlev.casanova@collabora.com>,
+        Dharma Balasubiramani <dharma.b@microchip.com>,
+        Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
+        Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jesse Van Gavere <jesseevg@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Liu Ying <victor.liu@nxp.com>,
+        Manikandan Muralidharan <manikandan.m@microchip.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
+        Sasha Finkelstein <fnkl.kernel@gmail.com>,
+        Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+        Vitalii Mordan <mordan@ispras.ru>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+        "Rob Herring (Arm)" <robh@kernel.org>,
+        Hsin-Te Yuan <yuanhsinte@chromium.org>,
+        Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>,
+        Aradhya Bhatia <a-bhatia1@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Ian Ray <ian.ray@ge.com>, Martyn Welch <martyn.welch@collabora.co.uk>,
+        Peter Senna Tschudin <peter.senna@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>, Inki Dae <inki.dae@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Helge Deller <deller@gmx.de>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <sdiwpe7nnhud3fvkgijjbfyenlwpchbxgehyxmsy7c5loo257h@hkfcawkjrlhd>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com> <20250429061004.205839-2-Neeraj.Upadhyay@amd.com>
-Message-ID: <aBDlVF4qXeUltuju@google.com>
-Subject: Re: [PATCH v5 01/20] KVM: x86: Move find_highest_vector() to a common header
-From: Sean Christopherson <seanjc@google.com>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
-	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com, 
-	francescolavra.fl@gmail.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+X-Proofpoint-ORIG-GUID: 3epeKG3nWXGuHCJgOWgZbWhqkcZ_uDk0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDExMCBTYWx0ZWRfX+nqocrIhkCpw qBhDF7QOS+b5luOZENvYVePrpIRxDtzfgL1RO0HcCElD6LpoLr6VjCf6uR3m2ClcUHuviq0AgKe HPWbU8qUnxLtTZe+fqVxqYypKmQVuqR1etRrhXlGBQEmktZ6dsVZ2FAkF74yAZ637j5Z12JSGRK
+ zsjj88Bie/U0la5OI7l872tIPwIyb/eiC/a0Oy6J86L1DoGWugKAzLG/sGPWSm7Y6Fi6VGqIxcn a/VdvJ8BBwSbtzY/JHw/Sgn9KTSVa0JcPPr4CBGlt/EuY0s9L3nNbHmFeWgElU6/WXY49vVeE/k KMOkZjA0aTg36Qj8bNgvVLCL8JfwwN93n2/sD96ab1fbKKpif+Tg56VO5D0x85A7ojZCZw0GGYI
+ JKXn11pqcv2Q1ooqZSxUzwSQ0UnpByD0oBdNHnVLMEw9flqzt0F1GUp45TGhnODGJOHOo7VB
+X-Authority-Analysis: v=2.4 cv=cfzSrmDM c=1 sm=1 tr=0 ts=6810e562 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=1X4oNAvfgwtBicUf-4YA:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: 3epeKG3nWXGuHCJgOWgZbWhqkcZ_uDk0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290110
 
-On Tue, Apr 29, 2025, Neeraj Upadhyay wrote:
-> In preparation for using find_highest_vector() in Secure AVIC
-> guest APIC driver, move (and rename) find_highest_vector() to
-> apic.h.
+On Tue, Apr 29, 2025 at 11:27:51AM +0200, Louis Chauvet wrote:
 > 
-> Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-> ---
-> Changes since v4:
->  - No change
+> On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
+> > devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
+> > bridge, and the only one supported from now on. It is also necessary for
+> > implementing reference counting and thus needed to support removal of
+> > bridges from a still existing DRM pipeline without use-after-free.
+> > 
+> > This series converts all DRM bridges to the new API.
+> > 
+> > [...]
 > 
->  arch/x86/include/asm/apic.h | 23 +++++++++++++++++++++++
->  arch/x86/kvm/lapic.c        | 23 +++--------------------
->  2 files changed, 26 insertions(+), 20 deletions(-)
+> Applied, thanks!
 > 
-> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> index 1c136f54651c..c63c2fe8ad13 100644
-> --- a/arch/x86/include/asm/apic.h
-> +++ b/arch/x86/include/asm/apic.h
-> @@ -500,6 +500,29 @@ static inline bool is_vector_pending(unsigned int vector)
->  	return lapic_vector_set_in_irr(vector) || pi_pending_this_cpu(vector);
->  }
->  
-> +#define MAX_APIC_VECTOR			256
-> +#define APIC_VECTORS_PER_REG		32
-> +
-> +static inline int apic_find_highest_vector(void *bitmap)
-> +{
-> +	unsigned int regno;
-> +	unsigned int vec;
-> +	u32 *reg;
-> +
-> +	/*
-> +	 * The registers in the bitmap are 32-bit wide and 16-byte
-> +	 * aligned. State of a vector is stored in a single bit.
-> +	 */
-> +	for (regno = MAX_APIC_VECTOR / APIC_VECTORS_PER_REG - 1; regno >= 0; regno--) {
-> +		vec = regno * APIC_VECTORS_PER_REG;
-> +		reg = bitmap + regno * 16;
-> +		if (*reg)
-> +			return __fls(*reg) + vec;
-> +	}
 
-NAK.  The changelog says nothing about rewriting the logic, and I have zero desire
-to review or test this for correctness.  If someone has requested that the logic be
-cleaned up, then do that as a separate patch (or patches) on top, with a changelog
-that justifies the change, because to my eyes this isn't an improvement.
+[...]
 
-I suspect the rewrite is in part due to REG_POS() being a KVM helper that's poorly
-named for a global macro.  lapic_vector_set_in_irr() already has open coded
-versions of REG_POS() and VEC_POS(), just dedup those.
- 
-*sigh*
+> [16/34] drm/msm/dp: convert to devm_drm_bridge_alloc() API
+>         commit: b2aabe5c6b65516d88214aba4b12ce2ca78bac6c
+> [17/34] drm/msm/dsi: convert to devm_drm_bridge_alloc() API
+>         commit: fffc8847743e45604c4478f554d628481b985556
+> [18/34] drm/msm/hdmi: convert to devm_drm_bridge_alloc() API
+>         commit: e11532be87e437648521a8ed5358c56df11933b4
 
-And you created your own versions of those in get_reg_bitmap() and get_vec_bit().
+Why? These drivers are explicitly handled outside of drm-misc. Please be
+more careful next time.
 
-Please slot the below in.  And if there is any more code in this series that is
-duplicating existing functionality, try to figure out a clean way to share code
-instead of open coding yet another version.
-
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Tue, 29 Apr 2025 07:30:47 -0700
-Subject: [PATCH] x86/apic: KVM: Deduplicate APIC vector => register+bit math
-
-Consolidate KVM's {REG,VEC}_POS() macros and lapic_vector_set_in_irr()'s
-open coded equivalent logic in anticipation of the kernel gaining more
-usage of vector => reg+bit lookups.
-
-Use lapic_vector_set_in_irr()'s math as using divides for both the bit
-number and register offset makes it easier to connect the dots, and for at
-least one user, fixup_irqs(), "/ 32 * 0x10" generates ever so slightly
-better code with gcc-14 (shaves a whole 3 bytes from the code stream):
-
-((v) >> 5) << 4:
-  c1 ef 05           shr    $0x5,%edi
-  c1 e7 04           shl    $0x4,%edi
-  81 c7 00 02 00 00  add    $0x200,%edi
-
-(v) / 32 * 0x10:
-  c1 ef 05           shr    $0x5,%edi
-  83 c7 20           add    $0x20,%edi
-  c1 e7 04           shl    $0x4,%edi
-
-Keep KVM's tersely named macros as "wrappers" to avoid unnecessary churn
-in KVM, and because the shorter names yield more readable code overall in
-KVM.
-
-No functional change intended (clang-19 and gcc-14 generate bit-for-bit
-identical code for all of kvm.ko).
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/apic.h | 7 +++++--
- arch/x86/kvm/lapic.h        | 4 ++--
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index c903d358405d..7082826030ba 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -488,11 +488,14 @@ static inline void apic_setup_apic_calls(void) { }
- 
- extern void apic_ack_irq(struct irq_data *data);
- 
-+#define APIC_VECTOR_TO_BIT_NUMBER(v) ((v) % 32)
-+#define APIC_VECTOR_TO_REG_OFFSET(v) ((v) / 32 * 0x10)
-+
- static inline bool lapic_vector_set_in_irr(unsigned int vector)
- {
--	u32 irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
-+	u32 irr = apic_read(APIC_IRR + APIC_VECTOR_TO_REG_OFFSET(vector));
- 
--	return !!(irr & (1U << (vector % 32)));
-+	return !!(irr & (1U << APIC_VECTOR_TO_BIT_NUMBER(vector)));
- }
- 
- static inline bool is_vector_pending(unsigned int vector)
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index e33c969439f7..13a4bc60e292 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -145,8 +145,8 @@ void kvm_lapic_exit(void);
- 
- u64 kvm_lapic_readable_reg_mask(struct kvm_lapic *apic);
- 
--#define VEC_POS(v) ((v) & (32 - 1))
--#define REG_POS(v) (((v) >> 5) << 4)
-+#define VEC_POS(v) APIC_VECTOR_TO_BIT_NUMBER(v)
-+#define REG_POS(v) APIC_VECTOR_TO_REG_OFFSET(v)
- 
- static inline void kvm_lapic_clear_vector(int vec, void *bitmap)
- {
-
-base-commit: 810a8562c8a326765a35e7c2415bd052cca9dd2a
---
+-- 
+With best wishes
+Dmitry
