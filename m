@@ -1,204 +1,161 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B475E27F747
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B942820B2;
+	Tue, 29 Apr 2025 08:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915295; cv=none; b=OQwG+DzrhP+W96shBSYaHgpoIdUFP402OTkzvxEN6DXZyFg0KNWRFRaKQxBqxnS/9nPpCeynSciB0Ydvy971DqInYiaoq527BXaa+xa9F/4ur/6IVHbrZ0I3qvfOVMd9d2zAmHx21zldwybNcfyp8dsV39HC2xfErbIaHOeSynA=
+	t=1745915296; cv=none; b=hfGCZnyfNGQoUOQQzMULbYTYwA9wuRVGrsm5DT+XzxT2BEPrvk3iBN873YexK3KmbSH1VCGFR/tdUINlUPvALg97TKw7AD8BUf+U+79VA2Oq5Oj+BMnkwZdPsgyyaXijkBvPriQv7UJ5yIHIFs1K0JJD/HqC2zDi3iWHPu3mVms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915295; c=relaxed/simple;
-	bh=1FsywMQHT6aCTH/4QijjV+e4uu/3MJPm0YGRHU38ci8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I0GrN0abyCfKL1krBJBMK1L+AeCfNNAN1fuCeEw4F8Lwe3jZFugj7BqOeg7W7uFC17SeqbiEwHeou13mYH0Pe8e+nZ4lOT9JedR3waYa6uod7G2jKSJypcRkFOHAPxEXeg7iie9zZCN6YsiTetLoHhU1u5rlvkzjZ+1gGjJFvQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XiJ8FYkW; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745915296; c=relaxed/simple;
+	bh=oiIYGLVaryNmP4b9joXCtmwuK9gnLcmQ6q0Qn8TLP3I=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZBcuJpgwYaErxT3JeIpluESaZrsBbuKrZrWo70lMdyvOe2m4M8JX96ZgZc0DgCGBF0dx8csrkgupIucTGpSloc1kr76NDK7SmXNEq1DTnhpze+0PumRbBVDuIEdrE2fNCfNMtZ6N2WdohjIvy9+yOeT9LZGaPnQjMq77yA/oI+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6zAqIq3; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XiJ8FYkW"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2240aad70f2so89155ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:28:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6zAqIq3"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso55343195e9.1;
+        Tue, 29 Apr 2025 01:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745915293; x=1746520093; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D5QKxnLZKN15CjETYE0cz5F8y62z+3Lyd2c2OfhrGOQ=;
-        b=XiJ8FYkWjiPglKhfyBJ5prckcaI3Oa4QLpYgaC039SrK9qp9Jr9TccEMyia82CHt70
-         a5xfZ/lh3c3l40eIxHIBkOstUioBe4oGiLrevvU7ZQPk2UVr6cijRKI12swS64jjhI9e
-         I0GEFmeoIeUYsf0udTcxkW7/y4CdTTsmibDzvBeHuvn5hPTUdcOoa87zNc5YxD68Nmno
-         gybrcdpv7WjLxOYMP3LWlP/8et6GfwsEF8BLmhflDrJT6FUSEazYPCUfX5SU3QtLf4H3
-         oAoivNXqrEmsr/EOOqCSsg6G8HZ8aNnFAiTE+pWPzGOZUg+WvhCn44r2lvHJRqeYNxb/
-         bhww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745915293; x=1746520093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745915292; x=1746520092; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D5QKxnLZKN15CjETYE0cz5F8y62z+3Lyd2c2OfhrGOQ=;
-        b=oBsvYZEmmLRNNxixOuUFfaDAnDK56g7CxAFbxMcyzKnDZKNFzyw47t8SFSRhtdMCbM
-         BVXH0JRy1j7hscxxLIvHoBgkuKrtD7eP7aHK9FNArCkRQQiclVlROqpe8k5g+sIoLY0O
-         P/V6s5bQA3qasiapNGN80oeXHkikgXUQcki1LJTl8cLmItXTFS3AkTDMLr9FgPwBL+SX
-         xBjrkhfxT+c2alFqRV9zc6K3Km2pc0W5bwuCYXNzdoVQIqsdC/R1j7YVwTHxq4msziwC
-         HvgUsXlUx229tF0Ggir58YYVShS+UOFrA0wdqYiKLIXJ6QZiszPIwT4UTa9kGsdE4v9e
-         GWaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUAHfW/nvBIOBvbm3cN3jKeRPAs2TIEgdVvrIixFmKHzOPR4lwPSzB9/HMLhlZcMbg4+Z2P/thpzSXxz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZGAtW1PcNhKi0AbfGO+u0qC5xNoxbZIzbdqxzB+OOXTTNeUq6
-	U6GBvBAiXBxyGgOJQNvPXoMAdvqSPdjCrAFskSqkJBHMri877DjqDrKV401sfQ==
-X-Gm-Gg: ASbGncthOkz4W/aDsELecFChwe9K3JJJJXdJ7pr/QCK8K+XuCXyv4ypmrxOHa/6LsSx
-	QEJk9gjKj3S6X8d/+btUyYonFcN2gqePRI7kvydpDIBx6wx4CsDjUL/Zc5RCX3X5IO/49Y2BAtx
-	1+40KS8bKhNsYox+HlRY0YdgVHkFWNM8HHcYeA4+iR/tuqfQo4Lacifw9fjU5QH/UlmhfcWoCIk
-	/y0NPX9XY1zaRazO5ChLlS+Burbhh+OLFKJz+BXpOMbQbqBpgzO/gYrq99WK53Q9fQM8HdFpUL+
-	BtH6rCL4aZyX91VIYub3DwmSb/5c9RpapQ/w0ohTA4Qp1kLiWbfxc8afXAmFEX1hS+2vgJgo
-X-Google-Smtp-Source: AGHT+IEBLTjQEPi6T2MilTT/Y6yv+CY2P+m49PsmJxyrcH4D1FATZ6uG7LkMVqt9dbTXi33w3gHvEg==
-X-Received: by 2002:a17:902:f643:b0:223:f479:3860 with SMTP id d9443c01a7336-22de6de05c5mr2640355ad.18.1745915292715;
+        bh=vtzTNjtZDU60W2bs8OvIBOH9Kq7lrWqCDc5aRj+boNg=;
+        b=Y6zAqIq3XW45Xnvo4l0HNyXmbMQAUX9YSNo1VyRPLxYI3dWmMl5ACTC+XcVjrceezE
+         qGAnGlaSlaDgFdKSIEHWM5OrrcIQejjXcNVN3jjbRjYLx3E9+fXBcW+dxCJQce6Zsb1t
+         T4SenyaQVL5AD6IThD6KFTa0+a+rDOKrAsa/xB8lvZRIfV6jk9TG7Vce6zNbq3ve1gtA
+         8wFTymZHEIbTA2q4uOdH7S7wMFEaGltZ/HynlkECuP2jsUb+BPR6Io2LQCaF2mu5X1hn
+         Chk9Zf/eb77BnxRbBT79GGIpzUXfHkyzR8ESx2q2/810e9NeruVqDxLCfomfz8MROt2C
+         v3yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745915292; x=1746520092;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vtzTNjtZDU60W2bs8OvIBOH9Kq7lrWqCDc5aRj+boNg=;
+        b=GAKs3MUGQvZWjYYPp8I6W95pHYiStxjFg27i6GkmGle1YVCzMjN1TJXhdRtEZT4aAC
+         sCLOg7z4IoQZASKpEjfOLBKWppNt0/ySFf7G7f5LcazYoedG4wIUMJTHSMfACZXVNqAd
+         33vtCqzZklI+10cnW3ThLZlLY6RajYmFk793GT53t5zMrf8Yb5grqhKoeDLavYIwdz0E
+         gEzobgnDX+g+vNuLwM82O5jzano8b25AhfFstNH6vggAgEuQ1Dp1iKhs9FkKtB8nnWu1
+         S772v9/Ol/f7NoSWLgGkVNvgN000DtqSslJAPVy1XBRxYHPb+sJU7H23xO8kLG2XkzCu
+         VTVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcJvlz9Muc0cnKxKM0NeaXwVXD3NHQZhyEcv5p7q+HmM/+VlMXiWXIos3wA7+i4hfWvnlRbX95pk994vWO@vger.kernel.org, AJvYcCVo7CixBKFCnaH7J91niif5/+JnaX1MHvso7O7/QUw7XtqzVTvPmJJbi2DEXntnOzKqJdjYOVkOZ6kD@vger.kernel.org, AJvYcCXfyMcKxs/Hip8hvcX5aojaOxC8RgkxZ52iwMCVguFkYGU35m6p4+DhEcRCD9FKpS56fiMWlYBfKbYo@vger.kernel.org
+X-Gm-Message-State: AOJu0YyphLaMPqlK+mZ0ar3R0YjeEquT9Qk/xYBn9B6JkpT6WjjHc/DC
+	QggrIrlzPXDejsS2Q1BTfwQrYV1rIkeHrzPaY+fvthHpyhu/dTMg
+X-Gm-Gg: ASbGncv0RX7E6xQVI/t2klvmLzuoin1QDE9TNBNoZg4b3uCqoQzhjdRZU6d1aDr81cX
+	4SoioevUgK6M9vJ0H5oN9+HveCd9uI8acXibsixsPlJoxisrxmFD+9RCCObjaaj3hm2ZYGM9YM9
+	RJyX/4SZcNxHQNapVOCaA4H34kz1RsOk1E82XpRgz0IxJUyXDLFTGfyouCKwivOXdZ5hK1lYwMs
+	wTRjbLSaWDO+bOFwCSWjuF87f2U+z1IbZk1Vn/wGnpD5MASJNE4NKskQtz5jUpbOCzEHQbqjMu2
+	4qepwzxvp47tEXKoyQBbb1GSb3xOgpS+bnqTio1T/+xe1pbVmFnXAajYe5YTNBixXTP18FKd9ZF
+	V/uhuARYOJys2
+X-Google-Smtp-Source: AGHT+IFSiljljE4c8dR0p1cx0UndJBY3bORBaaTbd/RHYBruq2cfSoOwtTBcNNXaxkEMB5yzBGIHqQ==
+X-Received: by 2002:a05:600c:138c:b0:43d:23fe:e8a6 with SMTP id 5b1f17b1804b1-440ab76a962mr99923835e9.5.1745915292364;
         Tue, 29 Apr 2025 01:28:12 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a995edsm9628409b3a.130.2025.04.29.01.28.07
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a13bdsm180114875e9.9.2025.04.29.01.28.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 29 Apr 2025 01:28:12 -0700 (PDT)
-Date: Tue, 29 Apr 2025 08:28:01 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
- ioctl
-Message-ID: <aBCNkcLp6XZpjYYT@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
- <aA_0TV0RkVOHk7Qj@google.com>
- <aBAEuP9962XweHPc@Asurada-Nvidia>
+Message-ID: <6db027ae67a46cfff906932e5d306fa0d9edf766.camel@gmail.com>
+Subject: Re: [PATCH v3 07/11] iio: adc: adi-axi-adc: add sync enable/disable
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 29 Apr 2025 09:28:16 +0100
+In-Reply-To: <20250425112538.59792-8-antoniu.miclaus@analog.com>
+References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
+	 <20250425112538.59792-8-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBAEuP9962XweHPc@Asurada-Nvidia>
 
-On Mon, Apr 28, 2025 at 03:44:08PM -0700, Nicolin Chen wrote:
-> On Mon, Apr 28, 2025 at 09:34:05PM +0000, Pranjal Shrivastava wrote:
-> > On Fri, Apr 25, 2025 at 10:58:05PM -0700, Nicolin Chen wrote:
-> > > @@ -501,6 +504,9 @@ static const struct iommufd_object_ops iommufd_object_ops[] = {
-> > >  	[IOMMUFD_OBJ_IOAS] = {
-> > >  		.destroy = iommufd_ioas_destroy,
-> > >  	},
-> > > +	[IOMMUFD_OBJ_VCMDQ] = {
-> > > +		.destroy = iommufd_vcmdq_destroy,
-> > > +	},
-> > >  	[IOMMUFD_OBJ_VDEVICE] = {
-> > >  		.destroy = iommufd_vdevice_destroy,
-> > >  	},
-> > 
-> > When do we expect the VMM to use this ioctl? While it's spawning a new
-> > VM?
-> 
-> When guest OS clears the VCMDQ's base address register, or when
-> guest OS reboots or shuts down.
-> 
+On Fri, 2025-04-25 at 14:25 +0300, Antoniu Miclaus wrote:
+> Add support for enabling/disabling the sync process used for data
+> capture alignment.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
 
-Ack. So, basically any write to VCMDQ_BASE is trapped?
+Some comments from me... I'm also still not convinced this API can't be mer=
+ged
+with the sync get. More comments on the frontend driver patch.
 
-> > IIUC, one vintf can have multiple lvcmdqs and looking at the series
-> > it looks like the vcmdq_alloc allocates a single lvcmdq. Is the plan to
-> > dedicate one lvcmdq to per VM? Which means VMs can share a vintf?
-> 
-> VINTF is a vSMMU instance per SMMU. Each VINTF can have multiple
-> LVCMDQs. Each vCMDQ is allocated per IOMMUFD_CMD_VCMDQ_ALLOC. In
-> other word, VM can issue multiple IOMMUFD_CMD_VCMDQ_ALLOC calls
-> for each VTINF/vSMMU.
-> 
+> changes in v3:
+> =C2=A0- update the function to match the new backend interface.
+> =C2=A0drivers/iio/adc/adi-axi-adc.c | 21 +++++++++++++++++++++
+> =C2=A01 file changed, 21 insertions(+)
+>=20
+> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.=
+c
+> index 2a3a6c3f5e59..9947be059f98 100644
+> --- a/drivers/iio/adc/adi-axi-adc.c
+> +++ b/drivers/iio/adc/adi-axi-adc.c
+> @@ -44,6 +44,7 @@
+> =C2=A0#define=C2=A0=C2=A0 ADI_AXI_ADC_REG_CONFIG_CMOS_OR_LVDS_N	BIT(7)
+> =C2=A0
+> =C2=A0#define ADI_AXI_ADC_REG_CTRL			0x0044
+> +#define=C2=A0=C2=A0=C2=A0 AXI_AD408X_CTRL_SYNC_MSK		BIT(3)
+> =C2=A0#define=C2=A0=C2=A0=C2=A0 ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
+> =C2=A0
+> =C2=A0#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+> @@ -416,6 +417,22 @@ static int axi_adc_ad408x_filter_type_set(struct
+> iio_backend *back,
+> =C2=A0				 AXI_AD408X_CNTRL_3_FILTER_EN_MSK);
+> =C2=A0}
+> =C2=A0
+> +static int axi_adc_sync_enable(struct iio_backend *back)
+> +{
+> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
+> +
+> +	return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CTRL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AXI_AD408X_CTRL_SYNC_MSK);
+> +}
+> +
+> +static int axi_adc_sync_disable(struct iio_backend *back)
+> +{
+> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
+> +
+> +	return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CTRL,
+> +				 AXI_AD408X_CTRL_SYNC_MSK);
+> +}
+> +
+> =C2=A0static struct iio_buffer *axi_adc_request_buffer(struct iio_backend=
+ *back,
+> =C2=A0						 struct iio_dev *indio_dev)
+> =C2=A0{
+> @@ -559,6 +576,8 @@ static const struct iio_backend_ops adi_axi_adc_ops =
+=3D {
+> =C2=A0	.request_buffer =3D axi_adc_request_buffer,
+> =C2=A0	.free_buffer =3D axi_adc_free_buffer,
+> =C2=A0	.data_sample_trigger =3D axi_adc_data_sample_trigger,
+> +	.data_alignment_enable =3D axi_adc_sync_enable,
+> +	.data_alignment_disable =3D axi_adc_sync_disable,
 
-Ack. I'm just wondering why would a single VM want more than one vCMDQ
-per vSMMU?
+Same comment as for the number of lanes op...
+> =C2=A0	.iodelay_set =3D axi_adc_iodelays_set,
+> =C2=A0	.test_pattern_set =3D axi_adc_test_pattern_set,
+> =C2=A0	.chan_status =3D axi_adc_chan_status,
+> @@ -605,6 +624,8 @@ static const struct iio_backend_ops adi_ad408x_ops =
+=3D {
+> =C2=A0	.free_buffer =3D axi_adc_free_buffer,
+> =C2=A0	.data_sample_trigger =3D axi_adc_data_sample_trigger,
+> =C2=A0	.filter_type_set =3D axi_adc_ad408x_filter_type_set,
+> +	.data_alignment_enable =3D axi_adc_sync_enable,
+> +	.data_alignment_disable =3D axi_adc_sync_disable,
 
-> > Or do we plan to trap access to trap the access everytime the VM
-> > accesses an lvcmdq base register?
-> 
-> Yes. That's the only place the VMM can trap. All other register
-> accesses are going to the HW directly without trappings.
-> 
+Are we using the disable op at all?
 
-Got it.
-
-> > > diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-> > > index a65153458a26..02a111710ffe 100644
-> > > --- a/drivers/iommu/iommufd/viommu.c
-> > > +++ b/drivers/iommu/iommufd/viommu.c
-> > > @@ -170,3 +170,97 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
-> > >  	iommufd_put_object(ucmd->ictx, &viommu->obj);
-> > >  	return rc;
-> > >  }
-> > > +
-> > > +void iommufd_vcmdq_destroy(struct iommufd_object *obj)
-> > > +{
-> > > +	struct iommufd_vcmdq *vcmdq =
-> > > +		container_of(obj, struct iommufd_vcmdq, obj);
-> > > +	struct iommufd_viommu *viommu = vcmdq->viommu;
-> > > +
-> > > +	if (viommu->ops->vcmdq_destroy)
-> > > +		viommu->ops->vcmdq_destroy(vcmdq);
-> > > +	iopt_unpin_pages(&viommu->hwpt->ioas->iopt, vcmdq->addr, vcmdq->length);
-> > > +	refcount_dec(&viommu->obj.users);
-> > > +}
-> > > +
-> > > +int iommufd_vcmdq_alloc_ioctl(struct iommufd_ucmd *ucmd)
-> > > +{
-> > > +	struct iommu_vcmdq_alloc *cmd = ucmd->cmd;
-> > > +	struct iommufd_viommu *viommu;
-> > > +	struct iommufd_vcmdq *vcmdq;
-> > > +	struct page **pages;
-> > > +	int max_npages, i;
-> > > +	dma_addr_t end;
-> > > +	int rc;
-> > > +
-> > > +	if (cmd->flags || cmd->type == IOMMU_VCMDQ_TYPE_DEFAULT)
-> > > +		return -EOPNOTSUPP;
-> > 
-> > The cmd->type check is a little confusing here, I think we could
-> > re-order the series and add this check when we have the CMDQV type.
-> 
-> This is the patch that introduces the IOMMU_VCMDQ_TYPE_DEFAULT.
-> So, it's natural we check it here. The thing is that we have to
-> introduce something to fill the enum iommu_vcmdq_type, so that
-> it wouldn't be empty.
-> 
-> An unsupported DEFAULT type is what we have for vIOMMU/vEVENTQ
-> also.
-> 
-> A driver patch should define its own type along with the driver
-> patch. And it's what this series does. I think it's pretty clear?
-> 
-
-Alright. Agreed.
-
-> > Alternatively, we could keep this in place and
-> [..]
-> > add the driver-specific
-> > vcmdq_alloc op calls when it's added/available for Tegra CMDQV while
-> > stubbing out the rest of this function accordingly.
-> 
-> Why?
-> 
-> The vcmdq_alloc op is already introduced in the prior patch. It
-> is cleaner to keep all core code in one patch. And then another
-> tegra patch to add driver type and its support.
-> 
-
-Alright.
-
-> Thanks
-> Nicolin
-
-Thanks,
-Praan
+> =C2=A0	.debugfs_reg_access =3D iio_backend_debugfs_ptr(axi_adc_reg_access=
+),
+> =C2=A0	.debugfs_print_chan_status =3D
+> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+> =C2=A0};
