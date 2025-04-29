@@ -1,92 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D06A2C179F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E810810942
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745936771; cv=none; b=Od2vycsKRs1MP6hbI9Dl1CniCeXmwgnUu7+YYd3uQZGPzVgUlpoyMHUB87L7X3erYjkXvVosQ5X6yxFYzW58ODiuHnSyZoXLgPcPN4GeB8h4g2K2TyQIb7wHN9oR7kQvftJLS5fUiUURyHhYR4SWJR04VXIxwJs1rdJFpULmXA8=
+	t=1745936775; cv=none; b=XWM3gZUIBYs5bx5rbldEZVPxC3/0KOnw94HGecFAS1lVkjWIMyeIsQDIzettWw3ORE2S9op14FiaJUetqkfytrHZ/6nxS3sCB+6GcMFWpS0UbiLXPzgG3D9rldXOKVC+iJZTBefci6BPY4Rn0mvP8jDpCetZQLxiakwNBqFCRus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745936771; c=relaxed/simple;
-	bh=FV9zsPW+AHUsqrVyH1X01rs3cKB0bQsJYt5QiL09+Kw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fuNDa/suktiwbNgCh2R7m8N5hnqx9mWWfu84OgySh4lqdiEFgwXHqfjBawqqOuwhy6LfAbV4cPnkUOe/SmPBEEvRWzy2EFVlXSuUfKTTa7wrezR4MKizYIWak1uLss4YzjyMIkzp9uZN8YUGcT7NCklQ91s8BSXmmYaCULfalkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF8AB1515;
-	Tue, 29 Apr 2025 07:26:01 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97E263F66E;
-	Tue, 29 Apr 2025 07:26:04 -0700 (PDT)
-Date: Tue, 29 Apr 2025 15:25:54 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: James Morse <james.morse@arm.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>, Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
-Subject: Re: [PATCH v9 27/27] MAINTAINERS: Add reviewers for fs/resctrl
-Message-ID: <aBDhcnqKabZCLhf4@e133380.arm.com>
-References: <20250425173809.5529-1-james.morse@arm.com>
- <20250425173809.5529-28-james.morse@arm.com>
+	s=arc-20240116; t=1745936775; c=relaxed/simple;
+	bh=tB7/loLzLj9Ek5QQ1tIEhY+6tK+s52+u1vt2qFEYnkM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=deNLFcnTfj6BrmrJ383mkjf1NEcxNgrrHCc3j7Dup67MI64S+qgtY5dPLoXfZoNYaMfcli385N0XK0/9bBMqR4vsp3Lkm04iDHiAcx2xWaFeNax1Dii/Nr0CYES036mK6svfqiyqfi80Xnd8atGMiL/12Q4dMhmP+V2LWdfPqzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XIdt539Q; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIdt539Q"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39efc1365e4so2856464f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745936772; x=1746541572; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cc7LY54K4yJW7U5wYxUM6Alr8WN7qWZLxLYuvii4gnw=;
+        b=XIdt539QcfQftnt9jSLEXlj/FbjTvYOGWQ29FX8NtCsAVg/8f19ABivhwX4cueBQtD
+         MvER/i+qdrgV42snw8aUPuMz+pDGhX45+Y+OymuS8OIjZNtHWqBpa7rbc82yPiSCxEOh
+         uepyzDDNjvMDDh86m/8x8t1+utrLFNp7m+FCO6zW/t/NhZq117qxmR/q6rwZLSx/FKpi
+         GVy37b6LIbdFTvdwge5YeT4sFNK8HoZDD5Uo556Uzc8FikldKJh9RQp6ARWL9sHczbCi
+         /9J74EEyE8L8RCmpfMcbhdWlsTLluBz+XS3H7ErdeJY/l7qeq488wqXn5xDgM4cCd/gV
+         NatQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745936772; x=1746541572;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cc7LY54K4yJW7U5wYxUM6Alr8WN7qWZLxLYuvii4gnw=;
+        b=kx9cM6ShW3MUf72eMPuj61IsFZYjbEWkGKfSVf1e/O7mzC6Sd0ST4u/LF6X8EhXagd
+         GuUNrbucG6GUg0sDptKUDGlHAUXF/gqBplfVCQA9brYOiV7DFdjcG4XU03kc8NBHD0Az
+         IhDXtUS8E02siv++ICJmk7zMMkj2JUlxg0ZN9WBZnYmdj5FQUjcQgUqewwBKGEsO0Xys
+         qUdCeo/wBBn6o3rDsNoZxLeA7oRD60UGzSQUIefFKuWDSnAqsD2gD9up1kuQJs0l//n9
+         LB1hTacIPALHDACVEr3+VVVIs/jwMU5/fLz672ZqmlR0fhVeRQVDpz3hCCaZu6eevgiN
+         3hlg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ZTkYgcb7JBe9gD7ITigfqWz8VIIg6erkSqptQc6coa4VIdztV8XYSrXiPwob8DrM2pmVXw5ohv1bF7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAZIxnLLRNHtTaAi2Y/uZRPKnwWEL4fLWvucuHT17xwPkF+/TN
+	pzRQAn7rumgBQSTo/tHjyARRirgzP6FkAgCAB53FeBWtWFRWptLtM5p2Ls5f1F0=
+X-Gm-Gg: ASbGncsPiT0lr72QXYRb3PM3MRypyNy5mWe5X1UHlyrzE5JQ0lYEbdalbeon6cHUaAX
+	n9VZ+dfoxcravDJGAfp4jB6+u8HkvYNJ+nZqj38QEhB4m46vHPIWay5khZPL0dOUJprvD7ourBU
+	yz0qyQ96mHS5pSrjR1NJ7Bq49I1e29VBRJ+N/fd5x8vDcVIml1cEjG6/UxeyRXGyfFt8JkvV2F6
+	l3XzvRJLKbRTKqXDsIP4wfalpQ9rE4r7DKPv5vPAsJF4raF31BL+U5vO5UK24A9H5IFTqqqjSTz
+	Tv3tWPedzGEjopek9xuIcrt+EYFJAfi+NTlc+7VrgTQvK6U=
+X-Google-Smtp-Source: AGHT+IHTa4dQspGAilQgnI1Rsq4mem9tVKEBYTiYbLMCHi8QW4B9v2n1Jb9lnZPY/Osg2Q72p116qg==
+X-Received: by 2002:a05:6000:40df:b0:397:5de8:6937 with SMTP id ffacd0b85a97d-3a08a3baa71mr2933824f8f.41.1745936772106;
+        Tue, 29 Apr 2025 07:26:12 -0700 (PDT)
+Received: from ho-tower-lan.lan ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ccb8e1sm14275192f8f.59.2025.04.29.07.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 07:26:11 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Tue, 29 Apr 2025 15:22:18 +0100
+Subject: [PATCH] perf tools: Fix in-source libperf build
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425173809.5529-28-james.morse@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-james-perf-fix-libperf-in-source-build-v1-1-a1a827ac15e5@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAJngEGgC/x2N0QqDMAxFf0XyvEAbptD9iuyh1nRmaJUEZSD++
+ 4pv58Dh3hOMVdjg1ZygfIjJWqr4RwNpiuXDKGN1IEete1LAb1zYcGPNmOWHsww3S0Fbd02Mwy7
+ ziL7tXEiJPMUIdWxTrvl91L+v6w/JRAXaeAAAAA==
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, linux@leemhuis.info
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-Hi,
+When libperf is built alone in-source, $(OUTPUT) isn't set. This causes
+the generated uapi path to resolve to '/../arch' which results in a
+permissions error:
 
-On Fri, Apr 25, 2025 at 05:38:09PM +0000, James Morse wrote:
-> resctrl has existed for quite a while as a filesystem interface private to
-> arch/x86. To allow other architectures to support the same user interface
-> for similar hardware features, it has been moved to /fs/.
-> 
-> Add those with a vested interest in the common code as reviewers.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 46f7365bb9ac..3a878ca99a78 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20338,6 +20338,8 @@ F:	tools/testing/selftests/net/rds/
->  RDT - RESOURCE ALLOCATION
->  M:	Tony Luck <tony.luck@intel.com>
->  M:	Reinette Chatre <reinette.chatre@intel.com>
-> +R:	Dave Martin <Dave.Martin@arm.com>
+  mkdir: cannot create directory '/../arch': Permission denied
 
-I'm happy to do this, though my conributions may continue to be a bit
-intermittent.
+Fix it by removing the preceding '/..' which means that it gets
+generated either in the tools/lib/perf part of the tree or the OUTPUT
+folder. Some other rules that rely on OUTPUT further refine this
+conditionally depending on whether it's an in-source or out-of-source
+build, but I don't think we need the extra complexity here. And this
+rule is slightly different to others because the header is needed by
+both libperf and Perf. This is further complicated by the fact that Perf
+always passes O=... to libperf even for in source builds, meaning that
+OUTPUT isn't set consistently between projects.
 
-Acked-by: Dave Martin <Dave.Martin@arm.com>
+Because we're no longer going one level up to try to generate the file
+in the tools/ folder, Perf's include rule needs to descend into libperf.
+Also fix the clean rule while we're here.
 
-> +R:	James Morse <james.morse@arm.com>
->  L:	linux-kernel@vger.kernel.org
->  S:	Supported
->  F:	Documentation/filesystems/resctrl.rst
+Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+Closes: https://lore.kernel.org/linux-perf-users/7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info/
+Fixes: bfb713ea53c7 ("perf tools: Fix arm64 build by generating unistd_64.h")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/lib/perf/Makefile    | 6 +++---
+ tools/perf/Makefile.config | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-[...]
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 1a19b5013f45..7fbb50b74c00 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -42,7 +42,7 @@ libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
+ TEST_ARGS := $(if $(V),-v)
+ 
+ INCLUDES = \
+--I$(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi \
++-I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi \
+ -I$(srctree)/tools/lib/perf/include \
+ -I$(srctree)/tools/lib/ \
+ -I$(srctree)/tools/include \
+@@ -100,7 +100,7 @@ $(LIBAPI)-clean:
+ 	$(call QUIET_CLEAN, libapi)
+ 	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+-uapi-asm := $(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi/asm
++uapi-asm := $(OUTPUT)arch/$(SRCARCH)/include/generated/uapi/asm
+ ifeq ($(SRCARCH),arm64)
+ 	syscall-y := $(uapi-asm)/unistd_64.h
+ endif
+@@ -130,7 +130,7 @@ all: fixdep
+ clean: $(LIBAPI)-clean
+ 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
+                 *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
+-                $(TESTS_STATIC) $(TESTS_SHARED)
++                $(TESTS_STATIC) $(TESTS_SHARED) $(syscall-y)
+ 
+ TESTS_IN = tests-in.o
+ 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index a52482654d4b..b7769a22fe1a 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -29,7 +29,7 @@ include $(srctree)/tools/scripts/Makefile.arch
+ $(call detected_var,SRCARCH)
+ 
+ CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated
+-CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi
++CFLAGS += -I$(OUTPUT)libperf/arch/$(SRCARCH)/include/generated/uapi
+ 
+ # Additional ARCH settings for ppc
+ ifeq ($(SRCARCH),powerpc)
 
-Cheers
----Dave
-> 
-> 
+---
+base-commit: bfb713ea53c746b07ae69fe97fa9b5388e4f34f9
+change-id: 20250429-james-perf-fix-libperf-in-source-build-15609cc212aa
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
+
