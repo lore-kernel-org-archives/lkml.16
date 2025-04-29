@@ -1,116 +1,163 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4651C8630;
-	Tue, 29 Apr 2025 22:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7AE1C8630
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745965016; cv=none; b=GSdaYCH02rffeNheyK5If7d26pmdFlFBuEDkaIERe9v4gP9e3f/HTKqBajclVdreXq3iNLPlTmG9xhkkH5Zg0zfEEXwR3eVZvrfqaTRExCHVs0UXRrK6uF1uR/QJDZEW5Ov+EOrjgrM5KvxdVpjlMQSUmaYr8fc8S7gvKBPHD10=
+	t=1745965081; cv=none; b=QRcnbvcr2APC7dXzV8sZIoV3igkteNQrYeDxSQe22192BwwUkAdAkCZBX0cksKp8yWlVYUyY6K55jOwajlujwsHEm7ADp42U6s+XbFOd3/R/ZSxVmBjU3BgT3nibJt4OQ48rSzzbKp2fbgtGdWOhKKbH626QnquAR7l15tIcvCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745965016; c=relaxed/simple;
-	bh=m9RrjlA+hLKSFbnlnSAcn5ppzHwNl4WuyjI9nWA63dA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R+2OPla559quIESVmxtc0tsqeQOkhQ19JlYQ9APkKOg+IZHoqSZ46vo1kL1nG+4Xebe1jtK5sHvAiO8ofOtoTqPGzIemVuNTziiFSDo4FP7ulk6n+qskaQMWIw7YQxJi7yYE789E0fEP+184z8gfuscqGwABD1hBEnQFwhtHkb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pn4fgxXB; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745965081; c=relaxed/simple;
+	bh=wDpIvk141ZV01NhrIY+JkCqDNYoHd9B0SSs3egxRMkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMQA+vJ0l/Q6n1h9EAbq4RUdlIR+djwuYcHXvWRGq2oZg2h+EYmNh/u2/54lpRcwuUqxpzvZ4VocrZAyXJAUAAob2j0X1PB2j6+y3Z1o9kD6oHBgD85AJfFUNYc11LTdSNBVtguPwMwfOSsH+Y3N8sj6ztgxXvwxr4iNS2rVvsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G6qOR9Nm; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn4fgxXB"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25520a289so1046492066b.3;
-        Tue, 29 Apr 2025 15:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745965013; x=1746569813; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jWE9Brl0rfnWuNnW+ftgre9u8u4eT9kBgPEjJA4544c=;
-        b=Pn4fgxXBSEX7+jhcNshcLj+Cdr7Mnk1gh3VyyHxmN99Rzg018N5QWc4fkMU0Cn0WJ5
-         cPAZrsMkG6oTItKaO6iaUwSU9CmAobUVriiqy8Z9tgVlIzGkeqk7SB4RMGZbRzjlSCAK
-         /KWLh5GJW7uvTRSzNEf/NbKyvkGNz0gl3cGyQmAN/7j8bpLtu7krECULOhBrCgayVZMZ
-         leCloVpef+3v9dlll41zl8FUT6v2GcGIUqHYDgM0HYmU502FeurwISOPctCxJ6uYOPhm
-         X6vZzFvA4tVWWBRT20dUQRaQR118yGinrtxLHjbQcXmnEI43vFBITO3loqWg+KmJaE5n
-         zwng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745965013; x=1746569813;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jWE9Brl0rfnWuNnW+ftgre9u8u4eT9kBgPEjJA4544c=;
-        b=nxLFHRumxMCN+C3RdiXKttq6i/9oYt1jK0LuJeK53ISyg5hm5g5EfEBfsp41zj4sGr
-         rpJwmoi9YzzOaZ3aPafB3ZOMxOWFG6fb74HGdhUFLHPKbdwhiSzGhO4xwZX8TQXf90WG
-         +uz23YSwNCexcub4WuccqqLwEMTKGa1HcuGuhANEfsKFq/B5wxcRpEz+7bA2avalnQDH
-         ftUnJmVZVgfg2cnH7giXxezmVnWuOnIFxRg7q69i26U18ryAC9Ja4+c/CGibFymP4qSi
-         rjLTpFA6Nz1WO6aGIDZ++s7SBH2sPknQVOsMlgRAJ1biIsU5avBlEpgQkN4DkXx05FPg
-         4Q7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWv4v3dMbJTLx2+W37V9nHHHfXnfof9BlrbyZ0yUOZan76I9F1/jf9kdCaja6EiO8nEPKH6FWxdRi7PcBk/@vger.kernel.org, AJvYcCXjRjcahzLegrd/PHt7uznLBDmgIM+ctB3Vr1P/jV15KFBAN6u2glN1oaXWIdKd/arvEqgiP1o/Ld8p@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrUfAvNeix8mpDFvUk7Z1NlL9VQyv4fwuicAz9wC1CBsmp/8ua
-	9rsD4RikI+KNR8O63CPad5rSDKzfwKYbyr96gn+TTjoXllXRNLyfAqPendZ31wTYJBy9eqxkuaT
-	DCr2hMetGQslvY/nopQVZdDpW/o8wJsr7
-X-Gm-Gg: ASbGncvfYfpEo1y4CdupjLbr90iZVWGp9HPihQOcPzaXDB/iAU0oZAjqqcxN7HXeeed
-	ZAz6C9UpSc4LfQ9QwrQc6mPwInWNJAXobz5NousiUyP3ZChNXbykB77wcb259yeWocdyC3YVOrF
-	xVhFoYD6SksK3N/wVRD5vMzg==
-X-Google-Smtp-Source: AGHT+IEb6dTbElip3EmWSrC2X4SHc8Rt6utXcnf8GLabFkhFihwLjXxB/SJlsMV7raaDAm/3PFi30D8huLEx4T1VZOw=
-X-Received: by 2002:a17:907:944a:b0:ace:d442:e3a0 with SMTP id
- a640c23a62f3a-acedc6ffde9mr91026066b.39.1745965012492; Tue, 29 Apr 2025
- 15:16:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G6qOR9Nm"
+Date: Tue, 29 Apr 2025 22:17:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745965076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VQJrRrVaFnBo4XocryJt5anmF0O/r9hN8T59g9L9+bs=;
+	b=G6qOR9Nmd2hZRkjRJSwbebk2ojGNBZjKTHw9Cbq30iktCdJKq2cJddDCl+7skE3ZxiG5Ol
+	YkVX0BUIC+d/kVdjEu6Xx0fbr0tLyechP3c0pYVUSxH1kX1oi4tPMOWBz+N/Zt0i7VM5gM
+	p6eYvL0BqmG+5/n7pnQRRr/WLiA56vU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org
+Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
+Message-ID: <aBFQBUsrTJLwqGXA@google.com>
+References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
+ <aBC7E487qDSDTdBH@tiehlicka>
+ <87selrrpqz.fsf@linux.dev>
+ <CAJuCfpEToCmf6rdA6tNpWrzw70Er6Q4ZWOwn+ruCWpU=ZEEkmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745841276.git.marcelo.schmitt@analog.com> <c249f5c7ee07583b65cd40b0fc6f1faa79c3bfe9.1745841276.git.marcelo.schmitt@analog.com>
-In-Reply-To: <c249f5c7ee07583b65cd40b0fc6f1faa79c3bfe9.1745841276.git.marcelo.schmitt@analog.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 30 Apr 2025 01:16:16 +0300
-X-Gm-Features: ATxdqUFdJ9EegEBEA6QqF8ZxYeOXvJ-WRQFYJ3QV1-4y42J2gHYRasVrA_38ug8
-Message-ID: <CAHp75VcCgcOd4z7OYm67ijpad2NjmEBOM5gMJHyWbjd2M9-hkw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] iio: adc: ad4170: Add support for internal
- temperature sensor
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	marcelo.schmitt1@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpEToCmf6rdA6tNpWrzw70Er6Q4ZWOwn+ruCWpU=ZEEkmA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 28, 2025 at 3:29=E2=80=AFPM Marcelo Schmitt
-<marcelo.schmitt@analog.com> wrote:
->
-> The AD4170 has an internal temperature sensor that can be read using the
-> ADC. Whenever possible, configure an IIO channel to provide the chip's
-> temperature.
+On Tue, Apr 29, 2025 at 02:56:31PM -0700, Suren Baghdasaryan wrote:
+> On Tue, Apr 29, 2025 at 7:45 AM Roman Gushchin <roman.gushchin@linux.dev> wrote:
+> >
+> > Michal Hocko <mhocko@suse.com> writes:
+> >
+> > > On Mon 28-04-25 03:36:05, Roman Gushchin wrote:
+> > >> This patchset adds an ability to customize the out of memory
+> > >> handling using bpf.
+> > >>
+> > >> It focuses on two parts:
+> > >> 1) OOM handling policy,
+> > >> 2) PSI-based OOM invocation.
+> > >>
+> > >> The idea to use bpf for customizing the OOM handling is not new, but
+> > >> unlike the previous proposal [1], which augmented the existing task
+> > >> ranking-based policy, this one tries to be as generic as possible and
+> > >> leverage the full power of the modern bpf.
+> > >>
+> > >> It provides a generic hook which is called before the existing OOM
+> > >> killer code and allows implementing any policy, e.g.  picking a victim
+> > >> task or memory cgroup or potentially even releasing memory in other
+> > >> ways, e.g. deleting tmpfs files (the last one might require some
+> > >> additional but relatively simple changes).
+> > >
+> > > Makes sense to me. I still have a slight concern though. We have 3
+> > > different oom handlers smashed into a single one with special casing
+> > > involved. This is manageable (although not great) for the in kernel
+> > > code but I am wondering whether we should do better for BPF based OOM
+> > > implementations. Would it make sense to have different callbacks for
+> > > cpuset, memcg and global oom killer handlers?
+> >
+> > Yes, it's certainly possible. If we go struct_ops path, we can even
+> > have both the common hook which handles all types of OOM's and separate
+> > hooks for each type. The user then can choose what's more convenient.
+> > Good point.
+> >
+> > >
+> > > I can see you have already added some helper functions to deal with
+> > > memcgs but I do not see anything to iterate processes or find a process to
+> > > kill etc. Is that functionality generally available (sorry I am not
+> > > really familiar with BPF all that much so please bear with me)?
+> >
+> > Yes, task iterator is available since v6.7:
+> > https://docs.ebpf.io/linux/kfuncs/bpf_iter_task_new/
+> >
+> > >
+> > > I like the way how you naturalely hooked into existing OOM primitives
+> > > like oom_kill_process but I do not see tsk_is_oom_victim exposed. Are
+> > > you waiting for a first user that needs to implement oom victim
+> > > synchronization or do you plan to integrate that into tasks iterators?
+> >
+> > It can be implemented in bpf directly, but I agree that it probably
+> > deserves at least an example in the test or a separate in-kernel helper.
+> > In-kernel helper is probably a better idea.
+> >
+> > > I am mostly asking because it is exactly these kind of details that
+> > > make the current in kernel oom handler quite complex and it would be
+> > > great if custom ones do not have to reproduce that complexity and only
+> > > focus on the high level policy.
+> >
+> > Totally agree.
+> >
+> > >
+> > >> The second part is related to the fundamental question on when to
+> > >> declare the OOM event. It's a trade-off between the risk of
+> > >> unnecessary OOM kills and associated work losses and the risk of
+> > >> infinite trashing and effective soft lockups.  In the last few years
+> > >> several PSI-based userspace solutions were developed (e.g. OOMd [3] or
+> > >> systemd-OOMd [4]). The common idea was to use userspace daemons to
+> > >> implement custom OOM logic as well as rely on PSI monitoring to avoid
+> > >> stalls.
+> > >
+> > > This makes sense to me as well. I have to admit I am not fully familiar
+> > > with PSI integration into sched code but from what I can see the
+> > > evaluation is done on regular bases from the worker context kicked off
+> > > from the scheduler code. There shouldn't be any locking constrains which
+> > > is good. Is there any risk if the oom handler took too long though?
+> >
+> > It's a good question. In theory yes, it can affect the timing of other
+> > PSI events. An option here is to move it into a separate work, however
+> > I'm not sure if it worth the added complexity. I actually tried this
+> > approach in an earlier version of this patchset, but the problem was
+> > that the code for scheduling this work should be dynamically turned
+> > on/off when a bpf program is attached/detached, otherwise it's an
+> > obvious cpu overhead.
+> > It's doable, but Idk if it's justified.
+> >
+> > >
+> > > Also an important question. I can see selftests which are using the
+> > > infrastructure. But have you tried to implement a real OOM handler with
+> > > this proposed infrastructure?
+> >
+> > Not yet. Given the size and complexity of the infrastructure of my
+> > current employer, it's not a short process. But we're working on it.
+> 
+> Hi Roman,
+> This might end up being very useful for Android. Since we have a
+> shared current employer, we might be able to provide an earlier test
+> environment for this concept on Android and speed up development of a
+> real OOM handler. I'll be following the development of this patchset
+> and will see if we can come up with an early prototype for testing.
 
-...
+Hi Suren,
 
-> +               case IIO_TEMP:
-> +                       /*
-> +                        * The scale_tbl converts output codes to mV unit=
-s so
-> +                        * multiply by MILLI to make the factor convert t=
-o =C2=B5V.
-> +                        * Then, apply the temperature sensor change sens=
-itivity
-> +                        * of 477 =CE=BCV/K. Finally, multiply the result=
- by MILLI
-> +                        * again to comply with milli degrees Celsius IIO=
- ABI.
-> +                        */
-> +                       *val =3D 0;
-> +                       *val2 =3D DIV_ROUND_CLOSEST(chan_info->scale_tbl[=
-pga][1] * MILLI,
-> +                                                 477) * MILLI;
-
-Do not wrap lines like this. Use a logical approach, i.e. the '477) *'
-part should be on the previous line.
-
-> +                       return IIO_VAL_INT_PLUS_NANO;
-> +               default:
-> +                       return -EINVAL;
-> +               }
-
---=20
-With Best Regards,
-Andy Shevchenko
+Sounds great, thank you!
