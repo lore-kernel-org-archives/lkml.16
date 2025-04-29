@@ -1,50 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B86129DB7B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17397279338;
 	Tue, 29 Apr 2025 09:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918698; cv=none; b=Lx/woz/PRoSOQHJZGenpdKCQAuQCF+5UmWhMoei1W97bzjYJ8lz6pmU2ChdkFkLHZ6U0xJvPOtYoLvA1Z9iZJi/zcrzBLN3NM/v2BjsMmkpJX39oqxo8OlB3BujtroLhl9VU8gIUCSr3pjs6o0N6Q8y2LnZ4Qy3c/GAeYPns7As=
+	t=1745918700; cv=none; b=D7kAdc/IOc/jrzfc9k/08mhiKP2tYVDX+uvB37hnyMlXKsU9djO6x/djn8Nt8J+xunwrpkSgMh5ezht6Zzq8GyLNVrNOxN7WgNMUuOepKlIxyuReP/gCO1vcSfBKYaRYFzDdFI8cn+5BKYcY4yRlTpzFC906Tm8CcGxoIXU2nRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918698; c=relaxed/simple;
-	bh=3RZSDmtn9V1jZFssHSUe5AyPbnMYlwKqaJ3rJn90mCY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=m6V+Z4czA747cw7mMtDQyEOy8u6/Wrx1YO+RjyRazawm5jENlIy6C1ERlJOvm72x5fCFECx15cArJ03iM2z7BH8JJxv9u/U83IdYxXMFI3NO7YlgNYUACeM/+w2gHfFFtET9m7HlRfA3O1carVSq0/EBLr/D+Zt7exfFtZiJ03M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SnPIe6pa; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1745918700; c=relaxed/simple;
+	bh=9q263ivkuqryr1cVq+/JdlL7NEFdiOrXd+wNryP4BAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=L4EyMGLAiZsppRxUlC6/7H6L51SdCr6/10aYPdNy/D9TEsWqZeElV1j9eW6jROlwRywZNT0NQo1Nw3fgbHe+wq+8yyKqCA0rkQjIafkBo8jO9PBwbAhCS3kH2m1Jz9XFFpTN0TCsu7JjXI9l9NiaYfvwF/djtFmKLB1DTUnvL18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jFyddsU5; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SnPIe6pa"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNr24Z032014;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jFyddsU5"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq66p011895;
 	Tue, 29 Apr 2025 09:24:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:date:from:in-reply-to:message-id:references:subject:to; s=
-	qcppdkim1; bh=7SCrIYkzDXXQwGrHRmtCxmwr3cj/cM0yK7gjtDX7VU8=; b=Sn
-	PIe6pacKFhBxQEU9zmSWB5XQGOKj4qVz7d8k4DpI4stc2v9uhf7NcuwLpUxrr70J
-	h2QpB6yC6LPkNWfM/9nVsVguyTn0iEVtMMYhW/kmtzn3Sflax8Beu6hwkDeGCI2F
-	HRNvLJl3BP4iFKjJfTZ4RTdnfcV9dJH+8DV7XtewnJZeFtojnZeKLzqoq7Uxlg2c
-	b79cMGZQ62Kme1/mYP8wzf6JoAGNwMxFDD4Ht1njtLFpjQIeZ9PddeZD5ELWrhbT
-	eNTgG8QxtiVv3qsTDwgd2HnEOmGKl+PmVBE+hKuEr9z40rRlCocKULzKXg/4ycT1
-	icv3plEeSmh5rAH67qow==
+	qcppdkim1; bh=iYnqUGOuE5ecB95qJ22K4FevBfb65lOVWRBY4zUgZIY=; b=jF
+	yddsU5Tdjd+RVBV/6fl+StmbAq51PjXj2ian1CUQ7+Gaj84YMq1PG9ZfgymZYKrU
+	pp6LeaSWoLDQJM6amPHS122fNBHJGwKgquwZcoKPl1EVvtANT9w9y7IcdS7zFyrH
+	QRR596tyQvoMNtvcux//bo1g8yom0tUk5kjpu0il8xQZjjqgtQ1ASS5/yJD6K7iE
+	GHf2PnmLbcP0f2GyHqcW9IqXhZkUVCAsGdzwfCRJrwB0ESJ5GSf3MKO2DerMZuLU
+	nwdac9D5HUri9HI03uQ6+9xKvodhh6ET/MRsxwjJ5U77x5QaH4+R9mufZzBxH4Lc
+	LSCoPxgRINZOehZNR2oQ==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468pevk3mp-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468q323x87-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 29 Apr 2025 09:24:52 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9OlIL031624;
-	Tue, 29 Apr 2025 09:24:47 GMT
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9Omrp031632;
+	Tue, 29 Apr 2025 09:24:49 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 468rjmhb31-1;
-	Tue, 29 Apr 2025 09:24:47 +0000
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 468rjmhb3u-1;
+	Tue, 29 Apr 2025 09:24:48 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53T9OlaO031585;
-	Tue, 29 Apr 2025 09:24:47 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53T9Om96031675;
+	Tue, 29 Apr 2025 09:24:48 GMT
 Received: from hu-maiyas-hyd.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.213.109.81])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 53T9OlbA031560;
-	Tue, 29 Apr 2025 09:24:47 +0000
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 53T9OmwC031658;
+	Tue, 29 Apr 2025 09:24:48 +0000
 Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 3914174)
-	id 9231D604542; Tue, 29 Apr 2025 14:54:46 +0530 (+0530)
+	id A39E2604548; Tue, 29 Apr 2025 14:54:46 +0530 (+0530)
 From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -54,9 +54,9 @@ Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
         Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Subject: [PATCH v2 1/7] arm64: dts: qcom: qcs6490-audioreach: Add gpr node
-Date: Tue, 29 Apr 2025 14:54:24 +0530
-Message-Id: <20250429092430.21477-2-quic_pkumpatl@quicinc.com>
+Subject: [PATCH v2 7/7] arm64: dts: qcom: qcm6490-idp: Add sound card
+Date: Tue, 29 Apr 2025 14:54:30 +0530
+Message-Id: <20250429092430.21477-8-quic_pkumpatl@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250429092430.21477-1-quic_pkumpatl@quicinc.com>
 References: <20250429092430.21477-1-quic_pkumpatl@quicinc.com>
@@ -64,20 +64,20 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ZNYaL4WuUGcLS9VBozJhZKtqFNN1F9aw
-X-Authority-Analysis: v=2.4 cv=aeBhnQot c=1 sm=1 tr=0 ts=68109ae4 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=Mhuy_G11ca2qzbwcTq0A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: ZNYaL4WuUGcLS9VBozJhZKtqFNN1F9aw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA2OSBTYWx0ZWRfX6pCtDWR9JLEK GJX3UHc9p1xGl2kJnQS6GrkBOc6ydDEG4GV6GUEPm6p0PTSOf/qEQ1OI9JYMa2bpzUumOZFczOg TDTUduGregoyN3PkCkgJrsUrbNZz8WojVhm/IxMqFnYzPgSHQq7thsglVjrXA1zeQK3KyvHojGB
- BZ29x7FvllaF7kQUngBs9AHgCIXlDSNkTv5gDYlTDPh6vqv4KTYWPqAlPf09yI5k/aNVsEe+GDK 2dsULTfa3118Hc/Goc3jcIgn8zQhAJEL0xLmc9hofQaOtKgss6opCq/+dry6XOGv3JMsWN735Ov vRi6yogI3ThXJ0T189QlK/jAPOjXfkkFpzv3AxHLn/lJjWHxXlHVtXRbrdxT+Oe5u1d23CHrs4a
- xyw+2T5T4pHdTIAjvwo0YYY6Tf6ZyC6zdSZYz2AdOLKxaw3AfYpyhK5aSvyRc/fzaYr8mHGB
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=68109ae4 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=h_l79siUWkRGThfnGhIA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: cB6N2JfV9KGpkcIzqmdfI9uXROKW0LbP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA2OSBTYWx0ZWRfX8MiRNcR3nyOZ DR5zK16XEAq/HXLg0DnadaMWg7sZzZnRQwgMHeOdlLP5Bi+nqNyCKPF6xhtAfeH+LSRTeaTKdks v4v4B043YDAxBcnXN991B1mDCa1sLbSCrT47JvGxvzy6vtsVa2gscacVJCCj4iQ/0WhXhPOP/2I
+ 756dkvEsqYjN6UmTTLP3ubza7cz9SjAbOCUC1XYvfvzwZ2z2MUOAQ7IiQEzGGYQolGQE4LuX7M2 6K9c7UoaOcat2NyceryLT8q6UE02baYk6NS3MUiMqkAKu/hCtfQytdO0D8sm4FilX01KEtAGlal 9zzy4ZQF3cYiFfJqGvyInBh8hVuosKcEACGXIaLA3N6ecEHDBaERm4vx15u0m7wkSNzeSH2FemJ
+ otcxtKOF+50nFGeKJWlGWRgaqUDdvXFue2IHymbY/gaA+RGLV4PhGQCmut4MeREGO/VpRQ9G
+X-Proofpoint-ORIG-GUID: cB6N2JfV9KGpkcIzqmdfI9uXROKW0LbP
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 spamscore=0
- mlxlogscore=782 phishscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=984 spamscore=0 phishscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504290069
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -87,89 +87,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 
-Add GPR(Generic Pack router) node along with
-APM(Audio Process Manager) and PRM(Proxy resource
-Manager) audio services.
+Add the sound card node with tested playback over WSA8835 speakers,
+digital on-board mics along with wcd9370 headset playabck and record.
 
 Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
 Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
 ---
- .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 51 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/sc7280.dtsi          |  2 +-
- 2 files changed, 52 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
+ arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 88 ++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-new file mode 100644
-index 000000000000..b11b9eea64c1
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * qcs6490 device tree source for Audioreach Solution.
-+ * This file will handle the common audio device tree nodes.
-+ *
-+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
+diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+index 1a59080cbfaf..a83044020ead 100644
+--- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
++++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+@@ -811,6 +811,94 @@
+ 	cd-gpios = <&tlmm 91 GPIO_ACTIVE_LOW>;
+ };
+ 
++&sound {
++	compatible = "qcom,qcm6490-idp-sndcard";
++	model = "qcm6490-idp-snd-card";
 +
-+#include <dt-bindings/clock/qcom,lpass-sc7280.h>
-+#include <dt-bindings/soc/qcom,gpr.h>
-+#include <dt-bindings/sound/qcom,q6afe.h>
-+#include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
++	audio-routing =
++		"SpkrLeft IN", "WSA_SPK1 OUT",
++		"SpkrRight IN", "WSA_SPK2 OUT",
++		"IN1_HPHL", "HPHL_OUT",
++		"IN2_HPHR", "HPHR_OUT",
++		"AMIC2", "MIC BIAS2",
++		"TX DMIC0", "MIC BIAS1",
++		"TX DMIC1", "MIC BIAS2",
++		"TX DMIC2", "MIC BIAS3",
++		"TX SWR_ADC1", "ADC2_OUTPUT",
++		"VA DMIC0", "VA MIC BIAS3",
++		"VA DMIC1", "VA MIC BIAS3",
++		"VA DMIC2", "VA MIC BIAS1",
++		"VA DMIC3", "VA MIC BIAS1";
 +
-+&remoteproc_adsp_glink {
-+	/delete-node/ apr;
-+
-+	gpr {
-+		compatible = "qcom,gpr";
-+		qcom,glink-channels = "adsp_apps";
-+		qcom,domain = <GPR_DOMAIN_ID_ADSP>;
-+		qcom,intents = <512 20>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		q6apm: service@1 {
-+			compatible = "qcom,q6apm";
-+			reg = <GPR_APM_MODULE_IID>;
-+			#sound-dai-cells = <0>;
++	wsa-dai-link {
++		link-name = "WSA Playback";
 +
-+			q6apmdai: dais {
-+				compatible = "qcom,q6apm-dais";
-+				iommus = <&apps_smmu 0x1801 0x0>;
-+			};
-+
-+			q6apmbedai: bedais {
-+				compatible = "qcom,q6apm-lpass-dais";
-+				#sound-dai-cells = <1>;
-+			};
++		codec {
++			sound-dai = <&left_spkr>, <&right_spkr>, <&swr2 0>,
++					<&lpass_wsa_macro 0>;
 +		};
 +
-+		q6prm: service@2 {
-+			compatible = "qcom,q6prm";
-+			reg = <GPR_PRM_MODULE_IID>;
++		cpu {
++			sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
++		};
 +
-+			q6prmcc: clock-controller {
-+				compatible = "qcom,q6prm-lpass-clocks";
-+				#clock-cells = <2>;
-+			};
++		platform {
++			sound-dai = <&q6apm>;
++		};
++	};
++
++	wcd-playback-dai-link {
++		link-name = "WCD Playback";
++
++		codec {
++			sound-dai = <&wcd9370 0>, <&swr0 0>, <&lpass_rx_macro 0>;
++		};
++
++		cpu {
++			sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
++		};
++
++		platform {
++			sound-dai = <&q6apm>;
++		};
++	};
++
++	wcd-capture-dai-link {
++		link-name = "WCD Capture";
++
++		codec {
++			sound-dai = <&wcd9370 1>, <&swr1 0>, <&lpass_tx_macro 0>;
++		};
++
++		cpu {
++			sound-dai = <&q6apmbedai TX_CODEC_DMA_TX_3>;
++		};
++
++		platform {
++			sound-dai = <&q6apm>;
++		};
++	};
++
++	va-dai-link {
++		link-name = "VA Capture";
++
++		codec {
++			sound-dai = <&lpass_va_macro 0>;
++		};
++
++		cpu {
++			sound-dai = <&q6apmbedai VA_CODEC_DMA_TX_0>;
++		};
++
++		platform {
++			sound-dai = <&q6apm>;
 +		};
 +	};
 +};
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 8e86d75cc6b4..3453740c0d14 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -3778,7 +3778,7 @@
++
+ &swr0 {
+ 	status = "okay";
  
- 			status = "disabled";
- 
--			glink-edge {
-+			remoteproc_adsp_glink: glink-edge {
- 				interrupts-extended = <&ipcc IPCC_CLIENT_LPASS
- 							     IPCC_MPROC_SIGNAL_GLINK_QMP
- 							     IRQ_TYPE_EDGE_RISING>;
 -- 
 2.17.1
 
