@@ -1,106 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C5222A7ED;
-	Tue, 29 Apr 2025 19:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3815A208D0
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745955986; cv=none; b=TLx9zwvbmfHNgNSzLeielwzWNU88XbmGiX8Q7736T2hAkoFwpYvccy815+G2MDp6xmPWuj3WKmOdZoRYLTHeG2rKZhN7nUArSDDosaoygi1Bm4xi4+vjjk1/iuW2zBBFdfYycS8hRLpDBa06XiYBkSdBYTIfquGc3e0zZERvC/E=
+	t=1745956066; cv=none; b=s8Lhgny1bp7OqEPxl5jf5hq5zxC8+RBUejaW9fAwFMdiQkGSCn3b8okdi/j61CPPtm1luoulkYB8LZpXH2Bx87RU1Y7QZd5n2km5jgGd/P6nNvxGyJN51lCdVZB0nN0CA2CItu4Bb//cKqiIvq5507rEvqgmS+2VxMuOEqL87h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745955986; c=relaxed/simple;
-	bh=epwUWG3hUTSdO39fbHMOAdOJmTT4D+QE67Z81g1XRzA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G7Ht2zWiYUZ/GWpoDc6TwNox4ZYkLwBLPpHTTk1BwoGDQvIWxHkHtAiJkgxQasy8q9zy6LIAJmWpESaLiKNgAWJM0sdGL4TM82Fw/yV/JXQHLHPk1Rk71MnKh25uDw2FM7cWM/FVIgA0nHTTVxDs0tF9Ra7wvjNF+K6FktDhWVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLhuIhjh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745956066; c=relaxed/simple;
+	bh=ugjyf/jMyKKt/zcQVDlLaFsLZEJxdrKZne7xK3f5sUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pd7qhwr5ZlTLFdVgCVHp5/QMHhaNTsYWO9uHEEVuOmQ0lkz22zdKBLhwu4mh3O4YmmYn7FxZ60E20pGjckgpAMBPJtVU9Qs8VdVru2/fexYrQytuwJ/3GCB6CyEnepkJz5c0SjFs2LjF2BAgLt7nuxf5dP+tNDufJYz/AZ32cSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gdesoaGn; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLhuIhjh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4782C4CEE3;
-	Tue, 29 Apr 2025 19:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745955985;
-	bh=epwUWG3hUTSdO39fbHMOAdOJmTT4D+QE67Z81g1XRzA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=RLhuIhjhsNYtQUZH7ZC68MgTZsII2Ei0e56QdIglDIQo/Txl2x3INFMXaWtuW9XFT
-	 32d2cYyLYoz3aVJaoETtlBTJuAkUfWfZBH1XpMmGMgXMAKnPyrGnsjhVHRcY5eYMBs
-	 moF9nBHfyHGe7+/vw0AYjVaoMAisUqkijXCYcWIr1grWKjgDXLbjK8fRK6dBxX+HM0
-	 X+WiMAeps0i7PiYGN13ND07E8o3S00E2ysNOB8WooTKHSJUkXw30Ldj2ZfxHZMOur1
-	 t30Q+GRP+Aem47mpVsRoE43fWJWnL+NjubxDZUy2jcFyUi2FMX2TFhrMf2CQenN/ml
-	 HyXxucQtvsF9w==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 29 Apr 2025 21:46:07 +0200
-Subject: [PATCH] scsi: ufs: ufs-qcom: Add more rates to
- ufs_qcom_freq_to_gear_speed()
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gdesoaGn"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2d071fcd89bso1841299fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745956063; x=1746560863; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PNMUgH5uNY4IqYIYRqaJEMyg/HY2VEe42NNCO90DOAc=;
+        b=gdesoaGnaIjkBQMOEMiWnQSmtkpyMRn3qpZSwNEDsPhqZ7kppm7tIXCviOdpJqlVQv
+         bACpzRAZwNkkBNj8TBN2JAiHLCdSqgMP89TnRrlq57hGtL8ntn6kAVCAheqP+ncIzEX9
+         AnSf/NsZ5SR284jJW4QVa21xCDe11O4t4nAWfxiCE/hy/uyZllX2vjhd+BTFrKNLS6cq
+         ya6pZw3FESzLyNkRDvz7yfMi28DdgwpzSUIQ11nrvIesdcgMA1OPsgQeOSNc/jj8SB9N
+         Woq1xyuJvDX9GgSttyVU+oKWirh7x7ben88mKeuXzZwnmdmxt2+7/pO3CvqWC45RM5Wb
+         lA5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745956063; x=1746560863;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PNMUgH5uNY4IqYIYRqaJEMyg/HY2VEe42NNCO90DOAc=;
+        b=V5iUhHICxv5/sjQn9W2ElTYQZAD/arYMzDbPbUoENw1WxMfhG6sbj+W/SkkdcOt/9n
+         ln3RQ+0+JopryOLAgDFX1aSIGSHjcnAdjdqoKeHWosFcDJZrjd27r6pt937/nV4aEMIF
+         iTNCneaq3cV1LZvnHm0xTyvvv4P6u2Ak1Azt5psVBIrbHnmZ0xTy/Nk5HCmE6CdkSTta
+         pNZRVtaXmfdVCaK5nB7qsv9Prvqi1PUDq1Bqy8kJ//hPXBJKGgEW+RFWGTVE3dtI3Ue4
+         aTuI2AsV4VChMdGXBCFx9AsuMu7jBbOY53bqAJyQ98T6yB5IAjongoaDBtt9WvJ8+6hO
+         XmPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyvjidcJ25NxicF4hp/85d36spn57PqUPYkYYnntxWu9xVSuHV6e3Fm6mUJiW4T/KAeBqyPULH7tDIlSA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4hbCtoc+yOQW49rxRfgsSdCRFqdQMi1dx5OaORD0hzqNiu83u
+	QFnQTXXWlD4IPVh/3WX8cVSc1BHQXWTX8pszaza0POonk+6oak9JkKd1HmP7oGs=
+X-Gm-Gg: ASbGncs/0aKxKsJbLA98Axs1ebXd7ZAl07vvW+tbSAjjdB2on5VaauuOXAdQBnvffyD
+	Tx5jxWsjirXfEu8rCMqWChmZOsisFo5QOOTWMlaRM8/7eNEvE3FbnD3q3/Gsa8dXSPA1CFqU2y1
+	wAaGOd2uL236YQnWeJIOeaFwIyCKH8DnHZ/tMa2EUVux70e+ZhK2zm4NpKLzJsrqDYGR8uJ7rA+
+	aqEBgIF/ecgMFzZS8sLTm/OPhnbu/WVGrYYePDTcQfgFtSiaMjl1YfgE3y3Dv/nZRiKCf2iulFN
+	Y9VWzKuxrObql91XaX9oOto6DFvR4HqcmoAjyy/d4zttqHn0dmjDWt0lfTzmaJJjfH99FmITrgt
+	+ALOnN5OuEIsf1GHuuRQzgg6N/FdM
+X-Google-Smtp-Source: AGHT+IF2u4BGVcklS8e42c3uNUIrh7aRuex4nRoeOZeNBykrvHleyFegxvqc61saZCq3sjivYkKrMA==
+X-Received: by 2002:a05:6871:358f:b0:2d0:3078:e72f with SMTP id 586e51a60fabf-2da6a2b0b6fmr225244fac.26.1745956063148;
+        Tue, 29 Apr 2025 12:47:43 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d973c18da5sm2955704fac.47.2025.04.29.12.47.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 12:47:42 -0700 (PDT)
+Message-ID: <38e243b0-e81b-4d4d-97fe-91ea2bec6270@baylibre.com>
+Date: Tue, 29 Apr 2025 14:47:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-topic-ufs_sdm845-v1-1-faabce28a63b@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAH4sEWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyNL3ZL8gsxk3dK04vjilFwLE1NdQzMLSyMjI4s0k5QkJaC2gqLUtMw
- KsJHRsbW1AC6fc21iAAAA
-X-Change-ID: 20250429-topic-ufs_sdm845-16892228f4db
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Peter Wang <peter.wang@mediatek.com>, Bean Huo <beanhuo@micron.com>, 
- Can Guo <quic_cang@quicinc.com>, Ziqi Chen <quic_ziqichen@quicinc.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745955981; l=1372;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=8Feni5EwMfFqOoooXK+CNvIvFMxdmG8iK8fnUw6OZvQ=;
- b=rDdly1E3tSM3R5EKiw6RugBrT40pTf5ENu3/uhgcjJBM7C9MRvT8QvBZdWt+vNz+ZJcpwwTN6
- pEfO8whpaE5DMEExlMuFVgWCqfHUwJQPqfv9xPHYje3HFfoS01OzR4Z
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
+ <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
+ <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com>
+ <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
+ <CAHp75VfcmvLhBDjbu6x46wGyzG+i7=rVypzSm11qzWN9Qq_rew@mail.gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CAHp75VfcmvLhBDjbu6x46wGyzG+i7=rVypzSm11qzWN9Qq_rew@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On 4/29/25 2:36 PM, Andy Shevchenko wrote:
+> On Tue, Apr 29, 2025 at 10:31 PM David Lechner <dlechner@baylibre.com> wrote:
+>> On 4/28/25 9:12 PM, David Lechner wrote:
+>>> On 4/28/25 3:23 PM, David Lechner wrote:
+>>>> Add new macros to help with the common case of declaring a buffer that
+>>>> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+>>>> to do correctly because of the alignment requirements of the timestamp.
+>>>> This will make it easier for both authors and reviewers.
+>>>>
+>>>> To avoid double __align() attributes in cases where we also need DMA
+>>>> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
+> 
+> ...
+> 
+>>>> +/**
+>>>> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
+>>>> + * @type: element type of the buffer
+>>>> + * @name: identifier name of the buffer
+>>>> + * @count: number of elements in the buffer
+>>>> + *
+>>>> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
+>>>> + * to ensure that the buffer doesn't share cachelines with anything that comes
+>>>> + * before it in a struct. This should not be used for stack-allocated buffers
+>>>> + * as stack memory cannot generally be used for DMA.
+>>>> + */
+>>>> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count)   \
+>>>> +    __IIO_DECLARE_BUFFER_WITH_TS(type, name, count)         \
+>>>> +    /* IIO_DMA_MINALIGN may be 4 on some 32-bit arches. */  \
+>>>> +    __aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
+>>>
+>>> I just realized my logic behind this is faulty. It assumes sizeof(s64) ==
+>>> __alignof__(s64), but that isn't always true and that is what caused the builds
+>>> to hit the static_assert() on v3.
+>>>
+>>> We should be able to leave this as __aligned(IIO_DMA_MINALIGN)
+>>>
+>>> And have this (with better error message):
+>>>
+>>> static assert(IIO_DMA_MINALIGN % __alignof__(s64) == 0);
+>>
+>> I was working late yesterday and should have saved that reply until morning
+>> to think about it more!
+>>
+>> We do want to align to to sizeof(s64) instead of __alignof__(s64) to avoid
+>> issues with, e.g. 32-bit kernel and 64-bit userspace (same reason that
+>> aligned_s64 exists and always uses 8-byte alignment).
+>>
+>> So I think this patch is correct as-is after all.
+> 
+> I'm wondering, shouldn't it be better just to make sure that
+> IIO_DMA_MINALIGN is always bigger or equal to sizeof(s64)?
+> 
 
-Booting up -next on SDM845 results in a number of warnings like:
+Sounds reasonable to me. From what I have seen while working on this is that
+there are quite a few drivers using IIO_DMA_MINALIGN expecting it to be
+sufficient for timestamp alignment, which as it seems is not always the case.
 
-ufshc: ufs_qcom_freq_to_gear_speed: Unsupported clock freq : 50000000
-ufshc: ufs_qcom_freq_to_gear_speed: Unsupported clock freq : 200000000
-
-Add the rates to the switch statement to make the check happy.
-
-Fixes: c02fe9e222d1 ("scsi: ufs: qcom: Implement the freq_to_gear_speed() vop")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/ufs/host/ufs-qcom.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 37887ec684127925e92e01d40f5ea6b8cdb7fc3c..6ddae865b35851b3b9d5bc5fd3720d06be0b2972 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -2104,6 +2104,7 @@ static u32 ufs_qcom_freq_to_gear_speed(struct ufs_hba *hba, unsigned long freq)
- 		gear = UFS_HS_G4;
- 		break;
- 	case 201500000:
-+	case 200000000:
- 		gear = UFS_HS_G3;
- 		break;
- 	case 150000000:
-@@ -2111,6 +2112,7 @@ static u32 ufs_qcom_freq_to_gear_speed(struct ufs_hba *hba, unsigned long freq)
- 		gear = UFS_HS_G2;
- 		break;
- 	case 75000000:
-+	case 50000000:
- 	case 37500000:
- 		gear = UFS_HS_G1;
- 		break;
-
----
-base-commit: 9d9096722447b77662d4237a09909bde7774f22e
-change-id: 20250429-topic-ufs_sdm845-16892228f4db
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+I'll wait for Jonathan to weigh in though before spinning up a new patch.
