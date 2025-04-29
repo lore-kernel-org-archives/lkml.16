@@ -1,90 +1,65 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E66126FA54;
-	Tue, 29 Apr 2025 05:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1949E1DE8B2;
+	Tue, 29 Apr 2025 05:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745906056; cv=none; b=VFCa+LvWHo0zjO5tPBs1JBw6w/F1rUBjfhNKzWBTc1qxkPADmb81Noy8tROOIXyiiY5L+iQowabFa1+X26XdPZ8wbaH+8f3Hkno5T6munPdr0x+p0blLv8mvpyoC5K1FavLo7BBkoFyA0fU48ZKA21jpGNpW2V2nOsj2+GTydxo=
+	t=1745906086; cv=none; b=RMRQJZMlRW/uekul2CJNMzOGa4s0rwbijMcKLy2xGylkLa72YaP2rBjmfUsMnEk9v5e4tMsrXQkme13uJGcy+EhVLd140QK8UjUshy8qtSQdYHZdstbya0OCVv1wKh8949aj+fzxRql1hSgRS5vcagaRpqwufvcuHYUwkVQTwH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745906056; c=relaxed/simple;
-	bh=1P+md1hj7ACnRGFyejNeOYHSJEhXlPbhBFkjUAEOecE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=G5nia59vZXh9esStPIIsxdA3NdK5Pi8gC4rDKik+7CO7YICAESR7hhO+peq8Goj1mwYSWt12K2xOrj1EbYRUFWfsW5dlpg6c6v0yj+sVKhJQCFLYrMfnDDssiUxodc+ZJANhSwOVHIcghIRk5PX/wOWk4Hye9TK5MnPEBlsETbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AbE/ku4X; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745906086; c=relaxed/simple;
+	bh=nb+nYwrAgyj/eqxrYtpAH90jouJToyN/XaNbYT+bYXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZjMqhLIBUUuAvE9LhIIP1uE+IdaguGJshNtOVhihkFbMkgeywQZZxgRkI2HSzxTWzMRAlNF+rXSHyI+qokLrLyTpljSHVTiCeZHS/Kmq9lE/Vkyu9v5zvtYJ+QhGoxjLiptU4SgXmpXPvn+Te9fX2+NUBilaUEBwY2IBtMMYcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=j2desh9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AbE/ku4X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745906047;
-	bh=3WUp871j+20++yrPckg29AMuSnQ66KJhzVjkYNuWwBc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AbE/ku4XvqNSZMpqyWNOBdiGhWegqTHT7O8N2h65SiFbkksmlIrMbQtsH7/fP8apc
-	 kohbuP1xVDfofMQEQOWzidr18Tqx1hcPQT7xWjsRaNSERUbUqhYcTjC5PliFFUvbit
-	 RvPAQNM77T7xYHX05+P4y55h3StdQ4tdZNLupoNvhQTwcBpQTeLZa0uwM1TXiQMEVQ
-	 kVcqcnVJvIZqqEAfG39IAnO65P4Uw2JjBsZbtFxnlELEOrMvDWnZ61fvwn9I8hhCi7
-	 rlkuF3S9fRtAwynldXzWpr2YHYkS6kxQIDFoHtZ0BmFW1NEC8EWiduu54yI48R9oEx
-	 1lnMAZnGdm8yQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmqJG0TF6z4wyl;
-	Tue, 29 Apr 2025 15:54:05 +1000 (AEST)
-Date: Tue, 29 Apr 2025 15:54:04 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thadeu Lima de Souza
- Cascardo <cascardo@igalia.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20250429155404.2b6fe5b1@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="j2desh9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9EEC4CEE3;
+	Tue, 29 Apr 2025 05:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745906085;
+	bh=nb+nYwrAgyj/eqxrYtpAH90jouJToyN/XaNbYT+bYXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j2desh9hc8fSy74ecVOLk4Y/lCsVOGGJK+3KCZqtCWbnMU8BaOyaofa4wCvjtKYqu
+	 GIqywQRYwaFnjoBhbwfWh//LwZ0KGTOJgR71MS3YHnlZ3DfII6wIRzqfSDdGXPeGoQ
+	 vwPIKOntjnKNAITU/Ah2woAv+l5vTZjqdw1LSxVI=
+Date: Tue, 29 Apr 2025 07:54:42 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
+Subject: Re: [PATCH] firmware_loader: use SHA-256 library API instead of
+ crypto_shash API
+Message-ID: <2025042935-ethanol-remodeler-bf69@gregkh>
+References: <20250428190909.852705-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WJT/KAb=VnGm25xilKDLJPe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428190909.852705-1-ebiggers@kernel.org>
 
---Sig_/WJT/KAb=VnGm25xilKDLJPe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 28, 2025 at 12:09:09PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> This user of SHA-256 does not support any other algorithm, so the
+> crypto_shash abstraction provides no value.  Just use the SHA-256
+> library API instead, which is much simpler and easier to use.
+> 
+> Also take advantage of printk's built-in hex conversion using %*phN.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+> 
+> This patch is targeting the firmware_loader tree for 6.16.
 
-Hi all,
 
-After merging the char-misc tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
-
-ERROR: modpost: "init_mknod" [drivers/misc/misc_minor_kunit.ko] undefined!
-ERROR: modpost: "init_unlink" [drivers/misc/misc_minor_kunit.ko] undefined!
-
-Caused by commit
-
-  45f0de4f8dc3 ("char: misc: add test cases")
-
-I have used the char-misc tree from next-20250428 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/WJT/KAb=VnGm25xilKDLJPe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQaXwACgkQAVBC80lX
-0Gx5ewgAh+QdVCPIjKjSPIJc8jkqRhdHKAUb69a3H2LLpJRHQp/po8vkGo63xd0X
-D0Z5jmUZnFnXwuSNVii5kNv8LjWKxJjPH6J6WkY76B3zCJWncm1kcWtte54lMAfO
-rXPT8Z9fvkjM8mGZPL8JW/CYeKsLTnmyD96qlG1/coG2tazRu94loI/rETWGR87D
-2O4OTzjFojHiPJRhKN2O6ySI14PlZ2GOcFPA2jmiDtCTdEkaY9slbBBjv0y50pd0
-KGW73krRJFY9/UMyj6EufIvVb8Ca3wmuNpZuEC9GqjFd19CwOna+TOIc81WKXs2i
-crwGvGdJ/Ieo4KSnSKE0yTx6XyOaeA==
-=SoWS
------END PGP SIGNATURE-----
-
---Sig_/WJT/KAb=VnGm25xilKDLJPe--
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
