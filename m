@@ -1,103 +1,135 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEEC2472B0;
-	Tue, 29 Apr 2025 20:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06CE25A2DE;
+	Tue, 29 Apr 2025 20:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957129; cv=none; b=l/YtTJxpRZdKy5RWDgQ8Pzx2HLMIBi1oxEDWeJmR3WKAq9nyWWss6rOP+kjjOzu3ZgzMbAtB6Gn96OnszY/a904ngNvObzbHpSSjQg+xBtEIC4B9VEfTH6GFvTL82tbRx0/vKFk2mgKLYvJnt8Ye3WSXHvpo4gKdpAOGogAlBzc=
+	t=1745957173; cv=none; b=eicDFrjdokioDyBm8zZ+C0wnU59aiBEsLGHTaYxQ3yKeyUnCDSR5lRBkNAk9l9BzKgMddEPCcbZRist5m4zWH/vUyKtf7eXOC3tlxW/OJUbtnQaOE/TiwT0ev3LWT0joRb0MernFoDMgqj2VI4WuiDv2sQUTwWm5Y2COncU1hWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957129; c=relaxed/simple;
-	bh=EPaDz9srlvFWoL0LgrmxpJ5HNRLE1J4tFa1bEpEb/Wc=;
+	s=arc-20240116; t=1745957173; c=relaxed/simple;
+	bh=ROrues9ocYSCTDxwHhiyyawG8Ax3bIuGP081rEw54HM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SlThINGr9bq+GelIYaCHjy34/8oCvM5HDp2S78QHIUtAZt71o1t5Vq8saN0tdH797N2PxiF4RJ84dCJJtYTZYyYl7cMK20aXAQ5ATdLosC5KU7/JhUw/rUATG44nGrWq7BS0BOs6CrMaM41a5KfhB9GqT298DCwa66K+ZIW3JQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nR9rDhYq; arc=none smtp.client-ip=209.85.215.181
+	 To:Cc:Content-Type; b=TvKep+lW1Le0WLEjZSvERQH0dtoswmjS3U6ZV+YaC0EDbQ8C53iqpQYHUcFrPVWTlccIekX8hiN+3b3YLGFKfq35lp1LsjHtSP/WOpTSwpx87F7WNOyDi7BoaeQSp32KR2b2h6MzevB/yXnes8hvcuJfZbTIwc7sTNN5UkcUIxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0wtL3hD; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR9rDhYq"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af90510be2eso773783a12.3;
-        Tue, 29 Apr 2025 13:05:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0wtL3hD"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so809632166b.1;
+        Tue, 29 Apr 2025 13:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745957127; x=1746561927; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745957168; x=1746561968; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EPaDz9srlvFWoL0LgrmxpJ5HNRLE1J4tFa1bEpEb/Wc=;
-        b=nR9rDhYqYAtUl+XmMfpYxLxsaX3VhDfcM5xiE13SIeyl3L243aKBNkEP6sqBIuDz09
-         MEZUNkxUZ6kxzNj8kFKLFnUS4uRxfZOFlb8/IaUFqHX1RdRW+y28ve4Wr/A1YajiiAwV
-         5s/4nuz3Y5OGPsb9GzFGkO+8nWJaWLl+CSE9O46SqUydcP3jR75WnwbtK2ayYry8w838
-         L9x5vK3gocZMBgssOIRM3lbECT58hUB5DV1Dbhw1IAIebcBW7e+NWJKG4VZh7vuSBDec
-         j5lqkWmUnx6vuAo9mjI9uHnawnBeHOs8oO1v75DtC86BQMmwdBem0NMo7rz3LgZ7Cd1+
-         4pnA==
+        bh=VnhlweQrbulpbYz5+ddzD9VuCBmMsdNLumZo0g6Oc68=;
+        b=M0wtL3hDfy74tnGFqJtumgEzOHtgnURSZkVIXvRW7DmTLCuL1ANlVku/XLXZ5g7o4k
+         rjQpL4x08/Uu1UfqiTfcPZsC1qUhJ2/SJcdCHrgLr32Ubk8IiyZhKXSpKvxt++rcPRJq
+         z/K283/3R+E6FPXBersEyce+W+H/oc3MUsjSxPQLrPEij6S7MeaUKw3sSpDSrWm2i28s
+         0uvOnDRU/2J1zPa0BWUx+UaKZwlZC6cDvi8+DIuMlKd8vaF1v1B3U67142XQ7UYS8myM
+         8CJuYHwyooEJuVyVNUGq4so3FoGG1ZaMSJP3DWzwL7LUGQiHU/rtkyTbQrV93QJMEIMy
+         eXWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745957127; x=1746561927;
+        d=1e100.net; s=20230601; t=1745957168; x=1746561968;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EPaDz9srlvFWoL0LgrmxpJ5HNRLE1J4tFa1bEpEb/Wc=;
-        b=IfKY1F0hbuPVuQEYNQ4B4mkhHC8yJDuPuicY8XU3yfYU4+hxO1LIhxKGVkGWGurWBf
-         N4IAXCk770jnE5v+j99F/O4hth+NrVkMlAWjvb3E6EoCW4A04+DIoUHb7uIJ4rK/rXnW
-         yAqKQYjmLZlZenT/fPNYOAvcVdfi+xp4mJOX0G2cWG33cO4uitbsGgqGZCXAvnKKT4Cq
-         TDIaZRS9DEFKrry9wbSUO3m15gal/upkFjZWsyNEx1rfkW9c2F1U0/9ILbwGrugryvLw
-         NHAPgtge6w9kd+M3qvI+ng1RY1pgXo6Cu1USgr1thvTerHZxo2qipQusBEn9/af3WWe5
-         4YMw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9oyBPvSPejuvJ2Hc62X62C/hQEgZlesgg1KovmWDTNA/WT1W8/MqdcrZNZRLTy7kw0FTdfmCxTr+OBrw=@vger.kernel.org, AJvYcCVRMbfKdnz6aipoZ2vhXaAAlxxdpqBSexb+uaN/NyWpqJSU5UtHShOTPYli0OoygPbIVm2y9wQHK3Kz68m9XptHPA==@vger.kernel.org, AJvYcCWHIv4sBJUgQhEO9FZiv+Hh0nPT2IZx7xBl1qKOAr/9dE9fnfahejX4P8NOp6i23/tIkcDiLOwGTBKPf/JIPEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu5vdgiJ1MGg30fF1XGJ7PVWGwPq6SPlo7Z3rX/T1XW/X38gDY
-	B/1xgzgxvWejIE1mXZoxy/WU5n84EvNa3x+66w5r06qfJPP/GNTV+VBdOy27wycXzGJNxFE9IkS
-	Xj1Z+qaUuoYMqdPmNKswJYMzlua4=
-X-Gm-Gg: ASbGncsta+WA3x+7V3diiex6rAUfD0FuVcqLq7FEQqctFNfWvgVJxZUghHLbquMsuYJ
-	5bX0P4Fv6t2FI50eHk1+usakJDDSCdvYnWYXniAuQ5VSltLEJlTWM0CebKBdcbvmy1XoZ8T6eIP
-	99n5prnSlrW4YP/4heSkUg8g==
-X-Google-Smtp-Source: AGHT+IGWF+l7or88VbtVsoih9aXdUV02U9Qn+pFOHncarixgIstYhZ3FKuRbLZND0+TvviOL031nXIBqToZtnStd7r0=
-X-Received: by 2002:a17:90b:1d06:b0:30a:28e2:a003 with SMTP id
- 98e67ed59e1d1-30a333537cbmr236830a91.3.1745957126955; Tue, 29 Apr 2025
- 13:05:26 -0700 (PDT)
+        bh=VnhlweQrbulpbYz5+ddzD9VuCBmMsdNLumZo0g6Oc68=;
+        b=dtGgkGKrgMT6agmVCVJGMynUARRd8FbnWYw/LN+iNNyflXOohAiDNdKNyb9JDqSie6
+         jA/3Viv/8Uldvut1eLcPYmChgN7L3O1WP9yGjQi/geq+rx6gy5Cg0MG/aWg4nI5RW+ri
+         aIDLvpdLoVtmxPM1yCZejtQT+pwE5do+Eq1X4t62mCUQDRlJio05Onb8uemoL7xygpkT
+         entB3t01TOGRP12+IX5k8bGJ74JfJ2FCV4HCOkZ57fjg1WsqUqwn7JzVskvcN4x3kn7e
+         PymJcTm323UB6s82iaxBQ1RtX2m6h31W33abOBFTDmhg7dcn79j9Jq1dOu7Kg67Hucvx
+         WY8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEeXnmYIOarM07EjwQKaBnnS5ucpt0Yd9znFu5mFUInSrsswMo5JKOx2DDwl58zURD9Zkj4frQufuy@vger.kernel.org, AJvYcCWkED/XKHVb9hyvVxclqQjAu2w2dKco7/1f/5oh16a/F67OzZolmuBG9Xxkb5DYBqpF2D7kJqrdgcKWL9PTteWT@vger.kernel.org, AJvYcCXyn8J0trxmlzldVRNA7IOyDWdt06xpftDDpJPfZyNpsQK1m1jOlNxGkftNyhmteS3PnKK0zNLp09ZG9+3/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY7hvKAqKQ4mA4sj4w9IMdLQwIUc6Ogfq//wRgvoIbWUaut5z2
+	XUDokxqBNBbb+toJDvCq/DZyD2tsXi9+Sbo8XXKca+WZBowP6ENMt5JP10jW0jpmkN6KWUhhyoK
+	EQohLpEaDUgyy5EPnLnAWCsXgvYc=
+X-Gm-Gg: ASbGncs4V5wQLolJ6kxR7IyZCCBZhUaY4ZHVVVhxpqqiyeQu2w76mWniFJwEM8TP+ce
+	B3qXb8xJL15FZnVy+oJkqJOUN4XSIFQDPLpC9w5ElzQAobF3xnRoCN28G6Ffwi6C5MUUrczBMbl
+	0SNlMap2HEENMY9npZjKeB2g==
+X-Google-Smtp-Source: AGHT+IHzBwENZySO+iABPSOfF0pbPLTD2vHtSSYYLyk7Rh9/rw8P+me+a0xt/eolP/8YcUIxAVbgjbLl+erCtG37oR0=
+X-Received: by 2002:a17:907:72c1:b0:ac2:9683:ad25 with SMTP id
+ a640c23a62f3a-acedc62278fmr64758766b.34.1745957167963; Tue, 29 Apr 2025
+ 13:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429185839.1807005-1-irogers@google.com> <20250429185839.1807005-4-irogers@google.com>
-In-Reply-To: <20250429185839.1807005-4-irogers@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 29 Apr 2025 22:05:14 +0200
-X-Gm-Features: ATxdqUHM5AHs_-EVk1tBU6W6vNSJKG_yZ1Vj6N1JMNl33Yw5FxIdRgkNWcOtSx4
-Message-ID: <CANiq72kw97U_5dy1MCVRHfKUVWDfrrE50anfEa1gL1qy=yQUxg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/6] perf demangle-rust: Remove previous legacy rust decoder
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev, Daniel Xu <dxu@dxuuu.xyz>
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-5-b3fffc11417d@bootlin.com>
+In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-5-b3fffc11417d@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 23:05:31 +0300
+X-Gm-Features: ATxdqUH3j5SoOveEZ_BcoQGg8gt0PoLFQ9rwxHPs1rQsev2JxgqaatDygJT-ZVg
+Message-ID: <CAHp75Vehui8wJPvX=wn78eQYVSYk3h0WqiEtczAS81qtuWsYzA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/12] gpio: aggregator: refactor the code to add GPIO
+ desc in the forwarder
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 8:59=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Apr 29, 2025 at 5:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 >
-> Code is unused since the introduction of rustc-demangle demangler.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Create a dedicated function to add a GPIO desc in the forwarder. Instead =
+of
+> passing an array of GPIO desc, now the GPIO desc are passed on by one to
 
-Looks fine -- the only two calls I see are gone in the previous patch, so:
+GPIO desc:s
+GPIO desc:s
 
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+> the forwarder.
 
-Cheers,
-Miguel
+...
+
+> +static int gpiochip_fwd_gpio_add(struct gpiochip_fwd *fwd,
+> +                                struct gpio_desc *desc,
+> +                                unsigned int offset)
+> +{
+> +       struct gpio_chip *parent =3D gpiod_to_chip(desc);
+> +       struct gpio_chip *chip =3D &fwd->chip;
+> +
+> +       if (offset > chip->ngpio)
+> +               return -EINVAL;
+
+> +       if (fwd->descs[offset])
+> +               return -EEXIST;
+
+If we still need this, it shouldn't be in this patch. This change
+doesn't require the check.
+
+> +       /*
+> +        * If any of the GPIO lines are sleeping, then the entire forward=
+er
+> +        * will be sleeping.
+> +        * If any of the chips support .set_config(), then the forwarder =
+will
+> +        * support setting configs.
+> +        */
+> +       if (gpiod_cansleep(desc))
+> +               chip->can_sleep =3D true;
+> +
+> +       if (parent && parent->set_config)
+> +               chip->set_config =3D gpio_fwd_set_config;
+> +
+> +       fwd->descs[offset] =3D desc;
+> +
+> +       dev_dbg(chip->parent, "%u =3D> gpio %d irq %d\n", offset,
+> +               desc_to_gpio(desc), gpiod_to_irq(desc));
+> +
+> +       return 0;
+> +}
+
+--=20
+With Best Regards,
+Andy Shevchenko
