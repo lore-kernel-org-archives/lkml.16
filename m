@@ -1,139 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1EE1EF01;
-	Tue, 29 Apr 2025 01:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F236C126BF7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745891903; cv=none; b=uYBaxkTfhQpnrPj5Gdi3XFv7IAv+p/IVbXJ5r+HmcJ/fj7tXPUUOeXk8BpPYlQA9+RwaRGLiDSsUO3POB1D3s36XO58sRaO18VSOaby7Itca/9nH3Xtw5nmybjQvn1D5QF09vXXN3+E5pZCdjrR3xhX8cS02Qe8IrADbvKOjc1M=
+	t=1745892068; cv=none; b=PwREUFnCj62TSALrvwr/I+oSjLx0C7vWjGdMl1Yn5TQa9b83Y0NAKOvcmVTWQQTDLzgAbi7zITGfv2O/61uz4njzhrI422ysbXNtYg8nzcCK0tPXtnAst1hXsvSY0rF1/gLsap8EO4we6tigL05Na4x3smbBIb/02vGVWZwGNjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745891903; c=relaxed/simple;
-	bh=r6Eqx4vQPJ/sbEzTmwfcYb+QRd2YEHOWgQzVfEbb/cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKYRUcuOEWINOaTGt+Cs/wA2CVhHfHpMltZMw/NMiNbxkDJdHtcK9+LO3jLC2KVYM2gK9C2aAD1F6oe+FvrjQ0C4S5W7U67+W8i7h4iOWAKtfM4Cbw8NFkFwdgTIQX3DfqJ56BWIdPwjcJi6APuiPcaDTKG9FlcbNh+Rqtzm/I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcKwdWrq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745892068; c=relaxed/simple;
+	bh=weqfYcB+EDyyw2HNB/6reTaDsnRhflpF5Zrts2EdPtQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=St3pknOP/Rwydj4P8fNsoXE9e/c/JKZpJtFL4cLK9mHFYuN0RsTFnRalYEZpIYSlRAQT/tAQZslfhUjUja5DOU/XkrpOy8rTVK+cZuqc6GB8PMW3DSFhab76zuoMoZPPNj4lNySsWsSpXkiIzRuSgRZ0pgCsEEU2Ye3GGmOzn+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=a/V8ZtRS; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcKwdWrq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842FCC4CEE4;
-	Tue, 29 Apr 2025 01:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745891902;
-	bh=r6Eqx4vQPJ/sbEzTmwfcYb+QRd2YEHOWgQzVfEbb/cs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dcKwdWrqcggvCNj6nHvFDtB6vzii8ZK4V/Z4ckm0LZD2LoXD/a6qjf3yjbdQu/Juo
-	 tVt8odskcKO9vuCGrJxXPpmIu30KFfl/YCoC73/RmsKC+XBDBV3LueueW8v7pEegPl
-	 uhSAvjYfr9LCR8yrgjvs7zQ6kKM4yoOtHK3sIe/pgDG05XORNrh6iRhikaGjXvfm/r
-	 5OHY0C8/6JoaieGHQhpJnEhkEPF560doDBylAgQeGzNKPiChKiQRDhc7rv+gmkYpLw
-	 aNhxcPInRY8kcOefQ7+EhUjwQWM33+QtKa04jOoL8AV0myPeFEktIxrQZdI+2eXAPN
-	 ExGYZqT1N+JFw==
-Date: Tue, 29 Apr 2025 09:58:14 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: cdnsp: fix L1 resume issue for
- RTL_REVISION_NEW_LPM version
-Message-ID: <20250429015814.GA3615063@nchen-desktop>
-References: <20250425054934.507320-1-pawell@cadence.com>
- <PH7PR07MB9538B55C3A6E71F9ED29E980DD842@PH7PR07MB9538.namprd07.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="a/V8ZtRS"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53T20D5e084945
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 28 Apr 2025 19:00:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53T20D5e084945
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745892015;
+	bh=Sa3174tDwufid9lYtjnyXVpiRUMqmxxt9iXJ7zEmUGw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=a/V8ZtRSqlR1/BTFZqcrwJRErwApyt0cYqkrfh2z+Y4mu9L5CE5/z/brCDx7IZzHv
+	 6JvXaeOjTLJ5lRiQXf1uUMWrsan6raPI66bYVqHA/ogzrNk2rFeAY/fU9UeCuwSISy
+	 4M2dYVdYZ0/QswbcmPcS3vmpM+IH4Qywv7KacDjPN7voCmNLWeYZnnOC6y9atCR9o9
+	 Pb6q9VWcB/JPm13r0lQrSg3wXo+6S28SWaR76gPs5CSv8gCN7pS9LeXwKi3lMcia6J
+	 efQdlKuuHNceK3YKrJrr+ltxXwZFZWk/E5iUbSS/o/oh636eYfed322wFtf7whVNNz
+	 WWkABNEDI7OZQ==
+Date: Mon, 28 Apr 2025 19:00:12 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>
+CC: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+        Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_bitops/32=3A_Convert_variable?=
+ =?US-ASCII?Q?=5Fffs=28=29_and_fls=28=29_zero-case_handling_to_C?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <67be5eee-b67b-409a-8309-829f891b9944@citrix.com>
+References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com> <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com> <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com> <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com> <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com> <CAHk-=wgJfWfWa2NTiTmev+Xr=e8Uo=aFkrXujLAQBVAVN-VigQ@mail.gmail.com> <B364FF6D-DFCC-42A7-ACA1-6A74E27EE57E@zytor.com> <67be5eee-b67b-409a-8309-829f891b9944@citrix.com>
+Message-ID: <916BD58C-E6A7-495E-9A60-722E130AC7A7@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR07MB9538B55C3A6E71F9ED29E980DD842@PH7PR07MB9538.namprd07.prod.outlook.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 25-04-25 05:55:40, Pawel Laszczak wrote:
-> The controllers with rtl version larger than
-> RTL_REVISION_NEW_LPM (0x00002700) has bug which causes that controller
-> doesn't resume from L1 state. It happens if after receiving LPM packet
-> controller starts transitioning to L1 and in this moment the driver force
-> resuming by write operation to PORTSC.PLS.
-> It's corner case and happens when write operation to PORTSC occurs during
-> device delay before transitioning to L1 after transmitting ACK
-> time (TL1TokenRetry).
-> 
-> Forcing transition from L1->L0 by driver for revision larger than
-> RTL_REVISION_NEW_LPM is not needed, so driver can simply fix this issue
-> through block call of cdnsp_force_l0_go function.
-> 
-> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+On April 28, 2025 5:12:13 PM PDT, Andrew Cooper <andrew=2Ecooper3@citrix=2E=
+com> wrote:
+>On 28/04/2025 10:38 pm, H=2E Peter Anvin wrote:
+>> On April 28, 2025 9:14:45 AM PDT, Linus Torvalds <torvalds@linux-founda=
+tion=2Eorg> wrote:
+>>> On Mon, 28 Apr 2025 at 00:05, Ingo Molnar <mingo@kernel=2Eorg> wrote:
+>>>> And once we remove 486, I think we can do the optimization below to
+>>>> just assume the output doesn't get clobbered by BS*L in the zero-case=
+,
+>>>> right?
+>>> We probably can't, because who knows what "Pentium" CPU's are out ther=
+e=2E
+>>>
+>>> Or even if Pentium really does get it right=2E I doubt we have any
+>>> developers with an original Pentium around=2E
+>>>
+>>> So just leave the "we don't know what the CPU result is for zero"
+>>> unless we get some kind of official confirmation=2E
+>>>
+>>>          Linus
+>> If anyone knows for sure, it is probably Christian Ludloff=2E However, =
+there was a *huge* tightening of the formal ISA when the i686 was introduce=
+d (family=3D6) and I really believe this was part of it=2E
+>>
+>> I also really don't trust that family=3D5 really means conforms to undo=
+cumented P5 behavior, e=2Eg=2E for Quark=2E
+>
+>https://www=2Esandpile=2Eorg/x86/flags=2Ehtm
+>
+>That's a lot of "can't even characterise the result" in the P5=2E
+>
+>Looking at P4 column, that is clearly what the latest SDM has
+>retroactively declared to be architectural=2E
+>
+>~Andrew
 
-Acked-by: Peter Chen <peter.chen@kernel.org>
+Yes, but it wasn't about flags here=2E=20
 
-Peter
-
-> ---
-> Changelog:
-> v2:
-> - improved patch description
-> - changed RTL_REVISION_NEW_LPM value
-> 
->  drivers/usb/cdns3/cdnsp-gadget.c | 2 ++
->  drivers/usb/cdns3/cdnsp-gadget.h | 3 +++
->  drivers/usb/cdns3/cdnsp-ring.c   | 3 ++-
->  3 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c b/drivers/usb/cdns3/cdnsp-gadget.c
-> index 87f310841735..e64c8f7eb0c5 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.c
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
-> @@ -1773,6 +1773,8 @@ static void cdnsp_get_rev_cap(struct cdnsp_device *pdev)
->  	reg += cdnsp_find_next_ext_cap(reg, 0, RTL_REV_CAP);
->  	pdev->rev_cap  = reg;
->  
-> +	pdev->rtl_revision = readl(&pdev->rev_cap->rtl_revision);
-> +
->  	dev_info(pdev->dev, "Rev: %08x/%08x, eps: %08x, buff: %08x/%08x\n",
->  		 readl(&pdev->rev_cap->ctrl_revision),
->  		 readl(&pdev->rev_cap->rtl_revision),
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
-> index 84887dfea763..357ddbe53917 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.h
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
-> @@ -1357,6 +1357,7 @@ struct cdnsp_port {
->   * @rev_cap: Controller Capabilities Registers.
->   * @hcs_params1: Cached register copies of read-only HCSPARAMS1
->   * @hcc_params: Cached register copies of read-only HCCPARAMS1
-> + * @rtl_revision: Cached controller rtl revision.
->   * @setup: Temporary buffer for setup packet.
->   * @ep0_preq: Internal allocated request used during enumeration.
->   * @ep0_stage: ep0 stage during enumeration process.
-> @@ -1411,6 +1412,8 @@ struct cdnsp_device {
->  	__u32 hcs_params1;
->  	__u32 hcs_params3;
->  	__u32 hcc_params;
-> +	#define RTL_REVISION_NEW_LPM 0x2700
-> +	__u32 rtl_revision;
->  	/* Lock used in interrupt thread context. */
->  	spinlock_t lock;
->  	struct usb_ctrlrequest setup;
-> diff --git a/drivers/usb/cdns3/cdnsp-ring.c b/drivers/usb/cdns3/cdnsp-ring.c
-> index 46852529499d..fd06cb85c4ea 100644
-> --- a/drivers/usb/cdns3/cdnsp-ring.c
-> +++ b/drivers/usb/cdns3/cdnsp-ring.c
-> @@ -308,7 +308,8 @@ static bool cdnsp_ring_ep_doorbell(struct cdnsp_device *pdev,
->  
->  	writel(db_value, reg_addr);
->  
-> -	cdnsp_force_l0_go(pdev);
-> +	if (pdev->rtl_revision < RTL_REVISION_NEW_LPM)
-> +		cdnsp_force_l0_go(pdev);
->  
->  	/* Doorbell was set. */
->  	return true;
-> -- 
-> 2.43.0
-> 
-
--- 
-
-Best regards,
-Peter
+Now, question: can we just use __builtin_*() for these? I think gcc should=
+ always generate inline code for these on x86=2E
