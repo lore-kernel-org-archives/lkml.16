@@ -1,168 +1,234 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C33221FAE;
-	Tue, 29 Apr 2025 22:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063C47E9;
+	Tue, 29 Apr 2025 22:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745964025; cv=none; b=GsUKBfHdtPEAHqT+KK+zxyE8AnaM4K74NT/Tgzv7rZUG9Oh3LwRrVkvWYPAqhEnMeMB7MfzeNWtoVl/iSTnDfqXrsYFSiZg7O0GCs1kRu6frIyEi4yAwO5bl4cXlIBq1OLQitvYpPEkLssTbTNOBAJ1dsZZEfHmddDMr80S4iYg=
+	t=1745964076; cv=none; b=ndYy1BPXmmoBYl+yLkjXpDoa49P+jZvkIbqzzDtBl6B4kL6IFzZ/RnX3KseGS94UJjsHbijvR4V4UEyYUZFlBsAIJVwQBeXAkokw31MRnict3pkAMQgbcobjzm4OyK09/a+NYLq4e0zWQVhqQwbGVox+toKMdPQZNmLMksX73JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745964025; c=relaxed/simple;
-	bh=d3/Z6QPw0Cs9yNszPaQ5V2DD+FjaBrRTlSPNyNV0saA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TS6kkhyPRwH/aObFf+sBgB7foBMndIfJc3DBKHR5P7tdZucsj8CD149qZoZe40Bn8rEkrSzm/gm8Rl+m+wjCNgtm6cgzt/uyGNG/P96kRCZrmGBSKJaouVy2OVy4njKen9WRQwOIQ+ZwJgM7sjzNqp4fVducSxLQ0fSse3E6NsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=svT14qQv; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745964076; c=relaxed/simple;
+	bh=so2WUcTSbPml9ZduHPdr5ppMxEZn0laxGP0IZlkm364=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EKAbmxYzvILee6JrMA3hybhnyCFy6duy4mEX6KWtoAZSoUdbQ1eKHCN2UbsUM/m+/1OB2t07vJhcY3NhM4T7Jnm3lccl5TcGhB64VrBUbqDocLD6yjGFLGjFxyteZFl9jLepxJk7Sz37o55slW05gS95sL97zdo0Ji1xk/CfcUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YPVaLOKY; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="svT14qQv"
-Received: from [100.70.192.100] (unknown [172.172.34.115])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A055E21130A6;
-	Tue, 29 Apr 2025 15:00:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A055E21130A6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745964023;
-	bh=GabYpzt6hKuuPORocEKZwZwL8u9mqEx7Hx0RkHPtTMs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=svT14qQvKRJ+l9WXAAjQjViQEabtZkIL7a6+9A2SiWIcaEE6oG3llA8Tle9Zg52/h
-	 mHL3oJsLKd+sYJYbDmLs/UAIfZO8ZSMyLetId+kOWFvupS0DrO0gferMEeKH4bCI7+
-	 4yLD9JSgsZHeObJHz6NRTySun/KqlZUUftz9U0cs=
-Message-ID: <2b352e35-5795-40da-bba6-c03347cfc5be@linux.microsoft.com>
-Date: Tue, 29 Apr 2025 15:00:20 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPVaLOKY"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac345bd8e13so950008566b.0;
+        Tue, 29 Apr 2025 15:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745964073; x=1746568873; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kQazwp9WUvNXy/9ZWbeeym5SVzeOQHXpU41heEUQ1Ww=;
+        b=YPVaLOKY7Dr0EtOACRmtcaX7kj+Npmf6PQzG293a8wJ1MmZkqCYvfqYnCPqtMjeDhD
+         VaOCOz7qcDjw2KLAAzOlczKXbuI64H/0ZCdSD8qXuuz9GMRXyH6d1TnhFehcQoKEVvxl
+         63vCrPrPtWvUlx0avAWdxB3zphzJtHsgPi+CsUJB6bQKaLk2GiM7RhrVLkVz8zsBvhuW
+         F5frQEt7RhXZaucKmuwl8zaWABkBlSx49H2NE1vzw4EyXzwI3Uf5DhcNzh3Be14bqSBF
+         JWQt25qzreJNyqNmPsfWW/o9NXMlIjsNWLA1K+WXP5bjZoTNJaw5BPAUOhGoHHnRxVvC
+         M4NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745964073; x=1746568873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kQazwp9WUvNXy/9ZWbeeym5SVzeOQHXpU41heEUQ1Ww=;
+        b=q7ppEuKT+fr+oNtf05GytUCeR+dJWFSolvvdbWT2S5k7iYFD6Bgo1xt/hzSdag6H2W
+         pOT9CPxaTNw1g/E5epecBGjvDvU94tZilVlDwfRdgmiKPN5D26rLC00QjseoyUlCcamk
+         4h6FPPtd+q70chV3oVVXNr/V1NuIeH8UY0pJV9FV+rqSL/dlBhPpPKJcoWCLDxQEqQ2v
+         oBmI53iRsG8xnrSLrqPxyNgOGhPN7a68AHgn+dcyMdrBZS7UOYSq7QW1oW/gRLhp3NdX
+         kvdTN1uEmxNKYnJPrb//QLN2kFeo0DQDe0BRGWUj/RpfqXZS5oQ4RwkdSuTy9s9+Df64
+         R7Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCGY4i2MEDVjaE5DWhU6eOqB1anMXLJO++FdXz2+ZgFTo5YKB1edjbAUWLHmjaFmVKcxhLPHuj35YK@vger.kernel.org, AJvYcCWH0mJeW7isizU5ddL2ANp8bwN5C7dbJdwk7mqtzs/CRNhRDXBkJEZZjlWPYObIlYRhxMiGXBaIp11MdR9/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA4gcBLTVFfupYJL9nT3U0lTDS0L8CII/jiPc7wPJ+aPwyfLGf
+	IneG1l1KNKc7ObQGu06+8PzFWyi0QM/erJWyf7uYAq7z8CJP5/k3yZ7K1cVK0tNK3HyL+ixYuZi
+	VvRNWdNhM2W5bQnCy0vQNt2wASek=
+X-Gm-Gg: ASbGncv4df5q/gK3L6ja2K2uVrKjxXeREENYc491yrT9VjXnaLVTYXQe0RbB7iE6nKO
+	DSVpmysTmOr6uC26kxPFSShvSVM4mF+xg/V8kdAV7Z57hM2tUi4b7NQFnfTH1ChtjTB/diSZbAu
+	gtLdKFRSIbK/QFzcOrsGkfOA==
+X-Google-Smtp-Source: AGHT+IEJv5YuET3FOvROh7mxVPAT0XW0YNAdhUXhA/RfLE8YK6WDQcNAMu1hvrRf31xYApYnG9kNJGpz1UVrmdGWzmE=
+X-Received: by 2002:a17:907:3e8c:b0:aca:a3da:80b8 with SMTP id
+ a640c23a62f3a-acedc7763a4mr85057366b.55.1745964072988; Tue, 29 Apr 2025
+ 15:01:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 8/9] ima: make the kexec extra memory configurable
-To: Stefan Berger <stefanb@linux.ibm.com>, zohar@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com
-References: <20250421222516.9830-1-chenste@linux.microsoft.com>
- <20250421222516.9830-9-chenste@linux.microsoft.com>
- <f9652da1-78a5-443c-9893-41d76007a974@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <f9652da1-78a5-443c-9893-41d76007a974@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1745841276.git.marcelo.schmitt@analog.com> <db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
+In-Reply-To: <db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 01:00:36 +0300
+X-Gm-Features: ATxdqUGE-rCNDXc8AWuQlT7f-J0zesni32t7ZpRaRi3RgltjEYUpWElbOaARGts
+Message-ID: <CAHp75Vc9CMqkkrEjgGEYPnmkb1R=u+RUvD3FAZ+7bFqi5aDzdw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] iio: adc: ad4170: Add support for buffered data capture
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/29/2025 12:06 PM, Stefan Berger wrote:
+On Mon, Apr 28, 2025 at 3:28=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
 >
->
-> On 4/21/25 6:25 PM, steven chen wrote:
->> From: Steven Chen <chenste@linux.microsoft.com>
->>
->> The extra memory allocated for carrying the IMA measurement list across
->> kexec is hard-coded as half a PAGE.  Make it configurable.
->>
->> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
->> extra memory (in kb) to be allocated for IMA measurements added during
->> kexec soft reboot.  Ensure the default value of the option is set such
->> that extra half a page of memory for additional measurements is 
->> allocated
->> for the additional measurements.
->>
->> Update ima_add_kexec_buffer() function to allocate memory based on the
->> Kconfig option value, rather than the currently hard-coded one.
->>
->> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
->> Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
->> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->> Acked-by: Baoquan He <bhe@redhat.com>
->> ---
->>   security/integrity/ima/Kconfig     | 11 +++++++++++
->>   security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
->>   2 files changed, 22 insertions(+), 5 deletions(-)
->>
->> diff --git a/security/integrity/ima/Kconfig 
->> b/security/integrity/ima/Kconfig
->> index 475c32615006..976e75f9b9ba 100644
->> --- a/security/integrity/ima/Kconfig
->> +++ b/security/integrity/ima/Kconfig
->> @@ -321,4 +321,15 @@ config IMA_DISABLE_HTABLE
->>       help
->>          This option disables htable to allow measurement of 
->> duplicate records.
->>   +config IMA_KEXEC_EXTRA_MEMORY_KB
->> +    int "Extra memory for IMA measurements added during kexec soft 
->> reboot"
->> +    range 0 40
->> +    depends on IMA_KEXEC
->> +    default 0
->> +    help
->> +      IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
->> +      allocated (in kb) for IMA measurements added during kexec soft 
->> reboot.
->> +      If set to the default value of 0, an extra half page of memory 
->> for those
->> +      additional measurements will be allocated.
->
-> If you have an IMA policy taking quite a few measurements and you are 
-> fast after reboot to log in to initiate the 'kexec load' (While system 
-> is still starting up), the system may end up with loss of measurements 
-> very easily if the default is 0 and pages are small. -> Set the 
-> default to the max? Also, would we expect distros to all go through 
-> the new config option and choose 40 or will they likely leave it at 0?
->
-Hi Stefan,
+> Extend the AD4170 driver to allow buffered data capture in continuous rea=
+d
+> mode. In continuous read mode, the chip skips the instruction phase and
+> outputs just ADC sample data, enabling faster sample rates to be reached.
+> The internal channel sequencer always starts sampling from channel 0 and
+> channel 0 must be enabled if more than one channel is selected for data
+> capture. The scan mask validation callback checks the aforementioned
 
-Could you please check the comments of version V11 on this default value?
+checks if the
 
-https://lore.kernel.org/all/20250402124725.5601-1-chenste@linux.microsoft.com/
+> condition is met.
 
-Thanks,
+...
 
-Steven
+> +static int ad4170_prepare_spi_message(struct ad4170_state *st)
+> +{
+> +       /*
+> +        * Continuous data register read is enabled on buffer postenable =
+so
+> +        * no instruction phase is needed meaning we don't need to send t=
+he
+> +        * register address to read data. Transfer only needs the read bu=
+ffer.
+> +        */
+> +       st->xfer.rx_buf =3D &st->rx_buf;
+> +       st->xfer.len =3D BITS_TO_BYTES(ad4170_channel_template.scan_type.=
+realbits);
 
->> +
->>   endif
->> diff --git a/security/integrity/ima/ima_kexec.c 
->> b/security/integrity/ima/ima_kexec.c
->> index ed867734ee70..d1c9d369ba08 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -118,6 +118,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->>                     .buf_min = 0, .buf_max = ULONG_MAX,
->>                     .top_down = true };
->>       unsigned long binary_runtime_size;
->> +    unsigned long extra_memory;
->>         /* use more understandable variable names than defined in 
->> kbuf */
->>       size_t kexec_buffer_size = 0;
->> @@ -125,15 +126,20 @@ void ima_add_kexec_buffer(struct kimage *image)
->>       int ret;
->>         /*
->> -     * Reserve an extra half page of memory for additional measurements
->> -     * added during the kexec load.
->> +     * Reserve extra memory for measurements added during kexec.
->>        */
->> -    binary_runtime_size = ima_get_binary_runtime_size();
->> +    if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
->> +        extra_memory = PAGE_SIZE / 2;
->> +    else
->> +        extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
->> +
->> +    binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
->> +
->>       if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
->>           kexec_segment_size = ULONG_MAX;
->>       else
->> -        kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
->> -                       PAGE_SIZE / 2, PAGE_SIZE);
->> +        kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
->> +
->>       if ((kexec_segment_size == ULONG_MAX) ||
->>           ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
->>           pr_err("Binary measurement list too large.\n");
+This will give, e.g., 3 for the realbits =3D=3D 24. Is this expected?
 
+> +       spi_message_init_with_transfers(&st->msg, &st->xfer, 1);
+> +
+> +       return devm_spi_optimize_message(&st->spi->dev, st->spi, &st->msg=
+);
+> +}
 
+...
+
+> +static int ad4170_buffer_predisable(struct iio_dev *indio_dev)
+> +{
+> +       struct ad4170_state *st =3D iio_priv(indio_dev);
+> +       int ret, i;
+
+Why is 'i' signed?
+
+> +       /*
+> +        * Use a high register address (virtual register) to request a wr=
+ite of
+> +        * 0xA5 to the ADC during the first 8 SCLKs of the ADC data read =
+cycle,
+> +        * thus exiting continuous read.
+> +        */
+> +       ret =3D regmap_write(st->regmap, AD4170_ADC_CTRL_CONT_READ_EXIT_R=
+EG, 0);
+
+No error check.
+
+> +       ret =3D regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
+> +                                AD4170_ADC_CTRL_CONT_READ_MSK,
+> +                                FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK=
+,
+> +                                           AD4170_ADC_CTRL_CONT_READ_DIS=
+ABLE));
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D  ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_IDLE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /*
+> +        * The ADC sequences through all the enabled channels (see datash=
+eet
+> +        * page 95). That can lead to incorrect channel being read if a
+> +        * single-shot read (or buffered read with different active_scan_=
+mask)
+> +        * is done after buffer disable. Disable all channels so only req=
+uested
+> +        * channels will be read.
+> +        */
+> +       for (i =3D 0; i < indio_dev->num_channels; i++) {
+> +               ret =3D ad4170_set_channel_enable(st, i, false);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +       return ret;
+
+Wouldn't return 0; suffice?
+
+> +}
+
+...
+
+> +static bool ad4170_validate_scan_mask(struct iio_dev *indio_dev,
+> +                                     const unsigned long *scan_mask)
+> +{
+> +       unsigned int masklength =3D iio_get_masklength(indio_dev);
+> +
+> +       /*
+> +        * The channel sequencer cycles through the enabled channels in
+> +        * sequential order, from channel 0 to channel 15, bypassing disa=
+bled
+> +        * channels. When more than one channel is enabled, channel 0 mus=
+t
+> +        * always be enabled. See datasheet channel_en register descripti=
+on at
+> +        * page 95.
+> +        */
+> +       if (bitmap_weight(scan_mask, masklength) > 1)
+
+> +               return test_bit(0, scan_mask);
+
+> +       return true;
+
+Hmm... Is it possible to get weight =3D=3D 0 and true here?
+
+> +}
+
+...
+
+> +static irqreturn_t ad4170_trigger_handler(int irq, void *p)
+> +{
+> +       struct iio_poll_func *pf =3D p;
+> +       struct iio_dev *indio_dev =3D pf->indio_dev;
+> +       struct ad4170_state *st =3D iio_priv(indio_dev);
+> +       int i, ret;
+
+Why is 'i' signed? (And even in the original case it's inconsistent to
+the similar in another function)
+
+> +       iio_for_each_active_channel(indio_dev, i) {
+> +               ret =3D spi_sync(st->spi, &st->msg);
+> +               if (ret)
+> +                       goto err_out;
+> +
+> +               st->bounce_buffer[i] =3D get_unaligned_be32(st->rx_buf);
+> +       }
+> +
+> +       iio_push_to_buffers(indio_dev, st->bounce_buffer);
+> +err_out:
+> +       iio_trigger_notify_done(indio_dev->trig);
+> +       return IRQ_HANDLED;
+> +}
+
+...
+
+> +               return dev_err_probe(&st->spi->dev, ret,
+> +                                    "Failed to register trigger\n");
+
+One line?
+
+--=20
+With Best Regards,
+Andy Shevchenko
