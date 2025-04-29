@@ -1,158 +1,250 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E3725F978;
-	Tue, 29 Apr 2025 19:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042A227453
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956082; cv=none; b=P6Yq874zoWjmBjYXK9FM+QwTTlGxktMqyV+FD1uDLeTOQ4pGwZwCIdKOXIV4BsXkedeuqZew+yS09oTOL2aXNimqgK17hA97QPVtJEzC7mQU5OjUjzr5xrA0nJ5kiIRvBrmQ/AzqZJZ1HQTgZPkFLbnkza887H17Nsnl0aU/ozc=
+	t=1745956164; cv=none; b=q7VqDIUeJorgkC3WDQx26lnjLtFAVzeqykQePhix6ibhXuhD3G/Yd4308RCpEb75UbolIwu8t/ddYxNaNNMaOY9BzQIRZS8lkGrtxEb6UQrBJmwhwzVwsfV3ktSbciy4RxiLX3SjGWhQPBz444JuleQE6V6LSnAxKMAC6VjKl30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956082; c=relaxed/simple;
-	bh=5sF17zBSWsEu1wpW4T/aKuh7B90BT+uOCbFZt5HIb/g=;
+	s=arc-20240116; t=1745956164; c=relaxed/simple;
+	bh=2EHDMWqXIotZFZATkaTcYHUnyAW55GV0o6mUZkjGoUY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pf5D5By8FQTpD0+R4wSxF6FBqkMIrQy1AaTNoeDDmjZLBCR7EKGEzKMdw7Z0EUHU0CEIkYeB2RdTa0/dGizarVFzNc7MRtKKXJ/6WZgZ+N754Oa6eXUWnd2MYdBUxSonPRms1dP/Saiu2QIRUUMDPKnDpXRnh+5D7Nsg8MRGKQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WHj8wW34; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=t+5Di80MDKMPCjRU3FM0eMaU3+xP6uWB14ou99PHLZi8/W0vHNsBMm/Zeow6NS5qHP5yw+rfD2WtHRJ5w+CdvRd0rVNtnbOkt1jPd1Jo7gLYLmSxiqe+kDJp5KFAMADv/RyCxvg4aoHv4hTCS98vjTHv6mbm8Cu3/jnBDkQWIX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=13u6SNBJ; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHj8wW34"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac7bd86f637so36609366b.1;
-        Tue, 29 Apr 2025 12:48:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="13u6SNBJ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d5f10e1aaso66245e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745956079; x=1746560879; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745956161; x=1746560961; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=31hHt99eQ7ecxAQBYo10uCFCGHQn8F86JxoMvBp/XTs=;
-        b=WHj8wW340mrXuwj0f3NAIPIvy19wrpRXOU0c+RIQ9zlE/tCq1BmYpCx0AREwpTCG2U
-         hsJpIayXJz5zk3oM2LZT00YmSmKg/Vvfe9C+OoehCQPQ3OWGfseDuEJZJL0zH4qM0oeh
-         Ox/WAnH8rhuQCGOTvf3GzN+d1ydq5V3ftzRFQ5+qVBZLaljykoiHNevHNnaUOaqARhxd
-         AEVV8Ml4p1Q4jkuvZIkHABZbr8wb7mnKPmItsqfWAwgU+jzhCUwZzOTzGgmpdaiRk51g
-         xrmXa4215VQh/00UwmqyYuEJv+HCM0eS3XvmDr7ZKSKvCabO8B1Yb64vuTbW5IZWt2ik
-         ohog==
+        bh=TzKOWzU43LrPmkFzN5+2z6l0zJFMgpGF/vX9S5W3V2I=;
+        b=13u6SNBJPmtIV3wLM89mzGyIX19AL/6LdxBDLfYD6atoMi5uHc9nQfEr5iw9HY7Slw
+         VJI/wdc3HfVdMgn0wnjTX0CRD37LnDtfHCCJ2SZTKdw7QyV6NPHJ/CP2ZMPK+pXfurFr
+         5NDYD9OYO25q7KqbOKt3Pucouiocfy4IBOlPqtHatXtEuwZ+jp+v730tXplr0q028NY/
+         tvJM9PZNmXZiT7mLmg2i4sGFA6WZAU6K2CqAr1htIl4i+73z0O68PNKNOOYKvdEH4RQU
+         ZIiVraXt/uipvHBgnjZLxrRYaImFbf7lTm8yP/rUu5goXVPD0wnbZ302eRKVl/vlzehs
+         ytSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745956079; x=1746560879;
+        d=1e100.net; s=20230601; t=1745956161; x=1746560961;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=31hHt99eQ7ecxAQBYo10uCFCGHQn8F86JxoMvBp/XTs=;
-        b=PPukRNKcBf5kdL+40GkNZLimw48LLoS9o+PltCwpzE9ve4OJZT5NIftsaN+0Tsl7IW
-         Q+qXfMxCSHlWUvhh+yvjk56lbMZmaQnl7S7ROpbJ8w7C4Zk1NCQBK7AGry4XAFForBoJ
-         qRk10+TQOugr3r6Y0FYY32cW2XFOTawYlZYzqQWDyzuNvqMSDRifpWMQ5n5qSIrf//vX
-         MzMdh/K4YcW/FFVxAVCyPcPOyAHqlhOYKoYAzIUXz2tC2xLAGLy4+qd4XOSh6gJcYuS6
-         AaI1D7di8Q/wa9x1VEN78dd6SrVNMWiUX6IRcwdNKVOAeDS6bJQFjaoKhqvWO91F9GwP
-         oiNg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8mcuR4QYY8E5n/rmtDUhZgz4s50P+IZUh17PGgzhhrtOueVouiHx/9KLoBila43d8WHhaGS5yqQsO@vger.kernel.org, AJvYcCV3VotOoRca+oFtQJLtjPI2sPd7j4J6bNn4x1N+cUEdbO/67OX09Zx8F7+En4MGn/T4jUBcV9QplhX/Mswf@vger.kernel.org, AJvYcCXhyMsblXjBRWymoOPzhliH6gMkCOdDaOWwueyC53wu3g22PPo15bF2vFtJkm6sDCNDF2fpAMDBvu/O@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5V+gOAsEaIIrdYBnafYK2fw5TCGth03pl0Q+MxMyajTpD0vZq
-	1t6v0rrSINiyLxoJdQLluZmlL4z0Ju63wV+wU0wlWVNG5/7WrrVmcAU8tMAUOwVNrZsn0emsLnO
-	IxsWOJhMm3fatgaEcinMer3WPLzs=
-X-Gm-Gg: ASbGncvNduOQXtEfat45RheJik3xAQfe4ty/EjO8entOxlTB1dnz9ECzcPZsrlfwuNs
-	9EyYD+V2UeNC6R4dUj9dUJWTU9ZlKK8zDpfdBErKp1ZYNhn70kNwUKLMoRHdCv8/mT8Ja1EpU+i
-	ogxq8+YUBKM3LsnH3sqXn8sA==
-X-Google-Smtp-Source: AGHT+IG053NtJm0hR+FwHICAyS7gp+M4t3UZk6wbhjh4+xpcE871md/xia3GNq0/H3rfYdZZf6GCNx2EKnYMhYJ4isw=
-X-Received: by 2002:a17:907:7ba8:b0:aca:d276:fa5 with SMTP id
- a640c23a62f3a-acedf349707mr18697166b.0.1745956078998; Tue, 29 Apr 2025
- 12:47:58 -0700 (PDT)
+        bh=TzKOWzU43LrPmkFzN5+2z6l0zJFMgpGF/vX9S5W3V2I=;
+        b=V3re8z3CIRtfCVkIY7gjqGADJ/WJKTk4o4vv4CUd8vJjJYmtA6EDvW+51DzSH1+lns
+         GkEYfqMtXb/CW7vrw9/ZRCCgnpr3HVpbwjGqSSjaxMngnoINffhQj1+zfqG5FaGbvunC
+         2oZvi6beQ+AwdF19A2KUpfpa33FUWe7MYOvszM3V9/eN5PpFC4eLMpY2KCgKvYfj2LJ4
+         +Q+r7tB3gzz9BNeMvYWgCX328hGXlpT1++88yp6jUQwF4hR+cFZoZJuVGT84Dr3tPeoU
+         95lzpcCeqN9+lBfwhgZuV+hID0L+yCV8wCUofQkzTCkSGlmzg0hrbIVbtg9QiIZtHtKs
+         2Lzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXek7GqsM9GXG5x7HzzSH7TyFq2ng/d+eJOaAJNd9xDOO+/2X5vc/NQ7HEA6KtXtjMlCUWD3UkXVcLboIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo96YZ+pkD3HfvKUF+tmJQ1ehjyEQeLsWbVfnpY9rBy7N5+vk1
+	+NQ4KnT1B6Awbt73kwhOcuAaJIEQ54oxUUA9EY04G2uPM+hVfNMrfXQemoccBu5TjxYhSoM4Dsr
+	fXszIayzeUgSO4qPBblIOqW941OhQQdjo8VgB
+X-Gm-Gg: ASbGncthBKxInj8mFKjkmTtgOCatKQ+Q/f4rrDGSMt7EQIjkAVxGaVHo9fh8ZMmiXop
+	jjgGF1ctB4Z3MC+nMHNRs7+zFZqA57nh1g5a0r3Tqlf81EoWFASZp983XSDV0oEZfmswgOLajQ8
+	yWvi6q+LHR/GOzeM+dIyDkSs8OmDzU+9mFepaAfl/ws+6bacjQlg==
+X-Google-Smtp-Source: AGHT+IHWvQ/UxjzUUwRECNcfgu+uE4CxuQo4Yg/huZ0f0f8fGXRQAw3hQFkIdxjr0XHLMAHxPwRY62fHbX9JtKGOg54=
+X-Received: by 2002:a05:600c:63cb:b0:43d:5b3a:18cc with SMTP id
+ 5b1f17b1804b1-441b200a129mr152725e9.2.1745956161141; Tue, 29 Apr 2025
+ 12:49:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aA/ineUBAM5IU79J@duo.ucw.cz> <20250429170220.8145-1-trannamatk@gmail.com>
-In-Reply-To: <20250429170220.8145-1-trannamatk@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 22:47:22 +0300
-X-Gm-Features: ATxdqUHg7vLAt0poth2caA_g2wxqIwhzv8QInVAHWSoWODRta2Iw45WeEjT2sDc
-Message-ID: <CAHp75VcVmTwS-zw=o5=m1-x0XC67BKBVWae2mMKZQH=qLCxZwg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix
- LED driver
-To: Nam Tran <trannamatk@gmail.com>
-Cc: pavel@ucw.cz, andy@kernel.org, geert@linux-m68k.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, christophe.jaillet@wanadoo.fr, 
-	corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, florian.fainelli@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org
+References: <20250417180943.1559755-1-tjmercier@google.com>
+ <a4f72149-70a0-4bbe-bdcc-70384c152f83@amd.com> <CABdmKX2-innZC65Fut6wc2MFUNwO2g6w=_iLv9EBkDn+6LQs5w@mail.gmail.com>
+In-Reply-To: <CABdmKX2-innZC65Fut6wc2MFUNwO2g6w=_iLv9EBkDn+6LQs5w@mail.gmail.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Tue, 29 Apr 2025 12:49:09 -0700
+X-Gm-Features: ATxdqUHw3CpDYUbqlneqXa6xD7zi73EGyL_HFvk88E824RQ0483hIO9wIhSzBDw
+Message-ID: <CABdmKX0pjGn85CLFgwauBop8i=WThnpUNkDfFhV3hMe19dDuyA@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: system_heap: No separate allocation for
+ attachment sg_tables
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 8:02=E2=80=AFPM Nam Tran <trannamatk@gmail.com> wro=
-te:
-> On Mon, 28 Apr 2025 Pavel Machek wrote:
-> > > On Mon, 28 Apr 2025 Geert Uytterhoeven wrote:
+On Tue, Apr 22, 2025 at 9:17=E2=80=AFAM T.J. Mercier <tjmercier@google.com>=
+ wrote:
+>
+> On Tue, Apr 22, 2025 at 1:24=E2=80=AFAM Christian K=C3=B6nig
+> <christian.koenig@amd.com> wrote:
 > >
-> > > > > > > - Move driver to drivers/auxdisplay/ instead of drivers/leds/=
-.
-> > > > > > > - Rename files from leds-lp5812.c/.h to lp5812.c/.h.
-> > > > > > > - Move ti,lp5812.yaml binding to auxdisplay/ directory,
-> > > > > > >   and update the title and $id to match new path.
-> > > > > > > - No functional changes to the binding itself (keep Reviewed-=
-by).
-> > > > > > > - Update commit messages and patch titles to reflect the move=
-.
-> > > > > > > - Link to v7: https://lore.kernel.org/linux-leds/202504221901=
-21.46839-1-trannamatk@gmail.com/
-> > > > > >
-> > > > > > Out of sudden without discussing with auxdisplay maintainers/re=
-viewers?
-> > > > > > Thanks, no.
-> > > > > > Please, put into the cover letter the meaningful summary of wha=
-t's
-> > > > > > going on and why this becomes an auxdisplay issue. Brief review=
- of the
-> > > > > > bindings sounds more likely like LEDS or PWM subsystems.
-> > > > >
-> > > > > It is 4x3 matrix. That means it is not suitable for LEDs. I don't
-> > > > > believe it is suitable for PWM, either -- yes, it is 36 PWM outpu=
-ts,
-> > > > > but...
-> > > >
-> > > > Is it intended to be used as a 4x3 matrix, or is this just an inter=
-nal
-> > > > wiring detail, and should it be exposed as 12 individual LEDs inste=
-ad?
+> > Am 17.04.25 um 20:09 schrieb T.J. Mercier:
+> > > struct dma_heap_attachment is a separate allocation from the struct
+> > > sg_table it contains, but there is no reason for this. Let's use the
+> > > slab allocator just once instead of twice for dma_heap_attachment.
 > > >
-> > > The 4=C3=973 matrix is a real and fundamental aspect of the LP5812=E2=
-=80=99s operation.
-> > > It is not just an internal wiring detail.
-> > > The device adopts a Time-Cross-Multiplexing (TCM) structure, where 4 =
-output
-> > > pins control 12 LED dots individually through scanning. Each pin incl=
-udes
-> > > both high-side and low-side drive circuits, meaning matrix multiplexi=
-ng is
-> > > required for proper operation =E2=80=94 it cannot be treated as 12 co=
-mpletely
-> > > independent LEDs.
+> > > Signed-off-by: T.J. Mercier <tjmercier@google.com>
 > >
-> > Scanning is really a detail.
-> >
-> > If this is used as rectangular 4x3 display, then it goes to auxdisplay.
-> >
-> > If this is used as a power LED, SD activity LED, capslock and numlock
-> > ... placed randomly all around the device, then it goes LED subsystem.
+> > I'm not *that* expert for this code, but looks totally reasonable to me=
+.
 >
-> The LP5812 is used for LED status indication in devices like smart speake=
-rs,
-> wearables, and routers, not as a structured rectangular display.
+> I noticed this while reviewing Maxime Ripard's recent carveout heap
+> patches, where I was confused about sg_free_table() until I realized
+> it doesn't free the underlying allocation. Then I started looking at
+> other heaps and found that most of them do it this way (including the
+> cma heap), and figured it was a nice cleanup here.
 >
-> Given that, it seems to match the LED subsystem better than auxdisplay, d=
-oesn't it?
+> > Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> >
+> > Let me know if I should push that to drm-misc-next.
+> >
+> > Regards,
+> > Christian.
+>
+> Thanks, yes please!
 
-I have mixed feelings about all this. As per hardware organisation it
-sounds more like a matrix (for example. keyboard), where all entities
-are accessed on a scanline, but at the same time each of the entities
-may have orthogonal functions to each other. Have you checked with DRM
-for the sake of completeness?
-Personally I lean more to the something special, which doesn't fit
-existing subsystems. Auxdisplay subsystem more or less about special
-alphanumeric displays (with the exception of some FB kinda devices,
-that were even discussed to have drivers be removed). Also maybe FB
-might have something suitable, but in any case it looks quite
-non-standard...
+Hi Christian, could you push this please? I don't have write permissions.
 
+Thanks,
+T.J.
 
---=20
-With Best Regards,
-Andy Shevchenko
+>
+>
+>
+> > > ---
+> > >  drivers/dma-buf/heaps/system_heap.c | 43 ++++++++++++---------------=
+--
+> > >  1 file changed, 17 insertions(+), 26 deletions(-)
+> > >
+> > > diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/he=
+aps/system_heap.c
+> > > index 26d5dc89ea16..bee10c400cf0 100644
+> > > --- a/drivers/dma-buf/heaps/system_heap.c
+> > > +++ b/drivers/dma-buf/heaps/system_heap.c
+> > > @@ -35,7 +35,7 @@ struct system_heap_buffer {
+> > >
+> > >  struct dma_heap_attachment {
+> > >       struct device *dev;
+> > > -     struct sg_table *table;
+> > > +     struct sg_table table;
+> > >       struct list_head list;
+> > >       bool mapped;
+> > >  };
+> > > @@ -54,29 +54,22 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP, H=
+IGH_ORDER_GFP, LOW_ORDER_GFP};
+> > >  static const unsigned int orders[] =3D {8, 4, 0};
+> > >  #define NUM_ORDERS ARRAY_SIZE(orders)
+> > >
+> > > -static struct sg_table *dup_sg_table(struct sg_table *table)
+> > > +static int dup_sg_table(struct sg_table *from, struct sg_table *to)
+> > >  {
+> > > -     struct sg_table *new_table;
+> > > -     int ret, i;
+> > >       struct scatterlist *sg, *new_sg;
+> > > +     int ret, i;
+> > >
+> > > -     new_table =3D kzalloc(sizeof(*new_table), GFP_KERNEL);
+> > > -     if (!new_table)
+> > > -             return ERR_PTR(-ENOMEM);
+> > > -
+> > > -     ret =3D sg_alloc_table(new_table, table->orig_nents, GFP_KERNEL=
+);
+> > > -     if (ret) {
+> > > -             kfree(new_table);
+> > > -             return ERR_PTR(-ENOMEM);
+> > > -     }
+> > > +     ret =3D sg_alloc_table(to, from->orig_nents, GFP_KERNEL);
+> > > +     if (ret)
+> > > +             return ret;
+> > >
+> > > -     new_sg =3D new_table->sgl;
+> > > -     for_each_sgtable_sg(table, sg, i) {
+> > > +     new_sg =3D to->sgl;
+> > > +     for_each_sgtable_sg(from, sg, i) {
+> > >               sg_set_page(new_sg, sg_page(sg), sg->length, sg->offset=
+);
+> > >               new_sg =3D sg_next(new_sg);
+> > >       }
+> > >
+> > > -     return new_table;
+> > > +     return 0;
+> > >  }
+> > >
+> > >  static int system_heap_attach(struct dma_buf *dmabuf,
+> > > @@ -84,19 +77,18 @@ static int system_heap_attach(struct dma_buf *dma=
+buf,
+> > >  {
+> > >       struct system_heap_buffer *buffer =3D dmabuf->priv;
+> > >       struct dma_heap_attachment *a;
+> > > -     struct sg_table *table;
+> > > +     int ret;
+> > >
+> > >       a =3D kzalloc(sizeof(*a), GFP_KERNEL);
+> > >       if (!a)
+> > >               return -ENOMEM;
+> > >
+> > > -     table =3D dup_sg_table(&buffer->sg_table);
+> > > -     if (IS_ERR(table)) {
+> > > +     ret =3D dup_sg_table(&buffer->sg_table, &a->table);
+> > > +     if (ret) {
+> > >               kfree(a);
+> > > -             return -ENOMEM;
+> > > +             return ret;
+> > >       }
+> > >
+> > > -     a->table =3D table;
+> > >       a->dev =3D attachment->dev;
+> > >       INIT_LIST_HEAD(&a->list);
+> > >       a->mapped =3D false;
+> > > @@ -120,8 +112,7 @@ static void system_heap_detach(struct dma_buf *dm=
+abuf,
+> > >       list_del(&a->list);
+> > >       mutex_unlock(&buffer->lock);
+> > >
+> > > -     sg_free_table(a->table);
+> > > -     kfree(a->table);
+> > > +     sg_free_table(&a->table);
+> > >       kfree(a);
+> > >  }
+> > >
+> > > @@ -129,7 +120,7 @@ static struct sg_table *system_heap_map_dma_buf(s=
+truct dma_buf_attachment *attac
+> > >                                               enum dma_data_direction=
+ direction)
+> > >  {
+> > >       struct dma_heap_attachment *a =3D attachment->priv;
+> > > -     struct sg_table *table =3D a->table;
+> > > +     struct sg_table *table =3D &a->table;
+> > >       int ret;
+> > >
+> > >       ret =3D dma_map_sgtable(attachment->dev, table, direction, 0);
+> > > @@ -164,7 +155,7 @@ static int system_heap_dma_buf_begin_cpu_access(s=
+truct dma_buf *dmabuf,
+> > >       list_for_each_entry(a, &buffer->attachments, list) {
+> > >               if (!a->mapped)
+> > >                       continue;
+> > > -             dma_sync_sgtable_for_cpu(a->dev, a->table, direction);
+> > > +             dma_sync_sgtable_for_cpu(a->dev, &a->table, direction);
+> > >       }
+> > >       mutex_unlock(&buffer->lock);
+> > >
+> > > @@ -185,7 +176,7 @@ static int system_heap_dma_buf_end_cpu_access(str=
+uct dma_buf *dmabuf,
+> > >       list_for_each_entry(a, &buffer->attachments, list) {
+> > >               if (!a->mapped)
+> > >                       continue;
+> > > -             dma_sync_sgtable_for_device(a->dev, a->table, direction=
+);
+> > > +             dma_sync_sgtable_for_device(a->dev, &a->table, directio=
+n);
+> > >       }
+> > >       mutex_unlock(&buffer->lock);
+> > >
+> > >
+> > > base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+> >
