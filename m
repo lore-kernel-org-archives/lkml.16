@@ -1,71 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F64A2741CF
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75119132103;
+	Tue, 29 Apr 2025 21:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745963319; cv=none; b=WVH/lYMT2nw4PVoZaMEcY4Gk/kT9byMuzXfRRphRzHN5ZptslbOT6YO+bgXCtipzDzYn5fA1jSWMV6WweTTyozcfUCNoWPseIIvVVFWC/o/+jdyXnnZJrfQskOvdUCfU2Dhbrck366pwti6S8q3xXeZHDA/QYb75UqwoRJncGgk=
+	t=1745963394; cv=none; b=RgqVPY510mlaV9ELY8tGlUAkVJe1vVR3/EHT1DON5/gm9RzdWaWG9UkYtVmu+mpa7iiUEFN/9vQzuvuS5J1MiODjagHsDc6UqN9K3W2Ww5Wirq0RIXJvO0OgdlCq9SslLWEMbPw8RlR6INDSV1oOcIfiUsD4LDDUS9RAj79DsOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745963319; c=relaxed/simple;
-	bh=LxDKiZxsWVn3MCgks6lAPdndhGyh67qFf+XcSfWRWnE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ajHr7OBWbNpxKrqa7JWe7jqysIghHVhsJbx3Us4rZdDzbTv+vXiO6WWiLkh0CTwesGzzjz2mhtcUBrSR3a8au/NAYxW5+vXEq3570NceLyfom4dOD9H6V+xFuWIphndPYJfN/CYZRfUXTj0ji0UhALabzrmK+lV41RNCReCA7uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iCoCvNYe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745963394; c=relaxed/simple;
+	bh=UjdCZlm7WDqcusIhWqtA1R5cnw9YVjL6XEiRR7s38DE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=N3aMu0rmGHLGeFrcP+M1aZi/cG7SzRk/ONiK3cAH+SaxN7//s1wno9Kg/lFL/GEpJBmwwMT7LrQ26A07f1htpzsAL3UniljNQr34EWSBgDcOni36PAwMoufLLzGdqW0+QNFDMPzVlGU/P8uo/YBl/O1E030yduSG1qKwTji9OPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7B2W2Cx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iCoCvNYe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745963317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YSxKqBS0jBP5OLr/ybCVe+hncFTUSwMxnhYHJYY0f+c=;
-	b=iCoCvNYeFvpal7j29olxwF8EgpCJiMOFbRH301v+trGm/E77oCFvh/KOtn5kwL9TF3JCgj
-	d1ROHtHsrbJ79kUS+1r2H09oBFeY22Bw3av5rd7zDM2ypWombLf7vo4hzuPEFdDQdYJ9uH
-	xzoL0+T79wc6dcxHLTkm5tt1fU2owgw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-323--EvGlmiQPZqq6ziMAosMNw-1; Tue,
- 29 Apr 2025 17:48:33 -0400
-X-MC-Unique: -EvGlmiQPZqq6ziMAosMNw-1
-X-Mimecast-MFC-AGG-ID: -EvGlmiQPZqq6ziMAosMNw_1745963311
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8728A18004A7;
-	Tue, 29 Apr 2025 21:48:31 +0000 (UTC)
-Received: from chopper.redhat.com (unknown [10.22.88.132])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0BAC319560A3;
-	Tue, 29 Apr 2025 21:48:28 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: rust-for-linux@vger.kernel.org,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 7/7] rust: hrtimer: Add HrTimer::expires()
-Date: Tue, 29 Apr 2025 17:44:43 -0400
-Message-ID: <20250429214752.1637859-8-lyude@redhat.com>
-In-Reply-To: <20250429214752.1637859-1-lyude@redhat.com>
-References: <20250429214752.1637859-1-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7B2W2Cx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF52C4CEEA;
+	Tue, 29 Apr 2025 21:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745963393;
+	bh=UjdCZlm7WDqcusIhWqtA1R5cnw9YVjL6XEiRR7s38DE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=S7B2W2CxVfXVIXga/XZ/s1ih+xgEKADkxWQ/pNgSYjJasHsvyS44SQLnbh9hc+XXQ
+	 sZIMGbYibbNXdJsTXvNDUpY7FcRkH3XIhL/kQ+OsoUlcGJSmDTfBAGeM4aVpXEYaws
+	 hIE6GE+I340K1X20xw33PiR3bjam4jpjOvj/GFMv9R8vWQCMw0zzB+vVRxbzsri/5m
+	 TynzfVg0vvL4bpwr9nRu8Ue6qaq7iNQb7Ox8ufY1bmS8Rw42y7Wt0CIMCmWdn2oYCa
+	 HLwqSH36HjtLKGMMeO3qhaZE02MvyDvMmV3YDRWga7v/XL/PPTxAqQTEGu6uRJNyy3
+	 o59MpG71+cyZQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB01B3822D4E;
+	Tue, 29 Apr 2025 21:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,77 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Subject: Re: [PATCH net v2] net: ethernet: mtk_eth_soc: fix SER panic with 4GB+
+ RAM
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174596343260.1806681.7860771179526030169.git-patchwork-notify@kernel.org>
+Date: Tue, 29 Apr 2025 21:50:32 +0000
+References: <4adc2aaeb0fb1b9cdc56bf21cf8e7fa328daa345.1745715843.git.daniel@makrotopia.org>
+In-Reply-To: <4adc2aaeb0fb1b9cdc56bf21cf8e7fa328daa345.1745715843.git.daniel@makrotopia.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: chad@monroe.io, nbd@nbd.name, bc-bocun.chen@mediatek.com,
+ sean.wang@mediatek.com, lorenzo@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
-This adds the ability to read the expiry time of the given timer.
+Hello:
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
----
-V2:
-* Convert from Ktime to Instant
-* Use read_volatile instead of read and add a FIXME
+On Sun, 27 Apr 2025 02:05:44 +0100 you wrote:
+> From: Chad Monroe <chad@monroe.io>
+> 
+> If the mtk_poll_rx() function detects the MTK_RESETTING flag, it will
+> jump to release_desc and refill the high word of the SDP on the 4GB RFB.
+> Subsequently, mtk_rx_clean will process an incorrect SDP, leading to a
+> panic.
+> 
+> [...]
 
-V4:
-* Correct read_volatile comment in HrTimer::expires()
+Here is the summary with links:
+  - [net,v2] net: ethernet: mtk_eth_soc: fix SER panic with 4GB+ RAM
+    https://git.kernel.org/netdev/net/c/6e0490fc36cd
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- rust/kernel/time/hrtimer.rs | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
-
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 0d93866d7b20a..5b508ff81aee2 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -73,7 +73,10 @@
-     time::{Delta, Instant},
-     types::Opaque,
- };
--use core::{marker::PhantomData, ptr::NonNull};
-+use core::{
-+    marker::PhantomData,
-+    ptr::{addr_of, NonNull},
-+};
- use pin_init::PinInit;
- 
- /// A timer backed by a C `struct hrtimer`.
-@@ -136,7 +139,7 @@ unsafe fn raw_get(this: *const Self) -> *mut bindings::hrtimer {
-         // SAFETY: The field projection to `timer` does not go out of bounds,
-         // because the caller of this function promises that `this` points to an
-         // allocation of at least the size of `Self`.
--        unsafe { Opaque::raw_get(core::ptr::addr_of!((*this).timer)) }
-+        unsafe { Opaque::raw_get(addr_of!((*this).timer)) }
-     }
- 
-     /// Cancel an initialized and potentially running timer.
-@@ -241,6 +244,26 @@ pub fn forward_now(self: Pin<&mut Self>, interval: Delta) -> u64 {
- 
-         self.forward(now, interval)
-     }
-+
-+    /// Return the time expiry for this [`HrTimer`].
-+    ///
-+    /// This value should only be used as a snapshot, as the actual expiry time could change after
-+    /// this function is called.
-+    pub fn expires(&self) -> Instant {
-+        // SAFETY: `self` is an immutable reference and thus always points to a valid `HrTimer`.
-+        let c_timer_ptr = unsafe { HrTimer::raw_get(self) };
-+
-+        // SAFETY:
-+        // - `node.expires` is a ktime_t, so it must be within the range of `0` to `KTIME_MAX`.
-+        // - There's no actual locking here, a racy read is fine and expected
-+        unsafe {
-+            Instant::from_nanos(
-+                // This `read_volatile` is intended to correspond to a READ_ONCE call.
-+                // FIXME(read_once): Replace with `read_once` when available on the Rust side.
-+                core::ptr::read_volatile(addr_of!((*c_timer_ptr).node.expires)),
-+            )
-+        }
-+    }
- }
- 
- /// Implemented by pointer types that point to structs that contain a [`HrTimer`].
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
