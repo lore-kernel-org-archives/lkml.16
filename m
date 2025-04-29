@@ -1,205 +1,188 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB6D270ECD;
-	Tue, 29 Apr 2025 20:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856A9278E7B;
+	Tue, 29 Apr 2025 20:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957864; cv=none; b=mJ8+t6UX7uB+nV0XV49hnIZ7z/SCiIJ7nbOLvWfAvWpck+wFqyzcBUEFM5HU1HhhLEoF22Rdsg0iJV5ahtz+s2x7+Ilg7fO6QDh6oZYLqcmwxWdQVG/7v0D0w4VyEoP22vnWbGjwqY80N0Qx7vU7lfr0HWXdM3Jdn53E8TRUh5c=
+	t=1745957866; cv=none; b=pu5GJPKgFUpLQtuiGcdAxfv2mCUgtcj7tylvNB1OtFy2rzYXGvhuywXgvc18Mi2GA0s+iSFFajAHWVV4gSIm2XOx5LfUk7zcI48+2c8Yipa4YW2z7DIXhhFZvm28WCRmzQbFMwBBR9QU6Jjr7JTR0szXcGeiY/ElGz8jtsZ+HGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957864; c=relaxed/simple;
-	bh=57G6+sYgoPGvBp3XvDWaCzrP6B3TqYTwiNHfa7VcEN0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fUfQ2Jib3PyZdUoIms6mqck+K+h9lC7TmR8hj2f9aFWiswQD7rvmwjn8i2w82qvD7kgBcxAuCQ5WcWqLstN+dHB0eo4HYz2l7d6LVYscjZfChC0mXEyA432PCKPVilaZWM2eNxQxpc4twuppqWT2Dg6YszfLyaiVstdecWQedIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=GQ9pi4lc; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1745957866; c=relaxed/simple;
+	bh=iKIi5IbtIQ6n2Yqby2/QwXaGpzinjrmagh0Zcb5dYlk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jVQ3qHWxMRN85jEtuAlhBezR9NrNP32Fh4xQeqcObUuiKFgZMjc3NVLFSOD9N35jkOlsGFcMeGwM6Xb4xO4YbM7BjwcJUWEWNRUvZ7yInYKgUfXnh9zh0XuY90DLFZlMCqK3hG1TmpFevn/gx59ELU77RnZT7XgY6jPkOkGcguA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggkFFXMD; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="GQ9pi4lc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745957848; x=1746562648; i=deller@gmx.de;
-	bh=Iowk4z8QtWkm4Y0YZCudQi3a8iJL7SyIX74+qCqJ5JY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=GQ9pi4lcu5J0lZxU5aw/2jpoKMS6q9j1vV0YEJFkGcbrVN7seuWV7hTH3FlrFrm/
-	 T10XqhfnpKp7TZFZt8x6Yrt5CiBYKmiDL/QfZThA6ZNFr9iFQ1mPl94Ibr3X1X7Cc
-	 1p1tVmHdsFnZlVH+RRtvX8kDpy8AvE2uHCqY/Fgsl8z2SAWBvAQeF3HEU0gZ5urMb
-	 18eHeP+msw2sfMb0ZshEggVsdFNumbVZQoGR7RotGmWOFYhBpxtIbievEvazARSfg
-	 qKoGTb3I8XIqNjx00v/NPm1oM8KomG2e/B4WqDQL8r9dCY7mfdG1HJql1GmUsOdWJ
-	 dZLTgr20FvWiLb981w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.173] ([109.250.63.181]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MYvY2-1uVsMK1tJ2-00Xq2X; Tue, 29
- Apr 2025 22:17:28 +0200
-Message-ID: <e68c6218-6055-45a6-b96e-9c8381a4b409@gmx.de>
-Date: Tue, 29 Apr 2025 22:17:26 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggkFFXMD"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso12536909a12.0;
+        Tue, 29 Apr 2025 13:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745957863; x=1746562663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T5BNxoTrzKFeKZ63Ngyf0mjUdLNCnvkNWHzVfnwG0qI=;
+        b=ggkFFXMDc2mhWBJ0kxVMKXD8zDKy9TIuayxpgbRsbjqxCcV+zoiUhUeCsFEaXbp70n
+         NnOKwYdBBkylhxJp4R/pa/X15btz6wmdhZmw0Jd3LvCY0/L0KqiSOAmC62ujOs0OWLdb
+         VjZ1qjNncQw6Eij89NE/ERWTas87R2t5Hn0bw1PFob+AxGrzXoGiPU8tgSm8uavXm3no
+         KDlqpL0D9x7kJ6+Xn1rjZNK9PH6iff4qQ4+81zMDcSIFYGe7mktIHoCE+WZGCACqde8Y
+         HF7qQwByGw9S3sCM4BTuXxOVCkJtMPOF0OTfTxDIZx12KwfCIZmFyXvp4nZ1XkjkP7um
+         dz7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745957863; x=1746562663;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T5BNxoTrzKFeKZ63Ngyf0mjUdLNCnvkNWHzVfnwG0qI=;
+        b=WgDVu1ySxBCw4XR8iAoykxQps/zhbxZ2/IqF7KGo81mglo1fM2O8xLKzYCRkGMhk3m
+         E3hjfXxTD56BLEkZEgvJqCeIQ66t12xdVCkdC+7KNXa4Z86Ti+oFojUBbjHRFQqFFuWY
+         Vw7dxXoyR4tYhBzokC7zywV5jLQ3td5GaxNTY/M0kKhnRUHsyPfl4wi+K8l+BYUGGL5P
+         e/IrXyYF8Jw5fsHOwOwVbK1dcBRzMu1KjRwbtqm/u7G8Cry3xptpPxop+LtX+Mc2Wsy5
+         7YNqoYJ1sWc/5lm6engtECPQaqj8cYXpNjunWsM+kmR7yIeZB9BkyGpWkH7YZKd7OzKe
+         HPpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0Hk+aZ8+XWcqoTNw5vf5DS0fkyMfbHJOjBuQAY2RQC9M2hiwU1xy2/Yk2nwSBJFWsAwm0LW4P6leK/vs=@vger.kernel.org, AJvYcCXWJI9zA+R4gOVqC26gG3I0RsTaFgj/xjYES7GlKduUTLIrDN1KGbiBOeUDURHjPXhu1NadZeBE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5kEdKj6NDm2ycVPgB0Ao4FChCy0Q9uAgpEdu/jY07FoS+/KBL
+	n8raaTu7r04T3aIL0CqUbeZIGBZo4SpT8AqYIur+cpWjx86dD2E8
+X-Gm-Gg: ASbGncs7YDkLGseKyexYdu3YH3ujG1kqS2TBTs6+Dt6gFaaK0+N4P3VSJruIdOTFPGh
+	VTzxQMRhnVM3j44lCybNzEl+vLoQszVCuMmIqCQQuJSOIrt+K1fWkTxw+e8PS0DGRlQmjfHejep
+	uh07VHoBH7rycfL3BkxAezMD4t5CNyslaRWR54OrgvmflBqGr7CeSKy87qSULOngv2NnqXY5g+o
+	T4ShIsqBlyL9XE8kRt6eqN2suieW3uZqESITVSDTEwnT+k34tBzM9nff7fC1p3MJVx4Iz544L80
+	xLBEuk6/M+Et1mRo4d5qiX5+3v7yy3VWj4PoFNNx2hGQ4yL7rbrEhWdEdJoCiQQRyKYVsqUYiNv
+	Rm3I7o1y6BPPmYEDhZck=
+X-Google-Smtp-Source: AGHT+IEg99rGpo8rsFAZS+LhmSX7lC7sLyGZu1gg/97KqcYbBE3PfMub95Xnuu1OY1tkrehDn27s8A==
+X-Received: by 2002:a17:906:c142:b0:ac8:1798:a796 with SMTP id a640c23a62f3a-acedc773ef7mr65205666b.54.1745957862650;
+        Tue, 29 Apr 2025 13:17:42 -0700 (PDT)
+Received: from localhost (dslb-002-205-023-067.002.205.pools.vodafone-ip.de. [2.205.23.67])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f70354633asm7773423a12.55.2025.04.29.13.17.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 13:17:42 -0700 (PDT)
+From: Jonas Gorski <jonas.gorski@gmail.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Kurt Kanzenbach <kurt@linutronix.de>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 11/11] net: dsa: b53: do not set learning and unicast/multicast on up
+Date: Tue, 29 Apr 2025 22:17:10 +0200
+Message-ID: <20250429201710.330937-12-jonas.gorski@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250429201710.330937-1-jonas.gorski@gmail.com>
+References: <20250429201710.330937-1-jonas.gorski@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Zheyu Ma <zheyuma97@gmail.com>,
- Samuel Thibault <samuel.thibault@ens-lyon.org>,
- Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250426062305.work.819-kees@kernel.org>
- <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
- <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OD3iOLWk7bbSwxeCWT3VGHi1hyS4DZIvlVShNIzJqeeJmM+HjLy
- ehQQmTvkg8wqUAnyL+ObCFaxRWjtUvoFBf8KtPMLsZc+pnhf+G3KqR+zAOfOu6bUHBA5B7W
- 80sGo7htpuyJ+pUZ7j2KtgjWAdh8yRsrgS5xkiW6Sr0vXZFdyeSnpFBQuUvFCI7fL1VIhvQ
- QFzr3Nfuj1Q+D5s5tqZhA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:oKxxmtUB4NI=;2Hq7UhfBDuuwJzLSfqtaxRLznMd
- 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
- iQQXUFQNy4SUM20mTc00y8=
+Content-Transfer-Encoding: 8bit
 
-On 4/28/25 08:36, Geert Uytterhoeven wrote:
-> Hi Kees,
->=20
-> On Sat, 26 Apr 2025 at 13:33, Helge Deller <deller@gmx.de> wrote:
->> On 4/26/25 08:23, Kees Cook wrote:
->>> In preparation for making the kmalloc family of allocators type aware,
->>> we need to make sure that the returned type from the allocation matche=
-s
->>> the type of the variable being assigned. (Before, the allocator would
->>> always return "void *", which can be implicitly cast to any pointer ty=
-pe.)
->>>
->>> The assigned type is "struct dac_info *" but the returned type will be
->>> "struct ics5342_info *", which has a larger allocation size. This is
->>> by design, as struct ics5342_info contains struct dac_info as its firs=
-t
->>> member. Cast the allocation type to match the assignment.
->>>
->>> Signed-off-by: Kees Cook <kees@kernel.org>
->=20
-> Thanks for your patch, which is now commit 8d2f0f5bbac87b9d ("fbdev:
-> arkfb: Cast ics5342_init() allocation type") in fbdev/for-next.
->=20
->> I applied your patch, but wouldn't this untested patch be cleaner and f=
-ulfill the
->> same purpose to match a kzalloc return type?
->>
->> diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
->> index 7d131e3d159a..a57c8a992e11 100644
->> --- a/drivers/video/fbdev/arkfb.c
->> +++ b/drivers/video/fbdev/arkfb.c
->> @@ -431,7 +431,8 @@ static struct dac_ops ics5342_ops =3D {
->>
->>    static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write=
-_regs_t dwr, void *data)
->>    {
->> -       struct dac_info *info =3D (struct dac_info *)kzalloc(sizeof(str=
-uct ics5342_info), GFP_KERNEL);
->> +       struct ics5342_info *ics_info =3D kzalloc(sizeof(struct ics5342=
-_info), GFP_KERNEL);
->=20
-> sizeof(*ics_info)?
->=20
->> +       struct dac_info *info =3D &ics_info->dac;
->=20
-> Exactly my thought when I noticed this commit.  Adding casts makes
-> it harder to notice any future discrepancies.
+When a port gets set up, b53 disables learning and enables the port for
+flooding. This can undo any bridge configuration on the port.
 
-I've changed it accordingly.
+E.g. the following flow would disable learning on a port:
 
-Helge
+$ ip link add br0 type bridge
+$ ip link set sw1p1 master br0 <- enables learning for sw1p1
+$ ip link set br0 up
+$ ip link set sw1p1 up <- disables learning again
+
+Fix this by populating dsa_switch_ops::port_setup(), and set up initial
+config there.
+
+Fixes: f9b3827ee66c ("net: dsa: b53: Support setting learning on port")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+---
+ drivers/net/dsa/b53/b53_common.c | 21 +++++++++++++--------
+ drivers/net/dsa/b53/b53_priv.h   |  1 +
+ drivers/net/dsa/bcm_sf2.c        |  1 +
+ 3 files changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index a2c0b44fc6be..9eb39cfa5fb2 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -578,6 +578,18 @@ static void b53_eee_enable_set(struct dsa_switch *ds, int port, bool enable)
+ 	b53_write16(dev, B53_EEE_PAGE, B53_EEE_EN_CTRL, reg);
+ }
+ 
++int b53_setup_port(struct dsa_switch *ds, int port)
++{
++	struct b53_device *dev = ds->priv;
++
++	b53_port_set_ucast_flood(dev, port, true);
++	b53_port_set_mcast_flood(dev, port, true);
++	b53_port_set_learning(dev, port, false);
++
++	return 0;
++}
++EXPORT_SYMBOL(b53_setup_port);
++
+ int b53_enable_port(struct dsa_switch *ds, int port, struct phy_device *phy)
+ {
+ 	struct b53_device *dev = ds->priv;
+@@ -590,10 +602,6 @@ int b53_enable_port(struct dsa_switch *ds, int port, struct phy_device *phy)
+ 
+ 	cpu_port = dsa_to_port(ds, port)->cpu_dp->index;
+ 
+-	b53_port_set_ucast_flood(dev, port, true);
+-	b53_port_set_mcast_flood(dev, port, true);
+-	b53_port_set_learning(dev, port, false);
+-
+ 	if (dev->ops->irq_enable)
+ 		ret = dev->ops->irq_enable(dev, port);
+ 	if (ret)
+@@ -724,10 +732,6 @@ static void b53_enable_cpu_port(struct b53_device *dev, int port)
+ 	b53_write8(dev, B53_CTRL_PAGE, B53_PORT_CTRL(port), port_ctrl);
+ 
+ 	b53_brcm_hdr_setup(dev->ds, port);
+-
+-	b53_port_set_ucast_flood(dev, port, true);
+-	b53_port_set_mcast_flood(dev, port, true);
+-	b53_port_set_learning(dev, port, false);
+ }
+ 
+ static void b53_enable_mib(struct b53_device *dev)
+@@ -2387,6 +2391,7 @@ static const struct dsa_switch_ops b53_switch_ops = {
+ 	.phy_read		= b53_phy_read16,
+ 	.phy_write		= b53_phy_write16,
+ 	.phylink_get_caps	= b53_phylink_get_caps,
++	.port_setup		= b53_setup_port,
+ 	.port_enable		= b53_enable_port,
+ 	.port_disable		= b53_disable_port,
+ 	.support_eee		= b53_support_eee,
+diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
+index 4636e27fd1ee..2cf3e6a81e37 100644
+--- a/drivers/net/dsa/b53/b53_priv.h
++++ b/drivers/net/dsa/b53/b53_priv.h
+@@ -384,6 +384,7 @@ enum dsa_tag_protocol b53_get_tag_protocol(struct dsa_switch *ds, int port,
+ 					   enum dsa_tag_protocol mprot);
+ void b53_mirror_del(struct dsa_switch *ds, int port,
+ 		    struct dsa_mall_mirror_tc_entry *mirror);
++int b53_setup_port(struct dsa_switch *ds, int port);
+ int b53_enable_port(struct dsa_switch *ds, int port, struct phy_device *phy);
+ void b53_disable_port(struct dsa_switch *ds, int port);
+ void b53_brcm_hdr_setup(struct dsa_switch *ds, int port);
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index fa2bf3fa9019..454a8c7fd7ee 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -1230,6 +1230,7 @@ static const struct dsa_switch_ops bcm_sf2_ops = {
+ 	.resume			= bcm_sf2_sw_resume,
+ 	.get_wol		= bcm_sf2_sw_get_wol,
+ 	.set_wol		= bcm_sf2_sw_set_wol,
++	.port_setup		= b53_setup_port,
+ 	.port_enable		= bcm_sf2_port_setup,
+ 	.port_disable		= bcm_sf2_port_disable,
+ 	.support_eee		= b53_support_eee,
+-- 
+2.43.0
+
