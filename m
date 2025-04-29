@@ -1,117 +1,150 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE421E32D3;
-	Tue, 29 Apr 2025 04:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F65F215771
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745899858; cv=none; b=KY3ULNNqGMNPDeM51An/TT6dqFUEA+RcL16DK8aSAL+GlU8n9KnXtSUtG4S4BAFaHhuYGHStx1jVQTT7s4P6m6U58qlCgxk7y7MISaPX2SsE0kWVcmEEGgW/8lhPMMQ0zRMOtDgPy8YQRKOUuEhflweMen40gyZImfLT+q2MfGw=
+	t=1745900013; cv=none; b=pTEexQ3H6u2ZrtWw9zSjClvxaA92poZSRxZEzYyd865KAsmdjvQq9QvhmzW4SY6+oQR9+PFgcAx9araUUZ211FArT7cFEOtKR88OIOFUsEJvlcTqSlxsopAdU3y4ZjWlxIC9/OkasPa9Knh2LJb4m+Ij4LFowm1oaZuUgDH0ERI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745899858; c=relaxed/simple;
-	bh=Ju/08vqrnEpiUQAgsbv81EOPkj0sLd/dqkoY8i6sesk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BykKlsAE8jkhf9clEJ9M4foijW/eJ08vMtM2QtsttsxceBdFeY7hB79Q9d2XTfjAgY8HuyUNm0ruYgOeklaX1p9I85GWbaU23Je870VTU/KrpWAxYYW8UDhXYz3GVdto1sgR3UYBovKQDYIi+yeYpjB4z+OzxRyJ/9gP8qMG3eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QcsFksX9; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745900013; c=relaxed/simple;
+	bh=8F6mTLmJlh4i3Fet3JGrhPNNSnQhPigFYr8g61jXIp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m+E5LuLpB/w6bHtgs1pZmYDXK2Fc8A4UWxMrOuK9AFFlUJ6dYlOzuR0+EoVld/GnsqCKAPMWgLiwll9EGMN7TLabH+vDxn/RElL+JvxJRAmhvz7gQuyXPe+MTH+ABVUAdZ3un+umSzrnn5QPFsJEgb7OB+mWDdQ9UkiBXo9N2G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=URs5Fwhk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcsFksX9"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b10956398so6288023e87.0;
-        Mon, 28 Apr 2025 21:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745899855; x=1746504655; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WB+cqeimwenCq7L7/QLBCXA8KCwu4mu1U+H42Trf610=;
-        b=QcsFksX9rAxRGTkX0KrWBD4hNplcvXjmOrZ4VoNGC1az3tvVsuNBePyyXGjcpfYUMA
-         SiSCp2hd42l1RBX+hO1zF0c7v2tphcZgj5BzaDP6YZpG5aZlYd0Bcw0BNbQG2WmmgFqK
-         M8FjUqSp8Y5jmSwybe+xGK1/J0YoqDxkd67CYN+qzBGx7wLk/bpXMzcf5+qWH2rlVNs0
-         hgGAYqJBYy+EUKArvn0AQ27lFFuRt72hgfPqugSM9RCSMqOC7cR0UHSghDzNaslFR6GP
-         zCuxlHUL43486sSeqta+NN/vEUHJsBAW+9twM5axIexrkPczddvMtje3sEVOUpm/Q4VT
-         Hytw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745899855; x=1746504655;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WB+cqeimwenCq7L7/QLBCXA8KCwu4mu1U+H42Trf610=;
-        b=LI0p1/FeL/oxstYBYEQ7RCtO7Yja1cGdpPytl56pxoxfOikbBW0OxJ0Ky+H04Z/4Bo
-         VlefIWkMnuAFAZNZSYrsfQYD5YbQheE0rWMCjL1lS/H4woO3P4Lsffd+Op4C25Khn1kr
-         WQZiKOE42UBa13Tengz/r9PHjCSWLkCRtcSi7yL1pZhaJUW0yQc5o21PVqe4pZpwk5Tv
-         1QxNgzal9s036ReUB50K/9jRBa0hr022M19dfmTd7UR1kOERs/dkWbeVEgZg0KXQ7lBK
-         G/+EHE/63gg7CpffDRjP0FINuCBaf7f0k/kv/KmAKTY0mCClW6oB82ZaReb70hrn3pNz
-         2xtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqtJidmJUO9z07wTyvx52kmV6rH99SGyMZzv1VBxmdBokBxchvKlfCwWZrl8mueUG57/jxwAUWe68=@vger.kernel.org, AJvYcCXOYC7PbeAZA5rfqOqMQs4y8Xyi3QxMYc9N4HOVd2KqBEJFpVUkNczzbuPLJwCBjwLgG9xejLcHhgkgcAvk@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAC7C4ow8jliUrLDyiPMtc7F128U2QsBKvlpGMYtxgiULZ5lrb
-	dp+mGIYduqdx+pDegFKViOZ2tpo5zu8tH7OCl6g1ToRj9Xfram01
-X-Gm-Gg: ASbGncvjeTOE33vwvLC7J2KWQfPM9hf75zgraygAWAds1dMSWohYPeSIAXAUNfjLfUj
-	7ym/camMvu+ZSY2KWsC1AXf5A/FPmsbpoT40aV/paJcomLJXbI4+n9aImvw88okZ7yYkjxr+ks1
-	xwYqccE/Vf9pMnYHi0vGEmrqNd39VSO1YuxbpkhhazANBmgLlFKgtehFyZSvuvZ3CQbfbxUDzQi
-	tvCAx7GtsHn5IUyh5E0SogMMObJFfHKItk6D3OJ3STATyfu/mz+esFlQ5ctud2/PN3CoA/Eq8/M
-	BB5npuLwrsGm49Fx6GAgHZ1bpHqJtr9VIBtNYq8ZzPBRSEx+Pf6cDitY+lgzoUdI9iz38k5Hdr5
-	NkMEgPKQizD0EThr2k2q2DQ==
-X-Google-Smtp-Source: AGHT+IEPFRl30BuyC77X8oD2m4RqzMlO7bZdHdra+WGqHTZCNfn9O0MiguPoJvpXWPticCD77ibFSA==
-X-Received: by 2002:a05:6512:3dab:b0:54b:117f:686f with SMTP id 2adb3069b0e04-54e9e1955f9mr403491e87.28.1745899854637;
-        Mon, 28 Apr 2025 21:10:54 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3983fsm1789040e87.60.2025.04.28.21.10.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 21:10:54 -0700 (PDT)
-Message-ID: <24baabd6-384d-472a-8e8e-96b59ad8840a@gmail.com>
-Date: Tue, 29 Apr 2025 07:10:52 +0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URs5Fwhk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745900010;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNCqutEYCGxkPLPPDptf/fqRtu8WQpYy2xLrXDrGIyA=;
+	b=URs5FwhkisSgbGVr8l3XIGGddb85wHsv0/BttsZ0IOtP8WWX/omSqZsAZPkKdhFEYmMqA4
+	wdEpa8D04ddU+Kld0ScslSY6u3V902yVOFZ41VQDekT8dp/hjnizxCltwhBP4/dYz75FY+
+	EvWc1J57LYbYsKMqxcF/1Jo7WNScTlI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-70-sKX23-etOymv-b4HYtgyAA-1; Tue,
+ 29 Apr 2025 00:13:23 -0400
+X-MC-Unique: sKX23-etOymv-b4HYtgyAA-1
+X-Mimecast-MFC-AGG-ID: sKX23-etOymv-b4HYtgyAA_1745900000
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25B87195608C;
+	Tue, 29 Apr 2025 04:13:20 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.64])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 181EE1800352;
+	Tue, 29 Apr 2025 04:13:05 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org,
+	bpf@vger.kernel.org
+Subject: [RFCv2 3/7] lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
+Date: Tue, 29 Apr 2025 12:12:10 +0800
+Message-ID: <20250429041214.13291-4-piliu@redhat.com>
+In-Reply-To: <20250429041214.13291-1-piliu@redhat.com>
+References: <20250429041214.13291-1-piliu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: ti-adc128s052: Drop variable vref
-To: David Lechner <dlechner@baylibre.com>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <59106e24332743a7f9eb0b13ad6a2f5595ab485a.1745823530.git.mazziesaccount@gmail.com>
- <b7adef4b-68ae-4a49-937b-307e116976f4@baylibre.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <b7adef4b-68ae-4a49-937b-307e116976f4@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 28/04/2025 18:16, David Lechner wrote:
-> On 4/28/25 2:02 AM, Matti Vaittinen wrote:
->> According to Jonathan, variable reference voltages are very rare. It is
->> unlikely it is needed, and supporting it makes the code a bit more
->> complex.
->>
->> Simplify the driver and drop the variable vref support.
->>
->> Suggested-by: Jonathan Cameron <jic23@kernel.org>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> ---
-> 
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> 
->> @@ -183,17 +173,14 @@ static int adc128_probe(struct spi_device *spi)
->>   	indio_dev->channels = config->channels;
->>   	indio_dev->num_channels = config->num_channels;
->>   
->> -	adc->reg = devm_regulator_get(&spi->dev, config->refname);
->> -	if (IS_ERR(adc->reg))
->> -		return PTR_ERR(adc->reg);
->> -
->> -	ret = regulator_enable(adc->reg);
->> +	ret = devm_regulator_get_enable_read_voltage(&spi->dev,
->> +							   config->refname);
-> 
-> Is this properly aligned to the opening "("?
+The KEXE PE format parser needs the kernel built-in decompressor to
+decompress the kernel image. So moving the decompressor out of __init
+sections.
 
-Thanks David. No, it's off by one tab. Nicely spotted :)
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+To: linux-kernel@vger.kernel.org
+---
+ include/linux/decompress/mm.h | 7 +++++++
+ lib/decompress.c              | 6 +++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-Yours,
-	-- Matti
+diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
+index ac862422df158..e8948260e2bbe 100644
+--- a/include/linux/decompress/mm.h
++++ b/include/linux/decompress/mm.h
+@@ -92,7 +92,14 @@ MALLOC_VISIBLE void free(void *where)
+ #define large_malloc(a) vmalloc(a)
+ #define large_free(a) vfree(a)
+ 
++#ifdef CONFIG_KEXEC_PE_IMAGE
++#define INIT
++#define INITCONST
++#else
+ #define INIT __init
++#define INITCONST __initconst
++#endif
++
+ #define STATIC
+ 
+ #include <linux/init.h>
+diff --git a/lib/decompress.c b/lib/decompress.c
+index ab3fc90ffc646..3d5b6304bb0f1 100644
+--- a/lib/decompress.c
++++ b/lib/decompress.c
+@@ -6,7 +6,7 @@
+  */
+ 
+ #include <linux/decompress/generic.h>
+-
++#include <linux/decompress/mm.h>
+ #include <linux/decompress/bunzip2.h>
+ #include <linux/decompress/unlzma.h>
+ #include <linux/decompress/unxz.h>
+@@ -48,7 +48,7 @@ struct compress_format {
+ 	decompress_fn decompressor;
+ };
+ 
+-static const struct compress_format compressed_formats[] __initconst = {
++static const struct compress_format compressed_formats[] INITCONST = {
+ 	{ {0x1f, 0x8b}, "gzip", gunzip },
+ 	{ {0x1f, 0x9e}, "gzip", gunzip },
+ 	{ {0x42, 0x5a}, "bzip2", bunzip2 },
+@@ -60,7 +60,7 @@ static const struct compress_format compressed_formats[] __initconst = {
+ 	{ {0, 0}, NULL, NULL }
+ };
+ 
+-decompress_fn __init decompress_method(const unsigned char *inbuf, long len,
++decompress_fn INIT decompress_method(const unsigned char *inbuf, long len,
+ 				const char **name)
+ {
+ 	const struct compress_format *cf;
+-- 
+2.49.0
 
