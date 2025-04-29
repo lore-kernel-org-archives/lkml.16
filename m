@@ -1,190 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD1B210F59
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8832B210F59;
+	Tue, 29 Apr 2025 04:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745899559; cv=none; b=Nub58fxmaTM46GCfaGFUEUgAVBNZspfyWqOE9/K114m8mi5XcAfuz568iz4f31OO8EaqSlR1ONf/Bdo4Yh3Uqjfcm/TtOIfWu++gsBfa+j6w6pPkTvhxjAYhtspL4fkweASdUCrBnEk2JDFHm8eZxkOD4jFgeTjhAw6yCpm/lfo=
+	t=1745899577; cv=none; b=JilON7LA5nt0tSp9ueYCsCeNYx34VZr650z8Pr9/1rpkOmdCsSATMKUg2lwjuKmGK9DY9FX7SJri8kXl8k8dHNfsJaQ2fVxBavGwOrK4MsBLkJwAkgQIi3Fhb9U5AzGpS2NE8rSUaqD7vrBkjl2xqMVGuTQss2B1m7Qj9ouD234=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745899559; c=relaxed/simple;
-	bh=mC064HA8cxmc5ppK0VWh3u7DcKPWkvHvnlU7CKsJHgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZsZmEf+goi2daogLWQFaAJOzKcM73POnCdUXqrDjbXn3SfEtRAzJY9EUbmPPYU9fOAdqPO0nC4JehnOnbNXrte2p1PX/rDCb5GRroFvNi/UGsvNIZjA8KWsVoyqKdc0ml0gDndFuJxbi4KHRX1m/FbQ+0BwDd2JRv6dT/7sTRUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OEysBOZd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745899577; c=relaxed/simple;
+	bh=puwaWg0YW0DjsEBEYIoY8x/bLms2MxI/ob3ZfklRDPw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GgZjT7ElXAqxC2kEp9ARElSu871fbQG5E+zbaHTMSGbr+t5ftaIIqfnAV6HnY/Gn7CnXYxYGOCcDfCP15w729UDW9f3J7sX5DE12FKx8L+d5POZ1woyk1xO3PTMrog+bYxhEYq0SDGgInPqu0VmF4XIAtJv8tHGs5krJ6S/Y9Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0NlFGD/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEysBOZd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745899557;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T35C5vWq4hYFn/I8gNZPS9eGF+vOp3+hGnioAT17dSw=;
-	b=OEysBOZd1ke+JxWptzHfzmqQnspCQkl5lq/0o48dJzKoJX5Mvmjx/PUkSL2k8OUtHhwfK2
-	eXbSf5+9f8phP566EiSgmgm+nrTuq1ENI2PZSoepFYdLX86KHuDH1R8reM9ANv+viv/BJ7
-	h0oWzKL1dffG5AB2Mfp6LpJHvXl1PvI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-i0h5bgxMMbShf-Hlnf_5MQ-1; Tue,
- 29 Apr 2025 00:05:50 -0400
-X-MC-Unique: i0h5bgxMMbShf-Hlnf_5MQ-1
-X-Mimecast-MFC-AGG-ID: i0h5bgxMMbShf-Hlnf_5MQ_1745899542
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 815081800264;
-	Tue, 29 Apr 2025 04:05:42 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.57])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27B8319560AB;
-	Tue, 29 Apr 2025 04:05:38 +0000 (UTC)
-Date: Tue, 29 Apr 2025 12:05:34 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Uday Shankar <ushankar@purestorage.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/8] ublk: factor out ublk_start_io() helper
-Message-ID: <aBBQDjLDkGWE63vT@fedora>
-References: <20250427045803.772972-1-csander@purestorage.com>
- <20250427045803.772972-6-csander@purestorage.com>
- <aA4rqcpC01SzUn_g@fedora>
- <CADUfDZpEGVLzEZJtPiScWgf6PVroQvKKhGed1cb8AJiyUr_RYg@mail.gmail.com>
- <CADUfDZqqeeBTbgvCfHa8sr7Y7BetGbPzHYA1hMoN83kz+Bi54A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0NlFGD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 469C7C4CEF3;
+	Tue, 29 Apr 2025 04:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745899577;
+	bh=puwaWg0YW0DjsEBEYIoY8x/bLms2MxI/ob3ZfklRDPw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=c0NlFGD/nhB9z6/D4xtydBdI9lJs5L3xbB+eo5cTRMg4n9RpEdjaAhdvc2frC/XoC
+	 5Lj5jHazpgfih7eU9Ip8zL87n2W5/Y7Xl7J5MUrNvUFI2sb3RB4BqU5pWTALmAZxrL
+	 regj0Ag6HkRUHS3xBvMdE2pb2vrLgesn1qt2AbGY8HXFnjIdmTVcNrNrmloKS1de70
+	 gu28EB9CLlaP68ai4PHXtKJqNUO/eYwYJM4vU8DspesAceo2GgBqak5RBzqxLyJenI
+	 KBmESNyXPRuCOOdoZcRlGFtuk67AXj0qsy35tYZK+DJvG69bCPTNEcNR9Ad1mpMaJl
+	 Y5LlZLpxc/FHA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A16FC369CB;
+	Tue, 29 Apr 2025 04:06:17 +0000 (UTC)
+From: Chen Linxuan via B4 Relay <devnull+chenlinxuan.uniontech.com@kernel.org>
+Date: Tue, 29 Apr 2025 12:06:11 +0800
+Subject: [PATCH RFC v3 7/8] x86/xen: add __init for xen_pgd_walk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADUfDZqqeeBTbgvCfHa8sr7Y7BetGbPzHYA1hMoN83kz+Bi54A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-noautoinline-v3-7-4c49f28ea5b5@uniontech.com>
+References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
+In-Reply-To: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
+To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
+ Kevin Tian <kevin.tian@intel.com>, 
+ Alex Williamson <alex.williamson@redhat.com>, 
+ Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nicolas.schier@linux.dev>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>, 
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+ Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+ Juergen Gross <jgross@suse.com>, 
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-integrity@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ llvm@lists.linux.dev, Winston Wen <wentao@uniontech.com>, 
+ kasan-dev@googlegroups.com, xen-devel@lists.xenproject.org, 
+ Chen Linxuan <chenlinxuan@uniontech.com>, 
+ Changbin Du <changbin.du@intel.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1213;
+ i=chenlinxuan@uniontech.com; h=from:subject:message-id;
+ bh=lLv+eC36iR+BfXD2pJvuB8T7k1wRLfuYuYg6Rtr4yeI=;
+ b=owEBbQKS/ZANAwAKAXYe5hQ5ma6LAcsmYgBoEFA0cu56sCmDMkf/pntxUHuMuekP/XRkxukwU
+ 9g4TyNMqLaJAjMEAAEKAB0WIQTO1VElAk6xdvy0ZVp2HuYUOZmuiwUCaBBQNAAKCRB2HuYUOZmu
+ i6oqEACNTdOu+wT9VWzDqaJxYPJzTDzhyaDgOrIaxGP72CExKq84a645B1Jl3TWZN1v4YEQN+Ex
+ U4BBfSuuQ9Yh0TKak7F0oJPgeJp4PeTVBP15tbocmZJmYUHXdJX5kcB6+MgIe90/7/tlKRXQlN5
+ uY8GMIazOdRrWgafA6k6G+0lJvn3E3R5v7129rFXvHWCYC7Nvp2Vr8gyxE2IYJVHEfZx/+ua0oe
+ z4a0WQgFS0t6W9PacgGnUTntuj/TGKVYb500Jwut0dBDJITdWXpackuvyCzviwumgxcGnbW66J/
+ sPOW9GIhrql6r3JIF1vU1iTJ1wxWyv8Al2Yy2Y7j9ypL0F07+xTB5euDs2A9h8HHd2x+0MwnqRD
+ 4T62VOpuvuHAy1CMHBv75g1GHhwTGMN1KwfuI0Pf0TXrf9JM01deVHQ7vjI5kZhyeYMl537pJVJ
+ 0itemi/gfnvcGViZ8usYXjp9yKtWO3JsSCn31sNT7BwsAtjyIUQl+DeQyQADc9wUchfIkTRw2AT
+ nXmGd9l2kspY+Bd3KtnokiL1Gm1q49EmDFnwJw+FvsjxRdcZ56x9pI1MXcoOzCJNGSxYn35Witw
+ vt49LNms8G/08qnrm3qBl6k+q0+gMBVS+JCmJst68knEU97MDg5chkLEEiEkEAzZLrlhGHN4eU8
+ gFY2uFKRqDDEdqA==
+X-Developer-Key: i=chenlinxuan@uniontech.com; a=openpgp;
+ fpr=D818ACDD385CAE92D4BAC01A6269794D24791D21
+X-Endpoint-Received: by B4 Relay for chenlinxuan@uniontech.com/default with
+ auth_id=380
+X-Original-From: Chen Linxuan <chenlinxuan@uniontech.com>
+Reply-To: chenlinxuan@uniontech.com
 
-On Mon, Apr 28, 2025 at 08:12:52AM -0700, Caleb Sander Mateos wrote:
-> On Mon, Apr 28, 2025 at 7:28 AM Caleb Sander Mateos
-> <csander@purestorage.com> wrote:
-> >
-> > On Sun, Apr 27, 2025 at 6:05 AM Ming Lei <ming.lei@redhat.com> wrote:
-> > >
-> > > On Sat, Apr 26, 2025 at 10:58:00PM -0600, Caleb Sander Mateos wrote:
-> > > > In preparation for calling it from outside ublk_dispatch_req(), factor
-> > > > out the code responsible for setting up an incoming ublk I/O request.
-> > > >
-> > > > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> > > > ---
-> > > >  drivers/block/ublk_drv.c | 53 ++++++++++++++++++++++------------------
-> > > >  1 file changed, 29 insertions(+), 24 deletions(-)
-> > > >
-> > > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > > > index 01fc92051754..90a38a82f8cc 100644
-> > > > --- a/drivers/block/ublk_drv.c
-> > > > +++ b/drivers/block/ublk_drv.c
-> > > > @@ -1151,17 +1151,44 @@ static inline void __ublk_abort_rq(struct ublk_queue *ubq,
-> > > >               blk_mq_requeue_request(rq, false);
-> > > >       else
-> > > >               blk_mq_end_request(rq, BLK_STS_IOERR);
-> > > >  }
-> > > >
-> > > > +static void ublk_start_io(struct ublk_queue *ubq, struct request *req,
-> > > > +                       struct ublk_io *io)
-> > > > +{
-> > > > +     unsigned mapped_bytes = ublk_map_io(ubq, req, io);
-> > > > +
-> > > > +     /* partially mapped, update io descriptor */
-> > > > +     if (unlikely(mapped_bytes != blk_rq_bytes(req))) {
-> > > > +             /*
-> > > > +              * Nothing mapped, retry until we succeed.
-> > > > +              *
-> > > > +              * We may never succeed in mapping any bytes here because
-> > > > +              * of OOM. TODO: reserve one buffer with single page pinned
-> > > > +              * for providing forward progress guarantee.
-> > > > +              */
-> > > > +             if (unlikely(!mapped_bytes)) {
-> > > > +                     blk_mq_requeue_request(req, false);
-> > > > +                     blk_mq_delay_kick_requeue_list(req->q,
-> > > > +                                     UBLK_REQUEUE_DELAY_MS);
-> > > > +                     return;
-> > > > +             }
-> > > > +
-> > > > +             ublk_get_iod(ubq, req->tag)->nr_sectors =
-> > > > +                     mapped_bytes >> 9;
-> > > > +     }
-> > > > +
-> > > > +     ublk_init_req_ref(ubq, req);
-> > > > +}
-> > > > +
-> > > >  static void ublk_dispatch_req(struct ublk_queue *ubq,
-> > > >                             struct request *req,
-> > > >                             unsigned int issue_flags)
-> > > >  {
-> > > >       int tag = req->tag;
-> > > >       struct ublk_io *io = &ubq->ios[tag];
-> > > > -     unsigned int mapped_bytes;
-> > > >
-> > > >       pr_devel("%s: complete: qid %d tag %d io_flags %x addr %llx\n",
-> > > >                       __func__, ubq->q_id, req->tag, io->flags,
-> > > >                       ublk_get_iod(ubq, req->tag)->addr);
-> > > >
-> > > > @@ -1204,33 +1231,11 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
-> > > >               pr_devel("%s: update iod->addr: qid %d tag %d io_flags %x addr %llx\n",
-> > > >                               __func__, ubq->q_id, req->tag, io->flags,
-> > > >                               ublk_get_iod(ubq, req->tag)->addr);
-> > > >       }
-> > > >
-> > > > -     mapped_bytes = ublk_map_io(ubq, req, io);
-> > > > -
-> > > > -     /* partially mapped, update io descriptor */
-> > > > -     if (unlikely(mapped_bytes != blk_rq_bytes(req))) {
-> > > > -             /*
-> > > > -              * Nothing mapped, retry until we succeed.
-> > > > -              *
-> > > > -              * We may never succeed in mapping any bytes here because
-> > > > -              * of OOM. TODO: reserve one buffer with single page pinned
-> > > > -              * for providing forward progress guarantee.
-> > > > -              */
-> > > > -             if (unlikely(!mapped_bytes)) {
-> > > > -                     blk_mq_requeue_request(req, false);
-> > > > -                     blk_mq_delay_kick_requeue_list(req->q,
-> > > > -                                     UBLK_REQUEUE_DELAY_MS);
-> > > > -                     return;
-> > > > -             }
-> > >
-> > > Here it needs to break ublk_dispatch_req() for not completing the
-> > > uring_cmd, however ublk_start_io() can't support it.
-> >
-> > Good catch. How about I change ublk_start_io() to return a bool
-> > indicating whether the I/O was successfully started?
+From: Chen Linxuan <chenlinxuan@uniontech.com>
 
-That is doable.
+Presume that kernel is compiled for x86_64 with gcc version 13.3.0:
 
-> 
-> Thinking a bit more about this, is the existing behavior of returning
-> early from ublk_dispatch_req() correct for UBLK_IO_NEED_GET_DATA? It
+  make allmodconfig
+  make KCFLAGS="-fno-inline-small-functions -fno-inline-functions-called-once"
 
-The requeue isn't related with UBLK_IO_NEED_GET_DATA actually, when
-UBLK_IO_FLAG_NEED_GET_DATA is cleared.
+This results a modpost warning:
 
-It is usually caused by running out of pages, so we have to requeue until
-ublk_map_io() can make progress.
+  WARNING: modpost: vmlinux: section mismatch in reference: xen_pgd_walk+0x42 (section: .text) -> xen_mark_pinned (section: .init.text)
 
-> makes sense for the initial ublk_dispatch_req() because the req will
-> be requeued without consuming the ublk fetch request, allowing it to
-> be reused for a subsequent I/O. But for UBLK_IO_NEED_GET_DATA, doesn't
-> it mean the io_uring_cmd will never complete? I would think it would
-> be better to return an error code in this case.
+As xen_pgd_walk is only referenced in xen_after_bootmem(void) which is
+also in .init.text, I add __init for xen_pgd_walk to fix this issue.
 
-The same request will be requeued and re-dispatched to ublk driver after
-a short delay, so the uring_cmd won't be never complete.
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+---
+ arch/x86/xen/mmu_pv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Anyway, it isn't another story, which shouldn't be added into this
-cleanup patch.
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index 38971c6dcd4b78b6b14f51bc69c4bf6b70ebd622..53650888be0a7b1dba170a5b7ba9c654244b5125 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -696,7 +696,7 @@ static void __xen_pgd_walk(struct mm_struct *mm, pgd_t *pgd,
+ 	(*func)(mm, virt_to_page(pgd), PT_PGD);
+ }
+ 
+-static void xen_pgd_walk(struct mm_struct *mm,
++static void __init xen_pgd_walk(struct mm_struct *mm,
+ 			 void (*func)(struct mm_struct *mm, struct page *,
+ 				      enum pt_level),
+ 			 unsigned long limit)
 
-Thanks,
-Ming
+-- 
+2.43.0
+
 
