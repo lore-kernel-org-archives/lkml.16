@@ -1,176 +1,129 @@
-Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2047A4431;
-	Tue, 29 Apr 2025 14:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2773D17588;
+	Tue, 29 Apr 2025 14:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938061; cv=none; b=AK7PIcLOw7L6JR9E6VA0OkKi8A4m4Ga0LgXUFpTUG144oK2XhT2obqt+gshkOvakLcgtnPjkaqGt1KKIAVbvBU+61TX4PKpyKVM4F2NhuN2jbrceq1l0fVSgbNTpTmS0JM38dT6iWb/Wow7QrnDOUJpAmoTJPb68JjaqTonhhYE=
+	t=1745938132; cv=none; b=PoOT9fG9wrVoDc4wTIu6SYxbLjSd1flOr/CkmP3HmXa1qEmBx8cVtVz7cAnUkdpOBHfHn8QxtkaWRU1GIK/cXrc0cO1WyPppvE/hPFZ+tdNxrQ2F/z5BAFAhDu2XQZ2yO3GRo/1fJF9t1+lYd5F3L3dS4F8N0P29dTFEjj8JuwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938061; c=relaxed/simple;
-	bh=lCWLwV0QsDYg09C7wweVWAByFd3y/Z0TIjaO8og8KZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJ/k9JxZ+WXBfv3u45kxGWUYhCCFiVw/9gjfSRtgn71R3PkGs30zRpcySDEePXx5CPr7XfzYffsW40hYacA5XwjTM1SJIKLdkvU3b7gdM29NM/A2TVO5pYWdp0/M8AK0VMAg1kL82cZMU995VE/YMGp2Xrob/iWPVA9lmf0BGMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=SulWdXUp; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=SulWdXUp; arc=none smtp.client-ip=46.255.227.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
+	s=arc-20240116; t=1745938132; c=relaxed/simple;
+	bh=oRNnnrKfvMB4H1OFL2yJMG5d6+mfssjvCvQkeRgaUD0=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=jLLXFATkOa3E/lK8JSA7nwfgugcWAgMZYix6JX5X+aXEKvElhDiqxhjNGBxFhx2MLNtj8MrbrRVD6hVzJUSxQKf06xfAUnK9QCQUR2HHbYquI62otG82Gd5lrRoLqwaAiLfClEqTIwzE6A/JtgoFqeQ/T10qT1+6ET55L+iR8Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=hyHYGP6P; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="SulWdXUp";
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="SulWdXUp"
-Received: from gmmr-1.centrum.cz (envoy-stl.cent [10.32.56.18])
-	by gmmr-2.centrum.cz (Postfix) with ESMTP id 836272038BAB;
-	Tue, 29 Apr 2025 16:45:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1745937950; bh=n2fineH2KiM0gAU2nno3zyw2Xd1Yc+c4zpdkIDc4l+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SulWdXUpLeomLiBPXZMFtBWmDL/plbPNhyymvKLaM8W9G2w5pB07Uup8HaCsV3y6+
-	 j2XF+Uru4tn/wBshK2wkhN3/siqy3Ro4LtQry4+5dXqnYjjJsUMSN+pgO/gSKTFFLS
-	 sUxYjvsnZ56dso+6N/IgoLtznAjRzzjXMfJD8zY8=
-Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
-	by gmmr-1.centrum.cz (Postfix) with ESMTP id 7FBE01A5;
-	Tue, 29 Apr 2025 16:45:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1745937950; bh=n2fineH2KiM0gAU2nno3zyw2Xd1Yc+c4zpdkIDc4l+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SulWdXUpLeomLiBPXZMFtBWmDL/plbPNhyymvKLaM8W9G2w5pB07Uup8HaCsV3y6+
-	 j2XF+Uru4tn/wBshK2wkhN3/siqy3Ro4LtQry4+5dXqnYjjJsUMSN+pgO/gSKTFFLS
-	 sUxYjvsnZ56dso+6N/IgoLtznAjRzzjXMfJD8zY8=
-Received: from antispam21.centrum.cz (antispam21.cent [10.30.208.21])
-	by gmmr-1.centrum.cz (Postfix) with ESMTP id 7E27CEB;
-	Tue, 29 Apr 2025 16:45:50 +0200 (CEST)
-X-CSE-ConnectionGUID: crGLesLxRuC8KMLyJI4WmQ==
-X-CSE-MsgGUID: mn/L3bo1S7ubox7jRB6q5A==
-X-ThreatScanner-Verdict: Negative
-X-IPAS-Result: =?us-ascii?q?A2GOAAAW5RBo/03h/y5aHAEBAQEBAQcBARIBAQQEAQFAC?=
- =?us-ascii?q?YE5BAEBCwGFJIRVkXSLdoYzjWkPAQEBAQEBAQEBCUQEAQE/hEgCizMnNwYOA?=
- =?us-ascii?q?QIEAQEBAQMCAwEBAQEBAQEBAQ0BAQYBAQEBAQEGBgECgR2FNVOCYgGDfwEBA?=
- =?us-ascii?q?QECASMECwFGBQsLDQsCAiYCAlYGE4MCgjABAw4jsWJ6fw0mGgJl3HACSQVVY?=
- =?us-ascii?q?4EqgRsuAYhPAYVshHdCgg2EBzg+iB6CaQSDQ4V6mCZSexwDWSwBVRMXCwcFg?=
- =?us-ascii?q?SZDA4EPI0sFLh2CEYUhghGBXAMDIgGDE3QchGaEUC1Pgy+CAmg9HUADC209N?=
- =?us-ascii?q?xQbBpZ2g2QHchxDCWXFT4JDgxyBCYROnRUzl3ADkmQuh2WQaxupGoF9ggAzI?=
- =?us-ascii?q?jCDIlIZywJ2PAIHAQoBAQMJgjuNYYFLAQE?=
-IronPort-PHdr: A9a23:QJ0emRGIiDzvySlAwZr8D51Gf7pLhN3EVzX9CrIZgr5DOp6u447ld
- BSGo6k21hmRBc6Bta4c26L/iOPJZy8p2d65qncMcZhBBVcuqP49uEgNJvDAImDAaMDQUiohA
- c5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFRrwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/I
- RuooQnLqsUanYRuJrgwxxbGvndFePldyH91K16Ugxvz6cC88YJ5/S9Nofwh7clAUav7f6Q8U
- 7NVCSktPn426sP2qxTNVBOD6HQEXGoZixZFHQfL4gziUpj+riX1uOx92DKHPcLtVrA7RS6i7
- 6ZwRxD2jioMKiM0/3vWisx0i6JbvQ6hqhliyIPafI2ZKPxzdb7GcNgEWWROQNpeVy1ZAoO9c
- YQPCfYBPf1FpIX5vlcCsAeyCRWpCO7p1zRGhGL53bci3uovEQ/IwhItEc8NvnTao9r6KLodX
- ++3w6TT0TXObOlb1Svh5ITUcB0sp+yHU7JqccrWzEkiDxnLgUuMqYz/Ijia2f4Cs26F6upjS
- OmijHQoqxtyoje1w8cjkJPJi5kPxVDY8SV22p01KcekR096eNOpFoZbuC6GOYVsWMwiX31ot
- zggyr0AoZO2YCcHxZsoyRDRb/GKcIiG7xzsWuqPITp1i25odK+iixi870Ws1O3xW8iq3FpWr
- idIkMXAumwO2hHO6saKV/tz80G80jiMzwDe8u5JLEEumabFK5MswqQ8moQNvUnDBCP7mkf7g
- LeIekk59OWk8frrbqv6qpOGKYN5hR3yPr4ql8G+B+kzLxIAUHKB+eum0b3u5Uj5QLJXgfIoi
- qTZq5XaJdgDpq6+Hg9Vzp4v6xahADei19QVhXYHLFdcdBKciojpJ0nOLO3kAfuln1ujjjFrx
- +zcPr38B5XBNGTMkbb5cbZ87U5T1hYzwMhQ6p9VEL0NPvL+V0/ruNDGEBM0Mxa4zuTlBdll0
- 4MRQ2OPAquXMKPItl+I4/oiLPOWZI8Wojn9LuIq5+T1gHAjhV8debOm3YANZH+kH/VqO1+Zb
- mb0gtcdDWcKuRIzTPbqiVKYVz5ffWyyX6Un6T4lEoKmEZzDS5u3j7yb2Se3BIFZZmdDClyUC
- 3fna52EW+sQaCKVOsJhlj0EVb68S44uzB2usQr6xqFkLurK4CIXqZHj2MJy5+3JmhE+7SZ0A
- NiF02GRU2F0mXsFSCU13KBnpExw0VOD0al+g/xFGt1f/v1JUgAnNZ7a0uN1EczyWgPGftePU
- lqmRc+mAT4pQtIr39AOe1p9G8mljh3bwiWlGaEVl72WC5Ev6KLTwWX+J8ZnxHbazqUuk14mQ
- s5XOW28mqF/7xTTB5LOk0iBk6aqdKIc3DPC9WuazmqBoltYUAhuXqXBRn0feETWosrj5k/YT
- L+hF64nMg1fxs6GMKdKbcfpjVpeSPf5JNvee36xm3u3BRuQ3bOMcJDldH4Z3CrDE0UEjQ8T8
- micNQQkBSeuvXjeDDpwGlLreU/s9vN+qHyjQk8y1A6Fd1dh2Kat+h4JmfycTOse07MctCg8q
- DV0HVO90srOBdSPqQVvYrlSbM877gQP6WWMmwVjP5DoD6FmilMYeR5+uU+mgxl+FIRMudIno
- HMj0Ex5LqfOg31bcDbN5Z3sIPXpI29R/1j7YrTV01TXyv6f5qMG87IzuQOw70mSCkM+/iA/g
- JFu2HyG68CPVVJKOa8=
-IronPort-Data: A9a23:L5TdB6kPWDU5gS8zSkzIeM/o5gy1J0RdPkR7XQ2eYbSJt1+Wr1Gzt
- xIYCGnVOPmOYjH8eY0nPorn8UlSuZfQxoNiSQM++ythQltH+JHPbTi7wuYcHM8wwunrFh8PA
- xA2M4GYRCwMZiaB4Erra/658CQUOZigHtLUEPTDNj16WThqQSIgjQMLs+Mii+aEu/Dga++2k
- Y20+pC31GONgWYubzpIsfPb8nuDgdyr0N8mlg1jDRx0lACG/5UlJMp3Db28KXL+Xr5VEoaSL
- 87fzKu093/u5BwkDNWoiN7TKiXmlZaPVeQmoiM+t5mK2nCulARrukoIHKZ0hXNsttm8t4sZJ
- ONl7sXsFFhzbsUgr8xGO/VQO3kW0aSrY9YrK1Dn2SCY5xWun3cBX5yCpaz5VGEV0r8fPI1Ay
- RAXADsXQTSOnMam+q+QGspJotUBDZXUObpK7xmMzRmBZRonaZ/GBr7P+ccBhHE7i8ZSB+vbI
- cELAdZtREieJUcSZxFNUs94w7jAanrXKlW0rHqcv6k+5mHJ5AVt1LH2dtHHEjCPbZ4MwxbA+
- zieoAwVBDkfMpu7kjCCq0nzm+XIjXz5YqhMDeCRo6sCbFq7gzZ75ActfUGqqP//kEm0VshDM
- GQd4C9opq83nGSvT9/gT1i9pVaHoBcXWJxXCeJSwAiO0q/85wefG3hBQDlcbtAvqM4xQ3otz
- FDht9/gGz1jmKeYRXKU6vGfqjbaESwUK3ISICwJVw0I5/H9r4wpyBHCVNBuFOiylNKdMSrsy
- jqOoQAgiLgJy80GzaO2+RbAmT3Em3TSZlJroF+KAyT/tF4/O9HNi5GU1GU3JM1odO6xJmRtd
- lBf8yRCxIji1a2wqRE=
-IronPort-HdrOrdr: A9a23:cscW9qOK8oYF68BcTsyjsMiBIKoaSvp037Dk7S9MoDhuA6mlfq
- eV7ZAmPH7P+VQssR4b8+xoVJPsfZqYz+8T3WBzB8bAYOCFggqVxehZhOOI/9SjIU3DH4Vmu5
- uIHZITNOHN
-X-Talos-CUID: =?us-ascii?q?9a23=3AqVCDg2gQGjzfzq+ZpKvTzMsypjJueWfy6HrLB1+?=
- =?us-ascii?q?CFE05a5ixWH2xpJxhqp87?=
-X-Talos-MUID: =?us-ascii?q?9a23=3A9qR+8gw5lGmyDi2RAAZyvwLV+rKaqKGoT2RWm5J?=
- =?us-ascii?q?fgJaZPytgZDWnpmquH6Zyfw=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.15,249,1739833200"; 
-   d="scan'208";a="315805207"
-Received: from unknown (HELO gm-smtp10.centrum.cz) ([46.255.225.77])
-  by antispam21.centrum.cz with ESMTP; 29 Apr 2025 16:45:50 +0200
-Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gm-smtp10.centrum.cz (Postfix) with ESMTPSA id 15D7780911A0;
-	Tue, 29 Apr 2025 16:45:50 +0200 (CEST)
-Date: Tue, 29 Apr 2025 16:45:47 +0200
-From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Ryan Roberts <ryan.roberts@arm.com>, linux-mm@kvack.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
-Message-ID: <2025429144547-aBDmGzJBQc9RMBj--arkamar@atlas.cz>
-References: <20250429142237.22138-1-arkamar@atlas.cz>
- <20250429142237.22138-2-arkamar@atlas.cz>
- <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="hyHYGP6P"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=eHqUkt7UJKIIILzl5IsZ8pSRFP8K0RvUiP7Kb3bGmWM=; b=hyHYGP6PdBOx/kyS79n0aakn/5
+	M1gPdPU8xqoR/Q2VGFhLc+fj61VjGuIiQH4W3jIik9IPXJ/+W2TVDGZ9nVEPAWTLTUE8uAhX3aA5O
+	rpaJ2Qq+xuHdHpAsDUC38bMzz70bp/KuREdHqe3ftAx0rxH/zsF81STIE7V9x69TLBXE=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:57924 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1u9mGG-0001yT-85; Tue, 29 Apr 2025 10:48:40 -0400
+Date: Tue, 29 Apr 2025 10:48:38 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
+ geert@linux-m68k.org, paul.barker.ct@bp.renesas.com, Geert Uytterhoeven
+ <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Message-Id: <20250429104838.a8da03da8f30ede5adc38765@hugovil.com>
+In-Reply-To: <20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com>
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
+	<20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -3.1 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v8 01/11] dt-bindings: serial: Added secondary clock for
+ RZ/T2H RSCI
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Tue, Apr 29, 2025 at 04:29:30PM +0200, David Hildenbrand wrote:
-> On 29.04.25 16:22, Petr Vaněk wrote:
-> > folio_pte_batch() could overcount the number of contiguous PTEs when
-> > pte_advance_pfn() returns a zero-valued PTE and the following PTE in
-> > memory also happens to be zero. The loop doesn't break in such a case
-> > because pte_same() returns true, and the batch size is advanced by one
-> > more than it should be.
-> > 
-> > To fix this, bail out early if a non-present PTE is encountered,
-> > preventing the invalid comparison.
-> > 
-> > This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
-> > optimize unmap/zap with PTE-mapped THP") and was discovered via git
-> > bisect.
-> > 
-> > Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
-> > ---
-> >   mm/internal.h | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index e9695baa5922..c181fe2bac9d 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
-> >   			dirty = !!pte_dirty(pte);
-> >   		pte = __pte_batch_clear_ignored(pte, flags);
-> >   
-> > +		if (!pte_present(pte))
-> > +			break;
-> >   		if (!pte_same(pte, expected_pte))
-> >   			break;
+Hi Thierry,
+
+On Tue, 29 Apr 2025 10:19:43 +0200
+Thierry Bultel <thierry.bultel.yh@bp.renesas.com> wrote:
+
+> At boot, the default clock is the PCLKM core lock (synchronous
+
+lock -> clock?
+
+> clock, which is enabled by the bootloader).
+> For different baudrates, the asynchronous clock input must be used.
+> Clock selection is made by an internal register of RCSI.
 > 
-> How could pte_same() suddenly match on a present and non-present PTE.
-
-In the problematic case pte.pte == 0 and expected_pte.pte == 0 as well.
-pte_same() returns a.pte == b.pte -> 0 == 0. Both are non-present PTEs.
-
-> Something with XEN is really problematic here.
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+>  .../bindings/serial/renesas,rsci.yaml          | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> index ea879db5f485..aa2428837a2f 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> @@ -35,10 +35,14 @@ properties:
+>        - const: tei
+>  
+>    clocks:
+> -    maxItems: 1
+> +    items:
+> +      - description: serial functional clock
+> +      - description: default core clock
+>  
+>    clock-names:
+> -    const: fck # UART functional clock
+> +    items:
+> +      - const: async
+> +      - const: bus
+>  
+>    power-domains:
+>      maxItems: 1
+> @@ -58,11 +62,7 @@ unevaluatedProperties: false
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> -    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> -
+> -    aliases {
+> -        serial0 = &sci0;
+> -    };
+> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
+>  
+>      sci0: serial@80005000 {
+>          compatible = "renesas,r9a09g077-rsci";
+> @@ -72,7 +72,7 @@ examples:
+>                       <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
+>                       <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
+>          interrupt-names = "eri", "rxi", "txi", "tei";
+> -        clocks = <&cpg CPG_MOD 108>;
+> -        clock-names = "fck";
+> +        clocks = <&cpg CPG_MOD 108>, <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
+> +        clock-names = "async", "bus";
+>          power-domains = <&cpg>;
+>      };
 > -- 
-> Cheers,
+> 2.43.0
 > 
-> David / dhildenb
 > 
+
+
+-- 
+Hugo Villeneuve
