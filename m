@@ -1,151 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f68.google.com (mail-io1-f68.google.com [209.85.166.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9AC221719;
-	Tue, 29 Apr 2025 16:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972E021772B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944761; cv=none; b=W2m7614f2uTqKCd60pmgnlntYfvMUuyKHyaU+9135W1MlUpuApdK/MbiiD9d6IobgXRcMmwHYkPO79tMT7XBhUI1aTMgxBMlGT7JYhlHigrpl0FPwygqwAcMNRCIPHIe7MHEMujF5a2HuwMXyYz6ySysdYvkOJysoZzXIi6DMF0=
+	t=1745944790; cv=none; b=FJScDOEH9WcFOVRYWsvqfDs2MEthg3D9G2jrz8g3U0GV61aZzRnfVZ3SsaDW7G2/B1QetzA+SKA13dEOGQIrLWxmGT/Qa7LJ0bEvxcUKdNmC3vtljcnNQigBvQ1M7Sdvncjg2OjXrilVfmlpZ2hc0UegV/Vy12jdGy9GjAUDVbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944761; c=relaxed/simple;
-	bh=IUKUx5rHs3y0JzulFjrxiQiR+dG93QZgEfRxFoGZczw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e/8okBdXCMALyvriDTMBN4U0WUBG2j6jSYdnaDHNhquOnpCNKop3yHkXf06C7mgITA+VqmQjF26WzJv7W1rv2i6VYK87hDe/fZWm9AbCHljqK4N/zAE19oHBbRZ/dCqUvHyGPPMnjM0ghg17CNBDqu0eAmUZ3AAax10oBDoBCgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HZvYhjBW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745944790; c=relaxed/simple;
+	bh=Ea02xPOzaJFRPwLpC5XYeQyxf9P03cTd+lWaLbeSZ5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nbhe5QrQWnss2mIi/Fq2SSpPBp5Uok3GErYL+0zBSe3oqiKB7Lq4/tMW53vdB9sV+euyt3XxhFKAuUwkMbSzcZDSlpYtxk86FtjprByhdr+tJRIWCzZd0gZlhcy/EwZ8wozB2wxozYVnL9gt9xjzDl3YKHsTqo5iGoJCGdMfwK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ddOlfctF; arc=none smtp.client-ip=209.85.166.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HZvYhjBW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E931EC4CEE3;
-	Tue, 29 Apr 2025 16:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745944760;
-	bh=IUKUx5rHs3y0JzulFjrxiQiR+dG93QZgEfRxFoGZczw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HZvYhjBWJAWG88PFpWa0g8IHHenaqjt964kpD2VBxwvic8PB3n5xGhxKOVvyGtixn
-	 aoUwNKZxDEQ+l/eDF5n5nffas9V4ow3d9l/T1X4NA/Iir3GtEjuJpxpjsHrb6xj3Va
-	 OBMAjxKK6o2TsPE6+Uq4y0EuMyE3/2Ey4JoVR6p0=
-Date: Tue, 29 Apr 2025 18:39:17 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ayush Singh <ayush@beagleboard.org>
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	Jason Kridner <jkridner@beagleboard.org>,
-	Deepak Khatri <lorforlinux@beagleboard.org>,
-	Robert Nelson <robertcnelson@beagleboard.org>,
-	Dhruva Gole <d-gole@ti.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: kernel: device: Add
- devm_of_platform_populate/depopulate
-Message-ID: <2025042956-yelling-magnifier-5778@gregkh>
-References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
- <aBDi2LE3O1rIsGqn@pollux>
- <2025042904-trade-leverage-0f98@gregkh>
- <aBDl5oRIRpwbPrC1@pollux>
- <2025042945-aviator-subzero-0263@gregkh>
- <1fda026e-9ec5-46f6-84e8-4111263350ff@beagleboard.org>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ddOlfctF"
+Received: by mail-io1-f68.google.com with SMTP id ca18e2360f4ac-85b43b60b6bso1018739f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745944787; x=1746549587; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kVHP1h0FhA8vh77DKQEGNILt5KJpnumqkzmu5LvDnek=;
+        b=ddOlfctFK9ilDnzCXIoewHmr8V91bOU0e33Jj83vZYP7d5gJv+O75fQUSYjYh2epNO
+         tTsn/hf0yjmWhX9NmaSWDa4Y4bpeo5zsZFu6xaxj5rKYJDoNz8Os19OJM8NVDMd/XI53
+         KBztglk46c40/IqgbFYwzUEva54RZAI8K8fI/vKh0P8rTsu7Nch9xrTI4qMA3RNSdkmt
+         vHXayOtA4JCmEfoDw6nGbKevAmcrgt0jHhBKtllbMdZYwKKBU+n9BXKtP4CSA1EZ4v9w
+         EotyT1wenJRoFVXJNXPzM4dDP2/FOIW46utlrwTf+KHgdCasPcy9S8Houfej1N+DlWL3
+         Uj9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745944787; x=1746549587;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kVHP1h0FhA8vh77DKQEGNILt5KJpnumqkzmu5LvDnek=;
+        b=uBacaWDovPwBsy3N4GMHIAunwpxnxXvitpGH4yjhuH1zOFPPQMzEk1wRDdRgKlDFPx
+         jpQ8bYP8UFM44hghJrIfc+0NNj+AwFb0yn6s/ZEXw3JjxHC8dSPEo988xbQ5E9bmC0zL
+         u1r86fdMXEKnntM+13Fp1JXYmRG5SX6E8JQrPEFQa/foRn8WDn8/NPvuosH0IWmsjjVF
+         MF+fJP4Z+L10tJFHKizG33m6RcMxWpCkVyAHOVrqoJgRvwsU6hMYhhDewpMJuNsUWHlD
+         0WztPDxcvVuzRRz3AF1NHnk+hOqsXRoghj+72EBcguyjpZuSvXamHtUyfTzcsblfCL+e
+         6zsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1Mj6AF35Vw5l5w6/kAU79j9QPITbhpnBZao3mX3wvXuDld/1upgu3unxuRoTf90mQ3NMSC1A8DrKB2U8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWtB8yCR93sSnOSv2uACS60ucdAqB+WLVwtICBwVR4IvzL9eKj
+	od2/q7+CvBGmaCY6kwtyIFYnqLaIi5sjpR4da/UFNhOKyxyrq4h4n6xvXTJEfldBCmDPVH+WYD2
+	yiwAgOw==
+X-Gm-Gg: ASbGnctF5AUCZthJTx3YZc0M8qngowLds9WR8u1aifKEHy9kBL94yYvMWCXOtygo1op
+	d2HuwzhUEO/YxWkh9ejZ4HE+Inymi/abCvKu6mUeQ4+MJ+kKwfESFi6JbFlDHu2bEWhNi9N8upK
+	/Da8tz2Ss5c7mkc74d9cnHukAxhtlt+y8X3dz7bn/bwh4tCiqIb1h/M65euyd219i25rKgzbruh
+	m4WLwYFPCGnWdYAzAxne/mVGUQk4VbDooefqS4P+5+22eTEdmOpKCRcYa69wZ61SJTpcNDQEYIg
+	8Ou06RpH5Bk2JxFAtABbjXFGrDqv/ywIwQcoOxs1eZIYSZTw
+X-Google-Smtp-Source: AGHT+IHIRuRCn5egZBsOPgCsa0klPEqz/M5zuoaBUYj+b9wi0hp8Qj7ANdB4KHlWZkpvOWGbx5p0cw==
+X-Received: by 2002:a6b:e706:0:b0:85b:5c9a:a9ce with SMTP id ca18e2360f4ac-86489d5e7a0mr441239739f.6.1745944787611;
+        Tue, 29 Apr 2025 09:39:47 -0700 (PDT)
+Received: from purestorage.com ([208.88.159.128])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f863149aacsm351917173.111.2025.04.29.09.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 09:39:47 -0700 (PDT)
+Date: Tue, 29 Apr 2025 10:39:44 -0600
+From: Michael Liang <mliang@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
+Cc: Michael Liang <mliang@purestorage.com>,
+	Mohamed Khalfella <mkhalfella@purestorage.com>,
+	Randy Jennings <randyj@purestorage.com>,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/1] nvme-tcp: fix possible data corruption caused by
+ premature queue
+Message-ID: <20250429163944.tvyrxt7z6c55abk2@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1fda026e-9ec5-46f6-84e8-4111263350ff@beagleboard.org>
 
-On Tue, Apr 29, 2025 at 09:37:04PM +0530, Ayush Singh wrote:
-> On 4/29/25 20:27, Greg Kroah-Hartman wrote:
-> 
-> > On Tue, Apr 29, 2025 at 04:44:54PM +0200, Danilo Krummrich wrote:
-> > > On Tue, Apr 29, 2025 at 04:37:49PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Tue, Apr 29, 2025 at 04:31:52PM +0200, Danilo Krummrich wrote:
-> > > > > On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
-> > > > > > +    /// Remove devices populated from device tree
-> > > > > > +    pub fn devm_of_platform_depopulate(&self) {
-> > > > > > +        // SAFETY: self is valid bound Device reference
-> > > > > > +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
-> > > > > > +    }
-> > > > > > +}
-> > > > > One additional question regarding devm_of_platform_depopulate(). This function
-> > > > > is only used once throughout the whole kernel (in [1]), and at a first glance
-> > > > > the usage there seems unnecessary.
-> > > > > 
-> > > > > In your upcoming driver you call devm_of_platform_depopulate() from a fallible
-> > > > > path [2].
-> > > > > 
-> > > > > So, I think we should change devm_of_platform_depopulate() to return an error
-> > > > > instead of WARN(ret).
-> > > > > 
-> > > > > If [1] needs it for some subtle reason I don't see, then I think we can still
-> > > > > call it from there as
-> > > > > 
-> > > > > 	WARN(devm_of_platform_depopulate())
-> > > > > 
-> > > > > [1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
-> > > > > [2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
-> > > > Ugh, no, we should just delete this function entirely if only one driver
-> > > > is using it.  That implies it's not really needed at all.
-> > > Ayush's driver calls {de}populate() from a sysfs store path [2]; not sure what
-> > > it's doing semantically or if this is a valid use-case though.
-> > That's going to be rough, and full of tricky corner-cases and probably
-> > shouldn't be doing that at all :)
-> > 
-> > So let's hold off on this entirely until we see a real user that can
-> > actually pass review.  Trying to do system configuration like this in
-> > sysfs is a much larger discussion than just adding rust bindings.
-> > 
-> > (hint, configfs is for system configuration, not sysfs...)
-> > 
-> > Anyway, worst case, you just "open code" the single function call that
-> > this one binding was trying to "wrap".  which is what I think the
-> > in-kernel user should be doing now.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> 
-> Well, I don't really want to convert this discussion to addon board
-> connector setup discussions. So I will try to keep things as short as
-> possible here while linking to all the other discussions for the same.
-> 
-> For starters, what the driver does is as follows:
-> 
-> 1. Provide 3 sysfs entries:
-> 
->     - New cape: Can write the name of the cape (I have not settled on the
-> naming convention yet). This name is then used to load appropriate overlay
-> from `/lib/firmware/` and populate all the devices. The overlay is applied
-> to the connector node. Only one cape overlay can be used at a time.
-> 
->     - Current cape: Just a ro entry to get the name of any active cape.
-> 
->     - Delete cape: Remove cape overlay and registered devices.
+Changes in v4:
+ - Change subject and add "Fixes" tag per suggestion;
+ - Link to v3: https://lore.kernel.org/linux-nvme/20250424161438.g2fyo4ozvburf2rh@purestorage.com/
 
-That's great, but I don't think that's what sysfs is good for, we can
-discuss that later when you submit your driver for review.
+Michael Liang (1):
+  nvme-tcp: fix possible data corruption caused by premature queue
+    removal and I/O failover
 
-Again, look at configfs please, that's for "configuring" things.  sysfs
-is for basic device properties and some tunables, but is NOT a major api
-interface that requires a lot of logic like loading an overlay would
-require.
+ drivers/nvme/host/tcp.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-Also, circumventing the "normal" device tree overlay interface and
-discussion isn't ok either, this needs to work for all types of devices,
-not just for "capes" like you have here.  To accept something like this
-would be going around all of those other maintainers with their strong
-views of how things should be done.
+-- 
+2.34.1
 
-Anyway, we can discuss that when you submit your code for review, but
-for now, I don't want to take this binding either as I think the whole
-function should just be removed from the kernel anyway :)
-
-thanks,
-
-greg k-h
