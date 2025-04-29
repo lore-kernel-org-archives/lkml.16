@@ -1,165 +1,250 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE620274FFA
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC6D227EAE
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745913148; cv=none; b=IUElffdrDb/hCSHYQ41KLCuvXeBZkTj6pYM+Efyevm6FvohREhkjcOAEHoqrxvw4c8bc2HRV3xzB7eAz4sRrO859SP7r1/P5hSxymVeBKF1w0a3MvXFlvsBXZH8dRpqlmvcdCWFq+Uvk/kxA8V60Ph/DN37wEIrEjC5Bn5GtLIY=
+	t=1745913360; cv=none; b=ss8Fn5Hr9K8622828AY6U3e0Wm6y75KViwToPVIbMMzaR0Qo8RFSLjkOZn5H+YkKPq1Gx96STg60w5ozNKxGe/Bh1Z4gs3J1iiHd6RaRCCvIWLl/O3DekmXILxB7M+Kvmy3yQjS+haNtbpWd3F397abTc4dAG4W8WcU7vu6v2nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745913148; c=relaxed/simple;
-	bh=f3kOrGVppFlTurzyKRffUEWgIU+mOrq3ADeX0U8XaFI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dRymtQ+/5Nt6/EScFpc/lG1B91G4oe9p9wVliyef9G/MvYNc9wWQGBQ2QwTFxsBIW6YQUGYxDFEmGZNRcli3u//rz0JX4a+b6gYxH2U/84MraC89WucWhI3c7++r9PG3CtXtG527YKI2kVynSTy3CDJGpRiw0g2TzcvaQiSiHjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=plXnjQue; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745913360; c=relaxed/simple;
+	bh=TaFLTRrzTco1H+Ykw1y7W3NGYFLY08UPb+NWjzli2Zw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=a+9SNGP76oPUmV+ey7lddmISWJoPtsrNfz+DObwNtzZVF9Zcnh2/dFYt8LOBSJbFBm+94nH6gbvZ3uX76HUrRSdjJ/AZGx/3LD/iDMXD21yun1DHZuM30MbsyiN/7eGq4HOk5eq+geb0hpNLcPWBK65mhPxK2kjYyEyKl77tfCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CY7BnI4t; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="plXnjQue"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c266c1389so4125613f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:52:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745913145; x=1746517945; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IP0g6Az1qg6/PdzbTEpbc2W905Osm3FKSg9EV8HEtrU=;
-        b=plXnjQueqEy1y78R8r0bGDOEMp6NXsmbeZxEW8uWP4gI8OQNc+HtfXJJnaN9J0wcqi
-         SLzi4M+jNvhHsLQzIUCKVpANZZtQhZoBUPfC1WP83cbGvNxShI3FU5a+ajQqi28pMUWA
-         W0UK8PIa7qcm12xdvOdilcgxNtG8JsxesV7NNxVpmWpdrk/Sxt6R+tVLGBVgQMf+Ll/A
-         hNa7DPDXuUJmJfRMWbM90swQK2YcPB0wlNaREHep5lZvVoKN4tHiggVuUtdR5SR/QRrL
-         GcjZIZbpZdD1s6ggkzEo9F6U237tS3CqinZrJZKCNBEim2KBsyXkidHTd0wUreLMTdJ4
-         zHVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745913145; x=1746517945;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IP0g6Az1qg6/PdzbTEpbc2W905Osm3FKSg9EV8HEtrU=;
-        b=Egqx+ECXMICTTmXyTVkTeoaA8wBR77CCeW5mVxRiXjzhSirR5yBjbM+Dgl48/ofhKG
-         2kDRHc+U4sLzFdxmt2gzg2a/DgaUubEd7LiYllS1WqwCqkfJEaGTzuy6eSxQGxXUkLpn
-         jUIF3uOIAkVTUcb7QltvnX6wpMzcFL6HjX8XeFzFgcHlib3qCnUwIH3fqB27Snb8ztNe
-         6AxDHsmlng6H/kGxzCrkgF1gOBocWnekZ3O5Q9sBdhhGUsSOjiiT0QwL10yBijv+jWjh
-         4m/AWnjmNEhOYdd5Ll1fUeM8i+L2xcbp4hGsrfn0HBfYf4ulOVcyadUNHfMtrHQEnCqL
-         1APg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnY4Pkw4Yg8yh9OBGmLHbHHdpjIoiKpfQq6inkvXO3In7B38QxrVrGQlqkMQgYeprKjbn5cIOMS2DQIqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1WFbuO6LShgv4/0FPH5H9WcTVey5FTq/wuAQNhSyiq65TSTdj
-	3R21ePEldTPQXCiHARrbHKYt7RusSw0oNPMGSJmCmd+ZeDGJiZUJCXsG7QSrOSU=
-X-Gm-Gg: ASbGncvdr46rPlNQMr5kLZeNKMUqhpWmGUpCkSZ/lGuJQUrzGMPGsI9fdHdnKpQrCq6
-	2UpFzEX3v8n4i6fZn0NpTK6PfKIAXyb3+Mgi7nRi0ns41Yp0NYsuiUo767aUANPA4nR1E5rDg3p
-	9iRZptrugPVAJpgr+drBBRkrLjx9JCoLVq0tu/MrNqA9MimASQKOeNBzaalq05ePeczU+qSZZGq
-	+RhIUjpdwsTCdrP90aHJ1TKBz1pEphScLfZAn8/Gs/jNFtFITG82JCLzFk7JoWf2EwUFdIFwLY/
-	CxEQrwBoJKw1sOqlilssQRhIvgBeiTrfe86bay6qMgY=
-X-Google-Smtp-Source: AGHT+IGuBGfFJec7/To+e+YvCZS6DGgY+MBgTwoivHQuGe6+RlkaR/yseql0t1IC3PzvnNkFfvupOA==
-X-Received: by 2002:a05:6000:430c:b0:3a0:8492:e493 with SMTP id ffacd0b85a97d-3a0890a5862mr2211069f8f.6.1745913144897;
-        Tue, 29 Apr 2025 00:52:24 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cc199fsm13354105f8f.55.2025.04.29.00.52.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 00:52:24 -0700 (PDT)
-Message-ID: <4c5eb1e1-f8ef-46a5-92da-50d77aba1405@linaro.org>
-Date: Tue, 29 Apr 2025 08:52:23 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CY7BnI4t"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7DAD3438F7;
+	Tue, 29 Apr 2025 07:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745913356;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=27NxqpJ//UrTOnLV5YKEgQaaGgpip1mmwz0DgoghWTs=;
+	b=CY7BnI4tDfZHmbuuMwS7DRva2cpb/mYX0Oyy5iwehrfX7RulrSJyRa51cwLe5u36fmoAKf
+	tEdbEg3J/v1gKfINeo67a+o5OK1IsOpgBHV5O70UmiBQDBei9O4z0YENlDdaeJNXwE3055
+	2i6cPVtbtQnrK5h4Vmut6T1e2fLiDtkpIsNaCyc05Urfeld3D8IJDERImw1rBLKhBhWnqE
+	w2ZxCZIVxdiq2xRbYogxejJEiZ5HBFZlCr5LRscMCG960JW1ebMAJqTj5BCIAPlpdnW0hv
+	LR7Y/bVxpdXJWBEHqLsrK+vwMfFQcHB1bDSrNL46XHxrwtyfEtfX6PWZ85BQrQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Liwei Song <liwei.song.lsong@gmail.com>
+Cc: RichardWeinberger <richard@nod.at>,  VigneshRaghavendra
+ <vigneshr@ti.com>,  TudorAmbarus <tudor.ambarus@linaro.org>,
+  PratyushYadav <pratyush@kernel.org>,  MichaelWalle <mwalle@kernel.org>,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: core: add sync between read/write and unbind
+ device
+In-Reply-To: <20250331161542.3040005-1-liwei.song.lsong@gmail.com> (Liwei
+	Song's message of "Tue, 1 Apr 2025 00:15:20 +0800")
+References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
+	<20250331161542.3040005-1-liwei.song.lsong@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 29 Apr 2025 09:55:54 +0200
+Message-ID: <87jz73v1th.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tools: Fix arm64 build by generating unistd_64.h
-From: James Clark <james.clark@linaro.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, arnd@linaro.org
-References: <20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org>
- <7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info>
- <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
-Content-Language: en-US
-In-Reply-To: <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefvdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeffeduhfefvdekheejueeivddvteehleffjeejhefghedtffeuffefkeduieegffenucffohhmrghinhepohiilhgrsghsrdhorhhgnecukfhppeelvddrudekgedruddtkedrvdehheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrvdehhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihifvghirdhsohhnghdrlhhsohhnghesghhmrghilhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtohepphhrrghthihushhhsehkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
+Hello Liwei,
 
+On 01/04/2025 at 00:15:20 +08, Liwei Song <liwei.song.lsong@gmail.com> wrot=
+e:
 
-On 29/04/2025 8:42 am, James Clark wrote:
-> 
-> 
-> On 28/04/2025 2:23 pm, Thorsten Leemhuis wrote:
->> On 17.04.25 15:55, James Clark wrote:
->>> Since pulling in the kernel changes in commit 22f72088ffe6 ("tools
->>> headers: Update the syscall table with the kernel sources"), arm64 is
->>> no longer using a generic syscall header and generates one from the
->>> syscall table. Therefore we must also generate the syscall header for
->>> arm64 before building Perf.
->>>
->>> Add it as a dependency to libperf which uses one syscall number. Perf
->>> uses more, but as libperf is a dependency of Perf it will be generated
->>> for both.
->>>
->>> Future platforms that need this will have to add their own syscall-y
->>> targets in libperf manually. Unfortunately the arch specific files that
->>> do this (e.g. arch/arm64/include/asm/Kbuild) can't easily be imported
->>> into the Perf build. But Perf only needs a subset of the generated files
->>> anyway, so redefining them is probably the correct thing to do.
->>
->> FYI, my daily -next build for Fedora based on its RPM spec file broke
->> on arm64 (x86_64 worked fine) while building libperf. I haven't checked
->> yet, but due to the error messages and a quick look in the history I
->> wonder if this is due to the quoted change, which showed up in -next
->> today:
->>
->> """
->> kernel.spec:3115: build libperf
->> + /usr/bin/make -s 'EXTRA_CFLAGS=-O2  -fexceptions -g -grecord-gcc- 
->> switches -pipe -Wall -Wno-complain-wrong-lang -Werror=format-security 
->> -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS - 
->> specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong 
->> -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -mbranch- 
->> protection=standard -fasynchronous-unwind-tables -fstack-clash- 
->> protection  ' 'LDFLAGS=-Wl,-z,relro -Wl,--as-needed  -Wl,-z,pack- 
->> relative-relocs -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened- 
->> ld -specs=/usr/lib/rpm/redhat/redhat-hardened-ld-errors -specs=/usr/ 
->> lib/rpm/redhat/redhat-annobin-cc1  -Wl,--build-id=sha1 -specs=/usr/ 
->> lib/rpm/redhat/redhat-package-notes ' -C tools/lib/perf V=1 DESTDIR=/ 
->> builddir/build/BUILD/kernel-6.15.0-build/BUILDROOT
->> mkdir: cannot create directory â€˜/../archâ€™: Permission denied
->> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/ 
->> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/ 
->> syscallhdr.sh: line 98: /../arch/arm64/include/generated/uapi/asm/ 
->> unistd_64.h: No such file or directory
->> make[2]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel- 
->> next-20250428/linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/ 
->> scripts/Makefile.asm-headers:81: /../arch/arm64/include/generated/ 
->> uapi/asm/unistd_64.h] Error 1
->> make[1]: *** [Makefile:108: uapi-asm-generic] Error 2
->> make: *** [Makefile:128: all] Error 2
->> error: Bad exit status from /var/tmp/rpm-tmp.vAfil2 (%build)
->> """
->>
->> Full log: https://download.copr.fedorainfracloud.org/results/@kernel- 
->> vanilla/next/fedora-rawhide-aarch64/08975350-next-next-all/builder- 
->> live.log.gz
->>
->> Ciao, Thorsten
-> 
-> Hi Thorsten,
-> 
-> Yes, this is the error that the fix is for.
-> 
-> 
-> James
-> 
+> When unbind mtd device or qspi controller with a high frequency
+> reading to /dev/mtd0 device, there will be Calltrace as below:
+>
+> $ while true; do cat /dev/mtd0 >/dev/null; done &
+> $ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
+>
+> Internal error: synchronous external abort: 0000000096000210 [#1] PREEMPT=
+ SMP
+> Modules linked in:
+> CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #1
+> Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+> pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
+> lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
+> Call trace:
+>  cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
+>  cqspi_exec_mem_op+0x8bc/0xe40
+>  spi_mem_exec_op+0x3e0/0x478
+>  spi_mem_no_dirmap_read+0xa8/0xc8
+>  spi_mem_dirmap_read+0xdc/0x150
+>  spi_nor_read_data+0x120/0x198
+>  spi_nor_read+0xf0/0x280
+>  mtd_read_oob_std+0x80/0x98
+>  mtd_read_oob+0x9c/0x168
+>  mtd_read+0x6c/0xd8
+>  mtdchar_read+0xdc/0x288
+>  vfs_read+0xc8/0x2f8
+>  ksys_read+0x70/0x110
+>  __arm64_sys_read+0x24/0x38
+>  invoke_syscall+0x5c/0x130
+>  el0_svc_common.constprop.0+0x48/0xf8
+>  do_el0_svc+0x28/0x40
+>  el0_svc+0x30/0xd0
+>  el0t_64_sync_handler+0x144/0x168
+>  el0t_64_sync+0x198/0x1a0
+> Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
+> ---[ end trace 0000000000000000 ]---
+>
+> Or:
+> $ while true; do cat /dev/mtd0 >/dev/null; done &
+> $ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
+>
+> Unable to handle kernel paging request at virtual address 00000000000012e8
+> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+ #1
+> Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+> pc : spi_mem_exec_op+0x3e8/0x478
+> lr : spi_mem_exec_op+0x3e0/0x478
+> Call trace:
+>  spi_mem_exec_op+0x3e8/0x478 (P)
+>  spi_mem_no_dirmap_read+0xa8/0xc8
+>  spi_mem_dirmap_read+0xdc/0x150
+>  spi_nor_read_data+0x120/0x198
+>  spi_nor_read+0xf0/0x280
+>  mtd_read_oob_std+0x80/0x98
+>  mtd_read_oob+0x9c/0x168
+>  mtd_read+0x6c/0xd8
+>  mtdchar_read+0xdc/0x288
+>  vfs_read+0xc8/0x2f8
+>  ksys_read+0x70/0x110
+>  __arm64_sys_read+0x24/0x38
+>  invoke_syscall+0x5c/0x130
+>  el0_svc_common.constprop.0+0x48/0xf8
+>  do_el0_svc+0x28/0x40
+>  el0_svc+0x30/0xd0
+>  el0t_64_sync_handler+0x144/0x168
+>  el0t_64_sync+0x198/0x1a0
+> Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
+> ---[ end trace 0000000000000000 ]---
+>
+> when unbind is running, the memory allocated to qspi controller and
+> mtd device is freed during unbinding, but open/close and reading device
+> are still running, if the reading process get read lock and start
+> excuting, there will be above illegal memory access. This issue also
+> can be repruduced on many other platforms like ls1046 and nxpimx8 which
+> have qspi flash.
+>
+> In this patch, register a spi bus notifier which will be called before
+> unbind process freeing device memory, add a new member mtd_event_remove
+> to block mtd open/read, then waiting for the running task to be finished,
+> after that, memory is safe to be free.
+>
+> Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
+> ---
+>
+> Hi Maintainer,
+>
+> This is an improved patch compared with the original one:
+> (https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.3699=
+535-1-liwei.song.lsong@gmail.com/),
+> This v2 patch move notifier to spi-nor to avoid crash other types of flas=
+h.
+> now this patch only aim at fixing nor-flash "bind/unbind while reading" c=
+alltrace,
+> but for other types of flash like nand also have this issue.
 
-Sorry I had it the wrong way around, I see you were asking about a new 
-build failure caused by the fix. Looking into it now.
+While I agree with the observation and also the conclusion of adding
+some kind of notifier, I'd like to understand the rationale behind
+choosing to fix only spi-nor in v2? If any spi memory registered in the
+mtd subsystem is subject to this failure, we should find a generic
+approach (or if it's too difficult, at least have the fix in both
+spi nor and spi nand). Looking at your implementation, maybe it could
+fit in spi-mem (I'm not sure).
 
-I noticed some strange characters in here, but I might have enough to go 
-on from the logs:
+...
 
-   mkdir: cannot create directory â€˜/../archâ€™: Permission denied
+> +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
+> +					unsigned long event, void
+> *data);
 
+I believe spi nor maitainers would prefer to avoid forward declarations.
+
+> +
+>  /**
+>   * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
+>   *			   extension type.
+> @@ -1191,6 +1195,9 @@ static int spi_nor_prep(struct spi_nor *nor)
+>  	if (nor->controller_ops && nor->controller_ops->prepare)
+>  		ret =3D nor->controller_ops->prepare(nor);
+>=20=20
+> +	if (nor->mtd.mtd_event_remove)
+> +		return -ENODEV;
+> +
+>  	return ret;
+>  }
+
+...
+
+> +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
+> +				    unsigned long event, void *data)
+> +{
+> +	struct device *dev =3D data;
+> +	struct spi_device *spi;
+> +	struct spi_mem *mem;
+> +	struct spi_nor *nor;
+> +
+> +	if (!of_match_device(spi_nor_of_table, dev))
+> +		return 0;
+> +
+> +	switch (event) {
+> +	case BUS_NOTIFY_DEL_DEVICE:
+> +	case BUS_NOTIFY_UNBIND_DRIVER:
+> +		spi =3D to_spi_device(dev);
+> +		mem =3D spi_get_drvdata(spi);
+> +		if (!mem)
+> +			return NOTIFY_DONE;
+> +		nor =3D spi_mem_get_drvdata(mem);
+> +
+> +		mutex_lock(&nor->lock);
+> +		nor->mtd.mtd_event_remove =3D true;
+> +		mutex_unlock(&nor->lock);
+> +		msleep(300);
+
+What is this sleep for?
+
+> +
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+>  /*
+>   * REVISIT: many of these chips have deep power-down modes, which
+>   * should clearly be entered on suspend() to minimize power use.
+> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+> index 8d10d9d2e830..134bfa6fcf76 100644
+> --- a/include/linux/mtd/mtd.h
+> +++ b/include/linux/mtd/mtd.h
+> @@ -290,6 +290,7 @@ struct mtd_info {
+>  	/* Kernel-only stuff starts here. */
+>  	const char *name;
+>  	int index;
+> +	bool mtd_event_remove;
+
+No need to repeat 'mtd' here, you are already in the mtd_info structure,
+so mtd->mtd_event_remove would be redundant.
+
+>  	/* OOB layout description */
+>  	const struct mtd_ooblayout_ops *ooblayout;
+
+Thanks,
+Miqu=C3=A8l
