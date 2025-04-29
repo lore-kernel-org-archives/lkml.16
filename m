@@ -1,65 +1,30 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DD822154E
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9B5221555;
+	Tue, 29 Apr 2025 15:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940303; cv=none; b=iyxWZbzl/Qh6J8cc7qoUaO+vjsIUXGAK5s6ATsZ6dvw/b53MfyZ58jOynqyLdGM5ldovDpHpJLXAWqCa4LN35ZcJXy0/C3KlJoYos/0QF52KJkCBwS/OJyoWJBw/C7mjhVdqqX9dTlA4KQJIMlSjibpDTphb7f6myuiOR9hbWaU=
+	t=1745940326; cv=none; b=sic4NbjIu3ZZwkHX03mXBBDMwfle05lRWmpw9yeDTz2inTK37+GGpksKoL0u4q64m4FsoykWydyLjA7cWLWOztZYIfsd/El695YGMTVFsjlFlTFOdJkVb7WrHCN1/QKmAasJhC37SV8hWQCxdeIq6RzA99HxC9YyPFzWldNAMiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940303; c=relaxed/simple;
-	bh=ldKd10krlA78evFCxJgwnrK37951xs9UWGwck0m+pDs=;
+	s=arc-20240116; t=1745940326; c=relaxed/simple;
+	bh=oYAdU0jkvuI+0Ij59NKXPgF9vmCiJv8dZouUG1rcl6w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oThFJsJIwIAQeYxzn3MddJK4Hcna5Wrnz2EPil8ETM1GbPkQdNOJlxIZIkRRzKBrNpPU36nWOt6M08PfG2vgostHSI/SACnkK19+xRGijSbYo0FYUAiypM28SadG3teEgd/PSBQT7kbO/b8HQ8XaSvgkjRwnPAFXFnLH77nSeso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xq96v4dV; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=l8gwyhstpQ6BgtQPOjo+kNiwCScnlKNyfKG3eKOaEdQiDqzTxlVqKuQyP4AOgigop/sxtUg1d+FjA6RnHqmIRcPxl9w6bulRGLRvkq9f/R3+BA0QuFLX7z1IGIEhaA4EyVhqHfoRCOtHTIesmCZEsPwx6LRzXbJTd7Te+Lcn6oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Gc1sewHC; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xq96v4dV"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7301c227512so3755992a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745940299; x=1746545099; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GPAzV2ZOk26TsSDij37Rr7O1oaKM6YOsipFaIWd8kEc=;
-        b=xq96v4dVhAcOMKnQWPBm3vfBjJpDeAJYRZFtQ8F23goEwKCyo5sBNY7s4rAkgRsNve
-         M6O3QA9XgBGdZ8EvYevu+ljCvpqHAen9znJ0e/gMOdrwdonlGlAqvFLIgFSQReARlAeQ
-         +BxeVd/hDO2eyUZZ6LW9CDsMa6pXjtn9YBYblAQ8sNb9XqAowat/JxisVgcI8Bx+H30u
-         KijHbcVPKg945m2qnFZshQe34buxs0VaIOIkfc0EzDWn6ExQ/w/MCaD3eg35VX910f5N
-         h3w6vkawr4Jnteks1HAf2pnAKlQe6ertMTQGXZyi0OmduYRZUjIpEITe3Jfey1udGO1k
-         1Pfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745940299; x=1746545099;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GPAzV2ZOk26TsSDij37Rr7O1oaKM6YOsipFaIWd8kEc=;
-        b=INNvcidGMzMRwjXYZkcON2FHXJHOdzogeZ6WHn43d9V9c40dCL8W032RdM9c0a8vE3
-         T4y3K29aAfZwoVJL0HnagCtNDXm7Its7RqITZoOeiLXcDkCG411h0ditAtjE5F7FxGfY
-         RJ0SKo339Z/PRzdYMqkn10wshDBwmcF+ihd1F2Tc1bfbBPpo57mqH/QUGBf2r4bGxqUF
-         IOnEYl76BTZRFsPURcYCPbhzBqFHUZyfJB5Nq9KKL/XimNivtUV8fgKXWenjmiXgNA7Q
-         9v+kECEWejMwadtgKGUf3JErOHEj0od7cFa0rqaJzG5twk7KkPDs7J4c/oWjVkw5jKvr
-         zoBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMqYZm2LMum6vn82bs+2C201Ilc+7wqfiDIlgS9qu2t+xVdFqobT5R8fQxVUZ1ozuOhdbZSsb3kzyIh1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxId4HImccRQMfbYWKSICDVxSKVpQg1gUcWB1VqAFxza7D0b4vR
-	v9ZoGXKT3m7PnBjfCbMuOciyF+03irGQz8KBC8S78EFfN7NudAlchTA13SxBxcA=
-X-Gm-Gg: ASbGnctwP4Z4CTko7AdpyIGaAWDsqj9tjcl20mG7KPU/x8e7qZJ9ImQdDP2+k7FDDgi
-	fpCjDLRTu/nszDsKyXWQLBXy+iHHqF65All3rioHPhiz4hceSt0hQ34kYhJicbhQkm0RFJ14Xjt
-	6aElXV9WzlReQMV70pyCksQ8Qzyx8OJWPrdq9fm9qcq5m81MRbeWeDBeVgEAyfyy8icU3bJ6J3U
-	IIVe4kGUFGp/W58ibU5ELI+6bHbxlP8TTVYTxawMfSM2cAlhNTh6ahGiKgZ1aeOc4ZVgsgxYeoo
-	EFjPqAnFMKSV+3y7Rj8xXgnZXuXhaUjnTr8jf4vOs64iL4Zh+w7zD0b16qCqAABKzOVg6j6SWMk
-	o88xwIHPDTN+gPR2h0w==
-X-Google-Smtp-Source: AGHT+IHV8z5DUUnExvDSgZL6FaXo2YhcZKSNUqk85shvOA8OWZ08jAI2WXlheo2Tot5Jrj3K8B5uww==
-X-Received: by 2002:a05:6830:6186:b0:72f:ff7b:6a6 with SMTP id 46e09a7af769-7308a52b7bfmr2010072a34.16.1745940299540;
-        Tue, 29 Apr 2025 08:24:59 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b312566sm320171a34.59.2025.04.29.08.24.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 08:24:59 -0700 (PDT)
-Message-ID: <f68231bc-6546-4eaf-a8b2-fc31add33a1f@baylibre.com>
-Date: Tue, 29 Apr 2025 10:24:57 -0500
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Gc1sewHC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=x+SauMl1lNpFDwDKg4OnckesseNQRn5XI+n9hs9dTi8=;
+	b=Gc1sewHC2v57NYJF+0dbcNruGB6y9pQkSF3Zu2AbfhDINXlJ8M8iBr2163GlRb
+	4zPiAX8h5wJAr4DQof0AAjh5Sb+kU6NOL76KzXndoQq+ysdWD99ght77/4yMTNhg
+	sHzsJaXiSTToeN9BQtV3l53AzpkkAaRDFr1E8DETOh348=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wAX1PQP7xBo7IxcDQ--.2207S2;
+	Tue, 29 Apr 2025 23:24:00 +0800 (CST)
+Message-ID: <2e502bf0-d65e-4394-9629-55392e496ed5@163.com>
+Date: Tue, 29 Apr 2025 23:23:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,69 +32,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] spi: axi-spi-engine: don't repeat mode config for
- offload
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
- <20250428-adi-main-v1-2-4b8a1b88a212@baylibre.com>
- <ca7708856683596894b5fb9cfd6caa164535a50a.camel@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v10 2/6] PCI: Clean up __pci_find_next_cap_ttl()
+ readability
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com,
+ manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250429125036.88060-1-18255117159@163.com>
+ <20250429125036.88060-3-18255117159@163.com>
+ <66cdb108-80f5-fe7c-329b-8c60caf55b64@linux.intel.com>
 Content-Language: en-US
-In-Reply-To: <ca7708856683596894b5fb9cfd6caa164535a50a.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <66cdb108-80f5-fe7c-329b-8c60caf55b64@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-
-On 4/29/25 4:08 AM, Nuno Sá wrote:
-> Hi David,
-> 
-> The whole series LGTM but I do have a small concern (maybe an hypothetical one)
-> in this one...
-> 
-> 
-> On Mon, 2025-04-28 at 15:58 -0500, David Lechner wrote:
+X-CM-TRANSID:_____wAX1PQP7xBo7IxcDQ--.2207S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZFWrKw18tw1xCw4fXrWfuFg_yoW5XFWfpF
+	98CFy7AF48JFyjka1v9w1ayF12qayDKFW8KryYg3WUZFy2yr1xGw4vkr1Y9FnrZrWvvF10
+	q34q93s5uryYyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRP8n5UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgU+o2gQ7ZYkXQAAsY
 
 
-...
 
->> +
->> +	writel_relaxed(SPI_ENGINE_CMD_SYNC(0),
->> +		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
->> +
->> +	writel_relaxed(SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_CONFIG,
->> +					    priv->spi_mode_config),
->> +		       spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
->> +
->> +	writel_relaxed(SPI_ENGINE_CMD_SYNC(1),
->> +		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
->> +
+On 2025/4/29 23:17, Ilpo Järvinen wrote:
+> On Tue, 29 Apr 2025, Hans Zhang wrote:
 > 
-> I would assume that SPI_ENGINE_CMD_SYNC(0) + SPI_ENGINE_CMD_SYNC(1) should be
-> executed in order by the core? I think all this relaxed API's don't give any
-> guarantee about store completion so, in theory, we could have SYNC(0) after
-> SYNC(1). Even the full barrier variants don't guarantee this I believe [1].
-> There's ioremap_np() variant but likely not supported in many platforms. Doing a
-> read() before SYNC(1) should be all we need to guarantee proper ordering here.
+>> Refactor the __pci_find_next_cap_ttl() to improve code clarity:
+>> - Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
+>> - Use ALIGN_DOWN() for position alignment instead of manual bitmask.
+>> - Extract PCI capability fields via FIELD_GET() with standardized masks.
+>> - Add necessary headers (linux/align.h, uapi/linux/pci_regs.h).
+>>
+>> The changes are purely non-functional cleanups, ensuring behavior remains
+>> identical to the original implementation.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>> Changes since v9:
+>> - None
+>>
+>> Changes since v8:
+>> - Split into patch 1/6, patch 2/6.
+>> - The
+>>   drivers/pci/pci.c             | 10 ++++++----
+>>   include/uapi/linux/pci_regs.h |  2 ++
+>>   2 files changed, 8 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index 4d7c9f64ea24..1c29e8f20cb5 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -9,6 +9,7 @@
+>>    */
+>>   
+>>   #include <linux/acpi.h>
+>> +#include <linux/align.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/dmi.h>
+>> @@ -30,6 +31,7 @@
+>>   #include <asm/dma.h>
+>>   #include <linux/aer.h>
+>>   #include <linux/bitfield.h>
+>> +#include <uapi/linux/pci_regs.h>
 > 
-> Or maybe this is all theoretical and not an issue on the platforms this driver
-> is supported but meh, just raising the possibility.
+> linux/pci.h will pull this in through <uapi/linux/pci.h> so you don't need
+> to add it (basically anywhere).
 > 
+>>   #include "pci.h"
+>>   
+>>   DEFINE_MUTEX(pci_slot_mutex);
+>> @@ -432,17 +434,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+>>   	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+>>   
+>>   	while ((*ttl)--) {
+>> -		if (pos < 0x40)
+>> +		if (pos < PCI_STD_HEADER_SIZEOF)
+>>   			break;
+>> -		pos &= ~3;
+>> +		pos = ALIGN_DOWN(pos, 4);
+>>   		pci_bus_read_config_word(bus, devfn, pos, &ent);
+>>   
+>> -		id = ent & 0xff;
+>> +		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+>>   		if (id == 0xff)
+>>   			break;
+>>   		if (id == cap)
+>>   			return pos;
+>> -		pos = (ent >> 8);
+>> +		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+>>   	}
+>>   	return 0;
+>>   }
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index ba326710f9c8..b59179e1210a 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -206,6 +206,8 @@
+>>   /* 0x48-0x7f reserved */
+>>   
+>>   /* Capability lists */
+>> +#define PCI_CAP_ID_MASK		0x00ff
+>> +#define PCI_CAP_LIST_NEXT_MASK	0xff00
 > 
-> [1]: https://elixir.bootlin.com/linux/v6.12-rc6/source/Documentation/driver-api/device-io.rst#L299
-> 
+> Consider adding a comment after the value as is done for most  defines in
+> this file.
 
-The way I am reading this, relaxed isn't "no barriers", just "weaker barriers".
-Quoting from the linked doc:
+Dear Ilpo,
 
-	On architectures that require an expensive barrier for serializing
-	against DMA, these “relaxed” versions of the MMIO accessors only
-	serialize against each other, but contain a less expensive barrier
-	operation.
+Thank you very much for your reply. Will add.
 
-So that sounds like we should not have a problem to me. (And if there is a
-problem, then it would affect other parts of the driver, like when we load
-the fifos with tx data in a loop.)
+Best regards,
+Hans
+
+> 
+>>   
+>>   #define PCI_CAP_LIST_ID		0	/* Capability ID */
+>>   #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+>>
+> 
 
