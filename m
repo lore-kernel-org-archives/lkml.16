@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FABD252900;
-	Tue, 29 Apr 2025 20:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA8B2620FA;
+	Tue, 29 Apr 2025 20:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745958261; cv=none; b=s824YS++F85EHayeR85FrqQ8FATXIoOy9sdTmpvchOz59/klC7AMky3mT22muZO+3pAeQ7Lf01NfOyjmnyrZuOber26HGXAPqsybYQdmJxn6allD+6JpoxYJnGEqpgbpD1xyFdqr2zfKNUwlSYzuLRp0QnNTk/+mgRwrCCfUI6Q=
+	t=1745958263; cv=none; b=fi7mK27NO677sOJm1ox+p4w8WPzMB587UTq6ekvKpEoNmm/iqL6SCQmnC58NFYET5FNhBqhKGqTYFyrePATS1M00pZubnZIoEdaNnxZ5IOLnwATVDFUYvB+kSSHg5TPs7Bz3azJcxX9YT9+7bL1zmR4u3Jkv8qHoLY1Y32OVSsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745958261; c=relaxed/simple;
-	bh=6BiOBBRPksYZ79Zl+8MOX/mVDJcU5/RCvN/jjbfh2To=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=swwfljwuK7kXV8SddC0MZ++jMTsDRfDren2d5hSMnJc9XVytjkARsMakj979uWH7Y030nmY9OPyUPZZIPrYFs8EhwRwmKSydlR9o6uIWaJvATVJ6ZboRo0p7PCUu8ZC9yQ3ZI/vHJCkIOJ7j5FJz9i2SDlXhzzu1h1lyOdD5Ok8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U1RxXGYE; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1745958263; c=relaxed/simple;
+	bh=pTiWjc5obwfd6KjattuPQp58CMusIzJRX+fwlUKvvXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P7Y2zJv4RRxavkOj8ILtEvXXWgxMH+SXi6yF9gsw+dEGSXyOVpod4nqNsZ02wI7Ik/T16SiG/NfL2d+vbxSYkGUmpY2KuwHpDnqDDcbAbpI9se4+QV4oP/AqyKFNW8ZariXp+L6D4FsfMLnBWL/ndoqQPKUfXVFiSc9PMeemDSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VlaqrMlb; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U1RxXGYE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VlaqrMlb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745958260; x=1777494260;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6BiOBBRPksYZ79Zl+8MOX/mVDJcU5/RCvN/jjbfh2To=;
-  b=U1RxXGYEqI1KuKzUBgnUqsB4jtZzy/4z5iN2UyN/yLJ17Skjblvjeqw2
-   AaJu+shK5f2A7iABpeSc71HuRETxjsV1aeg/+Fb8H4qRAYbxgbRkCjq7J
-   JTXcHh+k9mjMLywNCUOf6EXz2XTVqP3knu9xlo+UE98sSK+1+foNvBwdC
-   ZBkf/3TaO/Ob2je5/1WzbGp/RED8R65CtyqozR59C83N46NnXFbLrZ9NM
-   syUn4dFuhK+tTwABmA7pwYdTJannaIK5pArerJAdEP6dcfvF3V4VXM6WG
-   uBA7w4MCZtisB+cG/nhNJBDxrj4yjMUJHrh1I86JGuKPb1n3RZcKaasKN
+  t=1745958262; x=1777494262;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=pTiWjc5obwfd6KjattuPQp58CMusIzJRX+fwlUKvvXY=;
+  b=VlaqrMlbppMpE+E4aqcyQg6OHCYRnt0UrYkbGXZkDIfORAXUK14nWhjZ
+   xz1f8tCryPTXZ49jV1rGzTV7OKp0pmzZgIOKCNda6iq90VwIC3jFjni0N
+   1IEkg5eF8556hfQ+w/B5mmSex3bdlmj2lpOon9FWWkAas51BGLL7sMJ0P
+   TSmoxa7w5zAvObqA22NuC1VOks78qpUHVGnTi+QJ8O2Ql66UqBTe2qgoA
+   fO8aqEu35o2fa+GaLx7kfN3uBApNXh/kHX+BX+FT1QzvpE2LkzeipaFeM
+   Xq4mhc1IjItEyGkF3CnuNsLg/XTwjvHxylwOVbKin7rBCVb3By5Y0HCtX
    Q==;
-X-CSE-ConnectionGUID: yVPO5clCQzK/y7GNgm6FVA==
-X-CSE-MsgGUID: KmbqzxJQQViqll9RxLW1dA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47314063"
+X-CSE-ConnectionGUID: nIINkZhDRb+f+GplVCn+Og==
+X-CSE-MsgGUID: XLjCcSiPR32sUNEGOQvIUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47314071"
 X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
-   d="scan'208";a="47314063"
+   d="scan'208";a="47314071"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
   by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 13:24:19 -0700
-X-CSE-ConnectionGUID: RI1MOyAVRkqbMRiE3WF4hg==
-X-CSE-MsgGUID: pF+gcqPGQnSzbcYU37YAzg==
+X-CSE-ConnectionGUID: s8oumlQ0Th6IMaswpYdGHA==
+X-CSE-MsgGUID: 6QlcBOYVQFuDjJrr4R7ELQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
-   d="scan'208";a="139036124"
+   d="scan'208";a="139036131"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 13:24:18 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -50,10 +51,12 @@ Cc: lenb@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v4 0/4] Add interfaces for ACPI MRRM table
-Date: Tue, 29 Apr 2025 13:24:07 -0700
-Message-ID: <20250429202412.380637-1-tony.luck@intel.com>
+Subject: [PATCH v4 2/4] ACPI/MRRM: Minimal parse of ACPI MRRM table
+Date: Tue, 29 Apr 2025 13:24:09 -0700
+Message-ID: <20250429202412.380637-3-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250429202412.380637-1-tony.luck@intel.com>
+References: <20250429202412.380637-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,60 +65,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory used to be homogeneous. Then NUMA came along. Later different
-types of memory (persistent memory, on-package high bandwidth memory,
-CXL attached memory).
+The resctrl file system code needs to know how many region tags
+are supported. Parse the ACPI MRRM table and save the max_mem_region
+value.
 
-Each type of memory has its own performance characteristics, and users
-will need to monitor and control access by type.
+Provide a function for resctrl to collect that value.
 
-The MRRM solution is to tag physical address ranges with "region IDs"
-so that platform firmware[1] can indicate the type of memory for each
-range (with separate tags available for local vs. remote access to
-each range). Note that these ranges can include addresses reserved
-for future hotplugged memory.
-
-The region IDs will be used to provide separate event counts for each
-region for "perf" and for the "resctrl" file system to monitor and
-control memory bandwidth in each region.
-
-Users will need to know the address range(s) that are part of each
-region. This patch series adds
-	/sys/firmware/acpi/memory_ranges/rangeX
-directories to provide user space accessible enumeration.
-
--Tony
-
-[1] MRRM definition allow for future expansion for the OS to assign
-these region IDs.
-
-Changes since version 3 here:
-https://lore.kernel.org/all/20250410223207.257722-1-tony.luck@intel.com/
-
-1) Rebase to v6.15-rc4
-2) Removed ugly #ifdef in acpi_mrrm.c with better fix for CONFIG_NUMA=n
-3) Moved stub for acpi_mrrm_max_mem_region() into #else !ACPI section
-   of <linux/acpi.h>
-
-Tony Luck (4):
-  ACPICA: Define MRRM ACPI table
-  ACPI/MRRM: Minimal parse of ACPI MRRM table
-  ACPI/MRRM: Add /sys files to describe memory ranges
-  ACPI: Add documentation for exposing MRRM data
-
- include/linux/acpi.h                          |   9 +
- include/acpi/actbl1.h                         |   7 +
- include/acpi/actbl2.h                         |  42 ++++
- drivers/acpi/acpi_mrrm.c                      | 183 ++++++++++++++++++
- Documentation/ABI/testing/sysfs-firmware-acpi |  21 ++
- arch/x86/Kconfig                              |   1 +
- drivers/acpi/Kconfig                          |   3 +
- drivers/acpi/Makefile                         |   1 +
- 8 files changed, 267 insertions(+)
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ include/linux/acpi.h     |  9 +++++++++
+ drivers/acpi/acpi_mrrm.c | 42 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/Kconfig         |  1 +
+ drivers/acpi/Kconfig     |  3 +++
+ drivers/acpi/Makefile    |  1 +
+ 5 files changed, 56 insertions(+)
  create mode 100644 drivers/acpi/acpi_mrrm.c
 
-
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 3f2e93ed9730..c409f4cecb09 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -772,6 +772,10 @@ int acpi_get_local_u64_address(acpi_handle handle, u64 *addr);
+ int acpi_get_local_address(acpi_handle handle, u32 *addr);
+ const char *acpi_get_subsystem_id(acpi_handle handle);
+ 
++#ifdef CONFIG_ACPI_MRRM
++int acpi_mrrm_max_mem_region(void);
++#endif
++
+ #else	/* !CONFIG_ACPI */
+ 
+ #define acpi_disabled 1
+@@ -1092,6 +1096,11 @@ static inline acpi_handle acpi_get_processor_handle(int cpu)
+ 	return NULL;
+ }
+ 
++static inline int acpi_mrrm_max_mem_region(void)
++{
++	return -ENOENT;
++}
++
+ #endif	/* !CONFIG_ACPI */
+ 
+ #ifdef CONFIG_ACPI_HMAT
+diff --git a/drivers/acpi/acpi_mrrm.c b/drivers/acpi/acpi_mrrm.c
+new file mode 100644
+index 000000000000..ab8022e58da5
+--- /dev/null
++++ b/drivers/acpi/acpi_mrrm.c
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2025, Intel Corporation.
++ *
++ * Memory Range and Region Mapping (MRRM) structure
++ */
++
++#define pr_fmt(fmt) "acpi/mrrm: " fmt
++
++#include <linux/acpi.h>
++#include <linux/init.h>
++
++static int max_mem_region = -ENOENT;
++
++/* Access for use by resctrl file system */
++int acpi_mrrm_max_mem_region(void)
++{
++	return max_mem_region;
++}
++
++static __init int acpi_parse_mrrm(struct acpi_table_header *table)
++{
++	struct acpi_table_mrrm *mrrm;
++
++	mrrm = (struct acpi_table_mrrm *)table;
++	if (!mrrm)
++		return -ENODEV;
++
++	max_mem_region = mrrm->max_mem_region;
++
++	return 0;
++}
++
++static __init int mrrm_init(void)
++{
++	int ret;
++
++	ret = acpi_table_parse(ACPI_SIG_MRRM, acpi_parse_mrrm);
++
++	return ret;
++}
++device_initcall(mrrm_init);
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4b9f378e05f6..0e43069082df 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -38,6 +38,7 @@ config X86_64
+ 	select ARCH_HAS_ELFCORE_COMPAT
+ 	select ZONE_DMA32
+ 	select EXECMEM if DYNAMIC_FTRACE
++	select ACPI_MRRM if ACPI
+ 
+ config FORCE_DYNAMIC_FTRACE
+ 	def_bool y
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index 7f10aa38269d..7bc40c2735ac 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -576,6 +576,9 @@ config ACPI_FFH
+ 	  Enable this feature if you want to set up and install the FFH Address
+ 	  Space handler to handle FFH OpRegion in the firmware.
+ 
++config ACPI_MRRM
++	bool
++
+ source "drivers/acpi/pmic/Kconfig"
+ 
+ config ACPI_VIOT
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 797070fc9a3f..d1b0affb844f 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -66,6 +66,7 @@ acpi-$(CONFIG_ACPI_WATCHDOG)	+= acpi_watchdog.o
+ acpi-$(CONFIG_ACPI_PRMT)	+= prmt.o
+ acpi-$(CONFIG_ACPI_PCC)		+= acpi_pcc.o
+ acpi-$(CONFIG_ACPI_FFH)		+= acpi_ffh.o
++acpi-$(CONFIG_ACPI_MRRM)	+= acpi_mrrm.o
+ 
+ # Address translation
+ acpi-$(CONFIG_ACPI_ADXL)	+= acpi_adxl.o
 -- 
 2.48.1
 
