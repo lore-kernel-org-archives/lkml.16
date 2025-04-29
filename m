@@ -1,133 +1,127 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A4D25395D;
-	Tue, 29 Apr 2025 02:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C8425395D
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745892737; cv=none; b=meoBh+hTGJMMmQLEXtakH8sptMiV6fwIxoWXweIf1V73LnBRDBunzURbo1nmWioBjyQTEh4PC4EnjfvtAOq9duJW/2Ajlg2I5pEN6s/EaLA2Rh5nqA6kHS+KKYy5iCBHR3bOVTekKP+JAUGJVpXaxjB91/wLsCn7tdCeA8smfLA=
+	t=1745892774; cv=none; b=N1YkB3X8hVybeWxjcDeHDGT7qpkKn0n1UQXKz190uru5BQjKcY5CHRtLA10sjG+odlRXcw+vQGD7VRwXIchkvSMWmICjfA3BquQzvuPxSgp2twMFsP2HJBGoG+EyEsRSmi6HZxdT+ZkHt8o3GpvPuVGsd0vV+pqAMWsjSK8zhwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745892737; c=relaxed/simple;
-	bh=OOJEyNNIozxvUtkC8q39i19kPDutAv+II32wP9Kdf9w=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=NupUU6DAQp17k2g/SdNECEyMZChGhfYacGlfATtnMkH207mmKCA/MW9blLaItSqehq1qhOfUihCZz0hPFy+ZLKH2jMSP68DyyxH8ZCnTXhlK7aN/CCh1QjFg/31FKgYrKZrM3QIYqhHdiQth7OND6t80VKNbo3gfzsmjRCwXkSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oXk1B3/v reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745892774; c=relaxed/simple;
+	bh=pkqVCpFlFxkl36FV0Cieo0EG7h5YuC+3VDYKhhZAHDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h2fBDeNBdjQdE2YJHGiz1n3GE8nEP4K+L05dkdCfpHv7ZLeCRQ0zx7Zjz8jdALJSUpwqiV9GAr8b8hYWi4WaX1NfCTyfa0c/58Q0LolrjZ7wfbfPHL6k115CgQGnNNkeK9U4Z5qbQux2iU+1jDTGnbhbsmOFuY2knkrjQEOpTjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XyfEX/mz; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oXk1B3/v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=MKYPBsTauSfu80f6bYX5seZZch4mAdg69P83Vpogko0=; b=o
-	Xk1B3/vcnCJlanlww9d8UIXWrVobAQK/jzUX1MtaVSpYsBGRc5b49xSApqCJv9rY
-	ECOg1Ms2mcQcE/kYRs71U4GVMIkR1ZD7aHr1sLJZtQUk3X2924ep0sba6A0MRtDU
-	Y9qRwxaguc/QErwNUwmHqyRpZsU17W71ik2D/xrBDU=
-Received: from luckd0g$163.com ( [183.205.138.3] ) by
- ajax-webmail-wmsvr-40-123 (Coremail) ; Tue, 29 Apr 2025 10:11:28 +0800
- (CST)
-Date: Tue, 29 Apr 2025 10:11:28 +0800 (CST)
-From: "Jianzhou Zhao" <luckd0g@163.com>
-To: stable@vger.kernel.org
-Cc: shaggy@kernel.org, jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject:  kernel BUG in write_dev_supers  in  linux6.15-rc1
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-X-NTES-SC: AL_Qu2fB/SSvU4j7iCdZekfmU4Rhug7UMO3uf8n24JfPJ9wjAnp9wIAfHlFIHrNwsKdJiGJnh6RfyR++sdAc4Bceqw5b+kaYVCJiSQibuFJj7bURQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XyfEX/mz"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c7f876b321so1659382fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:12:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745892770; x=1746497570; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6S4GKpAtROTwbGLe6u4eJsWSI5xTeTy32z267OBAd5w=;
+        b=XyfEX/mzyCxZu00M7QYLkDERlKp3Yjp6zf4+HJUtjK9QnVQz3TdKMO6NoYiq/zJykP
+         LbDDz1rRq21wOaUfnGbaW4Ou8fFjrvJjoO2Ai5fFU3Oe7rXcaSUDDXVnSyR+xNEEE8oD
+         wl+VMsu1wYR/HkEDJhI8ytGVoDVf/i7mDiRSpEat2x+DB9rS9MUue5p4y5pfQrXlGZj4
+         bzx9gUYJjZ8fdYybOL40jNoB7OBcEuC6g5NQK81gzWvExug9JjH+EeLyZN6Ie9kJGv7O
+         xWeurs3yWls0g/4ocC54oJP+mKeGlLWpiuCFPBsQPNC9eVjMkRBQzmW5FMSLTqdDf9Ut
+         CCYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745892770; x=1746497570;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6S4GKpAtROTwbGLe6u4eJsWSI5xTeTy32z267OBAd5w=;
+        b=FrQXtr3HXXCnxT7j/m7SRm9/ZgGdLhtVzJv8CEkrreZM2FJyQ8uuZw1PcZPd9lULGo
+         2+Pi6q45/YSBAvIJEN0PwaSHWqZGreYcHESY8wtFAr2PKYU201R45G+RPnzKAgSiuywy
+         xc2viggyByPCHg6F1uWkAe9riW9lyVuSqklQruIU+w5UY1xIKC2RKjUtmxUHK5kQFsIS
+         +0DPmqHbCcqTPY0e+4XSJae9ym88Ygjzp2HfQ8/JV1kquw5OkKESc3c2o0SwAaDIN0nS
+         0HpjMiBtgcG2VhR9jurRhO6OHj7yZxs3gnZxcPlISJfvPmydwqaKxJALr8l5svWBmf02
+         x5zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaLvkUOsBfSnY8CwueMNoXYG9eC191FVhZ0jPOLiJFcOxbCX0NyqP/ELqwK8VrFb2yYR4072cm8DJRi6w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqCh96qtOieUz0kKE9PwOIFx7ZCJ9vrOZRdiqgNBJGr46XsjCi
+	sq4wvJUElAkQXavuu8Y3ojafCR4S8vA2LHojxWWDjIPMKpv8bkvmUalRWY+OnJg=
+X-Gm-Gg: ASbGncssMvpF3uB2l9Oz7Km/5z4oH6ke/vLskuOMPLmEilKCMrlD+LDwDFkxYiAKoHL
+	S20EZRuCVhnI8QliJ/3vxuChD5BTF/0roVO/BxV/CKagzNGvgcCCTEQ8S5kDRYsvkVAWJmSgeFe
+	YA15Sz1FoVkJQbDYHSvvB9I9Ktb6qcItKVFVQr8OobNfWGlFVrBcbKfK+xm2e8QbnkFifWDhidW
+	8KpvZWdfoCEhQQqyjPkO0lUoEa3kiBWFVDMaw647GZyZEWUuo5BWwxQPWW6xrQI2l+5XGkpwamh
+	cxroKIDrT1TAJFN7Zc1goZaszpSe7djEa4fpIJ0qXAxdfGaw7B2sp4Aq8qe+FjgRye9RitYcd7W
+	O8m9U9799N+0s5keN3Q==
+X-Google-Smtp-Source: AGHT+IE6FyjOxAKnVS0+MaJeSBNlFo7Z99elkvia9LCPi2NOJelDK6TnHtRbBBkq8ITYn9LPKBUkkg==
+X-Received: by 2002:a05:6870:718e:b0:29e:43ce:a172 with SMTP id 586e51a60fabf-2d9be84dc03mr6759663fac.28.1745892770447;
+        Mon, 28 Apr 2025 19:12:50 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:cff6:9ed0:6e45:1ff9? ([2600:8803:e7e4:1d00:cff6:9ed0:6e45:1ff9])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d973c196e8sm2551773fac.46.2025.04.28.19.12.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 19:12:49 -0700 (PDT)
+Message-ID: <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com>
+Date: Mon, 28 Apr 2025 21:12:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <70ae959e.21a4.1967f5040b6.Coremail.luckd0g@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:eygvCgD3v1xQNRBoR4gQAA--.56744W
-X-CM-SenderInfo: poxfyvkqj6il2tof0z/1tbiPRE9imgPaWMWlgADs1
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
+ <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGVsbG8sIEkgZm91bmQgYSBwb3RlbnRpYWwgYnVnIHRpdGxlZCAiICBrZXJuZWwgQlVHIGluIHdy
-aXRlX2Rldl9zdXBlcnMgICIgd2l0aCBtb2RpZmllZCBzeXprYWxsZXIgaW4gdGhlICBMaW51eDYu
-MTUtcmMxLgpJZiB5b3UgZml4IHRoaXMgaXNzdWUsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0
-YWcgdG8gdGhlIGNvbW1pdDogIFJlcG9ydGVkLWJ5OiBKaWFuemhvdSBaaGFvIDxsdWNrZDBnQDE2
-My5jb20+LCAgICB4aW5nd2VpIGxlZSA8eHJpdmVuZGVsbDdAZ21haWwuY29tPgpUaGUgY29tbWl0
-IG9mIHRoZSBrZXJuZWwgaXMgOiAwYWYyZjZiZTFiNDI4MTM4NWI2MThjYjg2YWQ5NDZlZGVkMDg5
-YWM4Cmtlcm5lbCBjb25maWc6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3RleHQ/dGFn
-PUtlcm5lbENvbmZpZyZ4PTRjOTE4NzIyY2I3ZTNkNwpjb21waWxlcjogZ2NjIHZlcnNpb24gMTEu
-NC4wCgpVbmZvcnR1bmF0ZWx5LCB3ZSBmYWlsZWQgdG8gZ2VuZXJhdGUgdGhlIHJlcHJvZHVjdGlv
-biBwcm9ncmFtIG9mIHRoaXMgYnVnLgoKLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIFRJVExFOiAgIGtlcm5lbCBCVUcgaW4g
-d3JpdGVfZGV2X3N1cGVycyAKLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tCj09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PQphc3NlcnRpb24gZmFpbGVkOiBmb2xpb19vcmRlcihmb2xpbykgPT0gMCwgaW4gZnMv
-YnRyZnMvZGlzay1pby5jOjM4NTYKLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0t
-Cmtlcm5lbCBCVUcgYXQgZnMvYnRyZnMvZGlzay1pby5jOjM4NTYhCk9vcHM6IGludmFsaWQgb3Bj
-b2RlOiAwMDAwIFsjMV0gU01QIEtBU0FOIE5PUFRJCkNQVTogMCBVSUQ6IDAgUElEOiA5NDYyIENv
-bW06IHN5ei1leGVjdXRvciBOb3QgdGFpbnRlZCA2LjE1LjAtcmMxLWRpcnR5ICM5IFBSRUVNUFQo
-ZnVsbCkgCkhhcmR3YXJlIG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKGk0NDBGWCArIFBJSVgsIDE5
-OTYpLCBCSU9TIDEuMTUuMC0xIDA0LzAxLzIwMTQKUklQOiAwMDEwOndyaXRlX2Rldl9zdXBlcnMr
-MHg3ZjAvMHg5MTAgZnMvYnRyZnMvZGlzay1pby5jOjM4NTYKQ29kZTogZTkgMDMgZmYgZmYgZmYg
-ZTggNzAgYTMgZWIgZmQgYjkgMTAgMGYgMDAgMDAgNDggYzcgYzIgNjAgYzAgZDkgOGIgNDggYzcg
-YzYgNjAgYzcgZDkgOGIgNDggYzcgYzcgZTAgYzAgZDkgOGIgZTggNDEgZDQgY2EgZmQgOTAgPDBm
-PiAwYiA0OCA4YiA3YyAyNCAzOCBlOCAwNCBmOSA1MSBmZSBlOSAzZCBmOSBmZiBmZiBlOCAzYSBm
-OCA1MSBmZQpSU1A6IDAwMTg6ZmZmZmM5MDAwNTNmZjdjMCBFRkxBR1M6IDAwMDEwMjg2ClJBWDog
-MDAwMDAwMDAwMDAwMDA0NSBSQlg6IGZmZmY4ODgwMjllNjAwMDAgUkNYOiBmZmZmZmZmZjgxOWE1
-OTI5ClJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmY4ODgwMWViOWJjODAgUkRJOiAwMDAw
-MDAwMDAwMDAwMDAyClJCUDogZmZmZmVhMDAwMTU2MGEwMCBSMDg6IGZmZmZmYmZmZjFjNGJiMDAg
-UjA5OiBmZmZmZjUyMDAwYTdmZWIxClIxMDogZmZmZmY1MjAwMGE3ZmViMCBSMTE6IGZmZmZjOTAw
-MDUzZmY1ODcgUjEyOiBkZmZmZmMwMDAwMDAwMDAwClIxMzogMDAwMDAwMDAwMDAwMDAwMCBSMTQ6
-IDAwMDAwMDAwMDAwMDAwMDIgUjE1OiAwMDAwMDAwMDAxMDAwMDAwCkZTOiAgMDAwMDU1NTU2ZTNj
-NTUwMCgwMDAwKSBHUzpmZmZmODg4MDk3YjQxMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAw
-MDAKQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpDUjI6
-IDAwMDA3ZjhhZjQ5NzYwODAgQ1IzOiAwMDAwMDAwMDc2MjQ4MDAwIENSNDogMDAwMDAwMDAwMDc1
-MmVmMApQS1JVOiA4MDAwMDAwMApDYWxsIFRyYWNlOgogPFRBU0s+CiB3cml0ZV9hbGxfc3VwZXJz
-KzB4OTIxLzB4MzY4MCBmcy9idHJmcy9kaXNrLWlvLmM6NDE1MwogYnRyZnNfY29tbWl0X3RyYW5z
-YWN0aW9uKzB4MmRhZC8weDQ2MjAgZnMvYnRyZnMvdHJhbnNhY3Rpb24uYzoyNTQxCiBidHJmc19z
-eW5jX2ZzKzB4MTMwLzB4NzYwIGZzL2J0cmZzL3N1cGVyLmM6MTA0MAogc3luY19maWxlc3lzdGVt
-IGZzL3N5bmMuYzo2NiBbaW5saW5lXQogc3luY19maWxlc3lzdGVtKzB4MWQzLzB4MmEwIGZzL3N5
-bmMuYzozMAogZ2VuZXJpY19zaHV0ZG93bl9zdXBlcisweDc0LzB4MzkwIGZzL3N1cGVyLmM6NjIx
-CiBraWxsX2Fub25fc3VwZXIrMHgzYS8weDYwIGZzL3N1cGVyLmM6MTIzNwogYnRyZnNfa2lsbF9z
-dXBlcisweDNjLzB4NTAgZnMvYnRyZnMvc3VwZXIuYzoyMTAwCiBkZWFjdGl2YXRlX2xvY2tlZF9z
-dXBlcisweGI4LzB4MTMwIGZzL3N1cGVyLmM6NDczCiBkZWFjdGl2YXRlX3N1cGVyIGZzL3N1cGVy
-LmM6NTA2IFtpbmxpbmVdCiBkZWFjdGl2YXRlX3N1cGVyKzB4YjEvMHhkMCBmcy9zdXBlci5jOjUw
-MgogY2xlYW51cF9tbnQrMHgzNzgvMHg1MTAgZnMvbmFtZXNwYWNlLmM6MTQzNQogdGFza193b3Jr
-X3J1bisweDE2Zi8weDI4MCBrZXJuZWwvdGFza193b3JrLmM6MjI3CiByZXN1bWVfdXNlcl9tb2Rl
-X3dvcmsgaW5jbHVkZS9saW51eC9yZXN1bWVfdXNlcl9tb2RlLmg6NTAgW2lubGluZV0KIGV4aXRf
-dG9fdXNlcl9tb2RlX2xvb3Aga2VybmVsL2VudHJ5L2NvbW1vbi5jOjExNCBbaW5saW5lXQogZXhp
-dF90b191c2VyX21vZGVfcHJlcGFyZSBpbmNsdWRlL2xpbnV4L2VudHJ5LWNvbW1vbi5oOjMyOSBb
-aW5saW5lXQogX19zeXNjYWxsX2V4aXRfdG9fdXNlcl9tb2RlX3dvcmsga2VybmVsL2VudHJ5L2Nv
-bW1vbi5jOjIwNyBbaW5saW5lXQogc3lzY2FsbF9leGl0X3RvX3VzZXJfbW9kZSsweDI5ZS8weDJh
-MCBrZXJuZWwvZW50cnkvY29tbW9uLmM6MjE4CiBkb19zeXNjYWxsXzY0KzB4ZGMvMHgyNjAgYXJj
-aC94ODYvZW50cnkvc3lzY2FsbF82NC5jOjEwMAogZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2Zy
-YW1lKzB4NzcvMHg3ZgpSSVA6IDAwMzM6MHg3ZmUzMWZiYWRmY2IKQ29kZTogYTggZmYgZmYgZmYg
-ZjcgZDggNjQgODkgMDEgNDggODMgYzggZmYgYzMgOTAgZjMgMGYgMWUgZmEgMzEgZjYgZTkgMDUg
-MDAgMDAgMDAgMGYgMWYgNDQgMDAgMDAgZjMgMGYgMWUgZmEgYjggYTYgMDAgMDAgMDAgMGYgMDUg
-PDQ4PiAzZCAwMCBmMCBmZiBmZiA3NyAwNSBjMyAwZiAxZiA0MCAwMCA0OCBjNyBjMiBhOCBmZiBm
-ZiBmZiBmNyBkOApSU1A6IDAwMmI6MDAwMDdmZmY2ZWVkMWQ5OCBFRkxBR1M6IDAwMDAwMjQ2IE9S
-SUdfUkFYOiAwMDAwMDAwMDAwMDAwMGE2ClJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAw
-MDAwMDAwMDAwY2YgUkNYOiAwMDAwN2ZlMzFmYmFkZmNiClJEWDogMDAwMDdmZTMxZmE0ZWIzMCBS
-U0k6IDAwMDAwMDAwMDAwMDAwMDkgUkRJOiAwMDAwN2ZmZjZlZWQxZTUwClJCUDogMDAwMDdmZmY2
-ZWVkMWU1MCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiAwMDAwN2ZmZjZlZWQxYzIwClIxMDog
-MDAwMDU1NTU2ZTNkODY3MyBSMTE6IDAwMDAwMDAwMDAwMDAyNDYgUjEyOiAwMDAwN2ZlMzFmYzQ0
-MTM1ClIxMzogMDAwMDdmZmY2ZWVkMmYyMCBSMTQ6IDAwMDA1NTU1NmUzZDg2MDAgUjE1OiAwMDAw
-MDAwMDAwMDM2NDRiCiA8L1RBU0s+Ck1vZHVsZXMgbGlua2VkIGluOgotLS1bIGVuZCB0cmFjZSAw
-MDAwMDAwMDAwMDAwMDAwIF0tLS0KUklQOiAwMDEwOndyaXRlX2Rldl9zdXBlcnMrMHg3ZjAvMHg5
-MTAgZnMvYnRyZnMvZGlzay1pby5jOjM4NTYKQ29kZTogZTkgMDMgZmYgZmYgZmYgZTggNzAgYTMg
-ZWIgZmQgYjkgMTAgMGYgMDAgMDAgNDggYzcgYzIgNjAgYzAgZDkgOGIgNDggYzcgYzYgNjAgYzcg
-ZDkgOGIgNDggYzcgYzcgZTAgYzAgZDkgOGIgZTggNDEgZDQgY2EgZmQgOTAgPDBmPiAwYiA0OCA4
-YiA3YyAyNCAzOCBlOCAwNCBmOSA1MSBmZSBlOSAzZCBmOSBmZiBmZiBlOCAzYSBmOCA1MSBmZQpS
-U1A6IDAwMTg6ZmZmZmM5MDAwNTNmZjdjMCBFRkxBR1M6IDAwMDEwMjg2ClJBWDogMDAwMDAwMDAw
-MDAwMDA0NSBSQlg6IGZmZmY4ODgwMjllNjAwMDAgUkNYOiBmZmZmZmZmZjgxOWE1OTI5ClJEWDog
-MDAwMDAwMDAwMDAwMDAwMCBSU0k6IGZmZmY4ODgwMWViOWJjODAgUkRJOiAwMDAwMDAwMDAwMDAw
-MDAyClJCUDogZmZmZmVhMDAwMTU2MGEwMCBSMDg6IGZmZmZmYmZmZjFjNGJiMDAgUjA5OiBmZmZm
-ZjUyMDAwYTdmZWIxClIxMDogZmZmZmY1MjAwMGE3ZmViMCBSMTE6IGZmZmZjOTAwMDUzZmY1ODcg
-UjEyOiBkZmZmZmMwMDAwMDAwMDAwClIxMzogMDAwMDAwMDAwMDAwMDAwMCBSMTQ6IDAwMDAwMDAw
-MDAwMDAwMDIgUjE1OiAwMDAwMDAwMDAxMDAwMDAwCkZTOiAgMDAwMDU1NTU2ZTNjNTUwMCgwMDAw
-KSBHUzpmZmZmODg4MGViMzQxMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAKQ1M6ICAw
-MDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpDUjI6IDAwMDA3ZmE1
-YjIxM2U3MzAgQ1IzOiAwMDAwMDAwMDc2MjQ4MDAwIENSNDogMDAwMDAwMDAwMDc1MmVmMApQS1JV
-OiA4MDAwMDAwMAo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT0KCkkgaG9wZSBpdCBoZWxwcy4KQmVzdCByZWdhcmRzCkppYW56
-aG91IFpoYW8=
+On 4/28/25 3:23 PM, David Lechner wrote:
+> Add new macros to help with the common case of declaring a buffer that
+> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+> to do correctly because of the alignment requirements of the timestamp.
+> This will make it easier for both authors and reviewers.
+> 
+> To avoid double __align() attributes in cases where we also need DMA
+> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+
+...
+
+> +/**
+> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
+> + * @type: element type of the buffer
+> + * @name: identifier name of the buffer
+> + * @count: number of elements in the buffer
+> + *
+> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
+> + * to ensure that the buffer doesn't share cachelines with anything that comes
+> + * before it in a struct. This should not be used for stack-allocated buffers
+> + * as stack memory cannot generally be used for DMA.
+> + */
+> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count)	\
+> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count)		\
+> +	/* IIO_DMA_MINALIGN may be 4 on some 32-bit arches. */	\
+> +	__aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
+
+I just realized my logic behind this is faulty. It assumes sizeof(s64) ==
+__alignof__(s64), but that isn't always true and that is what caused the builds
+to hit the static_assert() on v3.
+
+We should be able to leave this as __aligned(IIO_DMA_MINALIGN)
+
+And have this (with better error message):
+
+static assert(IIO_DMA_MINALIGN % __alignof__(s64) == 0);
