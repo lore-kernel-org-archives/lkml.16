@@ -1,114 +1,132 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D471DE2C6;
-	Tue, 29 Apr 2025 00:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D82D134AB
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745887055; cv=none; b=cvpwFPyUm7eF5BGK2AiQrLWAyJWiOvoI1k5PyEFBGhrfpY9hzVXaIqkqoHQBgBxWjwLHVQp+9zPNwiA/FRWw68aGamYolRoJxkmURlanQVSMVMHyhioL+JXWPBRRyrXcKrePSVwnlISEe+1ZwlXgmOo4KE9i9Zt0/XOHwbP7NAs=
+	t=1745887280; cv=none; b=jLsRrcJ6J2Z0dnO3YyTuI7pNhxZS4hbvR3eJZI6wA2VhK5haTBFSKWzy9nLTSebVAZTJKdujrUBULJ+NV0lrjFxEBHRDQEvLww7rqF92OwC/GODNDO4QIhyMUKPsKub9k39aOrib8GNlj5idpVVhbu66QHhRsQkv8h5SgV5M8ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745887055; c=relaxed/simple;
-	bh=VPJnbm9ofSRd+PYgtnAqWBQ5wVJDwJuZ2BgWufFrA/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NnjZVxlSzLNE89YtQRiBRQaJaFA4klZA5b/08fPfSO1wThN466pI3m/xG06gvagSMoGnZ0eB54s8dz4zwkiCld9TJOyZ+57S58B2vNVv7DF9Ew+8xL9qs3VAM6SysBU3sM5gI9h8sqUJeMgoWYgBk3TqdONxFM/IK7CrKlkAqas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JniuNjHy; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745887280; c=relaxed/simple;
+	bh=rmnPc8tqdZn5hexoKGEPfBpixXioI1yDAyR7/EtGRgs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hckeQ4jTvQesG1GQTXWmcj3u0G15zWO5tkd3fkv2VLXdSVTN39Uc5LgzMRpSZGze/+Zd63+sGjHCPkOOQ38hG0a84yHOmVzt1qeRn11kVFHoLSJ3zu9np4ikg48RUwQWcSzXd8YWAZ7Wu8lBW7x9pl1EUZ8rXzVkSQCYYWTFY24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ESCsPAjd; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JniuNjHy"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqni1001785;
-	Tue, 29 Apr 2025 00:37:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	psXrmKyxbRBwpbmTOJvAdED66voICAJ+SwqB0hGQ7HE=; b=JniuNjHyAIBxPS84
-	9YXGUP0HifIXTfyN7iF7pSpp66bgxOxwRtY64UZSCToEERW1VtepRyi+o+sHCKJD
-	W7nuY4k9HbTFkApZMdcjhWio0fu8CtnJjfOu+jUNF6GxBCEDDyTyI4c/vecmZCzq
-	+BOoR9P/86SAWcV3k5EAEBfDa6T2JK2FGGo44P31bsQBrD9MzS2kG46zxazBy6MZ
-	v0nxRSGHo7ePD1YNvb1VmpFtuaRRxiN25YoMZbhuaC/7ckazhJ097t/Se7ObQ6nB
-	dOIpyWG1yvPy/nlZM3FlbqJmaUIu4ENuY3+MFyqIjbj1/dw+jpq+8VWuHg5zoplC
-	ziD7TQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qv9jqp8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 00:37:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T0bL7n032059
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 00:37:21 GMT
-Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Apr
- 2025 17:37:20 -0700
-Message-ID: <4fb243c8-87aa-4114-8867-937a45ae3670@quicinc.com>
-Date: Mon, 28 Apr 2025 17:37:20 -0700
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ESCsPAjd"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso871807066b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745887276; x=1746492076; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cbaKAKCTzfmHltef4oBV78jsKmCoKC/2lN4zrIr3UH8=;
+        b=ESCsPAjdjmAEN56evBSHzvYuMJNFbtJcCkuF5+OaAKgIdPGPr8qBEnN3R9ihmSIwC/
+         Tauw4KXVtWd3SzKs21eQgU/jq2mRkN/4J/XuYBp6fOXgGZ1mNKtQYhJ8duiUmi0l3UxR
+         6/RMBScAgiDr7V5XNmUBdrUaONfxeTd5eqDutyRDc16nKjnpgK0l+Qkc3MPGQ7u8NSks
+         xmlwpBV8XHsdGypKLyEXHe3AODgj4M5IuIqpYmpYKOyfD4m+bXPGIQ3z8Q7644Lim/W7
+         sjgcwSiBzZBSbRwx/UIkOUfGeLgtdd98XyYNQA9oSuTPZGK9fi4bOPgtjTLc2CVNIvhP
+         bngg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745887276; x=1746492076;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cbaKAKCTzfmHltef4oBV78jsKmCoKC/2lN4zrIr3UH8=;
+        b=kGzjdG7TZ0Q5W4+bB9T27JyPxCoUsRGbFTVs9VFs+BvzlNGs8DcCwWMEfg/bzBGXZE
+         BQOBpgAmqfJDP1vnzKAXANEi00B7nhjoAqkuZnzCr0eL7U5dSKuhF0oS7M5eCO3corE6
+         bgB4lCHHkDFEOK28uhI+6m7znKRJOTnpVMzFnb+yKbWzBn+gIPB2sdcl8GKOss129ANv
+         96E4T7cwRZFK2NHHX/hD5akNFxtz9x9Mkyd1kUqAVal1BbAPAQhFBdhVYd/7w2jzWjqH
+         1E9tRsI9m3OE0RpvxSw7hzkyhuGQTnXBY+IUXR6e+C5CTMsdAOOzWxaYifMmQ0rj7T49
+         mzdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHCSEKhOQ7K8jW9v6Y1V0BmwJeEfttYYwGuXuK/LF5L7NhjQbrgaFvsdwuQUepw9g/ROvHw+LAi5QwwdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsHkvY8/IVrjce9/d7n7oFcOIZwIn/iAjxFzXNC3AT4sC3GfN6
+	AV3iUn6pcITtFlBCQxzv66x4rgcAVly8BeYDEm5dNtBusdUWeFda4fn6hhwZmulKfOU5T/0HXRf
+	Arr4UULme7byrocJxnGLDXVybyf1WUdfEJxePWg==
+X-Gm-Gg: ASbGncu6N/nHnuoGbs+smHSBvSGPtZDeV+pWBVZz/4ia0XKXAsGoGlHck8zszPP+bmM
+	iRr9cNhTFVnx9QLkmxEs0oQ9V70VVP+NYcfJSZiXyzeC6tsKx4TkMtl9z9ckbFZOy2bW9Q86x0m
+	aQrS7fXga1n2FrNHoEJt6vqNZ8EmeXcxC+uQ==
+X-Google-Smtp-Source: AGHT+IGDDd1KBmZYtGMAtcmO079rgPCkzThzjrRGdQyH+DShBHm1WziqDjfFzM1LQRG2qnLtbMLpLsYzzQQ9Ipi2Cr0=
+X-Received: by 2002:a17:907:6089:b0:ac2:66ff:878 with SMTP id
+ a640c23a62f3a-acec87b1b2cmr75859566b.50.1745887276408; Mon, 28 Apr 2025
+ 17:41:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] drm/msm/dpu: remove DSC feature bit for PINGPONG
- on MSM8937
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark
-	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>,
-        =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?=
-	<barnabas.czeman@mainlining.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Konrad
- Dybcio" <konrad.dybcio@oss.qualcomm.com>
-References: <20250301-dpu-fix-catalog-v2-0-498271be8b50@linaro.org>
- <20250301-dpu-fix-catalog-v2-1-498271be8b50@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250301-dpu-fix-catalog-v2-1-498271be8b50@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=AO34vM+d c=1 sm=1 tr=0 ts=68101f42 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
- a=iTZM9pQ1TWb8sfHiNRoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: 31yn-E73McJ-lA7Pt-ydn3PewTO4hj1E
-X-Proofpoint-ORIG-GUID: 31yn-E73McJ-lA7Pt-ydn3PewTO4hj1E
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDAwMiBTYWx0ZWRfXyS2SukoHCVI0 fsn3RsbESYO+c05Rl6Cri/vBT8d+l6TEDz7TurQKLccI6FIvi2cTIk4aNqr2Tm/ll+EQ66iLPMC tS4IRCqS73HFRR5SkI7dd7xWzeiayKUoh+4oFfRq7HWVYh8wMjuFJ37acVUyN0uWoWG85S/ejeU
- cT9l03dKQcf462cNeI8FrMeYYiTj8ZFAFURRBcoF4RZfF55ppvHyybEYBvhv1fc8Hh02B5nJM0J Qr/7pPM8kBNrzVaDcqFlzle5EmlbJsnCE8hbuq6K7DO5APAG25qNI8/hgUGcHoAIfSbKziGFTOJ xq9O0qoqVc7umjZh8u20OvR3DGK90CfGrLFv+j3fGyO/J/OvgmTL0EjWHIyQG2ez4jHLK3RQVEi
- 2YumrAAOEp7lh+IIG3tu6TxFXJfQrSUhB4fSZpgYtR9KoAKgOuRjNHTJD7qqJvrqh8UairSQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_09,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 clxscore=1015 malwarescore=0 spamscore=0 suspectscore=0
- mlxlogscore=977 mlxscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290002
+References: <20250420070251.378950-1-guodong@riscstar.com> <20250420070251.378950-4-guodong@riscstar.com>
+ <kftfye2zn2ogyvuv7diuyrv5qkp43csbpkcqfcms2xp5lsuubm@z2kocdzkb7qk>
+ <CAH1PCMZC5xrX07rd5bo+06zJoJDiAH3UNHqH5catwEALNJL2dQ@mail.gmail.com> <t4tnrsyl7t7hwfm752eapz3ajxkkl23nrfemw4jy6a7khi7a7u@gow3c2ba56ib>
+In-Reply-To: <t4tnrsyl7t7hwfm752eapz3ajxkkl23nrfemw4jy6a7khi7a7u@gow3c2ba56ib>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Tue, 29 Apr 2025 08:41:04 +0800
+X-Gm-Features: ATxdqUG3lFgkg3lNUF6_ATkNEyTDRUTSmHtumyCGNvrS81lb8iksobg6ENCiyps
+Message-ID: <CAH1PCMbuP6CzA-0CWM93MifWDY-cKmvozh7SUoy0658VRssaAA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] riscv: dts: spacemit: add PWM support for K1 SoC
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, 
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, 
+	tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com, 
+	duje.mihanovic@skole.hr, elder@riscstar.com, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 29, 2025 at 12:32=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
+rnel.org> wrote:
+>
+> Hello,
+>
+> On Mon, Apr 28, 2025 at 08:46:50PM +0800, Guodong Xu wrote:
+> > On Thu, Apr 24, 2025 at 4:18=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek=
+@kernel.org> wrote:
+> > > I want to make all pwms use #pwm-cells =3D <3> in the long run. Can y=
+ou
+> >
+> > Sure. I can do this.
+> >
+> > > please use that for the new binding? (Of course this needs adaption i=
+n
+> > > the binding doc, the code should already be prepared for that.)
+> > >
+> >
+> > I got what you mean. The code change for that is already integrated int=
+o
+> > v6.15-rc1.
+> > Commit 895fe4537cc8 ("pwm: Add upgrade path to #pwm-cells =3D <3> for u=
+sers of
+> > of_pwm_single_xlate()")
+> >
+> > Now, if I change this #pwm-cells from <1> to <3>, without the dt-bindin=
+g doc
+> > changes, I would expect to see warnings (" #pwm-cells: 1 was expected")=
+ during
+> >   make dtbs_check W=3D3
+> >
+> > Any suggestions when the dt-binding changes will be merged?
+> > or I can add your patch as a dependency.
+> > https://lore.kernel.org/all/cb799d8a5bb284cd861785a691b8d5e329300d99.17=
+38842938.git.u.kleine-koenig@baylibre.com/
+>
+> I don't want to merge this very soon given that 895fe4537cc8 isn't that
+> old yet. But I suggest you adapt patch #1 to require #pwm-cells =3D <3>
+> for the newly added compatible.
 
+ok, I will add a conditional check of #pwm-cells based on the compatible.
+spacemit,k1-pwm must use 3; other compatibles use 1.
+ (if:then:else in the bingding yaml)
 
-On 3/1/2025 1:24 AM, Dmitry Baryshkov wrote:
-> The MSM8937 platform doesn't have DSC blocks nor does have it DSC
-> registers in the PINGPONG block. Drop the DPU_PINGPONG_DSC feature bit
-> from the PINGPONG's feature mask and, as it is the only remaining bit,
-> drop the .features assignment completely.
-> 
-> Fixes: c079680bb0fa ("drm/msm/dpu: Add support for MSM8937")
-> Reported-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h | 2 --
->   1 file changed, 2 deletions(-)
-> 
+Thanks.
+Guodong
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>
+> Best regards
+> Uwe
