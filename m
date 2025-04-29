@@ -1,102 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9493F1DAC81;
-	Tue, 29 Apr 2025 15:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F69C2D1;
+	Tue, 29 Apr 2025 15:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938929; cv=none; b=P1D9CxsEQ2p0WIbgvfssqUUE4R0MqOyiSKT3VqniWzZc18z1mGSP2kp9ZSl6f5P3UBLWu1SCWY3vrUuOMfraUnYCJ/J1qvE/rsYkcosu7sKLBtdRQtWfLiDXB1SGgLOTByy+Is6S4fkT+Po/2UYA/L8xq7U3tNuPYVdHkLHnZz8=
+	t=1745938938; cv=none; b=q235yVlIsZNfHCAdqztYUiJFB3uDvCgO+Y7mUsTnlzLP0Ac6qMHf+iLsZ7Kp76iJefnKecZld6LAlhznLMCJRzcX/plrvsKOybRdZ1ub8Lygh7b+l5d3Mi8W2j8y0iqzzwwK7Q3/FAMTxLl+tdNGx6FtsMQWfFmh61G37Ak/MTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938929; c=relaxed/simple;
-	bh=CXyUkgUJ+Frrj1lxE9e4nGDb9q3jnTeEzXMZBRjwMCg=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=W2y+QM7Bo9zwMT/NFhoMlyZlwbSrk+DgJIXZEDmlYkoGr1qX85sqo/na+W+sqMc7lEgIFVCdCqbfZVP5r8EKDtlZdJ8luxaA5gt+ylwb1WjTOt8TcvcLv3FHUxKohlYt1GP2vAqbP187UKfnXv+i3latYhLvAlNsA8kfoy6LdWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B+iIImQ/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B+iIImQ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745938928; x=1777474928;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=CXyUkgUJ+Frrj1lxE9e4nGDb9q3jnTeEzXMZBRjwMCg=;
-  b=B+iIImQ/Z9lcY5nh4eHyvgssFqYPVaX3BYw5jgWY27pa0PUUoFonrNDJ
-   S8XDiirlgKMdVVbeFiX40j3RwHga47+sg8D82srYITgFyM2y25Wi/tGkW
-   6i4fNYRL0QuVl8ZIg9ayOr46gK+PB/shbLskOoATXklRglE9QQd1XBx4I
-   YQSbcv7V3q4XfI1wQU3hQGdFEEoz/mbnh1z3eEnffHnC8ZMB4Q7mxDhrH
-   v9DkOLVn8x7GY/hi8030XYdX2u+kXYfzprXBsCfYyLJh+OTeILJdU+QFB
-   gLjyiS+MhgqfCbnhIFGruQmWS/3+PbNzlKs0AFewb/ee/vah6wpZol9+w
-   A==;
-X-CSE-ConnectionGUID: KIJNvFzNQZy43ju3TGvjbA==
-X-CSE-MsgGUID: 7OEtgm0qQamXjbey17zZZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="35179160"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="35179160"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:02:07 -0700
-X-CSE-ConnectionGUID: lhuL/3jCRTGBN9KfmEd2Hg==
-X-CSE-MsgGUID: QaAvmvplT1SptIJiB9729w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="138833173"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:02:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
- hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
- Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <20250425195237.493129-1-xi.pardee@linux.intel.com>
-References: <20250425195237.493129-1-xi.pardee@linux.intel.com>
-Subject: Re: [PATCH v5 0/5] Create Intel PMC SSRAM Telemetry driver
-Message-Id: <174593891838.4147.15233566963314671509.b4-ty@linux.intel.com>
-Date: Tue, 29 Apr 2025 18:01:58 +0300
+	s=arc-20240116; t=1745938938; c=relaxed/simple;
+	bh=nPG+BgRfSzlu72qtVpculB1B811fjqa1f4HvppaeY38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jycgqTS44zVKR/sO1jrJ/2Uhc+bsOyMBaeEexvjIUzKD0QI73mofS2MUFdV51ALPJ4jjXdx7SDdWpzRaOXcKWtpevjSFP8D0r24MM4HhwjsHaRIbW/EtoOyvuMqHh3iFUBWgwdhW2WlzGFNBMZg0H1/RSyjokoE8XdIKgAqg1gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6911D1515;
+	Tue, 29 Apr 2025 08:02:06 -0700 (PDT)
+Received: from [10.1.25.156] (XHFQ2J9959.cambridge.arm.com [10.1.25.156])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DC8D3F673;
+	Tue, 29 Apr 2025 08:02:12 -0700 (PDT)
+Message-ID: <cac9bf3c-5af1-41be-86a5-bf76384b5e3b@arm.com>
+Date: Tue, 29 Apr 2025 16:02:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Petr_Van=C4=9Bk?=
+ <arkamar@atlas.cz>, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ stable@vger.kernel.org
+References: <20250429142237.22138-1-arkamar@atlas.cz>
+ <20250429142237.22138-2-arkamar@atlas.cz>
+ <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
+ <e9617001-da1d-4c4f-99f4-0e51d51d385e@arm.com>
+ <bb24f0d3-cbbf-4323-a9e6-09a627c8559b@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <bb24f0d3-cbbf-4323-a9e6-09a627c8559b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Apr 2025 12:52:28 -0700, Xi Pardee wrote:
-
-> This patch series removes the SSRAM support from Intel PMC Core driver
-> and creates a separate PCI driver for SSRAM device. The new Intel PMC
-> SSRAM driver provides the following functionalities:
+On 29/04/2025 15:46, David Hildenbrand wrote:
+> On 29.04.25 16:41, Ryan Roberts wrote:
+>> On 29/04/2025 15:29, David Hildenbrand wrote:
+>>> On 29.04.25 16:22, Petr Vaněk wrote:
+>>>> folio_pte_batch() could overcount the number of contiguous PTEs when
+>>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
+>>>> memory also happens to be zero. The loop doesn't break in such a case
+>>>> because pte_same() returns true, and the batch size is advanced by one
+>>>> more than it should be.
+>>>>
+>>>> To fix this, bail out early if a non-present PTE is encountered,
+>>>> preventing the invalid comparison.
+>>>>
+>>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
+>>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
+>>>> bisect.
+>>>>
+>>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+>>>> ---
+>>>>    mm/internal.h | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/mm/internal.h b/mm/internal.h
+>>>> index e9695baa5922..c181fe2bac9d 100644
+>>>> --- a/mm/internal.h
+>>>> +++ b/mm/internal.h
+>>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio,
+>>>> unsigned long addr,
+>>>>                dirty = !!pte_dirty(pte);
+>>>>            pte = __pte_batch_clear_ignored(pte, flags);
+>>>>    +        if (!pte_present(pte))
+>>>> +            break;
+>>>>            if (!pte_same(pte, expected_pte))
+>>>>                break;
+>>>
+>>> How could pte_same() suddenly match on a present and non-present PTE.
+>>>
+>>> Something with XEN is really problematic here.
+>>>
+>>
+>> We are inside a lazy MMU region (arch_enter_lazy_mmu_mode()) at this point,
+>> which I believe XEN uses. If a PTE was written then read back while in lazy mode
+>> you could get a stale value.
+>>
+>> See
+>> https://lore.kernel.org/all/912c7a32-b39c-494f-a29c-4865cd92aeba@agordeev.local/
+>> for an example bug.
 > 
-> 1. Search and store the PMC information in a structure, including PWRMBASE
-> address and devid for each available PMC. Then Intel PMC Core driver
-> achieves the PMC information using the API provided by the new driver.
-> 2. Search and register Intel Platform Monitoring Techology telemetry
-> regions so they would by available for read through sysfs and Intel PMT
-> API. Intel PMC Core driver can achieve Low Power Mode requirement
-> information from a telemetry region registered by the new driver.
-> 
-> [...]
+> So if we cannot trust ptep_get() output, then, ... how could we trust anything
+> here and ever possibly batch?
 
+The point is that for a write followed by a read to the same PTE, the read may
+not return what was written. It could return the value of the PTE at the point
+of entry into the lazy mmu mode.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+I guess one quick way to test is to hack out lazy mmu support. Something like
+this? (totally untested):
 
-The list of commits applied:
-[1/5] platform/x86:intel/vsec: Change return type of intel_vsec_register
-      commit: f6347ba78ad48eef2a79d2063d77a32d015c58af
-[2/5] platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
-      commit: f3d766cced899fa626e3f6f6ace43e16061ea19e
-[3/5] platform/x86:intel/pmc: Use devm for mutex_init
-      commit: 95350cbf5c4b7453d15990ad776b7b101fd6a290
-[4/5] platform/x86:intel/pmc: Move error handling to init function
-      commit: 75c7b75459efeb5b600d99421f3d08f485d33896
-[5/5] platform/x86:intel/pmc: Improve pmc_core_get_lpm_req()
-      commit: a946156129a6adb702dff43111c1d8cdab4f9362
+----8<----
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index c4c23190925c..1f0a1a713072 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -541,22 +541,6 @@ static inline void arch_end_context_switch(struct
+task_struct *next)
+        PVOP_VCALL1(cpu.end_context_switch, next);
+ }
 
---
- i.
+-#define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+-static inline void arch_enter_lazy_mmu_mode(void)
+-{
+-       PVOP_VCALL0(mmu.lazy_mode.enter);
+-}
+-
+-static inline void arch_leave_lazy_mmu_mode(void)
+-{
+-       PVOP_VCALL0(mmu.lazy_mode.leave);
+-}
+-
+-static inline void arch_flush_lazy_mmu_mode(void)
+-{
+-       PVOP_VCALL0(mmu.lazy_mode.flush);
+-}
+-
+ static inline void __set_fixmap(unsigned /* enum fixed_addresses */ idx,
+                                phys_addr_t phys, pgprot_t flags)
+ {
+----8<----
 
