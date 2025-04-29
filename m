@@ -1,221 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649D5254868;
-	Tue, 29 Apr 2025 17:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09AC24E000
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947308; cv=none; b=CGy0bJn1o+Q4qmeC6ZdACf4Fz1z4yQXTO03JffArE/7nnUiSjcoX6EhQsjRCxvpTzoaToIi/blHSs67xu90I91096/dBnfOi2pCs//ZwriQ7GirdOE5rX+2FErwZCEbEiDTZQkBnq3hNG3X6mmrkNkD45rmCJJ2qqJJp3qEcX5I=
+	t=1745947357; cv=none; b=EImnDB2DEc79qwczn+fUlvf4CUQm+saTXAFpLGIWaCAPhhztGwABe/jFKlrEJoZlFhWwEH7jtCnKcB066Pn57v23wA0k0VoHhHbgpjB3knrkORjW7wlxAuJkrV5Ds3vbFBEG+v4HxbU6QqGzb2/Rjt38mOnPKISq095yPlVEPag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947308; c=relaxed/simple;
-	bh=6NBgym4/EikYuDm0nWfg1osxoAlXmaBFRDdG5Co6GDM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p9oUqUvfYwxhWkARlbp75KMIy+UdA+3US94n3o7HhS0fbLhqG6Vrqb9Sa+5651bKrE6/4zMCwmH0Ff0WcYGZOabE2vYMWVeq823jA3FV7ubwiveF+EVKffzqDZ7vXW4FaAfB5TkfP9QmVScYIF72HtfkjsBblHBFXkECdBX4pOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6DrCkAI; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745947357; c=relaxed/simple;
+	bh=L4BNnkRR9uqLDG/4D/80t5HMleTkeLj0BZ8qMZ2TLIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BPNIjVVhX/z/LUhRHIc3go5ikz6W1yrQ/NoDy31/KlGW3n09ln0EvODL0TY83bw5S1pRuKLg79Of3LIsfPTsd439HQQQI5FKqgin2g1Q9gObZZyvxY7Xke1JWYufKFsQ7Caxzltj8dtNcFbKtN7f8EPFohMw2B4qEtQnGooVNbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=enhBOVRA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6DrCkAI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745947307; x=1777483307;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6NBgym4/EikYuDm0nWfg1osxoAlXmaBFRDdG5Co6GDM=;
-  b=X6DrCkAI6FRs80hJngKR+j/ENZns/hr6/P7KQj0Pf6Onf56gKXC/slqf
-   9FpGFONuz2Wg2l4ItVOkYBbW1R+bD3h2Dop4aFhoMCDF8mkX+DQr4aCQd
-   TjOk0fCADTRZ9VAKvYO1Ql2mh5esg1mlQcYN/dkhH/EbH/zEdU7V0cJLu
-   LabHCDXtKo4lMJzsmAhJW+IykznxKJEFMtNUrFanJKYlCYHp0vanjbbCs
-   W1Xtk6JaJOaU5+yDmrEBwmyKW8FZ57iOgbGBBvf2MUIBz59H2I4wdKcPs
-   GEHjZRh620Zxo//yPwIUVimRN1v8m1xYRnQEOh/x/dafd7PDJoY7YR8SH
-   w==;
-X-CSE-ConnectionGUID: w/Nk0KgpQ7+k7mvos6rDUQ==
-X-CSE-MsgGUID: SEWzg9z6QW6e0C8qye9jcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="64996984"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="64996984"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:21:46 -0700
-X-CSE-ConnectionGUID: RUWqMx43T460pY1p/OsbGQ==
-X-CSE-MsgGUID: XEHwzn+VQVSbGGyfW1jiqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="139073357"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.45])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:21:41 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	linux-edac@vger.kernel.org
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 4/4 v2] ACPI: extlog: Trace CPER CXL Protocol Errors
-Date: Tue, 29 Apr 2025 19:21:09 +0200
-Message-ID: <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
-References: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enhBOVRA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745947353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=qAfYTOYo0st9O8DtaYFErlvF+Z0seeV68r2hFxsaUz4=;
+	b=enhBOVRAWUuVJBFVyrt4xbcEuR/UeXaz12X6XxaZ1jX6VBs5zkZbQm0N0yPUbEE08Y0+YV
+	oM+ubh8GzTOZcXa4VJCYKr1n/xVQ0aHkoBAzUT5GKlpVyPMInqWShbw9+e5ZEWvCDXHo/d
+	RFFUITkeaeEk029x3YWCttFzGBqgAlc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-253-k3vgZuzcMcG0gP3Vcfr-Tg-1; Tue, 29 Apr 2025 13:22:32 -0400
+X-MC-Unique: k3vgZuzcMcG0gP3Vcfr-Tg-1
+X-Mimecast-MFC-AGG-ID: k3vgZuzcMcG0gP3Vcfr-Tg_1745947351
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so26030655e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:22:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745947351; x=1746552151;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qAfYTOYo0st9O8DtaYFErlvF+Z0seeV68r2hFxsaUz4=;
+        b=LoUsukxZzUSAwAbJgHPz51cucXbvHUp1kwyxTBc9QxemWhr1Y6jNzDsTZWREpRaSdt
+         yd46mzdGrdBIAJaMwus6/xHfjyGM4YqlPQ0B2NL2GQNjgR8lNgpHMLdMGz+JLzs2rKi1
+         KZCr3AWRf9ICjbFZEJnCzuspMmU2rZLfe8/7IEAtTiTwVZRTgK71zaOULxb8U4JhQSMt
+         CeMf3prnzQoXy7PW+pVj2bkn4h3SpWDJgC/HLEfpOqdX9AQDB1MqF0x8blXP1nyxaZHY
+         1jKlxEjiq97B5W2X9u95P4yppeOPN1RHj+C6/vKd47PxJojcOBfhvFmPjNPMquUUztfZ
+         +D6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXEkB0nrM/9wAZoxxzvPF0OzDJLcvkXhn8WbctYGJBPUQy6b9HnIeMj7htuzGNvitRc6LRiq9hyiFWCL4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbEbkyY2lBW4Iw8+kGj7jKhTNOnmDck63bHfY02vjOLnsqidv8
+	gYPhualvFp8gF8TtZCBUPaH+Vyp9oMoCSC1fGH5dO8pJHwBTsB7VtEM53CKzZbE4xpb/wWtMrjO
+	CMsXqRo997cTrmzy9JOdnjfqjqT9HeGGlItJZZmaPVJwNhQbfzaweSm5UZdgb/Q==
+X-Gm-Gg: ASbGnctlYrKu4xAXwC3iU80Aa+44tKQ4l4t1Ta7o0lz27y39J4up/NpCgAd8GpS8dUG
+	ZE5h3Po+ilW7euBUDH9D0daxT7m1/xlvOwDWLe+R+xc4Ek3IsNwr+ZYTwmOsp/sWdaTC3SoNUs6
+	EC8n1111lMoeXkfBar3yFnrifG/PK2rH82WxZRgiebAJ991SUyszTCBZOAIT4Fi54UJHOemZUu9
+	bzRTOR060T1/U9BnOJ6DGrhNwcjo4YTTTmHVV+ZRSjtxZOSABf3X16Iv9AA6m+xduM94Nor+DP4
+	6qubt7TfETXD4GJwdjlxrJprCRx6nVQeKpioXoPwaHqt5OTgT69zMvXGi8d5OrL2L71klqx3w9q
+	mmeSBJ5Rxf4Xzb/5Wp71WK9bMXygzlPXwkZQKIqs=
+X-Received: by 2002:a05:600c:3b85:b0:43b:cb12:ba6d with SMTP id 5b1f17b1804b1-441b1f3066amr1432725e9.3.1745947351114;
+        Tue, 29 Apr 2025 10:22:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGx2KVcawLRxhiuq/u0/yCcC6YZYsJNwwfrRs66PSlGvPfzsc1e2FbhPXSFRaIdwpXkKF1vWw==
+X-Received: by 2002:a05:600c:3b85:b0:43b:cb12:ba6d with SMTP id 5b1f17b1804b1-441b1f3066amr1432485e9.3.1745947350715;
+        Tue, 29 Apr 2025 10:22:30 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e0414sm199915345e9.40.2025.04.29.10.22.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 10:22:30 -0700 (PDT)
+Message-ID: <b6b68904-ca4b-48d9-b9e6-c65db3ae7f69@redhat.com>
+Date: Tue, 29 Apr 2025 19:22:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/4] mm: establish mm/vma_exec.c for shared exec/mm VMA
+ functionality
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Kees Cook <kees@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
+ <91f2cee8f17d65214a9d83abb7011aa15f1ea690.1745853549.git.lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <91f2cee8f17d65214a9d83abb7011aa15f1ea690.1745853549.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When Firmware First is enabled, BIOS handles errors first and then it
-makes them available to the kernel via the Common Platform Error Record
-(CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-via one of two similar paths, either ELOG or GHES.
+On 28.04.25 17:28, Lorenzo Stoakes wrote:
+> There is functionality that overlaps the exec and memory mapping
+> subsystems. While it properly belongs in mm, it is important that exec
+> maintainers maintain oversight of this functionality correctly.
+> 
+> We can establish both goals by adding a new mm/vma_exec.c file which
+> contains these 'glue' functions, and have fs/exec.c import them.
+> 
+> As a part of this change, to ensure that proper oversight is achieved, add
+> the file to both the MEMORY MAPPING and EXEC & BINFMT API, ELF sections.
+> 
+> scripts/get_maintainer.pl can correctly handle files in multiple entries
+> and this neatly handles the cross-over.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
 
-Currently, ELOG and GHES show some inconsistencies in how they report to
-userspace via trace events.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Therfore make the two mentioned paths act similarly by tracing the CPER
-CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13) signaled by the
-I/O Machine Check Architecture and reported by BIOS in FW-First.
-
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/acpi_extlog.c | 60 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/ras.c     |  6 ++++
- include/cxl/event.h        |  2 ++
- 3 files changed, 68 insertions(+)
-
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 7d7a813169f1..8f2ff3505d47 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -12,6 +12,7 @@
- #include <linux/ratelimit.h>
- #include <linux/edac.h>
- #include <linux/ras.h>
-+#include <cxl/event.h>
- #include <acpi/ghes.h>
- #include <asm/cpu.h>
- #include <asm/mce.h>
-@@ -157,6 +158,60 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 	}
- }
- 
-+static void
-+extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-+				int severity)
-+{
-+#ifdef CONFIG_ACPI_APEI_PCIEAER
-+	struct cxl_cper_prot_err_work_data wd;
-+	u8 *dvsec_start, *cap_start;
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-+		pr_err_ratelimited("CXL CPER invalid agent type\n");
-+		return;
-+	}
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-+		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-+		return;
-+	}
-+
-+	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-+		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-+				   prot_err->err_len);
-+		return;
-+	}
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-+		pr_warn(FW_WARN "CXL CPER no device serial number\n");
-+
-+	switch (prot_err->agent_type) {
-+	case RCD:
-+	case DEVICE:
-+	case LD:
-+	case FMLD:
-+	case RP:
-+	case DSP:
-+	case USP:
-+		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-+
-+		dvsec_start = (u8 *)(prot_err + 1);
-+		cap_start = dvsec_start + prot_err->dvsec_len;
-+
-+		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-+		wd.severity = cper_severity_to_aer(severity);
-+		break;
-+	default:
-+		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
-+				   prot_err->agent_type);
-+		return;
-+	}
-+
-+	cxl_cper_ras_handle_prot_err(&wd);
-+
-+#endif
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -208,6 +263,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			struct cxl_cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
-+
-+			extlog_cxl_cper_handle_prot_err(prot_err, gdata->error_severity);
- 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
- 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
- 
-@@ -375,3 +434,4 @@ module_exit(extlog_exit);
- MODULE_AUTHOR("Chen, Gong <gong.chen@intel.com>");
- MODULE_DESCRIPTION("Extended MCA Error Log Driver");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("CXL");
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index 485a831695c7..56db290c88d3 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -98,6 +98,12 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- 		cxl_cper_trace_uncorr_prot_err(pdev, data->ras_cap);
- }
- 
-+void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd)
-+{
-+	cxl_cper_handle_prot_err(wd);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cper_ras_handle_prot_err, "CXL");
-+
- static void cxl_cper_prot_err_work_fn(struct work_struct *work)
- {
- 	struct cxl_cper_prot_err_work_data wd;
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index f9ae1796da85..aef906e26033 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -285,4 +285,6 @@ static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data
- }
- #endif
- 
-+void cxl_cper_ras_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-+
- #endif /* _LINUX_CXL_EVENT_H */
 -- 
-2.48.1
+Cheers,
+
+David / dhildenb
 
