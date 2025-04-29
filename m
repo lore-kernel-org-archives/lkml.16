@@ -1,81 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1328D78F58;
-	Tue, 29 Apr 2025 17:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95545242D73;
+	Tue, 29 Apr 2025 17:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947742; cv=none; b=JxtcfOmgmV8wY3CHM+ZvKkfGNG2KjkTeuqIkCUjl5yYWd6v7ofCpx+rxwyiDYn2qQFBvuR7UxYbpS1pOtZQUfR/jdV4a0P+j5cZadAzU+IbrR2cU192AraO6FHqVs2yFfIsNVcWw0TDQxqOm9Se6jQB0+FhVOrxOqkwgc1H4eeM=
+	t=1745947786; cv=none; b=JVXMPpqtQwqXfH8YvwTjHzVif4NfIMe+NucvwL+bznWhaebD6TcKTN3Z2/hAO/DqBRJc0oNnk+4EBG/baX36znZSzMkdhqz8nnfkLQDizqLO4v7PqDGc19nZh9fKlfQDpUGSGMvEN+BblhY5NIBb24waO75xybul1mNw8MvvD2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947742; c=relaxed/simple;
-	bh=8xfiJRm4IrwupfThxxvWEdxfv+b8w/tb3J7jTDqosac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLqh/Or7FDDWdSdXfWGAWcFCVAxK4NQZHA7E6JI9vDUfBvn9La44wF6lzQQde6wSPl+DyosbmihWgmLgzAC7YITDTdcr4RPlkMLSzjXVnC6UYkxaDmxyCnies48icG4ribwrxegYGKP4Wbs953OYHNjhvmZ5zQayLFGW9Evo4v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER/9RRUS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745947786; c=relaxed/simple;
+	bh=kb1LQkEATwQDObUTfn7dlIuzugD4bFxDOqpPi+yOLKA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=g+i9hHOHPtl4xCzTqu3tYFEiVwohNUv41WyPXuT+Pq9NTY1wM9wWM9reF90kZbqkHYtysVC9sMPp3spMsLYwL27fI7EhgHCTdyPrnZ6o+EPegK4byU+xtx0PhhikZcknvDiogOI+bs7A47FuR1ZCLNXK7nIjKMbv1XhjhgF2VJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnQ/yhe4; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER/9RRUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4079C4CEE9;
-	Tue, 29 Apr 2025 17:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745947741;
-	bh=8xfiJRm4IrwupfThxxvWEdxfv+b8w/tb3J7jTDqosac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ER/9RRUSbbvw04ZwEowWxEX5SqfJ7eX7rKJnItQ1hn4vAx68iDSMCTU44Gm+Pk0Vn
-	 zDMoAZCkt/+sBqbHwDKOXMwb23EnSLvU51CY6dW16/30bb/twBuZK98mJYdDfBnuq3
-	 qijuhrUNllvkFw7wycTEN7Iizunamz/JyZb8jOCAachSVdTJ+3+Wz4AmC8j1X3J24v
-	 SZtkVLYvipdhCaeI/1IVJH2SzDaCxf89WetmkTgcY/wSm3lnxqLiIP1q5Aoj0AJtwx
-	 Q8xsHkZa58wqJfr9UcO6HRWKr7rw2fS6kQLNhJ1uATRyTN7hL5NTeyOdS9x8/+lrJI
-	 p8X3Jpgyxd+6Q==
-Date: Tue, 29 Apr 2025 10:28:58 -0700
-From: Kees Cook <kees@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Maxime Ripard <mripard@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Natalie Vock <natalie.vock@gmx.de>, Xavier <xavier_qy@163.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Maarten Lankhorst <dev@lankhorst.se>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kernel-doc: Add initial binfmt docs
-Message-ID: <202504291028.523CF77C@keescook>
-References: <20250426000704.work.637-kees@kernel.org>
- <87selrrhnw.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnQ/yhe4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745947786; x=1777483786;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=kb1LQkEATwQDObUTfn7dlIuzugD4bFxDOqpPi+yOLKA=;
+  b=fnQ/yhe4DL6HOEln7OHLsYulC6SjwkG3idsdSEWzRmgKFRAidqZwix0a
+   fmjKaEfbvw6jWs8PvrGYFzhrvRemcVdBcUeKCIYH6cShYv1iGd0Q3uWEU
+   ZARR+UScz7uJ9ZkgmuXs9OpiVUexuRon4AcYAPdSxDQ7tFHuPE5O041Ha
+   hh7uG6T+7uX/FEWVs+5gkXhXCCfN85zL4V0FRpJK2KhRqPtQ7B1V4LTSP
+   nBWVaUQ7GXsi1gV57LRNdJilvzc3Ac2fXSki3Xs4wMtVs+jso1vQm8wzW
+   00v7cgMwAOmCaF54RZxmJUPPYf8xaO8l3qZfziN7lnCql9/N9orMdMctl
+   w==;
+X-CSE-ConnectionGUID: A540W1YGSIu5Wa5hQslO2g==
+X-CSE-MsgGUID: FIhZjxk2QR2jGx2XBoQmMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="57784002"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="57784002"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:29:45 -0700
+X-CSE-ConnectionGUID: 1MxlXQjRSVSOFrgzSDqt1w==
+X-CSE-MsgGUID: qcN81ltcTty7e55AGrlXng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="137905858"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.167])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:29:44 -0700
+Message-ID: <07604feedc23ae2b404f8e9c0cfc1c19e2eb27e8.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86: ISST: Support SST-TF revision 2
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Tue, 29 Apr 2025 10:29:44 -0700
+In-Reply-To: <f45da867-1090-51cc-b405-c4a639adb5ab@linux.intel.com>
+References: <20250417170011.1243858-1-srinivas.pandruvada@linux.intel.com>
+	 <20250417170011.1243858-2-srinivas.pandruvada@linux.intel.com>
+	 <f45da867-1090-51cc-b405-c4a639adb5ab@linux.intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87selrrhnw.fsf@trenco.lwn.net>
 
-On Mon, Apr 28, 2025 at 05:27:15PM -0600, Jonathan Corbet wrote:
-> Kees Cook <kees@kernel.org> writes:
-> 
-> > Adds a framework to hold the initial exec.c and binfmt_elf.c
-> > kernel-docs. Updates scripts/kernel-doc to allow leading whitespace so
-> > that embedded "DOC:" tags can be found that aren't at the start of a
-> > line so that in-function documentation can be found, like that recently
-> > marked up in binfmt_elf.c[1].
-> 
-> Just one tiny little problem ... when you weren't looking, Mauro snuck
-> in and replaced scripts/kernel-doc with a shiny new Python
-> implementation.  So that part of the patch won't apply to docs-next; if
-> you apply it somewhere else, the change will get lost.
-> 
-> I figured we were going to run into at least one of these ... sorry ...
+On Tue, 2025-04-29 at 17:23 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Thu, 17 Apr 2025, Srinivas Pandruvada wrote:
+>=20
+> > SST-TF revision 2 supports a higher number of cores per bucket, as
+> > the
+> > current limit of 256 cores may be insufficient. To accommodate
+> > this, a
+> > new offset, "SST_TF_INFO-8," is introduced, allowing for a higher
+> > core
+> > count. Utilize this offset instead of the current "SST_TF_INFO-1"
+> > offset,
+> > based on SST-TF revision 2 or higher, and if there is a non-zero
+> > core
+> > count in any bucket.
+> >=20
+...
 
-Oh duh, yeah, I will go re-do this with -next.
+> > +	if (feature_rev >=3D 2) {
+> > +		bool valid =3D false;
+> > +
+> > +		for (i =3D 0; i < SST_TF_INFO_8_BUCKETS; ++i) {
+> > +			_read_tf_level_info("bucket_*_mod_count",
+> > turbo_freq.bucket_core_counts[i],
+> > +					=C2=A0=C2=A0=C2=A0 turbo_freq.level,
+> > SST_TF_INFO_8_OFFSET,
+> > +					=C2=A0=C2=A0=C2=A0 SST_TF_NUM_MOD_0_WIDTH
+> > * i, SST_TF_NUM_MOD_0_WIDTH,
+> > +					=C2=A0=C2=A0=C2=A0 SST_MUL_FACTOR_NONE)
+> > +
+> > +			if (!valid &&
+> > turbo_freq.bucket_core_counts[i])
+>=20
+> I'd just drop !valid from this check.
+>=20
+> > +				valid =3D true;
+> > +		}
+> > +
+> > +		if (valid)
+>=20
+>=20
+> Should this be named instead to something like has_tf_info_8 ? (As
+> this is=20
+> not really valid/invalid check but whether this new info exists or
+> not.)
+We can.
 
--Kees
+Thanks,
+Srinivas
 
--- 
-Kees Cook
+>=20
+> > +			goto done_core_count;
+> > +	}
+> > +
+> > =C2=A0	for (i =3D 0; i < TRL_MAX_BUCKETS; ++i)
+> > =C2=A0		_read_tf_level_info("bucket_*_core_count",
+> > turbo_freq.bucket_core_counts[i],
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 turbo_freq.level,
+> > SST_TF_INFO_1_OFFSET,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 SST_TF_NUM_CORE_0_WIDTH * i,
+> > SST_TF_NUM_CORE_0_WIDTH,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 SST_MUL_FACTOR_NONE)
+> > =C2=A0
+> > +
+> > +done_core_count:
+> > +
+> > =C2=A0	if (copy_to_user(argp, &turbo_freq, sizeof(turbo_freq)))
+> > =C2=A0		return -EFAULT;
+> > =C2=A0
+> >=20
+>=20
+
