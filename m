@@ -1,211 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78132750ED;
-	Tue, 29 Apr 2025 09:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D12384D02
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919968; cv=none; b=a1/Y7er53mi0bVLoxAyX8YQdD9DnKoavjyp8hUvCSVVMkG8mUUuugUszd6HZQF/bfJLqeMl7eThf7FVkL9cc29fImiSyJVZsWZ5hfIv2umcrepRnROHJJ1J/ZbKsLd+ioxUd48QAViGSs4x5ZQ8oFcVnhA4kuAC2D3JFevcodM0=
+	t=1745920010; cv=none; b=FAfCskaU/gUK50UX/1y45ohDagfocGTqNQ1m7SQGNMcXv26feP9HdG051hmPuXi8k0ZSgZ7m6KRP2QoEXkbWdzvDPz2m2GwrT0e53KXgFwLV9thkRv25gPf0Y4QQsCrDnJ5aEL00tDNvcwFQy0uOfi8YbpHCBAT7XqsXEZGcP2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919968; c=relaxed/simple;
-	bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Emgtv/gMe8St7UkcENtZv3YP4C3bsW6bZP0FKsGeS9U1BnqUjnJNZbnZpBbPYaqf5kryfkN+/tEaJYtwi4K+j+U/qRm+KlwPYB0QDqUiQEgBYfYiwi91+Wkmi/tUOtgTIFRj6nyQpWbf5tTKZhqvDps63zrbTXyaR88wDjjZJ/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhEkgs3Z; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745920010; c=relaxed/simple;
+	bh=7h6TDK9XO4vi8HAwbxlZy15xoNWwk+1COdubrAjH45o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KL9hMJAp1HMGaGwHf43bYtYT6eof3P5Z+zN9+QBRjXKZ3BetGXaY69Cl9Rzn2D8cU+oRIKcp1+vtl3Mjtigd3m+f2yWWEYsS5FXcFYEztGyPMwj1xzvOTlVCvHz4n64aP4Wevrf7cxw25BnHZepDd17EWvcCGQigIBrfCDkoCyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=fVR99dWh; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhEkgs3Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745919967; x=1777455967;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=OEmsROS2dzbLzqVvteqA+LjMNAwHbDGb3LITSHjMruA=;
-  b=KhEkgs3ZllIg5zGgsQX8fqOMXknpgK69caY27Orl6Lxtw7NSWSLkG1w4
-   g2DW8+YFG9+XROlrqXraqLm0YeKWEEPWfiozJNYG7NTjY9Ybfsx3fLYkC
-   y8vtWOJIfBcuRSbazfZUYhXJKkjZZzmLz+muojM6CKnLobXStCbTRw9bt
-   bVEcs9nbLpqe00aqkAN6nG2rckC7k2KlnNzn8lwvKgBJHm7fasoExIpQ2
-   Jpakh/f/zv4EkmnPEU3vWprM8wNHG6yIZRy3Hb/xzhlHzWUISTWFmsr4c
-   /lOfdyDSIpXKM0elxe1+HRCwKDWNyXDlQ7xWGHaMQuoIH+jRXpCTKCWob
-   Q==;
-X-CSE-ConnectionGUID: Z6lDBEttR7i/lsUKBkcN2Q==
-X-CSE-MsgGUID: JtsTc6SLS9m+bLDZyPwX+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="35143891"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="35143891"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:46:06 -0700
-X-CSE-ConnectionGUID: chXqGONbRG+KNhUajc2ULw==
-X-CSE-MsgGUID: 8lVzqi8rRgSKGWTaNKThpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="133495412"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:45:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 29 Apr 2025 12:45:49 +0300 (EEST)
-To: "Xin Li (Intel)" <xin@zytor.com>
-cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
-    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
-    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
-    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
-    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
-    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
-    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
-    dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-In-Reply-To: <20250427092027.1598740-2-xin@zytor.com>
-Message-ID: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-References: <20250427092027.1598740-1-xin@zytor.com> <20250427092027.1598740-2-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="fVR99dWh"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0782d787so35400225e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1745920007; x=1746524807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/khpT6y/LHVtwUJo6f8G8UANag+DTR3Iq07zRFJyCJk=;
+        b=fVR99dWhT4ZmLV/m1Fy1r2GhgFtAdO8896BH/FSAQSb3Vi53RsatZd//UBQhOd1b3i
+         tEdOb9S57/nTn9B9MM3tDMYgtpkxWugS01p5TKk0WJWdICd6vd+0PO3nrS/f1OSBtIbr
+         2wKVsQzrZm3RmZ9/tMr217vvcBX3LWZ6HN61zXAoDL0p6FjOLwTcI3cDFPcamwF6EO/m
+         KTZmZd7dQcbeSTB3YJazQfVdxkdmdo5akmsur/Ncx9/GgW4IGL6f+775FlMbK8nCQeXu
+         p2M/bGjfWFZDbKJcO0fsQnp9AgTiQtLsht7wdtLtM0ug/C5w/16IaZW6+QvkThHpQ2jV
+         owqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745920007; x=1746524807;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/khpT6y/LHVtwUJo6f8G8UANag+DTR3Iq07zRFJyCJk=;
+        b=Yf8MwBI7p/pSpy+6B0RgGYxx4L8uQGIj+/bjHYK/ty/zO67QqSubpDxhlRzJWUzl9i
+         ElYfWuaBjMXrDDZI7RE31RwH51qMsEp3GlBdhnER7jkEKNZnKjJn8Bj7wkWv/FwlJQTu
+         nQim06kwM7s1XMO8sp7KwzF/BdqA1+whps3PLzTUxlPxlnaeFBPkfduQSNba54cB+5mU
+         Ib4rkvq6E4FNl1jI5WWphgGzQaWFYOK0r530vjimfJsr0k9C7vkfadarXDS+G3zBdg04
+         olnaEmzcEX6adPMciO7s7pkda7Mq+m2JOgIbFLN54COeavmqvrQbtGU6WhRyUTiEaLXu
+         DnTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYDKJhWZ4OpZzeZsLzhZRbvS1+tSZZ4kJ7XiQhexc0n8+pKtWHg3wDgtSRGt3TMho0gigyRnQ1/2OPrq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/c+bZJrsf/Lxmgt9IyGphoCAIYh5XBiId3MKbcXjh1o+aYkUw
+	MkRSyu+DV6x/2oqoAq5SMM3S7wWHg5uInQVd3WuFGU3Nlk7tT9GIZ6zRtsQS4lDUd7XLlvbxkS9
+	0
+X-Gm-Gg: ASbGncuhhVIGqFfh8B8ItvoXiL5Xkd+sLZSJHZ16fOJfwyi7/beLwO2PHEEtsJvZgp3
+	P3N3LFUyOrZjK8GYM1Sh/kh/Mpvo8JPwmuntafb+X6QNbFnVkJSP0XmDfLaAV7NcVhZ4G1/VMJK
+	q6vO31Y1ZGpZt7a0PoEoAEp1OUghWat2fBqtPUjYuHs9WsWq5o7neGkTvBt5O8JrETzCgF8jgRn
+	ubukVU09kr1FTKvf5jn7ZK1pDvYSPbWgjbesiWC9JL5Jll+9TfzfcThOOWwZSwq0Ur48dxReHsh
+	UL/JZbNeJ8KKVaEokBw720JRc4Szle0FyFBzi4VvmMtwvUjIhrh/DqBYkAlJJpVlOiT43yt3fsz
+	m8EqDN0oqRYXkjfOS1XX/6TrU2N6bPk49Kyeu2lpA
+X-Google-Smtp-Source: AGHT+IGmkb10LLUhYY7LbhpZXzXXe/rQSihIzdVs5Dw8ilO8bgW8q/PStbCy/K14wLZtJipqod7ONA==
+X-Received: by 2002:a05:600c:4e90:b0:43d:22d9:4b8e with SMTP id 5b1f17b1804b1-441ac856140mr28432375e9.10.1745920006689;
+        Tue, 29 Apr 2025 02:46:46 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a0692a22sm169766855e9.2.2025.04.29.02.46.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:46:46 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH 1/2] include/linux/fs.h: add inode_lock_killable()
+Date: Tue, 29 Apr 2025 11:46:43 +0200
+Message-ID: <20250429094644.3501450-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-666243473-1745919726=:938"
-Content-ID: <1b5519eb-241d-dec5-af5a-fc9378cf96ec@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Prepare for making inode operations killable while they're waiting for
+the lock.
 
---8323328-666243473-1745919726=:938
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <6ad7f337-7709-3cca-3ccd-80f11d3e8d38@linux.intel.com>
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ include/linux/fs.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..5e4ac873228d 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -867,6 +867,11 @@ static inline void inode_lock(struct inode *inode)
+ 	down_write(&inode->i_rwsem);
+ }
+ 
++static inline __must_check int inode_lock_killable(struct inode *inode)
++{
++	return down_write_killable(&inode->i_rwsem);
++}
++
+ static inline void inode_unlock(struct inode *inode)
+ {
+ 	up_write(&inode->i_rwsem);
+@@ -877,6 +882,11 @@ static inline void inode_lock_shared(struct inode *inode)
+ 	down_read(&inode->i_rwsem);
+ }
+ 
++static inline __must_check int inode_lock_shared_killable(struct inode *inode)
++{
++	return down_read_killable(&inode->i_rwsem);
++}
++
+ static inline void inode_unlock_shared(struct inode *inode)
+ {
+ 	up_read(&inode->i_rwsem);
+-- 
+2.47.2
 
-> For some reason, there are some TSC-related functions in the MSR
-> header even though there is a tsc.h header.
->=20
-> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
-> to <asm/tsc.h> and to eventually eliminate the inclusion of
-> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
-> reference definitions from <asm/msr.h>.
->=20
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->=20
-> Change in v4:
-> *) Add missing includes in a different patch (Ilpo J=E4rvinen).
-> *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
->=20
-> Change in v3:
-> * Add a problem statement to the changelog (Dave Hansen).
-> ---
->  arch/x86/events/msr.c                                         | 3 +++
->  arch/x86/events/perf_event.h                                  | 1 +
->  arch/x86/events/probe.c                                       | 2 ++
-
-Under arch/x86/events/ a few files seem to be missing the include?
-
->  arch/x86/hyperv/ivm.c                                         | 1 +
-
-Also under hyperv/ not all files are covered but I'm a bit hesitant to=20
-suggest a change there since I'm not sure if they (hypervisors) do=20
-something special w.r.t. msr.
-
->  arch/x86/include/asm/fred.h                                   | 1 +
->  arch/x86/include/asm/microcode.h                              | 2 ++
->  arch/x86/include/asm/mshyperv.h                               | 1 +
->  arch/x86/include/asm/msr.h                                    | 1 +
->  arch/x86/include/asm/suspend_32.h                             | 1 +
->  arch/x86/include/asm/suspend_64.h                             | 1 +
->  arch/x86/include/asm/switch_to.h                              | 2 ++
-
-arch/x86/kernel/acpi/ ?
-acrh/x86/kernel/cet.c ?
-=2E..
-
-There seem to be quite many under arch/x86/ that still don't have it, I=20
-didn't list them all as there were so many after this point.
-
-But that's up to x86 maintainers how throughout they want you to be.
-
-This command may be helpful to exclude the files which already have the=20
-include so you can focus on the ones that may still be missing it:
-
-git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
-
->  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
->  arch/x86/kernel/fpu/xstate.h                                  | 1 +
->  arch/x86/kernel/hpet.c                                        | 1 +
->  arch/x86/kernel/process_64.c                                  | 1 +
->  arch/x86/kernel/trace_clock.c                                 | 2 +-
->  arch/x86/kernel/tsc_sync.c                                    | 1 +
->  arch/x86/lib/kaslr.c                                          | 2 +-
->  arch/x86/mm/mem_encrypt_identity.c                            | 1 +
->  arch/x86/realmode/init.c                                      | 1 +
->  drivers/acpi/acpi_extlog.c                                    | 1 +
->  drivers/acpi/processor_perflib.c                              | 1 +
->  drivers/acpi/processor_throttling.c                           | 3 ++-
->  drivers/char/agp/nvidia-agp.c                                 | 1 +
->  drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
->  drivers/crypto/ccp/sev-dev.c                                  | 1 +
->  drivers/edac/amd64_edac.c                                     | 1 +
->  drivers/edac/ie31200_edac.c                                   | 1 +
->  drivers/edac/mce_amd.c                                        | 1 +
->  drivers/hwmon/hwmon-vid.c                                     | 4 ++++
->  drivers/idle/intel_idle.c                                     | 1 +
->  drivers/misc/cs5535-mfgpt.c                                   | 1 +
->  drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
->  drivers/platform/x86/intel/ifs/core.c                         | 1 +
->  drivers/platform/x86/intel/ifs/load.c                         | 1 +
->  drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
->  drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
->  drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
->  .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
->  drivers/powercap/intel_rapl_common.c                          | 1 +
->  drivers/powercap/intel_rapl_msr.c                             | 1 +
->  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
->  drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
->  drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
->  drivers/video/fbdev/geode/display_gx.c                        | 1 +
->  drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
->  drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
-
-Under drivers/ this looked pretty complete. Nice work.
-
-Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
-
-I also noticed these files might not need to include msr.h:
-
-drivers/cpufreq/elanfreq.c
-drivers/cpufreq/sc520_freq.c
-drivers/accel/habanalabs/common/habanalabs_ioctl.c
-
-=2E..so if you want, you may consider optionally adding a cleanup patch to=
-=20
-remove the include from them.
-
-> --- a/drivers/video/fbdev/geode/gxfb_core.c
-> +++ b/drivers/video/fbdev/geode/gxfb_core.c
-> @@ -30,6 +30,7 @@
->  #include <linux/cs5535.h>
-> =20
->  #include <asm/olpc.h>
-> +#include <asm/msr.h>
-
-In wrong order.
-> =20
->  #include "gxfb.h"
-
---
- i.
---8323328-666243473-1745919726=:938--
