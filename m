@@ -1,1221 +1,359 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186F62D4B67;
-	Tue, 29 Apr 2025 14:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFB9028682
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745935721; cv=none; b=NnC7r6OkWNI3MPLahUU/UnnhMrohBYkIwrSKWm52Ac4wNKnTSn+r1z6tm6r6YOZDeXWWzvRR43/ehtRNxdztG98TzT6UazxMxinDqykShA7AHoeqF0ZCQ+vKeDO5fupKZN3t/u8wba00k+w9y6Na1Nkonl2DhmCzUytHaPOhEcY=
+	t=1745935763; cv=none; b=IZlyrzzjB35Ntw9aDOx5QBO76dRKFkzTCxLxqun7kLa37DMvs8e1Q6+j7yaiQDzz+wm2lX7rIKDs/N/TtazoZ70OqqFkHDHqZrk1WNlKgTYnyqr7RmDTuX41PN+ceSFO1q/lVJDGholqn8nzxIFttqI8kjri3jdGJ3Bx7wBtCZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745935721; c=relaxed/simple;
-	bh=bQlnHITsw6ZHtSol0FMENCrVjW9Rs9CSRpJWLts76B8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YC/Pfe6LYqyAR1XWM841Pkna4ydKwPjjpR6Bb2Aufqu4fah2jD3Z49GksWqpdY/lTRQPhPLdu+6PUUB3N82IeSYq9SFu3XEGCIcUzUBmYxDKBQ5nrKn4WvWWPztUDitn565ZeGLS5mzuu3YooHYhozsJ9DAB66Ymx7dEC9/+zww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xe7LZO6z; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xe7LZO6z"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CE1A0438D4;
-	Tue, 29 Apr 2025 14:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745935715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lqw/gR+9R/Rny+YNBaGBdybsdcFCE/YQtKYtkoYNScw=;
-	b=Xe7LZO6zLsHzgDZxkeZmMR2pXV2p9c0IoN3vxa1rzVAwPtWQDfp/wLK8VBrQZbCCUpAT8Z
-	I5WArN9WSJ2MDBbyxGIXqJ8EyfXKa9eNYI7r0Rfh/V61XU0jq4RnWzpTqMvVeUFpikZQHz
-	E741GASgy6XCzP45uLsLyLSyZMfxGKSR6cdqfqjGQEKDw8CVszaPVH9xpoxUGkM7xG6Rm5
-	q1sfI6DvtwbrrpOG1n4Q18qogN9IwZQ8Z+oCHMdXXXxuZcV7oNBBuCkgVW46KdvXu+0Ta6
-	qYY7a8oklBlYc4FeBpRywshzxq9dkl8hy4X6t6hFvUHE16SUH1syYRBotNMkXg==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 29 Apr 2025 16:08:26 +0200
-Subject: [PATCH v4 12/12] pinctrl: Add pin controller driver for AAEON UP
- boards
+	s=arc-20240116; t=1745935763; c=relaxed/simple;
+	bh=i1QdzQ7c6MTxOYvZa5NSHdvMTLEkPpZZKIlYcWxosz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qV5cUGOwPblcsAH6dvmRY8jsqm9KZ8LAYHs9OGVyBdfATxtYsy9W2a3ehcok9HeKv8rQpYFJBCdGHBxIH9NbMYKZHKWUErhxD3dS3/qtpQX0296txWB6Ms9BIyU70hZ4C//XaIz+cUVvlOQAhhfb2Ve3UPTR827R1qHcpobSQ+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F00C1515;
+	Tue, 29 Apr 2025 07:09:12 -0700 (PDT)
+Received: from [10.1.25.156] (XHFQ2J9959.cambridge.arm.com [10.1.25.156])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C08B83F66E;
+	Tue, 29 Apr 2025 07:09:16 -0700 (PDT)
+Message-ID: <64409a13-1c07-42cd-b1ec-572042738f1b@arm.com>
+Date: Tue, 29 Apr 2025 15:09:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-aaeon-up-board-pinctrl-support-v4-12-b3fffc11417d@bootlin.com>
-References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
-In-Reply-To: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
- linux-hardening@vger.kernel.org, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegtddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgepleenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepffgrnhhivghlvgevlhgvrhhisegrrggvohhnrdgvuhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: thomas.richard@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/9] Merge arm64/riscv hugetlbfs contpte support
+Content-Language: en-GB
+To: Alexandre Ghiti <alex@ghiti.fr>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-mm@kvack.org
+References: <20250321130635.227011-1-alexghiti@rivosinc.com>
+ <4dd5d187-f977-4f27-9937-8608991797b5@ghiti.fr>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <4dd5d187-f977-4f27-9937-8608991797b5@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This enables the pin control support of the onboard FPGA on AAEON UP
-boards.
+Hi Alexandre,
 
-This FPGA acts as a level shifter between the Intel SoC pins and the pin
-header, and also as a mux or switch.
+On 07/04/2025 13:04, Alexandre Ghiti wrote:
+> Can someone from arm64 review this? I think it's preferable to share the same
+> implementation between riscv and arm64.
 
-+---------+          +--------------+             +---+
-          |          |              |             |   |
-          | PWM0     |       \      |             | H |
-          |----------|------  \-----|-------------| E |
-          | I2C0_SDA |              |             | A |
-Intel SoC |----------|------\       |             | D |
-          | GPIO0    |       \------|-------------| E |
-          |----------|------        |             | R |
-          |          |     FPGA     |             |   |
-----------+          +--------------+             +---+
+I've been thinking about this for a while and had some conversations internally.
+This patchset has both pros and cons.
 
-For most of the pins, the FPGA opens/closes a switch to enable/disable
-the access to the SoC pin from a pin header.
-Each switch, has a direction flag that is set depending the status of the
-SoC pin.
+In the pros column, it increases code reuse in an area that has had quite of few
+bugs popping up lately; so this would bring more eyes and hopefully higher
+quality in the long run.
 
-For some other pins, the FPGA acts as a mux, and routes one pin (or the
-other one) to the header.
+But in the cons column, we have seen HW errata in similar areas in the past and
+I'm nervous that by hoisting this code to mm, we make it harder to workaround
+any future errata. Additionally I can imagine that this change could make it
+harder to support future Arm architecture enhancements.
 
-The driver provides also a gpiochip. It requests SoC pins in GPIO mode,
-and drives them in tandem with FPGA pins (switch/mux direction).
+I appreciate the cons are not strong *technical* arguments but nevertheless they
+are winning out in this case; My opinion is that we should keep the arm64
+implementations of huge_pte_ (and contpte_ too - I know you have a separate
+series for this) private to arm64.
 
-This commit adds support only for UP Squared board
+Sorry about that.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pinctrl/Kconfig           |   19 +
- drivers/pinctrl/Makefile          |    1 +
- drivers/pinctrl/pinctrl-upboard.c | 1068 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 1088 insertions(+)
+> 
+> The end goal is the support of mTHP using svnapot on riscv, which we want soon,
+> so if that patchset does not gain any traction, I'll just copy/paste the arm64
+> implementation into riscv.
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 464cc9aca157..398460f1a6df 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -590,6 +590,25 @@ config PINCTRL_TH1520
- 	  This driver is needed for RISC-V development boards like
- 	  the BeagleV Ahead and the LicheePi 4A.
- 
-+config PINCTRL_UPBOARD
-+	tristate "AAeon UP board FPGA pin controller"
-+	depends on MFD_UPBOARD_FPGA
-+	select PINMUX
-+	select GENERIC_PINCTRL_GROUPS
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select GPIOLIB
-+	select GPIO_AGGREGATOR
-+	help
-+	  Pin controller for the FPGA GPIO lines on UP boards. Due to the
-+	  hardware layout, the driver control the FPGA pins in tandem with
-+	  their corresponding Intel SoC GPIOs.
-+
-+	  Currently supported:
-+	  - UP Squared
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pinctrl-upboard.
-+
- config PINCTRL_ZYNQ
- 	bool "Pinctrl driver for Xilinx Zynq"
- 	depends on ARCH_ZYNQ
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac27e88677d1..f7246aead7b5 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_PINCTRL_SX150X)	+= pinctrl-sx150x.o
- obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
- obj-$(CONFIG_PINCTRL_TPS6594)	+= pinctrl-tps6594.o
- obj-$(CONFIG_PINCTRL_TH1520)	+= pinctrl-th1520.o
-+obj-$(CONFIG_PINCTRL_UPBOARD)	+= pinctrl-upboard.o
- obj-$(CONFIG_PINCTRL_ZYNQMP)	+= pinctrl-zynqmp.o
- obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
- 
-diff --git a/drivers/pinctrl/pinctrl-upboard.c b/drivers/pinctrl/pinctrl-upboard.c
-new file mode 100644
-index 000000000000..f3ae279016e9
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-upboard.c
-@@ -0,0 +1,1068 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * UP board pin control driver.
-+ *
-+ * Copyright (C) 2025 Bootlin
-+ *
-+ * Author: Thomas Richard <thomas.richard@bootlin.com>
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/dmi.h>
-+#include <linux/err.h>
-+#include <linux/gpio/forwarder.h>
-+#include <linux/mfd/upboard-fpga.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/seq_file.h>
-+#include <linux/stddef.h>
-+#include <linux/string_choices.h>
-+#include <linux/types.h>
-+
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "core.h"
-+#include "pinmux.h"
-+
-+enum upboard_board_id {
-+	UPBOARD_APL01,
-+};
-+
-+enum upboard_pin_mode {
-+	UPBOARD_PIN_MODE_FUNCTION,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_DISABLED,
-+};
-+
-+struct upboard_pin {
-+	struct regmap_field *funcbit;
-+	struct regmap_field *enbit;
-+	struct regmap_field *dirbit;
-+};
-+
-+struct upboard_pingroup {
-+	struct pingroup grp;
-+	enum upboard_pin_mode mode;
-+	const enum upboard_pin_mode *modes;
-+};
-+
-+struct upboard_pinctrl_data {
-+	const struct upboard_pingroup *groups;
-+	size_t ngroups;
-+	const struct pinfunction *funcs;
-+	size_t nfuncs;
-+	const unsigned int *pin_header;
-+	size_t ngpio;
-+};
-+
-+struct upboard_pinctrl {
-+	struct device *dev;
-+	struct pinctrl_dev *pctldev;
-+	const struct upboard_pinctrl_data *pctrl_data;
-+	struct gpio_pin_range pin_range;
-+	struct upboard_pin *pins;
-+	const struct pinctrl_map *maps;
-+	size_t nmaps;
-+};
-+
-+enum upboard_func0_fpgabit {
-+	UPBOARD_FUNC_I2C0_EN = 8,
-+	UPBOARD_FUNC_I2C1_EN = 9,
-+	UPBOARD_FUNC_CEC0_EN = 12,
-+	UPBOARD_FUNC_ADC0_EN = 14,
-+};
-+
-+static const struct reg_field upboard_i2c0_reg =
-+	REG_FIELD(UPBOARD_REG_FUNC_EN0, UPBOARD_FUNC_I2C0_EN, UPBOARD_FUNC_I2C0_EN);
-+
-+static const struct reg_field upboard_i2c1_reg =
-+	REG_FIELD(UPBOARD_REG_FUNC_EN0, UPBOARD_FUNC_I2C1_EN, UPBOARD_FUNC_I2C1_EN);
-+
-+static const struct reg_field upboard_adc0_reg =
-+	REG_FIELD(UPBOARD_REG_FUNC_EN0, UPBOARD_FUNC_ADC0_EN, UPBOARD_FUNC_ADC0_EN);
-+
-+#define UPBOARD_UP_BIT_TO_PIN(bit) UPBOARD_UP_BIT_##bit
-+
-+#define UPBOARD_UP_PIN_NAME(id)					\
-+	{							\
-+		.number = UPBOARD_UP_BIT_##id,			\
-+		.name = #id,					\
-+	}
-+
-+#define UPBOARD_UP_PIN_MUX(bit, data)				\
-+	{							\
-+		.number = UPBOARD_UP_BIT_##bit,			\
-+		.name = "PINMUX_"#bit,				\
-+		.drv_data = (void *)(data),			\
-+	}
-+
-+#define UPBOARD_UP_PIN_FUNC(id, data)				\
-+	{							\
-+		.number = UPBOARD_UP_BIT_##id,			\
-+		.name = #id,					\
-+		.drv_data = (void *)(data),			\
-+	}
-+
-+enum upboard_up_fpgabit {
-+	UPBOARD_UP_BIT_I2C1_SDA,
-+	UPBOARD_UP_BIT_I2C1_SCL,
-+	UPBOARD_UP_BIT_ADC0,
-+	UPBOARD_UP_BIT_UART1_RTS,
-+	UPBOARD_UP_BIT_GPIO27,
-+	UPBOARD_UP_BIT_GPIO22,
-+	UPBOARD_UP_BIT_SPI_MOSI,
-+	UPBOARD_UP_BIT_SPI_MISO,
-+	UPBOARD_UP_BIT_SPI_CLK,
-+	UPBOARD_UP_BIT_I2C0_SDA,
-+	UPBOARD_UP_BIT_GPIO5,
-+	UPBOARD_UP_BIT_GPIO6,
-+	UPBOARD_UP_BIT_PWM1,
-+	UPBOARD_UP_BIT_I2S_FRM,
-+	UPBOARD_UP_BIT_GPIO26,
-+	UPBOARD_UP_BIT_UART1_TX,
-+	UPBOARD_UP_BIT_UART1_RX,
-+	UPBOARD_UP_BIT_I2S_CLK,
-+	UPBOARD_UP_BIT_GPIO23,
-+	UPBOARD_UP_BIT_GPIO24,
-+	UPBOARD_UP_BIT_GPIO25,
-+	UPBOARD_UP_BIT_SPI_CS0,
-+	UPBOARD_UP_BIT_SPI_CS1,
-+	UPBOARD_UP_BIT_I2C0_SCL,
-+	UPBOARD_UP_BIT_PWM0,
-+	UPBOARD_UP_BIT_UART1_CTS,
-+	UPBOARD_UP_BIT_I2S_DIN,
-+	UPBOARD_UP_BIT_I2S_DOUT,
-+};
-+
-+static const struct pinctrl_pin_desc upboard_up_pins[] = {
-+	UPBOARD_UP_PIN_FUNC(I2C1_SDA, &upboard_i2c1_reg),
-+	UPBOARD_UP_PIN_FUNC(I2C1_SCL, &upboard_i2c1_reg),
-+	UPBOARD_UP_PIN_FUNC(ADC0, &upboard_adc0_reg),
-+	UPBOARD_UP_PIN_NAME(UART1_RTS),
-+	UPBOARD_UP_PIN_NAME(GPIO27),
-+	UPBOARD_UP_PIN_NAME(GPIO22),
-+	UPBOARD_UP_PIN_NAME(SPI_MOSI),
-+	UPBOARD_UP_PIN_NAME(SPI_MISO),
-+	UPBOARD_UP_PIN_NAME(SPI_CLK),
-+	UPBOARD_UP_PIN_FUNC(I2C0_SDA, &upboard_i2c0_reg),
-+	UPBOARD_UP_PIN_NAME(GPIO5),
-+	UPBOARD_UP_PIN_NAME(GPIO6),
-+	UPBOARD_UP_PIN_NAME(PWM1),
-+	UPBOARD_UP_PIN_NAME(I2S_FRM),
-+	UPBOARD_UP_PIN_NAME(GPIO26),
-+	UPBOARD_UP_PIN_NAME(UART1_TX),
-+	UPBOARD_UP_PIN_NAME(UART1_RX),
-+	UPBOARD_UP_PIN_NAME(I2S_CLK),
-+	UPBOARD_UP_PIN_NAME(GPIO23),
-+	UPBOARD_UP_PIN_NAME(GPIO24),
-+	UPBOARD_UP_PIN_NAME(GPIO25),
-+	UPBOARD_UP_PIN_NAME(SPI_CS0),
-+	UPBOARD_UP_PIN_NAME(SPI_CS1),
-+	UPBOARD_UP_PIN_FUNC(I2C0_SCL, &upboard_i2c0_reg),
-+	UPBOARD_UP_PIN_NAME(PWM0),
-+	UPBOARD_UP_PIN_NAME(UART1_CTS),
-+	UPBOARD_UP_PIN_NAME(I2S_DIN),
-+	UPBOARD_UP_PIN_NAME(I2S_DOUT),
-+};
-+
-+static const unsigned int upboard_up_pin_header[] = {
-+	UPBOARD_UP_BIT_TO_PIN(I2C0_SDA),
-+	UPBOARD_UP_BIT_TO_PIN(I2C0_SCL),
-+	UPBOARD_UP_BIT_TO_PIN(I2C1_SDA),
-+	UPBOARD_UP_BIT_TO_PIN(I2C1_SCL),
-+	UPBOARD_UP_BIT_TO_PIN(ADC0),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO5),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO6),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_CS1),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_CS0),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_MISO),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_MOSI),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_CLK),
-+	UPBOARD_UP_BIT_TO_PIN(PWM0),
-+	UPBOARD_UP_BIT_TO_PIN(PWM1),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_TX),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_RX),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_CTS),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_RTS),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_CLK),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_FRM),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_DIN),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_DOUT),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO22),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO23),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO24),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO25),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO26),
-+	UPBOARD_UP_BIT_TO_PIN(GPIO27),
-+};
-+
-+static const unsigned int upboard_up_uart1_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(UART1_TX),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_RX),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_RTS),
-+	UPBOARD_UP_BIT_TO_PIN(UART1_CTS),
-+};
-+
-+static const enum upboard_pin_mode upboard_up_uart1_modes[] = {
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+};
-+
-+static_assert(ARRAY_SIZE(upboard_up_uart1_modes) == ARRAY_SIZE(upboard_up_uart1_pins));
-+
-+static const unsigned int upboard_up_i2c0_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(I2C0_SCL),
-+	UPBOARD_UP_BIT_TO_PIN(I2C0_SDA),
-+};
-+
-+static const unsigned int upboard_up_i2c1_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(I2C1_SCL),
-+	UPBOARD_UP_BIT_TO_PIN(I2C1_SDA),
-+};
-+
-+static const unsigned int upboard_up_spi2_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(SPI_MOSI),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_MISO),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_CLK),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_CS0),
-+	UPBOARD_UP_BIT_TO_PIN(SPI_CS1),
-+};
-+
-+static const enum upboard_pin_mode upboard_up_spi2_modes[] = {
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+};
-+
-+static_assert(ARRAY_SIZE(upboard_up_spi2_modes) == ARRAY_SIZE(upboard_up_spi2_pins));
-+
-+static const unsigned int upboard_up_i2s0_pins[]  = {
-+	UPBOARD_UP_BIT_TO_PIN(I2S_FRM),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_CLK),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_DIN),
-+	UPBOARD_UP_BIT_TO_PIN(I2S_DOUT),
-+};
-+
-+static const enum upboard_pin_mode upboard_up_i2s0_modes[] = {
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+};
-+
-+static_assert(ARRAY_SIZE(upboard_up_i2s0_pins) == ARRAY_SIZE(upboard_up_i2s0_modes));
-+
-+static const unsigned int upboard_up_pwm0_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(PWM0),
-+};
-+
-+static const unsigned int upboard_up_pwm1_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(PWM1),
-+};
-+
-+static const unsigned int upboard_up_adc0_pins[] = {
-+	UPBOARD_UP_BIT_TO_PIN(ADC0),
-+};
-+
-+#define UPBOARD_PINGROUP(n, p, m)								\
-+{												\
-+	.grp = PINCTRL_PINGROUP(n, p, ARRAY_SIZE(p)),						\
-+	.mode = __builtin_choose_expr(								\
-+			__builtin_types_compatible_p(typeof(m), const enum upboard_pin_mode *),	\
-+			0, m),									\
-+	.modes = __builtin_choose_expr(								\
-+			__builtin_types_compatible_p(typeof(m), const enum upboard_pin_mode *), \
-+			m, NULL),								\
-+}
-+
-+static const struct upboard_pingroup upboard_up_pin_groups[] = {
-+	UPBOARD_PINGROUP("uart1_grp", upboard_up_uart1_pins, &upboard_up_uart1_modes[0]),
-+	UPBOARD_PINGROUP("i2c0_grp", upboard_up_i2c0_pins, UPBOARD_PIN_MODE_GPIO_OUT),
-+	UPBOARD_PINGROUP("i2c1_grp", upboard_up_i2c1_pins, UPBOARD_PIN_MODE_GPIO_OUT),
-+	UPBOARD_PINGROUP("spi2_grp", upboard_up_spi2_pins, &upboard_up_spi2_modes[0]),
-+	UPBOARD_PINGROUP("i2s0_grp", upboard_up_i2s0_pins, &upboard_up_i2s0_modes[0]),
-+	UPBOARD_PINGROUP("pwm0_grp", upboard_up_pwm0_pins, UPBOARD_PIN_MODE_GPIO_OUT),
-+	UPBOARD_PINGROUP("pwm1_grp", upboard_up_pwm1_pins, UPBOARD_PIN_MODE_GPIO_OUT),
-+	UPBOARD_PINGROUP("adc0_grp", upboard_up_adc0_pins, UPBOARD_PIN_MODE_GPIO_IN),
-+};
-+
-+static const char * const upboard_up_uart1_groups[] = { "uart1_grp" };
-+static const char * const upboard_up_i2c0_groups[]  = { "i2c0_grp" };
-+static const char * const upboard_up_i2c1_groups[]  = { "i2c1_grp" };
-+static const char * const upboard_up_spi2_groups[]  = { "spi2_grp" };
-+static const char * const upboard_up_i2s0_groups[]  = { "i2s0_grp" };
-+static const char * const upboard_up_pwm0_groups[]  = { "pwm0_grp" };
-+static const char * const upboard_up_pwm1_groups[]  = { "pwm1_grp" };
-+static const char * const upboard_up_adc0_groups[]  = { "adc0_grp" };
-+
-+#define UPBOARD_FUNCTION(func, groups)	PINCTRL_PINFUNCTION(func, groups, ARRAY_SIZE(groups))
-+
-+static const struct pinfunction upboard_up_pin_functions[] = {
-+	UPBOARD_FUNCTION("uart1", upboard_up_uart1_groups),
-+	UPBOARD_FUNCTION("i2c0", upboard_up_i2c0_groups),
-+	UPBOARD_FUNCTION("i2c1", upboard_up_i2c1_groups),
-+	UPBOARD_FUNCTION("spi2", upboard_up_spi2_groups),
-+	UPBOARD_FUNCTION("i2s0", upboard_up_i2s0_groups),
-+	UPBOARD_FUNCTION("pwm0", upboard_up_pwm0_groups),
-+	UPBOARD_FUNCTION("pwm1", upboard_up_pwm1_groups),
-+	UPBOARD_FUNCTION("adc0", upboard_up_adc0_groups),
-+};
-+
-+static const struct upboard_pinctrl_data upboard_up_pinctrl_data = {
-+	.groups = &upboard_up_pin_groups[0],
-+	.ngroups = ARRAY_SIZE(upboard_up_pin_groups),
-+	.funcs = &upboard_up_pin_functions[0],
-+	.nfuncs = ARRAY_SIZE(upboard_up_pin_functions),
-+	.pin_header = &upboard_up_pin_header[0],
-+	.ngpio = ARRAY_SIZE(upboard_up_pin_header),
-+};
-+
-+#define UPBOARD_UP2_BIT_TO_PIN(bit) UPBOARD_UP2_BIT_##bit
-+
-+#define UPBOARD_UP2_PIN_NAME(id)					\
-+	{								\
-+		.number = UPBOARD_UP2_BIT_##id,				\
-+		.name = #id,						\
-+	}
-+
-+#define UPBOARD_UP2_PIN_MUX(bit, data)					\
-+	{								\
-+		.number = UPBOARD_UP2_BIT_##bit,			\
-+		.name = "PINMUX_"#bit,					\
-+		.drv_data = (void *)(data),				\
-+	}
-+
-+#define UPBOARD_UP2_PIN_FUNC(id, data)					\
-+	{								\
-+		.number = UPBOARD_UP2_BIT_##id,				\
-+		.name = #id,						\
-+		.drv_data = (void *)(data),				\
-+	}
-+
-+enum upboard_up2_fpgabit {
-+	UPBOARD_UP2_BIT_UART1_TXD,
-+	UPBOARD_UP2_BIT_UART1_RXD,
-+	UPBOARD_UP2_BIT_UART1_RTS,
-+	UPBOARD_UP2_BIT_UART1_CTS,
-+	UPBOARD_UP2_BIT_GPIO3_ADC0,
-+	UPBOARD_UP2_BIT_GPIO5_ADC2,
-+	UPBOARD_UP2_BIT_GPIO6_ADC3,
-+	UPBOARD_UP2_BIT_GPIO11,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS1n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS1p,
-+	UPBOARD_UP2_BIT_SPI2_TXD,
-+	UPBOARD_UP2_BIT_SPI2_RXD,
-+	UPBOARD_UP2_BIT_SPI2_FS1,
-+	UPBOARD_UP2_BIT_SPI2_FS0,
-+	UPBOARD_UP2_BIT_SPI2_CLK,
-+	UPBOARD_UP2_BIT_SPI1_TXD,
-+	UPBOARD_UP2_BIT_SPI1_RXD,
-+	UPBOARD_UP2_BIT_SPI1_FS1,
-+	UPBOARD_UP2_BIT_SPI1_FS0,
-+	UPBOARD_UP2_BIT_SPI1_CLK,
-+	UPBOARD_UP2_BIT_I2C0_SCL,
-+	UPBOARD_UP2_BIT_I2C0_SDA,
-+	UPBOARD_UP2_BIT_I2C1_SCL,
-+	UPBOARD_UP2_BIT_I2C1_SDA,
-+	UPBOARD_UP2_BIT_PWM1,
-+	UPBOARD_UP2_BIT_PWM0,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS0n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS0p,
-+	UPBOARD_UP2_BIT_GPIO24,
-+	UPBOARD_UP2_BIT_GPIO10,
-+	UPBOARD_UP2_BIT_GPIO2,
-+	UPBOARD_UP2_BIT_GPIO1,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS3n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS3p,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS4n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS4p,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS5n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS5p,
-+	UPBOARD_UP2_BIT_I2S_SDO,
-+	UPBOARD_UP2_BIT_I2S_SDI,
-+	UPBOARD_UP2_BIT_I2S_WS_SYNC,
-+	UPBOARD_UP2_BIT_I2S_BCLK,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS6n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS6p,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS7n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS7p,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS2n,
-+	UPBOARD_UP2_BIT_EXHAT_LVDS2p,
-+};
-+
-+static const struct pinctrl_pin_desc upboard_up2_pins[] = {
-+	UPBOARD_UP2_PIN_NAME(UART1_TXD),
-+	UPBOARD_UP2_PIN_NAME(UART1_RXD),
-+	UPBOARD_UP2_PIN_NAME(UART1_RTS),
-+	UPBOARD_UP2_PIN_NAME(UART1_CTS),
-+	UPBOARD_UP2_PIN_NAME(GPIO3_ADC0),
-+	UPBOARD_UP2_PIN_NAME(GPIO5_ADC2),
-+	UPBOARD_UP2_PIN_NAME(GPIO6_ADC3),
-+	UPBOARD_UP2_PIN_NAME(GPIO11),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS1n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS1p),
-+	UPBOARD_UP2_PIN_NAME(SPI2_TXD),
-+	UPBOARD_UP2_PIN_NAME(SPI2_RXD),
-+	UPBOARD_UP2_PIN_NAME(SPI2_FS1),
-+	UPBOARD_UP2_PIN_NAME(SPI2_FS0),
-+	UPBOARD_UP2_PIN_NAME(SPI2_CLK),
-+	UPBOARD_UP2_PIN_NAME(SPI1_TXD),
-+	UPBOARD_UP2_PIN_NAME(SPI1_RXD),
-+	UPBOARD_UP2_PIN_NAME(SPI1_FS1),
-+	UPBOARD_UP2_PIN_NAME(SPI1_FS0),
-+	UPBOARD_UP2_PIN_NAME(SPI1_CLK),
-+	UPBOARD_UP2_PIN_MUX(I2C0_SCL, &upboard_i2c0_reg),
-+	UPBOARD_UP2_PIN_MUX(I2C0_SDA, &upboard_i2c0_reg),
-+	UPBOARD_UP2_PIN_MUX(I2C1_SCL, &upboard_i2c1_reg),
-+	UPBOARD_UP2_PIN_MUX(I2C1_SDA, &upboard_i2c1_reg),
-+	UPBOARD_UP2_PIN_NAME(PWM1),
-+	UPBOARD_UP2_PIN_NAME(PWM0),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS0n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS0p),
-+	UPBOARD_UP2_PIN_MUX(GPIO24, &upboard_i2c0_reg),
-+	UPBOARD_UP2_PIN_MUX(GPIO10, &upboard_i2c0_reg),
-+	UPBOARD_UP2_PIN_MUX(GPIO2, &upboard_i2c1_reg),
-+	UPBOARD_UP2_PIN_MUX(GPIO1, &upboard_i2c1_reg),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS3n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS3p),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS4n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS4p),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS5n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS5p),
-+	UPBOARD_UP2_PIN_NAME(I2S_SDO),
-+	UPBOARD_UP2_PIN_NAME(I2S_SDI),
-+	UPBOARD_UP2_PIN_NAME(I2S_WS_SYNC),
-+	UPBOARD_UP2_PIN_NAME(I2S_BCLK),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS6n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS6p),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS7n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS7p),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS2n),
-+	UPBOARD_UP2_PIN_NAME(EXHAT_LVDS2p),
-+};
-+
-+static const unsigned int upboard_up2_pin_header[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO10),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO24),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO1),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO2),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO3_ADC0),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO11),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_CLK),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_FS1),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_FS0),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_RXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_TXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_CLK),
-+	UPBOARD_UP2_BIT_TO_PIN(PWM0),
-+	UPBOARD_UP2_BIT_TO_PIN(PWM1),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_TXD),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_RXD),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_CTS),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_RTS),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_BCLK),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_WS_SYNC),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_SDI),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_SDO),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO6_ADC3),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_FS1),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_RXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_TXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_FS0),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO5_ADC2),
-+};
-+
-+static const unsigned int upboard_up2_uart1_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_TXD),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_RXD),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_RTS),
-+	UPBOARD_UP2_BIT_TO_PIN(UART1_CTS),
-+};
-+
-+static const enum upboard_pin_mode upboard_up2_uart1_modes[] = {
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+};
-+
-+static_assert(ARRAY_SIZE(upboard_up2_uart1_modes) == ARRAY_SIZE(upboard_up2_uart1_pins));
-+
-+static const unsigned int upboard_up2_i2c0_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(I2C0_SCL),
-+	UPBOARD_UP2_BIT_TO_PIN(I2C0_SDA),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO24),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO10),
-+};
-+
-+static const unsigned int upboard_up2_i2c1_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(I2C1_SCL),
-+	UPBOARD_UP2_BIT_TO_PIN(I2C1_SDA),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO2),
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO1),
-+};
-+
-+static const unsigned int upboard_up2_spi1_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_TXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_RXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_FS1),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_FS0),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI1_CLK),
-+};
-+
-+static const unsigned int upboard_up2_spi2_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_TXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_RXD),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_FS1),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_FS0),
-+	UPBOARD_UP2_BIT_TO_PIN(SPI2_CLK),
-+};
-+
-+static const enum upboard_pin_mode upboard_up2_spi_modes[] = {
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+};
-+
-+static_assert(ARRAY_SIZE(upboard_up2_spi_modes) == ARRAY_SIZE(upboard_up2_spi1_pins));
-+
-+static_assert(ARRAY_SIZE(upboard_up2_spi_modes) == ARRAY_SIZE(upboard_up2_spi2_pins));
-+
-+static const unsigned int upboard_up2_i2s0_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_BCLK),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_WS_SYNC),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_SDI),
-+	UPBOARD_UP2_BIT_TO_PIN(I2S_SDO),
-+};
-+
-+static const enum upboard_pin_mode upboard_up2_i2s0_modes[] = {
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_OUT,
-+	UPBOARD_PIN_MODE_GPIO_IN,
-+	UPBOARD_PIN_MODE_GPIO_OUT
-+};
-+
-+static_assert(ARRAY_SIZE(upboard_up2_i2s0_modes) == ARRAY_SIZE(upboard_up2_i2s0_pins));
-+
-+static const unsigned int upboard_up2_pwm0_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(PWM0),
-+};
-+
-+static const unsigned int upboard_up2_pwm1_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(PWM1),
-+};
-+
-+static const unsigned int upboard_up2_adc0_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO3_ADC0),
-+};
-+
-+static const unsigned int upboard_up2_adc2_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO5_ADC2),
-+};
-+
-+static const unsigned int upboard_up2_adc3_pins[] = {
-+	UPBOARD_UP2_BIT_TO_PIN(GPIO6_ADC3),
-+};
-+
-+static const struct upboard_pingroup upboard_up2_pin_groups[] = {
-+	UPBOARD_PINGROUP("uart1_grp", upboard_up2_uart1_pins, &upboard_up2_uart1_modes[0]),
-+	UPBOARD_PINGROUP("i2c0_grp", upboard_up2_i2c0_pins, UPBOARD_PIN_MODE_FUNCTION),
-+	UPBOARD_PINGROUP("i2c1_grp", upboard_up2_i2c1_pins, UPBOARD_PIN_MODE_FUNCTION),
-+	UPBOARD_PINGROUP("spi1_grp", upboard_up2_spi1_pins, &upboard_up2_spi_modes[0]),
-+	UPBOARD_PINGROUP("spi2_grp", upboard_up2_spi2_pins, &upboard_up2_spi_modes[0]),
-+	UPBOARD_PINGROUP("i2s0_grp", upboard_up2_i2s0_pins, &upboard_up2_i2s0_modes[0]),
-+	UPBOARD_PINGROUP("pwm0_grp", upboard_up2_pwm0_pins, UPBOARD_PIN_MODE_GPIO_OUT),
-+	UPBOARD_PINGROUP("pwm1_grp", upboard_up2_pwm1_pins, UPBOARD_PIN_MODE_GPIO_OUT),
-+	UPBOARD_PINGROUP("adc0_grp", upboard_up2_adc0_pins, UPBOARD_PIN_MODE_GPIO_IN),
-+	UPBOARD_PINGROUP("adc2_grp", upboard_up2_adc2_pins, UPBOARD_PIN_MODE_GPIO_IN),
-+	UPBOARD_PINGROUP("adc3_grp", upboard_up2_adc3_pins, UPBOARD_PIN_MODE_GPIO_IN),
-+};
-+
-+static const char * const upboard_up2_uart1_groups[] = { "uart1_grp" };
-+static const char * const upboard_up2_i2c0_groups[]  = { "i2c0_grp" };
-+static const char * const upboard_up2_i2c1_groups[]  = { "i2c1_grp" };
-+static const char * const upboard_up2_spi1_groups[]  = { "spi1_grp" };
-+static const char * const upboard_up2_spi2_groups[]  = { "spi2_grp" };
-+static const char * const upboard_up2_i2s0_groups[]  = { "i2s0_grp" };
-+static const char * const upboard_up2_pwm0_groups[]  = { "pwm0_grp" };
-+static const char * const upboard_up2_pwm1_groups[]  = { "pwm1_grp" };
-+static const char * const upboard_up2_adc0_groups[]  = { "adc0_grp" };
-+static const char * const upboard_up2_adc2_groups[]  = { "adc2_grp" };
-+static const char * const upboard_up2_adc3_groups[]  = { "adc3_grp" };
-+
-+static const struct pinfunction upboard_up2_pin_functions[] = {
-+	UPBOARD_FUNCTION("uart1", upboard_up2_uart1_groups),
-+	UPBOARD_FUNCTION("i2c0", upboard_up2_i2c0_groups),
-+	UPBOARD_FUNCTION("i2c1", upboard_up2_i2c1_groups),
-+	UPBOARD_FUNCTION("spi1", upboard_up2_spi1_groups),
-+	UPBOARD_FUNCTION("spi2", upboard_up2_spi2_groups),
-+	UPBOARD_FUNCTION("i2s0", upboard_up2_i2s0_groups),
-+	UPBOARD_FUNCTION("pwm0", upboard_up2_pwm0_groups),
-+	UPBOARD_FUNCTION("pwm1", upboard_up2_pwm1_groups),
-+	UPBOARD_FUNCTION("adc0", upboard_up2_adc0_groups),
-+	UPBOARD_FUNCTION("adc2", upboard_up2_adc2_groups),
-+	UPBOARD_FUNCTION("adc3", upboard_up2_adc3_groups),
-+};
-+
-+static const struct upboard_pinctrl_data upboard_up2_pinctrl_data = {
-+	.groups = &upboard_up2_pin_groups[0],
-+	.ngroups = ARRAY_SIZE(upboard_up2_pin_groups),
-+	.funcs = &upboard_up2_pin_functions[0],
-+	.nfuncs = ARRAY_SIZE(upboard_up2_pin_functions),
-+	.pin_header = &upboard_up2_pin_header[0],
-+	.ngpio = ARRAY_SIZE(upboard_up2_pin_header),
-+};
-+
-+static int upboard_pinctrl_set_function(struct pinctrl_dev *pctldev, unsigned int offset)
-+{
-+	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct upboard_pin *p = &pctrl->pins[offset];
-+	int ret;
-+
-+	if (!p->funcbit)
-+		return -EPERM;
-+
-+	ret = regmap_field_write(p->enbit, 0);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_field_write(p->funcbit, 1);
-+}
-+
-+static int upboard_pinctrl_gpio_commit_enable(struct pinctrl_dev *pctldev, unsigned int offset)
-+{
-+	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct upboard_pin *p = &pctrl->pins[offset];
-+	int ret;
-+
-+	if (p->funcbit) {
-+		ret = regmap_field_write(p->funcbit, 0);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return regmap_field_write(p->enbit, 1);
-+}
-+
-+static int upboard_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
-+					       struct pinctrl_gpio_range *range,
-+					       unsigned int offset)
-+{
-+	return upboard_pinctrl_gpio_commit_enable(pctldev, offset);
-+}
-+
-+static void upboard_pinctrl_gpio_commit_disable(struct pinctrl_dev *pctldev, unsigned int offset)
-+{
-+	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct upboard_pin *p = &pctrl->pins[offset];
-+
-+	regmap_field_write(p->enbit, 0);
-+};
-+
-+static void upboard_pinctrl_gpio_disable_free(struct pinctrl_dev *pctldev,
-+					      struct pinctrl_gpio_range *range, unsigned int offset)
-+{
-+	return upboard_pinctrl_gpio_commit_disable(pctldev, offset);
-+}
-+
-+static int upboard_pinctrl_gpio_commit_direction(struct pinctrl_dev *pctldev, unsigned int offset,
-+						 bool input)
-+{
-+	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct upboard_pin *p = &pctrl->pins[offset];
-+
-+	return regmap_field_write(p->dirbit, input);
-+}
-+
-+static int upboard_pinctrl_gpio_set_direction(struct pinctrl_dev *pctldev,
-+					      struct pinctrl_gpio_range *range,
-+					      unsigned int offset, bool input)
-+{
-+	return upboard_pinctrl_gpio_commit_direction(pctldev, offset, input);
-+}
-+
-+static int upboard_pinctrl_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-+				   unsigned int group_selector)
-+{
-+	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct upboard_pinctrl_data *pctrl_data = pctrl->pctrl_data;
-+	const struct upboard_pingroup *upgroups = pctrl_data->groups;
-+	struct group_desc *grp;
-+	unsigned int mode, i;
-+	int ret;
-+
-+	grp = pinctrl_generic_get_group(pctldev, group_selector);
-+	if (!grp)
-+		return -EINVAL;
-+
-+	for (i = 0; i < grp->grp.npins; i++) {
-+		mode = upgroups[group_selector].mode ?: upgroups[group_selector].modes[i];
-+		if (mode == UPBOARD_PIN_MODE_FUNCTION) {
-+			ret = upboard_pinctrl_set_function(pctldev, grp->grp.pins[i]);
-+			if (ret)
-+				return ret;
-+
-+			continue;
-+		}
-+
-+		ret = upboard_pinctrl_gpio_commit_enable(pctldev, grp->grp.pins[i]);
-+		if (ret)
-+			return ret;
-+
-+		ret = upboard_pinctrl_gpio_commit_direction(pctldev, grp->grp.pins[i],
-+							    mode == UPBOARD_PIN_MODE_GPIO_IN);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinmux_ops upboard_pinmux_ops = {
-+	.get_functions_count = pinmux_generic_get_function_count,
-+	.get_function_name = pinmux_generic_get_function_name,
-+	.get_function_groups = pinmux_generic_get_function_groups,
-+	.set_mux = upboard_pinctrl_set_mux,
-+	.gpio_request_enable = upboard_pinctrl_gpio_request_enable,
-+	.gpio_disable_free = upboard_pinctrl_gpio_disable_free,
-+	.gpio_set_direction = upboard_pinctrl_gpio_set_direction,
-+};
-+
-+static int upboard_pinctrl_pin_get_mode(struct pinctrl_dev *pctldev, unsigned int pin)
-+{
-+	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	struct upboard_pin *p = &pctrl->pins[pin];
-+	unsigned int val;
-+	int ret;
-+
-+	if (p->funcbit) {
-+		ret = regmap_field_read(p->funcbit, &val);
-+		if (ret)
-+			return ret;
-+		if (val)
-+			return UPBOARD_PIN_MODE_FUNCTION;
-+	}
-+
-+	ret = regmap_field_read(p->enbit, &val);
-+	if (ret)
-+		return ret;
-+	if (!val)
-+		return UPBOARD_PIN_MODE_DISABLED;
-+
-+	ret = regmap_field_read(p->dirbit, &val);
-+	if (ret)
-+		return ret;
-+
-+	return val ? UPBOARD_PIN_MODE_GPIO_IN : UPBOARD_PIN_MODE_GPIO_OUT;
-+}
-+
-+static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-+				     unsigned int offset)
-+{
-+	int ret;
-+
-+	ret = upboard_pinctrl_pin_get_mode(pctldev, offset);
-+	if (ret == UPBOARD_PIN_MODE_FUNCTION)
-+		seq_puts(s, "mode function ");
-+	else if (ret == UPBOARD_PIN_MODE_DISABLED)
-+		seq_puts(s, "HIGH-Z");
-+	else
-+		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
-+}
-+
-+static const struct pinctrl_ops upboard_pinctrl_ops = {
-+	.get_groups_count = pinctrl_generic_get_group_count,
-+	.get_group_name = pinctrl_generic_get_group_name,
-+	.get_group_pins = pinctrl_generic_get_group_pins,
-+	.pin_dbg_show = upboard_pinctrl_dbg_show,
-+};
-+
-+static int upboard_gpio_request(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(gc);
-+	struct upboard_pinctrl *pctrl = gpio_fwd_get_data(fwd);
-+	unsigned int pin = pctrl->pctrl_data->pin_header[offset];
-+	struct gpio_desc *desc;
-+	int ret;
-+
-+	ret = pinctrl_gpio_request(gc, offset);
-+	if (ret)
-+		return ret;
-+
-+	desc = gpiod_get_index(pctrl->dev, "external", pin, 0);
-+	if (IS_ERR(desc)) {
-+		pinctrl_gpio_free(gc, offset);
-+		return PTR_ERR(desc);
-+	}
-+
-+	return gpio_fwd_gpio_add(fwd, desc, offset);
-+}
-+
-+static void upboard_gpio_free(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(gc);
-+
-+	gpio_fwd_gpio_free(fwd, offset);
-+	pinctrl_gpio_free(gc, offset);
-+}
-+
-+static int upboard_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(gc);
-+	struct upboard_pinctrl *pctrl = gpio_fwd_get_data(fwd);
-+	unsigned int pin = pctrl->pctrl_data->pin_header[offset];
-+	int mode;
-+
-+	/* If the pin is in function mode or high-z, input direction is returned */
-+	mode = upboard_pinctrl_pin_get_mode(pctrl->pctldev, pin);
-+	if (mode < 0)
-+		return mode;
-+
-+	if (mode == UPBOARD_PIN_MODE_GPIO_OUT)
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int upboard_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	int ret;
-+
-+	ret = pinctrl_gpio_direction_input(gc, offset);
-+	if (ret)
-+		return ret;
-+
-+	return gpio_fwd_direction_input(gc, offset);
-+}
-+
-+static int upboard_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	int ret;
-+
-+	ret = pinctrl_gpio_direction_output(gc, offset);
-+	if (ret)
-+		return ret;
-+
-+	return gpio_fwd_direction_output(gc, offset, value);
-+}
-+
-+static int upboard_pinctrl_register_groups(struct upboard_pinctrl *pctrl)
-+{
-+	const struct upboard_pingroup *groups = pctrl->pctrl_data->groups;
-+	size_t ngroups = pctrl->pctrl_data->ngroups;
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < ngroups; i++) {
-+		ret = pinctrl_generic_add_group(pctrl->pctldev, groups[i].grp.name,
-+						groups[i].grp.pins, groups[i].grp.npins, pctrl);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int upboard_pinctrl_register_functions(struct upboard_pinctrl *pctrl)
-+{
-+	const struct pinfunction *funcs = pctrl->pctrl_data->funcs;
-+	size_t nfuncs = pctrl->pctrl_data->nfuncs;
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < nfuncs ; i++) {
-+		ret = pinmux_generic_add_function(pctrl->pctldev, funcs[i].name,
-+						  funcs[i].groups, funcs[i].ngroups, NULL);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_map upboard_pinctrl_mapping_apl01[] = {
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INT3452:00", "pwm0_grp", "pwm0"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INT3452:00", "pwm1_grp", "pwm1"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INT3452:00", "uart1_grp", "uart1"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INT3452:02", "i2c0_grp", "i2c0"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INT3452:02", "i2c1_grp", "i2c1"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INT3452:01", "ssp0_grp", "ssp0"),
-+};
-+
-+static const struct dmi_system_id dmi_platform_info[] = {
-+	{
-+		/* UP Squared */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UP-APL01"),
-+		},
-+		.driver_data = (void *)UPBOARD_APL01,
-+	},
-+	{ }
-+};
-+
-+static int upboard_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct upboard_fpga *fpga = dev_get_drvdata(dev->parent);
-+	const struct dmi_system_id *dmi_id;
-+	enum upboard_board_id board_id;
-+	struct pinctrl_desc *pctldesc;
-+	struct upboard_pinctrl *pctrl;
-+	struct upboard_pin *pins;
-+	struct gpiochip_fwd *fwd;
-+	struct pinctrl *pinctrl;
-+	struct gpio_chip *chip;
-+	unsigned int i;
-+	int ret;
-+
-+	pctldesc = devm_kzalloc(dev, sizeof(*pctldesc), GFP_KERNEL);
-+	if (!pctldesc)
-+		return -ENOMEM;
-+
-+	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
-+	if (!pctrl)
-+		return -ENOMEM;
-+
-+	switch (fpga->fpga_data->type) {
-+	case UPBOARD_UP_FPGA:
-+		pctldesc->pins = upboard_up_pins;
-+		pctldesc->npins = ARRAY_SIZE(upboard_up_pins);
-+		pctrl->pctrl_data = &upboard_up_pinctrl_data;
-+		break;
-+	case UPBOARD_UP2_FPGA:
-+		pctldesc->pins = upboard_up2_pins;
-+		pctldesc->npins = ARRAY_SIZE(upboard_up2_pins);
-+		pctrl->pctrl_data = &upboard_up2_pinctrl_data;
-+		break;
-+	default:
-+		return dev_err_probe(dev, -ENODEV, "Unsupported device type %d\n",
-+				     fpga->fpga_data->type);
-+	}
-+
-+	dmi_id = dmi_first_match(dmi_platform_info);
-+	if (!dmi_id)
-+		return -ENODEV;
-+
-+	board_id = (enum upboard_board_id)(unsigned long)dmi_id->driver_data;
-+
-+	switch (board_id) {
-+	case UPBOARD_APL01:
-+		pctrl->maps = upboard_pinctrl_mapping_apl01;
-+		pctrl->nmaps = ARRAY_SIZE(upboard_pinctrl_mapping_apl01);
-+		break;
-+	default:
-+		return dev_err_probe(dev, -ENODEV, "Unsupported board\n");
-+	}
-+
-+	pctldesc->name = dev_name(dev);
-+	pctldesc->owner = THIS_MODULE;
-+	pctldesc->pctlops = &upboard_pinctrl_ops;
-+	pctldesc->pmxops = &upboard_pinmux_ops;
-+
-+	pctrl->dev = dev;
-+
-+	pins = devm_kcalloc(dev, pctldesc->npins, sizeof(*pins), GFP_KERNEL);
-+	if (!pins)
-+		return -ENOMEM;
-+
-+	/* Initialize pins */
-+	for (i = 0; i < pctldesc->npins; i++) {
-+		const struct pinctrl_pin_desc *pin_desc = &pctldesc->pins[i];
-+		unsigned int regoff = pin_desc->number / UPBOARD_REGISTER_SIZE;
-+		unsigned int lsb = pin_desc->number % UPBOARD_REGISTER_SIZE;
-+		struct reg_field * const fld_func = pin_desc->drv_data;
-+		struct upboard_pin *pin = &pins[i];
-+		struct reg_field fldconf = {};
-+
-+		if (fld_func) {
-+			pin->funcbit = devm_regmap_field_alloc(dev, fpga->regmap, *fld_func);
-+			if (IS_ERR(pin->funcbit))
-+				return PTR_ERR(pin->funcbit);
-+		}
-+
-+		fldconf.reg = UPBOARD_REG_GPIO_EN0 + regoff;
-+		fldconf.lsb = lsb;
-+		fldconf.msb = lsb;
-+		pin->enbit = devm_regmap_field_alloc(dev, fpga->regmap, fldconf);
-+		if (IS_ERR(pin->enbit))
-+			return PTR_ERR(pin->enbit);
-+
-+		fldconf.reg = UPBOARD_REG_GPIO_DIR0 + regoff;
-+		fldconf.lsb = lsb;
-+		fldconf.msb = lsb;
-+		pin->dirbit = devm_regmap_field_alloc(dev, fpga->regmap, fldconf);
-+		if (IS_ERR(pin->dirbit))
-+			return PTR_ERR(pin->dirbit);
-+	}
-+
-+	pctrl->pins = pins;
-+
-+	ret = devm_pinctrl_register_and_init(dev, pctldesc, pctrl, &pctrl->pctldev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register pinctrl\n");
-+
-+	ret = upboard_pinctrl_register_groups(pctrl);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register groups\n");
-+
-+	ret = upboard_pinctrl_register_functions(pctrl);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register functions\n");
-+
-+	ret = devm_pinctrl_register_mappings(dev, pctrl->maps, pctrl->nmaps);
-+	if (ret)
-+		return ret;
-+
-+	pinctrl = devm_pinctrl_get_select_default(dev);
-+	if (IS_ERR(pinctrl))
-+		return dev_err_probe(dev, PTR_ERR(pinctrl), "Failed to select pinctrl\n");
-+
-+	ret = pinctrl_enable(pctrl->pctldev);
-+	if (ret)
-+		return ret;
-+
-+	fwd = devm_gpio_fwd_alloc(dev, pctrl->pctrl_data->ngpio);
-+	if (IS_ERR(fwd))
-+		return dev_err_probe(dev, PTR_ERR(fwd), "Failed to allocate the gpiochip forwarder\n");
-+
-+	chip = gpio_fwd_get_gpiochip(fwd);
-+	chip->request = upboard_gpio_request;
-+	chip->free = upboard_gpio_free;
-+	chip->get_direction = upboard_gpio_get_direction;
-+	chip->direction_output = upboard_gpio_direction_output;
-+	chip->direction_input = upboard_gpio_direction_input;
-+
-+	ret = gpio_fwd_register(fwd, pctrl);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register the gpiochip forwarder\n");
-+
-+	return gpiochip_add_sparse_pin_range(chip, dev_name(dev), 0, pctrl->pctrl_data->pin_header,
-+					     pctrl->pctrl_data->ngpio);
-+}
-+
-+static struct platform_driver upboard_pinctrl_driver = {
-+	.driver = {
-+		.name = "upboard-pinctrl",
-+	},
-+	.probe = upboard_pinctrl_probe,
-+};
-+module_platform_driver(upboard_pinctrl_driver);
-+
-+MODULE_AUTHOR("Thomas Richard <thomas.richard@bootlin.com");
-+MODULE_DESCRIPTION("UP Board HAT pin controller driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:upboard-pinctrl");
-+MODULE_IMPORT_NS("GPIO_FORWARDER");
+This copy/paste approach would be my preference.
 
--- 
-2.39.5
+Thanks,
+Ryan
+
+> 
+> Thanks,
+> 
+> Alex
+> 
+> On 21/03/2025 14:06, Alexandre Ghiti wrote:
+>> This patchset intends to merge the contiguous ptes hugetlbfs implementation
+>> of arm64 and riscv.
+>>
+>> Both arm64 and riscv support the use of contiguous ptes to map pages that
+>> are larger than the default page table size, respectively called contpte
+>> and svnapot.
+>>
+>> The riscv implementation differs from the arm64's in that the LSBs of the
+>> pfn of a svnapot pte are used to store the size of the mapping, allowing
+>> for future sizes to be added (for now only 64KB is supported). That's an
+>> issue for the core mm code which expects to find the *real* pfn a pte points
+>> to. Patch 1 fixes that by always returning svnapot ptes with the real pfn
+>> and restores the size of the mapping when it is written to a page table.
+>>
+>> The following patches are just merges of the 2 different implementations
+>> that currently exist in arm64 and riscv which are very similar. It paves
+>> the way to the reuse of the recent contpte THP work by Ryan [1] to avoid
+>> reimplementing the same in riscv.
+>>
+>> This patchset was tested by running the libhugetlbfs testsuite with 64KB
+>> and 2MB pages on both architectures (on a 4KB base page size arm64 kernel).
+>>
+>> [1] https://lore.kernel.org/linux-arm-kernel/20240215103205.2607016-1-
+>> ryan.roberts@arm.com/
+>>
+>> v4: https://lore.kernel.org/linux-riscv/20250127093530.19548-1-
+>> alexghiti@rivosinc.com/
+>> v3: https://lore.kernel.org/all/20240802151430.99114-1-alexghiti@rivosinc.com/
+>> v2: https://lore.kernel.org/linux-riscv/20240508113419.18620-1-
+>> alexghiti@rivosinc.com/
+>> v1: https://lore.kernel.org/linux-riscv/20240301091455.246686-1-
+>> alexghiti@rivosinc.com/
+>>
+>> Changes in v5:
+>>    - Fix "int i" unused variable in patch 2 (as reported by PW)
+>>    - Fix !svnapot build
+>>    - Fix arch_make_huge_pte() which returned a real napot pte
+>>    - Make __ptep_get(), ptep_get_and_clear() and __set_ptes() napot aware to
+>>      avoid leaking real napot pfns to core mm
+>>    - Fix arch_contpte_get_num_contig() that used to always try to get the
+>>      mapping size from the ptep, which does not work if the ptep comes the
+>> core mm
+>>    - Rebase on top of 6.14-rc7 + fix for
+>>      huge_ptep_get_and_clear()/huge_pte_clear()
+>>      https://lore.kernel.org/linux-riscv/20250317072551.572169-1-
+>> alexghiti@rivosinc.com/
+>>
+>> Changes in v4:
+>>    - Rebase on top of 6.13
+>>
+>> Changes in v3:
+>>    - Split set_ptes and ptep_get into internal and external API (Ryan)
+>>    - Rename ARCH_HAS_CONTPTE into ARCH_WANT_GENERAL_HUGETLB_CONTPTE so that
+>>      we split hugetlb functions from contpte functions (actually riscv contpte
+>>      functions to support THP will come into another series) (Ryan)
+>>    - Rebase on top of 6.11-rc1
+>>
+>> Changes in v2:
+>>    - Rebase on top of 6.9-rc3
+>>
+>> Alexandre Ghiti (9):
+>>    riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
+>>    riscv: Restore the pfn in a NAPOT pte when manipulated by core mm code
+>>    mm: Use common huge_ptep_get() function for riscv/arm64
+>>    mm: Use common set_huge_pte_at() function for riscv/arm64
+>>    mm: Use common huge_pte_clear() function for riscv/arm64
+>>    mm: Use common huge_ptep_get_and_clear() function for riscv/arm64
+>>    mm: Use common huge_ptep_set_access_flags() function for riscv/arm64
+>>    mm: Use common huge_ptep_set_wrprotect() function for riscv/arm64
+>>    mm: Use common huge_ptep_clear_flush() function for riscv/arm64
+>>
+>>   arch/arm64/Kconfig                  |   1 +
+>>   arch/arm64/include/asm/hugetlb.h    |  22 +--
+>>   arch/arm64/include/asm/pgtable.h    |  68 ++++++-
+>>   arch/arm64/mm/hugetlbpage.c         | 294 +---------------------------
+>>   arch/riscv/Kconfig                  |   1 +
+>>   arch/riscv/include/asm/hugetlb.h    |  36 +---
+>>   arch/riscv/include/asm/pgtable-64.h |  11 ++
+>>   arch/riscv/include/asm/pgtable.h    | 222 ++++++++++++++++++---
+>>   arch/riscv/mm/hugetlbpage.c         | 243 +----------------------
+>>   arch/riscv/mm/pgtable.c             |   6 +-
+>>   include/linux/hugetlb_contpte.h     |  39 ++++
+>>   mm/Kconfig                          |   3 +
+>>   mm/Makefile                         |   1 +
+>>   mm/hugetlb_contpte.c                | 258 ++++++++++++++++++++++++
+>>   14 files changed, 583 insertions(+), 622 deletions(-)
+>>   create mode 100644 include/linux/hugetlb_contpte.h
+>>   create mode 100644 mm/hugetlb_contpte.c
+>>
+> 
+> From mboxrd@z Thu Jan  1 00:00:00 1970
+> Return-Path: <linux-riscv-bounces+linux-
+> riscv=archiver.kernel.org@lists.infradead.org>
+> X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+>     aws-us-west-2-korg-lkml-1.web.codeaurora.org
+> Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+>     (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+>     (No client certificate requested)
+>     by smtp.lore.kernel.org (Postfix) with ESMTPS id A4D94C3601E
+>     for <linux-riscv@archiver.kernel.org>; Mon,  7 Apr 2025 12:35:59 +0000 (UTC)
+> DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+>     d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+>     Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+>     List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
+>     Date:Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+>     Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+>     bh=QGtw44ZccGhXZHG0gus8jo8nditsIsPYxbfRUYIB+hU=; b=TuC4N8bBiqSCZqINAlCMfr1aa0
+>     HKCtL5AM0VsHJ36rTV1TZCiAN0tKuI4mbGKMbrvNUcKXaa0IaZGgplHJXZPCwfiRmK51dvr1ndwc+
+>     x4+UfoK5lEB2HNBzTjcA9nH164vMm8lu0bitMWB+QzfpYT0nprO+11bFlBPqZVI35bwer5bTytL/w
+>     2PtmHktDSGJXgSCnDKefpnBo+yiIKU2uq7dhR713fLa1hzLYi5f0+2trqJXfZ5ADJSOBaZc6h2RQo
+>     Hfb0DRyNJsiBjuBYn3H1+RCnv6lZwV1eVbltqj1BIjrb0C32Zmnb7FxqUYECyH4vEhWbmYgbwpAKI
+>     8BYmZxbA==;
+> Received: from localhost ([::1] helo=bombadil.infradead.org)
+>     by bombadil.infradead.org with esmtp (Exim 4.98.1 #2 (Red Hat Linux))
+>     id 1u1lhh-00000000H0X-3INP;
+>     Mon, 07 Apr 2025 12:35:53 +0000
+> Received: from relay2-d.mail.gandi.net ([2001:4b98:dc4:8::222])
+>     by bombadil.infradead.org with esmtps (Exim 4.98.1 #2 (Red Hat Linux))
+>     id 1u1lDQ-000000009MS-3LfF;
+>     Mon, 07 Apr 2025 12:04:39 +0000
+> Received: by mail.gandi.net (Postfix) with ESMTPSA id E350243163;
+>     Mon,  7 Apr 2025 12:04:28 +0000 (UTC)
+> Message-ID: <4dd5d187-f977-4f27-9937-8608991797b5@ghiti.fr>
+> Date: Mon, 7 Apr 2025 14:04:27 +0200
+> MIME-Version: 1.0
+> User-Agent: Mozilla Thunderbird
+> Subject: Re: [PATCH v5 0/9] Merge arm64/riscv hugetlbfs contpte support
+> Content-Language: en-US
+> To: Alexandre Ghiti <alexghiti@rivosinc.com>,
+> Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+> Ryan Roberts <ryan.roberts@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+> Matthew Wilcox <willy@infradead.org>,
+> Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+> <palmer@dabbelt.com>, Andrew Morton <akpm@linux-foundation.org>,
+> linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+> linux-riscv@lists.infradead.org, linux-mm@kvack.org
+> References: <20250321130635.227011-1-alexghiti@rivosinc.com>
+> From: Alexandre Ghiti <alex@ghiti.fr>
+> In-Reply-To: <20250321130635.227011-1-alexghiti@rivosinc.com>
+> X-GND-State: clean
+> X-GND-Score: -100
+> X-GND-Cause:
+> gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtudegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepveetvdfhvdeuheekvdettdegheetgeejiefgjeetvedtfeeuvddvtefhjeffgeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeeisgemvdefgeekmeduvgduheemvdgrgeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeeisgemvdefgeekmeduvgduheemvdgrgeehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeeisgemvdefgeekmeduvgduheemvdgrgeehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrlhgvgihghhhithhisehrihhvohhsihhntgdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhls
+> ehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhigrnhdrrhhosggvrhhtshesrghrmhdrtghomhdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnugesrghrmhdrtghomhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
+> X-GND-Sasl: alex@ghiti.fr
+> X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 X-
+> CRM114-CacheID: sfid-20250407_050436_994014_8B16F654 X-CRM114-Status: GOOD ( 
+> 23.24  )
+> X-BeenThere: linux-riscv@lists.infradead.org
+> X-Mailman-Version: 2.1.34
+> Precedence: list
+> List-Id: <linux-riscv.lists.infradead.org>
+> List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+> <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+> List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+> List-Post: <mailto:linux-riscv@lists.infradead.org>
+> List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+> List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+> <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+> Content-Transfer-Encoding: 7bit
+> Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+> Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+> Errors-To: linux-riscv-bounces+linux-riscv=archiver.kernel.org@lists.infradead.org
+> 
+> Can someone from arm64 review this? I think it's preferable to share the same
+> implementation between riscv and arm64.
+> 
+> The end goal is the support of mTHP using svnapot on riscv, which we want soon,
+> so if that patchset does not gain any traction, I'll just copy/paste the arm64
+> implementation into riscv.
+> 
+> Thanks,
+> 
+> Alex
+> 
+> On 21/03/2025 14:06, Alexandre Ghiti wrote:
+>> This patchset intends to merge the contiguous ptes hugetlbfs implementation
+>> of arm64 and riscv.
+>>
+>> Both arm64 and riscv support the use of contiguous ptes to map pages that
+>> are larger than the default page table size, respectively called contpte
+>> and svnapot.
+>>
+>> The riscv implementation differs from the arm64's in that the LSBs of the
+>> pfn of a svnapot pte are used to store the size of the mapping, allowing
+>> for future sizes to be added (for now only 64KB is supported). That's an
+>> issue for the core mm code which expects to find the *real* pfn a pte points
+>> to. Patch 1 fixes that by always returning svnapot ptes with the real pfn
+>> and restores the size of the mapping when it is written to a page table.
+>>
+>> The following patches are just merges of the 2 different implementations
+>> that currently exist in arm64 and riscv which are very similar. It paves
+>> the way to the reuse of the recent contpte THP work by Ryan [1] to avoid
+>> reimplementing the same in riscv.
+>>
+>> This patchset was tested by running the libhugetlbfs testsuite with 64KB
+>> and 2MB pages on both architectures (on a 4KB base page size arm64 kernel).
+>>
+>> [1] https://lore.kernel.org/linux-arm-kernel/20240215103205.2607016-1-
+>> ryan.roberts@arm.com/
+>>
+>> v4: https://lore.kernel.org/linux-riscv/20250127093530.19548-1-
+>> alexghiti@rivosinc.com/
+>> v3: https://lore.kernel.org/all/20240802151430.99114-1-alexghiti@rivosinc.com/
+>> v2: https://lore.kernel.org/linux-riscv/20240508113419.18620-1-
+>> alexghiti@rivosinc.com/
+>> v1: https://lore.kernel.org/linux-riscv/20240301091455.246686-1-
+>> alexghiti@rivosinc.com/
+>>
+>> Changes in v5:
+>>    - Fix "int i" unused variable in patch 2 (as reported by PW)
+>>    - Fix !svnapot build
+>>    - Fix arch_make_huge_pte() which returned a real napot pte
+>>    - Make __ptep_get(), ptep_get_and_clear() and __set_ptes() napot aware to
+>>      avoid leaking real napot pfns to core mm
+>>    - Fix arch_contpte_get_num_contig() that used to always try to get the
+>>      mapping size from the ptep, which does not work if the ptep comes the
+>> core mm
+>>    - Rebase on top of 6.14-rc7 + fix for
+>>      huge_ptep_get_and_clear()/huge_pte_clear()
+>>      https://lore.kernel.org/linux-riscv/20250317072551.572169-1-
+>> alexghiti@rivosinc.com/
+>>
+>> Changes in v4:
+>>    - Rebase on top of 6.13
+>>
+>> Changes in v3:
+>>    - Split set_ptes and ptep_get into internal and external API (Ryan)
+>>    - Rename ARCH_HAS_CONTPTE into ARCH_WANT_GENERAL_HUGETLB_CONTPTE so that
+>>      we split hugetlb functions from contpte functions (actually riscv contpte
+>>      functions to support THP will come into another series) (Ryan)
+>>    - Rebase on top of 6.11-rc1
+>>
+>> Changes in v2:
+>>    - Rebase on top of 6.9-rc3
+>>
+>> Alexandre Ghiti (9):
+>>    riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
+>>    riscv: Restore the pfn in a NAPOT pte when manipulated by core mm code
+>>    mm: Use common huge_ptep_get() function for riscv/arm64
+>>    mm: Use common set_huge_pte_at() function for riscv/arm64
+>>    mm: Use common huge_pte_clear() function for riscv/arm64
+>>    mm: Use common huge_ptep_get_and_clear() function for riscv/arm64
+>>    mm: Use common huge_ptep_set_access_flags() function for riscv/arm64
+>>    mm: Use common huge_ptep_set_wrprotect() function for riscv/arm64
+>>    mm: Use common huge_ptep_clear_flush() function for riscv/arm64
+>>
+>>   arch/arm64/Kconfig                  |   1 +
+>>   arch/arm64/include/asm/hugetlb.h    |  22 +--
+>>   arch/arm64/include/asm/pgtable.h    |  68 ++++++-
+>>   arch/arm64/mm/hugetlbpage.c         | 294 +---------------------------
+>>   arch/riscv/Kconfig                  |   1 +
+>>   arch/riscv/include/asm/hugetlb.h    |  36 +---
+>>   arch/riscv/include/asm/pgtable-64.h |  11 ++
+>>   arch/riscv/include/asm/pgtable.h    | 222 ++++++++++++++++++---
+>>   arch/riscv/mm/hugetlbpage.c         | 243 +----------------------
+>>   arch/riscv/mm/pgtable.c             |   6 +-
+>>   include/linux/hugetlb_contpte.h     |  39 ++++
+>>   mm/Kconfig                          |   3 +
+>>   mm/Makefile                         |   1 +
+>>   mm/hugetlb_contpte.c                | 258 ++++++++++++++++++++++++
+>>   14 files changed, 583 insertions(+), 622 deletions(-)
+>>   create mode 100644 include/linux/hugetlb_contpte.h
+>>   create mode 100644 mm/hugetlb_contpte.c
+>>
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
 
