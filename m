@@ -1,70 +1,140 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7332135A3
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EE3212D7C;
+	Tue, 29 Apr 2025 10:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922725; cv=none; b=c1j4j1aj5m8VogaPJuB8WzRe8m9QdtHm6GpIoYS4iENeo0XRVchXOSfV4rd387D0Hvj3ijo133dlrLzI48TTncN6a1441OIppAzFXLwtj7GWvK/pJ4l9h94svz+96o9L+E3gvRT5bncRJ3PKHQubvER+gFcArbg1cD7SfZkNqJE=
+	t=1745922752; cv=none; b=b1JbpU8J0dgEH6/WG/B5531kzamWbdwQ52gqpHX3vMryNFZf9lFQnq/WW8xw7K1+1GoNPz1/WRQRgeptgioBApz1CUp3pBHUoPsA89/N4KmX1z8CIJNgt/O1Ef+uhib6sHa3IpOJFR3tyH9ggbeFhs21jqTLaijspaB57ISMQd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922725; c=relaxed/simple;
-	bh=z2E8jHyASWq7HV6g5EL/dQMtq8lV7MbAGJ2XOg39Pjs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=c3JuXsv+oygPSjCrmNao1rdd89G2SsCSqnUDRsu+KTSkkFABAdhfLnNhrY11cISc8jIVLPHcgA+m74lia1VUl7pWBaxqFnnbxaud+XGpMHuJXOd/CXR0hEDb7Hw083B6lACmFgrisuksqMmnQBx0uax6f2+4z9zdlKGoyggOhlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85be9e7bf32so1045752039f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745922723; x=1746527523;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CBJKd33MnmY6A5IylZariQ6qmIc4mPq8Kzw+IYRRLP4=;
-        b=c4eXt9pt5G1lKUgzd+Kr38lmXEFxQJ0SboDUaGdYYMCcgqLSRoje9Py7WmJH9bkviU
-         cfRr59sAi8jMnILNXq3JSvF3+zwvQP12kb++lYq1WyMvQJXYIm2tkQ4yxaLyqatcMGiL
-         Lbr0DUAxcCvEZ2hQGVCjdMD28P8EdQ5VSTkSfxUUHJcAxltsn/DpHwGmmz1NtnJTia/m
-         BvQuL+MewrDlosJgsvs83HJFHyox+kUvHix7GpMFmn1nav0QuGI5Ax3P47QgH3rLwcfP
-         VqUug9D2kS/oDtT0qDMYvGKpHc+gxgczqMhYFGcCUiyZuLkkcvIRuBXGKvtBjmMEsngx
-         G+9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWCq5jXp+wyZ37gv1w9q/oXFy+RDZneS78Afqj2MU5xJe2zOWXwapyDHUDkgT8nZw9uX15ajb0Cc/I0HMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN3ouRdDC6yBjJCeMDelzKLWmnVM8dmkKqfcqnTIXk0Gc+u5eS
-	8topCkXfuJ3G3RrmRVo+boTKmYQP/FmLHCrQ6Vhd/wfVBhyH7SumFxYY1NGm0AyiU0lmqiv/Do/
-	fRPr+IzNMi9QblD6OWNSGTIOQJa/aFFtDcoWxiEit1eOL+lzFwbcrGRk=
-X-Google-Smtp-Source: AGHT+IHaYT1bz4kZUtenX+8FvXMCJaAwee3VvUmwWFgNK+BR5Pw6qg1RNr7afo9FbfCMu1jzqqLtFvrB9BObiK6uz2qctCcOVywK
+	s=arc-20240116; t=1745922752; c=relaxed/simple;
+	bh=q+WH5pc4cqDVj5zJ4Oli+G3z8F3EnRd3vhW0L+jWhlI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Pivd5mgKR8xIu3ZYpl4JPyzMgnVJ496ML6PGrc23Q0Y7/Qmlm35dPNCMlGnaMelQ0nfSQYyyQqgG0eLKvwxTCC2c1yEOxI3VrKbMBKd9pJTiua64NGsYnzzzEYl1I5jPaxlZcXwQeM1ffVi24/F7/ivOVBgJdgQ1JSoKn2NFN7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cMQ9fbv8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cMQ9fbv8"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TAI57H011902;
+	Tue, 29 Apr 2025 10:32:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zYqda4xUjMi6wzp69EUTy9lVL72VertKeWkqtFw3FKI=; b=cMQ9fbv8T2uv45Bg
+	Y6/keFT7gCK+xWRif85+YmsTFW1edGecb7GvuXPr/bu7KzS56MRYAzpu0aimgfXU
+	v7F34Dto8x+rcRVnaIh5tAoKIK8bMKAocFTZebiP4INjp2bqZa1saMVh0pgBoF3T
+	m/kWZ7z2Vhkkvh5MdylqeJTg2rW4TgNV9s4HUBvNSSNtlnFposVSVydNa+9LmRlZ
+	agq1t5x8FtiR8Ke6814Aqt6D7HLC9se9A7ibWFG96m64XJH3sphTDHHmz8V5mLfp
+	yPCABnECZbt1GOukA2Myx8xyUoZcaiID4RRnczD6LaJLVP0DlsxnGf4aR7F7oApk
+	zX/oDA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468q3244q6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:32:26 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TAWPTs002193
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:32:25 GMT
+Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 03:32:20 -0700
+Message-ID: <6ab096e5-1546-5626-2b4f-e033e98c14b9@quicinc.com>
+Date: Tue, 29 Apr 2025 16:02:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3a8a:b0:864:4862:91a2 with SMTP id
- ca18e2360f4ac-8648988fedamr291177639f.10.1745922722979; Tue, 29 Apr 2025
- 03:32:02 -0700 (PDT)
-Date: Tue, 29 Apr 2025 03:32:02 -0700
-In-Reply-To: <tencent_7212DF0676098EEEF9EECD0C9F27D686DC06@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6810aaa2.a70a0220.23e4d2.0038.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
-From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 15/23] media: iris: Fix typo in depth variable
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-15-3a6013ecb8a5@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-15-3a6013ecb8a5@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=6810aaba cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=HByxHgxEeLxoAHTuB2AA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: uxdOUJ6147KUPv4MEQT9N6WO34Rne1O8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3OCBTYWx0ZWRfX7tmznhaMs1oX +BY3jSPvplz6Q7tPptxSFj/5tkqRNako7Q+64DZPiTNG3Gn/2CidTf1Q3XDV/+HJmrCZ80exxMq eWPxGLoNciVMTTtq9zQso0Xhp3oS0GDN7wiWf1hZ130TzKnUFNXstFZhfnlYhqhjqe0KV9qdLqS
+ TvIK8Z6f0we/WJCcU9Klcyfr702fkS4my1u7FUBubOuHZI+2TYZEHTCCTOfweewEoug4mDTbrRU ozwDwcYxN6frC5hAHJfCwYEBrusQQFlHijlT/cfplHPiA0dMIUdhL45H6ATNlt/izhd7NoxMslU DBm/bPOr/cOXezqY4hDj2YIF+crmck+J++fOCccBQeOpL2UFxqEuEcJHBD5RKRX3+0V5jx6XUd6
+ tBs0aqiW0hosSBqahgjFZR5BDztxeFjLPQ5XMakPGW/sPK5plBnofrdBZxgALFWt6jFhUkWK
+X-Proofpoint-ORIG-GUID: uxdOUJ6147KUPv4MEQT9N6WO34Rne1O8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=999 spamscore=0 phishscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290078
 
-Hello,
 
-syzbot tried to test the proposed patch but the build/boot failed:
-
-net/mac80211/ibss.c:1821:26: error: redefinition of 'local'
-
-
-Tested on:
-
-commit:         ca91b950 Merge tag 'v6.15-rc4-ksmbd-server-fixes' of g..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
-dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15e87270580000
-
+On 4/28/2025 2:59 PM, Dikshita Agarwal wrote:
+> Correct a typo from "dpeth" to "depth".
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 3a19d7b9e08b ("media: iris: implement set properties to firmware during streamon")
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>  drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
+> index a908b41e2868..802fa62c26eb 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
+> @@ -178,7 +178,7 @@ static int iris_hfi_gen2_set_crop_offsets(struct iris_inst *inst)
+>  						  sizeof(u64));
+>  }
+>  
+> -static int iris_hfi_gen2_set_bit_dpeth(struct iris_inst *inst)
+> +static int iris_hfi_gen2_set_bit_depth(struct iris_inst *inst)
+>  {
+>  	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
+>  	u32 port = iris_hfi_gen2_get_port(V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> @@ -378,7 +378,7 @@ static int iris_hfi_gen2_session_set_config_params(struct iris_inst *inst, u32 p
+>  		{HFI_PROP_BITSTREAM_RESOLUTION,       iris_hfi_gen2_set_bitstream_resolution   },
+>  		{HFI_PROP_CROP_OFFSETS,               iris_hfi_gen2_set_crop_offsets           },
+>  		{HFI_PROP_CODED_FRAMES,               iris_hfi_gen2_set_coded_frames           },
+> -		{HFI_PROP_LUMA_CHROMA_BIT_DEPTH,      iris_hfi_gen2_set_bit_dpeth              },
+> +		{HFI_PROP_LUMA_CHROMA_BIT_DEPTH,      iris_hfi_gen2_set_bit_depth              },
+>  		{HFI_PROP_BUFFER_FW_MIN_OUTPUT_COUNT, iris_hfi_gen2_set_min_output_count       },
+>  		{HFI_PROP_PIC_ORDER_CNT_TYPE,         iris_hfi_gen2_set_picture_order_count    },
+>  		{HFI_PROP_SIGNAL_COLOR_INFO,          iris_hfi_gen2_set_colorspace             },
+> 
+Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
