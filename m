@@ -1,155 +1,122 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AFE218ABA
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6735821ADDE
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938214; cv=none; b=ArWhX+uHY8ZIQvFa3/5inlei7XKAJ7dv3L47MseixDl1wvHrhYtW+pseVbhfk2/kohMAoQ3uXe9z5d+J4F0CXu3h8cv9JZPUlZhg+7Nk89fW4Al9l+4SD/0OHdNcq9THemZScKO3K4S+5XisbEDs2krIfKEoN52zmubi6NnB1mY=
+	t=1745938217; cv=none; b=ElovxJvYKyiWXpLkmMHAOSHDIMDVA7jFl9PnxlNeoALpT6xEPvrvcqYFSBvh/MjdyEFaOb86nRPuM6eJluyk2te8Y3j7sv/QMFkrxRZE04Rqp7XderUxcVAswrWR4qiItAO5UIxX8tGBIOCjoA2YW/7lHZDzV5cwlPSmI95kwj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938214; c=relaxed/simple;
-	bh=krTaRF67fPNsLB+dqfMsYJ7ZzFpkv8kbuSh7hjXyKGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bbhUk8USAUvW/a84GjRhl6PXUipqpSF3E63co/QMYLHd+1S2rXDk6A7eS6fLyNP4aKt26hUpEwxBF0EyyEkkSz4V4B2lRWA8kjkp8zha8BTwiQc88rPqobjQcHfh/UNSV4lMDgRjKDGcBnaK5EXP0DnyiWIvhw4NnRiXOXT5564=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=VUG6LLqT; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1745938217; c=relaxed/simple;
+	bh=6SNjMvr3bYLARz0BdjXwzgaSCKxRgbWTmGPyP0Jp6KY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S0+vPa2Z4KsgM4C+vG2qGlWf9/m82Obft+keGQZdlrwWK/Z10yTDVGoDzeOUvVwgsKAd5K2ArqCcGBz/VzzcE7TA0pU7je/d+d+a31qdwO6s5/R8vNEMyELE1+FpflmZpRfia0uvAt7+Gcc0dUNBhOLWr2ZDOJs9S22acsBYCy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kDqBxomB; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="VUG6LLqT"
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 154533F278
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1745938206;
-	bh=7zoJNAv7neP8pZ54k9HnfCrdAuXD65pSkqMbfySDhgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=VUG6LLqTbP0vBPD/vNeoYnQ2+t3r7FJIlGxvf59BTS+YOl309kvmNT1572yQaM6G/
-	 spsX4HSeNIHhio8pIzfiHrcndAxpwpRKyDntp+yzkXSG54CYIPAvIGg3uk5ixWK+wz
-	 6ND0cgmM4jcO0jkkcju/Tho26bL7FKDHmRh/A03KZKiPI0poZ6qrf/WbQHhujYZrXe
-	 iwvE8aV/MGr2Lup0w3ermf2mSyLxXHnyKNDdU6QoBqIgFocExPKzSJLH9U2lPdy4LE
-	 M9psTxnSrNIDXQjjW7tmWd5TC62rObZWbw83D+gq9VcQmyP2Lct5JtNUeWaueFysKv
-	 fgr/Es8gI83pw==
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d01024089so40746955e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:50:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745938204; x=1746543004;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7zoJNAv7neP8pZ54k9HnfCrdAuXD65pSkqMbfySDhgE=;
-        b=hAEAP4fiLDxRy00BZ4Vh5987SrhTCnYjW6JSZajpWuRkKSCeDzvdeAPqZwTouib4DB
-         UKzgK567ubq5PQsHot2RbTaPRaY8W4mlxUffN2bGyVcHhqaGVKyeBH2apxP4+t74xsRt
-         8pNAOubUqrQNuRkLaDxSFfzXITjcVH3bF4h0RBKbTlDB4yj14ZgIMipANgKRalOTR5mr
-         CEGTdPRu4aTUUPLJDVIUnCZyAc4loBwmthre4rnI1pRdrc79E6lW6401x8ZLaDilLe+O
-         bJVcDK18enwIvRiTZWsLXBkCcUsoT+lDC7AN/GemWU5iOZ27/v38hH0lE3hbZoghkJfN
-         wMwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXq+JWiiKrrIqwLelXECXo7Y5qJgdQQB0JUwui354+XRNH2QO/l7WnRUXri5nuXH2e55xuj9INmaRsc1kY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe5SDaZM2lJZd52ZQuF1q+c1dw/nESmh8RL3JI3DbmmOH6Lq0a
-	3hA8qigQE9MAgZ1K1YL2rXgtlejRgPwfnHI5EMWmQGpBfI2Wpz8trfXOla+5EJRcInD93xPxJlM
-	cCHI1wHJsajjXMbxvBlXYX/FIO5McbeW8jyIdPnIBsd3rV4c1pt2OfWLO4i5Hp2oKdu0lNDXbCz
-	W6yA==
-X-Gm-Gg: ASbGncvE815GBWhV9lI/YaTApLLDbIW9p75mTAW4o5vBHgXD8LukpGB7ZBfV0zP2Qxq
-	j8XpfDlR06ErpHL60FDJ1OGlC1C2taGLGAQn46P0Mezq6CObg9rnUb8bFvMBHAg3LZkHRYrcAFA
-	aWiBcw6gUQvi/KWphqdRip+EL2IzqFz/qAQYQH4NBQ4O/bb+mAL82y074FCepA1NGPpNV7dP2dN
-	Y4Z1UNnV77VeqorEH4Rux0dn+2oLDoBhj1OSK3GN5pTvu8k6+KC3eim34FrKIKM505bw5IMS8ny
-	/ol1ve4MQLxCMVTB9jXifFslp0yQHgkOJ3aeaI+wJa0rmhXI3Z5jBzb8
-X-Received: by 2002:a05:600c:c14:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-440ab846a52mr106209535e9.22.1745938204436;
-        Tue, 29 Apr 2025 07:50:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFNDbbGCcksRyCuvtj7AZi9NRp+RqmwiuGFNbYjNx1+LdUjm8j11MjOpdX2/aQqHlEkGBb5g==
-X-Received: by 2002:a05:600c:c14:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-440ab846a52mr106209275e9.22.1745938204102;
-        Tue, 29 Apr 2025 07:50:04 -0700 (PDT)
-Received: from localhost (151-243-191-194.pool.dsl-net.ch. [194.191.243.151])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8842sm190654525e9.31.2025.04.29.07.50.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 07:50:03 -0700 (PDT)
-From: Juerg Haefliger <juerg.haefliger@canonical.com>
-To: juerg.haefliger@canonical.com
-Cc: andersson@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: [PATCH v4 3/4] arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q: DT for HP EliteBook Ultra G1q
-Date: Tue, 29 Apr 2025 16:49:56 +0200
-Message-ID: <20250429144957.2088284-4-juerg.haefliger@canonical.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250429144957.2088284-1-juerg.haefliger@canonical.com>
-References: <20250416094236.312079-1-juerg.haefliger@canonical.com>
- <20250429144957.2088284-1-juerg.haefliger@canonical.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kDqBxomB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745938217; x=1777474217;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6SNjMvr3bYLARz0BdjXwzgaSCKxRgbWTmGPyP0Jp6KY=;
+  b=kDqBxomBezXkG6IgZ2gtAI4+aNiemMuIjevEXRhZiV3TADG3PwhyhBUd
+   gYpD2NDz1iIpZrcFb7eoup8Ca2dvCXVOFiocPZTwODRVL5a8JbEIKritP
+   8movG+IB3QJddEpdP5E9lNlqjT/MwBFjGf53EoBwCy3cS8dkplN34jbj5
+   +LmVAdr4E4SFYreYDBlBA2vNDz28xFPNBRcnwffpeSeF89paFDztJ0FTd
+   vmdLYMkWVp4CMcKzze7KHjhUvwABxg5qto2V1sQlwaAA6n5bYNsvWG86P
+   cseTuM1/2+zOENv/jUszg7BwChCzE1jREUomtXRvTWo5c1c20NrXi6yaW
+   w==;
+X-CSE-ConnectionGUID: i5r781G/TH6GYO00PsIXMg==
+X-CSE-MsgGUID: TQRccJjjQUS0waDY7P/aJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47443789"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="47443789"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:50:16 -0700
+X-CSE-ConnectionGUID: XqkwI4HrT8K/DB1lnvVl/A==
+X-CSE-MsgGUID: pqC6VLB6RUeZxwQassA/Ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="134362741"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.223.46]) ([10.124.223.46])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:50:15 -0700
+Message-ID: <b138cb84-3a34-40b3-a23d-6ff3708dae6b@intel.com>
+Date: Tue, 29 Apr 2025 07:50:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [V2 PATCH] x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE
+ was not successful
+To: Jun Miao <jun.miao@intel.com>, kirill.shutemov@linux.intel.com,
+ dave.hansen@linux.intel.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de
+Cc: x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ fan.du.com@web.codeaurora.org, zhiquan1.li@intel.com
+References: <20250429143114.1724280-1-jun.miao@intel.com>
+ <20250429143114.1724280-2-jun.miao@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250429143114.1724280-2-jun.miao@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Introduce a device tree for the HP EliteBook Ultra G1q 14" AI laptop. It
-seems to be using the same baseboard as the HP OmniBook X 14 so just use
-that for now.
+On 4/29/25 07:31, Jun Miao wrote:
+> REDUCE_VE can only be enabled if x2APIC_ID has been properly configured
+> with unique values for each VCPU.  Check if VMM has provided an activated
+> topology configuration first as it is the prerequisite of REDUCE_VE and
+> ENUM_TOPOLOGY, so move it to reduce_unnecessary_ve().  The function
+> enable_cpu_topology_enumeration() was very little and can be
+> integrated into reduce_unnecessary_ve().
 
-Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../qcom/x1e80100-hp-elitebook-ultra-g1q.dts  | 30 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 140b0b2abfb5..732cc3f6a220 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -293,6 +293,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-vivobook-s15.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-elitebook-ultra-g1q.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-omnibook-x14.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-lenovo-yoga-slim7x.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus13.dtb
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
-new file mode 100644
-index 000000000000..4ea00d823693
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+
-+/dts-v1/;
-+
-+#include "x1e80100-hp-omnibook-x14.dts"
-+
-+/ {
-+	model = "HP EliteBook Ultra G1q";
-+	compatible = "hp,elitebook-ultra-g1q", "qcom,x1e80100";
-+};
-+
-+&gpu {
-+	zap-shader {
-+		firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcdxkmsuc8380.mbn";
-+	};
-+};
-+
-+&remoteproc_adsp {
-+	firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcadsp8380.mbn",
-+			"qcom/x1e80100/hp/elitebook-ultra-g1q/adsp_dtbs.elf";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qccdsp8380.mbn",
-+			"qcom/x1e80100/hp/elitebook-ultra-g1q/cdsp_dtbs.elf";
-+};
-+
-+&sound {
-+	model = "X1E80100-HP-ELITEBOOK-ULTRA-G1Q";
-+};
--- 
-2.43.0
-
+Isn't this just working around VMM bugs? Shouldn't we just panic as
+quickly as possible so the VMM config gets fixed rather than adding kludges?
