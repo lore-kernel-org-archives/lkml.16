@@ -1,137 +1,180 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8322B2BD5A6
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70ACF29DB91
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918448; cv=none; b=qtB5mpkcL3L9Jnn0xmLLXRKum62zPyysNlZbs1dZnttotg9sr7OVHUJ0SKbHM6s79tNvIPIVInfm+svpInzyyb1fKPUc6I2QTPQ7FJVNxvJ0/8jBAKjCzLlkdqQWrppQ0N03hp9gtsI6C2EHA5oXyZER4Gez1JFsVUsKNhD542s=
+	t=1745918508; cv=none; b=skNqUJLyT8uR9a3rsqVxcoTO5OZRRbbT1ZN168aXXhFM0r1/mLsYN/YgZ7ClGq90K4B6hqa6fEnoFFiTs+uyPCE6AKJuouQx+RnFio8DbQS2L80WqNm9YFkE3u9mjx6+LjPZ4OciheDoQGSq0FxpV8+Brw0mCB5jNoOKAUZAu8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918448; c=relaxed/simple;
-	bh=aj5LkUh49sT8keYezlaFLY5VXoSNrS16ED54wbeDwzg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TX0P/KIOzo/vv9oWw6W5I7m5QXE/JxxhU7LpFTCMpVBRxxcxKAHKSlXTuch64guMj7hCzh2PJtoG/wZfYld/IycKrbAgmyE/PQu2YdUDalk5snWHaxPZS19OBQ0ZT1JmdEsTVEjlZBWbYlChx6LHqiJHQazR+5Uq/KvsAcL5X8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=YwtJysb+; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1745918508; c=relaxed/simple;
+	bh=yylSKJDv8HkOf0iH+SYlqcQffyWxREZ928vnNlKrMhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OsCYu3jBLluEYlxkyRee8HfzYEW6ZHDZuhTMrpR8vl9Uml6ltaJFCpOVRtm3IXMQrd5DVXDE20F3ZpapXYladAo1bH2qiq9R2Wy45qp9/r7IwglgolDhME/DhZgr4i+hZtrk3x611i3e9iQaGhQ7YsxkNbdbWfMOAuRWgvRnqwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z90x38ny; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="YwtJysb+"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-737685eda9aso756884b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:20:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z90x38ny"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c30d9085aso4207212f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1745918446; x=1746523246; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=26BMu2J7+YmLinZWtd6WALTAuUBvQeb+c2nCPLBeOsM=;
-        b=YwtJysb+pJHNzHismdgD+tRHA3zp3ZgcacBXQrDPBXAizaIf6K+Ufl9q8AfBh8PWTw
-         XoECMd3ohLzBtdiBY6ia1DCnEVZzAq0/A/qNN5uwJvnWaItrF07hTCjbwEhOReH1KGLS
-         13EeFf6NGIgW+5LiR8w0XwKiH9JhKNapYlx8XR5Spz2O45jCwCCxam92Tj3FFz1SZXmG
-         R428CzHA/FGQ96SwpisITyW2bprgHULOjQYnJCmhgodkqQFXzA/Rn1Vd7rjWnr8O2L+D
-         Bj1Qj1xMhaDm4exAkqV0mp8yBNzSpADV6/5t/WRzGSqXAUXM5UoPsS1/kWu7/n9J+9HJ
-         ZV1g==
+        d=linaro.org; s=google; t=1745918503; x=1746523303; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TI3jdvpeyG/XLxQ3dsLKaff+2PtCT4KthrhFkzjVZAM=;
+        b=Z90x38nygZHLQlMLbTcx4J7BKNQ3skhVLdP8aZYZ5rH/RdqkSCQ/IiMYkhxdfm0o+w
+         fPM4KpFd0+8rLvVmXtgbXHIzyTIgiHj3Q0shjAf/CZN9cRhdCoiZEjvNyM6R32fvJveb
+         ul9ZfypIvW6qqZ2JPdJLXKe91fQZTQRK6c+EYOg1BeOE333s6mtYxEhjN0nNjzrEEsM7
+         zr8XMkwzkdc25MXIECUAKkLF/lt0caGQDQIgQ3M0wwIxfwlUMlU5+592pi5mTN38SuT3
+         U93Eo7qqPqRCeRPdRPhahpRgAqCVwGT5fLO552j2B6I9sV1r+C30cp0X9c3fHe8XnPL7
+         LSSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918446; x=1746523246;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
+        d=1e100.net; s=20230601; t=1745918503; x=1746523303;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=26BMu2J7+YmLinZWtd6WALTAuUBvQeb+c2nCPLBeOsM=;
-        b=tbbyZmsR+6MX27/EVkJ6uC6ebM9qTOxzvC5yIqdygSCpGkdJYDDohbUI2vnrPEMKm3
-         RLJ6XGNXo6SvDHJewikHRZ+ESBv/y8DBXZHmVtrDQjXr6wp9Cs/4FTLpkYWpq117ea5t
-         VWkWkY4B7JPq1oXwJexPhqQiQtUjjb9yOtUO92T2SJVPs4ceLbpsGjt4e4rfmD+UQJ9r
-         2Xy5dJi9yQqd9Aio6U8jPJ2jnqfg5x45HTTOmcwPpJh8ift61Ir6LggKwj7mDs5T3cLJ
-         j+skCfKrC4RrLh/8kyu3cbGPepw3Jbi/ILtaMLa1zHD3jOHpvG/p1K7tL6PG0CZvJZ4g
-         VxZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHPwVuBfxayqhVPkKSZKhwbHlUihtiD3sjI0u+MdeRtCtXsuPqz3P/lH5DFuU5hQuL7id3IEdSkd5Ad1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxfuz7pyR6f3e44L9mpRgk06jau6iVHRamV9uMePdeql6S1XbPG
-	I1Ow/XwHDHpJ8wjS6I99Oo+eO03SGZYE3aAPPSJFohsVtTFun+e8IHVgZz3Mg8A=
-X-Gm-Gg: ASbGnctsF+bJx8Dxm+D9uIZQcTel8SYxpqdobklVuVtxTudNsoe8UBiGyKTzqhP2SqX
-	GXxfmZwTX3it36mah1uiSq0CXYBBsqoPoW2GIUIPG5CsxkGTw/iaXFB0ImNbtrOtl2z+dHLDEKy
-	y93McjZ7Ud8bC9XRETlEnLIEy92dNlaL5hkElT9HFLFFDgNd9//z/Ih2vi49ADGnYN8VX0LeAxU
-	65Cvdz4+Skic0JyzLE1jRZkoQXiEJFEQSCtq3v1tcs1NhSxclnkmLUSFIM6uZVDiJtUxqhMZ66e
-	XBLL0ae8ZxYPnaPEBTPqVkhUCO5X4sAaFuqdleIenCJ4oMxh+LXwtG/vaY/ItJka6rScgNVCPpM
-	xg3bc
-X-Google-Smtp-Source: AGHT+IECOeeos8hakKjTzrUcW1kd63GA+YGV9Aq9eutfb+q+Jb54LTlUEgtlh8xbmvIdH1qtRi0yCQ==
-X-Received: by 2002:aa7:9a89:0:b0:730:8c9d:5842 with SMTP id d2e1a72fcca58-7402914f1c0mr915511b3a.5.1745918445711;
-        Tue, 29 Apr 2025 02:20:45 -0700 (PDT)
-Received: from ubuntu.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9d44esm9722786b3a.148.2025.04.29.02.20.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 02:20:44 -0700 (PDT)
-From: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
-To: dianders@chromium.org,
-	neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
-Subject: [PATCH v3 3/3] drm/panel-edp: Add support for CSW MNE007QS3-8 panel
-Date: Tue, 29 Apr 2025 17:20:30 +0800
-Message-Id: <20250429092030.8025-4-xiazhengqiao@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
-References: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
+        bh=TI3jdvpeyG/XLxQ3dsLKaff+2PtCT4KthrhFkzjVZAM=;
+        b=T3BiKzsSXXFfh+14MxslM1NJ0Xtuj3VC5C0ae7eHf/lOnh4jOmEekfjFgHaHRdSgRr
+         RXpcnah7Fl+Q3tRc5IAmmv7prIV082pfzoR9fayqqoRw0PIl/CJ1nDgp2+HJqe7ogj3A
+         3WyF2NtNHMXhi4BUICBygU89pC0l6Aqh3GGfiDYoGZt4X4nNMTfqRXQMfm+fK9jzGJ+a
+         /h4ul4N4gXd6jG4q/p9qvfEwgJXot0Hm0ErXveIINkLlgurqf7Qy2e6mBHldSXoH7FF5
+         D7nubXvjPu+dw9q3udCV7SaxznyP0TsA955fibUED+3zFT5xBXVrTPxGIsftUhlENi4V
+         i/0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXs32xLuFiu9NWuDCjoDCaO/nomSr+32Bt3oC1zvbcPHokys2iA/4iZetsPIbzMLSTLfhfyB73KuVJ3q3I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZRWPZkOgq0hlp4HcfDbCflGFOCrkjR6Pl/PJTf9Ac8IeIDtKL
+	lHS8NOBewc+DvH/KqzuoWHXWRNPAz+y+u/+Tb5zBhaa07Hz5VbSKZ4MGmI8LdKo=
+X-Gm-Gg: ASbGncv8eKjO3vloDbm0sliBakIoA3XVL9Ii0Fcbfa3hjjzw4NE8xwANFjrr74Gk8b2
+	xTpXIJv4G8yqeWCRw0LPdvrkh02EVabPhJZUSpKiHbwLmxWSyPLXoAFhHqoKILkpbdzmjIZGoIS
+	wpR5XRUdW73LP9c4Mjqsqiw7QbbSHhLqr6NzFwKm2sDH2PVipQRP91ynKOvqsaSqOqbMHBXnaFZ
+	iQ9Fm8mGaEZhc1aQSuxqNuKmkaJXwzRF3AlL7XdzaTlWoAGoV8etlA7ETsyykRi6fftYpTnBom0
+	dIQanHGXZNEWO6RWTcN7jKlwCbE7QmBddsuvZ21xBz5fuV8sU5DATg==
+X-Google-Smtp-Source: AGHT+IEUGW55N4u/mThqrlEDhA9YSxZ89qDIJshXeMtSzbHkz+MFGGxdrPryOqnbUPm5rxvbTdTFqA==
+X-Received: by 2002:a05:6000:18ac:b0:39e:f89b:85dc with SMTP id ffacd0b85a97d-3a07aa65134mr7471133f8f.17.1745918502621;
+        Tue, 29 Apr 2025 02:21:42 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c6a0sm13337100f8f.86.2025.04.29.02.21.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 02:21:42 -0700 (PDT)
+Message-ID: <b2f05ef5-4ba7-4041-8d11-021aa2c3f6e3@linaro.org>
+Date: Tue, 29 Apr 2025 10:21:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tools: Fix arm64 build by generating unistd_64.h
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, arnd@linaro.org
+References: <20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org>
+ <7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info>
+ <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
+ <4c5eb1e1-f8ef-46a5-92da-50d77aba1405@linaro.org>
+ <f0bab5f8-ff61-4eee-a736-8c2dbd33bc72@leemhuis.info>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <f0bab5f8-ff61-4eee-a736-8c2dbd33bc72@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-CSW MNE007QS3-8 EDID:
-edid-decode (hex):
 
-00 ff ff ff ff ff ff 00 0e 77 57 14 00 00 00 00
-34 22 01 04 a5 1e 13 78 07 ee 95 a3 54 4c 99 26
-0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-01 01 01 01 01 01 cd 7c 80 a0 70 b0 50 40 30 20
-26 04 2e bc 10 00 00 1a cd 7c 80 a0 70 b0 50 45
-30 20 26 04 2e bc 10 00 00 1a 00 00 00 fd 00 1e
-78 9a 9a 20 01 0a 20 20 20 20 20 20 00 00 00 fc
-00 4d 4e 45 30 30 37 51 53 33 2d 38 0a 20 01 3f
 
-70 20 79 02 00 21 00 1d c8 0b 5d 07 80 07 b0 04
-80 3d 8a 54 cd a4 99 66 62 0f 02 45 54 7c 5d 7c
-5d 00 43 12 78 2b 00 0c 27 00 1e 77 00 00 27 00
-1e 3b 00 00 2e 00 06 00 43 7c 5d 7c 5d 81 00 20
-74 1a 00 00 03 01 1e 78 00 00 5a ff 5a ff 78 00
-00 00 00 8d 00 e3 05 04 00 e6 06 01 01 5a 5a ff
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 76 90
+On 29/04/2025 9:02 am, Thorsten Leemhuis wrote:
+> On 29.04.25 09:52, James Clark wrote:
+>> On 29/04/2025 8:42 am, James Clark wrote:
+>>> On 28/04/2025 2:23 pm, Thorsten Leemhuis wrote:
+>>>> On 17.04.25 15:55, James Clark wrote:
+>>>>> Since pulling in the kernel changes in commit 22f72088ffe6 ("tools
+>>>>> headers: Update the syscall table with the kernel sources"), arm64 is
+>>>>> no longer using a generic syscall header and generates one from the
+>>>>> syscall table. Therefore we must also generate the syscall header for
+>>>>> arm64 before building Perf.
+>>>>>
+>>>>> Add it as a dependency to libperf which uses one syscall number. Perf
+>>>>> uses more, but as libperf is a dependency of Perf it will be generated
+>>>>> for both.
+>>>>>
+>>>>> Future platforms that need this will have to add their own syscall-y
+>>>>> targets in libperf manually. Unfortunately the arch specific files that
+>>>>> do this (e.g. arch/arm64/include/asm/Kbuild) can't easily be imported
+>>>>> into the Perf build. But Perf only needs a subset of the generated
+>>>>> files
+>>>>> anyway, so redefining them is probably the correct thing to do.
+>>>>
+>>>> FYI, my daily -next build for Fedora based on its RPM spec file broke
+>>>> on arm64 (x86_64 worked fine) while building libperf. I haven't checked
+>>>> yet, but due to the error messages and a quick look in the history I
+>>>> wonder if this is due to the quoted change, which showed up in -next
+>>>> today:
+>>>>
+>>>> """
+>>>> kernel.spec:3115: build libperf
+>>>> + /usr/bin/make -s 'EXTRA_CFLAGS=-O2  -fexceptions -g -grecord-gcc-
+>>>> switches -pipe -Wall -Wno-complain-wrong-lang -Werror=format-security
+>>>> -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS -
+>>>> specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-
+>>>> strong -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -mbranch-
+>>>> protection=standard -fasynchronous-unwind-tables -fstack-clash-
+>>>> protection  ' 'LDFLAGS=-Wl,-z,relro -Wl,--as-needed  -Wl,-z,pack-
+>>>> relative-relocs -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-
+>>>> hardened- ld -specs=/usr/lib/rpm/redhat/redhat-hardened-ld-errors -
+>>>> specs=/usr/ lib/rpm/redhat/redhat-annobin-cc1  -Wl,--build-id=sha1 -
+>>>> specs=/usr/ lib/rpm/redhat/redhat-package-notes ' -C tools/lib/perf
+>>>> V=1 DESTDIR=/ builddir/build/BUILD/kernel-6.15.0-build/BUILDROOT
+>>>> mkdir: cannot create directory â€˜/../archâ€™: Permission denied
+>>>> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/
+>>>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/
+>>>> syscallhdr.sh: line 98: /../arch/arm64/include/generated/uapi/asm/
+>>>> unistd_64.h: No such file or directory
+>>>> make[2]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-
+>>>> next-20250428/
+>>>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/ scripts/
+>>>> Makefile.asm-headers:81: /../arch/arm64/include/generated/ uapi/asm/
+>>>> unistd_64.h] Error 1
+>>>> make[1]: *** [Makefile:108: uapi-asm-generic] Error 2
+>>>> make: *** [Makefile:128: all] Error 2
+>>>> error: Bad exit status from /var/tmp/rpm-tmp.vAfil2 (%build)
+>>>> """
+>>>>
+>>>> Full log: https://download.copr.fedorainfracloud.org/results/@kernel-
+>>>> vanilla/next/fedora-rawhide-aarch64/08975350-next-next-all/builder-
+>>>> live.log.gz
+>>>
+>>> Yes, this is the error that the fix is for.
+>>
+>> Sorry I had it the wrong way around,
+> 
+> Okay, for a moment I was confused and wondered if I was holding things
+> wrong. :-D
+> 
+>> I see you were asking about a new
+>> build failure caused by the fix. Looking into it now.
+> 
+> Many thx!
+> 
+>> I noticed some strange characters in here
+> 
+> Sorry, that was my (or my browsers) fault (some encoding mixup somewhere
+> I've seen earlier) and highly unlikely to be related.
+> 
 
-Signed-off-by: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
- drivers/gpu/drm/panel/panel-edp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Yep, not related it's just the quotes around the error printout. I just 
+need to use $(OUTPUT) properly without the "/../" on the end of it. If 
+OUTPUT isn't set it tries to go up one from root rather than being 
+relative to cwd.
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 4bbd11d57b28..ba6eb58ce730 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1763,6 +1763,13 @@ static const struct panel_delay delay_80_500_e50 = {
- 	.enable = 50,
- };
- 
-+static const struct panel_delay delay_80_500_e80_p2e200 = {
-+	.hpd_absent = 80,
-+	.unprepare = 500,
-+	.enable = 80,
-+	.prepare_to_enable = 200,
-+};
-+
- static const struct panel_delay delay_100_500_e200 = {
- 	.hpd_absent = 100,
- 	.unprepare = 500,
-@@ -1975,6 +1982,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('C', 'S', 'W', 0x1103, &delay_200_500_e80_d50, "MNB601LS1-3"),
- 	EDP_PANEL_ENTRY('C', 'S', 'W', 0x1104, &delay_200_500_e50, "MNB601LS1-4"),
- 	EDP_PANEL_ENTRY('C', 'S', 'W', 0x1448, &delay_200_500_e50, "MNE007QS3-7"),
-+	EDP_PANEL_ENTRY('C', 'S', 'W', 0x1457, &delay_80_500_e80_p2e200, "MNE007QS3-8"),
- 
- 	EDP_PANEL_ENTRY('E', 'T', 'C', 0x0000, &delay_50_500_e200_d200_po2e335, "LP079QX1-SP0V"),
- 
--- 
-2.17.1
+I'll send a patch.
+
+>>    mkdir: cannot create directory â€˜/../archâ€™: Permission denied
+> 
+> Ciao, Thorsten
 
