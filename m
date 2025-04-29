@@ -1,193 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D1D2459EA;
-	Tue, 29 Apr 2025 17:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD7225484A;
+	Tue, 29 Apr 2025 17:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947302; cv=none; b=YpX4eoX4zgYTkGrlj9IRGgoC7d02BWBj4KdpgBbfWfTq1aw2QxTJZOdCvYk3Ynp5sPHawL5ovw4oYbxan5sBAmIDKF+QolxywI8rgDDMFGzlEVaJqIYtr635AImGrPckJOil8aVTLeM31cLhNb/KaAX5dbtHzprLKb7jtkcj6G0=
+	t=1745947305; cv=none; b=QJ8uIizs6LyQoqpIOcwjFLdGXOfPZRLZ8pslST6SFxIXM4Clm/KN7BDVHvHz48E98obR4Oxw6tSNq2Do4TOJR1hrU1M/gPYpH9tvrVc8Ig3DNkv4Z3vG2BUjaU19dPmu12C/mNZQXg5wx07FHTU9I9bCutcqsQWV8X2MBPUQ3Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947302; c=relaxed/simple;
-	bh=LHmTP7DiNiCJt6QTpTz14DavcISMhdx93wqkEkSqPf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bz4kmhRo03weEUaKJKsYRRpbG20tVsGmEcFciipLicaoACt4ajJ/LvB4q4sFCirdDs6NxOjJLglpW+qsZxWl4WozKGqZ38NU/+AaTdtE+hP2bHBp736COnJ7x8E4z2WIDORNPUm/J8aNdjDAR21KT/V7ZoSv2GXhSoOnnUjUrR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTkJol5B; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745947305; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UePrlHN+R7jDRXZK/yLSXvaAhKgio+fA4AW7nvmk3lBO3FkU++zuRFDnNLtpfNkV7Qc7bN0y+I1c6eWfjoClCYl1Jrj2AUu5vN/lCAIihdzfUqDRJtjMovGniQvdyAo+K0LegJQjNXGwHvRvRQA7uCTk/P1g4U8RRlBhWTMF/HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=FpeMG7gL; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTkJol5B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745947301; x=1777483301;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LHmTP7DiNiCJt6QTpTz14DavcISMhdx93wqkEkSqPf0=;
-  b=bTkJol5Bb1z/nSX5bjqYwQSYBe9hEb7T0zviYdocX2pHrhShGqEx44xd
-   wwfyB6qQAk4hn5K2sVMOegkvT8iRGOl1SKyLbufL1pAJgw9fprqZLCbch
-   V1pTl5gdpJhTjbZ0oap4nbaQIJa8Obk2iWP1AjCUo2UAX7issQhGuNP4w
-   zTBepBbEQrJgUV29ycBmmT5TJPn65RfIUKTumv21mO+nZfcFWMoWLa1aK
-   yIYBKgI70rr2jCB7Vesp0ZdmPSw2DcJymNSKpNkd3fndoUX/XX91apEe1
-   IF6yC6v2HDjVIVgv/E02akPB0KEwvz4X8d8gbUap4Pk4Ta40TTUs4QQqJ
-   Q==;
-X-CSE-ConnectionGUID: gRcCz7T+SUueAVXwWpSTjQ==
-X-CSE-MsgGUID: rA5fx+79SUqnatL+chzh8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="64996968"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="64996968"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:21:41 -0700
-X-CSE-ConnectionGUID: 06FSbi8qTc6/uxnr0ds6vg==
-X-CSE-MsgGUID: clIxOUsESMOKDd1ykWNL5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="139073335"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.45])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:21:34 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	linux-edac@vger.kernel.org
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 3/4 v2] ACPI: extlog: Trace CPER PCI Express Error Section
-Date: Tue, 29 Apr 2025 19:21:08 +0200
-Message-ID: <20250429172109.3199192-4-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
-References: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="FpeMG7gL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1745947270; x=1746552070; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=FpeMG7gL8bQcwbzGPSPEHrCekH5szayaNULqmusJiwx9NxW3oLppX/w9gZmwEI/E
+	 PAK4rlVveDMFuIRLzeHUOE9GGSXEACybl3fa2ljMoYeqWtoSOLancCrXQ4SM6ifdj
+	 lkdmqKR4JxmZIy+V2QVbNfzeqowPpbfQWISP/9kS+OeaRZrMQ2oNPmJX+UbfG/ceI
+	 /2mS+TULOSehtMKuT1FpzZA2w+r6V0jaf1yu9VHWhXzGOOQGsrVPPFbbCSGH3fN/J
+	 ZOVimmDz8yAEXAr1GP46q4k0hfWkR99+doRcQyQdH8o99tZOqkj/LqjtNzHVXcerC
+	 7qYw6Vd33JNldhp6TA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.35.117]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1My32L-1v00OP2QZD-00wOEo; Tue, 29
+ Apr 2025 19:21:10 +0200
+Message-ID: <79f5c0c6-1c7e-4831-bd81-2b466e73d860@gmx.de>
+Date: Tue, 29 Apr 2025 19:21:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/311] 6.14.5-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250429161121.011111832@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250429161121.011111832@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:S/Tmqmk8K4T3moxT2efv1fQ/D3NqiiDg3lKrT57XhcZHkvLzRfm
+ +Ci+79znFMsajcWWcODOvnuqK/j2H5lylGiI+HYXEblythjq31KDMEdg78V04wA5ge7BoJm
+ UElf0Itcoitep2TyP70SjLe2nyAo/FKG/4sVXJmt0QfQt74e/V5Vt4qTlpReEV1pWYiixRv
+ 1RSbdbqKLY+bKhnwAe/zA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:tsiHcWhUleg=;W7ZRkMH00Sxrcl56CoiQCkKwt3F
+ 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
+ lUR3lJNeac+Gl526ByEtuLl/s/m9yGs=
 
-I/O Machine Check Arcitecture events may signal failing PCIe components
-or links. The AER event contains details on what was happening on the wire
-when the error was signaled.
+Hi Greg
 
-Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
-by the I/O MCA.
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/acpi_extlog.c | 30 ++++++++++++++++++++++++++++++
- drivers/pci/pcie/aer.c     |  2 +-
- include/linux/aer.h        | 13 +++++++++++--
- 3 files changed, 42 insertions(+), 3 deletions(-)
+Thanks
 
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index caca6ccd6e99..7d7a813169f1 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -131,6 +131,32 @@ static int print_extlog_rcd(const char *pfx,
- 	return 1;
- }
- 
-+static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-+			      int severity)
-+{
-+	struct aer_capability_regs *aer;
-+	struct pci_dev *pdev;
-+	unsigned int devfn;
-+	unsigned int bus;
-+	int aer_severity;
-+	int domain;
-+
-+	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
-+	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-+		aer_severity = cper_severity_to_aer(severity);
-+		aer = (struct aer_capability_regs *)pcie_err->aer_info;
-+		domain = pcie_err->device_id.segment;
-+		bus = pcie_err->device_id.bus;
-+		devfn = PCI_DEVFN(pcie_err->device_id.device,
-+				  pcie_err->device_id.function);
-+		pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
-+		if (!pdev)
-+			return;
-+		pci_print_aer(KERN_DEBUG, pdev, aer_severity, aer);
-+		pci_dev_put(pdev);
-+	}
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -182,6 +208,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
-+			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
-+
-+			extlog_print_pcie(pcie_err, gdata->error_severity);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index d0ebf7c15afa..627fcf434698 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -801,7 +801,7 @@ void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
- 			aer_severity, tlp_header_valid, &aer->header_log);
- }
--EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-+EXPORT_SYMBOL_GPL(pci_print_aer);
- 
- /**
-  * add_error_device - list device to be handled
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 45d0fb2e2e75..737db92e6570 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -56,17 +56,26 @@ struct aer_capability_regs {
- #if defined(CONFIG_PCIEAER)
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
- int pcie_aer_is_native(struct pci_dev *dev);
-+void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
-+		   struct aer_capability_regs *aer);
- #else
- static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- {
- 	return -EINVAL;
- }
- static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-+static inline void pci_print_aer(char *level, struct pci_dev *dev,
-+				 int aer_severity,
-+				 struct aer_capability_regs *aer)
-+{ }
- #endif
- 
--void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
--		   struct aer_capability_regs *aer);
-+#if defined(CONFIG_ACPI_APEI_PCIEAER)
- int cper_severity_to_aer(int cper_severity);
-+#else
-+static inline int cper_severity_to_aer(int cper_severity) { return 0; }
-+#endif
-+
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
- #endif //_AER_H_
--- 
-2.48.1
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
