@@ -1,72 +1,75 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1519A24BC04
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9935A24A047;
+	Tue, 29 Apr 2025 16:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945558; cv=none; b=E3hzLc5yp5aRCOjXBkZAZkbzVkEh3IhZ0F11N/dtlR+n/j+uv7sQAT42CT3TUPmV/y8paDsf6l5fJoUIuYDAX+/3qZoP/5o+8PFOZbIUR39StND8fuGZ1v+pOtVF569ZpJSdWNXrTA50b4fPkRkPqtuI0VRCXNAfix4J3ZeHzts=
+	t=1745945577; cv=none; b=cJ8NHcJdkzsyiMjoPySGdbDP1HiVADqUJpsHfLZsYpMj8YHIjIcVuxe1T4tXVR3A8rQ1OhgOI4uMj9z/zoblH231q/ZdVr9bEeLDSSXzJ2KG/b04YaeSsUTl6FB6/oIE80w/suqrmIbJUXPKE2M0EBxMUarGjpOuqKkFd3FIHuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945558; c=relaxed/simple;
-	bh=9/DyTaXRRRhmMtYj7n0VE2ZpY/dcBTLDTDYYO1pk/Ks=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Qkb0tNMdBOJ08rWRsVXF3+t79Egac4mEGwZqzXzUVuW/abFxbfEkkhi9CwuNAKkpo7EGBylg4FFbJNMTSdI+NeLsSiy+4ddKizmoFRDtgeaXq2g79rxE7TV+DLs2BXezoD5ENd8Q3Eh1219Hc1cPDmM8xSbkST45E4iyEhKg0ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=biT+Ta/N; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745945577; c=relaxed/simple;
+	bh=aOnvrbKGCd6oZtAZ+WNZIUoYtPamcTbmixwVmPQzSX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wxif/6/eZWGMiASOnQe5G0Apqk8Ae7GH8I2Cm3mrrbJkQEyXf2OE/LexTVmODh1RJrrJP4BxZYtqtgdkHE2ELSntStONpkcr14zdFMqqbYJS9T+E1wqRYvlxG3M6/sDoQoVpv1ANOeMtDCGRXc/3pUnwG/KgTkf2Oh1ARWypkf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbVoZggt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="biT+Ta/N"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3086107d023so5389624a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:52:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745945556; x=1746550356; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9/DyTaXRRRhmMtYj7n0VE2ZpY/dcBTLDTDYYO1pk/Ks=;
-        b=biT+Ta/NIhhq59VVxrszBNMy57vHcDctJN8ACrHPcI5+krqhLahkm6SdKkA/jnHuQz
-         zOHWWbhPOCXQQcHQ3NmHyxQSNjg/9wNaJmKROe7EPnUOfMaCAJWVCnfuFynCUNKleZo9
-         ni0wl2GZmJFh4yslLJR5V//hZIkD/ytn9SfMIjxQ+JDm/IPOj6MHq2QX6AlAP2Shs2+2
-         RYR7iilsQ7AksezOr4uyKbwLRpXyUP19q7+SEx9p4L64gN/7pDU6vrFIJJ7+Octr9Erp
-         1nsN8qP79WHSIfZ+xxDO/Tcr9b1wfqGak3/ts9rHGLoNkVMzPkuDUaQwy/Jh+YrTCZNZ
-         iqmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745945556; x=1746550356;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9/DyTaXRRRhmMtYj7n0VE2ZpY/dcBTLDTDYYO1pk/Ks=;
-        b=NcPsRnxox9dWgHXTP8QSYL8T8p9HoZp+WsE9hGoieF2IsdWYSeJONOLPLcXoU+pu42
-         M3MRsGFegz5tHLT++xWOZuR1O0GsSY+2gyf2maElIrb4/kyAQ2GeV46h+jJ9xHdpo/Qu
-         ObHAxOBQkKlyJY+nRdPvJceytMn6TB1oRalFjUms+XcU6ilqxyWqRXw7NS0IUIfvGIzY
-         4vbKn4IgFaEGI4YfHk7h6uEHD4gpC/azMc116SnwWe9BrWkOPCpg4twQXfg0IS/PNA5W
-         O/tmx1L8J39HrMzpgED1NetZuCdKhdqrRnts8/xkPaUnYkvdpt8+bjqQly2/siVi822Y
-         AlJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaZeLPlIbzjAHIQ1edJJlQStXNHcKz/8aHmFY1nLTE3GjarrANRd3MLm0Y8Ev4XYYSlnP60lEnTktRT3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC3BvtGRHqi+zVTyQUpq3Ihbya7iPaNJYJk4e0XTLdKzwOZW3Z
-	PAgDAMQCoM7qZ4V6SQOAC9p4EHR8vzydiI94AsgR2VxTasD2v7pK4xNUzgpeWfwhr/Ay8pqvP3Y
-	J9w==
-X-Google-Smtp-Source: AGHT+IFEE6LO1G7pamWoVl2A8JQIOWisDuS/kml2oFH5sEgf3g81yBC6JuYkTpidKh/jeQ32pw+x5WUisOE=
-X-Received: from pjbsy12.prod.google.com ([2002:a17:90b:2d0c:b0:2fc:1158:9fe5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:568c:b0:2ee:d433:7c50
- with SMTP id 98e67ed59e1d1-30a23e262eamr3924343a91.23.1745945556371; Tue, 29
- Apr 2025 09:52:36 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 29 Apr 2025 09:52:27 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbVoZggt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B93FC4CEE9;
+	Tue, 29 Apr 2025 16:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745945577;
+	bh=aOnvrbKGCd6oZtAZ+WNZIUoYtPamcTbmixwVmPQzSX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UbVoZggtxb56N/IORSBXBpTc4lh3NOkTRToTPMaFsJYwTRlD6ghYVlPEkfnoLP4ao
+	 v0PKVd3FFlFCiNH2jiXzIgej3wk9uJs3BckkbVwzlW04KXAtCxtJQGQRi1/v4RSivc
+	 h3OIAB2KF8wKt5siG65a4l0yoV6ov+R2FOXR2UhdK43FeZT9e6FdWM5TIiwbarbSEX
+	 CuUwTebiDJVI1nMFcGHpMben6YlRjiSOd8oswG6xR4NaNeQSq2JRqtI9z7K/erTp3j
+	 Tp/HY8S4mwIaDeoGWfHbPb7+NIl3wkgTTSK1x8nae3kxhpVjqfs88qCb5DYUq5FfZm
+	 LzmD9Q+O8EHtg==
+Date: Tue, 29 Apr 2025 09:52:54 -0700
+From: Kees Cook <kees@kernel.org>
+To: Nicolas Schier <n.schier@avm.de>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] randstruct: Rebuild completely if randstruct.seed changes
+Message-ID: <202504290951.8C3D7C7653@keescook>
+References: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250429165227.153943-1-seanjc@google.com>
-Subject: [ANNOUNCE] PUCK Agenda - 2025.04.30 - CANCELED
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ackerley Tng <ackerleytng@google.com>, roypat@amazon.co.uk, kalyazin@amazon.com, 
-	Fuad Tabba <tabba@google.com>, Vishal Annapurve <vannapurve@google.com>, david@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
 
-PUCK is canceled this week, as I managed to pick up a conflict (at 6am...).
+On Tue, Apr 29, 2025 at 02:59:13PM +0200, Nicolas Schier wrote:
+> Include generated/randstruct_hash.h in linux/compiler-version.h to force
+> a complete rebuild if CONFIG_RANDSTRUCT is enabled and randstruct.seed
+> changes.
+> 
+> Removal or change of scripts/basic/randstruct.seed leads to a remake of
+> generated/randstruct_hash.h.  As linux/compiler-version.h is a
+> hard-coded include for every kbuild induced compilation, conditionally
+> adding generated/randstruct_hash.h there adds it as build-dependency to
+> each object file.
 
-Future Schedule
-May 7th - guest_memfd initiated private/shared conversions (tenative)
+This does technically work, but this feels like the wrong solution.
+Also, this won't work for another case where I need a similar thing: if
+the .scl file for the integer sanitizer changes, we need to do the same
+full rebuild, and that's not a C file.
+
+I think we need to explicitly inject something into fixdep...
+
+-- 
+Kees Cook
