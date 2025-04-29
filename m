@@ -1,101 +1,154 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A121CC71;
-	Tue, 29 Apr 2025 15:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4586E21D3D9
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745939381; cv=none; b=AWhBg82p+pzYxDdWaxlJrLsZAgkJ3NjzWMbgRtoAke4+HPm0IXDLM9bNOyuaGjTy+elAt4nvDNn2yA8S5w0SPjnI+Lb/99ixTcJBEhqauIv/Pdrf1CdnxUkt6AbNI1SKf7CQhxObyGODC8qH5L+TrxMDsY6ffDFRR0AJgqOTRbE=
+	t=1745939394; cv=none; b=fSJHGpYxyGZR3YincMEw6orbVmCJJLEyYSp1Tvn6O6BYvewsaR0syPaEjilKO8Kaq2tTQyti79PSMPpTUI6S8RkXeYOCdpyKxX7+pfo8Q3Bk3w+XzvyCfI/lhEzvHPsuK14dmKX3PVO0uQJ7kZ6zGR5S9BMi4svWl1hUTlllH7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745939381; c=relaxed/simple;
-	bh=TZueY6r4MtJVN4qtEpTvckm76JVmxT5yG3PqM8Wda0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmy4CRNjebfX3L+JH9BuPQlImsZVXmA6ktO5pzccqjW4xMk44xIH31l6kZsZVWZsqmsCrAYr3X5xEmQv5iDTN+N+5FOzwlnb0AsdmlClasQKZrpWGCYzW39F65PWcR4P9Z3c8tMGjD+lVHXKyU3R/9bLQ8kn/ttPPrzaKAGLN7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XLfMdKhh; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745939394; c=relaxed/simple;
+	bh=7dYHrKUTPQP/Hr8bdLFOeeYAAyr9lrBYjROmKMi5q2Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=boCXHwpz/Lc5C8d738HH/sSuh6xW/E07iYkIk1q08nOUc9jm+NAzJfXUyUrX6qxVWJTc5O7Hivc4tKVcKTRq9tPYwQMZvf23f7vYzP3rmq6vsdYxKq6HX+pf4A6qWJlpTzvuUahGuDRTl+7H0q5vXE5LC5bNZK8y4uTSZDcc8c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SgOP5dSv; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XLfMdKhh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=OduaXqO0vpWQkm2nTVR92WsTV4Q+eJ6nrxylSonj7oQ=; b=XL
-	fMdKhhooPPpr7PglDfv/395KTHmc33skhhEu3pHQ8o3hzgpAyhN4ZI6NnVsCWyMyJWIzM/TZqp+5U
-	njOmiFSDSiQjslO/jdmfKlJV8RRXoFHKrgY26MgyEsLM9F3NkY5QxCr1tRxO0p7xdrsOjhszVymot
-	TIKFQDB196BQykY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9maI-00Ax53-Aq; Tue, 29 Apr 2025 17:09:22 +0200
-Date: Tue, 29 Apr 2025 17:09:22 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, wens@csie.org,
-	samuel@sholland.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
-Message-ID: <6a056bf8-9f39-4204-9378-8cc39be60038@lunn.ch>
-References: <20250413134318.66681-1-jernej.skrabec@gmail.com>
- <2219754.irdbgypaU6@jernej-laptop>
- <34e30bf2-6f80-4c43-9e52-c1ebe0521c43@lunn.ch>
- <5880182.DvuYhMxLoT@jernej-laptop>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SgOP5dSv"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3912539665cso2831175f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745939390; x=1746544190; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YSv8m1J8saJ9RpNQY0ts0Wj93tfXy19QLPFGEb6TRBw=;
+        b=SgOP5dSvMLWzaU/IRuDk5lLvNt4+xyWgduzjHdD9xwvBJEVpj8ebWapaZZzh83tQai
+         M3GdNeGItQFw72pFk6VOKFwU5XfNtWQ9/btpvFkRONVy+0FnMJOfAT+6uXiPw3mui+k0
+         VfYNEB8N295a0ydAP0EAymzLaCV8fbHdZGA6d5gwxZhRu1KvYoPsZrExLVC1q0oupv8A
+         SQ7wjbvFdIoi8xH2yBnL8jKh6GVJUP+fCBbjrDFfO1Re4HEHN18OCOe88tzUd7tF0b4H
+         HAeOtqBYWAE0ZB7805j3EJjEThx1MD+no3yjr5SXgstMHxLOY/gJrhRTzgcA5M963kVh
+         NPmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745939390; x=1746544190;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YSv8m1J8saJ9RpNQY0ts0Wj93tfXy19QLPFGEb6TRBw=;
+        b=dWP9um8QXDWJ6u+qFuHePfG/K3HyAk1DeWv9AwL8/Qc7OFZaCKIpyTsVVaGJKxuFb+
+         GCRu8Cgas+5xXVmCYr2Ge7fTyHNThF6C3vhvsb3PNIC1HPIhS9tA11jqp7Lae1pCQ19G
+         wqgRftOQ1l4OyFmPDUhjyrFhzdZk04oTN3r7RhCD5SuDcOeTgqzEiCCnmfqVB0dOZB/B
+         UkgwcGntaCTsx8TYon6+GlmCZN/becB4U+LF8QYaTtiIO4HZ11S6sYu02Vq03ONMLva9
+         NQHkWoUw43O4WHbKyAcDgIFKRM8APqWRnoxVz6zTycj2QAIaMMchj7HD0stCxUFZtPhS
+         99zA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9u5WvvV56D9G8kHy4SX/c0+t3MvfO1aSZk0Db3FTGaP60ZnycpB5oQWUodkxJqN0qNwc1xFzqwcPmSdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKPkRPN8dXThYE6Px6heJ1AYKkK3l/ncBhf0up3PH7i19NLiNq
+	pdyCKzFPzyJRfeYLqg/SAa5wkR2f9MROmklDw3cK62XIT3A+0PeFzUT3AxSSfD8NhLjlirW2sr8
+	3YVmPCiTd/DZcXA==
+X-Google-Smtp-Source: AGHT+IGounaCRSN9hjbKTVwcvwCpFuIXy9GARicDb4UeOPCmeVFAKu67J/rky+PAHuGyzy+H/gPxT0yINOcSmFY=
+X-Received: from wrbck11.prod.google.com ([2002:a5d:5e8b:0:b0:39a:be9d:f396])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:220d:b0:39c:1258:d12c with SMTP id ffacd0b85a97d-3a08a558dd9mr2706214f8f.28.1745939390469;
+ Tue, 29 Apr 2025 08:09:50 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:09:48 +0000
+In-Reply-To: <2025042918-outer-roamer-ab80@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5880182.DvuYhMxLoT@jernej-laptop>
+Mime-Version: 1.0
+References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+ <20250429-strncpy-from-user-v2-1-7e6facac0bf0@google.com> <2025042918-outer-roamer-ab80@gregkh>
+Message-ID: <aBDrvBelMq2QwPs0@google.com>
+Subject: Re: [PATCH v2 1/2] uaccess: rust: add strncpy_from_user
+From: Alice Ryhl <aliceryhl@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Apr 29, 2025 at 04:51:59PM +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 28. april 2025 ob 14:37:48 Srednjeevropski poletni čas je Andrew Lunn napisal(a):
-> > On Sat, Apr 26, 2025 at 08:00:49PM +0200, Jernej Škrabec wrote:
-> > > Dne petek, 25. april 2025 ob 17:34:14 Srednjeevropski poletni čas je Andrew Lunn napisal(a):
-> > > > > > +&emac {
-> > > > > > +	pinctrl-names = "default";
-> > > > > > +	pinctrl-0 = <&ext_rgmii_pins>;
-> > > > > > +	phy-mode = "rgmii-rxid";
-> > > > > 
-> > > > > So relating to what Andrew said earlier today, should this read rgmii-id
-> > > > > instead? Since the strap resistors just set some boot-up value, but we
-> > > > > want the PHY driver to enable both RX and TX delay programmatically?
-> > > > 
-> > > > Yes.
-> > > > 
-> > > > There is a checkpatch.pl patch working its way through the system
-> > > > which will add warning about any rgmii value other than rgmii-id. Such
-> > > > values need a comment that the PCB has extra long clock
-> > > > lines. Hopefully that will make people actually stop and think about
-> > > > this, rather than just copy broken vendor code.
-> > > 
-> > > I spent quite some time working on ethernet support for this board. Once
-> > > I've found PHY datasheet, I confirmed that there is added delay. So this
-> > > particular board needs "rgmii-rxid" mode.
+On Tue, Apr 29, 2025 at 01:04:44PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Apr 29, 2025 at 09:02:22AM +0000, Alice Ryhl wrote:
+> > This patch adds a direct wrapper around the C function of the same name.
+> > It's not really intended for direct use by Rust code since
+> > strncpy_from_user has a somewhat unfortunate API where it only
+> > nul-terminates the buffer if there's space for the nul-terminator. This
+> > means that a direct Rust wrapper around it could not return a &CStr
+> > since the buffer may not be a cstring. However, we still add the method
+> > to build more convenient APIs on top of it, which will happen in
+> > subsequent patches.
 > > 
-> > There have been numerous discussions about what these rgmii modes
-> > mean, because DT developers frequently get them wrong.
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > ---
+> >  rust/kernel/uaccess.rs | 34 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 33 insertions(+), 1 deletion(-)
 > > 
-> > Does the PCB have an extra long clock line in the TX direction? That
-> > is what rgmii-rxid means, the PCB is providing the TX delay, the
-> > MAC/PHY pair needs to add the RX delay.
+> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..acb703f074a30e60d42a222dd26aed80d8bdb76a 100644
+> > --- a/rust/kernel/uaccess.rs
+> > +++ b/rust/kernel/uaccess.rs
+> > @@ -8,7 +8,7 @@
+> >      alloc::{Allocator, Flags},
+> >      bindings,
+> >      error::Result,
+> > -    ffi::c_void,
+> > +    ffi::{c_char, c_void},
+> >      prelude::*,
+> >      transmute::{AsBytes, FromBytes},
+> >  };
+> > @@ -369,3 +369,35 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+> >          Ok(())
+> >      }
+> >  }
+> > +
+> > +/// Reads a nul-terminated string into `buf` and returns the length.
+> > +///
+> > +/// This reads from userspace until a NUL byte is encountered, or until `buf.len()` bytes have been
+> > +/// read. Fails with [`EFAULT`] if a read happens on a bad address. When the end of the buffer is
+> > +/// encountered, no NUL byte is added, so the string is *not* guaranteed to be NUL-terminated when
+> > +/// `Ok(buf.len())` is returned.
 > 
-> While schematic is accessible, AFAIK PCB/gerbers are not, so I can't really
-> tell how long it is. But without this extra delay, ethernet doesn't work.
+> I don't know if it matters, but this can fill up the buffer a bit and
+> still fail, to quote from the strncpy_from_user() documentation:
+> 
+> 	 If access to userspace fails, returns -EFAULT (some data may have been copied).
 
-You are not adding an extra delay, you are subtracting a
-delay. 'rgmii-rxid' says the TX delay is implemented by the PCB, hence
-the PHY does not need to add the delay.
+It doesn't matter, but it may still be useful to mention.
 
-What is normal is that the PCB adds no delays, and the PHY adds the
-delay for both the RX and the TX. And you represent this with
-'rgmii-id'.
+> > +///
+> > +/// # Guarantees
+> > +///
+> > +/// When this function returns `Ok(len)`, it is guaranteed that the first `len` of `buf` bytes are
+> > +/// initialized and non-zero. Furthermore, if `len < buf.len()`, then `buf[len]` is a NUL byte.
+> > +/// Unsafe code may rely on these guarantees.
+> > +#[inline]
+> > +pub fn raw_strncpy_from_user(ptr: UserPtr, buf: &mut [MaybeUninit<u8>]) -> Result<usize> {
+> > +    // CAST: Slice lengths are guaranteed to be `<= isize::MAX`.
+> > +    let len = buf.len() as isize;
+> > +
+> > +    // SAFETY: `buf` is valid for writing `buf.len()` bytes.
+> > +    let res = unsafe {
+> > +        bindings::strncpy_from_user(buf.as_mut_ptr().cast::<c_char>(), ptr as *const c_char, len)
+> > +    };
+> > +
+> > +    if res < 0 {
+> > +        return Err(Error::from_errno(res as i32));
+> 
+> Nit, this can just be returning EFAULT, but I guess it's safest just to
+> mirror what was passed back.
 
-So what you need to find out is, where does the TX delay come from?
+I think it's easiest to just mirror what was passed back.
 
-	Andrew
+> I would say to just leave it as "pub" for now, but that's not a big
+> deal.
+> 
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Thanks!
+
+Alice
