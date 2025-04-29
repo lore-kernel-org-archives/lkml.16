@@ -1,66 +1,744 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4BA2949FB;
-	Tue, 29 Apr 2025 08:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1938E29E056;
+	Tue, 29 Apr 2025 08:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745914838; cv=none; b=TeWKud0cxxf89c1cNgbOVZLrN63DALVPXjIi3ISUKKov1iJWoQPKhWIH5OUBvUrdJRJT7xQd6drCEZ0j9tjmJHulQ9v2/wTe9PMgtsJNnlHYaY9Uv7SWLZ1p/5KM2GRzkOgX/uB3K14bVh/2HW951vn0c4hJEKt1m65KE9YhDys=
+	t=1745914837; cv=none; b=XbC8OBR0iNeHfIh4po7/lftm0fBmDG+6DsPBremzyuhFXeXIUvc/DjxS6sauEM2SVwHycDfvirRx/XEwefd87Eh6dboOAOtrI/q9GtYf7hlYFvUVtpsAOpYIjKTdaNCe5O2a3wnaYX7Z0XtzI1biiHnUVlw5PK+x0b4pFUOfI6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745914838; c=relaxed/simple;
-	bh=rAqlEeY2Ob/LlJLDaCVezRDiR75ozTPIeV2/nB52+C4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W/CHQTSfETNZWQMMiWwGLNQrVjNIpqpvGzhtrzKcwEehUo7e04jvtU1lHSucU/PZUft4lPhepgrZKbaIDupabrWOBOLryXowKrlGetS7MjEQ5FjZks4uaLnpprT9aPGfPWsDyFA7KN/4JIFmJ1pi2d24iGArPbPu7xyuRNmRxw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbhOeGs5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbhOeGs5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B46C4CEEA;
-	Tue, 29 Apr 2025 08:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745914837;
-	bh=rAqlEeY2Ob/LlJLDaCVezRDiR75ozTPIeV2/nB52+C4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UbhOeGs5WP1RIpjW5cIh8caOS7QhJo38dcGo4ivryLS1ZS98PL8xrtq6W1RnF6kS2
-	 KMifMwmttIRwvDljBoUemDtEsAfDx1rD8d2nIozOxbgeswHWZEECbtZ7+D0ivu7qPk
-	 lsHK6OWzO06jW6tBHfPLyMxq7eylq3DEoIUqBWrz+aZgYdhSXlSIimHhMZaoZ06B2s
-	 LulBcZcsKAmJfik2x9osewbJ/UWV3+fC3H81OXUnkTPC9oVKf8TFeqrfY3A6PAzowj
-	 WmoPKwipbWVen6sH613vxqyrPlU5Nc2Agr5HjJUPn2yeNon1/4cgXbUweQ9Fi26F0K
-	 7V4TmJ1D/LPwQ==
-Date: Tue, 29 Apr 2025 10:20:33 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: carlos.song@nxp.com
-Cc: aisheng.dong@nxp.com, frank.li@nxp.com, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-i2c@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Message-ID: <ujjbteer3ripubpgmv5qsvhcoki5ibcp4im7vpnna56mbckacl@xxx52nayhw7e>
-References: <20250421062341.2471922-1-carlos.song@nxp.com>
+	s=arc-20240116; t=1745914837; c=relaxed/simple;
+	bh=yEyrbPgk7s3efGAdHAySOqF6o8qJbfCxuUamvayjufs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SM8LJ9LsKPoSJ11uL9j7yqx8F0h3zBUjeOqsCnWON/wpEgQGanIRHouoZccVsnoSpACLn30VT5byMPldraXWiSBCv0lk1uq3klTvppbeSq0EtEhQ8sUrHFodL8VW9cq48Fipyhd2nbCkf0v6UiTfdcSBw6Oxjy7KijU9oyM2y8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: RX9ZmAsGTUGBO1efmRWxeQ==
+X-CSE-MsgGUID: rJeG63i+SK+GhZxQvMgSag==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 29 Apr 2025 17:20:33 +0900
+Received: from superbuilder.administration.lan (unknown [10.226.93.118])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id CB426402F378;
+	Tue, 29 Apr 2025 17:20:30 +0900 (JST)
+From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+To: thierry.bultel@linatsea.fr
+Cc: linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org,
+	paul.barker.ct@bp.renesas.com,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v8 08/11] serial: sh-sci: Add support for RZ/T2H SCI
+Date: Tue, 29 Apr 2025 10:19:50 +0200
+Message-ID: <20250429081956.3804621-9-thierry.bultel.yh@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421062341.2471922-1-carlos.song@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Carlos,
+Define a new RSCI port type, and the RSCI 32 bits registers set.
+The RZ/T2H SCI has a a fifo, and a quite different set of registers
+from the orginal SH SCI ones.
+DMA is not supported yet.
 
-On Mon, Apr 21, 2025 at 02:23:41PM +0800, carlos.song@nxp.com wrote:
-> From: Clark Wang <xiaoning.wang@nxp.com>
-> 
-> Deferred probe with pm_runtime_put() may delay clock disable, causing
-> incorrect clock usage count. Use pm_runtime_put_sync() to ensure the
-> clock is disabled immediately.
-> 
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> Signed-off-by: Jun Li <jun.li@nxp.com>
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+---
+Changes v7->v8:
+  - s/rzsci/rsci/g
+  - declared SCI_PORT_RSCI as private port ID
+  - look for secondary clock
+  - report error when rsci clocks are not found
+Changes v6->v7:
+  - Renamed compatible string to r9a09g077-rsci
+Changes v5->v6:
+  - Rename SERIAL_RZ_SCI_T2 to CONFIG_SERIAL_RSCI
+  - Rename rz-sci-t2.{c,h} to rsci.{c,h}
+  - Rename port type to PORT_RSCI
+  - Rename sci_r9a09g077_data to of_sci_r9a09g077_data for consistency
+Changes v4->v5:
+  - Rename SERIAL_RZ_SCI to SERIAL_RZ_SCI_T2
+  - Rename rzsci.{c,h} to rz-sci-t2.{c,h}
+  - Rename port type to PORT_RZ_SCI_T2
+  - Set sci_shutdown ops pointer (needed by systemd for having a console)
+Changes v3->v4:
+  - Added missing #include <bitfield.h>
+  - Fix christmas tree code style in rzsci_transmit_chars.
+---
+ drivers/tty/serial/Kconfig         |   7 +
+ drivers/tty/serial/Makefile        |   1 +
+ drivers/tty/serial/rsci.c          | 466 +++++++++++++++++++++++++++++
+ drivers/tty/serial/rsci.h          |  12 +
+ drivers/tty/serial/sh-sci-common.h |   5 +
+ drivers/tty/serial/sh-sci.c        |  43 ++-
+ 6 files changed, 524 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/tty/serial/rsci.c
+ create mode 100644 drivers/tty/serial/rsci.h
 
-merged to i2c/i2c-host-fixes with all the changes I suggested.
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 79a8186d3361..44427415a80d 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -675,6 +675,13 @@ config SERIAL_SH_SCI_DMA
+ 	depends on SERIAL_SH_SCI && DMA_ENGINE
+ 	default ARCH_RENESAS
+ 
++config SERIAL_RSCI
++	tristate "Support for Renesas RZ/T2H SCI variant"
++	depends on SERIAL_SH_SCI
++	help
++	  Support for the RZ/T2H SCI variant with fifo.
++	  Say Y if you want to be able to use the RZ/T2H SCI serial port.
++
+ config SERIAL_HS_LPC32XX
+ 	tristate "LPC32XX high speed serial port support"
+ 	depends on ARCH_LPC32XX || COMPILE_TEST
+diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+index d58d9f719889..a2ccbc508ec5 100644
+--- a/drivers/tty/serial/Makefile
++++ b/drivers/tty/serial/Makefile
+@@ -71,6 +71,7 @@ obj-$(CONFIG_SERIAL_QCOM_GENI)		+= qcom_geni_serial.o
+ obj-$(CONFIG_SERIAL_QE)			+= ucc_uart.o
+ obj-$(CONFIG_SERIAL_RDA)		+= rda-uart.o
+ obj-$(CONFIG_SERIAL_RP2)		+= rp2.o
++obj-$(CONFIG_SERIAL_RSCI)		+= rsci.o
+ obj-$(CONFIG_SERIAL_SA1100)		+= sa1100.o
+ obj-$(CONFIG_SERIAL_SAMSUNG)		+= samsung_tty.o
+ obj-$(CONFIG_SERIAL_SB1250_DUART)	+= sb1250-duart.o
+diff --git a/drivers/tty/serial/rsci.c b/drivers/tty/serial/rsci.c
+new file mode 100644
+index 000000000000..6a71bcffcc98
+--- /dev/null
++++ b/drivers/tty/serial/rsci.c
+@@ -0,0 +1,466 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 Renesas Electronics Corp.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/serial_core.h>
++#include <linux/serial_sci.h>
++#include <linux/tty_flip.h>
++#include "rsci.h"
++
++/* RSCI registers */
++#define RDR	0x00
++#define TDR	0x04
++#define CCR0	0x08
++#define CCR1	0x0C
++#define CCR2	0x10
++#define CCR3	0x14
++#define CCR4	0x18
++#define FCR	0x24
++#define DCR	0x30
++#define CSR	0x48
++#define FRSR	0x50
++#define FTSR	0x54
++#define CFCLR	0x68
++#define FFCLR	0x70
++
++/* RDR (Receive Data Register) */
++#define RDR_FFER		BIT(12) /* FIFO Framing Error */
++#define RDR_FPER		BIT(11) /* FIFO Parity Error */
++#define RDR_RDAT_MSK		GENMASK(8, 0)
++
++/* TDR (Transmit Data Register) */
++#define TDR_MPBT		BIT(9)	/* Multiprocessor Transfer */
++#define TDR_TDAT_9BIT_LSHIFT	0
++#define TDR_TDAT_9BIT_VAL	0x1FF
++#define TDR_TDAT_9BIT_MSK	(TDR_TDAT_9BIT_VAL << TDR_TDAT_9BIT_LSHIFT)
++
++/* CCR0 (Common Control Register 0) */
++#define CCR0_SSE		BIT(24)	/* SSn# Pin Function Enable */
++#define CCR0_TEIE		BIT(21)	/* Transmit End Interrupt Enable */
++#define CCR0_TIE		BIT(20)	/* Transmit Interrupt Enable */
++#define CCR0_RIE		BIT(16)	/* Receive Interrupt Enable */
++#define CCR0_IDSEL		BIT(10)	/* ID Frame Select */
++#define CCR0_DCME		BIT(9)	/* Data Compare Match Enable */
++#define CCR0_MPIE		BIT(8)	/* Multiprocessor Interrupt Enable */
++#define CCR0_TE			BIT(4)	/* Transmit Enable */
++#define CCR0_RE			BIT(0)	/* Receive Enable */
++
++/* CCR1 (Common Control Register 1) */
++#define CCR1_NFEN		BIT(28)	/* Digital Noise Filter Function */
++#define CCR1_SHARPS		BIT(20)	/* Half -duplex Communication Select */
++#define CCR1_SPLP		BIT(16)	/* Loopback Control */
++#define CCR1_RINV		BIT(13)	/* RxD invert */
++#define CCR1_TINV		BIT(12)	/* TxD invert */
++#define CCR1_PM			BIT(9)	/* Parity Mode */
++#define CCR1_PE			BIT(8)	/* Parity Enable */
++#define CCR1_SPB2IO		BIT(5)	/* Serial Port Break I/O */
++#define CCR1_SPB2DT		BIT(4)	/* Serial Port Break Data Select */
++#define CCR1_CTSPEN		BIT(1)	/* CTS External Pin Enable */
++#define CCR1_CTSE		BIT(0)	/* CTS Enable */
++
++/* FCR (FIFO Control Register) */
++#define FCR_RFRST		BIT(23)	/* Receive FIFO Data Register Reset */
++#define FCR_TFRST		BIT(15)	/* Transmit FIFO Data Register Reset */
++#define FCR_DRES		BIT(0)	/* Incoming Data Ready Error Select */
++#define FCR_RTRG4_0		GENMASK(20, 16)
++#define FCR_TTRG		GENMASK(12, 8)
++
++/* CSR (Common Status Register) */
++#define CSR_RDRF		BIT(31)	/* Receive Data Full */
++#define CSR_TEND		BIT(30)	/* Transmit End Flag */
++#define CSR_TDRE		BIT(29)	/* Transmit Data Empty */
++#define CSR_FER			BIT(28)	/* Framing Error */
++#define CSR_PER			BIT(27)	/* Parity Error */
++#define CSR_MFF			BIT(26)	/* Mode Fault Error */
++#define CSR_ORER		BIT(24)	/* Overrun Error */
++#define CSR_DFER		BIT(18)	/* Data Compare Match Framing Error */
++#define CSR_DPER		BIT(17)	/* Data Compare Match Parity Error */
++#define CSR_DCMF		BIT(16)	/* Data Compare Match */
++#define CSR_RXDMON		BIT(15)	/* Serial Input Data Monitor */
++#define CSR_ERS			BIT(4)	/* Error Signal Status */
++
++#define SCxSR_ERRORS(port)	(to_sci_port(port)->params->error_mask)
++#define SCxSR_ERROR_CLEAR(port)	(to_sci_port(port)->params->error_clear)
++
++#define RSCI_DEFAULT_ERROR_MASK	(CSR_PER | CSR_FER)
++
++#define RSCI_RDxF_CLEAR		(CFCLR_RDRFC)
++#define RSCI_ERROR_CLEAR	(CFCLR_PERC | CFCLR_FERC)
++#define RSCI_TDxE_CLEAR		(CFCLR_TDREC)
++#define RSCI_BREAK_CLEAR	(CFCLR_PERC | CFCLR_FERC | CFCLR_ORERC)
++
++/* FRSR (FIFO Receive Status Register) */
++#define FRSR_R5_0		GENMASK(13, 8)	/* Receive FIFO Data Count */
++#define FRSR_DR			BIT(0)	/* Receive Data Ready */
++
++/* CFCLR (Common Flag CLear Register) */
++#define CFCLR_RDRFC		BIT(31)	/* RDRF Clear */
++#define CFCLR_TDREC		BIT(29)	/* TDRE Clear */
++#define CFCLR_FERC		BIT(28)	/* FER Clear */
++#define CFCLR_PERC		BIT(27)	/* PER Clear */
++#define CFCLR_MFFC		BIT(26)	/* MFF Clear */
++#define CFCLR_ORERC		BIT(24)	/* ORER Clear */
++#define CFCLR_DFERC		BIT(18)	/* DFER Clear */
++#define CFCLR_DPERC		BIT(17)	/* DPER Clear */
++#define CFCLR_DCMFC		BIT(16)	/* DCMF Clear */
++#define CFCLR_ERSC		BIT(4)	/* ERS Clear */
++#define CFCLR_CLRFLAG		(CFCLR_RDRFC | CFCLR_FERC | CFCLR_PERC | \
++				 CFCLR_MFFC | CFCLR_ORERC | CFCLR_DFERC | \
++				 CFCLR_DPERC | CFCLR_DCMFC | CFCLR_ERSC)
++
++/* FFCLR (FIFO Flag CLear Register) */
++#define FFCLR_DRC		BIT(0)	/* DR Clear */
++
++#define DCR_DEPOL		BIT(0)
++
++static u32 rsci_serial_in(struct uart_port *p, int offset)
++{
++	return readl(p->membase + offset);
++}
++
++static void rsci_serial_out(struct uart_port *p, int offset, int value)
++{
++	writel(value, p->membase + offset);
++}
++
++static void rsci_clear_DRxC(struct uart_port *port)
++{
++	rsci_serial_out(port, CFCLR, CFCLR_RDRFC);
++	rsci_serial_out(port, FFCLR, FFCLR_DRC);
++}
++
++static void rsci_clear_SCxSR(struct uart_port *port, unsigned int mask)
++{
++	rsci_serial_out(port, CFCLR, mask);
++}
++
++static void rsci_start_rx(struct uart_port *port)
++{
++	unsigned int ctrl;
++
++	ctrl = rsci_serial_in(port, CCR0);
++	ctrl |= CCR0_RIE;
++	rsci_serial_out(port, CCR0, ctrl);
++}
++
++static void rsci_set_termios(struct uart_port *port, struct ktermios *termios,
++			      const struct ktermios *old)
++{
++	struct sci_port *s = to_sci_port(port);
++	unsigned long flags;
++
++	sci_port_enable(s);
++	uart_port_lock_irqsave(port, &flags);
++
++	/* For now, only RX enabling is supported */
++	if (termios->c_cflag & CREAD)
++		rsci_start_rx(port);
++
++	uart_port_unlock_irqrestore(port, flags);
++	sci_port_disable(s);
++}
++
++static int rsci_txfill(struct uart_port *port)
++{
++	return rsci_serial_in(port, FTSR);
++}
++
++static int rsci_rxfill(struct uart_port *port)
++{
++	u32 val = rsci_serial_in(port, FRSR);
++
++	return FIELD_GET(FRSR_R5_0, val);
++}
++
++static unsigned int rsci_tx_empty(struct uart_port *port)
++{
++	unsigned int status = rsci_serial_in(port, CSR);
++	unsigned int in_tx_fifo = rsci_txfill(port);
++
++	return (status & CSR_TEND) && !in_tx_fifo ? TIOCSER_TEMT : 0;
++}
++
++static void rsci_set_mctrl(struct uart_port *port, unsigned int mctrl)
++{
++	/* Not supported yet */
++}
++
++static unsigned int rsci_get_mctrl(struct uart_port *port)
++{
++	/* Not supported yet */
++	return 0;
++}
++
++static void rsci_clear_CFC(struct uart_port *port, unsigned int mask)
++{
++	rsci_serial_out(port, CFCLR, mask);
++}
++
++static void rsci_start_tx(struct uart_port *port)
++{
++	struct sci_port *sp = to_sci_port(port);
++	u32 ctrl;
++
++	if (sp->chan_tx)
++		return;
++
++	/*
++	 * TE (Transmit Enable) must be set after setting TIE
++	 * (Transmit Interrupt Enable) or in the same instruction
++	 * to start the transmit process.
++	 */
++	ctrl = rsci_serial_in(port, CCR0);
++	ctrl |= CCR0_TIE | CCR0_TE;
++	rsci_serial_out(port, CCR0, ctrl);
++}
++
++static void rsci_stop_tx(struct uart_port *port)
++{
++	u32 ctrl;
++
++	ctrl = rsci_serial_in(port, CCR0);
++	ctrl &= ~CCR0_TIE;
++	rsci_serial_out(port, CCR0, ctrl);
++}
++
++static void rsci_stop_rx(struct uart_port *port)
++{
++	u32 ctrl;
++
++	ctrl = rsci_serial_in(port, CCR0);
++	ctrl &= ~CCR0_RIE;
++	rsci_serial_out(port, CCR0, ctrl);
++}
++
++static int rsci_txroom(struct uart_port *port)
++{
++	return port->fifosize - rsci_txfill(port);
++}
++
++static void rsci_transmit_chars(struct uart_port *port)
++{
++	unsigned int stopped = uart_tx_stopped(port);
++	struct tty_port *tport = &port->state->port;
++	u32 status, ctrl;
++	int count;
++
++	status = rsci_serial_in(port, CSR);
++	if (!(status & CSR_TDRE)) {
++		ctrl = rsci_serial_in(port, CCR0);
++		if (kfifo_is_empty(&tport->xmit_fifo))
++			ctrl &= ~CCR0_TIE;
++		else
++			ctrl |= CCR0_TIE;
++		rsci_serial_out(port, CCR0, ctrl);
++		return;
++	}
++
++	count = rsci_txroom(port);
++
++	do {
++		unsigned char c;
++
++		if (port->x_char) {
++			c = port->x_char;
++			port->x_char = 0;
++		} else if (stopped || !kfifo_get(&tport->xmit_fifo, &c)) {
++			break;
++		}
++
++		rsci_clear_CFC(port, CFCLR_TDREC);
++		rsci_serial_out(port, TDR, c);
++
++		port->icount.tx++;
++	} while (--count > 0);
++
++	if (kfifo_len(&tport->xmit_fifo) < WAKEUP_CHARS)
++		uart_write_wakeup(port);
++
++	if (kfifo_is_empty(&tport->xmit_fifo)) {
++		ctrl = rsci_serial_in(port, CCR0);
++		ctrl &= ~CCR0_TIE;
++		ctrl |= CCR0_TEIE;
++		rsci_serial_out(port, CCR0, ctrl);
++	}
++}
++
++static void rsci_receive_chars(struct uart_port *port)
++{
++	struct tty_port *tport = &port->state->port;
++	u32 rdat, status, frsr_status = 0;
++	int i, count, copied = 0;
++	unsigned char flag;
++
++	status = rsci_serial_in(port, CSR);
++	frsr_status = rsci_serial_in(port, FRSR);
++
++	if (!(status & CSR_RDRF) && !(frsr_status & FRSR_DR))
++		return;
++
++	while (1) {
++		/* Don't copy more bytes than there is room for in the buffer */
++		count = tty_buffer_request_room(tport, rsci_rxfill(port));
++
++		/* If for any reason we can't copy more data, we're done! */
++		if (count == 0)
++			break;
++
++		for (i = 0; i < count; i++) {
++			char c;
++
++			rdat = rsci_serial_in(port, RDR);
++			/* 9-bits data is not supported yet */
++			c = rdat & RDR_RDAT_MSK;
++
++			if (uart_handle_sysrq_char(port, c)) {
++				count--;
++				i--;
++				continue;
++			}
++
++			/* Store data and status.
++			 * Non FIFO mode is not supported
++			 */
++			if (rdat & RDR_FFER) {
++				flag = TTY_FRAME;
++				port->icount.frame++;
++			} else if (rdat & RDR_FPER) {
++				flag = TTY_PARITY;
++				port->icount.parity++;
++			} else {
++				flag = TTY_NORMAL;
++			}
++
++			tty_insert_flip_char(tport, c, flag);
++		}
++
++		rsci_serial_in(port, CSR); /* dummy read */
++		rsci_clear_DRxC(port);
++
++		copied += count;
++		port->icount.rx += count;
++	}
++
++	if (copied) {
++		/* Tell the rest of the system the news. New characters! */
++		tty_flip_buffer_push(tport);
++	} else {
++		/* TTY buffers full; read from RX reg to prevent lockup */
++		rsci_serial_in(port, RDR);
++		rsci_serial_in(port, CSR); /* dummy read */
++		rsci_clear_DRxC(port);
++	}
++}
++
++static void rsci_poll_put_char(struct uart_port *port, unsigned char c)
++{
++	u32 status;
++	int ret;
++
++	ret = readl_relaxed_poll_timeout_atomic(port->membase + CSR, status,
++						(status & CSR_TDRE), 100,
++						USEC_PER_SEC);
++	if (ret != 0) {
++		dev_err(port->dev,
++			"Error while sending data in UART TX : %d\n", ret);
++		goto done;
++	}
++	rsci_serial_out(port, TDR, c);
++done:
++	rsci_clear_SCxSR(port, CFCLR_TDREC);
++}
++
++static void rsci_prepare_console_write(struct uart_port *port, u32 ctrl)
++{
++	struct sci_port *s = to_sci_port(port);
++	u32 ctrl_temp =
++		s->params->param_bits->rxtx_enable |
++		CCR0_TIE |
++		s->hscif_tot;
++	rsci_serial_out(port, CCR0, ctrl_temp);
++}
++
++static const char *rsci_type(struct uart_port *port)
++{
++	return "rsci";
++}
++
++static size_t rsci_suspend_regs_size(void)
++{
++	return 0;
++}
++
++static const struct sci_common_regs rsci_common_regs = {
++	.status = CSR,
++	.control = CCR0,
++};
++
++static const struct sci_port_params_bits rsci_port_param_bits = {
++	.rxtx_enable = CCR0_RE | CCR0_TE,
++	.te_clear = CCR0_TE | CCR0_TEIE,
++	.poll_sent_bits = CSR_TDRE | CSR_TEND,
++};
++
++static const struct sci_port_params rsci_port_params = {
++	.fifosize = 16,
++	.overrun_reg = CSR,
++	.overrun_mask = CSR_ORER,
++	.sampling_rate_mask = SCI_SR(32),
++	.error_mask = RSCI_DEFAULT_ERROR_MASK,
++	.error_clear = RSCI_ERROR_CLEAR,
++	.param_bits = &rsci_port_param_bits,
++	.common_regs = &rsci_common_regs,
++};
++
++static const struct uart_ops rzt2_sci_uart_ops = {
++	.tx_empty	= rsci_tx_empty,
++	.set_mctrl	= rsci_set_mctrl,
++	.get_mctrl	= rsci_get_mctrl,
++	.start_tx	= rsci_start_tx,
++	.stop_tx	= rsci_stop_tx,
++	.stop_rx	= rsci_stop_rx,
++	.startup	= sci_startup,
++	.shutdown	= sci_shutdown,
++	.set_termios	= rsci_set_termios,
++	.pm		= sci_pm,
++	.type		= rsci_type,
++	.release_port	= sci_release_port,
++	.request_port	= sci_request_port,
++	.config_port	= sci_config_port,
++	.verify_port	= sci_verify_port,
++};
++
++static const struct sci_port_ops rsci_port_ops = {
++	.read_reg		= rsci_serial_in,
++	.write_reg		= rsci_serial_out,
++	.clear_SCxSR		= rsci_clear_SCxSR,
++	.transmit_chars		= rsci_transmit_chars,
++	.receive_chars		= rsci_receive_chars,
++	.poll_put_char		= rsci_poll_put_char,
++	.prepare_console_write	= rsci_prepare_console_write,
++	.suspend_regs_size	= rsci_suspend_regs_size,
++};
++
++struct sci_of_data of_sci_r9a09g077_data = {
++	.type = SCI_PORT_RSCI,
++	.ops = &rsci_port_ops,
++	.uart_ops = &rzt2_sci_uart_ops,
++	.params = &rsci_port_params,
++};
++
++#ifdef CONFIG_SERIAL_SH_SCI_EARLYCON
++
++static int __init rzt2hsci_early_console_setup(struct earlycon_device *device,
++					       const char *opt)
++{
++	return scix_early_console_setup(device, &of_sci_r9a09g077_data);
++}
++
++OF_EARLYCON_DECLARE(rsci, "renesas,r9a09g077-rsci", rzt2hsci_early_console_setup);
++
++#endif /* CONFIG_SERIAL_SH_SCI_EARLYCON */
+diff --git a/drivers/tty/serial/rsci.h b/drivers/tty/serial/rsci.h
+new file mode 100644
+index 000000000000..0a037af26267
+--- /dev/null
++++ b/drivers/tty/serial/rsci.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __RSCI_H__
++#define __RSCI_H__
++
++#include "sh-sci-common.h"
++
++#ifdef CONFIG_SERIAL_RSCI
++extern struct sci_of_data of_sci_r9a09g077_data;
++#endif
++
++#endif /* __RSCI_H__ */
+diff --git a/drivers/tty/serial/sh-sci-common.h b/drivers/tty/serial/sh-sci-common.h
+index de9796595cfd..f172715621ae 100644
+--- a/drivers/tty/serial/sh-sci-common.h
++++ b/drivers/tty/serial/sh-sci-common.h
+@@ -5,6 +5,11 @@
+ 
+ #include <linux/serial_core.h>
+ 
++/* Private port IDs */
++enum SCI_PORT_TYPE {
++	SCI_PORT_RSCI = BIT(15)|0,
++};
++
+ enum SCI_CLKS {
+ 	SCI_FCK,		/* Functional Clock */
+ 	SCI_SCK,		/* Optional External Clock */
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 2abf80230a77..44066cd53e5e 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -54,6 +54,7 @@
+ #include <asm/platform_early.h>
+ #endif
+ 
++#include "rsci.h"
+ #include "serial_mctrl_gpio.h"
+ #include "sh-sci.h"
+ #include "sh-sci-common.h"
+@@ -1828,7 +1829,7 @@ static irqreturn_t sci_tx_end_interrupt(int irq, void *ptr)
+ 	unsigned long flags;
+ 	u32 ctrl;
+ 
+-	if (s->type != PORT_SCI)
++	if (s->type != PORT_SCI && s->type != SCI_PORT_RSCI)
+ 		return sci_tx_interrupt(irq, ptr);
+ 
+ 	uart_port_lock_irqsave(port, &flags);
+@@ -2977,14 +2978,26 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
+ 	struct clk *clk;
+ 	unsigned int i;
+ 
+-	if (sci_port->type == PORT_HSCIF)
++	if (sci_port->type == PORT_HSCIF) {
+ 		clk_names[SCI_SCK] = "hsck";
++	} else if (sci_port->type == SCI_PORT_RSCI) {
++		clk_names[SCI_FCK] = "async";
++		clk_names[SCI_SCK] = "bus";
++	}
+ 
+ 	for (i = 0; i < SCI_NUM_CLKS; i++) {
+-		clk = devm_clk_get_optional(dev, clk_names[i]);
++		const char *name = clk_names[i];
++
++		clk = devm_clk_get_optional(dev, name);
+ 		if (IS_ERR(clk))
+ 			return PTR_ERR(clk);
+ 
++		if (!clk && i <= SCI_SCK && sci_port->type == SCI_PORT_RSCI) {
++			return dev_err_probe(dev, -ENODEV,
++					     "failed to get %s\n",
++					     name);
++		}
++
+ 		if (!clk && i == SCI_FCK) {
+ 			/*
+ 			 * Not all SH platforms declare a clock lookup entry
+@@ -2995,13 +3008,13 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
+ 			if (IS_ERR(clk))
+ 				return dev_err_probe(dev, PTR_ERR(clk),
+ 						     "failed to get %s\n",
+-						     clk_names[i]);
++						     name);
+ 		}
+ 
+ 		if (!clk)
+-			dev_dbg(dev, "failed to get %s\n", clk_names[i]);
++			dev_dbg(dev, "failed to get %s\n", name);
+ 		else
+-			dev_dbg(dev, "clk %s is %pC rate %lu\n", clk_names[i],
++			dev_dbg(dev, "clk %s is %pC rate %lu\n", name,
+ 				clk, clk_get_rate(clk));
+ 		sci_port->clks[i] = clk;
+ 	}
+@@ -3085,10 +3098,10 @@ static int sci_init_single(struct platform_device *dev,
+ 	}
+ 
+ 	/*
+-	 * The fourth interrupt on SCI port is transmit end interrupt, so
++	 * The fourth interrupt on SCI and RSCI port is transmit end interrupt, so
+ 	 * shuffle the interrupts.
+ 	 */
+-	if (p->type == PORT_SCI)
++	if (p->type == PORT_SCI || p->type == SCI_PORT_RSCI)
+ 		swap(sci_port->irqs[SCIx_BRI_IRQ], sci_port->irqs[SCIx_TEI_IRQ]);
+ 
+ 	/* The SCI generates several interrupts. They can be muxed together or
+@@ -3122,6 +3135,9 @@ static int sci_init_single(struct platform_device *dev,
+ 		else
+ 			sci_port->rx_trigger = 8;
+ 		break;
++	case SCI_PORT_RSCI:
++		sci_port->rx_trigger = 15;
++		break;
+ 	default:
+ 		sci_port->rx_trigger = 1;
+ 		break;
+@@ -3346,7 +3362,8 @@ static void sci_remove(struct platform_device *dev)
+ 
+ 	if (s->port.fifosize > 1)
+ 		device_remove_file(&dev->dev, &dev_attr_rx_fifo_trigger);
+-	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF)
++	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF ||
++	    type == SCI_PORT_RSCI)
+ 		device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
+ }
+ 
+@@ -3440,6 +3457,12 @@ static const struct of_device_id of_sci_match[] __maybe_unused = {
+ 		.compatible = "renesas,scif-r9a09g057",
+ 		.data = &of_sci_scif_rzv2h,
+ 	},
++#ifdef CONFIG_SERIAL_RSCI
++	{
++		.compatible = "renesas,r9a09g077-rsci",
++		.data = &of_sci_r9a09g077_data,
++	},
++#endif	/* CONFIG_SERIAL_RSCI */
+ 	/* Family-specific types */
+ 	{
+ 		.compatible = "renesas,rcar-gen1-scif",
+@@ -3699,7 +3722,7 @@ static int sci_probe(struct platform_device *dev)
+ 			return ret;
+ 	}
+ 	if (sp->type == PORT_SCIFA || sp->type == PORT_SCIFB ||
+-	    sp->type == PORT_HSCIF) {
++	    sp->type == PORT_HSCIF || sp->type == SCI_PORT_RSCI) {
+ 		ret = device_create_file(&dev->dev, &dev_attr_rx_fifo_timeout);
+ 		if (ret) {
+ 			if (sp->port.fifosize > 1) {
+-- 
+2.43.0
 
-Thanks,
-Andi
