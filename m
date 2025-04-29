@@ -1,108 +1,225 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE10215060
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A0521772B;
+	Tue, 29 Apr 2025 16:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945458; cv=none; b=XGWwr7ndUpZ5jF0Bw6C+zOPvXAqF3zYSJiEb7oWB2EK3yYX76a6qAoTyGKiwMu8GiZWC2ubyLGMRKuP5XXMgyUZZZM5BeCLMR04/0rhzRfwM4U6+N5vJqG1lk3xDWKb8pf77gQm/oADvr6QW6A9JLSnoX0gyyhY66fjFvdrVnHM=
+	t=1745945482; cv=none; b=NyFySC4IVDDzTtUI3jW/inVol2XYblLMf94mJCvjcER4RiX/8UIy4DmTwjwK8NawBfoujr1N5eLQornquSJPklos4S6IZf6SnoIv8mKzw/tM4wpZnhoi7js2/Zj6IomUjkmRznFBPylAs4AriXSgB8Z3qYIhcLw7NRKqDlLe57U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945458; c=relaxed/simple;
-	bh=YicU0zV7ztG//LlCNJQI63gqZUs/cpCP8ikOIeO5FwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fj/VHcoegMK3IQJJPRu94xThhTArioPykigaFOWArl3Hotl06EWkVVbvo4NN3h/U0DCtNW4NWeK0Vjf+BHm3z3DZTIRu06wzYS+u4/96sic70zYMhimQ0t0+DTvjNybF0krp/n1L+ZN8FKqZaR1rMOMOA041iqJGFhFAtpKb8RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RCfl0H0s; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1745945482; c=relaxed/simple;
+	bh=nRog4rgHQdqWWNURy9yDGbnz8Cf4zokBdQKc2g/uCj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H7ReSTC1UikpWvOC/32ZFSV3Y5hnj3ye7Gt8HMr4duunljLM7sfUUp/8UGlBo+c7BIBJiWbOVyJLUJ5qeRvdjURyx3S+Q2s/MSErhlxNHZrz6JatPlVC7ieWXlmgHcvc5JJG76uhySc+c/400BWRf+a2WpqpmA9QFCbQxFks+F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Evw07ja/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RCfl0H0s"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3A03A40E01DA;
-	Tue, 29 Apr 2025 16:50:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QYTWq-p_Ub9x; Tue, 29 Apr 2025 16:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745945448; bh=SUchcJ3ddZMa6sQjxgAPCwFqkH6A/V+MfHCJP2j+eT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RCfl0H0staJZd2fHDdIpQ+Q/bFHo22eJVz29OVu5W7L0oMKe+II++SwCeU2+00TkI
-	 NKCOM/GExNFdbam5gxEZpxWMsqn9tCqfsGa4bx6JhVK0WehGvvkmler1KTEREsTfB2
-	 wRyVHLDM7itC12IBan53XnOupn1eJb87vqyRanCLNuKE7QaAaDKimH4yhdzvUcpI6p
-	 91TblELxiXEUJCzcPs2i1+oW7kLAITuslCRp0ceNRhJlJLLa/cDyBWkErQHqxo6OQW
-	 /cEHojh4qDYPhU6TukP5atLgTNCQ5F0YbgtRpduq0sNpAeHPaa5GpFRHx7/fm6mt4I
-	 xarDcNW+9SafUK/mimnoxzwPPQiALqHo6pj+Uo0ysn3smjEVBGw3Rf8iuFtWpTokMZ
-	 Z9L1OREY4V9wpZmaY/aRcC4DsEx1rmL5h9jrnvINeFM/wZDF/xb3yo38VT+K1Nkiqm
-	 lpXfKIHhTNxTiX39EZqV+ImwkHBdUBYlOSavJN0wA2BNZ6EcCTxkXMuH/dTRL/C79X
-	 XvAj74Gi1O2gPTk7dBjbx7O7Mwr/HSfeDXuZlSxK8Jc1xh50oPnrBj+NWfRO6fzUfS
-	 jO3LtQPo6SLh6le/ZcWuut4cb0RV/ivVvJIpL/pLxUKbfZ+WXM5Uz0b9au9GbMS826
-	 oYuepW0d7O+EDLBMZZ4BJnyc=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4C00C40E0219;
-	Tue, 29 Apr 2025 16:50:38 +0000 (UTC)
-Date: Tue, 29 Apr 2025 18:50:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 16/16] x86/bugs: Restructure SRSO mitigation
-Message-ID: <20250429165032.GHaBEDWM8qeeE6nfxI@fat_crate.local>
-References: <20250418161721.1855190-1-david.kaplan@amd.com>
- <20250418161721.1855190-17-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Evw07ja/"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TA4YE0000608;
+	Tue, 29 Apr 2025 16:50:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=u1ij4K
+	yVPbarzVqmgQlnjtxugvQt3lIho1CryqH85Vk=; b=Evw07ja/zDnJdiqlVfmq/n
+	GZxKHvXimq5oIgGz0AMFRlGy520ZMI6AQDQO51+8RRj6YdAFhmLFdtz77/Ix1iUK
+	4M/u3CqvMSq68nK7Ujzr2+uSvYuTMikk3UEQKumEKsUd95wj0UgODniZq2BUwqSG
+	sA2B9U5FDQNOuS24SpEe/CMDZSvOTj6yXQ+qGtJmUZWaP7IYZm6oVfN844v25JlS
+	cy+8c6TIRuyCXp1G3rDRpQPnqCiCtI+6dRYZBvtFnRN/8LQYcYq2ZIJaqPUeFX1R
+	DG5VX2vJDNwgr9r7q7EJ9njJa9gAXowctcBJ1vz03Lj8A07NVW6o2YrXo5hnP51g
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46avpk9x5a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 16:50:46 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53TEj3Nk024644;
+	Tue, 29 Apr 2025 16:50:45 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1m3wdp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 16:50:45 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53TGoi7L34013810
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 16:50:44 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 765FA58054;
+	Tue, 29 Apr 2025 16:50:44 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E11095805A;
+	Tue, 29 Apr 2025 16:50:42 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Apr 2025 16:50:42 +0000 (GMT)
+Message-ID: <e1bd032b-8433-4e07-a940-7e020d7cecd0@linux.ibm.com>
+Date: Tue, 29 Apr 2025 12:50:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250418161721.1855190-17-david.kaplan@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 5/9] ima: kexec: define functions to copy IMA log at
+ soft boot
+To: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+References: <20250421222516.9830-1-chenste@linux.microsoft.com>
+ <20250421222516.9830-6-chenste@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20250421222516.9830-6-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=68110366 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8
+ a=gp-jI7jXbnyn_jZY2ukA:9 a=QEXdDO2ut3YA:10 a=BpimnaHY1jUKGyF_4-AF:22
+X-Proofpoint-ORIG-GUID: yItTAUl1fOti25qude2z2zRcfwXrUXCL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDEyMyBTYWx0ZWRfXygCIbTNTdcDM TXWRIkPvCV12OmAzMsLFXfRIWiV4Ml9P5OqfDTj3aeI6QFobKvXZeIemd8PNZPBl/iLDNElAk4r xcl703AHCRr9/8ZIhRtS7bA3GeeCLgnUvEpJ/CpdiyjtloBADb2K+ZJtgFKrvAUBffttFDk1pn/
+ +6DBYWZebKiHeJQTn8TyEdZgmGqG3Bcx/5Xp5CJjsrm3pN5DR1ZNjRq9mk5ZFF/WzYkggE2G/l+ Dqhq/R7Jr+vpIIjqg+51rkzbugMTt4cJOsNLB07RZup45GWvu1I8sXpDLXLknYrNnIsWfUO6CrB rBhdnmWIifPaDI255WxMD8y3xBN+vsDC/54qIxydl1Vx12uwFkOCX6z5GI3A0lsqhPrcejry+q/
+ l+rO0IqtAy/W6ueH/J1uVW6mAqVXY4fMKtmROiZ1B4F06sUh7C9DGg2Wfg9U34CfD2JQQ7st
+X-Proofpoint-GUID: yItTAUl1fOti25qude2z2zRcfwXrUXCL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290123
 
-On Fri, Apr 18, 2025 at 11:17:21AM -0500, David Kaplan wrote:
-> @@ -2738,130 +2730,80 @@ static void __init srso_select_mitigation(void)
->  {
->  	bool has_microcode = boot_cpu_has(X86_FEATURE_IBPB_BRTYPE);
 
-I'll push that init after the return so that it doesn't happen unnecessarily.
 
-> -	if (!boot_cpu_has_bug(X86_BUG_SRSO) ||
-> -	    cpu_mitigations_off() ||
-> -	    srso_cmd == SRSO_CMD_OFF) {
-> -		if (boot_cpu_has(X86_FEATURE_SBPB))
-> -			x86_pred_cmd = PRED_CMD_SBPB;
-> -		goto out;
-> -	}
-> +	if (!boot_cpu_has_bug(X86_BUG_SRSO) || cpu_mitigations_off())
-> +		srso_mitigation = SRSO_MITIGATION_NONE;
+On 4/21/25 6:25 PM, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+> 
+> The IMA log is currently copied to the new kernel during kexec 'load'
+> using ima_dump_measurement_list(). However, the log copied at kexec
+> 'load' may result in loss of IMA measurements that only occurred after
+> kexec "load'. Setup the needed infrastructure to move the IMA log copy
+> from kexec 'load' to 'execute'.
+> 
+> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
+> It will be used to call ima_dump_measurement_list() during kexec 'execute'.
+> 
+> Implement ima_kexec_post_load() function to be invoked after the new
+> Kernel image has been loaded for kexec. ima_kexec_post_load() maps the
+> IMA buffer to a segment in the newly loaded Kernel.  It also registers
+> the reboot notifier_block to trigger ima_update_kexec_buffer() at
+> kexec 'execute'.
+> 
+> Set the priority of register_reboot_notifier to INT_MIN to ensure that the
+> IMA log copy operation will happen at the end of the operation chain, so
+> that all the IMA measurement records extended into the TPM are copied
+> 
+> Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
+> ---
+>   include/linux/ima.h                |  3 ++
+>   security/integrity/ima/ima_kexec.c | 47 ++++++++++++++++++++++++++++++
+>   2 files changed, 50 insertions(+)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 0bae61a15b60..8e29cb4e6a01 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -32,6 +32,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
+>   
+>   #ifdef CONFIG_IMA_KEXEC
+>   extern void ima_add_kexec_buffer(struct kimage *image);
+> +extern void ima_kexec_post_load(struct kimage *image);
+> +#else
+> +static inline void ima_kexec_post_load(struct kimage *image) {}
+>   #endif
+>   
+>   #else
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 7e0a19c3483f..e79f6caf895b 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -12,10 +12,14 @@
+>   #include <linux/kexec.h>
+>   #include <linux/of.h>
+>   #include <linux/ima.h>
+> +#include <linux/reboot.h>
+> +#include <asm/page.h>
+>   #include "ima.h"
+>   
+>   #ifdef CONFIG_IMA_KEXEC
+> +static bool ima_kexec_update_registered;
+>   static struct seq_file ima_kexec_file;
+> +static void *ima_kexec_buffer;
+>   
+>   static void ima_free_kexec_file_buf(struct seq_file *sf)
+>   {
+> @@ -162,6 +166,49 @@ void ima_add_kexec_buffer(struct kimage *image)
+>   	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+>   		      kbuf.mem);
+>   }
 > +
-> +	if (srso_mitigation == SRSO_MITIGATION_NONE)
+> +/*
+> + * Called during kexec execute so that IMA can update the measurement list.
+> + */
+> +static int ima_update_kexec_buffer(struct notifier_block *self,
+> +				   unsigned long action, void *data)
+> +{
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block update_buffer_nb = {
+> +	.notifier_call = ima_update_kexec_buffer,
+> +	.priority = INT_MIN
+> +};
+> +
+> +/*
+> + * Create a mapping for the source pages that contain the IMA buffer
+> + * so we can update it later.
+> + */
+> +void ima_kexec_post_load(struct kimage *image)
+> +{
+> +	if (ima_kexec_buffer) {
+> +		kimage_unmap_segment(ima_kexec_buffer);
+> +		ima_kexec_buffer = NULL;
+> +	}
+> +
+> +	if (!image->ima_buffer_addr)
 > +		return;
 > +
-> +	if (srso_mitigation == SRSO_MITIGATION_AUTO)
-> +		srso_mitigation = SRSO_MITIGATION_SAFE_RET;
->  
->  	if (has_microcode) {
->  		/*
->  		 * Zen1/2 with SMT off aren't vulnerable after the right
->  		 * IBPB microcode has been applied.
-> -		 *
-> -		 * Zen1/2 don't have SBPB, no need to try to enable it here.
+> +	ima_kexec_buffer = kimage_map_segment(image,
+> +					      image->ima_buffer_addr,
+> +					      image->ima_buffer_size);
+> +	if (!ima_kexec_buffer) {
+> +		pr_err("Could not map measurements buffer.\n");
+> +		return;
+> +	}
+> +
+> +	if (!ima_kexec_update_registered) {
+> +		register_reboot_notifier(&update_buffer_nb);
+> +		ima_kexec_update_registered = true;
+> +	}
+> +}
+> +
+>   #endif /* IMA_KEXEC */
+>   
+>   /*
 
-Why?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
