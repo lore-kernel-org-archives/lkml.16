@@ -1,60 +1,63 @@
 Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002D02517A6
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:09:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46F7253B42
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745950192; cv=none; b=GBza6Souxw0lLgpHw+Ds4tZPozu4NezL70sE6Ew5DrE2C2PRhidPlBYZ9qFqEF66gYPZ8Uy0l9E84TcmJ/AeWv+skWqBdqy861+XiuG7drRcyYv7zrmNipGP9JJNwahDKOM6KQtML+G550F2sk0cPKvYXneq6e92IixXktmgQJc=
+	t=1745950195; cv=none; b=UEuuYatvcxejZh+HV4PsORxNPNihdzh2MkJhnG3AmeYtwDuQ4qDTgMyjtQf3yMEEmNv0G0/tQpLqQuhTCu+QSl/3FzT4XL6Z25Q7RnaYlEtNa6rjKeFlTyk/dKv2NCpV/9r6IZ/0mU9kitGVAzfSB0pbv5eYZNMi1c951HHad08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745950192; c=relaxed/simple;
-	bh=NRmEFA1cMtNTKkdV4Kz76ZxAsSzC6Ex/40jCfiCBdlA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z5mNQV4UFQAColEM2g/iASdrEPaRjKkSvrUefeYayJP+RGy+3sips35x3qmYjoI2o2uSOusScr+tTgoEdoZXG23U5gy1icXhnKut5jwsoKOJLz2xpLWvWPW+hPw95vGB4nc1CkH7JDkJhGSntwNoj/5lBp6Kybn3glnzB5r9pGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KAh+uwPi; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1745950195; c=relaxed/simple;
+	bh=5c/GwZGg6YfVlYGBkBCZKwX7PpiLtVcO4mQlYw0R+Yw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YlWPA10iOMmShM9f9NZGdlOnBCgLFOSLPcAXtfLgOFp4OvoauIzdWicK0vTsoCc0iD7DtcZbu50wM6M5/DqDU0PFOfLr4DMKxJQMb859kHxM0EVNEV7opjZvNcn4p4ZxVH7sNPr6nbjfJzEfiQEPaQOZh8mpmG3CQypahodlbrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iaJcwWmI; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KAh+uwPi"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf861f936so11169645e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:09:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iaJcwWmI"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-44069f5f3aaso9291995e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745950188; x=1746554988; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w/rG6AWXGoekxcd3LHIxXcRgVm+0IkNESPaRkmBuBd8=;
-        b=KAh+uwPip5xvNkGr24FODNbDLIbya8rebcJAlZte5lZJYz+zdFJoUJcZIrtMF0F+bU
-         wey5YgHsPQiBn0j2aBSELFHviC/Hwz6RbyFXhKr/xUwMr8NWY9X48qjrDxB/tffnVrIh
-         rCi296Tl3L1DCorFwDf/sLcicnxGwmQHVZpiFaiYBXtu6rGWodRDKYDp4rhPwIWV2hEm
-         d1O80BjHRg1wV9Sxd9jCixTXWc8S884qNQpEiA5M5B+EPslZOF9JrUw6kEE66wF/CxmJ
-         BDyyNG8U0dGRIvGqp0SB0G+kZHQHSFcK9V4NexlA9lREfNf5ZmDAZ94qZXK5mc4Vk5IE
-         0/mg==
+        d=linaro.org; s=google; t=1745950191; x=1746554991; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uq/xrCbSpMl8yUGK/CtcRuYFkY28ZnkmRZXSp/OjKl8=;
+        b=iaJcwWmIrWAMWNpMsq5wMcXnIBjvKe8BxMjq02BblNT+eO1Gu2w+9VqVPtA13jRF6J
+         wvwgxMCJBAkguOVhyTduMmVApwik4LI7ztjk8ZFGUkwcbCVZ6oYWaelhl54oVH5fSEI/
+         k4smSrh9p7UpAtakCmRxCzx2BpZOz2H6g/9X8lrDdWFjYm7cPzjrFLrPqcVMRGnheect
+         EaCMQ7K5/cHhFHh/SnC+8C2FBrImDnYYGo0YA1+oYLyBy6wLHApdkX4if0dSAgP4VmAN
+         JBmAae0T3jLEvSgtI+QILqCM1osAcq1lVAljGO3ZKN37dwnFMQ3T4Uq1i/S3Pbv126Z2
+         y3VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745950188; x=1746554988;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w/rG6AWXGoekxcd3LHIxXcRgVm+0IkNESPaRkmBuBd8=;
-        b=TEkmHyvt6LSqImq8FAQOEAK7n28fXZjqaKuwNbHgUPjyphlJu0BGGXmBJU8oPfodMs
-         NPdCKKxJRuhkDj8jGAGQ0rR/ujN29w3rDoLTC///n3MaQEaOWJug/eKbQfwDUPX0yN5y
-         YmfGXSHGSfZrmu71gCyoizQoKdlisaS8m4MrFAkl8nf2yTaskhkmYU66V2qTTv6fOqII
-         aE5EhnFgZyf5X7tDj2Rcl3oA6IESTjj23qalezNr5PuWLEd9gLIOXSIniN21ghJzOigT
-         2/2uVSxZ71A7TxO+PNzXycSLX2Uks+SdbhS+xBZVmhzx+CsF1iREh+MSfqBKuvQZX5x7
-         X1oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqQWK4+IAojkZ18Z4zM7Wxxx2VtCoOjAdkDft7NfFy+ldABguG1M4QghoqRV91aNo8FkFCwXr7N7Y3+4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ6n2wvWnrCm4OnC9kkeSm0QmlpEBEg2hdDS7jAwY94Lxmg82P
-	txwN17ZFYiztCZjzoMXGE7S6LlYtXltWxYCia8c80l0N1W6TzPjVivgnOMceg/I=
-X-Gm-Gg: ASbGnctJR17lopPkYhkEPbmtuEN/8U939ZHTTrmK1bDom9h71R1sWZz76YW/V/drENl
-	Tottcfa5kq3tMjsYLGZV+LDQV+yXC8UGLR/XEGFRYyjM9bZgIyhf5fabWKXGvrendio9ehXllSR
-	2GT92D46gBa10ucGr6hZBD4F/cK8sqaq9ZFIPQJfxN/BXeQGIaxvy1KpGqJbO+xaoYDn+weh93u
-	78lSnYw7ItBUeDDQ+sg1yg5j947tvAy2+V25Jvh6h4+5ECT5stMYSmbd/N/xC3SFlVzi8HZBvmy
-	6KJHloZQ1NJxp+7hEbvf7NDZreET9FEgOiDhoQj6DzU+TRJy7w==
-X-Google-Smtp-Source: AGHT+IGEAvfTMVbPsHmLNZ+IkEuAjoyB8jaVAoucK/+s16SnbjUKJ7712NKpLTFsRw8wJ6RbZnh36Q==
-X-Received: by 2002:a05:6000:420e:b0:391:3110:dff5 with SMTP id ffacd0b85a97d-3a08f79e75emr121818f8f.5.1745950188236;
-        Tue, 29 Apr 2025 11:09:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745950191; x=1746554991;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uq/xrCbSpMl8yUGK/CtcRuYFkY28ZnkmRZXSp/OjKl8=;
+        b=HZs0f6NIZpjZnfxKOqJNBSaVZcB2dUC66yihKCZROurP1qoc1ile7ynaVCTRkLN4k5
+         Q2SsrYS4Y6+0FOyRLDYLIffb5Hii/I65MrmH+R/CY2FKf9XjR7mYUJCVYhDnhleEwhqo
+         fCo41i6E3/HSUX1Zh8gbAimk+8dykvKRq1DFRwpX+/xBnxJv+FL1uyQ9of2OVpuug2FG
+         cGW+bU0p0XT34CsQ/blKxkq3BxCnI33ze/iyVLMnaNzenpwoKtpu9ljpR4Yknl4PYJe6
+         m0T3BvRS7Kgy6v5JHzjpwA/fhQCL6pRs4xEAw05ohkDuD3aXZ4xiulhL3TNk03HQ/Uzw
+         wTpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHlkcKEpCf8Tz77HgT4lNvtHKK1Rvw7fKcddUrrs5MnilwFOD+gOi9yhYUmO0N7C/X5eFjfwG+pvUruF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/l6QU/TseT0ff6OC+o8Si/WgmZQhlQ0pU2o8C1V5xFMex8ORm
+	sDD5nRX2h2BcnIzBJR9emvfdILzVMagRCk6ZIPVUPIS9Pc7KTZ/pBYvW9hxmBGP15CGIDBvtBMc
+	O
+X-Gm-Gg: ASbGncte3RFIRd4N5CgQWxZ119aVTMzKTf8M/Eu+lWlbQCmViuuUBD33dKd586CVAlC
+	tgM24+57JDBz8flTBQSgHgNT/ZmwFYQlj46jteuwYRZNujRPm8WeZbu5BkDwQy00Mp72ptdEz5A
+	JHGeuLLAOcFvZ7Jfs5yqUdV+mIQM2OgkExv/Rxnv7bkpvfpbzgn5yp4N22X5mWnTdSBCCeKyHqL
+	2FtJB/eESQAsdUnxaHjEdzg2z8l8PJ+bz+zkCfvlUk1yk0+sKfdiYvLTbtrJuOMYJclK4oaiTeL
+	YWHzwU4VSn5PGtL9Epfgk97WLeKCdAu5NNOZ74JvcP3lZIGNJA==
+X-Google-Smtp-Source: AGHT+IF4ruiqqDP8X8kBz07PWrwGmJHtaW7Bjk2i12EiWRq+A8qrj2gI7KFa7bV/OaRdFcxu+zZ3jw==
+X-Received: by 2002:a5d:59ac:0:b0:3a0:81c9:3eaf with SMTP id ffacd0b85a97d-3a08f7d186amr101070f8f.13.1745950190928;
+        Tue, 29 Apr 2025 11:09:50 -0700 (PDT)
 Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d52bsm15028818f8f.90.2025.04.29.11.09.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d52bsm15028818f8f.90.2025.04.29.11.09.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 11:09:47 -0700 (PDT)
+        Tue, 29 Apr 2025 11:09:50 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Robert Foss <rfoss@kernel.org>,
 	Todor Tomov <todor.too@gmail.com>,
@@ -64,29 +67,31 @@ To: Robert Foss <rfoss@kernel.org>,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with version
-Date: Tue, 29 Apr 2025 20:08:29 +0200
-Message-ID: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 3/3] media: qcom: camss: csiphy: Stop spamming logs with version
+Date: Tue, 29 Apr 2025 20:08:31 +0200
+Message-ID: <20250429180828.950219-6-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7342; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=NRmEFA1cMtNTKkdV4Kz76ZxAsSzC6Ex/40jCfiCBdlA=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoERWcIyDAxAv9TbP2GAMiw/QCHluBg1AQUDsz4
- TNetsccTP2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBEVnAAKCRDBN2bmhouD
- 139PD/9UaFPoTNGrGk3Kxu3/I1Xj66yiTsYIU0lLxXCKXqQ6e02DHsVQdoGqUJ1kSElO9ycyRrZ
- V9CC/NCXFRd4nWNHfIzp3akwKAiPIlt4OoAkzuhGyRoWHIuORF5kDC90Vj/7+UDDUTksSxP7rwE
- JcNHpi71hbxfyrgPYhWGYxgLXqh/hDTA1hzZoTM4dcp/kYOARoF/xpYlZQTXoNrf0TZmmI3oU2Y
- kgzzGAMC2hDB92Kf8rheFfQDgpI0DvrwLU8BV2Ue0iiqRW0VVHkvREf3ZVHCuLa1hP31KGvGGhS
- QLHQh0rrkDp59k8qrU0DT6aovnM1WX4OWXz3zUpZeQN3MdUY5kQAx524Zfmflk3KldG3drLyKC9
- sQYpx/ShKlbqgG+bSM7EWzsmyT194pSlQZSPRljtu//3t8FsCsV3MgLr9sqbdluD4Ah62t8DmH2
- 1WB0oFH2OmRU/vepKdp18ZCDtA19HJKdVm5icnu+N+/30meTorALrisI26cqJh4CpZiWJq7v8Tu
- GW7DGP8Jx73SOpKu6ECJEInMf+Cq4lzd1UWgNj0v6IaMHb/AAByAUIeU1Qf0UhXsp6c2t/kRJd8
- 3kFLQYFLwdkQ5xVa+GqUi+x8Yx6hXpM8qWchpbjmy7sMmrdb/3Q0CwI0EqRAQ5ra6JyRXBO4x+C 3PAh9BQL1KrHDsQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4129; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=5c/GwZGg6YfVlYGBkBCZKwX7PpiLtVcO4mQlYw0R+Yw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoERWhC8iFUeQq7gTWXqi7rueBD/nq8VUxg+SFS
+ j6KI5AwgWCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBEVoQAKCRDBN2bmhouD
+ 13DmD/9Yl/jXVFoF0eFwjIpMunLzVnW4YlDFQLgzjXWIywBX8pk2aZ1ouyFIJiqPl81pvGI5WjG
+ q0T9/NfNmdvYBTht280OPepdYpOrwVNZCc1/vKuiL6eI/wt3lz2PoUvJsjBqlcWwbRwxHD41KgC
+ xVTc9R0EHFFJNiaTBMwFoij+EBtxsrXRIkp7rUjJgzWd4+QDWIuUrszIPI+vbf1j3vVFQ0QOdr1
+ 8tUgsTdaPtY8ZnyDI3S7eAr51p27M59pmOYdun6xqFgUXrhFEEWdgVUhDaBxDYMWCwN5EFR8hyx
+ eG0eitZe07kA1SejXLokzVfDHtDM7hwHJlV+j7aqk0ycTpp+DJfrGUCWxOXJYDvZj6ik5BMcUX2
+ BCVMDv2ABuQlrriRvtoyYRo7zT8WKis/egecVYKs60INFI2+tytk5AOmmQ1rj/5H+bqQst05VOP
+ V0EcHuv0F680g7jpFD43pHatGXVDFL+Fj0eBICB5iYVylFDFau+Zgus1+Q0tMuCmmea6fGLTVEe
+ s4p8SaDHdZuJJwg6+ijoOrjrKZkwdyO9VO2YXMEsGtCzqeNFfuGfLkyFQP9m1kT3ddwUQZ4n1sF
+ mAtlwKfEFqee1hWqFzp7w+3qMHDjAC4la1uePxJMefJzRJC4rjzDGVINFeuQDiUi8u5hGZCYfpq rGWi02WnCeKfuFQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
@@ -105,167 +110,92 @@ hardware block is deducible from the compatible.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../media/platform/qcom/camss/camss-vfe-17x.c |  1 -
- .../media/platform/qcom/camss/camss-vfe-4-1.c |  1 -
- .../media/platform/qcom/camss/camss-vfe-4-7.c |  1 -
- .../media/platform/qcom/camss/camss-vfe-4-8.c |  1 -
- .../media/platform/qcom/camss/camss-vfe-480.c |  1 -
- .../media/platform/qcom/camss/camss-vfe-680.c |  1 -
- .../media/platform/qcom/camss/camss-vfe-780.c |  1 -
- drivers/media/platform/qcom/camss/camss-vfe.c | 22 -------------------
- drivers/media/platform/qcom/camss/camss-vfe.h |  8 -------
- 9 files changed, 37 deletions(-)
+ .../qcom/camss/camss-csiphy-2ph-1-0.c         | 10 ---------
+ .../qcom/camss/camss-csiphy-3ph-1-0.c         | 22 -------------------
+ .../media/platform/qcom/camss/camss-csiphy.c  |  2 --
+ 3 files changed, 34 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-17x.c b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
-index e5ee7e717b3b..e0d12c3f6015 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-17x.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-17x.c
-@@ -577,7 +577,6 @@ static void vfe_subdev_init(struct device *dev, struct vfe_device *vfe)
- 
- const struct vfe_hw_ops vfe_ops_170 = {
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr_read = vfe_isr_read,
- 	.isr = vfe_isr,
- 	.pm_domain_off = vfe_pm_domain_off,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-index 901677293d97..7620ce42b49b 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-@@ -993,7 +993,6 @@ static void vfe_subdev_init(struct device *dev, struct vfe_device *vfe)
- 
- const struct vfe_hw_ops vfe_ops_4_1 = {
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr_read = vfe_isr_read,
- 	.isr = vfe_isr,
- 	.pm_domain_off = vfe_4_1_pm_domain_off,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
-index 76729607db02..b3b6ccb4748e 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
-@@ -1145,7 +1145,6 @@ static void vfe_subdev_init(struct device *dev, struct vfe_device *vfe)
- 
- const struct vfe_hw_ops vfe_ops_4_7 = {
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr_read = vfe_isr_read,
- 	.isr = vfe_isr,
- 	.pm_domain_off = vfe_pm_domain_off,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-8.c b/drivers/media/platform/qcom/camss/camss-vfe-4-8.c
-index b2f7d855d8dd..5a4b4f486aca 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-4-8.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-4-8.c
-@@ -1135,7 +1135,6 @@ static void vfe_subdev_init(struct device *dev, struct vfe_device *vfe)
- 
- const struct vfe_hw_ops vfe_ops_4_8 = {
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr_read = vfe_isr_read,
- 	.isr = vfe_isr,
- 	.pm_domain_off = vfe_pm_domain_off,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-480.c b/drivers/media/platform/qcom/camss/camss-vfe-480.c
-index 4feea590a47b..edd92308af62 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-480.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-480.c
-@@ -278,7 +278,6 @@ static void vfe_buf_done_480(struct vfe_device *vfe, int port_id)
- const struct vfe_hw_ops vfe_ops_480 = {
- 	.enable_irq = vfe_enable_irq,
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr = vfe_isr,
- 	.isr_read = vfe_isr_read,
- 	.reg_update = vfe_reg_update,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-680.c b/drivers/media/platform/qcom/camss/camss-vfe-680.c
-index 99036e7c1e76..96a927acc6bb 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-680.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-680.c
-@@ -227,7 +227,6 @@ static inline void vfe_reg_update_clear(struct vfe_device *vfe,
- 
- const struct vfe_hw_ops vfe_ops_680 = {
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr = vfe_isr,
- 	.pm_domain_off = vfe_pm_domain_off,
- 	.pm_domain_on = vfe_pm_domain_on,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-780.c b/drivers/media/platform/qcom/camss/camss-vfe-780.c
-index b9812d70f91b..e5023eb7ad60 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-780.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-780.c
-@@ -142,7 +142,6 @@ static int vfe_halt(struct vfe_device *vfe)
- 
- const struct vfe_hw_ops vfe_ops_780 = {
- 	.global_reset = vfe_global_reset,
--	.hw_version = vfe_hw_version,
- 	.isr = vfe_isr,
- 	.pm_domain_off = vfe_pm_domain_off,
- 	.pm_domain_on = vfe_pm_domain_on,
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
-index 4bca6c3abaff..1ae523219525 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.c
-@@ -415,26 +415,6 @@ static u32 vfe_src_pad_code(struct vfe_line *line, u32 sink_code,
- 	return 0;
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c
+index 9d67e7fa6366..09d3b21e222f 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-2ph-1-0.c
+@@ -40,15 +40,6 @@ static u8 csiphy_get_lane_mask(struct csiphy_lanes_cfg *lane_cfg)
+ 	return lane_mask;
  }
  
--/*
-- * vfe_hw_version - Process write master done interrupt
-- * @vfe: VFE Device
-- *
-- * Return vfe hw version
-- */
--u32 vfe_hw_version(struct vfe_device *vfe)
+-static void csiphy_hw_version_read(struct csiphy_device *csiphy,
+-				   struct device *dev)
 -{
--	u32 hw_version = readl_relaxed(vfe->base + VFE_HW_VERSION);
+-	u8 hw_version = readl_relaxed(csiphy->base +
+-				      CAMSS_CSI_PHY_HW_VERSION);
 -
--	u32 gen = (hw_version >> HW_VERSION_GENERATION) & 0xF;
--	u32 rev = (hw_version >> HW_VERSION_REVISION) & 0xFFF;
--	u32 step = (hw_version >> HW_VERSION_STEPPING) & 0xFFFF;
--
--	dev_dbg(vfe->camss->dev, "VFE:%d HW Version = %u.%u.%u\n",
--		vfe->id, gen, rev, step);
--
--	return hw_version;
+-	dev_dbg(dev, "CSIPHY HW Version = 0x%02x\n", hw_version);
 -}
 -
  /*
-  * vfe_buf_done - Process write master done interrupt
-  * @vfe: VFE Device
-@@ -1088,8 +1068,6 @@ int vfe_get(struct vfe_device *vfe)
- 		vfe_reset_output_maps(vfe);
+  * csiphy_reset - Perform software reset on CSIPHY module
+  * @csiphy: CSIPHY device
+@@ -187,7 +178,6 @@ static int csiphy_init(struct csiphy_device *csiphy)
  
- 		vfe_init_outputs(vfe);
+ const struct csiphy_hw_ops csiphy_ops_2ph_1_0 = {
+ 	.get_lane_mask = csiphy_get_lane_mask,
+-	.hw_version_read = csiphy_hw_version_read,
+ 	.reset = csiphy_reset,
+ 	.lanes_enable = csiphy_lanes_enable,
+ 	.lanes_disable = csiphy_lanes_disable,
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+index f732a76de93e..bc605931278b 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c
+@@ -541,27 +541,6 @@ csiphy_lane_regs lane_regs_x1e80100[] = {
+ 	{0x0C64, 0x7F, 0x00, CSIPHY_SKEW_CAL},
+ };
+ 
+-static void csiphy_hw_version_read(struct csiphy_device *csiphy,
+-				   struct device *dev)
+-{
+-	struct csiphy_device_regs *regs = csiphy->regs;
+-	u32 hw_version;
 -
--		vfe->res->hw_ops->hw_version(vfe);
- 	} else {
- 		ret = vfe_check_clock_rates(vfe);
- 		if (ret < 0)
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.h b/drivers/media/platform/qcom/camss/camss-vfe.h
-index a23f666be753..1553ca89bd86 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.h
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.h
-@@ -101,7 +101,6 @@ struct vfe_device;
- struct vfe_hw_ops {
- 	void (*enable_irq)(struct vfe_device *vfe);
- 	void (*global_reset)(struct vfe_device *vfe);
--	u32 (*hw_version)(struct vfe_device *vfe);
- 	irqreturn_t (*isr)(int irq, void *dev);
- 	void (*isr_read)(struct vfe_device *vfe, u32 *value0, u32 *value1);
- 	void (*pm_domain_off)(struct vfe_device *vfe);
-@@ -259,13 +258,6 @@ void vfe_put(struct vfe_device *vfe);
-  */
- bool vfe_is_lite(struct vfe_device *vfe);
- 
--/*
-- * vfe_hw_version - Process write master done interrupt
-- * @vfe: VFE Device
-- *
-- * Return vfe hw version
-- */
--u32 vfe_hw_version(struct vfe_device *vfe);
+-	writel(CSIPHY_3PH_CMN_CSI_COMMON_CTRL6_SHOW_REV_ID, csiphy->base +
+-	       CSIPHY_3PH_CMN_CSI_COMMON_CTRLn(regs->offset, 6));
+-
+-	hw_version = readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 12));
+-	hw_version |= readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 13)) << 8;
+-	hw_version |= readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 14)) << 16;
+-	hw_version |= readl_relaxed(csiphy->base +
+-				   CSIPHY_3PH_CMN_CSI_COMMON_STATUSn(regs->offset, 15)) << 24;
+-
+-	dev_dbg(dev, "CSIPHY 3PH HW Version = 0x%08x\n", hw_version);
+-}
+-
  /*
-  * vfe_enable - Enable streaming on VFE line
-  * @line: VFE line
+  * csiphy_reset - Perform software reset on CSIPHY module
+  * @csiphy: CSIPHY device
+@@ -858,7 +837,6 @@ static int csiphy_init(struct csiphy_device *csiphy)
+ 
+ const struct csiphy_hw_ops csiphy_ops_3ph_1_0 = {
+ 	.get_lane_mask = csiphy_get_lane_mask,
+-	.hw_version_read = csiphy_hw_version_read,
+ 	.reset = csiphy_reset,
+ 	.lanes_enable = csiphy_lanes_enable,
+ 	.lanes_disable = csiphy_lanes_disable,
+diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers/media/platform/qcom/camss/camss-csiphy.c
+index c622efcc92ff..111c3a52a6d1 100644
+--- a/drivers/media/platform/qcom/camss/camss-csiphy.c
++++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
+@@ -243,8 +243,6 @@ static int csiphy_set_power(struct v4l2_subdev *sd, int on)
+ 		enable_irq(csiphy->irq);
+ 
+ 		csiphy->res->hw_ops->reset(csiphy);
+-
+-		csiphy->res->hw_ops->hw_version_read(csiphy, dev);
+ 	} else {
+ 		disable_irq(csiphy->irq);
+ 
 -- 
 2.45.2
 
