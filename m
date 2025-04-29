@@ -1,108 +1,78 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB21322422F;
-	Tue, 29 Apr 2025 08:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58452F56
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916222; cv=none; b=gOP8YY1SE/UK2N90UBUiwQJ1nMdlAuz5/w3sme4YHjE8dBru8ObDuIBL36W5CZDDj/Z+VaTLKkwPaX04rYgC5VUI3yaVFFjkEvDQiM41dOeWbqW82dodeEeRZQlzaxJrqxf0Zmeoxgs+XMg88P6rZhsRpY1uEWWu0Gp8fvfYuw8=
+	t=1745916333; cv=none; b=kYbsFpUXVRQJagwUUa9mW6TIII2bftKoB+139XzV62GxOWEZUYPyAxAUzLoFfNOIx+xXMZDuJLJbaI3nMRHPWWOcyGcW/f21okTdqsBleLdvwv24wsqQENxdVRcFmtfxY25hCzHcxjry3gSOJveV/tQgnB/K3hVJlAHDSI5Olpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916222; c=relaxed/simple;
-	bh=gt9yqUMAyVr3pWh2vCa1j58/QxEYy6y71QRDSOzfzsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GAPlccNHFTJ+aSSz3hq9oVnjsgXWEaxgzkfZ1LGOqwhdIOQQ0yGELWeV1siEumxRZLafX4a97DdDfrZvi9K5aUtJzDZZunQOTPPyaKeWETkqYUSQSmU16vVfxirCMsXUn2sJKKkaFcISZ8KGe0O3F/40fXNHLPXEFdll+UQ/9TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DfMUzp7s; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745916333; c=relaxed/simple;
+	bh=oRAa5mnOrowLtFslmNlY4yDQXQYBw9BfKvTiAtzpUMA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Kje7FrYOU/oOjt9uyeu9FxzCSzDlKT0m1+7m0t4jdfXsIYL0yq1i2RNpq/Kr7r6aPq9mCaFnKcTKrheeSeePMIjGTKE2XKw8X4kPhbEZOpOsKLbomvo+I3knIy1a788sYC9TBWDFqQet1W22h7f9WZUPIQp4CEBUiyW2Eajl1aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=T6O9qygh; arc=none smtp.client-ip=203.205.221.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DfMUzp7s"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 1967920BCAD1; Tue, 29 Apr 2025 01:43:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1967920BCAD1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745916214;
-	bh=MLMI0YGgePRRieH5KhOgSTTxPGhA0u8+OCwx8w9CvY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DfMUzp7s2Yb7IFsfitPC0jmnzTNngOmgTbu0WzU27qJqIjE5K4rlQSVrhqBrtC6hd
-	 Jqhv7WgTVOO/XMQTG3FcYuT+LGzqC2r0WJeZgdIVAYk0g+fawZ/g+ICp5WaU0pBBJk
-	 YEl7ZuFlmttDh59oXrIo9omNL43JHUpxcsTXROhQ=
-Date: Tue, 29 Apr 2025 01:43:34 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic
- MSI-X alloc
-Message-ID: <20250429084334.GA10839@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250425163748.GA546623@bhelgaas>
- <87ldrkqxum.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="T6O9qygh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1745916026; bh=Ch1JB0gV+OI9f2n8oy7YDjOdh6rDxEJQw7f3tYeima8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=T6O9qyghZ4nVPjnXEFRMuQwj4TlV4xaUZtlcc1sllpBMJxr24K9Qk1JN8TJVBT+Qg
+	 rnKDCGa/7n1nuNtrMC531zCJCNb3lugqIwPVQmjtQ1b2cFGZDCAJleSIEOHbXdfLI4
+	 uY+Oyq8lTsMGMhi+ZjnI0iFX0wwTetN1yVgQUDEU=
+Received: from pek-lxu-l1.wrs.com ([114.244.56.254])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id A18B24ED; Tue, 29 Apr 2025 16:40:24 +0800
+X-QQ-mid: xmsmtpt1745916024tjmj3adz1
+Message-ID: <tencent_40C361A96683BE84519777576D06D0737D05@qq.com>
+X-QQ-XMAILINFO: MmPNY57tR1XnKo04IUVr9r7gMcPx0djPqHxvIXMN4YKG9c5p3tSWLKA+PzxSdL
+	 JVqyklJG5uXEuTLD9MV6BW8D/mByCDh37UuE9aNtgk7gDp6B5r3GQfG4dxpGjwdBZRQoyAbtZhJw
+	 /kQUrEfquHXN//N92C+CxdFmFVtiDwrDgWz/wIjWdRxTGi20OhVMMeik2S54l03XDrPsbFnoJrzL
+	 x3q779k1yvuzH0knS6++Furk4Zzi/FDBlFuUuyIP5WuPLXc1h39UxordzZOTMWsKFEfWLwjYEm7j
+	 z5SRVBVmskgINQTeYEcKFJtBt2v/il6OCIp1ghWZo4qKGCGuAzoI0/J82gH/DYqx0PMt5J5smtaQ
+	 G9pKl+uSfkiPjt0B3p5ajJDM9g4V9eUmfXGIh0FIrFaL417cxO1pe9kvFODCkjD/ncgn+oWEBPG9
+	 h7ebweU3zJJz2iXu4oKEwbF1lFIrYHU8+tVgPgMqY6oEtQq8iY1D+pEJ7+gTdouUYvp2HdGBtLjX
+	 Hm39/xk5XTPWpdIpJXt5Ex2mQkfuyQonv9/DaolS053lZyxjoa8wPgxCS45xBMMzIRQcpIBPDZAN
+	 9lIIS58CfOAsy5kOU7hGDRggtuEW7bqeUVxmm8Z3bJKDXaBBUZZ2Rb1cloQW8E+ciF5BxLmp5qBU
+	 dFrznUpPn5Hx3KfkjoX66nYDDjmgJN2EHlHY3hiSKbN7eyoJPIfA4phy5H31alj1IeABLE5eYA/D
+	 lvvJLLZiUbkSGfFeUil21YoBtcvYhduFmM9VPOLTHNxBGpMMgza1HGsG3imjAFnHZMgDmUgOjjhO
+	 AP1vKAiWGyJ/pzogo0JBgbMPWCD68lo1wQMe3OVpsCRrLb5Z+7KjJixnqrh7xrC1mQvs9i1P6Wb0
+	 2wfMQFbWpvN3pMb0oKtRY1+MDyFH9dLcN6TKq84K/gN/gbca56OT/TWTU8mfRxfG86qvLEMQDXDr
+	 micXgfMQM=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+Date: Tue, 29 Apr 2025 16:40:25 +0800
+X-OQ-MSGID: <20250429084024.715217-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
+References: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ldrkqxum.ffs@tglx>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 02:22:57PM +0200, Thomas Gleixner wrote:
-> On Fri, Apr 25 2025 at 11:37, Bjorn Helgaas wrote:
-> 
-> Subject prefix wants to be PCI/MSI
-> 
->   git log --format=oneline path/to/file
-> 
-> gives you a pretty decent hint
-> 
-> 
-> 
-> > On Fri, Apr 25, 2025 at 03:53:57AM -0700, Shradha Gupta wrote:
-> >> For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
-> >> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
-> >> to prepare the desc is also needed.
-> 
-> Please write things out: ... to prepare the MSI descriptor ....
-> 
-> This is not twitter.
-> 
-> >> Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
-> >> MSI-X vector allocation.
-> >> 
-> >> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> >> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> > Thanks for the update and for splitting this from the hv driver
-> > update.  Will watch for Thomas's ack here.
-> 
-> Other than that:
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+#syz test
 
-Thank you for all the comments Thomas.
-I'll be mindful of these going forward.
+diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+index 741e6c7edcb7..6842c3011a99 100644
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -1353,6 +1353,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
+ 	hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_MONITOR);
+ 	hw->wiphy->software_iftypes |= BIT(NL80211_IFTYPE_MONITOR);
+ 
++	if (!channels)
++		return -EINVAL;
+ 
+ 	local->int_scan_req = kzalloc(sizeof(*local->int_scan_req) +
+ 				      sizeof(void *) * channels, GFP_KERNEL);
 
-regards,
-Shradha.
