@@ -1,93 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89902192E1;
-	Tue, 29 Apr 2025 14:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9047E219A63
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937901; cv=none; b=GzKhQLmIo1MQMSofcaf4DcWFBJHU854sPSspuVbmBnZ62//OfjwizXFSYF+1ASeCbxOR+gpDRwlf815wjnDpAjmq2fk2QDxPhd0KDNhJEoPiAe38+XxnhsmBlpe7NEXXOeo1y/yB1wk+aN5g2J1pl/l/PFmdDNCCyBwzM3V8Daw=
+	t=1745937904; cv=none; b=VD7fuL3QLDFUGvRapd6F2kRtca8tjj7iWkLEx1Qfxv9TGUeBBGv8fCqVA7oAOluUjNB/eH+V1FqLT3Q4o20zwzcPlBfEXLj28sF3TDJpzAUScV/qd+36ZPiL5ZedF+nxZf8rHpW0buj5a4c+HJuHUS3veNbaLwEc8ILBaZfVQTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937901; c=relaxed/simple;
-	bh=yh6jrYCzx4w3HFn+GGn6bJblwyr6OI1+JFpKoCro2MQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=om9wrvo5z59zjfzEqzA6uWSQOawq9FUWLFcU1eELuKt6rNqWAgvAAe/N3+3tPBd2Y085y2Dp/8urEnoTds0D3soBQ4oXJg3gh8c4oJOt+l1XDU3ZPxtv4uIdNE4XhzZKV8nPqLgej0V3Rf++vb2jg11riBJEwcLvC5a0qgL2dZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lipk2wGy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745937904; c=relaxed/simple;
+	bh=X4Wo18nxqtTMLDhZsnIwFvvWrKbVcmKLwzzbZn2wAfE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=al7pyUrqzuisW++HBD5C3XvfThFe+I2yNkD8qP2KNgDzXVFeeLt2Y3cbdlh7kfNsWc5RU242eQlkWKyH08JLKV+57PNmJ+I7SNVH+ifE2MqPWTdCg4qFGNfXjyaAbovqz26EdoV+I15a2SlAGCvr93F4Bmi8qqptHNZ9+NU2gZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DMiVA4bg; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lipk2wGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5591C4CEE3;
-	Tue, 29 Apr 2025 14:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745937901;
-	bh=yh6jrYCzx4w3HFn+GGn6bJblwyr6OI1+JFpKoCro2MQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lipk2wGyJSgUi1mhywaSDg0zku7ZooNg0E1sXIZtCj64hMsgb/hf7vxwXohfaW6Zo
-	 fBOXjouqSuU1574csRw7ZzNNdEGJPoxwDT19w/4e0YXX/RlXspsTqBI6E2SPtndgLK
-	 lYyIcZ/VemSwuOQOhBOJqMks220SSpx5ICKZ53Lq2+3EDW7W7na1NGJAiJt+aihgL9
-	 FtxOpaev3+nK9sr9eE2HfvlqJotzGY+AktRfmj8+Z9k+QU3+qELq54cWlGUhKnYRgp
-	 Cf3vkwf27FXJFp/SwxfnFlCwy3Es8UX5rqfRJIDZ69jsyFN3xTniKcaGeqkUog10gT
-	 eV6LBXincn8dQ==
-Date: Tue, 29 Apr 2025 16:44:54 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ayush Singh <ayush@beagleboard.org>,
-	Jason Kridner <jkridner@beagleboard.org>,
-	Deepak Khatri <lorforlinux@beagleboard.org>,
-	Robert Nelson <robertcnelson@beagleboard.org>,
-	Dhruva Gole <d-gole@ti.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: kernel: device: Add
- devm_of_platform_populate/depopulate
-Message-ID: <aBDl5oRIRpwbPrC1@pollux>
-References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
- <aBDi2LE3O1rIsGqn@pollux>
- <2025042904-trade-leverage-0f98@gregkh>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DMiVA4bg"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745937899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rOg8kBrXZEnZpRYh6yQ9Avc2ZWUXKTUFukDwMrQ1gOc=;
+	b=DMiVA4bgCsbTpuwrElY5dwht3Cvl2YsSagUxRzi9WTr4aZa0CHe7OYGjmvQ3jkWQYmkdWE
+	Q3nFIx+8SJ9JpafbUVrkIZyQJzlZysFdL+o9xmOJKWxddPO8u5/tSYuRiI5Y08fk72fEqh
+	IK04CZvyhOsWgHGn3BFqlVxYtH0emwE=
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Michal Hocko <mhocko@suse.com>
+Cc: linux-kernel@vger.kernel.org,  Andrew Morton
+ <akpm@linux-foundation.org>,  Alexei Starovoitov <ast@kernel.org>,
+  Johannes Weiner <hannes@cmpxchg.org>,  Shakeel Butt
+ <shakeel.butt@linux.dev>,  Suren Baghdasaryan <surenb@google.com>,  David
+ Rientjes <rientjes@google.com>,  Josh Don <joshdon@google.com>,  Chuyi
+ Zhou <zhouchuyi@bytedance.com>,  cgroups@vger.kernel.org,
+  linux-mm@kvack.org,  bpf@vger.kernel.org
+Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
+In-Reply-To: <aBC7E487qDSDTdBH@tiehlicka> (Michal Hocko's message of "Tue, 29
+	Apr 2025 13:42:11 +0200")
+References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
+	<aBC7E487qDSDTdBH@tiehlicka>
+Date: Tue, 29 Apr 2025 07:44:52 -0700
+Message-ID: <87selrrpqz.fsf@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025042904-trade-leverage-0f98@gregkh>
+Content-Type: text/plain
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 29, 2025 at 04:37:49PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 29, 2025 at 04:31:52PM +0200, Danilo Krummrich wrote:
-> > On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
-> > > +    /// Remove devices populated from device tree
-> > > +    pub fn devm_of_platform_depopulate(&self) {
-> > > +        // SAFETY: self is valid bound Device reference
-> > > +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
-> > > +    }
-> > > +}
-> > 
-> > One additional question regarding devm_of_platform_depopulate(). This function
-> > is only used once throughout the whole kernel (in [1]), and at a first glance
-> > the usage there seems unnecessary.
-> > 
-> > In your upcoming driver you call devm_of_platform_depopulate() from a fallible
-> > path [2].
-> > 
-> > So, I think we should change devm_of_platform_depopulate() to return an error
-> > instead of WARN(ret).
-> > 
-> > If [1] needs it for some subtle reason I don't see, then I think we can still
-> > call it from there as
-> > 
-> > 	WARN(devm_of_platform_depopulate())
-> > 
-> > [1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
-> > [2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
-> 
-> Ugh, no, we should just delete this function entirely if only one driver
-> is using it.  That implies it's not really needed at all.
+Michal Hocko <mhocko@suse.com> writes:
 
-Ayush's driver calls {de}populate() from a sysfs store path [2]; not sure what
-it's doing semantically or if this is a valid use-case though.
+> On Mon 28-04-25 03:36:05, Roman Gushchin wrote:
+>> This patchset adds an ability to customize the out of memory
+>> handling using bpf.
+>> 
+>> It focuses on two parts:
+>> 1) OOM handling policy,
+>> 2) PSI-based OOM invocation.
+>> 
+>> The idea to use bpf for customizing the OOM handling is not new, but
+>> unlike the previous proposal [1], which augmented the existing task
+>> ranking-based policy, this one tries to be as generic as possible and
+>> leverage the full power of the modern bpf.
+>> 
+>> It provides a generic hook which is called before the existing OOM
+>> killer code and allows implementing any policy, e.g.  picking a victim
+>> task or memory cgroup or potentially even releasing memory in other
+>> ways, e.g. deleting tmpfs files (the last one might require some
+>> additional but relatively simple changes).
+>
+> Makes sense to me. I still have a slight concern though. We have 3
+> different oom handlers smashed into a single one with special casing
+> involved. This is manageable (although not great) for the in kernel
+> code but I am wondering whether we should do better for BPF based OOM
+> implementations. Would it make sense to have different callbacks for
+> cpuset, memcg and global oom killer handlers?
+
+Yes, it's certainly possible. If we go struct_ops path, we can even
+have both the common hook which handles all types of OOM's and separate
+hooks for each type. The user then can choose what's more convenient.
+Good point.
+
+>
+> I can see you have already added some helper functions to deal with
+> memcgs but I do not see anything to iterate processes or find a process to
+> kill etc. Is that functionality generally available (sorry I am not
+> really familiar with BPF all that much so please bear with me)?
+
+Yes, task iterator is available since v6.7:
+https://docs.ebpf.io/linux/kfuncs/bpf_iter_task_new/
+
+>
+> I like the way how you naturalely hooked into existing OOM primitives
+> like oom_kill_process but I do not see tsk_is_oom_victim exposed. Are
+> you waiting for a first user that needs to implement oom victim
+> synchronization or do you plan to integrate that into tasks iterators?
+
+It can be implemented in bpf directly, but I agree that it probably
+deserves at least an example in the test or a separate in-kernel helper.
+In-kernel helper is probably a better idea.
+
+> I am mostly asking because it is exactly these kind of details that
+> make the current in kernel oom handler quite complex and it would be
+> great if custom ones do not have to reproduce that complexity and only
+> focus on the high level policy.
+
+Totally agree.
+
+>
+>> The second part is related to the fundamental question on when to
+>> declare the OOM event. It's a trade-off between the risk of
+>> unnecessary OOM kills and associated work losses and the risk of
+>> infinite trashing and effective soft lockups.  In the last few years
+>> several PSI-based userspace solutions were developed (e.g. OOMd [3] or
+>> systemd-OOMd [4]). The common idea was to use userspace daemons to
+>> implement custom OOM logic as well as rely on PSI monitoring to avoid
+>> stalls.
+>
+> This makes sense to me as well. I have to admit I am not fully familiar
+> with PSI integration into sched code but from what I can see the
+> evaluation is done on regular bases from the worker context kicked off
+> from the scheduler code. There shouldn't be any locking constrains which
+> is good. Is there any risk if the oom handler took too long though?
+
+It's a good question. In theory yes, it can affect the timing of other
+PSI events. An option here is to move it into a separate work, however
+I'm not sure if it worth the added complexity. I actually tried this
+approach in an earlier version of this patchset, but the problem was
+that the code for scheduling this work should be dynamically turned
+on/off when a bpf program is attached/detached, otherwise it's an
+obvious cpu overhead.
+It's doable, but Idk if it's justified.
+
+>
+> Also an important question. I can see selftests which are using the
+> infrastructure. But have you tried to implement a real OOM handler with
+> this proposed infrastructure?
+
+Not yet. Given the size and complexity of the infrastructure of my
+current employer, it's not a short process. But we're working on it.
+
+>
+>> [1]: https://lwn.net/ml/linux-kernel/20230810081319.65668-1-zhouchuyi@bytedance.com/
+>> [2]: https://lore.kernel.org/lkml/20171130152824.1591-1-guro@fb.com/
+>> [3]: https://github.com/facebookincubator/oomd
+>> [4]: https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
+>> 
+>> ----
+>> 
+>> This is an RFC version, which is not intended to be merged in the current form.
+>> Open questions/TODOs:
+>> 1) Program type/attachment type for the bpf_handle_out_of_memory() hook.
+>>    It has to be able to return a value, to be sleepable (to use cgroup iterators)
+>>    and to have trusted arguments to pass oom_control down to bpf_oom_kill_process().
+>>    Current patchset has a workaround (patch "bpf: treat fmodret tracing program's
+>>    arguments as trusted"), which is not safe. One option is to fake acquire/release
+>>    semantics for the oom_control pointer. Other option is to introduce a completely
+>>    new attachment or program type, similar to lsm hooks.
+>> 2) Currently lockdep complaints about a potential circular dependency because
+>>    sleepable bpf_handle_out_of_memory() hook calls might_fault() under oom_lock.
+>>    One way to fix it is to make it non-sleepable, but then it will require some
+>>    additional work to allow it using cgroup iterators. It's intervened with 1).
+>
+> I cannot see this in the code. Could you be more specific please? Where
+> is this might_fault coming from? Is this BPF constrain?
+
+It's in __bpf_prog_enter_sleepable(). But I hope I can make this hook
+non-sleepable (by going struct_ops path) and the problem will go away.
+
+>
+>> 3) What kind of hierarchical features are required? Do we want to nest oom policies?
+>>    Do we want to attach oom policies to cgroups? I think it's too complicated,
+>>    but if we want a full hierarchical support, it might be required.
+>>    Patch "mm: introduce bpf_get_root_mem_cgroup() bpf kfunc" exposes the true root
+>>    memcg, which is potentially outside of the ns of the loading process. Does
+>>    it require some additional capabilities checks? Should it be removed?
+>
+> Yes, let's start simple and see where we get from there.
+
+Agree.
+
+Thank you for taking a look and your comments/ideas!
