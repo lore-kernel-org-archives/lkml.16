@@ -1,61 +1,58 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E328E2D1938;
-	Tue, 29 Apr 2025 12:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2092D1F6E;
+	Tue, 29 Apr 2025 12:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928102; cv=none; b=qctgni22ekuNeDU67DX284wrq0HX1fmn4WIj/z29BZ7uze2jQcEIyq4Gnt6zxdiHd6LrXf5VfMi9sGmUiT/r6G8BNXsQFlXYm3/azg6hJZ2CbO7WY/2rJcgYcIXEa+GtI746C2hycJ4TdERi0QIpaazooppCFeq0nVNO20RF3hA=
+	t=1745928103; cv=none; b=rboA/AEN1YKSfZLernBY6XHJFMt3HMF83CY8UnBkMJyP9AdL7D1Mrsjly/77H5Fima9y+8h6PmW480JXNjBGgC0xBPIF1UrpgN9KaD/gp069huN3yGdYEW9FTxpzgnoh/zGHjLOfzem8Yz+OWRxRb2J+9f/n144htN7fOxN6S8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928102; c=relaxed/simple;
-	bh=oEyGbTvoth7vmSAJ/obSmdU7SImAIuoZDjOIF1BYGRU=;
+	s=arc-20240116; t=1745928103; c=relaxed/simple;
+	bh=LJj7nVWo+UpC/AjP+P4QUHQ3bc53OO1mrmdD+TgJ1pg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fjF7AOuqr26JPotMU7Jo02zi87VafSY9QpmJ2CCeobA8DPFw2KSEt/1xFyZ8V5IAQXa5mEGN3Yz8xud5ktriGOfVpVriO2tPoZJtg1v9YBlZdezWfp4M+4XmPVb26FO2PQjnNjZ4cRz66DHn1hJgogHZLBcoaRKFlkaHtjlxiQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CDCfdVes; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zEhY+Yk6; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=J6Hdrtcb+JzhOhSVX+EZhoPfyNhBcGGL5ZHLYj6Ajgea5h6I+r0ZWURnGoIXEzcYhFX5JsA4RvZnFpQvFYZ+08eex4gOIpnuOz4q/2SxYAnUWCyv/9XGQLJgK58MwMsiuIzxt5Da0pGDQ+aNByLIDHrNHy6aycQ7XbZ4+idn5MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ur3RE8DO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+3THFq7e; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CDCfdVes";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zEhY+Yk6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ur3RE8DO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+3THFq7e"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745928091;
+	s=2020; t=1745928093;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eoysUVIr9RMMwEjwkmOmSOvor7eg1lyUe7b2Nqa/AGs=;
-	b=CDCfdVesmPw83H1xxoCgLpUNudotg7dVAuJTKRgrA8trb5q0Ql9Pp4VH76N332m5AWjd0p
-	5ng7/9YVX1LyRaBL8PtK2gX+wQR3yk+KE+jNRadBIidU7M0B1bW2jTlkze43KIU1eV2D49
-	hW02YXo6vGcLrSXoktALq4fo5iMDY45kBL9dEdR1CQz0qB267FTtPHSv5ns2WOd/VZazh9
-	FXLK+QAzUjhOp2Xnw9zWq2H0L4vN8RQ1QYLYMGBDVq564kh9QTrBm6zFjQD5jUjeFkGVU0
-	FvsE8I8bKNA6mExqb22cFqR2meo4PNPGDCwZV+5mi2SaMToEfi9irXbVUMNYRw==
+	bh=5U7tTn+vTOfYBQG/6bDT1j37fVjy3vbg6beq9KSA7wQ=;
+	b=Ur3RE8DOJLbC7ibZYjiMA0pBuOju+7I5oeQC32mYhSdS+iRqdYuJT+Zip8RRIV7vxoZr3m
+	uVJnqqZghQtVSpsMHc85tCoK2aiv0pcdgFZhvbPsrK8JAgqZe0XCbjPZLZ5SGI2nUBdHCk
+	m21TKTbc/nFULs0sOzg/Bl/2gDY80kJP3M+p/mlZrqPFpj1fwqABDTFciwtAcJddHmhlp5
+	hH081EUHwMYeE2fG8eoNPyGTo4dHZxvXz9I47HB7vouwVnXO1LQ/nM5WuAFss4dnbn0dEM
+	ToANOVVjZ1OSN5iIdGvhn+Zv3RkslqWu1qGaahagjMvsLnFOBQu6EXFZFrjnDQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745928091;
+	s=2020e; t=1745928093;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eoysUVIr9RMMwEjwkmOmSOvor7eg1lyUe7b2Nqa/AGs=;
-	b=zEhY+Yk6Dfx09xypvol3gCr94gxMOZ8uvA63N6L82jaDSgangjWgOCkzLU42NJOVrIX8HL
-	tOHWhp/+vBlMlfAw==
+	bh=5U7tTn+vTOfYBQG/6bDT1j37fVjy3vbg6beq9KSA7wQ=;
+	b=+3THFq7emTWMOdhVTVZPlLYzm55jGnb3VVLSSIWp84K59DrvfHPTQW2486LKtXOaIz/bMR
+	Qs/84VV+yAFguMBw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v5 16/23] x86/tracing: Move page fault trace points to generic
-Date: Tue, 29 Apr 2025 14:01:01 +0200
-Message-Id: <1126b28fe3f07a5d2239835fb13ba1128f28c78e.1745926331.git.namcao@linutronix.de>
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v5 20/23] locking/rtmutex: Add block_on_rt_mutex tracepoints
+Date: Tue, 29 Apr 2025 14:01:05 +0200
+Message-Id: <2f7168be0b92cffe1ddc762914344136ef471220.1745926331.git.namcao@linutronix.de>
 In-Reply-To: <cover.1745926331.git.namcao@linutronix.de>
 References: <cover.1745926331.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,88 +63,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Page fault trace points are interesting for other architectures as well.
-Move them to be generic.
+Add block_on_rt_mutex_begin_tp and block_on_rt_mutex_end_tp tracepoints.
+They are useful to implement runtime verification monitor which detects
+priority inversion.
+
+trace_contention_begin and trace_contention_end are similar to these new
+tracepoints, but unfortunately they cannot be used without breaking
+userspace:
+
+  - userspace tool (perf-lock) assumes "contention_begin" tracepoint means
+    "current" is contending the lock.
+  - The runtime verification monitor needs the tracepoint in
+    rt_mutex_start_proxy_lock(). In this case, it is not "current" who is
+    contending.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Waiman Long <longman@redhat.com>
 ---
- arch/x86/mm/fault.c                                 |  2 +-
- .../asm/trace =3D> include/trace/events}/exceptions.h | 13 ++++---------
- 2 files changed, 5 insertions(+), 10 deletions(-)
- rename {arch/x86/include/asm/trace =3D> include/trace/events}/exceptions.h=
- (79%)
+ include/trace/events/lock.h  | 8 ++++++++
+ kernel/locking/rtmutex.c     | 2 ++
+ kernel/locking/rtmutex_api.c | 4 ++++
+ 3 files changed, 14 insertions(+)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 7e3e51fa1f95..ad4cb1502316 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -38,7 +38,7 @@
- #include <asm/sev.h>			/* snp_dump_hva_rmpentry()	*/
+diff --git a/include/trace/events/lock.h b/include/trace/events/lock.h
+index 8e89baa3775f..d83ec2eaab22 100644
+--- a/include/trace/events/lock.h
++++ b/include/trace/events/lock.h
+@@ -138,6 +138,14 @@ TRACE_EVENT(contention_end,
+ 	TP_printk("%p (ret=3D%d)", __entry->lock_addr, __entry->ret)
+ );
 =20
- #define CREATE_TRACE_POINTS
--#include <asm/trace/exceptions.h>
-+#include <trace/events/exceptions.h>
-=20
- /*
-  * Returns 0 if mmiotrace is disabled, or if the fault is not
-diff --git a/arch/x86/include/asm/trace/exceptions.h b/include/trace/events=
-/exceptions.h
-similarity index 79%
-rename from arch/x86/include/asm/trace/exceptions.h
-rename to include/trace/events/exceptions.h
-index 34bc8214a2d7..a631f8de8917 100644
---- a/arch/x86/include/asm/trace/exceptions.h
-+++ b/include/trace/events/exceptions.h
-@@ -7,7 +7,7 @@
-=20
- #include <linux/tracepoint.h>
-=20
--DECLARE_EVENT_CLASS(x86_exceptions,
-+DECLARE_EVENT_CLASS(exceptions,
-=20
- 	TP_PROTO(unsigned long address, struct pt_regs *regs,
- 		 unsigned long error_code),
-@@ -22,7 +22,7 @@ DECLARE_EVENT_CLASS(x86_exceptions,
-=20
- 	TP_fast_assign(
- 		__entry->address =3D address;
--		__entry->ip =3D regs->ip;
-+		__entry->ip =3D instruction_pointer(regs);
- 		__entry->error_code =3D error_code;
- 	),
-=20
-@@ -30,18 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
- 		  (void *)__entry->address, (void *)__entry->ip,
- 		  __entry->error_code) );
-=20
--DEFINE_EVENT(x86_exceptions, page_fault_user,
-+DEFINE_EVENT(exceptions, page_fault_user,
- 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
-_code),
- 	TP_ARGS(address, regs, error_code));
--
--DEFINE_EVENT(x86_exceptions, page_fault_kernel,
-+DEFINE_EVENT(exceptions, page_fault_kernel,
- 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
-_code),
- 	TP_ARGS(address, regs, error_code));
-=20
--#undef TRACE_INCLUDE_PATH
--#undef TRACE_INCLUDE_FILE
--#define TRACE_INCLUDE_PATH .
--#define TRACE_INCLUDE_FILE exceptions
- #endif /*  _TRACE_PAGE_FAULT_H */
++DECLARE_TRACE(block_on_rt_mutex_begin_tp,
++	TP_PROTO(struct task_struct *task),
++	TP_ARGS(task));
++
++DECLARE_TRACE(block_on_rt_mutex_end_tp,
++	TP_PROTO(struct task_struct *task),
++	TP_ARGS(task));
++
+ #endif /* _TRACE_LOCK_H */
 =20
  /* This part must be outside protection */
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 4a8df1800cbb..08d33b74be13 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -1707,6 +1707,7 @@ static int __sched __rt_mutex_slowlock(struct rt_mute=
+x_base *lock,
+ 	set_current_state(state);
+=20
+ 	trace_contention_begin(lock, LCB_F_RT);
++	trace_block_on_rt_mutex_begin_tp(current);
+=20
+ 	ret =3D task_blocks_on_rt_mutex(lock, waiter, current, ww_ctx, chwalk, wa=
+ke_q);
+ 	if (likely(!ret))
+@@ -1732,6 +1733,7 @@ static int __sched __rt_mutex_slowlock(struct rt_mute=
+x_base *lock,
+ 	fixup_rt_mutex_waiters(lock, true);
+=20
+ 	trace_contention_end(lock, ret);
++	trace_block_on_rt_mutex_end_tp(current);
+=20
+ 	return ret;
+ }
+diff --git a/kernel/locking/rtmutex_api.c b/kernel/locking/rtmutex_api.c
+index 191e4720e546..35f9bd7cbd54 100644
+--- a/kernel/locking/rtmutex_api.c
++++ b/kernel/locking/rtmutex_api.c
+@@ -302,6 +302,8 @@ int __sched __rt_mutex_start_proxy_lock(struct rt_mutex=
+_base *lock,
+ 	if (try_to_take_rt_mutex(lock, task, NULL))
+ 		return 1;
+=20
++	trace_block_on_rt_mutex_begin_tp(task);
++
+ 	/* We enforce deadlock detection for futexes */
+ 	ret =3D task_blocks_on_rt_mutex(lock, waiter, task, NULL,
+ 				      RT_MUTEX_FULL_CHAINWALK, wake_q);
+@@ -391,6 +393,8 @@ int __sched rt_mutex_wait_proxy_lock(struct rt_mutex_ba=
+se *lock,
+ 	fixup_rt_mutex_waiters(lock, true);
+ 	raw_spin_unlock_irq(&lock->wait_lock);
+=20
++	trace_block_on_rt_mutex_end_tp(current);
++
+ 	return ret;
+ }
+=20
 --=20
 2.39.5
 
