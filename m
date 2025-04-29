@@ -1,181 +1,194 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76AD248889;
-	Tue, 29 Apr 2025 17:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745946770; cv=none; b=sIqFUEIvfzkUwO3obD9DpCTWaPSLwYFaO8AMEC+qUtoyZIIRLU7+67w52gNdTDDPnHF8joHVx3UhCBEfZH/2/j0uScZjpULhJFD0x7eY5n59gXNThtAOxOC9EpEziLWH0e0KbgMZDl8gwSwjvfm3GB5/7/t3AXvALo9ZmbdYVAE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745946770; c=relaxed/simple;
-	bh=hgJY3wh6a6UeaEJse5LqpLhP5AnH9wkmWf2TvEMe+u4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DbT7dhxEK/2MzJ02G/38EXUeUiLzO2mKw0GlfHbU9dFqGP/ffIUrOgFVnQuq+u1PAwJBzPG65UBjXJ+z/fzxl/28IJrctRRdFbyPdok13y9fjm77JTb5x6kk13qFdes0eGGBdDITZWGqoY6ZyQ9eKQqZkTb58NZ5gmcmiPKKtQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VUpAU/UI; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EE12472B4;
+	Tue, 29 Apr 2025 17:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745946903; cv=fail; b=LuHoaQdmWeoRkegA4MUeqLabZ2m0ETFnoRYHIwZM4WMZIZXraeoelykJ7uWCGfmRbMDlnbJVfp7RvSZc1hiHVOuwwGcIa1K8WimrYFyf4CCTFNRhTAwonhM8JU3ceuvd6UQ2DFuNMjGvJmIrnjRoHSj1l53TIYT2GvOCA0foebA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745946903; c=relaxed/simple;
+	bh=IDJZazPldI5PjZfeAiplWI3xsUtPqQs/wjIb1BGw6UQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NApxFs8rwX2g8hQrjHtwxGocYU1IT9Qr76D7ABdFqqR4aka5986IGoL4Ilhc+Clt93C6tfZZ3isza0HRlsQekBCs8EwXmWnGd2dSemdNjhE6juM87r9VjieNWdG9G9Mx5FI5awKtkDmxMzi90A3CVYtmYoH88GqIhlAw7UNz8JE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TQzKFRug; arc=fail smtp.client-ip=40.107.93.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUpAU/UI"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso9837885a12.1;
-        Tue, 29 Apr 2025 10:12:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745946767; x=1746551567; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SsfvUz+i23ivaruHjbfi9ou4xDoXYHDfMl7yFqsBNNY=;
-        b=VUpAU/UIBzNBVWj9MhlFiQsswEJebnpEQhmfFdiQ6CYYavHKECm4i6z0dKhMm0ALKy
-         yq7VJb9gDHbQuiV0Z8S3UH6hNPCkvTAj6n2HiirjcrWI3WNWHTqrfqe61o2eczVf7yQm
-         enXKJ3v2I1f1BMCMgdQliEBCzDFfa3pNT1FwTlnV8GCccunYcGFYGwA8NaAl//zqQPBe
-         2ACqT3olUP2KgzxDodVYI/SvgTqQvyPqQwOUdGX1FzUv2rl3ZzVJen9yvI2GZz9+AeIF
-         wa2DK4s9k9OUfM8EhsMxoY+pLwdbVvi1ZeCN7vmJXwGdjiQzxS/XIbwNDIJei4FRtfiy
-         gq9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745946767; x=1746551567;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SsfvUz+i23ivaruHjbfi9ou4xDoXYHDfMl7yFqsBNNY=;
-        b=UQM1ijXJRaffRHj2A7es3DGh9zVLnMTSr1oNXjIKSZ2MqG0n6P2DFpjmQTgWOyjDmp
-         X5nAlz0NegyTDWVc3jEYbH5WcunJG60Ums6LAL4VR5A1YHjwnMvzCKrsVnhKs7miNbsf
-         U+y9GQ9OSfSE/1z+s5F6Akh2pz8cUXlsq6GSg8PYEAiPvUGXU6yw5zvTm2ruTw1zWWg5
-         OWhSnK7XAx+/ZbYWORTfOHrP3ZEVf6c0T3PAa0M1lhreVZadJxoGBlKF44iRw7HjToyc
-         6CDcMRCQ91kYw3Lza1HEcnntl01sftCGkIEnw1JdP5jnBLwCdVf6jNnOHkBKEWAemsI5
-         kNWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFgCkIpBpF5zkNW2r4yz0QPrJz+kc4b4mZqn/52PgJqi39G75eqncipcZJo9tHGob6cY+B1xz10ySL933I@vger.kernel.org, AJvYcCX8G1G8pevAyXgdFi79ofzwbryo+kLEtNihvalv8KuOOY2SmtYnvmKElbP4zOaXPLuAnIqoeQVg6Kbf2NLB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxas/v3fv/gU32TAnf2SckQPjEAg3dzo2tuVJnWtbB0/NER8I36
-	k6NpsxFztFjc88BN5z2XRkvz8nG7bsAKrWhhL38RJjOgz0L2kcSh17vSV7rbpw7uR+mE3S5QXc6
-	dt/zqZh50KEcCCuSpXB/xmLPtQayMz7XQ
-X-Gm-Gg: ASbGncsgAP1jrV1tzIgTmjRXk9Q/JZyMBPDMv6tFEjdGiVUeh49MgCAEKJi0zHCWkSM
-	VbnmBNxzC0L3bhxHqfuOoZk9SjG0TTmreffKIY6tx4ko+03p7KbdQmCxaWE2uOsufbMFoq3POsx
-	juYSk9gOSFj0+7o7M5hjPU
-X-Google-Smtp-Source: AGHT+IEFhOpRJtHhdameANKEr4F4uoVUaEZAhtAMKro2joPY0ijis9Vj5f2jUhCYho2E3q3oqxjBEekqlySWOza8xhU=
-X-Received: by 2002:a05:6402:370c:b0:5f4:d60f:93f0 with SMTP id
- 4fb4d7f45d1cf-5f83889e7bamr3636129a12.31.1745946766822; Tue, 29 Apr 2025
- 10:12:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TQzKFRug"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NGjNwyiD15y7GeASIlru+9BoKsj2DlovVZUrQfkJICNmUVIwR5erToeXMrBtc/rPhffpQIkHaNtudEjF8Ik9YItynAqVGD5wBOVlTLjRxRXz8myh1hdOCyh6KdcmOWDDLqwhBj8K0m0PZwxBu+ObYlDW6u2VCVnyuo+64lp7xgymqjr2D1fZA+9vfOf+GWvdrQQtaYeuYN1A3PMDVNcLoqNHOeKjc+ZApHM5c/ErpE+niQEizmrqfONYyJZ7B09t9pRrYNvkmDKkj4Lo6sdkbSlMIRrP6Zfh8dUmG3Qpif1c24QQq3KfvHtCf9QYVtpWn/jS0rI/uwJZCv9ha1hvfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kruR6bWWOlnzfkA4gkSvY4hRWIKumokxk7j7hVm+VWo=;
+ b=lHd4xW0t6hFr4Rqr5eE0VL1ythFVH+HAAPSw1Glo00AyB9H6a+y5nqCOb0iPrkEtzW6JeEzmMOW5KXUIXaEePNQmkfJOlQkF2ipyHVS5dty7H8ChjaeF5Clz/4aPy/smL/N6R+6cxufHRsACsc4TvIq6xWMy0ziJY9FUXY1URRnxFAIgStD8cY4/lHRN4xHHEMD7z7745yzeLKdbT9iGr+qsGnAnHHOS2zK72Q2Wr1g3M81sU9AHgLQmeGSI4FzTwT86pSJ7wbZDq9mmpbSCVhyUzneqcKjweFdFRJS/clDsTPFSrI0QQrFvp8dcwn1CkOgc+1rsV9P2Uy1miNkr9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kruR6bWWOlnzfkA4gkSvY4hRWIKumokxk7j7hVm+VWo=;
+ b=TQzKFRugDRaVFKxp45hPCnEDJ5cLP0FSJ/1zAjhXCMntRZrlYba0723VOSnq3tLqsc0TAiNrmHVo06uFCE60/+dXudV7OmIWlCr09Z2YLQsQmfH9hKFvpr6Un6aeTk9h3uE1ONWpeGZ+zFaIMr6mpETZYMRGWkrfsvFqWTaxEG0Fd0hb0lG7RMPK2FObxWynFxA3xAKabJnmF7xaYmb2UeIx97+4XB26yeaUGkHFMpPgOO4z8QhmQVEghvBWXHq7rNauW+FNtECheM5vJklMQ+xuSDMsAMk83ioO6c8HNkI2uboaNjaV14b2h3XcT1ZtteYzN5V+FzuT0+99mz4B4Q==
+Received: from CH2PR08CA0015.namprd08.prod.outlook.com (2603:10b6:610:5a::25)
+ by MW4PR12MB6778.namprd12.prod.outlook.com (2603:10b6:303:1e8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Tue, 29 Apr
+ 2025 17:14:54 +0000
+Received: from CH2PEPF0000013C.namprd02.prod.outlook.com
+ (2603:10b6:610:5a:cafe::67) by CH2PR08CA0015.outlook.office365.com
+ (2603:10b6:610:5a::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Tue,
+ 29 Apr 2025 17:14:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CH2PEPF0000013C.mail.protection.outlook.com (10.167.244.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Tue, 29 Apr 2025 17:14:53 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 29 Apr
+ 2025 10:14:38 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 29 Apr
+ 2025 10:14:38 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 29 Apr 2025 10:14:35 -0700
+Date: Tue, 29 Apr 2025 10:14:33 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <kevin.tian@intel.com>, Vasant Hegde
+	<vasant.hegde@amd.com>
+CC: <corbet@lwn.net>, <will@kernel.org>, <bagasdotme@gmail.com>,
+	<robin.murphy@arm.com>, <joro@8bytes.org>, <thierry.reding@gmail.com>,
+	<vdumpa@nvidia.com>, <jonathanh@nvidia.com>, <shuah@kernel.org>,
+	<jsnitsel@redhat.com>, <nathan@kernel.org>, <peterz@infradead.org>,
+	<yi.l.liu@intel.com>, <mshavit@google.com>, <praan@google.com>,
+	<zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, Suravee Suthikulpanit
+	<suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
+ ioctl
+Message-ID: <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
+ <b0d01609-bdda-49a3-af0c-ca828a9c4cea@amd.com>
+ <aA/exylmYJhIhEVL@Asurada-Nvidia>
+ <b8338b47-6fbf-44ac-9b99-3555997c9f36@amd.com>
+ <aBB1gLfahnLmn0N1@Asurada-Nvidia>
+ <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67dc67f0.050a0220.25ae54.001f.GAE@google.com> <20250324160003.GA8878@redhat.com>
- <20250429154944.GA18907@redhat.com>
-In-Reply-To: <20250429154944.GA18907@redhat.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 29 Apr 2025 19:12:34 +0200
-X-Gm-Features: ATxdqUEx3Vi0APNX--GO3y5NvRxsG1VNhvPaOpzMVNW8AhLlmPepqTW-UkJkA5E
-Message-ID: <CAGudoHGeMmv0n8rujNdPiwZHa+JtDfBS1ym2C41iBpKzzLkUtQ@mail.gmail.com>
-Subject: Re: [PATCH] exec: fix the racy usage of fs_struct->in_exec
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: brauner@kernel.org, kees@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, 
-	Michal Hocko <mhocko@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013C:EE_|MW4PR12MB6778:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5dd9d4b4-c0da-4a37-1524-08dd87415bc1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6M/IA226Rb5OOncApanguEvg5AxubrK6K9Mf10xDj54L2kMbXLCTdPdZGVV9?=
+ =?us-ascii?Q?h8F+LtUniHBw6E7PO9Zfd2jeutyYyLEZ7WmL2RIEQL62hw+Ug8qb1V442fzc?=
+ =?us-ascii?Q?3ygfohHmBC7VAZrrvk1RZ2QEkC16E+4K335CPKQAXxdQaDXMNUbS/0q3GMN/?=
+ =?us-ascii?Q?lPjFvJzGlzR6OSCxuWv15MsGCdWKquiwb+Mh4do2cYDxCVJ8HETgFz50qXEf?=
+ =?us-ascii?Q?bjbU3y6H75DdlCNlQ9+YXt8rDVRW6zqOJOpud2vOnbFEUCv8nO4J7CjIGmvV?=
+ =?us-ascii?Q?cIZK08lcHPhBRlYBNZlMhTu4n/5MWJU/TG7lJsp3iB44OX2fciBn4ZBlgPzU?=
+ =?us-ascii?Q?nhIgx1+QjUirMSzVNYfIXuIC71sQ/NiAMtaYFDv/Uv9z0KchoKqlLU/5DLE7?=
+ =?us-ascii?Q?PCvb39pHUns2y6/w6b/h6rL4frFH255LUlNZlPMfDVkDTg4Y4pz71/LNJBx4?=
+ =?us-ascii?Q?yFql9fasCkC+orfrAEuhp8hbLulZywaXy5LhAT79JGY6CT18Scm/xYaoZmrA?=
+ =?us-ascii?Q?hPtSJELIFuAvpdfXu/5ZXAJ6dbmHWmj/LyfRU1QRiTAjKD4PajMNvTvT9VlW?=
+ =?us-ascii?Q?nFYx965d4vWXzsdrAVEcIR/ThsjqPYnRwp1mP8YMC84PScHuZGfbFS2EllSc?=
+ =?us-ascii?Q?ejru1dNvBDSsfSk95Z/eYWzsCdmB5XNhC2m4QB1+JvRnOUjsEEOD0qqJMwDz?=
+ =?us-ascii?Q?Xon5AoP09BaLaztsanE2pdGNSHeOfOxehyGkW0GO9Q7JhczTAU2anllqLKjc?=
+ =?us-ascii?Q?rr9ftT0rNVjbeO9VEY51Ee3WGKHJSsGSCrNv8bQEdxAUUMmC1RowxUk+zNy9?=
+ =?us-ascii?Q?zvwiWbxU5+YoXcGzORxDI/UlwD3T23SdqhynOtlxwthz59sm/ZgLHJibsCP5?=
+ =?us-ascii?Q?ddskBkuKv48Alz2LkrwiACPTKUaiLvzSjTt5R2k5QCHwhcpH3W+LnkCKWrZ0?=
+ =?us-ascii?Q?HvLi3NsVLjJ5+WDD7Y8/Pcd0E5jsvDbX5Wqks0weJeDFwdunmfC7/s8k0LI3?=
+ =?us-ascii?Q?8xP7nHtQlkcUdch7qpSVFjyB3jkFay0/sO+5oL9AXPA7jNScNu17kwNglOVb?=
+ =?us-ascii?Q?QANG0yT+ZUFnLgOKU/4Ycgz3luyb8c1Qmp1AdtRhwsoon0CHvNkmB+gveAQY?=
+ =?us-ascii?Q?HSzx+5yFlbq7/lRcd3LN8Ev0Teez/T737+UE2+MbN6rh39yP4ZgGKcWkRGr4?=
+ =?us-ascii?Q?uZrqdolrlF8fJluXPGyhdMbXVN5LKNFsQbQNjaEU2ym5JjHH3a0+Xu5rRaGP?=
+ =?us-ascii?Q?+a59bNDu3H0TaAEgt0y2FpBNMA6kpUjeFFsvQPdAxZU0z91bthJNhnraxnVc?=
+ =?us-ascii?Q?Dcl2H2rkr+7AfVHH0yy+b4q+u7OLLMRiwi6zIhztrFQdnTIe8eGvR17AZeqp?=
+ =?us-ascii?Q?A9COUwF7bPwcUQCsG+KJ0kyIFnkXAAcOufTq2TMof3yY/cBXJh1eBNY2gJq1?=
+ =?us-ascii?Q?pBtpIgyXa5bESaVZduODZ42dTP2EJ1FL2KtMqgOhj3rfXHGDaEJBX3NNDVR3?=
+ =?us-ascii?Q?7rVJOYTyPSyTMMLPlEAcTy6y3zxzAeIgxMDf?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 17:14:53.7238
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5dd9d4b4-c0da-4a37-1524-08dd87415bc1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000013C.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6778
 
-On Tue, Apr 29, 2025 at 5:50=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> Damn, I am stupid.
->
-> On 03/24, Oleg Nesterov wrote:
-> >
-> > check_unsafe_exec() sets fs->in_exec under cred_guard_mutex, then execv=
-e()
-> > paths clear fs->in_exec lockless. This is fine if exec succeeds, but if=
- it
-> > fails we have the following race:
-> >
-> >       T1 sets fs->in_exec =3D 1, fails, drops cred_guard_mutex
-> >
-> >       T2 sets fs->in_exec =3D 1
-> >
-> >       T1 clears fs->in_exec
->
-> When I look at this code again, I think this race was not possible and th=
-us
-> this patch (applied as af7bb0d2ca45) was not needed.
->
-> Yes, begin_new_exec() can drop cred_guard_mutex on failure, but only afte=
-r
-> de_thread() succeeds, when we can't race with another sub-thread.
->
-> I hope this patch didn't make the things worse so we don't need to revert=
- it.
-> Plus I think it makes this (confusing) logic a bit more clear. Just, unle=
-ss
-> I am confused again, it wasn't really needed.
->
-> -------------------------------------------------------------------------=
-----
-> But. I didn't read the original report from syzbot,
-> https://lore.kernel.org/all/67dc67f0.050a0220.25ae54.001f.GAE@google.com/=
-#t
-> because I wasn't CC'ed. and then - sorry Kees!!! - I didn't bother to rea=
-d
-> your first reply carefully.
->
-> So yes, with or without this patch the "if (fs->in_exec)" check in copy_f=
-s()
-> can obviously hit the 1 -> 0 transition.
->
-> This is harmless, but should be probably fixed just to avoid another repo=
-rt
-> from KCSAN.
->
-> I do not want to add another spin_lock(fs->lock). We can change copy_fs()=
- to
-> use data_race(), but I'd prefer the patch below. Yes, it needs the additi=
-onal
-> comment(s) to explain READ_ONCE().
->
-> What do you think? Did I miss somthing again??? Quite possibly...
->
-> Mateusz, I hope you will cleanup this horror sooner or later ;)
->
-> Oleg.
-> ---
->
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 5d1c0d2dc403..42a7f9b43911 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1495,7 +1495,7 @@ static void free_bprm(struct linux_binprm *bprm)
->         free_arg_pages(bprm);
->         if (bprm->cred) {
->                 /* in case exec fails before de_thread() succeeds */
-> -               current->fs->in_exec =3D 0;
-> +               WRITE_ONCE(current->fs->in_exec, 0);
->                 mutex_unlock(&current->signal->cred_guard_mutex);
->                 abort_creds(bprm->cred);
->         }
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 4c2df3816728..381af8c8ece8 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1802,7 +1802,7 @@ static int copy_fs(unsigned long clone_flags, struc=
-t task_struct *tsk)
->                 /* tsk->fs is already what we want */
->                 spin_lock(&fs->lock);
->                 /* "users" and "in_exec" locked for check_unsafe_exec() *=
-/
-> -               if (fs->in_exec) {
-> +               if (READ_ONCE(fs->in_exec)) {
->                         spin_unlock(&fs->lock);
->                         return -EAGAIN;
->                 }
->
+On Tue, Apr 29, 2025 at 03:52:48PM +0530, Vasant Hegde wrote:
+> On 4/29/2025 12:15 PM, Nicolin Chen wrote:
+> > On Tue, Apr 29, 2025 at 11:04:06AM +0530, Vasant Hegde wrote:
+> >> On 4/29/2025 1:32 AM, Nicolin Chen wrote:
+> >>> On Mon, Apr 28, 2025 at 05:42:27PM +0530, Vasant Hegde wrote:
+> >>> Yes. For AMD "vIOMMU", it needs a new type for iommufd vIOMMU:
+> >>> 	IOMMU_VIOMMU_TYPE_AMD_VIOMMU,
+> >>>
+> >>> For AMD "vIOMMU" command buffer, it needs a new type too:
+> >>> 	IOMMU_VCMDQ_TYPE_AMD_VIOMMU, /* Kdoc it to be Command Buffer */
+> >>
+> >> You are suggesting we define one type for AMD and use it for all buffers like
+> >> command buffer, event log, PPR buffet etc? and use iommu_vcmdq_alloc->index to
+> >> identity different buffer type?
+> > 
+> > We have vEVENTQ for event logging and FAULT_QUEUE for PRI, but both
+> > are not for hardware accelerated use cases.
+> > 
+> > I didn't check the details of AMD's event log and PPR buffers. But
+> > they seem to be the same ring buffers and can be consumed by guest
+> > kernel directly?
+> 
+> Right. Event log is accelerated and consumed by guest directly. Also we have
+> Event Log B !
+> 
+> > 
+> > Will the hardware replace the physical device ID in the event with
+> > the virtual device ID when injecting the event to a guest event/PPR
+> > queue? 
+> > If so, yea, I think you can define them separately using the> vCMDQ
+> infrastructures:
+> >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_CMDBUF
+> >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_EVENTLOG
+> >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_PPRLOG
+> > (@Kevin @Jason Hmm, in this case we might want to revert the naming
+> >  "vCMDQ" back to "vQEUEUE", once Vasant confirms.)
 
-good grief man ;)
+I think I should rename IOMMUFD_OBJ_VCMDQ back to IOMMUFD_OBJ_VQUEUE
+since the same object fits three types of queue now in the AMD case.
 
-I have this on my TODO list, (un)fortunately $life got in the way and
-by now I swapped out almost all of the context. I mostly remember the
-code is hard to follow. ;)
+Or any better naming suggestion?
 
-that said, maybe i'll give it a stab soon(tm). I have a testcase
-somewhere to validate that this does provide the expect behavior vs
-suid, so it's not going to be me flying blindly.
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Thanks
+Nicolin
