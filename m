@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20602D26BB;
-	Tue, 29 Apr 2025 23:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230922D3462;
+	Tue, 29 Apr 2025 23:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970784; cv=none; b=W32K+VGfUBskY9EVc4u3CwrGoOSzhCAJYcrFxJzsbDLzqf/+LExTk2vCDSqncGfdmN2pc/L1sp8TmHG6WUUH13rNvsuI1d9XD6HelfO1QgrzOlVuTS13uPhNKgljJpEilzzFWXZdyzNKnWbwUfTjmd5NJ2XStpQZwioLfihgJtU=
+	t=1745970787; cv=none; b=RYrFOYZX+qx2MJnQF0opkNRVGAVhOd6L4ipdqBxfRZ6e3lmfnar5sapKSjsvAveiBYtXPwAIrR+fTMhZC3UQounPawJfFOpPXhZxbuwhBNGIss9Bhggz/5R9sMAzI/SBfkHA1gX6sQrW9dPElM5Jm1muBtiVGqLhQzDBumF2zJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970784; c=relaxed/simple;
-	bh=QUwnuC1y3iAmHWMyDULgb7TEwYmnyQqFYMmtkz9VAPM=;
+	s=arc-20240116; t=1745970787; c=relaxed/simple;
+	bh=2BXUmckJQQO5q7PlEnmciAtPCRsEaMB39VON6scAkbA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TxrdL4lGekY34jg3XgYXsXd3K1qzfO2Misp/ar9vUKIpDthyuz6GozjjMK057oH+NwoYfZwdVqcpUxmv4vyLyc67zjzEHZdTtJnKIXkh1YvECY5EEll3UEv1Tu4kBMf7fEcxdH52FWC7cd604eYLsMLysBtFXiZ/MJQLIYkeFw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtHhjC0D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pL5AMFjWuIoC/EHVyuwqDRdqPDt8nZgX0o5/JySGq+6L5tyuNH6/kQ99VvdYHalNCAKQ5eHA8ccGyfu/mIumSS/lkHI+YyAq1+u70IVz6EQ7Y93FDbHSRVYTrPgLnygTBT6FX+hIHdMcAChypaAM4E6YerRxFZaLtraWZnEUBWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgmPHAa5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtHhjC0D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2067FC4CEE3;
-	Tue, 29 Apr 2025 23:53:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgmPHAa5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE28C4CEEE;
+	Tue, 29 Apr 2025 23:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970784;
-	bh=QUwnuC1y3iAmHWMyDULgb7TEwYmnyQqFYMmtkz9VAPM=;
+	s=k20201202; t=1745970786;
+	bh=2BXUmckJQQO5q7PlEnmciAtPCRsEaMB39VON6scAkbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BtHhjC0DyNduYutd5Zn9zdAxpGbmQgvfkpFOoYR3ctOBzzHK7DlFyOTN3v2U9kBQX
-	 rwh089MSpZG6nkWAeZK2qgqqmqdBt6KWa5Ejt3YMXkKUEBr0tUn6wSeiBW/qnmr7dR
-	 CboC1wzIWY3MJzUnP/o4YooG/0wp1yABX1pLPgE3ntukbFZ/Q40Gcnc8TY4uc4r8m/
-	 /XmtQV/QhMBLtF3h3js3tFwmNh7yKAkc00M9S5sV04QPfK3UhvNC03xKn2OomitUif
-	 OAOzUtjN2GemNW4qQXeuOBxUaeRmyZ/tHL16bRT9j8WOIob+c7P81RKqoRh1tQPoqA
-	 LU2YUHPufam0w==
+	b=CgmPHAa5d5+91yd0ERCk4R6Eltr52Wy37Tpc0Wg9A5aWxTqBoUhsaN0/73u9SAtWS
+	 xcRZV2WdKz7LBOP9oa6Gk43CaV7WJ+tl2CeHHOHTIfsoXUTYLy8t5SBTCuTDD5LYxx
+	 BQ2wLXyYvIAkbGFO5E64XmyH2roMhV3JzRQmUS07QIbdNg2RFU7zlDyJE+F0jbyeQN
+	 iAr6v5MlhVA94+fVpd2lkEqHqnSdAiR17YN/VkxuG4lKdE4/t1U+cns8tOTAoWvhix
+	 WnWtEKkiaPyEu4jE6Ss8aWQTGk9vyJKGzl+CHV0V9ufd8LFrkMrQWVA4JM8lN4ev+B
+	 0m32hiT9nLVTQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Frederick Lawler <fred@cloudflare.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	claudiu.manoil@nxp.com,
-	xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	imx@lists.linux.dev,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 16/21] net: enetc: refactor bulk flipping of RX buffers to separate function
-Date: Tue, 29 Apr 2025 19:52:28 -0400
-Message-Id: <20250429235233.537828-16-sashal@kernel.org>
+	dmitry.kasatkin@gmail.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 17/21] ima: process_measurement() needlessly takes inode_lock() on MAY_READ
+Date: Tue, 29 Apr 2025 19:52:29 -0400
+Message-Id: <20250429235233.537828-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250429235233.537828-1-sashal@kernel.org>
 References: <20250429235233.537828-1-sashal@kernel.org>
@@ -58,64 +56,41 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.88
 Content-Transfer-Encoding: 8bit
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Frederick Lawler <fred@cloudflare.com>
 
-[ Upstream commit 1d587faa5be7e9785b682cc5f58ba8f4100c13ea ]
+[ Upstream commit 30d68cb0c37ebe2dc63aa1d46a28b9163e61caa2 ]
 
-This small snippet of code ensures that we do something with the array
-of RX software buffer descriptor elements after passing the skb to the
-stack. In this case, we see if the other half of the page is reusable,
-and if so, we "turn around" the buffers, making them directly usable by
-enetc_refill_rx_ring() without going to enetc_new_page().
+On IMA policy update, if a measure rule exists in the policy,
+IMA_MEASURE is set for ima_policy_flags which makes the violation_check
+variable always true. Coupled with a no-action on MAY_READ for a
+FILE_CHECK call, we're always taking the inode_lock().
 
-We will need to perform this kind of buffer flipping from a new code
-path, i.e. from XDP_PASS. Currently, enetc_build_skb() does it there
-buffer by buffer, but in a subsequent change we will stop using
-enetc_build_skb() for XDP_PASS.
+This becomes a performance problem for extremely heavy read-only workloads.
+Therefore, prevent this only in the case there's no action to be taken.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Wei Fang <wei.fang@nxp.com>
-Link: https://patch.msgid.link/20250417120005.3288549-3-vladimir.oltean@nxp.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Frederick Lawler <fred@cloudflare.com>
+Acked-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/enetc/enetc.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ security/integrity/ima/ima_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-index 8feb7d4226bb5..0c09d82dbf00d 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -1572,6 +1572,16 @@ static void enetc_xdp_drop(struct enetc_bdr *rx_ring, int rx_ring_first,
- 	}
- }
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 98308a2bdef6e..068edb0d79f73 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -235,7 +235,9 @@ static int process_measurement(struct file *file, const struct cred *cred,
+ 				&allowed_algos);
+ 	violation_check = ((func == FILE_CHECK || func == MMAP_CHECK ||
+ 			    func == MMAP_CHECK_REQPROT) &&
+-			   (ima_policy_flag & IMA_MEASURE));
++			   (ima_policy_flag & IMA_MEASURE) &&
++			   ((action & IMA_MEASURE) ||
++			    (file->f_mode & FMODE_WRITE)));
+ 	if (!action && !violation_check)
+ 		return 0;
  
-+static void enetc_bulk_flip_buff(struct enetc_bdr *rx_ring, int rx_ring_first,
-+				 int rx_ring_last)
-+{
-+	while (rx_ring_first != rx_ring_last) {
-+		enetc_flip_rx_buff(rx_ring,
-+				   &rx_ring->rx_swbd[rx_ring_first]);
-+		enetc_bdr_idx_inc(rx_ring, &rx_ring_first);
-+	}
-+}
-+
- static int enetc_clean_rx_ring_xdp(struct enetc_bdr *rx_ring,
- 				   struct napi_struct *napi, int work_limit,
- 				   struct bpf_prog *prog)
-@@ -1687,11 +1697,7 @@ static int enetc_clean_rx_ring_xdp(struct enetc_bdr *rx_ring,
- 				enetc_xdp_drop(rx_ring, orig_i, i);
- 				rx_ring->stats.xdp_redirect_failures++;
- 			} else {
--				while (orig_i != i) {
--					enetc_flip_rx_buff(rx_ring,
--							   &rx_ring->rx_swbd[orig_i]);
--					enetc_bdr_idx_inc(rx_ring, &orig_i);
--				}
-+				enetc_bulk_flip_buff(rx_ring, orig_i, i);
- 				xdp_redirect_frm_cnt++;
- 				rx_ring->stats.xdp_redirect++;
- 			}
 -- 
 2.39.5
 
