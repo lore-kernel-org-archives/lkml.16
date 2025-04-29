@@ -1,109 +1,205 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B26A253B71;
-	Tue, 29 Apr 2025 19:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5C8259CAF;
+	Tue, 29 Apr 2025 19:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956285; cv=none; b=JJneZEMpdsrBYvpe1/O2icbBCAC763jV+lEoI/R77eQVfPknzitpB9pb/Eiohs4/Ev0ISosiY06oLBxVRYo+gqUOTygK7WlJLswCblzKP/7Bu2lPuM7fHRVI3ail1f8RO84iKcy6KUGNxr6L3zD3K2m8rtg7z8ELjl0RJvPSP9I=
+	t=1745956287; cv=none; b=Ey3jDw61hIBsjOXc7sZ81iqIfLz5HCLegGEW1WCaIxovBslcz0xBQcICSmaSb7DuDc1zTdchb2oofLK8DUUPkYdV1Rrz2N5BHGaqRr6LoeRo0VvdF+FHpbY28DTndSvklM2wJBr1sGJj/gBWvakHKfayhKeTS+0Azx8AAHPol9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956285; c=relaxed/simple;
-	bh=MQZ6hbGt//4FbhLB0Xm1vDwPqGiHpColuVWx2Z50Eqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HjB5KcreOf6kXvIAxz6NY7wYEhOr+hqUixgvEP7H5T8DDwI2MEZlFgNKGFJcuDMWtb1IFcDgeVrLphUzJebzut2XW2xXz+gMka2L0pX6t9oaygctItrYyaW5jIS/Ch2haEz+IDfGJCkz0Ar61k95X2Qeg+D17daj1QWbdpnMWOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rbg4QEmn; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745956287; c=relaxed/simple;
+	bh=VJTYJ+DRSOZ7GY8qrph88f8OFS52yzkIz78IYtEQHco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cYGKlP9OOx0yKvfqrXN356HfYmX316Tq+YGnvhNmb27563Un2PTKjBhc1yr+FkYEx3unixM0no2skXYVSvJe8be7bz+zG0RWEDdL/fsAOkJSvfLM9cNQvDpeUOQklCFWEV3UIZ8a2bXQIqKhPPJVWhM0FpVV7GH1Gp4kyQcGcL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GcD7tVsY; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rbg4QEmn"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de12bso94640835ad.2;
-        Tue, 29 Apr 2025 12:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745956283; x=1746561083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RIDQIy8tP+iQrp+SJ899KKPpAiNauHHt2daVbB0nYIo=;
-        b=Rbg4QEmniMKJFfPCkfUgV7GycGBv9qbWR27qMkvQXYJhoeim+IXVio1/8yKux6/7Mq
-         G7prUH46xvsI9n2iUt7SiDSGPZevr4KQMWRRVhOosfidQiTtopc+UqvyYH42NG+kRxiU
-         qHXmH0lnOv6uYZ6yc5QqrnGid4EIv7OKaifULXrEoWAyUmIAEXB3TWhXun5bFOwBMOHq
-         CTlr9uyg/8i2KZtfgGDXxZ0y+ToHLllDtGV8F2xxTCpAQk936hc+EwTI2RACDDeU7EsM
-         ZY/RjAnq9QJVcTSLXoG9LoMFG6RTkwrL/uZ9doxgif9cwV1NiHhX/KoQ9CDc91TqXnWL
-         XOiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745956283; x=1746561083;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RIDQIy8tP+iQrp+SJ899KKPpAiNauHHt2daVbB0nYIo=;
-        b=F3mBHxggmqTJnx76r7MLLq8r/GT6LjZJ9NbrE9o/xwztLSUKzJ73OOSSuKHm2Zawep
-         vXALLgygOl5SZleZoMYNMa2MsEUSEu/zSlx6knq9rpDBAXdAnt908Y9XxFuHLaK+D00O
-         dNVVxw36PXEhMaOEy++s84dadpnXKc+tgM1o/ix7fEShpz+UL7f1CWB+ou2nSoKDV9WH
-         slEs0GSwJuTn7OIW48i6iTlYiBblhFuLv2WsZ0OK4WuuHsGFCNxlI+4ns4zSQA73UAUN
-         lsB1UK38kuK9HGDhbJdGMULQv5zoZRrB/HnvNDsB2VloWXg/WjERaLkrMP1X0wEffEUF
-         7eSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEL6kQ5L7Cr8ac1p7OK/24mpCIL5CH9WAYw+7fc+K2C4wa8M/hPC5VQfDstdYX+CpdaidSGOyy+kR+Qk8=@vger.kernel.org, AJvYcCXnhxf76fgFC4+D3MhwGnNeTi+dZZWgDUaU48YJZtp5NCRHWIYJccJRvdFQYH3gWKYUM8UpUyfwg5CPC2y3o8tKvYTH@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi81a/1s+TYC0OVGflkPHPGDucUswzfe73KrZgSnu7+//VJfzA
-	UJl3TS2G+DH8Djy1emWHstoIuLXbO2WHBgbnEKo/C+RGgiSH7jgJ
-X-Gm-Gg: ASbGncs2vw8LCEHYN6VahWXriCFLcNA9AlJNm2sQ4KMS/ba8SJGYORzz2gtNAvoAw7f
-	QxewFYQM+Xoe3flQyIX4dahouYAdMHy6NuIJUyX7LhRP0cV4TB7EdN3StQ7v8hi+WdRx+p3Mekx
-	jIQlJIHVozrbk7JLZyytQ40KeEINAJaA71c0y5cQtiOmUWM4lsJdu0afswarbF6XRAQsndVgz9o
-	nVYs7RFYkuEgiBWn6F5doyLz4SIHDAV/nvbSPhY9Go4ufNPGlgfcV7j2I7j/yoyWq7qzrrfllPn
-	hW/9EmNjWsxz1z9TvbIKGrhHDTiI0Bi4wATV4o4c
-X-Google-Smtp-Source: AGHT+IHZjdqY7yZCz2uVIQvXAPfIe8Qulbzil3UiILhzk55Gk4SXFd+yDlV+kTzT8Qp05gkX7FKc4g==
-X-Received: by 2002:a17:902:f785:b0:224:de2:7fd6 with SMTP id d9443c01a7336-22df34fc944mr8926045ad.25.1745956283367;
-        Tue, 29 Apr 2025 12:51:23 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7c1bsm107270045ad.107.2025.04.29.12.51.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 12:51:22 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH] tracing: cleanup upper_empty()
-Date: Tue, 29 Apr 2025 15:51:18 -0400
-Message-ID: <20250429195119.620204-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GcD7tVsY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745956286; x=1777492286;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VJTYJ+DRSOZ7GY8qrph88f8OFS52yzkIz78IYtEQHco=;
+  b=GcD7tVsY1TN0SPLyuWhmiOJWcXe3tcjo+K5CYODSiGv8Pk7ZJzf2oA5g
+   06+gf6yD//TKHHAGksO4qnia4UnPF+8ZuUZorPX0Sn4FJ2tBKG69TtnXM
+   xxwsRTxrDEMEA8WhWgmD+9PFh6/H+MnPjpubsnbxr7xNMFjRNT+yd5HNZ
+   SJg5iSO9kB3lxFsVphFuKhyAyDQZeT+BWg9HufjEm+AVDAoGDpDr/QBJE
+   WybIhg8TiORrQ4Ib6KPdRl6UMtECMoE5bJuK1azQx55ykjq/KqsA3zgzP
+   fb7UZVExc14dvrEtdLsRCe3T4fg+OPd9okKxBsEz+jw4jxO8r6jKWOlN6
+   g==;
+X-CSE-ConnectionGUID: XcXhtjlMTZmC8LjrDX/wCA==
+X-CSE-MsgGUID: 995BFKt2Sxqis8TxeEVYJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="65009684"
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="65009684"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 12:51:25 -0700
+X-CSE-ConnectionGUID: Nyl775vaQ86rWQdZs/rvnA==
+X-CSE-MsgGUID: gOyjbdY+Qn24s/zSN/8koQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="139102749"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orviesa005.jf.intel.com with SMTP; 29 Apr 2025 12:51:19 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 29 Apr 2025 22:51:17 +0300
+Date: Tue, 29 Apr 2025 22:51:17 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ben Hutchings <ben@decadent.org.uk>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: make all file references relative to source
+ root
+Message-ID: <aBEttQH4kimHFScx@intel.com>
+References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
+X-Patchwork-Hint: comment
 
-Instead of find_first_bit() use the dedicated bitmap_empty(),
-and make upper_empty() a nice one-liner.
+On Sat, Mar 15, 2025 at 02:20:14PM +0100, Thomas Weiﬂschuh wrote:
+> -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
+> Other references, for example in debug information, are not affected.
+> This makes handling of file references in the compiler outputs harder to
+> use and creates problems for reproducible builds.
+> 
+> Switch to -ffile-prefix map which affects all references.
+> 
+> Also drop the documentation section advising manual specification of
+> -fdebug-prefix-map for reproducible builds, as it is not necessary
+> anymore.
 
-While there, fix opencoded BITS_PER_TYPE().
+Hi,
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- kernel/trace/pid_list.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+This broke 'objdump -S' completely for me.
 
-diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
-index c62b9b3cfb3d..549c299530a4 100644
---- a/kernel/trace/pid_list.c
-+++ b/kernel/trace/pid_list.c
-@@ -81,13 +81,9 @@ static inline bool upper_empty(union upper_chunk *chunk)
- {
- 	/*
- 	 * If chunk->data has no lower chunks, it will be the same
--	 * as a zeroed bitmask. Use find_first_bit() to test it
--	 * and if it doesn't find any bits set, then the array
--	 * is empty.
-+	 * as a zeroed bitmask.
- 	 */
--	int bit = find_first_bit((unsigned long *)chunk->data,
--				 sizeof(chunk->data) * 8);
--	return bit >= sizeof(chunk->data) * 8;
-+	return bitmap_empty((unsigned long *)chunk->data, BITS_PER_TYPE(chunk->data));
- }
- 
- static inline int pid_split(unsigned int pid, unsigned int *upper1,
+I see the following difference in the debug info:
+-    <12>   DW_AT_name        : (indirect line string, offset: 0): drivers/gpu/drm/i915/i915_config.c
+-    <16>   DW_AT_comp_dir    : (indirect line string, offset: 0x23): /home/.../src/linux-2.6/build
++    <12>   DW_AT_name        : (indirect line string, offset: 0): ../drivers/gpu/drm/i915/i915_config.c
++    <16>   DW_AT_comp_dir    : (indirect line string, offset: 0x26): /home/.../src/linux-2.6/build
+
+Looks like I can work around it with some combination of --prefix and
+--prefix-strip, but that seems far too tedious to have to do every
+time I need to decode an oops.
+
+> 
+> Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+> Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
+> Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> ---
+> Changes in v2:
+> - Pick up Ack from Borislav
+> - Merge all changes into single patch
+> - Also drop link to KCFLAGS from docs
+> - Link to v1: https://lore.kernel.org/r/20250313-kbuild-prefix-map-v1-0-38cea8448c5f@weissschuh.net
+> ---
+>  Documentation/kbuild/reproducible-builds.rst | 17 -----------------
+>  Makefile                                     |  2 +-
+>  arch/x86/boot/Makefile                       |  2 +-
+>  arch/x86/boot/compressed/Makefile            |  2 +-
+>  4 files changed, 3 insertions(+), 20 deletions(-)
+> 
+> diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
+> index f2dcc39044e66ddd165646e0b51ccb0209aca7dd..a7762486c93fcd3eba08b836bed622a41e829e41 100644
+> --- a/Documentation/kbuild/reproducible-builds.rst
+> +++ b/Documentation/kbuild/reproducible-builds.rst
+> @@ -46,21 +46,6 @@ The kernel embeds the building user and host names in
+>  `KBUILD_BUILD_USER and KBUILD_BUILD_HOST`_ variables.  If you are
+>  building from a git commit, you could use its committer address.
+>  
+> -Absolute filenames
+> -------------------
+> -
+> -When the kernel is built out-of-tree, debug information may include
+> -absolute filenames for the source files.  This must be overridden by
+> -including the ``-fdebug-prefix-map`` option in the `KCFLAGS`_ variable.
+> -
+> -Depending on the compiler used, the ``__FILE__`` macro may also expand
+> -to an absolute filename in an out-of-tree build.  Kbuild automatically
+> -uses the ``-fmacro-prefix-map`` option to prevent this, if it is
+> -supported.
+> -
+> -The Reproducible Builds web site has more information about these
+> -`prefix-map options`_.
+> -
+>  Generated files in source packages
+>  ----------------------------------
+>  
+> @@ -131,7 +116,5 @@ See ``scripts/setlocalversion`` for details.
+>  
+>  .. _KBUILD_BUILD_TIMESTAMP: kbuild.html#kbuild-build-timestamp
+>  .. _KBUILD_BUILD_USER and KBUILD_BUILD_HOST: kbuild.html#kbuild-build-user-kbuild-build-host
+> -.. _KCFLAGS: kbuild.html#kcflags
+> -.. _prefix-map options: https://reproducible-builds.org/docs/build-path/
+>  .. _Reproducible Builds project: https://reproducible-builds.org/
+>  .. _SOURCE_DATE_EPOCH: https://reproducible-builds.org/docs/source-date-epoch/
+> diff --git a/Makefile b/Makefile
+> index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1067,7 +1067,7 @@ endif
+>  
+>  # change __FILE__ to the relative path to the source directory
+>  ifdef building_out_of_srctree
+> -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
+> +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
+>  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
+>  endif
+>  
+> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+> index 9cc0ff6e9067d574488a35573eff4d0f8449e398..f500f82864aae80deb74faa3df9a8b6333d6c4ca 100644
+> --- a/arch/x86/boot/Makefile
+> +++ b/arch/x86/boot/Makefile
+> @@ -54,7 +54,7 @@ targets += cpustr.h
+>  
+>  KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
+>  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+> -KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> +KBUILD_CFLAGS	+= $(call cc-option,-ffile-prefix-map=$(srctree)/=)
+>  KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+>  KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+>  
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 5edee7a9786c67e13c295473751b82387bcbd67e..ad324978b2e5b1b6f8be82647769c99db8257ac7 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -38,7 +38,7 @@ KBUILD_CFLAGS += -fno-stack-protector
+>  KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+>  KBUILD_CFLAGS += -Wno-pointer-sign
+> -KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> +KBUILD_CFLAGS += $(call cc-option,-ffile-prefix-map=$(srctree)/=)
+>  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+>  KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+>  # Disable relocation relaxation in case the link is not PIE.
+> 
+> ---
+> base-commit: a57512d6cd88eba04cdc1fb83832c00d248bd0d1
+> change-id: 20250312-kbuild-prefix-map-5ae76c209e7a
+> 
+> Best regards,
+> -- 
+> Thomas Weiﬂschuh <linux@weissschuh.net>
+> 
+
 -- 
-2.43.0
-
+Ville Syrj‰l‰
+Intel
