@@ -1,98 +1,107 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A07125DB15
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2206125D913
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916482; cv=none; b=IKalRbdZ2aVEU5Uac/ia2Hk+gYlesCY2l2AjujIpDK0WMAu+8yNgc/N6BKgHkx+xoMvq3vxQDKKhkSxV9sf7OyFAnv2OkHwRJZkgq1ipZDho4iioBFc7rnOtpTeKDAv4H4R44sS7FgyGt1csyS7Fiones0YDC2e0WWLWUz4vTes=
+	t=1745916570; cv=none; b=VWKbuzfXTdwOsgp/+8zI/NF5ll5iggrh44bi3PbLz9mcg1hiBcD8fFHi5AohZgmzWcVrx3b7XWx3UxG1mwZqG3CDdu5L2s1gTHPXVaRFqZUUUhhdN8i1n64rFr5zlAAh3zHb+hK5T/Mc9X+2u9omcxKIhd5v3npu/TV5ah4mgIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916482; c=relaxed/simple;
-	bh=+ZagfuJC2OTd2P7p3HpRdZfwzsuJtYmVYIRoQXL/BBA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QuMa949GTjbpgqxQJhO2oD2AExOqIXdgaymGNbBHHGwLrkV8RejsYb5d/SQIIRv6pqMaQBWJDfztDyOUOF21kueCJa+6qccDn9NcePjluY0q7S6qyvjchhfaWwrB+Y2+8j663vLxnVFW5jigQe3sf93vdXNxupg4RtMpJDdf5nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jiayanli.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JbdS+SNQ; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jiayanli.bounces.google.com
+	s=arc-20240116; t=1745916570; c=relaxed/simple;
+	bh=qQIdLk+FJaJTOLKosG3vFjdckw+iVeZ0wt9NMsX3AJU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZjnVfaIlhUkVYoNNOQ6AHWX/skUX6ZYDq6x0nNSzLk72/0tUtvXbMfXDY1ura307ZAmWGLAZC04ou3prk5iUzT4KXNt0jBG9IlKAURLWmdclVoXPDUlvJJS1JCD7QW9+iji3kTh/NcIi+pGKcd7CNWxrJao5l7jCBI+MfCQIYGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s7vK1rL1; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JbdS+SNQ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso6631901a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:48:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s7vK1rL1"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so8061578a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745916480; x=1746521280; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KYd3MUONGEmmtl9SUW3Ij+b6oXTZesvP0uBT5hlQeAc=;
-        b=JbdS+SNQ1PFyVdJ95ov+Uh1CVf3VI//6JCRFkw8QboPaZ9WxORWaGwaluJH2FJUmaV
-         vMyY90I4/KyiWYYMlrfvePokGM89OO+QHvaJuQyp7ORO9pLSgLiMpO8PWLitxP2Kg9Xh
-         ayXg2d0scfHVpkXm4LkB4aHReVYZKH7Z2TwosBbW2+MaK1WR4MEgD+lz3sb1CUipvExl
-         /iUUr7XAsNKxtymO9qzr5q+F15rK8SxN9Em1rnPg4R+1Dht0JJ2SymaVwliBDfHiabsd
-         tX0ruOeKrFRTdAlXqO01/rt+fs+f3qnY1rODWF+lCmt5SKnBrlj+oQygrlV4fuqJ7BL1
-         ueaA==
+        d=linaro.org; s=google; t=1745916567; x=1746521367; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bQ3Du2msqS99gBPXd5VzJGX2ImDSOyuqnj7RIZBT6Dg=;
+        b=s7vK1rL1C1ykAxg8McqfapjcTr4o3AEs93znL6fNn3EKhUCKw7SQbeWawn3jmKI4NE
+         T4TB9CFT9AodMPoo/KoTVb/jecQBhLzB7V1Q4mIHq6vqwzOpM8lQ1VUwEw5M3IX+0WiV
+         XGq6f1LQsxkyLVz+CHo9xmd94YQ65BFDvWH4RodJLD0WX11QXXlHc2/QZB2lcRvP8Ev1
+         +5dJec9ZVdM3ADW49YQlPzrJClVj3RGS4ugo4SWot4TK1JM36OQEZHKd7z8QMsJ8Jb3N
+         DYtyNyf2O7eRhrQ8xC09SeymsUIwpbfzdCpg2QBWdpR7EhMTUw9f5Fz5wufLnGlnE6LP
+         h2vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745916480; x=1746521280;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KYd3MUONGEmmtl9SUW3Ij+b6oXTZesvP0uBT5hlQeAc=;
-        b=KunekDvrCRBV+iSFVJQd7as3sD6rvdphENKc2oAx8d+3zLg8OlooaNfL3fIUq9Y8k5
-         U2l2DkdF+G88LXumoJnWXtGsqbpBrfX3qbMSJAfF+41FMyZy/HA1mXDs7cNXPOasp4g3
-         r7QCkS+3aWcZHw7kiR4Pa5ljPBa7RW1ODtLslGE0clEPJgiVwBFYqs2fyoYrWssYHZ/i
-         ruWqgltceMn6q1SsqlfxL3n9B9zFPbgx/7MuooyNCs31AWP+rNIJvSdmIK/5c3Noe5jv
-         hgPnb1SofikNuMjHZYQfUyOU9bQmvh2bG9VlObrTNSQaHvi3/sinEaQW1uFJwCV5XzaX
-         BOEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeR/ahyOZhhik3pc5phbTaUvhDPc1ui9mRcN7kLUONXKw34DpM+6WtbNZly0lfaysqFN/olMJeN8QDxEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUc6rIO6U7mfyszjk76f4Ykln3pJj8WIfCJaFn242kly+uM3Sv
-	ub3T4X2k7bpEtC07DTUK/u91irbQn6bN6LKRfiTILfOvXov9sjNcqmhA6aaHYvcrjuViu8Sx4L7
-	/xsCCbaoCcg==
-X-Google-Smtp-Source: AGHT+IHHq8YG/UfRHBfkc3mFLRSiExeXVTakUlQOc/lfIufC0Uu3iS0szmQe7j0vFj8WM66psVsi10s8SMyc/A==
-X-Received: from pjuu13.prod.google.com ([2002:a17:90b:586d:b0:308:7499:3dfc])
- (user=jiayanli job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5826:b0:2ff:693a:7590 with SMTP id 98e67ed59e1d1-30a21597ae5mr4908479a91.33.1745916480638;
- Tue, 29 Apr 2025 01:48:00 -0700 (PDT)
-Date: Tue, 29 Apr 2025 08:43:16 +0000
+        d=1e100.net; s=20230601; t=1745916567; x=1746521367;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bQ3Du2msqS99gBPXd5VzJGX2ImDSOyuqnj7RIZBT6Dg=;
+        b=YZPmimetacEOqTh5B7818afYMz+kyIR98ZKvsqg6IWapRYVGORVMXRsL77hBbP1UBg
+         lC288T1RK7KJ2wTriGZ9Yn1vCnzbR9FQ/t/jJQuYT5Ab5dtovnMm8H0jIXQO5xRWk+Ic
+         qfIzX6OUxocSDfzjhakvayc7Lh4Chmuk7UfGi7VcLeFlee9DmsBAFZFK/WZYJWsHctcR
+         pL0S760tfDdR2yE2zrCdAiak4e2Iv1ssYLqn0VJ+imVy4vI1QtodQ3q1qyRmGzekC5Ze
+         ztNhW/GyUoDvXQkEOzcG3sl+G7vyOgqqOjOPJw8kzM/L/q3q4j8eFeaJ3faBswmj14q3
+         fQjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdVOtFktLiurUAxrKdnWQdZnNgv/5iCD8vkOCsUpOeK90iqc8AejNQEYgjsbTQlOnKjObkCG2ktCOTOX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhWoRoIGumyhChQ7VQB9zSgyPzQLpuDY7wUiuLBS6TkDTCzzs2
+	tEEnboQRMRcsKaR/nGGwcFiyCuWAXHMq5FG1YO7iAflbmCxwt86fAjyRbpxwbUI=
+X-Gm-Gg: ASbGncvPObXE9jW3Coc/+/xjiNdV5ApGQ9EeTy22OiwXdwxB5xBE0qQriIDQPVJ1g9z
+	vSw3IlmgvtG+tIpMrDdgH/wjyBbAfBr+sj8PVnTs2Km3zZ+XrGCJpjj+hvbEAVdze8soY9MmmT7
+	86H7vTLVhkyvabs93roljkianW6a2kHrtA+Y4Uw8iMcInpswLh3G4gwEkpRxZdpl+e+emt8PUcY
+	DCSrDML8eu5RQzJO1CQpPKDIjbPFT5XTh5c8mCi+AG8Hwnx0bnZ9VsueiA7D72s5m1UxUj1hZUY
+	pAr3R7FA9pnOM3Y8sY48czhVtu4UPwyXgKKoDCzB01WHhrbdFpA+xbBXL5735wd6Of0O7BXIRGg
+	daXtTOHOy1l8fOPNtLSWfsvUd
+X-Google-Smtp-Source: AGHT+IGUOSkbNQi0TijAb91lwptPj1wuZauO4Jmzd3aIvKCh68E4hLv9NlgmiXg+nD07/oJegV0vGg==
+X-Received: by 2002:a17:906:6a23:b0:ac6:bca0:eb70 with SMTP id a640c23a62f3a-ace84b55d83mr1224307466b.56.1745916567365;
+        Tue, 29 Apr 2025 01:49:27 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7ec0e6331sm3546619a12.78.2025.04.29.01.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 01:49:26 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH 0/2] phy: exynos5-usbdrd: FIELD_PREP fixes
+Date: Tue, 29 Apr 2025 09:49:23 +0100
+Message-Id: <20250429-exynos5-phy-field-prep-v1-0-39eb279a3e0e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250429084317.1619909-1-jiayanli@google.com>
-Subject: [PATCH] x86/microcode/amd: fix the return value when microcode has no update
-From: Annie Li <jiayanli@google.com>
-To: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Annie Li <jiayanli@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJSSEGgC/x2MWwqAIBAArxL73UL5wOgq0YflmgthohBFdPekz
+ xmYeaBQZiowNg9kOrnwESv0bQNrsHEjZFcZRCd0p8SAdN3xKBpTuNEz7Q5TpoT9Iska6ZQxEmp
+ cpefrH0/z+37CgqzVaAAAAA==
+X-Change-ID: 20250428-exynos5-phy-field-prep-1b3ea73d4773
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>, 
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-In commit 6f059e634dcd("x86/microcode: Clarify the late load logic"), the
-return value is UCODE_OK if the load is up-to-date in amd platform, which
-leads to load_late_locked() returning -EBADFD.
+These patches fix some recently introduced usage issues of
+FIELD_PREP().
 
-This is different from the intel platform, which will return UCODE_NFOUND
-and is more reasonable.
-
-Fix the return to UCODE_NFOUND to avoid -EBADFD error.
-
-Fixes: 6f059e634dcd ("x86/microcode: Clarify the late load logic")
-Signed-off-by: Annie Li <jiayanli@google.com>
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- arch/x86/kernel/cpu/microcode/amd.c | 2 ++
- 1 file changed, 2 insertions(+)
+André Draszik (2):
+      phy: exynos5-usbdrd: fix setting LINKSYSTEM_FLADJ on exynos7870
+      phy: exynos5-usbdrd: s/FIELD_PREP_CONST/FIELD_PREP where appropriate
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index b61028cf5c8a3..f90779dc1cac5 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -1074,6 +1074,8 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
- 	if (ret != UCODE_OK)
- 		return ret;
- 
-+	ret = UCODE_NFOUND;
-+
- 	for_each_node_with_cpus(nid) {
- 		cpu = cpumask_first(cpumask_of_node(nid));
- 		c = &cpu_data(cpu);
+ drivers/phy/samsung/phy-exynos5-usbdrd.c | 63 +++++++++++++++-----------------
+ 1 file changed, 29 insertions(+), 34 deletions(-)
+---
+base-commit: 33035b665157558254b3c21c3f049fd728e72368
+change-id: 20250428-exynos5-phy-field-prep-1b3ea73d4773
+
+Best regards,
 -- 
-2.49.0.901.g37484f566f-goog
+André Draszik <andre.draszik@linaro.org>
 
