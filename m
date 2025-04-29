@@ -1,145 +1,101 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879DD23F413
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAD2221719;
+	Tue, 29 Apr 2025 16:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944739; cv=none; b=GLDZN778awiO/THR8YGU5B6DevzdP+c9VbVFAAMbHk+5FGuCsZt6B/0xCcgxMEhaKfNTLs8Xj7f8bdsTY8gP4EJlAdr66eoTsSIYHDKJCaZr70I1vp/ZhkAp+GGdee9N7H+3rsq7NhVKLkzkyIMqkFJk2x50UO0brjP7HpZfpEY=
+	t=1745944753; cv=none; b=lcFfBb3oSyAFwHIhLNHkNpRkjjozWdz+tAVAR3g8kstmCH39xEo7xLfs1PG5+8f5bG3GTyOxd8R5jHFPnmTXCFdghbrKne0cwMb6r8vfGvTQ61hIFZseOHw0ZAwM6XvtIonCbNwFaASLlHSF54UCUOlbzN4zV4DiYUu9jhozfk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944739; c=relaxed/simple;
-	bh=hR8Y+nK0cX/CZdCBzLn+W3sfxRoUxjFKeCQdBb+BaYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bGMmC7bPgFK0OPqd5jmIOyZ15Cn8UmgLH97GMx8Fe76HrbkmlSWIVM+d6qmNBFu21FPm5OhZDvRM+lbcyc0O1gbuf8vxbVvF3U3HoSdZU7ViFenSq+RnPzFWFS7UVK7ibhbXq56x1qFOe8gIaKVKpXxwgM55UCWaQB73h7Oa/WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=easyb.ch; spf=none smtp.mailfrom=easyb.ch; dkim=pass (2048-bit key) header.d=easyb-ch.20230601.gappssmtp.com header.i=@easyb-ch.20230601.gappssmtp.com header.b=a4FKzEKN; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=easyb.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easyb.ch
+	s=arc-20240116; t=1745944753; c=relaxed/simple;
+	bh=9cnUo42bVH6Ako8kUSAekQfAcAXta7oVIeRa+ZeBl/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UAhK8gltHnYRrREniE15dg9RbaffCUDqUY1Tl6XpEMG+Kme8Wex59dnVVNYslyvUSmwxUbx5eEGntNz5MvKxeYXpqKItJX+N1HQ5bMeFqH7XQIbsSes1w02gH9c+YCN+GXfgadl9Dfd8M8Z5zETvQHarSfGwZ3/SrsuUXwvEjyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YsAeS7Ww; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=easyb-ch.20230601.gappssmtp.com header.i=@easyb-ch.20230601.gappssmtp.com header.b="a4FKzEKN"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e6a8aa771e8so5468624276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:38:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsAeS7Ww"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so24545865e9.1;
+        Tue, 29 Apr 2025 09:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=easyb-ch.20230601.gappssmtp.com; s=20230601; t=1745944736; x=1746549536; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mKJPPGmtZ4Q4FEXLrbVF+XChkMZLyTXErk0JCwdy/xQ=;
-        b=a4FKzEKN+YLks3QNu8GVGLGXipONF0ukBLVeDOqGDULOPB8dCvDeDGrOrnG2RF+Hbr
-         yj90RDrwwu4hbJr0gZpboNQ6SlQ1zmGb/Tj+8KbTvpeG0HhlV0AzKjtIxG3p9pFcFyTp
-         ifIAYzatPar1wSeTyGSSSr/NGndkUv9h4DG+tSibE0LLbjDpvGtNL3n1FhTPw8PYIYGA
-         ltEM8zccIR10PxRsidosJwORNXUeRMb0vFCFzaXakK+eYN2UMH+Fa/RBVpgbZMqZuyNO
-         T/7ZwWvxkJUCihGYXtlNRY2V2a03DMeuEPDaWouoIeRKqaxY1ily/jHzf8a8vNuyVUUn
-         cypQ==
+        d=gmail.com; s=20230601; t=1745944748; x=1746549548; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfxB7ueWMJHOfVdTrigCt7WRfmfJvpUb5F90S4PMLb0=;
+        b=YsAeS7WwWTyz21+32JfiE165puqWH/VjGlL5wbqgRIJPJs2uLOGKFarDyFeIoW8jrf
+         SbxubVVh7SAZf8RGom2JM01EYQIKY22XhcAAhFCV+UppkTqGW49ldz1N5coIlWYaL2YH
+         CxE8VC0mXDJgJJjrOOzNaCtjicAntuvpRWE3idZsV6UNIyQ8jHMhEphxrjJ4xhwjQXN4
+         NhTmSLBWcgHCtzyIjwJGfhNBpi78tTqV8gnZug1/IeKE++qdqRw3ioi+UquPEZiopJj+
+         VlMWJ+U0VFTr4W+9GC+cUasFXqGLb06dphHhnHZpX9JkUoEOk32CGIETv0bkWJpy012P
+         5jmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745944736; x=1746549536;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mKJPPGmtZ4Q4FEXLrbVF+XChkMZLyTXErk0JCwdy/xQ=;
-        b=reBSdE8X5CLf+3AVmV+5CisOj7LqsuHF3/aPTDaOvXbwXoN7uUGh/Iz813Yic17D2O
-         izZdq8jAHPrXsgYd3LKMzMQz13+5tBgMoNtcrdQAbatJVOJzs+3cxpSA3YYif9pgMas6
-         eTSAvkz3T64w761cvMdZHmz9p15zo7ga618zwaOw+gi933gxzVpQTfJRdykoyDB21NJB
-         66/vBoLlYvgaff/d2O0R6NdLK0H6ZGnrfd5NsKTlJlYPS7e4HuZDvJnlcvjY7njRg5fR
-         4Nc63m9cppjpOe86gyP5XSvdgFsKU1sl/N5XCSRO7NnRa58o6X8pDE45FoB6+mDiIgof
-         f+yA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6+67Ehty/tSCrGvFllFSbYF6BHypkcVuVvRU5s+Y41jEVUYLecxOsFIYIhmgOm1TxLjX/zhl0M3RCDow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpyRE2H6stzjoKNTQ5m94jcLfYejgLSDxij3RhmNRYL9qwtO1G
-	mxagfQdq1XEO1D6vcgVDJZYGM1Ki09u0eUHwNHsG7YZTCWCb/7RIz+5CJynmMXfh5E8Wx55ChPa
-	F3rQf3zJOKET2V33sJigrWjc5BDw3vh/mRoXluA==
-X-Gm-Gg: ASbGncu6NL26s05EAB94jtspfJtk47n4bBh4DRVW37AWVMy8Mg7Sn7GfnuOVGfU7MIy
-	5Ou+5GqAx0zUQXvnnJJxCryt97U+QaiSa9MfeaRMsifqyaPeh6yqt0AI9wp9TiFTKLdditVqCoS
-	l80dB6ZNB3JQyxKksGsylyg71wteMCWWhDPTQ3+gMdgMkBxY4ny1w=
-X-Google-Smtp-Source: AGHT+IEBBaq5tsglGxhuINvv6IZSxaRI9dE1eDAka1Xuo1qsb8GlnVfNRulVXOsQNgsWdqejnZiq9iGFOJQ10Z6pJ+o=
-X-Received: by 2002:a05:6902:154a:b0:e72:a02e:a797 with SMTP id
- 3f1490d57ef6-e73511f984dmr5201544276.44.1745944736100; Tue, 29 Apr 2025
- 09:38:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745944748; x=1746549548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OfxB7ueWMJHOfVdTrigCt7WRfmfJvpUb5F90S4PMLb0=;
+        b=STe8OFGepwyc5ZmtcdPlyvDGNtQ2SKddhPGFqZuoiXUaq0tWW39we40CcV7RMoMq5h
+         XiizInKmDwGk3USQkZLZPs7LeONxVlMA0N77Jahlt0Ti5ZQbr567HBsE/hLtBTxfe3fS
+         WDPuQtcVxa+Eome2uXgGcAsxzq0BqvtzpwZoNkM2G5CTTwyWaB2l+/HRep+tEl2zlvHJ
+         ZY3fQkh6NHx8TMUcsrtkooYjg8+jUApStCZ/Pcp82WoXINU3iexc09QgcBrvEXfXg2Pg
+         ukpleBEOzoMEbxPvsSL9ZHGzYK34inMy4z4UYBFN0hspx9IDUydM+IhzhJX8vZcc9pcG
+         Uxvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWP6YYFgffzVSst6ks6YZkHY2yOYABdFvM1C7NGm7TB3OHielRJreWa03ZFvE3JHFXoA8ooNE9ARNDcU+DAYSk=@vger.kernel.org, AJvYcCXHMFITRnuJaD/4QhUPTyre2CZXqUwpg/4lBqVJkvik2RWS7B4EQn0oMG+CEw83xJERgDbizIQUXJzeF3RT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbEtFSQjA091k8MLDuhm0nrR68OGxjQfgtWZIRHdv21sXULDKK
+	b3tIp7JuyOP4NpYkcGB8IW88kdKhjvJ901qCEFePTwTgjkcCvWnA
+X-Gm-Gg: ASbGnctzn3Q1Ot8arVnU2pL94kMI2QRejpqnmxCqXlcO7QOPxh+6S/gx62z9TI+Uq3b
+	dUm7Aa+IUyxSrfaVXMXwNwueKnxwz0iHB27Q+oNP097W6vh0UxQTywzPSs+vcGRmZgiw5+/dwII
+	9/LmxQYrlLFv2vZ6pUyeCdXxh02LFVG77iQbx4qdGAlL/rIzOc4NkZZ8mTh0LrXdaElzR+IZBxf
+	7MrpKvgO2Hf7sSkxYxuabQbIzP9mNVu8NtdUXkbVR1KCw8jeHlw83fvNgSShgq60szEHpsoNzr4
+	FPlRRqjCo906dMuMpbyFP69JAgkagRyeh5/wm8Q19A==
+X-Google-Smtp-Source: AGHT+IEwn1kuyd7yIBmkob/jd/orK5Et2W92kV3id4CopJGSgQ+gR90AEwMrSeL1WSrlpBwGddY34w==
+X-Received: by 2002:a05:600c:c0f:b0:43d:563:6fef with SMTP id 5b1f17b1804b1-440ab848800mr113084645e9.21.1745944747617;
+        Tue, 29 Apr 2025 09:39:07 -0700 (PDT)
+Received: from localhost ([194.120.133.77])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4409d2d8479sm200434295e9.29.2025.04.29.09.39.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 09:39:07 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] tpm: remove extraneous space after newline \n
+Date: Tue, 29 Apr 2025 17:38:59 +0100
+Message-ID: <20250429163859.823531-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241107125209.1736277-1-michael.nemanov@ti.com>
-In-Reply-To: <20241107125209.1736277-1-michael.nemanov@ti.com>
-From: Ezra Buehler <ezra@easyb.ch>
-Date: Tue, 29 Apr 2025 18:38:20 +0200
-X-Gm-Features: ATxdqUHV5CP1dNwzjt8THrj9C95bgv7pJhkhoTGKgrCVvTrrD0jY5bAxDeZ-Gnw
-Message-ID: <CAM1KZSnvDqUHd2ENKyaZc=WyRgL18TrsF766_ZJVeeAiPth+Vw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/17] wifi: cc33xx: Add driver for new TI CC33xx
- wireless device family
-To: Michael Nemanov <michael.nemanov@ti.com>
-Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sabeeh Khan <sabeeh-khan@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Michael,
+There is an extraneous space after a \n in a printk statement.
+Remove it.
 
-On Thu, Nov 7, 2024 at 1:51=E2=80=AFPM Michael Nemanov <michael.nemanov@ti.=
-com> wrote:
-> This series adds support for CC33xx which is a new family of WLAN IEEE802=
-.11 a/b/g/n/ax
-> and BLE 5.4 transceivers by Texas Instruments.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/char/tpm/eventlog/tpm1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for going through the effort of upstreaming the driver.
+diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
+index 12ee42a31c71..566f4df58d48 100644
+--- a/drivers/char/tpm/eventlog/tpm1.c
++++ b/drivers/char/tpm/eventlog/tpm1.c
+@@ -258,7 +258,7 @@ static int tpm1_ascii_bios_measurements_show(struct seq_file *m, void *v)
+ 
+ 	eventname = kmalloc(MAX_TEXT_EVENT, GFP_KERNEL);
+ 	if (!eventname) {
+-		printk(KERN_ERR "%s: ERROR - No Memory for event name\n ",
++		printk(KERN_ERR "%s: ERROR - No Memory for event name\n",
+ 		       __func__);
+ 		return -EFAULT;
+ 	}
+-- 
+2.49.0
 
-We have started looking into the CC33xx chips (in conjunction with the
-AM62L SoC) and noticed the following behavior:
-
-# curl https://speedtest.init7.net/1GB.dd >/dev/null
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Cur=
-rent
-                                 Dload  Upload   Total   Spent    Left  Spe=
-ed
-  4 1024M    4 42.4M    0     0  2358k      0  0:07:24  0:00:18  0:07:06   =
-  0
-
-After downloading some megabytes of data, with reasonable speed,
-something seems to lock up and no further communication is possible
-through the Wi-Fi interface.
-
-AFAICT nothing is logged, however, when I unload the driver, I see errors
-like:
-
-[16590.256433] cc33xx: ERROR failed to initiate cmd role disable
-[16590.256446] cc33xx: CC33xx driver attempting recovery
-[16590.256455] cc33xx: Driver being removed, recovery disabled
-[16590.272950] wlan0: deauthenticating from ab:cd:ef:01:23:45 by local
-choice (Reason: 3=3DDEAUTH_LEAVING)
-[16590.784390] cc33xx: WARNING Unable to flush all TX buffers, timed
-out (timeout 500 ms
-[16591.296388] cc33xx: WARNING Unable to flush all TX buffers, timed
-out (timeout 500 ms
-[16591.808379] cc33xx: WARNING Unable to flush all TX buffers, timed
-out (timeout 500 ms
-[16591.816792] wlan0: failed to remove key (0, ab:cd:ef:01:23:45) from
-hardware (-11)
-[16593.840379] cc33xx: WARNING CONFIGURE command NOK
-[16593.845172] cc33xx: WARNING tx param cfg failed: -5
-[16595.856352] cc33xx: WARNING CONFIGURE command NOK
-[16595.861159] cc33xx: WARNING tx param cfg failed: -5
-[16597.872323] cc33xx: WARNING CONFIGURE command NOK
-[16597.877079] cc33xx: WARNING tx param cfg failed: -5
-[16599.888317] cc33xx: WARNING CONFIGURE command NOK
-[16599.893069] cc33xx: WARNING tx param cfg failed: -5
-[16600.400303] cc33xx: WARNING Unable to flush all TX buffers, timed
-out (timeout 500 ms
-[16600.912270] cc33xx: WARNING Unable to flush all TX buffers, timed
-out (timeout 500 ms
-[16600.920388] wlan0: failed to remove key (1, ff:ff:ff:ff:ff:ff) from
-hardware (-11)
-
-We can easily reproduce this behavior on our ATMDS62LEVM board in
-conjunction with the M2-CC3351 card. We run a Yocto-based distribution
-(Scarthgap) using the latest linux-ti-staging-6.12 kernel recipe (Linux
-6.12.17+).
-
-So far, I haven't tried to dig into this deeper. Any ideas on how to
-debug this further?
-
-Cheers,
-Ezra.
