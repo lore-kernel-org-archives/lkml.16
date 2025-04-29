@@ -1,167 +1,138 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E63246789
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB18A243964;
+	Tue, 29 Apr 2025 23:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970469; cv=none; b=WSJjnwgJbA+AzELuNoAjyFVaJFFhbr54V0ijOW5zx7BxNtdPqqQcTWf2o/Nnp8xJBdsBnGWWtC46+K3sL8DzbJ5XqZ1zWtRY2DGhR4bIjdtRfRC2orjU9sWxPbz8dGrKy+iztt540mn95G7y7McQUf6UFLjVj2MUz4Ed8QSfsDE=
+	t=1745970509; cv=none; b=jqwACP85bEi/hQmZjSQmpU4uh2SpNYycmWCVvM3XSD+5jPUjrvowfPgqXU0pCytJO2bHC0mNl72L1yB3PfAlnzQSukNOG/q5dJeiqCwpBN1IMaMsUK47Frc4Uk9YRiNVAXE3GxlEdQh7CFEGJ61lLvnB5g3GRGmP9WRUhlu2NiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970469; c=relaxed/simple;
-	bh=EUXN40sun50EBrYaGuLWVQrctCvrMTiPSjuC2qVa6MA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=XDzOLemomOzHYFcxY1BHAAuCyY1tiapmOFYKV6MQcvcOBu9TPvCjHlDzHfcmmY0nBRZbswTOAEhNEoqQOY6xkuvhoWjnAudz39/5VW/djd5cjVIFbhJngQWnMTntRXGlH78+vdSpMo4ye/xpuuKvaA5FT2LAEwrLUDauAeLGhhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CzL+BSU+; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
+	s=arc-20240116; t=1745970509; c=relaxed/simple;
+	bh=4UQrbLqnprywh1jT+CZHStDeoQvlUasn56dHNhU58J0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OBCAHQYtgbfCaC3M6JUYpT3cMgmoiiOdRVrBGa2CLL3bYBkn4X/BWEaHeMFeC85Etoi6TUQQ4EjLOw1qTqztkDOnuHYE/C2ZhPtwkvVVcigS/pevNw5axPPuoc4ux6YFP1el2q0lmpKkWJgk20r8rHPYXBOHZydULYG77yleeqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NM9pNT7t; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CzL+BSU+"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30872785c3cso9752852a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745970467; x=1746575267; darn=vger.kernel.org;
-        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kqhn91kxJk0NqrWbN6uNVF8ez7ssrZW8quhtkNzQJcg=;
-        b=CzL+BSU+J+3IOAtJsTXPf8lw4JvLGCvN4/gDlnyVwn0OwUIOahX5ZtYZqwa2YLkr05
-         SrE66pFaOgNheWY9tKdtBPwqljryVz4DjjyZiwoXTJE0ArfwfGTesKdbTeDcA8vYSeYT
-         IvQ/bz/G0zdAFyueBscslUP6cdz1333it+gTqk1/IBt6rdqN3UUaTOXFis5BxMA8BIqZ
-         Mipa7XNhOe/qXZFjUb/Jg9aT7ZB3YwQVUDemw8qq6WU+DXxPWQTAwbUoftmLPMHfoFk8
-         erIgZtyvULb9lP36UnYzaSEOdi026vl43BAHF8LTbjNYphojWGPUiBZgNucebF85UWgY
-         CTnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745970467; x=1746575267;
-        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kqhn91kxJk0NqrWbN6uNVF8ez7ssrZW8quhtkNzQJcg=;
-        b=k2ZJlcTIFrLLQwH+lUw4XkWE7eIW9hnS9aPPQ1WlhP9uM59MUrlWaoqotvsCl7pSJf
-         cdUyPL6ykz/t3aIOOILh283Xztfe+Vht9WP4pJp0qP3ycmY2M2tfJX040QEO0NHuxh2P
-         u+xNQsN5aKTLa7sVmfQunJQN2gs5z9ebkERjgc8OB8RXANCnEmA+F1JQvxxc4DAGbnQK
-         BgOIFLEgZeEpRoQZ4+/L8imfuxu89zRcd/++8EQT1uqjQyETWv+HOGxsYK51l9ulZxWC
-         KL9eisyWeGir7hnqnEwYKSwseJ5wYEl8Y3aCgDqzFblhjf+r6CV/EzFB1qOulkZK9ln5
-         MqlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZYQSdq5iE+/sdDEMRpxBGd09As+3feHBcWt1+GxZ+KaLLVK80fx0TvYSAKsHUe2K3tIJI29cuxveTsF0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNNA/nrciN7gR0jEFe/SRPV183B50xvAQ/gKtQ2M3j5NtwIa1R
-	KtdHAAsYMWpxtdBIJ1qtFoyEqhzQzOhO7scJh2rV4wn7T62AnoX3E704vh7TZUjDPk50YuL6XU1
-	n+Tf3hvdxIS14bg==
-X-Google-Smtp-Source: AGHT+IFJlrR3Sq9I5l43d7ShfYq2cl3PN625t73YYl+5vc8ZyI1ord9aUK9rPq80NYo4FPLDUqCmnjMJmHuGuMA=
-X-Received: from pjbok13.prod.google.com ([2002:a17:90b:1d4d:b0:301:1ea9:63b0])
- (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4fce:b0:309:fd87:821d with SMTP id 98e67ed59e1d1-30a333647demr1488703a91.29.1745970466762;
- Tue, 29 Apr 2025 16:47:46 -0700 (PDT)
-Date: Tue, 29 Apr 2025 23:47:42 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NM9pNT7t"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLaYKj020989;
+	Tue, 29 Apr 2025 23:48:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	oxUzzwgOdMjLzaUEsHCOAZMj5vXBisxuhB1rh5eePP8=; b=NM9pNT7tUZ3VrfPy
+	nkirBQwdr9kTg1r8ntzz77GdJ/o0euXluUURgZ+EIVmLW/7rZXSKM4/2qRPSVXY/
+	LHcm2wRtNsxR+3uc9wTKdwY5uto411Dbf7uPcFWIZJi/veFeUII1fAuTndlxgmZJ
+	8BXw043HpeFUXqNHT7LwVV7k+U7FKoS8KRmHqfoqAJ2Vp/TuVwlcoZnntrYwEl4N
+	nKTQdNLqVnMEU8RLP3y7zxyGaR5e6zn+Dyu7scMKn9c3K60Blw1oHe7w9cpcWMQQ
+	tXARRzc4VqAtWc3BxiwkJkGkWV7foWdQFPT+FsGKwFMU9WZkvLesXT1OsRMfYeDt
+	+qcVOw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u1r7e0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 23:48:12 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TNmBfE006356
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 23:48:11 GMT
+Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 16:48:10 -0700
+Message-ID: <b744353c-ad03-4500-9659-cf74ff288a01@quicinc.com>
+Date: Tue, 29 Apr 2025 16:48:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2833; i=rdbabiera@google.com;
- h=from:subject; bh=EUXN40sun50EBrYaGuLWVQrctCvrMTiPSjuC2qVa6MA=;
- b=owGbwMvMwCFW0bfok0KS4TbG02pJDBmCqfJPBE+e+jH9vbDYhiVySQvO/qvZY9Q499Zc8yyPl
- k/+rhVtHaUsDGIcDLJiiiy6/nkGN66kbpnDWWMMM4eVCWQIAxenAExk6VmG/04cOVYfax9siJgd
- PU2n4kXVDW0VPaskoVt3U3MVdQ9I+zMyPIicfpxR8mDNhcdXLDR1LmxsuZ7L7nzj20t5R7saxYI aPgA=
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250429234743.3749129-2-rdbabiera@google.com>
-Subject: [PATCH v1] usb: typec: tcpm: apply vbus before data bringup in tcpm_src_attach
-From: RD Babiera <rdbabiera@google.com>
-Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] drm/msm/dpu: pass master interface to CTL
+ configuration
+To: Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Neil
+ Armstrong" <neil.armstrong@linaro.org>
+References: <20250307-dpu-active-ctl-v3-0-5d20655f10ca@linaro.org>
+ <20250307-dpu-active-ctl-v3-3-5d20655f10ca@linaro.org>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250307-dpu-active-ctl-v3-3-5d20655f10ca@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=G5AcE8k5 c=1 sm=1 tr=0 ts=6811653c cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=tVI0ZWmoAAAA:8 a=COk6AnOGAAAA:8
+ a=pM9NJlXElLjiyNQRogoA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=-BPWgnxRz2uhmvdm1NTO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDE3NiBTYWx0ZWRfXw9zFPWohdwU5 AnYbY8+HcXA4pFfcS/nf9j89bvqgD0YVfKpECfsdBMo+7+VBkwZTX60ZQaiDUycytGkHhI/sLCJ AuFjvOP5/l4d7Qxv5VnvvINJTMweYPoOR/k4eEnIp6YqTGgWCEg+hBvULvPEtWmCI3DfzmKbOPk
+ EMfNu+7yOhl/Q7BYZCAp+V3WY5a1ehwwi3+MNQrRoYYHIWDFRAVLfaLd6vLjNTTBOBKFdVTA8MU yUTTWVBPhsmYi3ZgKR+/OC/l3tN1ba5rGg3IpN9AHbBrILei1OQpiERYHH7MGinB5FEUkdr/Dnz 8gQhImlSwzXCdzwrgpfcTOb96n1xLXEo8ytdEi2Qo99ONbDGeKq014+woIf6+6Jf9lKQ3rCpTxF
+ M1/XF71FtQztCYHEpSsJnAzDD8gvlEk4d4rRO7gu/7U3tCjhSx7KXvkUGQTnUAhH8HROdttL
+X-Proofpoint-GUID: xy3JhOGD3_KXcWNcSvOVls6D8--26v28
+X-Proofpoint-ORIG-GUID: xy3JhOGD3_KXcWNcSvOVls6D8--26v28
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_08,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ clxscore=1015 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290176
 
-This patch fixes Type-C compliance test TD 4.7.6 - Try.SNK DRP Connect
-SNKAS.
 
-tVbusON has a limit of 275ms when entering SRC_ATTACHED. Compliance
-testers can interpret the TryWait.Src to Attached.Src transition after
-Try.Snk as being in Attached.Src the entire time, so ~170ms is lost
-to the debounce timer.
 
-Setting the data role can be a costly operation in host mode, and when
-completed after 100ms can cause Type-C compliance test check TD 4.7.5.V.4
-to fail.
+On 3/6/2025 10:24 PM, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
+> Active controls require setup of the master interface. Pass the selected
+> interface to CTL configuration.
+> 
+> Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Turn VBUS on before tcpm_set_roles to meet timing requirement.
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-Fixes: f0690a25a140 ("staging: typec: USB Type-C Port Manager (tcpm)")
-Cc: stable@vger.kernel.org
-Signed-off-by: RD Babiera <rdbabiera@google.com>
-Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
----
- drivers/usb/typec/tcpm/tcpm.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 784fa23102f9..e099a3c4428d 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4355,17 +4355,6 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 
- 	tcpm_enable_auto_vbus_discharge(port, true);
- 
--	ret = tcpm_set_roles(port, true, TYPEC_STATE_USB,
--			     TYPEC_SOURCE, tcpm_data_role_for_source(port));
--	if (ret < 0)
--		return ret;
--
--	if (port->pd_supported) {
--		ret = port->tcpc->set_pd_rx(port->tcpc, true);
--		if (ret < 0)
--			goto out_disable_mux;
--	}
--
- 	/*
- 	 * USB Type-C specification, version 1.2,
- 	 * chapter 4.5.2.2.8.1 (Attached.SRC Requirements)
-@@ -4375,13 +4364,24 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 	    (polarity == TYPEC_POLARITY_CC2 && port->cc1 == TYPEC_CC_RA)) {
- 		ret = tcpm_set_vconn(port, true);
- 		if (ret < 0)
--			goto out_disable_pd;
-+			return ret;
- 	}
- 
- 	ret = tcpm_set_vbus(port, true);
- 	if (ret < 0)
- 		goto out_disable_vconn;
- 
-+	ret = tcpm_set_roles(port, true, TYPEC_STATE_USB, TYPEC_SOURCE,
-+			     tcpm_data_role_for_source(port));
-+	if (ret < 0)
-+		goto out_disable_vbus;
-+
-+	if (port->pd_supported) {
-+		ret = port->tcpc->set_pd_rx(port->tcpc, true);
-+		if (ret < 0)
-+			goto out_disable_mux;
-+	}
-+
- 	port->pd_capable = false;
- 
- 	port->partner = NULL;
-@@ -4392,14 +4392,14 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 
- 	return 0;
- 
--out_disable_vconn:
--	tcpm_set_vconn(port, false);
--out_disable_pd:
--	if (port->pd_supported)
--		port->tcpc->set_pd_rx(port->tcpc, false);
- out_disable_mux:
- 	tcpm_mux_set(port, TYPEC_STATE_SAFE, USB_ROLE_NONE,
- 		     TYPEC_ORIENTATION_NONE);
-+out_disable_vbus:
-+	tcpm_set_vbus(port, false);
-+out_disable_vconn:
-+	tcpm_set_vconn(port, false);
-+
- 	return ret;
- }
- 
-
-base-commit: 615dca38c2eae55aff80050275931c87a812b48c
--- 
-2.49.0.967.g6a0df3ecc3-goog
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c | 2 ++
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 2 ++
+>   2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+> index da9994a79ca293ec0265680c438835742102db2a..a0ba55ab3c894c200225fe48ec6214ae4135d059 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
+> @@ -60,6 +60,8 @@ static void _dpu_encoder_phys_cmd_update_intf_cfg(
+>   		return;
+>   
+>   	intf_cfg.intf = phys_enc->hw_intf->idx;
+> +	if (phys_enc->split_role == ENC_ROLE_MASTER)
+> +		intf_cfg.intf_master = phys_enc->hw_intf->idx;
+>   	intf_cfg.intf_mode_sel = DPU_CTL_MODE_SEL_CMD;
+>   	intf_cfg.stream_sel = cmd_enc->stream_sel;
+>   	intf_cfg.mode_3d = dpu_encoder_helper_get_3d_blend_mode(phys_enc);
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> index abd6600046cb3a91bf88ca240fd9b9c306b0ea2e..232055473ba55998b79dd2e8c752c129bbffbff4 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
+> @@ -298,6 +298,8 @@ static void dpu_encoder_phys_vid_setup_timing_engine(
+>   	if (phys_enc->hw_cdm)
+>   		intf_cfg.cdm = phys_enc->hw_cdm->idx;
+>   	intf_cfg.intf = phys_enc->hw_intf->idx;
+> +	if (phys_enc->split_role == ENC_ROLE_MASTER)
+> +		intf_cfg.intf_master = phys_enc->hw_intf->idx;
+>   	intf_cfg.intf_mode_sel = DPU_CTL_MODE_SEL_VID;
+>   	intf_cfg.stream_sel = 0; /* Don't care value for video mode */
+>   	intf_cfg.mode_3d = dpu_encoder_helper_get_3d_blend_mode(phys_enc);
+> 
 
