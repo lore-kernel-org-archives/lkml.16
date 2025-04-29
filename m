@@ -1,89 +1,94 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB61D29DB69;
-	Tue, 29 Apr 2025 08:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E42929E04A;
+	Tue, 29 Apr 2025 08:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917063; cv=none; b=ayPy1em6XpATR/khnvhTcLmFtUh6HLdF0W9Jt9/q7PzYZjtnIcY5TJcq6nkG8KjhFUPPLQeKeUdXD0a2ALj9S6o2JZBqeEKp9ekG32mfbhUWUAJR32FY+BmI7qBF6lp3Nh7hNjaEpdik5vEnr+slaoYR3TfO3S2/jtOkwBP2vwU=
+	t=1745917064; cv=none; b=bG47WioqxUn7+Ou+NNt7+v9Ya+uKBPL2ZROKayXDwM4t9LBIV7O4yXvR0f0sYxt6grnSmePfSb8kKkfjN48ZMobDL/0Ogmm9aLOIpW4khbdMEKdu3U8LwQwSCfz2N6ALtbACBq3MwCXV1wRlai8JBcTVK/WibuCoDgeYPn+txas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917063; c=relaxed/simple;
-	bh=9gUiOLR4Ub5pq2kdE0tVZmECzcIQ2qnzk/kE0Q2tlYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hx6xxzB4PLYfevyv1r6bgcxlpMhURXMKR5VOV8yKeXI9D1Dpr0rpbcHDYBEHeTwh8dd+VsxkEv3bqjtwGGouxQISy7254dsStdKkotoiDNOd/TIVDsm1U6qEydHZ9Y3dzp2WTuQ0ideAvqhpbXklEvQhnbiuO6Q2a7r3B4EI4gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MycuiMEn; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745917064; c=relaxed/simple;
+	bh=axarDXzssA2Bd+rC2EB5nm1vjnnM3xMlH6D/28yh/XI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JAo288+2NGuSwqZtt0UJeXI+3tqDBa8h/+PLHlwJGzyI6fxymAlTii1tyoiV1M5WTJdk2386d0Pm1VgC/nIpbVsvfMAat+KnJwvk6CndENCzOe0F0gozOHyAXsCgZDDTNxVJOulcgMZm2C3teELTlcskhpzaG1Ki0DQsR2Yqj24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7XTGz+o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MycuiMEn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745917056;
-	bh=ZMnqol9b7L6ELEKe7hfrlsdsRW7rIxKvx54BuTFo/Dc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MycuiMEnnNmmyK0uWAdp4N2vf3AdO0t0PXNQ2B/e9Re/n9yFyqFdTXr3JeJnJdmLC
-	 21lTXIHyXcjr6wsjCyWxUqFKPm59N7+klUYHGFP6TjZhbCmm1Abu0cbDlXwOj010IE
-	 ujqGDWtuzD6e0S9+EDi5AvPzt/CKyiFb3aSVBItIIobK+N9vAVxGJNK3NZNubsEKsj
-	 ULp1RQzQCmK0K73V1Xz4E421Frkw/TvE5TZem0FhLR1kibinWFNxYGB+dXHPTxQXts
-	 oEqfqIxt0gWlIKnz2lancLQWXfZYHl4yaM/V/aGhJfgybBnXX7nSfSoxdfnvj8IhjY
-	 M0GmWxk4K3u9A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmvN02yjLz4wcd;
-	Tue, 29 Apr 2025 18:57:36 +1000 (AEST)
-Date: Tue, 29 Apr 2025 18:57:35 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
- <mpe@ellerman.id.au>, PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc: Haren Myneni <haren@linux.ibm.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the powerpc tree
-Message-ID: <20250429185735.034ba678@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7XTGz+o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84362C4CEEA;
+	Tue, 29 Apr 2025 08:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745917062;
+	bh=axarDXzssA2Bd+rC2EB5nm1vjnnM3xMlH6D/28yh/XI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L7XTGz+oWjLkIdTAZOrar6k05AHFuwkZnOU0BeVr0Wo4fhWmTmWtgkzRWDfMpcxsG
+	 cGvT/CY2G8VQV1321ZXUfBdTHrma/0/T1aOklwgARzcUyzskEpF6HK20DeSBdy+Ja9
+	 dtXf5NH9uUbDUSPeOe8R+oEta2w15gSRJBG4C5x46l+CVwCjE4tA9i99nHyZua3zTB
+	 nIsh+3Ul8Pm3chDELttp0lp0CB9eB1PrvxFVY+wvKGBN/KpE3svCA/AYaX0lyxfryZ
+	 X9DLO0kgR5OQUOwBa8Vo44O9mAa2dDHrCE1Jl5iO1V6BtABz/7kgZTMivWPofcnvdB
+	 dKx9KarmAaakg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u9gme-000000000ub-1OUg;
+	Tue, 29 Apr 2025 10:57:44 +0200
+Date: Tue, 29 Apr 2025 10:57:44 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Xilin Wu <wuxilin123@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Konrad Dybcio <quic_kdybcio@quicinc.com>
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
+ compatible override
+Message-ID: <aBCUiIrg3oehMVjx@hovoldconsulting.com>
+References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//N6AO2owJxb3GsK2hxv6UU1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
 
---Sig_//N6AO2owJxb3GsK2hxv6UU1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
+> It all started with the support for CRD back when we had different
+> compatibles for eDP and DP. Meanwhile, that has been sorted out and it
+> is now figured out at runtime while using only the DP compatible.
+> 
+> It's almost funny how this got copied over from CRD and spread to all
+> X Elite platforms.
+> 
+> TBH, the best reason to drop it ASAP is to make sure this doesn't spread
+> beyond X Elite to newer platforms.
+> 
+> Functionally nothing changes.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+> Abel Vesa (7):
+>       arm64: dts: qcom: x1e-crd: Drop useless DP3 compatible override
+>       arm64: dts: acom: x1e80100-qcp: Drop useless DP3 compatible override
+>       arm64: dts: qcom: x1e80100-t14s: Drop useless DP3 compatible override
+>       arm64: dts: qcom: x1e80100-s15: Drop useless DP3 compatible override
+>       arm64: dts: qcom: x1e80100-hp-x14: Drop useless DP3 compatible override
+>       arm64: dts: qcom: x1e80100: Drop useless DP3 compatible override
+>       arm64: dts: qcom: x1e80100-romulus: Drop useless DP3 compatible override
 
-Hi all,
+Since this is essentially a clean up perhaps you should have squashed
+these into one patch.
 
-After merging the powerpc tree, today's linux-next build (powerpc
-allyesconfig) produced this warning:
+Either way:
 
-usr/include/asm/papr-platform-dump.h:12: found __[us]{8,16,32,64} type with=
-out #include <linux/types.h>
-
-Introduced by commit
-
-  8aa9efc0be66 ("powerpc/pseries: Add papr-platform-dump character driver f=
-or dump retrieval")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//N6AO2owJxb3GsK2hxv6UU1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQlH8ACgkQAVBC80lX
-0Gx/0gf/Yy9h/2ZxLOZuig8KsLaudX9eCxKcCBh0VWk6h3B0AV/cxaNfihM5wtfk
-+IWiW8EfWs32fmvFp7swLiUGZwYcaU6RRZcmHqhKlDsgSigGL98/yROPnNOhksWv
-kfNiMSgC3vWJIATPsyCdsTUc2gQDOBybyxUIXOvALixuh54j444eiLy0WRP5ACnP
-08k4QLpXzs25OerPT0yHHtclwGFL0s85jdTA/I5JO3tpgCsy5caLiPp8xls6agO3
-JkU0NUswLg5Ci7fT3C+tzcIV/NU7EZo3Y2bJ9QLbrrore4D5wjjd0WSpEvuajDlJ
-JwPQaxdYnI4PG9ClNNeM1C7YouMIPA==
-=AcDN
------END PGP SIGNATURE-----
-
---Sig_//N6AO2owJxb3GsK2hxv6UU1--
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
