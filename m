@@ -1,108 +1,63 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4D12749D8;
-	Tue, 29 Apr 2025 22:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096E526FD9E;
+	Tue, 29 Apr 2025 22:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745966121; cv=none; b=nIEBIHWQxLWp7LCdFD+zgT2v013WI14/aoqtDO92intLTAnFU5Ok5swke0HvL3QWYT5wjQCIHhkCaKVznzcXBwvpBCRBdplQfXWR7xiZVYzsMGs0sfkkXjOwsMz3iUj1KK8JVnk6giAypiqnIKjelfobaoRBnDafyHCe0fOS2As=
+	t=1745966131; cv=none; b=ggpWxGAn8bt7WRl5tVCKGURbFYhHk+KwbCk27aa2Qwm+NFV4WCnReUqDWrogdpekv/7AGkLmPLtljqePOWYx3JoVfss4QiNkx+rStH+ogkBBC/I3mDscaObhKdboOI/gw9WghflEs9vAadB8lyxhvsPM0IfYJBvobsNBGQArsY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745966121; c=relaxed/simple;
-	bh=5czEtHgcEsmSnXZy8rUpok3EBdWX/mkjP0hYJ3tUcr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iFWECiZBAWNBVu5cY/KXjKUQ0NmHA3zEHD+AfLWjf0LIs9CxVp80jinnL1bu/lgueZk3w+dixH95RVJ03GSxdXGq3XrH/2Ek6eq/CJPUX7IuxAop5LNzusbNg5qcB29QrQJAs45Z642K4na9F/enOpc2D/CZu5CuH4zztfLXXAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1XtHBp9; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745966131; c=relaxed/simple;
+	bh=DF3IzHwYlHaa1RbwxrNLks0dkoiya8ORTRXT6M0PCNU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dkwx4+L5YEoMEcdnvhc5ewNCoNbrSY6a1Uk/GLsO+Ra8VMq8HWhW3dDHSCLpeZapJeCrtmHQmhYJVYRUC7WMtyV6YHxcQPeLOXA6WkqwMf2K8kVEJGlBcz0YqYCerXVsvyqcwp3Y2oC1U4kdVjC0wlGlIEg70wJnGMO5e7C0SKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRv4iQjc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1XtHBp9"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so1177673066b.1;
-        Tue, 29 Apr 2025 15:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745966118; x=1746570918; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vqekzJ4SHeJxJT4+4vycfLq5IoK3pSLydSXi4y3rfUc=;
-        b=l1XtHBp9yRAuSQdzRxJ7ec7RO2mgjUuVf1Ke2rRdZikOKc2L6K3xIpuqMN8i5NBKCN
-         HhVLOTGIfO4IWrPkUkAvvwaVrTeTBZOoBNT0pSmaHAg+cTTUlImYJ/Ljksl4pdMCqWQO
-         1bpZgR9ioebj1cRPrmcp5nuKeE/uu4rt72r0FaZUgy/XLNm6a00y50t21nhXE7FzrXfA
-         Uhp5gdxV44QxFwNzTMY475SxjcumYoQqxvFmw4miseEtK52MTOe2TtO/d2YmHm6sGIeY
-         SY0VcVtmV9DuSLOmhpZHtCDQrj9YCuJa+ze45zNnlzLCuvVr88znDy9UTK7Qr+mUUBbE
-         67FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745966118; x=1746570918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vqekzJ4SHeJxJT4+4vycfLq5IoK3pSLydSXi4y3rfUc=;
-        b=AkbSmYYecEg4Uht1fWvYSrt1lmo8Iim4HF38Qa29aemFbsDf5wj0lEpp9gNDzk8b58
-         C7RFCvNG2L94N4IAe8uAYSuVszKiCgS4WHd4bcUpqEph00s6asG7ypjWzdV/1PjfcOzh
-         E9iqlRy1O5l16fImYQKgBxDuCW3aeEAto8b2ZaSYHNWCJ+XsuAkb0gp3CSTHncCZ5Udy
-         DR1YgejPCuYU1+rfsryFb5/DrZgXdcttxEs2DjMuXNvpn98+nAzJowUZH3ddSgULSWqX
-         Ly0L6bBbdJhhqWK7IJcAXG+I1ZH8WaTIXYjKT3jqbkBTQkc1Ls59hfMBcyX6yU4px1FW
-         SZZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1zq432NrWFayJgLWyCwUrEILr3/Xb9wXzvVAxuiZGrLUCGhFiOP4F5B1NHb+8KpXgeGEWpYaYzQVG@vger.kernel.org, AJvYcCVAuj1Recg7mBKwlQNZYlnHmshjYdGsgqv422bRavAIhZ+SXlLh6i2Y8xlwCOwTISkVuezwaG2+2u7x@vger.kernel.org, AJvYcCVTsz/v/mdvptPUNlqqJOqNB4fnSu6+j9tBP2jLQdmaLbYm4LxaVGyZ6MMr1yCRBKnmkUQBSqCaBTPuvxvh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXmJ1z9DM1jMkmPIAc9Hb0ITs6qC467HCyzAYY3or5v+PG/kzh
-	l1DdhDMoZDqP7bLGauN195XW/LLloNNzfF7tNXv1rZybMrU3iVGuwKzlAOJ1/Rd+DsSx3exepiJ
-	oC4s1TYkFNTp0K5tmZynxbdCulfk=
-X-Gm-Gg: ASbGncswEAnSohrVf8jR75kNnmqEsKdplytdMS6zaX2hNRq+sxHjb3ne3ixx3fFGio6
-	ptws5MVBPnOdztYjxEIk0l8J0J9ompOOlRPIihVLsNYIbbGrr+THhF/iO5YiccdZEg/7sEPo9Qb
-	/dDAgq2+TVRWkEc11YkTXGvw==
-X-Google-Smtp-Source: AGHT+IGniIHpBcjioY/nEHYQtjwbpfTlr8RRJkFWHLRXUzKFgDdxV3Ears/mmavtrFoXd2TxSQs1c8TZPu1UcGUu7qw=
-X-Received: by 2002:a17:906:fe48:b0:ac7:3918:50f3 with SMTP id
- a640c23a62f3a-acedc75818amr119043066b.58.1745966117766; Tue, 29 Apr 2025
- 15:35:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRv4iQjc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6F4C4CEE3;
+	Tue, 29 Apr 2025 22:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745966130;
+	bh=DF3IzHwYlHaa1RbwxrNLks0dkoiya8ORTRXT6M0PCNU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=mRv4iQjcY3IbF96Xpnld3jE9bq6AOa4C1RpYw8cvy2KZyPZJUfMvmOvy0R3rD5j9L
+	 NEplz2oFItc8AeHtS9D1A42HRuMGUfCbbuI3CCGUUxDi2Fh07leYTceuWMkMr9oGnB
+	 XWvp10dg0BWYYT19tIdoT2BETzjUGo5rX4+Y6XPjw/QyEH2bqZo2ft9LRWJwTth77w
+	 TXsX5HFVZmomqvdnDfdEntZ86NHXMGl767UPi+mQiSXq+lpsNpNrOV4ZpNG5n4slVA
+	 4Qpug6oe43+IfjWf1HwMcZb2AgNjVLCQe2VSp/JU2c5e8tshx0/x8uckAoKDND/1i2
+	 GMx/TolUMF3wA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0563822D4E;
+	Tue, 29 Apr 2025 22:36:10 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.15-4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20250429112434-323291040@linux.intel.com>
+References: <pdx86-pr-20250429112434-323291040@linux.intel.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20250429112434-323291040@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-4
+X-PR-Tracked-Commit-Id: 02c6e43397c39edd0c172859bf8c851b46be09a8
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 02d40046243fa6f00630d93f67651c4f741036c6
+Message-Id: <174596616922.1816670.8800118304733555398.pr-tracker-bot@kernel.org>
+Date: Tue, 29 Apr 2025 22:36:09 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
- <20250429-wip-bl-ad7606-calibration-v1-5-eb4d4821b172@baylibre.com>
-In-Reply-To: <20250429-wip-bl-ad7606-calibration-v1-5-eb4d4821b172@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 30 Apr 2025 01:34:41 +0300
-X-Gm-Features: ATxdqUHVfqZHfPjriEXKKodfvaGABNHKrKODfVOT6j7EtuMmXA6unQ_JyIDybSQ
-Message-ID: <CAHp75VfBrodRH0gW8teULNSt3f_uJA0Ze+P+YOTKLhtec84-3Q@mail.gmail.com>
-Subject: Re: [PATCH 5/5] iio: adc: ad7606: add gain calibration support
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 4:08=E2=80=AFPM Angelo Dureghello
-<adureghello@baylibre.com> wrote:
->
-> From: Angelo Dureghello <adureghello@baylibre.com>
->
-> Add gain calibration support, using resistor values set on devicetree,
-> values to be set accordingly with ADC external RFilter, as explained in
-> the ad7606c-16 datasheet, rev0, page 37.
->
-> Usage example in the fdt yaml documentation.
+The pull request you sent on Tue, 29 Apr 2025 11:24:34 +0300:
 
-...
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-4
 
-> +#define AD7606_CALIB_GAIN_MIN  0
-> +#define AD7606_CALIB_GAIN_STEP 1024
-> +#define AD7606_CALIB_GAIN_MAX  65536
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/02d40046243fa6f00630d93f67651c4f741036c6
 
-Are those values in decimal in the datasheet?
-It looks to me something like
+Thank you!
 
-_MAX =3D (64 * _STEP)
-
-but is it for real? Usually values are limited by the amount of bits
-in the HW, here it spans over 65 steps, i.e. 7 bits would be needed...
-Confusing.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
