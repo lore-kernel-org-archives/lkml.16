@@ -1,223 +1,338 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87A62701C4;
-	Tue, 29 Apr 2025 12:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745930851; cv=none; b=ZazK8zbyprimvED7XqvtIUjOuFqHuomX8krRYztUwOuWzi75XNKJzGAOGmTPmnJPgjBDKcsQSmz1BgQ27oifsrmllOhXENSUXa82F8ogRCAJlfm6gM1vkKvH+Yy54Xrc7PKRykfU8hM6EOqKRyOAS9n6U1PMxG1Tbvel2h6Nusw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745930851; c=relaxed/simple;
-	bh=ALFfqZTCZO2PHhqc2/0fWGwaOyZ3IOtl8aSKr66hINk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UqMKAyY6mnyDtiFu4tbX7szlPpulSCZx/UCm4yFoGELaRqD+a+A7XejpfCkcImfFJHH52C2b9V9omXSahHbTcdDoUnFzyPZRPN/pbrXXA88fCdjdP1HI3mvYq56pGJJIlnKwseXo9SPQOu1GC+q70jedvHeRrimBylBtt+fviVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j4QVCJ9y; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952C22C17A7;
+	Tue, 29 Apr 2025 12:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745930902; cv=fail; b=LHXiykwPzrHwqqj1BQFCtJE/oOAtNEHatIdkWDLes4tZyd3kj5tMOhEhyKyYbuHwePlxcaE95uahHNpF53+iXw8mVuERYY1m5N7o8U7pG1obmdiWSmkt1pS3htO2MGtvK13wSkhBkW2k7SHt1J9Vroomg/rbkI7Mlz0ec/3X8Vk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745930902; c=relaxed/simple;
+	bh=7irZdu6rg+gCEg4AvELbZUlT+BOUJjxIxYasga/iykI=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=H9i/K1Wz0lYmQDG4a4nfv/SdGhK5qjpL5uKpWYRFEi/7HTPNw2g9ty4Z0Ziw41k8SZD2QryUYyhMb3Ac4IOOYeBzRwJC4EKBDkMWP8Zr5sm6gy1NFJUizDhcljW6OLnrhW8TxlcSa5KNXXlR3wUxjOqN59Wl/8Nfa0nI/3e8+zw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eCFnpT22; arc=fail smtp.client-ip=40.107.93.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j4QVCJ9y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745930846;
-	bh=ALFfqZTCZO2PHhqc2/0fWGwaOyZ3IOtl8aSKr66hINk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=j4QVCJ9yzrE7ilsBqngIg3T+X/OaF94eCN0h1X09Aw/BEemEc870WphrS7RRiFOcl
-	 +sdGJ7cM75J6r5ybCBa/0bgu8hVs4KNy8SWq5L+HTDamlIFMANL7Fye196tO3J2G6v
-	 3A3XFsE9Ucm5Rebet3h2PZq2iOi+VWkC0Zj06Eadr2+6laLa7yJPNKrruIx3yVj46+
-	 Cv8bzighjtu1XuYQQI79L+dzYnFRgEou3JEVjrJ5gdXtnu0rOeb63kL5lFq4BAN3N9
-	 cXE0rBcSi/a0Py8yZk2wDuMRC6uyALWlu0MH77V0jh3P68uieQdrwlhRuU528FDCt6
-	 zk5uvfKZoaIig==
-Received: from [IPv6:2606:6d00:15:9913::5ac] (unknown [IPv6:2606:6d00:15:9913::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 714DA17E0649;
-	Tue, 29 Apr 2025 14:47:24 +0200 (CEST)
-Message-ID: <dc9b20aecc8740896b2b3e7352b8e0d73d43fed2.camel@collabora.com>
-Subject: Re: [PATCH v2 01/23] media: iris: Skip destroying internal buffer
- if not dequeued
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>, Vikash Garodia	
- <quic_vgarodia@quicinc.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Mauro Carvalho Chehab	 <mchehab@kernel.org>, Stefan Schmidt
- <stefan.schmidt@linaro.org>, Hans Verkuil	 <hverkuil@xs4all.nl>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio	 <konradybcio@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov	
- <dmitry.baryshkov@oss.qualcomm.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, 	linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, 
-	20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org, 
-	20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com, stable@vger.kernel.org
-Date: Tue, 29 Apr 2025 08:47:22 -0400
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
-	 <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eCFnpT22"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n2zxAa1NDuGFjFG2bV6wlhBUT32TPpHUt6iG1Qm9Z3RxFv3XGuJ04IY+vPZvZBXb1VvVIlogY0OfUIER9gLmGBtyxIhYDgU17K2PKZaM+HC8lPJAqw3daQzTyHySi1wMXXsE1Zb7FF2snU/5Xq3VzXC5LaMSzKCoKm1+qPj2VEcCBfvJ0Mjjrh8RUCB9Xhc0UJO73gOUMUg16zg9FcbwulEC681CDZfHT/cF6woa+dJF/xW5CmQ4aYjRZosBoA19tj171qIpaDqUdn2g3m8g+iqo89DoDoqEERJ1mz0gVVRvsNrylLAtK/2izhO10zTbwB5KsyJ7DR1WuCHCtHVzvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y/USV0Zoivh974fVba764W0x8+qJ2Tf6Xjqlfae8OvQ=;
+ b=Lg+YbJDa1UvwK5GqULSWgQVKfCInFLlqg5jY0t1I2Lzf2MJ5vh4gkBjC6QoISVgW/F5YqNXfO7NSVU5tpXRs2REOa87uwKzP5LFV3TitK+qe9xDm4FEODD+KyaoNIvvrF08lm+fYnZ4YjkqUoYk86IB7ETX1YM+LrKf+UdfkzKVEa96e0PwtRsNTZ1Pv4BBMZ8bjE5vJ/3E2U9V+39Vj0qAkY/rdsi0TGQrdBPN4sAGB30Bh9nSxr7i5qKLB9nxdV3G5dVIY2x3U3j9FkicVQWNl6RiV2UuimkL7eeEE19eNhJ36ltbw8eQQ3ovNz8SEEEtsegeBGqL44ZH25BcgXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y/USV0Zoivh974fVba764W0x8+qJ2Tf6Xjqlfae8OvQ=;
+ b=eCFnpT22S8l/ydnKbrKT58A8b8rCN/iWU/Ey84Njaw1xmeXaN8WyC8Sg0sBj1JlFPIIQZi4f+kvJwL85Q2MWyT1A9rKN09CvXaO611KilS3K/ZTyzrSUPKS1ZEWExRHQM6VpUpyP1axO8dBmokK9CFUyJBgzjEuohhpnQK4r1HTFkDP250L2/1nv6Z1RfECuZ0oKOC4NW344EBxr1gpKWqkXjBl12Q7mBPyygvK5+UhmCPUXnz1iuTSba4G4ERpZPHr55ZiwArRmV7GomPwEJdgZV8l0Uf4UCmYRkVyuHPdyJoBpnO6pVkAL9ljIWez+dkof4ifDQIDD0Y7ArB3Rjg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by BN7PPFD6BF22047.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6e4) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
+ 2025 12:48:17 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.012; Tue, 29 Apr 2025
+ 12:48:17 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 29 Apr 2025 21:48:14 +0900
+Message-Id: <D9J4UK3LWDL6.4TE5O7WM6AIP@nvidia.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Jonathan Corbet"
+ <corbet@lwn.net>, "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs"
+ <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH 08/16] gpu: nova-core: wait for GFW_BOOT completion
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-8-ecd1cca23963@nvidia.com>
+ <aAd_PBVB5S5pHeP0@cassiopeiae>
+In-Reply-To: <aAd_PBVB5S5pHeP0@cassiopeiae>
+X-ClientProxiedBy: TY2PR0101CA0025.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::11) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|BN7PPFD6BF22047:EE_
+X-MS-Office365-Filtering-Correlation-Id: f17c4d48-df67-4222-f5a3-08dd871c1cec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c0UxM0JqSndORkJ4SVJVZXVManFORjN4OWhyQlg1T0dqQ3ZLUTZaNTEzeXl5?=
+ =?utf-8?B?NCtrMVR2MGxDeGR5cGpsaEw1RnFFRitnVG9vdFZWTXowM3F5MzRwVjl0QkU3?=
+ =?utf-8?B?NXhNVWFudnoxT01nTlQ5Um9nMjNVaXFJQlZxUFhSWG1BZTgrVXI1QWU0S1Fy?=
+ =?utf-8?B?a3RtQUFLbE56dWZDNFBtZFJ1NVpPQ0s2VVBxRlBPM3I3ZkNLT3o2WDNleERk?=
+ =?utf-8?B?UzBBc2RaVjkrRTNuQVBUN3V2aTJ2aTBtNmtHVk5rZ2V1QmZyNGh0c2F6Wnor?=
+ =?utf-8?B?OW9jWmxibEFIRWxWOWpsQk5TdXRoUlNLNXkwSEx4M2x5UlVTYmdrRW9XNzNQ?=
+ =?utf-8?B?M3h0RXpUVzV1bDhpUjhGNVY2TkloT3RmYVBWeFFhNlVUWUlma1M5aUVpSnFL?=
+ =?utf-8?B?cy9KNWdOK1dPUTc1OTY1S0xHQUpRWXFPK05wY3hCRnh0T3pVazlsOGNUVFlW?=
+ =?utf-8?B?bnpzTGlGT0ZrbTFFaWI3cFhqUVpJZHArU3dhNXBMZmlWWjdmVS9rVm5lMCtZ?=
+ =?utf-8?B?MVo3YlVzVlVPYWg3Wm5GTWMrYVBqeFhieS8xaFNzWVZERGpMeWJYdkNZY1JZ?=
+ =?utf-8?B?MlUrQ0VwbS9TeHpyRXJWbEtuYk9sYjBkT0o1VktxMnZyeHBsQTE1K3ZUYUNx?=
+ =?utf-8?B?K0RWSzA3WEVabU9EajVSOGREWjR1TUcyZW9jOEgrOWNFNnljMy9iQ3JzdHNV?=
+ =?utf-8?B?QzlVNnhRQW5BSzd0cENQcS96anc0cndwaDUrMkVxWU1IczlGQmhwYjl2YzZQ?=
+ =?utf-8?B?Y0duMFZkQmVXc05PZ2lQQldOSFZsaENCZlZCRWtkcXBwRmkwbElvQVE3VFF0?=
+ =?utf-8?B?RHNxbWxWLzJhQ2VHd1lINW5HOHc3WHY1Vm1kNUoxOGhobmlzeEZiR0VEL1Rk?=
+ =?utf-8?B?MmhpM1FJajFqMTdxcmNlZjd0SWlDWjUvYVpPcXYvYmVaQzdkNWxWRExDOER1?=
+ =?utf-8?B?SWNnaTIrcjhsVjVCTkxVdTBwV1lCaEpyVFE3RTdROG1zSEVNek1ZcDc3UzI0?=
+ =?utf-8?B?VUhFczlxSEhiZzVBYTJOanZjbW43aklxWlRnbzE0VlAyaDhPU3krc2FzRUVF?=
+ =?utf-8?B?ejc2K3JteVZXV1hoTENsZDZtM29zVkxMeW9XMmY5SnQ4QXpUU2J6QklxM3h1?=
+ =?utf-8?B?V254b2pKRnp2RWZid2FDOEdDWVUva1M1YlhXNWw1b1RVWVAzZjNOOUV0ZHIw?=
+ =?utf-8?B?TnZSSG1HOWlUd1NWbis4SlpyVjRab1p6NGQxZC9BYTJrblRTRXBUK1lsbzhl?=
+ =?utf-8?B?NDFteHVRMXMwdEZtRzZxcVpXUGgrLytRcmFlcTlWMlpwQ3JPVWVEdzdqY3dk?=
+ =?utf-8?B?MVVXWWlscnU0djZBR0dwdCt0N0xGWVVRMUtMZnZOb00yRjFrenhER3kwVFFJ?=
+ =?utf-8?B?NHlHcEdOSG1PRFJoVm5qQi9uUXBwZnlTK1B0RHFpNVdrZlJuK2g1TEJReXA2?=
+ =?utf-8?B?Y0xlMmd3UXNSdnozU3BMUmxaTHBieHl3NENzS1JRejdVKzlZTHFCRkdhODg5?=
+ =?utf-8?B?SkhaSWE4bDhvZzlhSUk4cStadXFlY2N4MFc1dXRqc3pIS0k3Q1l4QXlGN3hi?=
+ =?utf-8?B?TXM5SDJmV1V6bHRHRnFjcU15ZFU0a25wblV3cW5wOEd6aFQyR0Z2cjJpMkdo?=
+ =?utf-8?B?TTZBYWRqbUdtc3M3ckZCYTFqKzNKTXd3U1dsbVJlZTZ3NlhCREdTVmVEbUw2?=
+ =?utf-8?B?NnBDVTQzOTRBQ2d0M083UFRlQk5xVllrRWJLdzFPVXFuZHFzUGE0eGYxdGt3?=
+ =?utf-8?B?NTdUNWdLcXd6c3BoTmFwMXNEN3BZS1NvTWJtRjZxOGc5MFBQbDl0cGFNNEww?=
+ =?utf-8?B?TXBQMmlBNk5DWXNaYmdyRmgrb29Wclpyb1RYUHV2WUVzc3dMM3pmVHZ1ZHY4?=
+ =?utf-8?B?L3hIU1hkSDZKNkl0aXRIZ1BjYnNkeEJ1VlN5eHFqU1liUnVUenVNWkdNMmhq?=
+ =?utf-8?Q?FOAYmqcxlXQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TEtuY2YwZnJreGJ4VlF1dmwvT1YzNXVIZHRBeUVsK0ZpRXdxV1NJTUcvaEpu?=
+ =?utf-8?B?Qzk1aFJhNnJpNTdwQ1YvTHdyVGFVYms3dUVCWEs3aFN1ZUppUUp3QVRDQ1Qy?=
+ =?utf-8?B?U1V5elJ3ejVDT0htbFpWUmtHSklFb2ZnU2xOa2RqNHBSZi9HVytRa3FmclpJ?=
+ =?utf-8?B?WVJqRHA5SEZNRmRmZndWTmJPUVVuWThaMTJmOE14VjBkTFo5bmU2aExzL3Vj?=
+ =?utf-8?B?WnpJbjhlbHRpUE1kN3FWQ3NFVmw2RXFUOUdGNXh3dlljbFBoaDM0YlkxRGQx?=
+ =?utf-8?B?cWRSV0tycGlsTjR5aGMzbTNrbE1UQ1pTU2FzTS9sUkdSZ3BJaGhnRnhXaE5Y?=
+ =?utf-8?B?N0VZeDJIYnpnanpVUGhFbmp6Rlp1OUkyK3FmSjVwTE1JUWhBR05pWkdWdW5D?=
+ =?utf-8?B?NWdBSFVNcVNGR0ROcEJQeXAySlkrb3EwS1JZUmwzTXQ4YktleTlJNDdEVXBs?=
+ =?utf-8?B?bFN6cVVsYjkrN3hvcGJaekxjZTZ3YVNYa1UxTDVBZS9zaFFhNXVjSVVwT09a?=
+ =?utf-8?B?bG1jRlRMUVA3Y0hKYzJzK0h1emtKbzYvcnhzOVRzV0djbTQzdVdSdmVoZnhP?=
+ =?utf-8?B?VXdpM2U1ZVNwbnlNb1l4L3dieEFLZnIyOWhaOGhIVVR3RWdRQ2Mrb1dzaUtj?=
+ =?utf-8?B?Q1cweW9WckVOM0pZeS84QnRxNXVoRzRBaDI2SjdKclFUeGFPczQvNFVaVGs3?=
+ =?utf-8?B?SkpYMzBQTG9wSklWdzdVZzdKUG8yaXJhTUlsT1VFZThFeWFRdVJBVnRSQlFr?=
+ =?utf-8?B?K0lzRVI3MklIWlYvTVE1UUQwOHRQeWZVa3Job1BEYXBsSm42bmM5T0ova2hB?=
+ =?utf-8?B?UW1JTStLS1pWY3lWVFFoNDVwZEZYeTlDa2puemxFek1Gd1RPV1pJcW4xeERo?=
+ =?utf-8?B?Rk1Ca3FjRld0QndzVGhYU1JxZmZqU1ErbkFUbFJsTkxuMjZ0NGl6R25BUjNR?=
+ =?utf-8?B?WXBCSmpmMzdvZFRSc3pTODNhWjYvZ3JVNUZzMCtUSkJNVlFVMHRBMVBkYzZJ?=
+ =?utf-8?B?SVNVdmZHOWlIVUllVklnaWZncUpiblFIdithMzlvTzRHWE85N2pnbjZvNjZ2?=
+ =?utf-8?B?YndxWVYwMGNvYWFSTzNia0tPUmdCWmJSTGlxeG54Mi9ZWk1weEV6QysxSnRK?=
+ =?utf-8?B?UGZBOTk5b2RuTVd1Ym9ST205ckN6MXB3SDJxYkl6S05WbTNMK1g1SndIZ2lP?=
+ =?utf-8?B?YytzV2htRlNtMjJ1a3FtRUZ2enhGUUNYWDdGdllzc1FCVEQxZ0NKNVVtNkFZ?=
+ =?utf-8?B?c1VMQmprL2JhS2lIOFBMQUdwcUEvcjFEQlpNYjFZMkZuQWJNMVlQRmhIQ3Uz?=
+ =?utf-8?B?TDdVeGtGQjI0MUYxLzV4bnpQa2VFTmhPdnc4N2lyUG5lcDM4bzc0aWF5VHNo?=
+ =?utf-8?B?MkQxL29DQXhCZHJETmgzZUtmNWg1OEJ3cU9MUktqQnhTaFBXd3pCeWlOSTc1?=
+ =?utf-8?B?Z0pEbTU5YzMxWTMxeVAyUXRrQVovYXZFbGhaOVhsaWdtTXg3djlaSm95MlB0?=
+ =?utf-8?B?cis5bFJ2cVFIZkN2U1pjQm10NWhjTUgyejFGZUxWbDl0MllZM3BJK3l3cnlJ?=
+ =?utf-8?B?RTRGNlJLVlMxWURVMjBsTGx1MzB4TGQrMFh0Qms0bUZQaDlzWUdZVUZ2N3kz?=
+ =?utf-8?B?KzVsUWRrV3Q2SEVEcWZxUzhDeU5RdUlkSHQrVkZUczFPZjZacjNEWGpwdHFr?=
+ =?utf-8?B?TEgyeC9NZGh1NjJjbFgvL1Z6c2J6RGdTZkd0RktiZVFGdGJpZTFIMXJjZzV6?=
+ =?utf-8?B?SHcvTE02VTJpQmRXTXdDTy92a29Ud3lNMTQ3dHdwVkdWbm4zSHl6dFN5bkJV?=
+ =?utf-8?B?UmZiMmp1T01VN2dwRUIzeVB3allsZi9RdmhySTk0TUluaEF1Ync2N0FqdE15?=
+ =?utf-8?B?dVZkaTIyNEMzeWZLeElLQlhSQTl6MSt5MTN5a2Z2ZGhuRnJsR3hrd1pOSW1y?=
+ =?utf-8?B?RG5aS3RoWE1NT3R1ZER6MnpGZ3dyV2NEZ3crVHAvWVc2N2ZNQkVJRUFXcFVt?=
+ =?utf-8?B?YjVFN3E3azJndDFnUmdEdStqT0w4eWtBc0lQSno2SjlBQTVFSlBCUElqTndM?=
+ =?utf-8?B?Z25iR09KZkd0RjZBUzczUXlqV01JYkliS25CU25JdTJiWGh6cXNOTkV4bWtX?=
+ =?utf-8?B?N3RGTjlJdHAxenZMdEtPSG9pSnl2TkgzdWR3ZmIrbFNrdWJCVzNPTHFqcnE1?=
+ =?utf-8?Q?vFmWvzIM45Oh5Ml0w5zRwaLlmexfPlJD4VOO+7b23WdC?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f17c4d48-df67-4222-f5a3-08dd871c1cec
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 12:48:17.3572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1p/tlCoMVKCWf+qifOsNcytZIEZg8RUar96AheRBVlUBVlhtjRVvk83gaWo1zq4Un7Qj/kKpfzBwbeYDSQTNXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPFD6BF22047
 
-Not mine to review, but wanted to highlight some best practices,
+On Tue Apr 22, 2025 at 8:36 PM JST, Danilo Krummrich wrote:
+> On Sun, Apr 20, 2025 at 09:19:40PM +0900, Alexandre Courbot wrote:
+>> Upon reset, the GPU executes the GFW_BOOT firmware in order to
+>> initialize its base parameters such as clocks. The driver must ensure
+>> that this step is completed before using the hardware.
+>>=20
+>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>> ---
+>>  drivers/gpu/nova-core/devinit.rs   | 40 +++++++++++++++++++++++++++++++=
++++++++
+>>  drivers/gpu/nova-core/driver.rs    |  2 +-
+>>  drivers/gpu/nova-core/gpu.rs       |  5 +++++
+>>  drivers/gpu/nova-core/nova_core.rs |  1 +
+>>  drivers/gpu/nova-core/regs.rs      | 11 +++++++++++
+>>  5 files changed, 58 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/gpu/nova-core/devinit.rs b/drivers/gpu/nova-core/de=
+vinit.rs
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..ee5685aff845aa97d6b0fbe9=
+528df9a7ba274b2c
+>> --- /dev/null
+>> +++ b/drivers/gpu/nova-core/devinit.rs
+>> @@ -0,0 +1,40 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +//! Methods for device initialization.
+>> +
+>> +use kernel::bindings;
+>> +use kernel::devres::Devres;
+>> +use kernel::prelude::*;
+>> +
+>> +use crate::driver::Bar0;
+>> +use crate::regs;
+>> +
+>> +/// Wait for devinit FW completion.
+>> +///
+>> +/// Upon reset, the GPU runs some firmware code to setup its core param=
+eters. Most of the GPU is
+>> +/// considered unusable until this step is completed, so it must be wai=
+ted on very early during
+>> +/// driver initialization.
+>> +pub(crate) fn wait_gfw_boot_completion(bar: &Devres<Bar0>) -> Result<()=
+> {
+>> +    let mut timeout =3D 2000;
+>> +
+>> +    loop {
+>> +        let gfw_booted =3D with_bar!(
+>> +            bar,
+>> +            |b| regs::Pgc6AonSecureScratchGroup05PrivLevelMask::read(b)
+>> +                .read_protection_level0_enabled()
+>> +                && (regs::Pgc6AonSecureScratchGroup05::read(b).value() =
+& 0xff) =3D=3D 0xff
+>> +        )?;
+>> +
+>> +        if gfw_booted {
+>> +            return Ok(());
+>> +        }
+>> +
+>> +        if timeout =3D=3D 0 {
+>> +            return Err(ETIMEDOUT);
+>> +        }
+>> +        timeout -=3D 1;
+>> +
+>> +        // SAFETY: msleep should be safe to call with any parameter.
+>> +        unsafe { bindings::msleep(2) };
+>
+> I assume this goes away with [1]? Can we please add a corresponding TODO?=
+ Also,
+> do you mind preparing the follow-up patches for cases like this (there's =
+also
+> the transmute one), such that we can apply them, once the dependencies di=
+d land
+> and such that we can verify that they suit our needs?
+>
+> [1] https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonori@=
+gmail.com/
 
-comment below...
+Good idea. Added the TODO item with a link to the patch.
 
-Le lundi 28 avril 2025 à 14:58 +0530, Dikshita Agarwal a écrit :
-> Firmware might hold the DPB buffers for reference in case of sequence
-> change, so skip destroying buffers for which QUEUED flag is not removed.
-> Also, make sure that all buffers are released during streamoff.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/iris/iris_buffer.c | 37 +++++++++++++++++++++++++-
->  drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
->  drivers/media/platform/qcom/iris/iris_vdec.c   |  4 +--
->  drivers/media/platform/qcom/iris/iris_vidc.c   |  6 +++--
->  4 files changed, 44 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
-> index e5c5a564fcb8..606d76b10be2 100644
-> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
-> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
-> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
->  	return 0;
->  }
->  
-> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
-> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
+>
+>> +    }
+>> +}
+>> diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/dri=
+ver.rs
+>> index a08fb6599267a960f0e07b6efd0e3b6cdc296aa4..752ba4b0fcfe8d835d366570=
+bb2f807840a196da 100644
+>> --- a/drivers/gpu/nova-core/driver.rs
+>> +++ b/drivers/gpu/nova-core/driver.rs
+>> @@ -10,7 +10,7 @@ pub(crate) struct NovaCore {
+>>      pub(crate) gpu: Gpu,
+>>  }
+>> =20
+>> -const BAR0_SIZE: usize =3D 8;
+>> +const BAR0_SIZE: usize =3D 0x1000000;
+>>  pub(crate) type Bar0 =3D pci::Bar<BAR0_SIZE>;
+>> =20
+>>  kernel::pci_device_table!(
+>> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+>> index 866c5992b9eb27735975bb4948e522bc01fadaa2..1f7799692a0ab042f2540e01=
+414f5ca347ae9ecc 100644
+>> --- a/drivers/gpu/nova-core/gpu.rs
+>> +++ b/drivers/gpu/nova-core/gpu.rs
+>> @@ -2,6 +2,7 @@
+>> =20
+>>  use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
+>> =20
+>> +use crate::devinit;
+>>  use crate::driver::Bar0;
+>>  use crate::firmware::Firmware;
+>>  use crate::regs;
+>> @@ -168,6 +169,10 @@ pub(crate) fn new(
+>>              spec.revision
+>>          );
+>> =20
+>> +        // We must wait for GFW_BOOT completion before doing any signif=
+icant setup on the GPU.
+>> +        devinit::wait_gfw_boot_completion(&bar)
+>> +            .inspect_err(|_| pr_err!("GFW boot did not complete"))?;
+>> +
+>>          Ok(pin_init!(Self { spec, bar, fw }))
+>>      }
+>>  }
+>> diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/=
+nova_core.rs
+>> index 0eecd612e34efc046dad852e6239de6ffa5fdd62..878161e060f54da7738c656f=
+6098936a62dcaa93 100644
+>> --- a/drivers/gpu/nova-core/nova_core.rs
+>> +++ b/drivers/gpu/nova-core/nova_core.rs
+>> @@ -20,6 +20,7 @@ macro_rules! with_bar {
+>>      }
+>>  }
+>> =20
+>> +mod devinit;
+>>  mod driver;
+>>  mod firmware;
+>>  mod gpu;
+>> diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.=
+rs
+>> index e315a3011660df7f18c0a3e0582b5845545b36e2..fd7096f0ddd4af90114dd111=
+9d9715d2cd3aa2ac 100644
+>> --- a/drivers/gpu/nova-core/regs.rs
+>> +++ b/drivers/gpu/nova-core/regs.rs
+>> @@ -13,3 +13,14 @@
+>>      7:4     major_rev =3D> as u8, "major revision of the chip";
+>>      28:20   chipset =3D> try_into Chipset, "chipset model"
+>>  );
+>> +
+>> +/* GC6 */
+>> +
+>> +register!(Pgc6AonSecureScratchGroup05PrivLevelMask@0x00118128;
+>> +    0:0     read_protection_level0_enabled =3D> as_bit bool
+>> +);
+>> +
+>> +/* TODO: This is an array of registers. */
+>> +register!(Pgc6AonSecureScratchGroup05@0x00118234;
+>> +    31:0    value =3D> as u32
+>> +);
+>
+> Please also document new register definitions.
 
-Its always tempting to just glue a boolean at the end of a parameter
-list. But this has huge downside in code readability, see below...
+Thankfully Joel's documentation patches take care of this!
 
->  {
->  	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
->  	struct iris_buffer *buf, *next;
-> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
->  	for (i = 0; i < len; i++) {
->  		buffers = &inst->buffers[internal_buf_type[i]];
->  		list_for_each_entry_safe(buf, next, &buffers->list, list) {
-> +			/*
-> +			 * during stream on, skip destroying internal(DPB) buffer
-> +			 * if firmware did not return it.
-> +			 * during close, destroy all buffers irrespectively.
-> +			 */
-> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
-> +				continue;
-> +
->  			ret = iris_destroy_internal_buffer(inst, buf);
->  			if (ret)
->  				return ret;
-> @@ -446,6 +454,33 @@ static int iris_release_input_internal_buffers(struct iris_inst *inst)
->  	return 0;
->  }
->  
-> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
-> +{
-> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
-> +	struct iris_buffer *buf, *next;
-> +	struct iris_buffers *buffers;
-> +	const u32 *internal_buf_type;
-> +	u32 internal_buffer_count, i;
-> +	u32 count = 0;
-> +
-> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
-> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
-> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
-> +	} else {
-> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
-> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
-> +	}
-> +
-> +	for (i = 0; i < internal_buffer_count; i++) {
-> +		buffers = &inst->buffers[internal_buf_type[i]];
-> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
-> +			count++;
-> +		if (count)
-> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
-> +				count, internal_buf_type[i]);
-> +	}
-> +}
-> +
->  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst)
->  {
->  	struct iris_buffers *buffers = &inst->buffers[BUF_PERSIST];
-> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
-> index c36b6347b077..03a32b91cf21 100644
-> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
-> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
-> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
->  int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
->  int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
->  int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
-> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
-> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force);
-> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane);
->  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
->  int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
->  int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
-> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
-> index 4143acedfc57..2c1a7162d2da 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
-> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
->  
->  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->  
-> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
-> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, false);
->  	if (ret)
->  		return ret;
->  
-> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
->  
->  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->  
-> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
-> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, false);
-
-If I was reviewing some changes (or even debugging) this specific C
-file, I would not be able to understanding what this "false" means. I
-would have to spend extra time, opening the declaration, going back and
-forth, and breaking the flow.
-
-An alternative approach is to keep the boolean parameter in a static
-function (c local), and then add two function wrappers that have
-explicit names.
-
-regards,
-Nicolas
-
->  	if (ret)
->  		return ret;
->  
-> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
-> index ca0f4e310f77..56531a7f0dfe 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
-> @@ -233,8 +233,10 @@ int iris_close(struct file *filp)
->  	iris_session_close(inst);
->  	iris_inst_change_state(inst, IRIS_INST_DEINIT);
->  	iris_v4l2_fh_deinit(inst);
-> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
-> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
-> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, true);
-> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, true);
-> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
-> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->  	iris_remove_session(inst);
->  	mutex_unlock(&inst->lock);
->  	mutex_destroy(&inst->ctx_q_lock);
-
--- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+Cheers,
+Alex.
