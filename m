@@ -1,107 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1C91F416A;
-	Tue, 29 Apr 2025 09:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BBD1C862F
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745920422; cv=none; b=isuIE1WMVnMXm7GdwWuiOMUBTc/PvKdiBMyEYAwupjtxXpR3CJQv9HPLX9hJ27wOV7IS6b00tNYJ9VGS7x+aaJrbyaUt28LQSnYl7qGiK0b+OC0cGwTumOxK73wzsALDfQcZyMCsR6jksnRwy+BiYpNDotwpIRa5xJtRVJXpSNY=
+	t=1745920503; cv=none; b=Is41IMEqH54hewICxnX/wK75OHH+uGA95tCophiYfnfM1dg3rs3AvUy8jrxW9BzhZirHpDiRU76APeW8+IrM7H5XtZYY7idXSoTwaegiuU7iKoZRnWxnJxhZ9g7k9f4kyds9l77FgcJTvb8Vf+xaU41rbe3MhylLi/9nXc+h+A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745920422; c=relaxed/simple;
-	bh=OhGV0jZlvwbTl/ALDvHmL48asVDhok2hLypoi47b+h0=;
+	s=arc-20240116; t=1745920503; c=relaxed/simple;
+	bh=sT3XIdFQ6Pyhe7oapXbNFeTfYoCnYG7Zz7pboetzDSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYtlqqYeS+CSyVGtRx+RYTYz5pN1SmuduAsh/s0n93ssxKUJzwd9qfGI0BBnQnjskj94KqRLyd8kIjSvbGPDVkSLAdH4MjPYHELjIjGd0YgUYYkzBc4Ji2ABtUOAUS1bLV6Hfd14I7VJYgK5cT0WHFmgwZ0GInrTDQs0V0d9IT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3860E1516;
-	Tue, 29 Apr 2025 02:53:33 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EBBE3F66E;
-	Tue, 29 Apr 2025 02:53:39 -0700 (PDT)
-Date: Tue, 29 Apr 2025 10:53:35 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Namhyung Kim <namhyung@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 09/48] perf tests: Silence -Wshorten-64-to-32 warnings
-Message-ID: <20250429095335.GH551819@e132581.arm.com>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-10-irogers@google.com>
- <20250402143541.GM115840@e132581.arm.com>
- <CAP-5=fVqax8cxdZ4HLBP4AMxL6jADfYNrORC97T6F23mjf3N1w@mail.gmail.com>
- <20250402163807.GP115840@e132581.arm.com>
- <CAP-5=fVJkJ39_qx2T9ZHn-fdxjECP_2G+cyfRRAjLvZZt5vz2A@mail.gmail.com>
- <Z-4URXOzsVHTY7zz@google.com>
- <CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com>
- <20250428111003.GC551819@e132581.arm.com>
- <CAP-5=fX3jn=ff9itMemKB22ACnHtU_cO6YUcx=uYYWX4=QaLJw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OibsJiXR+xRb/F6ifKK5sPq33RrNCsTYn9vnId7dBZthMj1fIHDotUma35wDInOSO2C59SjTW604VNOC+OFHsewRjcIo/zsfjak4DT2cf+MzH6vj4fmvMY9fjVoJI8O5tYcqVLbqCBpN42zcQUeXNkQ+PU9H1/8sHHXNTwFUTJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y/yOL/EX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k1hzt2sk; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y/yOL/EX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k1hzt2sk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y/yOL/EX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k1hzt2sk";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y/yOL/EX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k1hzt2sk"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9AA9B2120B;
+	Tue, 29 Apr 2025 09:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745920499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xlHQqP7IumQSWX28RlWg5A7y/SFv7iickr6pEHy2mI=;
+	b=y/yOL/EXPIhgLHCTn3kEuHw2QuB5slroRXNaWjQ2Yt8yGhdWb/s+HMm+Fm0iG2CiqKDhCq
+	3dFqcVy/ElFOAdYfVb02jVDXKgtF/+m2yW947OF1urfkCUIWFeIEIw6/p/KguIXYaen9/t
+	DO30xmO5z6jE12pxS0LtKduR6LByS7M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745920499;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xlHQqP7IumQSWX28RlWg5A7y/SFv7iickr6pEHy2mI=;
+	b=k1hzt2skMNFN0GRxEC714b5zn1wQ11lWK+hyC2EXkFcXDZwtVc7ElMJjwyHd3+ygW680ky
+	c6swYpr7pFJKgTAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745920499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xlHQqP7IumQSWX28RlWg5A7y/SFv7iickr6pEHy2mI=;
+	b=y/yOL/EXPIhgLHCTn3kEuHw2QuB5slroRXNaWjQ2Yt8yGhdWb/s+HMm+Fm0iG2CiqKDhCq
+	3dFqcVy/ElFOAdYfVb02jVDXKgtF/+m2yW947OF1urfkCUIWFeIEIw6/p/KguIXYaen9/t
+	DO30xmO5z6jE12pxS0LtKduR6LByS7M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745920499;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xlHQqP7IumQSWX28RlWg5A7y/SFv7iickr6pEHy2mI=;
+	b=k1hzt2skMNFN0GRxEC714b5zn1wQ11lWK+hyC2EXkFcXDZwtVc7ElMJjwyHd3+ygW680ky
+	c6swYpr7pFJKgTAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8D5001340C;
+	Tue, 29 Apr 2025 09:54:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GO94IvOhEGg2IwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 29 Apr 2025 09:54:59 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1D006A0952; Tue, 29 Apr 2025 11:54:51 +0200 (CEST)
+Date: Tue, 29 Apr 2025 11:54:51 +0200
+From: Jan Kara <jack@suse.cz>
+To: alexjlzheng@gmail.com
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: Re: [PATCH] fs: remove useless plus one in super_cache_scan()
+Message-ID: <7k7og24ts2sfulbqni7dtosknr5nng4p6l5zfu4mrbyoqfd6mz@wfslwlrlcaux>
+References: <20250428135050.267297-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -110,73 +88,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fX3jn=ff9itMemKB22ACnHtU_cO6YUcx=uYYWX4=QaLJw@mail.gmail.com>
+In-Reply-To: <20250428135050.267297-1-alexjlzheng@tencent.com>
+X-Spam-Score: -3.79
+X-Spamd-Result: default: False [-3.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-0.998];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.19)[-0.968];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Ian,
-
-On Mon, Apr 28, 2025 at 09:29:37AM -0700, Ian Rogers wrote:
-
-[...]
-
-> Hi Leo,
+On Mon 28-04-25 21:50:50, alexjlzheng@gmail.com wrote:
+> From: Jinliang Zheng <alexjlzheng@tencent.com>
 > 
-> So I sent out cleaning up the kernel headers separately:
-> https://lore.kernel.org/lkml/20250403165702.396388-1-irogers@google.com/
-> Arnd commented that it would be nicer to do larger changes, but my
-> concern was breaking printf modifiers, etc. It looks like those
-> patches have lost momentum, not sure what's going to happen about them
-> being merged.
+> After commit 475d0db742e3 ("fs: Fix theoretical division by 0 in
+> super_cache_scan()."), there's no need to plus one to prevent
+> division by zero.
 > 
-> On the fixes vs refactoring. I'm not sure refactoring is the right
-> term for the other things in the series. It is basically trying to
-> make implicit casts explicit, without doing some boil the ocean
-> exercise.
-
-Yeah, I agreed that some "refactoring" is actually fixing bugs.
-
-> I went through the issues in the email this is a reply to:
-> https://lore.kernel.org/lkml/CAP-5=fXwAA0PNYAOLNLdHY8g+AyEB0UxmzgX5w-gGj_DZqUxtg@mail.gmail.com/
-> Do you want to send the bits you think need prioritizing to the list?
-
-For me, at least two things can be fixed first:
-
-- One is the test case switch-tracking.c is broken on Arm64, your
-  change for the compar() function would be fine for me.
-
-- You mentioned the issue in ui/hist.c:
-  ret = b->callchain->max_depth - a->callchain->max_depth;
-
-These two issues are similiar and can fixed in the same format.
-
-> > > There are lots of cases like:
-> > > ```
-> > >                 case ARM_SPE_COUNTER:
-> > >                        if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
-> > > -                               decoder->record.latency = payload;
-> > > +                               decoder->record.latency = (u32)payload;
-> >
-> > This would be fine.  Since Arm SPE implements a counter with a maximum
-> > of 16 bits, there will never be an overflow when storing the data in a
-> > 32-bit unsigned integer.
+> Remove it to simplify the code.
 > 
-> The payload was > sizeof(u32), should record.latency be a u16?
+> Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
 
-Yes, we can change to u16 type for latency.
+Fair enough. Feel free to add:
 
-> My point wasn't so much to complain about adding a u32 cast in the SPE
-> code, but that having the cast makes it clear that truncation is
-> expected. Adding the casts isn't fixing a bug, but it is making it
-> clearer that the code will truncate the payload value (imo).
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-As Arm SPE has defined the format, I would prefer to refine the code
-based on the format:
+								Honza
 
-  #define SPE_CNT_PKT_COUNT(v)    ((v) & GENMASK_ULL(15, 0))
-
-  decoder->record.latency = SPE_CNT_PKT_COUNT(payload);
-
-I can send a minor patch series for this, if not conflict with your
-side.
-
-Thanks,
-Leo
+> ---
+>  fs/super.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/super.c b/fs/super.c
+> index 97a17f9d9023..6bbdb7e59a8d 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -201,7 +201,7 @@ static unsigned long super_cache_scan(struct shrinker *shrink,
+>  
+>  	inodes = list_lru_shrink_count(&sb->s_inode_lru, sc);
+>  	dentries = list_lru_shrink_count(&sb->s_dentry_lru, sc);
+> -	total_objects = dentries + inodes + fs_objects + 1;
+> +	total_objects = dentries + inodes + fs_objects;
+>  	if (!total_objects)
+>  		total_objects = 1;
+>  
+> -- 
+> 2.49.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
