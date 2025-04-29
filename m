@@ -1,40 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D3FF8BEE;
-	Tue, 29 Apr 2025 13:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1342BF3F7;
+	Tue, 29 Apr 2025 13:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745933837; cv=none; b=Owx4xdYL46Y5G/SW/HX74C4BAo56njuui3Lbie5HoPjdnRdPT+sl3O+MS44QngXDjHB+Dh+KP3fjIHz241f984v2VED4koAbCoV45dqn2PjptA3hXDB0H4rTIjVgNgi9Pj6a6m2opoMKPFMLJFBCkAX7keoksdBuDAqYA/a3RIg=
+	t=1745933894; cv=none; b=Gbvrhpu+h5iTPPlidYxno8ihcluSmLI0UiUZ2ZfHdaPGcBVfdWS7T0VJ7UATaQX17ADbhL3LxkHR4X3j9aYfb23d0XsOogl1aJIfCw7WHg56K6YCBR4OAllc5/FiAyC3rrY52SLGjohmtI4E8gel8625XMhofwUT0v2soaG+caI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745933837; c=relaxed/simple;
-	bh=cmAVh+rSEpXB+DkEglh7xBgATPwaoyIg7sOGQZzaIlA=;
+	s=arc-20240116; t=1745933894; c=relaxed/simple;
+	bh=P0u5bKOVeiv3vEYAMFrQC5BmOPXNLg3oQQYCtgr8BSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOaFWXfp0IVKeX7/THWPRg2RBR2F5Jxz/ip+pl/Vxp+/crRdo8sFsf2IvCTOOYdyvrAgFxAH9NI5qZqO70/aPLFWKi6RBnbQQnRBfWodzHGkkWIbuJ3jVwXQvxs/5a9eEBy1QOOfEwpxM9STCrE5NzD5kSVnk4DZswxWNK76NT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 025551515;
-	Tue, 29 Apr 2025 06:37:07 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6ECC3F673;
-	Tue, 29 Apr 2025 06:37:11 -0700 (PDT)
-Date: Tue, 29 Apr 2025 14:37:09 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Johan Hovold <johan@kernel.org>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
-	michal.simek@amd.com, quic_sibis@quicinc.com,
-	dan.carpenter@linaro.org, maz@kernel.org
-Subject: Re: [PATCH v2 2/4] firmware: arm_scmi: Add Quirks framework
-Message-ID: <aBDWBWqHTY-gfc_k@pluto>
-References: <20250425125250.1847711-1-cristian.marussi@arm.com>
- <20250425125250.1847711-3-cristian.marussi@arm.com>
- <aA5BeONpC3CJE5-Z@hovoldconsulting.com>
- <aBCuSpToEklg340R@pluto>
- <aBC16CGDhZ_XO3Xr@hovoldconsulting.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=tEyBFmsM7pUBkGY4KHGR+x8tRnBGAW7AGXesyYFN31z3pfE9aYziai6xEHRfnk8O6NGtAdWS05508rayWeTl39W5z/+os+uPACqMduJzEBonGr/V02oOwHfWPcxJ2gXH09bIeUPLk4cWPxLsSIz9JCzQsn1QsCuz3B4d+gb+Xbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXnowBPb; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXnowBPb"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2963dc379so888542066b.2;
+        Tue, 29 Apr 2025 06:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745933891; x=1746538691; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y26J0iAJoKCmJNS38dntVfyxrAVGftlCnn+OgGntO2A=;
+        b=DXnowBPbfjKKyRl1Hcv2Yg2gMaIm9Ue7pWBLElPeE7S6ZHdUwA8T7rI4mmxYHFsMFa
+         NRd2EtsriXOzuSJQcqEzQi848vninQULk/7NkT6Vht1NEjRnw+ethS+Qhua0HWLzkRgh
+         YJMxc9IzHtGbdhy55u+eK5ybwu6DD7YffXpxvh2q+XCfEXnxqmv/1kt/2iTQTZV1Pn0z
+         bMyP6kDZO96J4s+mfonhuBAnRxUVBt/Wvb0RKnkuakWhTUJeYIB7axfWn4ed2q9AE0wT
+         QR9zeLtazFHn0UYxw5TgBUUU9qkvwUKxEW0rOVaxCaniSc+nFlfPdvfNEisr4JJeEnuP
+         w7jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745933891; x=1746538691;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y26J0iAJoKCmJNS38dntVfyxrAVGftlCnn+OgGntO2A=;
+        b=gEDjCtl8DN4Xi39sBQXK3ahX09gBofe+CptD734tPYl4kZHYu6uXyyMKqaKb6KK88K
+         NvtU3Ib+5MlqoxTymmYUZub/RyOQlKs7p7q/Q0BvE/AgdyXL5bvSV5ZfzLSD2WQ6EQiD
+         hMMZHX5b3OGMYkzFD9SAtv9WoNDYsOMQbUZVD8KBJEs3InloxruVw77veSSiOWtSmexe
+         F4XRv2uzq6MDJ78YHWQeMvsuuI5ytbjGPUR+0I9RXeg40tm722ZwuP7BZv+xyXzMb3Yx
+         2XZcTFesgQspOQRSiw0/c3gepy9JxVJ2VU0HQMMd9bu4uO/pXmJAgSdv2gFekEQLBL1B
+         aPBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYle87ZITusNgfDPnrBZLvcoUixHV8KQfCh6JKoB44NszVuksYwHVdFnV516OV1l92jnurExxTqnBGnhwK@vger.kernel.org, AJvYcCWfrVe2Nx48tvCEzDFG/WNnmvGJ3JzQWo/08RyYzqCkX5BEm/pis1U1MyadTSrpSX1rPrVAGstPYa2+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym4h6wNa2exz2IU0+NDqR592If7bh1yXk941TlBAwu0Atgl3q5
+	7y3JJ0XTtXqtFlh7WFhjilr131/0kVlUiVp5zG68kw8sForR4udL
+X-Gm-Gg: ASbGncu1WGxAHysMtGfqrKZEF4TBdNa9i13te+b1/Jx8aKW77RSvNNDPZLMX1amZXMN
+	T1JJP3tPoYEMIHj6oiXPyiZ3+7nkDUHKg0sn2sqFqce4oiFvWXBTAf2x7MMeCtgEq6ZfoD5lEYa
+	wJ1b/KcRU3C22BxxSFIh0Uxnp/yOPuhzu7kYq59ux7kB1PL/XwLr+YBILnkeRXZWmReKwSBr4Bd
+	C0zXYeFjWII1ljAGjjHDhmiVDMSD5wp72X5dKUVnIMo0KUtmnWrI7nBu8/M6oQHGv6+w1IKxc13
+	dvRsn0iX9gVzuPfklL61UzrOvATBU5BqIBoT7Co4Z3hM9fcEFvNG3lo=
+X-Google-Smtp-Source: AGHT+IECDUUSwqdQe+jFeZC4zccITFBfdZlwb9V2S+BXUJyiLooaUiYpAnL5q+y3JtdKb9LMa4l5/A==
+X-Received: by 2002:a17:907:97c9:b0:ace:63b0:6f70 with SMTP id a640c23a62f3a-ace84b71607mr1146290666b.61.1745933891105;
+        Tue, 29 Apr 2025 06:38:11 -0700 (PDT)
+Received: from localhost ([217.151.144.138])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ace6ed72826sm778242466b.154.2025.04.29.06.38.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 06:38:10 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:37:27 +0200
+From: Oliver Graute <oliver.graute@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux@ew.tq-group.com
+Subject: Re: [PATCH 6/6] arm64: dts: imx8qm: Add Ethernet aliases
+Message-ID: <aBDWF4-63M60EwX9@graute-macos>
+References: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
+ <20250425-dts-imx-aliases-ethernet-v1-6-15b9d5cca611@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,128 +80,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBC16CGDhZ_XO3Xr@hovoldconsulting.com>
+In-Reply-To: <20250425-dts-imx-aliases-ethernet-v1-6-15b9d5cca611@linaro.org>
 
-On Tue, Apr 29, 2025 at 01:20:08PM +0200, Johan Hovold wrote:
-> On Tue, Apr 29, 2025 at 11:47:54AM +0100, Cristian Marussi wrote:
-> > On Sun, Apr 27, 2025 at 04:38:48PM +0200, Johan Hovold wrote:
-> > > On Fri, Apr 25, 2025 at 01:52:48PM +0100, Cristian Marussi wrote:
-> > > > Add a common framework to describe SCMI quirks and associate them with a
-> > > > specific platform or a specific set of SCMI firmware versions.
-> > > > 
-> > > > All the matching SCMI quirks will be enabled when the SCMI core stack
-> > > > probes and after all the needed SCMI firmware versioning information was
-> > > > retrieved using Base protocol.
+On 25/04/25, Krzysztof Kozlowski wrote:
+> Add Ethernet aliases for predictable names and for firmware or
+> bootloader to fill up MAC address.
 > 
-> > > > +static void scmi_enable_matching_quirks(struct scmi_info *info)
-> > > > +{
-> > > > +	struct scmi_revision_info *rev = &info->version;
-> > > > +	const char *compatible = NULL;
-> > > > +	struct device_node *root;
-> > > > +
-> > > > +	root = of_find_node_by_path("/");
-> > > > +	if (root) {
-> > > > +		of_property_read_string(root, "compatible", &compatible);
-> > > > +		of_node_put(root);
-> > > > +	}
-> > > > +
-> > > > +	dev_dbg(info->dev, "Looking for quirks matching: %s/%s/%s/0x%08X\n",
-> > > > +		compatible, rev->vendor_id, rev->sub_vendor_id, rev->impl_ver);
-> > > 
-> > > You're now just looking up the most specific compatible string in order
-> > > to include it in this dev_dbg(). Since you're now matching on all
-> > > compatible strings, perhaps you can consider just dropping it.
-> > > 
-> > 
-> > Yes indeed I was not sure to keep all of this machinery just to print
-> > the machine compatible that is used to try to match against the
-> > (possible) list of compats....on the other side seemed useful to know
-> > exactly what you are trying to match against....but maybe we can simply
-> > assume that the machine compatible is well-known....
-> 
-> Perhaps it would have been more useful if you printed all the compatible
-> strings here and not just the most specific one, but yeah, there are
-> other ways to read this strings through sysfs.
-> 
-> Keeping as-is should be fine too.
-> 
-
-I have dropped the whole machinery.
-
-> > > > +		/*
-> > > > +		 * Note that there could be multiple matches so we
-> > > > +		 * will enable multiple quirk part of an hash collision
-> > > 
-> > > nit: "quirks that are part of a"?
-> > > 
-> > 
-> > mmm...as a non-native and poor English speaker I am, though, reasonably
-> > confident that a/an is chosen based on the vowel/consonant SOUND of the
-> > next word NOT on the effective letter...am I wrong ?
-> > (then we could digress about which is the sound of a[n] 'hash' :P ...)
-> 
-> That's my understanding as well, but 'hash' begins with a consonant
-> sound so I'm pretty sure it's "a hash".
-
-:P ... so it is now certified publicly how bad my pronunciation skills are 
-
-> 
-> > > > +		 * domain...BUT we cannot assume that ALL quirks on the
-> > > > +		 * same collision domain are a full match.
-> > > > +		 */
-> > > > +		hash_for_each_possible(scmi_quirks_ht, quirk, hash, hkey) {
-> > > > +			if (quirk->enabled || quirk->hkey != hkey ||
-> > > > +			    impl < quirk->start_range ||
-> > > > +			    impl > quirk->end_range)
-> > > > +				continue;
-> > > > +
-> > > > +			if (quirk->compats[0] &&
-> > > > +			    !of_machine_compatible_match(quirk->compats))
-> > > > +				continue;
-> > > > +
-> > > > +			dev_info(dev, "Enabling SCMI Quirk [%s]\n",
-> > > > +				 quirk->name);
-> > > > +
-> > > > +			dev_dbg(dev,
-> > > > +				"Quirk matched on: %s/%s/%s/[0x%08X-0x%08X]\n",
-> > > > +				quirk->compats[0], quirk->vendor,
-> > > 
-> > > You can now match on more than one compats string, but I guess printing
-> > > just the first one is fine.
-> > > 
-> > 
-> > Yes, same as above dev_dbg...not sure if it was meaningful really to
-> > dump all the list and overload the log with all such info...
-> 
-> Right, indicating there is some compatible string that's being used is
-> still useful to know.
-> 
-> > > > +				quirk->sub_vendor_id,
-> > > > +				quirk->start_range, quirk->end_range);
-> > > > +
-> > > > +			static_branch_enable(quirk->key);
-> > > > +			quirk->enabled = true;
-> > > > +		}
-> > > > +	}
-> > > > +}
-> > > 
-> > > This seems to work as intended and I've tried matching on machine and
-> > > SoC compatible strings and/or vendor and protocol version:
-> > > 
-> > > Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> > > 
-> > 
-> > Thanks for the review Johan.
-> > 
-> > Since you have tested the effective final quirk patch, may I ask you to
-> > post straight away your final tested quirk patch on top of my next V3
-> > (with your authorship of course..)...I will drop the [NOT FOR UPSTREAM]
-> > example patch so that Sudeep can easily pick-up your patch.
-> 
-> Sure, I'll do so. Thanks for your help with getting this sorted!
->
-
-You're welcome.
-
-Cheers,
-Cristian
+> Suggested-by: Francesco Dolcini <francesco@dolcini.it>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Oliver Graute <oliver.graute@kococonnector.com>
