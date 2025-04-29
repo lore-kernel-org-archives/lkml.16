@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE1514EC5B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEA0433C4
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745908353; cv=none; b=FeYAornRZfXalJ13GbHWvuTRjfR917da12N62BMXEAqa76APH4cl77xF0cJutatZG8bW68rRosAySRPZm4FjADJ4AE0I/tbE8SpW3qiwgle7Y77YktIXIztHytgWFWba+Nix7kXdMpZadTqe130RqQTCZew2b7u0e6aFDfx8nvU=
+	t=1745908388; cv=none; b=hoJHRvbWc3+DHVOioNOg/L1IIDlZy4QnjuOcF4mve2TsWsJFG3/OQpJ2yVSj4dueUpyBo2wIR64xLdn8SJpzS+Beja41GzfOTjvQKumHf6tnnc1VKwhnw5+DYqiojFThiUxWTK0XbGiKpL+t5VtBz/MYCOYBrwCrQ35iNP1Aij8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745908353; c=relaxed/simple;
-	bh=Vkza2O6+dGm8gXRPylVtJ0daXTiMNkYHqq4Fd861PQM=;
+	s=arc-20240116; t=1745908388; c=relaxed/simple;
+	bh=o3uMeMDU8vBwj4IGsCzOkLDIARytjMi8U3yEpW7YFRI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=daWH5RvUR0tTdwzwjXvzlSS/MXQDVtlWXhWrL8EISRVze4d99R15sTs3zFimFjoXbfLQoJ8u+52NdcaDmOpc2W4Lp1wh/Xs2LQcSmOKKe2iXxaEJm900urN3W5H2uwHUPMs0uFAwypp0pBAkOIWnfIV2hQCkZVEVmzaUAUAheBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAC1GI1E; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQctczj+LciCq2XUqHnXNikhg//EY3qOzfqGbMZ4RLUxDwB0yexFUIlzm/0z3Uulvq0plpkjDHT3Z2fdnNSPUxvsgWaz6CrR0T0zPVhbfj4YnCrX1lG8HPeRjadCe9xitliWkvvXcGmaN7E5KUhYkkuV++Mm/eFa5PUD4JQUIuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRA0wOvZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAC1GI1E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5D1C4CEE3;
-	Tue, 29 Apr 2025 06:32:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRA0wOvZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395A7C4CEE3;
+	Tue, 29 Apr 2025 06:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745908352;
-	bh=Vkza2O6+dGm8gXRPylVtJ0daXTiMNkYHqq4Fd861PQM=;
+	s=k20201202; t=1745908387;
+	bh=o3uMeMDU8vBwj4IGsCzOkLDIARytjMi8U3yEpW7YFRI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cAC1GI1EUbJ0bj0WQFTmDYTXyhM2mYU4X0xXAt/1c4Yb/6dZgS4DZ1dZE/unvU0y0
-	 YsVZOMT78CTtPglJ3VbHzoxxrAHhfPEONSrncMGnYGaJ7D1q6vTtS41sW0friv/YaC
-	 pKVc7BZLoEdASOk1EYXDcPJ8a4SXJnfgCWkxLDtQVOsvOkkM6DMwr4eeJmcsLkIbla
-	 tFOLp6MI1dGEarQ1UWVNGxSmS5j9DiPQvF3Z2B5bMAvaBeAlX/ratPYBlYOSboESNh
-	 8s8jG8Vbb4xJit4EeuJc9swz1jYl0iO1FE0o8571X5590mWSM2BjcIDKTyzOWA65u6
-	 bDZ0bkdq2TV9w==
-Date: Tue, 29 Apr 2025 09:32:25 +0300
+	b=sRA0wOvZthOvgBl+IMbHFcuIZWXvS/2tQg4zmj3FPa2bkpZI0pKCM/nGdINpAdWQB
+	 dYsVOwtHHSQ2e7ISoBy9DoNcqMqyXPhsHn/1gDIJhWoYH/5zXMSC9ucUvZuHqL7K2S
+	 LXT/Q5Kzax+KWY3728JuebCVbduZqHqVaer73EjA7Cm1Z+asQauZKTqQ9qMcrktGhK
+	 5N4QWWjNJJW+Sp6PU6HqRTX/JefhWz0/l9qX41mM3zzqHHm678efcZwtuXpXFdytoW
+	 tlmCAE5eASxF/NviiqNSXh4Az/70rjrWYknWeKW9mPYlpkH9H+vWrD09gxLnSDQWg1
+	 pWZ4Gs5DI/FoA==
+Date: Tue, 29 Apr 2025 09:33:00 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: Ye Liu <ye.liu@linux.dev>
 Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org, lorenzo.stoakes@oracle.com,
 	Liam.Howlett@oracle.com, david@redhat.com, harry.yoo@oracle.com,
 	riel@surriel.com, vbabka@suse.cz, liuye@kylinos.cn
-Subject: Re: [PATCH 3/3] mm/numa: remove unnecessary local variable in
- alloc_node_data()
-Message-ID: <aBByeY7ck9H4YOaE@kernel.org>
+Subject: Re: [PATCH 1/3] mm/io-mapping: precompute remap protection flags for
+ clarity
+Message-ID: <aBBynJxyJXHPG-Fn@kernel.org>
 References: <20250427100442.958352-1-ye.liu@linux.dev>
- <20250427100442.958352-4-ye.liu@linux.dev>
+ <20250427100442.958352-2-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,13 +46,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427100442.958352-4-ye.liu@linux.dev>
+In-Reply-To: <20250427100442.958352-2-ye.liu@linux.dev>
 
-On Sun, Apr 27, 2025 at 06:04:42PM +0800, Ye Liu wrote:
+On Sun, Apr 27, 2025 at 06:04:40PM +0800, Ye Liu wrote:
 > From: Ye Liu <liuye@kylinos.cn>
 > 
-> The temporary local variable 'nd' is redundant. Directly assign the
-> virtual address to node_data[nid] to simplify the code.
+> In io_mapping_map_user(), precompute the page protection flags in a local
+> variable before calling remap_pfn_range_notrack().
 > 
 > No functional change.
 > 
@@ -61,38 +61,27 @@ On Sun, Apr 27, 2025 at 06:04:42PM +0800, Ye Liu wrote:
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
->  mm/numa.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  mm/io-mapping.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/mm/numa.c b/mm/numa.c
-> index f1787d7713a6..7d5e06fe5bd4 100644
-> --- a/mm/numa.c
-> +++ b/mm/numa.c
-> @@ -13,7 +13,6 @@ void __init alloc_node_data(int nid)
->  {
->  	const size_t nd_size = roundup(sizeof(pg_data_t), SMP_CACHE_BYTES);
->  	u64 nd_pa;
-> -	void *nd;
->  	int tnid;
+> diff --git a/mm/io-mapping.c b/mm/io-mapping.c
+> index 01b362799930..f44a6a134712 100644
+> --- a/mm/io-mapping.c
+> +++ b/mm/io-mapping.c
+> @@ -21,9 +21,10 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
+>  	if (WARN_ON_ONCE((vma->vm_flags & expected_flags) != expected_flags))
+>  		return -EINVAL;
 >  
->  	/* Allocate node data.  Try node-local memory and then any node. */
-> @@ -21,7 +20,6 @@ void __init alloc_node_data(int nid)
->  	if (!nd_pa)
->  		panic("Cannot allocate %zu bytes for node %d data\n",
->  		      nd_size, nid);
-> -	nd = __va(nd_pa);
->  
->  	/* report and initialize */
->  	pr_info("NODE_DATA(%d) allocated [mem %#010Lx-%#010Lx]\n", nid,
-> @@ -30,7 +28,7 @@ void __init alloc_node_data(int nid)
->  	if (tnid != nid)
->  		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
->  
-> -	node_data[nid] = nd;
-> +	node_data[nid] = __va(nd_pa);
->  	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+> +	pgprot_t remap_prot = __pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
+> +				       (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK));
+> +
+>  	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
+> -	return remap_pfn_range_notrack(vma, addr, pfn, size,
+> -		__pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
+> -			 (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK)));
+> +	return remap_pfn_range_notrack(vma, addr, pfn, size, remap_prot);
 >  }
->  
+>  EXPORT_SYMBOL_GPL(io_mapping_map_user);
 > -- 
 > 2.25.1
 > 
