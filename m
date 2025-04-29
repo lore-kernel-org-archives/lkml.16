@@ -1,82 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5688924113C;
-	Tue, 29 Apr 2025 16:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92932522A2;
+	Tue, 29 Apr 2025 16:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945662; cv=none; b=dbTs/qhIu2aQtQE3+NvxXKami4enTtYs98DNz7BIcYMMf/RoTJh+PG22TbhuJue8QacqzcRrbjrMbKZX1J1sHQYRlDcEdLumx/mYfYWsK7WI5QlmhVX/sdtT4N0AK5OYhECVkHK3pzdez9K5u81Asi5I4EeHmPcPpgBWK88NI1U=
+	t=1745945666; cv=none; b=Z3O7aTpGnkhYtbC9AEkvtaxUjVHuFzalLGhhWh8V/HQ8gLFQBdoZuPEUqvWkntKfialJ5as+/zSXNfdKOcLzsYEO0D/Qn4ERRGbU5vTsLTsY1g5T159EQHgWvvoF3M8Yy3gOpcED71ZrB9+QlJ81bxpFmM6wQ89V85Q18eUQe48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945662; c=relaxed/simple;
-	bh=gr9TqpDzik67MmDx/yJNWxsvaR2w9xNR+74mtWIzDSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rB6veQCX3Iyea6CA4VN+6wpv8NjO14B6vCd6KSwM0mKvcVHYJPQwm7ir619rwp+oP4cyD7RL5W+IpRVTSZkVb5HFd02pzbT69l7ASC/XMZLNzNzzB+CWgcT3MLVdYm0ZkVKCl9/W1Rxye4fvb12cZbLMe0yycLk1fEcCc6jvPp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjBqGeHi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745945666; c=relaxed/simple;
+	bh=AdoYyKISP36xJeQD9woyN2YEZghocYxvykppZ9AflqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fr8mieE96j94cMt/wnYY8R/S/ztsNGL0vBCqyrlyDP2EutBbj6Q2a9AUwzcIITeFS5czrogRg6++i97KY1ursM37ITSqqxdObZkTB5AINYh1IjVi1aMaTBMCdPJQxtPthmspeSowrfLtBrtW4BeEwX33REfTe31oJe8w9n8Fwk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMCcA1od; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjBqGeHi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18493C4CEE9;
-	Tue, 29 Apr 2025 16:54:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMCcA1od"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9792FC4CEF7;
+	Tue, 29 Apr 2025 16:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745945662;
-	bh=gr9TqpDzik67MmDx/yJNWxsvaR2w9xNR+74mtWIzDSw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YjBqGeHiSIyYnLF9JqHGyzte8jhcIToNNU0IVcuqLDrSYZO4KSuKRFBBoTEc++q12
-	 lRPsVjFUCO7dUmV6nBeu4sP1DX4s8GJwbjslnBbXSyJ8s0/A7VnvhbAeGyyUmjXlyr
-	 74K+qiT2F8xLKeivwmSxSxaA1T2BFaN4tG9805eYGd4/SSvIIWEXvHdfPKqx7RtDOW
-	 vwZTyUXri3wv6BHe+ghfzhoBxNEyJBSCZ2cF6IM6oX9aVhzUEQAUKFHJoleIoC10X1
-	 ZLybNxoWxmfyvSZKPug07cfwmUSIXJdEX5uOpWH+2j8uxPR6rYOHxRtvE9D9ORGAIn
-	 bRaUOpC+98uxQ==
-Date: Tue, 29 Apr 2025 09:54:21 -0700
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] mm: perform VMA allocation, freeing, duplication
- in mm
-Message-ID: <202504290954.B4A4F99E7@keescook>
-References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
- <f97b3a85a6da0196b28070df331b99e22b263be8.1745853549.git.lorenzo.stoakes@oracle.com>
+	s=k20201202; t=1745945666;
+	bh=AdoYyKISP36xJeQD9woyN2YEZghocYxvykppZ9AflqU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oMCcA1ody40ilGXC0Qybb7DD6sqJxB52dAXTz8M0wbK6IB+bf8EDHo+zzXnykV1B2
+	 ZI1MDHferuz/WYILmf64MfVy+QwDtMwoK9hJu5FENIHEjcHPdsmJr8V+2NcyUZWQR/
+	 Zdf6orSEajxT7dZqQA6CDJXGCy0o17kNrAxtAudher8AP/WyxvfA6LVxGJvT4OZ6pS
+	 0bIxAIDtB15QnFrdc3oEUAdhVzZGoHIszrH1ZT2KmV1CIzLZA5KlnpXlD58F78ji4B
+	 Ov8zQU6zZvoTI9gS8fwNBEguGszOBuHXgZ+V74f8H1IwxjKGkr04VtKNjQAL2PJNdg
+	 FAAdjY9cCvHBQ==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so1117676566b.1;
+        Tue, 29 Apr 2025 09:54:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVA6wy6LKyHIWE/uLdFhDoQrCh21Q5Mq21OOZjzan7z8Xv56yoO3P18NBME+R++5GiL8NmCnayM@vger.kernel.org, AJvYcCVQs0Y9bFooAFPxEFfnw5zELioFUW3uMJHjSt5bZmCwuTe54h65WT9JohIEQePN/4ebNRAuF9xeYgU6ASA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/eRoh90BjKxmXTGKInplZgFI7V+d58WIIZZZMvtX1s4LZotwv
+	3ZRkDqcjn7h5rKsMnV6zuJitYB3Qjvl30qFamazsi7gyPpC8ZUbUyZUakSQKC5Q8ECbSiScqXNs
+	1s3gtPcdFgEOBeeJTBvcR6T/Lf/E=
+X-Google-Smtp-Source: AGHT+IG7skFkYmrh78r3PBufunbwFhCyH6bMAAQyF6iwtL4SiSNbNImHJcW3bMTneYB2TP8fzRb2vISMbXZRWbUX/Vo=
+X-Received: by 2002:a17:907:3d0d:b0:ac7:eb12:dc69 with SMTP id
+ a640c23a62f3a-acedc6226e0mr11217966b.28.1745945665026; Tue, 29 Apr 2025
+ 09:54:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f97b3a85a6da0196b28070df331b99e22b263be8.1745853549.git.lorenzo.stoakes@oracle.com>
+References: <20250428105657.3283130-1-wei.fang@nxp.com> <20250428105657.3283130-6-wei.fang@nxp.com>
+In-Reply-To: <20250428105657.3283130-6-wei.fang@nxp.com>
+From: Timur Tabi <timur@kernel.org>
+Date: Tue, 29 Apr 2025 11:53:47 -0500
+X-Gmail-Original-Message-ID: <CAOZdJXWxX6BKqt8=z-dWNO15AunjbhNBkSi5Cpfx6Dn3Yw4BaQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH2vDIYWUftzeH4CwoDWqiZzAE9yKFOOu8ghijiqo79WRaU9jaZG_afqrM
+Message-ID: <CAOZdJXWxX6BKqt8=z-dWNO15AunjbhNBkSi5Cpfx6Dn3Yw4BaQ@mail.gmail.com>
+Subject: Re: [PATCH v6 net-next 05/14] net: enetc: add debugfs interface to
+ dump MAC filter
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, christophe.leroy@csgroup.eu, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 04:28:17PM +0100, Lorenzo Stoakes wrote:
-> Right now these are performed in kernel/fork.c which is odd and a violation
-> of separation of concerns, as well as preventing us from integrating this
-> and related logic into userland VMA testing going forward, and perhaps more
-> importantly - enabling us to, in a subsequent commit, make VMA
-> allocation/freeing a purely internal mm operation.
-> 
-> There is a fly in the ointment - nommu - mmap.c is not compiled if
-> CONFIG_MMU not set, and neither is vma.c.
-> 
-> To square the circle, let's add a new file - vma_init.c. This will be
-> compiled for both CONFIG_MMU and nommu builds, and will also form part of
-> the VMA userland testing.
-> 
-> This allows us to de-duplicate code, while maintaining separation of
-> concerns and the ability for us to userland test this logic.
-> 
-> Update the VMA userland tests accordingly, additionally adding a
-> detach_free_vma() helper function to correctly detach VMAs before freeing
-> them in test code, as this change was triggering the assert for this.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Mon, Apr 28, 2025 at 6:19=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wrote:
+> +void enetc_remove_debugfs(struct enetc_si *si)
+> +{
+> +       debugfs_remove_recursive(si->debugfs_root);
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+You can just call debugfs_remove() here.  debugfs_remove_recursive()
+is deprecated:
 
--- 
-Kees Cook
+void debugfs_remove(struct dentry *dentry);
+#define debugfs_remove_recursive debugfs_remove
