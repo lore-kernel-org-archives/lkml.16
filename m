@@ -1,156 +1,119 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0E32C1E3C;
-	Tue, 29 Apr 2025 12:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931096; cv=none; b=N1NGbSqmMxIDiEighMs2Ozqh+7pIJvoyTEDZdYuU3PUnXpXM0BQxSiNQKM+oqQHJaAFPVZTehNQRDwO+L0jY6pM1/XfGyJpUn6ZZhRBwvOCA4GMwWByAmTv7xcu3qc9h6nH4x7zna46MhySvfC31pSpe4lR8I7Ptmvcy3ly6VQE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931096; c=relaxed/simple;
-	bh=k/VOt13OojSw7K+V+NfpXrHAjT5wm6azQdPmLAshz9E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jLKuTu//+Z2+ZswGGxS6lKwdtiwLRQKcg+hISHpSDcFKv53Q1FQCLT9ntYZ/ZWXYIO8p2A6H12DgXfecqn6r0wm2RHvJHRrbAlCdmPLV8HUT0wyMeGKsun1WDUBhEJAg9xJC02vHmDxGnDlWLWuHJfzuBrbGh95Vu/EzJUpF4MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZWlCCbgd; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A44A2C17A7;
+	Tue, 29 Apr 2025 12:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745931118; cv=pass; b=VQDvyATm6/Cuebb/jdvw7T+lPSqyG9tSukNKmwF4xpvo8zeU6c5abrE6eNuZoXWSkBoOVFZHQ+ooWJBOmiw3mqawvJPTXy2H6O7uYeWZQ+zhhSzMmErTO68ZYV9MKLGekKJ3miVr+5v3wvovH16gssJ1dsHAYJlKdVYigKItSA4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745931118; c=relaxed/simple;
+	bh=DEQeFsMbhzlHPT/Sx8vc3XKjQ6HtI/zCWH8m7IsAtG0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gN+I+mkdVP3aozmgAIt4hw4bW09e8BYipPuzWBJsF6AQhT/6i62S9VllIvgL1NJqxCFdeB91+NnM1wmqymmPPbXxErs6u8nBfTv2g4Q8BNnN3Erk0VBs1wOFotnYC3tndAiKcTsue24c4GJ6QPVaF0Jrwtb44esEf5ltU0VhcMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Dn7mn+UJ; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZWlCCbgd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=R4ets
-	zlrRlRhr2cxA4vrJXY7WeE7DJgWLl5ztKXUTvQ=; b=ZWlCCbgdVkuYPFNYdDxud
-	ZWjMuyHOkfW0kGCuKWjwcbLv8+2qarrYfM7PzgfBc1RUOKPFBR3qw+RyX1eamAP/
-	MHWWPsjmR8AfJdmfg6lAz5635JGIcD/MXxmMMdo6lty+IC8R93u4wl5XxaqdWbKl
-	feqPwFeknVWq0h7jFBGpiY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wC3DRQeyxBoOlBzDQ--.23007S7;
-	Tue, 29 Apr 2025 20:50:43 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org,
-	ilpo.jarvinen@linux.intel.com,
-	kw@linux.com
-Cc: cassel@kernel.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v10 5/6] PCI: cadence: Use common PCI host bridge APIs for finding the capabilities
-Date: Tue, 29 Apr 2025 20:50:35 +0800
-Message-Id: <20250429125036.88060-6-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250429125036.88060-1-18255117159@163.com>
-References: <20250429125036.88060-1-18255117159@163.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Dn7mn+UJ"
+ARC-Seal: i=1; a=rsa-sha256; t=1745931096; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=LP4S9htb/tdPQTA3dqPD4Eu5tvwNdQS9ERqyw4qzqIOVSFZWqRLPR3P03Uqp20uF0+wyoQMIBoe7NlNfw4gts3e4KQafXgjKYpt/Jb+jVD3vhgmMTRgOUMxxxJGRYiozBNE/zbvwOD7yAPKHApCUHE0FsRMFEHzdUH5ci4SFTI0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745931096; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=wAqddgCvCAXmKLXb0X53fyiZ4qXPPUZR54/Xu7bltQs=; 
+	b=DAyh9eHU8Fl/fxMo2EBlE00D71Yb1Wiwc1Yb0lkBwAOQRu5ZFUBq7oLbqmPEKmwqg2qqHLM4j5uejbanXByLdLyN3+hg3/xYbJEfykwpJd+rr75d7OzjoaZYQdaTBDihqjJ5tQfHS+iQuYUnhA90irck6RFMBkSOhTsHgPN+UY4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745931096;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=wAqddgCvCAXmKLXb0X53fyiZ4qXPPUZR54/Xu7bltQs=;
+	b=Dn7mn+UJnXsXb8xFEEs9Tsu9KdhEDs9rWgBgndz7C+uX1fPse/Zq2PDJRV5pytYY
+	UCoZKhbdT4o/doQlSseVlwKcvtREcpR92n8HIxk/ehXiTv5QVgDhyM3X7HK6faheHDQ
+	+0XElXoFKUZsOUWkV6VbmneN1WisJojwYPztEMEY=
+Received: by mx.zohomail.com with SMTPS id 1745931094377930.5836650113462;
+	Tue, 29 Apr 2025 05:51:34 -0700 (PDT)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH] media: verisilicon: Free post processor buffers on error
+Date: Tue, 29 Apr 2025 08:51:32 -0400
+Message-ID: <2782084.mvXUDI8C0e@earth>
+In-Reply-To: <d901822b2710a2d642f1372fbfb53f99f1e60b2e.camel@collabora.com>
+References:
+ <20250425192447.227063-1-detlev.casanova@collabora.com>
+ <d901822b2710a2d642f1372fbfb53f99f1e60b2e.camel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3DRQeyxBoOlBzDQ--.23007S7
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuryrAr48Cw4rur1kCF4UJwb_yoW5ZF48pF
-	WDGFyfCa1rJFW3uFs3A3W5Xr15tFnak347ta92kw12vF17Cr1UGF12gFy3Kr9xKrs7Wr13
-	X3yDtFykKrn0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziID7hUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwY+o2gQySUy1wAAsx
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-Use the PCI core is now exposing generic macros for the host bridges to
-search for the PCIe capabilities, make use of them in the CDNS driver.
+On Monday, 28 April 2025 13:25:59 EDT Nicolas Dufresne wrote:
+> Le vendredi 25 avril 2025 =C3=A0 15:24 -0400, Detlev Casanova a =C3=A9cri=
+t :
+> > When initializing the post processor, it allocates the same number of
+>=20
+> What do you think reworking as:
+>=20
+>   During initialization, the post processor allocates the same number of
+>=20
+> > buffers as the buf queue.
+> > As the init function is called in streamon(), if an allocation fails,
+> > streamon will return an error and streamoff() will not be called, keepi=
+ng
+> > all post processor buffers allocated.
+> >=20
+> > To avoid that, all post proc buffers are freed in case of an allocation
+> > error.
+> >=20
+> > Fixes: 26711491a807 ("media: verisilicon: Refactor postprocessor to sto=
+re
+> > more buffers") Signed-off-by: Detlev Casanova
+> > <detlev.casanova@collabora.com>
+>=20
+> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+>=20
+> If you are fine with the suggestion, I can make the changes while
+> applying.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v8 ~ v9:
-- None
+Yes, that's goot for me.
 
-Changes since v7:
-- Resolve compilation errors.
+Detlev.
 
-Changes since v6:
-https://lore.kernel.org/linux-pci/20250323164852.430546-4-18255117159@163.com/
+> > ---
+> >  drivers/media/platform/verisilicon/hantro_postproc.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/media/platform/verisilicon/hantro_postproc.c
+> > b/drivers/media/platform/verisilicon/hantro_postproc.c index
+> > c435a393e0cb7..9f559a13d409b 100644
+> > --- a/drivers/media/platform/verisilicon/hantro_postproc.c
+> > +++ b/drivers/media/platform/verisilicon/hantro_postproc.c
+> > @@ -250,8 +250,10 @@ int hantro_postproc_init(struct hantro_ctx *ctx)
+> > =20
+> >  	for (i =3D 0; i < num_buffers; i++) {
+> >  		ret =3D hantro_postproc_alloc(ctx, i);
+> > -		if (ret)
+> > +		if (ret) {
+> > +			hantro_postproc_free(ctx);
+> >  			return ret;
+> > +		}
+> >  	}
+> > =20
+> >  	return 0;
 
-- The patch commit message were modified.
 
-Changes since v5:
-https://lore.kernel.org/linux-pci/20250321163803.391056-4-18255117159@163.com
 
-- Kconfig add "select PCI_HOST_HELPERS"
----
- drivers/pci/controller/cadence/pcie-cadence.c | 28 +++++++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h | 13 +++++++++
- 2 files changed, 41 insertions(+)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-index 204e045aed8c..ca4a1a809fcb 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -7,6 +7,34 @@
- #include <linux/of.h>
- 
- #include "pcie-cadence.h"
-+#include "../../pci.h"
-+
-+static int cdns_pcie_read_cfg(void *priv, int where, int size, u32 *val)
-+{
-+	struct cdns_pcie *pcie = priv;
-+
-+	if (size == 4)
-+		*val = cdns_pcie_readl(pcie, where);
-+	else if (size == 2)
-+		*val = cdns_pcie_readw(pcie, where);
-+	else if (size == 1)
-+		*val = cdns_pcie_readb(pcie, where);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
-+{
-+	return PCI_FIND_NEXT_CAP_TTL(cdns_pcie_read_cfg, PCI_CAPABILITY_LIST,
-+				     cap, pcie);
-+}
-+EXPORT_SYMBOL_GPL(cdns_pcie_find_capability);
-+
-+u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
-+{
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(cdns_pcie_read_cfg, 0, cap, pcie);
-+}
-+EXPORT_SYMBOL_GPL(cdns_pcie_find_ext_capability);
- 
- void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
- {
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 39ee9945c903..56d6a0e73eb7 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -398,6 +398,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- 	return readl(pcie->reg_base + reg);
- }
- 
-+static inline u32 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
-+{
-+	return readw(pcie->reg_base + reg);
-+}
-+
-+static inline u32 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
-+{
-+	return readb(pcie->reg_base + reg);
-+}
-+
- static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
- {
- 	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-@@ -557,6 +567,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- }
- #endif
- 
-+u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
-+u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
-+
- void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
- 
- void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
--- 
-2.25.1
 
