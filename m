@@ -1,230 +1,117 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2551D88A4
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E6A78F29;
+	Tue, 29 Apr 2025 07:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745910435; cv=none; b=jR/vNtDU+g69dZGTOAYg8uM8JOs1tDlGrXEQWZ7qEZUv1ldpuGD0LzKbXOTgmXepHna8TKC9XzEiH1dI1Z2Gq8yNLLIpW/o3wV84iw5fmp+/CCStLvwTjtVGbZBf1TK4YvD76QXMIzcPOfKFIKUwesBWxWNu9bP98mc7HWzZgbU=
+	t=1745910481; cv=none; b=SrDCY7PTMGTKuASBwvA8gODMOoD1neK7XGsH5RKA1QV0/xrRC0JnLrg53ofN44XfBbufuG1y0ppwFuMJn3YZ6HVAN9tYuXspd5QNdBCY9HV6XCDMm4DhPvuX0/QTJ4HBU9mvasaLMauv0n+Cy5S06t9ism7IHDQSgxbZXrKD67s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745910435; c=relaxed/simple;
-	bh=uOg4U6NEBFX3k1kwZPha+qXY5qzuRuGE9ojz1bSRHD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g7snNiONA7wzeWZMVX2nP8g9RBxVNio/YBgUuZ8P2J6A1Vjmqe1PEBdulFr+2ZSX+WXphBgnLND40QqxG+unZmWs3bxICrz3iD4UseaqIE8Hqaf2aUBigBJfGSK4v73cBmLKzh1kKhdEfeiCaCIhFJgZBpnXFZ4gbLOk5zJvH2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NgTwteJE; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1745910481; c=relaxed/simple;
+	bh=/agbpIEpvL1dYIcwFxxAnWwncnBkSjlhCa3SZj7TMTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qbG3KAmwE34pUDBkMbDcSRVrzn7tA/6QbbGKqw/OKmSW0XHBwlGi+dqC3+WYqIFvauiArVPCrc7UZi379bbVNp8ExuS+5q2l7FXz4ee1bBGb+FlHyq/eD2Zsvs2rsfgB4yXz6DWomFUC8VyhDsO3YLkj7SiAZ5H0dwycDYBnNVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AAN8du7r; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NgTwteJE"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso4297322f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745910431; x=1746515231; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IouLfT/aoPa/R6OCtl0qGB7KPQxFbX8a1jsVDadjoIc=;
-        b=NgTwteJEmgAbTAG5V4KeIVpQb1jPPXUedE48xsvgo4gsntf651ZqlJHRKdNOHuCg6Y
-         ZOeTt/RpIHqRJdiDERLqBNcy6NeaS1v8Clw+OKsBXZeq57pCuzfLDQ2/jtAWKrsmEtah
-         opNdE1YBGResvk1TowdLlv9LZO+C6qlZDt2agozJXuNedlxR0oQdfwXyeBNfxLesFzZM
-         sQyjr0IdCHDaAJKBKgtKQs2dTY/ApQJUSTl75D63H9YsSjsRjK1Zo5JsWNaGBmvslOoA
-         yicUNbQrxLcDf3/qNEYgopGLom1SNNEX05MXd6dQWNtQBNbCoXRzEmwBUH2ctSeY407d
-         +Kig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745910431; x=1746515231;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IouLfT/aoPa/R6OCtl0qGB7KPQxFbX8a1jsVDadjoIc=;
-        b=GL/kNxJRH9gI5M76nvjQ6igt1MaMhpkpxtVM6XsrkHQ4eXcS5MkUj5M7Fx/MYMB3ig
-         LoLEaM4vt4xOas+TJkYsuRjZ8g+0MAXnlLE0+TfDoY5Hu23RDU7XJui6avPlZ/9vUVjN
-         toQIJe2v0GZa8ihecHo5isUYDbns/tlPdYEOgPvma+3sfj5MWnVQ5Q7jfiBZTuVVileG
-         thPSpRvXiAKB0JALiB6dwqd1eGLPvGlwDWek24E36YCHk2Jo6EZXDL0NsWCTCNLa9t4d
-         ogqFWL4ugTqIlGf1gyJqDD7b2MXZG5ivf4G04U39lqowUEjTSInUr9wxpczpM+vIKLJo
-         CoVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnVitPn0j6whk5FUV4sxtz/m29aVA4xls//pwDnrpFDRWzMtY+619KKGkWObfzS8E/GwQOuilyXiga784=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmwbU+JlneDkGY0gYdbFaUItyCY60Qr0sZlJrRr08eAEVB9x2q
-	QhBVMVBGCtRRkXFFUGEV9ruogcsPVPX1mgX956Zc6y8JzgxHLetwC0RB2HZ2ex0=
-X-Gm-Gg: ASbGncsm50/UTJQ11WiUWcNvlHG8NxneA18HPoyeTqwVSu+yvWFmeGBzrQa2NXPH1Bn
-	7UADTKiTows1JD4D94IrJAcGqEjYzPz37TvgnN19tFdzQjN2BK1vOT3AGj98OGZ6YtRDrKD7MKh
-	p2bJvj9lxy6YM+4+ZF6hf6/RDx1F4GxQ8C/dwksI8hXqbRuyzXauT+tdwYqGULpADpxSLqS5hBA
-	HoW/XwZR+aJJeZPzrATNqpZC7tc3pQuOCmAA51psoEJHPRQA1uuBlQ1XEx+iiJVR4o1wIBVgWkp
-	CC2H3gzBeTnbop+8b0ILqx+RlkQSNL5emEvmg/sXKNoYobPuxcbg55JY37oB0h55ziQd7Mb2Gy1
-	/gzUQCsYbcA==
-X-Google-Smtp-Source: AGHT+IFj2OXOUboew7ts54Nxo8wn4cB8hSI+ZHyOLFUpeeQtltGs4Zu4l7bQC4xebcFyF+TLDjHQIg==
-X-Received: by 2002:a5d:64ce:0:b0:399:71d4:a9 with SMTP id ffacd0b85a97d-3a08a3c94b1mr1324087f8f.52.1745910430947;
-        Tue, 29 Apr 2025 00:07:10 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07a7c39a0sm10150725f8f.101.2025.04.29.00.07.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 00:07:10 -0700 (PDT)
-Message-ID: <b779beed-e44e-4a5e-9551-4647682b0d21@rivosinc.com>
-Date: Tue, 29 Apr 2025 09:07:09 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AAN8du7r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745910475;
+	bh=1qxqL3IB8/tukQnoKsoGEv4OQYEuGNd0wnjScgTy4iY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AAN8du7rxxYhOdg+t/ELoxOXipkkK24grnKb5o74PbrdXITwfqLaerueG9CIOpdoZ
+	 7jq3x2PolPVW7jfKfniO7Vdc3rHkGYvRXjsMiVUIDBvUomeMYcIu0qjXhZf1+wW12A
+	 bWB6MWnEjmIvWmqk1SkorLqT/6kjdzmkwPTQ2jPLX+6UVHqYwfQvhb/V9jiZubpcbo
+	 h1Om5kQRkOJxWUl8wnpDdKOf2FR36CAL4PfGqOJ3yBIK+iktt3kUlJCFmIbdpp5HSa
+	 G4UuyRwPanBUqAuyKNsuw3AQiZZmjCRCfdwG+qo0y9TnQrv2CyFbM+5DvOrp9q05Rx
+	 J4D04/ugT7h7Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmrxR01Nfz4wj2;
+	Tue, 29 Apr 2025 17:07:53 +1000 (AEST)
+Date: Tue, 29 Apr 2025 17:07:52 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andreas Hindborg <a.hindborg@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>
+Cc: Asahi Lina <lina+kernel@asahilina.net>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>
+Subject: linux-next: manual merge of the rust-xarray tree with the drm-nova
+ tree
+Message-ID: <20250429170752.27fddb30@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] riscv: misaligned: fix sleeping function called
- during misaligned access handling
-To: Nylon Chen <nylon.chen@sifive.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, charlie@rivosinc.com,
- jesse@rivosinc.com, evan@rivosinc.com, zhangchunyan@iscas.ac.cn,
- samuel.holland@sifive.com, zong.li@sifive.com
-References: <20250411073850.3699180-1-nylon.chen@sifive.com>
- <20250411073850.3699180-3-nylon.chen@sifive.com>
- <992e3135-0c55-403c-9f71-d76c59cec75b@rivosinc.com>
- <22a2c734-b446-4b1e-a2bc-a0080656fe29@ghiti.fr>
- <f4be063b-f321-45d4-9891-b50f30beb1ef@rivosinc.com>
- <CAHh=Yk-jk-KzDK_kJTbGi8HOZqsUPZjdGN8eF_op=HKF2V-Udw@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <CAHh=Yk-jk-KzDK_kJTbGi8HOZqsUPZjdGN8eF_op=HKF2V-Udw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/j7x18WCNzSCqfamaCICR9SI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/j7x18WCNzSCqfamaCICR9SI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 29/04/2025 07:57, Nylon Chen wrote:
-> Hi Clément,
-> 
-> Thank you for sharing your patch. I’ve reviewed the changes, but I’m
-> not sure I fully grasp the design rationale.
-> Could you please briefly explain the main considerations behind this
-> modification?
-> 
-> We’re also discussing internally the differences between my _nofault
-> approach and your IRQ-enable approach, and I’d appreciate your
-> perspective on the pros and cons of each.
+Today's linux-next merge of the rust-xarray tree got a conflict in:
 
-Hi Nylon,
+  rust/bindings/bindings_helper.h
 
-There is not really pro vs cons. Using nofault would lead to failure to
-read from user memory that is paged out for instance. This is not really
-acceptable, we should handle user misaligned access even at an address
-that would generate a page fault. One way to do so is to reenable IRQs
-when coming from userspace and use copy_from/to_user() since it can
-sleep while accessing memory. My latest version of the series [1] now
-reenables interrupts only when coming from userspace.
+between commit:
 
-Thanks,
+  c284d3e42338 ("rust: drm: gem: Add GEM object abstraction")
 
-Clément
+from the drm-nova tree and commit:
 
-[1]
-https://lore.kernel.org/linux-riscv/20250422162324.956065-1-cleger@rivosinc.com/
-> 
-> Looking forward to your suggestions!
-> 
-> Nylon
-> 
-> Clément Léger <cleger@rivosinc.com> 於 2025年4月11日 週五 下午4:38寫道：
->>
->>
->>
->> On 11/04/2025 10:35, Alexandre Ghiti wrote:
->>> Hi Clément,
->>>
->>> On 11/04/2025 09:36, Clément Léger wrote:
->>>> Hi Nylon,
->>>>
->>>> I already have a pending fix for that bug which is to reenable
->>>> interrupts while handling misaligned faults. Please see:
->>>> https://lore.kernel.org/linux-riscv/20250317170625.1142870-12-
->>>> cleger@rivosinc.com/
->>>
->>>
->>> Can you extract this fix from the series so that it can be merged in 6.15?
->>
->> Hi Alex,
->>
->> Yes sure, I can send a small series as well. However, I'd like the
->> associated kselftest to be reviewed since it would allow to catch such
->> behavior (there is no test for misaligned delegation yet).
->>
->> Thanks,
->>
->> Clément
->>
->>>
->>> Thanks,
->>>
->>> Alex
->>>
->>>
->>>>
->>>> Thanks,
->>>>
->>>> Clément
->>>>
->>>> On 11/04/2025 09:38, Nylon Chen wrote:
->>>>> Use copy_from_user_nofault() and copy_to_user_nofault() instead of
->>>>> copy_from/to_user functions in the misaligned access trap handlers.
->>>>>
->>>>> The following bug report was found when executing misaligned memory
->>>>> accesses:
->>>>>
->>>>> BUG: sleeping function called from invalid context at ./include/
->>>>> linux/uaccess.h:162
->>>>> in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 115, name: two
->>>>> preempt_count: 0, expected: 0
->>>>> CPU: 0 UID: 0 PID: 115 Comm: two Not tainted 6.14.0-rc5 #24
->>>>> Hardware name: riscv-virtio,qemu (DT)
->>>>> Call Trace:
->>>>>   [<ffffffff800160ea>] dump_backtrace+0x1c/0x24
->>>>>   [<ffffffff80002304>] show_stack+0x28/0x34
->>>>>   [<ffffffff80010fae>] dump_stack_lvl+0x4a/0x68
->>>>>   [<ffffffff80010fe0>] dump_stack+0x14/0x1c
->>>>>   [<ffffffff8004e44e>] __might_resched+0xfa/0x104
->>>>>   [<ffffffff8004e496>] __might_sleep+0x3e/0x62
->>>>>   [<ffffffff801963c4>] __might_fault+0x1c/0x24
->>>>>   [<ffffffff80425352>] _copy_from_user+0x28/0xaa
->>>>>   [<ffffffff8000296c>] handle_misaligned_store+0x204/0x254
->>>>>   [<ffffffff809eae82>] do_trap_store_misaligned+0x24/0xee
->>>>>   [<ffffffff809f4f1a>] handle_exception+0x146/0x152
->>>>>
->>>>> Fixes: b686ecdeacf6 ("riscv: misaligned: Restrict user access to
->>>>> kernel memory")
->>>>> Fixes: 441381506ba7 ("riscv: misaligned: remove CONFIG_RISCV_M_MODE
->>>>> specific code")
->>>>>
->>>>> Signed-off-by: Zong Li <zong.li@sifive.com>
->>>>> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
->>>>> ---
->>>>>   arch/riscv/kernel/traps_misaligned.c | 4 ++--
->>>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/
->>>>> kernel/traps_misaligned.c
->>>>> index d7275dfb6b7e..563f73f88fa8 100644
->>>>> --- a/arch/riscv/kernel/traps_misaligned.c
->>>>> +++ b/arch/riscv/kernel/traps_misaligned.c
->>>>> @@ -455,7 +455,7 @@ static int handle_scalar_misaligned_load(struct
->>>>> pt_regs *regs)
->>>>>         val.data_u64 = 0;
->>>>>       if (user_mode(regs)) {
->>>>> -        if (copy_from_user(&val, (u8 __user *)addr, len))
->>>>> +        if (copy_from_user_nofault(&val, (u8 __user *)addr, len))
->>>>>               return -1;
->>>>>       } else {
->>>>>           memcpy(&val, (u8 *)addr, len);
->>>>> @@ -556,7 +556,7 @@ static int handle_scalar_misaligned_store(struct
->>>>> pt_regs *regs)
->>>>>           return -EOPNOTSUPP;
->>>>>         if (user_mode(regs)) {
->>>>> -        if (copy_to_user((u8 __user *)addr, &val, len))
->>>>> +        if (copy_to_user_nofault((u8 __user *)addr, &val, len))
->>>>>               return -1;
->>>>>       } else {
->>>>>           memcpy((u8 *)addr, &val, len);
->>>>
->>>> _______________________________________________
->>>> linux-riscv mailing list
->>>> linux-riscv@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
->>
+  dea08321b98e ("rust: xarray: Add an abstraction for XArray")
 
+from the rust-xarray tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc rust/bindings/bindings_helper.h
+index e0676ba99d37,e0bcd130b494..000000000000
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@@ -61,4 -56,8 +62,9 @@@ const gfp_t RUST_CONST_HELPER___GFP_ZER
+  const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM =3D ___GFP_HIGHMEM;
+  const gfp_t RUST_CONST_HELPER___GFP_NOWARN =3D ___GFP_NOWARN;
+  const blk_features_t RUST_CONST_HELPER_BLK_FEAT_ROTATIONAL =3D BLK_FEAT_R=
+OTATIONAL;
+ +const fop_flags_t RUST_CONST_HELPER_FOP_UNSIGNED_OFFSET =3D FOP_UNSIGNED_=
+OFFSET;
++=20
++ const xa_mark_t RUST_CONST_HELPER_XA_PRESENT =3D XA_PRESENT;
++=20
++ const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC =3D XA_FLAGS_ALLOC;
++ const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC1 =3D XA_FLAGS_ALLOC1;
+
+--Sig_/j7x18WCNzSCqfamaCICR9SI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQesgACgkQAVBC80lX
+0Gz0oQf9Fw9e2fvAi0Gizsq0TZ7Ft6d9VyH/ISZttdJIMviSd3BAJypLMsdGx182
+1TMDabMUMGLJIuKAvNKQZfvLAl0r6TFVF926mIIrqy+iz1qI0hCg4Bvuu48O9YNj
+OKoNj82HYyezRJhzD1EdUkzYv7iqCDgh64qDQMfB1z0PWctEdCRhVXMi8YAOyszs
+teyhTwGJBXni6mWbeFecSSeW9WDwGDliWPD9kqPe/vxZ/2JNuXcHXWjlI+DuzHhe
+u2OtwlulDLA/rCjD4G+wzWTuZ+ATdE/BBsRZPxnNGuoqanHwWozeubwKXoMmvJCj
+y+2eTZj93MwkzLpfohpUZnjqyKbEIQ==
+=a5NJ
+-----END PGP SIGNATURE-----
+
+--Sig_/j7x18WCNzSCqfamaCICR9SI--
