@@ -1,97 +1,72 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B052422A7E6;
-	Tue, 29 Apr 2025 16:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945557; cv=pass; b=e9sgb01B1HKcdyGIrdv3fLpCtSSmosms3khj+5Jt8f0OJLIZ7qCXJxjEPoJ/vYWiEW7S63hMCxNgygeNBLq3SV/gIeO7OO6wSJC4rAp9Mwnmnt2pj1PKr7LJSoX/VYgD0wJNy8jbzSoYZgAVANJDgs4VqihYuiR4rpPKHBgrM4k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945557; c=relaxed/simple;
-	bh=xLfUqxkolvhQu6zJjR/MsGuj2lN1Bw7Le7IBOLEzbFs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uH59g5j6PvzaiAT747Fgp1Q+7MhvfsSwrDvWoJd22Nxfa6laDAUZ9Yg7euLpb05QlXlHWyCl+wY6aG1fChPCMkKwHyevrfUle0EMneu3Abcik8XhCwfDguFGGs1WNmFc9Mp7wXwlp3aFWKi0RaoOItiVEGVX9kClWfifY8JgpB4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=LrKvbKun; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1519A24BC04
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745945558; cv=none; b=E3hzLc5yp5aRCOjXBkZAZkbzVkEh3IhZ0F11N/dtlR+n/j+uv7sQAT42CT3TUPmV/y8paDsf6l5fJoUIuYDAX+/3qZoP/5o+8PFOZbIUR39StND8fuGZ1v+pOtVF569ZpJSdWNXrTA50b4fPkRkPqtuI0VRCXNAfix4J3ZeHzts=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745945558; c=relaxed/simple;
+	bh=9/DyTaXRRRhmMtYj7n0VE2ZpY/dcBTLDTDYYO1pk/Ks=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Qkb0tNMdBOJ08rWRsVXF3+t79Egac4mEGwZqzXzUVuW/abFxbfEkkhi9CwuNAKkpo7EGBylg4FFbJNMTSdI+NeLsSiy+4ddKizmoFRDtgeaXq2g79rxE7TV+DLs2BXezoD5ENd8Q3Eh1219Hc1cPDmM8xSbkST45E4iyEhKg0ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=biT+Ta/N; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="LrKvbKun"
-ARC-Seal: i=1; a=rsa-sha256; t=1745945533; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IQBQTzconYJkqWZwYVbRGCr0fE2QNxTFfE3QMFz6gVJvqqjVNRcp2WzYj6h+XjBoGDtnOwgRXtU4MQotaYUT7/jbbr50Xbg6I79CiNY/zyud3E4Q9mX8xFOoKJLaFQUUaZnfQaOFpSxS+znfdhhs0wQeqrvItZnZemNMOS1zkSs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745945533; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3hn7TI/NIifsiTf4RtEzy2zuXp6Q4rhXJuOfP6jWeJw=; 
-	b=YKACafeXthLiyZt4GzZHB89ADiQiUemvk91QX01rpznlzPVelZ2D700U4mpJudnJD+Z1zzaKxOXvPQae3EwQjLwwZW5WzluKVEApp0yGf30eDKkAfX0R0N90PMas83qOyh2CmGBWY8pHImSW5+uIglGNU7pPcWl1HfXVVf+MGgg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745945532;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=3hn7TI/NIifsiTf4RtEzy2zuXp6Q4rhXJuOfP6jWeJw=;
-	b=LrKvbKunSVI/bXi0eGOSIhTtqmEIxNKK8+JHQmS6zxTAqs7D9di/oS1wd8kmygIq
-	+KVSl52vk2D2C+eLPatAmN+tCgO71mESSy3jpjvZwPNZMB6GbnAsdvjQ4pIr7P2ubrr
-	ITZukGJ3wGH7l9tGmZqoP+i2VQkKYTKRsExjpbJM=
-Received: by mx.zohomail.com with SMTPS id 1745945531729697.7459362757056;
-	Tue, 29 Apr 2025 09:52:11 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Tue, 29 Apr 2025 18:51:55 +0200
-Subject: [PATCH] arm64: dts: rockchip: fix Sige5 RTC interrupt pin
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="biT+Ta/N"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3086107d023so5389624a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745945556; x=1746550356; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9/DyTaXRRRhmMtYj7n0VE2ZpY/dcBTLDTDYYO1pk/Ks=;
+        b=biT+Ta/NIhhq59VVxrszBNMy57vHcDctJN8ACrHPcI5+krqhLahkm6SdKkA/jnHuQz
+         zOHWWbhPOCXQQcHQ3NmHyxQSNjg/9wNaJmKROe7EPnUOfMaCAJWVCnfuFynCUNKleZo9
+         ni0wl2GZmJFh4yslLJR5V//hZIkD/ytn9SfMIjxQ+JDm/IPOj6MHq2QX6AlAP2Shs2+2
+         RYR7iilsQ7AksezOr4uyKbwLRpXyUP19q7+SEx9p4L64gN/7pDU6vrFIJJ7+Octr9Erp
+         1nsN8qP79WHSIfZ+xxDO/Tcr9b1wfqGak3/ts9rHGLoNkVMzPkuDUaQwy/Jh+YrTCZNZ
+         iqmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745945556; x=1746550356;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9/DyTaXRRRhmMtYj7n0VE2ZpY/dcBTLDTDYYO1pk/Ks=;
+        b=NcPsRnxox9dWgHXTP8QSYL8T8p9HoZp+WsE9hGoieF2IsdWYSeJONOLPLcXoU+pu42
+         M3MRsGFegz5tHLT++xWOZuR1O0GsSY+2gyf2maElIrb4/kyAQ2GeV46h+jJ9xHdpo/Qu
+         ObHAxOBQkKlyJY+nRdPvJceytMn6TB1oRalFjUms+XcU6ilqxyWqRXw7NS0IUIfvGIzY
+         4vbKn4IgFaEGI4YfHk7h6uEHD4gpC/azMc116SnwWe9BrWkOPCpg4twQXfg0IS/PNA5W
+         O/tmx1L8J39HrMzpgED1NetZuCdKhdqrRnts8/xkPaUnYkvdpt8+bjqQly2/siVi822Y
+         AlJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaZeLPlIbzjAHIQ1edJJlQStXNHcKz/8aHmFY1nLTE3GjarrANRd3MLm0Y8Ev4XYYSlnP60lEnTktRT3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC3BvtGRHqi+zVTyQUpq3Ihbya7iPaNJYJk4e0XTLdKzwOZW3Z
+	PAgDAMQCoM7qZ4V6SQOAC9p4EHR8vzydiI94AsgR2VxTasD2v7pK4xNUzgpeWfwhr/Ay8pqvP3Y
+	J9w==
+X-Google-Smtp-Source: AGHT+IFEE6LO1G7pamWoVl2A8JQIOWisDuS/kml2oFH5sEgf3g81yBC6JuYkTpidKh/jeQ32pw+x5WUisOE=
+X-Received: from pjbsy12.prod.google.com ([2002:a17:90b:2d0c:b0:2fc:1158:9fe5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:568c:b0:2ee:d433:7c50
+ with SMTP id 98e67ed59e1d1-30a23e262eamr3924343a91.23.1745945556371; Tue, 29
+ Apr 2025 09:52:36 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 29 Apr 2025 09:52:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-sige5-rtc-oopsie-v1-1-8686767d0f1f@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAKoDEWgC/y3MQQ6CMBCF4as0s3YSrDZFrmJY1DLiLGhxphgSw
- t1txOX/kvdtoCRMCp3ZQOjDyjnVOJ8MxFdIIyEPtcE21jVXe0PlkRxKiZjzrEw4XKIL3nvyoYV
- 6m4WevP7Ie3+00HupcjlGeAQljHmauHQm0Vrwr7fQ7/sXWxEMNZMAAAA=
-X-Change-ID: 20250429-sige5-rtc-oopsie-d3c5a777e7a8
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Detlev Casanova <detlev.casanova@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+Message-ID: <20250429165227.153943-1-seanjc@google.com>
+Subject: [ANNOUNCE] PUCK Agenda - 2025.04.30 - CANCELED
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ackerley Tng <ackerleytng@google.com>, roypat@amazon.co.uk, kalyazin@amazon.com, 
+	Fuad Tabba <tabba@google.com>, Vishal Annapurve <vannapurve@google.com>, david@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-Someone made a typo when they added the RTC to the Sige5 DTS, which
-resulted in it using interrupts from GPIO0 B0 instead of GPIO0 A0. The
-pinctrl entry for it wasn't typoed though, curiously enough.
+PUCK is canceled this week, as I managed to pick up a conflict (at 6am...).
 
-The Sige5 v1.1 schematic was used to verify that GPIO0 A0 is the correct
-pin for the RTC wakeup interrupt, so let's change it to that.
-
-Fixes: 40f742b07ab2 ("arm64: dts: rockchip: Add rk3576-armsom-sige5 board")
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-index 964ee351d3b63fcb4ede70f4b6c06541715cfe19..570252c4c0bfe56a3c269e47d81fca7676e61787 100644
---- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-@@ -616,7 +616,7 @@ hym8563: rtc@51 {
- 		reg = <0x51>;
- 		clock-output-names = "hym8563";
- 		interrupt-parent = <&gpio0>;
--		interrupts = <RK_PB0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <RK_PA0 IRQ_TYPE_LEVEL_LOW>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&hym8563_int>;
- 		wakeup-source;
-
----
-base-commit: 05c58e5408604391298fccf956f8cd0a4662da73
-change-id: 20250429-sige5-rtc-oopsie-d3c5a777e7a8
-
-Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-
+Future Schedule
+May 7th - guest_memfd initiated private/shared conversions (tenative)
