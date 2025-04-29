@@ -1,157 +1,114 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from hs01.dakr.org (hs01.dakr.org [173.249.23.66])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FBB2C1E07
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927255; cv=fail; b=QeifsBBTNUNucEjOPubEfZHPgf7xxB79lt+C213O08slU8n1vWQEiUOhX5s/WRb6iQHXd23eCNxrco5mr0nnAZkU3Ql5PrnGlzjsUQw9IFEHtJNwvvrd8t5gJOXUUlGhPDLA95mZNiMtC+4USovQLUyixkn0u3D9wLvzi9T5oBg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927255; c=relaxed/simple;
-	bh=z0Lm4a3lJK9Q6CYCmwXzqYDiQMzRWk/LGFS4NgeG80c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OHL8ua2odAWrJOEqByBYik9fGo8qMoO3M2NypG4qRXT5Aw31IaKTz5VQMIIozqZpO48eileMjmwjaiW7ZKYulc+g+s4dZNdNCwp/ITL8kqoWP8hC++Slo/VyrP84ZFjaQk74yy3rr1VhEZD0nJ4hjkyFcdKBR0tRhQWy6Po4Ucs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Y4oVEPQc; arc=fail smtp.client-ip=40.107.20.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y4oVEPQc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wty8SSpfYZdrAI4/cEZbJVy7G+uGa+4H7YjFJ5oexQ+qaScQxscwuTPZ7kHSk/XXmRHzJaxIyEBzSUcO5E1VyuC+eZ+nim73iQLxkvbka7Tl7516QsGwqomlwiOqQivFNz0HlqSVtbFyUURlbxcOQqvhj8wAAgyQ7r5ovurN69kWU23xF+ubUcCd6OqY6Fby3hiu2oogcQxrGC5v00mpp2/FwzCeoGc0bdieTiLGEn7oslXWxInjYlciFlUAc282IwBqtvt7vDHNsr/lUr1GOWpncNzo5jVT077gV98rMFy/cqqDufKVVz/dL0xrexrAsSq+7iBmy2nk4ljxBzz7Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NTyHfCIoLrz1R8JE+xQMwJfnRArb2IOFbz1pnXSIwgE=;
- b=mcm6ARtmwHDVhIbENC58qO7CfB5ZKn8V88DYaDoADmPopfRegY1XB7cqcouTuShQ0OZ9S9AAt5fgQhC1Z2SprZhH/8GHk68yYA4jtFCYg/9aqSd0iMCML7kao03UpiM7R+nCFOajhLT6i9mxsl96Z1J0hCl8o+PJi7t//Db+5C8Be6qwnOZEtOpJhb/BXfBPvE/nluAx9LT3MYqVBb1lEpZ1Vmw8NhlnqD1+FQ/NRogvsgAt5uMFwR67sTCvQxLRqv/Xyeu5/7mgNKx6tduaN27nZd0/1zNIAsl9tgITgHTxh5hp0Wec2gwphZEmFeRvF3EjNGc7H/UvXVbH3j1wkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NTyHfCIoLrz1R8JE+xQMwJfnRArb2IOFbz1pnXSIwgE=;
- b=Y4oVEPQcXFpTiFcUCzl0QpBuYH9W8HeMlek10Ne1eE7iUjjOpBz7GL9ioKrly7JD4TqePEDPD9W0n0+VSailx/Y2nARvgd42p+DopgemVPgNLyb+QbXQy569xiySQ+DBb83qRLrkJHgjurmPXrcan+xon/fa+OfPZ1BtqSwDCYIuglGrKPWE8HZh+ScjT6lNH65O49FpED9zCsG0YG315fxz/b+64qe5HmwVHm+X2O4JAEP30HkBYJ9guFzuZ49jGQ93XQXmyVruCeJ2DRTxkvRtRstlc2i09oFCCen9VGJejEjeCYhJnaQA7j2af0D00m2atu2GmWDzzuFjglPMMQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by AM8PR04MB7379.eurprd04.prod.outlook.com (2603:10a6:20b:1c4::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
- 2025 11:47:29 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%6]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
- 11:47:29 +0000
-Date: Tue, 29 Apr 2025 14:47:26 +0300
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>, christophe.leroy@csgroup.eu
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] bus: fsl-mc: Use strscpy() instead of
- strscpy_pad()
-Message-ID: <kko4akbacnugkdughit5ty6vpzg4wjiif3rh4w75hd67v34nre@ngpqhwjb5l4p>
-References: <20250429104149.66334-1-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429104149.66334-1-thorsten.blum@linux.dev>
-X-ClientProxiedBy: AS4PR10CA0024.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d8::16) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E48E2C1E37;
+	Tue, 29 Apr 2025 11:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.23.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745927288; cv=none; b=cZZ31873M3Hkc3NlUMrPytHqvOqV9xd/6ZO5yIX19M+W5v7dxPex+9C8q1Jc47/GaSZz0MoQZMbQw/pwgl33AFFj5cc23r23FToDFxqZEoRO28o4n4pWuV9FQSZax521owPCFBiHuInt5A98G7OUYEuevzcERFBjYUXQhlzFLi8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745927288; c=relaxed/simple;
+	bh=QLCpUut9z3tana09EUsBaAHZgMXic5dYw8zL7XMvUm4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=dHrCNWyhdN2OEnLz0+JSKn9cU7ecCk48sSut0OtylIVgEMFOKUL0zUN/FGNsV+wCMbqebT4tQf9uBMSxJdOaN7G0nN2ZerzjNCYLWdVSvz1s4Er+x+E3s3cN1QPeZct8EiM6YhkHXKGnVkKC2QJLyG5fBpAyinE/uiGkB4dIN2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dakr.org; spf=pass smtp.mailfrom=dakr.org; arc=none smtp.client-ip=173.249.23.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dakr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dakr.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|AM8PR04MB7379:EE_
-X-MS-Office365-Filtering-Correlation-Id: 334decda-593a-48d1-364d-08dd87139ea5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ru4lldNbiMf03s3CeniyNDYZXxTZCQIDGdKGQhrFZ18D+YizUAw1hRNoRJqt?=
- =?us-ascii?Q?lxkenGQABbhNMcPwIivJwvG4zxGQWg9os3KSW+SPatRlQhUv3spaVKTWV81W?=
- =?us-ascii?Q?bx3dZAVqwdo33nlLQ/8Ssqr29GXJubWkQ5powyESKGtfMS+ZTYVg2QYUcxHf?=
- =?us-ascii?Q?JhSA2X5nFGv+5xDLrCRhAfBbWEnQgusv8ekm8LYSyTpgMvzMAboUv/3Aqz68?=
- =?us-ascii?Q?Iuu4REHupboAfZnB5jF2zdyKjhXb8HQ1xEznq3lgDJS08Q3pmfVDuWqWEfnr?=
- =?us-ascii?Q?LFtVvsal3hWuIpoqmRclklmBGzP+leGLxp0RZspTdV+eg3yyYE4wBmeZxD59?=
- =?us-ascii?Q?MUViFnwWf0pJFrwWPYjp+CC3z/d+9YadLbA894mvusxS+wO4TQFmCo1ufxWH?=
- =?us-ascii?Q?/oNxPENhhRcrqGpm9k6g+51o50tkizya/qKhTRX8XKCfuHN0+8hkVSirQFny?=
- =?us-ascii?Q?V/DFElKo+cnztioPAakiYrtONxRfB9hD/7UMX+niHCLouUz0gBXfyTByHgWi?=
- =?us-ascii?Q?FJPfXfwvLMtUaIFB+I/NDKKcktQgDVjMzJvKERMirWyYQX+2yRCk+V/gDlBF?=
- =?us-ascii?Q?txEQaueRFRwcMjY2vpMb4bRD7lyya5B2T3c8CvkXFG3nfCpnDvJ0uB/hEooi?=
- =?us-ascii?Q?1A4UwW/qUaLmB+WWzCP0VgCWKdlJYcRNNAmjK3tghtwtmJUt+DDNuXbISTjs?=
- =?us-ascii?Q?RVvnw7AqTz9pg3p+71CiHblCe9vvr6Ksjc7h5Zz/wcjot6sMuNlxb4rkpn9N?=
- =?us-ascii?Q?VZ6D3BaKKU5Ska12Z1E8wPzn+aZrjWqdWWEIzSYg1gbGhPScCE+AdP6qWi2j?=
- =?us-ascii?Q?qtHZ2WImcndDvAAFQjckf5Yef+TbnSS6QiE83/BVMZgWyVHwTJGPsZuoGPMx?=
- =?us-ascii?Q?fmwgpkhJD9LKYskpKaiW5spOG28NCOOziayquZO18XsO0dSVRhLUNAq4lG4M?=
- =?us-ascii?Q?mXVHWeORxn+dWe3B43awZ5jbR/WH+hBhS+wAyCGPfd3jCqCAmKWYeJy1Gis4?=
- =?us-ascii?Q?SHsAUEGOHfoXuCI8sw73gwqmDmklK0nafHGxa7E6e/MIu8g8RY2AHXfSoIZM?=
- =?us-ascii?Q?ezfJE/YmwyEjLJPCnixE0K+Zg0gK+D1+kZ1p8N9aR5xD2QeIlzz+aMegrzuJ?=
- =?us-ascii?Q?QASHK7nO90y9IbD5M1ZfqbRYBbEiZYP/SAQF3Y4mbRYVZPsxBecg9UrQRjSU?=
- =?us-ascii?Q?vdzEiX1Kg+amcEU8xDmtVhMtecZZ87r9qtwe7ZK0gVp9sEhRsjBe6yWfJAR6?=
- =?us-ascii?Q?Jn8V4LR/wsvrVPkXKFceSbSQ4brelyGM0pzvplZVCspE+VXLQOjYiMTthEtH?=
- =?us-ascii?Q?v/K/GD8xsnvaXSaLtrXzAQ+Y0T/+MNCjRwQthS5GY0maQOtXQByTolu9JOQp?=
- =?us-ascii?Q?W5USo6NdG9S9b5qdm9eRIWY9nVTFfcOROabvCqWh9t8/bT47+a2hZiViaSYc?=
- =?us-ascii?Q?JIlEPUEbrXo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?txKI14GJnij+dDI1XjASRwccZmca/xHTQMZKQQfwr8TT7aM228jqGFWBF186?=
- =?us-ascii?Q?NzkEN4LIuzvVUcJgZCzzk6DSUVXHQq6O0JS0vSAz7LGzuTtahyQ8OXY4QMAf?=
- =?us-ascii?Q?V7GomzuNTzrkHPCScYfpZi2kia1CRKRATgaCi8326Ji+EiKFbPEiyueTTW8H?=
- =?us-ascii?Q?aQ6zo4I1ucFrlmcWoQ15xg59CRbFnpHiG3TkDW185NrxPc0hsncdFnr1r6HS?=
- =?us-ascii?Q?nDIL8CuZLSi2pw6jEwpU4/n3qkbTXGEgPD8idgQ9kZ7/qnEHoKGOEjD7CpQX?=
- =?us-ascii?Q?mnIe1Rcg+RPJsq0okKyPW8SEJYB5rTdXnqDemp36FMCkJ1UIsmUDm/KhgG9m?=
- =?us-ascii?Q?JB9JXThwvbnijtltsOwv9ZvbmSSqXW6nO93hX4A/YgCmzeiEEzBNBt0igAcb?=
- =?us-ascii?Q?2dx0hKbcfXsW6RqJhGZANi2ucfpSUl9t34Nm70Pi5TUMjyxixtVGbtdb94Hk?=
- =?us-ascii?Q?NMTCAypsRA7CN/9fHOl+6D3llLora6lKs+VYkaF8+aLziOReonRKIOqmqJod?=
- =?us-ascii?Q?PMyyIivG9iw+lZmTfY9cCwTgronL4bbTbM/N3o/v5+LdE/Z9GWa90I/ycjS+?=
- =?us-ascii?Q?s5YIJuEJ6z08g+xc4VsFyTo1yKwUR8fw4zuXFYS6rdqoVyGvLCbtcLEaIgOK?=
- =?us-ascii?Q?yelE9dsy2Zlg+gWFppmLpKuQdM4zBdBB92sVMenl21VKszTGIH1VdT1AA8Dg?=
- =?us-ascii?Q?qNIJoNQe13MTuySGYpEdGoUR5m4C14MQ6EtQQFqbftGt1Q/GvwlJtA/Z3kRH?=
- =?us-ascii?Q?jcIHdg+7bl5pTaEUXD1XBeyDS/iGq8mP9iFviCCiGQSh4zi4qLE683KSDcOz?=
- =?us-ascii?Q?nUWJD7KI45CIdRHopAQs1lF1IoH01sdGQpE+GUYrHPsx/KiB/r2+YtxVk98e?=
- =?us-ascii?Q?+DeC93UdPSQ9h3+6VEcrQuecEz3xLlpY3ziBSLAPqexGQs4xDjK50G2Y4F8g?=
- =?us-ascii?Q?upVX50hyaA0F6WXx3ogSnlz9y+zv43jFLgQObCvWYTCcUNR6AuKHJdJF/jy4?=
- =?us-ascii?Q?pkOsJFisJXAJUXccu4E94aJdJyaBuj+dKKp/potvQ6g9q94y8towMfMxOHLW?=
- =?us-ascii?Q?+AKL23RzX6+urElfp6Y1dYUoXZCUMwcrDdu2JkTsdyTyfqYAYve5gTWXiEQC?=
- =?us-ascii?Q?knkQm/yvX3gsc6f682ti8ezXzKsechnOu7/04x1LV2jPRdxg+tTrwXH9nImi?=
- =?us-ascii?Q?iCfjUUXlONa3fjAMYFqur1+ONRpcj+/9fH7/4Kk/SLqgctHN+FsL4tcN90Hu?=
- =?us-ascii?Q?lCZg9q9Pr866AV58w7t2IPtViEwsrSTUGCKA0y+aUP1sxxJOwWpeTe5F6jhz?=
- =?us-ascii?Q?9WkCtRWUR6G0nyqe/1EHR40y0iuGpW+cMAz/PR8a4gIVGTG4/OvvXFA679Tr?=
- =?us-ascii?Q?9arZGX6n+uDgH2nRJl48jPU44YoG3OaHENUiEvcqa+TI3dKG5z6FrmbiqUkg?=
- =?us-ascii?Q?iiTS4Jcl+fA9zMpj6tDWDfP5Ls7ATbeVYvarFg3zUrXRskiI68VTI/29ftDn?=
- =?us-ascii?Q?TZhwMLkaosDwp6rkbCLcwF9TqGrE8GJDeedvVc9esGRfOiP2oIGBDM6wxfJM?=
- =?us-ascii?Q?pX1X94t+2KkMz6ZkZLEH+gizieIKKtPJyYIxFI9N?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 334decda-593a-48d1-364d-08dd87139ea5
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 11:47:29.3655
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XXNpueGSrE7ShfRnkX0mB7wG6PP+M0ubwtGKR2aplJs79lWz5Hofv9PObhFt8ldPJeTQzWTwAJZytm/fPg75Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7379
+Date: Tue, 29 Apr 2025 13:38:26 +0200
+From: Danilo Krummrich <kernel@dakr.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+ <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] uaccess: rust: add
+ UserSliceReader::strcpy_into_buf
+In-Reply-To: <2025042919-varsity-registrar-fb45@gregkh>
+References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+ <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
+ <2025042919-varsity-registrar-fb45@gregkh>
+Message-ID: <4b54a2385923b1312606dbb5b651e163@dakr.org>
+X-Sender: kernel@dakr.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 29, 2025 at 12:41:48PM +0200, Thorsten Blum wrote:
-> Both destination buffers are already zero-initialized, making strscpy()
-> sufficient for safely copying 'obj_type'. The additional NUL-padding
-> performed by strscpy_pad() is unnecessary.
+On 2025-04-29 13:09, Greg Kroah-Hartman wrote:
+> On Tue, Apr 29, 2025 at 09:02:23AM +0000, Alice Ryhl wrote:
+>> This patch adds a more convenient method for reading C strings from
+>> userspace. Logic is added to NUL-terminate the buffer when necessary 
+>> so
+>> that a &CStr can be returned.
+>> 
+>> Note that we treat attempts to read past `self.length` as a fault, so
+>> this returns EFAULT if that limit is exceeded before `buf.len()` is
+>> reached.
+>> 
+>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+>> ---
+>>  rust/kernel/uaccess.rs | 35 +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>> 
+>> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+>> index 
+>> acb703f074a30e60d42a222dd26aed80d8bdb76a..7cec1b62bd8b816f523c8be12cb29905740789fc 
+>> 100644
+>> --- a/rust/kernel/uaccess.rs
+>> +++ b/rust/kernel/uaccess.rs
+>> @@ -293,6 +293,41 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut 
+>> Vec<u8, A>, flags: Flags) -> R
+>>          unsafe { buf.set_len(buf.len() + len) };
+>>          Ok(())
+>>      }
+>> +
+>> +    /// Read a NUL-terminated string from userspace and append it to 
+>> `dst`.
+>> +    ///
+>> +    /// Fails with [`EFAULT`] if the read happens on a bad address.
 > 
-> If the destination buffer has a fixed length, strscpy() automatically
-> determines its size using sizeof() when the argument is omitted. This
-> makes the explicit size arguments unnecessary.
+> Also returns this error:
 > 
-> No functional changes intended.
+>> +    pub fn strcpy_into_buf<'buf>(&mut self, buf: &'buf mut [u8]) -> 
+>> Result<&'buf CStr> {
+>> +        if buf.is_empty() {
+>> +            return Err(EINVAL);
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> if the buffer is of 0 length.  Don't know if you want to document that
+> or not.
+> 
+>> +        }
+>> +
+>> +        // SAFETY: The types are compatible and `strncpy_from_user` 
+>> doesn't write uninitialized
+>> +        // bytes to `buf`.
+>> +        let mut dst = unsafe { &mut *(buf as *mut [u8] as *mut 
+>> [MaybeUninit<u8>]) };
+>> +
+>> +        // We never read more than `self.length` bytes.
+>> +        if dst.len() > self.length {
+>> +            dst = &mut dst[..self.length];
+>> +        }
+>> +
+>> +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
+>> +        if len < dst.len() {
+>> +            // Add one to include the NUL-terminator.
+>> +            len += 1;
+>> +        } else if len < buf.len() {
+>> +            // We hit the `self.length` limit before `buf.len()`.
+>> +            return Err(EFAULT);
+> 
+> How can this happen?
 
-Reviewed-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+See my reply here (if I did not get it wrong):
 
-Christophe, could you also pick-up this patch when you have a chance?
-
-Thank you,
-Ioana
+https://lore.kernel.org/rust-for-linux/aBCrqJe4two4I45G@pollux/
