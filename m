@@ -1,272 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C92224EA90
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945540; cv=none; b=r0tPmrTTYa6Kdw/iYUS0QX79Z2yEwvaxWUKIXI5YOlE7xmlRdVfFHAHDczVlslXwR4hYUSzkxwJ1VHM6SdUrckxnvvZ3oduJqZ0BqsvLhBmXPyg7E8O4g8ejLsRAt+5FSvFZtXP54Oy3rV/HiqNGjxFJJ0CRq1JjXcjO8sBMHOQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945540; c=relaxed/simple;
-	bh=EfD/o66GX0OKRvbZSaNzNHske3QcGjcjuQjaULquzI8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ua0SnrvhdZUKiArCbrJJG8elq5Rwq5Hak6R46n0Qce8xUnfEYT4V5Xi7Kva4W/4iwQvl1QxMjqe9KvUKytDYba0p7DJFJs9LDRRHb+jAcMZNnq+TBpDFTXN/Y6vPHwbO1pukdgwOAE/LXbc3R8pXjocOYoBsNa1OPrt3uCuQcuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gXuT3MNn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B052422A7E6;
+	Tue, 29 Apr 2025 16:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745945557; cv=pass; b=e9sgb01B1HKcdyGIrdv3fLpCtSSmosms3khj+5Jt8f0OJLIZ7qCXJxjEPoJ/vYWiEW7S63hMCxNgygeNBLq3SV/gIeO7OO6wSJC4rAp9Mwnmnt2pj1PKr7LJSoX/VYgD0wJNy8jbzSoYZgAVANJDgs4VqihYuiR4rpPKHBgrM4k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745945557; c=relaxed/simple;
+	bh=xLfUqxkolvhQu6zJjR/MsGuj2lN1Bw7Le7IBOLEzbFs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uH59g5j6PvzaiAT747Fgp1Q+7MhvfsSwrDvWoJd22Nxfa6laDAUZ9Yg7euLpb05QlXlHWyCl+wY6aG1fChPCMkKwHyevrfUle0EMneu3Abcik8XhCwfDguFGGs1WNmFc9Mp7wXwlp3aFWKi0RaoOItiVEGVX9kClWfifY8JgpB4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=LrKvbKun; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXuT3MNn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745945538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pvlclyJOdlodk0vJ4LxFoHs9tOLTNVW8rNQpOB1HHMg=;
-	b=gXuT3MNnqZ5kausO2oRklIl9mX1vQUo/rnXYfoy+bfWLkcoFPibsFGvz2wAA+E5BWB76RI
-	yrCvxQ8PeHhYLNGwZDagsrRK126JDXnU+ThyDgfEzkpJGUT2Gik3CYzv5Qna3rnx7GCiuk
-	vmVu3M6tFidsTA0siFaQ7HCvo/ZxoEs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-259-Miky6MDoPh2AYYmMSFCl3Q-1; Tue,
- 29 Apr 2025 12:52:14 -0400
-X-MC-Unique: Miky6MDoPh2AYYmMSFCl3Q-1
-X-Mimecast-MFC-AGG-ID: Miky6MDoPh2AYYmMSFCl3Q_1745945533
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD6AF195609F;
-	Tue, 29 Apr 2025 16:52:13 +0000 (UTC)
-Received: from merkur.redhat.com (unknown [10.44.34.64])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AA8A21956094;
-	Tue, 29 Apr 2025 16:52:11 +0000 (UTC)
-From: Kevin Wolf <kwolf@redhat.com>
-To: dm-devel@lists.linux.dev
-Cc: kwolf@redhat.com,
-	hreitz@redhat.com,
-	mpatocka@redhat.com,
-	snitzer@kernel.org,
-	bmarzins@redhat.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dm mpath: Interface for explicit probing of active paths
-Date: Tue, 29 Apr 2025 18:50:18 +0200
-Message-ID: <20250429165018.112999-3-kwolf@redhat.com>
-In-Reply-To: <20250429165018.112999-1-kwolf@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="LrKvbKun"
+ARC-Seal: i=1; a=rsa-sha256; t=1745945533; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IQBQTzconYJkqWZwYVbRGCr0fE2QNxTFfE3QMFz6gVJvqqjVNRcp2WzYj6h+XjBoGDtnOwgRXtU4MQotaYUT7/jbbr50Xbg6I79CiNY/zyud3E4Q9mX8xFOoKJLaFQUUaZnfQaOFpSxS+znfdhhs0wQeqrvItZnZemNMOS1zkSs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745945533; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3hn7TI/NIifsiTf4RtEzy2zuXp6Q4rhXJuOfP6jWeJw=; 
+	b=YKACafeXthLiyZt4GzZHB89ADiQiUemvk91QX01rpznlzPVelZ2D700U4mpJudnJD+Z1zzaKxOXvPQae3EwQjLwwZW5WzluKVEApp0yGf30eDKkAfX0R0N90PMas83qOyh2CmGBWY8pHImSW5+uIglGNU7pPcWl1HfXVVf+MGgg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745945532;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=3hn7TI/NIifsiTf4RtEzy2zuXp6Q4rhXJuOfP6jWeJw=;
+	b=LrKvbKunSVI/bXi0eGOSIhTtqmEIxNKK8+JHQmS6zxTAqs7D9di/oS1wd8kmygIq
+	+KVSl52vk2D2C+eLPatAmN+tCgO71mESSy3jpjvZwPNZMB6GbnAsdvjQ4pIr7P2ubrr
+	ITZukGJ3wGH7l9tGmZqoP+i2VQkKYTKRsExjpbJM=
+Received: by mx.zohomail.com with SMTPS id 1745945531729697.7459362757056;
+	Tue, 29 Apr 2025 09:52:11 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Tue, 29 Apr 2025 18:51:55 +0200
+Subject: [PATCH] arm64: dts: rockchip: fix Sige5 RTC interrupt pin
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-sige5-rtc-oopsie-v1-1-8686767d0f1f@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAKoDEWgC/y3MQQ6CMBCF4as0s3YSrDZFrmJY1DLiLGhxphgSw
+ t1txOX/kvdtoCRMCp3ZQOjDyjnVOJ8MxFdIIyEPtcE21jVXe0PlkRxKiZjzrEw4XKIL3nvyoYV
+ 6m4WevP7Ie3+00HupcjlGeAQljHmauHQm0Vrwr7fQ7/sXWxEMNZMAAAA=
+X-Change-ID: 20250429-sige5-rtc-oopsie-d3c5a777e7a8
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Detlev Casanova <detlev.casanova@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-Multipath cannot directly provide failover for ioctls in the kernel
-because it doesn't know what each ioctl means and which result could
-indicate a path error. Userspace generally knows what the ioctl it
-issued means and if it might be a path error, but neither does it know
-which path the ioctl took nor does it necessarily have the privileges to
-fail a path using the control device.
+Someone made a typo when they added the RTC to the Sige5 DTS, which
+resulted in it using interrupts from GPIO0 B0 instead of GPIO0 A0. The
+pinctrl entry for it wasn't typoed though, curiously enough.
 
-In order to allow userspace to address this situation, implement a
-DM_MPATH_PROBE_PATHS ioctl that prompts the dm-mpath driver to probe all
-active paths in the current path group to see whether they still work,
-and fail them if not. If this returns success, userspace can retry the
-ioctl and expect that the previously hit bad path is now failed (or
-working again).
+The Sige5 v1.1 schematic was used to verify that GPIO0 A0 is the correct
+pin for the RTC wakeup interrupt, so let's change it to that.
 
-The immediate motivation for this is the use of SG_IO in QEMU for SCSI
-passthrough. Following a failed SG_IO ioctl, QEMU will trigger probing
-to ensure that all active paths are actually alive, so that retrying
-SG_IO at least has a lower chance of failing due to a path error.
-However, the problem is broader than just SG_IO (it affects any ioctl),
-and if applications need failover support for other ioctls, the same
-probing can be used.
-
-This is not implemented on the DM control device, but on the DM mpath
-block devices, to allow all users who have access to such a block device
-to make use of this interface, specifically to implement failover for
-ioctls. For the same reason, it is also unprivileged. Its implementation
-is effectively just a bunch of reads, which could already be issued by
-userspace, just without any guarantee that all the rights paths are
-selected.
-
-The probing implemented here is done fully synchronously path by path;
-probing all paths concurrently is left as an improvement for the future.
-
-Co-developed-by: Hanna Czenczek <hreitz@redhat.com>
-Signed-off-by: Hanna Czenczek <hreitz@redhat.com>
-Signed-off-by: Kevin Wolf <kwolf@redhat.com>
+Fixes: 40f742b07ab2 ("arm64: dts: rockchip: Add rk3576-armsom-sige5 board")
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- include/uapi/linux/dm-ioctl.h |  9 +++-
- drivers/md/dm-ioctl.c         |  1 +
- drivers/md/dm-mpath.c         | 91 ++++++++++++++++++++++++++++++++++-
- 3 files changed, 98 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/dm-ioctl.h b/include/uapi/linux/dm-ioctl.h
-index b08c7378164d..3225e025e30e 100644
---- a/include/uapi/linux/dm-ioctl.h
-+++ b/include/uapi/linux/dm-ioctl.h
-@@ -258,10 +258,12 @@ enum {
- 	DM_DEV_SET_GEOMETRY_CMD,
- 	DM_DEV_ARM_POLL_CMD,
- 	DM_GET_TARGET_VERSION_CMD,
-+	DM_MPATH_PROBE_PATHS_CMD,
- };
- 
- #define DM_IOCTL 0xfd
- 
-+/* Control device ioctls */
- #define DM_VERSION       _IOWR(DM_IOCTL, DM_VERSION_CMD, struct dm_ioctl)
- #define DM_REMOVE_ALL    _IOWR(DM_IOCTL, DM_REMOVE_ALL_CMD, struct dm_ioctl)
- #define DM_LIST_DEVICES  _IOWR(DM_IOCTL, DM_LIST_DEVICES_CMD, struct dm_ioctl)
-@@ -285,10 +287,13 @@ enum {
- #define DM_TARGET_MSG	 _IOWR(DM_IOCTL, DM_TARGET_MSG_CMD, struct dm_ioctl)
- #define DM_DEV_SET_GEOMETRY	_IOWR(DM_IOCTL, DM_DEV_SET_GEOMETRY_CMD, struct dm_ioctl)
- 
-+/* Block device ioctls */
-+#define DM_MPATH_PROBE_PATHS _IO(DM_IOCTL, DM_MPATH_PROBE_PATHS_CMD)
-+
- #define DM_VERSION_MAJOR	4
--#define DM_VERSION_MINOR	49
-+#define DM_VERSION_MINOR	50
- #define DM_VERSION_PATCHLEVEL	0
--#define DM_VERSION_EXTRA	"-ioctl (2025-01-17)"
-+#define DM_VERSION_EXTRA	"-ioctl (2025-04-28)"
- 
- /* Status bits */
- #define DM_READONLY_FLAG	(1 << 0) /* In/Out */
-diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
-index d42eac944eb5..4165fef4c170 100644
---- a/drivers/md/dm-ioctl.c
-+++ b/drivers/md/dm-ioctl.c
-@@ -1885,6 +1885,7 @@ static ioctl_fn lookup_ioctl(unsigned int cmd, int *ioctl_flags)
- 		{DM_DEV_SET_GEOMETRY_CMD, 0, dev_set_geometry},
- 		{DM_DEV_ARM_POLL_CMD, IOCTL_FLAGS_NO_PARAMS, dev_arm_poll},
- 		{DM_GET_TARGET_VERSION_CMD, 0, get_target_version},
-+		{DM_MPATH_PROBE_PATHS_CMD, 0, NULL}, /* block device ioctl */
- 	};
- 
- 	if (unlikely(cmd >= ARRAY_SIZE(_ioctls)))
-diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
-index 909ed6890ba5..af17a35c6457 100644
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -2021,6 +2021,85 @@ static int multipath_message(struct dm_target *ti, unsigned int argc, char **arg
- 	return r;
- }
- 
-+/*
-+ * Perform a minimal read from the given path to find out whether the
-+ * path still works.  If a path error occurs, fail it.
-+ */
-+static int probe_path(struct pgpath *pgpath)
-+{
-+	struct block_device *bdev = pgpath->path.dev->bdev;
-+	unsigned int read_size = bdev_logical_block_size(bdev);
-+	struct page *page;
-+	struct bio *bio;
-+	blk_status_t status;
-+	int r = 0;
-+
-+	if (WARN_ON_ONCE(read_size > PAGE_SIZE))
-+		return -EINVAL;
-+
-+	page = alloc_page(GFP_KERNEL);
-+	if (!page)
-+		return -ENOMEM;
-+
-+	/* Perform a minimal read: Sector 0, length read_size */
-+	bio = bio_alloc(bdev, 1, REQ_OP_READ, GFP_KERNEL);
-+	if (!bio) {
-+		r = -ENOMEM;
-+		goto out;
-+	}
-+
-+	bio->bi_iter.bi_sector = 0;
-+	__bio_add_page(bio, page, read_size, 0);
-+	submit_bio_wait(bio);
-+	status = bio->bi_status;
-+	bio_put(bio);
-+
-+	if (status && blk_path_error(status))
-+		fail_path(pgpath);
-+
-+out:
-+	__free_page(page);
-+	return r;
-+}
-+
-+/*
-+ * Probe all active paths in current_pg to find out whether they still work.
-+ * Fail all paths that do not work.
-+ *
-+ * Return -ENOTCONN if no valid path is left (even outside of current_pg). We
-+ * cannot probe paths in other pgs without switching current_pg, so if valid
-+ * paths are only in different pgs, they may or may not work. Userspace can
-+ * submit a request and we'll switch. If the request fails, it may need to
-+ * probe again.
-+ */
-+static int probe_active_paths(struct multipath *m)
-+{
-+	struct pgpath *pgpath;
-+	struct priority_group *pg;
-+	int r = 0;
-+
-+	mutex_lock(&m->work_mutex);
-+
-+	pg = READ_ONCE(m->current_pg);
-+	if (pg) {
-+		list_for_each_entry(pgpath, &pg->pgpaths, list) {
-+			if (!pgpath->is_active)
-+				continue;
-+
-+			r = probe_path(pgpath);
-+			if (r < 0)
-+				goto out;
-+		}
-+	}
-+
-+	if (!atomic_read(&m->nr_valid_paths))
-+		r = -ENOTCONN;
-+
-+out:
-+	mutex_unlock(&m->work_mutex);
-+	return r;
-+}
-+
- static int multipath_prepare_ioctl(struct dm_target *ti,
- 				   struct block_device **bdev,
- 				   unsigned int cmd, unsigned long arg,
-@@ -2031,6 +2110,16 @@ static int multipath_prepare_ioctl(struct dm_target *ti,
- 	unsigned long flags;
- 	int r;
- 
-+	if (_IOC_TYPE(cmd) == DM_IOCTL) {
-+		*forward = false;
-+		switch (cmd) {
-+		case DM_MPATH_PROBE_PATHS:
-+			return probe_active_paths(m);
-+		default:
-+			return -ENOTTY;
-+		}
-+	}
-+
- 	pgpath = READ_ONCE(m->current_pgpath);
- 	if (!pgpath || !mpath_double_check_test_bit(MPATHF_QUEUE_IO, m))
- 		pgpath = choose_pgpath(m, 0);
-@@ -2182,7 +2271,7 @@ static int multipath_busy(struct dm_target *ti)
-  */
- static struct target_type multipath_target = {
- 	.name = "multipath",
--	.version = {1, 14, 0},
-+	.version = {1, 15, 0},
- 	.features = DM_TARGET_SINGLETON | DM_TARGET_IMMUTABLE |
- 		    DM_TARGET_PASSES_INTEGRITY,
- 	.module = THIS_MODULE,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+index 964ee351d3b63fcb4ede70f4b6c06541715cfe19..570252c4c0bfe56a3c269e47d81fca7676e61787 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+@@ -616,7 +616,7 @@ hym8563: rtc@51 {
+ 		reg = <0x51>;
+ 		clock-output-names = "hym8563";
+ 		interrupt-parent = <&gpio0>;
+-		interrupts = <RK_PB0 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <RK_PA0 IRQ_TYPE_LEVEL_LOW>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&hym8563_int>;
+ 		wakeup-source;
+
+---
+base-commit: 05c58e5408604391298fccf956f8cd0a4662da73
+change-id: 20250429-sige5-rtc-oopsie-d3c5a777e7a8
+
+Best regards,
 -- 
-2.49.0
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
