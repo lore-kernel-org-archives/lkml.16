@@ -1,125 +1,106 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198D520D4E2;
-	Tue, 29 Apr 2025 02:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745894694; cv=pass; b=p22AEQz+9VsIIvUOaLFUcf8JvdikN6QscMZ9l5+XIqRIj4tZyF5toksOPlTOiXGr8RpZhthWdK2HcfUule6SVDD2uMRsAOzVFQ6cf4s5PhRy6Y3cyMc9yTml0ni786Nay5TUi0DaCo0mqIjS69r9xk9/M9rCBDfJZSFZM0GpsVY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745894694; c=relaxed/simple;
-	bh=80hSbyKne/0EugL7CapBvsxNWe+IjuzVuUn1HpWWPrc=;
-	h=MIME-Version:From:To:In-Reply-To:Cc:Subject:Message-ID:Date:
-	 Content-Type; b=W8oo9ovWK8WK6qPYg/GJ3TFpcOH+Xipb4/tZMMx8R9SBEFKUKiTv1VYj4xo9mO7VNN47ui+vJ2nAvaPcpEGFvGo693ImyYPy/026/JzbaUAi0WcyRlE0VKxd/z+JFxWcS1ZHdtIS0GCNlY4gE7NuU6vn0akA7q7aepmjclP9Ak8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=rxu3yHkM; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4F527735;
+	Tue, 29 Apr 2025 02:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745894756; cv=none; b=ViX3s9Tj7fzh939b8KszHnIoEBGqK58+C63ZdPRu6GwPEOwU/Lek03NUin//TyhFLUCEzYJKaM1N28QlIctr9qpgymkstNcFmT7IZOibBiyFEs76P0uIspm9Z8Mlq+aZ/d2XPbve0epFvh2ART9c0GSokZaki/Ryq83o7kHcpEQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745894756; c=relaxed/simple;
+	bh=Ci4h72wZKP6mJR4jKzbM/tBHpynbWTtO67r1MJP0opY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L+c9jedU0sOAnPGqoGTOjgqYDCbHIIFtOCq1sqqA84LkLaYqJXcrBy+LtwRt57F6YHMF9yZLorl2Yl4UUepXqVW8JLMhQsQ2ft4Gz9CnnlKc5eG4PThnydlAzqidwgqj2nxQmznoM5B8qYhD4c+BN502FZy4sjqXJk+XnXMMSac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WSzQfY90; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="rxu3yHkM"
-ARC-Seal: i=1; a=rsa-sha256; t=1745894658; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=W7Yqbl3KpTat/YCL5zO60BQism51l0PaZskt2Vj3NMRX7/ATEeDYjoIbfFXiqp9Redyr6QPoajgVisPtElobNqgguNSYYBvcWvTa1ZcmBE+geEWfZJUHcf8URe2450CtFeuXEcA52oRitOHYJ+gkZ1fHPEjNHw+FIGzqoA3gL+o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745894658; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Y8qohLpxxXxjlKsGCMSvmJyXGDphODOZWso+yF8m3A0=; 
-	b=YeU8SaNId4zOrIMVHLz8bFrSr9UiTlEtuGhiOiak6R54fg53lmOnTdh4NN+X3TSyItXEZTVlPtjNOxQoG1U7KQuEa5IhgUHJu8luYh/6585S3LnbomIVE8azzmUU41iK+1AcpxWFt0rkFIHw+fnIJ8KnmfD3Snfi2KN+Co4qD/M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=pigmoral.tech;
-	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
-	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745894658;
-	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
-	h=MIME-Version:From:From:To:To:In-Reply-To:Cc:Cc:Subject:Subject:Message-ID:Date:Date:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Y8qohLpxxXxjlKsGCMSvmJyXGDphODOZWso+yF8m3A0=;
-	b=rxu3yHkMtXenqyShakil1PCUh7UQ7F9cG2qo8QLzJXOwSBpHvYGMOCDE4HwX2Gg3
-	1qHPo9fVI3cYtJ8l5W0dPJ68jFneYBTM8DjWZ7e9Q8U1PHpRIW1/jx9bImqvok5Niyn
-	ZPKBoZd3avLaZz+kdP/h12Z0oZ00DKDUiKpldNqw=
-Received: by mx.zohomail.com with SMTPS id 1745894656786665.8936609850081;
-	Mon, 28 Apr 2025 19:44:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WSzQfY90"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745894750;
+	bh=BmbqdQNAhSoA+47d9GZWMVZmPLzHY9c8h9oax+oZ/kI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WSzQfY90JwXVarLlh1NGq0FhF4uezYb+ixPBOqU+oy0dZCN9I2nQPqxYT+L23i23P
+	 FhwBLKSwEjl0FB0vIfmgsjyKYG+ofg0wpfn3QSBNOC5qeW6gQXAOduizlFVY8RenjI
+	 MLFAZBXg5p91l9hMpXh47jkIlh6zNaCEkg/U4wcyqyClHG7lgfOjKEz+iE7RMLEIpy
+	 Dsaki3Z24s9tXe0nRhxsYqUSDNe3AtgKuMC4TktWAKyQx+lt1FDOiX/Tuo8oDH3jIc
+	 AzC2LeZGgIzCNh15ndPPozh+81dAo8aNdsD3y9z1g+leUWgaUXzEACENzzFffEGXOE
+	 Swsq1+janEqFQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zml716nhMz4x5g;
+	Tue, 29 Apr 2025 12:45:49 +1000 (AEST)
+Date: Tue, 29 Apr 2025 12:45:49 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Asahi Lina <lina+kernel@asahilina.net>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the drm-nova tree
+Message-ID: <20250429124549.0c0d8b91@canb.auug.org.au>
+In-Reply-To: <aA9F2_yyIGqLFWKU@cassiopeiae>
+References: <20250428142436.4579b115@canb.auug.org.au>
+	<aA9F2_yyIGqLFWKU@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Junhui Liu" <junhui.liu@pigmoral.tech>
-To: "Conor Dooley" <conor@kernel.org>
-In-Reply-To: <20250428-water-sermon-eefdfa511f8d@spud>
-Cc: "Jassi Brar" <jassisinghbrar@gmail.com>, 
-	"Rob Herring" <robh@kernel.org>, 
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
-	"Conor Dooley" <conor+dt@kernel.org>, 
-	"Chen Wang" <unicorn_wang@outlook.com>, 
-	"Inochi Amaoto" <inochiama@gmail.com>, "Yuntao Dai" <d1581209858@live.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, <linux-kernel@vger.kernel.org>, 
-	<devicetree@vger.kernel.org>, <sophgo@lists.linux.dev>, 
-	<linux-riscv@lists.infradead.org>, "Junhui Liu" <junhui.liu@pigmoral.tech>
-Subject: Re: [PATCH v3 2/3] riscv: dts: add mailbox for Sophgo CV18XX series
-	 SoC
-Message-ID: <183aa9ef25290278.6bcb31a17e34dfae.e6a8b825df767676@Jude-Air.local>
-Date: Tue, 29 Apr 2025 02:44:10 +0000
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; boundary="Sig_/Mzr7zkrfPkS+Xutfzc76e8p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/Mzr7zkrfPkS+Xutfzc76e8p
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
 
-Hi Conor,
-Thanks for you review.
+Hi Danilo,
 
-The previous email accidentally lost some Cc lists :(, I'm sorry to
-harass you.
-
-On 28/04/2025 17:55, Conor Dooley wrote:
-> On Mon, Apr 28, 2025 at 08:39:45PM +0800, Junhui Liu wrote:
->> From: Yuntao Dai <d1581209858@live.com>
->>=20
->> Add mailbox node for Sophgo CV18XX series SoC.
->>=20
->> Signed-off-by: Yuntao Dai <d1581209858@live.com>
->> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
->> ---
->>  arch/riscv/boot/dts/sophgo/cv18xx.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>=20
->> diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts=
-/sophgo/cv18xx.dtsi
->> index c18822ec849f353bc296965d2d600a3df314cff6..f7277288f03c024039054bdc4=
-176fc95c2c8be52 100644
->> --- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
->> +++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
->> @@ -55,6 +55,13 @@ soc {
->>  		dma-noncoherent;
->>  		ranges;
->> =20
->> +		mailbox: mailbox@1900000 {
->> +			compatible =3D "sophgo,cv1800b-mailbox";
->> +			reg =3D <0x01900000 0x1000>;
->> +			interrupts =3D <101 IRQ_TYPE_LEVEL_HIGH>;
->> +			#mbox-cells =3D <2>;
->> +		};
+On Mon, 28 Apr 2025 11:09:47 +0200 Danilo Krummrich <dakr@kernel.org> wrote:
+>
+> On Mon, Apr 28, 2025 at 02:24:36PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the drm-nova tree, today's linux-next build (KCONFIG_NAME)
+> > failed like this:
+> >=20
+> > x86_64-linux-gnu-ld: vmlinux.o: in function `rust_helper_drm_gem_object=
+_put':
+> > (.text+0x1b6cd15): undefined reference to `drm_gem_object_free'
+> >=20
+> > Caused by commit
+> >=20
+> >   be8d1a24798f ("rust: drm: gem: Add GEM object abstraction")
+> >=20
+> > I have used the drm-nova tree from next-20250414 for today. =20
 >=20
-> No user added here, is there another series in the works that adds a
-> user of the mailbox?
->=20
+> This issue was caused by rust/helpers/drm.c not having the required CONFI=
+G_DRM
+> guards.
 
-There isn't an actual user node in this specific patch. I used a
-`mailbox-test` node to verify the functionality in this patch series.
-
-The intended user for this mailbox is the `remoteproc` node. I plan to
-submit the `remoteproc` driver patches once the corresponding reset
-driver [1] is ready and merged.
-
-link: https://lore.kernel.org/linux-riscv/20250209122936.2338821-1-inochiama=
-@gmail.com/ [1]
-
->> +
->>  		clk: clock-controller@3002000 {
->>  			reg =3D <0x03002000 0x1000>;
->>  			clocks =3D <&osc>;
->>=20
->>
+So the build was x86_64 allmodconfig, so CONFIG_DRM=3Dm.  The build works
+now, thanks.
 
 --=20
-Best regards,
-Junhui Liu
+Cheers,
+Stephen Rothwell
+
+--Sig_/Mzr7zkrfPkS+Xutfzc76e8p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQPV0ACgkQAVBC80lX
+0Gz/IAf/Qwque3pUvElg/e1VmVI3sJD/hNzayiKHC6VQOR+bgBG7NSH7pgf8j8u9
+x57GYGEQRI2iasU7dIvIb/PweeitdiF/eUXLtqI33Tn+E4rj7NBO/a+EqJvUucXY
+6V2ZfQLCS9iIXtx/j1Y4jsGtUga1x9Q1AlK/ntVSW1TeiPSxXw4vP993FUMGlJzV
+qnexaI7JB95GL8SF5oCLVo3twcOfhgODIDKIzdUrWuAWGM47g3sqUliJKksMWxNm
+sgrQXO3Z5ieS5e14DcLu+JsGWZqhgcqig3hAHa5rebXdpOS92932AydfZfGFMf1T
+u2E6jC7usbWrHHmlnNrZpPH02Xp+yA==
+=kewy
+-----END PGP SIGNATURE-----
+
+--Sig_/Mzr7zkrfPkS+Xutfzc76e8p--
