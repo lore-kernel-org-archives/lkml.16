@@ -1,101 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2083.outbound.protection.outlook.com [40.107.223.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EBB2D3230;
-	Tue, 29 Apr 2025 13:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934204; cv=none; b=ILdqEO2TVNTQhpPDtBtF6R4qfUiUvPAsyqhr/42dgyh67r4KFBUKFuw90Vd1yslK5H9rbvv+cjBVP0n46CshTTkXxRyhhA5D7NyX95b81hcPSNjj9NRDLdPSVl8AK+CMVYumGOMm9foh4oKISMg+1AS5JmRVzBoQbCbVbsu3Zbc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934204; c=relaxed/simple;
-	bh=yGWkKy/tKQerFkmSW04s+UTgCO9enQW5oW0EdLwrtek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XiNyiuH9F4glzG4ZMgCpKGY5Oy1g7uVoxk9X7xTjOro8hDErbcLixEZb+DYTDYbzc3SGF+ZX8AOVtpCMOesjSO//GQP0oSrCHy13ACgDnzTqm8a/sHkB9TinO+Q4i9A91ea4R1ulO7KQKOLXtCymgVDoeZ3z+6R+pn8KkKOH9/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7CRtGTv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7CRtGTv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612E7C4CEEB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E3A2D3210;
 	Tue, 29 Apr 2025 13:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745934203;
-	bh=yGWkKy/tKQerFkmSW04s+UTgCO9enQW5oW0EdLwrtek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G7CRtGTvHO5PXI7/0xm2Dlb9UqieemyNO1L+QxPZC88h+YxCNFanYgAvRDZM7PE91
-	 ebRCdv6+Z7yWgORKPR/cDpXk8/gPqp99uonvSIIO8+MMQ0ChnTLrp1YqslU5Mzeyw6
-	 paclvxCYKmJUWSisz2s90hxATsGnAVnpvyr30clWITre9JcwkrTjY+ej0CKN2t0aab
-	 kxZEve0hkaB8qdy5VLuN4bvEX3wuLw4u4oOLMzNPK8IvuZKJ42uZILVuBEV2Rg1HJG
-	 9uKBzTDuk18p3ZWAOwkgz/tGPXK0QWjBxlcZfgIWameCh7spXPWTdR92u+SHuljhJI
-	 PY4IufoBDXKOQ==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	rcu <rcu@vger.kernel.org>
-Subject: [PATCH 5/5] rcu/exp: Warn on CPU lagging for too long within hotplug IPI's blindspot
-Date: Tue, 29 Apr 2025 15:43:04 +0200
-Message-ID: <20250429134304.3824863-6-frederic@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250429134304.3824863-1-frederic@kernel.org>
-References: <20250429134304.3824863-1-frederic@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745934206; cv=fail; b=UX+fo5jahWxYzgYKnZl4lUydXeZljWeIbwBeEVUEQ1jBD6ouY6LXkkmvLsC1JZf4v5VQkiPfndavoWDNxFDI3tfVx+kCFJA+VT9oNNccHIa5Uk0W1EV2uuxqHxhPsPFrn2Z4mRU9l9RJttVlgwmCsgbmp780CfR0wJmzSVN8qt0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745934206; c=relaxed/simple;
+	bh=66sYEPr8eQrfX7N+qb9HeZDenB/Isx6N4cnC8S275TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HtgGSUZc60Shl7iu23WF/Ot9NLPY7jOe0ZMsDnBzDmuueQQ3C2zqQlvTWAeyPHtXEL5CQ7FmLW5wzth2f39NP2idRoPuht0Eoc2wuGB3tyVjNknLp4DP8vNhdVpA0Qua5HWkN09AO8eU/NlzRxT+o5gJGX0EAJhBsPneCEr2vjc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cXHdg+ha; arc=fail smtp.client-ip=40.107.223.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cXHdg+ha"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ul3nK+6wBVmP/1yAmzGYVpNmITJD2wvpTmyhza7fTAtYBXNQTzpDO8xV0bnQjexMAFd6kuitA2jAw129LC9zqR2A9XMcooKL2v59JSqFVBU6ZluZs9Fp6D2Gfsmun5QCIbd88oKZ/gcAyA0Ju/jV55eoW8bmP0tkM2Fe25r+7MG3gbflB+/w7jltMgePOK7B5NR1HrgZM4aff6xdxttX0nLm7rrO1Nl2mvWrZyUEjE7ghBQUWTRhJmZv6qaEhwSAsB6xYPkahnWIcKUuM/izBldPhsHNpJYa/XjOaDj3Yn+ze2znL8PF3JI0NIbss2Wk/09cDoYNwAzX4QifF/Xphw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jJj631i3RjdrGkVASVE9jWTvNtXtfjm7sds3j2p/N4s=;
+ b=Ql9w8zV+1etGPQlyLowhyzKSy68pqVHsnlc2ZHwwpICJho7azNjccb2NGtX5wUU84jlRvf2eC98TFbo4xR6pUd9/2YjPDN7Rzu4hJKpL1IsB/JrnuqQTrnlsImOLp6R9oHXfnicnwLfL2BLa4D86mekDqTnYgc15vhxwUXDYdFPY/FvzoFPomR0SN2+sD59bvisasfO+hH9wdL5GleAoc6Ok6ddq8yAZqzuID/o9/z24PYWhsyJtGfEiQkoIA41dkxY6PGO5kUiSDt/7QdecNS2qiiiIp5Z1k1zg6SBeL863jFZg6wSQz+KF15D8AQfQ8GDEjK025hDABeQeYSKlNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jJj631i3RjdrGkVASVE9jWTvNtXtfjm7sds3j2p/N4s=;
+ b=cXHdg+haz8z563CfG/tEaCnxchg3+SaU0yxG1E1x3/1OOjgVh3UXcVeFn8DRkYdHG84EG4MXj1EdS13zqbTY+R280xVDrXsA2Q8PFLEStFLhMD/9JvWAf1HBP9k39sMXJPw0Q7LrUs+EP4sDDguoykbVjdNylI6CeYK2R2chNio=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by PH0PR12MB7960.namprd12.prod.outlook.com (2603:10b6:510:287::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
+ 2025 13:43:17 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8678.033; Tue, 29 Apr 2025
+ 13:43:17 +0000
+Date: Tue, 29 Apr 2025 15:43:11 +0200
+From: Robert Richter <rrichter@amd.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v4 13/14] cxl: Add a dev_dbg() when a decoder was added
+ to a port
+Message-ID: <aBDXbx6Ah9fUWuJN@rric.localdomain>
+References: <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-14-rrichter@amd.com>
+ <67ca0e4cd6aed_1a772945f@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67ca0e4cd6aed_1a772945f@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: FR4P281CA0315.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f6::11) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|PH0PR12MB7960:EE_
+X-MS-Office365-Filtering-Correlation-Id: e795491a-6f24-4213-7d4a-08dd8723cbe8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7R8CxQxrgVIwF2fA/HSYL3s4tCWUkGbu7JjCAE7eT41HBa86+V5xTe/xZkCp?=
+ =?us-ascii?Q?GJO2MDChB+xbLbR9vsUWuq7woN6rCC5fWqDuIgyKchzIYPxabctV1qRgmEaY?=
+ =?us-ascii?Q?hjydBxJvxa3TWKrfLksLrQXGLDs4wN1CAW+FrG/O+RXkHpgBIVIX9lUwnf6O?=
+ =?us-ascii?Q?Vj7h+DSyBE+ZPPhm6ZLM98zDuu2K6Tfr5lxdAAHmfbQH73Lq9IYWdIX2kjRy?=
+ =?us-ascii?Q?g2BTwcMP36A95JHY435b+LwmyVClPE/LACUgwNroNJawjOOJyfyiQBeJx7lk?=
+ =?us-ascii?Q?qaxcc0J8PXUAHd8uyVBhZFcMbL7VNDuo3pIy2e50NE+AnDAKUAPTBAv0d3Os?=
+ =?us-ascii?Q?/bFmu3iaCPf6PNubYhXd839zMWbDVTThDUi57K5tbuvvqsY3FrugntXgxPTS?=
+ =?us-ascii?Q?0luym/M9AqVsa9PsWW3CzydnsJIVz7AyhXi1+IwMUOyFHbTe+2n++whjIAbF?=
+ =?us-ascii?Q?PyIGeHNOl9agFVIAh1waeGdUeRgIVwcTXsJF5A6djX6arvvQEhO954968LG9?=
+ =?us-ascii?Q?kLpa5h/bP38ihsi2WA4GXeBzXGpDL6YA6dk3Xbbrr4Jw8hmHs/I0/QIS329j?=
+ =?us-ascii?Q?SP/VfPqU7A1R4X1bdShq4oMhui6KyOIez1AGzei8eptzAKh0KB3jzczSOV+C?=
+ =?us-ascii?Q?jo3GbzJhmXMIzYHysDD+0gJ31r0mMIMpM2UF2RefyHrH3nzPAZ/hhA+b6nyT?=
+ =?us-ascii?Q?ifVjQhYCSLHSe7MJ9Qne55LJgBGnhbmqPBpMjbA0HYGztVomEV6K26phyjGh?=
+ =?us-ascii?Q?utE/atxnHuJL66c+OpryiWLYzTNO0Wk1AwRO/OaY0a8ZKQeJDlia2piYJn7H?=
+ =?us-ascii?Q?T3XBlvx7dxlDkixptPvwizEaLA4TPhhfR6IwgnTr3u4BTpHI3Qz3XYYiJnqw?=
+ =?us-ascii?Q?B3fQvOlL4Rv8efL9UQlyyB5RKrhiHC3w2KxNM649DdjeZnmS8qVuNl7Y9K0t?=
+ =?us-ascii?Q?kaWtzYvGyV8/qZ6AEEGZBae2oVGD4fZtblKmP/2Jay7DboNX7J7afzIBr5Fj?=
+ =?us-ascii?Q?hWvEDb/GrISC8OAlKWeSX4/3NUt7X36zBdS0DsYed1T944UvUUW7+8ff+Lvr?=
+ =?us-ascii?Q?Ysu/mhmIbdrqdRE6FsgIpeMszIN1EzYWBiPwSYp8cBO2w37P77o8/G35f5im?=
+ =?us-ascii?Q?qitAfny35yadETpp38sW5KFOfpQfHKLd+x9OxilPLCBoG7dXVcLJ7ghF2cEU?=
+ =?us-ascii?Q?8Bws8UWiUo5BykHp6zz/mbDIwoKzYQvwhzf5zy3l44lNvrpT6WF+5s2nUtJG?=
+ =?us-ascii?Q?f68Xl/A7bnCcx0qnHFGBTq18gKGZHWHXuolSAzjEKj1aQHv1jlVX/wIYF995?=
+ =?us-ascii?Q?JkwvfLFy/SS13Jv7sjXWggVFr8na10O9PMhIAUTiZAP1slG/+5jyMLFGsdH+?=
+ =?us-ascii?Q?cNeMrEp7j5Y02NpNpV+1SRE3VtfU5gfbWZ3mxd65aSt3GN+6Nk9GHyHrP3qd?=
+ =?us-ascii?Q?Qu/MT3dfiGs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?o1OdlyHilKZDoTcNjAZdcQuZbtQdLRpQHOFDPaSFdH3gG8iIpxaAC9Pn+POw?=
+ =?us-ascii?Q?V+UVG8XJFGlgKq3LhflYDDJ/jOxFSN/pmjbWCOmHTHNbCi1U0mL+BRYCh9U/?=
+ =?us-ascii?Q?4u5LG8TbkiIq2avzpGHO+pSViXgjYTQYE78NDk7w2YIr5ltx9XB3clstsd8n?=
+ =?us-ascii?Q?oN6iCmaBxB2VmSuUALx/rgdHbK/IiITQ5HusG4+ayQZo8WSXyuw9bBC1HD7U?=
+ =?us-ascii?Q?VhTjImqe8PuQKUWirq5NFjRbPomzMFhT+n3MZvwc3JgoqXBokst3YniISqaI?=
+ =?us-ascii?Q?rI2HWPCLDVmXVY7RxIV9Qj0CtHZTKlms/9NUD1C6MBAvTRoxWJcIAbDNXFnC?=
+ =?us-ascii?Q?Z8/mCMYNfU3NOs0migwT2MqHw2krv3Sd/U3kYiw/7J44u8val03UW8bWHpXr?=
+ =?us-ascii?Q?0hl4pv8XP189dixCR4yyL6nnZhlahuvieUtbaB4gu2j6KXdLGB0L0mRfifad?=
+ =?us-ascii?Q?KTheQsjMnB+hH7/spBDrAIXEewkX7xZA3bKDRWWEbPxH3+k1rrK8HCaOuD21?=
+ =?us-ascii?Q?dOIzjKyjjHqPY6hauN3ZrDM16JumglZMxQLElXaxlT70gwIHtmj97zsBAi32?=
+ =?us-ascii?Q?h0g32BkSgGvZjUJXdLyLJuAgN7iVZ2Rv7ZsdWppnd9Km2WA04Mt0HB/WWpbL?=
+ =?us-ascii?Q?+rC0pAePB3CRVyhLlxFqfK5PBrZz8kLX+u4dHifJmYIqE9nzjmlv1BcqLuD1?=
+ =?us-ascii?Q?UTPrErLtjSRbZAzaD9+A6C1n2algE+6N33YiJJK7o5+KmNw/JuY6UtOasVHX?=
+ =?us-ascii?Q?WN1h4NcUiS2CJWDYNoKL4VHTL0iyf2HweKAsrYmXR0gpUnLDfhNo59gf+DWA?=
+ =?us-ascii?Q?QzjEYFZl0vJc+9PsLcOJPDYIZUetl4+HOSKDHXLreNerxvB1ptsBrPwTny8i?=
+ =?us-ascii?Q?Ljvu3SkGxwhaFKlfOD7viaC6AOmiS2yc3wjJw+UqHRseZzpuj9UjbtpGMfSX?=
+ =?us-ascii?Q?PpFejC+IQHBsoTk9NKsUFN0lWZoBu8xkdpDsUXrbtCNbNlbeeK5o2VdrXk55?=
+ =?us-ascii?Q?bqF98YHZBrrtU7ruu58SG2BMxBjqlZ73LM/PLMBqDz33vDE/TazhvuBG7aIL?=
+ =?us-ascii?Q?nccsUAvnyrbl6/WSKl/apUqBuuANS2SAl7wOh82Qqc688wT3bJO4BEZexaGI?=
+ =?us-ascii?Q?PLJRzRqMV1QZ5VZy5ZvDi7y2lIEUbCnlgM9EsYh2PGUOMqASkk1xe7xlG2o2?=
+ =?us-ascii?Q?h7+8IUPuVCjTojr8RISU+e07NLvMWwN1lwsSyB5FlXqsOtiYlgk5meIPLVY7?=
+ =?us-ascii?Q?eqC9vMz300fe05TP/lJQRIRMW7qvOCnI+OzLeYFC8/gQwlDxVOf8DQbE+j6F?=
+ =?us-ascii?Q?gcyQgXCANYpz9zUItLqjl4G+ZP6nSjVClxNWjQD4vtmfAK1n9YM2vVUherJK?=
+ =?us-ascii?Q?04PfO3LdyQaPie/ZGPneHCFAOat/WUQSsouiDrZ5AxR2fNjWLIiUKx8MGISh?=
+ =?us-ascii?Q?lAzSJjsHpOfkWyvweZXQ68zG2Eu5NXBxxGXQymwb7bteEwFRbYgqKQ7jVYM4?=
+ =?us-ascii?Q?6cYvvUQWQbQpZscc9EvgJaOmHVV0s+9NDu7ASha4o3re67UDnVfsT1NkBprG?=
+ =?us-ascii?Q?O+vM5ProCNV+gmqPwvfyg9YM4+d/YcOP0Gb4wquJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e795491a-6f24-4213-7d4a-08dd8723cbe8
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 13:43:17.3357
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aD+1IBndsDy603YfsNS0plJDFeVLGV6+H9pI6/vLb8ta0qoMs37B00EZjzQ6r3qcjWu5M3pBXxFTRciqZ1JkoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7960
 
-A CPU within hotplug operations can make the RCU exp kworker lagging if:
+Dan,
 
-* The dying CPU is running after CPUHP_TEARDOWN_CPU but before
-  rcutree_report_cpu_dead(). It is too late to send an IPI but RCU is
-  still watching the CPU. Therefore the exp kworker can only wait for
-  the target to reach rcutree_report_cpu_dead().
+thanks for all your reviews.
 
-* The booting CPU is running after rcutree_report_cpu_starting() but
-  before set_cpu_online(). RCU is watching the CPU but it is too early
-  to be able to send an IPI. Therefore the exp kworker can only wait
-  until it observes the CPU as officially online.
+On 06.03.25 13:06:20, Dan Williams wrote:
+> Robert Richter wrote:
+> > Improve debugging by adding and unifying messages whenever a decoder
+> > was added to a port. It is especially useful to get the decoder
+> > mapping of the involved CXL host bridge or PCI device. This avoids a
+> > complex lookup of the decoder/port/device mappings in sysfs.
+> 
+> I am not opposed to this debug statement, but I hope that most use cases
+> for associating objects are handled by tooling and we don't need to keep
+> extending kernel debug statements for these queries.
+> 
+> E.g.: show all the decoders and targets of port1
+> 
+> # cxl list -PT -p 1 -Di
 
-Such a lag is expected to be very short. However #VMEXIT and other
-hazards can stay on the way. Report long delays, 10 jiffies is
-considered a high threshold already.
+I kept the patch in the v5 series that I sent yesterday.
 
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/rcu/tree_exp.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+The issue I am seeing is that in case of failures the devices
+including their sysfs entries are not created or bound to a driver.
+Tools do not see them then nor there is a hint why there was a
+failure.
 
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 6058a734090c..87a44423927d 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -406,8 +406,18 @@ static void __sync_rcu_exp_select_node_cpus(struct rcu_exp_work *rewp)
- 	for_each_leaf_node_cpu_mask(rnp, cpu, mask_ofl_ipi) {
- 		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
- 		unsigned long mask = rdp->grpmask;
-+		int nr_retries = 0;
- 
- retry_ipi:
-+		/*
-+		 * In case of retrying, CPU either is lagging:
-+		 *
-+		 * - between CPUHP_TEARDOWN_CPU and rcutree_report_cpu_dead()
-+		 * or:
-+		 * - between rcutree_report_cpu_starting() and set_cpu_online()
-+		 */
-+		WARN_ON_ONCE(nr_retries++ > 10);
-+
- 		if (rcu_watching_snap_stopped_since(rdp, rdp->exp_watching_snap)) {
- 			mask_ofl_test |= mask;
- 			continue;
--- 
-2.48.1
-
+-Robert
