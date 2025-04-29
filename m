@@ -1,148 +1,208 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2C11FE478;
-	Tue, 29 Apr 2025 10:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA9229B77F
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921185; cv=none; b=N1Qt+HsSRfRLRUbI32vXRBloFGPwL5DzH/aE/u3/jdZ0Vz82/iboHI0HoWWzSpRB68f2SDrvkO5XfOhZKqs2Wt62TkNPMmU4SkKVECOrnFX6fo+TBlw4SG4NnY83kIXv0Ii15lxNUg2v+0NrKbxUFxfOYI0HGmPyNDX9Oz2xooQ=
+	t=1745921215; cv=none; b=kq2VdrSzMu9kLvdLs/aGAbVjyON4T353qBHn8j3DWnq6XD9iUQuaYgXJ/nOPUf5OgwiRbw2G+WF/WTu34jXcDn2c3AVj4vsZjtKCeFp2FLDX8RiAHwx4ErXZXok4evPG2Y+G5ZHTHrRh/DQeIEjJmS9dfI/fvefG0iHyBZZvBlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921185; c=relaxed/simple;
-	bh=kof4YDrJHqzs3PpRU+42B//MBn1YXsFjurvqP2NS4E0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fOuUWUjL0Af+NLXKrFGsA7c97mCQx1RO6EPxUV8dj6dVGGnVAakpEEhVNx72Ii8qEtsZoMKFzN3/GovBwt8EEkH2B4gUCv0TSiZ6hev/cIBA/jKb+xLSNI7sDUL1qJAVBYKwLpH6q0lwm/NCX/Y+0camndEn180AqUX3XWXhyGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LomVDNOF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745921215; c=relaxed/simple;
+	bh=U1IL5hommBa2Wv+FExNOtEc9rkh+55OUse5MfWOqQog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FRvmrcFPNOPQMgwOVXn87inLpgGhLhJMQ/AB1nNOdRPyJcdAjM201cAEJSFhDWGPclsZKyyFett9+o2LL/OJUfDk1+BUJI/0KJlEkuuVt4NVKZxxrcPyO+bAlJvewS9WHTDqyNk3K1irs1uhE5NM/B4CH3PpSkI4qhAvMxLgyCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ob2whYRQ; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LomVDNOF"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq2me019693;
-	Tue, 29 Apr 2025 10:06:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jQEJ+g7BmU8khLOOCEFMSoGh4C8XiVcJuLiR+yxuuOI=; b=LomVDNOFn+f1cZm6
-	sj3E0qbmVlT8+648qebUSbGUiCxAOyvSTa3N0MbiSgLB6iUFbFzsmasOzJkiruWm
-	byQz54BvdMQraA5rntqQzAIxR/wP+WKh//E4kB6nL+qA+Gp92IOvYv0Fu/GwcEik
-	1mXqEGqnW833R3BLiDVOfTI9oZ1fdfm4yoxvbdU1iQZT5/Gd59f/Gz/Sm8dDIlII
-	vtxv7D6lO7W2TFoT0shXeSX6ZC6+Uig6ZpnRkbNySAyTtUyg19QUlUd6HlqKNNqs
-	SETloQp/mu6Wyl0cwOO6be6yjeVcrOYylY1TDQN7gd7LX5p+yP+AnwsKKonnR+J6
-	Sv2/Dg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468n6jkdtn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:06:19 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TA6Ivb021600
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:06:18 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 03:06:12 -0700
-Message-ID: <963195e9-44e1-ec84-0892-32c5efb88efa@quicinc.com>
-Date: Tue, 29 Apr 2025 15:36:09 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ob2whYRQ"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6ff1e375a47so60446647b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745921212; x=1746526012; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jjQQ1gbntdrSbZtDquO40Eje9JxI9rUu3v+V9iiuKlU=;
+        b=Ob2whYRQtHGuz040o1Ucs8I8eAspDDPbj4vLhNA0FLx/Y/oiYV96VC0mttv0FjUNPZ
+         3Ipo6SFq0eqtLtXCgioDx+cMcqYGw/tu56WRVC73K/Wl2HOl2ODxQyht1qSB//AQFYUi
+         N1T9lShMlKig3y7P43jcySKN/6Dzrkk1R8NRwN1FzcW72ixhZrn0QFVkdbofN0ssNW51
+         FpEOivK/XytpwPNQnSReEtYDC0eZ/nPM7AVeG+A1qHNiKgUyOSjeuSv+O5bl8M1lr/Kw
+         Bi70atzAWO3lV9svYeWGT7KOwJgEXF5VPX70n2faYnA2Th9wF9/KXUjhhlaj4SW4Nb+G
+         kQCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745921212; x=1746526012;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jjQQ1gbntdrSbZtDquO40Eje9JxI9rUu3v+V9iiuKlU=;
+        b=UyecG9/XDGvdMbXdrs5gJe4lEGqH2C+6cjmyG3BrPUhNlZCrfzlSBSsqWY+RjvjnHc
+         uteKvlb1rtb0Vlpmksdp0zzkupBBRoTuPCEoRsBSliPoamo/7L+xyKJRfLW51OixgzQF
+         gaHgvip0kkh3PDEFeo2QrdG62sCMcPJIJKIep8sjI7Mtc/EKPVgH2WKHrwzfviA//fZP
+         od6vJLKHv9EyGNhqgtGeODTcAbTk5Gxn3zd7tNGaGyubvgPxefkAmF5Ih9f85jDPASpW
+         W4FW3ZwgUeMWwhqKXFAu8QeDTo7pxH0nqy32kFYM3SQjYPXJj/4D833+6B4lNVzueyZw
+         JcqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNigh7bI38qLVCR9/U1HxPvSpnf5G7iJFLpWViR4LOam5P18MfQJaTlMZX2t+TVMgA8dsW0jJvTFj8ivU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUrIHDyl1nUxltBkdewsXY5Dx1NP1FNv4eKuxgFjGVS1a2lhzD
+	IhnQvKA5DAweydN4phpbf1g82S6GqCQuPVwnaA9F66Ebn4EuDnqORKhCj3edEiioG45P7ivCR17
+	T1sexDnydUTeiZJXdQxukY5pop9dw6GUrkO1Tvg6wVGph9EUQ
+X-Gm-Gg: ASbGncuC53tnJ1GP25/rJrurSvvtSHdYGsyTIRww+Q7uOr2mLvKzYHmrlpmOg2BEf5t
+	4UGBapZhH/VFAmq3KGEnmGyfmK4vDGqxsR2sV6vt+vLfeNlIdYEabM9h0aoziEL8COaRX1AKqLo
+	Af0zv4B2x6VaHR2Pkw5UCQNMg=
+X-Google-Smtp-Source: AGHT+IG6WmWyhSGVmxVC3f3XCypyrDEpbVGX6ioUnUsJtVsCpx9/EXtlcANtXZwlnV6IGsG9Jd4CkmBcfsgDrtEzaaQ=
+X-Received: by 2002:a05:690c:3506:b0:703:b8f4:5b0e with SMTP id
+ 00721157ae682-7085f236277mr162475347b3.28.1745921212260; Tue, 29 Apr 2025
+ 03:06:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 07/23] media: iris: Add handling for no show frames
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-7-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-7-3a6013ecb8a5@quicinc.com>
+References: <20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com>
+In-Reply-To: <20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 29 Apr 2025 12:06:16 +0200
+X-Gm-Features: ATxdqUGRQt2dS-dYXQNUSdM9bjw6NNZW_Ep_w3cK8lN-p_Z_PHKTCdtR2wWOe8s
+Message-ID: <CAPDyKFp5N23KCZwOTba6vGyk9eaS1-SjSqY52FfPDng-bahn6g@mail.gmail.com>
+Subject: Re: [PATCH v3] mmc: sdhci-of-dwcmshc: add PD workaround on RK3576
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Elaine Zhang <zhangqing@rock-chips.com>, Finley Xiao <finley.xiao@rock-chips.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Detlev Casanova <detlev.casanova@collabora.com>, kernel@collabora.com, 
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NSBTYWx0ZWRfX5IaCucg7Vtvp QtRoradHz70RHP0Gh+9juYy/VZp/f7utrrPO1VBh28mVuxPEhaDh7j3ocU/U/Vn/CvgrTl/yMVT VtUsocDo6mG0RWMhf9M4MVn41WKGBeeb1+qU7maia+p28LCj+9ObkKR1kJFzF3reo84CEVnjC3e
- 30wE676O3BJEI2D4K9+CezPjW7PTHsyqNec/VvZ4twhwFC+sayAH7FkDxzVOLiDsUrnHguaKDaT G+6KUVNqB2XGmrZSbHE7PS8hyQkfpI6lTKlZ5J84Tq8X4DQ/IHzCp7HRXaPBd0pN1f2sCb0tUC0 Lto/cRV2BEdMoS9phyNp6oMguOXMPsMW+Sx9eSI3ZxFTuT5BTvXdp9rkZp6Ah11mIaZ94Z68jT9
- VokjfqRXxcH7SYj5xkj96a/GDKpGpLokfmkrgm76WYS8dFK58WeSVLIzSZNQlhnYkRTitMpE
-X-Proofpoint-GUID: ECGvXNqWQEn8ZoWoqYelCjDkVPKAj-CP
-X-Proofpoint-ORIG-GUID: ECGvXNqWQEn8ZoWoqYelCjDkVPKAj-CP
-X-Authority-Analysis: v=2.4 cv=C8fpyRP+ c=1 sm=1 tr=0 ts=6810a49b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=I1LTqFYYwnHxq3ZflJIA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=999 priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290075
 
-
-On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
-> Firmware sends the picture type as NO_SHOW for frames which are not
-> supposed to be displayed, add handling for the same in driver to drop
-> them.
-> 
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h  | 1 +
->  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 4 +++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-> index 806f8bb7f505..666061a612c3 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-> @@ -113,6 +113,7 @@ enum hfi_picture_type {
->  	HFI_PICTURE_I				= 0x00000008,
->  	HFI_PICTURE_CRA				= 0x00000010,
->  	HFI_PICTURE_BLA				= 0x00000020,
-> +	HFI_PICTURE_NOSHOW			= 0x00000040,
->  };
->  
->  enum hfi_buffer_type {
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> index 5bb20ec0d67f..1ed798d31a3f 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> @@ -91,7 +91,9 @@ static int iris_hfi_gen2_get_driver_buffer_flags(struct iris_inst *inst, u32 hfi
->  	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
->  	u32 driver_flags = 0;
->  
-> -	if (inst_hfi_gen2->hfi_frame_info.picture_type & keyframe)
-> +	if (inst_hfi_gen2->hfi_frame_info.picture_type & HFI_PICTURE_NOSHOW)
-> +		driver_flags |= V4L2_BUF_FLAG_ERROR;
-> +	else if (inst_hfi_gen2->hfi_frame_info.picture_type & keyframe)
->  		driver_flags |= V4L2_BUF_FLAG_KEYFRAME;
->  	else if (inst_hfi_gen2->hfi_frame_info.picture_type & HFI_PICTURE_P)
->  		driver_flags |= V4L2_BUF_FLAG_PFRAME;
-> 
+On Wed, 23 Apr 2025 at 09:54, Nicolas Frattaroli
+<nicolas.frattaroli@collabora.com> wrote:
 >
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> RK3576's power domains have a peculiar design where the PD_NVM power
+> domain, of which the sdhci controller is a part, seemingly does not have
+> idempotent runtime disable/enable. The end effect is that if PD_NVM gets
+> turned off by the generic power domain logic because all the devices
+> depending on it are suspended, then the next time the sdhci device is
+> unsuspended, it'll hang the SoC as soon as it tries accessing the CQHCI
+> registers.
+>
+> RK3576's UFS support needed a new dev_pm_genpd_rpm_always_on function
+> added to the generic power domains API to handle what appears to be a
+> similar hardware design.
+>
+> Use this new function to ask for the same treatment in the sdhci
+> controller by giving rk3576 its own platform data with its own postinit
+> function. The benefit of doing this instead of marking the power domains
+> always on in the power domain core is that we only do this if we know
+> the platform we're running on actually uses the sdhci controller. For
+> others, keeping PD_NVM always on would be a waste, as they won't run
+> into this specific issue. The only other IP in PD_NVM that could be
+> affected is FSPI0. If it gets a mainline driver, it will probably want
+> to do the same thing.
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+
+> ---
+> Changes in v3:
+> - Reword comment and commit message to correct that this is not a
+>   silicon bug, but seemingly intentional design with regards to runtime
+>   power management.
+> - Link to v2: https://lore.kernel.org/r/20250412-rk3576-emmc-fix-v2-1-830e653ad4f0@collabora.com
+>
+> Changes in v2:
+> - Rewrite patch to use dev_pm_genpd_rpm_always_on in sdhci driver
+>   instead, after Ulf Hansson made me aware of its existence
+> - Link to v1: https://lore.kernel.org/r/20250408-rk3576-emmc-fix-v1-1-3009828b1b31@collabora.com
+> ---
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 40 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index 09b9ab15e4995f0bddf57dd309c010c849be40d9..a20d03fdd6a93ecc5229c71f825bade5ac730370 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/reset.h>
+>  #include <linux/sizes.h>
+> @@ -745,6 +746,29 @@ static void dwcmshc_rk35xx_postinit(struct sdhci_host *host, struct dwcmshc_priv
+>         }
+>  }
+>
+> +static void dwcmshc_rk3576_postinit(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+> +{
+> +       struct device *dev = mmc_dev(host->mmc);
+> +       int ret;
+> +
+> +       /*
+> +        * This works around the design of the RK3576's power domains, which
+> +        * makes the PD_NVM power domain, which the sdhci controller on the
+> +        * RK3576 is in, never come back the same way once it's run-time
+> +        * suspended once. This can happen during early kernel boot if no driver
+> +        * is using either PD_NVM or its child power domain PD_SDGMAC for a
+> +        * short moment, leading to it being turned off to save power. By
+> +        * keeping it on, sdhci suspending won't lead to PD_NVM becoming a
+> +        * candidate for getting turned off.
+> +        */
+> +       ret = dev_pm_genpd_rpm_always_on(dev, true);
+> +       if (ret && ret != -EOPNOTSUPP)
+> +               dev_warn(dev, "failed to set PD rpm always on, SoC may hang later: %pe\n",
+> +                        ERR_PTR(ret));
+> +
+> +       dwcmshc_rk35xx_postinit(host, dwc_priv);
+> +}
+> +
+>  static int th1520_execute_tuning(struct sdhci_host *host, u32 opcode)
+>  {
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -1176,6 +1200,18 @@ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
+>         .postinit = dwcmshc_rk35xx_postinit,
+>  };
+>
+> +static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk3576_pdata = {
+> +       .pdata = {
+> +               .ops = &sdhci_dwcmshc_rk35xx_ops,
+> +               .quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +                         SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
+> +               .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+> +                          SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+> +       },
+> +       .init = dwcmshc_rk35xx_init,
+> +       .postinit = dwcmshc_rk3576_postinit,
+> +};
+> +
+>  static const struct dwcmshc_pltfm_data sdhci_dwcmshc_th1520_pdata = {
+>         .pdata = {
+>                 .ops = &sdhci_dwcmshc_th1520_ops,
+> @@ -1274,6 +1310,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+>                 .compatible = "rockchip,rk3588-dwcmshc",
+>                 .data = &sdhci_dwcmshc_rk35xx_pdata,
+>         },
+> +       {
+> +               .compatible = "rockchip,rk3576-dwcmshc",
+> +               .data = &sdhci_dwcmshc_rk3576_pdata,
+> +       },
+>         {
+>                 .compatible = "rockchip,rk3568-dwcmshc",
+>                 .data = &sdhci_dwcmshc_rk35xx_pdata,
+>
+> ---
+> base-commit: f34da179a4517854b2ffbe4bce8c3405bd9be04e
+> change-id: 20250317-rk3576-emmc-fix-7dc81a627422
+>
+> Best regards,
+> --
+> Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+>
