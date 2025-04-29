@@ -1,55 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD47D13D893
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E13142900;
+	Tue, 29 Apr 2025 01:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745889776; cv=none; b=OuH5Ygj1aPGM5Ijg/heIV4AFwJkmsMrX6ZajUmgI5tet6zXMH6YQzy+lom1UnpM3Uzr86USgiNts8DcK7vddgqZ4RAtCpbG9SleEUJCUiK97aMI+Yh3Gx2qxONtDoeUKiQhxIHWFoHmmSKTD2wJm5JMC4Ny6afUwsuLq//YBB4g=
+	t=1745889869; cv=none; b=qmulJEC/JQRz9eVbteTx41zrDL6GnxdThFSIlY3muHu/bkWCyiIzBI1Ir/G7mySzo5FRDFd2RT58vMdV0Nmf9dXf/JpiAOw3N+caOxDjXhSuNfDW3KciuLnVfOompDAWcPpSTsvWD4hMzkG0Cf11GUlX0zVxjFe3be0LtRJmMVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745889776; c=relaxed/simple;
-	bh=lDdvpoV6qxHTWi1ZaNBNMrxyOcf/jUN7/pAntxJBUTo=;
+	s=arc-20240116; t=1745889869; c=relaxed/simple;
+	bh=ZtxE0cyg4LN00rivesKyGI6iKLfGnmNQVRL/FHIyYAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElJtkBN1MqG10b0rp/u0EFQdE1u90srv7LSOjRif2pC+/SkuqP6kPZjeYXKSJvN3W9+uxdeWQsbup2jwM75VB00xYCOXg+IMk/TvTb/BSqLVp6tRACjbNcIpRhgeGfqNp3IToyvWA6X+P2eRo1rzVxfw9+XdYxnTdaHJYaz/Ri0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZHPbbd4G; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMCAaCfynZgCykvUoPdoa7eKcZkUXQ5zaBu6v/JDh2Z3VWgAsbb6LHTAVg2/O5X8Aqwx+ECPtYJKfM20BVEjl6u2UTPir/k4tuCoFxKxpBCidDMScveWVxOokd8BCRjj29rYuNH/uzmGua5Sxkz1EppgClV4eMuHSdoPjUKGsEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mB0Wfnn0; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZHPbbd4G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745889773;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R1De2Y8u2PUpjPCXzMy0cWwGfWJHKir9txxa56K9soM=;
-	b=ZHPbbd4GJjoLjeHryi4iYdkIospAhsOGAgzkyVUw3N6fv+xS5ITbZcx4kzzy5gnaCKj71Z
-	Q+a0JVX3ckEFwv/CPbnQCZqDIG8rqB2P3OJ4tOnuPSWt6dLjiI2XgADkk1mSeLyWLjSkVa
-	rSl3OvHtMo0+VL/wcAmCavXau3QSL2U=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-150-97_8gxpSOaChXuV_Eijc-g-1; Mon,
- 28 Apr 2025 21:22:50 -0400
-X-MC-Unique: 97_8gxpSOaChXuV_Eijc-g-1
-X-Mimecast-MFC-AGG-ID: 97_8gxpSOaChXuV_Eijc-g_1745889769
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BBEB81956094;
-	Tue, 29 Apr 2025 01:22:49 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.57])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 690A519560A3;
-	Tue, 29 Apr 2025 01:22:46 +0000 (UTC)
-Date: Tue, 29 Apr 2025 09:22:41 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] selftests: ublk: kublk: fix include path
-Message-ID: <aBAp4VUNx20r_fiB@fedora>
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
- <20250428-ublk_selftests-v1-3-5795f7b00cda@purestorage.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mB0Wfnn0"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so5700766b3a.0;
+        Mon, 28 Apr 2025 18:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745889867; x=1746494667; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyPoE7Ki+Stm1jCn5lhraUB7iivQ29gfAikoNMrY7EE=;
+        b=mB0Wfnn0ko47zRi9hEV3lvidS3YPZ/ojYyMzFKYkTlBULpOderIDvvtF6uHvIaDup9
+         4voVEALTTKq/w9RxW4hOSGlP2n+HOuTCNN3dkj3fz7Ke13CRLuU6LtZIPxurPQ5XrDZG
+         gtG1k6mt0EV5C9dynUunFiPXIbAtJHt++CEmep2qWIZPC4fxGroNL9GziGzhRONL0g0e
+         wizwCufDu3qWWmrg7ejdKrhaykQ4NLj7H3I0MrKYGserCIl+upGytafbtiYU1rVnQJbz
+         26INHDVncutJiuXa9vlsBRDMv0AWQ9p8UXozaFv/1lQIiAHdV9CZ001WfehhYpT5rUsZ
+         f93w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745889867; x=1746494667;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyPoE7Ki+Stm1jCn5lhraUB7iivQ29gfAikoNMrY7EE=;
+        b=CrQ/CTi02dXhXQ5YO/LHwEQnT0on3QD4UanVjrlk8MqADsyQPFl8yxXvBmXfxqEvvU
+         5kJLPApTrnbmeuNVU9+mY3XbIsgTGMy/Gfz3kuNCIE/EccHKTteD8yNSuCJWS7OVKxYf
+         6+1KfW5MYDSyl89ErpEmco/Nec3SMifF27gCtxaAh4KAiwnN3wA7Aptio+/zefCIA2qF
+         J6RYsiRquFiHX6zvqW6M84tFuLd1vLDCTyCMcUux46u7hDdLYiRPtfxJuTi9HMOkf7NH
+         vi6G2rYNqS3ndRXi1HqMK8sD1U7zDbB+fEKdCB3EXdzL/qPnFpLHnWZ1Ny4VZz49aiBJ
+         YhPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUf2rACw7Zn6HOoOfCyf5G4Z5JAZbNqDWgI8WIr3XvvvYF4SZ4y3zxkqD5OdOSMY8diuUF2K4Jm3BNweQ==@vger.kernel.org, AJvYcCVuiXJKDntfrAOMxv4tKQlT9NHcCfLgIcosZZHuc3y19GJhbgFe3THKuWiu0zaowdCOxUo54F3Z6djQm6mj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnKmfaNMo4HTTvvv+lrXkzowhV74WwMTBsXdjlvtWl8jXSDKk4
+	opI4acbasujDBMFBDblhsGkcQmuJI8ejWNi9WoO7tghKvxHeX0swObixRg==
+X-Gm-Gg: ASbGncsatdzULmzrpUjjNhdFLbqditU0lmgXMtXxR+Bqi0dSn7KoD+tkhzmPE/9nRiY
+	1VMI7yVwFXXzM2HBamgW/wMi0DRCMCxlYDlu+y3fAPp03PbSBopBS2iR0PGHwjibgns47ZWxWYQ
+	IE438Wvy7PQ5CZCaf03e3alQ8T0la44+1xFJ3cYG5naWcQZzSAi+SwuGv119CB+GPaRy/evhzA0
+	DyBs0qr5/J1jeI96X9aodIoCToBAElUNp3qYlgom39P8e+wdKmrbv8dwmRj/Xx/NXzNz2GF0PN+
+	otFrJfxAwhqLDgOHo4GnUyffaeYo3mJthvA5BOWgDJ02twvX8v5A
+X-Google-Smtp-Source: AGHT+IGkUBsywSb73JsJIWkm/g2pDHLdJTBuGbQbWm79sjTxxA5l9O6RtphUUdix9RaxkZ9qtgHWFA==
+X-Received: by 2002:a05:6a20:9f9a:b0:1e1:a449:ff71 with SMTP id adf61e73a8af0-2094f479376mr2033127637.1.1745889866630;
+        Mon, 28 Apr 2025 18:24:26 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:adc2:8397:4f51:d5a0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e259678acsm8719083b3a.80.2025.04.28.18.24.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 18:24:26 -0700 (PDT)
+Date: Mon, 28 Apr 2025 18:24:23 -0700
+From: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To: Oliver Graute <oliver.graute@kococonnector.com>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>, 
+	"yujiaoliang@vivo.com" <yujiaoliang@vivo.com>, "jkeeping@inmusicbrands.com" <jkeeping@inmusicbrands.com>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] input: ili210x: Fix uninitialized symbols in
+ ili251x_firmware_to_buffer
+Message-ID: <k6giuutuolfpx4yozicqure3gfkijr3wfv5xxm6qnpk2rg7l7i@524rayrahmja>
+References: <20250419131315.24897-1-purvayeshi550@gmail.com>
+ <aAiWvzzSSWraeRdr@graute-macos>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,32 +76,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250428-ublk_selftests-v1-3-5795f7b00cda@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <aAiWvzzSSWraeRdr@graute-macos>
 
-On Mon, Apr 28, 2025 at 05:10:22PM -0600, Uday Shankar wrote:
-> Building kublk currently fails (with a "could not find linux/ublk_cmd.h"
-> error message) if kernel headers are not installed in a system-global
-> location (i.e. somewhere in the compiler's default include search path).
-> This failure is unnecessary, as make kselftest installs kernel headers
-> in the build tree - kublk's build just isn't looking for them properly.
-> There is an include path in kublk's CFLAGS which is probably intended to
-> find the kernel headers installed in the build tree; fix it so that it
-> can actually find them.
+On Wed, Apr 23, 2025 at 07:30:18AM +0000, Oliver Graute wrote:
+> On 19/04/25, Purva Yeshi wrote:
+> > Fix Smatch-detected issue:
+> > 
+> > drivers/input/touchscreen/ili210x.c:621 ili251x_firmware_to_buffer()
+> > error: uninitialized symbol 'fw_addr'.
+> > drivers/input/touchscreen/ili210x.c:621 ili251x_firmware_to_buffer()
+> > error: uninitialized symbol 'fw_len'.
+> > 
+> > Initialize 'fw_addr' and 'fw_len' to 0 in ili251x_firmware_to_buffer()
+> > to avoid uninitialized use warnings reported by smatch.
+> > 
+> > Although the while loop ensures both variables are always assigned before
+> > use, initializing them silences false positives.
+> > 
+> > Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 > 
-> This introduces some macro redefinition issues between glibc-provided
-> headers and kernel headers; fix those by eliminating one include in
-> kublk.
-> 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Oliver Graute <oliver.graute@kococonnector.com>
 
-kernel selftest is supposed to run under the kernel tree without installing
-headers system wide, nice!
+No, we will not be adding gratuitous initializations just to appease
+smatch.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+That said, "do {} while (rec);" loop might work better here and also
+might allow smatch to recognize that both variables are not used
+uninitialized. I would accept such a patch.
 
+Thanks.
 
-
-Thanks,
-Ming
-
+-- 
+Dmitry
