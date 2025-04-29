@@ -1,62 +1,62 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5EF2DCB41;
-	Tue, 29 Apr 2025 23:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E7E2DCB7A;
+	Tue, 29 Apr 2025 23:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745969934; cv=none; b=XZYsdunsvXFpLClEk50Y/7c2uoh6JaTVNBe/O9d4qsjHIxYDs6MVZyLRcvv5erXvuxNKIJTswa1He8laOrLJ9OQ1mQCs2JA3tNsWpn+EtJKy7OXHVhcXWEuiO6hzasRLR3S1EXyOdRA9gI/RMJkdcGCakbIi4xIzaoLz/PZ+aik=
+	t=1745969936; cv=none; b=i0nrcqlnH6cW1UmL2f/nSGuEefq2bfHIHqhx2Dwl32MRf7odirWTNCTQfEssTRUARiNdViJmBUjdQIrQGXtEKlgM81l8oYp9IThV+TxbrNu1/HHnc6kyln2ts1YKtoEeaC8NMn2fT8gLGD7aLbpwC4Ncs/paTsZGexYxu1C4zSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745969934; c=relaxed/simple;
-	bh=K+fE1tEOojfiAdRs+JtbTz/Ixc47rZypB0NeTTCr0xk=;
+	s=arc-20240116; t=1745969936; c=relaxed/simple;
+	bh=6lu4oF39SEcXcDQcSnvnULT5GeUPSdpjuo9d07J7rEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XrRdMb5nj1TYPJ7IGQNQ+ZYz23iaO53wZPC/P7XhPMLa/CTFuwOo+2jtn+Bcu8hdprdLKZkZb3uebXB6pxokB+agj3fuFXKb3ITVwl3HPzmG1zoFGkMsiRmjT5MNRmHx4OMzs35eds4bDF6wCvYHg40aJe5yaZn4H3ijiH6TCf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J0sg9pwf; arc=none smtp.client-ip=209.85.128.179
+	 MIME-Version; b=O/4liRd12lXc3crmj363JLSaMaCFu3SolskvKZ+mX/USnuhBTO07gVtgwQQMBGtdQ9zDYl6i2OOSFwobNvRDtlPJD/529X0RVKNhvpuqlTmoExCsjEEMEK1848aQaimngYktOJyAtDW3qrMpgNc/CvEFK0RLKuZXxZ+zv9gx9z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZHfA0mO; arc=none smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0sg9pwf"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6fead015247so61557837b3.2;
-        Tue, 29 Apr 2025 16:38:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZHfA0mO"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70427fb838cso55256907b3.2;
+        Tue, 29 Apr 2025 16:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745969931; x=1746574731; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745969933; x=1746574733; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oKPYMi9z2u+pylu9elX+HeHi2VBZ+HlSHJvjFWP/QJA=;
-        b=J0sg9pwfRsJ7csNyKGKLuey8bbgtZ6jtTBZGdBUhYWHS5sJl/AKcfQzwxCYFOM4pdD
-         zP+vVIK6q6p93paoXTAbmHfX0R9GiIcNViBGSYjq3kxbPNkoTkqWZqphW0wvFLL8v9Tv
-         SMaDVnQfNxFxCaKFwqN6Z66NuoqZhRC7y9ogaa36UTn9+CsVxhjyenq5QmgWC0BqTo4A
-         5+hH7ZmtukBVRErBWBGBplA2I1t++0YV24aJjJUQSU+qetuRulh8H2jtp2FypKnMlEmr
-         Yb9vCuqLHyt53WGzbQdBGM+cer8Jkmuw4F1L+WeIuSTmK5eNae0k9SwjosrddGu1plr9
-         VaJg==
+        bh=fKE37L6euvcRArGqI2WCdwnU49QgVd0+WJwqbTjSGfU=;
+        b=VZHfA0mOypSbyP/7KjOi+WCRZg2L1pgSEC68x+apyOGN8qCxYma2DlR4vaW1cOo4Tw
+         y3AVg8bNWecMQBnD8gUbs2eASJMF3thfJ117cVZwaljxevHY/zxwtB7f+i+hv1qcseL0
+         oQSko+Ypgeo2h4Mu9yPJR1khyoH0ZUljfadvSWOqOsevEr0tnhAJ9EaMkiOVYx7d0CJt
+         H354rcmlx4SPFxABVCmLSK1INv6g/D4I/DYIPlN4BLRlhuemLe1oBRc9rhspyOlbsMs2
+         U+i7cge7YRRnphA9aCE748WjX0I2Dx9cwpnX9WgrK1v8MnOaTGXV8Noa+smZDltpGqPZ
+         2gLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745969931; x=1746574731;
+        d=1e100.net; s=20230601; t=1745969933; x=1746574733;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oKPYMi9z2u+pylu9elX+HeHi2VBZ+HlSHJvjFWP/QJA=;
-        b=m4AQgoQP0pxtrFMj6XlBoqo8d+CyA8IVkvdjAT9VDKsn40xOQNvuaJZ/7ZZcWXQ1Rc
-         0bS3zMXpwkJ3xT2QZt0WSlcm/PUpk1Wdr23JrEg4gZPz4Zb5x4L2h6NXZ0ocJwaPOh2u
-         jppYvNgNOixB2fTUlb6dgHCBP4ERV/39dqTCtWi8drut183gN8cDZQXUZ5Ptff0VciaA
-         Ubf2W0mZyeYrbprobf0R5FcF4XLhq/HZm2IWqdnLgLuCttyxFIh5SgT3R+Rxb1e+ma/K
-         IZINmjHpVLtzsDapfsZORKgeULxSga2DyuDQoY3KvgHhVvdhhA408P3SFhN/241Q9LnL
-         7CGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKmkISwj0vGt2IftnRFGlFTCtBeBsVIy1hMSQofqP4JKlVlYjqg04KuT5a8FWpDNP1CEhZBWHu@vger.kernel.org, AJvYcCUzGTIFZkmL2Rm70imC8XYRmf/Zh080j5wFqO7Kk+rhn8mxa7MOR1bvsmJJDcy7uIbwetuOsfjovl0=@vger.kernel.org, AJvYcCVMuDRd5fjyWPtRvE9lsfdcX/C4NNZplJgjbrISFXY9aTdm5KGMuLSwsV/4odbxy3W+0Ul+o7iWUr0BTOCv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiM3wWzxeeaNKU8TeRynAu897CV7SWGC2cWwP6OqjYvMhrF+NX
-	GDi1w00HHYgE/LWgM83AvDg6xB0CwE6yMCJNCDCsMRkUEBGuFWj6
-X-Gm-Gg: ASbGnculB5siLtFTscp57um30AOLdWtidaC/t/3qVK1plOjQnp5e8hfCG2pGWFmQ5D6
-	3lEtLSOJmLLlCu9u7OM2QYiP5Yd46KHLDHVfqDoZpwi1wO1tMM6GRnWBVSV7iKfak8NiqZvHTiD
-	hDN0dI4z/k931yoxXdvlGbhq0ANFxOJlsyiGtM9zJ7fOE1BWrfpR0tLS26FRCun95bQ5JDoGbEX
-	UoOwYJ8jLWGNMDjjSALAAdC1oAvR2KS1YqLQlBL28YW4c0lcZIMswTsRnJOy0vMztyqEM1w+7u9
-	Fzp9yOLv+ZTAdWnTBSMojV0ArVtwKRpX
-X-Google-Smtp-Source: AGHT+IEbVsUwWm1vJ8cPgyEKm/U3mnCYlKZjFZzkCwn0NZV9arn5fKzWNi2sdzUswsF0UpfObKyaeA==
-X-Received: by 2002:a05:690c:3509:b0:6fb:9429:83c5 with SMTP id 00721157ae682-708ad623882mr10923457b3.19.1745969931462;
-        Tue, 29 Apr 2025 16:38:51 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:74::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-708ae06befesm761997b3.55.2025.04.29.16.38.50
+        bh=fKE37L6euvcRArGqI2WCdwnU49QgVd0+WJwqbTjSGfU=;
+        b=m0nqRcXiV6hzMehGRCl8lgd//E9uTHziDFPf+G/epv5/o6iD74rDbp/8Ps+QKEuCLo
+         +FzrA4krZ/ZvKpnDWI1PNE4wZpHHs/6w429alU1eZjXUvkyqKhACHLFJEcI7XmzOe+mt
+         Igc5nfcgsjTFDSB75QvpLE2q2rG26l7VEa08RvqYAgz42BQxoLoE+HDNnsym4BUXF/gT
+         vI0lJNb3gL/CD4SZl713BScuJQNFQuJCvdTnwr1h3DP0+CSLgPKBzJPZhawlKXVv0tgn
+         2zgYlzvSSEMvxphFP0CzgdfLFvDmBxW1jVBexbRTO5YpstkGQUkfVvjuQ7Fywopbsbu+
+         wt1w==
+X-Forwarded-Encrypted: i=1; AJvYcCU01+Cb9IQvFbE37Mnuw+1AJP9S3ax/ZJ0l/jPvERqy1CG+2U/tpuuAaSptYh9+q1HgJN693VGz@vger.kernel.org, AJvYcCVKNWf/x7xHv7RXHSLeo5nNCYU0rqkpOq3AXppLfUvOMuaoZMb9FJ9VDsjc7VI/OSCJwVTJsd0t6I/4fIVQ@vger.kernel.org, AJvYcCXd3vIfXP6OD0FK8AHAYXku5noTWa2GyaZ6mKzMwIaMCDMKzAiLRbYy00qWr+/2pScn5iaUrevr+V8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwNMWSOmCy2ibGw4yobslEa+QiOpwKb3IYJOdcBxzMFnCu2Hgi
+	WaBLwWDfNa+iAxzpRqH8+u+b3zNSE2XnVmL/tZiPbD8dkV4wiw1K
+X-Gm-Gg: ASbGncuRtXcR5ZT2AKJ1PJOUCU0ag8bPVEgeAzJT+JT/uLkC9z1H3igZwvXFB+jO0zL
+	6h4dBj6YK7W4gwu5tE/wEeDTamsT64YqxVY3gTrlGNs1UcFpfhP0oAzSJ9h4po2CMWf8QJWOUOk
+	3oTCVXUCzCRmJeXa1RsJM+xG29sSo6XKAo8boqKKvdWThyWkLeh2G0VrBGH5YZYs3nOV0Dkjlgl
+	91ewYKiHgR8afIoyyr1sDrYF7KhUR5Q+hiiw7CH2hp8OITw42bSHv5BM2EC0MLYcn/WK+mJy6OF
+	m0Ze1OuTWTLQf2UMIgLu0JMDTe+mzyU=
+X-Google-Smtp-Source: AGHT+IFO87ET7RNKrk3UF1PEUh15ufHAa0Xuh+MHK1ieSEIT7Rz22UvQkjilBKaStSwIpkQPF5GxvQ==
+X-Received: by 2002:a05:690c:7304:b0:6f9:7a3c:1fe with SMTP id 00721157ae682-708abe2046emr20914727b3.23.1745969933102;
+        Tue, 29 Apr 2025 16:38:53 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:4::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-708ae1edd01sm700967b3.115.2025.04.29.16.38.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 16:38:51 -0700 (PDT)
+        Tue, 29 Apr 2025 16:38:52 -0700 (PDT)
 From: Nhat Pham <nphamcs@gmail.com>
 To: linux-mm@kvack.org
 Cc: akpm@linux-foundation.org,
@@ -84,9 +84,9 @@ Cc: akpm@linux-foundation.org,
 	cgroups@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	peterx@redhat.com
-Subject: [RFC PATCH v2 02/18] swapfile: rearrange functions
-Date: Tue, 29 Apr 2025 16:38:30 -0700
-Message-ID: <20250429233848.3093350-3-nphamcs@gmail.com>
+Subject: [RFC PATCH v2 04/18] mm: swap: add an abstract API for locking out swapoff
+Date: Tue, 29 Apr 2025 16:38:32 -0700
+Message-ID: <20250429233848.3093350-5-nphamcs@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250429233848.3093350-1-nphamcs@gmail.com>
 References: <20250429233848.3093350-1-nphamcs@gmail.com>
@@ -98,427 +98,204 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rearrange some functions in preparation for the rest of the series. No
-functional change intended.
+Currently, we get a reference to the backing swap device in order to
+lock out swapoff and ensure its validity. This does not make sense in
+the new virtual swap design, especially after the swap backends are
+decoupled - a swap entry might not have any backing swap device at all,
+and its backend might change at any time during its lifetime.
+
+In preparation for this, abstract away the swapoff locking out behavior
+into a generic API.
 
 Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 ---
- mm/swapfile.c | 332 +++++++++++++++++++++++++-------------------------
- 1 file changed, 166 insertions(+), 166 deletions(-)
+ include/linux/swap.h | 12 ++++++++++++
+ mm/memory.c          | 13 +++++++------
+ mm/shmem.c           |  7 +++----
+ mm/swap_state.c      | 10 ++++------
+ mm/userfaultfd.c     | 11 ++++++-----
+ 5 files changed, 32 insertions(+), 21 deletions(-)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index df7c4e8b089c..426674d35983 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -124,11 +124,6 @@ static struct swap_info_struct *swap_type_to_swap_info(int type)
- 	return READ_ONCE(swap_info[type]); /* rcu_dereference() */
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 8b8c10356a5c..23eaf44791d4 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -709,5 +709,17 @@ static inline bool mem_cgroup_swap_full(struct folio *folio)
  }
+ #endif
  
--static inline unsigned char swap_count(unsigned char ent)
--{
--	return ent & ~SWAP_HAS_CACHE;	/* may include COUNT_CONTINUED flag */
--}
--
- /*
-  * Use the second highest bit of inuse_pages counter as the indicator
-  * if one swap device is on the available plist, so the atomic can
-@@ -161,6 +156,11 @@ static long swap_usage_in_pages(struct swap_info_struct *si)
- /* Reclaim directly, bypass the slot cache and don't touch device lock */
- #define TTRS_DIRECT		0x8
- 
-+static inline unsigned char swap_count(unsigned char ent)
++static inline bool trylock_swapoff(swp_entry_t entry,
++				struct swap_info_struct **si)
 +{
-+	return ent & ~SWAP_HAS_CACHE;	/* may include COUNT_CONTINUED flag */
++	return get_swap_device(entry);
 +}
 +
- static bool swap_is_has_cache(struct swap_info_struct *si,
- 			      unsigned long offset, int nr_pages)
- {
-@@ -1326,46 +1326,6 @@ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
- 	return NULL;
- }
- 
--static unsigned char __swap_entry_free_locked(struct swap_info_struct *si,
--					      unsigned long offset,
--					      unsigned char usage)
--{
--	unsigned char count;
--	unsigned char has_cache;
--
--	count = si->swap_map[offset];
--
--	has_cache = count & SWAP_HAS_CACHE;
--	count &= ~SWAP_HAS_CACHE;
--
--	if (usage == SWAP_HAS_CACHE) {
--		VM_BUG_ON(!has_cache);
--		has_cache = 0;
--	} else if (count == SWAP_MAP_SHMEM) {
--		/*
--		 * Or we could insist on shmem.c using a special
--		 * swap_shmem_free() and free_shmem_swap_and_cache()...
--		 */
--		count = 0;
--	} else if ((count & ~COUNT_CONTINUED) <= SWAP_MAP_MAX) {
--		if (count == COUNT_CONTINUED) {
--			if (swap_count_continued(si, offset, count))
--				count = SWAP_MAP_MAX | COUNT_CONTINUED;
--			else
--				count = SWAP_MAP_MAX;
--		} else
--			count--;
--	}
--
--	usage = count | has_cache;
--	if (usage)
--		WRITE_ONCE(si->swap_map[offset], usage);
--	else
--		WRITE_ONCE(si->swap_map[offset], SWAP_HAS_CACHE);
--
--	return usage;
--}
--
- /*
-  * When we get a swap entry, if there aren't some other ways to
-  * prevent swapoff, such as the folio in swap cache is locked, RCU
-@@ -1432,6 +1392,46 @@ struct swap_info_struct *get_swap_device(swp_entry_t entry)
- 	return NULL;
- }
- 
-+static unsigned char __swap_entry_free_locked(struct swap_info_struct *si,
-+					      unsigned long offset,
-+					      unsigned char usage)
++static inline void unlock_swapoff(swp_entry_t entry,
++				struct swap_info_struct *si)
 +{
-+	unsigned char count;
-+	unsigned char has_cache;
-+
-+	count = si->swap_map[offset];
-+
-+	has_cache = count & SWAP_HAS_CACHE;
-+	count &= ~SWAP_HAS_CACHE;
-+
-+	if (usage == SWAP_HAS_CACHE) {
-+		VM_BUG_ON(!has_cache);
-+		has_cache = 0;
-+	} else if (count == SWAP_MAP_SHMEM) {
-+		/*
-+		 * Or we could insist on shmem.c using a special
-+		 * swap_shmem_free() and free_shmem_swap_and_cache()...
-+		 */
-+		count = 0;
-+	} else if ((count & ~COUNT_CONTINUED) <= SWAP_MAP_MAX) {
-+		if (count == COUNT_CONTINUED) {
-+			if (swap_count_continued(si, offset, count))
-+				count = SWAP_MAP_MAX | COUNT_CONTINUED;
-+			else
-+				count = SWAP_MAP_MAX;
-+		} else
-+			count--;
-+	}
-+
-+	usage = count | has_cache;
-+	if (usage)
-+		WRITE_ONCE(si->swap_map[offset], usage);
-+	else
-+		WRITE_ONCE(si->swap_map[offset], SWAP_HAS_CACHE);
-+
-+	return usage;
++	put_swap_device(si);
 +}
 +
- static unsigned char __swap_entry_free(struct swap_info_struct *si,
- 				       swp_entry_t entry)
- {
-@@ -1585,25 +1585,6 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
- 	unlock_cluster(ci);
- }
+ #endif /* __KERNEL__*/
+ #endif /* _LINUX_SWAP_H */
+diff --git a/mm/memory.c b/mm/memory.c
+index fb7b8dc75167..e92914df5ca7 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4305,6 +4305,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 	struct swap_info_struct *si = NULL;
+ 	rmap_t rmap_flags = RMAP_NONE;
+ 	bool need_clear_cache = false;
++	bool swapoff_locked = false;
+ 	bool exclusive = false;
+ 	swp_entry_t entry;
+ 	pte_t pte;
+@@ -4365,8 +4366,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 	}
  
--void swapcache_free_entries(swp_entry_t *entries, int n)
--{
--	int i;
--	struct swap_cluster_info *ci;
--	struct swap_info_struct *si = NULL;
--
--	if (n <= 0)
--		return;
--
--	for (i = 0; i < n; ++i) {
--		si = _swap_info_get(entries[i]);
--		if (si) {
--			ci = lock_cluster(si, swp_offset(entries[i]));
--			swap_entry_range_free(si, ci, entries[i], 1);
--			unlock_cluster(ci);
--		}
--	}
--}
--
- int __swap_count(swp_entry_t entry)
- {
- 	struct swap_info_struct *si = swp_swap_info(entry);
-@@ -1717,57 +1698,6 @@ static bool folio_swapped(struct folio *folio)
- 	return swap_page_trans_huge_swapped(si, entry, folio_order(folio));
- }
+ 	/* Prevent swapoff from happening to us. */
+-	si = get_swap_device(entry);
+-	if (unlikely(!si))
++	swapoff_locked = trylock_swapoff(entry, &si);
++	if (unlikely(!swapoff_locked))
+ 		goto out;
  
--static bool folio_swapcache_freeable(struct folio *folio)
--{
--	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
--
--	if (!folio_test_swapcache(folio))
--		return false;
--	if (folio_test_writeback(folio))
--		return false;
--
--	/*
--	 * Once hibernation has begun to create its image of memory,
--	 * there's a danger that one of the calls to folio_free_swap()
--	 * - most probably a call from __try_to_reclaim_swap() while
--	 * hibernation is allocating its own swap pages for the image,
--	 * but conceivably even a call from memory reclaim - will free
--	 * the swap from a folio which has already been recorded in the
--	 * image as a clean swapcache folio, and then reuse its swap for
--	 * another page of the image.  On waking from hibernation, the
--	 * original folio might be freed under memory pressure, then
--	 * later read back in from swap, now with the wrong data.
--	 *
--	 * Hibernation suspends storage while it is writing the image
--	 * to disk so check that here.
--	 */
--	if (pm_suspended_storage())
--		return false;
--
--	return true;
--}
--
--/**
-- * folio_free_swap() - Free the swap space used for this folio.
-- * @folio: The folio to remove.
-- *
-- * If swap is getting full, or if there are no more mappings of this folio,
-- * then call folio_free_swap to free its swap space.
-- *
-- * Return: true if we were able to release the swap space.
-- */
--bool folio_free_swap(struct folio *folio)
--{
--	if (!folio_swapcache_freeable(folio))
--		return false;
--	if (folio_swapped(folio))
--		return false;
--
--	delete_from_swap_cache(folio);
--	folio_set_dirty(folio);
--	return true;
--}
--
- /**
-  * free_swap_and_cache_nr() - Release reference on range of swap entries and
-  *                            reclaim their cache if no more references remain.
-@@ -1842,6 +1772,76 @@ void free_swap_and_cache_nr(swp_entry_t entry, int nr)
- 	put_swap_device(si);
- }
- 
-+void swapcache_free_entries(swp_entry_t *entries, int n)
-+{
-+	int i;
-+	struct swap_cluster_info *ci;
-+	struct swap_info_struct *si = NULL;
-+
-+	if (n <= 0)
-+		return;
-+
-+	for (i = 0; i < n; ++i) {
-+		si = _swap_info_get(entries[i]);
-+		if (si) {
-+			ci = lock_cluster(si, swp_offset(entries[i]));
-+			swap_entry_range_free(si, ci, entries[i], 1);
-+			unlock_cluster(ci);
-+		}
-+	}
-+}
-+
-+static bool folio_swapcache_freeable(struct folio *folio)
-+{
-+	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-+
-+	if (!folio_test_swapcache(folio))
-+		return false;
-+	if (folio_test_writeback(folio))
-+		return false;
-+
-+	/*
-+	 * Once hibernation has begun to create its image of memory,
-+	 * there's a danger that one of the calls to folio_free_swap()
-+	 * - most probably a call from __try_to_reclaim_swap() while
-+	 * hibernation is allocating its own swap pages for the image,
-+	 * but conceivably even a call from memory reclaim - will free
-+	 * the swap from a folio which has already been recorded in the
-+	 * image as a clean swapcache folio, and then reuse its swap for
-+	 * another page of the image.  On waking from hibernation, the
-+	 * original folio might be freed under memory pressure, then
-+	 * later read back in from swap, now with the wrong data.
-+	 *
-+	 * Hibernation suspends storage while it is writing the image
-+	 * to disk so check that here.
-+	 */
-+	if (pm_suspended_storage())
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * folio_free_swap() - Free the swap space used for this folio.
-+ * @folio: The folio to remove.
-+ *
-+ * If swap is getting full, or if there are no more mappings of this folio,
-+ * then call folio_free_swap to free its swap space.
-+ *
-+ * Return: true if we were able to release the swap space.
-+ */
-+bool folio_free_swap(struct folio *folio)
-+{
-+	if (!folio_swapcache_freeable(folio))
-+		return false;
-+	if (folio_swapped(folio))
-+		return false;
-+
-+	delete_from_swap_cache(folio);
-+	folio_set_dirty(folio);
-+	return true;
-+}
-+
- #ifdef CONFIG_HIBERNATION
- 
- swp_entry_t get_swap_page_of_type(int type)
-@@ -1957,6 +1957,37 @@ unsigned int count_swap_pages(int type, int free)
- }
- #endif /* CONFIG_HIBERNATION */
- 
-+/*
-+ * Scan swap_map from current position to next entry still in use.
-+ * Return 0 if there are no inuse entries after prev till end of
-+ * the map.
-+ */
-+static unsigned int find_next_to_unuse(struct swap_info_struct *si,
-+					unsigned int prev)
-+{
-+	unsigned int i;
-+	unsigned char count;
-+
-+	/*
-+	 * No need for swap_lock here: we're just looking
-+	 * for whether an entry is in use, not modifying it; false
-+	 * hits are okay, and sys_swapoff() has already prevented new
-+	 * allocations from this area (while holding swap_lock).
-+	 */
-+	for (i = prev + 1; i < si->max; i++) {
-+		count = READ_ONCE(si->swap_map[i]);
-+		if (count && swap_count(count) != SWAP_MAP_BAD)
-+			break;
-+		if ((i % LATENCY_LIMIT) == 0)
-+			cond_resched();
-+	}
-+
-+	if (i == si->max)
-+		i = 0;
-+
-+	return i;
-+}
-+
- static inline int pte_same_as_swp(pte_t pte, pte_t swp_pte)
- {
- 	return pte_same(pte_swp_clear_flags(pte), swp_pte);
-@@ -2241,37 +2272,6 @@ static int unuse_mm(struct mm_struct *mm, unsigned int type)
+ 	folio = swap_cache_get_folio(entry, vma, vmf->address);
+@@ -4713,8 +4714,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		if (waitqueue_active(&swapcache_wq))
+ 			wake_up(&swapcache_wq);
+ 	}
+-	if (si)
+-		put_swap_device(si);
++	if (swapoff_locked)
++		unlock_swapoff(entry, si);
+ 	return ret;
+ out_nomap:
+ 	if (vmf->pte)
+@@ -4732,8 +4733,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		if (waitqueue_active(&swapcache_wq))
+ 			wake_up(&swapcache_wq);
+ 	}
+-	if (si)
+-		put_swap_device(si);
++	if (swapoff_locked)
++		unlock_swapoff(entry, si);
  	return ret;
  }
  
--/*
-- * Scan swap_map from current position to next entry still in use.
-- * Return 0 if there are no inuse entries after prev till end of
-- * the map.
-- */
--static unsigned int find_next_to_unuse(struct swap_info_struct *si,
--					unsigned int prev)
--{
--	unsigned int i;
--	unsigned char count;
--
--	/*
--	 * No need for swap_lock here: we're just looking
--	 * for whether an entry is in use, not modifying it; false
--	 * hits are okay, and sys_swapoff() has already prevented new
--	 * allocations from this area (while holding swap_lock).
--	 */
--	for (i = prev + 1; i < si->max; i++) {
--		count = READ_ONCE(si->swap_map[i]);
--		if (count && swap_count(count) != SWAP_MAP_BAD)
--			break;
--		if ((i % LATENCY_LIMIT) == 0)
--			cond_resched();
--	}
--
--	if (i == si->max)
--		i = 0;
--
--	return i;
--}
--
- static int try_to_unuse(unsigned int type)
- {
- 	struct mm_struct *prev_mm;
-@@ -3525,6 +3525,26 @@ void si_swapinfo(struct sysinfo *val)
- 	spin_unlock(&swap_lock);
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 1ede0800e846..8ef72dcc592e 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2262,8 +2262,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	if (is_poisoned_swp_entry(swap))
+ 		return -EIO;
+ 
+-	si = get_swap_device(swap);
+-	if (!si) {
++	if (!trylock_swapoff(swap, &si)) {
+ 		if (!shmem_confirm_swap(mapping, index, swap))
+ 			return -EEXIST;
+ 		else
+@@ -2411,7 +2410,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	}
+ 	folio_mark_dirty(folio);
+ 	swap_free_nr(swap, nr_pages);
+-	put_swap_device(si);
++	unlock_swapoff(swap, si);
+ 
+ 	*foliop = folio;
+ 	return 0;
+@@ -2428,7 +2427,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		folio_unlock(folio);
+ 		folio_put(folio);
+ 	}
+-	put_swap_device(si);
++	unlock_swapoff(swap, si);
+ 
+ 	return error;
+ }
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index ca42b2be64d9..81f69b2df550 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -419,12 +419,11 @@ struct folio *filemap_get_incore_folio(struct address_space *mapping,
+ 	if (non_swap_entry(swp))
+ 		return ERR_PTR(-ENOENT);
+ 	/* Prevent swapoff from happening to us */
+-	si = get_swap_device(swp);
+-	if (!si)
++	if (!trylock_swapoff(swp, &si))
+ 		return ERR_PTR(-ENOENT);
+ 	index = swap_cache_index(swp);
+ 	folio = filemap_get_folio(swap_address_space(swp), index);
+-	put_swap_device(si);
++	unlock_swapoff(swp, si);
+ 	return folio;
  }
  
-+struct swap_info_struct *swp_swap_info(swp_entry_t entry)
-+{
-+	return swap_type_to_swap_info(swp_type(entry));
-+}
-+
-+/*
-+ * out-of-line methods to avoid include hell.
-+ */
-+struct address_space *swapcache_mapping(struct folio *folio)
-+{
-+	return swp_swap_info(folio->swap)->swap_file->f_mapping;
-+}
-+EXPORT_SYMBOL_GPL(swapcache_mapping);
-+
-+pgoff_t __folio_swap_cache_index(struct folio *folio)
-+{
-+	return swap_cache_index(folio->swap);
-+}
-+EXPORT_SYMBOL_GPL(__folio_swap_cache_index);
-+
- /*
-  * Verify that nr swap entries are valid and increment their swap map counts.
-  *
-@@ -3658,26 +3678,6 @@ void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry, int nr)
- 	cluster_swap_free_nr(si, offset, nr, SWAP_HAS_CACHE);
- }
+@@ -439,8 +438,7 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 	void *shadow = NULL;
  
--struct swap_info_struct *swp_swap_info(swp_entry_t entry)
--{
--	return swap_type_to_swap_info(swp_type(entry));
--}
--
--/*
-- * out-of-line methods to avoid include hell.
-- */
--struct address_space *swapcache_mapping(struct folio *folio)
--{
--	return swp_swap_info(folio->swap)->swap_file->f_mapping;
--}
--EXPORT_SYMBOL_GPL(swapcache_mapping);
--
--pgoff_t __folio_swap_cache_index(struct folio *folio)
--{
--	return swap_cache_index(folio->swap);
--}
--EXPORT_SYMBOL_GPL(__folio_swap_cache_index);
--
- /*
-  * add_swap_count_continuation - called when a swap count is duplicated
-  * beyond SWAP_MAP_MAX, it allocates a new page and links that to the entry's
+ 	*new_page_allocated = false;
+-	si = get_swap_device(entry);
+-	if (!si)
++	if (!trylock_swapoff(entry, &si))
+ 		return NULL;
+ 
+ 	for (;;) {
+@@ -538,7 +536,7 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 	put_swap_folio(new_folio, entry);
+ 	folio_unlock(new_folio);
+ put_and_return:
+-	put_swap_device(si);
++	unlock_swapoff(entry, si);
+ 	if (!(*new_page_allocated) && new_folio)
+ 		folio_put(new_folio);
+ 	return result;
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index d06453fa8aba..f40bbfd09fd5 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1161,6 +1161,7 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 	struct folio *src_folio = NULL;
+ 	struct anon_vma *src_anon_vma = NULL;
+ 	struct mmu_notifier_range range;
++	bool swapoff_locked = false;
+ 	int err = 0;
+ 
+ 	flush_cache_range(src_vma, src_addr, src_addr + PAGE_SIZE);
+@@ -1367,8 +1368,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 			goto out;
+ 		}
+ 
+-		si = get_swap_device(entry);
+-		if (unlikely(!si)) {
++		swapoff_locked = trylock_swapoff(entry, &si);
++		if (unlikely(!swapoff_locked)) {
+ 			err = -EAGAIN;
+ 			goto out;
+ 		}
+@@ -1399,7 +1400,7 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 				pte_unmap(src_pte);
+ 				pte_unmap(dst_pte);
+ 				src_pte = dst_pte = NULL;
+-				put_swap_device(si);
++				unlock_swapoff(entry, si);
+ 				si = NULL;
+ 				/* now we can block and wait */
+ 				folio_lock(src_folio);
+@@ -1425,8 +1426,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 	if (src_pte)
+ 		pte_unmap(src_pte);
+ 	mmu_notifier_invalidate_range_end(&range);
+-	if (si)
+-		put_swap_device(si);
++	if (swapoff_locked)
++		unlock_swapoff(entry, si);
+ 
+ 	return err;
+ }
 -- 
 2.47.1
 
