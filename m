@@ -1,441 +1,254 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC026187550
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7B11876;
+	Tue, 29 Apr 2025 03:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745898479; cv=fail; b=GZvBpuuBp+MR5TCqzQ7ONbEQKGXEsNJ9jflQgDCc6vi6XleUKQl+p47yTZBEfG6uhidz8bRbEbxx5mUUqrueVMXIpEuVe2KEQlxPRneHBu15RKlzutyQUmDzoH8XIUVaA3G38Rrt1/VCZkhI3HcZftGnMuqNWNxBOvF0U4p9ffQ=
+	t=1745898643; cv=fail; b=cTcaRWkAL5hh4bOH3jLzHiYFgFmICv0+Xbn/5UagpDOz438kIluRj1+yI/Njpe8Y3xspfyXgywoy8KbIy6lT/mKsfgX3zvW8GlPxkgF/6iEAB+4uK7ax0gSeK42pfU9auMaw+pD3lthWl3l5Tg8THNd60GndAMEzMHe+2pOsAPA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745898479; c=relaxed/simple;
-	bh=eTTfMAC4rspxdBYNcncqpLA6hd8dPILWrPn3mCgKuUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=S7BPGOGaJrr3WeWrmQCfq2XuUfLPvwWXaEtR8Ff0AzkNVMND1wqXvGx0PZGKQfZF+Kg0qG8fqSZ4BlcMHrguKzOtabpx+8xC2Z1vEgd62pfoibh0kWUZoZOZz3lrblfTBzwjX/9LIvGFv3DDmz+wkKtDeWA9NeBntsJDv57PSMQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NDs823NL; arc=fail smtp.client-ip=40.107.93.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1745898643; c=relaxed/simple;
+	bh=+e2JyXFga66Mo/7amPgLYSACAajKVKRDu45oQu/vHcI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UFDMgu3wJ1owTMxNEVcvFEy387U/hSuyUxqEqkV4NcPS4b4gQffwJwyT0FonBryNXw+qJFvmlkWZtqqmi8GeZSN6HYkFWIM+zJDVayYuwtIMQpGkDU32qg4G+Xzj+Jg6FzBOXM4Dkq0/3CAN+wZyD9YU6wpgeujBLsdg80lnF84=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=l1gzilU6; arc=fail smtp.client-ip=40.107.243.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NDs823NL"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="l1gzilU6"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B7NyRInQdwnXdBD5Of2W91UdZJwuCglEL+dQNG6jtT18dSotlRrYsKnZVRhtrJ6Z8fExN7HG8tFS/PC00Esnl/VXwqmIseArhvo0ohU7Eyj/VHpDE6FkwoEFjdyHDZ/LLGhvWCjHlwcsh3HcbP6/tG0DSOiEQrYSHP5ayTp4hIW6RvUog7HYdYRwD0o50EPmtiXesKXh8TKwKf1OML0PYt6kW2LVmxeYVWMNgBE+3ofBrSL9pU/3lTuCSUwJRSZYjd5qDmMxkbay3veqZcmtWOc9AOJbvB6/7mk0lT/Ih3tyWwLUAdjTp0usyHdIw56qZ/vtb6rPHWQs9LvHgPufDw==
+ b=HmPbTxKY79BRId5iUQkuJUe0I1lCm2kWIV/EHSOzoskvR1UZoPRSPA5wtH9sGGM2lH7syzWlhB5bKPpxbnTUFh5TwuuhUmCOUM2m0LmD/0hQ5Ps6dxoyBB6E7DH0erfwSu5n7WgeYdpyG7D7LZ+0eC/llkACmdLfs5oQnRTgGAaex8yFULWWUE3geIUTUNP7iloO8OLyY9ZjCBUzrwuFayHY7XM3KwABSI7NvhpvCOYZg+DZW4GqTQUrB7sAxW9sfONW1hQk4TuiklrkD2Crd4ROaAlJ/Ke67wt3bn7V3V0PN/tcFglY2XwwSv3Yb/xBdKCUMsBcnyAQzLwCX6qi0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9UtuXgJto1J1NZe8htNoC/VySuSqkkO28kinJNcbSWE=;
- b=x7N5Z73rJerNKA98+xrP6y1OZRHML0MN2sRwBdt4aBTPYyAnvxh5HECOahyMNkdA3ief4BKTdUbrizApWhPG7eU2szKjH7cSxqCjDODrGM9w3pMGWszQG2MoPdbuo20HeBb2JcTfRCLcIs9Vcvs+JHjF9C0ZeD1FnR453zEFKEBYGR4eMrMmBUrxltEsF/GJtXc306uGa5FlPZG6dqsFrFRdYwAOfh+pw/5ohylYrzmtZFGDme0YP/3ve4fFfdfQ1MlP2cHgfU19I2uE+6ix1qh3T8fUBjNlIwxOchE/OBagOBMn6W/X/DzyYmQ5/yX6Rj7bMT0hAEIHPurKxN+a5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=+e2JyXFga66Mo/7amPgLYSACAajKVKRDu45oQu/vHcI=;
+ b=Eu5h6D9kCjSXd3KGhWZJPrwJ84rAkWA4AfYMvckPq2x63uUGdh51aGaDwBIp/Njvdm4tKx0KuDL+lkPs/ypVqGXuaEDu8xr4Wgwf+9npCr8Y1KujJQHivJwoc9hjBoIV3YRSLW+vm/pj1aGfxvCBzRsUzO7oT/Zp1qMy+RZzzcT9ICK29fEzxETUa5eHSpwyr4iR8ls/1/XgwZ6mKZdhp5jet+dnvx7eYSXE2/nI2eRierr1BVGeFIzVS9Jk7aVOyCrjsz3wg6eUEG/4x4DRKHWsZV9kO8FMzeNIQHCWIRL8qSUaSD08flSMRXRLO8RZhYnuNOlMK+w7kQm9tUFrQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9UtuXgJto1J1NZe8htNoC/VySuSqkkO28kinJNcbSWE=;
- b=NDs823NLvVqV4D6RjJUW/H4wmU0BiFiHxtkstRGNRptln6VxpcwA5Dj0HWlD2FEtLgk30WSQpKkTbR2CwanY4LsYRTCQusSwrRVQOrqqTzeydi5fsQwen7ZeVQWBSAwMnnWmS6SGBBllAH949ChamSN4dVkNwIQmmM6QYP4DmB4=
-Received: from SN6PR08CA0011.namprd08.prod.outlook.com (2603:10b6:805:66::24)
- by SA3PR12MB7974.namprd12.prod.outlook.com (2603:10b6:806:307::17) with
+ bh=+e2JyXFga66Mo/7amPgLYSACAajKVKRDu45oQu/vHcI=;
+ b=l1gzilU6AM2LwGkuhadcVMitKx6/T89Rfy30HfEG7gD0fPwrEQZJJRyPKDvZme3N6Ke20FRRRJAShrrVKKFa7vqYVKWFBdMHPJTQQ3gKzWIqht2s+cQ4GyNCvYFDsGpthbjfgFXovLgunDTbhL1nEUtWzZpP2zZvgcqRbJgrNpeuayrj4Us1bZ3zZ2Og74+ACLg219sjKqJw0/T8VUxCnRtUBnBfKlFPO/6kB9FhXZ9RMZBF8GF+RWlevveL7fesT4GljGkqmZMnW3BMwuYLO0NO5X7QqdAmXU6uYzRKL71zIjOD8VF5qvRkB3vPC/Gz4xA4AHor0U6gAQfX+Z5+1Q==
+Received: from PH7PR12MB6418.namprd12.prod.outlook.com (2603:10b6:510:1fe::18)
+ by DM4PR12MB6375.namprd12.prod.outlook.com (2603:10b6:8:a2::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
- 2025 03:47:51 +0000
-Received: from SA2PEPF00003F66.namprd04.prod.outlook.com
- (2603:10b6:805:66:cafe::ff) by SN6PR08CA0011.outlook.office365.com
- (2603:10b6:805:66::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Tue,
- 29 Apr 2025 03:47:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F66.mail.protection.outlook.com (10.167.248.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8678.33 via Frontend Transport; Tue, 29 Apr 2025 03:47:51 +0000
-Received: from [10.136.42.115] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
- 2025 22:47:46 -0500
-Message-ID: <7c5fcd32-1f0f-4148-ab0e-0a25ea11c10f@amd.com>
-Date: Tue, 29 Apr 2025 09:17:43 +0530
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
+ 2025 03:50:35 +0000
+Received: from PH7PR12MB6418.namprd12.prod.outlook.com
+ ([fe80::c212:c319:304e:bb09]) by PH7PR12MB6418.namprd12.prod.outlook.com
+ ([fe80::c212:c319:304e:bb09%6]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 03:50:35 +0000
+From: Robert Lin <robelin@nvidia.com>
+To: Jon Hunter <jonathanh@nvidia.com>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, "daniel.lezcano@linaro.org"
+	<daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	Pohsun Su <pohsuns@nvidia.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Sumit Gupta
+	<sumitg@nvidia.com>
+Subject: RE: [PATCH v5 1/3] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+Thread-Topic: [PATCH v5 1/3] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+Thread-Index: AQHbsqVkfRv7lb88+Uiqh29bAMgel7O5J3aAgADk4pA=
+Date: Tue, 29 Apr 2025 03:50:35 +0000
+Message-ID:
+ <PH7PR12MB6418840127C215779DB63CE3D9802@PH7PR12MB6418.namprd12.prod.outlook.com>
+References: <20250421100821.2907217-1-robelin@nvidia.com>
+ <20250421100821.2907217-2-robelin@nvidia.com>
+ <e5e8b5be-7434-4693-8696-5e0e68f07c75@nvidia.com>
+In-Reply-To: <e5e8b5be-7434-4693-8696-5e0e68f07c75@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR12MB6418:EE_|DM4PR12MB6375:EE_
+x-ms-office365-filtering-correlation-id: acc3500c-3213-4200-417f-08dd86d0ff95
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?SkE5bWFyaVQ0bHVSZlRNRER2enI4T2dGZ0lrZFFWbDRJT2Y5NU9DaTlPQUZo?=
+ =?utf-8?B?YldIR1ZLWm5aazFpNkhFNVByM1lQRG5JdFRpNUZiOEIxQVF1QlNySUVYd3RF?=
+ =?utf-8?B?QVJERGlSL2JMQWUvT2diZDJoRkFDdmpoNURNaEJPWVptUDkwdTBvbTZyYkZT?=
+ =?utf-8?B?U1NPL1Z2VFpkZ2Z5V2l6eFk4RHE4Yzl2NnhESG5PV0ZsYVVWVUV4MzMwWTZ5?=
+ =?utf-8?B?b280Qyt3cUdndWtKV2pDdFhRY1QzQVBmakJIeExLemFoMWM4eTk3TitORFZJ?=
+ =?utf-8?B?U0FiN1FUSmRmTU5IV05HRnlRU1RQZjk1YjBTU2FMeTBtdy9xWG1BWDVNSkFS?=
+ =?utf-8?B?TGZnMUJ2RHMwVjhkSWQvelU5WWhtdU5HcitveVZxRmVlWUVqQm00eXdjVStB?=
+ =?utf-8?B?ZnJFbUNIZFg5S3NvMlY0Z1V5Ly9SVjhxNFJqZXcvTUVoSkc2OGFWdnZtMVNL?=
+ =?utf-8?B?aGwyN3ZXbS9Ia3cxTWRBVlFnbUhFN1B3ZGRHTC9aUEkybTQ0WWFRQ09WQUxZ?=
+ =?utf-8?B?MWZaUWEzU1N0aE43R2t0bVBDSk5yakM1RVNOMmtLTTdMTU5WZ2grMkx1eEdw?=
+ =?utf-8?B?ME4rcHpQVU5Ucjh5dFRxMzhVTE94RnhWWDhDTWRrZ2VUUEVHdHFhbTFwSi9B?=
+ =?utf-8?B?ank4dXI5eFE3Wm53L08yWjdCRjN0S0R2LzdBVnZCemMwTnZEWWU2UEViMy96?=
+ =?utf-8?B?enBnMmNjeE9vUDh3ZkR4d3ozWk40Y0ZGUW5KV3RZczdmaWdRMHZrSC9lcnBh?=
+ =?utf-8?B?UHRMMVpQY1V4RStTSTFxcGpra3RMRFhhYXE5Mi9TZjZuTHVpOXdNem82QUhr?=
+ =?utf-8?B?cXp5Z0VMaDM5eDZNQndBR0FMeUZPb3EwSXdSZnI5ZCs3V2ViTWtHS1Rnbmxk?=
+ =?utf-8?B?elY0WFYxV0tuL1RnK2VKa2FEQ25ybTNJRm1GcnVabmRHbU4zODlJT01IM3lX?=
+ =?utf-8?B?ZWFoOWhjakZwSnNTNzF5c2FHY2JBeStsMmZxQ2R0bW5ZRElKZzNhVTlHSyta?=
+ =?utf-8?B?aDJKR3lCSWhDcXJoOWtTQVRGSGQ4MVRlWVcrVi8wdHFJYVR1WTlZMUN2NWpH?=
+ =?utf-8?B?Wm5ZcG9QNGRaYjl4UzBKd3NQUUR0dUpGdEpJK1lMaXl3aStoZkRwaEdnc3Rv?=
+ =?utf-8?B?N3BXZUVjT3NOYXpueXFlVlBYY3BBWVM2L3RMbVYwQTQ2NkdzNHB6OUU0SWlt?=
+ =?utf-8?B?SWU3ZU1oTlpJa1NGVTlzTzlFRGFUTlIzZlcvZkV3WVlWRXk5c2lrdHJpTXhR?=
+ =?utf-8?B?ODdaT2Q3MFowc3BxWVVuUFRzL2xFTW9iQTdGVTNQZ045UGRsUDd2N0MvOGJ5?=
+ =?utf-8?B?blJaRG0wUDEvT1VjczVzNTRJYytlVFZaZEdYdTFqcFIrVFZkZWZLcitIQ2V6?=
+ =?utf-8?B?RHFOVFk4dCt5ZFozNFJ4eXpXK1RHVlQ4QzUvS21rNTF4ZHluVSt2bWYrVUNY?=
+ =?utf-8?B?dmE3L0xMWG5tZDFlbEJvcXRVQTFxVVdFUE9RMHRwWDJJcEYzcjVDSS81Rmt1?=
+ =?utf-8?B?V0tUN3A2aWVuV3N6VUlIM28xWjl5RXpINEdYTkZKdVlhUFVpd25kZ1I0S3JB?=
+ =?utf-8?B?cjk0aWFpbUFDQk80Vm1vbTRKc0RkOGt4a1F6Q0tsMmUreUJZZm90SU1uMTJJ?=
+ =?utf-8?B?d01oVWhhbDhzNDdXZ0N3THphRk9BQlNhNDE0Q3p4a3ovQnJTL1VPTHNWbmc2?=
+ =?utf-8?B?MzFCODI1ekU5UGE5Smt6ejZHSHBzaTNCamZvNCtaTUxOMjNZbHF4RlZQdXdv?=
+ =?utf-8?B?NjMwYi94ek5Pb2xHMkFyMXZZbDl5UHNqMEpORDRDcStOY0hqaXNRKzJZaUFv?=
+ =?utf-8?B?aTdoRjVqM1pSOW9yZnJIM2RzTVU4Q1l1Tm5qQ1hZMjVjZk5FSnJibUJGeHZ6?=
+ =?utf-8?B?SXRhMHREdWoxQmY0S3ZtZWt4bkxNWnVFWVBTN3BFUnl6S3dlRFBpZStZWk5y?=
+ =?utf-8?B?QkJYamxwdmRvN1o3dG1KOGlkOHdWN0NPZ1phbmNzeUFVaUZEdktRb21CWXYv?=
+ =?utf-8?Q?hyWSeDnqtOg87poTzCaSJTOV4N+yv0=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6418.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cFVFMkNuSHoyNkFqSFlIUm1JYXFDZXlSRE9Fd0lxOGhwMDl2bnRWTFh5WE0y?=
+ =?utf-8?B?WitjQ29VRENvNkVaUFBRVk9hYk51WW1LOGtxak51T2VZekpvdHE0MWIzNzRa?=
+ =?utf-8?B?K3R5Y1k0Uks4TGlKQmtSS0tBcWJWSEpnZ3AwOEw3dUdNWHhNN3VHb3dMQ3ZM?=
+ =?utf-8?B?MkwzejZOMmx5czFmZ3ZnWWRIQnM4VW9Rb3ZTeE95akkwWEZyeTlCV0xSQ214?=
+ =?utf-8?B?VlZxMUF6dytvcnJ3ay9RWlBjNmo4ZHJBVWZnUGMvK0N3b0w1QnFoUnhHaEtk?=
+ =?utf-8?B?VlJ0Yll4QVd6d2djeHErUUI4ekxkdUx1N0puV0Q5aGJDZS9GYlVOZE5CVU92?=
+ =?utf-8?B?N3NFTHNNZmlKbG4zY0RZbUJmQTFCakZGSVNqNDdLa0NhMTExQXVlbnZaNU9P?=
+ =?utf-8?B?d0pYSXZ3SGhydGVDLzg2QUYyWmU1RERKelhnZ1VaTEROV2d6RHhXRjVwdWdC?=
+ =?utf-8?B?VHUzcElraHY3ZlhDSzJpdEtLQ09MRUQxTWs4Z2xIdmNXdkVRV2RTeUQ0SzZs?=
+ =?utf-8?B?SG02MGpPRDBya05wY3BPdUpjQ29aZTlUZyt3NTdMZUh4NjRjWkx4UmJhUWU5?=
+ =?utf-8?B?VWZYVEJvZktjTU5NdUVlS3hMcDkxSlNlT3hFcjZMYi90d3BTLy9pWUczVWs0?=
+ =?utf-8?B?NEUrdklScmlDdmNuNUNMVjkrVTRqZFlsQWdhQmYzV3JJMlUxRDlvSmpXd0N4?=
+ =?utf-8?B?bE44WnBmRVZiVDdUV3B5YWdTNENGR0tVczJIRC9pN2hpY1hBc1BYc2d3VS9a?=
+ =?utf-8?B?Y04zNEs5TjJMVWc0RytUbUhCME5mcmNiT1diaVBoMlg1b1FBMFhJREpoemFi?=
+ =?utf-8?B?d0duMzVlaEU2R29pa0JHNVFaazZqbFhuUjZ6d1htMUlLdDNzUkNjRHlzZVdV?=
+ =?utf-8?B?RE5KNklzN2ZnaFRiQUFjZEVTL01XRmRFOXBja2RLaHR4dHJTeExEenZiQmJp?=
+ =?utf-8?B?ODFJQ3crRFVCeXZBU2ozSTdmbCs5T3lOeUhNdFhNUGdxZGZQZlNZVWhSQzRz?=
+ =?utf-8?B?cVJtZjFUQTQxY29WaHlBV0pvKytnT2w0eTIwelFWSjVvczJscHZxeCtENTdn?=
+ =?utf-8?B?bGFXQmcrbk5vT2NQYjhBYVh0Y2RrS0NqbmZTR3VKeTMvbVpFOTdDOVFDN3ow?=
+ =?utf-8?B?dHRmZDRabTM1RnVwQm1OMUYwUGNPVk95MEIzbUoxeS8wbWtINjV5WVJER2Jr?=
+ =?utf-8?B?ME9RVHpyUFdvTzJuRElIdElqc3Y4dFp0YytQbW1hck1PbHltOWdiYytKb09t?=
+ =?utf-8?B?SW5TWjZxRW9STGE1NitwSmZMajFORGFuMHJWcU9RR3dpN05xbVIyRlg2WVU1?=
+ =?utf-8?B?TENFMUt4MFU4RTdWZnRDZ2IvU0U3bGlpaUY1SHIyNUl2eDEyMGhFbS9FZ1B0?=
+ =?utf-8?B?d2hzaXlVVEd6YjJjSjlYMmdMaytGK3Z6NDlqZnVweGsrU29RQlFVdEhsYmpG?=
+ =?utf-8?B?aTZiK0g0V2xkMTFQcDN4MWNBcjBPNFZXYzJra3RVc2NoK3QzTGFFdDlPRnhq?=
+ =?utf-8?B?V0FiRFErT0toYS9ONmxGWU13OGk0WWFjMFJ5blY5WVYwdUx2eTNEMzg1MFpS?=
+ =?utf-8?B?bTFhYVBDTVVXNHkyTHRQV0xKWEt6TEVmU2xDaXVsOG9VL24ydmtseFFDTUxE?=
+ =?utf-8?B?ZzZobnRMOGNOczltZ1BjdTNqdkRxYVVabHBRSmdhOUNGTFBSYWIyWkgwOVZ5?=
+ =?utf-8?B?Y1h3NXhxU3Q0YitVeE5UZU5NdXcyWXM3MFRyZjRsbGFVbEYwMm55Ym1EQUtU?=
+ =?utf-8?B?ZkJLbFhReGxlYkR3K3R1VU5tajBKdkp6MVRMOWdaMjlNQ01sZ3RhczVNSU5L?=
+ =?utf-8?B?SjBnNGNrR0ZvZ3duMjhsNW1yTWpYNFRvc004TG8wQmxoWGRqNkl3dEh2ZUxV?=
+ =?utf-8?B?SU52L1AycWRXeTg5NG9aL3R0NllzNUwySE1zNE1PcXF2Z2VEQ2FZRHFFM0lv?=
+ =?utf-8?B?ci8rdUlGdVVXWkcxWGk4bVZGdWx5amxPZzNPUU9pL1F1bTVpamVEaVg3UTdV?=
+ =?utf-8?B?bkFYVnJYMVNtUzRBa0NLVU1CSjc2SWZSSzVrKzdCSXpWbjkyNEdNenBPdUdP?=
+ =?utf-8?B?RUc1cS8xdWFiTlBJOW9YdzVleHJPMnY4VWc5US9zaldWL203YUxkbWhPT2xC?=
+ =?utf-8?Q?+dfQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] sched: Introduce Cache aware scheduling
-To: Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	"Ingo Molnar" <mingo@redhat.com>, "Gautham R . Shenoy"
-	<gautham.shenoy@amd.com>
-CC: Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
-	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider
-	<vschneid@redhat.com>, Tim Chen <tim.c.chen@intel.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Libo Chen <libo.chen@oracle.com>, Abel Wu
-	<wuyun.abel@bytedance.com>, Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-	Hillf Danton <hdanton@sina.com>, <linux-kernel@vger.kernel.org>
-References: <cover.1745199017.git.yu.c.chen@intel.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <cover.1745199017.git.yu.c.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F66:EE_|SA3PR12MB7974:EE_
-X-MS-Office365-Filtering-Correlation-Id: 403f36a9-0595-4d49-4f30-08dd86d09da2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|36860700013|376014|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V080ZERnTkhLVTdRK1MrdjRCUERyVFE3SkFyb2NzL2FPVTBOTVhTVEFSZW80?=
- =?utf-8?B?c0dsa3JZRmQ3OGwrZzc0ZFNPK1FtWDhRTWVoWWdCQ084ekwzWTJTS1VVUUNC?=
- =?utf-8?B?aWE3V3F4N1hKWjh0Vi9YNGFDTHVMSzV2bkNYQlR1TURLekhGVURkSmdRaTFV?=
- =?utf-8?B?QlNrNVVBMlVadVNURmVLQzllTHlZeElaNStMYTczWWZZazF1Uk1LTmZQaGh6?=
- =?utf-8?B?SDRrZy9QTWg4VXFUNXczeDdidUYzeGFKeGY1MlFrUU4ybTZScHZodm9LRkx3?=
- =?utf-8?B?MCtJY2MyOVBONUN2bUl1eTdXTlYxQmRPY2lVclVMcnhrRzJJOFZ4bEZhMDhk?=
- =?utf-8?B?aktpcExaSzZCYmMvWk9VeXdvUUxRYkpVaDVQemx0WGliYm9zN1Q4Y3JldUdG?=
- =?utf-8?B?L05HaEhIRnpaVUEyUEFrZzNJSHFlYzc4ZVVlNjhvS3VoOFE0NEZPMVFua21I?=
- =?utf-8?B?YjAzZkkzSUF1dWh4NlpIMWQzWFFnN2hxWk1VM2JtQWdLV3VaaTIzTGZNanEw?=
- =?utf-8?B?dEc5R1NvK2FZMlJIa3UzVlh1bjY4d3M4Nko4Z3JBNE9vcTN0RFdreUpRUllo?=
- =?utf-8?B?MitwRE5TN3djb2FmeFQxOW00N3JiZkloQkxwSXU0K0Nvc0kxK28zenc4WGJV?=
- =?utf-8?B?akNsc3NTczNubzgxVGx0bDczNENmYnF3VU9UaGsxd3JidzYwclk5STAvZjR1?=
- =?utf-8?B?S0grY01vdUlrZ0ZSOG0wc3R3U1RNV3FXTTFIaFZQbFRTdm5UbHRoNnhodjZT?=
- =?utf-8?B?SVM0SDVIc0FEWHo2aVVaTjBXdlZLWXVROG5ZRmM3WXdOQkZiSnErMlU2QWVx?=
- =?utf-8?B?aGhxNjNOM0hYSWJTMUM5dHk2d2VVRTVjUW9zVjJnOHJiZlJBSnh3YktMdTY5?=
- =?utf-8?B?WXh1bW53dENCaUdmOVJjUTNpU1Bkeng3Mk1GaGYwY1RWVGNlcXFIQWh1U211?=
- =?utf-8?B?aHRJY25odUIyMVV1ZVE1cUpEOGprZks5NHA3UUU4bWRHTVhWaWdSMkVxTlJa?=
- =?utf-8?B?V2w1ZjNmUGgzQmE1eEZ4YlphU1RhblFtQTNZdXZJblJTejIwWWVsVXIzU3B1?=
- =?utf-8?B?dmRjWWxmYm1pcUMxV0x5VTc1SjRrRVVobmpEUDNNSU1aUmVpOUE5WHlWRWo3?=
- =?utf-8?B?ZHBTdlQwQWpGdTdZK1hveWhzWTBjZXBoUnlOQTRTVHlYTjlPNHRHZ2E0dUN6?=
- =?utf-8?B?dlZreG1hUEZXc2hvM0tuZUFoYlhFUFArbzV2cFdWNjlJcXcxcm5kdW4wQWFK?=
- =?utf-8?B?YWVTQS9DODBoUDlWa051VXJtcFNPQW83LzYxWDhpU3JUVnhxNnhkUUpMd3By?=
- =?utf-8?B?VXlWRFBkbjlZWGdHSGlsRndWOTBKeXNvS2YvbDhObm5HRDdOV1ZTRGdkaVhB?=
- =?utf-8?B?TFJ0K1FsaHRPZGc2ZVpVT1FpOVlReU9HM2RHNk4zV1l1MVZ3bjlzdTlCSTIw?=
- =?utf-8?B?NmFZd0NDUFV3Y0Y2Slp5L3pSZFBCUDlnb2dYd2pjcWdrc0tFUDNCenRMdVZm?=
- =?utf-8?B?eEYwNEhiQ01mc0xEb2xyN3d6VXNuUmVEdlBpNnZubWdTOTNLR0loNGRJWFhv?=
- =?utf-8?B?bkZUdm5sMll6OXhnV242bXNpSGdGc1Zhbk90NzgwV3ErVkRlbW1NZlVnTE4v?=
- =?utf-8?B?aDhHS3VKQnhzR2c0emhJV1VvZUMvbjRVUllndXFvMHVvemdKOFI5Qjd5dTZW?=
- =?utf-8?B?R0NBdHltVHZDZnJ2WXJyS244NGdWSCttckhsbTN6dUlnektqRzMwZ1pKcE5X?=
- =?utf-8?B?N0FSUWxDMEJjVm4xaFNiVGNkWkNTb2p6czZBY1dQMjhGaEFMU093OE5ackxL?=
- =?utf-8?B?NkEyMzZaK0hMdFQ3R3U2N29HQnV2VzJMdTllY2M5SDhoNEMwQ1QrR1FzL3Ux?=
- =?utf-8?B?R2ZiWDZLVnVKYUlYVEtoZ0Z2anV5YzVMR1QrMnREVnlZb0ZZS3U1Q2dDR3J5?=
- =?utf-8?B?eEJ6cWJ3RXo2Nko1Qmt6NE9WTUJ6WW1VR3A5SUlLTVZOcGUyZzFGaitiQkE2?=
- =?utf-8?B?dzQ3eXk5dkFhQUF6OUR2cEJubGpKclVUcW9ZZUVDZVY2TU1odTVjQWJQOXNB?=
- =?utf-8?B?OGRkRTRlM0tiM3RFcTNKL20ydnlXcG02R1BTUT09?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(36860700013)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 03:47:51.1907
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6418.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acc3500c-3213-4200-417f-08dd86d0ff95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2025 03:50:35.5279
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 403f36a9-0595-4d49-4f30-08dd86d09da2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F66.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7974
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V6M71+jnqsQ2g8UndQIO/pUD44kCAvmFbRsPLfeW/rWjvwwX9glEWDW1Y6hzHhF5wj/GX+9FcV9e7vU81cx1TQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6375
 
-Hello Chenyu,
-
-On 4/21/2025 8:53 AM, Chen Yu wrote:
-> This is a respin of the cache-aware scheduling proposed by Peter[1].
-> In this patch set, some known issues in [1] were addressed, and the performance
-> regression was investigated and mitigated.
-> 
-> Cache-aware scheduling aims to aggregate tasks with potential shared resources
-> into the same cache domain. This approach enhances cache locality, thereby optimizing
-> system performance by reducing cache misses and improving data access efficiency.
-> 
-> In the current implementation, threads within the same process are considered as
-> entities that potentially share resources. Cache-aware scheduling monitors the CPU
-> occupancy of each cache domain for every process. Based on this monitoring, it endeavors
-> to migrate threads within a given process to its cache-hot domains, with the goal of
-> maximizing cache locality.
-> 
-> Patch 1 constitutes the fundamental cache-aware scheduling. It is the same patch as [1].
-> Patch 2 comprises a series of fixes for Patch 1, including compiling warnings and functional
-> fixes.
-> Patch 3 fixes performance degradation that arise from excessive task migrations within the
-> preferred LLC domain.
-> Patch 4 further alleviates performance regressions when the preferred LLC becomes saturated.
-> Patch 5 introduces ftrace events, which is used to track task migrations triggered by wakeup
-> and load balancer. This addition facilitate performance regression analysis.
-> 
-> The patch set is applied on top of v6.14 sched/core,
-> commit 4ba7518327c6 ("sched/debug: Print the local group's asym_prefer_cpu")
-> 
-
-Thank you for working on this! I have been a bit preoccupied but I
-promise to look into the regressions I've reported below sometime
-this week and report back soon on what seems to make them unhappy.
-
-tl;dr
-
-o Most regressions aren't as severe as v1 thanks to all the work
-   from you and Abel.
-
-o I too see schbench regress in fully loaded cases but the old
-   schbench tail latencies improve when #threads < #CPUs in LLC
-
-o There is a consistent regression in tbench - what I presume is
-   happening there is all threads of "tbench_srv" share an mm and
-   and all the tbench clients share an mm but for best performance,
-   the wakeups between client and server must be local (same core /
-   same LLC) but either the cost of additional search build up or
-   the clients get co-located as one set of entities and the
-   servers get colocated as another set of entities leading to
-   mostly remote wakeups.
-
-   Not too sure if netperf has similar architecture as tbench but
-   that too sees a regression.
-
-o Longer running benchmarks see a regression. Still not sure if
-   this is because of additional search or something else.
-
-I'll leave the full results below:
-
-o Machine details
-
-- 3rd Generation EPYC System
-- 2 sockets each with 64C/128T
-- NPS1 (Each socket is a NUMA node)
-- C2 Disabled (POLL and C1(MWAIT) remained enabled)
-
-o Benchmark results
-
-   ==================================================================
-   Test          : hackbench
-   Units         : Normalized time in seconds
-   Interpretation: Lower is better
-   Statistic     : AMean
-   ==================================================================
-   Case:           tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-    1-groups     1.00 [ -0.00]( 9.02)     1.03 [ -3.38](11.44)
-    2-groups     1.00 [ -0.00]( 6.86)     0.98 [  2.20]( 6.61)
-    4-groups     1.00 [ -0.00]( 2.73)     1.00 [  0.42]( 4.00)
-    8-groups     1.00 [ -0.00]( 1.21)     1.04 [ -4.00]( 5.59)
-   16-groups     1.00 [ -0.00]( 0.97)     1.01 [ -0.52]( 2.12)
-
-
-   ==================================================================
-   Test          : tbench
-   Units         : Normalized throughput
-   Interpretation: Higher is better
-   Statistic     : AMean
-   ==================================================================
-   Clients:    tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-       1     1.00 [  0.00]( 0.67)     0.96 [ -3.95]( 0.55)
-       2     1.00 [  0.00]( 0.85)     0.98 [ -1.69]( 0.65)
-       4     1.00 [  0.00]( 0.52)     0.96 [ -3.68]( 0.09)
-       8     1.00 [  0.00]( 0.92)     0.96 [ -4.06]( 0.43)
-      16     1.00 [  0.00]( 1.01)     0.95 [ -5.19]( 1.65)
-      32     1.00 [  0.00]( 1.35)     0.95 [ -4.79]( 0.29)
-      64     1.00 [  0.00]( 1.22)     0.94 [ -6.49]( 1.46)
-     128     1.00 [  0.00]( 2.39)     0.92 [ -7.61]( 1.41)
-     256     1.00 [  0.00]( 1.83)     0.92 [ -8.24]( 0.35)
-     512     1.00 [  0.00]( 0.17)     0.93 [ -7.08]( 0.22)
-    1024     1.00 [  0.00]( 0.31)     0.91 [ -8.57]( 0.29)
-
-
-   ==================================================================
-   Test          : stream-10
-   Units         : Normalized Bandwidth, MB/s
-   Interpretation: Higher is better
-   Statistic     : HMean
-   ==================================================================
-   Test:       tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-    Copy     1.00 [  0.00]( 8.24)     1.03 [  2.66]( 6.15)
-   Scale     1.00 [  0.00]( 5.62)     0.99 [ -1.43]( 6.32)
-     Add     1.00 [  0.00]( 6.18)     0.97 [ -3.12]( 5.70)
-   Triad     1.00 [  0.00]( 5.29)     1.01 [  1.31]( 3.82)
-
-
-   ==================================================================
-   Test          : stream-100
-   Units         : Normalized Bandwidth, MB/s
-   Interpretation: Higher is better
-   Statistic     : HMean
-   ==================================================================
-   Test:       tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-    Copy     1.00 [  0.00]( 2.92)     0.99 [ -1.47]( 5.02)
-   Scale     1.00 [  0.00]( 4.80)     0.98 [ -2.08]( 5.53)
-     Add     1.00 [  0.00]( 4.35)     0.98 [ -1.85]( 4.26)
-   Triad     1.00 [  0.00]( 2.30)     0.99 [ -0.84]( 1.83)
-
-
-   ==================================================================
-   Test          : netperf
-   Units         : Normalized Througput
-   Interpretation: Higher is better
-   Statistic     : AMean
-   ==================================================================
-   Clients:         tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-    1-clients     1.00 [  0.00]( 0.17)     0.97 [ -2.55]( 0.50)
-    2-clients     1.00 [  0.00]( 0.77)     0.97 [ -2.52]( 0.20)
-    4-clients     1.00 [  0.00]( 0.93)     0.97 [ -3.30]( 0.54)
-    8-clients     1.00 [  0.00]( 0.87)     0.96 [ -3.98]( 1.19)
-   16-clients     1.00 [  0.00]( 1.15)     0.96 [ -4.16]( 1.06)
-   32-clients     1.00 [  0.00]( 1.00)     0.95 [ -5.47]( 0.96)
-   64-clients     1.00 [  0.00]( 1.37)     0.94 [ -5.75]( 1.64)
-   128-clients    1.00 [  0.00]( 0.99)     0.92 [ -8.50]( 1.49)
-   256-clients    1.00 [  0.00]( 3.23)     0.90 [-10.22]( 2.86)
-   512-clients    1.00 [  0.00](58.43)     0.90 [-10.28](47.59)
-
-
-   ==================================================================
-   Test          : schbench
-   Units         : Normalized 99th percentile latency in us
-   Interpretation: Lower is better
-   Statistic     : Median
-   ==================================================================
-   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-     1     1.00 [ -0.00]( 5.59)     0.55 [ 45.00](11.17)
-     2     1.00 [ -0.00](14.29)     0.52 [ 47.62]( 7.53)
-     4     1.00 [ -0.00]( 1.24)     0.57 [ 42.55]( 5.73)
-     8     1.00 [ -0.00](11.16)     1.06 [ -6.12]( 2.92)
-    16     1.00 [ -0.00]( 6.81)     1.12 [-12.28](11.09)
-    32     1.00 [ -0.00]( 6.99)     1.05 [ -5.26](12.48)
-    64     1.00 [ -0.00]( 6.00)     0.96 [  4.21](18.31)
-   128     1.00 [ -0.00]( 3.26)     1.63 [-62.84](36.71)
-   256     1.00 [ -0.00](19.29)     0.97 [  3.25]( 4.94)
-   512     1.00 [ -0.00]( 1.48)     1.05 [ -4.71]( 5.11)
-
-
-   ==================================================================
-   Test          : new-schbench-requests-per-second
-   Units         : Normalized Requests per second
-   Interpretation: Higher is better
-   Statistic     : Median
-   ==================================================================
-   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-     1     1.00 [  0.00]( 0.00)     0.95 [ -4.99]( 0.48)
-     2     1.00 [  0.00]( 0.26)     0.96 [ -3.82]( 0.55)
-     4     1.00 [  0.00]( 0.15)     0.95 [ -4.96]( 0.27)
-     8     1.00 [  0.00]( 0.15)     0.99 [ -0.58]( 0.00)
-    16     1.00 [  0.00]( 0.00)     1.00 [ -0.29]( 0.15)
-    32     1.00 [  0.00]( 4.88)     1.04 [  4.27]( 2.42)
-    64     1.00 [  0.00]( 5.57)     0.87 [-13.10](11.51)
-   128     1.00 [  0.00]( 0.34)     0.97 [ -3.13]( 0.58)
-   256     1.00 [  0.00]( 1.95)     1.02 [  1.83]( 0.15)
-   512     1.00 [  0.00]( 0.44)     1.00 [  0.48]( 0.12)
-
-
-   ==================================================================
-   Test          : new-schbench-wakeup-latency
-   Units         : Normalized 99th percentile latency in us
-   Interpretation: Lower is better
-   Statistic     : Median
-   ==================================================================
-   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-     1     1.00 [ -0.00]( 4.19)     1.00 [ -0.00](14.91)
-     2     1.00 [ -0.00]( 3.78)     0.93 [  7.14]( 0.00)
-     4     1.00 [ -0.00]( 8.91)     0.80 [ 20.00]( 4.43)
-     8     1.00 [ -0.00]( 7.45)     1.00 [ -0.00]( 7.45)
-    16     1.00 [ -0.00]( 4.08)     1.00 [ -0.00](10.79)
-    32     1.00 [ -0.00](16.90)     0.93 [  6.67](10.00)
-    64     1.00 [ -0.00]( 9.11)     1.12 [-12.50]( 0.00)
-   128     1.00 [ -0.00]( 7.05)     2.43 [-142.86](24.47)
-   256     1.00 [ -0.00]( 4.32)     1.02 [ -2.34]( 1.20)
-   512     1.00 [ -0.00]( 0.35)     1.01 [ -0.77]( 0.40)
-
-
-   ==================================================================
-   Test          : new-schbench-request-latency
-   Units         : Normalized 99th percentile latency in us
-   Interpretation: Lower is better
-   Statistic     : Median
-   ==================================================================
-   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
-     1     1.00 [ -0.00]( 0.78)     1.16 [-15.70]( 2.14)
-     2     1.00 [ -0.00]( 0.81)     1.13 [-13.11]( 0.62)
-     4     1.00 [ -0.00]( 0.24)     1.26 [-26.11](16.43)
-     8     1.00 [ -0.00]( 1.30)     1.03 [ -3.46]( 0.81)
-    16     1.00 [ -0.00]( 1.11)     1.02 [ -2.12]( 1.85)
-    32     1.00 [ -0.00]( 5.94)     0.96 [  4.05]( 4.48)
-    64     1.00 [ -0.00]( 6.27)     1.06 [ -6.01]( 6.67)
-   128     1.00 [ -0.00]( 0.21)     1.12 [-12.31]( 2.61)
-   256     1.00 [ -0.00](13.73)     1.06 [ -6.30]( 3.37)
-   512     1.00 [ -0.00]( 0.95)     1.05 [ -4.85]( 0.61)
-
-
-   ==================================================================
-   Test          : Various longer running benchmarks
-   Units         : %diff in throughput reported
-   Interpretation: Higher is better
-   Statistic     : Median
-   ==================================================================
-   Benchmarks:                 %diff
-   ycsb-cassandra              -1.21%
-   ycsb-mongodb                -0.69%
-
-   deathstarbench-1x           -7.40%
-   deathstarbench-2x           -3.80%
-   deathstarbench-3x           -3.99%
-   deathstarbench-6x           -3.02%
-
-   hammerdb+mysql 16VU         -2.59%
-   hammerdb+mysql 64VU         -1.05%
-
-
-Also, could you fold the below diff into your Patch2:
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index eb5a2572b4f8..6c51dd2b7b32 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7694,8 +7694,6 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool
-  	int i, cpu, idle_cpu = -1, nr = INT_MAX;
-  	struct sched_domain_shared *sd_share;
-  
--	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
--
-  	if (sched_feat(SIS_UTIL)) {
-  		sd_share = rcu_dereference(per_cpu(sd_llc_shared, target));
-  		if (sd_share) {
-@@ -7707,6 +7705,8 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool
-  		}
-  	}
-  
-+	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-+
-  	if (static_branch_unlikely(&sched_cluster_active)) {
-  		struct sched_group *sg = sd->groups;
-  
----
-
-If the SIS_UTIL cut off hits, that result of the cpumask_and() is of no
-use. To save some additional cycles, especially in cases where we target
-the LLC frequently and the search bails out because the LLC is busy,
-this overhead can be easily avoided. Since select_idle_cpu() can now be
-called twice per wakeup, this overhead can be visible in benchmarks like
-hackbench.
-
--- 
-Thanks and Regards,
-Prateek
-
-> schbench was tested on EMR and Zen3 Milan. An improvement in tail latency was observed when
-> the LLC was underloaded; however, some regressions were still evident when the LLC was
-> saturated. Additionally, the load balance should be adjusted to further address these
-> regressions.
-> 
-> [1] https://lore.kernel.org/all/20250325120952.GJ36322@noisy.programming.kicks-ass.net/
-> 
-> 
-> Chen Yu (4):
->    sched: Several fixes for cache aware scheduling
->    sched: Avoid task migration within its preferred LLC
->    sched: Inhibit cache aware scheduling if the preferred LLC is over
->      aggregated
->    sched: Add ftrace to track task migration and load balance within and
->      across LLC
-> 
-> Peter Zijlstra (1):
->    sched: Cache aware load-balancing
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKb24gSHVudGVyIDxqb25hdGhh
+bmhAbnZpZGlhLmNvbT4NCj4gU2VudDogTW9uZGF5LCBBcHJpbCAyOCwgMjAyNSAxMDowNCBQTQ0K
+PiBUbzogUm9iZXJ0IExpbiA8cm9iZWxpbkBudmlkaWEuY29tPjsgdGhpZXJyeS5yZWRpbmdAZ21h
+aWwuY29tOw0KPiBkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnOyB0Z2x4QGxpbnV0cm9uaXguZGU7
+IFBvaHN1biBTdQ0KPiA8cG9oc3Vuc0BudmlkaWEuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgtdGVncmFAdmdlci5rZXJuZWwub3JnOyBTdW1pdCBHdXB0YQ0K
+PiA8c3VtaXRnQG52aWRpYS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMS8zXSBjbG9j
+a3NvdXJjZS9kcml2ZXJzL3RpbWVyLXRlZ3JhMTg2OiBhZGQNCj4gV0RJT0NfR0VUVElNRUxFRlQg
+c3VwcG9ydA0KPiANCj4gSGkgUm9iZXJ0LA0KPiANCj4gT24gMjEvMDQvMjAyNSAxMTowOCwgUm9i
+ZXJ0IExpbiB3cm90ZToNCj4gPiBGcm9tOiBQb2hzdW4gU3UgPHBvaHN1bnNAbnZpZGlhLmNvbT4N
+Cj4gPg0KPiA+IFRoaXMgY2hhbmdlIGFkZHMgc3VwcG9ydCBmb3IgV0RJT0NfR0VUVElNRUxFRlQg
+c28gdXNlcnNwYWNlIHByb2dyYW1zDQo+ID4gY2FuIGdldCB0aGUgbnVtYmVyIG9mIHNlY29uZHMg
+YmVmb3JlIHN5c3RlbSByZXNldCBieSB0aGUgd2F0Y2hkb2cNCj4gPiB0aW1lciB2aWEgaW9jdGwu
+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQb2hzdW4gU3UgPHBvaHN1bnNAbnZpZGlhLmNvbT4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgTGluIDxyb2JlbGluQG52aWRpYS5jb20+DQo+ID4g
+LS0tDQo+ID4gICBkcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXRlZ3JhMTg2LmMgfCA1OA0KPiAr
+KysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgNTcgaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Y2xvY2tzb3VyY2UvdGltZXItdGVncmExODYuYw0KPiA+IGIvZHJpdmVycy9jbG9ja3NvdXJjZS90
+aW1lci10ZWdyYTE4Ni5jDQo+ID4gaW5kZXggZWE3NDI4ODllZTA2Li41NmQwOGJmMWI2YjAgMTAw
+NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci10ZWdyYTE4Ni5jDQo+ID4g
+KysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci10ZWdyYTE4Ni5jDQo+ID4gQEAgLTEsOCAr
+MSw5IEBADQo+ID4gICAvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQo+
+ID4gICAvKg0KPiA+IC0gKiBDb3B5cmlnaHQgKGMpIDIwMTktMjAyMCBOVklESUEgQ29ycG9yYXRp
+b24uIEFsbCByaWdodHMgcmVzZXJ2ZWQuDQo+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxOS0yMDI1
+IE5WSURJQSBDb3Jwb3JhdGlvbi4gQWxsIHJpZ2h0cyByZXNlcnZlZC4NCj4gPiAgICAqLw0KPiA+
+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4
+L2Nsb2Nrc291cmNlLmg+DQo+ID4gICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gICAj
+aW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ID4gQEAgLTMwLDYgKzMxLDcgQEANCj4gPg0K
+PiA+ICAgI2RlZmluZSBUTVJTUiAweDAwNA0KPiA+ICAgI2RlZmluZSAgVE1SU1JfSU5UUl9DTFIg
+QklUKDMwKQ0KPiA+ICsjZGVmaW5lICBUTVJTUl9QQ1YgR0VOTUFTSygyOCwgMCkNCj4gPg0KPiA+
+ICAgI2RlZmluZSBUTVJDU1NSIDB4MDA4DQo+ID4gICAjZGVmaW5lICBUTVJDU1NSX1NSQ19VU0VD
+ICgwIDw8IDApDQo+ID4gQEAgLTQ2LDYgKzQ4LDkgQEANCj4gPiAgICNkZWZpbmUgIFdEVENSX1RJ
+TUVSX1NPVVJDRV9NQVNLIDB4Zg0KPiA+ICAgI2RlZmluZSAgV0RUQ1JfVElNRVJfU09VUkNFKHgp
+ICgoeCkgJiAweGYpDQo+ID4NCj4gPiArI2RlZmluZSBXRFRTUiAweDAwNA0KPiA+ICsjZGVmaW5l
+ICBXRFRTUl9DVVJSRU5UX0VYUElSQVRJT05fQ09VTlQgR0VOTUFTSygxNCwgMTIpDQo+ID4gKw0K
+PiA+ICAgI2RlZmluZSBXRFRDTURSIDB4MDA4DQo+ID4gICAjZGVmaW5lICBXRFRDTURSX0RJU0FC
+TEVfQ09VTlRFUiBCSVQoMSkNCj4gPiAgICNkZWZpbmUgIFdEVENNRFJfU1RBUlRfQ09VTlRFUiBC
+SVQoMCkgQEAgLTIzNSwxMiArMjQwLDYzIEBADQo+IHN0YXRpYw0KPiA+IGludCB0ZWdyYTE4Nl93
+ZHRfc2V0X3RpbWVvdXQoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkLA0KPiA+ICAgCXJldHVy
+biAwOw0KPiA+ICAgfQ0KPiA+DQo+ID4gK3N0YXRpYyB1bnNpZ25lZCBpbnQgdGVncmExODZfd2R0
+X2dldF90aW1lbGVmdChzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlDQo+ID4gKyp3ZGQpIHsNCj4gPiAr
+CXN0cnVjdCB0ZWdyYTE4Nl93ZHQgKndkdCA9IHRvX3RlZ3JhMTg2X3dkdCh3ZGQpOw0KPiA+ICsJ
+dTMyIHRpbWVsZWZ0LCBleHBpcmF0aW9uLCB2YWw7DQo+ID4gKw0KPiA+ICsJaWYgKCF3YXRjaGRv
+Z19hY3RpdmUoJndkdC0+YmFzZSkpIHsNCj4gPiArCQkvKiByZXR1cm4gemVybyBpZiB0aGUgd2F0
+Y2hkb2cgdGltZXIgaXMgbm90IGFjdGl2YXRlZC4gKi8NCj4gPiArCQlyZXR1cm4gMDsNCj4gPiAr
+CX0NCj4gPiArDQo+ID4gKwkvKg0KPiA+ICsJICogUmVzZXQgb2NjdXJzIG9uIHRoZSBmaWZ0aCBl
+eHBpcmF0aW9uIG9mIHRoZQ0KPiA+ICsJICogd2F0Y2hkb2cgdGltZXIgYW5kIHNvIHdoZW4gdGhl
+IHdhdGNoZG9nIHRpbWVyIGlzIGNvbmZpZ3VyZWQsDQo+ID4gKwkgKiB0aGUgYWN0dWFsIHZhbHVl
+IHByb2dyYW1tZWQgaW50byB0aGUgY291bnRlciBpcyAxLzUgb2YgdGhlDQo+ID4gKwkgKiB0aW1l
+b3V0IHZhbHVlLiBPbmNlIHRoZSBjb3VudGVyIHJlYWNoZXMgMCwgZXhwaXJhdGlvbiBjb3VudA0K
+PiA+ICsJICogd2lsbCBiZSBpbmNyZWFzZWQgYnkgMSBhbmQgdGhlIGRvd24gY291bnRlciByZXN0
+YXJ0cy4NCj4gPiArCSAqIEhlbmNlIHRvIGdldCB0aGUgdGltZSBsZWZ0IGJlZm9yZSBzeXN0ZW0g
+cmVzZXQgd2UgbXVzdA0KPiA+ICsJICogY29tYmluZSAyIHBhcnRzOg0KPiA+ICsJICogMS4gdmFs
+dWUgb2YgdGhlIGN1cnJlbnQgZG93biBjb3VudGVyDQo+ID4gKwkgKiAyLiAobnVtYmVyIG9mIGNv
+dW50ZXIgZXhwaXJhdGlvbnMgcmVtYWluaW5nKSAqICh0aW1lb3V0LzUpDQo+ID4gKwkgKi8NCj4g
+PiArDQo+ID4gKwkvKiBHZXQgdGhlIGN1cnJlbnQgbnVtYmVyIG9mIGNvdW50ZXIgZXhwaXJhdGlv
+bnMuIFNob3VsZCBiZSBhDQo+ID4gKwkgKiB2YWx1ZSBiZXR3ZWVuIDAgYW5kIDQNCj4gPiArCSAq
+Lw0KPiA+ICsJdmFsID0gcmVhZGxfcmVsYXhlZCh3ZHQtPnJlZ3MgKyBXRFRTUik7DQo+ID4gKwll
+eHBpcmF0aW9uID0gRklFTERfR0VUKFdEVFNSX0NVUlJFTlRfRVhQSVJBVElPTl9DT1VOVCwgdmFs
+KTsNCj4gPiArCWlmIChXQVJOX09OKGV4cGlyYXRpb24gPiA0KSkNCj4gPiArICAgICAgICAgICAg
+IHJldHVybiAwOw0KPiA+ICsNCj4gPiArCS8qIEdldCB0aGUgY3VycmVudCBjb3VudGVyIHZhbHVl
+IGluIG1pY3Jvc2Vjb25kLg0KPiA+ICsJICovDQo+ID4gKwl2YWwgPSByZWFkbF9yZWxheGVkKHdk
+dC0+dG1yLT5yZWdzICsgVE1SU1IpOw0KPiA+ICsJdGltZWxlZnQgPSBGSUVMRF9HRVQoVE1SU1Jf
+UENWLCB2YWwpOw0KPiANCj4gU28gdGhpcyB2YWx1ZSBpcyBpbiBtaWNyb3NlY29uZHMuDQo+IA0K
+PiA+ICsNCj4gPiArCS8qDQo+ID4gKwkgKiBDYWxjdWxhdGUgdGhlIHRpbWUgcmVtYWluaW5nIGJ5
+IGFkZGluZyB0aGUgdGltZSBmb3IgdGhlDQo+ID4gKwkgKiBjb3VudGVyIHZhbHVlIHRvIHRoZSB0
+aW1lIG9mIHRoZSBjb3VudGVyIGV4cGlyYXRpb25zIHRoYXQNCj4gPiArCSAqIHJlbWFpbi4gRG8g
+dGhlIG11bHRpcGxpY2F0aW9uIGZpcnN0IG9uIHB1cnBvc2UganVzdCB0byBrZWVwDQo+ID4gKwkg
+KiB0aGUgcHJlY2lzaW9uIGR1ZSB0byB0aGUgaW50ZWdlciBkaXZpc2lvbi4NCj4gPiArCSAqLw0K
+PiA+ICsJdGltZWxlZnQgKz0gd2R0LT5iYXNlLnRpbWVvdXQgKiAoNCAtIGV4cGlyYXRpb24pIC8g
+NTsNCj4gDQo+IEhvd2V2ZXIsIHdkdC0+YmFzZS50aW1lb3V0IGlzIGluIHNlY29uZHMuIFNvIEkg
+ZG9uJ3QgdGhpbmsgd2UgY2FuIHNpbXBseSBhZGQNCj4gdGhpcy4gRG9uJ3Qgd2UgbmVlZCB0byAu
+Li4NCj4gDQo+IHRpbWVsZWZ0ICs9ICh3ZHQtPmJhc2UudGltZW91dCAqIFVTRUNfUEVSX1NFQyAq
+ICg0IC0gZXhwaXJhdGlvbikpIC8gNTsNCj4gDQoNCllvdSBhcmUgcmlnaHQuIEFzIHdhdGNoZG9n
+IHRpbWVyIGNhbiBzdGlsbCBiZSB0cmlnZ2VyZWQgYXQgdGhlIHJpZ2h0IHRpbWUsIGV2ZW4gaWYg
+Z2V0X3RpbWVsZWZ0IGNhbGxiYWNrIHJldHVybiB0aGUgaW5hY2N1cmF0ZSB2YWx1ZSwgSSB0aG91
+Z2h0IG15IGNoYW5nZSBpcyBmaW5lLiBCdXQgaXQgdHVybnMgb3V0IGdldF90aW1lbGVmdCBpcyBp
+bmRlcGVuZGVudCB0byB0aGlzLg0KDQpJJ2xsIGZpeCBhbmQgdmFsaWRhdGUgdGhpcyBjYXJlZnVs
+bHkuDQoNCj4gR2l2ZW4gdGhhdCB0aGlzIGNvdWxkIGJlIHF1aXRlIGEgYmlnIG51bWJlciwgd2Ug
+cHJvYmFibHkgd2FudCB0byBtYWtlDQo+IHRpbWVsZWZ0IGEgNjQtYml0IHR5cGUgdG9vLiBTbyB3
+ZSBtYXkgd2FudCB0byBkZWZpbmUgYSAndTY0IHRpbWVsZWZ0X3VzZWNzJw0KPiBhbmQgJ3UzMiB0
+aW1lbGVmdF9zZWNzJyB0aGF0IHdlIHJldHVybi4NCj4gDQoNCldlIGNhbiBkbyB0aGlzLg0KDQo+
+IEpvbg0KPiANCj4gLS0NCj4gbnZwdWJsaWMNCg0K
