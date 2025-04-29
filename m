@@ -1,236 +1,258 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA912C10A9
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBD12C10A9;
+	Tue, 29 Apr 2025 12:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745930422; cv=none; b=YnHbhSRQRij4MiqlF5321RbNd4tOB8qouum4DX2OxRL2Oe6ZpkZrt34Fpx8t/s2eKQCJ5pn5j4QMeoseVilVdq6mTi3Vm7XlO3PqSlqw03eb6AYJhp4+nsXXbZhQyrXsR2BLNQrRXm0nkSfmHg5EvIUD0YzJW1XtJlaH4My9EzM=
+	t=1745930518; cv=none; b=Nz7xXfddpYVdcs7HG7nvwsUQ32EsmN4skjk2X6BcL3CH/DF44orYwCe55XMrSwVFwZqhGcBmecDDwRmsXTrcR/X+hckd/pyzUn0dMyvcLoJ8p7j10nhzCzTFnBVQYlaZ2fr0Fo1xYZLxCRMfDju6RkYBEWP2wJmvRk1jDxdlKTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745930422; c=relaxed/simple;
-	bh=ip7eQAl3OkyTGCrq0cmjZ9WKSDXUMl/2DdneuAGxbWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RR16j0a2fEEPN8vsBu8tS7dISMLUsDRYQMbu8LyAIhGUiO51jNZ0Wrj3zO8pYNyfUF9dNbhYwUFGjbBo7rYav00mGClit8yZ+JxXTKFxGA3jbXxM2rcjFWwi/cUrKLccO+ZRoj9yf9aek4LOHe8sTwqig6MN0kVGMZd4dQtgFgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bBmG+n5Y; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745930518; c=relaxed/simple;
+	bh=XCnhP92FnLnRCYUyO2bvDnBsIp+W3m98fC3Wecogt0k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Fwv10/nQ/s7TIMcJSx7QrLJf/RleBF+UU4Nqff6p1sgQfRYzy5Bt7LPPJPXVihUS+HpLfefCjkktJFL46N5vi6ffJMqR+odXC9OF5n2He3oS8vZyFiYqe391KiPpvln4RwWd5nViqSo5F+SXVd3I8Re6PQ3q8Vmapz0achKO7u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fsC7jfN2; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bBmG+n5Y"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2263428c8baso91265ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745930419; x=1746535219; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hhyBzxR8NyUZrkIJH4pc7IFsAn1vSN/LWAh25/3km3g=;
-        b=bBmG+n5Y3bEvP/BZpXHfXRTxVWyVaZVuWrmxEIPNe9ATbFH3mYd+M3cQz9ANRRE4jY
-         pes7hxhgYzsmWpXjB7It7K/6GMCDEJdBQveachJZyJglH8DXN44Uvuec/3MEMgvU6VQe
-         KLGuz88efFS2C7iyYFCpetv8goU0cMHVvj2N+enyxc8x6YbVW9FBUV6VzO9WJwKFHv5t
-         PCSYGmODyT1R6mY6YFjEpdMuxFRBX9LKY6ft2BcIJJX5xzxzpI9X1w8hOXPmewQzJOJ9
-         ly4QsShK+4+R9eBxwSysaegJz+VT5OEy35pBcppLYfzCIOb9FJOqop0nn5gPPjLjGOLl
-         a8Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745930419; x=1746535219;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hhyBzxR8NyUZrkIJH4pc7IFsAn1vSN/LWAh25/3km3g=;
-        b=i3f0iyaaSFoYQ7MFJ8WMeBX6Wr90gUDOwMCKlNGiwshJLVOptRpHKifLPOF5Ewpaqc
-         GClUb298d2A1heGxqv5W12bryCaxVXa6B4aTvEnb5PvJSxhqN9OyEED1rsD+uCGLdojI
-         xLfI2GzAEOiBpFi+ZbtKwWWWfyqXSZPWV60vhfYqWj/LCkMBwLhKNWyEpOBR8p+4Dd+e
-         D92NaFYYk6H9cYVzIXYyRsR5D/JcGy5N4I0OcLzEPBEvbEUGXDFeyBQ+s13mguBdoHdz
-         HckTuKq6e/VeaAuqgq0C+d/lero7bzD/JvwsQnvJWISNQ96pRjwYJ8B56LYO9UI/lGAX
-         GG/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWxypgy87wEqBlz7iEIYTh/HH9qHp86Pi9dA2UcxeYBWHKApnyYVqLsun/Ss86irWuw3J96f9FjEOSo7wc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+lKdjkdXhys/dXPFssbZOR2XFm6hWTNxU22TFszL9/w1JzNV7
-	ePExOajKgZZNzjCnyhd5z8kcGQ07tDi8KiVMAaIDZMCJov27sid36xNSpHcj0Q==
-X-Gm-Gg: ASbGncvCkAoKePgfQIuLnKHCusk1sFylb9k6sNWaoUP9QnqRLidMbOrdR+qIPCQttxd
-	OYFgjxst2lytPQDiweIokzJbGUsowtwezzn+eujmpQixDjEbOiZd+0TvSdRSOLsgr1hjXLYTHjZ
-	HI7AYmWqk0vbTrjNl6rBpod5i1PbI8jPWNGsei0iaOR5LPP2a7EG9AEJWeU5DNqvYKV7Wagviwo
-	IM1DdzlM8o4OgYU77VEh/7Skfgxwy5mlhhdjDxrLT1IIOPUU+Fz9SW6nbJV1F7EUMFJmEfWATge
-	fXBWTUqgeLzSN/orqFtnEMW1ERbpKnsoKnEes4jWUp3DytmpTcka5tH3yfwbtlw/kpU0a1fN
-X-Google-Smtp-Source: AGHT+IH/V/T2eUYQJIXG2EPtw/1cOV7MQT9tuyQOLSioTulIDCv1mtnsV9bjGKGjf9rlwz1NRxgL8g==
-X-Received: by 2002:a17:902:e786:b0:216:201e:1b63 with SMTP id d9443c01a7336-22de85f23admr2173255ad.11.1745930418710;
-        Tue, 29 Apr 2025 05:40:18 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25acd2fcsm10065488b3a.179.2025.04.29.05.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 05:40:18 -0700 (PDT)
-Date: Tue, 29 Apr 2025 12:40:07 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 11/22] iommufd: Add for-driver helpers
- iommufd_vcmdq_depend/undepend()
-Message-ID: <aBDIpz7w8wxIn_AF@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <a25c9454c17663f9e79b37bc2908bf3a99856be6.1745646960.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fsC7jfN2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 868F21FCE7;
+	Tue, 29 Apr 2025 12:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745930513;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=+hOrEAhno7m4cQKlwlJmGm8Rj/tVEl/GuIX19J6c9EU=;
+	b=fsC7jfN2Zzf6DQkEjpRic8pWM7yzcLOC/nuVX8wuoLYV8lJ6JT8vJzjRggXFLv3DaY5M+g
+	bKS9DTcgGQb6UFWXFJadK88/OXkYFQ0U257kEblOQ+ZHiUU6v4GoGzvtCq8PumjxlHSYuc
+	27ApFm3NfD1iUBHANI+nm1UTwLeB63hANnKucJ5eLvejapXSWgCWmG0dssIzqyuKQ59h5S
+	HslL9buypFCZSx47sMrgoblrGoGYuvWptn/IPXPm1+L43A8deYah1v6XYWbtfzGRyj0VMv
+	1J9LTFX3WHkiEUsuimis6TvaKT2VKjtodkvxzEc8KB6E/9Pu/RNom5r5TdqJLg==
+Message-ID: <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
+Date: Tue, 29 Apr 2025 14:41:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a25c9454c17663f9e79b37bc2908bf3a99856be6.1745646960.git.nicolinc@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>,
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
+ Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
+ Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>,
+ Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Christoph Fritz <chf.fritz@googlemail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Dharma Balasubiramani <dharma.b@microchip.com>,
+ Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
+ Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
+ Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Liu Ying <victor.liu@nxp.com>,
+ Manikandan Muralidharan <manikandan.m@microchip.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
+ Sasha Finkelstein <fnkl.kernel@gmail.com>,
+ Sugar Zhang <sugar.zhang@rock-chips.com>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Vitalii Mordan <mordan@ispras.ru>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan
+ <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
+ Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>,
+ Martyn Welch <martyn.welch@collabora.co.uk>,
+ Peter Senna Tschudin <peter.senna@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Herve Codina
+ <herve.codina@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
+ Seung-Woo Kim <sw0312.kim@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+ Helge Deller <deller@gmx.de>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Philippe Cornu <philippe.cornu@foss.st.com>,
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+ Yannick Fertre <yannick.fertre@foss.st.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+ Alain Volmat <alain.volmat@foss.st.com>,
+ Raphael Gallais-Pou <rgallaispou@gmail.com>,
+ Michal Simek <michal.simek@amd.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+Content-Language: en-US
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekjeefjeevtedvgfeiueeuudegudetvdejvdeujeelhfefvdevkeduheettedtveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtledprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpt
+ hhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Fri, Apr 25, 2025 at 10:58:06PM -0700, Nicolin Chen wrote:
-> NVIDIA Virtual Command Queue is one of the iommufd users exposing vIOMMU
-> features to user space VMs. Its hardware has a strict rule when mapping
-> and unmapping multiple global CMDQVs to/from a VM-owned VINTF, requiring
-> mappings in ascending order and unmappings in descending order.
-> 
-> The tegra241-cmdqv driver can apply the rule for a mapping in the LVCMDQ
-> allocation handler, however it can't do the same for an unmapping since
-> the destroy op returns void.
-> 
-> Add iommufd_vcmdq_depend/undepend() for-driver helpers, allowing LVCMDQ
-> allocator to refcount_inc() a sibling LVCMDQ object and LVCMDQ destroyer
-> to refcount_dec().
-> 
-> This is a bit of compromise, because a driver might end up with abusing
-> the API that deadlocks the objects. So restrict the API to a dependency
-> between two driver-allocated objects of the same type, as iommufd would
-> unlikely build any core-level dependency in this case.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommufd.h        | 47 ++++++++++++++++++++++++++++++++++
->  drivers/iommu/iommufd/driver.c | 28 ++++++++++++++++++++
->  2 files changed, 75 insertions(+)
-> 
-> diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
-> index e91381aaec5a..5dff154e8ce1 100644
-> --- a/include/linux/iommufd.h
-> +++ b/include/linux/iommufd.h
-> @@ -232,6 +232,10 @@ struct iommufd_object *_iommufd_object_alloc(struct iommufd_ctx *ictx,
->  					     size_t size,
->  					     enum iommufd_object_type type);
->  void iommufd_object_abort(struct iommufd_ctx *ictx, struct iommufd_object *obj);
-> +int iommufd_object_depend(struct iommufd_object *obj_dependent,
-> +			  struct iommufd_object *obj_depended);
-> +void iommufd_object_undepend(struct iommufd_object *obj_dependent,
-> +			     struct iommufd_object *obj_depended);
->  struct device *iommufd_viommu_find_dev(struct iommufd_viommu *viommu,
->  				       unsigned long vdev_id);
->  int iommufd_viommu_get_vdev_id(struct iommufd_viommu *viommu,
-> @@ -252,6 +256,17 @@ static inline void iommufd_object_abort(struct iommufd_ctx *ictx,
->  {
->  }
->  
-> +static inline int iommufd_object_depend(struct iommufd_object *obj_dependent,
-> +					struct iommufd_object *obj_depended)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline void iommufd_object_undepend(struct iommufd_object *obj_dependent,
-> +					   struct iommufd_object *obj_depended)
-> +{
-> +}
-> +
->  static inline struct device *
->  iommufd_viommu_find_dev(struct iommufd_viommu *viommu, unsigned long vdev_id)
->  {
-> @@ -329,4 +344,36 @@ static inline int iommufd_viommu_report_event(struct iommufd_viommu *viommu,
->  		static_assert(offsetof(typeof(*drv_struct), member.obj) == 0); \
->  		iommufd_object_abort(ictx, &drv_struct->member.obj);           \
->  	})
-> +
-> +/*
-> + * Helpers for IOMMU driver to build/destroy a dependency between two sibling
-> + * structures created by one of the allocators above
-> + */
-> +#define iommufd_vcmdq_depend(vcmdq_dependent, vcmdq_depended, member)          \
-> +	({                                                                     \
-> +		static_assert(__same_type(struct iommufd_object,               \
-> +					  vcmdq_dependent->member.obj));       \
-> +		static_assert(offsetof(typeof(*vcmdq_dependent),               \
-> +					      member.obj) == 0);               \
-> +		static_assert(__same_type(struct iommufd_object,               \
-> +					  vcmdq_depended->member.obj));        \
-> +		static_assert(offsetof(typeof(*vcmdq_depended),                \
-> +					      member.obj) == 0);               \
-> +		iommufd_object_depend(&vcmdq_dependent->member.obj,            \
-> +				      &vcmdq_depended->member.obj);            \
-> +	})
-> +
-> +#define iommufd_vcmdq_undepend(vcmdq_dependent, vcmdq_depended, member)        \
-> +	({                                                                     \
-> +		static_assert(__same_type(struct iommufd_object,               \
-> +					  vcmdq_dependent->member.obj));       \
-> +		static_assert(offsetof(typeof(*vcmdq_dependent),               \
-> +					      member.obj) == 0);               \
-> +		static_assert(__same_type(struct iommufd_object,               \
-> +					  vcmdq_depended->member.obj));        \
-> +		static_assert(offsetof(typeof(*vcmdq_depended),                \
-> +					      member.obj) == 0);               \
-> +		iommufd_object_undepend(&vcmdq_dependent->member.obj,          \
-> +					&vcmdq_depended->member.obj);          \
-> +	})
->  #endif
-> diff --git a/drivers/iommu/iommufd/driver.c b/drivers/iommu/iommufd/driver.c
-> index 7980a09761c2..fb7f8fe40f95 100644
-> --- a/drivers/iommu/iommufd/driver.c
-> +++ b/drivers/iommu/iommufd/driver.c
-> @@ -50,6 +50,34 @@ void iommufd_object_abort(struct iommufd_ctx *ictx, struct iommufd_object *obj)
->  }
->  EXPORT_SYMBOL_NS_GPL(iommufd_object_abort, "IOMMUFD");
->  
-> +/* A per-structure helper is available in include/linux/iommufd.h */
-> +int iommufd_object_depend(struct iommufd_object *obj_dependent,
-> +			  struct iommufd_object *obj_depended)
-> +{
-> +	/* Reject self dependency that dead locks */
-> +	if (obj_dependent == obj_depended)
-> +		return -EINVAL;
-> +	/* Only support dependency between two objects of the same type */
-> +	if (obj_dependent->type != obj_depended->type)
-> +		return -EINVAL;
-> +
-> +	refcount_inc(&obj_depended->users);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iommufd_object_depend, "IOMMUFD");
-> +
-> +/* A per-structure helper is available in include/linux/iommufd.h */
-> +void iommufd_object_undepend(struct iommufd_object *obj_dependent,
-> +			     struct iommufd_object *obj_depended)
-> +{
-> +	if (WARN_ON_ONCE(obj_dependent == obj_depended ||
-> +			 obj_dependent->type != obj_depended->type))
-> +		return;
-> +
-> +	refcount_dec(&obj_depended->users);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iommufd_object_undepend, "IOMMUFD");
-> +
->  /* Caller should xa_lock(&viommu->vdevs) to protect the return value */
->  struct device *iommufd_viommu_find_dev(struct iommufd_viommu *viommu,
->  				       unsigned long vdev_id)
 
-If I'm getting this right, I think we are setting up dependencies like:
-vcmdq[2] -> vcmdq[1] -> vcmdq[0] based on refcounts of each object,
-which ensures that the unmaps happen in descending order..
 
-If that's right, Is it fair to have iommufd_vcmdq_depend/undepend in the
-core code itself? Since it's a driver-level limitation, I think we
-should just have iommufd_object_depend/undepend in the core code and the
-iommufd_vcmdq_depend/undepend can move into the CMDQV driver?
-
-> -- 
-> 2.43.0
+Le 29/04/2025 à 11:27, Louis Chauvet a écrit :
 > 
+> On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
+>> devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
+>> bridge, and the only one supported from now on. It is also necessary for
+>> implementing reference counting and thus needed to support removal of
+>> bridges from a still existing DRM pipeline without use-after-free.
+>>
+>> This series converts all DRM bridges to the new API.
+>>
+>> [...]
+> 
+> Applied, thanks!
+> 
+> [02/34] platform: arm64: acer-aspire1-ec: convert to devm_drm_bridge_alloc() API
+>          commit: 411465d35bc56877c33e2498ac697acfcf484e6b
+> [03/34] drm/bridge: analogix-anx6345: convert to devm_drm_bridge_alloc() API
+>          commit: 53ddeb25159781b029fda404226af600e76f975f
+> [06/34] drm/bridge: display-connector: convert to devm_drm_bridge_alloc() API
+>          commit: 4e90a3d96a6185e143041273f9867a1092dd4a71
+> [07/34] drm/bridge: lt9611uxc: convert to devm_drm_bridge_alloc() API
+>          commit: 6287ffd9eff6eea65865e64b9d4c45e115fa5ecf
+> [11/34] drm/bridge: dw-hdmi: convert to devm_drm_bridge_alloc() API
+>          commit: ed6987b674185873ebed7a619a646da6dd1a78fa
+> [12/34] drm/bridge: tda998x: convert to devm_drm_bridge_alloc() API
+>          commit: 7fe58bf1a9a24b533875c262a3222581a3f759e4
+> [13/34] drm/bridge: ti-sn65dsi86: convert to devm_drm_bridge_alloc() API
+>          commit: a4754ae9cfa76fbce79f023c268a5bac56f36321
+> [14/34] drm/exynos: mic: convert to devm_drm_bridge_alloc() API
+>          commit: 91c5c7b5bb2dd09b43b025bce6d790d3c79f4518
 
-Thanks,
-Praan
+Hello all,
+
+I made a mistake while applying those patches. Instead of taking 
+2-3,11-13,15-18,27,31, I took 2-3,11-18,27,31, which includes the patch 14.
+
+This patch is not R-by/A-by/SoB by non-Bootlin people. For me, the patch 
+is correct, it does not break the build nor generate warnings.
+
+What should I do? Is my SoB sufficient, or should I revert the patch and 
+wait for R/A-by before taking it again?
+
+Sorry for this,
+Louis Chauvet
+
+> [15/34] drm/mcde: convert to devm_drm_bridge_alloc() API
+>          commit: 40c25b9ec641f43ba17c7b788ac16ec23f8daaa8
+> [16/34] drm/msm/dp: convert to devm_drm_bridge_alloc() API
+>          commit: b2aabe5c6b65516d88214aba4b12ce2ca78bac6c
+> [17/34] drm/msm/dsi: convert to devm_drm_bridge_alloc() API
+>          commit: fffc8847743e45604c4478f554d628481b985556
+> [18/34] drm/msm/hdmi: convert to devm_drm_bridge_alloc() API
+>          commit: e11532be87e437648521a8ed5358c56df11933b4
+> [27/34] drm/vc4: convert to devm_drm_bridge_alloc() API
+>          commit: 9545c91ed75ff65e114761a7729de0e1b440aec6
+> [31/34] drm/bridge: imx8*-ldb: convert to devm_drm_bridge_alloc() API
+>          commit: e74b84cd83962e357329a695ba348b3dfe37395c
+> 
+> Best regards,
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
