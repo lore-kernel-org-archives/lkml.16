@@ -1,280 +1,233 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD3B21ABC8;
-	Tue, 29 Apr 2025 05:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB672741C2;
+	Tue, 29 Apr 2025 05:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745905327; cv=none; b=qwoRrfpuD76U7uoiE7rVnVdIEv7JxlPk8O4aoMdI0IshK862VZvTEg0NkWU84bqQEUKfXgK5nBIXkYUxn9ViuN8PVJVhCs9tdUblqJTF4JXgWLTUyyKyEu3vjGk9eg+nEhuH2813Uq0PYzJRs4fUTgcEgMN3ieKmJSOt3L1Yahc=
+	t=1745905331; cv=none; b=fHM1e/lGg4C05iS3eBF0NJlK+rFPj7QSBH8PCnakajKVvKk025HVFxTtrarmEQiTNb+DYp0PQRssfcRjFffxUOmEgOnzh33MptBaMXYzYevWDj6gpjA+J+exi5QpDK5FLhIdIPtEIVsqytQrN4knj8LhgZWGSOOMBA8H9AyCEPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745905327; c=relaxed/simple;
-	bh=0e5uxumMVgB+gJ4af5LiBNwBiNJ/RjGAyjB6I+PjhB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QB22yxP09X34JqWNGKRtl6yo1Xpgx1o9SQLrwkDRag3n/jDFXbpnUDcRt3UJeO58WdMiWCkWZVz66uiyw4gnMwsX7QV6vKP5A3m58Cps8aqfQ3A/ds6R2Qk7qG64UY3S4nRgLMoYsCw3YuHZmphMzcQoMcAJGE9ci/azyGVfNNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LREXRJ3h; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745905331; c=relaxed/simple;
+	bh=DLOitkgSZvQeteEV7vswzOSxYAHHO9ynIKrHuD7EL88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WJVfDP47dj2TmWQRqNOHEnQQRNgYIPklx9sdfuh9zGogwvQ9wgBFgc0fPk3uv0iwa+/yxLG3xxTt5ZlFoLXkdpJjMmBQpmUh7S93QR9SZVWDSIEcYUpfuFCJwtI8vNu4a5cLWgCtN4bvNO6wQnlcgjy+J4kwjLnvHqUyFDGIq9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iLsLiJRf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LREXRJ3h"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so3782540f8f.1;
-        Mon, 28 Apr 2025 22:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745905324; x=1746510124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VB5Wtwbx78r+orlHKCiKwe2I8rH2J7zEjSM0oCRsjK0=;
-        b=LREXRJ3hUgTGSCbQSam9d+zA+OJBJZZR9CegKE5Nhdo8gLPJk+pr0uJdibjX3CUF8g
-         m/TlXJrYMgiXdjEYIkYz4zUtW41v4C8Ucv6ZhM5SChHgoMVz5SA1QVXfhnStjvACNN8F
-         bDUfCzMPd+4OoD2z4GRzAGX5WmlogTAk4leaD9aOUkgIagZJ9SbCWPZM4BzxvxatGKBj
-         10QKvICszuHEdRld4IIH/kfgxorzYa/PigD/y5Ws0nGbfsVuZugkqCnvT4FpSFcDoc4t
-         R6F8iUFriaYCNnFwfCV3/WRIRT7ul1otCcPZaN2GfXp9Gp11/1s2hN6WGLBHn1PumqJa
-         Bukw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745905324; x=1746510124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VB5Wtwbx78r+orlHKCiKwe2I8rH2J7zEjSM0oCRsjK0=;
-        b=wnXT9ho21rQodxOJ0k260kwr5B5Kz7IAXyqBzk0uB1G9x2APGXwrFMyL5MgEdWa0N0
-         DYvEjxOqv3p5NYDU0l4CXo5PzzFAyMDzbYbPPpYZtANlZLynH3bReAOzBVvplMyey9I/
-         Cj/PXhIzwHRV+olhTZkAjbqqlo967L3OcpSJ86m3lnJcU7l+GMss7K0E3AUOOeFUxZiH
-         6m0APmCp423Ou39zhZC0bEqF901Y1zj46Vvz/cMldazpJ8aj7f0ZhT0TQSEofZo3Xk8r
-         jsVVmiaJHXf3wTln0kVWbvDvzn01OWs3hNLQovnu/eZYiMUS+gs/nwyidU4GJH7PG8Hv
-         LeFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQydoO/WQBWEXl6joHXQ1env6t8HC9L8wo/szRoEIljF4WUUxx+jJzMZ7QAzKEN/J6TvzNtpBkp2Uhs09e@vger.kernel.org, AJvYcCVwfDwdeTPcCwdOWIGxw80hoRHFKtIL8kvR5t6P3t+EcJdtigPz+UD9DBK5w1ZyjzoR0TZgdE7NIsa5Kac=@vger.kernel.org, AJvYcCWwHPClbYAFyg2WCdpba3jxVWPitkS1uA3oVBt4Ok6kiwXvmYKjRTFV/sR570EalUrUNFRrwhp0QGo=@vger.kernel.org, AJvYcCXQCmXkB/wX8cAubGy7584I86GHqmmU6qvItOeTN2oI8HsumXrM7nm2S5NNM6/52nI8Debvq8PBnrm3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH8DOI5kaQpUZoBDGXp2HSh4PxDO84Gxta0Vq2txqwRBkrq3F2
-	rdplA3ayrYVTkBzHhhkBhRafh25+MJ+p6bcS6NTmr8sAeW0R0t+cqInU4LyfEoYW4DPapLbMx/V
-	shUnQ+ciNtOVrSDktomSzCGhXPNM=
-X-Gm-Gg: ASbGncvhl2XxmnjuGtl5J0WopVAFbMvsQSUpZhVqSlJkus8CzLfm6OanyNUpQdrRDaN
-	pJtZqtk0Jab81E7l39TYSQPC1TOuv3JfIgrLDf2fFpl6NN1qFZkH8gMsxYwiq7oFX1zbev3+8an
-	fTR518oFy0Oq3tt2KV1IroIvOKmenDKTEo/w==
-X-Google-Smtp-Source: AGHT+IH4r75txm4cCS97/f9OrI2KG8AGYPc0bAJ+UQrYpFpQsY0S4uUNIdOxBS8MjpbL6UUQkSMtW3X5+RcM0EVnkBQ=
-X-Received: by 2002:a05:6000:402b:b0:3a0:7a5d:96dc with SMTP id
- ffacd0b85a97d-3a08ad32e13mr831956f8f.13.1745905324117; Mon, 28 Apr 2025
- 22:42:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iLsLiJRf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq1oD003855;
+	Tue, 29 Apr 2025 05:41:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EGQVTctIEjaRvzIG4gnnPlx1SdC7Ce357BzPTTQxWAI=; b=iLsLiJRf96r9u7Yx
+	9dwtHjQuxB1SQe9heTM5XoUGvea7BgYfYgteH92yqVkO+0obe/s3L9MIXygD6wgI
+	aVmLZtpp07s0ilubzg+8oGODEF9kLJP4BEK1iHC8GrRWLxeJ65Vmkg/PilzurTfZ
+	1aNGQMuhTvH//fFHe7cY6quNlpQL6mVvMNW61xPSEW++QDVmuyGf1q2aA+H7j9Xs
+	dmRHDnVitZOJZel8v42RPU7Knxw32KxHTAPnLNaVU6Ern9UIUNw9Yn0sdQhKV5St
+	0P/rxUdqzNeBKUu41/prqp2OG3rGnEBlIh3RQE6gdWeXEugADVmhkeIu/tqZXrsa
+	jalTkw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rsbabek-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 05:41:08 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T5f66E009620
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 05:41:07 GMT
+Received: from [10.151.36.30] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Apr
+ 2025 22:41:02 -0700
+Message-ID: <3fb46918-7ad2-a720-0cc9-6a63c925936c@quicinc.com>
+Date: Tue, 29 Apr 2025 11:10:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413111033.11408-1-clamor95@gmail.com> <20250413111033.11408-4-clamor95@gmail.com>
- <22du3s2n3pcyivw7ktpqcvyvady24qggiqouz5hqzoca2tzyqd@vdi5qbtdkrgj>
-In-Reply-To: <22du3s2n3pcyivw7ktpqcvyvady24qggiqouz5hqzoca2tzyqd@vdi5qbtdkrgj>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Tue, 29 Apr 2025 08:41:52 +0300
-X-Gm-Features: ATxdqUElrxNQVvYfTDSXnijX_xzVnVpoe4pcjetfMWxSULzsIaUGPBLP-yAkRuE
-Message-ID: <CAPVz0n0Qcu7NAsqiRRrUjZLhRhNp=rmtdM9XLnf2XTiTpDyJgg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] power/supply: Add driver for Pegatron Chagall battery
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Heiko Stuebner <heiko@sntech.de>, 
-	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Aradhya Bhatia <a-bhatia1@ti.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 1/3] mtd: rawnand: qcom: Pass 18 bit offset from NANDc
+ base to BAM base
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <broonie@kernel.org>, <absahu@codeaurora.org>, <bbrezillon@kernel.org>,
+        <architt@codeaurora.org>, <quic_srichara@quicinc.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-spi@vger.kernel.org>
+References: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
+ <20250410100019.2872271-2-quic_mdalam@quicinc.com>
+ <bsj6kvqjo3pfbsakex5quamk5tkrtigxdcoyu5bj3nt37zsgc5@7h7zidzbcs7p>
+Content-Language: en-US
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <bsj6kvqjo3pfbsakex5quamk5tkrtigxdcoyu5bj3nt37zsgc5@7h7zidzbcs7p>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0MSBTYWx0ZWRfX1X2DItrMteCT pPUOS1gV6rTwarn0O6JYA/LFWDTleubnOy5c7a0va4jVszyTS/jwnW0jt/AcLcPmf6c06Xaq/mI lpOqlD5R/t/d/b8FEfk5lmqZWj/4tnbX4T+CpwJ764JyGZedDr50sfvmsJqgJYFcZ9VQpd2Sn7j
+ mytZpC/R3VtE785Q+nZTYC47ZylFd8IhRbMfpPCSovNPcFqNT8yiIlfP3n5RhRJSLIDNHjQgdPQ uFWpbq75sVnAUJtW2dDy1pPQGzQELKLqBfb1ho3s0FxmENqeQLH2E/oTIjMdvzTOMSrEGspn76i Cs4mjLqIMuwZys/ce6ibBQA36kPZ351iUqnub/6uhNtp+IvvbTDz7tHL3WrBnu2OFjc4FtM6hS3
+ qW1SZ/vZjqzgDbOGKGEIVQS/+aQBOkJXIgU5MlylQEBPoDhyMDwf72dlgvPALg9xWzz49d2J
+X-Proofpoint-GUID: mqpHxRpb0nNJPwFk7TFWsvuItKPRGvNe
+X-Proofpoint-ORIG-GUID: mqpHxRpb0nNJPwFk7TFWsvuItKPRGvNe
+X-Authority-Analysis: v=2.4 cv=I8ZlRMgg c=1 sm=1 tr=0 ts=68106674 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
+ a=mOH42xogWxsjzwT06YoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290041
 
-=D0=B2=D1=82, 29 =D0=BA=D0=B2=D1=96=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 02:0=
-2 Sebastian Reichel
-<sebastian.reichel@collabora.com> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> Hi,
->
-> On Sun, Apr 13, 2025 at 02:10:32PM +0300, Svyatoslav Ryhel wrote:
-> > The Pegatron Chagall is an Android tablet utilizing a customized Cypres=
-s
-> > CG7153AM microcontroller (MCU) as its battery fuel gauge. It supports a
-> > single-cell battery and features a dual-color charging LED.
-> >
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
->
-> This looks mostly good to me, but I have some comments.
->
-> >  drivers/power/supply/Kconfig           |  12 +
-> >  drivers/power/supply/Makefile          |   1 +
-> >  drivers/power/supply/chagall-battery.c | 308 +++++++++++++++++++++++++
-> >  3 files changed, 321 insertions(+)
-> >  create mode 100644 drivers/power/supply/chagall-battery.c
->
-> [...]
->
-> > +static void chagall_leds_status_update(struct chagall_battery_data *cg=
-, int state)
-> > +{
-> > +     switch (state) {
-> > +     case POWER_SUPPLY_STATUS_FULL:
-> > +             led_set_brightness(&cg->amber_led, LED_OFF);
-> > +             led_set_brightness(&cg->white_led,  LED_ON);
-> > +             break;
-> > +
-> > +     case POWER_SUPPLY_STATUS_CHARGING:
-> > +             led_set_brightness(&cg->white_led, LED_OFF);
-> > +             led_set_brightness(&cg->amber_led,  LED_ON);
-> > +             break;
-> > +
-> > +     default:
-> > +             led_set_brightness(&cg->amber_led, LED_OFF);
-> > +             led_set_brightness(&cg->white_led, LED_OFF);
-> > +             break;
-> > +     }
-> > +}
->
-> Instead of doing this, you should setup LED triggers when
-> registering the LEDs. The white LED can use power-supply's full_trig
-> and the orange LED can use power-supply's charging_trig, which
-> should have the same effect.
->
-> > +static const enum power_supply_property chagall_battery_properties[] =
-=3D {
-> > +     POWER_SUPPLY_PROP_STATUS,
-> > +     POWER_SUPPLY_PROP_PRESENT,
-> > +     POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> > +     POWER_SUPPLY_PROP_VOLTAGE_MAX,
-> > +     POWER_SUPPLY_PROP_CURRENT_NOW,
-> > +     POWER_SUPPLY_PROP_CURRENT_MAX,
-> > +     POWER_SUPPLY_PROP_CAPACITY,
-> > +     POWER_SUPPLY_PROP_TEMP,
-> > +     POWER_SUPPLY_PROP_CHARGE_FULL,
-> > +     POWER_SUPPLY_PROP_CHARGE_NOW,
-> > +};
-> > +
-> > +static const unsigned int chagall_battery_prop_offs[] =3D {
-> > +     [POWER_SUPPLY_PROP_TEMP] =3D CHAGALL_REG_BATTERY_TEMPERATURE,
-> > +     [POWER_SUPPLY_PROP_VOLTAGE_NOW] =3D CHAGALL_REG_BATTERY_VOLTAGE,
-> > +     [POWER_SUPPLY_PROP_CURRENT_NOW] =3D CHAGALL_REG_BATTERY_CURRENT,
-> > +     [POWER_SUPPLY_PROP_CAPACITY] =3D CHAGALL_REG_BATTERY_CAPACITY,
-> > +     [POWER_SUPPLY_PROP_CURRENT_MAX] =3D CHAGALL_REG_BATTERY_CHARGING_=
-CURRENT,
-> > +     [POWER_SUPPLY_PROP_VOLTAGE_MAX] =3D CHAGALL_REG_BATTERY_CHARGING_=
-VOLTAGE,
-> > +     [POWER_SUPPLY_PROP_STATUS] =3D CHAGALL_REG_BATTERY_STATUS,
-> > +     [POWER_SUPPLY_PROP_CHARGE_NOW] =3D CHAGALL_REG_BATTERY_REMAIN_CAP=
-ACITY,
-> > +     [POWER_SUPPLY_PROP_CHARGE_FULL] =3D CHAGALL_REG_BATTERY_FULL_CAPA=
-CITY,
-> > +};
->
-> Please use the same order for chagall_battery_prop_offs and
-> chagall_battery_properties. Makes it a lot easier to see
-> that all options have been covered.
->
-> > +static int chagall_battery_get_value(struct chagall_battery_data *cg,
-> > +                                  enum power_supply_property psp, u32 =
-*val)
-> > +{
-> > +     if (psp >=3D ARRAY_SIZE(chagall_battery_prop_offs))
-> > +             return -EINVAL;
-> > +     if (!chagall_battery_prop_offs[psp])
-> > +             return -EINVAL;
-> > +
-> > +     /* Battery data is stored in 2 consecutive registers with little-=
-endian */
-> > +     return regmap_bulk_read(cg->regmap, chagall_battery_prop_offs[psp=
-], val, 2);
-> > +}
-> > +
-> > +static int chagall_battery_get_property(struct power_supply *psy,
-> > +                                     enum power_supply_property psp,
-> > +                                     union power_supply_propval *val)
-> > +{
-> > +     struct chagall_battery_data *cg =3D power_supply_get_drvdata(psy)=
-;
-> > +     int ret;
-> > +
-> > +     switch (psp) {
-> > +     case POWER_SUPPLY_PROP_PRESENT:
-> > +             val->intval =3D 1;
-> > +             break;
-> > +
-> > +     default:
-> > +             ret =3D chagall_battery_get_value(cg, psp, &val->intval);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             switch (psp) {
-> > +             case POWER_SUPPLY_PROP_TEMP:
-> > +                     val->intval -=3D TEMP_CELSIUS_OFFSET;
-> > +                     break;
-> > +
-> > +             case POWER_SUPPLY_PROP_VOLTAGE_MAX:
-> > +             case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> > +             case POWER_SUPPLY_PROP_CURRENT_MAX:
-> > +             case POWER_SUPPLY_PROP_CURRENT_NOW:
-> > +             case POWER_SUPPLY_PROP_CHARGE_FULL:
-> > +             case POWER_SUPPLY_PROP_CHARGE_NOW:
-> > +                     val->intval *=3D 1000;
-> > +                     break;
-> > +
-> > +             case POWER_SUPPLY_PROP_STATUS:
-> > +                     if (val->intval & BATTERY_FULL_CHARGED)
-> > +                             val->intval =3D POWER_SUPPLY_STATUS_FULL;
-> > +                     else if (val->intval & BATTERY_FULL_DISCHARGED)
-> > +                             val->intval =3D POWER_SUPPLY_STATUS_NOT_C=
-HARGING;
->
-> Have you tested this path? POWER_SUPPLY_STATUS_NOT_CHARGING is
-> intended to be used when the battery is neither charging nor
-> discharging. Does BATTERY_FULL_DISCHARGED mean, that the battery
-> is fully depleted and not providing any energy at all? Or is this
-> some kind of "battery level is criticial, you should attach a
-> power-supply now or the system will be turn off by itself soon"?
->
 
-This one is tricky. I have transferred this logic from downstream
-kernel and couldn't trigger BATTERY_FULL_DISCHARGED ever. It might be
-a brief state you describe as "battery level is criticial, you should
-attach a power-supply now or the system will be turn off by itself
-soon" but there is no such entry in POWER_SUPPLY_STATUS enum, so I
-assumed that  POWER_SUPPLY_STATUS_NOT_CHARGING co-responds to such
-state. If this is not the case I will just remove this entry.
 
-> > +                     else if (val->intval & BATTERY_DISCHARGING)
-> > +                             val->intval =3D POWER_SUPPLY_STATUS_DISCH=
-ARGING;
-> > +                     else
-> > +                             val->intval =3D POWER_SUPPLY_STATUS_CHARG=
-ING;
-> > +                     break;
-> > +
-> > +             default:
-> > +                     break;
-> > +             }
-> > +
-> > +             break;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void chagall_battery_poll_work(struct work_struct *work)
-> > +{
-> > +     struct chagall_battery_data *cg =3D
-> > +             container_of(work, struct chagall_battery_data, poll_work=
-.work);
-> > +     u32 state;
-> > +     int ret;
-> > +
-> > +     ret =3D chagall_battery_get_value(cg, POWER_SUPPLY_PROP_STATUS, &=
-state);
-> > +     if (ret)
-> > +             return;
-> > +
-> > +     if (state & BATTERY_FULL_CHARGED)
-> > +             state =3D POWER_SUPPLY_STATUS_FULL;
-> > +     else if (state & BATTERY_DISCHARGING)
-> > +             state =3D POWER_SUPPLY_STATUS_DISCHARGING;
-> > +     else
-> > +             state =3D POWER_SUPPLY_STATUS_CHARGING;
->
-> This basically duplicates the logic from chagall_battery_get_property(),
-> so put the translation logic into a helper function and use it in
-> both places.
->
-> Greetings,
->
-> -- Sebastian
+On 4/25/2025 1:17 PM, Manivannan Sadhasivam wrote:
+> On Thu, Apr 10, 2025 at 03:30:17PM +0530, Md Sadre Alam wrote:
+>> The BAM command descriptor provides only 18 bits to specify the NAND
+>> register offset.
+> 
+> s/NAND register offset/BAM register offset
+Ok
+> 
+>> Additionally, in the BAM command descriptor, the NAND
+>> register offset is supposed to be specified as "(NANDc base - BAM base)
+> 
+> Same here.
+Ok
+> 
+>> + reg_off". Since, the BAM controller expecting the value in the form of
+>> "NANDc base - BAM base", so that added a new field 'bam_offset' in the NAND
+>> properties structure and use it while preparing the command descriptor.
+>>
+>> Previously, the driver was specifying the NANDc base address in the BAM
+>> command descriptor.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 8d6b6d7e135e ("mtd: nand: qcom: support for command descriptor formation")
+>> Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>
+>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> - Mani
+> 
+>> ---
+>>   drivers/mtd/nand/qpic_common.c       | 8 ++++----
+>>   drivers/mtd/nand/raw/qcom_nandc.c    | 4 ++++
+>>   drivers/spi/spi-qpic-snand.c         | 1 +
+>>   include/linux/mtd/nand-qpic-common.h | 4 +---
+>>   4 files changed, 10 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/mtd/nand/qpic_common.c b/drivers/mtd/nand/qpic_common.c
+>> index e0ed25b5afea..4dc4d65e7d32 100644
+>> --- a/drivers/mtd/nand/qpic_common.c
+>> +++ b/drivers/mtd/nand/qpic_common.c
+>> @@ -236,21 +236,21 @@ int qcom_prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
+>>   	int i, ret;
+>>   	struct bam_cmd_element *bam_ce_buffer;
+>>   	struct bam_transaction *bam_txn = nandc->bam_txn;
+>> +	u32 offset;
+>>   
+>>   	bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_pos];
+>>   
+>>   	/* fill the command desc */
+>>   	for (i = 0; i < size; i++) {
+>> +		offset = nandc->props->bam_offset + reg_off + 4 * i;
+>>   		if (read)
+>>   			bam_prep_ce(&bam_ce_buffer[i],
+>> -				    nandc_reg_phys(nandc, reg_off + 4 * i),
+>> -				    BAM_READ_COMMAND,
+>> +				    offset, BAM_READ_COMMAND,
+>>   				    reg_buf_dma_addr(nandc,
+>>   						     (__le32 *)vaddr + i));
+>>   		else
+>>   			bam_prep_ce_le32(&bam_ce_buffer[i],
+>> -					 nandc_reg_phys(nandc, reg_off + 4 * i),
+>> -					 BAM_WRITE_COMMAND,
+>> +					 offset, BAM_WRITE_COMMAND,
+>>   					 *((__le32 *)vaddr + i));
+>>   	}
+>>   
+>> diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+>> index 5eaa0be367cd..ef2dd158ca34 100644
+>> --- a/drivers/mtd/nand/raw/qcom_nandc.c
+>> +++ b/drivers/mtd/nand/raw/qcom_nandc.c
+>> @@ -2360,6 +2360,7 @@ static const struct qcom_nandc_props ipq806x_nandc_props = {
+>>   	.supports_bam = false,
+>>   	.use_codeword_fixup = true,
+>>   	.dev_cmd_reg_start = 0x0,
+>> +	.bam_offset = 0x30000,
+>>   };
+>>   
+>>   static const struct qcom_nandc_props ipq4019_nandc_props = {
+>> @@ -2367,6 +2368,7 @@ static const struct qcom_nandc_props ipq4019_nandc_props = {
+>>   	.supports_bam = true,
+>>   	.nandc_part_of_qpic = true,
+>>   	.dev_cmd_reg_start = 0x0,
+>> +	.bam_offset = 0x30000,
+>>   };
+>>   
+>>   static const struct qcom_nandc_props ipq8074_nandc_props = {
+>> @@ -2374,6 +2376,7 @@ static const struct qcom_nandc_props ipq8074_nandc_props = {
+>>   	.supports_bam = true,
+>>   	.nandc_part_of_qpic = true,
+>>   	.dev_cmd_reg_start = 0x7000,
+>> +	.bam_offset = 0x30000,
+>>   };
+>>   
+>>   static const struct qcom_nandc_props sdx55_nandc_props = {
+>> @@ -2382,6 +2385,7 @@ static const struct qcom_nandc_props sdx55_nandc_props = {
+>>   	.nandc_part_of_qpic = true,
+>>   	.qpic_version2 = true,
+>>   	.dev_cmd_reg_start = 0x7000,
+>> +	.bam_offset = 0x30000,
+>>   };
+>>   
+>>   /*
+>> diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
+>> index a2af731049d4..89c774bf85a6 100644
+>> --- a/drivers/spi/spi-qpic-snand.c
+>> +++ b/drivers/spi/spi-qpic-snand.c
+>> @@ -1605,6 +1605,7 @@ static void qcom_spi_remove(struct platform_device *pdev)
+>>   
+>>   static const struct qcom_nandc_props ipq9574_snandc_props = {
+>>   	.dev_cmd_reg_start = 0x7000,
+>> +	.bam_offset = 0x30000,
+>>   	.supports_bam = true,
+>>   };
+>>   
+>> diff --git a/include/linux/mtd/nand-qpic-common.h b/include/linux/mtd/nand-qpic-common.h
+>> index cd7172e6c1bb..e8462deda6db 100644
+>> --- a/include/linux/mtd/nand-qpic-common.h
+>> +++ b/include/linux/mtd/nand-qpic-common.h
+>> @@ -199,9 +199,6 @@
+>>    */
+>>   #define dev_cmd_reg_addr(nandc, reg) ((nandc)->props->dev_cmd_reg_start + (reg))
+>>   
+>> -/* Returns the NAND register physical address */
+>> -#define nandc_reg_phys(chip, offset) ((chip)->base_phys + (offset))
+>> -
+>>   /* Returns the dma address for reg read buffer */
+>>   #define reg_buf_dma_addr(chip, vaddr) \
+>>   	((chip)->reg_read_dma + \
+>> @@ -454,6 +451,7 @@ struct qcom_nand_controller {
+>>   struct qcom_nandc_props {
+>>   	u32 ecc_modes;
+>>   	u32 dev_cmd_reg_start;
+>> +	u32 bam_offset;
+>>   	bool supports_bam;
+>>   	bool nandc_part_of_qpic;
+>>   	bool qpic_version2;
+>> -- 
+>> 2.34.1
+>>
+> 
