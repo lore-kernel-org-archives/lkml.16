@@ -1,244 +1,176 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC25269832
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8639C26A0CA
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745963805; cv=none; b=DkqbJQWeVC2ugEolpNt/rknFvpAi+xrdpLqGu4lKe41vM1VRg+KwJQphoEAu44lth1G614+VD7Db5yjCXP0xMKzpgtk3IHk61O2vqeqQuLBlVjqc8BbNYciyYVDAlHtlHaYDiVdZ368w5Bxo4h3sn/WLhCjMBb0cRgWS4aj6/dk=
+	t=1745963852; cv=none; b=a/9KI5NR/zKS7lVNc9HvfAE4EvqaadJeEDOYDSLPiS/ULLmktGeLJeUrMDgOxgYWPJTylgVd2uzJMOtk2DXcX0HlID4sf5ZPU3I2P9CFc/7KJLqkmi7XQWN/O+hH6xZ4Whu8pFOTVMaCm0sDwDm5GcHjbm/Zdk4gGacw65MIjwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745963805; c=relaxed/simple;
-	bh=G7glrdtwa55zyuDZmnQGTuV3cqpStTyHqlHnn6fYgJM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tFpPkfA95hWt1BzoVefN0Sa03yn5gLEfCmNehmlZSNvevwhikHoQLLOTa+Q3DPY1vvw5N0SDfHnhC9rQiKuQAi8wWges6ixIcvWrK/VcSjzg3Z4snwxR0DhKtO0mjjSBHcGS7JqTbtowXrDdBTSlhFdc4qCxusvp0YAGODRXqzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=usrq9h2j; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745963852; c=relaxed/simple;
+	bh=1P+KqJCl+BT8ecP/xdKBgPfjI1+DmDlsxbMLuEAGIAo=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e3GNrkjLn0ZBVfNbOlaqBwm9mBWaKZn2jV9TzVqI4WBq4TJRvZhQMKdB6b6zt7rlhAMmrfti65Z9LAyvjoZzJ9btAKtQtNznTpPwdF7t3trQwDZ0XJ7v1amNC5tw+RlqoH/z+cJR4ftpSnRqC8Y0FXbqmsaIpK0r9OmUrPwOHOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H3ZM0fX6; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="usrq9h2j"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47e9fea29easo166921cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:56:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3ZM0fX6"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8fce04655so70081176d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:57:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745963802; x=1746568602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DHPStCfNoeO92wT2yn6jdgylDS3AOWBgTDjw60mOQWk=;
-        b=usrq9h2jDgOFEUG2XrQxAZi+KWoyKhHFxvy3TzxXwSDymrwDW16FeZUvHFjiTwEMCS
-         f5i6tBym5xZS2DfuaPh/25BRUcrVAdUUselWJfODDAZ+nOM/tZbXpTeQfh9Ao7DkoNx7
-         pZ0X2GE6h3nDmrb7XsvJJrY2zKfshyy0OTk+q95U4CVP5nAk377K1+AHmtLC4G+/9Z7o
-         2xNxuPJSnOMYAhK8inCaViGdXqBT3hOBdnJSjuotB2soeGARs4QO1vumSg/8NfoUURph
-         UqqsIA+mEi3wz7jOx1BrjIOlU/+p+Spy55bRPpj45BxZASJjQCDMtXcJb4N4BoES5hrN
-         nxsw==
+        d=chromium.org; s=google; t=1745963848; x=1746568648; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gq+kwZN/MyVZc1uW7z6nPFptfAEWXYUqK/icC7+T8p0=;
+        b=H3ZM0fX6BmGMH8HxSWv7t/Wlxi6HwN5zXR1ZntTqdyAQWd0TIjTM+IVN65+Xc9YBP0
+         YUXLt8QR9SSLGzAZ9sNKN5FGZ/ppOUDalZTe60/P4mpJpqLUIaaNpIlmSTu04kJvumN0
+         OTHaK+b2s9U1eu6e7o0PvP1WsDFO7veeWskoA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745963802; x=1746568602;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DHPStCfNoeO92wT2yn6jdgylDS3AOWBgTDjw60mOQWk=;
-        b=KbqGb+cFg4I7iiIbnw4rXMjqfomFb6cgIt6jrnH/xudoW/s0Gjdf4Y52SYYkBe19qy
-         2k4CGhkWda/EiYO8/4K2DjcnczvSxV0HkkMafzJMVNk1+hGtFf9EI8oF65VULPFxU+78
-         YS70BENXf5SF5OAjcrmnaMMObGznCAcQG7z7MSRW46cEwoMP15ZuabA6EHM2UnzvzQs0
-         gyHAMKQq0eyMq+YDumK2/HS1UPrRkDyE9najuzuotVQbb+AsN4iHX/b9s1oaD8Kn/Pn3
-         H3vLc3ICGk/IOutuhIqEREuTmwBIsQitKVxDSlOqJlo0kTAABInxCEfk4bFeIevyluqc
-         FLhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVD8oPus3e9FOtgW84CJ8NrdcJpjY3BdC6Z5Gaj2JjUJAmc8TFrkTvZSbqxkeX/R9eYu2PkRUx0O8vMga4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRlVT1JruZmIoY6QCx3Y+flSKWVHdIj9bnTw6VVk2/cyDufmMi
-	Gxl2TXcCM4FEF5DiTMCpyvp6IONshffKJ3qhy3+F0Yps9e/VO7E3nvEuMVESAtp5RZGD2wf0I1S
-	EcRDXE63VCMQDrzW6pYgICF4n1khrlVXqrkb4
-X-Gm-Gg: ASbGnctIS0447xpxYs9ojjJEkWGU7hprwnH1JqwY5/584XoFr7ql5bSHa79Np0WVtaJ
-	afOPG/tgIlgxCh1Udo34q8HWF/A/on9pBHEONHVMzmm9DYzRLD3YTinLSg0h5pZ293WbPzayWbf
-	iB77OzNFn+ubIyE8uNYU4bkY34istsNNa03bHZEf+Y7uY4XBmqOAfm
-X-Google-Smtp-Source: AGHT+IHnm3oxMMCggQ4zYDBc/EviFjkF3Acb+O+Bqo5djYoDiGVrrZLyLpU3ATh7ELc5quPVw0I9UjhXoBryKd7Lkk4=
-X-Received: by 2002:ac8:7f93:0:b0:486:be94:7c21 with SMTP id
- d75a77b69052e-489b9b3576bmr1402081cf.14.1745963802313; Tue, 29 Apr 2025
- 14:56:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745963848; x=1746568648;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gq+kwZN/MyVZc1uW7z6nPFptfAEWXYUqK/icC7+T8p0=;
+        b=Qi5ZLpqJLWlig8m03t0mXEnMyQIyD7DAzVtz2jbWxPTRZu13PNbqvR3iXbrKzlwmV1
+         bqwQrE003VnHfBgH5U2uL8/sctmOvodb5y41DPbCgOWIcjP7h+WpXwVxC1JP8HPqRDoA
+         1R6db+4uE+i8vyXYgmhQ9pfjwLvJ8oZbHy52pGvIJc/wTi2zE0vw9/zbq4n/zF4FoLlf
+         3ITqlpnF9T5YYxgG2IjcN6frzETjXjsIxx/c+U3e8iG6TQABPCOfJsAwmKzM2b5GHtRD
+         p0jtTEotI05+5XlF5z/kVbl66eljz+ls41LES6G39Nh0M0kP49ElhplwnPly7NoX27AC
+         zqPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuq2XSQzW5Mn1MOU2kQoo1P01VE2rz7l0TMiZrU9uEYgfYEY4Yts3jEo20cpGo4APL5FUGS9c0Kxuw164=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze4pnUvrzctUlw9e9DJopps5zNkOElmoczA7OiZOe2m2vxvsJA
+	n9M2sHP7DpSzuBRC6JF3rXcUrk9i1fPmUV3wgGo8kHnSDeS8k2NGQd4y1Z9vw7X8y1p2x2aspEv
+	Mb8yfoWi4SDBoq+pE3/ottMLqvDE2ZGSBSfbgs1496ttYtcw=
+X-Gm-Gg: ASbGncsm2PDpq5jcMMjwRXwmZwyu3LJYFHuN+YdhXgyTwstKdM0JU9aO48A0i09jXe0
+	o7PAYNX40qXZhKUcSLqAdOe7lSkmhK3CbcPN7TonW+ErqhU/PVqSq4wv/Hd5v1R8olO0jZ/gm7w
+	vCxDX72Br6zU/Gigi/qrku0Uwg4DT6dTvEuI5SqW8/K4e3GHFGfg==
+X-Google-Smtp-Source: AGHT+IGFRFcmj203HgxtSiaafsTGGAnI40IQFnCG9K6ptPppPzLUX6brI2DPTkwS2p0VSLmxrTrYIiPhDp6xRk6AwAw=
+X-Received: by 2002:a05:6214:e8e:b0:6f2:d25e:8d17 with SMTP id
+ 6a1803df08f44-6f4fced985cmr17148876d6.21.1745963848451; Tue, 29 Apr 2025
+ 14:57:28 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 29 Apr 2025 14:57:27 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 29 Apr 2025 14:57:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
- <aBC7E487qDSDTdBH@tiehlicka> <87selrrpqz.fsf@linux.dev>
-In-Reply-To: <87selrrpqz.fsf@linux.dev>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 29 Apr 2025 14:56:31 -0700
-X-Gm-Features: ATxdqUGmHhJ_UTjKXo9nohfLLfKUi3iJT5843r-eaFIU3HLqrfEhnF9PVMNh5vQ
-Message-ID: <CAJuCfpEToCmf6rdA6tNpWrzw70Er6Q4ZWOwn+ruCWpU=ZEEkmA@mail.gmail.com>
-Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>, 
-	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
-	bpf@vger.kernel.org
+In-Reply-To: <npnpujjfonvzhf5c4upgajhx6hu5uqmerewmbqprvl7a3xrqgm@datubwgyucby>
+References: <20250416000208.3568635-1-swboyd@chromium.org> <20250416000208.3568635-7-swboyd@chromium.org>
+ <npnpujjfonvzhf5c4upgajhx6hu5uqmerewmbqprvl7a3xrqgm@datubwgyucby>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.12.dev8+g17a99a841c4b
+Date: Tue, 29 Apr 2025 14:57:27 -0700
+X-Gm-Features: ATxdqUHSfTHDCNbiMAyib_Rr1yPvdu5LV1ChItCTDCW7J5DkmOrjGVP9y9dJHm0
+Message-ID: <CAE-0n51eQns8ifUzc36FNSSQJ7WFd_8hZ3JnNcFvgrTrvqRhow@mail.gmail.com>
+Subject: Re: [PATCH 6/7] platform/chrome: cros_ec_typec: Add support for DP
+ altmode via drm_bridge
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev, 
+	Pin-yen Lin <treapking@chromium.org>, 
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>, 
+	Jameson Thies <jthies@google.com>, Andrei Kuchynski <akuchynski@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 7:45=E2=80=AFAM Roman Gushchin <roman.gushchin@linu=
-x.dev> wrote:
->
-> Michal Hocko <mhocko@suse.com> writes:
->
-> > On Mon 28-04-25 03:36:05, Roman Gushchin wrote:
-> >> This patchset adds an ability to customize the out of memory
-> >> handling using bpf.
-> >>
-> >> It focuses on two parts:
-> >> 1) OOM handling policy,
-> >> 2) PSI-based OOM invocation.
-> >>
-> >> The idea to use bpf for customizing the OOM handling is not new, but
-> >> unlike the previous proposal [1], which augmented the existing task
-> >> ranking-based policy, this one tries to be as generic as possible and
-> >> leverage the full power of the modern bpf.
-> >>
-> >> It provides a generic hook which is called before the existing OOM
-> >> killer code and allows implementing any policy, e.g.  picking a victim
-> >> task or memory cgroup or potentially even releasing memory in other
-> >> ways, e.g. deleting tmpfs files (the last one might require some
-> >> additional but relatively simple changes).
+Quoting Dmitry Baryshkov (2025-04-24 03:51:17)
+> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> > index 2cbe29f08064..27324cf0c0c6 100644
+> > --- a/drivers/platform/chrome/cros_ec_typec.c
+> > +++ b/drivers/platform/chrome/cros_ec_typec.c
+> > @@ -337,6 +340,9 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+> >       u32 port_num = 0;
 > >
-> > Makes sense to me. I still have a slight concern though. We have 3
-> > different oom handlers smashed into a single one with special casing
-> > involved. This is manageable (although not great) for the in kernel
-> > code but I am wondering whether we should do better for BPF based OOM
-> > implementations. Would it make sense to have different callbacks for
-> > cpuset, memcg and global oom killer handlers?
+> >       nports = device_get_child_node_count(dev);
+> > +     /* Don't count any 'ports' child node */
+> > +     if (of_graph_is_present(dev->of_node))
+> > +             nports--;
 >
-> Yes, it's certainly possible. If we go struct_ops path, we can even
-> have both the common hook which handles all types of OOM's and separate
-> hooks for each type. The user then can choose what's more convenient.
-> Good point.
+> Should this be a separate commit?
 >
-> >
-> > I can see you have already added some helper functions to deal with
-> > memcgs but I do not see anything to iterate processes or find a process=
- to
-> > kill etc. Is that functionality generally available (sorry I am not
-> > really familiar with BPF all that much so please bear with me)?
+> >       if (nports == 0) {
+> >               dev_err(dev, "No port entries found.\n");
+> >               return -ENODEV;
+> > @@ -350,6 +356,10 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+> >       /* DT uses "reg" to specify port number. */
+> >       port_prop = dev->of_node ? "reg" : "port-number";
+> >       device_for_each_child_node(dev, fwnode) {
+> > +             /* An OF graph isn't a connector */
+> > +             if (fwnode_name_eq(fwnode, "ports"))
+> > +                     continue;
+> > +
 >
-> Yes, task iterator is available since v6.7:
-> https://docs.ebpf.io/linux/kfuncs/bpf_iter_task_new/
->
-> >
-> > I like the way how you naturalely hooked into existing OOM primitives
-> > like oom_kill_process but I do not see tsk_is_oom_victim exposed. Are
-> > you waiting for a first user that needs to implement oom victim
-> > synchronization or do you plan to integrate that into tasks iterators?
->
-> It can be implemented in bpf directly, but I agree that it probably
-> deserves at least an example in the test or a separate in-kernel helper.
-> In-kernel helper is probably a better idea.
->
-> > I am mostly asking because it is exactly these kind of details that
-> > make the current in kernel oom handler quite complex and it would be
-> > great if custom ones do not have to reproduce that complexity and only
-> > focus on the high level policy.
->
-> Totally agree.
->
-> >
-> >> The second part is related to the fundamental question on when to
-> >> declare the OOM event. It's a trade-off between the risk of
-> >> unnecessary OOM kills and associated work losses and the risk of
-> >> infinite trashing and effective soft lockups.  In the last few years
-> >> several PSI-based userspace solutions were developed (e.g. OOMd [3] or
-> >> systemd-OOMd [4]). The common idea was to use userspace daemons to
-> >> implement custom OOM logic as well as rely on PSI monitoring to avoid
-> >> stalls.
-> >
-> > This makes sense to me as well. I have to admit I am not fully familiar
-> > with PSI integration into sched code but from what I can see the
-> > evaluation is done on regular bases from the worker context kicked off
-> > from the scheduler code. There shouldn't be any locking constrains whic=
-h
-> > is good. Is there any risk if the oom handler took too long though?
->
-> It's a good question. In theory yes, it can affect the timing of other
-> PSI events. An option here is to move it into a separate work, however
-> I'm not sure if it worth the added complexity. I actually tried this
-> approach in an earlier version of this patchset, but the problem was
-> that the code for scheduling this work should be dynamically turned
-> on/off when a bpf program is attached/detached, otherwise it's an
-> obvious cpu overhead.
-> It's doable, but Idk if it's justified.
->
-> >
-> > Also an important question. I can see selftests which are using the
-> > infrastructure. But have you tried to implement a real OOM handler with
-> > this proposed infrastructure?
->
-> Not yet. Given the size and complexity of the infrastructure of my
-> current employer, it's not a short process. But we're working on it.
+> ... together with this chunk.
 
-Hi Roman,
-This might end up being very useful for Android. Since we have a
-shared current employer, we might be able to provide an earlier test
-environment for this concept on Android and speed up development of a
-real OOM handler. I'll be following the development of this patchset
-and will see if we can come up with an early prototype for testing.
+I check for the of_graph being present below. It's all sorta related.
 
 >
+> >               if (fwnode_property_read_u32(fwnode, port_prop, &port_num)) {
+> >                       ret = -EINVAL;
+> >                       dev_err(dev, "No port-number for port, aborting.\n");
+> > @@ -417,6 +427,42 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
+> >       return ret;
+> >  }
 > >
-> >> [1]: https://lwn.net/ml/linux-kernel/20230810081319.65668-1-zhouchuyi@=
-bytedance.com/
-> >> [2]: https://lore.kernel.org/lkml/20171130152824.1591-1-guro@fb.com/
-> >> [3]: https://github.com/facebookincubator/oomd
-> >> [4]: https://www.freedesktop.org/software/systemd/man/latest/systemd-o=
-omd.service.html
-> >>
-> >> ----
-> >>
-> >> This is an RFC version, which is not intended to be merged in the curr=
-ent form.
-> >> Open questions/TODOs:
-> >> 1) Program type/attachment type for the bpf_handle_out_of_memory() hoo=
-k.
-> >>    It has to be able to return a value, to be sleepable (to use cgroup=
- iterators)
-> >>    and to have trusted arguments to pass oom_control down to bpf_oom_k=
-ill_process().
-> >>    Current patchset has a workaround (patch "bpf: treat fmodret tracin=
-g program's
-> >>    arguments as trusted"), which is not safe. One option is to fake ac=
-quire/release
-> >>    semantics for the oom_control pointer. Other option is to introduce=
- a completely
-> >>    new attachment or program type, similar to lsm hooks.
-> >> 2) Currently lockdep complaints about a potential circular dependency =
-because
-> >>    sleepable bpf_handle_out_of_memory() hook calls might_fault() under=
- oom_lock.
-> >>    One way to fix it is to make it non-sleepable, but then it will req=
-uire some
-> >>    additional work to allow it using cgroup iterators. It's intervened=
- with 1).
-> >
-> > I cannot see this in the code. Could you be more specific please? Where
-> > is this might_fault coming from? Is this BPF constrain?
+> > +static int cros_typec_dp_bridge_attach(struct drm_bridge *bridge,
+> > +                                    enum drm_bridge_attach_flags flags)
+> > +{
+> > +     return flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR ? 0 : -EINVAL;
+> > +}
+> > +
+> > +static const struct drm_bridge_funcs cros_typec_dp_bridge_funcs = {
+> > +     .attach = cros_typec_dp_bridge_attach,
+> > +};
+> > +
+> > +static int cros_typec_init_dp_bridge(struct cros_typec_data *typec)
+> > +{
+> > +     struct device *dev = typec->dev;
+> > +     struct cros_typec_dp_bridge *dp_bridge;
+> > +     struct drm_bridge *bridge;
+> > +     struct device_node *np = dev->of_node;
+> > +
+> > +     /* Not capable of DP altmode switching. Ignore. */
+> > +     if (!of_graph_is_present(np))
+> > +             return 0;
+> > +
+> > +     dp_bridge = devm_kzalloc(dev, sizeof(*dp_bridge), GFP_KERNEL);
+> > +     if (!dp_bridge)
+> > +             return -ENOMEM;
+> > +     typec->dp_bridge = dp_bridge;
+> > +
+> > +     bridge = &dp_bridge->bridge;
+> > +     bridge->funcs = &cros_typec_dp_bridge_funcs;
+> > +     bridge->of_node = np;
+> > +     bridge->type = DRM_MODE_CONNECTOR_DisplayPort;
+> > +     if (!device_property_read_bool(dev, "no-hpd"))
+> > +             bridge->ops |= DRM_BRIDGE_OP_HPD;
+> > +
+> > +     return devm_drm_bridge_add(dev, bridge);
 >
-> It's in __bpf_prog_enter_sleepable(). But I hope I can make this hook
-> non-sleepable (by going struct_ops path) and the problem will go away.
+> Could you please use aux-hpd-bridge instead?
+
+I can extend that to call some function when hpd changes. If I make a
+device node for the mux and the TCPCs then it may be possible to push
+everything into aux-hpd-bridge and use it for all three of them.
+
 >
-> >
-> >> 3) What kind of hierarchical features are required? Do we want to nest=
- oom policies?
-> >>    Do we want to attach oom policies to cgroups? I think it's too comp=
-licated,
-> >>    but if we want a full hierarchical support, it might be required.
-> >>    Patch "mm: introduce bpf_get_root_mem_cgroup() bpf kfunc" exposes t=
-he true root
-> >>    memcg, which is potentially outside of the ns of the loading proces=
-s. Does
-> >>    it require some additional capabilities checks? Should it be remove=
-d?
-> >
-> > Yes, let's start simple and see where we get from there.
+> BTW: what is the usecase for the no-hpd handling here?
 >
-> Agree.
->
-> Thank you for taking a look and your comments/ideas!
->
+
+Looks like you figured it out. I want to capture the HPD state so I can
+then go read the EC mux to figure out which way the mux is pointing. On
+trogdor the EC doesn't tell us which typec port has HPD asserted so we
+snoop the HPD state from the drm_bridge, read the mux when HPD changes,
+and pick the right typec port while also injecting HPD into the state of
+the port. The no-hpd property is used on Trogdor to indicate that the
+bridge in the EC doesn't signal HPD properly, ensuring the previous
+bridge handles the HPD detection.
