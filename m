@@ -1,99 +1,143 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5319525E47B;
-	Tue, 29 Apr 2025 20:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3735A247299
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957931; cv=none; b=M8mC1aw507mlNkDiKkUCTvDEL+5aYWq4OQCBaiwbxVcM+SYSpkHikpD90tFP5huj1tAaT55kQMBzhZFqn0oXmjxwDH0BevKM8wJgU0DRzEfm5QsCs5GqHIaDbjkzn9P6gEgiESSzy283XoPaFZwVaRu4Et/kdUdySDmjpdDQxWk=
+	t=1745957993; cv=none; b=Q0ZJCrTcIPaXPfwBg7rfzSB6YxwGAgf6m9TZMKrpjql0oe8KFBNCl59KYTvd6xrY/QCkkDF+XTnzFr8cW4ILkQdTsBmsrQP3g3E7at1ues5jIubKCX4sdy/e7xec2bmSe+ZYu5kL0A69TlQURbsD02FeAhXlpcUBNaFxL6Y6xH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957931; c=relaxed/simple;
-	bh=sDMxoCpucl7FxGwnSXWDMmTs32K9ueRzoHGHU98VOYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hv9E1wRT/W28X/yLnvwUlt7Iiuyw7lAq/QjhdHLGE9AKxZxSap04T90qMWNwpkITzvhIwv7QFwVk7BuOYM66rpYM7RjJRDN5Qzl5HSnndYFflkCm62WGgmko5dnegC/SsmXdY+M/QvkeYXQfQf5fIMYTzrqlZ5q7BtSOjyOPayk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=M8q/mjVp; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1745957993; c=relaxed/simple;
+	bh=jZGhVKHkpRai0Y2/EIkeTlYu8tYQjbtzz7neJZoq66Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ROHMhcNbfbQkxSEs9+iE6z1zfUJNFyPVQ4xy4x/W1OukxaKFznhkjlDlbK34f6h3hj82DU9+pVGuUwOoFz4ZyHvvSzuTln88BMZ722bq75tBsLV0DWSIiPeMrrlIwjjv7ARHsUnaezAO8LJpsxccvq8Rxu4IxcbSvUwm9P7IFRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jITlPYfD; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="M8q/mjVp"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 625A210273DB0;
-	Tue, 29 Apr 2025 22:18:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745957926; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=03RJ6CVBBgFmy/eiFwV71/JOGoxqIX2jDinYEZTMhQQ=;
-	b=M8q/mjVpAHYHYEZK5YFKnqmW2WyeCR3hPZaXaWCvE8fWTg1BScBirgNma9cDe3zWIwvBuy
-	lXNBM5pm25Bl+A5GQiqbKS3/vnZIHSSvoPGq2SvIeb12ujTmZHTETNSqCoPeGzFN1EvmZL
-	DZwMBGoirIcVd129wCZXOG9BSLhr9oBXI2oMGxjdmfjGGTNDr2mHFFJdXpg955AT98q/rg
-	tkBRrpBmmiJQkaehmhrZm0O9hOmK5ss4kIXtFngveHnh3W7yRgi1z4dahMv1AmsVrXktiC
-	tfl1wKnEc3ZrDqce093H0Y/10ZOxKy3Z8rMaogMX1+1IuF4wBYf2aM03ADVVsw==
-Date: Tue, 29 Apr 2025 22:18:41 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.14 000/311] 6.14.5-rc1 review
-Message-ID: <aBE0IVi4gqCLpdu7@duo.ucw.cz>
-References: <20250429161121.011111832@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jITlPYfD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745957989;
+	bh=jZGhVKHkpRai0Y2/EIkeTlYu8tYQjbtzz7neJZoq66Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jITlPYfDQ/id0t99pwZkpoU/2TR+rQ+XvgxpzVJS3VVbGxJF2VO19OTOxMWLHUp8U
+	 Kc5NNRgafkbAyvVnO2zrmKBZ8TTJOqUbXEuN2L4WdJfyd5N2uVJlwIowDKCZtAZV2x
+	 FRAoaDWqYL4LFXOpnX6IhBENO5Wv2eJ00wEAeOTfMRvpgdrB4+kU+8iURJJigYg4Tb
+	 vLKoQIwLIKx5Nd5sRfFuQkVsJ/reDxVh7+1rihIomiTiWzInLb1svQ8X5LuBtrl7g1
+	 3BCnbWOm91/4XOo/yEesCjuxrrCRNABYwUDklKbNbN98SFZKATgUoh0hfCNotAt5mC
+	 CO30rEN3EQzWQ==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8965A17E09B5;
+	Tue, 29 Apr 2025 22:19:48 +0200 (CEST)
+Date: Tue, 29 Apr 2025 22:19:43 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Steven Price <steven.price@arm.com>, Liviu Dudau
+ <liviu.dudau@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/panthor: Fix build warning when DEBUG_FS is
+ disabled
+Message-ID: <20250429182207.11a26b68@collabora.com>
+In-Reply-To: <20250424184041.356191-1-adrian.larumbe@collabora.com>
+References: <20250424184041.356191-1-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2IQwKLXhs60ALlL1"
-Content-Disposition: inline
-In-Reply-To: <20250429161121.011111832@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
-
-
---2IQwKLXhs60ALlL1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Thu, 24 Apr 2025 19:40:34 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-> This is the start of the stable review cycle for the 6.14.5 release.
-> There are 311 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Commit a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM
+> objects over DebugFS") causes a build warning and linking error when
+> built without support for DebugFS, because of a non-inline non-static
+> function declaration in a header file.
+>=20
+> On top of that, the function is only being used inside a single
+> compilation unit, so there is no point in exposing it as a global
+> symbol.
+>=20
+> This is a follow-up from Arnd Bergmann's first fix.
+> Also move panthor_gem_debugfs_set_usage_flags() into panthor_gem.c and
+> declare it static.
+>=20
+> Fixes: a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM objec=
+ts over DebugFS")
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Closes: https://lore.kernel.org/dri-devel/20250424142419.47b9d457@collabo=
+ra.com/T/#t
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
 
-CIP testing did not find any problems here:
+Queued to drm-misc-next.
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.14.y
+> ---
+>  drivers/gpu/drm/panthor/panthor_gem.c | 5 +++++
+>  drivers/gpu/drm/panthor/panthor_gem.h | 8 --------
+>  2 files changed, 5 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/pant=
+hor/panthor_gem.c
+> index 2dcf308094b2..7c00fd77758b 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
+> @@ -42,11 +42,16 @@ static void panthor_gem_debugfs_bo_rm(struct panthor_=
+gem_object *bo)
+>  	mutex_unlock(&ptdev->gems.lock);
+>  }
+> =20
+> +static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_objec=
+t *bo, u32 usage_flags)
+> +{
+> +	bo->debugfs.flags =3D usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INIT=
+IALIZED;
+> +}
+>  #else
+>  static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
+>  				       struct panthor_gem_object *bo)
+>  {}
+>  static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
+> +static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_objec=
+t *bo, u32 usage_flags) {}
+>  #endif
+> =20
+>  static void panthor_gem_free_object(struct drm_gem_object *obj)
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
+hor/panthor_gem.h
+> index 4641994ddd7f..4dd732dcd59f 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> @@ -212,14 +212,6 @@ void panthor_kernel_bo_destroy(struct panthor_kernel=
+_bo *bo);
+>  #ifdef CONFIG_DEBUG_FS
+>  void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
+>  				   struct seq_file *m);
+> -static inline void
+> -panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 u=
+sage_flags)
+> -{
+> -	bo->debugfs.flags =3D usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INIT=
+IALIZED;
+> -}
+> -
+> -#else
+> -void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, =
+u32 usage_flags) {};
+>  #endif
+> =20
+>  #endif /* __PANTHOR_GEM_H__ */
+>=20
+> base-commit: 3a2b7389feea9a7afd18d58cda59b7a989445f38
 
-6.12 and 6.6 pass our testing, too:
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.12.y
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.6.y
-
-I'm still retrying 5.4 and 5.15.
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---2IQwKLXhs60ALlL1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaBE0IQAKCRAw5/Bqldv6
-8ou6AKC9vt9++Fuyt36MUw6sabcV7fSCpgCghmJkgIJBeDshvTrNjSMf+ze4B2I=
-=jCHC
------END PGP SIGNATURE-----
-
---2IQwKLXhs60ALlL1--
