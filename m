@@ -1,164 +1,120 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C29622173C
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ADA2550CC;
+	Tue, 29 Apr 2025 21:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745962582; cv=none; b=Yphdn82959gCrSQibQ8jBiGpCe1DU9YPARHjPSE/Tk21UDQbtTqlW44ess26Cg3hD8ISs0Qjofu16CoBMfzdAae1wSmUQHh0Mwk//TlwTYF2KzL8F6KlaW/BGEN3kBFHxEhqAlmu4OMt6Wp7nEQPqnq3Yfp4miEtx73WKnWbbKg=
+	t=1745962732; cv=none; b=VggKo7XqSmV0tRpS87t6NZ7VXhQKSNVopcNNrUdHtJOP1xVP8+SucDaqnXFmzg2XTQI4qTvoxrEVHL3iTcEaH3xCLUDiRq110WI8uUN+4D3/R/9n3KiRHhwsy7bhCtjrf8Tbzsjw+Thfl6xeZfPe5SGsiRog9bDDdQvzicH8FO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745962582; c=relaxed/simple;
-	bh=pjG0WRYPmuFXgp5l4sOIxBPQ0JCTtzB9fn/bSzP4aws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=phXdd4iT58CNkCGW3DcrM+3psP6Pk7KYcKE+YhRYlxbP6ZlA5iveLmJgSQxJXwOGrjhaO/tIRyFJAGCpdY7QvIiR1w2WKa1XmNb+yDuQbE+hOKenuaL21FSIZ86xCOOizHGlGNV0kjNR1Fk5+Yq6vQCJEqhoD/DEReo8BSWFzQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h3WWJR3K; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745962732; c=relaxed/simple;
+	bh=mXA21M6mTenzQacSVg7jO63XICl0pQTaU9Sf1g+noZk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J+BNOVY6RG0cPYg1kpZR6O/ocvTUu1I2SzKb71r9MgzNof7QTnk+s8Amq9kuqHdnJfqULqLbib65cbXmMLWDzNRrpYXZFu4i9NJZSx5d91/Z+yDIPlPPitC/hpoIoIxfXg63YrjQt7NqMer4HwYDaxM9FeKGHmq1ufXc77C1WMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKST6pdr; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3WWJR3K"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2264c9d0295so238335ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:36:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKST6pdr"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c2d427194so54002211fa.0;
+        Tue, 29 Apr 2025 14:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745962580; x=1746567380; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VFHhD4L18F4DbheB1ANr+oLMK0ky8CpJtw12v2WCTVo=;
-        b=h3WWJR3KHXoQt4F4HvEAoj3cZePfCxVWD/1YrVTrrUx/6XLQ9Mj7T3CWXVaterMCIj
-         o+f91xIgBixGEZC0C2r87PY8UA+jmJlZQW3xeRXM4TO5H96RLlP53C4ymC5tcnVJx/AK
-         Z0YLKoHsCSfPw9vVkrM4v6TAQJSZDfAFSVOdTCNJiHJh8DJhbsmVYktXfPSzQ8FJKXeq
-         tKglu6tzlyfieyouUrDXeUN5vwvw9kMuDkkesc4LD236DRTL2VF6s//yFAI5aWU69dj5
-         cV6eg5KvtCKcF2F0k0dsiYHjKNMCS94HgphR5j7jqp7SYEBtP34vX5T0QrO13H9lZ4Ja
-         6scQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745962580; x=1746567380;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745962729; x=1746567529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VFHhD4L18F4DbheB1ANr+oLMK0ky8CpJtw12v2WCTVo=;
-        b=DpsWJYEhU3dV6qorBBytP1IAQ6OHnIQYFPBXbbtwea5h0MOrFWVYb7vrTb5Za8QSM2
-         SDjOUJX1PxgYBQX7WJxwCwYGgR8hp+Gxt9TXBM0OgYLRTzWlMNUrOJSCNUk39iWrDK/A
-         kNhoD1zVmcBMeabqAYxv7kFeDYGsFt+18fFP6uW3Rt1uYb+X3g4iI3p/s5/dn1OB4Yik
-         t2o9pPMux88BhEHddM5N/YownPxm97CZONjKawcWFOw3LALu+CUlY29R8thhVqxWkuqL
-         9diG576yCzR/VejoPFa34L18OKGznXhkiLaF3kj8i1IyrUflJy2PToqdNDTAEYoFFcQ3
-         ByXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJYw1c+jsVZAjy1DyaghgsdPzIifItv83EEMh6qCFXgMiGMlZArFN9XxUkgQWVcfGssUNHdd3K7G1hKEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybIaeM1j9bcnWrZ4CBQ9tAFhV9cg8TGINJ3il/U5RAwGAW9TMs
-	yaNTXVdIenffgm/GNz3T8irfTjKLhs0xouID2ubQOYJjRtR4EDVpJ3yTwiGrLg==
-X-Gm-Gg: ASbGncsyeYEoHy9rTeoHQGc6arfiYkW9TApi4bwsOTliayFsiLCCzryTm+sxg5wY+c7
-	/PEDI8NZx/F0iObejAg2Zy7rsd/EKSqY40s2004xnPr/OS/COjSk02HyvGTPHX0CyRwNyWdSlwX
-	qJZRds1P9gthPQCe4VlfWlsV9gmEpDfj5vPVgHtueKf6eV3gQM3VHUoBDOf3wb8/WZlDzWu2d/P
-	ibeBP+SWXBWIFQJPTPkkxycWxYrXTjlCdbWeT02eAm8L6gKxSLNdVjBBL4gDFvsKwje4DOM/5Mc
-	QdpyrZNyhg/lXrAzBPfWi6/TeoZBjLWyNMlk3DlPMvqcx5h5uotjtTQHylQyXfhrS5vHveRz
-X-Google-Smtp-Source: AGHT+IHMqNgjircjCmAkmKl5VbBskPIbU47nTYxADS2hK6tD9L6Ge4YAR4USLtbPpDWqfiuVVAQ0lQ==
-X-Received: by 2002:a17:903:144f:b0:21f:3f5c:d24c with SMTP id d9443c01a7336-22df3dda537mr1044155ad.0.1745962580224;
-        Tue, 29 Apr 2025 14:36:20 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76d34sm108297185ad.39.2025.04.29.14.36.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 14:36:19 -0700 (PDT)
-Date: Tue, 29 Apr 2025 21:36:09 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 16/22] iommu/arm-smmu-v3-iommufd: Add vsmmu_alloc impl
- op
-Message-ID: <aBFGSRGcIsCDU1Zj@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <73b1fc34b07f2ac42d542dd996c7119ae5f8939c.1745646960.git.nicolinc@nvidia.com>
+        bh=7dOsoZsb5X1fqF1yit50Q/60XIfapyBLfA2TkiLo//A=;
+        b=MKST6pdrR/SHBOt/TFU5dn4tOnA66xjoBrV08KILfL22a8JRw6ocgocuYiK12CNtN+
+         H+yEZLAsrmQVIHPj68xf+kopbFTbgTDozKyc6bIQBT8f3RVMtBm+b06akS8CzWOYJmkj
+         igEvH5NxcvBF+1LfbORGgYWil2UrnGSOY0hATTPpmgB5cVQN8+ITHOWbYoT9WI7VI/MS
+         +zQ3PDq0tadjdHC6WWgkHEww1Yi3WLTFxcAYRNt99HeQ/z2tiQXOVLbLmyesF+FzgIPh
+         rUja1czJ6qEOUQrgxA3h+1aXk1m0+/+307LHbXhE4R2n1JKkO+pQxXmCeX516ifszFVW
+         JH1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745962729; x=1746567529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7dOsoZsb5X1fqF1yit50Q/60XIfapyBLfA2TkiLo//A=;
+        b=JP+F0BvFQOuL+ieDmm7O1s4cXduQWuDKcrqJNYONWRlzSUix33olR2jj+2aHeygZJB
+         TJxs8KVCx4LJoX2m9EF2sejgdRmpgAUMcNq/ElV31zBFesaRt8gJbmcQypelhWENiIY+
+         siqalTqCHFJZmud2NCKAlpkFaNQR/CzZWqiWTvNa2rhxte4mhR6ueooHpd2nQoPgeU0P
+         uiDhFyLgtuIXojdPRpXsH/rh+SXQ2pisgxtJzR3VRLqk/Q2fcxbY760T0wDPHlnRXD28
+         9+CCie1eaq9yHgP3aRbxfl4GIUk1mwqaoF7b4YTJRbO9gtSxlGh55QGguqvmG0nmDADF
+         xdMA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+1r9ev5IGARnhxPKfOC2EfUMLhbbfOXjK3Ds+LCzYeL+WvEU2nI+mriFvt1b1Ubkq5TwyWXMEPaUV3g==@vger.kernel.org, AJvYcCV4j5tLXzD9muXR2Sokac1FXMI2FuOyh4zKCmwcMyZamkU+9LMNh6EzOI/seKvCHe6P6zAz7R9hDZZP@vger.kernel.org, AJvYcCVwC8NqlTwUzhMObXwjlO4N6PIrYdjlWMFpqJvGtOVH+0+weO2G1iEoUKJuCH58QZlwuMQ0Bpqf7rUhpt8=@vger.kernel.org, AJvYcCXZPZBKNiCkxTY+WDY6r4ErGxlmvTL4hq0NgAlN7nPBRNapRsqu0Lfum2Kffiy6U+/o1+BtyJd3Wki25bi8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZReVg4J9v4BoXPfODZXRIGUM22qlgv8lIl5BA+XpjyYQRw7f9
+	jQ4cKGGaYAGSEhskDt2AWbXOVeCKNXo1rz60dR8zaJLCDqItyUbZUUZFpr9kg3qmrjzCQVdWw6s
+	r6K8Z9n+eYaiLqal8TUgSGOq460+C3huMVtU=
+X-Gm-Gg: ASbGncuja5KXUI4OD+WdQEv84QWsvNjsEs+pONlk+MqA7tf5xdORqLmL6XnMdT4E/QE
+	qa4S/pmDgyBSkkP8IEro2jaNtdUHv1EGZRnjtd+pBJin/6VzYu8LRAActNc752AHA1YFUoUX92P
+	P/qR37xC/mn729CJmTNKJC1w==
+X-Google-Smtp-Source: AGHT+IF/UK+zmUfmInoS3qAk2Frv02mr3palOxT9R0ZL4Wb6rRZD8cvke+THGluTfwOcD1oVA/cmORv8R6u4Kfx0w1U=
+X-Received: by 2002:a2e:bea0:0:b0:302:1fce:3956 with SMTP id
+ 38308e7fff4ca-31e69e31164mr1843481fa.4.1745962728717; Tue, 29 Apr 2025
+ 14:38:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73b1fc34b07f2ac42d542dd996c7119ae5f8939c.1745646960.git.nicolinc@nvidia.com>
+References: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
+In-Reply-To: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Tue, 29 Apr 2025 16:38:36 -0500
+X-Gm-Features: ATxdqUF6jiRcVYa2bPh00Yw29bjpsdm1O4i4d3vZ_05WVXSqM1W38cGmDPoJUao
+Message-ID: <CALHNRZ8ndcd3mvGP+W2DVFcm65t4Ai4epNeGigPv=Oo8Cf3LkQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] pinctrl: tegra: Add Tegra186 pinmux driver
+To: webgeek1234@gmail.com
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 10:58:11PM -0700, Nicolin Chen wrote:
-> An impl driver might support its own vIOMMU object, as tegra241-cmdqv will
-> add IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV.
-> 
-> Add a vsmmu_alloc op to give impl a try, upon failure fallback to standard
-> vsmmu allocation for IOMMU_VIOMMU_TYPE_ARM_SMMUV3.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-
-Reviewd-by: Pranjal Shrivastava <praan@google.com>
-
+On Tue, Apr 29, 2025 at 4:33=E2=80=AFPM Aaron Kling via B4 Relay
+<devnull+webgeek1234.gmail.com@kernel.org> wrote:
+>
+> This series adds support for Tegra186 pin control, based on a downstream
+> driver, updated to match the existing Tegra194 driver.
+>
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 > ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     |  6 ++++++
->  .../iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 17 +++++++++++------
->  2 files changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> index 6b8f0d20dac3..a5835af72417 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> @@ -16,6 +16,7 @@
->  #include <linux/sizes.h>
->  
->  struct arm_smmu_device;
-> +struct arm_smmu_domain;
->  
->  /* MMIO registers */
->  #define ARM_SMMU_IDR0			0x0
-> @@ -720,6 +721,11 @@ struct arm_smmu_impl_ops {
->  	int (*init_structures)(struct arm_smmu_device *smmu);
->  	struct arm_smmu_cmdq *(*get_secondary_cmdq)(
->  		struct arm_smmu_device *smmu, struct arm_smmu_cmdq_ent *ent);
-> +	struct arm_vsmmu *(*vsmmu_alloc)(
-> +		struct arm_smmu_device *smmu,
-> +		struct arm_smmu_domain *smmu_domain, struct iommufd_ctx *ictx,
-> +		unsigned int viommu_type,
-> +		const struct iommu_user_data *user_data);
->  };
->  
->  /* An SMMUv3 instance */
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> index 66855cae775e..a8a78131702d 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> @@ -392,10 +392,7 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
->  		iommu_get_iommu_dev(dev, struct arm_smmu_device, iommu);
->  	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
->  	struct arm_smmu_domain *s2_parent = to_smmu_domain(parent);
-> -	struct arm_vsmmu *vsmmu;
-> -
-> -	if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
-> -		return ERR_PTR(-EOPNOTSUPP);
-> +	struct arm_vsmmu *vsmmu = ERR_PTR(-EOPNOTSUPP);
->  
->  	if (!(smmu->features & ARM_SMMU_FEAT_NESTING))
->  		return ERR_PTR(-EOPNOTSUPP);
-> @@ -423,8 +420,16 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
->  	    !(smmu->features & ARM_SMMU_FEAT_S2FWB))
->  		return ERR_PTR(-EOPNOTSUPP);
->  
-> -	vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
-> -				     &arm_vsmmu_ops);
-> +	if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
-> +		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
-> +			master->smmu, s2_parent, ictx, viommu_type, user_data);
-> +	if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
-> +		if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
-> +			return ERR_PTR(-EOPNOTSUPP);
-> +		/* Fallback to standard SMMUv3 type if viommu_type matches */
-> +		vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
-> +					     &arm_vsmmu_ops);
-> +	}
->  	if (IS_ERR(vsmmu))
->  		return ERR_CAST(vsmmu);
->  
-> -- 
-> 2.43.0
-> 
+> Aaron Kling (4):
+>       dt-bindings: pinctrl: Document Tegra186 pin controllers
+>       dt-bindings: gpio: tegra186: Add gpio-ranges
+>       pinctrl: tegra: Add Tegra186 pinmux driver
+>       arm64: tegra: Add Tegra186 pin controllers
+>
+>  .../bindings/gpio/nvidia,tegra186-gpio.yaml        |    3 +
+>  .../bindings/pinctrl/nvidia,tegra186-pinmux.yaml   |  285 ++++
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   12 +
+>  drivers/pinctrl/tegra/Kconfig                      |    4 +
+>  drivers/pinctrl/tegra/Makefile                     |    1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra186.c           | 1784 ++++++++++++++=
+++++++
+>  drivers/soc/tegra/Kconfig                          |    1 +
+>  7 files changed, 2090 insertions(+)
+> ---
+> base-commit: 1110ce6a1e34fe1fdc1bfe4ad52405f327d5083b
+> change-id: 20250308-tegra186-pinctrl-651ffbbbe816
+>
+> Best regards,
+> --
+> Aaron Kling <webgeek1234@gmail.com>
+>
+>
+Thierry and Jonathan, as the maintainers for the other tegra pinmux
+drivers, I listed you as the maintainers for this one in the dt
+bindings. And I think MAINTAINERS will do that by default for the
+driver itself. Are you okay with taking over ongoing maintenance for
+this one once it is approved for merge? I made it match the others as
+closely as possible, so it shouldn't need any additional changes over
+time that the others don't. But I don't want to sign anyone up for
+work without prior approval.
+
+Sincerely,
+Aaron
