@@ -1,80 +1,49 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48ED3BB44
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D432741C6;
+	Tue, 29 Apr 2025 07:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911689; cv=none; b=AHAvPZcFnWHc6z5wfJdvSAMWf4/1JOexDQjhlY48/PjZnkKNSw1Sca1B/lR6FQbTKpUyk0gA620oEEZ0S24CnIxWF6C0lVy9pJmeCs0PBvBB1EjLQJCvYzgSB9J+vuTAt/d12mL6Lk8n6PmGXD/3T1p8yrBNfwjz84zmCKOkTnU=
+	t=1745911730; cv=none; b=JI3ry6jgXg3r92mvkZNM+DOzJuGqxOpL6OMDHY5sI90vhyeYLiGtDVu7msofkHR0Jy8q7aTyxp6CZ39xqw6F5px63TYucpm9r/FGJnzijXz+GyemXVet+Boox7UToALm9jBRETPR3BJIu7Zyd2QuhZBYcrXCfNk/fQWYaoCXZVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911689; c=relaxed/simple;
-	bh=46HHIGCzwnNLPpAINs75A8m+fMD3+uz33+iaV8vmgjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oKubk2cqqdurelGWBsljdGKcN7roZMek2ixeU42RSwvNivygSCRBnNlwcdX2Cmu5gyiHw4PjcscvsSPsZcQISMCjYWEvzD1A2G8ijsvMM8qOaya63StCRo4tGpUnWC5/lab1M87+BzzIPlzE5X3x+YDvjlGOrgAYDaguoRpnobA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HhbgTS9i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zLGjcyQa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SpArUjJh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=e/Q+QaS5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745911730; c=relaxed/simple;
+	bh=+vH7I+42geCyCAD8XJgr+tpdYRDIkeIYXAHrLYMdwlw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Nf8srQA5EbTfw8gnuwmtqPypvO9XvuS/QqefhDjjyQBnL4vncbmhn6jBA5H7KFyj7QhoMZtkt/ZdGN5kT3+K8hDE6RhnFcX0nqPIy8wGEmkjcAU/BtHxDCjUajmsSe9kDO8hJyqYI30CgsIkpmoFe4EjaeEDwZxAsZbk69MaaMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=y2zF76gp; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HhbgTS9i";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zLGjcyQa";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SpArUjJh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="e/Q+QaS5"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F1ACA21C30;
-	Tue, 29 Apr 2025 07:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745911686; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
-	b=HhbgTS9iZ/ZveR6EsfJ+0v8KW9pesTHOmVlkWB3Mn9wNR+Plw9FsfveuOY2h+Pf/0V2ZTZ
-	zJXHXkw3avsUOeyXE4nOiNisAnaVHtIHoiY6FkIhBbaGaDWFTi0F9XmFJgDilxVM9Ok2tz
-	/VzHuhtsQDetteY/7XQfhBRFCSdB9Ds=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745911686;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
-	b=zLGjcyQau3o5t/fSlEsPVia9CsBtIvo797gcHFCITw2aKIAt+LM7rtxu1ZMg1xlcorpsZv
-	6MDJQVUBsSo8MVBQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745911685; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
-	b=SpArUjJh55/qe7tZb1aGaFjJRt70ELvKKD5Ha0f10UWBAcnNggkBJ1LOsREnerTlc3MZQL
-	iT1wuaElsLWJbRfrK3tLKmjOtlebv89BBJ6zPsw432mxPIOWoMoZ8BVmVH74h1FAqxkXdc
-	cVkDIDaAm8wWSV2OI3e/K/mQZKrrObY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745911685;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qn7RezL+ZodhNPZz0XE4F8zD560Td22qMXGm4ahQV1Y=;
-	b=e/Q+QaS59zd31uC/opKdcty8jJKZoleO8IXouA1gM62sXwgUI34vGlg2sUwkuAA71Gbmag
-	xwl71RlCXOieMHAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A1391340C;
-	Tue, 29 Apr 2025 07:28:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9JIiJIV/EGimcQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 29 Apr 2025 07:28:05 +0000
-Message-ID: <044b4684-4b88-4228-9bf6-31491b7738ba@suse.cz>
-Date: Tue, 29 Apr 2025 09:28:05 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y2zF76gp"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7ShD33027792
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 02:28:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745911723;
+	bh=Xji29AeQrTuafVznn9jEAm/SluSXzCm1zJ/2Vyy1tQc=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=y2zF76gpa+SIgv1ror2rHkxg2ODljwtgFqzAZCtzqmexgGqqQdoaD7WqfW+FSE4vg
+	 0FPsUOHM7P6UG9PhGEeUQXHh+y+ErhLeDE1bVk1AzHKbJgAi8njWe33iDrz+wD4H+P
+	 4K9pNAoPlDgS4oJ3jxeNAMKMgisvHgtCElJCoQ6I=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53T7ShN6051172
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 29 Apr 2025 02:28:43 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
+ Apr 2025 02:28:42 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 29 Apr 2025 02:28:42 -0500
+Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53T7ScOc110802;
+	Tue, 29 Apr 2025 02:28:39 -0500
+Message-ID: <ce025a6f-abf3-44aa-b011-848deea4c309@ti.com>
+Date: Tue, 29 Apr 2025 12:58:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,71 +51,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] move all VMA allocation, freeing and duplication
- logic to mm
+Subject: Re: [PATCH v3 1/2] arm64: dts: ti: k3-am68-sk/k3-j721s2-mcu: Add
+ bootph-all property to enable Ethernet boot
+To: Nishanth Menon <nm@ti.com>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Tero Kristo
+	<kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <danishanwar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250425051055.2393301-1-c-vankar@ti.com>
+ <20250425051055.2393301-2-c-vankar@ti.com>
+ <20250425212427.vvyocc4mmne5g3vq@vividly>
 Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
- David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+From: Chintan Vankar <c-vankar@ti.com>
+In-Reply-To: <20250425212427.vvyocc4mmne5g3vq@vividly>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 4/28/25 17:28, Lorenzo Stoakes wrote:
-> Currently VMA allocation, freeing and duplication exist in kernel/fork.c,
-> which is a violation of separation of concerns, and leaves these functions
-> exposed to the rest of the kernel when they are in fact internal
-> implementation details.
-> 
-> Resolve this by moving this logic to mm, and making it internal to vma.c,
-> vma.h.
-> 
-> This also allows us, in future, to provide userland testing around this
-> functionality.
-> 
-> We additionally abstract dup_mmap() to mm, being careful to ensure
-> kernel/fork.c acceses this via the mm internal header so it is not exposed
-> elsewhere in the kernel.
-> 
-> As part of this change, also abstract initial stack allocation performed in
-> __bprm_mm_init() out of fs code into mm via the create_init_stack_vma(), as
-> this code uses vm_area_alloc() and vm_area_free().
-> 
-> In order to do so sensibly, we introduce a new mm/vma_exec.c file, which
-> contains the code that is shared by mm and exec. This file is added to both
-> memory mapping and exec sections in MAINTAINERS so both sets of maintainers
-> can maintain oversight.
+Hello Nishanth,
 
-Note that kernel/fork.c itself belongs to no section. Maybe we could put it
-somewhere too, maybe also multiple subsystems? I'm thinking something
-between MM, SCHEDULER, EXEC, perhaps PIDFD?
+On 26/04/25 02:54, Nishanth Menon wrote:
+> On 10:40-20250425, Chintan Vankar wrote:
+>> Ethernet boot requires CPSW nodes to be present starting from R5 SPL
+>> stage. Add bootph-all property to required nodes to enable Ethernet boot
+>> on AM68-SK and J721S2-EVM.
+>>
+>> Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+>> ---
+>>
+>> Link to v2:
+>> https://lore.kernel.org/r/20250302153502.181832-2-c-vankar@ti.com/
+>>
+>> Changes from v2 to v3:
+>> - Removed "bootph-all" property from "mcu_cpsw" node as suggested by
+>>    Vignesh since child node already has that.
+>>
+>>   arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts | 3 +++
+>>   arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 3 +++
+> 
+> Why does every board that uses j721s2 need to have bootph-all for
+> cpsw? Is network boot mandatory boot mode for all boards? That does
+> not sound right. Just do them in the board file please.
+> 
+
+I have posted next version with your changes at here:
+https://lore.kernel.org/r/20250429072644.2400295-1-c-vankar@ti.com/
+
+Regards,
+Chintan.
+
+>>   2 files changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+>> index 5fa70a874d7b..c402d5e288b0 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+>> @@ -344,6 +344,7 @@ J721S2_WKUP_IOPAD(0x008, PIN_OUTPUT, 0) /* (E22) MCU_RGMII1_TD3 */
+>>   			J721S2_WKUP_IOPAD(0x018, PIN_OUTPUT, 0) /* (F21) MCU_RGMII1_TXC */
+>>   			J721S2_WKUP_IOPAD(0x000, PIN_OUTPUT, 0) /* (F22) MCU_RGMII1_TX_CTL */
+>>   		>;
+>> +		bootph-all;
+>>   	};
+>>   
+>>   	mcu_mdio_pins_default: mcu-mdio-default-pins {
+>> @@ -351,6 +352,7 @@ mcu_mdio_pins_default: mcu-mdio-default-pins {
+>>   			J721S2_WKUP_IOPAD(0x034, PIN_OUTPUT, 0) /* (A21) MCU_MDIO0_MDC */
+>>   			J721S2_WKUP_IOPAD(0x030, PIN_INPUT, 0) /* (A22) MCU_MDIO0_MDIO */
+>>   		>;
+>> +		bootph-all;
+>>   	};
+>>   
+>>   	mcu_mcan0_pins_default: mcu-mcan0-default-pins {
+>> @@ -626,6 +628,7 @@ &mcu_cpsw {
+>>   &davinci_mdio {
+>>   	phy0: ethernet-phy@0 {
+>>   		reg = <0>;
+>> +		bootph-all;
+>>   		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
+>>   		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+>>   		ti,min-output-impedance;
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+>> index bc31266126d0..218290b1840a 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
+>> @@ -154,12 +154,14 @@ mcu_conf: bus@40f00000 {
+>>   		cpsw_mac_syscon: ethernet-mac-syscon@200 {
+>>   			compatible = "ti,am62p-cpsw-mac-efuse", "syscon";
+>>   			reg = <0x200 0x8>;
+>> +			bootph-all;
+>>   		};
+>>   
+>>   		phy_gmii_sel: phy@4040 {
+>>   			compatible = "ti,am654-phy-gmii-sel";
+>>   			reg = <0x4040 0x4>;
+>>   			#phy-cells = <1>;
+>> +			bootph-all;
+>>   		};
+>>   
+>>   	};
+>> @@ -562,6 +564,7 @@ cpsw_port1: port@1 {
+>>   				label = "port1";
+>>   				ti,syscon-efuse = <&cpsw_mac_syscon 0x0>;
+>>   				phys = <&phy_gmii_sel 1>;
+>> +				bootph-all;
+>>   			};
+>>   		};
+>>   
+>> -- 
+>> 2.34.1
+>>
+>>
+> 
