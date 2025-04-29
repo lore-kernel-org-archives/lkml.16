@@ -1,119 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5D02777F8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:34:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60EE277002;
+	Tue, 29 Apr 2025 07:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912053; cv=none; b=SNrYIsiJBfdG67oIAALFZWC6rhq0oDC+/+CAwEdtuaNlhVVhqUKaDGSI0YwPRlszR0Q3E4gODrF6O0moVC/whm1HshDtxrTAifwjQYZkcmeX1ZqDxL5blwRVKc/RAqntoGBDC+ZdOC4GtN5O3ncd8zl19Pp/KbfCw7D9rwM3Ch4=
+	t=1745912073; cv=none; b=WRJnT21FPs3t2Fw91y/RrzRj3m2GKoo3SMORyrM+JZGGRZ8vYBloaaIRZ9eIHFcoDOpPTGOqmKjt9zM2H7V9HrNVAO3ux9u+Zz/tKmRmRlDEbJKdHjY36UQIJ61wsqntQD9m5C4BIdgP6b4fgvzts3LSioOp7cR/mTjtg9yFX+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745912053; c=relaxed/simple;
-	bh=7KwvjwqWpt7P9mIGSbCQc3XS85MpJcNT6e7j/JyjGvo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XUQGa11RUZsGCpUvSqakI1hUn67BaV1Ldxa8WhyGMsQmfGC6AehgTlHV6ciAA/L/npjkb8uNtj/wMFXVDI0xaguITLkdzEoeEIumjVmkDrw843XlsQueZI66hsT+mTpsNphd5jib31YSdRI4U5oZibziHELs0YXc07jthOh5v14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJWiWUbw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745912073; c=relaxed/simple;
+	bh=1FIwLwyQulKxxFP/ujnEVpEdgFJ8AVSMc5D8iY1ISc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RclPZSzUi1GuIGfI+IbTkixh3jklqSlAU09S3oDkDOIY8CmqVRi7USBINXmjaqjG4Ls9wWoiT5/aDJPu30O5CGgJxaULzIG0zZLyjjFb30lCsPF3DrtOh3bLdGMfgYoSoSVyYQNlw8YIH4yV6FTIWLPAPtskQRVPVXEU7nyH0WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jaRZw/fw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJWiWUbw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24DDC4CEE3;
-	Tue, 29 Apr 2025 07:34:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jaRZw/fw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7ABC4CEED;
+	Tue, 29 Apr 2025 07:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745912052;
-	bh=7KwvjwqWpt7P9mIGSbCQc3XS85MpJcNT6e7j/JyjGvo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bJWiWUbw1+gc7ZwHGNzpNiPuY8TEvxVkuCnmZDU9twKWflTmLBifTNeILSwaHHsyn
-	 GuYvPCjkxgeSk6BrRE9w8e2x4i+ts/NzCP4ZqzMStCPoVO5xcWEq5DBbc9Xqsxk3Z9
-	 MZgeYdJr6kaKPI/fdODiTvyNv8CM8s/8ntgYBbrEuRl/Mtv1mfthw6RdQ6xE0zKWML
-	 vT4zkZ/7WgmglVUSau9GWBeNmW5dF9YiayzeqfSWiqsggjcXlv9s+g1WTl/jd0i4Ff
-	 9n1/mIqS6sjyuuOzljFI1Xv2Inn4s7bNlYmnKqr2QJ4q+ISIp+6IOfK5htdv33Xd3M
-	 xfYnQRTb5368g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Jonathan Cavitt <jonathan.cavitt@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	John Harrison <John.C.Harrison@Intel.com>,
-	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-	Zhanjun Dong <zhanjun.dong@intel.com>,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/xe: fix devcoredump chunk alignmnent calculation
-Date: Tue, 29 Apr 2025 09:34:00 +0200
-Message-Id: <20250429073407.3505712-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1745912073;
+	bh=1FIwLwyQulKxxFP/ujnEVpEdgFJ8AVSMc5D8iY1ISc4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jaRZw/fwNa8P6+yoOBvuASueTp81mAvevIGO5h2y3NT2ac5rUzI7PPeMzY0x4wxeP
+	 hsbfxzfMJkWNqo9JVcuP/FLvwIFPlCg7L/QmeLfBN8XfbeTQBSzORgASauE7opb+46
+	 VJNq9eT4v+TM0tE6DKElhVpHQDq7eKqXrlL5LshoR4eLWID9VkFbroFF4gvsXEZ0WU
+	 pKXeWm9LqtGIyfEvWy1FjvCXxUs2q5VFV+M1HjAIXccYZ5jj8PLQBcTc2Qjmn541BP
+	 r1OpbM0jqZoe9cvTTy+fybg46f0Pm2vV7wx/VhuVKihv9SkERJn7TBnd1YO3k0WUwk
+	 WdxIQJKLCpN5g==
+Message-ID: <4557dde5-c0fe-4339-8c4c-291b186ee86f@kernel.org>
+Date: Tue, 29 Apr 2025 09:34:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/12] Enable jpeg enc & dec multi-hardwares for MT8196
+To: =?UTF-8?B?S3lyaWUgV3UgKOWQtOaZlyk=?= <Kyrie.Wu@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kyrie.wu@mediatek.corp-partner.google.com"
+ <kyrie.wu@mediatek.corp-partner.google.com>,
+ "mchehab@kernel.org" <mchehab@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <20250425085328.16929-1-kyrie.wu@mediatek.com>
+ <20250428-inescapable-smiling-oriole-bfbe3e@kuoka>
+ <5735ebabb8b049bd7c8700a433bf5b073dde66ad.camel@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <5735ebabb8b049bd7c8700a433bf5b073dde66ad.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 28/04/2025 10:10, Kyrie Wu (吴晗) wrote:
+> On Mon, 2025-04-28 at 09:01 +0200, Krzysztof Kozlowski wrote:
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> On Fri, Apr 25, 2025 at 04:53:16PM GMT, Kyrie Wu wrote:
+>>> This series adds support for mt8196 multi-hardwares jpeg enc & dec,
+>>> by first adding mt8196 jpegdec and jpegenc compatible to install
+>>> kernel driver. Add smmu setting to support smmu and iommu at the
+>>> same time.
+>>> Secondly refactor buffer and clock setting to support multi-hw jpeg
+>>> working.
+>>> Lastly, fix some bugs, including resolution change handleing, stop
+>>> streaming sw flow and others.
+>>>
+>>> This series has been tested with MT8196 tast test.
+>>> Encoding and decoding worked for this chip.
+>>>
+>>> Patches 1-3 Adds jpeg encoder and decoder compatible.
+>>> Patches 4 add jpeg smmu sid setting.
+>>> Patches 5 fix jpeg hw count setting to support different chips.
+>>> Patches 6 refactor jpeg buffer payload setting to handle buffer
+>>> size bug while resolution changed.
+>>> Patches 7 reconstruct jpeg dst buffer layout.
+>>> Patches 8 fix multi-core stop streaming flow
+>>> Patches 9 refactor multi-core clk suspend/resume setting
+>>> Patches 10 fix decoding buffer number setting timing issue
+>>> Patches 11 refactor decoding resolution change operation
+>>> Patches 12 fix remove buffer operation
+>>>
+>>> ---
+>>> This series patches dependent on:
+>>> [1]
+>>>
+> https://urldefense.com/v3/__https://patchwork.kernel.org/project/linux-mediatek/patch/20250424090824.5309-1-jianhua.lin@mediatek.com/__;!!CTRNKA9wMg0ARbw!hDjzydf2blyIhdAkYs_NbqpEaaWTuolLbaHLDw8hLg4BJ87r7ePzKkET-uDw24U6YXAqmbSxItem1Q$
+>>>
+>>> Changes compared with v2:
+>>> --refactor smmu sid setting function interface
+>>> --Some modifications for patch v2's review comments.
+>>
+>> This is very vague. What exactly changed.
+> 
+> Dear Krzysztof,
+> 
+> Sorry for the shortly descriptions. The main changing in V3 is fixed
+> dt-bindings comments by you.
 
-The device core dumps are copied in 1.5GB chunks, which leads to a
-link-time error on 32-bit builds because of the 64-bit division not
-getting trivially turned into mask and shift operations:
 
-ERROR: modpost: "__moddi3" [drivers/gpu/drm/xe/xe.ko] undefined!
+What changed? What comments? Again way too vague.
 
-On top of this, I noticed that the ALIGN_DOWN() usage here cannot
-work because that is only defined for power-of-two alignments.
-Change ALIGN_DOWN into an explicit div_u64_rem() that avoids the
-link error and hopefully produces the right results.
 
-Doing a 1.5GB kvmalloc() does seem a bit suspicious as well, e.g.
-this will clearly fail on any 32-bit platform and is also likely
-to run out of memory on 64-bit systems under memory pressure, so
-using a much smaller power-of-two chunk size might be a good idea
-instead.
-
-Fixes: c4a2e5f865b7 ("drm/xe: Add devcoredump chunking")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Please test this with multi-gigabyte buffers, the original code
-was clearly not right, but I don't trust my version either.
----
- drivers/gpu/drm/xe/xe_devcoredump.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_devcoredump.c b/drivers/gpu/drm/xe/xe_devcoredump.c
-index a9e618abf8ac..4eb70e2d9f68 100644
---- a/drivers/gpu/drm/xe/xe_devcoredump.c
-+++ b/drivers/gpu/drm/xe/xe_devcoredump.c
-@@ -177,6 +177,7 @@ static ssize_t xe_devcoredump_read(char *buffer, loff_t offset,
- 	struct xe_devcoredump *coredump = data;
- 	struct xe_devcoredump_snapshot *ss;
- 	ssize_t byte_copied;
-+	u32 chunk_offset;
- 
- 	if (!coredump)
- 		return -ENODEV;
-@@ -203,8 +204,9 @@ static ssize_t xe_devcoredump_read(char *buffer, loff_t offset,
- 
- 	if (offset >= ss->read.chunk_position + XE_DEVCOREDUMP_CHUNK_MAX ||
- 	    offset < ss->read.chunk_position) {
--		ss->read.chunk_position =
--			ALIGN_DOWN(offset, XE_DEVCOREDUMP_CHUNK_MAX);
-+		ss->read.chunk_position = div_u64_rem(offset,
-+			XE_DEVCOREDUMP_CHUNK_MAX, &chunk_offset)
-+			* XE_DEVCOREDUMP_CHUNK_MAX;
- 
- 		__xe_devcoredump_read(ss->read.buffer,
- 				      XE_DEVCOREDUMP_CHUNK_MAX,
-@@ -213,8 +215,7 @@ static ssize_t xe_devcoredump_read(char *buffer, loff_t offset,
- 
- 	byte_copied = count < ss->read.size - offset ? count :
- 		ss->read.size - offset;
--	memcpy(buffer, ss->read.buffer +
--	       (offset % XE_DEVCOREDUMP_CHUNK_MAX), byte_copied);
-+	memcpy(buffer, ss->read.buffer + chunk_offset, byte_copied);
- 
- 	mutex_unlock(&coredump->lock);
- 
--- 
-2.39.5
-
+Best regards,
+Krzysztof
