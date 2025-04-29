@@ -1,92 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7673F267AF2;
-	Tue, 29 Apr 2025 20:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586171B043C;
+	Tue, 29 Apr 2025 20:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745958503; cv=none; b=SYXm+9IQQDqx3ls5qUzhfkdNEBxRH7+KpLSvw2G1CgGOYbV5s3Fp6MMoz2S1yYDPGIFKGR8yPVRP0GtY7nR1Vq3Fvg+KZLiqxoQE0SBeiJVvSp5WRL/p0ItDJJgP44mtFZI/Q5v4G7SmwPfga4fyTX3ZKdHL5Mq+UIsCecgu7jA=
+	t=1745958629; cv=none; b=VlBB/3ZjILySnvpmaBgU603TpqIstWeXmB5SUGG6YyUF1K02Lf4e4CDrRWv1/GbPsKIufpMmrG5DZqNHGEbWtth30q7lkklXgeREF2IRfH3uapAmyuJKzYI8mzWip1vJs/jXha5NMt8844V5oB96l+oWCOZ961RfQFvjEF2jGGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745958503; c=relaxed/simple;
-	bh=yVQiGQTIo9RNGx1kcMdYwpv2Iyy6ige9ZYny4OmlJuw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FOy/WEaJWXPzha39EqI94WYBw88JLwF5zkfuvTFGegBtg9b+XVIKqVedxPPFB4uLDIGS+QVlAoy7QpTHQfxI1C0MB9Ki28BW36ifccu7iBt5AQE3IhwlmyXJWLR2GgpoHhJpE1xOfFLFgDnogbwsrJPiPoSf1bX2AvWx/IrB9B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t94tYQyv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745958629; c=relaxed/simple;
+	bh=QIDDEQs1Gmfq8nL4ROK79rDLFy3b/ikbmtUTE8FWJAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NnmE4Q1DmQxRZJMr3VzooZjtfw6SFoA6nuKvM7gMy0qCGyzGi1vhiSTnNjwclG/yBLfzWYU8dcjRyoDyK6rWdKfDbHAbo2q7y35Epkb/M8eBAaTmRA+ys2K2REk6bpUFyi58Ntp2T3emXEV/m8F9UH4cZjfhThzMzETVpMfXTyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfnUx5l1; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t94tYQyv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858EDC4CEE3;
-	Tue, 29 Apr 2025 20:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745958503;
-	bh=yVQiGQTIo9RNGx1kcMdYwpv2Iyy6ige9ZYny4OmlJuw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t94tYQyva5/fI1bTsOvrcAuWZgqTtzIRx5afVtXJ9exMTO1hd3U2ECNxmayHBYrEK
-	 tDYlVQkhTOx2twKfjj2BY4I0hx1LJA7RKTx6Rj/ftyIWQs2G8Boy6M+1dewrs3xwEQ
-	 /REjkLXORQ5poiLHG/sElok6YHGE8GSobRwUb1EHtbrnlujYccq8Ob8FTWm1ptUhYm
-	 z9T91wkFj8X4UhQbmaiTkaW9J77yLdQMi7m+lOIT/Ul/8fE/EUd81YPBySTp/7EwWV
-	 imRWR+vM+WxKzF8nU9sqUMCyHOAoRDgl/Bl6N2jOJBZ1RQxcjirl1l6leAjN/UR+CK
-	 Kx44aNX35py5w==
-From: Will Deacon <will@kernel.org>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-users@vger.kernel.org,
-	Valentin Schneider <vschneid@redhat.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Mike Galbraith <efault@gmx.de>,
-	Peter Collingbourne <pcc@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Kristina Martsenko <kristina.martsenko@arm.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH 0/1] arm64: enable PREEMPT_LAZY
-Date: Tue, 29 Apr 2025 21:27:52 +0100
-Message-Id: <174593068821.431779.9112946165910138990.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250305104925.189198-1-vschneid@redhat.com>
-References: <20250305104925.189198-1-vschneid@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfnUx5l1"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so455952a12.0;
+        Tue, 29 Apr 2025 13:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745958625; x=1746563425; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QIDDEQs1Gmfq8nL4ROK79rDLFy3b/ikbmtUTE8FWJAo=;
+        b=VfnUx5l1SUiRL2L8Icfi/NK7Uovllt/7SuTVuYrpwbC7W/fV1TvS/gALUTLuskwnii
+         bQU1WyiAfY4C8/BoRBOnyQXq0NS+FoZ8YZ/TpxXyfiH4VgoKLC9S9zxYIX/Oj2NWSBzm
+         m1gCl+MfAQirOhEZtPa5T8hgqASdh/dcDiKk1Ikwm3j1LSG7k/w5eVb7fjFRm+eHvqPf
+         4DHaTusWkb3lkbyybmvsXVuBlXVjX/VqaTXe5iZaUcbVSbXtMvNAFk+SIEocz1f+cuyX
+         b/sJOSMIg/oWqG+xgIJcv9mx561tOK5HyBMjue5VAJOzsuDjNLx5OOTwseXG3cXet2pN
+         Ldmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745958625; x=1746563425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QIDDEQs1Gmfq8nL4ROK79rDLFy3b/ikbmtUTE8FWJAo=;
+        b=FKIZU8eNO7R1KBBTmzLPTpwGafn3h+ABqWU0YjFhEz9iMd35xPzeA6kKM7a4COB69o
+         eH6yIZlIlDkmw3aybHbzOEwnCf0OQJxwM6XDd9gOJYc3b5kdKQ7iPoO3DuRZc1DAXNCh
+         h5/mfKDzE8EVW6tlRkgIMEflMCdDjP5lWZMznVQ7nQOQRKWPXo60tDQcfhbW2W8qwPGM
+         hevEDCwE9nIrf825SJiXBUxInGhLjY8NrWsa8Tei/jnaLX6hU199cB3wm2apB8bmdwYX
+         usmWfDvFmI+w6BHzPvbsSCBfmPy9GuLzUVRvWtJ7+hMXORPv5jPOVoxLPM/nnp6l7kQf
+         p2lA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS+5MYWzEyB89iP2Y2YB/OgYIvV0XtjOdE/SemCA+mzEaRBsFOrorWz+sMtbDGRnG+79WtbfBlqNVVJPKa@vger.kernel.org, AJvYcCUuR58fL9UsRZG8LTiT2GuPYISjwLHPKuNRl1yGbMvqC5H8JBzbPItxJ8XPmZGnxW95Vms2yZNVt0if@vger.kernel.org, AJvYcCWK0vHt10HWLoW9A8PsL99zMmLRkJM61srsCQxHvaX8kxky8+8x2D6Q9zbyNx4s8QXwJDoSLw49LVIkRbqG+luN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3jjCzpKuVhgYKl0p9EW23PRtRBGzLlIjU0MMwh+hvqXfqLyzg
+	lyX8JW3RPKpApzLEPr1dws7i3b4lnKPPuP/pHpAoYe3FtUsxY24HXbqCWbp1GvqcH1NiB0MVUVK
+	K18bWjOGTmFEsfLUVxxmDE0oH0I5evy66
+X-Gm-Gg: ASbGncuxqOA1pcoeOdv0VML8L//FfJmd2jNvoZLc+9FE1Z0JPBhugOroAW1yzwWQqWt
+	Z/hKGp0tg0IT1k6ktkQpd04FcH8Q1atKR/Y/yrUSpsh45SP1ygur7e1KM2GLiv7vXKjP90ikBRy
+	4+06iHYzlKXJaVjl1QD9OjB83YhCZF64JT
+X-Google-Smtp-Source: AGHT+IFZ+tPuhr4u0amL2o7GidiSohH6Utv5H0SUA5jmFzCgFcP74FND3D4ktHuU5vmLfiR56Xoev8wi90p9wd9PQ/E=
+X-Received: by 2002:a17:907:d64a:b0:aca:c67d:eac0 with SMTP id
+ a640c23a62f3a-acedf34991amr31962366b.0.1745958625432; Tue, 29 Apr 2025
+ 13:30:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <CAMRc=MfpE6M28P6jxFgs6K6Tf84LRhmaw5U4s8WgciF815M7Bg@mail.gmail.com>
+In-Reply-To: <CAMRc=MfpE6M28P6jxFgs6K6Tf84LRhmaw5U4s8WgciF815M7Bg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 23:29:49 +0300
+X-Gm-Features: ATxdqUG081dIkUKH47U4BcogKwVitG0L5aZWFuMYNfSzSFmwm44JDwqa1h18v0o
+Message-ID: <CAHp75VfkJAG6EKf94NFKVKRgKiRKxB7WER_UXcY7sGMOqA=YNg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/12] Add pinctrl support for the AAEON UP board FPGA
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 05 Mar 2025 11:49:24 +0100, Valentin Schneider wrote:
-> Hey folks,
-> 
-> This is a resubmission of Mark's patch [1]. I didn't end up changing anything
-> other than fluffing up the changelog.
-> 
-> I ran this under an arm64 VM, added some trace_printk's and checked that
-> sched_switch's between runnable hackbench threads would occurr in the right
-> conditions:
-> o with TIF_NEED_RESCHED_LAZY set
->   o at the tick
->   o at do_notify_resume()
-> o with TIF_NEED_RESCHED set
-> 
-> [...]
+On Tue, Apr 29, 2025 at 9:43=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Tue, Apr 29, 2025 at 4:08=E2=80=AFPM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
 
-Applied to arm64 (for-next/entry), thanks!
+...
 
-[1/1] arm64: enable PREEMPT_LAZY
-      https://git.kernel.org/arm64/c/c8597e2dd8b6
+> This looks pretty good now. Who should take it - Linus or I?
 
-Cheers,
--- 
-Will
+I agree, but it still has a few issues that need to be corrected.
+I believe the next version will be final.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+--=20
+With Best Regards,
+Andy Shevchenko
