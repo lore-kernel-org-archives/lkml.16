@@ -1,87 +1,78 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D598821ABA6
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58021218ABA;
+	Tue, 29 Apr 2025 15:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938774; cv=none; b=NBTQHFUQRLIlxfgw6HDT9vySg4yjqJOasgg6ubMc1WkEEnNo0CScILz/7r1iJfjqv7Om1VAm6gXydvQsA8qEyYMY2v2LyHoCnjkSPc2RwCDXzh//k1V0sub2D/bIbnqahKGr9lYfHFAVKIaZ8UT2CIdEK6akMGWQBcYrXFyqru0=
+	t=1745938877; cv=none; b=lKYhsxMk9sO4j/kj+gifocV1QBPVpNnX5tzaBQ6Kjf0dNqaWVWcSiSJgO1AivQCWQEEQ1n2r9MW5kRZPXoQfDyn/7OLBc5nfjp/cTVcXaDTIoRizYn0fQU3JEr5iOXLbuvfyaIZUFxjxTKdNHotCDqIoddTPMU+KbQlHYMnXqE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938774; c=relaxed/simple;
-	bh=1R/UVYZsHx8uy1xeBMN3faf8LhuTSWZAK1tYdGatObc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t/tgd70k0duT90juLpETaJki1q6pG6rgPBgopm4byDDcHDyxB7DfJpgqjSvQh3SdM6nw2bk36hBARGHuOAcEHJF8/Qt3BKcgnhjgqlzHfHjizAo8y7dHiU+ODu5wy+2V6pdOZ/x0wxbdU+28a368mGWbdpB8rLyhplTVpx7LGis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H3QXKoWO; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745938877; c=relaxed/simple;
+	bh=UQgYl5cvjAaC6YHzBjmSn9qYkSS2URKtp0ZQVUPviMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=osZMfMn/KoGUKQKBwhY9vrzXLQ7cDXdYEk29ikQ5HF/Uiq3HPMW1vU6HtYVZHlCKdyymfTythWYzBArJ5NlQ9nEC9jGi6GE2NH6feypHq/UduK7cvHWarUJQjl0HgKNYAlXfe8TFACGUZKCtt0hnTsq0z/vJZsi3eylur65gPjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWmNAI5O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H3QXKoWO"
-X-Forwarded-Encrypted: i=1; AJvYcCUL5XdfR4CR6h1x9Pws4FmvZdnRPkk0WtvXekKM016G7RoPL4hhzYlJ4bkEJNmQ1OTSZhACeE6C@vger.kernel.org, AJvYcCW7zf5GUKLaAie1lzwbv4xLx4cHp2NCWeisiOVrSYwatTJMAzCqbmeDhxbu1nTi7vHpT/trrpZRaPOmIIdV@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745938769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wnYluQNsvwlFJXZXZj0tS+5xHhVlsh145ES7SSJ3WhI=;
-	b=H3QXKoWO6FfFubQHdrSgo4pdu7CgpD7J2i1M/U4nlqoBZEf1uyEz+b0y9Ygm63B0xRYQbS
-	EslfhOgBt10gQIo/W2CpDAkI7XWpDYsdB3fs55Le4MwgMoA2tFXWi0D3Dn+ATaC81Y1nn0
-	ixK6vl5iFtIH6s46eGv9Ot4oWkWFrvQ=
-X-Gm-Message-State: AOJu0YwCbxIvkrDVpDp4wuBFxjCWnaVA/Ci2VFkwtYdnm1tkIiY4uSBj
-	fIJTWFJAIdWotJaJfP94cEq2nd2TpfVqO+KboNupFb4IwnRwoyGNdgzMWJcOua5aiExeSqyOKpg
-	jAWPxzFGsQEzoYYI2SsxRiqp7fcY=
-X-Google-Smtp-Source: AGHT+IGNBQScKbdOSUo8Y+Mw6oKw1PdkWWkRwZHqGviaYcint33ZBDfQezOKgc8bDBLZGCiwHYX56txfSJvKt7VyWNE=
-X-Received: by 2002:a05:6102:c93:b0:4cb:5d6c:9933 with SMTP id
- ada2fe7eead31-4d6406915ccmr8292361137.8.1745938767376; Tue, 29 Apr 2025
- 07:59:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWmNAI5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97708C4CEE3;
+	Tue, 29 Apr 2025 15:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745938873;
+	bh=UQgYl5cvjAaC6YHzBjmSn9qYkSS2URKtp0ZQVUPviMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HWmNAI5OB6WUpsYfsKvOROAHHmYuKknITMBLDaWInxVaO1r7PYChRH3VQoVWV0Rh6
+	 niRJkgtLhOB85gnZMPaGZAJ8C95JhyTk7c68DFyYxbde2/xaA8SVXuNNLltec5rUJU
+	 DjfSzjmAOmotxP4H0rj3k4NrypcD7JXTXnWMy8wc2YcQsFLD46tbcCClA48RZI1Ry3
+	 XZA9d2pNtkXBnJBAmcHHaStFNLEcNvaePY9v1UWfQJDwpA2yO8COL2aGHBzLuV+oDd
+	 abgsx0iNsCwDyjU9+zTg8n3KkmChEq1cDMI0YoeOErFGIUwCMpUxxQ+9MltMh0xECc
+	 yfWkdGjdqWfQQ==
+Date: Tue, 29 Apr 2025 10:01:12 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, geert@linux-m68k.org,
+	paul.barker.ct@bp.renesas.com, linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, thierry.bultel@linatsea.fr
+Subject: Re: [PATCH v8 03/11] dt-bindings: clock: Add cpg for the Renesas
+ RZ/T2H SoC
+Message-ID: <174593886824.4084075.3272169793165208261.robh@kernel.org>
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
+ <20250429081956.3804621-4-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYut=1TFvFUvkRPizj97v-JGyg0kKW7aH9XjPbss_Rwg1g@mail.gmail.com>
-In-Reply-To: <CA+G9fYut=1TFvFUvkRPizj97v-JGyg0kKW7aH9XjPbss_Rwg1g@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-Date: Tue, 29 Apr 2025 07:59:15 -0700
-X-Gmail-Original-Message-ID: <CAGj-7pViAbqP8pNy2vbvwJEcVG_b77FxNJigdQ5ibWqJd3X8Qg@mail.gmail.com>
-X-Gm-Features: ATxdqUGO8uv0C3KNe5vLyk-Im36DpLSwPCH86ZIO26AAD6a4CoByaREnphBWonE
-Message-ID: <CAGj-7pViAbqP8pNy2vbvwJEcVG_b77FxNJigdQ5ibWqJd3X8Qg@mail.gmail.com>
-Subject: Re: next-20250428: warning mm page_counter.c page_counter_cancel page_counter_cancel
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, Hugh Dickins <hughd@google.com>
-Cc: linux-mm <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Cgroups <cgroups@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429081956.3804621-4-thierry.bultel.yh@bp.renesas.com>
 
-On Tue, Apr 29, 2025 at 5:22=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> Regression while booting the Linux next-20250428 the following kernel war=
-nings
-> on the arm, arm64 and x86_64.
->
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
->
-> First seen on the next-20250428.
-> Good: next-20250424
-> Bad:  next-20250428
->
-> Boot regression: warning mm page_counter.c page_counter_cancel
-> page_counter_cancel
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
 
-Thanks for the report. Hugh has already posted the fix.
+On Tue, 29 Apr 2025 10:19:45 +0200, Thierry Bultel wrote:
+> Document RZ/T2H (a.k.a r9a09g077) cpg-mssr (Clock Pulse Generator) binding.
+> 
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+> Changes v7->v8:
+>   - extra parenthesis
+>   - added loco
+>   - renesas-cpg-mssr.h: removed unused clocks, added a macro for mstp
+> Changes v6->v7:
+>   - Add description for reg property
+> Changes v5->v6:
+>   - Set clock minItem constraint
+>   - Moved additionalProperties after 'allOf' section
+> Changes v4->v5:
+>   - Set reg minItems and maxItems defaults at top level
+> Changes v3->v4:
+>   - Handle maxItems and clocks names properly in schema.
+> ---
+>  .../bindings/clock/renesas,cpg-mssr.yaml      | 58 ++++++++++++++-----
+>  .../clock/renesas,r9a09g077-cpg-mssr.h        | 48 +++++++++++++++
+>  2 files changed, 90 insertions(+), 16 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h
+> 
 
-https://lore.kernel.org/all/d542d18f-1caa-6fea-e2c3-3555c87bcf64@google.com=
-/
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
