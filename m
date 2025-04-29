@@ -1,95 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1801DAC81;
-	Tue, 29 Apr 2025 15:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE072206A3
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940027; cv=none; b=qM7TVpTy0UU0FCXik9wvNAwPhVXc/gagw0UJhuUCvdITkkYqzoZuVheSmNGtdAGmYy7ZKecGiKaDC2kM9OeEPH/HrUpc6xgm2+HbMASFsMq/zpq57S5ZcTiChBWkgZMQeqkGGreCaFmjKXvOFRfgtvUiMkBgcAuQ9HQl/TGY8uo=
+	t=1745940124; cv=none; b=AcdlR8rIFm1fzTvHNZFTBBCCtEbTBzWqsorfVaGWkCYRiJ4wqgZs5gvOGjWG56l08tw2JmyxeaC2YSvINMbaujA5qhpcUWDCiKGYVRtC5TjriYKsG61He4DjpEWXvaTs+egzJPsjk/coGScabuypdE5Jn7ZAAepY0TKppCMfA58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940027; c=relaxed/simple;
-	bh=rxoMXpkpRsXYKrXv1e5QC5IEfYkq+HrBL07RI8vLYXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W/cmXPHYCIhIIoLytRyQf5x2KSKJzcVgZ4MIs+wAU4FcU0lMel2oQauzxPbEWjEfI6ylABSo3s6joI09NghTsnbuqYrkcxhYu8RaizzKtPc49iBvUrvsvaw7liT+iYArEcYjp4Nnd2XKVXeGmwO55m2ScAIymyjACmruIyvyQ1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsORuipn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745940124; c=relaxed/simple;
+	bh=eTm8uUOjEA2yj6gyEF2Wj5Q6fv0haX5JFNB0Clpjs/o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UoTKiC/Zqk88184TmorSdttLy9gMDlDVy/7yBj8ENZACl937TW+swWzRxvDWIntoAiSCv7f2iNx0cYzqLEio9eT/1jlp6ZWRTtW2OktbmTQt2SYmtDDsJCEFtsghv3a6ypkJ/aBWLFDPjF3HxMq7DIMEeosXKHpQ9JHGYAShuVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YSWjDd86; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsORuipn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFC1C4CEE3;
-	Tue, 29 Apr 2025 15:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745940026;
-	bh=rxoMXpkpRsXYKrXv1e5QC5IEfYkq+HrBL07RI8vLYXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bsORuipn+BexskWvLb3jJGuWS0W5JpuowzIlt3FoR+nvstJhBgHJKNcJyomtzEbTW
-	 7kNyFfEr9xWqpQ8cf8/eFG94lyqqtnKlJ64HP9hH3HF4dBrRD+KpFqB/K3y/MXSaO0
-	 tf4s611tM+VX4CMePy1Gqr1bI8mN2Xx+lFK9u7YkbFk5ffLjNmWte2BG3zi8hY7pzY
-	 ZNWfyhCQCPRsK5jbrm5Jvqvql881wB7NnWvesuhctzUAYaZcTX79HbyDBqE0wxJcpC
-	 H+B2lRV+Bj6YsnbTgeco/ptBcYCy6jiIH9Cr+5GLSKwYgebn+HKKcKRE4q0zNTwnom
-	 dMNBgQITYL+SA==
-Date: Tue, 29 Apr 2025 16:20:21 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ian Ray <ian.ray@gehealthcare.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	brian.ruley@gehealthcare.com, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Subject: Re: [PATCH] igb: Fix watchdog_task race with shutdown
-Message-ID: <20250429152021.GP3339421@horms.kernel.org>
-References: <20250428115450.639-1-ian.ray@gehealthcare.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSWjDd86"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3087a703066so5876615a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745940122; x=1746544922; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNk7xuT0f0Cef+C938NHaMgqXngD7O4h38pLZxapbNs=;
+        b=YSWjDd86r2ThzV3EF7G4IMgG5Fb2415C5I2rotOspfhWTRxA0vJ37hxPYZHe4gw+wa
+         i6kXHbcEfaiKwnlX8dEo4UAmmzGUBBf29LHYYZ06LpFvnK7WKroeLpQ83muEB0to6wRV
+         lPI6pcGwOhcOadlGmtBWqFUkIJFbQfCotZQFQAi9Y0lH8x8q1d015+Izhjrc6tSVoOJL
+         tFxtivNGgHNsMnn9r3DTMX7VAS+QFPrOZghls354S5w+RF5afgnUxHqtbi6BPGGFpBwC
+         zhuRqqjWRdhC9qhYLn3vzyNyY5wQIaSJsg9NZ7KND6rgDpYQxIX10hHkud2pnrPord1A
+         wlWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745940122; x=1746544922;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aNk7xuT0f0Cef+C938NHaMgqXngD7O4h38pLZxapbNs=;
+        b=wCR6LP+Iiol4Zjpdd8xuehPwQnesyVLMM45VYRVTVj8zVahC4ycjTq9Bmpw+eCNsuZ
+         SnJb29A481VDgOdRrnVQOD04O8kO9Oj9WECVXQqWmgmxRF0cMgwOGvXm7oQGR2IkkErS
+         bRvTsG+a2Dg5JzP2gcfTHrVuzybuKL+KFCrEdPw0jC4UOI4wIF4VSxQ9v6tchCb1SBJT
+         eZ8keEhKYZRot7wp8ghk5UOnX7CIbCUXXwod13Th6YvEof7ebq7RT2xryPoaqOrizq8i
+         u9ni6qyToAspzufxnLJ1CaDseOV6KhfvAqG1P9DDXL0TU1Bav3eTfzbcEw+ZxBt74feT
+         g3hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUizG9F6KsCuGpCVOHXU7eGizhov5WoCGMibaAotUWEoNWMJmcTrbjzjHtAEKh3fzIlKt61+xqJGwyMcbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynuQJ0Vi+jyagAEhlTU90iEaHctAKp5gpTWWAgzmZzvjg72rIM
+	riSTwIu/RYIP2ZnkoxyJlJKDyFQvnEd9fiT8n0tlKIKJhEfBvbLNejTo5Vx/rFAOUztXYWutYn4
+	1xw==
+X-Google-Smtp-Source: AGHT+IFYXh1I3s4XEFN65uVfk6oHWBn6YIlt2ZFbuISXBnP3zzgosLfAG8nouUaaQl7BdvugXwDdfe4pOcI=
+X-Received: from pjbsg5.prod.google.com ([2002:a17:90b:5205:b0:2f2:e97a:e77f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1e4b:b0:2ff:64c3:3bd9
+ with SMTP id 98e67ed59e1d1-30a0139a0b8mr15921485a91.23.1745940122452; Tue, 29
+ Apr 2025 08:22:02 -0700 (PDT)
+Date: Tue, 29 Apr 2025 08:22:00 -0700
+In-Reply-To: <8f03878443681496008b1b37b7c4bf77a342b459.1745866531.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428115450.639-1-ian.ray@gehealthcare.com>
+Mime-Version: 1.0
+References: <8f03878443681496008b1b37b7c4bf77a342b459.1745866531.git.thomas.lendacky@amd.com>
+Message-ID: <aBDumDW9kWEotu0A@google.com>
+Subject: Re: [PATCH] KVM: SVM: Update dump_ghcb() to use the GHCB snapshot fields
+From: Sean Christopherson <seanjc@google.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-+ Toke
+On Mon, Apr 28, 2025, Tom Lendacky wrote:
+> @@ -3184,18 +3189,18 @@ static void dump_ghcb(struct vcpu_svm *svm)
+>  		return;
+>  	}
+>  
+> -	nbits = sizeof(ghcb->save.valid_bitmap) * 8;
+> +	nbits = sizeof(svm->sev_es.valid_bitmap) * 8;
 
-On Mon, Apr 28, 2025 at 02:54:49PM +0300, Ian Ray wrote:
-> A rare [1] race condition is observed between the igb_watchdog_task and
-> shutdown on a dual-core i.MX6 based system with two I210 controllers.
-> 
-> Using printk, the igb_watchdog_task is hung in igb_read_phy_reg because
-> __igb_shutdown has already called __igb_close.
-> 
-> Fix this by locking in igb_watchdog_task (in the same way as is done in
-> igb_reset_task).
-> 
-> reboot             kworker
-> 
-> __igb_shutdown
->   rtnl_lock
->   __igb_close
->   :                igb_watchdog_task
->   :                :
->   :                igb_read_phy_reg (hung)
->   rtnl_unlock
-> 
-> [1] Note that this is easier to reproduce with 'initcall_debug' logging
-> and additional and printk logging in igb_main.
-> 
-> Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
+I'm planning on adding this comment to explain the use of KVM's snapshot.  Please
+holler if it's wrong/misleading in any way.
 
-Hi Ian,
+	/*
+	 * Print KVM's snapshot of the GHCB that was (unsuccessfully) used to
+	 * handle the exit.  If the guest has since modified the GHCB itself,
+	 * dumping the raw GHCB won't help debug why KVM was unable to handle
+	 * the VMGEXIT that KVM observed.
+	 */
 
-Thanks for your patch.
-
-While I think that the simplicity of this approach may well be appropriate
-as a fix for the problem described I do have a concern.
-
-I am worried that taking RTNL each time the watchdog tasks will create
-unnecessary lock contention. That may manifest in weird and wonderful ways
-in future.  Maybe this patch doesn't make things materially worse in that
-regard.  But it would be nice to have a plan to move away from using RTNL,
-as is happening elsewhere.
-
-...
-
+>  	pr_err("GHCB (GPA=%016llx):\n", svm->vmcb->control.ghcb_gpa);
+>  	pr_err("%-20s%016llx is_valid: %u\n", "sw_exit_code",
+> -	       ghcb->save.sw_exit_code, ghcb_sw_exit_code_is_valid(ghcb));
+> +	       kvm_ghcb_get_sw_exit_code(control), kvm_ghcb_sw_exit_code_is_valid(svm));
+>  	pr_err("%-20s%016llx is_valid: %u\n", "sw_exit_info_1",
+> -	       ghcb->save.sw_exit_info_1, ghcb_sw_exit_info_1_is_valid(ghcb));
+> +	       control->exit_info_1, kvm_ghcb_sw_exit_info_1_is_valid(svm));
+>  	pr_err("%-20s%016llx is_valid: %u\n", "sw_exit_info_2",
+> -	       ghcb->save.sw_exit_info_2, ghcb_sw_exit_info_2_is_valid(ghcb));
+> +	       control->exit_info_2, kvm_ghcb_sw_exit_info_2_is_valid(svm));
+>  	pr_err("%-20s%016llx is_valid: %u\n", "sw_scratch",
+> -	       ghcb->save.sw_scratch, ghcb_sw_scratch_is_valid(ghcb));
+> -	pr_err("%-20s%*pb\n", "valid_bitmap", nbits, ghcb->save.valid_bitmap);
+> +	       svm->sev_es.sw_scratch, kvm_ghcb_sw_scratch_is_valid(svm));
+> +	pr_err("%-20s%*pb\n", "valid_bitmap", nbits, svm->sev_es.valid_bitmap);
+>  }
