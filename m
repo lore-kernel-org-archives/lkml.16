@@ -1,140 +1,106 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002DC1FDA8C;
-	Tue, 29 Apr 2025 10:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1A520FA90
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922620; cv=none; b=Vc1uKO6asDkmp0zBHK1Az7pVLNBXp9NRsMZxQjwgjWgCV8AyDbgt+hpjLAE+iFUqd3NUfP20kc83Gd2mkI2SfncjT9uie07QX1BDH1NjpbrAe3FIc16+GAUG68dTvM9C53TdZLpNLBH1YGFp7CVxYOI69z8CdIcRRA+9GKnYvII=
+	t=1745922655; cv=none; b=MWEt4MF/QJiuB1ySfCO8OuI8965kl12fB1e9iSLirIPvxunafbm6+MQPupaz/1asgA8A/1ayQVlMR8UffJHsI1y4yCDjqEiWKTC8Ld+Wo8f3lw111J32KV+31AHivCcCLC/UjViHBWa1zC5NHSv+Nfd5njcsr9eEoACG2VRm8pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922620; c=relaxed/simple;
-	bh=lgyXItV2Bu+riV/9ewEdodHmjcO4qdizNxdMcwNkozc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Pi2fQ/sPDiOUSy70dgconqxrWw1Ak2pylW2LBWBBY7GNyQfOt1A0rhg2908m6nb+YpIQ/kn5df4NXJLKRk30CYqjp76I03zSMCdh9wt6vDEVZ2lr43Hf6rurPnr76HBoZ1vX8UAcIyW4UoXVtOkaYdoyYRb472gD11A1GwpTBJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m5vG2her; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745922655; c=relaxed/simple;
+	bh=04voz7/BTZUb5byXuw1Puz41gaRYXd2u6G7MthIyJKo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CY2ZxWiRscUAZCqO5tTo5ymXFij83GkvosPZ2OJJZF3qILrOYBZy2/rHYvs51UnOMi9DIFX/0HVri3KTx6ChAVWRiALcQME6KniBPtZ2tcLR3x6eqQRxD+d4Kv0oyNNCdVZz8Iob46bmfsCkXXGhq7NKGThuagRcnIglFF4k6pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OMaD7Voz; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m5vG2her"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9lCKU015307;
-	Tue, 29 Apr 2025 10:30:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bokXI+hybh6ma1h0DymYjEygB6zRvyEC3U/pIpaD5Is=; b=m5vG2herLhY3GlJh
-	pRbCVEDzhp9Z7WvxuYXaKdq86bOgMz0SrXgUExbDQq1PYTPshN5lfXhDu3dQVmDW
-	ivo2h7B9X51Vze366ppArHCVfQSxcbEFHV1dHu8FliFqiTF+T9Ek5jdQJLlpvFy4
-	Kio+jmyeryB6hi3DX/SikP3R1WIYkq2omYrdlFyeWNZ9efS8WnIPiKVnV5msE3AN
-	q/GXkgqtocqYFrHrILu7TmhuH3RCzlzuagZeMSGt7Qti/IMRf30Ok8eai9p6mvej
-	Q6kzvAo1Qp/Hd5bhfUH2YSKk0Nhrh+MKn1LJV1vUG4jPqxVF9XOyaiBzakIqWgMd
-	HAkGMQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qjwv5f6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:30:13 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TAUCi8029498
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:30:12 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 03:30:07 -0700
-Message-ID: <95da19b8-a909-288d-69bc-8bf00d802c80@quicinc.com>
-Date: Tue, 29 Apr 2025 16:00:03 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OMaD7Voz"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acec5b99052so136744466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:30:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745922652; x=1746527452; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WiBauZO2ElGRG8B3vbx0E57UweONyPLJm2l7Gk1dbO4=;
+        b=OMaD7VozvpMa4bkMVEieUrp5t3Ku1QDn9QTLxKgp+aiZwbOUoQe9VrgQQwsjM2SyrP
+         KSIo/qKYU9aSwegcncIM6FWe9SsSs0Xa0Pqjd3MIE7JIivLMZYK5Pb1rNn+vbTeoRX5A
+         iDvTrl7ICn0aKvdDbxC+4P3/PKbTD4wVp7Qh6i1C2iHlfdqGfbAcjcmsx5teBYKmxWPN
+         WbhjTOW5wu88XNR2em8t6vJHWB0aUTLEJBunir1g2XwOb/pkz9xPBk0YVs+GLr+hf28N
+         7c1rY4r4yHgtnI8xOfn84M0ZsOu2s6duICPq+IZ0rFmjSLMwm6ZOD5p0PamjR0Bzf9if
+         W2Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745922652; x=1746527452;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WiBauZO2ElGRG8B3vbx0E57UweONyPLJm2l7Gk1dbO4=;
+        b=AntoxmrRWjQ9+3zB2InF/7lhW8q/7WtEeDq9pguzZBYsis8zTVJZ3XMv+Rp20325FQ
+         MRh8Iv++pA1agenld8oqjeFXQONfq5tmhy5v3jvnGGzbWWW2xyx3Pc0DpNggOyQjhuL3
+         TbMYik4s7k+fKVM8l5qQdaGLcg4vnAoWZIakyMjNIE6PEFYWdpmx2Qgx8Bnur86+18Rw
+         mv6OyIFRssMpDuainlyo5cfUQ1IdqlzKwLFFxZAGNjw8WM0jSQD6AEQuVjLg9CXMQ0TK
+         j1XuSf7bn6zAuyhnDMSJhkmy31VaWLptdys9P3J0BQMgdbOuoFVJdbb+dURKu5VIX2th
+         B86g==
+X-Forwarded-Encrypted: i=1; AJvYcCUf+Q/HADwQOqJJR4alPwOdXO2U/Yc5m1kyeoAhhmRziZUL17CSgTVEPmsmn5zHz9iBFwPbSMGgTX7dUzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxan9HAHudq0+OtJbvq1ept37ljo6HahPgQH06u64pvZROcPqwA
+	OjZ9MyS9a+1bhFepIgiVk1MHYCnasOzWI4Sq0y/qDeoV2zQNJtPA+oq48qfI54yD6pe2/91nsD6
+	cK75E7vqOvYvZsSvKLA9AOgSR0pp2PzBKik/IVmjd67WtwXFTBg+5
+X-Gm-Gg: ASbGnctZ/0eZF6Q6PkPPSQ5ukSgRh7sZmuL98ywgZ8G1TAe13rwQoj/l2qF8kvjHCR+
+	g2N18f3QUOSfA+1n/ieeCvAbCC/FdmIBXcpDj1zTd/lTCuMNd+GBT/00g5chkImk5dcDOdMnowO
+	X6aCWneKWHPN/X0l+07Xwa6NXBAkRVtDbnPHXeagUaFJCnWjxEspcTHhLEe2ClB9Y=
+X-Google-Smtp-Source: AGHT+IFmHKm9kqNhujcVpdgOw96B4rLpnKryxzvvMQ8LDiaaEUClLTQnJ9pgBvY5KlSnoISbcndqYP37rgcSfo6LGIU=
+X-Received: by 2002:a05:600c:3547:b0:43c:fe15:41c9 with SMTP id
+ 5b1f17b1804b1-441ac853dc1mr23585585e9.9.1745922640597; Tue, 29 Apr 2025
+ 03:30:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 13/23] media: iris: Fix missing function pointer
- initialization
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-13-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-13-3a6013ecb8a5@quicinc.com>
+References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+ <20250429-strncpy-from-user-v2-1-7e6facac0bf0@google.com> <aBClyLz4y7a15WMg@pollux>
+In-Reply-To: <aBClyLz4y7a15WMg@pollux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 29 Apr 2025 12:30:26 +0200
+X-Gm-Features: ATxdqUFa3J0LW17Z4A1KkrE2MYyUXXKuptQZ7VbxgSdoPeqBASznqKjNgJpcxCM
+Message-ID: <CAH5fLgj_wW=8XgdnceHGv=VL19X_c3es7w_-QDqgK7+PoEcdZw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] uaccess: rust: add strncpy_from_user
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: _byHaITyWOg59otUsoGj12pjNGx4Jm1q
-X-Proofpoint-GUID: _byHaITyWOg59otUsoGj12pjNGx4Jm1q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NyBTYWx0ZWRfX0GCqcX3HcC9e n7p55z3mekh7pCVqHicfNVPFPmHmAlzw52gOvDW71uNt/ZM3wMak9DxYXdwDuGGKe2BaR2kGyBr xieKF8mDs/VA/uDRDgbxH88mKF+YhBmQpzuYq75qEm6B6lJLNq4pgPxFZtPzrghodDNqx1SNOJC
- y0gRLDL2W7tyqmoiCqcFyPg5oC800nNhLTulfdjVleCviHKQ7lv1ioH+60vWXRe2JCAcEmIRHuI ccp+aRyl97VpfT/dCQgkBxUZSS7TedfZI2jfKzzmgNCpxpGshAUi/kRlUTaAhr6BhAy3WxMT1uX wiGVkqv/9SxWggmRRXvRzpkG4CPuZDgdl/y1hVQyhST9PDN0r8KGJ0wRbLNHGiwDRpirt6AoLYx
- 7oD3d2uKu0zubegJdjeZhiElKewPLgp8asAhIgaIlEQzn0rYMMLUnLbJdHGOQvLazXALAwqp
-X-Authority-Analysis: v=2.4 cv=c/urQQ9l c=1 sm=1 tr=0 ts=6810aa35 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=1AEiwiRWklCkw4qv2JAA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 malwarescore=0
- clxscore=1015 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290077
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 29, 2025 at 12:11=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> On Tue, Apr 29, 2025 at 09:02:22AM +0000, Alice Ryhl wrote:
+> > This patch adds a direct wrapper around the C function of the same name=
+.
+> > It's not really intended for direct use by Rust code since
+> > strncpy_from_user has a somewhat unfortunate API where it only
+> > nul-terminates the buffer if there's space for the nul-terminator. This
+> > means that a direct Rust wrapper around it could not return a &CStr
+> > since the buffer may not be a cstring. However, we still add the method
+> > to build more convenient APIs on top of it, which will happen in
+> > subsequent patches.
+>
+> If we can't think of a use-case to be built upon outside of
+> rust/kernel/uaccess.rs, I'd make it private. We can still make it public =
+should
+> we find a use-case later on. If we have one already, it's fine of course.
+>
+> With that,
+>
+>         Reviewed-by: Danilo Krummrich <dakr@kernel.org>
 
-On 4/28/2025 2:59 PM, Dikshita Agarwal wrote:
-> The function pointers responsible for setting firmware properties were
-> never initialized in the instance capability structure, causing it to
-> remain NULL. As a result, the firmware properties were not being set
-> correctly.
-> 
-> Fix this by properly assigning the function pointers from the core
-> capability to the instance capability, ensuring that the properties are
-> correctly applied to the firmware.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3a19d7b9e08b ("media: iris: implement set properties to firmware during streamon")
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/iris/iris_ctrls.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_ctrls.c b/drivers/media/platform/qcom/iris/iris_ctrls.c
-> index 915de101fcba..13f5cf0d0e8a 100644
-> --- a/drivers/media/platform/qcom/iris/iris_ctrls.c
-> +++ b/drivers/media/platform/qcom/iris/iris_ctrls.c
-> @@ -157,6 +157,7 @@ void iris_session_init_caps(struct iris_core *core)
->  		core->inst_fw_caps[cap_id].value = caps[i].value;
->  		core->inst_fw_caps[cap_id].flags = caps[i].flags;
->  		core->inst_fw_caps[cap_id].hfi_id = caps[i].hfi_id;
-> +		core->inst_fw_caps[cap_id].set = caps[i].set;
->  	}
->  }
->  
-> 
-Would certainly make encoder fail later without this.
+Ok, I can drop the pub.
 
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Alice
