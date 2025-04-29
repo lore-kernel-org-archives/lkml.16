@@ -1,140 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5DA2DAF93;
-	Tue, 29 Apr 2025 23:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BF52DAF8E;
+	Tue, 29 Apr 2025 23:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970708; cv=none; b=chM7S5+a+tnxizdq2u8c7DIj9nqL80q+IBPH6K35lgyut/70tcrvs4teOkdbYl0AziI4Ax5ESGdV/iyf1emQNaOgZj4O5BBT4x40Y08zaqBKi9gF3u+Cv3LXRHlphRCY28U8/Dho1Wotrun4RJnpg4aGpW/xgkvZsm2c42mXXBU=
+	t=1745970709; cv=none; b=f3fbUuD4B7OXtD7Y+W1BCgkHrAwdPjvn30DvXrVl8yFhX38DLQHpY2JjVdGgsdAs79CM6+vHgWFhfoXVuVYcEjhwhEbDkP333frUstq0xgZ+f6jBBbRV+0uJBenn75qz/fMtLip6lSkYSDfWtaguvqNXRQw9vAF+Brms3DmIfYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970708; c=relaxed/simple;
-	bh=2hhM63m6Ix9ZtRt71NCJYFUVpCIBG/ABtk15UHjrBVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e8bWmpzCa+dl8F5wE1rtRJZXSVPE9HlcdeBg2DWMDE2GV1vDLStlBayBwO/5+q3u98qP9gv5ygt0AM9/uaXN3siuslVzV2pB5eLbjPK7n+rzbSvToyCLV8R9xA9HNL14SjppVbaRO5P5d/81NwibpqgE5SYpeqEmeOhUUWc3WAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKy73oKd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745970709; c=relaxed/simple;
+	bh=sBCCEu0PzXtD/z8CcTyLp+IK0B/An2GSO48BkbxRwVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=poDhDl02zEMJZLdJoGDQwFQhzF5gkAesSsB4x3qNulA66JwiRmq6Xl9PJziTTVb/e+gpKmIasHT1W14+SHTeXaA8hb108PuumGyKCq08C89sOWMuOiMHEODCfYmYdHDIy16BbfrJmbq9xdzTMdx7yBkWqSkWCoO5gU50YBfWetA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cnOSxA+l; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKy73oKd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3891DC4CEEB;
-	Tue, 29 Apr 2025 23:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970708;
-	bh=2hhM63m6Ix9ZtRt71NCJYFUVpCIBG/ABtk15UHjrBVw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gKy73oKd+lBdzHnGS+HEfJkVffjAz7HDAqNnMlbC2pkC7bDWuM9CmeqaNo5JP36qY
-	 nPKgQwdRcG32o5fYnTbTNdB1DvnqQRjXIBUKudOj8wYLUh0Gir9KzQTlBGSAAykaRr
-	 K4wDNKBi85tG5Q3a5cSeBk7zz6CLGVl5fU6QNavEGkXRRKDOIWT5eecugiaWjYsdmH
-	 kRR0DAGiJ+Fr2sCOonVxeb3h91gupDVsBM1bA5OxFNw10UvMJhdtTemR/ZHn04A3fQ
-	 5nq7Y307kMSsU9bynMdu0W4vbCBDC6Wt3AOdpkBWGU9qa7rC2e2yONgbmi/5qjJdmP
-	 IpWb/NlxpeUYw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Balbir Singh <balbirs@nvidia.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Bert Karwatzki <spasswolf@web.de>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sasha Levin <sashal@kernel.org>,
-	iommu@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 12/37] dma/mapping.c: dev_dbg support for dma_addressing_limited
-Date: Tue, 29 Apr 2025 19:50:57 -0400
-Message-Id: <20250429235122.537321-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250429235122.537321-1-sashal@kernel.org>
-References: <20250429235122.537321-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnOSxA+l"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ecfbf1c7cbso115828206d6.2;
+        Tue, 29 Apr 2025 16:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745970706; x=1746575506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VgJMhFJq4ZUTkLgK4HQ4HBKsoTPMcSmHP2uL7gp3E7o=;
+        b=cnOSxA+ls6kKEJaC93TvLN0JWzzOIBXoHKHvScVB92DVH28cOwuMaIuw4dP9c9SBfa
+         gJZdipbscE6MV0gH6qrpW95t8HehrxC3dH3xYuviVhm6Tw+SOX7k/0RlIgOcXE0ZbQBY
+         cTpdlfarjZpRAP2C0LFyxo97MX58FGuJHEmLgb8oz6cGnqOwupet8ueAfbOOfVbGb08b
+         j0v1qXVjPRKBmUi1bUzRI2ficZ4/LGbGalGvsOphzd/5ksKvclg+tqdOPKG1RIJK1zj5
+         dwRokShTdngaQhmeJXNFxVhlDbz5DX/mdQzbXzd2l8yriCoI2tdvSxuOeWI2+LCYSbUL
+         nOOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745970706; x=1746575506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VgJMhFJq4ZUTkLgK4HQ4HBKsoTPMcSmHP2uL7gp3E7o=;
+        b=Pr63Kt7S8MP3sKY7+8T4aJqaaZ75pO8w6nkk+ZcVfdmQ+nQJb0XWZMDzQ0L4S9tGBM
+         0BgdP4is5sND84VOGZ9bacrR4O8WKjIlHLSOtNE+88NYHJ8wbrHECd9qiOsVEaGW4I7h
+         ex3J0S02ErEUbec+d2Jt8RjaLnD/fgOwNK/4Ea3/7xrLL7iJyW8HWhcgLeXfv81S7qPB
+         F9x41hxrsQx1Pjut+o+hYuvitrwz0+8aOtOCAsnCV+RTIgRT5wakKCQGQ/QS7atMLUPG
+         w1CjGBV9ACdCiZld+4fZooG0+Z+s2Kxv9i0zPeozrj7QIXtGW7hr7KR+o1emDg6SKcwP
+         0l9w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0n7FsWxvbHtTl7d6rNwnPp8SgRTa7KOumowBcNJgDvtEW0Qu1xMriqkifw2/pFct6mTzzowNKKVg=@vger.kernel.org, AJvYcCWrDWLzhk6SYnUZUQDGL2bC4iMhljubzCvK0ZilnMUT0KmuPGdV2sep4pSrIDUgc43KRYTF6/CX@vger.kernel.org, AJvYcCXwQV51vzWGTeKCoJ/ePVtypLmrpDRUD2eLSYF9qzCs1a24hTDUpA5msuVuGnc1faKuslu91qXC9tCFr1KH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF0QPnWW/W19o/WSSKeqW+n0MIngQfrFHNIUBiE+052ClQHHgA
+	mrsG8f1PLJJ0Pkucel5N/Vg6MZHC09QhsxKMtm+w/OKhCzrDmFpAHxoKtqyvjK78BgI60p5xOpy
+	qjbYTGUyTUlNHt73JlVXLmTwcrwg=
+X-Gm-Gg: ASbGncskSh6TXjkT6+umpp7gPOVTEQA1K48PYyie2I/OjP9ueWcPeEk9OO1G/TEkaMZ
+	Cn6WbVWHAdAr7UmX5aqbiDawxiGayMXlBaMlguALZKpTIqqcIUSCMcGPiCEtLXZHp1AoIxKIr78
+	I0hT9GLal3DHgDxOAHEeI15ek=
+X-Google-Smtp-Source: AGHT+IHJjRFYguZCAOSMReICx0ON6O2vFOn6ON1tzk8HouhAX8NRmwnFIUzqGziJ7hrTHn025vdSyMxaH0CInlVPqOs=
+X-Received: by 2002:a05:6214:130d:b0:6e8:9b26:8c5 with SMTP id
+ 6a1803df08f44-6f4fe053011mr13808786d6.10.1745970706693; Tue, 29 Apr 2025
+ 16:51:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.25
-Content-Transfer-Encoding: 8bit
+References: <20250429233848.3093350-1-nphamcs@gmail.com>
+In-Reply-To: <20250429233848.3093350-1-nphamcs@gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 29 Apr 2025 16:51:36 -0700
+X-Gm-Features: ATxdqUGzJf3hFqFjw1dvxBqFD4iyh4yJTKCB2ByesYnjFgCzf21p8iLoeNdCFmM
+Message-ID: <CAKEwX=Mea5V6CKcGuQrYfCQAKErgbje1s0fThjkgCwZXgF-d2A@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/18] Virtual Swap Space
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, hughd@google.com, 
+	yosry.ahmed@linux.dev, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
+	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org, peterx@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Balbir Singh <balbirs@nvidia.com>
+On Tue, Apr 29, 2025 at 4:38=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote=
+:
+>
+> Changelog:
+> * v2:
+>         * Use a single atomic type (swap_refs) for reference counting
+>           purpose. This brings the size of the swap descriptor from 64 KB
+>           down to 48 KB (25% reduction). Suggested by Yosry Ahmed.
 
-[ Upstream commit 2042c352e21d19eaf5f9e22fb6afce72293ef28c ]
+bytes, not kilobytes. 48KB would be an INSANE overhead :)
 
-In the debug and resolution of an issue involving forced use of bounce
-buffers, 7170130e4c72 ("x86/mm/init: Handle the special case of device
-private pages in add_pages(), to not increase max_pfn and trigger
-dma_addressing_limited() bounce buffers"). It would have been easier
-to debug the issue if dma_addressing_limited() had debug information
-about the device not being able to address all of memory and thus forcing
-all accesses through a bounce buffer. Please see[2]
-
-Implement dev_dbg to debug the potential use of bounce buffers
-when we hit the condition. When swiotlb is used,
-dma_addressing_limited() is used to determine the size of maximum dma
-buffer size in dma_direct_max_mapping_size(). The debug prints could be
-triggered in that check as well (when enabled).
-
-Link: https://lore.kernel.org/lkml/20250401000752.249348-1-balbirs@nvidia.com/ [1]
-Link: https://lore.kernel.org/lkml/20250310112206.4168-1-spasswolf@web.de/ [2]
-
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Bert Karwatzki <spasswolf@web.de>
-Cc: Christoph Hellwig <hch@infradead.org>
-
-Signed-off-by: Balbir Singh <balbirs@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lore.kernel.org/r/20250414113752.3298276-1-balbirs@nvidia.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/dma/mapping.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 864a1121bf086..f7366083b4d00 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -905,7 +905,7 @@ EXPORT_SYMBOL(dma_set_coherent_mask);
-  * the system, else %false.  Lack of addressing bits is the prime reason for
-  * bounce buffering, but might not be the only one.
-  */
--bool dma_addressing_limited(struct device *dev)
-+static bool __dma_addressing_limited(struct device *dev)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
- 
-@@ -917,6 +917,15 @@ bool dma_addressing_limited(struct device *dev)
- 		return false;
- 	return !dma_direct_all_ram_mapped(dev);
- }
-+
-+bool dma_addressing_limited(struct device *dev)
-+{
-+	if (!__dma_addressing_limited(dev))
-+		return false;
-+
-+	dev_dbg(dev, "device is DMA addressing limited\n");
-+	return true;
-+}
- EXPORT_SYMBOL_GPL(dma_addressing_limited);
- 
- size_t dma_max_mapping_size(struct device *dev)
--- 
-2.39.5
-
+Apologies for the brainfart.
