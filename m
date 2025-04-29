@@ -1,127 +1,118 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A115C22A7EA
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81CF28DF00
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917325; cv=none; b=pfMRI1NpynC8Tp+wV1T/MJsk7biTnMwWqQZmntKSBR/0as71pXQnebWZuuZh9iTX4cxxcKEmLbQD8JOCRiLdlusU/PylSbdq3y+tJWoTcHO8x3kUCsAG9sgGfJskQQOlPg8KmrMzb8SD210y2gzfh2ZUCqzA6JJup//EAFxAaGY=
+	t=1745917379; cv=none; b=mFPYcLTJW+QuYY7amny1cyt5ldu3nxhAdJaK8pN3isl6DqwkgAXaHwFfqTTU0txGtjdtzL6Oqk7NvkGqPvnjzkeiPAZoaDaZGvD9HwV80Wyf5kCSooUywOo+ic/ZuoP6QipmO/utsu+Q1jFOTvymVD/gzlT+h/jMPeEqfnR1vlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917325; c=relaxed/simple;
-	bh=oNXzkfNQzmJC63PmCHxiMrgawnbadC7dxmj8/uKNLqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QSnXNYDBHVlgKKJw9y8ictVu4oN1PMMLxcpb6cc5Oedc0pPywXQ5LR0vrqJNm8Jc3i1L54Xt29n9JUnsm2SkpNir5VpDYkbNk77v5ALRWw2fNp9SbEiQ1Ysrxdr26H7Kp8HtjYnFfXni/3gnBKtofGRSa+e+wKLXs2z2gtT363A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=AqbgmLMC; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=QVG5KA7G reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1745917379; c=relaxed/simple;
+	bh=HRoiZv1+AvWN1cftOgRkKmMryexssKHd2QZI31HjnNo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AJ+tkFh0hJZaI11kU95FaiNyurbfeP4AipQ57Vm2P2pek2QquJ9U3ax8xdNzT23R/rZhrrE0ks8V5gCV9Mx5+8V34kvlfvg94OhKQypqnEPq0NPHCSYCfvbgad1k96WLsV3CqndL40/O1cLYvr8Aquvuwhofi+mHeHaeCYY6av0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sogISGKs; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="AqbgmLMC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="QVG5KA7G"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sogISGKs"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so29808295e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1745917322; x=1777453322;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CBp3gVMZ4Xj6VTie2AOZTRZv6GCiRK4KbGKItk9J0Z8=;
-  b=AqbgmLMCOuV0AwUJ1EReyfBli7tfkOH9DTx/R0DYrR2/SXCFeT15CH/x
-   YQ7clZll7HeaSQpL/pGCeuTWkGRLnI5Gi4O13Tuf+fFkIuNW/i02I+eB3
-   H4VsG6sonuaKrZPfpBHVFheGd/gcEtUf8J+rrvIWjL1MTVZwWsFo9PH7m
-   BHB08eGRAuAOPt/6kLHCBabxZ6pBG/8DMbK81Pkr3LL3Mx7jbINK0nWMO
-   lzx9B7HeRJSUZg5WDtimXRmbM26E7pv5wRnj1pbGFTAU+mb6RX2lokS60
-   h2FBUgpe1CMsMWwlwqb5Xa7uXler9hTnGDYCVFphmQ8nFAF+N4XZ+w+uT
-   w==;
-X-CSE-ConnectionGUID: ZLcJNe8HTUCCTWKIMfa8IA==
-X-CSE-MsgGUID: g9xvr/rwSxKr+0AA76UsgA==
-X-IronPort-AV: E=Sophos;i="6.15,248,1739833200"; 
-   d="scan'208";a="43777057"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 29 Apr 2025 11:01:59 +0200
-X-CheckPoint: {68109587-28-7141A0B0-E6EDEC14}
-X-MAIL-CPID: C8E3A0A56DD49BCC6676081E6626B4CF_3
-X-Control-Analysis: str=0001.0A006396.68109586.007C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BBE26160E21;
-	Tue, 29 Apr 2025 11:01:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1745917315;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CBp3gVMZ4Xj6VTie2AOZTRZv6GCiRK4KbGKItk9J0Z8=;
-	b=QVG5KA7GT2JDq9rzTqFcSeoi5lLbmx0CMc8+weH7zqGrzO50CqIJDaJPA8RDdlqMDmELy/
-	iO/ayZbZ6X+nzEl7k5urOsDN58yAYvBMT0nE5sg+cIU+2V5sgSQ1qGQLg/VOC6o46tbFD6
-	vgaEhmJHOpwZjCb0+9Grk0qUYtiAfmajw3QPrzERMURMMAHoDJ1Ovb/KT2Z6It/vMgFQ+Y
-	ZscvQUrZpAItjhSb/mXdV7zcGDBtJ3ZBLHlyfqs8fVcXisaONqB2KLiHlMI77hxL915riE
-	VI9/4PJHKozuLBGj+RF1QaTP7ZklxKaxq7xRDTjyawtsfotJE70groQwdcvDfA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-phy@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] phy: freescale: imx8m-pcie: Simplify with dev_err_probe()
-Date: Tue, 29 Apr 2025 11:01:52 +0200
-Message-ID: <20250429090152.1094243-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+        d=google.com; s=20230601; t=1745917376; x=1746522176; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=T7ZncPTDU6rGjAymPxyi/H+YVSlLIlXgf5320AUACWY=;
+        b=sogISGKsrMP3rM6k9sShr4hm2c6oWSNJ4j/W4+dTlW+n6LgRxJp4jQgq7iBm1T8Y1h
+         JoDOTzkxNOV9gDVBNULIoLv2ew+ioQ7CwLdmgcIL7ph8ISBqmuyJwNVSBFi5Z5grHACw
+         7xvM2vlKbJa74SNwXtuhcly15w3cspeGvVqk53xZBXHYtVd2TRgjkPTBKcVOWvgQhYHf
+         KKjd6I7uhiLCRA9YiJNsktn8LlrIWfothHFCQlH1YLlWX7dK8nzfs6ZZiF6Qm3tiKSi4
+         Ir6mEAmY8FA68wKNs48ZfMHEzaLx9JuA+NjdOr9sazN6ixG0HZ/hWeqqXSvswROb2j6l
+         AF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745917376; x=1746522176;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T7ZncPTDU6rGjAymPxyi/H+YVSlLIlXgf5320AUACWY=;
+        b=W0VjBpMvXwT1VdG3RuClAx8UgV+bVn5iq2MVYbBHRseGgpugsjSemySDqcFuM8oCz0
+         wBPuhMzbjUCLChIMLykSCQ1QY2MMg71E05C4GubvLcEN9GIbKWPGt+17nSJzi0Mk6itf
+         69CrIOYkqhyAtDnCRRr07rl8ekDMvLmpHmLDheaHEb5dBz937Re4jiV7Z8Nnvl4T6KWx
+         cdZp0YH6xuCUfoiMrkJVUMW39LFSCQeUJjwpd1gHhcksY16Qg7Fa8ZU1LMkssLWdRoh6
+         m2IEnAzKbHwTPcS8YocGNMH0lguXfYJh23FeP+bP+DqbTB6pLajhGlmy53+sGoJJGHXi
+         jAAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWT/2VPCyzqZ+pimXIeCMYxuJ+OJyfhrpsqfcIWNIZDTW797cwC+8/dFTyEp0xwQiv3kUC3sjS9nQ3E5Qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk+A/FREEJL8tTQXffDHHyM8e7BQyRoMbJLbmbuvMYuXWI8QPc
+	2ZwzSSILUL79uclOfxIwjeltZeCRDMxIyZAhLRy3QL4mTHj1SLCyUkQy3UJ8XP9Iaaq/tjplVUZ
+	Ux741Vp48J5n+uQ==
+X-Google-Smtp-Source: AGHT+IHv1zfxovl47q1QWqZ72EG7uO/LnNgfzHzDj7h1HqVSnMn+iKzw289YE7xV/fElvgiBNWuw6BMxSX2OQcE=
+X-Received: from wmbbi26.prod.google.com ([2002:a05:600c:3d9a:b0:43c:fcfd:1ce5])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600d:109:b0:43d:db5:7af8 with SMTP id 5b1f17b1804b1-441acd1dbacmr11681895e9.21.1745917376113;
+ Tue, 29 Apr 2025 02:02:56 -0700 (PDT)
+Date: Tue, 29 Apr 2025 09:02:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJ2VEGgC/32NQQ6CMBBFr0Jm7Zi2AkFX3sOwwHZamgglU2wkp
+ He3cgCX7yfv/R0isacIt2oHpuSjD3MBdapAj8PsCL0pDEqoRtSqxrjyrJcNLYcJ38VGaZUR7VN oYwiKtzBZ/zmaj77w6OMaeDsukvyt/2pJokR77S6WlGy7Zri7ENyLzjpM0Oecv/qViWCzAAAA
+X-Change-Id: 20250424-strncpy-from-user-1f2d06b0cdde
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1216; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=HRoiZv1+AvWN1cftOgRkKmMryexssKHd2QZI31HjnNo=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoEJWjNVurOgL/TbOxrTSkHoo8h09pT855aIlGP
+ zed8otHSneJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaBCVowAKCRAEWL7uWMY5
+ Rm5UD/9E1fo537h/ISDw9qGfdVOTzxwZaWziUhKZPx5CkSjMpgiJK4myYe68YJkMUBURVvzdeYp
+ uIp7gqWuEP33hgLezRLq48hdRzM2WhAR7DD7DTXrcaiCLbEMe/AghSZhmXD9RtOqSxIwV/gAO1s
+ 5n0I974CHXeZkiGjpGWu7pSe+NH5+XACqzSu6sLY66ALqs1WVY/Jg8cTMcYLivX5J7QX4IotExw
+ STsobhkuA9/D+OfwWB6MYArW5Mni+ULju2KmE2Mxszp9oyyiNIkWmVGCmHl0mJVGluaxMLpKB9u
+ 6l2LjdQQN0YX2pP2l7CtrUgx+yR/pbRacRV+/64KmghSVxL6NF/+xY01nzFiAywqBYpzheXPdLu
+ 2UmrlwEgxIDbCf/vvXjim7YT9fZo9Udd8/SkbX0mNYxzAQBGZKdRKxgs8JokCpFu9YI/EcTUVs4
+ Esy7Q/GGmhM27vTToTUgGMl/s722tjJxxAKElJtAtRPiTJ4dRQkSAxflK5JvYQdqrODFP3ffLBD
+ IKKKqwCynb7plbkGj74f12hhiEyHHE8qDoFa3p4VWxH+7CkQAeLA4zBodZnz0JaswcWbrpzpO7O
+ +gm/zECr+dmsE4aAN/GJqYWxkTWgDAtacDp7fGFYvFoDFdwgrLQNRCod0d817udWJ4WFL2z5Yib NOqJLRu33edgEjA==
+X-Mailer: b4 0.14.2
+Message-ID: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+Subject: [PATCH v2 0/2] strncpy_from_user for Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Error handling in probe() can be a bit simpler with dev_err_probe().
+There is currently no easy way to read NUL-terminated strings from
+userspace. Trying to use the ordinary read function on an array of the
+maximum length doesn't work because it could fail with EFAULT when the C
+string is shorter than the maximum length. In this case,
+strncpy_from_user is better because it doesn't return EFAULT even if it
+encounters a page fault on bytes that are after the NUL-terminator but
+before the maximum length.
 
-
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+Changes in v2:
+- Rename the raw wrapper around strncpy_from_user to raw_strncpy_from_user.
+- Add a more convenient helper on top that adds the missing
+  NUL-terminator when necessary.
+- Link to v1: https://lore.kernel.org/r/20250424-strncpy-from-user-v1-1-f983fe21685a@google.com
 
-diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index 7355d9921b646..68fcc8114d750 100644
---- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -238,24 +238,21 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
- 		imx8_phy->clkreq_unused = false;
- 
- 	imx8_phy->clk = devm_clk_get(dev, "ref");
--	if (IS_ERR(imx8_phy->clk)) {
--		dev_err(dev, "failed to get imx pcie phy clock\n");
--		return PTR_ERR(imx8_phy->clk);
--	}
-+	if (IS_ERR(imx8_phy->clk))
-+		return dev_err_probe(dev, PTR_ERR(imx8_phy->clk),
-+				     "failed to get imx pcie phy clock\n");
- 
- 	/* Grab GPR config register range */
- 	imx8_phy->iomuxc_gpr =
- 		 syscon_regmap_lookup_by_compatible(imx8_phy->drvdata->gpr);
--	if (IS_ERR(imx8_phy->iomuxc_gpr)) {
--		dev_err(dev, "unable to find iomuxc registers\n");
--		return PTR_ERR(imx8_phy->iomuxc_gpr);
--	}
-+	if (IS_ERR(imx8_phy->iomuxc_gpr))
-+		return dev_err_probe(dev, PTR_ERR(imx8_phy->iomuxc_gpr),
-+				     "unable to find iomuxc registers\n");
- 
- 	imx8_phy->reset = devm_reset_control_get_exclusive(dev, "pciephy");
--	if (IS_ERR(imx8_phy->reset)) {
--		dev_err(dev, "Failed to get PCIEPHY reset control\n");
--		return PTR_ERR(imx8_phy->reset);
--	}
-+	if (IS_ERR(imx8_phy->reset))
-+		return dev_err_probe(dev, PTR_ERR(imx8_phy->reset),
-+				     "Failed to get PCIEPHY reset control\n");
- 
- 	if (imx8_phy->drvdata->variant == IMX8MP) {
- 		imx8_phy->perst =
+---
+Alice Ryhl (2):
+      uaccess: rust: add strncpy_from_user
+      uaccess: rust: add UserSliceReader::strcpy_into_buf
+
+ rust/kernel/uaccess.rs | 69 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
+---
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250424-strncpy-from-user-1f2d06b0cdde
+
+Best regards,
 -- 
-2.43.0
+Alice Ryhl <aliceryhl@google.com>
 
