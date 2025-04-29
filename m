@@ -1,161 +1,94 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B942820B2;
-	Tue, 29 Apr 2025 08:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F197127C150
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915296; cv=none; b=hfGCZnyfNGQoUOQQzMULbYTYwA9wuRVGrsm5DT+XzxT2BEPrvk3iBN873YexK3KmbSH1VCGFR/tdUINlUPvALg97TKw7AD8BUf+U+79VA2Oq5Oj+BMnkwZdPsgyyaXijkBvPriQv7UJ5yIHIFs1K0JJD/HqC2zDi3iWHPu3mVms=
+	t=1745915296; cv=none; b=O8jQIzU27hkPfnPQ8R0FRJsqiuY+9XNdq9UJ9FaPs4CY1T2ZoqNBXsB0j79FyGrTZjh6QMQea/1dgUT94WtWdw/7V1FVTJE9eAM2Ns0TpUhGOAuXaoILhKfQoI/ldlbV7v/+rxq0e43GBgDupf4nOQwbAejOmo0+YFfqTZ6oL7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745915296; c=relaxed/simple;
-	bh=oiIYGLVaryNmP4b9joXCtmwuK9gnLcmQ6q0Qn8TLP3I=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZBcuJpgwYaErxT3JeIpluESaZrsBbuKrZrWo70lMdyvOe2m4M8JX96ZgZc0DgCGBF0dx8csrkgupIucTGpSloc1kr76NDK7SmXNEq1DTnhpze+0PumRbBVDuIEdrE2fNCfNMtZ6N2WdohjIvy9+yOeT9LZGaPnQjMq77yA/oI+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6zAqIq3; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=MU91rq6x6AMWRP8hSHtEK8HMpJbScePsSH9FDG38Qdo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uc4ayQB+IpGjzVEGeF8P64en/rExudd+7+esYhUlD6DR5NLSay8FTOPBu1Lj6WYcxlftZWLcgf1VQJFnF2yMFuLKLBEq3Nos0AsDK095rSLJN/YAIMNiAPQnxN8OewbxfCN1iADefYx35+KC9dzoSh9SnrZqlRoCd+g7XWDOTwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fk24WV+J; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6zAqIq3"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso55343195e9.1;
-        Tue, 29 Apr 2025 01:28:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fk24WV+J"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30effbfaf61so65446591fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:28:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745915292; x=1746520092; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1745915293; x=1746520093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vtzTNjtZDU60W2bs8OvIBOH9Kq7lrWqCDc5aRj+boNg=;
-        b=Y6zAqIq3XW45Xnvo4l0HNyXmbMQAUX9YSNo1VyRPLxYI3dWmMl5ACTC+XcVjrceezE
-         qGAnGlaSlaDgFdKSIEHWM5OrrcIQejjXcNVN3jjbRjYLx3E9+fXBcW+dxCJQce6Zsb1t
-         T4SenyaQVL5AD6IThD6KFTa0+a+rDOKrAsa/xB8lvZRIfV6jk9TG7Vce6zNbq3ve1gtA
-         8wFTymZHEIbTA2q4uOdH7S7wMFEaGltZ/HynlkECuP2jsUb+BPR6Io2LQCaF2mu5X1hn
-         Chk9Zf/eb77BnxRbBT79GGIpzUXfHkyzR8ESx2q2/810e9NeruVqDxLCfomfz8MROt2C
-         v3yA==
+        bh=MU91rq6x6AMWRP8hSHtEK8HMpJbScePsSH9FDG38Qdo=;
+        b=fk24WV+J6KW10tWbbqU2BsRFu5BGpNaxjtT2QXApK39EK5FBDTijtCTmVG7hB/qgqY
+         BX3g3bZc8DMJyrZjnE17T/gKusSSV39cIs/GDhS0rDmtL26hEihhQymCrC3VmwZUGHuI
+         eww7HHTRPf7d6VFB599wkPndRZBUr+3zWjRcv5oRSITZqt5oe0GrxgoDmULu3tP6mbVY
+         hh/UQjNR1FNmAT3hUltrjI/ONXuMqE6/Opyy59bYMbV5hs1FiI0t1D0yjrqeKEoCeQSK
+         c1Fl1EoQ5ET00+enQycOTs0TCCVLCGo2cPJfGkqeZcL8o7Mmyp6hQ5rfPFxW8EUMhveG
+         p+MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745915292; x=1746520092;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vtzTNjtZDU60W2bs8OvIBOH9Kq7lrWqCDc5aRj+boNg=;
-        b=GAKs3MUGQvZWjYYPp8I6W95pHYiStxjFg27i6GkmGle1YVCzMjN1TJXhdRtEZT4aAC
-         sCLOg7z4IoQZASKpEjfOLBKWppNt0/ySFf7G7f5LcazYoedG4wIUMJTHSMfACZXVNqAd
-         33vtCqzZklI+10cnW3ThLZlLY6RajYmFk793GT53t5zMrf8Yb5grqhKoeDLavYIwdz0E
-         gEzobgnDX+g+vNuLwM82O5jzano8b25AhfFstNH6vggAgEuQ1Dp1iKhs9FkKtB8nnWu1
-         S772v9/Ol/f7NoSWLgGkVNvgN000DtqSslJAPVy1XBRxYHPb+sJU7H23xO8kLG2XkzCu
-         VTVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcJvlz9Muc0cnKxKM0NeaXwVXD3NHQZhyEcv5p7q+HmM/+VlMXiWXIos3wA7+i4hfWvnlRbX95pk994vWO@vger.kernel.org, AJvYcCVo7CixBKFCnaH7J91niif5/+JnaX1MHvso7O7/QUw7XtqzVTvPmJJbi2DEXntnOzKqJdjYOVkOZ6kD@vger.kernel.org, AJvYcCXfyMcKxs/Hip8hvcX5aojaOxC8RgkxZ52iwMCVguFkYGU35m6p4+DhEcRCD9FKpS56fiMWlYBfKbYo@vger.kernel.org
-X-Gm-Message-State: AOJu0YyphLaMPqlK+mZ0ar3R0YjeEquT9Qk/xYBn9B6JkpT6WjjHc/DC
-	QggrIrlzPXDejsS2Q1BTfwQrYV1rIkeHrzPaY+fvthHpyhu/dTMg
-X-Gm-Gg: ASbGncv0RX7E6xQVI/t2klvmLzuoin1QDE9TNBNoZg4b3uCqoQzhjdRZU6d1aDr81cX
-	4SoioevUgK6M9vJ0H5oN9+HveCd9uI8acXibsixsPlJoxisrxmFD+9RCCObjaaj3hm2ZYGM9YM9
-	RJyX/4SZcNxHQNapVOCaA4H34kz1RsOk1E82XpRgz0IxJUyXDLFTGfyouCKwivOXdZ5hK1lYwMs
-	wTRjbLSaWDO+bOFwCSWjuF87f2U+z1IbZk1Vn/wGnpD5MASJNE4NKskQtz5jUpbOCzEHQbqjMu2
-	4qepwzxvp47tEXKoyQBbb1GSb3xOgpS+bnqTio1T/+xe1pbVmFnXAajYe5YTNBixXTP18FKd9ZF
-	V/uhuARYOJys2
-X-Google-Smtp-Source: AGHT+IFSiljljE4c8dR0p1cx0UndJBY3bORBaaTbd/RHYBruq2cfSoOwtTBcNNXaxkEMB5yzBGIHqQ==
-X-Received: by 2002:a05:600c:138c:b0:43d:23fe:e8a6 with SMTP id 5b1f17b1804b1-440ab76a962mr99923835e9.5.1745915292364;
-        Tue, 29 Apr 2025 01:28:12 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a13bdsm180114875e9.9.2025.04.29.01.28.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:28:12 -0700 (PDT)
-Message-ID: <6db027ae67a46cfff906932e5d306fa0d9edf766.camel@gmail.com>
-Subject: Re: [PATCH v3 07/11] iio: adc: adi-axi-adc: add sync enable/disable
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 29 Apr 2025 09:28:16 +0100
-In-Reply-To: <20250425112538.59792-8-antoniu.miclaus@analog.com>
-References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
-	 <20250425112538.59792-8-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+        d=1e100.net; s=20230601; t=1745915293; x=1746520093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MU91rq6x6AMWRP8hSHtEK8HMpJbScePsSH9FDG38Qdo=;
+        b=ZrVOmV/JwZA5pfuzQMCPaP2KqbXfI32Fur80lmMkk8397/nbEoTYiGefY9b/wA/4N9
+         UlQ0RtYav2TxouHbOpSrlbKzc3MwUGeddMPmJ4QN8U+25xqaVinJy2hKiM9Q4feHQT7p
+         PbTGDRtuowUq9DCaYWNHVFQFH9fxhOXUAkpxmVZM4SYoRDZZADebcwPOr3u2SpNkq+Bu
+         m35Fr5b4oiAh4wQMlGaGbV1TcKxEvV0gMFqI/ZOunQqZC+fyWiP1bc2dY8Z7rY3y4XhD
+         hADRCkkKSgvgNUYOdUGRXUsoO81MHnWcpaHH4CiCnxD7fjs55tabkR0WdV4Y5hpv8Roq
+         CCEw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6Ow+4ajAS5X5AldMGDOSK4HpXhDiZMs1+VHJn5jw8dQIR2nlsS4fTNWXSkfiSftfBNYUEtdwH758s90Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJVir8T4tggrkwV+ZeKddMtg/vfbmQg6PY7zAlZMYc42Vempc1
+	ybyyYf1LtMob3c2itV432w2bT8r6KOxBLGMCHtyfMH3p5Z5B3ZICwf8Oavq20OsByEpap9Zj4zN
+	0iiulZX8Aw4GW8QbQ0Gi42NGN7dJxLwdyEdlthF2I/dcnH29/
+X-Gm-Gg: ASbGncvu5Db2DJUYVSRV7eHaQNctKq3o6HdD4k9lphxs4dslZDKBRt8ukGP9lGGZeuE
+	erc8AJS8vaRPtqgoG5eVcIk5810hNXcfIhJ24gqC5kt+rhnCZvRXyt2lBq1Q4iCNqZobE0m4EmA
+	1EZ7W5J5oLstXH/6WDy9cDyg==
+X-Google-Smtp-Source: AGHT+IH5LFe76433BEhCOsz93hsXmpw541f+gjc8j0FntokriJNT3ta3i7KCJ9pJ4v6e9KkWJAHiRLsRkg2/T2I0yMs=
+X-Received: by 2002:a2e:a915:0:b0:30b:fc3a:5c49 with SMTP id
+ 38308e7fff4ca-31d45e2fefdmr6111831fa.9.1745915293027; Tue, 29 Apr 2025
+ 01:28:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250429-pinctrl_sm8750-v2-1-87d45dd3bd82@oss.qualcomm.com>
+In-Reply-To: <20250429-pinctrl_sm8750-v2-1-87d45dd3bd82@oss.qualcomm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 29 Apr 2025 10:28:01 +0200
+X-Gm-Features: ATxdqUFs24UJ9rCBZu0rld2DCgQQfVXx4UwFsW9Kaw9n5MBKTnSUAjPVfLDjQgc
+Message-ID: <CACRpkdbyZjfU3dh+3Cn+hDr6Pisf9iOQYuN=mAjrE=+OE0fs8A@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: Fix PINGROUP definition for sm8750
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Melody Olvera <melody.olvera@oss.qualcomm.com>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-04-25 at 14:25 +0300, Antoniu Miclaus wrote:
-> Add support for enabling/disabling the sync process used for data
-> capture alignment.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
+On Tue, Apr 29, 2025 at 6:02=E2=80=AFAM Maulik Shah
+<maulik.shah@oss.qualcomm.com> wrote:
 
-Some comments from me... I'm also still not convinced this API can't be mer=
-ged
-with the sync get. More comments on the frontend driver patch.
+> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+>
+> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
+> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
+>
+> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Reviewed-by: Melody Olvera <melody.olvera@oss.qualcomm.com>
 
-> changes in v3:
-> =C2=A0- update the function to match the new backend interface.
-> =C2=A0drivers/iio/adc/adi-axi-adc.c | 21 +++++++++++++++++++++
-> =C2=A01 file changed, 21 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.=
-c
-> index 2a3a6c3f5e59..9947be059f98 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -44,6 +44,7 @@
-> =C2=A0#define=C2=A0=C2=A0 ADI_AXI_ADC_REG_CONFIG_CMOS_OR_LVDS_N	BIT(7)
-> =C2=A0
-> =C2=A0#define ADI_AXI_ADC_REG_CTRL			0x0044
-> +#define=C2=A0=C2=A0=C2=A0 AXI_AD408X_CTRL_SYNC_MSK		BIT(3)
-> =C2=A0#define=C2=A0=C2=A0=C2=A0 ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
-> =C2=A0
-> =C2=A0#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
-> @@ -416,6 +417,22 @@ static int axi_adc_ad408x_filter_type_set(struct
-> iio_backend *back,
-> =C2=A0				 AXI_AD408X_CNTRL_3_FILTER_EN_MSK);
-> =C2=A0}
-> =C2=A0
-> +static int axi_adc_sync_enable(struct iio_backend *back)
-> +{
-> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
-> +
-> +	return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CTRL,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AXI_AD408X_CTRL_SYNC_MSK);
-> +}
-> +
-> +static int axi_adc_sync_disable(struct iio_backend *back)
-> +{
-> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
-> +
-> +	return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CTRL,
-> +				 AXI_AD408X_CTRL_SYNC_MSK);
-> +}
-> +
-> =C2=A0static struct iio_buffer *axi_adc_request_buffer(struct iio_backend=
- *back,
-> =C2=A0						 struct iio_dev *indio_dev)
-> =C2=A0{
-> @@ -559,6 +576,8 @@ static const struct iio_backend_ops adi_axi_adc_ops =
-=3D {
-> =C2=A0	.request_buffer =3D axi_adc_request_buffer,
-> =C2=A0	.free_buffer =3D axi_adc_free_buffer,
-> =C2=A0	.data_sample_trigger =3D axi_adc_data_sample_trigger,
-> +	.data_alignment_enable =3D axi_adc_sync_enable,
-> +	.data_alignment_disable =3D axi_adc_sync_disable,
+Patch applied for fixes.
 
-Same comment as for the number of lanes op...
-> =C2=A0	.iodelay_set =3D axi_adc_iodelays_set,
-> =C2=A0	.test_pattern_set =3D axi_adc_test_pattern_set,
-> =C2=A0	.chan_status =3D axi_adc_chan_status,
-> @@ -605,6 +624,8 @@ static const struct iio_backend_ops adi_ad408x_ops =
-=3D {
-> =C2=A0	.free_buffer =3D axi_adc_free_buffer,
-> =C2=A0	.data_sample_trigger =3D axi_adc_data_sample_trigger,
-> =C2=A0	.filter_type_set =3D axi_adc_ad408x_filter_type_set,
-> +	.data_alignment_enable =3D axi_adc_sync_enable,
-> +	.data_alignment_disable =3D axi_adc_sync_disable,
-
-Are we using the disable op at all?
-
-> =C2=A0	.debugfs_reg_access =3D iio_backend_debugfs_ptr(axi_adc_reg_access=
-),
-> =C2=A0	.debugfs_print_chan_status =3D
-> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
-> =C2=A0};
+Yours,
+Linus Walleij
