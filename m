@@ -1,47 +1,46 @@
 Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84698217F33;
-	Tue, 29 Apr 2025 14:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290A721773F;
+	Tue, 29 Apr 2025 14:37:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937445; cv=none; b=J4kZeHBs4TgeGgt8mpfIgkb1mcIDVInWYDKaUfcKI+B3lRpH9jY2MRNcm/rZFkFkiJfk6ah1CblvMwFPlL7pVcfef3G8vD9v0hYLJ1mbpmQmFe24fPuWTQQ6pIe0AJr0iYNkV83kRmwJioREnd4YtyC/A03CbIw0cKe1lS7crT0=
+	t=1745937446; cv=none; b=foes6EhM2thHJuB6+Sh0I6tTqCNyh316ItW3KUzV0DFyoKn7b5o1a2BYTTs+HjaYBHEYIcmAret9iI/s0D0Cw4WmZrW23wc6+3GU9oYEECIZk5QlzWJbeBjRMcqSh7GwFLnfu2/ejJ5UkngItCdAnKMud+RjLCCYRZr4W13xlAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937445; c=relaxed/simple;
-	bh=xZd5dk3y2ghZiy+6k+zzoWfpJ/fpDPb5lGfIROK1vt8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B6Yb0TfKrz7jZ/h5KLDeTXBb4leRcFWmIEMZLCa+23RkfhFkIOGUx7nIQcP3a2WhlqyLCeqFJ7kZlCtAKDGSY2X5pl5v2B+bu7FsJamChAIeCKOXXtHAAMMq1RdOgtSbA2cihMB0kA5gyS4Q2B7jWGjneXM+RfCK1EJJHVr0VX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lrQqQ6oC; arc=none smtp.client-ip=198.47.23.235
+	s=arc-20240116; t=1745937446; c=relaxed/simple;
+	bh=YWFgEE/pYx43RIkZxqYPeNDBpIA1GTsKMfT06yg+9FY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rME7o+Bgic8e/W2l81sFwhqCiHvHkSPeyIoS+2kuaol7MnPX5+zBRCaEsh0T44Mj6YNOfJ9mYeL3nQ6pCmleZ6x4zCjvhw5kKb69QfxAPkt2248XgZLFPy5ZhbBzVk4b3/vfdfOpWCa25Wl4iquvk37tm+YIZD9WJ908SMggazQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bqNzLyf9; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lrQqQ6oC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bqNzLyf9"
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEb2XI3868049
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEaw0f3867999
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 09:37:03 -0500
+	Tue, 29 Apr 2025 09:36:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745937423;
-	bh=LPt4f7SxrVd1phOvJkX4tkan0yuceLcIE3aquT7LAIQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=lrQqQ6oCDXUD5jQGTme3XQh/w1MseQnr+emPglkiJ1BRwl5PmJLlAzyLU53Wcyu++
-	 a5WJCP7a4I43EhyslI6BXzFwzvpI9RwGfUxPv2IHOawH9PJuXLmqiRuXtPmN+zODMX
-	 7PgTK2IrDusWPBfsWH7Q5E5dSr978HflTnSLXXio=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEb21Y035868
+	s=ti-com-17Q1; t=1745937418;
+	bh=DKk1xaSMzcGFiMWCM2d8Q1zeAjKKaHVkdez7w5iD168=;
+	h=From:To:CC:Subject:Date;
+	b=bqNzLyf9+Max/wk5qTUB3X8O/i8lA6biTrudCotisD35Tz+/Eo+v6Kr2612wSyZKf
+	 FRI8UQFKf+fyCpIVVhSe+jgoXdQ/+Lz5ysiTq1GCQqP9vSK82wa5I4NAMWR8a7VSeZ
+	 nlQtC2dHAEumm7apvuJjSZQ6PMaRBNFxQ4bXU+L0=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEawBI035775
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 09:37:02 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 29 Apr 2025 09:36:58 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 09:37:02 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 09:36:57 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 09:37:02 -0500
+ Frontend Transport; Tue, 29 Apr 2025 09:36:57 -0500
 Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TEb1cm086162;
-	Tue, 29 Apr 2025 09:37:02 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TEav0N086083;
+	Tue, 29 Apr 2025 09:36:57 -0500
 From: Devarsh Thakkar <devarsht@ti.com>
 To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
         <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
@@ -52,12 +51,10 @@ To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
 CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
         <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
         <h-shenoy@ti.com>, <devarsht@ti.com>
-Subject: [PATCH v5 3/3] drm/tidss: Add support for AM62L display subsystem
-Date: Tue, 29 Apr 2025 20:06:56 +0530
-Message-ID: <20250429143656.3252877-4-devarsht@ti.com>
+Subject: [PATCH v5 0/3] Add support for AM62L DSS
+Date: Tue, 29 Apr 2025 20:06:53 +0530
+Message-ID: <20250429143656.3252877-1-devarsht@ti.com>
 X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20250429143656.3252877-1-devarsht@ti.com>
-References: <20250429143656.3252877-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,162 +65,66 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Enable display for AM62L DSS [1] which supports only a single display
-pipeline using a single overlay manager, single video port and a single
-video lite pipeline which does not support scaling.
+This adds support for DSS subsystem present in TI's AM62L SoC
+which supports single display pipeline with DPI output which
+is also routed to DSI Tx controller within the SoC.
 
-The output of video port is routed to SoC boundary via DPI interface and
-the DPI signals from the video port are also routed to DSI Tx controller
-present within the SoC.
-
-[1]: Section 11.7 (Display Subsystem and Peripherals)
-Link : https://www.ti.com/lit/pdf/sprujb4
-
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
+Change Log:
 V5:
-- No change
+- Use hw_id instead of index for places where it was missed
+  so that we pick correct base address for vid region
 
 V4:
-- Rebase on top of previous patch to use vid_info structure
+- Update vid_info struct to keep hw_id and instantiate
+  only for actually existing pipes
 
-V3: 
-- Rebase on top of
-  0002-drm-tidss-Update-infra-to-support-DSS7-cut-down-vers.patch
-- Use the generic "tidss_am65x_common_regs" as common reg space
-  instead of creating a new one
+V3:
+- Make generic infra to support truncated K3 DSS IP's
+- Remove AM62A updates from AM62L DT binding updates
 
-V2: 
-- Add separate common reg space for AM62L
-- Add separate irq enable/disable/read/clear helpers for AM62L
-- Use separate helper function for setting overlay attributes
-- Drop Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-  due to additional changes made in V2.
+V2:
+- Fix incorrect format of compatible string (comma instead of
+  hyphen) for AM62L SoC
+- Use separate register space and helper functions for AM62L
+  due to minor differences in register offset/bit position differences
+  for first plane
 
- drivers/gpu/drm/tidss/tidss_dispc.c | 41 +++++++++++++++++++++++++++++
- drivers/gpu/drm/tidss/tidss_dispc.h |  2 ++
- drivers/gpu/drm/tidss/tidss_drv.c   |  1 +
- 3 files changed, 44 insertions(+)
+Rangediff:
+V4->V5:
+- https://gist.github.com/devarsht/a0e6aa7b1c19f47facd0058962e3c3c2
 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-index da6fe4e3ca85..6ec7aff95cc6 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.c
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-@@ -440,6 +440,42 @@ const struct dispc_features dispc_am62a7_feats = {
- 	.vid_order = {1, 0},
- };
- 
-+const struct dispc_features dispc_am62l_feats = {
-+	.max_pclk_khz = {
-+		[DISPC_VP_DPI] = 165000,
-+	},
-+
-+	.subrev = DISPC_AM62L,
-+
-+	.common = "common",
-+	.common_regs = tidss_am65x_common_regs,
-+
-+	.num_vps = 1,
-+	.vp_name = { "vp1" },
-+	.ovr_name = { "ovr1" },
-+	.vpclk_name =  { "vp1" },
-+	.vp_bus_type = { DISPC_VP_DPI },
-+
-+	.vp_feat = { .color = {
-+			.has_ctm = true,
-+			.gamma_size = 256,
-+			.gamma_type = TIDSS_GAMMA_8BIT,
-+		},
-+	},
-+
-+	.num_vids = 1,
-+
-+	.vid_info = {
-+		{
-+			.name = "vidl1",
-+			.is_lite = true,
-+			.hw_id = 1,
-+		}
-+	},
-+
-+	.vid_order = {0},
-+};
-+
- static const u16 *dispc_common_regmap;
- 
- struct dss_vp_data {
-@@ -955,6 +991,7 @@ dispc_irq_t dispc_read_and_clear_irqstatus(struct dispc_device *dispc)
- 		return dispc_k2g_read_and_clear_irqstatus(dispc);
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 	case DISPC_J721E:
- 		return dispc_k3_read_and_clear_irqstatus(dispc);
-@@ -972,6 +1009,7 @@ void dispc_set_irqenable(struct dispc_device *dispc, dispc_irq_t mask)
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 	case DISPC_J721E:
- 		dispc_k3_set_irqenable(dispc, mask);
-@@ -1464,6 +1502,7 @@ void dispc_ovr_set_plane(struct dispc_device *dispc, u32 hw_plane,
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 		dispc_am65x_ovr_set_plane(dispc, hw_plane, hw_videoport,
- 					  x, y, layer);
-@@ -2384,6 +2423,7 @@ static void dispc_plane_init(struct dispc_device *dispc)
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 	case DISPC_J721E:
- 		dispc_k3_plane_init(dispc);
-@@ -2492,6 +2532,7 @@ static void dispc_vp_write_gamma_table(struct dispc_device *dispc,
- 		break;
- 	case DISPC_AM625:
- 	case DISPC_AM62A7:
-+	case DISPC_AM62L:
- 	case DISPC_AM65X:
- 		dispc_am65x_vp_write_gamma_table(dispc, hw_videoport);
- 		break;
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-index 72a0146e57d5..28958514b8f5 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.h
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-@@ -67,6 +67,7 @@ enum dispc_vp_bus_type {
- enum dispc_dss_subrevision {
- 	DISPC_K2G,
- 	DISPC_AM625,
-+	DISPC_AM62L,
- 	DISPC_AM62A7,
- 	DISPC_AM65X,
- 	DISPC_J721E,
-@@ -96,6 +97,7 @@ struct dispc_features {
- extern const struct dispc_features dispc_k2g_feats;
- extern const struct dispc_features dispc_am625_feats;
- extern const struct dispc_features dispc_am62a7_feats;
-+extern const struct dispc_features dispc_am62l_feats;
- extern const struct dispc_features dispc_am65x_feats;
- extern const struct dispc_features dispc_j721e_feats;
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_drv.c b/drivers/gpu/drm/tidss/tidss_drv.c
-index d4652e8cc28c..f2a4f659f574 100644
---- a/drivers/gpu/drm/tidss/tidss_drv.c
-+++ b/drivers/gpu/drm/tidss/tidss_drv.c
-@@ -242,6 +242,7 @@ static const struct of_device_id tidss_of_table[] = {
- 	{ .compatible = "ti,k2g-dss", .data = &dispc_k2g_feats, },
- 	{ .compatible = "ti,am625-dss", .data = &dispc_am625_feats, },
- 	{ .compatible = "ti,am62a7-dss", .data = &dispc_am62a7_feats, },
-+	{ .compatible = "ti,am62l-dss", .data = &dispc_am62l_feats, },
- 	{ .compatible = "ti,am65x-dss", .data = &dispc_am65x_feats, },
- 	{ .compatible = "ti,j721e-dss", .data = &dispc_j721e_feats, },
- 	{ }
+V3->V4:
+- https://gist.github.com/devarsht/1e75c9e1ac0cdfc01703a0776e31e782
+
+V2->V3:
+- https://gist.github.com/devarsht/24fa8dd2986861efa431352d19ebbb41
+
+V1->V2
+- https://gist.github.com/devarsht/11d47f25ca9fea6976e6284330ddf443
+
+Links to previous versions:
+V4: https://lore.kernel.org/all/20250326145736.3659670-1-devarsht@ti.com/
+V3: https://lore.kernel.org/all/20250306132914.1469387-1-devarsht@ti.com/
+V2: https://lore.kernel.org/all/20250204061552.3720261-1-devarsht@ti.com/
+V1: https://lore.kernel.org/all/20241231090432.3649158-1-devarsht@ti.com/
+
+Test logs:
+https://gist.github.com/devarsht/82505ca69f0bd5d9788bfc240d2e83d4
+
+Devarsh Thakkar (3):
+  dt-bindings: display: ti,am65x-dss: Add support for AM62L DSS
+  drm/tidss: Update infrastructure to support K3 DSS cut-down versions
+  drm/tidss: Add support for AM62L display subsystem
+
+ .../bindings/display/ti/ti,am65x-dss.yaml     |  21 +-
+ drivers/gpu/drm/tidss/tidss_crtc.c            |  11 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c           | 193 ++++++++++++++----
+ drivers/gpu/drm/tidss/tidss_dispc.h           |  13 +-
+ drivers/gpu/drm/tidss/tidss_drv.c             |   1 +
+ drivers/gpu/drm/tidss/tidss_kms.c             |   2 +-
+ drivers/gpu/drm/tidss/tidss_plane.c           |   2 +-
+ 7 files changed, 195 insertions(+), 48 deletions(-)
+
 -- 
 2.39.1
 
