@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59272594
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E367B3E1
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745935258; cv=none; b=IKp0zH4nopj+PHnvprfb5DMYgSMcA0O8iYd3CYkittjpTvzWbMse9sZ/Me/QUeUO+IYqiBeO4/sJW+rtAYYmoSABcKChOqgluXUfYq8/5mbSlyHbkJZbwTT3Zfm0CdzAwyI0yXs8PKxX/G+fumq7IonXbzraqfD2t60o8CyiHpU=
+	t=1745935366; cv=none; b=qFD8lkwPay37Vgz6AM448+jLqWf5p+E3Fgch5h7u2TAXH2ZVMEgX1ALs0Lg1K7wVQ9nvR2CBfa6/BSO+0pBdUqdAeu1My1vEIrNzqjZkLBydik1pDdLCFm58g2ac8jwqm3NyctciNEgS+Jxh2kIZtrgScV+8S+amX6Qp7akYnTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745935258; c=relaxed/simple;
-	bh=QYr6h2XOFIe4mC9/QnHU0xlz9g7hlHkmy3ep+irTepY=;
+	s=arc-20240116; t=1745935366; c=relaxed/simple;
+	bh=4GXtgi1v8JuErjxQo2o+cI5MeI9D4HSR617YBuzu94c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ttwGhnl0Ro+AvwRWvVmpTYYPfgCpOsiDP7YOa31XqFVBSmHOGcgJEP0t6outxm0dl2rl8ynLCBU9dWT62V1gW+bmJAY4iWvNvWWjD3atwCToW6HS/crqW7JyP42qIV4nyFRvcd40XUEQTAEY1qE8wUMyIEpXBOkPVAJHOY4E4NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OYNKq2Na; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=ftc4kBtN67YbeCjdSHpv87eh1Ta9BuJ44mbwhc/bjvogzvllXnmGeLqq9HKVgLTbexTUJ3cum0R3cViBkYtvhWIRSleqOvZQc5Lxnj7ipn9QE/qAy/QX8cTxUXR2AUBO9BRckCzcns5hdqpPwvzDZjQiGvp+sOzr6BRg0z8HbQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J8mqqb6K; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OYNKq2Na"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J8mqqb6K"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745935255;
+	s=mimecast20190719; t=1745935362;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rPuSP7rL/M6eQxF/T0CIz+v7BklLeO0LdTlpgvoVmcw=;
-	b=OYNKq2Na5aUq3klQOZvTgabrya2fu8ZYuxBQLQH46NySwibPKY2h1o2l5yudwRAHT056h9
-	R+IO0iW3Bw7m7CeQhXxnvEt7WLFH463GMO5URPiRShXw+9awkmhGkL71UgRVNObzkXf+uo
-	XpXO0CkySqiJR9LfDcZ0H87WQE0eQ5I=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=bzOJ3l0iCtkEByccE0Wwh9YboIMqWbLM9kNzswJiyvY=;
+	b=J8mqqb6KQrDYtMbe84XoKakJCsJtyRcGTqLlDhT9sfc1qQulT1X27Y8bAY5eil76pUItbp
+	+VWbBNyxqFrEGwQorBSrWI+jY9TvfpaSy7YCsfYTXaGCEQcOyptGsV1NS1TmM8dIwSYT5A
+	ujIUphHb56Rr8Hhw57VhcnprjcdXlwQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-251-ga2LjpIsMN6hb_L9OyM7JA-1; Tue, 29 Apr 2025 10:00:54 -0400
-X-MC-Unique: ga2LjpIsMN6hb_L9OyM7JA-1
-X-Mimecast-MFC-AGG-ID: ga2LjpIsMN6hb_L9OyM7JA_1745935253
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso27103355e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:00:53 -0700 (PDT)
+ us-mta-671-3UV7uGpTMKq1QY6LmxTe3g-1; Tue, 29 Apr 2025 10:02:41 -0400
+X-MC-Unique: 3UV7uGpTMKq1QY6LmxTe3g-1
+X-Mimecast-MFC-AGG-ID: 3UV7uGpTMKq1QY6LmxTe3g_1745935360
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so24810415e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:02:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745935253; x=1746540053;
+        d=1e100.net; s=20230601; t=1745935360; x=1746540160;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rPuSP7rL/M6eQxF/T0CIz+v7BklLeO0LdTlpgvoVmcw=;
-        b=gWPWArmyHIt0uHCrYmrCqujwhVUFCnurR+XWmBtf13iNH/y8+333PUAAJaPDrWm7op
-         MtZWb6/eWd2S3aOWrn8+Dch6sYnUH/6iOKcYHgKuKGtN5zwnp8OaRrvTa9qHw+up+jjT
-         StxeNLst+jgn/hn0ktSVM0aJaIPWUxuDDHXtsKmPLO7q4IIX3DngJ/qplGqflGp2p1+I
-         F8GMU87fDdZQzwXm0KdPN7smjPVrxI7cxHMqo5LuVyxtMtP2WCLmB7lQvP8UWJf273KI
-         UA4/f+z1+V2/gvE4yujK6Cl/xQErTEG91UwJDyJQ6ZvkSxliO5mnmwtRpDf4uDQZehOZ
-         MoNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWHvfeclOrFS3zAlcZM+FRLnWs6vlTP7OREPZ2c4YzAKQuRkDvJ84i996RLB34VbBJubNRHXCoOz9JkA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkeY2id7HMOJXXI4QSqW7qeT4+edJmV6gV8zYagIABb8N6DEiL
-	d7rIYt6XUbzvYTpRYjMxeHxLUHoI7708FCAmlkPqjGfnHkUkSoZOi5ncErg8EuwwJOd40BWD/PS
-	x223On4KHqfgNHmA4NJwMMaRySgYOcIg1aePR3rLye99O3XWz/TdAufTuc9aYVw==
-X-Gm-Gg: ASbGncvQKiMbuT15XiMdHwPEwS1yFIpWW2G9qB3nh7yxyUuVvwjTcrRY2wql6v1eDK9
-	dLVawEYrsw6LBx+QJZR+BcYaQaLNzNFh1S6secHtVOH1LGfUNTSk/A/lXSOH4zcpHC3TuILZ/KU
-	wprNRIBvhj6F2zfb74+Al1WP5owk8hk+0aSNc5mfN/EUEI2ermFb04+tzcG77K2Gi6RKLn+udPf
-	4nMNU7wdOrhnLFrHg/YwS/Zsx4OHdeu5xGoIVOjMnr4fku1CwIBG0jHHhroN+rUOPaA7/G1NUwW
-	p2Y+UJqj/fCL0VxTS0AU/PuBDzYGkFsw/nR/8Olzg21f11n8tTRzUE/e0504pa3ApWzsGpKc84E
-	BwRGD78pZ2i0m6m8idaV+YldJFJa/reRCSYIMuoo=
-X-Received: by 2002:a05:600c:19c7:b0:43d:fa5f:7d30 with SMTP id 5b1f17b1804b1-441acb5bb33mr23651235e9.16.1745935252588;
-        Tue, 29 Apr 2025 07:00:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEC5+jkoc1JUziXqrIgQ+fR1hmKrKcNVkEatdSDCSmI8IokLNHuGLQJS3hly2YAp/zkXdCxpA==
-X-Received: by 2002:a05:600c:19c7:b0:43d:fa5f:7d30 with SMTP id 5b1f17b1804b1-441acb5bb33mr23650395e9.16.1745935251585;
-        Tue, 29 Apr 2025 07:00:51 -0700 (PDT)
+        bh=bzOJ3l0iCtkEByccE0Wwh9YboIMqWbLM9kNzswJiyvY=;
+        b=NCCEhHfHt1RVyotEtpkGQ9n6mYLpVjoIhus9FRflHFHVhXLyNOlbqrX6lTGT5wyY6Y
+         8WoEKNjOMP53zVyl52Q/a07QSuskrlCeluX71mDbNVwObu3QDWPIkFbfHo76SQOLhASz
+         kOOl4F65Vpq1nxiPrv0J2gywkt+PZfuIyL3ecY7ZXWkZvAKuV+U6Zk5WeA3Yo/1aiV7/
+         Z+pGwl7Cotcy9zF8cY1UUXP6JV7PboJbOk2Qz+bc4p0k2P6hbpCbWclFF9SdL0+63XnO
+         LurOIHftBjz6NpGyGptpD8PaiX5curoOne0aS9CHA1AWTwnJvT0rbPl88BYKKYTh/zN1
+         hxhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrgO072AyDxKBnLUTU3Gqw8crvJq5a6pRykXi63H0qbCIXljp2sQXdC948wYNeRU5vZ9sctFqnuakOezY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp2ICoSZg19Pn8ZT5GPyWGGbXmQCMOUwcnBcXNIOMM5TJq9coG
+	w5XM2EQYoAZjkuIqvjtd7U43JBVKac8GSSNggxTNwfrqtveB/qSdtjy2ORtSVQyx5LIkwFWEAHZ
+	ueSjwcRJlt30rjvNxPCGl3E+lgluqgxChm15Nr+Qy0h7Y/oB1OWSDemhm5GCHNA==
+X-Gm-Gg: ASbGncuvF33KGz6zU+qMENRw+8YtqpciOeCJcbRsZfYko3jyaXiFdKj6qkU5LLx3TgL
+	LDdU4NKZBFH6vtDSOVRW38+gZm0ElsCncniCHXjJdStqwhtj7GQ2PuYtG2yT9HGK/6qlKbvDWRB
+	sXkUTKm7mZ0TUOrj7W4QnvkgWoS+ka3TJ6i0XrmPG5h98FIXcH7pmUp1VcgNR8uArpt86fB/C1A
+	ajF8RAkWwE10vmNb0wSiqYxu8HRlH9kQul/WMFbQYugn/P2Si4dkeDRabciUnhYCMuRRz/tSya8
+	hIRAncS3QtTxSdlvPpQw7F1QGb3yISgDx3Vw54lgYmtGpPccN39sfjDIm1oa5vfp3xExN9GuwC+
+	vDIF9zon15rdBZNxRvqyuVc0z9CkSkRtnl/6BC5c=
+X-Received: by 2002:a7b:cb88:0:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-441acaa8d6amr25497185e9.1.1745935359616;
+        Tue, 29 Apr 2025 07:02:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEtb1hfCeBhNCaf5Q8KYXBK4Ot+ZsbBCrlpMl6OdBbsZss6ffFPJKvwhbpJMn1zaVkt4lWmDQ==
+X-Received: by 2002:a7b:cb88:0:b0:43b:baf7:76e4 with SMTP id 5b1f17b1804b1-441acaa8d6amr25496065e9.1.1745935358778;
+        Tue, 29 Apr 2025 07:02:38 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a13bdsm189398195e9.9.2025.04.29.07.00.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a2386sm193971675e9.14.2025.04.29.07.02.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 07:00:51 -0700 (PDT)
-Message-ID: <a427092f-3179-4397-a5c2-e13561706dbd@redhat.com>
-Date: Tue, 29 Apr 2025 16:00:49 +0200
+        Tue, 29 Apr 2025 07:02:38 -0700 (PDT)
+Message-ID: <306922f6-f21d-4973-bff5-425f3211d5b9@redhat.com>
+Date: Tue, 29 Apr 2025 16:02:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,22 +75,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org,
- ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+Subject: Re: [PATCH v2 0/7] Optimize mprotect for large folios
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
  anshuman.khandual@arm.com, peterx@redhat.com, joey.gouly@arm.com,
  ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
  quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
  yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
  hughd@google.com, yang@os.amperecomputing.com, ziy@nvidia.com
 References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-7-dev.jain@arm.com>
- <25dcf969-e479-4d4a-a95c-0e83706af99e@redhat.com>
- <9a770aec-a020-4199-a53e-eddda657999d@redhat.com>
- <7cf8235e-21f7-4643-82c4-82ad57d99b98@lucifer.local>
+ <6ac365cf-da48-4791-b56d-62335519efdf@lucifer.local>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -138,83 +134,17 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <7cf8235e-21f7-4643-82c4-82ad57d99b98@lucifer.local>
+In-Reply-To: <6ac365cf-da48-4791-b56d-62335519efdf@lucifer.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 29.04.25 15:57, Lorenzo Stoakes wrote:
-> On Tue, Apr 29, 2025 at 11:27:43AM +0200, David Hildenbrand wrote:
->> On 29.04.25 11:19, David Hildenbrand wrote:
->>>
->>>>     #include "internal.h"
->>>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>>> -			     pte_t pte)
->>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
->>>> +			      pte_t pte, struct folio *folio, unsigned int nr)
->>>>     {
->>>>     	struct page *page;
->>>> @@ -67,8 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>>>     		 * write-fault handler similarly would map them writable without
->>>>     		 * any additional checks while holding the PT lock.
->>>>     		 */
->>>> -		page = vm_normal_page(vma, addr, pte);
->>>> -		return page && PageAnon(page) && PageAnonExclusive(page);
->>>> +		if (!folio)
->>>> +			folio = vm_normal_folio(vma, addr, pte);
->>>> +		return folio_test_anon(folio) && !folio_maybe_mapped_shared(folio);
->>>
->>> Oh no, now I spot it. That is horribly wrong.
->>>
->>> Please understand first what you are doing.
->>
->> Also, would expect that the cow.c selftest would catch that:
->>
->> "vmsplice() + unmap in child with mprotect() optimization"
->>
->> After fork() we have a R/O PTE in the parent. Our child then uses vmsplice()
->> and unmaps the R/O PTE, meaning it is only left mapped by the parent.
->>
->> ret = mprotect(mem, size, PROT_READ);
->> ret |= mprotect(mem, size, PROT_READ|PROT_WRITE);
->>
->> should turn the PTE writable, although it shouldn't.
-> 
-> This makes me concerned about the stability of this series as a whole...
-> 
->>
->> If that test case does not detect the issue you're introducing, we should
->> look into adding a test case that detects it.
-> 
-> There are 25 tests that fail for the cow self-test with this series
-> applied:
-> 
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with base page
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (16 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (16 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (16 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (32 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (32 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (32 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (64 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (64 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (64 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (128 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (128 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (128 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (256 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (256 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (256 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (512 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (512 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (512 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (1024 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (1024 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (1024 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with PTE-mapped THP (2048 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with single PTE of THP (2048 kB)
-> # [RUN] vmsplice() + unmap in child with mprotect() optimization ... with partially shared THP (2048 kB)
+On 29.04.25 13:03, Lorenzo Stoakes wrote:
+> -cc namit@vmware.com
 
-As expected ... :)
+Yes, Nadav is no longer working for VMWare.
+
+.mailmap should already include the correct mapping to the gmail address 
+AFAIKS?
 
 -- 
 Cheers,
