@@ -1,124 +1,88 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234B1274678
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FDD2741CF;
+	Tue, 29 Apr 2025 22:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745965181; cv=none; b=mGu/bY47cCC9UWHTfItIwb8R/tad5KbT0nErkj1qzWmvq0scgP6GYjzFrv2ni3Aq16U3I/36bv2i0GPPMEKs6z5+eRC+YPM0UM4kvILOC80RYo6JcsjCtF766VSIrbWJsnaDMuxkKm/KzfWbnukykESIG4DK9wvgXgdcBptsd34=
+	t=1745965196; cv=none; b=uN5ol07sum0/WVeilPYBdmsmth/hbz3gEJghB8wgPnEximcvDG01sgYs6ahfej0lBpUUAdOuO0rI/rps9jAZ/CQ+OxIlpQM/NHSPXv3TVHsjn20wk+G0PRhoVg+vHIF7bhRpN4FVHXg6M8Nod3P0dLgdE4fX9ebArNMZrTQW+D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745965181; c=relaxed/simple;
-	bh=npwFnTkq6ClVsZtyhYC8oM+YtbGVUvfrZIC3pUaRyjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gs0bUssTXfFfDlAg/3wSdEWtuo+Sl8sViL+ihHJfO5GSnzg+J6DqMaxOnpJzVkPzwOzWj9ggeiy8nc1TpjeVVI1ut9vojrHMdmmJoGLpzssqLI5/a+MV/PTWIVJb4j3QEW+WNfOFaQZjoYb6MKoUU/yduuplSQiFci4Sop5AOCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu; spf=pass smtp.mailfrom=vt.edu; dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b=FbS3Woau; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vt.edu
+	s=arc-20240116; t=1745965196; c=relaxed/simple;
+	bh=J/s2dhfMtRtTsNtV8l9kvGYQI7PH+pUdKUmwCzscTVQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=V1ae6nN0hY4vdB7O1TYospBq1lGPZKGeSKdMY61/jYViIVfeYj3OEjMqOKSkZRaYlsmAZ4t7cHkB1z/R3ArFDcrbV/3MzmjZ/CHEeva2wSsXMXRKawZSZiLSOekFJUcTYDKcuUpa8IISvMItiRCIL0qBXq/hw7o9s8iTbcduQTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LELGss+W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b="FbS3Woau"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72bb9725de1so1312063a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vt-edu.20230601.gappssmtp.com; s=20230601; t=1745965178; x=1746569978; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=et/K/MNghigKGWczEEZX99Lv+RpVbFTZl6Eg9jXsd/g=;
-        b=FbS3WoauLsv3CHDOf2vKYAYTcYlr454zQ86OZYI75TuUHPe0Xsp+sCmA8TrlwOJkG8
-         6ma870VDjtqbzUDyJpW0cXIdYv2bWzwro+VJzpG0boniR75gLCAdKwEy5lMqiEneVCLa
-         8oR8X+NAKXvrItlW4cofKL+8wLi1nKGhFUUI/7QjVf6S48kjdWzyULI30XR9y4cT8Kb7
-         Nd+6zNirChEt2e64dn5lSgwTIW04nb8ULIwvfA6YiMPVaFLoMZ0P4aIrHKswargdrn3G
-         DUieavxFN4HEwREc7JAqLeUkHYVTxZMJbrXDm6lJuCA9mU5k0kY7fX44QNpRhC9q+xTt
-         YyLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745965178; x=1746569978;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=et/K/MNghigKGWczEEZX99Lv+RpVbFTZl6Eg9jXsd/g=;
-        b=UyUjIMaNy8oPyY9jQVLxttNwDx2Q1nUZ9OqOXaqEGe3SLJcryW4IeWz9h0K2sKosPy
-         8c1fBRfvVastkXB+V0+tFLhcF0erLonSd26OuZucr/dbFN0J+r/XkypytsPPDAdqGOJB
-         8tL8oZxLYBzqw1d+WvHgPZxbBTDubCEMw5Azp6n894G64yeFy+MHCBgV1ySrPRKlJPFh
-         l/4wRlJhZzvtJuP/hX/oJDb8tAXMZtb5SJLgvMIsoYgDpiaMfPa1Zd5beBH+X3UIXPzk
-         bPBGDtb2kIfakEYQBA25z9VP9DwDGTfjP7JBU8xhEFsBbn7GhaeK4E7npr8GRxg9N/p4
-         ez4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPnV3deuQJj/UbKtrVsqOkkILNVeMqMYRt69/I/f8tKlHnG3G2cnaDBu3/xfSg5K+f+CaWKU4KMVNsB+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBpf3GSSzn5XQQoJd9U2rDF0b3HCAE1TUKEdcUUnOBrpyxwMQ/
-	tyXh+ZhxFZnmWA+Tyr0J50VuDAyLl4cEP4sa5dQd9XAvwp0eAv+Fiuby+YsLKSU=
-X-Gm-Gg: ASbGncsHQ+NVdhVwdTXvu5H8rYhWXYOhBudvRH7U9xLIZlZ08Ats9hSbN428A9wCD5e
-	3gGE0l0TF8kpeoujPg2QTXRoNDzwf/V1Cnqd0YilBlhr4R3eC53nfRY0wGxOuBjuCv/8RZ+b1Mn
-	tVqreKmvn5RLzR7/oqyiRpjShWeToKJzhvT+PFHR+/B1FVfG6SNZV64wKmmNJ0GOI0GIn7uLGiB
-	391yC7A/UUXBQYSV21bzoHQAPwC6+DKawkAZVAMJq9w/tzDNSnxpB96GlLlLPvyXpyZwKRGaRzz
-	dPxNeyJvVviAIn27gU02wBRm2ysmI7/kvELsW+oBDiKSiIorDqCc7Ls/SIO5HvGRqNErMxPLjPq
-	UjyGiSkY=
-X-Google-Smtp-Source: AGHT+IGspJVlKsD2nNxDA5jmTflNeQsTYpJafp1NHFwSsJfZ8IPEGuUMeZp4V9HwbgY2c0zlDT2u5g==
-X-Received: by 2002:a05:6808:6095:b0:3fe:aeaf:316d with SMTP id 5614622812f47-402c7267c82mr215187b6e.20.1745965177994;
-        Tue, 29 Apr 2025 15:19:37 -0700 (PDT)
-Received: from ?IPV6:2603:8080:7400:36da:dff5:4180:2562:4c1e? ([2603:8080:7400:36da:dff5:4180:2562:4c1e])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40212c4dbf2sm473764b6e.47.2025.04.29.15.19.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 15:19:37 -0700 (PDT)
-Message-ID: <94faa778-38d5-4ea5-aa0d-9259b56999a4@vt.edu>
-Date: Tue, 29 Apr 2025 15:52:05 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LELGss+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C40C4CEE3;
+	Tue, 29 Apr 2025 22:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745965195;
+	bh=J/s2dhfMtRtTsNtV8l9kvGYQI7PH+pUdKUmwCzscTVQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LELGss+W/Qacqa1oJnOT0EY4FL/C+7Lyw9k7WUfCs1ewEjIBhFkqpLjIzrbqGvL8+
+	 qtw6ECkAFWAs0Ml7AnISd+h4MG+P17/RZ54npdi97HokHvw1ren1jXaDyDjoBobmYc
+	 dTnAX+m0QGAN/FElCSwzqpjzKEzAssTf/i9lRcdr+5ti5ZMDMpxjwliVBuQrNLuSbP
+	 KfEApLXFoDiI9VzjitqkAjvFW++cQPQ/Po6EH6gYeoIbnEgiaRgQXglgXMkDB+b9MT
+	 1NEWzBFxdwDuiIWBCIZGzPFHTBs9Snq61dLB8+FfRc2W5o5OREqAWdlbws/7WiW7ev
+	 LWxEuX8cpxbvg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0763822D4E;
+	Tue, 29 Apr 2025 22:20:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Reduce CPU consumption after panic
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, carlos.bilbao@kernel.org,
- tglx@linutronix.de, seanjc@google.com, jan.glauber@gmail.com,
- pmladek@suse.com, jani.nikula@intel.com, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, takakura@valinux.co.jp,
- john.ogness@linutronix.de, x86@kernel.org
-References: <20250429150638.1446781-1-carlos.bilbao@kernel.org>
- <20250429133941.063544bb4731df0ef802440c@linux-foundation.org>
- <20250429210650.GD4439@noisy.programming.kicks-ass.net>
- <433c6561-353e-4752-b9cf-155e49e62e63@vt.edu>
- <20250429221049.GG4439@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Carlos Bilbao <bilbao@vt.edu>
-In-Reply-To: <20250429221049.GG4439@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/4] Fix Felix DSA taprio gates after clock jump
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174596523475.1813341.4865840988683166459.git-patchwork-notify@kernel.org>
+Date: Tue, 29 Apr 2025 22:20:34 +0000
+References: <20250426144859.3128352-1-vladimir.oltean@nxp.com>
+In-Reply-To: <20250426144859.3128352-1-vladimir.oltean@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, claudiu.manoil@nxp.com,
+ alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
+ richard.pearn@nxp.com, xiaoliang.yang_1@nxp.com,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
-Hello,
+Hello:
 
-On 4/29/25 17:10, Peter Zijlstra wrote:
-> On Tue, Apr 29, 2025 at 03:32:56PM -0500, Carlos Bilbao wrote:
-> 
->> Yes, the machine is effectively dead, but as things stand today,
->> it's still drawing resources unnecessarily.
->>
->> Who cares? An example, as mentioned in the cover letter, is Linux running
-> 
-> Ah, see, I didn't have no cover letter, only akpm's reply.
-> 
->> in VMs. Imagine a scenario where customers are billed based on CPU usage --
->> having panicked VMs spinning in useless loops wastes their money. In shared
->> envs, those wasted cycles could be used by other processes/VMs. But this
->> is as much about the cloud as it is for laptops/embedded/anywhere -- Linux
->> should avoid wasting resources wherever possible.
-> 
-> So I don't really buy the laptop and embedded case, people tend to look
-> at laptops when open, and get very impatient when they don't respond.
-> Embedded things really should have a watchdog.
-> 
-> Also, should you not be using panic_timeout to auto reboot your machine
-> in all these cases?
-> 
-> In any case, the VM nonsense, do they not have a virtual watchdog to
-> 'reap' crashed VMs or something?
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-The key word here is "should." Should embedded systems have a watchdog?
-Maybe. Should I've auto reboot set? Maybe. Perhaps I don’t want to reboot
-until I’ve root-caused the crash. But my patch set isn’t about “shoulds.”
-What I’m discussing here is (1) the default Linux behavior, and (2)
-providing people with the flexibility to do what THEY think they should do,
-not what you think they should do.
+On Sat, 26 Apr 2025 17:48:54 +0300 you wrote:
+> Richie Pearn presented a reproducible situation where traffic would get
+> blocked on the NXP LS1028A switch if a certain taprio schedule was
+> applied, and stepping the PTP clock would take place. The latter event
+> is an expected initial occurrence, but also at runtime, for example when
+> transitioning from one grandmaster to another.
+> 
+> The issue is completely described in patch 1/4, which also contains
+> the fix, but it has left me with some doubts regarding the need for
+> vsc9959_tas_clock_adjust() in general.
+> 
+> [...]
 
-Thanks,
-Carlos
+Here is the summary with links:
+  - [net,1/4] net: dsa: felix: fix broken taprio gate states after clock jump
+    https://git.kernel.org/netdev/net/c/426d487bca38
+  - [net,2/4] selftests: net: tsn_lib: create common helper for counting received packets
+    https://git.kernel.org/netdev/net/c/efa6eb7d77aa
+  - [net,3/4] selftests: net: tsn_lib: add window_size argument to isochron_do()
+    https://git.kernel.org/netdev/net/c/f52fe6efd61f
+  - [net,4/4] selftests: net: tc_taprio: new test
+    https://git.kernel.org/netdev/net/c/4eb9da050f00
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
