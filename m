@@ -1,100 +1,99 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE9B27CCD7;
-	Tue, 29 Apr 2025 14:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367561F76A5
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745936795; cv=none; b=V/BgoLlbqDuWh8aEYRkzXdPflGRdDLV1Ug7GffCoNYkZkhiqSd3Nu/BJr+/updvKG0I8pgx2ZJFXsUUNtarVB6kMpMFFGbiL4w0x2BFtAcC3hr15q+XwAKRmuq/RgaretPFz7BDCvDNO7q40e4pYk/Y/WyYjd4EgmEphb0b9mxM=
+	t=1745936809; cv=none; b=MkyiZCwzy7WJYJXGudgvb7RWyhsv25rfuDStNiExrpk8hxvYjAbaLfUy4xpE9fBROH5grERwu7mu9MfoiNXv8yg/RvjqGaMqk/ariyTHpZfk5lN02mCHzXHzK9i0bY2763QPeqXTUq5OOHkXvqy6aBv8kiy6EIKmL2aP2GRQo44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745936795; c=relaxed/simple;
-	bh=W4I30SvNM9+KAOiZNBilpIRKZgT54av0AUAt9ZoB9fA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RYZbvER5TDUf8Yt9nyrcVERxaApl14Oh6ilLdvzWrS+OnzFslXSUa+ECQdTyuqv+QdrXNM0ZyurAuGdfREMyKdW2g82HBVd56AtvMKgNMR5EjT8n8dUFclHUPZkK+3DZ4Ouf+uHaemhcHm5nXaHyyA/phq+L+RV2oevj1f34Pss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476b89782c3so78144071cf.1;
-        Tue, 29 Apr 2025 07:26:33 -0700 (PDT)
+	s=arc-20240116; t=1745936809; c=relaxed/simple;
+	bh=0sf2XvtvsbPwlXZeXsAd0Z2lGqKNVZNueCdndHslTJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQe+KeyHFnvG7srEkztwvRIyuIwwL+vlT9wcA3RpP/gyouO/bShkZRvEyt7yv2BMRWX//HwAK1TR9umHYFElgH4d66xsm8ptBXLV9Tf/6LezpSEzP1zsidmDNWGDGg54nM10p3mvAgnVtAjbLnFlHTffSF8yf5T2DjtnvVgUzDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Tx4irxhe; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Tx4irxhe"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so9613373a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745936805; x=1746541605; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i11jWjMKjFB0m+5nZkJUQ48rdgc0E5ZWVkVF+qOAs9U=;
+        b=Tx4irxhea53//mc0JHULm6QhEGUSjwWkBL/BQF30P2SmUn8BsEQq/o7VrBR01O8cEd
+         ECZVXt/+aR/FrNRD/fYCzGaEV9zsLkk0MeMDkIJ1rQgIdCJFc2lkeke81dVcoiJ+RFa2
+         SuuRVmgze+PH3Wcae31uAmAIiLqSMB/3tWRigk1UNd6uZ5xrmotLT29PDe9uSTK5RJJ4
+         1XY8ei58xsXcDaMHyt2oBHvrUmkyHvRUBeVJjhHH9UpDxli+6TnpeAzx8wzTjzWWm7ku
+         T2Ama52TSK+0Jh/KqFVJGL1dp85Sjrn975emiy1JN/ladNwGcJQpq0AbwEUbwsqXTm61
+         On2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745936792; x=1746541592;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=USrJd919SgUjZesNRyH7GF2uBWWYxNg94OU2voVgEgU=;
-        b=iO1u4Tetg7tJVwa9YKD93zZli2MQvjUk5nOvgBZJrAJDquJxlMe5whfDd+l7BQ2hG4
-         sYgNob/uohH8GTvgZRaRwcqRCkcgse5lB/5c1s/hM/u8w18e0qfGyy8X+2cKXOfzpcOb
-         b+zxCpNarx7Za/zYAi0To3meMw25EDXuOCHdrWlYIUQwRQ02SQ/N7Z0FctgSsNctpekJ
-         UldsRPfy9y6W8O51y0PXGbv8CHjWmDfv+ee8Y8t8C+MmmYtYrtgJFUcZOY2ZdoKSm0l+
-         qaOBVuF5IsvgPnghHdhOb1CW8+rDBTrrI55HoX6Umolij2Iev6gcl7+1RJyEkJWPfGg3
-         YEYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeC9jqtpRjAyn6K+VWeyQ3b82U8cNtLn17bGYRDFGV6WkeFI23OobQI6m3cNWopoc1qCelDu5ljDxC2LI=@vger.kernel.org, AJvYcCV4nTn0BVW5lT2VAxzYNcsa3oooESi+Cz/v8xM4uqGaAbkrKg5w+ikri30aGpA988/CpZBZuG2DTrkEzEHIf4I/5aU=@vger.kernel.org, AJvYcCWHmPRNXuxUT8tdWnS6cbnykYgJdfno14DgNjHK1IGHBIPZClVh8el5r3b6ayK6Na7yDk87m6FiMdEMxHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUkJ5YBsGFTbomZqhhLWCNY5/OWa3fBd1sYsfhiijKJw0zt89F
-	KRtiQ0Ka7wPyHBhvd5HrHNOg9fmes4gH17M6xNKVz4TnhT1YpQzzPwhvMU8H
-X-Gm-Gg: ASbGncu4dOMC1VfTp9zlyT6AFxnVaty6UAhDcBcVDlKb12iCvOBSVNOzxc6J+7yyjPJ
-	jkeiIEyWe74JN8KdtORKygQ7lomFyeIxfFTjMjYHasdBIeVZWtacp9lWDqRIVJnVHJhi6lBj4s2
-	+Kr43W+8Nr28mLKk1/4u82A48fNkz6iBHNEsb+ZoPgd95j5Hp2JSYWqYuJBPQ+7ewx9OOtBDRCr
-	k0/k5ty2bzqrDqdk0EErpP6y9P7vRDNtXJMy1SoUI0CMkyLyRn7jXMb7nZ+6lFrxJ8JSNFp87iK
-	DBKD0wx01G6loCe7/PC/dRIyfCSYC9mpdIpvcBPqpiJFVvEgHN5krq2ZGGmoVgtxgfxxfysaCsi
-	ADhiQaIw=
-X-Google-Smtp-Source: AGHT+IELGWBFKvrCq1t0ApQdg+gN/b0cybCC+2a2wGwoLqSRDwF++GNAsXPROBNzpn5Gb1ktLJaJfA==
-X-Received: by 2002:a05:622a:124b:b0:47a:e775:da52 with SMTP id d75a77b69052e-488682fcbe8mr57442581cf.38.1745936791604;
-        Tue, 29 Apr 2025 07:26:31 -0700 (PDT)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f0d0efbsm81571911cf.26.2025.04.29.07.26.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 07:26:31 -0700 (PDT)
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5568355ffso554287985a.0;
-        Tue, 29 Apr 2025 07:26:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+ZO7AWx1ZV5obmRke41WVSyxdLSUFea8f3FpywYFHyfp9MhTiiG+ZZbAF0002ulq76LkoVH2nBbO7MJQ=@vger.kernel.org, AJvYcCW3rzsjhq25JJFVJkFYhaE5nThfGYnc/iCkK4YiPtQZloRutR0FPK+gzZi0/WtbtrsTrjPj+Xic+V585WEpc0qhePA=@vger.kernel.org, AJvYcCWFsxTw0FcjQNwrEhPJLzkYkueBADZMzc0YyhZhINRx5mbAeeJSF09ERyQnYJxZHiokNat3XcuVPTbZ40A=@vger.kernel.org
-X-Received: by 2002:a05:620a:8001:b0:7c5:46e4:47f5 with SMTP id
- af79cd13be357-7cabe5e9dddmr503329585a.20.1745936791249; Tue, 29 Apr 2025
- 07:26:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745936805; x=1746541605;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i11jWjMKjFB0m+5nZkJUQ48rdgc0E5ZWVkVF+qOAs9U=;
+        b=nBnWtXzf7V3owu6GZiBtk5EsrUxTaCn9OWR5Ijkkl6kM9dVxprFq+sEzxAl9JKqRGC
+         9EwBtgoFTWOJe3axifwiaueP7Hry31IQvOQI0d8Xuf5YImqIP7GRf7WEsSyG1ptN5vCX
+         dV+gQ4tjFsaNuW3znQYXeVte9t5OV/Epvg0/AmKDa+wAxkLaVSp/nNeeJYfjsaBnuW3l
+         SXZTScPVJMustEZQ3wg3HfqOWTmLACFvcUUj9pLwiyNdupvIJ8CC2+APUTaRe8BdP3QX
+         EbdT8pCSw65UFn27rshRbdXKmCCoc8zN5Nyq/+sS7oAcxzQS0bH/Hj3CvOyUkmkzkBJa
+         +yYA==
+X-Gm-Message-State: AOJu0Yw0ABX9TI21gGc2QDDVCxMrJv0LnvHFTxjBwicctNvekcKsfyP6
+	qaLvRTfCEMrp/18MdnJd/k+hj6ZwBHoFYT61tB8io0ERCqrUwHpp48c+HrFDUYU=
+X-Gm-Gg: ASbGncv7kyXlYX3ewYWQoIxEUriGULq1LoCpc2zkUuNDWwpiJO/zlwcQjbAFQ5erFue
+	qYF6E7cVsS8cI9J8mn7k9OThQVNmIEDuV1JpAiNejFxdEbpDtfxn3uaV1TNa+m92J/HSsY8wIxx
+	VAcL5JXHMioItJNNNunu+9xQr27cBT8FMmrRGZMQqYEyUP5C7sl8pBiB4LKtMkRJUbd9BMrCtMY
+	yGnpY+eyUjh+U6mNIaaFobZ+p6XDVFP02nPO6AjYVQwotFNdoWupYFrTMtRYgR2wlEgnZUzsR4u
+	LZJsoY1ZGkOUJyskPDt5n1+kAHXI2IXfdp20wLUQ
+X-Google-Smtp-Source: AGHT+IGuMJucQb7G+wfByCfg8gyHRHAl6vF4qRmzkUAvzwcmFJfSVsMgvLMzQmuS4h1SA9OWg+05gA==
+X-Received: by 2002:a05:6402:34cf:b0:5f4:c20d:499b with SMTP id 4fb4d7f45d1cf-5f7395f1d21mr11396671a12.13.1745936805483;
+        Tue, 29 Apr 2025 07:26:45 -0700 (PDT)
+Received: from pathway.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f70354514csm7447165a12.52.2025.04.29.07.26.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 07:26:45 -0700 (PDT)
+Date: Tue, 29 Apr 2025 16:26:43 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Subject: Re: [PATCH v3 17/20] ratelimit: Use nolock_ret label to save a
+ couple of lines of code
+Message-ID: <aBDho6c7EYBWNZzU@pathway.suse.cz>
+References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
+ <20250425002826.3431914-17-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429091609.9947-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250429091609.9947-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250429091609.9947-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 29 Apr 2025 16:26:19 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU-YVMRjxC6+P-Ljm0Vfnv3KfTt+04p=JVhAybcubcb2w@mail.gmail.com>
-X-Gm-Features: ATxdqUFGLHF3vKPqFuzBi32X1uec1rPmYCz6irMPhCxV-R_sYXIi-YqJLb8cvVU
-Message-ID: <CAMuHMdU-YVMRjxC6+P-Ljm0Vfnv3KfTt+04p=JVhAybcubcb2w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] media: renesas: rzg2l-cru: Fix typo in
- rzg3e_fifo_empty name
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425002826.3431914-17-paulmck@kernel.org>
 
-On Tue, 29 Apr 2025 at 11:17, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Correct the misnamed FIFO-empty helper for the RZ/G3E CRU. Rename
-> `rz3e_fifo_empty` to `rzg3e_fifo_empty` to match the intended
-> naming convention.
->
-> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Closes: https://lore.kernel.org/all/TY3PR01MB11346E57A3DF8D8A90A405E4686812@TY3PR01MB11346.jpnprd01.prod.outlook.com/
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu 2025-04-24 17:28:23, Paul E. McKenney wrote:
+> Create a nolock_ret label in order to start consolidating the unlocked
+> return paths that separately invoke ratelimit_state_inc_miss() or not.
+> 
+> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
+> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Looks good to me:
 
-Gr{oetje,eeting}s,
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best Regards,
+Petr
