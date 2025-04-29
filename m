@@ -1,72 +1,71 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100B1284694
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6F229DB99
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917217; cv=none; b=CrmRcIB6xarbbeBe3kQMbJw/tbRARMMJRvGCGnjXX8QapYs6n2kEZgOH/4g0if9RJtDBTY37QwoHLWyBSLS11mk3pFOf/WYbP69j2DWCu/kiJrlPfK1DZ877/+IoJuoAO4YsHljkmm1xbwUjsc1I6RkgE/bObGOZn2yu+3AlW2c=
+	t=1745917229; cv=none; b=QoIGghZQxb6HatuLw8mokp5T0Qr9SROABlnWa5BkFc7ByZeALaI7lk/Fb3aSqobtXm+daNyz8zVGI+nWRAv8qjbCW9uYMKRPK5CkNwLbb74uHeYXaK7MIJNpnTnueIKTG8EhBmjG1d7JYqGl3HPvL2VY/AW4yz93xivQ3qwPlKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917217; c=relaxed/simple;
-	bh=mYwV9qaC5quGigoNDzErPL97AxB0Z1lobQFByQD2FZw=;
+	s=arc-20240116; t=1745917229; c=relaxed/simple;
+	bh=2KIKuRu81xZaF2280xYX/+R5+wlu8WDBf1ye5GbVH/Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KwXTdqiiqy16fuoF/kvu1MM0nFmd0cQjn0gOumIQkejy0Hl9OqWdImmMzipw3vi4rAGtr3fSrKBcFip5RFV2rVKUBlX5GcUWkIp/JvSlZSFCzlZevlz38GoD3cjDlLGGblC5XVZoKFhxr5ghbJgQnpQXZYjqMGswpK7FhOg408g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JHycyrzi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=HLV5A5dI/X94qp1YGTxlolTgwGTUzvd+xqYgofXu+5DRz/0pQ5G55X+irg6viKRDiwxlh89ztE2yfCvAp6/V8rTueCvDriExkOCi/IX3RuxKL9oPoqp8U6f7+XZzC5Ou2KuyPzKOZ0+Or64O4gXqLcO58GQ0/VSOoxJk0VYQT14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pezbsw1B; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JHycyrzi"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq4VG006065
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:00:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zqDGdfO9/jWDyry3sjZsFjxW+nnt4/iR1gA9efn55k8=; b=JHycyrzi4i3ApBuc
-	31HQXK2oDNvxJ4SHzcea+VSjsiKuOh6XnUnuVU0NSB9G7G4PWnaoow/X8X+/v8JI
-	a+e3N4z51LMQvSD0wBJVsjEJb0ZNuxMFXe2nB+h6KmEX+vZs35oktuv+JFGd+wzO
-	RXbTekqBjlinpqhKMpCIG3MjhVtpILlI9lLl0ho/lOLvVaIFhkgF67WGtl2gPcji
-	VfDwmXVWoHIM6FuFNKcsY5lmWxXrEDHeP9lQ0wczsa0+xXpnqT9fbzQF/INJgV3T
-	Rr7RSKrd8lezM+BIxvGnAXZ2td3lEbBXHzwdpelMJahwDv/V5G9tia/T7jbSGw/j
-	17iOSw==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468ptmkwsc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:00:14 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-476695e930bso10763381cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:00:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pezbsw1B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745917226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PCHHHLvZcH3BVlqKXz9f7p7K33kY7dzdDWtjNHcUjrA=;
+	b=Pezbsw1B9qB1GEwXC4pH5VjS4qkEho7iMsqieDAPwO98WSpzbdxIDud0JAcazRtcN5qju8
+	eFffV324TG6xy1yX26DCZSTzTVXSUBedBf+0PVxGW7nCj7rFq7xACb0h6qs7a6sG+VHMTX
+	abSwvrN9oTCFfpX7ux2nVAX/vglm2xQ=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-187-svF3wDM_PiG1aCsMSlodKw-1; Tue, 29 Apr 2025 05:00:24 -0400
+X-MC-Unique: svF3wDM_PiG1aCsMSlodKw-1
+X-Mimecast-MFC-AGG-ID: svF3wDM_PiG1aCsMSlodKw_1745917224
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb23361d73so125595566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:00:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745917214; x=1746522014;
+        d=1e100.net; s=20230601; t=1745917223; x=1746522023;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zqDGdfO9/jWDyry3sjZsFjxW+nnt4/iR1gA9efn55k8=;
-        b=QAsdeTIhoUIY32lNc2bwHS57KbkDnP4zWSj713saYqOtdTZqaGgvZo2Y6wMDGNOnqZ
-         EHaeXADPX6A0XxA7cbhbmzQnaXLx6Norsz5hFAFKiynimbFrkg9oxM6rvOiBu5XWFi2M
-         Ve+cqy1WGr47RVcdyUmCZKi8PiOPbaSCpNFsxJhDbJOHk8FuBnYTjIaqX4agUh9B0T5d
-         7bREfgsLfjwtDNhG84R5xI1rG+IMHih3SZjBryMFPA949SuiwhlEJM4k2i3TKi65uY1N
-         ai9gaEIHkrU1umJR3aMN3EWQwWKFSiMjLTisxSh4l87iGQYDvvRgDBWiTvIJe6hNvXVV
-         04+w==
-X-Forwarded-Encrypted: i=1; AJvYcCU9N2xuPnMXWXavwCD8GLvI8o7A/RzmTLG3SdLneXQZO504CVIDsQFPW2t0QO0UyvLkxsmLDZUFDgHeud8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznpyOc05OE8J2Gh+vaiYy/mXH4/cW0VrnZKiPWIM7EASmAyWnU
-	EDJZjcN7NpMRCaWk2ZhDIo3taz+1cgBl0bJ0Nz2CLiSLvzQfnbg6iX7GssdvPUbxT5XKTz5/fbD
-	AKqod5ELLp4PSVF7ehG4tBBK/Jj24ppsWYcroO5uO9H+qpVChg/4PfLOJCVjWS9Y=
-X-Gm-Gg: ASbGncumDuZ6Z71SCL1Vgg4PQd7BLo0cUBT9pnQkO7r2fmru/ML0urXxo4vhv1KPVbE
-	I+BCNnCrXPShgDOfAZBX5i2mc6o1fr85bJJc9EBFmQz/5S0/rlULxxIjLAwGqVxYoX3lRzOtZP+
-	Faz3YMv9NG0ihBZX2IapK1ChLwKkoJNfU/+tNYwg5W60s7HySg1DkDahgQKBvsHW5GC2gHNm+Gq
-	+X+srRHyuXQwu3dItzd3jQhTJoPF/YLP+EP3TtCri9ZO0ytztFR/FPeYTnLRT1ycD8gBt8Vwjjc
-	Qf3Shz0KS3vh9BHZC2eZrIs1TkW41/9DNpQ6gnEOuePaO5HylxxuZnUmXpcktsYIoQ==
-X-Received: by 2002:ac8:584c:0:b0:472:7a2:c3ca with SMTP id d75a77b69052e-488665065b3mr13381331cf.7.1745917213865;
-        Tue, 29 Apr 2025 02:00:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHoe3LY+sQejWrjRsXICpmmof+c3/tmw3k1mD2dd7DkiBAR+7Wx53r3CiWHkEswrPutog4ATQ==
-X-Received: by 2002:ac8:584c:0:b0:472:7a2:c3ca with SMTP id d75a77b69052e-488665065b3mr13380991cf.7.1745917213331;
-        Tue, 29 Apr 2025 02:00:13 -0700 (PDT)
-Received: from [192.168.65.43] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4fb5ecsm747910666b.71.2025.04.29.02.00.10
+        bh=PCHHHLvZcH3BVlqKXz9f7p7K33kY7dzdDWtjNHcUjrA=;
+        b=CQPFwcE4zTErjsqPAAWsU2Pa/re3cC9E79rpAS4QT2av3DVkkAvqZle/eELdXUPaNW
+         UnSZv0INDFvFnR7V1QzetnU1gzyog+oHUdB+TjHpxNzT2cE/35+dWqPU1EuT37BWTGf8
+         PSanM27p+YiPdbBAp4I7LjrEkf8uT9U4P38tOIVfXDT1P7o4aD2WD1IUBa74FNhdZZVk
+         /lsH2DjLTwVQBr9LsSAZG6l+lRW29vhYOgFU2ccqM+LQuLtkO8CXGbYl+pZSfUB5yprW
+         h+pgaaZ9d4nuLaM+FKMgXxYYdCufY6dQldb7YwISIgUT2dSVn+xsW/8a2w8wkO9LZ09d
+         H1sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyJHkYXzTV0KecnyMDXm7VhTyHEwA1G0/Lt6z7UxshH/iWZMuuwQu13WBZQfD6s+PGWDw8gEdDgsuDTkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1FZU5I885jnQIQnU7et8bzuUXtvRS2+zWWE9OxhXykcy1RBnE
+	y4h3gGw4zvI+f2bUJPE7yJTsZu/2zkN6KOSQE/6DZQ+WxvjwHrnEkospUzHY4Aj2P3e2iy+XU+O
+	V3Jkn3kAR1T4peA51hJ+Llkc4pMiwGmFzDBVsVXjSBhl2TNHRpYB3U+C9r9aMJw==
+X-Gm-Gg: ASbGncvB0TYpgtfBRDAcaPVouxHupdostfTy25I9FQfp559xoyk6aCU2dK8dk7QAX/0
+	nUwFh/pspEPzUN+l8s6b4CDhDRAW5rGXRJfLGG2Y1voerLWBdo20V8XCd6Xj0p2uiq0PPqsnXiC
+	jGduoZXTM88JzAzzyXDPNECVr+N6UJ6vIF1vlruAK9NAU2yN+sOcw19+/zpRzcg+19TSCqWpRYU
+	TM8+bBpJJSOLTOJTyOt+YXaJZxqCjQc4FcQmz6j3GTMmfRmpUnrp1SdiCt0YX96SkK+Hid1k05Z
+	BiUSDYvabAYzJjZayjLj2P5op2hE2ISXFmKFKUIgiSqtZU2iDmT8aDc1f7U=
+X-Received: by 2002:a17:907:1ca4:b0:ac7:b1eb:8283 with SMTP id a640c23a62f3a-acec6a4958dmr218813966b.17.1745917223563;
+        Tue, 29 Apr 2025 02:00:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEkmrc9oaifrsbfBdKoTCsdQffffsFtg2dW8YPIfDy01PUM4CZM4fNcXpfPUjcXmTBPdpHaIA==
+X-Received: by 2002:a17:907:1ca4:b0:ac7:b1eb:8283 with SMTP id a640c23a62f3a-acec6a4958dmr218810366b.17.1745917223187;
+        Tue, 29 Apr 2025 02:00:23 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897? ([2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb1cbfsm741676566b.181.2025.04.29.02.00.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:00:12 -0700 (PDT)
-Message-ID: <a1b7d6f9-13bc-49ed-bc4c-40f4c2fae8e2@oss.qualcomm.com>
-Date: Tue, 29 Apr 2025 11:00:09 +0200
+        Tue, 29 Apr 2025 02:00:22 -0700 (PDT)
+Message-ID: <be2ae666-a891-4dee-8791-3773331ce7d7@redhat.com>
+Date: Tue, 29 Apr 2025 11:00:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,109 +73,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: sm7225-fairphone-fp4: Enable USB
- audio offload support
-To: Luca Weiss <luca.weiss@fairphone.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20250425-fp4-usb-audio-offload-v1-0-f90f571636e4@fairphone.com>
- <20250425-fp4-usb-audio-offload-v1-6-f90f571636e4@fairphone.com>
- <5c4ed073-45fe-4938-b25b-8979d96b456d@oss.qualcomm.com>
- <D9I3OWQF8T3Y.1Q5U9E2RI5YZX@fairphone.com>
- <8e152cf1-24a5-4883-8c5a-887d3c4bd888@oss.qualcomm.com>
- <D9IZWD6MS7A4.3FJ3UI3CG92OM@fairphone.com>
+Subject: Re: [PATCH net-next v9 02/13] net: pse-pd: Add support for reporting
+ events
+To: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Donald Hunter <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>,
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
+ Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
+ <20250422-feature_poe_port_prio-v9-2-417fc007572d@bootlin.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <D9IZWD6MS7A4.3FJ3UI3CG92OM@fairphone.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250422-feature_poe_port_prio-v9-2-417fc007572d@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: s9-vexhTTHHzCPBUlik6V90yWMcjO9J6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA2NiBTYWx0ZWRfX+wjMdcAWuMnR FgqXfNG3yS2sC2XLMMqSK/37/r7jyy/gPv7s9JivKworaYx1iz0GhydPQSaAvDNomYBPQ9Y6Scm oCRmjirLmQDvlGiX2C6QMAdq0A7FGpiTKnzB0MvTEg2zizvZeRlGhamqv0yHODL+QA3H33GBiFi
- Cbl5s8sgqN3xQKargMAB0DzCxdIEu0NFLy/u96LZaypXzIuw4sjXHJGs6gUpB4enzusrxesoWjo eqIiR08ok3pDPI52tI8bzWo81t1TXFYbAWQZ6RbzbvN7NVgEsWF8ZnnEMDQyPe/IrjxbgjCK29w PlJywbArj84mLZRLoD29nY18i+1GtLQoYdM0LDipOMFl7CEwKKP0TV73ZLip4njydRNyhi4wuIB
- +EPpIbHMkYXkMyD5ufPoTbwEVpLrG0pTbeLYZSSI4DAeJ4r+ZrorqbWz+3xJdrAjkxs5Ws4F
-X-Proofpoint-GUID: s9-vexhTTHHzCPBUlik6V90yWMcjO9J6
-X-Authority-Analysis: v=2.4 cv=DKWP4zNb c=1 sm=1 tr=0 ts=6810951e cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=6H0WHjuAAAAA:8 a=Iso9NqdAnq4PZ9IQp5IA:9 a=QEXdDO2ut3YA:10
- a=kacYvNCVWA4VmyqE58fU:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0
- phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290066
 
-On 4/29/25 10:55 AM, Luca Weiss wrote:
-> On Mon Apr 28, 2025 at 11:43 PM CEST, Konrad Dybcio wrote:
->> On 4/28/25 9:41 AM, Luca Weiss wrote:
->>> On Fri Apr 25, 2025 at 11:06 PM CEST, Konrad Dybcio wrote:
->>>> On 4/25/25 12:44 PM, Luca Weiss wrote:
->>>>> Enable USB audio offloading which allows to play audio via a USB-C
->>>>> headset with lower power consumption and enabling some other features.
->>>>>
->>>>> This can be used like the following:
->>>>>
->>>>>   $ amixer -c0 cset name='USB_RX Audio Mixer MultiMedia1' On
->>>>>   $ aplay --device=plughw:0,0 test.wav
->>>>>
->>>>> Compared to regular playback to the USB sound card no interrupts should
->>>>> appear on the xhci-hcd interrupts during playback, instead the ADSP will
->>>>> be handling the playback.
->>>>
->>>> "should" isn't very optimistic - I assume this works for you? > 
->>>
->>> Yes it does!
->>>
->>> With 'should' I meant to describe the expected behavior from using this
->>> since most people are probably not familiar with how this works.
->>>
->>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>>>> ---
->>
->> [...]
->>
->>>>>  &usb_1_dwc3 {
->>>>>  	maximum-speed = "super-speed";
->>>>>  	dr_mode = "otg";
->>>>> +	num-hc-interrupters = /bits/ 16 <3>;
->>>> Where does this number come from?
->>>
->>> I'm honestly not 100% sure. As far as I understand it, with
->>> 'qcom,usb-audio-intr-idx = /bits/ 16 <2>;' in the qcom,q6usb node (which
->>> I've checked against downstream) we declare which "XHCI interrupter
->>> number to use". Without the num-hc-interrupters property we get an error
->>> that not enough interrupters are available (I assume only 1 is then), so
->>> this value practically needs to be higher than the <2> from earlier.
->>>
->>> Why it's this value and not a higher value e.g. 4 I'm not really sure.
->>> Downstream code looks somewhat different and "max_interrupters" in
->>> drivers/usb/ doesn't come from a dt property. I'd need to check more in
->>> details what this code does - or maybe Wesley can help.
->>
->> I got word that it's simply hw specific - please move it over to the
->> soc dt with the value of 3
-> 
-> Will do, thanks for checking!
-> 
-> Would you have a reference how to get the correct value for it based on
-> downstream or the running kernel on the hw?
+On 4/22/25 4:56 PM, Kory Maincent wrote:
+> +/**
+> + * pse_control_find_phy_by_id - Find PHY attached to the pse control id
+> + * @pcdev: a pointer to the PSE
+> + * @id: index of the PSE control
+> + *
+> + * Return: PHY device pointer or NULL
+> + */
+> +static struct phy_device *
+> +pse_control_find_phy_by_id(struct pse_controller_dev *pcdev, int id)
+> +{
+> +	struct pse_control *psec;
+> +
+> +	mutex_lock(&pse_list_mutex);
+> +	list_for_each_entry(psec, &pcdev->pse_control_head, list) {
+> +		if (psec->id == id) {
+> +			mutex_unlock(&pse_list_mutex);
 
-3 should be reasonable for most platforms, but I don't think there's
-a clear value defined downstream
+AFAICS at this point 'psec' could be freed and the next statement could
+cause UaF.
 
-Konrad
+It looks like you should acquire a reference to the pse control?
+
+/P
+
