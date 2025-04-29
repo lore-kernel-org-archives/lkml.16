@@ -1,135 +1,99 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006A12D322B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C02C256B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927444; cv=none; b=MhxZm4CshcNjViLkuoBi12waBRHjsxqfpXVHOYHqXa1ImLI5sHLonjPLGTwaSsGb7ps1hWybXIFk7ljKmZGIFBDYgqw3sYfPNUnsXfoTL8U7j/onItK3jjnBo2nxU/2Lg3R8QauUEKXzglWaMZ+MO232aVETGqm0n6t4wsi1Iz4=
+	t=1745927530; cv=none; b=jzYjAnbIIJGXwaM9nesefobrCmNRHOVoMqiLBTzgGH5rq3g6WvQ2gHxFTqYQ7JR63yp05jnNw3ugPACyfGKe9SG0uikne6wo2NGdI3ZS03hu3eTSfb/Aj1NXE81BKQed5wDKA2vx78XkdAC1M04IFwpSaiOfm34s/zcli71VBFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927444; c=relaxed/simple;
-	bh=5wF15lZztxkwYWXqpSOs68VJh58ZU35XJoKkkZFV3vo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y24RWWH1RWQ9I2Iw4Vko5n8FfAHJ7tgJ++RqxqI7K5cShrefteBR8HZQ4sUhZg6nODDYT3d2Xe6FTG+GsyXuHuiJqic6BE9dwm8QG/2kaxsbuk3h/VNrDOCbMXYNPrqxyo98/tJM5j84SpSNnHGF6TEimtTu5Wq8jUYcEiDFyEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ices3CX3; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745927530; c=relaxed/simple;
+	bh=YSi+2pk2Y0OakkzAIbd3npt05KKhla52x73T72f+oCo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jEcvXGMnOvZq/4tcl3aRCqFSSLdC9aXqItL6uf2qxxcXxQJjkSMobthjY5iRz6K5A1v0rE5Jf/EJ1OQfVKDPGEUeAlVuMNyOIo6KOhvQFZVx5U23qdAMF5fnFJGE1iTgCN841Sr9h2jbglQ0dFeOIefNqwboe47RuPTLhbosDWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=BR/xMWVP; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ices3CX3"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b0b2ce7cc81so5813302a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:50:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745927442; x=1746532242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1iyyLf3WUxORZOnWOPX6x4ocgIFr1IijLbgh6GePFQ0=;
-        b=ices3CX3PsghaoA706x6iR+VJIHrpHLcF9Y73lcqnSocTOtwFARiws86Duq/j/xrDx
-         fyV5Aqp2IhLo2GBssPw6Q0YegV0bpWghs49KXIBcHC/BFBI6Bb4LWwSaI2sUMxTCNPk1
-         bROMs4pCRi891fEeFmlSU/L0MbITEE2BNZxWJ8F2dQTbipBzZ5DwyWeWXA/V7u8BiNrv
-         qWvFIYR35aimySFMddV3Ut+3Ee7Q8ftYTuxuDC5PprqWGn6DREvNmARoxH+99uj41rBR
-         VSOFOkqxzlZsVhkcFN6lv3+mOtOPcIBDhzCTazfMJvGbYVfHbePylESWsX+M1MNoo1GK
-         bWYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745927442; x=1746532242;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1iyyLf3WUxORZOnWOPX6x4ocgIFr1IijLbgh6GePFQ0=;
-        b=gLAbD2QPjvkR/jlu1XbAA92yDtp6zv/QrYwfHK4LwdmuaPCkxNcgP2YhbRIf2WMSxn
-         3IR8VnCmwFmlsCwsuhTpF10GVtxLifxRVUo94Nyd7K6s/geBqtZIN9sor/joe1eMjNOa
-         P91fI58y0nOfYVGloCwtPxmtPAN+dj7FaUHGLAUBj30iLa3uAD6o+6nA5FpDoVte0Bxl
-         88hZq3Dz2j1XxvprgcahxJzqYVfMgAz0Jwwh23MhIrwiJPxOktdGMZ/MUUMakDdgnzGS
-         cRXzNqMvQscSRMPFLH6pVAm1T9GxHdMElE5E4VJdCJB2DyHbLRyUQK/a/HZ2EOTkJhV0
-         VurQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSm6/srveVxqT7ZXqXXJVFVozqLc/ud6PnwkMNxjYKvIQrq9Z4X7lYHuxyp8Olr8Yh7JaK+eT5heuASLE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybYzoj+4jz6aphCcn8jFG7791aP4GKcU3QYltTK7n/fHwKbPH/
-	/6PpLVTw1oy7JBgAtYaMThIGFCHxcxrrp8o2rsmQxhB5cQ2mti/G
-X-Gm-Gg: ASbGncutQqVSpSXc6T1WrSBNgeSgFHyEzZaaJqf21M1dewQHoU2/FWBzXBCQ/lzLjTe
-	qs4qiHjDjuVl3rDe6GHZaOGlx8T49Hsyqfbn5OMCTR+N1MhVFub1hC8NiJuMkSJNjPNrnZLR/kq
-	Edr6OCijqVuZI9zGnm7kLb9nrRE6ia8HVCA0v+ya7ka0AEqZdY0Ai8hOBw5Grl7dJLJeXR+ZftO
-	ngYoRDvIo5L3QmCAQNRhSFDsEosdGidz8PZLFWMsV03Ud7iF0RwmvR6xt+aTEq8icnui7ILKh/Y
-	gsC5ekeVv671+uVuCDtDrSdIcLhJUxRwYTNmPLcGdgymcmi+CVnLCBVcSiexwc9T6KuHMn0=
-X-Google-Smtp-Source: AGHT+IHGZrBDHK1WbkvwgRv01O0LY6RBxT8KjFbk+mC347HBJHKGCCEDSTjXjALIl+WfaCFQil4KFg==
-X-Received: by 2002:a05:6a20:cd93:b0:1f5:8d91:293a with SMTP id adf61e73a8af0-2093e528fa6mr4122901637.41.1745927442169;
-        Tue, 29 Apr 2025 04:50:42 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([43.132.141.24])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm9661644b3a.167.2025.04.29.04.50.38
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 29 Apr 2025 04:50:41 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v2 6/6] mm, swap: remove no longer used swap mapping helper
-Date: Tue, 29 Apr 2025 19:49:49 +0800
-Message-ID: <20250429114949.41124-7-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250429114949.41124-1-ryncsn@gmail.com>
-References: <20250429114949.41124-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="BR/xMWVP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1745927090;
+	bh=NskZHmQ3jsP9LjMN23KzcSCE5zyblLz8whIXfHKEw1E=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=BR/xMWVP9VHC673+uC1BXyT6rTRpWcLKNfObTS7QVorwlWUDZok9NIhzj041nMOTF
+	 x95AduzZnykXxd5prsoIbMnmsBy7044afBCGDYktkeQf5xrTF7uyrMHH3xeUcY8JZC
+	 rK4jg3h32n/SKMxpJx3RFa5j5/90xdyk0szueYc4=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 217CC65997;
+	Tue, 29 Apr 2025 07:44:47 -0400 (EDT)
+Message-ID: <f0d7965a0016f458bb06e2968c15d8eb46be296e.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch:support CONFIG_SCHED_MC
+From: Xi Ruoyao <xry111@xry111.site>
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org, 
+	kernel@xen0n.name, wanghongliang@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Tue, 29 Apr 2025 19:44:44 +0800
+In-Reply-To: <20250429113356.17929-1-zhangtianyang@loongson.cn>
+References: <20250429113356.17929-1-zhangtianyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Kairui Song <kasong@tencent.com>
+On Tue, 2025-04-29 at 19:33 +0800, Tianyang Zhang wrote:
+> From: wanghongliang <wanghongliang@loongson.cn>
+>=20
+> In order to achieve more reasonable load balancing behavior,
+> support for SCHED_MC has been added.
+> The LLC distribution of Loongarch now is consistent with numa-node,
+> the balancing domain of SCHED_MC can effectively reduce the situation
+> where processes are awakened to smt_slibing
+>=20
+> Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
+> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+> =C2=A0arch/loongarch/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 ++++++
+> =C2=A0arch/loongarch/include/asm/smp.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 1 +
+> =C2=A0arch/loongarch/include/asm/topology.h |=C2=A0 8 +++++
+> =C2=A0arch/loongarch/kernel/smp.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 46 +++++++++++++++++++++++++++
+> =C2=A04 files changed, 64 insertions(+)
+>=20
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 1a2cf012b..72a142a85 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -493,6 +493,15 @@ config NR_CPUS
+> =C2=A0	=C2=A0 This allows you to specify the maximum number of CPUs which=
+ this
+> =C2=A0	=C2=A0 kernel will support.
+> =C2=A0
+> +config SCHED_MC
+> +	def_bool y
+> +	prompt "Multi-core scheduler support"
+> +	depends on SMP
+> +	help
+> +	=C2=A0 Multi-core scheduler support improves the CPU scheduler's decisi=
+on
+> +	=C2=A0 making when dealing with multi-core CPU chips at a cost of sligh=
+tly
+> +	=C2=A0 increased overhead in some places. If unsure say N here.
 
-This helper existed to fix the circular header dependency issue
-but it is no longer used since commit 0d40cfe63a2f ("fs: remove
-folio_file_mapping()"), remove it.
+To me it's puzzling to say "if unsure say N here" while setting the
+default to y.
 
-Signed-off-by: Kairui Song <kasong@tencent.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- include/linux/pagemap.h | 1 -
- mm/swapfile.c           | 9 ---------
- 2 files changed, 10 deletions(-)
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 47b5746d5a65..a071cdc8f902 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -533,7 +533,6 @@ static inline void filemap_nr_thps_dec(struct address_space *mapping)
- }
- 
- struct address_space *folio_mapping(struct folio *);
--struct address_space *swapcache_mapping(struct folio *);
- 
- /**
-  * folio_flush_mapping - Find the file mapping this folio belongs to.
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index bf6c98009909..1a36e1f4f198 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3653,15 +3653,6 @@ struct swap_info_struct *swp_swap_info(swp_entry_t entry)
- 	return swap_type_to_swap_info(swp_type(entry));
- }
- 
--/*
-- * out-of-line methods to avoid include hell.
-- */
--struct address_space *swapcache_mapping(struct folio *folio)
--{
--	return swp_swap_info(folio->swap)->swap_file->f_mapping;
--}
--EXPORT_SYMBOL_GPL(swapcache_mapping);
--
- /*
-  * add_swap_count_continuation - called when a swap count is duplicated
-  * beyond SWAP_MAP_MAX, it allocates a new page and links that to the entry's
--- 
-2.49.0
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
