@@ -1,118 +1,120 @@
-Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
+Received: from mail-yw1-f225.google.com (mail-yw1-f225.google.com [209.85.128.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5172777EC
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BC7216E1B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745966474; cv=none; b=f4Km0mv5a6MFcqX/M11SfMD4Dr895EXtXjutBH7BejwWMHw0VqIAfwbF+qqgfyjCZcN/iB72SJEEptqe8O1sGNCYcRg+xFyG91VCCcH9WucP9qNXZn9Cg92DmxHuvT5admEOk9EE04H+xBndTaB3IQmn6iyY3Q8e72hbe9+Ak78=
+	t=1745966639; cv=none; b=mGnLfILv92yHwrEtgQAhczSoXNyN//bUzhY5qPx2uOmo9kAyr7kozv+8nDFou0pm8iwwsNXibR2MbpdsY71dqKyeMM+iuQlw4cWHwhZq6lyv08t63WXDbD6u1f45WVjwsyangIwzUCLwQHC33ozdb4d5XRhIJ4Ov+4NnSzolVZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745966474; c=relaxed/simple;
-	bh=9WWclwrCg2TvbbTylHUPNf0AHpKWev2f2XnfjrSo0dg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dYHBvC4/QaUQiIRY41iBQLMon1ZYvGk309atNE3BBAVO9XDY4Apr7M1QD96qZNLazwdAx97ISVeDeSh2R1pTALNXKQmXnYW8FoJaaoleeGxFZ7q7KOn9tFjPsibI6jzXQp4BlfbB6VWn2MdTSZsRvtXq/p8bTdjgdkwTfGcvEsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=e4efcvoR; arc=none smtp.client-ip=209.85.166.226
+	s=arc-20240116; t=1745966639; c=relaxed/simple;
+	bh=8krmq6gGLWICnf0RDzJsoQ7XVrbV+7ACHvk9dokG9rw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ocEMN8/tCHY8WsFcQgNnoOvAH8+mke39JXFqisC2zpn1Hg7Csz5ldlNBU1/H7HC29tNd+yVd72ekf6LrUw0+UrOBcIeHdcvOfv5vz9IoCgx29eaI5u23T7buuF8ffjKB7jGz+MipIw/5Aw1xxXL44GmLtlp9xGuN3kOVeTLI7s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=B+FClEFX; arc=none smtp.client-ip=209.85.128.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="e4efcvoR"
-Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3d9189e9a06so22636845ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:41:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="B+FClEFX"
+Received: by mail-yw1-f225.google.com with SMTP id 00721157ae682-7053f85f059so61628517b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745966470; x=1746571270; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfQT2w7zXD5LlB+aHplKgN57RpOC1FTB5zWyhqieJWc=;
-        b=e4efcvoR2C8bHWQtUEfzSUSTjBRt/bvr01PClQ13GPLnOvn9YIK+GF4Yiz7ReyOA0Q
-         qCmXJDoeCyZwtF2ubcZRYqJg8m+E/pVBUPmzJPlLidwJeDHbOY8y2IdoUm1BOmLmRlrU
-         BrCLoTUGpQcqiFHvN9hPcQQ3F4W+a6wKSBH6GBalhE6SwdtO/aLTrLDZF6Z564JhYp1A
-         2wAB/IPjKC3Iv63nkIV05vijAgtm/FTRYNuYDcRUamhRmRqeWZFd7a8Q8H2qzxOwqaGR
-         WdtKetcFO18I1yk/PJImRLi+VieV1Jx/yClhVWhuJx9TSnmcYcjN3+bS4VPrTBjtvV7D
-         Ejrg==
+        d=purestorage.com; s=google2022; t=1745966637; x=1746571437; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=heVSgyVKUb+FAm8sFJ+MihlxtPVid7pXn+732rMtMEE=;
+        b=B+FClEFXj13MZ/uaJ/1kesJVtP2DjvqxSY3YJdVL6sZsj8H60S6lE5WbfdjmSPBrKK
+         G+F0uNhYMuruOa8WgFsV6nx8BuIZSHlhndfukzY7NbRYTMEmThMaq7uoePKPcsYqzNTU
+         3WTaMaoJZ5A06LoItiViTWxli0ClUyzfQYSm4+c4HZh/tWBNCz6kWWS81J6wbURM2Fsx
+         FgfXK91s/t5mo8/MBOHkHLOnhhDNBDJF8InSw3m3luc6KwvoHmT/p/5s7ZM5MMrH6rcl
+         R2uIVSW5na7mzOytugz28DVQp7qiLA89n66J1O/hDQ4DbsoCouyN/0pW+2RFRmtjj9GM
+         NXgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745966470; x=1746571270;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zfQT2w7zXD5LlB+aHplKgN57RpOC1FTB5zWyhqieJWc=;
-        b=nnGdkP7y5qZAt4S+Y9cmcI7Y+XpDdtB+4DT+FJ6laLCceFLoCxBOKatCS48p7xAph3
-         jo9o2kr845/LY3toXS54CaRHlfdoMtlDggNSZR++jep3m9bbF2UlwHeOzFjNl3xmK5nU
-         Arz4QivY2acisfGPog0pxixQGaivehK3cF2l070OC8YiHIqH9ug1rRsWCGc/WngsMsTX
-         oYza6K40t1vEQOPGyKxbnf/r7Pe/wIhWRxSdWmmQ/v+e7mc6PDkfO5pMOA7qiEWC1IGn
-         Zt/6tz0IyIOXycabnpQ0Bg9TwUFlWg3IHlXBx2ljq6SvQYZVK5aRIhjilFukwkcQQvuy
-         L7nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQYGbJJfIoPBsJbbZs6d2QdE2372ZiObr9gYnhoaWFUHY/QBOthoccbX3x9EA9OQBHbBr4OXFCaJnG5G0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT86a8CxNiT++vFzCFx2Xk+gOhLIJwGiaCkvIi1BqzLfmGVBlS
-	F1cQO0NQe26p25PHiYC3EZtada8nHf7VODpvBmu4DJR7c5ncm5z91SEOjof4MAV6ayCuP9HINrT
-	xBchJf5KmZVkrUNKs+G0v/YAJL3KMpRPq
-X-Gm-Gg: ASbGncveC7zicmA1x6RGMGd5oYjIRHYFPKFOCjCMH4UKFyDg35cfe+0RqvmK+EmNALk
-	qwgl9TkG9KVou247UtQUN6OxLdVfY+7l0HJoLRV1etsLnlw8rXbyGQvZtdzbmSyBxTU8r7Wn7QP
-	sw/U7NzPIzaNt/YqX/zCaJ6y5mEAcdVKa4C1Q2+dWfBu+7WkXAWv0ECgvWk/ChIFaOgLHn3+a2h
-	GxzRDJj134JBup/3SVF9/ohP/zAhgNmBdC+Z368TOB/R5Qg4gscdOfvcGeaxxBvcDSRsNJICZQw
-	fEdQcvAE8axM6Yo1U8/1T9zYf7gsAvCXuFUn8RVZr7eqPw==
-X-Google-Smtp-Source: AGHT+IHLrjPX8uIJEDj5oQlazw0ZvIAp6m9XfLG15y+LyDl9K6XmhE298LlPMgUlZIHAr8kwO+8SDz8hGUv0
-X-Received: by 2002:a05:6602:6a47:b0:85b:476e:ede2 with SMTP id ca18e2360f4ac-8649805ea02mr5457739f.13.1745966470122;
-        Tue, 29 Apr 2025 15:41:10 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id ca18e2360f4ac-8648bf34e49sm19972639f.7.2025.04.29.15.41.09
+        d=1e100.net; s=20230601; t=1745966637; x=1746571437;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=heVSgyVKUb+FAm8sFJ+MihlxtPVid7pXn+732rMtMEE=;
+        b=ejMk6vqITzURLFXkLHU6ko1WvzLi3/oO8r4DLJEGwL5YjABPU+dRWIgXwEvPZl71W2
+         4TCYF8JE+n94CplPDkyKJCXBv70ZkuTxl3jprBLUc4bH9FqPuuho3YnGyDS3i/qat/Qc
+         9ILjm30uVK6OGNrTLkF98MQXWkHnbwBLVhX8VjWh8+60zb8Fjl85Aw/Pc/c51M6d3Nvu
+         Sl7DClkWBzY2QOGMI53siPrv001b3mNq6S4sxVFBGJPrNKTEoOk1Q6F6BHe47T7cw7Z5
+         AikVzYHImf+PHU8hquUuNnwKzAJR3i/LCmjvaQwBKgnJH/i6PM9p2SxYzdq8qYhcXEYV
+         IG9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVzfVBU2xVGWnxJvx7AlFCBgode+dUygAhkRbDwQLSH6IUnoTe0Mmd5/vs/5VW6DvfRLJFAXc2PEI+xdig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpAtbzZAgfS8z/tHj3DDebqOisG/E0EtCyupkWyJ8WVj0woNuc
+	vEpFRen1ewoe2eq2yQhezdRoUI6Y1UEgQvi/keGSymzeFI9Q+7BK0xVaFt0V16/0L32dgBME/ug
+	vylf5dW2XvryGzGPtHbqT+zgzNVfj4C4jj9OalztD1WTtPx2c
+X-Gm-Gg: ASbGncvWo6PcWIdz5fjZzMhF8uUyjaHy39P1uEnvn+kKjq0x3Wk4ylPwq9w61fh5zwS
+	3qIIQWNGuxbFTD3CXcOIhEMXouR3WrbSQp3S1mJ1nMtVOK66Rz31fWEdfV+XQqjFe0vBzdY9KUo
+	gjLjpj9RP5e0FRZqflO29Kf/M2DoN/ld3GG39ocKCW5FBOi0kbr+hiaV2XJ45glpWKsdJZVjsP7
+	Ouunkw7EMGSqki2XHrczrpqzBN/3C5TnJ4N4m4JOdPokeQFNym1pl6mL1WuGMDx0k8LlRSF9AAL
+	0pIBgX58fHwJZBDzi9MpvuJXD8ZDfu8=
+X-Google-Smtp-Source: AGHT+IEz4rx1/5caK68tQaO9b1jaWJL9Vugr0d/32zWvxjD52I6FEeimg97KRMlrDUksPPYZMyAW7+pUA3Es
+X-Received: by 2002:a05:690c:6210:b0:6fb:9495:1650 with SMTP id 00721157ae682-708abd7d841mr21149987b3.11.1745966636991;
+        Tue, 29 Apr 2025 15:43:56 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-708ae00cce9sm75537b3.17.2025.04.29.15.43.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 15:41:10 -0700 (PDT)
+        Tue, 29 Apr 2025 15:43:56 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
 Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id EC0BD3400C9;
-	Tue, 29 Apr 2025 16:41:08 -0600 (MDT)
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 650BE3400C9;
+	Tue, 29 Apr 2025 16:43:56 -0600 (MDT)
 Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id DE629E40ECE; Tue, 29 Apr 2025 16:41:08 -0600 (MDT)
+	id 59D8AE404E6; Tue, 29 Apr 2025 16:43:56 -0600 (MDT)
+Date: Tue, 29 Apr 2025 16:43:56 -0600
 From: Uday Shankar <ushankar@purestorage.com>
-Subject: [PATCH v2 0/3] selftests: ublk: more misc fixes
-Date: Tue, 29 Apr 2025 16:41:02 -0600
-Message-Id: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] selftests: ublk: kublk: fix include path
+Message-ID: <aBFWLGhuRO+Rlzon@dev-ushankar.dev.purestorage.com>
+References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
+ <20250428-ublk_selftests-v1-3-5795f7b00cda@purestorage.com>
+ <CADUfDZoKictpMvAgu9FPbHRLVns4HvBgwddsCBgHsH9nhiK4AQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH5VEWgC/3WMQQ6DIBAAv2L2XBoEidpT/9GYBnFVUiuGVdLG8
- Pei9x5nkpkdCL1Fglu2g8dgybo5gbhkYEY9D8hslxgEF4oXomJbO72ehFO/Iq3E6kqKgndSS6E
- gRYvH3n7O4aNJPFpanf+e/5Af9u8q5IwzVdaqL1vOTafvy+bxyPWAV+Pe0MQYf5wyVKCyAAAA
-X-Change-ID: 20250428-ublk_selftests-983240d3a325
-To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADUfDZoKictpMvAgu9FPbHRLVns4HvBgwddsCBgHsH9nhiK4AQ@mail.gmail.com>
 
-Fix some more minor issues in ublk selftests.
+On Mon, Apr 28, 2025 at 06:14:18PM -0700, Caleb Sander Mateos wrote:
+> On Mon, Apr 28, 2025 at 4:11 PM Uday Shankar <ushankar@purestorage.com> wrote:
+> >
+> > Building kublk currently fails (with a "could not find linux/ublk_cmd.h"
+> > error message) if kernel headers are not installed in a system-global
+> > location (i.e. somewhere in the compiler's default include search path).
+> > This failure is unnecessary, as make kselftest installs kernel headers
+> > in the build tree - kublk's build just isn't looking for them properly.
+> > There is an include path in kublk's CFLAGS which is probably intended to
+> > find the kernel headers installed in the build tree; fix it so that it
+> > can actually find them.
+> >
+> > This introduces some macro redefinition issues between glibc-provided
+> > headers and kernel headers; fix those by eliminating one include in
+> > kublk.
+> 
+> I'm curious what symbol was redefined. struct iovec? Anyways,
 
-The first patch is from
-https://lore.kernel.org/linux-block/20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com/
-with a modification requested by Jens. The others are new.
+The RWF_* flags. Here's an example error:
 
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
----
-Changes in v2:
-- Use a test-specific WERROR flag instead of reusing CONFIG_WERROR from
-  the kernel build for deciding whether or not to use -Werror for the
-  kublk build. The default behavior is to use -Werror (Ming Lei)
-- Link to v1: https://lore.kernel.org/r/20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com
-
----
-Uday Shankar (3):
-      selftests: ublk: kublk: build with -Werror iff WERROR!=0
-      selftests: ublk: make test_generic_06 silent on success
-      selftests: ublk: kublk: fix include path
-
- tools/testing/selftests/ublk/Makefile           | 6 +++++-
- tools/testing/selftests/ublk/kublk.h            | 1 -
- tools/testing/selftests/ublk/test_generic_06.sh | 2 +-
- 3 files changed, 6 insertions(+), 3 deletions(-)
----
-base-commit: 53ec1abce79c986dc59e59d0c60d00088bcdf32a
-change-id: 20250428-ublk_selftests-983240d3a325
-
-Best regards,
--- 
-Uday Shankar <ushankar@purestorage.com>
-
+In file included from /root/linux/tools/testing/selftests/../../../usr/include/linux/io_uring.h:11,
+                 from kublk.h:25,
+                 from kublk.c:6:
+/root/linux/tools/testing/selftests/../../../usr/include/linux/fs.h:318: error: "RWF_HIPRI" redefined [-Werror]
+  318 | #define RWF_HIPRI       ((__kernel_rwf_t)0x00000001)
+      |
+In file included from /usr/include/sys/uio.h:179,
+                 from kublk.h:22,
+                 from kublk.c:6:
+/usr/include/bits/uio-ext.h:45: note: this is the location of the previous definition
+   45 | #define RWF_HIPRI       0x00000001 /* High priority request.  */
+      |
