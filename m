@@ -1,144 +1,134 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5E01DE4F3
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015EC216E2B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937248; cv=none; b=k/ZyzQle0w2laOyeUxuz9FQ34wpro9oFvOB50RGM/g0EFtaoUnEh5eLGZKr5y8BGOscPHmUuOvpHj+7aJ43NJnjqpOso1nEEVNAlVk7XzWDDobBvJRGkljByBnRIyHpIcqjRvXIHoIAiOocxTuw9kXtjNpyZj++rKUxu+xPM98Q=
+	t=1745937253; cv=none; b=YP1DGVnY6ZxslQx5qvMWLbk7cu8kv+z759gVMTiFVTlG+YmPcneU3pE/IFstCDPn/TxBCnUaX12RfBANchmou25gM311OkjhM625DlUs5Nn1GVRBmtnFcF56Zbpqtkp2CsXitFVI60aG0WrVp4+qAUK96FYqVcxh/WK9XoY0xbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937248; c=relaxed/simple;
-	bh=dvDfbAIk6ND6JChsdJII8xgWpJQZsIE/dY9EvsSmBYY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=niIY3Sc07NBPsO4u9bKj2RIvXo3JZkIt+/H+rNy/f8QVmjepeSiz+w04UHfcCETI07RuIw8OoAIgMSSE+gAFU00kjZW3F5/0U9G+AxoSXhNBIAE1AXwveE7x9o2WZvXv2aS8jFNORWB++jCe2QqVJvhhxar6jFd8TBM1EDJEfwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Jdj/Z600; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745937253; c=relaxed/simple;
+	bh=lmnxHLF68riBzOKcdJcpU+85GKfF7cyH/K4951Aw5B4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DmNx67P+3YYx1zU9QUSQCZpEFY8wRV/7iRtdcRgMT4S1Sfm+6Qut4/78Qk+FiCjYd8Zz7ubP1nAr0xQ3QotcJNQroxOLLQW99JvViVZzoH5uF6zwSRyk9e0A7wxq48QYqQGllKiubI++3Glk6jxjWmkkhnxg/tv83nAS0x4Qocc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ymv23thJ; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Jdj/Z600"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53TEWCFi442559
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 29 Apr 2025 07:32:13 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53TEWCFi442559
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745937135;
-	bh=LNjYixlftM0TocmwTWxp55iaVDYvdvPlmjeF4Wk1QKQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Jdj/Z600Zm+gH8++WJ3coUVX3bxm/9kz6VzSlcTsunLE2QdkL7cc+My/6OWOPvfBO
-	 3ktp4xGOb8Bi6yvo/Hv2ijFkM36AaqGcUPxWLErP4AyLU7V+MIoqT9uXMvBs/R+KOc
-	 Por8iQOetV42XpxMSzzjgtqyWZEX/qdTBR73GcL2v6YWZVDTG08lWKAhAQnRcUZeq9
-	 KueXqPQFQcIZca9owJdh852QSvT/UyXI+1TueFr/tWQpGYwgPkpz0VS1kXYHRBTgjr
-	 n5BNPcFGo8ojEJ4rqOyIxRCjUisbmkmZyRSIXeBA12UP6KFGaD71bFXBQGqGNZTqiz
-	 RBOkL2e7VGWbA==
-Date: Tue, 29 Apr 2025 07:32:10 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC: Andrew Cooper <andrew.cooper3@citrix.com>, Arnd Bergmann <arnd@arndb.de>,
-        Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-        Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_bitops/32=3A_Convert_variable?=
- =?US-ASCII?Q?=5Fffs=28=29_and_fls=28=29_zero-case_handling_to_C?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aBClAy837xcLnVpp@gmail.com>
-References: <aAyiganPp_UsNlnZ@gmail.com> <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com> <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com> <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com> <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com> <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com> <aA8q4Ot-1zTzv_Kt@gmail.com> <CAHk-=wh5DUS+nhfTxPEEbaB9dsFib39gWatrX4NoFq_MpdOzGw@mail.gmail.com> <aBClAy837xcLnVpp@gmail.com>
-Message-ID: <3A122140-5646-46D7-91A0-0A3E5B21C951@zytor.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ymv23thJ"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43690d4605dso46776605e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745937250; x=1746542050; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgm1hI8+hceaGAXwVfwpPvCd/kO4SsvuWHjINi5EhqY=;
+        b=ymv23thJSwg9o/lVvcIIUrqYxumM702nerPYUBJ9GdKaxEEiF2s/bBYtk+cKRYfuOC
+         dLgcbK1FOdIrEya7oa/Kd1ojQwO0CPa7Ah8QjKneXd/8ejbCZOqv1VGCXS9EEMJERrJ1
+         HaY6o1tGP+qnoWRemzTCe1DD5EVpAQjPcRn2+vQegsxRCLxOnFWWHJvspak7Cryl4D9P
+         NZzxJW2tT1v/nex9hqU0OeMMGGJjsHR2ldAGhs6hdq8sdAWi/rIdIFanqaD+x32x3vPM
+         ycdPRQ6INaM4G8D3awSfrf61D6ibd9jtTSyUk57/g0bpLELLRghk3tWQtbUME9jfyxva
+         16BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745937250; x=1746542050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bgm1hI8+hceaGAXwVfwpPvCd/kO4SsvuWHjINi5EhqY=;
+        b=MgBvGm30v6G2H3Y7YiZsjpJy6aBDv2RVh/o2lqO8171Nuywb0vDHlyZ0x8p93we3pT
+         DwBdq/29JwuWmnKn936G4CO+UtBz8IYYYfF8GeCD3UcqV/D65gTIg5PaLHyWMqR26aSQ
+         2kUwnDEXunrboh2BNQQS/jo44BH4lxtsuJNoXVC8bIiosEb7e5uXNpm/+/svc1shCcwt
+         p0+UUfHKE3ZoJbJ9730qf7awQfU/i5RHCAF/B5OfjW4U4Qb4oxjzhxUPN+pey/9V3g82
+         Ophus740dHaDaFlW6uzRDfzQSlNiQYfMBC8TqflCjO4MC9GOIa2MFzvXxGsBGXbInwkG
+         vRAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUq9k2cKdgP2T+JrQpJhrP2TjcOdKwbQpD1kMSnkYxcXzmOeLffPm8GlgIq0lHeLswxIxkwMrS2ZawhCH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYrFbY7/howIslZLgzg6q2JBRtRJqtR2orWouhMtw/1DGtagLb
+	mY2k/2Jkztaxqfa1fYe2JsM82kM8dwmFgnXAQbp83NDtkhOlQF4LHdHXD61Nq3s=
+X-Gm-Gg: ASbGncseybCBH+bNlktcrgmvAJwM58Z/ZpjzoCABsali9dT/BGr430xGjzyoKDVVLlH
+	PnHNw1KmlCWAzGyhZpCNTEjdz8f42U6zP/r80rPqlkR0P44ykqkd9AH+MwHrmlqhMQ88kEQP8zI
+	p5oU1owq8SpIlnFOSZbvkxV4Y4l0uihjRBfhN0wANJt7QE11S4YudmG8UsHWUH0tE3crr+CYEKS
+	x2NPO9RCeGY+tXZGJqkGdkVuziA4NBRSKC7aHRCRofPcS/u0zsAxfGmQ9WzI1z7FTAPGyH2VSjF
+	kq/6EAfNAiINVWllhIxups0rRT8sDucDNprUM6YXvTGb0dNlg7712cntmopZRa5wT5nKgh0uegi
+	EDtijyPE=
+X-Google-Smtp-Source: AGHT+IE1rlODd7Ymc+mVPNqfJSWt71txKxyIzWpUA/SAeTWDWH9SzzrOEc7XraHSBNM+FxFeWIKGvA==
+X-Received: by 2002:a05:600c:4708:b0:43c:fe15:41dd with SMTP id 5b1f17b1804b1-440ab77d015mr101725595e9.6.1745937250205;
+        Tue, 29 Apr 2025 07:34:10 -0700 (PDT)
+Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29b990sm196420085e9.4.2025.04.29.07.34.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 07:34:09 -0700 (PDT)
+Date: Tue, 29 Apr 2025 16:32:57 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 2/2] iio: dac: adi-axi-dac: use unique bus free check
+Message-ID: <udqm2qkw3yrewmovua54twfzbsfduojc5f5uoj4nptxldpbbr5@75bb2pldwq7f>
+References: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
+ <20250409-ad3552r-fix-bus-read-v2-2-34d3b21e8ca0@baylibre.com>
+ <Z_alpFoaQQUlWdfo@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_alpFoaQQUlWdfo@smile.fi.intel.com>
 
-On April 29, 2025 3:08:03 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->
->* Linus Torvalds <torvalds@linux-foundation=2Eorg> wrote:
->
->> On Mon, 28 Apr 2025 at 00:14, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->> >
->> > And, just out of intellectual curiosity, I also tried to measure the
->> > code generation price of the +1 standards-quirk in the fls()/ffs()
->> > interface as well:
->> >
->> > =2E=2E=2E and unless I messed up the patch, it seems to have a surpri=
-singly
->> > low impact - maybe because the compiler can amortize its cost by
->> > adjusting all dependent code mostly at build time, so the +1 doesn't
->> > end up being generated most of the time?
->>=20
->> No, I think one issue is that most users actually end up subtracting
->> one from the return value of 'ffs()', because the "bit #0 returns 1"
->> semantics of the standard ffs() function really is insane=2E
->>=20
->> It's not just that it doesn't match sane hardware, it's also that it
->> doesn't match sane *users*=2E If bit #0 is set, people want '0', so the=
-y
->> typically subtract 1=2E
->>=20
->> So when you stop adding one, you aren't actually removing code -
->> you're often adding it=2E
->>=20
->> Just see how many hits you get from
->>=20
->>     git grep '\<ffs(=2E*)=2E*-=2E*1'
->>=20
->> which is obviously not a very precise pattern, but just look at the
->> output and see just *how* common that "subtract one" thing is=2E
->>=20
->> I really don't understand how anybody *ever* thought that the whole
->> "return one bigger" was a good idea for ffs()=2E
->
->Yeah=2E No argument from me that it's a badly thought out interface - I=
-=20
->was just surprised that it doesn't seem to impact performance as badly=20
->as I expected=2E I have to add that a lot of work went into absorbing the=
-=20
->negative effects of the ffs()/fls() interfaces:
->
->  starship:~/tip> git grep -Ee '__ffs\(|__fls\(' | wc -l
->  1055
->
->So it impacts code quality negatively, which is arguably the worse side=
-=20
->effect=2E
->
->> But maybe people really were poisoned by the Pascal mindset=2E Or maybe=
-=20
->> it was invented by some ancient Roman who hadn't heard of the concept=
-=20
->> of zero=2E Who knows?
->
->Hey, ancient Romans didn't even have the concept of *whitespaces* and=20
->punctuation to begin with:
->
->    https://historyofinformation=2Ecom/images/Vergilius_Augusteus,_Georgi=
-ca_121=2Ejpg
->
->Lazy stonemasons the lot of them=2E
->
->Romans were the worst ever coders too I suspect=2E What have the Romans=
-=20
->ever done for us??
->
->	Ingo
+Hi Andy,
 
-Well, they did build the roads=2E=2E=2E =F0=9F=A4=A3
+sorry, seen this message now only, for some reason sometimes your emails
+goes to the spam. Now i marked all as "not spam", let's see.
 
-Roman numerals obviously were not a positional system, but at least in acc=
-ounting they used N for zero (nulla=2E)
+On 09.04.2025 19:51, Andy Shevchenko wrote:
+> On Wed, Apr 09, 2025 at 11:16:55AM +0200, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Use a unique function for the bus free check by polling, to reduce
+> > duplicated code. An error is always thrown in case of timeout.
+> 
+> ...
+> 
+> > +static int axi_dac_wait_bus_free(struct axi_dac_state *st)
+> > +{
+> > +	u32 val;
+> > +	int ret;
+> > +
+> > +	ret = regmap_read_poll_timeout(st->regmap, AXI_DAC_UI_STATUS_REG, val,
+> > +		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == -1, 10,
+> > +		100 * KILO);
+> 
+> Same comment as in the previous patch. Okay, it seems more than in the single
+> case. Perhaps to change that as well here?
+> 
 
-ROMANI=E2=80=A2ITE=E2=80=A2DOMVM
+for my personal taste would not use more specific named defines here,
+would not change this, in case we can send a separate patch to fix
+them all. 
+
+> > +	if (ret == -ETIMEDOUT)
+> > +		dev_err(st->dev, "AXI bus timeout\n");
+> 
+> Why do you need this? The error code will go to the user space at the end? If
+> yes, it will be enough to have it printed there, no?
+> 
+
+This warning means something very bad happen at AXI level. I never seen
+this warning issued, but it may help to debug AXI/HDL issues, would not 
+remove it. 
+
+> > +	return ret;
+> > +}
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+Regards,
+angelo
