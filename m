@@ -1,68 +1,96 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2441865EE;
-	Tue, 29 Apr 2025 14:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165A319D8AC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937126; cv=none; b=YhHJ0nbQ1dmz/gCgoZYC3mutaDKm8NiG4AeeoE9FvrHvP1ezS5kwD+VXmgQ/536tFat/lh6JfGloBF0tIfwURewRkon7CBDqC9JgkgwrmF6q9TMhtHxXWNsG3VXrpZTAS2SeGSGASfWbLJGdPUWAJmL2Lp/MGPIpaIJQLVEmm6Q=
+	t=1745937166; cv=none; b=cqTANrinaskEqMgHZgbIGZaso4mosnvHBl3/e6J68pKS1tJeg8I17uJxcMB7+wmrVvQD5Z6o1NkRGLnESbYVpixuAiwarhG2H4Xn34wqdMU3dWZeMhPZ1BaLEcInu+62KPIfX3Iyl1jOL/WBs2D7rE7JzDNtO3QxoQEugFKXYRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937126; c=relaxed/simple;
-	bh=kD399aqF42LIK1///+RHRZCER/2fVPehDQOnNruBlM0=;
+	s=arc-20240116; t=1745937166; c=relaxed/simple;
+	bh=CAjD/KK2jdzq9tsIIkgeEOC7cVQjgSZn3t9Wd39MQXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EOHCdIW1LrJs9AaQFmJB9wcRivtsKnQnQHt+0+eZdSQNd0nQ801BhDRJeFKMN54mSsYcjSLsz3+zdy/TcBOIkEULhmJJmMqbd/K894bSU1KInId4q5SndwdvKp5Es1X2xAJjyn5f4XYITGW82TSYdb2OqYWDIvFvRcbNnIPMB34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=aN2e1pw/; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=p4g++2vnBa+Fo0hvVtoR+HPbQZ7xP7CtPGLIc1pr7msSrs4AyhMZh6WI7YkONmyn337Tyakn7+fNriYESBZ4AVR9xbPd2XeIlV/RJiHnJL/RRsHmshdCDJ1UN/QgG5Zc9Pb+ftDRqmay4gl+rZwOqV9p6Q0Zp1jecLjLLa5Oya8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=J12JJMR9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="aN2e1pw/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LcwEsbGmESO1HdAFXvEV9nKOQ7rLtvuR5RS0uROUIk8=; b=aN2e1pw/1WY6i8+XXTZ5xB58PW
-	TfFd3guNAcyQl0sO5IdfaWRjMiV3ZsoCdZ4JxBN+mHT9Jmondc1tod0CA73cLCvBh60lNiNLgzpK/
-	tz6RycKkEJ4JF4DAYebkFZlIa1g1zofM6kyOzCXG+K+wjVJMlDuYjq43BqPvjpQAJtcZl3bjC/OGe
-	KNcduUkCZ6k+qSI1rJ84WUwm3hFRGs22Jkg3D6k9J8N82RE9Mj1aCfJDhhC/70+Q+1k4qUL8Y0yeW
-	d6hWWyuicwb02RyZ/BYf72y6Kh5ZCTuSQYBI8llRDAvPCyJDvQF+cRePDNZcJz7p+uImFcXpNPBrn
-	qRl0/csg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48466)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u9m03-0005yG-0F;
-	Tue, 29 Apr 2025 15:31:55 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u9lzv-0006DE-0r;
-	Tue, 29 Apr 2025 15:31:47 +0100
-Date: Tue, 29 Apr 2025 15:31:47 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, a.hindborg@kernel.org,
-	rust-for-linux@vger.kernel.org, gary@garyguo.net,
-	aliceryhl@google.com, me@kloenk.dev, daniel.almeida@collabora.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu,
-	ojeda@kernel.org, alex.gaynor@gmail.com, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@samsung.com,
-	anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
-	arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, tgunders@redhat.com,
-	david.laight.linux@gmail.com, boqun.feng@gmail.com,
-	pbonzini@redhat.com, jfalempe@redhat.com, linus.walleij@linaro.org
-Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
-Message-ID: <aBDi06bQibCIB4En@shell.armlinux.org.uk>
-References: <6qQX4d2uzNlS_1BySS6jrsBgbZtaF9rsbHDza0bdk8rdArVf_YmGDTnaoo6eeNiU4U_tAg1-RkEOm2Wtcj7fhg==@protonmail.internalid>
- <20250423192857.199712-6-fujita.tomonori@gmail.com>
- <871ptc40ds.fsf@kernel.org>
- <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
- <03ccb65b-a5f8-4afc-84f5-e46f1caf96b0@gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="J12JJMR9"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TA1BZV006805
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:32:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=bPriHSZx3KQJP/KsDQOWzlOT
+	mChm8sjxQPQzHrr/5WY=; b=J12JJMR9Q7NMWgxDtjREBVcwp4RzpJ5+02SMlUX4
+	qVgDGXteJgupzg7oZ5a0Ewx2671aEd1SzhiO9/H8SGrnSsAstywaK+KnSTQCzMKm
+	OzVftgwcJoCv0VCRLjooCp+6O4EDafmLLWX51ffh7cYkAScLWyaM0ZePtOWz8/ya
+	Wj6QrtpRz0croBpfkTmRT63iScrCDoUAgHAan7vVwxILXq0AbfMLgLYiACH2GKKZ
+	G0eyAoprIyDtOryovl9CY5A80QgjWUwM2hdCS+PhY00qa6C9kcwh1dGR0ulSkhIj
+	lnAzHx9VnmbmM2ECcHfPNQIhrus7mEpk/56biYdFgdo06g==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468ptmmucb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:32:43 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c9255d5e8cso1062674685a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:32:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745937163; x=1746541963;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bPriHSZx3KQJP/KsDQOWzlOTmChm8sjxQPQzHrr/5WY=;
+        b=HZUtbjMkDzdiorH2bGrqagFftS/8r6KrwzXPdAE8rIXE6k/pWzWfEgwC/yhoCLLPv7
+         q3L6jEFR1casbQX5f7vPpZYjhSLq5EYvCFAnOAYTJePEY8uTcVMIEHwVk0plYDLyuZRI
+         NYFBlUe+0iD9GSkj+jKBUOc9YkIhMl3oQ6Yu65xKSwEFevi8Pq7aoGdjtjUWKs62PXpl
+         TTMPdgw2HQpgy2XMuU47skniZjKv6WiR2Uur4E5fU+vBP0PYBrGRgcPrnHTaQ12ceF8A
+         AIDYFXktKMkK/md8WOb1Dgy5oVvN05DYJC3v+KAvg5vhG1/RJuL9A6E8TRyCzZJ23qXs
+         W1Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLkpBo1T7SIhE43Z5DWfYg7R1PBt3VxWHmvY1KD4ss78p/Otq8Kde6F1BtGVY+SPM4PBnkT7dz/QU7Dlg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLCTY4pol4u2mvZCet1W5KG2dsLFqvAJY8I0/cQOM1aSYKZAjB
+	pocdv2bWyR8IeqhRuDDLOu5WyuySRx992+A2FxxNbDre3yPhkHcH92CKFAyNzWHOwrV1Z6c5yZT
+	Cwvw6Hr3LL2qnhg1LY87X5Ki3jYFZwMvog1n1fGGu2hFEmI8m3v9qXxY4dGe7pMo=
+X-Gm-Gg: ASbGncut4A7WGLOkEk76nGfvTQUDMnI8ycRHMmS6wdLmPPwFQCc5rCBfQtDyYpES1gT
+	y+uxmxuEquVvjjazlVYta2ZqVGTuzaT6p+UBCNNfrSFpw/7JI+UYg/SpSsiI/fn3u7URerr3cmx
+	f4M4WEct40/ma9bTS23b1HJh+ThIPuaz4PZPUvTvK4xD6kfLnZmgioxHXzDiLwEGjbxvlbiJ1Pz
+	IXH+vGJvVXBy0XMBfAnlyyUcvrWHGVonseMMuRu7mm2DJUeukwpMk759AYbpJ3K8QKtbLe3WATc
+	R+0VZP5ErI8FYcV/xpznYOpfT8Kr5N1KfY2m2OXM3EiW4M3mkaqWdiP97K0GrcIXHMmLD9C2FS4
+	=
+X-Received: by 2002:a05:620a:3184:b0:7c5:5003:81b0 with SMTP id af79cd13be357-7cabdd823cdmr635635585a.23.1745937162993;
+        Tue, 29 Apr 2025 07:32:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGWF2xshAzyNqq5fdOAsbkOvEB3opt7kXShCLYeUNW9cmZ74LfQEMRBALbW7HQGg1CwIOtf9Q==
+X-Received: by 2002:a05:620a:3184:b0:7c5:5003:81b0 with SMTP id af79cd13be357-7cabdd823cdmr635632385a.23.1745937162672;
+        Tue, 29 Apr 2025 07:32:42 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cc9eb8dsm1880507e87.135.2025.04.29.07.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 07:32:41 -0700 (PDT)
+Date: Tue, 29 Apr 2025 17:32:40 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Krishna Manikandan <quic_mkrishn@quicinc.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: Re: [PATCH v4 16/19] drm/msm/dpu: Implement 10-bit color alpha for
+ v12.0 DPU
+Message-ID: <oibskwq6gk234lu6bymqlrtgt2yd7o4qbpk46snhba66uqbupi@lwwcfmgp7bul>
+References: <20250311-b4-sm8750-display-v4-0-da6b3e959c76@linaro.org>
+ <20250311-b4-sm8750-display-v4-16-da6b3e959c76@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,197 +99,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03ccb65b-a5f8-4afc-84f5-e46f1caf96b0@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250311-b4-sm8750-display-v4-16-da6b3e959c76@linaro.org>
+X-Proofpoint-ORIG-GUID: NnW8BDRQoz7dHIqT97arV_Jeh8RfzQ7R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDEwOCBTYWx0ZWRfXw/F9rWoniHG2 f/1AtDGW1A2yYtnKzv6/gYqfeMbgjOrfqOaSo+bPFNL08pMLaBur06F4w3LkC+ZThcLCPGa3XTF MUzqVAcJJDb1ZQTMdWHUu8usrigE54kWJ8roXl22KmLYKtDaBj5lZ52MOCrVVYedbh6ucI43WSj
+ FfIZ7+MBdA/xET7Wsk2fZnDIvTeiKGoLLq+MM+xNyF76tr+ObfMuNAuyk9hCKByuqugZFHaTgoW Zy5ApyI7HeXx45C7uIY4gWX984HF9pRf+Hnt6b8RUeCEo5eVZZCaWy+FMOA48d+Ts2AosVh0sru Ao/AMByy79JOhpi+BIfIvS+gBcje4ni4nqNNCFDvWJ2AqQOJMyHXF1c/0T7RUN+GB2uTcD/X0VP
+ GdcEPF2mLDOnjfDdwhSdsITXx1ahuM5VDbbETV8uT8OqucBxMFCj7X7JTQs/e+uVP2atr+90
+X-Proofpoint-GUID: NnW8BDRQoz7dHIqT97arV_Jeh8RfzQ7R
+X-Authority-Analysis: v=2.4 cv=DKWP4zNb c=1 sm=1 tr=0 ts=6810e30b cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=0cLWEtKbF7AIdJ2SciEA:9 a=CjuIK1q_8ugA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=832 clxscore=1015
+ priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0
+ phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290108
 
-On Tue, Apr 29, 2025 at 04:16:01PM +0200, Christian Schrefl wrote:
-> On 29.04.25 3:17 PM, FUJITA Tomonori wrote:
-> > On Mon, 28 Apr 2025 20:16:47 +0200
-> > Andreas Hindborg <a.hindborg@kernel.org> wrote:
-> > 
-> >> Hi Tomonori,
-> >>
-> >> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
-> >>
-> >>> Add a wrapper for fsleep(), flexible sleep functions in
-> >>> include/linux/delay.h which typically deals with hardware delays.
-> >>>
-> >>> The kernel supports several sleep functions to handle various lengths
-> >>> of delay. This adds fsleep(), automatically chooses the best sleep
-> >>> method based on a duration.
-> >>>
-> >>> sleep functions including fsleep() belongs to TIMERS, not
-> >>> TIMEKEEPING. They are maintained separately. rust/kernel/time.rs is an
-> >>> abstraction for TIMEKEEPING. To make Rust abstractions match the C
-> >>> side, add rust/kernel/time/delay.rs for this wrapper.
-> >>>
-> >>> fsleep() can only be used in a nonatomic context. This requirement is
-> >>> not checked by these abstractions, but it is intended that klint [1]
-> >>> or a similar tool will be used to check it in the future.
-> >>
-> >> I get an error when building this patch for arm32:
-> >>
-> >>   + kernel-make -j 96 O=/home/aeh/src/linux-rust/test-build-arm-1.78.0 vmlinux modules
-> >>   ld.lld: error: undefined symbol: __aeabi_uldivmod
-> >>   >>> referenced by kernel.df165ca450b1fd1-cgu.0
-> >>   >>>               rust/kernel.o:(kernel::time::delay::fsleep) in archive vmlinux.a
-> >>   >>> did you mean: __aeabi_uidivmod
-> >>   >>> defined in: vmlinux.a(arch/arm/lib/lib1funcs.o)
-> >>
-> >> Looks like a division function of some sort is not defined. Can you
-> >> reproduce?
-> > 
-> > Ah, 64-bit integer division on 32-bit architectures.
-> > 
-> > I think that the DRM QR driver has the same problem:
-> > 
-> > https://lore.kernel.org/rust-for-linux/CANiq72ke45eOwckMhWHvmwxc03dxr4rnxxKvx+HvWdBLopZfrQ@mail.gmail.com/
-> > 
-> > It appears that there is still no consensus on how to resolve it. CC
-> > the participants in the above thread.
+On Tue, Mar 11, 2025 at 08:02:06PM +0100, Krzysztof Kozlowski wrote:
+> v12.0 DPU on SM8750 comes with 10-bit color alpha.  Add register
+> differences and new implementations of setup_alpha_out,
+> setup_border_color and so one for this.
 > 
-> From what I remember from the thread is that generally 64 bit divisions
-> should be avoided (like the solution for DRM).
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> > I think that we can drop this patch and better to focus on Instant and
-> > Delta types in this merge window.
-> > 
-> > With the patch below, this issue could be resolved like the C side,
-> > but I'm not sure whether we can reach a consensus quickly.
+> ---
 > 
-> I think adding rust bindings for this is fine (and most likely needed),
-> for cases where it is required.
+> Changes in v4:
+> 1. Lowercase hex, use spaces for define indentation
+> 2. _dpu_crtc_setup_blend_cfg(): pass mdss_ver instead of ctl
 > 
-> > 
-> > diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> > index 48143cdd26b3..c44d45960eb1 100644
-> > --- a/rust/helpers/helpers.c
-> > +++ b/rust/helpers/helpers.c
-> > @@ -19,6 +19,7 @@
-> >  #include "io.c"
-> >  #include "jump_label.c"
-> >  #include "kunit.c"
-> > +#include "math64.c"
-> >  #include "mutex.c"
-> >  #include "page.c"
-> >  #include "platform.c"
-> > diff --git a/rust/helpers/math64.c b/rust/helpers/math64.c
-> > new file mode 100644
-> > index 000000000000..f94708cf8fcb
-> > --- /dev/null
-> > +++ b/rust/helpers/math64.c
-> > @@ -0,0 +1,8 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/math64.h>
-> > +
-> > +s64 rust_helper_div64_s64(s64 dividend, s64 divisor)
-> > +{
-> > +	return div64_s64(dividend, divisor);
-> > +}
-> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index de07aadd1ff5..d272e0b0b05d 100644
-> > --- a/rust/kernel/lib.rs
-> > +++ b/rust/kernel/lib.rs
-> > @@ -60,6 +60,7 @@
-> >  #[cfg(CONFIG_KUNIT)]
-> >  pub mod kunit;
-> >  pub mod list;
-> > +pub mod math64;
-> >  pub mod miscdevice;
-> >  #[cfg(CONFIG_NET)]
-> >  pub mod net;
-> > diff --git a/rust/kernel/math64.rs b/rust/kernel/math64.rs
-> > new file mode 100644
-> > index 000000000000..523e47911859
-> > --- /dev/null
-> > +++ b/rust/kernel/math64.rs
-> > @@ -0,0 +1,12 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +//! 64-bit integer arithmetic helpers.
-> > +//!
-> > +//! C header: [`include/linux/math64.h`](srctree/include/linux/math64.h)
-> > +
-> > +/// Divide a signed 64-bit integer by another signed 64-bit integer.
-> > +#[inline]
-> > +pub fn div64_s64(dividend: i64, divisor: i64) -> i64 {
-> > +    // SAFETY: Calling `div64_s64()` is safe as long as `divisor` is non-zero.
-> The safety comment is not valid, nowhere is it guaranteed divisor is non-zero.
-> 
-> There's three solutions I can think of:
-> * Mark this function as `unsafe` and give the responsibility of checking
->   this to the caller,
-> * return a `Result` with a division by zero error type or
-> * change the type of divisor to `NonZeroI64` [0].
-> 
-> Probably the best way is to use `NonZeroI64` since that way
-> it's statically guaranteed.
-> 
-> In that case it would also make sense to change `NSEC_PER_USEC` to be `NonZeroI64`.
-> 
-> 
-> Link: https://doc.rust-lang.org/nightly/core/num/type.NonZeroI64.html [0]
-> > +    unsafe { bindings::div64_s64(dividend, divisor) }
-> 
-> Is `s64` just a typedef for `int64_t` and if so this true for every
-> architecture? (I don't know the C side very well).
-> 
-> If not there might need to be some kind of conversion to make sure
-> they are passed correctly.
-> 
-> > +}
-> > diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-> > index 863385905029..7b5255893929 100644
-> > --- a/rust/kernel/time.rs
-> > +++ b/rust/kernel/time.rs
-> > @@ -24,6 +24,8 @@
-> >  //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
-> >  //! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
-> >  
-> > +use crate::math64;
-> > +
-> >  pub mod delay;
-> >  pub mod hrtimer;
-> >  
-> > @@ -229,13 +231,16 @@ pub const fn as_nanos(self) -> i64 {
-> >      /// Return the smallest number of microseconds greater than or equal
-> >      /// to the value in the [`Delta`].
-> >      #[inline]
-> > -    pub const fn as_micros_ceil(self) -> i64 {
-> > -        self.as_nanos().saturating_add(NSEC_PER_USEC - 1) / NSEC_PER_USEC
-> > +    pub fn as_micros_ceil(self) -> i64 {
-> > +        math64::div64_s64(
-> It would make sense to change `NSEC_PER_USEC` to be `NonZeroI64`.
-> 
-> > +            self.as_nanos().saturating_add(NSEC_PER_USEC - 1),
-> > +            NSEC_PER_USEC,
-> > +        )
-> >      }
-> >  
-> >      /// Return the number of milliseconds in the [`Delta`].
-> >      #[inline]
-> > -    pub const fn as_millis(self) -> i64 {
-> > -        self.as_nanos() / NSEC_PER_MSEC
-> > +    pub fn as_millis(self) -> i64 {
-> > +        math64::div64_s64(self.as_nanos(), NSEC_PER_MSEC)
 
-There is no way this should ever be an expensive 64-bit by 64-bit
-division. Think about value of the divisor here - there's 1000us
-in 1ms, and 1000ns in 1us, so this has the value of 1000000,
-which is 20 bits.
-
-So for a 32-bit architecture, trying to do a 64-bit by 64-bit
-division is expensive, and 32-bit architectures don't implement
-this as a general rule because of this - most times you do not
-have a 64-bit divisor, but something much smaller, making a
-64-bit by 32-bit division more suitable. That is a lot faster on
-32-bit architectures.
-
-So, I think more thought is needed to be put into this by Rust
-folk, rather than blindly forcing everything to be 64-bit by
-64-bit even when the divisor is 20-bit.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With best wishes
+Dmitry
