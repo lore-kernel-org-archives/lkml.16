@@ -1,200 +1,118 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDD8253354;
-	Tue, 29 Apr 2025 17:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A3125178C
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745946925; cv=none; b=saTU7ckFyj4ijoU+Vfl3LWRIjvP5/4TSlVTM6cj+qRTAR2z4ITv8HwQeJtuY5O8uqltnnznyMHUSyZE8WsbLbiyQtH9lr5CcYjmsrGr4AlA8puOzNmR+tylQE3+DWwGwq3ygl2rlll/5y+PDLXscUcCOTDts0PwZvFbo5R70zXw=
+	t=1745946971; cv=none; b=heJFrF5qLOdJYsXTxG+65hoBlSwvvXfbLQkGn/Lu+IRwsZ/DxwibDiUNeMdseUhuo0Zix8y7iG2RybFmlS1UmuFo9mbdqB+2w5ADhUcl0wiLScGGP7Vt3ZCeTgw1aYV8sG5G3P3dIlFXt0CAVgT+ri7cBf/gQEjmAeUyb/N++oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745946925; c=relaxed/simple;
-	bh=J2dDK33QVlVsGOMfWBz/CSOixKepXiTCR9mMLhsRO2E=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msqjUrKVKnuVN4G2Sqn+Pow/+37/MNSKs7bB95ZAV5G/3bBRmLOwTzjozgs9b/2dWX95qXFWzGgbmSP4j91cQkoIOl5WWwbXtzp6W18r1k15xv3JmhEds++XT452fZ6sQaqocu6xhTGRACaOIktxqiPmctV+FdBbyeaj93WcGYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lAKnOquk; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745946971; c=relaxed/simple;
+	bh=7RreN82ADxQheU4kFlw/w2oqpyMciZ+CVjUxQ6PBPwM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TVep+NfO50q6sRWgaLIdpCVAyR9hRtl3xSChhriL77VL+PPGmsc/JpIX+fba3tO6oiWnV7NNO4/7Psl0osvJSxiK0asWwvVcDX+Uao3brv0nhs+iv97mTNEno87M6r6mEcqh59qZ3LRynV5qjbaQc/RC+R3P6Mly/OSID7Lb2BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bXu2MwBv; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAKnOquk"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4774ce422easo76493741cf.1;
-        Tue, 29 Apr 2025 10:15:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXu2MwBv"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736d64c5e16so4917837b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:16:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745946923; x=1746551723; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0XqCfwz88Yr+Nnr1Fpu/NIeG2sCG+K67kbeALk/yJmQ=;
-        b=lAKnOqukofR8irEb1/vnwUul4Avflv0oFixqzp9BNlUU7uLGOtiHQrajSKF4OOAxtZ
-         f/GeFNoQjr85osNoYjnDnnkopKJ6y4yU7qpaYF3axmSus686JOTHhsUSnXBZssT49CWe
-         I7+vJNzmch/z9I/leXymOHaSRJPXwPy2OGGeBi3/TwlgsczyaTNWAyYIcqtij36u3PnY
-         UqDX79PsGdJgRLs++FVpJEM7u/xvBQz/JqkPmi7spq1vEknQoWibTXw6+MhymIJvdfaM
-         RBWOAYohEBUf1J2XUbkBJXgOeJXbbdX+vu+d5YlpTGQ9+5A07CZSv24t7DTXprZhS9Yp
-         VYHw==
+        d=google.com; s=20230601; t=1745946969; x=1746551769; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rgg+yk6TbZkrf50JyHWvmpVTzHV3/+x6Tw/18oxSDfg=;
+        b=bXu2MwBvNAlO8nBWeuN1zsR8XdKxHPAS6C4JsEKAfRG8mQZsVRB2ZvJQNFngWHiPwq
+         8f86r3A/fz04l1GZ+hapVDWQEmt6OYRqjI93ZWfmBo5mZafkTTyguzbMUMh6FEwSUVDA
+         eqRZ/N+ZaBpljcdcw7+D0/pOvoBI9lSdmbOj1unt6azWF6zHVGyihAOOs0ZMQyeMS3VU
+         aa9udOfB9etW1XjNq8Pfd2oGUIXW9T2gAfRL8iZ6Ork//pkjxlpWhPKyxOlJ8QHyrW//
+         jHLuWYLJ3GreKCV6b+WDvPT+KjUaGOvDWeMorKwUnl8XYpjSJCIJL6nLQbJ+loEn5Eqk
+         5qtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745946923; x=1746551723;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0XqCfwz88Yr+Nnr1Fpu/NIeG2sCG+K67kbeALk/yJmQ=;
-        b=n61/BLnMdpOyQCW5xkLMAl79jyMfu/Yn8wnRl2Olh3o3UPMjFmThXNo6uDAgWU07FH
-         R0MLMHNCXrYMDIIuTDj/3gCLXILeQg3CqXBwYsxVlBi9wPko1AsUrIjVwD+2n5PPBTN9
-         820e8p1+fu3J/XgjxLhXgp/KNmjw7EAqq5vIXdY7MPw4heLPbJMWLwYAW4zgunbM/uR2
-         BFTP2PnGrSuM60a2T4OqRTRUfkwQ3EDXJDmENrp28xtyejojYejbxyeELczJ5cHsHJ1K
-         n1avDwcI4JvtEcWc+tLt631/ORlZuUyxJsrbBDVFZdZkLK1nSQ4wmigd7ggFMgv+j4Ko
-         ajRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7mWpX4wx/UXliWdZc6TZ1F8HGmBbMXb5vi4b1g41FhgiEpAQFLkPBtVAtAh70cYPjkUQPOM9q@vger.kernel.org, AJvYcCVg/12s7jS/9IX7GEQFRb510cBTUA2qM2HJHSYFRw9t3niTDmPcUrINO8P6zqY+h5LGvEvlIVIex1EbpLR9JXc=@vger.kernel.org, AJvYcCXZ0woYEXey9RdLjD9blXJ0q0EMDmfKM2F/i5gzAYo9IW0LYAQojnNuRQivk4CNTb0UjBOQL+o7HP+wNaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBsq5joVd41HSl0OyD+2HcuirjKGD27FajDFD1fbnOnQPUaBHd
-	v5mdB7sDqas+giagJPb4ydnAbmD/LCX+PsqPZnfzRAkHvyGrX5Yl
-X-Gm-Gg: ASbGncuZtq9XZ6M18saoxRInbZS0PUqj4fN4dKKpDGAUurQR4A+QtGJGb128Un5Ma2u
-	WXNaEQ9fuXI6ZkYRnG9spH+/JAFeET2bK6GJOITwqVVyj9WuBJs2TZkNmqLgsAWKE5xsc/Wqkhj
-	x396UIbH4WowV27xop41Dq/r4ujb1aLH/pgWWAtau//2lp6o2AWcJwSzGTn0bxdj1iL/SjD3+K0
-	jZBBzoChpSr7cxeE+as27DMFZCyEhu67Jnh4+9LFuE7Fy+nKKu6lLisLA91hbwrZwtsuY7XkGq6
-	xOTYKtJ2Rrqy1h0W1vnQDuBV9qJaTYnO7bY53Gvia8e+UcYJ6MoehRdXJ4EUyyvCGM0SLSSE14t
-	O2enD3NhHyvmZUA0/FBYTzRAGYDF7HcE=
-X-Google-Smtp-Source: AGHT+IF84CyHlEuo5GJQfLI/neYy1T6WPo9fcqPp+3+2ph4jT5u/Vsi4HxpHyDu/W1EES00OqZBfwQ==
-X-Received: by 2002:ac8:5755:0:b0:476:c656:4e80 with SMTP id d75a77b69052e-48132e8c0c0mr250826151cf.34.1745946922788;
-        Tue, 29 Apr 2025 10:15:22 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f0cf12fsm83203531cf.21.2025.04.29.10.15.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 10:15:22 -0700 (PDT)
-Message-ID: <6811092a.050a0220.27f104.5603@mx.google.com>
-X-Google-Original-Message-ID: <aBEJJvS2enY0Icns@winterfell.>
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 59C111200043;
-	Tue, 29 Apr 2025 13:15:21 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Tue, 29 Apr 2025 13:15:21 -0400
-X-ME-Sender: <xms:KQkRaFcQssbYdF8bXv09rQ4_iEt5Q-K1E1w4yqGS8NbXMFUdtEGTUQ>
-    <xme:KQkRaDM7qV6EUXGZCHlXWQnK4w7G83qBj3ohjV4YSTqD7qxNo2Q05WFifmpOmYGOr
-    QADgsrVGIIlMJXtGg>
-X-ME-Received: <xmr:KQkRaOheoh3HJ9kI-Ao52G9j0JWs1v5DJ9eIPxoAUzDWlcj0G3pz0XCxEQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegfeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeetgedujeejudehveekteetfeefhfffheet
-    gfeugfetffekieetiedtudehgfffgfenucffohhmrghinhepghhithhhuhgsrdgtohhmpd
-    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepgedtpdhmohguvgepsh
-    hmthhpohhuthdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohep
-    fhhujhhithgrrdhtohhmohhnohhrihesghhmrghilhdrtghomhdprhgtphhtthhopegrrd
-    hhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhr
-    qdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihse
-    hgrghrhihguhhordhnvghtpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgv
-    rdgtohhmpdhrtghpthhtohepmhgvsehklhhovghnkhdruggvvhdprhgtphhtthhopegurg
-    hnihgvlhdrrghlmhgvihgurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehl
-    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:KQkRaO9EKnJAUUNmHmqkvLZR89ctTlTOvjYdKcqqA4LAkRNcchrAsQ>
-    <xmx:KQkRaBvYhaCWlByxqJZxSnY34EPFnxImDe9uB66G0D53e6LHsIxIrQ>
-    <xmx:KQkRaNHh77xBpJfF0c4GhmVRaRqunokSrMOu26joUiZzuNbeBr95-A>
-    <xmx:KQkRaIN9TtQcHoYSwHJuHZdrHPkvspssTYI7djBUgxTaNRP269G_4w>
-    <xmx:KQkRaKPvo0ED7Ki1F1gLQkRMVinssHoqbT1BAICB5FFVleB56s57EeYs>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 29 Apr 2025 13:15:20 -0400 (EDT)
-Date: Tue, 29 Apr 2025 10:15:18 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,	rust-for-linux@vger.kernel.org,
- Gary Guo <gary@garyguo.net>,	Alice Ryhl <aliceryhl@google.com>,
- me@kloenk.dev,	daniel.almeida@collabora.com,
- linux-kernel@vger.kernel.org,	Netdev <netdev@vger.kernel.org>,
- Andrew Lunn <andrew@lunn.ch>,	Heiner Kallweit <hkallweit1@gmail.com>,
-	Trevor Gross <tmgross@umich.edu>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Anna-Maria Gleixner <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,	John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>,	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Benjamin Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, tgunders@redhat.com,
-	david.laight.linux@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Christian Schrefl <chrisi.schrefl@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
-References: <6qQX4d2uzNlS_1BySS6jrsBgbZtaF9rsbHDza0bdk8rdArVf_YmGDTnaoo6eeNiU4U_tAg1-RkEOm2Wtcj7fhg==@protonmail.internalid>
- <20250423192857.199712-6-fujita.tomonori@gmail.com>
- <871ptc40ds.fsf@kernel.org>
- <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
- <5c18acfc-7893-4731-9292-dc69a7acdff2@app.fastmail.com>
- <de778f47-9bc6-4f4b-bb4f-828305ad4217@app.fastmail.com>
- <1b9e8761-b71f-4015-bf7d-29072b02f2ac@app.fastmail.com>
+        d=1e100.net; s=20230601; t=1745946969; x=1746551769;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rgg+yk6TbZkrf50JyHWvmpVTzHV3/+x6Tw/18oxSDfg=;
+        b=FD0Yn/uGwWveMYb9td1fQA5D6p36ZRW6TTacxOOdyOMnQ2gjEa1Np7Ewy4q+aTzy+S
+         FuT5bHXnxxDSdo92ahqmmnHYGFFZab7l3IqWcoMf+2LeszLTcwMYZpbgwPh+LkGZqtYz
+         +D1EktM+OwAlbLlY+ZxpegKEtB+c0fHnzIBe63RMp4KRe1vYDgnCzfbs9XQN/bmUjkaP
+         qU7U9ZxG/bzq8SrfjF4kKCAeqv4vVF7OM3k6YCXNumKe/SLVuh6mVHvJUuw3JqizjBbK
+         YseUX6H9f8QmQwZ9JIhbvTxgxfrCw6FWvM3iQLjWDlY45St4wiH7HEOrjUEPUJ7/rADQ
+         YxsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdE4zaRm2THziMLk9l+A1G1W5y8FFNRqswzZEc+ZTRNOcyLHFPKkvm21B4S4sKtMTm9vjUEOUhuRw09VQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNYRYUsavbId5f9173EGwiPhLgWKSSdjStDOfLrSqQ8hf6VRF2
+	+32TBakkgcpRLM5rR0WjeCianT/kxtfV0sx4N1bEDJ4zcLtnBWdLRdZZKT1e75z8nnqqIzJtFnx
+	ICw==
+X-Google-Smtp-Source: AGHT+IHnBsjJ2lHlGsUa7wfkhDlYoD1/JVsa8FRjr2Yl8wXuoJ1y4aqVn3VINpRePPFLsbZG8fx/ncC1Rgo=
+X-Received: from pfbkq14.prod.google.com ([2002:a05:6a00:4b0e:b0:73e:1925:b94b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1814:b0:736:5f75:4a44
+ with SMTP id d2e1a72fcca58-74038abcf18mr88925b3a.22.1745946969011; Tue, 29
+ Apr 2025 10:16:09 -0700 (PDT)
+Date: Tue, 29 Apr 2025 10:16:07 -0700
+In-Reply-To: <20250429144631.GI4198@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b9e8761-b71f-4015-bf7d-29072b02f2ac@app.fastmail.com>
+Mime-Version: 1.0
+References: <20250414113754.172767741@infradead.org> <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
+ <20250415074421.GI5600@noisy.programming.kicks-ass.net> <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
+ <20250416083859.GH4031@noisy.programming.kicks-ass.net> <20250426100134.GB4198@noisy.programming.kicks-ass.net>
+ <aA-3OwNum9gzHLH1@google.com> <20250429100919.GH4198@noisy.programming.kicks-ass.net>
+ <aBDcr49ez9B8u9qa@google.com> <20250429144631.GI4198@noisy.programming.kicks-ass.net>
+Message-ID: <aBEJVzesMum9-Rem@google.com>
+Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, 
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	samitolvanen@google.com, ojeda@kernel.org, shuah@kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 29, 2025 at 06:11:02PM +0200, Arnd Bergmann wrote:
-> On Tue, Apr 29, 2025, at 18:03, Boqun Feng wrote:
-> > On Tue, Apr 29, 2025, at 8:51 AM, Arnd Bergmann wrote:
-> >> On Tue, Apr 29, 2025, at 15:17, FUJITA Tomonori wrote:
-> >>> On Mon, 28 Apr 2025 20:16:47 +0200 Andreas Hindborg <a.hindborg@kernel.org> wrote:
-> >>>      /// Return the number of milliseconds in the [`Delta`].
-> >>>      #[inline]
-> >>> -    pub const fn as_millis(self) -> i64 {
-> >>> -        self.as_nanos() / NSEC_PER_MSEC
-> >>> +    pub fn as_millis(self) -> i64 {
-> >>> +        math64::div64_s64(self.as_nanos(), NSEC_PER_MSEC)
-> >>>      }
-> >>>  }
-> >>
-> >> I think simply calling ktime_to_ms()/ktime_to_us() should result
-> >> in reasonably efficient code, since the C version is able to
-> >> convert the constant divisor into a multiply/shift operation.
-> >>
-> >
-> > Well, before we jump into this, I would like to understand why
-> > this is not optimized with multiply/shift operations on arm in
-> > Rust code. Ideally all the dividing constants cases should not
-> > need to call a C function.
+On Tue, Apr 29, 2025, Peter Zijlstra wrote:
+> On Tue, Apr 29, 2025 at 07:05:35AM -0700, Sean Christopherson wrote:
+> > On Tue, Apr 29, 2025, Peter Zijlstra wrote:
+> > > On Mon, Apr 28, 2025 at 10:13:31AM -0700, Sean Christopherson wrote:
+> > > > On Sat, Apr 26, 2025, Peter Zijlstra wrote:
+> > > > > On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
+> > > > > 
+> > > > > > Yeah, I finally got there. I'll go cook up something else.
+> > > > > 
+> > > > > Sean, Paolo, can I once again ask how best to test this fastop crud?
+> > > > 
+> > > > Apply the below, build KVM selftests, 
+> > > 
+> > > Patch applied, my own hackery applied, host kernel built and booted,
+> > > foce_emulation_prefix set, but now I'm stuck at this seemingly simple
+> > > step..
+> > > 
+> > > $ cd tools/testing/selftests/kvm/
+> > > $ make
+> > > ... metric ton of fail ...
+> > > 
+> > > Clearly I'm doing something wrong :/
+> > 
+> > Did you install headers in the top level directory?  I.e. make headers_install.
 > 
-> I think it's just because nobody has rewritten the
-> macros from include/asm-generic/div64.h into rust code.
+> No, of course not :-) I don't use the top directory to build anything,
+> ever.
 > 
-> The compiler could do the same transformation, but they
-> generally just fall back to calling a libgcc function.
-> 
+> All my builds are into build directories, using make O=foo. This allows
+> me to do parallel builds for multiple architectures etc. Also, much
+> easier to wipe a complete build directory than it is to clean out the
+> top level dir.
 
-FWIW, I found this:
+FWIW, you can do the same with KVM selftests (and presumably others?), although
+the syntax is kinda weird (no idea why lib.mk uses OUTPUT instead of O).
 
-	https://github.com/llvm/llvm-project/issues/63731
+E.g. to build KVM selftests in $HOME/build/selftests/x86
 
-seems a WIP though.
-
-Would it make sense if we rely on compiler optimization when it's
-avaiable (for x86_64, arm64, riscv, etc), and only call ktime_to_ms() if
-not? The downside of calling ktime_to_ms() are:
-
-* it's a call function, and cannot be inlined with LTO or INLINE_HELPER:
-
-	https://lore.kernel.org/all/20250319205141.3528424-1-gary@garyguo.net/
-
-* it doesn't provide the overflow checking even if
-  CONFIG_RUST_OVERFLOW_CHECKS=y
-
-Thoughts?
-
-Regards,
-Boqun
-
->      Arnd
+  make O=$HOME/build/selftests/x86 headers_install
+  make OUTPUT=$HOME/build/selftests/x86
