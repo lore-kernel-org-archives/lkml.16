@@ -1,119 +1,201 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDD12949F7
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E14B2BE0E1;
+	Tue, 29 Apr 2025 10:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921376; cv=none; b=cx7QTku/jeYhUgh6eDkU6100HzjAgSbojDHYbIx6J+3P5B7DWS1l4IbR8qi7fc3JN9ixs6lcHVexQea28A0aZzS+ukeplIYtHVwWhwBClo1yyQki+MXdkBQaf6paS8vWHCU62Lts+52l5aYfpOWUUH8qAIVf23PeomXxz7ZJcNc=
+	t=1745921383; cv=none; b=cumg8UPM5kU9tWXrvA1kOgxzbHsQUQ7o+6c3APZ3kZnZgrTox890hUvjC59BB/CQLkw7OyPgWM4CHA+9aDE4z2qeu2UgeLBTFSbBVwUz+/pAHMIyovnTLiMorMw5LAzvgqYTcjXJRwncQaGb+bYnnThrI3MgOz0FRl3r+Ih7FPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921376; c=relaxed/simple;
-	bh=goisZbNoUKv69snA63GSjtR272V1jBTX7ipIJhdReGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZKk4IEeGB/nqYWvp7BOL3qpr+r5Iy1HVl792Lcor3rQIOLoJmkCBLEtnBtuCb6lo5yUsJ2um3wO+lxf96Y6V1lHU9AptSsabFBIumktmKN8tE5QMrR2p9d8fi1KzmopNmZJH0AfQmvAXyB/ulDNrW71MqXiz5zki9iNfcfmRKrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=XnoGx84z; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=pYPYSarC reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1745921383; c=relaxed/simple;
+	bh=Qsq+VfoGUW2v+Mv+j7DAjECure5XIuNLTQgdqhaBamI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=sjSIw+I+Mok62jToRSHLAMfRzh+cDIVJwNPPPnkvy6AMsN8a0ian3+LgfTxI5TW33riY5WUT2BcGHNlIwsTMHY2UKSaBFT7MjpVWsa2Gd9V7+BQGeZxe2fy4WFzv6WdFazp/a1bC8//cHnj37x5rd93Zendd2rgl9WZ46vGqqwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dhkbtnzf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="XnoGx84z";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="pYPYSarC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1745921372; x=1777457372;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iSnB+tiO7RJY6/v5TqZgypWMYIiKGFl49Mks0edXerk=;
-  b=XnoGx84zCsGv2Wc6TrKjUtV1RmJP+atwrNBCALusixqudEtq9DqzNdGE
-   Tuya3E+/uz2jjESIkHXT9dGRwZO5jF7ATxPsgN2OzhxinzoYyROuO/BfD
-   Sx9pO9Y7rHdq8CCVMc+BXVC7u0V/j4JsLsl/aj/m4k3KEEUoSwJJ9ZjlA
-   Tn9+Ncbfr1OZpnz2a2oGDLIWv/BOCG7kWCT6EVDhxqr5F0Zqqoh5IBNUq
-   oNh3S5zwgGUqOTSTvUsWYqcnhQAiuQq65Rr4lQAci9wI/YXOwr1f8YKp0
-   S2D2kJ/srEXsRPbAGi+ntnwpEJFpeuYKodaAeMSHTHP1U7Rm1ARWc4hYC
-   w==;
-X-CSE-ConnectionGUID: 2oTZPV+dSOOsxLVCJYAMkQ==
-X-CSE-MsgGUID: 8xZ4UqzESUiszoQuMgVlRg==
-X-IronPort-AV: E=Sophos;i="6.15,248,1739833200"; 
-   d="scan'208";a="43779882"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 29 Apr 2025 12:09:29 +0200
-X-CheckPoint: {6810A559-B-22EE63B7-E8AF8A9B}
-X-MAIL-CPID: 219F0D8F3AD959829E5A5445EFFD28B2_3
-X-Control-Analysis: str=0001.0A006396.6810A558.0045,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 658B4160E51;
-	Tue, 29 Apr 2025 12:09:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1745921364;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iSnB+tiO7RJY6/v5TqZgypWMYIiKGFl49Mks0edXerk=;
-	b=pYPYSarCiS7YLzsLmIEXC7QY79PIP9YZfAi+DPC2mCufP2/ezomg7Bcpzre93c5Q5EMkIZ
-	1WGkI8x+nprBZjyk0OaYhLFHZsN1NRxTDCR6d1Hd+6o4RXmAIhDbJOsLKL2yxcA+7Uy9L5
-	Xzy9OVOLC/Rrtrqvj3dWfxSPVp0U3KdOWEnox7QSpHdoqk4lr1NuiNI+qGPs0BSeMYxPz0
-	anJ4VMTsnJRMiTnYG9YbcbjH/orFmCG4rZI3b7RnTMwvWC5jtbHKqUkc6lK/n9R/mxvZUb
-	9xdxcrLkZBoW19+TV0FNj2Am5UGkBcLvKAW/vMC/iP72f12vHcd91qUqYc5oRA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Marek Vasut <marex@denx.de>,
-	Stefan Agner <stefan@agner.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	dri-devel@lists.freedesktop.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] drm: lcdif: Use dev_err_probe()
-Date: Tue, 29 Apr 2025 12:09:18 +0200
-Message-ID: <20250429100919.1180404-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dhkbtnzf"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqM8E015446;
+	Tue, 29 Apr 2025 10:09:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=12hipdhhaPt4CO/ltQv4GR
+	1SDZa5jKo0IbM4LWPNclw=; b=dhkbtnzfDtj+hBMEXYemc1aJc+do7ScPpDfnoB
+	wpUiDZRCfv1YJPe3ONkKx6QfmluQJFw9nzjECYnkdhp7VFJLIWAnyxC9W3rGhWe1
+	3mL8KXlbnCK6IYLQEAGG34jwephi3GAZnlYdWr8LAeKyRfdothrNO1NLhoUA+EVg
+	K3NWmjq8R0RJhK3t5vbGt52mwMlgm8Yq8TmejBhnl0n0p01f9rvnJhDksrkexNe9
+	gdj0euMPy+PLSS8lcy4bri3uORr6Jsyw92ayq/qN0TzmVQb8TCCtdZSvGDrJa3aE
+	6CA30m02AxWN5HhFxyWkAV2i8P6ByfMccII7ylCvw71ufjIQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468r8hu2kq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:09:38 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TA9cWq023204
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:09:38 GMT
+Received: from hu-pbrahma-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 29 Apr 2025 03:09:35 -0700
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Date: Tue, 29 Apr 2025 15:39:25 +0530
+Subject: [PATCH v2] arm64: dts: qcom: qcs8300: add the pcie smmu node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250429-qcs8300-pcie-smmu-v2-1-445288af3ea7@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAFSlEGgC/32NSw7CMAwFr1J5jVE+FAIr7oG6AGOoF03ahEagK
+ ncn9AAsZ6Q3b4HEUTjBqVkgcpYkwVcwmwaov/ono9wrg1GmVUbtcaLkrFI4kjCmYZhxR04bTQd
+ 7ZAd1N0Z+yHttXrrKvaRXiJ/1Iuuf/VfLGjU6ZlZsW9fe6DzNQuJpS2GArpTyBd5A0Fa0AAAA
+X-Change-ID: 20250206-qcs8300-pcie-smmu-4c8121c739e8
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Pratyush Brahma <quic_pbrahma@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745921375; l=4362;
+ i=quic_pbrahma@quicinc.com; s=20250113; h=from:subject:message-id;
+ bh=Qsq+VfoGUW2v+Mv+j7DAjECure5XIuNLTQgdqhaBamI=;
+ b=e4B+aBJXUG4UY25k+bcLE594FhL8zXmt0GlGNkEiiGNKGd4FMeXtLCa6zGht7sgCDhbJx+Gpm
+ ZbnAwFCn2+qBBcBcOSDrEfs09f7a9ja2M01z7J1KHDPqCZxOXiMW/6V
+X-Developer-Key: i=quic_pbrahma@quicinc.com; a=ed25519;
+ pk=YvfZKC4rRO1Fot+wlXZqsoQWnAtLqrpMyEzslw3Ji+M=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: eVb3-yjeZZ9Fhp8CqEdlg8Q6t2xhKlwL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NSBTYWx0ZWRfX1E8aef0SbFWa ZOxPBtUslPHcEqqi0ODDhkRxa7kwA2p9aUDOB9WUfX0vSnV8jLFqWU3nXnGjFCngmIJ0+krxSMB NYScgQPQTbE4DdHwMWQFx6yrqyVOo5FkseazsF7AJ43nQXyW651e31lL2r61L43Ybx7ckGmfgdR
+ qIIeBRmKQk9F6XVDBtLRGM7MlplK1sIw9R0iiLCSXhjYZUmP3srZN7xsyMKtwoVDkKsN7Zic1aq p9IEsugb0TkOzEIGXPI4Wh14si/5yvKMf+28CwUFbGhoBCF85ELYMeHFvMrwbSOICDKR/abb4GQ p4qEIqDRNOK7umBwCJCEMCCnMy+jmFDu3nbWi2vZHD/7y1Mtvw5C/YIO2Blr6FF2sIiO0/9jBsm
+ MzDcKDY57ZNwYPH6i4zhAAmd4P6rO7OeSxwB0b0w/3yB30B/wGk4gqfG3Mp5ebF9NAnh5AM4
+X-Authority-Analysis: v=2.4 cv=cfzSrmDM c=1 sm=1 tr=0 ts=6810a562 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=mN_G0mnyTAQcExH3DvwA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: eVb3-yjeZZ9Fhp8CqEdlg8Q6t2xhKlwL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=594 adultscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290075
 
-Use dev_err_probe() to add a reason for deferred probe. This can
-especially happen on lcdif3 which uses hdmi_tx_phy for 'pix' clock
+Add the PCIe SMMU node to enable address translations
+for pcie.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
 ---
- drivers/gpu/drm/mxsfb/lcdif_drv.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Changes in v2:
+- Updated the global-interrupts and interrupts based on Konrad's suggestions
+- Link to v1: https://lore.kernel.org/r/20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com
+---
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi | 74 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/drivers/gpu/drm/mxsfb/lcdif_drv.c b/drivers/gpu/drm/mxsfb/lcdif_drv.c
-index d5996efaf34bb..99e632d4a0e9b 100644
---- a/drivers/gpu/drm/mxsfb/lcdif_drv.c
-+++ b/drivers/gpu/drm/mxsfb/lcdif_drv.c
-@@ -164,15 +164,17 @@ static int lcdif_load(struct drm_device *drm)
+diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..5d15e2d77003d1f2e14e1d43a29330a67a070a07 100644
+--- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+@@ -3199,6 +3199,80 @@ apps_smmu: iommu@15000000 {
+ 				     <GIC_SPI 895 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
- 	lcdif->clk = devm_clk_get(drm->dev, "pix");
- 	if (IS_ERR(lcdif->clk))
--		return PTR_ERR(lcdif->clk);
-+		return dev_err_probe(drm->dev, PTR_ERR(lcdif->clk), "Failed to get pix clock\n");
- 
- 	lcdif->clk_axi = devm_clk_get(drm->dev, "axi");
- 	if (IS_ERR(lcdif->clk_axi))
--		return PTR_ERR(lcdif->clk_axi);
-+		return dev_err_probe(drm->dev, PTR_ERR(lcdif->clk_axi),
-+				     "Failed to get axi clock\n");
- 
- 	lcdif->clk_disp_axi = devm_clk_get(drm->dev, "disp_axi");
- 	if (IS_ERR(lcdif->clk_disp_axi))
--		return PTR_ERR(lcdif->clk_disp_axi);
-+		return dev_err_probe(drm->dev, PTR_ERR(lcdif->clk_disp_axi),
-+				     "Failed to get disp_axi clock\n");
- 
- 	platform_set_drvdata(pdev, drm);
- 
++		pcie_smmu: iommu@15200000 {
++			compatible = "qcom,qcs8300-smmu-500", "qcom,smmu-500", "arm,mmu-500";
++			reg = <0x0 0x15200000 0x0 0x80000>;
++			#iommu-cells = <2>;
++			#global-interrupts = <1>;
++			dma-coherent;
++
++			interrupts = <GIC_SPI 922 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 926 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 927 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 928 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 929 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 951 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 952 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 953 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 954 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 955 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 956 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 957 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 958 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 959 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 886 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 887 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 888 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 889 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 821 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 823 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 824 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 452 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 841 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 842 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 843 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 844 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 845 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 847 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 848 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 849 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 850 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 804 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 805 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 806 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 807 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 808 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 809 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 810 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 811 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 812 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 813 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 814 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 815 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 837 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 838 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 839 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 854 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 855 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 856 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 857 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 790 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 791 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 792 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 793 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 794 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 795 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 796 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 797 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 639 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 640 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		intc: interrupt-controller@17a00000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x0 0x17a00000 0x0 0x10000>,
+
+---
+base-commit: a13f6e0f405ed0d3bcfd37c692c7d7fa3c052154
+change-id: 20250206-qcs8300-pcie-smmu-4c8121c739e8
+
+Best regards,
 -- 
-2.43.0
+Pratyush Brahma <quic_pbrahma@quicinc.com>
 
