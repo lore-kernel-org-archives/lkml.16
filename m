@@ -1,145 +1,72 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF991C6B4;
-	Tue, 29 Apr 2025 19:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C7625E804
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745955424; cv=none; b=Q37e9QvhOeQQnqiPNo9lIsX8L0qLzOoKmvgbTx27gqg3TtmDYrUSDcslXzNjN0+i0tk9zTy5LONKENzhOSmQAC1PB9if9dFCPJFyqH4E/c2DpPJQcLuGk12p4bPsozLIB4zOg+YafB0lptzIk8IGHkbRPWMexpM4q/3mvs+XdSA=
+	t=1745955450; cv=none; b=Z3zzn1d9Wck8r7SQ6Z9NYOoaa25/WMCOghEPpXHO3zzKf/vcv2v04AHG5ljMAs4xCGkzWmCZdGQDFm6B8s9hZ9Le8zOIGYAOhsF/PMnvKy7MS0Qi2h+fkRmwjuI2easwwp6M7UFxYuIRDcv2eMSLLcgcHpHhlFnmaeceASh8QNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745955424; c=relaxed/simple;
-	bh=3RSQBQYYivFKA9pKVHeDfBEhAwfCaWu2qO7THyAb160=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=imvMLmGS4CTYB5djQsPlgjHge8xwCzay0BO5EuiMLef3u70eF/5Z8PlE6WS3XzKmw+lQ9GuRTa0m+IrhXvZMvxUrohzj+AiD07S7KWMIOK6fLLo2ekXR4Es2vIWCYlyl5NK8+BcxGF8qZAeFcOnINEL8h1bdzk2AU+NW6jHbBE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJoOyf1U; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745955450; c=relaxed/simple;
+	bh=kj3udJEQoV9Tt4bQuPrsENB1voFa/r5mlWekwEe2qCk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=OfxEfi3trglArnHRIOhxI/+vC5a3SAY4Y9DioozwJaasnfEPQw6sxtMYz4vcI2xUqvPMHJfayehaV7A1BW0hp2cLZwgUrlIcQVhLTBMPgeyytxamxFJMjt0qap+oVxc5BVB0KLAAE3Xxb1xH9DrboCWYSJjqcCRLXzV3sZxjLVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSZ8jVEV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJoOyf1U"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso1063380066b.1;
-        Tue, 29 Apr 2025 12:37:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745955421; x=1746560221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Tp6jQbur2uPrp6S/Am4jXNTxdawW/c11k2ZMTBdl30=;
-        b=fJoOyf1U6Pa6345Od2497LXzpl83rb9N+T6+cN/D3HlJU4d5LzBTECy2H/BE3lNNrX
-         E+dRq6tHD/NKWl4Fcp2pSF9lgh0tikvUrRC0jUxpnb20jjTBnkWJseAQQ9ZOdyx7aIbv
-         YhdvAWlcEODLO65qMpNspMiFRrVZdV7HBY/iHSBLTYTmpJi92y4XY4kQc/09k5uLhMZz
-         Lp3oN8lmi2SiYrgNv6mchB/zpCJQLK6VQFD/Dwl2i6uA+OhpUXALg8m92r4w36lsZrIg
-         9bwMV0hXc6BEDUJC9jInX18W4cyc7fYx8SUhlroWllyVZ7eZIQ4GGjs/H7SY3S1etNZX
-         zoJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745955421; x=1746560221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Tp6jQbur2uPrp6S/Am4jXNTxdawW/c11k2ZMTBdl30=;
-        b=OcAyf64JcjCTeGZze8llQPEcdVMByzHLb3+v7x2gvjhG7jOlbsfLnO8IUh/Rf7jIYM
-         DoDVG0i6vXuzwGMpLK5bZRbR52Q917EZgTOrUXhHPWW//v85awyhm6EGnglIaXT3seEm
-         cxBMcyCAC9EGfvjzK+cv7CYn4PR849D0wTxbZ3AbfLMPd+8McEqSNMoB+K26pRkyibjn
-         W4ddsghqwB2YL9KhHPwrGVzKRDUwh5L6sUkkhh0o5PDeBJaY5GevTyq+w6nUwCb3ajG1
-         qQRPreYfuFVXRLwXfV8yjhn4LATzPYDf1dI2/EUOwQAn2cvMTYv80WX1DcCErYFqf9yq
-         nZrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYP3mT6FiTv0AuwlDyiPM1gr29exkIJca+vfp0WZLkp9k7WmOwPCIWlAIsyTuP513j+tFno6mz1M=@vger.kernel.org, AJvYcCWhNT3Ab2zqUGsJeXsLAlIeTgyKYFUjBf/OgTMdpVTIabVRcE0WPc3D9zLAy3g1jMKM4o/3cmhJZxxuFqva@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2MrPG8TdCSn+8ypkq9HwkgKYOff1EGwLR9gIvZKMioesODhKc
-	/MvhlZTY4xQw8dayC/Wl1NVNO95nxk3mvuQUcKN9hy8mvtk1IeTnhso1h9fBm97L1M3Z0V/i5fZ
-	0nFu3/hC+myI7OZE74VyTBMbWXkU=
-X-Gm-Gg: ASbGncvv9QFw5FnOZzwjvS8+/cICJ4K69rb5/TETY/6hF1Y/G0aPpUhtanGFHnklITh
-	7fLpjbkcMvgGoeQFEp+J1NggVUXp89yiXgku+TzoG33cbpIUfH+e0vDKUSeiyaA2umFGCrZta0C
-	wVMR/KR1LiUNf7OxN25ySFOA==
-X-Google-Smtp-Source: AGHT+IEdsoIHAufNtJaT4e5z5ds/k/kKnJc+/x9kYEJiD5thFR4klPRX4LXJHI2J2frB9Rw/oGoqyvr69rpkRppUdB4=
-X-Received: by 2002:a17:907:9801:b0:ace:c225:c721 with SMTP id
- a640c23a62f3a-acedc56d9cemr51735966b.8.1745955420643; Tue, 29 Apr 2025
- 12:37:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSZ8jVEV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD97CC4CEEA;
+	Tue, 29 Apr 2025 19:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745955449;
+	bh=kj3udJEQoV9Tt4bQuPrsENB1voFa/r5mlWekwEe2qCk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=aSZ8jVEVv7OYNctdAo7+AGPLKkQgI9KYuR4mKRYWq+OJ/afdapCyJK9toaDOPZNXI
+	 xa57mIVZGsGDbAUn4G6TaeRdFi0b1IZVyaIRphdj0Kv+9l41VkH1VIFdcNGREEC/TA
+	 7xD7wQNZiGVhXQRliK6QVkVV92Fi6TB25RdFkiMnGZrF6KoNWOh43rgjdm3JP8MHv7
+	 h+FpP4rE4oo8hicvVLg6UMM+R068HF8zIiG9qk9+0qNYra4TASxuZfMFk8gLC6L9fN
+	 hC0InQ2aLth1eSouf3SWghgqtsLutoaUdIIdZJhefyEKJOSaMf08iSGrQTQPrJN8vP
+	 OrbRLheFIUw9A==
+From: Srinivas Kandagatla <srini@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250428150831.4001255-1-arnd@kernel.org>
+References: <20250428150831.4001255-1-arnd@kernel.org>
+Subject: Re: [PATCH] nvmem: rmem: select CONFIG_CRC32
+Message-Id: <174595544748.30657.382533239786356243.b4-ty@kernel.org>
+Date: Tue, 29 Apr 2025 20:37:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
- <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
- <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com> <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
-In-Reply-To: <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 29 Apr 2025 22:36:24 +0300
-X-Gm-Features: ATxdqUE34hEo360r8C9Web68AMwiNqGY2UEskFkoO_CVQ5Qq3fMSkPAEA4zL0cU
-Message-ID: <CAHp75VfcmvLhBDjbu6x46wGyzG+i7=rVypzSm11qzWN9Qq_rew@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, Apr 29, 2025 at 10:31=E2=80=AFPM David Lechner <dlechner@baylibre.c=
-om> wrote:
-> On 4/28/25 9:12 PM, David Lechner wrote:
-> > On 4/28/25 3:23 PM, David Lechner wrote:
-> >> Add new macros to help with the common case of declaring a buffer that
-> >> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
-> >> to do correctly because of the alignment requirements of the timestamp=
-.
-> >> This will make it easier for both authors and reviewers.
-> >>
-> >> To avoid double __align() attributes in cases where we also need DMA
-> >> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
 
-...
+On Mon, 28 Apr 2025 17:08:26 +0200, Arnd Bergmann wrote:
+> The newly added crc checking leads to a link failure if CRC32
+> itself is disabled:
+> 
+> x86_64-linux-ld: vmlinux.o: in function `rmem_eyeq5_checksum':
+> rmem.c:(.text+0x52341b): undefined reference to `crc32_le_arch'
+> 
+> 
+> [...]
 
-> >> +/**
-> >> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer wi=
-th timestamp
-> >> + * @type: element type of the buffer
-> >> + * @name: identifier name of the buffer
-> >> + * @count: number of elements in the buffer
-> >> + *
-> >> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DM=
-A_MINALIGN)
-> >> + * to ensure that the buffer doesn't share cachelines with anything t=
-hat comes
-> >> + * before it in a struct. This should not be used for stack-allocated=
- buffers
-> >> + * as stack memory cannot generally be used for DMA.
-> >> + */
-> >> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count)   \
-> >> +    __IIO_DECLARE_BUFFER_WITH_TS(type, name, count)         \
-> >> +    /* IIO_DMA_MINALIGN may be 4 on some 32-bit arches. */  \
-> >> +    __aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
-> >
-> > I just realized my logic behind this is faulty. It assumes sizeof(s64) =
-=3D=3D
-> > __alignof__(s64), but that isn't always true and that is what caused th=
-e builds
-> > to hit the static_assert() on v3.
-> >
-> > We should be able to leave this as __aligned(IIO_DMA_MINALIGN)
-> >
-> > And have this (with better error message):
-> >
-> > static assert(IIO_DMA_MINALIGN % __alignof__(s64) =3D=3D 0);
->
-> I was working late yesterday and should have saved that reply until morni=
-ng
-> to think about it more!
->
-> We do want to align to to sizeof(s64) instead of __alignof__(s64) to avoi=
-d
-> issues with, e.g. 32-bit kernel and 64-bit userspace (same reason that
-> aligned_s64 exists and always uses 8-byte alignment).
->
-> So I think this patch is correct as-is after all.
+Applied, thanks!
 
-I'm wondering, shouldn't it be better just to make sure that
-IIO_DMA_MINALIGN is always bigger or equal to sizeof(s64)?
+[1/1] nvmem: rmem: select CONFIG_CRC32
+      commit: f1a714e1cd0d29f7b0ffa5ec404784aac15e9af4
 
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+-- 
+Srinivas Kandagatla <srini@kernel.org>
+
