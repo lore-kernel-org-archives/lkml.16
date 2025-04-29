@@ -1,136 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F69C2D1;
-	Tue, 29 Apr 2025 15:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A706A21C19F;
+	Tue, 29 Apr 2025 15:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938938; cv=none; b=q235yVlIsZNfHCAdqztYUiJFB3uDvCgO+Y7mUsTnlzLP0Ac6qMHf+iLsZ7Kp76iJefnKecZld6LAlhznLMCJRzcX/plrvsKOybRdZ1ub8Lygh7b+l5d3Mi8W2j8y0iqzzwwK7Q3/FAMTxLl+tdNGx6FtsMQWfFmh61G37Ak/MTc=
+	t=1745938945; cv=none; b=lTGUoGXyf39zIdL5WoOhQThCczgpptOeX5XFu9YFTMOwft08Xqw1Yw7UpJk0PwCCCmzqGE77SbnvlrBeUh7ktFJnnYzts8og9MhIJYH1MIUhHcZFWu1jYugYSJy3itxQIOuT70Fc3lbpaNGn1qQyamyv79rTkQkMf1EjqyhYPss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938938; c=relaxed/simple;
-	bh=nPG+BgRfSzlu72qtVpculB1B811fjqa1f4HvppaeY38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jycgqTS44zVKR/sO1jrJ/2Uhc+bsOyMBaeEexvjIUzKD0QI73mofS2MUFdV51ALPJ4jjXdx7SDdWpzRaOXcKWtpevjSFP8D0r24MM4HhwjsHaRIbW/EtoOyvuMqHh3iFUBWgwdhW2WlzGFNBMZg0H1/RSyjokoE8XdIKgAqg1gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6911D1515;
-	Tue, 29 Apr 2025 08:02:06 -0700 (PDT)
-Received: from [10.1.25.156] (XHFQ2J9959.cambridge.arm.com [10.1.25.156])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DC8D3F673;
-	Tue, 29 Apr 2025 08:02:12 -0700 (PDT)
-Message-ID: <cac9bf3c-5af1-41be-86a5-bf76384b5e3b@arm.com>
-Date: Tue, 29 Apr 2025 16:02:10 +0100
+	s=arc-20240116; t=1745938945; c=relaxed/simple;
+	bh=aUl3rcsG/8z0/NS/eNGxVItw66jXfL3nPszPiTNdHeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H+zbrrKSPK1rSxuV5ZueA3kusyIGx4HFtvzDrt2aXoi8y01YIHzooows+5qOwmRRlfQ1Wa4Lwz7YynGmyF1X2Lz1RPP+bh8NT1SSupxZN/MgfJe1xla9EuLJsbgUjxIZdWUziTwE/JEKcY0Dzo96FCeFyvmHWdI5eSLp/T8pqZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4rRxEN7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4rRxEN7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83039C4CEE9;
+	Tue, 29 Apr 2025 15:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745938945;
+	bh=aUl3rcsG/8z0/NS/eNGxVItw66jXfL3nPszPiTNdHeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n4rRxEN7TRovLBU5VyEyt6ayZgpAnH0OlZRpx/1mTnItGK/A7um+DboOmu9SETnSF
+	 mIhjyt4ertWEkeMqQ1w/Dcez6ZlZnbiRHoeKet8jNnDMUoRnmAPOVPFq4n2ojCoPi2
+	 zSy8jTIlc4dGLDQepxNvCTpapE2ftyycrXO2N+u34m+NLXo2Lrw1Iw9xpolXaDYYi3
+	 +mcc/KaGoqE3w75S5qKBG9IhVRn9lHseGxJCshUhLKwKuVjIK7y9aPdDHAxBcltmI2
+	 aAXLvd0StaQdPYZVF+hbB3l2rmVrWD+iO3/Qq+iNj9alS7TeYtNd6lbwnzdNM5dacm
+	 S/WU/iWAwIUEw==
+Date: Tue, 29 Apr 2025 12:02:13 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jakub Brnak <jbrnak@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+	mpetlan@redhat.com, tglozar@redhat.com,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3] perf test probe_vfs_getname: Skip if no suitable line
+ detected
+Message-ID: <aBDp9fU5qJJeP9z3@x1>
+References: <20250324144523.597557-1-jbrnak@redhat.com>
+ <Z_fWa093x33Wcwrw@jbrnak-thinkpadx1carbongen9.tpbc.csb>
+ <Z_gw-xw97c_IWdXw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Petr_Van=C4=9Bk?=
- <arkamar@atlas.cz>, linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- stable@vger.kernel.org
-References: <20250429142237.22138-1-arkamar@atlas.cz>
- <20250429142237.22138-2-arkamar@atlas.cz>
- <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
- <e9617001-da1d-4c4f-99f4-0e51d51d385e@arm.com>
- <bb24f0d3-cbbf-4323-a9e6-09a627c8559b@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <bb24f0d3-cbbf-4323-a9e6-09a627c8559b@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_gw-xw97c_IWdXw@google.com>
 
-On 29/04/2025 15:46, David Hildenbrand wrote:
-> On 29.04.25 16:41, Ryan Roberts wrote:
->> On 29/04/2025 15:29, David Hildenbrand wrote:
->>> On 29.04.25 16:22, Petr Vaněk wrote:
->>>> folio_pte_batch() could overcount the number of contiguous PTEs when
->>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
->>>> memory also happens to be zero. The loop doesn't break in such a case
->>>> because pte_same() returns true, and the batch size is advanced by one
->>>> more than it should be.
->>>>
->>>> To fix this, bail out early if a non-present PTE is encountered,
->>>> preventing the invalid comparison.
->>>>
->>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
->>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
->>>> bisect.
->>>>
->>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
->>>> ---
->>>>    mm/internal.h | 2 ++
->>>>    1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/mm/internal.h b/mm/internal.h
->>>> index e9695baa5922..c181fe2bac9d 100644
->>>> --- a/mm/internal.h
->>>> +++ b/mm/internal.h
->>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio,
->>>> unsigned long addr,
->>>>                dirty = !!pte_dirty(pte);
->>>>            pte = __pte_batch_clear_ignored(pte, flags);
->>>>    +        if (!pte_present(pte))
->>>> +            break;
->>>>            if (!pte_same(pte, expected_pte))
->>>>                break;
->>>
->>> How could pte_same() suddenly match on a present and non-present PTE.
->>>
->>> Something with XEN is really problematic here.
->>>
->>
->> We are inside a lazy MMU region (arch_enter_lazy_mmu_mode()) at this point,
->> which I believe XEN uses. If a PTE was written then read back while in lazy mode
->> you could get a stale value.
->>
->> See
->> https://lore.kernel.org/all/912c7a32-b39c-494f-a29c-4865cd92aeba@agordeev.local/
->> for an example bug.
+On Thu, Apr 10, 2025 at 01:58:35PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> So if we cannot trust ptep_get() output, then, ... how could we trust anything
-> here and ever possibly batch?
+> On Thu, Apr 10, 2025 at 04:32:11PM +0200, Jakub Brnak wrote:
+> > On Mon, Mar 24, 2025 at 03:45:23PM +0100, Jakub Brnak wrote:
+> > > In some cases when calling function add_probe_vfs_getname, line number
+> > > can't be detected by perf probe -L getname_flags:
+> > > 
+> > >   78         atomic_set(&result->refcnt, 1);
+> > > 
+> > > 	     // one of the following lines should have line number
+> > > 	     // but sometimes it does not because of optimization
+> > > 	     result->uptr = filename;
+> > >              result->aname = NULL;
+> > > 
+> > >   81         audit_getname(result);
+> > > 
+> > > To prevent false failures, skip the affected tests
+> > > if no suitable line numbers can be detected.
+> > > 
+> > > Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> 
+> Sorry for the long delay.  It looks ok to me.
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-The point is that for a write followed by a read to the same PTE, the read may
-not return what was written. It could return the value of the PTE at the point
-of entry into the lazy mmu mode.
+Thanks, applied to perf-tools-next,
 
-I guess one quick way to test is to hack out lazy mmu support. Something like
-this? (totally untested):
-
-----8<----
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c4c23190925c..1f0a1a713072 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -541,22 +541,6 @@ static inline void arch_end_context_switch(struct
-task_struct *next)
-        PVOP_VCALL1(cpu.end_context_switch, next);
- }
-
--#define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
--static inline void arch_enter_lazy_mmu_mode(void)
--{
--       PVOP_VCALL0(mmu.lazy_mode.enter);
--}
--
--static inline void arch_leave_lazy_mmu_mode(void)
--{
--       PVOP_VCALL0(mmu.lazy_mode.leave);
--}
--
--static inline void arch_flush_lazy_mmu_mode(void)
--{
--       PVOP_VCALL0(mmu.lazy_mode.flush);
--}
--
- static inline void __set_fixmap(unsigned /* enum fixed_addresses */ idx,
-                                phys_addr_t phys, pgprot_t flags)
- {
-----8<----
-
+- Arnaldo
