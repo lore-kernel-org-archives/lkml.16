@@ -1,119 +1,114 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A44A2C17A7;
-	Tue, 29 Apr 2025 12:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931118; cv=pass; b=VQDvyATm6/Cuebb/jdvw7T+lPSqyG9tSukNKmwF4xpvo8zeU6c5abrE6eNuZoXWSkBoOVFZHQ+ooWJBOmiw3mqawvJPTXy2H6O7uYeWZQ+zhhSzMmErTO68ZYV9MKLGekKJ3miVr+5v3wvovH16gssJ1dsHAYJlKdVYigKItSA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931118; c=relaxed/simple;
-	bh=DEQeFsMbhzlHPT/Sx8vc3XKjQ6HtI/zCWH8m7IsAtG0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gN+I+mkdVP3aozmgAIt4hw4bW09e8BYipPuzWBJsF6AQhT/6i62S9VllIvgL1NJqxCFdeB91+NnM1wmqymmPPbXxErs6u8nBfTv2g4Q8BNnN3Erk0VBs1wOFotnYC3tndAiKcTsue24c4GJ6QPVaF0Jrwtb44esEf5ltU0VhcMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Dn7mn+UJ; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548B88BEE;
+	Tue, 29 Apr 2025 12:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745931268; cv=none; b=DA+ACFzQhngIPo3vChNnmnFHKMGCwL9yQ7QS+ss9ze1XqyRCotmQA6H7Qes6yiO1SESi/JvYbqqDOjxOofh1/2VvPM2U672FvrJEhBL304C4J8ySmgSSIbUPtvVcScws8t6lNPJDSfILF+47RpgrIVAC3TzebKo15qMmUswPdo4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745931268; c=relaxed/simple;
+	bh=pSgyMyO+6NdvGJb/3PCYahO4sbYNutrYAsAdKDVc0TQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EQrDZB2KIZWabWNjS2iUQxVHCViubwsb9OpeDkIhrfb28Gz3uKLuimRu026ceDoTs8/Jr8GwiWBKBVCuCiMRxQpj+P0IQm8t7gM0GxORqK0roqebimzB0WbGm0tFMS1CdZCoVNnromgQo+bAyeXxhOY+FO5HpO9KPRBqDD/76wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qksWZObr; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Dn7mn+UJ"
-ARC-Seal: i=1; a=rsa-sha256; t=1745931096; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LP4S9htb/tdPQTA3dqPD4Eu5tvwNdQS9ERqyw4qzqIOVSFZWqRLPR3P03Uqp20uF0+wyoQMIBoe7NlNfw4gts3e4KQafXgjKYpt/Jb+jVD3vhgmMTRgOUMxxxJGRYiozBNE/zbvwOD7yAPKHApCUHE0FsRMFEHzdUH5ci4SFTI0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745931096; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wAqddgCvCAXmKLXb0X53fyiZ4qXPPUZR54/Xu7bltQs=; 
-	b=DAyh9eHU8Fl/fxMo2EBlE00D71Yb1Wiwc1Yb0lkBwAOQRu5ZFUBq7oLbqmPEKmwqg2qqHLM4j5uejbanXByLdLyN3+hg3/xYbJEfykwpJd+rr75d7OzjoaZYQdaTBDihqjJ5tQfHS+iQuYUnhA90irck6RFMBkSOhTsHgPN+UY4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
-	dmarc=pass header.from=<detlev.casanova@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745931096;
-	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=wAqddgCvCAXmKLXb0X53fyiZ4qXPPUZR54/Xu7bltQs=;
-	b=Dn7mn+UJnXsXb8xFEEs9Tsu9KdhEDs9rWgBgndz7C+uX1fPse/Zq2PDJRV5pytYY
-	UCoZKhbdT4o/doQlSseVlwKcvtREcpR92n8HIxk/ehXiTv5QVgDhyM3X7HK6faheHDQ
-	+0XElXoFKUZsOUWkV6VbmneN1WisJojwYPztEMEY=
-Received: by mx.zohomail.com with SMTPS id 1745931094377930.5836650113462;
-	Tue, 29 Apr 2025 05:51:34 -0700 (PDT)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH] media: verisilicon: Free post processor buffers on error
-Date: Tue, 29 Apr 2025 08:51:32 -0400
-Message-ID: <2782084.mvXUDI8C0e@earth>
-In-Reply-To: <d901822b2710a2d642f1372fbfb53f99f1e60b2e.camel@collabora.com>
-References:
- <20250425192447.227063-1-detlev.casanova@collabora.com>
- <d901822b2710a2d642f1372fbfb53f99f1e60b2e.camel@collabora.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qksWZObr"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TBFNBp006863;
+	Tue, 29 Apr 2025 14:54:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	/Etz2e5JwOfdvpR/r973gOFgQ/rV50weJX1P1VEC9tU=; b=qksWZObrzZeMPNA0
+	951aATAM6pzqSxx8j7dOyRPRQqE3DCdUy1/S3XDPh8DglmIpzUVgccqk/IqvLYzZ
+	ePLK3gvCYx2IGbHIk7XfEfqvXIkCpIrHCLdgldy1klXbrzRq1ni5wAmDN8Tw/sen
+	ctJWhkq75MS4L8KgYyIJ2AAGvnrlSvBLooxPY6tRD9absVyxptPVvgPMy457kZjl
+	a0lE46MPovbPe0QlscRI4AUCXmpPeM6guSDpeosKW0Kq/1kvVQHG5IoExVTeQmoF
+	dZbINyE88lHou5uFSL1UV3YPYtKTPPVLQRc+gbEJAj4iZVdbHBx3isl6rEg2RGjY
+	/ewFdw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 468pu7kcy3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 14:53:59 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1472140047;
+	Tue, 29 Apr 2025 14:52:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3E8BEA82D67;
+	Tue, 29 Apr 2025 14:51:50 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
+ 2025 14:51:50 +0200
+Received: from localhost (10.252.5.160) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
+ 2025 14:51:49 +0200
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <daniel.lezcano@linaro.org>, <lee@kernel.org>,
+        <alexandre.torgue@foss.st.com>, <tglx@linutronix.de>
+CC: <ukleinek@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jic23@kernel.org>, <robh@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>, <wbg@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
+Subject: [PATCH v6 5/7] arm64: defconfig: enable STM32 LP timer clockevent driver
+Date: Tue, 29 Apr 2025 14:51:31 +0200
+Message-ID: <20250429125133.1574167-6-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_04,2025-04-24_02,2025-02-21_01
 
-On Monday, 28 April 2025 13:25:59 EDT Nicolas Dufresne wrote:
-> Le vendredi 25 avril 2025 =C3=A0 15:24 -0400, Detlev Casanova a =C3=A9cri=
-t :
-> > When initializing the post processor, it allocates the same number of
->=20
-> What do you think reworking as:
->=20
->   During initialization, the post processor allocates the same number of
->=20
-> > buffers as the buf queue.
-> > As the init function is called in streamon(), if an allocation fails,
-> > streamon will return an error and streamoff() will not be called, keepi=
-ng
-> > all post processor buffers allocated.
-> >=20
-> > To avoid that, all post proc buffers are freed in case of an allocation
-> > error.
-> >=20
-> > Fixes: 26711491a807 ("media: verisilicon: Refactor postprocessor to sto=
-re
-> > more buffers") Signed-off-by: Detlev Casanova
-> > <detlev.casanova@collabora.com>
->=20
-> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->=20
-> If you are fine with the suggestion, I can make the changes while
-> applying.
+Enable the STM32 LP timer MFD core and clockevent drivers used on
+STM32MP257F-EV1 board, for PSCI OSI.
 
-Yes, that's goot for me.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+---
+Changes in v2:
+- dropped unused IIO trigger, PWM and counter driver unused on upstream
+board currently, as advised by Krzysztof
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Detlev.
-
-> > ---
-> >  drivers/media/platform/verisilicon/hantro_postproc.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/media/platform/verisilicon/hantro_postproc.c
-> > b/drivers/media/platform/verisilicon/hantro_postproc.c index
-> > c435a393e0cb7..9f559a13d409b 100644
-> > --- a/drivers/media/platform/verisilicon/hantro_postproc.c
-> > +++ b/drivers/media/platform/verisilicon/hantro_postproc.c
-> > @@ -250,8 +250,10 @@ int hantro_postproc_init(struct hantro_ctx *ctx)
-> > =20
-> >  	for (i =3D 0; i < num_buffers; i++) {
-> >  		ret =3D hantro_postproc_alloc(ctx, i);
-> > -		if (ret)
-> > +		if (ret) {
-> > +			hantro_postproc_free(ctx);
-> >  			return ret;
-> > +		}
-> >  	}
-> > =20
-> >  	return 0;
-
-
-
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5bb8f09422a2..d106cdac05fa 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -777,6 +777,7 @@ CONFIG_MFD_TI_LP873X=m
+ CONFIG_MFD_TPS65219=y
+ CONFIG_MFD_TPS6594_I2C=m
+ CONFIG_MFD_ROHM_BD718XX=y
++CONFIG_MFD_STM32_LPTIMER=m
+ CONFIG_MFD_WCD934X=m
+ CONFIG_MFD_KHADAS_MCU=m
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+@@ -1414,6 +1415,7 @@ CONFIG_CLK_RENESAS_VBATTB=m
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_TEGRA186_TIMER=y
++CONFIG_CLKSRC_STM32_LP=y
+ CONFIG_RENESAS_OSTM=y
+ CONFIG_ARM_MHU=y
+ CONFIG_IMX_MBOX=y
+-- 
+2.25.1
 
