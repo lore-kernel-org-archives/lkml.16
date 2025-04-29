@@ -1,110 +1,97 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5AB24C083;
-	Tue, 29 Apr 2025 19:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E2022A7ED;
+	Tue, 29 Apr 2025 19:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745954726; cv=none; b=XCXBEyA0r25W9dNLEuO3BpbSzPmA2OF8sbGuTjD9kmaXSKQ2wTzmHG6t3qvLWF8jV+L1E74kLXxm3pXgvn3EGefNbSTL2T0ZXYHvUesTyreYftpGMuMJaAlnYKNJjnLBUA1YNHNkfdFMiFKsuh/gyaoJONPbUCfFu+//JuoI+Cg=
+	t=1745954756; cv=none; b=GSCjrMT2BPtYVJ8XIXXSMKWxSHuBozkmxBOmkAVPXilCgoS6GnaRaLmdjMcC/8SoWn0i0A4PmaOEhpNfiDlYCQEAHZWVjGyaGBJXwcRtTIbEVKmaLVaK6/39YIK9ZzrRwgbDYoglqVS1NzaSr5v+9xBUgTlLIIxswpydKZqsku8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745954726; c=relaxed/simple;
-	bh=mUFSIbOh0ZERHVxEyLTbjHnLuloD8xCAXL6STo3jemc=;
+	s=arc-20240116; t=1745954756; c=relaxed/simple;
+	bh=7k94BIZ8kZxo4oJB5l757V3p1rBa7gEdjstcK8HBF6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqtD0Ig0zCQVhxK7mXNtO3br9G53FchYEbG9YoNc3wcD53/ypv1KNbIKK0EQpBlgn/uVoWn7W4hIkheaEMMTNz0Ocwcdof1I4g2uJuH8x7y/9rvjYLzSI+TmU5z54uJ9nNU38uuZprM9u4LPIU4/YNEeeE9NLbvXXZoM3UFzHps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=X1Gp4j+j; arc=none smtp.client-ip=159.69.126.157
+	 Content-Type:Content-Disposition:In-Reply-To; b=NSLz7JAnCbzRLZNUgPgISQFXT5b7dbgyNnJf8n4/8jmmvMcWRSkDX2tniw0MyNKnlkX9xBwHTw0bfSgIvpC8YQydHLUVxxmOYmcIEc7BnnvnEK7Bi2vkud7T/sUnC230kd9j8hmm30O6KcyLFTko9XPTLD66N5s6zBGqtIPWNHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KGeLjiu4; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="X1Gp4j+j"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KGeLjiu4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1745954719;
-	bh=mUFSIbOh0ZERHVxEyLTbjHnLuloD8xCAXL6STo3jemc=;
+	s=mail; t=1745954752;
+	bh=7k94BIZ8kZxo4oJB5l757V3p1rBa7gEdjstcK8HBF6o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X1Gp4j+jtE+7s/Ln2koM142muoh0/5BNh7S7VjLubaJbjhYFz7qx9Vc79AJv9GTVS
-	 xj/uwv6z5jntVBafphaqZpQ9NCXAH168NHBgQr4aeicnwW0q9Fs150smmJXz16UsI5
-	 1xP/Hj2jkzBPaeRwfqkISrL/D7wyExEknEssH7Io=
-Date: Tue, 29 Apr 2025 21:25:18 +0200
+	b=KGeLjiu4APzhmj+P9ioce1Mg9af6nqNKGYpZBGjW/eNjkAIwA/nnuz4lZJg1aS5sC
+	 o0vQmiLYN2+ldD8IYh4zm1VVQqOra9CGFxTkrArs2ZsCcvcA6gkUCesIDHbGbt4n8T
+	 dEk9/0Qk1TGj/8B/ihRIVCMrtYQbhmQMAzd7I9lI=
+Date: Tue, 29 Apr 2025 21:25:51 +0200
 From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Sebastian Reichel <sre@kernel.org>, 
-	chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] power: supply: cros_charge-control: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <084dfe42-8aa7-415f-8435-f1310be89747@t-8ch.de>
-References: <aBEmk6ixfrQ2XpTw@kspp>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Willy Tarreau <w@1wt.eu>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 00/32] kselftest harness and nolibc compatibility
+Message-ID: <9c7f5d7a-75b2-40e6-a13a-00b57f2ad5d3@t-8ch.de>
+References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+ <20250422103612-64ea71dd-d51d-487e-b387-508c372af07c@linutronix.de>
+ <20250422085145.GB14589@1wt.eu>
+ <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
+ <329e186d-50e9-46b6-b0ea-ee22ad6e88cb@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aBEmk6ixfrQ2XpTw@kspp>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <329e186d-50e9-46b6-b0ea-ee22ad6e88cb@linuxfoundation.org>
 
-On 2025-04-29 13:20:51-0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On 2025-04-29 12:52:56-0600, Shuah Khan wrote:
+> On 4/24/25 14:06, Shuah Khan wrote:
+> > On 4/22/25 02:51, Willy Tarreau wrote:
+> > > Hi Thomas,
+> > > 
+> > > On Tue, Apr 22, 2025 at 10:48:28AM +0200, Thomas Weißschuh wrote:
+> > > > Hi,
+> > > > 
+> > > > On Fri, Apr 11, 2025 at 11:00:24AM +0200, Thomas Weißschuh wrote:
+> > > > > Nolibc is useful for selftests as the test programs can be very small,
+> > > > > and compiled with just a kernel crosscompiler, without userspace support.
+> > > > > Currently nolibc is only usable with kselftest.h, not the more
+> > > > > convenient to use kselftest_harness.h
+> > > > > This series provides this compatibility by adding new features to nolibc
+> > > > > and removing the usage of problematic features from the harness.
+> > > > > 
+> > > > > The first half of the series are changes to the harness, the second one
+> > > > > are for nolibc. Both parts are very independent and should go through
+> > > > > different trees.
+> > > > 
+> > > > I need a few nolibc bits of this series (snprintf() and prep patches) to base
+> > > > further patches on. For that I'd like to pick up all the nolibc patches from
+> > > > this series through the nolibc tree. They got Acks from Willy.
+> > > > 
+> > > > Any objections?
+> > > 
+> > > No objection on my side!
+> > > 
+> > 
+> > Thanks.
+> > 
+> > Kees, do you have any comments on this series? If you are okay
+> > with it, I would like to apply this for next.
+> > 
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of a
-> flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+> Thomas,
 > 
-> So, with these changes, fix the following warning:
-> 
-> drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/power/supply/cros_charge-control.c | 26 +++++++++-------------
->  1 file changed, 10 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
-> index 02d5bdbe2e8d..e33bc4c55bcc 100644
-> --- a/drivers/power/supply/cros_charge-control.c
-> +++ b/drivers/power/supply/cros_charge-control.c
-> @@ -53,23 +53,17 @@ static int cros_chctl_send_charge_control_cmd(struct cros_ec_device *cros_ec,
->  		[3] = sizeof(struct ec_params_charge_control),
->  	};
->  
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		union {
-> -			struct ec_params_charge_control req;
-> -			struct ec_response_charge_control resp;
-> -		} __packed data;
-> -	} __packed buf = {
-> -		.msg = {
-> -			.command = EC_CMD_CHARGE_CONTROL,
-> -			.version = cmd_version,
-> -			.insize  = 0,
-> -			.outsize = outsizes[cmd_version],
-> -		},
-> -		.data.req = *req,
-> -	};
-> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-> +			MAX(sizeof(struct ec_params_charge_control),
-> +			    sizeof(struct ec_response_charge_control)));
-> +
-> +	msg->command = EC_CMD_CHARGE_CONTROL;
-> +	msg->version = cmd_version;
-> +	msg->insize  = 0;
-> +	msg->outsize = outsizes[cmd_version];
-> +	*(struct ec_params_charge_control *)msg->data = *req;
+> Can this be part of no libc pull request for 6.16-rc1 which I will
+> be fielding this time around?
 
-Please use cros_ec_cmd() like the LED driver.
+Sure, I'll pick it up.
 
-https://lore.kernel.org/lkml/Z-rKcgFjsyKvd58q@kspp/
+> If so here is my Ack
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
->  
-> -	return cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-> +	return cros_ec_cmd_xfer_status(cros_ec, msg);
->  }
->  
->  static int cros_chctl_configure_ec(struct cros_chctl_priv *priv)
-> -- 
-> 2.43.0
-> 
+Thanks,
+Thomas
