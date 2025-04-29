@@ -1,129 +1,90 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2773D17588;
-	Tue, 29 Apr 2025 14:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC01D215F6C
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938132; cv=none; b=PoOT9fG9wrVoDc4wTIu6SYxbLjSd1flOr/CkmP3HmXa1qEmBx8cVtVz7cAnUkdpOBHfHn8QxtkaWRU1GIK/cXrc0cO1WyPppvE/hPFZ+tdNxrQ2F/z5BAFAhDu2XQZ2yO3GRo/1fJF9t1+lYd5F3L3dS4F8N0P29dTFEjj8JuwM=
+	t=1745938189; cv=none; b=GsIyX49eOvFcjvsWC0xA3RSsXdoEbPDweX/oHW/dCE2dv5bk/2XRnFUrd2pLesLDbV+Rd8rR6CRg7c9nVTMB9ne8Ttp/KUsj9PMb8F2IS3yDIXOUi+/uqDjHVz+HfqtlP9H+2hkBteDyIb0uwDqx3XYMOYeSR7JR6Ry3Iqtkbzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938132; c=relaxed/simple;
-	bh=oRNnnrKfvMB4H1OFL2yJMG5d6+mfssjvCvQkeRgaUD0=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=jLLXFATkOa3E/lK8JSA7nwfgugcWAgMZYix6JX5X+aXEKvElhDiqxhjNGBxFhx2MLNtj8MrbrRVD6hVzJUSxQKf06xfAUnK9QCQUR2HHbYquI62otG82Gd5lrRoLqwaAiLfClEqTIwzE6A/JtgoFqeQ/T10qT1+6ET55L+iR8Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=hyHYGP6P; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1745938189; c=relaxed/simple;
+	bh=zPKqDubqGQlbbZ0ERGazpJ4D1rDz8spLOm/r4Uz2J70=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=raS78pIlUbhcLhRbU1wlOhDuFhypaDQq/rikPdz5shHsr5JOuCJ753bAOtIxzlU74gZ/4bW+das2CCs61rdvWLDXd7y7BNexMmK0jRYgcEoStSUz8ggRt/mbuFvvBznSbdpxYgsWgx5467KX+EkUZK64ZauxixgAxH8yIdkWLxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zWLAEv8P; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="hyHYGP6P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=eHqUkt7UJKIIILzl5IsZ8pSRFP8K0RvUiP7Kb3bGmWM=; b=hyHYGP6PdBOx/kyS79n0aakn/5
-	M1gPdPU8xqoR/Q2VGFhLc+fj61VjGuIiQH4W3jIik9IPXJ/+W2TVDGZ9nVEPAWTLTUE8uAhX3aA5O
-	rpaJ2Qq+xuHdHpAsDUC38bMzz70bp/KuREdHqe3ftAx0rxH/zsF81STIE7V9x69TLBXE=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:57924 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1u9mGG-0001yT-85; Tue, 29 Apr 2025 10:48:40 -0400
-Date: Tue, 29 Apr 2025 10:48:38 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
- geert@linux-m68k.org, paul.barker.ct@bp.renesas.com, Geert Uytterhoeven
- <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Message-Id: <20250429104838.a8da03da8f30ede5adc38765@hugovil.com>
-In-Reply-To: <20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com>
-References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
-	<20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zWLAEv8P"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73dcce02a5cso3461240b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745938187; x=1746542987; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zPKqDubqGQlbbZ0ERGazpJ4D1rDz8spLOm/r4Uz2J70=;
+        b=zWLAEv8PmUgMnNAstxttD1v9ti2O1GDd2QoqMajXyXJu2P+ERV9ieuSacdw6X5LgZp
+         4TD4cgZGiiovQx/K0qrz4CyzAMRcxAzoNQw9rJYUIbd0amXyJ8tv87ybBjicYh16XryP
+         Kb8yNa1+xn/kPMwy030Lsj97k6bb+V6rBP8vMbMnjeHKWNjgHlJBKnaFpEy7DRFDTseY
+         7dR87hHSHtqR4x7DksTE+fIQy6gjI4RogOioUW7O8MNooEDO/uPbvf2HxhvNkBfvi14w
+         p0GkD75U37F7NxSarfYrQ9tuJeAF79QxrhN3Tnjd8nxZW/ubWBh4utWfQkXUebeEhiAF
+         o3Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745938187; x=1746542987;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zPKqDubqGQlbbZ0ERGazpJ4D1rDz8spLOm/r4Uz2J70=;
+        b=Mz9cNr/qnmGGTsud1pMHkQTs1aVUTe6bbchvWptlszZ1X89hQxp9yyE+ZFMJiQbCqU
+         IncXETxY4bxZeNpegXISHWwlRqeOs01nl/48vVxcoowElVQz2YeRd5grLteTGc3aMbrA
+         o65qkyaMaUNceoVwfQb+ghXzIpscflP6+hvNORk94Bkn5ss8S+jr1eqhGCpHGBe/r8tM
+         2Bqvu0567o46OzhepSwWeLEBbz/I8FFhRnTjLgMp68XZi+rD0woRIY9jMYB1VW+82RDQ
+         fkKVC070Ce6wKFjLXhVLHOMJ7vZk2rpNOIoo06PXYhMab0CK39SZxQpvdWxWiY/98ngA
+         u37A==
+X-Forwarded-Encrypted: i=1; AJvYcCVJnuk2MnojX1DPuNYrb+MNu7523mh5blnaZfk5p9iAane16Y4JTPTFQrBHfvOTOARz7zWv4TvYjNBAWOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1k3cbTeG4AmBN+ZZu5uhSkVxoWz2RNny0UtmwbXhcdAGnGgz7
+	8YpCD1T7cPJzYoImx/C1+OEit0tHMQpKPnm9ar2iIIAGwN3iA0ZyxziWYE2AZJBHv60/GuYLCMv
+	hfp5yqtecKx2BA2ofBYlvng==
+X-Google-Smtp-Source: AGHT+IEzQrNdrD5XZ5oQkHZCt1a4CsXs91g+AUEFyHlMqs7LdvOItt0h12zoq6RDItWNFBq3wzeuMH6n8vWHqqoYsA==
+X-Received: from pfbbj22.prod.google.com ([2002:a05:6a00:3196:b0:736:b315:f15e])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:2286:b0:739:4a93:a5db with SMTP id d2e1a72fcca58-73ff7396ad8mr16428620b3a.22.1745938186941;
+ Tue, 29 Apr 2025 07:49:46 -0700 (PDT)
+Date: Tue, 29 Apr 2025 07:49:45 -0700
+In-Reply-To: <20250402002936.960678-1-seanjc@google.com> (message from Sean
+ Christopherson on Tue,  1 Apr 2025 17:29:36 -0700)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -3.1 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH v8 01/11] dt-bindings: serial: Added secondary clock for
- RZ/T2H RSCI
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
-
-Hi Thierry,
-
-On Tue, 29 Apr 2025 10:19:43 +0200
-Thierry Bultel <thierry.bultel.yh@bp.renesas.com> wrote:
-
-> At boot, the default clock is the PCLKM core lock (synchronous
-
-lock -> clock?
-
-> clock, which is enabled by the bootloader).
-> For different baudrates, the asynchronous clock input must be used.
-> Clock selection is made by an internal register of RCSI.
-> 
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
->  .../bindings/serial/renesas,rsci.yaml          | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> index ea879db5f485..aa2428837a2f 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> @@ -35,10 +35,14 @@ properties:
->        - const: tei
->  
->    clocks:
-> -    maxItems: 1
-> +    items:
-> +      - description: serial functional clock
-> +      - description: default core clock
->  
->    clock-names:
-> -    const: fck # UART functional clock
-> +    items:
-> +      - const: async
-> +      - const: bus
->  
->    power-domains:
->      maxItems: 1
-> @@ -58,11 +62,7 @@ unevaluatedProperties: false
->  examples:
->    - |
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> -    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> -
-> -    aliases {
-> -        serial0 = &sci0;
-> -    };
-> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
->  
->      sci0: serial@80005000 {
->          compatible = "renesas,r9a09g077-rsci";
-> @@ -72,7 +72,7 @@ examples:
->                       <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
->                       <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
->          interrupt-names = "eri", "rxi", "txi", "tei";
-> -        clocks = <&cpg CPG_MOD 108>;
-> -        clock-names = "fck";
-> +        clocks = <&cpg CPG_MOD 108>, <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
-> +        clock-names = "async", "bus";
->          power-domains = <&cpg>;
->      };
-> -- 
-> 2.43.0
-> 
-> 
+Message-ID: <diqzplgvxbsm.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [ANNOUNCE] PUCK Agenda - 2025.04.02 - No Topic
+From: Ackerley Tng <ackerleytng@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: seanjc@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	roypat@amazon.co.uk, kalyazin@amazon.com, Fuad Tabba <tabba@google.com>, 
+	Vishal Annapurve <vannapurve@google.com>, david@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
 
--- 
-Hugo Villeneuve
+Would like to add an agenda item for 2025-04-30's PUCK meeting: KVM
+memory attributes vs guest_memfd shareability.
+
+guest_memfd tracks shareability to determine whether a page can be
+faulted by the host into userspace.
+
+pKVM does not use kvm->mem_attr_array for tracking private/shared status
+of a page, and for Coco VMs like TDX, there seems to be duplicate
+tracking of private/shared status in guest_memfd's shareability and in
+KVM's memory attributes.
+
+I would like to discuss a proposal for shared/private conversions to be
+performed through a guest_memfd (not KVM) ioctl instead of using
+KVM_SET_MEMORY_ATTRIBUTES, where Coco VMs using guest_memfd for both
+shared and private memory can be able to (with some other changes around
+KVM memory attributes) skip tracking private/shared in KVM's memory
+attributes.
+
+
+Thank you!
