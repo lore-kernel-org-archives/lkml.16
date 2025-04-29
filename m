@@ -1,151 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A962B279786
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B63E20E332;
+	Tue, 29 Apr 2025 10:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745920744; cv=none; b=Y2XI7z6eK4YGqhX+aJjtVNhNDk7gXzRmTuGfRt+y9wJNUNYDkeZyccqUCYcJ7LRvN0Z3idy7iKnEjTmpGJowWfTdA32psDA0mAlzpiq6HcHHRHkTSTznQdU87jNvpEKxSBtbzcOrEtt1rDkZsojlBpHwUhgMfH3U0W31LiJDQfc=
+	t=1745920822; cv=none; b=C1PkIQPA+2AS4psBUlKEjTj9xZvhNOsa+i9ST5wzWhoEi7BcMR7Z2qRaOjmtIYxyOOKV2ld8LLnZh/DHodSdyhx7rTfynafQk5uT7FezU59D3jgpkmx+YLGnowtAA7Hlm1oSQmfFVJRDpooUe2o5X28GO67cv28ZTNpd3AG3y1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745920744; c=relaxed/simple;
-	bh=Y4CZR3AkR1qLJtYLeiYskE8UkSuhw9qUG8qTDjUwqsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fYyB3bcTNp4ADnmqQc2YSkffrjGGCsMAkmg0A4BGG8+0LB8MDZIv1EGmVhxeRz+9OXyFDV/hN86kvsKtpN6MxphOje4RgGlv3ip7MrLAiH14+pXJzjqIY+s9q7bu05Q5UYoGjOAkYRp1n4jQgWtLPIJyEzmu1tpUm1yIHT1+aaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S3BuVB01; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745920822; c=relaxed/simple;
+	bh=zHO/91CVM0fqeya1zcefPwBUjAIR56WQZbciVPz9uF0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uSlMXi9wGCleuUjfEL050MObeDElnGYimg90vlu/Ot+64b71wOqjt/xLEUqWCDOKaEKEeI4OhFTexuhkUKfLMM+2H/mYzFnZ4QaAHcm5OUHr/yu5xpGG0dXNDFxJWl/G8vCRRmmi7uyW1Sp4gA5PnznxpM+BNsbkNJMFVSN+i6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LzPL0q4M; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S3BuVB01"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745920741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=roYvIVYawbb7U9Ozs/yO7NRr33/w0j3RYgfII2ExJPs=;
-	b=S3BuVB01XIsI+V+s5fXA7BFQnea1/2dWQDZ2TdMjHDBSH3IDjYFTkAesxVJaOAlKfEjDZ1
-	MhX2dbemvvjsTqrKvYXXcGH/A1EFcK/rjLNZ6dOT6YduwDu2So4GedQcG7yqRX22rK7/aw
-	AkgYjUsbOBuxhZBLE+GmEwZ6wwBqR+g=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-hcOmqyrjPgO5cXXh2kAKjQ-1; Tue, 29 Apr 2025 05:59:00 -0400
-X-MC-Unique: hcOmqyrjPgO5cXXh2kAKjQ-1
-X-Mimecast-MFC-AGG-ID: hcOmqyrjPgO5cXXh2kAKjQ_1745920739
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5f64bb8ec7dso1224269a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:58:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745920739; x=1746525539;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=roYvIVYawbb7U9Ozs/yO7NRr33/w0j3RYgfII2ExJPs=;
-        b=WeS8tDoGhE86WHDXTlIFi3dD6giocSXMMwuoHgtmae/JQvV7VrvPFuNIFEE4eKuRFV
-         QYvgm+62G1Dfr90UQUw9XhqRfjzkeF+loQnfpMEZZUXzThhK2/Kq1tEKA/L5cGx1NKDy
-         Qxu5wfM5h4kWBj3dQMru2hJskDTeCKpb/nb04betTBwSRVPCQkN1m1EJQqzZwN61qSRd
-         Uv2ktcMrP/bhqcGvcKsnPpKB2LUh+8S7o5o31M302hsCVpxO0AiwPmvmkZJ2lfkfv3wX
-         KC5GH31KH1OKp62GwETW9bacTn1kQzySYrfLrTzFDHrXm8IcYLVeRC9BOlGWnRJBGugr
-         v0Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOMnAIV27MVZl7ChU3CPhrCRN4ncMueeovD9bHaJI5X41d4Cmj88f6ppEUCEWJ4yvQDVuMJe6V9xL4PUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf5uq7Fv2Dq1a5WG/3at6okhbAR7kCVmPworxoLhSoONvXhedH
-	DZLWLI710nGxQYpPYXKP8AlaLGqohx9VRbpgs6rI6639QcBnIa1DHrAFjTvk94MPJ2Mz8K4LSeq
-	5DmMqgfNKFl7PWtlW5wipZDNrc9Y8OziZeGbdiAA5UTf8Stj2j3/S+fMk94DTCg==
-X-Gm-Gg: ASbGncvTdtc8WP/hfCFDm47bqV9mM97/KHQVvvVpwJXj2l6hIgWFSiJ5sAPYXqGVP7u
-	p3WyveOS4jve38ZA53oP3Nia7BVcP9a5MJYoWukxffG/rYdUb3C/eHhMaPEU53p/kZ7ujjwKEfh
-	wFhUA39z3q2yH49916wEpAdmeOtKbnSSIsvMtNGTR+FewRdNattW9BmDRP/czxe54jzrBZQzUeT
-	Q/asRSu1JgLbMn46AgSqMiNMLEy/1knndIl9qDYpMqyunlMQn3s0oaIKIbp5hpN72+c0fa03+wQ
-	ziv0WOKDxOycjuSKVl3SMOPCo1QRDEJdAiPmeu16o39XGPSqpl5pQyqhexur7G+qQGEsuLUbLPy
-	MJQwihG3R3GaFgW5mEkPZbV5wfwcDQWu9T9t/SaNwiOMYJ2EtLgMLHqsh1n9GuA==
-X-Received: by 2002:a05:6402:1d48:b0:5f4:ca30:acab with SMTP id 4fb4d7f45d1cf-5f8392ab7eemr2411843a12.9.1745920738868;
-        Tue, 29 Apr 2025 02:58:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFg8v2+6FTKwtHy/PC8HBUYDQ7YrAJwzJ0+rorJaw+QydUc6H37omfnGkWnwp3gC0Ea8ovMQ==
-X-Received: by 2002:a05:6402:1d48:b0:5f4:ca30:acab with SMTP id 4fb4d7f45d1cf-5f8392ab7eemr2411816a12.9.1745920738463;
-        Tue, 29 Apr 2025 02:58:58 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f48a3sm7155592a12.34.2025.04.29.02.58.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:58:57 -0700 (PDT)
-Message-ID: <ae359018-6561-4b06-8518-1b14497d5c5f@redhat.com>
-Date: Tue, 29 Apr 2025 11:58:56 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LzPL0q4M"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqPhw020497;
+	Tue, 29 Apr 2025 10:00:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KDg1ZYUqoUYtJP48KXrNiq/UAyQG0x/By48uNamBdGY=; b=LzPL0q4MkQM2o6eH
+	CRxARXMRRDz+GbCX/buu2+0IdA1uXSWIdHz4ee496yGyZAbgwIfqQg0vLlV/Teng
+	BLp7t06eexYI6bQewSGjde9pEWIcM01OHr9VNGABLMfZeVDUYbnpmD8Up96TmNhM
+	Sk+C3EiZ7zroXFLo+NL1SfTDraC8Ma/dqh61xexr7OdF4m40ptMn+ygXbasIiNH2
+	vlsovucdVyNIHJY+zHHGhHDVlFyGSMyc0rHv7GppqyNzyspp3NDy+3CAx+MzXkMW
+	8SVSxm3hW8v2gxKHzJ6kMjEBcvRV2mx10cvzyJJUe1GRHFEetWa7X+/ulGyGdhzj
+	wl/m4w==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468n6jkcyc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:00:15 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TA0ET5016680
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:00:14 GMT
+Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 03:00:09 -0700
+Message-ID: <890d7181-3e93-a954-ebf1-0696682ed23d@quicinc.com>
+Date: Tue, 29 Apr 2025 15:30:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: goodix - Allow DT specification of missing
- reset pull-up
-To: Esben Haabendal <esben@geanix.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
- <20250429-goodix-no-reset-pull-up-v2-2-0687a4ad5a04@geanix.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250429-goodix-no-reset-pull-up-v2-2-0687a4ad5a04@geanix.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 05/23] media: iris: Send V4L2_BUF_FLAG_ERROR for
+ buffers with 0 filled length
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-5-3a6013ecb8a5@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-5-3a6013ecb8a5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NCBTYWx0ZWRfX/rpJJuwvf3A/ QxTq6wAWWoruCjhw4Z2Or1bH6etp8gG7X3Qx1Gfu1CG7cp9BGQ9LSaTSJKUASG8TbYBh75jmOBk FD0Z3h3ZpRhWFw80ZmusRdwVcWe4tA/pU06ygxpqJMDD4naCL3cu9+3sopJXGTpx/xo16XYhS/L
+ vMSxXWeJHcNwFdncnYLvz9yf+QxE19cBy2Z7RHT0j7/XRCiKWa9ADkhDYDUE8hKyJ+1fs+MmJH+ j51DjurFza3HtioyNvjhTzWP+RNKvnlDe+gP4t5dN5alpHtq1I4q1X6Y7hPXcJmzG3VPZj3Vhww 7m6j6lQiAO+TdKoCp/A4bbx5+L+WbwtPMkWxZ/4Qs2wBqNAfNvaMujFCWSCMTiEDbJCwEYPqMnq
+ PTs1k1cxXR1MNS3bAg9H5ZYlowUcdSGFqzlFeOZ/o5tzKnNttPN+5QmExvrp1RFRV5EciKz0
+X-Proofpoint-GUID: tJpBvyZYEwiWSlZl4dHZ6tVYyTkXKb5w
+X-Proofpoint-ORIG-GUID: tJpBvyZYEwiWSlZl4dHZ6tVYyTkXKb5w
+X-Authority-Analysis: v=2.4 cv=C8fpyRP+ c=1 sm=1 tr=0 ts=6810a32f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=3ujAW4-UOuCNznGZemsA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=952 priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290074
 
-Hi,
 
-On 29-Apr-25 11:56 AM, Esben Haabendal wrote:
-> In commit a2fd46cd3dbb ("Input: goodix - try not to touch the reset-pin on x86/ACPI devices")
-> a fix for problems on various x86/ACPI devices where external
-> pull-up is missing were added. The same type of problem can exist on
-> device-tree platforms, and the fix can be activated by adding the
-> no-reset-pull-up device-tree property.
+On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
+> Firmware sends buffers with 0 filled length which needs to be dropped,
+> to achieve the same, add V4L2_BUF_FLAG_ERROR to such buffers.
+> Also make sure:
+> - These 0 length buffers are not returned as result of flush.
+> - Its not a buffer with LAST flag enabled which will also have 0 filled
+>   length.
 > 
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Thanks the new version looks good to me.
-
-Regards,
-
-Hans
-
-
-
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 > ---
->  drivers/input/touchscreen/goodix.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
+>  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index a3e8a51c91449533b4d5185746df6b98676053dd..ce4622bbcc89434a4d89c49bb97f084fb61aa448 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -772,10 +772,12 @@ int goodix_reset_no_int_sync(struct goodix_ts_data *ts)
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> index 0e889d07e997..0eb7549da606 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> @@ -377,6 +377,12 @@ static int iris_hfi_gen2_handle_output_buffer(struct iris_inst *inst,
 >  
->  	/*
->  	 * Put the reset pin back in to input / high-impedance mode to save
-> -	 * power. Only do this in the non ACPI case since some ACPI boards
-> -	 * don't have a pull-up, so there the reset pin must stay active-high.
-> +	 * power.
-> +	 * Avoid doing this on boards that are known to not have external
-> +	 * pull-up, and all ACPI boards since some ACPI boards don't have a
-> +	 * pull-up. These boards need the reset pin to stay active-high.
->  	 */
-> -	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_GPIO) {
-> +	if (ts->gpiod_rst_flags == GPIOD_IN) {
->  		error = gpiod_direction_input(ts->gpiod_rst);
->  		if (error)
->  			goto error;
-> @@ -969,6 +971,13 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
->  	 */
->  	ts->gpiod_rst_flags = GPIOD_IN;
+>  	buf->flags = iris_hfi_gen2_get_driver_buffer_flags(inst, hfi_buffer->flags);
 >  
-> +	/*
-> +	 * Devices that does not have pull-up on reset signal should not be
-> +	 * changed to input
-> +	 */
-> +	if (device_property_read_bool(dev, "goodix,no-reset-pull-up"))
-> +		ts->gpiod_rst_flags = GPIOD_ASIS;
+> +	if (!buf->data_size && inst->state == IRIS_INST_STREAMING &&
+> +	    !(hfi_buffer->flags & HFI_BUF_FW_FLAG_LAST) &&
+> +	    !(inst->sub_state & IRIS_INST_SUB_DRC)) {
+> +		buf->flags |= V4L2_BUF_FLAG_ERROR;
+> +	}
 > +
->  	ts->avdd28 = devm_regulator_get(dev, "AVDD28");
->  	if (IS_ERR(ts->avdd28))
->  		return dev_err_probe(dev, PTR_ERR(ts->avdd28), "Failed to get AVDD28 regulator\n");
+>  	return 0;
+>  }
+>  
 > 
+>
+Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 
