@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D09229E07E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D02729E077;
 	Tue, 29 Apr 2025 22:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745967308; cv=none; b=agfpolJdTVKofhjCc5bV4HCAyYTZL0GLZSlW3jYKZTxqgo7NGosOJ6CX4+Xpvw/PAeihVyoxiwDiiZJ8PWpe3RA6P4+zrBVTbEg2GtvAGVG+ZdnQhBw9oHqjeMPJLNNVhZ/W/LQmX/lAzsYKDxZJZrI3UMrYOZDPTxojrzJzp+0=
+	t=1745967308; cv=none; b=M8os08ujbhGZ6QIyiReLDs7ZN4frXQ8kvAQHVwU9rp6LGyE2hdaPiobZX+Tc3i19eOhS8i5yztZV+Br9IMBao5A9KkmZ6XSQBWlYGshyju4Zvyeb0VFRcoeY8O1G9k6mrniIiknIC57SCbJPZtGqlmnWegYyE3BeYV9yz50FXgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745967308; c=relaxed/simple;
-	bh=VdxKhz6N3WuAtyhJvRnjh/8RH3azoVAUuV/Qt7lH9OU=;
+	bh=z6RCFb2/vB/uPI6y66W4S0l3zN9napepWbci1XWwVNA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u1CNP3Inn7AbtJfAAhcoe3r94R3q5xzzgmM5PsIny+UlrmKr7jd956KIkb5sLNcWW9mH8c3MOJzaWskjTA4iYEY834xYH9eJjCOIHQk16zIjRkwsyz5fcI/eY60Bdum1WOYmjfg9J9AUU/QC/m5Lza7VwwSVVJWBlx3FzO3KGAk=
+	 In-Reply-To:To:Cc; b=awa0GMFDaL7LRYBzduXNwy+n/oQPkqOVjraV1xgJ01+zZkwq+MbTMajPceIPhbp3NO4TTeQ8CPeZhy6CYigJMYldBTWWDsSmOHEos8TBZ9gabzABobL/Z6zkU43BNlwWWSkUykkuQhenJsvdo/joS9ymv2r4mmWMynBH4Ed6mg4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66969C4CEE3;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71B68C4AF0C;
 	Tue, 29 Apr 2025 22:55:07 +0000 (UTC)
 Received: by venus (Postfix, from userid 1000)
-	id 9B5DC180F44; Wed, 30 Apr 2025 00:55:05 +0200 (CEST)
+	id 996A9180D29; Wed, 30 Apr 2025 00:55:05 +0200 (CEST)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Wed, 30 Apr 2025 00:54:24 +0200
-Subject: [PATCH v2 2/5] power: supply: core: remove of_node from
- power_supply_config
+Date: Wed, 30 Apr 2025 00:54:23 +0200
+Subject: [PATCH v2 1/5] regulator: act8865-regulator: switch psy_cfg from
+ of_node to fwnode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,7 +28,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-psy-core-convert-to-fwnode-v2-2-f9643b958677@collabora.com>
+Message-Id: <20250430-psy-core-convert-to-fwnode-v2-1-f9643b958677@collabora.com>
 References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
 In-Reply-To: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
 To: Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>, 
@@ -46,62 +46,45 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
  linux-phy@vger.kernel.org, 
  Sebastian Reichel <sebastian.reichel@collabora.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1586;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=890;
  i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=VdxKhz6N3WuAtyhJvRnjh/8RH3azoVAUuV/Qt7lH9OU=;
- b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBoEVjIQWkdUql6NNuli5U3aY4Y/bKXE4oGhtlL1
- v31l/zwZ+6JAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaBFYyAAKCRDY7tfzyDv6
- mvqJD/4q4P+lOwNAv610m+hf8jOlOOuGuYYiqa9IXiJfUz/0xX0sCa+00tOsyfqDXQvWa4n3nYt
- utv05VXwMp7e0Q6d8W4Nm2+JPgnCKIQ9h5p95IUNEz66Wa8IEiVSOv9xr8K1Axttg2dzaUuGf9m
- DYcuEBWCZJHWKFbDHcxbPKU3jRCSl496VdcyVgtg1o1XHERNLn5t7wYGiagIbi9DcrxyC7oY04O
- 9DnUT2ATJBc7RD9Zmbxvsl3sti1nPKepXQ3k4abfGyWByko3PmhV1E6QhB4YJ8XxFH2v17dN2Td
- KB48RRjmYn1PEy98E08AlS6Qd20BlG5phguqg7IXXgaQpmzImHrK3d+fzyn/fwxrmuJgjiG0YlX
- w04O0uJU3Wpush0TofNEsCZISQmMsme6I//qyYCm50AlN2pbBiFLH/WAL0bxpsxC/iTRPuuCoFr
- G90uC6GdFhYTvEAn1kIO5CuyVYvgP/TRKDULENPtCWvlW3Mln8BH2UpsbT0ZPJnTtK9eD6aWuVD
- 2qvRwdI0TY68ncJoa9wSG+s5Y6UdVZEZ23qiNd7oPaXYpXNmvx/szd4GSf876ybw3YrdUbG8kdK
- bZKjAqLrvF8EAj8HvOyruxQTn0VLj7FSOg+eW5wqcwc3X99jsnvoVYfTq46xVxje3y4kSRxn0G3
- e0Ci+mdeca0kTKA==
+ bh=z6RCFb2/vB/uPI6y66W4S0l3zN9napepWbci1XWwVNA=;
+ b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBoEVjHDxq9L2bIbtg8Ask+9Zi5ANVFY3lYCI4aQ
+ 1JyhAehH1mJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCaBFYxwAKCRDY7tfzyDv6
+ mjzDD/wOGjU5SJQHiuXe/cZCCPiDYMgcjvExrnrRPHAsmfQ8cA56gJqkfcj22CNOu04ye4imlhi
+ yUknuYuBnQa1uK65tN0iWjEWkdMjQoapGiAOdjyc1CItMevOZ+LEXb5t6OVn1Jd4pM2QJfL3ITx
+ +v1G8aXTtwnwewtK1FXzlGB8tvQAYiucZ5/luThafwsWgkQcGA5gB4ie74ISTSKR7b68bwwBQdk
+ ho/W+nyVJGcmJxN7pc2P6YhXLArH9v/5xPfR4rb6q8lI+eN4HVHwAeuqxsF4/JC54F7Yz+B8VPJ
+ Zg9Py/7RnrqoHvqu45i0/xJOiSsuLArj/PwZjKHLU8Oy6p5Syff0diY41bI9WgHxL4mmKyJaqGO
+ 801NMGkeYzbp3zWU42RGDEMpoIuttu2wPGWCN3mUtG64Qa4HVTParjzQWbMSVRcwOv5SNZmea8P
+ o70TPGBPoAkvhhzwvRD/ZqXFAOVeEMtiaXZAabNCT2ArJsGwF14GyUaTTcsSKCu3X9nI3JOU9Jq
+ RA5Cg1FqJDdTLzBMmJhJr9RXsXa+zmC1a9eR7KV9oDZajKQqWt4BN0JlPVf/NcUbCIQdT+F/dvx
+ FlX6e7P4bJ85YDuKHUF6/5hE4carsmjdi6jZQ4QoXMNduuXw97fAvcY/efVaRTvfUiGEmwHmsVK
+ cNdFp9Tw6gpu91A==
 X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-All drivers have been migrated from .of_node to .fwnode,
-so let's kill the former.
+In order to remove .of_node from the power_supply_config struct,
+use .fwnode instead.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/power/supply/power_supply_core.c | 3 +--
- include/linux/power_supply.h             | 1 -
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/regulator/act8865-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 33a5bfce4604f012344733ba489eda1c5e8b92c0..89947f1fe610d8a75756e1e4e5339b06349f9ab8 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -1529,10 +1529,9 @@ __power_supply_register(struct device *parent,
- 	dev_set_drvdata(dev, psy);
- 	psy->desc = desc;
- 	if (cfg) {
-+		device_set_node(dev, cfg->fwnode);
- 		dev->groups = cfg->attr_grp;
- 		psy->drv_data = cfg->drv_data;
--		dev->of_node =
--			cfg->fwnode ? to_of_node(cfg->fwnode) : cfg->of_node;
- 		psy->supplied_to = cfg->supplied_to;
- 		psy->num_supplicants = cfg->num_supplicants;
- 	}
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index c4cb854971f53a244ba7742a15ce7a5515da6199..b6eb31a23c878aa9ed8ad7bcb02a13721354e1cb 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -229,7 +229,6 @@ struct power_supply;
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 0457af23c55acdd97b2cdc6fd6bfd07ae0f9d11f..b2a6ddc6f56d32e8758977e25858b972e294bc84 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -643,7 +643,7 @@ static int act8600_charger_probe(struct device *dev, struct regmap *regmap)
+ 	struct power_supply *charger;
+ 	struct power_supply_config cfg = {
+ 		.drv_data = regmap,
+-		.of_node = dev->of_node,
++		.fwnode = dev_fwnode(dev),
+ 	};
  
- /* Run-time specific power supply configuration */
- struct power_supply_config {
--	struct device_node *of_node;
- 	struct fwnode_handle *fwnode;
- 
- 	/* Driver private data */
+ 	charger = devm_power_supply_register(dev, &act8600_charger_desc, &cfg);
 
 -- 
 2.47.2
