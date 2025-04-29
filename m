@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA1D2C0309;
-	Tue, 29 Apr 2025 23:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE682C031F;
+	Tue, 29 Apr 2025 23:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970759; cv=none; b=WWvFtz9hSLBPEl6Yfrqw/6r0gk4cSPCk3q45BkxjLf0WeU096Y6PXh9uC+MhzIon5YFI6G/KWpRsz5Y6JnTTZcFpVHe+8CWFIQaSDnqaT4LqdU3KClxEpgcuOAACRWFUnOXO9VFPNqDzFUUmO490TMjOCepEVYLNSAcuS3qXIh4=
+	t=1745970761; cv=none; b=FlrXzPwTwEmieH7SxfIK+7BRwJyvczUwcw80L3eiBOHRieJS601lt5HaV/ZB5Vu7DCowc6QIktOXcicy2XLnwZUcCBDi7u129fRMTnY4/bI6xHaHo+HDssJs/jHqmIMEipX8Nuyq44euVY8xv3ax9hErLs4yCduDfNfLQVt/9g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970759; c=relaxed/simple;
-	bh=ZBU19+R8ahuqjD6YirJAGVkDozUU72i3G9/SSQz/lDk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WFYqPepANLzoq5ujEY/bh21I2cmcpT3CYC9x16fuhbbaVwGNGoU6dxoBQM5PTTa/ybemC8ZcDRgEeOoFBDmorp26icsXjRHPlYUjXivf5Z5lB6z3+7GbKVb9pMNOyEyQAB7Job9EphQV1xdh411NyqIOH7JR+nUctN3P/IGGiQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZMmUZtM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745970761; c=relaxed/simple;
+	bh=ykLMS7gUdYtoJUrK25Huw4VRbIFaiCI+ESeBgVPX15M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=r7JapcmZoN22VYDJ+EPiEwNbKslLFSFOWZeKC2di13tKi9m1xl0UIvgeEVpurv3V6Kki8RXMdwmp+stQVtUW/URdccQgUBQWBjXbaDvpRRXzu2lbZvu0Ozj2xxv4KkkLD9xJCwYEp1QcvHl4BOYCkP789AA7X0D7rR6huZIlFZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ho5xWI4o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZMmUZtM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090D8C4CEE3;
-	Tue, 29 Apr 2025 23:52:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ho5xWI4o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5713EC4CEED;
+	Tue, 29 Apr 2025 23:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970758;
-	bh=ZBU19+R8ahuqjD6YirJAGVkDozUU72i3G9/SSQz/lDk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HZMmUZtM3e3GRTrCzKkg8igPiRZt+5MRyUDJLX460pWTZlNosOphCGBRTGr+Tsq4y
-	 38t2L5ODhme7Y3guW8WNBPuokhD3HxZL4Hq+FxdIzuOo0/TCv/wKUum8ZxUb8dpAy2
-	 MRBsorrC4gKO38/9xK3QIczW0vDgDqwncxd0BRMJfFXCNmMJFmLVSig8Bmmlbl3+nk
-	 zET0311guzNeUBgoepTrolNGB6vfqfU+klfoRpjO+j1jWYSJoN71F4qduEc3tzK0U0
-	 RZlRmNlWg3OOfg3SWCWVNtu+fqhGTXivwN/Za5iuwzX2T2zbOIEysVzhQX8Og2BgXs
-	 2lZgqIkynEkvg==
+	s=k20201202; t=1745970760;
+	bh=ykLMS7gUdYtoJUrK25Huw4VRbIFaiCI+ESeBgVPX15M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ho5xWI4ocw15dADepZojWKjkQ9yHR5wwKv0c5dmxaOafph5SvMBHlyRzAuTEQqJhZ
+	 8H1sXlBRaJfPBZ7RgP2M5JyiVeIzl6MxOlWxW5x+xVWIAsi7Qv45TiWoxcFVtOjQr0
+	 4vU9QCTTsYWlg+FJTAAiYqJ/KnIHkGlmYu/49XTqatYP22qScakodG25m3kF5CwFwM
+	 DjGoUcaM1tjc1ngiLlLk3QbImATz/8xsrID/pAS/ERWUKgpgPz4rUjXvuwJjqjjo2T
+	 I894p4A8GRrE8X2gs0tQNRcH3JkBsLAjbC30qTLcI+fmje8vdCEaCGLy9nIxEzlBRP
+	 4XIQ6erzAqI6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Pengyu Luo <mitltlatltl@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 01/21] cpufreq: Add SM8650 to cpufreq-dt-platdev blocklist
-Date: Tue, 29 Apr 2025 19:52:13 -0400
-Message-Id: <20250429235233.537828-1-sashal@kernel.org>
+	srini@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 02/21] nvmem: rockchip-otp: Move read-offset into variant-data
+Date: Tue, 29 Apr 2025 19:52:14 -0400
+Message-Id: <20250429235233.537828-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250429235233.537828-1-sashal@kernel.org>
+References: <20250429235233.537828-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,37 +54,65 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.88
 Content-Transfer-Encoding: 8bit
 
-From: Pengyu Luo <mitltlatltl@gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
 
-[ Upstream commit fc5414a4774e14e51a93499a6adfdc45f2de82e0 ]
+[ Upstream commit 6907e8093b3070d877ee607e5ceede60cfd08bde ]
 
-SM8650 have already been supported by qcom-cpufreq-hw driver, but
-never been added to cpufreq-dt-platdev. This makes noise
+The RK3588 has an offset into the OTP area where the readable area begins
+and automatically adds this to the start address.
+Other variants are very much similar to rk3588, just with a different
+offset, so move that value into variant-data.
 
-[    0.388525] cpufreq-dt cpufreq-dt: failed register driver: -17
-[    0.388537] cpufreq-dt cpufreq-dt: probe with driver cpufreq-dt failed with error -17
+To match the size in bytes, store this value also in bytes and not in
+number of blocks.
 
-So adding it to the cpufreq-dt-platdev driver's blocklist to fix it.
-
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20250411112251.68002-2-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvmem/rockchip-otp.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 09becf14653b5..c58c1defd7458 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -165,6 +165,7 @@ static const struct of_device_id blocklist[] __initconst = {
- 	{ .compatible = "qcom,sm8350", },
- 	{ .compatible = "qcom,sm8450", },
- 	{ .compatible = "qcom,sm8550", },
-+	{ .compatible = "qcom,sm8650", },
+diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
+index 7107d68a2f8c7..a0252ac867bf7 100644
+--- a/drivers/nvmem/rockchip-otp.c
++++ b/drivers/nvmem/rockchip-otp.c
+@@ -59,7 +59,6 @@
+ #define RK3588_OTPC_AUTO_EN		0x08
+ #define RK3588_OTPC_INT_ST		0x84
+ #define RK3588_OTPC_DOUT0		0x20
+-#define RK3588_NO_SECURE_OFFSET		0x300
+ #define RK3588_NBYTES			4
+ #define RK3588_BURST_NUM		1
+ #define RK3588_BURST_SHIFT		8
+@@ -69,6 +68,7 @@
  
- 	{ .compatible = "st,stih407", },
- 	{ .compatible = "st,stih410", },
+ struct rockchip_data {
+ 	int size;
++	int read_offset;
+ 	const char * const *clks;
+ 	int num_clks;
+ 	nvmem_reg_read_t reg_read;
+@@ -196,7 +196,7 @@ static int rk3588_otp_read(void *context, unsigned int offset,
+ 	addr_start = round_down(offset, RK3588_NBYTES) / RK3588_NBYTES;
+ 	addr_end = round_up(offset + bytes, RK3588_NBYTES) / RK3588_NBYTES;
+ 	addr_len = addr_end - addr_start;
+-	addr_start += RK3588_NO_SECURE_OFFSET;
++	addr_start += otp->data->read_offset / RK3588_NBYTES;
+ 
+ 	buf = kzalloc(array_size(addr_len, RK3588_NBYTES), GFP_KERNEL);
+ 	if (!buf)
+@@ -279,6 +279,7 @@ static const char * const rk3588_otp_clocks[] = {
+ 
+ static const struct rockchip_data rk3588_data = {
+ 	.size = 0x400,
++	.read_offset = 0xc00,
+ 	.clks = rk3588_otp_clocks,
+ 	.num_clks = ARRAY_SIZE(rk3588_otp_clocks),
+ 	.reg_read = rk3588_otp_read,
 -- 
 2.39.5
 
