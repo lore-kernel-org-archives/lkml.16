@@ -1,97 +1,155 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4CC244664
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6176F221DA7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745948679; cv=none; b=HAMMdeQzyNx33RNtvovlrkoF/y/mU0zI+7ZqNaSnICitC/87WRAPZxHzMPa5XD3u6tc/yTpsAcvctVwHogwU+DEC0jaPWQBBxtW4C3GAYuL9Pk4eJEzpoqJI7WHdiRpI0u6xrOSPbFi2EmInK1B4SVokNW88Xar+WmNFCsvuKgo=
+	t=1745948835; cv=none; b=LZwlQCclW8R1Ge4nzUGGlpDZaXafi0bBzcQ1QnaAWciJnxagR6TVkNlXDWx3cuAETKkUUQFPTu/uaTou7EodwlcPc3MSPVFn+o7T/BqKeXegaAf9ThsC/ZopHstt2Lkmujv0RoHbmRNCFU7FsgwMSn6QqV0I1pb6L/IRy2qXJ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745948679; c=relaxed/simple;
-	bh=AZSyoS3nQ87t+azxCNy70Sy3taZI5p9+MlltjLGguYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SqjNBhAhfnSwkirc1m8WOASkzsrPbf6wFXZk/5Z0rEKcX3s4vuVSRaqT9noh1fOzGtHWtYZrH0nMyvGu0K/BG/DHg/3GSFxqD6JUmuIFZ0K/ttt3WGI35wWe8pzc1c/+j+HSClkJJXFYm3z6NE1hw5fBbcPBitpN38tJnPFwf3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LHIWVKvf; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745948835; c=relaxed/simple;
+	bh=Cu21U8I0Wc0296g7qL7IR3Ck0MFf1FOYLgjhyHkmmdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i6DD9hPJDr6xQCeA5QfOaXmU9P1FZr3rmrb76kvGs4oHtsUUNzfanGf2F1WYILO6Ea39MPzHcAS385wYiNz8+Mi3sWbkYqLG9f97HBOcrYtKitu1Yai05lizhCnvP5QwCDzM711NBUa8z4rM6+XWjM5zR+mPdt6rRkMR95l7ZG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DZpbKQHI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wV7ytHRp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DZpbKQHI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wV7ytHRp; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LHIWVKvf"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so12145507a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745948675; x=1746553475; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VqI4giFijDKwvdPy+fzn8+ohURMxpiNTgKcLiD6rcNc=;
-        b=LHIWVKvfozQhmQyrdW5/t5AsAApFsARR6YHtM2l+DnUWUJ1IY3YhXP0ifKrHWVItdf
-         CmjROOSR7lR9XCEH0llgJrWjDD9JpoTEJvcczlcQthMRm3YBFr0AEYISCdkllLjuxR8n
-         +EhIwZ02eGXKNpb9VoY6HFFEIE7c0UGTjgEIc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745948675; x=1746553475;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VqI4giFijDKwvdPy+fzn8+ohURMxpiNTgKcLiD6rcNc=;
-        b=j8a0xNlBTC+IhN5lP6cFJ+pSLkOoUSZST+QlvLEKEzWgyNmUuO1u5cWKpFwMNsc1HB
-         DEIyP0NrPXYZnxxWFkeF792pkhKmfTo5ic6+PoqaPrqKMSgrY2HpIRmUzTl0S+wSIU9F
-         DgrBknvnz6bNdse9EFvff2Nkb3MeB0pkdJ9sQ4Mz3vXTHTY5RJN9BN3dJmiYT8dC6hyL
-         P/MP1AdRhiZhwzKGy9430trb+G/kaEGqjsBMCXntJ07XY2sNBOwNqsJNgmBIoL5u3Mcs
-         n/wtFoFiaKBlc9cmmQ5PShJoO3pl0t0nWN04ZQ9hF+LDvr6cEBjcXlZyLkykW1bPlTie
-         0RJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwvR8f79AkroWVvq8Fht3JRyCAUGlBZS1Pol0omvH6UzYsF3dHNv/qutwcNaVodMrwr8V0ieVGxfYoRPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7/yurbrxe55LiohzRsem6vN6CFmdp1QGRRqfjuh5K/Scgd9Ew
-	N7kNg/W+YNA/B18V9JN58xft4ZqCJAXDcGVC0Y1N53NFqWmUgGoIY9EpzA4xD2ZYH0B9pLKvLCZ
-	6LEwWEA==
-X-Gm-Gg: ASbGnctb/eG4muHw8CNB2o1rhB9Q68/yw3f7MbESXtnXcoI3pOoTUAPvztIc0E6pWPh
-	gTpxvpyd9QcYwIujfzKJKoe5+anZ7JGrV0ExLznGareZU0U8OX95W24UY6+iO+yMPrGN7N3sxHl
-	2AcAqCSKpLE5w4t5BVfi720h+3HS0vrDr30rvcUdIW01cY/7I8W2GVSdWLM56eq8QCBQdhdV3CL
-	lYBe8n8NQ53Wzq/P+H47aIAp+ZSYz7P/07MJk7jJ9wtWbBlk0XCiazYu++E7Xi2/nZ4m2NPeEAj
-	k64Ydghj/brtsKLChG7PODCMkA1URemHiMI+3to0F6AEKXhQCROc3av1SPYxhO0JjeoiHnDVWBI
-	8lmJUOCZa6DPLBX0=
-X-Google-Smtp-Source: AGHT+IF4HHgjKvVqOSAn8k4YQLHxexXU3pRREAo1TdVlWThmUEfKRUeLxK+yO0e6f4e4vzDRY+kewA==
-X-Received: by 2002:a05:6402:13c2:b0:5e7:2871:c137 with SMTP id 4fb4d7f45d1cf-5f83afc01fbmr3561663a12.14.1745948675322;
-        Tue, 29 Apr 2025 10:44:35 -0700 (PDT)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f48a3sm7673196a12.34.2025.04.29.10.44.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 10:44:34 -0700 (PDT)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb39c45b4eso1005758866b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:44:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1sxFoOAeEn3auJbXTmLd0oHMv2skLauW8I/sYpK/BfpOGg6lFgc2Fm0LAqmxPKeYPMm3ntiT0KYVn9J4=@vger.kernel.org
-X-Received: by 2002:a17:906:ef03:b0:ace:cbe0:2d67 with SMTP id
- a640c23a62f3a-acedc766bb3mr29490666b.55.1745948672062; Tue, 29 Apr 2025
- 10:44:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DZpbKQHI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wV7ytHRp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DZpbKQHI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wV7ytHRp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3E9CE211F5;
+	Tue, 29 Apr 2025 17:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745948831; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L+Om/2yyVlzIC8pM2MuKpNu5aVo4/a/X0+JQIku2ilU=;
+	b=DZpbKQHITozUhLgxkVSgGpSaezGeuWPjXHt6eLxJZwDXjg8QfZ3AYWG01ZU4CgrEJwZH4V
+	Hfth/J4TJIVSVLFHj7Iun5m9q+cgQUKGqiR8Gq1HXMSHhTmMswWj9yJ1cWOCk5y9wkgEQ/
+	AzWa2wOprwarpPUzH/JUdd3s7uFVzEw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745948831;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L+Om/2yyVlzIC8pM2MuKpNu5aVo4/a/X0+JQIku2ilU=;
+	b=wV7ytHRpM4jKkrlHatQ01JRYGx0Ii04wSMPJR3OBfkooyYEcoMMBgZJ1XD4JqkbGYQCRba
+	YNs/FswGbDHoZHAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=DZpbKQHI;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=wV7ytHRp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745948831; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L+Om/2yyVlzIC8pM2MuKpNu5aVo4/a/X0+JQIku2ilU=;
+	b=DZpbKQHITozUhLgxkVSgGpSaezGeuWPjXHt6eLxJZwDXjg8QfZ3AYWG01ZU4CgrEJwZH4V
+	Hfth/J4TJIVSVLFHj7Iun5m9q+cgQUKGqiR8Gq1HXMSHhTmMswWj9yJ1cWOCk5y9wkgEQ/
+	AzWa2wOprwarpPUzH/JUdd3s7uFVzEw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745948831;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L+Om/2yyVlzIC8pM2MuKpNu5aVo4/a/X0+JQIku2ilU=;
+	b=wV7ytHRpM4jKkrlHatQ01JRYGx0Ii04wSMPJR3OBfkooyYEcoMMBgZJ1XD4JqkbGYQCRba
+	YNs/FswGbDHoZHAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 55BF11340C;
+	Tue, 29 Apr 2025 17:47:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5JyuEZ4QEWjkNQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Tue, 29 Apr 2025 17:47:10 +0000
+Date: Tue, 29 Apr 2025 18:47:08 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] mm: perform VMA allocation, freeing, duplication
+ in mm
+Message-ID: <ozu7p2u72csonqksep3xd324hpiwo4ukvn53egr6jdkvx7ttjc@brcjkc7h2h7h>
+References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
+ <f97b3a85a6da0196b28070df331b99e22b263be8.1745853549.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231001131620.112484-1-ubizjak@gmail.com> <CAHk-=wg6P8pPg-x4BPUQj-wE0xC7HkGzFk89ftuji8MVo+RRxw@mail.gmail.com>
- <CAFULd4Y+HXuditB51Q0LznqiBsvxJr3BjEYvx4_224XmqrycCw@mail.gmail.com>
- <CAHk-=wh+cfn58XxMLnG6dH+Eb9-2dYfABXJF2FtSZ+vfqVvWzA@mail.gmail.com>
- <CAFULd4Y-gr+UAvi4m1-p4MnJyMv3NRcyH=TFLZfFfNngnE_Kpw@mail.gmail.com>
- <CAHk-=wi4ji10PR35r0FqiKA_XYO38gLbZmPN4SYursP9fiUcXQ@mail.gmail.com> <CAFULd4ZfAjobU45POv0uSB73urVFa0kFX_35RNyHy3rf_kbFjg@mail.gmail.com>
-In-Reply-To: <CAFULd4ZfAjobU45POv0uSB73urVFa0kFX_35RNyHy3rf_kbFjg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 29 Apr 2025 10:44:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg=tK1H30dxfBMYvxG87XgM8Jx2Foh43gLULq=k3d7ucA@mail.gmail.com>
-X-Gm-Features: ATxdqUFHkWkI-niDdKFIg1ut4XVJcVUvAXNGQro7VQe8aj9RTLzb997l-3EcZkQ
-Message-ID: <CAHk-=wg=tK1H30dxfBMYvxG87XgM8Jx2Foh43gLULq=k3d7ucA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] x86/percpu: Use segment qualifiers
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>, Nadav Amit <nadav.amit@gmail.com>, 
-	Brian Gerst <brgerst@gmail.com>, Denys Vlasenko <dvlasenk@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f97b3a85a6da0196b28070df331b99e22b263be8.1745853549.git.lorenzo.stoakes@oracle.com>
+X-Rspamd-Queue-Id: 3E9CE211F5
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,oracle.com:email,suse.de:email,suse.de:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, 29 Apr 2025 at 10:05, Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> True, the generated code due to mentioned HW limitation is then:
+On Mon, Apr 28, 2025 at 04:28:17PM +0100, Lorenzo Stoakes wrote:
+> Right now these are performed in kernel/fork.c which is odd and a violation
+> of separation of concerns, as well as preventing us from integrating this
+> and related logic into userland VMA testing going forward, and perhaps more
+> importantly - enabling us to, in a subsequent commit, make VMA
+> allocation/freeing a purely internal mm operation.
+> 
+> There is a fly in the ointment - nommu - mmap.c is not compiled if
+> CONFIG_MMU not set, and neither is vma.c.
+> 
+> To square the circle, let's add a new file - vma_init.c. This will be
+> compiled for both CONFIG_MMU and nommu builds, and will also form part of
+> the VMA userland testing.
+> 
+> This allows us to de-duplicate code, while maintaining separation of
+> concerns and the ability for us to userland test this logic.
+> 
+> Update the VMA userland tests accordingly, additionally adding a
+> detach_free_vma() helper function to correctly detach VMAs before freeing
+> them in test code, as this change was triggering the assert for this.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Thanks, looks fine to me.
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-             Linus
+-- 
+Pedro
