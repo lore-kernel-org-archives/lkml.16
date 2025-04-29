@@ -1,62 +1,62 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F69D2C1E3B;
-	Tue, 29 Apr 2025 11:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AFD2D1F63;
+	Tue, 29 Apr 2025 11:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927424; cv=none; b=t+V3oaZs5EwKOFPwQNuXNzDiJJRW0f93wQYmtARCts7zpwjNjOH3ld7i0YwwBM/HgGJga2joaCyiFOlYVgWNrhynXlfBiximlLLjarph9zN32M5PUzJm6dFTjPKxqwwAPNcewzQTmK0/7lYHagsDHA56HX62Xs8Yj4OGLyu7cfY=
+	t=1745927429; cv=none; b=ZUDkZegK6ZVjg6NbWWEhcSySXEzu8p6na42SCpvhsH6fpayamG3zVVsbTIq+fDZG6euxrlWcdmqmA09LdUb4hB/dmVfk1qsyeBFVGelGQwuJDsittjfH+VKb49B/hcnamvAKr/FBbxNDdfAZ+9aXvSO/18wNBK0elEJjlmYtb4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927424; c=relaxed/simple;
-	bh=uKkWq78XfYV8C1wGjeLxUClR6JZktKdqmRzCLRPiniM=;
+	s=arc-20240116; t=1745927429; c=relaxed/simple;
+	bh=bjClv6BryTyDpGkWdfsiI+95q6D8k7MY583X7jPAQJk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fs2IN8JPiCk974YjXMFS4TwueRCdqoQo6jMIx7XdQgdaH/6BBObob1VD/GHQSRTD8rJB5qseif1tmyW7En6OSq2nA1fszb39lAUX46Jom+eXAo485a9lWIj+Vl7afVCS0TKE/h7req4AOijvETVHBr4BI0f3AHX8TWkPJSuaE/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l46bT0bH; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=ppG3fu1fv+iUKzGIoRCRXi8wZHNXkr2+ai11gB9M/ZJLV68gCY1u+47CQEDJIJ10vwdvNhW64GgCJif6g/FAcy7ZBdMURQ9LhVl3eaR+CuI3buubCxSnj4LamDIeq4QsyJ4Z5cg/XQZoJcrpgyscI2UB07UengiWdEnVjCX2RZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S7ok08LE; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l46bT0bH"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso8347668b3a.2;
-        Tue, 29 Apr 2025 04:50:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7ok08LE"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736a72220edso5843642b3a.3;
+        Tue, 29 Apr 2025 04:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745927422; x=1746532222; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745927427; x=1746532227; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rWrdBEdzmL3R/kfX7rqlGT9fsre+XXLU7YQDNncr/vk=;
-        b=l46bT0bHkv0JBZn2e9RwrDbyrhAoUsCrNSsEcoc16UvDS3dwyc1EXNUEq8CeuM745H
-         QrSeW6X9T7p2om6YqjTHIZjNAWB5aSU2XOeFF03AhdW5IpU+uvH8N0xfsNW1cxbh4O0A
-         upAIZaz3X24IJaktUKqF4t0zmL2esmx5WNwyu0JuRhDD672Ojzqa29TDHuiJVUmGRwR9
-         aef7U7FuNZ0eZwawJc/ZrMUBJ8T+ZAPy3qsdaASe0jBsNpPa519SOd1Cq5bXMo1GWaXa
-         4/8lNHQWUrcbyUuU4RicV2+6G81wGRiW3zStBzKBMH0YGqK3pgZmfmcQD8G0TjexYMUL
-         J1LA==
+        bh=tq3nEj4DUSPSU3dXBHWbYOiByd1+bRHGbfykzSesdrc=;
+        b=S7ok08LE4iJdi1CuDPQfT/F30XCLMLEO6NkEyeHaE0XC+RISQE9lZ4T3vOX0TPwCxF
+         +sNOXeGNAzRLjEVhP3WMj0qvXFSStyl1uOXExpXqngcekrzV2FMLPRzwd+RPafVDo862
+         g0AvBWIN8kGnbg6yAZ0aneD+hqthXoxb/2qPuUBXCK9TGruTs9AFPh+zKQbv1l4gUG7M
+         O1eMlquhpGwpAM2zFujEBiIRGVynQ5iCQCKx8PMQnk5iRI3DUv6CzgLNIKsTkYgL0i8C
+         Qh6UFznzr7qNRt4Kgvd8E2RJBzw4rF5gPUWNyhoJCSZ4O+Ib22OYcaIJQuv2OS732YR2
+         zB1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745927422; x=1746532222;
+        d=1e100.net; s=20230601; t=1745927427; x=1746532227;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rWrdBEdzmL3R/kfX7rqlGT9fsre+XXLU7YQDNncr/vk=;
-        b=WBmFvaRETe58pkQMjmvJe8KQHAMbMjPM17H1uLZVmpCU0JWRpNhQZ5YGR4IU/a3tXw
-         B5by+YTDo1Rko6g+JB0x5xe2Q2Vg4wgTucnq+h3lCKDYLrkVeOeXB3IZhKP2WdDJsT6j
-         NPWRWeHFGzkv7fPXFsDy3sYQ+6nPfdsneB63GgBC1W5XDC0KX7xGoz6k2uP3AjAiIXq/
-         cGE9zs0r+beHoUFU9Cv+Olc2/W/RutfK9vVhD3CeF0VF+Wn/bzg2/fs4gZMwfGD7ag9e
-         gDq7a1WHyqASpA5tW+iU97F4Yo7Bt1A445wXMwU7aP+05K0sq8PCspsVuiL6n7tuOZmh
-         ulJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZayXrQhnx1EHbgHzCRj/EFQ0brZTAD+n13BngvBz+Gl8Uziz73n+U2aWo/V3F9S5yIuVDwBiCgTAN1Ypg@vger.kernel.org, AJvYcCVoRPvhqh1379tL49Hbd5+Sbe0d9pzMIodBs8E0NZK9rflDTwjp70CaCOc0MAw8Fb+oNRDLsymuPlQusmo0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhdJrQSlaUuVTR5T9zld5hyCjVyB7Qahk4dAGLyql463LZW0km
-	V3IH+SrQ8Cw/hZUMKsrsm1mGAU5XuSLdpXMEUjbIFGqa3q6xcuLy
-X-Gm-Gg: ASbGncsEEr4dvX60a+sDKKF5rD8yoEhcZjRgxdgkDb5gyE/aLG6rBbOPfHH8Not5bRB
-	VuLkGZhfq82VZJZaEh+337BImxMuN80cPdGKdn1/CAktzeWcydEeK7S8zF7SEwX+d6YkE9LEQyU
-	38utsZxunj6ioz8ijVuFBX+c4H1ngk35bgvMOxHsCoS6dAu4m4gqjKf/d1yLGy0XBnyBEORVjh3
-	ktog271kacnnrCTRpaBSCAbmfQsIVx+17bAs9RMYOf+y4+rgK7khqHmzHDP3+y4R9U8f1CMiz73
-	Q/Yd+0oGsEcwirjMB3BNhv4E5NY4GPUNuN/SxPMQD2CdEBcILZ9Xm+WkiewuWuQaKaVO42g=
-X-Google-Smtp-Source: AGHT+IE/utjdT7UzJxrdlrhtOtlOMqX4ScwR+z3Gkz6IueKwrIHT/ooBVXODi9qD8WVpFTeDHyYaSA==
-X-Received: by 2002:a05:6a00:14c6:b0:736:2a73:6756 with SMTP id d2e1a72fcca58-73ff73eed7fmr16992178b3a.21.1745927422335;
-        Tue, 29 Apr 2025 04:50:22 -0700 (PDT)
+        bh=tq3nEj4DUSPSU3dXBHWbYOiByd1+bRHGbfykzSesdrc=;
+        b=EGVaYYUNAq3dCAkvPwao3F8GGNX0zkFSUgRgKT/QJvFakUyMc2XgR789cR+jQySY7S
+         TaALhX2zMDPuN7CyCRmY5IWandptxJZRLzvl7SBSwICXhqFE4zd/1WIKfR5oftP53erw
+         K3PdYMk+T5EFhXg1QO8QcNlzLtPb/0Sbq1/Z6Qohp1CG/Lw1Au/3Nm332+vdmJQ5OopW
+         6AVoqZYaUnWyrAXnWDqOXUEQclDgb8T/SeAMU9oKQQJbBJ/RYBfzXebS8jY59V9Z96ZM
+         z2d9lYCGNagWllIGJA0+K9U0J7TiNZd/yveJpCZijgkV3IeO6ClMWJJ7GZK3F1NGIGwp
+         eqZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFVEMz0FYG6mIVLuIi7+rRTvonVe45wGC3v0E7TBtANQSRk7XBX+LhdDOmAxxKHZ/4YzW1/4gJ6Dc4PFq8@vger.kernel.org, AJvYcCXdRUtgti/K8BCWG91jwpUXk0nzYDernf66JqkMWMt4PYiroHt21Xgn+ccIkyZcA8NtqW/EPH4kej3Pog==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD04p8Dfi7cqKWg5LCvCLoZvw3WcTL8Aw0EMc+Jc1ZCgaYTF9E
+	23lmgwb0T2PvfkfpQXB1xdjAJ0TqNivRcr5Mfmaf6k0P+OJEphSPKeyPtdr3
+X-Gm-Gg: ASbGnctx2RjuNkf/v6VBsVPNmXb0oWljqjTkYBllMqvcqt8EOfB8X0iH/8eP8oqwpZ/
+	d7v67LnARWuMs56lppsOSiYrKyseeuO1RaGygqcmkW5zoz9gBkSiOxCIB0v6HOjks5275p1rtal
+	p+XPRefkbLv8fBtHxVElzVL0rKEzRDt8v59COOmQOEozq50Wle9RRU8dFZcZWzknr1Q2Le/RdFk
+	EpaJxClsja48sm6NNzH6ZJsHe46/VhI2ZBfwhubj2YjKYucz32l2pW0BBpZ4kHFubDOFaBG51Wx
+	eU8i1XcNZ/2KFFSHOG9Ps4DcWo0pmm6wc/Ur5kkNFL6wzh0QVaDijhKK2K3OEX9mtwLgsO4=
+X-Google-Smtp-Source: AGHT+IFceGviU6cyFKzyG4aWjdQDKx3Cfc2HEqFWBXzPaKs+4WEXEA1l8P+G5QoBnkrWzjUrg/mxQA==
+X-Received: by 2002:a05:6a21:3a44:b0:1f5:6e71:e55 with SMTP id adf61e73a8af0-2095907d1bamr3893991637.6.1745927426869;
+        Tue, 29 Apr 2025 04:50:26 -0700 (PDT)
 Received: from KASONG-MC4.tencent.com ([43.132.141.24])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm9661644b3a.167.2025.04.29.04.50.18
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm9661644b3a.167.2025.04.29.04.50.22
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 29 Apr 2025 04:50:21 -0700 (PDT)
+        Tue, 29 Apr 2025 04:50:26 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -70,13 +70,14 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-kernel@vger.kernel.org,
 	Kairui Song <kasong@tencent.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Joanne Koong <joannelkoong@gmail.com>,
+	Chris Mason <clm@fb.com>,
 	Josef Bacik <josef@toxicpanda.com>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 1/6] fuse: drop usage of folio_index
-Date: Tue, 29 Apr 2025 19:49:44 +0800
-Message-ID: <20250429114949.41124-2-ryncsn@gmail.com>
+	David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	Qu Wenruo <wqu@suse.com>
+Subject: [PATCH v2 2/6] btrfs: drop usage of folio_index
+Date: Tue, 29 Apr 2025 19:49:45 +0800
+Message-ID: <20250429114949.41124-3-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250429114949.41124-1-ryncsn@gmail.com>
 References: <20250429114949.41124-1-ryncsn@gmail.com>
@@ -96,40 +97,32 @@ cache, for pure page cache usage, the caller can just use
 folio->index instead.
 
 It can't be a swap cache folio here.  Swap mapping may only call into fs
-through `swap_rw` but fuse does not use that method for SWAP.
+through `swap_rw` but btrfs does not use that method for swap.
 
 Signed-off-by: Kairui Song <kasong@tencent.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Joanne Koong <joannelkoong@gmail.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
+Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
+Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
+Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
 Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
 ---
- fs/fuse/file.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/extent_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 754378dd9f71..6f19a4daa559 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -487,7 +487,7 @@ static inline bool fuse_folio_is_writeback(struct inode *inode,
- 					   struct folio *folio)
- {
- 	pgoff_t last = folio_next_index(folio) - 1;
--	return fuse_range_is_writeback(inode, folio_index(folio), last);
-+	return fuse_range_is_writeback(inode, folio->index, last);
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 197f5e51c474..e08b50504d13 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3509,7 +3509,7 @@ static void btree_clear_folio_dirty_tag(struct folio *folio)
+ 	xa_lock_irq(&folio->mapping->i_pages);
+ 	if (!folio_test_dirty(folio))
+ 		__xa_clear_mark(&folio->mapping->i_pages,
+-				folio_index(folio), PAGECACHE_TAG_DIRTY);
++				folio->index, PAGECACHE_TAG_DIRTY);
+ 	xa_unlock_irq(&folio->mapping->i_pages);
  }
  
- static void fuse_wait_on_folio_writeback(struct inode *inode,
-@@ -2349,7 +2349,7 @@ static bool fuse_writepage_need_send(struct fuse_conn *fc, struct folio *folio,
- 		return true;
- 
- 	/* Discontinuity */
--	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio_index(folio))
-+	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio->index)
- 		return true;
- 
- 	/* Need to grow the pages array?  If so, did the expansion fail? */
 -- 
 2.49.0
 
