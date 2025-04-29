@@ -1,124 +1,113 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D1929E042
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650412BD585
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745969681; cv=none; b=BJ79ER5CBSyzky9ZGAEt5nOoX4c5LFwaG0n3XOn04DavusbF6CtNvMqJBMb2KF2+UbkyvMrj2TLLCINU+5xXUkOTyfyhsrEuDgr8dvtfxOcXFNic1UdA0LzYzCW1w7xdjr3wkNFQM8+VgvspNL12iuqi6k6+jRTAN+2ro8iGZJI=
+	t=1745969711; cv=none; b=jqI93xoQzmI81RqpOppBMYNfpk+Me0MEtMkzuqSLfP3gTphunAZXRdJokUPMF2Y9vU5rqgEOKjm92yKsTb6rBkGmg2SbErSUuElB4RspispvSf4e10xBUPByLZfbW8o9uhJrGtai1Ww1Dg06VgBMslX9q+3/1iOI6GHl+uftmcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745969681; c=relaxed/simple;
-	bh=5PpGCLInumY79oCa5QN8pCEtkY3g3aL7RVIL8qW8exs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c3ZSKNPTAMRkbJIfx7p/VJ7OfJhCbmGXsnJmxOX/q+jsH2sjFmBVNtJACzThznuwQbj3vKZAqKIY+dDBAPUff26UYmFrw3Wum4M2BhaLtdW9+bMYmLqUcWdE3ZbpNCT1DuMcP2E6u3OP65DfjGB6rq8hqgPzZKxBBKKiB82LR20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FIjXBDyF; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745969711; c=relaxed/simple;
+	bh=rsEl9UaP3K3oS3AXEGJ4//+d9JcVZzKygP7EoztCreI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mWCP8odC2xhb+W5y4RVud/OHkd7ZdinT4oxl20hKEYmrGHvXNumaVqWAkfez4sYR/LbIf9d4sfMdHyW6noUKxxR0pNdFQeR7YsqKWcupDHlLDzwTSxfU49azRELv6CVnwQT0kCPfp/p0hVLTYxSnQNEyhL0/EKyK9qGhd1oluhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=QDm1WH5a; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FIjXBDyF"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d940c7ea71so21770415ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:34:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="QDm1WH5a"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e589c258663so5973418276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1745969678; x=1746574478; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K4gYzRxDTMG8a8m2JVbMN+mLEBXzCwIBH9qxkDPGLkE=;
-        b=FIjXBDyFl88sVU3HjaMuUwgelG7rsXRL05jT7yq7qmgYDFCRzIUGkqQBIruLmN2DoF
-         agR23e3CeQ8m3xUBTJYcQ55vkNL/QIQcfTR1h7r+Z0zmQrb1hY4wZEeUCoFZwq5S4bEd
-         CGoamXcOdUOqGF/Tk7w/hWcnH/lcA6zD11GjE=
+        d=paul-moore.com; s=google; t=1745969708; x=1746574508; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmnUMSIYfYwpn2HyiLKQyNsn7KSrfP3LbpSrKf+5Aoo=;
+        b=QDm1WH5aDX3S3onHkINlqKhU3r9HLrw9D1iA4hyEWhENRuaD2NoLbOYORnp9+t083B
+         2ZEG+KjLVuRtm8hoXk4HbUQXHgx+8/3YuC1MUHB0OOR8YumhPW3x93lR3uV7dh6TAJ1C
+         Cg4Z53TupJMN7ljgn/spNJm2j6L6EQV2CMOHBEoDRkHyXWg8IADMRpxcZ1Q/6YcaWszZ
+         xQQ8xpM3l//Dvo1h8453Bv0azTO8mUYPBv3lktXIg75qLusprpBitm76RUHAREgu2bHP
+         RAr2MZ4YMrOhy3JzoxkSDgZ38hXSb0YTYXcIWZBqWyfh3MgB3P1ll09FlnC3C4fZqfNm
+         rVZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745969678; x=1746574478;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4gYzRxDTMG8a8m2JVbMN+mLEBXzCwIBH9qxkDPGLkE=;
-        b=Psq/UfdqMfyYR+MVPDqD2FotQkK6B0YHwVSL4N8ML7TzgT10Axk67V0cAOqFeYrNRb
-         nW+hZRojqUKJc82FaEWK7xOFe0nI6lFSPnMTzaTB1u10fHBEV1w8cK93/5LU62svWVrx
-         /NWmVNAs/p6jhZP20F1uHg+zjuTBKPjImTQnECZ2NT9d7U5A86zFGVTwjv3/fSxHbQTP
-         uV5Q8KXaMmtlSXGcSRUbwlzSfM932MqfJ5gSKyszQPlTBFIHUdUi6U5/yLk6xOx1LjFS
-         letc3Ji0qzx88iHfryD1fPMsZEXdFXKAMRCe6Ox6QiKL13AIEkAkx6AcVuJLjAiEm7qj
-         AVcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUe1Uq6nBLDySJNAxJ69m62Ay4Ulkk5UuuH4JTs04kS4p9TN3k8rRrH9YVSo6NFfEsVpZzCbaGkkeW/reI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOOZtvjdevjuhBI91MaaVUPyRy50aWk2+SV3cLGTv198C5pZ/9
-	sckjoBO1cYx+6nLSkThYjqHoJOJIXn3rFIlSN/bSWz2A9Zr7mlIsIIBOrt0oiI0=
-X-Gm-Gg: ASbGncv+6/iGLVstU90yVbQHuo56oZ8FXDNXMlt/+0Z5QQpEEg3+h0QnfHs6DLfTye6
-	0rVv1sw3+Y2PJVP5TXqkUytyqN6jkQKmr1DJv+ROXcXYnqXk6+2Dn8wjjgVywMIS/SrjDNcYBth
-	S5okTjXswexZGipdDLZBMoNdketH2xfaIPKEaJdJm1RY2nTC4wT41/4G/xLzZ7MyZsiqGH+4HoI
-	2VATguBCfoCTQrs8kCyBHTCWiLQ5GZX5weIrMk5th9msKynKwFZP+lYuxNjXJwMXY+htx1/mET0
-	FDBuO3LpoT/2I2D/syzHrB3CkabT0I5aClFAOnQ7mqhhIPSK+28=
-X-Google-Smtp-Source: AGHT+IGOjy3LeocKf8YYHPxXWO9DsgVyLTc1222evmd5AAMOYmg3KWF6p2nXzH2m9ZsGo+Z4im+xEw==
-X-Received: by 2002:a05:6e02:1a0d:b0:3d0:4e57:bbda with SMTP id e9e14a558f8ab-3d967fa17f0mr5478365ab.1.1745969678668;
-        Tue, 29 Apr 2025 16:34:38 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d95f48030asm5366935ab.70.2025.04.29.16.34.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 16:34:38 -0700 (PDT)
-Message-ID: <9477f8e9-b17b-49c3-a957-849198251082@linuxfoundation.org>
-Date: Tue, 29 Apr 2025 17:34:37 -0600
+        d=1e100.net; s=20230601; t=1745969708; x=1746574508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RmnUMSIYfYwpn2HyiLKQyNsn7KSrfP3LbpSrKf+5Aoo=;
+        b=P6wi7Z+uZDcFxenxOBNn6224SVPBg/RfegY26KOHjLKt6HFKTE7x1h6upaKa4zt6qb
+         IG7m8/ahJYp6dLReDG3NDpsqME8JPdeOgb32zDVir612pBRyIf7vxNoBULp1MfM+H0u9
+         7mvvrpss2J4OgmoW7JtsXTujLHdhuC1yvrp+JBhUAcKVUOr/snt0TnBRRG4ZEaLX4hQk
+         +pFWKirU9R8qXme2Jl/EuXlqp2FFKBktBV+IBcVsC0MZ2GQFDMF7PpcJuHx8bd3Dpk3l
+         CApKL6IO1Ea5kMndQrPPttLt+/CEMuE6ZMDFJJYydXxT/ooUoiZ5XH9DdF6tXQQGjAai
+         9uxg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/EZj+uA3wZdsxtmCZ/Bh6yxKnrYNEaJsPR2zehIYFyFoULEwqQHvX/NoUQP+jUwxq50U8VeDyqzoukS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/AesaDFvwA/m0HcWSPKJWtMjCUrKgyKVoLgNqCiOZ4uDK0+up
+	6MwZKwNVZElj3nwTkA1cLyZVybW5N2wSIm8XPWp/U0CJ+//WP7hjvXSsFjlJjLbwFpUWDgYsASp
+	ZhcB8l3pj5DUEp1+HBjLXW43OaR1oYajRlQEb
+X-Gm-Gg: ASbGnct9EgF0EDdro6rF4ax+eCeZrqM1rxHI1KxofEY/bx8Yn+LM3sjzirHELiIZCUb
+	pH1HFWxXp9v5CGEm7439aNb1k7rxDRCM5ev7BzYdpdIc4WGRUJx9yAvZIwIji3xLBzDXk6S9wa3
+	ERIN3JcA43QxweI47trbIMtg==
+X-Google-Smtp-Source: AGHT+IF/PA17pzv+wdeYWaRIlp9MG3hOQmLeL81RAcqY50BbqvkWNnzjIoFkoR7L0ftuH1lvEReltyIjrUvBDvzq1Oo=
+X-Received: by 2002:a05:6902:18d0:b0:e6d:d996:d8e2 with SMTP id
+ 3f1490d57ef6-e73ea8e46c4mr1522551276.14.1745969708362; Tue, 29 Apr 2025
+ 16:35:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] kunit: add tips to clean source tree to build help
- message
-To: Jonathan Corbet <corbet@lwn.net>, brendan.higgins@linux.dev,
- davidgow@google.com, rmoar@google.com
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1745965121.git.skhan@linuxfoundation.org>
- <dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
- <87selqlh0q.fsf@trenco.lwn.net>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <87selqlh0q.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+In-Reply-To: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 29 Apr 2025 19:34:57 -0400
+X-Gm-Features: ATxdqUErdvmLNdYZ_wWU2pMeCgVPQbMkXZvEOfiOk_QLBFdZZaZpYQrTWKeaZ3k
+Message-ID: <CAHC9VhQfrMe7EY3_bvW6PcLdaW7tPMgv6WZuePxd1RrbhyZv-g@mail.gmail.com>
+Subject: Re: [PATCH v2] security,fs,nfs,net: update security_inode_listsecurity()
+ interface
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
+	selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/29/25 16:49, Jonathan Corbet wrote:
-> Shuah Khan <skhan@linuxfoundation.org> writes:
-> 
->> Add tips to clean source tree to build help message. When user run
->> kunit.py after building another kernel for ARCH=foo, it is necessary
->> to run 'make ARCH=foo mrproper' to remove all build artifacts generated
->> during the build. In such cases, kunit build could fail.
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   tools/testing/kunit/kunit.py | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
->> index 7f9ae55fd6d5..db86a396ed33 100755
->> --- a/tools/testing/kunit/kunit.py
->> +++ b/tools/testing/kunit/kunit.py
->> @@ -583,7 +583,7 @@ def main(argv: Sequence[str]) -> None:
->>   						'the options in .kunitconfig')
->>   	add_common_opts(config_parser)
->>   
->> -	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
->> +	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests. Successful build depends on a clean source tree. Run mrproper to clean generated artifcats for prior ARCH=foo kernel build. Run 'make ARCH=foo mrproper')
->>   	add_common_opts(build_parser)
-> 
-> Nit: could perhaps that line be broken in a bit more readable way?
+On Mon, Apr 28, 2025 at 4:15=E2=80=AFPM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> Update the security_inode_listsecurity() interface to allow
+> use of the xattr_list_one() helper and update the hook
+> implementations.
+>
+> Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.small=
+ey.work@gmail.com/
+>
+> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> ---
+> This patch is relative to the one linked above, which in theory is on
+> vfs.fixes but doesn't appear to have been pushed when I looked.
+>
+>  fs/nfs/nfs4proc.c             | 10 ++++++----
+>  fs/xattr.c                    | 19 +++++++------------
+>  include/linux/lsm_hook_defs.h |  4 ++--
+>  include/linux/security.h      |  5 +++--
+>  net/socket.c                  | 17 +++++++----------
+>  security/security.c           | 16 ++++++++--------
+>  security/selinux/hooks.c      | 10 +++-------
+>  security/smack/smack_lsm.c    | 13 ++++---------
+>  8 files changed, 40 insertions(+), 54 deletions(-)
 
-> 
->    	build_parser = subparser.add_parser('build',
->          	help='Builds a kernel with KUnit tests. '
->                    'Successful build depends on a clean source tree. '
->                    'Run mrproper to clean generated artifacts for prior '
->                    'ARCH=foo kernel build. '
->                    'Run "make ARCH=foo mrproper"')
+Thanks Stephen.  Once we get ACKs from the NFS, netdev, and Smack
+folks I can pull this into the LSM tree.
 
-It improves readability. Will fix it.
-> 
-> (fixed "artifacts" while I was in the neighborhood :)
-
-Thanks for catching it.
-
-thanks,
--- Shuah
+--=20
+paul-moore.com
