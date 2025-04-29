@@ -1,147 +1,104 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.120])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC653B2A0;
-	Tue, 29 Apr 2025 13:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FFF2C2ACE;
+	Tue, 29 Apr 2025 13:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931905; cv=none; b=hLP1eYHjJnvv6ibE0hml8qUXzwZTNJ2bx5nLUiTltJkhT8ajFFPn2GNOgevO6qEFvO576afzmjnENvnUIW5rF4uvV5RLyTnHbJykVKltHLY+LaSY2QY+jeochFHKZkFdka8bndrqXF5D+4VlVY4FagvprfDjTwnKyLHkS/MeIsc=
+	t=1745931955; cv=none; b=cOf47L/F345Zj3Kp+vU7xzlu9/F5qhQoaEyPS8RbiUG72xn4XxMDW6PI5bD4iQ1918hLxvTVL6Z8b1XUYeCwUxsMUK48GzKq+psgU4HGv46xpZA0rd0Fdqc8lJDrxYoWmretJgTOmR5Hvn4SJ0rrzp9Nl5VKbVhXpcT9o1KDW6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931905; c=relaxed/simple;
-	bh=2oCW7m9ifAETTD8BGa4ZwZTAQDr4NgniCQNg5GmjRAw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DTO7atwnFl63Nrno0xHjx7mVTAuecGrXrvipfBrg36ycMN4Q6ME7uEDBgN+uW6MIgACeojoyHA2/xXCgmM/b+mYOwY+XuMjk0WxOJrUniEKo+KG5gt9X+FSDioe/nXE4iogqnI6WHa2jl4zT82sRpHyipifkXcxWQLi1umbpMuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=YjFoloqp; arc=none smtp.client-ip=212.42.244.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	s=arc-20240116; t=1745931955; c=relaxed/simple;
+	bh=CyJN33OKpiyB3H+RaMMXug2TVr9R3h4wpkJGQqwoUJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bAFewl2nF7VFL9lhE3N2dkb+/OKKcz6DZRe6Nxc936muuS21bcWc4y1TH3mSxwLjvT0K98lCdjPU6+0LB2Tb2YK2GucJc4ZKtpFwW38ly7DI0aCnfWOtVdehhhe7wUAYV+Vr3aGbc6aqA4bk0dMAysedOeeasMndpkG0VShLGmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iutp6+ZY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="YjFoloqp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1745931564; bh=2oCW7m9ifAETTD8BGa4ZwZTAQDr4NgniCQNg5GmjRAw=;
-	h=From:Date:Subject:To:Cc:From;
-	b=YjFoloqpivBQWbE2WbnVfmpW9INRZv5pF97PSlPvPpjYmE5QnLma127gievqZpwLn
-	 awLAmpdVAlI9GiNBwWETkl2DXJgX4SvT7RRiDrXZk+iHRj6wOaYXbcG3GDYhj3xn/F
-	 hxDj6DBJ+so86j1avhozwnD2lEFWKcIDlSvnawCE=
-Received: from [212.42.244.71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
-	(envelope-from <n.schier@avm.de>)
-	id 6810cd2c-0395-7f0000032729-7f000001d2ce-1
-	for <multiple-recipients>; Tue, 29 Apr 2025 14:59:24 +0200
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Tue, 29 Apr 2025 14:59:24 +0200 (CEST)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 3397880838;
-	Tue, 29 Apr 2025 14:59:25 +0200 (CEST)
-Received: from l-nschier-z2.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:7792::1])
-	by buildd.core.avm.de (Postfix) with ESMTP id 1038F181BA4;
-	Tue, 29 Apr 2025 14:59:24 +0200 (CEST)
-Received: from localhost ([::1] helo=l-nschier-z2.ads.avm.de)
-	by l-nschier-z2.ads.avm.de with esmtp (Exim 4.98.2)
-	(envelope-from <n.schier@avm.de>)
-	id 1u9kYh-000000089kf-3Z1r;
-	Tue, 29 Apr 2025 14:59:23 +0200
-From: Nicolas Schier <n.schier@avm.de>
-Date: Tue, 29 Apr 2025 14:59:13 +0200
-Subject: [PATCH] randstruct: Rebuild completely if randstruct.seed changes
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iutp6+ZY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F63C4CEE3;
+	Tue, 29 Apr 2025 13:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745931954;
+	bh=CyJN33OKpiyB3H+RaMMXug2TVr9R3h4wpkJGQqwoUJg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Iutp6+ZYwNoeZeaLM1M9CYUq7xOe58XWW60+k2Ij5iz3w8JSRwTJNWZliKq8lr5e9
+	 Wocdlu4AD0zdKm72O+8FYHfPN+sFLWlwofa6qRGhHy+mZrsEoRefLB+iIEI2m7aCIn
+	 fVbrm1slTGF22TPms1nT5yp08r308nWC3xK/JW9Lf8OTqaGqvtsL6NhkH3K0+QJgCl
+	 UYm2fecWOyWKyld2xp0QEdCysvsia/BeV5A7ydN1UjQfTMJizBIpSlKJ0qtWayDEms
+	 Tt6kzs+aTau4iFeaiDITl7UuHDKzZzPR9196XhnV4rTvd5PCXlnvHWTcTOyBlyJuPP
+	 XU7BusJzH6q6g==
+Message-ID: <baa21129-287b-4c94-93ad-ff859bdd1698@kernel.org>
+Date: Tue, 29 Apr 2025 15:05:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] tty: serial: samsung_tty: support 18 uart ports
+To: Faraz Ata <faraz.ata@samsung.com>, alim.akhtar@samsung.com,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ dev.tailor@samsung.com, rosa.pila@samsung.com
+References: <CGME20250429101953epcas5p4604a6bd79548ebc29e1c72bdc64965a4@epcas5p4.samsung.com>
+ <20250429102941.4138463-1-faraz.ata@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250429102941.4138463-1-faraz.ata@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
-X-B4-Tracking: v=1; b=H4sIACHNEGgC/yWNwQqDQAwFf0VybkBXrdhfKT247rMGZC2JFkH8d
- xc9zmFmdjKowOiV7aT4i8kcExSPjPqxi1+whMTkclfnlWtZ4VeZAs+RtYvBFl37hQ0IfAvGT1/
- VKF0z+LKgFPopBtmuyftzHCfjBAZUdAAAAA==
-X-Change-ID: 20250429-rebuild-on-randstruct-seed-changes-6b45e327fb31
-To: Kees Cook <kees@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>, linux-hardening@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, Nicolas Schier <nicolas.schier@linux.dev>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2055; i=n.schier@avm.de;
- h=from:subject:message-id; bh=2oCW7m9ifAETTD8BGa4ZwZTAQDr4NgniCQNg5GmjRAw=;
- b=owEBbQKS/ZANAwAIAYjGvJyImm24AcsmYgBoEM0r7k1GoafcbnAfvnDJSYJVnnD7bEOXWjP81
- 0bR68QzE3aJAjMEAAEIAB0WIQQO/4WJ63TpgecLpGmIxryciJptuAUCaBDNKwAKCRCIxryciJpt
- uIRGEACOJz1v3io+I/0Iq/QaOAt9e5NEWGXdxwDGtLA7Y2x68gbBJ/vP8LbsdBaWWsxB/UFbrQY
- vvKHTmvRJAS3/giVw19jr/D/Owa5/B6r3AtW4mFjot52X021vK4TjKgQGpeW6c3qiSJGaMx8K4J
- X8eeq1HaBiXV8TEBW/eTOL4fX/OtkdP0T9wNRkccBc+u9eVFX0PUSGt/6i/CrvbV76FGBDE76rI
- SsIB/gWyB13ao6UrnTjnubpLsff+3B5kOV57e6kpDNmv0tqDsWa8X25IaDJrB8s3rGHo0AFhXWF
- trhjeBANONIXzGZlzbpR6KYx3a2nJwB3INiQOxp1iLrPUohT4bky0u8OOArvzfBvTzmMlOvAsXh
- nViGbseZ6QVGYU6UIlf/o/zMXQyrZJ1htk9lbHXWGCryqLxK0XxxYxMRQcey+QFzzmU9wEhoua6
- klLOyP9K5U0Wh0cpUOxt6dZxA3H2b+IMtdPhstfopAk1j0/dIe4gpKW5b91VlXTBThesRZXMfTQ
- 1pfz+D3NnkU84IWXW2XzSU4wTNkjtnd/1ljrM0vkc8i8ulMtbAGJMScE4CoAxf6mxwMeJiGSfTf
- CY+XVxQcmGdVtMfUtCj7E/TGWWmdVFjcFz//pCo1cGQrcMnRQNWXTaGBywMoHr2lfAMmkWXUlKw
- om2l5UNdKfJ8Ekg==
-X-Developer-Key: i=n.schier@avm.de; a=openpgp;
- fpr=7CF67EF8868721AFE53D73FDBDE3A6CC4E333CC8
-X-purgate-ID: 149429::1745931564-2D629E09-1E870DB7/0/0
-X-purgate-type: clean
-X-purgate-size: 2057
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
 
-Include generated/randstruct_hash.h in linux/compiler-version.h to force
-a complete rebuild if CONFIG_RANDSTRUCT is enabled and randstruct.seed
-changes.
+On 29/04/2025 12:29, Faraz Ata wrote:
+> ExynosAutov920 SoC supports 18 UART ports, update
+> the value of UART_NR to accommodate the same.
+> 
+> Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
 
-Removal or change of scripts/basic/randstruct.seed leads to a remake of
-generated/randstruct_hash.h.  As linux/compiler-version.h is a
-hard-coded include for every kbuild induced compilation, conditionally
-adding generated/randstruct_hash.h there adds it as build-dependency to
-each object file.
-
-Reported-by: Kees Cook <kees@kernel.org>
-Closes: https://lore.kernel.org/linux-kbuild/202504161928.17A90D9B@keescook/
-Signed-off-by: Nicolas Schier <n.schier@avm.de>
----
-As I have no rust experience at all, yet: Do we have to consider
-something for rust?
----
- include/linux/compiler-version.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-index 573fa85b6c0cd314dfeec66e8c77342798aa7e62..523eacf80c1a6149c513dccfd0dd9fd388e909a4 100644
---- a/include/linux/compiler-version.h
-+++ b/include/linux/compiler-version.h
-@@ -6,9 +6,19 @@
- #define __LINUX_COMPILER_VERSION_H
- 
- /*
-- * This header exists to force full rebuild when the compiler is upgraded.
-+ * This header exists to force full rebuild when the compiler is upgraded or
-+ * the randstruct is changed.
-  *
-  * When fixdep scans this, it will find this string "CONFIG_CC_VERSION_TEXT"
-  * and add dependency on include/config/CC_VERSION_TEXT, which is touched
-  * by Kconfig when the version string from the compiler changes.
-  */
-+#ifdef CONFIG_RANDSTRUCT
-+/*
-+ * If CONFIG_RANDSTRUCT is enabled and scripts/basic/randstruct.seed changes,
-+ * randstruct_hash.h is updated.  Including it here, makes it a build
-+ * dependency for all build objects.
-+ */
-+#include <generated/randstruct_hash.h>
-+#undef RANDSTRUCT_HASHED_SEED
-+#endif
-
----
-base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-change-id: 20250429-rebuild-on-randstruct-seed-changes-6b45e327fb31
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
--- 
-Nicolas Schier
-
+Krzysztof
