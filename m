@@ -1,43 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949802DFA5E;
-	Tue, 29 Apr 2025 23:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B0F2DA84F;
+	Tue, 29 Apr 2025 23:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970829; cv=none; b=Y7XTrzOIWZl5N4nKwprFtRQiP2/QN4wShuDrR4CliTZROhh0aEv1ng6rxIPzY/7aHCxQngTQu2rIJlj9b3oR5luqFM5AdNTt44JtVXCumwvmC6EUR0smZzpuJDmx70HgwUVGMiiT15gNnvnKoKKDQ8y+4iGOx8OZUzaORcLOuXg=
+	t=1745970831; cv=none; b=VOy/vT0Qrgr9dau5MQONF86zU4MwGKUpoep55mFgJTyZGH6xOYuYhmaJnQPBQG36HSfjiN+aKjq2xnUjZwid8idWS32vmFNsyTT0RBhoFrhZoV1w/3WXqZgMm2UVHe1Gwvb3QXB3RMN78lj9v3r+x01tL+eAiV4sueBnzxgp8vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970829; c=relaxed/simple;
-	bh=L1DXBN/ZIWGkfyY4/8zCa24buJIdqykH1WWhCW9C04c=;
+	s=arc-20240116; t=1745970831; c=relaxed/simple;
+	bh=NBFcAh9aTbjvvj3BdxNHYl0QUYZIi55TvNyf4MG5qhA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QpIMzG5QnY2wPT7YPeyh0+uNhuEGvIwxo23qQekSCtgm6y19TqwvnEIhjFRpRC5i2u3E+gkt5dXhGU3cBP2+MCHEKoKdLtCCNbwSkPSEFEYQsyDBrECTL+Mryz6yzimHaCFjl6+qg0vjqhpzT8tPPIsE8BzFYSwb7SJswJPCqhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUA83+6F; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lKhe7bbl1eL8RrVoV0snL2ON4quzpWglD8fRaDJ4t2Gk0ezynplI8zoyqSZ05YZWeL0ACSz84RJz6HlFA6hdPx7+KszOFqJ8pZr9gjbMV+xOwIOubsL+8rz/wW+xmupiFLpN88ZSXFkTCkRIiqEpmN3tSz2tSIxAszKaWToUXbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bmJb7tk3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUA83+6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EF2C4CEEE;
-	Tue, 29 Apr 2025 23:53:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmJb7tk3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDB7C4CEEB;
+	Tue, 29 Apr 2025 23:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970829;
-	bh=L1DXBN/ZIWGkfyY4/8zCa24buJIdqykH1WWhCW9C04c=;
+	s=k20201202; t=1745970831;
+	bh=NBFcAh9aTbjvvj3BdxNHYl0QUYZIi55TvNyf4MG5qhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eUA83+6Fw3ViOnNnoaIP9MG4f2IV2Jl7SCkaFmDLT/yu9voLCSlp5O3ijGqah02C4
-	 ipZtLjufhy0SVOgmdvdQlMmBW0AEltNLz0gNMiJdQUs3C4SzGus5XKyqF4H/DnshHI
-	 wKACNVWRu0871+OvwXxi8jhRyLzmKSnXO2njdeuiDBgt/LNZUf+mSmuJCqGxew9g6n
-	 gtHWeTHFbW77zZLiZbphgafoERaMM3eyUHvZC6O78xRqxF2kUBmZVQ7F/g2Z2QHSR+
-	 ftsUHg+ygtIVJwf/cjr0U64t0VRdbAt3BKsfkQEGGtsgSW0gihQl8tZrq6fh/bRI6F
-	 Ew2TFDDVMQY0g==
+	b=bmJb7tk3w8f8S1zKtC5EL+SwXrZKuXUM1bq9Q3yyMN/p28VobX+tye8Je0yxLWJYr
+	 lf6weexLfr7LXE1i8eNpR0dNY9ExU2z1A2dWDxRBvZrYj/eC1ZuG9ujmF5Tismr+lw
+	 8PN+kljLFz1tWViKBfDA6tIHegccjtvZeZK3+sB6jkw46fFjPcQDfLsUjrJ4pC01Hc
+	 ZQQKoSWUHmBdB5DPFjGNz1CsYKBrEWR28nNXw1m6T8GNGO7Tg3t/yutF6LZERhMXNF
+	 rCryRprPOsOBgaf48p+JfN3gxJko5FpAYXhD6ExmChV1UHLQcQT12gs5wj+2AGhfhq
+	 LW7NUe8JeRDsw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: gaoxu <gaoxu2@honor.com>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Tejun Heo <tj@kernel.org>,
+Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 4/7] cgroup: Fix compilation issue due to cgroup_mutex not being exported
-Date: Tue, 29 Apr 2025 19:53:35 -0400
-Message-Id: <20250429235339.538269-4-sashal@kernel.org>
+	claudiu.manoil@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	imx@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 5/7] net: enetc: refactor bulk flipping of RX buffers to separate function
+Date: Tue, 29 Apr 2025 19:53:36 -0400
+Message-Id: <20250429235339.538269-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250429235339.538269-1-sashal@kernel.org>
 References: <20250429235339.538269-1-sashal@kernel.org>
@@ -47,49 +53,69 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.180
 Content-Transfer-Encoding: 8bit
 
-From: gaoxu <gaoxu2@honor.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 87c259a7a359e73e6c52c68fcbec79988999b4e6 ]
+[ Upstream commit 1d587faa5be7e9785b682cc5f58ba8f4100c13ea ]
 
-When adding folio_memcg function call in the zram module for
-Android16-6.12, the following error occurs during compilation:
-ERROR: modpost: "cgroup_mutex" [../soc-repo/zram.ko] undefined!
+This small snippet of code ensures that we do something with the array
+of RX software buffer descriptor elements after passing the skb to the
+stack. In this case, we see if the other half of the page is reusable,
+and if so, we "turn around" the buffers, making them directly usable by
+enetc_refill_rx_ring() without going to enetc_new_page().
 
-This error is caused by the indirect call to lockdep_is_held(&cgroup_mutex)
-within folio_memcg. The export setting for cgroup_mutex is controlled by
-the CONFIG_PROVE_RCU macro. If CONFIG_LOCKDEP is enabled while
-CONFIG_PROVE_RCU is not, this compilation error will occur.
+We will need to perform this kind of buffer flipping from a new code
+path, i.e. from XDP_PASS. Currently, enetc_build_skb() does it there
+buffer by buffer, but in a subsequent change we will stop using
+enetc_build_skb() for XDP_PASS.
 
-To resolve this issue, add a parallel macro CONFIG_LOCKDEP control to
-ensure cgroup_mutex is properly exported when needed.
-
-Signed-off-by: gao xu <gaoxu2@honor.com>
-Acked-by: Michal Koutný <mkoutny@suse.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Wei Fang <wei.fang@nxp.com>
+Link: https://patch.msgid.link/20250417120005.3288549-3-vladimir.oltean@nxp.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/enetc/enetc.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 1e87257fe4692..1a3b2e1436db0 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -89,7 +89,7 @@
- DEFINE_MUTEX(cgroup_mutex);
- DEFINE_SPINLOCK(css_set_lock);
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+index 612872c8c8e3c..1068a5ea17b7a 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -1264,6 +1264,16 @@ static void enetc_xdp_drop(struct enetc_bdr *rx_ring, int rx_ring_first,
+ 	}
+ }
  
--#ifdef CONFIG_PROVE_RCU
-+#if (defined CONFIG_PROVE_RCU || defined CONFIG_LOCKDEP)
- EXPORT_SYMBOL_GPL(cgroup_mutex);
- EXPORT_SYMBOL_GPL(css_set_lock);
- #endif
++static void enetc_bulk_flip_buff(struct enetc_bdr *rx_ring, int rx_ring_first,
++				 int rx_ring_last)
++{
++	while (rx_ring_first != rx_ring_last) {
++		enetc_flip_rx_buff(rx_ring,
++				   &rx_ring->rx_swbd[rx_ring_first]);
++		enetc_bdr_idx_inc(rx_ring, &rx_ring_first);
++	}
++}
++
+ static int enetc_clean_rx_ring_xdp(struct enetc_bdr *rx_ring,
+ 				   struct napi_struct *napi, int work_limit,
+ 				   struct bpf_prog *prog)
+@@ -1379,11 +1389,7 @@ static int enetc_clean_rx_ring_xdp(struct enetc_bdr *rx_ring,
+ 				enetc_xdp_drop(rx_ring, orig_i, i);
+ 				rx_ring->stats.xdp_redirect_failures++;
+ 			} else {
+-				while (orig_i != i) {
+-					enetc_flip_rx_buff(rx_ring,
+-							   &rx_ring->rx_swbd[orig_i]);
+-					enetc_bdr_idx_inc(rx_ring, &orig_i);
+-				}
++				enetc_bulk_flip_buff(rx_ring, orig_i, i);
+ 				xdp_redirect_frm_cnt++;
+ 				rx_ring->stats.xdp_redirect++;
+ 			}
 -- 
 2.39.5
 
