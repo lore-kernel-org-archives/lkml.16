@@ -1,95 +1,172 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678BA13EFF3;
-	Tue, 29 Apr 2025 06:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2470E2222C7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745908122; cv=none; b=sDQeitqLOIc5jY6UUG0cV/3uUWpcqMNQ3LDaA2+UIt1kIaRgb17Un2BIBYv2UWeuqIPbRU15p4u+reBvmgNXISxsYbadvvkrYup3GRqj5UXiIOY1LAAT6FO+fnIyeiXFrySi2OEc+vSvG2beDlW7NKsZOrMgSZTDND27net4v1E=
+	t=1745908267; cv=none; b=CE1fD1RBDgR8a20Idb0hUuD4MFR9Z4ZI/d/BMmHH0PoxrhHjIlIAoXeaoiiU9RcHuVJxvRnq47STcsiewny2ghR7X8gFPKfqlo61BOQMOEKcPEICMOvihD32Jl318MYZT2IGvZOJLckmYEXNZ+CMS/hdXjPza2xCV1HYbAFGIUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745908122; c=relaxed/simple;
-	bh=/QcFu8jTMwn4D7EBmAXB8sLko0XzPZNY3u8sLFMOwlc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JAPcYsZ7tUGDRseAgdiXffQabnjE9V14YThNYXI//CWkc2BF08ERfMt23+ZX/5ZMaAZ1PMGHXmtfe6PXUNvuTUnIrjL+4X7jnapicAU7Ufb9/PL4VA4L7R8uVqDCknKbNK9h0z1ogAC+/WKnEwTVnuk4JLYnCdIIZYTlmlDngTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: esmtpsz21t1745908066t901c747c
-X-QQ-Originating-IP: dgSgOml0culBUhVYhft74ziURc0ZlMbrqZwb6gz4LzM=
-Received: from localhost.localdomain ( [175.9.43.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 29 Apr 2025 14:27:42 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 68823556814354705
-From: Liu Dalin <liudalin@kylinsec.com.cn>
-To: alexandre.belloni@bootlin.com,
-	zhoubinbin@loongson.cn,
-	wangming01@loongson.cn
-Cc: chenhuacai@kernel.org,
-	gaojuxin@loongson.cn,
-	git@xen0n.name,
-	jiaxun.yang@flygoat.com,
-	keguang.zhang@gmail.com,
-	lixuefeng@loongson.cn,
-	linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc: loongson: Add missing alarm notifications for ACPI RTC events
-Date: Tue, 29 Apr 2025 14:27:36 +0800
-Message-Id: <20250429062736.982039-1-liudalin@kylinsec.com.cn>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1745908267; c=relaxed/simple;
+	bh=0itftDmjkpVev479Jw2iDbbKedGJ9vLfK8+FwvVEbzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UXO/QH6WccBqiF+O8cb+6iGUjkpI03GzuJ7pbLiiMVj1LiD57/0qGDWshmDkN8vw3C4fF5kKGJYNbo30U+sPcOoFyOwiM799wMa5OdrvitD1BD2ynzpP6InkctmOv4K8yHZDKerZCW189SIZLCGtU8NpNZkTDuLzWhTlAnhEW00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=swZftD9R; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9PO1x5p4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=w2vUnPr9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MH2PCR27; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="swZftD9R";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9PO1x5p4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="w2vUnPr9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MH2PCR27"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 850B91F8BD;
+	Tue, 29 Apr 2025 06:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745908264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=grj4tteQ0hZ0UcL5/GdOtdzOdyrG2CBvSCbh6UsGUUo=;
+	b=swZftD9RbUpjgwPfCWrDRcID2zDkMb1bEZt6PSmatAhbbKTcLCfgSCJG5XmtcXrCIEGKGl
+	QWvHUVoEpd2UhKf77V1720+iwG1jMFLoNIv86mknMo55ifxgnW8hTpSZutfiwZ+8ud1Da+
+	bZOEk2fEhe1rADQBXhRBFymWMyMg5bI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745908264;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=grj4tteQ0hZ0UcL5/GdOtdzOdyrG2CBvSCbh6UsGUUo=;
+	b=9PO1x5p4rYBCoXy+aJGmWWMPEPsD9wwCEeLlJajhIbcSX4f9SXwrb5q7WYYTsMEjQyn6dR
+	rZDVHMK4RsfugTCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=w2vUnPr9;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MH2PCR27
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745908263; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=grj4tteQ0hZ0UcL5/GdOtdzOdyrG2CBvSCbh6UsGUUo=;
+	b=w2vUnPr9MwMWZRX3wLgERXjJ0xdAW3UuP0B+i5JhyT7vjv/kkAAnVBH9RCHfz/I+Dn4jG9
+	eO0bjyh4YL7bcaIat9DgRY2MvwZJrjGzw8F9BWluc0F4SYwJpRRkHdFCVFI6aO1q2+DMi9
+	RYYfdYC5GEgMd/2ijcOnB0jk4IuDhPc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745908263;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=grj4tteQ0hZ0UcL5/GdOtdzOdyrG2CBvSCbh6UsGUUo=;
+	b=MH2PCR27WKSyQY0izd8CkUw0jMCtxZ+PRCCe5u8GzN+3c6t5ThpBQfO9tRZKATTuuoLm7K
+	HwqRxx75xmGT4iBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8DD6B13931;
+	Tue, 29 Apr 2025 06:31:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id I5vJICZyEGjJYAAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 29 Apr 2025 06:31:02 +0000
+Message-ID: <2f140d8b-6a2a-41af-ba73-0963713f211e@suse.de>
+Date: Tue, 29 Apr 2025 08:31:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/9] block: cleanup blk_mq_in_flight_rw()
+To: Yu Kuai <yukuai1@huaweicloud.com>, hch@infradead.org, axboe@kernel.dk,
+ xni@redhat.com, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+ song@kernel.org, yukuai3@huawei.com, cl@linux.com, nadav.amit@gmail.com,
+ ubizjak@gmail.com, akpm@linux-foundation.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com
+References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
+ <20250427082928.131295-5-yukuai1@huaweicloud.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250427082928.131295-5-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz7a-0
-X-QQ-XMAILINFO: MxdW4jxL6NvXJgL4/p0KUIFjbW4kIr06zDyIqc46IjHyE52MA5l9Pwfk
-	Bm+E1rvbQILY4hILsSJFtSVnk7HQu1BXUX7cGMZ54WUHk8+8c2BWFAhG7PoNJ+pSCz4mln9
-	WhtOZKxrWyaq/DYgokIrHyJZu+D1z4HJqkjSpnuP/6cKgKeg/ZTBkatZJZMyCZ39dBJrSSh
-	ikoo6zTaqmNiKF3leprbf0pIHslDedIyZvZJnv63H1uIgAMNdRXE3KdU6YUNHwPNGQHOIuW
-	6TJEEOBRvFOH7sMNRxRhhLIScXXsdQsG2LGpng884+964SfbACMDnuJL/GjxSJ3hm6TA9xf
-	54xtSCudpBlfDgXPTPvC0tdT6gmvbJh9uVdgZ6HB25akgwilOJI3eSPl1dN9v7avYC4ecIq
-	ott/CH4eB/+C/+aSTWu7stAWxfjo4fq4LXG5ZO2SCwzJWQqFOpaxSbD4sRGZZ2SmxGvs1Yz
-	qJXgroXnHBV1MxN7wMbK4UG9sKwpNm7zlIcLnWi5Xq317jKhiOhgXXbUXF56Zx9s+jP21Tf
-	P8Hu2l9sG1i+Lwu6qBK7Avqe0YuALK7jD4UPxIGN7krnxlf1tacKg7Fz+mkCFY3+ikisvpF
-	mclCyJ6UhKQ5OSg+kO12D1qIeLRdKpHOTnkZjoM4CVsvHvA79j60bbRWGol0Tgd4PLF30vn
-	FOkEWYce6U62mBGGRDx6LXbnmDROuSLNNOD1j/iPekh443APvySwXpxJp69fK8y2fZNiIKO
-	RBJNF8GbdRdoyEIRgPxIWgo+a3km9LSoItbjIFHLe6gKHQeKhLrnp7cdbhS7gSmN0ZLaCDl
-	tY9qvfik3Uos3qp8eeR2sNK1b4eVirILt33gDwNpONPlqNyrhKf9S3yLmiCUlfLTsAOZ7gN
-	GVF+5nlBR9IopMaZ3rTWEdR46TScQQinJv+bNCQe/SQaCIP8T4J/ylIGxyfrgV7Xyww/Ons
-	tvUvBTy6v48dpwLqmE9eP+ngyq8zu7PsPwhA=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+X-Rspamd-Queue-Id: 850B91F8BD
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_TO(0.00)[huaweicloud.com,infradead.org,kernel.dk,redhat.com,kernel.org,huawei.com,linux.com,gmail.com,linux-foundation.org];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,huawei.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-When an application sets and enables an alarm on Loongson RTC devices,
-the alarm notification fails to propagate to userspace because the
-ACPI event handler omits calling rtc_update_irq().
+On 4/27/25 10:29, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> Also add comment for part_inflight_show() for the difference between
+> bio-based and rq-based device.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   block/blk-mq.c | 12 ++++++------
+>   block/blk-mq.h |  3 +--
+>   block/genhd.c  | 43 +++++++++++++++++++++++++------------------
+>   3 files changed, 32 insertions(+), 26 deletions(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index 301dbd3e1743..0067e8226e05 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -89,7 +89,7 @@ struct mq_inflight {
+>   	unsigned int inflight[2];
+>   };
+>   
+> -static bool blk_mq_check_inflight(struct request *rq, void *priv)
+> +static bool blk_mq_check_in_driver(struct request *rq, void *priv)
 
-As a result, processes waiting via select() or poll() on RTC device
-files fail to receive alarm notifications.
+Please don't rename these functions. 'in flight' always means 'in flight
+in the driver', so renaming them just introduces churn with no real 
+advantage.
 
-Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family chips")
-Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
----
- drivers/rtc/rtc-loongson.c | 2 ++
- 1 file changed, 2 insertions(+)
+Cheers,
 
-diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
-index 97e5625c064c..0c573f198f63 100644
---- a/drivers/rtc/rtc-loongson.c
-+++ b/drivers/rtc/rtc-loongson.c
-@@ -129,6 +129,8 @@ static u32 loongson_rtc_handler(void *id)
- {
- 	struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
- 
-+	rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
-+
- 	spin_lock(&priv->lock);
- 	/* Disable RTC alarm wakeup and interrupt */
- 	writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
+Hannes
 -- 
-2.33.0
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
