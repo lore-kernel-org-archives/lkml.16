@@ -1,93 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8632C28C5DC;
-	Tue, 29 Apr 2025 08:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A07125DB15
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916465; cv=none; b=X6KguyPeitNh5UOxojy3RC4WdmrZX2zYlucz9iixr3I+H3upZUTPJXJpVg2DFh3mjDbjjBT25HcomKS6Co9JjOs7aQEYxRqgcfXaHPm66V03is8odaLjay32uIpLXtUF7AHb6lJwAeL5gTud5CPspwSC+PhKQzNof61i5DPQ3pM=
+	t=1745916482; cv=none; b=IKalRbdZ2aVEU5Uac/ia2Hk+gYlesCY2l2AjujIpDK0WMAu+8yNgc/N6BKgHkx+xoMvq3vxQDKKhkSxV9sf7OyFAnv2OkHwRJZkgq1ipZDho4iioBFc7rnOtpTeKDAv4H4R44sS7FgyGt1csyS7Fiones0YDC2e0WWLWUz4vTes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916465; c=relaxed/simple;
-	bh=0JH0Z7oTPN0PihVowtifv52lUTa+jlkr/MLQBRnPoFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ihMJazCkAk4HvBtATBN/l30S8j6tfI4HJlef1Tbxj7UMgraQ2kWh8ePoyOppJOQOFFzbnX2JS34GU8YrZ9JWlQxVHdVnHYhZbwLROwFX/J9sQ+NLJkyJna4TETzGuSaemv+XNMEn7C2Xgn+G4OgjDs9teC0oh0FIR4ESG+zec4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwu95V8J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745916482; c=relaxed/simple;
+	bh=+ZagfuJC2OTd2P7p3HpRdZfwzsuJtYmVYIRoQXL/BBA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QuMa949GTjbpgqxQJhO2oD2AExOqIXdgaymGNbBHHGwLrkV8RejsYb5d/SQIIRv6pqMaQBWJDfztDyOUOF21kueCJa+6qccDn9NcePjluY0q7S6qyvjchhfaWwrB+Y2+8j663vLxnVFW5jigQe3sf93vdXNxupg4RtMpJDdf5nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jiayanli.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JbdS+SNQ; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jiayanli.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwu95V8J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEFE5C4CEED;
-	Tue, 29 Apr 2025 08:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745916464;
-	bh=0JH0Z7oTPN0PihVowtifv52lUTa+jlkr/MLQBRnPoFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bwu95V8Jxq0ApZ/A8MUaQ76OxAAD8CpamSIc8KQkl61x+99eL7RVBgCEw4bqJUphg
-	 t6QF65fNipJ00S0Kf3VhVkEUWnUpK8riojOzxwlo6jeJCpahPvyOC3GA0Jc5cDJBJr
-	 vF1ZNdDh5oVjXNtCab0Y/1P+bgZ3d7US27chWydRXBVDwIgm5scEWGtqZqgZpPZFPj
-	 ncWFnLKXoYlGO16/XznYJMYEKZzGHUQVVyzG87F04CF/4g8I4eT464a3Sh3cd6dprp
-	 Ofgw43I7VZid7Ly6zlTSiloN04N368hqq3KMzmNgSBHBrlUbCzabz3iz2Rs6GpTc/p
-	 rY3r8f4MJ+SuA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u9gcz-000000008FN-10kp;
-	Tue, 29 Apr 2025 10:47:45 +0200
-Date: Tue, 29 Apr 2025 10:47:45 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Qiang Yu <quic_qianyu@quicinc.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: qcom: qmp-pcie: drop bogus x1e80100 qref supply
-Message-ID: <aBCSMaZ7_tl-dEkB@hovoldconsulting.com>
-References: <20250429075440.19901-1-johan+linaro@kernel.org>
- <f44722a5-25b5-409c-baec-13d19af61d43@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JbdS+SNQ"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso6631901a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745916480; x=1746521280; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KYd3MUONGEmmtl9SUW3Ij+b6oXTZesvP0uBT5hlQeAc=;
+        b=JbdS+SNQ1PFyVdJ95ov+Uh1CVf3VI//6JCRFkw8QboPaZ9WxORWaGwaluJH2FJUmaV
+         vMyY90I4/KyiWYYMlrfvePokGM89OO+QHvaJuQyp7ORO9pLSgLiMpO8PWLitxP2Kg9Xh
+         ayXg2d0scfHVpkXm4LkB4aHReVYZKH7Z2TwosBbW2+MaK1WR4MEgD+lz3sb1CUipvExl
+         /iUUr7XAsNKxtymO9qzr5q+F15rK8SxN9Em1rnPg4R+1Dht0JJ2SymaVwliBDfHiabsd
+         tX0ruOeKrFRTdAlXqO01/rt+fs+f3qnY1rODWF+lCmt5SKnBrlj+oQygrlV4fuqJ7BL1
+         ueaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745916480; x=1746521280;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KYd3MUONGEmmtl9SUW3Ij+b6oXTZesvP0uBT5hlQeAc=;
+        b=KunekDvrCRBV+iSFVJQd7as3sD6rvdphENKc2oAx8d+3zLg8OlooaNfL3fIUq9Y8k5
+         U2l2DkdF+G88LXumoJnWXtGsqbpBrfX3qbMSJAfF+41FMyZy/HA1mXDs7cNXPOasp4g3
+         r7QCkS+3aWcZHw7kiR4Pa5ljPBa7RW1ODtLslGE0clEPJgiVwBFYqs2fyoYrWssYHZ/i
+         ruWqgltceMn6q1SsqlfxL3n9B9zFPbgx/7MuooyNCs31AWP+rNIJvSdmIK/5c3Noe5jv
+         hgPnb1SofikNuMjHZYQfUyOU9bQmvh2bG9VlObrTNSQaHvi3/sinEaQW1uFJwCV5XzaX
+         BOEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeR/ahyOZhhik3pc5phbTaUvhDPc1ui9mRcN7kLUONXKw34DpM+6WtbNZly0lfaysqFN/olMJeN8QDxEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUc6rIO6U7mfyszjk76f4Ykln3pJj8WIfCJaFn242kly+uM3Sv
+	ub3T4X2k7bpEtC07DTUK/u91irbQn6bN6LKRfiTILfOvXov9sjNcqmhA6aaHYvcrjuViu8Sx4L7
+	/xsCCbaoCcg==
+X-Google-Smtp-Source: AGHT+IHHq8YG/UfRHBfkc3mFLRSiExeXVTakUlQOc/lfIufC0Uu3iS0szmQe7j0vFj8WM66psVsi10s8SMyc/A==
+X-Received: from pjuu13.prod.google.com ([2002:a17:90b:586d:b0:308:7499:3dfc])
+ (user=jiayanli job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:5826:b0:2ff:693a:7590 with SMTP id 98e67ed59e1d1-30a21597ae5mr4908479a91.33.1745916480638;
+ Tue, 29 Apr 2025 01:48:00 -0700 (PDT)
+Date: Tue, 29 Apr 2025 08:43:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f44722a5-25b5-409c-baec-13d19af61d43@quicinc.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+Message-ID: <20250429084317.1619909-1-jiayanli@google.com>
+Subject: [PATCH] x86/microcode/amd: fix the return value when microcode has no update
+From: Annie Li <jiayanli@google.com>
+To: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Annie Li <jiayanli@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 29, 2025 at 04:24:19PM +0800, Qiang Yu wrote:
-> 
-> On 4/29/2025 3:54 PM, Johan Hovold wrote:
-> > The PCIe PHYs on x1e80100 do not a have a qref supply so stop requesting
-> > one. This also avoids the follow warning at boot:
-> >
-> > 	qcom-qmp-pcie-phy 1be0000.phy: supply vdda-qref not found, using dummy regulator
-> >
-> > Fixes: e961ec81a39b ("phy: qcom: qmp: Add phy register and clk setting for x1e80100 PCIe3")
-> > Cc: Qiang Yu <quic_qianyu@quicinc.com>
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
+In commit 6f059e634dcd("x86/microcode: Clarify the late load logic"), the
+return value is UCODE_OK if the load is up-to-date in amd platform, which
+leads to load_late_locked() returning -EBADFD.
 
-> We have QREF for each PCIe port on the X1E80100, all of which consume 
-> the regulator L3J. Although the PCIe PHY uses QREF indirectly, this 
-> creates a dependency, right? 
+This is different from the intel platform, which will return UCODE_NFOUND
+and is more reasonable.
 
-The PHY binding should describe the direct dependencies for the PHY, so
-the addition of qref for sm8550/sm8650 was probably also a mistake.
+Fix the return to UCODE_NFOUND to avoid -EBADFD error.
 
-From what I could tell there is not even a one-to-one mapping of qref
-supplies to PCIe ports, but perhaps you can provide more details on how
-this fits together here?
+Fixes: 6f059e634dcd ("x86/microcode: Clarify the late load logic")
+Signed-off-by: Annie Li <jiayanli@google.com>
+---
+ arch/x86/kernel/cpu/microcode/amd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> If PCIe doesn't vote for it, how can the 
-> PMIC driver decide when to disable L3J during system suspend or runtime 
-> suspend? Is there a chance that L3J could be disabled while PCIe still 
-> requires it?
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index b61028cf5c8a3..f90779dc1cac5 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -1074,6 +1074,8 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
+ 	if (ret != UCODE_OK)
+ 		return ret;
+ 
++	ret = UCODE_NFOUND;
++
+ 	for_each_node_with_cpus(nid) {
+ 		cpu = cpumask_first(cpumask_of_node(nid));
+ 		c = &cpu_data(cpu);
+-- 
+2.49.0.901.g37484f566f-goog
 
-If the QREF supplies can be turned off, you may need to mark them as
-always-on until things are described properly. But whether that's needed
-is not even clear at this point:
-
-	https://lore.kernel.org/lkml/17a1a4d9-fdc5-477a-bf4e-91cae5a62479@oss.qualcomm.com/
-
-Johan
