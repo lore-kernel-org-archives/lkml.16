@@ -1,216 +1,178 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011033.outbound.protection.outlook.com [52.103.67.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0127243364
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745942845; cv=none; b=DGIxl+RD87nYwmsdD+PqBpsHIQDs9hzamm0wZHNilYvuNSOOANZqExSAc8zSGBKMPi/So6aKpu3z3UWdegJA1LfnXKKiXNZ/WzjnGOkOSrAhUuQdWkC+MbNXjLNIoIkHPcPhu46CVPa90JR7BY4pNLgdSgAwwDR2hyT/i6yEpzc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745942845; c=relaxed/simple;
-	bh=TSFZloEttw3ZUTFT0vTim52fWwqIpP85dAKVbWAvxeM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qisEdoHOAnpNF1cNT6+uLqLg1Pb/50PNV2PsjN0PzC58CrcKAEO9ivx2m9BPiLTud2OO0ntDO5npzFmRatKJTLnQqQtBB31paxlFPcpWifdrNpFJgVCJNAmACgKjp91ccp/pSSy3hHDPNbtoKT5bZcNsv7S/1Zc0qdnvnDDapz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=et33YyJC; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A409239072;
+	Tue, 29 Apr 2025 16:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745942893; cv=fail; b=l73O8lBYf9gK90+EbD40yikcemjh9hiM3TiTthan1n4YdiXmlCFo59IM8ZrJaiA0mvkmkA2fW1mGorpv7b6sWA/LIfz00a4wEFnAP8f2uWbVlb0d19/fjNpdoYRapCk5htWrOl8BOBIrYadfPNwI9G8e1QB1RdDDIz3YH3gi1uY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745942893; c=relaxed/simple;
+	bh=LuEHCAtNaWHR+t1yDMF9KiwnMvV9GJ19LR7e0kkUANI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KZNY3e+XMIGOO4hiwPWVaM3TrjbVK/boRxHbR6AJgHwzyXP14xG8ILGY6DjbHc/SCjXS/+8LgKGDg5wN4LTudfHRG6Sg+eikqAvRWbAsK6Qa2H6/sEYkH31lpEjI0ok3C15N9np+KDPWvJZqrEjYry9zsM487VvbU6P8SAMPxYI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=NsskKn7F; arc=fail smtp.client-ip=52.103.67.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="et33YyJC"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223fd89d036so77751985ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1745942843; x=1746547643; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mC1UTKJ/aE2XaZGs9eJzOr2ci5VlY8Jj7KmPztDqUEE=;
-        b=et33YyJCfXzaYxM6LmrmvX7A3/a55PHhBlajvgwqvXzc2XPSLmIbkxLDJmdP1kLizU
-         7pkCqQTddIovA6HMpnKI2XCFthmx1RvIei01XWa7O/64IW2y5OfuO5hBSD/0cMqD0AEk
-         rPIJ8BwJmDIYKulePDCICPx9VsWosawe5uitCFJDjXUbqH8QOHR7GTABtgb29RXmwjWE
-         ueV+FHh0e3d2nnVktQf1mtGC6olbOgilagFQ5riv7IHJ8tQYSIkf75tDS4pVyhq5Y+zk
-         e9r9dL4dprMpi+1o1Q+V4TbpldgbrsHUfYsQZydx9xmO2ZugLsiiWbrO+VTA4CdC34AV
-         rp/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745942843; x=1746547643;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mC1UTKJ/aE2XaZGs9eJzOr2ci5VlY8Jj7KmPztDqUEE=;
-        b=KvllFvUv1voCFbl9FHgqu2OpVte7Nuxz4b9fchXGsIRqs5cox+WuSJeFRe7Obkjo03
-         rBKcuDKCwPwOcgSVkDVHzVqwDVFd7V5K6FWYLLu7Ij1I1QWqprDMCCGtLKlMnDOHu9/s
-         TlFKA587L1apsRaNtenTeU4gR66rj2D459356H4JoNSOv3hOZjuvaTdddr2oximVoxgQ
-         lO9s8zXqHcoF5AS1K56yptMr5l1kHMQkQDv/FpeLPHOpJY6Bb48+b1hAx4i4pv+RUXOE
-         WlAz+EkOy8twebPmrDyXwrXpRDpuYOhpIUx8EA8jKkC4gHBlNK9po5kxymP1+HeOuxFt
-         y4ng==
-X-Forwarded-Encrypted: i=1; AJvYcCUVE/089ujmrCH15aNjnmMp+Dhf+0kWPN4UanyuWhMMkJyB32raS6/S1lMtEmsgUposgoLBUeQohY4oABE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjHsk6B6vp+V1UdyWv0XcOUavDJpTRJJ4L/6jIQC2JYP2RacvW
-	nT1C6KoFDPDjJhdj82nk6nbxnYqWpwoUWUPDTB845hM5Vi5M8VnnXnKXuPeYpg==
-X-Gm-Gg: ASbGncvmLzUoyJzOg3NTE8Q/VmJAjVuiV4j16lVG3B3UU3e/SQUIFzoIqE1Uc9ds2ic
-	Lb49nzfNPeBMadK45g6cfznGKtKQ2UYr2qZyslmxgLkA8mUnqVN/M8YEdGVnzBWx+pxNaCiTUY6
-	JUacB0Ar5YsRP/nSZkecitBf/k6mtVSm+GzVDlwYQK7tip671UUx3tNcQR+m6pRPXEhNVN7owY7
-	GBItgwzpjJ1nDbUv+QYiZ79EYcQE+hzavOpVQejeQSdc4f32mc+RamHEZljyKTSJr2dW1wjFy9I
-	Jh9xPu2XV8zMFCt1zqWLfPcu2eVi2H2DuqDzXUX6uUnscs4=
-X-Google-Smtp-Source: AGHT+IHBM02KliheEDBQ/YbfFg9HkicKZ2Zh7waBOreEcgIMAIiWV3OXrKykhYTDFVeLIkUeSEyRFw==
-X-Received: by 2002:a17:903:228a:b0:223:4d5e:789d with SMTP id d9443c01a7336-22dc6a0013dmr210547165ad.19.1745942842801;
-        Tue, 29 Apr 2025 09:07:22 -0700 (PDT)
-Received: from [172.16.116.85] ([103.15.228.94])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7aadsm104528495ad.138.2025.04.29.09.07.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 09:07:22 -0700 (PDT)
-Message-ID: <1fda026e-9ec5-46f6-84e8-4111263350ff@beagleboard.org>
-Date: Tue, 29 Apr 2025 21:37:04 +0530
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="NsskKn7F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Se0GMlPjNuPEBYciD62I7VvkTFhD1I5zuU6u3jS4Z0slOwLS7cbmQh1LdkJhoAD68PiyPkzLEy8rlOX8ZBwOZRQ3B6EDGkO+sWyqsjypfumzt8q+KIq2vnvlgBHVKWaiI05DjPZWQaxFr5NZn9zjQDCTKRQYmphaGV1vPqHR5sk66KVM+7qQJ5fbb/ycuDv7k6A+Co2xjV8BNAB/S8+gj4Nc5oCV5uuMwqkEsJHY5zQZaF46lv0cbNAcC8f8h2x5LqUu3OJlaNYX+QvUS9xdwUnoaoHsXilWV0vCqrFffTn6iesIbjvkH14SDf/U15km4A0vJGMarL/GkbQjDlzvoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e+zSMucAanQk2Z8v2NWQ09hnGQQjocCv966equeBwQg=;
+ b=vH4vZiI0iSAHX9Syj4wcO3tIGvyNVf/3NUXH76HjXmxk1lhDD+HBBP0ndJZSWndeb8bVjlTiVIe+h2y0YRi9VVSYiNuxd0p0N4ycwrZpBUIqBm34+yu38KTDAzOimdeJNBYq6fSydctXT9vEG51shAcMYMKpI2pryX2U3eniaANqRflTJy+9Zy6sADb3+DFowXYLMcHTaD3u+2WehoH/6urdxAXX0oAaJpGAIyxS7XljCxhXfU5G3Jf+ioE2XwPVM12YA0EW70PnoLqhoSEr91XDwREnJ1B3LiDl2iTSmkIEQD+qlyI3O3velF2a66KDTq3WxSMued3UXk/7mogp2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e+zSMucAanQk2Z8v2NWQ09hnGQQjocCv966equeBwQg=;
+ b=NsskKn7FbU8X56H+caZoLW783gO/TmkPV6N2923JTFLSIHwKmljZ6r8bcErAIPdNG9ifCAjlpWffYZ2JsPjGKBt4utwE3jKKyAK1CD6X29BGKvs6kMNctFhG3BZfWx3nUMzcgBQq/FHa9sBbnrU6vLHSw6FrL5fdpTGyzXgcgvPZQx2UcCR/tZ7cyk+dCjc32gS3C2o+H8yFdmHvVBQR4IUkdr5lR9mKaGCCdQhMC5McUqHHO7L7caA3n5oT9tuS74SkPL6PvXlVxDmwO+IybJin2SRCgv5YU9AxBvndp8G5+UjdJE72pqdY4Oo2aUzamaSCILDGm50Tb160Clc6Gg==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by MA0PR01MB9769.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:ee::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
+ 2025 16:08:00 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 16:07:59 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: pmladek@suse.com
+Cc: admin@kodeit.net,
+	airlied@redhat.com,
+	akpm@linux-foundation.org,
+	alyssa@rosenzweig.io,
+	andriy.shevchenko@linux.intel.com,
+	apw@canonical.com,
+	asahi@lists.linux.dev,
+	corbet@lwn.net,
+	dri-devel@lists.freedesktop.org,
+	dwaipayanray1@gmail.com,
+	gargaditya08@live.com,
+	geert@linux-m68k.org,
+	joe@perches.com,
+	kees@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@rasmusvillemoes.dk,
+	lukas.bulwahn@gmail.com,
+	marcan@marcan.st,
+	mripard@kernel.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	simona@ffwll.ch,
+	sven@svenpeter.dev,
+	tamird@gmail.com,
+	tzimmermann@suse.de
+Subject: [PATCH] checkpatch: remove %p4cn
+Date: Tue, 29 Apr 2025 16:07:42 +0000
+Message-ID:
+ <PN3PR01MB95971954FC5E026C59B6F8EDB8802@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250428123132.578771-1-pmladek@suse.com>
+References: <20250428123132.578771-1-pmladek@suse.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PNYP287CA0088.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:2b6::8) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID: <20250429160742.9285-1-gargaditya08@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] rust: kernel: device: Add
- devm_of_platform_populate/depopulate
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>
-Cc: Jason Kridner <jkridner@beagleboard.org>,
- Deepak Khatri <lorforlinux@beagleboard.org>,
- Robert Nelson <robertcnelson@beagleboard.org>, Dhruva Gole <d-gole@ti.com>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
- <aBDi2LE3O1rIsGqn@pollux> <2025042904-trade-leverage-0f98@gregkh>
- <aBDl5oRIRpwbPrC1@pollux> <2025042945-aviator-subzero-0263@gregkh>
-Content-Language: en-US
-From: Ayush Singh <ayush@beagleboard.org>
-In-Reply-To: <2025042945-aviator-subzero-0263@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|MA0PR01MB9769:EE_
+X-MS-Office365-Filtering-Correlation-Id: c015924b-c768-431d-2438-08dd8738031e
+X-MS-Exchange-SLBlob-MailProps:
+	Cojqxok92mqfKcxoajxhsed+mnjicdeu3zYjMch3odlpFLEecKoyzqxPHZNyX49jnnzKka3oxfYHVTsnXAEILKFpv+zTTC9Nx5BtNHeT1JyoG/ivEFaCiaWs598Z5bLi8Ib4ChKGPYDAMscWHPvzT3Qi1Zg+RKkt7kpV4ZCmKTDZ802XVgM7It9C0p74l2vMmOXd47royIOGN1nTj+2fzTihqq6op0Ali1vyO4YmpRViZTZVar8DWZBWxMu4IUvAqw6SOGkVMozHFHnM54MjLLLAFSYEWWsNkKrJThR3jCrpf5D2PaEpYttaFC3GXGCUIf7zoxfyBL02MYFRTbQdt9p3t0EzYo1y4Oa80ohMtK5PZl4RuQarWJizMwMekIddKFlUfXysrE6Pp+uN/9Ypy5jPBhiSmTwda/EPDlct4Md7BXvS+r1sXldygPbGqJLZZaGLLF9Mmq3Iq8SBmQ/OfxmGA0gU8yYiIo6rDlJWELD4CRSJcze3Z/nqsECQRNO8kQGNlkBbEYMaiXfUmqgK4yZ5pXG4Gv05bg6XhM34ZqXASg4c+pHA6OgWdv+lGyBY14dXWCIYmMmsdJHQ3SSJ4xcW0J2Tkfe94eFWHAHnkHtPomHFPdviC3GRvFfz0gvRNYknOpCUv6WxdP+PiugQHK9UEWJDssZ4EeVTaSDJR5ZZUikZZA7Arp4w4Pa0w0Py
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|5072599009|15080799006|8060799006|19110799003|7092599003|3412199025|440099028|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FEvBSJvoICtJF05YaH3X9E5exBX1kLA50hawhCBAvVfuWMsOUTFUnCM0qlRu?=
+ =?us-ascii?Q?safMYKlyM8oR5As4vUkqr+vxTsg8GxKjaZHk01JF3SSl5N525Z1cLxnFb/FE?=
+ =?us-ascii?Q?mj26xxZt5I+0f1oy+eZx0lXRkfuYaOxwyPKy87t8KSFC7olvGtv4jrs4JXe6?=
+ =?us-ascii?Q?vCyLnLqy4fRJ5Sa8ULH1ajC2HD+YGNu0MbpsSbodPIfrufHOeoNULEeaenF5?=
+ =?us-ascii?Q?I+DqPR/MDc2uvhbbQa5m3+kITa2MvXc52xeNQfxanSjY0d9CFGcC3m5WuwHN?=
+ =?us-ascii?Q?EVqVwzjdGsAf9ogR9AK/2mXlDUye/rWZ3EbtmjSCKNRqX3vXDHuDdgNXLfGR?=
+ =?us-ascii?Q?nwLXMtQ7nwD8QsvbJguRX2w8lVENjQRl6NSNzwYNA4fi5CoufiOZPNc8Rn8v?=
+ =?us-ascii?Q?PPX3QrVW53vSfyULRbh6zDrI2p625yj2ydKNRsaiHRHFytVIUkMKt/Cly43b?=
+ =?us-ascii?Q?usPB8j+hjtChyVsstuifDm2SgydN+LfgzyvbCgxGqNHlI3D287SsbboAsfzE?=
+ =?us-ascii?Q?bdqvHasD+vRZmqd1sYBAn9aLcVWr0VthGAtlvc+YjeNr0A42qMA1Y/3IOc4W?=
+ =?us-ascii?Q?I89ftrC5+IZJs+Fx3MwCvRQe6+zGNfdLotgKOVybuI8JbB+q41tn6C8hdSfv?=
+ =?us-ascii?Q?FlZdyLC8tPKrUdxpMqmvlZ1nCEDt3tZD3m6ey7gxcGdFOQH6/pRikqjpOfFd?=
+ =?us-ascii?Q?jzeEAEbVXIydnKUNi1RpyTCV1vveCyBI2+dXPf64xn3ZHTZsNAARDavxs/yS?=
+ =?us-ascii?Q?VArOi6yXyuWLT8n4Bno5ylL2n7YvjoZM233xG+SThOLpga5J4tyYtZMwlVMJ?=
+ =?us-ascii?Q?52EsZVWKYOwODv2AGEb548sN5NoXCCTuaNsPYA81QotP2f1ZGeTStUBKWYAo?=
+ =?us-ascii?Q?zLNELw4vkg011Png+tM8kIiA0LDUsKR7bYb0jCWNcjQgEApt0eTO7fHt7+6l?=
+ =?us-ascii?Q?0AxUZ6nlBOHFgYAHGxXN+NgdXrpCCU3U7IOsV7bILWDKPbeAb4//0wQUN+Pj?=
+ =?us-ascii?Q?r8YiJGWSE6nkxyPVz5tkiU81wdgeL2opxhJVgTFzgWrnkBIfDO0J4W8Jf/Lt?=
+ =?us-ascii?Q?xyEdMXw1P7qAnUNmUxvYOMDsXgxdiSNa5OKDtmKsW8gaDr089hvyLFLVCjjr?=
+ =?us-ascii?Q?CCGDDVcJB7MMeQwFw9fWTuMC27tKDWUXCg=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?WIpQWpaXU79VThm6XkxwvMtpQSO9Gm4AKSdPktX5ZNxLEnwnfn4OBQHoScdH?=
+ =?us-ascii?Q?engq7FK54bC66Eji5TkqdZwmSt3WQMi7B6G8XPDpZ9oE/43xDNKjIiSzt5iW?=
+ =?us-ascii?Q?JwHtEmgIN5nDhcTzrwiEnDl4SLxfiRl9xb0Xro7jm5tAy+S4hakZMUqH5qz4?=
+ =?us-ascii?Q?q5VlGdsdhNM6r1aaOg6amM2SvTOAA2KpPUS+S32LOggr82s+KVQQA9EwYY99?=
+ =?us-ascii?Q?vTJXu2keyOo8I9Y9NjxZSSZ4qlNAKoJccp+RhWyWePUwV9D96UsUOMVdvmy5?=
+ =?us-ascii?Q?C1M/72USXRnC9laaua0nJ95psws/rtcdv03kMZTEsbBrdBHqvt1KGYw1jj8I?=
+ =?us-ascii?Q?jg3Y0ACUHY1SStRn3K8JtNQ4IPOd9VBj2qhAQiQ0isJJDnoJqn1A5+pYgS1x?=
+ =?us-ascii?Q?4Eb17pyJks2mYy6br6gR9P1W1YQhBPQAiogDmigl5yVtl7G9Dyl+CSRwjEU+?=
+ =?us-ascii?Q?6e9NwnqHnvn0XpsgaoQ3yUuesS+X3tuFef/hxVbccAuvWKGuvAdIg2erxoMp?=
+ =?us-ascii?Q?c7Lm8kORVUWtuACLMJ/8Zr5oTPnce2CeSbA17rpMdK10W9ZFoZOg8u2N+l3D?=
+ =?us-ascii?Q?WlmdnV2lnyxIvDSE1YyK3XdHCgxL0rc5/7Hwh7e/WJKkVuhmYhhwy7M3m07W?=
+ =?us-ascii?Q?bwBdUMjCHsTMPQY3RehuvXLlI/5xn+OaCy8u5ujOQG05ziE7NQ+9rod6TQae?=
+ =?us-ascii?Q?/M1upSWgpgFF+s9Ybe76eY3IjH5/g+2Vf9OOzh9HB1eZOlkq/0k/IXFns/lT?=
+ =?us-ascii?Q?t6tzqL2htNY61bP8dwVu2FODvAmF/2KL/ygQlQoovwcjBrrs+j0/f3c2wbIC?=
+ =?us-ascii?Q?r1tlGYvW6RKgPHQrLl7W2xxQzfqOdTIjnKOPrWmk8S96aYBwxGDM5SBBEGHd?=
+ =?us-ascii?Q?4HkBj0LgkJZwjeOBkT7rXVxfIVmoDTtjQMMJznP0MIAAdI9noCmVa492yYCb?=
+ =?us-ascii?Q?suqpZDaW+tfOLLUGWfHn6vPMPNRVK+EAEfCBaAtQdZJKv/zY5zQxQqdefFQa?=
+ =?us-ascii?Q?BNiKeQ1zhM7ZCh8tAeqnLTvJHifiG4k/SK1qjaXPqDj7zwFhU1LuZT9El3bx?=
+ =?us-ascii?Q?h/U6KdMPqxN7vb4lJK4N1CQi5ZdlRme6QEm8GiFfH0dw+cXhEf9FSqR5ke9Z?=
+ =?us-ascii?Q?+bZ5g2x+Kz5rBN5tWrwXtTXymp+IwdPfOK81tDJ4MwkN1nbBYRIz0mVLnGr2?=
+ =?us-ascii?Q?UGecO1sF6M+kBRuKAbtlToQ8YHyqCRadZ5dEfnm8U0hqHxO9E2XR4RJRH+Y?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: c015924b-c768-431d-2438-08dd8738031e
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 16:07:59.9417
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB9769
 
-On 4/29/25 20:27, Greg Kroah-Hartman wrote:
+%p4cn was recently removed and replaced by %p4chR in vsprintf. So,
+remove the check for %p4cn from checkpatch.pl.
 
-> On Tue, Apr 29, 2025 at 04:44:54PM +0200, Danilo Krummrich wrote:
->> On Tue, Apr 29, 2025 at 04:37:49PM +0200, Greg Kroah-Hartman wrote:
->>> On Tue, Apr 29, 2025 at 04:31:52PM +0200, Danilo Krummrich wrote:
->>>> On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
->>>>> +    /// Remove devices populated from device tree
->>>>> +    pub fn devm_of_platform_depopulate(&self) {
->>>>> +        // SAFETY: self is valid bound Device reference
->>>>> +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
->>>>> +    }
->>>>> +}
->>>> One additional question regarding devm_of_platform_depopulate(). This function
->>>> is only used once throughout the whole kernel (in [1]), and at a first glance
->>>> the usage there seems unnecessary.
->>>>
->>>> In your upcoming driver you call devm_of_platform_depopulate() from a fallible
->>>> path [2].
->>>>
->>>> So, I think we should change devm_of_platform_depopulate() to return an error
->>>> instead of WARN(ret).
->>>>
->>>> If [1] needs it for some subtle reason I don't see, then I think we can still
->>>> call it from there as
->>>>
->>>> 	WARN(devm_of_platform_depopulate())
->>>>
->>>> [1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
->>>> [2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
->>> Ugh, no, we should just delete this function entirely if only one driver
->>> is using it.  That implies it's not really needed at all.
->> Ayush's driver calls {de}populate() from a sysfs store path [2]; not sure what
->> it's doing semantically or if this is a valid use-case though.
-> That's going to be rough, and full of tricky corner-cases and probably
-> shouldn't be doing that at all :)
->
-> So let's hold off on this entirely until we see a real user that can
-> actually pass review.  Trying to do system configuration like this in
-> sysfs is a much larger discussion than just adding rust bindings.
->
-> (hint, configfs is for system configuration, not sysfs...)
->
-> Anyway, worst case, you just "open code" the single function call that
-> this one binding was trying to "wrap".  which is what I think the
-> in-kernel user should be doing now.
->
-> thanks,
->
-> greg k-h
+Fixes: 37eed892cc5f ("vsprintf: Use %p4chR instead of %p4cn for reading data in reversed host ordering")
 
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+ scripts/checkpatch.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Well, I don't really want to convert this discussion to addon board 
-connector setup discussions. So I will try to keep things as short as 
-possible here while linking to all the other discussions for the same.
-
-For starters, what the driver does is as follows:
-
-1. Provide 3 sysfs entries:
-
-     - New cape: Can write the name of the cape (I have not settled on 
-the naming convention yet). This name is then used to load appropriate 
-overlay from `/lib/firmware/` and populate all the devices. The overlay 
-is applied to the connector node. Only one cape overlay can be used at a 
-time.
-
-     - Current cape: Just a ro entry to get the name of any active cape.
-
-     - Delete cape: Remove cape overlay and registered devices.
-
-It's a very basic driver, where I am trying to experiment with the 
-following patches ([2], [3], [4]) to be able to provide a better picture 
-of things, and get a read on what more needs to be added to devicetree 
-spec and/or other infra to make connector setups possible, and provide a 
-proof of concept that might move the needle a bit more than the past 
-year has.
-
-
-I do not think this should use configfs, but maybe I am wrong.
-
-
-`of_platform_populate` is used to discover the devices that are added by 
-the overlay. Without this function, I am not sure how a setup which is 
-supposed to only modify the devicetree in a particular node is supposed 
-to work.
-
-
-The reason why local devicetree overlay is being used instead of 
-modifying the local tree is the discussion here regarding how global 
-tree modification is a security problem and any approach using it will 
-be difficult to upstream [0]. That is one of the reasons for not 
-pursuing the approach described here [1].
-
-
-I am okay with maintaining the patches for Rust side out of tree, 
-because well, at this point, it's a much smaller list than the number of 
-out of tree patches I need to have for the C side to be able to show a 
-semi complete connector setup anyway. And nothing is going to be merged 
-until a so called perfect solution is found. But just want to list out 
-why I at least do not want the C side of 
-`of_platform_populate/depopulate` to not disappear.
-
-
-Of course, feel free to list out any better alternatives than having to 
-use `of_platform_populate/depopulate`, which can be used for this purpose.
-
-
-Best Regards,
-
-Ayush Singh
-
-
-[0]: 
-https://lore.kernel.org/all/9c326bb7-e09a-4c21-944f-006b3fad1870@beagleboard.org/
-
-[1]: https://lore.kernel.org/lkml/20240702164403.29067-1-afd@ti.com/
-
-[2]: 
-https://lore.kernel.org/devicetree-spec/20250415122453.68e4c50f@bootlin.com/T/#m591e737b48ebe96aafa39d87652e07eef99dff90
-
-[3]: 
-https://lore.kernel.org/all/20241209151830.95723-1-herve.codina@bootlin.com/
-
-[4]: 
-https://lore.kernel.org/devicetree-spec/20250401081041.114333-1-herve.codina@bootlin.com/T/#t
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 44e233b6f..f79f0a085 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6891,7 +6891,7 @@ sub process {
+ 					    ($extension eq "f" &&
+ 					     defined $qualifier && $qualifier !~ /^w/) ||
+ 					    ($extension eq "4" &&
+-					     defined $qualifier && $qualifier !~ /^c[hnlbc]/)) {
++					     defined $qualifier && $qualifier !~ /^c[hlbc]/)) {
+ 						$bad_specifier = $specifier;
+ 						last;
+ 					}
+-- 
+2.49.0
 
