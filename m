@@ -1,102 +1,114 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0BB2C10BB
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C7B278E42;
+	Tue, 29 Apr 2025 12:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928120; cv=none; b=iJUnJaxngk5X0jzaqaw/FA/QBvYNtJ+tokkxpaLi5rueIMWF6fgcDoEt/rNzC+lEBwICSpcCEMhZKSDCrOP6eh+BH1zEAOKRGZMoAXE3GboOJp36Z9GC9ymvQFDymk9Q6R/slf+qZpuaVVylyR3xrVc/Fg2Dcta8TTqdqCwbrgo=
+	t=1745928274; cv=none; b=oZYEap0+JvuNF8AalMqeplkMgf9vZm+NsZhAVGJ7FMiIR+XrsQq7lyIAD5JcVvRmfzY/vLq6wkPCw5X1mVFtYdLEyQGPU8sKaRe/ZJmPUp5GT/2qXchwUIcaaxRr0bzSVcweVPh3A3PqYbJZKh2b8nvyQkCbfyEYl3Kf4RXj2so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928120; c=relaxed/simple;
-	bh=ao1pG8xhYeDrlKtgpmsWKo/niLkQ0arUYilf/2iWnFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BbNEzA+LH5LVioKFC/yPoWpw5SB6A2IXz2WdRh/T0hDfzshjuCUJm+xnuokOd5GEUeic6u53ZpwAoBXKfvrZzHKjHnqrBUVmsQuGNGcQu0gFz/Guzlx/UC29jYKKamX4THsz+RPBhRPgx8MXYez9l1pPe0E2KzRdDCwWhT+Xkao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Z6huD7J2; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1745928274; c=relaxed/simple;
+	bh=SYZGUFB6gTksaf0IctxnHNRt3T8zrdNfeOJ9LD98xCk=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=qp90zX8QNO9CijoQC9r0rhr+GI+hGYOGI5LZO1MESxFtCMoYjvZNioZxxUpbe1vFpmxSpSjPwuvkBSfr9PRWkByFiGkaDgWejse9toMVs/XA/x3I7ls64U1DbhkbG974LTty9JtgaEivQBKq4++C/7MVVi3/8SDdEWlL7cC4nWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=EEv2Mv/P; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Z6huD7J2"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-476f4e9cf92so43563701cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1745928116; x=1746532916; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2C+WyWVVVa2JqNDp2AeRXzuWB0J/pFCLydODe/2Eyw=;
-        b=Z6huD7J2DjLq4W3OQ4gAUeLOK82VVD4MtnWmI/d3+m6cWLyGzQRLbYn/qWWJ2iWgac
-         AQF50X/ZFhaznz0Bwr1dCHpVRsFrlHcIL/eizTlg4qwt5AlFXCuJBTowILiurN8CGmIB
-         ZA8Wem5pbSkLJ7Wq8Pg9sSappa/vUne5cTLT0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745928116; x=1746532916;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U2C+WyWVVVa2JqNDp2AeRXzuWB0J/pFCLydODe/2Eyw=;
-        b=B8KCtclUWd1LgL/HzMn+ZwifbjbHde2UztFuvcTGkH9k6myNk9OWYyK2SEBWFh7jfP
-         CjyMV0Sp1avGdw1HlofEyTJ3ro0ILHZ8u1e8b5gGQJy2a7n3SvviF+o6x2m4E5uro/kz
-         FYyiUOJ6lnfw7csz//Kq4gqkcTSw0SIxmTQRREuzdWp8QFkQDCIiNNi47for1la343Tn
-         h5MrGngvgGHl+ZtsBmBluOdHDFhgklxL5zAigpmctpHoUvmTUXuHooFfaR2nSx5LwJw4
-         NUlElvuilgQsxF5H5v7NfYz+BOJUd0Vwh2BK3a9rSc5ucM7INdau8Y1QsWD7qwnyDTqZ
-         wk9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbgD+hq+GBy6Q9p3254KhWUh58wqXuu1Yx4drVheUIc2eKLZCvCLGL5bkZa2iiClGp17ctbB1gnNXMKs8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIJNYa0KRTuUDXikqg1HCn9H9TE3uGnkEv0mm+aOBW3NtmSYUJ
-	tGgEbgnRlg//lZyPRXYpjVOlDa17ltS/GGNKecoshlFyGc8dcXPiXCjPBvRrD+S8JESA5AWQDsA
-	3vvN9dJx7LHSAcXkKRjWCj1ss7C/Vg6w6gKM40g==
-X-Gm-Gg: ASbGncvj2L6wk5+1Kbde89VgAAG2Xk0BgFmw+fahXqNFXDrwKdwT+qnxhBQohLp5UPi
-	72rBLGUaZSMGEAqLNYtymt3tDelaaBrUTs5MUeIxtEHhvUt2V/4S8BDYehgkgqFgBomi9riTa1w
-	NOH/DA1SSBbq7SOBjP08anufRgHqsOrVSMHDU=
-X-Google-Smtp-Source: AGHT+IHtR0+JbnanHFoFNW3uUELpcVbTzvD1m3twXqQrhYcmg7AR+mplyFjKirXIjZYvLUyB55nqkepgR4/GRIsTmWI=
-X-Received: by 2002:a05:622a:4814:b0:476:b078:c41c with SMTP id
- d75a77b69052e-48815b5675bmr58341191cf.35.1745928116035; Tue, 29 Apr 2025
- 05:01:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="EEv2Mv/P"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=bLLRKKNEb4/XcmmMXZV9Rmx8EwSf4W/vH2m5oybaYu4=; b=EEv2Mv/PNUvNJvRop4MP+1Z9Lr
+	0HXtWvF6pBUSqrEw1bJjNL3NptjUU9BXpMPbxwlKO4yJl2bIO0v7LIEzJ2HoDtIlJwZOlNuoCZRT1
+	a1nBMtsdC8myXCCgg2vpYMor5r3/sgCuR713V+F63Xqe43Q6HxrhyMHiqb0hoF8I3TioTy4unDAUJ
+	wprFA+/XoQVlzmm+GgfznjU5Uyd1mYvvcpUBXPpXCMK3oc0ThfrR9N7PMWrE5Z02Tfouh1lOFEcR5
+	g9hYxmyHNr/qYi0iXrsvvVOYIWJbQLQbc2R5UXxaa9VBA04Qin9WI7CJKCsCDC2KQLqGLV+gX3nO7
+	tenpWBpQ==;
+Received: from [122.175.9.182] (port=43062 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u9jhM-000000001xh-3nb9;
+	Tue, 29 Apr 2025 17:34:29 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id 06ABE1782431;
+	Tue, 29 Apr 2025 17:34:24 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id D9F6D178245B;
+	Tue, 29 Apr 2025 17:34:23 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mMPoJOb4M3MP; Tue, 29 Apr 2025 17:34:23 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id 9D4261782431;
+	Tue, 29 Apr 2025 17:34:23 +0530 (IST)
+Date: Tue, 29 Apr 2025 17:34:23 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: andreas <andreas@kemnade.info>
+Cc: aaro koskinen <aaro.koskinen@iki.fi>, Kevin Hilman <khilman@baylibre.com>, 
+	parvathi <parvathi@couthit.com>, rogerq <rogerq@kernel.org>, 
+	tony <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, nm <nm@ti.com>, 
+	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, 
+	danishanwar <danishanwar@ti.com>, praneeth <praneeth@ti.com>, 
+	srk <srk@ti.com>, rogerq <rogerq@ti.com>, afd <afd@ti.com>, 
+	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
+	mohan <mohan@couthit.com>, basharath <basharath@couthit.com>
+Message-ID: <1444286613.1173468.1745928263383.JavaMail.zimbra@couthit.local>
+In-Reply-To: <20250426115424.518cfe88@akair>
+References: <20250407072134.1044797-1-parvathi@couthit.com> <20250407072134.1044797-2-parvathi@couthit.com> <20250426115424.518cfe88@akair>
+Subject: Re: [PATCH v1 1/1] bus: ti-sysc: PRUSS OCP configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429001308.370040-1-wangzhaolong1@huawei.com>
-In-Reply-To: <20250429001308.370040-1-wangzhaolong1@huawei.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 29 Apr 2025 14:01:43 +0200
-X-Gm-Features: ATxdqUGwOSTF8hneO_shhAQGO5y9ZfnMLfqdtkQss91tvFlxelq0oMRW3_Ijdm4
-Message-ID: <CAJfpegvKvHwU69F0wazk_TyrKPCcrcVU+Z+5=UNpg29CJGH84w@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: fix potential NULL pointer dereferences in
- file handle code
-To: Wang Zhaolong <wangzhaolong1@huawei.com>
-Cc: amir73il@gmail.com, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
+Thread-Topic: ti-sysc: PRUSS OCP configuration
+Thread-Index: 9Ms9CBUzLFE0VAoHkNawnh3q8eMBNg==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Tue, 29 Apr 2025 at 02:13, Wang Zhaolong <wangzhaolong1@huawei.com> wrote:
->
-> Several locations in overlayfs file handle code fail to check if a file
-> handle pointer is NULL before accessing its members. A NULL file handle
-> can occur when the lower filesystem doesn't support export operations,
-> as seen in ovl_get_origin_fh() which explicitly returns NULL in this case.
 
-Have you tried to trigger these conditions?
+Hi,
+> Am Mon,  7 Apr 2025 12:51:34 +0530
+> schrieb Parvathi Pudi <parvathi@couthit.com>:
+> 
+>> Updates OCP master port configuration to enable memory access outside
+>> of the PRU-ICSS subsystem.
+>> 
+>> This set of changes configures PRUSS_SYSCFG.STANDBY_INIT bit to enable
+>> the OCP master ports during resume sequence and disables the OCP master
+>> ports during suspend sequence (applicable only on SoCs using OCP
+>> interconnect like the OMAP family).
+>> 
+>> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> 
+> mirrors what is done on module disable, so it looks sane.
+> 
 
-If you find a bug by code inspection, try to recreate it, by that you
-can also verify that the patch works.  If you cannot reproduce it, at
-least prove that triggering the bug is possible.
+Yes.
 
-Without a proof the patch may turn out to do nothing at best and
-introduce new bugs at worst.
+> Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
 
->
-> The following locations are vulnerable to NULL pointer dereference:
->
-> 1. ovl_set_origin_fh() accesses fh->buf without checking if fh is NULL
+Thanks for review.
 
-Hint: fh->buf is equivalent to &fh->buf in this case, the latter
-obviously not being a dereference.
 
-> 2. ovl_verify_fh() uses fh->fb members without NULL check
-> 3. ovl_get_index_name_fh() accesses fh->fb.len without NULL check
-
-These are called in the "index=on" case, which verifies at mount time
-that all layers support file handles.
-
-Thanks,
-Miklos
+Thanks and Regards,
+Parvathi.
