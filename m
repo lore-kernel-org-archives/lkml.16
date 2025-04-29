@@ -1,117 +1,164 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEC226A090
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93AE2528FC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745959569; cv=none; b=AAO/O5dAafWK+o04J6WODwcCFODBokXFzOy5n499nfw+gOnL03QMqqDODSUGvjB96zxsWcKU85QH4A3BVzytZ1TLW7srh46YMyDqV7gEu49H6I0qsZY/YzSzNl0Ul6Aj/HZSrjIktlAv8bx+TGKh3HXu5XQVZs2i08awcWD7Xgk=
+	t=1745959617; cv=none; b=JE8gu/n5EcRksfYdheh2YKuZ3pGL8DZtDWAH4hQ3ccOd5XffMYCY2zE56hyxFgA+rEebkXZ04yRuMzn3oNetqxf6m30A55NbI1tMALP64zTtbEzgnCcKlESbogy0D/SDLo3tmWhMHQG8JE3daFO1mCKC7QEFLb6y/4L3AIPCx8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745959569; c=relaxed/simple;
-	bh=b1i7Oiq8VFHbbF3djLlZfHnEoM/NeUuDRhdh117Z1bE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZB2Uv2+1grk7w93OqDX7zwwzfCHkTRGdYrN+sZ3jObkd4QhCI94k1SBjU3wfrM8mAq/oRINwarbEWr15Cvg6T0Ny3QiC5V0r5sBfGDx5fOUx/ePaMjX6IZ1bs29SdWjsAbxtB/uwQf8jt8jYf5GsBSZZ9tMJnSqVO72AUXYRc7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j8WkTGHC; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745959617; c=relaxed/simple;
+	bh=D/9Y5YifH1074wJb/GS4vtYd+k1QQYAwDd3xbHbVoJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OreTnjrnTWMEQNU9qp3596C7wKWyHomwGyLGxkRR3HrgCQ2w1QiBpuOzOlqOv2X+zhXLl3M844b4uZtsCw8tXS6pEeQfzNw+Erg9vwIYLJX7DXCGBqHIC/lRR2mSxrGaPpWvr/wjGLQ3mf7Hhk70cs16Bmb6nCw4d8p2hwE6QFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XQQZ67x3; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8WkTGHC"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54af20849bbso7435196e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:46:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XQQZ67x3"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe574976so45539545e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745959562; x=1746564362; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X/4zHTkk4RA8Bdrk3b8sTr8Stn91NAdSB8LOZDVLuso=;
-        b=j8WkTGHCBgK/wxLfbrIW9qzgP4bhY+KMLnppVla0k9JRyQXGe4HXj+rwblwMXFuJFt
-         QwWgmVSrw754SK8MYE/QtC8u6tC2S2CHSfERpY6tO1dUUWOF05bf1HudiiCwwGvE7eL9
-         gxsqDaWPXigg3bkrZxP7Y+B9AzdN78F3W9PqGiT0kC/h7/lDGfDjEpOIny3lqz8U+nmC
-         DkBpKToeqkyndSwyzMzxZq62G/LpXFNmHpj0g4dwihI2RcoVKYAQ2Yiz8EW98KaUmxNP
-         ngJYdErVZ6NP0tRXu6C+HWFCZ45yz2j5T4sbDeJKsDRdpiUXYNuOcxtvQC4CRlcHiEFL
-         5PsQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745959613; x=1746564413; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ZJ8j8Oe72qFBaNxqjkDCbDD8XAvsg/lPShitQQ2048=;
+        b=XQQZ67x3sPK3FBhXBNJPT15x8eb/HfFmjOKB3VNN3UWQRaAIhFahpAW/1LpPWUQFlu
+         qlZ1cTf06rzXsooNIQF2TsU0tIBaechMrDiGt4b4hoeoujBUlgUH5ugB3l0p+tBjbgIl
+         7i9WsDR0Ib2kBwCTtnEeD12eE0xzrQZh6u7/xm7xVCrNmIk072axrKDQvoUPHjkK9+aR
+         +tR+dkPwvwgbZdQdUssw9/PzjABwZbeKEdZdAf2oOhNGz1ILaB+I+12IzFfczLgeux4d
+         BDbiCSvljvXJk2l5VT7I/fpwgbrXo4VksucOZUq10fkiWx+h4LTV7vI7HcEgfSymq2tq
+         SWMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745959562; x=1746564362;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X/4zHTkk4RA8Bdrk3b8sTr8Stn91NAdSB8LOZDVLuso=;
-        b=TYA8lkMLxvWfLB1SjWv5oEAE9kpf1T96JAhKjjQgp+OV+Cqv54TiBqnbPl8iBK7jAJ
-         YEDRCYfp5zPopDB3hRYr6GgX68rAxh/Jw5WRHMAfWNNCpthNzHC5TxKDMZeODFQsMX5a
-         L5/8EzrzlBBcrL++1HEwAAgF5XcKf2SNI2BQUJRVVc6YHamjs1LpiNVyaFXSKRn+42Lh
-         SqdVhHIRGW0tTHpb4eIamnRdJfxKgzIvZjTqr3+0aSFnLS3197wQZ+Bt15/emcx5Hj8V
-         BwihxtOygt2/a8QqMmcmZfdAg+0v38QXkhQ9NbZe831FCOW8SW2p1XN/cXPl2np795bk
-         epag==
-X-Forwarded-Encrypted: i=1; AJvYcCXg4ztEGxIIS29daptW9G0kkoEuP9HuPHr1Dm0scGRFddJ9dKtL6pvLg5CPfIuz1R7UfcEUlBhVnKiIn30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIiQPkkDS4DRiHQviESEZI3kKvzjEjQxS0q0sHl4kRQ6Oba07c
-	4XdniT1D+Rkhqg4xd+TFDJBiHyzrqZFtd5IGGoKJtIIow3UP449pOdBAH0ET8e6V81pf2snicng
-	9
-X-Gm-Gg: ASbGncuwRaUGSKboL2b0G4Aknq0GiH8LX6njbBmX43DEPJn7tZI9g2knv/2uOJCHyQS
-	ekJ9VmywSTbCSTmkiBmZ+uKn/aFoVnm4XWBNduLdRUs1S8nVOeA8FzzIgjIm/74vi8A8OjWJiPc
-	ozi3G+4UL+BaYtKFbFZAOgKjxdbBHnUdMZfSDROsFLCeHRV1TowXUnaZu34xRwaCBRyL+Ww/fgo
-	LVvt1cAn3FI5wJ+GOb64NCjHc2IwceZUqxEdxaAcX9d3XTEe/EGIYd4QpIerOVqykFY6C9wSckL
-	FgIGeKh6mWuHkNMgyVhtPNCnrwrTTHSrw/tpLXnfshBq2V/KLM/21DoT8QHbxDdqVCeIxCQaY4q
-	KYkLPbGC9nnv6tHM=
-X-Google-Smtp-Source: AGHT+IHPYjzimBIFPkgeGK9SX48JxJc5HDD75O9G5aYZLS5ww1nZYuM142Ib3m8L89hZ9aqiC7cKNA==
-X-Received: by 2002:a05:6512:401a:b0:545:4d1:64c0 with SMTP id 2adb3069b0e04-54ea3ac85admr25479e87.27.1745959561913;
-        Tue, 29 Apr 2025 13:46:01 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb262b5sm2006777e87.36.2025.04.29.13.46.01
+        d=1e100.net; s=20230601; t=1745959613; x=1746564413;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9ZJ8j8Oe72qFBaNxqjkDCbDD8XAvsg/lPShitQQ2048=;
+        b=gzP61A5/yw+Surxwegb9MtUE2tFZTtOvcVZYVRNqOLluMzLQtQrtde2fnmgI7p8biB
+         /2BbziJHXdeww01C2NiGYYk9+rs5f1xVD+csgyoxia/efjk/LeyllGUmEEkQYLmnD3xH
+         kybetCC7TpXZp0zDGz0YJty08gWgbPRG78xXgHGgjFg27B0AgJkDuvZnwc/spv6naES6
+         IugjTPs3FsG8aGxRHd9oM8KG+1GYN4ryTYTxkpOW/m4GL9Lv1wbWi2HFuxObWNAsFByP
+         jKefoSmgCTNxJ3NaQurkwlOR/cqfEfOo/fS/kHwmz+pZQY0x37gl0Ok4eRxSBoUJVWMS
+         JZpg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/Fn+K9I26f/VGxA2EesFwVxCM660xeuihX06dvVHDokaoPqLt7nsT2remrdtfNPNDsATYU7HZ/ai2lHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlRSyNxyJd73DsHClr/bot1Mo4gHXkvuXRMCwU3a5iTQ1hvMXE
+	TsDe+bzsmdkO5ZhKLKsS4uC/PyyxqCfzt06VBjAuDegj8h8iupmM4tY2w+MnDuE=
+X-Gm-Gg: ASbGncvvnCLZ5rQ6L7UTwu0FWHjQm93wzBO6HYURcOVDVVZMwlMlO10tnBKzVhMiWZD
+	LhRVbRlP1qiuirDGEE5r1HxhFvV4YUc4A+lutBEHbtiw5uVXsCZu6QIKpF+dt6+9a/LZV+HQE9r
+	7yGwCukRQBtRuAbYj2/R5T/QQTXPVq/DRCPqgG0P6nGGoNqicFFW0vfqjicjC905Y83LPtXRdXe
+	3FTfm9h37/igqtizQWwaVq5f2nVZOQOjaWvFsgGN660U/2+u/s8QQ3026jtDRE/aAZ+zwOiDpIC
+	00GYZ/nS+9eYCAur2MY/CypwJ1+l6gDdMKOPks1aG9Y03edvr3wvrnagD/FwF6Em1Fnbjtlw3Tv
+	LpKqcyJY=
+X-Google-Smtp-Source: AGHT+IF9bv2cflSgAvGwtlEqK/Tpat8aDUtOYB8YNh//4MAjWZJ7TTuhWab4KG2FTzCSpSxKDA3ETQ==
+X-Received: by 2002:a05:6000:4014:b0:3a0:7a5d:96f8 with SMTP id ffacd0b85a97d-3a08f7a2755mr614243f8f.31.1745959613249;
+        Tue, 29 Apr 2025 13:46:53 -0700 (PDT)
+Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2afc6b3sm80455e9.31.2025.04.29.13.46.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 13:46:01 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Linus <torvalds@linux-foundation.org>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v6.15-rc5
-Date: Tue, 29 Apr 2025 22:46:00 +0200
-Message-ID: <20250429204600.176542-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        Tue, 29 Apr 2025 13:46:52 -0700 (PDT)
+Date: Tue, 29 Apr 2025 22:45:39 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: iio: adc: adi,ad7606: add gain
+ calibration support
+Message-ID: <uyreqaazupbt23vmf3pwxsaneimtahsuinlfmc77aaavt4nyl6@yofmvw3rndtx>
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-4-eb4d4821b172@baylibre.com>
+ <d13e3671-9330-419c-acf6-97f33060116c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d13e3671-9330-419c-acf6-97f33060116c@baylibre.com>
 
-Hi Linus,
+On 29.04.2025 10:26, David Lechner wrote:
+> On 4/29/25 8:06 AM, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Add gain calibration support by a per-channel resistor value.
+> > 
+> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> > index 29f12d650442b8ff2eb455306ce59a0e87867ddd..df30545fb52c89a814257443183303775a06a7f2 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> > @@ -204,6 +204,15 @@ patternProperties:
+> >            considered a bipolar differential channel. Otherwise it is bipolar
+> >            single-ended.
+> >  
+> > +      adi,rfilter-ohms:
+> > +        description:
+> > +          For ADCs that supports gain calibration, this property must be set to
+> > +          the value of the external RFilter resistor. Proper gain error
+> > +          correction is applied based on this value.
+> > +        default: 0
+> > +        minimum: 0
+> > +        maximum: 65536
+> > +
+> >      required:
+> >        - reg
+> >        - bipolar
+> > @@ -271,6 +280,10 @@ allOf:
+> >      then:
+> >        properties:
+> >          adi,sw-mode: false
+> > +      patternProperties:
+> > +        "^channel@[0-9a-f]+$":
+> > +          properties:
+> > +            adi,rfilter-ohms: false
+> 
+> I think this is in the wrong place. It would allow this property on ad7616, but
+> ad7616 does not have this feature.
+>
 
-Here's a PR with a couple of MMC fixes intended for v6.15-rc5. Details about the
-highlights are as usual found in the signed tag.
+Looks like it cannot work on ad7616 due to
 
-Please pull this in!
+  - if:
+      not:
+        properties:
+          compatible:
+            enum:
+              - adi,ad7606c-16
+              - adi,ad7606c-18
+    then:
+      patternProperties:
+        "^channel@[1-8]$": false
 
-Kind regards
-Ulf Hansson
+
+But maybe an additional patch should be added to add also adi,ad7606b
+to the above enum.
+
+Regards,
+angelo
 
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.15-rc1
-
-for you to fetch changes up to 77183db6b8dbd8c352816030b328dd55993dc330:
-
-  mmc: renesas_sdhi: disable clocks if registering regulator failed (2025-04-07 17:58:41 +0200)
-
-----------------------------------------------------------------
-MMC host:
- - renesas_sdhi: Fix error-paths in probe
- - renesas_sdhi: Fix build-error when CONFIG_REGULATOR is unset
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      mmc: renesas_sdhi: add regulator dependency
-
-Ruslan Piasetskyi (1):
-      mmc: renesas_sdhi: Fix error handling in renesas_sdhi_probe
-
-Wolfram Sang (1):
-      mmc: renesas_sdhi: disable clocks if registering regulator failed
-
- drivers/mmc/host/Kconfig             |  2 +-
- drivers/mmc/host/renesas_sdhi_core.c | 12 +++++-------
- 2 files changed, 6 insertions(+), 8 deletions(-)
+ 
+> 
+> >      else:
+> >        properties:
+> >          pwms:
+> > @@ -398,6 +411,7 @@ examples:
+> >                  reg = <8>;
+> >                  diff-channels = <8 8>;
+> >                  bipolar;
+> > +                adi,rfilter-ohms = <2048>;
+> >              };
+> >  
+> >          };
+> > 
+> 
