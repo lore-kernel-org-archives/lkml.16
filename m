@@ -1,180 +1,236 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70ACF29DB91
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EE31FCFC0
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918508; cv=none; b=skNqUJLyT8uR9a3rsqVxcoTO5OZRRbbT1ZN168aXXhFM0r1/mLsYN/YgZ7ClGq90K4B6hqa6fEnoFFiTs+uyPCE6AKJuouQx+RnFio8DbQS2L80WqNm9YFkE3u9mjx6+LjPZ4OciheDoQGSq0FxpV8+Brw0mCB5jNoOKAUZAu8I=
+	t=1745918530; cv=none; b=qE7mPPTiktTkHprpj8Ond5ekCemzlVFwLdLyP93DB2NjgBKMYDySZmn4L36cHQlj5pB/X7bR/7NWCu/fiHKrAkIWd6xF2VQLhMil0V9KVMwV874LAnGQ/mhaFytPqPO8xSykV5XSKVNKE/v6UDip1oFTLhVaNu/IXrtkkytBZl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918508; c=relaxed/simple;
-	bh=yylSKJDv8HkOf0iH+SYlqcQffyWxREZ928vnNlKrMhI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OsCYu3jBLluEYlxkyRee8HfzYEW6ZHDZuhTMrpR8vl9Uml6ltaJFCpOVRtm3IXMQrd5DVXDE20F3ZpapXYladAo1bH2qiq9R2Wy45qp9/r7IwglgolDhME/DhZgr4i+hZtrk3x611i3e9iQaGhQ7YsxkNbdbWfMOAuRWgvRnqwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z90x38ny; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745918530; c=relaxed/simple;
+	bh=Idoj+4hwbckVN4oPLEOPh5JODs+z9CwnDkjxq1GYS8k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ERMvk42NRgioQlKHLYH3xMTLlATd6lb1CrUUSTtN7kEmrMBkus11QJczwSI3YnOhCkO0U1FLCz6+zdTGBSTNiOQxD3IejFYEsBzqadFNEk4VgA46FGvbhBQ73JTb21mQfbI2wxseLQPPz91yiBontu9j4yzk/9acLy05BqT0IYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EeLQSq1e; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z90x38ny"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c30d9085aso4207212f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745918503; x=1746523303; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3jdvpeyG/XLxQ3dsLKaff+2PtCT4KthrhFkzjVZAM=;
-        b=Z90x38nygZHLQlMLbTcx4J7BKNQ3skhVLdP8aZYZ5rH/RdqkSCQ/IiMYkhxdfm0o+w
-         fPM4KpFd0+8rLvVmXtgbXHIzyTIgiHj3Q0shjAf/CZN9cRhdCoiZEjvNyM6R32fvJveb
-         ul9ZfypIvW6qqZ2JPdJLXKe91fQZTQRK6c+EYOg1BeOE333s6mtYxEhjN0nNjzrEEsM7
-         zr8XMkwzkdc25MXIECUAKkLF/lt0caGQDQIgQ3M0wwIxfwlUMlU5+592pi5mTN38SuT3
-         U93Eo7qqPqRCeRPdRPhahpRgAqCVwGT5fLO552j2B6I9sV1r+C30cp0X9c3fHe8XnPL7
-         LSSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918503; x=1746523303;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3jdvpeyG/XLxQ3dsLKaff+2PtCT4KthrhFkzjVZAM=;
-        b=T3BiKzsSXXFfh+14MxslM1NJ0Xtuj3VC5C0ae7eHf/lOnh4jOmEekfjFgHaHRdSgRr
-         RXpcnah7Fl+Q3tRc5IAmmv7prIV082pfzoR9fayqqoRw0PIl/CJ1nDgp2+HJqe7ogj3A
-         3WyF2NtNHMXhi4BUICBygU89pC0l6Aqh3GGfiDYoGZt4X4nNMTfqRXQMfm+fK9jzGJ+a
-         /h4ul4N4gXd6jG4q/p9qvfEwgJXot0Hm0ErXveIINkLlgurqf7Qy2e6mBHldSXoH7FF5
-         D7nubXvjPu+dw9q3udCV7SaxznyP0TsA955fibUED+3zFT5xBXVrTPxGIsftUhlENi4V
-         i/0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXs32xLuFiu9NWuDCjoDCaO/nomSr+32Bt3oC1zvbcPHokys2iA/4iZetsPIbzMLSTLfhfyB73KuVJ3q3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZRWPZkOgq0hlp4HcfDbCflGFOCrkjR6Pl/PJTf9Ac8IeIDtKL
-	lHS8NOBewc+DvH/KqzuoWHXWRNPAz+y+u/+Tb5zBhaa07Hz5VbSKZ4MGmI8LdKo=
-X-Gm-Gg: ASbGncv8eKjO3vloDbm0sliBakIoA3XVL9Ii0Fcbfa3hjjzw4NE8xwANFjrr74Gk8b2
-	xTpXIJv4G8yqeWCRw0LPdvrkh02EVabPhJZUSpKiHbwLmxWSyPLXoAFhHqoKILkpbdzmjIZGoIS
-	wpR5XRUdW73LP9c4Mjqsqiw7QbbSHhLqr6NzFwKm2sDH2PVipQRP91ynKOvqsaSqOqbMHBXnaFZ
-	iQ9Fm8mGaEZhc1aQSuxqNuKmkaJXwzRF3AlL7XdzaTlWoAGoV8etlA7ETsyykRi6fftYpTnBom0
-	dIQanHGXZNEWO6RWTcN7jKlwCbE7QmBddsuvZ21xBz5fuV8sU5DATg==
-X-Google-Smtp-Source: AGHT+IEUGW55N4u/mThqrlEDhA9YSxZ89qDIJshXeMtSzbHkz+MFGGxdrPryOqnbUPm5rxvbTdTFqA==
-X-Received: by 2002:a05:6000:18ac:b0:39e:f89b:85dc with SMTP id ffacd0b85a97d-3a07aa65134mr7471133f8f.17.1745918502621;
-        Tue, 29 Apr 2025 02:21:42 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c6a0sm13337100f8f.86.2025.04.29.02.21.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:21:42 -0700 (PDT)
-Message-ID: <b2f05ef5-4ba7-4041-8d11-021aa2c3f6e3@linaro.org>
-Date: Tue, 29 Apr 2025 10:21:41 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EeLQSq1e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745918528; x=1777454528;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Idoj+4hwbckVN4oPLEOPh5JODs+z9CwnDkjxq1GYS8k=;
+  b=EeLQSq1ez06Mnq1XFuM61x5SQUSX/unXIRKuMD3tIdaibtFR+z5ODw+N
+   Elwa9WEwREaocXP95ymivl/D70inApJocr+2Zui2er7OjDN8Hfe3WOA/v
+   szMGfBbqPkclOB/ggDalCbdh4fPmIbZ+ghJUR2sMLly8B0HdiWx8E2+u6
+   7t7iN5KuPWVJxCs2NK4SIO8hzrFF0ci0mUcm2BZXk5rUjpSvsemsn2IHV
+   GpLf27oCoCirUO4q2kvoYBQ9zBmHDM2219gQX+CwBfflwO+rhBT3CXkQo
+   AJSfeLviRk4ykuwo66m4OG92eM4fNsZNk1myXYt37RW0biL4dMh5DIUje
+   g==;
+X-CSE-ConnectionGUID: 8BJgWVxoRdWRjagIe6dVTA==
+X-CSE-MsgGUID: 1PSJh+erSmuR84ZGKUFmeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="50195647"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="50195647"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:22:07 -0700
+X-CSE-ConnectionGUID: RDQbuHfrTaCLjjeUl19HIA==
+X-CSE-MsgGUID: YvRXX3pqSkqXGLmAkijaTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="133663786"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.9])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:22:03 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+In-Reply-To: <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250331-b4-panel-refcounting-v4-0-dad50c60c6c9@redhat.com>
+ <20250331-b4-panel-refcounting-v4-2-dad50c60c6c9@redhat.com>
+ <87y0vkw8ll.fsf@intel.com>
+ <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
+Date: Tue, 29 Apr 2025 12:22:00 +0300
+Message-ID: <87o6wfwcef.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tools: Fix arm64 build by generating unistd_64.h
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, arnd@linaro.org
-References: <20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org>
- <7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info>
- <4c92fd9c-e545-47f9-bc67-0dfff962f506@linaro.org>
- <4c5eb1e1-f8ef-46a5-92da-50d77aba1405@linaro.org>
- <f0bab5f8-ff61-4eee-a736-8c2dbd33bc72@leemhuis.info>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <f0bab5f8-ff61-4eee-a736-8c2dbd33bc72@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-
-
-On 29/04/2025 9:02 am, Thorsten Leemhuis wrote:
-> On 29.04.25 09:52, James Clark wrote:
->> On 29/04/2025 8:42 am, James Clark wrote:
->>> On 28/04/2025 2:23 pm, Thorsten Leemhuis wrote:
->>>> On 17.04.25 15:55, James Clark wrote:
->>>>> Since pulling in the kernel changes in commit 22f72088ffe6 ("tools
->>>>> headers: Update the syscall table with the kernel sources"), arm64 is
->>>>> no longer using a generic syscall header and generates one from the
->>>>> syscall table. Therefore we must also generate the syscall header for
->>>>> arm64 before building Perf.
->>>>>
->>>>> Add it as a dependency to libperf which uses one syscall number. Perf
->>>>> uses more, but as libperf is a dependency of Perf it will be generated
->>>>> for both.
->>>>>
->>>>> Future platforms that need this will have to add their own syscall-y
->>>>> targets in libperf manually. Unfortunately the arch specific files that
->>>>> do this (e.g. arch/arm64/include/asm/Kbuild) can't easily be imported
->>>>> into the Perf build. But Perf only needs a subset of the generated
->>>>> files
->>>>> anyway, so redefining them is probably the correct thing to do.
->>>>
->>>> FYI, my daily -next build for Fedora based on its RPM spec file broke
->>>> on arm64 (x86_64 worked fine) while building libperf. I haven't checked
->>>> yet, but due to the error messages and a quick look in the history I
->>>> wonder if this is due to the quoted change, which showed up in -next
->>>> today:
->>>>
->>>> """
->>>> kernel.spec:3115: build libperf
->>>> + /usr/bin/make -s 'EXTRA_CFLAGS=-O2  -fexceptions -g -grecord-gcc-
->>>> switches -pipe -Wall -Wno-complain-wrong-lang -Werror=format-security
->>>> -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS -
->>>> specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-
->>>> strong -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1  -mbranch-
->>>> protection=standard -fasynchronous-unwind-tables -fstack-clash-
->>>> protection  ' 'LDFLAGS=-Wl,-z,relro -Wl,--as-needed  -Wl,-z,pack-
->>>> relative-relocs -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-
->>>> hardened- ld -specs=/usr/lib/rpm/redhat/redhat-hardened-ld-errors -
->>>> specs=/usr/ lib/rpm/redhat/redhat-annobin-cc1  -Wl,--build-id=sha1 -
->>>> specs=/usr/ lib/rpm/redhat/redhat-package-notes ' -C tools/lib/perf
->>>> V=1 DESTDIR=/ builddir/build/BUILD/kernel-6.15.0-build/BUILDROOT
->>>> mkdir: cannot create directory â€˜/../archâ€™: Permission denied
->>>> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250428/
->>>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/scripts/
->>>> syscallhdr.sh: line 98: /../arch/arm64/include/generated/uapi/asm/
->>>> unistd_64.h: No such file or directory
->>>> make[2]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-
->>>> next-20250428/
->>>> linux-6.15.0-0.0.next.20250428.435.vanilla.fc43.aarch64/ scripts/
->>>> Makefile.asm-headers:81: /../arch/arm64/include/generated/ uapi/asm/
->>>> unistd_64.h] Error 1
->>>> make[1]: *** [Makefile:108: uapi-asm-generic] Error 2
->>>> make: *** [Makefile:128: all] Error 2
->>>> error: Bad exit status from /var/tmp/rpm-tmp.vAfil2 (%build)
->>>> """
->>>>
->>>> Full log: https://download.copr.fedorainfracloud.org/results/@kernel-
->>>> vanilla/next/fedora-rawhide-aarch64/08975350-next-next-all/builder-
->>>> live.log.gz
->>>
->>> Yes, this is the error that the fix is for.
+On Tue, 29 Apr 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> Hi Jani,
+>
+> On Mon, Apr 28, 2025 at 07:31:50PM +0300, Jani Nikula wrote:
+>> On Mon, 31 Mar 2025, Anusha Srivatsa <asrivats@redhat.com> wrote:
+>> > Allocate panel via reference counting. Add _get() and _put() helper
+>> > functions to ensure panel allocations are refcounted. Avoid use after
+>> > free by ensuring panel pointer is valid and can be usable till the last
+>> > reference is put.
+>> >
+>> > Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>> > Reviewed-by: Maxime Ripard <mripard@kernel.org>
+>> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+>> >
+>> > ---
+>> > v4: Add refcounting documentation in this patch (Maxime)
+>> >
+>> > v3: Add include in this patch (Luca)
+>> >
+>> > v2: Export drm_panel_put/get() (Maxime)
+>> > - Change commit log with better workding (Luca, Maxime)
+>> > - Change drm_panel_put() to return void (Luca)
+>> > - Code Cleanups - add return in documentation, replace bridge to
+>> > panel (Luca)
+>> > ---
+>> >  drivers/gpu/drm/drm_panel.c | 64 ++++++++++++++++++++++++++++++++++++++++++++-
+>> >  include/drm/drm_panel.h     | 19 ++++++++++++++
+>> >  2 files changed, 82 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+>> > index bdeab5710ee324dc1742fbc77582250960556308..7b17531d85a4dc3031709919564d2e4d8332f748 100644
+>> > --- a/drivers/gpu/drm/drm_panel.c
+>> > +++ b/drivers/gpu/drm/drm_panel.c
+>> > @@ -355,24 +355,86 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
+>> >  }
+>> >  EXPORT_SYMBOL(of_drm_find_panel);
+>> >  
+>> > +static void __drm_panel_free(struct kref *kref)
+>> > +{
+>> > +	struct drm_panel *panel = container_of(kref, struct drm_panel, refcount);
+>> > +
+>> > +	kfree(panel->container);
+>> > +}
+>> > +
+>> > +/**
+>> > + * drm_panel_get - Acquire a panel reference
+>> > + * @panel: DRM panel
+>> > + *
+>> > + * This function increments the panel's refcount.
+>> > + * Returns:
+>> > + * Pointer to @panel
+>> > + */
+>> > +struct drm_panel *drm_panel_get(struct drm_panel *panel)
+>> > +{
+>> > +	if (!panel)
+>> > +		return panel;
+>> > +
+>> > +	kref_get(&panel->refcount);
+>> > +
+>> > +	return panel;
+>> > +}
+>> > +EXPORT_SYMBOL(drm_panel_get);
+>> > +
+>> > +/**
+>> > + * drm_panel_put - Release a panel reference
+>> > + * @panel: DRM panel
+>> > + *
+>> > + * This function decrements the panel's reference count and frees the
+>> > + * object if the reference count drops to zero.
+>> > + */
+>> > +void drm_panel_put(struct drm_panel *panel)
+>> > +{
+>> > +	if (panel)
+>> > +		kref_put(&panel->refcount, __drm_panel_free);
+>> > +}
+>> > +EXPORT_SYMBOL(drm_panel_put);
+>> > +
+>> > +/**
+>> > + * drm_panel_put_void - wrapper to drm_panel_put() taking a void pointer
+>> > + *
+>> > + * @data: pointer to @struct drm_panel, cast to a void pointer
+>> > + *
+>> > + * Wrapper of drm_panel_put() to be used when a function taking a void
+>> > + * pointer is needed, for example as a devm action.
+>> > + */
+>> > +static void drm_panel_put_void(void *data)
+>> > +{
+>> > +	struct drm_panel *panel = (struct drm_panel *)data;
+>> > +
+>> > +	drm_panel_put(panel);
+>> > +}
+>> > +
+>> >  void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t offset,
+>> >  			     const struct drm_panel_funcs *funcs,
+>> >  			     int connector_type)
+>> >  {
+>> >  	void *container;
+>> >  	struct drm_panel *panel;
+>> > +	int err;
+>> >  
+>> >  	if (!funcs) {
+>> >  		dev_warn(dev, "Missing funcs pointer\n");
+>> >  		return ERR_PTR(-EINVAL);
+>> >  	}
+>> >  
+>> > -	container = devm_kzalloc(dev, size, GFP_KERNEL);
+>> > +	container = kzalloc(size, GFP_KERNEL);
+>> >  	if (!container)
+>> >  		return ERR_PTR(-ENOMEM);
+>> >  
+>> >  	panel = container + offset;
+>> > +	panel->container = container;
+>> >  	panel->funcs = funcs;
+>> > +	kref_init(&panel->refcount);
+>> 
+>> Hi Anusha, this should be done in drm_panel_init() instead.
 >>
->> Sorry I had it the wrong way around,
-> 
-> Okay, for a moment I was confused and wondered if I was holding things
-> wrong. :-D
-> 
->> I see you were asking about a new
->> build failure caused by the fix. Looking into it now.
-> 
-> Many thx!
-> 
->> I noticed some strange characters in here
-> 
-> Sorry, that was my (or my browsers) fault (some encoding mixup somewhere
-> I've seen earlier) and highly unlikely to be related.
-> 
+>> There are many users of drm_panel that don't use devm_drm_panel_alloc()
+>> but allocate separately, and call drm_panel_init() only.
+>
+> That wouldn't really work, because then drivers would have allocated the
+> panel with devm_kzalloc and thus the structure would be freed when the
+> device is removed, no matter the reference counting state.
+>
+>> They'll all have refcount set to 0 instead of 1 like kref_init() does.
+>> 
+>> This means all subsequent get/put pairs on such panels will lead to
+>> __drm_panel_free() being called! But through a lucky coincidence, that
+>> will be a nop because panel->container is also not initialized...
+>> 
+>> I'm sorry to say, the drm refcounting interface is quite broken for such
+>> use cases.
+>
+> The plan is to convert all panel drivers to that function, and Anusha
+> already sent series to do. It still needs a bit of work, but it should
+> land soon-ish.
+>
+> For the transitional period though, it's not clear to me what you think
+> is broken at the moment, and / or what should be fixed.
+>
+> Would you prefer an explicit check on container not being 0, with a
+> comment?
 
-Yep, not related it's just the quotes around the error printout. I just 
-need to use $(OUTPUT) properly without the "/../" on the end of it. If 
-OUTPUT isn't set it tries to go up one from root rather than being 
-relative to cwd.
+I'm looking at what it would take to add drm_panel support to i915 so
+that you could have drm_panel_followers on it. There are gaps of course,
+but initially it would mean allocating and freeing drm_panel ourselves,
+not via devm_drm_panel_alloc() nor devm_kzalloc(), because none of the
+other stuff is allocated that way. drm_panel would just sit as a
+sub-struct inside struct intel_panel, which is a sub-struct of struct
+intel_connector, which has its own allocation...
 
-I'll send a patch.
+But basically in its current state, the refcounting would not be
+reliable for that use case. I guess with panel->container being NULL
+nothing happens, but the idea that the refcount drops back to 0 after a
+get/put is a bit scary.
 
->>    mkdir: cannot create directory â€˜/../archâ€™: Permission denied
-> 
-> Ciao, Thorsten
+Anyway, I think there should be no harm in moving the kref init to
+drm_panel_init(), right?
 
+BR,
+Jani.
+
+
+
+-- 
+Jani Nikula, Intel
