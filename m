@@ -1,161 +1,126 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BB7224AF9;
-	Tue, 29 Apr 2025 05:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D419926A0AB
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745905762; cv=none; b=Oi96cSO6MLKtqyNLLAE1N3yIpPBMLstk+RU7S51WTOmPSK5EoZYJl+irLdIouaODGlqcG/0GGZWlA7z29KbVFZ15W3/gtZpdGlGw62ShbCXwiV/l4im5s/G8AwiWEMg0cZNaL9yoKJMiABGtXysGkyXqtKIR9T6EhueOmqs3Zbk=
+	t=1745905815; cv=none; b=kvn4ksI5b6uPerLtmnb4s275p2sdVoUHie2YItWKszJ1Vv6nlJSzIkG+o25mquR6q9H8+2cgBAhPOhiKUV0Y2nqY2pab6ayeKClSs1aHv7TxjAf++74CUCNB1MJvv5VYmLKu1lbwCS5xQ5QI9J2RJHcHP5qBuQp5IEy5ErJwhw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745905762; c=relaxed/simple;
-	bh=odt4BvtRQCAZwHMR4seRzeiLOow/lp91qKjPibzrn1Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mMkHjcgjZNfHH3J52aTbZbHybWZZiXSZZYiLdrTeKiph1+B3RM6sYKO1DNqdeGDZHiObXI0fIByJlxDyi1XUxP8S1swYfYZqRwOISDQyFS0p6kjBRFhqjFrrFNQ6djXcuHdsOZHeYcnVus7YmqEwe/LFbS+p+ICfrgBAml0TMsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UhO3Gqvy; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1745905815; c=relaxed/simple;
+	bh=TC1pQF5+8x3TfRsyAFIm5rUMUBIGwkayJC79GBtSdMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LoQZxIrXZC88MDbthXDw/3fdbY7R6XX6IHipb+DCoITCau2EmZyRw6dxl08ePdMzTFtKh+rDt+ZQ08SaF5CaMN98BdjiSO2uVfeOvvxFTWtrIQmhrGHXY2UyWAYY+iwIeKAxSIm4ojoPOHn0ba924wcYiFON4KYwyobG7ALMT8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=QIHC3Ey5; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UhO3Gqvy"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqKsm012626;
-	Tue, 29 Apr 2025 05:49:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=iW1XVZ8l6CJyFrlX5XcyWr
-	a0zw0oiwZNvz4GD/HpHkc=; b=UhO3GqvytDaYfCLz9Lb+hGV13QJ7eEDPAd8VQv
-	yYPXxZGaltYYuCTt9hNvDboSMoUtmnoNL+c426zpFK9SgU87AABH1haD54ig3Jh+
-	ioTQ4pMQ8MAvumQ1E6vQ8BZkF0BGb+2zoyP0LV9LlxIKYeSG+qGBPoF2Ji4xwmeP
-	WzZsu9bjPhA7V2cn/ishCRQcNd7RyCtvctBrMnHJ6DPk8dODuDSTA4FkwH7HNTar
-	RBZ5IVGr1Dt7BMnBchsm1j2nEopfJsJPXqDVDPSHOTmUSTUPttPbSAbco67hSX0o
-	ks3wQbOgGuqSS6ufxCkiBBBS5MVgGmFO+NF2mhtyqTvOoT+w==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468q323bfh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 05:49:15 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T5mmS5029225;
-	Tue, 29 Apr 2025 05:49:12 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 468rjmfqus-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 05:49:12 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53T5nBUc030237;
-	Tue, 29 Apr 2025 05:49:11 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53T5nBju030223
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 05:49:11 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id 9C6C45A7; Tue, 29 Apr 2025 11:19:10 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com,
-        kernel@oss.qualcomm.com, Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH v6 0/4] qcom: Add support for IQ-9075-evk board
-Date: Tue, 29 Apr 2025 11:19:00 +0530
-Message-ID: <20250429054906.113317-1-quic_wasimn@quicinc.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="QIHC3Ey5"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bf1d48843so49002761fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1745905812; x=1746510612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HWfOibW0zJXCdtORmeJHJfO7jAlDvwO4GvsgR2VT7fc=;
+        b=QIHC3Ey5/8YvPSYOJTKp/LRCAkdTM5zEwbX0jszmfbqizmNivX492lU/o4CRdv1Wtf
+         1ek59gQVykIyclnpwPnm1Z9Gb35V0WvhfKYDj/dUHs7pPh8JUb2L1DLMlrylIwjjii4Q
+         vQHUQ8CLZRivsfC876alucYmAR6ugln+FvyJ7C1dAe/eKVeAcu6BsdPE9CUgeXBVQWR7
+         qw+iDIxd5zjPksyWodtUSriqQgTZF6AWQtqTZbsRqTJjMXQTIu1W1rzj1sNEcvWEHB48
+         aOHM4BtPIR465AlcOHaeqw8RPEt3ssBz5WLzktMAzs81hnAXSRnp80pjWmYZdnxULgw+
+         aXuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745905812; x=1746510612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HWfOibW0zJXCdtORmeJHJfO7jAlDvwO4GvsgR2VT7fc=;
+        b=wMUyKZ/mo17byyHYauQecS+0Sb4VG6DMfd4hPDVnJgp2NdqRgs5QZe5JHWByK3Cihh
+         KXuZiP/KowlykbNA/yg6/5XkShC2o0vFbQHy2TB+LTIDAOz/yCHdQYZbrdQm7bOoFrx5
+         gAd9aCDfhZyx3xJ+EIxmsL0EyLNbpqAj0t8zBC4GrScKmUZlzbGl5PfTqz6L65MfDCgQ
+         HWNj7LwhlmDBXg89ljd3q8f/2kPsdy9HTV6BqdAaxQJxj/V32Eaj30i8wxNbuTrTHStp
+         yZgBzJ7xieMkKo2DOZRHJlz2Ux6YC5OU4EIiGwBPDn5V3gY7LiAaLE86nwQTh03WvO/C
+         0qYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6o/e/Rs7g5TfG6T2C00rsz/6FCSSIu0lWGgKH74YcDowMDxV6VCCTWX2g+pc83oHPLhRngWsu5upa9KA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdi055Ym/mpFHDOKZfd07/0O/wcd4NOfYycNG+ZuJ+4PfE2vVe
+	6hD8riTJqhwx3GWb1YVSwGZD4f0x14F8elGAFygDVl8hO8GLENrAxSEPjSCH79pnZuMNnb80KAF
+	GrxZqcjAJELw8Ya66JAi2/yxdqwUu/2gDrT2jNg==
+X-Gm-Gg: ASbGncsuYI7XImQHoGVWdriumpjrcX7SOg8eEAKCysGCYmVCqce94Xh4yrvajl5UrqV
+	WEvyF2pAGtKpRYVXfiEOUoG3OLgc6tV90+CUhiJ13dP3Hd8ULdJNf2eUHHF2c6cawnH4+U+rqMP
+	gqd7UHy4CelJXIJJK66dHYPZxesDSTC+x6+w==
+X-Google-Smtp-Source: AGHT+IEXIWagJECOG4RLoTrQYomZ3sHcSOAll8CYP8clhn9zHjblZNubHzN3OqgFWmMSijyY1wb9UjZJkI4zeEP4uLw=
+X-Received: by 2002:a2e:be9e:0:b0:30c:460f:f56 with SMTP id
+ 38308e7fff4ca-31d34d60533mr6426041fa.20.1745905811969; Mon, 28 Apr 2025
+ 22:50:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=6810685b cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=BkoitdVaJjL6tbVqwpAA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: B8EggLNMhnza9TaW0NLEYT_YrEBzCy6v
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0MiBTYWx0ZWRfX1BBu3NMDwRAq dZPwPcZmbd9pb54DGLN3RVDwFg9NBaNKLSKjcIPXWH8DU6baJa4lYonOUNEISjTCfuhhWRKIZpC /boz37QyA43zsFNXQUD/vNuFBbcN+l+UtsOkajX6noCQ2uNk55HySql7Y7c6di+zsQRBJYvFhJn
- y1h7Sk67woC2LSvU3L2RKLioK/3vTw1Pd2Tkd908nQDHepGt8zGizjrZFDbuYyxJJ3kqG9D24UH /Vr6jNhCuMdCT30NttCJ/m9Eu1wViUOhoAi2vfOHYg+MlFs8zoyBDLw9buNr7GWUceDnst+W9I3 zdXjdsnLNTcgNFc+oLx2JULUXLMz8lInO5+eo0p5j6ixiXIphooTMw1l2PUOkc/nZxYBJ663piv
- IYIzVwLqzLYzK5KL3tsRT+/prXwFpmz4mRz1w9IkAM0sD+cOSGRRxDbw9oqCu3cw2QQdmTdH
-X-Proofpoint-ORIG-GUID: B8EggLNMhnza9TaW0NLEYT_YrEBzCy6v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 clxscore=1015 mlxlogscore=999 spamscore=0 phishscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290042
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+ <20250403112522.1566629-6-rkrcmar@ventanamicro.com> <CAAhSdy1RSpVCUzD+Aqbhh7aiQPmC2zdvuQfuOsmYNJrF3HxCsA@mail.gmail.com>
+ <D9IGVF0OY4WJ.1O1BX0M2LWUVM@ventanamicro.com>
+In-Reply-To: <D9IGVF0OY4WJ.1O1BX0M2LWUVM@ventanamicro.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Tue, 29 Apr 2025 11:20:00 +0530
+X-Gm-Features: ATxdqUGsRoK2KaLKI32KI2F__RZN-02oqDCocnMiqzg_aZlzW8XBSk76LkacWdo
+Message-ID: <CAK9=C2W3gLpeOmOcX3sp+J1zuBkWek7nO8tV79=gaWx+QZ6rgQ@mail.gmail.com>
+Subject: Re: [PATCH 3/5] KVM: RISC-V: remove unnecessary SBI reset state
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Anup Patel <anup@brainfault.org>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
+	Mayuresh Chitale <mchitale@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This series:
+On Mon, Apr 28, 2025 at 11:31=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcm=
+ar@ventanamicro.com> wrote:
+>
+> 2025-04-28T17:46:01+05:30, Anup Patel <anup@brainfault.org>:
+> > On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkr=
+cmar@ventanamicro.com> wrote:
+> >>
+> >> The SBI reset state has only two variables -- pc and a1.
+> >> The rest is known, so keep only the necessary information.
+> >>
+> >> The reset structures make sense if we want userspace to control the
+> >> reset state (which we do), but I'd still remove them now and reintrodu=
+ce
+> >> with the userspace interface later -- we could probably have just a
+> >> single reset state per VM, instead of a reset state for each VCPU.
+> >
+> > The SBI spec does not define the reset state of CPUs. The SBI
+> > implementations (aka KVM RISC-V or OpenSBI) or platform
+> > firmwares are free to clear additional registers as part system
+> > reset or CPU.
+> >
+> > As part of resetting the VCPU, the in-kernel KVM clears all
+> > the registers.
+>
+> Yes, but instead of doing a simple memset(0), KVM carriers around a lot
+> of data with minimal information value.  Reset is not really a fast
+> path, so I think it would be good to have the code there as simple as
+> possible.
+>
+> > The setting of PC, A0, and A1 is only an entry condition defined
+> > for CPUs brought-up using SBI HSM start or SBI System suspend.
+>
+> That is why this patch has to add kvm_vcpu_reset_state, to remember the
+> state of pc and a1.  (a0 is hart id and can be figured out.)
+>
+> > We should not go ahead with this patch.
+>
+> This patch only does refactoring.  Do you think the current reset
+> structures are better?
+>
 
-Add support for Qualcomm's iq9-evk board using QCS9075 SoC.
+I am fine getting rid of reset structures as long as we have
+memset(0) in-place to achieve the same thing.
 
-QCS9075 is compatible IoT-industrial grade variant of SA8775p SoC.
-Unlike QCS9100, it doesn't have safety monitoring feature of
-Safety-Island(SAIL) subsystem, which affects thermal management.
-
-In QCS9100 SoC, the safety subsystem monitors all thermal sensors and
-does corrective action for each subsystem based on sensor violation
-to comply safety standards. But as QCS9075 is non-safe SoC it requires
-conventional thermal mitigation for thermal management.
-In this series thermal mitigation changes are not included as it needs
-more discussion whether to include the change in DT or in drivers.
-
-Below are detailed informations on IQ-9075-evk HW:
-------------------------------------------------------
-QCS9075M SoM is stacked on top of IQ-9075-evk board.
-On top of IQ-9075-evk board additional mezzanine boards can be stacked
-in future.
-IQ-9075-evk is single board supporting these peripherals:
-  - Storage: 2 × 128 GB UFS, micro-SD card, EEPROMs for MACs,
-    eMMC on mezzanine card
-  - Audio/Video, Camera & Display ports
-  - Connectivity: RJ45 2.5GbE, WLAN/Bluetooth, CAN/CAN-FD
-  - Sensors: IMU
-  - PCIe ports
-  - USB & UART ports
-
-Currently basic features are enabled to support 'boot to shell'.
-
----
-Changelog:
-
-v6:
-  - Splitting v5 and bringing only rb8/IQ-9075-evk changes.
-  - IQ-9075-evk is the new marketing/product name for RB8 and files are
-    renamed accordingly.
-  - Introduce SoM for qcs9075 SoC.
-  - Introduce Memory map changes for IQ9 boards, currently enabled
-    for qcs9075 based boards only.
-  - Remove l4c regulator as it needs more validation with UFS for
-    over-current check.
-  - Remove thermal mitigation change, needs more discussion for final
-    change.
-  - v5:
-    https://lore.kernel.org/all/20241229152332.3068172-1-quic_wasimn@quicinc.com/
-
-Pratyush Brahma (1):
-  arm64: dts: qcom: iq9: Introduce new memory map for qcs9100/qcs9075
-
-Wasim Nazir (3):
-  dt-bindings: arm: qcom: Add bindings for QCS9075 SOC based board
-  arm64: dts: qcom: qcs9075: Introduce QCS9075M SOM
-  arm64: dts: qcom: Add support for qcs9075 IQ-9075-EVK
-
- .../devicetree/bindings/arm/qcom.yaml         |   8 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 108 +++++++
- .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 268 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/qcs9075-som.dtsi     |  10 +
- 5 files changed, 395 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
-
-
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
---
-2.49.0
-
+Regards,
+Anup
