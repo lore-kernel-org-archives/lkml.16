@@ -1,114 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F70244670
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2BC244670
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745952727; cv=none; b=dJG+4Q+To2B8x8EEzh+4sNaCvKO5wnOVY5wAvUHmebRIAszNUH6TC9BJVFPqWgDOp5+vDRy9ELp58Ne1+c78HZJCfWCDnBs7AGwhJnObwB26mOLbnJddXMtuKmAWXjSMe3nZIie925g4YNyJ1tNZYM3MFCYSL+1olkDmpdyV7mM=
+	t=1745952781; cv=none; b=Zy6UIIdXTMHe0zX8uI8PEKKqhM225eeEqsC009EmZAhKFQMoXu4ADPaeFbuGiEUZNN1j5x2ZaWP4CEiD3Mfc3nMsHbvPzpR1KBv5cRtI/QGLQo8xLJi9naC1F0Tc7M/YtqsP+FWRVp0cC2palYzwMI7sGnpesinX1HW59b4kv/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745952727; c=relaxed/simple;
-	bh=GAS0aYhnCMQLgtXpMhbOSOKqoNQ3bj2q+babqBOzsx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RkjgbeFHBL5znk5HpeonN1hV8C/fJmHqJsM4xBUbw9e9ioBTDh7w5TUmdq3g80lYtWqKjzZ8k1FqNQ4i9krtZwmRU8l5hczapocusf17vcNeJbqHh1ExwJGpOv3zLd+gzxwlieSI+mUuDUy4L2WZxWU7Ti4MnkLsaufI1eAEguA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jP2Mh1/u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745952781; c=relaxed/simple;
+	bh=QK6Ymfa95GtyUuSHfuI4LiDezyinKpzbQUwdqooUatI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhAI/RDE7IWMS45RJUaxABBbUCWfCL0nyCaaDfIn1LWtFnQgk6gfto8r2m/D1zz8LrF9AXuE9ZoWUp8Kd06RvEQojzfGDqCrschX5kHfsLU2E6jZY2m+GnLBT99h3//DSmYNMED8GGlSE2SeSdCMVYbmV9ybUq+bPsjt4tW79VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZK8ydnkJ; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jP2Mh1/u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91F85C4CEE3;
-	Tue, 29 Apr 2025 18:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745952725;
-	bh=GAS0aYhnCMQLgtXpMhbOSOKqoNQ3bj2q+babqBOzsx8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=jP2Mh1/uP6RIpO+MkshbnadFuIw+6CFZz5Xi/GAgpzYPcX7gYr/NgF2yXB8Jc9JBM
-	 rDFfHxHEHpgbfaSGu8LvZnpI+P0UhiMbph4e8iBkJrD5II3smBQT1bfcmTEQlh8hRe
-	 mJ6MihMQBIsMgkv/c+8TGs5xxM2uz94mpXvyyFN1WX2leRsZ1lyHsslvfGE7g9vwr0
-	 R8Q54HtjKnre2tlN+32kZXTHvRhrrKMAAK3naGTcUUGnUm5oIig7woojJY0eV274+y
-	 Ta1ygNJtxbtSHqRVBhFTX/b1oY/K7YgI3UXf1bfXMcPJx6octifsMzroE1FKtYgU49
-	 5ZwzerCHU2/IQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6E97ACE091E; Tue, 29 Apr 2025 11:52:04 -0700 (PDT)
-Date: Tue, 29 Apr 2025 11:52:04 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH v3 15/20] ratelimit: Warn if ->interval or ->burst are
- negative
-Message-ID: <1cc77290-ec8d-4c51-85c6-4f0bbcaaa8b4@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <20250425002826.3431914-15-paulmck@kernel.org>
- <aBDEtcmUEhiL5-zO@pathway.suse.cz>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZK8ydnkJ"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d9327d0720so44488785ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1745952778; x=1746557578; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z4yPNijB8LHnY5DZirk/kjkGFS1gFcodp+LjleefMUg=;
+        b=ZK8ydnkJfqk1i9aKMKIyviyxEgj7Zg3VXwimeCo3DH7bVp6RMhC1/T2LhK58zXH+yo
+         x28nWacXLhOCvO9evB2n8VZqTR2rwLWJ1qvvN33qmwRa46j62dumVpH3fqW/TVhbhd2o
+         bYM6K8ii/b8MiP+ABtPTMAuE5r07KPW8CFh90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745952778; x=1746557578;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z4yPNijB8LHnY5DZirk/kjkGFS1gFcodp+LjleefMUg=;
+        b=TmZlGtOoNr0gPMvoGf5TEKGAEgEjhrRSOLQYi1meS8L+08QWgMIdKGVsqvpvoL0Iq8
+         5c1ILbt2cH7z2lRhPEg281vVExbR5ZGhlOMjF6FZ8Nl5MqHDy+O02zt37pNsOs3V6bDJ
+         F2Rqq2LMGiHde8c8L6g/V7xPQqfJ64/S4o3RZQpb1oy9uBIWAURuxgJb+fg2fzVhOtiG
+         PAkbGq5H03mb9rX+woQMKL3MVqqONFD5p/pFxr7xOR5Ds6jJgkycwjvxdXzGHPalsWWJ
+         rzy01nfHv1E4L2P1OGrFDPfUxeArstDbLraHyvn/T/5mEdsrQfy3xPHuhQ9JDU4C636Q
+         U2LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTRH21FdatSngfkIBEExAMz2b/TISirEqYaUfWJ8qmFP4rCohgdiDxc24O3R10fThFgDrFROJp9lJ/I9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0vItCsKgNi+QQ7NLg+Qi9Ijinm/tC7evonb7HVPfCnHyJtYqT
+	4IqFTdr4pAayyekpw6pUO6fV2C8yvT0dS5vq0CYyqg8qFtRWaEhDh/MPPSWDI7s=
+X-Gm-Gg: ASbGncup0KKHqZvFPNZNzQQls8W7cHhwCtzNI7uBkK11dx3vunYwZvuxcjYft+sKDPo
+	s5rH0aAmEEoMY98PVv6Wa4d75zo6Chj3RVFHKP0rg3RP0C+VyI2UIIwmKyfS2DRwNqrNyttInDE
+	uTX29jQmJSgO6gE8afILulW1bx/326DN9+sZ1G78R/jsYeOR4iqdLj8IkO9+S9NEVKN03jcIpt1
+	Vr0CQEo/k8FbkI3UPdRXt11iXrOOBj4E7ODfXW8Yym4O5YirBSWcMGap/NeMAeYtxLQamYJZBML
+	9nDFc24PXEbVkG6kN+F0FwiS2D6WRl9KzNg/BI4Bpco5b7RzdTQ=
+X-Google-Smtp-Source: AGHT+IFUibPOjHr1A15bkj6HHuP+OSD5vPAsxUFRFKdm4ZJbzf5xV4+dCjqTUUtJoV5mzYv98EokRA==
+X-Received: by 2002:a05:6e02:2307:b0:3d9:39f3:f250 with SMTP id e9e14a558f8ab-3d9676b66f4mr3103995ab.3.1745952778078;
+        Tue, 29 Apr 2025 11:52:58 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d95f2a2ffbsm4559515ab.7.2025.04.29.11.52.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 11:52:57 -0700 (PDT)
+Message-ID: <329e186d-50e9-46b6-b0ea-ee22ad6e88cb@linuxfoundation.org>
+Date: Tue, 29 Apr 2025 12:52:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBDEtcmUEhiL5-zO@pathway.suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/32] kselftest harness and nolibc compatibility
+To: Willy Tarreau <w@1wt.eu>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Kees Cook <kees@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Andy Lutomirski <luto@amacapital.net>,
+ Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+ <20250422103612-64ea71dd-d51d-487e-b387-508c372af07c@linutronix.de>
+ <20250422085145.GB14589@1wt.eu>
+ <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 02:23:17PM +0200, Petr Mladek wrote:
-> On Thu 2025-04-24 17:28:21, Paul E. McKenney wrote:
-> > From: Petr Mladek <pmladek@suse.com>
-> > 
-> > Currently, ___ratelimit() treats a negative ->interval or ->burst as
-> > if it was zero, but this is an accident of the current implementation.
-> > Therefore, splat in this case, which might have the benefit of detecting
-> > use of uninitialized ratelimit_state structures on the one hand or easing
-> > addition of new features on the other.
-> > 
-> > Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> > Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> > Signed-off-by: Petr Mladek <pmladek@suse.com>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-> > Cc: Mateusz Guzik <mjguzik@gmail.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: John Ogness <john.ogness@linutronix.de>
-> > Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > ---
-> >  lib/ratelimit.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > index 4f5d8fb6919f7..63efb1191d71a 100644
-> > --- a/lib/ratelimit.c
-> > +++ b/lib/ratelimit.c
-> > @@ -40,6 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> >  	 * says always limit.
-> >  	 */
-> >  	if (interval <= 0 || burst <= 0) {
-> > +		WARN_ONCE(interval < 0 || burst < 0, "Negative interval (%d) or burst (%d): Uninitialized ratelimit_state structure?\n", interval, burst);
+On 4/24/25 14:06, Shuah Khan wrote:
+> On 4/22/25 02:51, Willy Tarreau wrote:
+>> Hi Thomas,
+>>
+>> On Tue, Apr 22, 2025 at 10:48:28AM +0200, Thomas Weißschuh wrote:
+>>> Hi,
+>>>
+>>> On Fri, Apr 11, 2025 at 11:00:24AM +0200, Thomas Weißschuh wrote:
+>>>> Nolibc is useful for selftests as the test programs can be very small,
+>>>> and compiled with just a kernel crosscompiler, without userspace support.
+>>>> Currently nolibc is only usable with kselftest.h, not the more
+>>>> convenient to use kselftest_harness.h
+>>>> This series provides this compatibility by adding new features to nolibc
+>>>> and removing the usage of problematic features from the harness.
+>>>>
+>>>> The first half of the series are changes to the harness, the second one
+>>>> are for nolibc. Both parts are very independent and should go through
+>>>> different trees.
+>>>
+>>> I need a few nolibc bits of this series (snprintf() and prep patches) to base
+>>> further patches on. For that I'd like to pick up all the nolibc patches from
+>>> this series through the nolibc tree. They got Acks from Willy.
+>>>
+>>> Any objections?
+>>
+>> No objection on my side!
+>>
 > 
-> Just for record, I agree with having this patch in this form
-> in this series.
+> Thanks.
 > 
-> That said, I think that we should warn even about using zero
-> initialized structure in the long term because of a possible use of
-> to-be-initialized spin lock. But it would require fixing
-> existing users and it is beyond scope of this patchset.
-> It is related to the discussion at
-> https://lore.kernel.org/r/aA-f0jpBBbdfsmn7@pathway.suse.cz .
+> Kees, do you have any comments on this series? If you are okay
+> with it, I would like to apply this for next.
+> 
 
-Agreed, it would be good to get to a more principled destination.
+Thomas,
 
-In contrast, this series is what I can come up with that deals with the
-current ratelimit clients without too much violence to the current code
-base, but we can clearly do better longer term.
+Can this be part of no libc pull request for 6.16-rc1 which I will
+be fielding this time around?
 
-And thank you for the Reviewed-by on the other patches!  I will apply
-these later today, Pacific Time.
+If so here is my Ack
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-							Thanx, Paul
+thanks,
+-- Shuah
+
