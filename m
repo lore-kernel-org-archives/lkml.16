@@ -1,75 +1,75 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E39A270EB8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465C81FBEB9;
+	Tue, 29 Apr 2025 13:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745933349; cv=none; b=BcNbrqb34SCsRoDST+Gq0cUffJltkjM99x9aFLEIyn+dVB7qwP2TILRsmMqBV/xVDQgG1URTbrniL5qdE3t8wXfDnnTwdMuYpcmES88r+yPEvGHbK3E0oDU/CRafilJPmDWaLYl2HdvUE+dPzvcVA9wQbE3yynjdRnNEMID0bxc=
+	t=1745933374; cv=none; b=W/kZYpPXO3vBfFZLDVgcasCLaB5CoMjpIVqyPwSdPEmuxZlQYqlfePCwW1D0deLaXlRT6Y+ilqJLqrLa9wqKxvWc+lSkXOII6KM+gx2Y3fZTqj5i/9pfb1EftlsvfI7KZEO9rACuHq71bV2XUmGh8uJZW+utZr1kkz9Hbi/vAT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745933349; c=relaxed/simple;
-	bh=QV4YByIzP9I4bKgAUEqZQnDOeP8ggRVUxaTKA6l9XAg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Qhx4OE3YNmfJH7Osfp0z+P+2mVhYo9MLWQb495TzD8uSzmaVOHfIIQuNE6mOD4wlpDWYXnFm92kNom5xYzhUCnQnoUPM/HQalFFtT1C0vvAoscD2F75m+XWOLDpc9ILErH8QevXtrVAbegDPVGqsuGLLzQpiSnDLwBOHux16ZAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=nMjKPaSH; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="nMjKPaSH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1745933345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0t4N43kcq+EG1O2tabi3Z0JaJWUv3qgGXlKWPJrpiSI=;
-	b=nMjKPaSHK33LAZsqSyqODSyU7VXu92qKWBV9TzlQhDIFdf6IEz43mR9xXfTwrelImsxcl6
-	SYT+/WdHvLFejBzuMS6qt0W4yBVaeGx878tRa71g34jmQCTTq0qZxjajTKCV4gxb1viYyq
-	WMogfNGpWlxIgfkoYMf+1dPURYzQwF4Nfc9sIciI3PoB9kA94XCNPeqK+AexW5tUrp+B6n
-	iboa+eSraBWHHF4a9P2ABr0Itw5NRbQ0W2scEws3bupxTJQjOpxog2HKf9VizF7gA8VuYv
-	kBdzV+DVCC/itIPJBgbv2hJk23ZrGq8ylsmtG9S7foeG1WpDDEzXJFS/rv+uAA==
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Lyude Paul <lyude@redhat.com>, Janne Grunau <j@jannau.net>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250304-drm_debug_dp_mst_topo_kconfig-v1-1-e16fd152f258@jannau.net>
-References: <20250304-drm_debug_dp_mst_topo_kconfig-v1-1-e16fd152f258@jannau.net>
-Subject: Re: [PATCH] drm: Select DRM_KMS_HELPER from
- DRM_DEBUG_DP_MST_TOPOLOGY_REFS
-Message-Id: <174593334421.31053.2925170432781781609.b4-ty@rosenzweig.io>
-Date: Tue, 29 Apr 2025 09:29:04 -0400
+	s=arc-20240116; t=1745933374; c=relaxed/simple;
+	bh=YwN4EMaAALUmRHq3OHZLExjO0utT8ZCGsFKX/ieuAps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aF5LxWTydc3c2zza41YLXXqSECBlcQAUWO/QHeK2M+fuytOXhTG12VYzW93bnXlrRfPpb6KndQJawpIZ83j4dFnJt85oOU0ux1a4tuQ0DNMVzrtLGajWUy44sAFMnWQnJa+OBIVHcqCXa8OBm9DRZIVou/CmtOtwHyltQ9457ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1u9l1V-0001Fg-Om; Tue, 29 Apr 2025 15:29:21 +0200
+Date: Tue, 29 Apr 2025 15:29:21 +0200
+From: Florian Westphal <fw@strlen.de>
+To: avimalin@gmail.com
+Cc: vimal.agrawal@sophos.com, linux-kernel@vger.kernel.org,
+	pablo@netfilter.org, netfilter-devel@vger.kernel.org, fw@strlen.de,
+	anirudh.gupta@sophos.com
+Subject: Re: [PATCH v1] nf_conntrack: sysctl: expose gc worker scan interval
+ via sysctl
+Message-ID: <20250429132921.GA4721@breakpoint.cc>
+References: <20250429130940.74538-1-vimal.agrawal@sophos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429130940.74538-1-vimal.agrawal@sophos.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+avimalin@gmail.com <avimalin@gmail.com> wrote:
+> diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+> index 2f666751c7e7..480ff9a6f185 100644
+> --- a/net/netfilter/nf_conntrack_standalone.c
+> +++ b/net/netfilter/nf_conntrack_standalone.c
+> @@ -559,6 +559,7 @@ enum nf_ct_sysctl_index {
+>  #ifdef CONFIG_NF_CONNTRACK_TIMESTAMP
+>  	NF_SYSCTL_CT_TIMESTAMP,
+>  #endif
+> +	NF_SYSCTL_CT_GC_SCAN_INTERVAL_INIT,
+>  	NF_SYSCTL_CT_PROTO_TIMEOUT_GENERIC,
+>  	NF_SYSCTL_CT_PROTO_TIMEOUT_TCP_SYN_SENT,
+>  	NF_SYSCTL_CT_PROTO_TIMEOUT_TCP_SYN_RECV,
+> @@ -691,6 +692,13 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+>  		.extra2 	= SYSCTL_ONE,
+>  	},
+>  #endif
+> +	[NF_SYSCTL_CT_GC_SCAN_INTERVAL_INIT] = {
+> +		.procname	= "nf_conntrack_gc_scan_interval_init",
+> +		.data		= &nf_conntrack_gc_scan_interval_init,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_jiffies,
+> +	},
+>  	[NF_SYSCTL_CT_PROTO_TIMEOUT_GENERIC] = {
+>  		.procname	= "nf_conntrack_generic_timeout",
+>  		.maxlen		= sizeof(unsigned int),
 
-On Tue, 04 Mar 2025 20:12:14 +0100, Janne Grunau wrote:
-> Using "depends on" and "select" for the same Kconfig symbol is known to
-> cause circular dependencies (cmp. "Kconfig recursive dependency
-> limitations" in Documentation/kbuild/kconfig-language.rst.
-> DRM drivers are selecting drm helpers so do the same for
-> DRM_DEBUG_DP_MST_TOPOLOGY_REFS.
-> Fixes following circular dependency reported on x86 for the downstream
-> Asahi Linux tree:
-> 
-> [...]
+I think you'll need to add NF_SYSCTL_CT_GC_SCAN_INTERVAL_INIT to
+the
 
-Applied, thanks!
+ /* Don't allow non-init_net ns to alter global sysctls */
+ if (!net_eq(&init_net, net)) {
 
-[1/1] drm: Select DRM_KMS_HELPER from DRM_DEBUG_DP_MST_TOPOLOGY_REFS
-      (no commit info)
-
-Best regards,
--- 
-Alyssa Rosenzweig <alyssa@rosenzweig.io>
-
+branch in nf_conntrack_standalone_init_sysctl().
