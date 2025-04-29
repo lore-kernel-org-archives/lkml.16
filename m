@@ -1,79 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-244108.protonmail.ch (mail-244108.protonmail.ch [109.224.244.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A5378F54;
-	Tue, 29 Apr 2025 19:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0692550A9;
+	Tue, 29 Apr 2025 19:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745953333; cv=none; b=dQHwkMqqKF8TcpacYQ2dKX/cWn6a2Pz27o2jRn79rEruEotbbNNlSzHZnmTisjqmuf7783+tAikb9uSXC79GCRw6ReHd6Z0Y4EiX84ooyR4tMZT8uWCOdQFcqwea7KbXEZWU7RmVPiwAz957WCmvg2Bnmtsyz7ulUaOxoJAHV/w=
+	t=1745953342; cv=none; b=f+zG60ZJpyQXMRcCuDWfY5BpygQCqI1+251vl9QERRQBFK2iuVatl9iYniXQoY3yZl8evjACjo+Ksn3o51rJIBwMH6Oo/yoPcQW7fTVcGZCvA2KB3Us9XchotljZbTCrmS2vmhIgJv6YrY/Lh5D+QP8l2Tk9RK34gQtrnOr7hwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745953333; c=relaxed/simple;
-	bh=2nAjN+lDJpPG/3AFkNBwRGaeoQ2au71DtIzMd+k6ns8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HTpKFw375gQRK9vZRRCvJnOduGVwOelYqIywTE6u2wrfgQD2OxDGyxtzqd+vwqoG6hag6Mq6KcQHLC7M4qYURDN4iwosceyIbEOt7joAfdWpAiBbOG/JR+NJx5GoCKIy17mNXVQdt7SS+M0zDgJ5IHJyo5kDw4OL0ySsL8UU7kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WR10Z9Xd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745953342; c=relaxed/simple;
+	bh=ZogMkcg1Vv62KgOALOq9xcS0XYjBf/i30u5wYAowTXs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=G+xmHzJeEUDAjkyRajTpCPzqKs6BnCpJlUtH00gv/+szAckMIF25b2VMbd82PhMQtcU2j8X3rqs/DWHyY5aN2lVx2WJLBR1SSabi4pMJawg/B913Krx5vInsi4t6M/asRiZPtfiFDeEY71ucBYjs/3zvTHBgf9xcAnU9xn0JvwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=BLiUhj87; arc=none smtp.client-ip=109.224.244.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WR10Z9Xd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D66C4CEE3;
-	Tue, 29 Apr 2025 19:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745953332;
-	bh=2nAjN+lDJpPG/3AFkNBwRGaeoQ2au71DtIzMd+k6ns8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WR10Z9XdtTt53b6JY3mS283JRh2MzxwfiXpdUtmsSCjRRfAn29RhPFZaPbIS/KT8d
-	 uror/Fcz/WeEbnT4hlZbC1Qirj3pOHbRNwLMxjFN7BITpKKEeBzhWSnpwvP/T7eOAz
-	 3NSGUnanz2EQzMLxpkzKkreVeOGalwgg7SoHtHB4FpFXI7QyfEPTQ88JmOZB0pEzMC
-	 J2jD4crcvbTYZdCZOiEFSXq0sFiwfi1UKDVxwm/ijx8Gkw4q2fXQtzrSeez6rJVnHQ
-	 RyZYLqQZVN2ZTdq3kFOfppcv+/FBC2KunYVwuueiwZCg78RkGkC/2h8td2hhBOj7pW
-	 Y+3HHlLGCPQoA==
-Date: Tue, 29 Apr 2025 12:02:10 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Da Xue <da@lessconfused.com>
-Cc: Simon Horman <horms@kernel.org>, Da Xue <da@libre.computer>, Andrew Lunn
- <andrew@lunn.ch>, Neil Armstrong <neil.armstrong@linaro.org>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman
- <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org, Eric Dumazet
- <edumazet@google.com>, netdev@vger.kernel.org, Jerome Brunet
- <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, Paolo Abeni
- <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>,
- linux-arm-kernel@lists.infradead.org, Heiner Kallweit
- <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3] net: mdio: mux-meson-gxl: set reversed bit when
- using internal phy
-Message-ID: <20250429120210.0aa6fa81@kernel.org>
-In-Reply-To: <CACdvmAhcBmoDNyuu0npZzyExfhyLKdyPw9HvHvV+OdADxEfJJQ@mail.gmail.com>
-References: <20250425192009.1439508-1-da@libre.computer>
-	<20250428181242.GG3339421@horms.kernel.org>
-	<CACdvmAhcBmoDNyuu0npZzyExfhyLKdyPw9HvHvV+OdADxEfJJQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="BLiUhj87"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1745953336; x=1746212536;
+	bh=1YjWb/Jn/3bYxh7+rmCEcUaERkMf0JFBVzH01YCTxkc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=BLiUhj87ccPj20knCWXb1RKgwwnGzYmFui9nq/odyJDIvWLFa7i2E3cvecS6quwTX
+	 /0t9MriOZ+Pw0KMfv1elpYqK0cV+gM2Rk9yxn1xP4U5c0+Fsw73cvqkPj2FcIQ2VOb
+	 pjEdLd3hkVT6Q7sCHsr43HWqx1TGSCauHP/jp8djuXn/vmtg3yrred3iRX37PNVxvZ
+	 t5fAjR6HN2I2ruIZ+IAhRAWTrsxKzS7DHTtTdySvQeDuq0H1yQ8dnSC9tdFdeE9NK4
+	 T4AlB6QroC03tqoD4G9KV1oJXNRza+FvnHtk2jmO+KXB6wG3plaEvsBR+sUDIRizzv
+	 e0FjHv3ApfiCA==
+X-Pm-Submission-Id: 4Zn8nf5gPRzLT
+From: Esben Haabendal <esben@geanix.com>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Cc: "Conor Dooley" <conor@kernel.org>,  "Rob Herring" <robh@kernel.org>,
+  "Krzysztof Kozlowski" <krzk+dt@kernel.org>,  "Conor Dooley"
+ <conor+dt@kernel.org>,  "Hans de Goede" <hdegoede@redhat.com>,
+  <linux-input@vger.kernel.org>,  <devicetree@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: input: touchscreen: goodix: Add
+ no-reset-pull-up property
+In-Reply-To: <2qwfe6yw3pil5tumibiagikqhgwct27vevi674fklfieabzozc@hzjwatn3vjss>
+	(Dmitry Torokhov's message of "Tue, 29 Apr 2025 09:09:58 -0700")
+References: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
+	<20250429-goodix-no-reset-pull-up-v2-1-0687a4ad5a04@geanix.com>
+	<qql72NifdMmJKSRJmT2927URaXnbRAbz9Yjzn9lBrOwjka7NxVvy5YKJUSLmBp435aYJiTkPqeuW1hMDcKKC4g==@protonmail.internalid>
+	<20250429-effects-subscript-58eb41737816@spud>
+	<87selrt1vl.fsf@geanix.com>
+	<Pvo1P0DaSIUd2X7OfO-NXvz2UcLtNfnyMTRBLEBRS3Zokk9Ww0TB4_ce3jobYuWRsvIbUd_E3OF2kzPx0xZbGw==@protonmail.internalid>
+	<2qwfe6yw3pil5tumibiagikqhgwct27vevi674fklfieabzozc@hzjwatn3vjss>
+Date: Tue, 29 Apr 2025 21:02:14 +0200
+Message-ID: <87o6weu6yx.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Mon, 28 Apr 2025 20:44:14 -0400 Da Xue wrote:
-> > On Fri, Apr 25, 2025 at 03:20:09PM -0400, Da Xue wrote:  
-> > > This bit is necessary to receive packets from the internal PHY.
-> > > Without this bit set, no activity occurs on the interface.
-> > >
-> > > Normally u-boot sets this bit, but if u-boot is compiled without
-> > > net support, the interface will be up but without any activity.
-> > >
-> > > The vendor SDK sets this bit along with the PHY_ID bits.  
-> >
-> > I'd like to clarify that:
-> > Without this patch the writel the patch is modifying will clear the PHY_ID bit.
-> > But despite that the system works if at some point (uboot) set the PHY_ID bit?  
-> 
-> Correct. If this is set once, it will work until the IP is powered
-> down or reset.
-> If u-boot does not set it, Linux will not set it and the IP will not work.
-> If u-boot does set it, the IP will not work after suspend-resume since
-> the IP is reset.
-> Thus, we need to set it on the Linux side when bringing up the interface.
+"Dmitry Torokhov" <dmitry.torokhov@gmail.com> writes:
 
-Added to the commit message when applying, thank you both!
+> On Tue, Apr 29, 2025 at 05:37:34PM +0200, Esben Haabendal wrote:
+>> "Conor Dooley" <conor@kernel.org> writes:
+>>
+>> > On Tue, Apr 29, 2025 at 11:56:11AM +0200, Esben Haabendal wrote:
+>> >> This should be added for boards where there is no pull-up on the reset pin,
+>> >> as the driver will otherwise switch the reset signal to high-impedance to
+>> >> save power, which obviously not safe without pull-up.
+>> >>
+>> >> Signed-off-by: Esben Haabendal <esben@geanix.com>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 4 ++++
+>> >>  1 file changed, 4 insertions(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+>> >> index eb4992f708b70fef93bd4b59b9565123f7c6ad5d..21ac13046b6e021eeb403d854aabc945801dd29f 100644
+>> >> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+>> >> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+>> >> @@ -45,6 +45,10 @@ properties:
+>> >>    reset-gpios:
+>> >>      maxItems: 1
+>> >>
+>> >> +  goodix,no-reset-pull-up:
+>> >> +    type: boolean
+>> >> +    description: There is no pull-up on reset pin
+>> >
+>> > I have to wonder, why are these system using the reset property if the
+>> > reset is not usable? Shouldn't the property be omitted?
+>>
+>> The reset are fully functional. It just have to be controlled in
+>> push-pull mode.
+>>
+>> Because of the lack of external pull-up, configuring the reset gpio as
+>> input (to save power) puts the reset pin in an unknown state.
+>
+> How much power do we save by doing this? I don't recall other drivers
+> trying to switch reset GPIO into input mode after performing reset...
+
+I don't know.  I also don't recall seeing this in other drivers.  But as
+not knowing how much power it is, I did not feel comofortable proposing
+to remove it.
+
+/Esben
