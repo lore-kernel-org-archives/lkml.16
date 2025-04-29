@@ -1,98 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78DA28C5DC;
-	Tue, 29 Apr 2025 08:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76397279347;
+	Tue, 29 Apr 2025 08:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916625; cv=none; b=m4KOZdLDzL3WJ1mZxoyNrzOnRPlafydnQ2vUaZWMJ9LGhRJMTl1vLu31HAxHFiIEDoC6SVOJTR3u83Tq3h1KeSM50h/biWOBgUvCab1E5pTZuphxHrV09ig4ffRuWqYOxVO05P67mfiCCSdd4AHIKPrHKExCM1CQFAttbIhFvVU=
+	t=1745916638; cv=none; b=qOjqaDU0GMmEvO+mpcBbSVBbdnqP57twnfbAlRcP/+yOJ2DmgSbH/q0fBIHCfOrMOq3v3JR6g1F47qyip67t/FrABh6zRmk06Cu4xGAiPh5wH6Hs5dP4GR8JFhYpWX22/p1FJCdFmqgrCKkKD7FkeW0TSAtG09Ft38aCgw7IVGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916625; c=relaxed/simple;
-	bh=Ml/13q0vC95SyVzhWSFXBnPjXdnRbqMxvb9SdPD+jS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LoZwphIPmc4OVoNpp1KH2Mlgk9XrsGmlMtUs9/m0HA0H0KkBCP51xUEfYfbIST2IXiNeXYQjruxaJwNIQG23HdDGqT43I8AyIDwJmShjAhc4YLijdpeScLnKG9lmvWL4/kXwkOt0xYP5mfO7yxxbuxS9SyIRD41ZAQvXS1yAiBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtZWEZj6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtZWEZj6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73009C4CEE3;
-	Tue, 29 Apr 2025 08:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745916625;
-	bh=Ml/13q0vC95SyVzhWSFXBnPjXdnRbqMxvb9SdPD+jS0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YtZWEZj6zIU8Jbq5ysBhy3/KTtuWI44HUn+4eAGzkqrPdwNZxU8E2kzHDW/4NxkeZ
-	 4VNDlXFEOzZVaj5PGu0xGc7pChvECFgnoEBTlflGnCONJgDVTzpi2XvzRnaWtJCo/H
-	 BDrobDQ8VgELEIH51GNKXyIwjgqSPZzHQh3n5wMhDQ0NjNOOf2WDZn8zbBBmSKPpO8
-	 iO4PwsReqwe0png7H7HRjuFbNz/5M9qzCTFmhDSPSgKfCNXxRPYHABBwLYSiH7SrJw
-	 0oPxrxvTlhtZ3DvLCuKa4eIOU1U9oPVfyZUuXnrityvWZBcLtbQdOIPg6I5PwYpt1Z
-	 eKQD9kryqH+NQ==
-Date: Tue, 29 Apr 2025 10:50:18 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>,
-	Dirk Behme <dirk.behme@gmail.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-Message-ID: <aBCSymzemg_6Fy2h@pollux>
-References: <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
- <aAyyR5LyhmGVNQpm@pollux>
- <0756503c-02e7-477a-9e89-e7d4881c8ce6@gmail.com>
- <aA4ht5sUic39mnHj@pollux>
- <ee888c8f-4802-48a1-bd08-b454b782fff4@de.bosch.com>
- <aA-oQAol8rAU7vzg@cassiopeiae>
- <20250428204840.GB1572343-robh@kernel.org>
- <aA_xUWQt6-UCdlGM@cassiopeiae>
- <D9ILR2IG980H.34N8WNWKWJJO3@buenzli.dev>
+	s=arc-20240116; t=1745916638; c=relaxed/simple;
+	bh=6C2TMS+n6qqj5M83V5ptzbHpW40e+AmDHnNCpPTAXdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t5eoK39GHJVxFvL2PADcfoUMuOSQhG5sS2nzrD2nF681IPXkQa6QHRO7a7wwQzBK0Uu2W9TSHkWiwdIQtFI/MCL2iTQ5Mb3wD0OiUohQL6K/6Zq+UUmEvM7fQrYS4fhuIqorRqeRtwEvi2hAJzYin3cyUVXEn1GnghSkWfsXgRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4ZmtbH6JVvz9sFT;
+	Tue, 29 Apr 2025 10:22:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id e30qWr8CZO0g; Tue, 29 Apr 2025 10:22:19 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZmtbG0699z9sCk;
+	Tue, 29 Apr 2025 10:22:18 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id F1CD98B766;
+	Tue, 29 Apr 2025 10:22:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 2CpqnVV7VgEF; Tue, 29 Apr 2025 10:22:17 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E7F68B763;
+	Tue, 29 Apr 2025 10:22:17 +0200 (CEST)
+Message-ID: <df566157-5320-47cf-ae14-a2e578f68a35@csgroup.eu>
+Date: Tue, 29 Apr 2025 10:22:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9ILR2IG980H.34N8WNWKWJJO3@buenzli.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/13] crypto: powerpc - drop redundant dependencies on
+ PPC
+To: Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, x86@kernel.org,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>
+References: <20250422152716.5923-1-ebiggers@kernel.org>
+ <20250422152716.5923-3-ebiggers@kernel.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250422152716.5923-3-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 11:50:19PM +0200, Remo Senekowitsch wrote:
-> On Mon Apr 28, 2025 at 11:21 PM CEST, Danilo Krummrich wrote:
-> > On Mon, Apr 28, 2025 at 03:48:40PM -0500, Rob Herring wrote:
-> >> 
-> >> One thing that's really hard to debug in C drivers is where an 
-> >> error came from. You can for example turn on initcall_debug and see that 
-> >> a driver probe returned an error. It's virtually impossible to tell 
-> >> where that originated from. The only way to tell is with prints. That is 
-> >> probably the root of why probe has so many error prints. I think we can 
-> >> do a lot better with rust given Result can hold more than just an int. 
-> >
-> > This I fully agree with, not sure if the solution is to put more stuff into the
-> > Result type though. However, there are things like #[track_caller] (also
-> > recently mentioned by Benno), which might be a good candidate for improving this
-> > situation.
-> >
-> > As mentioned, for now let's go with
-> >
-> > 	pub fn required_by(self, dev: &Device) -> Result<T>
-> >
-> > additional to required() for this purpose to get a proper dev_err() print.
+
+
+Le 22/04/2025 à 17:27, Eric Biggers a écrit :
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> Could it make sense to _replace_ `required` with `required_by` ?
-> Otherwise `required` sits a little awkwardly between `optional` and
-> `required_by`. I can't think of a situation where `required` would be
-> preferred.
+> arch/powerpc/crypto/Kconfig is sourced only when CONFIG_PPC=y, so there
+> is no need for the symbols defined inside it to depend on PPC.
+> 
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-Fine with me; required() also seems not useful to implement required_by().
 
-However, I think we should revisit those generic error prints once we tackled
-the issue of ergonomics in finding the source of an error in general.
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+Note that there are other redundancies in the file, for instance 
+CONFIG_VSX already depends on CONFIG_PPC64
+
+Christophe
+
