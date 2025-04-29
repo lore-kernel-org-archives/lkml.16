@@ -1,249 +1,230 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768CA374D1;
-	Tue, 29 Apr 2025 13:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BB5154BE2
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745933605; cv=none; b=VsnejD9JsvzkDDZoD2MD5f03M+JMgXv6bCACMl+fk8iWyDSbYgQ67ZT04quc3nTWWBbAvILghriQ9x0dcAx5qOxJOiZSj/vzRYvjv+SAkjIhTHgi0phFjq/Ya8L17GlLrRueXJZbanUG4/5Q+EtZwJ9SkFgK5pfM+RgTXwzkZvg=
+	t=1745933732; cv=none; b=F1/1MKkyMDaSgXDu9zbueNklyvugGDNU3ACWsWezfZ0Qhyt2GeTJo3LcA8ClckjVhisVzU7dnTS/nFoFzsAQo3xddb6I8heQmHrHXW5rnri76A7GFkplQiyk7X4q9HXCr6j+CsALw3H67WB1TBaa/tq1mXAazBPJENUNnWisuno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745933605; c=relaxed/simple;
-	bh=I4fM/o1bJjEGGY39wKCGAi6BcejJkqTUjX3MJmTypsQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ut943KYGfQnQHydkYWNbkpox5BAkqox1CPCmrH7xDZxpS6c6OBsEl//8uRFQnLc8OS53wsS1BMwEcnFs+brnvxtx6zOIgxiiWHJL1jsm7+KidoIhsTQE7YyelO/VtLXCdZE8ZgChMVleNEpKGghIe7tyEv91dRR03gz11KVtftI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+QML0O3; arc=none smtp.client-ip=209.85.166.45
+	s=arc-20240116; t=1745933732; c=relaxed/simple;
+	bh=a63i9iE1pik7V30aPviWOUMBkFOGLS98nmC+avpfCtM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dz5KxZn+eJrJU1N7bOW0KZZl9yISIKy6vvDLcAxDcCTF9KCTMj7W5mdf7fOwHQQXdtOfPFAKZwDtcS/ALp7NqIKAJQwhr9CnBPi7fVySs61E4MrdabBXg6yARIo8f/rb4SrOggZd4xzdGzzcHC4EFrR0Zw06x2ndXsQ+x+4nauI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlOHZ5AQ; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+QML0O3"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86135af1045so562575539f.1;
-        Tue, 29 Apr 2025 06:33:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlOHZ5AQ"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso63706871fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:35:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745933602; x=1746538402; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Df6b5iFE6W5u/roV6WT6hUMpstd2mlknLmR5T2FH1iY=;
-        b=P+QML0O3OasK2Z7kJqDUqTXGbJ81Kpe0p7AGOctTjyX3IuMAUI2Wer4iwownNf4Vwb
-         AVr0VKziG5r1RhIfLf+0gOauicBEdXvFgao2bWtqS1yE4DXbwrA81+Nsy8mYMiKleG0A
-         tCzVkRIpxKGnXE3SGbBs1XoAm6CziiiqrR4q4zaoQ1C0gTMyU4AI83R5/KC+JdD3SwKs
-         oK7Tqk7MVDP8ZG6n5NhXeCzDq4KlVqsUGTrQtG1xX+/SAgnyOHGvbUgzK35gvX+8fVmo
-         NLzLLYGCqusxu9hyAYfYmqcVMrO05C7ZAx8+m39Mmdlzl7m7SXiKGr1/MvebOWhNwEVG
-         kB+w==
+        d=gmail.com; s=20230601; t=1745933728; x=1746538528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fodDWo+RGItuZQ4Oj97QRpH3lQkupmOqH95MLEPhgwk=;
+        b=UlOHZ5AQa2u4IFH5xIhr/dphqpzisEAfEppRx3tDHCeHT1DCFyfAoirzB8sCqIIfnp
+         qSvHFhVFeiu5stx9OChq5nO0OK08P7enbHkdi4EdUW+NFCSL5HdVkEJLZoDsYPMg/x2M
+         GUcDSIkD2pvKNKmpKqlfXQ1oBQZJkfhQTVrLOGPC7C27mzP7IMukksGzZUsbI9ZbkPpr
+         DJlExUoyRBXWNkTUTAhvs6386bJPrGzIiM38660Z/l7z/itCMRjMHWvwRTJOm9fKLVY7
+         w1d8jElNuzkbC7cg2aShXk/Mgr0F55X4axl3tVGDnD/kGc1NStb/Uf7IVtOUGcCSHSG7
+         p+bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745933602; x=1746538402;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Df6b5iFE6W5u/roV6WT6hUMpstd2mlknLmR5T2FH1iY=;
-        b=xLeBKFNujdN+JQjUbY5dkvb/odaiRlBP9H3h9qWW/b3TT88eDBQCm5SdZdF1y8QMva
-         m8lnu0Sz2rbxcIadzMUwfpbPcRIFFkpLKkrXaqnzZ2fhiQadIfaeBHiiyTFzdJ3XoKoS
-         OkvRK8tx+R2ltHlsJMwYV0hcJa6BUcHfwryvQIuyzAWpERV+sm/+pHubHBhu6WZbe0wv
-         gzcrJWhVnK4ssFDfSpbXjd18LAlz9ybzisAGelVt7ZCOevjsBr27pcGOHAImKx/fxyl7
-         O1W1GGl2C9y1IjLcQIpmYSBJo7MFwKjKPVIjBTVw85gcHCKrnpQtgF0aJQPGC3uhDeVm
-         3T3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWEnq9LjAFY050Dj7sWF2HeCpUPFK4tXLVL1qgF4YNyfAyQEva9JKYFSBQKYiRFB+j2NrxJgUDivdu5Pr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/ZI4xB6/484Xr7cVsulgyJZz1up69f5lHDNMMtxaFLLl/hu6O
-	niwtVUkf0xlOLB1p30o2cTnPO+2lAvcuHiIGAV+78x18ZuMUTYZjxNqTI/ccnBQ=
-X-Gm-Gg: ASbGncu7XbaELF1/XKLuauZGN3MXlBSAKw70DkArtWmlxLLtrb1WU02/kImxWh5zGXF
-	suNUWpwfZNf+XqLO8SntRUB1q8aDZqpCt/HugUgXlKAreK/Hn0XtmXNG9yczq1ctuvk2DWug8SU
-	f0UyKYdTlyb+iVBx+NSJROblsH1P+X3VNHdtk+qhxD33X71tSiQGRws2T/gfKpCATA1XFjysYUo
-	ZKWc4qKSUTGi5MAEfCF9Ur5LZkiU0RIuJYIp4Xo6XxsWPbjHnX4sRyD3+iVkTPW2h7GNJVWfdDL
-	TDATZZ6DNY69jR2/rZCQGlkZPpSSRAQXwqwL+EvjocBskmELoUdeOYbewHR6aPWqRTxSjwg3GE+
-	fnLu9MyBdt9f/XuJDJCdFpEYUb+cpbLF7m/1+h0/vTuC9
-X-Google-Smtp-Source: AGHT+IGAvIf6TiaMuGR5+zGThvHlOgy2GE1EJpUQ5RCSOJTJ/exL3XN8GCXSeK49Pqktc98Lpcv+uw==
-X-Received: by 2002:a92:dd02:0:b0:3d9:64cd:9490 with SMTP id e9e14a558f8ab-3d964cd9699mr7221095ab.16.1745933602102;
-        Tue, 29 Apr 2025 06:33:22 -0700 (PDT)
-Received: from localhost.localdomain (76-224-4-192.lightspeed.clmboh.sbcglobal.net. [76.224.4.192])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f862e82ffesm280645173.36.2025.04.29.06.33.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:33:21 -0700 (PDT)
-From: hoff.benjamin.k@gmail.com
-To: linux-usb@vger.kernel.org
-Cc: gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	Ben Hoff <hoff.benjamin.k@gmail.com>
-Subject: [PATCH] usb: gadget: hid: allow dynamic interval configuration via configfs
-Date: Tue, 29 Apr 2025 09:33:10 -0400
-Message-ID: <20250429133310.353977-1-hoff.benjamin.k@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1745933728; x=1746538528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fodDWo+RGItuZQ4Oj97QRpH3lQkupmOqH95MLEPhgwk=;
+        b=e0s6LnoFS1QyKJXRjTcdIDmXl1t0fDmTEPNbxCLS+yj/nSsc08fkA15ilh3P/OhH1+
+         OmJT6XxBTrgEV6WtEUSCkLC6DCoBGEzJ/uu/QaVxdzHxcp1jHnUemKfv7FD0hXBXeqYI
+         Z9qhFInfqRVCCDKOwvE92werN+ferYKCfIFE5s9N2R0k7T4vRM76CSRWWoh7UQWfLg3r
+         FjgOQ/KyfFf0voGErjqK5+HfRINyNVT6qCc5aKmZNk/+dtzm/xN1MNFSc4PyGjU3Owlr
+         WB5peZ015znK2568RZmMTrx3cl1uvlehZB9AAdFNMGJe2AhDL+3nmgaBcKzghcPmHRxQ
+         ltiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU87sLp5GNaCZX6nWh8KWxDdxXOf6g6jPQHRpDvgxMWdddWA44nSFly0Eo7253Ndi2RTNHvDMq+c39v3hc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDV57sYoV7ldfTGTCQdfjhRkoKTUi+3p9q5dEKuI+ymh2pxFUW
+	0PKty/HDIWgjqkPLMKJde/g5aTfYMIJaO/3H5NOlPQDPbmN4ghfI8IO6uROJ3IlxFWQ5gqsQdNr
+	Imb0dJf3dnDUun9QBnpCI+34zyCg=
+X-Gm-Gg: ASbGnctOg9+BqCPyKEfKMyjlFr5ZlpwaLiKUSXlwmwu+2KXFrdfN33XkQWogIe7DH7P
+	x4wh1zNjQKaM4+beKrS1a4kTZxbiJepDOldUKeT2rBxXkiX2LvnT4rdwAnBb2Db0y+OraSFhpld
+	18EYastry4hYhUILOmFJ9EDw==
+X-Google-Smtp-Source: AGHT+IEwbfo6deTbCOIVtlzBWTe68r6ELJYHmuLGqK8PNPUVDEYpsne7HuqViroBaEpBasloP+47VkDxUjCrfDuNbX8=
+X-Received: by 2002:a05:651c:88f:b0:30b:9813:b010 with SMTP id
+ 38308e7fff4ca-319dd1c2296mr41566301fa.31.1745933727982; Tue, 29 Apr 2025
+ 06:35:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250429114949.41124-1-ryncsn@gmail.com> <20250429114949.41124-6-ryncsn@gmail.com>
+ <78487605-8b83-4b77-8147-9e34e4f8fda2@redhat.com>
+In-Reply-To: <78487605-8b83-4b77-8147-9e34e4f8fda2@redhat.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Tue, 29 Apr 2025 21:35:10 +0800
+X-Gm-Features: ATxdqUE4OYwPtw1kshLNvPBfX3ps1ZKR7FI5Y31rw9GI1__xH3Xmuo1y3FX0n9U
+Message-ID: <CAMgjq7AkaA+q8tNXurv4w2dNN5q6iLaGZ_7tfYRWSr5Oqrd3uQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] mm: move folio_index to mm/swap.h and remove no
+ longer needed helper
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, "Huang, Ying" <ying.huang@linux.alibaba.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ben Hoff <hoff.benjamin.k@gmail.com>
+On Tue, Apr 29, 2025 at 8:24=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 29.04.25 13:49, Kairui Song wrote:
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > There are no remaining users of folio_index() outside the mm subsystem.
+> > Move it to mm/swap.h to co-locate it with swap_cache_index(), eliminati=
+ng
+> > a forward declaration, and a function call overhead.
+> >
+> > Also remove the helper that was used to fix circular header dependency
+> > issue.
+> >
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > ---
+> >   include/linux/pagemap.h | 20 --------------------
+> >   mm/memfd.c              |  1 +
+> >   mm/migrate.c            |  1 +
+> >   mm/swap.h               | 23 +++++++++++++++++++++++
+> >   mm/swapfile.c           |  6 ------
+> >   5 files changed, 25 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> > index 1dc3416a9c0d..47b5746d5a65 100644
+> > --- a/include/linux/pagemap.h
+> > +++ b/include/linux/pagemap.h
+> > @@ -884,26 +884,6 @@ static inline struct page *grab_cache_page_nowait(=
+struct address_space *mapping,
+> >                       mapping_gfp_mask(mapping));
+> >   }
+> >
+> > -extern pgoff_t __folio_swap_cache_index(struct folio *folio);
+> > -
+> > -/**
+> > - * folio_index - File index of a folio.
+> > - * @folio: The folio.
+> > - *
+> > - * For a folio which is either in the page cache or the swap cache,
+> > - * return its index within the address_space it belongs to.  If you kn=
+ow
+> > - * the page is definitely in the page cache, you can look at the folio=
+'s
+> > - * index directly.
+> > - *
+> > - * Return: The index (offset in units of pages) of a folio in its file=
+.
+> > - */
+> > -static inline pgoff_t folio_index(struct folio *folio)
+> > -{
+> > -     if (unlikely(folio_test_swapcache(folio)))
+> > -             return __folio_swap_cache_index(folio);
+> > -     return folio->index;
+> > -}
+> > -
+> >   /**
+> >    * folio_next_index - Get the index of the next folio.
+> >    * @folio: The current folio.
+> > diff --git a/mm/memfd.c b/mm/memfd.c
+> > index c64df1343059..ab367e61553d 100644
+> > --- a/mm/memfd.c
+> > +++ b/mm/memfd.c
+> > @@ -20,6 +20,7 @@
+> >   #include <linux/memfd.h>
+> >   #include <linux/pid_namespace.h>
+> >   #include <uapi/linux/memfd.h>
+> > +#include "swap.h"
+> >
+> >   /*
+> >    * We need a tag: a new tag would expand every xa_node by 8 bytes,
+> > diff --git a/mm/migrate.c b/mm/migrate.c
+> > index f3ee6d8d5e2e..662e5dc44b33 100644
+> > --- a/mm/migrate.c
+> > +++ b/mm/migrate.c
+> > @@ -50,6 +50,7 @@
+> >   #include <trace/events/migrate.h>
+> >
+> >   #include "internal.h"
+> > +#include "swap.h"
+> >
+> >   bool isolate_movable_page(struct page *page, isolate_mode_t mode)
+> >   {
+> > diff --git a/mm/swap.h b/mm/swap.h
+> > index 6f4a3f927edb..91439d0ce50b 100644
+> > --- a/mm/swap.h
+> > +++ b/mm/swap.h
+> > @@ -50,6 +50,24 @@ static inline pgoff_t swap_cache_index(swp_entry_t e=
+ntry)
+> >       return swp_offset(entry) & SWAP_ADDRESS_SPACE_MASK;
+> >   }
+> >
+> > +/**
+> > + * folio_index - File index of a folio.
+> > + * @folio: The folio.
+> > + *
+> > + * For a folio which is either in the page cache or the swap cache,
+> > + * return its index within the address_space it belongs to.  If you kn=
+ow
+> > + * the folio is definitely in the page cache, you can look at the foli=
+o's
+> > + * index directly.
+> > + *
+> > + * Return: The index (offset in units of pages) of a folio in its file=
+.
+> > + */
+> > +static inline pgoff_t folio_index(struct folio *folio)
+> > +{
+> > +     if (unlikely(folio_test_swapcache(folio)))
+> > +             return swap_cache_index(folio->swap);
+> > +     return folio->index;
+> > +}
+> > +
+> >   void show_swap_cache_info(void);
+> >   void *get_shadow_from_swap_cache(swp_entry_t entry);
+> >   int add_to_swap_cache(struct folio *folio, swp_entry_t entry,
+> > @@ -125,6 +143,11 @@ static inline pgoff_t swap_cache_index(swp_entry_t=
+ entry)
+> >       return 0;
+> >   }
+> >
+> > +static inline pgoff_t folio_index(struct folio *folio)
+> > +{
+> > +     return folio->index;
+> > +}
+> > +
+>
+> Could we just have a single generic function that does something like:
+>
+> static inline pgoff_t folio_index(struct folio *folio)
+> {
+>         if (unlikely(IS_ENABLED(CONFIG_SWAP) &&
+>                      folio_test_swapcache(folio)))
+>                 return swap_cache_index(folio->swap);
+>         return folio->index;
+> }
+>
 
-This patch adds support for dynamically configuring the polling interval
-(bInterval) for HID function drivers using configfs. This enables
-custom HID gadgets with user-specified poll rates without recompilation.
+Sure, this is doable. I wanted to put the file in swap.h so it can use
+swap_cache_index without introducing another extra header dependency,
+and put in right next to swap_cache_index, I thought this way looks
+prettier :)
 
-Signed-off-by: Ben Hoff <hoff.benjamin.k@gmail.com>
----
- drivers/usb/gadget/function/f_hid.c | 54 ++++++++++++++---------------
- drivers/usb/gadget/function/u_hid.h |  1 +
- 2 files changed, 27 insertions(+), 28 deletions(-)
+I can move it to the tail of this file (out of ifdef CONFIG_SWAP) and
+use one single generic function.
 
-diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-index 740311c4fa24..8aae22f9d609 100644
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -62,6 +62,7 @@ struct f_hidg {
- 	unsigned short			report_desc_length;
- 	char				*report_desc;
- 	unsigned short			report_length;
-+	unsigned char			interval;
- 	/*
- 	 * use_out_ep - if true, the OUT Endpoint (interrupt out method)
- 	 *              will be used to receive reports from the host
-@@ -156,10 +157,7 @@ static struct usb_endpoint_descriptor hidg_ss_in_ep_desc = {
- 	.bEndpointAddress	= USB_DIR_IN,
- 	.bmAttributes		= USB_ENDPOINT_XFER_INT,
- 	/*.wMaxPacketSize	= DYNAMIC */
--	.bInterval		= 4, /* FIXME: Add this field in the
--				      * HID gadget configuration?
--				      * (struct hidg_func_descriptor)
--				      */
-+	/*.bInterval		= DYNAMIC */
- };
- 
- static struct usb_ss_ep_comp_descriptor hidg_ss_in_comp_desc = {
-@@ -177,10 +175,7 @@ static struct usb_endpoint_descriptor hidg_ss_out_ep_desc = {
- 	.bEndpointAddress	= USB_DIR_OUT,
- 	.bmAttributes		= USB_ENDPOINT_XFER_INT,
- 	/*.wMaxPacketSize	= DYNAMIC */
--	.bInterval		= 4, /* FIXME: Add this field in the
--				      * HID gadget configuration?
--				      * (struct hidg_func_descriptor)
--				      */
-+	/*.bInterval		= DYNAMIC */
- };
- 
- static struct usb_ss_ep_comp_descriptor hidg_ss_out_comp_desc = {
-@@ -218,10 +213,7 @@ static struct usb_endpoint_descriptor hidg_hs_in_ep_desc = {
- 	.bEndpointAddress	= USB_DIR_IN,
- 	.bmAttributes		= USB_ENDPOINT_XFER_INT,
- 	/*.wMaxPacketSize	= DYNAMIC */
--	.bInterval		= 4, /* FIXME: Add this field in the
--				      * HID gadget configuration?
--				      * (struct hidg_func_descriptor)
--				      */
-+	/* .bInterval		= DYNAMIC */
- };
- 
- static struct usb_endpoint_descriptor hidg_hs_out_ep_desc = {
-@@ -230,10 +222,7 @@ static struct usb_endpoint_descriptor hidg_hs_out_ep_desc = {
- 	.bEndpointAddress	= USB_DIR_OUT,
- 	.bmAttributes		= USB_ENDPOINT_XFER_INT,
- 	/*.wMaxPacketSize	= DYNAMIC */
--	.bInterval		= 4, /* FIXME: Add this field in the
--				      * HID gadget configuration?
--				      * (struct hidg_func_descriptor)
--				      */
-+	/*.bInterval		= DYNAMIC */
- };
- 
- static struct usb_descriptor_header *hidg_hs_descriptors_intout[] = {
-@@ -259,10 +248,7 @@ static struct usb_endpoint_descriptor hidg_fs_in_ep_desc = {
- 	.bEndpointAddress	= USB_DIR_IN,
- 	.bmAttributes		= USB_ENDPOINT_XFER_INT,
- 	/*.wMaxPacketSize	= DYNAMIC */
--	.bInterval		= 10, /* FIXME: Add this field in the
--				       * HID gadget configuration?
--				       * (struct hidg_func_descriptor)
--				       */
-+	/*.bInterval		= DYNAMIC */
- };
- 
- static struct usb_endpoint_descriptor hidg_fs_out_ep_desc = {
-@@ -1202,6 +1188,10 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
- 	hidg_hs_in_ep_desc.wMaxPacketSize = cpu_to_le16(hidg->report_length);
- 	hidg_fs_in_ep_desc.wMaxPacketSize = cpu_to_le16(hidg->report_length);
- 	hidg_ss_out_ep_desc.wMaxPacketSize = cpu_to_le16(hidg->report_length);
-+
-+	hidg_fs_in_ep_desc.bInterval = hidg->interval;
-+	hidg_hs_in_ep_desc.bInterval = hidg->interval;
-+
- 	hidg_ss_out_comp_desc.wBytesPerInterval =
- 				cpu_to_le16(hidg->report_length);
- 	hidg_hs_out_ep_desc.wMaxPacketSize = cpu_to_le16(hidg->report_length);
-@@ -1224,19 +1214,21 @@ static int hidg_bind(struct usb_configuration *c, struct usb_function *f)
- 	hidg_ss_out_ep_desc.bEndpointAddress =
- 		hidg_fs_out_ep_desc.bEndpointAddress;
- 
--	if (hidg->use_out_ep)
--		status = usb_assign_descriptors(f,
--			hidg_fs_descriptors_intout,
--			hidg_hs_descriptors_intout,
--			hidg_ss_descriptors_intout,
--			hidg_ss_descriptors_intout);
--	else
-+	if (hidg->use_out_ep) {
-+		hidg_fs_out_ep_desc.bInterval = hidg->interval;
-+		hidg_hs_out_ep_desc.bInterval = hidg->interval;
-+		status = usb_assign_descriptors(f,
-+			    hidg_fs_descriptors_intout,
-+			    hidg_hs_descriptors_intout,
-+			    hidg_ss_descriptors_intout,
-+			    hidg_ss_descriptors_intout);
-+	} else {
- 		status = usb_assign_descriptors(f,
- 			hidg_fs_descriptors_ssreport,
- 			hidg_hs_descriptors_ssreport,
- 			hidg_ss_descriptors_ssreport,
- 			hidg_ss_descriptors_ssreport);
--
-+	}
- 	if (status)
- 		goto fail;
- 
-@@ -1362,6 +1354,7 @@ F_HID_OPT(subclass, 8, 255);
- F_HID_OPT(protocol, 8, 255);
- F_HID_OPT(no_out_endpoint, 8, 1);
- F_HID_OPT(report_length, 16, 65535);
-+F_HID_OPT(interval, 8, 255);
- 
- static ssize_t f_hid_opts_report_desc_show(struct config_item *item, char *page)
- {
-@@ -1422,6 +1415,7 @@ static struct configfs_attribute *hid_attrs[] = {
- 	&f_hid_opts_attr_protocol,
- 	&f_hid_opts_attr_no_out_endpoint,
- 	&f_hid_opts_attr_report_length,
-+	&f_hid_opts_attr_interval,
- 	&f_hid_opts_attr_report_desc,
- 	&f_hid_opts_attr_dev,
- 	NULL,
-@@ -1468,6 +1462,9 @@ static struct usb_function_instance *hidg_alloc_inst(void)
- 	if (!opts)
- 		return ERR_PTR(-ENOMEM);
- 	mutex_init(&opts->lock);
-+
-+	opts->interval = 10;
-+
- 	opts->func_inst.free_func_inst = hidg_free_inst;
- 	ret = &opts->func_inst;
- 
-@@ -1546,6 +1543,7 @@ static struct usb_function *hidg_alloc(struct usb_function_instance *fi)
- 	hidg->bInterfaceProtocol = opts->protocol;
- 	hidg->report_length = opts->report_length;
- 	hidg->report_desc_length = opts->report_desc_length;
-+	hidg->interval = opts->interval;
- 	if (opts->report_desc) {
- 		hidg->report_desc = kmemdup(opts->report_desc,
- 					    opts->report_desc_length,
-diff --git a/drivers/usb/gadget/function/u_hid.h b/drivers/usb/gadget/function/u_hid.h
-index 84bb70292855..a29dcb14f738 100644
---- a/drivers/usb/gadget/function/u_hid.h
-+++ b/drivers/usb/gadget/function/u_hid.h
-@@ -25,6 +25,7 @@ struct f_hid_opts {
- 	unsigned short			report_desc_length;
- 	unsigned char			*report_desc;
- 	bool				report_desc_alloc;
-+	unsigned char			interval;
- 
- 	/*
- 	 * Protect the data form concurrent access by read/write
--- 
-2.49.0
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
+>
