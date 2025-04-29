@@ -1,85 +1,114 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3948269806
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B2926A1CF;
+	Tue, 29 Apr 2025 21:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745960821; cv=none; b=fi9zka5L0ryw4eW+RgICnXEeaLQZzrz2FdR6XKJuPn6A6D3J7Qy9kDvuszRUU1J4m1scGsZMmtYBhVSH1joa6ovrx3k1xH3WU/n9anihV8APgRbvoxjuslxpl1wUbReqcwLIUJcSxD7LSM/CSzUxotie5t3tFOcVEniwWrBzOl8=
+	t=1745960835; cv=none; b=TtKFnxs0g2viV65QBUF32Vp28OFaHVtozOcO8sfvKK4//9ZiZulp55I/uFalEWN4aM65bUVohB8VmI29os/fhcasJ5xBj3vyK3PgBSlxFtJSZ2QHk1LvzTZUW9DoYjz3HR0gHofsPNA6kS9e5Be/1h4xCNCa/7SZmCvHyD+LmH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745960821; c=relaxed/simple;
-	bh=OdPx+9rE/+SGwziMXpppjMh/K44iE529FLcpRp3+x34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HnZcUMV1TayDtTZEf1y0K9+kErpExgXUG4BMIFwAUxZmv8P29+lo/CH2vEjJAZFzE8jC1Y7jD7fP6WSmuQEup2Gb4IlLRdbHfJ57XtzTpR2l5pVQBSxMPDv5tan94ub399yFHV54O9cXiY/tPJVxNVJBMJ1wMdJemVxBFDoN4Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zk4lHq3h; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745960835; c=relaxed/simple;
+	bh=h4MHEOtVAPe0EKg+ia3xAD0U97c9p61TQFT9WGEXj3A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QXKlTHfxGXwzqj7Gvp6mPolDBoTmidpCmyMPakhxw8vpZNOF6dVuPSTZcF4f9QFwtFr1uIl7RnJkjC+oTXRUjHjq9x45eCqukzYodC4l1edPBxwnxUzSElH+hbiOcfXMghGo41ZTm2IY/LjI8YkONgltxtBJwfaK/4LJo7lbeL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZNev/tF; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zk4lHq3h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pbASHdPEQN2aUBUOT3uJTu0pEAfLEl1MEPamgqhd9s0=; b=Zk4lHq3hKPod8ZAhaG4kvtT83d
-	jmHSRCGbzhsJQCuDJbgIWiQPGxaqFv85ictTSX4UAMnkJWo5hny8LuzNnTw3UXBlZ9s0SM5yFUQQT
-	iIfx/tq9SCyTSftLAeK0CYYOrJliqlWiIm2uZP+3EGA0yn8cIOi4vEa2lhqZ//ur6I7cM3YG9DuCt
-	cQfQb0yQ9lncqMAYHDdlGDOmUGIjDy5cmLMa1npbtOGuCVyiTS5s+Wh1t0HHVpbkM9PxYIg4ieTPA
-	4LEK4pXNBMqMbqYEMGyOqvhnOCKLJOrGAmogRNOjCJxVhYxhEmF6WZpJU0HmNvJISWHcCZlcQ8C2T
-	No3BFZuw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u9sAF-0000000DWvK-2ECq;
-	Tue, 29 Apr 2025 21:06:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0006D30035E; Tue, 29 Apr 2025 23:06:50 +0200 (CEST)
-Date: Tue, 29 Apr 2025 23:06:50 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: carlos.bilbao@kernel.org, tglx@linutronix.de, seanjc@google.com,
-	jan.glauber@gmail.com, bilbao@vt.edu, pmladek@suse.com,
-	jani.nikula@intel.com, linux-kernel@vger.kernel.org,
-	gregkh@linuxfoundation.org, takakura@valinux.co.jp,
-	john.ogness@linutronix.de, x86@kernel.org
-Subject: Re: [PATCH v3 0/2] Reduce CPU consumption after panic
-Message-ID: <20250429210650.GD4439@noisy.programming.kicks-ass.net>
-References: <20250429150638.1446781-1-carlos.bilbao@kernel.org>
- <20250429133941.063544bb4731df0ef802440c@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZNev/tF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745960833; x=1777496833;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h4MHEOtVAPe0EKg+ia3xAD0U97c9p61TQFT9WGEXj3A=;
+  b=NZNev/tFO12qk6QLVabcuu0HqCdkVxhW745MFxytRqnttoyXeF2n1gKb
+   HDzMIQYMJR0dq63HH2c6qYSpwbNh6t4AtSZIWJmf7y4sBxEatqpmatfCe
+   kpQk6/dPtROTEdawRnRjMZXApoEZofdmWCLEvlxBi+cwSDthfNXLH1SmY
+   f53aIkXW8HT0eJ+a6bKNSq5uJggQsvy0gqM329uGnlzE+X1Y+FmwkoeRv
+   u+9q5irlkLU90+TRozJhb5SumfLL9LlgJr+IoW4N8HqUSAUNHGhWLTD00
+   4yDuPsMc/TRdPFtnjEoAQvp/3s5pGtQouGo5FVb8D4l2WezX/x+KhzQCa
+   Q==;
+X-CSE-ConnectionGUID: 8qSY/Xf0QXOld/3+D+A9aQ==
+X-CSE-MsgGUID: GHK8nw0YRDmctabP4prZZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="50260959"
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="50260959"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 14:07:12 -0700
+X-CSE-ConnectionGUID: YklolNELTnWcT0QB1z6VkQ==
+X-CSE-MsgGUID: r7aJJeZ6Q72Oy+gmLUqqQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="134925019"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by orviesa008.jf.intel.com with ESMTP; 29 Apr 2025 14:07:13 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: rafael@kernel.org,
+	viresh.kumar@linaro.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] cpufreq: intel_pstate: Unchecked MSR aceess in legacy mode
+Date: Tue, 29 Apr 2025 14:07:11 -0700
+Message-ID: <20250429210711.255185-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429133941.063544bb4731df0ef802440c@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 01:39:41PM -0700, Andrew Morton wrote:
-> (cc more x86 people)
-> 
-> On Tue, 29 Apr 2025 10:06:36 -0500 carlos.bilbao@kernel.org wrote:
-> 
-> > From: Carlos Bilbao <carlos.bilbao@kernel.org>
-> > 
-> > Provide a priority-based mechanism to set the behavior of the kernel at
-> > the post-panic stage -- the current default is a waste of CPU except for
-> > cases with console that generate insightful output.
-> > 
-> > In v1 cover letter [1], I illustrated the potential to reduce unnecessary
-> > CPU resources with an experiment with VMs, reducing more than 70% of CPU
-> > usage. The main delta of v2 [2] was that, instead of a weak function that
-> > archs can overwrite, we provided a flexible priority-based mechanism
-> > (following suggestions by Sean Christopherson), panic_set_handling().
-> > 
-> 
-> An effect of this is that the blinky light will never again occur on
-> any x86, I think?  I don't know what might the effects of changing such
-> longstanding behavior.
-> 
-> Also, why was the `priority' feature added?  It has no effect in this
-> patchset.
+When turbo mode is unavailable on a Skylake-X system, executing the
+command:
+"echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo"
+results in an unchecked MSR access error: WRMSR to 0x199
+(attempted to write 0x0000000100001300).
 
-It does what now, and why?
+This issue was reproduced on an OEM (Original Equipment Manufacturer)
+system and is not a common problem across all Skylake-X systems.
 
-Not being copied on anything, the first reaction is, its panic, your
-machine is dead, who cares about power etc..
+This error occurs because the MSR 0x199 Turbo Engage Bit (bit 32) is set
+when turbo mode is disabled. The issue arises when intel_pstate fails to
+detect that turbo mode is disabled. Here intel_pstate relies on
+MSR_IA32_MISC_ENABLE bit 38 to determine the status of turbo mode.
+However, on this system, bit 38 is not set even when turbo mode is
+disabled.
+
+According to the Intel Software Developer's Manual (SDM), the BIOS sets
+this bit during platform initialization to enable or disable
+opportunistic processor performance operations. Logically, this bit
+should be set in such cases. However, the SDM also specifies that "OS and
+applications must use CPUID leaf 06H to detect processors with
+opportunistic processor performance operations enabled."
+
+Therefore, in addition to checking MSR_IA32_MISC_ENABLE bit 38, verify
+that CPUID.06H:EAX[1] is 0 to accurately determine if turbo mode is
+disabled.
+
+Fixes: 4521e1a0ce17 ("cpufreq: intel_pstate: Reflect current no_turbo state correctly")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/cpufreq/intel_pstate.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index f41ed0b9e610..ba9bf06f1c77 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -598,6 +598,9 @@ static bool turbo_is_disabled(void)
+ {
+ 	u64 misc_en;
+ 
++	if (!cpu_feature_enabled(X86_FEATURE_IDA))
++		return true;
++
+ 	rdmsrl(MSR_IA32_MISC_ENABLE, misc_en);
+ 
+ 	return !!(misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
+-- 
+2.48.1
+
