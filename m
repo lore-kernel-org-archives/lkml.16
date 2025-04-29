@@ -1,46 +1,45 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE51244685;
-	Tue, 29 Apr 2025 16:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2E924290C;
+	Tue, 29 Apr 2025 16:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944425; cv=none; b=rmI8zJsuHH0pGU3ofCpQrxJl/JTprPWt3pyxsU9RlQmArOoIurW5p+9kdmOJRq4imNp7RGjSz5zUMwE9eEutiEt8BmaL6U7nSUFUJxVzKf7WFJnrJDlfeMtQ/z8JRtQhABNF88vj3AwBf/lSEnhGoUtJ1HB2kfOs1EGWiNPNMk0=
+	t=1745944431; cv=none; b=gJ3tHbzZpkOff1+57/sCqCRJh4EtSkiEFTeIPMYz99bzazfUC917kzfWj3Ow2lJ/A+PPgS03W5EzS98+/ft+NkaiZo7UWut+NLuPYgu4RDZJQemMtYdM5nk6fzs658PghuT8FcG9Ozp8aPGqcmeH4wwu3X4BKj82M+RMYL7uWko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944425; c=relaxed/simple;
-	bh=ITMZtQtSCuisMtzmkO5p3sYMeGrtIHcslnCAPyofEKA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KyvWmIyZGCAmwj52byFRPFv4z6MriqRl0qmz65IDGav0qxdFiAalEL5Y2A5EDhYLXWKUaCTGPQbWDxtKWNh1kZFK5N513Zk/GbrlLSYclIVQ0li2AC6wFjBIoMUS+jD/la0rGguU0niUrxcDAsTYgUyJi546J56jkclC2SBbQHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fYjs0bYu; arc=none smtp.client-ip=198.47.19.245
+	s=arc-20240116; t=1745944431; c=relaxed/simple;
+	bh=u2nnUWFZyeaUlcKUTzRvXJUSJDS/GwSvtgl2IU4J2UA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AkxRCWttbcNWsLdTIIFQFi3Nm9NR1Kr9cUyeBoaO5vfI3l2widGTRF8elDNr5aavPpvUeeMUs3mn8TlryZphxpT4sfTbem2b1on94Bnz+zcjkIdkpaqESH2wfMVoCzbGS/l1nOv69sxQ6vaht0qcbYBU+/nw6zLTTI0AF/s3JlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uUi4JEz2; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fYjs0bYu"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TGXbOi3141150
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uUi4JEz2"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TGXbFq3722128
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 11:33:38 -0500
+	Tue, 29 Apr 2025 11:33:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745944418;
-	bh=5fX3jYJgv1EleTFgsZUPSUMZTMUNaUj98y/1xoV41i4=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=fYjs0bYuFHT7zL4SZzIgI8b/J56WClYfJ1W11ll8slcpdOOs6O7chpbXtJ885yL5x
-	 dyyWesZ5oS6CqApQzu8jmD+ikyKX8lMa/2VMrqaRc8kAHsc2kYTwJbGsPtZL8qmCM/
-	 OQ1+pDrJkRa3Cy5EBVnXmoO6oiOElf7SNrbGTavM=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TGXbBY108651
+	s=ti-com-17Q1; t=1745944417;
+	bh=phAgRZDLcEJL+2Qt4p20wfF/jzjcFFMyigWTHHdSwyM=;
+	h=From:To:CC:Subject:Date;
+	b=uUi4JEz2qI1eDMijaOFWC73rACjTB3ACNAB3xU0K0w+jMXJH5+v1oZ0k5wovH/oVJ
+	 0w0Id6pHxRrpM+eFC8bSW3JyGabij8aLfl6L7zBfV1xKKU+sRYuCvcLgkI2DhrcMyo
+	 F2eO1QVzLUANxxsLC5z/jbcnx3j5EKgTL/hLykxo=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TGXbE8019666
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Tue, 29 Apr 2025 11:33:37 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
  Apr 2025 11:33:37 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Tue, 29 Apr 2025 11:33:37 -0500
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TGXb2M093065;
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TGXb2J093065;
 	Tue, 29 Apr 2025 11:33:37 -0500
 From: Judith Mendez <jm@ti.com>
 To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
@@ -54,12 +53,10 @@ CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
         <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>,
         Udit Kumar
 	<u-kumar1@ti.com>, Bryan Brattlof <bb@ti.com>
-Subject: [PATCH v2 3/3] arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to default
-Date: Tue, 29 Apr 2025 11:33:37 -0500
-Message-ID: <20250429163337.15634-4-jm@ti.com>
+Subject: [PATCH v2 0/3] Set eMMC clock parent to default
+Date: Tue, 29 Apr 2025 11:33:34 -0500
+Message-ID: <20250429163337.15634-1-jm@ti.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250429163337.15634-1-jm@ti.com>
-References: <20250429163337.15634-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,32 +67,42 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Set eMMC clock parents to the defaults which is MAIN_PLL0_HSDIV5_CLKOUT
-for eMMC. This change is necessary since DM is not implementing the
-correct procedure to switch PLL clock source for eMMC and MMC CLK mux is
-not glich-free. As a preventative action, lets switch back to the defaults.
+This series was split-off from "Misc MMC updates" patch series [0] and the
+original patch further divided into three to help with backporting as per
+review comments [1].
 
-Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more IPs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Judith Mendez <jm@ti.com>
-Acked-by: Udit Kumar <u-kumar1@ti.com>
----
+This series sets clock parent for eMMC to the default clock parent
+MAIN_PLL0_HSDIV5_CLKOUT for am62, am62a, & am62p/j722s SoCs. Software (DM)
+does not switch MMC clock parent correctly as per the Arasan IP requirement
+to hold the IP in reset while clock source is switched. Since muxes to
+switch clock parent are not glitch-free and the default parent is tested
+and working fine, switch to the default as a preventative action.
+
+Changes since v1:
+- split original patch into three
+- add cover-letter
+- reword patch descriptions
+- add review tags
+
+[0] https://lore.kernel.org/linux-devicetree/20250417233040.3658761-1-jm@ti.com/
+[1] https://lore.kernel.org/linux-devicetree/20250429142825.bvrbpoc5iz32wh35@garment/
+
+Link to v1:
+https://lore.kernel.org/linux-devicetree/20250429142333.4140010-1-jm@ti.com/
+
+Judith Mendez (3):
+  arm64: dts: ti: k3-am62-main: Set eMMC clock parents to default
+  arm64: dts: ti: k3-am62a-main: Set eMMC clock parents to default
+  arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parents to
+    default
+
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi               | 2 --
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi              | 2 --
  arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ 3 files changed, 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-index 7b65538110e8..fa55c43ca28d 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-@@ -573,8 +573,6 @@ sdhci0: mmc@fa10000 {
- 		power-domains = <&k3_pds 57 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 57 1>, <&k3_clks 57 2>;
- 		clock-names = "clk_ahb", "clk_xin";
--		assigned-clocks = <&k3_clks 57 2>;
--		assigned-clock-parents = <&k3_clks 57 4>;
- 		bus-width = <8>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
+
+base-commit: d864bb528a6725e775d564fd4430762acbb9dd0d
 -- 
 2.49.0
 
