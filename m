@@ -1,126 +1,90 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0DF243964
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197513EFF3;
+	Tue, 29 Apr 2025 23:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745969463; cv=none; b=TvyQdsl/v1K15roGH1pSKzibGa45ByJBroj99vSJwwjNs5T66fW5TaSymG2cukM2nI5RFr897HK4UD/NXR3Ho7OrCiuMtgp6iqSwZBVfWPbsmvOndbWK8RWDdi1GVJ2DxDJDBBoCsgI0uw6atL2swCUJOoWKLgy9heIxOguZCTg=
+	t=1745969483; cv=none; b=W4xN2CJW1UNkTo7+vJPJwxefc/gYVQP6jqeGjEn9KHopJCCehI73k7axJVk8FxCtyGu2PTB+0NfqvmHhEtUaVwVKzRmKs9pC3uBdxrBogXrVVlzjApXf/LSpEaeSQoBIDWwq6x9zynSQXyDD16TIfOJrZ0jPzjWGpE7XhMSOSEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745969463; c=relaxed/simple;
-	bh=6+tn3bVnsdbyoFhXLXW3XNOXO8RdLpvvD8H+IgN8isw=;
+	s=arc-20240116; t=1745969483; c=relaxed/simple;
+	bh=ws68QzpNPRXm5iYQ1h9ZNWvh8nFaDQz+1EoAmh1h7/A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kU9kWH3LdhdPOgkWiOGJvqmwnpmOZxOhfPrZD3dKwgIFufQIma3mNnNoUmrfuAC+OK0QzGv6+ntqfeeWIINMEP3hRBgR87YNGnf9qGrYP8kW4lI6NqVPCYCFVzvaxl2lTh9+U95mluTkqm4vjouQXCK2Et3aOxe4pP39QhSKwW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=EKXBOqmu; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	 To:Cc:Content-Type; b=kSG7uz8Ys0b2Djycy5RI3qyx31yaeF6R+IDjiM8kGaXcihXPofYrOKVN+wYScA82vO2vba5tAEQFlk2hrnPPQtIbDUkdOJDxFKF95+my5iXHZkg8YEQBcf/iRQyLT9MyB0aHgyt4L6H1nNkLmHnIzWutoROJfnoJP5JP+k25DgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iwb9hoy9; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="EKXBOqmu"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e733cd55f9eso2678621276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:31:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iwb9hoy9"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c0517142bso59659811fa.1;
+        Tue, 29 Apr 2025 16:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1745969460; x=1746574260; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745969480; x=1746574280; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cIuAebnQ3utGP4sRcNF3af9094rXpAxKt1SXsqCPHIU=;
-        b=EKXBOqmuBPd3QD0u0uXcMb8RXce8GeOv2o58ReliDmsY6jwHqdPW/JGLY+OEiGpmbT
-         lja2QVzmYiVG1FUiP9tnnqOQqueX/mWLevqAKG1cZIgtJibmyj/PZAwSkCrPGfE5S+Vx
-         ICYJZd9sxzmS32qWTvu6WGZ0u6715wpCeNxiUM7RroHWdXn5KAPoik7dU67SobIF1Ak0
-         W0KKY44pEeikYACgaLWIn6BpYQrRMReyGFibQT7N3PH9iI6TmA6utLBcD5SK0Zgg4D5y
-         IW6iZtZ02YU7Yc7nKGNd5Ze+slDFZj9UkpZVrf8WRaYytC14nazrOwLnYtA5MImIgzns
-         PeoA==
+        bh=m7fJoBZtpYgaIvTV/F7OH7KKN0eVTfYC0ZzUcBf7L8g=;
+        b=Iwb9hoy9FAq22xvVFb8ao/WIqmEbi72mbIJJEX/Dtn/N03t5FhgedL8pA9Ptxs3J11
+         NAt9g6UoipxolhfO0OVAhMH+B4XjEQcd/xI7Z/Mb1bxkD0T4ojRFwcpZgbZBZs8ZCXh4
+         Nvbb4DQ+aDZaaptm8Vn2c5lXPgFtFSNHJkTBXFFU6juKZfbqWAKpzhXsBXwQrHdmGnHv
+         zVpBigNw5H5uo7E7+cKMDkRF2uZP4obXDaFmMbfPUUA4QtFrsse4J8Mbvpdq1/ujYFmq
+         UCpuJ5mrD+uxxLM7GJ74EQpJ6c+mCy4OBtfbCVriIQ3v8QR6rYqPZ4Nao0LlxPeLCLro
+         +9LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745969460; x=1746574260;
+        d=1e100.net; s=20230601; t=1745969480; x=1746574280;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cIuAebnQ3utGP4sRcNF3af9094rXpAxKt1SXsqCPHIU=;
-        b=pTe/J7IOMy97JFQBgLtF+/UAYP9CleWG1ihyHRRjMWbw9P1g2bZ4Xa/DyUP/o5HDvA
-         4//ODkumYV11om0+unudQSrDbI8qiXF8sBdV2UwygmdVDFX19PwpLL0gmzxmjHhf0hW0
-         JmiyCjju7y1BDSVKtyKaGvMsD7vQWNF/r4Y5Dsh0AbohkAIo3a3/OdVGEzTt/KlZWK+m
-         Be8Vsj+ToKDnlTi5Y+V++ocnj+Qn628iPWMjOCNyWug+RBEAC87yGFBP4BR40CVFYmRd
-         axWw2Nf+S4VquvaS9HPM3VZkQt7KRtEh0wktCJdxq8VH0WeMjhTyZT75r0ojS1KPYKMp
-         A21A==
-X-Forwarded-Encrypted: i=1; AJvYcCXtCgFfJxgnyLpQLFHk+/flXY6LhKq3pLlzQz02Yg8ttS+dRAryrvCAbFUszbKbLqhEK/Zf9f7scoliiaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwYK90NbKFGhqIT/QKv8q1UUWqmn4ivGbkE0Gh7L7pkx2O47qd
-	4MKJmh9FTd9QPtr0Z36Krf76L1qQ/PwfzFYoWm49kDQsTgpOLdMiX2MHDUtKBh6GFFo39e2k6Nk
-	5AWX4CJwP6YWNMvcpLgHaQR2v9hKqxfBEN6Hq
-X-Gm-Gg: ASbGncv8VfHtNVSnKHY3DcLmd9cQ8F67ff42qjA5uaUoPush2zXl/F/e4IeyZWQcVgv
-	fZtOmXtj2NbBixoO/d4WYXfiRXIdwDmatVD79347foNdSNloEFdajXEI/WbaLGbFzTv6744p/Gv
-	atDaQyh2Vt9tFhq+hzLLCaoQ==
-X-Google-Smtp-Source: AGHT+IGwua5N9PuQI5YXnZ9QizB13TEvlVyb3ghRMEepupOY9IBACmHRKJ/ceFLULrT2r9vA2fNY/xi9tZpK618tJa8=
-X-Received: by 2002:a05:6902:e09:b0:e73:17e3:ef4e with SMTP id
- 3f1490d57ef6-e73ecf7cabdmr1474221276.48.1745969460035; Tue, 29 Apr 2025
- 16:31:00 -0700 (PDT)
+        bh=m7fJoBZtpYgaIvTV/F7OH7KKN0eVTfYC0ZzUcBf7L8g=;
+        b=KnJ0WZV9chGL75f365N6cAFTTcNlkrFTa1PCRgo6NYkISfktuJV5HtDdr7Zc6g+b/U
+         t6PJYuuecJWGBFDbYZdVaAr9dxIxXYDWDo5M2dUyVZiyOJS7dnXF17hdgbP2Al9hA4kG
+         fTErmqh17Nz2seS95QG0pt5CaUxhe60xFy2wZSha6bwtm5RhYM0LMq692ynspoPiD6Z8
+         iOi1BBmH81QenAHi5xHOSa0V2hmZWidjMa6EJAbDcb/TECF4lqfWBJs3sGRRX3f/c9xT
+         srBEcOyty2YjKf17D0jFP38NyHk+93PY/8qP3Ow28xCenKng8GgubpJlPDZH8P1PFCKm
+         AaQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdQM8vcJ4pO+a0MU93qwYQNHbxY952Otz3SHWgyfo2muvrvpI2jpVBGLIraFWrs8D/9xNm6o6cGngeoH8=@vger.kernel.org, AJvYcCXpdhSHIHthjfGlPCMiVZtJaMX8TnxS+gOrzqpgKzDkzvkweKdmW9jTfhB1Q/FXWnSC5BwhMvmH17cAwQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygypi3O7GLP0+bIaM880K/FZcjibuDlJNZkSBghqLAkRieIvci
+	w3dgrHEAvPLbVhOElqePutOftNVm1gCgW7CHgIMRQgoO9nc74c3l/2yrUQ40CqaIxkdtxtFCe1c
+	gd1Qm/Wrxd2b1H4iQCTAetud5jkAQHfaJupM=
+X-Gm-Gg: ASbGncs/H+Q14myUWLlzpHTZGKqodxu7yVCLAztux/VeJoof0fS/3o7fxSZnXiReCy2
+	lzFoKVEtdAgw6VSewHysYMYawObAVLja9NmCp86l6w3fLJ+gkkLI+LjX3hzvPPb1VdppVDH2RdJ
+	XOGQgv1sXqiqnoOkVVs+EEjbtQ09fwRnWq0mSYwg==
+X-Google-Smtp-Source: AGHT+IGZbgaQDM+jrVUhnFwMeBSwgcPEn9veOUHjPNsPAmBhZbLljwyfVK8I7b+PE1k0uVKIFtiezDRUe7FgQ2PGLvg=
+X-Received: by 2002:a05:651c:516:b0:30b:f775:baf5 with SMTP id
+ 38308e7fff4ca-31e679063dfmr3306271fa.0.1745969479441; Tue, 29 Apr 2025
+ 16:31:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-module-hashes-v3-0-00e9258def9e@weissschuh.net> <20250429-module-hashes-v3-8-00e9258def9e@weissschuh.net>
-In-Reply-To: <20250429-module-hashes-v3-8-00e9258def9e@weissschuh.net>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 29 Apr 2025 19:30:48 -0400
-X-Gm-Features: ATxdqUHKCRv2dWw3Z8HwiaRKbffRbebAcIs6GQu6Ludlza-Iyae1SuGp-QceJWc
-Message-ID: <CAHC9VhSAANnOYB11AerdtpEwWSu9OoRdxW34dap909D3z=t49A@mail.gmail.com>
-Subject: Re: [PATCH v3 8/9] lockdown: Make the relationship to MODULE_SIG a dependency
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	=?UTF-8?Q?Fabian_Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>, 
-	Arnout Engelen <arnout@bzzt.net>, Mattia Rizzolo <mattia@mapreri.org>, kpcyrd <kpcyrd@archlinux.org>, 
-	Christian Heusel <christian@heusel.eu>, =?UTF-8?Q?C=C3=A2ju_Mihai=2DDrosi?= <mcaju95@gmail.com>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-integrity@vger.kernel.org
+References: <20250430085544.12800bdd@canb.auug.org.au>
+In-Reply-To: <20250430085544.12800bdd@canb.auug.org.au>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 29 Apr 2025 16:30:43 -0700
+X-Gm-Features: ATxdqUE_jSUTq76ft0MU4jdlmTlKyDAuL9_Ho4QcMk-fYYVNebDbOcc8v2pLiXc
+Message-ID: <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the pm tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, gldrk <me@rarity.fan>, Kees Cook <kees@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 9:04=E2=80=AFAM Thomas Wei=C3=9Fschuh <linux@weisss=
-chuh.net> wrote:
+On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
 >
-> The new hash-based module integrity checking will also be able to
-> satisfy the requirements of lockdown.
-> Such an alternative is not representable with "select", so use
-> "depends on" instead.
+> Hi all,
 >
-> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> ---
->  security/lockdown/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-I'm hopeful that we will see notice about dedicated Lockdown
-maintainers soon, but in the meantime this looks okay to me.
-
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/security/lockdown/Kconfig b/security/lockdown/Kconfig
-> index e84ddf48401010bcc0829a32db58e6f12bfdedcb..155959205b8eac2c85897a8c4=
-c8b7ec471156706 100644
-> --- a/security/lockdown/Kconfig
-> +++ b/security/lockdown/Kconfig
-> @@ -1,7 +1,7 @@
->  config SECURITY_LOCKDOWN_LSM
->         bool "Basic module for enforcing kernel lockdown"
->         depends on SECURITY
-> -       select MODULE_SIG if MODULES
-> +       depends on !MODULES || MODULE_SIG
->         help
->           Build support for an LSM that enforces a coarse kernel lockdown
->           behaviour.
+> Commits
 >
-> --
-> 2.49.0
+>   9eef70365d71 ("ACPICA: Introduce ACPI_NONSTRING")
+>   ac9334785c75 ("ACPICA: utilities: Fix overflow check in vsnprintf()")
+>   5de20bc939b0 ("ACPICA: Apply pack(1) to union aml_resource")
+>
+> are missing a Signed-off-by from their authors.
 
---=20
-paul-moore.com
+Hi Stephen, how can I remedy this for 5de20bc939b0 ("ACPICA: Apply
+pack(1) to union aml_resource")?
