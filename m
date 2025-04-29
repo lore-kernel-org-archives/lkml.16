@@ -1,90 +1,149 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75F41DE4F3;
-	Tue, 29 Apr 2025 20:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEDD255E47;
+	Tue, 29 Apr 2025 20:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957830; cv=none; b=sXqk6KR27iuJJuXZ31qeQjW9GrmgBvpMz5xrYfU5QDm/uxjwvqPjhwx/ZiWsYWN/ym/RMvIKYtrMnDFv3DJv0ZUePWZUJ1pITiLQRpRSLa/LdROv0RWOXar/V53/UgQn58fY06uSsQfY5jyMXH2rhBZPeh3rhWCSwko7fjjwxgg=
+	t=1745957851; cv=none; b=apSyaFnon2QAx7MdRPHdXubd/Gm/2xfpOhN7m4VjkhHvwiQHBr47HdJgiOlxPcpXqeqlhLHK4XlWOEVxEmrnOJqSIQYOuQh0jkeYvIJRzNWmfsKnB/ehgBjaQjGIB5LhthThnZrcBoQt7nU1AFIJENXgn7A+bxvWfuz1iWpylxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957830; c=relaxed/simple;
-	bh=hFBTMEmaHf6s2MBLUN+i3MPudnyjQ5inJc+P6QHb/FY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heFMMYbZoOAH3r/q7CH44+QztMrUSnHHcfoSCSC9dBBmj0OWWAxwdTQ1Z021TCw8DT1CaoHgAj0T94cymS+pGm5pMsqsQzjjEOGVBMIL34PHMYDIQT8SIVK3uHaH8QYV6YBLYZ5WbNCv7xSgS3ngN4aMAig0yKZzx3iuke2ilK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=XzHCLtkI; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1745957851; c=relaxed/simple;
+	bh=rjpoDKDVhZTqHFvznQ+aLcgS+We6aZfken0Yuc6n86U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ov42uHIQxux/tjprN8E1xn0WkhYQ0SICOW/j6MSLWIN+PBh9Rce2acHO7LqALKFT2rP8qYt1n4ZihNjPB526jlJmmd9+AYP39YYxgowxbOPa4uip5B6ozNdmL3HayRSUwMGlkV36BKf/NLWHioDhwJBff1DJ7SSJH81oOdzmHoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yr4gewFu; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="XzHCLtkI"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0FC6710273DB0;
-	Tue, 29 Apr 2025 22:17:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745957826; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=4j/yiV5NKpHHxjQpGZnyDBnPZwZOAa4wZQq4VLSzkoM=;
-	b=XzHCLtkIcE/RBYTqKDPlGdGI7OXx7+oZMHFlpZj9JK7HTCLhNKP6sdEpAcTf35uZGnmg9O
-	QWnosW5y9Rx3Dq4uPzv6MPVhj59WIjhdqW2dFB7T9NyEORHom71fYr5+STI3a+Jm+qJVs7
-	0zHoNRzb5hjXjohdyRlmuk1oS84NHfTiAyXEdcxNpxhA2oENcTpm5GQQ7PSSSjoiU+0F3L
-	nPbROe8ZuoWVPDPLYA1j2HWaCznUTGz2O73uyWIFCdF1yRrBp2D/6H9jaYZjoPvvY806yd
-	6wG6bI96jn4KAYDsXEXvYAE9Bg76lEPJ8xhL72IQ3IgWczfgyZFUemx5GJoQRQ==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yr4gewFu"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acacb8743a7so41249466b.1;
+        Tue, 29 Apr 2025 13:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745957847; x=1746562647; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UJXqJGTR9eoXWZ1XO061gyOcS3WGgpE3MfcNzatM3x0=;
+        b=Yr4gewFuPZFhEL8Poxk6bxLzLGfFF1ODgg5zmbxmGNVPf4ChfL8ddFQmteXz3kxFeF
+         dbyA3A8boB7XTimKdimcjW7XcjJBan9FM2WHYkkVE6b5wlCkH++ToZJhkmTDsF7zDuZa
+         wJ+C+mL2vEtmM/TwbA2K7ZWPW4dtJrmbDoVwZtzwBkFlEden2Z9rGAAKfLr2sgiE6k+c
+         UtkmI+kIVti6QFvWZsnvMdYUBXqhlud7aErzPWMQV7z0WB19e4pkBFnjNc1rmSa1Sbtz
+         Ilg1rvYDs+C/VPNb3WMp5wESU//VlWZ6hiNY/2uKo4u+7AGP7vMJa+R+XzPfiInsuoSe
+         xUKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745957847; x=1746562647;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UJXqJGTR9eoXWZ1XO061gyOcS3WGgpE3MfcNzatM3x0=;
+        b=jIkqn8+kXPDCsQMYPGE0Yn7WboahUNYMktvKXWf46X3XnPKtR15JU9L85DpeYo9Sgz
+         NbF8Jis3+ExcsV+xoDmY7oObo4vdA/HlZaEhcREYbP+4rFKvjrFKIAVXlC+yNvuLOnrf
+         FU9gkozaGA/g7AUbUiAP8W1f6E0PWUMRSz7oyG2n8lI0nQ7p1kt/3Gfw9xzI3eAenmrx
+         4RjO5ztCKs6TcrE4frDbzqGSEwdw8XSbJY+fVfG0IPenNsQVRL/KnhciVhn/6zaR3uGo
+         B9TqW7c15YzPiWsxrB06/Xvj4ULjfxyu913dASPMRhthwzRW5wcVthI2mvH7GB/TEKAW
+         ss9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2u3AIVApf+mk58ynuJC9pWBvdEIkgGxIU8Kwgh9pDZxPSXuWaQ9GzJZF/F7RH9QgwgRZ0muuA@vger.kernel.org, AJvYcCVt7rr+Cc6FSxjaYMkOEi7TyebPITt2lNfjtiZ8322W6DMqpkELanP+9NJYzlbUkNqQqQN02PbBXB+bZZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSx9Xxp5jT9Vz7cbb6ZfYwDOH08mSeuzA91Tyjv2bP+2hw2x+7
+	iBRmj6oW7GqgXhwKr/Q67CYpmh5P+fTM/wkBHSQ+AmNdajg2BV28
+X-Gm-Gg: ASbGncuiRazsmyZDwnXj80nCzYl97B8YxhbLQabe0BxNO8CKUp9xnSEyR6RTV6xWydW
+	46lnBix8g/DU+izv/sOD17REtotXooj20+I6nc+CGX7nojOaBZf32EsoS0P24Tap9Qs5kfGag5q
+	yS7nt4BFInVDAbOI4oJTTKcHpP1p8jAUPe0XWJrOkkKNhu9y9Md2m9yQmxHIGfu96w1w4i6J4rq
+	5EYbUIk6UWHeKxV0ea34yH73S9PWX/wEtmhmo2rxvo9opFGbsG9Kuoyypmby95eJBSV9UBHTurb
+	cf8vfMuDT93IGbgx02WdB5tLOwUPJggv9u1JUSoPi1L3adaUY6Hc3Rn9Ua184uX/eblO20TeI7A
+	ow3q1kUKOI0pjcAEdfp8=
+X-Google-Smtp-Source: AGHT+IEN5dmuDUuaBVUsWbTbxMTVFfCdun/yQx3P0AU893RfJV4ABy+fUaLKEgZaq4HKTa96E98eiw==
+X-Received: by 2002:a17:907:805:b0:ace:4870:507c with SMTP id a640c23a62f3a-acedf98ee37mr15997166b.23.1745957847243;
+        Tue, 29 Apr 2025 13:17:27 -0700 (PDT)
+Received: from localhost (dslb-002-205-023-067.002.205.pools.vodafone-ip.de. [2.205.23.67])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acec123a3easm229896466b.147.2025.04.29.13.17.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 13:17:26 -0700 (PDT)
+From: Jonas Gorski <jonas.gorski@gmail.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Kurt Kanzenbach <kurt@linutronix.de>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 00/11] net: dsa: b53: accumulated fixes
 Date: Tue, 29 Apr 2025 22:16:59 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
-Message-ID: <aBEzuzBVkyzGnm8w@duo.ucw.cz>
-References: <20250429161051.743239894@linuxfoundation.org>
+Message-ID: <20250429201710.330937-1-jonas.gorski@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="w/80VTIZSwblmNnJ"
-Content-Disposition: inline
-In-Reply-To: <20250429161051.743239894@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
+This patchset aims at fixing most issues observed while running the
+vlan_unaware_bridge, vlan_aware_bridge and local_termination selftests.
 
---w/80VTIZSwblmNnJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Most tests succeed with these patches on BCM53115, connected to a
+BCM6368.
 
-Hi!
+It took me a while to figure out that a lot of tests will fail if all
+ports have the same MAC address, as the switches drop any frames with
+DA == SA. Luckily BCM63XX boards often have enough MACs allocated for
+all ports, so I just needed to assign them.
 
-> This is the start of the stable review cycle for the 6.1.136 release.
-> There are 167 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+The still failing tests are:
 
-CIP testing did not find any problems here:
+FDB learning, both vlan aware aware and unaware:
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.1.y
+This is expected, as b53 currently does not implement changing the
+ageing time, and both the bridge code and DSA ignore that, so the
+learned entries don't age out as expected.
 
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+ping and ping6 in vlan unaware:
 
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+These fail because of the now fixed learning, the switch trying to
+forward packet ingressing on one of the standalone ports to the learned
+port of the mac address when the packets ingressed on the bridged port.
 
---w/80VTIZSwblmNnJ
-Content-Type: application/pgp-signature; name="signature.asc"
+The port VLAN masks only prevent forwarding to other ports, but the ARL
+lookup will still happen, and the packet gets dropped because the port
+isn't allowed to forward there.
 
------BEGIN PGP SIGNATURE-----
+I have a fix/workaround for that, but as it is a bit more controversial
+and makes use of an unrelated feature, I decided to hold off from that
+and post it later.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaBEzuwAKCRAw5/Bqldv6
-8pwBAKCF1Dfk/0Ah9a2XYAVlPz05ynfjdQCdGPK/d7s5QhrRhK01NG57uQY/8Hk=
-=Ijli
------END PGP SIGNATURE-----
+This wasn't noticed so far, because learning was never working in VLAN
+unaware mode, so the traffic was always broadcast (which sidesteps the
+issue).
 
---w/80VTIZSwblmNnJ--
+Finally some of the multicast tests from local_termination fail, where
+the reception worked except it shouldn't. This doesn't seem to me as a
+super serious issue, so I didn't attempt to debug/fix these yet.
+
+I'm not super confident I didn't break sf2 along the way, but I did
+compile test and tried to find ways it cause issues (I failed to find
+any). I hope Florian will tell me.
+
+Jonas Gorski (11):
+  net: dsa: b53: allow leaky reserved multicast
+  net: dsa: b53: keep CPU port always tagged again
+  net: dsa: b53: fix clearing PVID of a port
+  net: dsa: b53: fix flushing old pvid VLAN on pvid change
+  net: dsa: b53: fix VLAN ID for untagged vlan on bridge leave
+  net: dsa: b53: always rejoin default untagged VLAN on bridge leave
+  net: dsa: b53: do not allow to configure VLAN 0
+  net: dsa: b53: do not program vlans when vlan filtering is off
+  net: dsa: b53: fix toggling vlan_filtering
+  net: dsa: b53: fix learning on VLAN unaware bridges
+  net: dsa: b53: do not set learning and unicast/multicast on up
+
+ drivers/net/dsa/b53/b53_common.c | 207 ++++++++++++++++++++++---------
+ drivers/net/dsa/b53/b53_priv.h   |   3 +
+ drivers/net/dsa/bcm_sf2.c        |   1 +
+ 3 files changed, 154 insertions(+), 57 deletions(-)
+
+-- 
+2.43.0
+
