@@ -1,118 +1,92 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A3125178C
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A6921ABDB;
+	Tue, 29 Apr 2025 17:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745946971; cv=none; b=heJFrF5qLOdJYsXTxG+65hoBlSwvvXfbLQkGn/Lu+IRwsZ/DxwibDiUNeMdseUhuo0Zix8y7iG2RybFmlS1UmuFo9mbdqB+2w5ADhUcl0wiLScGGP7Vt3ZCeTgw1aYV8sG5G3P3dIlFXt0CAVgT+ri7cBf/gQEjmAeUyb/N++oU=
+	t=1745946971; cv=none; b=RsnAdYadY5XEHjnq+4UK30BPWntuT6xj8WifC0YmKk+RAcSZxxWo2Aqf/baNvKLnLsr+PsfbBgiNdfWKIIY3+KXH3Z5KEG5mshcC/3xDuwtTmL6rBsYEoOD+LoRR4497rD74KPzuLTfPwFCWM1ZQ4gBlGAOcyAzXY2qVd69pD4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745946971; c=relaxed/simple;
-	bh=7RreN82ADxQheU4kFlw/w2oqpyMciZ+CVjUxQ6PBPwM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TVep+NfO50q6sRWgaLIdpCVAyR9hRtl3xSChhriL77VL+PPGmsc/JpIX+fba3tO6oiWnV7NNO4/7Psl0osvJSxiK0asWwvVcDX+Uao3brv0nhs+iv97mTNEno87M6r6mEcqh59qZ3LRynV5qjbaQc/RC+R3P6Mly/OSID7Lb2BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bXu2MwBv; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	bh=zIESig/sdrklC2QUfMKBiME2VbHq59qP0ORH722HL7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LvWxPqe6av00c4G8tdI5yfczTwqXZ88s/A+Naczih3L7FPfDX3zaBURJbp2kQMjRS6ZsKVVtEqmqVXZNfhyGKwhGQtFG+ltydaSz8axZJnnDi4WTY8kVv0KPoiEkJauxf1Y6AXM6v/UG+8uL/fw+hJ4f9ZMggaErXGomOGD5Ugg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=AkmyTe4S; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXu2MwBv"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736d64c5e16so4917837b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745946969; x=1746551769; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rgg+yk6TbZkrf50JyHWvmpVTzHV3/+x6Tw/18oxSDfg=;
-        b=bXu2MwBvNAlO8nBWeuN1zsR8XdKxHPAS6C4JsEKAfRG8mQZsVRB2ZvJQNFngWHiPwq
-         8f86r3A/fz04l1GZ+hapVDWQEmt6OYRqjI93ZWfmBo5mZafkTTyguzbMUMh6FEwSUVDA
-         eqRZ/N+ZaBpljcdcw7+D0/pOvoBI9lSdmbOj1unt6azWF6zHVGyihAOOs0ZMQyeMS3VU
-         aa9udOfB9etW1XjNq8Pfd2oGUIXW9T2gAfRL8iZ6Ork//pkjxlpWhPKyxOlJ8QHyrW//
-         jHLuWYLJ3GreKCV6b+WDvPT+KjUaGOvDWeMorKwUnl8XYpjSJCIJL6nLQbJ+loEn5Eqk
-         5qtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745946969; x=1746551769;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rgg+yk6TbZkrf50JyHWvmpVTzHV3/+x6Tw/18oxSDfg=;
-        b=FD0Yn/uGwWveMYb9td1fQA5D6p36ZRW6TTacxOOdyOMnQ2gjEa1Np7Ewy4q+aTzy+S
-         FuT5bHXnxxDSdo92ahqmmnHYGFFZab7l3IqWcoMf+2LeszLTcwMYZpbgwPh+LkGZqtYz
-         +D1EktM+OwAlbLlY+ZxpegKEtB+c0fHnzIBe63RMp4KRe1vYDgnCzfbs9XQN/bmUjkaP
-         qU7U9ZxG/bzq8SrfjF4kKCAeqv4vVF7OM3k6YCXNumKe/SLVuh6mVHvJUuw3JqizjBbK
-         YseUX6H9f8QmQwZ9JIhbvTxgxfrCw6FWvM3iQLjWDlY45St4wiH7HEOrjUEPUJ7/rADQ
-         YxsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdE4zaRm2THziMLk9l+A1G1W5y8FFNRqswzZEc+ZTRNOcyLHFPKkvm21B4S4sKtMTm9vjUEOUhuRw09VQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNYRYUsavbId5f9173EGwiPhLgWKSSdjStDOfLrSqQ8hf6VRF2
-	+32TBakkgcpRLM5rR0WjeCianT/kxtfV0sx4N1bEDJ4zcLtnBWdLRdZZKT1e75z8nnqqIzJtFnx
-	ICw==
-X-Google-Smtp-Source: AGHT+IHnBsjJ2lHlGsUa7wfkhDlYoD1/JVsa8FRjr2Yl8wXuoJ1y4aqVn3VINpRePPFLsbZG8fx/ncC1Rgo=
-X-Received: from pfbkq14.prod.google.com ([2002:a05:6a00:4b0e:b0:73e:1925:b94b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1814:b0:736:5f75:4a44
- with SMTP id d2e1a72fcca58-74038abcf18mr88925b3a.22.1745946969011; Tue, 29
- Apr 2025 10:16:09 -0700 (PDT)
-Date: Tue, 29 Apr 2025 10:16:07 -0700
-In-Reply-To: <20250429144631.GI4198@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="AkmyTe4S"
+Received: from localhost (unknown [10.10.165.8])
+	by mail.ispras.ru (Postfix) with ESMTPSA id A168940594EB;
+	Tue, 29 Apr 2025 17:15:59 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru A168940594EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1745946959;
+	bh=21UY7oxPFE0GjMY5Q/rd+zUU7x2/+gFe8bBEGUI2oK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AkmyTe4S+FnsWis9+pOeopoZ4A36Nc4bjGDcH5QIdwaqn8X0k+koCDis48Hy2EGFU
+	 OpoYiH2oxRClVixqMR7ynwnNxgPzKlbpzV2k2YN9NaS2GA869flI30t8mTQ9hSl8cN
+	 kWH9ydXfeAqd7FcxuuArRr82H8CXFz81Mitu0pYY=
+Date: Tue, 29 Apr 2025 20:15:59 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Stanislaw Gruszka <stf_xl@wp.pl>, Alexei Safin <a.safin@rosa.ru>
+Cc: lvc-project@linuxtesting.org, netdev@vger.kernel.org, 
+	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2] iwlegacy: 4965: fix possible out-of-bounds access in
+ il4965_tx_cmd_build_rate()
+Message-ID: <d57qkj2tj4bgfobgzbhcb4bceh327o35mgamy2yyfuvolg4ymo@7p7hbpyg5bxi>
+References: <20250424185244.3562-1-a.safin@rosa.ru>
+ <20250427063900.GA48509@wp.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414113754.172767741@infradead.org> <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
- <20250415074421.GI5600@noisy.programming.kicks-ass.net> <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
- <20250416083859.GH4031@noisy.programming.kicks-ass.net> <20250426100134.GB4198@noisy.programming.kicks-ass.net>
- <aA-3OwNum9gzHLH1@google.com> <20250429100919.GH4198@noisy.programming.kicks-ass.net>
- <aBDcr49ez9B8u9qa@google.com> <20250429144631.GI4198@noisy.programming.kicks-ass.net>
-Message-ID: <aBEJVzesMum9-Rem@google.com>
-Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com, 
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, 
-	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
-	samitolvanen@google.com, ojeda@kernel.org, shuah@kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250427063900.GA48509@wp.pl>
 
-On Tue, Apr 29, 2025, Peter Zijlstra wrote:
-> On Tue, Apr 29, 2025 at 07:05:35AM -0700, Sean Christopherson wrote:
-> > On Tue, Apr 29, 2025, Peter Zijlstra wrote:
-> > > On Mon, Apr 28, 2025 at 10:13:31AM -0700, Sean Christopherson wrote:
-> > > > On Sat, Apr 26, 2025, Peter Zijlstra wrote:
-> > > > > On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
-> > > > > 
-> > > > > > Yeah, I finally got there. I'll go cook up something else.
-> > > > > 
-> > > > > Sean, Paolo, can I once again ask how best to test this fastop crud?
-> > > > 
-> > > > Apply the below, build KVM selftests, 
-> > > 
-> > > Patch applied, my own hackery applied, host kernel built and booted,
-> > > foce_emulation_prefix set, but now I'm stuck at this seemingly simple
-> > > step..
-> > > 
-> > > $ cd tools/testing/selftests/kvm/
-> > > $ make
-> > > ... metric ton of fail ...
-> > > 
-> > > Clearly I'm doing something wrong :/
+Hello,
+
+On Sun, 27. Apr 08:39, Stanislaw Gruszka wrote:
+> > diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> > index 78dee8ccfebf..f60d9b9798c1 100644
+> > --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> > +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> > @@ -1572,7 +1572,7 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
+> >  	 */
+> >  	rate_idx = info->control.rates[0].idx;
+> >  	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
+> > -	    || rate_idx > RATE_COUNT_LEGACY)
+> > +	    || rate_idx >= RATE_COUNT_LEGACY)
+> >  		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
+> 
+> .. so looks the check is fine already and changing it will induce a bug
+> for RATE_54M_INDEX.
+> 
+> Regards
+> Stanislaw
+> 
+> >  	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
+> >  	if (info->band == NL80211_BAND_5GHZ)
+
+Here goes the fragment:
+
+		rate_idx += IL_FIRST_OFDM_RATE;
+	/* Get PLCP rate for tx_cmd->rate_n_flags */
+	rate_plcp = il_rates[rate_idx].plcp;
+
+> > -- 
+> > 2.39.5 (Apple Git-154)
 > > 
-> > Did you install headers in the top level directory?  I.e. make headers_install.
-> 
-> No, of course not :-) I don't use the top directory to build anything,
-> ever.
-> 
-> All my builds are into build directories, using make O=foo. This allows
-> me to do parallel builds for multiple architectures etc. Also, much
-> easier to wipe a complete build directory than it is to clean out the
-> top level dir.
 
-FWIW, you can do the same with KVM selftests (and presumably others?), although
-the syntax is kinda weird (no idea why lib.mk uses OUTPUT instead of O).
+Looks like the proper checks should be added to address the 5GHZ case and
+validate that the index won't exceed the array boundaries after being shifted
+by IL_FIRST_OFDM_RATE.
 
-E.g. to build KVM selftests in $HOME/build/selftests/x86
-
-  make O=$HOME/build/selftests/x86 headers_install
-  make OUTPUT=$HOME/build/selftests/x86
+--
+Thanks,
+Fedor
