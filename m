@@ -1,156 +1,89 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C5F270EAB
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AA71C5F14
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907951; cv=none; b=XA7yDToJE23sjlIEIsN6ByBy5BhcRc82IvvRPlboqytXNdAXlAclYKjCQi6trJcaBlmcnoaDSK6LLnHEC21Od/wKMfBkRINSqzygSv07rFvdw6VME9PjrSRonl+L+MB+2ddXR4DY5j63v6YLLke4/BKPR1zX++vIGChSFeX0YWw=
+	t=1745908004; cv=none; b=TFz8m5e4iGqmy40GYbbSZrAwoVDPhluGEEH69gzLOJJU++IiiqtEfxQEVd43XG1aCaUGAyRFij6/UtFNGoDU8j1VijO/eg6g533GuR3rVcFO4QrOeoX8+3FdRNsijOtzCBIE0VxndAM8+MuFkBRugLTnwO6gKUv88QOKorvhgng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907951; c=relaxed/simple;
-	bh=jBiD/YapoGW177IbLkYB3vVFsc7jriKE2rlPnMCWMtU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Apsj/eic8AFIjsgvjSoXzuN8WI4DYQUAs6KN7+2Ane6PCpIxgRdzET0jewDC10Du+RlORWUmVR+vdA1LYR6ND8GWd6yBIUhBq9no91E8SJwqPoX276t3kfnwPlOR72fk9I2b866SaQ2RN8XybUmuyoAh51DsYxunYP+yMw1LD7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=db0HSSEs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XqL+um24; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=db0HSSEs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XqL+um24; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745908004; c=relaxed/simple;
+	bh=qRBwxCPjrAEMnQU9tgT+tvB1rwycmOzjTVnF0rK6PfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aOaccRQFRi/KNchJJotRBDcQvTGG+VH9RojHC+NZk/Fk5Dsd8iWrpSDUuaAbYfXhvjzfJM3p9fI2Xv7ibBDlRjPXKTtl7P0eieMjBHUeCGWAazb2lo4QsynFZAz3skf1X+2B4acNbDhe9sOWsPexs5aY6nZ+HaAUlJVrRNEsQq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNQlRwGe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="db0HSSEs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XqL+um24";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="db0HSSEs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XqL+um24"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B1A881FB5A;
-	Tue, 29 Apr 2025 06:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745907947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AN9dbtdUFDq27tKWn7MFJvi8tb3eggILMwkZ2BFXns4=;
-	b=db0HSSEsriJkqk5vmANZ/pDBcBPZXfVYIRNo7QW+1wY9CwhVXZn/dVcCentd7waTrAyBsB
-	FiZ9ir6gpmcnBwhGH3FODgkj5qo2Oy/EZ13LbCzC5t/HvGIKSqrUKrzNI+6MfVfMFtzclq
-	AF3eUb6CHVa1q41rYQXjTWf/iFQudSM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745907947;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AN9dbtdUFDq27tKWn7MFJvi8tb3eggILMwkZ2BFXns4=;
-	b=XqL+um24uR8A+ecFos13OEc5mNRaeZ8ag/q7BKd9UAn0Ig6irJRIlNSXYAKxaWaIanhYLT
-	DsF3Du9G4slvbWCg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=db0HSSEs;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=XqL+um24
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745907947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AN9dbtdUFDq27tKWn7MFJvi8tb3eggILMwkZ2BFXns4=;
-	b=db0HSSEsriJkqk5vmANZ/pDBcBPZXfVYIRNo7QW+1wY9CwhVXZn/dVcCentd7waTrAyBsB
-	FiZ9ir6gpmcnBwhGH3FODgkj5qo2Oy/EZ13LbCzC5t/HvGIKSqrUKrzNI+6MfVfMFtzclq
-	AF3eUb6CHVa1q41rYQXjTWf/iFQudSM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745907947;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AN9dbtdUFDq27tKWn7MFJvi8tb3eggILMwkZ2BFXns4=;
-	b=XqL+um24uR8A+ecFos13OEc5mNRaeZ8ag/q7BKd9UAn0Ig6irJRIlNSXYAKxaWaIanhYLT
-	DsF3Du9G4slvbWCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E7E1913931;
-	Tue, 29 Apr 2025 06:25:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ay/zNupwEGhqXwAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 29 Apr 2025 06:25:46 +0000
-Message-ID: <3b69424a-5901-49f2-a613-5c2b38fff764@suse.de>
-Date: Tue, 29 Apr 2025 08:25:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNQlRwGe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41706C4CEE3;
+	Tue, 29 Apr 2025 06:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745908003;
+	bh=qRBwxCPjrAEMnQU9tgT+tvB1rwycmOzjTVnF0rK6PfU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=fNQlRwGezoEMDCirFgxxijTcBuPpD0r7xJqV+ooDIvDWHGMonaSyyNNCapEsnOZRQ
+	 MNYkNk2boIX2kiYIBDN6ymxNCSdVf9154xOPZaFqbfkws3MdxFf0z34hNOKW0P/aDN
+	 c3q/2KM9MtG6vaN8InDxERhhiYf+imAZ7Jwd8fk+R5Uu/u/mBkmxM8lmOSrpiqFtfB
+	 rXyPBqhl+5Llr6uJ/ezR0r7kqtdlHSpz4bdC8Zv8yv2zK80AwzfIkQhRdJlFWfGU9q
+	 h4y9tRGS90+nzjHoYfLXbHnt2KxbaFD1m/6TfO2K85sRKUnFCMi9Vx2gNDzSsebFvL
+	 lVFEnUGCbMEcQ==
+Date: Tue, 29 Apr 2025 09:26:37 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] memblock: fixes for nid setting in
+ memmap_init_reserved_pages()
+Message-ID: <aBBxHaHCu8qyO3E-@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/9] block: reuse part_in_flight_rw for part_in_flight
-To: Yu Kuai <yukuai1@huaweicloud.com>, hch@infradead.org, axboe@kernel.dk,
- xni@redhat.com, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
- song@kernel.org, yukuai3@huawei.com, cl@linux.com, nadav.amit@gmail.com,
- ubizjak@gmail.com, akpm@linux-foundation.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com
-References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
- <20250427082928.131295-3-yukuai1@huaweicloud.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250427082928.131295-3-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B1A881FB5A
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FREEMAIL_TO(0.00)[huaweicloud.com,infradead.org,kernel.dk,redhat.com,kernel.org,huawei.com,linux.com,gmail.com,linux-foundation.org];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,huawei.com:email,suse.de:dkim,suse.de:mid,suse.de:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 4/27/25 10:29, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> They are almost identical, to make code cleaner.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->   block/genhd.c | 24 +++++++++---------------
->   1 file changed, 9 insertions(+), 15 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Hi Linus,
 
-Cheers,
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-Hannes
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock tags/fixes-2025-04-29
+
+for you to fetch changes up to 3b394dff15e14550a26b133fc7b556b5b526f6a5:
+
+  memblock tests: add test for memblock_set_node (2025-04-07 09:28:01 +0300)
+
+----------------------------------------------------------------
+memblock: fixes for nid setting in memmap_init_reserved_pages()
+
+* pass 'size' rather than 'end' to memblock_set_node() as that function
+  expects
+* fix a corner case when memblock.reserved is doubled at
+  memmap_init_reserved_pages() and the newly reserved block won't have nid
+  assigned
+
+----------------------------------------------------------------
+Masami Hiramatsu (Google) (1):
+      memblock tests: Fix mutex related build error
+
+Wei Yang (3):
+      mm/memblock: pass size instead of end to memblock_set_node()
+      mm/memblock: repeat setting reserved region nid if array is doubled
+      memblock tests: add test for memblock_set_node
+
+ mm/memblock.c                            |  12 +++-
+ tools/testing/memblock/internal.h        |   6 ++
+ tools/testing/memblock/linux/mutex.h     |  14 +++++
+ tools/testing/memblock/tests/basic_api.c | 102 +++++++++++++++++++++++++++++++
+ 4 files changed, 133 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/memblock/linux/mutex.h
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Sincerely yours,
+Mike.
