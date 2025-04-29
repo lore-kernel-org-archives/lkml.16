@@ -1,46 +1,47 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3773729290D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD0029DB7B;
+	Tue, 29 Apr 2025 09:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918799; cv=none; b=Bm7mvopDe4EfSdXYk3UX4vIaALg3Esli15XnlXKdMacYLiol/N7Pqiq9/VYqRdqx4aYR27tVLnZie4WkI3mkj3TMc+Y+blAoPd/Djk54q66gXnUPJ2frP6EuUM0YiPl+xPbckN+j80D/yMsEiB09Qunm13a5Q4TjqCpldgJ4Ozk=
+	t=1745918836; cv=none; b=TyqkvLCG1Jb+kV4gEn0Idjz9qHRW9Eho0sNlIQ2NqONT0Dm/wr8+37FuwV7UupO4QELDo9pyX483jqwC0H8NqwClSntCuQl3tptAMmN2tRV/MKt0SzwUPBVWhWFYwDA7KsHCGSZa6mN9s2jCD95OCAelG63n4DD2h+bsynhmZ5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918799; c=relaxed/simple;
-	bh=YLfYS5ABeKHGhaDv1mbTfzYSLJDsPMjydLwS0/qNyck=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AqBZHSDK+kFkpVjsMYMl+sG/B4H3sKtxTeVbQdfKfAPBs27NxjqPsnfQfNPfQ+jOCIwpq8EbBIW56EAGyCMzBkzQ5MjZ2BGqRqDogW/uJoF1Aycw3t1jOVCOC5PUenWKJjycllEtcKhpMz82d6qLkbRt/ise3Y71kT/bHtL0dcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S3+PEoYn; arc=none smtp.client-ip=217.70.183.196
+	s=arc-20240116; t=1745918836; c=relaxed/simple;
+	bh=CASvlc42clKz5BfrQgoRV2/Mwzi6UHy9iT9YN0nWlVY=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=AemZ0uLzT8GcvPerGThrnedT7N1hT7B+n927m70z0xVpbANq+zS+xTgRDpmQQ4AYziOReVafDiyRkQeWDtY7vu7iQt72KpeV27Gd7Fpi4jlImyRNvlT176wOqUAgdaUJQ2CtN8qkopACKalSudnoZBphQxAdv6FeRP1jWNyjAow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VGhUfXtx; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S3+PEoYn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9E94C43AD5;
-	Tue, 29 Apr 2025 09:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VGhUfXtx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A2EA24330A;
+	Tue, 29 Apr 2025 09:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745918795;
+	t=1745918827;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3zBSOJ8PZCIJkVI0RwB72XCG1uSclea039h0mEzj+SA=;
-	b=S3+PEoYnUm9uzhdF5bN5wK/Kw45LUnE7GFYWD1oKTIhFFByEx6DaR6QT0FI6l25fIcxrrr
-	wpv5Wv6NK8KYo4yOqY5inXyzR2qREvhjN8smC/1Sf6ntqMD1mtEM+LjYuXRUf1KP5Kw2FC
-	LjfNk8i80tGmb2NDM0EHj7m7+zjWuBy4UF65Up7+3kVXAmvIjvpbV5+raOCQ9WvB33stVH
-	c/2rq6rqsUDh2LvtgCybFBrF87BpMY3m8MNkMurGV7VcrgKOI9y9hry2KsxYG9+Om5hUEh
-	WU6yTnCEdFXvIS6YxiAzF6UXIBKeLijPU7QGRzAAwQOz1V1EAtu7oAcxF2OHBA==
+	bh=2BEsZEXCs1M05aaWraZX8cJyox+y1wvJ/ugKyQkcHbk=;
+	b=VGhUfXtxFKlop6RasrXGGIa4QPusXTmg13rZxFcrkSxVIv6k82G+oj10XdYEL6KgV5GkDM
+	FohdJRKPRI0x+H+7xgSMGj4qeH4ZFF4MUHhSct/4EEM0hOGs7WSyVH5cMdpL8xCFhLOvDd
+	Q0C5Aquva6Z27TRWbMhWwJLDupysLbtNt32/DDgV1taCGmxZ3Xy2FvWzLX26CKhFins1PT
+	FqqL2iHODiHk+lZm2q5Uo8LxtTa6kgZNQuH3XYgCb03/gdnS9cLZ9fnC/Xbu4+Q5a43W7Z
+	QBzuDy7CdNgyDmNRpOuFthm4ATyw2kNM+iV5PMTBIBVo4WHH/bL8144dzVQTAg==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Mikhail Arkhipov <m.arhipov@rosa.ru>
-Cc: Richard Weinberger <richard@nod.at>, 
- Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-In-Reply-To: <20250408213906.23129-1-m.arhipov@rosa.ru>
-References: <20250408213906.23129-1-m.arhipov@rosa.ru>
-Subject: Re: [PATCH] mtd: nand: ecc-mxic: Fix use of uninitialized variable
- ret
-Message-Id: <174591879451.993707.7630596131927470519.b4-ty@bootlin.com>
-Date: Tue, 29 Apr 2025 11:26:34 +0200
+To: richard@nod.at, vigneshr@ti.com, manivannan.sadhasivam@linaro.org, 
+ broonie@kernel.org, absahu@codeaurora.org, bbrezillon@kernel.org, 
+ architt@codeaurora.org, quic_srichara@quicinc.com, 
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
+References: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
+Subject: Re: [PATCH v4 0/3] QPIC v2 fixes for SDX75
+Message-Id: <174591882547.993955.17062615074678307127.b4-ty@bootlin.com>
+Date: Tue, 29 Apr 2025 11:27:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,26 +53,28 @@ Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieffhfeulefgtdeltefgleevgffgheduledvheduudelgfehlefgheeivedvgeenucfkphepledvrddukeegrddutdekrddvheehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrddutdekrddvheehpdhhvghloheplgduledvrdduieekrddurddutdeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrghdprhgtphhtthhopehmrdgrrhhhihhpohhvsehrohhsrgdrrhhup
- dhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfgjfhfukfffgggtgffosehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfffhudefgfeuueehueevudeiieejhfejudevudevieetvdetfedtfffhjeeileefnecukfhppeelvddrudekgedruddtkedrvdehheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrvdehhedphhgvlhhopegludelvddrudeikedruddruddtiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhivhgrnhhnrghnrdhsrgguhhgrshhivhgrmheslhhinhgrrhhordhorhhgpdhrt
+ ghpthhtoheprggsshgrhhhusegtohguvggruhhrohhrrgdrohhrghdprhgtphhtthhopehquhhitggpmhgurghlrghmsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepqhhuihgtpghsrhhitghhrghrrgesqhhuihgtihhntgdrtghomhdprhgtphhtthhopegrrhgthhhithhtsegtohguvggruhhrohhrrgdrohhrgh
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, 09 Apr 2025 00:39:06 +0300, Mikhail Arkhipov wrote:
-> If ctx->steps is zero, the loop processing ECC steps is skipped,
-> and the variable ret remains uninitialized. It is later checked
-> and returned, which leads to undefined behavior and may cause
-> unpredictable results in user space or kernel crashes.
-> 
-> This scenario can be triggered in edge cases such as misconfigured
-> geometry, ECC engine misuse, or if ctx->steps is not validated
-> after initialization.
+On Thu, 10 Apr 2025 15:30:16 +0530, Md Sadre Alam wrote:
+> The BAM command descriptor provides only 18 bits to specify the NAND
+> register offset. Additionally, in the BAM command descriptor, the NAND
+> register offset is supposed to be specified as "(NANDc base - BAM base)
+> + reg_off". Since, the BAM controller expecting the value in the form of
+> "NANDc base - BAM base", so that added a new field 'bam_offset' in the
+> NAND properties structure and use it while preparing the command descriptor.
 > 
 > [...]
 
 Applied to nand/next, thanks!
 
-[1/1] mtd: nand: ecc-mxic: Fix use of uninitialized variable ret
-      commit: d95846350aac72303036a70c4cdc69ae314aa26d
+[1/3] mtd: rawnand: qcom: Pass 18 bit offset from NANDc base to BAM base
+      commit: ee000969f28bf579d3772bf7c0ae8aff86586e20
+[2/3] mtd: rawnand: qcom: Fix last codeword read in qcom_param_page_type_exec()
+      commit: 47bddabbf69da50999ec68be92b58356c687e1d6
+[3/3] mtd: rawnand: qcom: Fix read len for onfi param page
+      commit: e6031b11544b44966ba020c867fe438bccd3bdfa
 
 Patche(s) should be available on mtd/linux.git and will be
 part of the next PR (provided that no robot complains by then).
