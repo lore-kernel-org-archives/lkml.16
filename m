@@ -1,55 +1,106 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C4B2144BC
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931FF2472BD
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745951398; cv=none; b=jC0LvdhJDmKswwhCrR5/VNpHOuYAf9B40xOKhPgeETl8HU2lr7ChIco9oVCQojWx8s92c3E5eFxigM62oK9u7NdgB3+cLis9y2TJYuB+5dEgHBmIqOJyVrVdMYfjPq7fdY/+ANYj34LvPek93yOeb51NVD8LPkAU1APgQ+d9BQQ=
+	t=1745951432; cv=none; b=pu21PWl2BahveTf506r1YeiYyO/gPg2jEGYI4It/BsHNbtw3QXgvU9y7tJ8H8JyGkOQUMAMZisl58/tzJ6ypXRuC7TAXYHbyObRlWf+fw36uJTIpgDe78VPeOT9cKiqFiJ//mkh7ZroXXr7WTAnOpImf5WaHmTBthcC50eC4mt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745951398; c=relaxed/simple;
-	bh=nmmcLQBIsGmlTNrniaArwrngri3t89T3woQW1WUtnMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MqXE4L3DWrF8hX13ifWr/7c+TI0zF+DRdUnytLFmrof5rNCrLKBXGZzgGxYxzmLMprVkCLhfiWtwxkgR26WDYUpBguTbMJmJdYYE0DAV53qn7fSbtcDyUcB04JVRfUjN/9ENb1rIDweqWq8KjrtW+EdybbgEfl/Scj4uKG4AHso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oA2w0LwB; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745951432; c=relaxed/simple;
+	bh=AYT82nc38WJwSZy5HgjOKkPb8vsqJvvjJxxGUEXWt1g=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYXz6xInOATW/xsuau2cmu8ybT+glWaIDhK/fyWGiLaCEL7L8uSPxjp08+L0EHmKE83XBeSvCjPv6BI0U6SQsPkeZdHGhvw9MF/y73rhYnW/ZXK5XwBCCnbsiDUPI2z026im+/RNcnsB+cHnhVjQSy4zCIJm1IARWosVWKGia1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EeUlX375; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oA2w0LwB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=E0mzkKtFQrvDCIhJCJjDyLr36jVoNlO5U7XqkmOedlo=; b=oA2w0LwBMD2/d3K8APfxLMSHoR
-	ytIUgP9lBdvY69NkP2Dkr4ilDQkET5rEn3c5o1aQt5czU/IvUNkDoHhpiNA8WEb2pI6ziH0qKrqkv
-	4ca1iHDQCTZRXOaOXmNO28vnFKo3obM4mpjHAyuIFu9CnX3XtW7O0NKRjGJxfRA6HEucrzXxyv9/X
-	D32jAZ0X4w9/Y7Qx9ny36ouZR/0AHZlNeBR8bu3FLVy1Sx0sDDrs/NMpO33zonzjTNQj/3M09fHFD
-	0/ikmBckbVuO6gntvxsoDsSubJFXARk9KQyfC4Od2LX940atqoGgSxamvHVP1mTl2H6hBxmXBOJ5J
-	e2ukwbVA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9phk-000000048Xi-00Yy;
-	Tue, 29 Apr 2025 18:29:19 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 08C3630035E; Tue, 29 Apr 2025 20:29:05 +0200 (CEST)
-Date: Tue, 29 Apr 2025 20:29:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>,
-	"Saarinen, Jani" <jani.saarinen@intel.com>,
-	"De Marchi, Lucas" <lucas.demarchi@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [REGRESSION] x86/efi: Make efi_enter/leave_mm() use the
- use_/unuse_temporary_mm() machinery (linux-next)
-Message-ID: <20250429182904.GL4198@noisy.programming.kicks-ass.net>
-References: <SJ1PR11MB6129E62E3B372932C6B7477FB9BD2@SJ1PR11MB6129.namprd11.prod.outlook.com>
- <SJ1PR11MB61293655E9386DC0FBD263F4B9852@SJ1PR11MB6129.namprd11.prod.outlook.com>
- <87selrwdct.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeUlX375"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-702628e34f2so1746287b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745951429; x=1746556229; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P2/kKLn23gVJ5MvctnTFMLPP246vCSgXvuh10TQHsJ0=;
+        b=EeUlX375O7VFdWsdVh9CIY2uiWz2rQ0MKQFN8Q4Wmiyg7V3A+Xl/9r6ArffN2DATOl
+         vVjhtGzB5SM9X9e8z5S39ZYP5Gnvn5kfuvA4KkP1VzoRWZvZDKjzqDEznd8nfchTwVO6
+         FFf0sBn72pE7pieWpfS3V0XV9HSxNtiNPHx6VQM6jFUyZuxsGuz+xYBhdBNDktoOvDVf
+         9rt1CbOq0qTNy17m10/319iiFoq8meQUwn1u9I5EePyJ3eieScH4n/jj1GvBssJ3XY/f
+         1Kxs1sclAsCmquIouj+lsbPI84C+S6LKvZw0bJnIQby8fOTB48orEFIz7LqopKtnbXrM
+         gTuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745951429; x=1746556229;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P2/kKLn23gVJ5MvctnTFMLPP246vCSgXvuh10TQHsJ0=;
+        b=s4r+lXfc2jvWudOb6hyvjgFcjt83vdGXccmo1BG1oVmN0ziYAlVz0xMoTEWXfQlOBM
+         s0HOdnCsd7q57iMUkeRzqvlhn2J9u3dC56WGSAfbjQOP3WsM1o6EQ+dlx5aZh1m1R/Wp
+         44YKZjaPsJlGBVMwlwzHfBGQE0e2Ny7SejgNJob/XftVVsGChdhtoyuQjNEY8av7zDrh
+         LU5YWE9/+dD6I/Vz3d8hkE66buq9rRDO5lT/K1UfvF8XqNx8cI8XWgpkFSr9n4fmliz9
+         +d633wjvE4K9SgyfOQypbYGV2qRsgIiF3SEks83qJcVEtgTHM04F6yB29m4kSVNeVDit
+         ys8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUlp2sCGQLSHosM/NQqaMNQ7XTOhiqYfYeHx6qCchWPqViVH3dr3jLq2xZEzIdJj2jFpOp7xJNxbeQtxrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbr4ACSLA03P4LnZT7wHWVIhdIFS9H6lEWOdXpz8ENV0Mq973v
+	09dM4rW/sO5uEUPprHF6/0UV/Aey6JlJnHWeh9Arw6G6R94E/D5s
+X-Gm-Gg: ASbGncuyTrW6vvUjGugZiuv1yFu1qEzLGxhViqurslnsn/46wk5shaTeKtSXbHDgukT
+	/K5uG9O94hjSYBwg45ykge3w2SZkYlXnoT9Rg5HKWIsdbP1Xi9SnXDFf4Pmq5eFJSBRFZ9W1aFP
+	bU75iWypKgb9KgbE9b8dupM0UrylKvrYgXOsY7w8vRMJ0hvxbTJw+E4kRWj9xZE1+wrzsXmLe/u
+	yYK7J0APqESFuBphIHFOF2AOVOKcH6jm+2MC9IIQbohe7sN44q2ueOuFG5V4vvTxm0qUavFFjOr
+	J+YYP/ZEr/A/2gd/elj6BqAAUunl+hKL+2s5hgTGlqPoWHbPICsnXVThMTUcNL3mssY/HSeFnwx
+	T8PZxx6QumvGkAJzYddaCK9/qP3Hs3V+o/mt3w0DwLQ==
+X-Google-Smtp-Source: AGHT+IFaJ8PJLO6+gJFc3Bq1DkocxxcpnuO2vcOmEdQfPjKWOWe+TdUMOhANbLVWvtNXBJ4co2QGAw==
+X-Received: by 2002:a05:690c:6a81:b0:708:31ae:5ef8 with SMTP id 00721157ae682-708ac0d995dmr5311157b3.1.1745951429554;
+        Tue, 29 Apr 2025 11:30:29 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70841933581sm31881687b3.8.2025.04.29.11.30.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 11:30:29 -0700 (PDT)
+Message-ID: <68111ac5.810a0220.2b20a.1d32@mx.google.com>
+X-Google-Original-Message-ID: <aBEawsCN69SjNSrM@winterfell.>
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8B056120006A;
+	Tue, 29 Apr 2025 14:30:28 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Tue, 29 Apr 2025 14:30:28 -0400
+X-ME-Sender: <xms:xBoRaOp6rK908_Fmt4UrYLQLbcnW00zRvj0KJxElo10gv9GP_vKhkg>
+    <xme:xBoRaMqtjEYHnp1WVkqd0zzcP11mcRbejowOQKqk4edkiIIOW8pJdmNH2jG0yCzpp
+    IXzOntsl3qCohZQjg>
+X-ME-Received: <xmr:xBoRaDPTocd11il3JxZ__gRBZZUZqeCsUDxMaeNFyqyN0zFx_eZnT2NmTA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegheegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
+    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtth
+    hopehsrghshhgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgvthgvrhiisehi
+    nhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtoh
+    hmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhn
+    ghhmrghnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquhhnsehfihigmhgv
+    rdhnrghmvg
+X-ME-Proxy: <xmx:xBoRaN4qjpUepFsx8oTZnDcT09Kn7-tm40EGxw51rxIr4ivT0AzglQ>
+    <xmx:xBoRaN5496xS6tV1tU9aiWvFOTNLhZASHxG6CAQmiYM2-1xLlO6Llw>
+    <xmx:xBoRaNiGhG10HPYpu1zieSgkggCYZZFHuwUesJ8obsARhhTOflY2og>
+    <xmx:xBoRaH4LUcRWomWEK1DxNdFRqT3Kyu7YMJCNQCdxWCfxhaIZQVvUgA>
+    <xmx:xBoRaILlrUv_TNlJbtDv7RrnH7JVoiy-ZDZOunhYRq3Nd5Clc4Cl3K9c>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Apr 2025 14:30:27 -0400 (EDT)
+Date: Tue, 29 Apr 2025 11:30:26 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Sasha Levin <sashal@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	longman@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] locking/lockdep: Use hashtable.h for lock_keys_hash
+References: <20250320143120.3119975-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,73 +109,147 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87selrwdct.fsf@intel.com>
+In-Reply-To: <20250320143120.3119975-1-sashal@kernel.org>
 
-On Tue, Apr 29, 2025 at 12:01:22PM +0300, Jani Nikula wrote:
-> On Thu, 24 Apr 2025, "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com> wrote:
-> > +Andy, Ingo
-> >
-> > Friendly reminder.
-> > Issue is still seen on latest linux-next runs.
-> >
-> > https://intel-gfx-ci.01.org/tree/linux-next/next-20250424/bat-rpls-4/boot0.txt
-> >
-> > Regards
-> >
-> > Chaitanya
+Hi Sasha,
+
+Thanks for the patches. I want to let you know that we are currently
+doing some changes on the hashlist usage in lockdep:
+
+	https://lore.kernel.org/lkml/20250414060055.341516-1-boqun.feng@gmail.com/	
+
+so, it may take a while for me to back looking into this (until that get
+sorted).
+
+Regards,
+Boqun
+
+On Thu, Mar 20, 2025 at 10:31:17AM -0400, Sasha Levin wrote:
+> Convert the lock_keys_hash array in lockdep.c to use the generic
+> hashtable implementation from hashtable.h instead of the manual
+> hlist_head array implementation.
 > 
-> Andy, Ingo -
+> This simplifies the code and makes it more maintainable by using the
+> standard hashtable API defined in hashtable.h, while preserving the
+> RCU-safe behavior with proper RCU variants of the hashtable functions.
 > 
-> Commit e7021e2fe0b4 ("x86/efi: Make efi_enter/leave_mm() use the
-> use_/unuse_temporary_mm() machinery") on linux-next regresses as
-> reported by Chaitanya
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  kernel/locking/lockdep.c | 34 ++++++++++++++++------------------
+>  1 file changed, 16 insertions(+), 18 deletions(-)
 > 
-> Please look into it.
-
-Does your kernel include the below?
-
----
-commit aef1d0209ddf127a8069aca5fa3a062be4136b76
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Fri Apr 18 11:50:34 2025 +0200
-
-    x86/mm: Fix {,un}use_temporary_mm() IRQ state
-    
-    As the function switch_mm_irqs_off() implies, it ought to be called with
-    IRQs *off*. Commit 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs
-    are on") caused this to not be the case for EFI.
-    
-    Ensure IRQs are off where it matters.
-    
-    Fixes: 58f8ffa91766 ("x86/mm: Allow temporary MMs when IRQs are on")
-    Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
-    Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
-    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
-    Cc: H. Peter Anvin <hpa@zytor.com>
-    Cc: Andrew Morton <akpm@linux-foundation.org>
-    Cc: Andy Lutomirski <luto@kernel.org>
-    Cc: Linus Torvalds <torvalds@linux-foundation.org>
-    Cc: Rik van Riel <riel@surriel.com>
-    Link: https://lore.kernel.org/r/20250418095034.GR38216@noisy.programming.kicks-ass.net
-
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 79c124f6f3f2..39761c7765bd 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -986,6 +986,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
- 	struct mm_struct *prev_mm;
- 
- 	lockdep_assert_preemption_disabled();
-+	guard(irqsave)();
- 
- 	/*
- 	 * Make sure not to be in TLB lazy mode, as otherwise we'll end up
-@@ -1018,6 +1019,7 @@ struct mm_struct *use_temporary_mm(struct mm_struct *temp_mm)
- void unuse_temporary_mm(struct mm_struct *prev_mm)
- {
- 	lockdep_assert_preemption_disabled();
-+	guard(irqsave)();
- 
- 	/* Clear the cpumask, to indicate no TLB flushing is needed anywhere */
- 	cpumask_clear_cpu(smp_processor_id(), mm_cpumask(this_cpu_read(cpu_tlbstate.loaded_mm)));
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 4470680f02269..160cf8310eda0 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -57,6 +57,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/context_tracking.h>
+>  #include <linux/console.h>
+> +#include <linux/hashtable.h>
+>  
+>  #include <asm/sections.h>
+>  
+> @@ -212,8 +213,7 @@ static DECLARE_BITMAP(list_entries_in_use, MAX_LOCKDEP_ENTRIES);
+>   * in use.
+>   */
+>  #define KEYHASH_BITS		(MAX_LOCKDEP_KEYS_BITS - 1)
+> -#define KEYHASH_SIZE		(1UL << KEYHASH_BITS)
+> -static struct hlist_head lock_keys_hash[KEYHASH_SIZE];
+> +static DEFINE_HASHTABLE(lock_keys_hash, KEYHASH_BITS);
+>  unsigned long nr_lock_classes;
+>  unsigned long nr_zapped_classes;
+>  unsigned long max_lock_class_idx;
+> @@ -1209,32 +1209,28 @@ static void init_data_structures_once(void)
+>  	init_chain_block_buckets();
+>  }
+>  
+> -static inline struct hlist_head *keyhashentry(const struct lock_class_key *key)
+> -{
+> -	unsigned long hash = hash_long((uintptr_t)key, KEYHASH_BITS);
+> -
+> -	return lock_keys_hash + hash;
+> -}
+>  
+>  /* Register a dynamically allocated key. */
+>  void lockdep_register_key(struct lock_class_key *key)
+>  {
+> -	struct hlist_head *hash_head;
+>  	struct lock_class_key *k;
+> +	unsigned long hash;
+>  	unsigned long flags;
+>  
+>  	if (WARN_ON_ONCE(static_obj(key)))
+>  		return;
+> -	hash_head = keyhashentry(key);
+> +
+> +	hash = hash_long((uintptr_t)key, KEYHASH_BITS);
+>  
+>  	raw_local_irq_save(flags);
+>  	if (!graph_lock())
+>  		goto restore_irqs;
+> -	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+> +
+> +	hash_for_each_possible_rcu(lock_keys_hash, k, hash_entry, hash) {
+>  		if (WARN_ON_ONCE(k == key))
+>  			goto out_unlock;
+>  	}
+> -	hlist_add_head_rcu(&key->hash_entry, hash_head);
+> +	hash_add_rcu(lock_keys_hash, &key->hash_entry, hash);
+>  out_unlock:
+>  	graph_unlock();
+>  restore_irqs:
+> @@ -1245,8 +1241,8 @@ EXPORT_SYMBOL_GPL(lockdep_register_key);
+>  /* Check whether a key has been registered as a dynamic key. */
+>  static bool is_dynamic_key(const struct lock_class_key *key)
+>  {
+> -	struct hlist_head *hash_head;
+>  	struct lock_class_key *k;
+> +	unsigned long hash;
+>  	bool found = false;
+>  
+>  	if (WARN_ON_ONCE(static_obj(key)))
+> @@ -1260,10 +1256,10 @@ static bool is_dynamic_key(const struct lock_class_key *key)
+>  	if (!debug_locks)
+>  		return true;
+>  
+> -	hash_head = keyhashentry(key);
+> +	hash = hash_long((uintptr_t)key, KEYHASH_BITS);
+>  
+>  	rcu_read_lock();
+> -	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+> +	hash_for_each_possible_rcu(lock_keys_hash, k, hash_entry, hash) {
+>  		if (k == key) {
+>  			found = true;
+>  			break;
+> @@ -6561,9 +6557,9 @@ void lockdep_reset_lock(struct lockdep_map *lock)
+>   */
+>  void lockdep_unregister_key(struct lock_class_key *key)
+>  {
+> -	struct hlist_head *hash_head = keyhashentry(key);
+>  	struct lock_class_key *k;
+>  	struct pending_free *pf;
+> +	unsigned long hash;
+>  	unsigned long flags;
+>  	bool found = false;
+>  	bool need_callback = false;
+> @@ -6573,12 +6569,14 @@ void lockdep_unregister_key(struct lock_class_key *key)
+>  	if (WARN_ON_ONCE(static_obj(key)))
+>  		return;
+>  
+> +	hash = hash_long((uintptr_t)key, KEYHASH_BITS);
+> +
+>  	raw_local_irq_save(flags);
+>  	lockdep_lock();
+>  
+> -	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+> +	hash_for_each_possible(lock_keys_hash, k, hash_entry, hash) {
+>  		if (k == key) {
+> -			hlist_del_rcu(&k->hash_entry);
+> +			hash_del_rcu(&k->hash_entry);
+>  			found = true;
+>  			break;
+>  		}
+> -- 
+> 2.39.5
+> 
