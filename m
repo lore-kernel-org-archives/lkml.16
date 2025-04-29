@@ -1,145 +1,103 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF51027FD70;
-	Tue, 29 Apr 2025 08:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3E729290D
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916022; cv=none; b=pTDdzlQM3P5HLrD4cr90yGYD6ZePEJqFOYUJpJkX5FeJYhxOv2qIGU7WTAdY7Bq+aLau9YgZmKxtRXBud/wpoDhta5kc34+KQXTO4dcRdGld9U17RVDlc/91kbJjusf3uXxz9Uo4Ia0vBz9S/YbT/LfYOo7gAj708mnHjv9mGv8=
+	t=1745916056; cv=none; b=MT7usvyMM2kwXaYSXNVR4x6pxzTLRvT4imsorXg9SWF3cg/E3mQVu8CKxGLvmb48z67QH4GEIxBZy48w3u31L1xxwQ83sbPQEje5mLUJEmt/mMRpXhCB1c1Uem/2r+b+hLITghQP/Cij3ndRmKzt0iTSddwd1tpzfl9Mf4Nwr+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916022; c=relaxed/simple;
-	bh=j12eYWd/fxQAB51x01tD6d/Td9XPVxu5Ngf9D7Bibug=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sa4UShdd/tRqtzw8Eotg3KisUhuqtMomHpfaIV8s9OtxMGvhRvQjASc82lsrhTE4d3amJuuHDBdiZuq/FaNxQXAIjj1IyvoR+SCOpYSg2b8A/anbxFga0iJ5YA4oM/sXmTuNUmuOsYo9ilkVnskn25V70l4oiXJ5FU63pH4FUbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=l1S1RSh7; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1745916056; c=relaxed/simple;
+	bh=KyAtXWPUARsz+iDauIm3noZwAgvzeeeL/6Xih7T8GDE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UWScKWq6B2t6wY55tt0ITTvA0nHVq5hWtIvtS+ZIwFVj7/7Pn6EIj9JKM2hvaO7bkp6GQQSOn4UF7vgGAn2q6lDwvRZyXXy0wWZ5stspU5QoYoADtf3caJUBwjffQZiHzgy4EOvd97P+fJ2xMeks6NOHES50N84UFvd8OX2pNnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ansbdwJx; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="l1S1RSh7"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53T8dYX11431601, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1745915974; bh=j12eYWd/fxQAB51x01tD6d/Td9XPVxu5Ngf9D7Bibug=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=l1S1RSh7e/l3UMksXQjyh67q3dgLza40FSvzQRaUxiGu7ODmzaHc6MbmfsaXnrhIB
-	 lu1hFAvI5lWDpVSeOQm0zjw8T2CCWa28hHARdXUqwO1+VC8FFQxh68z4b71nkr/rM1
-	 7R2DvI1TLQshPUybXgBOArs9AUUJxBO+FP2BryhyixzHYpGXd7z3lB9kzzOtHB8kAw
-	 rWa/hugBAebBTKMljGFPQ5QoMTYt413GAduF7a403SYhgosUMvZRCorQMWEPZ0KoJm
-	 1NFxCJAiLZE/tKzCNeyma+ieKEBSviqNWPQ1/EPoI4gw0gfqRyWyV5/Ttjg/+8W5MG
-	 JSVfX3AiNf6HQ==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53T8dYX11431601
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 16:39:34 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 29 Apr 2025 16:39:35 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 29 Apr 2025 16:39:34 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 29 Apr 2025 16:39:34 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: David Laight <david.laight.linux@gmail.com>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "horms@kernel.org" <horms@kernel.org>,
-        Ping-Ke Shih
-	<pkshih@realtek.com>,
-        Larry Chiu <larry.chiu@realtek.com>
-Subject: RE: [PATCH net v2 3/3] rtase: Fix a type error in min_t
-Thread-Topic: [PATCH net v2 3/3] rtase: Fix a type error in min_t
-Thread-Index: AQHbrs2sHT6BFvalLE26yBqqUlL/zbO236AAgAOGx2A=
-Date: Tue, 29 Apr 2025 08:39:34 +0000
-Message-ID: <c5036c8c87c34b558e29428e9133d4d7@realtek.com>
-References: <20250416124534.30167-1-justinlai0215@realtek.com>
-	<20250416124534.30167-4-justinlai0215@realtek.com>
- <20250427114646.4253b39d@pumpkin>
-In-Reply-To: <20250427114646.4253b39d@pumpkin>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ansbdwJx"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30ddad694c1so63175101fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745916052; x=1746520852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyAtXWPUARsz+iDauIm3noZwAgvzeeeL/6Xih7T8GDE=;
+        b=ansbdwJxsueyefFM/ctUcCC6V8SAelIg4fyKH0DNmeisPkebKtqXUHrNQVqfENhfvo
+         /+xit3qJOdMQNIxjRfKCjBsxY2jgxaKdC9yYi5qsMAbJn/zV1cYNMbu/w4+loB87L643
+         DH0iVgtbCj6WQeJ0sbJ7sNEfSrSsGMP1adYk92DE/R/9ycX53FcJURUwQsxFhMD6m4Ai
+         T+HRIAFJccEWJbCk8+vatZJzmsTisFrWvgBUure1gbQ0+JaJ9Of4s58IKYvHqEa8LScR
+         UCmvWxEUobYTFF9R4MH7dqF8MXy9MWi4sSVnogYjOCJV9F0dCattldNwJT0oODZa8Tnd
+         BmBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745916052; x=1746520852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KyAtXWPUARsz+iDauIm3noZwAgvzeeeL/6Xih7T8GDE=;
+        b=uh3ktImMriSEe0BIOjpRy1mQdrukfUcsOQ05ZbD0B/5JO0j2rZNw4la6ztZ3yitQLU
+         fphLUHtgd4LnZQC3KcodRRRT+QVh41bQuhsUaoBY8XASaedJgutlqRbHkuNYjlGFYKNm
+         hwOD+SlmeQvQHi5F3oourKPuQ281a9dh+e2tXq6z+yn3+tOS9urrxnSlpDoHy2usgvA1
+         fmO1NdRB8M9adVtJt5W7uGc/rTWFYp677dzdHCdbkJYYUDy6n9ERqX7nnNveJNxRKMez
+         kBCUUMRnFUkiryGIQvS21hXW+CRoqLQZZ/lo9KgOHnvrb0WtrPdarUkrVBxKvPb3FeOT
+         9iWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXu0nn9t9jWw7Si1YZ6hq0XbJfikLv8NkydGgKPMU3Qfb+AQqxBSBDk7HhV7gtN0BbSJwmQYRtztoh1JG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8fYYOru8ePsF3vcsaHm97le905bLnLDZIev1tX+FtzIh5nuE9
+	vOcxyNO4u1cuS9YMZjyRqoQH3HIuPjs5r24k0DECdgGzPZAod1UOWcSGL3Q0+1ARyuUVOuqc5j4
+	TYrNoorGdTmBj7jhTTATRItmPlOrEOD9K80qsQg==
+X-Gm-Gg: ASbGnctm6mXurK2GpdPkNNQDlJdtrFOP0qT7B3yo2hNp02vn7awzuz7397s/1i+fFR/
+	cIrzOKnYmyAAx7xTX2p0uEVNDWBUMGtSiTJSDARlPLytPKtpQYpT7Tc/Z7Ilh2oXaFW3+SGZ0vw
+	2ISEqPYxHHgMEiDWlAu+797Q==
+X-Google-Smtp-Source: AGHT+IEUiqYB296CVrwZ+xxBw7BC+pTcJa/x+6Bu5GNB2EvNhnBwa7BLSUJNRUMp+Ehtf1mLBoE9JSmzpMhMYJBukms=
+X-Received: by 2002:a2e:bc0b:0:b0:30d:894a:a538 with SMTP id
+ 38308e7fff4ca-31d34b6c243mr8766341fa.21.1745916052135; Tue, 29 Apr 2025
+ 01:40:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-15-8f91a404d86b@bootlin.com>
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-15-8f91a404d86b@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 29 Apr 2025 10:40:41 +0200
+X-Gm-Features: ATxdqUEhPh2HxY_cKMawBJnfuogL8n7jPhFvg8U9jTR5km8hYrNkb1VPdIYXtGQ
+Message-ID: <CACRpkdZt8zem0hFUiq3-Z1feNZHRh3R=Y0cEtK=pVt=bJ9Qf1g@mail.gmail.com>
+Subject: Re: [PATCH v2 15/34] drm/mcde: convert to devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, 16 Apr 2025 20:45:34 +0800
-> Justin Lai <justinlai0215@realtek.com> wrote:
->=20
-> > Fix a type error in min_t.
->=20
-> NAK, in particular u16 is likely to be buggy Consider what would happen i=
-f
-> RTBASE_MITI_MAX_PKT_NUM was 65536.
-> (Yes, I know that isn't the intent of the code...)
->=20
-> As pointed out earlier using min() shouldn't generate a compile warning a=
-nd
-> won't mask off significant bits.
->=20
-> Also I think it isn't a bug in any sense because the two functions have a=
- single
-> caller that passes a constant.
->=20
->         David
+On Thu, Apr 24, 2025 at 9:00=E2=80=AFPM Luca Ceresoli <luca.ceresoli@bootli=
+n.com> wrote:
 
-Hi David,
+> This is the new API for allocating DRM bridges.
+>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-This is indeed not a bug fix, and I have modified it to use min instead
-of min_t, and posted it to net-next.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks,
-Justin
-
->=20
->=20
-> >
-> > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this
-> > module")
-> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> > ---
-> >  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > index 55b8d3666153..bc856fb3d6f3 100644
-> > --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32
-> time_us)
-> >       u8 msb, time_count, time_unit;
-> >       u16 int_miti;
-> >
-> > -     time_us =3D min_t(int, time_us, RTASE_MITI_MAX_TIME);
-> > +     time_us =3D min_t(u32, time_us, RTASE_MITI_MAX_TIME);
-> >
-> >       if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
-> >               msb =3D fls(time_us);
-> > @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16
-> pkt_num)
-> >       u8 msb, pkt_num_count, pkt_num_unit;
-> >       u16 int_miti;
-> >
-> > -     pkt_num =3D min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> > +     pkt_num =3D min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> >
-> >       if (pkt_num > 60) {
-> >               pkt_num_unit =3D RTASE_MITI_MAX_PKT_NUM_IDX;
-
+Yours,
+Linus Walleij
