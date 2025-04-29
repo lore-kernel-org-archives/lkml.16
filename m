@@ -1,126 +1,79 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D419926A0AB
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917AE14EC5B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745905815; cv=none; b=kvn4ksI5b6uPerLtmnb4s275p2sdVoUHie2YItWKszJ1Vv6nlJSzIkG+o25mquR6q9H8+2cgBAhPOhiKUV0Y2nqY2pab6ayeKClSs1aHv7TxjAf++74CUCNB1MJvv5VYmLKu1lbwCS5xQ5QI9J2RJHcHP5qBuQp5IEy5ErJwhw8=
+	t=1745905969; cv=none; b=V5D50XtKuTJbSgjPAlpt9eciEK7byaQyoLVEkNAT5N3uIGxvhJFJqEJP+2Qlm4H8B7um9NDPjGXvvUJBd+uAF4m6SJFMjt0IuVEGa+F+cIjnL/ldKWQQUnVIWV1YiwBdZEL9XoSuicxcrnFWp40NQ0u7gRTf6uwEIam12lYSw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745905815; c=relaxed/simple;
-	bh=TC1pQF5+8x3TfRsyAFIm5rUMUBIGwkayJC79GBtSdMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LoQZxIrXZC88MDbthXDw/3fdbY7R6XX6IHipb+DCoITCau2EmZyRw6dxl08ePdMzTFtKh+rDt+ZQ08SaF5CaMN98BdjiSO2uVfeOvvxFTWtrIQmhrGHXY2UyWAYY+iwIeKAxSIm4ojoPOHn0ba924wcYiFON4KYwyobG7ALMT8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=QIHC3Ey5; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="QIHC3Ey5"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bf1d48843so49002761fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745905812; x=1746510612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HWfOibW0zJXCdtORmeJHJfO7jAlDvwO4GvsgR2VT7fc=;
-        b=QIHC3Ey5/8YvPSYOJTKp/LRCAkdTM5zEwbX0jszmfbqizmNivX492lU/o4CRdv1Wtf
-         1ek59gQVykIyclnpwPnm1Z9Gb35V0WvhfKYDj/dUHs7pPh8JUb2L1DLMlrylIwjjii4Q
-         vQHUQ8CLZRivsfC876alucYmAR6ugln+FvyJ7C1dAe/eKVeAcu6BsdPE9CUgeXBVQWR7
-         qw+iDIxd5zjPksyWodtUSriqQgTZF6AWQtqTZbsRqTJjMXQTIu1W1rzj1sNEcvWEHB48
-         aOHM4BtPIR465AlcOHaeqw8RPEt3ssBz5WLzktMAzs81hnAXSRnp80pjWmYZdnxULgw+
-         aXuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745905812; x=1746510612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HWfOibW0zJXCdtORmeJHJfO7jAlDvwO4GvsgR2VT7fc=;
-        b=wMUyKZ/mo17byyHYauQecS+0Sb4VG6DMfd4hPDVnJgp2NdqRgs5QZe5JHWByK3Cihh
-         KXuZiP/KowlykbNA/yg6/5XkShC2o0vFbQHy2TB+LTIDAOz/yCHdQYZbrdQm7bOoFrx5
-         gAd9aCDfhZyx3xJ+EIxmsL0EyLNbpqAj0t8zBC4GrScKmUZlzbGl5PfTqz6L65MfDCgQ
-         HWNj7LwhlmDBXg89ljd3q8f/2kPsdy9HTV6BqdAaxQJxj/V32Eaj30i8wxNbuTrTHStp
-         yZgBzJ7xieMkKo2DOZRHJlz2Ux6YC5OU4EIiGwBPDn5V3gY7LiAaLE86nwQTh03WvO/C
-         0qYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6o/e/Rs7g5TfG6T2C00rsz/6FCSSIu0lWGgKH74YcDowMDxV6VCCTWX2g+pc83oHPLhRngWsu5upa9KA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdi055Ym/mpFHDOKZfd07/0O/wcd4NOfYycNG+ZuJ+4PfE2vVe
-	6hD8riTJqhwx3GWb1YVSwGZD4f0x14F8elGAFygDVl8hO8GLENrAxSEPjSCH79pnZuMNnb80KAF
-	GrxZqcjAJELw8Ya66JAi2/yxdqwUu/2gDrT2jNg==
-X-Gm-Gg: ASbGncsuYI7XImQHoGVWdriumpjrcX7SOg8eEAKCysGCYmVCqce94Xh4yrvajl5UrqV
-	WEvyF2pAGtKpRYVXfiEOUoG3OLgc6tV90+CUhiJ13dP3Hd8ULdJNf2eUHHF2c6cawnH4+U+rqMP
-	gqd7UHy4CelJXIJJK66dHYPZxesDSTC+x6+w==
-X-Google-Smtp-Source: AGHT+IEXIWagJECOG4RLoTrQYomZ3sHcSOAll8CYP8clhn9zHjblZNubHzN3OqgFWmMSijyY1wb9UjZJkI4zeEP4uLw=
-X-Received: by 2002:a2e:be9e:0:b0:30c:460f:f56 with SMTP id
- 38308e7fff4ca-31d34d60533mr6426041fa.20.1745905811969; Mon, 28 Apr 2025
- 22:50:11 -0700 (PDT)
+	s=arc-20240116; t=1745905969; c=relaxed/simple;
+	bh=+akeY5z7w1RyXiz6j2QAfwfh2W+sUGoBrjaV5TEkxNQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=joVvfewamGBJwqtbvx41PKmfNDeh4ApdUnNcqnygYk9yh/eQx9qdiswpBrDz09qdbL+gjYYkCDQh4khWmcA7rcaMoZ8/Sm3ZzBnypDM/+hJ9BWIVX9h8baTI00x3HtsuBqjTr/Ej4Bc5R0JvbxypfM9hJfFoP0/VutRbhCv0wsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201622.home.langchao.com
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202504291351301089;
+        Tue, 29 Apr 2025 13:51:30 +0800
+Received: from localhost.localdomain (10.94.5.55) by
+ jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 29 Apr 2025 13:51:29 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <agruenba@redhat.com>
+CC: <gfs2@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Bo Liu
+	<liubo03@inspur.com>
+Subject: [PATCH]  gfs2: Remove set but not used variable 'xattr_initialized'
+Date: Tue, 29 Apr 2025 01:49:16 -0400
+Message-ID: <20250429054916.2343-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-6-rkrcmar@ventanamicro.com> <CAAhSdy1RSpVCUzD+Aqbhh7aiQPmC2zdvuQfuOsmYNJrF3HxCsA@mail.gmail.com>
- <D9IGVF0OY4WJ.1O1BX0M2LWUVM@ventanamicro.com>
-In-Reply-To: <D9IGVF0OY4WJ.1O1BX0M2LWUVM@ventanamicro.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Tue, 29 Apr 2025 11:20:00 +0530
-X-Gm-Features: ATxdqUGsRoK2KaLKI32KI2F__RZN-02oqDCocnMiqzg_aZlzW8XBSk76LkacWdo
-Message-ID: <CAK9=C2W3gLpeOmOcX3sp+J1zuBkWek7nO8tV79=gaWx+QZ6rgQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] KVM: RISC-V: remove unnecessary SBI reset state
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Anup Patel <anup@brainfault.org>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201616.home.langchao.com (10.100.2.16) To
+ jtjnmail201622.home.langchao.com (10.100.2.22)
+tUid: 2025429135130a959781ce626ab25329c3b92bffbd5f4
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On Mon, Apr 28, 2025 at 11:31=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcm=
-ar@ventanamicro.com> wrote:
->
-> 2025-04-28T17:46:01+05:30, Anup Patel <anup@brainfault.org>:
-> > On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkr=
-cmar@ventanamicro.com> wrote:
-> >>
-> >> The SBI reset state has only two variables -- pc and a1.
-> >> The rest is known, so keep only the necessary information.
-> >>
-> >> The reset structures make sense if we want userspace to control the
-> >> reset state (which we do), but I'd still remove them now and reintrodu=
-ce
-> >> with the userspace interface later -- we could probably have just a
-> >> single reset state per VM, instead of a reset state for each VCPU.
-> >
-> > The SBI spec does not define the reset state of CPUs. The SBI
-> > implementations (aka KVM RISC-V or OpenSBI) or platform
-> > firmwares are free to clear additional registers as part system
-> > reset or CPU.
-> >
-> > As part of resetting the VCPU, the in-kernel KVM clears all
-> > the registers.
->
-> Yes, but instead of doing a simple memset(0), KVM carriers around a lot
-> of data with minimal information value.  Reset is not really a fast
-> path, so I think it would be good to have the code there as simple as
-> possible.
->
-> > The setting of PC, A0, and A1 is only an entry condition defined
-> > for CPUs brought-up using SBI HSM start or SBI System suspend.
->
-> That is why this patch has to add kvm_vcpu_reset_state, to remember the
-> state of pc and a1.  (a0 is hart id and can be figured out.)
->
-> > We should not go ahead with this patch.
->
-> This patch only does refactoring.  Do you think the current reset
-> structures are better?
->
+The variable xattr_initialized is assigned and never used, so can be removed.
 
-I am fine getting rid of reset structures as long as we have
-memset(0) in-place to achieve the same thing.
+Signed-off-by: Bo Liu <liubo03@inspur.com>
+---
+ fs/gfs2/inode.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Regards,
-Anup
+diff --git a/fs/gfs2/inode.c b/fs/gfs2/inode.c
+index 95c39798901b..f87f21b93b43 100644
+--- a/fs/gfs2/inode.c
++++ b/fs/gfs2/inode.c
+@@ -701,7 +701,6 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
+ 	u32 aflags = 0;
+ 	unsigned blocks = 1;
+ 	struct gfs2_diradd da = { .bh = NULL, .save_loc = 1, };
+-	bool xattr_initialized = false;
+ 
+ 	if (!name->len || name->len > GFS2_FNAMESIZE)
+ 		return -ENAMETOOLONG;
+@@ -843,10 +842,8 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
+ 	if (error)
+ 		goto fail_gunlock3;
+ 
+-	if (blocks > 1) {
++	if (blocks > 1)
+ 		gfs2_init_xattr(ip);
+-		xattr_initialized = true;
+-	}
+ 	init_dinode(dip, ip, symname);
+ 	gfs2_trans_end(sdp);
+ 
+-- 
+2.31.1
+
