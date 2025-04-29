@@ -1,117 +1,128 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65961F416A;
-	Tue, 29 Apr 2025 09:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177E31F416A;
+	Tue, 29 Apr 2025 09:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917686; cv=none; b=rhE/D52noGJTf9OvWk0kTJ9h1O89iRNg1NQjlGcC8vN1OLny++gIZE7VOcanWkLVae/aCPATcvxclv+PFpgx9q2ZocUZB6w7oJLPsfm4DZP8GrnCPMVjmcZF8VdO0BdcekXLbkSq5UV9tjQgs3Wm7ta3WUIbiDMmBNVftR3NcPY=
+	t=1745917711; cv=none; b=ME0QZeHD0WTFkyKnRot5SGv4+jKOfn5P6LRtt39e0lDKpFctm4gkk5yZldK1K/BM90Bq9hkvjfjnkCSIdPPG54z3g1yg64Y5IxkX4+5w4vnbJ96TNQH+UZMPUp0t3CipH0IF7NRyWJxT0p4cz9HOceD4pGALrPlg25qP0Z4iG4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917686; c=relaxed/simple;
-	bh=nOG64ITV9vXyXrwAzqO+s2gFVyK6Pd0RNJM0U1lskN0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hQm0fMdEU5bW09KEh0oTqg/OOtH2S6nKuzOhdyhPMkVQIYhPI0QNpEAsoqS8+EY/K4gho2S0PN2Vevtuyf2kQklDsteXOLN53Ruassy9PBkm5MfvDo9/04JGdXAg28uFIRFSSVX3miT1p9yO6/VcGZlI58fZljDBYta7fSJYCsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZmvbW635Kz4f3jtW;
-	Tue, 29 Apr 2025 17:07:35 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BB9871A176B;
-	Tue, 29 Apr 2025 17:07:54 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl_olhBoO4KgKw--.58664S3;
-	Tue, 29 Apr 2025 17:07:54 +0800 (CST)
-Subject: Re: [PATCH v2 4/9] block: cleanup blk_mq_in_flight_rw()
-To: Hannes Reinecke <hare@suse.de>, Yu Kuai <yukuai1@huaweicloud.com>,
- hch@infradead.org, axboe@kernel.dk, xni@redhat.com, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org, cl@linux.com,
- nadav.amit@gmail.com, ubizjak@gmail.com, akpm@linux-foundation.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
- <20250427082928.131295-5-yukuai1@huaweicloud.com>
- <2f140d8b-6a2a-41af-ba73-0963713f211e@suse.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <3de1a819-050e-fc3d-f369-302b3824e9d2@huaweicloud.com>
-Date: Tue, 29 Apr 2025 17:07:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1745917711; c=relaxed/simple;
+	bh=7tKkj3J8Tt+kCDm7+jBhWB+A/hvph8GxctRTX3yGEII=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lA91r8headcg24nVpoAbIEWXdnZbQB21rMCdf0l3rozU6xUOiwub0D4Kk5SYGTjAJ+f/cxHg825/x2amaUE1U571FYDY52nq386rd3UzzKwBLeKTeesaAlUxmOV4ibx5fNEwMOdDvLn5xaVL3XQpiDr4DfP57FQd/WgmF9haPF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FTWyLcur; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTWyLcur"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so7514657a12.1;
+        Tue, 29 Apr 2025 02:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745917708; x=1746522508; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oUz53Saw6cMVXBIDBX+3gyUruKRB/Beug22u3wURK4s=;
+        b=FTWyLcurHOP0O94CkNppG0JiPqhZ0v6aN4pNlhOilbSit622gB9fOA4dVVew6xJQxb
+         19zWN5M05LoC0poJJn2APp6X0a0NrtcsppMTw3FAZofWEiVAtnE3d3y8TTVBsXsr2DqY
+         ZEglgronFFOezWdp273Coe3HH5IFIbb/hiisCz26zObjzaDxHvssimnjSllQDQjEAOMp
+         KqJYMHHtq+CaG6+gkFq1VrkRrqjYLstYbBbNhpIiJ3YQ3BxyYpV8jgLOp3pp/t3++2oX
+         QuG6saBcObAgP+pYPwfvdJj17y/D8Pq1rDE7F7yEf6pL6BjCiTdfSUpN0EmB52ufNPon
+         TtDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745917708; x=1746522508;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oUz53Saw6cMVXBIDBX+3gyUruKRB/Beug22u3wURK4s=;
+        b=rfEU0mAi2Eioiq4hSAyRIEIuWLaFMKuIlNU8eOD/gOlzFNxLnxy92mpYQYZo+P14tW
+         ROTO5fTylwrJM/HPYYsogve3nq+5aHX6E0H3SvOP49TM3j1C0pahoBtGjt9MuniaqK68
+         1fjDDZLRKBb+PRKLf6ysolLvmCkrddAVeV+7ICKOV2P0P3ouFLUR1zr8fMYEAWWNx/I+
+         Cv/jQfmHbTbtl1oE7DICNDfLD7paT8ZuJ1Ewz+j4uzUUayghgHIMF+1WgihJZFO3R9rn
+         cdolAhruRNajLZFSDzTkKgRjvd3OWw+iuMY//s7AwsWFFSSDXQS0r0be8UBtXXk5j+tE
+         bmMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXH6OxIdEUUglC1JrQPzPyFR6bHG8CN8L/SrEnyy35Z4p86nAQ5KTzmjHZe4ug4YNMGyttNjjFd@vger.kernel.org, AJvYcCXsYMWp0Dnq4PJu6vYKfwACP8CTmOVrcOjZ7kV9KVySU0pbjzEsqtGSsAJif3nA/M1Ee6Lx41rcAd2Dqxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8GnhFaX8cts8LsKq3sHY9A412bDrxWjbtzincYC2L9hinv1M1
+	PB1kkE6QsnvsC/GsxNzZTaqecv1fLxH+RcsTwbuLNsJA9j78rAV5
+X-Gm-Gg: ASbGncv/9+OK5Letn2U5HSXm7mkBxb52mJkKIS3mcm2mm3YRcE6tW+I/PARV0cVMpY1
+	pULPBf/fE/AIds5GuAb3HNMfqAjzv3HaijPioeYjEJgPKqvef3MSKKtbiETHKbew/gU0/WuauND
+	0RHdoe2KXQ+hAB29P8bHKP0/PCoYahi+uemE1tU/fd4IgRkHA6wAjg0FSMFPoSP7IGO0P9zxYkW
+	VvyWik2K8Ojv86uXRkdF66E73hirUIQqaY538Kx7XMbFBZFrY7Cu0p6Wl07TyL8TOOk9IWhJJNE
+	Z0hG/+r44G7D4Fs7RxftS3WTXpfN0sutrMQLqfIuRPwUmogftNIHHLurVfj3/gXoAZOt0Gecek6
+	nIHu7U4NIU8gI+Z+4qwBfORQrVnSAmjvSC0dC/tk=
+X-Google-Smtp-Source: AGHT+IH0x6YL+2cpf45cN/k9GbVeXNWiPGIKjy2ZeOFTUUYtd3wRJNwtsQ+bN+GZ2H91QNv6Y+XNNA==
+X-Received: by 2002:a05:6402:e86:b0:5f6:c4ed:e266 with SMTP id 4fb4d7f45d1cf-5f83884b6c1mr1945283a12.8.1745917708122;
+        Tue, 29 Apr 2025 02:08:28 -0700 (PDT)
+Received: from titan.emea.group.atlascopco.com (static-212-247-106-195.cust.tele2.se. [212.247.106.195])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5dccsm7144159a12.37.2025.04.29.02.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:08:27 -0700 (PDT)
+From: mattiasbarthel@gmail.com
+To: wei.fang@nxp.com,
+	shenwei.wang@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	troy.kisky@boundarydevices.com
+Cc: imx@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mattias Barthel <mattias.barthel@atlascopco.com>
+Subject: [PATCH net v1] net: fec: ERR007885 Workaround for conventional TX
+Date: Tue, 29 Apr 2025 11:08:26 +0200
+Message-ID: <20250429090826.3101258-1-mattiasbarthel@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <2f140d8b-6a2a-41af-ba73-0963713f211e@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl_olhBoO4KgKw--.58664S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF4DGry3JFWUAry7AF1xAFb_yoW8Xry8pF
-	4xGa15Cr12gr1xCF1Sqa1xXFyrtw4ktry2qrnIyw1Svr13Cr17ZFy8Xr4rJFy8ur97AFsr
-	Wrs8tFy7WF1UC37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+From: Mattias Barthel <mattias.barthel@atlascopco.com>
 
-在 2025/04/29 14:31, Hannes Reinecke 写道:
-> On 4/27/25 10:29, Yu Kuai wrote:
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> Also add comment for part_inflight_show() for the difference between
->> bio-based and rq-based device.
->>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> ---
->>   block/blk-mq.c | 12 ++++++------
->>   block/blk-mq.h |  3 +--
->>   block/genhd.c  | 43 +++++++++++++++++++++++++------------------
->>   3 files changed, 32 insertions(+), 26 deletions(-)
->>
->> diff --git a/block/blk-mq.c b/block/blk-mq.c
->> index 301dbd3e1743..0067e8226e05 100644
->> --- a/block/blk-mq.c
->> +++ b/block/blk-mq.c
->> @@ -89,7 +89,7 @@ struct mq_inflight {
->>       unsigned int inflight[2];
->>   };
->> -static bool blk_mq_check_inflight(struct request *rq, void *priv)
->> +static bool blk_mq_check_in_driver(struct request *rq, void *priv)
-> 
-> Please don't rename these functions. 'in flight' always means 'in flight
-> in the driver', so renaming them just introduces churn with no real 
-> advantage.
+Activate TX hang workaround also in
+fec_enet_txq_submit_skb() when TSO is not enabled.
 
-Actually, the inflight value, from /proc/diskstats from diskstats_show,
-actually means IO start accounting, which may not in the rq driver. For
-example, IO scheduler. The same inflight value is used in
-update_io_ticks as well.
+Errata: ERR007885
 
-This is the main reason about this rename. Related comments are added in
-part_inflight_show() in this patch, and in part_in_flight() in next
-patch.
+Symptoms: NETDEV WATCHDOG: eth0 (fec): transmit queue 0 timed out
 
-Thanks,
-Kuai
+commit 37d6017b84f7 ("net: fec: Workaround for imx6sx enet tx hang when enable three queues")
+There is a TDAR race condition for mutliQ when the software sets TDAR
+and the UDMA clears TDAR simultaneously or in a small window (2-4 cycles).
+This will cause the udma_tx and udma_tx_arbiter state machines to hang.
 
-> 
-> Cheers,
-> 
-> Hannes
+So, the Workaround is checking TDAR status four time, if TDAR cleared by
+    hardware and then write TDAR, otherwise don't set TDAR.
+
+Fixes: 53bb20d1faba ("net: fec: add variable reg_desc_active to speed things up")
+Signed-off-by: Mattias Barthel <mattias.barthel@atlascopco.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index a86cfebedaa8..17e9bddb9ddd 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -714,7 +714,12 @@ static int fec_enet_txq_submit_skb(struct fec_enet_priv_tx_q *txq,
+ 	txq->bd.cur = bdp;
+ 
+ 	/* Trigger transmission start */
+-	writel(0, txq->bd.reg_desc_active);
++	if (!(fep->quirks & FEC_QUIRK_ERR007885) ||
++	    !readl(txq->bd.reg_desc_active) ||
++	    !readl(txq->bd.reg_desc_active) ||
++	    !readl(txq->bd.reg_desc_active) ||
++	    !readl(txq->bd.reg_desc_active))
++		writel(0, txq->bd.reg_desc_active);
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
 
