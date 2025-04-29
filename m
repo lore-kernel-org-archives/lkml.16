@@ -1,117 +1,109 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E6A78F29;
-	Tue, 29 Apr 2025 07:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2FE13A3F7;
+	Tue, 29 Apr 2025 07:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745910481; cv=none; b=SrDCY7PTMGTKuASBwvA8gODMOoD1neK7XGsH5RKA1QV0/xrRC0JnLrg53ofN44XfBbufuG1y0ppwFuMJn3YZ6HVAN9tYuXspd5QNdBCY9HV6XCDMm4DhPvuX0/QTJ4HBU9mvasaLMauv0n+Cy5S06t9ism7IHDQSgxbZXrKD67s=
+	t=1745910492; cv=none; b=Xpt8E/yuhor89iXNPGsBxDoJxG9eUtIRUFv/OiNY1TbjylXOW7MBIWlJ5Um3TNXIbHY2AaT4V5pjPytcJ66EAVcm2WxwolsSUbNQCqkoS5oNYzUWiGBCuk8pVLcbQhhSm6z9VuAPe88mAtJG52TNQ19gXhkParGhk9tgnbRre5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745910481; c=relaxed/simple;
-	bh=/agbpIEpvL1dYIcwFxxAnWwncnBkSjlhCa3SZj7TMTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qbG3KAmwE34pUDBkMbDcSRVrzn7tA/6QbbGKqw/OKmSW0XHBwlGi+dqC3+WYqIFvauiArVPCrc7UZi379bbVNp8ExuS+5q2l7FXz4ee1bBGb+FlHyq/eD2Zsvs2rsfgB4yXz6DWomFUC8VyhDsO3YLkj7SiAZ5H0dwycDYBnNVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AAN8du7r; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745910492; c=relaxed/simple;
+	bh=aE6zz7cpHKR5xzBlcOsApev1m2bk4YRf052mzvXiOxo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qaTNcFhzlwRCE+7h0S2lZlv/Z4O5kVdWmQZXzwIftxTU6hOBk0hVgH+sm/5RrMGzV6QVAbpwTi8X02GGg5aBddUl7tKGnzNnS8pM2yqcKrOvsne/OtwZk4t/XOxYJ0T1+k2hXbKXmgg92zTIHYYKwzi48zR7cp1YullDQ1tEi0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=jkYcv51A; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AAN8du7r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745910475;
-	bh=1qxqL3IB8/tukQnoKsoGEv4OQYEuGNd0wnjScgTy4iY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AAN8du7rxxYhOdg+t/ELoxOXipkkK24grnKb5o74PbrdXITwfqLaerueG9CIOpdoZ
-	 7jq3x2PolPVW7jfKfniO7Vdc3rHkGYvRXjsMiVUIDBvUomeMYcIu0qjXhZf1+wW12A
-	 bWB6MWnEjmIvWmqk1SkorLqT/6kjdzmkwPTQ2jPLX+6UVHqYwfQvhb/V9jiZubpcbo
-	 h1Om5kQRkOJxWUl8wnpDdKOf2FR36CAL4PfGqOJ3yBIK+iktt3kUlJCFmIbdpp5HSa
-	 G4UuyRwPanBUqAuyKNsuw3AQiZZmjCRCfdwG+qo0y9TnQrv2CyFbM+5DvOrp9q05Rx
-	 J4D04/ugT7h7Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="jkYcv51A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745910488;
+	bh=aE6zz7cpHKR5xzBlcOsApev1m2bk4YRf052mzvXiOxo=;
+	h=From:Date:Subject:To:Cc:From;
+	b=jkYcv51A4BLdV3F9ygISV2NYOwx/GT1GccAv8dHVFwKHu1YqULln1vB+Wxuv9l4sF
+	 FaISlYdiT8PBjgjVf6Gx5iCEaK64uemTDQw4M2H6tOHNhIcoOkeLz3Ed/4QKbPfwbj
+	 rG+9XsPXowMIxTHFzEsWIYDrbJKu2Ml/BrQGWd5ZhQdc1JPUmVkBjqsY0w4exI+SHw
+	 /0z+4jK5KeD282fDqBgjXxnT35jQEzfiBKIyIpe49AyOVkj5z6TOJh8wFJ6LkWuq/j
+	 mTt/7DAPJTLvmTk2s+f29y9S1xfnbjN6/45skMfcIdflS+6STI9eUk30oa5kdzst3Z
+	 xQbFxnn/DrZuw==
+Received: from apertis-1.home (2a01cb0892F2d600c8F85cF092D4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmrxR01Nfz4wj2;
-	Tue, 29 Apr 2025 17:07:53 +1000 (AEST)
-Date: Tue, 29 Apr 2025 17:07:52 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andreas Hindborg <a.hindborg@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>
-Cc: Asahi Lina <lina+kernel@asahilina.net>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>
-Subject: linux-next: manual merge of the rust-xarray tree with the drm-nova
- tree
-Message-ID: <20250429170752.27fddb30@canb.auug.org.au>
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7C4E317E049F;
+	Tue, 29 Apr 2025 09:08:07 +0200 (CEST)
+From: Julien Massot <julien.massot@collabora.com>
+Date: Tue, 29 Apr 2025 09:07:54 +0200
+Subject: [PATCH v3] ASoC: SOF: topology: Fix null pointer dereference
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/j7x18WCNzSCqfamaCICR9SI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-fixup-of-sof-topology-v3-1-3a15b8db7696@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAMl6EGgC/43NsQ6DIBAG4FcxzKUR9IB26ns0HRBRSaxHwJIa4
+ 7sXHbu0ww3/5b/vVhJtcDaSa7GSYJOLDqccqlNBzKCn3lLX5kx4yaGsuaKde788xY7GPDN6HLF
+ fKJRKCRBKSwUk3/pgc/Fw74+cBxdnDMvxJrF9+0tMjDLaGlZXUrSag7oZHEfdYNBng0+yq4n/J
+ fEsyYsQwEAr1shvadu2D8nFupMIAQAA
+X-Change-ID: 20250428-fixup-of-sof-topology-50886568a785
+To: kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: Liam Girdwood <liam.r.girdwood@intel.com>, 
+ sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>, 
+ Julien Massot <julien.massot@collabora.com>
+X-Mailer: b4 0.14.2
 
---Sig_/j7x18WCNzSCqfamaCICR9SI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The "get_function_tplg_files" function is only applicable to
+ACPI-based devices (sof_pdata->machine and sof_pdata->not of_machine).
+Skip this check for OF-based devices to avoid a NULL pointer
+dereference in snd_sof_load_topology().
 
-Hi all,
+Fixes: 6d5997c412cc ("ASoC: SOF: topology: load multiple topologies")
+Reviewed-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+Signed-off-by: Julien Massot <julien.massot@collabora.com>
+---
+Changes in v3:
+- More detailled commit message
+- Link to v2: https://lore.kernel.org/r/20250428-fixup-of-sof-topology-v2-1-7966515a81b7@collabora.com
 
-Today's linux-next merge of the rust-xarray tree got a conflict in:
+Changes in v2:
+- Better commit message as suggested
+- Link to v1: https://lore.kernel.org/r/20250428-fixup-of-sof-topology-v1-1-dc14376da258@collabora.com
+---
+ sound/soc/sof/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  rust/bindings/bindings_helper.h
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index e19ba94f2c80a43731b90351bacfde2720db50ed..5d3ee3a86392c5a3fbfd05f83acc99b102c8cf61 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -2481,7 +2481,7 @@ int snd_sof_load_topology(struct snd_soc_component *scomp, const char *file)
+ 	if (!tplg_files)
+ 		return -ENOMEM;
+ 
+-	if (sof_pdata->machine->get_function_tplg_files) {
++	if (sof_pdata->machine && sof_pdata->machine->get_function_tplg_files) {
+ 		tplg_cnt = sof_pdata->machine->get_function_tplg_files(scomp->card,
+ 								       sof_pdata->machine,
+ 								       tplg_filename_prefix,
 
-between commit:
+---
+base-commit: 80626102e730787e2cdcab0e36d267bedcd1a63e
+change-id: 20250428-fixup-of-sof-topology-50886568a785
 
-  c284d3e42338 ("rust: drm: gem: Add GEM object abstraction")
+Best regards,
+-- 
+Julien Massot <julien.massot@collabora.com>
 
-from the drm-nova tree and commit:
-
-  dea08321b98e ("rust: xarray: Add an abstraction for XArray")
-
-from the rust-xarray tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc rust/bindings/bindings_helper.h
-index e0676ba99d37,e0bcd130b494..000000000000
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@@ -61,4 -56,8 +62,9 @@@ const gfp_t RUST_CONST_HELPER___GFP_ZER
-  const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM =3D ___GFP_HIGHMEM;
-  const gfp_t RUST_CONST_HELPER___GFP_NOWARN =3D ___GFP_NOWARN;
-  const blk_features_t RUST_CONST_HELPER_BLK_FEAT_ROTATIONAL =3D BLK_FEAT_R=
-OTATIONAL;
- +const fop_flags_t RUST_CONST_HELPER_FOP_UNSIGNED_OFFSET =3D FOP_UNSIGNED_=
-OFFSET;
-+=20
-+ const xa_mark_t RUST_CONST_HELPER_XA_PRESENT =3D XA_PRESENT;
-+=20
-+ const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC =3D XA_FLAGS_ALLOC;
-+ const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC1 =3D XA_FLAGS_ALLOC1;
-
---Sig_/j7x18WCNzSCqfamaCICR9SI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQesgACgkQAVBC80lX
-0Gz0oQf9Fw9e2fvAi0Gizsq0TZ7Ft6d9VyH/ISZttdJIMviSd3BAJypLMsdGx182
-1TMDabMUMGLJIuKAvNKQZfvLAl0r6TFVF926mIIrqy+iz1qI0hCg4Bvuu48O9YNj
-OKoNj82HYyezRJhzD1EdUkzYv7iqCDgh64qDQMfB1z0PWctEdCRhVXMi8YAOyszs
-teyhTwGJBXni6mWbeFecSSeW9WDwGDliWPD9kqPe/vxZ/2JNuXcHXWjlI+DuzHhe
-u2OtwlulDLA/rCjD4G+wzWTuZ+ATdE/BBsRZPxnNGuoqanHwWozeubwKXoMmvJCj
-y+2eTZj93MwkzLpfohpUZnjqyKbEIQ==
-=a5NJ
------END PGP SIGNATURE-----
-
---Sig_/j7x18WCNzSCqfamaCICR9SI--
