@@ -1,99 +1,184 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B3AA2D0277;
-	Tue, 29 Apr 2025 12:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5945D1519BF
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928719; cv=none; b=Kyek558235G/aLOxmbs1IOmHKqvkrUPmnwQwYmL0qCt75OZUrf7IliZpYUgA5QpvCzmP4QDdEeck6kZ9p18NxpXwaM67t4PLACui6PSun4YZGvjDUe1gdwbPnJ5nP7g1SPWTB33jM+0el2nG5+spiz3fg2KQNa8VUB4vmFVyWnw=
+	t=1745928802; cv=none; b=FiQHdVsba1JATSYI3ET9ERisC0VXR7WXHM8fNa/ZgokpjPqJdcuUczeB+5QUCQMYdrzAPwJphMN+K9T8An1qHwRuh5hryY55UzSqEARVYH5APaUwnqHLbeOTMHwpJEA3Qzmk1H1qOlZMKPlO+0xR06rTx1ay4f6D8lYzn7LWI6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928719; c=relaxed/simple;
-	bh=V/Ie+ZwTST3Gao5+19A/LCA6skSpyushVizMP3n59hg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lP5POrziLtUHxb0JhrsUxJlClg/7oIGWdQehNRbUAXeZbRb12ozBtD0pGINREyljoDOSvtJwFogexOeMIRcktRJ5fTiTW9j2XWH86bknP8HLJtWbpF+1DOS6zDlnSxevmFq/w2rehK3r30rPb+uHVdPORo0BAtjZDSaKxF/SCV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VtxfA8w1; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745928802; c=relaxed/simple;
+	bh=GQiTk/htn7/1BJVac7ftCVKE98dbVakVfVbslKTnr/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EoGKRcoK5/StR3R1O9Cn6F5Ja1ZS2Z5L8rHZTdRBP4zaz5+trWHUEgUpzN/ADVMycSviaVF4u+698EUN+1ltl/STA6cNcE8nLNR5Bq9LRMrit0Rsol2q7zadux7UfuO726mqzvg0c8ETx42btKaijv+zjuPtuZz3lt5IVj3Yb5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TazUkZnT; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VtxfA8w1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=FCDaB
-	JfvI36gqhZRVHJX8XImVX7IwQoIXehlt+PgFmI=; b=VtxfA8w1/u9AKunanELhV
-	ShH81ap/U24Cd9ILWNbisnH29NaW9Sma6gYHa9iM3QBCRkpW8viANp0PhGUDCGqX
-	0KLWvQEv4UAxg9M8bHB2xPpYz20o7MbGl0q8NSNjw0xEFfhT0fHkzU8yEXW0vnR3
-	by973SQuXaWX4jFp2gtK9Q=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHUkXjwRBoU_m0DA--.22532S2;
-	Tue, 29 Apr 2025 20:11:17 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org
-Cc: cassel@kernel.org,
-	robh@kernel.org,
-	linux-pci@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TazUkZnT"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso7457048a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745928798; x=1746533598; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XGwtrgjfssbRJnnLGAioENkMU7oIKogOgkQ9Ev2GRas=;
+        b=TazUkZnT+3u7GG3XZtebYztPDVTZ2sRpxc52gskp937d5dikBOAFCCWOU6YrS3zjqu
+         gt1whZRuJOBHd9KXPCK65YkuLzcMKTh3GeC+JvTNqZMSDnG6weU1zjfmy4IQaruyOX/r
+         GMxVGUpu4+uxQEQXc+R/mWlegAybsB4Wpdkbq6XEIPhLCAvVp7TPpy0obTQMRe0KK2Wm
+         zARFY8dbXaib5uDeyPnzqKz57vgXxkSWGQZK+xvzBkxH3ZgccEcmJYW/XuhdHsfN2ELX
+         3uB2WD3gbpNBVRrqmtvJrTezgGJJ7R/1qSy00JJOaZUFklZmra5cd/JUV2oNpRhvnOBj
+         hr6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745928798; x=1746533598;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XGwtrgjfssbRJnnLGAioENkMU7oIKogOgkQ9Ev2GRas=;
+        b=pFSK1gWjRUNw4XxyhwWFYHgDU5SNYC7l7dEfN0nqM6YAKGIUFWKWrpf3Kexe99Pxk+
+         dt1gJSUP+cLNwTajlfybyta0a0cu0sJQJULTMJasKPT/qX5xNi+rAp8EO04+Dv5YTiXT
+         50cclLDhrei+e/G0aOBEEN5GK5KFOgtAqxNZ2l/7qnxMNMWMzSN0UmUuLIo4WF0oKRlo
+         8kRMq/6QDvbBN/GZc4csILMOi5MrbalUjV1x+6koNyLC2egvhGmuYAD6gitpCfa0zuvh
+         DQmJcjfTl53BMFHe08tD0BbfDq6v2YRhoVLYJlwx6B8P7Esd3Rgl/0B3Vii2NNNpJxSU
+         8CMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUex3cGtcCWIbrJvw+7mtp3yWhF4Y1rFXdxahrZz2hOXP01Jgnd91zG9RDmN7xKNfAaNGXl4u8gq7Ie/SY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq6uwk8vPisdcSAx20Kkip2tNgsp03wcgsArbGBTVaSP7Dd9s9
+	vLEifWFLArZGk2Tttlf84PZ9vUmqmC8VHXk+j9gaK5q6xmj1kwbSCufXUFyMuRM=
+X-Gm-Gg: ASbGncvIWIIhU6QITy3wWbgXY8yhGgWE2z5FMdqgzu7YIvBjsAWa74QqyHGm9vN5qpM
+	diCVKDm32mJAtPfBWpbJfrbGqFv+vLKIq35gKYEha/bywgCM4u/N+N6+phCExirLzzeJZfahA1Z
+	8T6TRDS30VzBkWG3PeOReb4vVQYhnGx+hKSgFp2FhLbpXn/Lc8cjPRdocJYvFbtwizqYiPkNuRM
+	gtRcCpgJfN9/PKhwQNi0h5s7XkEX8UYMiMtBRgArKJEIU8FQ8aTe1nK48oCgznnvVqmJ6wWvStO
+	PHTKBmr9mVnbiTDEMLyZDQwwMmxsbaaRGUirojCd4+vK12lgWcRL+A==
+X-Google-Smtp-Source: AGHT+IEo5qlskE04ChdYwUfeG14jGRzrfDGg7ko0hloQlCXfAEEdIv4iz53wIbhKxTpKz7/q/ZoqMg==
+X-Received: by 2002:a05:6402:5112:b0:5ed:bab5:3093 with SMTP id 4fb4d7f45d1cf-5f839b24397mr2697613a12.16.1745928797630;
+        Tue, 29 Apr 2025 05:13:17 -0700 (PDT)
+Received: from localhost (109-81-85-148.rct.o2.cz. [109.81.85.148])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5f7038328f1sm7319317a12.70.2025.04.29.05.13.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 05:13:17 -0700 (PDT)
+Date: Tue, 29 Apr 2025 14:13:16 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 0/3] Standardize link status check to return bool
-Date: Tue, 29 Apr 2025 20:11:06 +0800
-Message-Id: <20250429121109.16864-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <aBDCXB_Tb2Iaihua@tiehlicka>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHUkXjwRBoU_m0DA--.22532S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AFWDAw1UZFW8Jr43Aw43ZFb_yoW8Zr15pa
-	45tayxAF1rtF4Y9F1Yq3WDCa4Yq3ZrAasrK393Wa4fXFy3uFWUXr15GFySqasrJrW0qr17
-	KF15t3W7GFs3JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEna9cUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwQ+o2gQwOccoAAAs1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416180229.2902751-1-shakeel.butt@linux.dev>
 
-1. PCI: dwc: Standardize link status check to return bool.
-2. PCI: mobiveil: Refactor link status check.
-3. PCI: cadence: Simplify j721e link status check.
+On Wed 16-04-25 11:02:29, Shakeel Butt wrote:
+> Memory cgroup accounting is expensive and to reduce the cost, the kernel
+> maintains per-cpu charge cache for a single memcg. So, if a charge
+> request comes for a different memcg, the kernel will flush the old
+> memcg's charge cache and then charge the newer memcg a fixed amount (64
+> pages), subtracts the charge request amount and stores the remaining in
+> the per-cpu charge cache for the newer memcg.
+> 
+> This mechanism is based on the assumption that the kernel, for locality,
+> keep a process on a CPU for long period of time and most of the charge
+> requests from that process will be served by that CPU's local charge
+> cache.
+> 
+> However this assumption breaks down for incoming network traffic in a
+> multi-tenant machine. We are in the process of running multiple
+> workloads on a single machine and if such workloads are network heavy,
+> we are seeing very high network memory accounting cost. We have observed
+> multiple CPUs spending almost 100% of their time in net_rx_action and
+> almost all of that time is spent in memcg accounting of the network
+> traffic.
+> 
+> More precisely, net_rx_action is serving packets from multiple workloads
+> and is observing/serving mix of packets of these workloads. The memcg
+> switch of per-cpu cache is very expensive and we are observing a lot of
+> memcg switches on the machine. Almost all the time is being spent on
+> charging new memcg and flushing older memcg cache. So, definitely we
+> need per-cpu cache that support multiple memcgs for this scenario.
+> 
+> This patch implements a simple (and dumb) multiple memcg percpu charge
+> cache. Actually we started with more sophisticated LRU based approach but
+> the dumb one was always better than the sophisticated one by 1% to 3%,
+> so going with the simple approach.
 
----
-Changes for v2:
-- Remove the return of some functions (!!) .
-- Patches 2/3 and 3/3 have not been modified.
+Makes sense to start simple and go for a more sophisticated (has table
+appraoch maybe) later when a clear gain could be demonstrated.
 
-Based on the following branch:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
----
+> Some of the design choices are:
+> 
+> 1. Fit all caches memcgs in a single cacheline.
 
-Hans Zhang (3):
-  PCI: dwc: Standardize link status check to return bool
-  PCI: mobiveil: Refactor link status check
-  PCI: cadence: Simplify j721e link status check
+Could you be more specific about the reasoning? I suspect it is for the
+network receive path you are mentioning above, right?
 
- drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
- drivers/pci/controller/dwc/pci-dra7xx.c                | 4 ++--
- drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
- drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
- drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
- drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
- drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
- drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
- drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
- drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
- drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
- drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
- drivers/pci/controller/dwc/pcie-qcom-ep.c              | 2 +-
- drivers/pci/controller/dwc/pcie-qcom.c                 | 4 ++--
- drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
- drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
- drivers/pci/controller/dwc/pcie-tegra194.c             | 4 ++--
- drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
- drivers/pci/controller/dwc/pcie-visconti.c             | 4 ++--
- drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
- drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
- 21 files changed, 37 insertions(+), 56 deletions(-)
+> 2. The cache array can be mix of empty slots or memcg charged slots, so
+>    the kernel has to traverse the full array.
+> 3. The cache drain from the reclaim will drain all cached memcgs to keep
+>    things simple.
+> 
+> To evaluate the impact of this optimization, on a 72 CPUs machine, we
+> ran the following workload where each netperf client runs in a different
+> cgroup. The next-20250415 kernel is used as base.
+> 
+>  $ netserver -6
+>  $ netperf -6 -H ::1 -l 60 -t TCP_SENDFILE -- -m 10K
+> 
+> number of clients | Without patch | With patch
+>   6               | 42584.1 Mbps  | 48603.4 Mbps (14.13% improvement)
+>   12              | 30617.1 Mbps  | 47919.7 Mbps (56.51% improvement)
+>   18              | 25305.2 Mbps  | 45497.3 Mbps (79.79% improvement)
+>   24              | 20104.1 Mbps  | 37907.7 Mbps (88.55% improvement)
+>   30              | 14702.4 Mbps  | 30746.5 Mbps (109.12% improvement)
+>   36              | 10801.5 Mbps  | 26476.3 Mbps (145.11% improvement)
+> 
+> The results show drastic improvement for network intensive workloads.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
+Just a minor suggestion below. Other than that looks good to me (with
+follow up fixes) in this thread.
+Acked-by: Michal Hocko <mhocko@suse.com>
+Thanks!
 
-base-commit: 286ed198b899739862456f451eda884558526a9d
+> ---
+>  mm/memcontrol.c | 128 ++++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 91 insertions(+), 37 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 1ad326e871c1..0a02ba07561e 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1769,10 +1769,11 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
+>  	pr_cont(" are going to be killed due to memory.oom.group set\n");
+>  }
+>  
+
+/* Make sure nr_pages and cached fit into a single cache line */
+> +#define NR_MEMCG_STOCK 7
+>  struct memcg_stock_pcp {
+>  	local_trylock_t stock_lock;
+> -	struct mem_cgroup *cached; /* this never be root cgroup */
+> -	unsigned int nr_pages;
+> +	uint8_t nr_pages[NR_MEMCG_STOCK];
+> +	struct mem_cgroup *cached[NR_MEMCG_STOCK];
+>  
+>  	struct obj_cgroup *cached_objcg;
+>  	struct pglist_data *cached_pgdat;
+[...]
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
