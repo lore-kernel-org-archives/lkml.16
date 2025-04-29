@@ -1,91 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E052135A4;
-	Tue, 29 Apr 2025 13:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78242C375B;
+	Tue, 29 Apr 2025 13:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934057; cv=none; b=nRbkIb315VjGL8IluU8XlgXIaAhTuTCD84uThVYqT7UopOeKYLcY4jIUSizbWiiPRlNt8TomGtgzDP5+BcE6BMYw88LLjKZyhQooH6IEQ+5VJa1T7p8x3jJyJDmCp6dJG3wxWZs/j6Rw/vY59dM1C14C2yAi22Hgkvc6kGfhwXE=
+	t=1745934077; cv=none; b=mfADktK4ZnG1r4HExGNskDNtH8PaxXWf9GZWOzCxmZYSTxRQtfV7ep7Hj1Ydv47wudE0tWVJWKnCSlMAzmfljhqhgAekNe0GnoJfvvUG9xs6Q22u3RLcW9O8Tuj6rv+v3+/szOu9+npSDPdKr7W0C4Vxp0T4K9R/Xtvxo5lzzCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934057; c=relaxed/simple;
-	bh=MSR2wRV13Chm7qMvjBrZUPPk8jV++N/soVmQ3bTqXts=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tzskl7bZTgZNxU6Pl2Wvs2XmCmirilHBqakYO/4l1ZVzA7mqZ8iC6Jhw3/Mu8I6iDV1QzXGW4I1jHgD6Kug820GR+Y6TYCm/JcuoMIj/J1NFFyl8OLiHKqwK2HAQNTU0hERDg2+opYDgzxqF3gsybf5yoDwLw3WqwYPBnGgfCMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vN9qfmF8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745934077; c=relaxed/simple;
+	bh=bJRpUbI549tFu5fdC+DCORV9nXGD3YYzkP2HcOX7uQY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d7kW1z3rfURlr1TAdLbPNF99nR2sPWmefWmumEgHUBn/ONSArwyfM4yDbOYwcJXyz0sjTxqNFq+URceCTFGgUPzazjlc4WxgvriJX/uhe+4nFNF0UH8x73KIgmbl3Z+urX35ASu1dCbFmu3ntWvbl8aHe58Qf047wAOgS3OtKZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOexpkUF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vN9qfmF8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4DD6C4CEEB;
-	Tue, 29 Apr 2025 13:40:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOexpkUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F781C4CEE3;
+	Tue, 29 Apr 2025 13:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745934056;
-	bh=MSR2wRV13Chm7qMvjBrZUPPk8jV++N/soVmQ3bTqXts=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=vN9qfmF84NbKzn7Z/5xjUCpgCyaZL6Pkeb8qdBJbLPoPfHlFmQTy8J/HRZXFK5k+W
-	 SWpPE3Gsr9AxN5ihDRAM1I8YcqE8iaxAveDcO8+sdIcMWUVURBoVHhhn95Q3EDyKf6
-	 IH6hDcfkVln6QpaUpQuRYQCdSJLywiky35FaQn2b9mpGcwjmbHKWyNzU6O+u3grOoO
-	 GC/KIW9kITnDt9y2CMj+yKIx2rURdd+Md8i58qQ6sZTgR1Ltz9zTLJhsr8Y12hev0O
-	 k41fm9Crfyvz9GUNjC455Lw4tRuDQYY8u4VdsVdb//812Yrv1kD2qCJR/66dBApN8k
-	 xZ+MYsmGpKK5g==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Nathan Chancellor" <nathan@kernel.org>,  "Boqun
- Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin"
- <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  <rust-for-linux@vger.kernel.org>,  "Nick
- Desaulniers" <ndesaulniers@google.com>,  "Bill Wendling"
- <morbo@google.com>,  "Justin Stitt" <justinstitt@google.com>,
-  <llvm@lists.linux.dev>,  <linux-kernel@vger.kernel.org>,
-  <patches@lists.linux.dev>,  "Aaron Ballman" <aaron@aaronballman.com>,
-  "Bill Wendling" <isanbard@gmail.com>,  "Cole Nixon"
- <nixontcole@gmail.com>,  "Connor Kuehl" <cipkuehl@gmail.com>,  "Fangrui
- Song" <i@maskray.me>,  "James Foster" <jafosterja@gmail.com>,  "Jeff
- Takahashi" <jeffrey.takahashi@gmail.com>,  "Jordan Cantrell"
- <jordan.cantrell@mail.com>,  "Matthew Maurer" <mmaurer@google.com>,  "Nikk
- Forbus" <nicholas.forbus@gmail.com>,  "Qing Zhao" <qing.zhao@oracle.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Tim Pugh"
- <nwtpugh@gmail.com>,  "Kees Cook" <kees@kernel.org>,  "Nicolas Schier"
- <n.schier@avm.de>
-Subject: Re: [RFC PATCH] rust: allow Clang-native `RANDSTRUCT` configs
-In-Reply-To: <CANiq72mNJrMMbEcfJMLT4kM-_iviM0AR6oeigCyrb5eMWkn3KQ@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Tue, 29 Apr 2025 15:19:13 +0200")
-References: <20241119185747.862544-1-ojeda@kernel.org>
-	<CANiq72n4Fw96hcuqQeorsfH7z4Tb+R1gdf80H_XkD-oA6z5TSA@mail.gmail.com>
-	<PVK5DQh3QRZOFQ4cMasO5h75CnLppaPo_aKbvSjzd0gv-bUIagkLyv1FZG5KvJqSUWnl8qwSmmQdl6BVPEcNKQ==@protonmail.internalid>
-	<CANiq72mNJrMMbEcfJMLT4kM-_iviM0AR6oeigCyrb5eMWkn3KQ@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Tue, 29 Apr 2025 15:40:43 +0200
-Message-ID: <87jz732ihw.fsf@kernel.org>
+	s=k20201202; t=1745934074;
+	bh=bJRpUbI549tFu5fdC+DCORV9nXGD3YYzkP2HcOX7uQY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hOexpkUFYTMHUAahkUcB99gyQNhZi94+y5iTQIKG3/0Pge+BHKZJsq4hUAfCbzZ4O
+	 MlqiFUPPewBo8vPmY1sleA2XxiHyL4U0xJr7x9QvlrM5FCWcijVER/3tQbbCZkJtJb
+	 SCOb0IE8r/tlW7EdexI9cWLwfuLJxKvoqfdaaHaoFWNo2o5OY6hFpBaR5cVzfwedAs
+	 p/Wl9mf3z4SYUvIVGcD9QTS5ZKkG5hTzc58i1xNuG5dXvvr2hws8DdDHTrn8Ygf2PQ
+	 eQiA7c3BHd/qxXR+bK2mF5hKURUrH/eKHI214QQSk8O+NllaOYEe4yzs/krjI+Gv49
+	 OvEJ9S5cBtgKQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u9lCx-009vXz-TM;
+	Tue, 29 Apr 2025 14:41:12 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Quentin Perret <qperret@google.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Move pKVM ownership state to hyp_vmemmap
+Date: Tue, 29 Apr 2025 14:41:08 +0100
+Message-Id: <174593405817.3620453.10683944453931548390.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250416152648.2982950-1-qperret@google.com>
+References: <20250416152648.2982950-1-qperret@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, vdonnefort@google.com, tabba@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+On Wed, 16 Apr 2025 15:26:40 +0000, Quentin Perret wrote:
+> This series moves the hypervisor's ownership state to the hyp_vmemmap,
+> as discussed in [1]. The two main benefits are:
+> 
+>  1. much cheaper hyp state lookups, since we can avoid the hyp stage-1
+>     page-table walk;
+> 
+>  2. de-correlates the hyp state from the presence of a mapping in the
+>     linear map range of the hypervisor; which enables a bunch of
+>     clean-ups in the existing code and will simplify the introduction of
+>     other features in the future (hyp tracing, ...)
+> 
+> [...]
 
-> On Thu, Jan 9, 2025 at 3:51=E2=80=AFPM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
->>
->> I may pick this very early next cycle so that we can get some testing
->> during the -rc's, and just drop it if something breaks for anyone.
->>
->> But any other testing beforehand would be still very welcome...
->
-> I ended up waiting on this one since I think Andreas would be able to
-> try it with some actual workload (the nice benchmarks he has). Anyway,
-> it will go in sooner or later.
+Applied to next, thanks!
 
-It is on my list, sorry for not getting to that yet.
+[1/7] KVM: arm64: Track SVE state in the hypervisor vcpu structure
+      commit: 5db1bef933427aa467ad89c7b695a84a6b4afe16
+[2/7] KVM: arm64: Fix pKVM page-tracking comments
+      commit: ba637018ca67224fa21dc2212cb4457b357a5455
+[3/7] KVM: arm64: Use 0b11 for encoding PKVM_NOPAGE
+      commit: cd4b039165a5e709d0d599e207709d73141a8bed
+[4/7] KVM: arm64: Introduce {get,set}_host_state() helpers
+      commit: ba5b2e5b9dff5ba14940e1525f6e3a595f012466
+[5/7] KVM: arm64: Move hyp state to hyp_vmemmap
+      commit: 3390b3cbb613bc0822854f5754437cd1d1b3d5d0
+[6/7] KVM: arm64: Defer EL2 stage-1 mapping on share
+      commit: 48d848882395a6a42ff1bb685082c79791d4e753
+[7/7] KVM: arm64: Unconditionally cross check hyp state
+      commit: 43c475504a39e98f10f5e6ec4d9d9ed60672a753
 
+Cheers,
 
-Best regards,
-Andreas Hindborg
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
 
 
