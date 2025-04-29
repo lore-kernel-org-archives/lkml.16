@@ -1,161 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013019.outbound.protection.outlook.com [40.107.159.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C022676FE;
-	Tue, 29 Apr 2025 08:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915150; cv=none; b=lOiD0DWACPKtFc1ObnC5O/zokFLyhSI6KIL2jCqBRXtA64vok3HQ9aVwqvZ1ecNk2keS/W/J/zwgmGFhzSBN1KB5yMY5fXnRkRPDl6HUXGZIgyCr+1lTA/9bFRNBnzTBo6AkoLMh+HefafLu12RI0/hsjzNe/UzX0HMqeMlVAaQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915150; c=relaxed/simple;
-	bh=QgHt0DPwveKMPa/0IK3wVRz2UaQ2kbL35RtctM7eAlQ=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=HOIcD4+rroodqVHiHukwoDwSMgD4DanfXLwdyxCrT0uKE0o8X6jESMvFIpiDxgx4foUuGBvV5io/wlQIuNNY/7G4UjOVK2IHcwhXLEjlSH6ZLJd0US7iDTlK1cLVU+9vGY3A7g+mcFtBQXSmAoYMutb+xu8nhOdjsUFzEtmVd6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfmfVgS7; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA602949F7;
+	Tue, 29 Apr 2025 08:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745915154; cv=fail; b=QPcNfzWR/qJOBO+suHOOPmvQMXeDspjCGu3mrmD0pkiKluDvLIMVEpzIEtRvqjzI3WBmze2IouqIlLkt3b8q4OwrXukCHqNx5yjohcC1yJZKdCCxrnWDEJhdZ9avLK5YjoXCZsr0u3gezNDNEfU8PhML31Y9UzEL3ubvEmqfbOQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745915154; c=relaxed/simple;
+	bh=vt5kQSK4u0umkEyEjEa3tXHmt45y06Jj4V/i/PNwFSk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=huGh5PcW9c4c7tvAQ5vG+ndXk5jcBZJ+djJ0ah5yikT7ZNJpH69dZ0dXcpk7s5y8YTHMe41CsJ48tW6OBJosXPa7zzRI09QpiO9j+5QAeTKM8FZNXt0S3CsM0jGGM7EiJaAxyqTc/1Dlr9X362X4YmMnIP5ntxemRkQBheH98oE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=McR7zXV4; arc=fail smtp.client-ip=40.107.159.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfmfVgS7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745915149; x=1777451149;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QgHt0DPwveKMPa/0IK3wVRz2UaQ2kbL35RtctM7eAlQ=;
-  b=DfmfVgS7vpoWMULFvilfPebXl7qt10w+ZApAcg5JjZDqehH0yPcnXs8J
-   i8JEQcI1KgvKjYl7oT5oydHXQ1DnRGg3l+6A+zE0s3vPBqulExOqTjorF
-   mrRkAxZgaeQWXr7kzMlJ/my7KTrthQWNRSS1obITWPAORgs7CwsrzGo6O
-   cTl0QF7aeqGbqKim9XXdqKtRzo/yqHQh3eR0/PzwhTAbs0eP9TU6DUqga
-   9rgRkOVZ+zi6Fw9JtZRjc78FdOPcnnGbBbuvLzEPoAOCje/220VSBQEyt
-   y/5Z1aUgDf4IHm/HPv01U/na9+5/X8f73H/2btvWQoqaijrW/RGo7pBzO
-   g==;
-X-CSE-ConnectionGUID: rhN2uuSLS6SfJqild0JhPg==
-X-CSE-MsgGUID: iOL/VQsPTQmuo9OOHZFDvA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47663910"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="47663910"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:25:48 -0700
-X-CSE-ConnectionGUID: RDGw6uRNQtOe2o0wnDCcqg==
-X-CSE-MsgGUID: 9rGvZ+rjR92jwWhushJNEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="134270744"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:25:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Tue, 29 Apr 2025 11:24:34 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.15-4
-Message-ID: <pdx86-pr-20250429112434-323291040@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="McR7zXV4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s0hkYY8BRmEEcfW8QzPhwxPs6dxK2LWcQXU/Ykp/tehD4/DHSDcop0/6zSGl42fJGPxo7bkTA5Juki1W7ePnJLQBIBEPs3msfu8imjSYek8LTDHXzYMtg4k8IKhcXoaKCmb2HEUrY/ULYtZAp3bqL6qMb9zpSyt8tzlNlKpq4eD39v7NvZWMrhzJIR60WL3SNCJirJeGdlGaaWwn0tGtm7ceWYYAbHXGocNtaGwdG9oiodz/jG0PUdvaiNlBac42AXfYzdt74ojKTnRIzUuqz3Ne6UtcBzMw07G5OXrWdyPhSfDv0QBkGyQXxAn0Nm5f+54gxysBb9xkHlQg2D+8Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vt5kQSK4u0umkEyEjEa3tXHmt45y06Jj4V/i/PNwFSk=;
+ b=SXMMI2VVMQwLLo5+BNWMyBnpfUKho6JeOqelKN7l/ga44PIiEZRZ4qbe0MOMH2dT/BQZtGzMXqxoN2YBRj1hFbksasb+A4pv5JzEbY5s5UZ6reMiiUJQOKnyk3cZUq6MCIzM1bcnaRzzoMapoPMnKfZ3bkAUVYP51S5CmTCeVw8El1bbTwxbac7efUSIVdqteaMKplE0PpJxC7L8gZsnOSDxIhAlWB2P0YzwZ0SAJrQmzMIUnTxJkYspAf4Z0sYtpdkSMkCRPEkXbih2jA7CS/s9qtH15CmdjM1yY/tZp27gkgui4N70euCCxEpS/UzdJLl5h3L7xF/qUlxNfAgHHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vt5kQSK4u0umkEyEjEa3tXHmt45y06Jj4V/i/PNwFSk=;
+ b=McR7zXV4Xk/JFUgc0RghP2FGAE0UkSyfhA2x2k30k2EkfMoQWZBy72kjTMGvZwy1v+/Smqi2NNcsTWaWFSesvxKEBgnZ3acWO2CshmkseaToGkwJTD6p2GTZshUO+M0WPwoetsEYtvWcLd/lMPyBiadVXiw9Qc29w/t+h5XAaAH7IBgkN7jC8I7dzBb+YvD6N+aYxd0kCbFutn5vGnO0HqtpthJJxaNFAoZlq7AFpNuVKF7hkLiAAsUFC6twa3+6qWuMCHjCVeevjSLfJeqQvPSU/fIWFoyConZjKuRO8NqCj1kpK9+jnFv6POCzrIsjEpoQujLllfbSVXZCJLNJHQ==
+Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
+ (2603:10a6:800:293::14) by PA4PR04MB9269.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a4::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Tue, 29 Apr
+ 2025 08:25:47 +0000
+Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
+ ([fe80::75ad:fac7:cfe7:b687]) by VI2PR04MB11147.eurprd04.prod.outlook.com
+ ([fe80::75ad:fac7:cfe7:b687%7]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 08:25:47 +0000
+From: Carlos Song <carlos.song@nxp.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+CC: Aisheng Dong <aisheng.dong@nxp.com>, Frank Li <frank.li@nxp.com>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
+	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
+Thread-Topic: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
+Thread-Index: AQHbuOBPK7wvQPUQv0W+RHQ863q5GQ==
+Date: Tue, 29 Apr 2025 08:25:47 +0000
+Message-ID:
+ <VI2PR04MB11147A01165E7505FE44BD1BAE8802@VI2PR04MB11147.eurprd04.prod.outlook.com>
+References: <20250421062341.2471922-1-carlos.song@nxp.com>
+ <ujjbteer3ripubpgmv5qsvhcoki5ibcp4im7vpnna56mbckacl@xxx52nayhw7e>
+In-Reply-To: <ujjbteer3ripubpgmv5qsvhcoki5ibcp4im7vpnna56mbckacl@xxx52nayhw7e>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: VI2PR04MB11147:EE_|PA4PR04MB9269:EE_
+x-ms-office365-filtering-correlation-id: 9bd53f56-a0cb-43c7-f57f-08dd86f77188
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?sYfNDTJs9k3kD7OjK38Zt6uDZuzpW4VGvEzmbEhrF/TsQZ72xPv/Z99ewjZl?=
+ =?us-ascii?Q?j1h/W/17s38IGyi5UY7r9iLy/HuD/UHCumvP8IR1fixkLKo1+CyEIG/4Oa4y?=
+ =?us-ascii?Q?r4eJDRRuSlvghoHknzY5CTF2tg8lP/jkqrWXbTS2fOO4Lx2nq7LPutqC+0C6?=
+ =?us-ascii?Q?vJEBn28pc6dqTZEXy3O0wUzdtJs3T/IZwm3fSuzeVnIlrxAEjdRKGqRGBiAF?=
+ =?us-ascii?Q?OvKMHrPUYlKOd9bQA+Z4UaVN8p0AUpvEe/jcQ81ZaPilo8nzme+DVo9b6AB9?=
+ =?us-ascii?Q?MtlRz81iG2waPccDtdrkGijnn9PDBeQfMawXQDTrcyCElsPvVgA6iFRajnY2?=
+ =?us-ascii?Q?gw8yZrBjnYkY+W0vBpl26t9enUUdiEtz3VSfuIqXo7g9MwCB8m+gfvX9q2zq?=
+ =?us-ascii?Q?h8MWYOml8zNR68temZ0oZ/ajreQT0ykPxgZgkTbfqb32opuveJZItcJC/9pt?=
+ =?us-ascii?Q?nManxdzcoJv2DayJGvcJM/URkwHMZ8PpGvdqpZt8wI2mBtiUR9uwNriRbtfi?=
+ =?us-ascii?Q?S4zlh2rvI1COlaaGFCXkUZT3Efr+5g1tPX+jk4vMPaMY0EtiK5Kg4iGKJadz?=
+ =?us-ascii?Q?I850k/H4XKtv6eekTomIotoeAjvTpJWNFPfrV/Yfr8cxsmx8Y2UvfbSSXHQu?=
+ =?us-ascii?Q?W884GjYVfHvrQ1RyzKaJfhuPHsplniyhmXoAh88HZlgLecrRRkakKbYOByuR?=
+ =?us-ascii?Q?esicCuS1jb7iQ2tGKXWPxnENBT3B/gSQbY2fiYNsZJIVFned1pWMwtuWR9qf?=
+ =?us-ascii?Q?N3yf6nL++Hu8ulN//l/u0kacaE/lxZESJKvgiJjmID0+ZX7rEOssPrqLbWFn?=
+ =?us-ascii?Q?hO9hfwpJk+YA430gjztI7kowvsbPZ/Z6Uw/J2V4vFGoMuPaNXVfHOo6Lx713?=
+ =?us-ascii?Q?6jYxn8IziNdW3wL+Y2bsWcdn2XZb4gC1HaV7ORUgPVEBI1O/LIugCIOeOKPj?=
+ =?us-ascii?Q?uBS7ehXVJOEMEfevl1OhuJ7DM4g01o3zlcFkEmYEQbHg2r2iTU3Zt2OGQCS+?=
+ =?us-ascii?Q?uk8vKU0IOPA8vOC3/V6dNuHa+eqlN/gJ4hjpcCHQz/NNyFrFf3YSWAx+2gD4?=
+ =?us-ascii?Q?qt99J96s0ZiMMRkbAE7Y0Z9bxLdQQgJZvqPPZ10wGX63E26vUvTxQyLWZzsm?=
+ =?us-ascii?Q?zWe7NJMEDjqDvEZOrcYcZCmzxQgxenzEN639fhtdUx8VKdjEpZDTnkOjYLis?=
+ =?us-ascii?Q?BpuDlD8wTLNdaLzq7rPer2jYCZherOnzb4TCZ1sG81uJw3WYbpTShaBOpBgt?=
+ =?us-ascii?Q?z+M5+ubn11WSrc2GrpUustyLpnM3DqKDg/HHMafbLkGDpPB9mPZJrEdxMw0A?=
+ =?us-ascii?Q?Nv0+3EcJm0b6TJ3V9MUHp8buvgFcB2tY9k+u/g9H7J8DPhFKuA9mWofpmM0X?=
+ =?us-ascii?Q?MLnz4aNp47ksyhahScQQ8yFrOZrZ4hsYfOZIwMtPRwm4QforTicgOolJCaAH?=
+ =?us-ascii?Q?F2aI3J6fzP7x7TUgXIVqi2Nga8YZ+ndHujod54RvImwHXEvIrcOMl2RfCavX?=
+ =?us-ascii?Q?UhkbLENX7eUCyjc=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI2PR04MB11147.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?M+3kSKmiqowFSgjdo13zb/tKdk063OPEVh2S+N1Jf+VFbDbQRe+JRVp0oTuQ?=
+ =?us-ascii?Q?IArhzJ+UHHdUUcHrdY225s+l5AkZQ6FpU8nmKjoFss168S0PBFzdkENEvtGd?=
+ =?us-ascii?Q?HD3Yo5aMG/HgOCF8cpJpRYzVQmOdjfiX3qdqUe0a6JCk3gma3LCJ6ASUbcrX?=
+ =?us-ascii?Q?B9RQqf5N5WULfwE7xFinJhwcN04sSe9zCnH0QrZ8l+6xbgzRpI1dufSUCUnQ?=
+ =?us-ascii?Q?ogIdKOqdL89ayjUc1ggVrjyQjGRmhoPyt3Pgd/QID50RTcKnYcAb1E7A2n81?=
+ =?us-ascii?Q?KsvfXTC8tuKUweMnevO11fozKOd/syKZiFxi5CrPPT8iD98z3GdNRbjhrlt7?=
+ =?us-ascii?Q?+WFm3cYiXqBLelsPDtP5w5CiqQ9n+BQ7HLGwx+O6EXZtl3JZcVtN6lgfb0Ew?=
+ =?us-ascii?Q?XDf4TgAtahpyR/5RDgGHKu0cwVnFbS9p3p/OMIzDuYXrZX7BnQ81gE85nR2s?=
+ =?us-ascii?Q?rksHqZ0JcMCXnet7InrB1aNmQMqSBV/sT2bzQSJvtccHr+2jmHUz5WKpFnQX?=
+ =?us-ascii?Q?j9MbFmruBaxGcJ5+i1tqc+FthFgcaPGKwPbVjnMLLEw+QaAB72IZTzaIl9Ao?=
+ =?us-ascii?Q?BRmWXH12e9rzxSlLZU3U9kFXsfbSFuHWO7QlmEDvRoWqI7bMWaj9wFAp5MP7?=
+ =?us-ascii?Q?xsVv9X5D8+fUTOdfXplHgI7iJxEApSDtTqVS3n94iZ+GFed2rj0xT76UTL7+?=
+ =?us-ascii?Q?CGccKvK3mbbJQWFCPYjmmEWDN9xjId6+AiNOHLwWitpCodR98BKxZlbf3EVI?=
+ =?us-ascii?Q?oEd9VC/3yZf4lvas+8BpIyd3JOv9rz/QxYBAAwLyT835n4Kp7rHa4/qes9n7?=
+ =?us-ascii?Q?iN/VE0YWAbei6gHqO/YW9erHkg2OeuddJiqBeYS52q0VLTdsu4wg05sVtvXM?=
+ =?us-ascii?Q?Ntdm2w9QGnPkatqVoWrhm/cVWMW0Y2OiteCsoA5Z7OXjk1Nq+3/d2MN1QqBc?=
+ =?us-ascii?Q?tpgJr22W4HokePempqBnJiL46cGZQJAvSHmPCPCH0btyFHICWqlfNP0N2ZAQ?=
+ =?us-ascii?Q?sTw3xJ0eh0KwhDWmfY94MTLii6gjerDlCqiMpG6KtNvYvzs5361QIgH1aBCE?=
+ =?us-ascii?Q?fL1z5bvTtGkjOrugrhxm8ZJPFsAGW1FDANMoWCgoxbt7NLJ3mDls76TmfxVK?=
+ =?us-ascii?Q?Zp+Po1Yl8y+jNiR7cKO8MaVJTnvyn9VYK6mmgvFOo1Rg83+fuPbRGWYQvWNv?=
+ =?us-ascii?Q?08JD4L7k3MpLoD9gmyqLawKXx+yb3xcy9USoJlRTKZic5MOgoMptnBrdNFnp?=
+ =?us-ascii?Q?HSL/lPazMStss2w5Np64IPf5XtD7zvZXemM8Tp5yIko7XU79tDw9qL/dix4I?=
+ =?us-ascii?Q?p/WPMAi7SUmYXNoqCaYii+C6pK6wcwbGpZA3WjS7eC3nEDenT4S57MSuez1u?=
+ =?us-ascii?Q?VepypMJW6GN61dKHb/A4TEaR61rUZf8PEx0GAj/jcbYe/moqvUezQQYilBnw?=
+ =?us-ascii?Q?QQOUZPF6ZGJS3/WSkHXDv4pmqS6dnrC0Y/iL/tXAYWD9fWg6AFg2p8IWuxcB?=
+ =?us-ascii?Q?zfT2pTilC6xwmac/fOKKvJ6od02v9o6CUECbnWNOtHjjzy8tXTJS4EAPTtX/?=
+ =?us-ascii?Q?+l9L8toEvLqCcJnHO7Q=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi Linus,
-
-Here is a platform-drivers-x86 fixes PR for v6.15.
-
-Fixes and new HW support
-
-- amd/pmc: Require at least 2.5 seconds between HW sleep cycles
-
-- alienware-wmi-wmax:
-  - Add support for Alienware m15 R7
-  - Fix error handling to avoid uninitialized variable
-
-- asus-wmi: Disable OOBE state also on resume
-
-- ideapad-laptop: Support a few new buttons
-
-- intel/hid: Add Panther Lake support
-
-- intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-
-Regards, i.
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI2PR04MB11147.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bd53f56-a0cb-43c7-f57f-08dd86f77188
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2025 08:25:47.5877
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /ttI1VfH4cwK51VYfdhNMUE0M4OgRkFhwlF2NuVu3O+F20bZ8S6D9Nd0+Fu9Bk/6XEr2SbXf13jVGrua8p8C3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9269
 
 
-The following changes since commit baf2f2c2b4c8e1d398173acd4d2fa9131a86b84e:
 
-  platform/x86: msi-wmi-platform: Workaround a ACPI firmware bug (2025-04-16 11:15:22 +0300)
+> -----Original Message-----
+> From: Andi Shyti <andi.shyti@kernel.org>
+> Sent: Tuesday, April 29, 2025 4:21 PM
+> To: Carlos Song <carlos.song@nxp.com>
+> Cc: Aisheng Dong <aisheng.dong@nxp.com>; Frank Li <frank.li@nxp.com>;
+> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> festevam@gmail.com; linux-i2c@vger.kernel.org; imx@lists.linux.dev;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: [EXT] Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe def=
+ers
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report =
+this
+> email' button
+>=20
+>=20
+> Hi Carlos,
+>=20
+> On Mon, Apr 21, 2025 at 02:23:41PM +0800, carlos.song@nxp.com wrote:
+> > From: Clark Wang <xiaoning.wang@nxp.com>
+> >
+> > Deferred probe with pm_runtime_put() may delay clock disable, causing
+> > incorrect clock usage count. Use pm_runtime_put_sync() to ensure the
+> > clock is disabled immediately.
+> >
+> > Signed-off-by: Carlos Song <carlos.song@nxp.com>
+> > Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> > Signed-off-by: Jun Li <jun.li@nxp.com>
+> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+>=20
+> merged to i2c/i2c-host-fixes with all the changes I suggested.
+>=20
 
-are available in the Git repository at:
+That's good! Thank you very much!
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-4
-
-for you to fetch changes up to 02c6e43397c39edd0c172859bf8c851b46be09a8:
-
-  platform/x86: ideapad-laptop: add support for some new buttons (2025-04-23 13:05:26 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.15-4
-
-Fixes and new HW support
-
-- amd/pmc: Require at least 2.5 seconds between HW sleep cycles
-
-- alienware-wmi-wmax:
-  - Add support for Alienware m15 R7
-  - Fix error handling to avoid uninitialized variable
-
-- asus-wmi: Disable OOBE state also on resume
-
-- ideapad-laptop: Support a few new buttons
-
-- intel/hid: Add Panther Lake support
-
-- intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-
-The following is an automated shortlog grouped by driver:
-
-alienware-wmi-wmax:
- -  Add support for Alienware m15 R7
- -  Fix uninitialized variable due to bad error handling
-
-amd: pmc:
- -  Require at least 2.5 seconds between HW sleep cycles
-
-asus-wmi:
- -  Disable OOBE state after resume from hibernation
-
-ideapad-laptop:
- -  add support for some new buttons
-
-intel: hid:
- -  Add Pantherlake support
-
-intel-uncore-freq:
- -  Fix missing uncore sysfs during CPU hotplug
-
-----------------------------------------------------------------
-Gašper Nemgar (1):
-      platform/x86: ideapad-laptop: add support for some new buttons
-
-Kurt Borja (2):
-      platform/x86: alienware-wmi-wmax: Fix uninitialized variable due to bad error handling
-      platform/x86: alienware-wmi-wmax: Add support for Alienware m15 R7
-
-Mario Limonciello (1):
-      platform/x86/amd: pmc: Require at least 2.5 seconds between HW sleep cycles
-
-Pavel Nikulin (1):
-      platform/x86: asus-wmi: Disable OOBE state after resume from hibernation
-
-Saranya Gopal (1):
-      platform/x86/intel: hid: Add Pantherlake support
-
-Shouye Liu (1):
-      platform/x86/intel-uncore-freq: Fix missing uncore sysfs during CPU hotplug
-
- drivers/platform/x86/amd/pmc/pmc.c                  |  7 +++----
- drivers/platform/x86/asus-wmi.c                     | 11 ++++++++++-
- drivers/platform/x86/dell/alienware-wmi-wmax.c      | 14 ++++++++++----
- drivers/platform/x86/ideapad-laptop.c               | 16 ++++++++++++++++
- drivers/platform/x86/intel/hid.c                    | 21 +++++++++++----------
- .../x86/intel/uncore-frequency/uncore-frequency.c   | 13 +++++++++----
- 6 files changed, 59 insertions(+), 23 deletions(-)
+> Thanks,
+> Andi
