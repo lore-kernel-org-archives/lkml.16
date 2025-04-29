@@ -1,239 +1,213 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD052C1799
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69332C2580
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745929328; cv=none; b=NOWRMXD5kuGuyc9boGJQHo6RldvK0seHFvmaL+EznI7jFMkdqX0z4Ud0G1JVyjwnZ+Tna21JwOhfFUsI6aWsbeoYx1dJFDiIaHZztbTA8rI6hXwK9s8OI3cU6Momvkhv44PbXcMKoVdJdk5lTZX5PNV3H97NxnTexBlx5/zApmY=
+	t=1745929332; cv=none; b=TmGRSj2u0Mo97NTp7YwFYTEPWBmYhH73HLAIsN8YHIpKiLLHfVySItpMA8O9hLl4RjLrQeGNNCgxoAmUn34/HMmmrfqJb59TBIAAE/4RDGFi+6l9OxSnVoE6xav3WDd9dfNqK1EcP8bRY/jIV9FiQbCeBQRrdAXc7DdeJn+rr+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745929328; c=relaxed/simple;
-	bh=rlkoMh2C9VM0QAvGszpiyITfN4gKhaKKUVRLWB0+wug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TQew9H0s97VvDAU3Qkw1VoXLU6eA7DhfkBdO7MkYUO6BqMZeBTXE2ryLSjpnoFNBaLbJaiuCHbOOpTx1oqb5/7s6wsaGD1SKTyM5jK/Ogxc1mr6Y+4ldBwXXtw1D69oCQw8QJJjCkhx9rIZNwMaszd5/DAkUSL9jM4aXC8FdIP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CMMxtx4B; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745929332; c=relaxed/simple;
+	bh=VHMQOAapMPuhnJpM3dKwPYuNnsy0TZskQ9fzRnL4G4E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QZQmiRuF3lNnk5BjkYhHt0CrLUpOed+We7YHxjxk78eVKltMcmI8J9xma3Y3aTzSR4I5cefLoYH3HLjrLQq8NRAakaRT6FsiKiVADtnd4dnj08l0mN1BdoU6w+44Za4auu/uj9WMI/puWPrhYCZQ3UIoozgvHlEIMJOV6/v/3uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RGuMoAl0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CMMxtx4B"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TA279l005256
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:22:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=QcqwnwlHX4Z7g+pEyqpwef5F
-	AfNnWZYqyTef36MWiSk=; b=CMMxtx4B9jPSZe3py7ltz0n8emdwll2FMbvhzOnz
-	jHT4XpT2jTmunVANIjpC85V5irCvH3ErFhEJajZnn/CJ+djeUjhPdezhW/9sEbiS
-	WgTC3GYcAH8WtFwPvApbQyxFYpPuh3ZWAbMyY5MMDuk+ndRLXcbtQnU0Kg5MmcUV
-	YDDJm1I3jI1g0ta4keG8qBhC7hNLvSHPanVwj+7N4tNaGnXS+Q644L4CrakAJt4L
-	hJpaa8OArb2e2WeNClFcCElKIjgtvcmMTwpLkipgsrfPXl35lJHCn9/UCXw3P1JB
-	emozPa15yAwCecRxo9NeF+bVQhFyquD1nUyb3fQ7/QQmVw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rsbbfax-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:22:06 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5e2872e57so980713085a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:22:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGuMoAl0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745929329;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hu0T3YBPYeglvNoFV7uLeHvf/p7IaZ74RGzxo9in5d0=;
+	b=RGuMoAl0s0UIoyGtqXav+VNEodQlBil0Lw77kNgXJO0HL1Wj+WZ3Im1+BhHfxbWGbEvXDZ
+	2hUiUvQqj/QyUUV+7PH0apmYWVkf2pbLQqed9l5dBZHXSJeK3X8gMmU7rVPxUmPaWGWFv/
+	DbX2IpwFCbuQ4Bly7kBZ4ybl7FfQlcQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-608-kXd-u-aDMKOB5InLBt0dSg-1; Tue, 29 Apr 2025 08:22:05 -0400
+X-MC-Unique: kXd-u-aDMKOB5InLBt0dSg-1
+X-Mimecast-MFC-AGG-ID: kXd-u-aDMKOB5InLBt0dSg_1745929324
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912a0439afso1752554f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:22:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745929325; x=1746534125;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QcqwnwlHX4Z7g+pEyqpwef5FAfNnWZYqyTef36MWiSk=;
-        b=q0yna68CcxHQgr8NhJiGS+xPxGc8Hsz9FsSM38VpBY5oN1LFSEkSVxEerc7XvJRrQn
-         icbgfAZxIKHzTexq345yz2MdmSe26l/d548uNwnupDAvVxBq5L0XkNONEOGgWzxHESe6
-         DTrlgD/2XrQ4acOhNyfMGI0Vvb98mYdHddn0fnXcZUs3ExG/nXlxK6jzM26ttJ9dPoZy
-         +tTCswniUhnO51fZZCQplUb4N/vYOMhV5g2Wkew4klDA0Xg5RHOt3Uj0p7cyENHTCEEI
-         IAEsxBSuOzay1iN3vuku+MgguWCtGX+hJHnPs5PmU9G1EbUBaE9tMg7dL1jXKfmB8KKM
-         z4oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdwIgm5z8GJtMP33HCSLDtAMc/uFxwqJMf3Y6Pe3IvSk0rHmIwI5T/WhsOop501nENkwbQVhpiz4zeCPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNIhMi6oiEF3aVQjePEYhUx5icin2BLVZuCC+7jcuq5bfF1C3u
-	RQwTBRr5qYUIgi642d+mXR2hcVgj84jYFreHqlAIZxe9EmcoNzyyECRvWSUq2/Jpqj6+ZrlU9Vv
-	OgbFsUi98MDE6eqo5BBbXE1Ke6+AF18O/goJflucqCFLNaUsJVUXQSlgRxn8E1iQ=
-X-Gm-Gg: ASbGncugFCPGFWBpgaHd4kUWl+rhPk7d29Hs+qgLEKMnN6gFQ8ceSzwHYwIxqJttp/Z
-	HWdcjZ5XHtKJXTbb8E9rE7I2NoE3AcuHTqh3iZ9z0ff77WIKoACF3eDj+wb8ptJBREdgWur9Ck2
-	po7dL8R4k4ig48vAUVHYtliR9Yx9rFbDOAjFreJ21ls+ckxuvU6zjWdavrlUA4pnSQSgO+OAxl/
-	yr0bvE9o7lzZabXH1ZWb7LQ3RJVlzZqQUVwITUTZK0VqdJHdPlWvfSf3T72SJeUTR1/AHqE76mM
-	wLzG/h1NDxU+ZJ465A52juNvXIfNunOE261pHoPAqBNSiLhS9+2+qSGesSkllIN8BD2FQroBXh8
-	=
-X-Received: by 2002:a05:620a:40d3:b0:7c5:61b2:b95 with SMTP id af79cd13be357-7cabdd8f731mr514280985a.30.1745929324910;
-        Tue, 29 Apr 2025 05:22:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXUL9I45JsNu/1ShN5rznOiRCqQpVxxM0mjrjN1AEZ7KRlQcxcgY7B6F6Mg/kGlZUGDVSXyA==
-X-Received: by 2002:a05:620a:40d3:b0:7c5:61b2:b95 with SMTP id af79cd13be357-7cabdd8f731mr514274985a.30.1745929324388;
-        Tue, 29 Apr 2025 05:22:04 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb2635dsm1882207e87.38.2025.04.29.05.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 05:22:03 -0700 (PDT)
-Date: Tue, 29 Apr 2025 15:22:01 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: neil.armstrong@linaro.org, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sm8650: add iris DT node
-Message-ID: <4qvz7jcslwfd72ulrjrbp5fya6fbqkfrph7j4byf6vkw6dcz23@ialiag6o4wiv>
-References: <20250424-topic-sm8x50-upstream-iris-8650-dt-v2-1-dd9108bf587f@linaro.org>
- <3498cfda-a738-449d-9d9f-754bbc8125c2@oss.qualcomm.com>
- <db91a526-e2f8-48f8-a071-f3fcc75235be@linaro.org>
- <CAO9ioeWaPKXHgNGPx5q34+RP59PMLD+EVK5fQsN89KC9A1ca-Q@mail.gmail.com>
- <d79790e5-52c9-4135-8f3c-af797145fa2d@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1745929322; x=1746534122;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hu0T3YBPYeglvNoFV7uLeHvf/p7IaZ74RGzxo9in5d0=;
+        b=BBMHH1ZARfPnQqcugqpqRRRHyn7Cz7D/HdBH15MmEU3CdV8fRZebBmEymm63KDMrdD
+         AiR5hmZ03ipwWZjSdZun2H040T91alBlpjyJnfR+K3pkFRdwEQaHmg+nYWLahVnUqQBK
+         8vwQfJqcGz6Q9EdmKebHyovWOiB4O+0lg+svJwbrpkT8CKD7QjS49B+l47l7nxNYyVX8
+         S7Jg9aRBrHCFaNn+ZthsQIskKYTLLrlaLhOkXc1GumaLT7PS62fevT8s8JGFPv6HXvNu
+         kmxbwza6g8IRPplUZ7a5XZipb0zDSYHf4y61EsyYDtuauFqYRXIpNYYrEaovhvQ02brW
+         qU1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXMm+I/5pCcLeF6lh2TxpILj4pUkSDQNnjzfKKVOC0jPwKwyvqrlAosJlcjLzoFtudrLnls86EN4lDBR5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiCWz7DK1GOhW6XbZquLOJGnl435HJTBZczO3BkiLCSUU6jQCz
+	zfzZi0ftk3PtL7rqp/j7BS8QzKMh1IzqggQOS4PH8BplreWcR9wtsH09beSKTRsdigSc6+pBnjp
+	nBCmHboLEIBu4NKKayRmSH/PvGPPnSrmfXJvgqT+ShrI5eFvpVE7CjwysqUUQFg==
+X-Gm-Gg: ASbGncuST2icVfSRSPzQka2iegJEVcfFaaip3JKy4AwQICHszgC0JfUA9zkrn+4WC2X
+	+nQaJfWqTde1gvP1EJLYdtwxRUo57RPznXdcrgiSBK0DQ2CsCa4z3cvyEcoEgsi3X0SyX6xHYvi
+	E1zgqMs/ewoTRVvm30Gwipvz0FnBC79EqWE2gO5MrVlaGtMRxD5Z55A+D/HNqJEJibPoDtZC/y6
+	tpypzZ0y0ttG1RIiBYbKpyi0jwvI878DzXrHa3HQ5N8DbSUy4cDt9TfrmnQle10Y8rVv+Z6HOrO
+	b4f3J8bYlOpMZyedLat5uA9KXG8VZD1Nm1QkaV5goCD2HZfFbgd99uHCYENXCzkUjSPtl1CziF+
+	a2yPNUYyZrGH8tdfF2BHRPM2x5C5ZcyipWi1z5f4=
+X-Received: by 2002:a05:6000:1ace:b0:3a0:880f:1a87 with SMTP id ffacd0b85a97d-3a08ad7da15mr2171470f8f.51.1745929322496;
+        Tue, 29 Apr 2025 05:22:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhAWUDNvU6wR5dToGt3Tw2/yFm5KjNYTdLqDXuXRRDZf9Rh68gGKUKiH3JzrsUo/LsrkIA5g==
+X-Received: by 2002:a05:6000:1ace:b0:3a0:880f:1a87 with SMTP id ffacd0b85a97d-3a08ad7da15mr2171448f8f.51.1745929322113;
+        Tue, 29 Apr 2025 05:22:02 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a2386sm191282065e9.14.2025.04.29.05.22.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 05:22:01 -0700 (PDT)
+Message-ID: <116d8920-6154-4ed1-946a-887cfe084fe9@redhat.com>
+Date: Tue, 29 Apr 2025 14:22:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d79790e5-52c9-4135-8f3c-af797145fa2d@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA5MiBTYWx0ZWRfX0JcCi8xuAvL6 Edt0tX2ptqut56lFCbfUHwBhCOIvmLa1Z98gPpHWYXnNQfrT94RB8qdGUaxC4jqeRJp77QzSZSF Hd7eyLCKGhHqndJJ68vCNUbqFGJ107i/y5I1anEX2nXWljCl1UL4PAhVUf2qloNW5YdqcBuij0S
- j9ps2Z5kYPWALMySpYt7aDT4TFL2K7VloipjJ4bm87BQSdLiAs5oQOiaXhdKXxq8fhTViqu5x8m 3knPHqJqsksNQJscEHUY3PVHXb1kLqMDS9wXSEXxmWGVAvlH+Rc0dxQ/Q0aP3jiERGyLTVRbQXp M9rBSta60a5h2u2Xzj4EBFe7ICLYG+q1Mj2200TSYQHVdNSLgGWF3ouKE0Tz5bZkytChvLtH6k6
- Vj2RItB1Rxq9LEvM2bOwZBi00uuTxshkx9gVEehYvolIK0T4D08MpChm0Ah36LBGzD3tah44
-X-Proofpoint-GUID: Qh0tYSs6Yp89X2G-RCyj2MRADW6mkn_s
-X-Proofpoint-ORIG-GUID: Qh0tYSs6Yp89X2G-RCyj2MRADW6mkn_s
-X-Authority-Analysis: v=2.4 cv=I8ZlRMgg c=1 sm=1 tr=0 ts=6810c46e cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=cUhgIWFcHcWmCc0EzucA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
- malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290092
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/6] filemap: do not use folio_contains for swap cache
+ folios
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
+ Chris Li <chrisl@kernel.org>, Yosry Ahmed <yosryahmed@google.com>,
+ "Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org
+References: <20250429114949.41124-1-ryncsn@gmail.com>
+ <20250429114949.41124-5-ryncsn@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250429114949.41124-5-ryncsn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 11:14:18PM +0200, Konrad Dybcio wrote:
-> On 4/28/25 12:48 PM, Dmitry Baryshkov wrote:
-> > On Mon, 28 Apr 2025 at 11:18, Neil Armstrong <neil.armstrong@linaro.org> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 25/04/2025 23:49, Konrad Dybcio wrote:
-> >>> On 4/24/25 6:32 PM, Neil Armstrong wrote:
-> >>>> Add DT entries for the sm8650 iris decoder.
-> >>>>
-> >>>> Since the firmware is required to be signed, only enable
-> >>>> on Qualcomm development boards where the firmware is
-> >>>> available.
-> >>>>
-> >>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> >>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> >>>> ---
-> >>>> Changes in v2:
-> >>>> - removed useless firmware-name
-> >>>> - Link to v1: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org
-> >>>> ---
-> >>>
-> >>> [...]
-> >>>
-> >>>> +            iris: video-codec@aa00000 {
-> >>>> +                    compatible = "qcom,sm8650-iris";
-> >>>> +                    reg = <0 0x0aa00000 0 0xf0000>;
-> >>>> +
-> >>>> +                    interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
-> >>>> +
-> >>>> +                    power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-> >>>> +                                    <&videocc VIDEO_CC_MVS0_GDSC>,
-> >>>> +                                    <&rpmhpd RPMHPD_MXC>,
-> >>>> +                                    <&rpmhpd RPMHPD_MMCX>;
-> >>>> +                    power-domain-names = "venus",
-> >>>> +                                         "vcodec0",
-> >>>> +                                         "mxc",
-> >>>> +                                         "mmcx";
-> >>>> +
-> >>>> +                    operating-points-v2 = <&iris_opp_table>;
-> >>>> +
-> >>>> +                    clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-> >>>> +                             <&videocc VIDEO_CC_MVS0C_CLK>,
-> >>>> +                             <&videocc VIDEO_CC_MVS0_CLK>;
-> >>>> +                    clock-names = "iface",
-> >>>> +                                  "core",
-> >>>> +                                  "vcodec0_core";
-> >>>> +
-> >>>> +                    interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-> >>>> +                                     &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-> >>>> +                                    <&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
-> >>>> +                                     &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> >>>> +                    interconnect-names = "cpu-cfg",
-> >>>> +                                         "video-mem";
-> >>>> +
-> >>>> +                    /* FW load region */
-> >>>
-> >>> I don't think this comment brings value
-> >>
-> >> Right
-> >>
-> >>>
-> >>>> +                    memory-region = <&video_mem>;
-> >>>> +
-> >>>> +                    resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>,
-> >>>> +                             <&videocc VIDEO_CC_XO_CLK_ARES>,
-> >>>> +                             <&videocc VIDEO_CC_MVS0C_CLK_ARES>;
-> >>>> +                    reset-names = "bus",
-> >>>> +                                  "xo",
-> >>>> +                                  "core";
-> >>>> +
-> >>>> +                    iommus = <&apps_smmu 0x1940 0>,
-> >>>> +                             <&apps_smmu 0x1947 0>;
-> >>>
-> >>> I think you may also need 0x1942 0x0 (please also make the second value / SMR
-> >>> mask hex)> +
-> >>
-> >> I don't see 0x1942 in the downstream DT, and which mask should I set ? 0x1 ?
+On 29.04.25 13:49, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
 > 
-> I saw it in docs only, maybe Vikash or Dikshita can chime in whether it's
-> necessary. It would have mask 0x0 if so.
+> Currently, none of the folio_contains callers should encounter swap
+> cache folios.
 > 
-> >>
-> >>>> +                    dma-coherent;
-> >>>> +
-> >>>> +                    /*
-> >>>> +                     * IRIS firmware is signed by vendors, only
-> >>>> +                     * enable in boards where the proper signed firmware
-> >>>> +                     * is available.
-> >>>> +                     */
-> >>>
-> >>> Here's to another angry media article :(
-> >>>
-> >>> Please keep Iris enabled.. Vikash reassured me this is not an
-> >>> issue until the user attempts to use the decoder [1], and reading
-> >>> the code myself I come to the same conclusion (though I haven't given
-> >>> it a smoke test - please do that yourself, as you seem to have a better
-> >>> set up with these platforms).
-> >>>
-> >>> If the userland is sane, it should throw an error and defer to CPU
-> >>> decoding.
-> >>>
-> >>> This is >>unlike venus<< which if lacking firmware at probe (i.e. boot)
-> >>> would prevent .sync_state
-> >>
-> >> Well sync with Bjorn who asked me to only enable on board with available firmware ;-)
-> > 
-> > I'd second him here: if there is no firmware, don't enable the device.
-> > It's better than the users having cryptic messages in the dmesg,
-> > trying to understand why the driver errors out.
+> For fs/ callers, swap cache folios are never part of their workflow.
 > 
-> I don't agree.. the firmware may appear later at boot (e.g. user installs a
-> small rootfs and manually pulls in linux-firmware). Plus without the firmware,
-> we can still power on and off the IP block, particularly achieve sync_state
-> regardless of it
+> For filemap and truncate, folio_contains is only used for sanity
+> checks to verify the folio index matches the expected
+> lookup / invalidation target.
+> 
+> The swap cache does not utilize filemap or truncate helpers in ways
+> that would trigger these checks, as it mostly implements its own
+> cache management.
+> 
+> Shmem won't trigger these sanity checks either unless thing went
+> wrong, as it would directly trigger a BUG because swap cache index are
+> unrelated and almost never matches shmem index. Shmem have to handle
+> mixed values of folios, shadows, and swap entries, so it has its own
+> way of handling the mapping.
+> 
+> While some filemap helpers works for swap cache space, the swap cache
+> is different from the page cache in many ways. So this particular helper
+> will unlikely to work in a helpful way for swap cache folios.
+> 
+> So make it explicit here that folio_contains should not be used for
+> swap cache folios. This helps to avoid misuse, make swap cache less
+> exposed and remove the folio_index usage here.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>   include/linux/pagemap.h | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index af25fb640463..1dc3416a9c0d 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -935,14 +935,14 @@ static inline struct page *folio_file_page(struct folio *folio, pgoff_t index)
+>    * @folio: The folio.
+>    * @index: The page index within the file.
+>    *
+> - * Context: The caller should have the page locked in order to prevent
+> - * (eg) shmem from moving the page between the page cache and swap cache
+> - * and changing its index in the middle of the operation.
+> + * Context: The caller should have the folio locked and ensure
+> + * (e.g.) shmem did not move this folio to swap cache.
 
-Yes. But the firmware should appear at a well-known location (rather
-than a default one), so we are back to the question of having the
-firmware at all (even potentially). I really would rather not having
-users / developers trying to put qvss.mbn firmware into the default
-location at qcom/vpu. Likewise I don't think we should have users face
-cryptic errors if the firmware from linux-firmware is not suitable for
-the device. With all that in mind, let's follow our standard approach
-and not enable firmware-backed devices by default.
+The "(e.g.)" looks weird. Maybe "ensure that e.g., shmem ..."
 
-Also, if we define the device as disabled, we can reach the sync_state
-too, can we not?
+"to the"
+
+>    * Return: true or false.
+>    */
+>   static inline bool folio_contains(struct folio *folio, pgoff_t index)
+>   {
+> -	return index - folio_index(folio) < folio_nr_pages(folio);
+> +	VM_BUG_ON_FOLIO(folio_test_swapcache(folio), folio);
+
+Likely you want VM_WARN_ON_ONCE_FOLIO() here.
+
+> +	return index - folio->index < folio_nr_pages(folio);
+>   }
+>   
+>   unsigned filemap_get_folios(struct address_space *mapping, pgoff_t *start,
+
+
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
-With best wishes
-Dmitry
+Cheers,
+
+David / dhildenb
+
