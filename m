@@ -1,100 +1,92 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E2E18A93F;
-	Tue, 29 Apr 2025 14:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B4216E2B;
+	Tue, 29 Apr 2025 14:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937465; cv=none; b=uxV9O8oIO+iif1iya5zzL4Jd95a/QPnNFBmsLCrUETxUgLwoigg/D9EQebHfFsKjvZbOs6EP5VkpswZ9813R6TTc4BAhBPHs/KXAkgh0ObvzumIgb4c7l3qhAR2VOsQmrfGrJjnAYzsuCJ8zRQffjQb057k/SfJ4NT3xUewWARU=
+	t=1745937472; cv=none; b=eNftz78ahuVo6xmg9BYdV/596gPsm9nht/O+TefSlTtueXFK47FArQk42N5P07U1L5Du3X7eIDJtewDylk4Ptseee8x+wZnzWPHS0L3V1myWGmNZJinDWqc41PfQdPGHSb9RP1fQ+RhMMAGKW/oLRthXykKhbq9rAzfsaE+S1+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937465; c=relaxed/simple;
-	bh=/xQP20BJdZ0usmMJ3kurJkqp960Yp48ag2lCvfEP2zg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FGD37c2mYn0cerlsKcipkY15/AHvEEhAegYDEDY59xT1/Kpn1p7qWL9112iCB8e2D2NecgS0H6rjuswrZboAOE0WIlW2QDfLPoeWJHNQZDB8tsh13+EOBBNL9T5xJRUlmUdAEx0m2+HsC5LdTOCa0OTMXyved/V1E///T4MinZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=W3zu+TTU; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745937472; c=relaxed/simple;
+	bh=nVd8qF6yGUMGXXiUlR6CdwvZIu05Rfbpb3ez4qo0FPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ljmiYdjmmt33Ly4AQhlr/uRmI0bR6YdN86AVocuhLOmvqyrHVOvNZxmavVMdQNMnPUvGe6Cm/AGY1v36hx3RlUYXkfuxBMm/Z5ROkxxpzaFzp2yj0xXXNgRXBHO6yECPFqbjLz1FpiU7RJ2ghR7DJKOy4eiSWTUA/93FxcLNxyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=arqTb0Vm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W3zu+TTU"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEbU4Z3868279
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 09:37:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745937451;
-	bh=/oAT1IFU3YAYM+Sfb6c7hDr8u++kl5pA5rhqc1pFFIE=;
-	h=From:To:CC:Subject:Date;
-	b=W3zu+TTUccmtuWgLZfr2vm3p3jODNuVjr3aJTC1jHLDLljFR0rNdXYgl1wUyb13Uj
-	 OGY5hIX4Zb2xcEnmgvnEqGY46FG3V58aklsKasrMl1ZwqP1G/m4RsazvMgNVkMXYMw
-	 iZU8fPaZ1md89Bl0zDV06Mbv7+AY8xWPOb9fe9kE=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEbUo7010200
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 09:37:30 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 09:37:30 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 09:37:30 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TEbU2T106904;
-	Tue, 29 Apr 2025 09:37:30 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
-Date: Tue, 29 Apr 2025 09:37:30 -0500
-Message-ID: <20250429143730.4145747-1-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="arqTb0Vm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72ED2C4CEE3;
+	Tue, 29 Apr 2025 14:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745937472;
+	bh=nVd8qF6yGUMGXXiUlR6CdwvZIu05Rfbpb3ez4qo0FPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=arqTb0VmVe4kYSqEOdXDmPjiuCngQMkK8fgA1AEi6jsd21U9E4lNuLZdCPVUcU7sz
+	 aAoQvaLpIPBYInFrSOa6MULulzKmwaKO/4MRaLLJt1qFfY9Gjf1nO8yw+evNXlJf+x
+	 bI/FNbkX+GJ1L7FFgenePoULpIHqn0rUIUBBoVeM=
+Date: Tue, 29 Apr 2025 16:37:49 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Ayush Singh <ayush@beagleboard.org>,
+	Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>,
+	Robert Nelson <robertcnelson@beagleboard.org>,
+	Dhruva Gole <d-gole@ti.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rust: kernel: device: Add
+ devm_of_platform_populate/depopulate
+Message-ID: <2025042904-trade-leverage-0f98@gregkh>
+References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
+ <aBDi2LE3O1rIsGqn@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBDi2LE3O1rIsGqn@pollux>
 
-For am65x, add missing ITAPDLYSEL values for Default Speed and High
-Speed SDR modes to sdhci0 node according to the device datasheet [0].
+On Tue, Apr 29, 2025 at 04:31:52PM +0200, Danilo Krummrich wrote:
+> On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
+> > +    /// Remove devices populated from device tree
+> > +    pub fn devm_of_platform_depopulate(&self) {
+> > +        // SAFETY: self is valid bound Device reference
+> > +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
+> > +    }
+> > +}
+> 
+> One additional question regarding devm_of_platform_depopulate(). This function
+> is only used once throughout the whole kernel (in [1]), and at a first glance
+> the usage there seems unnecessary.
+> 
+> In your upcoming driver you call devm_of_platform_depopulate() from a fallible
+> path [2].
+> 
+> So, I think we should change devm_of_platform_depopulate() to return an error
+> instead of WARN(ret).
+> 
+> If [1] needs it for some subtle reason I don't see, then I think we can still
+> call it from there as
+> 
+> 	WARN(devm_of_platform_depopulate())
+> 
+> [1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
+> [2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
 
-Fixes: eac99d38f861 ("arm64: dts: ti: k3-am654-main: Update otap-del-sel values")
-[0] https://www.ti.com/lit/gpn/am6548
-Signed-off-by: Judith Mendez <jm@ti.com>
-Reviewed-by: Moteen Shah <m-shah@ti.com>
----
-This patch was split from "Misc MMC udates" patch series [1] to help
-with backporting.
-[1] https://lore.kernel.org/linux-devicetree/20250417233040.3658761-1-jm@ti.com/
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Ugh, no, we should just delete this function entirely if only one driver
+is using it.  That implies it's not really needed at all.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 6d3c467d7038..b085e7361116 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -449,6 +449,8 @@ sdhci0: mmc@4f80000 {
- 		ti,otap-del-sel-mmc-hs = <0x0>;
- 		ti,otap-del-sel-ddr52 = <0x5>;
- 		ti,otap-del-sel-hs200 = <0x5>;
-+		ti,itap-del-sel-legacy = <0xa>;
-+		ti,itap-del-sel-mmc-hs = <0x1>;
- 		ti,itap-del-sel-ddr52 = <0x0>;
- 		dma-coherent;
- 		status = "disabled";
+And we should NEVER have a WARN() call, that's just an excuse to reboot
+the box and assign a CVE...
 
-base-commit: d864bb528a6725e775d564fd4430762acbb9dd0d
--- 
-2.49.0
+thanks,
 
+greg k-h
