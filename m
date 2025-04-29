@@ -1,80 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41746433B3;
-	Tue, 29 Apr 2025 05:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1CA212D7C
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745905059; cv=none; b=bObkyh54u9H3cyUw/2g8GUnBZ/eHh1XGLDC+8mMj7OkrZ8MGI9CbdItYSdFgDkxpeVJWmPwNfsWOezwvzSwQapmZWroXOk+JaYCFt+Lft6eMq2r/d5Sg3SNJguK7ZctLVXeCZD/qtZM5zwAhyzyqlCB2szzrLABHj9Aoc+R7WCI=
+	t=1745905312; cv=none; b=OlJE/Fm9tKBvXd1ZX8xVk06oYCl1pQdkNjJkFl3qzZAM4zVgrR68yCWvp4WqigW9ODgY9PYTxJyJm4qtybobI7pqP2gB3BGM9oqAxP3rvLEZcrw/+1tOS4fvlrdxtJZGFAWrmhL8Bdb9siFaghCOFKBFqRQyQMCcibzJYtB3y2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745905059; c=relaxed/simple;
-	bh=KFqzEyNKOFOAeSkTWy5DiiPoP4XGs7Kz86yGcU1/JJw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XxiBhC47EaWhp9+3LQqOPZTwgVysXu7V7SyrI0pNilaXeVnJ2n+st4NubU9UZKFkWy0OnH5kn2jDHmYuH3QjknGy0OSk/ACWL2rZ8yQ84ihtix/QqvxCulih8pTT642p3a3gO8wLjd0EJ1rAM+7lKv4m7cUKNkMG9vkXy1pYoTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E36411515;
-	Mon, 28 Apr 2025 22:37:30 -0700 (PDT)
-Received: from [10.163.52.122] (unknown [10.163.52.122])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D23DC3F5A1;
-	Mon, 28 Apr 2025 22:37:32 -0700 (PDT)
-Message-ID: <06140631-c3cb-4837-bb4c-bdff30863ad2@arm.com>
-Date: Tue, 29 Apr 2025 11:07:28 +0530
+	s=arc-20240116; t=1745905312; c=relaxed/simple;
+	bh=LDGEy6BgXcLzexaYRIXjqYYouqaIk/CmA7XWdbGlmjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFMS7wT2Lg7DTA1OnWcA+DjKA5V41VZBqADUR6qdo2xVBlFeqVNtDe2OB8A3F5XEXpY9t4HflKy6n586MYtX7l+FJd942BU7ztGcmejjuW8JDnOXOBcPwBBvsgmBcGWYXCgN0NvSmsurYq8/QnoDuQWwpbcy08rvAtOobdgemeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jI3gB2HA; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jI3gB2HA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=G96w
+	HknFvMDYs9Me2VS4zcAoceHRxCX4C1FN4jhCjms=; b=jI3gB2HAzkOIzAXdfgGl
+	33CBhnQRcgr6MTIAw422tJwPkuKCftn8g/G1kt2/im1vO537D2UTdtIdbP8rFegk
+	TiG7xoNytx8chHE/vwJ22D/AQcr/WrXOLm0P3MmeB/ZwFy+RVRTeoNISNF12OIbM
+	fUH290VXsdQ8bOalrr0iwEjBpFLcYmFA+bN4QK92DRiCdma1s6FzASvPbwEdB02H
+	cfnS3igiEQuT5ZpHT/sW0aSC1Mm5fBjswjJHel1WyzRXFZcG9lZw6WBHjx/D77ST
+	UYYoLgsQY9l23RqYHuWsqVPUbV0b8AYxSHwR5BqkIrrroINUJDkxPW3f3sCDCagX
+	MQ==
+Received: (qmail 127660 invoked from network); 29 Apr 2025 07:41:45 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Apr 2025 07:41:45 +0200
+X-UD-Smtp-Session: l3s3148p1@wKKHQeQz2Ocujnsd
+Date: Tue, 29 Apr 2025 07:41:44 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	"digetx@gmail.com" <digetx@gmail.com>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	"wsa@kernel.org" <wsa@kernel.org>,
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v2 RESEND] i2c: tegra: check msg length in SMBUS block
+ read
+Message-ID: <aBBmmNlM3_zjNMC3@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Akhil R <akhilrajeev@nvidia.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	"digetx@gmail.com" <digetx@gmail.com>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	"wsa@kernel.org" <wsa@kernel.org>,
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Thierry Reding <treding@nvidia.com>
+References: <20250424053320.19211-1-akhilrajeev@nvidia.com>
+ <j3jxuuwu2joyn6jsfa63lkkuwqazd2mpeki6gamdpktllhpkhv@tfoqnztsa7zw>
+ <aBBE5mgqGk0yXQWN@shikoro>
+ <PH7PR12MB8178416B09D217B77CC43C04C0802@PH7PR12MB8178.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
- linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh@kernel.org
-Cc: Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, stable@vger.kernel.org
-References: <20250227035119.2025171-1-anshuman.khandual@arm.com>
- <174171335999.3659520.16613654046629962007.b4-ty@arm.com>
- <ddeb3df1-995b-44f4-ad20-50edfb906a28@arm.com>
-Content-Language: en-US
-In-Reply-To: <ddeb3df1-995b-44f4-ad20-50edfb906a28@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LKcIhL0cHU9e9mjD"
+Content-Disposition: inline
+In-Reply-To: <PH7PR12MB8178416B09D217B77CC43C04C0802@PH7PR12MB8178.namprd12.prod.outlook.com>
 
 
+--LKcIhL0cHU9e9mjD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/12/25 09:16, Anshuman Khandual wrote:
-> 
-> 
-> On 3/11/25 22:47, Catalin Marinas wrote:
->> On Thu, 27 Feb 2025 09:21:19 +0530, Anshuman Khandual wrote:
->>> FEAT_PMUv3p9 registers such as PMICNTR_EL0, PMICFILTR_EL0, and PMUACR_EL1
->>> access from EL1 requires appropriate EL2 fine grained trap configuration
->>> via FEAT_FGT2 based trap control registers HDFGRTR2_EL2 and HDFGWTR2_EL2.
->>> Otherwise such register accesses will result in traps into EL2.
->>>
->>> Add a new helper __init_el2_fgt2() which initializes FEAT_FGT2 based fine
->>> grained trap control registers HDFGRTR2_EL2 and HDFGWTR2_EL2 (setting the
->>> bits nPMICNTR_EL0, nPMICFILTR_EL0 and nPMUACR_EL1) to enable access into
->>> PMICNTR_EL0, PMICFILTR_EL0, and PMUACR_EL1 registers.
->>>
->>> [...]
->>
->> Applied to arm64 (for-next/el2-enable-feat-pmuv3p9), thanks!
->>
->> [1/1] arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
->>       https://git.kernel.org/arm64/c/858c7bfcb35e
->>
->> I removed Cc: stable since, if it gets backported automatically, it will
->> miss the sysreg updates and break the build. Please send it to stable
->> directly once it lands upstream, together with the dependencies.
-> 
-> Sure, will do that.
-> 
+Hi Akhil,
 
-Just FYI,
+> Yes. We have had issues where the client device sends '0' as length if the
 
-This patch along with required tools sysreg patches are merged in applicable
-stable branches which are now available in v6.12.25 and v6.14.4 respectively.
+Can you reveal which client that is?
+
+> transfer is terminated abruptly at the client's side. The actual fix is in the client's
+> driver, but this check here would ensure that the master does not run into
+> trouble either.
+
+Correct.
+
+Happy hacking!
+
+   Wolfram
+
+
+--LKcIhL0cHU9e9mjD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgQZpQACgkQFA3kzBSg
+KbYwVg/+Ls0ETpDPvjbXAvPTPGrLr4B1aAcdbJxiAEbIpx2BoU1NlrNi1muKcM9u
+9Cj+Xb+69BqlTuo8O4yup6pfd1aCe5MMejxLFkaoYxCbXRFSiFEbRHrPN7Le+LE9
+YrWR92ER5yy+XOKMWikfdHEcvGHy+emvurGfcmrrtykvl2lJ6ux1MoMbC7os7ky5
+P4UM7RFBuVVAhH8RCQHkhvE8ZJKGI8rA3HWGIMDIch+iiczzYaHPfuC9odYkRzZb
+RJSXaQFx/x4MQQ9MnbKwym96z6REcjXBIVMBssLexbQbP8odf76QomTO+wPegjts
+4GYKTgAi4mpTFeJ2mXk3A2hUuM8fF00szDhWc7obNLZdQtDe/wkxnsdWeQlbrMqP
+yo0f5nlhxP5guGV/Ofi5V7hkjDZ4iOY8ArACXqViUjRtV7ePJXr/PMRTnVKuz64T
+4j2pacdY7uazHVCesI867Zc37dB7pVbwbORnNnO4L6n+8x9sriO5Bvms96AdSs7W
+/kID7Gn1RnHc8L3vjnDTMKh+TY7pW/SRATQ+P8qIF8ewtuYBoiIvHMs7IaJq1uv+
+H/lrZ9Z3ysabkr09nqQS9k+ZZTfE7S6+878a2GGD5/T+/b4OyedD2uMvnDyf3pLK
+nEyy26Lwz1h8qj1cpSFRNkmd5ZIJu8ugW6rxtBt3Y7XqgK6G7wE=
+=JRhs
+-----END PGP SIGNATURE-----
+
+--LKcIhL0cHU9e9mjD--
