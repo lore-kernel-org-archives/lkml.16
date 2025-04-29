@@ -1,185 +1,163 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49D92BD5A1;
-	Tue, 29 Apr 2025 09:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF922949F7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919358; cv=none; b=RLdQVzg5WtxVzOXW6SY6XajftcvrA4R0ZF/sjlZ/q7a0qOigc+hb05Xf1JmU0VEi5eatuBNfKL5dnC4JBq85q92hvvrhBaJ7i+1QjINbhxrV0IGkBeHOdlBPISG55iEjsomxLXFT9kJISw4Sn2AbOVjkR8ty6cbp0QK9XzOtKU4=
+	t=1745919580; cv=none; b=I4sWdPKoQPZZxC5DIqHGmgXgjh5HOXs20Fn/UKCJdNhEimviHW2spjaMt2dw7XQ2+MDBHFTyGW551aUKqnHOxHA1pThUDmrjszmR6eRxW4eZHNaoXKg68Y4T2mZe8jeKsUD2BK7qydWq/qJv5MebWjP2gcVygf0vIsoYgd2XxCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919358; c=relaxed/simple;
-	bh=sn1h2qPcPLFA2sXaBTxt/NcqLBuuVYZ3ozOg1Avonfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YX5ESIRUCzyiyYyGE1+VKNIgbo6zGNdvvNz+l0vonZWdrfBejxDcNbV6ejGNQkSfef0wbpDpGBdSz547pEN5pt6DKeAvGBOI+CxIseFHi08AxhUDI/K7LS+ucl7hBOhG13F2jaiuWx4pcnudfZTEojSJ5G4HTIJDsEYIMddRYec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Bur+ahpN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Bur+ahpN"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq2RQ012445;
-	Tue, 29 Apr 2025 09:35:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9IaT7F7qdLnuVXkG89KMPqimQVkjBAEgraP45eTJrmc=; b=Bur+ahpNXnx0J0S4
-	pzWIDwFc470K4r67iPA41jNjOZgXM4PbJaBArrUc2z55F6k9yGFEWffwjF3dxSaP
-	b93gdKKhYg2OGX8xh5C1F9/tEgjwgMcwQgFe33s0Ec3+aBtrVWGElyQqxqNWJS7+
-	LT9+QhRONbZwGC4RnQclbwF7kQjdCTgBZIvlMlEFEqO86uNHPOt2BDsoE0XK8mcw
-	sArJpskwUluNkb2U9LK9GMhQIQo0i4Bh1GUrfst5lwXRpPd3uTvgPJjRFnnfxQO4
-	Se/HRn8ZsKpWla0gaN3hRVVtpQdjvuvuPKhD4d063ll9LBd0s+1XQ4qKvTSI2Jit
-	Y7Jr5A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnn2x4h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 09:35:52 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T9ZpOa011176
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 09:35:52 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 02:35:45 -0700
-Message-ID: <c2ee94fa-a440-0b61-514f-a5590bee5e66@quicinc.com>
-Date: Tue, 29 Apr 2025 15:05:42 +0530
+	s=arc-20240116; t=1745919580; c=relaxed/simple;
+	bh=wff8gluj3VBQRHUO2dAZPoDwcc7HlG1ihchdsWbgGBQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dzGstWOLBKbSiVyB35Xdj45biDKKBX13+U3UKm/cwcU5XqR2jwb7ZLdfrYtPKTL3i2m1hRzcU84DiYvgjwToJfMgZE6UmRPK8TANI8ChQ4i6oB/otiC3JMBFxGi/PgSA1Z5yWHpsQEGF/a/sDQCDL1TH/Ri2pUXtNPns2GddX+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <l.stach@pengutronix.de>)
+	id 1u9hQw-0004du-Pm; Tue, 29 Apr 2025 11:39:22 +0200
+Message-ID: <e97d3388a5b4272d70d7379b020843a47874a104.camel@pengutronix.de>
+Subject: Re: [PATCH 0/6] arm64: dts: imx: Move Ethernet aliases out of SoC
+ DTSI
+From: Lucas Stach <l.stach@pengutronix.de>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, Francesco Dolcini <francesco@dolcini.it>, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Date: Tue, 29 Apr 2025 11:39:20 +0200
+In-Reply-To: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
+References: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 03/23] media: iris: Add handling for corrupt and drop
- frames
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-3-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-3-3a6013ecb8a5@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zHFW06OKxc0qgvEOUz2Rv6Fep_fwicvp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3MSBTYWx0ZWRfX6g4Oju1p/V4W +4OUuwnkrPYjPogEdRxwSOkIOm48CnaE846MGrLKe0WBRLlFLHrk5/Z75WKFI+zT0kB1WNlwly5 cPQ3Ii/CW+gVWVmdfSbh1MO58LTWYrLNcDHTy8q2+cg7NemBO6ja/NKew8AIe9/FJ51v9+Qm1r1
- /P6bO8FlJ9y0pJZHQCRDJn37veR4rvlTP5D9fsoqY5YaEtj7r+ScwQ3vLncZmPrifXdGg7x/x6r 2FTSW+4ptZGrCQnfNA+Krw0+RkURjGnCn7cR9goEWF4Lo22fuH5ImTNF6DIZ8Irg7iXAWAJRVuj tHPSgd3/Mk4arf2omJ+VIDeYCzADjjB+fjz/KpvR7d1o9S8owMCuL2f8IXd8HYT5NJ+Ymox22gr
- efsO1mLQgleemU7wp1Xdq4SJ9eO/kl8axXyKQTmKfyMH+zJX7FpgvFj4NsTtd0zdwcqZZ66F
-X-Proofpoint-GUID: zHFW06OKxc0qgvEOUz2Rv6Fep_fwicvp
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=68109d78 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=1rPC81ydLq6XjGq1_2YA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290071
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Hi Krzysztof,
 
-On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
-> Firmware attach DATACORRUPT/DROP buffer flags for the frames which
-> needs to be dropped, handle it by setting VB2_BUF_STATE_ERROR for these
-> buffers before calling buf_done.
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Am Freitag, dem 25.04.2025 um 21:48 +0200 schrieb Krzysztof Kozlowski:
+> Not tested on hardware.
+>=20
+> Ethernet interface, like other exposed interfaces, aliases depend on
+> actual board configuration, e.g. its labeling, thus aliases should be
+> defined per each board or each SoM.
+>=20
+> Some boards (e.g. Gateworks) follow this convention but many do not.
+>=20
+> This is continuation of my comments from:
+> https://lore.kernel.org/r/16a98816-f43c-4f4d-940e-9da30cb1f73f@kernel.org
+>=20
+The i.MX boards have traditionally listed aliases for many hardware
+peripherals with the same numbering that's used in the SoC reference
+manual. Boards always have the option to override those aliases if they
+have a good reason to do so, e.g. labeling on the physical device.
+
+Other users besides Linux rely on fixed numbering provided by the
+aliases. Both barebox and U-Boot number their ethernet interfaces
+according to the alias.
+
+While you seem to add back aliases for in-tree boards, this breaks the
+majority of boards that include the kernel DTSI from an out-of-tree
+board. I can understand that we can't always accommodate these users,
+but I simply don't see the strong benefit of this patch to justify
+creating churn and possible regressions with those OOT users.
+
+Having those aliases in the DTSI has been common practice on the i.MX
+platform since 2012, long before there was any strong consensus on how
+those aliases should be used. Breaking existing users for the sake of
+aligning the i.MX platform with more idiomatic DT usage does not seem
+to be a worthwhile trade-off to me.
+
+Regards,
+Lucas
+
+> Best regards,
+> Krzysztof
+>=20
 > ---
->  drivers/media/platform/qcom/iris/iris_buffer.c            | 11 ++++++++---
->  drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h  |  2 ++
->  drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c |  6 ++++++
->  3 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
-> index 606d76b10be2..3691b68ea294 100644
-> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
-> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
-> @@ -628,10 +628,13 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
->  
->  	vb2 = &vbuf->vb2_buf;
->  
-> -	if (buf->flags & V4L2_BUF_FLAG_ERROR)
-> +	if (buf->flags & V4L2_BUF_FLAG_ERROR) {
->  		state = VB2_BUF_STATE_ERROR;
-> -	else
-> -		state = VB2_BUF_STATE_DONE;
-> +		vb2_set_plane_payload(vb2, 0, 0);
-> +		vb2->timestamp = 0;
-> +		v4l2_m2m_buf_done(vbuf, state);
-> +		return 0;
-> +	}
->  
->  	vbuf->flags |= buf->flags;
->  
-> @@ -651,6 +654,8 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
->  			v4l2_m2m_mark_stopped(m2m_ctx);
->  		}
->  	}
-> +
-> +	state = VB2_BUF_STATE_DONE;
->  	vb2->timestamp = buf->timestamp;
->  	v4l2_m2m_buf_done(vbuf, state);
->  
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h b/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h
-> index 9f246816a286..93b5f838c290 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h
-> @@ -117,6 +117,8 @@
->  #define HFI_FRAME_NOTCODED				0x7f002000
->  #define HFI_FRAME_YUV					0x7f004000
->  #define HFI_UNUSED_PICT					0x10000000
-> +#define HFI_BUFFERFLAG_DATACORRUPT			0x00000008
-> +#define HFI_BUFFERFLAG_DROP_FRAME			0x20000000
->  
->  struct hfi_pkt_hdr {
->  	u32 size;
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
-> index b72d503dd740..91d95eed68aa 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
-> @@ -481,6 +481,12 @@ static void iris_hfi_gen1_session_ftb_done(struct iris_inst *inst, void *packet)
->  	buf->attr |= BUF_ATTR_DEQUEUED;
->  	buf->attr |= BUF_ATTR_BUFFER_DONE;
->  
-> +	if (hfi_flags & HFI_BUFFERFLAG_DATACORRUPT)
-> +		flags |= V4L2_BUF_FLAG_ERROR;
-> +
-> +	if (hfi_flags & HFI_BUFFERFLAG_DROP_FRAME)
-> +		flags |= V4L2_BUF_FLAG_ERROR;
-> +
->  	buf->flags |= flags;
->  
->  	iris_vb2_buffer_done(inst, buf);
-> 
->
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Krzysztof Kozlowski (6):
+>       arm64: dts: imx8qxp: Move Ethernet aliases out of SoC DTSI
+>       arm64: dts: imx8dxl: Move Ethernet aliases out of SoC DTSI
+>       arm64: dts: imx8mm: Move Ethernet aliases out of SoC DTSI
+>       arm64: dts: imx8mn: Move Ethernet aliases out of SoC DTSI
+>       arm64: dts: imx8mq: Move Ethernet aliases out of SoC DTSI
+>       arm64: dts: imx8qm: Add Ethernet aliases
+>=20
+>  arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi           | 2 ++
+>  arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi     | 1 +
+>  arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi     | 1 +
+>  arch/arm64/boot/dts/freescale/imx8dxl-evk.dts                 | 1 +
+>  arch/arm64/boot/dts/freescale/imx8dxl.dtsi                    | 2 --
+>  arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi          | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-data-modul-edm-sbc.dts   | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-emcon.dtsi               | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-emtop-baseboard.dts      | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi                 | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-icore-mx8mm-ctouch2.dts  | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-icore-mx8mm-edimm2.2.dts | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-innocomm-wb15-evk.dts    | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts     | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts           | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-mx8menlo.dts             | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-nitrogen-r2.dts          | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-phg.dts                  | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi         | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-ucm-som.dtsi             | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi             | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-venice-gw700x.dtsi       | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-venice-gw7902.dts        | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-venice-gw7904.dts        | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi       | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi          | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-verdin-ivy.dtsi          | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-verdin-mallow.dtsi       | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm-verdin-yavia.dtsi        | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi                     | 1 -
+>  arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi          | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi   | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi                 | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mn-var-som.dtsi             | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mn-venice-gw7902.dts        | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi                     | 1 -
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts                  | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts   | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts       | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts          | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts             | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts             | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts              | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi              | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-thor96.dts               | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi           | 1 +
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi                     | 1 -
+>  arch/arm64/boot/dts/freescale/imx8qm-mek.dts                  | 5 +++++
+>  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts               | 1 +
+>  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts                 | 4 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi                    | 2 --
+>  arch/arm64/boot/dts/freescale/imx8x-colibri-aster.dtsi        | 6 ++++++
+>  arch/arm64/boot/dts/freescale/imx8x-colibri-eval-v3.dtsi      | 1 +
+>  arch/arm64/boot/dts/freescale/imx8x-colibri-iris.dtsi         | 1 +
+>  arch/arm64/boot/dts/freescale/mba8mx.dtsi                     | 4 ++++
+>  arch/arm64/boot/dts/freescale/mba8xx.dtsi                     | 2 ++
+>  56 files changed, 143 insertions(+), 7 deletions(-)
+> ---
+> base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+> change-id: 20250425-dts-imx-aliases-ethernet-37d8552939de
+>=20
+> Best regards,
 
