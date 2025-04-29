@@ -1,140 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gmmr-3.centrum.cz (gmmr-3.centrum.cz [46.255.225.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D0E10942;
-	Tue, 29 Apr 2025 14:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4017A27CCD7;
+	Tue, 29 Apr 2025 14:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.225.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745936536; cv=none; b=pSPoak20WIbYQLSJ42mkLC5GUPfrJigl7KP+KIX+govOrG0uiHuU9i3E/mcoKsL1ocTvaoajuRxPWBGCNE05kOSWm/C5Ym92c5MdmnZ2PnL12rVrlvI+R/2VKIU4Xvw467WFlqUhjQSoiN9tM0wwRiiSCWZdWiVAjBQ5mZZDISc=
+	t=1745936585; cv=none; b=hm7MIFUESqjaSu3eSBaJXyk3A0tZpngGbTDEk510rbcOkzzq+uEtUTm6CGywDPQiWOm5GH1LmqMQHace5JiWLSRFmc2kww6pEHhZFOGPiwvlkrwBt09YFCrxvkGzfJrMvBj5YalvKvPNJW4DZTPYIXDTCXH73970tCA9VZDVNJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745936536; c=relaxed/simple;
-	bh=Hn26jb1aZXYejporzmo9DyB26YCJ0sQN1ZLh9FSFMwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e11xzp6JOz45eu2VhwixyI2im84q1JD67J2FUSoOW4UhJY0daTsGjO0W7xDFAoetrOG1N8s2fQZmsgUk+/nmcVNT1NyaLzTvK0rfJgn0Wrb0OtBIGMyDmckO5t4eEcIvTEQGpd799/FXYjRRG40mwzCNxHUjMU1zbPV2uO+2smM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poAzvqd9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745936585; c=relaxed/simple;
+	bh=mSi10ExAIIaQz4/WSNbeci6hSI9+ZpJrJWvqtowmjAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hUK6ucePRs+jMClcHcIX5c9d/82X1BUWUvSyD8hM3MM4hktu40kaJGrBXODA16JoRd6gbWr3a1nppvBJbKUVcZ5M6sp6fjSwymLMkQ2bphrB/P48EcyViYKcCS2kKeTgwvsvxxU6V/jqrfp6Fr23CdK6VLbjSJ5WdQBIZA6ERhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=f9aDRZJP; arc=none smtp.client-ip=46.255.225.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poAzvqd9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B844C4CEE3;
-	Tue, 29 Apr 2025 14:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745936535;
-	bh=Hn26jb1aZXYejporzmo9DyB26YCJ0sQN1ZLh9FSFMwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=poAzvqd9eURiN3jHfL6W1FWeIh2XPHdSkTOF9+NePUCEE0nzrSuN1fjK3bW/7ZGwy
-	 Ir9/VDJas1weKrZiNqb6UU/su4AjVwwtrL8sl48e55NyCHfHCF8wO38ljtClLcA5uI
-	 EaLQwyZ2k88ED96kVWNRgqY0sZMPwnq6p/SHSYXo6AtoLiMOmcukV03EhbfElFnd9o
-	 N/lFzou9P83ffhnPzX/isaPcgPwHRhnmzT9G/iq8P8BB4qDQS8K65z42MtijnppqFR
-	 /FHkzILlOymDkVoEtFLSsK0XLe4KZ2EXAll0Y/ncxY1nSCK8vwxbpIEsUByFzG9lX3
-	 3JE9LbbW+xNEQ==
-Date: Tue, 29 Apr 2025 16:22:13 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] net: airoha: Fix an error handling path in airoha_probe()
-Message-ID: <aBDglZH4VaBlWU2a@lore-desk>
-References: <f4a420f3a8b4a6fe72798f9774ec9aff2291522d.1744977434.git.christophe.jaillet@wanadoo.fr>
- <aAJFgqrOFL_xAqtW@lore-desk>
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="f9aDRZJP"
+Received: from gmmr-3.centrum.cz (localhost [127.0.0.1])
+	by gmmr-3.centrum.cz (Postfix) with ESMTP id 0B1AE2066045;
+	Tue, 29 Apr 2025 16:22:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1745936574; bh=zcz3KV2j9DGPThJRRrNIl1X5dqrILd4s9iLxPnBmOwI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=f9aDRZJPq3ISnnxofAMOSl9GJu8xXrwiQrXqNNXt58DoxUbj3OeGIum+5hy9canqA
+	 1lkPogCxu/rBwG8iIfE2ppbkf2ZMs6uLkhT+aXvmsrpZdqOA8OHzyltImZYEKCJnzb
+	 G6akwzulKzmBsRNuIqVq+hsnzTuiD1sbjA+UhX5Q=
+Received: from antispam64.centrum.cz (antispam64.cent [10.30.208.64])
+	by gmmr-3.centrum.cz (Postfix) with ESMTP id 092BB20164EC;
+	Tue, 29 Apr 2025 16:22:54 +0200 (CEST)
+X-CSE-ConnectionGUID: YpSGceRmQye+NjdaFecdsw==
+X-CSE-MsgGUID: nVQDrnWZShShA9j8GCQ5Sw==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2FUAgBZ3xBo/03h/y5aHAEBAQEBAQcBARIBAQQEAQFAC?=
+ =?us-ascii?q?YFKgzSBcYRVnWqGM4EgjEkPAQEBAQEBAQEBCUQEAQGFBwKLMyc4EwECBAEBA?=
+ =?us-ascii?q?QEDAgMBAQEBAQEBAQENAQEGAQEBAQEBBgYBAoEdhTVTgmIBhAAGIw8BRhAYD?=
+ =?us-ascii?q?QImAgJWGYMCgjABAzGyY4EyGgJl3HACSQVVZIEpgRsuiFABhHxwhHdCgg2EB?=
+ =?us-ascii?q?3aFEIMOgmkEgy8Ukw6LEkiBBRwDWSwBVRMNCgsHBYFpAzUMCy4VbjMdghGFI?=
+ =?us-ascii?q?YIRggSJCoRQLU+FMYElHUADCxgNSBEsNxQbBj0BbgeVQ4NkB3IcQwllxU+CQ?=
+ =?us-ascii?q?4QlhE6cexozl1IeA5JkLodlkGsbpDGEaYF+gX8zIjCDIlIZynt2PAIHAQoBA?=
+ =?us-ascii?q?QMJgjuNYYFLAQE?=
+IronPort-PHdr: A9a23:7DIe1xLD1W0/wyHy/9mcuA9gWUAX0o4c3iYr45Yqw4hDbr6kt8y7e
+ hCEv7M11BSTA9mDsbptsKn/jePJYSQ4+5GPsXQPItRndiQuroE7uTJlK+O+TXPBEfjxciYhF
+ 95DXlI2t1uyMExSBdqsLwaK+i764jEdAAjwOhRoLerpBIHSk9631+ev8JHPfglEnjWwbL1sI
+ BmssQndqsYajZVjJ6s+1hfFvGZDdvhLy29vOV+ckBHw69uq8pV+6SpQofUh98BBUaX+Yas1S
+ KFTASolPW4o+sDlrAHPQwSX6HQTS2kbjBVGDRXd4B71Qpn+vC36tvFg2CaBJs35Uao0WTW54
+ Kh1ThLjlToKOCQ48GHTjcxwkb5brRe8rBFx34LYfIeYP+dlc6jDYd0VW3ZOXsdJVyxAHIy8a
+ ZcPD/EcNupctoXxukcCoQe7CQSqGejhyCJHhmXu0KM6zeosDxzI0gIjEdwJsnvUotr6O7sdX
+ +2u0KnFzi/OY+9M1Dvh6oXFdA0qr/GWXbJ3dMrc0VMhGB3ZjlWKtIfqMCma1uITtmiY8uFtU
+ vigi3Qkqw5rpzig3N0sh5LTiYIJzlDL7z55zJwpKty5UUN2Z8OvH5RMuS+ALYR2Xt8iTH9yu
+ CY80rAKpIK3cScKxpg6wxPRa+GKfpSI7BzsW+ucIjZ1iX1qdby/hBu/70eux+7+W8S60VtHr
+ iVInsTPu30P1hHf98uKR/1g9UmiwTaCzw/e5+BeLUwqlafWK4QtzqAumpcTq0jOHC37lF3og
+ KOLeEgo4Pak5/r7brn8uJOROJN4hhv6P6kvnMG0HP42PRIUX2eB/OSxzLjj/UrkT7pUlvA2i
+ azZsIzCJcQcu665HxdZ0oY95Ba7CDeryNsYnXweIFJefRKHk5DpN0zSLPziEfiwnVKskCtxx
+ /DbO73tGInCL3nbnLfge7Zy9VJcxRI8wN1e/Z5YFLEMLfLpVkPvqtDVDgU1Pg62zur/DdVyz
+ IIeWWaBAq+DN6PStEeF6fg1I+mPfoAVvSzyK+I+6vH0kX85nUUSfbKz0ZQLaXG0Bu5mLFmBY
+ XrwntcBFn8HvhA+TePwjl2OSyRTZ3GpUK0i/DE7FJmmAJzZSYC3hbyNxju0HppTZmxeEFCDD
+ W/od5mYW/cLcC+dONVhkj8eWrikUYAhzwqjuxXmy7pjNOXU4TcUuo7i1dRt/e3ciQky9SBoD
+ 8Say2yNS2B0nmUVRz45xax/pEl9x0yA0ahmmfNXCd9T6+lOUgcgOp7Q1/Z6BMzqWgLdYteJT
+ 06rTc+lATEpS9I82NsOY0d7G9W/gRHPxiSqA7gIl7yNGZM76L7c33n2J8Z70XrG07Mhj1Y+T
+ stVKWKmnrJ/9xTUB4PRjkqWjbiqdaUB0yPW7meM03eBvEFCXw5sS6nKQXcfZk7OodTj+kzCV
+ 6OuCaggMgZZzc6CK61KasDmjFlfR/fsJs7eY2SvlGe0HhuI2LyMY5Twe2kH3yXSFlIEkwYN8
+ naCLwQ+AT2ho23GADx0CV3ve1/s8fV5qH6jVU800xuFYFZl17Wr4RMVm/OcRO0J3r4euycut
+ S90HFCj0NLSEdaAoBBhfKpEbdM7+1hIzXjZuBBlPpy8M6BigUYTfgYk93/pghF2DJhQ1Msnt
+ nUnyCJsJq+CllBMbTWV2db3ILKEBHP1+UWXZrLMkm/X1nWVsvMG8vcxrlz5lAi1EkM5tX51h
+ YoGm0CA74nHWVJBGan6VVw6ol0j/+myXw==
+IronPort-Data: A9a23:rpmI7aIjTJoZfwztFE+RFpQlxSXFcZb7ZxGr2PjKsXjdYENSgzcPn
+ DYYCmqFa66PMWX3L95xOo3n/EwOuZ6Dz9IwSgQd+CA2RRqmiyZk6fd1jKvUF3nPRiEWZBs/t
+ 63yUvGZcYZpCCaa/krwWlTYhSEU/bmSQbbhA/LzNCl0RAt1IA8skhsLd9QR2+aEuvDnRVrQ0
+ T/Oi5eHYgL9h2Qlajh8B5+r8XuDgtyj5Vv0gXRhPZinjHeG/1EJAZQWI72GLneQauF8Au6gS
+ u/f+6qy92Xf8g1FIovNfmHTLyXm6paLVeS/oiI+t5qK23CulQRuukoPD8fwXG8M49m/t4sol
+ IgS78zYpTABZcUgkMxFO/VR/roX0aduoNcrKlDn2SCfItGvn9IBDJyCAWlvVbD09NqbDkl/7
+ cc3Iz03aymSiqGQwr6yZORnit88eZyD0IM34hmMzBnWCLM9RIzbGv2M7tJewC0tg4ZFD54yZ
+ eJFN3w1MUmGOUcSfAhIYH49tL7Aan3XeidboVecv4I+/2za10p6wtABNfKEI4bQHp0Lxi50o
+ ErAwV3VGBclBuef8jqso3D8qcT2wBjkDdd6+LqQs6QCbEeo7nYCARtQT1yxrOOlkWa3QdcZI
+ EsRkgInt6s78UWxZtDhWxSj5nWW1jYYWtxNA6g/7SmO1KPf4ECeHGdsZjdCcNkOsM4wWCxv2
+ FiUmd/gGT1otvuSU3313rudszK+ETIYIW8LeWkPSg5ty93ippwjyxHCVNBuFIargdDvXzL92
+ TaHqG45nbp7pdUX3q+/8HjZjD+24JvEVAg44kPQRG3N0+9iTNL7Idb1tB6Bt6sGc9nxokS9g
+ UXoUvO2tIgmZaxhXgTUKAnRNNlFP8q4DQA=
+IronPort-HdrOrdr: A9a23:ObIzvKGGm2sPaHnppLqE5ceALOsnbusQ8zAXPo5KJSC9Ffbo8P
+ xG/c5rsSMc5wx+ZJhNo7q90ey7MBDhHP1OkOws1NWZPTUO0VHAROpfBMnZsl/d8kbFmdK1u5
+ 0MT0EHMr3NMWQ=
+X-Talos-CUID: 9a23:VeA6gG67VOsqT1+1Z9ssxVYvNcsoSHjk3XqTBU20AEhkQ7GOVgrF
+X-Talos-MUID: 9a23:O4Q+6wZNZj9OYOBTsQHVqCtkC/VT45+uIREPwbotgpS/Knkl
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,249,1739833200"; 
+   d="scan'208";a="91223060"
+Received: from unknown (HELO gm-smtp10.centrum.cz) ([46.255.225.77])
+  by antispam64.centrum.cz with ESMTP; 29 Apr 2025 16:22:53 +0200
+Received: from localhost.localdomain (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp10.centrum.cz (Postfix) with ESMTPSA id 44AE080911A1;
+	Tue, 29 Apr 2025 16:22:53 +0200 (CEST)
+From: =?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	stable@vger.kernel.org,
+	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+Subject: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
+Date: Tue, 29 Apr 2025 16:22:37 +0200
+Message-ID: <20250429142237.22138-2-arkamar@atlas.cz>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250429142237.22138-1-arkamar@atlas.cz>
+References: <20250429142237.22138-1-arkamar@atlas.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Cs66MFCPOyZ/spK5"
-Content-Disposition: inline
-In-Reply-To: <aAJFgqrOFL_xAqtW@lore-desk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+folio_pte_batch() could overcount the number of contiguous PTEs when
+pte_advance_pfn() returns a zero-valued PTE and the following PTE in
+memory also happens to be zero. The loop doesn't break in such a case
+because pte_same() returns true, and the batch size is advanced by one
+more than it should be.
 
---Cs66MFCPOyZ/spK5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To fix this, bail out early if a non-present PTE is encountered,
+preventing the invalid comparison.
 
-> > If an error occurs after a successful airoha_hw_init() call,
-> > airoha_ppe_deinit() needs to be called as already done in the remove
-> > function.
-> >=20
-> > Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> > Compile tested-only
-> > ---
-> >  drivers/net/ethernet/airoha/airoha_eth.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/eth=
-ernet/airoha/airoha_eth.c
-> > index 69e523dd4186..252b32ceb064 100644
-> > --- a/drivers/net/ethernet/airoha/airoha_eth.c
-> > +++ b/drivers/net/ethernet/airoha/airoha_eth.c
-> > @@ -2631,6 +2631,8 @@ static int airoha_probe(struct platform_device *p=
-dev)
-> >  		}
-> >  	}
-> >  	free_netdev(eth->napi_dev);
-> > +
-> > +	airoha_ppe_deinit(eth);
-> >  	platform_set_drvdata(pdev, NULL);
-> > =20
-> >  	return err;
-> > --=20
-> > 2.49.0
-> >=20
->=20
-> Hi Christophe,
->=20
-> I agree we are missing a airoha_ppe_deinit() call in the probe error path,
-> but we should move it above after stopping the NAPI since if airoha_hw_in=
-it()
-> fails we will undo the work done by airoha_ppe_init(). Something like:
->=20
-> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ether=
-net/airoha/airoha_eth.c
-> index 16c7896f931f..37d9678798d1 100644
-> --- a/drivers/net/ethernet/airoha/airoha_eth.c
-> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
-> @@ -2959,6 +2959,7 @@ static int airoha_probe(struct platform_device *pde=
-v)
->  error_napi_stop:
->  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
->  		airoha_qdma_stop_napi(&eth->qdma[i]);
-> +	airoha_ppe_init(eth);
->  error_hw_cleanup:
->  	for (i =3D 0; i < ARRAY_SIZE(eth->qdma); i++)
->  		airoha_hw_cleanup(&eth->qdma[i]);
->=20
+This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
+optimize unmap/zap with PTE-mapped THP") and was discovered via git
+bisect.
 
-Hi Christophe,
+Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
+Cc: stable@vger.kernel.org
+Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+---
+ mm/internal.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-any plan to repost this fix?
+diff --git a/mm/internal.h b/mm/internal.h
+index e9695baa5922..c181fe2bac9d 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+ 			dirty = !!pte_dirty(pte);
+ 		pte = __pte_batch_clear_ignored(pte, flags);
+ 
++		if (!pte_present(pte))
++			break;
+ 		if (!pte_same(pte, expected_pte))
+ 			break;
+ 
+-- 
+2.48.1
 
-Regards,
-Lorenzo
-
->=20
-> Agree?
->=20
-> Regards,
-> Lorenzo
-
-
-
---Cs66MFCPOyZ/spK5
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaBDglQAKCRA6cBh0uS2t
-rHX6APwIvo/4Y3dZRr6TbMAZgufdsaVik6rZZyhOrTPpqe6ybwEAhi4Y5iLOE9C4
-os6h8aHQ7FIIGzhvOp1QYkFsEvZ0TQI=
-=ylrk
------END PGP SIGNATURE-----
-
---Cs66MFCPOyZ/spK5--
