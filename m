@@ -1,143 +1,145 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7608021ABC6;
-	Tue, 29 Apr 2025 19:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF991C6B4;
+	Tue, 29 Apr 2025 19:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745955198; cv=none; b=Fi22UWItiRzGZAQSUNHQgAhvQGAsSVYqKZUjZa9lU+Gvhgzd1FYRhuab4IsCrcO+ScIjdsp4O22XNfvmtOe7OdF3kcQQp7jOJ73ptyC2qAbbcScDHpki/JBup+UmCzYBrlc/65RvbScSatbSXB+/sZDvW2bfqRn72/zR9Zm4oKw=
+	t=1745955424; cv=none; b=Q37e9QvhOeQQnqiPNo9lIsX8L0qLzOoKmvgbTx27gqg3TtmDYrUSDcslXzNjN0+i0tk9zTy5LONKENzhOSmQAC1PB9if9dFCPJFyqH4E/c2DpPJQcLuGk12p4bPsozLIB4zOg+YafB0lptzIk8IGHkbRPWMexpM4q/3mvs+XdSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745955198; c=relaxed/simple;
-	bh=t/TaDhTEiYr8JZ9az+xPIoer1kKQ0EqLa+WBBbutaGU=;
+	s=arc-20240116; t=1745955424; c=relaxed/simple;
+	bh=3RSQBQYYivFKA9pKVHeDfBEhAwfCaWu2qO7THyAb160=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Iqr/4DSGWAbeLkj7h7dGniwxuLzpg3DSCQiGF1v6NblbE74bhaXtNKsWz3QBzzJSpT+b5iWhcvjLLf1uX0d2tXSq7+Zl8y7stF/lMzwLo5lyM0ff9/wjWcwgbJH+DmJo2DQH8yh/MDukZlAgN7kAwh7wLIAdgK/VN/yZ8uPkeyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JInmPKz9; arc=none smtp.client-ip=209.85.216.42
+	 To:Cc:Content-Type; b=imvMLmGS4CTYB5djQsPlgjHge8xwCzay0BO5EuiMLef3u70eF/5Z8PlE6WS3XzKmw+lQ9GuRTa0m+IrhXvZMvxUrohzj+AiD07S7KWMIOK6fLLo2ekXR4Es2vIWCYlyl5NK8+BcxGF8qZAeFcOnINEL8h1bdzk2AU+NW6jHbBE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJoOyf1U; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JInmPKz9"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff67f44fcaso510783a91.3;
-        Tue, 29 Apr 2025 12:33:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJoOyf1U"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso1063380066b.1;
+        Tue, 29 Apr 2025 12:37:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745955197; x=1746559997; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745955421; x=1746560221; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+6R87BCw+XZw8t56W3vKaa9E85JmDHuUT63nFr7qjY=;
-        b=JInmPKz9DDPU/Tl7tY7inxgquEZA0TO6okGYlsAN/MgafpJWsiS3P4uBBXVkmQUfKU
-         C0ktAoFRurADbh2jxFkvQt4GdBnann+OeyENrPqOcEab+j0izN1akUN/6MPPAOkSTz2H
-         D5vhRwRRE0mdrcYcwRacivTqCmsEHjXnCU19sOmnWUrPN2+yGovmCDacKCON3DYOZ39T
-         N9SQ3CMH0GfglI8xgKs/hpNXsNyayHp5pTX9ugZ/CLvFxfsDlkPYm35AXSrS4DQF+rty
-         9YP6f/7XAzqrYSLO4/c/CmhkLn4eA4M1xcB4DCr24kqUmbjuiE9uwbFmNWCgJ+lX+OLP
-         K6vg==
+        bh=3Tp6jQbur2uPrp6S/Am4jXNTxdawW/c11k2ZMTBdl30=;
+        b=fJoOyf1U6Pa6345Od2497LXzpl83rb9N+T6+cN/D3HlJU4d5LzBTECy2H/BE3lNNrX
+         E+dRq6tHD/NKWl4Fcp2pSF9lgh0tikvUrRC0jUxpnb20jjTBnkWJseAQQ9ZOdyx7aIbv
+         YhdvAWlcEODLO65qMpNspMiFRrVZdV7HBY/iHSBLTYTmpJi92y4XY4kQc/09k5uLhMZz
+         Lp3oN8lmi2SiYrgNv6mchB/zpCJQLK6VQFD/Dwl2i6uA+OhpUXALg8m92r4w36lsZrIg
+         9bwMV0hXc6BEDUJC9jInX18W4cyc7fYx8SUhlroWllyVZ7eZIQ4GGjs/H7SY3S1etNZX
+         zoJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745955197; x=1746559997;
+        d=1e100.net; s=20230601; t=1745955421; x=1746560221;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N+6R87BCw+XZw8t56W3vKaa9E85JmDHuUT63nFr7qjY=;
-        b=Hyo7nPS8J+7zY3mjiEv1U7ZENtjrOsjkMDiEiH7BYHlFr/CQmwxWFFfGuAEn4rogeg
-         3FbgZK53hwuQqmblQBbOt9MJOaYL10UToA4WmquxfSuH69A3HyBAbwQOEEOG3FysNtz8
-         sLzTuyLUIBSi3PUNR/qSLD/biGRVncDXJvgz/6xsJPw5/ydLT76BeRg6/KYfhCvV6mtP
-         lVsHQD9gZXmpkaNugTMY+qeGgrpYhqQE0N8wOXNor93po7cYO2axoAvkIM7vULXyFXF9
-         8qb//vSBkGFrT4tl3Bbt9gah4Pz2af1pGb1qKe38rr2yHdTy//vRucIgYoine3vsUZ06
-         2KEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVavlhX7bjQWAzOVlwFFuVd3gBxG4F8zYUfjNPoF762GPsXQ4jJwo6cuZCYH/ep/CUJgHV1CrUzL1s7fatbIAwSEw==@vger.kernel.org, AJvYcCVmCJRi4YA1xfIsvzQa8Cd8Pr+gB0gTXSwNKgNUM7HzN0UvwB1pumjq5wsroBez+alSIFOqvA5u6m53XkI=@vger.kernel.org, AJvYcCXGd6rdWvnFWDIGiNaPPfN54uBFRIsTfQUkMiYCvpUSuP+9JotzOwlnMRGpqTVE2sRno3UaO6DeipNk7VJC/aA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx80DRi5eLd7GZvXMgJ1RSJS6XVgiEfhK9/yGijU991IPKpWKzn
-	/BKu3FxRAghP7fZOyovSqgpD5ZstwqxEb10PpAZ775goxsgVCJE4gu6O2hvSwSdCtTIli4SOUNU
-	CbypEic8fB2YIMzdqw2XdAII5Sk8=
-X-Gm-Gg: ASbGncvDBIxL2HszPCw3hy2it3GheEf2D03FX3ungCu7vMiKLfmVPXt2fPKgEQBDO3R
-	qpzHrKWgX0vHSZCMoYsjrywjLJlaMFN+gHSLjzIQWpvY+wVUNu/4wvzM3DVlZTzQ6bjMxKiSZOx
-	yUmVuP+jF/Nfuv3OGtUFT4Nw==
-X-Google-Smtp-Source: AGHT+IGQqF75KnMv+4bVCZkAaU+P9VRF9V2GaCglJcEOLFkIoEF/9gIcBxqPqDF/usHsH68nxd+NNiRHshS5SL0h1Xo=
-X-Received: by 2002:a17:90b:3b91:b0:2ff:6bcf:5411 with SMTP id
- 98e67ed59e1d1-30a332d60e6mr187967a91.1.1745955196640; Tue, 29 Apr 2025
- 12:33:16 -0700 (PDT)
+        bh=3Tp6jQbur2uPrp6S/Am4jXNTxdawW/c11k2ZMTBdl30=;
+        b=OcAyf64JcjCTeGZze8llQPEcdVMByzHLb3+v7x2gvjhG7jOlbsfLnO8IUh/Rf7jIYM
+         DoDVG0i6vXuzwGMpLK5bZRbR52Q917EZgTOrUXhHPWW//v85awyhm6EGnglIaXT3seEm
+         cxBMcyCAC9EGfvjzK+cv7CYn4PR849D0wTxbZ3AbfLMPd+8McEqSNMoB+K26pRkyibjn
+         W4ddsghqwB2YL9KhHPwrGVzKRDUwh5L6sUkkhh0o5PDeBJaY5GevTyq+w6nUwCb3ajG1
+         qQRPreYfuFVXRLwXfV8yjhn4LATzPYDf1dI2/EUOwQAn2cvMTYv80WX1DcCErYFqf9yq
+         nZrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCYP3mT6FiTv0AuwlDyiPM1gr29exkIJca+vfp0WZLkp9k7WmOwPCIWlAIsyTuP513j+tFno6mz1M=@vger.kernel.org, AJvYcCWhNT3Ab2zqUGsJeXsLAlIeTgyKYFUjBf/OgTMdpVTIabVRcE0WPc3D9zLAy3g1jMKM4o/3cmhJZxxuFqva@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2MrPG8TdCSn+8ypkq9HwkgKYOff1EGwLR9gIvZKMioesODhKc
+	/MvhlZTY4xQw8dayC/Wl1NVNO95nxk3mvuQUcKN9hy8mvtk1IeTnhso1h9fBm97L1M3Z0V/i5fZ
+	0nFu3/hC+myI7OZE74VyTBMbWXkU=
+X-Gm-Gg: ASbGncvv9QFw5FnOZzwjvS8+/cICJ4K69rb5/TETY/6hF1Y/G0aPpUhtanGFHnklITh
+	7fLpjbkcMvgGoeQFEp+J1NggVUXp89yiXgku+TzoG33cbpIUfH+e0vDKUSeiyaA2umFGCrZta0C
+	wVMR/KR1LiUNf7OxN25ySFOA==
+X-Google-Smtp-Source: AGHT+IEdsoIHAufNtJaT4e5z5ds/k/kKnJc+/x9kYEJiD5thFR4klPRX4LXJHI2J2frB9Rw/oGoqyvr69rpkRppUdB4=
+X-Received: by 2002:a17:907:9801:b0:ace:c225:c721 with SMTP id
+ a640c23a62f3a-acedc56d9cemr51735966b.8.1745955420643; Tue, 29 Apr 2025
+ 12:37:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429185839.1807005-1-irogers@google.com> <20250429185839.1807005-2-irogers@google.com>
-In-Reply-To: <20250429185839.1807005-2-irogers@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 29 Apr 2025 21:33:03 +0200
-X-Gm-Features: ATxdqUF8JMzltITilMhWL094El5ZtueGDzQXtv_0-w06j1KIuKQGPrNQhTePM5Q
-Message-ID: <CANiq72kDkPgXS2SasysSa0MXX68kkkhYbSpvK9KAYxFbEKpLig@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] perf demangle-rust: Add rustc-demangle C demangler
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev, Daniel Xu <dxu@dxuuu.xyz>, 
-	Ariel Ben-Yehuda <ariel.byd@gmail.com>
+References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
+ <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
+ <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com> <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
+In-Reply-To: <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 29 Apr 2025 22:36:24 +0300
+X-Gm-Features: ATxdqUE34hEo360r8C9Web68AMwiNqGY2UEskFkoO_CVQ5Qq3fMSkPAEA4zL0cU
+Message-ID: <CAHp75VfcmvLhBDjbu6x46wGyzG+i7=rVypzSm11qzWN9Qq_rew@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 8:59=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Apr 29, 2025 at 10:31=E2=80=AFPM David Lechner <dlechner@baylibre.c=
+om> wrote:
+> On 4/28/25 9:12 PM, David Lechner wrote:
+> > On 4/28/25 3:23 PM, David Lechner wrote:
+> >> Add new macros to help with the common case of declaring a buffer that
+> >> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+> >> to do correctly because of the alignment requirements of the timestamp=
+.
+> >> This will make it easier for both authors and reviewers.
+> >>
+> >> To avoid double __align() attributes in cases where we also need DMA
+> >> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
+
+...
+
+> >> +/**
+> >> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer wi=
+th timestamp
+> >> + * @type: element type of the buffer
+> >> + * @name: identifier name of the buffer
+> >> + * @count: number of elements in the buffer
+> >> + *
+> >> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DM=
+A_MINALIGN)
+> >> + * to ensure that the buffer doesn't share cachelines with anything t=
+hat comes
+> >> + * before it in a struct. This should not be used for stack-allocated=
+ buffers
+> >> + * as stack memory cannot generally be used for DMA.
+> >> + */
+> >> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count)   \
+> >> +    __IIO_DECLARE_BUFFER_WITH_TS(type, name, count)         \
+> >> +    /* IIO_DMA_MINALIGN may be 4 on some 32-bit arches. */  \
+> >> +    __aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
+> >
+> > I just realized my logic behind this is faulty. It assumes sizeof(s64) =
+=3D=3D
+> > __alignof__(s64), but that isn't always true and that is what caused th=
+e builds
+> > to hit the static_assert() on v3.
+> >
+> > We should be able to leave this as __aligned(IIO_DMA_MINALIGN)
+> >
+> > And have this (with better error message):
+> >
+> > static assert(IIO_DMA_MINALIGN % __alignof__(s64) =3D=3D 0);
 >
-> Imported at 80e40f5 from:
-
-I would suggest using the usual commit reference format:
-
-    commit 80e40f57d99f ("add comment about finding latest version of code"=
-)
-
-> The files are renamed as perf supports multiple demanglers and so
-> demangle as a name would be overloaded.
+> I was working late yesterday and should have saved that reply until morni=
+ng
+> to think about it more!
 >
-> The work here was done by github.com/arielb1 and I am merely importing
-> it as discussed in the rust-lang issue.
+> We do want to align to to sizeof(s64) instead of __alignof__(s64) to avoi=
+d
+> issues with, e.g. 32-bit kernel and 64-bit userspace (same reason that
+> aligned_s64 exists and always uses 8-byte alignment).
+>
+> So I think this patch is correct as-is after all.
 
-Cc: Ariel Ben-Yehuda <ariel.byd@gmail.com>
+I'm wondering, shouldn't it be better just to make sure that
+IIO_DMA_MINALIGN is always bigger or equal to sizeof(s64)?
 
-> +// SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
-Hmm... The documentation is unclear, but I don't think parenthesis are
-needed (the docs have examples without them and for this particular
-pair we do not use them elsewhere).
-
-> +// Code for demangling Rust symbols. This code is mostly
-> +// a line-by-line translation of the Rust code in `rustc-demangle`.
-> +
-> +// you can find the latest version of this code in https://github.com/ru=
-st-lang/rustc-demangle
-
-Ideally, above this, i.e. before the original file starts, we could
-have something like we have for other vendored code, e.g. what we
-wrote elsewhere for some code from the standard library:
-
-    //! The contents of this file come from the Rust standard library, host=
-ed in
-    //! the <https://github.com/rust-lang/rust> repository, licensed under
-    //! "Apache-2.0 OR MIT" and adapted for kernel use. For copyright detai=
-ls,
-    //! see <https://github.com/rust-lang/rust/blob/master/COPYRIGHT>.
-
-(And then below the actual file)
-
-It wouldn't hurt to mention also something like we did for `alloc`:
-
-    Please note that these files should be kept as close as possible to
-    upstream.
-
-I hope that helps!
-
-Cheers,
-Miguel
+--=20
+With Best Regards,
+Andy Shevchenko
