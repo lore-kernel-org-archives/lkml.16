@@ -1,101 +1,136 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181A92D320D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863C52D321A;
+	Tue, 29 Apr 2025 14:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745936726; cv=none; b=R4dj8Ocx96h2s9Pra189wewV7D4GqxT3HxTe50UtCqg5f637LczD/vNCf+kjS9j21GAeDx+L4baG8OZeiG/vDIeAsPq3kCXUUKqJU5x2SbR99/k5dPQXWgQShq+JyzWmBFlYactdJbdoxD1ee/Bu/VHPMd6ZkrS4o+B9cIHpCG0=
+	t=1745936735; cv=none; b=oMY+tQuVev0pahFrS8oOCjw/s1d7i1Ox9UOcYXwa7BRXX0hZVMjbCNvznzcT3nKZiS2mOvf8YwZWE2s0rhfQ68DX+qhTahT7pUuMoV09qhFTfxzhZ14z0U4UN8SORJ3rpr1iayUvtJ6nu9C+lYyNO5ZMI55tM/R2h0gKMT6Y5y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745936726; c=relaxed/simple;
-	bh=mUpSfE2Rfdt8A2E6mNSWKRYmnN8XOD8gnmdgTI66IFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gw/KcGOHAU2xXbk0JEL/cZYD06/1eyG81ohgiuxXXfMaB0y5R2jsc0+iOTMGFgu2NxW4XaMdKgqPswD2blEbSfwubMyAnX3Wyb750qyyepear5XBSXkKfR2D4NTQ5KgCMUwovfhH3gJwRFeKdghvBSfAAYgYpDgYog6nOE0wH1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Jbg0RkWi; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745936735; c=relaxed/simple;
+	bh=HHHetzLClcVyYWk8l98u58LIcuM9dJ1z/dYCNokcUQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kjJSLotYhPQ9E9cSPax24pxgxiIhxpJUnlGm4MJ01Apy6odOlT7TfYJX5ufMg6w/ygBA7Zg/Rkz8uHMR71CWEjK1rSqSuXkbh5VRiZ8tmef6RbvTNhgB5u1kLq3bdb5FH2f5yxcW1Whm3t4pA/oQoIqiRPKPrBb+8j8EOoXpSAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0JJAKMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Jbg0RkWi"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acbb85ce788so1186058966b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745936722; x=1746541522; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=InMRIAu+YVbN2ROxaPK1QyyPvyBxh0KaL1h40gmjQIE=;
-        b=Jbg0RkWiHm3k3DNOP1Od6FerFDX9roLRK5UuPzJQxDry6IyaYFE73Rx/vUJwHqTEsJ
-         CKKGO6+N4XQNKksaXBiXIc+t+YmFCA8TwsVP6R9o7AqygYJ2MSLyVxOmq2aAaychvPNh
-         Qo+ywd1+JbsWqLaqbfU/TiOKTp+Peh20v3IC+l52LFTw9uIAutEjx9qEo5ZHERZ5upDD
-         hwvcKdvFz52n02TrWkX+Qh9WkxqhKopzOEimsK2jpcVDPs6qZgnT44eQMbkl1RmCdEfX
-         EFfgqV5rigxVAzCrrCF+E9YmA+o2jPjjai15xQiA6oPRKv3LkAU9Ad4+sZmhEa9iXXq8
-         vW4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745936722; x=1746541522;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=InMRIAu+YVbN2ROxaPK1QyyPvyBxh0KaL1h40gmjQIE=;
-        b=o9msXcF3pomCpFHf+tJWEiSfEDmtcrQMjhaMAMebTDoK5eTSyyBOCksJmJggZnvM4X
-         a0JfxBnfBuwRHgRRwNpKEPf2O2E62EYnovqhb/b9JNgRBNmRHA+X/GsyfLW1jI2AE0PL
-         QRtqJRaQS3XhTE1dYhcO1J4tJrZ4awhj66L3kxoH2gEK8hODEXgNrRW2SfEI6vQFTK0I
-         0xa2g/dA9tRD3V5CNAtmDVEYauM8FRKGzbqbmGXVwZ+cKX+QLS53C7yPzfRWIS5WIfTV
-         2s2I0bZR8FqdlXQjvLTvUkaJsg94Bj07wJMxXGaJ57CZhYquuMh80oaZHdrFO/M0UYW6
-         wlEg==
-X-Gm-Message-State: AOJu0YxO1hy7JUDc/YcNf+GCDHz+YHnN71184QahseHFVZrZ9gmNLwpj
-	d/A5d+lfnIc+Twzi1s9zFiKyHv8pUHo9aBCscaelnntAJcl0fOi9BxuuqjK+ZfNZLeVRmKtO9x7
-	K
-X-Gm-Gg: ASbGncsNNPtKabQo2Zj8/Due1p0G7/7n8pgi51EwBalvgOMW5UgA3NVo68TYKTXuq7l
-	z2mCGI4SfRScbKDUO+E4yBc4QU4kbOSvnAP2KWaeyYlAQsRDSWeYrd+tRhAx5/hHblQc5OFnq9S
-	gfUQtvqViOJv9qHuMRwFlb5w2jLRyM/OHUXepGcKUNTXyOoJBFDyFNc16+9t2RWZQYTeV9oIanB
-	nIzS7IREtXhywnxvLv5Q38QR8AoYf/H68uzijfSxVDrFoqIZBAvp4N0cPYMAdz1Lo79q29Bj2cZ
-	Y8AOtJwlPpbB4g1gNgQuhxCHKMf6godvL7SSAnzgZQMT0RLhzfc=
-X-Google-Smtp-Source: AGHT+IHrMDPANgorP5TPzRVdxzGSy94esjJoDUu+iiC16mR+If56ds0hWBl3ZAqA5T61YSusBEj8TA==
-X-Received: by 2002:a17:907:868b:b0:ace:3a3d:7e35 with SMTP id a640c23a62f3a-acec87b9062mr306128966b.53.1745936722409;
-        Tue, 29 Apr 2025 07:25:22 -0700 (PDT)
-Received: from pathway.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41b5e7sm807013166b.13.2025.04.29.07.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 07:25:22 -0700 (PDT)
-Date: Tue, 29 Apr 2025 16:25:20 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH v3 16/20] ratelimit: Simplify common-case exit path
-Message-ID: <aBDg-3SP_p-lCo7V@pathway.suse.cz>
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <20250425002826.3431914-16-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0JJAKMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01254C4CEEE;
+	Tue, 29 Apr 2025 14:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745936735;
+	bh=HHHetzLClcVyYWk8l98u58LIcuM9dJ1z/dYCNokcUQA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V0JJAKMSEGVTjCwPFtyo8go+iibWfKjH21D3IHWH/elVlYCuBN6XNSH8v3feeDIRj
+	 4DduDmZNPcPI00kLYwDAtJRtRtrf23mVgOcgzRGRGqG8DZMLXcX/HIW0VHzAAEDpgf
+	 t3OHbqJAMKEHDxRciwllPq6taUB1x7mNMTzvSnXA48xZXrJ3uqFUIfNusUAp7BamBG
+	 A/6qGRqV+k3nBx5tVaghxlU8bBd2265WD7ojHMsEg3C3JIO4PDTqmBg6JEA8Raekmc
+	 7fpXRCbUDgPqY0W868RyW1OFiGhLNTTwY5oi7VTc5ygv4cwX8FmB2Ddp5UJob9jPzx
+	 RjjA1XGQhWQcQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso7807846a12.1;
+        Tue, 29 Apr 2025 07:25:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXDqE5mnSIiiToCACsLun7epkHLfErzHK0hss3fAvACBMHqQCCWtMTCRqJELOwmzuKnmo+YsFOfuHuz3Vk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFGchZh7xdCaHC4LYgyK1VnO2U1+uciTCnhDiErVlSJKGnVFg0
+	ATcZCCJ5XC3zGRftFntscEZqDd+lRZ/CDpDts/JptyhHpvdlO58FTLN3v49Sf9hzl+UvV2Fj3E5
+	Vqgm+pBnPFnjslLnHirfU3Eor9w==
+X-Google-Smtp-Source: AGHT+IHfroQjiVVCpl99LNHJxjRUar4RVaGCvkl0v3xBaP9iBGHIfGCUcloWbvPs8CSF2by68p4lpBN+j6whe6viwkg=
+X-Received: by 2002:a05:6402:4304:b0:5e0:752a:1c7c with SMTP id
+ 4fb4d7f45d1cf-5f839204819mr3535728a12.1.1745936733598; Tue, 29 Apr 2025
+ 07:25:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425002826.3431914-16-paulmck@kernel.org>
+References: <20250422084340.457-1-alireza.sanaee@huawei.com>
+In-Reply-To: <20250422084340.457-1-alireza.sanaee@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 29 Apr 2025 09:25:21 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+mDoT=XFcPzx5V4dREGfBSGpWo6cnVo0-dsa+dD2tc2A@mail.gmail.com>
+X-Gm-Features: ATxdqUEHELZ1OjOnNJfx6ZMPIlivh56dcvLWcKfe4o76j4u1lowH3t3yLvFF3WI
+Message-ID: <CAL_Jsq+mDoT=XFcPzx5V4dREGfBSGpWo6cnVo0-dsa+dD2tc2A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] DT: Enable sharing resources for SMT threads
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: devicetree-spec@vger.kernel.org, mark.rutland@arm.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	jonathan.cameron@huawei.com, shameerali.kolothum.thodi@huawei.com, 
+	linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 2025-04-24 17:28:22, Paul E. McKenney wrote:
-> By making "ret" always be initialized, and moving the final call to
-> ratelimit_state_inc_miss() out from under the lock, we save a goto and
-> a couple lines of code.  This also saves a couple of lines of code from
-> the unconditional enable/disable slowpath.
-> 
-> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+On Tue, Apr 22, 2025 at 3:43=E2=80=AFAM Alireza Sanaee
+<alireza.sanaee@huawei.com> wrote:
+>
+> This patchset allows for sharing resources between SMT threads in the
+> device tree (DT).
+>
+> WHY? Given the current use of the DT, it is not possible to share L1
+> caches, as well as other resources such as clock among SMT threads.
+> However, DT spec in section Section 3.8.1 [1], describes how SMT threads
+> can be described in the reg array, this is how PowerPC describes SMT
+> threads in DT.
+>
+> CHALLENGE: Given discussions with the community [2], it was apparent
+> that it is not straightforward to implement this, since cpu-maps must
+> point to a particular CPU node in DT [3], Section 2.1. However, it is
+> not only the cpu-map but also there other nodes that point to cpu nodes
+> which indeed need care and changes.
+>
+> SOLUTION: This led to more discussions on what the solution should look
+> like and based on recent converstations we ended up with the following
+> approach [4].
+>
+> core0 {
+>   thread0 {
+>     cpu =3D <&cpu0 0>;
+>   };
+>   thread1 {
+>     cpu =3D <&cpu0 1>;
+>   };
+> };
+>
+> In this layout, first parameter is the phandle to cpu-node and second
+> index would be the local-thread index in the reg array available in the
+> cpu-node reg property. Further, when reading the property in the cpu-map
+> we must know how many parameters phandle has in cpu property. Therefore,
+> we optionally introduced "#cpu-cells" property to indicate the number of
+> cells.
+>
+> [1] https://github.com/devicetree-org/devicetree-specification/releases/d=
+ownload/v0.4/devicetree-specification-v0.4.pdf
+> [2] https://lore.kernel.org/linux-arm-kernel/Z4FJZPRg75YIUR2l@J2N7QTR9R3/
+> [3] https://www.kernel.org/doc/Documentation/devicetree/bindings/cpu/cpu-=
+topology.txt
+> [4] https://lore.kernel.org/devicetree-spec/CAL_JsqK1yqRLD9B+G7UUp=3DD8K+=
++mXHq0Rmv=3D1i6DL_jXyZwXAw@mail.gmail.com/
+>
+> Alireza Sanaee (5):
+>   DT: add infra for finding CPU id from phandle.
+>   arm64: of: handle multiple threads in ARM cpu node
 
-Looks good to me:
+>   driver/base/arch_topology: update CPU map to use the new API.
+>   driver/hwtracing/coresight: Use of_cpu_phandle_to_id for grabbing CPU
+>     id.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+You kind of have the path, but it's 'drivers' not 'driver'. In any
+case, that should be dropped. Use the prefix of the particular
+subsystem (git log --oneline path should tell you).
 
-Best Regards,
-Petr
+These 2 patches do the same change. Use a consistent subject.
+
+>   DT: of_cpu_phandle_to_id to support SMT threads
+
+Patches 1, 3, and 4 are useful refactoring regardless. They should
+come first in the series.
+
+>  arch/arm64/kernel/smp.c                       | 74 ++++++++++---------
+>  drivers/base/arch_topology.c                  | 12 +--
+>  .../coresight/coresight-cti-platform.c        | 15 +---
+>  .../hwtracing/coresight/coresight-platform.c  | 14 +---
+>  drivers/of/cpu.c                              | 45 +++++++++++
+>  include/linux/of.h                            |  3 +
+>  6 files changed, 100 insertions(+), 63 deletions(-)
+>
+> --
+> 2.43.0
+>
