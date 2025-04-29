@@ -1,112 +1,91 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367813B1A4;
-	Tue, 29 Apr 2025 14:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516F8219300;
+	Tue, 29 Apr 2025 14:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938011; cv=none; b=LaQShacy5NDlH5OxM0sA8nslJhT0tecLPUXxT736ro86ec2K6Sb1E4cAgmUacX9vwB+FYKEaYcZ1QRhv5WT1aCbi1hqw1nbIeyvq5lzqw3Pcognt8GPR/C/2csafrfE6NrOIZJb8UxjVbs5um2yOFMMxAhstmnUZFgbW2UIgIsE=
+	t=1745938028; cv=none; b=UtxBO0HhrzW1w9iFABxdlddDKbcVTFUOdxm2GxrEQ9IzGR2iTOuGSMOu1M/lUa0eoYixF6hHy20hD5viaBvXnzqwv+vBRlZTwIh3F4TktTK1igZzEvlRN6zZoNS5WLFicd6Eg1ZHl0AE7oUKU346aNHhUjJXwQ60owOw9fGvKKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938011; c=relaxed/simple;
-	bh=vg3hLhxa0BT1lWtJ0wGlClMnOrlCg2NBvt6huItHUVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSkqekv8j08pmtzkkBs+zOt5NETHYeRO9mt0pQj4dcPkqUEGoEKC8PL8+Z7KaGWceCOE6IiDU1KU13SubvTJCXvF/osGQ/rv8ax0PY69XFUntTGF0t0mB9xNHLQOYWwcZwzu+87gDf7GC54ohuV3OqrKZtvTbP285l2ZClTidrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=it0iWgin; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745938028; c=relaxed/simple;
+	bh=b9pHEZj3heKTlZy5IQ5f1pxQ0ApodYttIeoH2ZynHxY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=usHxo03UvKn9qrDmxFfpPLcemkde8YSHC6iZypcF0hp+aMZ4SCxESof/gN4xSGtDgz8rLJw+A5aPBT/iu+8ii9qksARBkl+z/aOB+ONUw151moUNvI8RWZVg+5SV/6dkInQuPuX0ZN9o48A8O7jdjBPwAmysPQ5pS4c9qv3zLsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JdWtPgQs; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="it0iWgin"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wb8yKBSDCNd+wK+Tsc/EBbJclD6fbaVvRfrOmBDAvfg=; b=it0iWgingi7xBwddoimoLQmsC8
-	P1qAwKNqpnUT+k+Oq1/EnY2+drj48W4KhIqm0UtjfhuV4TC75P9XnisekHhjPnMUrqDraqOqH5e75
-	fr7NrtYVqMB8/NY/ibTmdfc69swXp3Lm7ZYNhQ6jGzXnYHk1u320d7RMzOhOv269gP4h+b9IsFGGx
-	K2aG4+fnJIFiD6DHGh6t1Pgal1j8P/KDpUeXf4uVwKFBHzlQQ+NnnZkYjGpym44+aeON7V/Usrsff
-	0paTYLzK+CMmamTcDvI5K2R9l28N0VW+2HmOu6MjWnJtgSPhqxGypqTFyY8IqgtRJph5lDNViPhLJ
-	qtNfYOVA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9mED-0000000HWLz-0Zv5;
-	Tue, 29 Apr 2025 14:46:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A9315300777; Tue, 29 Apr 2025 16:46:31 +0200 (CEST)
-Date: Tue, 29 Apr 2025 16:46:31 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, samitolvanen@google.com,
-	ojeda@kernel.org, shuah@kernel.org
-Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
-Message-ID: <20250429144631.GI4198@noisy.programming.kicks-ass.net>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.172767741@infradead.org>
- <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
- <20250415074421.GI5600@noisy.programming.kicks-ass.net>
- <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
- <20250416083859.GH4031@noisy.programming.kicks-ass.net>
- <20250426100134.GB4198@noisy.programming.kicks-ass.net>
- <aA-3OwNum9gzHLH1@google.com>
- <20250429100919.GH4198@noisy.programming.kicks-ass.net>
- <aBDcr49ez9B8u9qa@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JdWtPgQs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745938027; x=1777474027;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=b9pHEZj3heKTlZy5IQ5f1pxQ0ApodYttIeoH2ZynHxY=;
+  b=JdWtPgQsr75zm+2BOlSw5SLhbOoXqexT1HCfFRZGQ3lEb9+B/BYUXMbk
+   NBdgOeNdrYYgzmJrIFl4LHVx/59yF5LCqb3kn9vtlC/M+9DnTZGIQMCYS
+   Feq/ohSiLzF3llbRKFwsBrF+GhoO3KBOIZzeV2U+4UVPfsEHnV2ggCUMc
+   jBOwgP4RO/Jn5zN4KuWQfdcUh0akUUcyVXHguAT0Zu5F/vjvpIzd7u+EX
+   zWhlPZX9qzS0S0KdCyA0VTUmEDT8XS9tQGa1Ah8x7Zr5NXSkZDtpYxnca
+   oqKosuF86xZ3mVGOjCRhzK+ZtKYRakbvOB4Vl27HVqdz0dPAol6Xyvg3r
+   A==;
+X-CSE-ConnectionGUID: yp5kgKG9RYiP8ozBfj00Fw==
+X-CSE-MsgGUID: wOe8HzHPQTqWebuGWiOC9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="46812032"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="46812032"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:47:07 -0700
+X-CSE-ConnectionGUID: 9KyEILGXTo+doilF6/iDSw==
+X-CSE-MsgGUID: C5n49VtEQ8GTqYT01bKRkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="138650151"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:47:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ Vadim Pasternak <vadimp@nvidia.com>, 
+ David Thompson <davthompson@nvidia.com>, 
+ Shravan Kumar Ramani <shravankr@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250423083103.5240-1-shravankr@nvidia.com>
+References: <20250423083103.5240-1-shravankr@nvidia.com>
+Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-pmc: Support
+ additional PMC blocks
+Message-Id: <174593801973.3519.12131064364710157373.b4-ty@linux.intel.com>
+Date: Tue, 29 Apr 2025 17:46:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBDcr49ez9B8u9qa@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, Apr 29, 2025 at 07:05:35AM -0700, Sean Christopherson wrote:
-> On Tue, Apr 29, 2025, Peter Zijlstra wrote:
-> > On Mon, Apr 28, 2025 at 10:13:31AM -0700, Sean Christopherson wrote:
-> > > On Sat, Apr 26, 2025, Peter Zijlstra wrote:
-> > > > On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
-> > > > 
-> > > > > Yeah, I finally got there. I'll go cook up something else.
-> > > > 
-> > > > Sean, Paolo, can I once again ask how best to test this fastop crud?
-> > > 
-> > > Apply the below, build KVM selftests, 
-> > 
-> > Patch applied, my own hackery applied, host kernel built and booted,
-> > foce_emulation_prefix set, but now I'm stuck at this seemingly simple
-> > step..
-> > 
-> > $ cd tools/testing/selftests/kvm/
-> > $ make
-> > ... metric ton of fail ...
-> > 
-> > Clearly I'm doing something wrong :/
+On Wed, 23 Apr 2025 04:31:03 -0400, Shravan Kumar Ramani wrote:
+
+> Add list of events and counters from the following blocks: APT (ARM Processor
+> Tile), GGA (Global Generic Accelerator), MSN (Memory Stasher and Navigator),
+> EMI (External Memory Interface) and PRNF (PCIe Request Node).
+> If any of the fields populated from the ACPI table (like apt_num) cannot be
+> read, assign the corresponding block count to be 0 instead of failing probe
+> to maintain compatibility with older firmware.
 > 
-> Did you install headers in the top level directory?  I.e. make headers_install.
+> [...]
 
-No, of course not :-) I don't use the top directory to build anything,
-ever.
 
-All my builds are into build directories, using make O=foo. This allows
-me to do parallel builds for multiple architectures etc. Also, much
-easier to wipe a complete build directory than it is to clean out the
-top level dir.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> The selftests build system was change a while back to require users to manually
-> install headers (I forget why, but it is indeed annoying).
+The list of commits applied:
+[1/1] platform/mellanox: mlxbf-pmc: Support additional PMC blocks
+      commit: ffde61d15f16aa0e59ef6fca92cb362c21956a77
 
-Bah, I remember NAK-ing that. Clearly the selftest people don't want
-selftests to be usable :-(
+--
+ i.
 
-Anyway, mingo build me a copy of the fastop selftest, and aside from a
-few stupid mistakes, I seem to now pass it \o/
-
-I'll attempt a Changelog and update the hyper-v patches and then post
-the lot.
