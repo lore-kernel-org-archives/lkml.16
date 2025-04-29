@@ -1,152 +1,135 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DED42594;
-	Tue, 29 Apr 2025 15:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DD822154E
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940264; cv=none; b=GF+abnB8ThHmvZzbG3FQSU5X8/Mk8wW5rv40kv0XknSN9iEqmqv7WizaomfBGUdOZI1QxN+gZMtjzrB4zR+KaOP29EtwBqQJvEo8+am/zwNngfkXMDEMOj3YNuhCdSiWi7NupC75j1BP0Josbwyskd63kpdwFePUUQNXRBQy49k=
+	t=1745940303; cv=none; b=iyxWZbzl/Qh6J8cc7qoUaO+vjsIUXGAK5s6ATsZ6dvw/b53MfyZ58jOynqyLdGM5ldovDpHpJLXAWqCa4LN35ZcJXy0/C3KlJoYos/0QF52KJkCBwS/OJyoWJBw/C7mjhVdqqX9dTlA4KQJIMlSjibpDTphb7f6myuiOR9hbWaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940264; c=relaxed/simple;
-	bh=xWFmWep8wq/2ahvRVQ4Q4kgybhqxGP9s17w9fhm930Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mb2wy/C8q6bYIW7nFlZ6ZEaBTPM8yPMLlN8AG8VGvLqWOkVBfPhsyGLr6qaVCpfHh2HGoQ4GuE/zC2mno0HmonZqfOL7BfSV81YaSXndmH+NJRlRUk3vG//Aibyi59gA4vda1ZeazXviShE2ATDdOCaK09Lk55YpKS3bUw7ewFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikMpymak; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745940303; c=relaxed/simple;
+	bh=ldKd10krlA78evFCxJgwnrK37951xs9UWGwck0m+pDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oThFJsJIwIAQeYxzn3MddJK4Hcna5Wrnz2EPil8ETM1GbPkQdNOJlxIZIkRRzKBrNpPU36nWOt6M08PfG2vgostHSI/SACnkK19+xRGijSbYo0FYUAiypM28SadG3teEgd/PSBQT7kbO/b8HQ8XaSvgkjRwnPAFXFnLH77nSeso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xq96v4dV; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikMpymak"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so436134a12.0;
-        Tue, 29 Apr 2025 08:24:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xq96v4dV"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7301c227512so3755992a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745940261; x=1746545061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=msGhu6fOF2oyCTN/tI7gZ7eRssIApKs0mAIDv15tSXY=;
-        b=ikMpymakLRpfbdnB045RkDL6pCNmAvXrqRKeV2Fx+Bsr/z4NcQV+QoTmrDVHTrdq8k
-         a2a3qMpTseZeshi9aa5E4tGU9R/T/W9WqQ0xDEjXm+s+Vw+urKvD2zogN+BdJ6C8FhUr
-         yj5nypXsUa1GUHGU7NieextUkj1qul0XptqR5sc/Krv/AhvrrJ1g0Hg4EwadTWewFpMi
-         VgiVPA8CqYlz2ng3/yOQT43M++xWx/prUKM74rB205IVurAzyeB4PLAsKqH1zPE9KIur
-         M7CQ+l2VXAm5Kb8+w+DaaMLK6Ss7pAZPbZlwVG7zGO/55aetAxpKxvT1Dk/Xy7mkT1hv
-         zxtQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745940299; x=1746545099; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GPAzV2ZOk26TsSDij37Rr7O1oaKM6YOsipFaIWd8kEc=;
+        b=xq96v4dVhAcOMKnQWPBm3vfBjJpDeAJYRZFtQ8F23goEwKCyo5sBNY7s4rAkgRsNve
+         M6O3QA9XgBGdZ8EvYevu+ljCvpqHAen9znJ0e/gMOdrwdonlGlAqvFLIgFSQReARlAeQ
+         +BxeVd/hDO2eyUZZ6LW9CDsMa6pXjtn9YBYblAQ8sNb9XqAowat/JxisVgcI8Bx+H30u
+         KijHbcVPKg945m2qnFZshQe34buxs0VaIOIkfc0EzDWn6ExQ/w/MCaD3eg35VX910f5N
+         h3w6vkawr4Jnteks1HAf2pnAKlQe6ertMTQGXZyi0OmduYRZUjIpEITe3Jfey1udGO1k
+         1Pfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745940261; x=1746545061;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=msGhu6fOF2oyCTN/tI7gZ7eRssIApKs0mAIDv15tSXY=;
-        b=DG3zQZM+LcsNKmimXH+MJrN3W+dV9wZ4w2+xDXxMW0C8h7SgZBIl35Wp9yUIYsbHP0
-         NZ/gSoT1c4WkGcJF9xJxOdZ2OMXiYlDqINufIgWa2OyVu1I3TOCwNWNmue3yPsanKzeN
-         xDEK3QzJvFptm/s5ohKpAmBSzV0/RSNbu+TYPIrhmCJxMhfMNa1iQqFVrLyOp71VTfKH
-         tij3vm9MEwXNXpPxkcLGk4MQMRksVbjAlfRpssPV7ZJVOLM2vdgB6LVRPh6PwCMa3mnx
-         dZDrokqDrAksfm4xOZlxP90VN+rwdy9EVTam29YFNwrOmO/07p+CzgLVWYb6hdb28G7q
-         NJMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUz0LxQ3HORW0xUuCy3BOBV1thErV3IBV96K+P7H5T/Eu9UF7Tjqg0Ivxm1YzukYOxcwOV4fHaA+g6R@vger.kernel.org, AJvYcCXVzq3iPnHOZK57/MsZnIHZIUFtckVcGbPGackWTrlNoPuH9qNT8oahpElzruA3mSPDmiFJnhtrEnwRwzSl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh9tfpRollkYI+Y/insiy2htxvrUyMsxy6jt7WTBCikJ+OpJep
-	Z3nwkjOUPllWzgluDtCSd+PAFb0qh5fWFPqeaQdyksbs5BpQjV8d
-X-Gm-Gg: ASbGncvqUqyg/9fFAOz9gNm6zUSu+muJ96qJW1HH/ZxCuq7Orf8HMfZD2xD4iCuR0QF
-	K+TOom9cvFp8GrVkDRMOPwGA7bNJX19Gf5tzEgSFZOGF58YU/lJTBLp98kMehVDV5xxrTnbIClu
-	sY5ODs4vC8uc1SmULM+FvC+1G122MNr1OZf1/Y7lFBppYXAGEh0z1iB2MbnfDlpQECEKMfEEfZI
-	OKgocuftg99AukO23D+9l5ZYiM4cgGbN0Sj7kJJy0xVw7AZqUVcnDHcVjVX4F71kfr30dknGvhE
-	w3LMZadf2tKcOGL8WNunDXTD332gXKGuTKUL+NaTESgHWmK897E+A+GORXESFROzf2s/vuTmcg/
-	vXtPMl0MYy5oSPNwm
-X-Google-Smtp-Source: AGHT+IGoCpwI1mhzwqjMaKdTGw9O8H9V2Z9zrCizgtb+8WQLicqiFAzaOh+hZID1l+Pa03HZ4jDIZw==
-X-Received: by 2002:a05:6402:3495:b0:5ec:cc90:b126 with SMTP id 4fb4d7f45d1cf-5f838862cd4mr3823949a12.19.1745940260576;
-        Tue, 29 Apr 2025 08:24:20 -0700 (PDT)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7011fc469sm7545748a12.7.2025.04.29.08.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 08:24:20 -0700 (PDT)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andre Przywara <andre.przywara@arm.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, wens@csie.org, samuel@sholland.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
-Date: Tue, 29 Apr 2025 17:24:18 +0200
-Message-ID: <4645060.LvFx2qVVIh@jernej-laptop>
-In-Reply-To: <6a056bf8-9f39-4204-9378-8cc39be60038@lunn.ch>
-References:
- <20250413134318.66681-1-jernej.skrabec@gmail.com>
- <5880182.DvuYhMxLoT@jernej-laptop>
- <6a056bf8-9f39-4204-9378-8cc39be60038@lunn.ch>
+        d=1e100.net; s=20230601; t=1745940299; x=1746545099;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GPAzV2ZOk26TsSDij37Rr7O1oaKM6YOsipFaIWd8kEc=;
+        b=INNvcidGMzMRwjXYZkcON2FHXJHOdzogeZ6WHn43d9V9c40dCL8W032RdM9c0a8vE3
+         T4y3K29aAfZwoVJL0HnagCtNDXm7Its7RqITZoOeiLXcDkCG411h0ditAtjE5F7FxGfY
+         RJ0SKo339Z/PRzdYMqkn10wshDBwmcF+ihd1F2Tc1bfbBPpo57mqH/QUGBf2r4bGxqUF
+         IOnEYl76BTZRFsPURcYCPbhzBqFHUZyfJB5Nq9KKL/XimNivtUV8fgKXWenjmiXgNA7Q
+         9v+kECEWejMwadtgKGUf3JErOHEj0od7cFa0rqaJzG5twk7KkPDs7J4c/oWjVkw5jKvr
+         zoBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMqYZm2LMum6vn82bs+2C201Ilc+7wqfiDIlgS9qu2t+xVdFqobT5R8fQxVUZ1ozuOhdbZSsb3kzyIh1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxId4HImccRQMfbYWKSICDVxSKVpQg1gUcWB1VqAFxza7D0b4vR
+	v9ZoGXKT3m7PnBjfCbMuOciyF+03irGQz8KBC8S78EFfN7NudAlchTA13SxBxcA=
+X-Gm-Gg: ASbGnctwP4Z4CTko7AdpyIGaAWDsqj9tjcl20mG7KPU/x8e7qZJ9ImQdDP2+k7FDDgi
+	fpCjDLRTu/nszDsKyXWQLBXy+iHHqF65All3rioHPhiz4hceSt0hQ34kYhJicbhQkm0RFJ14Xjt
+	6aElXV9WzlReQMV70pyCksQ8Qzyx8OJWPrdq9fm9qcq5m81MRbeWeDBeVgEAyfyy8icU3bJ6J3U
+	IIVe4kGUFGp/W58ibU5ELI+6bHbxlP8TTVYTxawMfSM2cAlhNTh6ahGiKgZ1aeOc4ZVgsgxYeoo
+	EFjPqAnFMKSV+3y7Rj8xXgnZXuXhaUjnTr8jf4vOs64iL4Zh+w7zD0b16qCqAABKzOVg6j6SWMk
+	o88xwIHPDTN+gPR2h0w==
+X-Google-Smtp-Source: AGHT+IHV8z5DUUnExvDSgZL6FaXo2YhcZKSNUqk85shvOA8OWZ08jAI2WXlheo2Tot5Jrj3K8B5uww==
+X-Received: by 2002:a05:6830:6186:b0:72f:ff7b:6a6 with SMTP id 46e09a7af769-7308a52b7bfmr2010072a34.16.1745940299540;
+        Tue, 29 Apr 2025 08:24:59 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b312566sm320171a34.59.2025.04.29.08.24.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 08:24:59 -0700 (PDT)
+Message-ID: <f68231bc-6546-4eaf-a8b2-fc31add33a1f@baylibre.com>
+Date: Tue, 29 Apr 2025 10:24:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] spi: axi-spi-engine: don't repeat mode config for
+ offload
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Michael Hennerich <michael.hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
+ <20250428-adi-main-v1-2-4b8a1b88a212@baylibre.com>
+ <ca7708856683596894b5fb9cfd6caa164535a50a.camel@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <ca7708856683596894b5fb9cfd6caa164535a50a.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Dne torek, 29. april 2025 ob 17:09:22 Srednjeevropski poletni =C4=8Das je A=
-ndrew Lunn napisal(a):
-> On Tue, Apr 29, 2025 at 04:51:59PM +0200, Jernej =C5=A0krabec wrote:
-> > Dne ponedeljek, 28. april 2025 ob 14:37:48 Srednjeevropski poletni =C4=
-=8Das je Andrew Lunn napisal(a):
-> > > On Sat, Apr 26, 2025 at 08:00:49PM +0200, Jernej =C5=A0krabec wrote:
-> > > > Dne petek, 25. april 2025 ob 17:34:14 Srednjeevropski poletni =C4=
-=8Das je Andrew Lunn napisal(a):
-> > > > > > > +&emac {
-> > > > > > > +	pinctrl-names =3D "default";
-> > > > > > > +	pinctrl-0 =3D <&ext_rgmii_pins>;
-> > > > > > > +	phy-mode =3D "rgmii-rxid";
-> > > > > >=20
-> > > > > > So relating to what Andrew said earlier today, should this read=
- rgmii-id
-> > > > > > instead? Since the strap resistors just set some boot-up value,=
- but we
-> > > > > > want the PHY driver to enable both RX and TX delay programmatic=
-ally?
-> > > > >=20
-> > > > > Yes.
-> > > > >=20
-> > > > > There is a checkpatch.pl patch working its way through the system
-> > > > > which will add warning about any rgmii value other than rgmii-id.=
- Such
-> > > > > values need a comment that the PCB has extra long clock
-> > > > > lines. Hopefully that will make people actually stop and think ab=
-out
-> > > > > this, rather than just copy broken vendor code.
-> > > >=20
-> > > > I spent quite some time working on ethernet support for this board.=
- Once
-> > > > I've found PHY datasheet, I confirmed that there is added delay. So=
- this
-> > > > particular board needs "rgmii-rxid" mode.
-> > >=20
-> > > There have been numerous discussions about what these rgmii modes
-> > > mean, because DT developers frequently get them wrong.
-> > >=20
-> > > Does the PCB have an extra long clock line in the TX direction? That
-> > > is what rgmii-rxid means, the PCB is providing the TX delay, the
-> > > MAC/PHY pair needs to add the RX delay.
-> >=20
-> > While schematic is accessible, AFAIK PCB/gerbers are not, so I can't re=
-ally
-> > tell how long it is. But without this extra delay, ethernet doesn't wor=
-k.
->=20
-> You are not adding an extra delay, you are subtracting a
-> delay. 'rgmii-rxid' says the TX delay is implemented by the PCB, hence
-> the PHY does not need to add the delay.
->=20
-> What is normal is that the PCB adds no delays, and the PHY adds the
-> delay for both the RX and the TX. And you represent this with
-> 'rgmii-id'.
+On 4/29/25 4:08 AM, Nuno Sá wrote:
+> Hi David,
+> 
+> The whole series LGTM but I do have a small concern (maybe an hypothetical one)
+> in this one...
+> 
+> 
+> On Mon, 2025-04-28 at 15:58 -0500, David Lechner wrote:
 
-ok, thanks for explanation.
 
->=20
-> So what you need to find out is, where does the TX delay come from?
+...
 
-How to do that? Strapping show me this way and testing confirmed it. Not
-sure what more I can do? As a hobbyist, I don't have access to anything more
-than schematic.
+>> +
+>> +	writel_relaxed(SPI_ENGINE_CMD_SYNC(0),
+>> +		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
+>> +
+>> +	writel_relaxed(SPI_ENGINE_CMD_WRITE(SPI_ENGINE_CMD_REG_CONFIG,
+>> +					    priv->spi_mode_config),
+>> +		       spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
+>> +
+>> +	writel_relaxed(SPI_ENGINE_CMD_SYNC(1),
+>> +		spi_engine->base + SPI_ENGINE_REG_CMD_FIFO);
+>> +
+> 
+> I would assume that SPI_ENGINE_CMD_SYNC(0) + SPI_ENGINE_CMD_SYNC(1) should be
+> executed in order by the core? I think all this relaxed API's don't give any
+> guarantee about store completion so, in theory, we could have SYNC(0) after
+> SYNC(1). Even the full barrier variants don't guarantee this I believe [1].
+> There's ioremap_np() variant but likely not supported in many platforms. Doing a
+> read() before SYNC(1) should be all we need to guarantee proper ordering here.
+> 
+> Or maybe this is all theoretical and not an issue on the platforms this driver
+> is supported but meh, just raising the possibility.
+> 
+> 
+> [1]: https://elixir.bootlin.com/linux/v6.12-rc6/source/Documentation/driver-api/device-io.rst#L299
+> 
 
-Best regards,
-Jernej
+The way I am reading this, relaxed isn't "no barriers", just "weaker barriers".
+Quoting from the linked doc:
 
+	On architectures that require an expensive barrier for serializing
+	against DMA, these “relaxed” versions of the MMIO accessors only
+	serialize against each other, but contain a less expensive barrier
+	operation.
+
+So that sounds like we should not have a problem to me. (And if there is a
+problem, then it would affect other parts of the driver, like when we load
+the fifos with tx data in a loop.)
 
