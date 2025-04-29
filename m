@@ -1,183 +1,108 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A5F224234
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5675E22371B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745904211; cv=none; b=WJLTOItERco7w0EkWPEZqBQw/sW+sa8JE5tI4ZGEW42NDk6HeEbEEy1UTQ6FovHS7EQOFcdCmXrWs2VG5ROC3Klslmp9XPDZw/dJSFGouUACsn32Ug8zb/Yf94ril6C+hdj7HCMVemhRTCQLM44cOtVDrV51NOte1CDp2J7Y/rE=
+	t=1745904234; cv=none; b=Pc3KqYgNYbRihS4kB0YGCJ9izhogumuCCMQa+991jfBT4ySwleK4yA5V8YWeraZjK5iUk+m3FWs/r9+yVHeA0KNSdO6FaAIEmtxuuqXaqLpltJZ3XaV5y8XayE5xfs0lMgVImxJQyu4Nj8C6hJoLk9rr6OwY2MPZyaBnI2vUqLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745904211; c=relaxed/simple;
-	bh=HHmgpEroABzp2ffx9Nlts99YbN0fSxzHKeZhG8cZWbI=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=rmY3xK6r04lZJjdo35ox7sHVAGMfFtzJsawble7qHwPayA33KA7nnQOc+IK5+SYy8E68IHP7LSJN+lOLa5FX9xnscvgejBJmvcwN75I4QCikqAEXEVCKzAGV3OiQkMDVeriHuJHtXVOdGu11y+thPIB/gMPivpU21zHPxnyogsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nBjiG5rj; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nBjiG5rj"
+	s=arc-20240116; t=1745904234; c=relaxed/simple;
+	bh=lZgSJyiZUL4P1NBNALtsh/Xo7TesAQuW8c0hPfgVzEM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d+/4ZRi0qead6UKwCyyQuDJQG3rpXRnH8rRYRlRKOF9k49d6Mgy0xjoDUwL9kvNP1/5ky3/GnEv5Xn9DUk7VxxMC6P1v9D0O2h6zZZBc6tp2vWtIIplp3puovvXGiyBAdHZK98LyRnLLdgch+rNSpu0t1mIDqpMv4WBHs3gIw/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB84E1515;
+	Mon, 28 Apr 2025 22:23:44 -0700 (PDT)
+Received: from K4MQJ0H1H2.arm.com (unknown [10.163.78.253])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0692B3F5A1;
+	Mon, 28 Apr 2025 22:23:41 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com,
+	david@redhat.com,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com,
+	vbabka@suse.cz,
+	jannh@google.com,
+	anshuman.khandual@arm.com,
+	peterx@redhat.com,
+	joey.gouly@arm.com,
+	ioworker0@gmail.com,
+	baohua@kernel.org,
+	kevin.brodsky@arm.com,
+	quic_zhenhuah@quicinc.com,
+	christophe.leroy@csgroup.eu,
+	yangyicong@hisilicon.com,
+	linux-arm-kernel@lists.infradead.org,
+	namit@vmware.com,
+	hughd@google.com,
+	yang@os.amperecomputing.com,
+	ziy@nvidia.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH v2 0/7] Optimize mprotect for large folios
+Date: Tue, 29 Apr 2025 10:53:29 +0530
+Message-Id: <20250429052336.18912-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745904197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xzKVHcxUNgUZ3k5cuqFhdfyUp6ng16+RrHnkO59Dl68=;
-	b=nBjiG5rjSc42h9jBukLq9YEhF0bdYT/OukI1198vedefrPnmNqYaAJZjGJTPc+UjnqyxFU
-	0fZyQJFULfRypaSlU4GL1GSyxSRMSJr0LuWMLeU/DW8g4Ydwp14DSXJeYwGQYHAxYzv2ZZ
-	FWpIcyzWRE+8oPy14JNIo2vJy3LMqPs=
-Date: Tue, 29 Apr 2025 05:23:14 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <8a5d5b162a1462568c4d342c93896c919950cbe9@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v1 1/3] bpf, sockmap: Introduce a new kfunc for
- sockmap
-To: "Cong Wang" <xiyou.wangcong@gmail.com>
-Cc: bpf@vger.kernel.org, mrpre@163.com, "Alexei Starovoitov"
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "Andrii
- Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>, "John Fastabend"
- <john.fastabend@gmail.com>, "KP Singh" <kpsingh@kernel.org>, "Stanislav
- Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Jakub Sitnicki"
- <jakub@cloudflare.com>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
- "Kuniyuki Iwashima" <kuniyu@amazon.com>, "Willem de Bruijn"
- <willemb@google.com>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
- <shuah@kernel.org>, "Jiapeng Chong" <jiapeng.chong@linux.alibaba.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
-In-Reply-To: <aBAjtATRrVNegYjm@pop-os.localdomain>
-References: <20250428081744.52375-1-jiayuan.chen@linux.dev>
- <20250428081744.52375-2-jiayuan.chen@linux.dev>
- <aBAjtATRrVNegYjm@pop-os.localdomain>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-2025/4/29 08:56, "Cong Wang" <xiyou.wangcong@gmail.com> wrote:
+This patchset optimizes the mprotect() system call for large folios
+by PTE-batching.
 
->=20
->=20On Mon, Apr 28, 2025 at 04:16:52PM +0800, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> +bpf_sk_skb_set_redirect_cpu()
-> >=20
->=20>  +^^^^^^^^^^^^^^^^^^^^^^
-> >=20
->=20>  +.. code-block:: c
-> >=20
->=20>  +
-> >=20
->=20>  + int bpf_sk_skb_set_redirect_cpu(struct __sk_buff *s, int redir_c=
-pu)
-> >=20
->=20>  +
-> >=20
->=20>  +This kfunc ``bpf_sk_skb_set_redirect_cpu()`` is available to
-> >=20
->=20>  +``BPF_PROG_TYPE_SK_SKB`` BPF programs. It sets the CPU affinity, =
-allowing the
-> >=20
->=20>  +sockmap packet redirecting process to run on the specified CPU as=
- much as
-> >=20
->=20>  +possible, helping users reduce the interference between the sockm=
-ap redirecting
-> >=20
->=20>  +background thread and other threads.
-> >=20
->=20>  +
-> >=20
->=20
-> I am wondering if it is a better idea to use BPF_MAP_TYPE_CPUMAP for
->=20
->=20redirection here instead? Like we did for bpf_redirect_map(). At leas=
-t
->=20
->=20we would not need to store CPU in psock with this approach.
->=20
->=20Thanks.
->
+We use the following test cases to measure performance, mprotect()'ing
+the mapped memory to read-only then read-write 40 times:
 
-You mean to use BPF_MAP_TYPE_CPUMAP with XDP to redirect packets to a
-specific CPU?
+Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
+pte-mapping those THPs
+Test case 2: Mapping 1G of memory with 64K mTHPs
+Test case 3: Mapping 1G of memory with 4K pages
 
-I tested and found such overhead:
-1=E3=80=81Needing to parse the L4 header from the L2 header to obtain the=
- 5-tuple,
-  and then maintaining an additional map to store the relationship betwee=
-n
-  each five-tuple and process/CPU. Compared to multi-process scenario, wi=
-th
-  one process binding to one CPU and one map, I can directly use a global
-  variable to let the BPF program know which thread it should use, especi=
-ally
-  for programs that enable reuseport.
+Average execution time on arm64, Apple M3:
+Before the patchset:
+T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
 
+After the patchset:
+T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.2 seconds
 
-2=E3=80=81Furthermore, regarding performance, I tested with cpumap and th=
-e results
-   were lower than expected. This is because loopback only has xdp_generi=
-c
-   mode and the problem I described in cover letter is actually occurred
-   on loopback...
+Observing T1/T2 and T3 before the patchset, we also remove the regression
+introduced by ptep_get() on a contpte block. And, for large folios we get
+an almost 74% performance improvement.
 
-Code:
-'''
-struct {
-      __uint(type, BPF_MAP_TYPE_CPUMAP);
-      __uint(key_size, sizeof(__u32));
-      __uint(value_size, sizeof(struct bpf_cpumap_val));
-      __uint(max_entries, 64);
-} cpu_map SEC(".maps");
+v1->v2:
+ - Rebase onto mm-unstable (6ebffe676fcf: util_macros.h: make the header more resilient)
+ - Abridge the anon-exclusive condition (Lance Yang)
 
+Dev Jain (7):
+  mm: Refactor code in mprotect
+  mm: Optimize mprotect() by batch-skipping PTEs
+  mm: Add batched versions of ptep_modify_prot_start/commit
+  arm64: Add batched version of ptep_modify_prot_start
+  arm64: Add batched version of ptep_modify_prot_commit
+  mm: Batch around can_change_pte_writable()
+  mm: Optimize mprotect() through PTE-batching
 
-SEC("xdp")
-int  xdp_stats1_func(struct xdp_md *ctx)
-{
-      /* Real world:
-       * 1. get 5-tuple from ctx
-       * 2. get corresponding cpu of current skb through XX_MAP
-       */
-      int ret =3D bpf_redirect_map(&cpu_map, 3, 0); // redirct to 3
-      return ret;
-}
-'''
+ arch/arm64/include/asm/pgtable.h |  10 ++
+ arch/arm64/mm/mmu.c              |  21 +++-
+ include/linux/mm.h               |   4 +-
+ include/linux/pgtable.h          |  42 ++++++++
+ mm/gup.c                         |   2 +-
+ mm/huge_memory.c                 |   4 +-
+ mm/memory.c                      |   6 +-
+ mm/mprotect.c                    | 165 ++++++++++++++++++++-----------
+ mm/pgtable-generic.c             |  16 ++-
+ 9 files changed, 198 insertions(+), 72 deletions(-)
 
-Result:
-'''
-./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress --no-verify
-Setting up benchmark 'sockmap'...
-create socket fd c1:14 p1:15 c2:16 p2:17
-Benchmark 'sockmap' started.
-Iter   0 ( 36.439us): Send Speed  561.496 MB/s ... Rcv Speed   33.264 MB/=
-s
-Iter   1 ( -7.448us): Send Speed  558.443 MB/s ... Rcv Speed   32.611 MB/=
-s
-Iter   2 ( -2.245us): Send Speed  557.131 MB/s ... Rcv Speed   33.004 MB/=
-s
-Iter   3 ( -2.845us): Send Speed  547.374 MB/s ... Rcv Speed   33.331 MB/=
-s
-Iter   4 (  0.745us): Send Speed  562.891 MB/s ... Rcv Speed   34.117 MB/=
-s
-Iter   5 ( -2.056us): Send Speed  560.994 MB/s ... Rcv Speed   33.069 MB/=
-s
-Iter   6 (  5.343us): Send Speed  562.038 MB/s ... Rcv Speed   33.200 MB/=
-s
-'''
+-- 
+2.30.2
 
-Instead, we can introduce a new kfunc to specify the CPU used by the
-backlog running thread, which can avoid using XDP. After all, this is a
-"problem" brought by the BPF L7 framework itself, and it's better to solv=
-e
-it ourselves.
