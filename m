@@ -1,115 +1,78 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD8D2D1F57;
-	Tue, 29 Apr 2025 13:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6651946B5;
+	Tue, 29 Apr 2025 13:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932249; cv=none; b=kQcRHeCmGUuZ4CIvGLh9wqdt4Tby815cdaZriqQUuyfSqZjLzpdMAtZzZPDdK1GW3tDovSsyvl4inYMOnha325HmpwZFjUwtXcrbaKRXWaGVPk1NCMqu/hp4toBp7FcpTLCbC+MkHg1+TCwCpNV2mQ7v8ZSJZcFylI1jM8Q1vdc=
+	t=1745932284; cv=none; b=ge7gzPuPdnhXTV7uOlygB4tpB50TRjWgBG7rUV/HtGPVfxHgmjpaf7e7EI+zbUwgDcWrG7VMik3p5t/Me5qqywwy33ILpN62ShmGcvWewaVeQTQhJ0Iu1gwk/tXztGy/a5/DMfICUZ25S8AiiRgK0nTEqM6+3eptYAzloycH2lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932249; c=relaxed/simple;
-	bh=mG/3cBPhWoZ4//uiwOPbYdE5LxoJHw8wteYclJkBm04=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=SCMo6/oRzvWhP+/VrienVXiwstN2/WJtl02iKfB6yGeP1hpqtfGyGpJIYNQHzPdxCwSfqJGYCb4pyHwk3pekb+OJpUNy2Dlkm63NAmyVuUXzTeNhG94UPF3bZfBit6pknJmBl2Uv0lzDNdnpc3tu04iD2pxVqw+dyuongh2BKEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAr7LmjX; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745932284; c=relaxed/simple;
+	bh=kI+xqmHWFmQhxfPWx0iSb39jTOlQwU0yc6GbWzn5/8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ERR7U2XZTt/kX4B4MSmUzoTAf7Oq195Vx5iASeCDnHTwJoDJPglDaZ7vsoCrjeuOQo19FEPuJPdeDFGzBbTXHpAR4AgqHyH68mBsoe94gUvIosprCA/3FJoPONQIv3JjSNXMdDNyo+eaCmuMHGFF/0x8x90jnsXka1TbDkGPvyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKmx5jv0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAr7LmjX"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so162678a12.1;
-        Tue, 29 Apr 2025 06:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745932246; x=1746537046; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mG/3cBPhWoZ4//uiwOPbYdE5LxoJHw8wteYclJkBm04=;
-        b=MAr7LmjXKeSoUr4zpKea/OVmZqlaKbl9M2qmXxUFRFhHa74+9MPNU6I6+BjQKNg/p/
-         fwpY3egsLUd/1/JOlSYQvxzjO8CKc8+e4TxZ8+eaoMEig+T4IGOdA3cB467WwtX03aHY
-         FtPMp4ckgYlQTpyytbbJjXcFAbP08DGyFMshiY5IIIO4jd3EIl57Y75xlTCpgBcpVJj6
-         V32MC5uSUqk/uxuuxVG87kpqBLjwvuqStUf756bvsq3p4OX47742udN2QOK1FVGL060l
-         mmidICh6QmOWt51S19qojKuWgtq1RmjhkGyNEkxgxhHl1W5xcSEc1/SLENfMWsarOU60
-         enHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745932246; x=1746537046;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mG/3cBPhWoZ4//uiwOPbYdE5LxoJHw8wteYclJkBm04=;
-        b=YPS06ndWlhWNwJJxHmczZ1t+fzwYyJ3y9NbaNM/idqQVJ6iosvHNDUwJvyShwV2SlC
-         k/9GnzSDdASpkUVlhQVHchJCTn+UAAppw+mFNoAPfdJlVXCkAlg7tiZD0tDYf80HSrQS
-         o2NKFa8GRKuQnJ/VJw6mki8TyUW7LjDuFk5Ty8E9Netz19uDVUZrHHjRXfzwT0MZYUND
-         40SiJTFkug9wn9WmbOE4c9sUItoFFe8zSvLOPBWqCkbyPkMJY+PsIIsgTu43bUe5w1+m
-         ttOknR79rmrRSmWotVP+tr/ITpwRdNzwuG7U2OcYFLi1WQ+Lbw1K2snqQ7OEqJebweuF
-         nRSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNkzTRuStlJ4sPT+y0z5l6qsbEksJg1ivOMR2yIZSe2CumPtd5W41tbYo0OWG8LrCP2ljOerK9P3SEMmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQLtGUDeC5B3v/va/4vlFjDHl6WpjQ1ccDLn3Dnd9pDDfD+4uy
-	awIP6DpCEl8kepfIVHfjKkhdyvzvWQ0WRT23D+VlOXvdbKgBeTpWu8yd/fviO1t25xGAoZT9xpX
-	sOkURNzMeJ8jIkkqenESFz/E7qPsJSA==
-X-Gm-Gg: ASbGncttf6aXRfxTQ2icLNBrTwM48ubheF7tOemP5YRiv7zv3TFfSYQ4dcaZbOggj2k
-	fqPwIQiNdhctiVJVmQH51lQkpGKhxuQsO2wXfchN5IU5sfBcYVZHVgNVuW8Ow4xy3pmP+N2KHXW
-	eMC4ncopf/md2YkJoioaxXwg==
-X-Google-Smtp-Source: AGHT+IHQL3YrPJ78P0Nn0UgfG6GQBhKUiP1vhNl4VHz6hEbH8sVpjgXhCCcqLmPt7HqeDGRnvC0+Uk72gKjgnAXLohM=
-X-Received: by 2002:a05:6402:268d:b0:5f3:7fe3:6838 with SMTP id
- 4fb4d7f45d1cf-5f838891c1emr3482576a12.22.1745932245672; Tue, 29 Apr 2025
- 06:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKmx5jv0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAEAC4CEE3;
+	Tue, 29 Apr 2025 13:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745932283;
+	bh=kI+xqmHWFmQhxfPWx0iSb39jTOlQwU0yc6GbWzn5/8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TKmx5jv0xDYfTJqlVB04Dtj2rzyVkKoBrKMzQaKaXCw9xyfbnnPG5QdhfLfgzn3gs
+	 ojz8YL5st/hhTteowfZQIcaFg2dawHr7q5aKR6BWoASjxYkKNMQhImiBYhCHnP/Raf
+	 4msIvDiY2pxY3EA03LnlD0sTqokwGcMOFOWpX1wbGJD7Q+bV6bqLO7hjei1zxMEEDH
+	 0edUdTKmWQ4cuXv2pmaHOb+J7b5bhPtTj3PyuSXQyXZc8iI5UXUg0u1mPIc1U94501
+	 ROC565/mmLH7tTh0533JgYyMO7KFY9Q8XIT7wO3KkdWfaNwaulJMYROlEFPma3cBbX
+	 UuczWNoUiJMaw==
+Date: Tue, 29 Apr 2025 14:11:19 +0100
+From: Will Deacon <will@kernel.org>
+To: Xiquan Zhang <zhangxiquan@hisilicon.com>
+Cc: catalin.marinas@arm.com, corbet@lwn.net,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maz@kernel.org
+Subject: Re: [PATCH] Documentation (arm64):Advanced SIMD and floating point
+ support condition
+Message-ID: <20250429131116.GA25912@willie-the-truck>
+References: <20250408031309.2095-1-zhangxiquan@hisilicon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHnbEGLHGX2rMnf=S6CasoNyc939DTe-whcsjt9WhSWG920OoA@mail.gmail.com>
- <434f6474-b960-4383-8d61-0705632b4c33@oracle.com>
-In-Reply-To: <434f6474-b960-4383-8d61-0705632b4c33@oracle.com>
-From: Sebastian Feld <sebastian.n.feld@gmail.com>
-Date: Tue, 29 Apr 2025 15:10:08 +0200
-X-Gm-Features: ATxdqUEzYJh-ZDH8rsCb57P0tiaf5FqyKuM1gdw0oyv9XhS5uDa8nJMbvwAKOEY
-Message-ID: <CAHnbEGJq-w4CMS1dg8UBraV+6kLMkmC-hO4Dq7f4z8Af6maitA@mail.gmail.com>
-Subject: Re: fattr4_hidden and fattr4_system r/w attributes in Linux NFSD?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408031309.2095-1-zhangxiquan@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Apr 28, 2025 at 4:15=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
->
-> Hi Sebastian -
->
-> On 4/28/25 7:06 AM, Sebastian Feld wrote:
-> > I've been debating with Opentext support about their Windows NFS4.0
-> > client about a problem that the Windows attributes HIDDEN and SYSTEM
-> > work with a Solaris NFSD, but not with a Linux NFSD.
-> >
-> > Their support said it's a known bug in LInux NFSD that "fattr4_hidden
-> > and fattr4_system, specified in RFC 3530, are broken in Linux NFSD".
->
-> RFC 7530 updates and replaces RFC 3530.
->
-> Section 5.7 lists "hidden" and "system" as RECOMMENDED attributes,
-> meaning that NFSv4 servers are not required to implement them.
->
-> So that tells me that both the Solaris NFS server and the Linux NFS
-> server are spec compliant in this regard. This is NOTABUG, but rather it
-> is a server implementation choice that is permitted by RFC.
->
-> It is more correct to say that the Linux NFS server does not currently
-> implement either of these attributes. The reason is that native Linux
-> file systems do not support these attributes, and I believe that neither
-> does the Linux VFS. So there is nowhere to store these, and no way to
-> access them in filesystems (such as the Linux port of NTFS) that do
-> implement them.
->
-> We want to have a facility that can be used by native applications
-> (such as Wine), Samba, and NFSD. So implementing side-car storage
-> for such attributes that only NFSD can see and use is not really
-> desirable.
+On Tue, Apr 08, 2025 at 11:13:09AM +0800, Xiquan Zhang wrote:
+> From: zhangyu <zhangyu550@huawei.com>
+> 
+> Because the kernel code cannot be started from el1
+> according to the booting.rst.
+> It is found that CPTR_EL2.FPEN is not configured.
+> After the configuration, the problem is solved.
+> 
+> Signed-off-by: zhangyu <zhangyu550@huawei.com>
+> Signed-off-by: zhangxiquan <zhangxiquan@hisilicon.com>
+> ---
+>  Documentation/arch/arm64/booting.rst | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> index dee7b6de864f..ccefc42b51bc 100644
+> --- a/Documentation/arch/arm64/booting.rst
+> +++ b/Documentation/arch/arm64/booting.rst
+> @@ -309,6 +309,7 @@ Before jumping into the kernel, the following conditions must be met:
+>    - If EL2 is present and the kernel is entered at EL1:
+> 
+>      - CPTR_EL2.TFP (bit 10) must be initialised to 0b0.
+> +    - CPTR_EL2.FPEN (bit 21:20) must be initialised to 0b11.
 
-I did a bit of digging, that debate started in 2002.
+Sorry, but I don't quite understand this. CPTR_EL2 has a different format
+depending on HCR_EL2.E2H and the FPEN field only exists when that bit is
+set to 1. In that case, however, why would the kernel be entered at EL1?
 
-23 years later, nothing happened. No Solution.
-Very depressing.
-
-Sebi
---=20
-Sebastian Feld - IT security consultant
+Will
