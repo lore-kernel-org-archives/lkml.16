@@ -1,128 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C96629B77F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:08:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6548A2949F7;
+	Tue, 29 Apr 2025 10:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921291; cv=none; b=dVpMA7y7XhY5RXt35vviTmkyw8Eabkq1Dv5/v4yvVHJCq0YxNQgw1mQq7bK+/WehDWp9HKu09+xk6bB65PPrXYOT4vMXiINzqvbIACgjl9DrvmPBVtmC+2nfSkiAAv8ONZUggxjyU0rhWPQu0XqKJwj6lnRj0BgCu2/Fd6ZDVHA=
+	t=1745921330; cv=none; b=XafF1URw24KWRwPmXexVWUUqDelKO0tW57y1jU8vW5VA07tGrhyZ67t3yT6KotKonl2yd2r0lZcVi71J+s9ok1GaV5djC1R1Q2oQ2Mw32D5dH8PNp0dUwsWQzW9GENrz3eGrVeFtIhVJUXiw6CtJs/mMdVuSbFGVFpZYIravN2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921291; c=relaxed/simple;
-	bh=FNkyaJGp8MfoVlpMeJugXq0KnLpj/jBe07Y8pBAACqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1RfUPq4iY+6fzWYoouC226kvH8wrOupGXE2VI9Myc+tnklECOkgbtlu+VtZYEkF3KKhDxIBb0+wLZX5cYrkXmxs+7wlQAcY3IkhudwRY1lGIW51Mz1T6U8l3xCxWYY7zRcdmcTdLUy4oMk1QGQufy3PWmgR6MB8TRj1tYKm2w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZKOu799; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745921330; c=relaxed/simple;
+	bh=0r7/u/RghNb9eJUw5r37qjxwNthSPVY+EKxonqbSJIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tMz+/C1YapTXb5yOXSMp4AWakwBNTDaSgKXQTe0p8M2nHzX8YzsaYF8O1R+Anm6X9jTkC67VFHm6P777O6pB7Laxk4qKJINBV+UXaAWKpl6Ar3gQth7F6OaEgZaIKs7Zok5XdEyPmIR1AYLXU8cMqdFvb6a886ZWUG95cmWD+i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP5FMcM8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZKOu799"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E22C4CEE3;
-	Tue, 29 Apr 2025 10:08:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP5FMcM8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF446C4CEE3;
+	Tue, 29 Apr 2025 10:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745921289;
-	bh=FNkyaJGp8MfoVlpMeJugXq0KnLpj/jBe07Y8pBAACqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VZKOu799+4V5pW/WeIPX/qMOLrBUca2dqVJr++ECXW2r6WG/1H+svFEldDbiX7Oo/
-	 DY94o1FtmcdGss/70ZUqk4LKljL1SvgzZ16Pvv24LIf9hBcyY3/XJyf68AQiZDjjnH
-	 L59TxFlHG20sFn7drQpXUlPUJ8ThkOni004ozQLvINNZUhpm+KdEjz3/Qpbg7khDuH
-	 I3DrOfWwhOeomddlNJ2qQxoiV/uAX1X4erXjcI2/wTWBJc2z9ALHBdlzAJpLs36VLl
-	 yOaXD0OWQbj4s1mQ1vUixWVu+yj/43QylJFIKx1Vy87I6Ai25BDi8HqaBo91TVBiwI
-	 exBh1/FcloI/Q==
-Date: Tue, 29 Apr 2025 12:08:03 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
-	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
- handling to C
-Message-ID: <aBClAy837xcLnVpp@gmail.com>
-References: <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
- <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
- <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
- <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
- <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
- <aA8nF0moBYOIgC5J@gmail.com>
- <aA8oqKUaFU-0wb-D@gmail.com>
- <aA8q4Ot-1zTzv_Kt@gmail.com>
- <CAHk-=wh5DUS+nhfTxPEEbaB9dsFib39gWatrX4NoFq_MpdOzGw@mail.gmail.com>
+	s=k20201202; t=1745921329;
+	bh=0r7/u/RghNb9eJUw5r37qjxwNthSPVY+EKxonqbSJIA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YP5FMcM8WaU9sCyDg1yg8xDL6okyXuUGf7VBD4GerghsL/DxoUbdreuRFdB9oSQsA
+	 +sQnUmJmbLTnOqpNWttPa1M64wuCcTqMf4rbevJvOHyttpg90QUY9lrnyjXDPnRvzC
+	 xYT0NmA4AIZ9Xj2Zy8i2oT3h9JrIURDS5jBc3V6VkuVuGkfGZh0TYdHkSP/vvKjG08
+	 GbErrLhKqOzNrw39wwY92AYw6X6C9jv67FXF8AsMxBRV48BFTENWMJNkLuHfMAcVGk
+	 sOaV8ZqLIDpK9j3HBs4dccU7Dpgs1DCya+/twsIBL5NBg/2XDrbJqWcDy6dPFbQBDq
+	 El17NM0lDLWAA==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	rcu <rcu@vger.kernel.org>
+Subject: [PATCH v2] rcu: Robustify rcu_is_cpu_rrupt_from_idle()
+Date: Tue, 29 Apr 2025 12:08:40 +0200
+Message-ID: <20250429100840.13917-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh5DUS+nhfTxPEEbaB9dsFib39gWatrX4NoFq_MpdOzGw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+RCU relies on the context tracking nesting counter in order to determine
+if it is running in extended quiescent state.
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+However the context tracking nesting counter is not completely
+synchronized with the actual context tracking state:
 
-> On Mon, 28 Apr 2025 at 00:14, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > And, just out of intellectual curiosity, I also tried to measure the
-> > code generation price of the +1 standards-quirk in the fls()/ffs()
-> > interface as well:
-> >
-> > ... and unless I messed up the patch, it seems to have a surprisingly
-> > low impact - maybe because the compiler can amortize its cost by
-> > adjusting all dependent code mostly at build time, so the +1 doesn't
-> > end up being generated most of the time?
-> 
-> No, I think one issue is that most users actually end up subtracting
-> one from the return value of 'ffs()', because the "bit #0 returns 1"
-> semantics of the standard ffs() function really is insane.
-> 
-> It's not just that it doesn't match sane hardware, it's also that it
-> doesn't match sane *users*. If bit #0 is set, people want '0', so they
-> typically subtract 1.
-> 
-> So when you stop adding one, you aren't actually removing code -
-> you're often adding it.
-> 
-> Just see how many hits you get from
-> 
->     git grep '\<ffs(.*).*-.*1'
-> 
-> which is obviously not a very precise pattern, but just look at the
-> output and see just *how* common that "subtract one" thing is.
-> 
-> I really don't understand how anybody *ever* thought that the whole
-> "return one bigger" was a good idea for ffs().
+* The nesting counter is set to 1 or incremented further _after_ the
+  actual state is set to RCU watching.
 
-Yeah. No argument from me that it's a badly thought out interface - I 
-was just surprised that it doesn't seem to impact performance as badly 
-as I expected. I have to add that a lot of work went into absorbing the 
-negative effects of the ffs()/fls() interfaces:
+* The nesting counter is set to 0 or decremented further _before_ the
+  actual state is set to RCU not watching.
 
-  starship:~/tip> git grep -Ee '__ffs\(|__fls\(' | wc -l
-  1055
+Therefore it is safe to assume that if ct_nesting() > 0, RCU is
+watching. But if ct_nesting() <= 0, RCU is not watching except for tiny
+windows.
 
-So it impacts code quality negatively, which is arguably the worse side 
-effect.
+This hasn't been a problem so far because rcu_is_cpu_rrupt_from_idle()
+has only been called from interrupts. However the code is confusing
+and abuses the role of the context tracking nesting counter while there
+are more accurate indicators available.
 
-> But maybe people really were poisoned by the Pascal mindset. Or maybe 
-> it was invented by some ancient Roman who hadn't heard of the concept 
-> of zero. Who knows?
+Clarify and robustify accordingly.
 
-Hey, ancient Romans didn't even have the concept of *whitespaces* and 
-punctuation to begin with:
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ kernel/rcu/tree.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-    https://historyofinformation.com/images/Vergilius_Augusteus,_Georgica_121.jpg
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 90d0214c05c7..cbcd579c5630 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -377,7 +377,7 @@ EXPORT_SYMBOL_GPL(rcu_momentary_eqs);
+  */
+ static int rcu_is_cpu_rrupt_from_idle(void)
+ {
+-	long nesting;
++	long nmi_nesting = ct_nmi_nesting();
+ 
+ 	/*
+ 	 * Usually called from the tick; but also used from smp_function_call()
+@@ -389,21 +389,28 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+ 	/* Check for counter underflows */
+ 	RCU_LOCKDEP_WARN(ct_nesting() < 0,
+ 			 "RCU nesting counter underflow!");
+-	RCU_LOCKDEP_WARN(ct_nmi_nesting() <= 0,
+-			 "RCU nmi_nesting counter underflow/zero!");
+ 
+-	/* Are we at first interrupt nesting level? */
+-	nesting = ct_nmi_nesting();
+-	if (nesting > 1)
++	/* Non-idle interrupt or nested idle interrupt */
++	if (nmi_nesting > 1)
+ 		return false;
+ 
+ 	/*
+-	 * If we're not in an interrupt, we must be in the idle task!
++	 * Non nested idle interrupt (interrupting section where RCU
++	 * wasn't watching).
+ 	 */
+-	WARN_ON_ONCE(!nesting && !is_idle_task(current));
++	if (nmi_nesting == 1)
++		return true;
+ 
+-	/* Does CPU appear to be idle from an RCU standpoint? */
+-	return ct_nesting() == 0;
++	/* Not in an interrupt */
++	if (!nmi_nesting) {
++		RCU_LOCKDEP_WARN(!in_task() || !is_idle_task(current),
++				 "RCU nmi_nesting counter not in idle task!");
++		return !rcu_is_watching_curr_cpu();
++	}
++
++	RCU_LOCKDEP_WARN(1, "RCU nmi_nesting counter underflow/zero!");
++
++	return false;
+ }
+ 
+ #define DEFAULT_RCU_BLIMIT (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 1000 : 10)
+-- 
+2.48.1
 
-Lazy stonemasons the lot of them.
-
-Romans were the worst ever coders too I suspect. What have the Romans 
-ever done for us??
-
-	Ingo
