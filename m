@@ -1,190 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586D92749D8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629881E2834;
+	Tue, 29 Apr 2025 06:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745908548; cv=none; b=qvfJFHQie0cc3MXfSmkzOYhd1+epHTJLSQC+MlvlL3p+LRCIg8xRz2kQ0KwkAGkC6YvYCe0APCa69q1VZFtTYOufM3GD++oMxs9eCcmH5tUuhoFqST1YqY9h33MTsss0MY8St02TnNkggMNT0fpZoed/u+nXywb65e8cTuMx730=
+	t=1745908582; cv=none; b=aiB8FeKxVzrruxWEFPBT9fYGLP4WbK3dEwRXdSWcnRmGnLiTllCwYot4vbQGxc2lGHRqUqcWsggwHlR7Jkt2fbVLoYAN9nvEoDMFKiOB6hd6+V82vx2DF9gBFlXhPJ5AyFyj6qEIhnD5TfVmFKG7Yj6sJJ7Oq1KeyCoZv3MYFT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745908548; c=relaxed/simple;
-	bh=kGVRxUlzoEJB4qXKwlBh+TaHXZU8T8gOZTim9slD8MM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c1Ibv/x6tQ9KyTSGQ58lPasWZxmE9SXc/30vEdW8fNJ4NCRJ9JOF2STex3BzfVgF/9oLKk7NPK1VIfmZsfmxtlduIzTtXtpNpHZ7ip1aq0HhTO2BlBdcAo+pXnVjAH2Jzr1Tjxk2TNVkRxW2Hy+OjMqcn/1SRs5T/KHTEo+TGjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/Yedh9q; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745908582; c=relaxed/simple;
+	bh=9mbueJwWZgiSOGRcpxVZxqIaPS1CG1KC5I/qRx56R7I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=P/i7gGPpMnHg476dH4q+IRG1fRDERufv9thHwMOiCsvocZGjihbeTINh/EjZNGSKp8apxqnz3KRGKK5ad+8gewxBD14xZZZugTl6lNB6uxJLc6zouVRxz8KeyKGT/5ICga/Br86sEEbccN1A926QEgvsG7Ri6m9AeY/GfuQfG1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DnWOW7Cn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T80HuCt5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/Yedh9q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745908547; x=1777444547;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kGVRxUlzoEJB4qXKwlBh+TaHXZU8T8gOZTim9slD8MM=;
-  b=E/Yedh9q/5q862LqhBYtRbu/mxWiqHqxc7q2IFJBZVIuvRy+RhwF042Q
-   a6QZHxwO/YeoB9pTU4sJZ114vdNZnE5APp+QkfITg/dWY0u4ZXVYbiztB
-   zRzwsLG92wtOHEwORTiTmOxgHofAvjDFkrMqUoxUZBsRvbv9t3kHusPvA
-   jDX7OHU0CoexzT4MfsTEdNfitZpSlKAtDBJNTs9X2fhi2nMTFLDhKRG2Z
-   wUtSHHbI8QjPM34JxoxbmflHIY8L1PNv7Cwqz2qIjdOjC4rH/2FLdL7IT
-   F7CtBiNpEaSuURRRFIO6BqD3e1+bs1b2a00iNBDYln3i9iKQQtM3Mdzi+
-   w==;
-X-CSE-ConnectionGUID: e3NmC6w7QlKM/pNK0jJuXQ==
-X-CSE-MsgGUID: Kj1WJOXyQUWLj73ckRzFXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="64937629"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="64937629"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 23:35:46 -0700
-X-CSE-ConnectionGUID: vi0G0E8RRb+fV6w4HGJ3UQ==
-X-CSE-MsgGUID: kK4hmxZUSpe7uRE8Ov9/vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="134254076"
-Received: from unknown (HELO CannotLeaveINTEL.bj.intel.com) ([10.238.153.146])
-  by fmviesa010.fm.intel.com with ESMTP; 28 Apr 2025 23:35:42 -0700
-From: Jun Miao <jun.miao@intel.com>
-To: kirill.shutemov@linux.intel.com,
-	dave.hansen@linux.intel.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de
-Cc: x86@kernel.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	jun.miao@intel.com,
-	fan.du.com,
-	zhiquan1.li@intel.com
-Subject: [V2 PATCH] x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE was not successful
-Date: Tue, 29 Apr 2025 10:31:14 -0400
-Message-ID: <20250429143114.1724280-2-jun.miao@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250429143114.1724280-1-jun.miao@intel.com>
-References: <20250429143114.1724280-1-jun.miao@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DnWOW7Cn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T80HuCt5"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745908580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9mbueJwWZgiSOGRcpxVZxqIaPS1CG1KC5I/qRx56R7I=;
+	b=DnWOW7CnOsAcV22vpKV63CbsY0ldb+5sbM3yvyIQcc2zf6QyVfsmfvL9wBypHs4nV0ld6Z
+	Zurxv7W1oMofpW0eEtAhlj+MHvHdG+GZ++ae2mgPOD6N9tkJ9LdUbpn/5wuZlsj/NUa6yp
+	acICJrAun4fhOZx5xqB7vp7BwzSyN8fIJj5rH/gqUrN3Ijb0ryMTJ5ISxKG5fqqRSmgjrb
+	dhG74v4QmZtjs2LYPyfXRSY/kuAZBRt+zfh4bgwBgwenZkjRI8AVseHBLAKaWK5cs6bJsZ
+	S31BdCGodkYHMMsRb0freXUSXiu4/hCKHRA9XHkXLmQrWgulGV7LBZPsRZ8hrA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745908580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9mbueJwWZgiSOGRcpxVZxqIaPS1CG1KC5I/qRx56R7I=;
+	b=T80HuCt5ESK3U117L2ud9Kpxqr73T+IhsCP8hk5od1nGiAlIYD21ojyx0oNzqnpjESRh7i
+	HuNjlGSQmCMYsBDQ==
+To: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy?=
+ =?utf-8?Q?=C5=84ski?=
+ <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
+ <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, Aaron Kling
+ <webgeek1234@gmail.com>
+Subject: Re: [PATCH v2 1/3] irqdomain: Export irq_domain_free_irqs
+In-Reply-To: <20250428-pci-tegra-module-v2-1-c11a4b912446@gmail.com>
+References: <20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com>
+ <20250428-pci-tegra-module-v2-1-c11a4b912446@gmail.com>
+Date: Tue, 29 Apr 2025 08:36:19 +0200
+Message-ID: <877c33qxss.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Zhiquan Li <zhiquan1.li@intel.com>
+On Mon, Apr 28 2025 at 20:05, Aaron Kling via wrote:
 
-The ENUM_TOPOLOGY and VIRT_CPUID2 virtualization control are the subset
-of the REDUCE_VE control, TD enabling REDUCE_VE will also implicitly
-enable ENUM_TOPOLOGY and VIRT_CPUID2.  Both features were introduced
-earlier than REDUCE_VE.  Now if enabling REDUCE_VE is failed
-will fall back to enabling ENUM_TOPOLOGY, the same reason is applicable
-for VIRT_CPUID2.
+$subject: .... irq_domain_free_irqs()
 
-The VIRT_CPUID2 feature allows TDX module provides fixed values
-eax=0x00feff01, ebx=0, ecx=0 and edx=0, meaning "cache data is returned
-by CPUID leaf 0x4" and "TLB data is returned by CPUID leaf 0x18" while
-TD guest execution of CPUID leaf 0x2, instead the kernel CPUID #VE
-handler returns all zeros.  It is quite useful for backward
-compatibility.
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> Add export for irq_domain_free_irqs() so that we can allow drivers like
+> the pci-tegra driver to be loadable as a module.
 
-REDUCE_VE can only be enabled if x2APIC_ID has been properly configured
-with unique values for each VCPU.  Check if VMM has provided an activated
-topology configuration first as it is the prerequisite of REDUCE_VE and
-ENUM_TOPOLOGY, so move it to reduce_unnecessary_ve().  The function
-enable_cpu_topology_enumeration() was very little and can be
-integrated into reduce_unnecessary_ve().
+Export irq_domain_free_irqs() to allow PCI/MSI drivers like pci-tegra to
+be built as a module.
 
-Only try to enable VIRT_CPUID2 when REDUCE_VE was not successful and the
-depended x2APIC_ID didn't set to each TD vCPU.
+See https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
 
-Fixes: cd9ce8217345 ("x86/tdx: Disable unnecessary virtualization exceptions")
-Co-developed-by: Jun Miao <jun.miao@intel.com>
-Signed-off-by: Jun Miao <jun.miao@intel.com>
-Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
----
- arch/x86/coco/tdx/tdx.c | 52 +++++++++++++++++++++++++++--------------
- 1 file changed, 34 insertions(+), 18 deletions(-)
+With that addressed:
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index edab6d6049be..94062dbf57fd 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -247,43 +247,59 @@ static void disable_sept_ve(u64 td_attr)
- }
- 
- /*
-+ * Newer TDX modules provide a "REDUCE_VE" feature.  When enabled, it
-+ * drastically cuts cases when guests receive #VE on MSR and CPUID accesses,
-+ * and TDX module also forces ENUM_TOPOLOGY and VIRT_CPUID to enabled.
-+ *
-+ * But REDUCE_VE can only be enabled if x2APIC_ID has been properly configured
-+ * with unique values for each VCPU. So check if VMM has provided a valid
-+ * topology configuration first.
-+ *
-  * TDX 1.0 generates a #VE when accessing topology-related CPUID leafs (0xB and
-  * 0x1F) and the X2APIC_APICID MSR. The kernel returns all zeros on CPUID #VEs.
-  * In practice, this means that the kernel can only boot with a plain topology.
-  * Any complications will cause problems.
-  *
-  * The ENUM_TOPOLOGY feature allows the VMM to provide topology information.
-- * Enabling the feature  eliminates topology-related #VEs: the TDX module
-+ * Enabling the feature eliminates topology-related #VEs: the TDX module
-  * virtualizes accesses to the CPUID leafs and the MSR.
-  *
-- * Enable ENUM_TOPOLOGY if it is available.
-+ * The VIRT_CPUID2 feature allows TDX module provides fixed values
-+ * eax=0x00feff01, ebx=0, ecx=0 and edx=0, meaning "cache data is returned by
-+ * CPUID leaf 0x4" and "TLB data is returned by CPUID leaf 0x18" while TD
-+ * guest execution of CPUID leaf 0x2, instead the kernel CPUID #VE handler
-+ * returns all zeros. It is quite useful for backward compatibility.
-+ *
-+ * Both ENUM_TOPOLOGY and VIRT_CPUID2 are earlier than REDUCE_VE, fall back to
-+ * enable them if REDUCE_VE was not successful.
-  */
--static void enable_cpu_topology_enumeration(void)
-+static void reduce_unnecessary_ve(void)
- {
-+	u64 err = TDX_SUCCESS;
- 	u64 configured;
- 
- 	/* Has the VMM provided a valid topology configuration? */
- 	tdg_vm_rd(TDCS_TOPOLOGY_ENUM_CONFIGURED, &configured);
--	if (!configured) {
--		pr_err("VMM did not configure X2APIC_IDs properly\n");
--		return;
--	}
--
--	tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_ENUM_TOPOLOGY, TD_CTLS_ENUM_TOPOLOGY);
--}
- 
--static void reduce_unnecessary_ve(void)
--{
--	u64 err = tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_REDUCE_VE, TD_CTLS_REDUCE_VE);
-+	if (configured) {
-+		err = tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_REDUCE_VE, TD_CTLS_REDUCE_VE);
- 
--	if (err == TDX_SUCCESS)
--		return;
-+		/*
-+		 * Enabling REDUCE_VE includes ENUM_TOPOLOGY. Only try to
-+		 * enable ENUM_TOPOLOGY if REDUCE_VE was not successful.
-+		 */
-+		if (err != TDX_SUCCESS)
-+			tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_ENUM_TOPOLOGY, TD_CTLS_ENUM_TOPOLOGY);
-+	} else
-+		pr_err("VMM did not configure X2APIC_IDs properly\n");
- 
- 	/*
--	 * Enabling REDUCE_VE includes ENUM_TOPOLOGY. Only try to
--	 * enable ENUM_TOPOLOGY if REDUCE_VE was not successful.
-+	 * Enabling REDUCE_VE includes VIRT_CPUID2. Only try to enable
-+	 * VIRT_CPUID2 if REDUCE_VE was not successful.
- 	 */
--	enable_cpu_topology_enumeration();
-+	if (!configured || err != TDX_SUCCESS)
-+		tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_VIRT_CPUID2, TD_CTLS_VIRT_CPUID2);
-+
- }
- 
- static void tdx_setup(u64 *cc_mask)
--- 
-2.43.0
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
