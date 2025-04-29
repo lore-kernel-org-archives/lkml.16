@@ -1,83 +1,167 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BE7229B05;
-	Tue, 29 Apr 2025 16:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6610B244679
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945310; cv=none; b=tNGalp8KFT5EBaLd+ydWFFXBpofD3xSkFPxtW0mj3lANypDSITB9g20+oN2WpJk6BhtW5IyLT5b9ybtIJE/UzxmqQIItj2chAWFhfIe5PhJSsrgSR0L7WHZsLd/1axOa0ix+6N4l/hh97DkPPwhpwnFYVaA1CDaIVBSnavl4kV8=
+	t=1745945343; cv=none; b=OjI2ZbJ1+DbMhR48lIZuAaAh6Wt89oMfareiapsB8ER5yGWV2hL77MttlngupVC9K5duGg+7nsfdw/TsNlEBSaB2gCU+MyM357bTcyRFVwmn7vf0yWAkqKcrGp5iHtJKxvmE5uvBgQOe/8Vny/sgridS14QaDCMTmpE7+RV4QAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945310; c=relaxed/simple;
-	bh=qPz8W9mQRFkr+tQs+W2tyTIpPrmHqC39JGGcuMRU22s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oj15BYuWnr3xgl3COECzgevjRNz8XDgkHvzsqkPg7OKpJXtldREontFAWeMPSH8q5b18yfMjkAJG/5kYwhXGOnOoTYkIn6tq//5sCY2Btywvm/33qa6N4F3WIxY0IPUEhiF+GwuxVo1zZMLU4p+JGP1vFtUNEux6hx3DRTyPjog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=odBTB5Qy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3QIFNafg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745945343; c=relaxed/simple;
+	bh=9H0LsjNRrY5PWe85DqM1hJ/9El74OMvJBsmQ6l8DTN4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N2RZoQuwpW/NFyMJ8RZl81u0PKM+268U7rOZ0MW8ZROiSOrub6ySFroPBNK1uFnivGKF9NucCHVSDUCjVKEbtj/PbSjdP8bNfXsLvxdMnJHtCIH5h9kdZb+fY89oEHrcJU/3bdqIqnB4BiIdLgr0tZ9x2KGqifBm0I9JGfCsdI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=batbytes.com; spf=none smtp.mailfrom=batbytes.com; dkim=pass (2048-bit key) header.d=batbytes-com.20230601.gappssmtp.com header.i=@batbytes-com.20230601.gappssmtp.com header.b=t2AmHvQu; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=batbytes.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=batbytes.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="odBTB5Qy";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3QIFNafg"
-Date: Tue, 29 Apr 2025 18:48:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745945306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eesAZMgstduPVaEESNAi0LnDjxGoJvSDuC/mj3w1pYU=;
-	b=odBTB5QykgKLaJoG3eJifs7bkg4z54MWQmZDMSDQ+hP4Qw1WCEALVv4DRJ+6me3mIW8kmY
-	Q7jqyd/6qjzwZThiTcj+skcpCQ/xcPFjVdN25wvVWmva+1fl69J3EX1GTXN/sEX3/o4Eks
-	b9LHQvRHyR0IjYDrIAwvYdNCpC1gdF4gVEMOJNl0EO6tNCG07f+Sg6KAD9ZBsRxFwWwxPg
-	q9yw/Unxsd9EzXs7ikI2TFiFe1efpRnzESQATSzzkOZhnZHWXdzBvenBo5y+Q6a2J/J7xr
-	Bv/jE8k7YuugsjkdKcGLzdBgQDLtkEbpQm6rtznaSKNSMOxOU02isPnZJbTJ2Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745945306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eesAZMgstduPVaEESNAi0LnDjxGoJvSDuC/mj3w1pYU=;
-	b=3QIFNafg6nxw8am8DCLkuq71zFvv4hecAyBBCes9WCZvY7dNUVVJf1qLzVZ/FRfGCp0UHO
-	adH1ylpazfq0GIBA==
-From: Nam Cao <namcao@linutronix.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, Kai Zhang <zhangkai@iscas.ac.cn>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH stable v6.6] riscv: kprobes: Fix wrong lengths passed to
- patch_text_nosync()
-Message-ID: <20250429164614.g3w8JJAk@linutronix.de>
-References: <20250429161418.838564-1-namcao@linutronix.de>
- <2025042945-financial-rumbling-bcd0@gregkh>
+	dkim=pass (2048-bit key) header.d=batbytes-com.20230601.gappssmtp.com header.i=@batbytes-com.20230601.gappssmtp.com header.b="t2AmHvQu"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so5276960a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=batbytes-com.20230601.gappssmtp.com; s=20230601; t=1745945341; x=1746550141; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9H0LsjNRrY5PWe85DqM1hJ/9El74OMvJBsmQ6l8DTN4=;
+        b=t2AmHvQuuMrx3aDM4aIZrZJGcJw7Jxy6KQCSYM0NdYgomnF3qi93KY8m8OB7p6sRwd
+         S1H/x+4eierDFsAmYB2NddB6zKLr8zgVcNCHFIePiAt1f89X/uauAZqg3rNsFewrvvFs
+         /qXGQXd58OE84N83j9j9ZzG4wf+tNzEL/r8im1kfBs5DpTMa0VG51mvDfA/hztPz/jIX
+         zD/Vkfk1D9V9i8lozqyrAgFgcsVXIUfYEeZ0Orgyi8j9JhZEOB753uZsSEK0WxQulhH6
+         hYqm0MUGDLZm1yF/RPT34dWvxf14Bz+b7LIzG/9kALKMIW3If8cHvJqAbTBCRwYgDFSk
+         BInw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745945341; x=1746550141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9H0LsjNRrY5PWe85DqM1hJ/9El74OMvJBsmQ6l8DTN4=;
+        b=rTqFveQAQ/RPp5Dh+/MEsihW8o2MKmZTlAi8o78tQbx0Yr6PjsETDIJdd7sgLKa0A6
+         p0kQKQnp0EMSgqZAI5ZIZsQQYzq5nucISyGUG7J83o9+jx5pN81NvLk1u26HetAK9DA6
+         HLWz3sKUOWqNUDoNF5NrPZIeyBTGuBrnMtTVVqbfoRmADGgfV+6sC4ugL18NeyKqw1JH
+         UY4/VulC1ik0ETIIF0SrROa2Oi7Io4YXMe3xnlPiw2eUpVxgpNNpKwIkz+JV1e5IoheW
+         rhsdz1DTaRep9SN91cn6pjZ6Xrvx0kcdltSvl6C+K0NuPuVgRKNolzHn01azaPS6jim5
+         sLAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUF8hSISqlqXK91g61HhTwnU2rs+bgjOWq8GehFSL1GqDRQsoxQTMqGy0Kc8DGwiaewHIhzGbOrA8iQzFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSVpOPhOxfB5Li5noLr0vgLlfBckjQc+0qMYfC3LCJ+E/nTzLo
+	zUHdoBOpiXjNs/pxZIl26wWgYsBrvR4Iy2zagNUcDEI/sMxnP7liBEVETdRB0UPqcdZk6WfGe/J
+	swqMGxPi0bX6eeXZfTw+SHHFYmhXO3Xz49D/N
+X-Gm-Gg: ASbGnctgglgJRrOjWvR0GsNQXTaMZFlYWk45LWiyQuLSqESoHiq3aFLGA7+6kPPwKW1
+	gtS1NbOAKWc1oE1gZj7eoIf0huOKU7FDDMcy3IB56XLKLyID9STTi6hMcJGGbjo5CnrPCdF/kzS
+	M+5Q0kV0w0PcpsxCijlhheKw==
+X-Google-Smtp-Source: AGHT+IFmYhxgBqdFTyeB6jtUKwq0NpwSO3n2aDEpxC1AlEnOModK21uopLYnylQAayMGSQAHm9dJ3k3XwfqUgH38qhw=
+X-Received: by 2002:a17:90b:4ec3:b0:2f6:dcc9:38e0 with SMTP id
+ 98e67ed59e1d1-30a21fed8f3mr6814613a91.0.1745945340592; Tue, 29 Apr 2025
+ 09:49:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025042945-financial-rumbling-bcd0@gregkh>
+References: <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+ <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+ <mlsjl7qigswkjvvqg2bheyagebpm2eo66nyysztnrbpjau2czt@pdxzjedm5nqw>
+ <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
+ <lmp73ynmvpl55lnfym3ry76ftegc6bu35akltfdwtwtjyyy46z@d3oygrswoiki>
+ <CAHk-=wiZ=ZBZyKfg-pyA3wmEq+RkscKB1s68c7k=3GaT48e9Jg@mail.gmail.com>
+ <CACh33FqQ_Ge6y0i0nRhGppftWdfMY=SpGsN0EFoy9B8VMgY-_Q@mail.gmail.com> <pkpzm6okfqchet42lhcebwaiuwrwil6wp76flnk3p3mgijtg2e@us7jkctbpsgc>
+In-Reply-To: <pkpzm6okfqchet42lhcebwaiuwrwil6wp76flnk3p3mgijtg2e@us7jkctbpsgc>
+From: Patrick Donnelly <batrick@batbytes.com>
+Date: Tue, 29 Apr 2025 12:48:49 -0400
+X-Gm-Features: ATxdqUGI6li0I9MiWlxbRa6mKpi0pyjVX_tYXFxi6p1GvM0SiC4YBXP4kZNxD8o
+Message-ID: <CACh33Fr4-53wOgciKSUTwsCwyb-L7A9fscQmLvbHynYX2j2brg@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 06:31:09PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 29, 2025 at 06:14:18PM +0200, Nam Cao wrote:
-> > Unlike patch_text(), patch_text_nosync() takes the length in bytes, not
-> > number of instructions. It is therefore wrong for arch_prepare_ss_slot() to
-> > pass length=1 while patching one instruction.
-> > 
-> > This bug was introduced by commit b1756750a397 ("riscv: kprobes: Use
-> > patch_text_nosync() for insn slots"). It has been fixed upstream by commit
-> > 51781ce8f448 ("riscv: Pass patch_text() the length in bytes"). However,
-> > beside fixing this bug, this commit does many other things, making it
-> > unsuitable for backporting.
-> 
-> We would almost always want the original commit, why not just send that
-> instead?  What is wrong with it being in here as-is?
+On Tue, Apr 29, 2025 at 12:21=E2=80=AFPM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
+>
+> On Tue, Apr 29, 2025 at 11:36:44AM -0400, Patrick Donnelly wrote:
+> > I would not consider myself a kernel developer but I assume this
+> > terminology (dentry aliases) refers to multiple dentries in the dcache
+> > referring to the same physical dentry on the backing file system?
+>
+> This issue turned out to be my own pebcak; I'd missed the
+> dentry_operations that do normalized lookups (to be fair, they were
+> rather hidden) and I'd just pulled a 14 hour day so was a tad bitchy
+> about it on the list.
+>
+> > If so, I can't convince myself that's a real problem. Wouldn't this be
+> > beneficial because each application/process may utilize a different
+> > name for the backing file system dentry? This keeps the cache hot with
+> > relevant names without any need to do transformations on the dentry
+> > names. Happy to learn otherwise because I expected this situation to
+> > occur in practice with ceph-fuse. I just tested and the dcache entries
+> > (/proc/sys/fs/dentry-state) increases as expected when performing case
+> > permutations on a case-insensitive file name. I didn't observe any
+> > cache inconsistencies when editing/removing these dentries. The danger
+> > perhaps is cache pollution and some kind of DoS? That should be a
+> > solvable problem but perhaps I misunderstand some complexity.
+>
+> Dentry aliases are fine when they're intended, they're properly
+> supported by the dcache.
+>
+> The issue with caching an alias for the un-normalized lookup name is
+> (as you note) that by permuting the different combinations of upper and
+> lower case characters in a filename, userspace would be able to create
+> an unbounded (technically, exponential bound in the length of the
+> filename) number of aliases, and that's not what we want.
+>
+> (e.g. d_prune_aliases processes the whole list of aliases for an inode
+> under a spinlock, so it's an easy way to produce unbounded latencies).
 
-The original commit is probably fine. But I'm paranoid, because it is not
-completely obvious whether the original commit would break something else
-in v6.6. Because, as mentioned, it does more than just fixing the bug.
+Well, if aliases are "supported" by the dcache, that seems like a bug to me=
+.
 
-Best regards,
-Nam
+> So it sounds like you probably didn't find the dentry_operations for
+> normalized lookups, same as me.
+
+I didn't look to begin with. :)
+
+> Have a look at generic_set_sb_d_ops().
+>
+> > > Also, originally this was all in the same core dcache lookup path. So
+> > > the whole "we have to check if the filesystem has its own hash
+> > > function" ended up slowing down the normal case. It's obviously been
+> > > massively modified since 1997 ("No, really?"), and now the code is
+> > > very much set up so that the straight-line normal case is all the
+> > > non-CI cases, and then case idnependence ends up out-of-line with its
+> > > own dcache hash lookup loops so that it doesn't affect the normal goo=
+d
+> > > case.
+> >
+> > It's seems to me this is a good argument for keeping case-sensitivity
+> > awareness out of the dcache. Let the fs do the namespace mapping and
+> > accept that you may have dentry aliases.
+> >
+> > FWIW, I also wish we didn't have to deal with case-sensitivity but we
+> > have users/protocols to support (as usual).
+>
+> The next issue I'm looking at is that the "keep d_ops out of the
+> fastpath" only works if case sensitivity isn't enabled on the filesystem
+> as a whole - i.e. if case sensitivity is enabled on even a single
+> directory, we'll be flagging all the dentries to hit the d_ops methods.
+>
+> dcache.c doesn't check IS_CASEFOLD(inode) - d_init can probably be used
+> for this, but we need to be careful when flipping casefolding on and off
+> on an (empty) directory, there might still be cached negative dentries.
+>
+> ext4 has a filesystem wide flag for "case sensitive directories are
+> allowed", so that enables/disables that optimization. But bcachefs
+> doesn't have that kind of filesystem level flag, and I'm not going to
+> add one - that sort of "you have to enable this option to have access to
+> this other option" is a pita for end users.
+
+In CephFS it's as simple as setting an extended attribute on a
+directory, by admins.
+
+--=20
+Patrick Donnelly
