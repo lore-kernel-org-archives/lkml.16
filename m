@@ -1,94 +1,118 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F197127C150
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C021DE2D7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915296; cv=none; b=O8jQIzU27hkPfnPQ8R0FRJsqiuY+9XNdq9UJ9FaPs4CY1T2ZoqNBXsB0j79FyGrTZjh6QMQea/1dgUT94WtWdw/7V1FVTJE9eAM2Ns0TpUhGOAuXaoILhKfQoI/ldlbV7v/+rxq0e43GBgDupf4nOQwbAejOmo0+YFfqTZ6oL7I=
+	t=1745915389; cv=none; b=epEsD43aLm1IBkjENqHr3DWj/0vOCK0nqcAVDg/L8pYQwW2rwc5kyrkM/FlEa8uJ7nVUQzyiw2DugVvmzcQwWI+t9h+UbORkDoGS/lB+vGQ4AO0aZeFcyTmJeo80kasXKotECrQAi7MCq+JL266mPd1aVuNzRljbj88x+ui853g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915296; c=relaxed/simple;
-	bh=MU91rq6x6AMWRP8hSHtEK8HMpJbScePsSH9FDG38Qdo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uc4ayQB+IpGjzVEGeF8P64en/rExudd+7+esYhUlD6DR5NLSay8FTOPBu1Lj6WYcxlftZWLcgf1VQJFnF2yMFuLKLBEq3Nos0AsDK095rSLJN/YAIMNiAPQnxN8OewbxfCN1iADefYx35+KC9dzoSh9SnrZqlRoCd+g7XWDOTwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fk24WV+J; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745915389; c=relaxed/simple;
+	bh=NZvHln3bcfSZ/TQLs4xr3IKvbwiNkKQxP5LZ2Fgfd5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=h0PY64RGZmz3gkjfQbJ51ZwyAV3QsWhABPMGQHm4r0LxGYlt5Wt3+cK4PFjTk2ZWzjTQ4xmYZ42FUJjAVo94L/o8tFLd0H8aMkwobAtYuzDrYQafewxs60dNMBr02FhNzNTuX7iKPDjUBntKxWOTeQq/7TwbV7bQNoeyt8Y6Dfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fxBV8f+p; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fk24WV+J"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30effbfaf61so65446591fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:28:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fxBV8f+p"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22d95f0dda4so83674305ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745915293; x=1746520093; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MU91rq6x6AMWRP8hSHtEK8HMpJbScePsSH9FDG38Qdo=;
-        b=fk24WV+J6KW10tWbbqU2BsRFu5BGpNaxjtT2QXApK39EK5FBDTijtCTmVG7hB/qgqY
-         BX3g3bZc8DMJyrZjnE17T/gKusSSV39cIs/GDhS0rDmtL26hEihhQymCrC3VmwZUGHuI
-         eww7HHTRPf7d6VFB599wkPndRZBUr+3zWjRcv5oRSITZqt5oe0GrxgoDmULu3tP6mbVY
-         hh/UQjNR1FNmAT3hUltrjI/ONXuMqE6/Opyy59bYMbV5hs1FiI0t1D0yjrqeKEoCeQSK
-         c1Fl1EoQ5ET00+enQycOTs0TCCVLCGo2cPJfGkqeZcL8o7Mmyp6hQ5rfPFxW8EUMhveG
-         p+MQ==
+        d=bytedance.com; s=google; t=1745915387; x=1746520187; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DHdRz/EtmBEiEa3gK3w++o5QutFIQ/a6w+5iRyEUy5Y=;
+        b=fxBV8f+pfGgJYYFOavC57essN5m3eX35d0hvu+KXKWUUigmrVfNiW+X6N7xZ0+wWpR
+         RpJ/UoO7y+68iJ8kk5yIlenijdLG70e8DQHItSqParCTeNcTSG1VyXz38A+Qg2G686Y/
+         phJ2IgWLvUq78OVnUGC4dSBGtwOGIeRbzz3QOfY6f1WBFRgGCsOO1GXxc9H51pAvIcdV
+         F/BY/YFIVo64dAnq3PxbutA7SVYKE+Cu2gl0Ul5ByueRreFDd1Vu1WRu236RKZ2Lqyy5
+         EUFdLFSSkLQcz1GPN429h8NklVkA1VlgqoRP57L8mswjdCj4HgK5rK9gK5sGlyp7BhmK
+         Pbrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745915293; x=1746520093;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MU91rq6x6AMWRP8hSHtEK8HMpJbScePsSH9FDG38Qdo=;
-        b=ZrVOmV/JwZA5pfuzQMCPaP2KqbXfI32Fur80lmMkk8397/nbEoTYiGefY9b/wA/4N9
-         UlQ0RtYav2TxouHbOpSrlbKzc3MwUGeddMPmJ4QN8U+25xqaVinJy2hKiM9Q4feHQT7p
-         PbTGDRtuowUq9DCaYWNHVFQFH9fxhOXUAkpxmVZM4SYoRDZZADebcwPOr3u2SpNkq+Bu
-         m35Fr5b4oiAh4wQMlGaGbV1TcKxEvV0gMFqI/ZOunQqZC+fyWiP1bc2dY8Z7rY3y4XhD
-         hADRCkkKSgvgNUYOdUGRXUsoO81MHnWcpaHH4CiCnxD7fjs55tabkR0WdV4Y5hpv8Roq
-         CCEw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6Ow+4ajAS5X5AldMGDOSK4HpXhDiZMs1+VHJn5jw8dQIR2nlsS4fTNWXSkfiSftfBNYUEtdwH758s90Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJVir8T4tggrkwV+ZeKddMtg/vfbmQg6PY7zAlZMYc42Vempc1
-	ybyyYf1LtMob3c2itV432w2bT8r6KOxBLGMCHtyfMH3p5Z5B3ZICwf8Oavq20OsByEpap9Zj4zN
-	0iiulZX8Aw4GW8QbQ0Gi42NGN7dJxLwdyEdlthF2I/dcnH29/
-X-Gm-Gg: ASbGncvu5Db2DJUYVSRV7eHaQNctKq3o6HdD4k9lphxs4dslZDKBRt8ukGP9lGGZeuE
-	erc8AJS8vaRPtqgoG5eVcIk5810hNXcfIhJ24gqC5kt+rhnCZvRXyt2lBq1Q4iCNqZobE0m4EmA
-	1EZ7W5J5oLstXH/6WDy9cDyg==
-X-Google-Smtp-Source: AGHT+IH5LFe76433BEhCOsz93hsXmpw541f+gjc8j0FntokriJNT3ta3i7KCJ9pJ4v6e9KkWJAHiRLsRkg2/T2I0yMs=
-X-Received: by 2002:a2e:a915:0:b0:30b:fc3a:5c49 with SMTP id
- 38308e7fff4ca-31d45e2fefdmr6111831fa.9.1745915293027; Tue, 29 Apr 2025
- 01:28:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745915387; x=1746520187;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHdRz/EtmBEiEa3gK3w++o5QutFIQ/a6w+5iRyEUy5Y=;
+        b=keYwpGYMm4/hg8kEVwRkJR9xRnqFVtkPSgLPsUzPqW20r8h7t4CNmPsNVydf4uO9ZX
+         qveXTIoBDWNXGozArBUn+lOqC4O7vkefkFrWkLzvdNEJEGFY/ksstnAoCJdZl8sJQ+c+
+         VwDxsWX3wu0tt5eIFezT68l3SxVMs3qWrmInG873gcDNDM3SLoXuCG44kG6bQWM+8oUV
+         wIAK5oo98iRrFY2f9StBgUZothDdmv/2hodOBQWTife6X0ThCnamg+P/bQ7lDS5keHhd
+         IFzp/BuIC8xnXvhM/DSsIHGAsmKvVR6AYfAPejiVXJNBRhbt962a2uTcsoz039xcvlvo
+         K/8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVQS9vyY5R5sBBR17dGE1jhPp2ntyD28zMI4BTCdw1UyEULyO4lkILdC0BtDcYtSJpEzpNhtZw8ALrGiL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9VaE329wolMFyH2dG4ipfwrI+ym6U4BjNO7krUWe6x5H2fNBx
+	730USXdE+6Ia+0+txx/wTSRvYQkhTroR7FnASoHWAxkd1qcnddifnII679k8zig4n6ve/qElUE0
+	=
+X-Gm-Gg: ASbGncuNABZ9TceQEMon1SMWeL6YSe4f/TEU0EKpVyHII9qxhYVQbN7DHE7CSfq8Z6y
+	MLYU93Qmc934XBrQmlq+pI/fSbqXmiIQQJhMVqYgJMBW2lN7YQqRxFa8QIiyf10uJUb+gJmCokm
+	c0tH0jaQr61dSkSomc+2pIpclhFXPXr48ZNtbjR/svMfsgSHJtRuTm+TMwkwL2k7exwifq4PQEX
+	iv/wX/zZ+OiammHBYv4nsFQrbpHCQztPRVuXzC2AfIx8b1IMV4iFmaCpJ8usQSTzPI3voUw0UzH
+	iuyFz9+efkBI50cqlWdNDUAYIUdSzeCMrGC35GWj
+X-Google-Smtp-Source: AGHT+IHtyasg1PY+dWv82Tx3oLvGNB5rgnrxkjELFD38XpCHt8wN8rT0V6Wq89ygKYgaphfBMh3T1g==
+X-Received: by 2002:a17:902:f70f:b0:224:8bf:6d81 with SMTP id d9443c01a7336-22de7022ec2mr33292685ad.46.1745915387470;
+        Tue, 29 Apr 2025 01:29:47 -0700 (PDT)
+Received: from bytedance ([115.190.40.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5100c13sm96762425ad.162.2025.04.29.01.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 01:29:46 -0700 (PDT)
+Date: Tue, 29 Apr 2025 16:29:34 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Kexin Wei <ys.weikexin@h3c.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block: remove test of io priority level
+Message-ID: <20250429082934.GA3896701@bytedance>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-pinctrl_sm8750-v2-1-87d45dd3bd82@oss.qualcomm.com>
-In-Reply-To: <20250429-pinctrl_sm8750-v2-1-87d45dd3bd82@oss.qualcomm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 29 Apr 2025 10:28:01 +0200
-X-Gm-Features: ATxdqUFs24UJ9rCBZu0rld2DCgQQfVXx4UwFsW9Kaw9n5MBKTnSUAjPVfLDjQgc
-Message-ID: <CACRpkdbyZjfU3dh+3Cn+hDr6Pisf9iOQYuN=mAjrE=+OE0fs8A@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: Fix PINGROUP definition for sm8750
-To: Maulik Shah <maulik.shah@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Melody Olvera <melody.olvera@oss.qualcomm.com>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Apr 29, 2025 at 6:02=E2=80=AFAM Maulik Shah
-<maulik.shah@oss.qualcomm.com> wrote:
+Ever since commit eca2040972b4("scsi: block: ioprio: Clean up interface
+definition"), the io priority level is masked and can no longer be larger
+than IOPRIO_NR_LEVELS so remove this now useless test.
 
-> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
->
-> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
-> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
->
-> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
-> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
-> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Reviewed-by: Melody Olvera <melody.olvera@oss.qualcomm.com>
+The actual test of io prio level is done in ioprio_value() where any
+invalid input of class/level/hint will result in an invalid class being
+passed to the syscall, this is introduced in commit 01584c1e2337("scsi: 
+block: Improve ioprio value validity checks").
 
-Patch applied for fixes.
+Reported-by: Kexin Wei <ys.weikexin@h3c.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>
+Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+---
+Kexin reported a LTP/ioprio_set03 case failure, where the test would
+pass IOPRIO_CLASS_BE with priority level 8 and see if kernel would
+return error. Turned out she is using an old kernel header where the
+change introduced in commit 01584c1e2337("scsi: block: Improve ioprio
+value validity checks") isn't available. During troubleshooting, I find
+this priority level test confusing and misleading so I think it should
+be removed.
 
-Yours,
-Linus Walleij
+ block/ioprio.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/block/ioprio.c b/block/ioprio.c
+index 73301a261429f..60364d3faf800 100644
+--- a/block/ioprio.c
++++ b/block/ioprio.c
+@@ -46,11 +46,8 @@ int ioprio_check_cap(int ioprio)
+ 			 */
+ 			if (!capable(CAP_SYS_ADMIN) && !capable(CAP_SYS_NICE))
+ 				return -EPERM;
+-			fallthrough;
+-			/* rt has prio field too */
++			break;
+ 		case IOPRIO_CLASS_BE:
+-			if (level >= IOPRIO_NR_LEVELS)
+-				return -EINVAL;
+ 			break;
+ 		case IOPRIO_CLASS_IDLE:
+ 			break;
+-- 
+2.39.5
+
