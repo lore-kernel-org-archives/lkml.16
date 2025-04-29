@@ -1,147 +1,190 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011028.outbound.protection.outlook.com [52.103.68.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD6324E000
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745948898; cv=none; b=NiP8RbfxtUP0xP8xapfqb+QqKXtierW4/j/Zzum0GC0Zv28nyQFti4WJaK2BThL7SBio0nmxsKQoUoZ/6ikfWhjR6cp+socNa3CfUFka9YYNrZ1ARtKhBzgHFSnhuo37b1AvhhhSkgHz+nwbqbNdjxhVtT4x5PnfUJSG79mzi2U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745948898; c=relaxed/simple;
-	bh=mxs4gTn2N125kC/LvbM1uX3xzjERcFtDjgSQkL8bJtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U1XoDjrCuFX7nmSi6TroJ3c9TBOXAI36Y6p6SgpBlo5tJQ5l91YP8T+T+eUN6eVdKmcY986FrRxDBebPubtIXZO73gpFJLSj3XrLPPDFaedzIdjQi0vn85mGJtuq2n1McbIA2XGlGVr9m2GjVFjebtTGmG50SAQA5gLaqCz9j5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I14MUTE2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7GSiurqq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I14MUTE2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7GSiurqq; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C23B21ABC1;
+	Tue, 29 Apr 2025 17:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745948928; cv=fail; b=Sk7R9z2ArVvSBZVi4LETNErZUsuqw48j0ndTe1z9/eJe/W5OeLZOguCKsxqPtlrET/COGMrPOenWTVPrMuz/GCkdCc56YwX/rxpN0S57RtifsgHwZvO8m/q6pqNj4u2FgDzPsoVkYb1FxQqyIOQwNLrM5Vfi/7wYJRaQxr4WzKI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745948928; c=relaxed/simple;
+	bh=0nqFIwXZ8jYcZk/BcVFuHbwjYJ7NOEx4bi/AKGFaZe4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=T5QclinJdjCOelnVJ8/DVOdELQX2IVFToY8ErfRYeGEgyfvOgeA68ItL0dTyfU9SY65c/NOtuuamlHDbxg86R1uYlGObCbLnFaUgh5Wd3qLxbCrIglQ2O0J5zfYAn9ngXMVe7TdZBdUL/oR600gLMI2ekkxT89IiX/XO+XklTbA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=YQGaXXl4; arc=fail smtp.client-ip=52.103.68.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I14MUTE2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7GSiurqq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I14MUTE2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7GSiurqq"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BA704211F5;
-	Tue, 29 Apr 2025 17:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745948894; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/cZq9dPFSRJYbWR4ZzbhKNrtoDXkEshJ45VJdmC5A6U=;
-	b=I14MUTE2YqQpb0jIjfvbMoMwL/Rfc0fZCRA9jg5nW+8nOjwD+LNmX75+5yIGbZ/T7R/QWu
-	zTlCx2V9bhhZ2GQFHu3ivCFDsDawqOmz+gcLlKDs9ZuJe6nHSa3RcQ6LGBDrOyceF6sED8
-	ZbSOgsYxorVDmWHzD68yjl/102I6XjI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745948894;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/cZq9dPFSRJYbWR4ZzbhKNrtoDXkEshJ45VJdmC5A6U=;
-	b=7GSiurqqZDC1fMc5gNecPW6KuOSSG8wGuYY9fM1886Tt5A0ZtQMYJWCyB1MYnqAcApfr/w
-	7PqtPDgzXaF8EiCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=I14MUTE2;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7GSiurqq
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745948894; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/cZq9dPFSRJYbWR4ZzbhKNrtoDXkEshJ45VJdmC5A6U=;
-	b=I14MUTE2YqQpb0jIjfvbMoMwL/Rfc0fZCRA9jg5nW+8nOjwD+LNmX75+5yIGbZ/T7R/QWu
-	zTlCx2V9bhhZ2GQFHu3ivCFDsDawqOmz+gcLlKDs9ZuJe6nHSa3RcQ6LGBDrOyceF6sED8
-	ZbSOgsYxorVDmWHzD68yjl/102I6XjI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745948894;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/cZq9dPFSRJYbWR4ZzbhKNrtoDXkEshJ45VJdmC5A6U=;
-	b=7GSiurqqZDC1fMc5gNecPW6KuOSSG8wGuYY9fM1886Tt5A0ZtQMYJWCyB1MYnqAcApfr/w
-	7PqtPDgzXaF8EiCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4DA81340C;
-	Tue, 29 Apr 2025 17:48:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KZ7CMN0QEWgcNgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 29 Apr 2025 17:48:13 +0000
-Date: Tue, 29 Apr 2025 18:48:12 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] mm: establish mm/vma_exec.c for shared exec/mm
- VMA functionality
-Message-ID: <hz4fm3vw56ql5oewh2o3qszsqbig3bprx37ere7ch6v7pbgymg@lpusxxq2sija>
-References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
- <91f2cee8f17d65214a9d83abb7011aa15f1ea690.1745853549.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="YQGaXXl4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KkuMhNJp3OoeY85AG/0azmuihPPHLC4XvG94mYVWt8EOD4Fo9FwhFJZKSMUE4EQ5SkUKMSs8vRHrXEejyBNqiSNZWqSYtFZO4qn2GrZFgp3v1e0KzO92UR+v4J0e6HZ7W4WBUT1QvL1nACFLecYTl6pSSRNBGJrKkZJWkEFfdrAtWueFFUTaPPqvCCfAsGRb3k2v2lZxN+dXCeGmQaVVVQAe9cfltheh78WxiMFDgn0Qrhfh5US8y9wg6DdmUZeUIMlhPo1dMDr8RiFGqG5BNn39loH660Tl/mqIKe3x+iplDKGC/r+zPO3J/AOWFaq5NUFFTBDRJrLdvSpFrKFJPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UFeu5dHkTl5Auo0ozfMonyutG7RLs8Ncw5zCpcUMSbo=;
+ b=l/w4vwFykj5GwvqGLQ3siW7Es3e8lue4qLQ16PiUq8Tu8r2CQgYZiJtqLbckh3WtVclh0pfYLM0CUzWGBnqyy9znZXeVpUYU5yNOcxVQY0G4qEWzVdnCdvYE+LE93AdjpOrwoJUuo9MUE2O36wmhjumVagoFfJuAJ9mGQgstX0jQPJUK+Gb7GiulcHGntIra/SE9K9GPw8TxDxA9P4/UoV+OxaRAOR9EVblb9LE2EDZVIrzwVS/m6EEzj6LYTqFb4kF25IY5LGoTGKPIgUII9t/X2n7xgOgN2fKIkq3fLZaKCi20lTkD+G7WSTtoUyK1gneRtwpX6lwD137jHZ7M/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UFeu5dHkTl5Auo0ozfMonyutG7RLs8Ncw5zCpcUMSbo=;
+ b=YQGaXXl42ny2zeM7MWURQzLujeeLdJYJLGx5QNbyyfCzwP+LLavy6SsTGkfuAsIx8oMjfNKn8iCtdpTTsKdjX4E5zPvgp6rSltuTlJhbmNJIu0GHGPULy3cpnNOqJ2OU50apzU2PkGnoOyJjy81ViV3kgDI9l5O9NpiFiEpqnGi+y20vTg73pKXXDL6EwlUgDiNqkrEZU3B2bHpMLTWmR+A6qlc5dGefMw+i+6YE7SFXX37+etZEVGTVFQgpZNOJLpb0PNCcy6mEEYrQfRzZiXYTaQaQRX6gBRaGy2clXZqIixQ9eEsOiXxfHnXgrYDa7nyKp7Ap8nGAD39GNY5sUw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PNZPR01MB4493.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
+ 2025 17:48:36 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 17:48:36 +0000
+Message-ID:
+ <PN3PR01MB959739C774BC0CFB20B9735FB8802@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Tue, 29 Apr 2025 23:18:30 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] checkpatch: remove %p4cn
+To: Joe Perches <joe@perches.com>, pmladek@suse.com
+Cc: admin@kodeit.net, airlied@redhat.com, akpm@linux-foundation.org,
+ alyssa@rosenzweig.io, andriy.shevchenko@linux.intel.com, apw@canonical.com,
+ asahi@lists.linux.dev, corbet@lwn.net, dri-devel@lists.freedesktop.org,
+ dwaipayanray1@gmail.com, geert@linux-m68k.org, kees@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@rasmusvillemoes.dk, lukas.bulwahn@gmail.com, marcan@marcan.st,
+ mripard@kernel.org, rostedt@goodmis.org, senozhatsky@chromium.org,
+ simona@ffwll.ch, sven@svenpeter.dev, tamird@gmail.com, tzimmermann@suse.de
+References: <20250428123132.578771-1-pmladek@suse.com>
+ <PN3PR01MB95971954FC5E026C59B6F8EDB8802@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <1490923bf0b7d5e32ded1393c1f7a3e4e640de5b.camel@perches.com>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <1490923bf0b7d5e32ded1393c1f7a3e4e640de5b.camel@perches.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0213.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::7) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <27e6d281-550f-4c67-b3c7-9d77a3295619@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91f2cee8f17d65214a9d83abb7011aa15f1ea690.1745853549.git.lorenzo.stoakes@oracle.com>
-X-Rspamd-Queue-Id: BA704211F5
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,oracle.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PNZPR01MB4493:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6f47ea6-41c6-4081-f6fc-08dd87461139
+X-MS-Exchange-SLBlob-MailProps:
+	bHQ38DpbEWCos0A2Q6z4vr+EGiiqRFMXUBeIlvMDCh48xmDo0UZ+v9UZgfdveNJXBfg3jwf3juqnF848cW2p4BTOfvqEOob/sU4sVsVFqUAzqIm5idVarfg91Nh7Lu78GU2S4IZEtZVxE/Q+E9PZZrVZI02rWkk5uvDyXGA7T1ee47E2jc6ZhZ6OTNuJ4xMQSnm9Rg1I+2ykZB9++eQPoLMolhCq8oGH6u2z6XpAYRiyxaUixyI7lyZJlxtm80PW4ypD9bXMlKbUCh1VQ1JCsj0Ki9D+R6f6iWrWP4vm9b5bYXYx/O/F2JlQTDGKl4DwsevCo9iPzV7kl59lYNJfgpJ+q0ehgLPG+6D1OayxjOXcuSJUcqa37gZl+2RUrF7cUsIP5fg+lUf6eMeswfVUXUdpTSRsxLxEotF7zwqCdPpALDlBCL4PJ5taHDUTg8Gpj1ZNmmZ1FH6bW6J3f8Zm/9RS4hjj8o8HrRbOZeriMHEPRjm37w/2q6G8rLHDZ9Nl3VTPgVPFZOFmEhpOD3oELTLXRh/cqsaUyvqD5B6+bP2qFGV5EBNNQXbtGpeQm+rQ+dmZmb+PT4eYQ5CKR4rNuR9m1u9WVRkhMOeQGvo8un+Vg0Sl5ilrqCyFOlmwnR588pBqaWzAsDSTwz0g92VtwxzdoBCfnw+EpTMYFP1rPhSJrIBMJ+UOKA==
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|7092599003|8060799006|15080799006|19110799003|5072599009|6090799003|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WTdRRS81YU9KQjRZRTJ1ZWM3b0dITXJ5bnE5aTVBYkJtOXdreE9kS3ZxRXh6?=
+ =?utf-8?B?Vlh2K0cyd2FPdXo2c0lEbFV4SWlscngvbWpmODdWbTNuaUwyM0NBSnM0Wk5U?=
+ =?utf-8?B?MkptSUJIeW5CeEgxbUV3Qk94Q1dXcXh5N2RBRnRhN1RwOWZNa0cyVGtsRlBF?=
+ =?utf-8?B?UlpCUnZXNFBsVk1jdTZkaXlqZkViTm5EUGlKWXFha1RWQ2hEbm5uL291dW1W?=
+ =?utf-8?B?aHJXMERTZnVLbGdabW1lQjQ2eWZjblo2b2x0MzBULzNQUzVlRGM4NVJzaDdq?=
+ =?utf-8?B?bTRXa3JVT1VJRS9wcmRSZDJ4YWNiSENHbHBkRE91RnFtcU96TlpJR0NNbVl0?=
+ =?utf-8?B?bUIvYmVKY3dXbXFDL25TSGN2OUFMcVlmOGVsTjJpVEhVQ3lHNlB0ZW9rWmVk?=
+ =?utf-8?B?WmRmWEZxNG12RllGbVZMOE8yRkN4cUwycWNnYkdzWFFLV1E0NmpmRXRuT0F4?=
+ =?utf-8?B?ZzlWRWlKN2lWRWtZWkt0YWNjM1VicjdKNGpvSmt1cDNrem5UQjRtYUdYbUg5?=
+ =?utf-8?B?ZWFQUkRsQWlXS09rYXkzSlprSEMzUkpyZE5EVDdLZTN2amd0blJMOXkzaDQw?=
+ =?utf-8?B?anByNWVyRVBscjhrbVJmdXVURXYyNjZuVlh4RURYYk4xVlFGdGlSZzA5RnJW?=
+ =?utf-8?B?TTh3TzBLd1QvRm1lNFc3ak9JVC9LcWFWK0lacHRMeThOWFhUVmpsZjZyMEww?=
+ =?utf-8?B?cWF3Z05WK3BPc2cwQ1MwbUZad1VRRjk1VWl0VWVJQkxNNzc3cXpjQjZGMkpG?=
+ =?utf-8?B?MTcvLzk1RmtQSzM5OE1OU0pkOVc1QTFLM2tRTk50UGxNaDh3Z205TFZ5MC8w?=
+ =?utf-8?B?aW5DalRyR1JGSTF6bW5jSGp4eFZaaFo1TjFwUEF0aXB6dDFidjlvVG80R1Ix?=
+ =?utf-8?B?dERFM3hkL2UraU0xV2x2OTFjYzhhNHJFaS9yalFyamp2N1B1b0ZVNU9abisr?=
+ =?utf-8?B?NzZwNXJuRGNhTTY3Y3hyUGFvajV6V0dvdk04eUkrb3YrTUVhRkp1VzVRN3Vx?=
+ =?utf-8?B?QzIwVjhpZmZ0cnMweG1HWElEeDhsMFJXeHNMMVhYTlBwL2wxcWJOaXZDUVpz?=
+ =?utf-8?B?ZC9mR25sbXFOanNOaVdKQWFQbGtHcXllYmxJTC9pamg5NmYyQk9iT0RVSkNn?=
+ =?utf-8?B?OU1LcEcxa2FiQm9mNUlHeHRtM0ppYStUNVFVdDVnRzY4UUFMaHZDRTFEZndL?=
+ =?utf-8?B?ZVlnZDdqWklIdCtRbTc1M2V1M3NiZWNJb3cxWFBJVXVKVEdXOG01LzdGekY5?=
+ =?utf-8?B?cHd1UnRvbi9qMWticTVXczVpRnJ3akZlWHIxbno3N09wWWNPQWFqOTV3TUFF?=
+ =?utf-8?B?bDVhb3V4cmpTb1FXVWdUdk1mRkRmNElLTmtMSHg1eVBaVEdqMzFMMHpHTFlQ?=
+ =?utf-8?B?WEIrbGIvQ1FvSkwxT0V3d2NhaEVXOWNHV2llMXNTUlkydk5zVHRjMzBkdzV6?=
+ =?utf-8?B?dGVBQnJ5RHJUbTdzMHdYTUZod1dzVU5QYWIvQmdrZmtlNkkwWjY5K3U3NzFZ?=
+ =?utf-8?B?UXRXRmxIOEQyN2Y2V3AzNU5vUlRaakQyNU5hSi9aQ3VnM1EwZTdIbldNOFc4?=
+ =?utf-8?B?WWdWZz09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RGRhUnV1RGE1bGVoYTlxazRPS3Y3QndzUWoyaFA5S0JBK3ZOMWNNRnJhVmQ3?=
+ =?utf-8?B?eFYzejBueldsd1QzQVpnZzZ4dS9RdEV5MFF0dWw2REtLeVR6QWFPeFd6VFo2?=
+ =?utf-8?B?SXZDSUZoR2hqRTFmMFgwL3dOZW5ueHJFQ1RPakdOYlZTVlg0dThNd3dTNFRz?=
+ =?utf-8?B?MUNzZ0JDTDE4enQyLzNyS1BMZDFOVk8wQUE2eFpHM2N5N0pSZ2FwWXczeXlv?=
+ =?utf-8?B?aUIrdVpVTnpGc3lTOTJhUTQrUUhYUTVLb1E4NzBWTjYwNDlaa2dISlo2emtz?=
+ =?utf-8?B?eG51bTQ5eDNjZXRKWHJXQUNPYmtKWjJEaGdGMjQ4SjdtdlBDQm44OHljRHQ4?=
+ =?utf-8?B?Y0xIZXh2dE94MEtLZlZPK3RQOGsvQ3QzVWtmUHZ3dkpSanhlMzdPM2ZEcEFQ?=
+ =?utf-8?B?ak1NemZFQmF4anh4NzYxemIvTWRXM0xUM0hCbWR3MEYyZXdnZnVSbUQ5MVRI?=
+ =?utf-8?B?ZTJiSHJ5bDM0SUtoNkpPeXc2ZDUrZDRTd1Jza0dUMGd5SW5IaFptRmZKS3gx?=
+ =?utf-8?B?Q0JDczZsMS83Q2tqVVNnNlNiRDhpSTZrRUEyME5TOTVqVVg3ZFRLbE8xMXcy?=
+ =?utf-8?B?ZFRSajdaT0tXeGFXd0d0NlZnQ0xWUVdhRnpqN25KbUcxSllpMTc3d2hIYW5t?=
+ =?utf-8?B?NTNvWURjSWZ6NzdxdURPdEQvb1o4RmVIVTcvb1dUL09kT0YrRWl3T3NkUmlB?=
+ =?utf-8?B?cWcvZUxNSE9qZ05pME44emZ1d2d5NjdwTW1DZWZobUgvUDJPZis4aTlQckk1?=
+ =?utf-8?B?UHdjZ0VmeWV4Lzkva0FQeDF0b3dsV3ZrZ1M3VlpTY2dSWFhKa3VucHFjQitF?=
+ =?utf-8?B?bEV2ckZidUlwYitkbFZodWttbVpTaTZKcjRNUlVibTlPcEpyb3FXdnFXRXdF?=
+ =?utf-8?B?WHVuWDNDbUdCNjN2ZXRkWHdGYkRId3FhN2xmS1FCZURZR2czR0lYdFpxR1RX?=
+ =?utf-8?B?YlJZK0oyY2F0NkZoM1NsNWNpU0cvbnBxY2FwMFh1NjVSZDN1STUzREF6NmdU?=
+ =?utf-8?B?N243SUZxcklFK2pTMGxIL1dKbzVlNlBiQTJLMVBJRlpnS0l4cVgxN2VndGZV?=
+ =?utf-8?B?S2xWT1BOTmFmS2xiQ3VpUGhWOGRFKzE4bElGVDlQanhoZ2hQUkw3ZFNpZkpS?=
+ =?utf-8?B?YWZUbnBSaWg0Q3V4aFNaS2IyN0FZY0xHQzkvYzNaWkRVNjVVMVFXUDN4RFBp?=
+ =?utf-8?B?SDRZUFl0aFYwUEp5V0ZQN2lwMkxRUDE3OGRObVVOdUg3NWF1U1ZEMGZMcUpn?=
+ =?utf-8?B?cW00MS9IVWtTdmYyalB0akphMm5LTEY5REhPU1hSTXRHeFI2ZjdCUng1Uk1w?=
+ =?utf-8?B?NmtFTzQ4RU5ObnpiMnhRTlVmTzdwZ0Z1d1crLzgrMkJPU2l0Ny9lK3ZjTzd0?=
+ =?utf-8?B?aldWdit5R0t0dXF2bTNJSXQxM0djcUJ1Nk9mdzQxVUg0TVl4R2tnN2dKU21V?=
+ =?utf-8?B?M1BRSkZPbXVDRjVwZmpuRm9mWkM2dExDUFpFYUZJYTZaOVlIcXpMdmEzWUVQ?=
+ =?utf-8?B?YnpnWGhIMXUzQzA5R2pyV3FkYTZTS2UvajQwbURiTkdla3MvYnhNODM2bXBH?=
+ =?utf-8?B?YWhYSXhIZ3NwWGxLWUNFcnVRZkhnTTRWL09NVFk3U0lLTVZSSzBoeDUxMUpp?=
+ =?utf-8?B?L3dyZFV1cFdlQWFLcGxjK1l2WDlBY2cwdzNSOWltZStRd2ZoS2NPZGRySzVX?=
+ =?utf-8?B?R0lIbHV1VWNSSHAwM0JiS0Z5MlpadmllR3NpMGFISDhPbENqVGpxMkpndjI0?=
+ =?utf-8?Q?2vM5MPWdUk1PsqCrc4=3D?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6f47ea6-41c6-4081-f6fc-08dd87461139
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 17:48:36.4970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PNZPR01MB4493
 
-On Mon, Apr 28, 2025 at 04:28:14PM +0100, Lorenzo Stoakes wrote:
-> There is functionality that overlaps the exec and memory mapping
-> subsystems. While it properly belongs in mm, it is important that exec
-> maintainers maintain oversight of this functionality correctly.
-> 
-> We can establish both goals by adding a new mm/vma_exec.c file which
-> contains these 'glue' functions, and have fs/exec.c import them.
-> 
-> As a part of this change, to ensure that proper oversight is achieved, add
-> the file to both the MEMORY MAPPING and EXEC & BINFMT API, ELF sections.
-> 
-> scripts/get_maintainer.pl can correctly handle files in multiple entries
-> and this neatly handles the cross-over.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
--- 
-Pedro
+
+On 29-04-2025 11:05 pm, Joe Perches wrote:
+> On Tue, 2025-04-29 at 16:07 +0000, Aditya Garg wrote:
+>> %p4cn was recently removed and replaced by %p4chR in vsprintf. So,
+>> remove the check for %p4cn from checkpatch.pl.
+>>
+>> Fixes: 37eed892cc5f ("vsprintf: Use %p4chR instead of %p4cn for reading data in reversed host ordering")
+>>
+>> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+>> ---
+>>  scripts/checkpatch.pl | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+>> index 44e233b6f..f79f0a085 100755
+>> --- a/scripts/checkpatch.pl
+>> +++ b/scripts/checkpatch.pl
+>> @@ -6891,7 +6891,7 @@ sub process {
+>>  					    ($extension eq "f" &&
+>>  					     defined $qualifier && $qualifier !~ /^w/) ||
+>>  					    ($extension eq "4" &&
+>> -					     defined $qualifier && $qualifier !~ /^c[hnlbc]/)) {
+>> +					     defined $qualifier && $qualifier !~ /^c[hlbc]/)) {
+> 
+> Probably needs to be something like:
+> 
+> 					$qualifier !~ /^c(?:[hlbc]|cR)$/
+
+ 					$qualifier !~ /^c(?:[hlbc]|hR)$/
+I'll send a v2
+> 
+>>  						$bad_specifier = $specifier;
+>>  						last;
+>>  					}
+> 
+
