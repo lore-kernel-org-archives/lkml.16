@@ -1,62 +1,62 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2D921767D;
-	Tue, 29 Apr 2025 23:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6E72DCB5D;
+	Tue, 29 Apr 2025 23:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745969933; cv=none; b=F692B7FjC1ZmztJDoWDf/AcoK0jbqe5ZOPeQqFAC6ZxSA5fWBhzujQGDAjQS4l/QMM8ANePg0UdekA/VBHu9VnWnc6EcAyO46vtVne+LidDK/rMfo+XcUUWY95e4JkqN5dTp1CWy+4Rz7IRr34c8pZrEKG7OEeepFsQ1HwfWvGA=
+	t=1745969934; cv=none; b=lxP/pXsJQTdm3xHBUBzFEoOubB+T43rAR3vKNUcSLg/6M2P9nis0C5Fcu/HUx9zYX9BKwUxsw5U/8KbXuZHT5kjQ59FGvq04zbM+tcnHqGVwUR3d0oWsxpoLBhlhoo6JFBLUOtoFZrPGohQ8xsCoKrpHh9UPFjP/3v9q/Q8LZD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745969933; c=relaxed/simple;
-	bh=9lfn7Mdrh8XNMBCIBDTXYW/OeN0hzWBMyVinBrI4kxE=;
+	s=arc-20240116; t=1745969934; c=relaxed/simple;
+	bh=Q4DB29dSrYsP+LDqQSDdApEPVzxvdtk+efseOmHmDYE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=feI0nmEgEyzEF+5bDD3XTG1aEF7N0sg0JcY3tZBxddfAXqX1rh/a2yA/wMXrg0ERkdRUAPnI7K80qfWwOofzi0YjywQ8BG+pc48xaD4FkvYHssny6RMCI5FW3TA9kx36meJXMT6v2dBBi7lcuuB0mKtPRCgGUdBIsL28PlVtg9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dZRAsKZz; arc=none smtp.client-ip=209.85.219.177
+	 MIME-Version; b=mIyaQmF1SoSlWBHz7tlziEnAHcMQHwnQuy/HSnJc3QsQEeepNWM8wcvWgEpb1h+q8gMmiC5e+aBDv6n5A0ueIXKRz06dhli+sNCfxWBbSm+IQZSvBW5y0xN9JQacGC6wJ+TGKLz8dCn4CQ+7V/mfMjIdANDkwZq1buk2lZFxdHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HN8sTkWu; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZRAsKZz"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e72c2a1b0d4so6338235276.2;
-        Tue, 29 Apr 2025 16:38:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HN8sTkWu"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7082ad1355bso56756487b3.1;
+        Tue, 29 Apr 2025 16:38:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745969930; x=1746574730; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745969932; x=1746574732; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0qBYzjibBJx9rHZLcTQDEGn367QWHS1A048569h/uvM=;
-        b=dZRAsKZzhcvlY3uKeeyJL+h5abKDODq+ZhZwcWaiElLiiMY4n8jxVQwdMuNJRIIS82
-         s951qOk91u2gXqpYbqdJcXYeq/WZs+2+PkP0+aiMJz2sL+HLH3x0+Asotc265sXgwYp5
-         zP8iC0U+23N+sCPdswsXkIJZlrLX9zGxZv62UzqZM5ltehN+ASYzQ0RBodAn9qlUeVmu
-         BddSd+CmEffUlr4xtznpUHCOUbQi7bnk8IIQbgGo/vfBQRFeUcjotfnWjAk85w38Re+o
-         fn9WYrIRzEzmBxzAhLk3ITBuTyJ4ygTk30ksHHiFGdRmMwWe1XvVFDcBVfNjep/OVFuS
-         2v0w==
+        bh=14KDt7UXK6qD0EIwc8xBiPaJIpnP0mlTkZz3fHF5ExI=;
+        b=HN8sTkWukVlEQwesuSEq5TeksGULB9/iNGatOS7MMyFkHq6gySjlj2Ac/w81ImOoHd
+         xamNYk+O0M7e5lt/mJS4h0N0CDiXx4DpndOrB6y9aJz1DuOTrwIOMrvPsvfIJVjBF8VG
+         lcXo7+xbXoFLOM816GhM7Vhy4S10kooz2LN28Lo/NZkSFW9yd9p0XKQ/ejidM7dleIFl
+         6XElCOfrQj+R5sYjH2qK461kdvNyJ2y8PlfyFUImIkXv5IV2zMutZvs4zUfjngQshXtJ
+         hH55p3IaTGF71+zGHbeFxpaiFQAvZnHLXLys7g7OlXHgiIUEB90OFO9yv6MN+5iBoKVO
+         NGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745969930; x=1746574730;
+        d=1e100.net; s=20230601; t=1745969932; x=1746574732;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0qBYzjibBJx9rHZLcTQDEGn367QWHS1A048569h/uvM=;
-        b=Za1hDRqvgrAKIUz+ECyuJp6RKtgndeA6yTQ9gd7MCs81Lb+w5Jk/AdN5oWbAoav63g
-         mmgQ0pbul1ymAn/vJsVrt1KaSTS8KFhXbrZMGM2rQ9/DS9mYHqrSXMciai572Dus2Qwp
-         1bGM8rxRdGp0pykSu1884xBR+O1Mste5hlPZD8b6hWbyjg3qTaZoZ+aXrOx+xmHSj1Ek
-         Vpe1FwWgGk+/rmrqIiNCTJAw0y12w91eC4bHd8NgAjbci785swNBTEFQ5oUWwBHsSop2
-         TmVS+ji7Flqdvsr33Cpu+ZrqRYdz8apEkL887jfLljUEDA8BnJtGlVFKSHtImZSZ5+H+
-         l6Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbVi3j10+v+BRNbOdsh8DEXOIpZuBkc2uE+xkb/gzPlgJ2G6QzOxbq54lT4MXRlMA9U8iaqj/v4f4=@vger.kernel.org, AJvYcCUkkVRS91W7M4zd2kQ8Aav7EMt9ve1BPUKpJuPcFjFMJcCWOHm08v8UUwRT08bsaRIIsEFcHETJ@vger.kernel.org, AJvYcCWtVaQB8dHbCaJL6eLEoLLd/3iLbprdxIToFAEU1UpHC4Hx2yQ3EOyRSjuls5J89HDj0/Cd8y0/U8fhaj1u@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqSBTqN0nmZ25s3LxVWfCpxq0VNRql0DmHZmTjwMoyHALGmlmo
-	PYrzn2PRQKCO2zNLgPAg9R6g/x4F2rxQySxT8+WFt4iIgxIlzf8N
-X-Gm-Gg: ASbGnctVnfMwv/gkP652sGqPhOHAy57WM8jHqFNYCoYqCSeuzNzXkJ79b02XvyMty3h
-	VtE5VVJLz/9P2Me98LgpNRd9Hod15FIWWx+SXIqz13/CQBNGrE2ChGlO1cabXc6+X6Ezk/51U2a
-	AtWR5YfBS2tC3nPkzIomY0I76JTZv+yfi//o6XVc3Ihdpbit0t5cs04Tn+4XBxCEoaJ0/ZWXWn1
-	U+Mwngysq/yxi0SMxfJVf3EibCdARC/JyBogjOq9lcL+lE7lOjtElii9vQpPrXMoA/Kru7ozB8l
-	OXnGnxeKPimP+82vwLAGti2lnQEqwyTxRW2KHmf7NWs=
-X-Google-Smtp-Source: AGHT+IHdxLhTmtD4Ht9GO+oV1MromZ9Nj3cR1phCcjSOrLEmdVAvEWKlu3ewjdvFFLOqR9mFjIe3Tw==
-X-Received: by 2002:a05:6902:150a:b0:e73:124b:95c4 with SMTP id 3f1490d57ef6-e740412f1e7mr1147823276.13.1745969930578;
-        Tue, 29 Apr 2025 16:38:50 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:73::])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7412e1f0a4sm63120276.17.2025.04.29.16.38.50
+        bh=14KDt7UXK6qD0EIwc8xBiPaJIpnP0mlTkZz3fHF5ExI=;
+        b=cYN30HzlxAbRtV2iDhB59rV2/HdrvPlbCZEWf+vKMX7zh+KHR8izNBkJNFDxYvu8p5
+         AzdkHq/jmLBIPU5Zbi8he8w5iUjLBlyAbUlklhtaQGkpezPlANHF/2Y6DyX5zmcJ6xrV
+         kzKO0HvvWA7ZMoUvxag0/roXP2YheS9yJ4ZlJlSUk3HR1WkqKj1ksfAQDSqSeTm0ZqfC
+         6lO8zOPVJ3GQUPNLBbfdc3g7l+IZ8H8VoSfOWZ/5w+FpG4pTzWaF5H1b8qRO0xDuwvqq
+         x66EdQNtFvQykpcR+eA0WzV4J5Y1tdjOzEZcuoLcX/vLD1+WFvhu0wHZHGo+dQxexEQb
+         5kag==
+X-Forwarded-Encrypted: i=1; AJvYcCUPguLr7eImgbrMrjN7VUMcggTdufOTpEcNAtjMV4NW566GgQKfpiMxCkKIKaomjDFJZ81eNoWu@vger.kernel.org, AJvYcCWOUN09ZVBKQswmM/2y2n7ScG6KHl9yY8w0dzOd2tCqEvGOstYAPPQNyEtxPXU8xoh1B1DZv+pm1SI=@vger.kernel.org, AJvYcCXSn3yUj7pFVKaAmi8aVyINwzBIoZZupkLqd9owEdhgvuN4S/6LpGA12Xc5hkvSO1gOGLY6D+//t/FbUrIK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVmvudE5ANZuXF2u8YzMgGB/waBTQbXWUgT8W5Qouf+EsqXp17
+	zZHHTinTL5x6qL5TWMqPsNvex3qkpOAXlPNSJk5EaRQfmC5qxZYg
+X-Gm-Gg: ASbGnctvq+KeN6ppL7IDB8kgPlbu2Z2WtwmPhtkAy61ea1UQes8D0ojCQj7zFBckOHD
+	F0DDx+C9d7mRAHrn6RGvYrFwol93ngUX3QHPR4KcO+6+VRiTXIYUqkCLfC0W+kxH8Yn9qfvgkqG
+	6fcdAHkEzHzZany4YZyZTdPIPxf3xMXk2s2KaxOmLbx4SMzzBkCpSuzEpQ3tDYX6UfQCfHYG4V+
+	LtuJ96COFozVk8G+FRGeSBKQNeypz/8UGZuZk9BOBk4CaqZjrZw6mlSh1pkDRxJBT7K94KkXktT
+	6M2mOYl2B+sOonhp0UTIPlgwZw+dEBI=
+X-Google-Smtp-Source: AGHT+IFL1V6HRFg2K9+CUxVQ7bHrWgmJ7ZUqXAol+JA4ERhhSJiPwEl2QI+sts6PXu02TZGnUD2BvA==
+X-Received: by 2002:a05:690c:1b:b0:6fe:bfb7:68bd with SMTP id 00721157ae682-708abd46579mr21773787b3.1.1745969932210;
+        Tue, 29 Apr 2025 16:38:52 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:2::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-708ae068ee9sm753227b3.53.2025.04.29.16.38.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 16:38:50 -0700 (PDT)
+        Tue, 29 Apr 2025 16:38:51 -0700 (PDT)
 From: Nhat Pham <nphamcs@gmail.com>
 To: linux-mm@kvack.org
 Cc: akpm@linux-foundation.org,
@@ -84,9 +84,9 @@ Cc: akpm@linux-foundation.org,
 	cgroups@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	peterx@redhat.com
-Subject: [RFC PATCH v2 01/18] swap: rearrange the swap header file
-Date: Tue, 29 Apr 2025 16:38:29 -0700
-Message-ID: <20250429233848.3093350-2-nphamcs@gmail.com>
+Subject: [RFC PATCH v2 03/18] swapfile: rearrange freeing steps
+Date: Tue, 29 Apr 2025 16:38:31 -0700
+Message-ID: <20250429233848.3093350-4-nphamcs@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250429233848.3093350-1-nphamcs@gmail.com>
 References: <20250429233848.3093350-1-nphamcs@gmail.com>
@@ -98,119 +98,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the swap header file (include/linux/swap.h), group the swap API into
-the following categories:
-
-1. Lifetime swap functions (i.e the function that changes the reference
-   count of the swap entry).
-
-2. Swap cache API.
-
-3. Physical swapfile allocator and swap device API.
-
-Also remove extern in the functions that are rearranged.
-
-This is purely a clean up. No functional change intended.
+In the swap free path, certain steps (cgroup uncharging and shadow
+clearing) will be handled at the virtual layer eventually. To facilitate
+this change, rearrange these functions a bit in their caller. There
+should not be any functional change.
 
 Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 ---
- include/linux/swap.h | 63 +++++++++++++++++++++++---------------------
- 1 file changed, 33 insertions(+), 30 deletions(-)
+ mm/swapfile.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index b13b72645db3..8b8c10356a5c 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -453,24 +453,40 @@ extern void __meminit kswapd_stop(int nid);
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 426674d35983..e717d0e7ae6b 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1129,6 +1129,8 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 	void (*swap_slot_free_notify)(struct block_device *, unsigned long);
+ 	unsigned int i;
  
- #ifdef CONFIG_SWAP
- 
--int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
--		unsigned long nr_pages, sector_t start_block);
--int generic_swapfile_activate(struct swap_info_struct *, struct file *,
--		sector_t *);
--
-+/* Lifetime swap API (mm/swapfile.c) */
-+swp_entry_t folio_alloc_swap(struct folio *folio);
-+bool folio_free_swap(struct folio *folio);
-+void put_swap_folio(struct folio *folio, swp_entry_t entry);
-+void swap_shmem_alloc(swp_entry_t, int);
-+int swap_duplicate(swp_entry_t);
-+int swapcache_prepare(swp_entry_t entry, int nr);
-+void swap_free_nr(swp_entry_t entry, int nr_pages);
-+void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-+int __swap_count(swp_entry_t entry);
-+int swap_swapcount(struct swap_info_struct *si, swp_entry_t entry);
-+int swp_swapcount(swp_entry_t entry);
++	clear_shadow_from_swap_cache(si->type, begin, end);
 +
-+/* Swap cache API (mm/swap_state.c) */
- static inline unsigned long total_swapcache_pages(void)
- {
- 	return global_node_page_state(NR_SWAPCACHE);
- }
--
--void free_swap_cache(struct folio *folio);
- void free_page_and_swap_cache(struct page *);
- void free_pages_and_swap_cache(struct encoded_page **, int);
--/* linux/mm/swapfile.c */
-+void free_swap_cache(struct folio *folio);
-+int init_swap_address_space(unsigned int type, unsigned long nr_pages);
-+void exit_swap_address_space(unsigned int type);
+ 	/*
+ 	 * Use atomic clear_bit operations only on zeromap instead of non-atomic
+ 	 * bitmap_clear to prevent adjacent bits corruption due to simultaneous writes.
+@@ -1149,7 +1151,6 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 			swap_slot_free_notify(si->bdev, offset);
+ 		offset++;
+ 	}
+-	clear_shadow_from_swap_cache(si->type, begin, end);
+ 
+ 	/*
+ 	 * Make sure that try_to_unuse() observes si->inuse_pages reaching 0
+@@ -1502,6 +1503,8 @@ static void swap_entry_range_free(struct swap_info_struct *si,
+ 	unsigned char *map = si->swap_map + offset;
+ 	unsigned char *map_end = map + nr_pages;
+ 
++	mem_cgroup_uncharge_swap(entry, nr_pages);
 +
-+/* Physical swap allocator and swap device API (mm/swapfile.c) */
-+int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
-+		unsigned long nr_pages, sector_t start_block);
-+int generic_swapfile_activate(struct swap_info_struct *, struct file *,
-+		sector_t *);
-+
- extern atomic_long_t nr_swap_pages;
- extern long total_swap_pages;
- extern atomic_t nr_rotate_swap;
--extern bool has_usable_swap(void);
-+bool has_usable_swap(void);
+ 	/* It should never free entries across different clusters */
+ 	VM_BUG_ON(ci != offset_to_cluster(si, offset + nr_pages - 1));
+ 	VM_BUG_ON(cluster_is_empty(ci));
+@@ -1513,7 +1516,6 @@ static void swap_entry_range_free(struct swap_info_struct *si,
+ 		*map = 0;
+ 	} while (++map < map_end);
  
- /* Swap 50% full? Release swapcache more aggressively.. */
- static inline bool vm_swap_full(void)
-@@ -483,31 +499,18 @@ static inline long get_nr_swap_pages(void)
- 	return atomic_long_read(&nr_swap_pages);
- }
+-	mem_cgroup_uncharge_swap(entry, nr_pages);
+ 	swap_range_free(si, offset, nr_pages);
  
--extern void si_swapinfo(struct sysinfo *);
--swp_entry_t folio_alloc_swap(struct folio *folio);
--bool folio_free_swap(struct folio *folio);
--void put_swap_folio(struct folio *folio, swp_entry_t entry);
--extern swp_entry_t get_swap_page_of_type(int);
--extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
--extern int add_swap_count_continuation(swp_entry_t, gfp_t);
--extern void swap_shmem_alloc(swp_entry_t, int);
--extern int swap_duplicate(swp_entry_t);
--extern int swapcache_prepare(swp_entry_t entry, int nr);
--extern void swap_free_nr(swp_entry_t entry, int nr_pages);
--extern void swapcache_free_entries(swp_entry_t *entries, int n);
--extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-+void si_swapinfo(struct sysinfo *);
-+swp_entry_t get_swap_page_of_type(int);
-+int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
-+int add_swap_count_continuation(swp_entry_t, gfp_t);
-+void swapcache_free_entries(swp_entry_t *entries, int n);
- int swap_type_of(dev_t device, sector_t offset);
- int find_first_swap(dev_t *device);
--extern unsigned int count_swap_pages(int, int);
--extern sector_t swapdev_block(int, pgoff_t);
--extern int __swap_count(swp_entry_t entry);
--extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t entry);
--extern int swp_swapcount(swp_entry_t entry);
-+unsigned int count_swap_pages(int, int);
-+sector_t swapdev_block(int, pgoff_t);
- struct swap_info_struct *swp_swap_info(swp_entry_t entry);
- struct backing_dev_info;
--extern int init_swap_address_space(unsigned int type, unsigned long nr_pages);
--extern void exit_swap_address_space(unsigned int type);
--extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
-+struct swap_info_struct *get_swap_device(swp_entry_t entry);
- sector_t swap_folio_sector(struct folio *folio);
- 
- static inline void put_swap_device(struct swap_info_struct *si)
+ 	if (!ci->count)
 -- 
 2.47.1
 
