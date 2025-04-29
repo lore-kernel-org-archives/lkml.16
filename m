@@ -1,163 +1,250 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B5B275114
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED2D184E
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745909221; cv=none; b=XSQ5sABqtFxn2sPaEhns3JNRh64MNWGSU2w5/jJG8LtvZmxLNqpDH2NA5BF9AJhN72U5EU3Y09PhvKBYEaHMeMdo/quYy2LNkYKGcbTXLw59ohjHeJy3noY4iM5a+QtZWSaVUdQTNMN06VVwQPHoX/+XOdfsdivgzRMwt9Q300k=
+	t=1745909271; cv=none; b=juKArjgAOW0L7PH98m+Dzf1ahQlrnd4r+jq7BP1/zR4V/tMo8FPCWj+0D8JFpangoYLqNg4Nt1q5YcD7qQbgvkdqCqjdH7IQ4Ww1cnhfQOyN+edJnN3YY/ebx7NJ61VVaK15cY0EgY+RLxtpxOjls3IQq/0Oz36m5DytRplW4N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745909221; c=relaxed/simple;
-	bh=tQU+tJgVddGo0bZ/bNkT49GRl80Y7q0CE1D4ZaVxOes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksCsk+lobT5ucZjGhpn9IUcJTWb/Gm5eraq4wjKU8Qz6fwKvFVohAj2Thc2mVNo4Ien/4d/iXMcuAmO3t1NnGjsxinY7E5esCymvcrWC89fF+dWwt9+t0RO/SRSd7Kv2M089Zmf2X4iXA10rlvu43TuDyqBak9cgrJbdK54Y2Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bolIncu5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745909271; c=relaxed/simple;
+	bh=zU66N6f4F9aXPoAaKPu+AZ3HzgLnJqL06cTiChM6jTU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ex6JhsKcmO9csYpmP6XDxCZ48ZTMURuRrp5edRxPUV6zxm34f3AV41dqIIEv+1J/VCcipkWi/TKkTStew96CubfjfDoV3OQUm6Z7vZAxoHsg+xmeNi6POE4cvQb51RFPEqrnKwSUx2c7oDbvOdvxREqi9Ff5W3EDqRRsEbfxQK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iukw5QAL; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bolIncu5"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq34C012818
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:46:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fXD2/4RoMwMAQOQGCSOHyCUpamVhGvGUtKHG2LOsDSE=; b=bolIncu5OQPUuPaL
-	qYylJxx/SL6MPyUEVmUMJy/rzA7MH3AT2sbSWoqguy0S73DIKGRMqHzUXcu7ltTs
-	PIo1G/rfcbNcULKMzZ+o81pE8s/zmNuYgbtzQ00r781iuOMsjbGjz/dRCprBg12U
-	P/k7AV5Fby1h0ZH7eRWEMw9xIH+fXi+uivf3sgPwR1WE82xiCH471mGI3pn18QsH
-	0f30wJPw7kg74bafHZ8FqlJbea+LD8XSbXSqGJWVOCS42Ub1yU0La29G3Pr4QCGq
-	h7joZdVkDcVwh2oCYymRA8Et6ewwbUjinyldzN27gllqDmBHRPVk+0Hdkvlgqh58
-	tAVnbw==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnn2egs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:46:59 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4770cbdb9c7so109020011cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:46:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iukw5QAL"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ace3b03c043so864101366b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745909268; x=1746514068; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lrl60vz+rZ8vtzjAChIb/BFMt+QrcIIajFlCpafu4jE=;
+        b=iukw5QALDSw//rHFNBR5xmw7Ib65mrRzEPyyTRwO7WJNNWRkX2TlDsPcyhafEy0UDM
+         2FbNbg0QTYOtRwVa6PTIFQPmYCTZGOFojVi9a+GLAaiZk8yUmFdoDohyy/9FO47ewZk0
+         zKmaqNYNTmxVVyNfpP4qiTXVP6yUt3kzoi8tqJNWy/vqQisPckgdmOipMuDgZDThzlxw
+         L+oRor63G0V8r815lBHyQfU83MUgJC5bWA4c+HH1oDiKMP8Dk2YlL8grjpQEBEdUbiTa
+         tfKFrkoFpLka7zMchbVl1zruMio0UGvECCV5VkfN96nsVncfuKDt+4x7F9vrz02VVS6X
+         gA8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745909218; x=1746514018;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fXD2/4RoMwMAQOQGCSOHyCUpamVhGvGUtKHG2LOsDSE=;
-        b=SFByQk9gjLuRv2raC+o6csDheXF7A87IyWsxp2Xltk3IjFYhcRhLqiYho2biN2yrLm
-         8tumuaNBLUa95d3H7ExmBOByvjo1MCL9DwRs2thCDXv7PVXkxy6pJVeks0iq3rgwjTm6
-         WbBHVXU80RV7JQmwQaRTuHpA3ehAko2CpfkfkGKas9hwqCAWQxMwQK+F4oOTVUSxds+E
-         n/a/vjHMIgVkPHoS/yakhcqrDpP2tTJV+3hXPwglKfq/ouW8OzEf1sj7IaKDUxI5yuEq
-         0Hawaoa2O72/EIKk8Yb7l9RgmjmWMV45+kgIeajR/qRPpuD35/r/nINrvcblLgTiaZNh
-         MGTQ==
-X-Gm-Message-State: AOJu0Yy+QZzqeqfczSrZFg9d31EYFQNAILyxI0/U8xjX+wlF0IURQp3O
-	JRaJPt6525AGLHiePj1b8JbOMxGaON0UW3kwwAjoTxOr4XjEvuDzn8q6GW/+vtqltZZ6luFuXtA
-	rbkB7Erqr2ozev2xQwUibNkqntyaeC2DkrHZVVUw/nk2PpzGD4iLCX7zL7MtxSkc=
-X-Gm-Gg: ASbGncv+pmbtoML2s2SNatzl8FRPzWEuLcAXjAcYGPAeGRBN2vaU0uSNXy+oZOjXKl6
-	bPISjVP9WKFzS7xNDLQ56NG+vppaGILQUetIJoxNJEd0gfpM0s5aC4A+eqP8jY3gtHq3Mf0CV+W
-	MBDSiwMH1rTZVaNxD1qkQpihUxQpbXijIM4e0dPmxeeabKDIehW9yI+Rn6yN9zdO+JH/iJQJInt
-	ppyuZOjPTfV0ObpfwnTa/DAqkfg90j/QtewW2thy6YHxN38KQvhENJeTbO+CBKejxSUjDMmpSi4
-	bw+ku7PwaYbTsjgzKf7mqiLRWLTSaw4H4Ubk0o4QCcyXNci7HI5y5N5dQzYiNNVQnFagCabfxko
-	=
-X-Received: by 2002:a05:622a:4184:b0:476:790c:73a7 with SMTP id d75a77b69052e-488682fcaf7mr32643961cf.40.1745909217933;
-        Mon, 28 Apr 2025 23:46:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGK6Va6YvoqH/CzYGmylSrfBRs/HdUH0nb1egjkaNYM8I9FzI8kODYjY4grnbVXKRtCr8OiFg==
-X-Received: by 2002:a05:622a:4184:b0:476:790c:73a7 with SMTP id d75a77b69052e-488682fcaf7mr32643841cf.40.1745909217649;
-        Mon, 28 Apr 2025 23:46:57 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb8a03sm1791093e87.259.2025.04.28.23.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 23:46:55 -0700 (PDT)
-Date: Tue, 29 Apr 2025 09:46:52 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Stephen Boyd <swboyd@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Conor Dooley <conor+dt@kernel.org>, Benson Leung <bleung@chromium.org>,
-        chrome-platform@lists.linux.dev, Pin-yen Lin <treapking@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        =?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>,
-        Jameson Thies <jthies@google.com>,
-        Andrei Kuchynski <akuchynski@chromium.org>
-Subject: Re: [PATCH 2/7] platform/chrome: cros_ec_typec: Allow DP configure
- to work
-Message-ID: <o5xngdkolgrkjp73yhq2gwzyo2koztpqxm7scbf6mfym3biwr7@msvf67d5envs>
-References: <20250416000208.3568635-1-swboyd@chromium.org>
- <20250416000208.3568635-3-swboyd@chromium.org>
- <03cb5084-38ef-4827-9951-f54880ca8a07@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1745909268; x=1746514068;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lrl60vz+rZ8vtzjAChIb/BFMt+QrcIIajFlCpafu4jE=;
+        b=hhTaQFeeOVHq4dDzf4jlTSp0mYrYYAh/0ycN2Ab0sK+d5xxoA7OQX6w0RoJjnPsavf
+         orQHJTGbI2YXmwvYhqsybh7Y4HXppHUEV3tmHW2mb/QlhRBQjHOc6G2mOYptU8O30am2
+         JR16d5ArW1vPI2FS2ku4bIDnnDObZ54K7Xr6ukZ8941P+D1TvwuSy8KQK1CeRaZWGCMZ
+         zbjDKs9bhWcXU+KJpV+2Ps8rIp8pl7UgcGVwwC8VbSrDJ8Sh8K9IJ1U5S/Qw6vXHpbdi
+         Wz6nQEDb7ZzHQYZy1Emx4TDQF0560yfnYEojslokwjp9CnWwKzIxdKeBfEQzQXXADgMD
+         IDbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEOTG1iK49nKgL9mNRlg4f/IzDSn2kh7DDknVd0ttRoJ/UQnU/Mb/nBCxYQqC8o/HgWrM6wzlfh5c0cho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaeYsOqDmNXtmPU/XV4jjdIjG/jNxYYAJmrazjW0VY7My5BLVR
+	HOlAQzcT0tbS0tp2I0SQpEPGqf+qFPCfPPCEmoPn4lM/4Zdo4aaUWumnjwsldLsrDRQzwiQ+sFL
+	/aVV8DQhpvcklOSZMv+LTW8z2xPefE4efOrSw5g==
+X-Gm-Gg: ASbGncv2papesjHWujANJxLrx/Q0M6/Veh6c3kkLYWhH/3VM5jGZ6E+1mwHdylIZ1jM
+	9TQwvpiXUhCBXvsXQy+xIVgJ3uJS2f3j0FF1KnWMRVkPUipR3sdDxOlAtyuwpvTOGxa6BIi8aMG
+	igZ2OPtt+l1BJVZfwMFVVicNtpxWUrksHEAGVzrRhfrES31e/vTkA=
+X-Google-Smtp-Source: AGHT+IH68bqVge8LS3fhLaj43yel0Pa5trL5bBlgIPEeJRLNsTrlAfEWSu2BmTFAO5qoRlaA/ab61Yh0OZDR5aUaxNA=
+X-Received: by 2002:a17:907:7f8d:b0:ace:c3b7:de7b with SMTP id
+ a640c23a62f3a-acec84b7f88mr143641966b.11.1745909267881; Mon, 28 Apr 2025
+ 23:47:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <03cb5084-38ef-4827-9951-f54880ca8a07@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: oZsjrgFrTgVCk4h8OiYE-mt7xXIE4F0N
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA1MCBTYWx0ZWRfX9u2h8Oj2uH26 HcNBDfmK1519LTZ1gya8hv0oC/mEaoXxLJnZ2yQahX9LRTdq92HWjuehIHAnmRqkcl0CuEUC8lZ tdELrWruDaeJsyrAwA0SwwyvWazzNnTj8U9DaK/D4BO3t7iGDTnKeEqcLOBnWlCYc8o4v/VE4m+
- qR4OEwCE+W+rbbSSfuY5PO2y1PVZr2X/yVV13QeN4eLVMhiiUc2hcw7kOu7nPkd3ZidGGpWQEzz IFLAscWOR8xcg2mwSE6Pxmd2L9EXebcc/uN+uq+tZdF4ydIsEHUITuyd4/9F6jjbYvLeryTrZJ9 0KrNnYCfg9Hn6sRPfT8/j8Qf1J8Ks3Z67GuIIPTIFA5+hw/zTPkiwfH2HhfQA8Q+XFMnII4TN9l
- U9vr7T2jOtk/YJQzmGRzSD0BxbHofC1a0dnlLY1drETvE0OqQiZCC62zvR0TSw69zdIquSX9
-X-Proofpoint-GUID: oZsjrgFrTgVCk4h8OiYE-mt7xXIE4F0N
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=681075e3 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=yEET-rYJ_iZV8nkrigoA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290050
+References: <20250418151225.3006867-1-vincent.guittot@linaro.org>
+ <20250418155115.GI17910@noisy.programming.kicks-ass.net> <20250422101628.GA33555@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250422101628.GA33555@noisy.programming.kicks-ass.net>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 29 Apr 2025 08:47:36 +0200
+X-Gm-Features: ATxdqUFxGmGgJUXBbZ93WrlZWr1uURPO05V5jCyPZuBN6vplMvjqQoIyxETnE3k
+Message-ID: <CAKfTPtBmQrGvxOQ6czeiEG+_vq=AKumL=osU+EN9xLkuFBvEFg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Increase max lag clamping
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	linux-kernel@vger.kernel.org, dhaval@gianis.ca
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 22, 2025 at 04:37:53PM +0300, Dmitry Baryshkov wrote:
-> On 16/04/2025 03:02, Stephen Boyd wrote:
-> > The DP altmode driver fails the configure stage because the status VDO
-> > that is spoofed in cros_typec_enable_dp() is missing a couple flags. Add
-> > them so that the configure succeeds. This has the nice side effect of
-> > properly reflecting the pin assignment and configuration of the DP
-> > altmode in sysfs.
-> 
-> 
-> Fixes?
+On Tue, 22 Apr 2025 at 12:16, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Apr 18, 2025 at 05:51:15PM +0200, Peter Zijlstra wrote:
+> > On Fri, Apr 18, 2025 at 05:12:25PM +0200, Vincent Guittot wrote:
+> > > sched_entity lag is currently limited to the maximum between the tick and
+> > > twice the slice. This is too short compared to the maximum custom slice
+> > > that can be set and accumulated by other tasks.
+> > > Clamp the lag to the maximum slice that a task can set. A task A can
+> > > accumulate up to its slice of negative lag while running to parity and
+> > > the other runnable tasks can accumulate the same positive lag while
+> > > waiting to run. This positive lag could be lost during dequeue when
+> > > clamping it to twice task's slice if task A's slice is 100ms and others
+> > > use a smaller value like the default 2.8ms.
+> > >
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > ---
+> > >  kernel/sched/fair.c | 16 +++++++++-------
+> > >  1 file changed, 9 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index a0c4cd26ee07..1c2c70decb20 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -683,15 +683,17 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+> > >   * is possible -- by addition/removal/reweight to the tree -- to move V around
+> > >   * and end up with a larger lag than we started with.
+> > >   *
+> > > - * Limit this to either double the slice length with a minimum of TICK_NSEC
+> > > - * since that is the timing granularity.
+> > > - *
+> > > - * EEVDF gives the following limit for a steady state system:
+> > > + * Limit this to the max allowed custom slice length which is higher than the
+> > > + * timing granularity (the tick) and EEVDF gives the following limit for
+> > > + * a steady state system:
+> > >   *
+> > >   *   -r_max < lag < max(r_max, q)
+> > >   *
+> > >   * XXX could add max_slice to the augmented data to track this.
+> > >   */
+> >
+> > Right, its that max_slice XXX there.
+> >
+> > I think I've actually done that patch at some point, but I'm not sure
+> > where I've placed it :-)
+>
+> No matter, I've redone it by copy-paste from min_slice.
+>
+> How's something like this then?
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> 
-> > 
-> > Cc: Benson Leung <bleung@chromium.org>
-> > Cc: Tzung-Bi Shih <tzungbi@kernel.org>
-> > Cc: <chrome-platform@lists.linux.dev>
-> > Cc: Pin-yen Lin <treapking@chromium.org>
-> > Cc: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > Cc: Łukasz Bartosik <ukaszb@chromium.org>
-> > Cc: Jameson Thies <jthies@google.com>
-> > Cc: Andrei Kuchynski <akuchynski@chromium.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >   drivers/platform/chrome/cros_ec_typec.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> > index 6ee182101bc9..2cbe29f08064 100644
-> > --- a/drivers/platform/chrome/cros_ec_typec.c
-> > +++ b/drivers/platform/chrome/cros_ec_typec.c
-> > @@ -531,7 +531,7 @@ static int cros_typec_enable_dp(struct cros_typec_data *typec,
-> >   	}
-> >   	/* Status VDO. */
-> > -	dp_data.status = DP_STATUS_ENABLED;
-> > +	dp_data.status = DP_STATUS_ENABLED | DP_STATUS_CON_UFP_D | DP_STATUS_PREFER_MULTI_FUNC;
-> >   	if (port->mux_flags & USB_PD_MUX_HPD_IRQ)
-> >   		dp_data.status |= DP_STATUS_IRQ_HPD;
-> >   	if (port->mux_flags & USB_PD_MUX_HPD_LVL)
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+I tested the patch and the1st tests look ok with the changes below
+which fix the copy-paste :-)
 
--- 
-With best wishes
-Dmitry
+I will run few more tests
+
+>
+> ---
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index f96ac1982893..9e90cd9023db 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -573,6 +573,7 @@ struct sched_entity {
+>         u64                             deadline;
+>         u64                             min_vruntime;
+>         u64                             min_slice;
+> +       u64                             max_slice;
+>
+>         struct list_head                group_node;
+>         unsigned char                   on_rq;
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 84916c865377..7c3c95f5cabd 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -676,6 +676,8 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+>         return cfs_rq->min_vruntime + avg;
+>  }
+>
+> +static inline u64 cfs_rq_max_slice(struct cfs_rq *cfs_rq);
+> +
+>  /*
+>   * lag_i = S - s_i = w_i * (V - v_i)
+>   *
+> @@ -689,17 +691,16 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
+>   * EEVDF gives the following limit for a steady state system:
+>   *
+>   *   -r_max < lag < max(r_max, q)
+> - *
+> - * XXX could add max_slice to the augmented data to track this.
+>   */
+>  static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+> +       u64 max_slice = cfs_rq_max_slice(cfs_rq) + TICK_NSEC;
+>         s64 vlag, limit;
+>
+>         WARN_ON_ONCE(!se->on_rq);
+>
+>         vlag = avg_vruntime(cfs_rq) - se->vruntime;
+> -       limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
+> +       limit = calc_delta_fair(max_slice, se);
+>
+>         se->vlag = clamp(vlag, -limit, limit);
+>  }
+> @@ -795,6 +796,21 @@ static inline u64 cfs_rq_min_slice(struct cfs_rq *cfs_rq)
+>         return min_slice;
+>  }
+>
+> +static inline u64 cfs_rq_max_slice(struct cfs_rq *cfs_rq)
+> +{
+> +       struct sched_entity *root = __pick_root_entity(cfs_rq);
+> +       struct sched_entity *curr = cfs_rq->curr;
+> +       u64 max_slice = 0ULL;
+> +
+> +       if (curr && curr->on_rq)
+> +               max_slice = curr->slice;
+> +
+> +       if (root)
+> +               max_slice = min(max_slice, root->max_slice);
+
+max(max_slice, root->max_slice);
+
+> +
+> +       return max_slice;
+> +}
+> +
+>  static inline bool __entity_less(struct rb_node *a, const struct rb_node *b)
+>  {
+>         return entity_before(__node_2_se(a), __node_2_se(b));
+> @@ -820,6 +836,15 @@ static inline void __min_slice_update(struct sched_entity *se, struct rb_node *n
+>         }
+>  }
+>
+> +static inline void __max_slice_update(struct sched_entity *se, struct rb_node *node)
+> +{
+> +       if (node) {
+> +               struct sched_entity *rse = __node_2_se(node);
+> +               if (rse->max_slice < se->max_slice)
+
+              if (rse->max_slice > se->max_slice)
+
+> +                       se->max_slice = rse->max_slice;
+> +       }
+> +}
+> +
+>  /*
+>   * se->min_vruntime = min(se->vruntime, {left,right}->min_vruntime)
+>   */
+> @@ -827,6 +852,7 @@ static inline bool min_vruntime_update(struct sched_entity *se, bool exit)
+>  {
+>         u64 old_min_vruntime = se->min_vruntime;
+>         u64 old_min_slice = se->min_slice;
+> +       u64 old_max_slice = se->max_slice;
+>         struct rb_node *node = &se->run_node;
+>
+>         se->min_vruntime = se->vruntime;
+> @@ -837,8 +863,13 @@ static inline bool min_vruntime_update(struct sched_entity *se, bool exit)
+>         __min_slice_update(se, node->rb_right);
+>         __min_slice_update(se, node->rb_left);
+>
+> +       se->max_slice = se->slice;
+> +       __max_slice_update(se, node->rb_right);
+> +       __max_slice_update(se, node->rb_left);
+> +
+>         return se->min_vruntime == old_min_vruntime &&
+> -              se->min_slice == old_min_slice;
+> +              se->min_slice == old_min_slice &&
+> +              se->max_slice == old_max_slice;
+>  }
+>
+>  RB_DECLARE_CALLBACKS(static, min_vruntime_cb, struct sched_entity,
+> @@ -852,6 +883,7 @@ static void __enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>         avg_vruntime_add(cfs_rq, se);
+>         se->min_vruntime = se->vruntime;
+>         se->min_slice = se->slice;
+> +       se->max_slice = se->slice;
+>         rb_add_augmented_cached(&se->run_node, &cfs_rq->tasks_timeline,
+>                                 __entity_less, &min_vruntime_cb);
+>  }
