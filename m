@@ -1,259 +1,143 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D14215F7C;
-	Tue, 29 Apr 2025 18:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745950868; cv=fail; b=GThdlGiKruIrokTcjlG2thHXqLEXKHi8F9ZP132QazehtULQyhJSVW32XtI3pbAZAKdO/knH+JY/eKM9f1VylUpR9sjvVWzGyr+hwvf7GO1yZos7pwBPWpwdKUL4AT4kJSAbS8VJ2PWiLGsJh/SMpdS2mRCMLSvDBjhYMIY/ysI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745950868; c=relaxed/simple;
-	bh=2v1sVJviT7edIUayrpZlB4AQTyZRVm9Ptn3CJ2OV8G8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dEOkgOh6qKqRH05P4ANNKQSd870LDCtq51LUTWSyFWAgSmJIsos6SOxJ8vzpGsDV87fWzgL5NzVtN6LMQZFY/eA2KfK3JH65I6GQXwLVdXstdMd5MZQkVzLWBDGbE2ijH+AwHR+K1l9stGgGUvzkCeGaLUpvaVcQU4qIvgyNkyA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4UFjTb2q; arc=fail smtp.client-ip=40.107.220.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79DC224234
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745950894; cv=none; b=udl7mAS8QTKTEObTPLb6CdEtDbWkiBPDLsvxfaQnsV+1DzSk5WqvY4zi9ACQGCPhhHolnlNC4nyZQEmwhJwUA5Hm+hNW6bpXufasuLY8OjfZTs4C29KZhQRX7Fz6bMzDQjiBejOSkyfkRGmcKoa8efFmwxOY3GZ4xwUYlaKsGxE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745950894; c=relaxed/simple;
+	bh=RdP3O/juRVH9lxADbiwNKQ/bCCrReDlQbPwIO3aDojo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOimJY7sGJMlrQAXqe2oHXQAidhs4D0NcGTMJqE4ieeAT4Yh6+Fj21QSZLlifgA6BmaSzq9fgEBGEXvNZBhifI5IUbcIG7Jxq6+2PSK1aIR57pwA44qGLnwblEqNuju8CLbtTzWJ6zj3UQIdXI13XRU0nDExl/qnOWMIXZx5wug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AOTpAYgx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4UFjTb2q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ejcd/9F23dPVwCayaWWhV14k9/ub6nDTqNPZ/ZqRoTZ36FJI7nNCjE6/WkA+X2y1AUrapzO25yBD3IBKAFEM7VWUrz1BcXYDE21v4cD51oz+DiGm8n+mmUCxPNGARc3apUXE32po0r51EGCe6rRbBnUzkeHanN8vkoX8IFrKgdwWvQa9xf01Vcg/ke97quC7FOJtGyrGrDaWBURDlJzBqoUMzSg38/nBXsA4jlxt05GWzTVVpR/TsJOAXMx/gNiQMUqkqMA6VAkxTxIioqVZ3o4mfqY4lUe6eztqmU+jkjlh3f3tcpxySu/r1M5YQnUbDgTyHgkfmlwUTUanMvv7oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ek6W4PErRfhVGTa/r7p36hxCDJV5whLv8VxpM2zV3eQ=;
- b=cNJSOYZMqyr7yzLYFwSMeOYf2Wa4ZvJG6yXjqF9YVzwapWB0jeJ5SxoKgoIpK65A1UlGLXoarKdOl+l9sugWh9Yfl1KBrW/6/vKMIbC/Hj8w79sq2NTVPpfXaM/MzxHN6z7iGyZ410e2mNZYfWqqnz2LNuEQ1Lkcb4bsAnMM3r8Q2CW5wMQwvTe5g8xJhlB5ExVTm+YYMLZ+C7WNeyglkti+9kGQwNAX9HE3Z3cQEC3wy1mMWaodzZ4+w3F8j4ZmbjNTaJAW5Va8InGFdME1yVpxNBiB8iBTgqmKHxl/6a1OzkrApgsj3fZ74UEwwA8hvmH88ad/j4uNX47v/+GKTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ek6W4PErRfhVGTa/r7p36hxCDJV5whLv8VxpM2zV3eQ=;
- b=4UFjTb2qh5hhfZQEf3YndtQ5rDYlfHqL8Xn9WQx0wWuxdAZVA+q1CfHHixRObxz+vYKMV/bmW9aAoip2Lq4BkatBhVCS6jChc3fyksUonR3mpLExUMOo0090AzftUeoCaVsY8HJvTY1ThpZJ2to1p58jQEdv5l7+nNvHQ1OAfe4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- SA1PR12MB6972.namprd12.prod.outlook.com (2603:10b6:806:24f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
- 2025 18:21:04 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
- 18:21:04 +0000
-Date: Tue, 29 Apr 2025 14:20:55 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4 v2] ACPI: extlog: Trace CPER CXL Protocol Errors
-Message-ID: <20250429182055.GB76257@yaz-khff2.amd.com>
-References: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
- <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
-X-ClientProxiedBy: BN9P221CA0010.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:408:10a::13) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AOTpAYgx"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TA27nG019654
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:21:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=PmqoRG464qsnj0pu8T0c6779
+	M0hEG7ElmjAzQA6sfi0=; b=AOTpAYgxnyRsVZRjLRr7VXvigdkz/UwUlNRZ7MPu
+	qniHDYs5yr1d8BtuPkqTU/sBWuvBH24kVXmSiAqdM48hGYNC4P9TGyHn4S1IPOX+
+	bq5POuQZNvTrrtzgMxXGeXI/mROs3WLNUUY57vTXMmGHoH+Df/y5qSo0hzxJSH4B
+	HFaCBTDHCvcxGStbRR225+2yGvR5unAVw26dMVzYFlMy1RqDaDxtBzHmuAqJViDW
+	d3KX+41X+sHKyBPn8ZTkwNo8bFBhWuqnR7QVQHHnHuGos4shhcyJs6QQBL5g83Qy
+	xJChDYWnI9F2bIYsA5+2advFxHyL5VdS30mWOZS9y7UzzA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468n6jmsuj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:21:30 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5cd0f8961so1255180585a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:21:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745950889; x=1746555689;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PmqoRG464qsnj0pu8T0c6779M0hEG7ElmjAzQA6sfi0=;
+        b=DOt+HQ/cC/eDNR71cxFnP9wPQyWQoXa/j+l2hdtFpHnt4xT9qbcgnTA8n6YcpTI0F8
+         DlXtldTLfvqk38CQjA0oXIwMhrbYyD+haRXtsYPFebKkQnZJnbSwQC5N0xLEXmQMcHQ4
+         tJ4fzok+AhwrrqNKWLUfBwsfyoNtuwBj0vwVbsXyPzQpXOnwrm0MRafZm003jjbFpTty
+         OsZC0ZIZEqzPjWClSgYdHus9Vd2UIctZNBs++oRLZi6mvR9tQUdX+XBNdpVeli35sW1R
+         AWuNW6BqdivHuUZRLrE1awkMejHfvBhurAwurU/54DsPGq2KWNNMFwublU16g4qfNW9e
+         JE/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUHHt7Sz4moSyAKwd8XvG2/zCT8y+K82S02QdrfuJynnFhEv4SUJ1Njv7Zl5eG4B+QGUhfIxQ915hamHmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqMmUX6sHmteZP0TRH+DBSvm/mJq3OjDq6ZzT/7WQPVjkOgzmO
+	9BlSX6f/J+pxJFGZVcsnHKqRh/63qvfk1YXWKX4nQ2q/BBCOSX4iGiauLKzKAcbrqBsS9gkYUnN
+	ZQTTdiPYws+1MIYz7667Y6V3gBnTVfR2D40j0Z8/jQ0OViTu5caoJ4QwZF/u6gQI=
+X-Gm-Gg: ASbGnctpyfg9Yu/tK+LExfVQeGBreOjAPU494in2MoE+47ER9pjcmmbn3ad47FbVWiE
+	8xGi2uQUdwa/rLRXQ+Mb2Q7qOAGpGYXaJy1npf7hxnNZQepUqCoa/Zu4XleBpelCi8nAN1AX1rD
+	u1aQCn2tvdfKUJDcXhQmIvGRNWz5a+FLLsZ39gl7/DMs8tGrHHCZ962BOohGOQ4jTWaLm3OfJJk
+	kX450Ars6EkAuXTWOZWrERFWghWDslctD9kaJwjV7MvUWpJxyvroaUEpi+UjnMnLnFWFVkWfD4A
+	hvKGKCPfJ5uL6TyIjQTF3LgsXAsKvq2VQnpnPzVM1z7d4FRDwwmDCcas5zcj1ssR4gYot8v9LC4
+	=
+X-Received: by 2002:a05:620a:c4c:b0:7c9:2612:32d6 with SMTP id af79cd13be357-7cac76deb67mr10119785a.48.1745950889447;
+        Tue, 29 Apr 2025 11:21:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpf9hzPxO+ornriQj5u2UWfhmL7wM+Z3TXsQc5Mtvy+HyZAWYphfNSkz3n79ilJezodpQzrA==
+X-Received: by 2002:a05:620a:c4c:b0:7c9:2612:32d6 with SMTP id af79cd13be357-7cac76deb67mr10115885a.48.1745950889098;
+        Tue, 29 Apr 2025 11:21:29 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e8fd2d823sm1322651e87.194.2025.04.29.11.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 11:21:28 -0700 (PDT)
+Date: Tue, 29 Apr 2025 21:21:26 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: Daniel Stone <daniel@fooishbar.org>, dri-devel@lists.freedesktop.org,
+        daniels@collabora.com, helen.fornazier@gmail.com, airlied@gmail.com,
+        simona.vetter@ffwll.ch, robdclark@gmail.com,
+        guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+        valentine.burley@collabora.com, lumag@kernel.org,
+        quic_abhinavk@quicinc.com, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] drm/ci: uprev mesa
+Message-ID: <rrrquzr4k64e6b74g4foio7z4pltfx3oxrqbrrw5w3frlmyzkd@x45yj42sgplt>
+References: <20250328110239.993685-1-vignesh.raman@collabora.com>
+ <20250328110239.993685-4-vignesh.raman@collabora.com>
+ <CAPj87rOPHqLaFn3r4rkeMMrQ=OSRQUJ2LLrQ4ZDE6eA1S6zybw@mail.gmail.com>
+ <3a3107d4-cc59-42ff-b3f8-2280a357208b@collabora.com>
+ <4cac94b9-2445-458c-a39f-5eb72537d6f6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|SA1PR12MB6972:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3d9f047-d61d-4999-6250-08dd874a9a2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wue69Ng4sHVypIHb6V63ms8JQNDUKcG39w5qehmULk7UPFgjC7cD4DPaFdCj?=
- =?us-ascii?Q?FbNR22bGLA2967iVghU53y2p+Esk+dNpxUbA5Cfi2iY1rM1lCJJd2sGKXo1i?=
- =?us-ascii?Q?gDfjloAnixVHtvKsH2yvqKCCkm/44nHkvuphCR8IcLyxs/PVnFLeYcfM0mr/?=
- =?us-ascii?Q?hqJB98mPTtrS9vdh2EYTw8jCvqedfBfLX19eUM/4Z461TS628HCM+3kWIWCn?=
- =?us-ascii?Q?gps1fQXZmP2YEu4FJhhzz6Cd3ovirIX05/7n/Qszrwg+CYzzadDw5q+PJFvm?=
- =?us-ascii?Q?BfwuEUBYHuTWqssC97X5secLiijHqyEWp+tY2vtb7uJOGPMA6gDCvaLI9JvQ?=
- =?us-ascii?Q?y4o1sT/a0yFBtl0qsuXqZwMF4U05G5i8N99DejO8TLc2I7P6z+fcCQ/186U9?=
- =?us-ascii?Q?q6Pxq9CyBhI9sgJYhj2TVoghrNEQxlAxRz5xjshvVaQ+aYLZw9XllgOPxIEg?=
- =?us-ascii?Q?Zp1YWINgOu2b+lM9y5lX/AHu2q4zvk+HhFOzzcc0fh2OjyFSADdKD3MFTXj4?=
- =?us-ascii?Q?30VwPhEmKgy7cDnspVisDN5R3ie8vRak5ex9Jx04DAqFg2eRWbDHG8B0J3zs?=
- =?us-ascii?Q?aTGe48s+eL+ggseMoInqWbLpClxQV9WFINeDQ+vA8EMT1nypMzgiSIy5uMMe?=
- =?us-ascii?Q?gispA+sJ/Uk9mWOalLgNYAAhrvdaA4ZTUScw5hmttYmWjdWuGEkA7v+j2OYn?=
- =?us-ascii?Q?M6jRq4YVfZ1UOOZjT+uBvAB4MNTIPA89M2HIzyuA85E6ZSduZfNC9gTtCej8?=
- =?us-ascii?Q?baG+XQoWFgw1yAv3u7RPx5ank/iMz+3Gy8YpJ4NPZRtfnqTVxQBwioN98pBw?=
- =?us-ascii?Q?4GFFli1Rz5wbTgO3Qgl3FWyKbg85PXkmmFnsG/ITwxl0RwVF3gPON0WCCzod?=
- =?us-ascii?Q?4qW4AThlTn/ddvmU7UnjeqZ/5vEOtOKP9Cm4SWp97off7x/kuGv6JsdHqKyj?=
- =?us-ascii?Q?FTuqQvYnmt5Eg86Zakc2Jhe6YALhmLSXtW8ga027fqhVDV3bJmXu4DCY+DIS?=
- =?us-ascii?Q?UWPenNiBmn87+nyUkjo8XgeObwfoH/i35QfC9HkZftIVtpZCx2dUev39BwhZ?=
- =?us-ascii?Q?T0VQNw7PE5i4xSqdqe8miqipiNmA/mMR8FfTQlwhVPnPo4+6igFstDecTRcu?=
- =?us-ascii?Q?B47jdlrEYIh7B+rKLwPGGSsyX1yGqwOUKKujk2KxWdO2UcEuUyVh2e1j0/4b?=
- =?us-ascii?Q?OeSJTkRzDoGlnvrkmUFSd2PA1fs9bmyGF6j6/3K9VblJ28F6Ry63oa6X0ayG?=
- =?us-ascii?Q?0qNxj7W05wg5DI9LGFIAfNG0/eI6cnZ7Q4wCfL6ocvNRcXCpsRN34UDVxqYM?=
- =?us-ascii?Q?gmMlvgWZvc1s6fvAKU5+ZNxciXrfwypmXi4c+4HjXazvh7KzvsJ/7kkzd/SM?=
- =?us-ascii?Q?pBk4w8ojiyBJteM6hLLs6vHQGOpw5uyOVLmwnKcWwk2HWYrqSF+Bqilmxdsn?=
- =?us-ascii?Q?Se4Fwhn2vxM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GkfKwJHu6ha0zJlZFgSlx3vEFhaI7bG/nJRDNnL7aS5usDWxR7YJaWV5ZDi3?=
- =?us-ascii?Q?GWICRwTxwZddBTzTSiu83ktNSisOUlRaZPHadwzmGNHdJn3TA+jWwHRHHaRc?=
- =?us-ascii?Q?LIVseRYjogb98gAkVqIypZ1debsPJUMIa+6qPi44mpKhECi62Ii85OPVy0Mf?=
- =?us-ascii?Q?CJHvpDwB93dOKNc0CtYGLO0SMOX2jJ17frxK5D5OoWOVs79D/HXIZNfaozJw?=
- =?us-ascii?Q?VQCZN9el22EkT8PaKvJhS8bzQDvFbfODuzk0QMfzjvoK+WbjkmijGtTF8+Pb?=
- =?us-ascii?Q?kLT99BNIZUY0Vf0MoIdKyUec9A7+8iv8JD8XYE14z5x5O10jOW6lwkCs8Y1B?=
- =?us-ascii?Q?m4SP5RFcR4JFvTyids8t09h+VcVrskuHJHPk4LhRSvhwhn4HVm4GwxrtLDcr?=
- =?us-ascii?Q?wnGFkThYN4MOadSY4ASjqhxarP/p92Ex0OqtUq2TL2QSiuRl9nC43cTiMPip?=
- =?us-ascii?Q?/2JW0H7FgstWSAPK0uVgxYsNpjqidbCRaEoZAPY6YtElsEYxi+g4ZeBIMv8y?=
- =?us-ascii?Q?fsuFTHGntWJyIkmtUZFAaMLwPD2Jwvm9cqrPgIR08dsskLVAQJBecQk2/ZKG?=
- =?us-ascii?Q?3x3RI26F3stgjkL3gDofGyqRKYDTrazrJHUZtgiafpCC+oDZm6iGjQiA/+51?=
- =?us-ascii?Q?GlJXczmmSjykWWDrCmKI5ODeGxFke2wkEBC41netsU8r1d9gmEV2QBGGThyj?=
- =?us-ascii?Q?jUXWdPBPIpCK0XeB+R903/L8N8cvn06BX6+xbDUU+nq+KxFaf5Qgy5iGZNpy?=
- =?us-ascii?Q?03PoqGoHav923bqCKL9iW/cXLXAaqYDkhLk88+I0FboUVJgnDj9utjuVSgyt?=
- =?us-ascii?Q?8tAar10bM3j5nSW7aF9lChxZyirpIbYyD/IwP78K2xz0xasTg8G2AfimeVmy?=
- =?us-ascii?Q?zRaz8+ow5Fi2qevLxsL2cHsy1pDd68EjwdcK6PqbMphZI28Gq0WcNnTmotI3?=
- =?us-ascii?Q?bCRr7tYC8DXq4jxTYXJ8I2q+Li4Q7v7Yf3mUCmmEFlIVtlFUQPDCYjJEN/Mq?=
- =?us-ascii?Q?i/FuFLANlpsAFgn3yxuHot26E8K7rmu4fMYq5F7ixChjhCCSWFf8tFi5pg8o?=
- =?us-ascii?Q?EXhPzv1D8r0GqIR6/+9vkVgHv3OE5CVl3dgUYajsFy0hI1Q5VWDzmG6rItUi?=
- =?us-ascii?Q?uQ802K+QAFQ3AkA/UfqcALu5d6tKv+ZHZrvH+Hu9JGhvCiTTOxshSDqMYI1E?=
- =?us-ascii?Q?rpPOTqPc3uxW9tcxHg2O9HoI48DEp4rKl3yhux12f+glo7x8rDvtP2AtGzsM?=
- =?us-ascii?Q?0IbuGmnhyQ4Lr5FRwIIZmznvC7Wceeb1QK1bxumI00kWqSiOh5YHDQG3MaDk?=
- =?us-ascii?Q?xO+lr7DSCCx698JOIH1CYBaZXafawG8B5RjYh4DlLlcsQWqqFZSMzV7Z3kSy?=
- =?us-ascii?Q?6oFjdn1u6ANVFHJF6lMpia+J2mi3qLI/ftQ8fnQIckR4Tu2lMg1jtCTaUG7S?=
- =?us-ascii?Q?Xacdaho9FnDxTVNOXg1PvEclFC2reCaEb8kWw8Y6WYl8F0BTTajY2u9+/VU+?=
- =?us-ascii?Q?EoLRZXskicULVv093fjGre9y64/H6+WBFuFowvk6pKtXyLLMyh/BioNjqpjG?=
- =?us-ascii?Q?lssZEmSgbsPOuN8Tt4ybPZePo9WKhe4AU7Q5/uOZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3d9f047-d61d-4999-6250-08dd874a9a2d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 18:21:04.2429
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: laaN3aYzvucdoM38teJrU3r3XVnjiqYTca95P9QHhKXue4oL8to20oCw5KyJPpo85gyrSA1C1oG9z3Dqq5hx0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6972
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cac94b9-2445-458c-a39f-5eb72537d6f6@collabora.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDEzNSBTYWx0ZWRfX6+RyxeTmTj0c ufT0T5Cyw2H3AtHkJ5aT9wTXcJxgYxzPAB9WfmNI58/91epF+7i31xuirfp1YRZQfU04bZG85Am 75lnGC5Uso0DadIo0dItKXqyynJiWSSpLHBCd3fumWQh5U7b76Et/90M7ehzEst/dT9/VCgZ6Ca
+ qQPvMJjKwPSz8aEiRBKjYyVtIIIQSznZ3PFo2t1hL1wGbwDi3mnygio7M9xNuUeY6h3IocVn9SV YhINoUtNf7ATiy3RZGH95U+GmV6/9GSoP6Ku+KR+mdU+Mmqc10rn6cPww9HLgrlpRTthM1ef/Cg VaqHKsDIRTsWtcZZZPivIpOFH2Q0wJxr/3M+aKJkGRSy9kQOfXIr03LvFP1JhLjcWF+nBezbiTz
+ k8WKwF7fk28QIQMGYiI2CrKcZ2S9dEWHoeUkDP1Jo/zOZKLfPq6BGQuiU6MNtk1ENdUT0YHi
+X-Proofpoint-GUID: TPe3BUPmO3eCENWVKH3FYsvIP5EZsItN
+X-Proofpoint-ORIG-GUID: TPe3BUPmO3eCENWVKH3FYsvIP5EZsItN
+X-Authority-Analysis: v=2.4 cv=C8fpyRP+ c=1 sm=1 tr=0 ts=681118aa cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=QX4gbG5DAAAA:8 a=xA4-SxEZz4SaK2JE-80A:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
+ a=AbAUZ8qAyYyZVLSsDulk:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290135
 
-On Tue, Apr 29, 2025 at 07:21:09PM +0200, Fabio M. De Francesco wrote:
-> When Firmware First is enabled, BIOS handles errors first and then it
-> makes them available to the kernel via the Common Platform Error Record
-> (CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-> via one of two similar paths, either ELOG or GHES.
+On Thu, Apr 03, 2025 at 11:29:55AM +0530, Vignesh Raman wrote:
+> Hi Daniel,
 > 
-> Currently, ELOG and GHES show some inconsistencies in how they report to
-> userspace via trace events.
+> On 28/03/25 17:29, Vignesh Raman wrote:
+> > Hi Daniel,
+> > 
+> > On 28/03/25 17:06, Daniel Stone wrote:
+> > > Hi Vignesh,
+> > > 
+> > > On Fri, 28 Mar 2025 at 11:03, Vignesh Raman
+> > > <vignesh.raman@collabora.com> wrote:
+> > > > The current s3cp implementation does not work anymore after the
+> > > > migration, and instead of fixing it and propagating the fix down to us,
+> > > > it's simpler to directly use curl. Uprev mesa [1][2] to adapt these
+> > > > changes. Also replace broken s3cp command with a curl wrapper call in
+> > > > drm-ci.
+> > > 
+> > > Thanks a lot for fixing this. Sorry the fallout has been so bad.
+> > > 
+> > > You can also upgrade ci-templates to get an s3cp which works again.
+> > 
+> > Thanks for fixing this. Will use the latest ci-templates and test it.
 > 
-> Therfore make the two mentioned paths act similarly by tracing the CPER
-> CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13) signaled by the
-> I/O Machine Check Architecture and reported by BIOS in FW-First.
-> 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->  drivers/acpi/acpi_extlog.c | 60 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/ras.c     |  6 ++++
->  include/cxl/event.h        |  2 ++
->  3 files changed, 68 insertions(+)
-> 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index 7d7a813169f1..8f2ff3505d47 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -12,6 +12,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/edac.h>
->  #include <linux/ras.h>
-> +#include <cxl/event.h>
->  #include <acpi/ghes.h>
->  #include <asm/cpu.h>
->  #include <asm/mce.h>
-> @@ -157,6 +158,60 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
->  	}
->  }
->  
-> +static void
-> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				int severity)
-> +{
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
+> We need to update mesa to use the latest ci-templates and then uprev mesa in
+> drm-ci. I will send this in a separate series after fixing it in mesa.
 
-Why not apply this check on the function prototype?
+Vignesh, Daniel, any updates on this? Currently drm/ci is broken both in
+master and in drm-misc.
 
-Reference: Documentation/process/coding-style.rst
-	   Section 21) Conditional Compilation
-
-> +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-> +		return;
-> +	}
-> +
-> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-> +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> +				   prot_err->err_len);
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
-
-Is this a requirement (in the spec) that we should warn users about?
-
-The UEFI spec says that serial number is only used if "CXL agent" is a
-"CXL device".
-
-"CXL ports" won't have serial numbers. So this will be a false warning
-for port errors.
-
-> +
-> +	switch (prot_err->agent_type) {
-> +	case RCD:
-> +	case DEVICE:
-> +	case LD:
-> +	case FMLD:
-> +	case RP:
-> +	case DSP:
-> +	case USP:
-> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +
-> +		dvsec_start = (u8 *)(prot_err + 1);
-> +		cap_start = dvsec_start + prot_err->dvsec_len;
-> +
-> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> +		wd.severity = cper_severity_to_aer(severity);
-> +		break;
-> +	default:
-> +		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
-
-"invalid" is too harsh given that the specs may be updated. Maybe say
-"reserved" or "unknown" or "unrecognized" instead.
-
-Hopefully things will settle down to where a user will be able to have a
-system with newer CXL "agents" without *requiring* a kernel update. :)
-
-Thanks,
-Yazen
+-- 
+With best wishes
+Dmitry
