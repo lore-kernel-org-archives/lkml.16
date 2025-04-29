@@ -1,126 +1,119 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863602192FE;
-	Tue, 29 Apr 2025 15:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C6C24167F
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745942195; cv=none; b=Jb1bwN6pveqNZ7oOalDsd8I8JYChrV+jtL138vrubNhrbLMG8N49hBq1pp/sPJMW55YBam0IFvxjG4S9Xam3mia/gFF4oDgAe7vZxVXugjt85BOMqXQE9N6YwsdQIWVBbLX59i45QY/CrWFhmCMvsXpMdyX2x64CrRuZeUfQmRU=
+	t=1745942199; cv=none; b=ikfgDbLwLOwx1gSQBTK85AZ1f3DDMzDdsQFZdSjBNVHXy2oOQF+PHxEpKO72NP1H5ycMx7yfMYnLFLApSUcHp3C9ixg80rwtWyikHH8fPI3MHvEZm0IzOqfNDRAcVFZdJLW0qF73mBYExb0gCdWhzj0SH7iRYi3mExhBDwaPu/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745942195; c=relaxed/simple;
-	bh=8nlWf1HiNlIJd2ze8hcxNAQkxKpTVs533PFedLOHUI8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=f1NMtuITuLQj92zUXlnFvRUkSvF0X8W757bndhzuKfZY4kS37RhQ6eBVELBAKVkM4VRqJK48XNkgqCW2PFBbd/g7Dph/2s30BHPb7OkxLkpguLat50SyY9q76NvHVuTgdytCLHWbUyL7+1gLYnBjzAIg5LQ2w1Ikewfj6KBrNdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=mkSdYvRc; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1745942199; c=relaxed/simple;
+	bh=PksiWfpMfxllb9cMtMeDE5xqZSJKQGuK3D2npFWtovY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N39S6pP1ep/pC4fqFTjODihydJajbVLTusO6DLzHN1lWKm70Pd8d49bGcdV+4H/9aO8Oqecd6HPNkmkEv9pJ+dE53PA6dcYwDwYKbD8MBCAyXmx7MoZ5oo7ywbQf4V8pC6lCuMF9orQcud2B5V/ICnVP59JO5S4z8dvYWiBaHJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O/USvDw8; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="mkSdYvRc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1745942185; x=1746546985; i=markus.elfring@web.de;
-	bh=oXEa4kcM/OxrUbCCm71kggBOZqNhYe6zTRrmMA6LR9c=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=mkSdYvRc5q8XQPy2rglf6mE7+fF8RpPs3fKhs7Mxdm8e14BeyCeJN9J6cg04e76H
-	 bDxgjy6hcuuP8mXM4sF2SWYnmrLT5zxawOkACUUmxQxjllFnZ2peUFfxaFlw4rmg/
-	 tMjLFfoLzBOU/6d8Nb/z/IclyaAc9SotU1ztFp4p8jvJyWPANiu/iZNQ6nonEgt69
-	 dpx7ZrIBtKp5vus1lEviQSJ1NkTdtGozTimcspknbKwsaENVQShIOs1XOpL/jp1sj
-	 ZiYwOMjJ2AdcNixnhVkEZY/fO1Cw2EWVj/A9Mwk9GwOwSox7M+s4RYpz162zuzjBI
-	 HASXQK69oWjuwkooOw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.57]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N8n46-1v6NNn03Wg-00vXHR; Tue, 29
- Apr 2025 17:56:25 +0200
-Message-ID: <538f8456-1b28-4e7b-83ae-71b4c4ebcf8b@web.de>
-Date: Tue, 29 Apr 2025 17:56:21 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O/USvDw8"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f632bada3bso1992a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745942196; x=1746546996; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PksiWfpMfxllb9cMtMeDE5xqZSJKQGuK3D2npFWtovY=;
+        b=O/USvDw8of1oGQ9GiuPDnsjhFb+4Hax6Oh5hkKMjDJozdj2o1GWvM+XqwdOhdzlgDf
+         4MCRPNyTVTo3rrOYBImstWzN7PdKlwN6zIO5QMaRqgv2g9kNUb2JmWZpSUnwzJPASmvw
+         ojVKVpD5HoBJhaAn+n/Cl/Cj/LX9+PJMApIeIuVN3TKi6mCNqC4NbDsZEeZLhS5amTcX
+         6NiH9H1rkZNn//7U6BdmGEa/o9x3f1LnBQNSkT3fW+qtBaiaq0idGJHLqIW9IpoGLsEC
+         j5RH6TXJ/0fHjj9zb+PGhwVvYTR7OYo0ka98XXaLGv9wgvilcm7osgx1dKjYeywpsLQ6
+         mLnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745942196; x=1746546996;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PksiWfpMfxllb9cMtMeDE5xqZSJKQGuK3D2npFWtovY=;
+        b=sGTUQvA3QenmkBMoyu2lv6/WAdGWpFSrU4TFdaNImJgst57fY3bV3qHXIlPSSM5tEY
+         y0FIUFSL8RkGGJSU2sixcGYi7Ykbag2hHJ0FQqomj/qMKjPm4YZZOxMICa9L0x6csPGG
+         ORHpPOe5IyfDtrpH40gPjsQvW2MiBsvYW6IfjU5vnaM2h9iw2oy9k0JqikHsZPjkBnZ3
+         SJ7BnEmS4BzFoEjkzVfS7tRmCW4jBKikHrt5ZeDwSrWiuFp1jtQWmd3VgOgOSes3JL92
+         eGgVDsi2nHKygqRoyT2p4ZQ9hTs/COyWCHQ8CvngPdXjCXhTKe7xk1zImqYieL9XAt0c
+         l9xA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuQqziHXR8kFq8cpCmt0e5JPj3sA45h8n77yNjpwbYGrDvXkNnKLYgfLah2qRmS+adHeUnMAuIIkZXp9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP9jwnMqX2a5JsFXFf3ehDE2SWC1CH/fswicRM0GDcvwSmdJ8c
+	zr0L31IRDfNTNXDJzL+jpN9y/+IxoEhFNJRWz3v+Wo8mkfaybuSU0lUocGMIvQwQG6Bggz7CtBo
+	misToK1a+9HF3fEZalVx/VnA8u4xgow3TKXSY
+X-Gm-Gg: ASbGnctzYkFAxEEMh3v0QFsnjyOMavzIb3yCs/+I0QBgInnabk5kL0aHI3rpF/d7Vdj
+	woKuxwc2uK93vLc1KuBr/ec0/pQIB2kFsHSEaSCf0QjxlN3mkrDDpjQ2zgov7geUAxPsCV1+1gz
+	fTfx3Y4IMrHdUJjNxozkfT/1yADWI54cMGY4atU9WUu3mQo3r11w==
+X-Google-Smtp-Source: AGHT+IGtxlZGWu2Je/bOBDJTv80S1Q80Y7hLVWaw/Dsh1sFOZ7mVM95j4NTnHLX0IbqUIKK8zCAe/YhlOZPXyx67i/w=
+X-Received: by 2002:a50:cd0f:0:b0:5e5:7c1:43bd with SMTP id
+ 4fb4d7f45d1cf-5f83c1b5a74mr91868a12.1.1745942195429; Tue, 29 Apr 2025
+ 08:56:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zhe Qiao <qiaozhe@iscas.ac.cn>, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Len Brown <lenb@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Sunil V L
- <sunilvl@ventanamicro.com>, Will Deacon <will@kernel.org>
-References: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
-Subject: Re: [PATCH v2] ACPI: PCI: Release excess memory usage
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-9-surenb@google.com>
+ <CAEf4BzabPLJTy1U=aBrGZqKpskNYvj5MYuhPHSh_=hjmVJMvrg@mail.gmail.com>
+In-Reply-To: <CAEf4BzabPLJTy1U=aBrGZqKpskNYvj5MYuhPHSh_=hjmVJMvrg@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 29 Apr 2025 17:55:59 +0200
+X-Gm-Features: ATxdqUFo7EtQYKmtjBK-XwiZ1ZSWDYl5j8WIiYqQOeXkDF7OdcxVClYh41AITzo
+Message-ID: <CAG48ez29frEbJG+ySVARX-bO_QWe8eUbZiV8Jq2sqYemfuqP_g@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] mm/maps: execute PROCMAP_QUERY ioctl under RCU
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
+	peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, 
+	shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:o/qCyeBpAqJ/Qi5y6kGMZKGPYMvfM09TnPWAo9TxJd+Ot0t1n4W
- WrURYnKeCJm7MXAbeuwWhYVaAH19k3UabKbiQWoWJnpHQD12t1B4s8C1ftJ1Gwf6R+/fVfs
- +CPMXFSVfpfi4mUCHCDZbh0gxK9BrRzkb2NLzX0Es80mRK6KRhN2DEnSvwPspj4HWPSkY5J
- WoF1odvkkiO+RFpvPTh4A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pqb6i9LD+xE=;sHj5mo69ZGJrWrfDJ2ElWp9mhkZ
- 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
- wEv61jEU9eTz0=
 
-=E2=80=A6
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1677,15 +1677,12 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_p=
-ci_root *root)
-> =20
->  	root_ops =3D kzalloc(sizeof(*root_ops), GFP_KERNEL);
->  	if (!root_ops) {
-> -		kfree(ri);
-> -		return NULL;
-> +		goto free_ri;
->  	}
+On Wed, Apr 23, 2025 at 12:54=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+> On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <surenb@googl=
+e.com> wrote:
+> > Utilize speculative vma lookup to find and snapshot a vma without
+> > taking mmap_lock during PROCMAP_QUERY ioctl execution. Concurrent
+> > address space modifications are detected and the lookup is retried.
+> > While we take the mmap_lock for reading during such contention, we
+> > do that momentarily only to record new mm_wr_seq counter.
+>
+> PROCMAP_QUERY is an even more obvious candidate for fully lockless
+> speculation, IMO (because it's more obvious that vma's use is
+> localized to do_procmap_query(), instead of being spread across
+> m_start/m_next and m_show as with seq_file approach). We do
+> rcu_read_lock(), mmap_lock_speculate_try_begin(), query for VMA (no
+> mmap_read_lock), use that VMA to produce (speculative) output, and
+> then validate that VMA or mm_struct didn't change with
+> mmap_lock_speculate_retry(). If it did - retry, if not - we are done.
+> No need for vma_copy and any gets/puts, no?
 
-Would you like to omit curly brackets around a single statement?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.15-rc4#n197
+I really strongly dislike this "fully lockless" approach because it
+means we get data races all over the place, and it gets hard to reason
+about what happens especially if we do anything other than reading
+plain data from the VMA. When reading the implementation of
+do_procmap_query(), at basically every memory read you'd have to think
+twice as hard to figure out which fields can be concurrently updated
+elsewhere and whether the subsequent sequence count recheck can
+recover from the resulting badness.
 
-Regards,
-Markus
+Just as one example, I think get_vma_name() could (depending on
+compiler optimizations) crash with a NULL deref if the VMA's ->vm_ops
+pointer is concurrently changed to &vma_dummy_vm_ops by vma_close()
+between "if (vma->vm_ops && vma->vm_ops->name)" and
+"vma->vm_ops->name(vma)". And I think this illustrates how the "fully
+lockless" approach creates more implicit assumptions about the
+behavior of core MM code, which could be broken by future changes to
+MM code.
