@@ -1,78 +1,51 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C25B18A93F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24251865EE;
+	Tue, 29 Apr 2025 14:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937111; cv=none; b=tL9kVBYvEqIZPwgVCosSd9UPbMJGJqyFchYAXptjQye804BVYpPqUzAEQMNvdNDC6bYzr33e9Uc2emT1OD/MBUSyIW+je5DXfjTW0Nt2AhBeN41wUmjf5Xf7UHIiD27zwmpkbYxaH+H5J0Ac/sJH+oG5GOt0R4lRjILgAAK5F3Y=
+	t=1745937119; cv=none; b=HCT8J3IUwuuKAwTOfC8zlOHgz5/ZDB4KpieflC8yKnOtjQc+zdi4MIdKgLHVHajz584hpAFdKEoJJ0P2PaJ/92jPfr0Bm23oYujgZh547IDrCi9zUovgpmH1vnUQEct6aPK4ptjkjQc6XtpZFAqan17YCAMpW+i30eaXJDl8waw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937111; c=relaxed/simple;
-	bh=GjePFKB2d1SL0jkk71/qGpeIkutf08TbyfhCHSaqhNg=;
+	s=arc-20240116; t=1745937119; c=relaxed/simple;
+	bh=ycYLmloz+NSG7+QWN/h+ibcOHt9KPIjjbhKyyZFMIZE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oYaWzsBfbixAcZfOumhYXy1r3QinXCTYYeKhNFwhfTzB6J5Wjxt6GrFLGShFUXDgnzWYN2T4MMc7rybY9PittLHi2fWdJdcGkkkQeLVGf6SuI13p6ntMcplq+qdZoRR899rBm5nExmFnqFZiVJ+0M3Ssp01iIb3xMfrS42kZZlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TqMT/Mkq; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LrHXx4expQ9bq7pziNzeIqOSVQ0BosvUP03n0S+ubWnfwR3G4SpIHTZ0MHcn0Ge6s+nzMQEDJxVBRIUSBBc45VKo8A7hyCIzENaYtGR2biRI5OwN//B/Q6o6jhUT0WyXfNx+aPwWsEQYhOHht9tvsj3oPB0djQ0pcoE4P+xOiuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBndihfw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TqMT/Mkq"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so326608a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745937107; x=1746541907; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FVLuIB2lOtDkNgi7qMUsY4w36jbSzeBnpqcHl6UrPO0=;
-        b=TqMT/MkqQTZuqvAx9yy/rkwd4Mn/p/z01Is1EKcmsvQNfLkPLHvsqbSKn9ExKqghXk
-         zOoZc4z22gXDhtMc5orwxmo05A294Luy7Y4lYtHAYhdDKkK8EK3q0xwBJb5j7oLgqHP/
-         u6Z7sWqET3PYPmGDO9Bp0L9agevuVL88gLsV015SAdWGlFmgxha4k9maDj1cowqEOh9o
-         XZ7J6h4NswLeflS73V2LJanrRzVJ0b+ng6n99Ye9gJWffK7SNRuyUaypkihHfQkwW/ZY
-         PegB26DRubaSO46dkykxbZGlIQeffdq3cKC0RtRTCU18eFqct1rJDYtfpWyGPJYS/FuF
-         4WAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745937107; x=1746541907;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FVLuIB2lOtDkNgi7qMUsY4w36jbSzeBnpqcHl6UrPO0=;
-        b=q6/bs8czTlCnvoomOQo/T246iQ0MTuZZA7I9hupl5Cgmmd5WjiHz+KVg0CSUlXx1hy
-         RLgv19lJ9vbWS78c2LgIHVAMYLI114kh6sMMTpVPynpRmE/hjrJQo989zbw3OTPYnKuJ
-         2nKBVIhrnshcGZTzVQN/UqkOnQTmNhsFnCo2TII4mi/JOhvwAiq+ABRnfjpdLSgykBWK
-         7LbnwxGC161gng3PPr7uQq+Zngba3cS8r5zkGQ4cAP7JEVEphMpNxkUljClUIZLoehM5
-         XVLugmIkcYzQEmOk8MDgj5yWAf2YR8A63HZwCzNP4bZnz4pJ/blfzLXSDcGLPSdvoac9
-         5BDA==
-X-Gm-Message-State: AOJu0YykPree778b50UTF/7MuJexaqES7P9ob8Ro9xSphI0C52sRkpAc
-	6nZ9AVwBtGaedcRPLqacdtUZ7tQTA6yhX9LntLuY+TWRrid8fQ4RX96n8Lq1LTc=
-X-Gm-Gg: ASbGncudHzCT/q9PK0dDlpL6olPm1WzC5HBk0pxMx+2c/bvJE/SDdR4V3BAwCcozXTt
-	90Gl5UCFa2iC6Bt8wzUMWbicysWym3ShhUDbfKDNReeEAaInnC9S/PExUsnJHa/Y5oER0DhAi0e
-	y3yAse8I5gxY6gzmsT3lHYoJK6IZMULDdGPecaTGUpu5huiAVMgA3fOyIocotoW2aLnprDj8d4Q
-	cgXB6MNqqTwubiMTMZzeWUaZhq0gOGQ3DTJ8wGfz4qK1mOtYqsux1wcxLSZnPsZ3MSUEp80CK7G
-	MA0pMK7Nq4rUe9DLvik6iQ3DWicWZQcy1Z7BuhWV
-X-Google-Smtp-Source: AGHT+IGrg0RU/sZM0brIEoAXFybZg4vKsrBCT+3DlRai6gjoHOfmWmJuHdAEgbYqaarkWnKCGueLEA==
-X-Received: by 2002:a05:6402:370c:b0:5f3:fad4:fa75 with SMTP id 4fb4d7f45d1cf-5f83889fcfbmr3609914a12.32.1745937107540;
-        Tue, 29 Apr 2025 07:31:47 -0700 (PDT)
-Received: from pathway.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7035451b3sm7577360a12.50.2025.04.29.07.31.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 07:31:47 -0700 (PDT)
-Date: Tue, 29 Apr 2025 16:31:45 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH v3 18/20] ratelimit: Use nolock_ret label to collapse
- lock-failure code
-Message-ID: <aBDi0TD47UnByeN2@pathway.suse.cz>
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <20250425002826.3431914-18-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBndihfw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9031C4CEE3;
+	Tue, 29 Apr 2025 14:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745937118;
+	bh=ycYLmloz+NSG7+QWN/h+ibcOHt9KPIjjbhKyyZFMIZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mBndihfwHvAuE8T3l1xFn3ZYCZi5L2jU7u6WFqDCRwXfdJPE4eeo6KPbs/asZriDD
+	 MVfWEpLQXVoL3jTL2JtH404OamCcpHZYJur1wPN97Z9SUfc3KckWsjtRU0VXA49ybo
+	 BtiGwOlGTKKah/3Gvgw9S2z2g+X1DD14Z+luJ1uBLrLI22ErmSFyLGyArogFk9aQY7
+	 tOpgPjCcD+NH9nW6AC22hfaqDT29bSZqpiI+Sa2AgjR/WfuLqAbLcS81COlVxEDznc
+	 +/bqZ9t8LsX+4W32sfu5Y2d5bxl0pluwXc8FN6KnGv1xvuVW0h03F5lElxvU/WCjwr
+	 nO5X458wbcD8Q==
+Date: Tue, 29 Apr 2025 16:31:52 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Ayush Singh <ayush@beagleboard.org>
+Cc: Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>,
+	Robert Nelson <robertcnelson@beagleboard.org>,
+	Dhruva Gole <d-gole@ti.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rust: kernel: device: Add
+ devm_of_platform_populate/depopulate
+Message-ID: <aBDi2LE3O1rIsGqn@pollux>
+References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,20 +54,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425002826.3431914-18-paulmck@kernel.org>
+In-Reply-To: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
 
-On Thu 2025-04-24 17:28:24, Paul E. McKenney wrote:
-> Now that we have a nolock_ret label that handles ->missed correctly
-> based on the value of ret, we can eliminate a local variable and collapse
-> several "if" statements on the lock-acquisition-failure code path.
-> 
-> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
+> +    /// Remove devices populated from device tree
+> +    pub fn devm_of_platform_depopulate(&self) {
+> +        // SAFETY: self is valid bound Device reference
+> +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
+> +    }
+> +}
 
-Looks good to me:
+One additional question regarding devm_of_platform_depopulate(). This function
+is only used once throughout the whole kernel (in [1]), and at a first glance
+the usage there seems unnecessary.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+In your upcoming driver you call devm_of_platform_depopulate() from a fallible
+path [2].
 
-Best Regards,
-Petr
+So, I think we should change devm_of_platform_depopulate() to return an error
+instead of WARN(ret).
+
+If [1] needs it for some subtle reason I don't see, then I think we can still
+call it from there as
+
+	WARN(devm_of_platform_depopulate())
+
+[1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
+[2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
