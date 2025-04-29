@@ -1,211 +1,129 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62441EEE0
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F781DE4F3;
+	Tue, 29 Apr 2025 14:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937765; cv=none; b=keRoWHOAdAR1Dj8HCHwMU4156gIYRGNQH/Cn+T/TjO/UFdvAJQIQIMfub/p2cTbv/eBbObGrWlIDQz4sHDKzrfsiRE5Pb8sRb4IywAuSxq4Y1PXF+ClCIrYZeURtN/lNqXBIQIjQuCoQZEeiiKk3V6rpK7z5DZDjDvbBIyPNBEQ=
+	t=1745937860; cv=none; b=u8ZKBitFHSq5KCNVI+Tb9AE1IvutLc5RGZJ6gWAWR8O9Tz3WTdwMjZ/Ifc4cg9Eg1ftSDZRO5DXrhDB8AjH6f14GW/j4WImubGW8EYN/9Ks6pEjmarEY0s00vJuASJhGb4yCYCT1yAHRWd7ZdlknfpaXTItV0lngP8G5quoYXc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937765; c=relaxed/simple;
-	bh=ZdBlqcD7UgXi/cmHBjpAFe6EpoLl9MO34xzM6rTx074=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jXX+E9mL8KCRShSvGdtctHjAikFQkxLe4ZM4VFKKTJnzkwhiAJ8SWBZE5jZkYCSyPITTnIb7TJ9Ufvphwf6I0wQL0eMOh+s9hlOUajpayJC/WLiFnZI0mdaobHSs4e116wi1loeisigeLFnioNcGsWHxCYYreZ93V4y/IoUvni8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WaLLtT5C; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745937860; c=relaxed/simple;
+	bh=4rr0S3mSjoui4D8DbAX2wTbORXf1cAmtg5M9HmjHuhU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=ZlSpD4OnlVJkyVyVggvY6BTqISMWEehiBePo01eIclDgA/fsR2TZIB31TdchAb82EYZO7PpA8aLWC4cQGB/elpYJSb84T05VB9QTBBH6GxtKFopI4WflEOmO+icCn3xc4ffopoqJP8XIyIhwIdwtDp1BQlCKj2zuW9ByIbllDwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3YUk0Ov; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WaLLtT5C"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9GRpw028409
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=95T6lUWWSMvDyPMIc22M5eNK
-	HqFKHq2wCTghZ6/oaJE=; b=WaLLtT5C8FQJcBDimbkuPt6TTht/cqWy5fKvWqMW
-	ILpQ4FF1A55IxDrswWlIclW1piFJUsnCWdTYFUGmuQysFPqImmV7yUh6xBE/ilPR
-	bb2G6myBogFm4RPgPQrk+conHuGunajECg0n9cIdzK9XsFIwHOvJ5mFV1RUDGjbs
-	ZNqm9qaxetcA0D+BTMmzHMm8am9RMW5W5xHeAzwGubxvVQ5DwqDd/2+Mf+3fMfTg
-	YZ47bkm9K/StMh6cpwHU8/Epk21WTDsx2zpEdRJiFUZw5CT6/OzmtbcaRFmkse0p
-	jVHxBm/tqOBWWPBV3MuZV4aGW4uImQHirEavkGqJTHITLQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468r8hut9m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:42:42 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c7c30d8986so768289385a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:42:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745937761; x=1746542561;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=95T6lUWWSMvDyPMIc22M5eNKHqFKHq2wCTghZ6/oaJE=;
-        b=Z/CGEwuQehDlraEK/Wt57UUqT7vjuMgS92XlCk91DRpmjuANhkbKdoocJbRr0HdIuo
-         sstTrsA70pQduIzecuVgEtNE/GECMJzv3PF/C1wnDsvFWiNOuSTIs+bz1za4thBkcOiN
-         pjEQ/eHWl9CAOjYy7xsNUebAvghjGxY+SU+dlZr4f9HDq7AIYDGxqaJ4TXOS0x7FsX9t
-         Mj3Kld7/QNcD4gNTViseqPuzg6MKWWdVy1UyNjuAh3PGe9gbFijRsjMjNyOXz3ALobmG
-         lIiwCJ1AvaIL+bmnp6YnZ6ymt3nBg7YRFTnMLZJZnHxIVJ7akzAJy4GCotm4nuG3h9Ow
-         5eVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkz+UfDTKIt53QDf7ekoKZljxbjE7bTiBf5PjfG+o+lHS2BQ0BRgsRAusuSyGSGsftK9oyh+fPG2JtCyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE3Mome0X5Rku8+ixYLH23ShlJCZIt2GHzNOl2OyOo91htZaIC
-	k5HOZIYxjV1qYnrnRHm9qOUwSihcWH7e0P2MExfjbZ4BDXYPTF4jZX8of+8gw5DTI0vQ1k+Lddz
-	xTjO5GdF/IG50hxntnRoSVgi83FOnjm89KnCpYuqdCm+/5EKvIBWFJCgIJ5LZueo=
-X-Gm-Gg: ASbGncuCaJ597W+UsSDwBgsucSNNkCO5BnjfN3tQMx68vTOh8ZN5x0Dbjs/929Sfn6o
-	JtiGVDyEm95XittxCOuLbQ9G0ix+LkQP7LyFP7h2I9TXVl0Oi5OZPZTEeFYipEVrzDNKKBv83SI
-	CVIX7JmpHf2JBSSGWQjxbCXxNfF3g28Hx5stB4i6+XSPQy7hdfICD6CfvxCrwUYuk8IR5J6Ef4n
-	l5c1Kfn9NIyBMhElVWEgMyHCRhm2p5oRP+DcGtJAplDyNMsp8Gia4AIpHAgrbX2o7SZ84vbc5Fc
-	U4pFZWmyR/O3CGkwJHGoaqxFa0NU/3M9QMCCgo9+quty3p5lEi+Arinqj7QsLaSA9ckJBXW6I48
-	=
-X-Received: by 2002:a05:620a:4609:b0:7c5:6a66:5c1e with SMTP id af79cd13be357-7c9668cdc37mr2109272885a.58.1745937761589;
-        Tue, 29 Apr 2025 07:42:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDNJAkS5MxDnNhkLq8y60Bm1ZZecLba9P4Zw5IB7TV0UsyjpIf9foZNs6LWwIvq9tQDTlZsQ==
-X-Received: by 2002:a05:620a:4609:b0:7c5:6a66:5c1e with SMTP id af79cd13be357-7c9668cdc37mr2109266985a.58.1745937761023;
-        Tue, 29 Apr 2025 07:42:41 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb26258sm1895708e87.17.2025.04.29.07.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 07:42:40 -0700 (PDT)
-Date: Tue, 29 Apr 2025 17:42:38 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        Anusha Srivatsa <asrivats@redhat.com>,
-        Paul Kocialkowski <paulk@sys-base.io>,
-        Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Adam Ford <aford173@gmail.com>,
-        Adrien Grassein <adrien.grassein@gmail.com>,
-        Aleksandr Mishin <amishin@t-argos.ru>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Christoph Fritz <chf.fritz@googlemail.com>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Detlev Casanova <detlev.casanova@collabora.com>,
-        Dharma Balasubiramani <dharma.b@microchip.com>,
-        Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
-        Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesse Van Gavere <jesseevg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Manikandan Muralidharan <manikandan.m@microchip.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-        Vitalii Mordan <mordan@ispras.ru>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-        "Rob Herring (Arm)" <robh@kernel.org>,
-        Hsin-Te Yuan <yuanhsinte@chromium.org>,
-        Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>,
-        Aradhya Bhatia <a-bhatia1@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Ian Ray <ian.ray@ge.com>, Martyn Welch <martyn.welch@collabora.co.uk>,
-        Peter Senna Tschudin <peter.senna@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Herve Codina <herve.codina@bootlin.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>, Inki Dae <inki.dae@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Helge Deller <deller@gmx.de>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
- devm_drm_bridge_alloc()
-Message-ID: <sdiwpe7nnhud3fvkgijjbfyenlwpchbxgehyxmsy7c5loo257h@hkfcawkjrlhd>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3YUk0Ov"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14C7C4CEE3;
+	Tue, 29 Apr 2025 14:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745937860;
+	bh=4rr0S3mSjoui4D8DbAX2wTbORXf1cAmtg5M9HmjHuhU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=d3YUk0Ov4iLTp8IvzNdV/ZNp8XRfU0tpb5oO11Ch7TeqYX980y0eKGMK/tSkiZdHG
+	 vKKfoEdkR1s+NYjN7a+AJ5LIM2s8BnXPc1k9zkOx3UAgsn7GdLXMskG8pcyMg6PZjr
+	 hnW+l0awaOZdLhL+FF6sOcWJBst8YDQPRSyQW//eEcvnLFRkEHcFbRJrI4NtMZ4/5s
+	 9oXWECSmFA4F6IcyherLCLXt/f8gFvTWDlZX+lIkLCg2rPK6y/rBhahA2HfK5II7y2
+	 TITnqai63Vv44JqE0pz38xD3AqDqqBaPCzJM4ILcDM3e08c2AK0fAgXs+F+HIJjvhE
+	 S2Zreml59gaJw==
+Date: Tue, 29 Apr 2025 09:44:18 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
-X-Proofpoint-ORIG-GUID: 3epeKG3nWXGuHCJgOWgZbWhqkcZ_uDk0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDExMCBTYWx0ZWRfX+nqocrIhkCpw qBhDF7QOS+b5luOZENvYVePrpIRxDtzfgL1RO0HcCElD6LpoLr6VjCf6uR3m2ClcUHuviq0AgKe HPWbU8qUnxLtTZe+fqVxqYypKmQVuqR1etRrhXlGBQEmktZ6dsVZ2FAkF74yAZ637j5Z12JSGRK
- zsjj88Bie/U0la5OI7l872tIPwIyb/eiC/a0Oy6J86L1DoGWugKAzLG/sGPWSm7Y6Fi6VGqIxcn a/VdvJ8BBwSbtzY/JHw/Sgn9KTSVa0JcPPr4CBGlt/EuY0s9L3nNbHmFeWgElU6/WXY49vVeE/k KMOkZjA0aTg36Qj8bNgvVLCL8JfwwN93n2/sD96ab1fbKKpif+Tg56VO5D0x85A7ojZCZw0GGYI
- JKXn11pqcv2Q1ooqZSxUzwSQ0UnpByD0oBdNHnVLMEw9flqzt0F1GUp45TGhnODGJOHOo7VB
-X-Authority-Analysis: v=2.4 cv=cfzSrmDM c=1 sm=1 tr=0 ts=6810e562 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=1X4oNAvfgwtBicUf-4YA:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: 3epeKG3nWXGuHCJgOWgZbWhqkcZ_uDk0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_05,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290110
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+To: Patrice Chotard <patrice.chotard@foss.st.com>
+In-Reply-To: <20250428-upstream_omm_ospi_dts-v9-0-62522b1b0922@foss.st.com>
+References: <20250428-upstream_omm_ospi_dts-v9-0-62522b1b0922@foss.st.com>
+Message-Id: <174593770361.4057747.4332961101566967821.robh@kernel.org>
+Subject: Re: [PATCH v9 0/3] arm64: dts: st: Add SPI NOR support for
+ stm32mp257f-ev1
 
-On Tue, Apr 29, 2025 at 11:27:51AM +0200, Louis Chauvet wrote:
+
+On Mon, 28 Apr 2025 10:40:20 +0200, Patrice Chotard wrote:
+> Add SPI NOR support for stm32mp257f-ev1 board by adding:
+>   _ Octo memory Manager node in stm32mp251.dtsi
+>   _ OSPI port1 pinctrl entries in stm32mp25-pinctrl.dtsi
+>   _ Add SPI NOR support for stm32mp257f-ev1.dts
 > 
-> On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
-> > devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
-> > bridge, and the only one supported from now on. It is also necessary for
-> > implementing reference counting and thus needed to support removal of
-> > bridges from a still existing DRM pipeline without use-after-free.
-> > 
-> > This series converts all DRM bridges to the new API.
-> > 
-> > [...]
+> To: Rob Herring <robh@kernel.org>
+> To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> To: Conor Dooley <conor+dt@kernel.org>
+> To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> To: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
 > 
-> Applied, thanks!
+> Changes in v9:
+>   - split patchset by susbsystem, current one include only DTS related
+>     patches.
+>   - Link to v8: https://lore.kernel.org/r/20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com
+> 
+> ---
+> Patrice Chotard (3):
+>       arm64: dts: st: Add OMM node on stm32mp251
+>       arm64: dts: st: Add ospi port1 pinctrl entries in stm32mp25-pinctrl.dtsi
+>       arm64: dts: st: Add SPI NOR flash support on stm32mp257f-ev1 board
+> 
+>  arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 51 +++++++++++++++++++++++++
+>  arch/arm64/boot/dts/st/stm32mp251.dtsi        | 54 +++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    | 32 ++++++++++++++++
+>  3 files changed, 137 insertions(+)
+> ---
+> base-commit: 65954899a157832f68536b488194cf698248a26e
+> change-id: 20250410-upstream_omm_ospi_dts-04b97cc02e52
+> 
+> Best regards,
+> --
+> Patrice Chotard <patrice.chotard@foss.st.com>
+> 
+> 
 > 
 
-[...]
 
-> [16/34] drm/msm/dp: convert to devm_drm_bridge_alloc() API
->         commit: b2aabe5c6b65516d88214aba4b12ce2ca78bac6c
-> [17/34] drm/msm/dsi: convert to devm_drm_bridge_alloc() API
->         commit: fffc8847743e45604c4478f554d628481b985556
-> [18/34] drm/msm/hdmi: convert to devm_drm_bridge_alloc() API
->         commit: e11532be87e437648521a8ed5358c56df11933b4
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Why? These drivers are explicitly handled outside of drm-misc. Please be
-more careful next time.
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
--- 
-With best wishes
-Dmitry
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 65954899a157832f68536b488194cf698248a26e
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/st/' for 20250428-upstream_omm_ospi_dts-v9-0-62522b1b0922@foss.st.com:
+
+arch/arm64/boot/dts/st/stm32mp257f-dk.dtb: /soc@0/ommanager@40500000: failed to match any schema with compatible: ['st,stm32mp25-omm']
+arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: /soc@0/ommanager@40500000: failed to match any schema with compatible: ['st,stm32mp25-omm']
+arch/arm64/boot/dts/st/stm32mp257f-dk.dtb: /soc@0/ommanager@40500000/spi@0: failed to match any schema with compatible: ['st,stm32mp25-ospi']
+arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: /soc@0/ommanager@40500000/spi@0: failed to match any schema with compatible: ['st,stm32mp25-ospi']
+arch/arm64/boot/dts/st/stm32mp257f-dk.dtb: /soc@0/ommanager@40500000/spi@1: failed to match any schema with compatible: ['st,stm32mp25-ospi']
+arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: /soc@0/ommanager@40500000/spi@1: failed to match any schema with compatible: ['st,stm32mp25-ospi']
+
+
+
+
+
