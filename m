@@ -1,116 +1,228 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3531D22E40E;
-	Tue, 29 Apr 2025 10:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921114; cv=none; b=mwbE4i6VW36ff868XkWXUFNFWjIw2f64c7f0KDOd3D0EaEoBB4lD01UV0YmTaYWDpopHGimM5YBMBkwKqitmuQbnjx/lERuNoazczkM/3Kil8eR10KH1unoLZvjstO95hGBmktpwWOhoqc7fWQLvks4hBW8N2dcSPmQjau43KE4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921114; c=relaxed/simple;
-	bh=oT8jmdKRD53dK1OsOJGBSBEwoTPzjwLFCjZkXjFpL0w=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=YKiwEsEavb/7yNVRdlhOoG6hZfeImuSLL++hPIzI1DiI63xnJhsR3wXwKVFEzfxzp509ykHLaxp0ZVD8SErOWJn0l27XAAFcZilLI/tuDq3pb0Rqx/uYPzLclQCVEkDOrFRzwl0Ej+seJZs42JxdK2JKItuyWTlM1+5YXl6vbPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=0JOzSXfq; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A52E1FE478;
+	Tue, 29 Apr 2025 10:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745921165; cv=pass; b=SJrqCm3h90Btp395k64AbDx9FxSNu9XOOB21BIGQ9H8FNDVERfD5P+g327/GeM6jENU3b2jbPn2pYQ/LBUIqQcvfOPDW2bx3MUuTDRN94NuJpfJS06n1MBc5uEsQAydVrxbsPgicv8UNGaKOFZUvppGZrouD3auSbPivGkU81pM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745921165; c=relaxed/simple;
+	bh=xO1N4nuoRCCxFNHfoe4rs+JshgVbK6a3AQv8MPvyX7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FyyVKkdITU9fdNZVuy6IMroVQ8U+yspoekir6TFWSg3LgRZqtqw+eR2ilKFStXHslr4J3PQH37Kj6wLveD1Wo0auqYw0TPq/8FF/xuPDQMbesDR9d3cRx6BYHjcfwVfI6XKmx0Rm4KsgEsHenuWb54PiZS6QsQfQ6DLrsVYYjW0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=ScUGTsBQ; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="0JOzSXfq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=oT8jmdKRD53dK1OsOJGBSBEwoTPzjwLFCjZkXjFpL0w=; b=0JOzSXfqdcMYGwC0bPRPLnnAcf
-	PCwW6kpNicsWBKSdKcaD29OYqQG3kreVd+vU8ncE8bDZufHD3/huCJRuajpikIbr/zacfgk6YYDv6
-	Yg34PKJjMp2V3I5yNfTcd8VRGbhf13g3JMoHcy6p6vHXNh2b/MPs9ZR7v9ZGS6hZXALr8xT3Boloe
-	vvAi3f3QXTgo3UWC8xw/FAd/Zfi3rWyPp24XIfWiNEtZZdOpPdaHcjhFPKEcmnXDD10H6g45EG9Uo
-	usiMcM79UHCrk8AOuBNWRit2KTMmiFiwu1pLlK/+PwBEuLr3vb2slyshnWvu/GCbqjfooCLz00Xvg
-	Sw+o+dVQ==;
-Received: from [122.175.9.182] (port=32794 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1u9hpq-000000008U8-2FW1;
-	Tue, 29 Apr 2025 15:35:06 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 58E801783FDC;
-	Tue, 29 Apr 2025 15:34:54 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 48A6D178245B;
-	Tue, 29 Apr 2025 15:34:54 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id qr0AbpeTHHwl; Tue, 29 Apr 2025 15:34:54 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 108DD1782431;
-	Tue, 29 Apr 2025 15:34:54 +0530 (IST)
-Date: Tue, 29 Apr 2025 15:34:53 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: kuba <kuba@kernel.org>
-Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
-	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
-	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
-	pabeni <pabeni@redhat.com>, robh <robh@kernel.org>, 
-	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>, 
-	nm <nm@ti.com>, ssantosh <ssantosh@kernel.org>, 
-	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>, 
-	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
-	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
-	basharath <basharath@couthit.com>, horms <horms@kernel.org>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>
-Message-ID: <663252690.1172927.1745921093992.JavaMail.zimbra@couthit.local>
-In-Reply-To: <20250424191600.50d7974c@kernel.org>
-References: <20250423060707.145166-1-parvathi@couthit.com> <20250423072356.146726-7-parvathi@couthit.com> <20250424191600.50d7974c@kernel.org>
-Subject: Re: [PATCH net-next v6 06/11] net: ti: prueth: Adds HW timestamping
- support for PTP using PRU-ICSS IEP module
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="ScUGTsBQ"
+ARC-Seal: i=1; a=rsa-sha256; t=1745921137; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jpSzhwxlzOAiAzYn1qgSNGg8hpGzpfBH9ZSCGDbaaQWaYBf+YTPl5HH5Y2t2me7v9d7Nqt9ShWyU/To8C5dpiQKL2aiNXBunoimO6cOc0f0dvRz6hN2jaAvgLenXRYp4rx0zkLJ8StgkMH3sI7h+Ow2hlEgQezjW5j4OGT9aIVM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745921137; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=JxbCFy+YVAok7lkWS9hgSHArZDCzdlEOMBm9HS++e8M=; 
+	b=GKpj86eYoSeNFysHu2RMVKHTLtlZZzBLvMvKoBNr7LcpO+Z4Znm7AnG7AuZ9MdQ/qdj2qKDpK/fAs72EzucerpNxuxBl4dFmgoONR6L/FT/KtbHbAadNOUR9IX3AM8qy0kWUq0YhI+kJvAHyoCKKbHcuyuWTBB3vkzeCzRrUEvs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745921137;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=JxbCFy+YVAok7lkWS9hgSHArZDCzdlEOMBm9HS++e8M=;
+	b=ScUGTsBQeOdzXPal+jTXkQH/TtCHyCJS3xVRpl0+uUm5bDvVOrABlUbBHKOKQNex
+	CpvEWt235HdE+Hb2sFR6N01jaBy52WClbaN3+ye+vb+cQLyL8dRzGH84JXN/SQnxi/3
+	gj/y5VEPmR225Abunl34QxehV4TCifdRWstIpdhI=
+Received: by mx.zohomail.com with SMTPS id 1745921136083931.6736324937333;
+	Tue, 29 Apr 2025 03:05:36 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Jeffrey Hugo <quic_jhugo@quicinc.com>, linux-rockchip@lists.infradead.org,
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: Re: [PATCH v2 6/7] accel/rocket: Add job submission IOCTL
+Date: Tue, 29 Apr 2025 12:05:28 +0200
+Message-ID: <2365360.ElGaqSPkdT@workhorse>
+In-Reply-To: <20250225-6-10-rocket-v2-6-d4dbcfafc141@tomeuvizoso.net>
+References:
+ <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
+ <20250225-6-10-rocket-v2-6-d4dbcfafc141@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds HW timestamping support for PTP using PRU-ICSS IEP module
-Thread-Index: rMCkv9aSBafPeayIWiLctpQIplkvYA==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+On Tuesday, 25 February 2025 08:55:52 Central European Summer Time Tomeu Vizoso wrote:
+> Using the DRM GPU scheduler infrastructure, with a scheduler for each
+> core.
+> 
+> Userspace can decide for a series of tasks to be executed sequentially
+> in the same core, so SRAM locality can be taken advantage of.
+> 
+> The job submission code was initially based on Panfrost.
+> 
+> v2:
+> - Remove hardcoded number of cores
+> - Misc. style fixes (Jeffrey Hugo)
+> - Repack IOCTL struct (Jeffrey Hugo)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
+>  drivers/accel/rocket/Makefile        |   3 +-
+>  drivers/accel/rocket/rocket_core.c   |   6 +
+>  drivers/accel/rocket/rocket_core.h   |  14 +
+>  drivers/accel/rocket/rocket_device.c |   2 +
+>  drivers/accel/rocket/rocket_device.h |   2 +
+>  drivers/accel/rocket/rocket_drv.c    |  15 +
+>  drivers/accel/rocket/rocket_drv.h    |   4 +
+>  drivers/accel/rocket/rocket_job.c    | 710 +++++++++++++++++++++++++++++++++++
+>  drivers/accel/rocket/rocket_job.h    |  50 +++
+>  include/uapi/drm/rocket_accel.h      |  55 +++
+>  10 files changed, 860 insertions(+), 1 deletion(-)
 
-> On Wed, 23 Apr 2025 12:53:51 +0530 Parvathi Pudi wrote:
->> +static inline void icssm_prueth_ptp_ts_enable(struct prueth_emac *emac)
->=20
-> Also do not use "inline" for functions which are not called from
-> the fast path. Basically no "inline" unless you can measure real
-> perf impact.
+Hi Tomeu,
 
-We will review and remove =E2=80=9Cinline=E2=80=9D keyword in the next vers=
-ion.
+some more power management things I've noticed here.
 
-Thanks and Regards,
-Parvathi.
+>
+> [...]
+>
+> diff --git a/drivers/accel/rocket/rocket_job.c b/drivers/accel/rocket/rocket_job.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..25b31f28e932aaee86173b9a0962932c9c640c03
+> --- /dev/null
+> +++ b/drivers/accel/rocket/rocket_job.c
+>
+> [...]
+>
+> +static void
+> +rocket_reset(struct rocket_core *core, struct drm_sched_job *bad)
+> +{
+> +	bool cookie;
+> +
+> +	if (!atomic_read(&core->reset.pending))
+> +		return;
+> +
+> +	/*
+> +	 * Stop the scheduler.
+> +	 *
+> +	 * FIXME: We temporarily get out of the dma_fence_signalling section
+> +	 * because the cleanup path generate lockdep splats when taking locks
+> +	 * to release job resources. We should rework the code to follow this
+> +	 * pattern:
+> +	 *
+> +	 *	try_lock
+> +	 *	if (locked)
+> +	 *		release
+> +	 *	else
+> +	 *		schedule_work_to_release_later
+> +	 */
+> +	drm_sched_stop(&core->sched, bad);
+> +
+> +	cookie = dma_fence_begin_signalling();
+> +
+> +	if (bad)
+> +		drm_sched_increase_karma(bad);
+> +
+> +	/*
+> +	 * Mask job interrupts and synchronize to make sure we won't be
+> +	 * interrupted during our reset.
+> +	 */
+> +	rocket_write(core, REG_PC_INTERRUPT_MASK, 0x0);
+> +	synchronize_irq(core->irq);
+> +
+> +	/* Handle the remaining interrupts before we reset. */
+> +	rocket_job_handle_irq(core);
+> +
+> +	/*
+> +	 * Remaining interrupts have been handled, but we might still have
+> +	 * stuck jobs. Let's make sure the PM counters stay balanced by
+> +	 * manually calling pm_runtime_put_noidle() and
+> +	 * rocket_devfreq_record_idle() for each stuck job.
+> +	 * Let's also make sure the cycle counting register's refcnt is
+> +	 * kept balanced to prevent it from running forever
+> +	 */
+> +	spin_lock(&core->job_lock);
+> +	if (core->in_flight_job)
+> +		pm_runtime_put_noidle(core->dev);
+
+This particular line of code caused me issues when I was experimenting with the
+driver on RK3576. My current situation is that every job that gets submitted
+times out because of some IRQs never arriving, which is besides the point, but
+it did expose a power management bug here that I suspect may affect RK3588 as
+well. After like 3 timeouts, we reset again and hang in the interrupt mask write
+just a few lines above. This is because we somehow managed to get into a
+situation where this function is called with pclk disabled, and this manual
+balancing act may be part of it. Not doing the manual balancing at all here
+doesn't fix it, I had to explicitly wrap the reset function in
+pm_runtime_get_sync and pm_runtime_put_noidle to avoid having this function
+execute with disabled clocks. That seems like the "wrong solution" though
+because it means something already powered off our hardware too eagerly before
+we got the reset done.
+
+My gut instinct tells me that there's a bug here with multiple timed out jobs
+being in flight, but I'm not 100% on it. Maybe you'll be able to reproduce it
+on an RK3588 by artificially forcing all your jobs to time out with some very
+low timeout value or by masking the interrupts.
+
+> +
+> +	core->in_flight_job = NULL;
+> +	spin_unlock(&core->job_lock);
+> +
+> +	/* Proceed with reset now. */
+> +	pm_runtime_force_suspend(core->dev);
+> +	pm_runtime_force_resume(core->dev);
+
+Do we need to guarantee some sort of exclusivity here so that nothing tries to
+concurrently use the device while we're forcing it off and back on again? I'm
+unfamiliar with the drm fence stuff, so I may be overthinking this.
+
+> +
+> +	/* GPU has been reset, we can clear the reset pending bit. */
+> +	atomic_set(&core->reset.pending, 0);
+
+Nitpick: should probably be "NPU" ;)
+
+> +
+> +	/*
+> +	 * Now resubmit jobs that were previously queued but didn't have a
+> +	 * chance to finish.
+> +	 * FIXME: We temporarily get out of the DMA fence signalling section
+> +	 * while resubmitting jobs because the job submission logic will
+> +	 * allocate memory with the GFP_KERNEL flag which can trigger memory
+> +	 * reclaim and exposes a lock ordering issue.
+> +	 */
+> +	dma_fence_end_signalling(cookie);
+> +	drm_sched_resubmit_jobs(&core->sched);
+> +	cookie = dma_fence_begin_signalling();
+> +
+> +	/* Restart the scheduler */
+> +	drm_sched_start(&core->sched, 0);
+> +
+> +	dma_fence_end_signalling(cookie);
+> +}
+>
+> [...]
+>
+
+Kind regards,
+Nicolas Frattaroli
+
+
