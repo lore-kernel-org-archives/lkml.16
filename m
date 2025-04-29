@@ -1,130 +1,279 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB7A242D68;
-	Tue, 29 Apr 2025 17:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65249251780
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745948645; cv=none; b=cGgJKHY4Xz7jaR+h7/DHSsDKEMEajHzTAzri9PaTnUbyyN9+VU5xtMqlKiUGA+C/sX/j2/7lXtY+qxXn722ju03gGwP9GwPTSVZ6aRoOQ3w+obxA5z+sZvUfclWWXHc5TCBlZ2dT3GxfIxCuMp/JjgtVgHjVFKsB/WGhZ7DWRCI=
+	t=1745948676; cv=none; b=LaCeiDi/xfJjA0CHO1B+F6CTvgBFwU4IjXIq6FQkBUY2+rDNOPTi4CiMWFCbug2Ie7EoQIlxr2dq4xS458O5qveteznvgo1kLDNkBNQJM5qq5oTbx0w5JrlwpUvVCDAfVkP/H6TxkWztXi+G1V8NqeN7FcqnR+i5Pu2JNfqXy4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745948645; c=relaxed/simple;
-	bh=F4rC992XN2TU5FtjdY4KUMHyWZV0UGUS8TF2YpquYNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K6ycwJ8M+/VGMBdxQHU9HQ94b3/WFQ2d7F0BcYWyez+edXQ88Sf/3m+yzoXGsDygD1PdS7PpbSl65jf+9mz6m4zZP92olPO0YqpelWgDXRBypYGAV8KpKFXxjSOwgwr7LroBCCUttlP/Vy0jhzAFCsQSVkwiMs8F1y9Yys/EtVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Md9hyH9E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745948676; c=relaxed/simple;
+	bh=YihdS4lIlPx1QvCRHI6VlfjDGJoGrUsNEFaaqylzs1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nl13CA+qyw7nEWSjBbOodasxK+IkISaCgVUMjGHNJ/fEVlsRgBxAfhR5hU7SJaF7GovjJnbUkYp+5jpbfjcggHO1vtMvEwnh1atpgM0SRvIIH2LV0x+Se5HSod0+ut1IObeQhy34SO91vbFytLP137/7eeyGo3VpS6gpXzTUCBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dTYx6A2v; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Md9hyH9E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69E4C4CEE3;
-	Tue, 29 Apr 2025 17:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745948645;
-	bh=F4rC992XN2TU5FtjdY4KUMHyWZV0UGUS8TF2YpquYNk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Md9hyH9E5zshZ27kev1oBe0YX+0nTaVhgaGIlJfe7OI52WCeN14Y+3goj3EkBPLF2
-	 HFTOr3lhxYXQ1gzGDteA5AvGGSHcpZdqGvK2GxIk/SG7oRFmi2GqlcCuFbbqEm9k1I
-	 QndAk/0PX87poQNq2Oyp0G32UZmitVSKvlOOqmMCNw5e/ofUHZxEogSiGf/Qfxb6ES
-	 XrCFdTHrR5mo2CDC+klVQt+WiS7tMXwOHlZ2xz/+bVfIjbTGCRkn1xFpm1Qe3XMDo8
-	 AsYshyMieJq5MYUGlg3DtFgp7fCN8cCSvEAARFy8w9n1dwQldqb2AtFlk+i7Erdsqd
-	 9ikkRjfEtcs0A==
-Message-ID: <64e5c5bb-f1f9-4bac-b1a1-f628816ee1b2@kernel.org>
-Date: Tue, 29 Apr 2025 19:43:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dTYx6A2v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745948675; x=1777484675;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YihdS4lIlPx1QvCRHI6VlfjDGJoGrUsNEFaaqylzs1A=;
+  b=dTYx6A2vqR+qMu4UCJL7xmattwR2pY+1R63e9D64qJxK1A2ztOcpIoLM
+   VCsQasW0zMFBw1EW0UUfMJNyQzlcn4RZyW0DnR2rkZvTiJBgsxhEGyyZs
+   v17a54Zm+a5I3/U9VUEyjP20crVC+mE4ub4LohJlQnYh8rDqHnX26jyyL
+   X4qS2Kwkon79WXYinPcgl5OU4COJd5jLMII7HM4Nk5l+i/11iYh7BvYY4
+   AHCdBpV9jIK3vkpoTJNuozQLbWQv8hGIZnChIWiEnLNm9x0YkD1iBP+1j
+   oBiteWwvClTvv+ADn708IGiz/RBT1LwJpct7Hn2N3iTZuonjPxqtzsnhZ
+   A==;
+X-CSE-ConnectionGUID: u2f9m2laQrWP9BKpeXTYDQ==
+X-CSE-MsgGUID: kT0wzBatTJycQsiKQclrEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="64999828"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="64999828"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:44:34 -0700
+X-CSE-ConnectionGUID: 71ZXWDiaR8mGsyo071y1aQ==
+X-CSE-MsgGUID: ZUYBiCRvRZWmgpkXX6ipMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="139077844"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orviesa005.jf.intel.com with SMTP; 29 Apr 2025 10:44:29 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 29 Apr 2025 20:44:27 +0300
+Date: Tue, 29 Apr 2025 20:44:27 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+	david@redhat.com, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
+	ryan.roberts@arm.com, ioworker0@gmail.com, da.gomez@samsung.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org,
+	Eero Tamminen <eero.t.tamminen@intel.com>
+Subject: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio support
+ for tmpfs
+Message-ID: <aBEP-6iFhIC87zmb@intel.com>
+References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
+ <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/2] dt-bindings: iio: adc: add NCT7201 ADCs
-To: David Lechner <dlechner@baylibre.com>, Eason Yang <j2anfernee@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nuno.sa@analog.com, javier.carrasco.cruz@gmail.com,
- tgamblin@baylibre.com, olivier.moysan@foss.st.com, alisadariana@gmail.com,
- gstols@baylibre.com, antoniu.miclaus@analog.com, eblanc@baylibre.com,
- andriy.shevchenko@linux.intel.com, matteomartelli3@gmail.com,
- marcelo.schmitt@analog.com, chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
- yhyang2@nuvoton.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250429025505.3278016-1-j2anfernee@gmail.com>
- <20250429025505.3278016-2-j2anfernee@gmail.com>
- <20250429-sensible-subtle-cobra-badedb@kuoka>
- <00fdf173-ac7f-48bd-be81-5d41351e99bd@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <00fdf173-ac7f-48bd-be81-5d41351e99bd@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
+X-Patchwork-Hint: comment
 
-On 29/04/2025 18:09, David Lechner wrote:
-> On 4/29/25 2:36 AM, Krzysztof Kozlowski wrote:
->> On Tue, Apr 29, 2025 at 10:55:04AM GMT, Eason Yang wrote:
->>> Add a binding specification for the Nuvoton NCT7201/NCT7202 up to 12-bit
->>> ADCs with I2C interface.
->>>
->>> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
->>> Reviewed-by: Krzysztof Kozlowski <krzk+dt@kernel.org>
->>
->> NAK
->>
->> This never happened. Don't add fake tags.
->>
->> Best regards,
->> Krzysztof
->>
+On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
+> Add large folio support for tmpfs write and fallocate paths matching the
+> same high order preference mechanism used in the iomap buffered IO path
+> as used in __filemap_get_folio().
 > 
-> Then who send these messages? :-p
+> Add shmem_mapping_size_orders() to get a hint for the orders of the folio
+> based on the file size which takes care of the mapping requirements.
 > 
-> https://lore.kernel.org/all/7f2d4894-788e-4ba7-bbfc-67ac0903b6fb@kernel.org/
+> Traditionally, tmpfs only supported PMD-sized large folios. However nowadays
+> with other file systems supporting any sized large folios, and extending
+> anonymous to support mTHP, we should not restrict tmpfs to allocating only
+> PMD-sized large folios, making it more special. Instead, we should allow
+> tmpfs can allocate any sized large folios.
+> 
+> Considering that tmpfs already has the 'huge=' option to control the PMD-sized
+> large folios allocation, we can extend the 'huge=' option to allow any sized
+> large folios. The semantics of the 'huge=' mount option are:
+> 
+> huge=never: no any sized large folios
+> huge=always: any sized large folios
+> huge=within_size: like 'always' but respect the i_size
+> huge=advise: like 'always' if requested with madvise()
+> 
+> Note: for tmpfs mmap() faults, due to the lack of a write size hint, still
+> allocate the PMD-sized huge folios if huge=always/within_size/advise is set.
+> 
+> Moreover, the 'deny' and 'force' testing options controlled by
+> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', still retain the same
+> semantics. The 'deny' can disable any sized large folios for tmpfs, while
+> the 'force' can enable PMD sized large folios for tmpfs.
+> 
+> Co-developed-by: Daniel Gomez <da.gomez@samsung.com>
+> Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Do you see entirely different email? I NEVER give tags with email as
-written here. Such tag could not happen.
+Hi,
 
-> https://lore.kernel.org/all/20250417-acoustic-ambrosial-mosquito-9d75f4@shite/
+This causes a huge regression in Intel iGPU texturing performance.
 
-Where is such tag here?
+I haven't had time to look at this in detail, but presumably the
+problem is that we're no longer getting huge pages from our
+private tmpfs mount (done in i915_gemfs_init()).
 
-Best regards,
-Krzysztof
+Some more details at
+https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/13845
+
+> ---
+>  mm/shmem.c | 99 ++++++++++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 81 insertions(+), 18 deletions(-)
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 7595c3db4c1c..54eaa724c153 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -554,34 +554,100 @@ static bool shmem_confirm_swap(struct address_space *mapping,
+>  
+>  static int shmem_huge __read_mostly = SHMEM_HUGE_NEVER;
+>  
+> +/**
+> + * shmem_mapping_size_orders - Get allowable folio orders for the given file size.
+> + * @mapping: Target address_space.
+> + * @index: The page index.
+> + * @write_end: end of a write, could extend inode size.
+> + *
+> + * This returns huge orders for folios (when supported) based on the file size
+> + * which the mapping currently allows at the given index. The index is relevant
+> + * due to alignment considerations the mapping might have. The returned order
+> + * may be less than the size passed.
+> + *
+> + * Return: The orders.
+> + */
+> +static inline unsigned int
+> +shmem_mapping_size_orders(struct address_space *mapping, pgoff_t index, loff_t write_end)
+> +{
+> +	unsigned int order;
+> +	size_t size;
+> +
+> +	if (!mapping_large_folio_support(mapping) || !write_end)
+> +		return 0;
+> +
+> +	/* Calculate the write size based on the write_end */
+> +	size = write_end - (index << PAGE_SHIFT);
+> +	order = filemap_get_order(size);
+> +	if (!order)
+> +		return 0;
+> +
+> +	/* If we're not aligned, allocate a smaller folio */
+> +	if (index & ((1UL << order) - 1))
+> +		order = __ffs(index);
+> +
+> +	order = min_t(size_t, order, MAX_PAGECACHE_ORDER);
+> +	return order > 0 ? BIT(order + 1) - 1 : 0;
+> +}
+> +
+>  static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+>  					      loff_t write_end, bool shmem_huge_force,
+> +					      struct vm_area_struct *vma,
+>  					      unsigned long vm_flags)
+>  {
+> +	unsigned int maybe_pmd_order = HPAGE_PMD_ORDER > MAX_PAGECACHE_ORDER ?
+> +		0 : BIT(HPAGE_PMD_ORDER);
+> +	unsigned long within_size_orders;
+> +	unsigned int order;
+> +	pgoff_t aligned_index;
+>  	loff_t i_size;
+>  
+> -	if (HPAGE_PMD_ORDER > MAX_PAGECACHE_ORDER)
+> -		return 0;
+>  	if (!S_ISREG(inode->i_mode))
+>  		return 0;
+>  	if (shmem_huge == SHMEM_HUGE_DENY)
+>  		return 0;
+>  	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
+> -		return BIT(HPAGE_PMD_ORDER);
+> +		return maybe_pmd_order;
+>  
+> +	/*
+> +	 * The huge order allocation for anon shmem is controlled through
+> +	 * the mTHP interface, so we still use PMD-sized huge order to
+> +	 * check whether global control is enabled.
+> +	 *
+> +	 * For tmpfs mmap()'s huge order, we still use PMD-sized order to
+> +	 * allocate huge pages due to lack of a write size hint.
+> +	 *
+> +	 * Otherwise, tmpfs will allow getting a highest order hint based on
+> +	 * the size of write and fallocate paths, then will try each allowable
+> +	 * huge orders.
+> +	 */
+>  	switch (SHMEM_SB(inode->i_sb)->huge) {
+>  	case SHMEM_HUGE_ALWAYS:
+> -		return BIT(HPAGE_PMD_ORDER);
+> +		if (vma)
+> +			return maybe_pmd_order;
+> +
+> +		return shmem_mapping_size_orders(inode->i_mapping, index, write_end);
+>  	case SHMEM_HUGE_WITHIN_SIZE:
+> -		index = round_up(index + 1, HPAGE_PMD_NR);
+> -		i_size = max(write_end, i_size_read(inode));
+> -		i_size = round_up(i_size, PAGE_SIZE);
+> -		if (i_size >> PAGE_SHIFT >= index)
+> -			return BIT(HPAGE_PMD_ORDER);
+> +		if (vma)
+> +			within_size_orders = maybe_pmd_order;
+> +		else
+> +			within_size_orders = shmem_mapping_size_orders(inode->i_mapping,
+> +								       index, write_end);
+> +
+> +		order = highest_order(within_size_orders);
+> +		while (within_size_orders) {
+> +			aligned_index = round_up(index + 1, 1 << order);
+> +			i_size = max(write_end, i_size_read(inode));
+> +			i_size = round_up(i_size, PAGE_SIZE);
+> +			if (i_size >> PAGE_SHIFT >= aligned_index)
+> +				return within_size_orders;
+> +
+> +			order = next_order(&within_size_orders, order);
+> +		}
+>  		fallthrough;
+>  	case SHMEM_HUGE_ADVISE:
+>  		if (vm_flags & VM_HUGEPAGE)
+> -			return BIT(HPAGE_PMD_ORDER);
+> +			return maybe_pmd_order;
+>  		fallthrough;
+>  	default:
+>  		return 0;
+> @@ -781,6 +847,7 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
+>  
+>  static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+>  					      loff_t write_end, bool shmem_huge_force,
+> +					      struct vm_area_struct *vma,
+>  					      unsigned long vm_flags)
+>  {
+>  	return 0;
+> @@ -1176,7 +1243,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
+>  			STATX_ATTR_NODUMP);
+>  	generic_fillattr(idmap, request_mask, inode, stat);
+>  
+> -	if (shmem_huge_global_enabled(inode, 0, 0, false, 0))
+> +	if (shmem_huge_global_enabled(inode, 0, 0, false, NULL, 0))
+>  		stat->blksize = HPAGE_PMD_SIZE;
+>  
+>  	if (request_mask & STATX_BTIME) {
+> @@ -1693,14 +1760,10 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>  		return 0;
+>  
+>  	global_orders = shmem_huge_global_enabled(inode, index, write_end,
+> -						  shmem_huge_force, vm_flags);
+> -	if (!vma || !vma_is_anon_shmem(vma)) {
+> -		/*
+> -		 * For tmpfs, we now only support PMD sized THP if huge page
+> -		 * is enabled, otherwise fallback to order 0.
+> -		 */
+> +						  shmem_huge_force, vma, vm_flags);
+> +	/* Tmpfs huge pages allocation */
+> +	if (!vma || !vma_is_anon_shmem(vma))
+>  		return global_orders;
+> -	}
+>  
+>  	/*
+>  	 * Following the 'deny' semantics of the top level, force the huge
+> -- 
+> 2.39.3
+> 
+
+-- 
+Ville Syrjälä
+Intel
