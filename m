@@ -1,119 +1,128 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6EA2BF3EA
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C96629B77F
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921229; cv=none; b=SuplPkwmAGy763kP+xOflBBrrYgvI9aJuY2mh0T8hGyL8zgKdG3yFYeybNau9oUq4KWcV5IzuaXK6Xbf8Z4CJ2u3HFfthCU6n6Y1x9BQog+fi+bQwJKaFSJL3aSvwpAcD+veJjYOKeZ0uSr19PkAHzvNGoD5b54OIUJDtJ9tQyM=
+	t=1745921291; cv=none; b=dVpMA7y7XhY5RXt35vviTmkyw8Eabkq1Dv5/v4yvVHJCq0YxNQgw1mQq7bK+/WehDWp9HKu09+xk6bB65PPrXYOT4vMXiINzqvbIACgjl9DrvmPBVtmC+2nfSkiAAv8ONZUggxjyU0rhWPQu0XqKJwj6lnRj0BgCu2/Fd6ZDVHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921229; c=relaxed/simple;
-	bh=g1tVxbnLGk3i5P6Pxoj8Qjo6872iN8ITjCbgI2W21Dg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nnsrWundi+kALLqklEEqvYk8QciYebJ/k8dG3qgnuH//O2P++VHt6YczP2ijqvK2DWrESmazBwV3h3urnCRDiYgLU5lk528GVqls+VxopEGIjPnTSaMlR80uhWaASTGMqlSgojNdKKYD+4KDndQa1xViZLDfbcKCSuQBaXZ96ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vVod8pq8; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745921291; c=relaxed/simple;
+	bh=FNkyaJGp8MfoVlpMeJugXq0KnLpj/jBe07Y8pBAACqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W1RfUPq4iY+6fzWYoouC226kvH8wrOupGXE2VI9Myc+tnklECOkgbtlu+VtZYEkF3KKhDxIBb0+wLZX5cYrkXmxs+7wlQAcY3IkhudwRY1lGIW51Mz1T6U8l3xCxWYY7zRcdmcTdLUy4oMk1QGQufy3PWmgR6MB8TRj1tYKm2w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZKOu799; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vVod8pq8"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70427fb838cso47566587b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745921227; x=1746526027; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=emtwuLYFhq/+dXPJNX/QT8Hgt+pr1K3s+G1bwQ8o3u0=;
-        b=vVod8pq8yoTc4wRQ69nfOjuZRgRLkxnYuLitHdLrdyp+BHWUVuzsh08veAufytzWmm
-         1vBq2hxdPjNcHkQGNx2YUWrEH8AaeSqWtoozELJ2Iu0LVC2mh/MAr9qj/gP6m6quNqQk
-         ilIj1S8TcVxs6422qjARIzFlUDGvx9rpmF0NtwH5q8WxXmBq6VazeNAhvZ3xGtsCwBmC
-         dvZvDsVnfv/33Wivv36hjJTIj1JijaBjm1KW+6MnoemrcvEuwu9eaIZLDcpJ/jZ9wbJh
-         yqMnlN6Ki5Z7vUcdrcN06PEkRYawYpaGsM9lqe/5hmxsbelP7fBef8+i6JoZnI7ulJxn
-         qeaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745921227; x=1746526027;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=emtwuLYFhq/+dXPJNX/QT8Hgt+pr1K3s+G1bwQ8o3u0=;
-        b=oobeJuZzKMy92u5HgDnHx4bCpoW0iZCoGmjN2I+5DpLtzQQquy5GpdUGsHBCeR+1tG
-         8esIy4svAbrAQBghxAVnydmfAeKhVWLacX1qSD/a9G8Ky/wAjpcCEk7PBaQfgeJXG+3s
-         wivSo2uSbpa0rv0OqLh++BkZm/Z/X0U9R5ouknDUu6A55Zxn5yn4VkYM0d0kipzSzZFn
-         nZqSokEm9YXJYTg1/DW3xmihupO+bGWH+3hAZ0ZBLJk7r5vU07kR/cGxY5eb0ZnvspGx
-         WqaR+2RZcmP8uhvftIkKEj9D1C93LZZOTAsyMKKLfeTbT+qLekWXBBl2X8f0C2xvvBLE
-         4HtQ==
-X-Gm-Message-State: AOJu0YyTcTndiyHKSFg3ltIvsGW/X3jhl4nFTWy7srN5Tz0ZWBQSU5fc
-	g5uxM8Cf+xUiw1tVEYQlC6laBVXek9QUPcxWlH2NJ+lZ/rEaGzh1dihDKMWIIbsxh8n5G2380WR
-	ENtUp1fdd9ashpHRZH5HeicvfjmbZ9pLs93yYJQ==
-X-Gm-Gg: ASbGnctIRi5Kd1AE1G92AuStid9RcrJzWo/1RJz4FUE4oCafLsAdTUjblA89fn0SYqA
-	2xRgYJvyPFuvo14E9ntkle08dwT5/3FAXXwN20IBxNTCX307ENx+MwCADutpTkhVsiQP/bLxzon
-	bTfx0/ix3+44FSB3GVuWXUrlk=
-X-Google-Smtp-Source: AGHT+IE+KQ5mhqCdAicmf7a28zsguJznUEdy53WKuiHnYymLVfd0/ONr455swN8mCtn+15YDbEpXrpy4cOjvjDDAfZo=
-X-Received: by 2002:a05:690c:a90:b0:6fd:33a5:59a with SMTP id
- 00721157ae682-7089af99460mr31745177b3.18.1745921226784; Tue, 29 Apr 2025
- 03:07:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZKOu799"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E22C4CEE3;
+	Tue, 29 Apr 2025 10:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745921289;
+	bh=FNkyaJGp8MfoVlpMeJugXq0KnLpj/jBe07Y8pBAACqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VZKOu799+4V5pW/WeIPX/qMOLrBUca2dqVJr++ECXW2r6WG/1H+svFEldDbiX7Oo/
+	 DY94o1FtmcdGss/70ZUqk4LKljL1SvgzZ16Pvv24LIf9hBcyY3/XJyf68AQiZDjjnH
+	 L59TxFlHG20sFn7drQpXUlPUJ8ThkOni004ozQLvINNZUhpm+KdEjz3/Qpbg7khDuH
+	 I3DrOfWwhOeomddlNJ2qQxoiV/uAX1X4erXjcI2/wTWBJc2z9ALHBdlzAJpLs36VLl
+	 yOaXD0OWQbj4s1mQ1vUixWVu+yj/43QylJFIKx1Vy87I6Ai25BDi8HqaBo91TVBiwI
+	 exBh1/FcloI/Q==
+Date: Tue, 29 Apr 2025 12:08:03 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
+ handling to C
+Message-ID: <aBClAy837xcLnVpp@gmail.com>
+References: <aAyiganPp_UsNlnZ@gmail.com>
+ <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
+ <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
+ <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
+ <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
+ <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
+ <aA8nF0moBYOIgC5J@gmail.com>
+ <aA8oqKUaFU-0wb-D@gmail.com>
+ <aA8q4Ot-1zTzv_Kt@gmail.com>
+ <CAHk-=wh5DUS+nhfTxPEEbaB9dsFib39gWatrX4NoFq_MpdOzGw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424034610.441532-1-rdunlap@infradead.org>
-In-Reply-To: <20250424034610.441532-1-rdunlap@infradead.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 29 Apr 2025 12:06:30 +0200
-X-Gm-Features: ATxdqUGe1f7BXwgk8BKhjbgMOwlPjLa7A1c1xzU9Uqd9tqasf9-fMmdsvIXz7aE
-Message-ID: <CAPDyKFr3EN+Ss5qaFmQ1+42=t_cZ55PtggXMq8uVHPkYQy-uyw@mail.gmail.com>
-Subject: Re: [PATCH -next] mmc: sdhci-esdhc-imx: fix defined but not used warnings
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Luke Wang <ziniu.wang_1@nxp.com>, 
-	linux-mmc@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>, imx@lists.linux.dev, 
-	s32@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-
-On Thu, 24 Apr 2025 at 05:46, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Fix warnings when CONFIG_PM=y and CONFIG_PM_SLEEP is not set by
-> surrounding the 2 functions with #ifdef CONFIG_PM_SLEEP.
->
-> drivers/mmc/host/sdhci-esdhc-imx.c:1659:13: warning: 'sdhc_esdhc_tuning_restore' defined but not used [-Wunused-function]
->  1659 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
-> drivers/mmc/host/sdhci-esdhc-imx.c:1637:13: warning: 'sdhc_esdhc_tuning_save' defined but not used [-Wunused-function]
->  1637 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
->
-> Fixes: 3d1eea493894 ("mmc: sdhci-esdhc-imx: Save tuning value when card stays powered in suspend")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Luke Wang <ziniu.wang_1@nxp.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: Haibo Chen <haibo.chen@nxp.com>
-> Cc: imx@lists.linux.dev
-> Cc: s32@nxp.com
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh5DUS+nhfTxPEEbaB9dsFib39gWatrX4NoFq_MpdOzGw@mail.gmail.com>
 
 
-> ---
->  drivers/mmc/host/sdhci-esdhc-imx.c |    2 ++
->  1 file changed, 2 insertions(+)
->
-> --- linux-next-20250423.orig/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ linux-next-20250423/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -1634,6 +1634,7 @@ static void sdhci_esdhc_imx_hwinit(struc
->         }
->  }
->
-> +#ifdef CONFIG_PM_SLEEP
->  static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
->  {
->         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -1688,6 +1689,7 @@ static void sdhc_esdhc_tuning_restore(st
->                        host->ioaddr + ESDHC_TUNE_CTRL_STATUS);
->         }
->  }
-> +#endif
->
->  static void esdhc_cqe_enable(struct mmc_host *mmc)
->  {
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Mon, 28 Apr 2025 at 00:14, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > And, just out of intellectual curiosity, I also tried to measure the
+> > code generation price of the +1 standards-quirk in the fls()/ffs()
+> > interface as well:
+> >
+> > ... and unless I messed up the patch, it seems to have a surprisingly
+> > low impact - maybe because the compiler can amortize its cost by
+> > adjusting all dependent code mostly at build time, so the +1 doesn't
+> > end up being generated most of the time?
+> 
+> No, I think one issue is that most users actually end up subtracting
+> one from the return value of 'ffs()', because the "bit #0 returns 1"
+> semantics of the standard ffs() function really is insane.
+> 
+> It's not just that it doesn't match sane hardware, it's also that it
+> doesn't match sane *users*. If bit #0 is set, people want '0', so they
+> typically subtract 1.
+> 
+> So when you stop adding one, you aren't actually removing code -
+> you're often adding it.
+> 
+> Just see how many hits you get from
+> 
+>     git grep '\<ffs(.*).*-.*1'
+> 
+> which is obviously not a very precise pattern, but just look at the
+> output and see just *how* common that "subtract one" thing is.
+> 
+> I really don't understand how anybody *ever* thought that the whole
+> "return one bigger" was a good idea for ffs().
+
+Yeah. No argument from me that it's a badly thought out interface - I 
+was just surprised that it doesn't seem to impact performance as badly 
+as I expected. I have to add that a lot of work went into absorbing the 
+negative effects of the ffs()/fls() interfaces:
+
+  starship:~/tip> git grep -Ee '__ffs\(|__fls\(' | wc -l
+  1055
+
+So it impacts code quality negatively, which is arguably the worse side 
+effect.
+
+> But maybe people really were poisoned by the Pascal mindset. Or maybe 
+> it was invented by some ancient Roman who hadn't heard of the concept 
+> of zero. Who knows?
+
+Hey, ancient Romans didn't even have the concept of *whitespaces* and 
+punctuation to begin with:
+
+    https://historyofinformation.com/images/Vergilius_Augusteus,_Georgica_121.jpg
+
+Lazy stonemasons the lot of them.
+
+Romans were the worst ever coders too I suspect. What have the Romans 
+ever done for us??
+
+	Ingo
