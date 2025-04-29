@@ -1,101 +1,100 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12EA130A54
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CF92C2ABC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932653; cv=none; b=hDTrXhejmu9mldvxnmuRn3yqO57ZzO1Odx+6FT3h6Shm9rXYh6xHM+pBsVqBwJKWDDYjL42FGrVV7/EIBo2xZ51M7dzUaCH82l9GnpxJ0B7DvNwZBa6Pt59fzbjXu2JDXcH0oGf0VIp6kbshE+dKetqUdMZ8vW7c9IV6w8TuzIc=
+	t=1745932670; cv=none; b=ZY8i6HEUROe9mol2dukiCVX0BjQLw5qQ3j0rHPZSwtuK+BdJ+uJZF41YYoVdWpmPPSI3rpzSAjXxTZ8iwA/+oiWtcmXxb9MyW0vFSorLQdHp3AIl0hb9s5EECJC/OnkTBiON0RvZKO22CkVXWGHj5mdgXsF2Lma5ir7Q8M5lcZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932653; c=relaxed/simple;
-	bh=7Y5NTnCFDzXwCsD2wU9EAUF1uwpBd6usaQJu+svC4Sc=;
-	h=Message-Id:Date:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=d/nKc2Pljrilano95Tw5jZiltjy7gf9+SInw+PNKHNJ8HyrlzeZXhgA3Yf/Wwy9DCEOVsJ/a/wR49HcFhLqk8cGBdsIuNVzUaOtAol9sO9apUfxORAGaxUKAs3QkGKlyJ34SHP5o1yLVSQfrDc+b4bcLZ8CFjTm+/6GoFEa9ZDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-db.zte.com.cn (unknown [10.5.228.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4Zn17j42NMz5B1Jt;
-	Tue, 29 Apr 2025 21:17:21 +0800 (CST)
-Received: (from root@localhost)
-	by mse-db.zte.com.cn id 53TDHHjY085301;
-	Tue, 29 Apr 2025 21:17:17 +0800 (+08)
-	(envelope-from liu.song13@zte.com.cn)
-Message-Id: <202504291317.53TDHHjY085301@mse-db.zte.com.cn>
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 53T9T3aU063440;
-	Tue, 29 Apr 2025 17:29:03 +0800 (+08)
-	(envelope-from liu.song13@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid31;
-	Tue, 29 Apr 2025 17:29:05 +0800 (CST)
-Date: Tue, 29 Apr 2025 17:29:05 +0800 (CST)
-X-Zmail-TransId: 2af968109be16a9-43a08
-X-Mailer: Zmail v1.0
-In-Reply-To: <0b1e1a00-2cb9-4793-a439-06fcec3e71ec@amd.com>
-References: 202504270413.53R4DUco001600@mse-db.zte.com.cn,0b1e1a00-2cb9-4793-a439-06fcec3e71ec@amd.com
+	s=arc-20240116; t=1745932670; c=relaxed/simple;
+	bh=R3HOfhuh4Z/yau6P4o09NM2xwO65jdSQzwa46LoRqpU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dpoozIbTVoZAnFf9SuJBtMiN3ARcro1TEe66FBGW4lJG47IYqYjVhiFdjZwDHNX7BPnmzFONfQWXPjkyKxgNWgyarsZchhtA0MowHgGSoz4UP43ChQ7l8649HL7/ZaqGStiCODs00e25Oo1gqu6ZxERRPTXc1K/HLhH+hPbB1tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=USF1+qqD; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="USF1+qqD"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6feb229b716so50671227b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=criticallink.com; s=google; t=1745932668; x=1746537468; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JiU0ctgy7Lku6IPSealurIvtPQsS8cdAkog6qNamfp4=;
+        b=USF1+qqDnxgaV+JunfwDta5K4//84DptMR0utZMV8Zi/e7BrwN/vtP9F236HzeIGmN
+         TQbzjQz+VT2nyZ2Da5bo/RJjDC40M4Wnv/6MsXXNjZzCCsF1LiHbImFSJ0FHeZMg91Z+
+         mp7pJdsf2mEM4gsMYYBHqa9Oo1rl/NFDOs7Vqttex/5ragcvX0WmgwUC9mYFScQKRWBZ
+         8E3k3y53jhcq9MPM/tmz3u5t4n+0e1JvZqJlUTeei9CFRpaZUOTGt/5jEd3YxYT4Cay9
+         EbmfWlGwc5xtbR10KoWUrCSizCq+em4tKKblOctsgoyKFTSvvWjl4tkGfjxpg3knmD3l
+         ka4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745932668; x=1746537468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JiU0ctgy7Lku6IPSealurIvtPQsS8cdAkog6qNamfp4=;
+        b=O1Xvml5qOPbxtWQDsNNUbNlhP4omn537EuB3gfc3vTcfN1UFfMG+hraJh95sPwzRp5
+         mPWMX4u2BmOFa3o08DE5zCgGfRAykTlmRAewdR/xpBiRLsj1oNEy2dRidEQt6oQYbfFf
+         mKCqveXQHfJEGsKTCXAm6uDNssWEVQwJDn3UY9wBaq4Q8gOczgWMqAAtJR+jCsS41XLa
+         sYCt/unLI8CHpjE0Wsdm9JlFjAObHqfIodOFiXpsvO/QknTPnSaCOkyZ4EDNtnF4M6UN
+         z/zVkG14bipaJe7cnzzNIv6r7dez9Wn43yDS0O5xlO2VguDpvzMGsqiRvTyAFuqJ1Grb
+         vENQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOgF1CuhLDAHzLROSTQDrak+ADluxiMAzIpJx0c7H8iupQewNtwufGhPTdfyHojxGbBfFpOdWb8H2e60E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2NPydddhevpLVwsBP6YjazYT3tfxPavfNNyXpph976hxYS6Qo
+	wvvYmT+ooXyzAJ3r2J1ROzYTAaRFe+j4+T9TDe+kEvIuMdlX1RCXFXrBBjFz3ZGzCV91BbC4uk5
+	XwcWpNCv44gOB1rYd5V7XMB9HSwjfcXrFhHl+
+X-Gm-Gg: ASbGncvTAT0IEAhSRZYN7aoRqrrYiiWwJ/towvGo9gLvB+/Do9ASm2RjgZ1MYQnKCRo
+	Lg2MV1j6Ztp67XhTYbMJaVbbuU3k2C+acRfsQMTjl1jrIw5L57xtDpS6Ie/d1umqb5WiexCfphd
+	BQuN3tbbHk0pEjCHK5WmM8
+X-Google-Smtp-Source: AGHT+IFAkL63cTl/cATNWOg2+YEvpMmi4OYjf4KFpNJEBRA716QUIF33QsNLmMAkg+zJVxgzGQkTVCNVAoMlrQh1Ycg=
+X-Received: by 2002:a05:690c:6888:b0:6fd:a226:fb24 with SMTP id
+ 00721157ae682-7085f1773b5mr194962727b3.10.1745932667944; Tue, 29 Apr 2025
+ 06:17:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <liu.song13@zte.com.cn>
-To: <felix.kuehling@amd.com>
-Cc: <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <airlied@gmail.com>, <simona@ffwll.ch>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <liu.xuemei1@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <xue.zhihong@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gZHJtL2FtZGtmZDogZW5hYmxlIGtmZCBvbiBSSVNDViBzeXN0ZW1z?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-db.zte.com.cn 53TDHHjY085301
-X-MSS: AUDITRELEASE@mse-db.zte.com.cn
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6810D161.000/4Zn17j42NMz5B1Jt
+MIME-Version: 1.0
+References: <20250425203315.71497-1-s-ramamoorthy@ti.com> <20250425203315.71497-4-s-ramamoorthy@ti.com>
+ <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com>
+In-Reply-To: <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com>
+From: Jon Cormier <jcormier@criticallink.com>
+Date: Tue, 29 Apr 2025 09:17:36 -0400
+X-Gm-Features: ATxdqUG2F7x0DRZn5itS7I9rvm7sd9uKgUWiZxhm2pdUZyNe5KbRtX9ZG_d-XUs
+Message-ID: <CADL8D3YY+EYPBX+Unt=zbCCLT1-qaCmOmF5VwG1qOK7v_yFzoA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] gpio: tps65219: Add support for varying
+ gpio/offset values
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>, aaro.koskinen@iki.fi, andreas@kemnade.info, 
+	khilman@baylibre.com, rogerq@kernel.org, tony@atomide.com, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, linux-omap@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc: m-leonard@ti.com, jsava@criticallink.com, 
+	Praneeth Bajjuri <praneeth@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->> From: Xuemei Liu <liu.xuemei1@zte.com.cn>
->>
->> KFD has been confirmed that can run on RISCV systems. It's necessary to
->> support CONFIG_HSA_AMD on RISCV.
-> 
-> Is there a public user mode branch with any changes needed to make ROCm 
-> user mode work with RISCV?
-> 
-> One more question inline.
-> 
-> 
->> Signed-off-by: Xuemei Liu <liu.xuemei1@zte.com.cn>
->> ---
->>   drivers/gpu/drm/amd/amdkfd/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdkfd/Kconfig b/drivers/gpu/drm/amd/amdkfd/Kconfig
->> index d3c3d3ab7225..9d4a5f8ef43f 100644
->> --- a/drivers/gpu/drm/amd/amdkfd/Kconfig
->> +++ b/drivers/gpu/drm/amd/amdkfd/Kconfig
->> @@ -5,7 +5,7 @@
->>
->>   config HSA_AMD
->>    bool "HSA kernel driver for AMD GPU devices"
->> - depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64)
->> + depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || RISCV)
-> 
-> The KFD memory model only works on 64-bit architectures. Is there a way 
-> to express that in the RISCV dependency?
-> 
-> Regards,
->   Felix
+On Mon, Apr 28, 2025 at 12:41=E2=80=AFPM Jonathan Cormier
+<jcormier@criticallink.com> wrote:
+>
 
-Dear Felix:
+>
+> Note: Its unclear to me, why Jerome Neanne and I weren't included in
+> this patch set, considering we were the ones who authored and submitted
+> this driver.
 
-  Thanks for your feedback.
-  Regarding the issues you've pointed out:
-  1. The adaptation work of ROCm user mode work on RISCV was done by my collegue. He replied that he made no changes in ROCm code.
-  2. I will send patch-v2 to satisfy KFD only work on 64-bit architectures.
+I see Jerome's email is dead. So that's one mystery solved.
 
-Best regards,
-  Xuemei
+
+
+--=20
+Jonathan Cormier
+Senior Software Engineer
+
+Voice:  315.425.4045 x222
+
+http://www.CriticalLink.com
+6712 Brooklawn Parkway, Syracuse, NY 13211
