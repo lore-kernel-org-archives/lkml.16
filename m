@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5675E22371B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:23:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 994BF2512FF
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745904234; cv=none; b=Pc3KqYgNYbRihS4kB0YGCJ9izhogumuCCMQa+991jfBT4ySwleK4yA5V8YWeraZjK5iUk+m3FWs/r9+yVHeA0KNSdO6FaAIEmtxuuqXaqLpltJZ3XaV5y8XayE5xfs0lMgVImxJQyu4Nj8C6hJoLk9rr6OwY2MPZyaBnI2vUqLo=
+	t=1745904244; cv=none; b=doEPycxKMG1t0zvUJGkcZlQTHdBizgijTJqvrcE2W2DDFx5vjYvURvt0MKLnkaazEpvlThQjlbavxdNFieZDuX1mvQS5FUj38vW64ogfTTcgpJR5AFZSFLY0KIS+tK3nkIStoDBlY1Jb0tJ6EWAkm+IfkLnzYcHz6uWdcVquLD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745904234; c=relaxed/simple;
-	bh=lZgSJyiZUL4P1NBNALtsh/Xo7TesAQuW8c0hPfgVzEM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d+/4ZRi0qead6UKwCyyQuDJQG3rpXRnH8rRYRlRKOF9k49d6Mgy0xjoDUwL9kvNP1/5ky3/GnEv5Xn9DUk7VxxMC6P1v9D0O2h6zZZBc6tp2vWtIIplp3puovvXGiyBAdHZK98LyRnLLdgch+rNSpu0t1mIDqpMv4WBHs3gIw/k=
+	s=arc-20240116; t=1745904244; c=relaxed/simple;
+	bh=4hin14bzeWTrOJettsy0ZOrgToaRCaKMDdQbc4jv4xs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZsazDUlxgnmHbKFac32VIJgd19bTLNW5aRgYqNLlXf1uFYqjJ+4/5Jv1wOWuVWL7dRnYtQehik2wL75pizxp1LnSazwlwYfjQXmjtcIHhGfTrESJYp0UKIOGDhzP2p/D2WyUxKbpoUKobkyEoYMcCrOY5A0XT97Ii6TyQajCV9U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB84E1515;
-	Mon, 28 Apr 2025 22:23:44 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 259331515;
+	Mon, 28 Apr 2025 22:23:55 -0700 (PDT)
 Received: from K4MQJ0H1H2.arm.com (unknown [10.163.78.253])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0692B3F5A1;
-	Mon, 28 Apr 2025 22:23:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 421023F5A1;
+	Mon, 28 Apr 2025 22:23:51 -0700 (PDT)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org
 Cc: ryan.roberts@arm.com,
@@ -45,10 +46,12 @@ Cc: ryan.roberts@arm.com,
 	yang@os.amperecomputing.com,
 	ziy@nvidia.com,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 0/7] Optimize mprotect for large folios
-Date: Tue, 29 Apr 2025 10:53:29 +0530
-Message-Id: <20250429052336.18912-1-dev.jain@arm.com>
+Subject: [PATCH v2 1/7] mm: Refactor code in mprotect
+Date: Tue, 29 Apr 2025 10:53:30 +0530
+Message-Id: <20250429052336.18912-2-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250429052336.18912-1-dev.jain@arm.com>
+References: <20250429052336.18912-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,52 +60,150 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset optimizes the mprotect() system call for large folios
-by PTE-batching.
+Reduce indentation in change_pte_range() by refactoring some of the code
+into a new function. No functional change.
 
-We use the following test cases to measure performance, mprotect()'ing
-the mapped memory to read-only then read-write 40 times:
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ mm/mprotect.c | 116 +++++++++++++++++++++++++++++---------------------
+ 1 file changed, 68 insertions(+), 48 deletions(-)
 
-Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
-pte-mapping those THPs
-Test case 2: Mapping 1G of memory with 64K mTHPs
-Test case 3: Mapping 1G of memory with 4K pages
-
-Average execution time on arm64, Apple M3:
-Before the patchset:
-T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
-
-After the patchset:
-T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.2 seconds
-
-Observing T1/T2 and T3 before the patchset, we also remove the regression
-introduced by ptep_get() on a contpte block. And, for large folios we get
-an almost 74% performance improvement.
-
-v1->v2:
- - Rebase onto mm-unstable (6ebffe676fcf: util_macros.h: make the header more resilient)
- - Abridge the anon-exclusive condition (Lance Yang)
-
-Dev Jain (7):
-  mm: Refactor code in mprotect
-  mm: Optimize mprotect() by batch-skipping PTEs
-  mm: Add batched versions of ptep_modify_prot_start/commit
-  arm64: Add batched version of ptep_modify_prot_start
-  arm64: Add batched version of ptep_modify_prot_commit
-  mm: Batch around can_change_pte_writable()
-  mm: Optimize mprotect() through PTE-batching
-
- arch/arm64/include/asm/pgtable.h |  10 ++
- arch/arm64/mm/mmu.c              |  21 +++-
- include/linux/mm.h               |   4 +-
- include/linux/pgtable.h          |  42 ++++++++
- mm/gup.c                         |   2 +-
- mm/huge_memory.c                 |   4 +-
- mm/memory.c                      |   6 +-
- mm/mprotect.c                    | 165 ++++++++++++++++++++-----------
- mm/pgtable-generic.c             |  16 ++-
- 9 files changed, 198 insertions(+), 72 deletions(-)
-
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 88608d0dc2c2..70f59aa8c2a8 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -83,6 +83,71 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+ 	return pte_dirty(pte);
+ }
+ 
++
++
++static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
++		int target_node)
++{
++	bool toptier;
++	int nid;
++
++	/* Also skip shared copy-on-write pages */
++	if (is_cow_mapping(vma->vm_flags) &&
++	    (folio_maybe_dma_pinned(folio) ||
++	     folio_maybe_mapped_shared(folio)))
++		return true;
++
++	/*
++	 * While migration can move some dirty pages,
++	 * it cannot move them all from MIGRATE_ASYNC
++	 * context.
++	 */
++	if (folio_is_file_lru(folio) &&
++	    folio_test_dirty(folio))
++		return true;
++
++	/*
++	 * Don't mess with PTEs if page is already on the node
++	 * a single-threaded process is running on.
++	 */
++	nid = folio_nid(folio);
++	if (target_node == nid)
++		return true;
++	toptier = node_is_toptier(nid);
++
++	/*
++	 * Skip scanning top tier node if normal numa
++	 * balancing is disabled
++	 */
++	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
++	    toptier)
++		return true;
++	return false;
++}
++
++static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
++		unsigned long addr, pte_t oldpte, int target_node)
++{
++	struct folio *folio;
++	int ret;
++
++	/* Avoid TLB flush if possible */
++	if (pte_protnone(oldpte))
++		return true;
++
++	folio = vm_normal_folio(vma, addr, oldpte);
++	if (!folio || folio_is_zone_device(folio) ||
++	    folio_test_ksm(folio))
++		return true;
++	ret = prot_numa_skip(vma, folio, target_node);
++	if (ret)
++		return ret;
++	if (folio_use_access_time(folio))
++		folio_xchg_access_time(folio,
++			jiffies_to_msecs(jiffies));
++	return false;
++}
++
+ static long change_pte_range(struct mmu_gather *tlb,
+ 		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
+ 		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
+@@ -116,56 +181,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 			 * Avoid trapping faults against the zero or KSM
+ 			 * pages. See similar comment in change_huge_pmd.
+ 			 */
+-			if (prot_numa) {
+-				struct folio *folio;
+-				int nid;
+-				bool toptier;
+-
+-				/* Avoid TLB flush if possible */
+-				if (pte_protnone(oldpte))
+-					continue;
+-
+-				folio = vm_normal_folio(vma, addr, oldpte);
+-				if (!folio || folio_is_zone_device(folio) ||
+-				    folio_test_ksm(folio))
+-					continue;
+-
+-				/* Also skip shared copy-on-write pages */
+-				if (is_cow_mapping(vma->vm_flags) &&
+-				    (folio_maybe_dma_pinned(folio) ||
+-				     folio_maybe_mapped_shared(folio)))
+-					continue;
+-
+-				/*
+-				 * While migration can move some dirty pages,
+-				 * it cannot move them all from MIGRATE_ASYNC
+-				 * context.
+-				 */
+-				if (folio_is_file_lru(folio) &&
+-				    folio_test_dirty(folio))
++			if (prot_numa &&
++			    prot_numa_avoid_fault(vma, addr,
++						  oldpte, target_node))
+ 					continue;
+ 
+-				/*
+-				 * Don't mess with PTEs if page is already on the node
+-				 * a single-threaded process is running on.
+-				 */
+-				nid = folio_nid(folio);
+-				if (target_node == nid)
+-					continue;
+-				toptier = node_is_toptier(nid);
+-
+-				/*
+-				 * Skip scanning top tier node if normal numa
+-				 * balancing is disabled
+-				 */
+-				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
+-				    toptier)
+-					continue;
+-				if (folio_use_access_time(folio))
+-					folio_xchg_access_time(folio,
+-						jiffies_to_msecs(jiffies));
+-			}
+-
+ 			oldpte = ptep_modify_prot_start(vma, addr, pte);
+ 			ptent = pte_modify(oldpte, newprot);
+ 
 -- 
 2.30.2
 
