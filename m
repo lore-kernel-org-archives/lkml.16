@@ -1,93 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DAA1E766F;
-	Tue, 29 Apr 2025 11:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4C42C1793;
+	Tue, 29 Apr 2025 11:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745924944; cv=none; b=MBDkaIBxHtL6JnsJBaeNf6UaLbzU48AWxlhhU66+YJ2n9n0c6yG8V98bBCFqKvoRuz/LBZSjXbAvMFYX8mSNlCIARdWMiujjMJey7opeJwNdSubaBpH77S8fWM1SZvnDc1isk+iBhsrXwREtS7Lc09IvH+AMsTXJdXSiyBccL40=
+	t=1745924962; cv=none; b=XEaUCJ9P6VqoliQifFkQOYGtGmBCNwxXcTiCiw3P6tiGmp/7Rt7pzK3WpoO2Po9IQsbCYvQgrHzOgTYhlbM/u+eDrPHk8AHyLtzygDoIrFhk/eLTBe49XQO/+7adwPYtI2hqatu+kCpJd+KoEp5yrH/U8Km8g1+zIjsg+zd2fKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745924944; c=relaxed/simple;
-	bh=6W5bZ7kV+SEAo1aKDYzV8iQ9Oc96d7635w7XhaN2yN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FGu4VDmrytwEsR2HqvbA4TMvZJTW+TYlaM/gKXpklfrU0xkcZFA+DJAL5WXHxUI/91cOngSfggMxf5LiYoclYxpi+Y1biuzwORtz0vyAwdz+mNhShdr9SSMTRe7/AEMy+CRxSRZe5Tb6VP6mDVV75Osx0SYUHPF/ai61KxYK9/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJoNtR21; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745924962; c=relaxed/simple;
+	bh=ZXz2yD+d82VC43nSuY5nImDpV2JGQJKNMs4bpCo0zTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rGOveMVU+kxQxAvH38j3BfC63KSsMWYEzxCDXrpYj7QhNkCnuI8CcyH8dWlM8AtyGWvMvlqSwAW2LB8yuydN2nWgY+9ae/O2IugyzBjXBM+M13XWXvnnaB11c1XriIPTyZnkqn1ul67rd1o31UpXvpSey1syAhnbrkQAakw+vOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vPpCB6J8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJoNtR21"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FECC4AF0C;
-	Tue, 29 Apr 2025 11:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745924943;
-	bh=6W5bZ7kV+SEAo1aKDYzV8iQ9Oc96d7635w7XhaN2yN0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kJoNtR21vvtiSK5I4AhujhMcNV+jG3JNu8FI7oxh5yfbV+ZGNOJAcf70SZ6ZSbSSh
-	 WBA6V6p0QtkKVHNdfpf78MPtWIqpmwUBJlYJTzrZvhAcslEg+Ok3J8Th6QnSWh8qvV
-	 10U4NKBGv5e21OLZCs4VfN9DALwLzye40muCMeiO6cNaIXV7O6k77LyqZA0oBKafXN
-	 qVziuIj7I6gsva59f529qRXh9gygYQYEzDjUdqla68igWIwRnbbirGlzXeO2cbCs9r
-	 PYgmQ9Ww/z9N3j3sDgyS4MQc7ykvmUy+DCcAa6TahzHBHr9YBfpaSxLoPgOHYximNo
-	 7L0asRTv1pDAg==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2da3c5729fcso646430fac.0;
-        Tue, 29 Apr 2025 04:09:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHV1BWex9W/CZ/9MRrEIffWgutpHrgPtD8P1h+dEj+d4O+kaHn1dzYqXjjipIKSigvIfGmVwVZ+8mjq10=@vger.kernel.org, AJvYcCUrGPX+pqDFJPv5is1z9q+cfizHJFIgKuiXKKk0X0u+YT8TmZDOmHOIA9u49UK41KgoQxyK05ydyOU=@vger.kernel.org, AJvYcCWcmwdSjP/HAgry7FvLnBMoWffnohSwJpGsBXfjjNbWYIKRXwxXzVHZbcskzac9AqDJBh7OHEwUSH4T@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7k3Qc2V1mVq9G+g2wWzU7j7iut1GSOJY11TBdd56oBFVUgGkR
-	tgj3AVtPDUX0UQ0rRzyqCMuQiDmTR1AthS5pIwBNY145nO+HKJA5iCRGR6oQasoCeOKzs2Wco0n
-	Y6TnK2QEFyTkKBwMQXxLAL6a7QWw=
-X-Google-Smtp-Source: AGHT+IFY4i+B3pR5hn7A2kqkAlnBnbb/HDJe+RY21qXj4tISAk0tiDxufLtwdDVT//wBwk48KcRpyo3+ep5C+qD0nl0=
-X-Received: by 2002:a05:6871:2886:b0:2c3:f8e3:bdb9 with SMTP id
- 586e51a60fabf-2da486a7a9amr1047877fac.28.1745924943157; Tue, 29 Apr 2025
- 04:09:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vPpCB6J8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BEF0C4CEE3;
+	Tue, 29 Apr 2025 11:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745924961;
+	bh=ZXz2yD+d82VC43nSuY5nImDpV2JGQJKNMs4bpCo0zTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vPpCB6J8Did6SL6ieVRERHWiMQVou2FditYC4SOcc+YlGE6WGBmjz+eOJaWTGMSXe
+	 aufbHjwU2vdQxeoDYbflnRVYny9LrndOQ3GZNv52+wh/48GhF4cd8cyWrevVsH1GMK
+	 0fXO+AxzZYKH4ICDygZ4OoXnWrj7+2S+H3B79SpM=
+Date: Tue, 29 Apr 2025 13:09:18 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] uaccess: rust: add
+ UserSliceReader::strcpy_into_buf
+Message-ID: <2025042919-varsity-registrar-fb45@gregkh>
+References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+ <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327195928.680771-2-csokas.bence@prolan.hu>
- <20250327195928.680771-3-csokas.bence@prolan.hu> <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
- <b38b27d4-c3d3-450c-8634-2e07f393a76c@prolan.hu>
-In-Reply-To: <b38b27d4-c3d3-450c-8634-2e07f393a76c@prolan.hu>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 29 Apr 2025 13:08:51 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hRsXw45utNMEhLB=i56tsJDz8AvYfV2stPbtRHh09HUg@mail.gmail.com>
-X-Gm-Features: ATxdqUES0FmjmyEqrlOpgBYB8t6ofrTgX8zGFUf5SN2x5tU_vCgg6l81l9wKEDc
-Message-ID: <CAJZ5v0hRsXw45utNMEhLB=i56tsJDz8AvYfV2stPbtRHh09HUg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] pm: runtime: Add new devm functions
-To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Varshini Rajendran <varshini.rajendran@microchip.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Len Brown <len.brown@intel.com>, 
-	Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Pavel Machek <pavel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
 
-On Mon, Apr 28, 2025 at 10:44=E2=80=AFAM Cs=C3=B3k=C3=A1s Bence <csokas.ben=
-ce@prolan.hu> wrote:
->
-> Hi,
->
-> On 2025. 04. 09. 19:43, Rafael J. Wysocki wrote:
-> > On Thu, Mar 27, 2025 at 8:59=E2=80=AFPM Bence Cs=C3=B3k=C3=A1s <csokas.=
-bence@prolan.hu> wrote:
-> >>
-> >> Add `devm_pm_runtime_set_active_enabled()` and
-> >> `devm_pm_runtime_get_noresume()` for simplifying common cases in drive=
-rs.
-> >>
-> >> Signed-off-by: Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.hu>
-> >
-> > I can apply this one alone if you want me to do that, but I could also
-> > apply the other patch in the series if it got an ACK from the driver
-> > maintainer.
->
-> Did this end up being applied?
+On Tue, Apr 29, 2025 at 09:02:23AM +0000, Alice Ryhl wrote:
+> This patch adds a more convenient method for reading C strings from
+> userspace. Logic is added to NUL-terminate the buffer when necessary so
+> that a &CStr can be returned.
+> 
+> Note that we treat attempts to read past `self.length` as a fault, so
+> this returns EFAULT if that limit is exceeded before `buf.len()` is
+> reached.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  rust/kernel/uaccess.rs | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> index acb703f074a30e60d42a222dd26aed80d8bdb76a..7cec1b62bd8b816f523c8be12cb29905740789fc 100644
+> --- a/rust/kernel/uaccess.rs
+> +++ b/rust/kernel/uaccess.rs
+> @@ -293,6 +293,41 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut Vec<u8, A>, flags: Flags) -> R
+>          unsafe { buf.set_len(buf.len() + len) };
+>          Ok(())
+>      }
+> +
+> +    /// Read a NUL-terminated string from userspace and append it to `dst`.
+> +    ///
+> +    /// Fails with [`EFAULT`] if the read happens on a bad address.
 
-Just applied as 6.16 material, I'll let you know when the tag to pull
-from is ready.
+Also returns this error:
 
-Thanks!
+> +    pub fn strcpy_into_buf<'buf>(&mut self, buf: &'buf mut [u8]) -> Result<&'buf CStr> {
+> +        if buf.is_empty() {
+> +            return Err(EINVAL);
+
+if the buffer is of 0 length.  Don't know if you want to document that
+or not.
+
+> +        }
+> +
+> +        // SAFETY: The types are compatible and `strncpy_from_user` doesn't write uninitialized
+> +        // bytes to `buf`.
+> +        let mut dst = unsafe { &mut *(buf as *mut [u8] as *mut [MaybeUninit<u8>]) };
+> +
+> +        // We never read more than `self.length` bytes.
+> +        if dst.len() > self.length {
+> +            dst = &mut dst[..self.length];
+> +        }
+> +
+> +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
+> +        if len < dst.len() {
+> +            // Add one to include the NUL-terminator.
+> +            len += 1;
+> +        } else if len < buf.len() {
+> +            // We hit the `self.length` limit before `buf.len()`.
+> +            return Err(EFAULT);
+
+How can this happen?  And if it does, why is that a memory fault?
+Doesn't this just mean that we read smaller than our overall size of our
+buffer?  Or am I misreading this completely?
+
+Maybe a self-test would be good to exercise all of this :)
+
+thanks,
+
+greg k-h
