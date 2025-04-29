@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407BA2D1F5F;
-	Tue, 29 Apr 2025 12:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9122D29BF;
+	Tue, 29 Apr 2025 12:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745928103; cv=none; b=MQzMXgQzsTa0texwOCj/LSTf9wKA1d6PTjhVjFr+hKov7ITyfHKlLhtohRjfjWBPBfnO3+GdYZO2wDsSSwIYVqk75d5kQ46eprdQwwQGhE24OP/GPmcLdwKed9JOfAK8nuOd9Frdj/y0HIVxp1HRb4xh7h8ECg2pz6D2Q9rEEOk=
+	t=1745928104; cv=none; b=hoaNnecL8wPk2C7OLLM2KpnWAY8v3OYxgwoQFQGtsTJD3aoZHyGi0h192DmaTdaaKhQ7GcycFrt/bmyrd14DQg7Gvh3dJ5DsB/c1gXXoP16Kmc5gmyliNfGuK3kvv8H9bEtKF1KYHn9HRuMUp/ar2WTy2VBvy6ZrEwPiRR4Osyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745928103; c=relaxed/simple;
-	bh=63SSOKFSEqcjbQoJl5F1xfsKFc3zZT0b4E7TON8iDu8=;
+	s=arc-20240116; t=1745928104; c=relaxed/simple;
+	bh=hQA6qqGvwzZFtAZxFqekDTt+sSU6wgmodPxkSK4vBIs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LuF00mriCE84dodI1lgVq5fMevTye/JtEr6rTyHKm/gvWRNBYY9FGIv6xW1WTJ23beNz61u0EMJOujdUyPmzN7drJJ0muT8JpnEVhEbbeYDwIadJRNajI729xNu7L+NP0YSWRjJiyM96ayXEssymm+BR4owmHWS7quErvOZPsXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MCn82hJ7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ypb+Dw4G; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=lGeshssEBYcxoGlvqGsPMnMpmZJCjcubANXjkCl1wsU/jC43gu/j0cfN6ccuf60DpKPMRlBrTD/0+IKhQYOtUhN9WqXtBSPIm198hGeMY/ONvkgLn1gOuWd5io9P/tGWKS3lRX+38K10qgQ2uFq6TarwIdbVO6L6C+crCbmtn1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=svPDyC5n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sxKF/nNm; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MCn82hJ7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypb+Dw4G"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="svPDyC5n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sxKF/nNm"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745928093;
+	s=2020; t=1745928094;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mFYb5V4IyVEoCUHFCMY8+1BrRHYKk9SC4cQ0JOZIl/4=;
-	b=MCn82hJ7pe4xlojo8fuUri9BdPbjYZuAidO7zVYzbEQRsr6kl30uX+tCC5s7M+Rf9nwiEy
-	RDgappGDcSRaALliIxshZuea3cAejG8hdPt1LIXXj0ymKH4HLSaYdshc9oaLzQwSaxiIsd
-	e7PL5kWZSc6JIk6p/Z5A2sh4ILutTn2/ezBZQZmHearmbDm7Yly6pTzD/fzSJEyIIt4h87
-	tvpue9RavJ5gyyMewCzlQ5KSLaK3PN8JgwkAraQz4xbXidRQmCefOlmALbFymZGMNlk5u6
-	Ztbs2Z0LL6dAzW8FHZ0wqLdOoNBQiScusL53s00HQwlsWVUenvRhfKjWilGalg==
+	bh=US9+bEe6lsHn+NLLmdFqzC4dUUP/fmwKCds5E1h2XJ0=;
+	b=svPDyC5nTIOs/DVpTIDxTdpFyPaYJMn6JJJjSo3cJR2TZ1P9x9csaLSUHhwWPU1VyxhXiW
+	l1rU9vftN/KUQ/zs4EDJpt6Z5gS6AYtDcfmc1f/dYppiRC8OvArwPtNfS37SmNqWob5neT
+	IthaJioMJ+7kNo7jh7GLvPR64N0h8aOqsH5v9JFkZXQxLMj78HVq1WI4Brz+OOF/dbjdUE
+	+l2KkEqqTfBOS9/QsG7SqsXx6ZuRdo/NqAFXNQbXEIS5f3KkZmevAoLatIimW0X66WT4Sf
+	q2BtVznr0738yXNOop/7YKJwavgzJS+PUCC19FXIM8AiU63px/bLBLBAbMbAqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745928093;
+	s=2020e; t=1745928094;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mFYb5V4IyVEoCUHFCMY8+1BrRHYKk9SC4cQ0JOZIl/4=;
-	b=ypb+Dw4G3gqgfrQ+TRDtDUO9vIpbVa+MC6C0YBfNNg+mNtnC1RmDljwXdmAzFSbRP5BKuB
-	7PJ7zzDD5CYR5/CQ==
+	bh=US9+bEe6lsHn+NLLmdFqzC4dUUP/fmwKCds5E1h2XJ0=;
+	b=sxKF/nNmOS0FGYH5U14idm/C5u68/Knn2T5MD6DXs7FqmYBYQ7t4XQ9Xrh94QVAJILgv7P
+	4PmXuoj4rv0BzuDQ==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v5 19/23] rv: Add rtapp_pagefault monitor
-Date: Tue, 29 Apr 2025 14:01:04 +0200
-Message-Id: <8ca50e24474d6d8918edb60a9b5bda56054d674d.1745926331.git.namcao@linutronix.de>
+Subject: [PATCH v5 23/23] rv: Allow to configure the number of per-task monitor
+Date: Tue, 29 Apr 2025 14:01:08 +0200
+Message-Id: <4a99283ebb235a3c6c397d1fa5151535512cf34d.1745926331.git.namcao@linutronix.de>
 In-Reply-To: <cover.1745926331.git.namcao@linutronix.de>
 References: <cover.1745926331.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,282 +58,131 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Userspace real-time applications may have design flaws that they raise
-page faults in real-time threads, and thus have unexpected latencies.
-
-Add an linear temporal logic monitor to detect this scenario.
+Now that there are 2 monitors for real-time applications, users may want to
+enable both of them simultaneously. Make the number of per-task monitor
+configurable. Default it to 2 for now.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- kernel/trace/rv/Kconfig                       |  1 +
- kernel/trace/rv/Makefile                      |  1 +
- kernel/trace/rv/monitors/pagefault/Kconfig    | 11 +++
- .../trace/rv/monitors/pagefault/pagefault.c   | 87 +++++++++++++++++++
- .../trace/rv/monitors/pagefault/pagefault.h   | 57 ++++++++++++
- .../rv/monitors/pagefault/pagefault_trace.h   | 14 +++
- kernel/trace/rv/rv_trace.h                    |  1 +
- tools/verification/models/rtapp/pagefault.ltl |  1 +
- 8 files changed, 173 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/pagefault/Kconfig
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.c
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.h
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_trace.h
- create mode 100644 tools/verification/models/rtapp/pagefault.ltl
+ include/linux/rv.h                     | 9 +--------
+ include/linux/sched.h                  | 8 +++-----
+ kernel/trace/rv/Kconfig                | 9 +++++++++
+ kernel/trace/rv/monitors/rtapp/Kconfig | 1 +
+ kernel/trace/rv/rv.c                   | 8 ++++----
+ 5 files changed, 18 insertions(+), 17 deletions(-)
 
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 2897aad16883..099b23c14e54 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -74,14 +74,7 @@ struct ltl_monitor {};
+=20
+ #endif /* CONFIG_RV_LTL_MONITOR */
+=20
+-/*
+- * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
+- * If we find justification for more monitors, we can think about
+- * adding more or developing a dynamic method. So far, none of
+- * these are justified.
+- */
+-#define RV_PER_TASK_MONITORS		1
+-#define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
++#define RV_PER_TASK_MONITOR_INIT	(CONFIG_RV_PER_TASK_MONITORS)
+=20
+ union rv_task_monitor {
+ 	struct da_monitor	da_mon;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 45be0fa7a5cc..560782493292 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1623,12 +1623,10 @@ struct task_struct {
+=20
+ #ifdef CONFIG_RV
+ 	/*
+-	 * Per-task RV monitor. Nowadays fixed in RV_PER_TASK_MONITORS.
+-	 * If we find justification for more monitors, we can think
+-	 * about adding more or developing a dynamic method. So far,
+-	 * none of these are justified.
++	 * Per-task RV monitor, fixed in CONFIG_RV_PER_TASK_MONITORS.
++	 * If memory becomes a concern, we can think about a dynamic method.
+ 	 */
+-	union rv_task_monitor		rv[RV_PER_TASK_MONITORS];
++	union rv_task_monitor		rv[CONFIG_RV_PER_TASK_MONITORS];
+ #endif
+=20
+ #ifdef CONFIG_USER_EVENTS
 diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 5c407d291661..6f86d8501e87 100644
+index 942d57575e67..c11bf7e61ebf 100644
 --- a/kernel/trace/rv/Kconfig
 +++ b/kernel/trace/rv/Kconfig
-@@ -42,6 +42,7 @@ source "kernel/trace/rv/monitors/scpd/Kconfig"
- source "kernel/trace/rv/monitors/snep/Kconfig"
- source "kernel/trace/rv/monitors/sncid/Kconfig"
- source "kernel/trace/rv/monitors/rtapp/Kconfig"
-+source "kernel/trace/rv/monitors/pagefault/Kconfig"
- # Add new monitors here
+@@ -32,6 +32,15 @@ menuconfig RV
+ 	  For further information, see:
+ 	    Documentation/trace/rv/runtime-verification.rst
 =20
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 9b28c2419995..353ecf939d0e 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
- obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
- obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
- obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
-+obj-$(CONFIG_RV_MON_PAGEFAULT) +=3D monitors/pagefault/pagefault.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/pagefault/Kconfig b/kernel/trace/rv/m=
-onitors/pagefault/Kconfig
-new file mode 100644
-index 000000000000..b31dee208459
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_PAGEFAULT
++config RV_PER_TASK_MONITORS
++	int "Maximum number of per-task monitor"
 +	depends on RV
-+	select RV_LTL_MONITOR
-+	depends on RV_MON_RTAPP
-+	default y
-+	select LTL_MON_EVENTS_ID
-+	bool "pagefault monitor"
++	range 1 8
++	default 2
 +	help
-+	  Monitor that real-time tasks do not raise page faults
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/=
-rv/monitors/pagefault/pagefault.c
-new file mode 100644
-index 000000000000..80f6d7ecf5cf
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/rv.h>
-+#include <linux/sched/deadline.h>
-+#include <linux/sched/rt.h>
-+#include <linux/tracepoint.h>
-+#include <rv/instrumentation.h>
++	  This option configures the maximum number of per-task RV monitors that =
+can run
++	  simultaneously.
 +
-+#define MODULE_NAME "pagefault"
-+
-+#include <rv_trace.h>
-+#include <trace/events/exceptions.h>
-+#include <monitors/rtapp/rtapp.h>
-+
-+#include "pagefault.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon)
-+{
-+	/*
-+	 * This includes "actual" real-time tasks and also PI-boosted tasks. A ta=
-sk being PI-boosted
-+	 * means it is blocking an "actual" real-task, therefore it should also o=
-bey the monitor's
-+	 * rule, otherwise the "actual" real-task may be delayed.
-+	 */
-+	ltl_atom_set(mon, LTL_RT, rt_or_dl_task(task));
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation)
-+{
-+	if (task_creation)
-+		ltl_atom_set(mon, LTL_PAGEFAULT, false);
-+}
-+
-+static void handle_page_fault(void *data, unsigned long address, struct pt=
-_regs *regs,
-+			      unsigned long error_code)
-+{
-+	ltl_atom_pulse(current, LTL_PAGEFAULT, true);
-+}
-+
-+static int enable_pagefault(void)
-+{
-+	int retval;
-+
-+	retval =3D ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("rtapp_pagefault", page_fault_kernel, handle_page_f=
-ault);
-+	rv_attach_trace_probe("rtapp_pagefault", page_fault_user, handle_page_fau=
-lt);
-+
-+	return 0;
-+}
-+
-+static void disable_pagefault(void)
-+{
-+	rv_detach_trace_probe("rtapp_pagefault", page_fault_kernel, handle_page_f=
-ault);
-+	rv_detach_trace_probe("rtapp_pagefault", page_fault_user, handle_page_fau=
-lt);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+static struct rv_monitor rv_pagefault =3D {
-+	.name =3D "pagefault",
-+	.description =3D "Monitor that RT tasks do not raise page faults",
-+	.enable =3D enable_pagefault,
-+	.disable =3D disable_pagefault,
-+};
-+
-+static int __init register_pagefault(void)
-+{
-+	return rv_register_monitor(&rv_pagefault, &rv_rtapp);
-+}
-+
-+static void __exit unregister_pagefault(void)
-+{
-+	rv_unregister_monitor(&rv_pagefault);
-+}
-+
-+module_init(register_pagefault);
-+module_exit(unregister_pagefault);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-+MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page fau=
-lts");
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.h b/kernel/trace/=
-rv/monitors/pagefault/pagefault.h
-new file mode 100644
-index 000000000000..94c0fe4fdaa5
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME pagefault
-+
-+enum ltl_atom {
-+	LTL_PAGEFAULT,
-+	LTL_RT,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] =3D {
-+		"pa",
-+		"rt",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
-+	bool val3 =3D !pagefault;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val4 =3D val1 || val3;
-+
-+	if (val4)
-+		__set_bit(S0, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
-gned long *next)
-+{
-+	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
-+	bool val3 =3D !pagefault;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val4 =3D val1 || val3;
-+
-+	switch (state) {
-+	case S0:
-+		if (val4)
-+			__set_bit(S0, next);
-+		break;
-+	}
-+}
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_trace.h b/kernel/=
-trace/rv/monitors/pagefault/pagefault_trace.h
-new file mode 100644
-index 000000000000..fe1f82597b1a
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_PAGEFAULT
-+DEFINE_EVENT(event_ltl_monitor_id, event_pagefault,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *=
-next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_pagefault,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_PAGEFAULT */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index f9fb848bae91..02c906c9745b 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -172,6 +172,7 @@ TRACE_EVENT(error_ltl_monitor_id,
+ source "kernel/trace/rv/monitors/wip/Kconfig"
+ source "kernel/trace/rv/monitors/wwnr/Kconfig"
+ source "kernel/trace/rv/monitors/sched/Kconfig"
+diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
+ors/rtapp/Kconfig
+index 94689d66a79c..6a521c95a03f 100644
+--- a/kernel/trace/rv/monitors/rtapp/Kconfig
++++ b/kernel/trace/rv/monitors/rtapp/Kconfig
+@@ -1,5 +1,6 @@
+ config RV_MON_RTAPP
+ 	depends on RV
++	depends on RV_PER_TASK_MONITORS >=3D 2
+ 	bool "rtapp monitor"
+ 	help
+ 	  Collection of monitors to check for common problems with real-time appl=
+ication that cause
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index d493fddf411f..ebd4b4b228bf 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -165,7 +165,7 @@ struct dentry *get_monitors_root(void)
+ LIST_HEAD(rv_monitors_list);
 =20
- 	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
- );
-+#include <monitors/pagefault/pagefault_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
-diff --git a/tools/verification/models/rtapp/pagefault.ltl b/tools/verifica=
-tion/models/rtapp/pagefault.ltl
-new file mode 100644
-index 000000000000..d7ce62102733
---- /dev/null
-+++ b/tools/verification/models/rtapp/pagefault.ltl
-@@ -0,0 +1 @@
-+RULE =3D always (RT imply not PAGEFAULT)
+ static int task_monitor_count;
+-static bool task_monitor_slots[RV_PER_TASK_MONITORS];
++static bool task_monitor_slots[CONFIG_RV_PER_TASK_MONITORS];
+=20
+ int rv_get_task_monitor_slot(void)
+ {
+@@ -173,12 +173,12 @@ int rv_get_task_monitor_slot(void)
+=20
+ 	lockdep_assert_held(&rv_interface_lock);
+=20
+-	if (task_monitor_count =3D=3D RV_PER_TASK_MONITORS)
++	if (task_monitor_count =3D=3D CONFIG_RV_PER_TASK_MONITORS)
+ 		return -EBUSY;
+=20
+ 	task_monitor_count++;
+=20
+-	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++) {
++	for (i =3D 0; i < CONFIG_RV_PER_TASK_MONITORS; i++) {
+ 		if (task_monitor_slots[i] =3D=3D false) {
+ 			task_monitor_slots[i] =3D true;
+ 			return i;
+@@ -194,7 +194,7 @@ void rv_put_task_monitor_slot(int slot)
+ {
+ 	lockdep_assert_held(&rv_interface_lock);
+=20
+-	if (slot < 0 || slot >=3D RV_PER_TASK_MONITORS) {
++	if (slot < 0 || slot >=3D CONFIG_RV_PER_TASK_MONITORS) {
+ 		WARN_ONCE(1, "RV releasing an invalid slot!: %d\n", slot);
+ 		return;
+ 	}
 --=20
 2.39.5
 
