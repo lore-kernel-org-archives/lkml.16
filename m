@@ -1,96 +1,159 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF5D2405ED;
-	Tue, 29 Apr 2025 16:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0442B244675;
+	Tue, 29 Apr 2025 16:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745943083; cv=none; b=feuefqWsInKFj2Sz2ddDDVdlg0QYVOeuE6VNgUOMtyeG7IB/qBLBuHJssaqwTzhaSQCMl41Zy7W4lZzLhrK7PcbGAO1hqWxGPWTHXSOtgIsrSuhK2jolA0jSkJ6rCi+O13BrpwhDRf4FDtS4eHmUQP90iIQ0jLIVjOqadIaATA0=
+	t=1745943087; cv=none; b=IxEq9HAncYOO2VjjnhFkj/nhiZmDrRkPUxh0lLr7Ri5Ml9v8uARavrt5f800YqkamZV74M/FwV+BzvaWxPPy+2PPb/p9eHPIsGxiSWWOuBN/pWxSH3S+QULh2iFejNpQDvakMxlM+7PzkLqlruTbfL0/RFppvIA5Aox73R/sDJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745943083; c=relaxed/simple;
-	bh=oR1w33SSQ6omVDl7olGy+HBmxCOZTlnjOnPfmHUvvLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RbHhSlVm+Yc59B18m12W5hEdz46clwf6HTRneLZfBhoGbs+qdY2UzVBaA2BJdymcd17IAHLJfck03AjKJdN7J8RWHb7qg07Y6JOina5vIfcsIulAbUjQAOXfjWzhtnMJ0x0mUv8YuAhXRE3aI34a21K+szFsPIuBc/CzD9+FeyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aDgbckmz; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745943087; c=relaxed/simple;
+	bh=aI4FF+Sfq4fMUsrJompbg1DSOfAVfkZ8HgqsklKZbKQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ellhlbYyKRTGYE3qhbVrO5SfMUbdgpVemoXpFToy5qjOt4BMH67jzK3yt0IC2oCbeOKRAUsw1PRxBwEsHxcGoGHUKxvP0IT1wpimiKUQyOH+vBoldxAmAl1kBxQbjqgFX/p43lcHXLzXoqBQdqqEwAEbVkNuLZTmFuFKPA7eRnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hrjeGXfJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=idUuX08I; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aDgbckmz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gVKWWLH02zdPYf4ECkjnNjHF9iWECDI8Hr/g+xNsShY=; b=aDgbckmz/hgFalTkpvZDMWcsBn
-	YzFXREbm/DQ9QUqNtuTaly+sbBzrBF4egTvE4lmhqPWOqywwksQsg0gG0sfhOAJWuF+UCtwb7GU9c
-	/zj3brJ4hBGh6N+nxOp9PCsC6xFx2Uc+zDPzvloD+BmVEIvo5rsJnT/mJHPjAqzy7sMB5afNqvssu
-	J3BP5CkhZ5d67di99bxoEMUTCq4D6RvjBE1GCSJ9wcv6PKRli+HR9+xJhWRupkDi59UFQXH3p9HQH
-	3SrIdHb5pqDJXmBU7e8UP0HOMgaySi0usOyQpKh9Sdig47dLKPW+tGol9hP/cgrWRqtZCXPr4jK2o
-	Qwf4y8hg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9nXB-00000000v20-34ww;
-	Tue, 29 Apr 2025 16:10:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B550F30057C; Tue, 29 Apr 2025 18:10:02 +0200 (CEST)
-Date: Tue, 29 Apr 2025 18:10:02 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, seanjc@google.com,
-	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org
-Subject: Re: [PATCH 6/6] objtool: Validate kCFI calls
-Message-ID: <20250429161002.GB4439@noisy.programming.kicks-ass.net>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.540779611@infradead.org>
- <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hrjeGXfJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="idUuX08I"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 22D191140146;
+	Tue, 29 Apr 2025 12:11:24 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 29 Apr 2025 12:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745943084;
+	 x=1746029484; bh=YXrpQhriJ7deAXwAidsiUMu//ETuSEsyn6WCKxZHkNE=; b=
+	hrjeGXfJwhk0k2W6dDDP4JmwbST5ryB4yzGnimysf634OcVcIWcZgGkHpAZC15zm
+	t1wzTRzAsNgy4rPg+mokyiD4nGEkH+yJkbOJgCD/uU8IpZmVF7ixXPm4YBaeQGp4
+	/pudEe+WZWfG5FC3wYUh+f4b/dTLjngbvKnSx23qbHvTxM9sO4+Y7yOStUZxZWmT
+	QbVLVh/DaA4VIoGx2/kpm2KX3Pz0Tb+fyI4gPQSgnAxOidgbw9f0R1q2Sc5z7BvV
+	16D+sXugtSrP4zgE4+VDpkaPY46hm+WsidH2AI3FLV3HDWTMdL/Wc0IWK8kozrI9
+	dNxDslaJAKIG6M6gaP//XA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745943084; x=
+	1746029484; bh=YXrpQhriJ7deAXwAidsiUMu//ETuSEsyn6WCKxZHkNE=; b=i
+	dUuX08IxNX52gLCgHsNztTAaORMjrOcmT/JBLfhfudb1R/Uka/ecLK266ymqO0ek
+	sONweXY0NiylkPOhrrIVxfaQyK6ib0+YKQqCqydd18kduF/pzazTBsE9Euc35Zvm
+	Ak/1dVFXJSukgeIi2gznz1Iy+mpyJRIz1j4fe6xugB1QAlVQT02Tf30Z5jf+1dC6
+	rCjnMq3N0feGsCBAu5n+CVwSkNgBuNjejyx7KrBo9QZwlO7zgBauSrWqviaZ8uQe
+	IUc6U2RuA8LC4M3oi5IZglJT18nPCH/m09IfIgksoZ8imtlH7Q7rgleZqu5mgItW
+	AtYEx7fTAk+pYZ04H88sQ==
+X-ME-Sender: <xms:KvoQaEXRHwiwjYVCvrxkzMwkJ-qb1AIiZpuTwk2QFcNDK3FiqTT9oA>
+    <xme:KvoQaIk0IhVHwXHutfHti_pCgrvdqNXX4Ilv62CE1kC4CZyWS_5KkTqQWG-9cPZX0
+    koK_03LYWAIJV7hlpU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegvdeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    feelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguihgvthhmrghrrdgvghhgvg
+    hmrghnnhesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidr
+    ohhrghdruhhkpdhrtghpthhtohepuggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsg
+    horhgrrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghp
+    thhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegsoh
+    hquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopegthhhrihhsihdrshgt
+    hhhrvghflhesghhmrghilhdrtghomhdprhgtphhtthhopegurghvihgurdhlrghighhhth
+    drlhhinhhugiesghhmrghilhdrtghomhdprhgtphhtthhopehfuhhjihhtrgdrthhomhho
+    nhhorhhisehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:KvoQaIbMb-67ArV4bBmc2RpjktTOTu2htrFS6x7nBBLLoPBrqRFNWA>
+    <xmx:KvoQaDXlxfsNBzWEWfpPNn3WkaOwuRq4RBCZ-ytnDwHWkj-vfedZ4g>
+    <xmx:KvoQaOn5T373t0x-2P-2e7XQANiqF-W8m12-kAvVwRxe0hW7oLmFmQ>
+    <xmx:KvoQaIdaR5R0z0FBDuuYkYeVQx-TKjcCbhOvTNzIIr1fVQm-9tznPQ>
+    <xmx:LPoQaDEXiVpsVfzjGXrThLlIq64MGOCNelqa1sQJPTmCey1SlPnmck-Y>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BCBA32220073; Tue, 29 Apr 2025 12:11:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
+X-ThreadId: T252c7cf41b12c3c8
+Date: Tue, 29 Apr 2025 18:11:02 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Boqun Feng" <boqun.feng@gmail.com>,
+ "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, "Gary Guo" <gary@garyguo.net>,
+ "Alice Ryhl" <aliceryhl@google.com>, me@kloenk.dev,
+ daniel.almeida@collabora.com, linux-kernel@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@samsung.com>,
+ "Anna-Maria Gleixner" <anna-maria@linutronix.de>,
+ "Frederic Weisbecker" <frederic@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "John Stultz" <jstultz@google.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Juri Lelli" <juri.lelli@redhat.com>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Dietmar Eggemann" <dietmar.eggemann@arm.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Benjamin Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>,
+ "Valentin Schneider" <vschneid@redhat.com>, tgunders@redhat.com,
+ david.laight.linux@gmail.com, "Paolo Bonzini" <pbonzini@redhat.com>,
+ "Jocelyn Falempe" <jfalempe@redhat.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Christian Schrefl" <chrisi.schrefl@gmail.com>,
+ "Linus Walleij" <linus.walleij@linaro.org>
+Message-Id: <1b9e8761-b71f-4015-bf7d-29072b02f2ac@app.fastmail.com>
+In-Reply-To: <de778f47-9bc6-4f4b-bb4f-828305ad4217@app.fastmail.com>
+References: 
+ <6qQX4d2uzNlS_1BySS6jrsBgbZtaF9rsbHDza0bdk8rdArVf_YmGDTnaoo6eeNiU4U_tAg1-RkEOm2Wtcj7fhg==@protonmail.internalid>
+ <20250423192857.199712-6-fujita.tomonori@gmail.com>
+ <871ptc40ds.fsf@kernel.org>
+ <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
+ <5c18acfc-7893-4731-9292-dc69a7acdff2@app.fastmail.com>
+ <de778f47-9bc6-4f4b-bb4f-828305ad4217@app.fastmail.com>
+Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 04:43:26PM -0700, Josh Poimboeuf wrote:
+On Tue, Apr 29, 2025, at 18:03, Boqun Feng wrote:
+> On Tue, Apr 29, 2025, at 8:51 AM, Arnd Bergmann wrote:
+>> On Tue, Apr 29, 2025, at 15:17, FUJITA Tomonori wrote:
+>>> On Mon, 28 Apr 2025 20:16:47 +0200 Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>>>      /// Return the number of milliseconds in the [`Delta`].
+>>>      #[inline]
+>>> -    pub const fn as_millis(self) -> i64 {
+>>> -        self.as_nanos() / NSEC_PER_MSEC
+>>> +    pub fn as_millis(self) -> i64 {
+>>> +        math64::div64_s64(self.as_nanos(), NSEC_PER_MSEC)
+>>>      }
+>>>  }
+>>
+>> I think simply calling ktime_to_ms()/ktime_to_us() should result
+>> in reasonably efficient code, since the C version is able to
+>> convert the constant divisor into a multiply/shift operation.
+>>
+>
+> Well, before we jump into this, I would like to understand why
+> this is not optimized with multiply/shift operations on arm in
+> Rust code. Ideally all the dividing constants cases should not
+> need to call a C function.
 
-> > +	 * Verify all indirect calls are kCFI adorned by checking for the
-> > +	 * UD2. Notably, doing __nocfi calls to regular (cfi) functions is
-> > +	 * broken.
-> 
-> This "__nocfi calls" is confusing me.  IIUC, there are two completely
-> different meanings for "nocfi":
-> 
->   - __nocfi: disable the kcfi function entry stuff
+I think it's just because nobody has rewritten the
+macros from include/asm-generic/div64.h into rust code.
 
-Ah, no. __nocfi is a bit of a mess, this is both the function entry
-thing, but also very much the caller verification stuff for indirect
-calls done inside this function.
+The compiler could do the same transformation, but they
+generally just fall back to calling a libgcc function.
 
-This leads to lovely stuff like:
-
-void (*foo)(void);
-
-static __always_inline __nocfi void nocfi_caller(void)
-{
-	foo();
-}
-
-void bar(void)
-{
-	nocfi_caller();
-	foo();
-}
-
-This actually compiles and has bar() have two distinctly different
-indirect calls to foo, while bar itself has a __cfi preamble.
-
-
-Anyway, let me have a poke at the annotation.
+     Arnd
