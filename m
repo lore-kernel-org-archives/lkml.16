@@ -1,119 +1,110 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86F72472AC
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5AB24C083;
+	Tue, 29 Apr 2025 19:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745954723; cv=none; b=Awl5AdIMX76HGtTVmQDhqeOCCSTwtNhNZF/OQNnZjwldRJy3GbSFZmbHZUTx8DgXSYJIIdZBmRVcm+0Ii3WLe4Q3mc8uRpR4MAi18hLQpkDNHM2whmcg75pEBxa9K5SPvJX/dA01Yn1raqYO1xTk9KLr78haR4QpZiUZp41UX4M=
+	t=1745954726; cv=none; b=XCXBEyA0r25W9dNLEuO3BpbSzPmA2OF8sbGuTjD9kmaXSKQ2wTzmHG6t3qvLWF8jV+L1E74kLXxm3pXgvn3EGefNbSTL2T0ZXYHvUesTyreYftpGMuMJaAlnYKNJjnLBUA1YNHNkfdFMiFKsuh/gyaoJONPbUCfFu+//JuoI+Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745954723; c=relaxed/simple;
-	bh=wQYgyO8cTCRZnnsbCH9cX9z79zt/5slmTEUOaPrK4W0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dRo4y9YNWELVCs/0VGh9ZYmrsjNn1wrONbd2lBvr9vfr+4aljI3oXi5GeXMWuAaM8Uhx0y+JPpkTgpCHrXZ+ItlRQnbaAGAvObkAdHpImNWv05WhvyR9K7yyITey11ybYXSjDnkJpgUOCGErnX/+8FuytB619S1sBKGO9yKkHPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=HwxktT6L; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
+	s=arc-20240116; t=1745954726; c=relaxed/simple;
+	bh=mUFSIbOh0ZERHVxEyLTbjHnLuloD8xCAXL6STo3jemc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqtD0Ig0zCQVhxK7mXNtO3br9G53FchYEbG9YoNc3wcD53/ypv1KNbIKK0EQpBlgn/uVoWn7W4hIkheaEMMTNz0Ocwcdof1I4g2uJuH8x7y/9rvjYLzSI+TmU5z54uJ9nNU38uuZprM9u4LPIU4/YNEeeE9NLbvXXZoM3UFzHps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=X1Gp4j+j; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="HwxktT6L"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e573136107bso5681478276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1745954719; x=1746559519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r/ifkoP2VzjSNVs4Xu0uRQ1iLvHQ3o12JsQMc2lGYGM=;
-        b=HwxktT6Ll2Y2nntGRoqh71qvITTVcUnQ3FOKA9UsN7vKADajUmLO+49zUMvPjstHFw
-         kl7tbuqrhtSTwvODBUMOCRCjlYzWCmXqhWwwjp92UF/DK5yjPv/qX/k1bEFWG8IjKRqz
-         Hk63CKe/gulqhRywbXQY37anWtr99uhNUof5BNzREIfmI4yihYPlHDFWMeI/vnPzSDG0
-         kyrsgD6GLeSrrZ9RLewKLm1sB5dtNyvZIfRNmZMC0eQJFDWNT0266m9xfQQpAh94p2JL
-         NI41TZ0Lvy1wOqp/HGwGYVLqTD7eaNDlyjBK4905N+qwk5YOLXX1mWa5omki+jG+K0fI
-         /OzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745954719; x=1746559519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r/ifkoP2VzjSNVs4Xu0uRQ1iLvHQ3o12JsQMc2lGYGM=;
-        b=D7Bb5+tGfoGsY3NHZKqChtWqu0wTAvW7pXgpMclXJ5mJgMizMs+BJkmcx807ELl6Fk
-         TiAmuvYdmgyNjhUNSSJ8oB+MtVw8Ra7NogCpBrv5z0HH2HvM1ksXynLZYrC7sH2acz4a
-         nd4JlqWPriZgY4VsODhCOCk1XphJtcKEenBYEDulufoM+rVtHuPLSmFf4s31sBapb4O7
-         xnC2PrlEapGEPWlxCeGYlvH3LLBTlFTSMM4pwmgbwncsNek0klxOP9u62MIfixIkp0Zq
-         u3KR4KTEsWZ26svp2cmBbow2rRSeUm32vqqWeeXymfkpK7shgjgS0xdteTJ+BQzDrG4u
-         Dshw==
-X-Forwarded-Encrypted: i=1; AJvYcCXyJFUlgPw3frgJdenCXHoR/zhSQ/DYetDKf+n5N0T5AX2+/cWdr3udhoLW5hARrSl9sBzJsjKxNEsBQwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyoNu9cs5sZj8anI4coYuBPNVU8j+kEiya+qbH4RohDZkFdgF6
-	F/Rkpz7QGHBckaaHLdIhup25UBy7ldNQZCtPi7JXCgRlO31BlKV3wqu722ei/WT5tb1YPcPHOai
-	4QFWlOierVsu36MuGKJap34Ti4hweH+Lo+NYY
-X-Gm-Gg: ASbGncto4dkI5nvPL7B1BrAI+uzK3evFwiXFj+ZH8dFrqgZC8WwlachEvTp2hFWJjri
-	Q4HEkJY5/43NTqgN2SOCWOD2EU5KFvp4Qr5T7tJOZ4bxhIVnm0J0UOWwut/tsH8W35TUIORDRiI
-	Ks4aP17Tw6DJBsGq8Z/JtP
-X-Google-Smtp-Source: AGHT+IGqPxuLRzyJFjxrB+wKq9wOk//LyPTOPx3ptoig5goYUbeX82deJ4X6MbMth7FkOt7ItZfdyhmRh3usApwY78Q=
-X-Received: by 2002:a05:6902:2808:b0:e73:117c:42cb with SMTP id
- 3f1490d57ef6-e73ea2123bemr645377276.2.1745954719592; Tue, 29 Apr 2025
- 12:25:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="X1Gp4j+j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1745954719;
+	bh=mUFSIbOh0ZERHVxEyLTbjHnLuloD8xCAXL6STo3jemc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X1Gp4j+jtE+7s/Ln2koM142muoh0/5BNh7S7VjLubaJbjhYFz7qx9Vc79AJv9GTVS
+	 xj/uwv6z5jntVBafphaqZpQ9NCXAH168NHBgQr4aeicnwW0q9Fs150smmJXz16UsI5
+	 1xP/Hj2jkzBPaeRwfqkISrL/D7wyExEknEssH7Io=
+Date: Tue, 29 Apr 2025 21:25:18 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Sebastian Reichel <sre@kernel.org>, 
+	chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] power: supply: cros_charge-control: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <084dfe42-8aa7-415f-8435-f1310be89747@t-8ch.de>
+References: <aBEmk6ixfrQ2XpTw@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425203315.71497-1-s-ramamoorthy@ti.com> <20250425203315.71497-4-s-ramamoorthy@ti.com>
- <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com> <683a1c36-0b5a-461f-bc89-3a418f542b57@ti.com>
-In-Reply-To: <683a1c36-0b5a-461f-bc89-3a418f542b57@ti.com>
-From: Jon Cormier <jcormier@criticallink.com>
-Date: Tue, 29 Apr 2025 15:25:08 -0400
-X-Gm-Features: ATxdqUFbxaBs_n6S4jW-r8vtMbiLr_Zi-oXCzuJN-ujmvmE10E7tbKFaoDyKPd4
-Message-ID: <CADL8D3YwBOf6wPTgxjadsPPn3rLR16V7nAO39+7J=tNxk_hQDQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] gpio: tps65219: Add support for varying
- gpio/offset values
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Jerome Neanne <jneanne@baylibre.com>, m-leonard@ti.com, 
-	praneeth@ti.com, jsava@criticallink.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBEmk6ixfrQ2XpTw@kspp>
 
-On Tue, Apr 29, 2025 at 12:42=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@t=
-i.com> wrote:
->
-> Hi,
->
-> On 4/28/2025 11:41 AM, Jonathan Cormier wrote:
-> > On 4/25/25 4:33 PM, Shree Ramamoorthy wrote:
+On 2025-04-29 13:20:51-0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of a
+> flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/power/supply/cros_charge-control.c | 26 +++++++++-------------
+>  1 file changed, 10 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
+> index 02d5bdbe2e8d..e33bc4c55bcc 100644
+> --- a/drivers/power/supply/cros_charge-control.c
+> +++ b/drivers/power/supply/cros_charge-control.c
+> @@ -53,23 +53,17 @@ static int cros_chctl_send_charge_control_cmd(struct cros_ec_device *cros_ec,
+>  		[3] = sizeof(struct ec_params_charge_control),
+>  	};
+>  
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		union {
+> -			struct ec_params_charge_control req;
+> -			struct ec_response_charge_control resp;
+> -		} __packed data;
+> -	} __packed buf = {
+> -		.msg = {
+> -			.command = EC_CMD_CHARGE_CONTROL,
+> -			.version = cmd_version,
+> -			.insize  = 0,
+> -			.outsize = outsizes[cmd_version],
+> -		},
+> -		.data.req = *req,
+> -	};
+> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
+> +			MAX(sizeof(struct ec_params_charge_control),
+> +			    sizeof(struct ec_response_charge_control)));
+> +
+> +	msg->command = EC_CMD_CHARGE_CONTROL;
+> +	msg->version = cmd_version;
+> +	msg->insize  = 0;
+> +	msg->outsize = outsizes[cmd_version];
+> +	*(struct ec_params_charge_control *)msg->data = *req;
 
-> >
-> > However Jerome wanted GPIO to map to linux "GPIO 0".  Is this still
-> > the case for TPS65215?
->
-> In my attempt to combine TPS65214 (which originally had 1 GPO and 1 GPIO
-> when I wrote the patch, but systems informed me they just switched it to
-> 2 GPOs and 1 GPIO) & TPS65215 (2 GPOs and 1 GPIO), I made a mistake in
-> combining the 2 series during rebase & with how similar the PMICs are.
-> Thanks for reviewing this as I wrote it a cycle ago. I'll made the
-> necessary changes & re-test. I will double check that GPIO matches to
-> linux "GPIO 0" now that I have more context about the offset math (super
-> helpful explanation!).
+Please use cros_ec_cmd() like the LED driver.
 
+https://lore.kernel.org/lkml/Z-rKcgFjsyKvd58q@kspp/
 
-Thanks. Considering this confusion, could you add a comment for the
-pin mappings? Something like:
-// TPS65219 GPIO mapping
-// Linux gpio 0 -> GPIO (pin16) -> offset 2
-// Linux gpio 1 -> GPO1 (pin8 ) -> offset 0
-// Linux gpio 2 -> GPO2 (pin17) -> offset 1
-
-
-
-
---=20
-Jonathan Cormier
-Senior Software Engineer
-
-Voice:  315.425.4045 x222
-
-http://www.CriticalLink.com
-6712 Brooklawn Parkway, Syracuse, NY 13211
+>  
+> -	return cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
+> +	return cros_ec_cmd_xfer_status(cros_ec, msg);
+>  }
+>  
+>  static int cros_chctl_configure_ec(struct cros_chctl_priv *priv)
+> -- 
+> 2.43.0
+> 
