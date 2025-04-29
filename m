@@ -1,43 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5284275101;
-	Tue, 29 Apr 2025 08:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D26230BDB;
+	Tue, 29 Apr 2025 08:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745913954; cv=none; b=c0Dp73HrKiDscinCYWMhoI2S8b5mxqlMeMOMjbLPqrzjF0N5OEutnvjhmZ2j4TNjdyg7RqHHGKUu+2x3k0e4HOjWUFoSOsOX8UEwbpabh893RFtmH86M1kRf5uasAnBeNtQ1r93pH7eh1w2hq6m7lbkU0QBOp3hGh+j7tos4WEQ=
+	t=1745913967; cv=none; b=IxNe87ikB1h3xFlLgKbg4gzXV9IrPrIIh8vhA6mgLycXnTQIZHJJA682spLbmJl+p23JzPhwW5vblECePNzz4TUDPvrkmy9HfWFyLKsujTmOEi1bVCevpVmBWtW/4YpKUTXwTdLHGTpej5JUp3pRrt3emmX3U5LS7lpAf48LBZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745913954; c=relaxed/simple;
-	bh=Zjw4u7wLH6353sZ37N5PpAxiSpLykF8oyhhhSu57PzA=;
+	s=arc-20240116; t=1745913967; c=relaxed/simple;
+	bh=XJbOu8oe6MHnFoBGQc7cHTHtXhGx4hB36GKy8vSOICk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DlVzwKRfNPKqqbO63ex6Kkhl+DPywmalQr9FzCqN4mXvzdr28pvNnmlRDGDd4v6fNfcCdisJnJeplXxHmEFgscsBlxym252PLPclDuxJIhYc8hEO1D43RmoNr2k1FDXOVoR8CZyAEylVU+1YgIX9qJQ7ve44Ewq11ouQav74wS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/fHwv04; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=THi9X+z643gKRdotf0+ZSTX97C7YpCaeylEnE5p6l3ED9EeejbJtU9EPBdThVD4WScoQ/rrrgIHIHIKQ1dg2Pbb3FuJ3avWLhmDnvc6DDqclq5m7otiPgN0AQOYyzXKDxL3HHG8RJ3iMYXYcyUm9xAHkuxzP9lnPV41aZ87ab3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DncP7Ez0; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/fHwv04"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A226C4CEE3;
-	Tue, 29 Apr 2025 08:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745913953;
-	bh=Zjw4u7wLH6353sZ37N5PpAxiSpLykF8oyhhhSu57PzA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z/fHwv04jrQsqZ5wE1lINXsmCvkieF3LNJ33Tzc+N0d1E29VhYcmc3PoWNhNVKzwX
-	 esOimQWVJogF4uBYVZydcZo6yGklfDx1k00EimacfauHMgZJe0OrItqeB+C/u5EQng
-	 RXoGrQ1LPBPzQYCP47KBGHOiTzpKcIP5OG/S4ibD2krQju2LOQFT1lr6xNCIo7AaG1
-	 13Us/DuCBu7U49TdIxlA2cvAsZLy0xxhKrFst5S6PTu1iJY+OXuN93fn3y1MZGPvRp
-	 2D3u6lWlfgvIBeuloXtRsKoqhac8mC6SyWNW35kM6F07jY3M5K8JDkZ5XyATrkL7fI
-	 ADAcoUA9lFIDA==
-Date: Tue, 29 Apr 2025 10:05:48 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] PCI: dwc: Standardize link status check to return
- bool
-Message-ID: <aBCIXPc24daPPIxY@ryzen>
-References: <20250428171027.13237-1-18255117159@163.com>
- <20250428171027.13237-2-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DncP7Ez0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745913962; x=1777449962;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XJbOu8oe6MHnFoBGQc7cHTHtXhGx4hB36GKy8vSOICk=;
+  b=DncP7Ez0AcRr4WQ9aFrvdFs7nNl8rWvDzbQFZyzIhwr7AUIB3VBVXtHp
+   z3LRuytVcWVW8Nt0rLtEd+/l0awWz5c6X6HFkMNLe4Img8Iw4rrNwMNe0
+   xo21DkKVsT1HwMEnsNzsf7K15XPFzwc86RQRp6ReViXapVn5N6gQwZx/Z
+   QhDof6DVyZXMWytmePAcvdRRRP9gamFBIQ2eHCVVbFFK11374vhFC2pSp
+   /D6ApNNAmh+walnfFGDLwXmCwodEqQsyAUqk5LR2Pa40jxHQTb3a8cDUc
+   s6UgOJzUJyqDZ7VHUghSl5WHJ310s1RaDeKmqa8/AmTWqqBchj/Dkn76a
+   A==;
+X-CSE-ConnectionGUID: 1VUpMUMKRj6wp32414LRlw==
+X-CSE-MsgGUID: iqiyhQWPSFGI7wuOjeaJpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47537527"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="47537527"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 01:05:48 -0700
+X-CSE-ConnectionGUID: 98GuK9QCRYSrVo/7tNEo5g==
+X-CSE-MsgGUID: WIUxjBp3S2eSXWSWqrFQiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="164699249"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 29 Apr 2025 01:05:44 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u9fyI-0000ZP-08;
+	Tue, 29 Apr 2025 08:05:42 +0000
+Date: Tue, 29 Apr 2025 16:05:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, peter.ujfalusi@gmail.com,
+	vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	praneeth@ti.com, vigneshr@ti.com, u-kumar1@ti.com, a-chavda@ti.com
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH 6/8] dmaengine: ti: New driver for K3 BCDMA_V2
+Message-ID: <202504291527.tCMC8UGh-lkp@intel.com>
+References: <20250428072032.946008-7-s-adivi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,74 +69,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250428171027.13237-2-18255117159@163.com>
+In-Reply-To: <20250428072032.946008-7-s-adivi@ti.com>
 
-Hello Hans,
+Hi Sai,
 
-On Tue, Apr 29, 2025 at 01:10:25AM +0800, Hans Zhang wrote:
-> Modify link_up functions across multiple DWC PCIe controllers to return
-> bool instead of int. Simplify conditional checks by directly returning
-> logical evaluations. This improves code clarity and aligns with PCIe
-> status semantics.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c       | 2 +-
->  drivers/pci/controller/dwc/pci-exynos.c       | 4 ++--
->  drivers/pci/controller/dwc/pci-keystone.c     | 5 ++---
->  drivers/pci/controller/dwc/pci-meson.c        | 6 +++---
->  drivers/pci/controller/dwc/pcie-armada8k.c    | 6 +++---
->  drivers/pci/controller/dwc/pcie-designware.c  | 2 +-
->  drivers/pci/controller/dwc/pcie-designware.h  | 4 ++--
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
->  drivers/pci/controller/dwc/pcie-histb.c       | 9 +++------
->  drivers/pci/controller/dwc/pcie-keembay.c     | 2 +-
->  drivers/pci/controller/dwc/pcie-kirin.c       | 7 ++-----
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     | 4 ++--
->  drivers/pci/controller/dwc/pcie-qcom.c        | 2 +-
->  drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 2 +-
->  drivers/pci/controller/dwc/pcie-spear13xx.c   | 7 ++-----
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 2 +-
->  drivers/pci/controller/dwc/pcie-uniphier.c    | 2 +-
->  drivers/pci/controller/dwc/pcie-visconti.c    | 2 +-
->  18 files changed, 30 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 33d6bf460ffe..4ef25d14312b 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -118,7 +118,7 @@ static u64 dra7xx_pcie_cpu_addr_fixup(struct dw_pcie *pci, u64 cpu_addr)
->  	return cpu_addr & DRA7XX_CPU_TO_BUS_ADDR;
->  }
->  
-> -static int dra7xx_pcie_link_up(struct dw_pcie *pci)
-> +static bool dra7xx_pcie_link_up(struct dw_pcie *pci)
->  {
->  	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
->  	u32 reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_PHY_CS);
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> index ace736b025b1..d4a25d376b11 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> @@ -209,12 +209,12 @@ static struct pci_ops exynos_pci_ops = {
->  	.write = exynos_pcie_wr_own_conf,
->  };
->  
-> -static int exynos_pcie_link_up(struct dw_pcie *pci)
-> +static bool exynos_pcie_link_up(struct dw_pcie *pci)
->  {
->  	struct exynos_pcie *ep = to_exynos_pcie(pci);
->  	u32 val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_RDLH_LINKUP);
->  
-> -	return (val & PCIE_ELBI_XMLH_LINKUP);
-> +	return !!(val & PCIE_ELBI_XMLH_LINKUP);
+kernel test robot noticed the following build warnings:
 
-!! is not needed here, or in other places.
+[auto build test WARNING on vkoul-dmaengine/next]
+[also build test WARNING on linus/master v6.15-rc4]
+[cannot apply to next-20250428]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-When assigning to the bool any non-zero value becomes 1.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Sree-Kartheek-Adivi/dt-bindings-dma-ti-Add-document-for-K3-BCDMA-V2/20250428-152616
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20250428072032.946008-7-s-adivi%40ti.com
+patch subject: [PATCH 6/8] dmaengine: ti: New driver for K3 BCDMA_V2
+config: arm64-kismet-CONFIG_TI_K3_RINGACC-CONFIG_TI_K3_UDMA_V2-0-0 (https://download.01.org/0day-ci/archive/20250429/202504291527.tCMC8UGh-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250429/202504291527.tCMC8UGh-lkp@intel.com/reproduce)
 
-!! is usually only needed when needing to store an explicit 1 or 0 in an int.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504291527.tCMC8UGh-lkp@intel.com/
 
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for TI_K3_RINGACC when selected by TI_K3_UDMA_V2
+   WARNING: unmet direct dependencies detected for TI_K3_RINGACC
+     Depends on [n]: SOC_TI [=y] && (ARCH_K3 [=y] || COMPILE_TEST [=y]) && TI_SCI_INTA_IRQCHIP [=n]
+     Selected by [y]:
+     - TI_K3_UDMA_V2 [=y] && DMADEVICES [=y] && ARCH_K3 [=y]
 
-Kind regards,
-Niklas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
