@@ -1,163 +1,105 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF922949F7
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967D8280A57
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919580; cv=none; b=I4sWdPKoQPZZxC5DIqHGmgXgjh5HOXs20Fn/UKCJdNhEimviHW2spjaMt2dw7XQ2+MDBHFTyGW551aUKqnHOxHA1pThUDmrjszmR6eRxW4eZHNaoXKg68Y4T2mZe8jeKsUD2BK7qydWq/qJv5MebWjP2gcVygf0vIsoYgd2XxCc=
+	t=1745919627; cv=none; b=X2YamIkEOx6QhHMBEbQ4SXkf5Eu2a3zw/tx8a8Zef5SEIB63T5kBA4unQbMi9/SvtdO3rOVNp87a0LI6RPsjlJkvmDO0wcvlRMKfWzyoUpW2o2Jj9RqwItSI//y7v77jlnr6bK54XZdA/OvDxPRLUrQlUSyCvEqWfWXDEZRlbUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919580; c=relaxed/simple;
-	bh=wff8gluj3VBQRHUO2dAZPoDwcc7HlG1ihchdsWbgGBQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dzGstWOLBKbSiVyB35Xdj45biDKKBX13+U3UKm/cwcU5XqR2jwb7ZLdfrYtPKTL3i2m1hRzcU84DiYvgjwToJfMgZE6UmRPK8TANI8ChQ4i6oB/otiC3JMBFxGi/PgSA1Z5yWHpsQEGF/a/sDQCDL1TH/Ri2pUXtNPns2GddX+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1u9hQw-0004du-Pm; Tue, 29 Apr 2025 11:39:22 +0200
-Message-ID: <e97d3388a5b4272d70d7379b020843a47874a104.camel@pengutronix.de>
-Subject: Re: [PATCH 0/6] arm64: dts: imx: Move Ethernet aliases out of SoC
- DTSI
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, Francesco Dolcini <francesco@dolcini.it>, 
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Date: Tue, 29 Apr 2025 11:39:20 +0200
-In-Reply-To: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
-References: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1745919627; c=relaxed/simple;
+	bh=VEClPpvelOykPpRU7PP7F/S3ulnhMGLUZV/2Au4tLs8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NryCN/NokKLQq2KPIMwWdtrhgToG6NVam5gCorHb7aLdKrx23sT/zx7HXr5VJN4uZ33zP74DzO9CUHxsAlcOvQajcgwIT6Siidkb8n2CYZFo/5kgP8L5gQ7OIdHOkQPiPxeoYcltUAtb5oQtKhJIprRNk9monVm0UTdgs6Kfp3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rvo2mRiX; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rvo2mRiX"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c33e5013aso68332935ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745919625; x=1746524425; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=887j+HuJAg3GAFJi8re61kxKscTlK+O7RQ0PqOMN3wo=;
+        b=Rvo2mRiX50wj6MiH7GVu1/4JUDxZ5AaIKK6tXbKTL+zC98IAU9sbGWLOMKTVS7bh+V
+         C2cVA+1wg+RPu9DlCnhf1GbS7LUbopgmbZ8wycFTmQlYG5+JWne8AIi2Plin1vRKPDbs
+         aEbPNNTQc1/tAORHZ/MMFXujNu1/lHh+AgDDT13BT2lNHbSS3mU3fMG4ImpDeySRN6bZ
+         6MFGjMeQohT8Xt/HV2mq4gBULlW6MCtISMBbFeHg83Fzj4c7D5b46fZgCYG9rRusS4ar
+         tURDpRrqCFcVmEQ8hK9AdrTX2ZyF92nAIhjhZ3WKke2oMORKvNk1qAdSjWxBbauf/fmX
+         2GjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745919625; x=1746524425;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=887j+HuJAg3GAFJi8re61kxKscTlK+O7RQ0PqOMN3wo=;
+        b=LxM/yYxuyVa80KixL2pw8Rj5msBNQIsSckJo+qxORoKL6EWxWZxvV7CBsJx81d/5GM
+         bLtHT4EbQ2C1UkS/Or1XZwSUkV2p36Ubn37b8FC1nixM+vyyo5J2LFyaUBRHoYun/1sE
+         4AUkND67+y2YSSxxmXGbcoRPSvWM3aZyb+Izf7xNik/wfTgsQELLQQCQp5W/DF7u7Bda
+         FSKMm3fwcLn18wNHMxB2bBMbiev2KX2hKx6W/IDAadDkNWl1i9RufPPX1EtEVtjqjmIH
+         6CgOymSRRIZMewZ6Jgohn959cr7/XGmHYGJ6Z2nRVjw+aADV0pkokj4iDk/SHu5ZjSZL
+         dD+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXVldY3Fq/S9+JZZV+mh2QgHqDS1T2gMH348hkbqdIbFY27Ws82+6Hcq8RROHXW8P9oD8DwpieGXYFXeQ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTSkcogTWnzIu74po0GvcpELbKAVpU5Kwww8FgyA5dphJQOrvf
+	PmZdVHqm7ULy3O/wJE4okbxYDFwY97AFLBZsDsqn9olJ1TwyY1O9BfqGV1Pb5gLdZd0Rfw1+moC
+	6Zw==
+X-Gm-Gg: ASbGncs82amhQibrErIjtdbhT3sjmyR8aKJ2yxzYLHLwSM9BYRM72PqQixkmOei0KwO
+	hbhXWoTmi23DGV8OHEE0UWsRIY2fI5XLZ+NrmpaU7GTwLaNswkoQhWpxwJnRACVIJSkCU1oT4SH
+	f2bIoLNn5JLXJ8h7iCL9uMqNbqPkNcDJ/tzhCaAphb0lW4u+bul9nmqbtJES/HJitA7t9Ghtx86
+	YHDmlx+yFLhH9+ZxhLpjikYq/qsVdm2fTNH9kNgcyeJeKz/HaggU6jcJNnY0hCvq2eu2dK1ppDR
+	KYaNo6qIGWH6eTvtfXm6CmKCujM0WSkwz6v45DSfNbxvcel+SB8LjNvXlCo/K6LuJ78pDOdamEq
+	m6k/nJSjQERq4tmn8HOZ+vbq9
+X-Google-Smtp-Source: AGHT+IGJzRx+E9AYOKH3V9G8U9AElamVc69ogYXshkqnP91KceEEIHQZBBI1Oddf93pxjy3KZrE5dQ==
+X-Received: by 2002:a17:903:2bce:b0:223:4c09:20b8 with SMTP id d9443c01a7336-22dc6a6c91emr166079865ad.37.1745919624658;
+        Tue, 29 Apr 2025 02:40:24 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7cf2sm98181285ad.154.2025.04.29.02.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:40:23 -0700 (PDT)
+Date: Tue, 29 Apr 2025 02:40:07 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+    Shakeel Butt <shakeel.butt@linux.dev>
+cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
+    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+    Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, 
+    cgroups@vger.kernel.org, netdev@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+In-Reply-To: <as5cdsm4lraxupg3t6onep2ixql72za25hvd4x334dsoyo4apr@zyzl4vkuevuv>
+Message-ID: <d542d18f-1caa-6fea-e2c3-3555c87bcf64@google.com>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev> <as5cdsm4lraxupg3t6onep2ixql72za25hvd4x334dsoyo4apr@zyzl4vkuevuv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Krzysztof,
+[PATCH mm-unstable] memcg: multi-memcg percpu charge cache - fix 3
 
-Am Freitag, dem 25.04.2025 um 21:48 +0200 schrieb Krzysztof Kozlowski:
-> Not tested on hardware.
->=20
-> Ethernet interface, like other exposed interfaces, aliases depend on
-> actual board configuration, e.g. its labeling, thus aliases should be
-> defined per each board or each SoM.
->=20
-> Some boards (e.g. Gateworks) follow this convention but many do not.
->=20
-> This is continuation of my comments from:
-> https://lore.kernel.org/r/16a98816-f43c-4f4d-940e-9da30cb1f73f@kernel.org
->=20
-The i.MX boards have traditionally listed aliases for many hardware
-peripherals with the same numbering that's used in the SoC reference
-manual. Boards always have the option to override those aliases if they
-have a good reason to do so, e.g. labeling on the physical device.
+Fix 2 has been giving me lots of memcg OOM kills not seen before:
+it's better to stock nr_pages than the uninitialized stock_pages.
 
-Other users besides Linux rely on fixed numbering provided by the
-aliases. Both barebox and U-Boot number their ethernet interfaces
-according to the alias.
+Signed-off-by: Hugh Dickins <hughd@google.com>
+---
+ mm/memcontrol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-While you seem to add back aliases for in-tree boards, this breaks the
-majority of boards that include the kernel DTSI from an out-of-tree
-board. I can understand that we can't always accommodate these users,
-but I simply don't see the strong benefit of this patch to justify
-creating churn and possible regressions with those OOT users.
-
-Having those aliases in the DTSI has been common practice on the i.MX
-platform since 2012, long before there was any strong consensus on how
-those aliases should be used. Breaking existing users for the sake of
-aligning the i.MX platform with more idiomatic DT usage does not seem
-to be a worthwhile trade-off to me.
-
-Regards,
-Lucas
-
-> Best regards,
-> Krzysztof
->=20
-> ---
-> Krzysztof Kozlowski (6):
->       arm64: dts: imx8qxp: Move Ethernet aliases out of SoC DTSI
->       arm64: dts: imx8dxl: Move Ethernet aliases out of SoC DTSI
->       arm64: dts: imx8mm: Move Ethernet aliases out of SoC DTSI
->       arm64: dts: imx8mn: Move Ethernet aliases out of SoC DTSI
->       arm64: dts: imx8mq: Move Ethernet aliases out of SoC DTSI
->       arm64: dts: imx8qm: Add Ethernet aliases
->=20
->  arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi           | 2 ++
->  arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi     | 1 +
->  arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi     | 1 +
->  arch/arm64/boot/dts/freescale/imx8dxl-evk.dts                 | 1 +
->  arch/arm64/boot/dts/freescale/imx8dxl.dtsi                    | 2 --
->  arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi          | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-data-modul-edm-sbc.dts   | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-emcon.dtsi               | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-emtop-baseboard.dts      | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi                 | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-icore-mx8mm-ctouch2.dts  | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-icore-mx8mm-edimm2.2.dts | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-innocomm-wb15-evk.dts    | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-kontron-bl-osm-s.dts     | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-kontron-bl.dts           | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-mx8menlo.dts             | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-nitrogen-r2.dts          | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-phg.dts                  | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-phycore-som.dtsi         | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-ucm-som.dtsi             | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi             | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-venice-gw700x.dtsi       | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-venice-gw7902.dts        | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-venice-gw7904.dts        | 1 +
->  arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi       | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi          | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-verdin-ivy.dtsi          | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-verdin-mallow.dtsi       | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm-verdin-yavia.dtsi        | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi                     | 1 -
->  arch/arm64/boot/dts/freescale/imx8mn-beacon-som.dtsi          | 1 +
->  arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi   | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi                 | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mn-var-som.dtsi             | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mn-venice-gw7902.dts        | 1 +
->  arch/arm64/boot/dts/freescale/imx8mn.dtsi                     | 1 -
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts                  | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts   | 1 +
->  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts       | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts          | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts             | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts             | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts              | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi              | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-thor96.dts               | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi           | 1 +
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi                     | 1 -
->  arch/arm64/boot/dts/freescale/imx8qm-mek.dts                  | 5 +++++
->  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts               | 1 +
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts                 | 4 ++++
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi                    | 2 --
->  arch/arm64/boot/dts/freescale/imx8x-colibri-aster.dtsi        | 6 ++++++
->  arch/arm64/boot/dts/freescale/imx8x-colibri-eval-v3.dtsi      | 1 +
->  arch/arm64/boot/dts/freescale/imx8x-colibri-iris.dtsi         | 1 +
->  arch/arm64/boot/dts/freescale/mba8mx.dtsi                     | 4 ++++
->  arch/arm64/boot/dts/freescale/mba8xx.dtsi                     | 2 ++
->  56 files changed, 143 insertions(+), 7 deletions(-)
-> ---
-> base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-> change-id: 20250425-dts-imx-aliases-ethernet-37d8552939de
->=20
-> Best regards,
-
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 178d79e68107..02c6f553dc53 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1952,7 +1952,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 		}
+ 		css_get(&memcg->css);
+ 		WRITE_ONCE(stock->cached[i], memcg);
+-		WRITE_ONCE(stock->nr_pages[i], stock_pages);
++		WRITE_ONCE(stock->nr_pages[i], nr_pages);
+ 	}
+ 
+ 	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
