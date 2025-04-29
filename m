@@ -1,120 +1,172 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E77270ECF;
-	Tue, 29 Apr 2025 10:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A111FE478;
+	Tue, 29 Apr 2025 10:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921046; cv=none; b=gmlXC49rkRqNtU5JDQA4V9JjWoE3yyEFUDFNxyCTQc7h8xGswfT/zwmCMuLS3h2v2J03Q2T+rbcfPxe4TMqdLiYVGgCV1Ed+kyarWrFgJ3DEDM8t0L0eS3PNSqcgkSeGH2Wnf/bifOrajK+AJPq0WQC0zdvXOuSJHQdSRXbtTd8=
+	t=1745921085; cv=none; b=r1ZRSlQ9c5wHv2S8lN9fzcfn375G2hjrPPsxgb0K2HzSP1x84Vw5Q930iIeMy42kxhKuJn/COx1qczwchEKq2bHXevw2LJIiG8xuJAhLN15Nic0jHo5CEhJSJdiX1tbN0CmzPmL55zcmzhwSkMqtOGQE+TnlisDAcnle8Y21iAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921046; c=relaxed/simple;
-	bh=RF6o8GHfj1ttEiwuBJivOFM9iu0SmwBpRTbAzQir5Hw=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=AnUKFSYK5yeqCtcLF3LwGQzfG6i9xQ47tdDsA40Zq+3a0Fsf2ZUbQw19dI5pTvNnxj6t6lTHf8Yq0s8mPN+9ozU/FJ2/YH150KR72X4gvfdBDDsAf68vcBB6oPVzMw+FpbH+TvKSpJHzOLffyDe7gAYKHCa0o9njoXzJxhqb/08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=0fKUcyOo; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1745921085; c=relaxed/simple;
+	bh=ggnZ9rB4L/OHC4j1OJGJrTPWEDDVBgLNqAzq6M93a+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QOuRxvYDTWchc2dsQqwAmCBC8T0VjV04dx41nTqh2OvFbYg6zXl+SqKS1lOBwWJ+UDixgs/xeVqmBDidZgzZkxo1b70PWHO/HZXginyqGz7CezoFV9vN7cXnmVpxTpPcg3WE6EkD7oRG3PF8F2RjcOUMtvyWmZI+a7448YBk6LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnBSuLn9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="0fKUcyOo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=UMcULxUbcMjQJ66Cg9wMoxO/ZD9NbgZNU7gRtsbDIj8=; b=0fKUcyOocXqLlYVibtRCQmj/Y0
-	MZupjRZEn+QJ3q29KzxFTb8mgttNr6sWZfz08u+r/H3mO1QYspyV6exnz6uyXZaYwrZa6dgNA2SiW
-	QNIw4CSCVViUbilfAcfjvGWSJe24/QUHibOb9rZqCJ1gjVJ3Ctk/7v2ou6UFCmh61E0IiaYfh/tXC
-	X0H35EfvdU2gND1BE1OolJg96IGZ0GB8Kxhk0euJD9s7I7bfeVOuCxax95SIKCnTyxuk2KknQThPE
-	oaoAooVeB82AQhdcz0zWLu9t7fuHoOJzknKIveu+TCsLDc0a1WRrsupSD6h+uJPOtOnZ9+NzVxl6D
-	iR4goHcQ==;
-Received: from [122.175.9.182] (port=6139 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1u9hob-000000008Sv-3slT;
-	Tue, 29 Apr 2025 15:33:50 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 991321782431;
-	Tue, 29 Apr 2025 15:33:41 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 75066178245B;
-	Tue, 29 Apr 2025 15:33:41 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id HxMW6xCJqpGW; Tue, 29 Apr 2025 15:33:41 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 185171782431;
-	Tue, 29 Apr 2025 15:33:41 +0530 (IST)
-Date: Tue, 29 Apr 2025 15:33:40 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: kuba <kuba@kernel.org>
-Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
-	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
-	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
-	pabeni <pabeni@redhat.com>, robh <robh@kernel.org>, 
-	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>, 
-	nm <nm@ti.com>, ssantosh <ssantosh@kernel.org>, 
-	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>, 
-	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
-	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
-	basharath <basharath@couthit.com>, horms <horms@kernel.org>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>
-Message-ID: <772474665.1172924.1745921020429.JavaMail.zimbra@couthit.local>
-In-Reply-To: <20250424191350.7bf69fdb@kernel.org>
-References: <20250423060707.145166-1-parvathi@couthit.com> <20250423072356.146726-5-parvathi@couthit.com> <20250424191350.7bf69fdb@kernel.org>
-Subject: Re: [PATCH net-next v6 04/11] net: ti: prueth: Adds link detection,
- RX and TX support.
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnBSuLn9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB09C4CEE3;
+	Tue, 29 Apr 2025 10:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745921084;
+	bh=ggnZ9rB4L/OHC4j1OJGJrTPWEDDVBgLNqAzq6M93a+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DnBSuLn9Rb+kmgRen/PdoU7YoxcW1XGpp1oic6H9IJ8AlavhfdqQ+/9Rfv5J+z6CM
+	 ZssYFjuPuGzlTUU30RmMmUS3mlwEBUvJ832E8UGH4+LktIiRI0es3DSVdzLks1mTzF
+	 VJEfsffhgzMxcJ6AWXgyRePU1QheVhGR6ocn16mHuNWjAaWpy1ax7YAfBaDwJoNiXj
+	 emOnwIif4B4Yc9/S3eVF5mq7agx7mVZSarxR5HrbqfCfbvpnTYzZnn+Qz+bkGeuB+R
+	 1HdFhIUlhwkKILB8V/Qfy+On1HWgHhAZYumkOg6tAXBYpiYaI5RsiENSCq+gjzLb/y
+	 px1P0Ct8hPEAw==
+Date: Tue, 29 Apr 2025 12:04:38 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v1 5/7] modpost: Create modalias for builtin modules
+Message-ID: <aBCkNh0Q2hwpMchj@example.org>
+References: <cover.1745591072.git.legion@kernel.org>
+ <bb0d887760a474e5e7f9db0e9933eee81a5d9ea3.1745591072.git.legion@kernel.org>
+ <cf3ff619-6177-42e1-8f64-74cf4cbb8672@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds link detection, RX and TX support.
-Thread-Index: e9vQTHb25dOlfaA340zfiKRfwAC3Tg==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf3ff619-6177-42e1-8f64-74cf4cbb8672@suse.com>
 
-Hi,
-
-> On Wed, 23 Apr 2025 12:53:49 +0530 Parvathi Pudi wrote:
->> +static inline void icssm_prueth_write_reg(struct prueth *prueth,
->> +					  enum prueth_mem region,
->> +					  unsigned int reg, u32 val)
->> +{
->> +	writel_relaxed(val, prueth->mem[region].va + reg);
->> +}
+On Tue, Apr 29, 2025 at 11:25:47AM +0200, Petr Pavlu wrote:
+> On 4/26/25 18:16, Alexey Gladkov wrote:
+> > For some modules, modalias is generated using the modpost utility and
+> > the section is added to the module file.
+> > 
+> > When a module is added inside vmlinux, modpost does not generate
+> > modalias for such modules and the information is lost.
+> > 
+> > As a result kmod (which uses modules.builtin.modinfo in userspace)
+> > cannot determine that modalias is handled by a builtin kernel module.
+> > 
+> > $ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
+> > pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
+> > 
+> > $ modinfo xhci_pci
+> > name:           xhci_pci
+> > filename:       (builtin)
+> > license:        GPL
+> > file:           drivers/usb/host/xhci-pci
+> > description:    xHCI PCI Host Controller Driver
+> > 
+> > Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
+> > modpost if the module is built separately.
+> > 
+> > To fix this it is necessary to generate the same modalias for vmlinux as
+> > for the individual modules. Fortunately '.vmlinux.export.o' is already
+> > generated from which '.modinfo' can be extracted in the same way as for
+> > vmlinux.o.
+> > 
+> > Signed-off-by: Alexey Gladkov <legion@kernel.org>
+> > ---
+> >  include/linux/module.h   |  4 ----
+> >  scripts/mod/file2alias.c | 13 ++++++++++++-
+> >  scripts/mod/modpost.c    | 21 ++++++++++++++++++---
+> >  scripts/mod/modpost.h    |  7 ++++++-
+> >  4 files changed, 36 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/include/linux/module.h b/include/linux/module.h
+> > index 7250b4a527ec..6225793ddcd4 100644
+> > --- a/include/linux/module.h
+> > +++ b/include/linux/module.h
+> > @@ -257,14 +257,10 @@ extern void cleanup_module(void);
+> >  	__PASTE(type,			\
+> >  	__PASTE(__, name)))))))
+> >  
+> > -#ifdef MODULE
+> >  /* Creates an alias so file2alias.c can find device table. */
+> >  #define MODULE_DEVICE_TABLE(type, name)			\
+> >  extern typeof(name) __mod_device_table(type, name)	\
+> >    __attribute__ ((unused, alias(__stringify(name))))
+> > -#else  /* !MODULE */
+> > -#define MODULE_DEVICE_TABLE(type, name)
+> > -#endif
+> >  
+> >  /* Version of form [<epoch>:]<version>[-<extra-version>].
+> >   * Or for CVS/RCS ID version, everything but the number is stripped.
+> > diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> > index dff1799a4c79..0fa3f031b904 100644
+> > --- a/scripts/mod/file2alias.c
+> > +++ b/scripts/mod/file2alias.c
+> > @@ -1471,7 +1471,8 @@ static const struct devtable devtable[] = {
+> >  /* Create MODULE_ALIAS() statements.
+> >   * At this time, we cannot write the actual output C source yet,
+> >   * so we write into the mod->dev_table_buf buffer. */
+> > -void handle_moddevtable(struct module *mod, struct elf_info *info,
+> > +void handle_moddevtable(struct list_head *modules,
+> > +			struct module *mod, struct elf_info *info,
+> >  			Elf_Sym *sym, const char *symname)
+> >  {
+> >  	void *symval;
 > 
-> Please don't use "inline" unnecessarily.
-> The compiler will inline a single-line static function.
+> The new modules parameter is unused.
 
+Indeed. It is no longer needed after the optimization. Thank you.
 
-Understood. We will address this in the next version.
+> > @@ -1509,6 +1510,16 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+> >  	typelen = name - type;
+> >  	name += strlen("__");
+> >  
+> > +	if (mod->is_vmlinux) {
+> > +		struct module *builtin_mod;
+> > +
+> > +		builtin_mod = new_module(modname, modnamelen);
+> > +		builtin_mod->is_vmlinux = mod->is_vmlinux;
+> > +		builtin_mod->dump_file = MODULE_BUILTIN_FNAME;
+> 
+> The module.dump_file member is described in scripts/mod/modpost.h as
+> "path to the .symvers file if loaded from a file". However, that is not
+> the case here.
+> 
+> Similarly, the module struct in scripts/mod/modpost.h is commented as
+> "represent a module (vmlinux or *.ko)", but this patch expands its scope
+> to also include builtin modules.
 
-Thanks and Regards,
-Parvathi.
+Well, an alternative would be to add a separate flag. I used dump_file
+because it allows you to exclude such "builtin" modules from processing in
+write_dump(), write_namespace_deps_files(), etc.
+
+But yes, I agree that it's an abuse.
+
+> I'm not sure it's best to overload this data in this way. I think mixing
+> actual files and "logical" modules in the modules list is somewhat
+> confusing.
+> 
+> An alternative would be to keep a single module struct for vmlinux and
+> record the discovered aliases under it?
+
+It is possible to extend struct module_alias and add the module name. The
+problem is that alias is added by module_alias_printf() and we will have
+to add the module name to the arguments to each do_entry handler in
+addition to struct module where there is already a name (but in our case
+it is vmlinux).
+
+I can do that if you think it's a better way.
+
+-- 
+Rgrds, legion
+
