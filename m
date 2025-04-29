@@ -1,52 +1,34 @@
-Received: from tretyak2q.mcst.ru (tretyak2q.mcst.ru [213.247.143.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6920B29DB74
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.247.143.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E70A2C178F;
+	Tue, 29 Apr 2025 12:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745929730; cv=none; b=L5hnRo2kWRbG6ZGaGoRf1r7zphlz3kJuxXpr2crGNLcCeTxhhKaCZK3KeUZhSaZbR98+W/U8qOcc3VhZZ1jcrfATwKgE/lJDRLM2VAnWOY7cPIlmgQNCaaePDBSdvkOb3QkY8qgcNeai2kEmjlgcVirxmHZtm9wZcyLem3RKy4U=
+	t=1745929770; cv=none; b=JA/zSFo+1CtfaxZaiEzVdl02rQFUSt7qCFsXSu4Gju0pR1pLaxlTPzuWgKxJvwFd9Im1lTmjGSS+P+H+Cabcgb/7WM7WGnWRjIQABKC/MAY2efn/cE+BEfEFDK0G5O7CX3iSRBr3Lh4zBQwiKa94ZqurAff1Ye2QbsgdoR3MorU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745929730; c=relaxed/simple;
-	bh=ZGOwHJN9T6Ufq78cJaZMUAQsKWhGnJeXHj2oH8VgLH4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dZb43xQz1E1qHB3dv3p5p3ZOfV7uT75pydWqxErOtJfP/ZVCG2TdLQwowrr4nANqYdaNEXZzhZOiJZL9scuFkbrWpSkibWixvPhbuYKKpRcJDhNtvj48cn55FKQf0FIsxul6ruijpogKjrG6o19ucJsqmTSlMfeu8fOp1iuy0Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru; spf=pass smtp.mailfrom=mcst.ru; dkim=pass (2048-bit key) header.d=mcst.ru header.i=@mcst.ru header.b=p5ZA9exv; arc=none smtp.client-ip=213.247.143.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mcst.ru
+	s=arc-20240116; t=1745929770; c=relaxed/simple;
+	bh=l9WVZpUe07GworAoOUBdHThkKV12yLAUYvfdH4Ce0+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p5NJ5KciWSQQJPkzJl0nIfQhrwoBtq/iO0S8npN74SNH1ygxaHCd6+1KzE0nN/BUXQkVrT6kLo80N7dnAQmNrC/wLqUf8hc5sgjZtxazN//7iXL62tytTB0NlvXM4f25tmecsEY9TtqibRfE6me87sculuxRutBZbQT3hDY6imQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=GddofSk+; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mcst.ru header.i=@mcst.ru header.b="p5ZA9exv"
-Received: from tretyak2q.mcst.ru (localhost.localdomain [127.0.0.1])
-	by tretyak2q.mcst.ru (Proxmox) with ESMTP id 11D07100C0F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:28:38 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mcst.ru; h=cc:cc
-	:content-transfer-encoding:date:from:from:message-id
-	:mime-version:reply-to:subject:subject:to:to; s=dkim; bh=ywxBNZm
-	/e8MuqcQvNAqzfZyw9hVYSTV4wTfXNoxerqU=; b=p5ZA9exveVnEd/AVFHrAPky
-	wTA+tUq7WuVaCUDajMDcHNYVm9djyGMWplG4gnw/v5+vqO0AuWDvEcZ5EqdCg57F
-	5zDxMcDrv+XFlqtK6UVIdgS6V94imODgkH/xIglmjfXrfJJsaHqvg7/yUOdrKfdc
-	xwzN/Jfcmbqdky7blaWTENpCTDYn6pYk4tP79g+sB5liglyo55mtofn5FDCdepyE
-	570I9x8b/FiyV8QqPnXO9i1v0cSGuLL2Ewi+cTEAnjqMHt0VO1/myRYvepPIgclt
-	r2cfWLxQMz9KMBSPeXwFy6al93GFIDFdU+4PmyKLDX5E0zE7EvbaUXT6r3/rHUQ=
-	=
-X-Virus-Scanned: Debian amavis at mcst.ru
-From: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Igor Artemiev <Igor.A.Artemiev@mcst.ru>,
-	Evan Quan <evan.quan@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@linux.ie>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Alexey Kodanev <aleksei.kodanev@bell-sw.com>
-Subject: [lvc-project] [PATCH 5.10/5.15] drm/amd/pm: vega10_hwmgr: fix potential off-by-one overflow in 'performance_levels'
-Date: Tue, 29 Apr 2025 15:20:15 +0300
-Message-Id: <20250429122015.1503994-1-Igor.A.Artemiev@mcst.ru>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="GddofSk+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1745929764; bh=l9WVZpUe07GworAoOUBdHThkKV12yLAUYvfdH4Ce0+A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GddofSk+1YPDb7h8Ohb0gqjdYe6K6yP9JIHC1W1RG/OOBY3OSysTz2IMQxqn1dB42
+	 MamLSNnmK1EFLAAO/OFgMAHb4exKOAO9PIhhw5uJNVY7xB1b/AJuHbdM7ZwFVmePEc
+	 +kwJstet4m8klO3BPbrP4oyhdtLuKPj6YmsXOf4o=
+From: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Ondrej Jirman <megi@xff.cz>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH rtw-next v3 0/2] Fix inadverent sharing of struct ieee80211_supported_band data
+Date: Tue, 29 Apr 2025 14:29:09 +0200
+Message-ID: <20250429122916.1734879-1-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,42 +37,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+From: Ondrej Jirman <megi@xff.cz>
 
-commit 2cc4a5914ce952d6fc83b0f8089a23095ad4f677 upstream.
+This is a series of patches requested by Ping-Ke Shih in response to
+https://lore.kernel.org/lkml/20250427002414.410791-1-megi@xff.cz/
 
-Since 'hardwareActivityPerformanceLevels' is set to the size of the
-'performance_levels' array in vega10_hwmgr_backend_init(), using the
-'<=' assertion to check for the next index value is incorrect.
-Replace it with '<'.
+Please take a look.
 
-Detected using the static analysis tool - Svace.
-Fixes: f83a9991648b ("drm/amd/powerplay: add Vega10 powerplay support (v5)")
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-[Igor: In order to adapt this patch to branch 5.10/5.15 the variable name
-'vega10_ps' has been changed to 'vega10_power_state' as it is used 
-in branch 5.10/5.15.] 
-Signed-off-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
----
- drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+(hw->wiphy->bands[*] are no longer being NULLed when probe fails and on
+remove(), but I guess that should not be an issue? I tried unbinding the
+device and it worked fine without any crash)
 
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
-index 79a41180adf1..30eab5002077 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
-@@ -3171,7 +3171,7 @@ static int vega10_get_pp_table_entry_callback_func(struct pp_hwmgr *hwmgr,
- 			return -1);
- 
- 	PP_ASSERT_WITH_CODE(
--			(vega10_power_state->performance_level_count <=
-+			(vega10_power_state->performance_level_count <
- 					hwmgr->platform_descriptor.
- 					hardwareActivityPerformanceLevels),
- 			"Performance levels exceeds Driver limit!",
+thank you and regards,
+	Ondrej Jirman
+
+Changes since v2:
+- requested sizeof argument changes
+Changes since v1:
+- added patch to convert some memory allocations to be devm_* managed
+- check for NULL from kmemdup()
+- rename rtw89_copy_sband
+- drop some kfree due to them not being needed because failed
+  rtw89_core_set_supported_band() results in abandoned probe()
+  and devm_* will take care of that
+- add error return to rtw89_init_he_eht_cap and check for it
+
+Ondrej Jirman (2):
+  wifi: rtw89: Convert rtw89_core_set_supported_band to use devm_*
+  wifi: rtw89: Fix inadverent sharing of struct ieee80211_supported_band
+    data
+
+ drivers/net/wireless/realtek/rtw89/core.c | 124 +++++++++++-----------
+ 1 file changed, 60 insertions(+), 64 deletions(-)
+
 -- 
-2.39.2
-
+2.49.0
 
