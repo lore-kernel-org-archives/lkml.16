@@ -1,60 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD05130A54
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE692C3759
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745933328; cv=none; b=bQEncebw37OlpU3koUCsnBXJanpnlTBJtfsUiuOAb/X0JwJ1VtGQbpdzwE4kdlg5Hx5m7dEvuD/qjjK4va/2VW0vkKXw1ZrnKMbKt/ClOo4tbCOHcqjsmuMWj7HWlg1BDmrisB6QD+DNNprEg8YGkohQJ3X22EuANDkzo4eO4yE=
+	t=1745933348; cv=none; b=illWlDGSDJPI/RmTxZcNgMhWYkcwIHRjHdnhzaHqwKec/7lwy2s3dYG8szxg4Nhoi9QuwDqibMSf/4ibpIRQakRH2aunadXRklNvQQQk5qn8cEcsIowDookQMCNS2m/mRtDsGLsrho9MfAv61sADQsc76lnhW8yZ+cOkLBDpVSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745933328; c=relaxed/simple;
-	bh=xsBsO/sjs+IIJB50V0/7metlk79FzVIvViIS88ZGBNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kzPpmHC2RZW7DILFcnAaYaQe1bzrOVbputp09rDDw4tMSrdWHpdZau92usGH42VM4QAb+clyWIKYWi5jgo5TDVODoQl9UCvllK5AaJlxJ4DcdH2XjHRaqGg3Mpy4dftVibxlf23HIbDxgO56QCsArSXHk4Dr317eCogSaNGGm80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8MLGJA3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745933348; c=relaxed/simple;
+	bh=kDv0l15rAK7bZZq1e1Vseo/zrn4ABP5F9SmziT3xyZI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=EKBU0K/FyR6N7aK0BGomVXi+kL0R+r5o1wt/5pvu+pzb3/vOUM3G7IzUl3XxYFopDKl0cgOeTCBoJUbnZu/UiIQFGbq9o1oxe3dj0Js4VcjVP8KqvWElrZSjANtpGHAKz860UFqqbaLsktii8yuzgosKzGNKeWQiL5++Pl3+o4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=ROw1RHi0; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8MLGJA3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85794C4CEE3;
-	Tue, 29 Apr 2025 13:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745933328;
-	bh=xsBsO/sjs+IIJB50V0/7metlk79FzVIvViIS88ZGBNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X8MLGJA30OvJcZ56T+sH+cvJU1823GqqTvbfrlRw5shX+cJD+Y9glWt1Y8O9gRxb1
-	 0NDtCRlGQDUlUqR3s/QdZw4tFQVEuuVlxSYWIlstvKjVDKuTCtqUTmx1doEJ2FUfdt
-	 L35utiH5jGWr/WA7Bp4qur745g1/S7bdF7GWQCUYz5kV1MhBzSed7ARckyQcg5kn0Q
-	 ZbX5S232aK0EY4TitrEafEdm9kDH5YZKdE3IDUzzvbB+pQpBVie3HCBjkTPnX8rk28
-	 l0XUHexl3KLMCFHknyiYnf7tu7aWY1+qyk/9a7mcymVcXjKkUBQ9Lyjw94DoRlxsYT
-	 Ys3VwAhw+omfw==
-Date: Tue, 29 Apr 2025 21:28:41 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com, dhavale@google.com,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] erofs: remove unused enum type
-Message-ID: <aBDUCS7rzDbB1OpZ@debian>
-Mail-Followup-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org,
-	chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
-	dhavale@google.com, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-References: <20250429075056.689570-1-lihongbo22@huawei.com>
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="ROw1RHi0"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1745933344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4DytQf8/knSTl8uN0E/2GEj/HCfcYQColb3vJTlNtko=;
+	b=ROw1RHi0HM04vTWcet5QsVpmmPhfbXa4hwH6n+xgsKwc32TKuztrJt44PvMGB5AL0YyL4a
+	zoQOfN6SH0Nt23ov4l80WjBYo1jgFf90uj/2I55trX8KrCqO3ijmILGzu7hdWk7MAtSfuP
+	qGPXenuw1BgxPHRVa9AQeyou0Uv3lrFSlaRrm4c2RuM74s1VpkTgu1rcuJ0nk/PDxpNF1W
+	dvmgYpbo+Q3KOzWX9yFd9oxrzEgw3wxmobR2n340M8A9i8iImAwXErfSfFVhv4RpPVzEBA
+	Ynyq3VtD+PaWFbAjOWA3VjyOVfrTxJqHn1/q4+5+FzGnF846uhJpgGKqFaOeSA==
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Neal Gompa <neal@gompa.dev>, Dmitry Baryshkov <lumag@kernel.org>, 
+ Janne Grunau <j@jannau.net>
+Cc: dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250428-drm_adp_fixes-v2-0-912e081e55d8@jannau.net>
+References: <20250428-drm_adp_fixes-v2-0-912e081e55d8@jannau.net>
+Subject: Re: [PATCH v2 0/4] Apple Display Pipe driver fixes
+Message-Id: <174593334122.31053.18397299595093842185.b4-ty@rosenzweig.io>
+Date: Tue, 29 Apr 2025 09:29:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250429075056.689570-1-lihongbo22@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 29, 2025 at 07:50:56AM +0000, Hongbo Li wrote:
-> Opt_err is not used in EROFS, we can remove it.
+
+On Mon, 28 Apr 2025 13:37:12 +0200, Janne Grunau wrote:
+> While looking at a suspend issue in the Asahi downstream kernel I
+> noticed several issues in the the ADP driver. This series fixes those
+> issue.
 > 
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> The root cause of the issue was that the device is unexpectedly powered
+> down on suspend. The driver relies on initialization done by the boot
+> loader and can not bring the device up from reset. The change in [1]
+> annotates the power-domain used by ADP as always-on. This ensure the
+> touchbar is useable when the adpdrm module is loaded after boot.
+> 
+> [...]
 
-Reviewed-by: Gao Xiang <xiang@kernel.org>
+Applied, thanks!
 
-Thanks,
-Gao Xiang
+[1/4] drm: adp: Use spin_lock_irqsave for drm device event_lock
+      (no commit info)
+[2/4] drm: adp: Handle drm_crtc_vblank_get() errors
+      (no commit info)
+[3/4] drm: adp: Enable vblank interrupts in crtc's .atomic_enable
+      (no commit info)
+[4/4] drm: adp: Remove pointless irq_lock spin lock
+      (no commit info)
+
+Best regards,
+-- 
+Alyssa Rosenzweig <alyssa@rosenzweig.io>
+
