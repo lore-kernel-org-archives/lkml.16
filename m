@@ -1,94 +1,115 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EC927FD70
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D6A2741CC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915950; cv=none; b=X4BbiyqxXfDd16ShyoUXWFpiCKDbm6t4jp268/8wfyXpayJ37t3lnidfIEtIGHmRTRa1VSQJie+O8xCR0FriwAEFlliA45VqTAOPL7ltDiJfiG32HT2tIbS0dWaNqIZLF36D2Megs9qn+fJmIEGjSx5WLfyP8A+LKUNZgwKMHHM=
+	t=1745916003; cv=none; b=Sf8InK0wjSwL/NNAD4tnCz7pMll1Ys9rSFDx9mMznLY1IdWsV3IVtI7JleFcfDQ8VfoR3wttwEPh0cyTPzSGduqf3pjToF6ouI4Pc15EmCgaFYYrGFgkQxFNaQONne3Or6bWKBnRO59GW1t7x0xmPEvThluVxfnbV6d8BoyJVfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915950; c=relaxed/simple;
-	bh=UXd6ZBRFfyXJOZgQdgT9dBLzGRXvPHd03emOjSyDqxM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=szR5H7NylxzVYpKGGvrZZEhAnEttF7ycwNYj3CmIbC0nq4/YYhR4w0o5jkmf/dKjd2vVUpgOeMTcrzu00VLXO5gKa60l6aI/UN6qqkTm671YxXdVjShj66mOzL2EO/qbjTB5Mew6Jl+WQwQuiFclkNO3OKwzCHy8RpwQhtHaCAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=n6RwMuSp; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="n6RwMuSp"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso7354994e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745915947; x=1746520747; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UXd6ZBRFfyXJOZgQdgT9dBLzGRXvPHd03emOjSyDqxM=;
-        b=n6RwMuSpP6AkmsI/2yevJMtpE6g9Kd1dNdZ5AVb7T6G+NJ1G+k7Az5ONBmmtpDYHf0
-         Lzo5QA7fdy5orVNAn/hh7qEXcM0PtI3wh2pIbqMPfC66nbwABl1K5/ymMnhv8Q+X9Kq8
-         3F/uJf3JrHg/VEhbX4Ms92lbZ3i6O0lo7M2w4AwmOLBcmRg1DqQj6wbGZC06XwQj7aF+
-         Mr6/3/cID6/FL18dwlqIXcHxaCCakrTxmksKWAMfTZtp3iDLpCqqOQOkfonYE09MVKi1
-         BShVXIDgLWRbclOEoRgb5lPPLlYbr3hZmhqwcc0jVjTfWF4/dA6fYY9Z7Z5He5+v1eWf
-         9rQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745915947; x=1746520747;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UXd6ZBRFfyXJOZgQdgT9dBLzGRXvPHd03emOjSyDqxM=;
-        b=mg7rs0CeBXrWo18GuzJltoHYmYwg5882i3SNFWHqOk5U56Gonkjy2t+AbtOgHhK6Ei
-         4rwaSr1rr6RtfPUoh2dr0UqrLM3yfCSzT3uBSJThKPTlI0XJPEQcFGk4Cx4G4zwxk/Cd
-         H5a/n7xA2R010lDBJwOr8JRMzDeMZQOWbezgPVUKypJ2aZQgE3TmcQZndNzxk0eEyc1l
-         R5FHvOPABc4lgVxOx6A6nAreOuIEQFiykxb3+/4Gzkaz8GemBXZCBtB6wj3Mh4tfoXKP
-         BaDcTy0SJ6YWEzUwrjxYxrF6Dy1y4/kwSbYEXx/FjNvPWMDJ0RdnkFvlPpj33elwlQp3
-         KXIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtX4wzq7HSj4zOh5Lf9aoeDDjkKDUm2YggE3gdocvWmwuEpcoMHfvN0fPbp6jz10WOOzYfUKxdxtTJUf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFeFBko1XMfIcSvHcHXdsPcH/aL9jf14Azigd/cbxZJaPfi0J8
-	88Zz6NrgJrnADnvttprVKEe/ZGe0OASc5xwBZLTnSdMK+8du2FvF8Vn8U6N1iw09LxHyd3w+Pw0
-	UQSwBjEtS9jVJJ5RMtilZMfS2XgB0VHtDK+ji6g==
-X-Gm-Gg: ASbGnctG7qOaeI6ZT0WV3HjiFGSene8IXQalxpP4fW6K0+ddr8TqMsNBrBzvQbBPq/o
-	2JBgeMRDwgriFhY/hxFOraGKTMP1ptS+0L9+fqHVe60t3ok/2PgQRE5FybbdRggyCevLdFygKa2
-	nMtDE09uCHXEVlQouATYLf3E3NqoqVsAoz7nGkvoknM/ZPegJeGCSgQWZcnTdEB/Tx
-X-Google-Smtp-Source: AGHT+IENnVjqUwXNLAYDfTiNrsEIWwNs+6d+NpV5FHnYd17iK45VPUqKM3XyJFL4hddosaZTQWV2RnYYV/NteWYUjPg=
-X-Received: by 2002:a05:6512:400c:b0:545:5d:a5ea with SMTP id
- 2adb3069b0e04-54e9e537c34mr615854e87.3.1745915946982; Tue, 29 Apr 2025
- 01:39:06 -0700 (PDT)
+	s=arc-20240116; t=1745916003; c=relaxed/simple;
+	bh=M1c6jlLbe4Ax87QcLh2zMwyAKz1WIbajcF4qOaYlfoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ncroVpXA2puGx43sTjDg8dZT1drWlmyxpqsfgeMeJq5eqyVVya+pxdOtdqvB53FK9yNk4XQTlh8dkLkYX4oyhGZ6PQMSEORxszSXre6psrGSHgwdQqbEtIW1h+pzGZUjsaQ+Gj5iHvlfAqXH3DzdhXt3DgODwc/ZV5EXHQFPKzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D69421515;
+	Tue, 29 Apr 2025 01:39:53 -0700 (PDT)
+Received: from [10.163.52.122] (unknown [10.163.52.122])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97EBB3F66E;
+	Tue, 29 Apr 2025 01:39:50 -0700 (PDT)
+Message-ID: <93411699-2e36-4a4e-bc3a-3efeb8e2260b@arm.com>
+Date: Tue, 29 Apr 2025 14:09:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org> <20250429-max77759-mfd-v8-5-72d72dc79a1f@linaro.org>
-In-Reply-To: <20250429-max77759-mfd-v8-5-72d72dc79a1f@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 29 Apr 2025 10:38:54 +0200
-X-Gm-Features: ATxdqUHQUcFHUAFI3-nZJt5a9IRI1ekBnea7Lczn1CqKEhZ8m8SpsIrkkBLDoLk
-Message-ID: <CAMRc=MeizZec6YkYhNDEh4kE4hRO_wJccE=iy0-PKu7uX52u1w@mail.gmail.com>
-Subject: Re: [PATCH v8 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] mm: Add batched versions of
+ ptep_modify_prot_start/commit
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, peterx@redhat.com, joey.gouly@arm.com,
+ ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
+ quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
+ yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
+ namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
+ ziy@nvidia.com
+References: <20250429052336.18912-1-dev.jain@arm.com>
+ <20250429052336.18912-4-dev.jain@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250429052336.18912-4-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 29, 2025 at 10:22=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@=
-linaro.org> wrote:
->
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
->
-> This driver supports the GPIO functions using the platform device
-> registered by the core MFD driver.
->
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+
+
+On 4/29/25 10:53, Dev Jain wrote:
+> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
+> Architecture can override these helpers.
+> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 > ---
+>  include/linux/pgtable.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index b50447ef1c92..ed287289335f 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -891,6 +891,44 @@ static inline void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
+>  }
+>  #endif
+>  
+> +/* See the comment for ptep_modify_prot_start */
+> +#ifndef modify_prot_start_ptes
+> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+> +		unsigned long addr, pte_t *ptep, unsigned int nr)
+> +{
+> +	pte_t pte, tmp_pte;
+> +
+> +	pte = ptep_modify_prot_start(vma, addr, ptep);
+> +	while (--nr) {
+> +		ptep++;
+> +		addr += PAGE_SIZE;
+> +		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+> +		if (pte_dirty(tmp_pte))
+> +			pte = pte_mkdirty(pte);
+> +		if (pte_young(tmp_pte))
+> +			pte = pte_mkyoung(pte);
+> +	}
+> +	return pte;
+> +}
+> +#endif
+> +
+> +/* See the comment for ptep_modify_prot_commit */
+> +#ifndef modify_prot_commit_ptes
+> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
+> +		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+> +{
+> +	for (;;) {
+> +		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+> +		if (--nr == 0)
+> +			break;
+> +		ptep++;
+> +		addr += PAGE_SIZE;
+> +		old_pte = pte_next_pfn(old_pte);
+> +		pte = pte_next_pfn(pte);
+> +	}
+> +}
+> +#endif
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Is there any particular reason why the first loop here is while { }
+based where as the second one is a for { } loop ?
+
+> +
+>  /*
+>   * On some architectures hardware does not set page access bit when accessing
+>   * memory page, it is responsibility of software setting this bit. It brings
+
+These helpers should be added with at least a single caller using them.
