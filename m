@@ -1,92 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B4216E2B;
-	Tue, 29 Apr 2025 14:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC6A2192E3;
+	Tue, 29 Apr 2025 14:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937472; cv=none; b=eNftz78ahuVo6xmg9BYdV/596gPsm9nht/O+TefSlTtueXFK47FArQk42N5P07U1L5Du3X7eIDJtewDylk4Ptseee8x+wZnzWPHS0L3V1myWGmNZJinDWqc41PfQdPGHSb9RP1fQ+RhMMAGKW/oLRthXykKhbq9rAzfsaE+S1+w=
+	t=1745937480; cv=none; b=Wu27l3aZ4b4GPDB+7OiAqqvlRzjsMgHC+Qi3mVnjtMxgmgkW4cHh0HJ1jjIXVgYMSAmASvKqfQZeS0ndTY5ths2WZJlqgGRiZhJMURBGMprzPMpQnvRB5XYzMgydt6cd0hRj54meBpPQD7niXHeuy/KZ80VLf6I8edRnnZoNTYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937472; c=relaxed/simple;
-	bh=nVd8qF6yGUMGXXiUlR6CdwvZIu05Rfbpb3ez4qo0FPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ljmiYdjmmt33Ly4AQhlr/uRmI0bR6YdN86AVocuhLOmvqyrHVOvNZxmavVMdQNMnPUvGe6Cm/AGY1v36hx3RlUYXkfuxBMm/Z5ROkxxpzaFzp2yj0xXXNgRXBHO6yECPFqbjLz1FpiU7RJ2ghR7DJKOy4eiSWTUA/93FxcLNxyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=arqTb0Vm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745937480; c=relaxed/simple;
+	bh=4Gs21laQhcqWYudDUmToeI3J82M4LIM7c8fcMrnGics=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eiMQLkTyFdgkKBZbudDwZj9XN9HW0dGFnJeTmfnHdHZLb+Y4HmWQLlIso9JLNozCUvdxvZONzjt9SeJezj5j3OxvsJuTQjrPywM2zK078vk3edjUg14UDU1ibxWEzHu3M9+rBwAE58lKu7Mybp8J0m1pv8HOd90U9eq902QkDCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HInyXyx0; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="arqTb0Vm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72ED2C4CEE3;
-	Tue, 29 Apr 2025 14:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745937472;
-	bh=nVd8qF6yGUMGXXiUlR6CdwvZIu05Rfbpb3ez4qo0FPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=arqTb0VmVe4kYSqEOdXDmPjiuCngQMkK8fgA1AEi6jsd21U9E4lNuLZdCPVUcU7sz
-	 aAoQvaLpIPBYInFrSOa6MULulzKmwaKO/4MRaLLJt1qFfY9Gjf1nO8yw+evNXlJf+x
-	 bI/FNbkX+GJ1L7FFgenePoULpIHqn0rUIUBBoVeM=
-Date: Tue, 29 Apr 2025 16:37:49 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Ayush Singh <ayush@beagleboard.org>,
-	Jason Kridner <jkridner@beagleboard.org>,
-	Deepak Khatri <lorforlinux@beagleboard.org>,
-	Robert Nelson <robertcnelson@beagleboard.org>,
-	Dhruva Gole <d-gole@ti.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: kernel: device: Add
- devm_of_platform_populate/depopulate
-Message-ID: <2025042904-trade-leverage-0f98@gregkh>
-References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
- <aBDi2LE3O1rIsGqn@pollux>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HInyXyx0"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEbEui3118882
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Apr 2025 09:37:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745937434;
+	bh=uBLnvq9tnNBll+b98jrKss/AplqJhmEOPSzRV87IXfU=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=HInyXyx0A+jDK9Yahourju5HZWcbifNe0kqH7qS7C0sMESH02G1c26Q44YRMbC3h1
+	 oaD7C3yySyY4YJhHgiyAqTX2ukjrm5OTJCgpdOVyFTzMDk1R5t0wYwPYZP47ayTUXk
+	 cjPO6HqZTgR+FpRueB5MAeZJb1p8aJvrWczRc2W0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TEbEEh036133
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 29 Apr 2025 09:37:14 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
+ Apr 2025 09:37:14 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 29 Apr 2025 09:37:14 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TEaw7X106235;
+	Tue, 29 Apr 2025 09:36:59 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <jyri.sarha@iki.fi>, <tomi.valkeinen@ideasonboard.com>,
+        <airlied@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <dri-devel@lists.freedesktop.org>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
+        <h-shenoy@ti.com>, <devarsht@ti.com>
+Subject: [PATCH v5 1/3] dt-bindings: display: ti,am65x-dss: Add support for AM62L DSS
+Date: Tue, 29 Apr 2025 20:06:54 +0530
+Message-ID: <20250429143656.3252877-2-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20250429143656.3252877-1-devarsht@ti.com>
+References: <20250429143656.3252877-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBDi2LE3O1rIsGqn@pollux>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 29, 2025 at 04:31:52PM +0200, Danilo Krummrich wrote:
-> On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
-> > +    /// Remove devices populated from device tree
-> > +    pub fn devm_of_platform_depopulate(&self) {
-> > +        // SAFETY: self is valid bound Device reference
-> > +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
-> > +    }
-> > +}
-> 
-> One additional question regarding devm_of_platform_depopulate(). This function
-> is only used once throughout the whole kernel (in [1]), and at a first glance
-> the usage there seems unnecessary.
-> 
-> In your upcoming driver you call devm_of_platform_depopulate() from a fallible
-> path [2].
-> 
-> So, I think we should change devm_of_platform_depopulate() to return an error
-> instead of WARN(ret).
-> 
-> If [1] needs it for some subtle reason I don't see, then I think we can still
-> call it from there as
-> 
-> 	WARN(devm_of_platform_depopulate())
-> 
-> [1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
-> [2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
+The DSS controller on TI's AM62L SoC is an update from that on TI's
+AM625/AM65x/AM62A7 SoC. The AM62L DSS [1] only supports a single display
+pipeline using a single overlay manager, single video port and a single
+video lite pipeline which does not support scaling.
 
-Ugh, no, we should just delete this function entirely if only one driver
-is using it.  That implies it's not really needed at all.
+The output of video port is routed to SoC boundary via DPI interface and
+the DPI signals from the video port are also routed to DSI Tx controller
+present within the SoC.
 
-And we should NEVER have a WARN() call, that's just an excuse to reboot
-the box and assign a CVE...
+[1]: Section 11.7 (Display Subsystem and Peripherals)
+Link : https://www.ti.com/lit/pdf/sprujb4
 
-thanks,
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+V5:
+- No change
 
-greg k-h
+V4:
+- No change
+
+V3:
+- Remove AM62A references as suggested
+- Add Reviewed-by
+
+V2: 
+- Add Reviewed-by
+- s/ti,am62l,dss/ti,am62l-dss
+ 
+ .../bindings/display/ti/ti,am65x-dss.yaml     | 21 ++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+index 31c4ffcb599c..a5b13cb7bc73 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
++++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+@@ -12,18 +12,25 @@ maintainers:
+   - Tomi Valkeinen <tomi.valkeinen@ti.com>
+ 
+ description: |
+-  The AM625 and AM65x TI Keystone Display SubSystem with two output
++  The AM625 and AM65x TI Keystone Display SubSystem has two output
+   ports and two video planes. In AM65x DSS, the first video port
+   supports 1 OLDI TX and in AM625 DSS, the first video port output is
+   internally routed to 2 OLDI TXes. The second video port supports DPI
+   format. The first plane is full video plane with all features and the
+   second is a "lite plane" without scaling support.
++  The AM62L display subsystem has a single output port which supports DPI
++  format but it only supports single video "lite plane" which does not support
++  scaling. The output port is routed to SoC boundary via DPI interface and same
++  DPI signals are also routed internally to DSI Tx controller present within the
++  SoC. Due to clocking limitations only one of the interface i.e. either DSI or
++  DPI can be used at once.
+ 
+ properties:
+   compatible:
+     enum:
+       - ti,am625-dss
+       - ti,am62a7-dss
++      - ti,am62l-dss
+       - ti,am65x-dss
+ 
+   reg:
+@@ -91,6 +98,8 @@ properties:
+           For AM625 DSS, the internal DPI output port node from video
+           port 1.
+           For AM62A7 DSS, the port is tied off inside the SoC.
++          For AM62L DSS, the DSS DPI output port node from video port 1
++          or DSI Tx controller node connected to video port 1.
+ 
+       port@1:
+         $ref: /schemas/graph.yaml#/properties/port
+@@ -123,6 +132,16 @@ allOf:
+         ports:
+           properties:
+             port@0: false
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ti,am62l-dss
++    then:
++      properties:
++        ports:
++          properties:
++            port@1: false
+ 
+ required:
+   - compatible
+-- 
+2.39.1
+
