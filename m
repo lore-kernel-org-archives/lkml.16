@@ -1,25 +1,31 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51BEC13A3F7
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F019C1C5D7D;
+	Tue, 29 Apr 2025 07:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745910884; cv=none; b=MW2zYbIKGqFH617eXaqaj3dzC0M3WmZPiuaN59IpYlpGvqequ3061lDLRpJZBx3prfBYzPWqtTIYG5nyBAttZIv7HuQnGyCgENIG31f0VMUWfUUKDKV8KmUTHkJpCqiMI7iV4tIXYa6LlTX2BXoF8SzaLlhUtkifkz4cFgMFdpo=
+	t=1745910985; cv=none; b=YcFfY0/s3meZOzVRQ+iYaJdmymEuxy6TUeVWDHFzLlA+yA+Cdzs+dyuVpZvCxY8zq2rEd/vFI7lOcYVVe/fXQQqrNPQFzSU2HPA8Z3xpDMWbsW/qGEYJNmPtOjg7qws3JuVU/wUKo/YYCt0zavhBT3KTl8/MmIVJOb+Zls7hTM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745910884; c=relaxed/simple;
-	bh=/F0rwoASJN4cJrSqXtppk1kQTiKS/PN8CxIcPjZzTOE=;
+	s=arc-20240116; t=1745910985; c=relaxed/simple;
+	bh=mDsXvFYCqLUt6MkNyVoQCAOGXZknjiPYiw5eBAG99RA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qKfFUfISBI4N0a8UWilFAzpBZbt7JOrOMkBb/DeTbGimeulXtwJB8SS9Qv9vQuY6msarr5dB7PGhCLDW0IQOBEE+vYxObHW5/N30fehe1yeYN5sshMshtDGo4oWuq61LKLxp/+wyVmW98aPRODO5yvyGpbtJNr7l8zSdeF/XoGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB2411515;
-	Tue, 29 Apr 2025 00:14:34 -0700 (PDT)
-Received: from [10.163.52.122] (unknown [10.163.52.122])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51CD23F5A1;
-	Tue, 29 Apr 2025 00:14:31 -0700 (PDT)
-Message-ID: <ebf73f29-dab4-4551-b1a0-951cae76b5ce@arm.com>
-Date: Tue, 29 Apr 2025 12:44:27 +0530
+	 In-Reply-To:Content-Type; b=oPHwEUfMiJEVjg4XDVmcUDFH3mPNsvG0+Uqxdpdd3+8VvUDNUqKYG10atHYRH4kYQ+4kfOu0YrLR8DUbicWoimNnEYypV/KgSzyqwYBb10kl1U1oL7Xe6L55fPM/lWy+U1Sr2mVF3QLTUau1L2cdmA75iHbmzrle0C6FxT754zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=w2giMlaa; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="w2giMlaa"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745910973; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=V7fNVsPJQwk08b50EHm4veDfd70FS94pJvf8TbPo+hE=;
+	b=w2giMlaajiwYE2LKJFE7DccGA4gBQUSLbJAsA5RRq0kriJztZtsJKaDflBpDJqq5tJxrjN3yJBuBLPYEbp62Hssghp5fyM94vku05MDORzbarObgPm0snpniPnhwwPvnBlIn23pEHFtK7jm1ofE6lI2zSlz42eldZAJsaHYnARI=
+Received: from 30.74.146.169(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WYcmdSq_1745910969 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 29 Apr 2025 15:16:10 +0800
+Message-ID: <ad93f480-431a-4f9b-9225-136d8c6c37df@linux.alibaba.com>
+Date: Tue, 29 Apr 2025 15:16:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,137 +33,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] mm: Optimize mprotect() by batch-skipping PTEs
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
- will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- vbabka@suse.cz, jannh@google.com, peterx@redhat.com, joey.gouly@arm.com,
- ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
- quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
- yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
- namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
- ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-3-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250429052336.18912-3-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4 06/12] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-7-npache@redhat.com>
+ <5de38fe3-4a73-443b-87d1-0c836ffdbe30@linux.alibaba.com>
+ <CAA1CXcAiiBJ4mMp0WJUk7tWTF20guJi80P8wBh271yJ9P+c_VA@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAA1CXcAiiBJ4mMp0WJUk7tWTF20guJi80P8wBh271yJ9P+c_VA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/29/25 10:53, Dev Jain wrote:
-> In case of prot_numa, there are various cases in which we can skip to the
-> next iteration. Since the skip condition is based on the folio and not
-> the PTEs, we can skip a PTE batch.
+
+
+On 2025/4/28 22:47, Nico Pache wrote:
+> On Sat, Apr 26, 2025 at 8:52 PM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> On 2025/4/17 08:02, Nico Pache wrote:
+>>> khugepaged scans PMD ranges for potential collapse to a hugepage. To add
+>>> mTHP support we use this scan to instead record chunks of utilized
+>>> sections of the PMD.
+>>>
+>>> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
+>>> that represents chunks of utilized regions. We can then determine what
+>>> mTHP size fits best and in the following patch, we set this bitmap while
+>>> scanning the PMD.
+>>>
+>>> max_ptes_none is used as a scale to determine how "full" an order must
+>>> be before being considered for collapse.
+>>>
+>>> When attempting to collapse an order that has its order set to "always"
+>>> lets always collapse to that order in a greedy manner without
+>>> considering the number of bits set.
+>>>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>>    include/linux/khugepaged.h |  4 ++
+>>>    mm/khugepaged.c            | 94 ++++++++++++++++++++++++++++++++++----
+>>>    2 files changed, 89 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+>>> index 1f46046080f5..18fe6eb5051d 100644
+>>> --- a/include/linux/khugepaged.h
+>>> +++ b/include/linux/khugepaged.h
+>>> @@ -1,6 +1,10 @@
+>>>    /* SPDX-License-Identifier: GPL-2.0 */
+>>>    #ifndef _LINUX_KHUGEPAGED_H
+>>>    #define _LINUX_KHUGEPAGED_H
+>>> +#define KHUGEPAGED_MIN_MTHP_ORDER    2
+>>
+>> Why is the minimum mTHP order set to 2? IMO, the file large folios can
+>> support order 1, so we don't expect to collapse exec file small folios
+>> to order 1 if possible?
+> I should have been more specific in the patch notes, but this affects
+> anonymous only. I'll go over my commit messages and make sure this is
+> reflected in the next version.
+
+OK. I am looking into how to support shmem mTHP collapse based on your 
+patch series.
+
+>> (PS: I need more time to understand your logic in this patch, and any
+>> additional explanation would be helpful:) )
 > 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  mm/mprotect.c | 27 ++++++++++++++++++++-------
->  1 file changed, 20 insertions(+), 7 deletions(-)
+> We are currently scanning ptes in a PMD. The core principle/reasoning
+> behind the bitmap is to keep the PMD scan while saving its state. We
+> then use this bitmap to determine which chunks of the PMD are active
+> and are the best candidates for mTHP collapse. We start at the PMD
+> level, and recursively break down the bitmap to find the appropriate
+> sizes for the bitmap.
 > 
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index 70f59aa8c2a8..ec5d17af7650 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -91,6 +91,9 @@ static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
->  	bool toptier;
->  	int nid;
->  
-> +	if (folio_is_zone_device(folio) || folio_test_ksm(folio))
-> +		return true;
-> +
+> looking at a simplified example: we scan a PMD and get the following
+> bitmap, 1111101101101011 (in this case MIN_MTHP_ORDER= 5, so each bit
+> == 32 ptes, in the actual set each bit == 4 ptes).
+> We would first attempt a PMD collapse, while checking the number of
+> bits set vs the max_ptes_none tunable. If those conditions arent
+> triggered, we will try the next enabled mTHP order, for each half of
+> the bitmap.
+> 
+> ie) order 8 attempt on 11111011 and order 8 attempt on 01101011.
+> 
+> If a collapse succeeds we dont keep recursing on that portion of the
+> bitmap. If not, we continue attempting lower orders.
+> 
+> Hopefully that helps you understand my logic here! Let me know if you
+> need more clarification.
 
-Moving these here from prot_numa_avoid_fault() could have been done
-earlier, while adding prot_numa_skip() itself in the previous patch
-(in case this helper is determined to be really required).
+Thanks for your explanation. That's pretty much how I understand it.:) 
+I'll give a test for your new version.
 
->  	/* Also skip shared copy-on-write pages */
->  	if (is_cow_mapping(vma->vm_flags) &&
->  	    (folio_maybe_dma_pinned(folio) ||
-> @@ -126,8 +129,10 @@ static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
->  }
->  
->  static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
-> -		unsigned long addr, pte_t oldpte, int target_node)
-> +		unsigned long addr, pte_t *pte, pte_t oldpte, int target_node,
-> +		int max_nr, int *nr)
->  {
-> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> 
+> I gave a presentation on this that might help too:
+> https://docs.google.com/presentation/d/1w9NYLuC2kRcMAwhcashU1LWTfmI5TIZRaTWuZq-CHEg/edit?usp=sharing&resourcekey=0-nBAGld8cP1kW26XE6i0Bpg
 
-Flags are all correct.
-
->  	struct folio *folio;
->  	int ret;
->  
-> @@ -136,12 +141,16 @@ static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
->  		return true;
->  
->  	folio = vm_normal_folio(vma, addr, oldpte);
-> -	if (!folio || folio_is_zone_device(folio) ||
-> -	    folio_test_ksm(folio))
-> +	if (!folio)
->  		return true;
-> +
->  	ret = prot_numa_skip(vma, folio, target_node);
-> -	if (ret)
-> +	if (ret) {
-> +		if (folio_test_large(folio) && max_nr != 1)
-
-Conditional checks are all correct.
-
-> +			*nr = folio_pte_batch(folio, addr, pte, oldpte,
-> +					      max_nr, flags, NULL, NULL, NULL);
->  		return ret;
-> +	}
->  	if (folio_use_access_time(folio))
->  		folio_xchg_access_time(folio,
->  			jiffies_to_msecs(jiffies));
-> @@ -159,6 +168,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
->  	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
->  	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
-> +	int nr;
->  
->  	tlb_change_page_size(tlb, PAGE_SIZE);
->  	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> @@ -173,8 +183,10 @@ static long change_pte_range(struct mmu_gather *tlb,
->  	flush_tlb_batched_pending(vma->vm_mm);
->  	arch_enter_lazy_mmu_mode();
->  	do {
-> +		nr = 1;
-
-'nr' resets each iteration.
-
->  		oldpte = ptep_get(pte);
->  		if (pte_present(oldpte)) {
-> +			int max_nr = (end - addr) >> PAGE_SHIFT;
-
-Small nit - 'max_nr' declaration could be moved earlier along with 'nr'.
-
->  			pte_t ptent;
->  
->  			/*
-> @@ -182,8 +194,9 @@ static long change_pte_range(struct mmu_gather *tlb,
->  			 * pages. See similar comment in change_huge_pmd.
->  			 */
->  			if (prot_numa &&
-> -			    prot_numa_avoid_fault(vma, addr,
-> -						  oldpte, target_node))
-> +			    prot_numa_avoid_fault(vma, addr, pte,
-> +						  oldpte, target_node,
-> +							  max_nr, &nr))
->  					continue;
->  
->  			oldpte = ptep_modify_prot_start(vma, addr, pte);
-> @@ -300,7 +313,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				pages++;
->  			}
->  		}
-> -	} while (pte++, addr += PAGE_SIZE, addr != end);
-> +	} while (pte += nr, addr += nr * PAGE_SIZE, addr != end);
->  	arch_leave_lazy_mmu_mode();
->  	pte_unmap_unlock(pte - 1, ptl);
->  
-
-Otherwise LGTM
+Unfortunately, this link requires access permission.
