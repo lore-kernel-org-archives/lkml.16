@@ -1,162 +1,106 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8EA2D0263
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767F920F066;
+	Tue, 29 Apr 2025 13:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932681; cv=none; b=G63AK9xSMTlyZxM7CVw76cxCJ+UzPUC+qn2TSL+YjrNxHGVG+5t8/T/ao0w31iby1r7wYsWi7bobN10JHpHxsfI8rHaipDQ2IggQ0+OqF09G/xWR9aoxUx+0lDwNeB2XF2Hej64kUt7MjTNWDCmKlu043fwv6ng2FgVC+FkKeVk=
+	t=1745932767; cv=none; b=sxrcKOUDxf9KUR5VDp294E0m3wBIm953iCIKEW6vbTNdW39A4EkDyWOwF3uA+01wqCGHVP1QkTk3R77zhmTZLs5MzmV8oaUa8BMZIXfLeXhvHNc0N3BE6EJnTQDIHa8xjPTQ86ExzY8Cr2Isd03uzLVF/Ck3jGiUITkI0fNfHNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932681; c=relaxed/simple;
-	bh=o9S3xS6x/7ltvjnbA8prO8mDFGuFdVAzu8uNbExAUYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ttEO5baOcZVw/H3qGaL7KhmfyphoIpAQQmFoVwnOaKou8ilQjvj/9zwhCnsPZAJMqRvonIjO2fx9TkAqPxcVtye5OPf6bkssHXqchVjkcNZgqbBu1PxI4yaHSVyW/CDh1BTVI/IfUMwpUV035qcllV8GmD5NbjjAwmn2jxwqS24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rjenn99I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H3YDLAQm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rjenn99I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H3YDLAQm; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745932767; c=relaxed/simple;
+	bh=q6pMNSJyTz849RKd8d/Eni1P8kzBFLPdHuoV6nEkUnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dilVZXp6NUcYuTTjxwPm0D7T5A/zBHNS7qjlA2eia1JJgoNliLZFQwEwASemTgAQykznl5WO1pKai9W6ewBP4RflF/THxRYRH5Ain07MXnIUdCetz8p/XoH2DbOfl/R/pgDiC4DZdZYyQohw4YNkX7fZxNIkyPEAiOhUGLiV2do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NisH+AMo; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rjenn99I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H3YDLAQm";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rjenn99I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H3YDLAQm"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9A25F1F391;
-	Tue, 29 Apr 2025 13:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745932677; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
-	b=rjenn99IKOJKneAgSUtp07MjWiiw9Fzo7v7xcQMM0B9TrsWdofeipTbMZOMdgg9Wq0VJs+
-	17HKyrHlFLnBleDUQeKfgyF0GSF51Jc1xlID7vqr43ih8O53vV25axOHf8XjZKFVvQE3ZJ
-	P7lDb85wwL71j35Ui46o6so4KuYx28Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745932677;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
-	b=H3YDLAQmg9aWlPK3HtKqixsARrVdAmLtdXoK8k7YT+vUd3gIh/onrs51hckzK6P5+B+a3I
-	811O/IkhnsCcsjBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=rjenn99I;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=H3YDLAQm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745932677; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
-	b=rjenn99IKOJKneAgSUtp07MjWiiw9Fzo7v7xcQMM0B9TrsWdofeipTbMZOMdgg9Wq0VJs+
-	17HKyrHlFLnBleDUQeKfgyF0GSF51Jc1xlID7vqr43ih8O53vV25axOHf8XjZKFVvQE3ZJ
-	P7lDb85wwL71j35Ui46o6so4KuYx28Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745932677;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
-	b=H3YDLAQmg9aWlPK3HtKqixsARrVdAmLtdXoK8k7YT+vUd3gIh/onrs51hckzK6P5+B+a3I
-	811O/IkhnsCcsjBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82F8C1340C;
-	Tue, 29 Apr 2025 13:17:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id S79uH4XREGhTZgAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 29 Apr 2025 13:17:57 +0000
-Message-ID: <a2aa71cc-b30f-4d48-aa1d-9058fcdbb6d0@suse.de>
-Date: Tue, 29 Apr 2025 15:17:57 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NisH+AMo"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so552665a91.2;
+        Tue, 29 Apr 2025 06:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745932766; x=1746537566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qfwi78OPJ+7NloXGVD0nV3Y/3cfDPkY2XA/mDHzCFKg=;
+        b=NisH+AMo5dkEJ+EK9JCYpxQDyugrytMV2M7eep7bs/iwYjVv+ZR63V/lo0T3Srvxgb
+         O6iVs3leUjO1Wxh3leKiuX27Zrx92EgZu3Pg71BIaEt+5B9x/LgINEONPqyL0IiiTiG6
+         KzdJCGu0aa53blRO5/e9bgfu8KPrK66JbtNb/SK5aKmABr/k/iCiredFi9GT0GFZEpxY
+         RL0m8teG84jjKxKj52dml8zmmba5aOwi54x8D20GaDgyZCmr4URNf0/BE1T+8NibOZyF
+         CFE6l10opPh7GmM/LLBPj54RANV68TQ7v0QB2PmfsGiY89axvRf82ZI7Ku9g39bTcKbU
+         r2XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745932766; x=1746537566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qfwi78OPJ+7NloXGVD0nV3Y/3cfDPkY2XA/mDHzCFKg=;
+        b=SUhPTj5UmtrJ7/MclP1erMh9/QYeVurQmra7CqU7doeG6Xe7UIB2v/42BP3kU+qzWo
+         fyIWziaWH68lZ8TzGhcN3/5f+xVZ2WJflYpJXST0pcld336FWnivrcIoQec5yUVjRfkD
+         EIzoP9N93+m7CFvvGFwd5hW5PcnucWXhJiYqnjfngQgar4Ak5NRxeVPzqo90GPhwYDZE
+         iYgfG/u5W0ZFM+m8jbXdIvyq8FlcWT33FvuAbicQh6ZEMVg+eXKUyMa5CSdotw3CIheB
+         r72XZiGP9yotZxEZkTgEDjfb66Be/dRpj022I9Y3lXFyhTfVjdu8E2VOQ2QOzIgug1ub
+         f+pA==
+X-Forwarded-Encrypted: i=1; AJvYcCU69JzFEs52zDDQWPYXKA0A8AeIGq7297yJYJ5o3/l0zn/yDrM0X87iOhOHlTP+nv8JeDODLlQog4pg4SY=@vger.kernel.org, AJvYcCVpuevm43wnPh3v7DVTIX4PxY/QPUWrDxtn4D2vg857PdOG3bgwantp8JgZq4NaptXaRGpH0BYOeUOYfEHoHGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxelMX+4w5Mryj/ugrZBHQI+FpozOxPPMV3un3cfRuiYMFOf5sV
+	E+5nek41IPSdyCzTVAb5dfubrloVfOPdPMSHgKuXmGk4OZk+Sa8VDC5TL3E6lPSMG7/A2b8PQSk
+	aE8acXbtug+PKt/jZSvUda6iW4iu5qrUisYQ=
+X-Gm-Gg: ASbGncui/pp8Eh+WPfkxEgXlVhM4Evi9DJXXH8ZS+EH8GmG+nenqiQ6HX40YYALrktX
+	6632J35vHkHqla/6wYvHace6LyaFnuuVtld6fcRlTxVH0LaS7QCH3uA7x/wPE49Blj2VDHeZJ7C
+	O0edy4Y10yYKVRdHrM7Vj4hg==
+X-Google-Smtp-Source: AGHT+IHxnj2vnGMV80DWZ4aFFXP8qUs5JrcNSGq2bKT98m93IjisoHwKfYDtOCPyJ/O9yqy7+8fVIugvKcq0lL0lIqo=
+X-Received: by 2002:a17:90b:33c7:b0:305:5f20:b28c with SMTP id
+ 98e67ed59e1d1-30a220f061dmr1555914a91.5.1745932765639; Tue, 29 Apr 2025
+ 06:19:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvme-tcp: select tls config when tcp tls is enabled
-To: Alistair Francis <alistair23@gmail.com>, hch@lst.de, sagi@grimberg.me,
- kch@nvidia.com, linux-nvme@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Alistair Francis <alistair.francis@wdc.com>
-References: <20250424101333.2908504-1-alistair.francis@wdc.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250424101333.2908504-1-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 9A25F1F391
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com,lst.de,grimberg.me,nvidia.com,lists.infradead.org];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+References: <20241119185747.862544-1-ojeda@kernel.org> <CANiq72n4Fw96hcuqQeorsfH7z4Tb+R1gdf80H_XkD-oA6z5TSA@mail.gmail.com>
+In-Reply-To: <CANiq72n4Fw96hcuqQeorsfH7z4Tb+R1gdf80H_XkD-oA6z5TSA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 29 Apr 2025 15:19:13 +0200
+X-Gm-Features: ATxdqUGN0dlLf5NE4vIholiXMZscWUbgyfznzqrixWlWYYWoan5VvhqtWa-4NWI
+Message-ID: <CANiq72mNJrMMbEcfJMLT4kM-_iviM0AR6oeigCyrb5eMWkn3KQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] rust: allow Clang-native `RANDSTRUCT` configs
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, Aaron Ballman <aaron@aaronballman.com>, 
+	Bill Wendling <isanbard@gmail.com>, Cole Nixon <nixontcole@gmail.com>, 
+	Connor Kuehl <cipkuehl@gmail.com>, Fangrui Song <i@maskray.me>, James Foster <jafosterja@gmail.com>, 
+	Jeff Takahashi <jeffrey.takahashi@gmail.com>, Jordan Cantrell <jordan.cantrell@mail.com>, 
+	Matthew Maurer <mmaurer@google.com>, Nikk Forbus <nicholas.forbus@gmail.com>, 
+	Qing Zhao <qing.zhao@oracle.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Tim Pugh <nwtpugh@gmail.com>, Kees Cook <kees@kernel.org>, Nicolas Schier <n.schier@avm.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/24/25 12:13, Alistair Francis wrote:
-> Ensure that TLS support is enabled in the kernel when
-> NVME_TARGET_TCP_TLS is enabled. This allows TLS secure channels to be
-> used out of the box.
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
->   drivers/nvme/target/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
-> index fb7446d6d682..4c253b433bf7 100644
-> --- a/drivers/nvme/target/Kconfig
-> +++ b/drivers/nvme/target/Kconfig
-> @@ -98,6 +98,7 @@ config NVME_TARGET_TCP_TLS
->   	bool "NVMe over Fabrics TCP target TLS encryption support"
->   	depends on NVME_TARGET_TCP
->   	select NET_HANDSHAKE
-> +	select TLS
->   	help
->   	  Enables TLS encryption for the NVMe TCP target using the netlink handshake API.
->   
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+On Thu, Jan 9, 2025 at 3:51=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> I may pick this very early next cycle so that we can get some testing
+> during the -rc's, and just drop it if something breaks for anyone.
+>
+> But any other testing beforehand would be still very welcome...
+
+I ended up waiting on this one since I think Andreas would be able to
+try it with some actual workload (the nice benchmarks he has). Anyway,
+it will go in sooner or later.
+
+On top of that, backlinking the seed discussion since I will need to
+update this patch:
+
+    https://lore.kernel.org/rust-for-linux/CANiq72mwYbg_L8u9NEfRD0Fp9E_zhCi=
+=3Dt=3DU2jyjsZe_Ls306hw@mail.gmail.com/
 
 Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Miguel
