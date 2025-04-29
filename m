@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C82423D2A3;
-	Tue, 29 Apr 2025 16:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF47217F27;
+	Tue, 29 Apr 2025 16:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745942710; cv=none; b=qAq/2nMMWDRVZN1nvKe+VVfckL7FBP7CBTYbwGbrzR8NUVMqS0vYbn/9HNwFlOWgEN/3TjZ6E0asMr0JM3cGSMvDI7upbC9J7UNapgMvp+nJ4ujBdvox64loP2R2jXO0ePOQ4gp/7agHpqLoEqSAuXLT2bzIcGw2uV9RK22y0pM=
+	t=1745942786; cv=none; b=p4yF2AWq1jq4WdWABlpL0Ex5DCzpFfAL0idjtGM6kho1GFUYDZMhl+fNFes8AZ5Ls+jz3iKTk91b9CG4vJ3c5sHg+It4mr+GBg+UOBC5mrGDlD4vD8Tvy1l70QT2w1ARgG7iZBFUXZ0qgn6FFbk9DSSk7IaF2Gxlflo7Y8qLt3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745942710; c=relaxed/simple;
-	bh=kc4wP+JTOQYbzdxScoLeIhj26yfCcr1KXX5njmFEzCM=;
+	s=arc-20240116; t=1745942786; c=relaxed/simple;
+	bh=2+za/Wd7mqbVhiX4qWwpSAKjWmTdOR4nplZwpcx+ko8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JvM2gcQDSxx0MRmxG+Oh4GPfslDV6d/LjEvoPCSF/dn6aLnw4+iXeZCoTeSrHY8FVq//R1VnCG9MT8GWIhlJxC5Pftr0LDUaKIBNVliCw6S30/Cuk2t5cCOblG6yXcGTA4hLNHkbGLSlUQX7HpUUwRV8Df17Uyq5Znt4terXvwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ghIkR8HT; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=MBlt4MSY2JdQhVB/8I5ao0vqPYbcsP3CxYrEJt4P2T7ISCQefe1CuAls37fsi5zpEBayNygEYyJN2ATjR7bocoWN2UKYaBT8y40qh0tAZ85+wTI54fnssj7UefPiPVUKVMikqywQh0QY1wAYxhG9rHyGsUgYnwFgGBGnJ4h2f8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHUSeYmv; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ghIkR8HT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHUSeYmv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745942708; x=1777478708;
+  t=1745942784; x=1777478784;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=kc4wP+JTOQYbzdxScoLeIhj26yfCcr1KXX5njmFEzCM=;
-  b=ghIkR8HToNp1SoqLY7Z3ShmGxv8QmbFLlH7NKXXZMR6qQaUJdflFO6hL
-   xyWJTt833VV4V7usGvvscbrQE2n6fhrcFETcYFPY7rgvuI6x0wzhca25f
-   7gKSv/Cw7WJTFf1cV7MtHi6ipa3jBn0af0V5JbcFplokQeLnZ+FRSOSnO
-   pKFeKGUExB3AdKdJrcCkAJbr4MkxLrdM3xieRY6f5RI3mqrCagMnGjR62
-   +3BJyRK6ruV0EhxB8SV/B2N4d2GfV/qo2Mxsh3um9A5ta58eS0t6WcAOP
-   EsHMsqPKaZGFbzaLKnRyJ2w+k+7SNOs7w3u4YqPa29ripxuymYQ3N+E1b
-   A==;
-X-CSE-ConnectionGUID: d2YddJCMSMCRNFKrqsHXDg==
-X-CSE-MsgGUID: BL3w4CtXTZ6zNqvvr2ywAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47585024"
+  bh=2+za/Wd7mqbVhiX4qWwpSAKjWmTdOR4nplZwpcx+ko8=;
+  b=FHUSeYmvGahEsxDyGgASsfGvrA7KBQbl+WJupltAnzOcm0hZ4QAWgLXz
+   Hlq08ASSNHoNdTfnh1ATaUGRiIBaL+n7/W7jPlRMbVVX2GAK0lx9ReAEU
+   h5ULN8YxYFRbM2nI9dLJAhnRuieP36IoYJOtutBMwVXII+7AO5PerUYmL
+   DGY6LCrXcMljupdJajQ/DQBoiMAITnvpYACuVN51rbqkGPJMpKg4xaly5
+   U9Hs/i9xn8V13oYen1gs6k9hntitF7Pffxa3RdrVZ5bRkNshWsImeSloT
+   e8ZIGFVBwrZAoflK4DpiWr4gfMjlaoA9gdeA4SjPmqaq1oNtYLmIY7yV8
+   Q==;
+X-CSE-ConnectionGUID: oLzuGR/LQUudTxwjiq0ucg==
+X-CSE-MsgGUID: pdwn1rgGTkW8cke+1BwxKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47585228"
 X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="47585024"
+   d="scan'208";a="47585228"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:05:07 -0700
-X-CSE-ConnectionGUID: 4V1xIgNkRNqS84as7fjsbQ==
-X-CSE-MsgGUID: qtvKug+WQZ2IK/ghsaacoA==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:06:23 -0700
+X-CSE-ConnectionGUID: jprk9LZTRiGvaEpFCgNi7g==
+X-CSE-MsgGUID: 4izxWN+ZSo2csuyrRFsyNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="139055434"
+   d="scan'208";a="139055788"
 Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.223.107]) ([10.124.223.107])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:05:05 -0700
-Message-ID: <e90b81a4-a912-4174-b6e9-46a6ddd92ee3@intel.com>
-Date: Tue, 29 Apr 2025 09:05:02 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 09:06:21 -0700
+Message-ID: <d64a4593-c9bd-42c7-81f6-137a22ff5caa@intel.com>
+Date: Tue, 29 Apr 2025 09:06:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
 References: <20250411053745.1817356-1-changyuanl@google.com>
  <20250411053745.1817356-12-changyuanl@google.com>
  <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
- <aBD165pVhOIl3_by@kernel.org>
+ <aBCIhQjKKyaAuvC9@kernel.org>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -116,61 +116,70 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <aBD165pVhOIl3_by@kernel.org>
+In-Reply-To: <aBCIhQjKKyaAuvC9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/29/25 08:53, Mike Rapoport wrote:
+On 4/29/25 01:06, Mike Rapoport wrote:
 > On Mon, Apr 28, 2025 at 03:05:55PM -0700, Dave Hansen wrote:
 >> On 4/10/25 22:37, Changyuan Lyu wrote:
 >>> From: Alexander Graf <graf@amazon.com>
 >>>
->>> +#ifdef CONFIG_KEXEC_HANDOVER
->>> +static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
->>> +{
->>> +	struct kho_scratch *kho_scratch;
->>> +	struct setup_data *ptr;
->>> +	int i, nr_areas = 0;
+>>> +/*
+>>> + * If KHO is active, only process its scratch areas to ensure we are not
+>>> + * stepping onto preserved memory.
+>>> + */
 >>
->> Do these really need actual #ifdefs or will a nice IS_ENABLED() check
->> work instead?
+>> Same thing on the imperative voice here.
 >>
->>> +	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
->>
->> What's with the double cast?
+>> I'm also not fully understanding the comment. Do these "scratch" regions
+>> basically represent all the memory that's not being handed over? It's
+>> not obvious.
 > 
-> The double cast is required for this to be compiled on 32 bits (just like
-> in mem_avoid_overlap). The setup_data is all u64 and to cast it to a
-> pointer on 32 bit it has to go via unsigned long.
-
-Let's just make KHO depend on 64BIT, at least on x86.
-
->>> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->>> index 68530fad05f74..518635cc0876c 100644
->>> --- a/arch/x86/kernel/kexec-bzimage64.c
->>> +++ b/arch/x86/kernel/kexec-bzimage64.c
->>> @@ -233,6 +233,31 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
->>>  #endif /* CONFIG_IMA_KEXEC */
->>>  }
+> Scratch memory represents areas created at the boot of the first kernel and
+> it's known that scratch areas won't contain any memory that's being handed
+> over.
+>  
+>>> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+>>> index 57120f0749cc3..c314212a5ecd5 100644
+>>> --- a/arch/x86/kernel/e820.c
+>>> +++ b/arch/x86/kernel/e820.c
+>>> @@ -1300,6 +1300,24 @@ void __init e820__memblock_setup(void)
+>>>  		memblock_add(entry->addr, entry->size);
+>>>  	}
 >>>  
->>> +static void setup_kho(const struct kimage *image, struct boot_params *params,
->>> +		      unsigned long params_load_addr,
->>> +		      unsigned int setup_data_offset)
->>> +{
->>> +#ifdef CONFIG_KEXEC_HANDOVER
+>>> +	/*
+>>> +	 * At this point with KHO we only allocate from scratch memory.
+>>> +	 * At the same time, we configure memblock to only allow
+>>> +	 * allocations from memory below ISA_END_ADDRESS which is not
+>>> +	 * a natural scratch region, because Linux ignores memory below
+>>> +	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
+>>> +	 * allocations, we must allocate real-mode trapoline below
 >>
->> Can this #ifdef be replaced with IS_ENABLED()?
+>> 						trampoline ^
+>>
+>>> +	 * ISA_END_ADDRESS.
+>>> +	 *
+>>> +	 * To make sure that we can actually perform allocations during
+>>> +	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
+>>> +	 * so we can allocate from there in a scratch-only world.
+>>> +	 *
+>>> +	 * After real mode trampoline is allocated, we clear scratch
+>>> +	 * marking from the memory below ISA_END_ADDRESS
+>>> +	 */
+>>> +	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
+>>
+>> This isn't making a whole ton of sense to me.
+>>
+>> Is this *only* to facilitate possible users that need <ISA_END_ADDRESS
+>> allocations? If so, please say that.
+>>
+>> I _think_ this is trying to say that KHO kernels are special and are
+>> trying to only allocate from scratch areas. But <ISA_END_ADDRESS
+>> allocations are both necessary and not marked by KHO _as_ a scratch area
+>> which causes a problem.
 > 
-> The KHO structures in kexec image are under #ifdef, so it won't compile
-> with IS_ENABLED().
+> Yes :)
 
-They shouldn't be. Define them unconditionally, please.
-
-...
->> Please axe the #ifdef in the .c file if at all possible, just like the
->> others.
-> 
-> This one follows IMA, but it's easy to make it IS_ENABLED(). It's really up
-> to x86 folks preference.
-
-Last I checked, I'm listed under the big M: for "X86 ARCHITECTURE". ;)
+So, on both of these, could the submitters please add or revise the
+comments to make it more clear?
