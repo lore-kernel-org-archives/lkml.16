@@ -1,208 +1,171 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA9229B77F
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FC32BE7D8;
+	Tue, 29 Apr 2025 10:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921215; cv=none; b=kq2VdrSzMu9kLvdLs/aGAbVjyON4T353qBHn8j3DWnq6XD9iUQuaYgXJ/nOPUf5OgwiRbw2G+WF/WTu34jXcDn2c3AVj4vsZjtKCeFp2FLDX8RiAHwx4ErXZXok4evPG2Y+G5ZHTHrRh/DQeIEjJmS9dfI/fvefG0iHyBZZvBlQ=
+	t=1745921218; cv=none; b=YE/8OBtAHJo2tT1SfjuG8M7yWIKdbcjKmDCI2C6JDrw8lzKdpUGZChWPULrd0I8P7GACf0NSkIXt+pXcjo5ChBi6s/M1Vb76wfwPHR01x3nybt/uQliJw9TsTvL1AkITckK5L0uErwIMECYrzT26YNYUtMN1lU7UmA6nVb7Fiug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921215; c=relaxed/simple;
-	bh=U1IL5hommBa2Wv+FExNOtEc9rkh+55OUse5MfWOqQog=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FRvmrcFPNOPQMgwOVXn87inLpgGhLhJMQ/AB1nNOdRPyJcdAjM201cAEJSFhDWGPclsZKyyFett9+o2LL/OJUfDk1+BUJI/0KJlEkuuVt4NVKZxxrcPyO+bAlJvewS9WHTDqyNk3K1irs1uhE5NM/B4CH3PpSkI4qhAvMxLgyCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ob2whYRQ; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745921218; c=relaxed/simple;
+	bh=39pgH4p/ZTSPv29D5o3J2WLloPQmBCsigS4c8NDb+Ng=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=mCPgz4Y/4PZ8MuzCpz+9l14QXUGbz7eK41/48CRmCfXiJzSuS1QSX3x0gO76/L16arOgzQEruWH2XAfPrlBA/ju4bg3coqaXFZdXdftWkdJw6tO6hImulUmsY4CvnbdCUJD36e3L/90KpGSTads5x6slMt0/nAiDy0cu+69nuD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=Bx3WWgVL; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ob2whYRQ"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6ff1e375a47so60446647b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745921212; x=1746526012; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjQQ1gbntdrSbZtDquO40Eje9JxI9rUu3v+V9iiuKlU=;
-        b=Ob2whYRQtHGuz040o1Ucs8I8eAspDDPbj4vLhNA0FLx/Y/oiYV96VC0mttv0FjUNPZ
-         3Ipo6SFq0eqtLtXCgioDx+cMcqYGw/tu56WRVC73K/Wl2HOl2ODxQyht1qSB//AQFYUi
-         N1T9lShMlKig3y7P43jcySKN/6Dzrkk1R8NRwN1FzcW72ixhZrn0QFVkdbofN0ssNW51
-         FpEOivK/XytpwPNQnSReEtYDC0eZ/nPM7AVeG+A1qHNiKgUyOSjeuSv+O5bl8M1lr/Kw
-         Bi70atzAWO3lV9svYeWGT7KOwJgEXF5VPX70n2faYnA2Th9wF9/KXUjhhlaj4SW4Nb+G
-         kQCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745921212; x=1746526012;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jjQQ1gbntdrSbZtDquO40Eje9JxI9rUu3v+V9iiuKlU=;
-        b=UyecG9/XDGvdMbXdrs5gJe4lEGqH2C+6cjmyG3BrPUhNlZCrfzlSBSsqWY+RjvjnHc
-         uteKvlb1rtb0Vlpmksdp0zzkupBBRoTuPCEoRsBSliPoamo/7L+xyKJRfLW51OixgzQF
-         gaHgvip0kkh3PDEFeo2QrdG62sCMcPJIJKIep8sjI7Mtc/EKPVgH2WKHrwzfviA//fZP
-         od6vJLKHv9EyGNhqgtGeODTcAbTk5Gxn3zd7tNGaGyubvgPxefkAmF5Ih9f85jDPASpW
-         W4FW3ZwgUeMWwhqKXFAu8QeDTo7pxH0nqy32kFYM3SQjYPXJj/4D833+6B4lNVzueyZw
-         JcqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNigh7bI38qLVCR9/U1HxPvSpnf5G7iJFLpWViR4LOam5P18MfQJaTlMZX2t+TVMgA8dsW0jJvTFj8ivU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUrIHDyl1nUxltBkdewsXY5Dx1NP1FNv4eKuxgFjGVS1a2lhzD
-	IhnQvKA5DAweydN4phpbf1g82S6GqCQuPVwnaA9F66Ebn4EuDnqORKhCj3edEiioG45P7ivCR17
-	T1sexDnydUTeiZJXdQxukY5pop9dw6GUrkO1Tvg6wVGph9EUQ
-X-Gm-Gg: ASbGncuC53tnJ1GP25/rJrurSvvtSHdYGsyTIRww+Q7uOr2mLvKzYHmrlpmOg2BEf5t
-	4UGBapZhH/VFAmq3KGEnmGyfmK4vDGqxsR2sV6vt+vLfeNlIdYEabM9h0aoziEL8COaRX1AKqLo
-	Af0zv4B2x6VaHR2Pkw5UCQNMg=
-X-Google-Smtp-Source: AGHT+IG6WmWyhSGVmxVC3f3XCypyrDEpbVGX6ioUnUsJtVsCpx9/EXtlcANtXZwlnV6IGsG9Jd4CkmBcfsgDrtEzaaQ=
-X-Received: by 2002:a05:690c:3506:b0:703:b8f4:5b0e with SMTP id
- 00721157ae682-7085f236277mr162475347b3.28.1745921212260; Tue, 29 Apr 2025
- 03:06:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="Bx3WWgVL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=pRJpXxtXspf00/o6/ugq1hIMvacha4Xn4cBWyKfWYus=; b=Bx3WWgVLQvkl4QFHw+dWoUCys4
+	V8X70gKZz38WfqR9qD2N+N8vRNonmLt87sBOhMhsn7XEEDfiEhyVGGRYrs05GSejf/kv5x4KJBVew
+	0fv512iiizW1yXEhqddx+osiDVy5xb0lMglMn/8rEcojA7UnmYB4T0l4oE5LMq12KO6wLbUozVjMt
+	urNXDmhtMgENuVB5XU8yCZpb+JPv94Eq2N17MVYfJnuzmeKnzDU6zRg2/iZoNL932WcY74puK/zgY
+	URJm2bsZfExkCW2A6Hnglp4CaFyEWSxN7L2uVNXTIaRuP2z4N12VnYVxfWJZLKOD35fy4jYCYi/W1
+	GmpKZZlw==;
+Received: from [122.175.9.182] (port=52071 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u9hrW-0000000005m-07gL;
+	Tue, 29 Apr 2025 15:36:50 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id 3793E1783FDC;
+	Tue, 29 Apr 2025 15:36:44 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id 0FF47178245B;
+	Tue, 29 Apr 2025 15:36:44 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id CbIv-kPgtkN5; Tue, 29 Apr 2025 15:36:43 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id BB52B1782431;
+	Tue, 29 Apr 2025 15:36:43 +0530 (IST)
+Date: Tue, 29 Apr 2025 15:36:43 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: kuba <kuba@kernel.org>
+Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
+	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
+	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
+	pabeni <pabeni@redhat.com>, robh <robh@kernel.org>, 
+	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>, 
+	nm <nm@ti.com>, ssantosh <ssantosh@kernel.org>, 
+	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>, 
+	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
+	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
+	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
+	basharath <basharath@couthit.com>, horms <horms@kernel.org>, 
+	jacob e keller <jacob.e.keller@intel.com>, 
+	m-malladi <m-malladi@ti.com>, 
+	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
+	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	netdev <netdev@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
+	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
+	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
+	mohan <mohan@couthit.com>
+Message-ID: <619030056.1172946.1745921203564.JavaMail.zimbra@couthit.local>
+In-Reply-To: <20250424191741.55323f28@kernel.org>
+References: <20250423060707.145166-1-parvathi@couthit.com> <20250423072356.146726-6-parvathi@couthit.com> <20250424191741.55323f28@kernel.org>
+Subject: Re: [PATCH net-next v6 05/11] net: ti: prueth: Adds ethtool support
+ for ICSSM PRUETH Driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com>
-In-Reply-To: <20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 29 Apr 2025 12:06:16 +0200
-X-Gm-Features: ATxdqUGRQt2dS-dYXQNUSdM9bjw6NNZW_Ep_w3cK8lN-p_Z_PHKTCdtR2wWOe8s
-Message-ID: <CAPDyKFp5N23KCZwOTba6vGyk9eaS1-SjSqY52FfPDng-bahn6g@mail.gmail.com>
-Subject: Re: [PATCH v3] mmc: sdhci-of-dwcmshc: add PD workaround on RK3576
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Elaine Zhang <zhangqing@rock-chips.com>, Finley Xiao <finley.xiao@rock-chips.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Detlev Casanova <detlev.casanova@collabora.com>, kernel@collabora.com, 
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
+Thread-Topic: prueth: Adds ethtool support for ICSSM PRUETH Driver
+Thread-Index: aOSvrMwlP2wLYvNaXDGDtXazpxI8Zw==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Wed, 23 Apr 2025 at 09:54, Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
->
-> RK3576's power domains have a peculiar design where the PD_NVM power
-> domain, of which the sdhci controller is a part, seemingly does not have
-> idempotent runtime disable/enable. The end effect is that if PD_NVM gets
-> turned off by the generic power domain logic because all the devices
-> depending on it are suspended, then the next time the sdhci device is
-> unsuspended, it'll hang the SoC as soon as it tries accessing the CQHCI
-> registers.
->
-> RK3576's UFS support needed a new dev_pm_genpd_rpm_always_on function
-> added to the generic power domains API to handle what appears to be a
-> similar hardware design.
->
-> Use this new function to ask for the same treatment in the sdhci
-> controller by giving rk3576 its own platform data with its own postinit
-> function. The benefit of doing this instead of marking the power domains
-> always on in the power domain core is that we only do this if we know
-> the platform we're running on actually uses the sdhci controller. For
-> others, keeping PD_NVM always on would be a waste, as they won't run
-> into this specific issue. The only other IP in PD_NVM that could be
-> affected is FSPI0. If it gets a mainline driver, it will probably want
-> to do the same thing.
->
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Hi,
 
-Applied for next, thanks!
+> On Wed, 23 Apr 2025 12:53:50 +0530 Parvathi Pudi wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>> 
+>> Changes for enabling ethtool support for the newly added PRU Ethernet
+>> interfaces. Extends the support for statistics collection from PRU internal
+>> memory and displays it in the user space. Along with statistics,
+>> enable/disable of features, configuring link speed etc.are now supported.
+>> 
+>> The firmware running on PRU maintains statistics in internal data memory.
+>> When requested ethtool collects all the statistics for the specified
+>> interface and displays it in the user space.
+>> 
+>> Makefile is updated to include ethtool support into PRUETH driver.
+> 
+> drivers/net/ethernet/ti/icssm/icssm_prueth.h:229: warning: Function parameter or
+> struct member 'stormprev_counter_bc' not described in 'port_statistics'
+> drivers/net/ethernet/ti/icssm/icssm_prueth.h:229: warning: Function parameter or
+> struct member 'stormprev_counter_mc' not described in 'port_statistics'
+> drivers/net/ethernet/ti/icssm/icssm_prueth.h:229: warning: Function parameter or
+> struct member 'stormprev_counter_uc' not described in 'port_statistics'
+> drivers/net/ethernet/ti/icssm/icssm_prueth.h:229: warning: Function parameter or
+> struct member 'cs_error' not described in 'port_statistics'
+> drivers/net/ethernet/ti/icssm/icssm_prueth.h:229: warning: Excess struct member
+> 'stormprev_counter' description in 'port_statistics'
+> 
 
-Kind regards
-Uffe
+We will address this in the next version.
+
+>> +static const struct {
+>> +	char string[ETH_GSTRING_LEN];
+>> +	u32 offset;
+>> +} prueth_ethtool_stats[] = {
+>> +	{"txBcast", PRUETH_STAT_OFFSET(tx_bcast)},
+>> +	{"txMcast", PRUETH_STAT_OFFSET(tx_mcast)},
+>> +	{"txUcast", PRUETH_STAT_OFFSET(tx_ucast)},
+>> +	{"txOctets", PRUETH_STAT_OFFSET(tx_octets)},
+>> +	{"rxBcast", PRUETH_STAT_OFFSET(rx_bcast)},
+>> +	{"rxMcast", PRUETH_STAT_OFFSET(rx_mcast)},
+>> +	{"rxUcast", PRUETH_STAT_OFFSET(rx_ucast)},
+>> +	{"rxOctets", PRUETH_STAT_OFFSET(rx_octets)},
+>> +
+>> +	{"tx64byte", PRUETH_STAT_OFFSET(tx64byte)},
+>> +	{"tx65_127byte", PRUETH_STAT_OFFSET(tx65_127byte)},
+>> +	{"tx128_255byte", PRUETH_STAT_OFFSET(tx128_255byte)},
+>> +	{"tx256_511byte", PRUETH_STAT_OFFSET(tx256_511byte)},
+>> +	{"tx512_1023byte", PRUETH_STAT_OFFSET(tx512_1023byte)},
+>> +	{"tx1024byte", PRUETH_STAT_OFFSET(tx1024byte)},
+>> +	{"rx64byte", PRUETH_STAT_OFFSET(rx64byte)},
+>> +	{"rx65_127byte", PRUETH_STAT_OFFSET(rx65_127byte)},
+>> +	{"rx128_255byte", PRUETH_STAT_OFFSET(rx128_255byte)},
+>> +	{"rx256_511byte", PRUETH_STAT_OFFSET(rx256_511byte)},
+>> +	{"rx512_1023byte", PRUETH_STAT_OFFSET(rx512_1023byte)},
+>> +	{"rx1024byte", PRUETH_STAT_OFFSET(rx1024byte)},
+>> +
+>> +	{"lateColl", PRUETH_STAT_OFFSET(late_coll)},
+>> +	{"singleColl", PRUETH_STAT_OFFSET(single_coll)},
+>> +	{"multiColl", PRUETH_STAT_OFFSET(multi_coll)},
+>> +	{"excessColl", PRUETH_STAT_OFFSET(excess_coll)},
+> 
+> Do not dump into ethtool -S what's reported via standard stats.
+
+This is to align with firmware internal statistics layout. We will
+review and address this in the next version.
 
 
-> ---
-> Changes in v3:
-> - Reword comment and commit message to correct that this is not a
->   silicon bug, but seemingly intentional design with regards to runtime
->   power management.
-> - Link to v2: https://lore.kernel.org/r/20250412-rk3576-emmc-fix-v2-1-830e653ad4f0@collabora.com
->
-> Changes in v2:
-> - Rewrite patch to use dev_pm_genpd_rpm_always_on in sdhci driver
->   instead, after Ulf Hansson made me aware of its existence
-> - Link to v1: https://lore.kernel.org/r/20250408-rk3576-emmc-fix-v1-1-3009828b1b31@collabora.com
-> ---
->  drivers/mmc/host/sdhci-of-dwcmshc.c | 40 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> index 09b9ab15e4995f0bddf57dd309c010c849be40d9..a20d03fdd6a93ecc5229c71f825bade5ac730370 100644
-> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> @@ -17,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/reset.h>
->  #include <linux/sizes.h>
-> @@ -745,6 +746,29 @@ static void dwcmshc_rk35xx_postinit(struct sdhci_host *host, struct dwcmshc_priv
->         }
->  }
->
-> +static void dwcmshc_rk3576_postinit(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
-> +{
-> +       struct device *dev = mmc_dev(host->mmc);
-> +       int ret;
-> +
-> +       /*
-> +        * This works around the design of the RK3576's power domains, which
-> +        * makes the PD_NVM power domain, which the sdhci controller on the
-> +        * RK3576 is in, never come back the same way once it's run-time
-> +        * suspended once. This can happen during early kernel boot if no driver
-> +        * is using either PD_NVM or its child power domain PD_SDGMAC for a
-> +        * short moment, leading to it being turned off to save power. By
-> +        * keeping it on, sdhci suspending won't lead to PD_NVM becoming a
-> +        * candidate for getting turned off.
-> +        */
-> +       ret = dev_pm_genpd_rpm_always_on(dev, true);
-> +       if (ret && ret != -EOPNOTSUPP)
-> +               dev_warn(dev, "failed to set PD rpm always on, SoC may hang later: %pe\n",
-> +                        ERR_PTR(ret));
-> +
-> +       dwcmshc_rk35xx_postinit(host, dwc_priv);
-> +}
-> +
->  static int th1520_execute_tuning(struct sdhci_host *host, u32 opcode)
->  {
->         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -1176,6 +1200,18 @@ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
->         .postinit = dwcmshc_rk35xx_postinit,
->  };
->
-> +static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk3576_pdata = {
-> +       .pdata = {
-> +               .ops = &sdhci_dwcmshc_rk35xx_ops,
-> +               .quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-> +                         SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
-> +               .quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-> +                          SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
-> +       },
-> +       .init = dwcmshc_rk35xx_init,
-> +       .postinit = dwcmshc_rk3576_postinit,
-> +};
-> +
->  static const struct dwcmshc_pltfm_data sdhci_dwcmshc_th1520_pdata = {
->         .pdata = {
->                 .ops = &sdhci_dwcmshc_th1520_ops,
-> @@ -1274,6 +1310,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
->                 .compatible = "rockchip,rk3588-dwcmshc",
->                 .data = &sdhci_dwcmshc_rk35xx_pdata,
->         },
-> +       {
-> +               .compatible = "rockchip,rk3576-dwcmshc",
-> +               .data = &sdhci_dwcmshc_rk3576_pdata,
-> +       },
->         {
->                 .compatible = "rockchip,rk3568-dwcmshc",
->                 .data = &sdhci_dwcmshc_rk35xx_pdata,
->
-> ---
-> base-commit: f34da179a4517854b2ffbe4bce8c3405bd9be04e
-> change-id: 20250317-rk3576-emmc-fix-7dc81a627422
->
-> Best regards,
-> --
-> Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
->
+Thanks and Regards,
+Parvathi.
