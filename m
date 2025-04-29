@@ -1,285 +1,116 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984C0F9C1
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88977E107;
+	Tue, 29 Apr 2025 00:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745888168; cv=none; b=nQ38Pic3NVP8+jhzoEbYWqP8lb97J/BQsLK1hgu9BnRs1eVHKtK+q8/eD7tjj3OHe7wt3fhoEHIIzzq9w+42xaqXb5RH2cUWAdf9yVgg1N5jp2ZR7wZdvxf43b+qRDmBCeNKJpdXraV6fvBr/PHHQvQ8YT9RqGSlyGfohT39MGc=
+	t=1745888184; cv=none; b=OflwaZnFliDhhYG3HbXfS3DC8dZs2wBqU2Y9SXVx5c2rtPFP3A8EJDAh3/nw3K2o6s9GKUspeRM/Nc3acOFQZ3F9zDEBR/6ZfTsoY2rQISdDm9qxcFx+q5jtr3FONiLdP5LKbY0npw6rmuiS9JzSdphwaLmh2HmggJ33LzWXe0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745888168; c=relaxed/simple;
-	bh=R3qiCOKricv0V7guueM+WNlKjYrj/xlSi1gJS3t7yhU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cFs1V06hcArgKM/iHS2iET0h7uC0WrmKlvLZV6s5XYh00/Hl1gk3fIedB70kmVymVatF26kgT95ieKz866HA1hgokRbYx5x9LrS/CH5s6tlZZ0pMrNGeyXlT0mvQp5m8hikSYnHhs/irocZE+gCbFHnGggTCYH/atKb9WZPkRvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FZg+en0g; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745888184; c=relaxed/simple;
+	bh=UGHLeiApJf7V1C8ImguoPGkGXxAG1MLhiPDBuTxIWCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lVm8QJgQDD7BEre5OZjQvkyzaFIY/iKrya2/3aWJAmQAU9sSZETylkwDnBs5TSvA+dtSv9luaisWmXfYMyfwBg0naLTn8m1Hkbec6+cmC+Q6XWR+T2YNVym3JQ9e0MdegGRoGu6EYfPJopKeFcmo+krw+zGVVuZepHRQKG/EydY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOaF0xhJ; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FZg+en0g"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-309f0d465bdso7206074a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:56:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOaF0xhJ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so5689518b3a.0;
+        Mon, 28 Apr 2025 17:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745888166; x=1746492966; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qIfl9sldI2oYnELP7cv05KQ/pnmI23d3v+rJeb6lnZA=;
-        b=FZg+en0gDpc2QXlRb2mFJdA+TzdRGyY889OIZm+qOCRrzU5pSyyWOgGVvlNGA6LWaY
-         HLM8BhVYk5glD0oEkxEqbuqfd4FNHq14hSYLBetNGaO6sx6t7GHUvcbYB9Go2fiZxHkZ
-         e684PYi5Hm6rAhJ61DblPZenE8XEBvd+UIjvXWxgcZXQGcnZYkH4mASzab4mNVRv6fS/
-         YFKL06Uc8Z6SNzRYyMgZB1+hL34GwLTzFJKrFVWHK26wFfoOqw2Te1B2GQxM3xAKFGar
-         o/jvRRjsOZbvgPY0re2ZjNSQXbbjSgOgpuUb4ZaVjCKQtEtIA1lh+ZH5KEHo/rMmPqLx
-         GmsQ==
+        d=gmail.com; s=20230601; t=1745888182; x=1746492982; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YtB+mT0E8TIrbKFCUfN6M50HTfM9YyB2DMZzb9JngOs=;
+        b=WOaF0xhJ1LUbDMEqIG0qeuxtwOWMP5omy5if+8BPU5qaIGk4Jcnq2F2ij9y2whaLLY
+         C7kE8lJhGn1wv8ZKwiL/68MYJlUEkpE+pfBTGd8/8irZ4naxCaCU+mQ5sJjpB2k/PZy6
+         JFynKoBSoLPXPt0ja94K3l2cBwyzahADs3vCvVgIxjrWCyMk9+PC/5LPhAfjCjnNvX1Y
+         lG/K/wZ5B+I+hdDv0N1SSHqRFFCQ0GQAxYZAF6DGyAfbU+lXLDg3N06oR+5QrVc6msUN
+         r8DX9E58x+gZ40JXCLg5hQnDqZ1qCEUFkJq1PAOrV4+0pjB/5JQWtddaKuQCX0KD87aY
+         yTgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745888166; x=1746492966;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qIfl9sldI2oYnELP7cv05KQ/pnmI23d3v+rJeb6lnZA=;
-        b=taVAhrWeTK7NNo9Qu06J5d60zNhORkNkCXsJSc1XXiqM9q7YSGDGSSMiv1OJYNJvGb
-         +Jo3AMmIjqQR8UkfH4Gb6dwKfzFCYv+CfuIP2SsesXoEx1aV1PuItv6fvA40lVEjmj4T
-         Cef4Uab+ucfo3pwMIuogdWcYE8bQGBSyvtGr0l2mzjr9aixyKou2SfWCshaiFC7INP8t
-         LZcYAiO8rESG482I1juBgpU3SfWcHx5U6h+Dr1ZVobo/HRkkPtjrcNakqgP6tt874A0M
-         F8KBUEU4s1x+C9mVdCRNbi2YVlFz0PmdzpCthtFaAYx9RzYxTFbBrT2qlflq4EUYrAZV
-         9B7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWkX+eEJh3WSiA3Sbtxo360v6gIo5NKl4pu4G6qH/TXwnBXnrHY4TZ4yGcl35h77xLluW9zmIQmtM5T5lA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxKOQM83mbk3i3aSuqN6lw0ahV3tEoIKqvscvFBkuiRxHGYOgX
-	OproJWTOn57vimmx4oVYJ6T9m3CGj4B0s/UwOFpFkbh3ojgniHTFKr46z4QRtr+fDlGddpeRLlw
-	h7A==
-X-Google-Smtp-Source: AGHT+IFRDAQmXGqF9t6A1AUN9GWgCt2IQIKU/j6VszK3kGzTc9EySIp4JBSSxgQ/BZg7rQbLlNIadMMTltw=
-X-Received: from pjboe15.prod.google.com ([2002:a17:90b:394f:b0:2ea:448a:8cd1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4c1:b0:227:e74a:a05a
- with SMTP id d9443c01a7336-22de60702a3mr26654175ad.44.1745888165925; Mon, 28
- Apr 2025 17:56:05 -0700 (PDT)
-Date: Mon, 28 Apr 2025 17:56:04 -0700
-In-Reply-To: <CADrL8HX03P1f2E7NzufXU3enW1EXz2Bk2qNh5KQg-X1KFQed8g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745888182; x=1746492982;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YtB+mT0E8TIrbKFCUfN6M50HTfM9YyB2DMZzb9JngOs=;
+        b=b9NKNvuQqADUpkZEHot+MdNwmyeBVpu8OWf/Yzc2OJPAFDq7M4QhC2MzSTGB/FNk5R
+         0tD8/OGhRhaafwMqRkhyEwzbZNpHhAD+HvBiNIDbiE3nK/3ktg6KtYOuePvcxldUqeEn
+         GzwVaXrpVEY0lAje6DdWZ+xXv1rkElVPuJxSZeL6iu2glpXr+hxWXACyAHpZyUJpBxMy
+         98hFxjuO20Tw6neF9rH6OIEH+alWnwsMMX5SueYLyeI8LXt2Vj4BXodOWV0z2o/x1SUd
+         WKMIV2BbvCicfQWvw3iH2wRlvRZwly+d6gWXuBtFYCGcCEKDqoIi+FRmylNXAU3VUHu1
+         Zcog==
+X-Forwarded-Encrypted: i=1; AJvYcCU+1gLxNgYj0bCrGIKKV5XcuvFyrOgAdIo4lGNFwjeU6cTVRfNriBUuhKLYsowVDTbWgzehvmlDWc1lgpco@vger.kernel.org, AJvYcCV63mgyK0YbS1tnfGFkz8dYUKuB92vAuA5AzF/E9DTqjue6NYXW0RK9yiBpHdetY6Ai5wb07jwDNGAhKHNAYTmO@vger.kernel.org, AJvYcCWzvYxz2YMPdiJa7mFqvcQqhOIbaf6dTqdhfyZN05l5I5Jj8pjJQXianBVb2gqTU30laStJJ6uR+PI=@vger.kernel.org, AJvYcCXZPll0sn0UGZVvlGK1VJC+KWSu4tqadp34/ONR3NYr+xiPBqIubmXjluStqfSW6MGDguEWplDE@vger.kernel.org
+X-Gm-Message-State: AOJu0YytJT+U940XxRMA0tTUzKmvyyDsVBiRVVW+ozVob3f686GzzBDZ
+	xPyckdpzoJTl5LrF3715M4nqWKyatHwXmC+X7k3jbll6eh+FrvJU
+X-Gm-Gg: ASbGncvWg9WtpmOXOREyr4QYv+THFuO2HlOFYvQgBIo/fjETd2qB8pjc9PTuT9CA/I3
+	SYNcKRQqeT/ngAEfcOwWeb1JoRqtCZMCXInf8paV9ZiqLAH5ZfzxeI/4iem7rOTjCX2wYjyGYyO
+	841LKMEhGrbMpeO4DkLV9eJ4y08l5HheXsgU30OJBhSn+PKJROE0LhqZWDYa3WIh6RvWbGrcf7y
+	VkGL+KOuY5s4mTM4XxKkpxLVS0NguzrfSlEBQVQDVtTwWpSV42kVkqNPOvy6itHwXaw5Les4KOg
+	Q1QfyUqAAhCW5/q4kpU7ufW8RcoANnd2x4lDL8mmVUWL
+X-Google-Smtp-Source: AGHT+IH0mSCIzf4YRTszhlxszcJ5ZHkUQ+VCosBGzav/EA6LiA9LnwUdkxmQ5kQYAzOP/f/ImW8wjw==
+X-Received: by 2002:a05:6a20:9c8b:b0:1f3:383e:7739 with SMTP id adf61e73a8af0-2094f670068mr1713198637.7.1745888182032;
+        Mon, 28 Apr 2025 17:56:22 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faded634sm7990861a12.73.2025.04.28.17.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 17:56:21 -0700 (PDT)
+Date: Mon, 28 Apr 2025 17:56:20 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 1/3] bpf, sockmap: Introduce a new kfunc for
+ sockmap
+Message-ID: <aBAjtATRrVNegYjm@pop-os.localdomain>
+References: <20250428081744.52375-1-jiayuan.chen@linux.dev>
+ <20250428081744.52375-2-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414200929.3098202-1-jthoughton@google.com>
- <20250414200929.3098202-6-jthoughton@google.com> <aAwpWwMIJEjtL5F9@google.com>
- <CADrL8HX03P1f2E7NzufXU3enW1EXz2Bk2qNh5KQg-X1KFQed8g@mail.gmail.com>
-Message-ID: <aBAjpKvXoT62zG6h@google.com>
-Subject: Re: [PATCH v3 5/5] KVM: selftests: access_tracking_perf_test: Use
- MGLRU for access tracking
-From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428081744.52375-2-jiayuan.chen@linux.dev>
 
-On Mon, Apr 28, 2025, James Houghton wrote:
-> On Fri, Apr 25, 2025 at 8:31=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> >
-> > On Mon, Apr 14, 2025, James Houghton wrote:
-> > > By using MGLRU's debugfs for invoking test_young() and clear_young(),=
- we
-> > > avoid page_idle's incompatibility with MGLRU, and we can mark pages a=
-s
-> > > idle (clear_young()) much faster.
-> > >
-> > > The ability to use page_idle is left in, as it is useful for kernels
-> > > that do not have MGLRU built in. If MGLRU is enabled but is not usabl=
-e
-> > > (e.g. we can't access the debugfs mount), the test will fail, as
-> > > page_idle is not compatible with MGLRU.
-> > >
-> > > cgroup utility functions have been borrowed so that, when running wit=
-h
-> > > MGLRU, we can create a memcg in which to run our test.
-> > >
-> > > Other MGLRU-debugfs-specific parsing code has been added to
-> > > lru_gen_util.{c,h}.
-> >
-> > This fails on my end due to not being able to find the cgroup.  I spent=
- about 15
-> > minutes poking at it and gave it.  FWIW, this is on our devrez hosts, s=
-o it's
-> > presumably similar hardware to what you tested on.
->=20
-> Ah sorry, yes, this selftest needs to be patched when running the
-> devrez userspace, which uses a combination of cgroup-v1 and cgroup-v2.
-> Simply hard-coding the root to "/dev/cgroup/memory" (which is in fact
-> a cgroup-v1 mount) should be what you need if you want to give it
-> another go.
->
-> > Even if this turns out to be PEBKAC or some CONFIG_XXX incompatibility,=
- there
-> > needs to be better hints provided to the user of how they can some this=
-.
->=20
-> Yeah this can be better. I should at least check that the found
-> cgroup-v2 root's cgroup.controllers contains "memory". In your case,
-> it did not.
->=20
-> (cgroup.controllers is not available for cgroup-v1 -- because it
-> doesn't make sense -- so if I patch the selftest to check this file,
-> using cgroup-v1 mounts will stop working. So, again, you'd need to
-> patch the test to work on devrez.)
+On Mon, Apr 28, 2025 at 04:16:52PM +0800, Jiayuan Chen wrote:
+> +bpf_sk_skb_set_redirect_cpu()
+> +^^^^^^^^^^^^^^^^^^^^^^
+> +.. code-block:: c
+> +
+> +    int bpf_sk_skb_set_redirect_cpu(struct __sk_buff *s, int redir_cpu)
+> +
+> +This kfunc ``bpf_sk_skb_set_redirect_cpu()`` is available to
+> +``BPF_PROG_TYPE_SK_SKB`` BPF programs. It sets the CPU affinity, allowing the
+> +sockmap packet redirecting process to run on the specified CPU as much as
+> +possible, helping users reduce the interference between the sockmap redirecting
+> +background thread and other threads.
+> +
 
-Or, and I know this going to sound crazy, what if we simply make the test w=
-ork
-with v1 or v2?  That is not hard to do, at all.  Please slot the below into=
- the
-next version of the series.  Feel free to modify it as needed, e.g. to addr=
-ess
-other maintainer feedback.  The only thing I care about is the selftest not=
- failing.
+I am wondering if it is a better idea to use BPF_MAP_TYPE_CPUMAP for
+redirection here instead? Like we did for bpf_redirect_map(). At least
+we would not need to store CPU in psock with this approach.
 
-> > And this would be a perfect opportunity to clean up this:
-> >
-> >         __TEST_REQUIRE(page_idle_fd >=3D 0,
-> >                        "CONFIG_IDLE_PAGE_TRACKING is not enabled");
->=20
-> I think the change I've already made to this string is sufficient
-> (happy to change it further if you like):
-
-Doh, I missed that your patch did already improve the skip message to spit =
-out
-/sys/kernel/mm/page_idle/bitmap; that part I definitely like.
-
-> > > +               __TEST_REQUIRE(page_idle_fd >=3D 0,
-> > > +                              "Couldn't open /sys/kernel/mm/page_idl=
-e/bitmap. "
-> > > +                              "Is CONFIG_IDLE_PAGE_TRACKING enabled?=
-");
->=20
-> > I can't count the number of times I've forgotten to run the test with r=
-oot
-> > privileges, and wasted a bunch of time remembering it's not that the ke=
-rnel
-> > doesn't have CONFIG_IDLE_PAGE_TRACKING, but that /sys/kernel/mm/page_id=
-le/bitmap
-> > isn't accessible.
-> >
-> > I mention that, because on a kernel with MGRLU available but disabled, =
-and
-> > CONFIG_IDLE_PAGE_TRACKING=3Dn, the user has no idea that they _can_ run=
- the test
-> > without mucking with their kernel.
->=20
-> Fair enough, I'll change the output from the test for that
-> configuration to say something like: "please either enable the missing
-> MGLRU features (e.g. `echo 3 > /sys/kernel/mm/lru_gen/enabled`) or
-> recompile your kernel with CONFIG_IDLE_PAGE_TRACKING=3Dy."
-
-That's still misleading.  In my case, my kernels are already built with
-CONFIG_IDLE_PAGE_TRACKING=3Dy.
-
-Looking at this again, we can do much better.  For my permissions issue, op=
-en()
-should fail with -EACCES, whereas the CONFIG_IDLE_PAGE_TRACKING=3Dn case sh=
-ould
-fail with ENOENT.  And that is easy enough to handle in open_path_or_exit()=
-.
-
-I'll send a small series to clean that up, and then will apply this series =
-on top.
-The resulting conflict will be trivial to resolve, so don't worry about reb=
-asing
-on top of my mini-series.
-
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 28 Apr 2025 17:36:06 -0700
-Subject: [PATCH] cgroup: selftests: Add API to find root of specific
- controller
-
-Add an API in the cgroups library to find the root of a specific
-controller.  KVM selftests will use the API to find the memory controller.
-
-Search for the controller on both v1 and v2 mounts, as KVM selftests'
-usage will be completely oblivious of v1 versus v2.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- .../selftests/cgroup/lib/cgroup_util.c        | 32 +++++++++++++++----
- .../cgroup/lib/include/cgroup_util.h          |  1 +
- 2 files changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/cgroup/lib/cgroup_util.c b/tools/testi=
-ng/selftests/cgroup/lib/cgroup_util.c
-index 69a68f43e3fa..4e7e7329b226 100644
---- a/tools/testing/selftests/cgroup/lib/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/lib/cgroup_util.c
-@@ -217,7 +217,8 @@ int cg_write_numeric(const char *cgroup, const char *co=
-ntrol, long value)
- 	return cg_write(cgroup, control, buf);
- }
-=20
--int cg_find_unified_root(char *root, size_t len, bool *nsdelegate)
-+static int cg_find_root(char *root, size_t len, const char *controller,
-+			bool *nsdelegate)
- {
- 	char buf[10 * PAGE_SIZE];
- 	char *fs, *mount, *type, *options;
-@@ -237,17 +238,36 @@ int cg_find_unified_root(char *root, size_t len, bool=
- *nsdelegate)
- 		strtok(NULL, delim);
- 		strtok(NULL, delim);
-=20
--		if (strcmp(type, "cgroup2") =3D=3D 0) {
--			strncpy(root, mount, len);
--			if (nsdelegate)
--				*nsdelegate =3D !!strstr(options, "nsdelegate");
--			return 0;
-+		if (strcmp(type, "cgroup") =3D=3D 0) {
-+			if (!controller || !strstr(options, controller))
-+				continue;
-+		} else if (strcmp(type, "cgroup2") =3D=3D 0) {
-+			if (controller &&
-+			    cg_read_strstr(mount, "cgroup.controllers", controller))
-+				continue;
-+		} else {
-+			continue;
- 		}
-+		strncpy(root, mount, len);
-+
-+		if (nsdelegate)
-+			*nsdelegate =3D !!strstr(options, "nsdelegate");
-+		return 0;
- 	}
-=20
- 	return -1;
- }
-=20
-+int cg_find_controller_root(char *root, size_t len, const char *controller=
-)
-+{
-+	return cg_find_root(root, len, controller, NULL);
-+}
-+
-+int cg_find_unified_root(char *root, size_t len, bool *nsdelegate)
-+{
-+	return cg_find_root(root, len, NULL, nsdelegate);
-+}
-+
- int cg_create(const char *cgroup)
- {
- 	return mkdir(cgroup, 0755);
-diff --git a/tools/testing/selftests/cgroup/lib/include/cgroup_util.h b/too=
-ls/testing/selftests/cgroup/lib/include/cgroup_util.h
-index cbe6f0b4247d..d9e6e3090b3f 100644
---- a/tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-+++ b/tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-@@ -21,6 +21,7 @@ static inline int values_close(long a, long b, int err)
- 	return labs(a - b) <=3D (a + b) / 100 * err;
- }
-=20
-+extern int cg_find_controller_root(char *root, size_t len, const char *con=
-troller);
- extern int cg_find_unified_root(char *root, size_t len, bool *nsdelegate);
- extern char *cg_name(const char *root, const char *name);
- extern char *cg_name_indexed(const char *root, const char *name, int index=
-);
-
-base-commit: 65a87fcc85da28361af2a5718c109dbc2f8d54a2
---
+Thanks.
