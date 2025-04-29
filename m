@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8E52BFC79;
-	Tue, 29 Apr 2025 23:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA1D2C0309;
+	Tue, 29 Apr 2025 23:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970753; cv=none; b=MVo0+SnYY0d7IDgMu8lXGzdPeXOyvvsEzF29YdmWFjfaDsW89DaIn+2OCSrtBmOCe1MWLSQ6ZmfxcjjycDUybR5XFb/VoHGcC+7WHKiNv+g6EjnOe/18FBL6WkUcmv92On0718NgVSUD/qU4TtwhZaPJ1EF+OGvKT6s7fK+yJsY=
+	t=1745970759; cv=none; b=WWvFtz9hSLBPEl6Yfrqw/6r0gk4cSPCk3q45BkxjLf0WeU096Y6PXh9uC+MhzIon5YFI6G/KWpRsz5Y6JnTTZcFpVHe+8CWFIQaSDnqaT4LqdU3KClxEpgcuOAACRWFUnOXO9VFPNqDzFUUmO490TMjOCepEVYLNSAcuS3qXIh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970753; c=relaxed/simple;
-	bh=Er3aY9LjtWCWUFSG8bdrcX0y6a1XyBTgdSUDsN4/Tjk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=teNTEUhliMgLsPyuR64waGHU7qR8Hek1qnZhj9HSTvoqFr7vjvSz6KFsyCYRxOtEqKX/jVBP3Q/yccsRYjg7c7b7VLG3n/d9EMQT8SEOK2sNtecDWiRljn2wviiayLeIg1o2POpqYRJ+VKZixofF1DiRcJyFkub+K/uDmlIUDiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j97kjp77; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745970759; c=relaxed/simple;
+	bh=ZBU19+R8ahuqjD6YirJAGVkDozUU72i3G9/SSQz/lDk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WFYqPepANLzoq5ujEY/bh21I2cmcpT3CYC9x16fuhbbaVwGNGoU6dxoBQM5PTTa/ybemC8ZcDRgEeOoFBDmorp26icsXjRHPlYUjXivf5Z5lB6z3+7GbKVb9pMNOyEyQAB7Job9EphQV1xdh411NyqIOH7JR+nUctN3P/IGGiQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZMmUZtM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j97kjp77"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EE8C4CEEE;
-	Tue, 29 Apr 2025 23:52:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZMmUZtM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090D8C4CEE3;
+	Tue, 29 Apr 2025 23:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970752;
-	bh=Er3aY9LjtWCWUFSG8bdrcX0y6a1XyBTgdSUDsN4/Tjk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j97kjp77fhzKykPA19k4lo89y1GUkil81xt0wpNM9PEdye9ag6oVexkfJTdEGTE0p
-	 fvMOTMnwVZcfCG41ZcZ9zrxxggq2YapfhAblqANbN1DhNWtIoKnm8N+Z3jmGHl5JWe
-	 Ou4RgaOv4lcjfl7CeUi/lbHYsN1HTud0UNoHf4PLQWdY9SDOrhsdhU4Syefc10fkiZ
-	 9lOp+/b9Pb5rKoxBF/0zbuYwkOsqqt9Y5XlnU0W1mxOURN9R5Nop5Ea9TiMZ4ZmbL+
-	 Fw2/ExafZKxsoh8nsrNqRem6iYdt2YMag1vILZLQ2UDuzBTVYmWnfjS4pV3ndgSdF6
-	 dT67bViJQSBxA==
+	s=k20201202; t=1745970758;
+	bh=ZBU19+R8ahuqjD6YirJAGVkDozUU72i3G9/SSQz/lDk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HZMmUZtM3e3GRTrCzKkg8igPiRZt+5MRyUDJLX460pWTZlNosOphCGBRTGr+Tsq4y
+	 38t2L5ODhme7Y3guW8WNBPuokhD3HxZL4Hq+FxdIzuOo0/TCv/wKUum8ZxUb8dpAy2
+	 MRBsorrC4gKO38/9xK3QIczW0vDgDqwncxd0BRMJfFXCNmMJFmLVSig8Bmmlbl3+nk
+	 zET0311guzNeUBgoepTrolNGB6vfqfU+klfoRpjO+j1jWYSJoN71F4qduEc3tzK0U0
+	 RZlRmNlWg3OOfg3SWCWVNtu+fqhGTXivwN/Za5iuwzX2T2zbOIEysVzhQX8Og2BgXs
+	 2lZgqIkynEkvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Haoran Jiang <jianghaoran@kylinos.cn>,
-	zhangxi <zhangxi@kylinos.cn>,
-	Andrii Nakryiko <andrii@kernel.org>,
+Cc: Pengyu Luo <mitltlatltl@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	nathan@kernel.org,
-	bpf@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 37/37] samples/bpf: Fix compilation failure for samples/bpf on LoongArch Fedora
-Date: Tue, 29 Apr 2025 19:51:22 -0400
-Message-Id: <20250429235122.537321-37-sashal@kernel.org>
+	rafael@kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 01/21] cpufreq: Add SM8650 to cpufreq-dt-platdev blocklist
+Date: Tue, 29 Apr 2025 19:52:13 -0400
+Message-Id: <20250429235233.537828-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250429235122.537321-1-sashal@kernel.org>
-References: <20250429235122.537321-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,59 +45,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.25
+X-stable-base: Linux 6.6.88
 Content-Transfer-Encoding: 8bit
 
-From: Haoran Jiang <jianghaoran@kylinos.cn>
+From: Pengyu Luo <mitltlatltl@gmail.com>
 
-[ Upstream commit 548762f05d19c5542db7590bcdfb9be1fb928376 ]
+[ Upstream commit fc5414a4774e14e51a93499a6adfdc45f2de82e0 ]
 
-When building the latest samples/bpf on LoongArch Fedora
+SM8650 have already been supported by qcom-cpufreq-hw driver, but
+never been added to cpufreq-dt-platdev. This makes noise
 
-     make M=samples/bpf
+[    0.388525] cpufreq-dt cpufreq-dt: failed register driver: -17
+[    0.388537] cpufreq-dt cpufreq-dt: probe with driver cpufreq-dt failed with error -17
 
-There are compilation errors as follows:
+So adding it to the cpufreq-dt-platdev driver's blocklist to fix it.
 
-In file included from ./linux/samples/bpf/sockex2_kern.c:2:
-In file included from ./include/uapi/linux/in.h:25:
-In file included from ./include/linux/socket.h:8:
-In file included from ./include/linux/uio.h:9:
-In file included from ./include/linux/thread_info.h:60:
-In file included from ./arch/loongarch/include/asm/thread_info.h:15:
-In file included from ./arch/loongarch/include/asm/processor.h:13:
-In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
-./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin.h' file not found
-         ^~~~~~~~~~~~~~~
-1 error generated.
-
-larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
-and the header file location is specified at compile time.
-
-Test on LoongArch Fedora:
-https://github.com/fedora-remix-loongarch/releases-info
-
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-Signed-off-by: zhangxi <zhangxi@kylinos.cn>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/20250425095042.838824-1-jianghaoran@kylinos.cn
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 7afe040cf43b3..f06f88b26183c 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -400,7 +400,7 @@ $(obj)/%.o: $(src)/%.c
- 	@echo "  CLANG-bpf " $@
- 	$(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
- 		-I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
--		-I$(LIBBPF_INCLUDE) \
-+		-I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
- 		-D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
- 		-D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
- 		-Wno-gnu-variable-sized-type-not-at-end \
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index 09becf14653b5..c58c1defd7458 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -165,6 +165,7 @@ static const struct of_device_id blocklist[] __initconst = {
+ 	{ .compatible = "qcom,sm8350", },
+ 	{ .compatible = "qcom,sm8450", },
+ 	{ .compatible = "qcom,sm8550", },
++	{ .compatible = "qcom,sm8650", },
+ 
+ 	{ .compatible = "st,stih407", },
+ 	{ .compatible = "st,stih410", },
 -- 
 2.39.5
 
