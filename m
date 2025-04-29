@@ -1,135 +1,175 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2054.outbound.protection.outlook.com [40.107.104.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4860C2C1098;
-	Tue, 29 Apr 2025 10:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745924251; cv=none; b=FsHGo1t6tXRTuLfA6rKmDGEyBd/sCclt6/SAf9P3LWrMRHoPtGWYL4t8cmF2dJJDdUyiyojJUvXZegJnjWexRR+ADYe4pm/xWS5S/xyCj9mnrHuSTVsm3Vbt1RIsyk9kOqUNeUDUtIFuH443dCsT+lasD+5zOzvihU+5Lqe0K5g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745924251; c=relaxed/simple;
-	bh=Uvtd6fy4RCGG//kBsfKgM+4FFLLpycksKJkZw5rqC0Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vFuQ8rLschOfo8DNg0pdOvV/T2J5oVWpIZrvpEmYrffB6xRfK6B0zwzHnxtPFzhmPiZqbpsPK0QbeNCbWq87cg4qwlMw12auYSOcThuBKi/BIkkoJHPkgG+lTSLX320+7uO6nbNBq2VzVvaF21cNeYCJ9hsrX2jNq5Dk+aMJSRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L37KPNWE; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B5F2BF3EA;
+	Tue, 29 Apr 2025 10:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745924273; cv=fail; b=DxQs8OojezNH2QB7r2KIxhJZMU5o8PfbzKBIHi5BI0epxf/yXYPYJj7XniaN7VJ9+qt9uxmkMZ6+CE0N/nGRIGJ8WhQc+RDv5CgxENNz4x9+hOSayYjQIbsw1WA27opHaIDc5cn/g3PZggOk3LyM3cddL6lAr/EmqrKLq8z5+bw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745924273; c=relaxed/simple;
+	bh=/D+Yy4U/arvyV2uhywXyGqHR+CSqJ3GI6GkPpIUpcLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AZ6laKtLfYqV7mFtT1nLN+rarMKANVId/RjFVhXHhHVOkWnb9v1SnR900hZc+3osYBKF7phrPM4CN+T/ASc5e/SoD3Jom04Kg3XqUJNTNynw+gM/dF0VOabkJwGdetecusFZuGXj8NS+hO42s5EgkoZAVLAh0bZB7sDxcE4uWQs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=DSa62Dg0; arc=fail smtp.client-ip=40.107.104.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L37KPNWE"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so38625475e9.1;
-        Tue, 29 Apr 2025 03:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745924247; x=1746529047; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uvtd6fy4RCGG//kBsfKgM+4FFLLpycksKJkZw5rqC0Q=;
-        b=L37KPNWEJek24kTksiYtJqmdvDbimj0ZH9vRAdgfOhYojc7aTcWKmOHJGDEZbyTkO7
-         MamAJILCTtp0JmquVgp2q+dmqkBGUnlSLuvMN4szGBkwyHhWqFg9yxZ8Q7xYLaKsMLmA
-         lrDK4WMaX1+vl03X1SEscsoGtVbkFf/KNkBPfNaY31hbYkaX+mow8PCXdSQ0R5VnX1zh
-         1viito69Rx5dcH4DLcLPQWnqa0LzjGYzrn9mqaEefF7ju0154FHwUnJ/1GapbZpV1oLD
-         ZYBr7bjuWcKY/QQFOoO4hM7NRe60N1XOHvpEwgSkm7ntyvFGn/vPZ41ckTj4jjPZuowI
-         f5MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745924247; x=1746529047;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Uvtd6fy4RCGG//kBsfKgM+4FFLLpycksKJkZw5rqC0Q=;
-        b=PPyhLz2r9nhdpKPu8Mb0BonZZuAYPyC32uxUkMB4yUF4yO1hfgEyi7NannkY7cVmIc
-         dMfAxagsqqfXscqMJVd8twxtybnUPHGMC4hiATUEuwXmXXuWl3vyAcdYwjkPeIDg4YJu
-         8zf+NIiPBO6S0+MFCWUZOSrhzckdFeHRzSsrU04AD/0I0ZKaZwFILbBPwFTEmwt5o0u1
-         X1kmYjPeLkrBQDGyhtwUwaCRCvyayTukfg36LhU8IE5OW2mQKFu3vMJBOXg/RNZdmmMj
-         BaEty1u4U0vYYOGWUghVk9U8PrkS68I6wYflNuZQ+th+kMjhkZ9Yy/EYDHhmUlAYDyCm
-         uR2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVKHw6vuYZUIyWBhiCX9qdwU2LoMZcHSP+l6zPlZoPRHMVlgwufv5BmkiFIwz6ebKyptCVqKuW8zh9fvosK@vger.kernel.org, AJvYcCXdFN7xeIajSW6esb1N5ohbqLkbaq5O3brg+ztraEP7wgp/b5PEQM6skSQIafVbVfLyEInTTUHXlD+03ykB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7bx3IyYRjjCZqvrHr9yo1ZaAEHYeyhfY9ZsUmzXSqcDtEO9mF
-	LhE/4ELjlFFgUudG+vzCr8hBZ+ezZwc8+TqrP08n84bmh3riGPavkfRVLwDEemxUBRaxrj1X2jT
-	shCZ695Z+zxoa2XDIeFKvBOZjLWmBzHEWgA==
-X-Gm-Gg: ASbGncvoGDsEJ+kg6wwj6UyCUlOJ1l/P9OFXnRg2qfsqJLqRNxsmLyDF/i6FCl7RJQ1
-	6k6mB9CE1YTn4nS2GMMA+aemUMLGHYbJzluMZpzFja54xzS0ZjCWBeVjjUA2y46yQljlrLhcpce
-	D2TuR0ngZnAEF3u1jQVQqg7g==
-X-Google-Smtp-Source: AGHT+IHirYlnb/J0Rw491chdfeUL8F8I4KZrN9hJ04U8tCSV4ragmKxqYNjWe5UdaZyFQMvJteyrgFv9C6magoKSZoE=
-X-Received: by 2002:a05:600c:1550:b0:43d:79:ae1b with SMTP id
- 5b1f17b1804b1-441ad3b5ea9mr23239755e9.14.1745924247107; Tue, 29 Apr 2025
- 03:57:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DSa62Dg0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Pa7v74bUXMkb8Qd+bo7jTBW+pkZA3drxqxpgPrkAstoSQC3+SpcKhPW05lmLcPzRKEmJh2lnpAnqpBXstirCISMxCjRbIVheBng5wBP/+2yBIUK1b7yqugdvfi4oSmWW64mhIIHpj8Cn5fWvK5POL+gbzdiclLtHG2CzRsgLATJI7qtu4HSDnjIAHT/bBpKrZjEXk2yc/SL5UKWmXdLpkwgLSi+w5rB76N7RNuDJK93YJufSpImgglZVjDAA0mDH1M4x0vdA92BTuPLyFRVck8rJw+G/OEPaPDk0JWuUUeG+0ywPYvZAmyw/IArv8bkyp3es5KiTKo6gmT10dqr9zQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/D+Yy4U/arvyV2uhywXyGqHR+CSqJ3GI6GkPpIUpcLk=;
+ b=HJ1nCnS0w53l7VMc9rOLUblJTpm+0P5GJma4VgI1iGguAcK0FDinbjrSjfrRY5jTnR7O3Sk7HletT9lGp6znHnuoR6CsGeuoupP+vH8yVzoRQXhv5vY666DrZ+FtcZjFdHNnkIVm0rgHIxH3P/sXUYyXU9mi/bOemzU+vrag7Iy9CNZBS7uFEgIS+Sgjv14q3ouvQlTxB6IbGJ/xt3ngD+2N1g4vKRHvS57BOLmeTfdZoCQJlatZn6KV2pRyXEdyk3MctIjwHcgqTgUP2R4a+XRn23wdWRixlUbfNBZZwRgyInAQXwSsZHF63pgIaq0wChe7Ij8IiTK+jy2VCOr3Kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/D+Yy4U/arvyV2uhywXyGqHR+CSqJ3GI6GkPpIUpcLk=;
+ b=DSa62Dg0JXbdUN5qx7Or83fmzJ+uDRClWcFGMH2JT7gDrrH5pX/f7mjC77cIEvwvYQRMhtGHlKxQWT99F6ivS6F8304bW4nf5x62oVBV4P6PnkptlX7hAb/IsjRVsRu5TXPzd9PMrKDfxQozjSMX2pMhCZU/vkg2xL8dIXcn1SBUWRzjDFTD2LM0ZLA97N/te8lQlA98pKzStHzit73mlUecgkBrCGE4D5bDsSpEdTFCUWZQVVewmSr3tuoVmGHxa53KWx6y97HHdPruqA3tWk2kWt6bQPP4imMJ/fz0ztu5ux/B7adUhPQOa2QsaShDU5Cet4XLaR2aK6vJQxghYg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PAXPR04MB9060.eurprd04.prod.outlook.com (2603:10a6:102:223::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Tue, 29 Apr
+ 2025 10:57:48 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 10:57:48 +0000
+Date: Tue, 29 Apr 2025 20:06:49 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Primoz Fiser <primoz.fiser@norik.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, upstream@lists.phytec.de
+Subject: Re: [PATCH 2/2] arm64: dts: freescale: Add PHYTEC
+ phyBOARD-Nash-i.MX93 support
+Message-ID: <20250429120649.GC28789@nxa18884-linux>
+References: <20250425064107.174548-1-primoz.fiser@norik.com>
+ <20250425064107.174548-2-primoz.fiser@norik.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425064107.174548-2-primoz.fiser@norik.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2P153CA0037.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::6)
+ To PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
- <aA8yFI2Bvm-lFJTl@hovoldconsulting.com> <CAMcHhXpmii=Rc9YVeKXaB17mYv0piSFs02K=0r8kWe5tQGk7eA@mail.gmail.com>
- <aA94yOjsayZHNDpx@hovoldconsulting.com> <aA+N8YHX0DZ6h9Uj@linaro.org>
- <aBB-gl150GVaZPn5@hovoldconsulting.com> <aBCE3wSG2g5pp7jg@linaro.org> <aBCH4oo7dbG8ajvP@hovoldconsulting.com>
-In-Reply-To: <aBCH4oo7dbG8ajvP@hovoldconsulting.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Tue, 29 Apr 2025 12:57:16 +0200
-X-Gm-Features: ATxdqUFvmRK5viywa4f0WLPi0f48GWdtHCGAXUyP3eWhlaokJqLCQWixu2VChH0
-Message-ID: <CAMcHhXrDEVrM4fEyMwZ9TDgqgY=s_mTcKZMacCoUuZ2fa8FhWg@mail.gmail.com>
-Subject: Re: drm/msm/dp: Introduce link training per-segment for LTTPRs
-To: Johan Hovold <johan@kernel.org>
-Cc: Abel Vesa <abel.vesa@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	dmitry.baryshkov@oss.qualcomm.com, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, laurentiu.tudor1@dell.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PAXPR04MB9060:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b9b1b85-c791-4bc9-e9bb-08dd870cade7
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PdDs3FbldAVdGsMuJHN+pzM9/FK80UkMJA32he0z8O79ZjSI/hTw39veHH1p?=
+ =?us-ascii?Q?yfVI8WRQi08mruj+smEiEvFNMAnrhr8vnhAXAAVo/RMNiFRy3/dCgkneOKjf?=
+ =?us-ascii?Q?L6ELMNwtjeb4ri34JDXrJmrgS23GlvYLnpwAs/q1Yc1sboYUvEe0ueBLCbbk?=
+ =?us-ascii?Q?7LMfLD+Z/OGgeYO4RnbRoDyOPTUAA+8JkkcJLrJvhj2dMhgrDau+M5B9S66y?=
+ =?us-ascii?Q?G9HcD87vN+MU+dtQ4iCTmKXaBHtObsl3PzcIANIAqeEiY7gOy9BUxPYLiA9q?=
+ =?us-ascii?Q?DwlceBIdoViyLO4HTrVsz7gdrcopjvFBKYePklPC6mGxDkybPIKTuR+XjkZa?=
+ =?us-ascii?Q?N01qE86hWos6uqP9ghYEfOrBteeFaz5OAJcZgIfutALIZaguSJqGDodMsLcP?=
+ =?us-ascii?Q?J/U5LSmWxf8bspiNTc8KiNdNUADEaRqPgAdjGiIozKQE2uTvbBjbwBqe6GxX?=
+ =?us-ascii?Q?iekyt+U3f5ss4GxH3mRCCIsGKFlYk1HR6DzhTUGBBPcR458eAsF2qbwXMXpz?=
+ =?us-ascii?Q?Ir1TGG7wVXxeJ/fzJFpF41BSoH/ok43FHWIsUVcmHHOdXSkfbRJdB5PZHhqZ?=
+ =?us-ascii?Q?z5eSEf8zGX+zxgLg4DuX80R+ryjBTqVsJkzaApg62AS77BkCLqZgLxO9gCRj?=
+ =?us-ascii?Q?xl7cpjrwx/iwF7BDMDo1USn7DS0K4lHYBRKGzsiQy1JW12wHGkqr/muuvlNg?=
+ =?us-ascii?Q?NBI5ZOgl0FSaq+DhE1z6oCL/uMcYmHBMpfiY/51q9rC/QKm16RnL0/3RhJPq?=
+ =?us-ascii?Q?Z3Rh7nv67bT7Ip1ylsfeBZBp9lvHMbTe8QMh0jH97VWAoPWIbWO14JPGqs1L?=
+ =?us-ascii?Q?ewk4LFTaQLN6ZCwyQf+xAx9GDDXsDVzs4mMeZFunyAmdE6z4bjcY/8/n6g8j?=
+ =?us-ascii?Q?AlQeTZEZg6YtvAQIWsRehMnJsQYP0DDFJpchEMDwvkkPQjPGKRHEv/vHsusg?=
+ =?us-ascii?Q?HQ94x922k54TYEFW1NW+VuJtUh13ponXGCEzdXvVuWdLHHLozWhC3QTZuJEs?=
+ =?us-ascii?Q?Tx0+6ky5//Yl4RGQOpFFs42C06rDmPTTzCUlpOc2h5u4aR5IJ9meDhZzMUAm?=
+ =?us-ascii?Q?k1PObrfVA16SydFUzGtwvLs0oKsnYHacJUX1YFyyIoUj/39xQe4FydwAoXQH?=
+ =?us-ascii?Q?fAhjDGT2SJCkmBjWVI7Dfci7r/UnDrn0vasjz4odX+YAAm1Luc7OwCcokbb9?=
+ =?us-ascii?Q?CovcVDHtW3E/OFOXKL+c7JEHM5ezW30n/CPzDqWsHL64M8gEuYptVbbvKSoi?=
+ =?us-ascii?Q?8+I5QAuJtCOEHXLqdMFjQjd25GWvdHnyRJeDdJm2z1IfUnEbzeb/+D+zjQMF?=
+ =?us-ascii?Q?QS9Z4h0acAy/9RMKWlih+apCo7KgY3+eTywmeXfU2aBEt2t/fgUADhzfM9cx?=
+ =?us-ascii?Q?fOVwgwRC/8ZjWK5OCZiTxAb2hQS5NsJ4gt7bc4J+HcHDtKinUgbs9uELtsGo?=
+ =?us-ascii?Q?OzRd4KkhAbs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3noZahmE2GdxnXvsofXK6emNbSiQeApBvxSyLdI7MExFwlFxw25xra1tSXn5?=
+ =?us-ascii?Q?iQOvNNPvAmECWbhk9sslSVH2Fdi5lirPp0ahy6UZA4B1rzOHNuzrVO0Jj5E3?=
+ =?us-ascii?Q?Zeu9+9hUgKWYYcHQN9YlflwxzwKUPBIOL8tczXVAJ0U3xrgywKhiSedQt+9+?=
+ =?us-ascii?Q?6AE/nnIcNLB+2T8Z3kMeBMqJyi9F8tQG95abZwTcnRKj9fNad9Xs82l8KDIO?=
+ =?us-ascii?Q?2v+qqV9036cfswGdxrAuoFoQKvVNc1IQ9DmQXDXbSFndtd1I/w7exHox/LNS?=
+ =?us-ascii?Q?/k5Pi40QDkcuM0m7/EyCM0AGL7Jimsk4NiLc2EsgzDxEYCQZbXUlwCA7xX8A?=
+ =?us-ascii?Q?aXG3VmCtXwUWiu5mejddO/s8NXuzUv4rtu5FumwoSdGsvWVxQjiRCgort++N?=
+ =?us-ascii?Q?qeGzrXTwRYbaFKcXJalZ9kBaPt0oFk7MU/o+dDmRHl/HkQvEh61PeinnICOx?=
+ =?us-ascii?Q?SkBXV4esB3R/ZSY8Ar7bnI5w1OmMaxpNW4kpbEYlqm63yLju+j43Ce4gCyK2?=
+ =?us-ascii?Q?rIn7lBUKE+8CK+YMt80D1CFp+megFm8kI9uykoV50ebhKTU1J4ZkDSTIjxVI?=
+ =?us-ascii?Q?BseKfMen/0sjnkQSzUkJ5E/IRFTCPF/QdWoAjBICQNdtuFgfM2e7SM0k7b/S?=
+ =?us-ascii?Q?YlgqNWzBGrDszMaC+oIYEMC3Jgs4yLGe/8q4YhtN9hwaacOGCeYlzdm2mnD9?=
+ =?us-ascii?Q?AYkC0rar5GQOKmb6DQVHwSsvAFZsCSctrf8lF+UpgC+yqCqC/rb/yFSNFHMO?=
+ =?us-ascii?Q?ebXojljdBIHuBOllRXzwoR919d/HV+PPxp03oOuprAqdcGK5SKrKTWmfnxiA?=
+ =?us-ascii?Q?TUfW4lkpaWGIY62tJv/fbi5/pgbj8B/Pk+K1lbkceC1GAgoeeD69EoZkPnL+?=
+ =?us-ascii?Q?P5PKF/hhmgaCP/3VM5U5Bj6Aqqc7BZa/Ga7NHvrCTki6+3A0EfSQg66v5jx9?=
+ =?us-ascii?Q?nzUPj+mZbZznQQjsc6Qo3gMsb1yPBbht5+zhP2qxAThPDZBX4j9Yq+B0vabz?=
+ =?us-ascii?Q?GlVG4mcRiI9GUPEmoDSodU1o/VWqu0inl8Gr6c7sQXg8LbiU9GNjGY3JNkz8?=
+ =?us-ascii?Q?KemD6Ybaf3dQ9WrM+wx9enLyPP20a1N3KoHgcmpyikIp+7c34o2L/RcpUBfM?=
+ =?us-ascii?Q?S0f6TGmOLjWKrWlL0ikD/C4kTwXhfCHTqsI2OA62unojA5uBFSFULXykW1jC?=
+ =?us-ascii?Q?hnFGL0auXrCZ/Oj1p0jaU8DB0K1mkI01THzzQpGNJl3D3vRHA39DaBTob21M?=
+ =?us-ascii?Q?s8jPf3gAE62xl8BAYlJ863sh3OdoQ9TUapnMorMItRiNDfe8UyrvC3lj/0JO?=
+ =?us-ascii?Q?K/zpKY9AJ9nMqqeO9GDRjnsMVa8RennIp6Y634HXunkhxKIv7QyuoaShh6AK?=
+ =?us-ascii?Q?uvbGkaAjaNggYeGRxh4LL8pbS6KzYOQ51m22JmuhR96j8I6iBTlUEPT18H1v?=
+ =?us-ascii?Q?Flh7AMial49S3AjY+kZAxKAgBUncP9m3eCy2i1/BiDo3ha3XxRweUbC9Y343?=
+ =?us-ascii?Q?xmhZhSA2VpBW+zl7ulvlLmIFLWU97l7qEWf9y4RbKsv82o/t6i9ymBkMngZS?=
+ =?us-ascii?Q?ZtLx/JKMBKIdaTF/0ZHxl0lNiWckT0vtl8JeEghA?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b9b1b85-c791-4bc9-e9bb-08dd870cade7
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 10:57:48.5371
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /AdPwgY76Nnn1b55xTj6CyA+5cnHAggWL1jb27NSHJQ0CFx8Tsrc0NcFGaru95wHU6GX6AqXpFSLLkAgJgNyMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9060
 
-On Tue, 29 Apr 2025 at 10:03, Johan Hovold <johan@kernel.org> wrote:
+On Fri, Apr 25, 2025 at 08:41:07AM +0200, Primoz Fiser wrote:
+>Add initial support for PHYTEC phyBOARD-Nash-i.MX93 board [1] based on
+>the PHYTEC phyCORE-i.MX93 SoM (System-on-Module) [2].
 >
-> On Tue, Apr 29, 2025 at 10:50:55AM +0300, Abel Vesa wrote:
-> > On 25-04-29 09:23:46, Johan Hovold wrote:
-> > > On Mon, Apr 28, 2025 at 05:17:21PM +0300, Abel Vesa wrote:
-> > > > On 25-04-28 14:47:04, Johan Hovold wrote:
-> > > > > On Mon, Apr 28, 2025 at 11:06:39AM +0200, Aleksandrs Vinarskis wrote:
-> > > > > > On Mon, 28 Apr 2025 at 09:45, Johan Hovold <johan@kernel.org> wrote:
+>Supported board features:
+> * ADC
+> * CAN
+> * Ethernet 2x
+> * EEPROM
+> * eMMC
+> * Heartbeat LED
+> * RTC
+> * RS-232/RS-485
+> * SD-card
+> * TPM 2.0
+> * USB
 >
-> > > > > > > Does this mean that the incomplete LTTPR support in 6.15-rc1 broke
-> > > > > > > adapters or docks with retimers in transparent mode?
+>For more details see the product pages for the development kit and the
+>SoM:
 >
-> > > Ok, but my concern is if they may have worked in a default transparent
-> > > mode.
-> >
-> > But if they are by default in transparent mode, doing the setup to
-> > transparent mode will not break it in any way.
+>[1] https://www.phytec.eu/en/produkte/development-kits/phyboard-nash/
+>[2] https://www.phytec.eu/en/produkte/system-on-modules/phycore-imx-91-93/
 >
-> It looks like it will, see below.
->
-> > > > X13s doesn't have LTTPRs on-board so when reading the caps, LTTPRs count
-> > > > would return 0 and none of the of the transparent/non-transparent setup
-> > > > would happen.
-> > >
-> > > But this is the crux; does any off-board LTTPRs in transparent mode add
-> > > to the count or not? If they don't, how would you ever learn that there
-> > > are any LTTPRs? If they do, it seems we may have a problem here.
-> >
-> > Count gets increased either way. It doesn't matter if they are in
-> > transparent mode or not.
->
-> Thanks for confirming. So then it seems we do have a problem as since
-> 6.15-rc1 drm_dp_lttpr_init() will switch all LTTPRs to non-transparent
-> mode.
+>Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 
-In this case, let me add Fixes to the entire series. Do you think we
-could land it in 6.15-rcX then? The second option proposed to roll
-back current LTTPR support and wait until 6.16 will completely break
-DP output on all X1E, so it's very undesirable.
-
-This series was tested quite a bit on at least the X1E/X1P devices,
-both with and without docking stations, as it is also (v2 iirc) part
-of Ubuntu's concept tree since little over a month ago. You have
-confirmed that x13s also works with this change but without a docking
-station. If someone could confirm that x13s with this change does work
-with a docking station as well, it would be safe to merge the entire
-series as fix to 6.15, correct? I could reach out on #aarch64-laptops,
-perhaps someone has both x13s (or another qcom-based non X1(E) device)
-and a docking station.
-
-Thanks,
-Alex
-
->
-> Johan
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
