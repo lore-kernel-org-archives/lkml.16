@@ -1,147 +1,131 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230F023E340
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D1C22539D;
+	Tue, 29 Apr 2025 16:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944345; cv=none; b=CR8EsjFgJTy3F1vOJi8+Hdd1LY1byGNZSv/fSc1tFx3h8Ad5ZQf5bPQysy+QrS5qxb7/0XkX3mSiI8EtxtOnnzY3Gp8a6HEXOD0LxYpMK1RGV522POwUSCNH3wDUfH2ELn44gaowkQDDN5JJHy40ceyCnFjg7ac/aNld2dBVJsA=
+	t=1745944368; cv=none; b=LyhvopFmnlbUA2m+4a2SNysb5cAPygC3AA+2OweOiRVhhN27CRa4LX/DNf3qkPeNKm1l4It+WgXFpJ44WnAs079XAKy7bRlpswCa06qyj7Al/MGhc+/AKEhOz6lwg4YRCEU5suuniGy97boswLrOF8iLlE+QwA0HAYfeOWIWqZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944345; c=relaxed/simple;
-	bh=kxJijwJOOpyMIXcfCls3QqWyToNqydz2DXvZT0qcO1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E6Tv1TlCTgD/iRoWuaYkKgdhAes5pI4EvNQVew5owkq7fI5it5TNs3SRaCvuSQ6gKNxv9lePr/6u8i0yYFY41yeiSc29+d+ca2VEe1nvB635dpYTidbdBVvZQYFUrIfuINdUNoq62T3VfQVcfr+T6MqM5bMsxc4YK8mwbAbTQnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ELlwHHls; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745944368; c=relaxed/simple;
+	bh=feUIYWjgsatR0wsDBnR320zo35FzttrKF/ike0EndGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWBSxcAhV9ytSHIaFGohhOjjCnsqqjOJ4hRqPu2tlYanG1u8MnA3sBb19gbZlwvtsrNWqbj104rxyvAEF1MwnybCOlylbCGbrCFkEyf0XPXSELU9Bq53lGP+HUlIZ8+oPpSumOSmmaOfvG4C2bLgN6TiXn6zEioWnZld0q0l80c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGIHmtRo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ELlwHHls"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-401c43671ecso15965b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745944342; x=1746549142; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VlzV3aC3Ajcd4WwT0NS/l9ibLgDyq3ihO7Tsirhk0II=;
-        b=ELlwHHlsrW4x6siALslx2SQSxA7l8//pnnn/r1cacg4Kp8Q0AQNXaXrbSf3ZBBtZ/3
-         3L4dHQ5n40xTkPUBXHg1/eBR9k9ZvcPm6rkqk8xY/utc/aUw/JA/7wEQ3k0QgT5MGeTI
-         6V2d9iZNAnfZLOWkumB35RahyHKZHYWfuws+Ml/rsrrtVSduWe4YjUn2kiCo4GnqEIEu
-         QzbtP8TJkDFUa7cU1kCZevOyOFBB++REcnfhAaTVIjn/FoVVuYflKgBCUMY1hDrkH9Ek
-         V+zpPoBAr43pC9qnJa9xkuXyJja30QtwgDo6c27ACc4ToMl5dGZv69nFXgdE5FH7zC1R
-         AAiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745944342; x=1746549142;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VlzV3aC3Ajcd4WwT0NS/l9ibLgDyq3ihO7Tsirhk0II=;
-        b=v4Gc9CgL58fyFKdmRA5PrvVQ0inG5NUsnjFQyzzrr8n4tlJZ5y/G0royRFrYBZMROy
-         /4YUfdm4EmKMiA1y5HI/lYTZpb+Fqp7jS5Aw2/DqDHvwNkQAFk2s/8UPQ/UG2TH5txMB
-         PLXNSj817VpKfax1yIkXlOaRqn9Kkol7oj8Z44DESc5Tm9yA8Iq9rPKVBTWPAL336Vdz
-         CQu9hjHoEq9sKliMPH6GZqvcrmvV3tbx14OVEq7pXfHwI5WfqyfPpxLXYb3DnMq2Ohxy
-         cyortjpVV5IqBo4ahJHA8ecH+quDO+kgQ0fqG9k7mQFD9RMLLAjvM4U6O0CxlOUTETxr
-         VBMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwr0ZvkrZMt8WXS1Vl/rSRIhyyr7zdNEZ3xndotD2OIHh6Uq76yMH04NutyVaxAJNHtYX4HCDu5iwchmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaJHJv18Y/PPfBnXuVSoRCUFA+P489+WJCahQKd7PPf9Y8nfrL
-	koPW2T7AQVMRRKawaG9DQPKew5Eh+dx9Be7D817s8l4/13MPCQ80TyRb4Ry5kDo=
-X-Gm-Gg: ASbGncvMS0WpOV1obfngYd3MpLdPkXb81xQfR6IMjrdU/GvutaWGfO4OqczuW9Qtz//
-	6Um6qJdaC5G6Zde9XRYqrMhI479jB3ZkwGnv8M9z127ad4mOUwHQZGpxgFRFRRv8+ExXv69cnoJ
-	dkZjosdLiPERNOtH27q0K/QpjFJQD7fE/QvahUA/giSiVxBQvVk01Wnw33H8q9v6mujzye2BItr
-	a4ScVyo+z37vKcCJsqoVNRDW7LwLOdRsXSNGduYhziQZDrDU+1IhjBwBdSN8faXUMvZTn8wBv10
-	6x/JFwjymgxSebvlWGtMIqj3EmFMJEsXgN8XuhggQa6vXn59BUg5aWa6iBdUde0JdVurhpt+sis
-	KPviU6ySV2aktY775Og==
-X-Google-Smtp-Source: AGHT+IECXLQfMw4IHoT8sY1k3B5PGYoLM8POTBaiM9WXU5IhYjgdUCA4tjARzeoztfzPvG3hb3MlHw==
-X-Received: by 2002:a05:6808:22a9:b0:3f4:11b3:206b with SMTP id 5614622812f47-4021103ccb9mr2215175b6e.17.1745944342109;
-        Tue, 29 Apr 2025 09:32:22 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40212c4dbe6sm315201b6e.49.2025.04.29.09.32.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 09:32:20 -0700 (PDT)
-Message-ID: <ad489cc7-8c89-44fa-bcec-5c4b9cbcab74@baylibre.com>
-Date: Tue, 29 Apr 2025 11:32:19 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGIHmtRo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54235C4CEE3;
+	Tue, 29 Apr 2025 16:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745944368;
+	bh=feUIYWjgsatR0wsDBnR320zo35FzttrKF/ike0EndGM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gGIHmtRoeMc5skK+Uret9+sNF7RFNy3BEWPrbyWSDJ+5SRrf7mtw1bAaMaUc6Xpj8
+	 cYPvdk+7/ciq2q8+VgFYyN7TT6ImhpLntVfyBRLNgAZjSDnD9Id6MvYJbX/7QMkwCm
+	 OActXunbzjeRJyiT8rrBVDY9bRcxWjIjlkS79dq1HDDVQSGzoyxM2WU1eGEaBF3nEo
+	 Ov0OcO8fHJCJgb5p86Z9lkWvoV9LqaeYYsDCuW1pKfMqxL2G7G7BdHP0mkU+FKXbR4
+	 cOVOWOMT+9kujdP/3J71kDyjtlIDIzSdgSPSHd7D6d+NXNL58zUquXaMgCAakyuoel
+	 J6QVYo/6Endyw==
+Date: Tue, 29 Apr 2025 19:32:33 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
+	catalin.marinas@arm.com, corbet@lwn.net,
+	dave.hansen@linux.intel.com, devicetree@vger.kernel.org,
+	dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com,
+	hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org,
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
+	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com,
+	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de,
+	robh@kernel.org, rostedt@goodmis.org, saravanak@google.com,
+	skinsburskii@linux.microsoft.com, tglx@linutronix.de,
+	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Subject: Re: [PATCH v6 11/14] x86: add KHO support
+Message-ID: <aBD_IUE6xmbphB5R@kernel.org>
+References: <20250411053745.1817356-1-changyuanl@google.com>
+ <20250411053745.1817356-12-changyuanl@google.com>
+ <35c58191-f774-40cf-8d66-d1e2aaf11a62@intel.com>
+ <aBCIhQjKKyaAuvC9@kernel.org>
+ <d64a4593-c9bd-42c7-81f6-137a22ff5caa@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] iio: adc: add support for Nuvoton NCT7201
-To: Eason Yang <j2anfernee@gmail.com>, jic23@kernel.org, lars@metafoo.de,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- nuno.sa@analog.com, javier.carrasco.cruz@gmail.com, tgamblin@baylibre.com,
- olivier.moysan@foss.st.com, alisadariana@gmail.com, gstols@baylibre.com,
- antoniu.miclaus@analog.com, eblanc@baylibre.com,
- andriy.shevchenko@linux.intel.com, matteomartelli3@gmail.com,
- marcelo.schmitt@analog.com, chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
- yhyang2@nuvoton.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250429025505.3278016-1-j2anfernee@gmail.com>
- <20250429025505.3278016-3-j2anfernee@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250429025505.3278016-3-j2anfernee@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d64a4593-c9bd-42c7-81f6-137a22ff5caa@intel.com>
 
-On 4/28/25 9:55 PM, Eason Yang wrote:
-> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
+On Tue, Apr 29, 2025 at 09:06:19AM -0700, Dave Hansen wrote:
+> On 4/29/25 01:06, Mike Rapoport wrote:
+> > On Mon, Apr 28, 2025 at 03:05:55PM -0700, Dave Hansen wrote:
+> >> On 4/10/25 22:37, Changyuan Lyu wrote:
+> >>> From: Alexander Graf <graf@amazon.com>
+> >>>
+> >>> @@ -1300,6 +1300,24 @@ void __init e820__memblock_setup(void)
+> >>>  		memblock_add(entry->addr, entry->size);
+> >>>  	}
+> >>>  
+> >>> +	/*
+> >>> +	 * At this point with KHO we only allocate from scratch memory.
+> >>> +	 * At the same time, we configure memblock to only allow
+> >>> +	 * allocations from memory below ISA_END_ADDRESS which is not
+> >>> +	 * a natural scratch region, because Linux ignores memory below
+> >>> +	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
+> >>> +	 * allocations, we must allocate real-mode trapoline below
+> >>
+> >> 						trampoline ^
+> >>
+> >>> +	 * ISA_END_ADDRESS.
+> >>> +	 *
+> >>> +	 * To make sure that we can actually perform allocations during
+> >>> +	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
+> >>> +	 * so we can allocate from there in a scratch-only world.
+> >>> +	 *
+> >>> +	 * After real mode trampoline is allocated, we clear scratch
+> >>> +	 * marking from the memory below ISA_END_ADDRESS
+> >>> +	 */
+> >>> +	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
+> >>
+> >> This isn't making a whole ton of sense to me.
+> >>
+> >> Is this *only* to facilitate possible users that need <ISA_END_ADDRESS
+> >> allocations? If so, please say that.
+> >>
+> >> I _think_ this is trying to say that KHO kernels are special and are
+> >> trying to only allocate from scratch areas. But <ISA_END_ADDRESS
+> >> allocations are both necessary and not marked by KHO _as_ a scratch area
+> >> which causes a problem.
+> > 
+> > Yes :)
 > 
+> So, on both of these, could the submitters please add or revise the
+> comments to make it more clear?
 
-...
+Is this one clearer?
 
-> +static int nct7201_init_chip(struct nct7201_chip_info *chip)
-> +{
-> +	struct device *dev = regmap_get_device(chip->regmap);
-> +	__le16 data = cpu_to_le16(GENMASK(chip->num_vin_channels - 1, 0));
-> +	unsigned int value;
-> +	int err;
-> +
-> +	err = regmap_write(chip->regmap, NCT7201_REG_CONFIGURATION,
-> +			   NCT7201_BIT_CONFIGURATION_RESET);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to reset chip\n");
-> +
-> +	/*
-> +	 * After about 25 msecs, the device should be ready and then the power-up
-> +	 * bit will be set to 1. If not, wait for it.
-> +	 */
-> +	fsleep(25 * USEC_PER_MSEC);
-> +
-> +	err = regmap_read(chip->regmap, NCT7201_REG_BUSY_STATUS, &value);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to read busy status\n");
-> +	if (!(value & NCT7201_BIT_PWR_UP))
-> +		return dev_err_probe(dev, -EIO, "Failed to power up after reset\n");
-> +
-> +	/* Enable Channel */
-> +	if (chip->num_vin_channels <= 8)
-> +		err = regmap_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
-> +				   GENMASK(chip->num_vin_channels - 1, 0));
-> +	else
-> +		err = regmap_bulk_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
-> +					&data, sizeof(data));
+	/*
+	 * At this point memblock is only allowed to allocate from memory
+	 * below 1M (aka ISA_END_ADDRESS) up until direct map is completely set
+	 * up in init_mem_mapping().
+	 *
+	 * KHO kernels are special and use only scratch memory for memblock
+	 * allocations, but memory below 1M is ignored by kernel after early
+	 * boot and cannot be naturally marked as scratch.
+	 *
+	 * To allow allocation of the real-mode trampoline and a few (if any)
+	 * other very early allocations from below 1M forcibly mark the memory
+	 * below 1M as scratch.
+	 *
+	 * After real mode trampoline is allocated, we clear that scratch
+	 * marking.
+	 */
+	memblock_mark_kho_scratch(0, SZ_1M);
 
-Why does this use little-endian format for data but the later bulk_read of the
-same register uses CPU-endian?
-
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to enable channel\n");
-> +
-> +	err = regmap_bulk_read(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
-> +			       &chip->vin_mask, sizeof(chip->vin_mask));
-> +	if (err)
-> +		return dev_err_probe(dev, err,
-> +				     "Failed to read channel enable register\n");
-> +
-> +	/* Start monitoring if needed */
-> +	err = regmap_set_bits(chip->regmap, NCT7201_REG_CONFIGURATION,
-> +			      NCT7201_BIT_CONFIGURATION_START);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to start monitoring\n");
-> +
-> +	return 0;
-> +}
-> +
+-- 
+Sincerely yours,
+Mike.
