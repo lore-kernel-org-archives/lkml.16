@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D1C2DC123;
-	Tue, 29 Apr 2025 23:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0242DC13E;
+	Tue, 29 Apr 2025 23:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970852; cv=none; b=cLIJ4E+pIuoTYhngSEM2xEaiPXNof9V+odut5GPgMVWYttGHd7eetlwLJrlGbe7fxM1Gt9wB5VlTa04jb1Lt2IoqmTP+A8QOzqZSPYXm2TY+MxyOwUxTYyfR9ZaPVKn3EaDQRCa6TtN8uFQfxgkGOgPW07dnVCKYCL7rrEFmY5M=
+	t=1745970853; cv=none; b=k8f36QA4cewSQQYb2AMSrDER1TrnBoPRZugBeWVNfjyECJ6bsUmuVM6OBVSmOOD6KP5gEMvbukbIBKHUIDpoIWUbuvuETTsHD9ls/pwsyHR57EWLoPnBZDLLctJ8eDZhBLjaX0IK5MbP1aeboZmt8pYCiVPdTT7PMqhOSvacHbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970852; c=relaxed/simple;
-	bh=oSHN2FSzFVsU3MkAOdioPpqDfhvjfWKuz6HOzPaI6FI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AUWyoNlxGUjemKHez+sI602BnQO801pVfYTLrs/2cEu/+mBtzIvLMxasELUxmhIvfjfDNd8slu/MJZfZBS+tb5Vv6CRR9ag/Y2BxRhX+7+xusOhFd4RpbY0W2+eZfLarq9xwCrmRDp+6UMCfepxjinbf9RETn18va+8SJUcheLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfevGkcd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745970853; c=relaxed/simple;
+	bh=cdrSVJK+t/2IJ1ZnwyEjnT3o63rwsICsorcHnPWG51s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y9hABkB1bttB3W9ewhkCqb5WjUYGUd2AnLttIgCgmRlNFNn9OCicOHdGRA/4/lXL0ZSk0pgxvKbM2kNATBhjWp1MeiSYGj61inLyL+ggY8IBIjVhoips68QBsE+WDAJnHsjkMfltNPIdc947IuH/XtNDb0KQifRaxRRNhK9EIRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jc8u/4WL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfevGkcd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1353DC4CEE3;
-	Tue, 29 Apr 2025 23:54:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jc8u/4WL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2636C4CEEB;
+	Tue, 29 Apr 2025 23:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970851;
-	bh=oSHN2FSzFVsU3MkAOdioPpqDfhvjfWKuz6HOzPaI6FI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bfevGkcd+KAPt+c1OBdBJw7qHe6hLnIbQSVuAcRyXZZJytYqgh1/doJTdkxK+mvY2
-	 hl400mbGzNr7DVApLt7owDJEQsXGYa7v5FSkc3aaASoAzhksMj45RQENy7IrUfUnyH
-	 YcoBskj5XZPsMpTQyfMTlyT4wF3CqYH/cvepvgSbk/b9P+xr/BdHDmrgvbUGDMgH7R
-	 rUxnMXarP3zpPOk0PACjL4OIVEr9g1QgrAE6qyDwREYYO+15pSkxFbDSwOkX4aQD/a
-	 moNg6CazvUF+JJIJWJ/uREFsVd6hBbKemnZdolhRiTtE0OCakAwuLjoJLvKZuNKRYO
-	 szc+VtiRf8CRw==
+	s=k20201202; t=1745970852;
+	bh=cdrSVJK+t/2IJ1ZnwyEjnT3o63rwsICsorcHnPWG51s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jc8u/4WLlX8o6NOntmEGb4UzCiRYgX4EBNIlyRdkG7onj5soGYHQpoFCA5PiPGbsx
+	 /kUspEM04lh9KHzqByA40OR1vecdh0uNknQctXDInqUxqxuR1s9/hpWoGqaTKuqxT6
+	 LOpok1ax96dA3xEibT5M0SMfWiuf5ZyzKds98vfIJ1i4y871nhKmqddEYMdLSpOSen
+	 bC02dyR1zhYq6z7E1fn6+XVftUqcefcIVEJQWRjbtQ9efu2jc49Po+IDtb4EM8K8V9
+	 gvw1bv0XZD687Uf/zKdJDlEAv4t6L6TaVligNc+aT+cN5pYKAYyVaSSQWsqSWZQdyQ
+	 wUucWV2iBOuhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Bogdanov <d.bogdanov@yadro.com>,
-	Maurizio Lombardi <mlombard@redhat.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux@treblig.org,
-	ebiggers@google.com,
-	ardb@kernel.org,
-	viro@zeniv.linux.org.uk,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 1/3] scsi: target: iscsi: Fix timeout on deleted connection
-Date: Tue, 29 Apr 2025 19:54:03 -0400
-Message-Id: <20250429235406.538466-1-sashal@kernel.org>
+	iommu@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.4 2/3] dma-mapping: avoid potential unused data compilation warning
+Date: Tue, 29 Apr 2025 19:54:04 -0400
+Message-Id: <20250429235406.538466-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250429235406.538466-1-sashal@kernel.org>
+References: <20250429235406.538466-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,55 +51,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.292
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Bogdanov <d.bogdanov@yadro.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 7f533cc5ee4c4436cee51dc58e81dfd9c3384418 ]
+[ Upstream commit c9b19ea63036fc537a69265acea1b18dabd1cbd3 ]
 
-NOPIN response timer may expire on a deleted connection and crash with
-such logs:
+When CONFIG_NEED_DMA_MAP_STATE is not defined, dma-mapping clients might
+report unused data compilation warnings for dma_unmap_*() calls
+arguments. Redefine macros for those calls to let compiler to notice that
+it is okay when the provided arguments are not used.
 
-Did not receive response to NOPIN on CID: 0, failing connection for I_T Nexus (null),i,0x00023d000125,iqn.2017-01.com.iscsi.target,t,0x3d
-
-BUG: Kernel NULL pointer dereference on read at 0x00000000
-NIP  strlcpy+0x8/0xb0
-LR iscsit_fill_cxn_timeout_err_stats+0x5c/0xc0 [iscsi_target_mod]
-Call Trace:
- iscsit_handle_nopin_response_timeout+0xfc/0x120 [iscsi_target_mod]
- call_timer_fn+0x58/0x1f0
- run_timer_softirq+0x740/0x860
- __do_softirq+0x16c/0x420
- irq_exit+0x188/0x1c0
- timer_interrupt+0x184/0x410
-
-That is because nopin response timer may be re-started on nopin timer
-expiration.
-
-Stop nopin timer before stopping the nopin response timer to be sure
-that no one of them will be re-started.
-
-Signed-off-by: Dmitry Bogdanov <d.bogdanov@yadro.com>
-Link: https://lore.kernel.org/r/20241224101757.32300-1-d.bogdanov@yadro.com
-Reviewed-by: Maurizio Lombardi <mlombard@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20250415075659.428549-1-m.szyprowski@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/dma-mapping.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index ab2f0ceb1e23b..b610c99c9c2dc 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4168,8 +4168,8 @@ int iscsit_close_connection(
- 	spin_unlock(&iscsit_global->ts_bitmap_lock);
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 87cbae4b051f1..ead09620e2138 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -895,10 +895,14 @@ static inline int dma_mmap_wc(struct device *dev,
+ #else
+ #define DEFINE_DMA_UNMAP_ADDR(ADDR_NAME)
+ #define DEFINE_DMA_UNMAP_LEN(LEN_NAME)
+-#define dma_unmap_addr(PTR, ADDR_NAME)           (0)
+-#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { } while (0)
+-#define dma_unmap_len(PTR, LEN_NAME)             (0)
+-#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
++#define dma_unmap_addr(PTR, ADDR_NAME)           \
++	({ typeof(PTR) __p __maybe_unused = PTR; 0; })
++#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  \
++	do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
++#define dma_unmap_len(PTR, LEN_NAME)             \
++	({ typeof(PTR) __p __maybe_unused = PTR; 0; })
++#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    \
++	do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
+ #endif
  
- 	iscsit_stop_timers_for_cmds(conn);
--	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
-+	iscsit_stop_nopin_response_timer(conn);
- 
- 	if (conn->conn_transport->iscsit_wait_conn)
- 		conn->conn_transport->iscsit_wait_conn(conn);
+ #endif
 -- 
 2.39.5
 
