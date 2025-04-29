@@ -1,139 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF052BD59D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F4BEEB5
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745924162; cv=none; b=Hupyb5+393kfkYS1fbOct5GWEC8f+mTRKkIO7CMaDt+ZVlGQ3RqORrmw3b3RsZG4R1BVQronjevqCIuKuq1/BdmnzMQtGJqaxSKu5ufltWWl4WgUj6K/nPPyzVfZ2armznfyuopVChZkmntREJBSn3F727Ur2lhhERtfPRo0wf4=
+	t=1745924237; cv=none; b=HaGjcQwCt2XFskLmMJ9jWjBjsde5gdpgd+KsgQhLCCgBAst4ilavRn9uKUz5pswPyinEyTv1Ur2yLutwYUXLArqplOkzUHwH+Jjeq+/29CgUpkK/L3Dh2TNMxg/8SmTe/wcvih9nF2f01LHBXtG64ulsN+Y23yaOhRSg0JAs3co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745924162; c=relaxed/simple;
-	bh=2XOsrJ9QxJ2xmMD7aI3JwMzLwhIcEOOkFjqywzEOBXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewKZMHwn/HqiB0nIilI7LB00fnXH9MzX6lq6tYdSoJ5qFC37xhyooB0IMswvLqHg324LkQ26unPNKFWxAx7cRx42rQwQRsVhY91p/xdTrVj4aQVkI8yslQScfzIeZ4MFfbzSaYvOyVOC3tsHy/cJ7fYXsXnqUraFkTFqNC7ueOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CFmEnN0t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745924237; c=relaxed/simple;
+	bh=Q3IUv1IptwoqxtcxxQnCfv/z8U0PZ19+CT76FvE/MI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=balg0NoFRt9ba3fz+bh79iqt+v/1+tQHfO/n5QXmAexyd53BAj2qBJL/Orak26y6wCJWhxsh+Ilmd7PF/qhXrfuW33/awv/XuVA4q894bdAHXRjmqM74xyP0v+4V++8JjiXXpAfk1Yq1h8OWZsrjoFYfxbVQU0iUdvqVcTG95eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FWFVsorX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CFmEnN0t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745924159;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=19RTGAYgSCXwR1/QnePt6pjSqRpqNVt5Z/wpug3TfME=;
-	b=CFmEnN0tx48xOF29CTLyNjnpLmCOW+ztzbOGM5ICNbzkTVok9q1VCtBIKox4lK+BmzgPUb
-	BvxTI73tRli4dnnAqTnbRApJy122VvXss7HUMJiEVpnw7093G1DYyQ0QzEktBmWumgOU41
-	gZy3OpUeISetbUItPCqskN0VA0iazMs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-94-Vkpxu_RmOH-hQt83GeXvuA-1; Tue, 29 Apr 2025 06:55:58 -0400
-X-MC-Unique: Vkpxu_RmOH-hQt83GeXvuA-1
-X-Mimecast-MFC-AGG-ID: Vkpxu_RmOH-hQt83GeXvuA_1745924157
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso35329975e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:55:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FWFVsorX"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9ahUD025060
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:57:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RaIsk3krAO50FiCRlyJ2JPF+E8yq6SBCaXeUPT0TyQY=; b=FWFVsorXnJEHGeOE
+	BInV6qWg8TV+/qsACwdFnOMm5gAf+twqVkl4hO4SkI+wB7oTHLZZgOdNfEAg+y8/
+	XcdYDs/N8/JkDF0FeWALxtm0DXxFo9QhmTmyLtcgXe4VuwXe0IvuKYPs5AD9fnj0
+	vSMTcRV0kVxi4MirRxFWiURZTtwj0EVJ97POuxRGf1z9sgGhYSqzXE6edHQblZdE
+	Kq6xd1W0e8WwQfs1B0FuLta1KT/r/IIqzC3vCj8G5Qe41znJyKZ11b9tJBQ0tgis
+	j3zbng/3bdBDYGjxQn545V+MS7UY3igzmJCauyjpF9WMr1+GhUvXhs4wLbV42P8q
+	ylm5UQ==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqmf6c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:57:14 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47ae537a9d6so8232981cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:57:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745924157; x=1746528957;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1745924234; x=1746529034;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=19RTGAYgSCXwR1/QnePt6pjSqRpqNVt5Z/wpug3TfME=;
-        b=TAVis2uTQ0e5XwhvwfTYLGL7spasJnMcfD77h/J5zDdl1hpTvAzR+0c/Poli9Zxqco
-         H/QMVbby29IupSQrYmH1V8vikAodl7lLAoHEZbcGeDYcabsQb9/aABGGm96MeSPD2gsZ
-         TfR0vLx/lRK7F3uOUbhRIdNhfYO7Cx17/tYDS3jOaHKxXykgU3QkzyqGPi0Ve5KBRoEX
-         SEdV4GYjMqoiXrSBe6FzsXRFNN0E5Jkp1ah3X5ycetd0fYcYQqShYIs4Fb25f+BRnGn2
-         eU39WLG+rP+qrOnbW+bclENUSttoAkXEMdXlLxmMFu02YndUqIyNZor9rxOzSfiyPddy
-         XeQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGtaqaXjsy0RFugPKwx17PB2LNLCyDNwQoivSvvBVnCEM/VqHPVlz8y3iWKvOQswudSTJX014ReNEdMCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym08hhfTrBkTXN9nAPb7/90xuPgXJDlfO5Haxn14hItgHUm1vV
-	9JM6xly6XEKsoiZ/l1pbrK+TXp3PYcmsYWG2Ugv6h+pz5KOCQ5CwmlumE5nvYj5m1e+Y+rK1eDO
-	kVI7RLDIE+JZgkrm4YOQIRIeWluvDFCFbDaad+RKi/wDLSKrREDgo7bH0gFGexA==
-X-Gm-Gg: ASbGnctQVgt11+oS9xT/0caeCVUJD+5cRPxFKNCQUdintEMiSx0vNqzZLu1ABnc+8aA
-	jeY69xWm9KlZY9U2mRz+zi8DxaRdxGR3kibak5kdrPDxUa9/M+759aj2j4CJvwZ5WSXcYRjawRX
-	znKkfJlngT2zuNTHvlJxnGYvPV8sohQ8Y/ibyfXwLQO5T4Mn1XRGdTNO7ZlqHFomDup2Hv7UaUP
-	IEeQE8DfP6WPhGWfS46J5TWReZwAVA2iykqk+FzWEVlM90q2hr8kfkEKIysnAl9iVB/DJnmMwfR
-	3YUruQ==
-X-Received: by 2002:a05:600c:384a:b0:43d:160:cd9e with SMTP id 5b1f17b1804b1-441ac85cfffmr30415235e9.17.1745924156962;
-        Tue, 29 Apr 2025 03:55:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNHhPyQF+kfEhHY8Rir1hFUnKPAus/tT9SNHKVUQOtQwHP4Id2+yIhepQRoyIXOCX/07G8ZQ==
-X-Received: by 2002:a05:600c:384a:b0:43d:160:cd9e with SMTP id 5b1f17b1804b1-441ac85cfffmr30414975e9.17.1745924156638;
-        Tue, 29 Apr 2025 03:55:56 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a536a1ddsm154027115e9.30.2025.04.29.03.55.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 03:55:55 -0700 (PDT)
-Date: Tue, 29 Apr 2025 06:55:53 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: Cindy Lu <lulu@redhat.com>, michael.christie@oracle.com,
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL
- VHOST_FORK_FROM_OWNER
-Message-ID: <20250429065044-mutt-send-email-mst@kernel.org>
-References: <20250421024457.112163-1-lulu@redhat.com>
- <20250421024457.112163-5-lulu@redhat.com>
- <CACGkMEt-ewTqeHDMq847WDEGiW+x-TEPG6GTDDUbayVmuiVvzg@mail.gmail.com>
- <CACGkMEte6Lobr+tFM9ZmrDWYOpMtN6Xy=rzvTy=YxSPkHaVdPA@mail.gmail.com>
- <CACGkMEstbCKdHahYE6cXXu1kvFxiVGoBw3sr4aGs4=MiDE4azg@mail.gmail.com>
+        bh=RaIsk3krAO50FiCRlyJ2JPF+E8yq6SBCaXeUPT0TyQY=;
+        b=d0qvTLb0PuXQkFWoMm8crhUOvM9ov8B4QnT4CBJ2YE0LBF5Hm5tDts7UwOmLBYwMud
+         cUPGxIrMwetiHpfqs/Hd1K+a9eiaZT7IJ54vL1fZdls3vZQAKrpKFVdI7RGm1sW6ejJY
+         x9xvd1nV6W9EckUM87O7O0SmcFYnCRNNzeO1N/0GL2zodC3wCzdBspPnDI0J4e9yYK9c
+         RRbBhhyDPp9mYWIm5BiCWv1qG/nXyp6jnZlQciWhOZ0UDzeQ9EudNOmrK13Sov3BXkot
+         G2KSY82YvLOXREVOdLtr48QwRSGG+IEmo6nLRVMBR4k1/EjVTvNOQJXoOY6725SLyigC
+         oGGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcC9cHafJASsHJTW7co/jVR+M5S510QyPQoeudOc878+kBhsC8d5sHapyWcvjTmbcoRTKNj6UZjeC8Kt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKCdlyQ4qQ3org/4M+jR+ekJAKZID9Vfvs0CKnbvM6Ic6Qcd7r
+	bUobUsChSWZhHBVSJ/xWaeWG8HFzVHqM29OdCYtmiytNmwe1oCyZzLafP0S1vOBGZnFiPdrML0n
+	yN63/Al7YiLLkJc3V9Whtl1eiO1N8KHvRXI3g7I+Y0NF/60Lr+Ya8pXpLvhbwX54=
+X-Gm-Gg: ASbGnctDoGh8vqn/TWAqpO5g7zxOu6Lsk4Q0r79wWmd14H8bDOdgbzRl45Q+rnZYxwk
+	zykdAB+bdItudd6YrPfdJbUTAdBlPmZ4AsV8cHedqJiUEySWXUEy6Vq9n9KgBNwlZTaNjS1s8QE
+	HImmTnI1jlpRrN89G97Mb5LcCO2w3+LhRfIiW4P7xzA0AuSTLkM1xe2zaBTDOcUluMCezZBRUBF
+	aK6y0NQDOaYOjPV8QZQOM4cKo2Brqz6mFLoUcaoLqapakj3DzsUvpoN/5PkY+g2hypj+nE0KHuk
+	1ypKtOjRnrenJ2p9lUvwskwrjJ2iPpIs2uqZaPgkyYIwrlyuGlPqkp8/u7PTKgIAng==
+X-Received: by 2002:a05:622a:1822:b0:475:1c59:1748 with SMTP id d75a77b69052e-488682fca48mr15300731cf.11.1745924233839;
+        Tue, 29 Apr 2025 03:57:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAGDiKbYXYI1YKP03aH36Y/ijWTB1LGNtNpA7B35+8pnVEETxrISLoviJLQZ9SaGON3KQ2KA==
+X-Received: by 2002:a05:622a:1822:b0:475:1c59:1748 with SMTP id d75a77b69052e-488682fca48mr15300571cf.11.1745924233440;
+        Tue, 29 Apr 2025 03:57:13 -0700 (PDT)
+Received: from [192.168.65.43] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8cb3sm771648166b.93.2025.04.29.03.57.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 03:57:12 -0700 (PDT)
+Message-ID: <af6200f6-2abb-432d-a196-01a7e77f2649@oss.qualcomm.com>
+Date: Tue, 29 Apr 2025 12:57:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEstbCKdHahYE6cXXu1kvFxiVGoBw3sr4aGs4=MiDE4azg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/7] arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830
+ speakers amplifier
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250429092430.21477-1-quic_pkumpatl@quicinc.com>
+ <20250429092430.21477-5-quic_pkumpatl@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250429092430.21477-5-quic_pkumpatl@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA4MSBTYWx0ZWRfX3jrYMokvAd8i oDByOeJXBN5qQZSR4h6KTNz8P88ma7MzJqmoGoZh9m0Gqc64Axt3sQW2WsCpGaZblNubj4UpeBN /vniUBa3axqqHEhnYwsBm5gp7pDctGkBH1KaDi2vhgByIfHu5m/KIeTXjM2diLzr/kIvPLSI8Ly
+ TWSdnYCXKUeD9mEeftdITOLLFvA0jv/V8kjqHFRsElJ/9Myyy4eALhQr8+TvLMJoEK0kkjHusf6 3Kn3EXYEn9YsiH83nX302wbA1t5q31tYf41hg0di8gg8nwL4jsa/x3YToSNHBMb0YYfh0IK/bnK fCWoraFN7nDyt3Yqsvcw6I44xoms6jyOBqfRX0pqc8guhRuV/KGVcHc6G45CdKofAoYCkq8Zhtc
+ tAC/HKD+kw+q++SLCOw6bXzD8JQ0RagedBBSwSrhCfc1PKgatKeKbIEXHMHBfRmSSuNt9W6X
+X-Proofpoint-GUID: JnbOeLToZqgef-rIYtvEmW4VmFzRuK1H
+X-Proofpoint-ORIG-GUID: JnbOeLToZqgef-rIYtvEmW4VmFzRuK1H
+X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=6810b08a cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=hnSZPa_brixH1gHJoW4A:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290081
 
-On Tue, Apr 29, 2025 at 11:39:37AM +0800, Jason Wang wrote:
-> On Mon, Apr 21, 2025 at 11:46 AM Jason Wang <jasowang@redhat.com> wrote:
-> >
-> > On Mon, Apr 21, 2025 at 11:45 AM Jason Wang <jasowang@redhat.com> wrote:
-> > >
-> > > On Mon, Apr 21, 2025 at 10:45 AM Cindy Lu <lulu@redhat.com> wrote:
-> > > >
-> > > > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
-> > > > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
-> > > > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
-> > > > is disabled, and any attempt to use it will result in failure.
-> > >
-> > > I think we need to describe why the default value was chosen to be false.
-> > >
-> > > What's more, should we document the implications here?
-> > >
-> > > inherit_owner was set to false: this means "legacy" userspace may
-> >
-> > I meant "true" actually.
+On 4/29/25 11:24 AM, Prasad Kumpatla wrote:
+> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 > 
-> MIchael, I'd expect inherit_owner to be false. Otherwise legacy
-> applications need to be modified in order to get the behaviour
-> recovered which is an impossible taks.
+> Add nodes for WSA8830 speakers amplifier on qcs6490-rb3gen2 board.
 > 
-> Any idea on this?
+> Enable lpass_wsa and lpass_va macros along with pinctrl settings
+> for audio.
 > 
-> Thanks
+> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 70 ++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> index 5fbcd48f2e2d..43cbdbe43afd 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -19,6 +19,7 @@
+>  #include "pm7325.dtsi"
+>  #include "pm8350c.dtsi"
+>  #include "pmk8350.dtsi"
+> +#include "qcs6490-audioreach.dtsi"
+>  
+>  /delete-node/ &ipa_fw_mem;
+>  /delete-node/ &rmtfs_mem;
+> @@ -765,6 +766,44 @@
+>  	};
+>  };
+>  
+> +&lpass_dmic01_clk {
+> +	drive-strength = <8>;
+> +	bias-disable;
+> +};
+> +
+> +&lpass_dmic01_data {
+> +	bias-pull-down;
+> +};
+> +
+> +&lpass_dmic23_clk {
+> +	drive-strength = <8>;
+> +	bias-disable;
+> +};
+> +
+> +&lpass_dmic23_data {
+> +	bias-pull-down;
+> +};
+> +
+> +&lpass_va_macro {
+> +	status = "okay";
+> +};
+> +
+> +&lpass_wsa_macro {
+> +	status = "okay";
+> +};
+> +
+> +&lpass_wsa_swr_clk {
+> +	drive-strength = <2>;
+> +	slew-rate = <1>;
+> +	bias-disable;
+> +};
+> +
+> +&lpass_wsa_swr_data {
+> +	drive-strength = <2>;
+> +	slew-rate = <1>;
+> +	bias-bus-hold;
+> +};
 
-At this point, as we changed the behaviour, we have two types of legacy applications
-- ones expecting inherit_owner false
-- ones expecting inherit_owner true
+These properties should likely be moved to sc7280.dtsi
 
-Whatever we do, some of these will have to be changed.
-Given current
-kernel has it as true, and given it is a cleaner behaviour that will
-keep working when we disable CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL in 10
-years, I think it's the better default.
-If you want to change it transparently, look for ways to
-distinguish between the two types.
+> +
+>  &mdss {
+>  	status = "okay";
+>  };
+> @@ -1039,6 +1078,31 @@
+>  	status = "okay";
+>  };
+>  
+> +&swr2 {
+> +	status = "okay";
 
-The application in question is qemu, is it not?
-I do not see how sticking an ioctl call into its source is such
-a big deal, if this is what we want to do.
-A bit of short term pain but we get clear maintainable semantics.
+Please keep a newline between the properties and first subnode
 
--- 
-MST
+[...]
 
+>  &tlmm {
+>  	gpio-reserved-ranges = <32 2>, /* ADSP */
+>  			       <48 4>; /* NFC */
+> @@ -1095,6 +1159,12 @@
+>  		 */
+>  		bias-pull-up;
+>  	};
+> +
+> +	sw_ctrl: sw-ctrl-state {
+
+Not only non-descript, this node is not used
+
+Konrad
