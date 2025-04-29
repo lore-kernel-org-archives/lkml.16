@@ -1,155 +1,441 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3945429E07F;
-	Tue, 29 Apr 2025 03:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745898290; cv=none; b=PnMyM1dLcKkAw71p5DQ1i1vAeNU9LEl6FQvvmFyIB0SSChZXgOuepy4xfix7nvECByH/7s6iYQvPOMcn5k5hnirOllMSYjORHMt4R37Vogr/KUvojfAxuTHLJExXWcSwf/sozthwwi8SFEY0ueEryMUuxLkKlJdE0IOkQUqhC3Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745898290; c=relaxed/simple;
-	bh=ZHoXysjC3tKjwBhupXya9t0tvevKJFeLclU2Q2P4acg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AC8Jw1nqG2/07/wGkeMk/2AhMOhpXydZbJkUde3rIOizZDY3N0Ia/BUZPHP7nMg7Rh4Y9l1I/b2cIHu+Vb/TJQXYOWDTZi7gdElP6+r16P16qQ3sbNTvnwy2bj3zfs1pGEfngSHRGpKzJz162nfghWp9Qj51xeIQ32E7R2R6LrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dv7V7AJE; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC026187550
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745898479; cv=fail; b=GZvBpuuBp+MR5TCqzQ7ONbEQKGXEsNJ9jflQgDCc6vi6XleUKQl+p47yTZBEfG6uhidz8bRbEbxx5mUUqrueVMXIpEuVe2KEQlxPRneHBu15RKlzutyQUmDzoH8XIUVaA3G38Rrt1/VCZkhI3HcZftGnMuqNWNxBOvF0U4p9ffQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745898479; c=relaxed/simple;
+	bh=eTTfMAC4rspxdBYNcncqpLA6hd8dPILWrPn3mCgKuUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=S7BPGOGaJrr3WeWrmQCfq2XuUfLPvwWXaEtR8Ff0AzkNVMND1wqXvGx0PZGKQfZF+Kg0qG8fqSZ4BlcMHrguKzOtabpx+8xC2Z1vEgd62pfoibh0kWUZoZOZz3lrblfTBzwjX/9LIvGFv3DDmz+wkKtDeWA9NeBntsJDv57PSMQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NDs823NL; arc=fail smtp.client-ip=40.107.93.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dv7V7AJE"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2241053582dso83035375ad.1;
-        Mon, 28 Apr 2025 20:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745898288; x=1746503088; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YgYxG+vTxBAlApfr9OfPBfVTpSGem7njEO/S/STMqlg=;
-        b=Dv7V7AJE89JWOJ9BwDOFhfhCQxspaPNCxU2oDqs7/IYQ71psWWm4Gcoop9xnqzOMHy
-         mUzP7Va2b9cdN5uVU54K0n1gurtMtOUZXdJOtvTiRXskE8bcfL+LxUhaDD9CCfAs3vFy
-         jk9CpnMR18ovIsRVuCCOe9RIciafLbUJHpA0jnnRuU000M/gq31gfW12Oo31zEHZpgpR
-         LIyYeBa7vminjOeeLAtJ9Ll4/UYPYp6cftQnysPVsqfLnUug5aZxO3kP/xxOdEjeoiBr
-         CYSP7MbvdJRQrwwFh2cZcY+cmy4r/b972VPYhbRdRVqsu8pmF6lMAv2FIM+YqbAuHh+y
-         nANg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745898288; x=1746503088;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YgYxG+vTxBAlApfr9OfPBfVTpSGem7njEO/S/STMqlg=;
-        b=dWSGLPmM22FWZmgGJ4XgImndAmTMyIFIvssDkZtNFnSpKgUJG+LlMIguGTo1xtYFi5
-         BlZW7oJHe8A326FGYruOi+SFQC9mShpg4Zq6xN5wUWvgeqz/lMKzWyrx4wbSpXZUfU2X
-         d7Mk5+RdCC8j6Le3H9zkF1w1/MPJXVu5gCbhVUXUD+SpJ0VdN22CLdJlafzrJZDRhETD
-         dYh3nIZCecfcgc9hGud7YjfyIxU+n716xouhkVevzEjyX210WQ5pHCozFbBCzlr53DN7
-         l1vc/i2aa5qHsl2zL2esb4WjuaI2rdV0t/jDAGvkiGI5u1MM3AzVXENi2TSXNP8/NisN
-         cyaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdwfE5vp+z0fs+KN1BM3QSbOOyo0PJFpJ76+Nix4S+snSYyUSB7EmNr6RPezg46ClYuL5bcUhLks5iQZBo@vger.kernel.org, AJvYcCWGA/FYgtH5Kr9ndiSmve9l7grwDP2ciK6GtFATeK6asFW7qDWQRtYJEwy4zsFC212PgMXLs8R7/iKG@vger.kernel.org, AJvYcCXs+dvvWk9nMW/tvkuqYVxXlRNrcdn3LfmtVnfM43Idt3Bys2ghNERExVgQDxOVmgKKYC5vNPHk/KZ4kxD7bpSF+w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyyolbj/nTmENzEWqg81U08MTrm6SXvl+4MA45UtXVBwUC22iT
-	VOnAmUEFiu6lzLbg/BkLYTU9VtA7Gsl8YBK6c+lBuXRloGXRdhfq
-X-Gm-Gg: ASbGnctCxOM8MhJ7cuVCUwMXQwkaTlDDU7JAxhTNcdlZZ/AEVB8W1czUaEzp2ywBnlk
-	8VgXaqyFdtjeEXzTgiA8ycZuwsExB4JkTOg8L/m15AIVvrTUcxOqGcfVYnzYFCty3O/MMWWhLSZ
-	KcfRanbL+JAL4bEyzpdLMYhxhex8iE1bwwgnPkI4RrTTmfQzC/UH1j5V+VdkF7Q7wRjTPy/2GY+
-	Tf6G2HSaCpEBoXQ4t4erNrSn5JI3TYyeDvPphW4i/yjt624AuAPIHOEQjbauPNZyqyEBvbh4hn0
-	ogdghccZSVggvM670WdTnMVEePmK1aTfwgxMtNlJQVl+P2XoxgDODvPqz0ioBtaw4HYx
-X-Google-Smtp-Source: AGHT+IG+mbGfHby4oN4mif/0xWyzRBGUvzT/O7NjVxUxLjebSyALlk4r0nPv9AAtoDtPEV0kMXU5LA==
-X-Received: by 2002:a17:903:24e:b0:220:e023:8fa6 with SMTP id d9443c01a7336-22dc6a87a3bmr149376745ad.50.1745898288540;
-        Mon, 28 Apr 2025 20:44:48 -0700 (PDT)
-Received: from [127.0.1.1] (wf121-134.ust.hk. [175.159.121.134])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-309ef03bb7fsm9953249a91.9.2025.04.28.20.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 20:44:48 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-Date: Tue, 29 Apr 2025 11:42:45 +0800
-Subject: [PATCH RESEND v6 21/21] arm64: dts: apple: t8015: Add CPU PMU
- nodes
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NDs823NL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B7NyRInQdwnXdBD5Of2W91UdZJwuCglEL+dQNG6jtT18dSotlRrYsKnZVRhtrJ6Z8fExN7HG8tFS/PC00Esnl/VXwqmIseArhvo0ohU7Eyj/VHpDE6FkwoEFjdyHDZ/LLGhvWCjHlwcsh3HcbP6/tG0DSOiEQrYSHP5ayTp4hIW6RvUog7HYdYRwD0o50EPmtiXesKXh8TKwKf1OML0PYt6kW2LVmxeYVWMNgBE+3ofBrSL9pU/3lTuCSUwJRSZYjd5qDmMxkbay3veqZcmtWOc9AOJbvB6/7mk0lT/Ih3tyWwLUAdjTp0usyHdIw56qZ/vtb6rPHWQs9LvHgPufDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9UtuXgJto1J1NZe8htNoC/VySuSqkkO28kinJNcbSWE=;
+ b=x7N5Z73rJerNKA98+xrP6y1OZRHML0MN2sRwBdt4aBTPYyAnvxh5HECOahyMNkdA3ief4BKTdUbrizApWhPG7eU2szKjH7cSxqCjDODrGM9w3pMGWszQG2MoPdbuo20HeBb2JcTfRCLcIs9Vcvs+JHjF9C0ZeD1FnR453zEFKEBYGR4eMrMmBUrxltEsF/GJtXc306uGa5FlPZG6dqsFrFRdYwAOfh+pw/5ohylYrzmtZFGDme0YP/3ve4fFfdfQ1MlP2cHgfU19I2uE+6ix1qh3T8fUBjNlIwxOchE/OBagOBMn6W/X/DzyYmQ5/yX6Rj7bMT0hAEIHPurKxN+a5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9UtuXgJto1J1NZe8htNoC/VySuSqkkO28kinJNcbSWE=;
+ b=NDs823NLvVqV4D6RjJUW/H4wmU0BiFiHxtkstRGNRptln6VxpcwA5Dj0HWlD2FEtLgk30WSQpKkTbR2CwanY4LsYRTCQusSwrRVQOrqqTzeydi5fsQwen7ZeVQWBSAwMnnWmS6SGBBllAH949ChamSN4dVkNwIQmmM6QYP4DmB4=
+Received: from SN6PR08CA0011.namprd08.prod.outlook.com (2603:10b6:805:66::24)
+ by SA3PR12MB7974.namprd12.prod.outlook.com (2603:10b6:806:307::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
+ 2025 03:47:51 +0000
+Received: from SA2PEPF00003F66.namprd04.prod.outlook.com
+ (2603:10b6:805:66:cafe::ff) by SN6PR08CA0011.outlook.office365.com
+ (2603:10b6:805:66::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Tue,
+ 29 Apr 2025 03:47:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF00003F66.mail.protection.outlook.com (10.167.248.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8678.33 via Frontend Transport; Tue, 29 Apr 2025 03:47:51 +0000
+Received: from [10.136.42.115] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
+ 2025 22:47:46 -0500
+Message-ID: <7c5fcd32-1f0f-4148-ab0e-0a25ea11c10f@amd.com>
+Date: Tue, 29 Apr 2025 09:17:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] sched: Introduce Cache aware scheduling
+To: Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	"Ingo Molnar" <mingo@redhat.com>, "Gautham R . Shenoy"
+	<gautham.shenoy@amd.com>
+CC: Juri Lelli <juri.lelli@redhat.com>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider
+	<vschneid@redhat.com>, Tim Chen <tim.c.chen@intel.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Libo Chen <libo.chen@oracle.com>, Abel Wu
+	<wuyun.abel@bytedance.com>, Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
+	Hillf Danton <hdanton@sina.com>, <linux-kernel@vger.kernel.org>
+References: <cover.1745199017.git.yu.c.chen@intel.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <cover.1745199017.git.yu.c.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-apple-cpmu-v6-21-ed21815f0c3f@gmail.com>
-References: <20250429-apple-cpmu-v6-0-ed21815f0c3f@gmail.com>
-In-Reply-To: <20250429-apple-cpmu-v6-0-ed21815f0c3f@gmail.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Sven Peter <sven@svenpeter.dev>, 
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Neal Gompa <neal@gompa.dev>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Nick Chan <towinchenmi@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1462; i=towinchenmi@gmail.com;
- h=from:subject:message-id; bh=ZHoXysjC3tKjwBhupXya9t0tvevKJFeLclU2Q2P4acg=;
- b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBoEErmS1j7IbxLQZFLwnkOWnyGSToxunf+XJVbp
- 2Po03ztjQmJAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaBBK5gAKCRABygi3psUI
- JEnzD/4oHcDES/A3PK30mbJojwRLni5u89YxyaUUXYibt356GrRUeaB9TaCO01jQtOCbCyLwdng
- YYLhyzjLX5WGz+LVCOpox/FejgYqaGmOs48zTsdrza7jrrcapf4Gm3y4u9LGy1oivwzW4eSvHqe
- BclP4UmTlBVeLCZgD5Lpdx1Y7gGcA/kE0oKbae+SCi23mdmVMa6uVCUd0YrwMGRwglDR/DNE33E
- v8Pk7JisxFreQLuncLRqBJXpYzB5lDbB3XxsnmuZqNuT1SDyjwK+EHMGuNIsXLBLF+FjFwQJ4dC
- NKmL4l+qJPyZJ2badP5lsPMumOQ4E882OtRIGWLojoc2W7DzjrPbPSrZ8FzILxZtDwxyLqHALf5
- rOlZ/n4kepyshmCA1terQLnhNH66s4MEPKSTRqIdbOmpaOJAmQr0q7xehYOTcQtkOxik80Dizob
- 5UAtpDS+m2hl3rgIk/L4thrBIfq5YVY+5kPuZ77KP9UEJoxKoopvnY8AedI6CZ8Kj4Vk496/r7k
- bIw0zf4Dv76CCEY/S9EJdSOe1UG0VMQEbYtoarAGR3tYr8skigSk++wEkiMdMIAddQ+ryWvepQS
- dNNrxD1hBKlDuXAs4WdEvD7FLxKx9p3JaA56Abb1PxNiE8S85h95aE0WQHyuIURre8/c7Wb3kcv
- wjboZ0P2NAD9FNg==
-X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
- fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F66:EE_|SA3PR12MB7974:EE_
+X-MS-Office365-Filtering-Correlation-Id: 403f36a9-0595-4d49-4f30-08dd86d09da2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|36860700013|376014|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V080ZERnTkhLVTdRK1MrdjRCUERyVFE3SkFyb2NzL2FPVTBOTVhTVEFSZW80?=
+ =?utf-8?B?c0dsa3JZRmQ3OGwrZzc0ZFNPK1FtWDhRTWVoWWdCQ084ekwzWTJTS1VVUUNC?=
+ =?utf-8?B?aWE3V3F4N1hKWjh0Vi9YNGFDTHVMSzV2bkNYQlR1TURLekhGVURkSmdRaTFV?=
+ =?utf-8?B?QlNrNVVBMlVadVNURmVLQzllTHlZeElaNStMYTczWWZZazF1Uk1LTmZQaGh6?=
+ =?utf-8?B?SDRrZy9QTWg4VXFUNXczeDdidUYzeGFKeGY1MlFrUU4ybTZScHZodm9LRkx3?=
+ =?utf-8?B?MCtJY2MyOVBONUN2bUl1eTdXTlYxQmRPY2lVclVMcnhrRzJJOFZ4bEZhMDhk?=
+ =?utf-8?B?aktpcExaSzZCYmMvWk9VeXdvUUxRYkpVaDVQemx0WGliYm9zN1Q4Y3JldUdG?=
+ =?utf-8?B?L05HaEhIRnpaVUEyUEFrZzNJSHFlYzc4ZVVlNjhvS3VoOFE0NEZPMVFua21I?=
+ =?utf-8?B?YjAzZkkzSUF1dWh4NlpIMWQzWFFnN2hxWk1VM2JtQWdLV3VaaTIzTGZNanEw?=
+ =?utf-8?B?dEc5R1NvK2FZMlJIa3UzVlh1bjY4d3M4Nko4Z3JBNE9vcTN0RFdreUpRUllo?=
+ =?utf-8?B?MitwRE5TN3djb2FmeFQxOW00N3JiZkloQkxwSXU0K0Nvc0kxK28zenc4WGJV?=
+ =?utf-8?B?akNsc3NTczNubzgxVGx0bDczNENmYnF3VU9UaGsxd3JidzYwclk5STAvZjR1?=
+ =?utf-8?B?S0grY01vdUlrZ0ZSOG0wc3R3U1RNV3FXTTFIaFZQbFRTdm5UbHRoNnhodjZT?=
+ =?utf-8?B?SVM0SDVIc0FEWHo2aVVaTjBXdlZLWXVROG5ZRmM3WXdOQkZiSnErMlU2QWVx?=
+ =?utf-8?B?aGhxNjNOM0hYSWJTMUM5dHk2d2VVRTVjUW9zVjJnOHJiZlJBSnh3YktMdTY5?=
+ =?utf-8?B?WXh1bW53dENCaUdmOVJjUTNpU1Bkeng3Mk1GaGYwY1RWVGNlcXFIQWh1U211?=
+ =?utf-8?B?aHRJY25odUIyMVV1ZVE1cUpEOGprZks5NHA3UUU4bWRHTVhWaWdSMkVxTlJa?=
+ =?utf-8?B?V2w1ZjNmUGgzQmE1eEZ4YlphU1RhblFtQTNZdXZJblJTejIwWWVsVXIzU3B1?=
+ =?utf-8?B?dmRjWWxmYm1pcUMxV0x5VTc1SjRrRVVobmpEUDNNSU1aUmVpOUE5WHlWRWo3?=
+ =?utf-8?B?ZHBTdlQwQWpGdTdZK1hveWhzWTBjZXBoUnlOQTRTVHlYTjlPNHRHZ2E0dUN6?=
+ =?utf-8?B?dlZreG1hUEZXc2hvM0tuZUFoYlhFUFArbzV2cFdWNjlJcXcxcm5kdW4wQWFK?=
+ =?utf-8?B?YWVTQS9DODBoUDlWa051VXJtcFNPQW83LzYxWDhpU3JUVnhxNnhkUUpMd3By?=
+ =?utf-8?B?VXlWRFBkbjlZWGdHSGlsRndWOTBKeXNvS2YvbDhObm5HRDdOV1ZTRGdkaVhB?=
+ =?utf-8?B?TFJ0K1FsaHRPZGc2ZVpVT1FpOVlReU9HM2RHNk4zV1l1MVZ3bjlzdTlCSTIw?=
+ =?utf-8?B?NmFZd0NDUFV3Y0Y2Slp5L3pSZFBCUDlnb2dYd2pjcWdrc0tFUDNCenRMdVZm?=
+ =?utf-8?B?eEYwNEhiQ01mc0xEb2xyN3d6VXNuUmVEdlBpNnZubWdTOTNLR0loNGRJWFhv?=
+ =?utf-8?B?bkZUdm5sMll6OXhnV242bXNpSGdGc1Zhbk90NzgwV3ErVkRlbW1NZlVnTE4v?=
+ =?utf-8?B?aDhHS3VKQnhzR2c0emhJV1VvZUMvbjRVUllndXFvMHVvemdKOFI5Qjd5dTZW?=
+ =?utf-8?B?R0NBdHltVHZDZnJ2WXJyS244NGdWSCttckhsbTN6dUlnektqRzMwZ1pKcE5X?=
+ =?utf-8?B?N0FSUWxDMEJjVm4xaFNiVGNkWkNTb2p6czZBY1dQMjhGaEFMU093OE5ackxL?=
+ =?utf-8?B?NkEyMzZaK0hMdFQ3R3U2N29HQnV2VzJMdTllY2M5SDhoNEMwQ1QrR1FzL3Ux?=
+ =?utf-8?B?R2ZiWDZLVnVKYUlYVEtoZ0Z2anV5YzVMR1QrMnREVnlZb0ZZS3U1Q2dDR3J5?=
+ =?utf-8?B?eEJ6cWJ3RXo2Nko1Qmt6NE9WTUJ6WW1VR3A5SUlLTVZOcGUyZzFGaitiQkE2?=
+ =?utf-8?B?dzQ3eXk5dkFhQUF6OUR2cEJubGpKclVUcW9ZZUVDZVY2TU1odTVjQWJQOXNB?=
+ =?utf-8?B?OGRkRTRlM0tiM3RFcTNKL20ydnlXcG02R1BTUT09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(36860700013)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 03:47:51.1907
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 403f36a9-0595-4d49-4f30-08dd86d09da2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F66.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7974
 
-Add CPU PMU nodes for Apple A11 SoC.
+Hello Chenyu,
 
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+On 4/21/2025 8:53 AM, Chen Yu wrote:
+> This is a respin of the cache-aware scheduling proposed by Peter[1].
+> In this patch set, some known issues in [1] were addressed, and the performance
+> regression was investigated and mitigated.
+> 
+> Cache-aware scheduling aims to aggregate tasks with potential shared resources
+> into the same cache domain. This approach enhances cache locality, thereby optimizing
+> system performance by reducing cache misses and improving data access efficiency.
+> 
+> In the current implementation, threads within the same process are considered as
+> entities that potentially share resources. Cache-aware scheduling monitors the CPU
+> occupancy of each cache domain for every process. Based on this monitoring, it endeavors
+> to migrate threads within a given process to its cache-hot domains, with the goal of
+> maximizing cache locality.
+> 
+> Patch 1 constitutes the fundamental cache-aware scheduling. It is the same patch as [1].
+> Patch 2 comprises a series of fixes for Patch 1, including compiling warnings and functional
+> fixes.
+> Patch 3 fixes performance degradation that arise from excessive task migrations within the
+> preferred LLC domain.
+> Patch 4 further alleviates performance regressions when the preferred LLC becomes saturated.
+> Patch 5 introduces ftrace events, which is used to track task migrations triggered by wakeup
+> and load balancer. This addition facilitate performance regression analysis.
+> 
+> The patch set is applied on top of v6.14 sched/core,
+> commit 4ba7518327c6 ("sched/debug: Print the local group's asym_prefer_cpu")
+> 
+
+Thank you for working on this! I have been a bit preoccupied but I
+promise to look into the regressions I've reported below sometime
+this week and report back soon on what seems to make them unhappy.
+
+tl;dr
+
+o Most regressions aren't as severe as v1 thanks to all the work
+   from you and Abel.
+
+o I too see schbench regress in fully loaded cases but the old
+   schbench tail latencies improve when #threads < #CPUs in LLC
+
+o There is a consistent regression in tbench - what I presume is
+   happening there is all threads of "tbench_srv" share an mm and
+   and all the tbench clients share an mm but for best performance,
+   the wakeups between client and server must be local (same core /
+   same LLC) but either the cost of additional search build up or
+   the clients get co-located as one set of entities and the
+   servers get colocated as another set of entities leading to
+   mostly remote wakeups.
+
+   Not too sure if netperf has similar architecture as tbench but
+   that too sees a regression.
+
+o Longer running benchmarks see a regression. Still not sure if
+   this is because of additional search or something else.
+
+I'll leave the full results below:
+
+o Machine details
+
+- 3rd Generation EPYC System
+- 2 sockets each with 64C/128T
+- NPS1 (Each socket is a NUMA node)
+- C2 Disabled (POLL and C1(MWAIT) remained enabled)
+
+o Benchmark results
+
+   ==================================================================
+   Test          : hackbench
+   Units         : Normalized time in seconds
+   Interpretation: Lower is better
+   Statistic     : AMean
+   ==================================================================
+   Case:           tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+    1-groups     1.00 [ -0.00]( 9.02)     1.03 [ -3.38](11.44)
+    2-groups     1.00 [ -0.00]( 6.86)     0.98 [  2.20]( 6.61)
+    4-groups     1.00 [ -0.00]( 2.73)     1.00 [  0.42]( 4.00)
+    8-groups     1.00 [ -0.00]( 1.21)     1.04 [ -4.00]( 5.59)
+   16-groups     1.00 [ -0.00]( 0.97)     1.01 [ -0.52]( 2.12)
+
+
+   ==================================================================
+   Test          : tbench
+   Units         : Normalized throughput
+   Interpretation: Higher is better
+   Statistic     : AMean
+   ==================================================================
+   Clients:    tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+       1     1.00 [  0.00]( 0.67)     0.96 [ -3.95]( 0.55)
+       2     1.00 [  0.00]( 0.85)     0.98 [ -1.69]( 0.65)
+       4     1.00 [  0.00]( 0.52)     0.96 [ -3.68]( 0.09)
+       8     1.00 [  0.00]( 0.92)     0.96 [ -4.06]( 0.43)
+      16     1.00 [  0.00]( 1.01)     0.95 [ -5.19]( 1.65)
+      32     1.00 [  0.00]( 1.35)     0.95 [ -4.79]( 0.29)
+      64     1.00 [  0.00]( 1.22)     0.94 [ -6.49]( 1.46)
+     128     1.00 [  0.00]( 2.39)     0.92 [ -7.61]( 1.41)
+     256     1.00 [  0.00]( 1.83)     0.92 [ -8.24]( 0.35)
+     512     1.00 [  0.00]( 0.17)     0.93 [ -7.08]( 0.22)
+    1024     1.00 [  0.00]( 0.31)     0.91 [ -8.57]( 0.29)
+
+
+   ==================================================================
+   Test          : stream-10
+   Units         : Normalized Bandwidth, MB/s
+   Interpretation: Higher is better
+   Statistic     : HMean
+   ==================================================================
+   Test:       tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+    Copy     1.00 [  0.00]( 8.24)     1.03 [  2.66]( 6.15)
+   Scale     1.00 [  0.00]( 5.62)     0.99 [ -1.43]( 6.32)
+     Add     1.00 [  0.00]( 6.18)     0.97 [ -3.12]( 5.70)
+   Triad     1.00 [  0.00]( 5.29)     1.01 [  1.31]( 3.82)
+
+
+   ==================================================================
+   Test          : stream-100
+   Units         : Normalized Bandwidth, MB/s
+   Interpretation: Higher is better
+   Statistic     : HMean
+   ==================================================================
+   Test:       tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+    Copy     1.00 [  0.00]( 2.92)     0.99 [ -1.47]( 5.02)
+   Scale     1.00 [  0.00]( 4.80)     0.98 [ -2.08]( 5.53)
+     Add     1.00 [  0.00]( 4.35)     0.98 [ -1.85]( 4.26)
+   Triad     1.00 [  0.00]( 2.30)     0.99 [ -0.84]( 1.83)
+
+
+   ==================================================================
+   Test          : netperf
+   Units         : Normalized Througput
+   Interpretation: Higher is better
+   Statistic     : AMean
+   ==================================================================
+   Clients:         tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+    1-clients     1.00 [  0.00]( 0.17)     0.97 [ -2.55]( 0.50)
+    2-clients     1.00 [  0.00]( 0.77)     0.97 [ -2.52]( 0.20)
+    4-clients     1.00 [  0.00]( 0.93)     0.97 [ -3.30]( 0.54)
+    8-clients     1.00 [  0.00]( 0.87)     0.96 [ -3.98]( 1.19)
+   16-clients     1.00 [  0.00]( 1.15)     0.96 [ -4.16]( 1.06)
+   32-clients     1.00 [  0.00]( 1.00)     0.95 [ -5.47]( 0.96)
+   64-clients     1.00 [  0.00]( 1.37)     0.94 [ -5.75]( 1.64)
+   128-clients    1.00 [  0.00]( 0.99)     0.92 [ -8.50]( 1.49)
+   256-clients    1.00 [  0.00]( 3.23)     0.90 [-10.22]( 2.86)
+   512-clients    1.00 [  0.00](58.43)     0.90 [-10.28](47.59)
+
+
+   ==================================================================
+   Test          : schbench
+   Units         : Normalized 99th percentile latency in us
+   Interpretation: Lower is better
+   Statistic     : Median
+   ==================================================================
+   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+     1     1.00 [ -0.00]( 5.59)     0.55 [ 45.00](11.17)
+     2     1.00 [ -0.00](14.29)     0.52 [ 47.62]( 7.53)
+     4     1.00 [ -0.00]( 1.24)     0.57 [ 42.55]( 5.73)
+     8     1.00 [ -0.00](11.16)     1.06 [ -6.12]( 2.92)
+    16     1.00 [ -0.00]( 6.81)     1.12 [-12.28](11.09)
+    32     1.00 [ -0.00]( 6.99)     1.05 [ -5.26](12.48)
+    64     1.00 [ -0.00]( 6.00)     0.96 [  4.21](18.31)
+   128     1.00 [ -0.00]( 3.26)     1.63 [-62.84](36.71)
+   256     1.00 [ -0.00](19.29)     0.97 [  3.25]( 4.94)
+   512     1.00 [ -0.00]( 1.48)     1.05 [ -4.71]( 5.11)
+
+
+   ==================================================================
+   Test          : new-schbench-requests-per-second
+   Units         : Normalized Requests per second
+   Interpretation: Higher is better
+   Statistic     : Median
+   ==================================================================
+   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+     1     1.00 [  0.00]( 0.00)     0.95 [ -4.99]( 0.48)
+     2     1.00 [  0.00]( 0.26)     0.96 [ -3.82]( 0.55)
+     4     1.00 [  0.00]( 0.15)     0.95 [ -4.96]( 0.27)
+     8     1.00 [  0.00]( 0.15)     0.99 [ -0.58]( 0.00)
+    16     1.00 [  0.00]( 0.00)     1.00 [ -0.29]( 0.15)
+    32     1.00 [  0.00]( 4.88)     1.04 [  4.27]( 2.42)
+    64     1.00 [  0.00]( 5.57)     0.87 [-13.10](11.51)
+   128     1.00 [  0.00]( 0.34)     0.97 [ -3.13]( 0.58)
+   256     1.00 [  0.00]( 1.95)     1.02 [  1.83]( 0.15)
+   512     1.00 [  0.00]( 0.44)     1.00 [  0.48]( 0.12)
+
+
+   ==================================================================
+   Test          : new-schbench-wakeup-latency
+   Units         : Normalized 99th percentile latency in us
+   Interpretation: Lower is better
+   Statistic     : Median
+   ==================================================================
+   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+     1     1.00 [ -0.00]( 4.19)     1.00 [ -0.00](14.91)
+     2     1.00 [ -0.00]( 3.78)     0.93 [  7.14]( 0.00)
+     4     1.00 [ -0.00]( 8.91)     0.80 [ 20.00]( 4.43)
+     8     1.00 [ -0.00]( 7.45)     1.00 [ -0.00]( 7.45)
+    16     1.00 [ -0.00]( 4.08)     1.00 [ -0.00](10.79)
+    32     1.00 [ -0.00](16.90)     0.93 [  6.67](10.00)
+    64     1.00 [ -0.00]( 9.11)     1.12 [-12.50]( 0.00)
+   128     1.00 [ -0.00]( 7.05)     2.43 [-142.86](24.47)
+   256     1.00 [ -0.00]( 4.32)     1.02 [ -2.34]( 1.20)
+   512     1.00 [ -0.00]( 0.35)     1.01 [ -0.77]( 0.40)
+
+
+   ==================================================================
+   Test          : new-schbench-request-latency
+   Units         : Normalized 99th percentile latency in us
+   Interpretation: Lower is better
+   Statistic     : Median
+   ==================================================================
+   #workers: tip[pct imp](CV)    cache_aware_lb[pct imp](CV)
+     1     1.00 [ -0.00]( 0.78)     1.16 [-15.70]( 2.14)
+     2     1.00 [ -0.00]( 0.81)     1.13 [-13.11]( 0.62)
+     4     1.00 [ -0.00]( 0.24)     1.26 [-26.11](16.43)
+     8     1.00 [ -0.00]( 1.30)     1.03 [ -3.46]( 0.81)
+    16     1.00 [ -0.00]( 1.11)     1.02 [ -2.12]( 1.85)
+    32     1.00 [ -0.00]( 5.94)     0.96 [  4.05]( 4.48)
+    64     1.00 [ -0.00]( 6.27)     1.06 [ -6.01]( 6.67)
+   128     1.00 [ -0.00]( 0.21)     1.12 [-12.31]( 2.61)
+   256     1.00 [ -0.00](13.73)     1.06 [ -6.30]( 3.37)
+   512     1.00 [ -0.00]( 0.95)     1.05 [ -4.85]( 0.61)
+
+
+   ==================================================================
+   Test          : Various longer running benchmarks
+   Units         : %diff in throughput reported
+   Interpretation: Higher is better
+   Statistic     : Median
+   ==================================================================
+   Benchmarks:                 %diff
+   ycsb-cassandra              -1.21%
+   ycsb-mongodb                -0.69%
+
+   deathstarbench-1x           -7.40%
+   deathstarbench-2x           -3.80%
+   deathstarbench-3x           -3.99%
+   deathstarbench-6x           -3.02%
+
+   hammerdb+mysql 16VU         -2.59%
+   hammerdb+mysql 64VU         -1.05%
+
+
+Also, could you fold the below diff into your Patch2:
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index eb5a2572b4f8..6c51dd2b7b32 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7694,8 +7694,6 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool
+  	int i, cpu, idle_cpu = -1, nr = INT_MAX;
+  	struct sched_domain_shared *sd_share;
+  
+-	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
+-
+  	if (sched_feat(SIS_UTIL)) {
+  		sd_share = rcu_dereference(per_cpu(sd_llc_shared, target));
+  		if (sd_share) {
+@@ -7707,6 +7705,8 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, bool
+  		}
+  	}
+  
++	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
++
+  	if (static_branch_unlikely(&sched_cluster_active)) {
+  		struct sched_group *sg = sd->groups;
+  
 ---
- arch/arm64/boot/dts/apple/t8015.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apple/t8015.dtsi b/arch/arm64/boot/dts/apple/t8015.dtsi
-index 4d54afcecd50b50ed1fd386ccfc46c373e190e6b..e838b65ea63eef9c198032ee87e63dae282141dc 100644
---- a/arch/arm64/boot/dts/apple/t8015.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8015.dtsi
-@@ -252,6 +252,18 @@ aic: interrupt-controller@232100000 {
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			power-domains = <&ps_aic>;
-+
-+			affinities {
-+				e-core-pmu-affinity {
-+					apple,fiq-index = <AIC_CPU_PMU_E>;
-+					cpus = <&cpu_e0 &cpu_e1 &cpu_e2 &cpu_e3>;
-+				};
-+
-+				p-core-pmu-affinity {
-+					apple,fiq-index = <AIC_CPU_PMU_P>;
-+					cpus = <&cpu_p0 &cpu_p1>;
-+				};
-+			};
- 		};
- 
- 		pmgr: power-management@232000000 {
-@@ -380,6 +392,18 @@ timer {
- 		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
- 			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
- 	};
-+
-+	pmu-e {
-+		compatible = "apple,mistral-pmu";
-+		interrupt-parent = <&aic>;
-+		interrupts = <AIC_FIQ AIC_CPU_PMU_E IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmu-p {
-+		compatible = "apple,monsoon-pmu";
-+		interrupt-parent = <&aic>;
-+		interrupts = <AIC_FIQ AIC_CPU_PMU_P IRQ_TYPE_LEVEL_HIGH>;
-+	};
- };
- 
- #include "t8015-pmgr.dtsi"
+If the SIS_UTIL cut off hits, that result of the cpumask_and() is of no
+use. To save some additional cycles, especially in cases where we target
+the LLC frequently and the search bails out because the LLC is busy,
+this overhead can be easily avoided. Since select_idle_cpu() can now be
+called twice per wakeup, this overhead can be visible in benchmarks like
+hackbench.
 
 -- 
-2.49.0
+Thanks and Regards,
+Prateek
 
+> schbench was tested on EMR and Zen3 Milan. An improvement in tail latency was observed when
+> the LLC was underloaded; however, some regressions were still evident when the LLC was
+> saturated. Additionally, the load balance should be adjusted to further address these
+> regressions.
+> 
+> [1] https://lore.kernel.org/all/20250325120952.GJ36322@noisy.programming.kicks-ass.net/
+> 
+> 
+> Chen Yu (4):
+>    sched: Several fixes for cache aware scheduling
+>    sched: Avoid task migration within its preferred LLC
+>    sched: Inhibit cache aware scheduling if the preferred LLC is over
+>      aggregated
+>    sched: Add ftrace to track task migration and load balance within and
+>      across LLC
+> 
+> Peter Zijlstra (1):
+>    sched: Cache aware load-balancing
+> 
