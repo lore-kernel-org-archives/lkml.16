@@ -1,124 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0642BE0EC
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD8C297A40
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919042; cv=none; b=T32MYoxhkVTdt+tefTe7y6tQN/akDqEjaDtewMzHYKamLp44sOv4hG7VLbUQ0VcAeMz3q6xd2i7IJ0carf9/6XxBXZDhTsRnws+/agI+VkEmNHX3OOdFBy5fMh3ZXqWidFmQv7rstbgUltBRya5rX18wQdx3FUAe7o/3HSYSM9g=
+	t=1745919103; cv=none; b=Ikemf3Kv6U+qM0mZZgect5dp20oLVqjlMkSsQf8MDLMQ5DRmOyKdf5hpL0TaD63o14UVRb/7FNGCffLVjx+IS8vLKM9k4QcziCAoEhTifTzRbas0K9sSB6yZr9Tka60i28blt5zu5uE+DMMhY8PaWJ1g0dSUqR4JUWzrxotWnLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919042; c=relaxed/simple;
-	bh=hXonJzExV6f/cYOmpVW4RG/5EKao+OkAqFLmiQh/hcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZZQO4/EaASibd2bYCmZloBIZI8Si6Th8lRbpnsfJOdlL+uK+NlpK6xMHYpqXp9bHlit4zSG+HR4+LkkesDuZ4YUALaGZLZYI9dErFm08ilal4mA/nPH+9IjVvIkz/l2M/JLZc3RAhWp22a5u/Y97kQFWrt3v2eiDCNggisCzk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzLecNAs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745919103; c=relaxed/simple;
+	bh=JSp33XGPTyatueK4o6jd84vVu0TKMpsc3F+Uq/MAUeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3LNsZtYZGTDgcCyVhkDHdKspsanD1xcHCYr08Bik6STVxXJmYyFPmMMWKaT+0deJlbvaKhHZUcXeEYJSVXuQ2OHhs/l4HFMbGdSaa6GSlbKs0pPyGXhLUaMvQ23j40ltwm9YqU0GT9G6/gcspq7TpjGf+wsenygpefd9Zz9BfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cWUqEJV2; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzLecNAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745919038;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aKFEHdgHcLwRfGZHvxEjeWO9rZ2vSungJ+/BDNwcd7k=;
-	b=hzLecNAsInqcDTm4hEwQkwkh2u4bak60DKiQNVjmHwaoiFBURZM4qDrInNKmzqzQ0l6xeW
-	6BgxRdjcK3w/YXkWJyvrE1N8AO0aMjIzAVLxEaGnqPs3gniA2ob0shuFD6eru12oKzZ10S
-	pBCmpvW8ITCSDq+SARo+qDNXUelYhxs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-YIwONv6sMfOyPAo2Ar94zQ-1; Tue, 29 Apr 2025 05:30:36 -0400
-X-MC-Unique: YIwONv6sMfOyPAo2Ar94zQ-1
-X-Mimecast-MFC-AGG-ID: YIwONv6sMfOyPAo2Ar94zQ_1745919036
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5c1bb6a23so1397158a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:30:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745919036; x=1746523836;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aKFEHdgHcLwRfGZHvxEjeWO9rZ2vSungJ+/BDNwcd7k=;
-        b=R73vGagNb6JeToRp0x9j2ax3NTXB6NTPL3M7Oi88cczo1i6bRrKtvCZTS59sGSxGws
-         hcr2NXLjh9d+yn+XQwP3p97K6bLcpIsr41cPpotqb4YaFZ1aVbc5syDhXegmUwt+u9Nk
-         EgGyYf7GnXvwwPlT7isaiXrwrvM6k1cCpS4+ylBJJUFp6XgteCju0LE3ngyMQh/NN6h/
-         Z9353ByOIZjf+U2uafTjCqkEUiPvli605ZKibe1UbiyQcAPYIZchq+X/B2FYyG3onBwB
-         wWc+QSnFkOe1HISWzgAahv80McsUSpzbdfWyBujFvzkgEZFmQh6CGpOTOqw22rWGKWff
-         cbTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXybSVHd8uP56NcrNmuRoW2661lx3yygquTgjswB+UKIpgj+KJvTqTGgHQDEP1blXYfGtvZthxMSMJxEfI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZs/se/jyieOlKyBM0R0gqD0Z76fHwBYHUxW/lrzrPzDbhAPZs
-	W3zjRe6Y2oAl48f2IDjwOAxP0C32+PTPoJQrngeTZElDmJeH1/XcydiBxisqzwq3o7RkgNRFEay
-	RqImSx/mROjrVSqJZHdvWrXdOKgqLu8IDu9UMGbX5RYs+IyMww8SwuvzKimNl2w==
-X-Gm-Gg: ASbGncv4SPWnXnXOilcJcFeygUdCl66L2ZIK4qgcogpcxKVFtU56QpzlZTC2N8C3fQ4
-	Oe4XebWTMxc5NZxtZyxP2x0kk4SkwVa6wIBv4bnRqpL2c05GztCfmAOweF3SqYC0LxV7JYqANyX
-	HMd2+Pqjk+zBt6yyxeqzidXzpGHWsjr+xW2Pe/Z+ZJMIzkr7seW3VMR87riM6x4M4gAK6xqqvCB
-	7raCBf7Uskm4G0LNb5jQTdbfHD1k5HaR6m/HLzyYTHRGkow+SLr8/IAbr23y0W1+wjb+oJOChJC
-	bAhmRK9yzSx1B3KqkUUTVvwWdHSkcjpRwHfULsn5q8u4sX4sKrDSvcVfuu8=
-X-Received: by 2002:a05:6402:1e94:b0:5f4:c7b5:fd16 with SMTP id 4fb4d7f45d1cf-5f839224a59mr1942335a12.6.1745919035695;
-        Tue, 29 Apr 2025 02:30:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFS2Aal7Wz+dVWPGKPbDkIqlChFVLqNPD6xjJGGYetpQ28hV8efTZJRlGmop13TtQQ6QsChxw==
-X-Received: by 2002:a05:6402:1e94:b0:5f4:c7b5:fd16 with SMTP id 4fb4d7f45d1cf-5f839224a59mr1942313a12.6.1745919035327;
-        Tue, 29 Apr 2025 02:30:35 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897? ([2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5db6sm7332402a12.44.2025.04.29.02.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:30:34 -0700 (PDT)
-Message-ID: <60643797-2466-4200-9abe-9956bfdeaa73@redhat.com>
-Date: Tue, 29 Apr 2025 11:30:32 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cWUqEJV2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745919102; x=1777455102;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JSp33XGPTyatueK4o6jd84vVu0TKMpsc3F+Uq/MAUeo=;
+  b=cWUqEJV2SZJGt59J/Mdi8jwzN/1M47mRWli2V9TxdNEE7guyEZAoEJax
+   KE+bQ+iG6km6edOSH0OcDDXUAg/jLNPY1VlVJsWkdMfaZ1iD0/DKQ8pcw
+   460rSn607H6fUlsJ2DSAa4E1Jx0wya715/ElSotVtJpVveH/i0vwGxDyU
+   nrWAO1vB8Wg/AczzTs5tMoyWH4vIDYb8t5WlrOxVBfAS036Rk/ergOQv1
+   18szxXe2jEEsOiRXDm7RqWLnEw5eQoiOB071BkwjgO041dWMPNQMPlqEF
+   1uBU3NArZmrRd1zC8MyHD1LfC+jQdup/7hnNPgUD/9GOS5vbIpsBM1kWZ
+   A==;
+X-CSE-ConnectionGUID: wooKWWgIQFmEixdnIyz/tg==
+X-CSE-MsgGUID: 8jLJqeUwQYStNEsMlqAikA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="64950251"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="64950251"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:31:41 -0700
+X-CSE-ConnectionGUID: vSTcVcNKRbqprzBtYgZZqQ==
+X-CSE-MsgGUID: EItLiXMqRMC9ILIgbEryWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="134086830"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:31:35 -0700
+Date: Tue, 29 Apr 2025 12:31:32 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Tomas Winkler <tomasw@gmail.com>
+Subject: Re: [PATCH v9 02/12] mtd: add driver for intel graphics non-volatile
+ memory device
+Message-ID: <aBCcdPbIxthARrMj@black.fi.intel.com>
+References: <20250424132536.3043825-1-alexander.usyskin@intel.com>
+ <20250424132536.3043825-3-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 07/13] net: pse-pd: Add support for budget
- evaluation strategies
-To: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Donald Hunter <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>,
- Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
- <20250422-feature_poe_port_prio-v9-7-417fc007572d@bootlin.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250422-feature_poe_port_prio-v9-7-417fc007572d@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424132536.3043825-3-alexander.usyskin@intel.com>
 
-On 4/22/25 4:56 PM, Kory Maincent wrote:
-> @@ -223,6 +237,17 @@ struct pse_pi_pairset {
->   * @rdev: regulator represented by the PSE PI
->   * @admin_state_enabled: PI enabled state
->   * @pw_d: Power domain of the PSE PI
-> + * @prio: Priority of the PSE PI. Used in static budget evaluation strategy
-> + * @isr_pd_detected: PSE PI detection status managed by the interruption
-> + *		     handler. This variable is relevant when the power enabled
-> + *		     management is managed in software like the static
-> + *		     budget evaluation strategy.
-> + * @pw_allocated_mW: Power allocated to a PSE PI to manage power budget in
-> + *		     static budget evaluation strategy.
-> + * @_isr_counter_mismatch: Internal flag used in PSE core in case of a
-> + *			   counter mismatch between regulator and PSE API.
-> + *			   This is caused by a disable call in the interrupt
-> + *			   context handler.
+On Thu, Apr 24, 2025 at 04:25:26PM +0300, Alexander Usyskin wrote:
+> Add auxiliary driver for intel discrete graphics
+> non-volatile memory device.
 
-The name itself of this field is somewhat concerning, and I don't see it
-set to any nonzero value here or in later patches.
+...
 
-Possibly it should be removed entirely???
+> +static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+> +			      const struct auxiliary_device_id *aux_dev_id)
+> +{
+> +	struct intel_dg_nvm_dev *invm = auxiliary_dev_to_intel_dg_nvm_dev(aux_dev);
+> +	struct device *device;
+> +	struct intel_dg_nvm *nvm;
+> +	unsigned int nregions;
+> +	unsigned int i, n;
+> +	char *name;
 
-/P
+Perhaps move this to the loop it is being used in?
 
+> +	int ret;
+> +
+> +	device = &aux_dev->dev;
+> +
+> +	/* count available regions */
+> +	for (nregions = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
+> +		if (invm->regions[i].name)
+> +			nregions++;
+> +	}
+> +
+> +	if (!nregions) {
+> +		dev_err(device, "no regions defined\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
+> +	if (!nvm)
+> +		return -ENOMEM;
+> +
+> +	kref_init(&nvm->refcnt);
+> +
+> +	nvm->nregions = nregions;
+
+Is this assignment useful?
+
+> +	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
+> +		if (!invm->regions[i].name)
+> +			continue;
+> +
+> +		name = kasprintf(GFP_KERNEL, "%s.%s",
+> +				 dev_name(&aux_dev->dev), invm->regions[i].name);
+> +		if (!name)
+> +			continue;
+> +		nvm->regions[n].name = name;
+> +		nvm->regions[n].id = i;
+> +		n++;
+> +	}
+> +	nvm->nregions = n; /* in case where kasprintf fail */
+
+Considering kasprintf failure, should we move forward if n == 0?
+
+> +	nvm->base = devm_ioremap_resource(device, &invm->bar);
+> +	if (IS_ERR(nvm->base)) {
+> +		dev_err(device, "mmio not mapped\n");
+
+Is this useful? Perhaps the helper already does it for us.
+
+> +		ret = PTR_ERR(nvm->base);
+> +		goto err;
+> +	}
+> +
+> +	dev_set_drvdata(&aux_dev->dev, nvm);
+> +
+> +	return 0;
+> +
+> +err:
+> +	kref_put(&nvm->refcnt, intel_dg_nvm_release);
+> +	return ret;
+> +}
+> +
+> +static void intel_dg_mtd_remove(struct auxiliary_device *aux_dev)
+> +{
+> +	struct intel_dg_nvm *nvm = dev_get_drvdata(&aux_dev->dev);
+> +
+> +	if (!nvm)
+> +		return;
+
+Are we expecting this?
+
+> +	dev_set_drvdata(&aux_dev->dev, NULL);
+
+Do we need this?
+
+> +	kref_put(&nvm->refcnt, intel_dg_nvm_release);
+> +}
+> +
+> +static const struct auxiliary_device_id intel_dg_mtd_id_table[] = {
+> +	{
+> +		.name = "i915.nvm",
+> +	},
+> +	{
+> +		.name = "xe.nvm",
+> +	},
+> +	{
+> +		/* sentinel */
+> +	}
+> +};
+> +MODULE_DEVICE_TABLE(auxiliary, intel_dg_mtd_id_table);
+> +
+> +static struct auxiliary_driver intel_dg_mtd_driver = {
+> +	.probe  = intel_dg_mtd_probe,
+> +	.remove = intel_dg_mtd_remove,
+> +	.driver = {
+> +		/* auxiliary_driver_register() sets .name to be the modname */
+> +	},
+> +	.id_table = intel_dg_mtd_id_table
+> +};
+
+> +
+
+Nit: Redundant blank line.
+
+> +module_auxiliary_driver(intel_dg_mtd_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Intel Corporation");
+> +MODULE_DESCRIPTION("Intel DGFX MTD driver");
+> diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
+> new file mode 100644
+> index 000000000000..68df634c994c
+> --- /dev/null
+> +++ b/include/linux/intel_dg_nvm_aux.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
+> + */
+> +
+> +#ifndef __INTEL_DG_NVM_AUX_H__
+> +#define __INTEL_DG_NVM_AUX_H__
+> +
+> +#include <linux/auxiliary_bus.h>
+
+Missing types.h, container_of.h
+
+> +#define INTEL_DG_NVM_REGIONS 13
+> +
+> +struct intel_dg_nvm_region {
+> +	const char *name;
+> +};
+> +
+> +struct intel_dg_nvm_dev {
+> +	struct auxiliary_device aux_dev;
+> +	bool writable_override;
+> +	struct resource bar;
+> +	const struct intel_dg_nvm_region *regions;
+> +};
+> +
+> +#define auxiliary_dev_to_intel_dg_nvm_dev(auxiliary_dev) \
+> +	container_of(auxiliary_dev, struct intel_dg_nvm_dev, aux_dev)
+> +
+> +#endif /* __INTEL_DG_NVM_AUX_H__ */
+> -- 
+> 2.43.0
+> 
