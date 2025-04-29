@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5A1295527;
-	Tue, 29 Apr 2025 23:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F53296FC5;
+	Tue, 29 Apr 2025 23:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970714; cv=none; b=IicxJRwzM72ytGiQafz1VIr+09NJigp/riw3QfSSf576s2jKc7nJQnHxzcLhCVw6CAiYQnwkPeMiPEJEpcUYkeiZuzQ5jR0UJMQjHeMRTNR9XKYaNbVsj2CX2grQRnFkXOqh/f/RCFZ4Zh8mBXkV1GDsujT1NSN2q+WVQ3qL9ps=
+	t=1745970715; cv=none; b=sUdkNrypSIjOMcvFDt0ZijWgvE60V4UFplIKlcrpUJtwb3OwQewd0Y+b92pAM26R6t60AJjaoykSp8TuJDtSPXCWbAYCcbgnyLENJ4qv5yu1gCYNrQU6lNDoqbZI/lFIsoe01OjnLGZoLDuOzUsNnj7x38UAI4ZSMe9U+vk0rmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970714; c=relaxed/simple;
-	bh=KCLyh9loOGeaxvbc6X8iT+z/3F2iQE19hAh1JFIuN1Y=;
+	s=arc-20240116; t=1745970715; c=relaxed/simple;
+	bh=UXHGnVxGYFoKCRYp/YPA1ZcNzQmy0SWBIp7O0KSaN3M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ISyDVJOnnod0LYdXdFpi8hup9cA38pCDlJZbcjaQDtphYTs8/zsqSAuJzs5u+A07JDZ7FHrgl16AmK9t/6SXTFrLG3ogxvM+NHwcTBQc0kiYkPWdkROT5ooA99nyEIc/j6dAjDasfffzzveWQWp1o9+pCBmmOLR5Zuit4aVTGAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjU5/lDR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=j+P842+VDJNnRIjfPN57dW7sdC3ikuKNsoxG6HE/mhAzFjttCKLs0/Qvr0KOOQprdQkcB7MhwF8dfJWi8/4gOjNAv3G/ZVWaI0HIOiBcZL7qPq797RvgWsoBALS5sfF9gyWE13NCfRv4Xr8jinLK4uzHOrsvqsMmX3jJkH0oiGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaqZIuvH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjU5/lDR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7117C4CEEB;
-	Tue, 29 Apr 2025 23:51:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaqZIuvH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282A2C4CEED;
+	Tue, 29 Apr 2025 23:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970713;
-	bh=KCLyh9loOGeaxvbc6X8iT+z/3F2iQE19hAh1JFIuN1Y=;
+	s=k20201202; t=1745970715;
+	bh=UXHGnVxGYFoKCRYp/YPA1ZcNzQmy0SWBIp7O0KSaN3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mjU5/lDRXzLkUVKnZHhRm3rrrGaIsiEQttaQkG/1ag+AaJuPdOiSrPgguIL+w/b/4
-	 G6UNsAIUo3xnfRTDtN1MCX3kfCvMiEsJJcCu3fSMcbWSu6vDu9ZZM0H9llsMss52Z5
-	 HSaBNpzWRpMg/KctOYgV0Bzax1cpVIpgHU40mqlWzbST+gQC/xpDiHTbYyDkHCegUH
-	 8Gm32M6XP8Zrdsrbte8UPqqMM4/Owd0hZsOWn7aw6R4OlOeV5U/680t8PQAmHNB+JT
-	 9mkftXKPzLbgtIGMkL/UvIrgzCn5zqeZIO/eSIvp/zXHyY2n+2mWCMLdMCgl+MojPK
-	 rN/ha00hvOP1g==
+	b=aaqZIuvHVDzr7vCB0YbyY8vkA+06Gj8qBK6+kuS8lUU8gdjQW7b4wLils77gZz16E
+	 3K2LW3J91ttMu2WwHy110u9PCcYLgVEKw4E6+rIBGDToD5DbavXSvV6veigEZZ7CVs
+	 dwVJSQfzTIg2pJPkzTk8K/37qrYO+omu98lj2UI1y/xkYk4u3wqxxi4M/RkLeCjOW4
+	 qH2pCe7MoSZlSCd7SC2ftsCKiQm8seniqABXaLTra2H9G6+iqhtzNhRo+H62Te6hTX
+	 rX3T6hbIfB+siL6r+lcPFLpyGClMVqvwWMDowHuwnNvp+6DCeIt2RnAUbgCg31w46k
+	 WoB77URQWSlgA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.12 16/37] mei: vsc: Use struct vsc_tp_packet as vsc-tp tx_buf and rx_buf type
-Date: Tue, 29 Apr 2025 19:51:01 -0400
-Message-Id: <20250429235122.537321-16-sashal@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	iommu@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 17/37] dma-mapping: avoid potential unused data compilation warning
+Date: Tue, 29 Apr 2025 19:51:02 -0400
+Message-Id: <20250429235122.537321-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250429235122.537321-1-sashal@kernel.org>
 References: <20250429235122.537321-1-sashal@kernel.org>
@@ -51,80 +51,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.25
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit f88c0c72ffb014e5eba676ee337c4eb3b1d6a119 ]
+[ Upstream commit c9b19ea63036fc537a69265acea1b18dabd1cbd3 ]
 
-vsc_tp.tx_buf and vsc_tp.rx_buf point to a struct vsc_tp_packet, use
-the correct type instead of "void *" and use sizeof(*ptr) when allocating
-memory for these buffers.
+When CONFIG_NEED_DMA_MAP_STATE is not defined, dma-mapping clients might
+report unused data compilation warnings for dma_unmap_*() calls
+arguments. Redefine macros for those calls to let compiler to notice that
+it is okay when the provided arguments are not used.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Link: https://lore.kernel.org/r/20250318141203.94342-3-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20250415075659.428549-1-m.szyprowski@samsung.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mei/vsc-tp.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ include/linux/dma-mapping.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-index ef0a9f423c8f8..fb2f45829f7bd 100644
---- a/drivers/misc/mei/vsc-tp.c
-+++ b/drivers/misc/mei/vsc-tp.c
-@@ -67,8 +67,8 @@ struct vsc_tp {
- 	u32 seq;
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 1524da363734a..22b9099927fad 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -633,10 +633,14 @@ static inline int dma_mmap_wc(struct device *dev,
+ #else
+ #define DEFINE_DMA_UNMAP_ADDR(ADDR_NAME)
+ #define DEFINE_DMA_UNMAP_LEN(LEN_NAME)
+-#define dma_unmap_addr(PTR, ADDR_NAME)           (0)
+-#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { } while (0)
+-#define dma_unmap_len(PTR, LEN_NAME)             (0)
+-#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
++#define dma_unmap_addr(PTR, ADDR_NAME)           \
++	({ typeof(PTR) __p __maybe_unused = PTR; 0; })
++#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  \
++	do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
++#define dma_unmap_len(PTR, LEN_NAME)             \
++	({ typeof(PTR) __p __maybe_unused = PTR; 0; })
++#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    \
++	do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
+ #endif
  
- 	/* command buffer */
--	void *tx_buf;
--	void *rx_buf;
-+	struct vsc_tp_packet *tx_buf;
-+	struct vsc_tp_packet *rx_buf;
- 
- 	atomic_t assert_cnt;
- 	wait_queue_head_t xfer_wait;
-@@ -160,7 +160,7 @@ static int vsc_tp_xfer_helper(struct vsc_tp *tp, struct vsc_tp_packet *pkt,
- {
- 	int ret, offset = 0, cpy_len, src_len, dst_len = sizeof(struct vsc_tp_packet);
- 	int next_xfer_len = VSC_TP_PACKET_SIZE(pkt) + VSC_TP_XFER_TIMEOUT_BYTES;
--	u8 *src, *crc_src, *rx_buf = tp->rx_buf;
-+	u8 *src, *crc_src, *rx_buf = (u8 *)tp->rx_buf;
- 	int count_down = VSC_TP_MAX_XFER_COUNT;
- 	u32 recv_crc = 0, crc = ~0;
- 	struct vsc_tp_packet ack;
-@@ -320,7 +320,7 @@ int vsc_tp_rom_xfer(struct vsc_tp *tp, const void *obuf, void *ibuf, size_t len)
- 	guard(mutex)(&tp->mutex);
- 
- 	/* rom xfer is big endian */
--	cpu_to_be32_array(tp->tx_buf, obuf, words);
-+	cpu_to_be32_array((u32 *)tp->tx_buf, obuf, words);
- 
- 	ret = read_poll_timeout(gpiod_get_value_cansleep, ret,
- 				!ret, VSC_TP_ROM_XFER_POLL_DELAY_US,
-@@ -336,7 +336,7 @@ int vsc_tp_rom_xfer(struct vsc_tp *tp, const void *obuf, void *ibuf, size_t len)
- 		return ret;
- 
- 	if (ibuf)
--		be32_to_cpu_array(ibuf, tp->rx_buf, words);
-+		be32_to_cpu_array(ibuf, (u32 *)tp->rx_buf, words);
- 
- 	return ret;
- }
-@@ -492,11 +492,11 @@ static int vsc_tp_probe(struct spi_device *spi)
- 	if (!tp)
- 		return -ENOMEM;
- 
--	tp->tx_buf = devm_kzalloc(dev, VSC_TP_MAX_XFER_SIZE, GFP_KERNEL);
-+	tp->tx_buf = devm_kzalloc(dev, sizeof(*tp->tx_buf), GFP_KERNEL);
- 	if (!tp->tx_buf)
- 		return -ENOMEM;
- 
--	tp->rx_buf = devm_kzalloc(dev, VSC_TP_MAX_XFER_SIZE, GFP_KERNEL);
-+	tp->rx_buf = devm_kzalloc(dev, sizeof(*tp->rx_buf), GFP_KERNEL);
- 	if (!tp->rx_buf)
- 		return -ENOMEM;
- 
+ #endif /* _LINUX_DMA_MAPPING_H */
 -- 
 2.39.5
 
