@@ -1,112 +1,99 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DC72741C8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA6B27464D;
+	Tue, 29 Apr 2025 06:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907548; cv=none; b=qut6ldHgAzhVPR1G9BNQF5UbnAIRu30iS5u1i3TcTp3C85zCMji0he+EXk8Qs1SqfrnTYLvEStgSKIkoM6AQrCpI0hMCMI0i9RipZ3fdsa48fLP0wANmnHyXc1+UnriCPutVkSMAw9f2Ae3so+mpI6d/cgSeOF+1mcYtEum69z0=
+	t=1745907558; cv=none; b=g0+2r5JtXh0W9DYYYlXNrlm/eVeud7bBQ1zsRQ4clcTb4bmj0V9oaoHw1TSefN6eDac5S/hz0EgP25AENpLCCwdSWr2gK409utNKoZgdLRJgAWalvmYt0OOOB/seMdIHZbNsghO3paTiqFXDJP1Qo1Bugl+tcE5v3U3/CJcwzDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907548; c=relaxed/simple;
-	bh=Rp3cJHHmTx7PeP2hBYT2wQr82zD5tAALg+YJNXZeNEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rlK08NdPX2dF7WZmR+a+3ExZOiVoMVjQI6PT2ONYDHS7UxjHZ6anAQ5RRPL+yPDgl1Z0q1k8GwbVKdZixXRslr/gpEhVP6YnvXy9maIHVlQ6E6K//sHX8fnBN0Wv8Nt/jskhOmDllRu5g6g2odyiXmlKNYLPDT1ITe8EIIrWLGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PV9bzNe7; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745907558; c=relaxed/simple;
+	bh=to96rNsXBuxik4uZ6ag+2c1WhKm2TcEPMNEp1yi5Dek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qkyUzJW9QVXafvOx/eusP52lvU38MU6FKRfkMKq+LnufaRsbvjMkstytxs5Hr2nDT3r0jz9htPSs//yYTDWDMsv7pvfNR9jQ3rNybyqUBBsTcN+b6lMvQBsFViz+xKqZWSdmf5eslA5j2bNGOSrvsN7I+KZfB+uhEDU0tXBD0z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=di8BSgU8; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PV9bzNe7"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53T6IZbb3603302
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 01:18:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745907515;
-	bh=DabvRdYFWGduGnW6eb29i9SQxqUOvxHEet2tbUqVCSU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=PV9bzNe75ccEsbtETXF8C6hyk2cn4dKQVf4Q45xzanGRw3kWUO36g+BoLsQPe7b3Z
-	 e0hjn7fT/RWZQiJyezcDVK0rkZk2fv8KO7fsY+j4kG78p9I/wbaEgmUECVLR3NNJI1
-	 g+oU+8Lpn2jHOn2eM1TRUW/Q6sNMkGN3XDdlyJGk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53T6IZVe099945
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 01:18:35 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 01:18:35 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 01:18:35 -0500
-Received: from [172.24.19.207] (lt9560gk3.dhcp.ti.com [172.24.19.207])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53T6ITaV009260;
-	Tue, 29 Apr 2025 01:18:30 -0500
-Message-ID: <5a5584be-670c-46f1-a66a-3b95ef81cf1c@ti.com>
-Date: Tue, 29 Apr 2025 11:48:29 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="di8BSgU8"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8fc176825so50652746d6.0;
+        Mon, 28 Apr 2025 23:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745907556; x=1746512356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=to96rNsXBuxik4uZ6ag+2c1WhKm2TcEPMNEp1yi5Dek=;
+        b=di8BSgU87W/DEDYb6h9C+e3Q3sKqyND2/V2tphqaabJb/0UgVk4ULVSQ1rui0fO6UF
+         q0I46c2T/PbMjOI7+/qD31mQJd8sLVo6uNKn3ucU8toSnkQyRsy9evto3dH5Mp0CttbE
+         slGZBaBi/s90ofGD1NUghwtNv6UVhZpAtsPwLtGv4igQNigyla+dNJqnAAeX3/JZWlo4
+         kKNFHz1o7TfBKOxOkdJhv3B6OvyMNAryFexOKTUw6USbA8J4RxhHB7Sgbf0IfXxyphQ8
+         SZZoTaDsDJ0uEtQfGN8b1JQ5HWYgHk0zkGZNTNBwZOh3gmpifZmW7pwgqWLXYWP36G1v
+         7g/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745907556; x=1746512356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=to96rNsXBuxik4uZ6ag+2c1WhKm2TcEPMNEp1yi5Dek=;
+        b=Uqv6Bg6gJeQhsqbhtzp2aRoCLD47obJsbzg40lEDaHQ0fY/rCiRc315xehTKeKTNyn
+         bmvzvB32xK1wO/RlvRzLdrlLGZaxJz8kNx2S80rmw8IQJvG4avt8P2KUds5lLOzVpq/b
+         tlAYq4KS1D1fkxdXtRBz2prESnwvmOuIoHZvWAloV2y0sGQP+jRjztVbcnNGHRzK6OUw
+         5VSoz1yux21t3roHcqGSJRDfOuZCCOTTjQyvzgMTC8z5qtbPmibm7/gMAcPw4WLx6cHE
+         /IbUMKWRsQmOwWNl3cK4RV/HKE73eNVxfWMlZnbJeePBRKyT0L7T7sNynSCX3aDognSG
+         sVuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNtwvmeAjc6KFcjZjiKRz6Wq+2KZqfNm1yYMFyr+4VRNLrpFFzbuLJc/QinXl+0J+3JNMJhZ4SSvK0Sx9m@vger.kernel.org, AJvYcCX/u+mwEKinZ8dSZ15s1ZIAgnhj9Kwj5eqTx/BpPPLTrDt6iv5TDweXK4iwXf+qxsye4ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiCi4pq5wCuKcYPo+I4WwzIyW6HVkirGmXISDBvtT1yiKJ0c8W
+	Y7IGKcsZ5Dm43R6S1jiUgaFYG6M7lTOrBw5vAdt7I3lkHmZ+4KqXwMEofVmfaoo5i9NEER1Ms3R
+	ppB+4Yb5A9I5qVTu4MOWMH22aWZs=
+X-Gm-Gg: ASbGncvg/LPB5oIuTBrIqRn/vZMy/ivhLASR4Hz4a2N0E7Q9jR5ARutGOxpZpC5HUSg
+	ih4FgCcMd7qA6XNXYPXLILGe0ELlZz2Rh298xAhS6BF4wl4T8b0i7BRuSWS6eQJkWzgSMv2ucoz
+	UTLk1+QSNsu26pza/ysDuyy5s=
+X-Google-Smtp-Source: AGHT+IEsZZy0YWcOC4vhoy7fjiYyU0NC/Z/hsYbcXHZ/2rwkSKrvQDaK+4lISyDGN3W/xEMk1b3QRzKcGcygynxBmDM=
+X-Received: by 2002:a05:6214:c6d:b0:6e1:a4ed:4b0c with SMTP id
+ 6a1803df08f44-6f4f1bc656emr28792856d6.26.1745907556075; Mon, 28 Apr 2025
+ 23:19:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH] arm64: defconfig: Enable XDP socket
- support for high-performance networking
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <nm@ti.com>,
-        <vigneshr@ti.com>
-CC: <prabhakar.mahadev-lad.rj@bp.renesas.com>, <quic_tdas@quicinc.com>,
-        <nfraprado@collabora.com>, <arnd@arndb.de>, <lumag@kernel.org>,
-        <geert+renesas@glider.be>, <bjorn.andersson@oss.qualcomm.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Roger Quadros
-	<rogerq@kernel.org>, <danishanwar@ti.com>
-References: <20250428121025.246119-1-m-malladi@ti.com>
- <1df9b47a-d20e-4755-9b30-75d8ff150551@linaro.org>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <1df9b47a-d20e-4755-9b30-75d8ff150551@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250423163901.2983689-1-chen.dylane@linux.dev> <0a25f585-de46-4e3e-8ec2-47df25947df1@linux.dev>
+In-Reply-To: <0a25f585-de46-4e3e-8ec2-47df25947df1@linux.dev>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Tue, 29 Apr 2025 14:18:40 +0800
+X-Gm-Features: ATxdqUHu04qteggs8h5a-T20xGufOv50i0ALjGNIVQQS8dTPfwmvBAQC9HTNZDY
+Message-ID: <CALOAHbBUaSw=LYYYPwqM+HQz_8t5_g43Y7ARdvMZ-7rBTvS+Aw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] libbpf: remove sample_period init in perf_buffer
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
+	martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+On Tue, Apr 29, 2025 at 1:48=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> =E5=9C=A8 2025/4/24 00:39, Tao Chen =E5=86=99=E9=81=93:
+>
+> ping...
 
-On 4/28/2025 6:18 PM, Krzysztof Kozlowski wrote:
-> On 28/04/2025 14: 10, Meghana Malladi wrote: > From: MD Danish Anwar 
-> <danishanwar@ ti. com> > > Enable CONFIG_XDP_SOCKETS to allow for 
-> eXpress Data Path (XDP) socket > support specifically on TI SoC 
-> platforms such as the AM64x
-> ZjQcmQRYFpfptBannerStart
-> This message was sent from outside of Texas Instruments.
-> Do not click links or open attachments unless you recognize the source 
-> of this email and know the content is safe.
-> Report Suspicious
-> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
-> updqN51OXC2bwCXOvJOJf0uHOQ4u3JTTnIdRY_6gd786E07eEGpwtXIyCGLsDPJV6_rRmpwjb3dBOwY_bDAu4CiUT0pGPU8$>
-> ZjQcmQRYFpfptBannerEnd
-> 
-> On 28/04/2025 14:10, Meghana Malladi wrote:
->> From: MD Danish Anwar <danishanwar@ti.com>
->> 
->> Enable CONFIG_XDP_SOCKETS to allow for eXpress Data Path (XDP) socket
->> support specifically on TI SoC platforms such as the AM64x and AM65x.
->> This enables the use of XDP sockets for high-performance, low-latency
->> networking applications, allowing for efficient processing of network
->> packets and improved overall system performance.
-> 
-> High performance, low-latency network applications do not use defconfig.
-> That's a development config.
-> 
+The patch has already been accepted and merged into bpf-next:
+https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=
+=3D64821d25f05ac468d435e61669ae745ce5a633ea
 
-Oh got it, will drop upstreaming this patch then. Thanks.
+Interestingly, patchwork-bot+netdevbpf@kernel.org didn't send a
+notification about this.
 
-> Best regards,
-> Krzysztof
-> 
+You can check the current status of your patches on Patchwork:
+https://patchwork.kernel.org/project/netdevbpf/list/?delegate=3D121173&stat=
+e=3D*
 
--- 
-Thanks,
-Meghana Malladi
 
+--=20
+Regards
+Yafang
