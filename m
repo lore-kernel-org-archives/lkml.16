@@ -1,245 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD8C297A40
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0AB1CF7AF;
+	Tue, 29 Apr 2025 09:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919103; cv=none; b=Ikemf3Kv6U+qM0mZZgect5dp20oLVqjlMkSsQf8MDLMQ5DRmOyKdf5hpL0TaD63o14UVRb/7FNGCffLVjx+IS8vLKM9k4QcziCAoEhTifTzRbas0K9sSB6yZr9Tka60i28blt5zu5uE+DMMhY8PaWJ1g0dSUqR4JUWzrxotWnLc=
+	t=1745919170; cv=none; b=t1IGVQa3OZ/98Yf4LYqMV4K2nr7fQI5u2CXeyz72FhILfRez4fh3DoCnF4PcI0QNqMtSeQN74GPU78kw2pRbP53H8sy2XAMHH7EI04U31DOtEb/3AtEyzgk0/cGyGJGxlwFqcmoGaJ+BJOhlVf0+buWPf8HTNLg3BYI6ao9MXis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919103; c=relaxed/simple;
-	bh=JSp33XGPTyatueK4o6jd84vVu0TKMpsc3F+Uq/MAUeo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L3LNsZtYZGTDgcCyVhkDHdKspsanD1xcHCYr08Bik6STVxXJmYyFPmMMWKaT+0deJlbvaKhHZUcXeEYJSVXuQ2OHhs/l4HFMbGdSaa6GSlbKs0pPyGXhLUaMvQ23j40ltwm9YqU0GT9G6/gcspq7TpjGf+wsenygpefd9Zz9BfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cWUqEJV2; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745919170; c=relaxed/simple;
+	bh=iyrD5fmqLJLdHUw4ZJ+D4a+Bfs8zSL40H6J52M4ie7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cdpQa/MGQ1QFt0bwdxGAkYggtyVhbJWgeSqFIzXyQEyMjclH4ITzP3isgUZ2b62FxaRvJojEul0drHHD0Tn/rSvx9VAd68eWpSA57bvv55p2ft2/RMX0gDIZEzzyiuz4F39k6G7BnW269SJ7izwl5dEf0t6BzMDI2/I59fr3lC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jCzzZ0df; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cWUqEJV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745919102; x=1777455102;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JSp33XGPTyatueK4o6jd84vVu0TKMpsc3F+Uq/MAUeo=;
-  b=cWUqEJV2SZJGt59J/Mdi8jwzN/1M47mRWli2V9TxdNEE7guyEZAoEJax
-   KE+bQ+iG6km6edOSH0OcDDXUAg/jLNPY1VlVJsWkdMfaZ1iD0/DKQ8pcw
-   460rSn607H6fUlsJ2DSAa4E1Jx0wya715/ElSotVtJpVveH/i0vwGxDyU
-   nrWAO1vB8Wg/AczzTs5tMoyWH4vIDYb8t5WlrOxVBfAS036Rk/ergOQv1
-   18szxXe2jEEsOiRXDm7RqWLnEw5eQoiOB071BkwjgO041dWMPNQMPlqEF
-   1uBU3NArZmrRd1zC8MyHD1LfC+jQdup/7hnNPgUD/9GOS5vbIpsBM1kWZ
-   A==;
-X-CSE-ConnectionGUID: wooKWWgIQFmEixdnIyz/tg==
-X-CSE-MsgGUID: 8jLJqeUwQYStNEsMlqAikA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="64950251"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="64950251"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:31:41 -0700
-X-CSE-ConnectionGUID: vSTcVcNKRbqprzBtYgZZqQ==
-X-CSE-MsgGUID: EItLiXMqRMC9ILIgbEryWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="134086830"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 02:31:35 -0700
-Date: Tue, 29 Apr 2025 12:31:32 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Alexander Usyskin <alexander.usyskin@intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>,
-	Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Tomas Winkler <tomasw@gmail.com>
-Subject: Re: [PATCH v9 02/12] mtd: add driver for intel graphics non-volatile
- memory device
-Message-ID: <aBCcdPbIxthARrMj@black.fi.intel.com>
-References: <20250424132536.3043825-1-alexander.usyskin@intel.com>
- <20250424132536.3043825-3-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jCzzZ0df"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CF72B43AF4;
+	Tue, 29 Apr 2025 09:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745919165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7Ka0Bn71hD5KRGfp1m5vqguPisa5gsBriU33g+DLET0=;
+	b=jCzzZ0dfRgp0juitg7OuU93zMJKRcX4KFXXucM1BpINsJ6vfPLqlSI/UXtaDjEZ278uKww
+	ZbTbl7XOsfwaZyMlQeahVPokVo7wXVJA/KcjHeou+INDVfRzwcV18Xc+MBS4gRA3Zy7kYo
+	KZrgtvXwaE+cZOzij08fOcAXVDlXwrrbAAuILXZ7uLPCbAeNBrkEWKAPU6DjF1OgTplXqV
+	AARxMPxalK0d6IJOtAX08doNuknRsA9rB1Lwwb1G/fccrudjTqn+cj4KjMts/RYAL8egA4
+	NmmhfalVsnbctzeBA7EmdQW/HMvVx5dCE/8qTrCir7w8XGtu4G9ndMaYJWd2Mw==
+Date: Tue, 29 Apr 2025 11:32:41 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v9 02/13] net: pse-pd: Add support for
+ reporting events
+Message-ID: <20250429113241.572e3759@kmaincent-XPS-13-7390>
+In-Reply-To: <be2ae666-a891-4dee-8791-3773331ce7d7@redhat.com>
+References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
+	<20250422-feature_poe_port_prio-v9-2-417fc007572d@bootlin.com>
+	<be2ae666-a891-4dee-8791-3773331ce7d7@redhat.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424132536.3043825-3-alexander.usyskin@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefgeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughum
+ hgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Thu, Apr 24, 2025 at 04:25:26PM +0300, Alexander Usyskin wrote:
-> Add auxiliary driver for intel discrete graphics
-> non-volatile memory device.
+On Tue, 29 Apr 2025 11:00:19 +0200
+Paolo Abeni <pabeni@redhat.com> wrote:
 
-...
+> On 4/22/25 4:56 PM, Kory Maincent wrote:
+> > +/**
+> > + * pse_control_find_phy_by_id - Find PHY attached to the pse control id
+> > + * @pcdev: a pointer to the PSE
+> > + * @id: index of the PSE control
+> > + *
+> > + * Return: PHY device pointer or NULL
+> > + */
+> > +static struct phy_device *
+> > +pse_control_find_phy_by_id(struct pse_controller_dev *pcdev, int id)
+> > +{
+> > +	struct pse_control *psec;
+> > +
+> > +	mutex_lock(&pse_list_mutex);
+> > +	list_for_each_entry(psec, &pcdev->pse_control_head, list) {
+> > +		if (psec->id =3D=3D id) {
+> > +			mutex_unlock(&pse_list_mutex); =20
+>=20
+> AFAICS at this point 'psec' could be freed and the next statement could
+> cause UaF.
+>=20
+> It looks like you should acquire a reference to the pse control?
 
-> +static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
-> +			      const struct auxiliary_device_id *aux_dev_id)
-> +{
-> +	struct intel_dg_nvm_dev *invm = auxiliary_dev_to_intel_dg_nvm_dev(aux_dev);
-> +	struct device *device;
-> +	struct intel_dg_nvm *nvm;
-> +	unsigned int nregions;
-> +	unsigned int i, n;
-> +	char *name;
+Oh indeed, thanks for spotting this issue!
 
-Perhaps move this to the loop it is being used in?
+I first though this would be sufficient:=20
+phydev =3D psec->attached_phydev;
+mutex_unlock(&pse_list_mutex);
+return phydev;
 
-> +	int ret;
-> +
-> +	device = &aux_dev->dev;
-> +
-> +	/* count available regions */
-> +	for (nregions = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
-> +		if (invm->regions[i].name)
-> +			nregions++;
-> +	}
-> +
-> +	if (!nregions) {
-> +		dev_err(device, "no regions defined\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
-> +	if (!nvm)
-> +		return -ENOMEM;
-> +
-> +	kref_init(&nvm->refcnt);
-> +
-> +	nvm->nregions = nregions;
+But in fact the ethnl_pse_send_ntf(phydev, notifs, &extack) is called witho=
+ut
+RTNL lock, therefore the phydev could be freed and we could also have an Ua=
+F on
+the phydev pointer. I will add a rtnl_lock here. Maybe a
+get_device(&phydev->mdio.dev) is sufficient but not sure.
 
-Is this assignment useful?
+Also we really need to throw the ASSERT_RTNL() in the phy_detach function,
+because there are still paths where the phy is freed without rtnl. I have a
+patch for it, I will try to send it in RFC soon.
 
-> +	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
-> +		if (!invm->regions[i].name)
-> +			continue;
-> +
-> +		name = kasprintf(GFP_KERNEL, "%s.%s",
-> +				 dev_name(&aux_dev->dev), invm->regions[i].name);
-> +		if (!name)
-> +			continue;
-> +		nvm->regions[n].name = name;
-> +		nvm->regions[n].id = i;
-> +		n++;
-> +	}
-> +	nvm->nregions = n; /* in case where kasprintf fail */
-
-Considering kasprintf failure, should we move forward if n == 0?
-
-> +	nvm->base = devm_ioremap_resource(device, &invm->bar);
-> +	if (IS_ERR(nvm->base)) {
-> +		dev_err(device, "mmio not mapped\n");
-
-Is this useful? Perhaps the helper already does it for us.
-
-> +		ret = PTR_ERR(nvm->base);
-> +		goto err;
-> +	}
-> +
-> +	dev_set_drvdata(&aux_dev->dev, nvm);
-> +
-> +	return 0;
-> +
-> +err:
-> +	kref_put(&nvm->refcnt, intel_dg_nvm_release);
-> +	return ret;
-> +}
-> +
-> +static void intel_dg_mtd_remove(struct auxiliary_device *aux_dev)
-> +{
-> +	struct intel_dg_nvm *nvm = dev_get_drvdata(&aux_dev->dev);
-> +
-> +	if (!nvm)
-> +		return;
-
-Are we expecting this?
-
-> +	dev_set_drvdata(&aux_dev->dev, NULL);
-
-Do we need this?
-
-> +	kref_put(&nvm->refcnt, intel_dg_nvm_release);
-> +}
-> +
-> +static const struct auxiliary_device_id intel_dg_mtd_id_table[] = {
-> +	{
-> +		.name = "i915.nvm",
-> +	},
-> +	{
-> +		.name = "xe.nvm",
-> +	},
-> +	{
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(auxiliary, intel_dg_mtd_id_table);
-> +
-> +static struct auxiliary_driver intel_dg_mtd_driver = {
-> +	.probe  = intel_dg_mtd_probe,
-> +	.remove = intel_dg_mtd_remove,
-> +	.driver = {
-> +		/* auxiliary_driver_register() sets .name to be the modname */
-> +	},
-> +	.id_table = intel_dg_mtd_id_table
-> +};
-
-> +
-
-Nit: Redundant blank line.
-
-> +module_auxiliary_driver(intel_dg_mtd_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Intel Corporation");
-> +MODULE_DESCRIPTION("Intel DGFX MTD driver");
-> diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
-> new file mode 100644
-> index 000000000000..68df634c994c
-> --- /dev/null
-> +++ b/include/linux/intel_dg_nvm_aux.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
-> + */
-> +
-> +#ifndef __INTEL_DG_NVM_AUX_H__
-> +#define __INTEL_DG_NVM_AUX_H__
-> +
-> +#include <linux/auxiliary_bus.h>
-
-Missing types.h, container_of.h
-
-> +#define INTEL_DG_NVM_REGIONS 13
-> +
-> +struct intel_dg_nvm_region {
-> +	const char *name;
-> +};
-> +
-> +struct intel_dg_nvm_dev {
-> +	struct auxiliary_device aux_dev;
-> +	bool writable_override;
-> +	struct resource bar;
-> +	const struct intel_dg_nvm_region *regions;
-> +};
-> +
-> +#define auxiliary_dev_to_intel_dg_nvm_dev(auxiliary_dev) \
-> +	container_of(auxiliary_dev, struct intel_dg_nvm_dev, aux_dev)
-> +
-> +#endif /* __INTEL_DG_NVM_AUX_H__ */
-> -- 
-> 2.43.0
-> 
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
