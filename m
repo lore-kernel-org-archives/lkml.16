@@ -1,140 +1,112 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E0B28032F;
-	Tue, 29 Apr 2025 23:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A853255F50
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970392; cv=none; b=JbqE0bgA53Au8mu8wN7OsLokIV69amhOTf5bxlaT8BYVK1S9/oOuGUlwvPRGQ3WBq77vvrUzYOw0pJUWFrgp2RGWM647vacbhADM2Pt/IAuzP8hZuPj6fOP6Wai3IB+WkXHqz0FBYv/QGG7sa85Rskw5s+d3XcIiRDRUuPrjla0=
+	t=1745970430; cv=none; b=gdkfhRIAOQE0y16iav5BulPsfJGf2E3TmA1LAU/oqkKE6ky33gpd5msd9N2+0v+JLLn8v/0bkTyf77JRN3dXFYxZxO5Tciv8viXI8TbBidFkJfJo+dlpAXhI0QgU2iitCDXVcW1WNEO7toZ4Mqq4D5zUuyr36z+0JVX0sINt594=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970392; c=relaxed/simple;
-	bh=jC9ESrquPWsK4+tw8ngYfnrS7aa/CAurRFMXmPtAc+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G3Q0cIOJnLe/jjoIIPEZ6iyqaALG5ozmEjavm1TDBtA15SMCvlfGC6+TN9ZVelsB54MgUN5EA212AsT2dEi/knRGYjnFnP1/00KyVshl0LWaPJ24Q/3CtRRRRpum7P9cLweBZ246sfoJLjN2ggtdh7JNvFx4IOcsW5JKHs1OjDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=nENxa7Ng; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745970430; c=relaxed/simple;
+	bh=lqFpTzBKH0n+hLPP3D74zDTrtj3ZCOQgeEHM7+9pKZ4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=AQEnRsf4mfO3eTY9oOk9k2z1hw7Az+Aoy+5+I325DPLuRFV0V0w5ogHa3M49csnk/c21e6zTo/MtxL9QeHbLRSVk8gwFHb87Bhukmmj0LGbD6AV9LMBGThJxEfoRdyIxFSZK56zc0QgP2CT1Q3SHFswdhBTdEAh0gu4JcC2xGBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m2Oten3T; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="nENxa7Ng"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=uRcjVbFq8T8/LjI+x083YOLHE0Mpv5g8CqVtzshi4Ds=; b=nENxa7NgF9VhOOqX
-	t1+9fnOoIaZl14n9BOIWc2rF4O9Y1rPeQlciq8hHFu1+wMCwmLRPFMvRr+rpFLRokxU4ZoVYwAKcZ
-	0AnoqcK05Nmw82RHZXLbkREMRwx2Cz6Nuily4StuKsYlTHbhuEUql/Pep1YGwKudfSEaB8knO8GDW
-	rZW0tOMTDGMnTOkCMEMigpjOeEfBNJHHIe2pNkQFjCWHdlOW96mvEM+zqaq2cLp21Y3p9FwHxh5OX
-	gGYmW/PhtDKW/+TKNs7tWqUlvVXTufOdVL5LR0+mOmTy6TYGnlR4pwuZT4Yug0zsXcYzkgRazacyE
-	f5U52f8GWAPeURXliQ==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u9ueQ-000WFz-0b;
-	Tue, 29 Apr 2025 23:46:10 +0000
-From: linux@treblig.org
-To: arnaud.pouliquen@foss.st.com,
-	andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: corbet@lwn.net,
-	linux-remoteproc@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH v3 2/3] rpmsg: virtio: Remove uncallable offchannel functions
-Date: Wed, 30 Apr 2025 00:45:58 +0100
-Message-ID: <20250429234600.301083-3-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250429234600.301083-1-linux@treblig.org>
-References: <20250429234600.301083-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m2Oten3T"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73c09e99069so6555692b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745970428; x=1746575228; darn=vger.kernel.org;
+        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rHgN+FCfcpWxKWmUBcvDV+CDR/OsUBfRs2x102Mf4zk=;
+        b=m2Oten3TacdjncZXnZwfYz/0bAs35CDRIRa3B6apFcHEWS124i3a4+mSgrLAn186Ca
+         8a4rjrF0qHBNKhWXPolP+HnFxqd61iHlDF0Rf/SNdzBi7KhyBcdbrBWTUQDQ2u9a0tbZ
+         6dWtN2wg+cmeFSLobbRs7cxj5d9B0nUC6/1EpteOTFcGErTne1fNHzHZ7f8a0GlS83WC
+         2O/we83avKo8JAQGU5KnzomJviYacpgJGH+mc+X0hi7kLGlYDmak+UL3eHkttSVSusx8
+         oer7vkXC3D2dfYB65q0q2HwH94Hf98L0hVnDaL/1dsjZ5nGwso9MzlDMDZ5NE5cfkiRe
+         syqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745970428; x=1746575228;
+        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rHgN+FCfcpWxKWmUBcvDV+CDR/OsUBfRs2x102Mf4zk=;
+        b=bJmBvV2VdLhAuMdHwyvb1RkD5mhaQ+hUeWQVSnKd+TO5MFVM+bMIsdpCtCAhcz4Agc
+         ADpyDHqnX+cU91rrkoMylb0TW4/A6kCNr0Ki3fZgyjtJULdLh/FA/WweuMTRYDcUFb6R
+         hd5BNyV5EeOf9PLynzM9fhSdUXOCn6QHiZSfdFE0yTGYb6LA7fSr4ozN15Fwqyp5DUVi
+         hEA0ii7WsMBEwR8pqYEvcd5qhssfV8pInpfXXvEXVAeQRmQWLs6gAKp3eWcl6/+roEYq
+         /GX/Dw4tbPM2BxfRRBlJWF3H8lxAkC0UVXhk3J5o4RS4MTnnxS6JxwOzGb+yu+9Fsb+K
+         c60w==
+X-Forwarded-Encrypted: i=1; AJvYcCWMZHJ6LMgSAH6HkjxTrGtg2Pa2cbo/TcIVcMTh8+WU+L9z/oJFgIeLcC9l/WvhBmrw6knNdu497K8l8Rk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSxLT3Z10wnn1tU/FCG5QJEhWuHvtNzfAwsdKP0kZ+9YXlR/JX
+	DCeUYIx+62/onIrU2xaNU0sjgHI5NzUL8SYO5qLpgW9nxEN0Bek2nCUFTgTHkc5E8OlhaH7GiC7
+	DoLCJ4QMBc8uL8Q==
+X-Google-Smtp-Source: AGHT+IHJSCSltg+/WIvPA6Nl6fDGEhdVNbCCtrD4AIszlnjDqDNJCFlblYduUzbVm4fXKSyRzxB9EK7JCUQkCWs=
+X-Received: from pgnm17.prod.google.com ([2002:a63:7d51:0:b0:b15:84fa:ff1f])
+ (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:e94:b0:1f5:7280:1cf7 with SMTP id adf61e73a8af0-20a87c542bamr1146783637.16.1745970428604;
+ Tue, 29 Apr 2025 16:47:08 -0700 (PDT)
+Date: Tue, 29 Apr 2025 23:47:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1469; i=rdbabiera@google.com;
+ h=from:subject; bh=lqFpTzBKH0n+hLPP3D74zDTrtj3ZCOQgeEHM7+9pKZ4=;
+ b=owGbwMvMwCFW0bfok0KS4TbG02pJDBmCKd9jVzPEWE+SSrfKeOVlefIr47ZZgRELovtfTD78I
+ zOVdXdlRykLgxgHg6yYIouuf57BjSupW+Zw1hjDzGFlAhnCwMUpABP58Z2R4Z39tc+rWv++8FLm
+ FvHh9P/j6cJSI/Uy9HDYjEsd03i38DD84c25lzGD5yy3dIz5rdjZusJGkve3vA/pufQr/I70Zd9 1nAA=
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250429234703.3748506-2-rdbabiera@google.com>
+Subject: [PATCH v1] usb: typec: tcpm: delay SNK_TRY_WAIT_DEBOUNCE to
+ SRC_TRYWAIT transition
+From: RD Babiera <rdbabiera@google.com>
+Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
+	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+This patch fixes Type-C Compliance Test TD 4.7.6 - Try.SNK DRP Connect
+SNKAS.
 
-The virtio_rpmsg_send_offchannel() and virtio_rpmsg_trysend_offchannel()
-are wired up to the send_offchannel and trysend_offchannel members
-of rpmsg_endpoint_ops, the only dereference of those was by
-the unused, and now removed rpmsg_send_offchannel() and
-rpmsg_trysend_offchannel() functions.
+The compliance tester moves into SNK_UNATTACHED during toggling and
+expects the PUT to apply Rp after tPDDebounce of detection. If the port
+is in SNK_TRY_WAIT_DEBOUNCE, it will move into SRC_TRYWAIT immediately
+and apply Rp. This violates TD 4.7.5.V.3, where the tester confirms that
+the PUT attaches Rp after the transitions to Unattached.SNK for
+tPDDebounce.
 
-Remove them.
+Change the tcpm_set_state delay between SNK_TRY_WAIT_DEBOUNCE and
+SRC_TRYWAIT to tPDDebounce.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Fixes: a0a3e04e6b2c ("staging: typec: tcpm: Check for Rp for tPDDebounce")
+Cc: stable@vger.kernel.org
+Signed-off-by: RD Babiera <rdbabiera@google.com>
+Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
- drivers/rpmsg/virtio_rpmsg_bus.c | 24 +-----------------------
- 1 file changed, 1 insertion(+), 23 deletions(-)
+ drivers/usb/typec/tcpm/tcpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-index 89d7a3b8c48b..4730b1c8b322 100644
---- a/drivers/rpmsg/virtio_rpmsg_bus.c
-+++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-@@ -141,13 +141,9 @@ static void virtio_rpmsg_destroy_ept(struct rpmsg_endpoint *ept);
- static int virtio_rpmsg_send(struct rpmsg_endpoint *ept, void *data, int len);
- static int virtio_rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len,
- 			       u32 dst);
--static int virtio_rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src,
--					u32 dst, void *data, int len);
- static int virtio_rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len);
- static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
- 				  int len, u32 dst);
--static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
--					   u32 dst, void *data, int len);
- static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept);
- static struct rpmsg_device *__rpmsg_create_channel(struct virtproc_info *vrp,
- 						   struct rpmsg_channel_info *chinfo);
-@@ -156,10 +152,8 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
- 	.destroy_ept = virtio_rpmsg_destroy_ept,
- 	.send = virtio_rpmsg_send,
- 	.sendto = virtio_rpmsg_sendto,
--	.send_offchannel = virtio_rpmsg_send_offchannel,
- 	.trysend = virtio_rpmsg_trysend,
- 	.trysendto = virtio_rpmsg_trysendto,
--	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
- 	.get_mtu = virtio_rpmsg_get_mtu,
- };
- 
-@@ -545,7 +539,7 @@ static void rpmsg_downref_sleepers(struct virtproc_info *vrp)
-  * the function will immediately fail, and -ENOMEM will be returned.
-  *
-  * Normally drivers shouldn't use this function directly; instead, drivers
-- * should use the appropriate rpmsg_{try}send{to, _offchannel} API
-+ * should use the appropriate rpmsg_{try}send{to} API
-  * (see include/linux/rpmsg.h).
-  *
-  * Return: 0 on success and an appropriate error value on failure.
-@@ -665,14 +659,6 @@ static int virtio_rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len,
- 	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, true);
- }
- 
--static int virtio_rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src,
--					u32 dst, void *data, int len)
--{
--	struct rpmsg_device *rpdev = ept->rpdev;
--
--	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, true);
--}
--
- static int virtio_rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len)
- {
- 	struct rpmsg_device *rpdev = ept->rpdev;
-@@ -690,14 +676,6 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
- 	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
- }
- 
--static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
--					   u32 dst, void *data, int len)
--{
--	struct rpmsg_device *rpdev = ept->rpdev;
--
--	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
--}
--
- static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
- {
- 	struct rpmsg_device *rpdev = ept->rpdev;
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 784fa23102f9..87d56ac4565d 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -6003,7 +6003,7 @@ static void _tcpm_cc_change(struct tcpm_port *port, enum typec_cc_status cc1,
+ 	case SNK_TRY_WAIT_DEBOUNCE:
+ 		if (!tcpm_port_is_sink(port)) {
+ 			port->max_wait = 0;
+-			tcpm_set_state(port, SRC_TRYWAIT, 0);
++			tcpm_set_state(port, SRC_TRYWAIT, PD_T_PD_DEBOUNCE);
+ 		}
+ 		break;
+ 	case SRC_TRY_WAIT:
+
+base-commit: 615dca38c2eae55aff80050275931c87a812b48c
 -- 
-2.49.0
+2.49.0.967.g6a0df3ecc3-goog
 
