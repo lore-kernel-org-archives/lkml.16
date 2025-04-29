@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40C1189B9D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6390C26FD9C
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912473; cv=none; b=Ua2PQRt0mbGTut2R2pjcStx3ymIrYLn4uKR8bQe4zrO4TdxTuKaJ2ClKeHOeTbjMaRHe+9+bmBBSJj5k+Lua0GDG3+iQEW13F1Yp0Os0p72gsjrsphQlf2lj+tB+Ro0flCznAIuJG2pNk+ek0n/zL0r2dTNXBFHdFf9vm8v0X58=
+	t=1745912473; cv=none; b=K/LiUAcHNlCIIEDOeHOHjsDPCTjEDLuWMuXqr/nSQ97fVM17B3jrP9mqfQ+tHydB8SHVy7Mdd8Z5SHzn6LD5RXhfSf59IEYs/+z+P2750a7xUZgStUdjABB+SzYDDdNU3n2azd9XhokfwVtBYO4q1aQi7Aj2l53nskeUiwcV23k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745912473; c=relaxed/simple;
-	bh=MBFWwb46UQQNdOkUo56hW2ui2l2iYYiZr5TxJR/PPC4=;
+	bh=1k8DD7DU6StfRskpYGO/JVOEw0YmLwAKC4vCqPkq0s4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R6v9WmMJZQIzIQH+I143+oELOUbBG+7x3iJ0XD89+zja34faC9WlfXlLt6r95AHWmCfZ4MmmBgtdbzTQwU9h1EOyDT06f+DkWgHuAYXlhk2XxgvMlqd53vPfO28cz38nsdz0pvO3Sg4c9418HAIYRY/D8Oxw5JJVWep9rCRP/MY=
+	 MIME-Version; b=KRXAl7+3NBVrlEbRL9gWIHlDnYCYSmgXE3FAWLQPp2DcAxVb/9HA+ixZkYkexve1pTXPoGPIRmPKBdIv3wKTeqhoduV++A8nDiiSBYDNLHXcdni44ivJP6C3eKvROlASIBznoc4TM+AUTZYM5sMEiqYQr1kmhmGPuvwACclT52w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9faT-0006KR-Sj; Tue, 29 Apr 2025 09:41:05 +0200
+	id 1u9faT-0006KP-Sj; Tue, 29 Apr 2025 09:41:05 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9faS-000E3G-1e;
+	id 1u9faS-000E3D-1W;
 	Tue, 29 Apr 2025 09:41:04 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u9faS-00CY78-1Q;
+	id 1u9faS-00CY6o-1J;
 	Tue, 29 Apr 2025 09:41:04 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -40,9 +40,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH net-next v3 4/4] net: selftests: add PHY loopback tests with HW checksum offload
-Date: Tue, 29 Apr 2025 09:41:03 +0200
-Message-Id: <20250429074103.2991006-5-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v3 2/4] net: selftests: prepare for detailed error handling in net_test_get_skb()
+Date: Tue, 29 Apr 2025 09:41:01 +0200
+Message-Id: <20250429074103.2991006-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250429074103.2991006-1-o.rempel@pengutronix.de>
 References: <20250429074103.2991006-1-o.rempel@pengutronix.de>
@@ -52,127 +52,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Introduce two new PHY loopback tests that validate hardware checksum
-offload functionality using UDP and TCP packets. These tests set
-csum_mode = CHECKSUM_PARTIAL, allowing the NIC to compute transport
-checksums.
+Replace NULL return with ERR_PTR(-ENOMEM) in net_test_get_skb() and
+update the caller to use IS_ERR/PTR_ERR.
 
-Tests are only executed if the device advertises NETIF_F_HW_CSUM
-support. If not, they are skipped with -EOPNOTSUPP.
-
-Also register the tests under descriptive names in the test list.
+This prepares the code for follow-up changes that will return more
+specific error codes from net_test_get_skb().
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Reviewed-by: Simon Horman <horms@kernel.org>
 ---
- net/core/selftests.c | 80 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ net/core/selftests.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/net/core/selftests.c b/net/core/selftests.c
-index 591686978dd7..e751dc677858 100644
+index 9146e33db25a..3f82a5d14cd4 100644
 --- a/net/core/selftests.c
 +++ b/net/core/selftests.c
-@@ -539,6 +539,79 @@ static int net_test_phy_loopback_tcp(struct net_device *ndev)
- 	return __net_test_loopback(ndev, &attr);
- }
+@@ -74,7 +74,7 @@ static struct sk_buff *net_test_get_skb(struct net_device *ndev,
  
-+/**
-+ * net_test_phy_loopback_udp_hwcsum - PHY loopback test using UDP with HW
-+ *                                    checksum
-+ * @ndev: The network device to test
-+ *
-+ * Sends and receives a UDP packet through the device's internal PHY loopback
-+ * path. The packet is configured for hardware checksum offload
-+ * (CHECKSUM_PARTIAL), allowing the NIC to compute the transport checksum.
-+ *
-+ * Expected packet path:
-+ *   Test code → MAC driver → MAC HW → xMII → PHY →
-+ *   internal PHY loopback → xMII → MAC HW → MAC driver → test code
-+ *
-+ * The test frame includes Ethernet (14B), IPv4 (20B), UDP (8B), and a
-+ * small payload (13B), totaling 55 bytes before MAC padding/FCS. Most
-+ * MACs pad this to the minimum Ethernet payload (60 bytes before FCS).
-+ *
-+ * If the device does not support NETIF_F_HW_CSUM, the test is skipped
-+ * and -EOPNOTSUPP is returned.
-+ *
-+ * Returns 0 on success, or negative error code on failure.
-+ */
-+static int net_test_phy_loopback_udp_hwcsum(struct net_device *ndev)
-+{
-+	struct net_packet_attrs attr = { };
-+
-+	if (!(ndev->features & NETIF_F_HW_CSUM))
-+		return -EOPNOTSUPP;
-+
-+	attr.dst = ndev->dev_addr;
-+	attr.tcp = false;
-+	attr.csum_mode = NET_TEST_CHECKSUM_PARTIAL;
-+
-+	return __net_test_loopback(ndev, &attr);
-+}
-+
-+/**
-+ * net_test_phy_loopback_tcp_hwcsum - PHY loopback test using TCP with HW
-+ *                                    checksum
-+ * @ndev: The network device to test
-+ *
-+ * Sends and receives a TCP packet through the device's internal PHY loopback
-+ * path. The packet is configured for hardware checksum offload
-+ * (CHECKSUM_PARTIAL), allowing the NIC to compute the transport checksum.
-+ *
-+ * Expected packet path:
-+ *   Test code → MAC driver → MAC HW → xMII → PHY →
-+ *   internal PHY loopback → xMII → MAC HW → MAC driver → test code
-+ *   (via packet_type handler)
-+ *
-+ * The test frame includes Ethernet (14B), IPv4 (20B), TCP (20B),
-+ * and a small payload (13B), totaling 67 bytes before FCS.
-+ * No additional padding is required.
-+ *
-+ * If the device does not support NETIF_F_HW_CSUM, the test is skipped
-+ * and -EOPNOTSUPP is returned.
-+ *
-+ * Returns 0 on success, or negative error code on failure.
-+ */
-+static int net_test_phy_loopback_tcp_hwcsum(struct net_device *ndev)
-+{
-+	struct net_packet_attrs attr = { };
-+
-+	if (!(ndev->features & NETIF_F_HW_CSUM))
-+		return -EOPNOTSUPP;
-+
-+	attr.dst = ndev->dev_addr;
-+	attr.tcp = true;
-+	attr.csum_mode = NET_TEST_CHECKSUM_PARTIAL;
-+
-+	return __net_test_loopback(ndev, &attr);
-+}
-+
- static const struct net_test {
- 	char name[ETH_GSTRING_LEN];
- 	int (*fn)(struct net_device *ndev);
-@@ -562,6 +635,13 @@ static const struct net_test {
- 	}, {
- 		.name = "PHY loopback TCP (SW csum)    ",
- 		.fn = net_test_phy_loopback_tcp,
-+	}, {
-+		/* Conditional HW checksum tests */
-+		.name = "PHY loopback UDP (HW csum)    ",
-+		.fn = net_test_phy_loopback_udp_hwcsum,
-+	}, {
-+		.name = "PHY loopback TCP (HW csum)    ",
-+		.fn = net_test_phy_loopback_tcp_hwcsum,
- 	}, {
- 		/* This test should be done after all PHY loopback test */
- 		.name = "PHY internal loopback, disable",
+ 	skb = netdev_alloc_skb(ndev, size);
+ 	if (!skb)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	prefetchw(skb->data);
+ 
+@@ -267,8 +267,8 @@ static int __net_test_loopback(struct net_device *ndev,
+ 	dev_add_pack(&tpriv->pt);
+ 
+ 	skb = net_test_get_skb(ndev, attr);
+-	if (!skb) {
+-		ret = -ENOMEM;
++	if (IS_ERR(skb)) {
++		ret = PTR_ERR(skb);
+ 		goto cleanup;
+ 	}
+ 
 -- 
 2.39.5
 
