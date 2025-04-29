@@ -1,148 +1,97 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141BA293B58
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2DB293453
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745914933; cv=none; b=U4K3azMH7fBCJNDQSqfNgrsm8JjCGH+MR8HIj52DH8mZGh/wcDDAad2p7kHBVCFhig6kqhJtUBeO9pNiGdfe9YQKjZN5dnUA58QFokAzk5Zu8BgdkHyRCzbo9Lt/sdTOfMrM6Pwvo1vD7rXpB2ZzI4SjGzB9KgbrOfMS3JDThZI=
+	t=1745914933; cv=none; b=GtsDoELrV8CcLZgnOEFFfdjTk4yUrtIP0K2gbe7Ihr5mm/ut0gGJjnNCsGxifnsH8/5CZ+TX3RIzAnB+oztzfO3Xixv8YHRUqmr9lH15B3zKFMSAV/TamTUjRL/TZNF0WFkmdATNC2NXX5a49GoB9G8ae1WU9O6lC7aemBUm3OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745914933; c=relaxed/simple;
-	bh=Cc1Ucs7d+DoVlcf66E1KPy7NQ5fP8mutIpm2TD0VDuE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MbvgkEMw7h9CWR7xFRJk9KNqCXKzTHJtS39MoSiirNo67LePIROrxnWHMatkjku3HESqyUi38kRi+/MMVsn93FbuQWxFvxhE/9sr045H2+70HAtXJ9y/i1CHL4Sy9g6FtV5lIF/+DKlWiMYg/V7jQ5CGODmy8HE3e7WD97IayN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JIx/2dq0; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=51rPKNWy28yHEQF5vKFIvy3xEvik4jtPFbzVCWffIjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oj18GMsovk3Xa4aIZ8HtiZjiKcbhAiMLd7nC+sszP5yJ8mq+jL63Gqpn4GEj4z4iMCHFWN+o2mGfw+RXRazAXdQyLoJHlV+7/3QZryWQk+FodQCOJNslOWsNfvOKKY1FMY1glQUl4TVZ4Kkz3Sshfu2ZGoBAKUwnc34lqvEEa78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jQS+oPEw; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JIx/2dq0"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so983518066b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745914928; x=1746519728; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rgc6ivQ4v0OBxVxiMV//REmkxOVzSIsF9RwMWgdL0S4=;
-        b=JIx/2dq0IdP5lsWIrTOPOeR6rm7/Ty0PDCRQFTGX5B+VLkE2tL7NxkZqVceAoqOeNb
-         mVD3rpFNJ6vrN1bXWUjkrbklE8VG8Ln6Kh5sh7Qt/Aj2SIfW/dI01tp9c/K4CfrTojtK
-         Zfj/SQ820rMqH2oHDyia9AyjQy9PTH3yhVUkUaFBUjETIPku/bTrUT/zp0CJOl7PYAi1
-         kGrPUWO5WpfGeskOfcmfd/cZWKL2Wa1e19CNBqGFjMDPEUpKD1sOiZNyqigG9cfN8SOB
-         V6pxHsDYgZCtHXs2xg9dJ0+OoeOeXDu/esQGmZiOihr4G2wPV03hZctH/+29F2WwLBWr
-         lxqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745914928; x=1746519728;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rgc6ivQ4v0OBxVxiMV//REmkxOVzSIsF9RwMWgdL0S4=;
-        b=BgsovfjOgGi4+AyzBjiMI0B1/x7fuNi7Yn9her7fTRfzuv9thhWtxtMGRxmLrFMI3A
-         rn8mhpCrJSmm2UoGpr4F0JAGm3qa6RApCkp59nP7v0RjrbcAoOCDQ+Y81+FnwkR0dQRV
-         hviQM+s/gqT2DOOlmmwfFpScPsHHdkqgBJA0fVmF/EpDAyoq8D+4u0syy4XXvTGhneXW
-         zvR/QMFce69U4X57X+S59TgAniveespwi4iIzxdm4FSmKN9LtEAb655n2zf5T83kMn/w
-         OKHldxpN/MkrujzyMZBdduAKBiI6SWy/NE9+/9TgtcNscwLWe+OcZOMxvUSNWzSgbduc
-         aUIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJNe7JtneKQBh/pd0XgdZhdGgHuOausYfbRsHqb0RoizKliotD0GfGrqazOXi40SOqTn4Mtr9QtpoYSjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFSGojqqcnaLweLpGszV/03iL6iWnnYjaZvED3ZZlq3OnOdyUE
-	M7S3CRTJdbawuqMs3Cv9qkyfMRvHdUJi7RbmaPK9MQvFiQpP040DVtzLrOLzQEU=
-X-Gm-Gg: ASbGncv4b0KBqQU3zsJPaXytxnHmpOvA1gjtcK8Oz90ZqBRhBo2UEIh6yCLXtmlVeA0
-	UuQTi+qEWG/B1Tc3cP7Lf7oO5mEfcgZH40f0iEKJf5xeyqIdy1hlmEjtCVQA1appyCSEmghx8sZ
-	zmQe4rG/0l6gqaxB+e3jRQPe5FLfg2ifnGtJhnKivubse8HCzVUZwosDlo6rM1DuwS+RYzshRWU
-	lk6ifOYQuZ8ycQvzgc4aF6rwOxt4nFlrG30TMCo2z5TVRTHT53gTQGtnKlIzyqryYJUM5ITUIhB
-	hoUhzmBi/EYXbXMAV7kIaToYJn+3Dn8kPz8qbANySPbNu540xD8PK5oZJEebZvaYXkm9LjrF/kw
-	cpXi0a7ucijbmWOCcAAHTwVwE
-X-Google-Smtp-Source: AGHT+IFe3Pnn1X/IyxiNpZeYuCh2G0CyBjUHp/1BGmD7TkeokHlJhATW4MV7s/37c0u7zNh9awdx1w==
-X-Received: by 2002:a17:907:7e84:b0:aca:d83b:611b with SMTP id a640c23a62f3a-ace84aad97bmr1190165266b.43.1745914928158;
-        Tue, 29 Apr 2025 01:22:08 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bbf4sm737905466b.36.2025.04.29.01.22.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:22:07 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Tue, 29 Apr 2025 09:21:38 +0100
-Subject: [PATCH v8 2/6] dt-bindings: nvmem: add max77759 binding
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jQS+oPEw"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E403440E01DA;
+	Tue, 29 Apr 2025 08:22:05 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id IPaWyLf-IvJ4; Tue, 29 Apr 2025 08:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745914921; bh=3CaGAPewZFSnVcYCOgKAQQmZ9XkXLsxzrSeWCgPXUSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jQS+oPEw4ODjn7I6/MVlU9MF63n+93F2EeiAaC5YY+nwYD7rs+qxYH922tpFa5j0y
+	 bdGvDlgTWv7iX0UiOWirJOCBoQfynHW+sDMalHB1LEdtfB8yaWpEGxlwl1S7rf4PK5
+	 eEzAQKwLpwM3/UxXXvJuKcMKHrqmYeoSlvTZtOuJFfGLo8EUBFXhShRL/Q9YvvjNc0
+	 3iI23JIuG3VwTVDclkSldxhIc30EliyX4r1YaNm0JnBvhffveotjSSuFXOYPqb8Xef
+	 gkDJpxZpEdqGvljJP/mZKVTPzK5AxpEdRnBS08XVhkQzybVCf41I4INPiBWfydumOh
+	 e6XAMMwMAla6fj+HIt1a7vVrn66fwuDlNjIGKvthKOqxfgN3F+Z0P58OK9Po+AM+9H
+	 WJlV/xttDFka6z/Iu6NXusZNQkk2DRqh82TJ3f2O5jlMRzuD0XpnrNHUYEMERlL0Ak
+	 sz6zZLMV4B4YGa38BQGiEKEQ5KPwN6m2Y/G3IfbcMIk1gzmBIRR/OnVgdC20T1QKbO
+	 JIb+aRlAsRToaRU4bhx37sKyN1kNQ+tNptke7ABTG9Xa8O2acZqbvG6Td8EazFjF07
+	 YRMeJkPFCCS/VMWfxg3kHKrpyTPiWsOLlktVBUpHvsSsvnsmWSjv3aJaqZfE9aXLX5
+	 2U32jmm87PbEggm27/ZlbFP8=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8774440E0214;
+	Tue, 29 Apr 2025 08:21:51 +0000 (UTC)
+Date: Tue, 29 Apr 2025 10:21:43 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 10/16] x86/bugs: Restructure retbleed mitigation
+Message-ID: <20250429082143.GCaBCMF6MCxxwZsfs-@fat_crate.local>
+References: <20250418161721.1855190-1-david.kaplan@amd.com>
+ <20250418161721.1855190-11-david.kaplan@amd.com>
+ <20250428185939.GBaA_QG-bWQ7WQ3vlY@fat_crate.local>
+ <LV3PR12MB9265CC8CA5922E081A5BDAD394812@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250429-max77759-mfd-v8-2-72d72dc79a1f@linaro.org>
-References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
-In-Reply-To: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srini@kernel.org>, 
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB9265CC8CA5922E081A5BDAD394812@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-Port Controller (TCPC), NVMEM, and a GPIO expander.
+On Mon, Apr 28, 2025 at 08:55:13PM +0000, Kaplan, David wrote:
+> It's really just following the same order as the order that the select
+> functions are called, which largely matches the order in existing code.
 
-This describes its storage module (NVMEM).
+Oh ok, as long as there's not any undocumented magic in there...
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
-v2:
-* drop example as the MFD binding has a complete one (Rob)
+> While this is mostly true, there's still a few dependencies with the update
+> functions which are clearly noted with comments.
 
-Note: MAINTAINERS doesn't need updating, the binding update for the
-first leaf device (gpio) adds a wildcard matching all max77759 bindings
----
- .../bindings/nvmem/maxim,max77759-nvmem.yaml       | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+Ack.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..1e3bd4433007341a11040f513bf444866b9e38a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
-@@ -0,0 +1,32 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/maxim,max77759-nvmem.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Maxim Integrated MAX77759 Non Volatile Memory
-+
-+maintainers:
-+  - André Draszik <andre.draszik@linaro.org>
-+
-+description: |
-+  This module is part of the MAX77759 PMIC. For additional information, see
-+  Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
-+
-+  The MAX77759 is a PMIC integrating, amongst others, Non Volatile Memory
-+  (NVMEM) with 30 bytes of storage which can be used by software to store
-+  information or communicate with a boot loader.
-+
-+properties:
-+  compatible:
-+    const: maxim,max77759-nvmem
-+
-+  wp-gpios: false
-+
-+required:
-+  - compatible
-+
-+allOf:
-+  - $ref: nvmem.yaml#
-+
-+unevaluatedProperties: false
+> Yeah this makes sense.
+
+Ok, merged in.
+
+Thx.
 
 -- 
-2.49.0.901.g37484f566f-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
