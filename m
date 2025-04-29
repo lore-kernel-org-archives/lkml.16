@@ -1,539 +1,319 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2079.outbound.protection.outlook.com [40.107.102.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1204270ED6
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907126; cv=none; b=mK94BVayGaDo4PEQFGsItlrwJs7jqp8FQdMRok6Xi52zGgnK01HHzf1q+6oZsDN4S9KYIAaGPCAnmSrtAB95cE/SKTa9UeOTvlMWrXHRoS8OL0ImZi0dV7CDRzxsqWTwPLoaOw6pTTIq/K16z0IjeZ16EVgxW+K8pfTm6GnswX4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907126; c=relaxed/simple;
-	bh=nD80AiV4vmOQH+r2Z0ImWG8BSZmGw/VGV+Ek0aya8VU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DC0zlAOBBxr5V5qR+Th2umLYfyNdnpIkLTFQEsuRqlORX6XR5Qhj0TTcA9N9RN2v8deQKNd88hBpATiK+UHaiItzWwgLm8M7ookhrMUJpWFUwh1dHGzG83TxMNxJq9HEn3tWlGyU0u90qG2shPLgeII2KaYGDvBy+CsY7TWY55M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GAyO9M3j; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD7A1DB366;
+	Tue, 29 Apr 2025 06:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745907145; cv=fail; b=ZsgvfKzJdgQ5ZqwhQnOa4PcW1zo+vc0muTgtypDabA6/1uxQQLxaBJNiC5kMUJa+nc/msIcCEtXMcqZ/ah/K+yBkigBGvFeHZJkHtfZxg4iRZx7kOaD93nT09PmV7JU4icw5i3cOaMCncyvwWFZLpgF7Ng3ZqN5oHcGDOpW+6ng=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745907145; c=relaxed/simple;
+	bh=4k0dJ+qV6NGzq9vZDCe/1A9a3Qk2simLHn5vj7BRkws=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QppwgESTyEilaHeR1pgviPO2xqutpI6CCAs5n9gqmHXiuo4aWWz24Lyga/0lHKxbammzvXDdfA2+o2TGSMWiUk44mUIwLZBFwW3TB50GaRWWQlECAL2n3rj5aqopOPz1UN+Sgr4cOxQTA8ZiG01hEoA7H6ZpVGpRR1yIc+iTK40=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0Y4LFr74; arc=fail smtp.client-ip=40.107.102.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GAyO9M3j"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T4EYGr028677;
-	Tue, 29 Apr 2025 06:11:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=9iaowe
-	cAWd93D42fDX1wd26N3pM98IU46+mLmXvjhlg=; b=GAyO9M3j07gvc82xrp+aAE
-	m68sWP81Wz4sB5UO7F9gOmxYDRJOm4WS5DQW5aMkwrfG4Jk+6KDJvv0IcCRVBBJZ
-	ORtcyzFWAluQkFi1r8AFrW/V0DEIa2Fj+rNdQJkOQ5sbCdtsqOOsGJtWdAH3WivE
-	XyFkwyGOLrV/vKD9fcd1G8bIOwrJjOQcBNlIH3XFJb5bJQEmnODgt/RvryVPukL5
-	HcMefiaHc6A8NhlA61wqG4dLFoun0ukfpRHf7ws710RPoC/jqUw1EdmigH4sCL3d
-	JQK+vEYOGDLU0JfEAPwF1fjaexU7uFYv+dKYR+vmEAJ/knZxdEcHNCdL3G1bwYDw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ah8m9kda-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 06:11:24 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53T6BNk8005532;
-	Tue, 29 Apr 2025 06:11:23 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ah8m9kd8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 06:11:23 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T3atXk031677;
-	Tue, 29 Apr 2025 06:11:22 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4699tu22qf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 06:11:22 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53T6BIA656689092
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 06:11:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B65772004B;
-	Tue, 29 Apr 2025 06:11:18 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAECD20040;
-	Tue, 29 Apr 2025 06:11:10 +0000 (GMT)
-Received: from [9.124.218.151] (unknown [9.124.218.151])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 29 Apr 2025 06:11:10 +0000 (GMT)
-Message-ID: <85084257-a186-430c-b46d-2fca10d17b8f@linux.ibm.com>
-Date: Tue, 29 Apr 2025 11:41:09 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0Y4LFr74"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dsrS0nK72S1fH8qpVL191tQgxZlmZqRqaNHbuJX2l092BzzoNyZwDJ8pY+ffPWwST5/7thMHLMye1b2PurYczURcuzZLnEg5tIhtyuofwoxL8Mb6z+CG5297QhI6b9mNoGDV5BJIHhf8qYK4G89x9BQXeG048F55QJ0xcN80htbGWk7ZAPlZCs9jjWfgfOloNcjuqx9d71UxpcXim6MCBsV2hVx9kyJJm9pQJIGRr1v5z3KRde/iUq3L2WUr33ibEoQ6yc+rfZOBuXaAACF4YwcZjJk8CeYAWRpgUHg4DIBR+AnrFjGPmRP4fX1GFH+d2ERlingHSKCi4KYWnu6sjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1dOA9IaDU8aHJj0Zo2MhX6c2yQ2Se0n9W/kFEFT91e4=;
+ b=WHmlDvdaC/P5DkF24irmL/i0ckImoaZ9FrgT6/KKa9c/g3ESiS2Du2Yt9u/JMPTXBDMbFbSHDphukaLQlEFvFzTxTT9bt0+mifLkLNQNQZLoWVVhP6eY/o0XXWv9LgNlzWucao1pP8avtZuwPVlOEa+xPragktg2WCcsokVZL8o2C2IUjv3uopJoaBcuzNXCR472Fql8n4t29ezz1gwZWPQ9eE8KABjVqFZ+nKEqzrneSVqkSn1LuJtK7nGP9MNo5pOf1KZIN6eJ6zKFqqtAr6fv8X/wCLHQIMBCyhw/rQ8zQxG6rR7QP2RjgZGEkdZtuFkNgZXdNp2pBD0Ta0aPCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1dOA9IaDU8aHJj0Zo2MhX6c2yQ2Se0n9W/kFEFT91e4=;
+ b=0Y4LFr749snx52F7ceST22C2IkG6uBP+YhhzD8WBIfOMM3JRsvYT0fzjxrvKgXf6XqibR3bN9YWHHIZdZ+VZpLQtbOpFuryvP5jR9lJaX6l8ECP63mfRsGpVELCX4fd10qORdX91Oy/ynh2kx5ZT+YyFSW7XjQjRXPSeFZ6kleA=
+Received: from BLAPR03CA0079.namprd03.prod.outlook.com (2603:10b6:208:329::24)
+ by SA1PR12MB7271.namprd12.prod.outlook.com (2603:10b6:806:2b8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.26; Tue, 29 Apr
+ 2025 06:12:18 +0000
+Received: from BL6PEPF0001AB56.namprd02.prod.outlook.com
+ (2603:10b6:208:329:cafe::c) by BLAPR03CA0079.outlook.office365.com
+ (2603:10b6:208:329::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Tue,
+ 29 Apr 2025 06:12:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB56.mail.protection.outlook.com (10.167.241.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8678.33 via Frontend Transport; Tue, 29 Apr 2025 06:12:18 +0000
+Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 29 Apr 2025 01:12:05 -0500
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
+Subject: [PATCH v5 05/20] x86/apic: Populate .read()/.write() callbacks of Secure AVIC driver
+Date: Tue, 29 Apr 2025 11:39:49 +0530
+Message-ID: <20250429061004.205839-6-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC V1 6/6] powerpc: Enable Generic Entry/Exit for syscalls.
-To: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org,
-        neeraj.upadhyay@kernel.org, vschneid@redhat.com, tglx@linutronix.de,
-        frederic@kernel.org, ankur.a.arora@oracle.com, bigeasy@linutronix.de,
-        kees@kernel.org, oleg@redhat.com, peterz@infradead.org,
-        tzimmermann@suse.de, namcao@linutronix.de, kan.liang@linux.intel.com,
-        mcgrof@kernel.org, rppt@kernel.org, atrajeev@linux.vnet.ibm.com,
-        anjalik@linux.ibm.com, coltonlewis@google.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250428152225.66044-2-mchauras@linux.ibm.com>
- <20250428152225.66044-9-mchauras@linux.ibm.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250428152225.66044-9-mchauras@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7pqXajHC3v8iNJ8jNgwXM-lj4puFscuy
-X-Proofpoint-GUID: o49jqFrFopD5cMEEuniCy3FKi8qjdQMY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0NSBTYWx0ZWRfX0xbMy6hPsOV8 RWa40kwTfUz61FtOlmOSQnFZVvpPPGLtkU8lSLbCbIXdSMU77Wuac7fkVJtgIunq8lDXORJGcdm Vf8SMD0mxybOTWKyIWmgogyNUdIaHWms7VOE+NAV7E2Qg+x7jwHWXEYtuP3n16WTcLMvppBjbKu
- HdcWx5HrdYK9NXDePua5WtALe1WWkwI/lh3inC7QuDigydI9/7S3sl0O0WXy9PJbIYTzZ9XMXCm 5Jg7sGTf6jnd2rm+H0Oddl0QqbN9Bg49sHLcOpzVNYeiD0c8S1DQ6MCYVwDdLs8NgXbvunomEUt IYvlx2Uz69J/n+NUdpiCuc3AOzGpYiKJckw7o3yyANo5U9y4kUE9I3Gbu620rSs7VUfRMFrVM3c
- 9wgzmG5nRIkL4oV+OeaU/Q2mWXvaPyLwI3QBIF43Ix3bIZzqqvQ0fNDUbkB/SycUKHGHaxlA
-X-Authority-Analysis: v=2.4 cv=QNRoRhLL c=1 sm=1 tr=0 ts=68106d8c cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=rOVY07Nq74tCNd9X-qYA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 clxscore=1011 mlxscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 phishscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290045
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB56:EE_|SA1PR12MB7271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 405a6434-36b4-4411-9222-08dd86e4cb98
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?I2nMVoRMvB5AZpGyrH3NiD52AC+Pg9phjhC3e7vh798LdeFOKghA/mEVEcCS?=
+ =?us-ascii?Q?8Vv+NIeSjscVgQBJ5bHQya0iIPj6wg3vMFomYgt32Aa0OgsayvXZx4xguBt1?=
+ =?us-ascii?Q?PP9NY8WQCYc7Y4RVXVFtsw+6TWsheyrdLNwEIrTrKPTKoQWpQ+r0ecup7JG4?=
+ =?us-ascii?Q?kRKl5r3cUaDh1ueyy4zRRi/Gloi05yMFhbU6hYuyytjjouGn4wHPulvPo86M?=
+ =?us-ascii?Q?CG5LxK4BVEFVzEXBc4arEiRQScZ2iFXzLRdHXOkZ/obo2Bc0vUd1UFWKjfEt?=
+ =?us-ascii?Q?GNtA6NoheIkPfQRq0VqKYxYWnDB6bqzKKhkiBLa53PMCiucW5KNUSNI0RhNq?=
+ =?us-ascii?Q?nvcrTeLqboGiuPI6hG/RNGveJVYkU2cBg+ERRCR8S7wuV/UJMFRIRnI5DIx1?=
+ =?us-ascii?Q?qsiSQiT5IBy5RGIhos2U4MEn4n/W6sNdhaPrA8Nz4ApJZC0iUuRRhbzkgvqE?=
+ =?us-ascii?Q?CelVqP6asdzUMxfzM6YpejQIW49tS/Ftc+aot3pn1b6Rgh3v6YRdSZI21Wo7?=
+ =?us-ascii?Q?0FhfV3VfZtHWERNWjiS7bt+bJV0QRAPiYdiUXOVJ9jpzYl27S4eCZNIpmlCn?=
+ =?us-ascii?Q?BCNAO9hPzqvXLgcC2tOl7KVzytDw4NHv2Cc0l+xEKZwLcKdynnFNZ53dBIW7?=
+ =?us-ascii?Q?PUyjwaruj4/oRw1fQcXf/FqQjAU6zDczxrP/drlFRO2hff8O9SQetsdbkEg8?=
+ =?us-ascii?Q?uOfkHOvAFABgZ5u5fU5lkQLtOrPE2H9v4cqkxRK10JPWhTYmszzSnSZCfC+j?=
+ =?us-ascii?Q?P9CaBlNb+ict6lPY4hn2B2omZ46vc6TRWQRL5BPdlO2aLk4eEf+GiWkYtDNk?=
+ =?us-ascii?Q?xBFXJ6iq3NCTY4nNIw42Tky4NsVUpK6A2mUS8VFI4WYJaKGiaHj1GGtRNneO?=
+ =?us-ascii?Q?oGzQ9L8VqWfeWym5GGW2J0qGwZXeoJqcTsKzyORfiMNrU6svfP8WmQIYNCVn?=
+ =?us-ascii?Q?+znmmTcFasriC7kh9FYAz2hLJMbFcNniuMwiGpYLooq6f+NznCWz1I09AWTW?=
+ =?us-ascii?Q?Sdk48jRutSe7C2fTXMV0fovKL2iECpO9jOcw3Szh5dUDqneuJhvJ1SeeWcG2?=
+ =?us-ascii?Q?N1lEh5dhBoU3D9OROINkey3nXStjIJn+zcGHh7RxjCW5Q43iqCE626j2/eXb?=
+ =?us-ascii?Q?pQ3ml9k2VxXUgtihdGyEiREnr7ahR0SZsZlJWgFNdyhs3ecuimM7ITVDcBGR?=
+ =?us-ascii?Q?6NGjnlzJ894/RukSjInkV56vA+WVYrrC+3ZvEei0yj/ZzsAPBBy+/3Q3DNkS?=
+ =?us-ascii?Q?eqwgnyr3fbM7OIurKJh8O3I7o4CBmSXrF9pXTQ/QJ1WDPMlioEJdWUk48Cqp?=
+ =?us-ascii?Q?HPMFQqP76swznn1JKYvkMoRhDqgnxzqKsZW17GmIU7spjfrO9OB2ht8AckD3?=
+ =?us-ascii?Q?xqbIjOeKO1a69/CrPhzmSxIfLsmAsWwsI6IlAUWI66lD2eRSs2uARrs/AScM?=
+ =?us-ascii?Q?TSbVRODGQi+hV2axDHgU0xSEqiG5WFCFVDv3rSt+Ad1ASwCnJrt8xRsFTqZp?=
+ =?us-ascii?Q?jjbGFyPdRRhhhNNA6w8lDpmQImUUyHqVQIwS?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 06:12:18.2501
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 405a6434-36b4-4411-9222-08dd86e4cb98
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB56.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7271
 
+Add read() and write() APIC callback functions to read and write x2APIC
+registers directly from the guest APIC backing page of a vCPU.
 
+The x2APIC registers are mapped at an offset within the guest APIC
+backing page which is same as their x2APIC MMIO offset. Secure AVIC
+adds new registers such as ALLOWED_IRRs (which are at 4-byte offset
+within the IRR register offset range) and NMI_REQ to the APIC register
+space.
 
-On 4/28/25 20:52, Mukesh Kumar Chaurasiya wrote:
-> Enable the syscall entry and exit path from generic framework.
-> 
-> Signed-off-by: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+When Secure AVIC is enabled, guest's rdmsr/wrmsr of APIC registers
+result in VC exception (for non-accelerated register accesses) with
+error code VMEXIT_AVIC_NOACCEL. The VC exception handler can read/write
+the x2APIC register in the guest APIC backing page to complete the
+rdmsr/wrmsr. Since doing this would increase the latency of accessing
+x2APIC registers, instead of doing rdmsr/wrmsr based reg accesses
+and handling reads/writes in VC exception, directly read/write APIC
+registers from/to the guest APIC backing page of the vCPU in read()
+and write() callbacks of the Secure AVIC APIC driver.
 
-Hi Mukesh. Thanks for working on this. Trying to go through it.
+Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+Changes since v4:
+ - No change.
 
-> ---
->   arch/powerpc/Kconfig                |   1 +
->   arch/powerpc/kernel/interrupt.c     |  46 +++++++----
->   arch/powerpc/kernel/ptrace/ptrace.c | 103 ------------------------
->   arch/powerpc/kernel/signal.c        |   8 +-
->   arch/powerpc/kernel/syscall.c       | 117 +---------------------------
->   5 files changed, 38 insertions(+), 237 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 6722625a406a0..45b70ccf7c89e 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -202,6 +202,7 @@ config PPC
->   	select GENERIC_CPU_AUTOPROBE
->   	select GENERIC_CPU_VULNERABILITIES	if PPC_BARRIER_NOSPEC
->   	select GENERIC_EARLY_IOREMAP
-> +	select GENERIC_ENTRY
+ arch/x86/include/asm/apicdef.h      |   2 +
+ arch/x86/kernel/apic/x2apic_savic.c | 116 +++++++++++++++++++++++++++-
+ 2 files changed, 116 insertions(+), 2 deletions(-)
 
-IMHO this should be enabled after irqentry_* is supported too.
-
->   	select GENERIC_GETTIMEOFDAY
->   	select GENERIC_IDLE_POLL_SETUP
->   	select GENERIC_IOREMAP
-> diff --git a/arch/powerpc/kernel/interrupt.c b/arch/powerpc/kernel/interrupt.c
-> index 7f31f3fb9c1d8..8731064631de0 100644
-> --- a/arch/powerpc/kernel/interrupt.c
-> +++ b/arch/powerpc/kernel/interrupt.c
-> @@ -1,6 +1,7 @@
->   // SPDX-License-Identifier: GPL-2.0-or-later
->   
->   #include <linux/context_tracking.h>
-> +#include <linux/entry-common.h>
->   #include <linux/err.h>
->   #include <linux/compat.h>
->   #include <linux/rseq.h>
-> @@ -163,15 +164,10 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
->   	unsigned long ret = 0;
->   	bool is_not_scv = !IS_ENABLED(CONFIG_PPC_BOOK3S_64) || !scv;
->   
-> -	CT_WARN_ON(ct_state() == CT_STATE_USER);
-> -
->   	kuap_assert_locked();
->   
->   	regs->result = r3;
->   
-> -	/* Check whether the syscall is issued inside a restartable sequence */
-> -	rseq_syscall(regs);
-> -
->   	ti_flags = read_thread_flags();
->   
->   	if (unlikely(r3 >= (unsigned long)-MAX_ERRNO) && is_not_scv) {
-> @@ -192,13 +188,27 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
->   	}
->   
->   	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
-> -		do_syscall_trace_leave(regs);
->   		ret |= _TIF_RESTOREALL;
->   	}
->   
-> -	local_irq_disable();
-> -	ret = interrupt_exit_user_prepare_main(ret, regs);
-
-This loop i dont understand why.
-
-> +again:
-> +	syscall_exit_to_user_mode(regs);
-
-exit_to_user_mode also calls user_enter_irqoff.
-so below user_enter_irqoff may be a nop or wrong.
-
-also, syscall_exit_to_user_mode disables local interrupts first.
-
-is local_irq_enable fixing something here?
-
-> +
-> +	user_enter_irqoff();
-> +	if (!prep_irq_for_enabled_exit(true)) {
-> +		user_exit_irqoff();
-> +		local_irq_enable();
-> +		local_irq_disable();
-> +		goto again;
-> +	}
-> +
-> +	/* Restore user access locks last */
-> +	kuap_user_restore(regs);
->   
-> +	if (unlikely((local_paca->generic_fw_flags & GFW_RESTORE_ALL) == GFW_RESTORE_ALL)) {
-> +		ret |= _TIF_RESTOREALL;
-> +		local_paca->generic_fw_flags &= ~GFW_RESTORE_ALL;
-> +	}
->   #ifdef CONFIG_PPC64
->   	regs->exit_result = ret;
->   #endif
-> @@ -209,6 +219,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
->   #ifdef CONFIG_PPC64
->   notrace unsigned long syscall_exit_restart(unsigned long r3, struct pt_regs *regs)
->   {
-> +	unsigned long ret = 0;
->   	/*
->   	 * This is called when detecting a soft-pending interrupt as well as
->   	 * an alternate-return interrupt. So we can't just have the alternate
-> @@ -222,14 +233,23 @@ notrace unsigned long syscall_exit_restart(unsigned long r3, struct pt_regs *reg
->   #ifdef CONFIG_PPC_BOOK3S_64
->   	set_kuap(AMR_KUAP_BLOCKED);
->   #endif
-> +again:
-> +	syscall_exit_to_user_mode(regs);
->   
-> -	trace_hardirqs_off();
-> -	user_exit_irqoff();
-> -	account_cpu_user_entry();
-> +	user_enter_irqoff();
-> +	if (!prep_irq_for_enabled_exit(true)) {
-> +		user_exit_irqoff();
-> +		local_irq_enable();
-> +		local_irq_disable();
-> +		goto again;
-> +	}
->   
-> -	BUG_ON(!user_mode(regs));
-> +	if (unlikely((local_paca->generic_fw_flags & GFW_RESTORE_ALL) == GFW_RESTORE_ALL)) {
-> +		ret = _TIF_RESTOREALL;
-> +		local_paca->generic_fw_flags &= ~GFW_RESTORE_ALL;
-> +	}
->   
-> -	regs->exit_result = interrupt_exit_user_prepare_main(regs->exit_result, regs);
-> +	regs->exit_result |= ret;
->   
->   	return regs->exit_result;
->   }
-> diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-> index c6997df632873..2a2b0b94a3eaa 100644
-> --- a/arch/powerpc/kernel/ptrace/ptrace.c
-> +++ b/arch/powerpc/kernel/ptrace/ptrace.c
-> @@ -21,9 +21,6 @@
->   #include <asm/switch_to.h>
->   #include <asm/debug.h>
->   
-> -#define CREATE_TRACE_POINTS
-> -#include <trace/events/syscalls.h>
-> -
->   #include "ptrace-decl.h"
->   
->   /*
-> @@ -233,106 +230,6 @@ static int do_seccomp(struct pt_regs *regs)
->   static inline int do_seccomp(struct pt_regs *regs) { return 0; }
->   #endif /* CONFIG_SECCOMP */
->   
-> -/**
-> - * do_syscall_trace_enter() - Do syscall tracing on kernel entry.
-> - * @regs: the pt_regs of the task to trace (current)
-> - *
-> - * Performs various types of tracing on syscall entry. This includes seccomp,
-> - * ptrace, syscall tracepoints and audit.
-> - *
-> - * The pt_regs are potentially visible to userspace via ptrace, so their
-> - * contents is ABI.
-> - *
-> - * One or more of the tracers may modify the contents of pt_regs, in particular
-> - * to modify arguments or even the syscall number itself.
-> - *
-> - * It's also possible that a tracer can choose to reject the system call. In
-> - * that case this function will return an illegal syscall number, and will put
-> - * an appropriate return value in regs->r3.
-> - *
-> - * Return: the (possibly changed) syscall number.
-> - */
-> -long do_syscall_trace_enter(struct pt_regs *regs)
-> -{
-> -	u32 flags;
-> -
-> -	flags = read_thread_flags() & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
-> -
-> -	if (flags) {
-> -		int rc = ptrace_report_syscall_entry(regs);
-> -
-> -		if (unlikely(flags & _TIF_SYSCALL_EMU)) {
-> -			/*
-> -			 * A nonzero return code from
-> -			 * ptrace_report_syscall_entry() tells us to prevent
-> -			 * the syscall execution, but we are not going to
-> -			 * execute it anyway.
-> -			 *
-> -			 * Returning -1 will skip the syscall execution. We want
-> -			 * to avoid clobbering any registers, so we don't goto
-> -			 * the skip label below.
-> -			 */
-> -			return -1;
-> -		}
-> -
-> -		if (rc) {
-> -			/*
-> -			 * The tracer decided to abort the syscall. Note that
-> -			 * the tracer may also just change regs->gpr[0] to an
-> -			 * invalid syscall number, that is handled below on the
-> -			 * exit path.
-> -			 */
-> -			goto skip;
-> -		}
-> -	}
-> -
-> -	/* Run seccomp after ptrace; allow it to set gpr[3]. */
-> -	if (do_seccomp(regs))
-> -		return -1;
-> -
-> -	/* Avoid trace and audit when syscall is invalid. */
-> -	if (regs->gpr[0] >= NR_syscalls)
-> -		goto skip;
-> -
-> -	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
-> -		trace_sys_enter(regs, regs->gpr[0]);
-> -
-> -	if (!is_32bit_task())
-> -		audit_syscall_entry(regs->gpr[0], regs->gpr[3], regs->gpr[4],
-> -				    regs->gpr[5], regs->gpr[6]);
-> -	else
-> -		audit_syscall_entry(regs->gpr[0],
-> -				    regs->gpr[3] & 0xffffffff,
-> -				    regs->gpr[4] & 0xffffffff,
-> -				    regs->gpr[5] & 0xffffffff,
-> -				    regs->gpr[6] & 0xffffffff);
-> -
-> -	/* Return the possibly modified but valid syscall number */
-> -	return regs->gpr[0];
-> -
-> -skip:
-> -	/*
-> -	 * If we are aborting explicitly, or if the syscall number is
-> -	 * now invalid, set the return value to -ENOSYS.
-> -	 */
-> -	regs->gpr[3] = -ENOSYS;
-> -	return -1;
-> -}
-> -
-> -void do_syscall_trace_leave(struct pt_regs *regs)
-> -{
-> -	int step;
-> -
-> -	audit_syscall_exit(regs);
-> -
-> -	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
-> -		trace_sys_exit(regs, regs->result);
-> -
-> -	step = test_thread_flag(TIF_SINGLESTEP);
-> -	if (step || test_thread_flag(TIF_SYSCALL_TRACE))
-> -		ptrace_report_syscall_exit(regs, step);
-> -}
-> -
->   void __init pt_regs_check(void);
->   
->   /*
-> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-> index 719930cf4ae1f..8e1a1b26b5eae 100644
-> --- a/arch/powerpc/kernel/signal.c
-> +++ b/arch/powerpc/kernel/signal.c
-> @@ -6,6 +6,7 @@
->    *    Extracted from signal_32.c and signal_64.c
->    */
->   
-> +#include <linux/entry-common.h>
->   #include <linux/resume_user_mode.h>
->   #include <linux/signal.h>
->   #include <linux/uprobes.h>
-> @@ -22,11 +23,6 @@
->   
->   #include "signal.h"
->   
-> -/* This will be removed */
-> -#ifdef CONFIG_GENERIC_ENTRY
-> -#include <linux/entry-common.h>
-> -#endif /* CONFIG_GENERIC_ENTRY */
-> -
->   #ifdef CONFIG_VSX
->   unsigned long copy_fpr_to_user(void __user *to,
->   			       struct task_struct *task)
-> @@ -374,11 +370,9 @@ void signal_fault(struct task_struct *tsk, struct pt_regs *regs,
->   				   task_pid_nr(tsk), where, ptr, regs->nip, regs->link);
->   }
->   
-> -#ifdef CONFIG_GENERIC_ENTRY
->   void arch_do_signal_or_restart(struct pt_regs *regs)
->   {
->   	BUG_ON(regs != current->thread.regs);
->   	local_paca->generic_fw_flags |= GFW_RESTORE_ALL;
->   	do_signal(current);
->   }
-> -#endif /* CONFIG_GENERIC_ENTRY */
-> diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
-> index 9f03a6263fb41..66fd6ca4462b0 100644
-> --- a/arch/powerpc/kernel/syscall.c
-> +++ b/arch/powerpc/kernel/syscall.c
-> @@ -3,6 +3,7 @@
->   #include <linux/compat.h>
->   #include <linux/context_tracking.h>
->   #include <linux/randomize_kstack.h>
-> +#include <linux/entry-common.h>
->   
->   #include <asm/interrupt.h>
->   #include <asm/kup.h>
-> @@ -21,121 +22,9 @@ notrace long system_call_exception(struct pt_regs *regs, unsigned long r0)
->   	kuap_lock();
->   
->   	add_random_kstack_offset();
-> +	r0 = syscall_enter_from_user_mode(regs, r0);
->   
-> -	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
-> -		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
-> -
-> -	trace_hardirqs_off(); /* finish reconciling */
-> -
-> -	CT_WARN_ON(ct_state() == CT_STATE_KERNEL);
-> -	user_exit_irqoff();
-> -
-> -	BUG_ON(regs_is_unrecoverable(regs));
-> -	BUG_ON(!user_mode(regs));
-> -	BUG_ON(regs_irqs_disabled(regs));
-> -
-> -#ifdef CONFIG_PPC_PKEY
-> -	if (mmu_has_feature(MMU_FTR_PKEY)) {
-> -		unsigned long amr, iamr;
-> -		bool flush_needed = false;
-> -		/*
-> -		 * When entering from userspace we mostly have the AMR/IAMR
-> -		 * different from kernel default values. Hence don't compare.
-> -		 */
-> -		amr = mfspr(SPRN_AMR);
-> -		iamr = mfspr(SPRN_IAMR);
-> -		regs->amr  = amr;
-> -		regs->iamr = iamr;
-> -		if (mmu_has_feature(MMU_FTR_KUAP)) {
-> -			mtspr(SPRN_AMR, AMR_KUAP_BLOCKED);
-> -			flush_needed = true;
-> -		}
-> -		if (mmu_has_feature(MMU_FTR_BOOK3S_KUEP)) {
-> -			mtspr(SPRN_IAMR, AMR_KUEP_BLOCKED);
-> -			flush_needed = true;
-> -		}
-> -		if (flush_needed)
-> -			isync();
-> -	} else
-> -#endif
-> -		kuap_assert_locked();
-> -
-> -	booke_restore_dbcr0();
-> -
-> -	account_cpu_user_entry();
-> -
-> -	account_stolen_time();
-> -
-> -	/*
-> -	 * This is not required for the syscall exit path, but makes the
-> -	 * stack frame look nicer. If this was initialised in the first stack
-> -	 * frame, or if the unwinder was taught the first stack frame always
-> -	 * returns to user with IRQS_ENABLED, this store could be avoided!
-> -	 */
-> -	irq_soft_mask_regs_set_state(regs, IRQS_ENABLED);
-> -
-> -	/*
-> -	 * If system call is called with TM active, set _TIF_RESTOREALL to
-> -	 * prevent RFSCV being used to return to userspace, because POWER9
-> -	 * TM implementation has problems with this instruction returning to
-> -	 * transactional state. Final register values are not relevant because
-> -	 * the transaction will be aborted upon return anyway. Or in the case
-> -	 * of unsupported_scv SIGILL fault, the return state does not much
-> -	 * matter because it's an edge case.
-> -	 */
-> -	if (IS_ENABLED(CONFIG_PPC_TRANSACTIONAL_MEM) &&
-> -			unlikely(MSR_TM_TRANSACTIONAL(regs->msr)))
-> -		set_bits(_TIF_RESTOREALL, &current_thread_info()->flags);
-> -
-> -	/*
-> -	 * If the system call was made with a transaction active, doom it and
-> -	 * return without performing the system call. Unless it was an
-> -	 * unsupported scv vector, in which case it's treated like an illegal
-> -	 * instruction.
-> -	 */
-> -#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-> -	if (unlikely(MSR_TM_TRANSACTIONAL(regs->msr)) &&
-> -	    !trap_is_unsupported_scv(regs)) {
-> -		/* Enable TM in the kernel, and disable EE (for scv) */
-> -		hard_irq_disable();
-> -		mtmsr(mfmsr() | MSR_TM);
-> -
-> -		/* tabort, this dooms the transaction, nothing else */
-> -		asm volatile(".long 0x7c00071d | ((%0) << 16)"
-> -				:: "r"(TM_CAUSE_SYSCALL|TM_CAUSE_PERSISTENT));
-> -
-> -		/*
-> -		 * Userspace will never see the return value. Execution will
-> -		 * resume after the tbegin. of the aborted transaction with the
-> -		 * checkpointed register state. A context switch could occur
-> -		 * or signal delivered to the process before resuming the
-> -		 * doomed transaction context, but that should all be handled
-> -		 * as expected.
-> -		 */
-> -		return -ENOSYS;
-> -	}
-> -#endif // CONFIG_PPC_TRANSACTIONAL_MEM
-> -
-> -	local_irq_enable();
-> -
-> -	if (unlikely(read_thread_flags() & _TIF_SYSCALL_DOTRACE)) {
-> -		if (unlikely(trap_is_unsupported_scv(regs))) {
-> -			/* Unsupported scv vector */
-> -			_exception(SIGILL, regs, ILL_ILLOPC, regs->nip);
-> -			return regs->gpr[3];
-> -		}
-> -		/*
-> -		 * We use the return value of do_syscall_trace_enter() as the
-> -		 * syscall number. If the syscall was rejected for any reason
-> -		 * do_syscall_trace_enter() returns an invalid syscall number
-> -		 * and the test against NR_syscalls will fail and the return
-> -		 * value to be used is in regs->gpr[3].
-> -		 */
-> -		r0 = do_syscall_trace_enter(regs);
-> -		if (unlikely(r0 >= NR_syscalls))
-> -			return regs->gpr[3];
-> -
-> -	} else if (unlikely(r0 >= NR_syscalls)) {
-> +	if (unlikely(r0 >= NR_syscalls)) {
->   		if (unlikely(trap_is_unsupported_scv(regs))) {
->   			/* Unsupported scv vector */
->   			_exception(SIGILL, regs, ILL_ILLOPC, regs->nip);
+diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
+index 094106b6a538..be39a543fbe5 100644
+--- a/arch/x86/include/asm/apicdef.h
++++ b/arch/x86/include/asm/apicdef.h
+@@ -135,6 +135,8 @@
+ #define		APIC_TDR_DIV_128	0xA
+ #define	APIC_EFEAT	0x400
+ #define	APIC_ECTRL	0x410
++#define APIC_SEOI	0x420
++#define APIC_IER	0x480
+ #define APIC_EILVTn(n)	(0x500 + 0x10 * n)
+ #define		APIC_EILVT_NR_AMD_K8	1	/* # of extended interrupts */
+ #define		APIC_EILVT_NR_AMD_10H	4
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index 0a2cb1c03d08..4761afc7527d 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/cc_platform.h>
+ #include <linux/percpu-defs.h>
++#include <linux/align.h>
+ 
+ #include <asm/apic.h>
+ #include <asm/sev.h>
+@@ -32,6 +33,117 @@ static int savic_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ 	return x2apic_enabled() && cc_platform_has(CC_ATTR_SNP_SECURE_AVIC);
+ }
+ 
++static __always_inline u32 get_reg(unsigned int offset)
++{
++	return READ_ONCE(this_cpu_ptr(apic_page)->regs[offset >> 2]);
++}
++
++static __always_inline void set_reg(unsigned int offset, u32 val)
++{
++	WRITE_ONCE(this_cpu_ptr(apic_page)->regs[offset >> 2], val);
++}
++
++#define SAVIC_ALLOWED_IRR	0x204
++
++static u32 savic_read(u32 reg)
++{
++	/*
++	 * When Secure AVIC is enabled, rdmsr/wrmsr of APIC registers
++	 * result in VC exception (for non-accelerated register accesses)
++	 * with VMEXIT_AVIC_NOACCEL error code. The VC exception handler
++	 * can read/write the x2APIC register in the guest APIC backing page.
++	 * Since doing this would increase the latency of accessing x2APIC
++	 * registers, instead of doing rdmsr/wrmsr based accesses and
++	 * handling apic register reads/writes in VC exception, the read()
++	 * and write() callbacks directly read/write APIC register from/to
++	 * the vCPU APIC backing page.
++	 */
++	switch (reg) {
++	case APIC_LVTT:
++	case APIC_TMICT:
++	case APIC_TMCCT:
++	case APIC_TDCR:
++	case APIC_ID:
++	case APIC_LVR:
++	case APIC_TASKPRI:
++	case APIC_ARBPRI:
++	case APIC_PROCPRI:
++	case APIC_LDR:
++	case APIC_SPIV:
++	case APIC_ESR:
++	case APIC_ICR:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVT0:
++	case APIC_LVT1:
++	case APIC_LVTERR:
++	case APIC_EFEAT:
++	case APIC_ECTRL:
++	case APIC_SEOI:
++	case APIC_IER:
++	case APIC_EILVTn(0) ... APIC_EILVTn(3):
++		return get_reg(reg);
++	case APIC_ISR ... APIC_ISR + 0x70:
++	case APIC_TMR ... APIC_TMR + 0x70:
++		if (WARN_ONCE(!IS_ALIGNED(reg, 16),
++			      "APIC reg read offset 0x%x not aligned at 16 bytes", reg))
++			return 0;
++		return get_reg(reg);
++	/* IRR and ALLOWED_IRR offset range */
++	case APIC_IRR ... APIC_IRR + 0x74:
++		/*
++		 * Either aligned at 16 bytes for valid IRR reg offset or a
++		 * valid Secure AVIC ALLOWED_IRR offset.
++		 */
++		if (WARN_ONCE(!(IS_ALIGNED(reg, 16) ||
++				IS_ALIGNED(reg - SAVIC_ALLOWED_IRR, 16)),
++			      "Misaligned IRR/ALLOWED_IRR APIC reg read offset 0x%x", reg))
++			return 0;
++		return get_reg(reg);
++	default:
++		pr_err("Permission denied: read of Secure AVIC reg offset 0x%x\n", reg);
++		return 0;
++	}
++}
++
++#define SAVIC_NMI_REQ		0x278
++
++static void savic_write(u32 reg, u32 data)
++{
++	switch (reg) {
++	case APIC_LVTT:
++	case APIC_LVT0:
++	case APIC_LVT1:
++	case APIC_TMICT:
++	case APIC_TDCR:
++	case APIC_SELF_IPI:
++	case APIC_TASKPRI:
++	case APIC_EOI:
++	case APIC_SPIV:
++	case SAVIC_NMI_REQ:
++	case APIC_ESR:
++	case APIC_ICR:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVTERR:
++	case APIC_ECTRL:
++	case APIC_SEOI:
++	case APIC_IER:
++	case APIC_EILVTn(0) ... APIC_EILVTn(3):
++		set_reg(reg, data);
++		break;
++	/* ALLOWED_IRR offsets are writable */
++	case SAVIC_ALLOWED_IRR ... SAVIC_ALLOWED_IRR + 0x70:
++		if (IS_ALIGNED(reg - SAVIC_ALLOWED_IRR, 16)) {
++			set_reg(reg, data);
++			break;
++		}
++		fallthrough;
++	default:
++		pr_err("Permission denied: write to Secure AVIC reg offset 0x%x\n", reg);
++	}
++}
++
+ static void savic_setup(void)
+ {
+ 	void *backing_page;
+@@ -95,8 +207,8 @@ static struct apic apic_x2apic_savic __ro_after_init = {
+ 
+ 	.nmi_to_offline_cpu		= true,
+ 
+-	.read				= native_apic_msr_read,
+-	.write				= native_apic_msr_write,
++	.read				= savic_read,
++	.write				= savic_write,
+ 	.eoi				= native_apic_msr_eoi,
+ 	.icr_read			= native_x2apic_icr_read,
+ 	.icr_write			= native_x2apic_icr_write,
+-- 
+2.34.1
 
