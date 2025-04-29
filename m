@@ -1,122 +1,198 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A3920D4E2
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41622741A9
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745904289; cv=none; b=ULt02JJmawsrzqH5CE5wUBsWaw71ELV3IWJM1MGWGZNW1ER+L1TdidwR2Kebr4Moi1Fcn78ovQFGdGABNHWe+4yeaYsCITUAqIgbX40+JUT6xhmrs3F5uEFYhn4jnQsQenzVjAy0HWxE37JzdiCTfVG/GnZhqNgg5+PT+9zPxUw=
+	t=1745904297; cv=none; b=dysSLfE86e3+3gWh9fWa0hccJyib7W2ZDUM3D4cyhK+eU7rOtzOB/n6pMP9O7a4LpsBkM+Muq6puUkpghXkrNlA8SSof+kCs4xzr/lfHFT6gyrKxAxmpFBvT21ywYYqLKIclsI2cRHvPGal0nkDELXx0zTcKuyoINOF07dLZhSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745904289; c=relaxed/simple;
-	bh=/KC233azgY3A1MOqq8JrlK5M7xo9FxTg7CclfxXZFos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CKaFQRbDf5boIni2L/s1hsi4NTqE04P50wzgAh6UB/azSZ2NA39LHcfn6Bx4awDRkxd0ym8gpCq2cq7ywwwUmsQ2aAL20k6I7HgJ0byHrCBKbP7ef4Zotgl/eT6hVaAhK6yp38hI872OyyM5XYk/xs12glnua7kZwOL1/rvPSFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E7+Xl6FC; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7+Xl6FC"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7376e311086so7541785b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745904287; x=1746509087; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEG2jELXd9nNPULNYZssLdKsrgNlc7ll4A8WlMh6fPs=;
-        b=E7+Xl6FCajASVSoHt0UJQwDwTAAd26NjQYqa4lw6+yg+N/lS6VEPOlbEYjbLL0CwYT
-         vw9IGKxxClC9tWXo8gjw+Xw1p2oETN/rYMQvkyP5sY7hJcz7NEtcTBG+YFRKSfVWqLpE
-         vcldfbrbTQrQjDdiGkLs55LJV7WfQeBNPhu5NdCS39Q09vCNmyl7YCKBWUBobWSixKCN
-         8lHOogX3XMGKv6qqNDwcZ59NCJz4BRraKrlxgdex087UWOT/EWsHKImigDDZE9UESdIR
-         J1qUtTuEII4f7qEv5hAsNiXZcvDBVtkh743GMINQAJGuQRjiMaPLy4aCgkotTvfzHEZ4
-         3TgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745904287; x=1746509087;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AEG2jELXd9nNPULNYZssLdKsrgNlc7ll4A8WlMh6fPs=;
-        b=bxjgt8nj1Mz2fyiVd6X53/nSI/qi6AADXaCJ7unJgymY8MVDfY48dcurxjkXkhjbBR
-         3Olq87uMUkv75XiLpUwhMv+lsw97u3BK7CqKpI50cUC0HzUgeGZtxT5vCWObqA0jJVBp
-         zLEr73qCOEoafZJXSK6/4nH0Qu5I1pRpxXx/IkQfwxIyM/Wk8DA3veaNOfV+YhiQJAm6
-         AKJGglNFjnwW4Nf3YyuNltuh0leuB1Sz7uoxNzzzs5jbC3YfrYEOyXKbsxDmma5PQ+ek
-         uzs+W0jnTChVLj7v6qtaCunoFt/AZvielq6cYbHwwPtFYGPhwoSKSXGvodDzjINF4VY8
-         f+OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPAX1DTbj5OVYHvLj35OGNvm/80qSz6cM5tooU9rOPaApq2kIRbSWXSM5Tk3VZOiOVHUVcVPD32HVuwnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhMjUSZlk7pTy7OAfMS0qipA4ghNNXmbvZmXrlJaZDFPlJbFpN
-	ArmhqOfJzGucoKBzyvvWBege+z2rtS5LX7WtmsVn96C3G83Oo7KSapUi+mDUe3VyCiJ+TduD09E
-	E
-X-Gm-Gg: ASbGncvz0ttqF7zZUgAJ/IHk5dGKAofRtexbckMCejjWEpmWeF0I+cQ0WSeGfu7VJXb
-	AWC+J+OkY1J47G93e/72+Uy//e2O8lEdGuRPSI5bgitbbxW1k6onC3iDubMWTcnXMA1elCu2tgG
-	YWwue7qJG/qQnVucJedaKn78pE33i5SWPAUIkg5f5FcEFU/X+XWF6WcUn3XFFBeNOqPKrcgiFxj
-	5YK6qHmFr3Z4INyi41Uz21kS8+4JPoJjFW2g13fL1vkVZrjjQmdcxGHYCgjeQxU2LFivp9iGiTF
-	zLWpk+GcZhIcyUwWAaHA8AIft9AVVgtOEa8tDrGFTg==
-X-Google-Smtp-Source: AGHT+IGacVDQkA79I4oerLjfSwtP2EnSgzoWaq7vlyI+ukjcLDfb1uzKM/LBC1AotrtWGv/r4XmSrA==
-X-Received: by 2002:a05:6a00:2410:b0:736:5e6f:295b with SMTP id d2e1a72fcca58-7402715dfc9mr3302755b3a.12.1745904287390;
-        Mon, 28 Apr 2025 22:24:47 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6b1e7sm9311484b3a.108.2025.04.28.22.24.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 22:24:46 -0700 (PDT)
-Date: Tue, 29 Apr 2025 10:54:44 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Seyediman Seyedarab <imandevel@gmail.com>
-Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v2] cpufreq: fix locking order in store_local_boost to
- prevent deadlock
-Message-ID: <20250429052444.zfmfzjirkcaq3edh@vireshk-i7>
-References: <20250428171931.1850-1-ImanDevel@gmail.com>
+	s=arc-20240116; t=1745904297; c=relaxed/simple;
+	bh=CNCr1BK1I5eNOQUzCtO35c3OcbzUiLc3O9lx/hnWPRk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tc0up4BB2Q0DQaAjIJeKl1V8YO4Swsx6n6iuJtLtKNummgQGXLh2TsJZur3IR2tmIxgLc5vIJDtHCX3Q0+JDLKCOfTGy1L2vusPxZR0PwyXbrvepcuJEZDHLpjsefntDr5o5wsa6WhHylRKei3CI0WNq/rEjZ404KjGgXbT9gIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 748811515;
+	Mon, 28 Apr 2025 22:24:45 -0700 (PDT)
+Received: from K4MQJ0H1H2.arm.com (unknown [10.163.78.253])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4330A3F5A1;
+	Mon, 28 Apr 2025 22:24:41 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com,
+	david@redhat.com,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com,
+	vbabka@suse.cz,
+	jannh@google.com,
+	anshuman.khandual@arm.com,
+	peterx@redhat.com,
+	joey.gouly@arm.com,
+	ioworker0@gmail.com,
+	baohua@kernel.org,
+	kevin.brodsky@arm.com,
+	quic_zhenhuah@quicinc.com,
+	christophe.leroy@csgroup.eu,
+	yangyicong@hisilicon.com,
+	linux-arm-kernel@lists.infradead.org,
+	namit@vmware.com,
+	hughd@google.com,
+	yang@os.amperecomputing.com,
+	ziy@nvidia.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
+Date: Tue, 29 Apr 2025 10:53:35 +0530
+Message-Id: <20250429052336.18912-7-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250429052336.18912-1-dev.jain@arm.com>
+References: <20250429052336.18912-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428171931.1850-1-ImanDevel@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 28-04-25, 13:19, Seyediman Seyedarab wrote:
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index acf19b004..5464c8487 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -653,10 +653,7 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
->  
->  	policy->boost_enabled = enable;
->  
-> -	cpus_read_lock();
->  	ret = cpufreq_driver->set_boost(policy, enable);
-> -	cpus_read_unlock();
-> -
->  	if (ret) {
->  		policy->boost_enabled = !policy->boost_enabled;
->  		return ret;
-> @@ -1045,11 +1042,17 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
->  	if (!fattr->store)
->  		return -EIO;
->  
-> +	if (fattr == &local_boost)
-> +		cpus_read_lock();
-> +
+In preparation for patch 7, we need to properly batch around
+can_change_pte_writable(). We batch around pte_needs_soft_dirty_wp() by
+the corresponding fpb flag, we batch around the page-anon exclusive check
+using folio_maybe_mapped_shared(); modify_prot_start_ptes() collects the
+dirty and access bits across the batch, therefore batching across
+pte_dirty(): this is correct since the dirty bit on the PTE really
+is just an indication that the folio got written to, so even if
+the PTE is not actually dirty (but one of the PTEs in the batch is),
+the wp-fault optimization can be made.
 
-Please add a comment as well to explain why this is required here.
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ include/linux/mm.h |  4 ++--
+ mm/gup.c           |  2 +-
+ mm/huge_memory.c   |  4 ++--
+ mm/memory.c        |  6 +++---
+ mm/mprotect.c      | 11 ++++++-----
+ 5 files changed, 14 insertions(+), 13 deletions(-)
 
->  	down_write(&policy->rwsem);
-
-And please rebase over PM tree's linux-next branch, your patch won't
-apply anymore due to recent changes.
-
->  	if (likely(!policy_is_inactive(policy)))
->  		ret = fattr->store(policy, buf, count);
->  	up_write(&policy->rwsem);
->  
-> +	if (fattr == &local_boost)
-> +		cpus_read_unlock();
-> +
->  	return ret;
->  }
-
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 21dd110b6655..2f639f6d93f9 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2487,8 +2487,8 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen);
+ #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+ 					    MM_CP_UFFD_WP_RESOLVE)
+ 
+-bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+-			     pte_t pte);
++bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
++			     pte_t pte, struct folio *folio, unsigned int nr);
+ extern long change_protection(struct mmu_gather *tlb,
+ 			      struct vm_area_struct *vma, unsigned long start,
+ 			      unsigned long end, unsigned long cp_flags);
+diff --git a/mm/gup.c b/mm/gup.c
+index f32168339390..c39f587842a0 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -614,7 +614,7 @@ static inline bool can_follow_write_common(struct page *page,
+ 		return false;
+ 
+ 	/*
+-	 * See can_change_pte_writable(): we broke COW and could map the page
++	 * See can_change_ptes_writable(): we broke COW and could map the page
+ 	 * writable if we have an exclusive anonymous page ...
+ 	 */
+ 	return page && PageAnon(page) && PageAnonExclusive(page);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2780a12b25f0..a58445fcedfc 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2032,12 +2032,12 @@ static inline bool can_change_pmd_writable(struct vm_area_struct *vma,
+ 		return false;
+ 
+ 	if (!(vma->vm_flags & VM_SHARED)) {
+-		/* See can_change_pte_writable(). */
++		/* See can_change_ptes_writable(). */
+ 		page = vm_normal_page_pmd(vma, addr, pmd);
+ 		return page && PageAnon(page) && PageAnonExclusive(page);
+ 	}
+ 
+-	/* See can_change_pte_writable(). */
++	/* See can_change_ptes_writable(). */
+ 	return pmd_dirty(pmd);
+ }
+ 
+diff --git a/mm/memory.c b/mm/memory.c
+index 68c1d962d0ad..e7ebc6b70421 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -750,7 +750,7 @@ static void restore_exclusive_pte(struct vm_area_struct *vma,
+ 		pte = pte_mkuffd_wp(pte);
+ 
+ 	if ((vma->vm_flags & VM_WRITE) &&
+-	    can_change_pte_writable(vma, address, pte)) {
++	    can_change_ptes_writable(vma, address, pte, NULL, 1)) {
+ 		if (folio_test_dirty(folio))
+ 			pte = pte_mkdirty(pte);
+ 		pte = pte_mkwrite(pte, vma);
+@@ -5796,7 +5796,7 @@ static void numa_rebuild_large_mapping(struct vm_fault *vmf, struct vm_area_stru
+ 			ptent = pte_modify(ptent, vma->vm_page_prot);
+ 			writable = pte_write(ptent);
+ 			if (!writable && pte_write_upgrade &&
+-			    can_change_pte_writable(vma, addr, ptent))
++			    can_change_ptes_writable(vma, addr, ptent, NULL, 1))
+ 				writable = true;
+ 		}
+ 
+@@ -5837,7 +5837,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+ 	 */
+ 	writable = pte_write(pte);
+ 	if (!writable && pte_write_upgrade &&
+-	    can_change_pte_writable(vma, vmf->address, pte))
++	    can_change_ptes_writable(vma, vmf->address, pte, NULL, 1))
+ 		writable = true;
+ 
+ 	folio = vm_normal_folio(vma, vmf->address, pte);
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index ec5d17af7650..baff009fc981 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -40,8 +40,8 @@
+ 
+ #include "internal.h"
+ 
+-bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+-			     pte_t pte)
++bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
++			      pte_t pte, struct folio *folio, unsigned int nr)
+ {
+ 	struct page *page;
+ 
+@@ -67,8 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+ 		 * write-fault handler similarly would map them writable without
+ 		 * any additional checks while holding the PT lock.
+ 		 */
+-		page = vm_normal_page(vma, addr, pte);
+-		return page && PageAnon(page) && PageAnonExclusive(page);
++		if (!folio)
++			folio = vm_normal_folio(vma, addr, pte);
++		return folio_test_anon(folio) && !folio_maybe_mapped_shared(folio);
+ 	}
+ 
+ 	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+@@ -222,7 +223,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 			 */
+ 			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+ 			    !pte_write(ptent) &&
+-			    can_change_pte_writable(vma, addr, ptent))
++			    can_change_ptes_writable(vma, addr, ptent, folio, 1))
+ 				ptent = pte_mkwrite(ptent, vma);
+ 
+ 			ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
 -- 
-viresh
+2.30.2
+
