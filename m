@@ -1,124 +1,314 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CBAC2D1
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9034E84A35
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745944600; cv=none; b=YulvGwjWCqb9qg/geqkd+idgnXsZaWb50ENNz8BKNdBguoY0F7OCLs0qfZd8x0oPymD4T8lIbcW71DTIXdJ3IDGT2h252z8RZVn9loDo3AaTGStNv2ixmWcqiDfSatwMp5xeyvearL+HRR5Gn3KzLdvpkVhlz4IST7AeDNspmy8=
+	t=1745944666; cv=none; b=KW/Mss5601AVbW3ddLPSMESz7aijOvF6fHheOCDMQQnG4Vtxs5roCu0ik0/S9qM6ikPPoE7wZfUZZOU6LJ21Rj7nQHsxQCwSrw8bU0L6psW8H1TDTD8LQQj2+95i5jetI2x51g68ocCTx+rS/FYivK6mZFyUH88kTPbSzM6qAdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745944600; c=relaxed/simple;
-	bh=xRPQTzVNw6kR4/8JZFHsXi/5pTBjN58UhIePapCj/+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lPcmme/gD3AalF36HVjW4zcoK+HjBksz3Is9OaDywAHvc2Xp6ox+CpHllwnnUty6uzLCc/ZOjaB3Y4sE+XlKn2p1S3v56rbqENOh9n42sD0oV2OqQB6/jDAwc+3TNn7JoetHzrIe4wbePxBHPP0swTCjkigrBjg64MIJoDiWh1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Stywinjc; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1745944666; c=relaxed/simple;
+	bh=GTBwZABLBbNP1w6oTnGAs8DazHtwqpwsSWLbCx8V+J0=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=GTHEuHuE7ArN6DVib+W7qvSoCBCnLe2BF2MVmrdEsXwASUyq6rOREppjiHnjDja2CkK0z2RND8ShvEGorEjjVCpZiYY+dMAHrFJkYNAil2yoZVxyoh0f4oBGMzlokAPqOWJ+S4K2onSWSWKJSQCU4UAa+AGOh/X67/uV+mYX79U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SB0VeVp1; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Stywinjc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SB0VeVp1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745944597;
+	s=mimecast20190719; t=1745944661;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=waEdyNuipqRc2FvA2naLTCSIIiKXgQ9HjpRrzr7KHVs=;
-	b=Stywinjc33tKLUZAwNHyd7/dFRyzLSw6NZqYVzibb76DGnR6CEvJH1TSPhIkFo/37BMiSK
-	1eHqdacXK5o0k3BFRzhS6eSqgVpDaRs1gCpKDCYySQxzUyw8HwgJiYEvihdwMfmWD+L5Zq
-	WOJopZf6DBN87GnXny+8fIT9hUMSdow=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-41-EmYZcYw-PD-itXuall_fKw-1; Tue, 29 Apr 2025 12:36:36 -0400
-X-MC-Unique: EmYZcYw-PD-itXuall_fKw-1
-X-Mimecast-MFC-AGG-ID: EmYZcYw-PD-itXuall_fKw_1745944596
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6ed16cc6e39so128293316d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:36:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745944595; x=1746549395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=waEdyNuipqRc2FvA2naLTCSIIiKXgQ9HjpRrzr7KHVs=;
-        b=n/eJDioIDYlpq5bmciadgR08CtkFtpvmXCXg8Jb0oHKIrqPe9HkT0SMckyqkJJ8oGF
-         xn3r6l0EgwG9NskIuNmWO4dJJ41519SmQbDmFs8JSTNLsH8k7tTOuet7H0OwflAdSfIq
-         SEDnx83jjH+0VBHTnX/q11zUusF/QU0VMK4Zu7Pl68mnZdVXc0B0RTIFi4DwV/4iR837
-         DfiEYZmytG1rz1RX1dXOKOo2Kt4m/U2Dfl/tXoJ61S2lHClrsGcsnITBURuP9UN/gmba
-         PV7W+X3HqWts2bUH5HBrGUam7RuKI+ctBGtBLopfqqB51U4kHbPeY4e3OgL1YfsCPtDU
-         EczQ==
-X-Gm-Message-State: AOJu0Yz0cmBvPCIJh2QarFRlv2e7KUhzLs+T4KvjHOoDDx9eBwZdqYPQ
-	6uX2uQyHkayJtMq41/VddJ+dkBg1GUuN9UJGshZwfPtXAJg6P6gjq47xueVMNKG2v7ABJXLcvAO
-	Q3nUXF/RUZ6r0/fmmnrJxQ1jhygVelLN2fClRw4Cb16Mnfrqyftnjm+E4c+sSEA==
-X-Gm-Gg: ASbGncuY5JnLZSsKtRuxdRnrqAf4IGHXU5wdffOSNcrr55KSQn7MUXl6FTfrH+NF1EO
-	mDiUo8yutFEAx+bsHNB/a5dmGNUoytNSyR1Q3bEkPTYgzu+G4wnHmE+S+npJzAowyyb23UOVVyd
-	b/hXAkCXpzwx8kvB3WOkjgNczph4edTreaMujP4DBpM+UW7Fa/LqMecRqCTu3KkAJiWLUZ8sXwS
-	ybvlwPBlqSuP6IOkyGZd9nQ+u8n889i6cn1j8RcJUalBUz1fo7EYHul2169nuQSut/TgZlDOeVx
-	tN8=
-X-Received: by 2002:a05:6214:1c42:b0:6e8:feae:9291 with SMTP id 6a1803df08f44-6f4fcee30d1mr719286d6.24.1745944595673;
-        Tue, 29 Apr 2025 09:36:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGrl8H4/5jtnrguKExXXuFCOERrcXvTboYVKeLXf20R7G+3egGDvxPBeabBwEPjBOiCsfK/vg==
-X-Received: by 2002:a05:6214:1c42:b0:6e8:feae:9291 with SMTP id 6a1803df08f44-6f4fcee30d1mr718716d6.24.1745944595247;
-        Tue, 29 Apr 2025 09:36:35 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0934346sm73501926d6.33.2025.04.29.09.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 09:36:34 -0700 (PDT)
-Date: Tue, 29 Apr 2025 12:36:31 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
- pfnmap_sanitize_pgprot()
-Message-ID: <aBEAD02B5CIzonwU@x1.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-3-david@redhat.com>
- <aAvjJOmvm5GsZ-JN@x1.local>
- <78f88303-6b00-42cf-8977-bf7541fa45a9@redhat.com>
- <aAwh6n058Hh490io@x1.local>
- <75998f7c-93d2-4b98-bb53-8d858b2c108e@redhat.com>
- <aA-q_PrThAw5v1PF@x1.local>
- <57f9480c-2f8c-4be8-864c-406fec917eb1@redhat.com>
- <aBDXr-Qp4z0tS50P@x1.local>
- <4a57e772-51f5-4341-a249-dd1b8fcf23b0@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=v4Z7IYlxZGIUKwJwhWYGYh06tJAodt68SWJ/LkN2PlU=;
+	b=SB0VeVp1TtJKKYnJA+D7TnAoI14DVtlmFcY6u8VwZeGxKCexuK2xpOKMVxbpUb0JoFBvrp
+	pPyBiVyw4ST2gL9W0exuXteaTfnGTGImgaY0eOwxhi/EeQKM3KFdJBtgpC0kOBAS3ozO3B
+	Oqqya1r7xSijlD9I97PgY3Z/T83m4Cw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-152-eRO5V1PWO2ysRFZJIgC9aA-1; Tue,
+ 29 Apr 2025 12:37:39 -0400
+X-MC-Unique: eRO5V1PWO2ysRFZJIgC9aA-1
+X-Mimecast-MFC-AGG-ID: eRO5V1PWO2ysRFZJIgC9aA_1745944657
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6F24F1800EC9;
+	Tue, 29 Apr 2025 16:37:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9F810180047F;
+	Tue, 29 Apr 2025 16:37:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+    Christian Brauner <brauner@kernel.org>
+cc: dhowells@redhat.com,
+    Etienne Champetier <champetier.etienne@gmail.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Jeffrey Altman <jaltman@auristor.com>,
+    Chet Ramey <chet.ramey@case.edu>, Steve French <sfrench@samba.org>,
+    linux-afs@lists.infradead.org, openafs-devel@openafs.org,
+    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4a57e772-51f5-4341-a249-dd1b8fcf23b0@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <433927.1745944651.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 29 Apr 2025 17:37:31 +0100
+Message-ID: <433928.1745944651@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Apr 29, 2025 at 06:25:06PM +0200, David Hildenbrand wrote:
-> I do wonder why we even have to lookup the memtype again if the caller
-> apparently reserved it (which implied checking it). All a bit weird.
+    =
 
-Maybe it's because the memtype info isn't always visible to the upper
-layers, e.g. default pci_iomap() for MMIOs doesn't need to specify anything
-on cache mode.  There's some pci_iomap_wc() variance, but still looks like
-only the internal has full control..
+Bash has a work around in redir_open() that causes open(O_CREAT) of a file
+in a sticky directory to be retried without O_CREAT if bash was built with
+AFS workarounds configured:
 
--- 
-Peter Xu
+        #if defined (AFS)
+              if ((fd < 0) && (errno =3D=3D EACCES))
+            {
+              fd =3D open (filename, flags & ~O_CREAT, mode);
+              errno =3D EACCES;    /* restore errno */
+            }
+
+        #endif /* AFS */
+
+This works around the kernel not being able to validly check the
+current_fsuid() against i_uid on the file or the directory because the
+uidspaces of the system and of AFS may well be disjoint.  The problem lies
+with the uid checks in may_create_in_sticky().
+
+However, the bash work around is going to be removed:
+
+        https://git.savannah.gnu.org/cgit/bash.git/tree/redir.c?h=3Dbash-5=
+.3-rc1#n733
+
+Fix this in the kernel by:
+
+ (1) Provide an ->is_owned_by_me() inode op, similar to ->permission(),
+     and, if provided, call that to determine if the caller owns the file
+     instead of checking the i_uid to current_fsuid().
+
+ (2) Provide a ->have_same_owner() inode op, that, if provided, can be
+     called to see if an inode has the same owner as the parent on the pat=
+h
+     walked.
+
+For kafs, use the first hook to check to see if the server indicated the
+ADMINISTER bit in the access rights returned by the FS.FetchStatus and
+suchlike and the second hook to compare the AFS user IDs retrieved by
+FS.FetchStatus (which may not fit in a kuid if AuriStor's YFS variant).
+
+This can be tested by creating a sticky directory (the user must have a
+token to do this) and creating a file in it.  Then strace bash doing "echo
+foo >>file" and look at whether bash does a single, successful O_CREAT ope=
+n
+on the file or whether that one fails and then bash does one without
+O_CREAT that succeeds.
+
+Reported-by: Etienne Champetier <champetier.etienne@gmail.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jeffrey Altman <jaltman@auristor.com>
+cc: Chet Ramey <chet.ramey@case.edu>
+cc: Alexander Viro <viro@zeniv.linux.org.uk>
+cc: Christian Brauner <brauner@kernel.org>
+cc: Steve French <sfrench@samba.org>
+cc: linux-afs@lists.infradead.org
+cc: openafs-devel@openafs.org
+cc: linux-cifs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/afs/dir.c       |    2 ++
+ fs/afs/file.c      |    2 ++
+ fs/afs/internal.h  |    3 +++
+ fs/afs/security.c  |   52 +++++++++++++++++++++++++++++++++++++++++++++++=
++++++
+ fs/namei.c         |   22 ++++++++++++++++++----
+ include/linux/fs.h |    3 +++
+ 6 files changed, 80 insertions(+), 4 deletions(-)
+
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 9e7b1fe82c27..6360db1673b0 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -65,6 +65,8 @@ const struct inode_operations afs_dir_inode_operations =3D=
+ {
+ 	.permission	=3D afs_permission,
+ 	.getattr	=3D afs_getattr,
+ 	.setattr	=3D afs_setattr,
++	.is_owned_by_me	=3D afs_is_owned_by_me,
++	.have_same_owner =3D afs_have_same_owner,
+ };
+ =
+
+ const struct address_space_operations afs_dir_aops =3D {
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index fc15497608c6..0317f0a36cf2 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -47,6 +47,8 @@ const struct inode_operations afs_file_inode_operations =
+=3D {
+ 	.getattr	=3D afs_getattr,
+ 	.setattr	=3D afs_setattr,
+ 	.permission	=3D afs_permission,
++	.is_owned_by_me	=3D afs_is_owned_by_me,
++	.have_same_owner =3D afs_have_same_owner,
+ };
+ =
+
+ const struct address_space_operations afs_file_aops =3D {
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 440b0e731093..fbfbf615abe3 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1495,6 +1495,9 @@ extern struct key *afs_request_key(struct afs_cell *=
+);
+ extern struct key *afs_request_key_rcu(struct afs_cell *);
+ extern int afs_check_permit(struct afs_vnode *, struct key *, afs_access_=
+t *);
+ extern int afs_permission(struct mnt_idmap *, struct inode *, int);
++int afs_is_owned_by_me(struct mnt_idmap *idmap, struct inode *inode);
++int afs_have_same_owner(struct mnt_idmap *idmap, struct inode *inode,
++			struct dentry *dentry);
+ extern void __exit afs_clean_up_permit_cache(void);
+ =
+
+ /*
+diff --git a/fs/afs/security.c b/fs/afs/security.c
+index 6a7744c9e2a2..cc9689fbed47 100644
+--- a/fs/afs/security.c
++++ b/fs/afs/security.c
+@@ -477,6 +477,58 @@ int afs_permission(struct mnt_idmap *idmap, struct in=
+ode *inode,
+ 	return ret;
+ }
+ =
+
++/*
++ * Determine if an inode is owned by 'me' - whatever that means for the
++ * filesystem.  In the case of AFS, this means that the file is owned by =
+the
++ * AFS user represented by the token (e.g. from a kerberos server) held i=
+n a
++ * key.  Returns 0 if owned by me, 1 if not; can also return an error.
++ */
++int afs_is_owned_by_me(struct mnt_idmap *idmap, struct inode *inode)
++{
++	struct afs_vnode *vnode =3D AFS_FS_I(inode);
++	afs_access_t access;
++	struct key *key;
++	int ret;
++
++	key =3D afs_request_key(vnode->volume->cell);
++	if (IS_ERR(key))
++		return PTR_ERR(key);
++
++	/* Get the access rights for the key on this file. */
++	ret =3D afs_check_permit(vnode, key, &access);
++	if (ret < 0)
++		goto error;
++
++	/* We get the ADMINISTER bit if we own the file. */
++	ret =3D (access & AFS_ACE_ADMINISTER) ? 0 : 1;
++error:
++	key_put(key);
++	return ret;
++}
++
++/*
++ * Determine if a file has the same owner as its parent - whatever that m=
+eans
++ * for the filesystem.  In the case of AFS, this means comparing their AF=
+S
++ * UIDs.  Returns 0 if same, 1 if not same; can also return an error.
++ */
++int afs_have_same_owner(struct mnt_idmap *idmap, struct inode *inode,
++			struct dentry *dentry)
++{
++	struct afs_vnode *vnode =3D AFS_FS_I(inode);
++	struct dentry *parent;
++	s64 owner;
++
++	/* Get the owner's ID for the directory.  Ideally, we'd use RCU to
++	 * access the parent rather than getting a ref.
++	 */
++	parent =3D dget_parent(dentry);
++	vnode =3D AFS_FS_I(d_backing_inode(parent));
++	owner =3D vnode->status.owner;
++	dput(parent);
++
++	return vnode->status.owner !=3D owner;
++}
++
+ void __exit afs_clean_up_permit_cache(void)
+ {
+ 	int i;
+diff --git a/fs/namei.c b/fs/namei.c
+index 84a0e0b0111c..79e8ef1b6900 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1318,11 +1318,25 @@ static int may_create_in_sticky(struct mnt_idmap *=
+idmap, struct nameidata *nd,
+ =
+
+ 	i_vfsuid =3D i_uid_into_vfsuid(idmap, inode);
+ =
+
+-	if (vfsuid_eq(i_vfsuid, dir_vfsuid))
+-		return 0;
++	if (unlikely(inode->i_op->have_same_owner)) {
++		int ret =3D inode->i_op->have_same_owner(idmap, inode, nd->path.dentry)=
+;
+ =
+
+-	if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
+-		return 0;
++		if (ret <=3D 0)
++			return ret;
++	} else {
++		if (vfsuid_eq(i_vfsuid, dir_vfsuid))
++			return 0;
++	}
++
++	if (unlikely(inode->i_op->is_owned_by_me)) {
++		int ret =3D inode->i_op->is_owned_by_me(idmap, inode);
++
++		if (ret <=3D 0)
++			return ret;
++	} else {
++		if (vfsuid_eq_kuid(i_vfsuid, current_fsuid()))
++			return 0;
++	}
+ =
+
+ 	if (likely(dir_mode & 0002)) {
+ 		audit_log_path_denied(AUDIT_ANOM_CREAT, "sticky_create");
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..ec278d2d362a 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2236,6 +2236,9 @@ struct inode_operations {
+ 			    struct dentry *dentry, struct fileattr *fa);
+ 	int (*fileattr_get)(struct dentry *dentry, struct fileattr *fa);
+ 	struct offset_ctx *(*get_offset_ctx)(struct inode *inode);
++	int (*is_owned_by_me)(struct mnt_idmap *idmap, struct inode *inode);
++	int (*have_same_owner)(struct mnt_idmap *idmap, struct inode *inode,
++			       struct dentry *dentry);
+ } ____cacheline_aligned;
+ =
+
+ static inline int call_mmap(struct file *file, struct vm_area_struct *vma=
+)
 
