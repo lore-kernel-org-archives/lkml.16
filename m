@@ -1,99 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE18244686;
-	Tue, 29 Apr 2025 16:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F008BEE;
+	Tue, 29 Apr 2025 16:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745943276; cv=none; b=KR4V3Kagv/MWOhKb4KsMXWnkzO5yEV/gBWOQzYi4tvd+gPjf3AZoa33oMxW9fGJrJZxXzt8E/Thq2kjw1HqwC4vBy1g7xnqF14Y13KZwvbWPwtAFbXslZEHgy0qzlnOzOfs+FjyrRN8pIFvZGfzVf+fxcq/XcyjvBD7i4cLrquM=
+	t=1745943595; cv=none; b=Sg6BYZZX8HzDZeOrZ0KwES9jAYnm9VVBXF4tgSU2YQTO+OnIDXva2b3EwkK3dyXqiFOGaziuL6duoMCQEdDqAA6BCVl9k4JEwW4G8i3dX/X7iFutzT3ymSLcQJ8GWZ0yfBFTVbvbF5X24kzw1ouZnUIc5Ht4KsBnoF+T1dR7iPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745943276; c=relaxed/simple;
-	bh=Za8BZ1UuGG2x9A7r1s1ssfvw4dTTAtf2acqIsO/vEKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DQzLjM4SZU0CLvB9bR9TOLt83TAx9y/Rn/3t00va8GnZA8QEYXtYFvwB1HgDkMAtXOHWFUwI3mywaO846s2vTXMCPb9oxX/aJZuy61XI4chAkLTqcYldziOXfNFwidEgcU2RKHgGtdlQEsLuUZR6aTj16GmIPeV/aVfAfmSXONA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHbxnauX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745943595; c=relaxed/simple;
+	bh=mEnsdqsn08I1GggVR6Aa/UWsmPOPO7CSGUPOdViS8uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uEbUNXatmGRefqd26RYC/4ssl6QdvdSR7PrZM6POf1m32fXiupEQBOOaI649qUvqKJe0EUurxbyVCO7nVFuakL+167rK/ec9aH205GVtWGpcBeqrLvbjmVToz9arNQ1HfE41/EEWfWMA3moklFrNSDapkp81BqiaNkjSDbim7i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O7En+CmC; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHbxnauX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47365C4CEE9;
-	Tue, 29 Apr 2025 16:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745943275;
-	bh=Za8BZ1UuGG2x9A7r1s1ssfvw4dTTAtf2acqIsO/vEKQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SHbxnauXLSp+l6ucqxC0MVJsfT2tWA3tsa4WUZuygkJ7bIefavMEcVylGGbx3u1WR
-	 Vwh9cMNNo0n1kzTkZMIDfXbjDpmUvMub52/2Q0782AX9UmTU9H1Jj1I4y1bCjIoHxH
-	 aM4rB0brwO6RBieMNPa5ayn3nY/KJ14mdFvdr6FzLbH7D43veYo/mfqip7p1Jqq1x+
-	 4O2I/ZjC4ZNUOP28X7o7p9qUkINwSdygqnwH4ObTS2Wkbp/I8guLZ8ml7P1HBHSnvH
-	 hyFCfA5ZFVrt0xbxR3TrQwa3Y91eFnSbVs+Gt6K/IJF3npnF3e8ZNm6g0fOauCE8sD
-	 Fozt+c+Ndc+ww==
-Date: Tue, 29 Apr 2025 09:14:33 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
- Eric Dumazet <edumazet@google.com>, Florian Fainelli
- <f.fainelli@gmail.com>, Paolo Abeni <pabeni@redhat.com>, Vladimir Oltean
- <olteanv@gmail.com>, Woojung Huh <woojung.huh@microchip.com>, "Russell King
- (Oracle)" <linux@armlinux.org.uk>, Heiner Kallweit <hkallweit1@gmail.com>,
- stable@vger.kernel.org, kernel@pengutronix.de,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH net v3 1/2] net: dsa: microchip: let phylink manage PHY
- EEE configuration on KSZ switches
-Message-ID: <20250429091433.7a4e8aaa@kernel.org>
-In-Reply-To: <20250429073644.2987282-2-o.rempel@pengutronix.de>
-References: <20250429073644.2987282-1-o.rempel@pengutronix.de>
-	<20250429073644.2987282-2-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O7En+CmC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mEnsdqsn08I1GggVR6Aa/UWsmPOPO7CSGUPOdViS8uo=; b=O7En+CmCZiOn1t8NSY8VLHLo7m
+	OEmZd9uy4G7Rcgmen9k9cCjpFCxsACI5T90HPOzkf+gF1HgdEe7bkuMEB3Auw8Ongc3aUdr3H0wYg
+	4BO5m/PjR3ELxCObp/15qs2D2xLpmColKf9Fg7BLNip+D20olZ+2IO0Xa2NKwg/CTa3FO3TV30G3I
+	JJNXVR21LHB6WjHySwbx3CrgPAafBAQqvqQu3Jdn4cLP+3ZcAihOEyEonxPQlTwTXRCS6/rh3zOAq
+	qgZV2GYCJwfRvlmvyv7+BJIvzbt53CYa53pd3rKO+YYgGpUti6VdFheDBTW9uZq/Z8xJZfTQf+EkZ
+	0srHn+xw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9nf1-000000016JE-2BgQ;
+	Tue, 29 Apr 2025 16:18:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3886430057C; Tue, 29 Apr 2025 18:18:11 +0200 (CEST)
+Date: Tue, 29 Apr 2025 18:18:11 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, seanjc@google.com,
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 6/6] objtool: Validate kCFI calls
+Message-ID: <20250429161811.GC4439@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.540779611@infradead.org>
+ <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
 
-On Tue, 29 Apr 2025 09:36:43 +0200 Oleksij Rempel wrote:
->  	switch (dev->chip_id) {
->  	case KSZ8563_CHIP_ID:
-> +	case KSZ9563_CHIP_ID:
-> +	case KSZ9893_CHIP_ID:
-> +		return true;
->  	case KSZ8567_CHIP_ID:
-> +		/* KSZ8567R Errata DS80000752C Module 4 */
-> +	case KSZ8765_CHIP_ID:
-> +	case KSZ8794_CHIP_ID:
-> +	case KSZ8795_CHIP_ID:
-> +		/* KSZ879x/KSZ877x/KSZ876x Errata DS80000687C Module 2 */
->  	case KSZ9477_CHIP_ID:
-> -	case KSZ9563_CHIP_ID:
-> +		/* KSZ9477S Errata DS80000754A Module 4 */
->  	case KSZ9567_CHIP_ID:
-> -	case KSZ9893_CHIP_ID:
-> +		/* KSZ9567S Errata DS80000756A Module 4 */
->  	case KSZ9896_CHIP_ID:
-> +		/* KSZ9896C Errata DS80000757A Module 3 */
->  	case KSZ9897_CHIP_ID:
->  	case LAN9646_CHIP_ID:
-> -		return true;
-> +		/* KSZ9897R Errata DS80000758C Module 4 */
-> +		/* Energy Efficient Ethernet (EEE) feature select must be
-> +		 * manually disabled
-> +		 *   The EEE feature is enabled by default, but it is not fully
-> +		 *   operational. It must be manually disabled through register
-> +		 *   controls. If not disabled, the PHY ports can auto-negotiate
-> +		 *   to enable EEE, and this feature can cause link drops when
-> +		 *   linked to another device supporting EEE.
-> +		 *
-> +		 * The same item appears in the errata for all switches above.
-> +		 */
->  	}
+On Mon, Apr 14, 2025 at 04:43:26PM -0700, Josh Poimboeuf wrote:
+> Can we call this ANNOTATE_NOCFI_SAFE or something?
 
-compilers are not on board with having labels right before the closing
-bracket. Please add a 'break;' here?
+I'm hesitant to do so, because some of these sites really are not safe.
+EFI and VMX interrupt crud really are a security issue.
 
-drivers/net/dsa/microchip/ksz_common.c:3565:9: warning: statement expected after case label
-
-reminder: we have a 24h cool down period between reposts
--- 
-pv-bot: 24h
-pw-bot: cr
+EFI really is unfixable but not less brokene, because the EFI code is
+out of our control, the VMX thing might be fixable, not sure I
+understand KVM well enough.
