@@ -1,301 +1,556 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBDF219E93
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACEB2512C5
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745958800; cv=none; b=Dpj+E2sMMeb/parrhDMOjYh2nbPnmIaUT2iexUG6U2dGoqX35UAyGPh/eq6Qf29H06K9O21cdemC5YD4P0L09hBxdkXcH4MId0figQZ/23dnm8xfhaIsA+hUC65+wPdeS9JKf5ElvN7PCJKPTxOALExFe6NK5ti79jn1c5pScgU=
+	t=1745958872; cv=none; b=tbyjJqDUDIb0kK/HK6eHXxvdbrOEgRwNDjWjvXeBhUMP+f2jAWzRu+l02Mbu5CMnGAU1WgtUKq+YJeDbeUxbZQWDZUbaAfq1dyttCAc3xeSpFktF0vvaIFVmwkJ+TZscQiGHv4ELloIsjUcJYZr2XSjcPjs3PetWS6tcV/pXSxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745958800; c=relaxed/simple;
-	bh=3/CUJIs+JRvVspffRj6ZGRTR6X6h0zQfLy2IiLb4+yY=;
+	s=arc-20240116; t=1745958872; c=relaxed/simple;
+	bh=sGlnrQ/MOQplxDlbDhA79T/eVHpLdXq6Ayvj/XA97Hs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qjnLvqMvrQo+QxHO8h6M4CfGAOPsxOk306nBgy7vWCEQbCZz0apFBOqdoSFKt92nYl1Lh3UcGuvvUQyhZMozJP1k30C1LxFE0xxNBqZxxStoM8v83Xpk+7yMfUO02OoNartKUnkc6K4JoAoeDjxt8Fw6s3ildF+ERs7zkY4l6MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gJTtreEY; arc=none smtp.client-ip=209.85.160.181
+	 To:Cc:Content-Type; b=EfdpgspoZrUZ41Jzidj0rU07j3dyZNSsN4o/eOpGFtHAV/Nvuou8AERqnIUFP+Uvaeoand4PmR2ER7Py/HNX72HMQwq5z1WMeEw6szdLzRS64X8E1djOeo7cN6WU677N1DwJU1m/luQov9fZ8TQQpbDJva4wPWA36lK1X8iDMAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HzGlbmp9; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gJTtreEY"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4774611d40bso347561cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:33:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HzGlbmp9"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfe808908so74055e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745958798; x=1746563598; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745958868; x=1746563668; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6RuHqTNBtcvgW69uG+veZI2+mQpj/OYd2zcCul6gKi8=;
-        b=gJTtreEYX5hxAOQxn80wiy0lcl9Kx+CmTbcBk174vwcjgaYX7CPOW3y7jv97l91Zxj
-         X6105lsErg1wWKPHkd65nkKMIRS51su1NGnvJOp8142t5yX2IQl9+/CZQrvUWg05B8KK
-         8IOEcCYv8dL4JE7dSg3llRcrNAfcsxnA+K/jejqUfXjNNDk3oD58xgY4gtUcvrjxY7xT
-         7iyw4APg4YzPHSZd/rJGQEo8kKoAKbBgwmQJk+kOg4Rk7QoD48jwpNavoowpakrH3YeO
-         Nakw3hG2+tKUry+p787R5s7bC2La/92bQGX2NLaQ09EOaZeMdBCwe+BHSfraGxg32WOz
-         84gQ==
+        bh=e6tMfh0HII/co4dwYxVDVqR67wVyNotROtYhKBa1M7Q=;
+        b=HzGlbmp9coYHsEhXZLJMiWNRB50mMWX66aG4KoTbp5vMv2s5L4gk/tQmf0YE4c/zcs
+         Jw11VXsIoXe9jEmIUw9AbOjm7iXmIHPCvY4ZoJ9cDx5XHPDJTEvagruwWY+zYvlsBbmC
+         p0quDtF6v/q4u8nsEiqZTJiWyWnE46cYah8sDJ4sNb4e2qSkQZKHDMWbyQheM+tGTRiE
+         G0j5beAQNJBENPkQje64BxvOfGxLFYy32/l+JmghFn3zOBhtdkky6eryUuZoWgXnBmTw
+         D90wXjpbjObJhsx8KbUT3Yby0hC/jcioj9wCcTxfWZptv3//aij9VIYVFRZLoiEu7011
+         Gecw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745958798; x=1746563598;
+        d=1e100.net; s=20230601; t=1745958868; x=1746563668;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6RuHqTNBtcvgW69uG+veZI2+mQpj/OYd2zcCul6gKi8=;
-        b=arku8Nql38GiHfJyy8ENd/6PmvbgfDuhgOj1NfeRnD5GtI49+hygpQMgi9R0K++M/t
-         y330RxbC7TDcP56VBHzuuZyt+aDXxh4x+dO+uy7VyvbsCxMWIQ1ZB9e0lU+6B1US8iNI
-         blzR3q6Lj1XpVr1u+mpcIxhNXjoD8eCN8/5yvnP1K2YhpedOTO+TcVfbnsSCknQiXswA
-         clLm/Va+FunkoxtKfv/BesGgmKGYBMbyrv4enjL+xrtg1iRfBcNw6L5W/rXKsM8tjbqq
-         W9giEyH0Q/oYvErMww+Ljyz8BdBit3K4Uu8rs1ARGB+sdYB7qYWVjJi8FWX58xgk2baF
-         kcZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVKlvjZquuStQons2Lai0trWDxUPHXotsk5nI9eJvunS/31YxltB+ffglDLJfx11j4WSSq5yOwXLR7xSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvb9Wht/eVnqAQ6ER5MjfWjbo48WuISNtFoGY7yvZoeZwb/pxp
-	5gT5lWLmWb/Qu3DAMZxpeVPbJdF5Tr9/kyrcWJVyjRZfZ4TF/p2QMnuN0NfEnPcPLNMbFpa51CF
-	YU2kDSbBvtgxv2MR+IPsxvU31jwJf75rgpi23
-X-Gm-Gg: ASbGnct6Mo3Z+eDB8Dq+Zm8nvezTHskTJip2vYfvbrHsqlmr2pQUDyDPwrnhJNAbdby
-	aAQWcZJR/W2natUGFN1RiP7HTkOUxRrE3gQ/uR2yehWK2il3XZ818dsn09/hBTe9OE13uhfngeg
-	dBwj5QF6OEViomwSDUXzzqNP3PVxmAB+FfkRzw50s79rd5oSsaeSD09MCJU0OeAW0=
-X-Google-Smtp-Source: AGHT+IFfAqUaqm8TlmxiDs/TpA8pVnnKtFrG+o0jmeCwd2WChU9Uegcp05S3xNJHn3OsPIEFvPnGKyo2zqt4PAryZbg=
-X-Received: by 2002:ac8:578b:0:b0:489:7ea9:4263 with SMTP id
- d75a77b69052e-489b9838a60mr982441cf.10.1745958797430; Tue, 29 Apr 2025
- 13:33:17 -0700 (PDT)
+        bh=e6tMfh0HII/co4dwYxVDVqR67wVyNotROtYhKBa1M7Q=;
+        b=LxNj0jZU3WuOwg5NQcIUi/ImHFATcjVWvGhOa/PjKRpHIg3aB401slZ47I/zqs2AVb
+         CPOB7USb+N1U3td7qPvHjbbDrcLuD3aKMOFhrOQeQtZRdmsAlgaLJp0lCzKVTlC4HaYi
+         wb0WVtzY16MffQ1V51OadN3G1cwlr2YQQDXISALRH1MGStthgP93uu+id6RwwrCJJdVO
+         84ofq1CQ8NTFWS0oRtp4o07lr1mFnrB4dX2p+0ACQ87cypulVYImtiFYleP1g9l6M1nA
+         tEp8PsfnFK7ZO2rxro2sOKs+YoZgUrjQE5wu5ziAwTHaeKLblqD9/ubIiAVMaml6CRAr
+         IFuw==
+X-Gm-Message-State: AOJu0YxN/5Gv7XA2ylLIue8Om+Lcwt50sTtRsZzL7DVzE6ClGw9wA3Ji
+	FDhFRfK6gG5gdLQ5nbFvDEfOD6NadpC/4lO2Bn4YBvpu1eqT4olk0CmF5CgecivbzD7B4xA6PEE
+	bg7UmI8KGSTzM3V8W7tUulhCsr6VtpYJ/MyJ0
+X-Gm-Gg: ASbGnctk6+9M3mV0kSSnG9hUuK2V/JNDJjCisLl14AzT5nsT0InNhxc+MtpSFHBCUPz
+	kgClIb5WUwgE/7hzG/Ne5jTs83sRlt1tIrXYpELc7VdsbzAcP/Swvg8Z3/JMhNaxzBRpFJ8NElP
+	7bfoX+M0S07d+auL/+9EdAAB0ObTSU7sQy6WIJwNqCo8JzTRcPP/8=
+X-Google-Smtp-Source: AGHT+IEnc0fv+sueFCuA+iPG4MIqFaER7pRMaCfTPn52Qp04oCY6VYoXgjVhIFsQZ4Z+tXZbgJPJcnyieZkG1svQynw=
+X-Received: by 2002:aa7:da0f:0:b0:5f8:7b57:e5c2 with SMTP id
+ 4fb4d7f45d1cf-5f896f24328mr22797a12.4.1745958852127; Tue, 29 Apr 2025
+ 13:34:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
- <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
- <CAJuCfpGGiwTbMeGAeYNtQ5SsFenUw8up6ToLy=VstULM_TSoXA@mail.gmail.com>
- <CAG48ez15g5n9AoMJk1yPHsDCq2PGxCHc2WhCAzH8B2o6PgDwzQ@mail.gmail.com>
- <CAJuCfpG+YjyVE-6TaAQEjwc0iixqN8Epf25jo2awtL=gqY=afA@mail.gmail.com> <CAG48ez0ntTH_sOaPiqML715jyTCujwyh3Og1wBq9RNLbu55C5Q@mail.gmail.com>
-In-Reply-To: <CAG48ez0ntTH_sOaPiqML715jyTCujwyh3Og1wBq9RNLbu55C5Q@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 29 Apr 2025 13:33:05 -0700
-X-Gm-Features: ATxdqUEe002VsMDCR8tZV7bMaBYZb2LRjVYTvWo45vIOB09sAK6-nvvtt3xxSRU
-Message-ID: <CAJuCfpFA0Kqt_KOceq6bxbJG80z-RaxcFbC+-59F_sPOXAorQA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: Jann Horn <jannh@google.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
-	vbabka@suse.cz, peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
-	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
-	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
+References: <20250420010214.1963979-1-xur@google.com>
+In-Reply-To: <20250420010214.1963979-1-xur@google.com>
+From: Rong Xu <xur@google.com>
+Date: Tue, 29 Apr 2025 13:34:00 -0700
+X-Gm-Features: ATxdqUF38hTBVGnmkK7BzLGfbjEInGx7B6MqwpurnFwvQhy1LHTObI4gin51Pwg
+Message-ID: <CAF1bQ=RWmNt1xnnoQrsBG6-TXzSiqX6e-_Squ22UOSmUi-Tr8w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: distributed build support for Clang ThinLTO
+To: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Rafael Aquini <aquini@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Rong Xu <xur@google.com>, 
+	Teresa Johnson <tejohnson@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 11:55=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
-:
->
-> On Tue, Apr 29, 2025 at 8:04=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> > On Tue, Apr 29, 2025 at 10:21=E2=80=AFAM Jann Horn <jannh@google.com> w=
-rote:
-> > >
-> > > Hi!
-> > >
-> > > (I just noticed that I incorrectly assumed that VMAs use kfree_rcu
-> > > (not SLAB_TYPESAFE_BY_RCU) when I wrote my review of this, somehow I
-> > > forgot all about that...)
-> >
-> > Does this fact affect your previous comments? Just want to make sure
-> > I'm not missing something...
->
-> When I suggested using "WRITE_ONCE(vma->vm_file, NULL)" when tearing
-> down a VMA, and using get_file_rcu() for the lockless lookup, I did
-> not realize that you could actually also race with all the other
-> places that set ->vm_file, like __mmap_new_file_vma() and so on; and I
-> did not think about whether any of those code paths might leave a VMA
-> with a dangling ->vm_file pointer.
+Just wanted to gently follow up on this patch that I sent previously.
 
-So, let me summarize my understanding and see if it's correct.
+From a toolchain and compiler perspective, I genuinely believe that
+kernel ThinLTO builds should use this. I really want to get some feedback
+and reviews on this patch.
 
-If we copy the original vma, ensure that it hasn't changed while we
-were copying (with mmap_lock_speculate_retry()) and then use
-get_file_rcu(&copy->vm_file) I think we are guaranteed no UAF because
-we are in RCU read section. At this point the only issue is that
-copy->vm_file might have lost its last refcount and get_file_rcu()
-would enter an infinite loop. So, to avoid that we have to use the
-original vma when calling get_file_rcu() but then we should also
-ensure that vma itself does not change from under us due to
-SLAB_TYPESAFE_BY_RCU used for vm_area_struct cache. If it does change
-from under us we might end up accessing an invalid address if
-vma->vm_file is being modified concurrently.
+Thanks,
 
->
-> I guess maybe that means you really do need to do the lookup from the
-> copied data, as you did in your patch; and that might require calling
-> get_file_active() on the copied ->vm_file pointer (instead of
-> get_file_rcu()), even though I think that is not really how
-> get_file_active() is supposed to be used (it's supposed to be used
-> when you know the original file hasn't been freed yet). Really what
-> you'd want for that is basically a raw __get_file_rcu(), but that is
-> static and I think Christian wouldn't want to expose more of these
-> internals outside VFS...
-> (In that case, all the stuff below about get_file_rcu() would be moot.)
->
-> Or you could pepper WRITE_ONCE() over all the places that write
-> ->vm_file, and ensure that ->vm_file is always NULLed before its
-> reference is dropped... but that seems a bit more ugly to me.
+-Rong
 
-Ugh, yes. We either ensure no vma->vm_file tearing or use
-__get_file_rcu() on a copy of the vma. Or we have to stabilize the vma
-by locking it... Let me think about all these options. Thanks!
-
+On Sat, Apr 19, 2025 at 6:02=E2=80=AFPM <xur@google.com> wrote:
 >
-> > > On Tue, Apr 29, 2025 at 7:09=E2=80=AFPM Suren Baghdasaryan <surenb@go=
-ogle.com> wrote:
-> > > > On Tue, Apr 29, 2025 at 8:40=E2=80=AFAM Jann Horn <jannh@google.com=
-> wrote:
-> > > > > On Fri, Apr 18, 2025 at 7:50=E2=80=AFPM Suren Baghdasaryan <suren=
-b@google.com> wrote:
-> > > > > > With maple_tree supporting vma tree traversal under RCU and vma=
- and
-> > > > > > its important members being RCU-safe, /proc/pid/maps can be rea=
-d under
-> > > > > > RCU and without the need to read-lock mmap_lock. However vma co=
-ntent
-> > > > > > can change from under us, therefore we make a copy of the vma a=
-nd we
-> > > > > > pin pointer fields used when generating the output (currently o=
-nly
-> > > > > > vm_file and anon_name). Afterwards we check for concurrent addr=
-ess
-> > > > > > space modifications, wait for them to end and retry. While we t=
-ake
-> > > > > > the mmap_lock for reading during such contention, we do that mo=
-mentarily
-> > > > > > only to record new mm_wr_seq counter. This change is designed t=
-o reduce
-> > > > > > mmap_lock contention and prevent a process reading /proc/pid/ma=
-ps files
-> > > > > > (often a low priority task, such as monitoring/data collection =
-services)
-> > > > > > from blocking address space updates.
-> > > > > [...]
-> > > > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > > > > > index b9e4fbbdf6e6..f9d50a61167c 100644
-> > > > > > --- a/fs/proc/task_mmu.c
-> > > > > > +++ b/fs/proc/task_mmu.c
-> > > > > [...]
-> > > > > > +/*
-> > > > > > + * Take VMA snapshot and pin vm_file and anon_name as they are=
- used by
-> > > > > > + * show_map_vma.
-> > > > > > + */
-> > > > > > +static int get_vma_snapshot(struct proc_maps_private *priv, st=
-ruct vm_area_struct *vma)
-> > > > > > +{
-> > > > > > +       struct vm_area_struct *copy =3D &priv->vma_copy;
-> > > > > > +       int ret =3D -EAGAIN;
-> > > > > > +
-> > > > > > +       memcpy(copy, vma, sizeof(*vma));
-> > > > > > +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> > > > > > +               goto out;
-> > > > >
-> > > > > I think this uses get_file_rcu() in a different way than intended=
-.
-> > > > >
-> > > > > As I understand it, get_file_rcu() is supposed to be called on a
-> > > > > pointer which always points to a file with a non-zero refcount (e=
-xcept
-> > > > > when it is NULL). That's why it takes a file** instead of a file*=
- - if
-> > > > > it observes a zero refcount, it assumes that the pointer must hav=
-e
-> > > > > been updated in the meantime, and retries. Calling get_file_rcu()=
- on a
-> > > > > pointer that points to a file with zero refcount, which I think c=
-an
-> > > > > happen with this patch, will cause an endless loop.
-> > > > > (Just as background: For other usecases, get_file_rcu() is suppos=
-ed to
-> > > > > still behave nicely and not spuriously return NULL when the file*=
- is
-> > > > > concurrently updated to point to another file*; that's what that =
-loop
-> > > > > is for.)
-> > > >
-> > > > Ah, I see. I wasn't aware of this subtlety. I think this is fixable=
- by
-> > > > checking the return value of get_file_rcu() and retrying speculatio=
-n
-> > > > if it changed.
-> > >
-> > > I think you could probably still end up looping endlessly in get_file=
-_rcu().
+> From: Rong Xu <xur@google.com>
 >
-> (Just to be clear: What I meant here is that get_file_rcu() loops
-> *internally*; get_file_rcu() is not guaranteed to ever return if the
-> pointed-to file has a zero refcount.)
+> Add distributed ThinLTO build support for the Linux kernel.
+> This new mode offers several advantages: (1) Increased
+> flexibility in handling user-specified build options.
+> (2) Improved user-friendliness for developers. (3) Greater
+> convenience for integrating with objtool and livepatch.
 >
-> > By "retrying speculation" I meant it in the sense of
-> > get_vma_snapshot() retry when it takes the mmap_read_lock and then
-> > does mmap_lock_speculate_try_begin to restart speculation. I'm also
-> > thinking about Liam's concern of guaranteeing forward progress for the
-> > reader. Thinking maybe I should not drop mmap_read_lock immediately on
-> > contention but generate some output (one vma or one page worth of
-> > vmas) before dropping mmap_read_lock and proceeding with speculation.
+> Note that "distributed" in this context refers to a term
+> that differentiates in-process ThinLTO builds by invoking
+> backend compilation through the linker, not necessarily
+> building in distributed environments.
 >
-> Hm, yeah, I guess you need that for forward progress...
+> Distributed ThinLTO is enabled via the
+> `CONFIG_LTO_CLANG_THIN_DIST` Kconfig option. For example:
+>  > make LLVM=3D1 defconfig
+>  > scripts/config -e LTO_CLANG_THIN_DIST
+>  > make LLVM=3D1 oldconfig
+>  > make LLVM=3D1 vmlinux -j <..>
 >
-> > > > > (If my understanding is correct, maybe we should document that mo=
-re
-> > > > > explicitly...)
-> > > >
-> > > > Good point. I'll add comments for get_file_rcu() as a separate patc=
-h.
-> > > >
-> > > > >
-> > > > > Also, I think you are introducing an implicit assumption that
-> > > > > remove_vma() does not NULL out the ->vm_file pointer (because tha=
-t
-> > > > > could cause tearing and could theoretically lead to a torn pointe=
-r
-> > > > > being accessed here).
-> > > > >
-> > > > > One alternative might be to change the paths that drop references=
- to
-> > > > > vma->vm_file (search for vma_close to find them) such that they f=
-irst
-> > > > > NULL out ->vm_file with a WRITE_ONCE() and do the fput() after th=
-at,
-> > > > > maybe with a new helper like this:
-> > > > >
-> > > > > static void vma_fput(struct vm_area_struct *vma)
-> > > > > {
-> > > > >   struct file *file =3D vma->vm_file;
-> > > > >
-> > > > >   if (file) {
-> > > > >     WRITE_ONCE(vma->vm_file, NULL);
-> > > > >     fput(file);
-> > > > >   }
-> > > > > }
-> > > > >
-> > > > > Then on the lockless lookup path you could use get_file_rcu() on =
-the
-> > > > > ->vm_file pointer _of the original VMA_, and store the returned f=
-ile*
-> > > > > into copy->vm_file.
-> > > >
-> > > > Ack. Except for storing the return value of get_file_rcu(). I think
-> > > > once we detect that  get_file_rcu() returns a different file we sho=
-uld
-> > > > bail out and retry. The change in file is an indication that the vm=
-a
-> > > > got changed from under us, so whatever we have is stale.
-> > >
-> > > What does "different file" mean here - what file* would you compare
-> > > the returned one against?
-> >
-> > Inside get_vma_snapshot() I would pass the original vma->vm_file to
-> > get_file_rcu() and check if it returns the same value. If the value
-> > got changed we jump to  /* Address space got modified, vma might be
-> > stale. Re-lock and retry. */ section. That should work, right?
+> The implementation changes the top-level Makefile with a
+> macro for generating `vmlinux.o` for distributed ThinLTO
+> builds. It uses the existing Kbuild infrastructure to
+> perform two recursive passes through the subdirectories.
+> The first pass generates LLVM IR object files, similar to
+> in-process ThinLTO. Following the thin-link stage, a second
+> pass compiles these IR files into the final native object
+> files. The build rules and actions for this two-pass process
+> are primarily implemented in `scripts/Makefile.build`.
 >
-> Where do you get an "original vma->vm_file" from?
+> Currently, this patch focuses on building the main kernel
+> image (`vmlinux`) only. Support for building kernel modules
+> using this method is planned for a subsequent patch.
 >
-> To be clear, get_file_rcu(p) returns one of the values that *p had
-> while get_file_rcu(p) is running.
-
-``````
+> Tested on the following arch: x86, arm64, loongarch, and
+> riscv.
+>
+> Some implementation details can be found here:
+> https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kernel/859=
+34
+>
+> Signed-off-by: Rong Xu <xur@google.com>
+> ---
+>  MAINTAINERS                       |  5 +++
+>  Makefile                          | 40 ++++++++++++++++++++---
+>  arch/Kconfig                      | 12 +++++++
+>  scripts/Makefile.build            | 52 +++++++++++++++++++++++++++---
+>  scripts/Makefile.lib              |  7 +++-
+>  scripts/Makefile.vmlinux_o        | 16 +++++++---
+>  scripts/Makefile.vmlinux_thinlink | 53 +++++++++++++++++++++++++++++++
+>  scripts/head-object-list.txt      |  1 +
+>  8 files changed, 171 insertions(+), 15 deletions(-)
+>  create mode 100644 scripts/Makefile.vmlinux_thinlink
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c966e71ea60bb..40d3bc223e4b0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5782,6 +5782,11 @@ F:       scripts/Makefile.clang
+>  F:     scripts/clang-tools/
+>  K:     \b(?i:clang|llvm)\b
+>
+> +CLANG/LLVM THINLTO DISTRIBUTED BUILD
+> +M:     Rong Xu <xur@google.com>
+> +S:     Supported
+> +F:     scripts/Makefile.vmlinux_thinlink
+> +
+>  CLK API
+>  M:     Russell King <linux@armlinux.org.uk>
+>  L:     linux-clk@vger.kernel.org
+> diff --git a/Makefile b/Makefile
+> index e65f8735c7bf6..18da9a40dd2c8 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -298,7 +298,8 @@ no-dot-config-targets :=3D $(clean-targets) \
+>                          outputmakefile rustavailable rustfmt rustfmtchec=
+k
+>  no-sync-config-targets :=3D $(no-dot-config-targets) %install modules_si=
+gn kernelrelease \
+>                           image_name
+> -single-targets :=3D %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %/
+> +single-targets :=3D %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %.=
+final_o \
+> +                 %.final_a %.o.thinlto.bc %/
+>
+>  config-build   :=3D
+>  mixed-build    :=3D
+> @@ -991,10 +992,10 @@ export CC_FLAGS_SCS
+>  endif
+>
+>  ifdef CONFIG_LTO_CLANG
+> -ifdef CONFIG_LTO_CLANG_THIN
+> -CC_FLAGS_LTO   :=3D -flto=3Dthin -fsplit-lto-unit
+> -else
+> +ifdef CONFIG_LTO_CLANG_FULL
+>  CC_FLAGS_LTO   :=3D -flto
+> +else # for CONFIG_LTO_CLANG_THIN or CONFIG_LTO_CLANG_THIN_DIST
+> +CC_FLAGS_LTO   :=3D -flto=3Dthin -fsplit-lto-unit
+>  endif
+>  CC_FLAGS_LTO   +=3D -fvisibility=3Dhidden
+>
+> @@ -1218,8 +1219,34 @@ vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-obj=
+ect-list.txt FORCE
+>         $(call if_changed,ar_vmlinux.a)
+>
+>  PHONY +=3D vmlinux_o
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +vmlinux.thinlink: vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+> +       $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_thinlink
+> +targets +=3D vmlinux.thinlink
+> +
+> +vmlinux_final_a :=3D $(patsubst %.a,%.final_a,$(KBUILD_VMLINUX_OBJS))
+> +quiet_cmd_ar_vmlinux.final_a =3D AR      $@
+> +      cmd_ar_vmlinux.final_a =3D \
+> +       rm -f $@; \
+> +       $(AR) cDPrST $@ $(vmlinux_final_a); \
+> +       $(AR) mPiT $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F =
+-f $(srctree)/scripts/head-object-list.txt)
+> +
+> +define rule_gen_vmlinux_final_a
+> +       +$(Q)$(MAKE) $(build)=3D. need-builtin=3D1 thinlto_final_pass=3D1=
+ need-modorder=3D1 built-in.final_a
+> +       $(call cmd_and_savecmd,ar_vmlinux.final_a)
+> +endef
+> +
+> +vmlinux.final_a: vmlinux.thinlink scripts/head-object-list.txt FORCE
+> +       $(call if_changed_rule,gen_vmlinux_final_a)
+> +
+> +targets +=3D vmlinux.final_a
+> +
+> +vmlinux_o: vmlinux.final_a
+> +       $(Q)$(MAKE) thinlto_final_pass=3D1 -f $(srctree)/scripts/Makefile=
+.vmlinux_o
+> +else
+>  vmlinux_o: vmlinux.a $(KBUILD_VMLINUX_LIBS)
+>         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.vmlinux_o
+> +endif
+>
+>  vmlinux.o modules.builtin.modinfo modules.builtin: vmlinux_o
+>         @:
+> @@ -1577,7 +1604,8 @@ CLEAN_FILES +=3D vmlinux.symvers modules-only.symve=
+rs \
+>                modules.builtin.ranges vmlinux.o.map vmlinux.unstripped \
+>                compile_commands.json rust/test \
+>                rust-project.json .vmlinux.objs .vmlinux.export.c \
+> -               .builtin-dtbs-list .builtin-dtb.S
+> +              .builtin-dtbs-list .builtin-dtb.S \
+> +              .vmlinux_thinlto_bc_files vmlinux.thinlink
+>
+>  # Directories & files removed with 'make mrproper'
+>  MRPROPER_FILES +=3D include/config include/generated          \
+> @@ -2028,6 +2056,8 @@ clean: $(clean-dirs)
+>                 -o -name '*.symtypes' -o -name 'modules.order' \
+>                 -o -name '*.c.[012]*.*' \
+>                 -o -name '*.ll' \
+> +               -o -name '*.final_a' -o -name '*.final_o' \
+> +               -o -name '*.o.thinlto.bc' \
+>                 -o -name '*.gcno' \
+>                 \) -type f -print \
+>                 -o -name '.tmp_*' -print \
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index b0adb665041f1..cbeeeb9b076d8 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -810,6 +810,18 @@ config LTO_CLANG_THIN
+>             https://clang.llvm.org/docs/ThinLTO.html
+>
+>           If unsure, say Y.
+> +
+> +config LTO_CLANG_THIN_DIST
+> +       bool "Clang ThinLTO in distributed mode (EXPERIMENTAL)"
+> +       depends on HAS_LTO_CLANG && ARCH_SUPPORTS_LTO_CLANG_THIN
+> +       select LTO_CLANG
+> +       help
+> +         This option enables Clang's ThinLTO in distributed build mode.
+> +         In this mode, the linker performs the thin-link, generating
+> +         ThinLTO index files. Subsequently, the build system explicitly
+> +         invokes ThinLTO backend compilation using these index files
+> +         and pre-linked IR objects. The resulting final object files
+> +         are with the .final_o suffix.
+>  endchoice
+>
+>  config ARCH_SUPPORTS_AUTOFDO_CLANG
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 13dcd86e74ca8..87259b0e2bfc8 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -50,18 +50,23 @@ endif
+>
+>  # =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+>
+> +builtin_suffix :=3D $(if $(filter %.final_a, $(MAKECMDGOALS)),final_a,a)
+> +ifeq ($(thinlto_final_pass),1)
+> +builtin_suffix :=3D final_a
+> +endif
+> +
+>  # subdir-builtin and subdir-modorder may contain duplications. Use $(sor=
+t ...)
+> -subdir-builtin :=3D $(sort $(filter %/built-in.a, $(real-obj-y)))
+> +subdir-builtin :=3D $(sort $(filter %/built-in.$(builtin_suffix), $(real=
+-obj-y)))
+>  subdir-modorder :=3D $(sort $(filter %/modules.order, $(obj-m)))
+>
+>  targets-for-builtin :=3D $(extra-y)
+>
+>  ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
+> -targets-for-builtin +=3D $(obj)/lib.a
+> +targets-for-builtin +=3D $(obj)/lib.$(builtin_suffix)
+>  endif
+>
+>  ifdef need-builtin
+> -targets-for-builtin +=3D $(obj)/built-in.a
+> +targets-for-builtin +=3D $(obj)/built-in.$(builtin_suffix)
+>  endif
+>
+>  targets-for-modules :=3D $(foreach x, o mod, \
+> @@ -337,6 +342,10 @@ $(obj)/%.o: $(obj)/%.S FORCE
+>  targets +=3D $(filter-out $(subdir-builtin), $(real-obj-y))
+>  targets +=3D $(filter-out $(subdir-modorder), $(real-obj-m))
+>  targets +=3D $(lib-y) $(always-y)
+> +ifeq ($(builtin_suffix), final_a)
+> +final_o_targets =3D $(patsubst,%.o,%.final_o,$(targets))
+> +targets +=3D $(final_targets)
+> +endif
+>
+>  # Linker scripts preprocessor (.lds.S -> .lds)
+>  # ----------------------------------------------------------------------=
+-----
+> @@ -347,6 +356,24 @@ quiet_cmd_cpp_lds_S =3D LDS     $@
+>  $(obj)/%.lds: $(src)/%.lds.S FORCE
+>         $(call if_changed_dep,cpp_lds_S)
+>
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +# Generate .final_o (obj) from .o (bitcode) file
+> +# ----------------------------------------------------------------------=
+-----
+> +quiet_cmd_cc_o_bc =3D CC $(quiet_modtag) $@
+> +
+> +cmd_cc_o_bc      =3D $(if $(filter bitcode, $(shell file -b $<)),$(CC) \
+> +                  $(filter-out -Wp% $(LINUXINCLUDE) %.h.gch %.h -D% \
+> +                  -flto=3Dthin, $(c_flags)) \
+> +                  -Wno-unused-command-line-argument \
+> +                  -x ir -fthinlto-index=3D$<.thinlto.bc -c -o $@ \
+> +                  $(if $(findstring ../,$<), \
+> +                  $$(realpath --relative-to=3D$(srcroot) $<), $<), \
+> +                  cp $< $@)
+> +
+> +$(obj)/%.final_o: $(obj)/%.o FORCE
+> +       $(call if_changed,cc_o_bc)
+> +endif
+> +
+>  # ASN.1 grammar
+>  # ----------------------------------------------------------------------=
+-----
+>  quiet_cmd_asn1_compiler =3D ASN.1   $(basename $@).[ch]
+> @@ -360,7 +387,7 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objt=
+ree)/scripts/asn1_compiler
+>  # ----------------------------------------------------------------------=
+-----
+>
+>  # To build objects in subdirs, we need to descend into the directories
+> -$(subdir-builtin): $(obj)/%/built-in.a: $(obj)/% ;
+> +$(subdir-builtin): $(obj)/%/built-in.$(builtin_suffix): $(obj)/% ;
+>  $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+>
+>  #
+> @@ -377,6 +404,12 @@ quiet_cmd_ar_builtin =3D AR      $@
+>  $(obj)/built-in.a: $(real-obj-y) FORCE
+>         $(call if_changed,ar_builtin)
+>
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +# Rule to compile a set of .final_o files into one .final_a file.
+> +$(obj)/built-in.final_a: $(patsubst %.o,%.final_o,$(real-obj-y)) FORCE
+> +       $(call if_changed,ar_builtin)
+> +endif
+> +
+>  # This is a list of build artifacts from the current Makefile and its
+>  # sub-directories. The timestamp should be updated when any of the membe=
+r files.
+>
+> @@ -394,6 +427,14 @@ $(obj)/modules.order: $(obj-m) FORCE
+>  $(obj)/lib.a: $(lib-y) FORCE
+>         $(call if_changed,ar)
+>
+> +ifdef CONFIG_LTO_CLANG_THIN_DIST
+> +quiet_cmd_ar_final =3D AR      $@
+> +      cmd_ar_final =3D rm -f $@; $(AR) cDPrsT $@ $(patsubst %.o,%.final_=
+o,$(real-prereqs))
+> +
+> +$(obj)/lib.final_a: $(patsubst %.o,%.final_o,$(lib-y)) FORCE
+> +       $(call if_changed,ar_final)
+> +endif
+> +
+>  quiet_cmd_ld_multi_m =3D LD [M]  $@
+>        cmd_ld_multi_m =3D $(LD) $(ld_flags) -r -o $@ @$< $(cmd_objtool)
+>
+> @@ -459,7 +500,8 @@ $(single-subdir-goals): $(single-subdirs)
+>  PHONY +=3D $(subdir-ym)
+>  $(subdir-ym):
+>         $(Q)$(MAKE) $(build)=3D$@ \
+> -       need-builtin=3D$(if $(filter $@/built-in.a, $(subdir-builtin)),1)=
+ \
+> +       need-builtin=3D$(if $(filter $@/built-in.$(builtin_suffix), $(sub=
+dir-builtin)),1) \
+> +       thinlto_final_pass=3D$(if $(filter final_a, $(builtin_suffix)),1)=
+ \
+>         need-modorder=3D$(if $(filter $@/modules.order, $(subdir-modorder=
+)),1) \
+>         $(filter $@/%, $(single-subdir-goals))
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 2fe73cda0bddb..ce341ed8d1df3 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -34,8 +34,13 @@ else
+>  obj-m :=3D $(filter-out %/, $(obj-m))
+>  endif
+>
+> +builtin_suffix :=3D $(if $(filter %.final_a, $(MAKECMDGOALS)),final_a,a)
+> +ifeq ($(thinlto_final_pass),1)
+> +        builtin_suffix :=3D final_a
+> +endif
+> +
+>  ifdef need-builtin
+> -obj-y          :=3D $(patsubst %/, %/built-in.a, $(obj-y))
+> +obj-y          :=3D $(patsubst %/, %/built-in.$(builtin_suffix), $(obj-y=
+))
+>  else
+>  obj-y          :=3D $(filter-out %/, $(obj-y))
+>  endif
+> diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
+> index 938c7457717ea..4f04eb2c11412 100644
+> --- a/scripts/Makefile.vmlinux_o
+> +++ b/scripts/Makefile.vmlinux_o
+> @@ -9,6 +9,14 @@ include $(srctree)/scripts/Kbuild.include
+>  # for objtool
+>  include $(srctree)/scripts/Makefile.lib
+>
+> +ifeq ($(thinlto_final_pass),1)
+> +vmlinux_a :=3D vmlinux.final_a
+> +vmlinux_libs :=3D $(patsubst %.a,%.final_a,$(KBUILD_VMLINUX_LIBS))
+> +else
+> +vmlinux_a :=3D vmlinux.a
+> +vmlinux_libs :=3D $(KBUILD_VMLINUX_LIBS)
+> +endif
+> +
+>  # Generate a linker script to ensure correct ordering of initcalls for C=
+lang LTO
+>  # ----------------------------------------------------------------------=
+-----
+>
+> @@ -18,7 +26,7 @@ quiet_cmd_gen_initcalls_lds =3D GEN     $@
+>         $(PERL) $(real-prereqs) > $@
+>
+>  .tmp_initcalls.lds: $(srctree)/scripts/generate_initcall_order.pl \
+> -               vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+> +               $(vmlinux_a) $(vmlinux_libs) FORCE
+>         $(call if_changed,gen_initcalls_lds)
+>
+>  targets :=3D .tmp_initcalls.lds
+> @@ -59,8 +67,8 @@ quiet_cmd_ld_vmlinux.o =3D LD      $@
+>         $(LD) ${KBUILD_LDFLAGS} -r -o $@ \
+>         $(vmlinux-o-ld-args-y) \
+>         $(addprefix -T , $(initcalls-lds)) \
+> -       --whole-archive vmlinux.a --no-whole-archive \
+> -       --start-group $(KBUILD_VMLINUX_LIBS) --end-group \
+> +       --whole-archive $(vmlinux_a) --no-whole-archive \
+> +       --start-group $(vmlinux_libs) --end-group \
+>         $(cmd_objtool)
+>
+>  define rule_ld_vmlinux.o
+> @@ -68,7 +76,7 @@ define rule_ld_vmlinux.o
+>         $(call cmd,gen_objtooldep)
+>  endef
+>
+> -vmlinux.o: $(initcalls-lds) vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
+> +vmlinux.o: $(initcalls-lds) $(vmlinux_a) $(vmlinux_libs) FORCE
+>         $(call if_changed_rule,ld_vmlinux.o)
+>
+>  targets +=3D vmlinux.o
+> diff --git a/scripts/Makefile.vmlinux_thinlink b/scripts/Makefile.vmlinux=
+_thinlink
+> new file mode 100644
+> index 0000000000000..13e4026c7d45b
+> --- /dev/null
+> +++ b/scripts/Makefile.vmlinux_thinlink
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +PHONY :=3D __default
+> +__default: vmlinux.thinlink
+> +
+> +include include/config/auto.conf
+> +include $(srctree)/scripts/Kbuild.include
+> +
+> +
+> +# Generate a linker script to ensure correct ordering of initcalls for C=
+lang LTO
+> +# ----------------------------------------------------------------------=
+-----
+> +
+> +quiet_cmd_gen_initcalls_lds =3D GEN     $@
+> +      cmd_gen_initcalls_lds =3D \
+> +       $(PYTHON3) $(srctree)/scripts/jobserver-exec \
+> +       $(PERL) $(real-prereqs) > $@
+> +
+> +.tmp_initcalls_thinlink.lds: $(srctree)/scripts/generate_initcall_order.=
+pl \
+> +               vmlinux.a FORCE
+> +       $(call if_changed,gen_initcalls_lds)
+> +
+> +targets :=3D .tmp_initcalls_thinlink.lds
+> +
+> +initcalls-lds :=3D .tmp_initcalls_thinlink.lds
+> +
+> +quiet_cmd_ld_vmlinux.thinlink =3D LD      $@
+> +      cmd_ld_vmlinux.thinlink =3D \
+> +       $(AR) t vmlinux.a > .vmlinux_thinlto_bc_files; \
+> +       $(LD) ${KBUILD_LDFLAGS} -r $(addprefix -T , $(initcalls-lds)) \
+> +       --thinlto-index-only @.vmlinux_thinlto_bc_files; \
+> +       touch vmlinux.thinlink
+> +
+> +vmlinux.thinlink: vmlinux.a $(initcalls-lds) FORCE
+> +       $(call if_changed,ld_vmlinux.thinlink)
+> +
+> +targets +=3D vmlinux.thinlink
+> +
+> +# Add FORCE to the prerequisites of a target to force it to be always re=
+built.
+> +# ----------------------------------------------------------------------=
+-----
+> +
+> +PHONY +=3D FORCE
+> +FORCE:
+> +
+> +# Read all saved command lines and dependencies for the $(targets) we
+> +# may be building above, using $(if_changed{,_dep}). As an
+> +# optimization, we don't need to read them if the target does not
+> +# exist, we will rebuild anyway in that case.
+> +
+> +existing-targets :=3D $(wildcard $(sort $(targets)))
+> +
+> +-include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
+> +
+> +.PHONY: $(PHONY)
+> diff --git a/scripts/head-object-list.txt b/scripts/head-object-list.txt
+> index 7274dfc65af60..b300222e99a6b 100644
+> --- a/scripts/head-object-list.txt
+> +++ b/scripts/head-object-list.txt
+> @@ -18,6 +18,7 @@ arch/arm/kernel/head.o
+>  arch/csky/kernel/head.o
+>  arch/hexagon/kernel/head.o
+>  arch/loongarch/kernel/head.o
+> +arch/loongarch/kernel/head.final_o
+>  arch/m68k/68000/head.o
+>  arch/m68k/coldfire/head.o
+>  arch/m68k/kernel/head.o
+> --
+> 2.49.0.805.g082f7c87e0-goog
+>
