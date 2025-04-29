@@ -1,150 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F65F215771
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06C3E253F3F;
+	Tue, 29 Apr 2025 04:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745900013; cv=none; b=pTEexQ3H6u2ZrtWw9zSjClvxaA92poZSRxZEzYyd865KAsmdjvQq9QvhmzW4SY6+oQR9+PFgcAx9araUUZ211FArT7cFEOtKR88OIOFUsEJvlcTqSlxsopAdU3y4ZjWlxIC9/OkasPa9Knh2LJb4m+Ij4LFowm1oaZuUgDH0ERI=
+	t=1745900095; cv=none; b=d2PP8/p6HR/CM9+hwQH/vFkf/l6raQF5OKIfrURhQeHc1rqxUKw9osNk07RTJJmEZFKNzDiykuKdk1U4RJnMsP0jFR7Zm4clu2xiX+10himiRZlR3RddpelMPO3qyxM9T2on5HgaBHINbFqeACoKGRUYd7fF6M3MP1OirWMT5wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745900013; c=relaxed/simple;
-	bh=8F6mTLmJlh4i3Fet3JGrhPNNSnQhPigFYr8g61jXIp8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m+E5LuLpB/w6bHtgs1pZmYDXK2Fc8A4UWxMrOuK9AFFlUJ6dYlOzuR0+EoVld/GnsqCKAPMWgLiwll9EGMN7TLabH+vDxn/RElL+JvxJRAmhvz7gQuyXPe+MTH+ABVUAdZ3un+umSzrnn5QPFsJEgb7OB+mWDdQ9UkiBXo9N2G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=URs5Fwhk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URs5Fwhk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745900010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BNCqutEYCGxkPLPPDptf/fqRtu8WQpYy2xLrXDrGIyA=;
-	b=URs5FwhkisSgbGVr8l3XIGGddb85wHsv0/BttsZ0IOtP8WWX/omSqZsAZPkKdhFEYmMqA4
-	wdEpa8D04ddU+Kld0ScslSY6u3V902yVOFZ41VQDekT8dp/hjnizxCltwhBP4/dYz75FY+
-	EvWc1J57LYbYsKMqxcF/1Jo7WNScTlI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-70-sKX23-etOymv-b4HYtgyAA-1; Tue,
- 29 Apr 2025 00:13:23 -0400
-X-MC-Unique: sKX23-etOymv-b4HYtgyAA-1
-X-Mimecast-MFC-AGG-ID: sKX23-etOymv-b4HYtgyAA_1745900000
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25B87195608C;
-	Tue, 29 Apr 2025 04:13:20 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.72.112.64])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 181EE1800352;
-	Tue, 29 Apr 2025 04:13:05 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Pingfan Liu <piliu@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>,
-	Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	kexec@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [RFCv2 3/7] lib/decompress: Keep decompressor when CONFIG_KEXEC_PE_IMAGE
-Date: Tue, 29 Apr 2025 12:12:10 +0800
-Message-ID: <20250429041214.13291-4-piliu@redhat.com>
-In-Reply-To: <20250429041214.13291-1-piliu@redhat.com>
-References: <20250429041214.13291-1-piliu@redhat.com>
+	s=arc-20240116; t=1745900095; c=relaxed/simple;
+	bh=baMMwFVDxypluEk8CV7aFD5fbx3ebJGyWjS37zcBV2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WtP9pGhQ1AfkdwlDCRJKAB0GBoGSE6OckVcD9qTm84f61/25XmjBBTi6+AWKbApXp0Aoi2GjbwdvZ2KCvk7TBiAwKSOoog9YiPf2LoW8l6tpATYye5cgtkQK8jfLIDOtcUP1zqvyU0wyf657p9T39P+GW5pBGm4dd9ZRWY1OOcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A55C1515;
+	Mon, 28 Apr 2025 21:14:46 -0700 (PDT)
+Received: from [10.163.52.122] (unknown [10.163.52.122])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C797B3F66E;
+	Mon, 28 Apr 2025 21:14:49 -0700 (PDT)
+Message-ID: <afc531fe-c4d0-4676-92ef-c5cfc63a3967@arm.com>
+Date: Tue, 29 Apr 2025 09:44:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] documentation: Add nodebugmon for arm64 platforms
+To: linux-doc@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250416062706.2735563-1-anshuman.khandual@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250416062706.2735563-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The KEXE PE format parser needs the kernel built-in decompressor to
-decompress the kernel image. So moving the decompressor out of __init
-sections.
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-To: linux-kernel@vger.kernel.org
----
- include/linux/decompress/mm.h | 7 +++++++
- lib/decompress.c              | 6 +++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
-index ac862422df158..e8948260e2bbe 100644
---- a/include/linux/decompress/mm.h
-+++ b/include/linux/decompress/mm.h
-@@ -92,7 +92,14 @@ MALLOC_VISIBLE void free(void *where)
- #define large_malloc(a) vmalloc(a)
- #define large_free(a) vfree(a)
- 
-+#ifdef CONFIG_KEXEC_PE_IMAGE
-+#define INIT
-+#define INITCONST
-+#else
- #define INIT __init
-+#define INITCONST __initconst
-+#endif
-+
- #define STATIC
- 
- #include <linux/init.h>
-diff --git a/lib/decompress.c b/lib/decompress.c
-index ab3fc90ffc646..3d5b6304bb0f1 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -6,7 +6,7 @@
-  */
- 
- #include <linux/decompress/generic.h>
--
-+#include <linux/decompress/mm.h>
- #include <linux/decompress/bunzip2.h>
- #include <linux/decompress/unlzma.h>
- #include <linux/decompress/unxz.h>
-@@ -48,7 +48,7 @@ struct compress_format {
- 	decompress_fn decompressor;
- };
- 
--static const struct compress_format compressed_formats[] __initconst = {
-+static const struct compress_format compressed_formats[] INITCONST = {
- 	{ {0x1f, 0x8b}, "gzip", gunzip },
- 	{ {0x1f, 0x9e}, "gzip", gunzip },
- 	{ {0x42, 0x5a}, "bzip2", bunzip2 },
-@@ -60,7 +60,7 @@ static const struct compress_format compressed_formats[] __initconst = {
- 	{ {0, 0}, NULL, NULL }
- };
- 
--decompress_fn __init decompress_method(const unsigned char *inbuf, long len,
-+decompress_fn INIT decompress_method(const unsigned char *inbuf, long len,
- 				const char **name)
- {
- 	const struct compress_format *cf;
--- 
-2.49.0
+On 4/16/25 11:57, Anshuman Khandual wrote:
+> Add an entry for nodebugmon which has been used on arm64 platforms.
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This patch applies on v6.15-rc2
+> 
+>  Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index d9fd26b95b34..f4a313d6c0ab 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4085,6 +4085,13 @@
+>  			/sys/module/printk/parameters/console_suspend) to
+>  			turn on/off it dynamically.
+>  
+> +	nodebugmon
+> +			[HW,ARM64] Disable debug monitor
+> +			Disables the debug monitor exception handling on the platform
+> +			regardless whether breakpoints and watchpoints are programmed
+> +			or not. This prevents debug exceptions from being enabled via
+> +			MDSCR_EL1 register.
+> +
+>  	no_debug_objects
+>  			[KNL,EARLY] Disable object debugging
+>  
 
+Any updates on this ?
