@@ -1,264 +1,131 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BE6227E97
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E817A227E97
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941205; cv=none; b=rAr1AQiiIqOaTMvoMV0326nEXzmR9bosYIZN/tkTcv/zkOLnxPckhUfnnO6EuMTlM5rxe9veieSy6p1t6EUX3GyiGO0wEFfRxfkVPZ4aKOyHveCfYdGOXHZuo6VOMtMqOPcTpIOO/W3SJL17SHOPxWfEvNkIHnHVokLgYeRyIuQ=
+	t=1745941219; cv=none; b=miuRKpvDoiVOR13gc25Pls0aziuHb9+EkW3VGSY9URwWBmCwyZ/GMP/q/ZgSiAQ6WWYXJqrGsSTEluDNwslVn99TqqTIWpMHPrfLKRPsr0pyQf/6HNEQMnP8pVwcvv51ram/uHnmsKwVxmFf5T3gvWzCuzZ9YynALFgBwxEYp64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941205; c=relaxed/simple;
-	bh=m4RIdnC33T+0DzN2pkMUmi2ZJdkLEyYSorF3bzhZmQI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s+CClPklu3hZNfclLlxNGbLthNHasDUhGDgax0F/xWlzAhapEn9IsVgu4GEU2pkGl0L2P3I5msVkuOCs2DU/K6Ggcrp4UmdQyvB7FVSjecnEZxGkJbQpHF2Q+kQwMw9xav0veULIO/MPbHX4zqIZ07+Sc1lJpgYbIITlMVQJE7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=igkPu5v2; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745941219; c=relaxed/simple;
+	bh=ZSlaSOOnAD2Cp1tBIlvme8AqpEDC6hlg0gqvRaVTa9g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SMBemEw7Bff9rfnXSUvyvjXR+0dN5rv8OI5MTzfRjeyDZsX6rn56Q710xq1SrxfC4CjDnGexVOPlzFWoWzmawNw7l50jal6MsGzXGX3pgyoJWtYHVNa4vbDTet5Igl0vQ9RsFT/xT04b0L+TPc0elQ0CQ5tUUzdZ17F52f/Gmjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YcjTq8pj; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="igkPu5v2"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1739a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:40:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YcjTq8pj"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3fea0363284so4130333b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:40:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745941202; x=1746546002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nrLjz0SO4NLZaGlZgmJ5ANLBwSUMQ+H6anEYSpKzKcw=;
-        b=igkPu5v2E8TpJbmhkZaYMFhSI1L7Qtv4eKmpWL0Gina+4r8Qxihkactxa3ckTeS4it
-         klnhE32dMbujO+Y1KfmfAdI/redH2erF39k/0T2zCF7m3MkvGKuASkcokX3gsONoO68/
-         LydkD1sZwjDOA3Myo288fcZKl32BA7nsAQGdw849qvnwfoxKWl2XKBwf1ZEEMS+1rCEH
-         RQxTEkCwT10Rh2ceVGJ83RsiN8VL7N0yaJU0Z2JOERwHvrc+VmDTm6UlvuoZ5WyTyTgb
-         nxQstjnbhFD+H81RHNvsjTv55sCMOuTd+eSfh+LS7BQIlxa6CmKS9VqyBsL7/8285pz9
-         0Enw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745941217; x=1746546017; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IKHZLFnrfagn8Gc44g2MZTpXJ9t5oidezhlrUDWVs0Y=;
+        b=YcjTq8pjS1P3iyQIQa+y+f0PTT18kC5URqpqC9eSdoczJ6mSQCMKAsI7zZbclH4vdV
+         HqaQfHUEd7ZmdewTEWlob4/Yo7EF5XyM8iH2A4SKgdq/Der4dxzrXCW3zsXwDofH2gHj
+         3+gBjYxeR3a2bCKBoKBdhdY+hU++Cvw32RsEZ/x6ZmbGygg1VyCTEyNzKp0r+EDN6drJ
+         jjYYPGdxTvwkPHX6c5FAZ0D7+2jhC9wQLn1z5mw0SJTVzYcyzXmGZm7e1QEMOf/IIPkj
+         CTcD37u/Qmw9ggMLLHLLW7v41et1kE4yrw33wtRjv7LA17ZtgYwBPY6G5jJ9WdrBg74H
+         pSeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745941202; x=1746546002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nrLjz0SO4NLZaGlZgmJ5ANLBwSUMQ+H6anEYSpKzKcw=;
-        b=p9F8pI46Miejo79mE5ER0/8rZAjFtutAGkkNj/szIBblm16zsU6cIebQuaMQ1H1aXI
-         lfCDas6E77Q/0d8VdL8vz8qTf1F8UAcrhjbaidtLRQ2V/70spd5nNwOxCNfA+B2zQPOI
-         n4A2yc+ZjY7BvBROM10adit3y0xsH7efBEJvD3gHVCgOTcUPeebqskOsdIS1hN24VdZ+
-         ZpU6SaRYSVfg9x7xnQhGsXc5AMbQFTC0octSw70XbL5ghKMjmU4ZX9WTt5gQ0Br4GCvm
-         4XH6Vrl1LDBZelzbFsGf9uA+O0dr7LpRqe1WIufI5aFUGr8/+gDC0n8w8V9f2jOuaJwN
-         tyOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7ZxISguUFgaBPliMfWgOPM0D6EC7XU6e1nzIM890abZU7ZdK+P0WuwMAhgePv7tPVmRXRf6UUyi2pLpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0WmBDtM4jWeXSbeT+XrpZhmbMZb3CfOuySm5f8+/08wItTWGL
-	1JJLY9m+utJoF9pDM5qQki6VPu/voRJRPrxg5hOZBKzvpLI3DxfvruZ9sJ+84xbG0z2qsUkpfSr
-	npRM09zJJzN4JoG7yZSqTxkPADdqUsSTMTzFJ
-X-Gm-Gg: ASbGncuQJ/9OXyNw8fiYAys5jFHq/TlZx15V1k5jPZ+NUhVNcHeriPQYiWO0LlxFn26
-	oeFqU4tHoMS4Xl/D3MB8jmn5jPHAb5ySK42yGyFYB9ndtGemLiW5fUSIfDGQOfxaGqaZpRdd9jS
-	NTK5Y9kJzT0QyX8bwf1D6pco4z3MYcZbbdga7uU3NKNBahJGHSVg==
-X-Google-Smtp-Source: AGHT+IGTmRrDj58386rjJZziDq63lizkFMzj1lu/PM65c5dMEelMGMumc3qFR5YFmPkjXr20u694i69kdm2X64XfN50=
-X-Received: by 2002:a50:8713:0:b0:5de:bcd9:4aa with SMTP id
- 4fb4d7f45d1cf-5f83c1b5a2bmr96410a12.3.1745941201725; Tue, 29 Apr 2025
- 08:40:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745941217; x=1746546017;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IKHZLFnrfagn8Gc44g2MZTpXJ9t5oidezhlrUDWVs0Y=;
+        b=gGWYYsaqDeeDM/mfqUpz1VeOeHuLX0wpiHcZiawyk+RHWCGi1bimvW3jYiHpaxNYM7
+         Ji4KFfNZd/HKaS0dsqIDN2GaOxDlcWB0dmOarx+nimaZaQ8X9pk2uw74ClFwaEg4vDAV
+         5IzVif03D3sp7UYOYJkhmkRYZ0hhYF9QkfIr91QfFl1DeuId01069qcR8nwUj0UJ3TgK
+         TXpZTGE8mznyclxue1Pvgq6T7tVDT4a3KjEP/uPehRP1tYTDf9t4msSrxvdn4Mcmam48
+         dAc5LGhOXv0x9f3qZR+2sW8n8UEuReE6/+FtOj4tJGZKvarulVfyYcPMpy6/andblLPa
+         zvUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXU+PKIPjLwWNZaT5DJMUK4/4efqMqltwz3/Dzprvn7kozZpBfKuCCNe279CPoyJgmmYMoLW+WW/TM+wq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytZUyT3pPv5VJoSudVZI8w7Bci8+9dzK5pYsDbsimGwIQxJvl+
+	527L08AYzKwlD9pWwAR5cLgxW1rU5P2Chn5fMc+u9DUgkrxM9Xns16v8eK1osNM=
+X-Gm-Gg: ASbGncv/TmJcpqTuhGgV5cVLIm/vv7jLKOyku3QXm+GXJGpVldoRlIEH2eYF1pj4O9I
+	IPVfPP837p2KCvx72LnTAD5m6cTwzv3tasD9SgCkzbW2UdTECGpthjeZXn9UHu6/Z6jMZxNW4z0
+	tizsliEpYV9LH6ZUHULOjcqci64c2PFTcUloRzrCSiDowvAOb/knC5lMU9m/ORUGkLouqX9fPtw
+	fMhGN9w9HE7DcyPCgWgAWrYnIQWbh0Dez7PowieiyOtelKuKKgzAy1q9FYxFI2LrrnIpHeG8cO2
+	K9RYl5l5tKYd6/eWQQHECRa/Il5RS125bx21yxhDN2YMQrfNxiUbIAsi2l8MJP7Mk7tKL/A1RnX
+	TpUfIySVh5nnt6ap/AogyiuirXC5l
+X-Google-Smtp-Source: AGHT+IEoUSoJwOEaMAzGJzx8g+iEjy8VILrk9/hm7FHFKGMS1oJnNn7zWdRkCw1+SUiqaiAkTKDS6w==
+X-Received: by 2002:a05:6808:2214:b0:400:7dd3:2dbe with SMTP id 5614622812f47-402110303f0mr1770338b6e.14.1745941216954;
+        Tue, 29 Apr 2025 08:40:16 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40212c4d567sm293636b6e.43.2025.04.29.08.40.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 08:40:16 -0700 (PDT)
+Message-ID: <5aa4d76f-6f16-40ae-9dbf-767c63aa0a3d@baylibre.com>
+Date: Tue, 29 Apr 2025 10:40:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
-In-Reply-To: <20250418174959.1431962-8-surenb@google.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 29 Apr 2025 17:39:25 +0200
-X-Gm-Features: ATxdqUE5eaCYmwGd2V3bpxMHfmJQqwTFsFKw7F4dJMhdfNXiMK8VuoXSkdfNDiE
-Message-ID: <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: Suren Baghdasaryan <surenb@google.com>, Al Viro <viro@zeniv.linux.org.uk>, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
-	peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, 
-	shuah@kernel.org, adobriyan@gmail.com, josef@toxicpanda.com, 
-	yebin10@huawei.com, linux@weissschuh.net, willy@infradead.org, 
-	osalvador@suse.de, andrii@kernel.org, ryan.roberts@arm.com, 
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+To: Jorge Marques <gastmaier@gmail.com>, Andy Shevchenko <andy@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
+ <aAe6u6NhAsgjaL5_@smile.fi.intel.com>
+ <c3i7g273lgvx7rpihzq6r7exxxnglbwrqwfryyz6ciqo52tszf@cvi7pz4bmkvq>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <c3i7g273lgvx7rpihzq6r7exxxnglbwrqwfryyz6ciqo52tszf@cvi7pz4bmkvq>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 18, 2025 at 7:50=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
-> With maple_tree supporting vma tree traversal under RCU and vma and
-> its important members being RCU-safe, /proc/pid/maps can be read under
-> RCU and without the need to read-lock mmap_lock. However vma content
-> can change from under us, therefore we make a copy of the vma and we
-> pin pointer fields used when generating the output (currently only
-> vm_file and anon_name). Afterwards we check for concurrent address
-> space modifications, wait for them to end and retry. While we take
-> the mmap_lock for reading during such contention, we do that momentarily
-> only to record new mm_wr_seq counter. This change is designed to reduce
-> mmap_lock contention and prevent a process reading /proc/pid/maps files
-> (often a low priority task, such as monitoring/data collection services)
-> from blocking address space updates.
-[...]
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index b9e4fbbdf6e6..f9d50a61167c 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-[...]
-> +/*
-> + * Take VMA snapshot and pin vm_file and anon_name as they are used by
-> + * show_map_vma.
-> + */
-> +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_ar=
-ea_struct *vma)
-> +{
-> +       struct vm_area_struct *copy =3D &priv->vma_copy;
-> +       int ret =3D -EAGAIN;
-> +
-> +       memcpy(copy, vma, sizeof(*vma));
-> +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> +               goto out;
+On 4/29/25 8:47 AM, Jorge Marques wrote:
+> 
+> Hi Andy,
+> 
+> I agree with your suggestion, and in this case the appropriate kernel
+> version is 3.10.
+> 
+>>
+>>> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
+>>> +KernelVersion:	6.15
+>>
+>> Then why don't you put the real version of the first release that has it?
+>>
+>>> +Contact:	linux-iio@vger.kernel.org
+>>> +Description:
+>>> +		Some devices have internal clocks for oversampling.
+>>> +		Sets the resulting frequency in Hz to trigger a conversion used by
+>>> +		the oversampling filter.
+>>> +		If the device has a fixed internal clock or is computed based on
+>>> +		the sampling frequency parameter, the parameter is read only.
+>>> +
+>>> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
+>>> +KernelVersion:	6.15
+>>
+>> Ditto.
+>>
+>>> +Contact:	linux-iio@vger.kernel.org
+>>> +Description:
+>>> +		Hardware dependent values supported by the oversampling
+>>> +		frequency.
 
-I think this uses get_file_rcu() in a different way than intended.
 
-As I understand it, get_file_rcu() is supposed to be called on a
-pointer which always points to a file with a non-zero refcount (except
-when it is NULL). That's why it takes a file** instead of a file* - if
-it observes a zero refcount, it assumes that the pointer must have
-been updated in the meantime, and retries. Calling get_file_rcu() on a
-pointer that points to a file with zero refcount, which I think can
-happen with this patch, will cause an endless loop.
-(Just as background: For other usecases, get_file_rcu() is supposed to
-still behave nicely and not spuriously return NULL when the file* is
-concurrently updated to point to another file*; that's what that loop
-is for.)
-(If my understanding is correct, maybe we should document that more
-explicitly...)
+I don't see oversampling_frequency used in any existing driver, so how could
+it be introduced in kernel 3.10? I think you confuse it with
+events/sampling_frequency.
 
-Also, I think you are introducing an implicit assumption that
-remove_vma() does not NULL out the ->vm_file pointer (because that
-could cause tearing and could theoretically lead to a torn pointer
-being accessed here).
+oversampling_frequency is new and so 6.16 should be correct if Jonathan picks
+this up in the next few weeks, otherwise it will be 6.17.
 
-One alternative might be to change the paths that drop references to
-vma->vm_file (search for vma_close to find them) such that they first
-NULL out ->vm_file with a WRITE_ONCE() and do the fput() after that,
-maybe with a new helper like this:
-
-static void vma_fput(struct vm_area_struct *vma)
-{
-  struct file *file =3D vma->vm_file;
-
-  if (file) {
-    WRITE_ONCE(vma->vm_file, NULL);
-    fput(file);
-  }
-}
-
-Then on the lockless lookup path you could use get_file_rcu() on the
-->vm_file pointer _of the original VMA_, and store the returned file*
-into copy->vm_file.
-
-> +       if (!anon_vma_name_get_if_valid(copy))
-> +               goto put_file;
-> +
-> +       if (!mmap_lock_speculate_retry(priv->mm, priv->mm_wr_seq))
-> +               return 0;
-
-We only check for concurrent updates at this point, so up to here,
-anything we read from "copy" could contain torn pointers (both because
-memcpy() is not guaranteed to copy pointers atomically and because the
-updates to the original VMA are not done with WRITE_ONCE()).
-That probably means that something like the preceding
-anon_vma_name_get_if_valid() could crash on an access to a torn
-pointer.
-Please either do another mmap_lock_speculate_retry() check directly
-after the memcpy(), or ensure nothing before this point reads from
-"copy".
-
-> +       /* Address space got modified, vma might be stale. Re-lock and re=
-try. */
-> +       rcu_read_unlock();
-> +       ret =3D mmap_read_lock_killable(priv->mm);
-> +       if (!ret) {
-> +               /* mmap_lock_speculate_try_begin() succeeds when holding =
-mmap_read_lock */
-> +               mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_seq)=
-;
-> +               mmap_read_unlock(priv->mm);
-> +               ret =3D -EAGAIN;
-> +       }
-> +
-> +       rcu_read_lock();
-> +
-> +       anon_vma_name_put_if_valid(copy);
-> +put_file:
-> +       if (copy->vm_file)
-> +               fput(copy->vm_file);
-> +out:
-> +       return ret;
-> +}
-[...]
-> @@ -266,39 +399,41 @@ static void get_vma_name(struct vm_area_struct *vma=
-,
->                 } else {
->                         *path =3D file_user_path(vma->vm_file);
->                 }
-> -               return;
-> +               goto out;
->         }
->
->         if (vma->vm_ops && vma->vm_ops->name) {
->                 *name =3D vma->vm_ops->name(vma);
-
-This seems to me like a big, subtle change of semantics. After this
-change, vm_ops->name() will no longer receive a real VMA; and in
-particular, I think the .name implementation special_mapping_name used
-in special_mapping_vmops will have a UAF because it relies on
-vma->vm_private_data pointing to a live object.
-
-I think you'll need to fall back to using the mmap lock and the real
-VMA if you see a non-NULL vma->vm_ops->name pointer.
-
->                 if (*name)
-> -                       return;
-> +                       goto out;
->         }
->
->         *name =3D arch_vma_name(vma);
->         if (*name)
-> -               return;
-> +               goto out;
->
->         if (!vma->vm_mm) {
->                 *name =3D "[vdso]";
-> -               return;
-> +               goto out;
->         }
->
->         if (vma_is_initial_heap(vma)) {
->                 *name =3D "[heap]";
-> -               return;
-> +               goto out;
->         }
->
->         if (vma_is_initial_stack(vma)) {
->                 *name =3D "[stack]";
-> -               return;
-> +               goto out;
->         }
->
->         if (anon_name) {
->                 *name_fmt =3D "[anon:%s]";
->                 *name =3D anon_name->name;
-> -               return;
->         }
-> +out:
-> +       if (anon_name && !mmap_locked)
-> +               anon_vma_name_put(anon_name);
-
-Isn't this refcount drop too early, causing UAF read? We drop the
-reference on the anon_name here, but (on some paths) we're about to
-return anon_name->name to the caller through *name, and the caller
-will read from it.
-
-Ah, but I guess it's actually fine because the refcount increment was
-unnecessary in the first place, because the vma pointer actually
-points to a copy of the original VMA, and the copy has its own
-refcounted reference to the anon_name thanks to get_vma_snapshot()?
-It might be helpful to have some comments documenting which VMA
-pointers can point to copies.
