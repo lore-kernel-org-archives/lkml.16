@@ -1,75 +1,80 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2057.outbound.protection.outlook.com [40.107.94.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CDF1D6AA;
-	Tue, 29 Apr 2025 06:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907501; cv=fail; b=oByjktHc0xsrD7AWv35v0nK1CwQTk5ibhYsvTrNMntIMTBdGo8Q2TWJoXRVaMalZPbcuxjY/JJiM9B1JTtxFPBw6nn9qgT/ZXoiDqnc8ZckCkEOfqRieOo9SzzHusfS68kxmRJ4CQjLU6xJmMYDWDW9X+cP9NCpPWMSNk9Cz854=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907501; c=relaxed/simple;
-	bh=SFEG7BZx5zbUFu5YS2+vLSMLQqbmV0DZoZxjnBDLUAg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TVzBjxzLQixBoGlXYr/iMmScGLvBZyfLmRUSbgBC+nY0lXi0PQNGiPlLGir5lX4wkG1G+VYSxbiZ+nIMxC3u7H1GRADXFRURoIoU1PEA8zyAW2uyOFIirlgqjvvspHsJzNxVCFXOoPu03DkgCnijTWgYBoh3WYvN3eGRw3BATEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ihERkzLs; arc=fail smtp.client-ip=40.107.94.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA0B7405A;
+	Tue, 29 Apr 2025 06:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745907512; cv=none; b=eCKJrKP9FysXDbev8Dvqc3TZD824cBmv2lJ5ZheI3p7Pqi1lgCFrVrxWDy5GzLtvkkTjmeUjBnImYcQnpWfOjdzQmdEzZRAugosKcllkEr3d6/XFDPxblBcAwDVj2eMFsyhA1/osHGx/t7bYEJoolRvuNgD0icZukURt8hnG+ko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745907512; c=relaxed/simple;
+	bh=cu2YGhMwTXRXoDOhKCOJulyp43CXklzRH3EmmxyA1Vg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CUr1USXidCrgUSzVUrJF46A/e89DcefQIq4EfJfssJEYem7x3Ibm8ygG5DbDv3uz9oyOXlRphaIE11z6QTDh4YGRDd3pGIqSkkgmDL5WT73m0NVxwHDfhuFFqLMiMAKTEOiP3UZU/e7G/o3wHQ473QaSGoKldp9mroYzDJ34DhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f4n9pxzN; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ihERkzLs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nexiOA/yTnpjB1HKmVydTDqbEAdLCE7NhbKsniBrmjNcjhi5QkTNmFXUgOZjLzL2Xbyzr8ZL/q3AVFEug8f1FqS+q/UsP0gw0UDY1tDi/5Vljh0s+l1EedLKUc9vPkRADzXiYM5E4X79rpJIC+M4yHrPCvZ7Kofh1SR7Jltd5Q/KyuAUYdQvIWkBY581rJbfngHjuQlhMuLHFZCRjBypcPj3FqrXK5huXDBn20L6YSNA50WPKhM6FuA8c4h+i2yGILRQUBKQFfLJtNkD4pHh6vVgJuABjonU28zTI44/+9aBJvmbHnRFMw1c+jzkJJC5x5MXfEWvdLM2t7Ez5+hbHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jDLlvLT2mRP3NS4ypSR9MagrzfdU7pEp1rzaRbKT3os=;
- b=rrnIQbxRRfPbuhoL1DyvrCWeo7ccoEySRDzG5sqIpDLKc7EyasjiMl7MJdTnEnx5oa4ZEucO1o1PyMsF0ghdcmORKAfz+jqiGDbcZYhFH5dllpLw1XDTlYzKtliP9ygjUTyNsHov7yTJyYstirhaM4MxXIV2DzqERllsHB1h1SyTLjBqxssAQJzJV0G2nZ+LEFRvdogJ+m9LVozpXJ8Fn0PFVeSd/pCtWyIepuW0YshmG5qqEwRACXpH4ZPjYzV4gtuqB1wZ/tLTlaNEaWJhiJFrXA8SUBHxXFegQJBAAQC5V3rzolDJiNfiSX/4owq2ACoQaHcSaHCHUvN8tFysHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jDLlvLT2mRP3NS4ypSR9MagrzfdU7pEp1rzaRbKT3os=;
- b=ihERkzLsWj3unnPodh1xDOpKm+mlomyt3+fgeIM90ofmyaCmYyRjGHau42kR00kmJrHjmxy0OZ27r0zjJC3xJ/LEG3eIHj5UifoKZC5sr+DBioe+4b/nyjpOava3RJO1g9NdiHnF6FRf0LCqmWFjWWMOuGXnALYxkFhgsh4wiHI=
-Received: from DS7PR05CA0105.namprd05.prod.outlook.com (2603:10b6:8:56::19) by
- DS0PR12MB7850.namprd12.prod.outlook.com (2603:10b6:8:146::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.34; Tue, 29 Apr 2025 06:18:14 +0000
-Received: from DS2PEPF0000343D.namprd02.prod.outlook.com
- (2603:10b6:8:56:cafe::f3) by DS7PR05CA0105.outlook.office365.com
- (2603:10b6:8:56::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Tue,
- 29 Apr 2025 06:18:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF0000343D.mail.protection.outlook.com (10.167.18.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8678.33 via Frontend Transport; Tue, 29 Apr 2025 06:18:14 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 29 Apr 2025 01:17:59 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
-Subject: [PATCH v5 19/20] x86/sev: Prevent SECURE_AVIC_CONTROL MSR interception for Secure AVIC guests
-Date: Tue, 29 Apr 2025 11:40:03 +0530
-Message-ID: <20250429061004.205839-20-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
-References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4n9pxzN"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso6779008a12.1;
+        Mon, 28 Apr 2025 23:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745907509; x=1746512309; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SxnqY4X0sY6/scdLHV+pN5MKndUjVPCeKrlCIqdGx80=;
+        b=f4n9pxzNOZ1MRYdSi4JnidzqaAUuS/+tvlkVfqb8jHUWIiYvszkmCHf0kYvxryFNVj
+         4KbVKQfAGIj01ZKMC0Sn3TiKK8wpDI4akTc0GplzaxLcX2N0bkbg8aADFHEY9Snd8dXw
+         XTxPZrZ432FlL87/zPmfbSRwFTF8VUtiYpgn23eJ4ZVSQ98WEDky8IdA47lgK6iIQFLr
+         8DA8jAZWUO55uhUSHNPKtNBCpqk2SdWu0SY/nxE2viOTCjQm7bc8XLfb8apNVOH8szFL
+         AoYFJ7UeaIjdNDFZN+TLzywGYBO/GEEqW6l7S/zGEibmvT6e9DwInE+RSpfEa3Q5MDFu
+         aTcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745907509; x=1746512309;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SxnqY4X0sY6/scdLHV+pN5MKndUjVPCeKrlCIqdGx80=;
+        b=CtB3b6raEP0Io/bek6jgdzwRGaJ1/kvI4byweMtMiXLllxkcGQA0eK8Yopncva1G0g
+         KyiM5LujosEDMo41bve2zEsVHuSMSgdmMQwmqbRypEGiZGXbtd2MqXia3r36h9jZ972l
+         Mj4jQbRjfrnALv6rPhmX+m+vjQhrCIvF6dtcUZ0n9hkJyZq7E6wSUn0+rjvb8RLQepdZ
+         YZgoDJgP+vUpM8EB0ReHd1f69D23UE0sdKlDB1EP1kg/vhMHx/YlXGQiynvS1IRXezF3
+         mAOfGzMKYCKdBYV4CtslutE2pKPmgAIyh57YEwmcNSxpQaJBI+2nMh3xX1ey0oSgFcLs
+         62JA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfe0jOMXESLK4rXj2LKN4Lr19fc23GBXz1G/OYOOIl9k9zUbKJliq5p4l+CHwDP8FxCooOOVROoRg6Mk9a@vger.kernel.org, AJvYcCXFIrYQ1ZxpOP7psh499Q7V3s7Y+Kkz+QIlLIBmJAPQUd+vO3S9s4SqGhcabIIYm6ErRV8Ni8y2CXn7@vger.kernel.org, AJvYcCXMkj+l3ivIbxQYvgnVECsIdX901WngWR7dA9cCG2Ork5RbVM/R8bQ+VHSL3/pLg1C0RCipRqz2gvzNfSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLAur3M7ZwzzcTUEImaTE//+kWHabvKqowPq3ICG42W0XAiUah
+	0MrciMQJLZw7XpTddToGA7OSDQEK7UR+8Ja11+stQ6tEY10Q1TTi
+X-Gm-Gg: ASbGncutitOTIxelmiQvICvqyXKtK/qG3njUExMMolQp6gUruWtR7LeXv1Ec5GHcGmt
+	kgr6f1uJHJxWUZB+wHv0l+0z+Is4lFpG41Rt0IZpu2y1TJMKAp0afmV/o8OVPT2IgjAGhz/6kYe
+	64R/BAt4X8VZm8mFJyyDYVDgfSnqIdLCRBVHznOBNk7S7yfrEorgNXlS8dUORgVJTsoSOZdiED9
+	jPQFHg5eg0jZRWdxw82hwFKP6lLeUcGNf+0xVnie5ysnTzH/Lq9h6B4tccmCCMdJB2XDADsZ5T2
+	Xvwnm/Vv75U04XWWcilKQg71Pc/Te04h
+X-Google-Smtp-Source: AGHT+IHAHcbigwBuqfbbIr+9Y3VE3b0IbwZKs2AahD2N4aud0BCXQmTE505TkfCy8nXomx9tSeudOA==
+X-Received: by 2002:a05:6402:13d5:b0:5ed:19b4:98ea with SMTP id 4fb4d7f45d1cf-5f8390bd1c6mr1709359a12.0.1745907509350;
+        Mon, 28 Apr 2025 23:18:29 -0700 (PDT)
+Received: from xeon.. ([188.163.112.70])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7013ff9c5sm6996570a12.28.2025.04.28.23.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 23:18:29 -0700 (PDT)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH v3 0/4] power: supply: add support for Pegatron Chagall battery
+Date: Tue, 29 Apr 2025 09:17:58 +0300
+Message-ID: <20250429061803.9581-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,92 +82,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF0000343D:EE_|DS0PR12MB7850:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7e990f6-604e-45bf-0804-08dd86e59fcc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5jr7cW/mg7JjDk9xRnD0TZaQxgBXXQWcE6+jq9CVixD1lfLe3hrbmEoBW515?=
- =?us-ascii?Q?m7jXrXEl0ZA+Pxjqw7DZAoGX53pAjCsl9xnd67ZJpvSAr4koNFCslbsdB60A?=
- =?us-ascii?Q?IV/I1xHwqsiQftfQJahw2ZUM1vpYg1OvVrVkdBxDIQWVFtZ3oGECQANIPGdE?=
- =?us-ascii?Q?HTlxuvbr1QDx5HIv+YhPhv3x/lvrJEGabMI8nPtesz633VfnKVA3mapMkQgl?=
- =?us-ascii?Q?u8tXaoFGlv4J3gVhOkTdEtayyDhsNuzKz7JPGSsO7IbNfdVlr/6D9ITga+xW?=
- =?us-ascii?Q?S4zHOR4k148fBUzQUMzUCbxwSFMmAwqSNjIJUAx83Q98B7kAC4phIHCgVR8y?=
- =?us-ascii?Q?pkWlQ1bzEvJXG3GrlEXll4Wgt0flCdqF4/sfiS6hj79Yboi+lyaBaeqw8MV4?=
- =?us-ascii?Q?kWriXppKo5uGuI+lQpjPN8S33X8gZYtyadHdmrMbhomluYS4BEJALMo0nHLu?=
- =?us-ascii?Q?Q2LikUwf0v7aGLPBklnp1VgnPUWyL8Esq0WqzlTZkeI5LIgj/XhYxVPzgTS/?=
- =?us-ascii?Q?Z2Q58dEvLRt85pLTRKO9eX9XACwKqa0UAcFc1U6393R2AJH8hTbk70uPbhhK?=
- =?us-ascii?Q?T0cOVXV47oQB3zoOjM1MbMaLjiXPxN48Uc3SlVlFuprvr/cZssxnfpR1YpyX?=
- =?us-ascii?Q?dBBppTlOs0iJX8sSPfIN+kKBweapWXO1DJKLqfEfBL/f+4Op0yO/Cvb73ZGJ?=
- =?us-ascii?Q?SjA9gd3ZWlk2jSuyTtfYF2L1HS0q6N5MEI3mi9r06V2JcoM8QJtZYgt3YnY0?=
- =?us-ascii?Q?v3w5tdTvIPdQtWB8zHSEVVXUeZ8pc+j6UFi/pTukKq9xMfaDqdnNlMRpyZlk?=
- =?us-ascii?Q?0wp4yJ4wMzLeeZui8WZ0oU7aOpTHfnSeoWojJbTLq0VHwz/M64CIlgpE05ca?=
- =?us-ascii?Q?0X9Wg3N4RHSokgR9CTHefin+Sdk+fxhw3mcZUDBOKaXmK3R6kueyYE6WAwyZ?=
- =?us-ascii?Q?bkSito+/H+tIL+6RpsvIqBXdZ2+V48sBUcyrV9rsj8OiZ8B5eyPa054E5n2e?=
- =?us-ascii?Q?J4jpJzTbimDe7OCGGhAQG5wcenKXzCLjbQ1z9vt1Z536+/ERLJaiERepArOO?=
- =?us-ascii?Q?KQDOiSXDCEL9lJppRKguU5ICOaFouxlGprHe7/XsSDXgL9oovLny/tl1E803?=
- =?us-ascii?Q?VIgEEyzAaP90zT4zdAy3DTyFFOUxHs+QCIe4UUCOyWJYGQMnHzN4NcRawe5P?=
- =?us-ascii?Q?KYEbsqGiYJ5INZw5okkGwyeR/AuYc//VbXIotgn7ictTT9EoOmQGc3BCtBRp?=
- =?us-ascii?Q?GgDBG/kArKmbKTmYWBtIBUl9sXxmfF0kTiKZcrkpzigRxsKHN1PbMr7Utus7?=
- =?us-ascii?Q?di37VvpChR3cOhMHmSKpsr57UR2FtXSkDadz501DRDaOtaR8zUIlXW89HV1a?=
- =?us-ascii?Q?nVNWBSj6aGD/MXI4iAHR+p4iq0mMO+Z2L9W9oIjNYPE7Q97fJLj9TuWc73Nx?=
- =?us-ascii?Q?d8E9WlllMhzeCtnbCaLAV/0nbylGZ+vGcykqm8nX1FEKadO2M32Ing3+0ktl?=
- =?us-ascii?Q?YZu9W2OoeWK6TumI79kGXnF7jlgCf7R2cKFK?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 06:18:14.2290
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7e990f6-604e-45bf-0804-08dd86e59fcc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF0000343D.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7850
 
-The SECURE_AVIC_CONTROL MSR holds the GPA of the guest APIC backing
-page and bitfields to control enablement of Secure AVIC and NMI by
-guest vCPUs. This MSR is populated by the guest and the hypervisor
-should not intercept it. A #VC exception will be generated otherwise.
-If this occurs and Secure AVIC is enabled, terminate guest execution.
+The Pegatron Chagall is an Android tablet utilizing a customized Cypress
+CG7153AM microcontroller (MCU) as its battery fuel gauge. It supports a
+single-cell battery and features a dual-color charging LED.
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
 ---
-Changes since v4:
- - Resolve merge conflicts due to addition of sev-startup.c in mainline.
+Changes in v3:
+- status update handled via default-trigger
+- chagall_battery_prop_offs sorted by chagall_battery_properties
+- separated status logic into chagall_battery_get_status helper
+- removed controversial POWER_SUPPLY_STATUS_NOT_CHARGING use
+- code formatting improvemets
 
- arch/x86/boot/startup/sev-startup.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes in v2:
+- removed CG7153AM mentions in code, documentation and commit messages
+- moved schema to power/supply
+- left only pegatron,chagall compatible, other is dropped
+---
 
-diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
-index af7ba9aab46d..0f9cb02cb54e 100644
---- a/arch/x86/boot/startup/sev-startup.c
-+++ b/arch/x86/boot/startup/sev-startup.c
-@@ -623,6 +623,15 @@ enum es_result sev_es_ghcb_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt
- 		if (sev_status & MSR_AMD64_SNP_SECURE_TSC)
- 			return __vc_handle_secure_tsc_msrs(regs, write);
- 		break;
-+	case MSR_AMD64_SECURE_AVIC_CONTROL:
-+		/*
-+		 * AMD64_SECURE_AVIC_CONTROL should not be intercepted when
-+		 * Secure AVIC is enabled. Terminate the Secure AVIC guest
-+		 * if the interception is enabled.
-+		 */
-+		if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
-+			return ES_VMM_ERROR;
-+		break;
- 	default:
- 		break;
- 	}
+Svyatoslav Ryhel (4):
+  dt-bindings: vendor-prefixes: add prefix for Pegatron Corporation
+  dt-bindings: power: supply: Document Pegatron Chagall fuel gauge
+  power: supply: Add driver for Pegatron Chagall battery
+  ARM: tegra: chagall: Add embedded controller node
+
+ .../power/supply/pegatron,chagall-ec.yaml     |  49 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../dts/nvidia/tegra30-pegatron-chagall.dts   |  16 +
+ drivers/power/supply/Kconfig                  |  12 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/chagall-battery.c        | 291 ++++++++++++++++++
+ 6 files changed, 371 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/pegatron,chagall-ec.yaml
+ create mode 100644 drivers/power/supply/chagall-battery.c
+
 -- 
-2.34.1
+2.48.1
 
