@@ -1,106 +1,133 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767F920F066;
-	Tue, 29 Apr 2025 13:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4349B2D191D
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932767; cv=none; b=sxrcKOUDxf9KUR5VDp294E0m3wBIm953iCIKEW6vbTNdW39A4EkDyWOwF3uA+01wqCGHVP1QkTk3R77zhmTZLs5MzmV8oaUa8BMZIXfLeXhvHNc0N3BE6EJnTQDIHa8xjPTQ86ExzY8Cr2Isd03uzLVF/Ck3jGiUITkI0fNfHNE=
+	t=1745932772; cv=none; b=LrDcM5SXHbzKjMWNNSY32rEB0OBgYdzJRsSVdn6Hk/2EnGAi7f3xH+2ht5TJ8L8p0gReXnAvAaMgalZiMqLJ4dMWW5Nx9U49cV4hHCIlrpTNYuNkHP1zI+BOxLC/CNmtxDCmzrgoyn8tsM08HtmLNWaZU5fWlnqeY8LvrTkYlyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932767; c=relaxed/simple;
-	bh=q6pMNSJyTz849RKd8d/Eni1P8kzBFLPdHuoV6nEkUnI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dilVZXp6NUcYuTTjxwPm0D7T5A/zBHNS7qjlA2eia1JJgoNliLZFQwEwASemTgAQykznl5WO1pKai9W6ewBP4RflF/THxRYRH5Ain07MXnIUdCetz8p/XoH2DbOfl/R/pgDiC4DZdZYyQohw4YNkX7fZxNIkyPEAiOhUGLiV2do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NisH+AMo; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745932772; c=relaxed/simple;
+	bh=XePYFUZFOmGANaCFVWnQbmv+MH6vntg+h8qSytSplf8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ggP243C1V9uSIcUbc+U/uUdHloGCuvOkBEvPrSU2w//h1sPVqcyX/vKkuHzXX5E1RD1fhDnqjIhhVJAJcCNvo7KxbtKhIC5FK09907cOuOWYKjNRAHO6DmYZNF4oc6YjHwensUfXu/osvFRYUQlxGiCu6ssp+myHcGTzVTJsxNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MfLos37w; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NisH+AMo"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so552665a91.2;
-        Tue, 29 Apr 2025 06:19:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfLos37w"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe574976so41658245e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745932766; x=1746537566; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qfwi78OPJ+7NloXGVD0nV3Y/3cfDPkY2XA/mDHzCFKg=;
-        b=NisH+AMo5dkEJ+EK9JCYpxQDyugrytMV2M7eep7bs/iwYjVv+ZR63V/lo0T3Srvxgb
-         O6iVs3leUjO1Wxh3leKiuX27Zrx92EgZu3Pg71BIaEt+5B9x/LgINEONPqyL0IiiTiG6
-         KzdJCGu0aa53blRO5/e9bgfu8KPrK66JbtNb/SK5aKmABr/k/iCiredFi9GT0GFZEpxY
-         RL0m8teG84jjKxKj52dml8zmmba5aOwi54x8D20GaDgyZCmr4URNf0/BE1T+8NibOZyF
-         CFE6l10opPh7GmM/LLBPj54RANV68TQ7v0QB2PmfsGiY89axvRf82ZI7Ku9g39bTcKbU
-         r2XA==
+        d=linaro.org; s=google; t=1745932768; x=1746537568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qSBA2FVneKH15/yfDJmf3I99yTke3ZzCIPR7/+gqo2M=;
+        b=MfLos37wyS3I5VBUmgD+VaBnXnH40VtAmbdJhaBIIdWhc+ox6RjTxT4fwk0xmxeNDL
+         chdR52l/LX+Tikd12zB/oeMvtJFRSqgsjL2rnPLFe2ycgLao2rcElTPNWDp48roq/XaY
+         NewmLaQ+Xx1BiWDYzgxK/pe2kzaBY+tKA2fEiYD/PMTajJ6xS/ZwXtrUc/R0W+s+SYGz
+         jjA2LvB/SkcqpWvqY6QHCSi5Ulh87lRROAteFBAAd/s7fo3yuxIMp/p8MeqFfEYSmoZB
+         58Bg7gZFOdMD8/Pv+RNxP+LvDE4QLM3p51DYw1HVESa2LmXbpEtYXms/ZYw46gn5/uvt
+         bJIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745932766; x=1746537566;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qfwi78OPJ+7NloXGVD0nV3Y/3cfDPkY2XA/mDHzCFKg=;
-        b=SUhPTj5UmtrJ7/MclP1erMh9/QYeVurQmra7CqU7doeG6Xe7UIB2v/42BP3kU+qzWo
-         fyIWziaWH68lZ8TzGhcN3/5f+xVZ2WJflYpJXST0pcld336FWnivrcIoQec5yUVjRfkD
-         EIzoP9N93+m7CFvvGFwd5hW5PcnucWXhJiYqnjfngQgar4Ak5NRxeVPzqo90GPhwYDZE
-         iYgfG/u5W0ZFM+m8jbXdIvyq8FlcWT33FvuAbicQh6ZEMVg+eXKUyMa5CSdotw3CIheB
-         r72XZiGP9yotZxEZkTgEDjfb66Be/dRpj022I9Y3lXFyhTfVjdu8E2VOQ2QOzIgug1ub
-         f+pA==
-X-Forwarded-Encrypted: i=1; AJvYcCU69JzFEs52zDDQWPYXKA0A8AeIGq7297yJYJ5o3/l0zn/yDrM0X87iOhOHlTP+nv8JeDODLlQog4pg4SY=@vger.kernel.org, AJvYcCVpuevm43wnPh3v7DVTIX4PxY/QPUWrDxtn4D2vg857PdOG3bgwantp8JgZq4NaptXaRGpH0BYOeUOYfEHoHGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxelMX+4w5Mryj/ugrZBHQI+FpozOxPPMV3un3cfRuiYMFOf5sV
-	E+5nek41IPSdyCzTVAb5dfubrloVfOPdPMSHgKuXmGk4OZk+Sa8VDC5TL3E6lPSMG7/A2b8PQSk
-	aE8acXbtug+PKt/jZSvUda6iW4iu5qrUisYQ=
-X-Gm-Gg: ASbGncui/pp8Eh+WPfkxEgXlVhM4Evi9DJXXH8ZS+EH8GmG+nenqiQ6HX40YYALrktX
-	6632J35vHkHqla/6wYvHace6LyaFnuuVtld6fcRlTxVH0LaS7QCH3uA7x/wPE49Blj2VDHeZJ7C
-	O0edy4Y10yYKVRdHrM7Vj4hg==
-X-Google-Smtp-Source: AGHT+IHxnj2vnGMV80DWZ4aFFXP8qUs5JrcNSGq2bKT98m93IjisoHwKfYDtOCPyJ/O9yqy7+8fVIugvKcq0lL0lIqo=
-X-Received: by 2002:a17:90b:33c7:b0:305:5f20:b28c with SMTP id
- 98e67ed59e1d1-30a220f061dmr1555914a91.5.1745932765639; Tue, 29 Apr 2025
- 06:19:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745932768; x=1746537568;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qSBA2FVneKH15/yfDJmf3I99yTke3ZzCIPR7/+gqo2M=;
+        b=HAZ9y6sZe5YuQzS6E8dsxh/9T15G0Uh4iiUeyt9hDMZ848kcADoCNHsy2uhHZJouxU
+         y5oHyHoN+pWqkCUpBY/SBKdDFKHBOGD0twV3xS/7eAXIWFMxS845ztEYiuHHChqM0Mmv
+         +kY9AGv/SmWW9dxOUa4UkkiaO60Ck69c16so5nVAzaLMkSZENQlEj4BJDt6iL3q941wk
+         GW84jmVipNRRDty22Y8A0bGF2CGN8P3ym5Br3jnG4vlDtQQVmQkoTeLo5vMJjchQRo1W
+         yE93vh2n3U2Rw6U41NUdCwz5MnrFAmlrhScOKpQmI4gRp7R0NY4BX2hOUZgakLcgI7SI
+         N2vA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBXb4gzIno4v/kzN+lgj1XL0+7mBo8Q8I+k68Dp7Y8jAKNF5qG+pC7Ovfl3rYydWQX8Fk8c01cSIQntDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/9qoBI2iOzceJTZfItBzKVcaDtMxB6mxezk+vhBpOp76UqyZ6
+	/hZn6HEX2VAGahpyEPDAwk90bZFvFYef/kjX4fiP9TBaykE9OVp7woZEaqaSgE4=
+X-Gm-Gg: ASbGncuHhY0u174l7oN9LFYUewm5tufowbF1maipstygvaBLH363lZ3BNcjx/pYc9l6
+	5bWddqYJJFvcx8tgLNgU5A+mnwLNkyElcMOpPHFaBf4NqM621WMZyHF2q1n1BElqRSzqOWXZGFd
+	AXwU/dRNw/rU9zrkk6QMkGRH1IbZXSknm6A2Bm8oJws9V2L7m+PZ+eFKE88e+QWEWEStpFB2f6o
+	k82r1AtPqOn4wrKPRjdu5Ei3nGP3grMLlkoQN4xnndGBCsDkMBqr3Y9P+0V+UgFQpCtr091quTY
+	wTZUVOzDvBakXUkhH0SlHW9B8W05Mnn+95Ogzamv8dbNKxX0oYGRwfbgpnSl3/dnMhANKJTpz8m
+	kgm8w
+X-Google-Smtp-Source: AGHT+IHAYw0/lwXakKmjaC+/n7Ew4ZuEbD1KGM7D3NN5C8KbtKmvLbCZ8/H5NgImD03ODoBSykVgJw==
+X-Received: by 2002:a05:600c:4ece:b0:43d:fa58:81d4 with SMTP id 5b1f17b1804b1-441ac91d66dmr27017825e9.33.1745932768416;
+        Tue, 29 Apr 2025 06:19:28 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-440a530324dsm154990655e9.10.2025.04.29.06.19.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 06:19:26 -0700 (PDT)
+Message-ID: <0fc89d71-6510-4ca9-a789-290e1818798c@linaro.org>
+Date: Tue, 29 Apr 2025 15:19:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241119185747.862544-1-ojeda@kernel.org> <CANiq72n4Fw96hcuqQeorsfH7z4Tb+R1gdf80H_XkD-oA6z5TSA@mail.gmail.com>
-In-Reply-To: <CANiq72n4Fw96hcuqQeorsfH7z4Tb+R1gdf80H_XkD-oA6z5TSA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 29 Apr 2025 15:19:13 +0200
-X-Gm-Features: ATxdqUGN0dlLf5NE4vIholiXMZscWUbgyfznzqrixWlWYYWoan5VvhqtWa-4NWI
-Message-ID: <CANiq72mNJrMMbEcfJMLT4kM-_iviM0AR6oeigCyrb5eMWkn3KQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] rust: allow Clang-native `RANDSTRUCT` configs
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev, Aaron Ballman <aaron@aaronballman.com>, 
-	Bill Wendling <isanbard@gmail.com>, Cole Nixon <nixontcole@gmail.com>, 
-	Connor Kuehl <cipkuehl@gmail.com>, Fangrui Song <i@maskray.me>, James Foster <jafosterja@gmail.com>, 
-	Jeff Takahashi <jeffrey.takahashi@gmail.com>, Jordan Cantrell <jordan.cantrell@mail.com>, 
-	Matthew Maurer <mmaurer@google.com>, Nikk Forbus <nicholas.forbus@gmail.com>, 
-	Qing Zhao <qing.zhao@oracle.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Tim Pugh <nwtpugh@gmail.com>, Kees Cook <kees@kernel.org>, Nicolas Schier <n.schier@avm.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+To: Jon Hunter <jonathanh@nvidia.com>, Robert Lin <robelin@nvidia.com>
+Cc: thierry.reding@gmail.com, tglx@linutronix.de, pohsuns@nvidia.com,
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, sumitg@nvidia.com
+References: <20250421100821.2907217-1-robelin@nvidia.com>
+ <20250421100821.2907217-2-robelin@nvidia.com>
+ <aBCU5vec0XMX5VRz@mai.linaro.org>
+ <fbb3a1b3-3949-402a-b51c-f5446a392e83@nvidia.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <fbb3a1b3-3949-402a-b51c-f5446a392e83@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 9, 2025 at 3:51=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> I may pick this very early next cycle so that we can get some testing
-> during the -rc's, and just drop it if something breaks for anyone.
->
-> But any other testing beforehand would be still very welcome...
+On 29/04/2025 11:15, Jon Hunter wrote:
+> Hi Daniel,
+> 
+> On 29/04/2025 09:59, Daniel Lezcano wrote:
+>> On Mon, Apr 21, 2025 at 06:08:19PM +0800, Robert Lin wrote:
+>>> From: Pohsun Su <pohsuns@nvidia.com>
+>>>
+>>> This change adds support for WDIOC_GETTIMELEFT so userspace
+>>> programs can get the number of seconds before system reset by
+>>> the watchdog timer via ioctl.
+>>>
+>>> Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
+>>> Signed-off-by: Robert Lin <robelin@nvidia.com>
+>>> ---
+>>
+>> Hi Robert,
+>>
+>> I realize that this driver should be split in two and the watchdog 
+>> part go
+>> under drivers/watchdog.
+> 
+> Are there any other examples you know of where the timer is split in 
+> this way? It is not clear to me how you propose we do this?
 
-I ended up waiting on this one since I think Andreas would be able to
-try it with some actual workload (the nice benchmarks he has). Anyway,
-it will go in sooner or later.
+Just keep the clocksource and move the watchdog code (everything related 
+to the watchdog_ops) to a new driver under drivers/watchdog
 
-On top of that, backlinking the seed discussion since I will need to
-update this patch:
+BTW, there are three clocksources with the same rating, what is the 
+point of having them supported ?
 
-    https://lore.kernel.org/rust-for-linux/CANiq72mwYbg_L8u9NEfRD0Fp9E_zhCi=
-=3Dt=3DU2jyjsZe_Ls306hw@mail.gmail.com/
+Is it not the architected clocksource enough ?
 
-Cheers,
-Miguel
+May be the clocksource can be removed and the driver remains a pure 
+watchdog driver ?
+
+> BTW, for this series, I just want to get these updates merged. Any other 
+> re-factoring we can handle later.
+> 
+> Cheers!
+> Jon
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
