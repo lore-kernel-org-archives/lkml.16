@@ -1,45 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB23263F30
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6C6267B04
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745958484; cv=none; b=HDgd6USQ2Bc4JZuYIALPyFoplLlWQ14lq1VlcQzTQjAAevB2haD5oUZVPnlLU+fOZs2R1/+lO1GxxkWzROlaWbwQiFgDErNmTqBwJH3wZBW9OSu6SknJLkmfxHbv8GiZA8ccMp6N93iJgyxnEv18FqO+AzBBwaXbELmL5m/hC3o=
+	t=1745958487; cv=none; b=O5V2t6uo299Bw6uUvnL4pkwn2Xyd82tHjdpCGuRPn1mPtfG3Wc9dOOeKvYUnz0yCNlteEaaVtWMXApwUXYTKvDkHv0yyz2992vtT3uSFPCT4Qmy877DGQX7ewFKMFQCtPQqn336Ke2YqPr+ZHxaXgWvKhBqA+fVc23DdTqxr3JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745958484; c=relaxed/simple;
-	bh=MQH9dAaTaIg0ur9/5v4Mb+xBkI4AfjNQQm26Qr4pKTU=;
+	s=arc-20240116; t=1745958487; c=relaxed/simple;
+	bh=q5qnGWin/gWeyke8MwKqAHQ6UyRcIimhz3Mx7LaAL8k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TxnBPLpSVmcJLi23n2M9xIwsQi1B9P/HoveNX4q+ybBGsRWYy2CIXzN7uL4pHorlLRewrts4NNkdxJgoJ8HfCHOMTXGsI6WrblLHTYFKwHHUiK4MkTx6xVhK2KM4VNprmmabQ1T+vMomT5zF4/FWfO9gSyzP8/asXT0XIhPEZv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcewA3nQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=T/KkcRtwEYxXbO01kt/tfgiPK3PxGyUnc7BWdwNk/ASJCVktCGT2CLnoQnxLV1y/yx+gQnfinlcyWTLwAM54QgiDVyxOvWc7bmsBXyZZNJckRU3k5q5m7sOqCAsIIYBKNCZTjyiQb26NXwYsZD8nQc9lA1GRhKXL/I4VQTmqjxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfRQnp0d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcewA3nQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70EE6C4CEE3;
-	Tue, 29 Apr 2025 20:28:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfRQnp0d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA7FC4CEEA;
+	Tue, 29 Apr 2025 20:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745958483;
-	bh=MQH9dAaTaIg0ur9/5v4Mb+xBkI4AfjNQQm26Qr4pKTU=;
+	s=k20201202; t=1745958487;
+	bh=q5qnGWin/gWeyke8MwKqAHQ6UyRcIimhz3Mx7LaAL8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DcewA3nQGO44qEhUyevWkkgOdZVEYyYhO1BiKNX5pw1i3V5LHIhomBcwitEj22tOv
-	 MjjzT2mvHqVNcrXKbOZIZBFil/KBxEDxiS7+oGh9mfect+tA4VeJ6IWqhGVg1f7rcQ
-	 KP3c953dfFRxJF7uLa9LIiKyYv0TNhTe4bY0lMHS/3fRc31EOquDOQuJHOznIa0Syd
-	 qSEjOAAfpuOEbICz91QTUYXsD1mcSKfIx9xzLc/How3KxqyJL6yWC7jZx7lGZTdzVr
-	 wFpfC+9DkBkuCcQFWrTsmdxdqELQmzG08qcr9K6hk9ztSEW5m+iLgh813OygCFut+H
-	 8ARjgUeWnyZ0w==
+	b=cfRQnp0d/aFuC6pYINtv3BmNH59De0BoqRJP1lna4Yf88BVRO/UDm/Ndf8CqO84IR
+	 9n9f7Fc0JuzJ8brIHC6jI4dFE1d9dxurYesJNRjn/Vp2PSdhpmWE30YipQQJymPKV0
+	 AyQxBV+vWUq+ATWL8faysa06Lr8PhO6A30XNndaygrMZdjxJPTwxxRcK5H5bG7+REn
+	 Oq/R0yW7IIU+8+MToQHTShEPdTQHtwdORqV6u4uP+txoj/Apo7dREagtHISob2LKRi
+	 DUpf4tSI3zrKUmf2s6PfiAxs4SvHCQaRd0DbqA736sQwbvhgSCvJiopWQ1Ykk2FHPZ
+	 Gqe5ophSDqGvg==
 From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Bartosz Szczepanek <bsz@amazon.de>
+To: catalin.marinas@arm.com,
+	Dev Jain <dev.jain@arm.com>
 Cc: kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
-	nh-open-source@amazon.com,
+	gshan@redhat.com,
+	rppt@kernel.org,
+	steven.price@arm.com,
+	suzuki.poulose@arm.com,
+	tianyaxiong@kylinos.cn,
+	ardb@kernel.org,
+	david@redhat.com,
+	ryan.roberts@arm.com,
+	urezki@gmail.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Extend pr_crit message on invalid FDT
-Date: Tue, 29 Apr 2025 21:27:44 +0100
-Message-Id: <174594023826.474412.9245389283026480521.b4-ty@kernel.org>
+Subject: Re: [PATCH v2] arm64: pageattr: Explicitly bail out when changing permissions for vmalloc_huge mappings
+Date: Tue, 29 Apr 2025 21:27:45 +0100
+Message-Id: <174594039520.474971.2876521667626295214.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250423084851.26449-1-bsz@amazon.de>
-References: <20250423084851.26449-1-bsz@amazon.de>
+In-Reply-To: <20250403052844.61818-1-dev.jain@arm.com>
+References: <20250403052844.61818-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,20 +57,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Apr 2025 08:48:51 +0000, Bartosz Szczepanek wrote:
-> Log size in addition to physical and virtual addresses. It has potential
-> to be helpful when DTB exceeds the 2 MB limit.
-> 
-> Initialize size to 0 to print out sane value if fixmap_remap_fdt fails
-> without setting the size.
-> 
+On Thu, 03 Apr 2025 10:58:44 +0530, Dev Jain wrote:
+> arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
+> which does not support changing permissions for block mappings. This function
+> will change permissions until it encounters a block mapping, and will bail
+> out with a warning. Since there are no reports of this triggering, it
+> implies that there are currently no cases of code doing a vmalloc_huge()
+> followed by partial permission change. But this is a footgun waiting to
+> go off, so let's detect it early and avoid the possibility of permissions
+> in an intermediate state. So,  explicitly disallow changing permissions
+> for VM_ALLOW_HUGE_VMAP mappings.
 > 
 > [...]
 
-Applied to arm64 (for-next/misc), thanks!
+Applied to arm64 (for-next/mm), thanks!
 
-[1/1] arm64: Extend pr_crit message on invalid FDT
-      https://git.kernel.org/arm64/c/83a39eccdf2f
+[1/1] arm64: pageattr: Explicitly bail out when changing permissions for vmalloc_huge mappings
+      https://git.kernel.org/arm64/c/fcf8dda8cc48
 
 Cheers,
 -- 
