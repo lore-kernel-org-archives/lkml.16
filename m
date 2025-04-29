@@ -1,125 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6F229DB99
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917229; cv=none; b=QoIGghZQxb6HatuLw8mokp5T0Qr9SROABlnWa5BkFc7ByZeALaI7lk/Fb3aSqobtXm+daNyz8zVGI+nWRAv8qjbCW9uYMKRPK5CkNwLbb74uHeYXaK7MIJNpnTnueIKTG8EhBmjG1d7JYqGl3HPvL2VY/AW4yz93xivQ3qwPlKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917229; c=relaxed/simple;
-	bh=2KIKuRu81xZaF2280xYX/+R5+wlu8WDBf1ye5GbVH/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HLV5A5dI/X94qp1YGTxlolTgwGTUzvd+xqYgofXu+5DRz/0pQ5G55X+irg6viKRDiwxlh89ztE2yfCvAp6/V8rTueCvDriExkOCi/IX3RuxKL9oPoqp8U6f7+XZzC5Ou2KuyPzKOZ0+Or64O4gXqLcO58GQ0/VSOoxJk0VYQT14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pezbsw1B; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEFA2BCF54;
+	Tue, 29 Apr 2025 09:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745917234; cv=pass; b=gzdCpCZ2Txe5SRgHvz91pdOQGl+KLoa5TzN1Fky9N39Y2FIyCyOcS4HYILEU58gxg+1UT8oqvTk80k7R75r1+b5Haljo7unK4qS9Dp2PWdPzWep034bOJrcMN9K/Bj5ovR0roz85F+keaovjf+4uATsUiSMsIHREW54MY/TpNeY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745917234; c=relaxed/simple;
+	bh=fZQkV+LeKWISYkYSjblN43k3j75EsN/nAxXEFWfOGOc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D08xViWBoIwwzedNu9x8P1EAS0cISaNK5tkPZqBz2pCwuKd8kQRW7gBGLOYLJUVUDBo612mSN5vSyBX1uHBP8Www/roWl//UeQiXZwXHRN4kCnMPV14ozEgh/1M/2IEH8XyAWAEB63a182XXm3/SLQI0iU8tKrcsz7ttAveBFmA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=SFVzEJFk; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pezbsw1B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745917226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PCHHHLvZcH3BVlqKXz9f7p7K33kY7dzdDWtjNHcUjrA=;
-	b=Pezbsw1B9qB1GEwXC4pH5VjS4qkEho7iMsqieDAPwO98WSpzbdxIDud0JAcazRtcN5qju8
-	eFffV324TG6xy1yX26DCZSTzTVXSUBedBf+0PVxGW7nCj7rFq7xACb0h6qs7a6sG+VHMTX
-	abSwvrN9oTCFfpX7ux2nVAX/vglm2xQ=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-187-svF3wDM_PiG1aCsMSlodKw-1; Tue, 29 Apr 2025 05:00:24 -0400
-X-MC-Unique: svF3wDM_PiG1aCsMSlodKw-1
-X-Mimecast-MFC-AGG-ID: svF3wDM_PiG1aCsMSlodKw_1745917224
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb23361d73so125595566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:00:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745917223; x=1746522023;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PCHHHLvZcH3BVlqKXz9f7p7K33kY7dzdDWtjNHcUjrA=;
-        b=CQPFwcE4zTErjsqPAAWsU2Pa/re3cC9E79rpAS4QT2av3DVkkAvqZle/eELdXUPaNW
-         UnSZv0INDFvFnR7V1QzetnU1gzyog+oHUdB+TjHpxNzT2cE/35+dWqPU1EuT37BWTGf8
-         PSanM27p+YiPdbBAp4I7LjrEkf8uT9U4P38tOIVfXDT1P7o4aD2WD1IUBa74FNhdZZVk
-         /lsH2DjLTwVQBr9LsSAZG6l+lRW29vhYOgFU2ccqM+LQuLtkO8CXGbYl+pZSfUB5yprW
-         h+pgaaZ9d4nuLaM+FKMgXxYYdCufY6dQldb7YwISIgUT2dSVn+xsW/8a2w8wkO9LZ09d
-         H1sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyJHkYXzTV0KecnyMDXm7VhTyHEwA1G0/Lt6z7UxshH/iWZMuuwQu13WBZQfD6s+PGWDw8gEdDgsuDTkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1FZU5I885jnQIQnU7et8bzuUXtvRS2+zWWE9OxhXykcy1RBnE
-	y4h3gGw4zvI+f2bUJPE7yJTsZu/2zkN6KOSQE/6DZQ+WxvjwHrnEkospUzHY4Aj2P3e2iy+XU+O
-	V3Jkn3kAR1T4peA51hJ+Llkc4pMiwGmFzDBVsVXjSBhl2TNHRpYB3U+C9r9aMJw==
-X-Gm-Gg: ASbGncvB0TYpgtfBRDAcaPVouxHupdostfTy25I9FQfp559xoyk6aCU2dK8dk7QAX/0
-	nUwFh/pspEPzUN+l8s6b4CDhDRAW5rGXRJfLGG2Y1voerLWBdo20V8XCd6Xj0p2uiq0PPqsnXiC
-	jGduoZXTM88JzAzzyXDPNECVr+N6UJ6vIF1vlruAK9NAU2yN+sOcw19+/zpRzcg+19TSCqWpRYU
-	TM8+bBpJJSOLTOJTyOt+YXaJZxqCjQc4FcQmz6j3GTMmfRmpUnrp1SdiCt0YX96SkK+Hid1k05Z
-	BiUSDYvabAYzJjZayjLj2P5op2hE2ISXFmKFKUIgiSqtZU2iDmT8aDc1f7U=
-X-Received: by 2002:a17:907:1ca4:b0:ac7:b1eb:8283 with SMTP id a640c23a62f3a-acec6a4958dmr218813966b.17.1745917223563;
-        Tue, 29 Apr 2025 02:00:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkmrc9oaifrsbfBdKoTCsdQffffsFtg2dW8YPIfDy01PUM4CZM4fNcXpfPUjcXmTBPdpHaIA==
-X-Received: by 2002:a17:907:1ca4:b0:ac7:b1eb:8283 with SMTP id a640c23a62f3a-acec6a4958dmr218810366b.17.1745917223187;
-        Tue, 29 Apr 2025 02:00:23 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897? ([2a0d:3344:2726:1910:4ca0:1e29:d7a3:b897])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb1cbfsm741676566b.181.2025.04.29.02.00.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:00:22 -0700 (PDT)
-Message-ID: <be2ae666-a891-4dee-8791-3773331ce7d7@redhat.com>
-Date: Tue, 29 Apr 2025 11:00:19 +0200
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="SFVzEJFk"
+ARC-Seal: i=1; a=rsa-sha256; t=1745917214; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=CU1m58RfCOjQD6HAj0LxtIh1J2MxKzzYfGWGVh9AQinEm6q5PYuCNXLPPR7d3s+R140ho1SRXckR9Dp0zOsAHXa2pyEG1G7lvfiGT9R3m1XOzuOhkGh2YCLPLck0/O/lTbGz7VezbKlWwlRKVuirc1524wdFkDUnBEqxZGyrpSk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745917214; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fZQkV+LeKWISYkYSjblN43k3j75EsN/nAxXEFWfOGOc=; 
+	b=COcBrzNN2fTjUXuVJH7yjzsCwQo28uPfAXfBYxuVA6Xw0TfozcROdUYiUK0TYlaYYJBliaIKSN/MmqmmBh1FdKTUoJXFLqrdqaRyAjISG4fSo+8tTb7fOYwbiYeRkTlkATA5lj1isTQRoTQBa1rbDmN36qut8TjeZvMqZI5ZVgc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745917214;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=fZQkV+LeKWISYkYSjblN43k3j75EsN/nAxXEFWfOGOc=;
+	b=SFVzEJFk1bX/oFi/F4bDcqwJC2MdR0FYySoJ2VXeBaKZL8q9yhRuOAO8J44D39m0
+	TApkYhQppOsqeRV4PvrqJI2CIgiLXcsN+DNfXrh5WAYTapqes726Vy/iAAGyBa42MgM
+	1TOjb++bg8VgbzgWXYr10XeMhkVg7Go6qC5q/cunTvbWNBKTojjgoYJti6tZxMcFw0Q
+	pE5Lh2oysxb5p3Y6ED0dTI2V/uQyoS7Ug1M3dMKw3OXVsESWMkR9FHSlBzSBVD1F/FP
+	zcE951ASj85fpW4Ac3V46T8ARINxGCqkNsOtWrPEk9yBHZ+eBtCQSBNwZQJvunQV0X/
+	MmJU5JgCGA==
+Received: by mx.zohomail.com with SMTPS id 1745917211373281.29103320839295;
+	Tue, 29 Apr 2025 02:00:11 -0700 (PDT)
+Message-ID: <4d0bf5b8e1dd00f4025b7643a746cd99010c08fc.camel@icenowy.me>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+ <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,  linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Date: Tue, 29 Apr 2025 17:00:04 +0800
+In-Reply-To: <8e131fce-12b6-4a5f-8601-c15a0e4290fe@kernel.org>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+	 <20250424062017.652969-2-uwu@icenowy.me>
+	 <20250428-smiling-azure-sunfish-7c1c25@kuoka>
+	 <34c92033f4bbf289c6048a85f0f6ba04435e7bf8.camel@icenowy.me>
+	 <8e131fce-12b6-4a5f-8601-c15a0e4290fe@kernel.org>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 02/13] net: pse-pd: Add support for reporting
- events
-To: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Donald Hunter <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>,
- Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
- <20250422-feature_poe_port_prio-v9-2-417fc007572d@bootlin.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250422-feature_poe_port_prio-v9-2-417fc007572d@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 4/22/25 4:56 PM, Kory Maincent wrote:
-> +/**
-> + * pse_control_find_phy_by_id - Find PHY attached to the pse control id
-> + * @pcdev: a pointer to the PSE
-> + * @id: index of the PSE control
-> + *
-> + * Return: PHY device pointer or NULL
-> + */
-> +static struct phy_device *
-> +pse_control_find_phy_by_id(struct pse_controller_dev *pcdev, int id)
-> +{
-> +	struct pse_control *psec;
-> +
-> +	mutex_lock(&pse_list_mutex);
-> +	list_for_each_entry(psec, &pcdev->pse_control_head, list) {
-> +		if (psec->id == id) {
-> +			mutex_unlock(&pse_list_mutex);
+=E5=9C=A8 2025-04-29=E6=98=9F=E6=9C=9F=E4=BA=8C=E7=9A=84 09:31 +0200=EF=BC=
+=8CKrzysztof Kozlowski=E5=86=99=E9=81=93=EF=BC=9A
+> On 28/04/2025 10:40, Icenowy Zheng wrote:
+> > =E5=9C=A8 2025-04-28=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 09:20 +0200=EF=
+=BC=8CKrzysztof Kozlowski=E5=86=99=E9=81=93=EF=BC=9A
+> > > On Thu, Apr 24, 2025 at 02:20:15PM GMT, Icenowy Zheng wrote:
+> > > > The JH7110 SoC could support internal GPI signals to be routed
+> > > > to
+> > > > not
+> > > > external GPIO but internal low/high levels.
+> > > >=20
+> > > > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
+> > > > virtual
+> > > > "pads" to represent internal GPI sources with fixed low/high
+> > > > levels.
+> > > >=20
+> > > > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> > > > ---
+> > > > =C2=A0include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 +++=
++
+> > > > =C2=A01 file changed, 4 insertions(+)
+> > > >=20
+> > > > diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-
+> > > > pinctrl.h
+> > > > b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > > > index 3865f01396395..3cca874b2bef7 100644
+> > > > --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > > > +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> > > > @@ -126,6 +126,10 @@
+> > > > =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PAD_GM=
+AC0_TXEN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A018
+> > > > =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PAD_GM=
+AC0_TXC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A019
+> > > > =C2=A0
+> > > > +/* virtual pins for forcing GPI */
+> > > > +#define PAD_INTERNAL_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+254
+> > > > +#define PAD_INTERNAL_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0255
+> > >=20
+> > > Why this cannot be 20 and 21? These are not values for registers,
+> > > but
+> > > abstract numbers.
+> >=20
+> > The number must not collide with SYS GPIO pads too.
+>=20
+> There are no SYS GPIO pads here. Do you understand that this is not
+> value for registers?
 
-AFAICS at this point 'psec' could be freed and the next statement could
-cause UaF.
+Yes I understand.
 
-It looks like you should acquire a reference to the pse control?
+The situation is that JH7110 has two similar pin mux controllers, one
+SYSGPIO and one AONGPIO. Despite I listed the values after the AONGPIO
+pad list, these values should apply to SYSGPIO too (unless you want to
+let them have different values for these two pinmux controllers), which
+is the part with comment "sys_iomux pins".
 
-/P
+>=20
+> Best regards,
+> Krzysztof
 
