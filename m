@@ -1,133 +1,200 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4514227057C;
-	Tue, 29 Apr 2025 06:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABC62749C5;
+	Tue, 29 Apr 2025 06:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745906949; cv=none; b=DMsfg2caeARb2CTjfkSnaB3G3LEOE4Tj2NkjUg9gzPkW5hW0i//zqlVPRdx94SFbOHND8JL10/5mm8CB3ScqA7FnZ/1ZDtORtIG5BhWF7vKYnppWw+pHx1PEMOwUj1YONDdMfLFi3XJBLxSW7a4Az6CeaARMdKvU8y/bSGoqYYo=
+	t=1745906964; cv=none; b=GMXQNt49RYwLCxCqIojbucNTRWZCxiYh7NfGTQYCbNLjC9Wmd/B9WCxRNMPcgyp7MoCUB5QxIyn0M6nx2Xi9dkjbj/D0oL2cYhEHr2Z/7eGRKfD9fTiX3sf/8KPh9JcV7ytLt1g0ztv3uR49RGXx58z/JulBkO+Wk0Hcga69R+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745906949; c=relaxed/simple;
-	bh=Marj5r3kVxF6pHVxPMZl6SBr+BOUstXhJdPVFluqlvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6BcsahOM4BJe55p1EqKf6QfBH07vfTDjLTNGFufpTDr5lQp458px9LuQ3QSBJKFf/C4b1UnUzA+lCVD5G3KXzQJB/ZHt5ldKZHEqM+ovZoqXwzwOysuKQG2chUuaz4lUYKIyqaaxcsvM3UbjjjT99U4sTGE6at6mCuuAzGKFdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjiMcRfG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745906964; c=relaxed/simple;
+	bh=PNH//cVkWbnB2fS1ezNe4WtvGXzhnSIV29jcs1sTleU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LC4Y9G9XatJ7cZNVmDIxZjM+RNMgb1Wdr4JOc7Wyd9snxmD7kbJaqsjyFMepN95YFmTiIgsZRsCoVx8xqdNxn5+rSP38hXLhhEpY4BMAQEMOT90SH81huMGNXtf6KSsHWS0Ewa6ea+LqJvm3vC5Y+ydJq9EObC5zZU68NM4XA+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDWNet5k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjiMcRfG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54996C4CEE3;
-	Tue, 29 Apr 2025 06:09:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDWNet5k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B524AC4CEE3;
+	Tue, 29 Apr 2025 06:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745906948;
-	bh=Marj5r3kVxF6pHVxPMZl6SBr+BOUstXhJdPVFluqlvQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RjiMcRfGSTfBwP5V5QrWTwXA5LPhlb1MLs/ow5uf2/nKYhX0gHR1S1G1avyWldTu5
-	 FUw10U/MGYxMfaYon/pbzeMTaLWBtmImQs3ZS1wC/I1lscqrXbhYOhEiaTOMfUMMLM
-	 1ZBFgWaNyhr+m84SpCBiTjA3FIj8DtM4w7q18d9HWLkGvVL+hmC853dB0cdXCgaMd4
-	 YJMl+CWOUuvteojV6ACPLb6XNcf+16mudGUS2kBe8/rwEcr8btAGeL7sGRdPM6pMBv
-	 y1Cl3tfp4MZrC7GRR1v6QM9AASV9w6K4KoxnvvI4n7CrQvPvR0YkdkqByldN53f8E3
-	 nQ3ZfMN7X1JEg==
-Message-ID: <8fdb13dd-6540-471e-9be0-b7248533e522@kernel.org>
-Date: Tue, 29 Apr 2025 08:09:01 +0200
+	s=k20201202; t=1745906963;
+	bh=PNH//cVkWbnB2fS1ezNe4WtvGXzhnSIV29jcs1sTleU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uDWNet5k2IklSXyclsdy71tc6aXagAuOzOP5Z1vsPDPEw1xByvYmxH/7R8kedffmR
+	 K3ASHl60pRtDMWg9p0JxFzxO/3aGKB98mGU3GQziALdCRkObg3CMNM8boWhkMNq5Fb
+	 SoRi+onUpbh4+8C7egZp68jWH9bVq8JE2GNbbjKqgOv4PvtvgZAdPdF4XvW8+i2Vac
+	 6q6ESVLxxn8p2qJcdlZLSSecESrOtQeA31phlOs3O0ew9tbbYj38i+QlIYTLHGum0F
+	 nK+XngMnFMQRY8/5XFAQ7Xguljv3BaQDuFiBtITTOynS0B/PtXC5n3GH/3WSmM3hcr
+	 NiVEF7HYK25Ng==
+Date: Tue, 29 Apr 2025 09:09:18 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v10 03/24] iommu: generalize the batched sync after map
+ interface
+Message-ID: <20250429060918.GK5848@unreal>
+References: <cover.1745831017.git.leon@kernel.org>
+ <69da19d2cc5df0be5112f0cf2365a0337b00d873.1745831017.git.leon@kernel.org>
+ <f8d86cde-d485-4e5a-a693-e9323679474f@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Srinivas Kandagatla <srini@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
- <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250428-max77759-mfd-v7-5-edfe40c16fe8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8d86cde-d485-4e5a-a693-e9323679474f@linux.intel.com>
 
-On 28/04/2025 13:36, André Draszik wrote:
-> +static const struct of_device_id max77759_gpio_of_id[] = {
-> +	{ .compatible = "maxim,max77759-gpio", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max77759_gpio_of_id);
-> +
-> +static struct platform_driver max77759_gpio_driver = {
-> +	.driver = {
-> +		.name = "max77759-gpio",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +		.of_match_table = max77759_gpio_of_id,
-> +	},
-> +	.probe = max77759_gpio_probe,
-> +};
-> +
-> +module_platform_driver(max77759_gpio_driver);
-> +
-> +MODULE_AUTHOR("André Draszik <andre.draszik@linaro.org>");
-> +MODULE_DESCRIPTION("GPIO driver for Maxim MAX77759");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:max77759-gpio");
+On Tue, Apr 29, 2025 at 10:19:46AM +0800, Baolu Lu wrote:
+> On 4/28/25 17:22, Leon Romanovsky wrote:
+> > From: Christoph Hellwig<hch@lst.de>
+> > 
+> > For the upcoming IOVA-based DMA API we want to batch the
+> > ops->iotlb_sync_map() call after mapping multiple IOVAs from
+> > dma-iommu without having a scatterlist. Improve the API.
+> > 
+> > Add a wrapper for the map_sync as iommu_sync_map() so that callers
+> > don't need to poke into the methods directly.
+> > 
+> > Formalize __iommu_map() into iommu_map_nosync() which requires the
+> > caller to call iommu_sync_map() after all maps are completed.
+> > 
+> > Refactor the existing sanity checks from all the different layers
+> > into iommu_map_nosync().
+> > 
+> > Signed-off-by: Christoph Hellwig<hch@lst.de>
+> > Acked-by: Will Deacon<will@kernel.org>
+> > Tested-by: Jens Axboe<axboe@kernel.dk>
+> > Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+> > Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
+> > Signed-off-by: Leon Romanovsky<leonro@nvidia.com>
+> > ---
+> >   drivers/iommu/iommu.c | 65 +++++++++++++++++++------------------------
+> >   include/linux/iommu.h |  4 +++
+> >   2 files changed, 33 insertions(+), 36 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> > index 4f91a740c15f..02960585b8d4 100644
+> > --- a/drivers/iommu/iommu.c
+> > +++ b/drivers/iommu/iommu.c
+> > @@ -2443,8 +2443,8 @@ static size_t iommu_pgsize(struct iommu_domain *domain, unsigned long iova,
+> >   	return pgsize;
+> >   }
+> > -static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+> > -		       phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+> > +int iommu_map_nosync(struct iommu_domain *domain, unsigned long iova,
+> > +		phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+> >   {
+> >   	const struct iommu_domain_ops *ops = domain->ops;
+> >   	unsigned long orig_iova = iova;
+> > @@ -2453,12 +2453,19 @@ static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+> >   	phys_addr_t orig_paddr = paddr;
+> >   	int ret = 0;
+> > +	might_sleep_if(gfpflags_allow_blocking(gfp));
+> > +
+> >   	if (unlikely(!(domain->type & __IOMMU_DOMAIN_PAGING)))
+> >   		return -EINVAL;
+> >   	if (WARN_ON(!ops->map_pages || domain->pgsize_bitmap == 0UL))
+> >   		return -ENODEV;
+> > +	/* Discourage passing strange GFP flags */
+> > +	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
+> > +				__GFP_HIGHMEM)))
+> > +		return -EINVAL;
+> > +
+> >   	/* find out the minimum page size supported */
+> >   	min_pagesz = 1 << __ffs(domain->pgsize_bitmap);
+> > @@ -2506,31 +2513,27 @@ static int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+> >   	return ret;
+> >   }
+> > -int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> > -	      phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+> > +int iommu_sync_map(struct iommu_domain *domain, unsigned long iova, size_t size)
+> >   {
+> >   	const struct iommu_domain_ops *ops = domain->ops;
+> > -	int ret;
+> > -
+> > -	might_sleep_if(gfpflags_allow_blocking(gfp));
+> > -	/* Discourage passing strange GFP flags */
+> > -	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
+> > -				__GFP_HIGHMEM)))
+> > -		return -EINVAL;
+> > +	if (!ops->iotlb_sync_map)
+> > +		return 0;
+> > +	return ops->iotlb_sync_map(domain, iova, size);
+> > +}
+> 
+> I am wondering whether iommu_sync_map() needs a return value. The
+> purpose of this callback is just to sync the TLB cache after new
+> mappings are created, which should effectively be a no-fail operation.
+> 
+> The definition of iotlb_sync_map in struct iommu_domain_ops seems
+> unnecessary:
+> 
+> struct iommu_domain_ops {
+> ...
+>         int (*iotlb_sync_map)(struct iommu_domain *domain, unsigned long
+> iova,
+>                               size_t size);
+> ...
+> };
+> 
+> Furthermore, currently no iommu driver implements this callback in a way
+> that returns a failure. We could clean up the iommu definition in a
+> subsequent patch series, but for this driver-facing interface, it's
+> better to get it right from the beginning.
 
-Drop alias, if you need it means you have incomplete platform ID table
-(because it means you will need to add more aliases on every new OF entry).
+I see that s390 is relying on return values:
+
+  569 static int s390_iommu_iotlb_sync_map(struct iommu_domain *domain,
+  570                                      unsigned long iova, size_t size)
+  571 {
+
+<...>
+
+  581                 ret = zpci_refresh_trans((u64)zdev->fh << 32,
+  582                                          iova, size);
+  583                 /*
+  584                  * let the hypervisor discover invalidated entries
+  585                  * allowing it to free IOVAs and unpin pages
+  586                  */
+  587                 if (ret == -ENOMEM) {
+  588                         ret = zpci_refresh_all(zdev);
+  589                         if (ret)
+  590                                 break;
+  591                 }
+
+<...>
+
+  595         return ret;
+  596 }
 
 > 
-
-
-Best regards,
-Krzysztof
+> Thanks,
+> baolu
