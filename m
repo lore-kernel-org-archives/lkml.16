@@ -1,148 +1,125 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF753238177;
-	Tue, 29 Apr 2025 15:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED2E23E32B;
+	Tue, 29 Apr 2025 15:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941891; cv=none; b=h6g9ZDek3eJ99j6eDU2GwVm7dlNJe0kpdpnryKWu3qXJVINrhD/D0KA72P5p7XIGVRN0H92ca8M9PaYOzfrZWvx6zuNrBWnSK6zbpBH/Imj7QRmuj00f6HFNVBvKanalOcLmaJhv8w0PMFa9mC/w0T8lyojIkFpWNaXL1cUVRYg=
+	t=1745941909; cv=none; b=YvTSYmrFSDaxR7KzAsEa1x70deum98EcBNPgkkBpw3aL621ULpgFfRukJSfysX3iO+JajBEXjNgetP7k7KG2An/RDodA8OYFJ2WjIl3jrdJS1MqMoormcnS9PtYRF4U8SLdoe/QF6wSCJJNg5dQQyXa5Ykl7UcMIJYx5W67E9WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941891; c=relaxed/simple;
-	bh=l+QvsevxJ3gRe9UnLNb8RJ42TkYXK+H5ulz9N97rJSA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Gy3Fn8KcYCPIRAeKbLP3FbQMlCPBPF1vvxYZwaHsdn8EtmE2vN0xXh6QO97PCZf1lGWV7qu3WzL7U/5TcKyhPYYb/DiPG6aw5nNE3hJdvEYdyDuHx3tcOu2t9sFiABHNUZxSX1PYOFSzJhmVloLz5ycp3d9PO+QkXUMM4PeSCg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=paxyRFFe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mQy+8siS; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745941909; c=relaxed/simple;
+	bh=DnTNSFiQMa982txtTGvepKRlDKUMmvvPua/94CABBlI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=PqdoTR4h/TDKZ0vBO+67ynqB8Pb5ruBoieeZIh1vnyanhTzKaycPrb+DBu8redAS5ouqH8nGJ/+ZZSiH6YMaKwMx+QHTc/z/BKjmUF0a+0Ch2oY1u8JNtCcAGAxrF5DzejTe8FMfh5w2+M0+4XcsLLj3LcdmnEArcO55bISytk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HCmfRlt4; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="paxyRFFe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mQy+8siS"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 9651C114016C;
-	Tue, 29 Apr 2025 11:51:27 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Tue, 29 Apr 2025 11:51:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745941887;
-	 x=1746028287; bh=5ypmnlG4bx0alFv7ufvPvstflAVmjqUkuICddIWF6ho=; b=
-	paxyRFFeLAkloUjrgzbdChFKuIOtS9XvYGJQfD3vNY5xG7lDjeeQTEfIDi8uXUB5
-	rymj8Vm0SSzImzcnUaf1ZE1M+EmmEpa75IGtEtZ2wcY1IR6nrABhCPBqBnV+7vKp
-	MOwxwZ1fFh4i8TacUPm++YbZvU7+ayicG/JZLxPhw791lbT/XD8fwCxmkzTW14aM
-	ixc6KcTIi+OG1e8tvNQ9ril/SdoQFWvyiMYbBhl9P6hYwFbzeRRVj63wJT7pgWlU
-	uD+NaU0JaGlOaEu4BkK6EpBn4W4+IGDj97VowXeq7YTCIGMnfehFoCBAydRuz16i
-	63WNa+JKyAt/xvhCtiC1QQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745941887; x=
-	1746028287; bh=5ypmnlG4bx0alFv7ufvPvstflAVmjqUkuICddIWF6ho=; b=m
-	Qy+8siS/mVOZ2TLSq0bURzdaKsAQqR8qtcn2gGF9C0rnm3oa09iNHYFwg307fRUP
-	SFwzlIXaXVwp9kEhrdIPINJ7jHcvL4QSvoELN7nN8zALYFVWcuJTVce7DEnnhXA9
-	XJGYOKWPbOOdu0esr6m1sCeT0YVeb2uoAK4tzvAFWWPAU9MLugmPzA/GP5Fo56g+
-	1mEJOM2s9EMfKbQb2FONwaImDXGZPenAgsJ+QqO56Ec5K67lRoa0w1mDY6tYRQ3G
-	SqHzYCtoi7zY+5tpuXmOanUmnk9mxfgTjHleGFvXhbyVJqZTWH5eIPCFy5ChoiYI
-	8e7DRcqsHxeFS+E0zpnTg==
-X-ME-Sender: <xms:fvUQaHO7x2eyHUdrs5kTI01c76rfERSGTU1XETABEGP_O6jVqt9q_A>
-    <xme:fvUQaB8-bnKgez5Hx42wdFdFHDNxYqY02tA7baDZtsp625ij6UQ3rjupcwvXsmJ49
-    THUy2Lb8TIg_bZnqPk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieegvddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    feelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguihgvthhmrghrrdgvghhgvg
-    hmrghnnhesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidr
-    ohhrghdruhhkpdhrtghpthhtohepuggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsg
-    horhgrrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghp
-    thhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegsoh
-    hquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopegthhhrihhsihdrshgt
-    hhhrvghflhesghhmrghilhdrtghomhdprhgtphhtthhopegurghvihgurdhlrghighhhth
-    drlhhinhhugiesghhmrghilhdrtghomhdprhgtphhtthhopehfuhhjihhtrgdrthhomhho
-    nhhorhhisehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:fvUQaGSltOKtWHbcE2uyE9z0IBLXu0I5jwXVEgLzHA0BVUTHLgUSIg>
-    <xmx:fvUQaLuvlUgAA8ZKSNGlW-3vNCPYefoH1z-uXuHuvmgAm-f5ybix8Q>
-    <xmx:fvUQaPeYRcrvFOiQ6qYoZJjxQ5hD_16Y3DNKmQVcUCNKga11vmzhvw>
-    <xmx:fvUQaH2nql3HNYfFJycfFuN7Xl65OX_Nf0HKIeFF8deWFlnjFdOwvA>
-    <xmx:f_UQaAOlsBuQO2PKhczH7Tl5sLEuTHbdCsKM-XYV3H6d6e1EyaO1AHQV>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 28D452220073; Tue, 29 Apr 2025 11:51:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HCmfRlt4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1745941586; x=1746546386; i=markus.elfring@web.de;
+	bh=DnTNSFiQMa982txtTGvepKRlDKUMmvvPua/94CABBlI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HCmfRlt4okoAETCbUqxka3c2+UkhgqQ0TwiXQG5oN1EQcsBBNgpRJ1LWVnBJFYYZ
+	 TmAV9LiflNKPn/z7h+vOFHM6Bmsgi6wXSf/mppmlKG9Hl1HMD5oSUiE8gKq9YB4uk
+	 sbptxTnbsxW3WnV1HyV7v/iVeO0kdxyqlveGK1kpU46l3YNCZfh8NkTvawfX3lJdr
+	 2MJ3x0ri81pyVjKu/xCDiARUeYsVjNV3OWIacmglqBUebfvcwRBK0zrbXxoEwn/9J
+	 LjbV7dFfp93HkBUiG3IV1Z9ZRQqpHPdIP3Frm6jY0izFl4BBcB55blKbUphRw/E5N
+	 h+Wmgo07v7TyXaY6nA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.57]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MXoca-1uYySc3Ccm-00PDIc; Tue, 29
+ Apr 2025 17:46:26 +0200
+Message-ID: <b3876ccc-8446-433a-a2e9-caf6faaf1995@web.de>
+Date: Tue, 29 Apr 2025 17:46:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T252c7cf41b12c3c8
-Date: Tue, 29 Apr 2025 17:51:05 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
- "Andreas Hindborg" <a.hindborg@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, "Gary Guo" <gary@garyguo.net>,
- "Alice Ryhl" <aliceryhl@google.com>, me@kloenk.dev,
- daniel.almeida@collabora.com, linux-kernel@vger.kernel.org,
- Netdev <netdev@vger.kernel.org>, "Andrew Lunn" <andrew@lunn.ch>,
- "Heiner Kallweit" <hkallweit1@gmail.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@samsung.com>,
- "Anna-Maria Gleixner" <anna-maria@linutronix.de>,
- "Frederic Weisbecker" <frederic@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "John Stultz" <jstultz@google.com>, "Stephen Boyd" <sboyd@kernel.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Juri Lelli" <juri.lelli@redhat.com>,
- "Vincent Guittot" <vincent.guittot@linaro.org>,
- "Dietmar Eggemann" <dietmar.eggemann@arm.com>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Benjamin Segall" <bsegall@google.com>, "Mel Gorman" <mgorman@suse.de>,
- "Valentin Schneider" <vschneid@redhat.com>, tgunders@redhat.com,
- david.laight.linux@gmail.com, "Boqun Feng" <boqun.feng@gmail.com>,
- "Paolo Bonzini" <pbonzini@redhat.com>,
- "Jocelyn Falempe" <jfalempe@redhat.com>,
- "Russell King" <linux@armlinux.org.uk>,
- "Christian Schrefl" <chrisi.schrefl@gmail.com>,
- "Linus Walleij" <linus.walleij@linaro.org>
-Message-Id: <5c18acfc-7893-4731-9292-dc69a7acdff2@app.fastmail.com>
-In-Reply-To: <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
-References: 
- <6qQX4d2uzNlS_1BySS6jrsBgbZtaF9rsbHDza0bdk8rdArVf_YmGDTnaoo6eeNiU4U_tAg1-RkEOm2Wtcj7fhg==@protonmail.internalid>
- <20250423192857.199712-6-fujita.tomonori@gmail.com>
- <871ptc40ds.fsf@kernel.org>
- <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
-Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+To: Zhe Qiao <qiaozhe@iscas.ac.cn>, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, Len Brown <lenb@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Sunil V L
+ <sunilvl@ventanamicro.com>, Will Deacon <will@kernel.org>
+References: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
+Subject: Re: [PATCH v2] ACPI: PCI: Release excess memory usage.
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KzKXQKM8YUun6Mb1+1KnJXUqQVWv4oVsPPY372eaUISzFJlypNh
+ fjpIGoUMkmhn6rWA7lKakYsGsV+f/e3tGzLKqBLnVs+HlXVjb8lAHygimUtjqAj01I5o/Ny
+ ufv+0iT8F//QfQ0oafQmZpS6lmmM+INXc0Bgpevf4aRYtStShelBrGyI+mp60FLrAm7uea5
+ rZFSTqQYmOhqc22HJfljA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Y3c6w/2B9OY=;RMe9UwOCM+FSFzFIluYM7Rg0hhx
+ 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
+ g==
 
-On Tue, Apr 29, 2025, at 15:17, FUJITA Tomonori wrote:
-> On Mon, 28 Apr 2025 20:16:47 +0200 Andreas Hindborg <a.hindborg@kernel.org> wrote:
->      /// Return the number of milliseconds in the [`Delta`].
->      #[inline]
-> -    pub const fn as_millis(self) -> i64 {
-> -        self.as_nanos() / NSEC_PER_MSEC
-> +    pub fn as_millis(self) -> i64 {
-> +        math64::div64_s64(self.as_nanos(), NSEC_PER_MSEC)
->      }
->  }
+=E2=80=A6
+> the allocated memory should be released to avoid memory occupation.
 
-I think simply calling ktime_to_ms()/ktime_to_us() should result
-in reasonably efficient code, since the C version is able to
-convert the constant divisor into a multiply/shift operation.
+Will an imperative wording be more desirable for an improved change descri=
+ption?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.15-rc4#n94
 
-div64_s64() itself is never optimized for constant arguments since
-the C version is not inline, if any driver needs those, this is
-better done open-coded so hopefully it gets caught in review
-when this is called in a fast path.
+Do you propose to complete the exception handling?
 
-       Arnd
+
+How will development interests grow for the application of the attribute =
+=E2=80=9C__free=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.15-rc4/source/include/linux/slab.h#L47=
+6
+
+Regards,
+Markus
