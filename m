@@ -1,75 +1,147 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD49D2222A2
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947D52741B2
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907768; cv=none; b=THcxiOL7VRlfhrOVcO4fbq8YdXcRqqdKjCpLJQ2uEJ58FehzNd6wu66ILIf0eCbqERI+nWanT3qawRVIc84SKiKJ7f6E8sWS/zjCZMYJ/FnDUIoRxrrBl+RiMtzOPuFCXIrQjjrzMbh+VPQIDZ8xisAFncaTTdzuZ4uxNQ9/scY=
+	t=1745907926; cv=none; b=ca+dFkUDW9MYY4O0S1zSv6FSlVz7RGIOxV1dBZr8+CWLn2g7PbSvzw/dYmNiq66WrLYNFbdTt+9vyM0TKRfZu3J0Dfe4cxaLPgzyJIg8u2aiNphKIGZBmY6BjDHJEdLHyMgE7tZcBsznepphlf0Otb+kih9L2S5mh2cfk47W5Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907768; c=relaxed/simple;
-	bh=6kxxaR5LyDqrY0I0o5nuULRtHnYnVROSEl6iiVmCESc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NcNrXtJhxcllAf1VqWj/Nr+Kg2FBtiTKdnUw1DESdup4Nwb9Cjjr/ZQv/sYGyu07UD2KlrPY0v54cvulC9zMSfqV9KdINxCvDzVn8Kfk3alIVw4BYSeADtzcfuHM6+pOHhxxBrlYmCYBXHwdSpCZw/iadhJdohSDHWf+wxGEnGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hfCoNAtX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QUebiwN6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745907926; c=relaxed/simple;
+	bh=778Tsk9V5RLv7u5+J8mGWYXvwJlfwQGKJpCCruIQUNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lZedXo6IryIt0r4C5o+q5uOFOhB0C0dEFTy3zuU5NqtUDhy6DsqBRSGk3q+dbQG+lLLYpp7mmp3+QEyH3U7S8PgwVM1RJBjVNJxqRyYDfQ6xH5fDqgVYN3bHEw1BgSIHDwPcoFKPbwmYLwDhBEiCW4sP3qOobwiLk4RSEiDYC9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=v774V8tB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yspDwa/p; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GIrBtqGC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=61sHmbae; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hfCoNAtX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QUebiwN6"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745907764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="v774V8tB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yspDwa/p";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GIrBtqGC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="61sHmbae"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9743C1FE70;
+	Tue, 29 Apr 2025 06:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745907921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PfLmHnwY8ZXEOsYbbVJ97ixKv/+/pNFlWhDjGPZV0X0=;
-	b=hfCoNAtXzAVfQidb26BP0lKQSh2195S7soqRj6KUUzf9DiZNJjsQI5GsDdC0iaQz7WVqrX
-	GWX4zEc9F9sfXx+O9mBmWDLMVMe1FdYlYUhyFoiQExlc8uoFdhqk7HX52MXR7gW+LpDffQ
-	ZyHhinw7Go1rN6dpWvd42wvuYMJUbKTKtXY8FFXFgqfMAUhye9oShUJxpIahq5nyZM3Khg
-	l4g1okocmC2G1T4pwt53bgmiAOZTQn/pXawLGQduh1ld682nqJftGLk7Lrqd7lGp2ky6uh
-	Rti1DRK4H7cAzNNry5vvONaclcPdjuX8+h4KPr2ohMI9qf+cAiU2NPI5hC3nEw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745907764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	bh=6S9stFslWf1BocyHPdJ7xpeGvTQZK2+LLCON0hSowMM=;
+	b=v774V8tBsZIa3heGVk7dMz7I2YGN8Q4XYJ2H0hD+yh2Cq8e8Z9kynUoPJBq3X7bx6vjs+X
+	8V/n97lgllXwZ4gWqf2lRCGBUyNhdwPv4HPoGzeyDlrQ9ZYIvD4KUIzGUO9CgLVZ9w4niQ
+	+gyEq8F1/Ue72ydTTvgyOVO1RHajdFs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745907921;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PfLmHnwY8ZXEOsYbbVJ97ixKv/+/pNFlWhDjGPZV0X0=;
-	b=QUebiwN640dbdSwxBbXtKNIRo5ReVVztAjTPJCU7kxyTPXe2EAucUCM2oaHaxJtmI1m7Oy
-	wGcTWG70DVjZZWDg==
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Peter Zijlstra <peterz@infradead.org>, Andy
- Lutomirski <luto@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH v6 0/4] entry: Move ret_from_fork() to C and inline
- syscall_exit_to_user_mode()
-In-Reply-To: <aA_5IGGvXqB7v_EA@ghost>
-References: <20250320-riscv_optimize_entry-v6-0-63e187e26041@rivosinc.com>
- <87frj613kz.ffs@tglx> <aA_5IGGvXqB7v_EA@ghost>
-Date: Tue, 29 Apr 2025 08:22:44 +0200
-Message-ID: <87a57zqyff.ffs@tglx>
+	bh=6S9stFslWf1BocyHPdJ7xpeGvTQZK2+LLCON0hSowMM=;
+	b=yspDwa/phnJy9/hXeqiKf5K0DX2VJ6AE+cWx/PasYEvrPVWASypiGtqUwsXeQoEBJf0PK2
+	ER5DiNBXdIW6XpAg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745907920; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6S9stFslWf1BocyHPdJ7xpeGvTQZK2+LLCON0hSowMM=;
+	b=GIrBtqGCIJt5d0JgegSc5q88NNUI/zJwxb40x6wGkaAV+TEhTpT3Y7yg1bqcGfoh9mcJRo
+	La1M52RUxo/44edFm73UjY/LNq8HwujLI8vKSsPX2qu4FjXn8Hfz4ma3HVz9Occbz+RhKQ
+	57UG2psavtfWR9gbb8DFq8s2V9o5/LQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745907920;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6S9stFslWf1BocyHPdJ7xpeGvTQZK2+LLCON0hSowMM=;
+	b=61sHmbael7fiLlZyEIhtBVRhd3J90RgppOy+KlEaO5WE/xOfuOnM3DD744y26buVoZIG/q
+	mj8WS6gL10HSIQDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D57A413931;
+	Tue, 29 Apr 2025 06:25:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id O75WMc9wEGg8XwAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 29 Apr 2025 06:25:19 +0000
+Message-ID: <bbac5c03-270b-4686-82e2-638aef59323d@suse.de>
+Date: Tue, 29 Apr 2025 08:25:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/9] blk-mq: remove blk_mq_in_flight()
+To: Yu Kuai <yukuai1@huaweicloud.com>, hch@infradead.org, axboe@kernel.dk,
+ xni@redhat.com, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+ song@kernel.org, yukuai3@huawei.com, cl@linux.com, nadav.amit@gmail.com,
+ ubizjak@gmail.com, akpm@linux-foundation.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com
+References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
+ <20250427082928.131295-2-yukuai1@huaweicloud.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250427082928.131295-2-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[huaweicloud.com,infradead.org,kernel.dk,redhat.com,kernel.org,huawei.com,linux.com,gmail.com,linux-foundation.org];
+	TAGGED_RCPT(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,huawei.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Mon, Apr 28 2025 at 14:54, Charlie Jenkins wrote:
-> On Fri, Mar 21, 2025 at 10:22:36PM +0100, Thomas Gleixner wrote:
->> 
->> This looks sane now. I've bookmarked it as post-merge window material.
->
-> Has this been applied somewhere?
+On 4/27/25 10:29, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> It's not used and can be removed.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   block/blk-mq.c | 10 ----------
+>   block/blk-mq.h |  2 --
+>   2 files changed, 12 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Thanks for the nudge. It indeed fell through the cracks. Tending to it
-now.
+Cheers,
 
-Thanks,
-
-        tglx
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
