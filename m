@@ -1,75 +1,112 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905E71B040D;
-	Tue, 29 Apr 2025 11:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABC526FDA7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927705; cv=none; b=kXRwrH5o4yyc0BymaN8dQDv4qwD0Nd3n6D8pxX64Bx/7G8XniJDDANFQUDVaVTEY/x641hQt/sEEqE/gDGyu0MqMIlvSqb1NRoE+YnE5Uq0GUMIY0W0cxlF/g9eJYC6oBT8GQdUZxBck3otk938jO+JJYI3CqEorwnyQ6n+N+vA=
+	t=1745927782; cv=none; b=VpoL6bhKfz/4quyf7E/Xcg4bIuaA5Kxa2mFTpslFED6oztwDdZqwEfENQLJqWKcMGDJMww12SAUOU20Ic5c02G9+Q5v0ZzoAm1pk6Hy9Y7fsQntkO8KgLoB1baow5lBTCbjM2VQZVgwe0+sGfnXQ42cPqhWZuMPbSRmQzFP1ZWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927705; c=relaxed/simple;
-	bh=+rNyKIl/RBZ5aP/MltKedW1NnaUhMihaKYwfC3GhJNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqctvQ0kxgWSdlwbnxYLknSmbTfRIoRoyzz5toPqg88Lnp7UFCMVLKifNnpTCh/CCawYWEr0SWENWKXJrtXj+08Dp75rigsK9rznRlZQiM5k8YXr3g9+YJ7bEFQTJ2yFMgpKWaG0TI0/ed6N9Gb1Y5BuTun7SXDKw7vUb2Doksg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Qu3uNUA/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745927782; c=relaxed/simple;
+	bh=/DLXevGhyfap/70SzhKIg9RjdZhXXFEs1UB6viXtLRE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=B1ngtHa7wx6LJTZqv7ZMhfCkElcrJyiPTtX6Dx7VhXLA/vTPlP8JLhg8oJoLpzAhdkyZq2+hVej5NuazwsUjCiCPlyGCPW5befET41Qzu+dM367uu652AFuu/Z28zgrjRrtz8ce+7mYwC2LXANE24wL6tY1qydQns4T3xvU+kkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HwF8svZP; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Qu3uNUA/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Bu4ZHz9O9QAPTcYBsVBqDb2/neVtowMeWzeBjt2mIy8=; b=Qu3uNUA/WAb4oeHv/xwttmfHX1
-	OK0eFQObYXoKIwkj92J/xfHxUWQ+0xgDu2MnK6SB8oSgT09OlL0c+ISsqh3xLgCNstGyPj4Chtp6k
-	izzHzoWJpWNm0LnaIkSF8ow86GF8a+bV18SBS3xzALAwzrGDT5UbNXjvVM8swanZWfMg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9jXs-00Avsd-GF; Tue, 29 Apr 2025 13:54:40 +0200
-Date: Tue, 29 Apr 2025 13:54:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: mattiasbarthel@gmail.com
-Cc: wei.fang@nxp.com, shenwei.wang@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, troy.kisky@boundarydevices.com,
-	imx@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mattias Barthel <mattias.barthel@atlascopco.com>
-Subject: Re: [PATCH net v1] net: fec: ERR007885 Workaround for conventional TX
-Message-ID: <d77b4361-2ff4-4a3d-9506-354c054ae3ca@lunn.ch>
-References: <20250429090826.3101258-1-mattiasbarthel@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HwF8svZP"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745927767;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AdVSQ9hJnUiFysWlOa0SsVj55N45zfI2LhyhuRAbyMA=;
+	b=HwF8svZPZ+JdV/OZsXJ1Em5ZU+7hUzwNJpym+yQzK7vY24zFPzeLzy4/2R2eAJAVlgC4kQ
+	NLPQgEHQetzjXlR2LSOIZKP2EYarCDvr1ABsUIaQPuQykDvf83t00EOKI2KiFkV3mm+hX/
+	E8MIBuolHV5IvX8lAi+ozaJ6A7O3tcs=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429090826.3101258-1-mattiasbarthel@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [RESEND PATCH] mux: Convert mux_control_ops to a flex array
+ member in mux_chip
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <A6D52C12-29BF-4A51-B677-584EFC4F3823@linux.dev>
+Date: Tue, 29 Apr 2025 13:55:53 +0200
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EF33DB16-407A-4A09-8FF8-E216A2B231C4@linux.dev>
+References: <20250302230220.245739-3-thorsten.blum@linux.dev>
+ <202503031040.223DEF2781@keescook>
+ <785391F0-C381-47FE-89E7-6265F7761208@linux.dev>
+ <202504071119.DB9497A510@keescook>
+ <A6D52C12-29BF-4A51-B677-584EFC4F3823@linux.dev>
+To: Peter Rosin <peda@axentia.se>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 29, 2025 at 11:08:26AM +0200, mattiasbarthel@gmail.com wrote:
-> From: Mattias Barthel <mattias.barthel@atlascopco.com>
-> 
-> Activate TX hang workaround also in
-> fec_enet_txq_submit_skb() when TSO is not enabled.
-> 
-> Errata: ERR007885
-> 
-> Symptoms: NETDEV WATCHDOG: eth0 (fec): transmit queue 0 timed out
-> 
-> commit 37d6017b84f7 ("net: fec: Workaround for imx6sx enet tx hang when enable three queues")
-> There is a TDAR race condition for mutliQ when the software sets TDAR
-> and the UDMA clears TDAR simultaneously or in a small window (2-4 cycles).
-> This will cause the udma_tx and udma_tx_arbiter state machines to hang.
-> 
-> So, the Workaround is checking TDAR status four time, if TDAR cleared by
->     hardware and then write TDAR, otherwise don't set TDAR.
-> 
-> Fixes: 53bb20d1faba ("net: fec: add variable reg_desc_active to speed things up")
-> Signed-off-by: Mattias Barthel <mattias.barthel@atlascopco.com>
+Peter?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On 13. Apr 2025, at 14:42, Thorsten Blum wrote:
+> On 7. Apr 2025, at 20:20, Kees Cook wrote:
+>> On Fri, Mar 07, 2025 at 12:32:07PM +0100, Thorsten Blum wrote:
+>>> On 3. Mar 2025, at 19:44, Kees Cook wrote:
+>>>> On Mon, Mar 03, 2025 at 12:02:22AM +0100, Thorsten Blum wrote:
+>>>>> Convert mux_control_ops to a flexible array member at the end of =
+the
+>>>>> mux_chip struct and add the __counted_by() compiler attribute to
+>>>>> improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>>>>> CONFIG_FORTIFY_SOURCE.
+>>>>>=20
+>>>>> Use struct_size() to calculate the number of bytes to allocate for =
+a new
+>>>>> mux chip and to remove the following Coccinelle/coccicheck =
+warning:
+>>>>>=20
+>>>>> WARNING: Use struct_size
+>>>>>=20
+>>>>> Use size_add() to safely add any extra bytes.
+>>>>>=20
+>>>>> Compile-tested only.
+>>>>=20
+>>>> I believe this will fail at runtime. Note that sizeof_priv follows =
+the
+>>>> allocation, so at the very least, you'd need to update:
+>>>>=20
+>>>> static inline void *mux_chip_priv(struct mux_chip *mux_chip)
+>>>> {
+>>>>      return &mux_chip->mux[mux_chip->controllers];
+>>>> }
+>>>>=20
+>>>> to not use the mux array itself as a location reference because it =
+will
+>>>> be seen as out of bounds.
+>>>>=20
+>>>> To deal with this, the location will need to be calculated using
+>>>> mux_chip as the base, not mux_chip->mux as the base. For example, =
+see
+>>>> commit 838ae9f45c4e ("nouveau/gsp: Avoid addressing beyond end of =
+rpc->entries")
+>>>=20
+>>> Since this should work and is well-defined C code according to =
+[1][2],
+>>> could you give this patch another look or should I still change it =
+and
+>>> submit a v2?
+>>=20
+>> I think C is wrong here, but it seems it will continue to =
+accidentally
+>> work. I personally would like a v3 that fixes this, but I leave it to
+>> Peter who is the MUX maintainer...
+>=20
+> What's your take on this?
 
-    Andrew
