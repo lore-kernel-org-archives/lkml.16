@@ -1,132 +1,138 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BB51E282D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA1835966;
+	Tue, 29 Apr 2025 22:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745964119; cv=none; b=fr2ha6SUyQ6211SD04e65m8737haFYhizs15frS/uARbi0+ju3iXLj1myU+RyO509I1/sH58uCyJh8652Djbdg6BqLMHS84yEMkvY9rEbqQsLS457o3t/qoCL66Y2XN2xz1UvuB4k2h9xwSkd4hzH+PR7/9bW2RIgLVgco0dl+o=
+	t=1745964227; cv=none; b=TeA1NtYYgPRaqg0jEKVP/yYRq2Pgu/6PjOyWM90EP4RqxRanzcnp6ouSCVxPYeCO3ObECRQAAYV4z9qLjFQLCo9g/lsyDvTBMdP9tEQeJTapd95UpEAOCdZAok/X28GRv1bHXslrtSuFs6cNtHPb8hBR2knBgUQrF/AA5emAk9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745964119; c=relaxed/simple;
-	bh=sPJqgOyX29R9KKlPV6B43tSpDg21WwbqwYOhi4lpMVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LuUDrRtEYSRcXWrdca9Mnf+gJpRL/7X1ruSu8CTslBPFixPoMf8Ywn/0nwsUbSz4UzKUimgMg5YpLMtgYF2gv3qagzVVkvdAJ4afR+IuxaJRlGWcRvVUU9pJdwI9vdrpCPTodqHq/JfAwNDq4TwL/Kz+3xQp0Hc+4DFDb8XBGSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu; spf=pass smtp.mailfrom=vt.edu; dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b=bNQH7ILQ; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vt.edu
+	s=arc-20240116; t=1745964227; c=relaxed/simple;
+	bh=YWFo4xizY9VcrKOaPbSy5kzMkwMTuDcrv3mEuWOPcEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iq5RKv2t38547QoXOL386w4hi5yx4BzZgDfAdSdwc7x5qBRTIMj5ABuDS7hcvqnz9VMrENSLUSgrUp0aepheeLQeTQfsXJsc/IoZjEO6PJ0BOm9HvEXDdjkdC6m2+qGToDzJE8TEjzD0cKW+I22AWwVRXygyG7y3AJ7WAqe1DTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lV1UshY8; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b="bNQH7ILQ"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72bbead793dso5227177a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:01:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lV1UshY8"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acbb48bad09so1229928866b.0;
+        Tue, 29 Apr 2025 15:03:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vt-edu.20230601.gappssmtp.com; s=20230601; t=1745964116; x=1746568916; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s/Iy6G1QbQ70EX/jQq/aMS57PpOXhBvcYl5cYZVpbY0=;
-        b=bNQH7ILQPybteHuAcdGD6mMZ7BqeA3/IYUeGtm/ml1JPXQeqGZDZxEz+20Yw3IhGIy
-         y8Wao+Pi/h0E9ab9rGAlFVrb84fEqKYjCw5vSQ1mbbCVBN2ItpwrSYU5d7rFMIgl2f17
-         vWOYC4dgHJ+Ajl2x+lI5xoMSxv2sbmrNqiWBv0w8rJljKiEGt9pSfNH3LvGMe8Iy1bdm
-         JmkR2iUkNcbyxi+fvPF0H4ciKfgq84/4UY3rB4bIzEaZWDRxXL5JR/LVnfa207ecyK5z
-         7dOXou+qyWzK0tlgE/j/zPs1RU28G/X/oCbUzQqH4Ea49xMTO3K/l0zxfT9nI7lVztRR
-         7KvA==
+        d=gmail.com; s=20230601; t=1745964224; x=1746569024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BUbpeTZh/O2+70pK3M2d/VVXENkGigx9cnO3sBLqmmk=;
+        b=lV1UshY8bP444rx6SdUOVBikfEfPDR2lfpPaLKeJirH3lG4twPtqKvf9JIntZm6NSg
+         pt/IUch2lTNQd1vmApBLnOQIq9xHFFpjc9LOgVqIKvptwOS8NeY77t3qKPIcR1cNWSTu
+         K3vL5zykSRzoZSY2J3Uod8hyOh5o1E3HYVNOdgAo1yrqltLnQRTK2+8Yk2lI1Gs/5XKU
+         2ZWy/G6EZsFwfMnG/rXzxiMcQ7FDwfBd3jx1DlLehu2gGZbWizYV3+VghUQhSm3vxupF
+         ZTQKhC8NpzPMnrn00d0m1HgDv0wBc/EM4jPxKUcTAWe8Tl1rBvJeTpjmRmN3lQE7OTwH
+         7UIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745964116; x=1746568916;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s/Iy6G1QbQ70EX/jQq/aMS57PpOXhBvcYl5cYZVpbY0=;
-        b=MzSj3wQ+RZt28CrbxMCK1Q9AOxPlnTtW4+ocQwut84EKMxlf+cYU5ASixp+q4da8aJ
-         tuTybqeO8SnSb6OKLgGWJCQQcUaIexs3I46vXY1dDtDjk5p6UETxvvm7+PfrM0GXHZIh
-         0ORL92OHBltM9+CZI8i1vPbmD4ftnnrFvHuEU/Lu27PZgCe3fb4CUmxNe0RRngxyOjQi
-         4VeWGxpUrj7bEyA2S+PssfvAoCdO7FVFtxwWr5WnqcwL/l8skepYx/i6QIGuMpO3/gBo
-         zlSAWJBO8hi/Ho3ucArz/wnroiyTAKyChrIFDAuyWIf3XcO7/ihHObLf19IQtdmkgUIJ
-         sfxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkEA4DB7FeLTIsLdkjD7JD5oiXWxv72hXHzSf6fbpt70s/k/yINDewwE6suN5mkiZMCXoXTd/HlDa5S8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/b4h82qTh5jHlIZQV/xxOrJeWXcRlPwqt8/6hIfu1rwEIRT2l
-	nNILw2HACo5QqxXt4elyPPo6EW/UalmRNXlVZy98ciqDtqQeWxTUpviY710Rql0=
-X-Gm-Gg: ASbGncvfqkX/RnibMaldfvuI6e10hQqsL8+ZqJeNWENy/nQMjfvqyrqWjUPjSquEHNv
-	tRQjudJbCifXm2VAVZgfRkOv/QIwcth4Lie/daYViafX3tXZeG3xbR3//ZWuA+Ekjw82+QojTFV
-	NDWh4GcFjPulXyF6bT29zM+KirNfIJdVfXgeDE9frmQjfQynD8ZNU4QLD0Bg7emOyVNE0xuj2mD
-	HCcH2xRiiyJ+B4UJi8PTUwkO5HvFG4PfszjSa1td2hSUoGyz0Y5zxt3N2OU+SyGAlS3Yn67lv/Z
-	JIs+BpFywLxikYeLS3Xut7bQ6UFTmrxNNZbLS8jcJCsk8/S7DGn8V8DI0hp1WXYisspn0mtmRmu
-	SMSI0nySJ/cVRJrAh2Q==
-X-Google-Smtp-Source: AGHT+IEhDNMyfCEPOBhSZmHlOMiioLQII4XVVfboVPxcNey7XhZuybzhr5UHdTndkzt1/V3AUZCVzQ==
-X-Received: by 2002:a05:6830:2a93:b0:72b:a064:fab0 with SMTP id 46e09a7af769-731c09d8de0mr591119a34.3.1745964116293;
-        Tue, 29 Apr 2025 15:01:56 -0700 (PDT)
-Received: from ?IPV6:2603:8080:7400:36da:dff5:4180:2562:4c1e? ([2603:8080:7400:36da:dff5:4180:2562:4c1e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b0f9632sm529162a34.8.2025.04.29.15.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 15:01:55 -0700 (PDT)
-Message-ID: <433c6561-353e-4752-b9cf-155e49e62e63@vt.edu>
-Date: Tue, 29 Apr 2025 15:32:56 -0500
+        d=1e100.net; s=20230601; t=1745964224; x=1746569024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BUbpeTZh/O2+70pK3M2d/VVXENkGigx9cnO3sBLqmmk=;
+        b=AELev5UnjsKSIcl/ZDl/3n+WtC6iBNWAo1IFUawibFK0aB5mstTOdFuSuNTBRS7Z+G
+         8Zmq2joL1YPjujd/wbG4g/+s3eppqLoxHInIwqkHIJKD4cfLA6/SSNPs9EJFOkp88F4O
+         wGjQYV7naIkAB33XMptfmMaJe9jwUJLCgOfoVvn72TPJPTfs5SWxjb1BWcYa+H4PBEYk
+         mmo7USaEz/X52W3vN101nua0iIobdKMXn6Mff/sLsfpAFXqrA0ycn8Exe3iHlFf69WqQ
+         HZ6hEUq396ndT1BPKfhDAElAIPjCa4RpLhhe7oaQN9AibNj0NjyKP+UG/NdpkoBW4Qko
+         rG0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVH3bSXqOjUCl/kWnM258b+d5e+rIKGIBsuP/4blp7YOSVhO6QKGfFZoBDf8yvYjADbuocZdT8vBwXY@vger.kernel.org, AJvYcCVZe5F/EOL9XZnAtW3vQEZlCBnaoref9Q63czw3hnqLOSm156hBFiHrDIFa9NjZ6qAKAn+iPXAsc+hV@vger.kernel.org, AJvYcCWA79nsTiZ5IK+dQQAaS4EO0U8pyOqkmFy5elBOmL5PQGLNlga9CAdPxZmRJGIu014QrVK/VFrQwPDg@vger.kernel.org, AJvYcCXD+kTVNfyUTPP64PzuDjQZnKnyG7bPKVH7XyTDjRzLgtfmOYfla0QDtCh/Sg+16sCfY63/MYnSPfwK@vger.kernel.org, AJvYcCXSlSRXHn0blnxbvdwGHJCSbtZxgM7DsyrJyNnzPQMMS1eCKIUA3XQy6/3ls4PR+sXiu0MJGzl8G/dfxOUy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUh1YdbosR+V4JCrUFypzJV81SQMKnP/kCyfe7+8qz0Fl/Q4L2
+	aes9S8E6crmgmMGO0QtFgA8hZC9UDPbPXrYxFoXD9BXyqyK3i1XKFO7eUndUVaSsok5OOLkj+mn
+	Ztn9BRrrAWUb3nyHoKPPuCuBTn5Q=
+X-Gm-Gg: ASbGnctc2tD5gF/I1QhkDsa4YtEZR+ITk2dRLFCU/4bb6fMGLJXc7Otb+TQEq6VTKyP
+	tKX/1S01IjMlVIAiBunCW+2gQkRM2NcGrXAX+NPRaNN9dm/XUV9AidqFMHORFGv461sKWuwXN2R
+	lYwnjBF48B7HXeCDAxH7nGI+vsbTXf57oe
+X-Google-Smtp-Source: AGHT+IHx3E1TOCQoFjjfqy8I4fVZMMpJ0iKzLAhBBssx5XQ5DV5jGakXTEI7x5pRT2CHPQidhYYFIxXs+JdDfuHgysM=
+X-Received: by 2002:a17:907:2d89:b0:ac6:fe8c:e7bb with SMTP id
+ a640c23a62f3a-acee25dcd7dmr11755066b.55.1745964223811; Tue, 29 Apr 2025
+ 15:03:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Reduce CPU consumption after panic
-To: Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: carlos.bilbao@kernel.org, tglx@linutronix.de, seanjc@google.com,
- jan.glauber@gmail.com, pmladek@suse.com, jani.nikula@intel.com,
- linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
- takakura@valinux.co.jp, john.ogness@linutronix.de, x86@kernel.org
-References: <20250429150638.1446781-1-carlos.bilbao@kernel.org>
- <20250429133941.063544bb4731df0ef802440c@linux-foundation.org>
- <20250429210650.GD4439@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Carlos Bilbao <bilbao@vt.edu>
-In-Reply-To: <20250429210650.GD4439@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com> <aAe6u6NhAsgjaL5_@smile.fi.intel.com>
+ <c3i7g273lgvx7rpihzq6r7exxxnglbwrqwfryyz6ciqo52tszf@cvi7pz4bmkvq> <5aa4d76f-6f16-40ae-9dbf-767c63aa0a3d@baylibre.com>
+In-Reply-To: <5aa4d76f-6f16-40ae-9dbf-767c63aa0a3d@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 01:03:07 +0300
+X-Gm-Features: ATxdqUHBcczVvmBXvRAjBY2yw7dSAwsyZRXLvCYySReQNpkh_kytP2hJPk00epo
+Message-ID: <CAHp75VcZM+4Br2-RMKZixEd1=x3_exbWZkEFw1U_NrFtsejkUg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in sysfs-bus-iio
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jorge Marques <gastmaier@gmail.com>, Andy Shevchenko <andy@kernel.org>, 
+	Jorge Marques <jorge.marques@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hey Peter,
+On Tue, Apr 29, 2025 at 6:40=E2=80=AFPM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> On 4/29/25 8:47 AM, Jorge Marques wrote:
+> >
+> > Hi Andy,
+> >
+> > I agree with your suggestion, and in this case the appropriate kernel
+> > version is 3.10.
+> >
+> >>
+> >>> +What:              /sys/bus/iio/devices/iio:deviceX/oversampling_fre=
+quency
+> >>> +KernelVersion:     6.15
+> >>
+> >> Then why don't you put the real version of the first release that has =
+it?
+> >>
+> >>> +Contact:   linux-iio@vger.kernel.org
+> >>> +Description:
+> >>> +           Some devices have internal clocks for oversampling.
+> >>> +           Sets the resulting frequency in Hz to trigger a conversio=
+n used by
+> >>> +           the oversampling filter.
+> >>> +           If the device has a fixed internal clock or is computed b=
+ased on
+> >>> +           the sampling frequency parameter, the parameter is read o=
+nly.
+> >>> +
+> >>> +What:              /sys/bus/iio/devices/iio:deviceX/oversampling_fre=
+quency_available
+> >>> +KernelVersion:     6.15
+> >>
+> >> Ditto.
+> >>
+> >>> +Contact:   linux-iio@vger.kernel.org
+> >>> +Description:
+> >>> +           Hardware dependent values supported by the oversampling
+> >>> +           frequency.
+>
+>
+> I don't see oversampling_frequency used in any existing driver, so how co=
+uld
+> it be introduced in kernel 3.10? I think you confuse it with
+> events/sampling_frequency.
+>
+> oversampling_frequency is new and so 6.16 should be correct if Jonathan p=
+icks
+> this up in the next few weeks, otherwise it will be 6.17.
 
-On 4/29/25 16:06, Peter Zijlstra wrote:
-> On Tue, Apr 29, 2025 at 01:39:41PM -0700, Andrew Morton wrote:
->> (cc more x86 people)
->>
->> On Tue, 29 Apr 2025 10:06:36 -0500 carlos.bilbao@kernel.org wrote:
->>
->>> From: Carlos Bilbao <carlos.bilbao@kernel.org>
->>>
->>> Provide a priority-based mechanism to set the behavior of the kernel at
->>> the post-panic stage -- the current default is a waste of CPU except for
->>> cases with console that generate insightful output.
->>>
->>> In v1 cover letter [1], I illustrated the potential to reduce unnecessary
->>> CPU resources with an experiment with VMs, reducing more than 70% of CPU
->>> usage. The main delta of v2 [2] was that, instead of a weak function that
->>> archs can overwrite, we provided a flexible priority-based mechanism
->>> (following suggestions by Sean Christopherson), panic_set_handling().
->>>
->>
->> An effect of this is that the blinky light will never again occur on
->> any x86, I think?  I don't know what might the effects of changing such
->> longstanding behavior.
->>
->> Also, why was the `priority' feature added?  It has no effect in this
->> patchset.
-> 
-> It does what now, and why?
-> 
-> Not being copied on anything, the first reaction is, its panic, your
-> machine is dead, who cares about power etc..
+If this is the case, the whole commit message should be revisited.
 
-Thanks for taking the time to look into my patch set!
-
-Yes, the machine is effectively dead, but as things stand today,
-it's still drawing resources unnecessarily.
-
-Who cares? An example, as mentioned in the cover letter, is Linux running
-in VMs. Imagine a scenario where customers are billed based on CPU usage --
-having panicked VMs spinning in useless loops wastes their money. In shared
-envs, those wasted cycles could be used by other processes/VMs. But this
-is as much about the cloud as it is for laptops/embedded/anywhere -- Linux
-should avoid wasting resources wherever possible.
-
-Thanks,
-Carlos
+--=20
+With Best Regards,
+Andy Shevchenko
