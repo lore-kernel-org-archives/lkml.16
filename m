@@ -1,85 +1,78 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AC7221D8B;
-	Tue, 29 Apr 2025 15:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5361221F35;
+	Tue, 29 Apr 2025 15:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940407; cv=none; b=MhuY4n2K1E94U8kuLBAGzZvBfGtKIeYGaYWvCGSJsPe3TMaM6UUmv9bUBHBiEsq/kGhvbPwcSKmqLHtvXbFdnjmwaEr1DIM3czPyzzRtIbmEqTJO746VTy9/OmSwxqdVHMkAn9rIkfpfPyToHpg+Xn1ZvmkQN0OdG1QJMjZ9n3M=
+	t=1745940411; cv=none; b=JUyGHKlFt4YgzoCmlvyt83TnEa4MLhtVZ2E2Kzapni467JMDWY/b1ddZ5sjfI+oZDZM7NXQxafn7I3bMcFhfxxMbYeHx0aBAj62xCiz7hIVcRvskblAZWhQhY85ctEYsuwLkLweMBTEi60Z8LH9O2PMhhpMhM1ob31WAYSFNsu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940407; c=relaxed/simple;
-	bh=nTH8UfUeo2dOVQ7p0AA8nZBOT1sXEh05Hwz/YzGOoSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucyn61TQ+DVDIP6oX1bX+t2LRPTaDesppMWJGIoIJ7w4YYEBxMVSuCQZanN0nW+fIlEjNWsExFjFO1CLfkhWtpKgoEFXIb4xDFPFb6HqcylRfpA9kkS9EWO4FkL/XDS8v0C+akMtr4IsPAFZBInAMe8YL9CB74jT8y9xg7WI3mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=fi9osQRR; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745940411; c=relaxed/simple;
+	bh=Ocdg9p1ctJ34kTikV98uKisN6axye0zRmxXT2hdowhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fq185f5/8LDXaadCmoK5/d4640BTVbopKBFPWMQsCjM1PA7Y+May3rsxrslgHCGuZFmJWiODliK7d4Wzc6Jv4wHqa/YciLM+ux46Np/plkV9rgECIqvUWKcIa6jcMpA6GhYqc7RIUnpTDYaHhCl/07I3xKMlZFe1yanhnkvbHl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VFTqFMRE; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fi9osQRR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/f9THZOQn+1tNgvt8I2ZTq9Z2mlHTRdXjKcrrEcqPdc=; b=fi9osQRR0vdMRwiR+ivU6bGQIy
-	Lq1wq6jM/JpBPWYG1Pw3Uu36CzTEszgZYLqvVbqAsXEWhV5/dIudPHkKKWS9fe2CAE1A/6t974b3/
-	yr1z2f0kYvYACAhf48W28OaJh3tHdJSkAdu2JnH9t6JTtsQzDvlAruNKav0b0cYJb41w=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9mqo-00AxD6-2x; Tue, 29 Apr 2025 17:26:26 +0200
-Date: Tue, 29 Apr 2025 17:26:26 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <73ffdfe2-ecf2-44e9-8850-c00ed9ff388c@lunn.ch>
-References: <20250429-v6-15-rc3-net-rgmii-delays-v1-1-f52664945741@lunn.ch>
- <aBDhRH2TlyxKmaaW@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VFTqFMRE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=iM10/XhGFlmUW9vhdC/BAbzUo2I7KWviLdph8pwrgag=;
+	b=VFTqFMREl4GnHzlZaiymepapo5fUzjBU3hbZqrIFBdnyH4eeq5oHU2jOEU8W+1
+	cUEDwHiWMKr8RryF5uRU7+uZPhPfg/TwM6QqOkOysOCdfOY4dFXq/TLdjPYl9pRa
+	4eX6dmJ5waGgN2zVneW+uJlyYwNYQJHWwUngPntgiBWXE=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDXNCqX7xBoGqqMDQ--.8760S2;
+	Tue, 29 Apr 2025 23:26:15 +0800 (CST)
+Message-ID: <4ee5d1cd-bf48-48d4-aa9c-051c5103bc0c@163.com>
+Date: Tue, 29 Apr 2025 23:26:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBDhRH2TlyxKmaaW@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 2/6] PCI: Clean up __pci_find_next_cap_ttl()
+ readability
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com,
+ manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250429125036.88060-1-18255117159@163.com>
+ <20250429125036.88060-3-18255117159@163.com>
+ <66cdb108-80f5-fe7c-329b-8c60caf55b64@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <66cdb108-80f5-fe7c-329b-8c60caf55b64@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXNCqX7xBoGqqMDQ--.8760S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU8db1UUUUU
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwA+o2gQ5kbo+wAAsN
 
-> > +# In practice, very few PCBs make use of extra long clock lines. Hence
-> > +# any RGMII phy mode other than 'rgmii-id' is probably wrong, and is
-> > +# unlikely to be accepted during review.
+
+
+On 2025/4/29 23:17, Ilpo Järvinen wrote:
+>>   #include <linux/acpi.h>
+>> +#include <linux/align.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/dmi.h>
+>> @@ -30,6 +31,7 @@
+>>   #include <asm/dma.h>
+>>   #include <linux/aer.h>
+>>   #include <linux/bitfield.h>
+>> +#include <uapi/linux/pci_regs.h>
 > 
-> Maybe add "without details provided in the commit description."
+> linux/pci.h will pull this in through <uapi/linux/pci.h> so you don't need
+> to add it (basically anywhere).
 
-I was thinking about that. And i would actually prefer a comment in
-the DT explicitly saying the PCB adds delays.
+Dear Ilpo,
 
-> > +# If the PHY is to perform fine tuning, the properties
-> > +# 'rx-internal-delay-ps' and 'tx-internal-delay-ps' in the PHY node
-> > +# should be used. When the PHY is implementing delays, these
-> > +# properties should have a value near to 2000ps.
-> 
-> ... according to the phy-mode used (as they're documented to be
-> dependent on that.)
-> 
-> I'm wondering whether they should be dependent on which rgmii-* mode
-> is being used, as delays << 2ns could be used to finely adjust the
-> PCB delays if the PHY supports that. I haven't looked closely enough
-> at PHY datasheets to know whether that's possible or not though.
+Will delete.
 
-Yes, i was trying to express that with the 'When the PHY is
-implementing delays'. If the PHY is not adding delays, 'rgmii', small
-fine tuning delays are O.K. And some PHYs do support this, they cover
-the full range from 0ps to > 2000ps in steps.
+Best regards,
+Hans
 
-	Andrew
