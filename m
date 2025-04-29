@@ -1,211 +1,155 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631551E0DBA
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F3E21325C;
+	Tue, 29 Apr 2025 12:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927902; cv=none; b=T0PfEK0uEAqTtMEAD7MXLqAGVdg047Y5Cp7WMh9RRQTFHmMVBRtmw9sopfpJqgPf3lH/wJ8TwztVJ2gcWqOMCFXWx/hZ3THCwvNbWwYBWu8vdEhD2PxuW3ixdbdJkNa1I52VuTUvXT9YWyVDTl2X5VWx5Vho9kqRRAJKjlpzXss=
+	t=1745928076; cv=none; b=jl7kIXRaYnVEq7g0fBAXFW6TFtWMbPHZegZRSZ3jAmqnJofMRsQ4w52G0Ekhl+lh1E1DSamWrL02Da+5pyLZMlg3WWzaQD9qPdRUGWFU11MuVVaUzPsjuoWtNnk800patD+/TFmxKnrpOAG+EpScpuJrbHr4bn0jEL4ik+5LmLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927902; c=relaxed/simple;
-	bh=MdFbKAOEQYCc1jkBKljdoNZaXqm8BPhMNW5HxkmA/Ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MkFuBjNhvB2no0atcZ3bwAAJAEg6yWioxnvudoxYXPd+8Eb6s34Oip/9q7LQ/m34b7cw2qKfj3YqzrW9LOkWv7fRgwpzQIBamWPAZclcLfXYaHYcbSS7nqqC+rCz0w4BXwfV2nFIwIfype5a0HKM+RlOOjcwmQDq6OSAeCwK+Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZwScV3bW; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745928076; c=relaxed/simple;
+	bh=Nb6NfT8WKqkyzRVDy8XKyQ8nS6maQi397ouHJdzBsak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THIwN83SE+OCMtz687RdbUGULtiR95kdmP02BURDeER5fhU3KLfXZcMimyy7xgj/7bQrgSHhtKRdf8xETomJkEroan5/02inC3Eoy6L5MUC2HXCWuT6tK707zbLspI//cy6t+vR14yg0cY3r547M34zIHsMsXMzIAjcYLkaCHbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hx1JN+7L; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwScV3bW"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e6e2971f79fso4564283276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745927897; x=1746532697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YC2LGGpE70kiPFeCCi72EkYRfCk+pYT/yGe+VdlkBmI=;
-        b=ZwScV3bWffdnhcHL+PtUDFKREP9TBZa0z+8a5ITYu4fq3GCks1m4JMO+cCcMPUPnjr
-         K2ONk0Y/thH+erfVCP6bgtwXciDNP/eKPZgeRg6b4XX/LO7g+//vbrrkQDTqiD2yQQYh
-         b18aGoYbZtNlJCDAsTyDkxyNFm9qXSSgcZzncq1lCIulkddWDYebRVESeo1guA6RVz+5
-         G01jF7qbw5bor3OK5u93HxRLI6j7XLm+/LophWgDFdcWXV4AYeJTXJwzn8FPxLFYK0CL
-         IOs4DEa0UqhS6Y83jxknY952u9r9lHmIJqBFv6ybt6eNEqv7C6FmiTZEfJdEvxKGf+68
-         jgig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745927897; x=1746532697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YC2LGGpE70kiPFeCCi72EkYRfCk+pYT/yGe+VdlkBmI=;
-        b=tGvYX1sBtw9ALEfjW6QndbALFGIWy/+yltAwfeXryFsoxRVTQxY+dlW7XMKWxckR58
-         m2HQbPcuROGXCZvuUq/ytbcao/TuzcFknfB6T4TTKqlh4QXoc7yy1OCyxLZbGWu1yd0d
-         A0OXkv2TPTTKln6PIjUIThW2xJH+Jju2HMPTajh2LFnSKEQKw3EkrUsagUjXopUBLy+i
-         nKQ3yCqr8tYvQ4s3boCN0uvcOUgwmxtbZJHHAEPZAvGMOPs1Jbml85xolYcOsFTrCi9k
-         qiChIqHmh85CDS2uqNz4igTfZRHUOwnwEpCEbh22RbFgzT3NBUuvuq7nFxf/LhffClMk
-         6o3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWCKGY+QCHBZVPBK67YgJDUp5puspbzGehVOQ8YHya8AvUw5Ff1hN6qA/fj0+DjZ8rbcao5MCc8DPmy4kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKFxb5WiiUGCIu7Fjxx2tXLlhKsotEpBG7ksi3ooPKdpr2gzXb
-	LNzKwrLpziX3xUyYrqLs22JnULJh4c5wBS9ymKtiuqvB3pwttdpwOMxUwg4vjbiqq+Wq6RjGDsE
-	Fp5vKQmSQHhwf/EcX3dxoSasIG1Q=
-X-Gm-Gg: ASbGncvLvf0QPfJjcMeI+pTtXhYkMrrrI3BN8TvVA77i15nQc4BwiHoH75hf26F0ngP
-	JmqGARFwYtrRNMlfogNfhDzUq/iFRpmLl0dlNt2Ft/nGTuc19Lmw1mPfesarROnqu79ZjK4WbjB
-	pERfZS1bk1HuGZCk12CZmqrw==
-X-Google-Smtp-Source: AGHT+IFZuUpUcT0FpWh/xFcN7YV8mTmhhmd1TfDP2Xpd6GzqIj7t/GP6ENv//lBM+JolYrLZVqHMwRl7cIw868ZvG+I=
-X-Received: by 2002:a05:6902:2085:b0:e73:9d0:1823 with SMTP id
- 3f1490d57ef6-e7323472933mr17628295276.47.1745927897185; Tue, 29 Apr 2025
- 04:58:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hx1JN+7L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745928075; x=1777464075;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Nb6NfT8WKqkyzRVDy8XKyQ8nS6maQi397ouHJdzBsak=;
+  b=hx1JN+7L3+kkfH5reOxJaD1ZyFxnQrGipUtybUkwY+P+FAZCB+hlYj54
+   s+BD4QFGMHKU0QP3lfO2I6P41Sn9UTIcv6qYZq2THiyQL57jYdSYiOrcw
+   8N+AxlmjZirSKP39cgLtAEgJ1ZMIz5Zoj/vB7JRCnI7OEJe4yRS2kK806
+   Bmx9hUQHsEE20hhvMeCD1s0ur4fLIRTKXzONUUhFpsBOUobhpnJjDRjMM
+   Y+UP9DkAXWCd/zzR/IVAR3pAKMT9w5R8aeHHaFeXOLm3oF/he+OcMxTOJ
+   GSaJwsIR5hIIJbVtg0FPF2pLyKqyG1r4d85+dxI7RKc5OwiuUZOBYnYr1
+   g==;
+X-CSE-ConnectionGUID: EmG7Nl8TThSfn573jRsXJQ==
+X-CSE-MsgGUID: rXGVPnFIS/yz71OLO7SNgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="47635762"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="47635762"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 05:01:14 -0700
+X-CSE-ConnectionGUID: 0+AUv4gyQG+k9WOoOzxdLQ==
+X-CSE-MsgGUID: rV/r1IICSrekMBjrmlkzow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="164751829"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 05:01:11 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id DAFFE11F944;
+	Tue, 29 Apr 2025 15:01:07 +0300 (EEST)
+Date: Tue, 29 Apr 2025 12:01:07 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
+Message-ID: <aBC_gx8vFNWLacgB@kekkonen.localdomain>
+References: <20250407-b4-vd55g1-v6-0-1850f18b1f24@foss.st.com>
+ <20250407-b4-vd55g1-v6-2-1850f18b1f24@foss.st.com>
+ <aBCxpuppB6L-Ft2c@kekkonen.localdomain>
+ <70f7bc9b-4533-4c8e-a792-aad9a0b7a6d4@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241119093949.3014-1-SkyLake.Huang@mediatek.com>
- <871pymtab3.fsf@bootlin.com> <c1e2d8ea-1b37-479d-8239-cb9bf0efdcaf@gmail.com> <87bjsfv0x1.fsf@bootlin.com>
-In-Reply-To: <87bjsfv0x1.fsf@bootlin.com>
-From: Chuanhong Guo <gch981213@gmail.com>
-Date: Tue, 29 Apr 2025 19:58:05 +0800
-X-Gm-Features: ATxdqUFw156jElhjP-eZDXnKLbf_YdyLPXPeNQmy3SBNzsMbmjDF-l2toZGqZGM
-Message-ID: <CAJsYDVKiMeYY2rw_BxuW4BAxvMcq5hDwzhiPoAR=tkXzZpRYiw@mail.gmail.com>
-Subject: Re: [PATCH nand/next] mtd: nand: spi: Use write_cache first and then
- update_cache in write operation
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Sky Huang <SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Daniel Golle <daniel@makrotopia.org>, 
-	Chia-Lin Kao <acelan.kao@canonical.com>, Cheng Ming Lin <chengminglin@mxic.com.tw>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Pratyush Yadav <pratyush@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	Steven Liu <Steven.Liu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70f7bc9b-4533-4c8e-a792-aad9a0b7a6d4@foss.st.com>
 
-Hello, Miquel!
+Hi Benjamin,
 
-On Tue, Apr 29, 2025 at 4:15=E2=80=AFPM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
->
-> Hello,
->
-> On 22/04/2025 at 09:38:26 +08, Chuanhong Guo <gch981213@gmail.com> wrote:
->
-> > Hello!
-> > =E5=9C=A8 2024/12/5 23:32, Miquel Raynal =E5=86=99=E9=81=93:
-> >> Hello,
-> >> On 19/11/2024 at 17:39:49 +08, Sky Huang <SkyLake.Huang@mediatek.com>
-> >> wrote:
-> >>
-> >>> From: Sky Huang <skylake.huang@mediatek.com>
-> >>>
-> >>> According to discussion with Miquel Raynal <miquel.raynal@bootlin.com=
->
-> >>> and Chuanhong Guo <gch981213@gmail.com> on FORESEE F35SQA002G patch,
-> >>> Chuanhong recommmends that we can use the following sequence in
-> >>> spinand_write_to_cache_op():
-> >>>
-> >>> x1 mode:
-> >>> 02H(program data load) -> 84H(random program data load) -> 84H ...
-> >>>
-> >>> x4 mode:
-> >>> 32H(program data load x4) -> 34H(random program data load x4) -> 34H =
-...
-> >>>
-> >>> 02H or 32H commands will clear cache buffer on SPI-NAND and load
-> >>> data to it. For those SPI controllers which can't finish transmission
-> >>> in single step, 84H or 34H will be triggered for the rest data.
-> >>>
-> >>> We observe that some current SPI-NANDs, including FORESEE F35SQA001G =
-and
-> >>> F35SQA002G, must use 02H or 32H to reset cache buffer in flash before
-> >>> using 84H or 34H. Or users may encounter program failure issue. This =
-issue
-> >>> is not always reproducible, but it may occur and cause system instabi=
-lity.
-> >>>
-> >>> This sequence should work on all SPI-NANDs nowadays. I also check wit=
-h
-> >>> Foresee that the sequence can solve the above program failure issue.
-> >>>
-> >>> On my test platform (MT7988), SPI driver is drivers/spi/spi-mt65xx.c.
-> >>> And I limit MTK_SPI_IPM_PACKET_SIZE to SZ_1K to simulate lightweight =
-SPI
-> >>> controller which can only transmit 1024 bytes.
-> >>>
-> >>> The test step is the following:
-> >>> - mtd erase /dev/mtd2
-> >>> - dd if=3D/dev/zero bs=3D2048 count=3D1 | tr '\0' '\xA5' > output.bin
-> >>> - mtd write output.bin /dev/mtd2
-> >>>
-> >>> Before applying this patch, write operation uses only 34H(update_cach=
-e):
-> >>> [78.937720] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st=
- byte: 0xa5
-> >>> [78.945297] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1=
-st byte: 0xa5
-> >>> [78.954251] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st=
- byte: 0xa5
-> >>> [78.962966] OP code: 0x10, addr val: 0x300
-> >>> [78.968816] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st=
- byte: 0xff
-> >>> [78.977233] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1=
-st byte: 0xff
-> >>> [78.985124] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st=
- byte: 0xff
-> >>> [78.992527] OP code: 0x10, addr val: 0x301
-> >>> [78.996981] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st=
- byte: 0xff
-> >>> [79.004416] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1=
-st byte: 0xff
-> >>> [79.012031] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st=
- byte: 0xff
-> >>> [79.019435] OP code: 0x10, addr val: 0x302
-> >> I am sorry but above you said that we should not perform:
-> >>      0x32, 0x32, 0x32...
-> >> because the second time it would clear the cache again. And here
-> >> you tell us that actually the core already handles that by performing
-> >> instead:
-> >>      0x34, 0x34, 0x34...
-> >> So what is the problem?
-> >> Or maybe I misunderstood the issue, but I think Chuanhong raised an
-> >> issue that is already solved? Isn't it?
-> >>
-> >
-> > The issue is that the FORESEE NANDs require the first cache writing
-> > instruction to be WRITE_CACHE instead of UPDATE_CACHE. i.e. it needs a
-> > command sequence of:
-> >     0x32, 0x34, 0x34, 0x34...
->
-> So Foresee NANDs do not support update_cache, why are they advertised in
-> the first place? Could you we have a less impacting solution for the
-> other NANDs?
->
-> > This patch does exactly that, making the first instruction issued 0x32.
-> > It should be applied to fix the issue above.
->
-> My understanding is that this is very specific to FORESEE NANDs and you
-> are changing this for all NANDs. I have fears that it will break
-> everywhere else.
+On Tue, Apr 29, 2025 at 01:29:39PM +0200, Benjamin Mugnier wrote:
+> >> +static int vd55g1_check_csi_conf(struct vd55g1 *sensor,
+> >> +				 struct fwnode_handle *endpoint)
+> >> +{
+> >> +	struct i2c_client *client = sensor->i2c_client;
+> >> +	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
+> >> +	u8 n_lanes;
+> >> +	int ret;
+> >> +
+> >> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
+> >> +	if (ret)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/* Check lanes number */
+> >> +	n_lanes = ep.bus.mipi_csi2.num_data_lanes;
+> >> +	if (n_lanes != 1) {
+> >> +		dev_err(&client->dev, "Sensor only supports 1 lane, found %d\n",
+> >> +			n_lanes);
+> >> +		ret = -EINVAL;
+> >> +		goto done;
+> >> +	}
+> >> +
+> >> +	/* Clock lane must be first */
+> >> +	if (ep.bus.mipi_csi2.clock_lane != 0) {
+> >> +		dev_err(&client->dev, "Clock lane must be mapped to lane 0\n");
+> >> +		ret = -EINVAL;
+> >> +		goto done;
+> >> +	}
+> >> +
+> >> +	/* Handle polarities in sensor configuration */
+> >> +	sensor->oif_ctrl = (ep.bus.mipi_csi2.lane_polarities[0] << 3) |
+> >> +			   (ep.bus.mipi_csi2.lane_polarities[1] << 6);
+> >> +
+> >> +	/* Check the link frequency set in device tree */
+> >> +	if (!ep.nr_of_link_frequencies) {
+> >> +		dev_err(&client->dev, "link-frequency property not found in DT\n");
+> >> +		ret = -EINVAL;
+> >> +		goto done;
+> >> +	}
+> >> +	if (ep.nr_of_link_frequencies != 1) {
+> >> +		dev_err(&client->dev, "Multiple link frequencies not supported\n");
+> >> +		ret = -EINVAL;
+> >> +		goto done;
+> > 
+> > Please check the link frequency matches with what the driver supports,
+> > using e.g. v4l2_link_freq_to_bitmap().
+> > 
+> 
+> Are you referring to checks performed in in vd55g1_prepare_clock_tree()
+> ? Keep in mind it will change a bit with Laurent's comments though.
+> The sensor supports a range of frequencies therefore I chose to check it
+> manually instead of v4l2_link_freq_to_bitmap().
 
-I just checked a few datasheets of SPI-NANDs from
-Toshiba/Winbond/Etron/ESMT/GigaDevice/Macronix.
-All of them specify the programming sequence to be:
-write_enable->write_cache->update_cache if needed->
-program_execute->poll status.
-Some of them mentions that the only difference between write_cache
-and update_cache is whether the page cache is cleared before
-writing (Winbond), while others don't specifically say that.
+Ok, that's fine then. But please check this results to the frequency that
+was requested, currently it may be off AFAIR.
 
-The original sequence doesn't seem to be following any manufacturers'
-instructions. We just haven't run into any problems until this FORESEE
-one.
+> >> +	ret = v4l2_async_register_subdev(&sensor->sd);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "async subdev register failed %d\n", ret);
+> >> +		goto err_subdev;
+> >> +	}
+> > 
+> > Aren't you missing:
+> > 
+> > 	pm_runtime_put_autosuspend(dev);
+> > 
+> > here?
+> > 
+> 
+> Thank you. I'll add it to the pm_runtime block above.
+> I also noticed I miss the pm_runtime_dont_use_autosuspend() call in
+> err_power_off. I'll add that too.
 
->
-> Overall I understand the problem, but I disagree with the fix. Could you
-> propose something less impacting as hinted above?
->
-> Thanks and sorry for the delay.
-> Miqu=C3=A8l
+Ack, sounds good.
 
---=20
+-- 
 Regards,
-Chuanhong Guo
+
+Sakari Ailus
