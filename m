@@ -1,237 +1,162 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3472B2C2ABC;
-	Tue, 29 Apr 2025 13:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8EA2D0263
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932675; cv=none; b=Vp4MMXgTlLm6/sELn5NGqJKPAlEWWHHh2fb1p3J5eCPs0mWFJA379rn4RcZ+Ov9C+nvUuVZgxRUoQXEoDJHp+9NMpO/8kabT4+MetRCbYi78q51KFqyBysXZHtm9pqmYM7K+s8r1PI7VC3LQm+mY2PM1/ld/B92HypQRlZny9EU=
+	t=1745932681; cv=none; b=G63AK9xSMTlyZxM7CVw76cxCJ+UzPUC+qn2TSL+YjrNxHGVG+5t8/T/ao0w31iby1r7wYsWi7bobN10JHpHxsfI8rHaipDQ2IggQ0+OqF09G/xWR9aoxUx+0lDwNeB2XF2Hej64kUt7MjTNWDCmKlu043fwv6ng2FgVC+FkKeVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932675; c=relaxed/simple;
-	bh=13u4nULt1pp3rMM9Q+ih5iWZwsTcc4n3mmfV8mtcU1c=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=e0NaVtPhjEhuC67wi9bVN1HYU7juuEPAGtFroKvvhghodvpootvaRaUKxjdNsgdiueRr7UXyiIHsLGOUv2n+DZ+4Ec6eNGVD5d0ghGiwQxn5CMI9tnn/Q54wVuhW3JUNwMUWhDUKl+oLbCE99HyuRjJIerR5uSZlAhKjG+j3gqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j47b98Xv; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745932681; c=relaxed/simple;
+	bh=o9S3xS6x/7ltvjnbA8prO8mDFGuFdVAzu8uNbExAUYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ttEO5baOcZVw/H3qGaL7KhmfyphoIpAQQmFoVwnOaKou8ilQjvj/9zwhCnsPZAJMqRvonIjO2fx9TkAqPxcVtye5OPf6bkssHXqchVjkcNZgqbBu1PxI4yaHSVyW/CDh1BTVI/IfUMwpUV035qcllV8GmD5NbjjAwmn2jxwqS24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rjenn99I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H3YDLAQm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rjenn99I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H3YDLAQm; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j47b98Xv"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-301cda78d48so7478426a91.0;
-        Tue, 29 Apr 2025 06:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745932673; x=1746537473; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6fFyGhsYuAsCKMmGCS1jhd9ZOFAOyHJ81xtQ8hlgOHo=;
-        b=j47b98XvD2VXbioZRaNM/hQachrh/+V+t+ZqX0iR37IsZm401mSH+h5hdFcNEhgQdL
-         URvDhcU/irpZwDJYDd2iGhhQ+93U46tGoT+CTpLp0WhLNoHBZVVCcy/5EowKkyg2iUB1
-         CwgOiEEjzpqIX+5S9fC69p0QBj+OitrqNNfAjXftZS0bLnv4ax7tb1WRgmhapK3PqA0m
-         L3csS0B1iPrR0EjzucX8AH/VoxSFogsLhMRVu/yYYPLlN6NjdUbmM1UO1m8qcpUb38qC
-         ZhNgsVd/3qYNXKK1y8RbJqY3YPrQRBXqhlAta+oPgjBot+8zMSARPrj7zt1EY5q5AmJw
-         r+6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745932673; x=1746537473;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6fFyGhsYuAsCKMmGCS1jhd9ZOFAOyHJ81xtQ8hlgOHo=;
-        b=NUFTn72R0KRRL5pvMlchE7XQXwn5/acPiqcHKhhVmIlyVkjF54WpMiFWagWtfF1yYg
-         Te7r6EyYoCcJGBhma/EKapdRmVUhTMaJjIQwHndz8kMpaSUZ0SEliRbFn4NzsPSU7Ozb
-         9v9iANcUDRd4Wq7SyFY7gWCdf7RsJ/CRWdtgz2ywQgfTSZuMQd/6hP5647+Ze74VAUeW
-         lmb1ubsRFE0HXRSely34mG0BPppJT0+0KU1YbNtiqixrFwyo1jf7CNUr8ZmyBppsa7Da
-         XHdrxh0mNwbCLsl1o6awSLf747npeup8L0fy3/OtUrKvYlG0CJu4mBeb0hKreGbqvuz4
-         GCsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVr0m5X8UEY26UnAsZEC4XoD4VrBb6Rp6HLVzBFBirR1Q1hCjKi+2qfpyFu2T2cvdb5ifBUcGkO@vger.kernel.org, AJvYcCXHoYoCyKlqhKIX2uXCahNY24eVId7/+c6Uvlyvr05oBD9iLyMl82hWxwKeNRQDrES3yOf5j1FD+O+HBzA=@vger.kernel.org, AJvYcCXbgWx1j5MtPArSo9fbWxLHOxoMs28xtfID7LYWQWzbQWS4nFyJc0a7IX7MnpESplXMTMK9lRAKzBBMjaKm3RA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUzYrmXu1m8ponS69fsqMBr2zl22fYfMkmyTL2Td7vVhr7GWyq
-	YtU3zDfB1UCPZt9ay2HVsGnScnsfETdYSN3HORXPJRei2yGusAPQ
-X-Gm-Gg: ASbGnct8A+Krk5YLWg9A+F0PNh7Y402mg808BYejiHGvWqwUvlEGFps7cC9GSf8vEal
-	K/SP4nqNJ7TwEYFmdy8LmJJJOY81uX6LWCEbbpE+Cf3sR3EylSj+BADiUPG13kU8OBRhofK7KSw
-	bQwWim+1DwWHwuY/b/BvDXxidFFk49nSvTYKwjTktT/75sP/UEyf3T3dgpP+EzLypJsH6/fqH0t
-	UoiDiZiIZHXg7G1ZCO9wzFBPqr2So8O6n+graRs2PubMIFOtAcjpuN4dQMaFU60bjqNma3Q7hsy
-	+OUObpQpKMkg1eBhtSzhBSyGUHKZh0ycH812v3YJxCwfCrapQu2pU6o1uMswhZYkFsATvRdVjZI
-	GUzIivOY62dEK0b3t0dte0i8=
-X-Google-Smtp-Source: AGHT+IEbS4hdKtSzuo6oEZXKv47QnIuQs8efH07eWwnFKokvGzRUKI31iJKMmkahZfUtYQNLwUrycg==
-X-Received: by 2002:a17:90a:d644:b0:2fc:3264:3657 with SMTP id 98e67ed59e1d1-30a214bcad9mr6765939a91.0.1745932673157;
-        Tue, 29 Apr 2025 06:17:53 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f78486e5sm9293315a91.40.2025.04.29.06.17.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:17:52 -0700 (PDT)
-Date: Tue, 29 Apr 2025 22:17:33 +0900 (JST)
-Message-Id: <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
- gary@garyguo.net, aliceryhl@google.com, me@kloenk.dev,
- daniel.almeida@collabora.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
- tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com,
- anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
- arnd@arndb.de, jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com,
- david.laight.linux@gmail.com, boqun.feng@gmail.com, pbonzini@redhat.com,
- jfalempe@redhat.com, linux@armlinux.org.uk, chrisi.schrefl@gmail.com,
- arnd@arndb.de, linus.walleij@linaro.org
-Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <871ptc40ds.fsf@kernel.org>
-References: <6qQX4d2uzNlS_1BySS6jrsBgbZtaF9rsbHDza0bdk8rdArVf_YmGDTnaoo6eeNiU4U_tAg1-RkEOm2Wtcj7fhg==@protonmail.internalid>
-	<20250423192857.199712-6-fujita.tomonori@gmail.com>
-	<871ptc40ds.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rjenn99I";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H3YDLAQm";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rjenn99I";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H3YDLAQm"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9A25F1F391;
+	Tue, 29 Apr 2025 13:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745932677; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=rjenn99IKOJKneAgSUtp07MjWiiw9Fzo7v7xcQMM0B9TrsWdofeipTbMZOMdgg9Wq0VJs+
+	17HKyrHlFLnBleDUQeKfgyF0GSF51Jc1xlID7vqr43ih8O53vV25axOHf8XjZKFVvQE3ZJ
+	P7lDb85wwL71j35Ui46o6so4KuYx28Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745932677;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=H3YDLAQmg9aWlPK3HtKqixsARrVdAmLtdXoK8k7YT+vUd3gIh/onrs51hckzK6P5+B+a3I
+	811O/IkhnsCcsjBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=rjenn99I;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=H3YDLAQm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745932677; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=rjenn99IKOJKneAgSUtp07MjWiiw9Fzo7v7xcQMM0B9TrsWdofeipTbMZOMdgg9Wq0VJs+
+	17HKyrHlFLnBleDUQeKfgyF0GSF51Jc1xlID7vqr43ih8O53vV25axOHf8XjZKFVvQE3ZJ
+	P7lDb85wwL71j35Ui46o6so4KuYx28Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745932677;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=H3YDLAQmg9aWlPK3HtKqixsARrVdAmLtdXoK8k7YT+vUd3gIh/onrs51hckzK6P5+B+a3I
+	811O/IkhnsCcsjBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82F8C1340C;
+	Tue, 29 Apr 2025 13:17:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id S79uH4XREGhTZgAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 29 Apr 2025 13:17:57 +0000
+Message-ID: <a2aa71cc-b30f-4d48-aa1d-9058fcdbb6d0@suse.de>
+Date: Tue, 29 Apr 2025 15:17:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme-tcp: select tls config when tcp tls is enabled
+To: Alistair Francis <alistair23@gmail.com>, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, linux-nvme@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Alistair Francis <alistair.francis@wdc.com>
+References: <20250424101333.2908504-1-alistair.francis@wdc.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250424101333.2908504-1-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 9A25F1F391
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[gmail.com,lst.de,grimberg.me,nvidia.com,lists.infradead.org];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Mon, 28 Apr 2025 20:16:47 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
-
-> Hi Tomonori,
+On 4/24/25 12:13, Alistair Francis wrote:
+> Ensure that TLS support is enabled in the kernel when
+> NVME_TARGET_TCP_TLS is enabled. This allows TLS secure channels to be
+> used out of the box.
 > 
-> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+>   drivers/nvme/target/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
->> Add a wrapper for fsleep(), flexible sleep functions in
->> include/linux/delay.h which typically deals with hardware delays.
->>
->> The kernel supports several sleep functions to handle various lengths
->> of delay. This adds fsleep(), automatically chooses the best sleep
->> method based on a duration.
->>
->> sleep functions including fsleep() belongs to TIMERS, not
->> TIMEKEEPING. They are maintained separately. rust/kernel/time.rs is an
->> abstraction for TIMEKEEPING. To make Rust abstractions match the C
->> side, add rust/kernel/time/delay.rs for this wrapper.
->>
->> fsleep() can only be used in a nonatomic context. This requirement is
->> not checked by these abstractions, but it is intended that klint [1]
->> or a similar tool will be used to check it in the future.
-> 
-> I get an error when building this patch for arm32:
-> 
->   + kernel-make -j 96 O=/home/aeh/src/linux-rust/test-build-arm-1.78.0 vmlinux modules
->   ld.lld: error: undefined symbol: __aeabi_uldivmod
->   >>> referenced by kernel.df165ca450b1fd1-cgu.0
->   >>>               rust/kernel.o:(kernel::time::delay::fsleep) in archive vmlinux.a
->   >>> did you mean: __aeabi_uidivmod
->   >>> defined in: vmlinux.a(arch/arm/lib/lib1funcs.o)
-> 
-> Looks like a division function of some sort is not defined. Can you
-> reproduce?
+> diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+> index fb7446d6d682..4c253b433bf7 100644
+> --- a/drivers/nvme/target/Kconfig
+> +++ b/drivers/nvme/target/Kconfig
+> @@ -98,6 +98,7 @@ config NVME_TARGET_TCP_TLS
+>   	bool "NVMe over Fabrics TCP target TLS encryption support"
+>   	depends on NVME_TARGET_TCP
+>   	select NET_HANDSHAKE
+> +	select TLS
+>   	help
+>   	  Enables TLS encryption for the NVMe TCP target using the netlink handshake API.
+>   
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Ah, 64-bit integer division on 32-bit architectures.
+Cheers,
 
-I think that the DRM QR driver has the same problem:
-
-https://lore.kernel.org/rust-for-linux/CANiq72ke45eOwckMhWHvmwxc03dxr4rnxxKvx+HvWdBLopZfrQ@mail.gmail.com/
-
-It appears that there is still no consensus on how to resolve it. CC
-the participants in the above thread.
-
-I think that we can drop this patch and better to focus on Instant and
-Delta types in this merge window.
-
-With the patch below, this issue could be resolved like the C side,
-but I'm not sure whether we can reach a consensus quickly.
-
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 48143cdd26b3..c44d45960eb1 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -19,6 +19,7 @@
- #include "io.c"
- #include "jump_label.c"
- #include "kunit.c"
-+#include "math64.c"
- #include "mutex.c"
- #include "page.c"
- #include "platform.c"
-diff --git a/rust/helpers/math64.c b/rust/helpers/math64.c
-new file mode 100644
-index 000000000000..f94708cf8fcb
---- /dev/null
-+++ b/rust/helpers/math64.c
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/math64.h>
-+
-+s64 rust_helper_div64_s64(s64 dividend, s64 divisor)
-+{
-+	return div64_s64(dividend, divisor);
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index de07aadd1ff5..d272e0b0b05d 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -60,6 +60,7 @@
- #[cfg(CONFIG_KUNIT)]
- pub mod kunit;
- pub mod list;
-+pub mod math64;
- pub mod miscdevice;
- #[cfg(CONFIG_NET)]
- pub mod net;
-diff --git a/rust/kernel/math64.rs b/rust/kernel/math64.rs
-new file mode 100644
-index 000000000000..523e47911859
---- /dev/null
-+++ b/rust/kernel/math64.rs
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! 64-bit integer arithmetic helpers.
-+//!
-+//! C header: [`include/linux/math64.h`](srctree/include/linux/math64.h)
-+
-+/// Divide a signed 64-bit integer by another signed 64-bit integer.
-+#[inline]
-+pub fn div64_s64(dividend: i64, divisor: i64) -> i64 {
-+    // SAFETY: Calling `div64_s64()` is safe as long as `divisor` is non-zero.
-+    unsafe { bindings::div64_s64(dividend, divisor) }
-+}
-diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index 863385905029..7b5255893929 100644
---- a/rust/kernel/time.rs
-+++ b/rust/kernel/time.rs
-@@ -24,6 +24,8 @@
- //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
- //! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
- 
-+use crate::math64;
-+
- pub mod delay;
- pub mod hrtimer;
- 
-@@ -229,13 +231,16 @@ pub const fn as_nanos(self) -> i64 {
-     /// Return the smallest number of microseconds greater than or equal
-     /// to the value in the [`Delta`].
-     #[inline]
--    pub const fn as_micros_ceil(self) -> i64 {
--        self.as_nanos().saturating_add(NSEC_PER_USEC - 1) / NSEC_PER_USEC
-+    pub fn as_micros_ceil(self) -> i64 {
-+        math64::div64_s64(
-+            self.as_nanos().saturating_add(NSEC_PER_USEC - 1),
-+            NSEC_PER_USEC,
-+        )
-     }
- 
-     /// Return the number of milliseconds in the [`Delta`].
-     #[inline]
--    pub const fn as_millis(self) -> i64 {
--        self.as_nanos() / NSEC_PER_MSEC
-+    pub fn as_millis(self) -> i64 {
-+        math64::div64_s64(self.as_nanos(), NSEC_PER_MSEC)
-     }
- }
-
-base-commit: da37ddd3f607897d039d82e6621671c3f7baa886
+Hannes
 -- 
-2.43.0
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
