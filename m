@@ -1,63 +1,63 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B662741D3;
-	Tue, 29 Apr 2025 20:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FD325FA07;
+	Tue, 29 Apr 2025 20:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745957862; cv=none; b=o/4it400FDjklCArH9IUHvHjQ930c3lbTKJkAhdVBSGpk/GJAobxzw7J2qohAubdfdjD/US4gCishvuvOoHpSVwvklMmyDccrbLFQcgTaSOiTukIIlLiVj1tCRKO3EM0ycbcRxR8FE0A5leBQP9tcJ9TV9tReuSwjlE5aMrmeKs=
+	t=1745957864; cv=none; b=npqzaEa6mey6lcZ2QY5V2NlhMvXUFV6GwmZeqkT5b1XXl/XAknsWXFtbOnCRBjkgNMZQAWUEbClyKTfDC71g2mzUQqKK33D5nAJ0CNi90Cu0DsDjH0qLT0NHkSDlcPKzlaXeD29ZqXyZTMlcskjJuuFD1sJ9X6d80VSTR/F+8Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745957862; c=relaxed/simple;
-	bh=NC6BjIlDW2bse6NI2QYcaBzkHqHpmEvDywCM6E3fajI=;
+	s=arc-20240116; t=1745957864; c=relaxed/simple;
+	bh=tEKgoAhmzAz7RoqlYHi7jk1HqzHnEX108NgPQ8Yg+lw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F9Yq1B3yzIXtJxbcEjbMoCZrfsFq83ABtna9qb9Ey87g9rwTJXnBfr9WTkzBzm/5+qTZlKX10i+H1pyCuXYvkM1XCZsZuee4NaVd2bCcqPFw1OoId9KhQ2DI01/fzv9iGhGJA5dfL6aYy3o5/B9/FTqtBshRbGZ72CZ8oMVxprY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RrINI36P; arc=none smtp.client-ip=209.85.218.45
+	 MIME-Version; b=dYHbPBrH/8XKJmCNDKpNXSYWJSQjfWeHnJs1oTZqx3eeyDgHeEGBYIa6Ywd1MxsHNW9l8BtT7LEkGq3vWQ3easPEgL97XL7Gk0OzQoOTn/ONLtxgvxxMkUEO9eNs1j5MTg5SDTN+xGh0d4L9QxdHnO4Lvk7iRK2fxIuN+Nnin00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Se10ligm; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrINI36P"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2c663a3daso1284684966b.2;
-        Tue, 29 Apr 2025 13:17:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Se10ligm"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb39c45b4eso1029701966b.1;
+        Tue, 29 Apr 2025 13:17:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745957858; x=1746562658; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745957861; x=1746562661; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4FDeoPkfxPm46C6PaSQAiFc6ilbuBJH6D2vRzmLBaXg=;
-        b=RrINI36POWixJ8b1ryyma7Bc96Lc9T8pUKUB8lTTi/E7ffDYnr9ywobmeu1b1KFdwc
-         t0IV4lwbSIuh4kTfUjKdvlf2dyYIEZep7MTTujxxRHjRihOngngQCF7aAA75dKGCVIHP
-         +rMpF56QNlqnUamLJLTBt72PsdJoOTlW3hHXgj/UrrtJe10RzEyv9HRpymOMhMwH9FZx
-         DGYslGY47PBwjPQI1kEGlzUSV5a8h+iNorBAvh5TQa3feGwaPcTQhj2AMA3YTauhmxji
-         zuwY9hYlnNoS7ulhL9O1hR/Yuviay25pCWS+7jewHNmoL/jK8DkeGhM3nS+L9Z8BhKgz
-         d5SQ==
+        bh=VXNwoUZ6hC22doJH7VQvPeDIdfTefCUIkaPi/UWgWfQ=;
+        b=Se10ligmV8wluqeb5gCxGG3Xo9EhKgY6Xf6/ycJV9IqL+FZioKaKM5Eg7Ufsw/qUt6
+         E0cNY4UcjkPpyo7M2xyl5uuIu6mNKz0Tk4ItfKXQWFkIDnlkcgMVHkmJsKhEs2FRtaej
+         FuAr/TflttGV5pQ8f1KLSXb8HXWJTuvWlqbcd8073C1554WDPW2JDbzNZMVhsl+S5lzb
+         K/gq/GVtUgfZMz4jzsbDGu2LO4s7t3JSrs2xhXOXUdLkslr5PnEvsRpY9+cfaKDmCqxg
+         tbntAAtS6PZqUvEUGUTIyInTRueIfOSmtAgdMZMKt03ImrlFjFG2p/cv3L69xwxnqOW3
+         BNzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745957858; x=1746562658;
+        d=1e100.net; s=20230601; t=1745957861; x=1746562661;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4FDeoPkfxPm46C6PaSQAiFc6ilbuBJH6D2vRzmLBaXg=;
-        b=ffkxsC4O6nEDyfxpNGND2hRRqs189iaAiZKzux+v5AAcGAk9cfQciOtEpCnlSg4J4c
-         N1WV2eFgBHrhU9ZhEpazy94EhKr947Evd4rbeOa+MbfT5XEANKnWHCkVsTjVyZGVaapI
-         1KxR6EpRo8vxDVhX2rKztoOUiiZs+OAsjx7REPEYve3TUN3msqZTHi3JdNbfszESHnW7
-         Cy2ZEnfyn2cn7GUAoyVipNRBVhBe9m6doJ3nPZozTkXtPtPxQVYZDj9CA6TdUpqDRmZn
-         LgGgJaDWzlJlQ8z8ru9kUWuXHsuXcg/TXEdjtHR12Owqg1FbEDQf6ohiv1Ld6oD2Hgyx
-         PCvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSFuZ1m+qf9nxz7vpt0C9b48kvVTQ822osF3XTcqFCpR46VCz9hvYSgd+dIK8TluOJarwqjnWGfqeSKoI=@vger.kernel.org, AJvYcCV+nbyeL6j7YK5YVdYMFlUi4lkzJjdsxYUzeEbCjL9h24bAElBuVVn3qz3s99mfdnudEAsi2C5f@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcZ/BaYNLMyIijFxrxpwhsOuzEbGxp3FerNruML5VK9lg4O0nC
-	wfe93txQoU4HBNpr1SLRKEBnVJEPRd4ZFYMJkwXtkULPR+lCQJb+
-X-Gm-Gg: ASbGncsfr6IwqzueXqJmgeDxBR+1XEOJRcsuB4cWTPT8GWzyKiRTsMDprQpqmb7Tgi+
-	8WpVyEiEcxus3OGBxmlgJwWguWSuLqM2Uu9b0RWfOafGl2usWLUxufXJR35/F4vW5ESxeje6AdT
-	peF5QnJViGdj6j0Y43noSzo5uoEw+evFnlB8nf7C8CFE224mKqOkGNNGWI3PJEKNj1cWBA6ZxO8
-	GIUPc7b288Mhp4/oT8z8uNnwDM4GV3QXnKyybrdWjGpcqD5o88fWDidgoi8yLSiJkRznDuYde1Q
-	dE/8wWcdp3QNizg2RIaLtHsXwFkUT3t3lfo6Qo9n7giZoK8ksCtpjaamHx7/vaug1cw8GhWOxAJ
-	xMh03OQ80Q7MosYOsrG8=
-X-Google-Smtp-Source: AGHT+IGzV23esDmkOB0c+h8Ee6nwGnXXnRQitYJLm0wThkRAKFQNz/y8jS045dBMw6ojvBYWMbM9jw==
-X-Received: by 2002:a17:907:7206:b0:ace:bf94:2d2c with SMTP id a640c23a62f3a-acedc767e05mr70623066b.54.1745957858199;
-        Tue, 29 Apr 2025 13:17:38 -0700 (PDT)
+        bh=VXNwoUZ6hC22doJH7VQvPeDIdfTefCUIkaPi/UWgWfQ=;
+        b=UJZKCOFp13gPyBo8PxWIIASgYVBG5ptOue2qJVzIlrvlCi5yIjCMPfkUFfJLrQHg8e
+         pvMQbSOv+T2DQOOq7xPQLyjcjMReGRIZj8iRVSW3WXhVu0LMoBS3P2eMFaAVkEaX+P44
+         w6zm43mCVurVjFcSeHs7+RmNzP9arrpoj53jcacJO+hj7W6aibuwuRcSdJX5DcgLsM6t
+         p9suXE0LtcODLTYo+dRnADLXwnvb6f8Lm2h4QPEiwD74DaraLsSgCn//kS6IyS5j+1bY
+         RWxYP0tY8+x8VhFtvwl+bHR1exUqQAv2YaEf/TPNLss7UyQ8yDbPobd3OzfrtMqiXl4Z
+         TZDg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/hWLLy+JadttBfXYbyyLri7i9YIDsxicSB54ByyYj+q6mv9YVhrwNiUqVlUqJd72QTB8rd8PL@vger.kernel.org, AJvYcCXklyBxR5QxsnYY7bbhyoJYjVlYhuG6ND1zkHk484tpmrCPcuioXWDYk4wTxVyjhwUvaoBSuxoWjyKkyL4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwN90WKovFnnchXaI8hiosN/JSWk/wE8yXhAcxLyfHmVh2Bh0m
+	XNEjIcWnfnSSoyXiH1taYKWcsZHUQrgXpn/qReXRMsgdpRojEkWL
+X-Gm-Gg: ASbGnctLpyHVeULxQ09ZJQ4hh/1hlfF+S/Ow+4+48Wj8smIyuNLl6xMAfxWZSEHA03o
+	KvFJ6puUFqQ0ayCUHZ78xyRR6QCuAGYO7J7zO3cbekTJQ33XDN2BYVRi3XSVKybXa2rNn0zpuOw
+	et7bLRg6PZIKWFilzQhe1ijyjnjVDtUct2Fo278NEhp6FBpNUQHtbCSWTmvE6BehafFd/AQOlNk
+	AqYmXaIdR+3rp/E0ELfmsICi8pTYqXM4IUMx2C73eL3ez2MP2fRdq6Cc2gcup9wZe1OM52C7ZNk
+	EID+K3bSZCWKUGUcmninrVRQ8HvFYLdbj86CUr/fubOGD52mMfhmnKy724uS2WReg/z4V9Wl7b2
+	5SHt8UMbY8maEoe5l6jc=
+X-Google-Smtp-Source: AGHT+IF6SoZiSBcqvJqtqnhcuPK8c4eYyjZcPtVja7HqyxdLlm55bR38u9H/rgAZEfd4XmNuMwCDlw==
+X-Received: by 2002:a17:907:9693:b0:ac2:9ac:a062 with SMTP id a640c23a62f3a-acedc5f1cb2mr65273666b.23.1745957860707;
+        Tue, 29 Apr 2025 13:17:40 -0700 (PDT)
 Received: from localhost (dslb-002-205-023-067.002.205.pools.vodafone-ip.de. [2.205.23.67])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41b0f7sm826145266b.22.2025.04.29.13.17.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acecdbbc6easm136021566b.88.2025.04.29.13.17.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 13:17:37 -0700 (PDT)
+        Tue, 29 Apr 2025 13:17:40 -0700 (PDT)
 From: Jonas Gorski <jonas.gorski@gmail.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -71,9 +71,9 @@ To: Florian Fainelli <florian.fainelli@broadcom.com>,
 Cc: Florian Fainelli <f.fainelli@gmail.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net 08/11] net: dsa: b53: do not program vlans when vlan filtering is off
-Date: Tue, 29 Apr 2025 22:17:07 +0200
-Message-ID: <20250429201710.330937-9-jonas.gorski@gmail.com>
+Subject: [PATCH net 10/11] net: dsa: b53: fix learning on VLAN unaware bridges
+Date: Tue, 29 Apr 2025 22:17:09 +0200
+Message-ID: <20250429201710.330937-11-jonas.gorski@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250429201710.330937-1-jonas.gorski@gmail.com>
 References: <20250429201710.330937-1-jonas.gorski@gmail.com>
@@ -85,104 +85,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Documentation/networking/switchdev.rst says:
+When VLAN filtering is off, we configure the switch to forward, but not
+learn on VLAN table misses. This effectively disables learning while not
+filtering.
 
-- with VLAN filtering turned off: the bridge is strictly VLAN unaware and its
-  data path will process all Ethernet frames as if they are VLAN-untagged.
-  The bridge VLAN database can still be modified, but the modifications should
-  have no effect while VLAN filtering is turned off.
+Fix this by switching to forward and learn. Setting the learning disable
+register will still control whether learning actually happens.
 
-This breaks if we immediately apply the VLAN configuration, so skip
-writing it when vlan_filtering is off.
-
-Fixes: 0ee2af4ebbe3 ("net: dsa: set configure_vlan_while_not_filtering to true by default")
+Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
 Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- drivers/net/dsa/b53/b53_common.c | 48 +++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 0b28791cca52..ee2f1be62618 100644
+index 0a7749b416f7..a2c0b44fc6be 100644
 --- a/drivers/net/dsa/b53/b53_common.c
 +++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1547,6 +1547,9 @@ int b53_vlan_add(struct dsa_switch *ds, int port,
- 	if (vlan->vid == 0)
- 		return 0;
+@@ -383,7 +383,7 @@ static void b53_enable_vlan(struct b53_device *dev, int port, bool enable,
+ 			vc4 |= VC4_ING_VID_VIO_DROP << VC4_ING_VID_CHECK_S;
+ 			vc5 |= VC5_DROP_VTABLE_MISS;
+ 		} else {
+-			vc4 |= VC4_ING_VID_VIO_FWD << VC4_ING_VID_CHECK_S;
++			vc4 |= VC4_NO_ING_VID_CHK << VC4_ING_VID_CHECK_S;
+ 			vc5 &= ~VC5_DROP_VTABLE_MISS;
+ 		}
  
-+	if (!ds->vlan_filtering)
-+		return 0;
-+
- 	b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port), &old_pvid);
- 	if (pvid)
- 		new_pvid = vlan->vid;
-@@ -1592,6 +1595,9 @@ int b53_vlan_del(struct dsa_switch *ds, int port,
- 	if (vlan->vid == 0)
- 		return 0;
- 
-+	if (!ds->vlan_filtering)
-+		return 0;
-+
- 	b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port), &pvid);
- 
- 	vl = &dev->vlans[vlan->vid];
-@@ -1952,18 +1958,20 @@ int b53_br_join(struct dsa_switch *ds, int port, struct dsa_bridge bridge,
- 	pvid = b53_default_pvid(dev);
- 	vl = &dev->vlans[pvid];
- 
--	/* Make this port leave the all VLANs join since we will have proper
--	 * VLAN entries from now on
--	 */
--	if (is58xx(dev)) {
--		b53_read16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN, &reg);
--		reg &= ~BIT(port);
--		if ((reg & BIT(cpu_port)) == BIT(cpu_port))
--			reg &= ~BIT(cpu_port);
--		b53_write16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN, reg);
--	}
--
- 	if (ds->vlan_filtering) {
-+		/* Make this port leave the all VLANs join since we will have
-+		 * proper VLAN entries from now on
-+		 */
-+		if (is58xx(dev)) {
-+			b53_read16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN,
-+				   &reg);
-+			reg &= ~BIT(port);
-+			if ((reg & BIT(cpu_port)) == BIT(cpu_port))
-+				reg &= ~BIT(cpu_port);
-+			b53_write16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN,
-+				    reg);
-+		}
-+
- 		b53_get_vlan_entry(dev, pvid, vl);
- 		vl->members &= ~BIT(port);
- 		if (vl->members == BIT(cpu_port))
-@@ -2030,16 +2038,16 @@ void b53_br_leave(struct dsa_switch *ds, int port, struct dsa_bridge bridge)
- 	pvid = b53_default_pvid(dev);
- 	vl = &dev->vlans[pvid];
- 
--	/* Make this port join all VLANs without VLAN entries */
--	if (is58xx(dev)) {
--		b53_read16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN, &reg);
--		reg |= BIT(port);
--		if (!(reg & BIT(cpu_port)))
--			reg |= BIT(cpu_port);
--		b53_write16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN, reg);
--	}
--
- 	if (ds->vlan_filtering) {
-+		/* Make this port join all VLANs without VLAN entries */
-+		if (is58xx(dev)) {
-+			b53_read16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN, &reg);
-+			reg |= BIT(port);
-+			if (!(reg & BIT(cpu_port)))
-+				reg |= BIT(cpu_port);
-+			b53_write16(dev, B53_VLAN_PAGE, B53_JOIN_ALL_VLAN_EN, reg);
-+		}
-+
- 		b53_get_vlan_entry(dev, pvid, vl);
- 		vl->members |= BIT(port) | BIT(cpu_port);
- 		vl->untag |= BIT(port) | BIT(cpu_port);
 -- 
 2.43.0
 
