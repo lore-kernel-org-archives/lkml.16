@@ -1,215 +1,314 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5390821E0AC
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991DA21ADC4
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941565; cv=none; b=FKpZLjHV+BtBVsx57nNRp/McA47LUGMzq5kjGSZuFlT+wyl12G16mF7Czp/CnmhjxWbiOcl9L0OfXUN0KKgLyW94V8oMiiKt2RALJH5VTLKpD27Jrsk1HRjO2yWD2se0jWwDBNRylVPAdvq4VCGms23TngDT1kHFKBB/MjSJ6RE=
+	t=1745941659; cv=none; b=nnZPkTGqFQm6/cyb1RVaT4BTV5DJhXMhjmrkv3i646uc0avwhqXaIRUjMr5/OR70Wkf65Xg0V5zzNvg4IxoasxwGWOBeOkj6Vgfwj+CJkYUCeL4BX+Xyp9UQvtnHEBUeU/QcAaqYT7LcbwHgqnXpAL+RohNL3L3ZY3QNHBlypfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941565; c=relaxed/simple;
-	bh=S7itzmkTPv/yQdqAjes8b8Y4TuhqFNIK1LkVNhNlswM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=U4zqpOYwdvjDAJzVSdazf2eYGgtbJuC56j+6PUJknehl8dzMVfpBJKJ6a8iZ7mlFoga4E4QxlGYMNOheGFovI4LRAgstimeEeP+yca1seXG7t6vA/rtclvic+uNjqzmj8aPKZx6J20g/MxXe9v7W6sv2grch3HIgKMoxQNMfGrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ATnjZElS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745941659; c=relaxed/simple;
+	bh=FbcSnOoCa0wvh7pCaEnEphnJHhhSEautrrFIMqym6Ls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eryUlS50l16RcGYECdUfjVz0V7jcacWds+KZ5Bd0Rt/YrresQOSUq48YtUktbNGfdlFquUX6k4vfVRMp46NE+lZj1JWHtLMGit1PjzO6SwV2d4NjfriHjJVIlCXTdYm0S6F51jwYW1GbQOmDd860y1nz/R0Gliz0HOzcLOVI5fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZD5MG7xe; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATnjZElS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745941562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KJkBeINQl3NFAYCfsyQAhOdLaYy8cgJsBpXeXsGczuA=;
-	b=ATnjZElSfgGyCC6ky+FSjrOylQ8Q4JkGT3cE0XxRQwt3Y5YSnuo9KSEj0cFo4QsmqdmOA5
-	NMYaGrz/ujiW6SpjYYn9zCiOFE5RjxbdQk1G0F6BAFpAh794NpkQsf88edC77x7ikSUTuZ
-	lEVaAIzcv5V2Ipb7P+s1gNSnwekmmyU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-31-GO_W3gmBM0CdtPTXJFALew-1; Tue, 29 Apr 2025 11:45:56 -0400
-X-MC-Unique: GO_W3gmBM0CdtPTXJFALew-1
-X-Mimecast-MFC-AGG-ID: GO_W3gmBM0CdtPTXJFALew_1745941555
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d01024089so41153125e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:45:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZD5MG7xe"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so16715ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745941656; x=1746546456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5xbf6yXNNkTSMsRnalVCuWOHXU+tlgRiNUj0W+IJp9k=;
+        b=ZD5MG7xeCls/aQngQ7Irf5FAJMoQ0TtYEX9L8gtg5HA9aQeLg4bgL93MSbwQPAB4d1
+         n1CStBTeJpvPorL1HEwn7g6qNNNXuUlb/y0hm8OxWjKvoK0SQjywNZshJSYLfD5KgLKN
+         k4UX3VMpqjtF9NK5J3+sQYVL96QbDvrVTQf/wI0uuaqrN2idjuEm9z68Q7pGhaIpDiET
+         u1Azu/3e/lk5uM4vWHALSFej3yDYj9kKy0SdtwsIRlbGRFHZUm4hs1VdumqSVNgeofGO
+         xPRtzvYNd6zZv1Qd47hfhv5gtn5sP+UnvoELYYtFTB0KuIGYYWYoeN6Zd9+tAm3rb641
+         Zx3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745941555; x=1746546355;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KJkBeINQl3NFAYCfsyQAhOdLaYy8cgJsBpXeXsGczuA=;
-        b=qfF1jF5fraKs3DZM9gkKteRoj8P9yxA2Du5Y+k5ycfd4oXFr4+rZPdKobU0oWh1sP/
-         P10hr+XmA8j0f94fjVBeLYAN6E+8+gUirhgzrq+KLD5d1OgDmPqmuuU9C9vyGzMbumyY
-         sJVv2RNWFzg7b5MRb3gbWDnMz/a2lKOuAQBmlGp6jJr2SAEqY2VKz5UX7DoO97iBICxt
-         m5KwCGljqkbwnF9hFD499hG6xzH2mjT1Zf83Qr1s+3ieeAfuz9qZl+B8IG0aHZ29col6
-         2f138oUj8rR2HlF9rURx7k2rMvmmpB24fFY8RaKcUj2LjP+c2qlSY5Ut+bqEaf0Pr1kL
-         ATuQ==
-X-Gm-Message-State: AOJu0Yza37OqWQeXmaaLqOrmYxzps7Ey9PFK+PQALQypXnRvsXug2Ckg
-	dkLRmINq+7ZxakofMHwnwiwCxJ5IVTtgIyeeRzEvoZByratOT+lNGO3uGVmZAbQfuGSHCYhN0Qc
-	4f8QLBcVSg/tWrE68VZpUaWWtLNJXmtt7wKhUQP9NxfvrCra/fSHo/Uvab+LPzQ==
-X-Gm-Gg: ASbGncsDOsO1wTJ3TAVPw6xZFShxsl97wRkMoHHSSxB8t/ZQZJXE5o7omps8WB9e/jS
-	2WrhCt1peE7K8wWfVrDRUQ4eVrqCHIHJov0ZCPBPDfb8gZS8QR3f1k72eKnpKJG/VsVCGLrYSDM
-	1DhKi72i+MbuPYoxtnlhrdZiu+qEE9pDqbU5URdWti96H7hdH1A29U2zS9hmpPAa1vqD5EghRBU
-	fRRi72SUPRgIMH22ustw7rurlSTmql2io21As7r8pHRDBW/whKWe+udeU7gxZZH8MJxtaOArOU9
-	BJf7Ubhde1gmqMmC71L7s10jJHizv1yUqjPdBwb8snoDEC3BA3rUD0TfV30Hat8OPg2jCJgeWzv
-	rWVnhfbKjjaY8A1UzGjzFkWPRHNeFyzj+1ewD7mI=
-X-Received: by 2002:a05:600c:46cf:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-440ab871770mr128621595e9.30.1745941554884;
-        Tue, 29 Apr 2025 08:45:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFt0DK2rmUfljN2z2b+q11frPzsFEc1skfJ0nZYXWdcoUPJqbsw4oWgy/3IkPCYXvYpVzK/AA==
-X-Received: by 2002:a05:600c:46cf:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-440ab871770mr128621335e9.30.1745941554500;
-        Tue, 29 Apr 2025 08:45:54 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441ae3ee26fsm19485125e9.1.2025.04.29.08.45.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 08:45:54 -0700 (PDT)
-Message-ID: <b6613b71-3eb9-4348-9031-c1dd172b9814@redhat.com>
-Date: Tue, 29 Apr 2025 17:45:53 +0200
+        d=1e100.net; s=20230601; t=1745941656; x=1746546456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5xbf6yXNNkTSMsRnalVCuWOHXU+tlgRiNUj0W+IJp9k=;
+        b=VxGEBYMqXS6GFH5L43zCz97h2mU2Fnp2vEZYTFVwh2eSIHWoNFiqUJH3ZJ+MKcVm9G
+         GuqpPzU6fYMezl6cepZ5bVX03b3lPzCnc0CpHlQUsBmDV6iG+7+XpsvWMw4eARIF4AUP
+         NInpw/FKjB3yj7SLKyG/Lf5EDk8WRDEXvW37n/ZSrIzkahz4CJgdYjar3yzbx4JN5Mtz
+         EAlMB3Ulv9aw54jjd9i1yE/0oI6wfgfUdRLoc6aqLznAcoSsgIB1bAVgyONOD2FyWryn
+         450juGpEsOaCkSCUYaTDUdw7SMiNYmWLE+VOgIOHbLglJehO+PCGMMh3rBWSGbqYq2y5
+         vaPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrTZ4wvqFdEqnFJUy9ndjgNMFOllr3K2M+tsUf7rlBofmNoZC+/ZN4lTcSK06ctYEbsrSuRxTpqSjhrKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJcYyaj1//y55MmeNR+jAQaYo9J14EtHRKMMk9r/jtqK1zsV82
+	5EVqtN2/2JFXGByqqUnQeXjSVPPYKJUFDPymW/xKvt/7WJDHosw599UDHFXgc+mv3xfce2XVgrh
+	boW2qEO0TdTCQrNrn7TOwE979lV6nKmACfcCg
+X-Gm-Gg: ASbGncu/mKRFnH8KzxSfw0XdTFlnly/KyrNSqQSee433DEcN5XfTrd21I1AzB3VbYha
+	5RFLvZ6y2x6Vbh8HVZQAirdee509PZsRJci+45lX3JA48ZnznUXa91RHTqXbUi1Zc4d66aeqUTS
+	H2hdbhyQgrRTPyNBNr4Fjk5/jP8+1ulHjzIQrclwZQ/KBJBqMwYvo=
+X-Google-Smtp-Source: AGHT+IEFQaxkKs0T9ppoZLafefhCpeTNBISMKftoGitq7N47y9f/m2EDeEl/MMXvk4v8fYJ2QPsDkDZ6/NIwYlUb+MA=
+X-Received: by 2002:a05:6e02:b44:b0:3d4:6f05:dfde with SMTP id
+ e9e14a558f8ab-3d95d91724bmr4034695ab.22.1745941656385; Tue, 29 Apr 2025
+ 08:47:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
-From: David Hildenbrand <david@redhat.com>
-To: =?UTF-8?Q?Petr_Van=C4=9Bk?= <arkamar@atlas.cz>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-mm@kvack.org,
- stable@vger.kernel.org
-References: <20250429142237.22138-1-arkamar@atlas.cz>
- <20250429142237.22138-2-arkamar@atlas.cz>
- <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
- <2025429144547-aBDmGzJBQc9RMBj--arkamar@atlas.cz>
- <ef317615-3e26-4641-8141-4d3913ced47f@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ef317615-3e26-4641-8141-4d3913ced47f@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250324164543.62574-1-irogers@google.com> <CAP-5=fWr8EUyro8ckxfMYWR3BhiXgzkjejTjmTb=8PR1p+wvWA@mail.gmail.com>
+ <aBDsyY-iMT5CBg4i@x1>
+In-Reply-To: <aBDsyY-iMT5CBg4i@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 29 Apr 2025 08:47:25 -0700
+X-Gm-Features: ATxdqUH05BlKp34S2vRe27cZXACp3sdHgyg9MH4TKlrFnEGGklS56teFO5edamA
+Message-ID: <CAP-5=fVSNyFtuPxRQCDbsn8QZ9ENTjq6kMNcbxBb-Tr4WqLVwQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Prefer sysfs/JSON events also when no PMU is provided
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29.04.25 16:52, David Hildenbrand wrote:
-> On 29.04.25 16:45, Petr Vaněk wrote:
->> On Tue, Apr 29, 2025 at 04:29:30PM +0200, David Hildenbrand wrote:
->>> On 29.04.25 16:22, Petr Vaněk wrote:
->>>> folio_pte_batch() could overcount the number of contiguous PTEs when
->>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
->>>> memory also happens to be zero. The loop doesn't break in such a case
->>>> because pte_same() returns true, and the batch size is advanced by one
->>>> more than it should be.
->>>>
->>>> To fix this, bail out early if a non-present PTE is encountered,
->>>> preventing the invalid comparison.
->>>>
->>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
->>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
->>>> bisect.
->>>>
->>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
->>>> ---
->>>>     mm/internal.h | 2 ++
->>>>     1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/mm/internal.h b/mm/internal.h
->>>> index e9695baa5922..c181fe2bac9d 100644
->>>> --- a/mm/internal.h
->>>> +++ b/mm/internal.h
->>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
->>>>     			dirty = !!pte_dirty(pte);
->>>>     		pte = __pte_batch_clear_ignored(pte, flags);
->>>>     
->>>> +		if (!pte_present(pte))
->>>> +			break;
->>>>     		if (!pte_same(pte, expected_pte))
->>>>     			break;
->>>
->>> How could pte_same() suddenly match on a present and non-present PTE.
->>
->> In the problematic case pte.pte == 0 and expected_pte.pte == 0 as well.
->> pte_same() returns a.pte == b.pte -> 0 == 0. Both are non-present PTEs.
-> 
-> Observe that folio_pte_batch() was called *with a present pte*.
-> 
-> do_zap_pte_range()
-> 	if (pte_present(ptent))
-> 		zap_present_ptes()
-> 			folio_pte_batch()
-> 
-> How can we end up with an expected_pte that is !present, if it is based
-> on the provided pte that *is present* and we only used pte_advance_pfn()
-> to advance the pfn?
+On Tue, Apr 29, 2025 at 8:14=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Thu, Mar 27, 2025 at 12:13:45PM -0700, Ian Rogers wrote:
+> > On Mon, Mar 24, 2025 at 9:46=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > At the RISC-V summit the topic of avoiding event data being in the
+> > > RISC-V PMU kernel driver came up. There is a preference for sysfs/JSO=
+N
+> > > events being the priority when no PMU is provided so that legacy
+> > > events maybe supported via json. Originally Mark Rutland also
+> > > expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+> > > M? processors, but James Clark more recently tested this and believes
+> > > the driver issues there may not have existed or have been resolved. I=
+n
+> > > any case, it is inconsistent that with a PMU event names avoid legacy
+> > > encodings, but when wildcarding PMUs (ie without a PMU with the event
+> > > name) the legacy encodings have priority.
+> > >
+> > > The patch doing this work was reverted in a v6.10 release candidate
+> > > as, even though the patch was posted for weeks and had been on
+> > > linux-next for weeks without issue, Linus was in the habit of using
+> > > explicit legacy events with unsupported precision options on his
+> > > Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+> > > where ARM decided to call the events bus_cycles and cycles, the latte=
+r
+> > > being also a legacy event name. ARM haven't renamed the cycles event
+> > > to a more consistent cpu_cycles and avoided the problem. With these
+> > > changes the problematic event will now be skipped, a large warning
+> > > produced, and perf record will continue for the other PMU events. Thi=
+s
+> > > solution was proposed by Arnaldo.
+> > >
+> > > v6: Rebase of v5 (dropping already merged patches):
+> > >     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@goog=
+le.com/
+> > >     that unusually had an RFC posted for it:
+> > >     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
+> > >     Note, this patch conflicts/contradicts:
+> > >     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@goo=
+gle.com/
+> > >     that I posted so that we could either consistently prioritize
+> > >     sysfs/json (these patches) or legacy events (the other
+> > >     patches). That lack of event printing and encoding inconsistency
+> > >     is most prominent in the encoding of events like "instructions"
+> > >     which on hybrid are reported as "cpu_core/instructions/" but
+> > >     "instructions" before these patches gets a legacy encoding while
+> > >     "cpu_core/instructions/" gets a sysfs/json encoding. These patche=
+s
+> > >     make "instructions" always get a sysfs/json encoding while the
+> > >     alternate patches make it always get a legacy encoding.
+> >
+> > So another fun finding. Sysfs and json events are case insensitive:
+> > ```
+> > $ perf stat -e 'inst_retired.any,INST_RETIRED.ANY' true
+> >
+> > Performance counter stats for 'true':
+> >
+> >           129,134      cpu_atom/inst_retired.any:u/
+> >     <not counted>      cpu_core/inst_retired.any:u/
+> >                         (0.00%)
+> >           129,134      cpu_atom/INST_RETIRED.ANY:u/
+> >     <not counted>      cpu_core/INST_RETIRED.ANY:u/
+> >                         (0.00%)
+> >
+> >       0.002193191 seconds time elapsed
+> >
+> >       0.002354000 seconds user
+> >       0.000000000 seconds sys
+> > ```
+> > But legacy events match in lex code that is case sensitive. This means
+> > (on x86) the event 'instructions' is currently legacy, but the event
+> > 'INSTRUCTIONS' is a sysfs event. The event CYCLES is a parse error as
+> > there is no sysfs/json version. Given legacy events don't follow the
+> > case insensitivity norm this is more evidence we need to reduce their
+> > priority by merging these patches.
+>
+> root@number:~# perf trace -e perf_event_open perf stat -C 1 -e INSTRUCTIO=
+NS,instructions,cycles sleep 1
+>      0.000 ( 0.025 ms): :620592/620592 perf_event_open(attr_uptr: { type:=
+ 4 (cpu), size: 136, config: 0xc0 (instructions), sample_type: IDENTIFIER, =
+read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1=
+ }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CLOEXEC) =3D 3
+>      0.030 ( 0.004 ms): :620592/620592 perf_event_open(attr_uptr: { type:=
+ 0 (PERF_TYPE_HARDWARE), size: 136, config: 0x1 (PERF_COUNT_HW_INSTRUCTIONS=
+), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNN=
+ING, disabled: 1, inherit: 1 }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CL=
+OEXEC) =3D 8
+>      0.035 ( 0.003 ms): :620592/620592 perf_event_open(attr_uptr: { type:=
+ 0 (PERF_TYPE_HARDWARE), size: 136, config: 0 (PERF_COUNT_HW_CPU_CYCLES), s=
+ample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING,=
+ disabled: 1, inherit: 1 }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CLOEXE=
+C) =3D 9
+>
+>  Performance counter stats for 'CPU(s) 1':
+>
+>          1,499,102      INSTRUCTIONS
+>          1,498,883      instructions                     #    0.81  insn =
+per cycle
+>          1,850,082      cycles
+>
+>        1.001553577 seconds time elapsed
+>
+> root@number:~#
+>
+> So the behaviour if "instructions" is specified, since perf started, is
+> to have this:
+>
+>      0.030 ( 0.004 ms): :620592/620592 perf_event_open(attr_uptr: { type:=
+ 0 (PERF_TYPE_HARDWARE), size: 136, config: 0x1 (PERF_COUNT_HW_INSTRUCTIONS=
+), sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNN=
+ING, disabled: 1, inherit: 1 }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CL=
+OEXEC) =3D 8
+>
+> And this is what we continue to obtain.
+>
+> At some point we started supporting sysfs/JSON and then INSTRUCTIONS
+> started being accepted and we are getting:
+>
+>      0.000 ( 0.025 ms): :620592/620592 perf_event_open(attr_uptr: { type:=
+ 4 (cpu), size: 136, config: 0xc0 (instructions), sample_type: IDENTIFIER, =
+read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1=
+ }, pid: -1, cpu: 1, group_fd: -1, flags: FD_CLOEXEC) =3D 3
+>
+> Which is what is expected, no change in behaviour over time.
 
-I've been staring at the code for too long and don't see the issue.
+I'm not sure what the point of this comment is. With perf we use
+strcasecmp to match events:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n473
+```
+static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
+   const char *name,
+   bool load)
+{
+struct perf_pmu_alias *alias;
+...
+list_for_each_entry(alias, &pmu->aliases, list) {
+if (!strcasecmp(alias->name, name))
+return alias;
+...
+```
+We even lower case event names during the json parsing:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/jevents.py?h=3Dperf-tools-next#n326
 
-We even have
+We don't use case insensitive pattern matching when matching legacy events:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/parse-events.l?h=3Dperf-tools-next#n392
+```
+...
+cpu-cycles|cycles { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_CPU_CYCLES); }
+stalled-cycles-frontend|idle-cycles-frontend { return sym(yyscanner,
+PERF_TYPE_HARDWARE, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+stalled-cycles-backend|idle-cycles-backend { return sym(yyscanner,
+PERF_TYPE_HARDWARE, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+instructions { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_INSTRUCTIONS); }
+cache-references { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_CACHE_REFERENCES); }
+cache-misses { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_CACHE_MISSES); }
+branch-instructions|branches { return sym(yyscanner,
+PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
+branch-misses { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_BRANCH_MISSES); }
+bus-cycles { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_BUS_CYCLES); }
+ref-cycles { return sym(yyscanner, PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_REF_CPU_CYCLES); }
+cpu-clock { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_CPU_CLOCK); }
+task-clock { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_TASK_CLOCK); }
+page-faults|faults { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_PAGE_FAULTS); }
+minor-faults { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_PAGE_FAULTS_MIN); }
+major-faults { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_PAGE_FAULTS_MAJ); }
+context-switches|cs { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_CONTEXT_SWITCHES); }
+cpu-migrations|migrations { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_CPU_MIGRATIONS); }
+alignment-faults { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_ALIGNMENT_FAULTS); }
+emulation-faults { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_EMULATION_FAULTS); }
+dummy { return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
+bpf-output { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_BPF_OUTPUT); }
+cgroup-switches { return sym(yyscanner, PERF_TYPE_SOFTWARE,
+PERF_COUNT_SW_CGROUP_SWITCHES); }
+...
+```
 
-VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+This means the behavior of instructions,INSTRUCTIONS,cpu/instructions/
+all vary when parsed. I am working to change the metric parsing so
+that rather than matching strings it works off of the config values,
+this fixes the problem that metrics cannot handle tracepoints without
+the need to reinvent event parsing. As the config values vary for some
+if not all of instructions,INSTRUCTIONS,cpu/instructions/ then it will
+impact de-duplicating events. There's generally an expectation that
+events are case insensitive and when that's not true it looks like a
+bug to me.
 
-So the initial pteval we got is present.
+Just to repeat for clarity. Legacy events were mapped to fixed
+encodings and had priority. Intel/Arnaldo/Jiri changed that to make it
+so that legacy encodings would wildcard match. I cleaned that up in
+making metrics work, including with Intel hybrid CPUs, for the support
+of topdown metrics and so the Intel hybrid approach was made generic
+and not hard coded to Intel PMUs. My change broke Apple-M as they had
+been reliant on not having their PMUs spotted as core legacy
+supporting PMUs, with events programmed as if they were uncore PMUs.
+Mark Rutland argued that sysfs/json should be made the priority and I
+made it so, focussing first on the case where a PMU is specified as
+that matched the bug. The later changes are just following through on
+that priority change. RISC-V supports this change given the variable
+nature of how they encode events.
 
-I don't see how
+Note, there is a newer version of this patch series:
+https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
+it addresses problems with tracking events and perf_api_probe using
+wildcarding. The patches are applied in:
+https://github.com/googleprodkernel/linux-perf/
 
-	nr = pte_batch_hint(start_ptep, pte);
-	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+Thanks,
+Ian
 
-would suddenly result in !pte_present(expected_pte).
-
-The really weird thing is that this has only been seen on XEN.
-
-But even on XEN, a present pte should not suddenly get !present -- we're not
-re-reading from ptep :/
-
--- 
-Cheers,
-
-David / dhildenb
-
+> - Arnaldo
