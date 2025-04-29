@@ -1,59 +1,372 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2044.outbound.protection.outlook.com [40.107.22.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82B8284B52
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745893087; cv=none; b=qqFBx3JdXX4LbenzcpYGBsguvmMAI8NBOQL82UFLush4wpaO17vniS6WZD+haizv/DFB0fze5RsI1uFCoN4Q3w5xbW2v6FMYJWyo4rzRoBhXYqk7N53WiC77Jvf5tQchUuX8wuwYW3lM8QFi6+V9luvIuXe+Hb63Ds3t9UniDOo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745893087; c=relaxed/simple;
-	bh=WqI3BDt2ktsqzmLmXUsvdTN+ybpt4JxjyySqnvpfTDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3+HItYl6Po6aaEUs2VAskB07/HGwRxWvsOvb1zoEO6RenkdUyLIefFw3G98ZI9lZsCdNMWUY0k+IMmZiCZRcT9nq3Ub3qcBqgdVBvT7GzVf19LRx8em3JLUKjHOeqxyYmC3DJOBlnOnTJtDcJKtjZXCfJ+m/nCq1KBZEjeN+Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8ED3C4CEE4;
-	Tue, 29 Apr 2025 02:18:06 +0000 (UTC)
-Message-ID: <42674c5a-42fe-4846-bf90-340310393fea@linux-m68k.org>
-Date: Tue, 29 Apr 2025 12:18:04 +1000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E708629AB11;
+	Tue, 29 Apr 2025 02:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745893097; cv=fail; b=ZglK0AklLbznAp1A6EiEUAI/h5wBPS3irMsV0CYJDbN/WA7LrZY8t9uXd0JqIDga7jroxsJXZrh73MGjGmN6H6VizcPg5AD5DdptW1DCcnF7QrbQZ6jarHx6JTOJuIpGsTG3PGz9HM0OOUvMZbOfskrwHEHOIix9eOUhhpRckyc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745893097; c=relaxed/simple;
+	bh=TIfrAzz5YzivibzcSg/UsBixKUv21HNZOWkZY9PlZZQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pbZTxreNz6pvv+ZSqzTeI1ZnWRVX5DynbFMS8jwc0UStB2ja9LctZlRf3oRqv1j9RIuUbSVzsXmK7ZvL8zFAue+jGGiVG86ifENqo+wY1EihbS4JtZnyo8Hne71j+F2O10IOgCT8i5f6Qk8ejCZZlIqYf6IAVCm7pXOHMI1cgC4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=EhtWCUwM; arc=fail smtp.client-ip=40.107.22.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="EhtWCUwM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FScjYO+WbVv8GRE1PdEzYd7ZNY79iKFKpSyfoi125wAKXHa3v9oC5mRCiuzBCv8P6I9lXLgpxTKGBA0IlDoAkBsE4xBYLxCQK7kpJOSEWr1QRjrqCD8aZ6GX07+RGo0EMMJNUZmu3eijRW0evLJpAnFr0L/XxEUWxGF/swpLd0X/PgGxZK3aQxyXBurguxxAm6YufA0VKIkfmMj7LMi4RqRK121aja+u4Ru+9XfIN2HWoo7832JuvAvt8IW8YyaiaCfJkc1CEpWM0sMzNZHPl4+s22RLuxsY+fLa+CDCXZWZOVU/7XfwsjYd9FQ3q7RydT+BXtdyw7AJUlq9I+iQkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RVUXW1AB3ZXHci+L450P3dukJamRcw8Bdt70UkTw4IQ=;
+ b=oZlsnQNuA0rndgUEj9wBfyd1TqX2q7vd/ZcF9VuCoIuheSRYierIO84A/0fr4awtD67DfAOkuNvXJWErO7IbstDP7jZMOB6Qzj4yxcAxXwYY3ChOSwfLsEhVJRMvStnwaZRJaaSN7iB5D2jhlNu/e0iwpXR7VO/Mna7eIv9iQ1r1ZRKqHnuwzv6ZaOHd/FcSYrI2nGTd/V5uuvuNpxQ1AEMiXsFoPRBukYcczoohvWmjgdC/bK1bqrP9CMldcfp50MYgSl0v4EqvEj4y8Po7GkRvC7Kby60PXjVdvY3irdcvFxAcham3LfghG6JNiyZU5zB1ToJ7/65l40FCjurtFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RVUXW1AB3ZXHci+L450P3dukJamRcw8Bdt70UkTw4IQ=;
+ b=EhtWCUwMQ8kkhwStRCllsVzXV/0+wcNqPZk5yjSYblHOTHoA4rHvLxXSU75hzrd1Zv7S+gOjxcYxOi/XLM2GZy9iN+RYq3prn83wdQpLP4qVLP96FHAibE4qsLmqqAS0JCEftZkig6bDKKE/+w6o4bROJlnH5JCOwKG0cnJJxs78xmKUPnIgpFJikmVvUbb8NNKOiesqAguBqswC5IqEkmajqpmDx41tKTM4dIr+aQMUWM3UnlnbKdnb2YAP3PcWCqE448EbT3OzbBPO3DqzVayrQCNCmnIYD5WGadEwJxTB4sUDJF1NkbQo6+k5DYHBtluCf/NnHHHvVgxEA9gYHg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by VI0PR04MB10758.eurprd04.prod.outlook.com (2603:10a6:800:25c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Tue, 29 Apr
+ 2025 02:18:11 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 02:18:11 +0000
+Message-ID: <810dc089-4789-4efb-a88f-4ab8da1519d4@nxp.com>
+Date: Tue, 29 Apr 2025 10:19:27 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/34] drm: convert many bridge drivers from
+ devm_kzalloc() to devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>,
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
+ Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
+ Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>,
+ Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Christoph Fritz <chf.fritz@googlemail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Dharma Balasubiramani <dharma.b@microchip.com>,
+ Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
+ Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
+ Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Manikandan Muralidharan <manikandan.m@microchip.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
+ Sasha Finkelstein <fnkl.kernel@gmail.com>,
+ Sugar Zhang <sugar.zhang@rock-chips.com>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Vitalii Mordan <mordan@ispras.ru>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SGAP274CA0018.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::30)
+ To AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] m68k: Enable dead code elimination
-To: Daniel Palmer <daniel@0x0f.com>
-Cc: geert@linux-m68k.org, linux-m68k@lists.linux-m68k.org,
- linux-kernel@vger.kernel.org
-References: <20250416114240.2929832-1-daniel@0x0f.com>
- <ac188e54-7f23-4ecd-805c-c0437a53247a@linux-m68k.org>
- <CAFr9PXmrVUL1HubP04iHR1ObhaNo+mObg7FC+-HpTF7QR0og3g@mail.gmail.com>
-Content-Language: en-US
-From: Greg Ungerer <gerg@linux-m68k.org>
-In-Reply-To: <CAFr9PXmrVUL1HubP04iHR1ObhaNo+mObg7FC+-HpTF7QR0og3g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|VI0PR04MB10758:EE_
+X-MS-Office365-Filtering-Correlation-Id: b783f059-68bc-4290-3335-08dd86c416bc
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?ZmhQWDVmb0tSR3dBREFGOWJxcGlTcFIvcDE5TVdxQVl4a1VyamFlUjVqNWtT?=
+ =?utf-8?B?cWFlSzZIaXJXQWRZMjdIQ2pOM2xoVFdsVmFFcGFxRzBGbGVUR05BeXJBYk5X?=
+ =?utf-8?B?TWx1RTIwOGxJYWVpZFhMbCs1TG0xL3lleEJRZGpmakVhdHZwUVNOL1ZLWWU5?=
+ =?utf-8?B?ZWlpUm95S3lOM0c4R2dSZmRQdDFNbXQvUVRMdm4zUmttL1gwUUhvQ3pnTWJI?=
+ =?utf-8?B?WWtncmU5TWdSVHgrRkR2RnYxS0FNcGNWQ0pibDFkRFBBY3pGL0hIbVhEczFZ?=
+ =?utf-8?B?Nk8wKzNqR3ZTQXlibnp2dGZyZmVrVTNOM0EzSEpQM1ltSkJNNWxBem5id3kr?=
+ =?utf-8?B?NUduL2cybzlZZWlxK1hmenduVWlrT0RpRW9JajVoelE2Nyt6WjA0UWFMdjFB?=
+ =?utf-8?B?VFk0UlMyYWozT045b2hCQWZZbnFTY3JiRG9peFgxZm96ZnJEMHdrYlZwWWds?=
+ =?utf-8?B?WXhKMWt4Qm1UUkVpQ053NmdtVHg1c2RZV2dLU283aVhOS2V4ZzZOdllUN2dD?=
+ =?utf-8?B?UE0zcWNLQmdrL0IrdE50c3NuRUdJV3RaUEpzMHR3VEYxMmhKREVDd25acHlS?=
+ =?utf-8?B?ZUFZdXNJZUhYV3RSekpEZllnR0hIQ0NCMUtmTHJSUHAxSlp3SGxOVFFqbnlB?=
+ =?utf-8?B?TFo1aGplblFKM0puNjhUZ3RCT29IcWRyUFJzekpxZXk0a1dUYjNad2RSbGZP?=
+ =?utf-8?B?aDU2a0tWOEJuU2c1Z05iSHQrTnR0U0dvUHZ5SktxMlZLMUE3RWdySTZYNS9a?=
+ =?utf-8?B?ZHlFdU5mQ0lJWVFIckdTVDZjYklQK3AvbFNiV3hBVzcvRFF2RlNMcUNXNnZZ?=
+ =?utf-8?B?a2JKUUFtcmIza1ZrM1pCelpZamNJOGJXVjBWUGhVSVNjci93eU5JTk1SclVV?=
+ =?utf-8?B?NW5WQ3BVbUwySmR2RWlYcUFpRlN3ZDlGVDdBWENsSFlrbHlZc3FGY3ZtZitp?=
+ =?utf-8?B?OFFIazZZeWxIWjJNNy85ckQ0Rnp4YTFjaldNczJlbUJLN2pkajh3WjFDUkZU?=
+ =?utf-8?B?dTFtSHdZYzQzOGlZTCtzVlVhWHM3c0tTUy9FKzJPNGUwUUtnc0kwdDdSYmpT?=
+ =?utf-8?B?cXMvRXFwc3FIVWFXbWJRTXdzV3hHL0dZL3JiRlh6dTUzUk9laXkvVWRhQ24y?=
+ =?utf-8?B?WE9vSUFscTdYWTE1NzkwYVlwVGRhWTZsbW9hdmxITUxyWFNhN3luU3dHVkV5?=
+ =?utf-8?B?Q0VLNHd1Ty9UeVppVytVV3hwY3krNU9QOUoyL2UzZjBYMXhJZ1VwSUF5amE5?=
+ =?utf-8?B?dFkwMXNRYmhteHBuWWJIZDhxZDNZTE9SL1RFQXZXOU4xL1NzRnRPaWpNeUpR?=
+ =?utf-8?B?MlA1bnMzdTJwcHZheHhkOHVIQ2NPMEp6RDF6SDRmVTZtbnBURHJFRFBITEdu?=
+ =?utf-8?B?WmlncFVxdnF5VEhaeW0yL2lrdXRSeFIxYkpYNm1IYlZsTEtaNmlZaUtYWFpW?=
+ =?utf-8?B?ZHo5SXBqL00xR0o3OHFLZFM1bEQ2Z1JlaDZad2RQc24vZ3FNSUMrdm84bTd0?=
+ =?utf-8?B?TGMyckh3N1hGRXNRMXhXNEpSQk5zTEZPLzNpU25LdWh1dkJ0SFZMMWk3WEtl?=
+ =?utf-8?B?U0Qwa0Y2c3Y5T3VvTGFpbDY0aG1IbHZrYW1wZnpyc2gwa0hjV0JhOFF0STB6?=
+ =?utf-8?B?aExLS1gyekUrUllMV3RLSklzb1FDU1M2QVRmUHpnT3VhMHRUM1JEdUlISUpR?=
+ =?utf-8?B?dWxUZSt2RnM1MHdqaHIyT0JoMzltajJmQktWYUhaLzZicnVpM1pQdGl2SUlX?=
+ =?utf-8?B?SDUrU3hpaEpPakc0RkhucFdCblF2eGZkeTYwRmZBTzZWK25TTjJuMUk0Y0xP?=
+ =?utf-8?B?L2hWT1c0UW1GVStDN2RIK0Z5aXBldEdzZHM4SmV1TUp5ZWhSdFBKS1g1bFd3?=
+ =?utf-8?B?NldjMFY1VlI4a3RValp2SjhJTFpWVVdMR2pIVEVyeDBHaDFKajlMSmpJV1JU?=
+ =?utf-8?B?eHZralM5SDJuTWJlWUpack9pM2ttb1hyaWcvNE5lNE1GMDRFV3ZoYVF5NnJ2?=
+ =?utf-8?B?Z1A5REZFN1pBPT0=?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?ZzlEc1h2WmkxTW1obFpWWWZRSDVwdXlobnI4bmZGWHZ4aHRiSm1UVEpIUmJC?=
+ =?utf-8?B?RG5sUkZjdWZKT0hwV0xDeTBXSkVWeG1PdjIyZS9iV3h5MHNISnBGQWh5c0Fl?=
+ =?utf-8?B?MUdsR2JGZzlrN21PUnZ1U2RCbnpzNGRpdm1mTTBPZHliRFYybWdrTENRSC83?=
+ =?utf-8?B?TnlacmdkbzB4aGVwa213RFVIV2c0VlFNM0xlR2xWck8xRjVpMXQzSVAxSlVV?=
+ =?utf-8?B?NUtiUVd6bnllY3hETm0xeUVuMGN6Z2ZBd21TbHB5RC9YbVlUMk90RU5EUUVV?=
+ =?utf-8?B?MWJyZHorYmxSZnNzSTRITU9UTTVod3RObFBqZ0NjQktKRmZmRFZPaVpYVDdJ?=
+ =?utf-8?B?bGNod1Q2aWh5Z2xkWTkwN0pMV242NFgrYy9HRGJYeVFEYmRVSy9wdjBBYm5N?=
+ =?utf-8?B?QVZIR3NJd2dobDRoQWZBQXRWdktBdGwzcWRVdjIzVWg0ZW9oSGxOcmFYV0xC?=
+ =?utf-8?B?bDlka1VPazhEZmZnTFluQWpmYlhBalVsV1JjTXJEMnpDUW5LcW9BL1NQeG9H?=
+ =?utf-8?B?QXBVSXJnWjc1b2QybkhoN0U0azNxZmpEU0doczV4Tk1UWFQ2dHVacmdjOUVy?=
+ =?utf-8?B?K0tOYjJQLzNHbm1EUHI3YnRVa3lFbFVyRGVvOHBzcXJGbTJWS01YR1J5RXE2?=
+ =?utf-8?B?cS8zc3FnZG1EeURUdVhIc3hGS01jcUZLVXVGd3E2RFpuQ2tUV1F6d05Pa2dt?=
+ =?utf-8?B?ZFNlVjZwS2s2dVZGUEw2Tkt5dDFhb0pPS1FkdFRlZlllMld3SUo2NUhBMGln?=
+ =?utf-8?B?VjVvaDFpYm9FVzhpMVdyaGNadE94L3dSWlJMZSs2WUJLUncrZEJzR1dtUWoz?=
+ =?utf-8?B?V1MyeCtaZDl0d093WjdBYUtPemswYmRvVm8xM2ZnTE9WeHA2RjZxaE9WREtX?=
+ =?utf-8?B?bDI2aVpwd2lvMnVPVU9XMmw5Q3NYdHJKb0p2Y3BBZjdEVlNjbDF2Ry92Y3py?=
+ =?utf-8?B?OVZGbUFiT3lqRjVUYXBXaC84NVVEME50RkZWYWRqUzc4NTc2bk1lWTdlOVdR?=
+ =?utf-8?B?azEwV1ZzME52cjBYVE5Jb25sbTZFeVVLOFVTbFA5SjMvNmtUdndSMEN0NXYy?=
+ =?utf-8?B?dnhQaHBEYkE4Zy9ZbXdtWlJ2NGFwWGZhQzlsMXAvcVR0TzdreVUzSnB6M0Nh?=
+ =?utf-8?B?SzFvckFpYy9QYWVPQXRTUStqTnZ1K2VUNk94eFY2UE1KUjJTYUhUUU55bVJy?=
+ =?utf-8?B?c0o5L1BSc0p3YnFEL2lKMkZIdHVOcFFldjhxOTFzcjFSUVNxL3J2dVBwVTZB?=
+ =?utf-8?B?M012dmlaMVFDOVh1R0p3N3U5blBrM2d1KzkwRWNKOE9SbUdxcEthN3hWMzFm?=
+ =?utf-8?B?SFRDTkVnbDFmY2xJTHpCWTY1WFh4Q1k1dHcyN3BveGV0SGsyOUdXTUpSY3Bj?=
+ =?utf-8?B?cXRGcXI2bzFhNDh1QVQwbktMdzJGcWNmeHh0K2VMcEpMMDJ1bTI5UkJuN2gx?=
+ =?utf-8?B?VFZ3OHp0eFUrWFc3QjVENDRqWHdXczdsT1hFNTFvUlZqcTNyZUdER1hWWjNO?=
+ =?utf-8?B?OUJlbDM4RHBDdncxbUl3a0JDSVQ4a054ZXQybXpqdFpvU01MaTExYVZRTmlG?=
+ =?utf-8?B?RGEvNlcxWFRwWEdFVzdJa3JzNnFSNXVKUjk5RXppeHVwOTVKOXErNW5qY0tp?=
+ =?utf-8?B?N2YyaUF0b2NWdFhkeFhSL3RSVk5jMUVUVHlsV3dROUp1dUFVbithNlZkVWhZ?=
+ =?utf-8?B?SXplMENoQyt0K1ZodlpzalhiRldKYUF2K0V5aGc4d2RhdFJxR1FuWm92ZmtY?=
+ =?utf-8?B?VEttenUveHhNdkNHeW5DdEp5RHdmckorWWdvYXBybXovVzNoZ1VpajZxOWVT?=
+ =?utf-8?B?WWN6YkV3YTBqaG9FNktVZ2FaN3dIWjNMcmFYRCtoakV4aFlMTlBUT20yR054?=
+ =?utf-8?B?Y2ZaRkVRdWcxSHEzc1ZDczdPV1JEbGNpUXFnclZpNWNyUmRYZldYU2RLSVNI?=
+ =?utf-8?B?NWttU201UWJybU9ZZU5iYnRYbzhBY1czZzZibzZoNTNFdmkvNHEvRmFLRnM1?=
+ =?utf-8?B?T0J6NW16cDR2TlpBSFFoaW9QU0FNeUJ5WjE3cnJnazVSVVZkMVkzaVNNakxO?=
+ =?utf-8?B?dENtQVpXK3cvTmdFMjV3MldrMlU4YVdjbnZaUjVGQ0xJQUpqVjd3bW4zRkt4?=
+ =?utf-8?Q?2gJW/xE0D+1lzeW0oDEFHDAIJ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b783f059-68bc-4290-3335-08dd86c416bc
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 02:18:11.1092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HOfL+yKbTC3CSXgt/c1AoU8+j82MySAGkhscZf7I4ovxNbemzti32Dn9P47tq4Eae3jbcyjMMhm2y9bfcePdhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10758
 
-Hi Daniel,
+Hi,
 
-On 29/4/25 10:04, Daniel Palmer wrote:
-> Hi Greg,
+On 04/25/2025, Luca Ceresoli wrote:
+> devm_drm_bridge_alloc() is the new API to be used for allocating (and
+> partially initializing) a private driver struct embedding a struct
+> drm_bridge.
 > 
-> On Mon, 28 Apr 2025 at 08:37, Greg Ungerer <gerg@linux-m68k.org> wrote:
->> I notice that some other architectures (arm and powerpc) have version
->> checks on gcc or ld in the config. Do you know if there is any version
->> limitations for m68k here?
+> For many drivers having a simple code flow in the probe function, this
+> commit does a mass conversion automatically with the following semantic
+> patch. The changes have been reviewed manually for correctness as well as
+> to find any false positives.
 > 
-> I'm not sure about that. I'll try to work out why they have the checks
-> and see if that affects m68k too.
-> I'm using GCC13 so probably new enough that most things work.
+>   @@
+>   type T;
+>   identifier C;
+>   identifier BR;
+>   expression DEV;
+>   expression FUNCS;
+>   @@
+>   -T *C;
+>   +T *C;
+>    ...
+>   (
+>   -C = devm_kzalloc(DEV, ...);
+>   -if (!C)
+>   -    return -ENOMEM;
+>   +C = devm_drm_bridge_alloc(DEV, T, BR, FUNCS);
+>   +if (IS_ERR(C))
+>   +     return PTR_ERR(C);
+>   |
+>   -C = devm_kzalloc(DEV, ...);
+>   -if (!C)
+>   -    return ERR_PTR(-ENOMEM);
+>   +C = devm_drm_bridge_alloc(DEV, T, BR, FUNCS);
+>   +if (IS_ERR(C))
+>   +     return PTR_ERR(C);
+>   )
+>    ...
+>   -C->BR.funcs = FUNCS;
+> 
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> 
+> ---
+> 
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: Adrien Grassein <adrien.grassein@gmail.com>
+> Cc: Aleksandr Mishin <amishin@t-argos.ru>
+> Cc: Andy Yan <andy.yan@rock-chips.com>
+> Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Biju Das <biju.das.jz@bp.renesas.com>
+> Cc: Christoph Fritz <chf.fritz@googlemail.com>
+> Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> Cc: Detlev Casanova <detlev.casanova@collabora.com>
+> Cc: Dharma Balasubiramani <dharma.b@microchip.com>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Janne Grunau <j@jannau.net>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Jesse Van Gavere <jesseevg@gmail.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Cc: Liu Ying <victor.liu@nxp.com>
+> Cc: Manikandan Muralidharan <manikandan.m@microchip.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Phong LE <ple@baylibre.com>
+> Cc: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> Cc: Sugar Zhang <sugar.zhang@rock-chips.com>
+> Cc: Sui Jingfeng <sui.jingfeng@linux.dev>
+> Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> Cc: Vitalii Mordan <mordan@ispras.ru>
+> 
+> Changed in v2:
+> - added missing PTR_ERR() in the second spatch alternative
+> ---
+>  drivers/gpu/drm/adp/adp-mipi.c                      |  8 ++++----
+>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c        |  9 ++++-----
+>  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c  |  9 ++++-----
+>  drivers/gpu/drm/bridge/aux-bridge.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/aux-hpd-bridge.c             |  9 +++++----
+>  drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c |  8 ++++----
+>  drivers/gpu/drm/bridge/chipone-icn6211.c            |  9 ++++-----
+>  drivers/gpu/drm/bridge/chrontel-ch7033.c            |  8 ++++----
+>  drivers/gpu/drm/bridge/cros-ec-anx7688.c            |  9 ++++-----
+>  drivers/gpu/drm/bridge/fsl-ldb.c                    |  7 +++----
+>  drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c      |  9 ++++-----
+>  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c        | 10 ++++------
+>  drivers/gpu/drm/bridge/imx/imx8qxp-pixel-link.c     |  8 ++++----
+>  drivers/gpu/drm/bridge/imx/imx8qxp-pxl2dpi.c        |  8 ++++----
+>  drivers/gpu/drm/bridge/ite-it6263.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/ite-it6505.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/ite-it66121.c                |  9 ++++-----
+>  drivers/gpu/drm/bridge/lontium-lt8912b.c            |  9 ++++-----
+>  drivers/gpu/drm/bridge/lontium-lt9211.c             |  8 +++-----
+>  drivers/gpu/drm/bridge/lontium-lt9611.c             |  9 ++++-----
+>  drivers/gpu/drm/bridge/lvds-codec.c                 |  9 ++++-----
+>  drivers/gpu/drm/bridge/microchip-lvds.c             |  8 ++++----
+>  drivers/gpu/drm/bridge/nwl-dsi.c                    |  8 ++++----
+>  drivers/gpu/drm/bridge/parade-ps8622.c              |  9 ++++-----
+>  drivers/gpu/drm/bridge/parade-ps8640.c              |  9 ++++-----
+>  drivers/gpu/drm/bridge/sii9234.c                    |  9 ++++-----
+>  drivers/gpu/drm/bridge/sil-sii8620.c                |  9 ++++-----
+>  drivers/gpu/drm/bridge/simple-bridge.c              | 10 ++++------
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c        |  8 ++++----
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c       |  8 ++++----
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c      |  8 ++++----
+>  drivers/gpu/drm/bridge/tc358762.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/tc358764.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/tc358768.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/tc358775.c                   |  9 ++++-----
+>  drivers/gpu/drm/bridge/thc63lvd1024.c               |  8 ++++----
+>  drivers/gpu/drm/bridge/ti-dlpc3433.c                |  9 ++++-----
+>  drivers/gpu/drm/bridge/ti-tdp158.c                  |  8 ++++----
+>  drivers/gpu/drm/bridge/ti-tfp410.c                  |  9 ++++-----
+>  drivers/gpu/drm/bridge/ti-tpd12s015.c               |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_dp.c                   |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_dpi.c                  |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_dsi.c                  |  9 ++++-----
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c                 |  9 ++++-----
+>  drivers/gpu/drm/meson/meson_encoder_cvbs.c          | 12 ++++++------
+>  drivers/gpu/drm/meson/meson_encoder_dsi.c           | 12 ++++++------
+>  drivers/gpu/drm/meson/meson_encoder_hdmi.c          | 12 ++++++------
+>  drivers/gpu/drm/renesas/rcar-du/rcar_lvds.c         |  9 ++++-----
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c      | 10 ++++------
+>  49 files changed, 201 insertions(+), 237 deletions(-)
 
-FWIW, the oldest toolchain I had lying around was based on gcc 8.3.0
-and binutils 2.32. This patch worked fine on that.
+[...]
 
-Regards
-Greg
+> diff --git a/drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c b/drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c
+> index f072c6ed39ef183b10518b43bd6d979bc89e36f9..8069c4881e9058f5462f99116799b589bd52b19e 100644
+> --- a/drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c
+> +++ b/drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c
+> @@ -59,9 +59,10 @@ struct drm_bridge *devm_imx_drm_legacy_bridge(struct device *dev,
+>  	struct imx_legacy_bridge *imx_bridge;
+>  	int ret;
+>  
+> -	imx_bridge = devm_kzalloc(dev, sizeof(*imx_bridge), GFP_KERNEL);
+> -	if (!imx_bridge)
+> -		return ERR_PTR(-ENOMEM);
+> +	imx_bridge = devm_drm_bridge_alloc(dev, struct imx_legacy_bridge,
+> +					   base, &imx_legacy_bridge_funcs);
+> +	if (IS_ERR(imx_bridge))
+> +		return PTR_ERR(imx_bridge);
+>  
+>  	ret = of_get_drm_display_mode(np,
+>  				      &imx_bridge->mode,
+> @@ -71,8 +72,6 @@ struct drm_bridge *devm_imx_drm_legacy_bridge(struct device *dev,
+>  		return ERR_PTR(ret);
+>  
+>  	imx_bridge->mode.type |= DRM_MODE_TYPE_DRIVER;
+> -
 
+Nit: Can you please leave this blank line undeleted?  And I see similar
+situations where lines are unnecessarily deleted by this patch, so this applies
+to the entire patch.
 
+> -	imx_bridge->base.funcs = &imx_legacy_bridge_funcs;
+>  	imx_bridge->base.of_node = np;
+>  	imx_bridge->base.ops = DRM_BRIDGE_OP_MODES;
+>  	imx_bridge->base.type = type;
+
+-- 
+Regards,
+Liu Ying
