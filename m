@@ -1,62 +1,62 @@
 Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AFD2D1F63;
-	Tue, 29 Apr 2025 11:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B322D29BD
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745927429; cv=none; b=ZUDkZegK6ZVjg6NbWWEhcSySXEzu8p6na42SCpvhsH6fpayamG3zVVsbTIq+fDZG6euxrlWcdmqmA09LdUb4hB/dmVfk1qsyeBFVGelGQwuJDsittjfH+VKb49B/hcnamvAKr/FBbxNDdfAZ+9aXvSO/18wNBK0elEJjlmYtb4I=
+	t=1745927433; cv=none; b=Yq+DS+LBieJA1UIHKEEBtvIpXaBOVazrri282H+4TkCyac0RDLx7HHXElalp222o/An8qX5PPb6XfC81Ii9lC4Z1WlLiRvMHFmik40Pys5KfIka46rwHu1DM/ia7Z/9ZTwQMul0qFZYGo4ngDynhap08rxiCsK8pbvJUrdJZzOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745927429; c=relaxed/simple;
-	bh=bjClv6BryTyDpGkWdfsiI+95q6D8k7MY583X7jPAQJk=;
+	s=arc-20240116; t=1745927433; c=relaxed/simple;
+	bh=2+zHp3o6v4QSVzp94ClonbDqg/k5+dUzGUoCLjRAKLo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ppG3fu1fv+iUKzGIoRCRXi8wZHNXkr2+ai11gB9M/ZJLV68gCY1u+47CQEDJIJ10vwdvNhW64GgCJif6g/FAcy7ZBdMURQ9LhVl3eaR+CuI3buubCxSnj4LamDIeq4QsyJ4Z5cg/XQZoJcrpgyscI2UB07UengiWdEnVjCX2RZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S7ok08LE; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=U2GPzxvTFLA4PRksPTS+gXoH1uNuBIenYHQxjZcrZHA75+DrIkSBBD7AiR0r/0ad0GWi/tNr5KrGZsgLkY9niVxeN+/a+3KZx1+ztWkD+9MncmunecEd39IXyGxIDjwf5h4dTcOjcZh2AbCzzH8xV27TguKWtBMrrp9B2NG/Puk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZQrd+iS1; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7ok08LE"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736a72220edso5843642b3a.3;
-        Tue, 29 Apr 2025 04:50:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQrd+iS1"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso7908305b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 04:50:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745927427; x=1746532227; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745927431; x=1746532231; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=tq3nEj4DUSPSU3dXBHWbYOiByd1+bRHGbfykzSesdrc=;
-        b=S7ok08LE4iJdi1CuDPQfT/F30XCLMLEO6NkEyeHaE0XC+RISQE9lZ4T3vOX0TPwCxF
-         +sNOXeGNAzRLjEVhP3WMj0qvXFSStyl1uOXExpXqngcekrzV2FMLPRzwd+RPafVDo862
-         g0AvBWIN8kGnbg6yAZ0aneD+hqthXoxb/2qPuUBXCK9TGruTs9AFPh+zKQbv1l4gUG7M
-         O1eMlquhpGwpAM2zFujEBiIRGVynQ5iCQCKx8PMQnk5iRI3DUv6CzgLNIKsTkYgL0i8C
-         Qh6UFznzr7qNRt4Kgvd8E2RJBzw4rF5gPUWNyhoJCSZ4O+Ib22OYcaIJQuv2OS732YR2
-         zB1A==
+        bh=NRi4DVQ4l2yFg1fX4IS9tDs6tW+LC63jcXq9t1eYUbg=;
+        b=ZQrd+iS1J5t23AbFzS8Xlfov6H4FzlkVx1eGnc88VIurgc+AzEd2Q6rMPgAtpVbqvt
+         5uN4UH50xGcOwT5NNJU5lzcgBHwAjPCy0e8PgS/rgKCcwJ6zctJhuYV6xy1E47RTBvT9
+         htapmzDXrB6IFEx3snBcd+uDw2Iu0XKhLUwCkI5S9AhzxYddZmcPxWpcD77cOEuMYBo7
+         5dRHP0pvWXQ9174UKBbWRmTO0IclJM6JUzHqVesR1uDtFuEXpjWim+xL4kWc8Fk1OatT
+         oHXnfJml6vYG4/lntYyiosXm+5AgIisJzAflsYPbWDS6czzBReGdVuaRfxabGdLFeAcz
+         ag/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745927427; x=1746532227;
+        d=1e100.net; s=20230601; t=1745927431; x=1746532231;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tq3nEj4DUSPSU3dXBHWbYOiByd1+bRHGbfykzSesdrc=;
-        b=EGVaYYUNAq3dCAkvPwao3F8GGNX0zkFSUgRgKT/QJvFakUyMc2XgR789cR+jQySY7S
-         TaALhX2zMDPuN7CyCRmY5IWandptxJZRLzvl7SBSwICXhqFE4zd/1WIKfR5oftP53erw
-         K3PdYMk+T5EFhXg1QO8QcNlzLtPb/0Sbq1/Z6Qohp1CG/Lw1Au/3Nm332+vdmJQ5OopW
-         6AVoqZYaUnWyrAXnWDqOXUEQclDgb8T/SeAMU9oKQQJbBJ/RYBfzXebS8jY59V9Z96ZM
-         z2d9lYCGNagWllIGJA0+K9U0J7TiNZd/yveJpCZijgkV3IeO6ClMWJJ7GZK3F1NGIGwp
-         eqZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFVEMz0FYG6mIVLuIi7+rRTvonVe45wGC3v0E7TBtANQSRk7XBX+LhdDOmAxxKHZ/4YzW1/4gJ6Dc4PFq8@vger.kernel.org, AJvYcCXdRUtgti/K8BCWG91jwpUXk0nzYDernf66JqkMWMt4PYiroHt21Xgn+ccIkyZcA8NtqW/EPH4kej3Pog==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD04p8Dfi7cqKWg5LCvCLoZvw3WcTL8Aw0EMc+Jc1ZCgaYTF9E
-	23lmgwb0T2PvfkfpQXB1xdjAJ0TqNivRcr5Mfmaf6k0P+OJEphSPKeyPtdr3
-X-Gm-Gg: ASbGnctx2RjuNkf/v6VBsVPNmXb0oWljqjTkYBllMqvcqt8EOfB8X0iH/8eP8oqwpZ/
-	d7v67LnARWuMs56lppsOSiYrKyseeuO1RaGygqcmkW5zoz9gBkSiOxCIB0v6HOjks5275p1rtal
-	p+XPRefkbLv8fBtHxVElzVL0rKEzRDt8v59COOmQOEozq50Wle9RRU8dFZcZWzknr1Q2Le/RdFk
-	EpaJxClsja48sm6NNzH6ZJsHe46/VhI2ZBfwhubj2YjKYucz32l2pW0BBpZ4kHFubDOFaBG51Wx
-	eU8i1XcNZ/2KFFSHOG9Ps4DcWo0pmm6wc/Ur5kkNFL6wzh0QVaDijhKK2K3OEX9mtwLgsO4=
-X-Google-Smtp-Source: AGHT+IFceGviU6cyFKzyG4aWjdQDKx3Cfc2HEqFWBXzPaKs+4WEXEA1l8P+G5QoBnkrWzjUrg/mxQA==
-X-Received: by 2002:a05:6a21:3a44:b0:1f5:6e71:e55 with SMTP id adf61e73a8af0-2095907d1bamr3893991637.6.1745927426869;
-        Tue, 29 Apr 2025 04:50:26 -0700 (PDT)
+        bh=NRi4DVQ4l2yFg1fX4IS9tDs6tW+LC63jcXq9t1eYUbg=;
+        b=TJdhwbN7oJLfMPzWZE4vKfTNk5l+0+M+A5d/5WIwhEY3tLOR7FwVu0x9Za3Oa+i3Lv
+         5botkNonF+0x+dT88pCz2W4MGrIiBFJfpsKDBdJDOaUMQ1QaQbFwKYjsbFPpaEzBolgh
+         5owrVdo/vLw9k82SO4dAfe3he5T9mIJ6jni3ou/GmBY5JFwY/Zsdmym13q+snAwF8ZC+
+         iHKkfKA1aXADUq66KqcKdRE8ZbsSXRkGEVfVQlDMp4bZK5CBIxi2HGvdPxMIXpHslFH9
+         t75SEd+OPpz6usLPgKaVvBzB0YvlvWPzPyxpFOszGaEGQyPuyPPiK8W0sAlYJp8kyC6t
+         m/7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVYQ/uZOkgH3Q1rlBCuxd1UfxR5O52QFUo0EdMEZrW57hAChBhbnD7fNMdpUDfqxG2Sp5yb2If9hdm3qF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyZ4qZuWfnzo7RwQsf0xeHjM7v84z4syC+i26g/bplQvw5aP+A
+	qg1nQr6iNZsWvsikfbXH2SbZjc28kJ1agY3CIx6aCOb23neuJwRR
+X-Gm-Gg: ASbGncuWMGSA9bMN9Na7S/VNhXnurMvFgFWwHPppaCBucouM+/fVTOFM2CEx0H8nYuH
+	8WARfmnta7RfcafgaM8AoWqUr+6rg8bSbRakyUlzhxL96f2b0ToSYkuRKGi4B4RzwzITGNiDgeS
+	SAyXAkmTna01lQwYGlRoll13Aa6FSwzNzdWSuJpOJwbez+GsxvZgOSuUy/NKVYAotmi1sfBY+N6
+	XjNs8QHHTbMRP8NKj3PUvSyEBQZq4QxWJxWynAPif8tMmeE6OKd4nh2MG6tzgW5+yzFxOdATRU1
+	cKNcuVCjozuX/cBm5ls42xf3Lq78RD+fZ2XMrVDPlP4zwcbIr7DjWpUT/y2a4FwQzV70HqM=
+X-Google-Smtp-Source: AGHT+IEoriRK2NyH//YcoOQqQiNaSwS5WKzp7Q2fF6Hs41CP4tZDUS769rp7JmgItvGnje7zbfgCvg==
+X-Received: by 2002:a05:6a21:4a4b:b0:1f5:59e5:8ada with SMTP id adf61e73a8af0-20958f841c3mr3725562637.4.1745927431033;
+        Tue, 29 Apr 2025 04:50:31 -0700 (PDT)
 Received: from KASONG-MC4.tencent.com ([43.132.141.24])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm9661644b3a.167.2025.04.29.04.50.22
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm9661644b3a.167.2025.04.29.04.50.27
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 29 Apr 2025 04:50:26 -0700 (PDT)
+        Tue, 29 Apr 2025 04:50:30 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -70,14 +70,12 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-kernel@vger.kernel.org,
 	Kairui Song <kasong@tencent.com>,
-	Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	Qu Wenruo <wqu@suse.com>
-Subject: [PATCH v2 2/6] btrfs: drop usage of folio_index
-Date: Tue, 29 Apr 2025 19:49:45 +0800
-Message-ID: <20250429114949.41124-3-ryncsn@gmail.com>
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH v2 3/6] f2fs: drop usage of folio_index
+Date: Tue, 29 Apr 2025 19:49:46 +0800
+Message-ID: <20250429114949.41124-4-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250429114949.41124-1-ryncsn@gmail.com>
 References: <20250429114949.41124-1-ryncsn@gmail.com>
@@ -97,32 +95,76 @@ cache, for pure page cache usage, the caller can just use
 folio->index instead.
 
 It can't be a swap cache folio here.  Swap mapping may only call into fs
-through `swap_rw` but btrfs does not use that method for swap.
+through `swap_rw` but f2fs does not use that method for swap.
 
 Signed-off-by: Kairui Song <kasong@tencent.com>
-Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
-Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
-Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
-Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
+Cc: Jaegeuk Kim <jaegeuk@kernel.org> (maintainer:F2FS FILE SYSTEM)
+Cc: Chao Yu <chao@kernel.org> (maintainer:F2FS FILE SYSTEM)
+Cc: linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE SYSTEM)
 Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
 ---
- fs/btrfs/extent_io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/data.c   | 4 ++--
+ fs/f2fs/inline.c | 4 ++--
+ fs/f2fs/super.c  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 197f5e51c474..e08b50504d13 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3509,7 +3509,7 @@ static void btree_clear_folio_dirty_tag(struct folio *folio)
- 	xa_lock_irq(&folio->mapping->i_pages);
- 	if (!folio_test_dirty(folio))
- 		__xa_clear_mark(&folio->mapping->i_pages,
--				folio_index(folio), PAGECACHE_TAG_DIRTY);
-+				folio->index, PAGECACHE_TAG_DIRTY);
- 	xa_unlock_irq(&folio->mapping->i_pages);
- }
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 54f89f0ee69b..5745b97ca1f0 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2077,7 +2077,7 @@ static int f2fs_read_single_page(struct inode *inode, struct folio *folio,
+ 	sector_t last_block;
+ 	sector_t last_block_in_file;
+ 	sector_t block_nr;
+-	pgoff_t index = folio_index(folio);
++	pgoff_t index = folio->index;
+ 	int ret = 0;
  
+ 	block_in_file = (sector_t)index;
+@@ -2392,7 +2392,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ 		}
+ 
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+-		index = folio_index(folio);
++		index = folio->index;
+ 
+ 		if (!f2fs_compressed_file(inode))
+ 			goto read_single_page;
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index ad92e9008781..aaaec3206538 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -86,7 +86,7 @@ void f2fs_do_read_inline_data(struct folio *folio, struct page *ipage)
+ 	if (folio_test_uptodate(folio))
+ 		return;
+ 
+-	f2fs_bug_on(F2FS_I_SB(inode), folio_index(folio));
++	f2fs_bug_on(F2FS_I_SB(inode), folio->index);
+ 
+ 	folio_zero_segment(folio, MAX_INLINE_DATA(inode), folio_size(folio));
+ 
+@@ -130,7 +130,7 @@ int f2fs_read_inline_data(struct inode *inode, struct folio *folio)
+ 		return -EAGAIN;
+ 	}
+ 
+-	if (folio_index(folio))
++	if (folio->index)
+ 		folio_zero_segment(folio, 0, folio_size(folio));
+ 	else
+ 		f2fs_do_read_inline_data(folio, ipage);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index f087b2b71c89..eac1dcb44637 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3432,7 +3432,7 @@ static int __f2fs_commit_super(struct f2fs_sb_info *sbi, struct folio *folio,
+ 	bio = bio_alloc(sbi->sb->s_bdev, 1, opf, GFP_NOFS);
+ 
+ 	/* it doesn't need to set crypto context for superblock update */
+-	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio_index(folio));
++	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio->index);
+ 
+ 	if (!bio_add_folio(bio, folio, folio_size(folio), 0))
+ 		f2fs_bug_on(sbi, 1);
 -- 
 2.49.0
 
