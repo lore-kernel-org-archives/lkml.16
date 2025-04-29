@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6610024676A;
-	Tue, 29 Apr 2025 23:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE802D3F99;
+	Tue, 29 Apr 2025 23:53:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970789; cv=none; b=s06P2wW8pYDioSNiDyZ77RhnVYzCJbrW02yNjjAFu9gCMznzrZmwkh1ue+VX2BjxTUcMbryfTZIZWP+Zq/uWxo1gheCelhNIE01nOhvnY9W11/MeqdtkLrp/jmF9wRrlnUrky+VrWV2r7jF3zBnVYdMqsYHDcomrmg1c+uCaUXc=
+	t=1745970791; cv=none; b=pPfV28H1q6P1wqbwbKw0CvgQ03S7TwnYRu0Zm10lPgnc17/TFCawaAjV4bSTGVmr1EJ1kmFtcp1tZ/qllfQRN/VhxQmLx79wdr2ZwzEJ4TXwheeC6m/MVtHaOj31KIoBJ1mk9D3nfC8bBTK3xFZPMs3vWFwzSn0lZQXjl2N70i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970789; c=relaxed/simple;
-	bh=pZt2DPHAfask/sfLxdPOeDkn02Ro66UHuDGl1/Gb3Bc=;
+	s=arc-20240116; t=1745970791; c=relaxed/simple;
+	bh=2oz50+X7QDKubf9DkwX20leuuzsNO+Ef9u69G8iUJdo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DgS3dDNFjK31R/IGcSGVX0TR2hwla01nuejsBOs8LNmCEGkpEUO9gUU3neCDFmhWErRhrPIxfFzUF6ExX7+bh2iiVsOy+aNlpM1+Ab8zwbZVEs+/wwfQjyePPV+FWT8QEfGusHE+Tv6/qBBxJPssNuHcmk6RzpY6xzhJbupCdgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgL95Hfz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XMaAi9Yjb48f1DnocPtRWxkYTOp/7JO7ln2E2TdOpQ+thiBomusWOmTGicOPMwzlAi4HrSg7qJgvkq7Al0yekeTMk4Nu7vKJq3sLv6nRucrXg0FECW9vrqthwc5tmKGBDy37ksz75X9ze4p90Kf7uecS55NjzOnNAS7PhUzKzVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpmTxcxz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgL95Hfz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6B6C4CEF2;
-	Tue, 29 Apr 2025 23:53:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpmTxcxz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474DEC4CEE3;
+	Tue, 29 Apr 2025 23:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970789;
-	bh=pZt2DPHAfask/sfLxdPOeDkn02Ro66UHuDGl1/Gb3Bc=;
+	s=k20201202; t=1745970791;
+	bh=2oz50+X7QDKubf9DkwX20leuuzsNO+Ef9u69G8iUJdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MgL95HfzIMz/STrMCTMwKpS9wSIR7hvwZJR3377RiF2ZebkzF57adGdGWf5TfPBF+
-	 3gApDA7jpxScmthCxMYaq01Y0DUDatsuv/ClbxQ3Rwr/JMQC1iOCy0N2TSAdfGcZwe
-	 jGezGdHZyFkgTdrdOSIzMe2IrXgYb2MTpV3vD8Kgj6OeHwkPm1to3wVVcJ+8AUlQW/
-	 Jl3DOhG5G1j6ssikGtAiHdOFidlZijs+pSiBacjtneSK4dW1K50uFgapqcaZ23qYEL
-	 lQubGX3+/AkqsyA/agYCaWFXKIOeX+x06N3xLkeiNV+C3MyYA2fxU3paJooMi4vriK
-	 y2i62VadOJaGw==
+	b=GpmTxcxzpAAavpeChUs/pExfjRwHXrfZ7tPdI3WNkHQRVmZ5Ih0B8lgfRY6EP40AW
+	 TC79zJIS+HX7UoGcjWXucw9/7zDGqVbxELMcV7G4L6w5t4pJAAEVoaop+EsPc949nh
+	 ZLsd7RlHCm6l8gC+Uq65A2UEBCM0kveNBOBthRL1edN32aKJ35GiGpM75eegB0cKx9
+	 B5RVSWsqiOq0/E17/1asBcD9QeUCUZIU1FN5fMIbiE3yf66EN+luBAjjyRvu8pdrlA
+	 TusyLbsZknAdAxavAfBnSNXtpuljGmxXma+zf50mytQLurj4MQzx0pLTc22B0/+eaA
+	 upSCtDFM+yTkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Felix Kuehling <felix.kuehling@amd.com>,
-	Hao Zhou <hao.zhou@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	Yunxiang.Li@amd.com,
-	tvrtko.ursulin@igalia.com,
-	matthew.auld@intel.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 18/21] drm/amdgpu: Allow P2P access through XGMI
-Date: Tue, 29 Apr 2025 19:52:30 -0400
-Message-Id: <20250429235233.537828-18-sashal@kernel.org>
+	eddyz87@gmail.com,
+	daniel@iogearbox.net,
+	shuah@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 19/21] selftests/bpf: Mitigate sockmap_ktls disconnect_after_delete failure
+Date: Tue, 29 Apr 2025 19:52:31 -0400
+Message-Id: <20250429235233.537828-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250429235233.537828-1-sashal@kernel.org>
 References: <20250429235233.537828-1-sashal@kernel.org>
@@ -53,89 +51,53 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.88
 Content-Transfer-Encoding: 8bit
 
-From: Felix Kuehling <felix.kuehling@amd.com>
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
 
-[ Upstream commit a92741e72f91b904c1d8c3d409ed8dbe9c1f2b26 ]
+[ Upstream commit f2858f308131a09e33afb766cd70119b5b900569 ]
 
-If peer memory is accessible through XGMI, allow leaving it in VRAM
-rather than forcing its migration to GTT on DMABuf attachment.
+"sockmap_ktls disconnect_after_delete" test has been failing on BPF CI
+after recent merges from netdev:
+* https://github.com/kernel-patches/bpf/actions/runs/14458537639
+* https://github.com/kernel-patches/bpf/actions/runs/14457178732
 
-Signed-off-by: Felix Kuehling <felix.kuehling@amd.com>
-Tested-by: Hao (Claire) Zhou <hao.zhou@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-(cherry picked from commit 372c8d72c3680fdea3fbb2d6b089f76b4a6d596a)
+It happens because disconnect has been disabled for TLS [1], and it
+renders the test case invalid.
+
+Removing all the test code creates a conflict between bpf and
+bpf-next, so for now only remove the offending assert [2].
+
+The test will be removed later on bpf-next.
+
+[1] https://lore.kernel.org/netdev/20250404180334.3224206-1-kuba@kernel.org/
+[2] https://lore.kernel.org/bpf/cfc371285323e1a3f3b006bfcf74e6cf7ad65258@linux.dev/
+
+Signed-off-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Reviewed-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Link: https://lore.kernel.org/bpf/20250416170246.2438524-1-ihor.solodrai@linux.dev
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 30 ++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-index be4cc4868a748..493e18bcea069 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-@@ -43,6 +43,29 @@
- #include <linux/pci-p2pdma.h>
- #include <linux/pm_runtime.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
+index 2d0796314862a..0a99fd404f6dc 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
+@@ -68,7 +68,6 @@ static void test_sockmap_ktls_disconnect_after_delete(int family, int map)
+ 		goto close_cli;
  
-+static const struct dma_buf_attach_ops amdgpu_dma_buf_attach_ops;
-+
-+/**
-+ * dma_buf_attach_adev - Helper to get adev of an attachment
-+ *
-+ * @attach: attachment
-+ *
-+ * Returns:
-+ * A struct amdgpu_device * if the attaching device is an amdgpu device or
-+ * partition, NULL otherwise.
-+ */
-+static struct amdgpu_device *dma_buf_attach_adev(struct dma_buf_attachment *attach)
-+{
-+	if (attach->importer_ops == &amdgpu_dma_buf_attach_ops) {
-+		struct drm_gem_object *obj = attach->importer_priv;
-+		struct amdgpu_bo *bo = gem_to_amdgpu_bo(obj);
-+
-+		return amdgpu_ttm_adev(bo->tbo.bdev);
-+	}
-+
-+	return NULL;
-+}
-+
- /**
-  * amdgpu_dma_buf_attach - &dma_buf_ops.attach implementation
-  *
-@@ -54,12 +77,14 @@
- static int amdgpu_dma_buf_attach(struct dma_buf *dmabuf,
- 				 struct dma_buf_attachment *attach)
- {
-+	struct amdgpu_device *attach_adev = dma_buf_attach_adev(attach);
- 	struct drm_gem_object *obj = dmabuf->priv;
- 	struct amdgpu_bo *bo = gem_to_amdgpu_bo(obj);
- 	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
- 	int r;
+ 	err = disconnect(cli);
+-	ASSERT_OK(err, "disconnect");
  
--	if (pci_p2pdma_distance(adev->pdev, attach->dev, false) < 0)
-+	if (!amdgpu_dmabuf_is_xgmi_accessible(attach_adev, bo) &&
-+	    pci_p2pdma_distance(adev->pdev, attach->dev, false) < 0)
- 		attach->peer2peer = false;
- 
- 	r = pm_runtime_get_sync(adev_to_drm(adev)->dev);
-@@ -482,6 +507,9 @@ bool amdgpu_dmabuf_is_xgmi_accessible(struct amdgpu_device *adev,
- 	struct drm_gem_object *obj = &bo->tbo.base;
- 	struct drm_gem_object *gobj;
- 
-+	if (!adev)
-+		return false;
-+
- 	if (obj->import_attach) {
- 		struct dma_buf *dma_buf = obj->import_attach->dmabuf;
- 
+ close_cli:
+ 	close(cli);
 -- 
 2.39.5
 
