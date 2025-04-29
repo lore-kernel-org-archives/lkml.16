@@ -1,155 +1,94 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5628921ABD3
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A622F21CC57
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745939261; cv=none; b=VkQGWMPtMmXrSSgy/q2Z62XWeVzXez/GwN1EWfr/sc0b2nEzvzf+khyjZeGmy3MBsvevsau+Q6XqTvfLeDO8U9iYyjUU+muIDCWLztcceFM6li0fJyCW9KoJIrpojj4txPA+fD6ZzZ8HSQ/YC30kwrWYiOp6aXTWdtHSrk68R1o=
+	t=1745939354; cv=none; b=j3o8aFexskE3fOoV00HRk5yoYJLVB6WDEJzuwP08BNayLTh4RFOu0RtsTXoFtmjshi3hUpuwua32XswT67SJmqX7zKcO9TJE8oyX1k5AhznYo3XQ23tcujGksS3XbiT6GOmXbpHwx3e5+UYR0didabi9nrk+l+VqaSJ9P/yiMes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745939261; c=relaxed/simple;
-	bh=yWvLS+L1vwhGX/x64llCG0tlFfpZ48J1mGjHGuD7HgU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aMUDuITwzMJsvIMoViVPmSCzqXDN4MangzBnXtHjGVCDN++yycJ5cMnbjdLwc+bSclxJ1TMnTmT1NB9H7n6WBQF4nTkl6SKy7G3ZSxaYIw+3Zi2basHmQOd2x+fj1GfYVGcxRQUtDBJ/mE1R9eUBJDbISDsRy3wJbx/nkuEEAtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YxWm+WXq; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
+	s=arc-20240116; t=1745939354; c=relaxed/simple;
+	bh=ojkcmuoTOZc+OvrBxj7j7/ITRR6GPZahdKeeEgC9hTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SNXUhH0RQD3JA/+FPub6YjUb+7Rp9+L46Ub8qQsyaBFEQoV95sVomEKgk2JACN2pqusIo4F/snTO1JMobxMHT7F7zn57BU7KyBQbWE4B4Gin+NTvl9iw9yCL1sMYYSX31Kl4AHi28+IAsjFkVl64ZLvzdtbVm+bJQ8BlihpjEcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMVzPR55; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YxWm+WXq"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af9564001cbso3693619a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745939259; x=1746544059; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/YTmetfmZSii2yQiCrQzYOAurMpZM7O82nYLhh7qEWA=;
-        b=YxWm+WXqUJIaHkv6QhQS9tweIzopvjEW/obry5an50ZMhlTR80uF7y3SNz6uW/X07d
-         45CxkA2z8CamIpOA/vn9Je2huOGu+Q9zgWORfU2G8+wWqq7UnYdXwYw4oBl8G7JgEP+i
-         25Dy9AdIxM/yMcpiI4aJIppMVAGYb69Gh+mCYNKE/8C/75ie8Tht3PvdHAXn9f2QTYDO
-         L76SSPuMJxDM81FOmvtz5Z6pKqMCtscuN6AsiNA8Kxbt57cQGy9pFLP1N0/UVbiBQ1mW
-         1+e1o7I+MaMjpeeS/SbrtlzPGeRQStw43YU5B+beSaRNP7TycNcdpGHkxtjW7+346tnD
-         w9Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745939259; x=1746544059;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/YTmetfmZSii2yQiCrQzYOAurMpZM7O82nYLhh7qEWA=;
-        b=n23zIJX50lT3CzwsKbSrKSP11b62BCQXmVvuai0Z0wat4t8LwOA/GdwSf/utQb+3XZ
-         OKfi/lTcT+Pp6/tZF7F5UUYagAheZ+T2093tRFw6nbkRzQPpMBWVFwAC49EdITansfZX
-         4+Dmmoy9tDiYDuYWFAyA4VG4Z3frTDRUewCHZnWWpx97F/ByBXRYNjKabbq77/UCrarj
-         oCAg+YxE3fZ6+ovWTR/Mvy7IKPl37U1q69Tz1OXQMTPxIQSlAGhsHuXYs9zQdC8ZzC/T
-         m+zRqMYqXpmmS2h19rtVb3YyIfjiTBFyt4P7wcIN09doJ8s33cnWZ84/tBevBnxZ7PBY
-         6lIw==
-X-Gm-Message-State: AOJu0Yyg2jnV5n2whzC/Uz2UzS8sPIwiWUlHMXS/4+1cjnLTubsytGy1
-	17QvCtB6t+66aud4lWuFV/Ztr0iRt6BLPIqE0NcVuklICaYCrV/UJAU89etw1m0Sictxkm2pR1A
-	PaHqAdTERuRtQxYl9LWyrwi2H8SJwyDUr2G0B8V803bpVW+2lvhhx0lJ7eCRKiZ8dpzshn7xX+n
-	hoOBVSPMFpN7cq3WImwwJiOCa3ySqN8unP9UUKcmY3jZc6
-X-Google-Smtp-Source: AGHT+IFZOhJvojlvQHDx0AbPbHCighCjEuRE0mLrm8jLKFC4Cmo8aMpAvbaOIxxS7sQX73zFIE3gkA29CXjy
-X-Received: from pgac2.prod.google.com ([2002:a05:6a02:2942:b0:af3:30b9:99a4])
- (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:329f:b0:1fd:f4df:96ed
- with SMTP id adf61e73a8af0-2093e818762mr5666246637.26.1745939259424; Tue, 29
- Apr 2025 08:07:39 -0700 (PDT)
-Date: Tue, 29 Apr 2025 08:07:26 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMVzPR55"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745939352; x=1777475352;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=ojkcmuoTOZc+OvrBxj7j7/ITRR6GPZahdKeeEgC9hTI=;
+  b=SMVzPR55BCm0bGEDeq3yk1D2m69X1BYH0SUZ1jNZ1jXdsG/ewtCBZFbw
+   ZUTObLRg6ajS8oxt74pZWuYZjGhUVIyoqP/+eLDg0KJns96jthAow1YkS
+   v+MckjXkZoHC2oRtyN9eWdp80lcL6LCmjDx2OhO3GI2VajAQlECCEQ9Bd
+   B2gPvCU3XoqjS9LPqvt8KttQncmPENPB/ct4lU/U2niZrJz1IsCJoCBzc
+   2yAW2qIGF1gwsZZdeC7q+L0gpjAxto3V8fWvKpPX6272SGZrBVQgpsBeh
+   d3kSaTSKnnnEhsPZ9Qz0QS6hbzJusUtZEHbKA/HtCXSLij8Fg2pRUiKVE
+   A==;
+X-CSE-ConnectionGUID: HHj+LEckQJaCV73X7PTmpw==
+X-CSE-MsgGUID: TiHVHjxYRYuaD1c3yxxnHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="50228919"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="50228919"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 08:09:09 -0700
+X-CSE-ConnectionGUID: 6woIGgMWT2O+NUM5FQtStA==
+X-CSE-MsgGUID: u+4nm9mrRsqJXq6D1Wyidw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="138834820"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 29 Apr 2025 08:09:08 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u9ma1-0000oH-1N;
+	Tue, 29 Apr 2025 15:09:05 +0000
+Date: Tue, 29 Apr 2025 23:08:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb:
+ nand-controller@ff100000 (xlnx,zynqmp-nand-controller): Unevaluated
+ properties are not allowed ('arasan,has-mdma', 'power-domains' were
+ unexpected)
+Message-ID: <202504292212.luCFluoD-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250429150736.3778580-1-jstultz@google.com>
-Subject: [PATCH v3] sched/core: Tweak wait_task_inactive() to force dequeue
- sched_delayed tasks
-From: John Stultz <jstultz@google.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: John Stultz <jstultz@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com, 
-	peter-yc.chang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It was reported that in 6.12, smpboot_create_threads() was
-taking much longer then in 6.6.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ca91b9500108d4cf083a635c2e11c884d5dd20ea
+commit: 499a4b16a4869a901a9bc601bc1e0b8f60151e93 dt-bindings: mtd: arasan,nand-controller: Ensure all properties are defined
+date:   3 months ago
+config: arm64-randconfig-052-20250428 (https://download.01.org/0day-ci/archive/20250429/202504292212.luCFluoD-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+dtschema version: 2025.3.dev21+ge6ea659
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250429/202504292212.luCFluoD-lkp@intel.com/reproduce)
 
-I narrowed down the call path to:
- smpboot_create_threads()
- -> kthread_create_on_cpu()
-    -> kthread_bind()
-       -> __kthread_bind_mask()
-          ->wait_task_inactive()
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504292212.luCFluoD-lkp@intel.com/
 
-Where in wait_task_inactive() we were regularly hitting the
-queued case, which sets a 1 tick timeout, which when called
-multiple times in a row, accumulates quickly into a long
-delay.
+dtcheck warnings: (new ones prefixed by >>)
+>> arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb: nand-controller@ff100000 (xlnx,zynqmp-nand-controller): Unevaluated properties are not allowed ('arasan,has-mdma', 'power-domains' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/arasan,nand-controller.yaml#
+   arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb: /axi/spi@ff050000/flash@0: failed to match any schema with compatible: ['atmel,at45db041e', 'atmel,at45', 'atmel,dataflash']
+   arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb: /axi/spi@ff050000/flash@0: failed to match any schema with compatible: ['atmel,at45db041e', 'atmel,at45', 'atmel,dataflash']
+   arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb: /axi/spi@ff050000/flash@0: failed to match any schema with compatible: ['atmel,at45db041e', 'atmel,at45', 'atmel,dataflash']
+--
+>> arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dtb: nand-controller@ff100000 (xlnx,zynqmp-nand-controller): Unevaluated properties are not allowed ('arasan,has-mdma', 'num-cs', 'power-domains' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/arasan,nand-controller.yaml#
 
-I noticed disabling the DELAY_DEQUEUE sched feature recovered
-the performance, and it seems the newly create tasks are usually
-sched_delayed and left on the runqueue.
-
-So in wait_task_inactive() when we see the task
-p->se.sched_delayed, manually dequeue the sched_delayed task
-with DEQUEUE_DELAYED, so we don't have to constantly wait a
-tick.
-
-This seems to work, but I've only lightly tested it, so I'd love
-close review and feedback in case I've missed something in
-wait_task_inactive(), or if there is a simpler alternative
-approach.
-
-NOTE: Peter did highlight[1] his general distaste for the
-kthread_bind() through wait_task_inactive() functions, which
-suggests a deeper rework might be better, but I'm not familiar
-enough with all its users to have a sense of how that might be
-done, and this fix seems to address the problem and be more
-easily backported to 6.12-stable, so I wanted to submit it
-again, as a potentially more short-term solution.
-
-[1]: https://lore.kernel.org/lkml/20250422085628.GA14170@noisy.programming.kicks-ass.net/
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: kernel-team@android.com
-Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
-Reported-by: peter-yc.chang@mediatek.com
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Signed-off-by: John Stultz <jstultz@google.com>
----
-v2:
-* Rework & simplify the check as suggested by K Prateek Nayak
-* Added Reported-by tag for proper attribution
-v3:
-* Add Fixed-by: and Tested-by tag suggested by Prateek
----
- kernel/sched/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c81cf642dba05..b986cd2fb19b7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2283,6 +2283,12 @@ unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state
- 		 * just go back and repeat.
- 		 */
- 		rq = task_rq_lock(p, &rf);
-+		/*
-+		 * If task is sched_delayed, force dequeue it, to avoid always
-+		 * hitting the tick timeout in the queued case
-+		 */
-+		if (p->se.sched_delayed)
-+			dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
- 		trace_sched_wait_task(p);
- 		running = task_on_cpu(rq, p);
- 		queued = task_on_rq_queued(p);
 -- 
-2.49.0.901.g37484f566f-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
