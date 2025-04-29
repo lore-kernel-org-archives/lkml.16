@@ -1,110 +1,113 @@
-Received: from mail-43171.protonmail.ch (mail-43171.protonmail.ch [185.70.43.171])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BDB2BE7DE;
-	Tue, 29 Apr 2025 09:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430472BE0F7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745920601; cv=none; b=oHo9VC5G9fwE4K19WP1lWdlZqtNeQb3ufZQ+s9OzyBUhTz65+Jg3f1f7zli4J5YCWMvQgLm1WI1z9d+Yqe+lJl8VmVxEKuYjzKtpVDTmAqylDNwiyZgWEwqcIob+nFB6vBYOTYUaK3Y6/8r22IOyUPxSMyeKu5j5cXWrUQozlwE=
+	t=1745920738; cv=none; b=AVhqvdH6JF20tLXFtc9vp4ZbGlS8++YSByH+Jh+UiXi6jzGSCURQLDegAR15JI99bBBZQ4F7QfMA3Wm/qn23uNmNCFuZHLxzMN03E10kJgJrEBNHH1Wd7fBUVMW0p5YBIFzgNwJmdRAkn504a0kawCMuQfan8Bi8aIZdTD0Bb3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745920601; c=relaxed/simple;
-	bh=TOitCNlEHavJgJ0406Fj4t6giqT2OUkC7+UWGeAosKA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BkxhkvEAu5cn+oJmfvLQClcx49qC9BF1L1ceY+MpNC9545i1z27lkUPIe7xnSztqQ81yAxgfPIqRgtB5qFZ0N5w0O4YZKXtYIqVoyL40eKYU1E+QDtJB9yEPJW03+zFAPXRTiwercZNJgUWChXdHZkDkrj5V8HBCmFE1v2CCY44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=t9LMIS//; arc=none smtp.client-ip=185.70.43.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1745920738; c=relaxed/simple;
+	bh=YPTPXj7GXADEHXOMx1Z4O90ixxizjLkgmi0Dh6J7BJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AX3og9SezzmWoWMlQEUmMk7IaaaWuYJAJXbrBRU5pUHsXrTbAIc4EgkjSLqxG4u7dBT5AAXAKaADKdIKn7Y5niqo6v8jn/3Uybdc8zHDOm+YrHnShsLPnYNaGP4Jr6iNCOVPm+TJ5/fpsMUSZ2HCKOm/Mxt9y+gol7lp5hTXch8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WAHjDIQw; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="t9LMIS//"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1745920595; x=1746179795;
-	bh=BIj1PH3AC001SwYGa/4ndDv3Snnx5p8N27N5kIu5Rbc=;
-	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=t9LMIS//QjgJ8QRB7fuXYgrlz0+YSKRYLo2ZrufxkcAa4IbMTUWPW2b2feaamkQ0h
-	 zs9hlz8nKn9MeslWZ8iCOVmwjw2uL3lfVPzJzf/mjZ0dbhdHytrViLXIXAaaGE2LM8
-	 8Qc4P4lbMhJh92FyYUxRk8KcuXXXZm5+gtjwwJEWMOaijX8H8Hw+6h2liT+odhcnig
-	 9OZvu9xI6L8WF5hmpN4vp3/bgXetKc3TWSjj8ECQUZvL1m6oUAQxkEPTDA5Hdnyp4S
-	 lxA5nTPLGHTe4vNIWtL1L1TBVx5HTlvs2mNogIxJedz6LPWYIADJ9kdkPuYEq7D+wC
-	 aTqNbj9/9cJSA==
-X-Pm-Submission-Id: 4Zmwgx4bQDz44r
-From: Esben Haabendal <esben@geanix.com>
-Date: Tue, 29 Apr 2025 11:56:12 +0200
-Subject: [PATCH v2 2/2] Input: goodix - Allow DT specification of missing
- reset pull-up
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WAHjDIQw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745920734;
+	bh=YPTPXj7GXADEHXOMx1Z4O90ixxizjLkgmi0Dh6J7BJs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WAHjDIQwAJc3o5uxAknbJm5ETVG6FNj2CmTb9v3QxDNUMLgfs1h/Pt/ma+auHcAv0
+	 YKkl3a3Uv4AGD21pLRgKMt0JBb4bGixVubdE9T2Ycme2PiS274+JonPQGDfi3NBbOX
+	 EuCg7RdpbeuJgUTYYoylSZnxBFlduZhF42jBYCNMii+f6+3DVzLC1e6EWew/NjbF25
+	 QglkBRm4moWj4DM0Xxea2dWm2+GPYna1uB516wz/iAUSDcutWRo7LOMjBTe1fDczAP
+	 8WeBbgbtpBYFM10q3faLrDz100X6epUwmulqFqC3ZnvFnr5cYILcSgwIOHtLrmpaWw
+	 cM4E50wBKGCrQ==
+Received: from [192.168.1.90] (unknown [84.232.140.122])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EA34E17E1073;
+	Tue, 29 Apr 2025 11:58:53 +0200 (CEST)
+Message-ID: <e54a7f29-c0a0-406a-b907-bb612d80e612@collabora.com>
+Date: Tue, 29 Apr 2025 12:58:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 08/23] drm/tests: hdmi: Add macro to simplify EDID
+ setup
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <lumag@kernel.org>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
+ <20250425-hdmi-conn-yuv-v4-8-5e55e2aaa3fa@collabora.com>
+ <87cycwy5n4.fsf@intel.com>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <87cycwy5n4.fsf@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-goodix-no-reset-pull-up-v2-2-0687a4ad5a04@geanix.com>
-References: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
-In-Reply-To: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Esben Haabendal <esben@geanix.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745920580; l=2058;
- i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=TOitCNlEHavJgJ0406Fj4t6giqT2OUkC7+UWGeAosKA=;
- b=LXGLbkRsBK9V1v9vARAI3xti/9Iwl1ti7/D+c9GdS507CofovXMkB2RdwJ2zMiUDgvauKGzB9
- N6J9RfslxibA9p3OyEb9/8b6aDPK2+3ib3kDq0oqU/byGOJXhkohZro
-X-Developer-Key: i=esben@geanix.com; a=ed25519;
- pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
 
-In commit a2fd46cd3dbb ("Input: goodix - try not to touch the reset-pin on x86/ACPI devices")
-a fix for problems on various x86/ACPI devices where external
-pull-up is missing were added. The same type of problem can exist on
-device-tree platforms, and the fix can be activated by adding the
-no-reset-pull-up device-tree property.
+Hi Jani,
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/input/touchscreen/goodix.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+On 4/28/25 12:52 PM, Jani Nikula wrote:
+> On Fri, 25 Apr 2025, Cristian Ciocaltea <cristian.ciocaltea@collabora.com> wrote:
+>> Factor out the HDMI connector initialization from
+>> drm_kunit_helper_connector_hdmi_init_funcs() into a common
+>> __connector_hdmi_init() function, while extending its functionality to
+>> allow setting custom (i.e. non-default) EDID data.
+>>
+>> Introduce a macro as a wrapper over the new helper to allow dropping the
+>> open coded EDID setup from all test cases.
+>>
+>> The actual conversion will be handled separately; for now just apply it
+>> to drm_kunit_helper_connector_hdmi_init() helper.
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 46 +++++++++++++---------
+>>  1 file changed, 28 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> index c8dc6fa0f925e35e9903a18bac7f78f9d8165960..36734639d19a3f279abc4631eb19d5c2b20ca315 100644
+>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> @@ -140,10 +140,11 @@ static const struct drm_connector_funcs dummy_connector_funcs = {
+>>  
+>>  static
+>>  struct drm_atomic_helper_connector_hdmi_priv *
+>> -drm_kunit_helper_connector_hdmi_init_funcs(struct kunit *test,
+>> -					   unsigned int formats,
+>> -					   unsigned int max_bpc,
+>> -					   const struct drm_connector_hdmi_funcs *hdmi_funcs)
+>> +__connector_hdmi_init(struct kunit *test,
+>> +		      unsigned int formats,
+>> +		      unsigned int max_bpc,
+>> +		      const struct drm_connector_hdmi_funcs *hdmi_funcs,
+>> +		      const char *edid_data, size_t edid_len)
+> 
+> char* is weird for EDID data, but it's a pre-existing thing, and
+> actually making it unsigned char or u8 isn't much better.
+> 
+> A follow-up could switch edid_data to just const void *, and ditto for
+> set_connector_edid() and current_edid member in struct
+> drm_atomic_helper_connector_hdmi_priv.
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index a3e8a51c91449533b4d5185746df6b98676053dd..ce4622bbcc89434a4d89c49bb97f084fb61aa448 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -772,10 +772,12 @@ int goodix_reset_no_int_sync(struct goodix_ts_data *ts)
- 
- 	/*
- 	 * Put the reset pin back in to input / high-impedance mode to save
--	 * power. Only do this in the non ACPI case since some ACPI boards
--	 * don't have a pull-up, so there the reset pin must stay active-high.
-+	 * power.
-+	 * Avoid doing this on boards that are known to not have external
-+	 * pull-up, and all ACPI boards since some ACPI boards don't have a
-+	 * pull-up. These boards need the reset pin to stay active-high.
- 	 */
--	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_GPIO) {
-+	if (ts->gpiod_rst_flags == GPIOD_IN) {
- 		error = gpiod_direction_input(ts->gpiod_rst);
- 		if (error)
- 			goto error;
-@@ -969,6 +971,13 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
- 	 */
- 	ts->gpiod_rst_flags = GPIOD_IN;
- 
-+	/*
-+	 * Devices that does not have pull-up on reset signal should not be
-+	 * changed to input
-+	 */
-+	if (device_property_read_bool(dev, "goodix,no-reset-pull-up"))
-+		ts->gpiod_rst_flags = GPIOD_ASIS;
-+
- 	ts->avdd28 = devm_regulator_get(dev, "AVDD28");
- 	if (IS_ERR(ts->avdd28))
- 		return dev_err_probe(dev, PTR_ERR(ts->avdd28), "Failed to get AVDD28 regulator\n");
+Noted for next revision (if required), otherwise I'll handle it separately.
 
--- 
-2.49.0
-
+Thanks,
+Cristian
