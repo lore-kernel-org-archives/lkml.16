@@ -1,75 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9935A24A047;
-	Tue, 29 Apr 2025 16:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8007624C08D;
+	Tue, 29 Apr 2025 16:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945577; cv=none; b=cJ8NHcJdkzsyiMjoPySGdbDP1HiVADqUJpsHfLZsYpMj8YHIjIcVuxe1T4tXVR3A8rQ1OhgOI4uMj9z/zoblH231q/ZdVr9bEeLDSSXzJ2KG/b04YaeSsUTl6FB6/oIE80w/suqrmIbJUXPKE2M0EBxMUarGjpOuqKkFd3FIHuk=
+	t=1745945591; cv=none; b=V0xE8LNupGpjSrkn8T8fiUnRt1b2mJYwHwUmge3OTc+UQMXeB9S9Z8t5lIa2j4jjrcdD1yXsDGZBm+B/m6a4MHM/B6DSd4M65Qsv3vm6tabzYRrteIZt5HFDtCr4glGlU3KZZ1kpUFLI7NxzmuOsP7R0fwIsP3CedgdCaMAWg9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945577; c=relaxed/simple;
-	bh=aOnvrbKGCd6oZtAZ+WNZIUoYtPamcTbmixwVmPQzSX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wxif/6/eZWGMiASOnQe5G0Apqk8Ae7GH8I2Cm3mrrbJkQEyXf2OE/LexTVmODh1RJrrJP4BxZYtqtgdkHE2ELSntStONpkcr14zdFMqqbYJS9T+E1wqRYvlxG3M6/sDoQoVpv1ANOeMtDCGRXc/3pUnwG/KgTkf2Oh1ARWypkf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbVoZggt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745945591; c=relaxed/simple;
+	bh=+hdnXxC4NDXKRuT9lf143RB20lIGAAYL/7bIxsAcRxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ek+4Zq+s0X9SORTNaL6wUk4cMAxnmsVPgvVo4DM31+peTzD8oYv3F4FMw+qOvwstT2/773YiKFrTSQRGpzfo00jVXhzmK/iMDS3ih5uLskkFrGFZNUxqSUDiGgIo7oRN3SEvr4VxFcW4yCC6x6xXox/StD6QFj1RXIJMFGkiDL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=CbMj1bGv; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbVoZggt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B93FC4CEE9;
-	Tue, 29 Apr 2025 16:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745945577;
-	bh=aOnvrbKGCd6oZtAZ+WNZIUoYtPamcTbmixwVmPQzSX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UbVoZggtxb56N/IORSBXBpTc4lh3NOkTRToTPMaFsJYwTRlD6ghYVlPEkfnoLP4ao
-	 v0PKVd3FFlFCiNH2jiXzIgej3wk9uJs3BckkbVwzlW04KXAtCxtJQGQRi1/v4RSivc
-	 h3OIAB2KF8wKt5siG65a4l0yoV6ov+R2FOXR2UhdK43FeZT9e6FdWM5TIiwbarbSEX
-	 CuUwTebiDJVI1nMFcGHpMben6YlRjiSOd8oswG6xR4NaNeQSq2JRqtI9z7K/erTp3j
-	 Tp/HY8S4mwIaDeoGWfHbPb7+NIl3wkgTTSK1x8nae3kxhpVjqfs88qCb5DYUq5FfZm
-	 LzmD9Q+O8EHtg==
-Date: Tue, 29 Apr 2025 09:52:54 -0700
-From: Kees Cook <kees@kernel.org>
-To: Nicolas Schier <n.schier@avm.de>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] randstruct: Rebuild completely if randstruct.seed changes
-Message-ID: <202504290951.8C3D7C7653@keescook>
-References: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CbMj1bGv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=BRcdsk3TvN9DaRVrtf6cpw/TXDjhWY1fpqAdozY9Je8=; b=CbMj1bGv+IDiuOe7R1UP+3WL+L
+	Ydm6RfJ6+DMJ8mQuvD3ph9vGzJqtzdNisv9ILwwp0UPRwqY5Iow3eeD256Jt8SIrTHzGfTTOJ355x
+	B65qbfTWCcMCK7XdV7tm6xkxgYJH19FqETb9tk8uyJGeGNhwbwg7LFTCbsmGH846xIROGXrQeYUSr
+	XNiDFqKxjj2ZQmYEFaaEctxRGJMEJ7Hg7SomZUyc/0/23P/pEegMfVpF0pCJKpRC6z3W9VcuKkz4X
+	SVnl3pPRFQS1wPd9W8H5FpdAvbU3KVYaHMJsVrNPKND8CoKBGI4rJ3H78bv5UTtNwOvjWdj+conKe
+	onqFKxrg==;
+Date: Tue, 29 Apr 2025 18:52:40 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Jerome Neanne <jneanne@baylibre.com>, Shree Ramamoorthy
+ <s-ramamoorthy@ti.com>, Mark Brown <broonie@kernel.org>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo
+ <kristo@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Kevin Hilman
+ <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, Tony Lindgren
+ <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: tps65219/am62p kernel oops
+Message-ID: <20250429185240.6a7644bf@akair>
+In-Reply-To: <aBDSTxALaOc-PD7X@gaggiata.pivistrello.it>
+References: <aBDSTxALaOc-PD7X@gaggiata.pivistrello.it>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429-rebuild-on-randstruct-seed-changes-v1-1-16a74fe65538@avm.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 29, 2025 at 02:59:13PM +0200, Nicolas Schier wrote:
-> Include generated/randstruct_hash.h in linux/compiler-version.h to force
-> a complete rebuild if CONFIG_RANDSTRUCT is enabled and randstruct.seed
-> changes.
+Am Tue, 29 Apr 2025 15:21:19 +0200
+schrieb Francesco Dolcini <francesco@dolcini.it>:
+
+> Hello all,
+> while working on adding support in mainline for a new board based on TI
+> AM62P SoC I noticed the following Kernel Oops.
 > 
-> Removal or change of scripts/basic/randstruct.seed leads to a remake of
-> generated/randstruct_hash.h.  As linux/compiler-version.h is a
-> hard-coded include for every kbuild induced compilation, conditionally
-> adding generated/randstruct_hash.h there adds it as build-dependency to
-> each object file.
+> This oops was reproduced running current Linux
+> master, 6.15.0-rc4+, ca91b9500108d4cf083a635c2e11c884d5dd20ea, but I was able
+> to reproduce the same with 6.14.4.
+> 
 
-This does technically work, but this feels like the wrong solution.
-Also, this won't work for another case where I need a similar thing: if
-the .scl file for the integer sanitizer changes, we need to do the same
-full rebuild, and that's not a C file.
+[...]
+> [  +0.000022] Call trace:
+> [  +0.000011]  regulator_notifier_call_chain+0x20/0xa4 (P)
+> [  +0.000018]  tps65219_regulator_irq_handler+0x34/0x80
 
-I think we need to explicitly inject something into fixdep...
+wild guessing: maybe because irqdata->rdev is not initalized in
+_probe()? At least I do not see where it would be initialized.
 
--- 
-Kees Cook
+Regards,
+Andreas
+
