@@ -1,207 +1,324 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 128B624EAB3
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243561E515
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745909694; cv=none; b=JXxR3wnKXsv9LDFW40phXyugquzjpbmrATMuK1z5kDM9Z6HloAgdz8ml8mz4vabZooYF9vPBIXDRUC/+Oyu/RXX8qmP2xn0WHwFOCqGbFv1zCNYKcwDSfLCwUZjCwtYH0VYGYOhPx/tlp0kfBuZwcIK56iH9GPYsV/msdfcZ/Bg=
+	t=1745909695; cv=none; b=ubd+B5Fn/cbN9Bkjrg93B1jV530cuuGhqaPxeUFOmFhQ9hAqOlqhWIWa/Z8o9tAbHEEgY30YJpokyiX2HTmtx6WI9JSfe0IOxx4UEZzTQRUJmrIQ3+dmxvwJucp920uoRTTMO78ffuNAut83FMumFgTF7SIn4dfoALwjmmk3Q20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745909694; c=relaxed/simple;
-	bh=yAfxxEt3u2cGWEC1v5XC7vdbYm+8s7aIBUQAa+eMuVM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tAEQNJb9KSN64JwXfmFaAZzhZckmsF4XG1r/PfxE01LFwYbxCDB2+9cDHQsN7/CkukmpTA519qJh9ynFIG3nEnqJR/2NPA8b/oLgIIk+/TZugq9ZPb9pYaZ/iwfQGGZ+meRqRtulCIYNvw50qVHsUryyBR3qFWRRGgUmsaUqlNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7693D1515;
-	Mon, 28 Apr 2025 23:54:44 -0700 (PDT)
-Received: from [10.163.78.253] (unknown [10.163.78.253])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 647323F5A1;
-	Mon, 28 Apr 2025 23:54:41 -0700 (PDT)
-Message-ID: <b780d1b8-d6f0-42f1-aa5c-c6e016bbd9ae@arm.com>
-Date: Tue, 29 Apr 2025 12:24:37 +0530
+	s=arc-20240116; t=1745909695; c=relaxed/simple;
+	bh=AvMfWLvTTNlSaZzhYJRzJ22Y5akNCKwEDl/ms22zTVU=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=XcZ6+n+DJDjbEUlxZMOQLNfZfJ4s/PKXZRzVcppuYrreUorvaHkquwqxW1J/fBVjx2LgUQOZHKiEK5diXtZPAZQM7K8zSfX6Cd4XCjCx+p/1KlIT2hh1k4z01320thVuxLhNDKLv7pbfqj+mDQ3OxjY+A1p4lphM7y2Od/qIpZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VeKO/AHP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8CthQKMc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VeKO/AHP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8CthQKMc"
+Message-ID: <20250429065420.125439431@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745909691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=dzosJNCvmzKIX9RdmCBoR9wrniXmPjUK+yULOxcvuuE=;
+	b=VeKO/AHPNroIZTKJ5iP49KHuGZDccYESayyG87yQrtH0RH76kREPD9E82VFb4Wt4E2QyPE
+	7xJmWpKVTkAKwocyw34yq0g/e5of6zwqK7ZJbRz6y0+kqO4Rdidmk3bKE3Kj7njU00/bbX
+	L8/UIBe/Jglv5PmDIZN2FFNuPtO1E1Rrusa4aVSE5oxhHbTesPKd4jYIXsFqdcFzjdXcTW
+	rj09ioYHN4IwsIbAEtzAYdKKXMlx9hQ70x4YVuOsT1XqvpaBse2sRsFf3ubVXPiU4rB4Ju
+	RHwYuC1bGdrt7NfQp86fNFUXNr/7E4u08U1e2DRx0gsAkdlFj3nbCUbXeQWkNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745909691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=dzosJNCvmzKIX9RdmCBoR9wrniXmPjUK+yULOxcvuuE=;
+	b=8CthQKMcLK7Pt9tLeSJfrWQluJfOf2GiwZAEr7PJNCiGoRdq+3iyW5Z2bGS4y62nyrfoJz
+	mXVT6Dui6fU/P2Bg==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Subject: [patch V2 02/45] genirq/irqdesc: Switch to lock guards
+References: <20250429065337.117370076@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] mm: Refactor code in mprotect
-To: Anshuman Khandual <anshuman.khandual@arm.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
- will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- vbabka@suse.cz, jannh@google.com, peterx@redhat.com, joey.gouly@arm.com,
- ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
- quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
- yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
- namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
- ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-2-dev.jain@arm.com>
- <43dc2d0b-1ce9-4d56-a260-d1dfc4545c99@arm.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <43dc2d0b-1ce9-4d56-a260-d1dfc4545c99@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 29 Apr 2025 08:54:50 +0200 (CEST)
 
+Replace all lock/unlock pairs with lock guards and simplify the code flow.
 
+No functional change.
 
-On 29/04/25 12:11 pm, Anshuman Khandual wrote:
-> 
-> 
-> On 4/29/25 10:53, Dev Jain wrote:
->> Reduce indentation in change_pte_range() by refactoring some of the code
->> into a new function. No functional change.
->>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>   mm/mprotect.c | 116 +++++++++++++++++++++++++++++---------------------
->>   1 file changed, 68 insertions(+), 48 deletions(-)
->>
->> diff --git a/mm/mprotect.c b/mm/mprotect.c
->> index 88608d0dc2c2..70f59aa8c2a8 100644
->> --- a/mm/mprotect.c
->> +++ b/mm/mprotect.c
->> @@ -83,6 +83,71 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>   	return pte_dirty(pte);
->>   }
->>   
->> +
->> +
->> +static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
->> +		int target_node)
->> +{
->> +	bool toptier;
->> +	int nid;
->> +
->> +	/* Also skip shared copy-on-write pages */
->> +	if (is_cow_mapping(vma->vm_flags) &&
->> +	    (folio_maybe_dma_pinned(folio) ||
->> +	     folio_maybe_mapped_shared(folio)))
->> +		return true;
->> +
->> +	/*
->> +	 * While migration can move some dirty pages,
->> +	 * it cannot move them all from MIGRATE_ASYNC
->> +	 * context.
->> +	 */
->> +	if (folio_is_file_lru(folio) &&
->> +	    folio_test_dirty(folio))
->> +		return true;
->> +
->> +	/*
->> +	 * Don't mess with PTEs if page is already on the node
->> +	 * a single-threaded process is running on.
->> +	 */
->> +	nid = folio_nid(folio);
->> +	if (target_node == nid)
->> +		return true;
->> +	toptier = node_is_toptier(nid);
->> +
->> +	/*
->> +	 * Skip scanning top tier node if normal numa
->> +	 * balancing is disabled
->> +	 */
->> +	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
->> +	    toptier)
->> +		return true;
->> +	return false;
->> +}
->> +
->> +static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
->> +		unsigned long addr, pte_t oldpte, int target_node)
->> +{
->> +	struct folio *folio;
->> +	int ret;
->> +
->> +	/* Avoid TLB flush if possible */
->> +	if (pte_protnone(oldpte))
->> +		return true;
->> +
->> +	folio = vm_normal_folio(vma, addr, oldpte);
->> +	if (!folio || folio_is_zone_device(folio) ||
->> +	    folio_test_ksm(folio))
->> +		return true;
->> +	ret = prot_numa_skip(vma, folio, target_node);
-> 
-> What purpose does it solve to create additional helper prot_numa_skip().
-> IOW - why cannot all of these be inside prot_numa_avoid_fault() itself.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-That is in preparation for patch 2, so that I can skip a PTE batch.
+---
+ kernel/irq/irqdesc.c |  127 +++++++++++++++++----------------------------------
+ 1 file changed, 43 insertions(+), 84 deletions(-)
 
-> 
->> +	if (ret)
->> +		return ret;
->> +	if (folio_use_access_time(folio))
->> +		folio_xchg_access_time(folio,
->> +			jiffies_to_msecs(jiffies));
->> +	return false;
->> +}
->> +
->>   static long change_pte_range(struct mmu_gather *tlb,
->>   		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
->>   		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
->> @@ -116,56 +181,11 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   			 * Avoid trapping faults against the zero or KSM
->>   			 * pages. See similar comment in change_huge_pmd.
->>   			 */
->> -			if (prot_numa) {
->> -				struct folio *folio;
->> -				int nid;
->> -				bool toptier;
->> -
->> -				/* Avoid TLB flush if possible */
->> -				if (pte_protnone(oldpte))
->> -					continue;
->> -
->> -				folio = vm_normal_folio(vma, addr, oldpte);
->> -				if (!folio || folio_is_zone_device(folio) ||
->> -				    folio_test_ksm(folio))
->> -					continue;
->> -
->> -				/* Also skip shared copy-on-write pages */
->> -				if (is_cow_mapping(vma->vm_flags) &&
->> -				    (folio_maybe_dma_pinned(folio) ||
->> -				     folio_maybe_mapped_shared(folio)))
->> -					continue;
->> -
->> -				/*
->> -				 * While migration can move some dirty pages,
->> -				 * it cannot move them all from MIGRATE_ASYNC
->> -				 * context.
->> -				 */
->> -				if (folio_is_file_lru(folio) &&
->> -				    folio_test_dirty(folio))
->> +			if (prot_numa &&
->> +			    prot_numa_avoid_fault(vma, addr,
->> +						  oldpte, target_node))
->>   					continue;
->>   
->> -				/*
->> -				 * Don't mess with PTEs if page is already on the node
->> -				 * a single-threaded process is running on.
->> -				 */
->> -				nid = folio_nid(folio);
->> -				if (target_node == nid)
->> -					continue;
->> -				toptier = node_is_toptier(nid);
->> -
->> -				/*
->> -				 * Skip scanning top tier node if normal numa
->> -				 * balancing is disabled
->> -				 */
->> -				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
->> -				    toptier)
->> -					continue;
->> -				if (folio_use_access_time(folio))
->> -					folio_xchg_access_time(folio,
->> -						jiffies_to_msecs(jiffies));
->> -			}
->> -
->>   			oldpte = ptep_modify_prot_start(vma, addr, pte);
->>   			ptent = pte_modify(oldpte, newprot);
->>   
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -246,8 +246,7 @@ static struct kobject *irq_kobj_base;
+ #define IRQ_ATTR_RO(_name) \
+ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+ 
+-static ssize_t per_cpu_count_show(struct kobject *kobj,
+-				  struct kobj_attribute *attr, char *buf)
++static ssize_t per_cpu_count_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+ 	ssize_t ret = 0;
+@@ -266,99 +265,75 @@ static ssize_t per_cpu_count_show(struct
+ }
+ IRQ_ATTR_RO(per_cpu_count);
+ 
+-static ssize_t chip_name_show(struct kobject *kobj,
+-			      struct kobj_attribute *attr, char *buf)
++static ssize_t chip_name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
+-	raw_spin_lock_irq(&desc->lock);
++	guard(raw_spinlock_irq)(&desc->lock);
+ 	if (desc->irq_data.chip && desc->irq_data.chip->name)
+-		ret = sysfs_emit(buf, "%s\n", desc->irq_data.chip->name);
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++		return sysfs_emit(buf, "%s\n", desc->irq_data.chip->name);
++	return 0;
+ }
+ IRQ_ATTR_RO(chip_name);
+ 
+-static ssize_t hwirq_show(struct kobject *kobj,
+-			  struct kobj_attribute *attr, char *buf)
++static ssize_t hwirq_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
++	guard(raw_spinlock_irq)(&desc->lock);
+ 	raw_spin_lock_irq(&desc->lock);
+ 	if (desc->irq_data.domain)
+-		ret = sysfs_emit(buf, "%lu\n", desc->irq_data.hwirq);
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++		return sysfs_emit(buf, "%lu\n", desc->irq_data.hwirq);
++	return 0;
+ }
+ IRQ_ATTR_RO(hwirq);
+ 
+-static ssize_t type_show(struct kobject *kobj,
+-			 struct kobj_attribute *attr, char *buf)
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+-
+-	raw_spin_lock_irq(&desc->lock);
+-	ret = sysfs_emit(buf, "%s\n", irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
+-	raw_spin_unlock_irq(&desc->lock);
+ 
+-	return ret;
++	guard(raw_spinlock_irq)(&desc->lock);
++	return sysfs_emit(buf, "%s\n", irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
+ 
+ }
+ IRQ_ATTR_RO(type);
+ 
+-static ssize_t wakeup_show(struct kobject *kobj,
+-			   struct kobj_attribute *attr, char *buf)
++static ssize_t wakeup_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+-
+-	raw_spin_lock_irq(&desc->lock);
+-	ret = sysfs_emit(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
+ 
++	guard(raw_spinlock_irq)(&desc->lock);
++	return sysfs_emit(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
+ }
+ IRQ_ATTR_RO(wakeup);
+ 
+-static ssize_t name_show(struct kobject *kobj,
+-			 struct kobj_attribute *attr, char *buf)
++static ssize_t name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
+-	raw_spin_lock_irq(&desc->lock);
++	guard(raw_spinlock_irq)(&desc->lock);
+ 	if (desc->name)
+-		ret = sysfs_emit(buf, "%s\n", desc->name);
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++		return sysfs_emit(buf, "%s\n", desc->name);
++	return 0;
+ }
+ IRQ_ATTR_RO(name);
+ 
+-static ssize_t actions_show(struct kobject *kobj,
+-			    struct kobj_attribute *attr, char *buf)
++static ssize_t actions_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+ 	struct irqaction *action;
+ 	ssize_t ret = 0;
+ 	char *p = "";
+ 
+-	raw_spin_lock_irq(&desc->lock);
+-	for_each_action_of_desc(desc, action) {
+-		ret += sysfs_emit_at(buf, ret, "%s%s", p, action->name);
+-		p = ",";
++	scoped_guard(raw_spinlock_irq, &desc->lock) {
++		for_each_action_of_desc(desc, action) {
++			ret += sysfs_emit_at(buf, ret, "%s%s", p, action->name);
++			p = ",";
++		}
+ 	}
+-	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	if (ret)
+ 		ret += sysfs_emit_at(buf, ret, "\n");
+-
+ 	return ret;
+ }
+ IRQ_ATTR_RO(actions);
+@@ -414,19 +389,14 @@ static int __init irq_sysfs_init(void)
+ 	int irq;
+ 
+ 	/* Prevent concurrent irq alloc/free */
+-	irq_lock_sparse();
+-
++	guard(mutex)(&sparse_irq_lock);
+ 	irq_kobj_base = kobject_create_and_add("irq", kernel_kobj);
+-	if (!irq_kobj_base) {
+-		irq_unlock_sparse();
++	if (!irq_kobj_base)
+ 		return -ENOMEM;
+-	}
+ 
+ 	/* Add the already allocated interrupts */
+ 	for_each_irq_desc(irq, desc)
+ 		irq_sysfs_add(irq, desc);
+-	irq_unlock_sparse();
+-
+ 	return 0;
+ }
+ postcore_initcall(irq_sysfs_init);
+@@ -569,12 +539,12 @@ static int alloc_descs(unsigned int star
+ 	return -ENOMEM;
+ }
+ 
+-static int irq_expand_nr_irqs(unsigned int nr)
++static bool irq_expand_nr_irqs(unsigned int nr)
+ {
+ 	if (nr > MAX_SPARSE_IRQS)
+-		return -ENOMEM;
++		return false;
+ 	nr_irqs = nr;
+-	return 0;
++	return true;
+ }
+ 
+ int __init early_irq_init(void)
+@@ -652,11 +622,9 @@ EXPORT_SYMBOL(irq_to_desc);
+ static void free_desc(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+-	unsigned long flags;
+ 
+-	raw_spin_lock_irqsave(&desc->lock, flags);
+-	desc_set_defaults(irq, desc, irq_desc_get_node(desc), NULL, NULL);
+-	raw_spin_unlock_irqrestore(&desc->lock, flags);
++	scoped_guard(raw_spinlock_irqsave, &desc->lock)
++		desc_set_defaults(irq, desc, irq_desc_get_node(desc), NULL, NULL);
+ 	delete_irq_desc(irq);
+ }
+ 
+@@ -677,14 +645,13 @@ static inline int alloc_descs(unsigned i
+ 
+ static int irq_expand_nr_irqs(unsigned int nr)
+ {
+-	return -ENOMEM;
++	return false;
+ }
+ 
+ void irq_mark_irq(unsigned int irq)
+ {
+-	mutex_lock(&sparse_irq_lock);
++	guard(mutex)(&sparse_irq_lock);
+ 	irq_insert_desc(irq, irq_desc + irq);
+-	mutex_unlock(&sparse_irq_lock);
+ }
+ 
+ #ifdef CONFIG_GENERIC_IRQ_LEGACY
+@@ -823,11 +790,9 @@ void irq_free_descs(unsigned int from, u
+ 	if (from >= nr_irqs || (from + cnt) > nr_irqs)
+ 		return;
+ 
+-	mutex_lock(&sparse_irq_lock);
++	guard(mutex)(&sparse_irq_lock);
+ 	for (i = 0; i < cnt; i++)
+ 		free_desc(from + i);
+-
+-	mutex_unlock(&sparse_irq_lock);
+ }
+ EXPORT_SYMBOL_GPL(irq_free_descs);
+ 
+@@ -844,11 +809,10 @@ EXPORT_SYMBOL_GPL(irq_free_descs);
+  *
+  * Returns the first irq number or error code
+  */
+-int __ref
+-__irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
+-		  struct module *owner, const struct irq_affinity_desc *affinity)
++int __ref __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
++			    struct module *owner, const struct irq_affinity_desc *affinity)
+ {
+-	int start, ret;
++	int start;
+ 
+ 	if (!cnt)
+ 		return -EINVAL;
+@@ -866,22 +830,17 @@ int __ref
+ 		from = arch_dynirq_lower_bound(from);
+ 	}
+ 
+-	mutex_lock(&sparse_irq_lock);
++	guard(mutex)(&sparse_irq_lock);
+ 
+ 	start = irq_find_free_area(from, cnt);
+-	ret = -EEXIST;
+ 	if (irq >=0 && start != irq)
+-		goto unlock;
++		return -EEXIST;
+ 
+ 	if (start + cnt > nr_irqs) {
+-		ret = irq_expand_nr_irqs(start + cnt);
+-		if (ret)
+-			goto unlock;
++		if (!irq_expand_nr_irqs(start + cnt))
++			return -ENOMEM;
+ 	}
+-	ret = alloc_descs(start, cnt, node, affinity, owner);
+-unlock:
+-	mutex_unlock(&sparse_irq_lock);
+-	return ret;
++	return alloc_descs(start, cnt, node, affinity, owner);
+ }
+ EXPORT_SYMBOL_GPL(__irq_alloc_descs);
+ 
 
