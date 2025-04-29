@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B11A23C501;
-	Tue, 29 Apr 2025 23:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B422D268B;
+	Tue, 29 Apr 2025 23:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970781; cv=none; b=rVZZF44Vsn//0vpR66NMI+nRfSKhTiWnYlqZ2jAE3ZVBgbPRkYig9ukil7kKVQC5kTnb3aIiFlz4tA1yCmXmgDhAjRUYpW/QZqbPOQa2F7CkBneJ+wtPHQklGwP3geYJ+uLfOWo/sGyOt6Z9u+6DzbqjKedRZypCPcw2DBsmCZY=
+	t=1745970782; cv=none; b=pbX/9TrHfam/z536BwT00XvFwZY7LJXJL5zj910OAaMbN3dBQmU2cKkYrVRFk/MqRLLDzJuKDNfLLLGGMUK3qLOabHcu78B5TU2A+SBqRvvyD9hXyaFnKX0sSvpFkHddg1YBB/o7zKfZ8rdtZOX9cuzH/y1K2K3udTGGdmmTyM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970781; c=relaxed/simple;
-	bh=3MOEBFzFO7/aysooKzH5y1R6gbx8Xi4AfTz2KrC1bjI=;
+	s=arc-20240116; t=1745970782; c=relaxed/simple;
+	bh=COWLj79dpWMIyMzXi7B+njZVsskogsohijzWz47SUME=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XukrD7LBtGVKDbDDY/rmwL+HF+/QkicKYXNM0RCS9CrvT0zCP/CTEX1sRxjsooisLDujugfHzmAKzZX6DkYzf13BFtxeiAPN0FgoU5sVtjPZMkbB70Q3LFYxSFvIOCErFZHoECw/ThgQgr+x9fABsi6ndxkSWBW3bWYgswCXdJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9sEXz8J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sghK9tegFPTrhgVt3PhGwlKt+9iTxX2sp8/chTjQ6Vy/CUtTqqxbf6+QJPcly563wqwtpe9dn/Lv8U+DOuBFA4EB2nEs67H1CIM24V3icMb4vp6ajIArVoe1sy5za58Rr8KKORNTXraU8f+VW8hIGS348GS8a+lvgFY2Ucc4oz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlTwq4fU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9sEXz8J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9878FC4CEE3;
-	Tue, 29 Apr 2025 23:52:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlTwq4fU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51708C4CEEE;
+	Tue, 29 Apr 2025 23:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745970780;
-	bh=3MOEBFzFO7/aysooKzH5y1R6gbx8Xi4AfTz2KrC1bjI=;
+	s=k20201202; t=1745970782;
+	bh=COWLj79dpWMIyMzXi7B+njZVsskogsohijzWz47SUME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P9sEXz8JwINUhoArEs0uq9NtUs+ETngfRZpGUvYePcpDOP3Cvrfo+x5/lem6RRfBd
-	 fOD4Z/qAKJsPu42rmx2jsMoJ/p18QCzVV0Cqk1XbkwL+HI9yh4zzKarm7oTYgbki9f
-	 gDEpLi08anMc8wpgx6MoIj6PMYJitGSaW0Bp1NuL2FvQBWzGsc7/MytXoFRPD8CSYr
-	 VWZBjAj8QeJ1l+hIlbEmVk5MQdgYc3ocIkM/RyImJXdqYJhbs2ZC9NOUtwxrG/4Stu
-	 tssRzHGcfTZ+9icUsqBPF1j6U+pwsi1Fie69emW3FDCpqDeH7Zp6IDX9BCfWprXJu2
-	 mSi1LNeqwLsDg==
+	b=UlTwq4fUhAa3Ne4e5/jkuefa6+fwTR7MkMiUGIAxVspfCofHuUlYD1bd9jBH3tHF9
+	 SQiCbKrXRfufxtdRhRD620IByOs0sIHlqEsDqaLCFqvUUEEJW8UEAYtIz9VctkpJ7q
+	 Wf07CSfZEPGN7j/3iAGRldTMkm/RLvfd/pYPMHyTeWP0Y9HCt3gz3yjWjnxh4W24DT
+	 GjslurJyYMg9/oQ6JO5gByEGoQQ5dNBhp8J6jAFFQn/td2G5ukYK4QKJ8J5Sozb43E
+	 a8a7+NDrbSWoe5EeC083GgOIV5m+swTKRqawQt8BzxL7o1unbRSheM3FpPWpPECMb2
+	 h+Dt5CKJFp+6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dongli Zhang <dongli.zhang@oracle.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
+Cc: Ranjan Kumar <ranjan.kumar@broadcom.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 14/21] vhost-scsi: protect vq->log_used with vq->mutex
-Date: Tue, 29 Apr 2025 19:52:26 -0400
-Message-Id: <20250429235233.537828-14-sashal@kernel.org>
+	sathya.prakash@broadcom.com,
+	kashyap.desai@broadcom.com,
+	sumit.saxena@broadcom.com,
+	sreekanth.reddy@broadcom.com,
+	James.Bottomley@HansenPartnership.com,
+	mpi3mr-linuxdrv.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 15/21] scsi: mpi3mr: Add level check to control event logging
+Date: Tue, 29 Apr 2025 19:52:27 -0400
+Message-Id: <20250429235233.537828-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250429235233.537828-1-sashal@kernel.org>
 References: <20250429235233.537828-1-sashal@kernel.org>
@@ -54,80 +56,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.88
 Content-Transfer-Encoding: 8bit
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Ranjan Kumar <ranjan.kumar@broadcom.com>
 
-[ Upstream commit f591cf9fce724e5075cc67488c43c6e39e8cbe27 ]
+[ Upstream commit b0b7ee3b574a72283399b9232f6190be07f220c0 ]
 
-The vhost-scsi completion path may access vq->log_base when vq->log_used is
-already set to false.
+Ensure event logs are only generated when the debug logging level
+MPI3_DEBUG_EVENT is enabled. This prevents unnecessary logging.
 
-    vhost-thread                       QEMU-thread
-
-vhost_scsi_complete_cmd_work()
--> vhost_add_used()
-   -> vhost_add_used_n()
-      if (unlikely(vq->log_used))
-                                      QEMU disables vq->log_used
-                                      via VHOST_SET_VRING_ADDR.
-                                      mutex_lock(&vq->mutex);
-                                      vq->log_used = false now!
-                                      mutex_unlock(&vq->mutex);
-
-				      QEMU gfree(vq->log_base)
-        log_used()
-        -> log_write(vq->log_base)
-
-Assuming the VMM is QEMU. The vq->log_base is from QEMU userpace and can be
-reclaimed via gfree(). As a result, this causes invalid memory writes to
-QEMU userspace.
-
-The control queue path has the same issue.
-
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Message-Id: <20250403063028.16045-2-dongli.zhang@oracle.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Ranjan Kumar <ranjan.kumar@broadcom.com>
+Link: https://lore.kernel.org/r/20250415101546.204018-1-ranjan.kumar@broadcom.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/scsi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/scsi/mpi3mr/mpi3mr_fw.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index 8d8a22504d71f..724dd69c86489 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -560,6 +560,9 @@ static void vhost_scsi_complete_cmd_work(struct vhost_work *work)
- 	int ret;
+diff --git a/drivers/scsi/mpi3mr/mpi3mr_fw.c b/drivers/scsi/mpi3mr/mpi3mr_fw.c
+index 0d148c39ebcc9..60714a6c26375 100644
+--- a/drivers/scsi/mpi3mr/mpi3mr_fw.c
++++ b/drivers/scsi/mpi3mr/mpi3mr_fw.c
+@@ -174,6 +174,9 @@ static void mpi3mr_print_event_data(struct mpi3mr_ioc *mrioc,
+ 	char *desc = NULL;
+ 	u16 event;
  
- 	llnode = llist_del_all(&svq->completion_list);
++	if (!(mrioc->logging_level & MPI3_DEBUG_EVENT))
++		return;
 +
-+	mutex_lock(&svq->vq.mutex);
-+
- 	llist_for_each_entry_safe(cmd, t, llnode, tvc_completion_list) {
- 		se_cmd = &cmd->tvc_se_cmd;
+ 	event = event_reply->event;
  
-@@ -593,6 +596,8 @@ static void vhost_scsi_complete_cmd_work(struct vhost_work *work)
- 		vhost_scsi_release_cmd_res(se_cmd);
- 	}
- 
-+	mutex_unlock(&svq->vq.mutex);
-+
- 	if (signal)
- 		vhost_signal(&svq->vs->dev, &svq->vq);
- }
-@@ -1301,8 +1306,11 @@ static void vhost_scsi_tmf_resp_work(struct vhost_work *work)
- 		resp_code = VIRTIO_SCSI_S_FUNCTION_REJECTED;
- 	}
- 
-+	mutex_lock(&tmf->svq->vq.mutex);
- 	vhost_scsi_send_tmf_resp(tmf->vhost, &tmf->svq->vq, tmf->in_iovs,
- 				 tmf->vq_desc, &tmf->resp_iov, resp_code);
-+	mutex_unlock(&tmf->svq->vq.mutex);
-+
- 	vhost_scsi_release_tmf_res(tmf);
- }
- 
+ 	switch (event) {
 -- 
 2.39.5
 
