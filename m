@@ -1,161 +1,281 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9B42D0261
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F365B2248BA
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931573; cv=none; b=nh8G27+b89SRB8aaqe/CiiRIgmRfXdoXCvYc0CjH00/RAb4sPXfdSr8Gn4zfGABtnxBNqxbekMADwGNl3GyZoijZxf2+8Mo3GpJgK9ln6AHWke/L3S6HiByNu9Oy2M5MW7NcURmmhI6qsRahiAgQzc5Xed7VB80WZYTfZ0nZYvE=
+	t=1745931684; cv=none; b=AZ9cwQuirOeonCGkzS25nZ0Isn7MeVNKVMEur3WSYl+edj59CP9fjeK7GsSrimDyYz/Ds14aRu5+JXjJKYHzsT7+8UP032Tj779GoQHF6D7vFfcDZbwZivXrAiH5QF9WkmTlQIh42re8UpHh5Vim9x0ITyb79P9uhBPUCV2XdMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931573; c=relaxed/simple;
-	bh=MjuK/lSg2gfnEJ1nryEr/psdW7THiGFlO+Gx0Qp8XhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mltfZaibbpvB9UbdOrD+azZjAIDu2QP5B2/yaZBuD3hn3fcYj8dw80Q2YROzMFIPJfuHS/+xsXlCz5BpB5m8fdg4DPW3itFI7iULySeDM2HlYiO/lWbg+P9qAIhTKNOxB/GmFKFE5p/HsvHpkPwel2aevDv9BEC0C8/TXdo4Vwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ki0qKgl6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Isbw33bq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ki0qKgl6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Isbw33bq; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745931684; c=relaxed/simple;
+	bh=DFeDFQIgqisFrRbTyxkaRmuV5afJwHFeG7TqQcoSyTU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IF37/DhQMDjts2ZJ1woPfDSal3VK6iYos/lmPJ8WXkt7lLfUsFO+wpBiBFlHNkCcTuARzDdr4cvrY9joK5C3AEwiYwSYqH2MPJKnCvq70wxWXnQm447MxAXPE7uxv4JJoqzFqQ5GHxHlowXi67k3Ed93+XjG2GwUHNi6pcsbHsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UL+EEVJp; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ki0qKgl6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Isbw33bq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ki0qKgl6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Isbw33bq"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 72A3B1F391;
-	Tue, 29 Apr 2025 12:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745931569; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LOpr0MmnZWLYeA72wI88/nqcTraiGo+BD0i31sE7Rtk=;
-	b=ki0qKgl6E5qcsG1lSg71g7+Tyz+w7icENL7VGX9dvDqjqqCWqmQQ7+XBm2SqNurWze4Y7z
-	vIOY+mrDeRMKjSLPlWviVq4M1BD9aG4O/rSza7Okfoizn1y5BBd5ZC48CZ+2yGBFwYLRm3
-	pbcRfyDpjWxj+s/EGP+UMJayNJloCcA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745931569;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LOpr0MmnZWLYeA72wI88/nqcTraiGo+BD0i31sE7Rtk=;
-	b=Isbw33bq03+GreuAyzjBgP//PNMMUsFH2Vs3D6nYe0a0/8cKidwMg+4/w/S3dzdoIyB5Ys
-	+os3INoVfkjjugDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745931569; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LOpr0MmnZWLYeA72wI88/nqcTraiGo+BD0i31sE7Rtk=;
-	b=ki0qKgl6E5qcsG1lSg71g7+Tyz+w7icENL7VGX9dvDqjqqCWqmQQ7+XBm2SqNurWze4Y7z
-	vIOY+mrDeRMKjSLPlWviVq4M1BD9aG4O/rSza7Okfoizn1y5BBd5ZC48CZ+2yGBFwYLRm3
-	pbcRfyDpjWxj+s/EGP+UMJayNJloCcA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745931569;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LOpr0MmnZWLYeA72wI88/nqcTraiGo+BD0i31sE7Rtk=;
-	b=Isbw33bq03+GreuAyzjBgP//PNMMUsFH2Vs3D6nYe0a0/8cKidwMg+4/w/S3dzdoIyB5Ys
-	+os3INoVfkjjugDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 533481340C;
-	Tue, 29 Apr 2025 12:59:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 09D4ETHNEGhaYAAAD6G6ig
-	(envelope-from <iivanov@suse.de>); Tue, 29 Apr 2025 12:59:29 +0000
-Date: Tue, 29 Apr 2025 15:59:28 +0300
-From: "Ivan T. Ivanov" <iivanov@suse.de>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Jeff Chen <jeff.chen_1@nxp.com>,
-	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
-	Brian Norris <briannorris@chromium.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org
-Subject: Re: [PATCH do not merge 0/4] wifi: mwifiex: add iw61x support
-Message-ID: <20250429125928.pw7k4raw52jyvyaj@localhost.localdomain>
-References: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
- <20250331065026.GA12444@francesco-nb>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UL+EEVJp"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0782d787so36983505e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745931679; x=1746536479; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MONQIfm/Oa04J/4iy7mo5OMqJtr7l+XlLP0uVBN0U7E=;
+        b=UL+EEVJpULaP5vT8KeWbx2RKvDMn0sc85NmKUEHoeUsw95lkgnFPHSZx0uh5z7EdAo
+         aXnrwd+ohFp25coTNqHUdmFvErkXwHqz0A2j1HKLpzTRpMRKngXV7H7TIunY7f9/JEtc
+         PpnFq0kJedyLwlKas9XCShI/mh1TRB84DUDwXNxsTkES5JESlFjPK4isxd5n/6ugGtsy
+         E7an7MSyfVbpA0Ndv4B1mD31vOt6G/WUfEWkiF3RkmSzcR398IwNo9x2Z9SZBvIG1jAv
+         6LUSTmMIwac8vwid9GH8p9RhZUMNI905uOKWkzkpL+LCs8DT9xmcIy4pfyz7VegROUyM
+         HxaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745931679; x=1746536479;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MONQIfm/Oa04J/4iy7mo5OMqJtr7l+XlLP0uVBN0U7E=;
+        b=U0n9CRW9GIrjsCIZAWliO83XwHWQ2AzBMapkq13rFO/q7/kl++PWEpAYOcKfs4yEwd
+         JAEpR1/gOCjtK8z5rTcmIN9Bw56cpUy83admO6EYYPec4QHecDMG18DqdFm+5s/DbK0X
+         oOQ95kj2cHQC6hKl2h3G2aATx+WFyU0x3C7vXt06GxS6q5x3fu0YZRRf+7XmReumD8Qo
+         l2VTRnCnu7YTLrFs6+YIkSUqvmod2a/DKjvuqHxPWMKpIIaJu3LdCJlWdfNcaGxC/nMT
+         Or9Lm94+vFhXLUuHzFzQKS/23SWBJ8J8HXgilW8+SRT1ZVVRd6hHMtQbF3RcEdtZFR2J
+         tVxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMjjWl16ScmZFLCh422OPZNm34HwO8BV+J2RJQ5i4rTJTNcwoWJIaxeIT7VqTy3UUknYa8algEVMlTAoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYZtUIAbLqjq+wfYYoZYSIIWr/tF/lpJ75XYA4RmbySwEz2u7R
+	fKAon0jFdopP1wsSih1gFXHjfMjdovhcqh0wk3oGKEbtyULbD6xbwuhirCuoscA=
+X-Gm-Gg: ASbGncvDKxM9TA8EQXb03vgMfX+j9hUCw38QB6O2+SRzTq4IB9A2G/tMq67Zi+Acwqr
+	35YHxU7OvA0bWNPoMlNWDgolChtxcNQC30Br4SG1fwDCSGFJr3cXM1wOdEfDEMhxSFLAUl/vCsK
+	xqEQXxlSM4CYxKMhSyZeDjd+7t/IZqvvM0NdOpyJCARiUeb3LJuDl/3WcAiep9Hs7QF0ItL4ZI9
+	x4s4nlzz85Kl+Zk6GaCfsvm0CuAQPH1CnABQhXlM7gFMxF/GnO91OftisY3FBM+s5du810f/wDx
+	OZgvWtdZ3bLeYI37TOxM6xXNRTz8c3HlrOxv6cJgmcCiIlx7vXQsQKK6nYmzS9zlJz5HlVZ12l6
+	0l62QA8WMAAdODgmP/A==
+X-Google-Smtp-Source: AGHT+IFzOm/zeLBXb8tq9k3CffyVspFovQWIpznGeeVBZrU7maNGW9UIaOh5zs9qS8Jytx7rDtlTQw==
+X-Received: by 2002:a05:6000:2a1:b0:3a0:89df:3b85 with SMTP id ffacd0b85a97d-3a089df3e89mr2974196f8f.38.1745931678644;
+        Tue, 29 Apr 2025 06:01:18 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:7eea:fda1:4564:f556? ([2a01:e0a:3d9:2080:7eea:fda1:4564:f556])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07a7c39a0sm10970372f8f.101.2025.04.29.06.01.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 06:01:18 -0700 (PDT)
+Message-ID: <3c4e3ed8-ceaf-45c7-a52c-dc7b8209418b@linaro.org>
+Date: Tue, 29 Apr 2025 15:01:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331065026.GA12444@francesco-nb>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v4 00/11] Trusted Execution Environment (TEE) driver for
+ Qualcomm TEE (QTEE)
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
+ Jens Wiklander <jens.wiklander@linaro.org>,
+ Sumit Garg <sumit.garg@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Apurupa Pattapu <quic_apurupa@quicinc.com>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ linux-doc@vger.kernel.org, Sumit Garg <sumit.garg@oss.qualcomm.com>
+References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 03-31 08:50, Francesco Dolcini wrote:
-> Message-ID: <20250331065026.GA12444@francesco-nb>
+On 29/04/2025 08:06, Amirreza Zarrabi wrote:
+> This patch series introduces a Trusted Execution Environment (TEE)
+> driver for Qualcomm TEE (QTEE). QTEE enables Trusted Applications (TAs)
+> and services to run securely. It uses an object-based interface, where
+> each service is an object with sets of operations. Clients can invoke
+> these operations on objects, which can generate results, including other
+> objects. For example, an object can load a TA and return another object
+> that represents the loaded TA, allowing access to its services.
 > 
-> +Pete/Jesse @NXP
+> Kernel and userspace services are also available to QTEE through a
+> similar approach. QTEE makes callback requests that are converted into
+> object invocations. These objects can represent services within the
+> kernel or userspace process.
 > 
-> On Wed, Mar 26, 2025 at 01:18:30PM +0100, Sascha Hauer wrote:
-> > This series adds iw61x support to the mwifiex driver. It works for me,
-> > but is not yet ready to be merged. Some people showed interest in it, so
-> > I am sending it here.
-> > 
-> > All testing and review feedback appreciated.
-> > 
-> > During startup I get these messages:
-> > 
-> > [   12.078010] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0xff
-> > [   12.078018] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0xff
-> > [   12.078024] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0x23e
+> Note: This patch series focuses on QTEE objects and userspace services.
+> 
+> Linux already provides a TEE subsystem, which is described in [1]. The
+> tee subsystem provides a generic ioctl interface, TEE_IOC_INVOKE, which
+> can be used by userspace to talk to a TEE backend driver. We extend the
+> Linux TEE subsystem to understand object parameters and an ioctl call so
+> client can invoke objects in QTEE:
+> 
+>    - TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_*
+>    - TEE_IOC_OBJECT_INVOKE
+> 
+> The existing ioctl calls TEE_IOC_SUPPL_RECV and TEE_IOC_SUPPL_SEND are
+> used for invoking services in the userspace process by QTEE.
+> 
+> The TEE backend driver uses the QTEE Transport Message to communicate
+> with QTEE. Interactions through the object INVOKE interface are
+> translated into QTEE messages. Likewise, object invocations from QTEE
+> for userspace objects are converted into SEND/RECV ioctl calls to
+> supplicants.
+> 
+> The details of QTEE Transport Message to communicate with QTEE is
+> available in [PATCH 11/11] Documentation: tee: Add Qualcomm TEE driver.
+> 
+> You can run basic tests with following steps:
+> git clone https://github.com/quic/quic-teec.git
+> cd quic-teec
+> mkdir build
+> cmake .. -DCMAKE_TOOLCHAIN_FILE=CMakeToolchain.txt -DBUILD_UNITTEST=ON
+> 
+> https://github.com/quic/quic-teec/blob/main/README.md lists dependencies
+> needed to build the above.
+> 
+> This series has been tested for basic QTEE object invocations and
+> callback requests, including loading a TA and requesting services form
+> the TA.
+> 
+> Tested platforms: sm8650-mtp
+> 
+> [1] https://www.kernel.org/doc/Documentation/tee.txt
+> 
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> 
+> Changes in v4:
+> - Move teedev_ctx_get/put and tee_device_get/put to tee_core.h.
+> - Rename object to id in struct tee_ioctl_object_invoke_arg.
+> - Replace spinlock with mutex for qtee_objects_idr.
+> - Move qcomtee_object_get to qcomtee_user/memobj_param_to_object.
+> - More code cleanup following the comments.
+> - Cleanup documentations.
+> - Update MAINTAINERS file.
+> - Link to v3: https://lore.kernel.org/r/20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com
+> 
+> Changes in v3:
+> - Export shm_bridge create/delete APIs.
+> - Enable support for QTEE memory objects.
+> - Update the memory management code to use the TEE subsystem for all
+>    allocations using the pool.
+> - Move all driver states into the driver's main service struct.
+> - Add more documentations.
+> - Link to v2: https://lore.kernel.org/r/20250202-qcom-tee-using-tee-ss-without-mem-obj-v2-0-297eacd0d34f@quicinc.com
+> 
+> Changes in v2:
+> - Clean up commit messages and comments.
+> - Use better names such as ubuf instead of membuf or QCOMTEE prefix
+>    instead of QCOM_TEE, or names that are more consistent with other
+>    TEE-backend drivers such as qcomtee_context_data instead of
+>    qcom_tee_context.
+> - Drop the DTS patch and instantiate the device from the scm driver.
+> - Use a single structure for all driver's internal states.
+> - Drop srcu primitives and use the existing mutex for synchronization
+>    between the supplicant and QTEE.
+> - Directly use tee_context to track the lifetime of qcomtee_context_data.
+> - Add close_context() to be called when the user closes the tee_context.
+> - Link to v1: https://lore.kernel.org/r/20241202-qcom-tee-using-tee-ss-without-mem-obj-v1-0-f502ef01e016@quicinc.com
+> 
+> Changes in v1:
+> - It is a complete rewrite to utilize the TEE subsystem.
+> - Link to RFC: https://lore.kernel.org/all/20240702-qcom-tee-object-and-ioctls-v1-0-633c3ddf57ee@quicinc.com
+> 
+> ---
+> Amirreza Zarrabi (11):
+>        tee: allow a driver to allocate a tee_device without a pool
+>        tee: add close_context to TEE driver operation
+>        tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
+>        tee: add TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF
+>        firmware: qcom: scm: add support for object invocation
+>        firmware: qcom: scm: remove unused arguments to the shm_brige
+>        firmware: qcom: tzmem: export shm_bridge create/delete
+>        tee: add Qualcomm TEE driver
+>        qcomtee: add primordial object
+>        qcomtee: enable TEE_IOC_SHM_ALLOC ioctl
+>        Documentation: tee: Add Qualcomm TEE driver
+> 
+>   Documentation/tee/index.rst              |   1 +
+>   Documentation/tee/qtee.rst               | 150 ++++++
+>   MAINTAINERS                              |   8 +
+>   drivers/firmware/qcom/qcom_scm.c         | 132 ++++-
+>   drivers/firmware/qcom/qcom_scm.h         |   7 +
+>   drivers/firmware/qcom/qcom_tzmem.c       |  57 ++-
+>   drivers/tee/Kconfig                      |   1 +
+>   drivers/tee/Makefile                     |   1 +
+>   drivers/tee/qcomtee/Kconfig              |  10 +
+>   drivers/tee/qcomtee/Makefile             |  11 +
+>   drivers/tee/qcomtee/async.c              | 160 ++++++
+>   drivers/tee/qcomtee/call.c               | 770 +++++++++++++++++++++++++++++
+>   drivers/tee/qcomtee/core.c               | 815 +++++++++++++++++++++++++++++++
+>   drivers/tee/qcomtee/mem_obj.c            | 172 +++++++
+>   drivers/tee/qcomtee/primordial_obj.c     | 115 +++++
+>   drivers/tee/qcomtee/qcom_scm.c           |  38 ++
+>   drivers/tee/qcomtee/qcomtee_msg.h        | 239 +++++++++
+>   drivers/tee/qcomtee/qcomtee_private.h    | 264 ++++++++++
+>   drivers/tee/qcomtee/release.c            |  48 ++
+>   drivers/tee/qcomtee/shm.c                | 146 ++++++
+>   drivers/tee/qcomtee/user_obj.c           | 713 +++++++++++++++++++++++++++
+>   drivers/tee/tee_core.c                   | 127 ++++-
+>   drivers/tee/tee_private.h                |   6 -
+>   include/linux/firmware/qcom/qcom_scm.h   |  31 +-
+>   include/linux/firmware/qcom/qcom_tee.h   | 302 ++++++++++++
+>   include/linux/firmware/qcom/qcom_tzmem.h |  15 +
+>   include/linux/tee_core.h                 |  54 +-
+>   include/linux/tee_drv.h                  |  12 +
+>   include/uapi/linux/tee.h                 |  54 +-
+>   29 files changed, 4427 insertions(+), 32 deletions(-)
+> ---
+> base-commit: 33035b665157558254b3c21c3f049fd728e72368
+> change-id: 20241202-qcom-tee-using-tee-ss-without-mem-obj-362c66340527
+> 
+> Best regards,
 
-In the downstream driver, branch lf-6.12.3_1.0.0, t his seems to be
-MrvlIEtypes_fw_cap_info_t for things like:
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-QRD
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8650-HDK
 
-FW_CAPINFO_EXT_802_11AX, FW_CAPINFO_EXT_6G ....
+# /unittest -d
+[test_print_diagnostics_info][52] 831360          = Total bytes as heap
+[test_print_diagnostics_info][53] 111707          = Total bytes allocated from heap
+[test_print_diagnostics_info][54] 700160          = Total bytes free on heap
+[test_print_diagnostics_info][55] 15280           = Total bytes overhead
+[test_print_diagnostics_info][56] 4213            = Total bytes wasted
+[test_print_diagnostics_info][57] 454160          = Largest free block size
 
-> > [   12.078029] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0x25c
-> > 
+[test_print_diagnostics_info][60] SUCCESS.
+# /unittest -l / /smcinvoke_skeleton_ta64.mbn 0
+[test_read_file][246] File //smcinvoke_skeleton_ta64.mbn, size: 32856 Bytes.
+[test_load_sample_ta][199] SUCCESS.
 
-This looks like MrvlIEtypes_Secure_Boot_Uuid_t. Doesn't seems too
-important.
-
-> > Not sure what these are about, I can't see these handled in the
-> > downstream mwifiex driver as well. Could also be there is some parsing
-> > error. Nevertheless the driver seems to work.
-
-Yep, it is working. Thank you! I am testing this on FRDM-iMX93, which has
-IW612 revision 1.0.
-
-I have to use nxp/sd_w61x_v1.bin.se on this board and NULL firmware_sdiouart
-because it seems that firmware return 1 as "strap" value, even if WiFi
-is definitely connected over SDIO.
-
-Regards,
-Ivan
-
+Thanks,
+Neil
