@@ -1,84 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A0A1DE4F3;
-	Tue, 29 Apr 2025 14:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE12216E1B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938616; cv=none; b=rCQ3gDltrl8c5T9xtuRWG+RwFA9d9Q9pXmV7qh/0Ho1nBt8ocQTNGgu8Wmu3q9mO9OO6tRlR562Z6e5r+W/Mmxswha6mPYpdfuwGZ1EmWNlM/qsD18VJJXHOYsNA1DbuFcid/uE5G7tNkF6dDkis9kN177S4bHPsQpM3RTurDDA=
+	t=1745938635; cv=none; b=p4iPeNkBJsGLODpka+76jgkfpVNJYlRiOqL3YlicuK3y1aFrPmOS64s52A0bQmacrIDK00qBxz4wNalOqKMho7bimiHDY+1ZGYBtDqdW1Wgjo44JJsiljTLPGZWsocMhNGtKihkhs96cwmIhcCde5H6CvqM66RzyY/SPBI4rKOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938616; c=relaxed/simple;
-	bh=TrUU+M1F4SQVXD7iadCxRa4FaQ+mnKlBzxagUQ1A3Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TPd+6kETB5wKwksf1UCF6ZfGy19b7RC5aGiDTC2HyBEFqTxUIiod9zlChVYNarx7uGeFW811gv+ZmancHCx1Z56nnILNLX3HHdt6vYbkBV0sdTb+FHQCbdccr6MTK555+XZUBJttxP7BDowAwTKCz1zNjLoAWEAwAR5LbQ7rSaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PK41a2TV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745938635; c=relaxed/simple;
+	bh=2Q8upZle3Pl+hSpx+WcywIF4WjHDWMmyBOgsLI68l2M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K6rvPubHTfRINJC7U47ALqb2C/jggDCDwQLhf06+CGe1b7S/NUJkaheK98AoWRQPNxvbh7m/VAK8C3klevsqo60pITjrjCKl9JsKT5w76VJvtqHmJbJppCs8/re2Oa/REMemAqHj/S8RkfOMnhSg6Vk5vBzTO/Namuu3bpOLpAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zEVipC7L; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PK41a2TV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E605CC4CEE3;
-	Tue, 29 Apr 2025 14:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745938614;
-	bh=TrUU+M1F4SQVXD7iadCxRa4FaQ+mnKlBzxagUQ1A3Yo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PK41a2TVkkURAhJcJlYrBHdcjcLNua9tmjhOd9oe0wEb7v3lCEWM3PwhQQFcfZTt2
-	 lbpIEIiaDTP9zUTOOXJGhJxjWYxar0k8WJfr2re/cH53Bu8pK9cC0dIOkgu+d14liD
-	 XPIkkjbKRPdYICmyZRjsV8XrHCrmhbzmJpXYH/BlhNYACHMHWP5JB9gEOoJiaI/C+f
-	 58fjYrI6FWSLU+pe8d93wnEsWRuwBov+DPYcNR7Z+TfI8SEABTrdNhGzxd7BIcOrVI
-	 HGhsAsgNdnDu7/98LUEOMmrE7E3H/4J3Fnpxqq/lIkOA/paoSv67P4aUJ7V3xmL/VE
-	 sNgBcYgSSnPRQ==
-Date: Tue, 29 Apr 2025 15:56:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/5] dt-bindings: iio: adc: adi,ad7606: add gain
- calibration support
-Message-ID: <20250429-irritably-cacti-b7287dbdc3d8@spud>
-References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
- <20250429-wip-bl-ad7606-calibration-v1-4-eb4d4821b172@baylibre.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zEVipC7L"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso4139478b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745938633; x=1746543433; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TB43dZ4ujKYVL5yH6f+GKwT+k67GpAb3MV7+vj+l10M=;
+        b=zEVipC7LndMYRJs66BZX3e2FzgbctplqRYk2Yoa/AeS1lvF/hSHan6TGTZUv3jSdTE
+         7PeN1orp3JtpP2+OFrH7SSNDbUl82rBQ+z2/87pLDP+ZPyyk/7wC4dMITbqR3OEmwfn/
+         yizEXXbkVzsVgjyfuhI77AS1jzSRDIgR+518T4dcihv7q2JCIBSaJ2UXjBT6f3KbEqY+
+         dxx/k25zBkSQQkkkEE4uYYaxYTcdNd+J723SXuEutnV0UkqAbqeHN3wiNEjt2TH8S4rM
+         tZp0cOhxPAiYC+rn5OFa7rPJZ8O4skUNMo+4K/GF7no0/mzL4QO2NB+BOGVQiOYcrrs1
+         LnbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745938633; x=1746543433;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TB43dZ4ujKYVL5yH6f+GKwT+k67GpAb3MV7+vj+l10M=;
+        b=CHQhZCbUB9BHXX0uBqQHysBxy95S+sr3TtMX2YjdeEpOu+0q1l0yNnlbUdSVbcmNUS
+         dCOj0ckR/RA9C33eNOQeaH1n0aQPs5dm/cdUafvPI3XwXHsYeXC+g1iEDh/G17u4NNV9
+         OpErRz1ayp0Fky7EtGNsGNJdmeysA+EhsjxNUfCC5RI1J2Ajm2FoLiHkVmXdxEyWNYbj
+         GrDQGUTaDkv/uOscffy7E/hMXqBOzF9bzc7AnrXAKMqLJAnuixwlsUxsphs172OVi7p+
+         jhoqc6HaMdlujCXSsm7YZw3QbmRlWLMqX9pG9QW0hTgQdnyVcK/0WTO2cGTs8SCMQv+a
+         7OYg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6H3ZfC59kV3TOBZxhgAtPTdKb1BePe9J7/q6tfJ574gqXwPXt4gn5scY759NB7jG+GzrPoWH1Ud2bjhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysmGwNn0CLdaxwrGbUJmMAX5q2MUo7oCgeXIwHp0bMW56eK8D9
+	6A0JSuFCpvrEmQOMrGoMmqZa9epIn17ghROykbOD6NuGxlpd9xXBRiVJhdVWwpPTwFLTb/KnFtP
+	zig==
+X-Google-Smtp-Source: AGHT+IFvUz4j9goI4AfIal5aVOI3Op9qWLAmmNjkH6AEijmG7O4ajG3tpIdGIyQ/2zTowTeP0K8nQOPnXyI=
+X-Received: from pfbgl7.prod.google.com ([2002:a05:6a00:84c7:b0:736:5012:3564])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:10d1:b0:739:4a30:b902
+ with SMTP id d2e1a72fcca58-7402710cc5emr5417993b3a.2.1745938633185; Tue, 29
+ Apr 2025 07:57:13 -0700 (PDT)
+Date: Tue, 29 Apr 2025 07:57:11 -0700
+In-Reply-To: <20250428215952.1332985-3-carlos.bilbao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="u3SN/e233iO0AJsN"
-Content-Disposition: inline
-In-Reply-To: <20250429-wip-bl-ad7606-calibration-v1-4-eb4d4821b172@baylibre.com>
+Mime-Version: 1.0
+References: <20250428215952.1332985-1-carlos.bilbao@kernel.org> <20250428215952.1332985-3-carlos.bilbao@kernel.org>
+Message-ID: <aBDox0dlo6S7KzSI@google.com>
+Subject: Re: [PATCH v2 2/2] x86/panic: Add x86_panic_handler as default
+ post-panic behavior
+From: Sean Christopherson <seanjc@google.com>
+To: carlos.bilbao@kernel.org
+Cc: tglx@linutronix.de, jan.glauber@gmail.com, bilbao@vt.edu, pmladek@suse.com, 
+	akpm@linux-foundation.org, jani.nikula@intel.com, 
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, 
+	takakura@valinux.co.jp, john.ogness@linutronix.de
+Content-Type: text/plain; charset="us-ascii"
 
+On Mon, Apr 28, 2025, carlos.bilbao@kernel.org wrote:
+> From: Carlos Bilbao <carlos.bilbao@kernel.org>
+> 
+> Add function x86_panic_handler() as the default behavior for x86 for
+> post-panic stage via panic_set_handling(). Instead of busy-wait loop, it
+> will halt if there's no console to save CPU cycles.
+> 
+> Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
+> ---
+>  arch/x86/kernel/setup.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 9d2a13b37833..3bfef55e9adb 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/initrd.h>
+>  #include <linux/iscsi_ibft.h>
+>  #include <linux/memblock.h>
+> +#include <linux/panic.h>
+>  #include <linux/panic_notifier.h>
+>  #include <linux/pci.h>
+>  #include <linux/root_dev.h>
+> @@ -837,6 +838,15 @@ static void __init x86_report_nx(void)
+>  	}
+>  }
+>  
+> +
 
---u3SN/e233iO0AJsN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Spurious newline.
 
-On Tue, Apr 29, 2025 at 03:06:48PM +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add gain calibration support by a per-channel resistor value.
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> +static void x86_panic_handler(void)
+> +{
+> +	if (console_trylock()) {
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+A comment here would be very helpful.  Even with the changelog saying "if there's
+no console", as an unfamiliar reader of console code, I have zero idea why being
+able to lock the console is an effective test for no console.
 
---u3SN/e233iO0AJsN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBDosQAKCRB4tDGHoIJi
-0n7VAP9zBmDK1EdgInc5dNcBH+0CC1vKZpP5v6NG2zoBXcWc/wD/RCJONyK9ylp2
-dH/IUzZo0vEQoP1ZpeYMXVOf8XU16Qs=
-=V640
------END PGP SIGNATURE-----
-
---u3SN/e233iO0AJsN--
+> +		console_unlock();
+> +		safe_halt();
+> +	}
+> +}
