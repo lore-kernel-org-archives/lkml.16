@@ -1,60 +1,60 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFC62BCF7E
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8388F2BD589
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918439; cv=none; b=kz0OXXtHo5k+al0CkUFPrf7OM+PNHE8tZ8Vk7wXytNOjdcc/QRe+C7VWzSXVJXrWHK0zErnBDI/GxojPn63/ohHt+ZxmPIUTAgJxbrX7CfmcQ1J/Ubwl9F4gy93aEBGZFdL0HRzg8mWEfES0vGVVV7lPuFZD5t89LdO60oeZ1Us=
+	t=1745918442; cv=none; b=XWO3baG4oh/qyINdFHiSJHMX3AjvgJszLOsnrVqElkBZ0ayBvgNFkcCWKrCpZ+bRUJco8JFqk7DA4rWdUkMp6Tm9EWH3KCz75D/s0tIA+M/6IfCoqmGiBQr2HacIAgw/GHVwbRFR2vwFGlb9YFrLx5atB6iyq2krFDf+NFBTYTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918439; c=relaxed/simple;
-	bh=Mtubd7kcUTSuCVjg0jfNXyqdjQoCE84ajtDBpsHqT5k=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Ai+jX7ODEgg5fMHDXrKhWW8TWwsZRlEnvAEsv+Qax3IwfNbxUFxSwIqs3prgQQmMuLZxKqmxV6ffFhcgR9znmZxUztEiN+fdJ6wduSk+/JbN8SEDI/1FG6mlTOSDYQw3i7EIUJq1/VYWlbqJz312jOtDnvhcAaPBBQJFVB+hF8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=1wfMONlD; arc=none smtp.client-ip=209.85.210.169
+	s=arc-20240116; t=1745918442; c=relaxed/simple;
+	bh=4RIqdgxdC/oOuBbLUh2vIuacG9wyhJnyJn3fbS8S1mA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=UXLONh6Tmk9B1JHHQ0cIotFmfPXrj4bMvuvRLJaIRpE+UqOU1wr1OTrVuqAPhoIRkbPtAxTWDlc2EHVbCxM2lcF6XxzvjUH3uunIL2Y9kFTrkoLz7ypBbTjJWiOZ0MnF81XrG5bXcQvpt0FJZGx3E4VubGXl8lOePt4JWzQLSLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=J6o/xd2k; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="1wfMONlD"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7393eab4a75so805925b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:20:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="J6o/xd2k"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7395095e9afso742916b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:20:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1745918437; x=1746523237; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BvaliSErUYZ24zOy24oW0l9inFOug0V/EfItbz4+qJY=;
-        b=1wfMONlDQxJ2V/NRZJBNkfXlS3UZB5SRspIXThQ6rlrC3VWUr4Z4cKnHSgNUJFKmDK
-         +2Jx6OgIPLSv1AtmKefvWPvhXoaEwEOUFNTn6ErLwPb8CNmIuiixOjri+XHw8J/9b7W+
-         xsS8m+EYB8KYXC8tGuyfzSI36dkvT9A+b4kKe+tfeMKsODLXx8Bg5pbYK1ganXlocKRS
-         3lpSERI/lRzbt1TxMLtBPfu+ksrh2lEO8N7EanJhqTMThIjX6I8ZsIx6Iwqlfour3+XP
-         oPOKdSmddQX4Ge7pvun8WBwtqUAXUFa9jl5qWG21cABSp1hhuCZ7cd5q8hIdYZexWTGc
-         D4MA==
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1745918440; x=1746523240; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uXN+jhLGdXGQPrM46EPqrwhrceeRXpjRt30SBte/Qog=;
+        b=J6o/xd2k6YFw+Pnd612a5J09oiPxsvodVMBF28HdMb+OvzessZeEJgfJ4y4xpDIowa
+         9FKRZCCFqEcpx4dzXEx8G/RmDf9v0rCTF4LrITaNzukjWzkGmY3qf91yo4JbM2pNsYGV
+         79ttsA2r27YIVYuVcqqf//kGQlUok3bXbB2n9c/OhRV53nZ87X2NFI0H34+GIbadJJTm
+         rYdQBNxl6wxzl9YrZpYxR+b0UKbs58fHOq4SWsv8byGtjc9fY0qmF0G0ILhKQytXCc3+
+         duwdkdApe4xvyEAL6iN4PnVsadI56Hifoe2zzD2/NU1xTakC1pox1HHTQKVxBD64AX4e
+         rAYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918437; x=1746523237;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BvaliSErUYZ24zOy24oW0l9inFOug0V/EfItbz4+qJY=;
-        b=nLKjPuTE2WiVBYMbm3GtYv5oTqLkV24oDdgcoVjBnwicJQ7156ziwYdki6PQKpsu7H
-         D1943/JC7hc1p4Ok4le6TIUkX7MZyTKYcZ0EhoNgEOtvZnpVSzLnJ5f9SiOkcXqtaSis
-         9cxJxKFtW6LCx+5GuCZg9dmaN3FGFFLn2ObTE4Bb52FXvenElyCwaJ9+4WhDBGRvy/nw
-         eOdteRKUnxBlvxfBzp2wxD9h9USJoNCz1bm/q09AYHHlrrhs5a5smYwyi5J5FUyunq62
-         cfUep9PLsTUTRkyDNB6ke4sriD2tcYZqDlj4QgztOU2MEpc1ILKkS8EtAr63lH/KA0yy
-         7UkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlpcURsGaWz7nSoN8H9yYXfLKWjKWom/YX6I6bXcIoQCUVkCJPBHO+awQG+cNFbwtr8GXo8+n87pLWKUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpYPokP73TpNQtrKwshSibNXT6NKPYeJ9ulrpDpFCOoqezbJEs
-	NPdLeFxwDxFTgphJIZGEpZr9ClXM4J0nCf0/HkGaEaH0RuBNFkIH2SDgN/CiX9M=
-X-Gm-Gg: ASbGncvN0CX6dKEoJbV7u+AnRsik6calEjAz2vRiuRZt6474V6yXpzsqzrLgVk2g52g
-	mPjbkQYvc9VPMMAj+LA4xgO2VTPMUBONsXlq4DngigqAiMxsDM5kSzw1nPiMSxTBU/zNIttFEyX
-	V+cu988/t/iB7B0mIPEetkS+jimYwoSfOKo31IjP+u6LpXDi0CofSeDePBR3na/JjcH4Q+FXVKL
-	kQCo+2yiwNyoi4czcAdLGnR1t8AsQ39Y5ndQhksp5rat2ObQqE8ra5C3+txOBJVmKNPWb3ueOQY
-	rtid0/ztuXadxPClECLa68HIruQRZxwL/kyBEWJj3UwwoAIWjx7qGo1xQqRrBIEHIUYlSvsFe8o
-	ZFO19nqVtEkHfm2A=
-X-Google-Smtp-Source: AGHT+IEV5ogys0l2vXW3zP5HCQ1ycfry815W3wpmmpb0QJkuLBL078T8CYF88qMpcAKeaw6hSxPNRA==
-X-Received: by 2002:a05:6a21:1349:b0:1ee:d047:ec23 with SMTP id adf61e73a8af0-20942f162f0mr1518908637.11.1745918436818;
-        Tue, 29 Apr 2025 02:20:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745918440; x=1746523240;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uXN+jhLGdXGQPrM46EPqrwhrceeRXpjRt30SBte/Qog=;
+        b=LjnvvfL5bmlddFfpBvdFVtRQaZjzkNJIBvFwPoSuC7zxSJNW1KIvyr1GF9KJuifJB/
+         eMXOeS04DLmrtq5y7QjcQVcOXfXWSTwuDVcVSXC/sG918fz5W4j9IQBHL+iZxm01yK8u
+         QLTx9NCkkTxI+8v3Ff0umL9tsAbV32035+LLLaAOi60MK8+Q6vaIsPGK70hK9/PauSal
+         drtouWRYqO9eqKKSF+fSvHjFclA4ZRqUbAX0uXY5xC2+InT2E54lBk8UFmx2MTl4cNo2
+         2TPLhsYXNZHbF+rPAHhjYb+46BTNCMKlK/xo15x8j8rTLnigqyhMOoGOuo/8h4unt4Hj
+         oE+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX1PTuLfVxfQN6E8Wsi2wuwK3exOvBSqFzGKjkNqllZoR6HUEDeHdWi376jEoxCuXv5OTuJ5VEOPW7a/8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjrS0IOLUjljeHU9hSYf5R9yGAmxjYHdjyFsBKxFdRQJYrul+X
+	6Uq4Kv4En2+6CiCAy5V7rRh8pz3gHehwxCKY1EuavAy1fi/gwlrQiw9wVVN2Lfw=
+X-Gm-Gg: ASbGncudQvfU3ATXJfx+YXguJ1Rk0NYVRw99qOiAvpcOm0C7UqkI4/oHx/BLiKykctK
+	Z3et8jkPK+VOy3idAEaGSJIRM9UrkQJEinzAfEPESQmlriC6s47/KixLhyhcEzZWJnD7Ot8GdNP
+	hRhkmMPcd8h+G8DyXw4B7nQarLKMsgCh66cIAZFBIVNc9cs1dscasGCmwopu7G9+NloBj+SXA0c
+	bQLR/S6fj89BMZovchZf5uf0B64RlG0xbCf42m7zR50gEDVaZIPOqc8Ee0CNzaQtOtqd1RmQG7t
+	s/U1c3D5YDMrTQB5KppfW1ilaj81ZTmE/iieahGFVqxg4LxspErySi3HLR2csb3m4UwuWJy6KYU
+	mX0SE
+X-Google-Smtp-Source: AGHT+IG+15drw1HE4LF6BgEWXs2qRjNpr1HvzCSKPm7xtb+B+MDf+JIRvdQU8yNQIKy6C5t5pg6VQQ==
+X-Received: by 2002:aa7:9a89:0:b0:730:8c9d:5842 with SMTP id d2e1a72fcca58-7402914f1c0mr915425b3a.5.1745918439780;
+        Tue, 29 Apr 2025 02:20:39 -0700 (PDT)
 Received: from ubuntu.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9d44esm9722786b3a.148.2025.04.29.02.20.34
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9d44esm9722786b3a.148.2025.04.29.02.20.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 02:20:36 -0700 (PDT)
+        Tue, 29 Apr 2025 02:20:39 -0700 (PDT)
 From: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
 To: dianders@chromium.org,
 	neil.armstrong@linaro.org,
@@ -67,34 +67,56 @@ To: dianders@chromium.org,
 Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
-Subject: [PATCH v3 0/3] drm/panel-edp: Add support for several panels
-Date: Tue, 29 Apr 2025 17:20:27 +0800
-Message-Id: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
+Subject: [PATCH v3 1/3] drm/panel-edp: Add support for AUO B140QAN08.H panel
+Date: Tue, 29 Apr 2025 17:20:28 +0800
+Message-Id: <20250429092030.8025-2-xiazhengqiao@huaqin.corp-partner.google.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
+References: <20250429092030.8025-1-xiazhengqiao@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-AUO B140QAN08.H
-BOE NE140WUM-N6S
-CSW MNE007QS3-8
+AUO B140QAN08.H EDID:
+edid-decode (hex):
 
-Changes in v3:
-- PATCH 1/3: Sort the list
-- PATCH 2/3: remove delay_200_500_e80_p2e80 and Sort the list
-- PATCH 3/3: The test timing of hpd_absent meets spec, don't modify
-- Link to v2: https://patchwork.kernel.org/project/dri-devel/cover/20250421113637.27886-1-xiazhengqiao@huaqin.corp-partner.google.com/
+00 ff ff ff ff ff ff 00 06 af b9 fe 00 00 00 00
+00 23 01 04 a5 1e 13 78 03 c1 45 a8 55 48 9d 24
+0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
+01 01 01 01 01 01 18 86 40 a0 b0 08 52 70 30 20
+65 00 2d bc 10 00 00 18 00 00 00 0f 00 00 00 00
+00 00 00 00 00 00 00 00 00 20 00 00 00 fd 00 28
+3c 71 71 22 01 0a 20 20 20 20 20 20 00 00 00 fc
+00 42 31 34 30 51 41 4e 30 38 2e 48 20 0a 01 79
 
-Zhengqiao Xia (3):
-  drm/panel-edp: Add support for AUO B140QAN08.H panel
-  drm/panel-edp: Add support for BOE NE140WUM-N6S panel
-  drm/panel-edp: Add support for CSW MNE007QS3-8 panel
+70 20 79 02 00 21 01 1d c2 0b 58 07 40 0b 08 07
+88 8b fa 54 7e 24 9d 45 12 0f 02 35 54 40 5e 40
+5e 00 44 12 78 22 00 14 ef 3c 05 85 3f 0b 9f 00
+2f 80 1f 00 07 07 51 00 05 00 04 00 25 01 09 ef
+3c 05 ef 3c 05 28 3c 80 2e 00 06 00 44 40 5e 40
+5e 81 00 15 74 1a 00 00 03 00 28 3c 00 00 60 ff
+60 ff 3c 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 4f 90
 
- drivers/gpu/drm/panel/panel-edp.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Signed-off-by: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
+---
+ drivers/gpu/drm/panel/panel-edp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 52028c8f8988..a7ada5382c82 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -1878,6 +1878,7 @@ static const struct edp_panel_entry edp_panels[] = {
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0xa199, &delay_200_500_e50, "B116XAN06.1"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0xa7b3, &delay_200_500_e50, "B140UAN04.4"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0xc4b4, &delay_200_500_e50, "B116XAT04.1"),
++	EDP_PANEL_ENTRY('A', 'U', 'O', 0xc9a8, &delay_200_500_e50, "B140QAN08.H"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0xd497, &delay_200_500_e50, "B120XAN01.0"),
+ 	EDP_PANEL_ENTRY('A', 'U', 'O', 0xf390, &delay_200_500_e50, "B140XTN07.7"),
+ 
 -- 
 2.17.1
 
