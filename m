@@ -1,287 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A15729AB11
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E99728DF00
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917396; cv=none; b=RiRrQ7RJ4e//64rk+uAaCFw695ikOODypMe3md7AzibuG/NCpqDiDAdGuhnsli/c8v5m2wZlgJIHEPCC1lrWoovGqeqw20WEhJlal7VEKuXF1SY2XbPyBU7vJ3HupQln4n9y0sAlVXH+lKJlCpo3XNUT4tG8m/g8j+mX9Y0hF34=
+	t=1745917564; cv=none; b=eq7Dycf0qoP95Y76zjUmLCSKXKWQwNnhgQQobTLNA1uuFne2uqnvk9ZxIU/g+De24+xEG6Fu1TR2+0HsFWSERByQcmzHaep6qI47dF5ESPJ5onXiQQNC1gPG/NmOpkOAPVy5fNyvWu7/GEIisJNZVMuSx9u4xAk/M81gZchHa14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917396; c=relaxed/simple;
-	bh=vjNiNlnQNEtIWHSdkehvZhSzUQFapdziJnyclIvRV80=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RugFnyt497PAVe8itoThdqor7fDWwwYb26oJxUn5vhIHhmJrUAddWEhkVtB//9VCgEJYw1bq3RAaGbdZLHd+HY6QZnEUGzG3a/0pVZ4vF0lzzsHxDgKuZsn/GGWZZ01/PZPrlZfvu5vEFjE+Z+t4AmDpPmD8vnQr5dRlrFvz5ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8995622F8;
-	Tue, 29 Apr 2025 02:03:06 -0700 (PDT)
-Received: from [10.163.78.253] (unknown [10.163.78.253])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B9003F673;
-	Tue, 29 Apr 2025 02:03:02 -0700 (PDT)
-Message-ID: <05c3cd68-0d75-4682-a51c-59307e2b2e78@arm.com>
-Date: Tue, 29 Apr 2025 14:32:59 +0530
+	s=arc-20240116; t=1745917564; c=relaxed/simple;
+	bh=qkRHa501eVnNgHsKBEHeYXm/l1LwtCxMPaoCXH+474k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogHSTL8Ojo4UQftM+TUYGYlFFSBflHhKX2ksn5NQVpBGlSOlixpNkzKeccLjv4kiQz7V6/QPGzS7uJeFOLJP6o36lnLJqkEbj/UvQztcxiAXyu38e4Yicx7FqV+1vaCTt9Kw58rcCNlo3K4fX4wvL8eFHCri2QZ75X0g9YdYwIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rZxufACr; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rZxufACr"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so831587366b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:06:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745917561; x=1746522361; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=St34CXEhhvs84MHtoWjKg9uUjbKo8QcnXhc2ZI3qO8s=;
+        b=rZxufACrhzIDoeAlm2hInizgikdWFKt2H+5b7wFu3x6isHDaTLC3FZumxVDz2dRxhQ
+         YcpoSU/+3WZmuOnuqGPro5UN3J+8QFntUTMALCl1i3LH5W7VeBAdozReG8ZJKKSbL33z
+         wwpDZDdSrffaAL5xdWb8/NQdmyKyJNDpNjGNu04kOjJV2pv1tVp48nh9ApY5YEBK8Snk
+         xWStwit8ubaiLFey/ImZCFEaVWo73gpf8H6o6TIAYtMBF1QzMyYesMta9nxSBTW1731R
+         TDsCZZLd38mFHZ3sHJQCoXEQkne+8nV83RfAU++LB0ACOvg7rbaAAbyQZGaPMklX1cyv
+         mS1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745917561; x=1746522361;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=St34CXEhhvs84MHtoWjKg9uUjbKo8QcnXhc2ZI3qO8s=;
+        b=lUwWhkS3WZ8n+Se2qw2Y5tm9zllWxNt+GiNbLPqJQ8JvhbMkPJKwjK3Gpmw6TPKy66
+         2MjsNVi2SwfuaGSdc7bSV4+BDctIWN4vtC6Csb4ey5Sd3ooR+asCDHXJPS7NCvRQiboU
+         jx/zB2A9WN1dr60MBEfuHAjiF1sStipn3eWSBrXEx7RQGpoKRii3S56Dz1NvMgYro+Ok
+         C6SNEY/99OYJjRLsXdZSSR2znQAkmtiKSaAirvO6/Q7dSG8CUHKsFBQ6ORn6hiRaeQbV
+         VIygvpwD1FqEyQqRXuHTKeaXaQR31ym6ioXdQWy7HU/btTcNWHHp10SYUy9Ei6Gq9tTo
+         aU1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXwfySvldQSjRzmOTkRMDJxMTOoGdSi/gIR5F97akzr679Q7KaDzNA/nbehAJ95kHFQB8k5cvkRdIcMCLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfrlwQ412ucnVZx5+88AGtg9MBV+/S905PjeCSguThVXBDbjlh
+	KsNe5wdpG9USPvgXmMcedEsBiXAx5fL+3/t7JmWATfNhWaFq9fc1i2B00di2Q34=
+X-Gm-Gg: ASbGncvMrWEACl/8lFS/7KnyN7Ewk2G/ywfWREXE6i7yCtaK3eMLQWgJ8/0UxiP0A7U
+	7/lyPSiQCFaa193vobci/SOTuglZgQIKXN3lFxtHnnl9cnyvxS9w87Xrn413hqxu5Ownj3esLfa
+	h4VhjtDoORHsgOoJ3cEVvnqAKp1HJCu54PK/LJCG/1nKId0DjRUEuDGihfimQi225mr93ylNz5X
+	c8EJy1gp1z8yzYH3A1cDNrRU0gHPxfYLdHOgkSE7V6UohI7ZP3zWu3FhY0NAEwVa/Zr4GUdEcH+
+	5BkVhpINLPyqGo4AxE38kp1MO4jVLS05Ezfy+A==
+X-Google-Smtp-Source: AGHT+IFmI25gdGUDFX+EYL8wwESKP6CDqL7XcjLVoi/vRf53apyrXKNyCcwgIrqiDFdc//uuYfkUpg==
+X-Received: by 2002:a17:906:6a21:b0:ace:7be1:1434 with SMTP id a640c23a62f3a-acec4cecc3fmr281782466b.30.1745917561077;
+        Tue, 29 Apr 2025 02:06:01 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41c934sm743471266b.8.2025.04.29.02.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 02:06:00 -0700 (PDT)
+Date: Tue, 29 Apr 2025 12:05:58 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Xilin Wu <wuxilin123@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Konrad Dybcio <quic_kdybcio@quicinc.com>
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
+ compatible override
+Message-ID: <aBCWdpk2HXPaJPlH@linaro.org>
+References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
+ <aBCUiIrg3oehMVjx@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] Optimize mprotect for large folios
-To: Lance Yang <lance.yang@linux.dev>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
- will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
- peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
- baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <ba73873b-1b26-44cd-ac0f-76e33e8fc2cf@linux.dev>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <ba73873b-1b26-44cd-ac0f-76e33e8fc2cf@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBCUiIrg3oehMVjx@hovoldconsulting.com>
 
+On 25-04-29 10:57:44, Johan Hovold wrote:
+> On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
+> > It all started with the support for CRD back when we had different
+> > compatibles for eDP and DP. Meanwhile, that has been sorted out and it
+> > is now figured out at runtime while using only the DP compatible.
+> > 
+> > It's almost funny how this got copied over from CRD and spread to all
+> > X Elite platforms.
+> > 
+> > TBH, the best reason to drop it ASAP is to make sure this doesn't spread
+> > beyond X Elite to newer platforms.
+> > 
+> > Functionally nothing changes.
+> > 
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> > Abel Vesa (7):
+> >       arm64: dts: qcom: x1e-crd: Drop useless DP3 compatible override
+> >       arm64: dts: acom: x1e80100-qcp: Drop useless DP3 compatible override
+> >       arm64: dts: qcom: x1e80100-t14s: Drop useless DP3 compatible override
+> >       arm64: dts: qcom: x1e80100-s15: Drop useless DP3 compatible override
+> >       arm64: dts: qcom: x1e80100-hp-x14: Drop useless DP3 compatible override
+> >       arm64: dts: qcom: x1e80100: Drop useless DP3 compatible override
+> >       arm64: dts: qcom: x1e80100-romulus: Drop useless DP3 compatible override
+> 
+> Since this is essentially a clean up perhaps you should have squashed
+> these into one patch.
 
+I was actually thinking that before sending, but then I decided to add
+the Fixes tag to each one. Since it's such a trivial worthless cleanup,
+I wasn't sure if the Fixes tags were worth it either.
 
-On 29/04/25 12:36 pm, Lance Yang wrote:
-> Hey Dev,
-> 
-> Hmm... I also hit the same compilation errors:
-> 
-> In file included from ./include/linux/kasan.h:37,
->                   from ./include/linux/slab.h:260,
->                   from ./include/linux/crypto.h:19,
->                   from arch/x86/kernel/asm-offsets.c:9:
-> ./include/linux/pgtable.h: In function ‘modify_prot_start_ptes’:
-> ./include/linux/pgtable.h:905:15: error: implicit declaration of 
-> function ‘ptep_modify_prot_start’ [-Werror=implicit-function-declaration]
->    905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
->        |               ^~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/pgtable.h:905:15: error: incompatible types when 
-> assigning to type ‘pte_t’ from type ‘int’
-> ./include/linux/pgtable.h:909:27: error: incompatible types when 
-> assigning to type ‘pte_t’ from type ‘int’
->    909 |                 tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
->        |                           ^~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/pgtable.h: In function ‘modify_prot_commit_ptes’:
-> ./include/linux/pgtable.h:925:17: error: implicit declaration of 
-> function ‘ptep_modify_prot_commit’ [-Werror=implicit-function-declaration]
->    925 |                 ptep_modify_prot_commit(vma, addr, ptep, 
-> old_pte, pte);
->        |                 ^~~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/pgtable.h: At top level:
-> ./include/linux/pgtable.h:1360:21: error: conflicting types for 
-> ‘ptep_modify_prot_start’; have ‘pte_t(struct vm_area_struct *, long 
-> unsigned int,  pte_t *)’
->   1360 | static inline pte_t ptep_modify_prot_start(struct 
-> vm_area_struct *vma,
->        |                     ^~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/pgtable.h:905:15: note: previous implicit declaration of 
-> ‘ptep_modify_prot_start’ with type ‘int()’
->    905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
->        |               ^~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/pgtable.h:1371:20: warning: conflicting types for 
-> ‘ptep_modify_prot_commit’; have ‘void(struct vm_area_struct *, long 
-> unsigned int,  pte_t *, pte_t,  pte_t)’
->   1371 | static inline void ptep_modify_prot_commit(struct 
-> vm_area_struct *vma,
->        |                    ^~~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/pgtable.h:1371:20: error: static declaration of 
-> ‘ptep_modify_prot_commit’ follows non-static declaration
-> ./include/linux/pgtable.h:925:17: note: previous implicit declaration of 
-> ‘ptep_modify_prot_commit’ with type ‘void(struct vm_area_struct *, long 
-> unsigned int,  pte_t *, pte_t,  pte_t)’
->    925 |                 ptep_modify_prot_commit(vma, addr, ptep, 
-> old_pte, pte);
->        |                 ^~~~~~~~~~~~~~~~~~~~~~~
->    CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/ 
-> libstring.o
->    CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/ 
-> libctype.o
->    CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/ 
-> str_error_r.o
->    CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/ 
-> librbtree.o
-> cc1: some warnings being treated as errors
-> make[2]: *** [scripts/Makefile.build:98: arch/x86/kernel/asm-offsets.s] 
-> Error 1
-> make[1]: *** [/home/runner/work/mm-test-robot/mm-test-robot/linux/ 
-> Makefile:1280: prepare0] Error 2
-> make[1]: *** Waiting for unfinished jobs....
->    LD /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/objtool/ 
-> objtool-in.o
->    LINK /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
-> objtool/objtool
-> make: *** [Makefile:248: __sub-make] Error 2
-> 
-> Well, modify_prot_start_ptes() calls ptep_modify_prot_start(), but x86
-> does not define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION. To avoid
-> implicit declaration errors, the architecture-independent
-> ptep_modify_prot_start() must be defined before modify_prot_start_ptes().
-> 
-> With the changes below, things work correctly now ;)
-
-Ah thanks! My bad :(
+I can squash them if the consensus is that it's not backporting.
 
 > 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index 10cdb87ccecf..d9d6c49bb914 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -895,44 +895,6 @@ static inline void wrprotect_ptes(struct mm_struct 
-> *mm, unsigned long addr,
->   }
->   #endif
+> Either way:
 > 
-> -/* See the comment for ptep_modify_prot_start */
-> -#ifndef modify_prot_start_ptes
-> -static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
-> -        unsigned long addr, pte_t *ptep, unsigned int nr)
-> -{
-> -    pte_t pte, tmp_pte;
-> -
-> -    pte = ptep_modify_prot_start(vma, addr, ptep);
-> -    while (--nr) {
-> -        ptep++;
-> -        addr += PAGE_SIZE;
-> -        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
-> -        if (pte_dirty(tmp_pte))
-> -            pte = pte_mkdirty(pte);
-> -        if (pte_young(tmp_pte))
-> -            pte = pte_mkyoung(pte);
-> -    }
-> -    return pte;
-> -}
-> -#endif
-> -
-> -/* See the comment for ptep_modify_prot_commit */
-> -#ifndef modify_prot_commit_ptes
-> -static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, 
-> unsigned long addr,
-> -        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
-> -{
-> -    for (;;) {
-> -        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-> -        if (--nr == 0)
-> -            break;
-> -        ptep++;
-> -        addr += PAGE_SIZE;
-> -        old_pte = pte_next_pfn(old_pte);
-> -        pte = pte_next_pfn(pte);
-> -    }
-> -}
-> -#endif
-> -
->   /*
->    * On some architectures hardware does not set page access bit when 
-> accessing
->    * memory page, it is responsibility of software setting this bit. It 
-> brings
-> @@ -1375,6 +1337,45 @@ static inline void ptep_modify_prot_commit(struct 
-> vm_area_struct *vma,
->       __ptep_modify_prot_commit(vma, addr, ptep, pte);
->   }
->   #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
-> +
-> +/* See the comment for ptep_modify_prot_start */
-> +#ifndef modify_prot_start_ptes
-> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
-> +        unsigned long addr, pte_t *ptep, unsigned int nr)
-> +{
-> +    pte_t pte, tmp_pte;
-> +
-> +    pte = ptep_modify_prot_start(vma, addr, ptep);
-> +    while (--nr) {
-> +        ptep++;
-> +        addr += PAGE_SIZE;
-> +        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
-> +        if (pte_dirty(tmp_pte))
-> +            pte = pte_mkdirty(pte);
-> +        if (pte_young(tmp_pte))
-> +            pte = pte_mkyoung(pte);
-> +    }
-> +    return pte;
-> +}
-> +#endif
-> +
-> +/* See the comment for ptep_modify_prot_commit */
-> +#ifndef modify_prot_commit_ptes
-> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, 
-> unsigned long addr,
-> +        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
-> +{
-> +    for (;;) {
-> +        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-> +        if (--nr == 0)
-> +            break;
-> +        ptep++;
-> +        addr += PAGE_SIZE;
-> +        old_pte = pte_next_pfn(old_pte);
-> +        pte = pte_next_pfn(pte);
-> +    }
-> +}
-> +#endif
-> +
->   #endif /* CONFIG_MMU */
-> 
->   /*
-> -- 
-> 
-> Thanks,
-> Lance
-> 
-> On 2025/4/29 13:23, Dev Jain wrote:
->> This patchset optimizes the mprotect() system call for large folios
->> by PTE-batching.
->>
->> We use the following test cases to measure performance, mprotect()'ing
->> the mapped memory to read-only then read-write 40 times:
->>
->> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
->> pte-mapping those THPs
->> Test case 2: Mapping 1G of memory with 64K mTHPs
->> Test case 3: Mapping 1G of memory with 4K pages
->>
->> Average execution time on arm64, Apple M3:
->> Before the patchset:
->> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
->>
->> After the patchset:
->> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.2 seconds
->>
->> Observing T1/T2 and T3 before the patchset, we also remove the regression
->> introduced by ptep_get() on a contpte block. And, for large folios we get
->> an almost 74% performance improvement.
->>
->> v1->v2:
->>   - Rebase onto mm-unstable (6ebffe676fcf: util_macros.h: make the 
->> header more resilient)
->>   - Abridge the anon-exclusive condition (Lance Yang)
->>
->> Dev Jain (7):
->>    mm: Refactor code in mprotect
->>    mm: Optimize mprotect() by batch-skipping PTEs
->>    mm: Add batched versions of ptep_modify_prot_start/commit
->>    arm64: Add batched version of ptep_modify_prot_start
->>    arm64: Add batched version of ptep_modify_prot_commit
->>    mm: Batch around can_change_pte_writable()
->>    mm: Optimize mprotect() through PTE-batching
->>
->>   arch/arm64/include/asm/pgtable.h |  10 ++
->>   arch/arm64/mm/mmu.c              |  21 +++-
->>   include/linux/mm.h               |   4 +-
->>   include/linux/pgtable.h          |  42 ++++++++
->>   mm/gup.c                         |   2 +-
->>   mm/huge_memory.c                 |   4 +-
->>   mm/memory.c                      |   6 +-
->>   mm/mprotect.c                    | 165 ++++++++++++++++++++-----------
->>   mm/pgtable-generic.c             |  16 ++-
->>   9 files changed, 198 insertions(+), 72 deletions(-)
->>
-> 
+> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
 
+Thanks!
+
+Abel
