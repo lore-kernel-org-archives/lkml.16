@@ -1,197 +1,123 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ECC2749E9
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E87B274FCD
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907588; cv=none; b=OxWed2X8yJK4HIPn6/rmXdjssUJD8rlY2nuW4vr3yQN5ZfQEuGRWumzICSqnYMtvufa9cLk9J9R/NmeXL37ygQSod44Gqt84nzUokXFUiGdOCo2X0IFVZGFDE5BEmyKTKA5Ta0JGaO5RWJEYNZBh4M/AN03riq8u7aiMLndCtZ4=
+	t=1745907589; cv=none; b=QEmTJ5cNrvbwr83eB7Gh23lE7CN4aOC6G1b1TUr3vp7/N/qZH3AtzRPQcSRxuZk7fhIorUMg3dbowGFUmo8PF+3E1L1UNnvZYenrwJcIXDnIY1smiEypwQJTuHMZ7gWZ4MymW23ynE5LU2jV2+a0LScVQsnLbdk95buX8vEDOh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907588; c=relaxed/simple;
-	bh=KERr5ATA8PcWGtC8VcDS5QHP9VkzbQhQz1o8bndHHvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RSoNVB12fcw8Pp7jK7Io0+naVY/Fvi7O25K44U2Deox9T9L0aYUmNpcfQ9S+dCSgD/VwOK+EXKSHzl5bkA7VMxm0LlLFDfBzfOR7DXQ7s0LHNhSvMi8bcjhCAWr3s/KekfbceamMj5zoDKUAjPa0qwIAaoLbRgmjlt4ixrhBtHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P8P2FUSp; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745907589; c=relaxed/simple;
+	bh=j1cZ/ama4pXQcm0lNYjPZ0pmuSUHD0UY9XZIX1D92as=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=s1UL5rZjh8eCVV80Wy1saKR3QU7r6LrYPLhr8dalEDryr8xRM4ojsyjvJmyUvngMXm9b8WVRGpMUAVgXAP2SKOAWOs6BoTkgAgQTj8nqN8xo/UNsI2bY8LPRF6pYjumzc0iEr27+33W8asZRlgJy6rBeSgOF+hPiOQ3YF7BCs4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fmt4JqKu; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P8P2FUSp"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T4EZkH007143;
-	Tue, 29 Apr 2025 06:19:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=7EkTj8
-	zjQNiIWy2SSyHfpedL42RKtKz8QhkEGfsAEbE=; b=P8P2FUSplh1vHaGEmAbdUU
-	eGuG0h2UKkRxj/WjlDDdFZRN4FyIcw6CaQkAh81rOOt9LGwIMHIovuPqEIEmPxsI
-	9nxykKwUskeu2aq8kLhRRJjeAIxSKy0076WvkqB5Q4mctMJ7xMBkUOpQbRHOl0uB
-	XIYkiQ7l4EwQ39ZCuZ27kJrTBXhqYWwKXkzXKTwjAa3SWO0i0e0RiuzxXLqpcFSa
-	N9v6EPHVnwhTORHkQocr2lL/iTbvzOPv64BWr5OzpldlyPbdAQaJ6K/SYbFT7F1J
-	FUszx3AL/EfQiU62DM8I7twMrlqRjncHnE/KR7eAJlAgYyxK/7G3lJmccSfTaU9g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ahs99h1k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 06:19:29 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53T6JSQq002020;
-	Tue, 29 Apr 2025 06:19:28 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ahs99h1g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 06:19:28 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T1i8th008542;
-	Tue, 29 Apr 2025 06:19:27 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 469ch31mqg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 06:19:27 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53T6JOIB58458594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 06:19:24 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0B5AA2004B;
-	Tue, 29 Apr 2025 06:19:24 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 601C520040;
-	Tue, 29 Apr 2025 06:19:21 +0000 (GMT)
-Received: from [9.124.218.151] (unknown [9.124.218.151])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 29 Apr 2025 06:19:21 +0000 (GMT)
-Message-ID: <7596af4a-e3aa-4aad-bc29-1cbfb4dfbc3d@linux.ibm.com>
-Date: Tue, 29 Apr 2025 11:49:20 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fmt4JqKu"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c0dfba946so4046378f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745907585; x=1746512385; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5uELk3IX0KmAe3gKWKpct9PqfIxioiMahM8zzKV5oTM=;
+        b=Fmt4JqKuBIRrgVmjue7TZ5UP41EojdrQpun2F11XlKWXLIMSWAyLZLeWmG6Lce+qih
+         yLaK4DAzKOa9dF/TKCpBWTdtniag5IbA3szLuZOy+5Qlw10VvMKAdQbnkZ/fudQY1ILT
+         m0Pbgmw97jH5Cgt1bgI59Hxmd3DDReEeAajjXEapTWCks6K8yy/NBN7Mfh8iwSukLa8G
+         unu73Ag27uPWFofcC53WSoCNW6m3heoUhFGHT9VwqtUZfXFfhattPjFAhMDht9ofoF3R
+         rv9CLY08dnd0kUt5w8mDUnjV9iNRuNFtFkNOCyLhn2Efy9dsJecJ9rWwx3oMpfZGlJCy
+         BaQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745907585; x=1746512385;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5uELk3IX0KmAe3gKWKpct9PqfIxioiMahM8zzKV5oTM=;
+        b=DOo0cwLEXer0C1vU4NLPaEE9RfqKZqPNHtg5+E6n/6TApiifB1ysbpjr3Jh0DOZWrJ
+         CQxNvmzVL3+Bh2RUdaXK5auyu4/zWRQ2q740fupzY6GhU3Id8B+1L7vwE1wMyOrR+xxK
+         AjdpPN1Agh2WrejvKPPP4n994rrCXDqYxhfCxO1auhg4wVZf3LaFp9soF/rQlVJD4Ott
+         YlYt/PtTJwUvIT+8zG3MRSfjNlS1U0JVdfFk1om9RSlEQckl9Nr7+W1tx6ddyq63pvlw
+         fPQT2fEwMVRwWOmr+SXFNxlvJkWH2lQmgOua6/5kPuUSP5BijWj8fNC7F1Dtb8TH7AUh
+         A9+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXS9thR2fhNbdwk15sxMMiueUVGQn+WLGWQy1qSO0OiZNtYbYaZ+GtieTfr+CFiKba1COUbL459imfBroQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWGoaLa+VpaO2TLYmhzyt/7p/OMcJtzjutjTQLUH9/lQ7TL0h1
+	PWQripaQGGWT38L78bnZ6q0uWwE0qUgcLZSLnBgs5/7oC3V6l2t+6h6zqend/SI=
+X-Gm-Gg: ASbGncs2f0l+Ywt5VpLyhFghonU6TVUSfal+5TjMShJt65QmZmUsZT9DN2zTYi/BQ48
+	RT06+d0zc8mcztfMVFp5uCUWR3i1pAsyYouZEIFh8sayzoP3L7hAeEzUYz4MkBiYkh+ofT9QYAT
+	DOuMSGfeY31OviF0ybUvAhqZKPWbLSky8EAvktuiN0YqC+CdvGoLVMqFcI11kuDSUds0X0ziYQI
+	WeeIspjDEISpRTYABwTvTp/q3hsDOXtB5b6IQ+S7MLIywjvtTLM8OfFkteujnSMol6DufhYmH8N
+	EOgy3VvV5a98xuiSD5MV0nEvXBuAXho9nMbceX8uXLQbTUFh5/Mig9s1pXuO7lAgxnnkaBc=
+X-Google-Smtp-Source: AGHT+IFThpMV/Hn8fv8bhLUDnjAre1JV27A3D8kJIgvlJw9xTbB+HJubAdPKRGlV07vzAa+DCEfhUA==
+X-Received: by 2002:adf:f989:0:b0:39c:2678:302b with SMTP id ffacd0b85a97d-3a07ab9be39mr7770595f8f.45.1745907585666;
+        Mon, 28 Apr 2025 23:19:45 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([145.224.90.246])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca4e50sm13302616f8f.30.2025.04.28.23.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 23:19:45 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Tue, 29 Apr 2025 07:19:39 +0100
+Subject: [PATCH v3 3/5] MAINTAINERS: Add google,gs101-pmu-intr-gen.yaml
+ binding file
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] powerpc: kvm: use generic transfer to guest mode work
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: npiggin@gmail.com, vaibhav@linux.ibm.com, maddy@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, christophe.leroy@csgroup.eu,
-        gautam@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <20250421102837.78515-1-sshegde@linux.ibm.com>
- <20250421102837.78515-2-sshegde@linux.ibm.com>
- <20250424144215._ooDjDz9@linutronix.de>
- <365ba747-9311-45ab-b798-80ba4e578796@linux.ibm.com>
- <20250424183811.7_MLThpt@linutronix.de>
- <2891b989-6249-4e84-969e-f11af3f92b0b@linux.ibm.com>
- <20250425133131.DTvWJE29@linutronix.de>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250425133131.DTvWJE29@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=LuKSymdc c=1 sm=1 tr=0 ts=68106f71 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=eUDsRD9QmrZOUdxpPkMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: _fMU_bGpcceVIh_J-soShGWwknXpVTbL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0NSBTYWx0ZWRfXylq8sOFmwNoa OpiCmkmj1IVxVxTduM7c//hqVDmXg3DapEB3tMc64lAE7BMubDCLpmA9mKOhGLNQb7Mht/dc9Cw pWC8FhslsIJjKdZiEVnOaEH5gQq6fIlUtd0U4/ujpgTzIcPPyjQ1dBFiFws6IdtIk8rFVlouLxy
- ZxyYkIJBS877E8V/Od+/YK4L4bF1EcrR7WhphtYOehkU8EcK1yiALPadfoRYsQT7PgkGSauwNXA f7ndS60DZ7KKwnquU2BwOZXUTLfXckxmMOUOHulLpMjBvOojwWheGqbEaG7Ln0QRo1r75nHFGdK xC18zqFpH0hihut4Rrz8abCEQCicXHDY3wMQOOv4IqUpkJZE7xN0ytvXDmOQcG1b8hDkVOjGONn
- LHsDurNThXiVCBShEC166KWPISvyLUic7U1CwV95zQMyqLX/ryVAVm0G52p4D3PW7OsyllTy
-X-Proofpoint-GUID: 05VXkeVRbrhdKPel1PaYX5LPwtcodsDr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 spamscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 mlxscore=0 impostorscore=0 suspectscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290045
+Message-Id: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-3-1bcc44fb1d55@linaro.org>
+References: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-0-1bcc44fb1d55@linaro.org>
+In-Reply-To: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-0-1bcc44fb1d55@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ tudor.ambarus@linaro.org, andre.draszik@linaro.org, willmcvicker@google.com, 
+ kernel-team@android.com, Peter Griffin <peter.griffin@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=799;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=j1cZ/ama4pXQcm0lNYjPZ0pmuSUHD0UY9XZIX1D92as=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoEG98RkuoPV0ry3Z4PLypiABZHhICoNaJvJmzl
+ VrD7t2Hx4iJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaBBvfAAKCRDO6LjWAjRy
+ uhJND/9CiA4POIsZpZfYrYWxI1RtoQfz0bxdT4Ik7cUrXlCIPZUvjwpWr8qmHvQTE9Pg7lWfxgj
+ qVRVNh5pAxiIfudy10QlHmK4JNGcCOazysndlC6MDImVhynvgt27JL9OKS06+DfT6sRE0emLUul
+ 9bvFPilY6FxzCFL2CzIfKKUuGoFPB1zxwiEqooCK6IrB3TlP4kR0nqFVdO4aZOGRSJSPmspBIKt
+ 24bWWDgnAD5X5gr7lrF3lD50YgRTj8bzQ+yHtwc0fIQ/cQM+KpvwHnHOg5wUCuxllkYtqkz2UAJ
+ fCII3zQzY5RwF5sFrEREDuxiu7ZtVE9PSBlYOzM4NudnuLYM+Z8wMoDC0R9vfeun3s0gqYftcB7
+ gGJ3HQzEa5sqQcb5hqyVO6Bos+bgP2UgiYAazLouAvijAHa2Qisq8up9U6AmF19nnBDLO/GMovU
+ cO8RuQysMeQV4NY9BWJLLr/azwnN0yC8Q0uVPGZAILidzoZ+rhLbAkCmFFf8PtRvvoby9ENIYo8
+ uwCUQqie6oN/8FyNwIIN/HmOqszXQ21rFyKwbtG67tAqE7EbgLcaBC2YLn0uoSjN7PAx99F9319
+ ETHgGVv12CAvIpqiUJtKp63+gWxVmqhpZYr/qWiv1OZC/dl9QLcQGd9SzUNauJktEt1LxA8eN10
+ XWjSXrReQ3prmUA==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
+Add the newly added google,gs101-pmu-intr-gen.yaml file to the
+Tensor section.
 
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 4/25/25 19:01, Sebastian Andrzej Siewior wrote:
-> On 2025-04-25 16:49:19 [+0530], Shrikanth Hegde wrote:
->> On 4/25/25 00:08, Sebastian Andrzej Siewior wrote:
->>> On 2025-04-24 21:27:59 [+0530], Shrikanth Hegde wrote:
->>>>>> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
->>>>>> index 19f4d298d..123539642 100644
->>>>>> --- a/arch/powerpc/kvm/book3s_hv.c
->>>>>> +++ b/arch/powerpc/kvm/book3s_hv.c
->>>>>> @@ -4901,7 +4901,7 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
->>>>>>     	}
->>>>>>     	if (need_resched())
->>>>>> -		cond_resched();
->>>>>> +		schedule();
->>>>>
->>>>
->>>>
->>>>> This looks unrelated and odd. I don't why but this should be a
->>>>> cond_resched() so it can be optimized away on PREEMPT kernels.
->>>>
->>>> This is needed, otherwise KVM on powerVM setup gets stuck on preempt=full/lazy.
->>>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b2c3be5f6131432647dd01f22bbf4bf1c8bde9e6..5b2ec4c2023f39a3dd532ac61f0075a0a1555411 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10118,6 +10118,7 @@ L:	linux-samsung-soc@vger.kernel.org
+ S:	Maintained
+ C:	irc://irc.oftc.net/pixel6-kernel-dev
+ F:	Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
++F:	Documentation/devicetree/bindings/soc/google/google,gs101-pmu-intr-gen.yaml
+ F:	arch/arm64/boot/dts/exynos/google/
+ F:	drivers/clk/samsung/clk-gs101.c
+ F:	drivers/phy/samsung/phy-gs101-ufs.c
 
-When i look back, i think below makes sense, since this is what even the 
-generic framework will do and it would work for all preemption models.
-
-Since this happens in a loop, it is necessary to check for reschedule.
-
-if need_resched()
-	schedule()
-
-Ideal would be call xfer_to_guest_mode_handle_work in the loop, which 
-would handle the above too.
-
->>> But this makes no sense. On preempt=full the cond_resched() gets patched
->>> out while schedule() doesn't. Okay, this explains the stuck.
->>
->> cond_resched works. What you said is right about schedule and preemption models.
->> Initially I had some other code changes and they were causing it get stuck. i retested it.
-> 
-> so it is unrelated then ;)
-> 
->> But looking at the semantics of usage of xfer_to_guest_mode_work
->> I think using schedule is probably right over here.
->> Correct me if i got it all wrong.
-> 
-> No, if you do xfer_to_guest_mode_work() then it will invoke schedule()
-> when appropriate. It just the thing in kvmhv_run_single_vcpu() looks odd
-> and might have been duct tape or an accident and could probably be
-> removed.
-> 
->> on x86:
->> kvm_arch_vcpu_ioctl_run
->> 	vcpu_run
->> 		for () {
->> 			.. run guest..
->> 			xfer_to_guest_mode_handle_work
->> 				schedule
->> 		}
->>
->>
->> on Powerpc:  ( taking book3s_hv flavour):
->> kvm_arch_vcpu_ioctl_run
->> kvmppc_vcpu_run_hv  *1
->> 	do while() {
->> 		kvmhv_run_single_vcpu or kvmppc_run_vcpu
->> 			-- checking for need_resched and signals and bails out *2
->> 	}
->>
->>
->> *1 - checks for need resched and signals before entering guest
-> I don't see the need_resched() check here.
-> 
->> *2 - checks for need resched and signals while running the guest
->>
->>
->> This patch is addressing only *1 but it needs to address *2 as well using generic framework.
->> I think it is doable for books3s_hv atleast. (though might need rewrite)
->>
->> __kvmppc_vcpu_run is a block box to me yet. I think it first makes sense
->> to move it C and then try use the xfer_to_guest_mode_handle_work.
->> nick, vaibhav, any idea on __kvmppc_vcpu_run on how is it handling signal pending, and need_resched.
->>
->>
->> So this is going to need more work specially on *2 and doing that is also key for preempt=lazy/full to work
->> for kvm on powepc. will try to figure out.
-> 
-> Okay.
-> 
-> Sebastian
+-- 
+2.49.0.901.g37484f566f-goog
 
