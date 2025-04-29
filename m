@@ -1,98 +1,223 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634212C3759
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87A62701C4;
+	Tue, 29 Apr 2025 12:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745930852; cv=none; b=fMWnqiyWV9u0SrBvZ+zImo6LGajO5Bz58cioSxOlQCKaLH6NOK0yHlTNhXmWPMMGw3YPf6YIqTGgrlFeqm9orlwatLGeO6o4V7RadXwsOuWoVuYq0stPnyc9GSkvc+BqgldpB8uQl/LMIjnJmTEOGVJpuJUqBcHI34NXK5GgOAw=
+	t=1745930851; cv=none; b=ZazK8zbyprimvED7XqvtIUjOuFqHuomX8krRYztUwOuWzi75XNKJzGAOGmTPmnJPgjBDKcsQSmz1BgQ27oifsrmllOhXENSUXa82F8ogRCAJlfm6gM1vkKvH+Yy54Xrc7PKRykfU8hM6EOqKRyOAS9n6U1PMxG1Tbvel2h6Nusw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745930852; c=relaxed/simple;
-	bh=cFF6VU1FyugaAJfxTA/LO9ddZ+pDnBgTgMqHrjX799U=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bys0zeo9QF7CDyHHLzuc8EY3/YMfAaloX014a/YHoOZPSawvLYezei3vs2a6Ky/Dv+Sd/Bq8DCEXqbz497qr1eW6GoB84dDr65Pau2aWIccY3gsiG6sjui24zOM7Dn7xbXKieS2CNWaelsT3Uti4tQOdNl956N3xYr+B13sOc4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-861d6e340e2so560338139f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:47:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745930850; x=1746535650;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1lBvDxpT3qeCElgQSmEgjirhy8ts7wnaWc0xcs/cQkA=;
-        b=cgIMbX3GUwYcytCxrxee9nR1RiCI1dAFlxc8Mwcg0YKIpIpfDfemwdQrTwDBgZDs0b
-         AEJXkSBPI/Y09m4e198b5tFbw51AduCdkq8WncnmO8/YC6FOBkaDtXdZAq8g/7Xugwbo
-         lUEH5gkGvquOjtCpnnTEgteV+NOQhENyOcqlPD15e1xrUYp+PGtJrNslSXiWLTLmp43y
-         jQGnPQDZiI8dbmLnOebcWs929IrP7EcZ8j6YRJHWghD7UcqnIELEgZL6JIbOSX56fPzr
-         BjRv00LfSIU7WBd3RIAEOxjTxknNnsslGCmDk/mvWGMuMWCwDA+Ty8U/eR1opnlt/eGG
-         w9ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWXcUhc6nlEN6MfLUJUd5QkJc/DZQVSLwzHoLmEkeMaP0zMRZtFUXCwsRL2oX8klCf9Hut6WhliQAw9+lk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqpX1/FVe6dlyF69pY2fHMlCFdqQrto3OmhznCnyiBFDN62RF4
-	gsb+gQRkHyqPKpu5kFU6wwbyUuISb+pZMKLyNDNZwflqe8EABU7w6q+ccMVF6YQhcTB9IBBDiAe
-	W1rj1tu7jyeHMZJbz1nkHyIyNrHwXquGzFoq1ORHduXjbS63iLeJcU4g=
-X-Google-Smtp-Source: AGHT+IEYNvZE6kKWhT93yep1SZFjQTCGkUfGLqor7tn2UjjmQO0T/emH97LXWiNj/tKXcQbPoDaf8F8q8j+VWtoruKLl0BIEOoqp
+	s=arc-20240116; t=1745930851; c=relaxed/simple;
+	bh=ALFfqZTCZO2PHhqc2/0fWGwaOyZ3IOtl8aSKr66hINk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UqMKAyY6mnyDtiFu4tbX7szlPpulSCZx/UCm4yFoGELaRqD+a+A7XejpfCkcImfFJHH52C2b9V9omXSahHbTcdDoUnFzyPZRPN/pbrXXA88fCdjdP1HI3mvYq56pGJJIlnKwseXo9SPQOu1GC+q70jedvHeRrimBylBtt+fviVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j4QVCJ9y; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j4QVCJ9y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745930846;
+	bh=ALFfqZTCZO2PHhqc2/0fWGwaOyZ3IOtl8aSKr66hINk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=j4QVCJ9yzrE7ilsBqngIg3T+X/OaF94eCN0h1X09Aw/BEemEc870WphrS7RRiFOcl
+	 +sdGJ7cM75J6r5ybCBa/0bgu8hVs4KNy8SWq5L+HTDamlIFMANL7Fye196tO3J2G6v
+	 3A3XFsE9Ucm5Rebet3h2PZq2iOi+VWkC0Zj06Eadr2+6laLa7yJPNKrruIx3yVj46+
+	 Cv8bzighjtu1XuYQQI79L+dzYnFRgEou3JEVjrJ5gdXtnu0rOeb63kL5lFq4BAN3N9
+	 cXE0rBcSi/a0Py8yZk2wDuMRC6uyALWlu0MH77V0jh3P68uieQdrwlhRuU528FDCt6
+	 zk5uvfKZoaIig==
+Received: from [IPv6:2606:6d00:15:9913::5ac] (unknown [IPv6:2606:6d00:15:9913::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 714DA17E0649;
+	Tue, 29 Apr 2025 14:47:24 +0200 (CEST)
+Message-ID: <dc9b20aecc8740896b2b3e7352b8e0d73d43fed2.camel@collabora.com>
+Subject: Re: [PATCH v2 01/23] media: iris: Skip destroying internal buffer
+ if not dequeued
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>, Vikash Garodia	
+ <quic_vgarodia@quicinc.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Mauro Carvalho Chehab	 <mchehab@kernel.org>, Stefan Schmidt
+ <stefan.schmidt@linaro.org>, Hans Verkuil	 <hverkuil@xs4all.nl>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio	 <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov	
+ <dmitry.baryshkov@oss.qualcomm.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, 	linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, 
+	20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org, 
+	20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com, stable@vger.kernel.org
+Date: Tue, 29 Apr 2025 08:47:22 -0400
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+	 <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:27c6:b0:85b:b82f:965b with SMTP id
- ca18e2360f4ac-86467fd5c6bmr1468087539f.12.1745930850563; Tue, 29 Apr 2025
- 05:47:30 -0700 (PDT)
-Date: Tue, 29 Apr 2025 05:47:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6810ca62.050a0220.16fb2c.0002.GAE@google.com>
-Subject: [syzbot] Monthly ocfs2 report (Apr 2025)
-From: syzbot <syzbot+list2798b3e8aee0b9ae07b2@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello ocfs2 maintainers/developers,
+Not mine to review, but wanted to highlight some best practices,
 
-This is a 31-day syzbot report for the ocfs2 subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/ocfs2
+comment below...
 
-During the period, 3 new issues were detected and 0 were fixed.
-In total, 72 issues are still open and 16 have already been fixed.
+Le lundi 28 avril 2025 à 14:58 +0530, Dikshita Agarwal a écrit :
+> Firmware might hold the DPB buffers for reference in case of sequence
+> change, so skip destroying buffers for which QUEUED flag is not removed.
+> Also, make sure that all buffers are released during streamoff.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>  drivers/media/platform/qcom/iris/iris_buffer.c | 37 +++++++++++++++++++++++++-
+>  drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
+>  drivers/media/platform/qcom/iris/iris_vdec.c   |  4 +--
+>  drivers/media/platform/qcom/iris/iris_vidc.c   |  6 +++--
+>  4 files changed, 44 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+> index e5c5a564fcb8..606d76b10be2 100644
+> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
+> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
+>  	return 0;
+>  }
+>  
+> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
 
-Some of the still happening issues:
+Its always tempting to just glue a boolean at the end of a parameter
+list. But this has huge downside in code readability, see below...
 
-Ref  Crashes Repro Title
-<1>  168860  Yes   possible deadlock in ocfs2_try_remove_refcount_tree
-                   https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
-<2>  49590   Yes   possible deadlock in dqget
-                   https://syzkaller.appspot.com/bug?extid=6e493c165d26d6fcbf72
-<3>  37759   Yes   possible deadlock in ocfs2_acquire_dquot
-                   https://syzkaller.appspot.com/bug?extid=51244a05705883616c95
-<4>  17497   Yes   possible deadlock in ocfs2_reserve_suballoc_bits
-                   https://syzkaller.appspot.com/bug?extid=5d516fba7bc3c966c9a9
-<5>  11874   Yes   possible deadlock in ocfs2_reserve_local_alloc_bits
-                   https://syzkaller.appspot.com/bug?extid=843fa26882088a9ee7e3
-<6>  11560   Yes   possible deadlock in ocfs2_init_acl
-                   https://syzkaller.appspot.com/bug?extid=4007ab5229e732466d9f
-<7>  7792    Yes   possible deadlock in deactivate_super (2)
-                   https://syzkaller.appspot.com/bug?extid=180dd013ba371eabc162
-<8>  6409    Yes   possible deadlock in ocfs2_setattr
-                   https://syzkaller.appspot.com/bug?extid=d78497256d53041ee229
-<9>  2378    No    possible deadlock in ocfs2_xattr_set
-                   https://syzkaller.appspot.com/bug?extid=ba9a789bd1f4d21fcefe
-<10> 2198    No    possible deadlock in ocfs2_lock_global_qf
-                   https://syzkaller.appspot.com/bug?extid=b53d753ae8fb473e2397
+>  {
+>  	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+>  	struct iris_buffer *buf, *next;
+> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>  	for (i = 0; i < len; i++) {
+>  		buffers = &inst->buffers[internal_buf_type[i]];
+>  		list_for_each_entry_safe(buf, next, &buffers->list, list) {
+> +			/*
+> +			 * during stream on, skip destroying internal(DPB) buffer
+> +			 * if firmware did not return it.
+> +			 * during close, destroy all buffers irrespectively.
+> +			 */
+> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
+> +				continue;
+> +
+>  			ret = iris_destroy_internal_buffer(inst, buf);
+>  			if (ret)
+>  				return ret;
+> @@ -446,6 +454,33 @@ static int iris_release_input_internal_buffers(struct iris_inst *inst)
+>  	return 0;
+>  }
+>  
+> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
+> +{
+> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+> +	struct iris_buffer *buf, *next;
+> +	struct iris_buffers *buffers;
+> +	const u32 *internal_buf_type;
+> +	u32 internal_buffer_count, i;
+> +	u32 count = 0;
+> +
+> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
+> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
+> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
+> +	} else {
+> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
+> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
+> +	}
+> +
+> +	for (i = 0; i < internal_buffer_count; i++) {
+> +		buffers = &inst->buffers[internal_buf_type[i]];
+> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
+> +			count++;
+> +		if (count)
+> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
+> +				count, internal_buf_type[i]);
+> +	}
+> +}
+> +
+>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst)
+>  {
+>  	struct iris_buffers *buffers = &inst->buffers[BUF_PERSIST];
+> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
+> index c36b6347b077..03a32b91cf21 100644
+> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
+> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
+> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
+>  int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
+>  int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
+>  int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
+> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
+> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force);
+> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane);
+>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
+>  int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
+>  int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
+> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
+> index 4143acedfc57..2c1a7162d2da 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
+> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
+>  
+>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>  
+> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, false);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
+>  
+>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>  
+> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, false);
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+If I was reviewing some changes (or even debugging) this specific C
+file, I would not be able to understanding what this "false" means. I
+would have to spend extra time, opening the declaration, going back and
+forth, and breaking the flow.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+An alternative approach is to keep the boolean parameter in a static
+function (c local), and then add two function wrappers that have
+explicit names.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+regards,
+Nicolas
 
-You may send multiple commands in a single email message.
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+> index ca0f4e310f77..56531a7f0dfe 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+> @@ -233,8 +233,10 @@ int iris_close(struct file *filp)
+>  	iris_session_close(inst);
+>  	iris_inst_change_state(inst, IRIS_INST_DEINIT);
+>  	iris_v4l2_fh_deinit(inst);
+> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, true);
+> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, true);
+> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>  	iris_remove_session(inst);
+>  	mutex_unlock(&inst->lock);
+>  	mutex_destroy(&inst->ctx_q_lock);
+
+-- 
+Nicolas Dufresne
+Principal Engineer at Collabora
