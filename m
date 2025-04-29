@@ -1,147 +1,189 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A558B2512D8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FFA24A06A
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745946137; cv=none; b=ATvXvNnXHTSLykof+iRu9xp/ZIxNmNeJqlvwP1O1jeF7ICs6/t4BtXjYrWExqfKZoSm1jfo78kMZTtxrrsi/6ck6zFwc7XzyXKRqWjiVLhfdkP0+aEczOPmH/izzX9TBeK7XsLIAkfvTifUPKstgJJv/adTr9D1/JKl5eXWwmD0=
+	t=1745946144; cv=none; b=Ap6IiKoM4/6vDo5fjS7lUUdspZ7tw4S4S0oQXexQ3kHGGScw/JJH29rz1AlhkE+6RnYbbsI3MIpQolJWnzQ5Uj5oQ0z8b/p6vH0uUtnpQr5yM/wjD4fIDnCSoXYRfhltRVPxOtTOYDIxk/24iw0pcr/Y2j8/SR9cbJcBLZgwQt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745946137; c=relaxed/simple;
-	bh=+gsvmBh20Knx07j4AfwEXPaisMHBTHSRoOqPOI0jUKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XyGmmwXOp9AIePu9uB7d7AlDakN7rlV9GIjTQxSkfM3yciDCD/7l4XyjmiKHiy3j5mGEK0tbz/XUDYiQn2IFd/KhSajMGr/CfcnAza+GMMhpEAActFp3TWnsSt1m8z+DuWUlzhQdb9ePaGVIdDzQuOw5QSaXDc2Ue4lLt0cR8N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLg+UI3D; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745946144; c=relaxed/simple;
+	bh=Qz4OGEmbuVrrrJNZqV3Ij3zwJSPUvCrZnG//EyAPLT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cwPoCMBRLcs9pAw1cgRIifP5QzT8dpvQiF+67yPoVKbGVWQ/8USORM5OqRIILGd3DwtLW5xmmO7zbwKA+b+Wvw+bAaLy6LAkN70pExFbCslH7QkbmjieqKYONs5Tf+quTihGwtPwKGmtxjSd0E+YpiZST/BtFbLH9niMxtzUDgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2vO0mrBT; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLg+UI3D"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-73044329768so4965886a34.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:02:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2vO0mrBT"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so86562696d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745946134; x=1746550934; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ui//EJYGAYt2drqdb2r1Vk+rY3bamOchMf6Nr2rIwsg=;
-        b=kLg+UI3Dx9q48JTX1CJTYfUIJCt3KWFa5SXiCjaYm2ljIFwsLA+bKGvVPXF/acMOnV
-         qKx8Bc/DjraqUk47ht2ErJUKDEJ6u87NGHvAAnP+w3rjnwPdLjzs/9NZTcqzN47m+wei
-         5iH/8+B5SI1amyYHNP8xSDLc+pmD7uLODp98wZpPCPSrFvB9KSMWTJYkuEdM93A6bTn3
-         kqt9Fk10mjS1v1wtoSw/I8Z9a/R8G74Ag017CmYAn5iS+9mxX3/dn6saeoTxQdVRg5FD
-         neGPiKPoIh/nbS2dtR43I8Gg8Ga5CdBe3gtu6Djas3bRBXlZ9R2MIYElphQtQOg7jQ+1
-         MjGA==
+        d=google.com; s=20230601; t=1745946142; x=1746550942; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6qHWKZeK4ritAUfK+7VjAlw31q6vqsBixsKT44Ec01E=;
+        b=2vO0mrBTrglDrl6fWf8IgldkMC3zNXQrn4xio7vB1jFGMF508H8JzdVoepZVNHL1Lb
+         U9A6gihekaeEHCWRXkqwTCW0r7RIuLKAqHReBDVPw23Kvg8Y0elqxQeu6DtachIxMjDa
+         /pPJr29I6RBzi2wQlSwS+3Qx8xp193PP93xymlwjvab8kFHEqyigRGE7q/hW6iQa4+hg
+         ueFG8xWV/R74Y+JVgTabwtoROEbijeqSNEUKnfm06ng4dD6sdjOCpuZhYyYZQeieiKlO
+         SPsIOgq6c1UgFHuCKb+Ijp9++nr3brO5lGhzTP9RiXMNG7FBXDs262uRewsxNUOSSi33
+         V08A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745946134; x=1746550934;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ui//EJYGAYt2drqdb2r1Vk+rY3bamOchMf6Nr2rIwsg=;
-        b=WFw5rBGAnJ+puSgLGfbtca35rDilcR9CwlFz+umbUwQHnsDaX9ExZB0IJZ5NHPTN7w
-         u8q2Mq08woHHBHYR2VPcZRPrwYcyVaZ3VZcegVXIPBmgr1lRrQyOGSZtgYTy5L7lfSj+
-         5XcuFI1TTnd3DP3UGNuRojRPhbTZqtx09rzosKl/jak0pmpfIxykH9eC44UCB9/Mvy7E
-         aizkmltMVPr7MFgtmEZHWWXkC0gYFk2PHwQ8BgvlXUP66/wsEnLrJzoM95npVJ0nK+j3
-         ShQYSbQQIoQsM7+sBSI+eiia/UttXL34gjF+yA0R6XH4C+193KjzUpJRt93kS2Fjercg
-         vdKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU03HAPFXGrNd9+a7hVuOb3QLAm96qrX14YicYeTLO6JNqevQv0rKcSbzV4kwzd+JLMPts5Ue5w8zBbF+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9l+CX0ukvPAmPYvPiFzCz333LEUvQPR7oPD5n71RidPNAbrcY
-	wSuFrav4K0AJRd0ZiH1iX7AdLkxfJN+uJKfqfOegvgaAVcejgPyz
-X-Gm-Gg: ASbGnctqf4fvRGX4tWlB2IRWnDu9TRRjld+BHbQzsS/N0dUla3bO3HYt/YiLlGiA5Ux
-	YA0TXNqlzRsAYrCkmeIXfbEY6HHuq0ZI5SKD83EtBRva2MrFlhFGxN8FjVJZrxNl8BubWtRuE+Z
-	rfn1BOQl9jeuJbdW023Ls3TzlpJwZEDKXz50FFakcMOKzxCAkX4N5T7ag+Zd86EF/C5LaG2Qhy7
-	OZ3qtmHujejcBRea4qlRdvSRNS8wiEKNefHBTtghvfGTpY/wKWPWjxGQoLE2BgxNNCv0uG1eUWu
-	/Ud/NLRP19aecAn5FuA7E/qJ9qk/uZbZ+a7SC9xGmDhJM7V2FI3eFO0G4fqHEZYpT1xGHubDjoz
-	kDiTKobnH5WaejqV4zBDoyJLP5ew9
-X-Google-Smtp-Source: AGHT+IGQ4JRdodikPJDHVEDlNU/DxLkruCkD5xLMuaL8pqIWImZbIq8DCALeHILJpnJwduxHMYAQqw==
-X-Received: by 2002:a05:6830:43a1:b0:72c:10db:f210 with SMTP id 46e09a7af769-73088b63ce8mr2847176a34.13.1745946134577;
-        Tue, 29 Apr 2025 10:02:14 -0700 (PDT)
-Received: from ?IPV6:2603:8080:7400:36da:dff5:4180:2562:4c1e? ([2603:8080:7400:36da:dff5:4180:2562:4c1e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b0077fdsm373355a34.0.2025.04.29.10.02.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 10:02:14 -0700 (PDT)
-Message-ID: <781ef1d7-f9c6-4a15-b94d-c735e83e7d01@gmail.com>
-Date: Tue, 29 Apr 2025 10:25:04 -0500
+        d=1e100.net; s=20230601; t=1745946142; x=1746550942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6qHWKZeK4ritAUfK+7VjAlw31q6vqsBixsKT44Ec01E=;
+        b=GZQ9zr6A7xB0O9zq374mMKmqsPM1rdpcn4VINon11bzyev+o5Y7NuL06R5URQYzZek
+         eGqAd7mMzwj7lkdhCpSV235bdgZr1A1lDj0lh1zJkaBSVO5dfvetPihin6Q5f+P9zimn
+         tcLQoqwY1jrW6PXSuPS1Z4OgL5Y1vzexeVUhFi4SAHSlkQNTpXuT1cbQgy1CNc7VpeLV
+         5jcBsdhlrATo27Za9eQmmhnmWWpBtjBzd1X/MSZJ8eCf3IVaC7QY7uaAqdcpOAlWBE+d
+         sljJlOn5Dy2NG/0Ih8xj65D/uT8PUTjChJR5k7+Ra/4svb9CCXcjAlLEPxoJjebKKJDp
+         Y1bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+VfgG+3ZjzXBoSA9IU8Jg2AEOpB7X/xHXt8z0pTzy4xKKanVU0SIQrCHPb1xYb878+ck339aoQ6MjcaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd9xKJ746c6225CCsNqzw39dkQEJNZPZT++ipYesDBuLbvomOQ
+	NVxW3FfGAEUrEsaNpHmu35BAHORZCDwKZ2OGLxuvA7XAFB0SlmBN9SdSMINmDtVeirwpjPdmZ/n
+	kbFnpJ/3Z5ynk8BoKsFSbk/VjWq3Ll+Sg6iY=
+X-Gm-Gg: ASbGncuMFuO59jpLiZTHpkgBcwXzIjP33zvGgQ/1vKiWKto3++94KcONV2R0Oh8LX/N
+	S6VVV3PAUxw5we0o1PlcHZsoF/ZKCAMdlThekjmkqBl+JTRYAcPt+kAhW0+95RZpD+WYKIAAnsm
+	urjKqpkNzPHyUX0bgcltvyzFK0af109vhO6W4okmopYqsMrQgpkJQ=
+X-Google-Smtp-Source: AGHT+IGJ2FFd6Eiwu9oIiINLmRXDdz0Z5mu/0T6rc0ayxYrgV8A3GYGLzgZnX06XlBBhgN6OaBE8Qx+Gn+Z+i3mrGnw=
+X-Received: by 2002:a05:6214:2247:b0:6d4:238e:35b0 with SMTP id
+ 6a1803df08f44-6f4fce9dc4dmr2026256d6.17.1745946141318; Tue, 29 Apr 2025
+ 10:02:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] x86/panic: Add x86_panic_handler as default
- post-panic behavior
-To: John Ogness <john.ogness@linutronix.de>, carlos.bilbao@kernel.org,
- tglx@linutronix.de, seanjc@google.com, jan.glauber@gmail.com
-Cc: bilbao@vt.edu, pmladek@suse.com, akpm@linux-foundation.org,
- jani.nikula@intel.com, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, takakura@valinux.co.jp
-References: <20250428215952.1332985-1-carlos.bilbao@kernel.org>
- <20250428215952.1332985-3-carlos.bilbao@kernel.org>
- <84ldri7vv0.fsf@jogness.linutronix.de>
-Content-Language: en-US
-From: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-In-Reply-To: <84ldri7vv0.fsf@jogness.linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250421215818.3800081-1-yabinc@google.com> <20250421215818.3800081-2-yabinc@google.com>
+ <48640298-effa-42d4-9137-a18a51637f03@linaro.org> <aAeQcgmL-iqGbG_g@gmail.com>
+ <20250422141026.GH28953@e132581.arm.com> <CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com>
+ <f03715ac-a4ac-415d-8daa-1914384319fb@linaro.org>
+In-Reply-To: <f03715ac-a4ac-415d-8daa-1914384319fb@linaro.org>
+From: Yabin Cui <yabinc@google.com>
+Date: Tue, 29 Apr 2025 10:02:09 -0700
+X-Gm-Features: ATxdqUESro1ma6kgnDZ_JUnNPtdCVCZAaJx-9arTO5zJv1h0N-wUAHCe0Ud_CwE
+Message-ID: <CALJ9ZPMiJ4oZerKWb4TL8swh8K3tfj70LTL+WibTRN-vB8rqvw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU capability
+To: James Clark <james.clark@linaro.org>
+Cc: Leo Yan <leo.yan@arm.com>, Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>, 
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mike Leach <mike.leach@linaro.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello John,
-
-On 4/29/25 11:53, John Ogness wrote:
-> On 2025-04-28, carlos.bilbao@kernel.org wrote:
->> From: Carlos Bilbao <carlos.bilbao@kernel.org>
->>
->> Add function x86_panic_handler() as the default behavior for x86 for
->> post-panic stage via panic_set_handling(). Instead of busy-wait loop, it
->> will halt if there's no console to save CPU cycles.
->>
->> Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
->> ---
->>  arch/x86/kernel/setup.c | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 9d2a13b37833..3bfef55e9adb 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -16,6 +16,7 @@
->>  #include <linux/initrd.h>
->>  #include <linux/iscsi_ibft.h>
->>  #include <linux/memblock.h>
->> +#include <linux/panic.h>
->>  #include <linux/panic_notifier.h>
->>  #include <linux/pci.h>
->>  #include <linux/root_dev.h>
->> @@ -837,6 +838,15 @@ static void __init x86_report_nx(void)
->>  	}
->>  }
->>  
->> +
->> +static void x86_panic_handler(void)
->> +{
->> +	if (console_trylock()) {
->> +		console_unlock();
->> +		safe_halt();
->> +	}
-> I do not understand what you are trying to accomplish with the
-> console_trylock(). At this point in the panic, all the messages are
-> already output. The console lock is totally irrelevant.
+On Mon, Apr 28, 2025 at 1:56=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
 >
-> Also, the console lock is only valid for legacy consoles.
 >
-> I see no reason why you don't just use safe_halt() as your panic
-> handler.
-
-
-Yes, in my original implementation I simply used halt, but I was trying to
-be cautious in case any remaining messages hadn't flushed. I wonder, can we
-be certain that, as you said, all output (e.g., a backtrace) has already
-been displayed on screen at this point? I'm not sure.
-
-
 >
-> John Ogness
-
-
-Thanks,
-
-Carlos
-
+> On 23/04/2025 8:52 pm, Yabin Cui wrote:
+> > On Tue, Apr 22, 2025 at 7:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote=
+:
+> >>
+> >> On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
+> >>
+> >> [...]
+> >>
+> >>>> Hi Yabin,
+> >>>>
+> >>>> I was wondering if this is just the opposite of
+> >>>> PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default
+> >>>> for all devices to solve the issue you describe. Because we already
+> >>>> have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages.
+> >>>> Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high order
+> >>>> allocations for AUX buffers optimistically") that explains that the
+> >>>> current allocation strategy is an optimization.
+> >>>>
+> >>>> Your change seems to decide that for certain devices we want to
+> >>>> optimize for fragmentation rather than performance. If these are
+> >>>> rarely used features specifically when looking at performance should
+> >>>> we not continue to optimize for performance? Or at least make it use=
+r
+> >>>> configurable?
+> >>>
+> >>> So there seems to be 3 categories:
+> >>>
+> >>>   - 1) Must have physically contiguous AUX buffers, it's a hardware A=
+BI.
+> >>>        (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
+> >>>
+> >>>   - 2) Would be nice to have continguous AUX buffers, for a bit more
+> >>>        performance.
+> >>>
+> >>>   - 3) Doesn't really care.
+> >>>
+> >>> So we do have #1, and it appears Yabin's usecase is #3?
+> >
+> > Yes, in my usecase, I care much more about MM-friendly than a little po=
+tential
+> > performance when using PMU. It's not a rarely used feature. On Android,=
+ we
+> > collect ETM data periodically on internal user devices for AutoFDO opti=
+mization
+> > (for both userspace libraries and the kernel). Allocating a large
+> > chunk of contiguous
+> > AUX pages (4M for each CPU) periodically is almost unbearable. The kern=
+el may
+> > need to kill many processes to fulfill the request. It affects user
+> > experience even
+> > after using PMU.
+> >
+> > I am totally fine to reuse PERF_PMU_CAP_AUX_NO_SG. If PMUs don't want t=
+o
+> > sacrifice performance for MM-friendly, why support scatter gather mode?=
+ If there
+> > are strong performance reasons to allocate contiguous AUX pages in
+> > scatter gather
+> > mode, I hope max_order is configurable in userspace.
+> >
+> > Currently, max_order is affected by aux_watermark. But aux_watermark
+> > also affects
+> > how frequently the PMU overflows AUX buffer and notifies userspace.
+> > It's not ideal
+> > to set aux_watermark to 1 page size. So if we want to make max_order us=
+er
+> > configurable, maybe we can add a one bit field in perf_event_attr?
+> >
+> >>
+> >> In Yabin's case, the AUX buffer work as a bounce buffer.  The hardware
+> >> trace data is copied by a driver from low level's contiguous buffer to
+> >> the AUX buffer.
+> >>
+> >> In this case we cannot benefit much from continguous AUX buffers.
+> >>
+> >> Thanks,
+> >> Leo
+>
+> Hi Yabin,
+>
+> So after doing some testing it looks like there is 0 difference in
+> overhead for max_order=3D0 vs ensuring the buffer is one contiguous
+> allocation for Arm SPE, and TRBE would be exactly the same. This makes
+> sense because we're vmapping pages individually anyway regardless of the
+> base allocation.
+>
+> Seems like the performance optimization of the optimistically large
+> mappings is only for devices that require extra buffer management stuff
+> other than normal virtual memory. Can we add a new capability
+> PERF_PMU_CAP_AUX_PREFER_LARGE and apply it to Intel PT and BTS? Then the
+> old (before the optimistic large allocs change) max_order=3D0 behavior
+> becomes the default again, and PREFER_LARGE is just for those two
+> devices. Other and new devices would get the more memory friendly
+> allocations by default, as it's unlikely they'll benefit from anything
+> different.
+>
+Good suggestion! I will upload a v2 patch for that.
+>
+> Thanks
+> James
+>
