@@ -1,140 +1,116 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B63E20E332;
-	Tue, 29 Apr 2025 10:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D250E1C5D4B;
+	Tue, 29 Apr 2025 10:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745920822; cv=none; b=C1PkIQPA+2AS4psBUlKEjTj9xZvhNOsa+i9ST5wzWhoEi7BcMR7Z2qRaOjmtIYxyOOKV2ld8LLnZh/DHodSdyhx7rTfynafQk5uT7FezU59D3jgpkmx+YLGnowtAA7Hlm1oSQmfFVJRDpooUe2o5X28GO67cv28ZTNpd3AG3y1o=
+	t=1745920946; cv=none; b=mtEbJ7mDpT0V6q3/C/idEEqLPvBZS3k5wUMuNVaTJTauNwEeS+YOazsW+RXBqCsEMtFEegVxUUE7d5KuJVs2n/hZSXKZwaLcU6UqHrm892Wkly2R3liqk5fDlm16ROW0IWXCUrnGAAYweUmC117Rj3qnTGUzl25PObavULdR0T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745920822; c=relaxed/simple;
-	bh=zHO/91CVM0fqeya1zcefPwBUjAIR56WQZbciVPz9uF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uSlMXi9wGCleuUjfEL050MObeDElnGYimg90vlu/Ot+64b71wOqjt/xLEUqWCDOKaEKEeI4OhFTexuhkUKfLMM+2H/mYzFnZ4QaAHcm5OUHr/yu5xpGG0dXNDFxJWl/G8vCRRmmi7uyW1Sp4gA5PnznxpM+BNsbkNJMFVSN+i6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LzPL0q4M; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LzPL0q4M"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqPhw020497;
-	Tue, 29 Apr 2025 10:00:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	KDg1ZYUqoUYtJP48KXrNiq/UAyQG0x/By48uNamBdGY=; b=LzPL0q4MkQM2o6eH
-	CRxARXMRRDz+GbCX/buu2+0IdA1uXSWIdHz4ee496yGyZAbgwIfqQg0vLlV/Teng
-	BLp7t06eexYI6bQewSGjde9pEWIcM01OHr9VNGABLMfZeVDUYbnpmD8Up96TmNhM
-	Sk+C3EiZ7zroXFLo+NL1SfTDraC8Ma/dqh61xexr7OdF4m40ptMn+ygXbasIiNH2
-	vlsovucdVyNIHJY+zHHGhHDVlFyGSMyc0rHv7GppqyNzyspp3NDy+3CAx+MzXkMW
-	8SVSxm3hW8v2gxKHzJ6kMjEBcvRV2mx10cvzyJJUe1GRHFEetWa7X+/ulGyGdhzj
-	wl/m4w==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468n6jkcyc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:00:15 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TA0ET5016680
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:00:14 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 03:00:09 -0700
-Message-ID: <890d7181-3e93-a954-ebf1-0696682ed23d@quicinc.com>
-Date: Tue, 29 Apr 2025 15:30:06 +0530
+	s=arc-20240116; t=1745920946; c=relaxed/simple;
+	bh=wbMS1Nbi9qxzvhfFmoY2xyviFUoT/2hBLVnNwtBWpxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YPpLoLE01y12/92SEIHPwHO15tPpDFjqnFLm+lwnfBc+6y2NteBvDmNtOAtFTXJM23hgyDnoWuxCs5L80leGbUW9AviY7z74BQxncYv48ZvVfuhNqSpiqjLXZel6C3WiVHL0dgeTgSoLSadeGqltntz3Q0Z58OY1EWwioMY7oqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CF34D200A463;
+	Tue, 29 Apr 2025 12:02:11 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 1197A1730B; Tue, 29 Apr 2025 12:02:13 +0200 (CEST)
+Date: Tue, 29 Apr 2025 12:02:13 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with
+ PCI_LINK_LBMS_SEEN flag
+Message-ID: <aBCjpfyYmlkJ12AZ@wunner.de>
+References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com>
+ <aAi734h55l7g6eXH@wunner.de>
+ <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com>
+ <aAnOOj91-N6rwt2x@wunner.de>
+ <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
+ <aAtgIfG8VG7vLDPN@wunner.de>
+ <e154f382-629e-f910-ea56-7cce262df079@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 05/23] media: iris: Send V4L2_BUF_FLAG_ERROR for
- buffers with 0 filled length
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-5-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-5-3a6013ecb8a5@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NCBTYWx0ZWRfX/rpJJuwvf3A/ QxTq6wAWWoruCjhw4Z2Or1bH6etp8gG7X3Qx1Gfu1CG7cp9BGQ9LSaTSJKUASG8TbYBh75jmOBk FD0Z3h3ZpRhWFw80ZmusRdwVcWe4tA/pU06ygxpqJMDD4naCL3cu9+3sopJXGTpx/xo16XYhS/L
- vMSxXWeJHcNwFdncnYLvz9yf+QxE19cBy2Z7RHT0j7/XRCiKWa9ADkhDYDUE8hKyJ+1fs+MmJH+ j51DjurFza3HtioyNvjhTzWP+RNKvnlDe+gP4t5dN5alpHtq1I4q1X6Y7hPXcJmzG3VPZj3Vhww 7m6j6lQiAO+TdKoCp/A4bbx5+L+WbwtPMkWxZ/4Qs2wBqNAfNvaMujFCWSCMTiEDbJCwEYPqMnq
- PTs1k1cxXR1MNS3bAg9H5ZYlowUcdSGFqzlFeOZ/o5tzKnNttPN+5QmExvrp1RFRV5EciKz0
-X-Proofpoint-GUID: tJpBvyZYEwiWSlZl4dHZ6tVYyTkXKb5w
-X-Proofpoint-ORIG-GUID: tJpBvyZYEwiWSlZl4dHZ6tVYyTkXKb5w
-X-Authority-Analysis: v=2.4 cv=C8fpyRP+ c=1 sm=1 tr=0 ts=6810a32f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=3ujAW4-UOuCNznGZemsA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=952 priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290074
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e154f382-629e-f910-ea56-7cce262df079@linux.intel.com>
 
+On Fri, Apr 25, 2025 at 03:24:45PM +0300, Ilpo Järvinen wrote:
+> On Fri, 25 Apr 2025, Lukas Wunner wrote:
+> > On Thu, Apr 24, 2025 at 03:37:38PM +0300, Ilpo Järvinen wrote:
+> > > On Thu, 24 Apr 2025, Lukas Wunner wrote:
+> > > >   The only concern here is whether the cached
+> > > >   link speed is updated.  pcie_bwctrl_change_speed() does call
+> > > >   pcie_update_link_speed() after calling pcie_retrain_link(), so that
+> > > >   looks fine.  But there's a second caller of pcie_retrain_link():
+> > > >   pcie_aspm_configure_common_clock().  It doesn't update the cached
+> > > >   link speed after calling pcie_retrain_link().  Not sure if this can
+> > > >   lead to a change in link speed and therefore the cached link speed
+> > > >   should be updated?  The Target Link Speed isn't changed, but maybe
+> > > >   the link fails to retrain to the same speed for electrical reasons?
+> > > 
+> > > I've never seen that to happen but it would seem odd if that is forbidden 
+> > > (as the alternative is probably that the link remains down).
+> > > 
+> > > Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as the 
+> > > last step, then the irq handler returning IRQ_NONE doesn't matter.
+> > 
+> > Why pcie_reset_lbms()?  I was rather thinking that pcie_update_link_speed()
+> > should be called from pcie_retrain_link().  Maybe right after the final
+> > pcie_wait_for_link_status().
+> 
+> My reasonale for having it in pcie_reset_lbms() is that LBMS is cleared
+> there which races with the irq handler reading LBMS. If LBMS is cleared 
+> before the irq handler reads linksta register, it returns IRQ_NONE and 
+> will misses the LBMS event. So this race problem is directly associated 
+> with the write-to-clear of LBMS.
 
-On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
-> Firmware sends buffers with 0 filled length which needs to be dropped,
-> to achieve the same, add V4L2_BUF_FLAG_ERROR to such buffers.
-> Also make sure:
-> - These 0 length buffers are not returned as result of flush.
-> - Its not a buffer with LAST flag enabled which will also have 0 filled
->   length.
-> 
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> index 0e889d07e997..0eb7549da606 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> @@ -377,6 +377,12 @@ static int iris_hfi_gen2_handle_output_buffer(struct iris_inst *inst,
->  
->  	buf->flags = iris_hfi_gen2_get_driver_buffer_flags(inst, hfi_buffer->flags);
->  
-> +	if (!buf->data_size && inst->state == IRIS_INST_STREAMING &&
-> +	    !(hfi_buffer->flags & HFI_BUF_FW_FLAG_LAST) &&
-> +	    !(inst->sub_state & IRIS_INST_SUB_DRC)) {
-> +		buf->flags |= V4L2_BUF_FLAG_ERROR;
-> +	}
-> +
->  	return 0;
->  }
->  
-> 
->
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+pcie_reset_lbms() is only called from two places:
 
+(1) pciehp's remove_board() -- no need to update the link speed of an empty
+    slot and you've proven that the speed *is* updated by board_added()
+    once there is a new card in the slot.
+
+(2) pcie_retrain_link() -- retraining could always lead to a different
+    speed, e.g. due to electrical issues, so unconditionally updating
+    the link speed makes sense.
+
+It feels awkward that a function named pcie_reset_lbms() would also
+update the link speed as a side effect.
+
+> While I don't disagree with that spec interpretation, in case of ASPM, the 
+> question is more complex than that. The link was already trained to speed 
+> x, can the new link training result in failing to train to x (in 
+> practice).
+
+It's probably rare but bad wiring or soldering issues can always cause
+a lower or higher speed than before.
+
+My recommendation would be to move the invocation of
+pcie_update_link_speed() from pcie_bwctrl_change_speed()
+to pcie_retrain_link().
+
+Just to cover the case that the retraining initiated by
+pcie_aspm_configure_common_clock() leads to a different speed
+and pcie_reset_lbms() wins the race against the bwctrl irq handler.
+It's a corner case, but if we've identified it now, might as well
+fix it I guess?
+
+Thanks,
+
+Lukas
