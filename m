@@ -1,116 +1,150 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCF825F7AB
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CCB18FDAB
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745915731; cv=none; b=TZVu1pUrsqy4sHEPcC1McIk72DIBr7LX8VAD/BzIYuFOsEnLZMInd5BrBGxaTNPqIgmHnlLWgofMg3ezsur0AKmZAx1q59Fna5CItsUb0M4Pnh/3OFZqRXJ75j6npo0Ui+R2pEiT6CyPNnBJUJ2rFZWBzlHEtZIsbTFteI4ecJw=
+	t=1745915796; cv=none; b=kwaazsdzRJXTqKpupRuLNY4i2yl8jcsDDomKmmfElPuMrqnyizAtbraDQ+fq9MLF47R/24EoXYksMRF4WHrPhn9kohKfg77ffE6N6t8Bz8Qi5dKS+o4WdWZ9ETXVkuEjNaYesEvKDw3AgDq/NN5zUNMOD3WG/c+1aRgzlWy/Gqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745915731; c=relaxed/simple;
-	bh=ZaO56ejThSxRzS1nBO1hWUV9qmuFiNNZzzBGRbfNtPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLc3S1DurEiUNU0Sb/IC1qbisIUEGA29YB0h6Th4lICgnkEbOQrrtDO2na+zqo7Fq1uO4/o2vq12dvuW6HapZhmRgqixnA2N6uWl3/NOC4P/zz+/KEpSR6YOnbjwXMCPE4jzoMGVtz9Silm0B+wuSs0AMRZ6dHkr6uBkSULVjiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jPPFzB0N; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745915796; c=relaxed/simple;
+	bh=CD3pCW7rSNJV61xpSf6mpjklctqkwJQ6xLMNue4gAHE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=orxxDh4Db09vu2XH1kYJXSqZusxLyDsG7+pGqNVnJbX2p83n9JgPCjsWJYVNhiB8uqpSXlHMi7mQxkWvGlihlm89T/BV2rYJdF760xntOAVPdkrFjLjkhVL9Ry1/lafDySrmvCnf+n9a/Bp18dggSyt3wc21gk5A89FLoWcCYJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RSIFGIbC; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jPPFzB0N"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso55430445e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745915727; x=1746520527; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hyI+vkzvATQ+oPRkGM6xS0Ik29eThJkeSR9qIvKwiD4=;
-        b=jPPFzB0NH5NI/kMCO7W/4UoWXwo87888+JuHw6RINARoMGZOLdQWwidTpuww86xo9P
-         Yqr/EknhyW2azq+2QfyUFORDA6o8NhMYplWJ6NCYSp6LM7DziAL0Ft7tTDLbPkbbj2Hx
-         BA9Okf6G6H9DAIH1PlJhGbunQbrWc9bO5kbjykh+A7MwaFxiqKTLXKQhnHYGMtM7TvNn
-         4sZdLJqgqIxqzCjlDQa9on6zpvE/IM6WX89TD4QvHYNyfAw1mGLgc8zRPn0q8SvEEgPS
-         rLjj/NExwt8C7JGndnzvvB+0HJkIxf9dN2Fuk8axLyWUSgoh6gkDACVUZtIKV6TQINhf
-         6k9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745915727; x=1746520527;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hyI+vkzvATQ+oPRkGM6xS0Ik29eThJkeSR9qIvKwiD4=;
-        b=lHqWgYRsx8PkYqW+yfbM/wBrdORghIQao4OTO6e+f5n0UQjVwhFsDnLOapxnSDm0qE
-         1yUgyQpijGzKxsee56jt3Vamk+gxjL1UOZUzlO8+/JRsl0/jNXdwiQGCriVdIfrVy37U
-         hNIC/GMJSaSnJeuAlcUbcLPHEFpNJM6prDOa2WzsfjILaOmtUGFBFUqlNCU3ICVscULs
-         2qsBqOh3RDypEmpQbqashmxO3xaGInOpuDh28Xh8fV6QdVZknp2A/o3iuaViA/ZU1DDH
-         ZirmxraMItAfu4KPzhJFMCYZnddL0DtxfcbYWh+XXr1n/E+79V6zRWa99gScZS0/tLqn
-         ncJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWP6fseVS4SOGDGNmhhuA8xgDp4Hi/hIJ6Bi1hsK0uz2zGLP0deair5614M78pWV0gjQUUeeehBdfcFRZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLRFOfQP2XdEZSC5KUOC4qHBhFaLlPp/WtJ2z2e3puKuOvb1Wy
-	vmTcZYS8rbP3oiHGYCtY/zHo98KRMT+C+s8ixIxnezHBNc80lS/p4Nkl+nnKO2I=
-X-Gm-Gg: ASbGncvfCqwJZuQ7tjt6Trps9xSvy3Nz+jDSMqUZ3j6gjCpR0tTpIFwkBGAyZmyk6WA
-	4u14AfvKIpP762Ac28N8ReOL3dV+dLNk/voRYzbFIYfrQXmxoRV7McUupuJ9FhaiBBzrFx0hagZ
-	+3UtdYLixdOhw5mXuIhyH5yAtCzLOipyIfytFCXkjvEjtNjCACgRM0crNPa6TPRK6M3NvTPzT61
-	B1+tdoTjdoPZufGIfYxmJ+bAQyqiAU3WZVeUCmR0yH+M+S/4/hn4Qy8Cqh+yia1kDZmqgee7kBk
-	Dj5Q7W6BAlaCWwzeNCEAaQHK4EPw3IAJ07YC4dRBAD2ymdLdsYKCuL3rEla0q1mKjDVokHKWU52
-	iijzeYQ0=
-X-Google-Smtp-Source: AGHT+IFZhCkQOIyJ9oPlNzZA28oEmoeLDHWRYZCNcJUG9KfhtjcqugnktaaeS4AF/qgx1AjGsb+yrw==
-X-Received: by 2002:a05:6000:188c:b0:3a0:82de:f228 with SMTP id ffacd0b85a97d-3a082def248mr6959999f8f.45.1745915727089;
-        Tue, 29 Apr 2025 01:35:27 -0700 (PDT)
-Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e461bfsm13422566f8f.79.2025.04.29.01.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:35:26 -0700 (PDT)
-Date: Tue, 29 Apr 2025 10:34:14 +0200
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, 
-	Beniamin Bia <beniamin.bia@analog.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7606_spi: fix reg write value mask
-Message-ID: <upz2umlx6qjnfiw5wvheukvfvolvea4anq7hky2vz5yi2w5wea@ormxyycioexv>
-References: <20250428-iio-adc-ad7606_spi-fix-write-value-mask-v1-1-a2d5e85a809f@baylibre.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RSIFGIbC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D52D1FCEA;
+	Tue, 29 Apr 2025 08:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745915786;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=esHd36pt+N8ryAwFfhcdTZSNZRbzqDw4YcR4AKfDyms=;
+	b=RSIFGIbC2isNSHaUIMssleEx8oUn09KMV74iBNdBsc8Ljyi1ulehg9lrYgKkCmjHP6D0/z
+	g7BLt+v0UzpAWlxicIeqyh/PqNl3wmLl/xxNWIeEHkzdqD0NsGpceudUUCcacVA8lj9KEW
+	rwlod4zKqpfJBmBXPKdm15CB4tSalEVJphYA0DXymWcGpu2LXSfUCs7GjWTd2CMIpCQmB8
+	qq/DignU2f64SMAKvITf7d+vFikwc+YQZYJByZTH1XXvtvdR7TKHNMeCkpWmhhnqC6a8wh
+	1Zal3lmsikZmwip0ZMT9wvaEbCUw1R88g99FLQvhqJM3Pe6HF1ta+caYvVTOCg==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Date: Tue, 29 Apr 2025 10:36:23 +0200
+Subject: [PATCH v2] drm: writeback: Fix drm_writeback_connector_cleanup
+ signature
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428-iio-adc-ad7606_spi-fix-write-value-mask-v1-1-a2d5e85a809f@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-drm-fix-writeback-cleanup-v2-1-548ff3a4e284@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAIaPEGgC/42OzRLCIAyEX6XD2ahQtT8n38PpATDVjAIVaK3T6
+ buLdrx7y2az+2ViAT1hYHU2MY8DBXI2CbHKmL5Ke0Ggc9JMbMV+uxMlnL2BlkZ4eoqopL6BvqO
+ 0fQeS86Jqc1UdKs5SvvOYDr/dpybpK4Xo/OuLGvhn+0/rwIED7nQh8vJQqiI/KufinexaO8Oae
+ QF5fPTp97jQmJIBIfmGYp19ug0FvfkNYHGMKTq/AaPsiGz+AAAA
+X-Change-ID: 20250428-drm-fix-writeback-cleanup-a1179f3b9691
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: thomas.petazzoni@bootlin.com, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Mark Yacoub <markyacoub@google.com>, 
+ Louis Chauvet <louis.chauvet@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2728;
+ i=louis.chauvet@bootlin.com; h=from:subject:message-id;
+ bh=CD3pCW7rSNJV61xpSf6mpjklctqkwJQ6xLMNue4gAHE=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBoEI+Iu98lXztO/neTQJlRQ7TY60V6ITeCKFa8E
+ 7DJOQS56nuJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCaBCPiAAKCRAgrS7GWxAs
+ 4jQjD/0eA941lwlgFehTz8o4ybkma1QDp/av7/CQAd2Hda/PSMxhsceoLfnWhyLJeZ2I+BLzeAf
+ dnAHDWVKnnKgrkusrb0uJ/hLv0s/XbJ9ZgyDw4aRVEB3k9Z6zXkfx5OUveudoUwxFVyOUiWZpmP
+ 9/9P0SFJYY2/jFmJBoBXnQGJD2N+xuV52xGYtonC2l3sqvlpbwFA3sS0UhZmeYAK82sLO9r+yTj
+ wTIotW/retw+k8vj4SQDcaZVIHtG+rHAQnBR22xaiuzdAZDDEi9ICObZhMkfDy0yzXsQvS/BO2z
+ KIB/3KA5dt7GNk7anZG1qJeNgXiUTY98LQ596pROQHaUNUOztz83UYmFPgmsqNHT+SemhPyYwEp
+ hPBsKFLqibJbOUhBM52zfyXzv4aEpJP9F2NkFzldZQ4W8InvwpzExd56YRQJF0P6sLIj8yoDE9w
+ hJPUu9quXd5qLD2gFaUbCpmDEqGI2GBwTCcH+6D6EdDSBinZJFUZqzl0R5iJyLnJchsoRLGAtV0
+ P8AcY8VAMixsz8IVz3Fye9VFNAHsFDd0PJwsHPzUj+GlapiTPajDULgUYxVA1dCCoswf7cnIbhu
+ 9MYilHyRRoashN/VS04Ns7cH1SQtYf/tub+FEcejq+0hsNIkatkfGlsxNQ2AOiBAO143r1lktRu
+ 0NHixcRxSbiSxhQ==
+X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
+ fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeffeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhhedtjeekhfdtteeftefgieffveeluedvueejleevfeevgedvjeevheehffehgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludejvddrudekrddtrddungdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvu
+ ggvshhkthhophdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On 28.04.2025 20:55, David Lechner wrote:
-> Fix incorrect value mask for register write. Register values are 8-bit,
-> not 9. If this function was called with a value > 0xFF and an even addr,
-> it would cause writing to the next register.
-> 
-> Fixes: f2a22e1e172f ("iio: adc: ad7606: Add support for software mode for ad7616")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  drivers/iio/adc/ad7606_spi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
-> index bd05357a542cf7234d5bb6b718829d6b720262cd..6c1228c7b1b11058cb5186513f032f7c8c8aa8f4 100644
-> --- a/drivers/iio/adc/ad7606_spi.c
-> +++ b/drivers/iio/adc/ad7606_spi.c
-> @@ -127,7 +127,7 @@ static int ad7606_spi_reg_write(struct ad7606_state *st,
->  	struct spi_device *spi = to_spi_device(st->dev);
->  
->  	st->d16[0] = cpu_to_be16((st->bops->rd_wr_cmd(addr, 1) << 8) |
-> -				  (val & 0x1FF));
-> +				  (val & 0xFF));
->  
->  	return spi_write(spi, &st->d16[0], sizeof(st->d16[0]));
->  }
-> 
-> ---
-> base-commit: aa1bd0b0ad048855d9efbee4ee8b9a6eee536256
-> change-id: 20250428-iio-adc-ad7606_spi-fix-write-value-mask-7acdcca46227
+The drm_writeback_connector_cleanup have the signature:
 
-Reviewed-by: Angelo Dureghello <adureghello@baylibre.com>
+     static void drm_writeback_connector_cleanup(
+		struct drm_device *dev,
+		struct drm_writeback_connector *wb_connector)
 
-> 
-> Best regards,
-> -- 
-> David Lechner <dlechner@baylibre.com>
-> 
+But it is stored and used as a drmres_release_t
+
+    typedef void (*drmres_release_t)(struct drm_device *dev, void *res);
+
+While the current code is valid and does not produce any warning, the
+CFI runtime check (CONFIG_CFI_CLANG) can fail because the function
+signature is not the same as drmres_release_t.
+
+In order to fix this, change the function signature to match what is
+expected by drmres_release_t.
+
+Fixes: 1914ba2b91ea ("drm: writeback: Create drmm variants for drm_writeback_connector initialization")
+
+Suggested-by: Mark Yacoub <markyacoub@google.com>
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+---
+Changes in v2:
+- Forgot to update the documentation
+- Link to v1: https://lore.kernel.org/r/20250428-drm-fix-writeback-cleanup-v1-1-e4c723868b73@bootlin.com
+---
+ drivers/gpu/drm/drm_writeback.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+index edbeab88ff2b..d983ee85cf13 100644
+--- a/drivers/gpu/drm/drm_writeback.c
++++ b/drivers/gpu/drm/drm_writeback.c
+@@ -343,17 +343,18 @@ EXPORT_SYMBOL(drm_writeback_connector_init_with_encoder);
+ /**
+  * drm_writeback_connector_cleanup - Cleanup the writeback connector
+  * @dev: DRM device
+- * @wb_connector: Pointer to the writeback connector to clean up
++ * @data: Pointer to the writeback connector to clean up
+  *
+  * This will decrement the reference counter of blobs and destroy properties. It
+  * will also clean the remaining jobs in this writeback connector. Caution: This helper will not
+  * clean up the attached encoder and the drm_connector.
+  */
+ static void drm_writeback_connector_cleanup(struct drm_device *dev,
+-					    struct drm_writeback_connector *wb_connector)
++					    void *data)
+ {
+ 	unsigned long flags;
+ 	struct drm_writeback_job *pos, *n;
++	struct drm_writeback_connector *wb_connector = data;
+ 
+ 	delete_writeback_properties(dev);
+ 	drm_property_blob_put(wb_connector->pixel_formats_blob_ptr);
+@@ -405,7 +406,7 @@ int drmm_writeback_connector_init(struct drm_device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = drmm_add_action_or_reset(dev, (void *)drm_writeback_connector_cleanup,
++	ret = drmm_add_action_or_reset(dev, drm_writeback_connector_cleanup,
+ 				       wb_connector);
+ 	if (ret)
+ 		return ret;
+
+---
+base-commit: a22e0051f9eb2281b181218d97f77cebc299310d
+change-id: 20250428-drm-fix-writeback-cleanup-a1179f3b9691
+
+Best regards,
+-- 
+Louis Chauvet <louis.chauvet@bootlin.com>
+
