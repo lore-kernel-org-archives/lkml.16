@@ -1,78 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69468BEE;
-	Tue, 29 Apr 2025 12:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DF04206B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745930736; cv=none; b=Zu5iEq+FgDw3206R5xYpSiXVAZFt8fXUK8wZrRJkyir3ayVlnrKxfhd1tV6j3vuI1F47ASpu2arOyKrLsU3P+OUwQcql5TLxySdOOmQ5a9RAyyIhhgxObPm2piQM8w/gIf9DWAwrJnXHAc6TtTyOq/kpLx/OtuPkK83zbBBpnS0=
+	t=1745930738; cv=none; b=JXA13IhUOyT37YcAXboNW6uvEu6wNKqNllAbVEjHExegA8EtFbhnosSYxMVw1K0QSAO28RNNWZ+kPf1zl63Z+IItOLGpD/z7SziFWQ1q7rRy9pO0rcJqz6FY1+J3XMyYZVoZ7AchKleKxP56Fn2bkCuadKuiCPwCpZQe+LFKAaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745930736; c=relaxed/simple;
-	bh=6+2F9d2vQJBN+qiFNCygGrCDiRttfJH3PpspPZdJpHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAGlYK+vJB3hxeTdtzeh0U5jLZX5IwIYIZ5FFjKYxu34ceFnKTyuJAV23nodihwDnMcVZeZ+Ia+Mnrrhf1whdUaGpAbxLVfFi0XmgqKirfRrHteQhhjzslcQQ22plJ0fh+SXhrpsHa/174RCx1oXJPt35yF5DsiJ21m3eY+257E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f83v9cDX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745930738; c=relaxed/simple;
+	bh=PpAMnzI0kNBjQbY2TRjuBdxKU7zvRVYeg0EDLdXpYhE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=FShQLo4JrjCw9rjKD3DDN2cP34wqolSOYZCrFDyixB2Z3O3WiYRsdUgzBY5bl64WwZDP/5wlIUdNNcdMtF+bsQP7KNFBcWbszWpUpHFo2b8xfOO7sRK17NdwJFHVsEZHTA2nu5anFSmz2XWf+jlUTMGzDa/u++9cjY2WAElQjpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sRqmWhw4; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f83v9cDX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2485AC4CEEB;
-	Tue, 29 Apr 2025 12:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745930736;
-	bh=6+2F9d2vQJBN+qiFNCygGrCDiRttfJH3PpspPZdJpHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f83v9cDXKLb1VwZ/DAPpgaGXVtLDI+kpIKw5NMOzQ4qa6A5nicXNdkPDgTrtU/voo
-	 g5rBqU2eJq1Bo1J4jjqOWZAjueEC8rpxcJui3Ah1q6HjyJSoCs6H5pmDmiYD97MWQJ
-	 58upXHW+LefVfSV0qnJCWAICk7A27SvEd4htO43DF/Z5aFxL2+zSaEAKRgXfVxQKd8
-	 6ZqeZU8wVcMO0Stvx4aKB97s4Y2y4UvANw046gzyM8fYiu4Kc8y4KEUBir7/hhqX9L
-	 D6V4xZ30oNREaq9zY3/6ycZtGrGVMHSsk+bcXKZxDqaj8r4JMHJbegyNCv7gAbnkDv
-	 ZPLbRDCkqiNNA==
-Date: Tue, 29 Apr 2025 13:45:29 +0100
-From: Will Deacon <will@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-users@vger.kernel.org, Mike Galbraith <efault@gmx.de>,
-	Peter Collingbourne <pcc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Kristina Martsenko <kristina.martsenko@arm.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH 1/1] arm64: enable PREEMPT_LAZY
-Message-ID: <20250429124528.GA25752@willie-the-truck>
-References: <20250305104925.189198-1-vschneid@redhat.com>
- <20250305104925.189198-2-vschneid@redhat.com>
- <Z8hAZ09Q40fxLJSk@J2N7QTR9R3>
- <20250331090756.L7iXi1Ee@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sRqmWhw4"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745930733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PpAMnzI0kNBjQbY2TRjuBdxKU7zvRVYeg0EDLdXpYhE=;
+	b=sRqmWhw44OjJbRzJ9q8wv20RxoXTswli5MCApnQXx57ToQrdqG4mmujAPwy/MutiGxouUf
+	3XE2EmfyJDkI3rqTIgO9yci7CvAdonCq8EFeJ4AFLy1LJt0KNSoPU1tPgkkSL44fWle9Fp
+	FoDiVVBfiHiqTZ6qh+THYjHJ20naxQ8=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331090756.L7iXi1Ee@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [RESEND PATCH] bus: fsl-mc: Use strscpy() instead of
+ strscpy_pad()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <17c35382-36c2-44e6-b553-e66a32a8c47e@csgroup.eu>
+Date: Tue, 29 Apr 2025 14:45:21 +0200
+Cc: Ioana Ciornei <ioana.ciornei@nxp.com>,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9DDEEADA-BD78-4F4D-97AA-DCC683B2C7D0@linux.dev>
+References: <20250429104149.66334-1-thorsten.blum@linux.dev>
+ <kko4akbacnugkdughit5ty6vpzg4wjiif3rh4w75hd67v34nre@ngpqhwjb5l4p>
+ <17c35382-36c2-44e6-b553-e66a32a8c47e@csgroup.eu>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 31, 2025 at 11:07:56AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-03-05 12:15:35 [+0000], Mark Rutland wrote:
-> > Catalin, Will, given this is small and self-contained, I reckon it makes
-> > sense to pick this up ahead of Jinjie's series to move arm64 over to the
-> > generic entry library (which is on my queue of things to review). Even
-> > if we pick up both, it'll be easier to bisect and debug issues caused by
-> > this patch alone.
-> 
-> Any updates here? I know it is the merge window but I don't know if
-> upstream considers this or wants to sit on it until the generic entry
-> gets in.
-> In the meantime I stuff it into my RT tree so it does not get lost.
+Hi Christophe,
 
-Sorry for the delay; I'll pick this up in the arm64 tree today.
+On 29. Apr 2025, at 13:58, Christophe Leroy wrote:
+> Le 29/04/2025 =C3=A0 13:47, Ioana Ciornei a =C3=A9crit:
+>> On Tue, Apr 29, 2025 at 12:41:48PM +0200, Thorsten Blum wrote:
+>>> Both destination buffers are already zero-initialized, making =
+strscpy()
+>>> sufficient for safely copying 'obj_type'. The additional NUL-padding
+>>> performed by strscpy_pad() is unnecessary.
+>>>=20
+>>> If the destination buffer has a fixed length, strscpy() =
+automatically
+>>> determines its size using sizeof() when the argument is omitted. =
+This
+>>> makes the explicit size arguments unnecessary.
+>>>=20
+>>> No functional changes intended.
+>>>=20
+>>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>> Reviewed-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+>> Christophe, could you also pick-up this patch when you have a chance?
+>=20
+> Sure I will take it when time comes, but again I'd expect an =
+explanation inside the patch (below the ---) for the resend. I now have =
+this patch twice in the list and don't know why, see =
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=3D&submitte=
+r=3D&state=3D&q=3D&archive=3D&delegate=3D61610
 
-Will
+A "resend" is meant as a "ping" and the patch is always unmodified, at
+least that's my understanding of it. So there's no particular reason
+other than: "Did you see my patch? Let me send it again just to be sure
+you didn't miss it."
+
+=46rom [1]: "Don=E2=80=99t add =E2=80=9CRESEND=E2=80=9D when you are =
+submitting a modified version
+of your patch or patch series - =E2=80=9CRESEND=E2=80=9D only applies to =
+resubmission of
+a patch or patch series which have not been modified in any way from the
+previous submission."
+
+The patches are identical - just pick one.
+
+Thanks,
+Thorsten
+
+[1] =
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#don=
+-t-get-discouraged-or-impatient
+
