@@ -1,222 +1,159 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81452227EAE
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84A6279786
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745919281; cv=none; b=c5deFQ/gMwcZIFrkXiFagD6LWi6TEemNmfPEjLqaRoItD6cz0OvQsdlzEOr/5WTG8JLyjsXLFQU655OjKCe1SO7Pky2Ow2TZdFe41fcVPoMO++rCQatQkKaAWcHVNPgJJ9z33ve8/8YTtYD/Ck79q9Gon4yLX5fkF4zp/y7FUJ0=
+	t=1745919309; cv=none; b=RMUm9H4fBHJ8tRoaYoXsnihAV2I+HznLcNqcvVlSLRlMNk5o7xL4UX/RXb51GR0Y6EwWRPMtjcNqLZQ8rXVY+DEOhH2fsEreHcUK5pDYcJL2BJgxdMq/uM7/zQXcE+4MtSqUjUNgpYMFnGpoOi9uj+rL9tKe2NDESKUzqwmDmyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745919281; c=relaxed/simple;
-	bh=ZNA/YfWSdVwWVC2UvpKCFkOunox/kHXL7eFHYnV//XY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SO60Qcafj+EWovnMUyTLJ7HZqXdy6C4QtKM7BKOI193QTxzspPYd7xUgVttew3vAC2eD6O+9ovfB2TKeE4UY03BwVUWwRHi/jA0ydlfIuwAItCiL9BGEfKSWkJnAlwO/Fs+epOg71Nlp28EOXkRr07rPQPxb/IF6vlpRCHjOq00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OvSqyyzR; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745919309; c=relaxed/simple;
+	bh=guAD50gmgdf8dNbOSIkbRIT3QyGj4WLIcqax997RKGg=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=qMCSnqgf+jaoBN0PayYXPAE+GR9WsN4WfLeDTtqQAj63Itjee7wzoiGO3z63nk1YqnG4FINHkMZ3GpSk8vDSSYk3THYEHFFQdu7wNaAPTgblyl2X14idl/g7XJd011bGpgyrR8iIrLOau5CKoiYcouGvy02C7G/D3qkgdplqy64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dKdk1vTn; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OvSqyyzR"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3913b539aabso3108658f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745919277; x=1746524077; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Za4U3xRAsortMbeBuio1B55CAmLpnNgYQPUZfqFH4oU=;
-        b=OvSqyyzRrkHyD9Nr/RQByUFY0XaGG+U8N16oQm9zK+akUt6IzfDdEeqGDd6wOY+Fam
-         Yfs3cz5xSm0GTu+uwYi0SDL3LOg3wzBVP1uAZQ7tJIo8g5V/t/6CsHsd4b2UGlmpeOXr
-         vkmDQKUoxwWMyI1eUYrIV2CUonadfWOpR6vlPuQrC2WmIbKWOfzixZDcWrQ9p76v+JKD
-         k10GBs8WL324uzxb1pYJ/TPBRe2nwP6E4OTaWLOgsGXHNDQ1TQQfGmJzXLbN2EsUKAgY
-         UZoPqwCxIepyNSW3cJUXjFTS6HBvixFD8fuuoxyI6kfTYhZEINi/ZLy4ANUhyhvxKcsU
-         vZmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745919277; x=1746524077;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Za4U3xRAsortMbeBuio1B55CAmLpnNgYQPUZfqFH4oU=;
-        b=Rfh102omitiYgS0MpnUWTLR6GV05s2tzIGM1ghk2errmV0QeHYR2O22v+LIwOlyT3h
-         FZ95zZvCyiKX7URXdlSwMir/OkaIykfrjZgyyOL2amNVtQAVl+pGXnY8WPhtaFSpOsgA
-         3W6XipNb81ERqMVpHG2jrySAzHJME+3CP5LYadbsLastweQ7r/cmMTuxx+gnZRZbMQM+
-         SB5B9gbyN+RBGmHyTt5yifRPyxUPN+Q5oqGq5zvg/xaYZ56s7lS4y1npadjk/oBcv0hU
-         32UxJ05JdWIBuANu/L4tvMxfbn0srSNiJ2PsBgeb3BS7nHZYlu5urPAKvIQ7ys+1ZcUr
-         xNuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJVQOQhJX1raj6h/3RYnVCg6NiNrG3gzFNC+VwXrmIFYXNiesqWvo6zXqBzun4YlmkYV14xcPWP52GTX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE5nlsRyglbVr9WQQOM9c+qEjE3LsOg3+cMZwSGcIC8S9jQTGK
-	VXWf6k3Uydq3EKQEcSl5rZe0+mntetqWc4BK4HrgUqFUXiVZPNYY21t53lsijYY=
-X-Gm-Gg: ASbGncsCkUxuV8s6XXeynwh5iYEAdTjt0n7tGZdunvkHDRe7CDOyDyAFg/ahyDbA6M3
-	dWKq3dEZr7g3Gml/f71UL4Lw35yAV5zrnsAnh60lhojtjc7MBOrpBDjJtGULeFrch50r+hKNgA3
-	9VsMw8huogDeLmaNqbb3rABHOtrh8pt0gTS4IjFbKZWSh7htjHVboQI25ubPEsWwUGJQGi2CKk5
-	0WhHxH3RZWfYHnLRqeuROqjydoOFtQJ+RgvSpK159z4C2++xzp8I4X70vfU99eqBeTtScJeXdxv
-	faU2yr+/xL1Mj2b4GK19r2dTTIfWls4klOxgCik7zqHfCchl0UwgQF3QtF/Yssbl/0HtIN0toKZ
-	N/0NMyg==
-X-Google-Smtp-Source: AGHT+IGVw2ZBwIFw8ZZVZzgJZsi/4nV3k/NK0Kh7uHF7vho5Ug5zLb1wnxqp1qar9eVXOIxtUTAlMQ==
-X-Received: by 2002:a05:6000:18af:b0:391:43cb:43fa with SMTP id ffacd0b85a97d-3a07ab8c3d0mr8438370f8f.51.1745919276760;
-        Tue, 29 Apr 2025 02:34:36 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46a54sm13677677f8f.67.2025.04.29.02.34.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 02:34:36 -0700 (PDT)
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Date: Tue, 29 Apr 2025 10:34:34 +0100
-Subject: [PATCH v2] media: dt-bindings: Add OminiVision 0V02C10
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dKdk1vTn"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250429093458epoutp02bd0a73809caf79a2ed7a6e02e783fe13~6wFoWeWKa2214222142epoutp02r
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:34:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250429093458epoutp02bd0a73809caf79a2ed7a6e02e783fe13~6wFoWeWKa2214222142epoutp02r
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745919298;
+	bh=Pi/iyF0IplJUPA7d0Z7gKsd7OHUodqqvbGsperI0axM=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=dKdk1vTnFVWqBAR2SqLxsvkR24HZJehguH3rUbBAEJbVDuU068FhhwprcjuoWmYVD
+	 +QxiUfdPiLYwIKGECzqtXUifHOs/dwfFmc+0I/Biz153MLGw2my1Xp+dMw74C36bFL
+	 xPFKnHHjVFszrH1obIRaxQsXlhBd7RNLs5FtKlsw=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250429093457epcas5p2b0fbeb86b8e679376761a83858e6041e~6wFneFqts1952619526epcas5p26;
+	Tue, 29 Apr 2025 09:34:57 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZmwC41Dxcz6B9mH; Tue, 29 Apr
+	2025 09:34:56 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250429092957epcas5p264b0dfae6bae9179df57e520fc59f8b5~6wBQCY4K62748727487epcas5p2B;
+	Tue, 29 Apr 2025 09:29:57 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250429092957epsmtrp1a2a35e256eff10acc70d75b9a28f6bdb~6wBQBc9JQ2444424444epsmtrp1v;
+	Tue, 29 Apr 2025 09:29:57 +0000 (GMT)
+X-AuditID: b6c32a52-41dfa70000004c16-e5-68109c1514f7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	FD.FD.19478.51C90186; Tue, 29 Apr 2025 18:29:57 +0900 (KST)
+Received: from INBRO002053 (unknown [107.122.2.234]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250429092955epsmtip192a33218257ecbc1e6673c37e238d0e8~6wBOVcwOw0967309673epsmtip1z;
+	Tue, 29 Apr 2025 09:29:55 +0000 (GMT)
+From: "Yashwant Varur" <yashwant.v@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <cs0617.lee@samsung.com>, <g.naidu@samsung.com>,
+	<niyas.ahmed@samsung.com>
+In-Reply-To: <73a5d0a6-ceb0-4c47-9992-260828f074d0@kernel.org>
+Subject: RE: [PATCH] arm64: dts: exynos: Added the ethernet pin
+ configuration
+Date: Tue, 29 Apr 2025 14:59:54 +0530
+Message-ID: <0ed501dbb8e9$45aa96e0$d0ffc4a0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQI+tP5AvR0g22A5T67WLyfPVk3CYgKkYErqAxsAxq2yxm0V4A==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJTld0jkCGwfVnKhYP5m1js1iz9xyT
+	xap3vBbzj5xjtdgy8zKzxctZ99gszp/fwG6x6fE1VovLu+awWcw4v4/J4smUR6wW//fsYHfg
+	8di0qpPNY/OSeo++LasYPT5vkgtgieKySUnNySxLLdK3S+DKePyvnbngJF/F31+32BsYF/N0
+	MXJySAiYSBz/+Jixi5GLQ0hgO6PE+Xsn2boYOYASUhINb8IhaoQlVv57zg5iCwk8Z5ToOSsG
+	YrMJ6Es833yNCaRXRGAxk8SXpoNgvcwCQRJfdgdCzNzLKDGvdzcLSAOngJ3E2a6HYIOEBXwl
+	dnecAbNZBFQlzk8+wgLSyytgKTHhqRpImFdAUOLkzCdgrcwC2hJPbz6Fs5ctfM0McZuCxM+n
+	y1hBbBEBJ4n9J9cyQtSIS7w8eoR9AqPwLCSjZiEZNQvJqFlIWhYwsqxiFE0tKM5Nz00uMNQr
+	TswtLs1L10vOz93ECI4zraAdjMvW/9U7xMjEwXiIUYKDWUmEt8qAP0OINyWxsiq1KD++qDQn
+	tfgQozQHi5I4r3JOZ4qQQHpiSWp2ampBahFMlomDU6qByTVe5u5+psuu9/VLDx8zV2Dd06M2
+	U/5eTdOpFhcWkyLO2j2MTFOv5Ksrsz76ZMC6Oe7E3uhFD6Ye5qo/+4/Fe2K99PLWjVbZVbOm
+	XjWt2R1u8Wzvb9m3ofMsExJ+9BpLcTItVY95vK2IiftEqvSLxvxdzuec7OI+OU6cZhUjMa23
+	2O76hv64q5esbufqpO/PVy7mVjdx9l5TN7uzK6FfPErf80bWfkeLHTU3JhxmWM5UpLBw0pTq
+	l3bJ3dcmyS/u4269orir5Dpv9KSC8iVhZa8O/Vqx/dY8rfS7zt8MGpo59/K6euTeZff64JOh
+	zi7mEff6f/1GXSvDF9slUtrunRCe+C15mlO3UMWj3/+UWIozEg21mIuKEwEo7Tz1IgMAAA==
+X-CMS-MailID: 20250429092957epcas5p264b0dfae6bae9179df57e520fc59f8b5
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-v2-1-7f9946f2c8f8@linaro.org>
-X-B4-Tracking: v=1; b=H4sIACmdEGgC/52NTQrDIBSErxJc9xU1xv6seo+ShTGaPEi1PFtpC
- N69NkcozOabgfk2lhyhS+zabIxcxoQxVJCHhtnZhMkBjpWZ5LLjSmoYFCSDyzv5SKBB1EAHCaf
- gRoiZSys4rOaxgD7bdmhHbb33rP49yXn87K57X3nG9Iq07uosfu0/lizqdDFKC6m8cafhtmAwF
- I+RJtaXUr4SxqLF4wAAAA==
-X-Change-ID: 20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-68c3b3d6cfff
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Bryan O'Donoghue <bod@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4533;
- i=bryan.odonoghue@linaro.org; h=from:subject:message-id;
- bh=ZNA/YfWSdVwWVC2UvpKCFkOunox/kHXL7eFHYnV//XY=;
- b=owEBbQKS/ZANAwAIASJxO7Ohjcg6AcsmYgBoEJ0r7+cdhBucbidk3RNPLVQrcDwlHunhY7/G4
- wUgVUkyBq+JAjMEAAEIAB0WIQTmk/sqq6Nt4Rerb7QicTuzoY3IOgUCaBCdKwAKCRAicTuzoY3I
- OqvAD/48m6S7FG5H9NOllxSytTUGIvsN+VcjZ87J6wPc6T4eRHw/3hFM62mqn3LtK9dtHuVvjLg
- lT5Fw9mR8q5yVOvlvOASTxtUxe3aId4RNV32WBh+mvhRbH6iEa3so2vuufSaOwoISyUxuj10iTq
- dyPre8eucun5EVOtNjVGz1NrccnD1S3h20VpdsBDP2JfUQHWD8jSbfKsy30FOd6Z6aXXPcjOaZr
- zRDqtOBNutVR5VnN671fEVu9+nFKInRvtwbkpNs+IN/oAGlJq2kFTrEq/sOgh9rwCK/O99Xza8F
- xubBSwiLhDJJnW+EoqD+nSUTGV8qjfWxCg2FY03U3sud5rIUrYG3hXew0X8sBoV2Pro8O7EKUup
- cJRYKtQlrmjrJze2xH375MMuLHMZobC1ZsuXwY5PoS202Hi+TXRUOOYkOCOCxx1+rfgSlq2khFD
- 7LvC31ABk961NrspDf6P66io5LCSSmijEQQ+mqFlBB2O19sbranRRrAFDIcuM8dpVRlApEG1fB0
- 3seYTbKNeajdgkbCtBVIw2v0Ls/BdUJD3GIPLXmXhFozXgyL9GkpUYP1dO0/nGOcBx3VY0dnoR/
- cbB1gKVqigHIxMn4rWlG81dQ/P3xTDPWN8eq6P7tbvkhtEWifngYFJBjRtKskIzisNFIe5boO5f
- G/BZzcmre/yXkng==
-X-Developer-Key: i=bryan.odonoghue@linaro.org; a=openpgp;
- fpr=E693FB2AABA36DE117AB6FB422713BB3A18DC83A
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-543,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a
+References: <CGME20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a@epcas5p2.samsung.com>
+	<20250423060034.973-1-yashwant.v@samsung.com>
+	<73a5d0a6-ceb0-4c47-9992-260828f074d0@kernel.org>
 
-Extend the ov02e10 bindings yaml to describe the ov02c10 sensor which has
-the same bindings with a different compat string and different i2c
-address only.
 
-Other differences in sensor capabilities exist but are not expressed in
-devicetree.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
-v2:
-- Updates the pixel formats in the description 4c1 -> Quad Bayer - Sakari
-- Aside form the i2c address there's no hardware level differentiation
-  I can think of to document ov02c10 (v) ov02e10 - Sakari/bod
-- Adds RB - Krzysztof
-- Link to v1: https://lore.kernel.org/r/20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-v1-1-9a46124fae7b@linaro.org
+-----Original Message-----
+From: Krzysztof Kozlowski <krzk=40kernel.org>=20
+Sent: Wednesday, April 23, 2025 8:41 PM
+To: Yashwant Varur <yashwant.v=40samsung.com>; robh=40kernel.org; krzk+dt=
+=40kernel.org; conor+dt=40kernel.org; alim.akhtar=40samsung.com; devicetree=
+=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-samsung-s=
+oc=40vger.kernel.org; linux-kernel=40vger.kernel.org
+Cc: cs0617.lee=40samsung.com; g.naidu=40samsung.com; niyas.ahmed=40samsung.=
+com
+Subject: Re: =5BPATCH=5D arm64: dts: exynos: Added the ethernet pin configu=
+ration
 
-v1:
-I previously submitted a standalone ov02c10 yaml file but, it was pointed
-out to me by Krzysztof that the ov02e10 yaml has exactly the same bindings
-and we should therefore extend the ov02e10 yaml.
+On 23/04/2025 08:00, Yashwant Varur wrote:
+> This patch adds the ethernet pin configuration.
 
-Link: https://lore.kernel.org/linux-media/da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org/
 
-The accompanying patch:
+>=20
+> Signed-off-by: Yashwant Varur <yashwant.v=40samsung.com>
+> Signed-off-by: Changsub Lee <cs0617.lee=40samsung.com>
 
-- Updates the overall description to differentiate between the two sensors
-- Adds ovti,ov02c10 compat string
-- Adds an example for the ov02c10
+Incorrect chain or confusing. Who was the author? What is the meaning of th=
+e last SoB?
+>
+Sorry will correct the order.
 
-Once merged we can also merge the ov02c10 driver, which contains a compat
-string requiring yaml description as precursor to merge.
----
- .../bindings/media/i2c/ovti,ov02e10.yaml           | 47 ++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
-index 4ac4e11a16c8bb7a53db0c44289b1004dbdc282a..0eb769708e2727776eb8a832bb0a765dd6facf9d 100644
---- a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
-@@ -11,12 +11,22 @@ maintainers:
-   - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
- 
- description: |
--  The Omnivision OV02E10 is a 2 megapixel, CMOS image sensor which supports:
-+  The Omnivision OV02E10 and 0V02C10 sensors are 2 megapixel, CMOS image sensors which support:
-   - Automatic black level calibration (ABLC)
-   - Programmable controls for frame rate, mirror and flip, binning, cropping
-     and windowing
--  - Output formats 10-bit 4C RGB RAW, 10-bit Bayer RAW
--  - 2-lane MIPI D-PHY TX @ 720 Mbps per lane
-+  - OVO2C10
-+    - 10 bit RAW Bayer 1920x1080 60 fps 2-lane @ 800 Mbps/lane
-+    - 10 bit RAW Bayer 1920x1080 60 fps 1-lane @ 1500 Mbps/lane
-+    - 10 bit RAW Bayer 1280x720 60 fps cropped 1-lane @ 960 Mbps/lane
-+    - 10 bit RGB/BW 640x480 60 fps bin2 or skip2 1-lane @ 800 Mbps/lane
-+    - 10 bit RGB/BW 480x270 60 fps bin4 or skip4 1-lane @ 800 Mbps/lane
-+  - OV02E10
-+    - 10 bit RAW Bayer 1920x1088 60 fps 2-lane @ 720 Mbps/lane
-+    - 10 bit RAW Bayer 1280x1080 60 fps 2-lane @ 720 Mbps/lane
-+    - 10 bit Quad Bayer 960x540 60 fps 2-lane 360 Mbps/lane
-+    - 8 bit Quad Bayer 480x270 1/3/5/10 fps sub2 288 Mbps/lane
-+    - 8 bit Quad Bayer 232x132 1/3/5/10 fps sub4 144 Mbps/lane
-   - Dynamic defect pixel cancellation
-   - Standard SCCB command interface
- 
-@@ -25,7 +35,9 @@ allOf:
- 
- properties:
-   compatible:
--    const: ovti,ov02e10
-+    enum:
-+      - ovti,ov02c10
-+      - ovti,ov02e10
- 
-   reg:
-     maxItems: 1
-@@ -109,5 +121,32 @@ examples:
-                 };
-             };
-         };
-+
-+        ov02c10: camera@36 {
-+            compatible = "ovti,ov02c10";
-+            reg = <0x36>;
-+
-+            reset-gpios = <&tlmm 237 GPIO_ACTIVE_LOW>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&cam_rgb_defaultt>;
-+
-+            clocks = <&ov02c10_clk>;
-+
-+            assigned-clocks = <&ov02c10_clk>;
-+            assigned-clock-parents = <&ov02c10_clk_parent>;
-+            assigned-clock-rates = <19200000>;
-+
-+            avdd-supply = <&vreg_l7b_2p8>;
-+            dvdd-supply = <&vreg_l7b_1p8>;
-+            dovdd-supply = <&vreg_l3m_1p8>;
-+
-+            port {
-+                ov02c10_ep: endpoint {
-+                    remote-endpoint = <&csiphy4_ep>;
-+                    data-lanes = <1 2>;
-+                    link-frequencies = /bits/ 64 <400000000>;
-+                };
-+            };
-+        };
-     };
- ...
+> ---
+>  .../dts/exynos/exynosautov920-pinctrl.dtsi    =7C 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi=20
+> b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
+> index 663e8265cbf5..778584d339d5 100644
+> --- a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
+> =40=40 -166,6 +166,24 =40=40 gph6: gph6-gpio-bank =7B
+>  		interrupt-controller;
+>  		=23interrupt-cells =3D <2>;
+>  	=7D;
+> +
+> +	eth0_pps_out: eth0_pps_out =7B
 
----
-base-commit: 8b5b11babc761c25602230260fb001267645b9a1
-change-id: 20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-68c3b3d6cfff
+Please follow DTS coding style carefully. This applies to all commits you t=
+ry to send from your downstream/vendor code.
+>
+Sure, thanks
+
+What is more important, I don't really understand why you are doing this
+- there is no user of these entries - and commit msg does not help here.
+>
+Understood, in v2 will add the Ethernet node as well.
+
+
 
 Best regards,
--- 
-Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Krzysztof
 
