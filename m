@@ -1,142 +1,70 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B988F77;
-	Tue, 29 Apr 2025 10:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7332135A3
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922694; cv=none; b=MZGMF4QxKl+fObiFsrcMEZVE3jcl1yhay1e7Af8Wr16X55qsl9W8VZAA2Cs7V72kB8MGyQ8xqfe0qH0khD13rg1l+/ZcL8lLKfSwocZuSqBliWTkI/2R1sV/Yh35fSJ/6fp3XQLoSsQNtEpWICWy3SsY/RgRixEyXqVuRx83zFU=
+	t=1745922725; cv=none; b=c1j4j1aj5m8VogaPJuB8WzRe8m9QdtHm6GpIoYS4iENeo0XRVchXOSfV4rd387D0Hvj3ijo133dlrLzI48TTncN6a1441OIppAzFXLwtj7GWvK/pJ4l9h94svz+96o9L+E3gvRT5bncRJ3PKHQubvER+gFcArbg1cD7SfZkNqJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922694; c=relaxed/simple;
-	bh=E72IkalazZSH9hmLoh8WOuFfHOJ9Y7cbGMxlWZDqlaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t/5N9BnD7wFOULiJnD6TmdBwhx9MNVDXdV2MkXBInL7zUXB6HiiJCxHDIY/P/WmRmn+D/WAkdevOTOe+j/cf59dRh+76JCm4N80z6cJ3I/evGsEMCOMCN/vN2YK0ScR/b3ST9g38LUxMyIrLCNdvrNhBK1mOwx7yNxw56pnP0Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=npr4iHht; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="npr4iHht"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9l2Ah011871;
-	Tue, 29 Apr 2025 10:31:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	62H73I4+pk5Umqg8rnvLzTJpE7bmIFq2jzdCc1OA+z4=; b=npr4iHhtuT3+slqw
-	DNZFEtvQ00NYmUF+GEm52rGoJsVueDptHoI21pv1hLKnTnQJk5bGbXdyP/0cQ7AH
-	7m+skW6VSGOIPmc1DturlCxbl+AMJfxuMV9mQ6N9j2UZno2MS7lAAfkKgeBu1o/p
-	oFd/3a90wXdaGv9fUW7gm7NBsxU6yhL9dEzwohvWkh+cIgBdWTupgJL4nyUd7ZES
-	OS4fn/Y7nQNL/3LQPUO680k1eBfjFrDeEMcpF9ow5aOjH2MVkPUqISv8HnN5vg0o
-	ni4ePklhhqAErRLOGCYg0g+oxEkk1iPEztuLyda2FLwmsoepird8/ioHbksCIh8p
-	4gUu7A==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468pg9c813-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:31:26 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TAVPaA000748
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 10:31:25 GMT
-Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 03:31:19 -0700
-Message-ID: <6f913d1a-bcbb-e620-a761-676e38bdd1b8@quicinc.com>
-Date: Tue, 29 Apr 2025 16:01:17 +0530
+	s=arc-20240116; t=1745922725; c=relaxed/simple;
+	bh=z2E8jHyASWq7HV6g5EL/dQMtq8lV7MbAGJ2XOg39Pjs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=c3JuXsv+oygPSjCrmNao1rdd89G2SsCSqnUDRsu+KTSkkFABAdhfLnNhrY11cISc8jIVLPHcgA+m74lia1VUl7pWBaxqFnnbxaud+XGpMHuJXOd/CXR0hEDb7Hw083B6lACmFgrisuksqMmnQBx0uax6f2+4z9zdlKGoyggOhlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85be9e7bf32so1045752039f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:32:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745922723; x=1746527523;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CBJKd33MnmY6A5IylZariQ6qmIc4mPq8Kzw+IYRRLP4=;
+        b=c4eXt9pt5G1lKUgzd+Kr38lmXEFxQJ0SboDUaGdYYMCcgqLSRoje9Py7WmJH9bkviU
+         cfRr59sAi8jMnILNXq3JSvF3+zwvQP12kb++lYq1WyMvQJXYIm2tkQ4yxaLyqatcMGiL
+         Lbr0DUAxcCvEZ2hQGVCjdMD28P8EdQ5VSTkSfxUUHJcAxltsn/DpHwGmmz1NtnJTia/m
+         BvQuL+MewrDlosJgsvs83HJFHyox+kUvHix7GpMFmn1nav0QuGI5Ax3P47QgH3rLwcfP
+         VqUug9D2kS/oDtT0qDMYvGKpHc+gxgczqMhYFGcCUiyZuLkkcvIRuBXGKvtBjmMEsngx
+         G+9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWCq5jXp+wyZ37gv1w9q/oXFy+RDZneS78Afqj2MU5xJe2zOWXwapyDHUDkgT8nZw9uX15ajb0Cc/I0HMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN3ouRdDC6yBjJCeMDelzKLWmnVM8dmkKqfcqnTIXk0Gc+u5eS
+	8topCkXfuJ3G3RrmRVo+boTKmYQP/FmLHCrQ6Vhd/wfVBhyH7SumFxYY1NGm0AyiU0lmqiv/Do/
+	fRPr+IzNMi9QblD6OWNSGTIOQJa/aFFtDcoWxiEit1eOL+lzFwbcrGRk=
+X-Google-Smtp-Source: AGHT+IHaYT1bz4kZUtenX+8FvXMCJaAwee3VvUmwWFgNK+BR5Pw6qg1RNr7afo9FbfCMu1jzqqLtFvrB9BObiK6uz2qctCcOVywK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 14/23] media: iris: Fix NULL pointer dereference
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>,
-        <stable@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-14-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-14-3a6013ecb8a5@quicinc.com>
+X-Received: by 2002:a05:6602:3a8a:b0:864:4862:91a2 with SMTP id
+ ca18e2360f4ac-8648988fedamr291177639f.10.1745922722979; Tue, 29 Apr 2025
+ 03:32:02 -0700 (PDT)
+Date: Tue, 29 Apr 2025 03:32:02 -0700
+In-Reply-To: <tencent_7212DF0676098EEEF9EECD0C9F27D686DC06@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6810aaa2.a70a0220.23e4d2.0038.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ZpvtK87G c=1 sm=1 tr=0 ts=6810aa7e cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=Ge1I_e8bFEkiASVbsqMA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: tQfmm9M7hcs9hhOC6imbGR8A_09jxIKa
-X-Proofpoint-GUID: tQfmm9M7hcs9hhOC6imbGR8A_09jxIKa
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3OCBTYWx0ZWRfX/rrdyDmeRD2l Rsnd1RxGoe+VLxofoYJABHv83OWo7LaqsanMvh76zpRunZMkDkCDVLrmJka5lzCMI7JarF75o2R CSQ16h5V+srcIEBv0iVawdyY6w51h/OxCu9G+InulopvR3+96DehrhE47gjvc7mlTmK2DOw9cAq
- pdV084pI2dITP5G9l9sDPXsLixzLKw7aNJLz3haqJ+DAFu4DtrYNVTNR8LHw+EENmUYisk05pof AWItrC5clxcMzzv9FiTENuXhQmg/VRDrruUts6GjvePSFgXKkQ/GLT5pJxovxkNwh4KiZE9uMCk w7yM6QsOcqFqu1f4SXWWD+LuJxgK+HfjhY6HycPktitgFTFOpak9gQay7Nsa5rw/6Sxc8k2rePO
- M5g50AbWclRHaOkmZibBwIJzRDBRDyAlWW/1aMS4ngnZy5xVlLuTUjNvomC1hGAv0jTygpmX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290078
+
+Hello,
+
+syzbot tried to test the proposed patch but the build/boot failed:
+
+net/mac80211/ibss.c:1821:26: error: redefinition of 'local'
 
 
+Tested on:
 
-On 4/28/2025 2:59 PM, Dikshita Agarwal wrote:
-> A warning reported by smatch indicated a possible null pointer
-> dereference where one of the arguments to API
-> "iris_hfi_gen2_handle_system_error" could sometimes be null.
-> 
-> To fix this, add a check to validate that the argument passed is not
-> null before accessing its members.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: fb583a214337 ("media: iris: introduce host firmware interface with necessary hooks")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-media/634cc9b8-f099-4b54-8556-d879fb2b5169@stanley.mountain/
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> index 1ed798d31a3f..cba71b5db943 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-> @@ -267,7 +267,8 @@ static int iris_hfi_gen2_handle_system_error(struct iris_core *core,
->  {
->  	struct iris_inst *instance;
->  
-> -	dev_err(core->dev, "received system error of type %#x\n", pkt->type);
-> +	if (pkt)
-> +		dev_err(core->dev, "received system error of type %#x\n", pkt->type);
->  
->  	core->state = IRIS_CORE_ERROR;
->  
-> 
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+commit:         ca91b950 Merge tag 'v6.15-rc4-ksmbd-server-fixes' of g..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
+dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15e87270580000
+
