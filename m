@@ -1,136 +1,167 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D5C246762;
-	Tue, 29 Apr 2025 23:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E63246789
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745970463; cv=none; b=ftI5GpX2+C0C+v3cU6vJ9ZiAW/IblbaL/YrHaIccMmwNnTJoxV8rwlY7sXLLuCdIqcGp1zgu7YB/OuVF7X9bsX4M0TKqr65w2O1DGT4LC0pkjVIHENrHHlz9L72Sp6bSIns+qE4D2mstONi4K2hkhr4ymg29jG5FOXswJNxfylw=
+	t=1745970469; cv=none; b=WSJjnwgJbA+AzELuNoAjyFVaJFFhbr54V0ijOW5zx7BxNtdPqqQcTWf2o/Nnp8xJBdsBnGWWtC46+K3sL8DzbJ5XqZ1zWtRY2DGhR4bIjdtRfRC2orjU9sWxPbz8dGrKy+iztt540mn95G7y7McQUf6UFLjVj2MUz4Ed8QSfsDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745970463; c=relaxed/simple;
-	bh=XkiAREM0que9989LTPRy0Ga/JqzoNw/ix1/Y2kzR1Gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUl3wIgm9aLbBz8MvLbhKbrNzo/nuc7VBQPJC6QMguYf5xrPpfoPRDNMOHapyk5kE8U15AK+a609Liz8zTeoFktz73ZKh0P6kbNWnDa80HJAY6Dc9K23jKcXCSI0MieSePV/uxLD5CyYJIPiB/5SeX9UihMAi5rPEfoHPn8KkRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=oj1lLeZD; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745970469; c=relaxed/simple;
+	bh=EUXN40sun50EBrYaGuLWVQrctCvrMTiPSjuC2qVa6MA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=XDzOLemomOzHYFcxY1BHAAuCyY1tiapmOFYKV6MQcvcOBu9TPvCjHlDzHfcmmY0nBRZbswTOAEhNEoqQOY6xkuvhoWjnAudz39/5VW/djd5cjVIFbhJngQWnMTntRXGlH78+vdSpMo4ye/xpuuKvaA5FT2LAEwrLUDauAeLGhhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CzL+BSU+; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="oj1lLeZD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=U0saWugJmx2Vge5QQBUQ8pQdCUNf2tXtPiln6IpxNQc=; b=oj1lLeZDB0X6Upyb
-	ihEqvpUuNnq00BpLydvh3AIOPIxHi0LTMEiQie/y6wMerIY242+rs0UlhGDtP6ErUNgPHZuTWpqEE
-	mH0OMG/xN2NNQDqUI9StoV6yH4pr7CBQVt/0SBt2fFZdr/W1qFi9DJkgjmVO77Xw/YppLrRzHEP/c
-	pNeXjd44khC1CjzAMmSfaYf/AfBhJe69cC2f4MqvobyBTnDe5OmoxONL55e1nCtXlUamTWCiRx4Z6
-	80gHrWAl0tNGIufEy93h5OGeyGyQsTA2MAO31CsSmds2gQVV255t2PO5un2oNE5Q2bpmswG9Avjbz
-	NNZK8Llz/0yguXJXYw==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u9ufp-000WJY-18;
-	Tue, 29 Apr 2025 23:47:37 +0000
-Date: Tue, 29 Apr 2025 23:47:37 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: arnaud.pouliquen@foss.st.com, andersson@kernel.org, corbet@lwn.net,
-	linux-remoteproc@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] rpmsg: Remove unused method pointers
- *send_offchannel
-Message-ID: <aBFlGWI9usTpjQIU@gallifrey>
-References: <20250424142746.79062-1-linux@treblig.org>
- <20250424142746.79062-4-linux@treblig.org>
- <aBEh85gDlaEywWtX@p14s>
- <aBEzcYaw63e93fFw@gallifrey>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CzL+BSU+"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30872785c3cso9752852a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745970467; x=1746575267; darn=vger.kernel.org;
+        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kqhn91kxJk0NqrWbN6uNVF8ez7ssrZW8quhtkNzQJcg=;
+        b=CzL+BSU+J+3IOAtJsTXPf8lw4JvLGCvN4/gDlnyVwn0OwUIOahX5ZtYZqwa2YLkr05
+         SrE66pFaOgNheWY9tKdtBPwqljryVz4DjjyZiwoXTJE0ArfwfGTesKdbTeDcA8vYSeYT
+         IvQ/bz/G0zdAFyueBscslUP6cdz1333it+gTqk1/IBt6rdqN3UUaTOXFis5BxMA8BIqZ
+         Mipa7XNhOe/qXZFjUb/Jg9aT7ZB3YwQVUDemw8qq6WU+DXxPWQTAwbUoftmLPMHfoFk8
+         erIgZtyvULb9lP36UnYzaSEOdi026vl43BAHF8LTbjNYphojWGPUiBZgNucebF85UWgY
+         CTnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745970467; x=1746575267;
+        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kqhn91kxJk0NqrWbN6uNVF8ez7ssrZW8quhtkNzQJcg=;
+        b=k2ZJlcTIFrLLQwH+lUw4XkWE7eIW9hnS9aPPQ1WlhP9uM59MUrlWaoqotvsCl7pSJf
+         cdUyPL6ykz/t3aIOOILh283Xztfe+Vht9WP4pJp0qP3ycmY2M2tfJX040QEO0NHuxh2P
+         u+xNQsN5aKTLa7sVmfQunJQN2gs5z9ebkERjgc8OB8RXANCnEmA+F1JQvxxc4DAGbnQK
+         BgOIFLEgZeEpRoQZ4+/L8imfuxu89zRcd/++8EQT1uqjQyETWv+HOGxsYK51l9ulZxWC
+         KL9eisyWeGir7hnqnEwYKSwseJ5wYEl8Y3aCgDqzFblhjf+r6CV/EzFB1qOulkZK9ln5
+         MqlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZYQSdq5iE+/sdDEMRpxBGd09As+3feHBcWt1+GxZ+KaLLVK80fx0TvYSAKsHUe2K3tIJI29cuxveTsF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNNA/nrciN7gR0jEFe/SRPV183B50xvAQ/gKtQ2M3j5NtwIa1R
+	KtdHAAsYMWpxtdBIJ1qtFoyEqhzQzOhO7scJh2rV4wn7T62AnoX3E704vh7TZUjDPk50YuL6XU1
+	n+Tf3hvdxIS14bg==
+X-Google-Smtp-Source: AGHT+IFJlrR3Sq9I5l43d7ShfYq2cl3PN625t73YYl+5vc8ZyI1ord9aUK9rPq80NYo4FPLDUqCmnjMJmHuGuMA=
+X-Received: from pjbok13.prod.google.com ([2002:a17:90b:1d4d:b0:301:1ea9:63b0])
+ (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:4fce:b0:309:fd87:821d with SMTP id 98e67ed59e1d1-30a333647demr1488703a91.29.1745970466762;
+ Tue, 29 Apr 2025 16:47:46 -0700 (PDT)
+Date: Tue, 29 Apr 2025 23:47:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <aBEzcYaw63e93fFw@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 23:46:27 up 2 days,  8:00,  1 user,  load average: 0.06, 0.04, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Mime-Version: 1.0
+X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2833; i=rdbabiera@google.com;
+ h=from:subject; bh=EUXN40sun50EBrYaGuLWVQrctCvrMTiPSjuC2qVa6MA=;
+ b=owGbwMvMwCFW0bfok0KS4TbG02pJDBmCqfJPBE+e+jH9vbDYhiVySQvO/qvZY9Q499Zc8yyPl
+ k/+rhVtHaUsDGIcDLJiiiy6/nkGN66kbpnDWWMMM4eVCWQIAxenAExk6VmG/04cOVYfax9siJgd
+ PU2n4kXVDW0VPaskoVt3U3MVdQ9I+zMyPIicfpxR8mDNhcdXLDR1LmxsuZ7L7nzj20t5R7saxYI aPgA=
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250429234743.3749129-2-rdbabiera@google.com>
+Subject: [PATCH v1] usb: typec: tcpm: apply vbus before data bringup in tcpm_src_attach
+From: RD Babiera <rdbabiera@google.com>
+Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
+	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-* Dr. David Alan Gilbert (linux@treblig.org) wrote:
-> * Mathieu Poirier (mathieu.poirier@linaro.org) wrote:
-> > Hi,
-> > 
-> > On Thu, Apr 24, 2025 at 03:27:46PM +0100, linux@treblig.org wrote:
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > 
-> > > After the previous patch, there are no implementers of the
-> > > send_offchannel() and trysend_offchannel() methods.
-> > > 
-> > > Remove them.
-> > > 
-> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > > ---
-> > >  drivers/rpmsg/rpmsg_internal.h | 6 ------
-> > >  1 file changed, 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-> > > index 42c7007be1b5..397e4926bd02 100644
-> > > --- a/drivers/rpmsg/rpmsg_internal.h
-> > > +++ b/drivers/rpmsg/rpmsg_internal.h
-> > > @@ -50,10 +50,8 @@ struct rpmsg_device_ops {
-> > >   * @destroy_ept:	see @rpmsg_destroy_ept(), required
-> > >   * @send:		see @rpmsg_send(), required
-> > >   * @sendto:		see @rpmsg_sendto(), optional
-> > > - * @send_offchannel:	see @rpmsg_send_offchannel(), optional
-> > >   * @trysend:		see @rpmsg_trysend(), required
-> > >   * @trysendto:		see @rpmsg_trysendto(), optional
-> > > - * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
-> > >   * @poll:		see @rpmsg_poll(), optional
-> > >   * @set_flow_control:	see @rpmsg_set_flow_control(), optional
-> > >   * @get_mtu:		see @rpmsg_get_mtu(), optional
-> > > @@ -67,13 +65,9 @@ struct rpmsg_endpoint_ops {
-> > >  
-> > >  	int (*send)(struct rpmsg_endpoint *ept, void *data, int len);
-> > >  	int (*sendto)(struct rpmsg_endpoint *ept, void *data, int len, u32 dst);
-> > > -	int (*send_offchannel)(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -				  void *data, int len);
-> > >  
-> > >  	int (*trysend)(struct rpmsg_endpoint *ept, void *data, int len);
-> > >  	int (*trysendto)(struct rpmsg_endpoint *ept, void *data, int len, u32 dst);
-> > > -	int (*trysend_offchannel)(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -			     void *data, int len);
-> > >  	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
-> > >  			     poll_table *wait);
-> > >  	int (*set_flow_control)(struct rpmsg_endpoint *ept, bool pause, u32 dst);
-> > 
-> > I'm good with this patchset.  Can you fix the last paragraph in the comment for
-> > function rpmsg_send_offchannel_raw() and remove the reference to "_offchannel"?
-> 
-> Sure.  I'll cut a v3 with that as an extra patch at the end.
+This patch fixes Type-C compliance test TD 4.7.6 - Try.SNK DRP Connect
+SNKAS.
 
-Actually I rolled it in, see v3 series starting with message:
-  20250429234600.301083-1-linux@treblig.org
+tVbusON has a limit of 275ms when entering SRC_ATTACHED. Compliance
+testers can interpret the TryWait.Src to Attached.Src transition after
+Try.Snk as being in Attached.Src the entire time, so ~170ms is lost
+to the debounce timer.
 
-that I just sent.
+Setting the data role can be a costly operation in host mode, and when
+completed after 100ms can cause Type-C compliance test check TD 4.7.5.V.4
+to fail.
 
-Dave
-  
-> Dave
-> 
-> > Thanks,
-> > Mathieu
-> > 
-> > > -- 
-> > > 2.49.0
-> > > 
-> > 
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
-> 
+Turn VBUS on before tcpm_set_roles to meet timing requirement.
+
+Fixes: f0690a25a140 ("staging: typec: USB Type-C Port Manager (tcpm)")
+Cc: stable@vger.kernel.org
+Signed-off-by: RD Babiera <rdbabiera@google.com>
+Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+ drivers/usb/typec/tcpm/tcpm.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 784fa23102f9..e099a3c4428d 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -4355,17 +4355,6 @@ static int tcpm_src_attach(struct tcpm_port *port)
+ 
+ 	tcpm_enable_auto_vbus_discharge(port, true);
+ 
+-	ret = tcpm_set_roles(port, true, TYPEC_STATE_USB,
+-			     TYPEC_SOURCE, tcpm_data_role_for_source(port));
+-	if (ret < 0)
+-		return ret;
+-
+-	if (port->pd_supported) {
+-		ret = port->tcpc->set_pd_rx(port->tcpc, true);
+-		if (ret < 0)
+-			goto out_disable_mux;
+-	}
+-
+ 	/*
+ 	 * USB Type-C specification, version 1.2,
+ 	 * chapter 4.5.2.2.8.1 (Attached.SRC Requirements)
+@@ -4375,13 +4364,24 @@ static int tcpm_src_attach(struct tcpm_port *port)
+ 	    (polarity == TYPEC_POLARITY_CC2 && port->cc1 == TYPEC_CC_RA)) {
+ 		ret = tcpm_set_vconn(port, true);
+ 		if (ret < 0)
+-			goto out_disable_pd;
++			return ret;
+ 	}
+ 
+ 	ret = tcpm_set_vbus(port, true);
+ 	if (ret < 0)
+ 		goto out_disable_vconn;
+ 
++	ret = tcpm_set_roles(port, true, TYPEC_STATE_USB, TYPEC_SOURCE,
++			     tcpm_data_role_for_source(port));
++	if (ret < 0)
++		goto out_disable_vbus;
++
++	if (port->pd_supported) {
++		ret = port->tcpc->set_pd_rx(port->tcpc, true);
++		if (ret < 0)
++			goto out_disable_mux;
++	}
++
+ 	port->pd_capable = false;
+ 
+ 	port->partner = NULL;
+@@ -4392,14 +4392,14 @@ static int tcpm_src_attach(struct tcpm_port *port)
+ 
+ 	return 0;
+ 
+-out_disable_vconn:
+-	tcpm_set_vconn(port, false);
+-out_disable_pd:
+-	if (port->pd_supported)
+-		port->tcpc->set_pd_rx(port->tcpc, false);
+ out_disable_mux:
+ 	tcpm_mux_set(port, TYPEC_STATE_SAFE, USB_ROLE_NONE,
+ 		     TYPEC_ORIENTATION_NONE);
++out_disable_vbus:
++	tcpm_set_vbus(port, false);
++out_disable_vconn:
++	tcpm_set_vconn(port, false);
++
+ 	return ret;
+ }
+ 
+
+base-commit: 615dca38c2eae55aff80050275931c87a812b48c
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+2.49.0.967.g6a0df3ecc3-goog
+
