@@ -1,117 +1,130 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D4453A7;
-	Tue, 29 Apr 2025 00:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F3F366;
+	Tue, 29 Apr 2025 00:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745885698; cv=none; b=tqBX48ovm/WeZqfKG9yyhMSTzAgSNtRGwattU1NfnUg4cs+aNyhKCpngJRSR+OKxA55wXjrvGXqyPVrSupukB5xZ+DoaR+gdKWogFJEdQtAHQZ5Bym/4j70lj4WLeE1uVLXGCg8XISAkJJyDxmC4inCVE6Bfra14PkVijtR2tmI=
+	t=1745885738; cv=none; b=kKZNJrCKVbIsD+gEZzwRnVlmlZBxf5/lq+Q/IEBfvx3hSGm7a485csk4UnaQCijzuK3i5fhzP9t2ntJt+C9KxQH5AUG2Zr8D2WyNB4mD3+msKMhj0wqH89CLI3S8+cxCbA56H3ebMgPdoNirFW0YYp5Lhf//Fcpp3AnOU29GSms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745885698; c=relaxed/simple;
-	bh=ukG9HeqpcQ+1GO6qYLdY8Pxl1AdcJwX98/G0xfA2dkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pn4w17VDvupYQGSCShR+jNzTKqPzCAfEVUq+8A428bls4gbVg+h3mOtdD1Aj/kWPz20Fuq+aY0IBEnwL29ZXmNu6DebLBUXvkVcmO3UF2MEoIOI6Gb3oLAzLayDhpLAV6hmjeWjWGpmumrW4duV80zWsr2f/HbM5GOxtJMzqdIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsjdrRzn; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsjdrRzn"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so5012151a91.2;
-        Mon, 28 Apr 2025 17:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745885696; x=1746490496; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZD79ds3YCjQTyKFTrJ7hlnaJAXSCiy4KXLJc1qdVPa8=;
-        b=AsjdrRznVidM3fI/ZwtXFNhEd1iR4EL8U7fRANn3usS30jS88/3JuVilo4ymAWx+4T
-         ECEO7Do78pKmQ3bx8PfVE9u2TkS39qwiWpTG8Bz3dSw/WaOm+3M/EXhqCtk2D29HxW4l
-         wzt+LQ/XOJPgy1w8SkV1Iv8OMmtJn8/vSh04H+Ru1ZIBmOBmQzRX8iNMJV2KUOdYpJ41
-         JfMXUW1m8WWVZnavtRq98CYGbc4MRetlYJ7Fj8MaodWwltAMzKue9PdpRpKR7gkBZ00G
-         soDnMS/0GmJ2PnbS5xxFk7UCBJGJ90vKaL3zlFG9s9z3Mqyk6GYyGTRPvqHtXVc9C3AK
-         2iWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745885696; x=1746490496;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZD79ds3YCjQTyKFTrJ7hlnaJAXSCiy4KXLJc1qdVPa8=;
-        b=Pog2IMpC1thJ/sZmfo12VsOE3hHwoHRYP38iocpSUgz4VUfSTDOBvhpPKcKSg5qo3c
-         Ov+5kGZw62KwNm4kDUxBft2J7xsOi7oWnVUjZ9rh5U3phH1c6K9W8i6pw56z35C2CafI
-         iKidN5M462uLEEBZHHMuX4FMWXYw0RCxbnuJsCpvVXGh8CcCJfgMNzrnAgMKTjrTWk/R
-         m7UN1jLaSPKWlb6SXq3WtbhZXlsdmFvqMmkOJ2G5QT1nEhVk8ZLjLUcfO10jDDUk9kOc
-         YBHT0uH09tUiHpapq24kKK6/AxFFvbUKcvUu5w1V3ZlaEkGYxgPzDOuqcm6drp13/8dt
-         x3cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUruiYl0EcuXeqbY/9LOIYBmh+FpSdkxHx0Df0u6AEwk8WGXuhHinni74TUs9yNGmn+wiHrlwg4@vger.kernel.org, AJvYcCVBS8VlwpSN2SSMTaJaQCs2OLK1HTpoGhSFCegilPCJE7wma4OwD5iTjfXGpebLcbh/AhSMGVEQcepQ8Y4aQ92j@vger.kernel.org, AJvYcCXt2oNG27junXcWbdyebOk3RsgsZrBYLC7mvpSUOMaZEqwfwM9tUEAoCCMJe5Cam3g9issZqliWsEnQAF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxoe0xSIdSBzWcc3kzpD5dvDf69yq6wamS4fsa+kJ1ZwTmZ65iM
-	bPWfHs4SJtPWCSmrIgyemOHQBaovhFyJx1gwonKBF7vP3IW45yszz22xW31e58M=
-X-Gm-Gg: ASbGncsA+jvTaudXka+Af3HN8tZo3SFIblmWvt850Jq/ywqsOAOdo0hodDRVTUvjIwa
-	jF5hXQqY0+iYqsNqVfdiuyQhzrAkTcCLvkrjAUJH9USBl3b+2AfsOYm4WAwLe9XRN2ML+wkLhow
-	G12OqQmIFF4ts+zGlZqgUFD2e84tnVcxCxi2NU/n0xYl5tV8bsAn3allNG1t6ipRkQ2IJFZW7un
-	P4bCr3/NAfbXEQy7ODJtRLzUvWDpQ1yzn/K5RZq8wnc7pY2W1LcGKRtE0nNR+j0l70bsFFXDBVB
-	04w9+5pa7aaBx8Ey2dTGIziw4VXKahevUWCXONFHb8f9
-X-Google-Smtp-Source: AGHT+IG/2mzZD80DHP89sQ6Y2zaVIFRO+ETZ75/jeNGjxU9eTucg5K13V9/nU2vFcH5nwlMBV93DYA==
-X-Received: by 2002:a17:90b:3a44:b0:309:f67c:aa8a with SMTP id 98e67ed59e1d1-30a21546738mr2487091a91.5.1745885695819;
-        Mon, 28 Apr 2025 17:14:55 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef061a39sm9713333a91.13.2025.04.28.17.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 17:14:55 -0700 (PDT)
-Date: Mon, 28 Apr 2025 17:14:54 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1 1/2] ktls, sockmap: Fix missing uncharge
- operation
-Message-ID: <aBAZ/p0Yj2kFGHhg@pop-os.localdomain>
-References: <20250425060015.6968-1-jiayuan.chen@linux.dev>
- <20250425060015.6968-2-jiayuan.chen@linux.dev>
+	s=arc-20240116; t=1745885738; c=relaxed/simple;
+	bh=HiRVX59FAYDlVZsniwT06tqFI1rfNUP051mzgdDgM4g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rK+5UoqzfefgkeZ5l36GEfhZyxbSEAWy9VcOcBjbhqn+Wh0niz0bhSFwa6hMJw0CMx3cReKiLa/Qhrazj9TU2ySffGOTdbp4tD1xsn08n3+xWGXWpHtrN7znkC7vYd4W+huVxsgJgB1+/OrYSG1+yEGmVrvCMfW4UwGntzl8SQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZmgmL3q1dz13LW4;
+	Tue, 29 Apr 2025 08:14:26 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C2EF81402ED;
+	Tue, 29 Apr 2025 08:15:32 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 29 Apr
+ 2025 08:15:32 +0800
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+To: <miklos@szeredi.hu>, <amir73il@gmail.com>
+CC: <linux-unionfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH v2] overlayfs: fix potential NULL pointer dereferences in file handle code
+Date: Tue, 29 Apr 2025 08:15:31 +0800
+Message-ID: <20250429001531.370112-1-wangzhaolong1@huawei.com>
+X-Mailer: git-send-email 2.34.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425060015.6968-2-jiayuan.chen@linux.dev>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Fri, Apr 25, 2025 at 01:59:57PM +0800, Jiayuan Chen wrote:
->  net/tls/tls_sw.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-> index f3d7d19482da..fc88e34b7f33 100644
-> --- a/net/tls/tls_sw.c
-> +++ b/net/tls/tls_sw.c
-> @@ -908,6 +908,13 @@ static int bpf_exec_tx_verdict(struct sk_msg *msg, struct sock *sk,
->  					    &msg_redir, send, flags);
->  		lock_sock(sk);
->  		if (err < 0) {
-> +			/* Regardless of whether the data represented by
-> +			 * msg_redir is sent successfully, we have already
-> +			 * uncharged it via sk_msg_return_zero(). The
-> +			 * msg->sg.size represents the remaining unprocessed
-> +			 * data, which needs to be uncharged here.
-> +			 */
-> +			sk_mem_uncharge(sk, msg->sg.size);
->  			*copied -= sk_msg_free_nocharge(sk, &msg_redir);
+Several locations in overlayfs file handle code fail to check if a file
+handle pointer is NULL before accessing its members. A NULL file handle
+can occur when the lower filesystem doesn't support export operations,
+as seen in ovl_get_origin_fh() which explicitly returns NULL in this case.
 
-Equivalent to sk_msg_free() ?
+The following locations are vulnerable to NULL pointer dereference:
 
-Thanks.
+1. ovl_set_origin_fh() accesses fh->buf without checking if fh is NULL
+2. ovl_verify_fh() uses fh->fb members without NULL check
+3. ovl_get_index_name_fh() accesses fh->fb.len without NULL check
+
+Fix these potential NULL pointer dereferences by adding appropriate NULL
+checks before accessing the file handle structure members.
+
+V1 -> V2:
+- Reworked ovl_verify_fh() to postpone ofh allocation until after fh
+  validation
+- Return -EINVAL instead of -ENODATA for NULL fh in ovl_verify_fh()
+
+Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
+---
+ fs/overlayfs/copy_up.c | 4 ++--
+ fs/overlayfs/namei.c   | 9 ++++++++-
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+index d7310fcf3888..9b45010d4a7d 100644
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -489,12 +489,12 @@ int ovl_set_origin_fh(struct ovl_fs *ofs, const struct ovl_fh *fh,
+ 	int err;
+ 
+ 	/*
+ 	 * Do not fail when upper doesn't support xattrs.
+ 	 */
+-	err = ovl_check_setxattr(ofs, upper, OVL_XATTR_ORIGIN, fh->buf,
+-				 fh ? fh->fb.len : 0, 0);
++	err = ovl_check_setxattr(ofs, upper, OVL_XATTR_ORIGIN,
++				 fh ? fh->buf : NULL, fh ? fh->fb.len : 0, 0);
+ 
+ 	/* Ignore -EPERM from setting "user.*" on symlink/special */
+ 	return err == -EPERM ? 0 : err;
+ }
+ 
+diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+index be5c65d6f848..f6b2a99a111b 100644
+--- a/fs/overlayfs/namei.c
++++ b/fs/overlayfs/namei.c
+@@ -493,13 +493,17 @@ static int ovl_check_origin(struct ovl_fs *ofs, struct dentry *upperdentry,
+  * Return 0 on match, -ESTALE on mismatch, < 0 on error.
+  */
+ static int ovl_verify_fh(struct ovl_fs *ofs, struct dentry *dentry,
+ 			 enum ovl_xattr ox, const struct ovl_fh *fh)
+ {
+-	struct ovl_fh *ofh = ovl_get_fh(ofs, dentry, ox);
++	struct ovl_fh *ofh;
+ 	int err = 0;
+ 
++	if (!fh)
++		return -EINVAL;
++
++	ofh = ovl_get_fh(ofs, dentry, ox);
+ 	if (!ofh)
+ 		return -ENODATA;
+ 
+ 	if (IS_ERR(ofh))
+ 		return PTR_ERR(ofh);
+@@ -702,10 +706,13 @@ int ovl_verify_index(struct ovl_fs *ofs, struct dentry *index)
+ 
+ int ovl_get_index_name_fh(const struct ovl_fh *fh, struct qstr *name)
+ {
+ 	char *n, *s;
+ 
++	if (!fh)
++		return -EINVAL;
++
+ 	n = kcalloc(fh->fb.len, 2, GFP_KERNEL);
+ 	if (!n)
+ 		return -ENOMEM;
+ 
+ 	s  = bin2hex(n, fh->buf, fh->fb.len);
+-- 
+2.34.3
+
