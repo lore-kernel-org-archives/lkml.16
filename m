@@ -1,62 +1,62 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5902DEBA8;
-	Tue, 29 Apr 2025 23:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9902DFA35;
+	Tue, 29 Apr 2025 23:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745969939; cv=none; b=cdMYoUGKilO6xTNjp6kZc4SiIGF6Vg7gjX4hdxwrXBXqamubnofLEGsVRgB/2UAs7m95nsrVwe24s314WgB4O4YLpBILcWMRaPClewAhzq7ognj8Njgqv2qzO87nG06UuRNOmtZp2qHh1wCZW0xy70eM2x1nDQBYPOqiKwr0BhM=
+	t=1745969941; cv=none; b=Ge5JvSmvZSYleupK5T6i58QLDD33c3BVyxWwOzJtQBbQ4vY2FHAmS2QZBk5sPI4DE1sTaEohZbwI4npl4CQ+NwnY7sgs2y76SxBScy8S+iLvsxucyK0ouglG+1Z5GG5w5TDEBeOevRlZmbGQFrR1Vwpyuh0u3QOrhWMMj1eMSDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745969939; c=relaxed/simple;
-	bh=196lU1jIJriKLiqmzv1Vy3qpM+eNgjeCkiA+fGipeqw=;
+	s=arc-20240116; t=1745969941; c=relaxed/simple;
+	bh=NKb1h0r/ekGqJhrCCk5g0MiE9b26osXSCs9ZAg+i8m4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RVM7oZm5dD1NTP+AB/9SyeOTbp2kb1WdWQ4Xa3eBxvhmKDiJaDGxMYtcCn7WZ6yzqYn7g7qFWDQhFD6jJd0c6TQ5A4e5jh4L/NNOD406/mTSg3De37vpbFFRQPwEZOqWBBtY5dEsdpb07N76BG7ElLti4Mewuy7f66eQyxZ4NNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akWuXJXT; arc=none smtp.client-ip=209.85.128.182
+	 MIME-Version; b=J8ZIQpoLBrJvIeQjIvjAxvE+8EUz0EhTHij4JDp9G8C3cpw4bwePCYq44mGSEgBMyMl31RDN27b8I+qX+AAPUPtr3ZZff5pTPTTXQ6FMBvD2rIORtL2U7y0eXti/HDu0auOewSCajBdMqWmdCr83rWj61aQLIYjldSSlb3XEPiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikDd6VMs; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akWuXJXT"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70811611315so57367017b3.1;
-        Tue, 29 Apr 2025 16:38:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikDd6VMs"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e731a56e111so4423421276.1;
+        Tue, 29 Apr 2025 16:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745969936; x=1746574736; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745969938; x=1746574738; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=44dQEBk34Lg+twP2t8lNoyYgFTs2iNjxhzJ6aTJ3tVA=;
-        b=akWuXJXT023ucQQLpYOgmCCXrORzgtGLN4vEd7skv9SM6NcWwuZwkyCz5A1UznBm/G
-         GnTmSXJQfVU/Zg/CBugWsLa4HSCXpT5xYb6QrTX6rs5/HjtQR1WvfudCtdAae1fc4hcT
-         vVOGo0T/0TTV8X8/kNKGQ/2S8rTKAu6P84triLyjGClpJLZicPMvbZ39IMvKPNvdaBz3
-         GzQ+MMlWX24VN/amejdiD+FQn+O2SuXWBjbGfJRxuWTT2YvJ9Nn1aGeHcr5m5wNescUH
-         41nvwdf2VbNllvIfc+CLNKMHgvTucoy3GuwKqRwUwfOWDSCTCCrLFoc4sxEMfIg/59FR
-         0Jeg==
+        bh=VDaYNr62oZV/U6TDpPRjwWYHhp0Fz9Nf+NOXmppHJcs=;
+        b=ikDd6VMsDbsy6qw2EXAtpehvoHDnE/CfJeGqOmRLK/BGgV/9fIcwlV0qODxV4mB2Dw
+         PXC8/J8Q9pIipJrcyKmoS+Pf/fnrOyQQQaxiyo1coh4XLEHOTWN/iCfgDcVWFgERk5yC
+         y3mtjp0h/b54dfe1M7hZwf0Nc8vqsEEVo4v8Hq8WgtLi0Onll133qALWDVSB/x1jo/8z
+         MAoOiuBTAAZeb8tXykWMhTUPTMycsdY1jgU4aZrFPMeLdSUY7+cP2/E3gHbW+MF3UYPo
+         ZO9xNCVPabcFez6FhD8lFxqXX9Pfl8WzAH1af78+vkxKSCLmp4t1BaZLdbZ3KYa8VAdY
+         4O0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745969936; x=1746574736;
+        d=1e100.net; s=20230601; t=1745969938; x=1746574738;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=44dQEBk34Lg+twP2t8lNoyYgFTs2iNjxhzJ6aTJ3tVA=;
-        b=iG70vX4RywuDsbbPqSqKxsMFC2zgMFsy/FyBql/g6tizXskDFfczxFGxGWgVfFwprn
-         KOWmct0FRO6voMTiUPLQamjHN397lzZ9AnuXnV6N93Nj53cvIm5E9bQtiu/H6GWx0Q0P
-         fRyORTqtHgj+koikyolkcsKC5tVqBbvHXbJqyZ6B6lK945Ah/YC4yPxEDw3V9sn/aP3H
-         8oCnOKxWz3OWkW+FCvU83yexUd2HTmfjkBuvwEJhGTkyhQB+9O6enWq+Y/oxjVRmdJCh
-         1DjQWR+5jDySoReAST+FKauSQAkTuzRagh5uuVWyQs7fRZ4AzsQ3E8og5I5VGRgNWKdi
-         n3yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSnCrGdY8m/k7bNNN0TBSRT3mQNJUhc29L7UHvfZcjZdTf7Qqmi/Zji47ddy5/jvjdmyhVpY0/@vger.kernel.org, AJvYcCVdxUklhEuQ89MgiYAFdz0FD5bKGKpyj4aI0uTSNvaAjXsYyxh0pCxpGY+/jndMYJyAGQz/iTt4f4c=@vger.kernel.org, AJvYcCWpi7j+XTrdpbBrlumxE4xvp139q9/gjQFRSR9VNMLWnTFZyjFIG3/2HUZSZKW4AnuiEueUswwuaQYRJZhU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpQWQhwYMainBDfSsnkku52NedeU9737Yn6j+BA6VCAQfUggun
-	mB6LO2q2UPdu3bQgSdxYwGVMAzzs8mCkJy15GH2YEnmaaJxvO+0G
-X-Gm-Gg: ASbGnctjeA+RIVOmEBxLGH2lCKwbMMHYCcciA3AtBJ0g3c1Zaz1/JMifjZCmrku8FDI
-	e9TfVDZKigh0xzVeR5a5jkopx9njjpdZydT8UXivzx9R/wa/3I9vxc+iaR9LEmtvbLmC7mFPiG8
-	Zu+SjtdCgU3CdKtNlWYVxQytA9tstW+uYm3vVBKRpM5WeLee9MI5MIvbBKNoP1+Pct6x+XJkw2i
-	vNLoIoRkgV8hmQxLQuUFl8lg8AhMcBPLKuJLauQQ6lkhx41rpIG3B3PpXzDtDwttJevLb30UAgX
-	G4OsszSJyMcQ/wukyNMZEVtXdjyxZ1DrZ6cYJyYDBw==
-X-Google-Smtp-Source: AGHT+IF0Gq0OKMjMbPFewLBiKCryoCgbkMLTWTjJKXA6zaQErPJ0Qq2QeEf8yHjPw1HgNf/wZrnNZg==
-X-Received: by 2002:a05:690c:6c85:b0:6f7:55a2:4cd8 with SMTP id 00721157ae682-708ad5c575dmr9535387b3.5.1745969936353;
-        Tue, 29 Apr 2025 16:38:56 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:2::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-708ae1e9ae7sm701547b3.102.2025.04.29.16.38.55
+        bh=VDaYNr62oZV/U6TDpPRjwWYHhp0Fz9Nf+NOXmppHJcs=;
+        b=RYdU3SWtMuX8AmU4gvR5JRmnyzeo0b70oEiRmMatrYVFrN/b/8rKP+KdIVCDP5OIu3
+         WCeiPaiZkRtuv7RCNNr4t0uvad7gksCs8IgtWtTVtTT60R3BUvcY4K0LLCAxUeCYIMtP
+         o17wzm8zyCNgzhuWN3f+k60cY49P7xzyV51ptuzv1OP6BrUVWPdRxwJNg6EkKhf7Ro/g
+         Voe6XZHcOLlpKCUiVmNAOn3G7O6LIJTYq8llPQt+Tg/v13YvKy1158GhuzOmNHoi5/kj
+         +Wrlm16QINTUaXEnMBOYVnbiesclwDiCZ+vMZ6T4wKwyS8fsHHcD13jOen4Ic39wDYm7
+         IIKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUovkN1ATi+OIIK1mqLFgVQNxDUPzM8g82AAVRZZwvMfvYBe9H8XvW6R84dTPiJyu3/rQIR2kF6@vger.kernel.org, AJvYcCWLjbj/2fnjPT7EVKRXBlBX7eAcGwmPEoB2wX3AjYlJgE/MIpiNXDn1J9oy2dfv06XCOLleBIDfjZk=@vger.kernel.org, AJvYcCXUyTiy2sQEkk+iFe+dx5nmX/n7/a3L+WeHGeLL5wMdPu8+h90n84bkGC0Q4EUUgJ8egnoMNBE/3+vfUyGR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqkxHkqozykdKmH5rJCU/zQSpbAn0xHqEG+bfAeg+mS4dhspRe
+	06B12n3oMriog336uB6PUZrlpWm/V8ZCcQJY+3nQJ8PlKGjCQTZS
+X-Gm-Gg: ASbGncsI71BgHaCFLRFnUIdJg4NyBlZlzmzXW8d+GXbZEa5nXLIDT+6uZjLoFKe2cok
+	2QP2tDPJC1nsQaRvHWgdIfgOcNeGK51LDuIfDmomX0hvA9Bj+jA3pN6mWjPI4m1JXyz+lc9Uwon
+	6nAYFPXLX0QEH4aHSOcvwC40+Mie7I+dJPk4A8Rtx4hi6nji/b/KQiJ23Wgtg3mKBW061wZS2sk
+	KBY04TioMUTyYTf1WEaWHYrpv273kb+2D25iU3FyrJ80feJWcM3DnvnbYDwyGZILyWJopBVa4fD
+	39bpAJATbvRz6z/ttpa/QYGRhg3Wei7j
+X-Google-Smtp-Source: AGHT+IHn6mOAWGkqEbsXafeS7GzpaJiDdkS+3cjQx5q2B086gbKX/FA06JCBoeWXljznIEoDhpFWCg==
+X-Received: by 2002:a05:6902:4607:b0:e73:3147:e7c with SMTP id 3f1490d57ef6-e73e7a5043amr1563404276.0.1745969938064;
+        Tue, 29 Apr 2025 16:38:58 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:74::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7412f1386esm63843276.22.2025.04.29.16.38.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 16:38:55 -0700 (PDT)
+        Tue, 29 Apr 2025 16:38:57 -0700 (PDT)
 From: Nhat Pham <nphamcs@gmail.com>
 To: linux-mm@kvack.org
 Cc: akpm@linux-foundation.org,
@@ -84,9 +84,9 @@ Cc: akpm@linux-foundation.org,
 	cgroups@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	peterx@redhat.com
-Subject: [RFC PATCH v2 07/18] mm: swap: zswap: swap cache and zswap support for virtualized swap
-Date: Tue, 29 Apr 2025 16:38:35 -0700
-Message-ID: <20250429233848.3093350-8-nphamcs@gmail.com>
+Subject: [RFC PATCH v2 09/18] swap: implement the swap_cgroup API using virtual swap
+Date: Tue, 29 Apr 2025 16:38:37 -0700
+Message-ID: <20250429233848.3093350-10-nphamcs@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250429233848.3093350-1-nphamcs@gmail.com>
 References: <20250429233848.3093350-1-nphamcs@gmail.com>
@@ -98,268 +98,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the swap cache code assumes that the swap space is of a fixed
-size. The virtual swap space is dynamically sized, so the existing
-partitioning code cannot be easily reused.  A dynamic partitioning is
-planned, but for now keep the design simple and just use a flat
-swapcache for vswap.
-
-Similar to swap cache, the zswap tree code, specifically the range
-partition logic, can no longer easily be reused for the new virtual swap
-space design. Use a simple unified zswap tree in the new implementation
-for now. As in the case of swap cache, range partitioning is planned as
-a follow up work.
-
-Since the vswap's implementation has begun to diverge from the old
-implementation, we also introduce a new build config
-(CONFIG_VIRTUAL_SWAP). Users who do not select this config will get the
-old implementation, with no behavioral change.
+Once we decouple a swap entry from its backing store via the virtual
+swap, we can no longer statically allocate an array to store the swap
+entries' cgroup information. Move it to the swap descriptor.
 
 Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 ---
- mm/swap.h       | 22 ++++++++++++++--------
- mm/swap_state.c | 44 +++++++++++++++++++++++++++++++++++---------
- mm/zswap.c      | 38 ++++++++++++++++++++++++++++++++------
- 3 files changed, 81 insertions(+), 23 deletions(-)
+ mm/Makefile |  2 ++
+ mm/vswap.c  | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 73 insertions(+), 1 deletion(-)
 
-diff --git a/mm/swap.h b/mm/swap.h
-index d5f8effa8015..06e20b1d79c4 100644
---- a/mm/swap.h
-+++ b/mm/swap.h
-@@ -22,22 +22,27 @@ void swap_write_unplug(struct swap_iocb *sio);
- int swap_writepage(struct page *page, struct writeback_control *wbc);
- void __swap_writepage(struct folio *folio, struct writeback_control *wbc);
- 
--/* linux/mm/swap_state.c */
--/* One swap address space for each 64M swap space */
-+/* Return the swap device position of the swap slot. */
-+static inline loff_t swap_slot_pos(swp_slot_t slot)
-+{
-+	return ((loff_t)swp_slot_offset(slot)) << PAGE_SHIFT;
-+}
-+
- #define SWAP_ADDRESS_SPACE_SHIFT	14
- #define SWAP_ADDRESS_SPACE_PAGES	(1 << SWAP_ADDRESS_SPACE_SHIFT)
- #define SWAP_ADDRESS_SPACE_MASK		(SWAP_ADDRESS_SPACE_PAGES - 1)
-+
-+/* linux/mm/swap_state.c */
-+#ifdef CONFIG_VIRTUAL_SWAP
-+extern struct address_space *swap_address_space(swp_entry_t entry);
-+#define swap_cache_index(entry) entry.val
-+#else
-+/* One swap address space for each 64M swap space */
- extern struct address_space *swapper_spaces[];
- #define swap_address_space(entry)			    \
- 	(&swapper_spaces[swp_type(entry)][swp_offset(entry) \
- 		>> SWAP_ADDRESS_SPACE_SHIFT])
- 
--/* Return the swap device position of the swap slot. */
--static inline loff_t swap_slot_pos(swp_slot_t slot)
--{
--	return ((loff_t)swp_slot_offset(slot)) << PAGE_SHIFT;
--}
--
- /*
-  * Return the swap cache index of the swap entry.
+diff --git a/mm/Makefile b/mm/Makefile
+index b7216c714fa1..35f2f282c8da 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -101,8 +101,10 @@ obj-$(CONFIG_PAGE_COUNTER) += page_counter.o
+ obj-$(CONFIG_MEMCG_V1) += memcontrol-v1.o
+ obj-$(CONFIG_MEMCG) += memcontrol.o vmpressure.o
+ ifdef CONFIG_SWAP
++ifndef CONFIG_VIRTUAL_SWAP
+ obj-$(CONFIG_MEMCG) += swap_cgroup.o
+ endif
++endif
+ obj-$(CONFIG_CGROUP_HUGETLB) += hugetlb_cgroup.o
+ obj-$(CONFIG_GUP_TEST) += gup_test.o
+ obj-$(CONFIG_DMAPOOL_TEST) += dmapool_test.o
+diff --git a/mm/vswap.c b/mm/vswap.c
+index 23a05c3393d8..3792fa7f766b 100644
+--- a/mm/vswap.c
++++ b/mm/vswap.c
+@@ -27,10 +27,14 @@
+  *
+  * @slot: The handle to the physical swap slot backing this page.
+  * @rcu: The RCU head to free the descriptor with an RCU grace period.
++ * @memcgid: The memcg id of the owning memcg, if any.
   */
-@@ -46,6 +51,7 @@ static inline pgoff_t swap_cache_index(swp_entry_t entry)
- 	BUILD_BUG_ON((SWP_OFFSET_MASK | SWAP_ADDRESS_SPACE_MASK) != SWP_OFFSET_MASK);
- 	return swp_offset(entry) & SWAP_ADDRESS_SPACE_MASK;
- }
+ struct swp_desc {
+ 	swp_slot_t slot;
+ 	struct rcu_head rcu;
++#ifdef CONFIG_MEMCG
++	atomic_t memcgid;
 +#endif
- 
- void show_swap_cache_info(void);
- bool add_to_swap(struct folio *folio);
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 1607d23a3d7b..f677ebf9c5d0 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -38,8 +38,18 @@ static const struct address_space_operations swap_aops = {
- #endif
  };
  
-+#ifdef CONFIG_VIRTUAL_SWAP
-+static struct address_space swapper_space __read_mostly;
-+
-+struct address_space *swap_address_space(swp_entry_t entry)
-+{
-+	return &swapper_space;
-+}
-+#else
- struct address_space *swapper_spaces[MAX_SWAPFILES] __read_mostly;
- static unsigned int nr_swapper_spaces[MAX_SWAPFILES] __read_mostly;
-+#endif
-+
- static bool enable_vma_readahead __read_mostly = true;
+ /* Virtual swap space - swp_entry_t -> struct swp_desc */
+@@ -122,8 +126,10 @@ static swp_entry_t vswap_alloc(int nr)
+ 		return (swp_entry_t){0};
+ 	}
  
- #define SWAP_RA_ORDER_CEILING	5
-@@ -718,23 +728,34 @@ struct folio *swap_cluster_readahead(swp_entry_t entry, gfp_t gfp_mask,
- 	return folio;
+-	for (i = 0; i < nr; i++)
++	for (i = 0; i < nr; i++) {
+ 		descs[i]->slot.val = 0;
++		atomic_set(&descs[i]->memcgid, 0);
++	}
+ 
+ 	xa_lock(&vswap_map);
+ 	if (nr == 1) {
+@@ -352,6 +358,70 @@ swp_entry_t swp_slot_to_swp_entry(swp_slot_t slot)
+ 	return entry ? (swp_entry_t){xa_to_value(entry)} : (swp_entry_t){0};
  }
  
-+static void init_swapper_space(struct address_space *space)
++#ifdef CONFIG_MEMCG
++static unsigned short vswap_cgroup_record(swp_entry_t entry,
++				unsigned short memcgid, unsigned int nr_ents)
 +{
-+	xa_init_flags(&space->i_pages, XA_FLAGS_LOCK_IRQ);
-+	atomic_set(&space->i_mmap_writable, 0);
-+	space->a_ops = &swap_aops;
-+	/* swap cache doesn't use writeback related tags */
-+	mapping_set_no_writeback_tags(space);
++	struct swp_desc *desc;
++	unsigned short oldid, iter = 0;
++
++	XA_STATE(xas, &vswap_map, entry.val);
++
++	rcu_read_lock();
++	xas_for_each(&xas, desc, entry.val + nr_ents - 1) {
++		if (xas_retry(&xas, desc))
++			continue;
++
++		oldid = atomic_xchg(&desc->memcgid, memcgid);
++		if (!iter)
++			iter = oldid;
++		VM_WARN_ON(iter != oldid);
++	}
++	rcu_read_unlock();
++
++	return oldid;
 +}
 +
-+#ifdef CONFIG_VIRTUAL_SWAP
-+int init_swap_address_space(unsigned int type, unsigned long nr_pages)
++void swap_cgroup_record(struct folio *folio, unsigned short memcgid,
++			swp_entry_t entry)
++{
++	unsigned short oldid =
++		vswap_cgroup_record(entry, memcgid, folio_nr_pages(folio));
++
++	VM_WARN_ON(oldid);
++}
++
++unsigned short swap_cgroup_clear(swp_entry_t entry, unsigned int nr_ents)
++{
++	return vswap_cgroup_record(entry, 0, nr_ents);
++}
++
++unsigned short lookup_swap_cgroup_id(swp_entry_t entry)
++{
++	struct swp_desc *desc;
++	unsigned short ret;
++
++	/*
++	 * Note that the virtual swap slot can be freed under us, for instance in
++	 * the invocation of mem_cgroup_swapin_charge_folio. We need to wrap the
++	 * entire lookup in RCU read-side critical section, and double check the
++	 * existence of the swap descriptor.
++	 */
++	rcu_read_lock();
++	desc = xa_load(&vswap_map, entry.val);
++	ret = desc ? atomic_read(&desc->memcgid) : 0;
++	rcu_read_unlock();
++	return ret;
++}
++
++int swap_cgroup_swapon(int type, unsigned long max_pages)
 +{
 +	return 0;
 +}
 +
-+void exit_swap_address_space(unsigned int type) {}
-+#else
- int init_swap_address_space(unsigned int type, unsigned long nr_pages)
++void swap_cgroup_swapoff(int type) {}
++#endif /* CONFIG_MEMCG */
++
+ int vswap_init(void)
  {
--	struct address_space *spaces, *space;
-+	struct address_space *spaces;
- 	unsigned int i, nr;
- 
- 	nr = DIV_ROUND_UP(nr_pages, SWAP_ADDRESS_SPACE_PAGES);
- 	spaces = kvcalloc(nr, sizeof(struct address_space), GFP_KERNEL);
- 	if (!spaces)
- 		return -ENOMEM;
--	for (i = 0; i < nr; i++) {
--		space = spaces + i;
--		xa_init_flags(&space->i_pages, XA_FLAGS_LOCK_IRQ);
--		atomic_set(&space->i_mmap_writable, 0);
--		space->a_ops = &swap_aops;
--		/* swap cache doesn't use writeback related tags */
--		mapping_set_no_writeback_tags(space);
--	}
-+	for (i = 0; i < nr; i++)
-+		init_swapper_space(spaces + i);
- 	nr_swapper_spaces[type] = nr;
- 	swapper_spaces[type] = spaces;
- 
-@@ -752,6 +773,7 @@ void exit_swap_address_space(unsigned int type)
- 	nr_swapper_spaces[type] = 0;
- 	swapper_spaces[type] = NULL;
- }
-+#endif
- 
- static int swap_vma_ra_win(struct vm_fault *vmf, unsigned long *start,
- 			   unsigned long *end)
-@@ -930,6 +952,10 @@ static int __init swap_init_sysfs(void)
- 	int err;
- 	struct kobject *swap_kobj;
- 
-+#ifdef CONFIG_VIRTUAL_SWAP
-+	init_swapper_space(&swapper_space);
-+#endif
-+
- 	err = vswap_init();
- 	if (err) {
- 		pr_err("failed to initialize virtual swap space\n");
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 23365e76a3ce..c1327569ce80 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -203,8 +203,6 @@ struct zswap_entry {
- 	struct list_head lru;
- };
- 
--static struct xarray *zswap_trees[MAX_SWAPFILES];
--static unsigned int nr_zswap_trees[MAX_SWAPFILES];
- 
- /* RCU-protected iteration */
- static LIST_HEAD(zswap_pools);
-@@ -231,12 +229,28 @@ static bool zswap_has_pool;
- * helpers and fwd declarations
- **********************************/
- 
-+#ifdef CONFIG_VIRTUAL_SWAP
-+static DEFINE_XARRAY(zswap_tree);
-+
-+static inline struct xarray *swap_zswap_tree(swp_entry_t swp)
-+{
-+	return &zswap_tree;
-+}
-+
-+#define zswap_tree_index(entry)	entry.val
-+#else
-+static struct xarray *zswap_trees[MAX_SWAPFILES];
-+static unsigned int nr_zswap_trees[MAX_SWAPFILES];
-+
- static inline struct xarray *swap_zswap_tree(swp_entry_t swp)
- {
- 	return &zswap_trees[swp_type(swp)][swp_offset(swp)
- 		>> SWAP_ADDRESS_SPACE_SHIFT];
- }
- 
-+#define zswap_tree_index(entry)	swp_offset(entry)
-+#endif
-+
- #define zswap_pool_debug(msg, p)				\
- 	pr_debug("%s pool %s/%s\n", msg, (p)->tfm_name,		\
- 		 zpool_get_type((p)->zpool))
-@@ -1047,7 +1061,7 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
- 				 swp_entry_t swpentry)
- {
- 	struct xarray *tree;
--	pgoff_t offset = swp_offset(swpentry);
-+	pgoff_t offset = zswap_tree_index(swpentry);
- 	struct folio *folio;
- 	struct mempolicy *mpol;
- 	bool folio_was_allocated;
-@@ -1463,7 +1477,7 @@ static bool zswap_store_page(struct page *page,
- 		goto compress_failed;
- 
- 	old = xa_store(swap_zswap_tree(page_swpentry),
--		       swp_offset(page_swpentry),
-+		       zswap_tree_index(page_swpentry),
- 		       entry, GFP_KERNEL);
- 	if (xa_is_err(old)) {
- 		int err = xa_err(old);
-@@ -1612,7 +1626,7 @@ bool zswap_store(struct folio *folio)
- bool zswap_load(struct folio *folio)
- {
- 	swp_entry_t swp = folio->swap;
--	pgoff_t offset = swp_offset(swp);
-+	pgoff_t offset = zswap_tree_index(swp);
- 	bool swapcache = folio_test_swapcache(folio);
- 	struct xarray *tree = swap_zswap_tree(swp);
- 	struct zswap_entry *entry;
-@@ -1670,7 +1684,7 @@ bool zswap_load(struct folio *folio)
- 
- void zswap_invalidate(swp_entry_t swp)
- {
--	pgoff_t offset = swp_offset(swp);
-+	pgoff_t offset = zswap_tree_index(swp);
- 	struct xarray *tree = swap_zswap_tree(swp);
- 	struct zswap_entry *entry;
- 
-@@ -1682,6 +1696,16 @@ void zswap_invalidate(swp_entry_t swp)
- 		zswap_entry_free(entry);
- }
- 
-+#ifdef CONFIG_VIRTUAL_SWAP
-+int zswap_swapon(int type, unsigned long nr_pages)
-+{
-+	return 0;
-+}
-+
-+void zswap_swapoff(int type)
-+{
-+}
-+#else
- int zswap_swapon(int type, unsigned long nr_pages)
- {
- 	struct xarray *trees, *tree;
-@@ -1718,6 +1742,8 @@ void zswap_swapoff(int type)
- 	nr_zswap_trees[type] = 0;
- 	zswap_trees[type] = NULL;
- }
-+#endif /* CONFIG_VIRTUAL_SWAP */
-+
- 
- /*********************************
- * debugfs functions
+ 	swp_desc_cache = KMEM_CACHE(swp_desc, 0);
 -- 
 2.47.1
 
