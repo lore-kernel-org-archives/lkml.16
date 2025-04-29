@@ -1,99 +1,192 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA6B27464D;
-	Tue, 29 Apr 2025 06:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA632144DE
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907558; cv=none; b=g0+2r5JtXh0W9DYYYlXNrlm/eVeud7bBQ1zsRQ4clcTb4bmj0V9oaoHw1TSefN6eDac5S/hz0EgP25AENpLCCwdSWr2gK409utNKoZgdLRJgAWalvmYt0OOOB/seMdIHZbNsghO3paTiqFXDJP1Qo1Bugl+tcE5v3U3/CJcwzDo=
+	t=1745907586; cv=none; b=JFhVXBxwsXlSzE2IfxLbW5SG2B9SilN1blj+OHNdY4k4fcgqBLBhhFtZKvos8x+4/EFH9pGPCSbIykGpGoexs7Eng+ilkaz4QnwzIz6swJjekVg9vMzNuirIBmosIxZrJcxwyxhrih/BAUcyvQqN/hxgh9E4nZcsEhZqpgYpJk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907558; c=relaxed/simple;
-	bh=to96rNsXBuxik4uZ6ag+2c1WhKm2TcEPMNEp1yi5Dek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qkyUzJW9QVXafvOx/eusP52lvU38MU6FKRfkMKq+LnufaRsbvjMkstytxs5Hr2nDT3r0jz9htPSs//yYTDWDMsv7pvfNR9jQ3rNybyqUBBsTcN+b6lMvQBsFViz+xKqZWSdmf5eslA5j2bNGOSrvsN7I+KZfB+uhEDU0tXBD0z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=di8BSgU8; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745907586; c=relaxed/simple;
+	bh=RuZmshfx0WMimIm7Tn9iytcwybbaUd3KhINLT19ml28=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AOyh4Tr4lvrn7zxzZeycUDdqR4sL3zuUyaDeH8ihb4VgDMuDomreGvCi24/WrDYKmuBTd/gKpqrgideJKqEutMm4cgzqPoJ6+jBhENzVZTcwOJfpR1VDNUytnyUVo01y7ekyWUXhO49jk8Rno9h1OjL/BK4y/0hTXTfvnhCL2pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pxPPNgVk; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="di8BSgU8"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8fc176825so50652746d6.0;
-        Mon, 28 Apr 2025 23:19:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxPPNgVk"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c30d9085aso4077952f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745907556; x=1746512356; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=to96rNsXBuxik4uZ6ag+2c1WhKm2TcEPMNEp1yi5Dek=;
-        b=di8BSgU87W/DEDYb6h9C+e3Q3sKqyND2/V2tphqaabJb/0UgVk4ULVSQ1rui0fO6UF
-         q0I46c2T/PbMjOI7+/qD31mQJd8sLVo6uNKn3ucU8toSnkQyRsy9evto3dH5Mp0CttbE
-         slGZBaBi/s90ofGD1NUghwtNv6UVhZpAtsPwLtGv4igQNigyla+dNJqnAAeX3/JZWlo4
-         kKNFHz1o7TfBKOxOkdJhv3B6OvyMNAryFexOKTUw6USbA8J4RxhHB7Sgbf0IfXxyphQ8
-         SZZoTaDsDJ0uEtQfGN8b1JQ5HWYgHk0zkGZNTNBwZOh3gmpifZmW7pwgqWLXYWP36G1v
-         7g/w==
+        d=linaro.org; s=google; t=1745907582; x=1746512382; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uFyZjvPBAmbsxn7nEC7C02rpwZ1NH2zXCqf0IPWpsAQ=;
+        b=pxPPNgVkKXp4UlS3/CiuLXny6rHNv5fd5eVuMa5NT7JcmWKBXrrF67D5uDTlnaO9Ug
+         R4I91r7tG9cVv2pUfiTbl/GXfWsSRLVpwvZl9sYiyngQzcbNzdB/0k5nAYGP5dDCxAlS
+         MNuV6+29PjtviSfNCZAU1+QOIi5Hp8+XM2hIoxaWHH18Edv/cVJgybV/DGBntkX1ZF/3
+         2EbNWP+Lt154DXmQWff3tUb7SF9vJZBWamNnW6VxOjB+bmLIAPdz3CvyUXz4q95qpFZV
+         ikiiWSICsOGHT/9YDzICXUHmjhPJC/fcZBojCTvU7Ui8eaORHUIJ41hrDRQGfltXojm+
+         KqDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745907556; x=1746512356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=to96rNsXBuxik4uZ6ag+2c1WhKm2TcEPMNEp1yi5Dek=;
-        b=Uqv6Bg6gJeQhsqbhtzp2aRoCLD47obJsbzg40lEDaHQ0fY/rCiRc315xehTKeKTNyn
-         bmvzvB32xK1wO/RlvRzLdrlLGZaxJz8kNx2S80rmw8IQJvG4avt8P2KUds5lLOzVpq/b
-         tlAYq4KS1D1fkxdXtRBz2prESnwvmOuIoHZvWAloV2y0sGQP+jRjztVbcnNGHRzK6OUw
-         5VSoz1yux21t3roHcqGSJRDfOuZCCOTTjQyvzgMTC8z5qtbPmibm7/gMAcPw4WLx6cHE
-         /IbUMKWRsQmOwWNl3cK4RV/HKE73eNVxfWMlZnbJeePBRKyT0L7T7sNynSCX3aDognSG
-         sVuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNtwvmeAjc6KFcjZjiKRz6Wq+2KZqfNm1yYMFyr+4VRNLrpFFzbuLJc/QinXl+0J+3JNMJhZ4SSvK0Sx9m@vger.kernel.org, AJvYcCX/u+mwEKinZ8dSZ15s1ZIAgnhj9Kwj5eqTx/BpPPLTrDt6iv5TDweXK4iwXf+qxsye4ig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiCi4pq5wCuKcYPo+I4WwzIyW6HVkirGmXISDBvtT1yiKJ0c8W
-	Y7IGKcsZ5Dm43R6S1jiUgaFYG6M7lTOrBw5vAdt7I3lkHmZ+4KqXwMEofVmfaoo5i9NEER1Ms3R
-	ppB+4Yb5A9I5qVTu4MOWMH22aWZs=
-X-Gm-Gg: ASbGncvg/LPB5oIuTBrIqRn/vZMy/ivhLASR4Hz4a2N0E7Q9jR5ARutGOxpZpC5HUSg
-	ih4FgCcMd7qA6XNXYPXLILGe0ELlZz2Rh298xAhS6BF4wl4T8b0i7BRuSWS6eQJkWzgSMv2ucoz
-	UTLk1+QSNsu26pza/ysDuyy5s=
-X-Google-Smtp-Source: AGHT+IEsZZy0YWcOC4vhoy7fjiYyU0NC/Z/hsYbcXHZ/2rwkSKrvQDaK+4lISyDGN3W/xEMk1b3QRzKcGcygynxBmDM=
-X-Received: by 2002:a05:6214:c6d:b0:6e1:a4ed:4b0c with SMTP id
- 6a1803df08f44-6f4f1bc656emr28792856d6.26.1745907556075; Mon, 28 Apr 2025
- 23:19:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745907582; x=1746512382;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uFyZjvPBAmbsxn7nEC7C02rpwZ1NH2zXCqf0IPWpsAQ=;
+        b=Re5ao0FYkERQQ1IsuV/9c+4Z5kLNkSodG9h0tVgxfPM23JXy6sp/zaF0kO3BgV7V/e
+         Y284BUrGBSo2JlpU7Tb0mw66jpmG3i0UwfmX4Ejqq+5FfxuqzdKn6gASI6sJSor/EfQv
+         sfh3OfOh4+xPvQREpmB1mllNBPo+yX0H4xUVS4uMq58hr0o3j3dK7AGhbpkgSyelo+ST
+         rvGvRdVRkiShvh9lMGRmZaCOacAou467meldrQTzgETAPCsfNGuN/nGdawx88db5vOik
+         EoMZVCA69J5hce7szmaNOAY+TCHt6p0/N1SJHVVozaZP05sbjvN8UCIprhtqgLjsObp3
+         ifPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWLlREdjQnY3cE3fVXZai1MJm3bbaELC2UdK+2v+sDY+tllB8Rf/86ZeJ3JE3D2yH+yOb6BrgcdCDtWdg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUD0SQ0eIDg9EtlLG+zqSyjkVOuD6z78qYyxQU+OUNIwYT4sl3
+	dydJNGZleL0iHjYwTjxbI9M2la/ZjhzQB3qcwpcB11xj0WrBvNPoFq4yy0YsWfs=
+X-Gm-Gg: ASbGnct/4JJ2Sn1GAin4ZH6WHsXm5MVK4JEq1cbX5mlu3fLm3xlGBLKUtBY7Hjh8uzp
+	Hb8/OGY2I85nVunmlMJ0h1dLeHDdw5xVJmRCbksVDIehjnJNXRmieQZp7Ku7qBkxu5HW4rei9av
+	tv04JExEmw4j5zcdiKHG1eaTxwt27rQbm7HW08EyBEXVSmnrODtgDIb4FkZj5uD7IA2xKNhTgth
+	UeroAQQR2FG+Y0wSxpjW+2ZBNO2xRHuQJX2zp0KnCfa/6Akz3ryVo0O6VMwqrY0LWCnItY9bhqp
+	A0e1a5PybrBKXiJ3hcUo8ETB3zfVXSu3ozQSB8oIb757g1jpiX8e10Eoa0dLuGSnqlnzgcM=
+X-Google-Smtp-Source: AGHT+IGzg8u5L2WOlzYwTof6+sSIg8lXFgr3pYwOWiVWKlAozVNfU+0kERbCJNCsNMAIv+NpvoSqVA==
+X-Received: by 2002:a05:6000:4382:b0:390:fe8b:f442 with SMTP id ffacd0b85a97d-3a07ab8c463mr9060355f8f.54.1745907582493;
+        Mon, 28 Apr 2025 23:19:42 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([145.224.90.246])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca4e50sm13302616f8f.30.2025.04.28.23.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 23:19:42 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 0/5] Fix gs101 CPU hotplug support
+Date: Tue, 29 Apr 2025 07:19:36 +0100
+Message-Id: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-0-1bcc44fb1d55@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423163901.2983689-1-chen.dylane@linux.dev> <0a25f585-de46-4e3e-8ec2-47df25947df1@linux.dev>
-In-Reply-To: <0a25f585-de46-4e3e-8ec2-47df25947df1@linux.dev>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 29 Apr 2025 14:18:40 +0800
-X-Gm-Features: ATxdqUHu04qteggs8h5a-T20xGufOv50i0ALjGNIVQQS8dTPfwmvBAQC9HTNZDY
-Message-ID: <CALOAHbBUaSw=LYYYPwqM+HQz_8t5_g43Y7ARdvMZ-7rBTvS+Aw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] libbpf: remove sample_period init in perf_buffer
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHhvEGgC/52NQQ7CIBBFr2JYOwYGaq0r72FcINCWpAKBlmia3
+ l3axIVLTWbz5ifvzSSZaE0i591Mosk2We8K8P2OqF66zoDVhQlSFAwZB+XdGO0dQgcqTND7MQx
+ TB2lKwTiNUT6gtU+TIDNgbS21UKJqKCPFGKLZtiK83gr3No0+vrZ4Zuv3v045CqrGpj61R14zf
+ hmsk9EffOzIGsr4kVdUYPWbHIu8ZRWn2jRaCvySL8vyBuHNM4NEAQAA
+X-Change-ID: 20241213-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-1f7ad4c45901
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ tudor.ambarus@linaro.org, andre.draszik@linaro.org, willmcvicker@google.com, 
+ kernel-team@android.com, Peter Griffin <peter.griffin@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4126;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=RuZmshfx0WMimIm7Tn9iytcwybbaUd3KhINLT19ml28=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoEG976bf5mwHz8je/RtwgP6enUETGQ+/11sFwd
+ G9ztnqgr0yJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaBBvewAKCRDO6LjWAjRy
+ upJED/0euGHEqK1Y6ppKAivCbCa/3MatUq0YyXDb0CCelsbCJFnbI1Pi6hWJExhx5UYK64lvIMW
+ GmFozjAZD48cC9MBvoTweUds2QFBKToCjzMvhHlIBIjUrOzogPze9Uyr9hSD4miZCwu8+gqY5f+
+ FTK/ZJRKVMQ6eLEb+cACcLWHIC6TEaNRnb7XpjDmkPbNOPzGmIq+pTruJDRPiQwEVGMX1TOUukJ
+ r4aAZOGtcgGcXUk6XJ86OYx01cNBYkcSSaxHffjFJg0EE31laGnGuQLNP6JRPUzsa8Bc9vHclp0
+ awLE9X3ubQ5CRXHiSqh5ahOt50NNIdnoBBImX9b/3Xu4p8elNQjcdyzQAuFpQDEYHdfDWL3Y6x8
+ 6yAWT6PX7j/HKWF6D8ZwGTFGI8ymfQZgjMRYLFHwHVxnJKBIEq7UKpLPPh4UNElqfZKMBMlB6KZ
+ YnwwMNXF+dn0fQWSbr0HRhBav1uU1Ei6nuCsZ7h6ajZRo8YcUZLrPa2lBGOyoYahi/NdLp1cCZN
+ OSuT7Q8tIypLXtfF9hOBs5wpBfg2Y/gV7aDDs+VlK5kOZdhgaPgM+Fzntl9nUjT17S8kovnIkhJ
+ SsOQKQ1uuZOtyg4Mxo6pT0z86yCQqLIG52iviGixThe3BX2h512A4H2lkWvBXK+QkrP9xORYnV2
+ NI4mJ1dZYDEAjtw==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
-On Tue, Apr 29, 2025 at 1:48=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> =E5=9C=A8 2025/4/24 00:39, Tao Chen =E5=86=99=E9=81=93:
->
-> ping...
+Hi folks,
 
-The patch has already been accepted and merged into bpf-next:
-https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=
-=3D64821d25f05ac468d435e61669ae745ce5a633ea
+As part of an effort to make suspend to RAM functional upstream on
+Pixel 6 I noticed that CPU hotplug leads to a system hang.
 
-Interestingly, patchwork-bot+netdevbpf@kernel.org didn't send a
-notification about this.
+After debugging and comparing with downstream drivers it became clear
+that some extra register writes are required to make CPU hotplug
+functional on these older devices which use a el3mon firmware.
 
-You can check the current status of your patches on Patchwork:
-https://patchwork.kernel.org/project/netdevbpf/list/?delegate=3D121173&stat=
-e=3D*
+This series adds support for that programming the CPU_INFORM register
+hint required by the firmware and also adds support for the pmu-intr-gen
+register region which is now modelled as it's own syscon. With these
+changes CPU hotplug is now functional.
 
+It can be tested with commands such as
 
---=20
-Regards
-Yafang
+echo 0 > /sys/devices/system/cpu/cpu6/online
+echo 1 > /sys/devices/system/cpu/cpu6/online
+[   15.880597][    T0] Detected PIPT I-cache on CPU6
+[   15.880638][    T0] GICv3: CPU6: found redistributor 600 region 0:0x0000000010500000
+[   15.880685][    T0] CPU6: Booted secondary processor 0x0000000600 [0x411fd440]
+
+This would (prior to this series) hang the system.
+
+As more of a stress test, I ran a script hotplugging CPUs 1 to 7 in a
+loop 200 times which also completed suucessfully. In addition using the
+recent fuel gauge series from Thomas we can also verify that the power
+reduces once the CPU's are offlined.
+
+Note 1: It is highly likely that similar changes are required for other
+Exynos based SoCs using el3mon. For anyone following along who is
+accustomed to looking at downstream Exynos based drivers this replaces
+register writes defined in
+
+drivers/soc/<google|samsung>/cal-if/<socname>/flexpmu_cal_cpu_<socname>.h
+
+Which are used by files in the cal-if folder and exynos-cpupm.c driver.
+
+For the moment I've used the GS101 CPU inform register offsets directly
+but these can be moved to driver data once we've established other SoCs
+benefit from this.
+
+Note 2: To ensure older DTs which don't specify google,pmu-intr-gen-syscon
+phandle still work. The driver only issues a warning if the syscon can't
+be obtained, and the behaviour remains the same as today (system boots, but
+CPU hotplug will not be functional).
+
+Note 3: I've added the bindings doc google,gs101-pmu-intr-gen.yaml in a new
+google folder as it seemed odd to have it in the soc/samsung directory, but
+it's likely this may be re-used by other Exynos SoCs that use APM/ACPM.
+
+kind regards,
+
+Peter
+
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+Changes in v3:
+- Fix  $id, relative path/filename doesn't match actual path or filename (Robs patch bot)
+- Link to v2: https://lore.kernel.org/r/20250425-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v2-0-f1530de9da42@linaro.org
+
+Changes in v2:
+* Use BIT macro (Kryzstof)
+* Use gs101_ prefix for cpuhp functions (Kryzstof)
+* Model pmu-intr-gen SFR region as it's own syscon (Kryzstof)
+* Use regmap_update_bits() API (Kryzstof)
+* Program hint on current processor (Peter)
+- Link to v1: https://lore.kernel.org/r/20241213-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v1-0-c72978f63713@linaro.org
+
+---
+Peter Griffin (5):
+      dt-bindings: soc: google: Add gs101-pmu-intr-gen binding documentation
+      dt-bindings: soc: samsung: exynos-pmu: gs101: add google,pmu-intr-gen phandle
+      MAINTAINERS: Add google,gs101-pmu-intr-gen.yaml binding file
+      arm64: dts: exynos: gs101: add pmu-intr-gen syscon node
+      soc: samsung: exynos-pmu: enable CPU hotplug support for gs101
+
+ .../soc/google/google,gs101-pmu-intr-gen.yaml      | 35 ++++++++++
+ .../bindings/soc/samsung/exynos-pmu.yaml           | 15 ++++
+ MAINTAINERS                                        |  1 +
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi       |  6 ++
+ drivers/soc/samsung/exynos-pmu.c                   | 80 +++++++++++++++++++++-
+ drivers/soc/samsung/exynos-pmu.h                   |  1 +
+ include/linux/soc/samsung/exynos-regs-pmu.h        | 11 +++
+ 7 files changed, 148 insertions(+), 1 deletion(-)
+---
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+change-id: 20241213-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-1f7ad4c45901
+
+Best regards,
+-- 
+Peter Griffin <peter.griffin@linaro.org>
+
