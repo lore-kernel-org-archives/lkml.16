@@ -1,198 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3209E20D4FD
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1939C148;
+	Tue, 29 Apr 2025 02:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745894097; cv=none; b=gmJ85scps0/dFsBRTVZ/6IA7QVdCeQPiHZI15Y9HfxsA19ka5qrrdnVSN4JYIgUVBL+VmDDskseRM1WXAa6UefvEYxgoyx+zpUuAqVIiVkD7YX92AB3UtxMYchIApAcKa9gKHS5H234kFI4do2ieDXcTFUTAnp8m5o8UZGLTnzQ=
+	t=1745894367; cv=none; b=koTEzxLMIHCHkzoPuxIOMSpEHkdo8KiU1EX7I+kPbE8FlJf+L78NRvtu8x8dOhHg/smkr0j8NcdlttinONFuejf7uw7k2uhQNNCujPxP5GVbR02XztYj4a9pp8g0dVLgW9iTOaTbXBCXYWh0woq7TkyVmjAT0mMV8uh1Lt14CkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745894097; c=relaxed/simple;
-	bh=5zoTRy+ZA3TI0f2K0ExTkspVgIg/yCiljsH4BZDfUEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lhm6sN0+Rlcw3QUStSeZwpbWu99KwpmBlcew2UYoHAasGdXsotmu3EwMDY9sk/ADEZrdfFSaG29+5owajI7k7TzmO9ew1FTndjZmc8+kqA9ReLxQs3Vy/MmmsPAcO13eTsRFAaNbEgAnnmB4YWFQpP/cm0UoMYJYBdjFzfIuDfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9pFI0td; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745894367; c=relaxed/simple;
+	bh=CrwT/ljPsJFDXtcbdCiabcYKmXMKrWVP8Z31dUUNNA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tb6JmDfnvjSKdq6YAurUPW6kAr49cN9xZ2OwcdFagshDbPMZg7I8usW4v21SvrMVKEKU8AO8PXgr6DitNsAmBQVgpI47Y3PP5HwySfB72lpVu0QUUtELByn5ycX7he2n/pfhmkN+3nmFeoyXKKIdtASvftHFD3XMNkMYIe0GStw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IR4ajaxR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9pFI0td"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745894095; x=1777430095;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5zoTRy+ZA3TI0f2K0ExTkspVgIg/yCiljsH4BZDfUEA=;
-  b=M9pFI0tddcfVR9yedCBzVdckrAMXcm6MoXVO8wUE2kGpz5N1S3KvsIFp
-   tGXMJ6tqluoyoRnr5SobNUvro94IwDXlZvfqV4K4Amh+hyGGYSM0ua0HZ
-   aoGUmxuFwWxJBvozwQavGBp98QluVTG/Uvadar6eo9nY77OV/upI2uL+m
-   d/sE5TlIhAggrCM6ta8lO8p11X2Ws8VGsjqfyQU1qGSwD6wqCfygsl9zj
-   C7oRbm3sJjXUUd6AVHuhQI7Qe7SaWJ2wO+hnnJrTdeu1RApEyt/uwczxU
-   b1wNivJoVplNtAQtg0S6fMQ95PfQSERj3g0dtzKm8MEKZmyk2uu0qqQYO
-   A==;
-X-CSE-ConnectionGUID: AxNYF7hTRRmlo/t4Xr9Hlg==
-X-CSE-MsgGUID: 7/NrgTRrTS+WB5ujPNgOhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="50160491"
-X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="50160491"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 19:34:54 -0700
-X-CSE-ConnectionGUID: HBh1Tn3VQMuNR7oGOTmfag==
-X-CSE-MsgGUID: mNXGw7cDSrOnDUUcmbWpnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="133593452"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 28 Apr 2025 19:34:51 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u9ao5-0000QJ-1b;
-	Tue, 29 Apr 2025 02:34:49 +0000
-Date: Tue, 29 Apr 2025 10:34:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	"Rob Herring (Arm)" <robh@kernel.org>
-Subject: arch/arm64/boot/dts/apm/apm-mustang.dtb: mmc@1c000000
- (arasan,sdhci-4.9a): Unevaluated properties are not allowed ('dma-coherent'
- was unexpected)
-Message-ID: <202504291052.7vw8beT7-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IR4ajaxR"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqEg5025873;
+	Tue, 29 Apr 2025 02:39:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NKktZXjUVHJTf01+SeFofdJnC/BYWnl8koKOQ2R+rp0=; b=IR4ajaxRVA6arZQq
+	Xyn9Yc1IamGIubk8l+gDMRwVv0fzEyE3FFWhSI/atsW7o3zHbM1uHsodP6mq5+H0
+	XwqGa/cEkaimj/yAAfIc7I77FSpSMkzAqghLCpatshwCJuo9j2PVnuWGvrUyRe/r
+	oGV5k+vkrogZldvsV5qJW7hzt7Ae3njUZQJRVfsk+ixlc7UBBppLlI4i1MevJBSO
+	0vtRdap3I6bGcBSF/RnEuI20hTLZbZRZm7GoPZGTagGcqyFS10oUQ1DH2WxK/EYx
+	vc7wGqVN0/FnK2YHN8hStdfjfqMGsdy/gNw3KZncel4I6YuGC13Xke5euyD0bVhY
+	kvefFw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qq5j4tq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 02:39:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T2dG5P007055
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 02:39:17 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Apr
+ 2025 19:39:14 -0700
+Message-ID: <f574983e-bd12-4d8b-b294-87c5e554f784@quicinc.com>
+Date: Tue, 29 Apr 2025 10:39:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] wifi: ath11k: Fix memory reuse logic
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        <jeff.johnson@oss.qualcomm.com>, Jeff Johnson <jjohnson@kernel.org>
+CC: <kernel@collabora.com>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250428080242.466901-1-usama.anjum@collabora.com>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <20250428080242.466901-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jep2DKH73GU4AkaTDt10RXB5OvepQmwV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDAxOCBTYWx0ZWRfX6XHN9NauGqYO ER9JmSwSW4mDiLyflRcUjdBr7pAgY+55VbAMv2QXcOGf6wY72O+nWzdVEATLcxGgNPCU5CnGwHk W0ACY3bm4n/gJkTzAJT7vs7SgJEWUcwjsOADy77swkrpb5SdNSyxfjfhXYj/har6+hzC/jBvIfC
+ fimFqae+f9Lbq3hNip18GO6nf+iPWDLhI9mGdOvShOkfcLY42PPZ0hAZ5bMYeNNX74mfrwZwodk Ev0D5ZhxxfpF1T+Xw13XEzsh0gaaU6vBpYVwo0zLRISz/1dbsIxVq4Ja209VKU2vyQm4kputsiC JiwlxO6FOicKbPgKEmG+lVDjfHNoA6h4Hx/vpw53VpQKwEroj6czezc286Eq9VkNEx7HYQHYXuU
+ Zd01KuzXATHapr7KrdhevpzD1g+jcAW1N9ksdtkFyQsYgB0e5kY3PdIS9qDQbpfhWOtoNWbH
+X-Authority-Analysis: v=2.4 cv=QP1oRhLL c=1 sm=1 tr=0 ts=68103bd5 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=QX4gbG5DAAAA:8 a=COk6AnOGAAAA:8 a=7xKvOyCpBhAOSqRoKRkA:9
+ a=QEXdDO2ut3YA:10 a=AbAUZ8qAyYyZVLSsDulk:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: jep2DKH73GU4AkaTDt10RXB5OvepQmwV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290018
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ca91b9500108d4cf083a635c2e11c884d5dd20ea
-commit: 7597794706952db4adada29b2a6593251cddcd85 dt-bindings: mmc: Change to additionalProperties to fix fail detect Unevaluated property
-date:   7 weeks ago
-config: arm64-randconfig-052-20250428 (https://download.01.org/0day-ci/archive/20250429/202504291052.7vw8beT7-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-dtschema version: 2025.3.dev21+ge6ea659
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250429/202504291052.7vw8beT7-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504291052.7vw8beT7-lkp@intel.com/
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f2c0000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f2d0000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f2d0000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f500000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f500000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f510000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/pcie@1f510000: failed to match any schema with compatible: ['apm,xgene-storm-pcie', 'apm,xgene-pcie']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/mailbox@10540000: failed to match any schema with compatible: ['apm,xgene-slimpro-mbox']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/i2cslimpro: failed to match any schema with compatible: ['apm,xgene-slimpro-i2c']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/hwmonslimpro: failed to match any schema with compatible: ['apm,xgene-slimpro-hwmon']
->> arch/arm64/boot/dts/apm/apm-mustang.dtb: mmc@1c000000 (arasan,sdhci-4.9a): Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/arasan,sdhci.yaml#
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/gpio0@1701c000: failed to match any schema with compatible: ['apm,xgene-gpio']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/phy@1f21a000: failed to match any schema with compatible: ['apm,xgene-phy']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/phy@1f22a000: failed to match any schema with compatible: ['apm,xgene-phy']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/phy@1f23a000: failed to match any schema with compatible: ['apm,xgene-phy']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/sata@1a000000: failed to match any schema with compatible: ['apm,xgene-ahci']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/sata@1a400000: failed to match any schema with compatible: ['apm,xgene-ahci']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/sata@1a800000: failed to match any schema with compatible: ['apm,xgene-ahci']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/gpio@17001000: failed to match any schema with compatible: ['apm,xgene-gpio-sb']
-   arch/arm64/boot/dts/apm/apm-mustang.dtb: /soc/rtc@10510000: failed to match any schema with compatible: ['apm,xgene-rtc']
---
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/mailbox@10540000: failed to match any schema with compatible: ['apm,xgene-slimpro-mbox']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/i2cslimpro: failed to match any schema with compatible: ['apm,xgene-slimpro-i2c']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/hwmonslimpro: failed to match any schema with compatible: ['apm,xgene-slimpro-hwmon']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/pcie@1f2b0000: failed to match any schema with compatible: ['apm,xgene-pcie', 'apm,xgene2-pcie']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/pcie@1f2b0000: failed to match any schema with compatible: ['apm,xgene-pcie', 'apm,xgene2-pcie']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/pcie@1f2c0000: failed to match any schema with compatible: ['apm,xgene-pcie', 'apm,xgene2-pcie']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/pcie@1f2c0000: failed to match any schema with compatible: ['apm,xgene-pcie', 'apm,xgene2-pcie']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/sata@1a000000: failed to match any schema with compatible: ['apm,xgene-ahci-v2']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/sata@1a200000: failed to match any schema with compatible: ['apm,xgene-ahci-v2']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/sata@1a400000: failed to match any schema with compatible: ['apm,xgene-ahci-v2']
->> arch/arm64/boot/dts/apm/apm-merlin.dtb: mmc@1c000000 (arasan,sdhci-4.9a): Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/arasan,sdhci.yaml#
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/gpio@1f63c000: failed to match any schema with compatible: ['apm,xgene-gpio']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/gpio@17001000: failed to match any schema with compatible: ['apm,xgene-gpio-sb']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/mdio@1f610000: failed to match any schema with compatible: ['apm,xgene-mdio-xfi']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/ethernet@1f610000: failed to match any schema with compatible: ['apm,xgene2-sgenet']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: /soc/ethernet@1f620000: failed to match any schema with compatible: ['apm,xgene2-xgenet']
-   arch/arm64/boot/dts/apm/apm-merlin.dtb: i2c@10511000 (snps,designware-i2c): Unevaluated properties are not allowed ('#clock-cells' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/i2c/snps,designware-i2c.yaml#
---
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: /soc/internal-regs@d0000000/ethernet@40000: failed to match any schema with compatible: ['marvell,armada-3700-neta']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: usb@58000 (marvell,armada3700-xhci): Unevaluated properties are not allowed ('marvell,usb-misc-reg' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: /soc/internal-regs@d0000000/system-controller@5d800: failed to match any schema with compatible: ['marvell,armada-3700-usb2-host-device-misc', 'syscon']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: usb@5e000 (marvell,armada-3700-ehci): phy-names:0: 'usb' was expected
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ehci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: usb@5e000 (marvell,armada-3700-ehci): Unevaluated properties are not allowed ('marvell,usb-misc-reg' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ehci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: /soc/internal-regs@d0000000/xor@60900: failed to match any schema with compatible: ['marvell,armada-3700-xor']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: /soc/internal-regs@d0000000/mailbox@b0000: failed to match any schema with compatible: ['marvell,armada-3700-rwtm-mailbox']
->> arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: mmc@d8000 (marvell,armada-3700-sdhci): Unevaluated properties are not allowed ('marvell,xenon-emmc' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: /soc/pcie@d0070000: failed to match any schema with compatible: ['marvell,armada-3700-pcie']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-emmc.dtb: /firmware/armada-3700-rwtm: failed to match any schema with compatible: ['marvell,armada-3700-rwtm-firmware']
---
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: /soc/internal-regs@d0000000/ethernet@40000: failed to match any schema with compatible: ['marvell,armada-3700-neta']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: usb@58000 (marvell,armada3700-xhci): Unevaluated properties are not allowed ('marvell,usb-misc-reg' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: /soc/internal-regs@d0000000/system-controller@5d800: failed to match any schema with compatible: ['marvell,armada-3700-usb2-host-device-misc', 'syscon']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: usb@5e000 (marvell,armada-3700-ehci): phy-names:0: 'usb' was expected
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ehci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: usb@5e000 (marvell,armada-3700-ehci): Unevaluated properties are not allowed ('marvell,usb-misc-reg' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ehci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: /soc/internal-regs@d0000000/xor@60900: failed to match any schema with compatible: ['marvell,armada-3700-xor']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: /soc/internal-regs@d0000000/mailbox@b0000: failed to match any schema with compatible: ['marvell,armada-3700-rwtm-mailbox']
->> arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: mmc@d8000 (marvell,armada-3700-sdhci): Unevaluated properties are not allowed ('marvell,xenon-emmc' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: /soc/pcie@d0070000: failed to match any schema with compatible: ['marvell,armada-3700-pcie']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: /firmware/armada-3700-rwtm: failed to match any schema with compatible: ['marvell,armada-3700-rwtm-firmware']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: usb3-phy (usb-nop-xceiv): '#phy-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/usb/usb-nop-xceiv.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-ultra.dtb: gpio-leds (gpio-leds): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
---
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: /soc/internal-regs@d0000000/ethernet@40000: failed to match any schema with compatible: ['marvell,armada-3700-neta']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: usb@58000 (marvell,armada3700-xhci): Unevaluated properties are not allowed ('marvell,usb-misc-reg' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: /soc/internal-regs@d0000000/system-controller@5d800: failed to match any schema with compatible: ['marvell,armada-3700-usb2-host-device-misc', 'syscon']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: usb@5e000 (marvell,armada-3700-ehci): phy-names:0: 'usb' was expected
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ehci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: usb@5e000 (marvell,armada-3700-ehci): Unevaluated properties are not allowed ('marvell,usb-misc-reg' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-ehci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: /soc/internal-regs@d0000000/xor@60900: failed to match any schema with compatible: ['marvell,armada-3700-xor']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: /soc/internal-regs@d0000000/mailbox@b0000: failed to match any schema with compatible: ['marvell,armada-3700-rwtm-mailbox']
->> arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: mmc@d8000 (marvell,armada-3700-sdhci): Unevaluated properties are not allowed ('marvell,xenon-emmc' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: /soc/pcie@d0070000: failed to match any schema with compatible: ['marvell,armada-3700-pcie']
-   arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dtb: /firmware/armada-3700-rwtm: failed to match any schema with compatible: ['marvell,armada-3700-rwtm-firmware']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mt6331 (mediatek,mt6331): 'regulators' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: /soc/pwrap@1000d000/mt6331/mt6331regulator: failed to match any schema with compatible: ['mediatek,mt6331-regulator']
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: intpol-controller@10200620 (mediatek,mt6795-sysirq): $nodename:0: 'intpol-controller@10200620' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
-   	from schema $id: http://devicetree.org/schemas/interrupt-controller/mediatek,mt6577-sysirq.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: iommu@10205000 (mediatek,mt6795-m4u): 'mediatek,infracfg' is a required property
-   	from schema $id: http://devicetree.org/schemas/iommu/mediatek,iommu.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11230000 (mediatek,mt6795-mmc): mediatek,latch-ck: 20 is greater than the maximum of 7
-   	from schema $id: http://devicetree.org/schemas/mmc/mtk-sd.yaml#
->> arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11230000 (mediatek,mt6795-mmc): Unevaluated properties are not allowed ('mediatek,latch-ck' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/mtk-sd.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11240000 (mediatek,mt6795-mmc): 'pinctrl-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mmc/mtk-sd.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11240000 (mediatek,mt6795-mmc): 'pinctrl-0' is a required property
-   	from schema $id: http://devicetree.org/schemas/mmc/mtk-sd.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11240000 (mediatek,mt6795-mmc): 'pinctrl-1' is a required property
-   	from schema $id: http://devicetree.org/schemas/mmc/mtk-sd.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11250000 (mediatek,mt6795-mmc): 'pinctrl-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mmc/mtk-sd.yaml#
-   arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dtb: mmc@11250000 (mediatek,mt6795-mmc): 'pinctrl-0' is a required property
+On 4/28/2025 4:02 PM, Muhammad Usama Anjum wrote:
+> Firmware requests 2 segments at first. The first segment is of 6799360
+> whose allocation fails due to dma remapping not available. The success
+> is returned to firmware. Then firmware asks for 22 smaller segments
+> instead of 2 big ones. Those get allocated successfully. At suspend/
+> hibernation time, these segments aren't freed as they will be reused
+> by firmware after resuming.
+> 
+> After resuming, the firmware asks for the 2 segments again with the
+> first segment of 6799360 size. Since chunk->vaddr is not NULL, the
+> type and size are compared with the previous type and size to know if
+> it can be reused or not. Unfortunately, it is detected that it cannot
+> be reused and this first smaller segment is freed. Then we continue to
+> allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
+> is called which frees the second smaller segment as well. Later success
+> is returned to firmware which asks for 22 smaller segments again. But
+> as we had freed 2 segments already, we'll allocate the first 2 new
+> smaller segments again and reuse the remaining 20. Hence 20 small
+> segments are being reused instead of 22.
+> 
+> Add skip logic when vaddr is set, but size/type don't match. Use the
+> same skip and success logic as used when dma_alloc_coherent() fails.
+> By skipping, the possibility of resume failure due to kernel failing to
+> allocate memory for QMI can be avoided.
+> 
+> 	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
+> 	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+> 
+> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> 
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> Changes since v1:
+> - Update description
+> 
+> Changes since v2:
+> - Update description and title of patch
+> 
+> Changes since v3:
+> - Update description and title of patch
+> 
+> Changes since v4:
+> - Update title of the patch
+> ---
+>  drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
+> index 47b9d4126d3a9..2782f4723e413 100644
+> --- a/drivers/net/wireless/ath/ath11k/qmi.c
+> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
+> @@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
+>  			    chunk->prev_size == chunk->size)
+>  				continue;
+>  
+> +			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
+> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
+> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
+> +					    chunk->size, chunk->type,
+> +					    chunk->prev_size, chunk->prev_type);
+> +				ab->qmi.target_mem_delayed = true;
+> +				return 0;
+> +			}
+> +
+>  			/* cannot reuse the existing chunk */
+>  			dma_free_coherent(ab->dev, chunk->prev_size,
+>  					  chunk->vaddr, chunk->paddr);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Baochen Qiang <quic_bqiang@quicinc.com>
+
+
