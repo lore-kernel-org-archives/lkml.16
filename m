@@ -1,62 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B6E2741C2;
-	Tue, 29 Apr 2025 09:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-43171.protonmail.ch (mail-43171.protonmail.ch [185.70.43.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB732BCF54;
+	Tue, 29 Apr 2025 09:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745920591; cv=none; b=azDveMGa1DcdD0vq2dHB7Y3waVGuug81DiTh6h29rly4BQbc2QneZcPIFln6c/3ABvl6zfzfqHuF1dSIsOz/6Rl514MxS5TvURjmMht+aLjhi+/A5aqqj6D2vW05SlSUGf5nPPuvl4kYYqhR0x2SiH/Dp8TRGtrP00JTfQDg7Lc=
+	t=1745920594; cv=none; b=A9Ca4c4RmqKzgGWJYpKo+OrppzdNuLkKBcCqRHrCFfCt4XZZ6SS7Qe57pvMxbJYP6QylFQFbF4RBeiF74UEsP0Oss3NSA6C/rewMgHkzz/azF8r14mN0IWW3ulkV0L95bduc/7Ps/0Lxbol5vcAXmVMY6Ny+TEpsFcuMGUXYDeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745920591; c=relaxed/simple;
-	bh=873o4zG4rWdsqZx5RoDf2BmYwZe7j3rvQ8zTJTDrBNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jir1D0OC7TsuUBH/pBfWC7nVpguGw+HWxfrIt4yznYDjQoY/LV4NpV0ArJ4mo0vIdFExQh/Cx5k+kQd5OeGuEtVe1aSmCw0Lo0B89UV9l6lfoJSrLFGoIXbWD6VdURvBmhMy6wywb5a+U8sW1hdBDeIJ5XJl9u0Xl305MV1a70w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92FC11515;
-	Tue, 29 Apr 2025 02:56:22 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3C4D3F66E;
-	Tue, 29 Apr 2025 02:56:28 -0700 (PDT)
-Date: Tue, 29 Apr 2025 10:56:27 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Wander Costa <wcosta@redhat.com>
-Subject: Re: [BUG] perf segfaults when combining --overwrite and intel_pt
- event
-Message-ID: <20250429095627.GI551819@e132581.arm.com>
-References: <CAP4=nvTab7BnT4uu0iCuFJpZ-_MdY-MYU+Q25QnpygEZKmsQ8A@mail.gmail.com>
- <20250428101234.GB551819@e132581.arm.com>
- <CAP4=nvQ_7oS5ZAsKmOd_ORg0tyHS=B+i2m63K=TLg22rTEiRGQ@mail.gmail.com>
- <20250428124727.GE551819@e132581.arm.com>
- <CAP4=nvTdD=eKcO_sJL3G7U0KxRTQ6XjJeJxNrmeD3n8UGBv5+g@mail.gmail.com>
+	s=arc-20240116; t=1745920594; c=relaxed/simple;
+	bh=QK/b73spM203lHmcwL4U06QdCZ6NzmAeNXW1+LR6zV8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KuHBpdW9zYB8ZShTzCxGoPga4wxo+O7XG8TQmikWJW0TAxK5Om31e/Fxc2yw81kDAuprkAssZbViKGG/mHe6x8iYmyyZ9S8QvxnIDbfAl10ffaMtl67Hl5xlnhityTapX8GCtvpD5viK6pjUwUtSz5FCR1KPobntN+d6hQgwphU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=OzCNh0Dr; arc=none smtp.client-ip=185.70.43.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="OzCNh0Dr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1745920588; x=1746179788;
+	bh=5M8UB3lb8YXwFi4Sz7fw55A9f2CgUuDRhzX/fbPMljY=;
+	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=OzCNh0DrIa20jkDePwlTQAFNS1mNkv50sYS9VmdUIhd7eitQYer9WkGfdJQRGCXdj
+	 iZzjjMNGpvewGakfhuOujoLw5Vz8uyb5UXZf03u3Usvz7giaeYBOal0AG0eVgcYHNg
+	 xVXCm6QQ+CGIs9h09iIxS7kUq69IeDuQ/kkhoHsmkOC0xfP1jQRSOFB2FnZTsQBtkL
+	 llNpNVHutE9TC77TVtQbpk/kWxWoFjlG8sbj9AV+rtH6Gj5FWTSIdG//TKcgD8DDB4
+	 9zMXq8LJKGcBB5IPQNy5F8dklqKtut7+lmCPvuvSX3q6ihl2CCoh9lfghA0UBngFR/
+	 vOur9/y2KyvAg==
+From: Esben Haabendal <esben@geanix.com>
+Date: Tue, 29 Apr 2025 11:56:11 +0200
+Subject: [PATCH v2 1/2] dt-bindings: input: touchscreen: goodix: Add
+ no-reset-pull-up property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP4=nvTdD=eKcO_sJL3G7U0KxRTQ6XjJeJxNrmeD3n8UGBv5+g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-goodix-no-reset-pull-up-v2-1-0687a4ad5a04@geanix.com>
+References: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
+In-Reply-To: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Esben Haabendal <esben@geanix.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745920580; l=1033;
+ i=esben@geanix.com; s=20240523; h=from:subject:message-id;
+ bh=QK/b73spM203lHmcwL4U06QdCZ6NzmAeNXW1+LR6zV8=;
+ b=HEYlnnKte1rhMuk+miZPOQL+TJM0j6OLfJCF8+SCpKWcfCo4y4gJAdHiJ3C9QGyau2cFHTc8S
+ qRo3nP2K8gcAXWrZDFL2i1iDOE/hb6zlpozS5eT+blFs86JeyLz8Rh2
+X-Developer-Key: i=esben@geanix.com; a=ed25519;
+ pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
 
-On Mon, Apr 28, 2025 at 04:16:58PM +0200, Tomas Glozar wrote:
+This should be added for boards where there is no pull-up on the reset pin,
+as the driver will otherwise switch the reset signal to high-impedance to
+save power, which obviously not safe without pull-up.
 
-[...]
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> However, the data cannot be read:
-> 
-> $ perf report
-> 0x7620 [0x30]: failed to process type: 71 [Invalid argument]
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+index eb4992f708b70fef93bd4b59b9565123f7c6ad5d..21ac13046b6e021eeb403d854aabc945801dd29f 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
+@@ -45,6 +45,10 @@ properties:
+   reset-gpios:
+     maxItems: 1
+ 
++  goodix,no-reset-pull-up:
++    type: boolean
++    description: There is no pull-up on reset pin
++
+   AVDD28-supply:
+     description: Analog power supply regulator on AVDD28 pin
+ 
 
-I can reproduce this issue, it is likely caused by failing parsing the
-PERF_RECORD_AUXTRACE sample.  I will look into it.
+-- 
+2.49.0
 
-Thanks for reporting the issue.
-
-Leo
