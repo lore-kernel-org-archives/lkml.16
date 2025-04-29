@@ -1,128 +1,150 @@
-Received: from mail-il1-f228.google.com (mail-il1-f228.google.com [209.85.166.228])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9925D7080E
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22BC215F6C
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745966781; cv=none; b=eLDGzA8GAis3sYzpjw1jIWdUoN8JqG5kqnui7xdLfpn1uRVkauaqg6Vt/ep3sPOXlOlju1IDooCD60vWmM0SOudiwYxZqPPtLXwj7609pOZ5dXZH0JVYjh0sATmZaosclsdKqyu/gimk+FSKvP1918WJbQ8HajkJOvuI31JF8TQ=
+	t=1745966803; cv=none; b=d2DSC9JDtM0WoNOo6L5+AM8ndPSHN26Eb3b0q0UN7+tTxikJPaPDdFuH7GYDa0j1/IPTvu5AwW7GeKwBcKM6rrOkJaCFDHE/8pa/GMcjaY62auKLgo3SMNQwav+0GPOjJS3B1uS4XDM7665Dmta3QPEygkJeAkzCo/oPwQd4K3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745966781; c=relaxed/simple;
-	bh=YQGldYYZN+M+lMKEvXamPZpN40rNMsoWh5qt4/JT0LA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zl7PiUxXkCbAOXD09gBzMBLr16eJABeRu1VP4dzDAAOpk1hWSvOh3y28QrIX0gDi1oeHj8UKQInp5H1RheWTYQHzy/XJtYGTbiKbwK4znnLCnjmZkEnrYaiKtAR0Nv4KFns0qsBlsT0BrZfNnXR/uXPsXuX9U9j7mNUfBjtBl7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eEnYViyt; arc=none smtp.client-ip=209.85.166.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1745966803; c=relaxed/simple;
+	bh=EMiJ/dxywsGmUp0dA3BYacymFWhlXTOhMsOz3prXtgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pL1HhhoSm/x0wtBXGH8yj1ArxfYBzBKX4EkmpDGVB+ofMITxpdm5PklS1OtQZsdOt+THYGXn9DhyMrxAfB3AyjQHMaMHVUqRdz0V6Wwn70SiPipLIFoVsOYRQCZ6v00U+BPks4izem22kx6DEI8wMzZJ5lAojkqXXtxm0HVqu40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=AuQ9wj33; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eEnYViyt"
-Received: by mail-il1-f228.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so32074555ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:46:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="AuQ9wj33"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-73044329768so5186977a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:46:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745966776; x=1746571576; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZCGCCKXBocwMhtCNRTkeUsgiaS7jZ1hs+w86svHkyjs=;
-        b=eEnYViytMzkG/tKt//nQPEIKIurRr5yfH+7MFcgmbfjzoaZRjAksLm+vk2PI0yNJ0a
-         cpZ+6rWpHJh02LBCjd8HJCDfmIUeipzDmXPar1rLxb0wIgDYFFsltEo8Y1GTFkaZx23n
-         /oS0o4vNO1Pf8w2Ouid91DFpI7rE6GO3zLCpUH9YtALvWQeKFYylKLBXpXrAX3w4Z85T
-         q8DcY4dx7/N0urlsiQ/MlBXk2oJ94xqa9kiBFTaAtQba7IDfW2N6fU+xMQhlqTdTWwIo
-         JedC+UIeBH0944n8c+1f06T2rXdgW8yKQ3LUWOwrZYxXa/nmczxJ5hpNjJ9QW1jIqLa8
-         6VaA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745966800; x=1746571600; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jxON1Bozl2aLfPwU6gx/eCpiRYdqSVgYx9l/nuultOg=;
+        b=AuQ9wj33uSjqv4M4NUuMU2lNLo4gB7+jmR45JJ3q9dvQHotvW65bXv0A7dUurIwmVe
+         5DVi/ZE7cyeuvC9sLHRma+6Q1dP3mSekSHFbfJXyEeR5nPbuVZc59yOOXPygqIvAQd2u
+         db597FD1uyN7GwPJKhxSsvB/TIs/Bzw6lv3ybrezl71VDc34YBBUS9V7RtjxW2tA3hmc
+         2j3xUCkvI4g2DtXQtjh0CyZ5n+NxNFyfZWk90jE+aUR3tiTLvGshp2bswhiYAZ57i/+j
+         4+BKlodSLdVgxwCMHduwbLnwFaSzejt0OGx3/7uItJeSRwpZ/ATCorrsI+xXRYv7EC3z
+         EcZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745966776; x=1746571576;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZCGCCKXBocwMhtCNRTkeUsgiaS7jZ1hs+w86svHkyjs=;
-        b=N7CKcNMY6Zv72VkZslKdvvenKraxt2aGer5pWxHeqGIOu7kLZCIro57MGBNHuBbyHo
-         zeJ520OgcINWROlYRh4RazowBJlm0iH3h+neXTTnfwuZmVSjRM+/33mSikMTxPz7Ob0y
-         aWQ/4keIJho1ddDjiTToGtp0RCc22AxvX+ReM8AMMbzLWE7pLQes7TSO65rA6BjcWx3H
-         pK1o1j25GvFNcY4pkvvABZL/v03wxwzzoa1/AmOLtgDdQqh1tp8QiJQgTuzXncMX6KN0
-         Cwq9Sy1kRrFMaBtMpJ/C3BX65M2J5so4I+kT5GeuC0XHrbityAKb8CCKufNYLQk+40ST
-         T8+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWv29noHaPjdv2WMNHSMY3/ztChzJsIbJgHkRuLVx1ApVdAiE4tsiVv+fKRH1dtBFOe7zHpwEaQSyOfY+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZUZ1cBSLU3qUjfKVlM3t4vu0Vy2A4sWaMAyySGtnqbD3PIpwa
-	pSoQ+FXAVPTcNj587i/gCoNxxTNlHSPbL2VCri8TMtoGe1XzIUkowpLXFNdKbhooFXtX3P+6T7t
-	Hiup+5X+XVZbkUGDPah+cbeSXM25YQx00
-X-Gm-Gg: ASbGnctTG5JYBkLfHVui3h/M4mJvPbKz1SHY79xL4Vwc6W/t6SXIKeVQUfrpQz7+vdf
-	Bjx1Q1v2RIffHjf9/d+68ShkUVwXVXD2jowlikkELDLyaVf+kmtBHQ6AO2oguE3dHr17evm9PHf
-	2rqa0yIT1FE0ENvj8iFke8UOlFwgh9gvlrxdgdCmVqx5mb4mPcwPKDYjdq1M5PqPLqLrlDw3319
-	l6+tmsDzYiOZJk6GrF62HUaWjiRzaJKKUcWteAAhJa6RpR/3W9vLYa9Wdvw7vuZfSqRydfK4eV2
-	86eRZtThAwFoalxogULC/nwTlDISfMFM1urVmoMFRsnCoQ==
-X-Google-Smtp-Source: AGHT+IE+G/JgBSc4QPhJO/JMssnCs47xAcdzkMDhhI6dkdMavoR9/32QK0KRcpc8my2GqlxfzQ2mMpfpLE2Y
-X-Received: by 2002:a05:6e02:b42:b0:3d9:644c:e3b7 with SMTP id e9e14a558f8ab-3d967ffec1dmr3337395ab.15.1745966776636;
-        Tue, 29 Apr 2025 15:46:16 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d967d2b553sm155645ab.25.2025.04.29.15.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 15:46:16 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0BCFD3400C9;
-	Tue, 29 Apr 2025 16:46:15 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id A4D78E404E6; Tue, 29 Apr 2025 16:46:14 -0600 (MDT)
-Date: Tue, 29 Apr 2025 16:46:14 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] selftests: ublk: kublk: build with -Werror iff
- CONFIG_WERROR=y
-Message-ID: <aBFWtvHv84aPTMvi@dev-ushankar.dev.purestorage.com>
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
- <20250428-ublk_selftests-v1-1-5795f7b00cda@purestorage.com>
- <aBAnKZCUZWyEJhfS@fedora>
+        d=1e100.net; s=20230601; t=1745966800; x=1746571600;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jxON1Bozl2aLfPwU6gx/eCpiRYdqSVgYx9l/nuultOg=;
+        b=bVV6eAXHIwB4+oOmsKT1i7k/D16AtBZgrbO4RdZKJMwVQ7fYP+hjweYLSZuC2hVoh6
+         2q9q1MqGWro1V8dFxAjMCA7gvPB1vMoH6hl2LijC8Wb4tN6t/GOmrvS6D84kahrPPg9i
+         FIKkPzX44JandlG3rjqLd8VvPQoyzgOTx8s4ZyitMtc9L+zWioN2S87nmHUOluSR7Nkw
+         HBXU97fu7Bf4qcsX+pF4EwioAR9PC9KIyiHMmcJbauR3PPMg84ysXMtWzYQvlCZ+HzWO
+         3/XjIaBPQOC6+oZ6LxkgYa4NcifmoHpfjvjFlqDTXwFdkMYBRXkxfFBahpqf8ez7pLtK
+         +Fbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBg83iRiG5DgCyQ0PaGFnnRcbKvExHtr7WdNI0tShxqcLC/aGKoaLEcq9YskaHckuGyaxohlikHsTjfXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtu8g06HvbtmwNqBu+oHuf6/DZEPeFVYt3nCRag0lWnSrwbzs8
+	heqhdAZs+wCwrwR8rl52TDoCTcrp0zNTBJ91uFKwqgEZTMptJExmgk/b9olvPCQ=
+X-Gm-Gg: ASbGncsKISLxvxXj1dkg2l1gNu8NHmfPXsixqiGaKCAlaHR7U1OFCczdwK3vTIrUEok
+	U2nFKj5pu0c7LfOmXUCzhlM4vFmVG+fF7rqCSrPw4R6BrHT6ohvlwkgIBAwpG7LAVGk+4PhwQGH
+	GvYvzBpTssdNq0OdfpOCa0JBvz7sKoIcMQpdTAyQZ8ax+qJNcg36uaa9wIQO4GBp3qR+yIsQOra
+	u4igP3irY52edET0YBRx1GUGnF8NLntKxuSm1pTBfpkENguTJ4a/PKUWv930k0nnZ8IMWarfubR
+	HCsV5hcoR0eSjGNr4+8PStHfs0y7U/BM6EP/eaphzfAmaLAg/K1PILZUiZCUvh0Nldo7UptOBwv
+	dT7lBVvcvbevdNFXpRg==
+X-Google-Smtp-Source: AGHT+IFuVVoGKVmn1rmBPbb+UXnQybHQ7N3kb98326v2W/tSAiNfoTR5IXLxMEWxRISYzAB0Cl37eQ==
+X-Received: by 2002:a05:6870:1c9:b0:29e:4ba5:4ddc with SMTP id 586e51a60fabf-2da6a345f37mr457236fac.24.1745966799750;
+        Tue, 29 Apr 2025 15:46:39 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2da6e5934dfsm54103fac.45.2025.04.29.15.46.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 15:46:39 -0700 (PDT)
+Message-ID: <0677db3c-9c36-4f34-93c0-5c53d702c4bd@baylibre.com>
+Date: Tue, 29 Apr 2025 17:46:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBAnKZCUZWyEJhfS@fedora>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] iio: adc: ad7606: add gain calibration support
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-5-eb4d4821b172@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250429-wip-bl-ad7606-calibration-v1-5-eb4d4821b172@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 29, 2025 at 09:11:05AM +0800, Ming Lei wrote:
-> On Mon, Apr 28, 2025 at 05:10:20PM -0600, Uday Shankar wrote:
-> > Compiler warnings can catch bugs at compile time. They can also produce
-> > annoying false positives. Due to this duality, the kernel provides
-> > CONFIG_WERROR so that the developer can choose whether or not they want
-> > compiler warnings to fail the build. Use this same config options to
-> > control whether or not warnings in building kublk fail its build.
-> > 
-> > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> > ---
-> >  tools/testing/selftests/ublk/Makefile | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
-> > index ec4624a283bce2ebeed80509be6573c1b7a3623d..86474cfe8d03b2df3f8c9bc1a5902701a0f72f58 100644
-> > --- a/tools/testing/selftests/ublk/Makefile
-> > +++ b/tools/testing/selftests/ublk/Makefile
-> > @@ -1,6 +1,8 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  
-> > -CFLAGS += -O3 -Wl,-no-as-needed -Wall -I $(top_srcdir)
-> > +CONFIG = $(top_srcdir)/include/config/auto.conf
-> > +WERROR = $(if $(shell grep CONFIG_WERROR=y ${CONFIG}),-Werror,)
-> > +CFLAGS += -O3 -Wl,-no-as-needed -Wall ${WERROR} -I $(top_srcdir)
-> >  LDLIBS += -lpthread -lm -luring
+On 4/29/25 8:06 AM, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
 > 
-> I think it isn't good to reuse kernel CONFIG_WERROR for test code.
-> 
-> But it can be done in the following way by passing 'WERROR=1' to make
-> command line:
-> 
-> +ifneq ($(WERROR),0)
-> +       CFLAGS += -Werror
-> +endif
 
-I've taken this approach in [1]. It actually passes -Werror by default,
-but it gives the developer a way to disable it with
+...
 
-make WERROR=0 TARGETS=ublk kselftest
+> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec *chan)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +	unsigned int num_channels = st->chip_info->num_adc_channels;
+> +	struct device *dev = st->dev;
+> +	int ret;
+> +
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		int reg, r_gain;
+> +
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* channel number (here) is from 1 to num_channels */
+> +		if (reg < 1 || reg > num_channels) {
+> +			dev_warn(dev, "invalid ch number (ignoring): %d\n", reg);
+> +			continue;
+> +		}
+> +
+> +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> +					       &r_gain);
 
-[1] https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com/
+Instead of...
 
+> +		if (ret)
+> +			return ret;
+
+... we need:
+
+		if (ret == -EINVAL)
+			r_gain = 0;
+		else if (ret)
+			return ret;
+
+Otherwise driver fails to probe if adi,rfilter-ohms is missing.
+
+> +
+> +		if (r_gain < AD7606_CALIB_GAIN_MIN ||
+> +		    r_gain > AD7606_CALIB_GAIN_MAX)
+> +			return -EINVAL;
+> +
+
+Also, return dev_err_probe() on the returns above would have made debugging
+easier.
+
+> +		/* Chan reg is 1-based index. */
+> +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> +					  r_gain / AD7606_CALIB_GAIN_STEP);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
