@@ -1,194 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3F021ABB7
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367813B1A4;
+	Tue, 29 Apr 2025 14:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937987; cv=none; b=Vkfq7Kmr4o73scLGCeb7NU3cvxT1ZUm+sQhxTJOlnTFJWkJctKghBEgKys+SioRkV/sk7Hh544SIE1+Qrw9Tq0OGDkoawgEplHezKi65fWTheT+EtEyk0NuI7bXp7YBQQqkX65Xz1rZjhA6Pt6FzSlc5ryYNeuMoRqpYPddqstQ=
+	t=1745938011; cv=none; b=LaQShacy5NDlH5OxM0sA8nslJhT0tecLPUXxT736ro86ec2K6Sb1E4cAgmUacX9vwB+FYKEaYcZ1QRhv5WT1aCbi1hqw1nbIeyvq5lzqw3Pcognt8GPR/C/2csafrfE6NrOIZJb8UxjVbs5um2yOFMMxAhstmnUZFgbW2UIgIsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937987; c=relaxed/simple;
-	bh=snIS4vhGRssXnoN1pY7HJdNuGFL3by2NCS3TDRu4gFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C2N/+g90bo5dYO1+B8BUbXM+UcXYtCiBT5ueXLTtR6hPOxIzufzRqwvwUMFtP8RwVixEid+WUB+o1jEZKd77ZisRRnaSJhNfzjGFlovPbI7tRSLCJaP9T/bieQNnSJaGLUMzTkSnDaw3guPLsrqVy8VvoRynbWvc+J4hScVPZeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZqQGDr2r; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745938011; c=relaxed/simple;
+	bh=vg3hLhxa0BT1lWtJ0wGlClMnOrlCg2NBvt6huItHUVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSkqekv8j08pmtzkkBs+zOt5NETHYeRO9mt0pQj4dcPkqUEGoEKC8PL8+Z7KaGWceCOE6IiDU1KU13SubvTJCXvF/osGQ/rv8ax0PY69XFUntTGF0t0mB9xNHLQOYWwcZwzu+87gDf7GC54ohuV3OqrKZtvTbP285l2ZClTidrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=it0iWgin; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqQGDr2r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745937984;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=So5S8sD+I2YgOYOjQZKvpf3wIivuDABn+zCCZb8ZZ+4=;
-	b=ZqQGDr2r+UfNg5WHljRW4OzzF+D/tZwdgDEsocEaAOjaeKS8DlsHwmKgp4EqXsC8Ei/+Ki
-	dpl46BQpA3z9ng2W1VQGT/fAZ0POT2hTSNpLZ38xX3BhTNTS1VfN66RZJJMidg2FWnkzFd
-	vOXdJ/0Qr0UQND47+w34ZCOoPEt+6cg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-134-6JC0d57FOeqfDZe2z6zf-w-1; Tue, 29 Apr 2025 10:46:22 -0400
-X-MC-Unique: 6JC0d57FOeqfDZe2z6zf-w-1
-X-Mimecast-MFC-AGG-ID: 6JC0d57FOeqfDZe2z6zf-w_1745937982
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a064c45f03so2702395f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:46:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745937981; x=1746542781;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=So5S8sD+I2YgOYOjQZKvpf3wIivuDABn+zCCZb8ZZ+4=;
-        b=Z8+bJnGLDLOeu5jC9tqlk8BkHNLM/1YyWClyr9fVKLxVwX6gbrOVvmlRb3IDW4NU6K
-         oQHVQtHioQgkGpT5JmC1vUEVeSbTh3UrpyZlicEXc6Z54+3LWI/NOKPu/OlnH4rdf5bE
-         RhZaojYrrGfxTJP7riAFuuyo4r87zaEFhT0KHxItU7qggE8+NbBJOqDEXEZV4CjHHKQz
-         I9GEd9ObrrqoOIssFdUY8fkI/uOeRY5DHWBcuBH1mxZbRiNGLaG1B8qakldiUKlTHoWL
-         85jsiG/BnYCT0BLOqHeRKt3kaKVV1OTv9HFyJO0Mgw1ZxmFOm6P/izqlE5zleZPcSC8m
-         5VVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZvw9y91qgYqI3KrRtC6ICHWxSPA77e/zXuDBcefxDLh+OVJAARHanAf8ObgR6D5WwIjgAc0KGMPBrJXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjQ2vNgb5jGdgng0hMhmPADbmnYjRe46Uf8y2bfV42ogmrMpgf
-	/WXYR4W6rYTqadB+wsBduKEVIjWL2cXMW60q01/mVjrqWGrboI/0ZgbR9qGB5fO6wOF9YVEtusX
-	cOQK7tdSNo7DoTyJjJa5sP+20Ab6/LqY3NcveDMoKQ5qniviY0SyVQNfOTI6csg==
-X-Gm-Gg: ASbGncu/1jWvkXtvaF4eoy60I/jPIxtZISh/713bNDalYNJp+wL6j1W2y7Y4WvlKkG5
-	cjUpOduNDCZOfGBzxDX6/lHuFiKwtH8l8WxNDTRonDJRDY7VZ02q4aU11CBG/8AbGr1v+oSC1dj
-	QnfuwbJ51+PnkOpieNQRQqzQpbRh9Bios0YT08msb2O7Takk2+OSKlNZegfZNR0m4LYlgEcDLU3
-	2Z0+mfMIqkibvytqv9eg9WgMdZBmUYxoz2GwVr1sjKnvMDr0q4HMQUc/zglVW99q4OdY2CmxAC2
-	sJnNnuEaugrZcNhYnmkJ0UwDGN/VIraabOLMl2+LvUYOYGu1T0Tu6oWxmxjxuz2KmNdoNCrpu6c
-	vJrsfIHU+WMycgChP2nJkYUz7lMTO4EcRYXins/A=
-X-Received: by 2002:a05:6000:2a1:b0:39f:d0a:5b23 with SMTP id ffacd0b85a97d-3a08a51fb97mr2658110f8f.17.1745937981623;
-        Tue, 29 Apr 2025 07:46:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6dsJBdR+bHHaU2+8egweIE2dJ2t0DU4uwXHc22E2qh371BmcqxNVEvlNIK7604ghEWaDtdg==
-X-Received: by 2002:a05:6000:2a1:b0:39f:d0a:5b23 with SMTP id ffacd0b85a97d-3a08a51fb97mr2658084f8f.17.1745937981197;
-        Tue, 29 Apr 2025 07:46:21 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5e345sm14319611f8f.94.2025.04.29.07.46.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 07:46:20 -0700 (PDT)
-Message-ID: <bb24f0d3-cbbf-4323-a9e6-09a627c8559b@redhat.com>
-Date: Tue, 29 Apr 2025 16:46:20 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="it0iWgin"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wb8yKBSDCNd+wK+Tsc/EBbJclD6fbaVvRfrOmBDAvfg=; b=it0iWgingi7xBwddoimoLQmsC8
+	P1qAwKNqpnUT+k+Oq1/EnY2+drj48W4KhIqm0UtjfhuV4TC75P9XnisekHhjPnMUrqDraqOqH5e75
+	fr7NrtYVqMB8/NY/ibTmdfc69swXp3Lm7ZYNhQ6jGzXnYHk1u320d7RMzOhOv269gP4h+b9IsFGGx
+	K2aG4+fnJIFiD6DHGh6t1Pgal1j8P/KDpUeXf4uVwKFBHzlQQ+NnnZkYjGpym44+aeON7V/Usrsff
+	0paTYLzK+CMmamTcDvI5K2R9l28N0VW+2HmOu6MjWnJtgSPhqxGypqTFyY8IqgtRJph5lDNViPhLJ
+	qtNfYOVA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9mED-0000000HWLz-0Zv5;
+	Tue, 29 Apr 2025 14:46:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A9315300777; Tue, 29 Apr 2025 16:46:31 +0200 (CEST)
+Date: Tue, 29 Apr 2025 16:46:31 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com,
+	pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
+	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org, shuah@kernel.org
+Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
+Message-ID: <20250429144631.GI4198@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.172767741@infradead.org>
+ <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
+ <20250415074421.GI5600@noisy.programming.kicks-ass.net>
+ <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
+ <20250416083859.GH4031@noisy.programming.kicks-ass.net>
+ <20250426100134.GB4198@noisy.programming.kicks-ass.net>
+ <aA-3OwNum9gzHLH1@google.com>
+ <20250429100919.GH4198@noisy.programming.kicks-ass.net>
+ <aBDcr49ez9B8u9qa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
-To: Ryan Roberts <ryan.roberts@arm.com>, =?UTF-8?Q?Petr_Van=C4=9Bk?=
- <arkamar@atlas.cz>, linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- stable@vger.kernel.org
-References: <20250429142237.22138-1-arkamar@atlas.cz>
- <20250429142237.22138-2-arkamar@atlas.cz>
- <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
- <e9617001-da1d-4c4f-99f4-0e51d51d385e@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <e9617001-da1d-4c4f-99f4-0e51d51d385e@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBDcr49ez9B8u9qa@google.com>
 
-On 29.04.25 16:41, Ryan Roberts wrote:
-> On 29/04/2025 15:29, David Hildenbrand wrote:
->> On 29.04.25 16:22, Petr Vaněk wrote:
->>> folio_pte_batch() could overcount the number of contiguous PTEs when
->>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
->>> memory also happens to be zero. The loop doesn't break in such a case
->>> because pte_same() returns true, and the batch size is advanced by one
->>> more than it should be.
->>>
->>> To fix this, bail out early if a non-present PTE is encountered,
->>> preventing the invalid comparison.
->>>
->>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
->>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
->>> bisect.
->>>
->>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
->>> ---
->>>    mm/internal.h | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/mm/internal.h b/mm/internal.h
->>> index e9695baa5922..c181fe2bac9d 100644
->>> --- a/mm/internal.h
->>> +++ b/mm/internal.h
->>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio,
->>> unsigned long addr,
->>>                dirty = !!pte_dirty(pte);
->>>            pte = __pte_batch_clear_ignored(pte, flags);
->>>    +        if (!pte_present(pte))
->>> +            break;
->>>            if (!pte_same(pte, expected_pte))
->>>                break;
->>
->> How could pte_same() suddenly match on a present and non-present PTE.
->>
->> Something with XEN is really problematic here.
->>
+On Tue, Apr 29, 2025 at 07:05:35AM -0700, Sean Christopherson wrote:
+> On Tue, Apr 29, 2025, Peter Zijlstra wrote:
+> > On Mon, Apr 28, 2025 at 10:13:31AM -0700, Sean Christopherson wrote:
+> > > On Sat, Apr 26, 2025, Peter Zijlstra wrote:
+> > > > On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
+> > > > 
+> > > > > Yeah, I finally got there. I'll go cook up something else.
+> > > > 
+> > > > Sean, Paolo, can I once again ask how best to test this fastop crud?
+> > > 
+> > > Apply the below, build KVM selftests, 
+> > 
+> > Patch applied, my own hackery applied, host kernel built and booted,
+> > foce_emulation_prefix set, but now I'm stuck at this seemingly simple
+> > step..
+> > 
+> > $ cd tools/testing/selftests/kvm/
+> > $ make
+> > ... metric ton of fail ...
+> > 
+> > Clearly I'm doing something wrong :/
 > 
-> We are inside a lazy MMU region (arch_enter_lazy_mmu_mode()) at this point,
-> which I believe XEN uses. If a PTE was written then read back while in lazy mode
-> you could get a stale value.
-> 
-> See
-> https://lore.kernel.org/all/912c7a32-b39c-494f-a29c-4865cd92aeba@agordeev.local/
-> for an example bug.
+> Did you install headers in the top level directory?  I.e. make headers_install.
 
-So if we cannot trust ptep_get() output, then, ... how could we trust 
-anything here and ever possibly batch?
+No, of course not :-) I don't use the top directory to build anything,
+ever.
 
--- 
-Cheers,
+All my builds are into build directories, using make O=foo. This allows
+me to do parallel builds for multiple architectures etc. Also, much
+easier to wipe a complete build directory than it is to clean out the
+top level dir.
 
-David / dhildenb
+> The selftests build system was change a while back to require users to manually
+> install headers (I forget why, but it is indeed annoying).
 
+Bah, I remember NAK-ing that. Clearly the selftest people don't want
+selftests to be usable :-(
+
+Anyway, mingo build me a copy of the fastop selftest, and aside from a
+few stupid mistakes, I seem to now pass it \o/
+
+I'll attempt a Changelog and update the hyper-v patches and then post
+the lot.
