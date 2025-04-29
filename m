@@ -1,105 +1,153 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A6135966;
-	Tue, 29 Apr 2025 22:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0C82550AF
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745964356; cv=none; b=KKXLVsgROW92XTZUU/hHmKmn4aQa5T0S32Gfpb3t/vQOnFfrzS31hoPPAgHeWvOV+B5oNpZmHi6GpMK/b0Xo5qfu4QqkGOA4JGgZvuTjpyizneyRfo/ymjvHj4e1qwI4niZtea6dJBjIKEc4vSOBamsoosG/3T1JYmze2nx7Ubg=
+	t=1745964366; cv=none; b=Ttep4a7sd40ddSgzV3cvvWZoT5d9mLqeQLbWSmlXFubJhDe0ReYHqBIAZLhiS21GXE1z/Iye8ZfNzLE5f1NmatbP8XHAFCwKmRdeij6ygGDFCR7haMY/RhHkEFV0TBj4kHhHxYvRif959e37/Orz+wF40WRkoaXRJaMPeiOqFdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745964356; c=relaxed/simple;
-	bh=4O2j4TGs4G8CaqLecCzN8FOvXNaVx3SdjP3YLwA3vGM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CMt6DcNxdpBFCkHaAIuxsqdm4X2sey0tG1HI3qWIjnY4t+Fpa3r26xZqDZ1fuQmszOxMlumzh5fBmKmxrUEd8Nk2DQEYffNktKI8gek5m5yucrkYHMG08EZS/ejXg+3f0f4AijE/Sged4bmAV4vjnNMZIM2AchzdTxKXvZQ2zZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ptvu4ciK; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745964366; c=relaxed/simple;
+	bh=V0MjIrRRnJ7qPEsKlGIcg2Ppi1C1SKM7n+g7Vbf2skc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6ApSqOESn7bmygtM06IaM7jUEjX41PihpB0VK+DXQt6UQEjXjx2OuD6d5sKsw60av4TksJy7ZWLt+du7qrV/gAY8LiPvBAb+Tg1ndl1UMA7EEGbi90bMpXJvms5g6I4Fbml9q0dLGkKngGQnBe2rth0W5zrI5+jb+iiyLBSA8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lPd2kfDu; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ptvu4ciK"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-acbb48bad09so1230252366b.0;
-        Tue, 29 Apr 2025 15:05:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPd2kfDu"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2264c9d0295so242295ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745964353; x=1746569153; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ngyVqPjRfvSenmNYMWAtrNOcgdOx/7rX2SoMZ7xGFK0=;
-        b=Ptvu4ciKwK/YI0wRXe6aSPSeiJEBqTKr6TeGDNnJlfhlmY6JxUZG/frWZz9Nl73KAZ
-         Pdtmj8nv7Km05TGpCJyfci/RrVYoOr1IJ42t1G0QZ3AfPZ2Ao/Nw3R4BghV06LOLchV+
-         1FiFZSWXCYC1jBGBWJbItJ5KWlSdWk+v0GeOl8GvdlaLhA3dWSPnYYsPyNYPqpT8LA5j
-         Mw9+woGrtM6FRlRWirb1MeOyMxAGu4Mx1et6Kol2vVKFkWD1C1NQhFsVV3wvy0uRRytt
-         eAUN3P52jBupGIBbBA+i4y++o9J0oJbsOG95C24/nNSnaSfR3cmnHRvjSKu6dfmbJ3d7
-         ls1A==
+        d=google.com; s=20230601; t=1745964363; x=1746569163; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R47AcAvcUPYEXwZnHLXErEx0+JYbAettmKys/t37PLc=;
+        b=lPd2kfDuc9nZmG7xpAUOKMVxZ8EzDzMEgogY3cj6kyJDvQz1bnlw/zjrRDqTiWzupw
+         sFOWMx7C5cF+3EqP0rvBEjBgT8rOHXN+kB8Sch1EpnV/pwBRhQC4/JeQks2mchCwuv5d
+         JI/KxKN9hnBcZ4r7bCxuZ7Pl0FVQ7OJHv6pxjYKM5QVcOsn6W3/uAsUNyXRSBpvSysaT
+         HewnD01tsxuh/2t+h1WogrdylOihu1k40RH28rOmX9XX4mTNK/O2uo8BRs51lZNr9oNB
+         KOu5/YkNmSY7Lk2JGJ05sgkiSxyFCb60aH0+XynzQlXV4PMTAEMasYtYqotspOfx5LGL
+         Sn3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745964353; x=1746569153;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ngyVqPjRfvSenmNYMWAtrNOcgdOx/7rX2SoMZ7xGFK0=;
-        b=DpJcIQOAh0F6tjh7U3Qgr2q/JDhKF09pR5Lsr7DxEyt8W+AXALRuEiVh6ePUBjd0hO
-         qX8N3ltA2QolQHpaGfMIfc1EkGNPKumU/Z+YQfPsVPhQ/s46UZSnSbew08yQ8xr0JOic
-         KR3JHG2PVXGakhW6zSUG3Zyk0U4PD32esd3JN1sZQAkB0sXARltnIKNF6Mu9ACtx+IfA
-         9JZgJmTL6BmXaTdFKr6fBJNAoHK0QgNe29RmQ8JoS2rq4YTmdl9ab10Fgk+8c3cMhm2b
-         AvHAn33YzKiw7ofKLgJJE1jxlwL1dlVJFA2hvFNpAfnMRWNBbi4WD1X7578IIKMg7gfV
-         xPzg==
-X-Forwarded-Encrypted: i=1; AJvYcCW03LEAqQm8lYNff77HurFgEHRABlgghzCQoqvPSUTsQJ1lRVUYMFRIfkWRYBVX9LpmDl3GUSAldYr2DhGC@vger.kernel.org, AJvYcCWkooBbWuPHrlkOc4vRCBB5x43UBfxNTAHUuntH4iHkt7fxxFS/NzD55zQXumXIl2gOLfgxm9njaG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8ZpWeMWTr0PBI50hwv4m0qTNcX8spU3G3lwuXloFV2EsBhiEy
-	riTkI4vp/jJUleKeWTWi1s8Ckumo6tdluJpUDrW6m7NAQtZcOc01T1LmOv6LpPciKJvEsJVAMX7
-	SPfiOlognxYcsxSr9b6pPc/i8RFk=
-X-Gm-Gg: ASbGncu30rbRS39RVngDD9C0ouAr4CA6dEenuKMuN6HYdUXxhfPjIShDSiBISQav626
-	qipr5sE4PHaSs7U3TN7s5cNb4OeWvGkJtbHfhyGbv5w0lOJMJLGV3qk+tWgzjMxmidjHIh9B7qa
-	YFR5jQ2SOKOTzF2T0TH3uwzg==
-X-Google-Smtp-Source: AGHT+IHNNsKhQKCg6aIsyYV7pnfSuCjUZUABgxChEteF6kywXt2dEXwuhxrLc2At+HvwHYHM31ityr7Hw9JhJe5r/xc=
-X-Received: by 2002:a17:907:97c7:b0:ac6:d0f6:c85c with SMTP id
- a640c23a62f3a-acee21ab689mr15923166b.20.1745964353325; Tue, 29 Apr 2025
- 15:05:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745964363; x=1746569163;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R47AcAvcUPYEXwZnHLXErEx0+JYbAettmKys/t37PLc=;
+        b=vM1PlFBjeguRotTqbA0rjsdCYFVxT51zyRDtVN19NsWnAbuZ5NeO98XXo4qeNnBWI7
+         +jUslht39hAPe1xEUb/8ZYxpCRub22gRjegMGPTc7rBpe3Koqv0pSgDwJX2p4sJ5A7Fk
+         FuBMgPKbTeLmol7eUAQud85Y0znBa92jsV9Ac01j4hmlK+8aJ2TOQhQZ0YCo4Jvj8/ja
+         /6qFJbV3d5twW6d1TuOPNM74BbWv6pcqpKOE9arXJNG1vATUGOVhmBulNlQAK2xGNL+1
+         PCT3koOANzYD/dfgOG92JKPoCJUNXNIxFmetOMrbRLxgVaOIh1+Im2Biam0sXD/Xyc/c
+         1eTA==
+X-Forwarded-Encrypted: i=1; AJvYcCX21ewA3XJ95o6NDx9NyRlYoX8I6gzKmBhRYN+12ZEiNeJyo6foiqRNs7PvTEIiiBu1Wn4Ny63gL9VIcSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZwGu3iSihCyFgM94DHoxo+uXx6EclSoB4d/6i5kb4ouhRcMjv
+	Of0PL34/GNapael0WsrdGtfprpt4PMJcgaclNVk56FDEKZLun0+tKAv1vOeZ1g==
+X-Gm-Gg: ASbGncs+uBUm/0B5uWyU4AQHfkZzPvzphC6dlbytoHHh4+tCOd8HpJfBzzN5Hb9P4If
+	PX9ckzGvCQwKWoeuA6YHi57y2IH850gWGfLCr0b0pCBs9ya6kDxklwJuqDvEdXIUEcHCg5Dxeid
+	hKLg+P/2zEYRAxk3VNabX2sNDChkQZpcrbTLTUT73tFB3LOFwNwGYSfgot8olGXUjWVlJGD4g3R
+	YGZMJ4r7OW3lpDUFtrYRJ3Vg3tgb1MbpydWLc/ufaZmr2c0vObHOC+t4/yCZ7Va/pNSLvfPGu7B
+	JS42CiI5wUZnLNPpxbx+SqEvvzGnpsu+urNpLoDc1lg/Q48NoMaTv3AAhTMvtTnQ+U/YtMVL
+X-Google-Smtp-Source: AGHT+IH6piFbPZPJtlfgLIuHdj3oSeyNguwt8iF17ao/opI6U18w7y2m7t4fquT0Dch2XSA/jTVSww==
+X-Received: by 2002:a17:903:41d1:b0:21f:2ded:bfc5 with SMTP id d9443c01a7336-22df4076324mr1004945ad.28.1745964363012;
+        Tue, 29 Apr 2025 15:06:03 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5100aa7sm107720575ad.161.2025.04.29.15.05.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 15:06:02 -0700 (PDT)
+Date: Tue, 29 Apr 2025 22:05:52 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 19/22] iommu/tegra241-cmdqv: Simplify deinit flow in
+ tegra241_cmdqv_remove_vintf()
+Message-ID: <aBFNQFVbxyr596gB@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <7c180fb751def39cbc8634b08b65c3f26ad73833.1745646960.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
- <20250409-ad3552r-fix-bus-read-v2-2-34d3b21e8ca0@baylibre.com>
- <Z_alpFoaQQUlWdfo@smile.fi.intel.com> <udqm2qkw3yrewmovua54twfzbsfduojc5f5uoj4nptxldpbbr5@75bb2pldwq7f>
-In-Reply-To: <udqm2qkw3yrewmovua54twfzbsfduojc5f5uoj4nptxldpbbr5@75bb2pldwq7f>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 30 Apr 2025 01:05:17 +0300
-X-Gm-Features: ATxdqUEIjX_f1ZVn41mqh2bcpKKKRKJ43eZTgNTzTgN_lDDRQC6xeSIwKe30Zp4
-Message-ID: <CAHp75VfpgqNnLOn4n+Tf03mmLFMj36SsV7j06TvhEhyqmmGgVw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: dac: adi-axi-dac: use unique bus free check
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Nuno Sa <nuno.sa@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c180fb751def39cbc8634b08b65c3f26ad73833.1745646960.git.nicolinc@nvidia.com>
 
-On Tue, Apr 29, 2025 at 5:34=E2=80=AFPM Angelo Dureghello
-<adureghello@baylibre.com> wrote:
-> On 09.04.2025 19:51, Andy Shevchenko wrote:
-> > On Wed, Apr 09, 2025 at 11:16:55AM +0200, Angelo Dureghello wrote:
+On Fri, Apr 25, 2025 at 10:58:14PM -0700, Nicolin Chen wrote:
+> The current flow of tegra241_cmdqv_remove_vintf() is:
+>  1. For each LVCMDQ, tegra241_vintf_remove_lvcmdq():
+>     a. Disable the LVCMDQ HW
+>     b. Release the LVCMDQ SW resource
+>  2. For current VINTF, tegra241_vintf_hw_deinit():
+>     c. Disable all LVCMDQ HWs
+>     d. Disable VINTF HW
+> 
+> Obviously, the step 1.a and the step 2.c are redundant.
+> 
+> Since tegra241_vintf_hw_deinit() disables all of its LVCMDQ HWs, it could
+> simplify the flow in tegra241_cmdqv_remove_vintf() by calling that first:
+>  1. For current VINTF, tegra241_vintf_hw_deinit():
+>     a. Disable all LVCMDQ HWs
+>     b. Disable VINTF HW
+>  2. Release all LVCMDQ SW resources
+> 
+> Drop tegra241_vintf_remove_lvcmdq(), and move tegra241_vintf_free_lvcmdq()
+> as the new step 2.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> index ba029f7d24ce..8d418c131b1b 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> @@ -628,24 +628,17 @@ static int tegra241_cmdqv_init_vintf(struct tegra241_cmdqv *cmdqv, u16 max_idx,
+>  
+>  /* Remove Helpers */
+>  
+> -static void tegra241_vintf_remove_lvcmdq(struct tegra241_vintf *vintf, u16 lidx)
+> -{
+> -	tegra241_vcmdq_hw_deinit(vintf->lvcmdqs[lidx]);
+> -	tegra241_vintf_free_lvcmdq(vintf, lidx);
+> -}
+> -
+>  static void tegra241_cmdqv_remove_vintf(struct tegra241_cmdqv *cmdqv, u16 idx)
+>  {
+>  	struct tegra241_vintf *vintf = cmdqv->vintfs[idx];
+>  	u16 lidx;
+>  
+> +	tegra241_vintf_hw_deinit(vintf);
+> +
+>  	/* Remove LVCMDQ resources */
+>  	for (lidx = 0; lidx < vintf->cmdqv->num_lvcmdqs_per_vintf; lidx++)
+>  		if (vintf->lvcmdqs[lidx])
+> -			tegra241_vintf_remove_lvcmdq(vintf, lidx);
+> -
+> -	/* Remove VINTF resources */
+> -	tegra241_vintf_hw_deinit(vintf);
+> +			tegra241_vintf_free_lvcmdq(vintf, lidx);
+>  
+>  	dev_dbg(cmdqv->dev, "VINTF%u: deallocated\n", vintf->idx);
+>  	tegra241_cmdqv_deinit_vintf(cmdqv, idx);
 
-...
+I don't have access to a HW spec to verify HW behaviour, but the changes
+make sense to me.
 
-> > > +   if (ret =3D=3D -ETIMEDOUT)
-> > > +           dev_err(st->dev, "AXI bus timeout\n");
-> >
-> > Why do you need this? The error code will go to the user space at the e=
-nd? If
-> > yes, it will be enough to have it printed there, no?
-> >
->
-> This warning means something very bad happen at AXI level. I never seen
-> this warning issued, but it may help to debug AXI/HDL issues, would not
-> remove it.
+Acked-by: Pranjal Shrivastava <praan@google.com>
 
-But wouldn't user space get the error code and translate to a message if ne=
-eded?
-
-> > > +   return ret;
-
---=20
-With Best Regards,
-Andy Shevchenko
+> -- 
+> 2.43.0
+> 
