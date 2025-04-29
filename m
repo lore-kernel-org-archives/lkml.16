@@ -1,120 +1,149 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ADA2550CC;
-	Tue, 29 Apr 2025 21:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84626A0CA;
+	Tue, 29 Apr 2025 21:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745962732; cv=none; b=VggKo7XqSmV0tRpS87t6NZ7VXhQKSNVopcNNrUdHtJOP1xVP8+SucDaqnXFmzg2XTQI4qTvoxrEVHL3iTcEaH3xCLUDiRq110WI8uUN+4D3/R/9n3KiRHhwsy7bhCtjrf8Tbzsjw+Thfl6xeZfPe5SGsiRog9bDDdQvzicH8FO0=
+	t=1745962737; cv=none; b=AhIkEpjWIiVJ3VbPPtjVR5CPr3PXBzdlwqJQCEzSdpF/XFIKmC05dZXI817JnP7tQTT6VjyfoddGxVILXSM5IEKTTZjmbMDLI9aaVCi33RKYuhQNQmYDY0qtZugH2rvLyOX0e3rgPvAch/Mhwp5dOIUSWFALwedYxVOUOtuTmjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745962732; c=relaxed/simple;
-	bh=mXA21M6mTenzQacSVg7jO63XICl0pQTaU9Sf1g+noZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+BNOVY6RG0cPYg1kpZR6O/ocvTUu1I2SzKb71r9MgzNof7QTnk+s8Amq9kuqHdnJfqULqLbib65cbXmMLWDzNRrpYXZFu4i9NJZSx5d91/Z+yDIPlPPitC/hpoIoIxfXg63YrjQt7NqMer4HwYDaxM9FeKGHmq1ufXc77C1WMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKST6pdr; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745962737; c=relaxed/simple;
+	bh=NgXlRi7ByvyuqoGSVzg0p9LuPp3ZSSrv2et1Oir0qnE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O7iscL+ybrwr2ne0cybFqlzy8hTiFkMbe5TNHVmV9u9mEx0sN+XcqbW83fsuyyi/Vsq5S5HU6ktTKM+qBU86fiftiniqUfZKeaUgpcIFjB3RrmxjWIjEyh3ljwytK34/MiV06XzK8uZotG7ixcy1GYVWUz44e9HVDyanF+euwD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=kVn7y2Us; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKST6pdr"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c2d427194so54002211fa.0;
-        Tue, 29 Apr 2025 14:38:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kVn7y2Us"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745962729; x=1746567529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7dOsoZsb5X1fqF1yit50Q/60XIfapyBLfA2TkiLo//A=;
-        b=MKST6pdrR/SHBOt/TFU5dn4tOnA66xjoBrV08KILfL22a8JRw6ocgocuYiK12CNtN+
-         H+yEZLAsrmQVIHPj68xf+kopbFTbgTDozKyc6bIQBT8f3RVMtBm+b06akS8CzWOYJmkj
-         igEvH5NxcvBF+1LfbORGgYWil2UrnGSOY0hATTPpmgB5cVQN8+ITHOWbYoT9WI7VI/MS
-         +zQ3PDq0tadjdHC6WWgkHEww1Yi3WLTFxcAYRNt99HeQ/z2tiQXOVLbLmyesF+FzgIPh
-         rUja1czJ6qEOUQrgxA3h+1aXk1m0+/+307LHbXhE4R2n1JKkO+pQxXmCeX516ifszFVW
-         JH1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745962729; x=1746567529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7dOsoZsb5X1fqF1yit50Q/60XIfapyBLfA2TkiLo//A=;
-        b=JP+F0BvFQOuL+ieDmm7O1s4cXduQWuDKcrqJNYONWRlzSUix33olR2jj+2aHeygZJB
-         TJxs8KVCx4LJoX2m9EF2sejgdRmpgAUMcNq/ElV31zBFesaRt8gJbmcQypelhWENiIY+
-         siqalTqCHFJZmud2NCKAlpkFaNQR/CzZWqiWTvNa2rhxte4mhR6ueooHpd2nQoPgeU0P
-         uiDhFyLgtuIXojdPRpXsH/rh+SXQ2pisgxtJzR3VRLqk/Q2fcxbY760T0wDPHlnRXD28
-         9+CCie1eaq9yHgP3aRbxfl4GIUk1mwqaoF7b4YTJRbO9gtSxlGh55QGguqvmG0nmDADF
-         xdMA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+1r9ev5IGARnhxPKfOC2EfUMLhbbfOXjK3Ds+LCzYeL+WvEU2nI+mriFvt1b1Ubkq5TwyWXMEPaUV3g==@vger.kernel.org, AJvYcCV4j5tLXzD9muXR2Sokac1FXMI2FuOyh4zKCmwcMyZamkU+9LMNh6EzOI/seKvCHe6P6zAz7R9hDZZP@vger.kernel.org, AJvYcCVwC8NqlTwUzhMObXwjlO4N6PIrYdjlWMFpqJvGtOVH+0+weO2G1iEoUKJuCH58QZlwuMQ0Bpqf7rUhpt8=@vger.kernel.org, AJvYcCXZPZBKNiCkxTY+WDY6r4ErGxlmvTL4hq0NgAlN7nPBRNapRsqu0Lfum2Kffiy6U+/o1+BtyJd3Wki25bi8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZReVg4J9v4BoXPfODZXRIGUM22qlgv8lIl5BA+XpjyYQRw7f9
-	jQ4cKGGaYAGSEhskDt2AWbXOVeCKNXo1rz60dR8zaJLCDqItyUbZUUZFpr9kg3qmrjzCQVdWw6s
-	r6K8Z9n+eYaiLqal8TUgSGOq460+C3huMVtU=
-X-Gm-Gg: ASbGncuja5KXUI4OD+WdQEv84QWsvNjsEs+pONlk+MqA7tf5xdORqLmL6XnMdT4E/QE
-	qa4S/pmDgyBSkkP8IEro2jaNtdUHv1EGZRnjtd+pBJin/6VzYu8LRAActNc752AHA1YFUoUX92P
-	P/qR37xC/mn729CJmTNKJC1w==
-X-Google-Smtp-Source: AGHT+IF/UK+zmUfmInoS3qAk2Frv02mr3palOxT9R0ZL4Wb6rRZD8cvke+THGluTfwOcD1oVA/cmORv8R6u4Kfx0w1U=
-X-Received: by 2002:a2e:bea0:0:b0:302:1fce:3956 with SMTP id
- 38308e7fff4ca-31e69e31164mr1843481fa.4.1745962728717; Tue, 29 Apr 2025
- 14:38:48 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1745962736; x=1777498736;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6pWS6UFOhe9i4/+rtYoRtmh+LDBHour1WcHut23/qrU=;
+  b=kVn7y2UsugburEFpGHMxf8KWHXg9OOgkvD6/3JLXmpJzCqb4BBQXdUJh
+   1TO26bLGkx2RTnOnT0XZ29fp/DBWZ5lrl/+Bk2iEVsgHTTj6e24KFU0/b
+   ECfS4Wr9Ag13tfytZcBbOnllRJUc9U8KNfL+6ijInY2aOY2C+5QFvSixF
+   8=;
+X-IronPort-AV: E=Sophos;i="6.15,250,1739836800"; 
+   d="scan'208";a="292876582"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 21:38:52 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:37204]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.68:2525] with esmtp (Farcaster)
+ id 9febca8e-c496-45a3-a44b-1c2b580bfebb; Tue, 29 Apr 2025 21:38:51 +0000 (UTC)
+X-Farcaster-Flow-ID: 9febca8e-c496-45a3-a44b-1c2b580bfebb
+Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 29 Apr 2025 21:38:51 +0000
+Received: from 88665a51a6b2.amazon.com (10.106.178.54) by
+ EX19D016UWA004.ant.amazon.com (10.13.139.119) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 29 Apr 2025 21:38:48 +0000
+From: Cristian Prundeanu <cpru@amazon.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Cristian Prundeanu <cpru@amazon.com>, K Prateek Nayak
+	<kprateek.nayak@amd.com>, Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>,
+	"Ali Saidi" <alisaidi@amazon.com>, Benjamin Herrenschmidt
+	<benh@kernel.crashing.org>, Geoff Blake <blakgeof@amazon.com>, Csaba Csoma
+	<csabac@amazon.com>, Bjoern Doebel <doebel@amazon.com>, Gautham Shenoy
+	<gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, "Joseph
+ Salisbury" <joseph.salisbury@oracle.com>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-tip-commits@vger.kernel.org>, <x86@kernel.org>
+Subject: EEVDF regression still exists
+Date: Tue, 29 Apr 2025 16:38:17 -0500
+Message-ID: <20250429213817.65651-1-cpru@amazon.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
-In-Reply-To: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Tue, 29 Apr 2025 16:38:36 -0500
-X-Gm-Features: ATxdqUF6jiRcVYa2bPh00Yw29bjpsdm1O4i4d3vZ_05WVXSqM1W38cGmDPoJUao
-Message-ID: <CALHNRZ8ndcd3mvGP+W2DVFcm65t4Ai4epNeGigPv=Oo8Cf3LkQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: tegra: Add Tegra186 pinmux driver
-To: webgeek1234@gmail.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D043UWC004.ant.amazon.com (10.13.139.206) To
+ EX19D016UWA004.ant.amazon.com (10.13.139.119)
 
-On Tue, Apr 29, 2025 at 4:33=E2=80=AFPM Aaron Kling via B4 Relay
-<devnull+webgeek1234.gmail.com@kernel.org> wrote:
->
-> This series adds support for Tegra186 pin control, based on a downstream
-> driver, updated to match the existing Tegra194 driver.
->
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
-> Aaron Kling (4):
->       dt-bindings: pinctrl: Document Tegra186 pin controllers
->       dt-bindings: gpio: tegra186: Add gpio-ranges
->       pinctrl: tegra: Add Tegra186 pinmux driver
->       arm64: tegra: Add Tegra186 pin controllers
->
->  .../bindings/gpio/nvidia,tegra186-gpio.yaml        |    3 +
->  .../bindings/pinctrl/nvidia,tegra186-pinmux.yaml   |  285 ++++
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   12 +
->  drivers/pinctrl/tegra/Kconfig                      |    4 +
->  drivers/pinctrl/tegra/Makefile                     |    1 +
->  drivers/pinctrl/tegra/pinctrl-tegra186.c           | 1784 ++++++++++++++=
-++++++
->  drivers/soc/tegra/Kconfig                          |    1 +
->  7 files changed, 2090 insertions(+)
-> ---
-> base-commit: 1110ce6a1e34fe1fdc1bfe4ad52405f327d5083b
-> change-id: 20250308-tegra186-pinctrl-651ffbbbe816
->
-> Best regards,
-> --
-> Aaron Kling <webgeek1234@gmail.com>
->
->
-Thierry and Jonathan, as the maintainers for the other tegra pinmux
-drivers, I listed you as the maintainers for this one in the dt
-bindings. And I think MAINTAINERS will do that by default for the
-driver itself. Are you okay with taking over ongoing maintenance for
-this one once it is approved for merge? I made it match the others as
-closely as possible, so it shouldn't need any additional changes over
-time that the others don't. But I don't want to sign anyone up for
-work without prior approval.
+Peter,
 
-Sincerely,
-Aaron
+Here are the latest results for the EEVDF impact on database workloads. 
+The regression introduced in kernel 6.6 still persists and doesn't look 
+like it is improving.
+
+This time I've compared apples to apples - default 6.5 vs default 6.12+ 
+and SCHED_BATCH on 6.5 vs SCHED_BATCH on 6.12+. The results are below.
+
+Kernel   | Runtime     | Throughput | P50 latency
+aarm64   | parameters  | (NOPM)     | (larger is worse)
+---------+-------------+------------+------------------
+6.5.13   | default     |  baseline  |  baseline
+---------+-------------+------------+------------------
+6.12.25  | default     |  -5.1%     |  +7.8%
+---------+-------------+------------+------------------
+6.14.4   | default     |  -7.4%     |  +9.6%
+---------+-------------+------------+------------------
+6.15-rc4 | default     |  -7.4%     |  +10.2%
+======================================================
+6.5.13   | SCHED_BATCH |  baseline  |  baseline
+---------+-------------+------------+------------------
+6.12.25  | SCHED_BATCH |  -8.1%     |  +8.7%
+---------+-------------+------------+------------------
+6.14.4   | SCHED_BATCH |  -7.9%     |  +8.3%
+---------+-------------+------------+------------------
+6.15-rc4 | SCHED_BATCH |  -10.6%    |  +11.8%
+---------+-------------+------------+------------------
+
+The tests were run with the mysql reproducer published before (link and 
+instructions below), using two networked machines running hammerdb and 
+mysql respectively. The full test details and reports from "perf sched 
+stats" are also posted [1], not included here for brevity.
+
+[1] https://github.com/aws/repro-collection/blob/main/repros/repro-mysql-EEVDF-regression/results/20250428/README.md
+
+
+At this time, we have accumulated numerous data points and many hours of 
+testing exhibiting this regression. The only counter arguments I've seen 
+are relying on either synthetic test cases or unrealistic simplified tests 
+(e.g. SUT and loadgen on the same machine, or severely limited thread 
+count). It's becoming painfully obvious that EEVDF replaced CFS before it 
+was ready to be released; yet most of what we've been debating is whether 
+SCHED_BATCH is a good enough workaround.
+
+Please let's take a fresh approach at what's happening, and find out why 
+the scheduler is underperforming. I'm happy to provide additional data if 
+it helps debug this. I've backported and forward ported Swapnil's "perf 
+sched stats" command [2] so it is ready to run on any kernel from 6.5 up 
+to 6.15, and the reproducer already runs it automatically for convenience.
+
+[2] https://lore.kernel.org/lkml/20250311120230.61774-1-swapnil.sapkal@amd.com/
+
+
+Instructions for reproducing the above tests (same as before):
+
+1. Code: The reproducer scenario and framework can be found here: 
+https://github.com/aws/repro-collection
+
+2. Setup: I used a 16 vCPU / 32G RAM / 1TB RAID0 SSD instance as SUT, 
+running Ubuntu 22.04 with the latest updates. All kernels were compiled 
+from source, preserving the same config across versions (as much as 
+possible) to minimize noise - in particular, CONFIG_HZ=250 was used 
+everywhere.
+
+3. Running: To run the repro, set up a SUT machine and a LDG (loadgen) 
+machine on the same network, clone the git repo on both, and run:
+
+(on the SUT) ./repro.sh repro-mysql-EEVDF-regression SUT --ldg=<loadgen_IP> 
+
+(on the LDG) ./repro.sh repro-mysql-EEVDF-regression LDG --sut=<SUT_IP>
+
+The repro will build and test multiple combinations of kernel versions and 
+scheduler settings, and will prompt you when to reboot the SUT and rerun 
+the same above command to continue the process.
+
+More instructions can be found both in the repo's README and by running 
+'repro.sh --help'.
