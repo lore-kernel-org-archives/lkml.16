@@ -1,305 +1,130 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7C1B0430;
-	Tue, 29 Apr 2025 00:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773131C3308;
+	Tue, 29 Apr 2025 00:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745886999; cv=none; b=O+NZfaVvz6UZMgEmgF9mcd5kHHClIOjkktDuyIx9BIAKw1k/8BQXtPm9kKOfJgf/2oloY+tU/TBj6i8YZAL1szWCLfXp03AtyoklboGtcfakszwA/mwpHADZCmemAuTBDJr9g2pTe+o1LzP+OvoyYN+kxgLIlsIlG2AQm8Movf4=
+	t=1745887024; cv=none; b=jhlsVw4e541BTWaLQOxr+LyGgoFNl1NDAWdCt+bqwo0xn5gdNM3c4pROFGEvX60iiorbv7OoY4k1LFhSdfpKCnLmxpG5sH4rl8w59qR2PlNbMWuYC7l9XJBd/OOXXGuUcT7pRKd2zbotKQ3JhQjJLCwWZuo9tv/4B9HrQuK7ZK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745886999; c=relaxed/simple;
-	bh=VyAaQCwVTKyodHJbWRjjuyUH6q3W1KuHvM58oNnwBqY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I4iq/PdqRz2elQAUZuu8Vfbhar1gEMWhbqRfixluCwFmz7e/5hUrdl4FufXvpaBugyPumeK7V3g/XwfKlhR3RToCM/Dm9Q7L7UKmgvNY9wIH/p49zrkwxnVkVXTGKAJHhhSrIaHcTHgTmt10iSISCEFi7MMRfEy++Rk1yJki8ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bsKvdV1x; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1745887024; c=relaxed/simple;
+	bh=HWy+TXJzjFdBEC7yQCmPxk1fT2IsyTLjXxnmOYV/zlo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VlwJBgrPqKCI9lQuRxpM6WxRTdkhJRS1VNEAHraGJPGQAJRjxQbGt65d5KootuYcwDDHZDcaK+K/uMHMrZLdOBNv35Skx8Rqubg61R3BIyWNChuULMq738VHJ/qBQ0a4yn3QmYj9zVWMQRP8pZUanyKRbxzoKgkffLaseuHdwoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CjPKYrKL; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bsKvdV1x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745886985; x=1746491785; i=w_armin@gmx.de;
-	bh=9Y2WQZ77zZCI4KFEbSyvqglWHM2SvgIsYOScYy2OBxs=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=bsKvdV1xY0ERV8GTqjS2/I7Rv2vXX2rqt+GAoCJA05Lt+vocH0MryefS8Xwu6BbZ
-	 Q3Sx/wGWsOnjdK0l8Bn+NaqSeUcvNxy6MYO+Xtuxg6ftW8wxzPZICl0Ok7vSCJaT3
-	 I/v+Am0xpD6+jzsbY9MzTTUS8JQ4L7Ki5+WyKVeCKZ1QVL3E6ReN+YY6hlgTP+/wC
-	 fsE6JsP8L6bsGDvJhk6wJ9HaGyLk53rzNszAvKmTRwmlPNuDL7lQ3ztOe0fTuZ64r
-	 yK1FeXO7iXQzkCw6E/KhaModpVLG6d2v+d6YsG5XEOHD5i11hIX5R8qTFN/GR21nk
-	 uMTL7q53//Ha4kL4Fw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MGyxX-1uEnlb2rUh-00AUOd; Tue, 29 Apr 2025 02:36:24 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: sre@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] platform/x86: dell-ddv: Expose the battery health to userspace
-Date: Tue, 29 Apr 2025 02:36:06 +0200
-Message-Id: <20250429003606.303870-4-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250429003606.303870-1-W_Armin@gmx.de>
-References: <20250429003606.303870-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CjPKYrKL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745887024; x=1777423024;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HWy+TXJzjFdBEC7yQCmPxk1fT2IsyTLjXxnmOYV/zlo=;
+  b=CjPKYrKLwjGZfn+Zz/dDeD2B160ViWFEjHuX0TEhcHjY4z+KtbPX5d3g
+   bPUxHr9dsgCdHyG63Gw8s2GqJGxgunVKYWXozqT87b6oneULK8HajTX/s
+   QWPTKQ2El1dIgd2nP/+Q/Kw+hDWr4p0FSOb5b9un7kSPVFoQnlVyKiMnt
+   H9SSeZLEJIY7N6cZ31nLaEpL36h9aQWVT9kBqOGYnm74Ec7KDTjlJhAdy
+   SwZ6WWsRpibqKUJct89rf+CfkGzTEopsDnENclm0IJlXdMUVICUqL93gX
+   BWj7Mo62J3m+ABshaMM+L1oBbEL5D+RHbsStobufg+Nr8A4G405geMntD
+   A==;
+X-CSE-ConnectionGUID: SAsBPiuCSbiocLpvYEkPGw==
+X-CSE-MsgGUID: OUgdnR8USgWd33w/rh9zzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58485727"
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="58485727"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:37:03 -0700
+X-CSE-ConnectionGUID: RgBn9lVTScuL3jy4Ume47w==
+X-CSE-MsgGUID: jn5uCoNQRASlbnA8eOkP7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="133621127"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.223.46]) ([10.124.223.46])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 17:37:01 -0700
+Message-ID: <b6361702-fa08-498b-a603-402ae8292102@intel.com>
+Date: Mon, 28 Apr 2025 17:37:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QDUPF2bWhumT0YXmQVYjFCcbqylL2H/aMBOY5pvk+5mgRilIw4R
- T1Gs9KeKKNbOXTT6lABMCGHIe6LYFjBDBZTrJQvVSuQej+mVoNKkBl42Ef3tIs9shAjdBDL
- zpVY076K+KaAyoqQumSzrutJvN31noTnpwwDK8Ekww9QojvdpFXI/NyExGswjBX0D6jJimp
- yjWmIfUd5n8qp/4HpJz2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:odmEQe451D4=;qBGKT834AgQ51PkQU9kdOhBWDbZ
- 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
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] Restrict devmem for confidential VMs
+To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com
+Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+ Vishal Annapurve <vannapurve@google.com>, Kees Cook <kees@kernel.org>,
+ stable@vger.kernel.org, x86@kernel.org,
+ Nikolay Borisov <nik.borisov@suse.com>, Naveen N Rao <naveen@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-coco@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mpe@ellerman.id.au,
+ suzuki.poulose@arm.com
+References: <174491711228.1395340.3647010925173796093.stgit@dwillia2-xfh.jf.intel.com>
+ <63bb3383-de43-4638-b229-28c33c1582be@intel.com>
+ <681005cdd3631_1d522948e@dwillia2-xfh.jf.intel.com.notmuch>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <681005cdd3631_1d522948e@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The health of a given battery is exposed over the Dell DDV WMI
-interface using the "BatteryManufactureAceess" WMI method. The
-resulting data contains, among other data, the health status of
-the battery.
+On 4/28/25 15:48, Dan Williams wrote:
+>> I guess arm and powerpc have cc_platform_has() so it's not _completely_
+>> x86 only, either. Acks from those folks would also be appreciated since
+>> it's going to affect them most immediately.
+> I have added Suzuki and Michael for their awareness, but I would not say
+> acks are needed at this point since to date CC_ATTR_GUEST_MEM_ENCRYPT is
+> strictly an x86-ism.
+> 
+> For example, the PowerPC implementation of cc_platform_has() has not been
+> touched since Tom added it. 
 
-Expose this value to userspace using the power supply extension
-interface.
-
-Tested on a Dell Inspiron 3505.
-
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/wmi/devices/dell-wmi-ddv.rst | 35 ++++++++-
- drivers/platform/x86/dell/dell-wmi-ddv.c   | 89 ++++++++++++++++++++++
- 2 files changed, 123 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/wm=
-i/devices/dell-wmi-ddv.rst
-index 41c553d5c77d..109d4c5c922e 100644
-=2D-- a/Documentation/wmi/devices/dell-wmi-ddv.rst
-+++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
-@@ -150,7 +150,40 @@ Returns the voltage flow of the battery in mV as an u=
-16.
- WMI method BatteryManufactureAccess()
- -------------------------------------
-=20
--Returns a manufacture-defined value as an u16.
-+Returns the health status of the battery as a u16.
-+The health status encoded in the following manner:
-+
-+ - the third nibble contains the general failure mode
-+ - the fourth nibble contains the specific failure code
-+
-+Valid failure modes are:
-+
-+ - permanent failure (``0x9``)
-+ - overheat failure (``0xa``)
-+ - overcurrent failure (``0xb``)
-+
-+All other failure modes are to be considered normal.
-+
-+The following failure codes are valid for a permanent failure:
-+
-+ - fuse blown (``0x0``)
-+ - cell imbalance (``0x1``)
-+ - overvoltage (``0x2``)
-+ - fet failure (``0x3``)
-+
-+The last two bits of the failure code are to be ignored when the battery
-+signals a permanent failure.
-+
-+The following failure codes a valid for a overheat failure:
-+
-+ - overheat at start of charging (``0x5``)
-+ - overheat during charging (``0x7``)
-+ - overheat during discharging (``0x8``)
-+
-+The following failure codes are valid for a overcurrent failure:
-+
-+ - overcurrent during charging (``0x6``)
-+ - overcurrent during discharging (``0xb``)
-=20
- WMI method BatteryRelativeStateOfCharge()
- -----------------------------------------
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index 8bd3ff76bb91..cb4e0c1b908e 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -47,6 +47,26 @@
- #define SBS_MANUFACTURE_MONTH_MASK	GENMASK(8, 5)
- #define SBS_MANUFACTURE_DAY_MASK	GENMASK(4, 0)
-=20
-+#define MA_FAILURE_MODE_MASK			GENMASK(11, 8)
-+#define MA_FAILURE_MODE_PERMANENT		0x9
-+#define MA_FAILURE_MODE_OVERHEAT		0xA
-+#define MA_FAILURE_MODE_OVERCURRENT		0xB
-+
-+#define MA_PERMANENT_FAILURE_CODE_MASK		GENMASK(13, 12)
-+#define MA_PERMANENT_FAILURE_FUSE_BLOWN		0x0
-+#define MA_PERMANENT_FAILURE_CELL_IMBALANCE	0x1
-+#define MA_PERMANENT_FAILURE_OVERVOLTAGE	0x2
-+#define MA_PERMANENT_FAILURE_FET_FAILURE	0x3
-+
-+#define MA_OVERHEAT_FAILURE_CODE_MASK		GENMASK(15, 12)
-+#define MA_OVERHEAT_FAILURE_START		0x5
-+#define MA_OVERHEAT_FAILURE_CHARGING		0x7
-+#define MA_OVERHEAT_FAILURE_DISCHARGING		0x8
-+
-+#define MA_OVERCURRENT_FAILURE_CODE_MASK	GENMASK(15, 12)
-+#define MA_OVERCURRENT_FAILURE_CHARGING		0x6
-+#define MA_OVERCURRENT_FAILURE_DISCHARGING	0xB
-+
- #define DELL_EPPID_LENGTH	20
- #define DELL_EPPID_EXT_LENGTH	23
-=20
-@@ -749,6 +769,72 @@ static ssize_t eppid_show(struct device *dev, struct =
-device_attribute *attr, cha
- 	return ret;
- }
-=20
-+static int dell_wmi_ddv_get_health(struct dell_wmi_ddv_data *data, u32 in=
-dex,
-+				   union power_supply_propval *val)
-+{
-+	u32 value, code;
-+	int ret;
-+
-+	ret =3D dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_MANUFACT=
-URER_ACCESS, index,
-+					 &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (FIELD_GET(MA_FAILURE_MODE_MASK, value)) {
-+	case MA_FAILURE_MODE_PERMANENT:
-+		code =3D FIELD_GET(MA_PERMANENT_FAILURE_CODE_MASK, value);
-+		switch (code) {
-+		case MA_PERMANENT_FAILURE_FUSE_BLOWN:
-+			val->intval =3D POWER_SUPPLY_HEALTH_BLOWN_FUSE;
-+			return 0;
-+		case MA_PERMANENT_FAILURE_CELL_IMBALANCE:
-+			val->intval =3D POWER_SUPPLY_HEALTH_CELL_IMBALANCE;
-+			return 0;
-+		case MA_PERMANENT_FAILURE_OVERVOLTAGE:
-+			val->intval =3D POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+			return 0;
-+		case MA_PERMANENT_FAILURE_FET_FAILURE:
-+			val->intval =3D POWER_SUPPLY_HEALTH_DEAD;
-+			return 0;
-+		default:
-+			dev_notice_once(&data->wdev->dev, "Unknown permanent failure code %u\n=
-",
-+					code);
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+	case MA_FAILURE_MODE_OVERHEAT:
-+		code =3D FIELD_GET(MA_OVERHEAT_FAILURE_CODE_MASK, value);
-+		switch (code) {
-+		case MA_OVERHEAT_FAILURE_START:
-+		case MA_OVERHEAT_FAILURE_CHARGING:
-+		case MA_OVERHEAT_FAILURE_DISCHARGING:
-+			val->intval =3D POWER_SUPPLY_HEALTH_OVERHEAT;
-+			return 0;
-+		default:
-+			dev_notice_once(&data->wdev->dev, "Unknown overheat failure code %u\n"=
-,
-+					code);
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+	case MA_FAILURE_MODE_OVERCURRENT:
-+		code =3D FIELD_GET(MA_OVERCURRENT_FAILURE_CODE_MASK, value);
-+		switch (code) {
-+		case MA_OVERCURRENT_FAILURE_CHARGING:
-+		case MA_OVERCURRENT_FAILURE_DISCHARGING:
-+			val->intval =3D POWER_SUPPLY_HEALTH_OVERCURRENT;
-+			return 0;
-+		default:
-+			dev_notice_once(&data->wdev->dev, "Unknown overcurrent failure code %u=
-\n",
-+					code);
-+			val->intval =3D POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-+			return 0;
-+		}
-+	default:
-+		val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
-+		return 0;
-+	}
-+}
-+
- static int dell_wmi_ddv_get_manufacture_date(struct dell_wmi_ddv_data *da=
-ta, u32 index,
- 					     enum power_supply_property psp,
- 					     union power_supply_propval *val)
-@@ -808,6 +894,8 @@ static int dell_wmi_ddv_get_property(struct power_supp=
-ly *psy, const struct powe
- 		return ret;
-=20
- 	switch (psp) {
-+	case POWER_SUPPLY_PROP_HEALTH:
-+		return dell_wmi_ddv_get_health(data, index, val);
- 	case POWER_SUPPLY_PROP_TEMP:
- 		ret =3D dell_wmi_ddv_query_integer(data->wdev, DELL_DDV_BATTERY_TEMPERA=
-TURE, index,
- 						 &value);
-@@ -829,6 +917,7 @@ static int dell_wmi_ddv_get_property(struct power_supp=
-ly *psy, const struct powe
- }
-=20
- static const enum power_supply_property dell_wmi_ddv_properties[] =3D {
-+	POWER_SUPPLY_PROP_HEALTH,
- 	POWER_SUPPLY_PROP_TEMP,
- 	POWER_SUPPLY_PROP_MANUFACTURE_YEAR,
- 	POWER_SUPPLY_PROP_MANUFACTURE_MONTH,
-=2D-=20
-2.39.5
-
+Ahh, good point. I was just grepping for cc_platform_has(), not
+CC_ATTR_GUEST_MEM_ENCRYPT. Unless someone pipes up, I'd agree that acks
+aren't required. Thanks for adding them to the cc though.
