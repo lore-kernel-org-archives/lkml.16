@@ -1,82 +1,140 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E81525D8E8
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002DC1FDA8C;
+	Tue, 29 Apr 2025 10:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922566; cv=none; b=hUdqB9rEA7djYqK7sbM+OLQ6UCxeEBXJqfnNm9CcxdDXw+zS30X5aTwWRSv2/OLQbzAbBKZCKEwjh2WcX4tuoxhktA3cFZ/J+LqEYwQM4lAHPxq/jYY+AhhhfVNIciCBiv1b28zIoHG/5WY23bnOe8vXs2b+LrZ3kvQYG4LZ05s=
+	t=1745922620; cv=none; b=Vc1uKO6asDkmp0zBHK1Az7pVLNBXp9NRsMZxQjwgjWgCV8AyDbgt+hpjLAE+iFUqd3NUfP20kc83Gd2mkI2SfncjT9uie07QX1BDH1NjpbrAe3FIc16+GAUG68dTvM9C53TdZLpNLBH1YGFp7CVxYOI69z8CdIcRRA+9GKnYvII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922566; c=relaxed/simple;
-	bh=5RrDLi3PZzyNGGnZ9negfTwgCdp5O8QJQ2VcaXdGPb8=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ptudD4UUGjUlh1w3lTWOXCutNprnJscJG58DF3rsqIebWAAPSamRR22ISUwcQTHfcQSZHbg9YsmkjhQpVhFb0ymQ6eL5NLD6xu6XlCei48a6joFofelf8hekEK+AjbbP4Bj8/YLVsYd/HaXoQPeNsdTBUcHtJDD0jqU/JgapofY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hiuDa4pP; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1745922620; c=relaxed/simple;
+	bh=lgyXItV2Bu+riV/9ewEdodHmjcO4qdizNxdMcwNkozc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Pi2fQ/sPDiOUSy70dgconqxrWw1Ak2pylW2LBWBBY7GNyQfOt1A0rhg2908m6nb+YpIQ/kn5df4NXJLKRk30CYqjp76I03zSMCdh9wt6vDEVZ2lr43Hf6rurPnr76HBoZ1vX8UAcIyW4UoXVtOkaYdoyYRb472gD11A1GwpTBJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m5vG2her; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hiuDa4pP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1745922551; bh=EzkTMPalhiZ+t3ncZHFG2Y4CwLhlWITD7mdAZZ8jkuo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hiuDa4pPBKV2l3eRl10s7YpdVR1zrBjvpwwc4bNmyZaKReq43LCJuo/iftdyjVVAu
-	 TDnylyty/nuFhU1MJ/F6LlOTyjGpzjXpctMIxxtddDpHxDp+1ZcEX7luTJDJHxK3ud
-	 d+BFZPwB47jJ9e/qcj9kLogO7+qbNnWIWc20s9c8=
-Received: from pek-lxu-l1.wrs.com ([114.244.56.254])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 5C587E89; Tue, 29 Apr 2025 18:23:05 +0800
-X-QQ-mid: xmsmtpt1745922185tjdi1nepa
-Message-ID: <tencent_7212DF0676098EEEF9EECD0C9F27D686DC06@qq.com>
-X-QQ-XMAILINFO: OdDhBiKk1LgM6k2GFuIG/QaMOz6EAIEnfQGjRze4Zf/h72JRI4GSn3SpWZYKdj
-	 5vthzPx7ir3Y8grqPpswKXWpvCexGKsfH079B5po7Gi9fQ9EZYZA76u0OW0uRiyBPVK4t+QRmNGo
-	 dfwYzv/Ohm/+ko/327d1tg03aGEqBxt2kEYN1Qk6AeaJq6uqcpNu0q/U91OnoQu1nivvjO9MVUa3
-	 CyYnFOi3UU0B4SdqqHTeZQqt6BBb6Wzdym2C7npLKINydipeKxEN0Ld4EpLWO3dVroxGtDLGJL56
-	 tuYBI8MGMidYBHSu7NN3Zrej1XKAMoyDd0RuXIa1TDX11NtPKB2MNtItZ3UWP8+wBBWv64sN+ziL
-	 EpxjO6fubPOfCY8nBD5KIo+RIXPSthPwa+Ba+Y3tjIPe+AMLV/1COWA2DpclfbOHfuXqqCSvu1ND
-	 AiXs6wxUIxSb3G957PDqn6abK14Nk7fK1Q0LTfGmkv4l5qlwN1fxB2vRVkMgufBouCkQYjNfU/xv
-	 uZ5/Zx1McqBAY7+XhFyDlh8JaWuNW8jHU3x6zInIJiPVtj9HVmQ8RFg5lxuJG71SGkiTPJfjp7uc
-	 fjEtIFDZd5EgLJQtKlhO05Yee1pU2sZtA6oGQTZ1OM9AfSxTUgSH7dGXRh1s1ioCOTIua8eUDChM
-	 RckFP/d42T+9sdcdBKFNgEcUqjLPaTQdRDPmQD5UmKCrMBE+QtiCC433T8XJdKR5uuisuryQZDsO
-	 XTurFt4dLYGBJnhMvvAV8b2mW2twrAC8qHlQHGONXJXiGuAyBsJo+ZpHF4fkUShh2qRyrqqEVMr8
-	 a21JAJahl9dC5euc9bOMqfDPaq5eUg4xYqbyFSQtCFyIqHIXWqDNKsHJC3ZlqwDkc7T8LrcfvrUb
-	 jXzn4tTA7nnU4UR/OnXOcg6/09U69NrQxsgGOEjiUhCci0Fb2VnNo4HjY6SQe2ScRq6/7wvrGN86
-	 v1Wx2vyLU=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
-Date: Tue, 29 Apr 2025 18:23:06 +0800
-X-OQ-MSGID: <20250429102305.805209-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
-References: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m5vG2her"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9lCKU015307;
+	Tue, 29 Apr 2025 10:30:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bokXI+hybh6ma1h0DymYjEygB6zRvyEC3U/pIpaD5Is=; b=m5vG2herLhY3GlJh
+	pRbCVEDzhp9Z7WvxuYXaKdq86bOgMz0SrXgUExbDQq1PYTPshN5lfXhDu3dQVmDW
+	ivo2h7B9X51Vze366ppArHCVfQSxcbEFHV1dHu8FliFqiTF+T9Ek5jdQJLlpvFy4
+	Kio+jmyeryB6hi3DX/SikP3R1WIYkq2omYrdlFyeWNZ9efS8WnIPiKVnV5msE3AN
+	q/GXkgqtocqYFrHrILu7TmhuH3RCzlzuagZeMSGt7Qti/IMRf30Ok8eai9p6mvej
+	Q6kzvAo1Qp/Hd5bhfUH2YSKk0Nhrh+MKn1LJV1vUG4jPqxVF9XOyaiBzakIqWgMd
+	HAkGMQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qjwv5f6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:30:13 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TAUCi8029498
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:30:12 GMT
+Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 03:30:07 -0700
+Message-ID: <95da19b8-a909-288d-69bc-8bf00d802c80@quicinc.com>
+Date: Tue, 29 Apr 2025 16:00:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 13/23] media: iris: Fix missing function pointer
+ initialization
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-13-3a6013ecb8a5@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-13-3a6013ecb8a5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _byHaITyWOg59otUsoGj12pjNGx4Jm1q
+X-Proofpoint-GUID: _byHaITyWOg59otUsoGj12pjNGx4Jm1q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NyBTYWx0ZWRfX0GCqcX3HcC9e n7p55z3mekh7pCVqHicfNVPFPmHmAlzw52gOvDW71uNt/ZM3wMak9DxYXdwDuGGKe2BaR2kGyBr xieKF8mDs/VA/uDRDgbxH88mKF+YhBmQpzuYq75qEm6B6lJLNq4pgPxFZtPzrghodDNqx1SNOJC
+ y0gRLDL2W7tyqmoiCqcFyPg5oC800nNhLTulfdjVleCviHKQ7lv1ioH+60vWXRe2JCAcEmIRHuI ccp+aRyl97VpfT/dCQgkBxUZSS7TedfZI2jfKzzmgNCpxpGshAUi/kRlUTaAhr6BhAy3WxMT1uX wiGVkqv/9SxWggmRRXvRzpkG4CPuZDgdl/y1hVQyhST9PDN0r8KGJ0wRbLNHGiwDRpirt6AoLYx
+ 7oD3d2uKu0zubegJdjeZhiElKewPLgp8asAhIgaIlEQzn0rYMMLUnLbJdHGOQvLazXALAwqp
+X-Authority-Analysis: v=2.4 cv=c/urQQ9l c=1 sm=1 tr=0 ts=6810aa35 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=1AEiwiRWklCkw4qv2JAA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 malwarescore=0
+ clxscore=1015 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290077
 
-#syz test
 
-diff --git a/net/mac80211/ibss.c b/net/mac80211/ibss.c
-index 4246d168374f..b709864c7ceb 100644
---- a/net/mac80211/ibss.c
-+++ b/net/mac80211/ibss.c
-@@ -1818,6 +1818,12 @@ int ieee80211_ibss_join(struct ieee80211_sub_if_data *sdata,
- 	sdata->deflink.needed_rx_chains = local->rx_chains;
- 	sdata->control_port_over_nl80211 = params->control_port_over_nl80211;
- 
-+	struct ieee80211_local *local = sdata->local;
-+	if (local && local->int_scan_req) {
-+		printk("sd: %p, l: %p, nch: %d, %s\n", sdata, local, local->int_scan_req->n_channels, __func__);
-+		if (!local->int_scan_req->n_channels)
-+			return -EINVAL;
-+	}
- 	wiphy_work_queue(local->hw.wiphy, &sdata->work);
- 
- 	return 0;
+On 4/28/2025 2:59 PM, Dikshita Agarwal wrote:
+> The function pointers responsible for setting firmware properties were
+> never initialized in the instance capability structure, causing it to
+> remain NULL. As a result, the firmware properties were not being set
+> correctly.
+> 
+> Fix this by properly assigning the function pointers from the core
+> capability to the instance capability, ensuring that the properties are
+> correctly applied to the firmware.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 3a19d7b9e08b ("media: iris: implement set properties to firmware during streamon")
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>  drivers/media/platform/qcom/iris/iris_ctrls.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_ctrls.c b/drivers/media/platform/qcom/iris/iris_ctrls.c
+> index 915de101fcba..13f5cf0d0e8a 100644
+> --- a/drivers/media/platform/qcom/iris/iris_ctrls.c
+> +++ b/drivers/media/platform/qcom/iris/iris_ctrls.c
+> @@ -157,6 +157,7 @@ void iris_session_init_caps(struct iris_core *core)
+>  		core->inst_fw_caps[cap_id].value = caps[i].value;
+>  		core->inst_fw_caps[cap_id].flags = caps[i].flags;
+>  		core->inst_fw_caps[cap_id].hfi_id = caps[i].hfi_id;
+> +		core->inst_fw_caps[cap_id].set = caps[i].set;
+>  	}
+>  }
+>  
+> 
+Would certainly make encoder fail later without this.
 
+Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
