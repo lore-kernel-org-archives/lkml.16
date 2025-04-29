@@ -1,86 +1,119 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1090C24E4AF;
-	Tue, 29 Apr 2025 10:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDD12949F7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921373; cv=none; b=Jn6hLRPUk1JMYLTHEVX3DXDpycdWydT/PSP4E+9Z99XVGTdawgfcipBdbm8AZGPCsCqI7OVGCJaUKquyRQzc10OaR5TZ9jOGjYP+KT+MkzAPqW2OcitdLcMHAagwSsKpinebG47rdqdBDswqLAT7pu3oFDPAlTi4DrdB3L4PTqk=
+	t=1745921376; cv=none; b=cx7QTku/jeYhUgh6eDkU6100HzjAgSbojDHYbIx6J+3P5B7DWS1l4IbR8qi7fc3JN9ixs6lcHVexQea28A0aZzS+ukeplIYtHVwWhwBClo1yyQki+MXdkBQaf6paS8vWHCU62Lts+52l5aYfpOWUUH8qAIVf23PeomXxz7ZJcNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921373; c=relaxed/simple;
-	bh=eLO1sBN9es+KqiA7uBtT5eAFv9XGUNJi4oXi0j72MFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYy2+rS80bXMNR7MLA1MKEB3ICvCwAwm6wF+4CDf1DWSP3xOJKTc9cMlgyaQTOCsgIhpJugJrSunW05toXdOftcGn3HSzXmB1JGWhYs/bMlOCEXPfd1dTCYNVINmzK84N+2AMXg8DAfhrpBebrGbFNWeewM0PoSf1skY6Da26T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=goXW2lO0; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745921376; c=relaxed/simple;
+	bh=goisZbNoUKv69snA63GSjtR272V1jBTX7ipIJhdReGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZKk4IEeGB/nqYWvp7BOL3qpr+r5Iy1HVl792Lcor3rQIOLoJmkCBLEtnBtuCb6lo5yUsJ2um3wO+lxf96Y6V1lHU9AptSsabFBIumktmKN8tE5QMrR2p9d8fi1KzmopNmZJH0AfQmvAXyB/ulDNrW71MqXiz5zki9iNfcfmRKrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=XnoGx84z; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=pYPYSarC reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="goXW2lO0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QPf4zQBm/p7IMNLfzi1aXzU7z6Pf+a2T6bBJiFnTgTU=; b=goXW2lO0v//rdTPZWHL5bTHk74
-	vKr2MCEHHJNqamsPuS6+XZhMIXimx5tPKDtawbcI5TKayI06gkDwJKT1X7Em7p2VujfifDD3K/oZS
-	PBY6OXGTGkYSf5b9T/mmNUuRtaIVD6fQG+loW3Cc/kY7RLAB3h9Tgg1BbkEig7AdMtBIEoiSFPrMX
-	35l476LLz+JQXtKHw7ipQRTpc3w1HbCXPUPEzVb12mqBUPcg8E767Fpd02RGoohjr1Ti0dQY961ta
-	+Rf3ukL4gUN5eHD/uPS/ENpFKaL0xJ1NC+Rfk9Ns2gslk2ZkPQAQqsVfazlU/pap4sYMX8pwYJwyR
-	ACWAnLmA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u9htw-0000000DGN9-1Rjn;
-	Tue, 29 Apr 2025 10:09:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D2F8830057C; Tue, 29 Apr 2025 12:09:19 +0200 (CEST)
-Date: Tue, 29 Apr 2025 12:09:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, samitolvanen@google.com,
-	ojeda@kernel.org
-Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
-Message-ID: <20250429100919.GH4198@noisy.programming.kicks-ass.net>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.172767741@infradead.org>
- <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
- <20250415074421.GI5600@noisy.programming.kicks-ass.net>
- <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
- <20250416083859.GH4031@noisy.programming.kicks-ass.net>
- <20250426100134.GB4198@noisy.programming.kicks-ass.net>
- <aA-3OwNum9gzHLH1@google.com>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="XnoGx84z";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="pYPYSarC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1745921372; x=1777457372;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iSnB+tiO7RJY6/v5TqZgypWMYIiKGFl49Mks0edXerk=;
+  b=XnoGx84zCsGv2Wc6TrKjUtV1RmJP+atwrNBCALusixqudEtq9DqzNdGE
+   Tuya3E+/uz2jjESIkHXT9dGRwZO5jF7ATxPsgN2OzhxinzoYyROuO/BfD
+   Sx9pO9Y7rHdq8CCVMc+BXVC7u0V/j4JsLsl/aj/m4k3KEEUoSwJJ9ZjlA
+   Tn9+Ncbfr1OZpnz2a2oGDLIWv/BOCG7kWCT6EVDhxqr5F0Zqqoh5IBNUq
+   oNh3S5zwgGUqOTSTvUsWYqcnhQAiuQq65Rr4lQAci9wI/YXOwr1f8YKp0
+   S2D2kJ/srEXsRPbAGi+ntnwpEJFpeuYKodaAeMSHTHP1U7Rm1ARWc4hYC
+   w==;
+X-CSE-ConnectionGUID: 2oTZPV+dSOOsxLVCJYAMkQ==
+X-CSE-MsgGUID: 8xZ4UqzESUiszoQuMgVlRg==
+X-IronPort-AV: E=Sophos;i="6.15,248,1739833200"; 
+   d="scan'208";a="43779882"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 29 Apr 2025 12:09:29 +0200
+X-CheckPoint: {6810A559-B-22EE63B7-E8AF8A9B}
+X-MAIL-CPID: 219F0D8F3AD959829E5A5445EFFD28B2_3
+X-Control-Analysis: str=0001.0A006396.6810A558.0045,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 658B4160E51;
+	Tue, 29 Apr 2025 12:09:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1745921364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iSnB+tiO7RJY6/v5TqZgypWMYIiKGFl49Mks0edXerk=;
+	b=pYPYSarCiS7YLzsLmIEXC7QY79PIP9YZfAi+DPC2mCufP2/ezomg7Bcpzre93c5Q5EMkIZ
+	1WGkI8x+nprBZjyk0OaYhLFHZsN1NRxTDCR6d1Hd+6o4RXmAIhDbJOsLKL2yxcA+7Uy9L5
+	Xzy9OVOLC/Rrtrqvj3dWfxSPVp0U3KdOWEnox7QSpHdoqk4lr1NuiNI+qGPs0BSeMYxPz0
+	anJ4VMTsnJRMiTnYG9YbcbjH/orFmCG4rZI3b7RnTMwvWC5jtbHKqUkc6lK/n9R/mxvZUb
+	9xdxcrLkZBoW19+TV0FNj2Am5UGkBcLvKAW/vMC/iP72f12vHcd91qUqYc5oRA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Marek Vasut <marex@denx.de>,
+	Stefan Agner <stefan@agner.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	dri-devel@lists.freedesktop.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] drm: lcdif: Use dev_err_probe()
+Date: Tue, 29 Apr 2025 12:09:18 +0200
+Message-ID: <20250429100919.1180404-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA-3OwNum9gzHLH1@google.com>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, Apr 28, 2025 at 10:13:31AM -0700, Sean Christopherson wrote:
-> On Sat, Apr 26, 2025, Peter Zijlstra wrote:
-> > On Wed, Apr 16, 2025 at 10:38:59AM +0200, Peter Zijlstra wrote:
-> > 
-> > > Yeah, I finally got there. I'll go cook up something else.
-> > 
-> > Sean, Paolo, can I once again ask how best to test this fastop crud?
-> 
-> Apply the below, build KVM selftests, 
+Use dev_err_probe() to add a reason for deferred probe. This can
+especially happen on lcdif3 which uses hdmi_tx_phy for 'pix' clock
 
-Patch applied, my own hackery applied, host kernel built and booted,
-foce_emulation_prefix set, but now I'm stuck at this seemingly simple
-step..
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+ drivers/gpu/drm/mxsfb/lcdif_drv.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-$ cd tools/testing/selftests/kvm/
-$ make
-... metric ton of fail ...
+diff --git a/drivers/gpu/drm/mxsfb/lcdif_drv.c b/drivers/gpu/drm/mxsfb/lcdif_drv.c
+index d5996efaf34bb..99e632d4a0e9b 100644
+--- a/drivers/gpu/drm/mxsfb/lcdif_drv.c
++++ b/drivers/gpu/drm/mxsfb/lcdif_drv.c
+@@ -164,15 +164,17 @@ static int lcdif_load(struct drm_device *drm)
+ 
+ 	lcdif->clk = devm_clk_get(drm->dev, "pix");
+ 	if (IS_ERR(lcdif->clk))
+-		return PTR_ERR(lcdif->clk);
++		return dev_err_probe(drm->dev, PTR_ERR(lcdif->clk), "Failed to get pix clock\n");
+ 
+ 	lcdif->clk_axi = devm_clk_get(drm->dev, "axi");
+ 	if (IS_ERR(lcdif->clk_axi))
+-		return PTR_ERR(lcdif->clk_axi);
++		return dev_err_probe(drm->dev, PTR_ERR(lcdif->clk_axi),
++				     "Failed to get axi clock\n");
+ 
+ 	lcdif->clk_disp_axi = devm_clk_get(drm->dev, "disp_axi");
+ 	if (IS_ERR(lcdif->clk_disp_axi))
+-		return PTR_ERR(lcdif->clk_disp_axi);
++		return dev_err_probe(drm->dev, PTR_ERR(lcdif->clk_disp_axi),
++				     "Failed to get disp_axi clock\n");
+ 
+ 	platform_set_drvdata(pdev, drm);
+ 
+-- 
+2.43.0
 
-Clearly I'm doing something wrong :/
