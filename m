@@ -1,135 +1,153 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CB022CBD9;
-	Tue, 29 Apr 2025 15:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C0422839A
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941336; cv=none; b=YtKgMRl6NlxBWFPzD8e3r0awCGShCjcj+37d6Ji3f/FnRIQdHJz6fsl/0xUjj7p73Ck05sfP7HZS8O1t8P8ouGavYO9JR9F8rDcFYa0LTZrxzJCKSBbg79d40BiiY6A/Rbnuli7uVHwkfAI5T13YA2KIodJ/rJDmxPouAsjmuZo=
+	t=1745941359; cv=none; b=gi/R75BHRxeR1tf++81/EDVYdDsvaKysvoUWqjqhUvqZawNoeVoSfWcWechJsTP3kMIPg/iIo9qTFrUefPiFPPMZ47z2bEPTiZ4AqYUgaaFJ/Lva2/1VKaxGLh7/lysGiNvcN3ysjw47GKXJSFezveN1HqiWEkza+bXXBEOIKbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941336; c=relaxed/simple;
-	bh=OVUpFYw8EEbYe9Lk/l+H/ocJPtxgHwBeTDmWKZSU72s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DKkG9DcXmDP4OrYsfLotp0v5CcxKfkPpY+vT59eV0TlukOdEaWN0Y9StKDG36cZngYeiUWpQT1ZFzfoiOvg3qT3wwWHQmQAQRFmKHFB5t6TKx4XvQyogrx91fUv/CDfi7AsBTDc0+DkjqwwWN4TdnFTYO+ZMARmsIPZK01VO47I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dFjFeWwT; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745941359; c=relaxed/simple;
+	bh=j/YHf1teaDrb4ir9M8xT43/VAvVAAqIIQm3vpT9RNQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKuvR13TBStkxA7L4+pIItopyldK4fuH05jeyxVP0GzMtOds2xEtYPAG2O/MumtwrUsN8hF5INqRJJxGCZlGWhI5KlIoWh9+VjlXaWnN7txl5KXxJH/u7fnnM7dLIgKLZinrT5MkG6zevLUJ+7Nv3W44gjBn/KNSDQyTmTUvKK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iotlXLtG; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dFjFeWwT"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53TFfxoa3121174
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 10:41:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745941319;
-	bh=AeBJMhQyyG1RQnNgel+KZd/M8odIiZqEzCYJ3l+mOj0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=dFjFeWwT8n8D+AQy5+HHmmwHtTWtyg40LpqESMRGetHT4ygBj5ok4w0csjEsPIBHq
-	 Kkq/rOgUHfwH68R+IwFvK1biV2QeOijpYv0Cb9QXHW42RQfIkH8F+2qxGhX4pbq4WV
-	 d+qcYH0+5GqxBGZvP1NnhdP/Tl61qfTz4P+pH43s=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53TFfxpR049671
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 29 Apr 2025 10:41:59 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 29
- Apr 2025 10:41:59 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 29 Apr 2025 10:41:59 -0500
-Received: from ws.dhcp.ti.com (ws.dhcp.ti.com [10.24.69.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53TFfXVt030051;
-	Tue, 29 Apr 2025 10:41:54 -0500
-From: Rishikesh Donadkar <r-donadkar@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <devarsht@ti.com>,
-        <y-abhilashchandra@ti.com>, <s-jain1@ti.com>, <jai.luthra@linux.dev>,
-        <jai.luthra@ideasonboard.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <imx@lists.linux.dev>, <r-donadkar@ti.com>
-Subject: [PATCH v1 4/4] arm64: dts: ti: k3-am62x: Add required voltage supplies for TEVI-OV5640
-Date: Tue, 29 Apr 2025 21:11:33 +0530
-Message-ID: <20250429154133.3377962-5-r-donadkar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250429154133.3377962-1-r-donadkar@ti.com>
-References: <20250429154133.3377962-1-r-donadkar@ti.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iotlXLtG"
+Date: Tue, 29 Apr 2025 15:42:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745941342;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y81njpVq6vhPefsffMyJQnG/4OkeUNAj+Vh1f25K2Cs=;
+	b=iotlXLtGiFrEmKEnROAr+VqKuiA7RA246ZDTFou2eqbzF/kouv6PauUkEqtWaulgdxa00T
+	zkXnBYIjyZyTkXO+5cpeuvw3oaywvYS2ckQ3YJiEpgVHOaUf9atwWt2MsUId+NVrAj8aEn
+	y9VEyAGkcWE+a+JbdBWbRA1unqn3Yss=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: Matt Bobrowski <mattbobrowski@google.com>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org
+Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
+Message-ID: <aBDzWDcrk1Le32cN@google.com>
+References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
+ <aA9bu7UJOCTQGk6L@google.com>
+ <aA-5xX10nXE2C2Dn@google.com>
+ <CAP01T76Wv+swbT9xuQ-YhQ=-qOFggw6u1RziJNGjJBiNO233OQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP01T76Wv+swbT9xuQ-YhQ=-qOFggw6u1RziJNGjJBiNO233OQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-The device tree overlay for TEVI-OV5640 requires following voltage
-supplies:
+On Tue, Apr 29, 2025 at 03:56:54AM +0200, Kumar Kartikeya Dwivedi wrote:
+> On Mon, 28 Apr 2025 at 19:24, Roman Gushchin <roman.gushchin@linux.dev> wrote:
+> >
+> > On Mon, Apr 28, 2025 at 10:43:07AM +0000, Matt Bobrowski wrote:
+> > > On Mon, Apr 28, 2025 at 03:36:05AM +0000, Roman Gushchin wrote:
+> > > > This patchset adds an ability to customize the out of memory
+> > > > handling using bpf.
+> > > >
+> > > > It focuses on two parts:
+> > > > 1) OOM handling policy,
+> > > > 2) PSI-based OOM invocation.
+> > > >
+> > > > The idea to use bpf for customizing the OOM handling is not new, but
+> > > > unlike the previous proposal [1], which augmented the existing task
+> > > > ranking-based policy, this one tries to be as generic as possible and
+> > > > leverage the full power of the modern bpf.
+> > > >
+> > > > It provides a generic hook which is called before the existing OOM
+> > > > killer code and allows implementing any policy, e.g.  picking a victim
+> > > > task or memory cgroup or potentially even releasing memory in other
+> > > > ways, e.g. deleting tmpfs files (the last one might require some
+> > > > additional but relatively simple changes).
+> > > >
+> > > > The past attempt to implement memory-cgroup aware policy [2] showed
+> > > > that there are multiple opinions on what the best policy is.  As it's
+> > > > highly workload-dependent and specific to a concrete way of organizing
+> > > > workloads, the structure of the cgroup tree etc, a customizable
+> > > > bpf-based implementation is preferable over a in-kernel implementation
+> > > > with a dozen on sysctls.
+> > > >
+> > > > The second part is related to the fundamental question on when to
+> > > > declare the OOM event. It's a trade-off between the risk of
+> > > > unnecessary OOM kills and associated work losses and the risk of
+> > > > infinite trashing and effective soft lockups.  In the last few years
+> > > > several PSI-based userspace solutions were developed (e.g. OOMd [3] or
+> > > > systemd-OOMd [4]). The common idea was to use userspace daemons to
+> > > > implement custom OOM logic as well as rely on PSI monitoring to avoid
+> > > > stalls. In this scenario the userspace daemon was supposed to handle
+> > > > the majority of OOMs, while the in-kernel OOM killer worked as the
+> > > > last resort measure to guarantee that the system would never deadlock
+> > > > on the memory. But this approach creates additional infrastructure
+> > > > churn: userspace OOM daemon is a separate entity which needs to be
+> > > > deployed, updated, monitored. A completely different pipeline needs to
+> > > > be built to monitor both types of OOM events and collect associated
+> > > > logs. A userspace daemon is more restricted in terms on what data is
+> > > > available to it. Implementing a daemon which can work reliably under a
+> > > > heavy memory pressure in the system is also tricky.
+> > > >
+> > > > [1]: https://lwn.net/ml/linux-kernel/20230810081319.65668-1-zhouchuyi@bytedance.com/
+> > > > [2]: https://lore.kernel.org/lkml/20171130152824.1591-1-guro@fb.com/
+> > > > [3]: https://github.com/facebookincubator/oomd
+> > > > [4]: https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
+> > > >
+> > > > ----
+> > > >
+> > > > This is an RFC version, which is not intended to be merged in the current form.
+> > > > Open questions/TODOs:
+> > > > 1) Program type/attachment type for the bpf_handle_out_of_memory() hook.
+> > > >    It has to be able to return a value, to be sleepable (to use cgroup iterators)
+> > > >    and to have trusted arguments to pass oom_control down to bpf_oom_kill_process().
+> > > >    Current patchset has a workaround (patch "bpf: treat fmodret tracing program's
+> > > >    arguments as trusted"), which is not safe. One option is to fake acquire/release
+> > > >    semantics for the oom_control pointer. Other option is to introduce a completely
+> > > >    new attachment or program type, similar to lsm hooks.
+> > >
+> > > Thinking out loud now, but rather than introducing and having a single
+> > > BPF-specific function/interface, and BPF program for that matter,
+> > > which can effectively be used to short-circuit steps from within
+> > > out_of_memory(), why not introduce a
+> > > tcp_congestion_ops/sched_ext_ops-like interface which essentially
+> > > provides a multifaceted interface for controlling OOM killing
+> > > (->select_bad_process, ->oom_kill_process, etc), optionally also from
+> > > the context of a BPF program (BPF_PROG_TYPE_STRUCT_OPS)?
+> >
+> > It's certainly an option and I thought about it. I don't think we need a bunch
+> > of hooks though. This patchset adds 2 and they belong to completely different
+> > subsystems (mm and sched/psi), so Idk how well they can be gathered
+> > into a single struct ops. But maybe it's fine.
+> >
+> > The only potentially new hook I can envision now is one to customize
+> > the oom reporting.
+> >
+> 
+> If you're considering scoping it down to a particular cgroup (as you
+> allude to in the TODO), or building a hierarchical interface, using
+> struct_ops will be much better than fmod_ret etc., which is global in
+> nature. Even if you don't support it now. I don't think a struct_ops
+> is warranted only when you have more than a few callbacks. As an
+> illustration, sched_ext started out without supporting hierarchical
+> attachment, but will piggy-back on the struct_ops interface to do so
+> in the near future.
 
-AVDD-supply: Analog voltage supply, 2.8 volts
-DOVDD-supply: Digital I/O voltage supply, 1.8 volts
-DVDD-supply: Digital core voltage supply, 1.5 volts
+Good point! I agree.
 
-Add them in the DT overlay.
-
-Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
----
- .../dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-index b6bfdfbbdd984..123ab0e5e8dfa 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-@@ -15,6 +15,33 @@ clk_ov5640_fixed: ov5640-xclk {
- 		#clock-cells = <0>;
- 		clock-frequency = <24000000>;
- 	};
-+
-+	reg_2p8v: regulator-2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P8V";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		vin-supply = <&vcc_3v3_sys>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3_sys>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1p5v: regulator-1p5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P5V";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		vin-supply = <&vcc_3v3_sys>;
-+		regulator-always-on;
-+	};
- };
- 
- &main_i2c2 {
-@@ -40,6 +67,11 @@ ov5640: camera@3c {
- 
- 				clocks = <&clk_ov5640_fixed>;
- 				clock-names = "xclk";
-+
-+				AVDD-supply = <&reg_2p8v>;
-+				DOVDD-supply = <&reg_1p8v>;
-+				DVDD-supply = <&reg_1p5v>;
-+
- 				powerdown-gpios = <&exp1 13 GPIO_ACTIVE_LOW>;
- 
- 				port {
--- 
-2.34.1
-
+Thanks
