@@ -1,116 +1,118 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail-m19731104.qiye.163.com (mail-m19731104.qiye.163.com [220.197.31.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB5B1F6694;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C332750E1;
 	Tue, 29 Apr 2025 07:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745911147; cv=none; b=ft6RwJ0nuGfRcnF3/ar72L65hNesE2piPg4W6e2LBAlpMJnmx8KeS9Wi6wcQrWdjY0mmsqfvPFa2fnKxVGKGmVAZJdaP4k/EhiPJclhwm1Nw21WNKn4ri7REO74IjS1UJzuD3VlzLCAg8Otb6j05MTLotvcjwjaIJZQOsbgxhws=
+	t=1745911151; cv=none; b=MBr3L4hORxc9M+R9aol8/RKmDPC8zkq3mOTLNQawCGYuByI1KfADptLocQPbBqJE055pobFBq4H6vzzxR5lhrgUe9EUXlvGglmQmt8mn2SsWc3Yv0ExzV61ad+EEM6TLAwRjTMJV/lfGsPJiqP63F6bI7Pxrf1dB0LJvhIdvo/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745911147; c=relaxed/simple;
-	bh=WGsrAAY6+9Enrae+rtfbkLrFdSWE/XhncKtP2rfP6fk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hzeqeQW+0xCZ+JWp+7R2c0/pxyJosvjS+4fuJONbbfPtr7ioin/TS3fd6Xb0VYKc1IXtwiuZhD8edTfm6xSR50Arwx3drR5x+EpioEFj863sGjplXbZ0DG4DHgoeYohTI+3/MYnITqv0M0DLJ+5rNGbN5ZIo8q0jq4cfqnyLWCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DMpTmpM4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745911151; c=relaxed/simple;
+	bh=iN5EuTFR6FY4U9PPMMwgN8esEdP0zX1zCcZhV+aHgFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nh1SGtQol8PTK5R7zKljzO5e0X4h7PwOWg9RUJ6Mgu+0kgrFRTJjXdc42pwaLHanQjz1JyImDM4PZMeRwq+o1TUB50lKDmvrQiMii9SlMbWngDrYBg9ZqdBsuOxt6YaMM6Nm3l/mBmPnuqPmHGIDjpgiH9oLewk9aLuylZVNP/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=EpGcqWX9; arc=none smtp.client-ip=220.197.31.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DMpTmpM4"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqIF4025620;
-	Tue, 29 Apr 2025 07:18:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=aoGzH4QjgLcKToCB9Hw+Ob
-	YgReyc16FZAAig/lxN6OQ=; b=DMpTmpM49a+vKSzFIadDMDvt3OEeccJ4Mc5uvW
-	1Acbw8mbl/MolztRcfS0WvBwjd4R2pd61MYtfwzJlTexd6ps24u+9wV7UMLYC2UP
-	KWKM5gQ1VRBKWAIk9+GevcfiKHdGneOOr33sgqCrjGmsHs1j+sYtQx/22zw70hIk
-	53xR6gDs1Fk1UA7rYY5fopAAPLmyKx9e4uI+G7OnUV6HNfoHbYaEbkLoIzLpePL4
-	F5BvQgfnZbNQgrc0d3axvGAHsr5vWaT0ro7wkv/sM/gyzW7krFsgvhH5U6yYbcEt
-	GEEC0Y4JhT/dQ/KZXa3hHmFe1RybLIU0G6daWKgCowz6jOyg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqktn5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 07:18:53 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53T7IqGW007045
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 07:18:52 GMT
-Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 29 Apr 2025 00:18:52 -0700
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>
-CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v2 0/2] Add Qualcomm extended CTI support
-Date: Tue, 29 Apr 2025 00:18:39 -0700
-Message-ID: <20250429071841.1158315-1-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="EpGcqWX9"
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 137882886;
+	Tue, 29 Apr 2025 10:42:59 +0800 (GMT+08:00)
+Message-ID: <027de192-4227-4010-a759-5283b6af1531@rock-chips.com>
+Date: Tue, 29 Apr 2025 10:42:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add rk3399-evb-ind board
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Chaoyi Chen <kernel@airkyi.com>, Heiko Stuebner <heiko@sntech.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+ Jimmy Hon <honyuenkwun@gmail.com>, Quentin Schulz
+ <quentin.schulz@cherry.de>, FUKAUMI Naoki <naoki@radxa.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Alexey Charkov <alchark@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250427094211.246-1-kernel@airkyi.com>
+ <20250427094211.246-3-kernel@airkyi.com>
+ <6291f6b8-75d3-4243-9935-9b64450e2b7f@lunn.ch>
+ <c583c59a-d5b7-4e20-9a1f-96f51bd7b4f3@rock-chips.com>
+ <15ee1a6b-55ba-41e9-b8a0-6e0bf62cabf0@lunn.ch>
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+In-Reply-To: <15ee1a6b-55ba-41e9-b8a0-6e0bf62cabf0@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA1NCBTYWx0ZWRfXyM/5xamKtjF8 SguNJEMGCzP19PJyfsNEyTpPJQIlzmUVxR/6xu0/zqRNx7FaaW03hjB79K2dPcASB2Dbs6hokwA JOgxYmRsCoCLM557oTpw8C0z+Jov778IuKWKEvEt+Zzo/V4v40Tpcj3BdyNbjph5MjP9a6Ppqr2
- 23e7DaqTWsCOp311HKydV7MnZ0S1lWJ8BaJst4uVMDiamCBSezaDs5RnxrM1aCeKCSJR1xDUUtr jDjyNRRENhuODBu4NYrdOp1whhU0Q2r5HnR9MFfmgF9XKp/B1UNFrtyy+MDwtU0H/ohOHGRBv1d 7bjuBIh6yUlokxTR9dLiT6h2UgunDEBbhie2aQX7xqEUCZqY84a7KfMrzvurXur8cbZolEpXFNq
- 645cp4DRln8aJjGC1bddoMFC2n9p1D8WTTyVWXRWCr5O75Xe+ZiW/7MknCqarMBN+Bv/PQ+N
-X-Proofpoint-GUID: 4OFxk86Jss1NoNFQwer_mu8keip1_4FL
-X-Proofpoint-ORIG-GUID: 4OFxk86Jss1NoNFQwer_mu8keip1_4FL
-X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=68107d5d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VDLssO2nRW9oqwq64HgA:9 a=NqO74GWdXPXpGKcKHaDJD/ajO6k=:19
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290054
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkpKT1YaHh0ZH05OSEIYTB1WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
+	5VSktLVUpCS0tZBg++
+X-HM-Tid: 0a967f6d1f6303abkunm137882886
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MhA6Hww5QjJCHSkuOjw5LhUD
+	C0lPCg9VSlVKTE9OQ0JPTkNMSEpPVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSElCSzcG
+DKIM-Signature:a=rsa-sha256;
+	b=EpGcqWX9zy7b4aOQJQl3I+h7mRCxOtfrxcfOyZWgCO5Xbg67xbaFmiQOrSj42HnlGh3mT2NSrLAHkxuGFUuURJhC9/XoiI1g47KLJ33keDr/FvfvjP0JhZUJzOwuhpVsunq+3DGBVLesmqCEjhgrA/sFnyq1HT1xtUBZjxkaPhQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=gkmGwA1JNJSi9vWgEDnuu8pe72dV9P14DRuR/dc+N4Y=;
+	h=date:mime-version:subject:message-id:from;
 
-The QCOM extended CTI is a heavily parameterized version of ARM’s CSCTI.
-It allows a debugger to send to trigger events to a processor or to send
-a trigger event to one or more processors when a trigger event occurs on
-another processor on the same SoC, or even between SoCs.
+Hi Andrew,
 
-QCOM extended CTI supports up to 128 triggers. And some of the register
-offsets are changed.
+On 2025/4/28 20:45, Andrew Lunn wrote:
+> On Mon, Apr 28, 2025 at 09:47:34AM +0800, Chaoyi Chen wrote:
+>> Hi Andrew,
+>>
+>> On 2025/4/28 4:42, Andrew Lunn wrote:
+>>>> +&gmac {
+>>>> +	assigned-clocks = <&cru SCLK_RMII_SRC>;
+>>>> +	assigned-clock-parents = <&clkin_gmac>;
+>>>> +	pinctrl-names = "default";
+>>>> +	pinctrl-0 = <&rgmii_pins>;
+>>>> +	clock_in_out = "input";
+>>>> +	phy-supply = <&vcc_phy>;
+>>>> +	phy-mode = "rgmii";
+>>> Does the PCB have extra long clock lines to implement the RGMII 2ns
+>>> delay?
+>> The 2ns delay of RGMII is implemented inside the RK3399 chip instead of PCB
+>> lines, and there are also additional delayline configurations.
+> If the PCB does not implement the delay, rgmii is wrong.
+>
+> If the MAC/PHY pair is implementing the delay, you need to use
+> rgmii-id. You can then use additional properties to fine tune the
+> delay the MAC/PHY is adding. And the Linux preference is that the PHY
+> adds the delay.
 
-The commands to configure CTI triggers are the same as ARM's CTI.
+The signal path of RK3399 is as follows:
 
-Changes in V2:
-1. Add enum for compatible items.
-2. Move offset arraies to coresight-cti-core
+MAC <---> IO <---> PHY
 
-Mao Jinlong (2):
-  dt-bindings: arm: Add Qualcomm extended CTI
-  coresight: cti: Add Qualcomm extended CTI support
+In fact, the delay is added to the path between the MAC and the IO, 
+rather than being implemented in the MAC itself. These delay value is 
+controlled by the GRF register[0] . These paths are implemented inside 
+the SoC and have not yet reached the board level.
 
- .../bindings/arm/arm,coresight-cti.yaml       |   4 +-
- .../hwtracing/coresight/coresight-cti-core.c  | 127 ++++++++++++++----
- .../coresight/coresight-cti-platform.c        |  16 ++-
- .../hwtracing/coresight/coresight-cti-sysfs.c | 124 +++++++++++++----
- drivers/hwtracing/coresight/coresight-cti.h   |  72 +++++-----
- 5 files changed, 243 insertions(+), 100 deletions(-)
+According to the document[1], use "rgmii" when "RX and TX delays are 
+added by the MAC when required". In addition, currently we can see that 
+all RK3399 boards use "rgmii".  Is there anything I missed? Thank you.
 
--- 
-2.25.1
 
+[0]: 
+https://lore.kernel.org/netdev/1472752204-8924-2-git-send-email-wxt@rock-chips.com/
+
+[1]: 
+https://www.kernel.org/doc/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+
+>
+> 	Andrew
+>
+>
