@@ -1,117 +1,84 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D49035966
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B24E21B8F8;
+	Tue, 29 Apr 2025 15:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940867; cv=none; b=k/5WH7PjjTcyVcR5SY7JyFiAq/tkSP287kd4vWBlL4d1W3ZOk1zZUSaduOtOhtNFR87qlDT8NM9Fe5mvo1s+d9bs4kKZldsPQKxx5bXtD/ZI2WsuFcKBo/AZKag6s0nZ3J2YchZQFUeoi6QR5DbU6H9ypUio/wl2GOzwJ7Te/Vo=
+	t=1745940892; cv=none; b=NjbJnhercP1U2tS2iDWtUyGXDrH4bYTVKrjI798Wbr/mipyLkrDCQVRMexxSMl/3/nYqIXv4sNuWlxipQ+UD+KtpJWDYSPbzCI5GfDJdkDuGy4snoueWYpOaTgDRevDS2ROkcJ8J9UYnYj11JzlYHeLS7Y44Ho4ECNL58QxITVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940867; c=relaxed/simple;
-	bh=tibaVybjpzAuYiRZ5j1Pwnla0w4c8ydA402MSqNDJfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HIlZ/o4mj3nRTZNHq3e93bZBIkzKaB2vD7myCbjR1Zix6bNsD+jZGC+uadrOEHgLFWWBKW4Fn3VpeI2qUgf4GENTL/TlfSJRrGLFPWUUB1uZtXmhTcG5nuciXsvje6k4s5Y+HjJUYhQy0ZAiZAAuR6S8vLS+S+MWm5LaP/oImX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=sor68NNK; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="sor68NNK"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so6164927b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745940865; x=1746545665; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jnUkSyi8yoyA+VJzSElKzGl7Uo741FBMA+bn3K0dXP8=;
-        b=sor68NNKiChgj4VvxGhv2gl5ymcwCbyEiJkUcheG+cA2QI5Kqn+ZH5yrFh6ah4nP5i
-         yrC++RbclnwVqD1O4jaC/5OtLtZseaiH7jO3voiyi4Ix0SzvY4GsQobIOSgT6FqPEWhu
-         1Vng8tF2uzbi6A8SKNzBolQ3o1UIhMysBUdFU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745940865; x=1746545665;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jnUkSyi8yoyA+VJzSElKzGl7Uo741FBMA+bn3K0dXP8=;
-        b=cK9HSIbvur4BQb0ynsAPpNI3sf3ZPeJ5wAQdIdSnj++LVXtmB6bLX0ERS3OJ4My1Fz
-         aF7rpURgPIhxQ2YI4b+Buf5PuADiWDRPxfmJ01li/i9gVE9IZCWTWLS/blwwF/DU6XsD
-         xbQc5Csydccb4b4S+1sEEX373/wjSb1CSOB354KKy120NpPfT1tUUL3Rq1r0sekpwLIP
-         theDC9KvwZKpW570Xv1gocrKhpPIctPT6BD3m65bhtmbLyDiye/CyVwo8oEtI6b7LLio
-         9TIAOvi4drRjVW0Sr2sNM5R7jbdCXa/mVNnvEXYzUfYlb+nxzNzm8LNriygPOHFj+iTk
-         CtiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+/3i2Lz6fcz9rH4OqIBbjOW9e3FQuWLSbam5UC+ymVZMOik1xABV7egXX2+NCBkhw8HgfKyDBfyfrdIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJEHHrq02M9yMPJdDeozCIpCz8HVYO2BY6oH57BxuBUpUR9FG8
-	hZD9K/sgLxHtwranIbBH3mupVonG5mcjDDzcSD1Z+aFEVXfuc4S/Ek2bobl3wck=
-X-Gm-Gg: ASbGncuI7CyqsG6VwhEiKqQrPANx5YiG2PuREfRkj1v0slUl+VTk+AeVSwPGVO++AKt
-	8TX1/OKgVww9oj+Pmqve3ghaWIbzMSFevi8I4ibjUXfVP853Bxb3/3cRO5EvhEANFX2GOi3cP7r
-	yWZoEkBX6ANx4j/Jvn1ViDzRw2T6dDkmgsK09/dnSDySTIlu7BKQQkEjkvRekqUD56ZT5LD9mfk
-	BgKX6sNwIdGzDLIyfJ25IbC4DJbuzO2UzueojZL6aEShCnNuD2G+S7ec6siE6h2PIqiSap5FI/z
-	BsqSvLQsbekZEOToEl/tZrLlSPPSoYe97cHBuisEXQf8SZUO
-X-Google-Smtp-Source: AGHT+IFlgfMl04kK4KrlY2CMQdov14qWDEOc+SHDYw5ScrR6I51QGMaBXsx96/yH3hBue0l8iz318g==
-X-Received: by 2002:a05:6a21:8dcc:b0:1f5:8a1d:3904 with SMTP id adf61e73a8af0-2046a402b02mr20763355637.7.1745940865516;
-        Tue, 29 Apr 2025 08:34:25 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f7fb7e54sm9135581a12.30.2025.04.29.08.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 08:34:25 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: Joe Damato <jdamato@fastly.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Mike Pagano <mpagano@gentoo.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH vfs.fixes] eventpoll: Prevent hang in epoll_wait
-Date: Tue, 29 Apr 2025 15:34:19 +0000
-Message-ID: <20250429153419.94723-1-jdamato@fastly.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1745940892; c=relaxed/simple;
+	bh=LiUQo6GAZ+wuv9L2yLsXzocAbXJsEUOnptnyTnkiBC4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NdPth013FNym+UpNlbG73ZiBvUuL5Y1XPD550w4DmEIij7FOfYx44TvxyEfPNrot1gSBWnhGp2R8SpdrhfFOIICRehTiqmliHFVtU9uwM+NjIRYIUwEjnHfjGXVkfhJGUzo7ltw0uPfviAX2GSeGj2H5Awl2ZvACWh5HTFuOtIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zn47x5VVGz67QRR;
+	Tue, 29 Apr 2025 23:32:45 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 304951402F0;
+	Tue, 29 Apr 2025 23:34:48 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Apr
+ 2025 17:34:47 +0200
+Date: Tue, 29 Apr 2025 16:34:46 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
+ De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
+	<terry.bowman@amd.com>
+Subject: Re: [PATCH v5 06/14] cxl/region: Avoid duplicate call of
+ cxl_port_pick_region_decoder()
+Message-ID: <20250429163446.00006e8f@huawei.com>
+In-Reply-To: <20250428214318.1682212-7-rrichter@amd.com>
+References: <20250428214318.1682212-1-rrichter@amd.com>
+	<20250428214318.1682212-7-rrichter@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-In commit 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the
-future"), a bug was introduced causing the loop in ep_poll to hang under
-certain circumstances.
+On Mon, 28 Apr 2025 23:43:09 +0200
+Robert Richter <rrichter@amd.com> wrote:
 
-When the timeout is non-NULL and ep_schedule_timeout returns false, the
-flag timed_out was not set to true. This causes a hang.
+> Function cxl_port_pick_region_decoder() is called twice, in
+> alloc_region_ref() and cxl_rr_alloc_decoder(). Both functions are
+> subsequently called from cxl_port_attach_region(). Make the decoder a
+> function argument to both which avoids a duplicate call of
+> cxl_port_pick_region_decoder().
+> 
+> Now, cxl_rr_alloc_decoder() no longer allocates the decoder. Instead,
+> the previously picked decoder is assigned to the region reference.
+> Hence, rename the function to cxl_rr_assign_decoder().
+> 
+> Moving the call out of alloc_region_ref() also moves it out of the
+> xa_for_each() loop in there. Now, cxld is determined no longer only
+> for each auto-generated region, but now once for all regions
+> regardless of auto-generated or not. This is fine as the cxld argument
+> is needed for all regions in cxl_rr_assign_decoder() and an error would
+> be returned otherwise anyway. So it is better to determine the decoder
+> in front of all this and fail early if missing instead of running
+> through all that code with multiple calls of
+> cxl_port_pick_region_decoder().
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Tested-by: Gregory Price <gourry@gourry.net>
 
-Adjust the logic and set timed_out, if needed, fixing the original code.
+Subject to considering that name change
 
-Reported-by: Christian Brauner <brauner@kernel.org>
-Closes: https://lore.kernel.org/linux-fsdevel/20250426-haben-redeverbot-0b58878ac722@brauner/
-Reported-by: Mike Pagano <mpagano@gentoo.org>
-Closes: https://bugs.gentoo.org/954806
-Reported-by: Carlos Llamas <cmllamas@google.com>
-Closes: https://lore.kernel.org/linux-fsdevel/aBAB_4gQ6O_haAjp@google.com/
-Fixes: 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the future")
-Tested-by: Carlos Llamas <cmllamas@google.com>
-Signed-off-by: Joe Damato <jdamato@fastly.com>
----
- fs/eventpoll.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 4bc264b854c4..1a5d1147f082 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -2111,7 +2111,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- 
- 		write_unlock_irq(&ep->lock);
- 
--		if (!eavail && ep_schedule_timeout(to))
-+		if (!ep_schedule_timeout(to))
-+			timed_out = 1;
-+		else if (!eavail)
- 			timed_out = !schedule_hrtimeout_range(to, slack,
- 							      HRTIMER_MODE_ABS);
- 		__set_current_state(TASK_RUNNING);
-
-base-commit: f520bed25d17bb31c2d2d72b0a785b593a4e3179
--- 
-2.43.0
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
