@@ -1,63 +1,63 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0176529CB49
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147FF297A40
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916709; cv=none; b=N9tdjn46MWPVUqQ6umYMYlurluBGSOV/y2v40DhyiF6oTaLY3K6BqiUwaXRH0GaHvq0vE6bU771pL0bpfROfPEtqfI1RDIgRzXT3fGhjKWqCcaAfK2+PPrTfBs0hZSg9bvCBa8jDUof5FLulKU+Mv1/Xqv8tLUgicbrYujRFo3w=
+	t=1745916720; cv=none; b=los/d06S7zW6k6hy3zhU2DLmGpQ0UBlLyeofAb2Igu1WwRXuIPLc7ooy0W1NJHpw199AGJccg1DWeXnghO+BQtq8ripMA41wbTpqVTFBJVtQHqKhfhxP2DIgnhF9uir80L6ZVKCZC9U/kjU5lzuUy2LUeFYZ92H2dfvFLPIQXOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916709; c=relaxed/simple;
-	bh=unz/GArn5oq7rBFAQN1e0CgDX1gyE0iTVCyPB09o4uA=;
+	s=arc-20240116; t=1745916720; c=relaxed/simple;
+	bh=J4NuNn/tXwp9sQqsV0iWm0NCqyaD25RTgEa4ZmPkOGw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tX7qdgcEdEkO1hx69FJVc8g2EHOhjr1YuW4CS1I/e7psOzTe4Uh1sAfEOJP5bdaKr3a2E6y9w2rn74nO/5S92QTR+Rcx8PJmUipwn96iYYPfz6hQO8yuhoq7jdXQD5r0jCAdo9M2ishzB3K9mLSxyewUUZWHoy2yY1kCtpuz/Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=dnFEsmMG; arc=none smtp.client-ip=209.85.215.181
+	 MIME-Version; b=cJSmlpMJRzajQzV5EtmklYFt2WQhBWQceerrSNjiG9AYK9i2NnSL6Jie9iLSJTi++o49CZC+GRd0c1nFlNe1lasBQEZ9rURMe3u5fmcPQkBRK8inbDyd4keqPc1KgkIizMm940ViLuC8zhGL1ICVOTXmYqQhZc6zKOnxCEeK+Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ZzGgjUQY; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="dnFEsmMG"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b074d908e56so4241055a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:51:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ZzGgjUQY"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso7732222b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745916706; x=1746521506; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745916718; x=1746521518; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kQiOfIT4Y6cd0OqbpS97ZsP9HrOyG2drOaiW2vvWtVw=;
-        b=dnFEsmMGQSw1iEW6ki79k2waBW38VzeTfmSGn3lbeZSKk4hfliTPCtCC/371KJairb
-         6/ME89ZdeJ5lWhVoLVC59A/6FaOk6OntDmLaqViDEbCTrQQ+mwq/eI0VSyV7zNmSv/4M
-         LHEbn03b5TeY7IVcvbsA9vItiDM+6OnbhGzTU9zzQMyi/VKkG11cWhwaXkEQ1vqIfkah
-         mctw4mWwir5LBKLLuZvbHNCU5V5PvbKeBAa4Wy1JwVu3QuhxytSgvS0fZjoO3k5fju1D
-         vbzvjIDU+m2TM1dkCwjaSxBXLAUog1YW4P+FOOGV+MeHvEDL02PAuGBlij0STs4tSMF4
-         CnHg==
+        bh=cYS2eMiVk4Xt0bu0VrX3eSLEVjDrDZlAzYja2cax6VM=;
+        b=ZzGgjUQY3y3vkvtk2HzH8Hr4ifpoWSqrrAZuOikmiTGWOYF5etJ59xWyUKvnp+7vUN
+         jrgLgkecHgM/86ycXKNdwnxSarYT765PHV8jG10t4o/3RoqmPAIwg07b88EN7tIw4eq2
+         MOpVyLv0ulJY7XKbsHN4KhZE9rKZJPMLAirz+uCZ3ohUSA+XBnfWAz6egRwjPQ0lbEJL
+         JoSXLxYYI0Hgr8uLOdzO4XQxpcsn7N4f2CVq6dkr36PQfXBAadDuMQKZAp6ChwpL/NYd
+         jmyoxVjCTrFha8Z4IGmUSku3Vt9NXYjA3OfHvjTNlci/4atLTZSTH7/KMSzjHXeyxkWC
+         Tz+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745916706; x=1746521506;
+        d=1e100.net; s=20230601; t=1745916718; x=1746521518;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kQiOfIT4Y6cd0OqbpS97ZsP9HrOyG2drOaiW2vvWtVw=;
-        b=MCqucRigd6nErwZJ9inFK7gpATQBgGQ5/3OcQYUvdAf0iWRBiAWg+wlXf6i1h3/OqJ
-         SABegIWQeMS+L0ejGLgv7kus1ccX/mhj6VhoM5GoGzYjYlb3o6q60bBm1pJM8a//CyLU
-         tWamE7qkhkQo2FSfDaCPqf4O/tK4dDyJdd6wLBuXN8ZdxkTep8XTYRGq3HHAStMdO7XY
-         GGNTo0q+xcjzOnlCCwhbsKRg9U6TrFlYe91gieJOpq8Hq7OW+O70S8+dysSdRJYIaVGC
-         hg9CpPtstQ6FEzqF/A11I2wYq1e2RSxhtqM4sZB6RFl2HT7Q5Qc7tFvhdzknjT4qICfy
-         udtw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7dtaHPw09iQcRMKVUbARX9z7jY7ZhubqQLWlG6afNL8KMsMZTu1jH9F9F6YjKj7kDHMoEyqYmhEiEZ8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyyn7DjG24GQ+Q7wpg5hEucQxFKFGnBf2X0mE2LsNVZ009g68m4
-	qxLcaYWVd6O9SxIaboLIKlkmHlplqG35iiG44xYgEV3UezJQ6gwS15RLSITtER8=
-X-Gm-Gg: ASbGncsw5wZ82F0Of/g5CgyOG6zVDUnHJG/ilCQHW2zGKckSkZd52W7t6LIQjLg37Sr
-	cmiuD9AAE60G0Psnvd4P9XcsJMg2Ub5ia3tQpFvVJHmqZgkeo6hfh2BtLoIUGOEDDq0pXe0FMPB
-	1MVTOxGQvLZjiC4iNGGaCgJPMEjXq5Ci4JLumH5WusXBjX58+WbLS9rl9r/79rvMaW25IZuHhr/
-	J0Lgekk3Cqr04sQA4kGZZWwekZlqdEp5OCTqHNsC1+IFz4DTvRPMlkJdTs15QsOCfDJyjWLDYP7
-	tQ4phew61YOe/9CSA1fPcMh6b2c2EFHGYIKkked3nYzzJEFMQpPGO979KnEVgk1WOk5Uv73paEP
-	hGi+fL6gxQSvDNKM=
-X-Google-Smtp-Source: AGHT+IGMNd2BwqPorstDPO+7WDARX7h5Gi5J8S+MkMkte/NeVmwAhf3z+Fk/S8vbtM/Sb8c+7Ms4+g==
-X-Received: by 2002:a05:6a20:c6c9:b0:1f3:397d:86f1 with SMTP id adf61e73a8af0-2046a56a58cmr15449500637.16.1745916706277;
-        Tue, 29 Apr 2025 01:51:46 -0700 (PDT)
+        bh=cYS2eMiVk4Xt0bu0VrX3eSLEVjDrDZlAzYja2cax6VM=;
+        b=nsYe0qI6wtfi6bZa3b+0Pfmr3EU/YN4WljVYeSE/VjCUAFCI/fzSEvwN2L/8O0rjyQ
+         0V1AoU+mtLSph6d/OUKI+x/1K75aoAN4H2qduvnuo988LWjqLDAA9+MplyiJqIPY+L12
+         fOvx+PgO/m4g3pV3yqOa/ZWm8o3M9gV5BzuQ2+KCRKsTCESA5haRPci12EyhUJQwzSX7
+         6vSltmemYXWBYuLzjq2VtPL/rATNQRO1zVyf4gRPzS7xci+h9iyBJvqyRP2lbHMyThFz
+         P54D2BNFkZVoCIF/ERlmiVpt1AG1GyBwpmyq8tvVZqULaDzoDng6b920pc/oPX+JKdRM
+         1ZBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUkKbY0GbCpSrj5GDI/yvQ/qwOTWG3NVwhfgGYyroNMlq+BolIzvEtAlQeni4SOcL83NyvlStK2lA12+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUN78mkNAdeXkwmMNfhj4H6Im0KRRyz0TL8grGGEOFlREEdtqr
+	/69Ipxx6loZMnHeMCJjPyc6PaQ7ERJNAzNyQgSKsnni+9Q+eqHZKn5SSfjgFKFk=
+X-Gm-Gg: ASbGnctm1TktWTKjbdbe1RJcMLvk8oyKy12JBaD62VTQACwrpBwV0X0lbS4MW4N/yz0
+	YpuY6HdPDF83Fm4ydxHy1xORlM7tZi9rNasXDa5XfkfaZaCvKFyzXuhSmNXkia3MHnWH+nQLTLp
+	p6XstGWZqmV1hxXP626EsRm7HMbZneUFDxsemz0H/qnl8vYhdLWskaKN8u4yYHMyne3eQnCFCyJ
+	BlAGYc6NM4XD04jEUpln2M96JcPzpGcRVBEHW5rPtquoMY1gezmDrj+pJiIQQcsWmHDjCY6CNM6
+	JyC0CIb0gje2kwlzcBECxPQWCdS1ZnaRCVwGmYtpgZR0elzTulD/VHmsOuRAjPwJWh8mLZf7WIo
+	hj7qyglrtOV1T7KU=
+X-Google-Smtp-Source: AGHT+IFY1/NJQY1EBeDwxCimqA2xJLyNhndajPdetd6CnjlEWVopEm9ixDmG0zsCZTOnJTyyL/yb/g==
+X-Received: by 2002:a05:6a21:3a41:b0:1fa:995a:5004 with SMTP id adf61e73a8af0-2095aa9a073mr3324411637.26.1745916718351;
+        Tue, 29 Apr 2025 01:51:58 -0700 (PDT)
 Received: from localhost.localdomain (210-61-187-174.hinet-ip.hinet.net. [210.61.187.174])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597e0bsm8550119a12.44.2025.04.29.01.51.37
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597e0bsm8550119a12.44.2025.04.29.01.51.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:51:45 -0700 (PDT)
+        Tue, 29 Apr 2025 01:51:57 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: ukleinek@kernel.org,
 	robh@kernel.org,
@@ -85,9 +85,9 @@ Cc: elder@riscstar.com,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	guodong@riscstar.com
-Subject: [PATCH v3 3/6] riscv: dts: spacemit: add PWM support for K1 SoC
-Date: Tue, 29 Apr 2025 16:50:45 +0800
-Message-ID: <20250429085048.1310409-4-guodong@riscstar.com>
+Subject: [PATCH v3 4/6] riscv: dts: spacemit: add pwm14_1 pinctrl setting
+Date: Tue, 29 Apr 2025 16:50:46 +0800
+Message-ID: <20250429085048.1310409-5-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250429085048.1310409-1-guodong@riscstar.com>
 References: <20250429085048.1310409-1-guodong@riscstar.com>
@@ -99,206 +99,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SpacemiT K1 SoC features a PWM controller with 20 independent
-channels. Add the corresponding 20 PWM nodes to the device tree.
+This patch adds the option 1 (hence the name pwm14_1) pinctrl
+configuration for PWM14 on the SpacemiT K1 SoC.
+
+PWM14 option 1 is used for PWM-based backlight control on MIPI displays.
+This configuration is present on all existing K1 development boards,
+such as the Banana Pi BPI-F3 and the Milk-V Jupiter.
+
+For reference, a more complete list of PWM0-PWM19 pinctrl configurations
+including all options can be found in [1].
+
+Note: Since the corresponding functionality for other pins is not yet
+in use or ready for upstreaming, this patch includes only the pwm14_1
+setting.
+
+[1] https://lore.kernel.org/all/20250411131423.3802611-7-guodong@riscstar.com/
 
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
-v3: Changed #pwm-cells from <1> to <3>
-v2: Changed compatible string with the fallback marvell,pxa910-pwm
+v3: No change
+v2: Discard pwm0-pwm19 pinctrl configurations, and adds only pwm14_1_cfg
 
- arch/riscv/boot/dts/spacemit/k1.dtsi | 180 +++++++++++++++++++++++++++
- 1 file changed, 180 insertions(+)
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index f4afb35dc6bc..99bf7a3f5458 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -580,5 +580,185 @@ sec_uart1: serial@f0612000 {
- 			reg-io-width = <4>;
- 			status = "reserved"; /* for TEE usage */
+diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+index 283663647a86..195eb8874f3c 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+@@ -20,4 +20,11 @@ uart0-2-pins {
+ 			drive-strength = <32>;
  		};
-+
-+		pwm0: pwm@d401a000 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401a000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM0>;
-+			resets = <&syscon_apbc RESET_PWM0>;
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@d401a400 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401a400 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM1>;
-+			resets = <&syscon_apbc RESET_PWM1>;
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@d401a800 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401a800 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM2>;
-+			resets = <&syscon_apbc RESET_PWM2>;
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@d401ac00 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401ac00 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM3>;
-+			resets = <&syscon_apbc RESET_PWM3>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@d401b000 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401b000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM4>;
-+			resets = <&syscon_apbc RESET_PWM4>;
-+			status = "disabled";
-+		};
-+
-+		pwm5: pwm@d401b400 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401b400 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM5>;
-+			resets = <&syscon_apbc RESET_PWM5>;
-+			status = "disabled";
-+		};
-+
-+		pwm6: pwm@d401b800 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401b800 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM6>;
-+			resets = <&syscon_apbc RESET_PWM6>;
-+			status = "disabled";
-+		};
-+
-+		pwm7: pwm@d401bc00 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd401bc00 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM7>;
-+			resets = <&syscon_apbc RESET_PWM7>;
-+			status = "disabled";
-+		};
-+
-+		pwm8: pwm@d4020000 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4020000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM8>;
-+			resets = <&syscon_apbc RESET_PWM8>;
-+			status = "disabled";
-+		};
-+
-+		pwm9: pwm@d4020400 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4020400 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM9>;
-+			resets = <&syscon_apbc RESET_PWM9>;
-+			status = "disabled";
-+		};
-+
-+		pwm10: pwm@d4020800 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4020800 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM10>;
-+			resets = <&syscon_apbc RESET_PWM10>;
-+			status = "disabled";
-+		};
-+
-+		pwm11: pwm@d4020c00 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4020c00 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM11>;
-+			resets = <&syscon_apbc RESET_PWM11>;
-+			status = "disabled";
-+		};
-+
-+		pwm12: pwm@d4021000 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4021000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM12>;
-+			resets = <&syscon_apbc RESET_PWM12>;
-+			status = "disabled";
-+		};
-+
-+		pwm13: pwm@d4021400 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4021400 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM13>;
-+			resets = <&syscon_apbc RESET_PWM13>;
-+			status = "disabled";
-+		};
-+
-+		pwm14: pwm@d4021800 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4021800 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM14>;
-+			resets = <&syscon_apbc RESET_PWM14>;
-+			status = "disabled";
-+		};
-+
-+		pwm15: pwm@d4021c00 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4021c00 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM15>;
-+			resets = <&syscon_apbc RESET_PWM15>;
-+			status = "disabled";
-+		};
-+
-+		pwm16: pwm@d4022000 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4022000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM16>;
-+			resets = <&syscon_apbc RESET_PWM16>;
-+			status = "disabled";
-+		};
-+
-+		pwm17: pwm@d4022400 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4022400 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM17>;
-+			resets = <&syscon_apbc RESET_PWM17>;
-+			status = "disabled";
-+		};
-+
-+		pwm18: pwm@d4022800 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4022800 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM18>;
-+			resets = <&syscon_apbc RESET_PWM18>;
-+			status = "disabled";
-+		};
-+
-+		pwm19: pwm@d4022c00 {
-+			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-+			reg = <0x0 0xd4022c00 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			clocks = <&syscon_apbc CLK_PWM19>;
-+			resets = <&syscon_apbc RESET_PWM19>;
-+			status = "disabled";
-+		};
  	};
++	pwm14_1_cfg: pwm14-1-cfg {
++		pwm14-1-pins {
++			pinmux = <K1_PADCONF(44, 4)>;
++			bias-pull-up = <0>;
++			drive-strength = <32>;
++		};
++	};
  };
 -- 
 2.43.0
