@@ -1,112 +1,202 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991B4248191;
-	Tue, 29 Apr 2025 16:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9889B246326
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745945780; cv=none; b=Ri9axr/UJj1DLWj16RgES4517PXHG7SzPyU1H0WrDjKkSas+j2ee0lW0u5ZT6jnd+ztAUeIY+ThfG640QObva3OP+X0l7IpX8AvUVNdStxGriEzicoKMSD/jRMgaF1oRABF0hMJnG0wkomit8bJPte807RpBycVDWpDByclZVfk=
+	t=1745945798; cv=none; b=VrDx+Jz7wdZKLBHWTffRRATC65FxXDxKsf2bEHoEWA6JtOTDwO0WAQPCIJRhaom4SdwSR3CoK0MRNZ4hC82QLdaEY1Qjkkidf4sARgPeVbC1aA5zhUwGodDLINf1sbyHOXnLGMRKkzIVTVL5spCn2aB79EhTcIzHf9dFYBcH1H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745945780; c=relaxed/simple;
-	bh=ZBivkq4bsRKPhUyFGxJQG9MmcvXaxlQ9Dd4wSsqIJSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8WKjkMnC/pl3HClMh2B11IHLpcz/e52/6ijQK+93KuzZ3lvyZVufjDOpuYK6b8s8w7eaH0HpjblHr+Mfnr9ywXpKH7VA7N2Q+33GEDqPdsPKf7Qb0W1Vvx4uGduVS3XMN1F1b9C1K+3vRj1OJR0tIZu6Qe+IINU51GyRuoa8ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ho9e5Jmd; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745945798; c=relaxed/simple;
+	bh=Z8jzSEAAEsdF/rnNezAVGGYhRnmDx8SeNUM7WSzLjLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X4ouBoKVUxvrFxLrNi+599ff8NEDE6qiLoG7n+6iC72KEWAQF5Tp4Cl8p582Nh6nDKV3M43PjljYOxEbS4IEEsDhtaGjAOSZw9pq//2byjXqEf1S8ggL4wQ1FsNUYxmiSJehKNgFTczkWwL1XpEEIH+nBC/nyYVD+PJCLYl6wLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=eqYb6dts; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ho9e5Jmd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=r5rlUDCcvbNorSSfBxhY0Uo2Pju4LLTw7V0kTzWGnw0=; b=Ho9e5JmdTFW+pLmFUi4wNow9wm
-	VXlhmjwcdIcVeswarlOATW52sNWISJ24fB8EbnhqWkVPq5rWXCKE4XW6CCvksmzSNXGu6Rjho0bq/
-	E09xKIHdsgcp/D40bvZt6p8bdcgD1GU2aPoc/q59R6QMlkz38uxPZV9YB6ACDKlDfR3Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9oFc-00AxlT-0j; Tue, 29 Apr 2025 18:56:08 +0200
-Date: Tue, 29 Apr 2025 18:56:08 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-	Andre Przywara <andre.przywara@arm.com>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, samuel@sholland.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
-Message-ID: <b98d6bab-d3bb-44d2-9dbf-623dfb673671@lunn.ch>
-References: <20250413134318.66681-1-jernej.skrabec@gmail.com>
- <6a056bf8-9f39-4204-9378-8cc39be60038@lunn.ch>
- <4645060.LvFx2qVVIh@jernej-laptop>
- <4975791.GXAFRqVoOG@jernej-laptop>
- <2486dae4-c5a5-4df2-8048-87b4b2d46d54@lunn.ch>
- <CAGb2v66dF8hMmjjJMnpVxM+092q=ZYZ+kT316roZuty6i+rcXQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="eqYb6dts"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so5110433a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1745945796; x=1746550596; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7Alb5XzkHBLEmo9P8d8nkOyHgjfhkLtR/Mnz4LZQol8=;
+        b=eqYb6dtscZWnrV/yMGwuwRW3mQCwI/ouR3cOhxaO8r6BUlKkvv2Y4T+hfELcRhZDaV
+         D70RVCmpCNpJu7EyksPIIZdPbgCVoEXh5knX8XJT/UYr/uZ8DAVL1ljBB3/NdnS13dcr
+         SfQxDoD9x+TMYhNYu78pSR1B153hanTDYsWjnycTEuJ3iNO7q3jyR2XcwV4BW7Lbz13n
+         uiAmNSA/wOQlE3t5J9I0N6xmhCvE4zSm4l+ZSUG2lzptmvwMWu6NeMe9Qezc+Y9+P0ai
+         UoK0C384c2+m6gYAjkRWuWI8hMWksaYXofLPEPF9dgwnbvzCLohxpoiXYqnuvLMAJqYG
+         XqqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745945796; x=1746550596;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Alb5XzkHBLEmo9P8d8nkOyHgjfhkLtR/Mnz4LZQol8=;
+        b=FfY3Af876qNTPfOcPq0aEwWg3dJtaFdvS0oahHX2Nmjz7B4GVOpnN8mpBua++HXxdx
+         Q52ZO5V/3roFJNMvy80apn6tgniumBHdqfThnnS4d3h3kliz9nlaNj9Jkjm/isk5l6Dm
+         udrp5ito3NtsmiadSwFpB8xxvFauoazvVo9jU9OlRfDz9EhkyS8g4D0cDGfTQutG56VO
+         pwFwLvA+0FdHrofK4lDOvldB4S0afbVNcVpT8ShFr36iV6hpxqi8kbXSu9sJ8NKXj/zc
+         lHg67g1+CW1L8AfTABhroReAlMp59Xky5LeHUgGCEpY4ZGlSejjPw0ZR1i4B+whbaKIY
+         1WVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFmpLLhP/gyEYH5dLcIWC+BAgEoaHWpyscyOa/v+siaoJ7LYD4LFclPvwvKi3c66TShMKDSGW5lE8pBVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe5C+2JnIDMCpUVPBjBanE2hmViUZVT547/QZdSv3dQ9QmjoZ/
+	q/fCUqhRo1055DcVcGA0xNHB+MOm1Noxrq+DZd05Ot1/plGfhawE3Erkp6+qQQ==
+X-Gm-Gg: ASbGncvPICdD6zU070A0QGMIxOI9IeRWiUhhyxKOBCwOo0uF4cArp/N0Ev5rO9HaAjO
+	0DR6USRSkRL7nWQwXHohxgQ3K8OyYQogP8k7WZR7EZZeN3DDPlVYFju/Bzyymy3VJaf8I7ebnBX
+	5Z8KZal5F6ooGfC5tdAEsXNpFjvKj4pNUuQK/8qlZ53pVp/vOITZGu3MI3TR6oevEgnwyTaM8cy
+	/g9eCemvWDcTvDvW2z+gfuucEJpLg64bkXf86d6Q8IADFJTzEe6f+Xm94e8Vn/o+QEOK6aCbYr8
+	98bxhBnL5FG0vLdMOj0/NuisCs8AUqEQhxkkHLCR0+EHMW0=
+X-Google-Smtp-Source: AGHT+IEBA1qLYaYtZQHyo31ojNkFPVQdkO+8Yo5EYwpmV6szkHpz3uYQnCTIH2KHcRzw87iCqQsfeA==
+X-Received: by 2002:a17:90b:58f0:b0:2fe:a8b1:7d8 with SMTP id 98e67ed59e1d1-30a22139fdcmr5796812a91.25.1745945795740;
+        Tue, 29 Apr 2025 09:56:35 -0700 (PDT)
+Received: from [172.16.116.85] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f782cd54sm9557520a91.35.2025.04.29.09.56.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 09:56:35 -0700 (PDT)
+Message-ID: <fa831c54-1998-4cea-95fd-e6ced90974e2@beagleboard.org>
+Date: Tue, 29 Apr 2025 22:26:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66dF8hMmjjJMnpVxM+092q=ZYZ+kT316roZuty6i+rcXQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] rust: kernel: device: Add
+ devm_of_platform_populate/depopulate
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@kernel.org>,
+ Jason Kridner <jkridner@beagleboard.org>,
+ Deepak Khatri <lorforlinux@beagleboard.org>,
+ Robert Nelson <robertcnelson@beagleboard.org>, Dhruva Gole <d-gole@ti.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+References: <20250429-rust-of-populate-v2-1-0ad329d121c5@beagleboard.org>
+ <aBDi2LE3O1rIsGqn@pollux> <2025042904-trade-leverage-0f98@gregkh>
+ <aBDl5oRIRpwbPrC1@pollux> <2025042945-aviator-subzero-0263@gregkh>
+ <1fda026e-9ec5-46f6-84e8-4111263350ff@beagleboard.org>
+ <2025042956-yelling-magnifier-5778@gregkh>
+Content-Language: en-US
+From: Ayush Singh <ayush@beagleboard.org>
+In-Reply-To: <2025042956-yelling-magnifier-5778@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> > The RX path looks O.K. RGMII-RXID means the PHY should be adding the
-> > 2ns delay. The allwinner,rx-delay-ps = <0> should be redundant, that
-> > should be the driver default. And there are no properties in the PHY
-> > node about RX. All good.
-> 
-> The default action when the property is missing is to leave the hardware
-> settings alone. I admit this doesn't match the bindings.
+On 4/29/25 22:09, Greg Kroah-Hartman wrote:
 
-Please submit a patch fix the binding.
+> On Tue, Apr 29, 2025 at 09:37:04PM +0530, Ayush Singh wrote:
+>> On 4/29/25 20:27, Greg Kroah-Hartman wrote:
+>>
+>>> On Tue, Apr 29, 2025 at 04:44:54PM +0200, Danilo Krummrich wrote:
+>>>> On Tue, Apr 29, 2025 at 04:37:49PM +0200, Greg Kroah-Hartman wrote:
+>>>>> On Tue, Apr 29, 2025 at 04:31:52PM +0200, Danilo Krummrich wrote:
+>>>>>> On Tue, Apr 29, 2025 at 05:09:26PM +0530, Ayush Singh wrote:
+>>>>>>> +    /// Remove devices populated from device tree
+>>>>>>> +    pub fn devm_of_platform_depopulate(&self) {
+>>>>>>> +        // SAFETY: self is valid bound Device reference
+>>>>>>> +        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
+>>>>>>> +    }
+>>>>>>> +}
+>>>>>> One additional question regarding devm_of_platform_depopulate(). This function
+>>>>>> is only used once throughout the whole kernel (in [1]), and at a first glance
+>>>>>> the usage there seems unnecessary.
+>>>>>>
+>>>>>> In your upcoming driver you call devm_of_platform_depopulate() from a fallible
+>>>>>> path [2].
+>>>>>>
+>>>>>> So, I think we should change devm_of_platform_depopulate() to return an error
+>>>>>> instead of WARN(ret).
+>>>>>>
+>>>>>> If [1] needs it for some subtle reason I don't see, then I think we can still
+>>>>>> call it from there as
+>>>>>>
+>>>>>> 	WARN(devm_of_platform_depopulate())
+>>>>>>
+>>>>>> [1] https://elixir.bootlin.com/linux/v6.15-rc4/source/drivers/soc/ti/pruss.c#L558
+>>>>>> [2] https://github.com/Ayush1325/linux/commit/cdb1322b7166532445c54b601ad0a252866e574d#diff-7b9e3179e36732d5f3a681034d70c2fda4ff57745c79ad4a656f328c91e54b77R71
+>>>>> Ugh, no, we should just delete this function entirely if only one driver
+>>>>> is using it.  That implies it's not really needed at all.
+>>>> Ayush's driver calls {de}populate() from a sysfs store path [2]; not sure what
+>>>> it's doing semantically or if this is a valid use-case though.
+>>> That's going to be rough, and full of tricky corner-cases and probably
+>>> shouldn't be doing that at all :)
+>>>
+>>> So let's hold off on this entirely until we see a real user that can
+>>> actually pass review.  Trying to do system configuration like this in
+>>> sysfs is a much larger discussion than just adding rust bindings.
+>>>
+>>> (hint, configfs is for system configuration, not sysfs...)
+>>>
+>>> Anyway, worst case, you just "open code" the single function call that
+>>> this one binding was trying to "wrap".  which is what I think the
+>>> in-kernel user should be doing now.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> Well, I don't really want to convert this discussion to addon board
+>> connector setup discussions. So I will try to keep things as short as
+>> possible here while linking to all the other discussions for the same.
+>>
+>> For starters, what the driver does is as follows:
+>>
+>> 1. Provide 3 sysfs entries:
+>>
+>>      - New cape: Can write the name of the cape (I have not settled on the
+>> naming convention yet). This name is then used to load appropriate overlay
+>> from `/lib/firmware/` and populate all the devices. The overlay is applied
+>> to the connector node. Only one cape overlay can be used at a time.
+>>
+>>      - Current cape: Just a ro entry to get the name of any active cape.
+>>
+>>      - Delete cape: Remove cape overlay and registered devices.
+> That's great, but I don't think that's what sysfs is good for, we can
+> discuss that later when you submit your driver for review.
+>
+> Again, look at configfs please, that's for "configuring" things.  sysfs
+> is for basic device properties and some tunables, but is NOT a major api
+> interface that requires a lot of logic like loading an overlay would
+> require.
+>
+> Also, circumventing the "normal" device tree overlay interface and
+> discussion isn't ok either, this needs to work for all types of devices,
+> not just for "capes" like you have here.  To accept something like this
+> would be going around all of those other maintainers with their strong
+> views of how things should be done.
 
-> > TX is the problem. The allwinner,tx-delay-ps = <700> causes the MAC to
-> > add 700ps delay, and 'rgmii-rxid' means the PHY should not add any
-> > delay. But 700ps is too low. It should be around 2000ps. So something
-> > else is adding a delay, or the 700ps is not really 700ps.
-> 
-> Anything is possible. As was raised in a previous reply, it's possible
-> instead of extending the delay range, the decreased the step size and
-> added more steps. The problem is we don't really know.
+Umm, can you please explain how exactly I am circumventing "normal" 
+devicetree overlay interface and discussion here. If I submit spec or 
+devicetree compiler changes, nobody responds. And when I submit the full 
+driver, it ends up with it not being the way upstream wants. And I have 
+not seen any of Herve and Luca's subsystem specific patches for addon 
+board + connector setups accepted yet. So if there is a place where I 
+can discuss things regarding the addon board + connector setup more 
+before writing full implementations, I would really love that.
 
-By poking around with other configuration knobs, i hope we can
-determine if this 700ps actually is 700ps.
+I have added Herve and Luca here as well, if they want to add something.
 
-> > You say the PHY is a YT8531C. These PHYs also accept
-> > rx-internal-delay-ps and tx-internal-delay-ps properties in their DT
-> > node.
-> >
-> > Try setting 'rgmii-id', allwinner,tx-delay-ps = <0>, and both
-> > rx-internal-delay-ps and tx-internal-delay-ps in the PHY node to 1950.
-> > If that does not work, try other values in the PHY node.
-> 
-> I don't get why we should ignore the strappings instead of using them
-> as reference or even truth.
+> Anyway, we can discuss that when you submit your code for review, but
+> for now, I don't want to take this binding either as I think the whole
+> function should just be removed from the kernel anyway :)
+>
+> thanks,
+>
+> greg k-h
 
-If you don't want the PHY to be reprogrammed pass:
 
-* @PHY_INTERFACE_MODE_NA: Not Applicable - don't touch
+Best Regards,
 
-rather than one of
+Ayush Singh
 
- * @PHY_INTERFACE_MODE_RGMII: Reduced gigabit media-independent interface
- * @PHY_INTERFACE_MODE_RGMII_ID: RGMII with Internal RX+TX delay
- * @PHY_INTERFACE_MODE_RGMII_RXID: RGMII with Internal RX delay
- * @PHY_INTERFACE_MODE_RGMII_TXID: RGMII with Internal TX delay
-
-However, if we do pass one of these RGMII modes, i expect the PHY to
-follow them.
-
-> If the strappings worked correctly w/ the
-> generic PHY driver (that doesn't know how to configure the delay mode
-> on the PHY side), isn't it working as intended?
-
-The generic PHY driver is there as a fallback, for when the real PHY
-driver is missing. It is nice if it works, but it often does not in
-current systems.  What we really care about is that the real PHY
-driver works, and the system as a whole follows the DT bindings.
-
-	Andrew
