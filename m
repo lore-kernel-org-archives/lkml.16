@@ -1,82 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6FF2528EC;
-	Tue, 29 Apr 2025 21:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E877F243964
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745962793; cv=none; b=mpaT5mC9lFjsmlGPHhncaiWsr5vkfcewEpN2+B6N6rSM2ctUbbd+Gv8/bCfaZLCKLjmE/OZwc8xzMN97CdIXBPYovceRjqnomtc2uTPr9/9+heGS9cUctoUpMtM7x+h2E39xiFUo1hvGz1LiB0Wd6M2S9Yvh1nzTL9QT/VhNBUo=
+	t=1745962830; cv=none; b=i2zRnJKMOTqAcFTQbz6ThgqE8RPBI41roZW/K+H/rHdgdTVIfR+A5uFxqdYvRBoE5WIILHm/2BlaODrzWS7h1D/MK2l6VsrmmeeEPE57el0uQp6Pwl6ZdCjgMHacJs0Ae23dM0MJ+/Mug03SAIdd7YdOoxXCc+k0sFH49HffjKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745962793; c=relaxed/simple;
-	bh=RAx7Zevt4MDRSQBBDsoltAbofA76l+6apvnhqXBCE+Q=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JjqciaXR5J8jGWIGa5ivQ/Hh8LzRFpE3zmCw5KkRi8s3ldnEZvLMxUODIuswyOFBJyqDIKefzfCYo+xf3R+OYPM3ROPzzGxiei+ivMjxLLs5r6SlEzoz7eCh1LWA/cDqjPJP2thHwsEYE/a9IwMgSXXXBcZr73PaYSiZbY2IgdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLWHhuxb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745962830; c=relaxed/simple;
+	bh=yRb7/lDslTlRdulv8UKLXCO4mzF4SCMJ6ui9a8zVlH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LPsGeeKr2euu5X/+QJqEigDWH9RqkCQ0Gxx7YKzkxpk40XYKXCmlH+SIvcKiQTTu+R1iWnm6IT5XaljMMOfKS6s08edsGubdj+tISSs097GqsxEDdTYGeE8kB/4ZXaRxoHyHwJnXVCoovomhOwEX+eU1sWT1ogWG5RI8q9ci2WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=nr7tAiVI; arc=none smtp.client-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLWHhuxb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A57C4CEE3;
-	Tue, 29 Apr 2025 21:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745962792;
-	bh=RAx7Zevt4MDRSQBBDsoltAbofA76l+6apvnhqXBCE+Q=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DLWHhuxbmdOVcXLhXFCY47SMIR5lT68LqIZC/0b435p0RH31elOT1KKGdczMIdPel
-	 TOQWBtrbo1A0MJKQYbn7tUq4zO/cgu9T/GTMfnNNK1ppkPqBR/7kPpNu89St+2PDCa
-	 8F5BHFrbgluCRAZHjkQAPawK15eBie0AO9Ju/EZV0xvfdWvxIZQDbf1+1WEqk8Nlcv
-	 jggMbBSRilz29+UstWOBIT8Fg4j59yg+lsyVGktigVDh8nvqmAi8esp3SgmyXwtn/v
-	 a7Gr9q/uA1nZdq6iOs8qLR3zVKvO4G0UKkjjjokpzLhBhnOwjhLJh+S97hDD9d39Sz
-	 JQhzhWe9Hm7rw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCAD3822D4E;
-	Tue, 29 Apr 2025 21:40:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="nr7tAiVI"
+Received: (wp-smtpd smtp.wp.pl 2564 invoked from network); 29 Apr 2025 23:40:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1745962818; bh=QsS+vghrLazG/Lj5WT2xQ0ZHOLkr/aVzxaRWd06fOsA=;
+          h=From:To:Cc:Subject;
+          b=nr7tAiVI4OeziEkW4tnzoYHtRw3WgBLf7x/+AmdORv/YMiHNXGmJNBX5SqAbwmmxz
+           7Ufdptb8CC+hZoxrigvP45Ua3wvyiEizWf1rsJGJIQxkabz9zF17z70vd/b7MHlVkh
+           0tlikjWn1/7sDejMWbORXWs65XMWpChrY4zxPOdwDw4XanzAyDgae8v5C3OKdspQOH
+           2xPo7Y3H4DqPwDLzwyKAyX/IbphAppmpTgC/ZfZek5C5aTeedjbqHWjCYGTyV1uhKZ
+           A1AaWD5OT26mNO1j32PuH0jS6tvZT+Y7zMQvIVMwu+XmVlyJqjkhCTmQlimlRQMSQJ
+           qgxlx4ZPz4nuQ==
+Received: from 89-64-9-175.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.9.175])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <pchelkin@ispras.ru>; 29 Apr 2025 23:40:18 +0200
+Date: Tue, 29 Apr 2025 23:40:18 +0200
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: Alexei Safin <a.safin@rosa.ru>, lvc-project@linuxtesting.org,
+	netdev@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2] iwlegacy: 4965: fix possible out-of-bounds access in
+ il4965_tx_cmd_build_rate()
+Message-ID: <20250429214018.GA55582@wp.pl>
+References: <20250424185244.3562-1-a.safin@rosa.ru>
+ <20250427063900.GA48509@wp.pl>
+ <d57qkj2tj4bgfobgzbhcb4bceh327o35mgamy2yyfuvolg4ymo@7p7hbpyg5bxi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/2] xsk: respect the offsets when copying frags
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174596283150.1804413.6332242799239007270.git-patchwork-notify@kernel.org>
-Date: Tue, 29 Apr 2025 21:40:31 +0000
-References: <20250426081220.40689-1-minhquangbui99@gmail.com>
-In-Reply-To: <20250426081220.40689-1-minhquangbui99@gmail.com>
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
- john.fastabend@gmail.com, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org, maciej.fijalkowski@intel.com, aleksander.lobakin@intel.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d57qkj2tj4bgfobgzbhcb4bceh327o35mgamy2yyfuvolg4ymo@7p7hbpyg5bxi>
+X-WP-MailID: 29ac691aa7d10a18ddcfef0a5cf7185a
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000001 [QXKh]                               
 
-Hello:
+Hi
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Sat, 26 Apr 2025 15:12:18 +0700 you wrote:
-> Hi everyone,
+On Tue, Apr 29, 2025 at 08:15:59PM +0300, Fedor Pchelkin wrote:
+> Hello,
 > 
-> In commit 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb
-> conversion"), we introduce a helper to convert zerocopy xdp_buff to skb.
-> However, in the frag copy, we mistakenly ignore the frag's offset. This
-> series adds the missing offset when copying frags in
-> xdp_copy_frags_from_zc(). This function is not used anywhere so no
-> backport is needed.
+> On Sun, 27. Apr 08:39, Stanislaw Gruszka wrote:
+> > > diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> > > index 78dee8ccfebf..f60d9b9798c1 100644
+> > > --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> > > +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> > > @@ -1572,7 +1572,7 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
+> > >  	 */
+> > >  	rate_idx = info->control.rates[0].idx;
+> > >  	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
+> > > -	    || rate_idx > RATE_COUNT_LEGACY)
+> > > +	    || rate_idx >= RATE_COUNT_LEGACY)
+> > >  		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
+> > 
+> > .. so looks the check is fine already and changing it will induce a bug
+> > for RATE_54M_INDEX.
+> > 
+> > Regards
+> > Stanislaw
+> > 
+> > >  	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
+> > >  	if (info->band == NL80211_BAND_5GHZ)
 > 
-> [...]
+> Here goes the fragment:
+> 
+> 		rate_idx += IL_FIRST_OFDM_RATE;
+> 	/* Get PLCP rate for tx_cmd->rate_n_flags */
+> 	rate_plcp = il_rates[rate_idx].plcp;
+> 
+> > > -- 
+> > > 2.39.5 (Apple Git-154)
+> > > 
+> 
+> Looks like the proper checks should be added to address the 5GHZ case and
+> validate that the index won't exceed the array boundaries after being shifted
+> by IL_FIRST_OFDM_RATE.
 
-Here is the summary with links:
-  - [net-next,v2,1/2] xsk: respect the offsets when copying frags
-    https://git.kernel.org/netdev/net-next/c/ebaebc5eaf43
-  - [net-next,v2,2/2] xsk: convert xdp_copy_frags_from_zc() to use page_pool_dev_alloc()
-    https://git.kernel.org/netdev/net-next/c/7ead4405e06f
+Good point. It make sense to move rate_idx range check after possible
+IL_FIRST_OFDM_RATE addition for 5GHz.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Regards
+Stanislaw
