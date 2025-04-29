@@ -1,53 +1,52 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17161922F4;
-	Tue, 29 Apr 2025 05:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BB7224AF9;
+	Tue, 29 Apr 2025 05:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745905760; cv=none; b=pE6BDySYdKqBtoSuSE+hGPWMlckOAldxUbD7yYXs1mcyjAVInMavv069hhm2vj57HopPQC94qXrBzTiK1GRYfIogwxktgrOl9m98BRNKhiZK6VS4c/wIVxVfWOTKW03HugFEuwGN+f/P+eSO3qXELDQfBTRw4gcy75s4hZ7i7pc=
+	t=1745905762; cv=none; b=Oi96cSO6MLKtqyNLLAE1N3yIpPBMLstk+RU7S51WTOmPSK5EoZYJl+irLdIouaODGlqcG/0GGZWlA7z29KbVFZ15W3/gtZpdGlGw62ShbCXwiV/l4im5s/G8AwiWEMg0cZNaL9yoKJMiABGtXysGkyXqtKIR9T6EhueOmqs3Zbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745905760; c=relaxed/simple;
-	bh=ctOWVregGwEG4Mr056ZykboOVNc8RTcPDJiJth048sw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mq7g7BCkz9Q0WDDDRD38wPh7WiRHRnSesZHDpSwIK541NIqskQjk1AA6EcflzbH4Q+kyHuZeEikHmpMXs7AWJzkGhT5QrKBa4j/7Qwo/J3NYEKdXOZR4YXCvss2c4E2fCvw0aUU0PqZJHYhNvt/sDKX8zdPvpRKdIFQf4Gp5h9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lSXpUzt+; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1745905762; c=relaxed/simple;
+	bh=odt4BvtRQCAZwHMR4seRzeiLOow/lp91qKjPibzrn1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mMkHjcgjZNfHH3J52aTbZbHybWZZiXSZZYiLdrTeKiph1+B3RM6sYKO1DNqdeGDZHiObXI0fIByJlxDyi1XUxP8S1swYfYZqRwOISDQyFS0p6kjBRFhqjFrrFNQ6djXcuHdsOZHeYcnVus7YmqEwe/LFbS+p+ICfrgBAml0TMsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UhO3Gqvy; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lSXpUzt+"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNq2XJ017905;
-	Tue, 29 Apr 2025 05:49:16 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UhO3Gqvy"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SNqKsm012626;
+	Tue, 29 Apr 2025 05:49:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=fGQo1quZIhA
-	7GfvlHJm12SrM4bocVnva+SPNWRF5I9g=; b=lSXpUzt+6vGUWJnAb2Kxzh15WNd
-	X5C5RlNyxxp48LUas2HeCom1k3MefPr0ZAlAzbsP1qV63LD9m6RQN0UttnSBWZw5
-	GwnZnyG020C0MbKo6PgiJOcHTlOcRx2eCo7yYsENtf/6uFNjKe84xyqqHFP4XhRc
-	J5gwm62DyC4i/1E/GY/j1AZZVr+EXsAMOyIQEntjP9YeJHIcFza5v9AFuu3ha9sy
-	0+8vVr6byxdwDlDOkfpqJ3sWi4DPWFjyzfLANZ0yGpyLJmBaGAnZXXy/x5h5pXZ0
-	RFWyCLBylEqhIetyCnf/vSLmjlVInQfCfMIwtNhKhPq7qVxCqY7URTtipkQ==
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=iW1XVZ8l6CJyFrlX5XcyWr
+	a0zw0oiwZNvz4GD/HpHkc=; b=UhO3GqvytDaYfCLz9Lb+hGV13QJ7eEDPAd8VQv
+	yYPXxZGaltYYuCTt9hNvDboSMoUtmnoNL+c426zpFK9SgU87AABH1haD54ig3Jh+
+	ioTQ4pMQ8MAvumQ1E6vQ8BZkF0BGb+2zoyP0LV9LlxIKYeSG+qGBPoF2Ji4xwmeP
+	WzZsu9bjPhA7V2cn/ishCRQcNd7RyCtvctBrMnHJ6DPk8dODuDSTA4FkwH7HNTar
+	RBZ5IVGr1Dt7BMnBchsm1j2nEopfJsJPXqDVDPSHOTmUSTUPttPbSAbco67hSX0o
+	ks3wQbOgGuqSS6ufxCkiBBBS5MVgGmFO+NF2mhtyqTvOoT+w==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qq5jhbp-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468q323bfh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 29 Apr 2025 05:49:15 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T5nCBK030272;
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53T5mmS5029225;
 	Tue, 29 Apr 2025 05:49:12 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 468rjmfqur-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 468rjmfqus-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 29 Apr 2025 05:49:12 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53T5nBDD030235;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53T5nBUc030237;
 	Tue, 29 Apr 2025 05:49:11 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53T5nBJR030227
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53T5nBju030223
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 29 Apr 2025 05:49:11 +0000
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id AA4CC5B0; Tue, 29 Apr 2025 11:19:10 +0530 (+0530)
+	id 9C6C45A7; Tue, 29 Apr 2025 11:19:10 +0530 (+0530)
 From: Wasim Nazir <quic_wasimn@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -56,337 +55,107 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@quicinc.com,
         kernel@oss.qualcomm.com, Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH v6 4/4] arm64: dts: qcom: Add support for qcs9075 IQ-9075-EVK
-Date: Tue, 29 Apr 2025 11:19:04 +0530
-Message-ID: <20250429054906.113317-5-quic_wasimn@quicinc.com>
+Subject: [PATCH v6 0/4] qcom: Add support for IQ-9075-evk board
+Date: Tue, 29 Apr 2025 11:19:00 +0530
+Message-ID: <20250429054906.113317-1-quic_wasimn@quicinc.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250429054906.113317-1-quic_wasimn@quicinc.com>
-References: <20250429054906.113317-1-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zqReqXxeHOJSD_l2H3-WH0XSiVLmfgjx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0MiBTYWx0ZWRfX0IYgi2pjTP/F /kqdzn9kPLTGncpCorxO+ZY6GAL84JiiVstUErQLUVkOj26wt/z5b0HE3adg7AtVxMl1+0m4faG Av7uCJ7u8Q/a+xhV1cCOCiEk2piInxDeiR/H+5m69ePklnRRGz/tzM9VAlRHAj1bawILBT3bszd
- 5e3nQ1fGQ6Sa920GvxOLLl6+vDhDAXL0BZIQtGsraKki1c7Vv1ImOMv+oaih5mV+RAVvTDVuXlE F/RBB65bZWciRBY8P94/xLAX3q5/NadjTowJ5ZwNVbrAYgoaaJxnw53an/PpUg2Guucv9Txju5X bRGjRdyYQHj0N03MdGTWNXYj82CQwymvmwl+6Gp1pEKnDabZ4ypPUqpgwgLxKqV2nDEnKAyXIzP
- z0dWQDNZttD29kkWSF9XfrxSYduFXl7N2FF0/RuNxykoSond+S1XAmZypH//gHKSEZNXvNoa
-X-Authority-Analysis: v=2.4 cv=QP1oRhLL c=1 sm=1 tr=0 ts=6810685b cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=ctKxQ8g-j2yoPrACdqAA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: zqReqXxeHOJSD_l2H3-WH0XSiVLmfgjx
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=6810685b cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=BkoitdVaJjL6tbVqwpAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: B8EggLNMhnza9TaW0NLEYT_YrEBzCy6v
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA0MiBTYWx0ZWRfX1BBu3NMDwRAq dZPwPcZmbd9pb54DGLN3RVDwFg9NBaNKLSKjcIPXWH8DU6baJa4lYonOUNEISjTCfuhhWRKIZpC /boz37QyA43zsFNXQUD/vNuFBbcN+l+UtsOkajX6noCQ2uNk55HySql7Y7c6di+zsQRBJYvFhJn
+ y1h7Sk67woC2LSvU3L2RKLioK/3vTw1Pd2Tkd908nQDHepGt8zGizjrZFDbuYyxJJ3kqG9D24UH /Vr6jNhCuMdCT30NttCJ/m9Eu1wViUOhoAi2vfOHYg+MlFs8zoyBDLw9buNr7GWUceDnst+W9I3 zdXjdsnLNTcgNFc+oLx2JULUXLMz8lInO5+eo0p5j6ixiXIphooTMw1l2PUOkc/nZxYBJ663piv
+ IYIzVwLqzLYzK5KL3tsRT+/prXwFpmz4mRz1w9IkAM0sD+cOSGRRxDbw9oqCu3cw2QQdmTdH
+X-Proofpoint-ORIG-GUID: B8EggLNMhnza9TaW0NLEYT_YrEBzCy6v
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-29_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- clxscore=1015 mlxlogscore=999 lowpriorityscore=0 adultscore=0 mlxscore=0
- bulkscore=0 phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=999 spamscore=0 phishscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504290042
 
-Add initial device tree support for IQ-9075-EVK board,
-based on Qualcomm's QCS9075M SOM. QCS9075M SOM is based on QCS9075 SOC.
+This series:
 
-Basic changes are supported for boot to shell.
+Add support for Qualcomm's iq9-evk board using QCS9075 SoC.
 
-Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+QCS9075 is compatible IoT-industrial grade variant of SA8775p SoC.
+Unlike QCS9100, it doesn't have safety monitoring feature of
+Safety-Island(SAIL) subsystem, which affects thermal management.
+
+In QCS9100 SoC, the safety subsystem monitors all thermal sensors and
+does corrective action for each subsystem based on sensor violation
+to comply safety standards. But as QCS9075 is non-safe SoC it requires
+conventional thermal mitigation for thermal management.
+In this series thermal mitigation changes are not included as it needs
+more discussion whether to include the change in DT or in drivers.
+
+Below are detailed informations on IQ-9075-evk HW:
+------------------------------------------------------
+QCS9075M SoM is stacked on top of IQ-9075-evk board.
+On top of IQ-9075-evk board additional mezzanine boards can be stacked
+in future.
+IQ-9075-evk is single board supporting these peripherals:
+  - Storage: 2 × 128 GB UFS, micro-SD card, EEPROMs for MACs,
+    eMMC on mezzanine card
+  - Audio/Video, Camera & Display ports
+  - Connectivity: RJ45 2.5GbE, WLAN/Bluetooth, CAN/CAN-FD
+  - Sensors: IMU
+  - PCIe ports
+  - USB & UART ports
+
+Currently basic features are enabled to support 'boot to shell'.
+
 ---
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 268 ++++++++++++++++++
- 2 files changed, 269 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+Changelog:
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index adb4d026bcc4..6cca965d86e0 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -122,6 +122,7 @@ qcs6490-rb3gen2-vision-mezzanine-dtbs := qcs6490-rb3gen2.dtb qcs6490-rb3gen2-vis
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs9075-iq-9075-evk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-new file mode 100644
-index 000000000000..eadc59739a4b
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-@@ -0,0 +1,268 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024-2025, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+
-+#include "qcs9075-som.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IQ 9075 EVK";
-+	compatible = "qcom,qcs9075-iq-9075-evk", "qcom,qcs9075-som", "qcom,qcs9075", "qcom,sa8775p";
-+
-+	aliases {
-+		serial0 = &uart10;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&apps_rsc {
-+	regulators-0 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_s4a: smps4 {
-+			regulator-name = "vreg_s4a";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1816000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s5a: smps5 {
-+			regulator-name = "vreg_s5a";
-+			regulator-min-microvolt = <1850000>;
-+			regulator-max-microvolt = <1996000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s9a: smps9 {
-+			regulator-name = "vreg_s9a";
-+			regulator-min-microvolt = <535000>;
-+			regulator-max-microvolt = <1120000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4a: ldo4 {
-+			regulator-name = "vreg_l4a";
-+			regulator-min-microvolt = <788000>;
-+			regulator-max-microvolt = <1050000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5a: ldo5 {
-+			regulator-name = "vreg_l5a";
-+			regulator-min-microvolt = <870000>;
-+			regulator-max-microvolt = <950000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6a: ldo6 {
-+			regulator-name = "vreg_l6a";
-+			regulator-min-microvolt = <870000>;
-+			regulator-max-microvolt = <970000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a: ldo7 {
-+			regulator-name = "vreg_l7a";
-+			regulator-min-microvolt = <720000>;
-+			regulator-max-microvolt = <950000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8a: ldo8 {
-+			regulator-name = "vreg_l8a";
-+			regulator-min-microvolt = <2504000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9a: ldo9 {
-+			regulator-name = "vreg_l9a";
-+			regulator-min-microvolt = <2970000>;
-+			regulator-max-microvolt = <3544000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-1 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "c";
-+
-+		vreg_l1c: ldo1 {
-+			regulator-name = "vreg_l1c";
-+			regulator-min-microvolt = <1140000>;
-+			regulator-max-microvolt = <1260000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2c: ldo2 {
-+			regulator-name = "vreg_l2c";
-+			regulator-min-microvolt = <900000>;
-+			regulator-max-microvolt = <1100000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3c: ldo3 {
-+			regulator-name = "vreg_l3c";
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5c: ldo5 {
-+			regulator-name = "vreg_l5c";
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6c: ldo6 {
-+			regulator-name = "vreg_l6c";
-+			regulator-min-microvolt = <1620000>;
-+			regulator-max-microvolt = <1980000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7c: ldo7 {
-+			regulator-name = "vreg_l7c";
-+			regulator-min-microvolt = <1620000>;
-+			regulator-max-microvolt = <2000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8c: ldo8 {
-+			regulator-name = "vreg_l8c";
-+			regulator-min-microvolt = <2400000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9c: ldo9 {
-+			regulator-name = "vreg_l9c";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-2 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "e";
-+
-+		vreg_s4e: smps4 {
-+			regulator-name = "vreg_s4e";
-+			regulator-min-microvolt = <970000>;
-+			regulator-max-microvolt = <1520000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s7e: smps7 {
-+			regulator-name = "vreg_s7e";
-+			regulator-min-microvolt = <1010000>;
-+			regulator-max-microvolt = <1170000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s9e: smps9 {
-+			regulator-name = "vreg_s9e";
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <570000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6e: ldo6 {
-+			regulator-name = "vreg_l6e";
-+			regulator-min-microvolt = <1280000>;
-+			regulator-max-microvolt = <1450000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8e: ldo8 {
-+			regulator-name = "vreg_l8e";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1950000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&tlmm {
-+	qup_uart10_default: qup-uart10-state {
-+		pins = "gpio46", "gpio47";
-+		function = "qup1_se3";
-+	};
-+};
-+
-+&uart10 {
-+	compatible = "qcom,geni-debug-uart";
-+	pinctrl-0 = <&qup_uart10_default>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&xo_board_clk {
-+	clock-frequency = <38400000>;
-+};
+v6:
+  - Splitting v5 and bringing only rb8/IQ-9075-evk changes.
+  - IQ-9075-evk is the new marketing/product name for RB8 and files are
+    renamed accordingly.
+  - Introduce SoM for qcs9075 SoC.
+  - Introduce Memory map changes for IQ9 boards, currently enabled
+    for qcs9075 based boards only.
+  - Remove l4c regulator as it needs more validation with UFS for
+    over-current check.
+  - Remove thermal mitigation change, needs more discussion for final
+    change.
+  - v5:
+    https://lore.kernel.org/all/20241229152332.3068172-1-quic_wasimn@quicinc.com/
+
+Pratyush Brahma (1):
+  arm64: dts: qcom: iq9: Introduce new memory map for qcs9100/qcs9075
+
+Wasim Nazir (3):
+  dt-bindings: arm: qcom: Add bindings for QCS9075 SOC based board
+  arm64: dts: qcom: qcs9075: Introduce QCS9075M SOM
+  arm64: dts: qcom: Add support for qcs9075 IQ-9075-EVK
+
+ .../devicetree/bindings/arm/qcom.yaml         |   8 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 108 +++++++
+ .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 268 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs9075-som.dtsi     |  10 +
+ 5 files changed, 395 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
+
+
+base-commit: 33035b665157558254b3c21c3f049fd728e72368
 --
 2.49.0
 
