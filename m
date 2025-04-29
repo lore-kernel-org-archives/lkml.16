@@ -1,125 +1,134 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C5D4C81
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2874C81
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745953064; cv=none; b=NMotiK5HX3CPwKZ0zDnsWoAPKWJflgkiL0XDsEbGLesp/M2Osd4mbM6hAzKiieGUSuM3ueQndDbfmVTXFqmWId894Hmyn9lMaT7HDuaw+JiJZQwTDDhjRS3xq9wBmbHhI3YOC+UumjhU8GvZKMrW8IxJ+TU2ayd0wen6SxoxMFc=
+	t=1745953132; cv=none; b=jCAiG4gEuIik2RSpnhyR9CNzd4v1KhNhZK0cFG7HM8y8Tp0OlKbqFU/pJH4m2uqww1PhjVARmSD8uUt5EtwcffsUNWyBYxuspjZNX/jFgrKi4jQSzh+Pl50F5LFXytZ6YsX13rgngAhvlANjX1GHDJuKePpSgEph9EmkmMiCrho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745953064; c=relaxed/simple;
-	bh=neW8JICaEEWUIk+9rBwbn5iIXjtiSl0sUhd8RTSSX8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bEnG5OTA3XjZQyPYxKD0A9xR44bTdNlZxFaVc0Nd9v9xaFmFiRVEqOp/lh/0mjUPhfgfT7H/1OsktcZXUa4hGLgyq580cVAeJweBfNrCb0S8OI2Cx2h21xjT8LiNq/caWE+HogV6n2c2iyQlBhNgs4fWPkPJm/Vlh5kDI5KUxjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=op5DRgX/; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745953132; c=relaxed/simple;
+	bh=8DWUkgowi58Q+C6KSwBRblI0nmvZQfHYlZ0o/INoJlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HcDH3pGmgl1oz/T+B0PN/7BCVc42TNchRgWdtbPlQCrFe6x9+rSsyOq564hSPwcoMMynRkbdOBfp9DceF6JfP1hcpYtkCNZQvPvTBK9i81GEpB7b0B8zzDzPkVn60S7SCre+pyJeKVQ++h6v0FsflFK9/k4tR8rGQDbhTLhYDo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=gM26QAy9; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="op5DRgX/"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240aad70f2so212125ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:57:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="gM26QAy9"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso61124435e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:58:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745953062; x=1746557862; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fdXV/8C/yQUJ8I+wtd2Z/G5iaXapJqIY6nj11Km1s7M=;
-        b=op5DRgX/KaTY0NxUnn1fFffmY3C5vo109AmUOlkmp/aWk0wZX6s7lJqDiczqtZL/bx
-         7d39aHojvWbM0l5hLfjDnSxqbnfnBkL2usFyFye0UyGQ8UsP0Yuz0H6eMk81criVqZsm
-         5l0QxzQ7+oxC3H/8d/IcT7N/fO5CGtl15LV3q0wypcVUD9HRhfyJEtSW0U2AkSRBSNsD
-         yseE9LRvUA8H9McpFjWOlUkNCX/93FsFSHd3oPUlkLyaFpHH2HEVrnCWQkw3/rPaZxJg
-         HtRETnh/oOboFCUhSrxzcWGh+IIB7lbuag/LlUf9kYGroHzOpRrhUUraqvTcZrfYs71a
-         ueTg==
+        d=ionos.com; s=google; t=1745953127; x=1746557927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJ5gLIKdEnlHfp/ZM9aOKHXL04cwNu47lJLmXXaF2II=;
+        b=gM26QAy9PFPVm0t2wYMjzl6cRHjV9vLdBez/1mkvChOBElSY8hLmeBOZFeBryMplf1
+         3E61LQR9LXd/OJ+PGjeah+7n2elVhTl/B5NLh2Pfq3Kx3GaB4c9cmV1n56Moyyd5ohzq
+         GuJnrOPXnJr98ci7GzaFY1cwUdIR+pmqML6fC/sbKFNWathDmCqpfW6axtX+iR5loYUa
+         SS+HhnI/6Rka0V0zS3OyXOFOPDqdL+rYDa89p1hx69vopna0/fIdhpkz76KEk1z6pEJY
+         zI3GmzTXngjzuKjQIuV2lK0aK47uWjXDWv5JNtVE4cpZghxFjkwu7pPfb9EF0aGpVjIh
+         HyEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745953062; x=1746557862;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fdXV/8C/yQUJ8I+wtd2Z/G5iaXapJqIY6nj11Km1s7M=;
-        b=ZXahF+93sEB4ALD9bXKrITt3pBCYWPCmWarvwfPor9ve3A8FiCorOgaCXb11s1C+9M
-         sUT3RTcaKAedVStomI2kymQ9ocy0uiXL+b8HRXYTnjQ3q7mVHFOW809aaary9IqXSkpm
-         oroGR1MJVGJy2+zQvjN+2zF7oUPu4f9iC0zogMMa5Wel0MO97qW6pUBNngbXbG+ehVvL
-         3L9ks47swyIz59f6+vuJBUyanOJLDy/psbQf2bFRrfS/dgX4fJCfR5LprSLPJG0hupQU
-         DKHmyggCTox3KXEBmA5yj8lk1/lUE3ZgxlWON9MWTORxNIJVY+T0Krmhmc3/jMY/zubm
-         qJkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdpx6HOp+8W7Z3e8zmDUwAmGl8p+189WRk6ef5reqb/DPnpBYXIhpfH5sBX8j2oEHGR84j3n0/rDKQwxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpsDirS4eC7EvAfy2gZqx75/1IdWtlKfNzx5KU8sisk+d54ePz
-	dGtOYQ+8wXJHhTkG/dVLwuo6imPeDZ9CN7Ecx6Ci/8CzX7z286XR0nXfZ9ZGDQ==
-X-Gm-Gg: ASbGncv6Qe+oMpLbEo5bHKSW52Xqq1EAkYWp93oLkJpS47twvCldT79wp0EJrXTXt0n
-	mr31i/uPklJb4IRua9LWGFvfSw5xb15CfUKBD9o7b/C3gJh4NrKmfqKJ5+J1o97p1oVDQuPMd3Y
-	NXduyeORU3Xff9Nt+AdP2eDBcUBwdUzqhRLUmzZkIfEjj27jhzQYQ4Byy1Lij0sDI6vZkNLiVk6
-	QASNzHwHgg16Ub8NSvEEMpXHELkT0cwPE260FU5L3+YLVOv34HY5JQjbAIrj/lmwiqfp/ldszAF
-	hqiIC5+kXp+8wsGSI4VN+4KLC0m14tgZXkbp34I70utnNMMQivZTUaM7Jv2vJK9f/5H+DXiN
-X-Google-Smtp-Source: AGHT+IGgXGpqrHCfuif7QcKDzCUp9vTefuXFD3aLx4LdLjCaDTVmYgt+1uOwojrpCvF02XNkiYlVaw==
-X-Received: by 2002:a17:903:248:b0:215:7ced:9d66 with SMTP id d9443c01a7336-22df3f77b8cmr333515ad.10.1745953061819;
-        Tue, 29 Apr 2025 11:57:41 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef097e0csm11594174a91.25.2025.04.29.11.57.36
+        d=1e100.net; s=20230601; t=1745953127; x=1746557927;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mJ5gLIKdEnlHfp/ZM9aOKHXL04cwNu47lJLmXXaF2II=;
+        b=oPtqWtsCE8D687eo6bfVar6Fr1Ct9jvJRHzTX96NzdASF5zkrjNWjga4f/3dmSNPSY
+         GIj3Z3gJ1R6mQFXFMcGurK+7ZmnwbF4csdiB2jxNPF8/14flleE2dlMBTTU0d7zqj9Fq
+         7kXO+mfUPgT0PRvL9B1MHE6gnF9KLkvRfNcj/qaxLHooCMicSHh+Vg5VBMUy/1F4Iix3
+         BKF7lc7PkRwi9Nunz60XFKOdTvlvMHSJ5A9l1kfB5jHLQmjPwy/Q9WDTU5qDuO++QBmf
+         CeaLFDUHOyjw2j05MsGlQvBIX9Iok/gFLUfe3DTRCVa6naPmQGx8G0LTqrp8dp5fr/Mb
+         ScwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZzHlXOsqzC92uJpCtWibLK7GdrwDYZDzBQT/I9gj+Izq5KCogC6aXLiX5fRwsd5MKatzI0VxZ1NtlouU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCu0S4uneBBRpxghCfjXQf3ILiwiq8+6vYSFQ5NctzlyeerHbG
+	bVwzhIalp5GJDs/RDai08Xwe5Med/t51YsMG8pdfeIutx2urs6kmFE+kJMfpJZ0=
+X-Gm-Gg: ASbGnctRYWMZNszEEBPvvNHvCCcgW1UzWhimp9FxCgckQGoJAooRknqctyhOn6NZgsX
+	hX6LaFRWnAbO+I8spFMnrX6JPZ3yKpCMfw9AZfidA0fQImzKy2Do9v/5H2LVxzA7ubEqJOLgmVJ
+	+pitv7iF1ti/mopTmqtKkbe7yx9vbUaAc6cEPrGXH0cNw4EkwgYfpULwx5VmLifeOHWQzcD4s3W
+	W73EKrD7DfcMN7uO43u2PslvffN73+aMZh3fhspp586LYsGVvDf4ictcLcfxIxCqDbWvGYfVwdu
+	/e1MQtW9ZZtpO1RiBecF2O1J1xJ/dMNVt6u/Aq5XgJ1NyPNpt9ZQ02/vCarkuKxVxfRK3bevj2c
+	8bpsG5JbvJ4SM0dAp6sYt3eVxQFij0uXXYCFihoAt
+X-Google-Smtp-Source: AGHT+IEZMwWz0zdMJ9NDjk9O5Asf64JDL54V1y9NgXWNtSz5RkuH7RmJD1LO2QHqy0LDF2oJCsnupg==
+X-Received: by 2002:a05:600c:540e:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-441b1f35c1dmr3839765e9.2.1745953127536;
+        Tue, 29 Apr 2025 11:58:47 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a530a6e9sm165643035e9.16.2025.04.29.11.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 11:57:41 -0700 (PDT)
-Date: Tue, 29 Apr 2025 18:57:30 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
- ioctl
-Message-ID: <aBEhGmoh0E865PxF@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
- <aA_0TV0RkVOHk7Qj@google.com>
- <aBAEuP9962XweHPc@Asurada-Nvidia>
- <aBCNkcLp6XZpjYYT@google.com>
- <aBEWFw2wq40SHjTn@google.com>
- <aBEXJFnLalIh788i@Asurada-Nvidia>
+        Tue, 29 Apr 2025 11:58:47 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>,
+	Joe Damato <jdamato@fastly.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] fs/eventpoll: fix endless busy loop after timeout has expired
+Date: Tue, 29 Apr 2025 20:58:27 +0200
+Message-ID: <20250429185827.3564438-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBEXJFnLalIh788i@Asurada-Nvidia>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 11:15:00AM -0700, Nicolin Chen wrote:
-> On Tue, Apr 29, 2025 at 06:10:31PM +0000, Pranjal Shrivastava wrote:
-> > On Tue, Apr 29, 2025 at 08:28:01AM +0000, Pranjal Shrivastava wrote:
-> > > On Mon, Apr 28, 2025 at 03:44:08PM -0700, Nicolin Chen wrote:
-> > > > On Mon, Apr 28, 2025 at 09:34:05PM +0000, Pranjal Shrivastava wrote:
-> > > > > On Fri, Apr 25, 2025 at 10:58:05PM -0700, Nicolin Chen wrote:
-> > > [...] 
-> > > > > IIUC, one vintf can have multiple lvcmdqs and looking at the series
-> > > > > it looks like the vcmdq_alloc allocates a single lvcmdq. Is the plan to
-> > > > > dedicate one lvcmdq to per VM? Which means VMs can share a vintf?
-> > > > 
-> > > > VINTF is a vSMMU instance per SMMU. Each VINTF can have multiple
-> > > > LVCMDQs. Each vCMDQ is allocated per IOMMUFD_CMD_VCMDQ_ALLOC. In
-> > > > other word, VM can issue multiple IOMMUFD_CMD_VCMDQ_ALLOC calls
-> > > > for each VTINF/vSMMU.
-> > > > 
-> > > 
-> > > Ack. I'm just wondering why would a single VM want more than one vCMDQ
-> > > per vSMMU?
-> > > [...]
-> > 
-> > I guess the only thing on this patch from me was to understand why
-> > would a single VM want more than one vCMDQ per vSMMU? (Just curious to
-> > know :) )
-> 
-> It gives some perf gain since it has two portals to fill commands.
+After commit 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in
+the future"), the following program would immediately enter a busy
+loop in the kernel:
 
-Ohh! I'm imagining concurrent invalidations / commands! Interesting!
+```
+int main() {
+  int e = epoll_create1(0);
+  struct epoll_event event = {.events = EPOLLIN};
+  epoll_ctl(e, EPOLL_CTL_ADD, 0, &event);
+  const struct timespec timeout = {.tv_nsec = 1};
+  epoll_pwait2(e, &event, 1, &timeout, 0);
+}
+```
 
-> 
-> Nicolin
+This happens because the given (non-zero) timeout of 1 nanosecond
+usually expires before ep_poll() is entered and then
+ep_schedule_timeout() returns false, but `timed_out` is never set
+because the code line that sets it is skipped.  This quickly turns
+into a soft lockup, RCU stalls and deadlocks, inflicting severe
+headaches to the whole system.
 
-Thanks!
-Praan
+When the timeout has expired, we don't need to schedule a hrtimer, but
+we should set the `timed_out` variable.  Therefore, I suggest moving
+the ep_schedule_timeout() check into the `timed_out` expression
+instead of skipping it.
+
+Fixes: 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the future")
+Cc: Joe Damato <jdamato@fastly.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ fs/eventpoll.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 4bc264b854c4..d4dbffdedd08 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -2111,9 +2111,10 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+ 
+ 		write_unlock_irq(&ep->lock);
+ 
+-		if (!eavail && ep_schedule_timeout(to))
+-			timed_out = !schedule_hrtimeout_range(to, slack,
+-							      HRTIMER_MODE_ABS);
++		if (!eavail)
++			timed_out = !ep_schedule_timeout(to) ||
++				!schedule_hrtimeout_range(to, slack,
++							  HRTIMER_MODE_ABS);
+ 		__set_current_state(TASK_RUNNING);
+ 
+ 		/*
+-- 
+2.47.2
+
