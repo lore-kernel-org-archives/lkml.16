@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A00A27604B
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D772C2ACD
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745926894; cv=none; b=XYRAB51Y8ncwC5dTwv1jlM4HZ/oKnUXl7nG8zAsjO1QimEKvR1SeDfrfMJONoxL5ECxjp/9vJqHGsdwfbhAHiSihqhMt9jxYDpFNPjaDNIhYNg/fm6E/7CGEXGzmcdVgtlrli0xFPm5isn0fHhLMVHWaqymnpdof3lgcwWQ7isI=
+	t=1745926923; cv=none; b=nLjqhScItkEN25fg7bR8bqfsnPYmYSCyukMkDG2QFWe6gebguVy3LuFV+Gu/hH2L0NrrtmhZ7lHrBbDFbuOpwu729zWlFi88Jk4Vz3Yd3F6xxO5iBKozaVvepcOz29/321hvY38N4UG7aHGUAifpXaTBWvc2fAjG0f9LGqZFGVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745926894; c=relaxed/simple;
-	bh=FdqjXGxiURxrjRoUqrRU4qBEHU0/AoHGlpqsAnFYzXk=;
+	s=arc-20240116; t=1745926923; c=relaxed/simple;
+	bh=kxWC1t7/BhbfuL23Afr2KNhXz8vZgT9DHhKCYr4vZLU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R4W5Ygc6++PyuijyKk05p2Mk3XOeegJK3IH27KuceWDM+VZF38fl1/yCayf+QYb0+C7FXdvtufLoOmePocscRmJGYLc+/uTw9b3gC9O8zLKmWwA/F6icpvFl1bN8sTEYWs3Wlmrwtt34LLF5xxhS+uGMIGFuXq8sQ3IIy7YfOjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jbn0kvSe; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=uo8oyenYAk+HiUaAUddTofjDn3EUr+20pqrH90XvuSUnQBsI6MS1XRpcn2eyykWUROMI0fK9vvRm3C7fldg2jShWCd4DrS2ThoD255FauQriKB5KryT3KGjS7RXy4Za+LBuldIXmnr0kPZOoA51iymHHfm5PZtH4YTYtwjCchJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JwaEJkRO; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jbn0kvSe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwaEJkRO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745926891;
+	s=mimecast20190719; t=1745926921;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0OOf67lYUqPKctKAmCN90TJlQaAL2pWnlF+O50r9JuE=;
-	b=Jbn0kvSe2sp4QSpiUu2qHS0Am/0eGOsHFGVOSDPtAwfEZTKMvENuIpPiNBzEmQyot4PrgA
-	AHQ5XT3yxobsAZOlljQXUTZHjh1SwPMggdv6R3nJavzT7Nl6bcKYmSAu3XsoT2sgXO+WgU
-	NvhxU79oa8z1QdYCclwSMN1l4RCbhqY=
+	bh=pOR+/fkeCQEE32OWhR0BqyOD5/ykiIz6VrqIxRu0TPQ=;
+	b=JwaEJkRO3yQozGxixWcyxld9QjqhM7TfU+GQqzPcKo7SeMFvZYYP7otM3Opd4aN4cbt33q
+	kUAsy3l72oO3XHdxILvNSQvVEbAhh2Dl5tIsjPxbHc6OPs7yFsb1UYu2Xty+soACVlHQOp
+	Cu8sEz2gR255yQGHRNAaUGKW6t7vlTE=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-248--0ZifB14MF-ROg7gruMmbQ-1; Tue,
- 29 Apr 2025 07:41:28 -0400
-X-MC-Unique: -0ZifB14MF-ROg7gruMmbQ-1
-X-Mimecast-MFC-AGG-ID: -0ZifB14MF-ROg7gruMmbQ_1745926883
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-203-A84IH6JAPCeA7cHwNRTckw-1; Tue,
+ 29 Apr 2025 07:41:57 -0400
+X-MC-Unique: A84IH6JAPCeA7cHwNRTckw-1
+X-Mimecast-MFC-AGG-ID: A84IH6JAPCeA7cHwNRTckw_1745926913
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D1681800876;
-	Tue, 29 Apr 2025 11:41:23 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 219821800360;
+	Tue, 29 Apr 2025 11:41:53 +0000 (UTC)
 Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.45.225.102])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8113119560A3;
-	Tue, 29 Apr 2025 11:40:54 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 227BD19560A3;
+	Tue, 29 Apr 2025 11:41:23 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	virtualization@lists.linux.dev,
@@ -57,7 +57,8 @@ To: linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	bpf@vger.kernel.org
-Cc: Juri Lelli <juri.lelli@redhat.com>,
+Cc: Sean Christopherson <seanjc@google.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
 	Marcelo Tosatti <mtosatti@redhat.com>,
 	Yair Podemsky <ypodemsk@redhat.com>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -67,7 +68,6 @@ Cc: Juri Lelli <juri.lelli@redhat.com>,
 	Frederic Weisbecker <frederic@kernel.org>,
 	"Paul E. McKenney" <paulmck@kernel.org>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
 	Juergen Gross <jgross@suse.com>,
 	Ajay Kaher <ajay.kaher@broadcom.com>,
 	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
@@ -139,9 +139,9 @@ Cc: Juri Lelli <juri.lelli@redhat.com>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	John Stultz <jstultz@google.com>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v5 15/25] sched/clock: Mark sched_clock_running key as __ro_after_init
-Date: Tue, 29 Apr 2025 13:32:32 +0200
-Message-ID: <20250429113242.998312-16-vschneid@redhat.com>
+Subject: [PATCH v5 16/25] KVM: VMX: Mark __kvm_is_using_evmcs static key as __ro_after_init
+Date: Tue, 29 Apr 2025 13:32:33 +0200
+Message-ID: <20250429113242.998312-17-vschneid@redhat.com>
 In-Reply-To: <20250429113242.998312-1-vschneid@redhat.com>
 References: <20250429113242.998312-1-vschneid@redhat.com>
 Precedence: bulk
@@ -153,28 +153,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-sched_clock_running is only ever enabled in the __init functions
-sched_clock_init() and sched_clock_init_late(), and is never disabled. Mark
-it __ro_after_init.
+The static key is only ever enabled in
 
+  __init hv_init_evmcs()
+
+so mark it appropriately as __ro_after_init.
+
+Reported-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- kernel/sched/clock.c | 2 +-
+ arch/x86/kvm/vmx/vmx_onhyperv.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
-index a09655b481402..200e5568b9894 100644
---- a/kernel/sched/clock.c
-+++ b/kernel/sched/clock.c
-@@ -66,7 +66,7 @@ notrace unsigned long long __weak sched_clock(void)
- }
- EXPORT_SYMBOL_GPL(sched_clock);
+diff --git a/arch/x86/kvm/vmx/vmx_onhyperv.c b/arch/x86/kvm/vmx/vmx_onhyperv.c
+index b9a8b91166d02..ff3d80c9565bb 100644
+--- a/arch/x86/kvm/vmx/vmx_onhyperv.c
++++ b/arch/x86/kvm/vmx/vmx_onhyperv.c
+@@ -3,7 +3,7 @@
+ #include "capabilities.h"
+ #include "vmx_onhyperv.h"
  
--static DEFINE_STATIC_KEY_FALSE(sched_clock_running);
-+static DEFINE_STATIC_KEY_FALSE_RO(sched_clock_running);
+-DEFINE_STATIC_KEY_FALSE(__kvm_is_using_evmcs);
++DEFINE_STATIC_KEY_FALSE_RO(__kvm_is_using_evmcs);
  
- #ifdef CONFIG_HAVE_UNSTABLE_SCHED_CLOCK
  /*
+  * KVM on Hyper-V always uses the latest known eVMCSv1 revision, the assumption
 -- 
 2.49.0
 
