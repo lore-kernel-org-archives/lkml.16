@@ -1,607 +1,184 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8096B2777FB
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DA078F29
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745897228; cv=none; b=EFpFbVgRQJabdkxKVm0S0paWdUvzMTzC0j5v4iqC+aacvTn87xLeLX8Z7ibiRgZuR18ic2e7xz00fEDJM/0/3FBXrDmWk8qqkPcHErj+/doPS0Wx2aAUZpElHsvOhV7bmLIoGrTlePeAd/U9fUm/XqenTYZrx1W91R2Nh5GXicM=
+	t=1745897475; cv=none; b=YPXK6okrp/MeNBPXv4ED14/KZE31kQRg+5whj5uDff6828NeAHQs1fXcPJHv/BwExVvGXsyz3/2U0NjheGZ3rxHyifDYqC17kC+HpFFxomp4u/dT371zCzomVcGXOiiqoarKz9zkfZ2m9CbKSzC4gboLGpFtdvpZmgbBPAycGF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745897228; c=relaxed/simple;
-	bh=QtSO5nlVXPkCRK88VhahUHwkbHyxPNFISaazexycgu0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sqHGgSqfL47GsZ1CNCtK+la47Zjx79n7dRbEcxV15xGz0i8xsOLSSVPQXdDbtOo36zhzzaKj/xTcs8YX8zaaEQUL3YueT9C99khiWATu8o44XLTcO20VQauuwL8pbG5+37wYNp3hSq6i1GmFj+tEGh4wH9muQf83Oi8Eu2jVza0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g0/vOse7; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1745897475; c=relaxed/simple;
+	bh=CuL+YpcnQKY0haqmcdUS5IRj6Y2DmxCYuPRov7XSKeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+PAwJ4EMaAz3t7nPLhYddxo1Zftx5VukKaRm2yEugkC3hF0mjYrCExjjtAZffk8gkh1t/Bb/bKoUHw9GSpeIkDbOkpeWltBoVa7aEvQZXik5OVtCgVQDqW1gVHg2lV6pNOecz33rgbdAKd4Z+FUEskw3b9ZivTlDtCgadireeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIEuhtQ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g0/vOse7"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af9564001cbso3342901a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745897224; x=1746502024; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fLRFIGt2Ey1m50gqrm2J+sBnLuvF3wbxV6n2FoXWwZk=;
-        b=g0/vOse7Z2AFPLN8PhEG7zUlJZc8+Q8RK+Z+uIh+GikCwXwKuQQ4iqxFyzDyDC7vte
-         XznM22JtOYT5al8aQpw+Gw91z4nq7ci/QYP0NSOcvAyF5N9ymaGBp6MYa4HWEDVvnpS9
-         lpaF3siSzWrz7LSX+Xourh5Zk+WnM8TkQsrAGTybjxCtifT8pa4cctLn8XRifEE5CGfu
-         z1LWL3flbXFnlv7TTQX+JMUSByCdSJ97jIZ1MpZnHPHjGQ0VZqW5k+rt8T+9vukyWmvl
-         E/sHOZtSbcUJ2RkRyWor5YCH4r0bypyvpxb3P9yRGixATIzWpUi3r8V6WAdtrObKdOcX
-         KLRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745897224; x=1746502024;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fLRFIGt2Ey1m50gqrm2J+sBnLuvF3wbxV6n2FoXWwZk=;
-        b=Dj+c2+cJwamWgrxGR25ILHnFO55ndPdrXtmDqGxsW7GD2hBv1RaZdp6pZAMowsRThr
-         /TF0ubux15RFjryVdtVgqTkCrcBmug0zjbbQ/13D7rW90DYoBGVDLL/2r+PCGaGkmVCt
-         uy/QMOxpDpIZtWDC/jTffib194YsoxJnMDEtpTbURpTzFqOdO7E3XutSck9MOHzR0BCf
-         dPnYSCfB6PV3KCNEyvicLXJM+SH4cTiosShoXKMDGIvF7yBuFYH+ZhtQIwFrsUV/8XME
-         tpNLDJjjQsb+qvPhqk+JNzVCNmiPwldWehDfMQAVJgjovSp11CVErBDTYQJUn0zkSlJo
-         X9Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUmIedzUigHNHVV3kHAgXUpN9s8O6vQC2Ms3NaNilecUltSgrCbbC2taQdZF1n1h+vdBwPNN+mOooEi7nM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsvlBxBhXBJq0ko3G3596HKKymgeDhBID55nUc3boY8yA7H1lr
-	2gXZb1LspxfvfaGzMXOcGyIoM53EJd98UrOJ8EEkop8nNBtJ8/qUmutWSftYV7L9G6JgAVglnln
-	o7/E6Hc8oGk/H6D5q481B2g==
-X-Google-Smtp-Source: AGHT+IExMbhMRAF+/sgY1RYdUT/6sqcYfgIryFakw88y7rmYQ9+58dk1gS5dnNa4851+6m4YzqL48EPK9e4SQX2MNw==
-X-Received: from pgbfq27.prod.google.com ([2002:a05:6a02:299b:b0:af2:357f:4269])
- (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:31c8:b0:1f5:520d:fb93 with SMTP id adf61e73a8af0-2093cb057e0mr2955575637.24.1745897223714;
- Mon, 28 Apr 2025 20:27:03 -0700 (PDT)
-Date: Tue, 29 Apr 2025 03:26:45 +0000
-In-Reply-To: <20250429032645.363766-1-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIEuhtQ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BBD5C4CEE3;
+	Tue, 29 Apr 2025 03:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745897475;
+	bh=CuL+YpcnQKY0haqmcdUS5IRj6Y2DmxCYuPRov7XSKeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dIEuhtQ+D06yhlDPd6yZl46Dnjate2a62MZZ63YCcohRNIRPPn2OsBVVldNIcKfQJ
+	 0cO7oYXa3CQWMgvBZejTvQ7nYn+QUjJ/r6YhuvzhbeydVKqneLGXS2h0eW9itxwre3
+	 mQ5c3E64QGvphmTwEuGYP3DbeXJ9Si4/q94t9iyv9Le3DypRJWBcOF/Ti19ErpGnej
+	 BXTqtk6hLresQcxJn3cJsqzLA802Q8vRX998aAlw5eGaf66mzsQIOSH383RJVkjvze
+	 F0KgCeeL2FmsT3IIFLgmktCMsAXXqQ8YzmJe/lW0SEAwD5IpBtMsQ7Jh+dRe4AFhJl
+	 ZfcuekcpExWbw==
+Date: Tue, 29 Apr 2025 11:31:05 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com, dhavale@google.com,
+	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] erofs: encode file handle with the internal helpers
+Message-ID: <aBBH+Wrwa1xXFGmo@debian>
+Mail-Followup-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org,
+	chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
+	dhavale@google.com, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+References: <20250429011139.686847-1-lihongbo22@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250429032645.363766-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250429032645.363766-10-almasrymina@google.com>
-Subject: [PATCH net-next v13 9/9] selftests: ncdevmem: Implement devmem TCP TX
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	"=?UTF-8?q?Eugenio=20P=C3=A9rez?=" <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250429011139.686847-1-lihongbo22@huawei.com>
 
-Add support for devmem TX in ncdevmem.
+Hi Hongbo,
 
-This is a combination of the ncdevmem from the devmem TCP series RFCv1
-which included the TX path, and work by Stan to include the netlink API
-and refactored on top of his generic memory_provider support.
+I think the subject can be updated as:
+`erofs-utils: fix file handle encoding for 64-bit NIDs`
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+On Tue, Apr 29, 2025 at 01:11:39AM +0000, Hongbo Li wrote:
+> In erofs, the inode number has the location information of
+> files. The default encode_fh uses the ino32, this will lack
+> of some information when the file is too big. So we need
+> the internal helpers to encode filehandle.
+> 
+> Since i_generation in EROFS is not used, here we only encode
+> the nid into file handle when it is exported. So it is easy
+> to parse the dentry from file handle.
 
----
+If `FILEID_INO64_GEN_PARENT` is used, I don't think
+the generation number should be emitted, as documented as:
 
-v5:
-- Remove unnecassyr socat bindings (Stan).
-- Add exit_wait=True (Stan)
-- Remove unnecessary -c arg to ncdevmem in check_tx.
+`
+/*
+ * 64 bit inode number, 32 bit generation number.
+ */
+FILEID_INO64_GEN = 0x81,
 
-v4:
-- Add TX test to devmem.py (Paolo).
+/*
+ * 64 bit inode number, 32 bit generation number,
+ * 64 bit parent inode number, 32 bit parent generation.
+ */
+FILEID_INO64_GEN_PARENT = 0x82,
+` 
 
-v3:
-- Update ncdevmem docs to run validation with RX-only and RX-with-TX.
-- Fix build warnings (Stan).
-- Make the validation expect new lines in the pattern so we can have the
-  TX path behave like netcat (Stan).
-- Change ret to errno in error() calls (Stan).
-- Handle the case where client_ip is not provided (Stan).
-- Don't assume mid is <= 2000 (Stan).
+Even the generation number is 0 but we might use
+i_generation for some remote update use cases
+in the future.
 
-v2:
-- make errors a static variable so that we catch instances where there
-  are less than 20 errors across different buffers.
-- Fix the issue where the seed is reset to 0 instead of its starting
-  value 1.
-- Use 1000ULL instead of 1000 to guard against overflow (Willem).
-- Do not set POLLERR (Willem).
-- Update the test to use the new interface where iov_base is the
-  dmabuf_offset.
-- Update the test to send 2 iov instead of 1, so we get some test
-  coverage over sending multiple iovs at once.
-- Print the ifindex the test is using, useful for debugging issues where
-  maybe the test may fail because the ifindex of the socket is different
-  from the dmabuf binding.
+> 
+> It is easy to reproduce test:
+>   1. prepare an erofs image with nid bigger than UINT_MAX
+>   2. mount -t erofs foo.img /mnt/erofs
+>   3. set exportfs with configuration: /mnt/erofs *(rw,sync,
+>      no_root_squash)
+>   4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
+>   5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
+>      than UINT_MAX.
+> For overlayfs case, the under filesystem's file handle is
+> encoded in ovl_fb.fid, it is same as NFS's case.
 
----
- .../selftests/drivers/net/hw/devmem.py        |  26 +-
- .../selftests/drivers/net/hw/ncdevmem.c       | 300 +++++++++++++++++-
- 2 files changed, 311 insertions(+), 15 deletions(-)
+Can we have a way to add a testcase for the overlayfs case:
+since it's somewhat complex to write a testcase with nfs
+above.
 
-diff --git a/tools/testing/selftests/drivers/net/hw/devmem.py b/tools/testing/selftests/drivers/net/hw/devmem.py
-index 3947e91571159..7fc686cf47a2d 100755
---- a/tools/testing/selftests/drivers/net/hw/devmem.py
-+++ b/tools/testing/selftests/drivers/net/hw/devmem.py
-@@ -1,6 +1,7 @@
- #!/usr/bin/env python3
- # SPDX-License-Identifier: GPL-2.0
- 
-+from os import path
- from lib.py import ksft_run, ksft_exit
- from lib.py import ksft_eq, KsftSkipEx
- from lib.py import NetDrvEpEnv
-@@ -10,8 +11,7 @@ from lib.py import ksft_disruptive
- 
- def require_devmem(cfg):
-     if not hasattr(cfg, "_devmem_probed"):
--        port = rand_port()
--        probe_command = f"./ncdevmem -f {cfg.ifname}"
-+        probe_command = f"{cfg.bin_local} -f {cfg.ifname}"
-         cfg._devmem_supported = cmd(probe_command, fail=False, shell=True).ret == 0
-         cfg._devmem_probed = True
- 
-@@ -25,7 +25,7 @@ def check_rx(cfg) -> None:
-     require_devmem(cfg)
- 
-     port = rand_port()
--    listen_cmd = f"./ncdevmem -l -f {cfg.ifname} -s {cfg.addr_v['6']} -p {port}"
-+    listen_cmd = f"{cfg.bin_local} -l -f {cfg.ifname} -s {cfg.addr_v['6']} -p {port}"
- 
-     with bkg(listen_cmd) as socat:
-         wait_port_listen(port)
-@@ -34,9 +34,27 @@ def check_rx(cfg) -> None:
-     ksft_eq(socat.stdout.strip(), "hello\nworld")
- 
- 
-+@ksft_disruptive
-+def check_tx(cfg) -> None:
-+    cfg.require_ipver("6")
-+    require_devmem(cfg)
-+
-+    port = rand_port()
-+    listen_cmd = f"socat -U - TCP6-LISTEN:{port}"
-+
-+    with bkg(listen_cmd, exit_wait=True) as socat:
-+        wait_port_listen(port)
-+        cmd(f"echo -e \"hello\\nworld\"| {cfg.bin_remote} -f {cfg.ifname} -s {cfg.addr_v['6']} -p {port}", host=cfg.remote, shell=True)
-+
-+    ksft_eq(socat.stdout.strip(), "hello\nworld")
-+
-+
- def main() -> None:
-     with NetDrvEpEnv(__file__) as cfg:
--        ksft_run([check_rx],
-+        cfg.bin_local = path.abspath(path.dirname(__file__) + "/ncdevmem")
-+        cfg.bin_remote = cfg.remote.deploy(cfg.bin_local)
-+
-+        ksft_run([check_rx, check_tx],
-                  args=(cfg, ))
-     ksft_exit()
- 
-diff --git a/tools/testing/selftests/drivers/net/hw/ncdevmem.c b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-index 2bf14ac2b8c62..f801a1b3545f0 100644
---- a/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-+++ b/tools/testing/selftests/drivers/net/hw/ncdevmem.c
-@@ -9,22 +9,31 @@
-  *     ncdevmem -s <server IP> [-c <client IP>] -f eth1 -l -p 5201
-  *
-  *     On client:
-- *     echo -n "hello\nworld" | nc -s <server IP> 5201 -p 5201
-+ *     echo -n "hello\nworld" | \
-+ *		ncdevmem -s <server IP> [-c <client IP>] -p 5201 -f eth1
-  *
-- * Test data validation:
-+ * Note this is compatible with regular netcat. i.e. the sender or receiver can
-+ * be replaced with regular netcat to test the RX or TX path in isolation.
-+ *
-+ * Test data validation (devmem TCP on RX only):
-  *
-  *     On server:
-  *     ncdevmem -s <server IP> [-c <client IP>] -f eth1 -l -p 5201 -v 7
-  *
-  *     On client:
-  *     yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
-- *             tr \\n \\0 | \
-- *             head -c 5G | \
-+ *             head -c 1G | \
-  *             nc <server IP> 5201 -p 5201
-  *
-+ * Test data validation (devmem TCP on RX and TX, validation happens on RX):
-  *
-- * Note this is compatible with regular netcat. i.e. the sender or receiver can
-- * be replaced with regular netcat to test the RX or TX path in isolation.
-+ *	On server:
-+ *	ncdevmem -s <server IP> [-c <client IP>] -l -p 5201 -v 8 -f eth1
-+ *
-+ *	On client:
-+ *	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06\\x07) | \
-+ *		head -c 1M | \
-+ *		ncdevmem -s <server IP> [-c <client IP>] -p 5201 -f eth1
-  */
- #define _GNU_SOURCE
- #define __EXPORTED_HEADERS__
-@@ -40,15 +49,18 @@
- #include <fcntl.h>
- #include <malloc.h>
- #include <error.h>
-+#include <poll.h>
- 
- #include <arpa/inet.h>
- #include <sys/socket.h>
- #include <sys/mman.h>
- #include <sys/ioctl.h>
- #include <sys/syscall.h>
-+#include <sys/time.h>
- 
- #include <linux/memfd.h>
- #include <linux/dma-buf.h>
-+#include <linux/errqueue.h>
- #include <linux/udmabuf.h>
- #include <linux/types.h>
- #include <linux/netlink.h>
-@@ -79,6 +91,8 @@ static int num_queues = -1;
- static char *ifname;
- static unsigned int ifindex;
- static unsigned int dmabuf_id;
-+static uint32_t tx_dmabuf_id;
-+static int waittime_ms = 500;
- 
- struct memory_buffer {
- 	int fd;
-@@ -92,6 +106,8 @@ struct memory_buffer {
- struct memory_provider {
- 	struct memory_buffer *(*alloc)(size_t size);
- 	void (*free)(struct memory_buffer *ctx);
-+	void (*memcpy_to_device)(struct memory_buffer *dst, size_t off,
-+				 void *src, int n);
- 	void (*memcpy_from_device)(void *dst, struct memory_buffer *src,
- 				   size_t off, int n);
- };
-@@ -152,6 +168,20 @@ static void udmabuf_free(struct memory_buffer *ctx)
- 	free(ctx);
- }
- 
-+static void udmabuf_memcpy_to_device(struct memory_buffer *dst, size_t off,
-+				     void *src, int n)
-+{
-+	struct dma_buf_sync sync = {};
-+
-+	sync.flags = DMA_BUF_SYNC_START | DMA_BUF_SYNC_WRITE;
-+	ioctl(dst->fd, DMA_BUF_IOCTL_SYNC, &sync);
-+
-+	memcpy(dst->buf_mem + off, src, n);
-+
-+	sync.flags = DMA_BUF_SYNC_END | DMA_BUF_SYNC_WRITE;
-+	ioctl(dst->fd, DMA_BUF_IOCTL_SYNC, &sync);
-+}
-+
- static void udmabuf_memcpy_from_device(void *dst, struct memory_buffer *src,
- 				       size_t off, int n)
- {
-@@ -169,6 +199,7 @@ static void udmabuf_memcpy_from_device(void *dst, struct memory_buffer *src,
- static struct memory_provider udmabuf_memory_provider = {
- 	.alloc = udmabuf_alloc,
- 	.free = udmabuf_free,
-+	.memcpy_to_device = udmabuf_memcpy_to_device,
- 	.memcpy_from_device = udmabuf_memcpy_from_device,
- };
- 
-@@ -187,14 +218,16 @@ void validate_buffer(void *line, size_t size)
- {
- 	static unsigned char seed = 1;
- 	unsigned char *ptr = line;
--	int errors = 0;
-+	unsigned char expected;
-+	static int errors;
- 	size_t i;
- 
- 	for (i = 0; i < size; i++) {
--		if (ptr[i] != seed) {
-+		expected = seed ? seed : '\n';
-+		if (ptr[i] != expected) {
- 			fprintf(stderr,
- 				"Failed validation: expected=%u, actual=%u, index=%lu\n",
--				seed, ptr[i], i);
-+				expected, ptr[i], i);
- 			errors++;
- 			if (errors > 20)
- 				error(1, 0, "validation failed.");
-@@ -393,6 +426,49 @@ static int bind_rx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
- 	return -1;
- }
- 
-+static int bind_tx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
-+			 struct ynl_sock **ys)
-+{
-+	struct netdev_bind_tx_req *req = NULL;
-+	struct netdev_bind_tx_rsp *rsp = NULL;
-+	struct ynl_error yerr;
-+
-+	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
-+	if (!*ys) {
-+		fprintf(stderr, "YNL: %s\n", yerr.msg);
-+		return -1;
-+	}
-+
-+	req = netdev_bind_tx_req_alloc();
-+	netdev_bind_tx_req_set_ifindex(req, ifindex);
-+	netdev_bind_tx_req_set_fd(req, dmabuf_fd);
-+
-+	rsp = netdev_bind_tx(*ys, req);
-+	if (!rsp) {
-+		perror("netdev_bind_tx");
-+		goto err_close;
-+	}
-+
-+	if (!rsp->_present.id) {
-+		perror("id not present");
-+		goto err_close;
-+	}
-+
-+	fprintf(stderr, "got tx dmabuf id=%d\n", rsp->id);
-+	tx_dmabuf_id = rsp->id;
-+
-+	netdev_bind_tx_req_free(req);
-+	netdev_bind_tx_rsp_free(rsp);
-+
-+	return 0;
-+
-+err_close:
-+	fprintf(stderr, "YNL failed: %s\n", (*ys)->err.msg);
-+	netdev_bind_tx_req_free(req);
-+	ynl_sock_destroy(*ys);
-+	return -1;
-+}
-+
- static void enable_reuseaddr(int fd)
- {
- 	int opt = 1;
-@@ -431,7 +507,7 @@ static int parse_address(const char *str, int port, struct sockaddr_in6 *sin6)
- 	return 0;
- }
- 
--int do_server(struct memory_buffer *mem)
-+static int do_server(struct memory_buffer *mem)
- {
- 	char ctrl_data[sizeof(int) * 20000];
- 	struct netdev_queue_id *queues;
-@@ -685,6 +761,206 @@ void run_devmem_tests(void)
- 	provider->free(mem);
- }
- 
-+static uint64_t gettimeofday_ms(void)
-+{
-+	struct timeval tv;
-+
-+	gettimeofday(&tv, NULL);
-+	return (tv.tv_sec * 1000ULL) + (tv.tv_usec / 1000ULL);
-+}
-+
-+static int do_poll(int fd)
-+{
-+	struct pollfd pfd;
-+	int ret;
-+
-+	pfd.revents = 0;
-+	pfd.fd = fd;
-+
-+	ret = poll(&pfd, 1, waittime_ms);
-+	if (ret == -1)
-+		error(1, errno, "poll");
-+
-+	return ret && (pfd.revents & POLLERR);
-+}
-+
-+static void wait_compl(int fd)
-+{
-+	int64_t tstop = gettimeofday_ms() + waittime_ms;
-+	char control[CMSG_SPACE(100)] = {};
-+	struct sock_extended_err *serr;
-+	struct msghdr msg = {};
-+	struct cmsghdr *cm;
-+	__u32 hi, lo;
-+	int ret;
-+
-+	msg.msg_control = control;
-+	msg.msg_controllen = sizeof(control);
-+
-+	while (gettimeofday_ms() < tstop) {
-+		if (!do_poll(fd))
-+			continue;
-+
-+		ret = recvmsg(fd, &msg, MSG_ERRQUEUE);
-+		if (ret < 0) {
-+			if (errno == EAGAIN)
-+				continue;
-+			error(1, errno, "recvmsg(MSG_ERRQUEUE)");
-+			return;
-+		}
-+		if (msg.msg_flags & MSG_CTRUNC)
-+			error(1, 0, "MSG_CTRUNC\n");
-+
-+		for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
-+			if (cm->cmsg_level != SOL_IP &&
-+			    cm->cmsg_level != SOL_IPV6)
-+				continue;
-+			if (cm->cmsg_level == SOL_IP &&
-+			    cm->cmsg_type != IP_RECVERR)
-+				continue;
-+			if (cm->cmsg_level == SOL_IPV6 &&
-+			    cm->cmsg_type != IPV6_RECVERR)
-+				continue;
-+
-+			serr = (void *)CMSG_DATA(cm);
-+			if (serr->ee_origin != SO_EE_ORIGIN_ZEROCOPY)
-+				error(1, 0, "wrong origin %u", serr->ee_origin);
-+			if (serr->ee_errno != 0)
-+				error(1, 0, "wrong errno %d", serr->ee_errno);
-+
-+			hi = serr->ee_data;
-+			lo = serr->ee_info;
-+
-+			fprintf(stderr, "tx complete [%d,%d]\n", lo, hi);
-+			return;
-+		}
-+	}
-+
-+	error(1, 0, "did not receive tx completion");
-+}
-+
-+static int do_client(struct memory_buffer *mem)
-+{
-+	char ctrl_data[CMSG_SPACE(sizeof(__u32))];
-+	struct sockaddr_in6 server_sin;
-+	struct sockaddr_in6 client_sin;
-+	struct ynl_sock *ys = NULL;
-+	struct msghdr msg = {};
-+	ssize_t line_size = 0;
-+	struct cmsghdr *cmsg;
-+	struct iovec iov[2];
-+	char *line = NULL;
-+	unsigned long mid;
-+	size_t len = 0;
-+	int socket_fd;
-+	__u32 ddmabuf;
-+	int opt = 1;
-+	int ret;
-+
-+	ret = parse_address(server_ip, atoi(port), &server_sin);
-+	if (ret < 0)
-+		error(1, 0, "parse server address");
-+
-+	socket_fd = socket(AF_INET6, SOCK_STREAM, 0);
-+	if (socket_fd < 0)
-+		error(1, socket_fd, "create socket");
-+
-+	enable_reuseaddr(socket_fd);
-+
-+	ret = setsockopt(socket_fd, SOL_SOCKET, SO_BINDTODEVICE, ifname,
-+			 strlen(ifname) + 1);
-+	if (ret)
-+		error(1, errno, "bindtodevice");
-+
-+	if (bind_tx_queue(ifindex, mem->fd, &ys))
-+		error(1, 0, "Failed to bind\n");
-+
-+	if (client_ip) {
-+		ret = parse_address(client_ip, atoi(port), &client_sin);
-+		if (ret < 0)
-+			error(1, 0, "parse client address");
-+
-+		ret = bind(socket_fd, &client_sin, sizeof(client_sin));
-+		if (ret)
-+			error(1, errno, "bind");
-+	}
-+
-+	ret = setsockopt(socket_fd, SOL_SOCKET, SO_ZEROCOPY, &opt, sizeof(opt));
-+	if (ret)
-+		error(1, errno, "set sock opt");
-+
-+	fprintf(stderr, "Connect to %s %d (via %s)\n", server_ip,
-+		ntohs(server_sin.sin6_port), ifname);
-+
-+	ret = connect(socket_fd, &server_sin, sizeof(server_sin));
-+	if (ret)
-+		error(1, errno, "connect");
-+
-+	while (1) {
-+		free(line);
-+		line = NULL;
-+		line_size = getline(&line, &len, stdin);
-+
-+		if (line_size < 0)
-+			break;
-+
-+		mid = (line_size / 2) + 1;
-+
-+		iov[0].iov_base = (void *)1;
-+		iov[0].iov_len = mid;
-+		iov[1].iov_base = (void *)(mid + 2);
-+		iov[1].iov_len = line_size - mid;
-+
-+		provider->memcpy_to_device(mem, (size_t)iov[0].iov_base, line,
-+					   iov[0].iov_len);
-+		provider->memcpy_to_device(mem, (size_t)iov[1].iov_base,
-+					   line + iov[0].iov_len,
-+					   iov[1].iov_len);
-+
-+		fprintf(stderr,
-+			"read line_size=%ld iov[0].iov_base=%lu, iov[0].iov_len=%lu, iov[1].iov_base=%lu, iov[1].iov_len=%lu\n",
-+			line_size, (unsigned long)iov[0].iov_base,
-+			iov[0].iov_len, (unsigned long)iov[1].iov_base,
-+			iov[1].iov_len);
-+
-+		msg.msg_iov = iov;
-+		msg.msg_iovlen = 2;
-+
-+		msg.msg_control = ctrl_data;
-+		msg.msg_controllen = sizeof(ctrl_data);
-+
-+		cmsg = CMSG_FIRSTHDR(&msg);
-+		cmsg->cmsg_level = SOL_SOCKET;
-+		cmsg->cmsg_type = SCM_DEVMEM_DMABUF;
-+		cmsg->cmsg_len = CMSG_LEN(sizeof(__u32));
-+
-+		ddmabuf = tx_dmabuf_id;
-+
-+		*((__u32 *)CMSG_DATA(cmsg)) = ddmabuf;
-+
-+		ret = sendmsg(socket_fd, &msg, MSG_ZEROCOPY);
-+		if (ret < 0)
-+			error(1, errno, "Failed sendmsg");
-+
-+		fprintf(stderr, "sendmsg_ret=%d\n", ret);
-+
-+		if (ret != line_size)
-+			error(1, errno, "Did not send all bytes");
-+
-+		wait_compl(socket_fd);
-+	}
-+
-+	fprintf(stderr, "%s: tx ok\n", TEST_PREFIX);
-+
-+	free(line);
-+	close(socket_fd);
-+
-+	if (ys)
-+		ynl_sock_destroy(ys);
-+
-+	return 0;
-+}
-+
- int main(int argc, char *argv[])
- {
- 	struct memory_buffer *mem;
-@@ -728,6 +1004,8 @@ int main(int argc, char *argv[])
- 
- 	ifindex = if_nametoindex(ifname);
- 
-+	fprintf(stderr, "using ifindex=%u\n", ifindex);
-+
- 	if (!server_ip && !client_ip) {
- 		if (start_queue < 0 && num_queues < 0) {
- 			num_queues = rxq_num(ifindex);
-@@ -778,7 +1056,7 @@ int main(int argc, char *argv[])
- 		error(1, 0, "Missing -p argument\n");
- 
- 	mem = provider->alloc(getpagesize() * NUM_PAGES);
--	ret = is_server ? do_server(mem) : 1;
-+	ret = is_server ? do_server(mem) : do_client(mem);
- 	provider->free(mem);
- 
- 	return ret;
--- 
-2.49.0.901.g37484f566f-goog
+> 
+> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>  fs/erofs/super.c | 51 ++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 43 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index cadec6b1b554..8f787c47e04d 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -511,24 +511,59 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+>  	return 0;
+>  }
+>  
+> -static struct inode *erofs_nfs_get_inode(struct super_block *sb,
+> -					 u64 ino, u32 generation)
+> +static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+> +			   struct inode *parent)
+>  {
+> -	return erofs_iget(sb, ino);
+> +	int len = parent ? 4 : 2;
+> +	erofs_nid_t nid;
+> +
+> +	if (*max_len < len) {
+> +		*max_len = len;
+> +		return FILEID_INVALID;
+> +	}
+> +
+> +	nid = EROFS_I(inode)->nid;
+> +	fh[0] = (u32)(nid >> 32);
+> +	fh[1] = (u32)(nid & 0xffffffff);
+> +
+> +	if (parent) {
+> +		nid = EROFS_I(parent)->nid;
+> +
+> +		fh[2] = (u32)(nid >> 32);
+> +		fh[3] = (u32)(nid & 0xffffffff);
+> +	}
+> +
+> +	*max_len = len;
+> +	return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
+>  }
+>  
+>  static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
+>  		struct fid *fid, int fh_len, int fh_type)
+>  {
+> -	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
+> -				    erofs_nfs_get_inode);
+> +	erofs_nid_t nid;
+> +
+> +	if ((fh_type != FILEID_INO64_GEN &&
+> +	     fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 2)
+> +		return NULL;
+> +
+> +	nid = (u64) fid->raw[0] << 32;
+> +	nid |= (u64) fid->raw[1];
+> +
 
+Redundant new line.
+
+> +	return d_obtain_alias(erofs_iget(sb, nid));
+>  }
+>  
+>  static struct dentry *erofs_fh_to_parent(struct super_block *sb,
+>  		struct fid *fid, int fh_len, int fh_type)
+>  {
+> -	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
+> -				    erofs_nfs_get_inode);
+> +	erofs_nid_t nid;
+> +
+> +	if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 4)
+> +		return NULL;
+> +
+> +	nid = (u64) fid->raw[2] << 32;
+> +	nid |= (u64) fid->raw[3];
+> +
+
+Same here.
+
+Thanks,
+Gao Xiang
