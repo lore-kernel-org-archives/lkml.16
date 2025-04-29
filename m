@@ -1,106 +1,228 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C727E9
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7370E7E9
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745965445; cv=none; b=XfSKw4VnncsrrMHsDiW0vGd8CtPeX8pvoiFqL6+ZApoZHHC2/vn4Q4+MpDJEIRybAr4rIcjj/uGym1pTcHCKluSiCiyAze5VZxzFiIDoCqHOtwSvpzVMaJWz8ypr3mjQULlYu4aUwkUkHi8UBHgr7H3gsHQtLQlGuKOkP7vnkVg=
+	t=1745965469; cv=none; b=d9y0c0VyPB8YIH4blPe9fuYhz8hCj2Bp7o4r9vg+Veq+e/ciqNBtc+0K7wBnIWYvgHyqXt7b1EILeM0qKBcHoBpXp+X22DJ7RrcQzyYvSEPWobkXClFYRv+ol4d/LMw70081GIyZN9LBsM82xiqF5MHFPTc9UJ/BgSZ4XfvHlKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745965445; c=relaxed/simple;
-	bh=MuMYYJlONuNOOG6ONkCN/Cp8H25zkOcw4fwPmZU6F4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YmjfQp356AzqhTIBiJ8BKqyB86uO5sF2F9s2ZrcIMyPAPuMA23vyHOS7RbXdyC9adOKUMWbW0ekmSgFtBHCuXbD8qKIh2LIOeoXqxSrWGsjRSab7Bx/Y5CBt2OD5jMouSsJjlqFBKiVur9FEn2spzRp0ua2YV5R3Si5DKHhn46k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgYZkmZK; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgYZkmZK"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af91fc1fa90so6030467a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745965443; x=1746570243; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CGEUp3ob+JGpdilZp+gx8NdgXFPIJ9r8QmvAiWLd4sQ=;
-        b=RgYZkmZKebFD7/D27iaG8Aeg6ttBhTZsoHlNy7Ardeb0LLONK8GfKAtVHCl52JQ56y
-         ws1snNOZmfIubX2tiDnZb3ppwYJpxKG2XeAGQviPwtI1+qt00tBQ+nJsBGClzufA6zsk
-         UdxfVDa209Sh4m3kE7h4oziLSC9jmBRLDmUPlqGOQXqayuA8iim1Lp1J+ngt9CxDjsrD
-         CPVlgMr4zgUrAF/1SetY44+bEPE3e1slfuPz8R0btnVBAQ9Qt9mQLj7GAVEdqphH+4FJ
-         R6yEt2xj+mbTGMC+p/EwVGlsGG3jOmiNw/FHFtB75bnNQ9XY7Fimrrq88dpFgh+arZs8
-         QN3A==
+	s=arc-20240116; t=1745965469; c=relaxed/simple;
+	bh=ZxjSSO3zSdfQ+0uQV9kS+bFB1X651PDwoMLjLyWGzPI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Si4pOORXZgPkeSxIRPUh/eu9b1Wcae/1mZ178Epkg6T3JTSQZUN5+a4kuzY2v4eUlmdCkWHlA0DUn0Bt0K3AJWrlEhwf2uE95TwTbdqK8MTN29L0rr/KlSp50X53pbdZ6zvCkK2xWwJutKm5OnvSEXup4fKIhc18R90OUTyRnZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e7e0413c2so573801139f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:24:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745965443; x=1746570243;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745965466; x=1746570266;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CGEUp3ob+JGpdilZp+gx8NdgXFPIJ9r8QmvAiWLd4sQ=;
-        b=ESpizqISMEyL9TrlduffiOje51MlHmWsOM3nnTTujRkyY5DKSoPALjTvxJouPhNeZX
-         06z7jgoJH6Ww/EqVV8/CwFXZ9nALrYV/IQ4fQKy+rLrhdJSXWuTIzV9UK3x5r6S+EGE/
-         Z7xwdJUxId5H1Tq29JSg4kWRBPLzlA7BNpwImog19JchRMd8fYpWbOVuL4UVUvSzohwn
-         3escsA47VtXqG/EwvIi7x/oyDhgdY5/6+UpP/ArUCyzjfsJ+09i9LYg2wvuK5XbVb4Q2
-         A2s8UlJDl0SCKl58Zk7LQHIhzu3m2LdX7wqmYiFrp28lbVxMSyhC2ihjw2rcnM7oUJbx
-         dmig==
-X-Gm-Message-State: AOJu0YzYMM5bAEDp3a9LR3Jhi3nPHzadAYAOztyJT8tl92pxtBxrse3d
-	Ksm8v7ZaZzGv0n12J5B2zpxw7Abh1PHP2inqE+tg0yWpkYyiOrC6
-X-Gm-Gg: ASbGncuL+eVqK1RvWctQ+0tUu9lSh4KHE1S4hf7IsnxPRPHIMVqeKPBlS5pkivi08A2
-	HSNBxGzhVpHcjMehNGfzChCBGLTDE6vgUYAOxh5FTqYEEWJw4BmFMs/GFdTm1o5FSC5r9tTMOW3
-	0xk5htny8pl6GDPz1niDD7fxJ7AtET2imuFRqV3LTMq5IKRYkNGo8ed0JJsNqE3ciQR1lwlFtNN
-	SN0Sz01V2lyfavE9cq4Kro9QhWWnv1cVy1gJw+v8K3S+EgODs922crjpUMNFjv9PCE38KK83+bG
-	IHlI3eTu4j4QTH3dZ4os2N2DkFJXv5a/wqYOarzIs4QmMZO06mS9QXAy4LnIV5v3XKFSqr6BfdB
-	Xni2GktYVo98fVSbwSjij+5J58oZpdIStiYWeILKbqFEE4g==
-X-Google-Smtp-Source: AGHT+IHF69aRwz3TZ1NaDoib+tAud/ycJsSGFVCOO3bK++WRTy36kJlMFxYTEpVOplk/jCEwcufrxQ==
-X-Received: by 2002:a17:90b:55d0:b0:301:98fc:9b5a with SMTP id 98e67ed59e1d1-30a332d5c99mr1058275a91.6.1745965443080;
-        Tue, 29 Apr 2025 15:24:03 -0700 (PDT)
-Received: from toolbx.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a349e3c37sm68489a91.5.2025.04.29.15.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 15:24:02 -0700 (PDT)
-From: Alistair Francis <alistair23@gmail.com>
-X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
-To: hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	hare@suse.de,
-	alistair23@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v2] nvme-tcp: select tls config when tcp tls is enabled
-Date: Wed, 30 Apr 2025 08:23:47 +1000
-Message-ID: <20250429222347.2215363-1-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.49.0
+        bh=IdNXUZqQeuiW9B9XnKTAPLYvVVlrDQjOW3qEnnYK9gQ=;
+        b=pXSMa4TISctM/lyXMsd8dVBe+7egGlptB2mn3v+WTrmsCkB7it+XDwBmsgg0M2hqti
+         wJCQQKndf1Ezonnl2sVCgwHPA8oCnHm/xoW9ZfrpDRMZ2C90BDSwVafUaYXDhPOBEBPT
+         mBHhgByWMmdaLujtwHtrQhnaWpn3iFkIQxVe6aurL6M68MyqFrIBy3d1/8LT2HzUEe+D
+         n1G8roJj9q5y/4jMvnoVCnQwsaca61LYBvWlLlakO8bny8jyzOe4YbRmTC5H0ZxrzWlu
+         lhVxlxNuBWjCwJuhn+d7QGkUaBAiT4cVTCSERa1fhU+AzSTMA+u7KQjY50S8mmeAjN1u
+         yApw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXFBmmPKktdU9c+ivY+4L47FZfFKzq5sPOKDsUJcQR6OSoOnH3wGNLn0W3JyHxxj0ELsZwn+w6eKAoFrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6wug2LXCq2MFXuKwY9hMwKOOPr09upj1e1SJ0jD6ijkwAlhJ6
+	mn+ELKHcrqsWxKwR2rL+ppgpK8QDtOhEiTonpdcNs5j3BBjDjUIQI5LjW/63V8ov5j5ggxgyJBB
+	2xup47Tk53a0XMqCg0o5cNB4DgL88V8Mo9Nv7AXIAKRtyCJkGfnFQRYE=
+X-Google-Smtp-Source: AGHT+IG3BV9QV3T1xpNWUZM+44RrpkkuPVTnvQP0+PP2B8noLWzU3V0Zb6ry2PiikVafiQM5UcCgqe0GikC6NRLq1VaLIVh1onl2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:298b:b0:864:4a9b:f1f1 with SMTP id
+ ca18e2360f4ac-86495f33807mr136127039f.14.1745965466554; Tue, 29 Apr 2025
+ 15:24:26 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:24:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6811519a.050a0220.39e3a1.0c93.GAE@google.com>
+Subject: [syzbot] [bcachefs?] kernel BUG in bch2_fill_extent
+From: syzbot <syzbot+150f08265580ecb7c31f@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ensure that TLS support is enabled in the kernel when
-NVME_TARGET_TCP_TLS is enabled. This allows TLS secure channels to be
-used out of the box.
+Hello,
 
-Fixes: 675b453e0241 ("nvmet-tcp: enable TLS handshake upcall")
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+syzbot found the following issue on:
+
+HEAD commit:    c3137514f1f1 Merge tag 'riscv-for-linus-6.15-rc4' of git:/.=
+.
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D10da10d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D90837c100b88a63=
+6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D150f08265580ecb7c=
+31f
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-=
+1~exp1~20250402004600.97), Debian LLD 20.1.2
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7fe=
+b34a89c2a/non_bootable_disk-c3137514.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/467c03afa53b/vmlinux-=
+c3137514.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ea8b6881765e/bzI=
+mage-c3137514.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+150f08265580ecb7c31f@syzkaller.appspotmail.com
+
+bcachefs (loop0): Version upgrade required:
+Version upgrade from 0.24: unwritten_extents to 1.7: mi_btree_bitmap incomp=
+lete
+Doing incompatible version upgrade from 0.24: unwritten_extents to 1.25: ex=
+tent_flags
+  running recovery passes: check_allocations,check_alloc_info,check_lrus,ch=
+eck_btree_backpointers,check_backpointers_to_extents,check_extents_to_backp=
+ointers,check_alloc_to_lru_refs,bucket_gens_init,check_snapshot_trees,check=
+_snapshots,check_subvols,check_subvol_children,delete_dead_snapshots,check_=
+inodes,check_extents,check_indirect_extents,check_dirents,check_xattrs,chec=
+k_root,check_unreachable_inodes,check_subvolume_structure,check_directory_s=
+tructure,check_nlinks,set_fs_needs_rebalance
+bcachefs (loop0): dropping and reconstructing all alloc info
+bcachefs (loop0): accounting_read... done
+bcachefs (loop0): alloc_read... done
+bcachefs (loop0): snapshots_read... done
+bcachefs (loop0): check_allocations...
+bcachefs (loop0): pointer to nonexistent device 237
+ =20
+bcachefs (loop0): pointer to missing device 237
+  while marking u64s 7 type extent 536870913:24:U32_MAX len 24 ver 0: durab=
+ility: 0 crc: c_size 8 size 24 offset 0 nonce 0 csum none 0:0  compress lz4=
+ ptr: 237:893353206280 gen 0, fixing
+ done
+bcachefs (loop0): going read-write
+bcachefs (loop0): journal_replay... done
+bcachefs (loop0): check_alloc_info... done
+bcachefs (loop0): check_lrus... done
+bcachefs (loop0): check_btree_backpointers... done
+bcachefs (loop0): check_backpointers_to_extents... done
+bcachefs (loop0): check_extents_to_backpointers...
+bcachefs (loop0): scanning for missing backpointers in 9/128 buckets
+ done
+bcachefs (loop0): check_alloc_to_lru_refs... done
+bcachefs (loop0): bucket_gens_init... done
+bcachefs (loop0): check_snapshot_trees... done
+bcachefs (loop0): check_snapshots...
+bcachefs (loop0): snapshot points to missing/incorrect tree:
+  u64s 8 type snapshot 0:4294967295:0 len 0 ver 0: is_subvol 1 deleted 0 pa=
+rent          0 children          0          0 subvol 1 tree 0, fixing
+ done
+bcachefs (loop0): check_subvols... done
+bcachefs (loop0): check_subvol_children... done
+bcachefs (loop0): delete_dead_snapshots... done
+bcachefs (loop0): check_inodes... done
+bcachefs (loop0): check_extents... done
+bcachefs (loop0): check_indirect_extents... done
+bcachefs (loop0): check_dirents... done
+bcachefs (loop0): check_xattrs... done
+bcachefs (loop0): check_root... done
+bcachefs (loop0): check_unreachable_inodes... done
+bcachefs (loop0): check_subvolume_structure... done
+bcachefs (loop0): check_directory_structure... done
+bcachefs (loop0): check_nlinks...
+bcachefs (loop0): inode 536870914 type reg has wrong i_nlink (2780562353, s=
+hould be 1), fixing
+ done
+bcachefs (loop0): resume_logged_ops... done
+bcachefs (loop0): delete_dead_inodes... done
+bcachefs (loop0): set_fs_needs_rebalance... done
+bcachefs (loop0): done starting filesystem
+------------[ cut here ]------------
+kernel BUG at fs/bcachefs/fs.c:1327!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5313 Comm: syz.0.0 Not tainted 6.15.0-rc3-syzkaller-0024=
+4-gc3137514f1f1 #0 PREEMPT(full)=20
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16=
+.3-2~bpo12+1 04/01/2014
+RIP: 0010:bch2_fill_extent+0x96e/0x970 fs/bcachefs/fs.c:1327
+Code: 0f 0b e8 d5 c2 8d fd 90 0f 0b e8 cd c2 8d fd e9 f7 fe ff ff e8 c3 c2 =
+8d fd 90 0f 0b e8 bb c2 8d fd 90 0f 0b e8 b3 c2 8d fd 90 <0f> 0b 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa
+RSP: 0018:ffffc9000d6c7420 EFLAGS: 00010287
+RAX: ffffffff8431fbed RBX: 0000000000000014 RCX: 0000000000100000
+RDX: ffffc9000e0f2000 RSI: 00000000000015b3 RDI: 00000000000015b4
+RBP: 0000000000000001 R08: ffff88801f690000 R09: 0000000000000004
+R10: 0000000000000012 R11: 0000000000000002 R12: 0000000000000000
+R13: ffffc9000d6c78a8 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fc1fa9426c0(0000) GS:ffff88808d6cd000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc1f9dae0a0 CR3: 000000003f77c000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_fiemap+0x2764/0x2970 fs/bcachefs/fs.c:1540
+ ioctl_fiemap fs/ioctl.c:220 [inline]
+ do_vfs_ioctl+0x1638/0x1eb0 fs/ioctl.c:840
+ __do_sys_ioctl fs/ioctl.c:904 [inline]
+ __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc1f9b8e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fc1fa942038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fc1f9db5fa0 RCX: 00007fc1f9b8e969
+RDX: 0000200000000100 RSI: 00000000c020660b RDI: 0000000000000004
+RBP: 00007fc1f9c10ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fc1f9db5fa0 R15: 00007fff94ccddb8
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:bch2_fill_extent+0x96e/0x970 fs/bcachefs/fs.c:1327
+Code: 0f 0b e8 d5 c2 8d fd 90 0f 0b e8 cd c2 8d fd e9 f7 fe ff ff e8 c3 c2 =
+8d fd 90 0f 0b e8 bb c2 8d fd 90 0f 0b e8 b3 c2 8d fd 90 <0f> 0b 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa
+RSP: 0018:ffffc9000d6c7420 EFLAGS: 00010287
+RAX: ffffffff8431fbed RBX: 0000000000000014 RCX: 0000000000100000
+RDX: ffffc9000e0f2000 RSI: 00000000000015b3 RDI: 00000000000015b4
+RBP: 0000000000000001 R08: ffff88801f690000 R09: 0000000000000004
+R10: 0000000000000012 R11: 0000000000000002 R12: 0000000000000000
+R13: ffffc9000d6c78a8 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fc1fa9426c0(0000) GS:ffff88808d6cd000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc1f9dae0a0 CR3: 000000003f77c000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/nvme/target/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
-index fb7446d6d682..4c253b433bf7 100644
---- a/drivers/nvme/target/Kconfig
-+++ b/drivers/nvme/target/Kconfig
-@@ -98,6 +98,7 @@ config NVME_TARGET_TCP_TLS
- 	bool "NVMe over Fabrics TCP target TLS encryption support"
- 	depends on NVME_TARGET_TCP
- 	select NET_HANDSHAKE
-+	select TLS
- 	help
- 	  Enables TLS encryption for the NVMe TCP target using the netlink handshake API.
- 
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
