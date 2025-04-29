@@ -1,108 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8473B259C9D;
-	Tue, 29 Apr 2025 19:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86F72472AC
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745954456; cv=none; b=i88A+GMKerzwMMC/XF6PTdxNVXMRwZJ0OUr63UWvDyK1N02Blro90oFKyl0a3E4YS1Jl4zkQj6Po3ckA093OAG3/nLrmm16+IX7REzH//HpKbSh8/9UaWDERV2/0oZ1DtC5bbkWRFrrlGAOeQ1LMMe13D7fVdmtniybY7f+As5M=
+	t=1745954723; cv=none; b=Awl5AdIMX76HGtTVmQDhqeOCCSTwtNhNZF/OQNnZjwldRJy3GbSFZmbHZUTx8DgXSYJIIdZBmRVcm+0Ii3WLe4Q3mc8uRpR4MAi18hLQpkDNHM2whmcg75pEBxa9K5SPvJX/dA01Yn1raqYO1xTk9KLr78haR4QpZiUZp41UX4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745954456; c=relaxed/simple;
-	bh=1ARwXxe8pdNgLXp+etb58lUobvz2R+B72ZZn8/OpA04=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=k672tJhJX2p07oFXF5JB2pE0LfIxQZe1lR2MdlEhhZn9sImW6BsPkshGouD82UMr3+9AY9HXNgjxNW0bdFBEr6qUnh46yOH9hpx5UHUH5ETuM8AHbDdKdIuTssl7Xn2DiU3xxY3UtruA1UWd87pzWKyNsL4s9+rjnoMkQ22gMBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKN1cbFQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745954723; c=relaxed/simple;
+	bh=wQYgyO8cTCRZnnsbCH9cX9z79zt/5slmTEUOaPrK4W0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dRo4y9YNWELVCs/0VGh9ZYmrsjNn1wrONbd2lBvr9vfr+4aljI3oXi5GeXMWuAaM8Uhx0y+JPpkTgpCHrXZ+ItlRQnbaAGAvObkAdHpImNWv05WhvyR9K7yyITey11ybYXSjDnkJpgUOCGErnX/+8FuytB619S1sBKGO9yKkHPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=HwxktT6L; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKN1cbFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70424C4CEE3;
-	Tue, 29 Apr 2025 19:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745954456;
-	bh=1ARwXxe8pdNgLXp+etb58lUobvz2R+B72ZZn8/OpA04=;
-	h=Date:From:To:Cc:Subject:From;
-	b=iKN1cbFQwYMqjjMB8+RRbf8nUT8bU+TX4dLNIZvHoYSms7tOTa5qXtsDXNvptljTT
-	 TDE+90CSU3NY8t3BGLIUcVzbCchK2e+Ue+5tFOIQulhu37PkmQL5HVoXWCMkCYwJZF
-	 aCPNNifFVJQSMGJdhqkq08G5FMwwxkcUpWZzLCkvBfjBJlU/Mp4KfsN0kjlLk9p71D
-	 JfkViq1CJ995Tuk5jXRxyvM5YWBElPGedgKMZOkFPiIXXf0oMPZTlZfRJDITttuNbc
-	 Lf70OKATJswzMqh2du+EuZyAcVK4Zlhb4nE8nXgUDBKgdvzf5GYF6PqSpYYKoXT5LB
-	 OMXys3kmuElvQ==
-Date: Tue, 29 Apr 2025 13:20:51 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Sebastian Reichel <sre@kernel.org>
-Cc: chrome-platform@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] power: supply: cros_charge-control: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <aBEmk6ixfrQ2XpTw@kspp>
+	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="HwxktT6L"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e573136107bso5681478276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=criticallink.com; s=google; t=1745954719; x=1746559519; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r/ifkoP2VzjSNVs4Xu0uRQ1iLvHQ3o12JsQMc2lGYGM=;
+        b=HwxktT6Ll2Y2nntGRoqh71qvITTVcUnQ3FOKA9UsN7vKADajUmLO+49zUMvPjstHFw
+         kl7tbuqrhtSTwvODBUMOCRCjlYzWCmXqhWwwjp92UF/DK5yjPv/qX/k1bEFWG8IjKRqz
+         Hk63CKe/gulqhRywbXQY37anWtr99uhNUof5BNzREIfmI4yihYPlHDFWMeI/vnPzSDG0
+         kyrsgD6GLeSrrZ9RLewKLm1sB5dtNyvZIfRNmZMC0eQJFDWNT0266m9xfQQpAh94p2JL
+         NI41TZ0Lvy1wOqp/HGwGYVLqTD7eaNDlyjBK4905N+qwk5YOLXX1mWa5omki+jG+K0fI
+         /OzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745954719; x=1746559519;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r/ifkoP2VzjSNVs4Xu0uRQ1iLvHQ3o12JsQMc2lGYGM=;
+        b=D7Bb5+tGfoGsY3NHZKqChtWqu0wTAvW7pXgpMclXJ5mJgMizMs+BJkmcx807ELl6Fk
+         TiAmuvYdmgyNjhUNSSJ8oB+MtVw8Ra7NogCpBrv5z0HH2HvM1ksXynLZYrC7sH2acz4a
+         nd4JlqWPriZgY4VsODhCOCk1XphJtcKEenBYEDulufoM+rVtHuPLSmFf4s31sBapb4O7
+         xnC2PrlEapGEPWlxCeGYlvH3LLBTlFTSMM4pwmgbwncsNek0klxOP9u62MIfixIkp0Zq
+         u3KR4KTEsWZ26svp2cmBbow2rRSeUm32vqqWeeXymfkpK7shgjgS0xdteTJ+BQzDrG4u
+         Dshw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyJFUlgPw3frgJdenCXHoR/zhSQ/DYetDKf+n5N0T5AX2+/cWdr3udhoLW5hARrSl9sBzJsjKxNEsBQwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyoNu9cs5sZj8anI4coYuBPNVU8j+kEiya+qbH4RohDZkFdgF6
+	F/Rkpz7QGHBckaaHLdIhup25UBy7ldNQZCtPi7JXCgRlO31BlKV3wqu722ei/WT5tb1YPcPHOai
+	4QFWlOierVsu36MuGKJap34Ti4hweH+Lo+NYY
+X-Gm-Gg: ASbGncto4dkI5nvPL7B1BrAI+uzK3evFwiXFj+ZH8dFrqgZC8WwlachEvTp2hFWJjri
+	Q4HEkJY5/43NTqgN2SOCWOD2EU5KFvp4Qr5T7tJOZ4bxhIVnm0J0UOWwut/tsH8W35TUIORDRiI
+	Ks4aP17Tw6DJBsGq8Z/JtP
+X-Google-Smtp-Source: AGHT+IGqPxuLRzyJFjxrB+wKq9wOk//LyPTOPx3ptoig5goYUbeX82deJ4X6MbMth7FkOt7ItZfdyhmRh3usApwY78Q=
+X-Received: by 2002:a05:6902:2808:b0:e73:117c:42cb with SMTP id
+ 3f1490d57ef6-e73ea2123bemr645377276.2.1745954719592; Tue, 29 Apr 2025
+ 12:25:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250425203315.71497-1-s-ramamoorthy@ti.com> <20250425203315.71497-4-s-ramamoorthy@ti.com>
+ <f92085bd-e35e-422a-8aa3-66e624c44586@criticallink.com> <683a1c36-0b5a-461f-bc89-3a418f542b57@ti.com>
+In-Reply-To: <683a1c36-0b5a-461f-bc89-3a418f542b57@ti.com>
+From: Jon Cormier <jcormier@criticallink.com>
+Date: Tue, 29 Apr 2025 15:25:08 -0400
+X-Gm-Features: ATxdqUFbxaBs_n6S4jW-r8vtMbiLr_Zi-oXCzuJN-ujmvmE10E7tbKFaoDyKPd4
+Message-ID: <CADL8D3YwBOf6wPTgxjadsPPn3rLR16V7nAO39+7J=tNxk_hQDQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] gpio: tps65219: Add support for varying
+ gpio/offset values
+To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
+	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Jerome Neanne <jneanne@baylibre.com>, m-leonard@ti.com, 
+	praneeth@ti.com, jsava@criticallink.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, Apr 29, 2025 at 12:42=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@t=
+i.com> wrote:
+>
+> Hi,
+>
+> On 4/28/2025 11:41 AM, Jonathan Cormier wrote:
+> > On 4/25/25 4:33 PM, Shree Ramamoorthy wrote:
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of a
-flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+> >
+> > However Jerome wanted GPIO to map to linux "GPIO 0".  Is this still
+> > the case for TPS65215?
+>
+> In my attempt to combine TPS65214 (which originally had 1 GPO and 1 GPIO
+> when I wrote the patch, but systems informed me they just switched it to
+> 2 GPOs and 1 GPIO) & TPS65215 (2 GPOs and 1 GPIO), I made a mistake in
+> combining the 2 series during rebase & with how similar the PMICs are.
+> Thanks for reviewing this as I wrote it a cycle ago. I'll made the
+> necessary changes & re-test. I will double check that GPIO matches to
+> linux "GPIO 0" now that I have more context about the offset math (super
+> helpful explanation!).
 
-So, with these changes, fix the following warning:
 
-drivers/power/supply/cros_charge-control.c:57:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Thanks. Considering this confusion, could you add a comment for the
+pin mappings? Something like:
+// TPS65219 GPIO mapping
+// Linux gpio 0 -> GPIO (pin16) -> offset 2
+// Linux gpio 1 -> GPO1 (pin8 ) -> offset 0
+// Linux gpio 2 -> GPO2 (pin17) -> offset 1
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/power/supply/cros_charge-control.c | 26 +++++++++-------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/power/supply/cros_charge-control.c b/drivers/power/supply/cros_charge-control.c
-index 02d5bdbe2e8d..e33bc4c55bcc 100644
---- a/drivers/power/supply/cros_charge-control.c
-+++ b/drivers/power/supply/cros_charge-control.c
-@@ -53,23 +53,17 @@ static int cros_chctl_send_charge_control_cmd(struct cros_ec_device *cros_ec,
- 		[3] = sizeof(struct ec_params_charge_control),
- 	};
- 
--	struct {
--		struct cros_ec_command msg;
--		union {
--			struct ec_params_charge_control req;
--			struct ec_response_charge_control resp;
--		} __packed data;
--	} __packed buf = {
--		.msg = {
--			.command = EC_CMD_CHARGE_CONTROL,
--			.version = cmd_version,
--			.insize  = 0,
--			.outsize = outsizes[cmd_version],
--		},
--		.data.req = *req,
--	};
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			MAX(sizeof(struct ec_params_charge_control),
-+			    sizeof(struct ec_response_charge_control)));
-+
-+	msg->command = EC_CMD_CHARGE_CONTROL;
-+	msg->version = cmd_version;
-+	msg->insize  = 0;
-+	msg->outsize = outsizes[cmd_version];
-+	*(struct ec_params_charge_control *)msg->data = *req;
- 
--	return cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+	return cros_ec_cmd_xfer_status(cros_ec, msg);
- }
- 
- static int cros_chctl_configure_ec(struct cros_chctl_priv *priv)
--- 
-2.43.0
 
+
+--=20
+Jonathan Cormier
+Senior Software Engineer
+
+Voice:  315.425.4045 x222
+
+http://www.CriticalLink.com
+6712 Brooklawn Parkway, Syracuse, NY 13211
