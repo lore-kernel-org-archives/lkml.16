@@ -1,104 +1,112 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f228.google.com (mail-pl1-f228.google.com [209.85.214.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9518B25F7B2
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970592777E4
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745966457; cv=none; b=M6eUqItwx9mMUiws7VeH3XlxTyW0UbPEbjoi/bcPPPitJItIbKlxDG+S/FUcprrsO0jZ1dp0TxR8uATEEW0q//4t9e+GyXRbS2v5YwQctrRDn0nHxNSyF10YPnlXy4Z+8z7GVbs2oWuVsSs3v6V033s+KadNxlb2WPO+Oz/Eg9Q=
+	t=1745966473; cv=none; b=PAxJMSwX+uswN6ioQpstp0nB2wzhSEaETsSfLGRX8V1bBqjIAySN3H65+ZjgTGaknfbwKFo5HsStQXSEV+S+2OZLlNzNA6DJU2fcuf3Fek4Zyl8bl9Qk13b2A25b4HzAY/CbuRGJVHY4KkYGcDJ/dZw6USK6j6lRMKOV7zh1mDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745966457; c=relaxed/simple;
-	bh=rzblUjmuva03Jqa+IV3WtGt8yIVowSe+ChkqLl4IjY0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d/TmP6fIBiOw+kEMTzXAnlAlP3oT5gjAR322uJrHD6nCJG+Cqa2eCvK4eVN/DLImFfk6jH3LL+YqSFUOfMYYaXgMiSRQFmjvNy8HNzmUOJqiNXeBIQ+icz1tH1W5bjfV7v0NbbadWsEdi/BodtpIjM+jF3RclgDvRXHZ6Ma36fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRnKOfWZ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745966473; c=relaxed/simple;
+	bh=yLjCvoCe6VXMT5MsUjHgKpFFAFBbBtQRcr91r8jHk+A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QvrRdKhINQX+6Xwiix7gZ5qKgzs7rYMo3Sch+kJXcVcB+uvupr+vUOhGqtB6yvTZoDwmnheeliSYkTh5yvVwEMyhNo2qherlAqy+KOMlwHG/IoRBgomyoW33w6gATauMTDP0MPSsDSnQMapdeMUcEeUsEYIAtwNBhQ9pwclQn4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=LwqKwcsW; arc=none smtp.client-ip=209.85.214.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRnKOfWZ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22423adf751so66754365ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:40:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="LwqKwcsW"
+Received: by mail-pl1-f228.google.com with SMTP id d9443c01a7336-2241053582dso99247165ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745966455; x=1746571255; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yyTeZsz6IZ53slc/uXF/wiJNoEHlyhXOmtXLOMGmbDM=;
-        b=LRnKOfWZ9JfyoY/Hcwd2XJ3qXQ+V4XT1GVr/N7PefwCxyMh/i6tnZBu/c2vsKDJ4Vz
-         PD3NSMsVbl7H2LocAsCWHXlrZm8yVDSi/1o8uR23pwQcU4/Et/pxcKD9GfplYLsAf6+k
-         Xu5CsViBJTevxxejUcyDmXf6wq8bZKOipDAUVXV0tgB3RYCfxe+Z90vFerrpx+LLgipu
-         yIajHxa/jOVlDvtTSsiFtnh6mAxfo4if0WdLnvD5AJXW1qvJAow36QzuJTq5oekQwiI6
-         P48T5cFfjg7/obcquJK0rODxv40fIy4uMNe8c0/z45rUvtyUV3tpUJHK8FynEf/enGOW
-         7TOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745966455; x=1746571255;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=purestorage.com; s=google2022; t=1745966470; x=1746571270; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yyTeZsz6IZ53slc/uXF/wiJNoEHlyhXOmtXLOMGmbDM=;
-        b=b04T3HmV6en21Xvnqi1tQ5t0amTxGgZehI9LjA3smBH/2nSmqXQl2j2QMuM7acpWoA
-         PTLmLSWmUMRP9rqCAywSLAHYP62FiiHwxI8TJlMevPFyFcGo0q0gDqnbvh7xMuoqPhq+
-         quNpjxIsjOPFPTRYnbFgcUP3u+bKkAVmFYRjGRxi7Vur8n6O6dulj5CQ5z5CIUO+E3Iv
-         DMab2yQ0uwYN6gv3Bn0sL+Iy2SJmqHswrgYHzIfOJdSOmmxdpS6TWu+LzJn0vTZBHPIe
-         natLZl1z/4MFX34kwwJe4AJe3z2n23rgUEWYrHqmZ+9F0Fh4OEVnLmRwGUCtjuLzRuzJ
-         ZZ9g==
-X-Gm-Message-State: AOJu0YyIMopgFk5YubFVga0cfPmbZk8+La0BHkf5WF/H5B06troTiRSt
-	4GKxA84w5bpk0fVKDCv8oU+MkhQr707qaoC37mu8HzijHNa6aSvN
-X-Gm-Gg: ASbGncu4YlUvizD4l6gpGkwfvCJDfZdJFs/Cu01XcQLy6zdTEU9FjoW1YUi9YIthxWX
-	K4rpVuiLp3ehK/RWW+E3fV61PpVjIp2aP6hi46h8pokMgmcBNhxOpn0b5ORHN8iOIAT2Fk1BvLT
-	8xVHTNDzHQZBiZDiYSn/8MgEdkd8sTFlOJarYya23+EceVtW6wqqjcpE8c/pxRE1I19CPyA7gQQ
-	76EHv8G36pQPFrhRnVhu1F28D11VGdWMThY5OzMf8d8wZfENq1OSraDSpEhYUvjcvz/L6l4CPUp
-	x8Jn54wHpuev+WiTKQn2tO5/D39Z2sAjzpFruaPRXrzcuc7IuhzaygEiIOFP1H9WOAhoIGvuxEX
-	EcuIYYzTVuFJKXYOfaeS/WJWovVmzrZ1DWu1fQ1eV+zi50LsnpQwny8cl
-X-Google-Smtp-Source: AGHT+IG/LcYTawggDwNx+7aZsKXZ7xv08EL1BPd6O9A7QWNZPdPJKyekrLT/6B7mGyw5UqbPrBFvuQ==
-X-Received: by 2002:a17:902:e741:b0:224:2201:84da with SMTP id d9443c01a7336-22df34b38bcmr12875565ad.6.1745966454671;
-        Tue, 29 Apr 2025 15:40:54 -0700 (PDT)
-Received: from toolbx.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51025basm108642445ad.187.2025.04.29.15.40.51
+        bh=FFNtS618ufyKJDtfH/r/PyGi4nE5aM2nCuyHf6tRb3Y=;
+        b=LwqKwcsWiHCt0Ma4fVElW3asrerOszOKpN0s0hzAvtiMJPqCAoFGGvNNRgXDX9Cf7S
+         ZYYWkvnueOR5YH6AXoBwp0ywutmIfIL3iSN8+Teu8N6RDD3EWiY3Ct8gx7dVdnZEMVZp
+         Wf6c1/JNeztMCGffl7q1cMvUUBiLKdMGDg2aJdDNpqlYr/67Xsi0VqjgqIHeWotNTtgp
+         dj5oVroce5AkxbB4/g0K13X/nGEXXOANwqaGmtE2vylF3hHmcWvBK0NlKV+kX61Nq66m
+         b5dMFMF8yeUIP5we4+t9qiZA/D1ApZ/o/DQD564ytiq/CECJq+z9Nx4m7LeFo5bVfUZI
+         EjvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745966470; x=1746571270;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FFNtS618ufyKJDtfH/r/PyGi4nE5aM2nCuyHf6tRb3Y=;
+        b=NUN7L6VNVRcjgo7is/fv+1iqBgpt6xtOua9/saA/lj82pyhe9xRvx0BajLZtKwJo5G
+         wdIB7ctGBEbXyDYox1bkpv5Df6v+l/eNTYkR0qBZ7ZlS2HaXVHiQUj7bPZxwvholwRVc
+         s32FqsWNDoDHbMUJwsNO9+J5KMO3p+QI7mtXpEUOSnJklYef+sC/O+IdQqixiQiow/Rz
+         nfhHGzKikJM8MRyM2PesshDKOf9tcnuse2k+W2cynqCMxqHTdmKVkXfz2vpjEbNpaH3C
+         NvA4Wryfj93T3PrxgOJIN8tqMp4SGHGQoiCB61VcNnnOUwmIofACKJdJUA1S1GcY+Cfq
+         bpHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrlpS1YnIuvhyw/XZ9icdPkLgmrfIbJ1fuNzdBYaTrJL4hAKgEYYWIPoQ/65LI8RpuIwfqv3RQjo2y03w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx05RrkTV0V3W/oKl3tCU068aq5WjhFHW9hkKh0ggthuWOB0GGA
+	QymDqaZt1fQnW8btOLVOQTujoTc0NaxC80Ier0NjeRdzEezu2xEPmK+NIATzyVtMi7hYTVmbU2u
+	uq2Y5xyXK5bW+YX9bxv6aLy+V8K9cU0F6AO1WRUpK8Rs9LZ1/
+X-Gm-Gg: ASbGncv5vbG6spn6hhm+1NnmwYuygCsBn+3NL0ub5cV4NjITPLa6lESghnSjp+uyXog
+	SQIPHMDXcyvCE3Ppyw4u+j7a6XW9bKAbQKTpXRr7WuE0yWMrqmrDfLTYDlTcPj6C8gcj1ZvD4BE
+	1jXikCXRBg2wCC1ME7y/yv0jG64/ZecTD6z14oBPH7qOhTj2TK9+drL8b67mZS7/SmkKtlCAeRm
+	rwtn8pFpqr3PgBS34+R7m/DkzPRCsWfkFLCB6npGkxxenHxf7fnatKTfKOMQRw961cddhdlbsT3
+	vMr2oLbebU14McMbMyd1SeMMr0tn+u4=
+X-Google-Smtp-Source: AGHT+IGBZ7D6TEnAUN4d7huIcnUzTzs2CYiqo4tm38ieihvVaysSOYFpmF+9wSpzUkmmpxVwAfixH06NtvV6
+X-Received: by 2002:a17:903:3c66:b0:21f:1202:f2f5 with SMTP id d9443c01a7336-22df57638e7mr2895685ad.8.1745966469787;
+        Tue, 29 Apr 2025 15:41:09 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 41be03b00d2f7-b15f7ec226dsm809653a12.1.2025.04.29.15.41.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 15:40:54 -0700 (PDT)
-From: Alistair Francis <alistair23@gmail.com>
-X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
-To: hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	hare@suse.de,
-	alistair23@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH] nvme: select tls config when tcp tls is enabled
-Date: Wed, 30 Apr 2025 08:40:25 +1000
-Message-ID: <20250429224025.3077488-1-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.49.0
+        Tue, 29 Apr 2025 15:41:09 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0055634034F;
+	Tue, 29 Apr 2025 16:41:08 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id E501DE40EC9; Tue, 29 Apr 2025 16:41:08 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Date: Tue, 29 Apr 2025 16:41:04 -0600
+Subject: [PATCH v2 2/3] selftests: ublk: make test_generic_06 silent on
+ success
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-ublk_selftests-v2-2-e970b6d9e4f4@purestorage.com>
+References: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
+In-Reply-To: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
-Ensure that TLS support is enabled in the kernel when
-NVME_TCP_TLSS is enabled. This allows TLS secure channels to be
-used out of the box.
+Convention dictates that tests should not log anything on success. Make
+test_generic_06 follow this convention.
 
-Fixes: be8e82caa68 ("nvme-tcp: enable TLS handshake upcall")
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/nvme/host/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/ublk/test_generic_06.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
-index d47dfa80fb95..4d64b6935bb9 100644
---- a/drivers/nvme/host/Kconfig
-+++ b/drivers/nvme/host/Kconfig
-@@ -102,6 +102,7 @@ config NVME_TCP_TLS
- 	depends on NVME_TCP
- 	select NET_HANDSHAKE
- 	select KEYS
-+	select TLS
- 	help
- 	  Enables TLS encryption for NVMe TCP using the netlink handshake API.
+diff --git a/tools/testing/selftests/ublk/test_generic_06.sh b/tools/testing/selftests/ublk/test_generic_06.sh
+index b67230c42c847c71b0bbe82ad9de1a737ea3cb75..fd42062b7b76b0b3dfae95a39aba6ae28facc185 100755
+--- a/tools/testing/selftests/ublk/test_generic_06.sh
++++ b/tools/testing/selftests/ublk/test_generic_06.sh
+@@ -17,7 +17,7 @@ STARTTIME=${SECONDS}
+ dd if=/dev/urandom of=/dev/ublkb${dev_id} oflag=direct bs=4k count=1 status=none > /dev/null 2>&1 &
+ dd_pid=$!
  
+-__ublk_kill_daemon ${dev_id} "DEAD"
++__ublk_kill_daemon ${dev_id} "DEAD" >/dev/null
+ 
+ wait $dd_pid
+ dd_exitcode=$?
+
 -- 
-2.49.0
+2.34.1
 
