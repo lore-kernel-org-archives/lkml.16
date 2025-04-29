@@ -1,188 +1,317 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436A52BD580
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918871; cv=none; b=Y9ju8Im5RMUcHeFNB52SkWuzAyLYn7T7OmuMn4SLjxew+oBy1R8uQ+LTAEFcbsZUmk3cjetWS7R3jFNMCE0snYmfNzd5ddbHJrB3+7DldDD7z5OuI3jJOo6CfswREpaNfmwRzvZGh/rYvprHr2MYE5owCrXLpaS1SI/gnO4oaeM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918871; c=relaxed/simple;
-	bh=8HK6UNjvWFByLkQO5X7zxGeF5wGGaZyqcJ8hX/3z0lE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KIs3QMYlNtyU7JOd9d3OLsgU+0hUdszD2TGRmp+JhwDerTXbCpmgPI3xpYxUA2sXnrQ4KophUpq528S9HYtvQI+xKqt1/ew/GrahpeofiQ8XYqQ1GdycySijZ9tq8H8kGwoS/GQ/6obpKsRxOrNQfHb4cSDrLs1Jn7ojhBiXmyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NAhswpOM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE642BCF47;
+	Tue, 29 Apr 2025 09:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745918878; cv=fail; b=ZDI4dV6Dlxu5HUgX36PuH2kvOWACgWoT8xSkVYgSCraVr86PByAgm9AqWFqPgK7k6Pb8RxwMMToEpEHPOGYuj2W6IUOiG+Dw4A8zdr3mwoQpmajRbLN+3u/1TgKXLXsv5eaHRnRRyD44PlGKz36x2eKAt0raAOZgMhhQxUkQygQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745918878; c=relaxed/simple;
+	bh=krqE+8/IxvtJ4gMIWTjQyrBbE1bwmCANoRhOUOx2d90=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pMGglkFF+PxTO9qN53G9asRmV9YZwga7tpz65RnvLS71kH9Y2jb69jhYrVMCMG0CQO6VOsBuKsRb6NOraKV3hl6gatCA+/l2Zy3x6IVmCrFu3if7jzXde0Tbj/SlIu0mh6C+zqPCwwlvYNAeCgJfrR8Pn0X7001w/b91wf4gZ0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=F3++x9jC; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NAhswpOM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745918869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fKSH+FXqhLWZM9fRPxjrnAYFhRTwogig0uOiiV/gcWk=;
-	b=NAhswpOMWgBc7UD5KkvNLsdPJHV9QbD44IlH1JefuEGdSNZugTNID79UofdL3q1QEPgp0G
-	IFx7RolNXh+S+ZzBJ1ozwfza8MGpodMWuOZYK0DaI//UBuH8P/cVoFdNrVmWKhl8CbThxi
-	1da4VtS3wrVUYDG9j/hgA1TtdkMPTT4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-Qoha7D8WMjK3k69mUa4U_w-1; Tue, 29 Apr 2025 05:27:47 -0400
-X-MC-Unique: Qoha7D8WMjK3k69mUa4U_w-1
-X-Mimecast-MFC-AGG-ID: Qoha7D8WMjK3k69mUa4U_w_1745918866
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39130f02631so1897146f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:27:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918866; x=1746523666;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fKSH+FXqhLWZM9fRPxjrnAYFhRTwogig0uOiiV/gcWk=;
-        b=sTBPzXevSY7h2Kncj3+K3Sxq6Z4oHcRCM5KuTYj4K4jU8vpi/naFaHMKYoSG+mvA/e
-         qJFUMm8a7FfLBtful93OFOEU3cQQZ75ztYAaTImYXGCmZEeYO3+PLKBIDQxGb5EpLVT0
-         4w97xPnY/D/hfMTt94jEIeogdOi3JkwlznzXboMGxrLPzpfEyKYFea/XsgKMYHcCL29G
-         3ugqkIRTZaGLgyTH0J0jhj8ODwxxcfsHVT9Tmqbj4nl+jypkVwf+SJBZwnIXzTE7IAZe
-         o98F4je7tZ+FYDT+lmJIST7OuiMHZxwTbaWVm3zLuWvnSQry+yPVaO3d03U+3BI+YWeK
-         6TLA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5m2hLDhKNNI7Cbw2Dfcoh5YvKlWoqALDt1/crvooAsqXlUKYgU8tXGcm7n7WP7ukwvlkWTG4WE3SUbOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOGj8jRJ+yKUy1muO8cKjYPspbZUgrNCV4XgTrH1w3A3xy2r1T
-	Sg4jMbnwMqBnuv0GiFqtki9Yj8gypIn2yqKj5x2QtGWmRTK+/ZSaT5tuaAVetr1H2ctzD5cNf78
-	FD8nzADXVsIGNPgTBHZAW/QcBFYfQOw/7InjeeHJXXsOpf+z7oAXaMq/fNtCVaA==
-X-Gm-Gg: ASbGncuic6S0rGMz8w8q6Hw9ZvcVt8VwabaQMArAtCXv5h5ae7vtsSx5Mpdp64ca8V/
-	6UoLmuGgglcmKcQ3+wMsy0UvDzGVFSWxUP1iRbO5ibqaBgGWis9LEmVX4ReKauYGYKsu4pACuul
-	TiDNveMfx9TgJTAJzNRexkn99fKnHy2TKihf1MQZYyVHUdqm3+O39VMNSriKgAWB1yFNkwfx1GF
-	Fz+B7aoMeN79qtITYFM5/OSNthWjUmteNEsQ8nl5vPuRCd3IpguEIu7BLzPofled87HKe9ylqAZ
-	H0svlq9UVvXQ5bNWYLBkR6m2GIt45PtH0vA2tcmyCbvHiOqSXa+Bh8JinmyIezArtRpsBIbVdih
-	giDAnFhlcGyr4CFH7r9yPcq1n87944VBQxA2A3fE=
-X-Received: by 2002:a05:600c:4e54:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-441ac91ce3fmr23580555e9.30.1745918866329;
-        Tue, 29 Apr 2025 02:27:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjHWG3JA2ydXcTpqmzjCTS1CxLqIa0iOQT/f4ABfKTOjSI117XybK9mJBeuL0JFNSojm5kYw==
-X-Received: by 2002:a05:600c:4e54:b0:43c:f1b8:16ad with SMTP id 5b1f17b1804b1-441ac91ce3fmr23580295e9.30.1745918865908;
-        Tue, 29 Apr 2025 02:27:45 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5394bfasm151677125e9.40.2025.04.29.02.27.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:27:45 -0700 (PDT)
-Message-ID: <9a770aec-a020-4199-a53e-eddda657999d@redhat.com>
-Date: Tue, 29 Apr 2025 11:27:43 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="F3++x9jC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mp0ulIzlnEfEqndnwS5qgZEMNF4CFMAIV0lA99SeirRaHtzzRRTwVxT2TsRXT81T198wdepQZDu1HB545GpqsfWXYnGzT5d5PyOstwe+b6n6awC9zBrrYNAI7E/0Vlh41GETZ4Az+zAQbet2xPytxQxOTuKqriMHOkV0+8nR1GMG8F6ND9KcsxXJ5rnEixiNhTyl2J/+QyMB9DSEvb+aRNnYy2dwnKHV78qC6kkwlmkG9KwOzzc9/uhej85EiQZKvHJHqgBJJZoZ1gVqX6pkrtUidR+Uaf0DLtgrXq6RzK3MDsXcuN6NYyitkyS3VomsWtQrZLk/ziCvA3DW+Ac/UA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VAc2kgMBB0voFxMnep34pBFAcqtbamp2YsRoP6FBcWY=;
+ b=EZcXmaEEPZilRAa04I5NUTdW+q40f0fZaDfPabI2wlJ8nsfeC7WSTp5MO6rvkcWzTbCdGNvDdAbgmAudOqJh9VvTOptgDxrhBhh8NvXrDMou+rGX/bvrwO0ktJaj+Q6UIpKeIGH7vpTauAWHZerlYkmYas5yTNNqprOymj3eXqqrYG1NNdUvImAr3NNFXZtRb/MiTnwgeXnITWo8484oEiT6vzndmAaiZ6DX32SsMynPjk1OW89HDijFJab5JlcMkWvMpuO4pLKh1HaBTBDcSdAKwP4jy1NWUdEXInahnNv70Odab3wpRhU8Qc8ZuB+COyB8sbFrVoq7NadMq5IAvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VAc2kgMBB0voFxMnep34pBFAcqtbamp2YsRoP6FBcWY=;
+ b=F3++x9jCt2KgxWj7i6jxSz/pG7+n0D6bM23irv3g4vKpZnjzPog8+5J/SrDfhxE8F6FsUzUVxx3R6geOqVN/EfgMDHtiENbAleTc6LPuvAtI5AwGO8WJFlUMMFh8pcypSj8pcNkq2sxWsfpRXYKpZNaTsYepA0+Wa6aQUyXLmXv2/TTD0qoHxKU7IfMOhMC7VINhCs8XsLp4Mybxakb4oJtL+6gw9R6u2M5Q5VxS2RMhwIp/NVc7frlC8+x+vKHc/FUaFyPZAy7vaYom8/5e5flpnMF+L0pCysC4PZXNaL0qlJUO25lVPQd69Mp3NDheSyK820aRvty9EZ4LUA208Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by IA1PR12MB8540.namprd12.prod.outlook.com (2603:10b6:208:454::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
+ 2025 09:27:53 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 09:27:53 +0000
+Message-ID: <15a3c451-1928-4455-8bc9-4039ea341f09@nvidia.com>
+Date: Tue, 29 Apr 2025 10:27:47 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/3] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+To: Robert Lin <robelin@nvidia.com>, thierry.reding@gmail.com,
+ daniel.lezcano@linaro.org, tglx@linutronix.de, pohsuns@nvidia.com
+Cc: linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+ sumitg@nvidia.com
+References: <20250429064540.1642030-1-robelin@nvidia.com>
+ <20250429064540.1642030-2-robelin@nvidia.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250429064540.1642030-2-robelin@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0251.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a7::22) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
-From: David Hildenbrand <david@redhat.com>
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-7-dev.jain@arm.com>
- <25dcf969-e479-4d4a-a95c-0e83706af99e@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <25dcf969-e479-4d4a-a95c-0e83706af99e@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|IA1PR12MB8540:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17ab387c-ef81-4f70-2dd4-08dd87001e04
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U0RROUloTmlNTzdkRmlicGx4TGluak5GcnlZcVZVYUpBSFlvNDltc3l4ZE16?=
+ =?utf-8?B?VU9oc2s5Zm1hY2RHbjFxSGZ3Um5USGpkY0prWlBOdTlqbUU5VDNJcHBsRDJk?=
+ =?utf-8?B?bll4bHdEYU4yQ0Zuai9jTUFmUjRDQzJlSk5qcWpUOEpXc1RhbXZOcE0rNmhm?=
+ =?utf-8?B?ZkR2c01FWWo0WGhteHZVNm00cWRLTFlIK01HYWRpUWZuZE5kWDd5SkUvNHFa?=
+ =?utf-8?B?cm81Rlg3SEcyalJWT1YwczZmb0lZYlBhWXZCL2F4TExUdUo0RUlac2VDTkxT?=
+ =?utf-8?B?UVlkWW1OeGN1a1dzRU9zTnliQmkwOFdlK0J3L0x6NmRRU2t5ejhCZGF5QzNR?=
+ =?utf-8?B?bDlQYXRqcmtYUnpzUk9VYWJXVXYvVFFSSm41OTZJT0oyS2JTaklXY3JQaWdj?=
+ =?utf-8?B?cGNPRGlaakMvMStRUjNOOVhqU04xYnpzZnhScjExZ1VVN3RLVHdqZW1BMnpN?=
+ =?utf-8?B?anZoTmpnYTlCcExxbnl6WmVrR2VvRkxRTVVsaHlZQm11TDJJQWhEcERHUTIz?=
+ =?utf-8?B?U2hmdUZiRnNhVGt2Slpic3A3cDNXV1BBNi9FenFCaC9tanpzNU5FTVNRT0hk?=
+ =?utf-8?B?d2p0WFFieHBxaXpmbWQ3a1hxeU5TeFNaMEdEazFYZnpJNDBVS0h6ZFlQdk5X?=
+ =?utf-8?B?by9YWlN5V09sSW5oMHBCeVdURnUxVUJ0N2RWZGhmbldzN1RQcFo0NFdoOVNa?=
+ =?utf-8?B?M2xNNSt3bmQrdFNOS1lTK2xPamZpcnhSbmhNTFV3YlJDcXdzUGJ1bW8yV0JS?=
+ =?utf-8?B?R3d6YTl6N0ZFaUkzc0ZMRU85akE0Qm16UEl5V3RWWVFJbFN1QjF4MTJDb2du?=
+ =?utf-8?B?czlIaUJ2dDBqbFYvdGJGY3VkUXdSTlZ0NGxld0N5ZXJXbHdSZVVjSWJFdm5n?=
+ =?utf-8?B?TzNWSXJjL0o1YkhNb0JvSHJjcUY2NE84MVVUT25VeUlGTGQ3Nm5QU0lVRm14?=
+ =?utf-8?B?bVg5NW9scFhOWm51blV2blBZMGRWZzVRRFNNOUVXYVdHTXVPL0xrZG5GK0lW?=
+ =?utf-8?B?bHlERlVwbnVnbTR5UmFtZERwT09jVldVbzhGVkxkeG1uY2RBRTAyMTVQR0VR?=
+ =?utf-8?B?eVB4ZHdMOFEyV0QxNXpZb0xQMFZua0dUbFFuU1IzeFBWT3Yydkg4TDZMMUtQ?=
+ =?utf-8?B?SzNUZXJIdjZmS2ZJTDhvYlczTUxSZ0VjakU3WGlrSlZEYUFxb2owMDYyMWZB?=
+ =?utf-8?B?YzlnQ3pFemR6dU91YUg4YVoyKzRVdk1lMGxlSDNtT2U3WXFKYVQrV0ZlYnB5?=
+ =?utf-8?B?YkhXZkhVL2FBeStaNWFVa3krTzZIRlVydUJwQ2hWOE5WeHV4NUtTQlJLd3U0?=
+ =?utf-8?B?QU40TWhnUkVxOTR5RndNbCtMN0dzOEU1K1dsS1Q0c0xoREJPTWVVRng1K1dY?=
+ =?utf-8?B?cWxWS1kxelM2NVhSYSt2eWVIcWNvWkt3UkVGaENBUTF6RTM5UzZmWHUycGhs?=
+ =?utf-8?B?UGVWWlFZZzk5S3M5WTRTbUpxVEdGWURYZmROcFQyUVkyeU1QQWdXLzJYaUVF?=
+ =?utf-8?B?NHR6enVvU0FyUGYydW56Mmx2Q3hKS3dmMXJ6ZGVkTGJ3ZlNQdFkxQVRoSEVX?=
+ =?utf-8?B?WEdPQyt6RXVJWFNMMnhteTc2MWpJTllYcWxRY0JFNG15MERBNnp5RkRVUzBo?=
+ =?utf-8?B?UHdjeVljZEgrNjYzemxyS0pVQk8wMWZVVG9ZaVBqbE1KZkZTZTVNa2E0MGNH?=
+ =?utf-8?B?dVlURjlGcFo1MW5ySWVPTFhPcW1BWEpSV1hRc2lYbUp0LzlnbXZpdWlYTGRj?=
+ =?utf-8?B?czhTUTgwR3ZXQVhnVURZRkhXY3YwamhFSkluOG1jT1dwcVVVVXpwTlNNOW15?=
+ =?utf-8?B?b0J1bFpwZFVvUURFcWpWWVlMYk9uekJGYnBaYlJiWUV3cEZIMlMvWGRxdGZh?=
+ =?utf-8?B?dEhudy9qdkRwMXloUTUrQ0Q4UE9RdGVSNVpRbVpOR3ExbDBVWlp1dFpoVmpz?=
+ =?utf-8?Q?zw68LaVlaEI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YTUwTTZOWDZNOEhNMngvWm1aUEZaL0I4a09JOEZJTmpSam9yT0txTlpoVnJB?=
+ =?utf-8?B?ZEJIRHJER3hYL0w1aXJ0S1RkMFFtaFo0ajdVOENQeUNXY2daa3pWcFJTem9x?=
+ =?utf-8?B?UUVWV2VwamdyVGVmM1ppTDBaUHpSYUlUUlVmOENteHdqUjlHK2ZqR2xobGM4?=
+ =?utf-8?B?RnpEQXp2cm1TY0pNVTI0aVdKRjBhcWd5Q0FkVWdVYVc3dXBYbTgzRUJ3QmdN?=
+ =?utf-8?B?VEgybmdxNXNseUR0TGV1S3RpMDVQdGNXeFdZTHdyVnFvbEtlcHFNTlFZVWNW?=
+ =?utf-8?B?MVpONHdpUEdaSVNoMzN4emNXajd4Yll1NTU4eFpYeVljNGxiTjZmVlZ0Yk8z?=
+ =?utf-8?B?K1hreHExUktsaUxlK0FyaHBFY2RtTEJrYXNGRmRBRDhMbVBtdEZhN00xUFdP?=
+ =?utf-8?B?YzBuWVBmRjFucHEvb0NVdG9XK1hlL3YwcTgwQUl6M3pyS2pLTHlIb042SWZr?=
+ =?utf-8?B?OEtSMHVOVEVvVEdnd1BVRHl3UEZ3M2Roa283NFZLNnZSL1plOUhINVN5a2ZY?=
+ =?utf-8?B?L2dMdHpJTFg1N29MSWg5aVJSVnVUZXlGYUc2QWlsNWMyUWtUSlZlMDZsUHdx?=
+ =?utf-8?B?TWUzTE9OLzRLbG5TNjA4TlJsVVUzL2JEc215a0JObFJOcVZaS3RxaDR0dGg5?=
+ =?utf-8?B?M2EzblRQRGNSNnlOenJRUGF4eGF2STREWnlKTmdmRXNieTAyY0QwRVpwVWVM?=
+ =?utf-8?B?S2pBcFRUR0E2dEdSTUp0ZEVmRU5DbFNaMkJISnorRHViZjh3N2x0a0RUQ2Y4?=
+ =?utf-8?B?ZjZwOENDMnd5dEhKYmxhNFhlZERvcFlPVDNsZWJ2a3pKRExyYjZ1NlVMWlNj?=
+ =?utf-8?B?SW8xaVltWGdob2ZPN25VL3pNWnRlbVB3bldIS0RHbU1tNVRUZWpSMmp2N0Fl?=
+ =?utf-8?B?SG0yeWZJNUFpUjBlU0tmcWhYbEUrSzVCVkp1THJMRlBIVmFwWU9nNEZxREw1?=
+ =?utf-8?B?a24zUENyV0p4ZzRGZWxGNGljMHNZWVRiam96cjg5a0t6cVI2WlVSRFlrTXdD?=
+ =?utf-8?B?R3V0VHNKSTBwcjM2RG14Wk9FU3pNK0xqVi9pS25yVFBSaDh1L2t1ZkRDSWQz?=
+ =?utf-8?B?cTRGWVhHcHVNYXArcUxlK3F6bHpQUUhPQ3pMQzM4THVvY3ZWTHBuU3ltNlY5?=
+ =?utf-8?B?djNKa0RBSzhVd3VVZW5EVThkV3dBeFVBSXExejlRaXMzcy8xTzZNLzd5T3Ft?=
+ =?utf-8?B?N2FibWpxN0M1bTFYYXM3anp6ZnZqWjBQUThaejQ0SFpoSGpic2RlZFB1VS90?=
+ =?utf-8?B?L2pXemJSY2plVTF0NFFpVjFKTW5NWG0rTVFnZDQrZzlyRTZobmY1RkxaSEZ3?=
+ =?utf-8?B?dFhJWVpycFBWc250WWlKZ2JydllrSUNiaEdmRklOdk9qL0NuaEx4N0RLTXUw?=
+ =?utf-8?B?N2N2b05mYkdEdU4wQ2VJTXYxcnA5TnQycG9jZ25YbGN3SjNWekJGY2QrN2RV?=
+ =?utf-8?B?alU2Q3dMNndkWmZicGJiU00rQ3hWS2VockZkQXE0NEx2S2Z6bDg1a3NwSmQ2?=
+ =?utf-8?B?VThHQ0oyUmZCVXlNZ1dBNmx1UXphMS84V3BhMVVvdW4yNFBUcVozMUJ6cmQ0?=
+ =?utf-8?B?SS9jNitzMWowK2FsNG5ETzc1VEVteXQ0NXhIamFCVlZNWGJjTUM1aHcwT0RV?=
+ =?utf-8?B?ZDN3SFIxWS8zWXgzNEd2bGlSbmpVcGNtT3VXRFZHam0wYTNpRHFaa1NKZTh5?=
+ =?utf-8?B?T3hZdmxNQUVzSStscWJ2eS93MU5oL2hLMEtyTUIwOFhqODU1NWFNbXBrbm5t?=
+ =?utf-8?B?ODBOU3ZjdTNZQ29PaWQyUCs2MEFBb0RiRWx5Q01vd2p2MnFuWVNneStmeGtL?=
+ =?utf-8?B?VExZL0hPeGdMWkxZSE9VMi9udUx4b3hhL0tPZ2xpWGZrUEtCeC9iQXFFNkN4?=
+ =?utf-8?B?Szc2dTVVTzBRZVhJRzkxaE1aclQ2SCt3TndjanBvbSttTVMwL1N5aU44b3BM?=
+ =?utf-8?B?WHZ5VTlLVDR2Q3lpN3p4Q1A4WGlDc0UrcXpTWEJyUHFRWS8yaXNONzYycm1k?=
+ =?utf-8?B?andGeEN5Q0ZIMkUwcGVxZ2xUR0VYZ21BSTBSd0VvRkFLUG1wVG9lZEJlQXlE?=
+ =?utf-8?B?VjBRY0RWVmtkV1pOUUNSRXJPT1Q4ak5QUUVPZHg5bTRjRm1RSFZvbTBKTCtw?=
+ =?utf-8?B?NndtVzh6REcvZzVqMmFuTkdmWXlXY1hZWGI4L2hNTUxIMEtKSGlvSE00QXBs?=
+ =?utf-8?B?OS9WUWVDelE0dGpiS2pNdUdQdzM5QXNNUjBadU9vckd2OWNwUHhESjk4RnhZ?=
+ =?utf-8?B?RThPWUNDb01PV3d4eHpnZTJZZWh3PT0=?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17ab387c-ef81-4f70-2dd4-08dd87001e04
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 09:27:53.2823
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VNvHQ5lxdsG93AZE0j8oB7OgH+/7DkNCVTvCUZdLk8A81fm/AZmtwW+kJbCiDaaYe8iA1aaG9kq+lyXEEsyN/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8540
 
-On 29.04.25 11:19, David Hildenbrand wrote:
+
+
+On 29/04/2025 07:45, Robert Lin wrote:
+> From: Pohsun Su <pohsuns@nvidia.com>
 > 
->>    #include "internal.h"
->>    
->> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->> -			     pte_t pte)
->> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
->> +			      pte_t pte, struct folio *folio, unsigned int nr)
->>    {
->>    	struct page *page;
->>    
->> @@ -67,8 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>    		 * write-fault handler similarly would map them writable without
->>    		 * any additional checks while holding the PT lock.
->>    		 */
->> -		page = vm_normal_page(vma, addr, pte);
->> -		return page && PageAnon(page) && PageAnonExclusive(page);
->> +		if (!folio)
->> +			folio = vm_normal_folio(vma, addr, pte);
->> +		return folio_test_anon(folio) && !folio_maybe_mapped_shared(folio);
+> This change adds support for WDIOC_GETTIMELEFT so userspace
+> programs can get the number of seconds before system reset by
+> the watchdog timer via ioctl.
 > 
-> Oh no, now I spot it. That is horribly wrong.
+> Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
+> Signed-off-by: Robert Lin <robelin@nvidia.com>
+> ---
+>   drivers/clocksource/timer-tegra186.c | 60 +++++++++++++++++++++++++++-
+>   1 file changed, 59 insertions(+), 1 deletion(-)
 > 
-> Please understand first what you are doing.
+> diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
+> index ea742889ee06..800f6650ebd4 100644
+> --- a/drivers/clocksource/timer-tegra186.c
+> +++ b/drivers/clocksource/timer-tegra186.c
+> @@ -1,8 +1,9 @@
+>   // SPDX-License-Identifier: GPL-2.0-only
+>   /*
+> - * Copyright (c) 2019-2020 NVIDIA Corporation. All rights reserved.
+> + * Copyright (c) 2019-2025 NVIDIA Corporation. All rights reserved.
+>    */
+>   
+> +#include <linux/bitfield.h>
+>   #include <linux/clocksource.h>
+>   #include <linux/module.h>
+>   #include <linux/interrupt.h>
+> @@ -30,6 +31,7 @@
+>   
+>   #define TMRSR 0x004
+>   #define  TMRSR_INTR_CLR BIT(30)
+> +#define  TMRSR_PCV GENMASK(28, 0)
+>   
+>   #define TMRCSSR 0x008
+>   #define  TMRCSSR_SRC_USEC (0 << 0)
+> @@ -46,6 +48,9 @@
+>   #define  WDTCR_TIMER_SOURCE_MASK 0xf
+>   #define  WDTCR_TIMER_SOURCE(x) ((x) & 0xf)
+>   
+> +#define WDTSR 0x004
+> +#define  WDTSR_CURRENT_EXPIRATION_COUNT GENMASK(14, 12)
+> +
+>   #define WDTCMDR 0x008
+>   #define  WDTCMDR_DISABLE_COUNTER BIT(1)
+>   #define  WDTCMDR_START_COUNTER BIT(0)
+> @@ -235,12 +240,65 @@ static int tegra186_wdt_set_timeout(struct watchdog_device *wdd,
+>   	return 0;
+>   }
+>   
+> +static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
+> +{
+> +	struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
+> +	u32 timeleft, expiration, val;
+> +	u64 timeleft_us;
+> +
+> +	if (!watchdog_active(&wdt->base)) {
+> +		/* return zero if the watchdog timer is not activated. */
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Reset occurs on the fifth expiration of the
+> +	 * watchdog timer and so when the watchdog timer is configured,
+> +	 * the actual value programmed into the counter is 1/5 of the
+> +	 * timeout value. Once the counter reaches 0, expiration count
+> +	 * will be increased by 1 and the down counter restarts.
+> +	 * Hence to get the time left before system reset we must
+> +	 * combine 2 parts:
+> +	 * 1. value of the current down counter
+> +	 * 2. (number of counter expirations remaining) * (timeout/5)
+> +	 */
+> +
+> +	/* Get the current number of counter expirations. Should be a
+> +	 * value between 0 and 4
+> +	 */
+> +	val = readl_relaxed(wdt->regs + WDTSR);
+> +	expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
+> +	if (WARN_ON(expiration > 4))
+> +             return 0;
 
-Also, would expect that the cow.c selftest would catch that:
+There is a problem with the indent here ...
 
-"vmsplice() + unmap in child with mprotect() optimization"
+WARNING: suspect code indent for conditional statements (8, 13)
+#83: FILE: drivers/clocksource/timer-tegra186.c:270:
++	if (WARN_ON(expiration > 4))
++             return 0;
 
-After fork() we have a R/O PTE in the parent. Our child then uses 
-vmsplice() and unmaps the R/O PTE, meaning it is only left mapped by the 
-parent.
+ERROR: code indent should use tabs where possible
+#84: FILE: drivers/clocksource/timer-tegra186.c:271:
++             return 0;$
 
-ret = mprotect(mem, size, PROT_READ);
-ret |= mprotect(mem, size, PROT_READ|PROT_WRITE);
+WARNING: please, no spaces at the start of a line
+#84: FILE: drivers/clocksource/timer-tegra186.c:271:
++             return 0;$
 
-should turn the PTE writable, although it shouldn't.
+> +
+> +	/* Get the current counter value in microsecond.
+> +	 */
 
-If that test case does not detect the issue you're introducing, we 
-should look into adding a test case that detects it.
+No newline needed here, the comment can fit on a single line ...
+
+        /* Get the current counter value in microsecond. */
+
+> +	val = readl_relaxed(wdt->tmr->regs + TMRSR);
+> +	timeleft_us = FIELD_GET(TMRSR_PCV, val);
+> +
+> +	/*
+> +	 * Calculate the time remaining by adding the time for the
+> +	 * counter value to the time of the counter expirations that
+> +	 * remain.
+> +	 */
+> +	timeleft_us += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
+
+There should be a newline here.
+
+
+> +	/*
+> +	 * Convert the current counter value to seconds,
+> +	 * rounding up to the nearest second. Cast u64 to
+> +	 * u32 under the assumption that no overflow happens
+> +	 * when coverting to seconds.
+> +	 */
+> +	timeleft = (timeleft_us + USEC_PER_SEC / 2) / USEC_PER_SEC;
+
+I am always a bit concerned about possible overflows that can be 
+silently missed. So probably best to make 'timeleft' a u64 too and then ...
+
+  timeleft = (timeleft_us + USEC_PER_SEC / 2) / USEC_PER_SEC;
+
+  if (WARN_ON(timeleft > U32_MAX))
+          return U32_MAX;
+
+  return lower_32_bits(timeleft);
+
+> +	return timeleft;
+> +}
+> +
+>   static const struct watchdog_ops tegra186_wdt_ops = {
+>   	.owner = THIS_MODULE,
+>   	.start = tegra186_wdt_start,
+>   	.stop = tegra186_wdt_stop,
+>   	.ping = tegra186_wdt_ping,
+>   	.set_timeout = tegra186_wdt_set_timeout,
+> +	.get_timeleft = tegra186_wdt_get_timeleft,
+>   };
+>   
+>   static struct tegra186_wdt *tegra186_wdt_create(struct tegra186_timer *tegra,
 
 -- 
-Cheers,
-
-David / dhildenb
+nvpublic
 
