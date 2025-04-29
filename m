@@ -1,214 +1,128 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-il1-f228.google.com (mail-il1-f228.google.com [209.85.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EB3243964
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9925D7080E
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745966668; cv=none; b=pxu3zX/Z1PK2D+drHWOWHzJUR+jvfgE1mrdsM5ojw/MC6Rh3HqBCdRhbGBk8hi+q3iqxYEY3eljiNrOZSCy5XE+NJQu7UxRkfBvI4AqhbbidQZuSpJ5iBIB/8pNOGkrhIAsqbiZlbFECH83iYmhzYJ2JU1D65UC9AsJW/T3bj+Y=
+	t=1745966781; cv=none; b=eLDGzA8GAis3sYzpjw1jIWdUoN8JqG5kqnui7xdLfpn1uRVkauaqg6Vt/ep3sPOXlOlju1IDooCD60vWmM0SOudiwYxZqPPtLXwj7609pOZ5dXZH0JVYjh0sATmZaosclsdKqyu/gimk+FSKvP1918WJbQ8HajkJOvuI31JF8TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745966668; c=relaxed/simple;
-	bh=wY9say8tGiLCWO3IU3LClcUQ6iwxEoNogz9c5HCWbbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N3oya6MOHWEXZfxKn6nOcSuC7nalB6q+ZIVV3M9z7tdgEaSrPhB6YsemRdePWuZgPmem6l9kH9FOcs4Xu4jc4W8vFEB4/5zI0nwcOHzqX/gRCF2X8WE6+AKHZrp1velVX0V5/rVxxT3SMAKZGb2jteLpklXiZ5qYTgLAgNwBKL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NHSrQDYu; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745966781; c=relaxed/simple;
+	bh=YQGldYYZN+M+lMKEvXamPZpN40rNMsoWh5qt4/JT0LA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zl7PiUxXkCbAOXD09gBzMBLr16eJABeRu1VP4dzDAAOpk1hWSvOh3y28QrIX0gDi1oeHj8UKQInp5H1RheWTYQHzy/XJtYGTbiKbwK4znnLCnjmZkEnrYaiKtAR0Nv4KFns0qsBlsT0BrZfNnXR/uXPsXuX9U9j7mNUfBjtBl7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eEnYViyt; arc=none smtp.client-ip=209.85.166.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NHSrQDYu"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47666573242so476781cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:44:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eEnYViyt"
+Received: by mail-il1-f228.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so32074555ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745966666; x=1746571466; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Q+2haq7XwAv6J5PtSHPQ69YS6DBi9vH+XHrN06jFIM=;
-        b=NHSrQDYuvvtQkXmwavpy/3IET/FzBVQm0xjMRiXZljjwwMmFD6OLpzvnFMkcQyr9ah
-         ptIY/Vxk/47yqOcuulVEUK5FeuDNr3lf00mexcKLHKa4hFksHPIF6k3klrWZSZruCCE3
-         UyOrY+qIZ02sfiiKo3OZE4GmgXCIIh6dRNKL8HoVLdfWvnKhs1w4SU2ftP5Zq9p0dLL2
-         yrKi5rg++VZnSAW5LiVif51uTtlfCJPMTWb4COxECm/jN8UIJdlN3o3ONlCq+OYrQQpM
-         5hQ81AwGeEZpx5jD7OKdrDzJraenifSn/Wb/vKhYTv7Ot7yAaqfLhJb1S9Fc+Rs7PtaT
-         zSNw==
+        d=purestorage.com; s=google2022; t=1745966776; x=1746571576; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZCGCCKXBocwMhtCNRTkeUsgiaS7jZ1hs+w86svHkyjs=;
+        b=eEnYViytMzkG/tKt//nQPEIKIurRr5yfH+7MFcgmbfjzoaZRjAksLm+vk2PI0yNJ0a
+         cpZ+6rWpHJh02LBCjd8HJCDfmIUeipzDmXPar1rLxb0wIgDYFFsltEo8Y1GTFkaZx23n
+         /oS0o4vNO1Pf8w2Ouid91DFpI7rE6GO3zLCpUH9YtALvWQeKFYylKLBXpXrAX3w4Z85T
+         q8DcY4dx7/N0urlsiQ/MlBXk2oJ94xqa9kiBFTaAtQba7IDfW2N6fU+xMQhlqTdTWwIo
+         JedC+UIeBH0944n8c+1f06T2rXdgW8yKQ3LUWOwrZYxXa/nmczxJ5hpNjJ9QW1jIqLa8
+         6VaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745966666; x=1746571466;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Q+2haq7XwAv6J5PtSHPQ69YS6DBi9vH+XHrN06jFIM=;
-        b=bj+hCCXm1hKhzu/REEl+ea5ZlUlSNoT4M0WG7p0agIJs2JgU/oQNBdMdnPxgQSwdSI
-         yD6Gs03zj6bcrYsYXdG8uTMqWqj4R7zpd7cqsp724FmaznRQOimYj0fZBjW2503NFKCM
-         m08cX7WJ1LAF2iB9pzvk0tyeAqSoS/D+2SOJNQMfsjU1wymYOyCPJN9eI1BgzOMerAfU
-         UgQcrsgttzQpVzGEnUGDGJsTzkDipFaY54lRjgk5+WKCRSXrMRBnzt5eyB2EKwN4inyo
-         J7B4AeSdlbenR6tqTYQlz32rCn4VsJqvPXv3yUrdwm+GAJxnIoKgu3d0V2jjm7cBpGrF
-         ywYA==
-X-Gm-Message-State: AOJu0YzM+pL494vXinE2kiv3cppBhqX/3x//17Og6+s7VHTfxqZz1/lK
-	NAie9SHGByFCpAuSfsNtog8VwfIkBKjUth7+lfEJiloHTsBRGIVmqBA4D5qTHqkTtwSfZQVK5kA
-	/2WzqPC3kMaOl5X3LJi+k58iAE4uTSzTr928x
-X-Gm-Gg: ASbGnctzXFGL/pPuLopD5u9NsgrBUSRlCMwtFtcqsWN+vslnPYPtuTeuXqkih0yWnd0
-	nBvpxUU5iGpWrboHHHbzVz3c515ZWMzJNX6rTR2obg33To4SEuDnjKFf+teJNhYhO1KwEsrDBGP
-	R4aTLluTq9wbbVWpKbrCh5MbPvhas3us+RqUb7pNG/2XOXS9PU0eOXuVePQQlblOI=
-X-Google-Smtp-Source: AGHT+IGp3ol19l66XpIR0HRveaM+/EwEn2dP2bkpY0B9zrpxdPZiZBnty9O1i5cicSDF8bDdT7SZ8k6g1jsNGNxwKCI=
-X-Received: by 2002:a05:622a:44e:b0:477:63b7:3523 with SMTP id
- d75a77b69052e-489b9935eafmr1740991cf.4.1745966665576; Tue, 29 Apr 2025
- 15:44:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745966776; x=1746571576;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZCGCCKXBocwMhtCNRTkeUsgiaS7jZ1hs+w86svHkyjs=;
+        b=N7CKcNMY6Zv72VkZslKdvvenKraxt2aGer5pWxHeqGIOu7kLZCIro57MGBNHuBbyHo
+         zeJ520OgcINWROlYRh4RazowBJlm0iH3h+neXTTnfwuZmVSjRM+/33mSikMTxPz7Ob0y
+         aWQ/4keIJho1ddDjiTToGtp0RCc22AxvX+ReM8AMMbzLWE7pLQes7TSO65rA6BjcWx3H
+         pK1o1j25GvFNcY4pkvvABZL/v03wxwzzoa1/AmOLtgDdQqh1tp8QiJQgTuzXncMX6KN0
+         Cwq9Sy1kRrFMaBtMpJ/C3BX65M2J5so4I+kT5GeuC0XHrbityAKb8CCKufNYLQk+40ST
+         T8+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWv29noHaPjdv2WMNHSMY3/ztChzJsIbJgHkRuLVx1ApVdAiE4tsiVv+fKRH1dtBFOe7zHpwEaQSyOfY+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZUZ1cBSLU3qUjfKVlM3t4vu0Vy2A4sWaMAyySGtnqbD3PIpwa
+	pSoQ+FXAVPTcNj587i/gCoNxxTNlHSPbL2VCri8TMtoGe1XzIUkowpLXFNdKbhooFXtX3P+6T7t
+	Hiup+5X+XVZbkUGDPah+cbeSXM25YQx00
+X-Gm-Gg: ASbGnctTG5JYBkLfHVui3h/M4mJvPbKz1SHY79xL4Vwc6W/t6SXIKeVQUfrpQz7+vdf
+	Bjx1Q1v2RIffHjf9/d+68ShkUVwXVXD2jowlikkELDLyaVf+kmtBHQ6AO2oguE3dHr17evm9PHf
+	2rqa0yIT1FE0ENvj8iFke8UOlFwgh9gvlrxdgdCmVqx5mb4mPcwPKDYjdq1M5PqPLqLrlDw3319
+	l6+tmsDzYiOZJk6GrF62HUaWjiRzaJKKUcWteAAhJa6RpR/3W9vLYa9Wdvw7vuZfSqRydfK4eV2
+	86eRZtThAwFoalxogULC/nwTlDISfMFM1urVmoMFRsnCoQ==
+X-Google-Smtp-Source: AGHT+IE+G/JgBSc4QPhJO/JMssnCs47xAcdzkMDhhI6dkdMavoR9/32QK0KRcpc8my2GqlxfzQ2mMpfpLE2Y
+X-Received: by 2002:a05:6e02:b42:b0:3d9:644c:e3b7 with SMTP id e9e14a558f8ab-3d967ffec1dmr3337395ab.15.1745966776636;
+        Tue, 29 Apr 2025 15:46:16 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d967d2b553sm155645ab.25.2025.04.29.15.46.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 15:46:16 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0BCFD3400C9;
+	Tue, 29 Apr 2025 16:46:15 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id A4D78E404E6; Tue, 29 Apr 2025 16:46:14 -0600 (MDT)
+Date: Tue, 29 Apr 2025 16:46:14 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] selftests: ublk: kublk: build with -Werror iff
+ CONFIG_WERROR=y
+Message-ID: <aBFWtvHv84aPTMvi@dev-ushankar.dev.purestorage.com>
+References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
+ <20250428-ublk_selftests-v1-1-5795f7b00cda@purestorage.com>
+ <aBAnKZCUZWyEJhfS@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
-In-Reply-To: <20250428033617.3797686-1-roman.gushchin@linux.dev>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 29 Apr 2025 15:44:14 -0700
-X-Gm-Features: ATxdqUFgwg8VjWDE02DoJhjYn9FVXzG-oTsO_zJH_wM8K_TPzbvSWrGdfiA0Du4
-Message-ID: <CAJuCfpHnND1UJ1ZqiyshPqwbZDfeN41HOUuc7DWQfSM1cATBmQ@mail.gmail.com>
-Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, David Rientjes <rientjes@google.com>, 
-	Josh Don <joshdon@google.com>, Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBAnKZCUZWyEJhfS@fedora>
 
-On Sun, Apr 27, 2025 at 8:36=E2=80=AFPM Roman Gushchin <roman.gushchin@linu=
-x.dev> wrote:
->
-> This patchset adds an ability to customize the out of memory
-> handling using bpf.
->
-> It focuses on two parts:
-> 1) OOM handling policy,
-> 2) PSI-based OOM invocation.
->
-> The idea to use bpf for customizing the OOM handling is not new, but
-> unlike the previous proposal [1], which augmented the existing task
-> ranking-based policy, this one tries to be as generic as possible and
-> leverage the full power of the modern bpf.
->
-> It provides a generic hook which is called before the existing OOM
-> killer code and allows implementing any policy, e.g.  picking a victim
-> task or memory cgroup or potentially even releasing memory in other
-> ways, e.g. deleting tmpfs files (the last one might require some
-> additional but relatively simple changes).
->
-> The past attempt to implement memory-cgroup aware policy [2] showed
-> that there are multiple opinions on what the best policy is.  As it's
-> highly workload-dependent and specific to a concrete way of organizing
-> workloads, the structure of the cgroup tree etc, a customizable
-> bpf-based implementation is preferable over a in-kernel implementation
-> with a dozen on sysctls.
->
-> The second part is related to the fundamental question on when to
-> declare the OOM event. It's a trade-off between the risk of
-> unnecessary OOM kills and associated work losses and the risk of
-> infinite trashing and effective soft lockups.  In the last few years
-> several PSI-based userspace solutions were developed (e.g. OOMd [3] or
-> systemd-OOMd [4]). The common idea was to use userspace daemons to
-> implement custom OOM logic as well as rely on PSI monitoring to avoid
-> stalls. In this scenario the userspace daemon was supposed to handle
-> the majority of OOMs, while the in-kernel OOM killer worked as the
-> last resort measure to guarantee that the system would never deadlock
-> on the memory. But this approach creates additional infrastructure
-> churn: userspace OOM daemon is a separate entity which needs to be
-> deployed, updated, monitored. A completely different pipeline needs to
-> be built to monitor both types of OOM events and collect associated
-> logs. A userspace daemon is more restricted in terms on what data is
-> available to it. Implementing a daemon which can work reliably under a
-> heavy memory pressure in the system is also tricky.
+On Tue, Apr 29, 2025 at 09:11:05AM +0800, Ming Lei wrote:
+> On Mon, Apr 28, 2025 at 05:10:20PM -0600, Uday Shankar wrote:
+> > Compiler warnings can catch bugs at compile time. They can also produce
+> > annoying false positives. Due to this duality, the kernel provides
+> > CONFIG_WERROR so that the developer can choose whether or not they want
+> > compiler warnings to fail the build. Use this same config options to
+> > control whether or not warnings in building kublk fail its build.
+> > 
+> > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> > ---
+> >  tools/testing/selftests/ublk/Makefile | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
+> > index ec4624a283bce2ebeed80509be6573c1b7a3623d..86474cfe8d03b2df3f8c9bc1a5902701a0f72f58 100644
+> > --- a/tools/testing/selftests/ublk/Makefile
+> > +++ b/tools/testing/selftests/ublk/Makefile
+> > @@ -1,6 +1,8 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  
+> > -CFLAGS += -O3 -Wl,-no-as-needed -Wall -I $(top_srcdir)
+> > +CONFIG = $(top_srcdir)/include/config/auto.conf
+> > +WERROR = $(if $(shell grep CONFIG_WERROR=y ${CONFIG}),-Werror,)
+> > +CFLAGS += -O3 -Wl,-no-as-needed -Wall ${WERROR} -I $(top_srcdir)
+> >  LDLIBS += -lpthread -lm -luring
+> 
+> I think it isn't good to reuse kernel CONFIG_WERROR for test code.
+> 
+> But it can be done in the following way by passing 'WERROR=1' to make
+> command line:
+> 
+> +ifneq ($(WERROR),0)
+> +       CFLAGS += -Werror
+> +endif
 
-I didn't read the whole patchset yet but want to mention couple
-features that we should not forget:
-- memory reaping. Maybe you already call oom_reap_task_mm() after BPF
-oom-handler kills a process or maybe BPF handler is expected to
-implement it?
-- kill reporting to userspace. I think BPF handler would be expected
-to implement it?
+I've taken this approach in [1]. It actually passes -Werror by default,
+but it gives the developer a way to disable it with
 
->
-> [1]: https://lwn.net/ml/linux-kernel/20230810081319.65668-1-zhouchuyi@byt=
-edance.com/
-> [2]: https://lore.kernel.org/lkml/20171130152824.1591-1-guro@fb.com/
-> [3]: https://github.com/facebookincubator/oomd
-> [4]: https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd=
-.service.html
->
-> ----
->
-> This is an RFC version, which is not intended to be merged in the current=
- form.
-> Open questions/TODOs:
-> 1) Program type/attachment type for the bpf_handle_out_of_memory() hook.
->    It has to be able to return a value, to be sleepable (to use cgroup it=
-erators)
->    and to have trusted arguments to pass oom_control down to bpf_oom_kill=
-_process().
->    Current patchset has a workaround (patch "bpf: treat fmodret tracing p=
-rogram's
->    arguments as trusted"), which is not safe. One option is to fake acqui=
-re/release
->    semantics for the oom_control pointer. Other option is to introduce a =
-completely
->    new attachment or program type, similar to lsm hooks.
-> 2) Currently lockdep complaints about a potential circular dependency bec=
-ause
->    sleepable bpf_handle_out_of_memory() hook calls might_fault() under oo=
-m_lock.
->    One way to fix it is to make it non-sleepable, but then it will requir=
-e some
->    additional work to allow it using cgroup iterators. It's intervened wi=
-th 1).
-> 3) What kind of hierarchical features are required? Do we want to nest oo=
-m policies?
->    Do we want to attach oom policies to cgroups? I think it's too complic=
-ated,
->    but if we want a full hierarchical support, it might be required.
->    Patch "mm: introduce bpf_get_root_mem_cgroup() bpf kfunc" exposes the =
-true root
->    memcg, which is potentially outside of the ns of the loading process. =
-Does
->    it require some additional capabilities checks? Should it be removed?
-> 4) Documentation is lacking and will be added in the next version.
->
->
-> Roman Gushchin (12):
->   mm: introduce a bpf hook for OOM handling
->   bpf: mark struct oom_control's memcg field as TRUSTED_OR_NULL
->   bpf: treat fmodret tracing program's arguments as trusted
->   mm: introduce bpf_oom_kill_process() bpf kfunc
->   mm: introduce bpf kfuncs to deal with memcg pointers
->   mm: introduce bpf_get_root_mem_cgroup() bpf kfunc
->   bpf: selftests: introduce read_cgroup_file() helper
->   bpf: selftests: bpf OOM handler test
->   sched: psi: bpf hook to handle psi events
->   mm: introduce bpf_out_of_memory() bpf kfunc
->   bpf: selftests: introduce open_cgroup_file() helper
->   bpf: selftests: psi handler test
->
->  include/linux/memcontrol.h                   |   2 +
->  include/linux/oom.h                          |   5 +
->  kernel/bpf/btf.c                             |   9 +-
->  kernel/bpf/verifier.c                        |   5 +
->  kernel/sched/psi.c                           |  36 ++-
->  mm/Makefile                                  |   3 +
->  mm/bpf_memcontrol.c                          | 108 +++++++++
->  mm/oom_kill.c                                | 140 +++++++++++
->  tools/testing/selftests/bpf/cgroup_helpers.c |  67 ++++++
->  tools/testing/selftests/bpf/cgroup_helpers.h |   3 +
->  tools/testing/selftests/bpf/prog_tests/oom.c | 227 ++++++++++++++++++
->  tools/testing/selftests/bpf/prog_tests/psi.c | 234 +++++++++++++++++++
->  tools/testing/selftests/bpf/progs/test_oom.c | 103 ++++++++
->  tools/testing/selftests/bpf/progs/test_psi.c |  43 ++++
->  14 files changed, 983 insertions(+), 2 deletions(-)
->  create mode 100644 mm/bpf_memcontrol.c
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/oom.c
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/psi.c
->  create mode 100644 tools/testing/selftests/bpf/progs/test_oom.c
->  create mode 100644 tools/testing/selftests/bpf/progs/test_psi.c
->
-> --
-> 2.49.0.901.g37484f566f-goog
->
+make WERROR=0 TARGETS=ublk kselftest
+
+[1] https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com/
+
