@@ -1,484 +1,220 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2070.outbound.protection.outlook.com [40.107.223.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7B0275101
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0624327466B;
+	Tue, 29 Apr 2025 06:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907199; cv=fail; b=fAXS70XVtjQUePJS6jElg5aM23J8hVmubbyZ/h8BAhPc5WBadbg5Nlvh3Pj5ewAAlSFsjlUuRvDphTElXtzXcaW6PRkrPfY8nL/KqPggf+AO+nBhJelZc6uHJwD/+LKw+CnX2fgtiqBBeNz4d4neHz+h0zi4hDjwBq/CXmXuay0=
+	t=1745907219; cv=fail; b=KcVzkOJDAFq2xcc0EWnCGDW6d5Bh9/fw7FckjXayuGhfvx0Ht/DdkwMjWh1gDLe0AMVlveNyupyDzFvXSNsnJbrhxOTfj/EG/tJAa06lNvFmE1TfGZ0lWp++0y8zztYMjU00hnlSHgfo/tGOw3fP81EVgbeAIDksFC8V9DKFz8Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907199; c=relaxed/simple;
-	bh=nYy0qDCjYxWZ22VEUJmMORCKoJVUSTHj74OR03G0Lis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t1MmkHK0O0pgBCFoLkaTJ37eB5KHzpt534UurtMnwot4jLyovWLKEqMT65mZzwsIowv3+DHFe9S1LFSaSVUTMEPAYr//tkaS/oQFLbFyBouew+hFZnF6bo52HTpUKPP7Ppim30sDaxAwnV3EuwVPa85N0KqWTTUvg8eiVhGq7fw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=THqEnbW7; dkim=fail (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ci32vtEo reason="signature verification failed"; arc=fail smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745907219; c=relaxed/simple;
+	bh=srF16KdSj2kgtm8RSI2RVkSeg6DVtXeNWhyTNTDwpc0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f1VpifXbV6UG+DrzGk3nrqtyVODTA5+1pRGOC2lP1MSn5fcVRHtwHMCO8hNasbGs5GIXlDHdd5FjnSIULVwCuiAobzGzLayQ7XxkaDq7knuHP1PlEgxBiDMk/yjrQItWV1X1d+McUHLPy02LBoifYeamJ9cWX5qP75YO/iL9N/g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gOTbLCYx; arc=fail smtp.client-ip=40.107.223.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="THqEnbW7";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ci32vtEo"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745907193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2uH9lxtGNXrDszx56Z84uJt2iii6/fQ5pv5DwQ8+b+A=;
-	b=THqEnbW7OoTDfwchJqNiCBLD5t/x8waxsTnItkSaXgIAZ8UECZufOsgr6VCTfXkzconuUE
-	5+IoumwiWD9l8uqO368d6j9X4w/tx8QkmgWq+4xcBR8drIiufwcemE5kWflM7MWaMyN5ae
-	vfIPOVihPmVzNfERodHMAeEWTgfjq60=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	shakeel.butt@linux.dev
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	JP Kobryn <inwardvessel@gmail.com>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [OFFLIST PATCH 2/2] cgroup: use subsystem-specific rstat locks to avoid contention
-Date: Mon, 28 Apr 2025 23:12:11 -0700
-Message-ID: <20250428174943.69803-2-inwardvessel@gmail.com>
-In-Reply-To: <20250428174943.69803-1-inwardvessel@gmail.com>
-References: <20250428174943.69803-1-inwardvessel@gmail.com>
-X-Envelope-To: shakeel.butt@linux.dev
-Authentication-Results: aspmx1.migadu.com; dkim=pass header.d=gmail.com header.s=20230601 header.b=ci32vtEo; spf=pass (aspmx1.migadu.com: domain of inwardvessel@gmail.com designates 2607:f8b0:4864:20::636 as permitted sender) smtp.mailfrom=inwardvessel@gmail.com; dmarc=pass (policy=none) header.from=gmail.com
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1; t=1745862594; h=from:from:reply-to:subject:subject:date:date:message-id:message-id: to:to:cc:mime-version:mime-version: content-transfer-encoding:content-transfer-encoding: in-reply-to:in-reply-to:references:references:dkim-signature; bh=T9FxElrI6X1f0BNtJHqNj7QKlHLxnjZJhQ1N93uc1Tc=; b=ahKz7kbXjBCloHM3NUJVvHBkLPEE4UvoVt7dh3ns7i13MxZIbXu+eJiFuk8qzUxIQluMiI G9qf9k4Xqm1qt5sQIi/x2AkA6jQshm8yWS17HrWMboM1cs6GmTkIIymlfB+JY6Rk2P4GUF JykjfckEfXPH2g8EV2/p6ieOmEq/+fw=
-ARC-Authentication-Results: i=1; aspmx1.migadu.com; dkim=pass header.d=gmail.com header.s=20230601 header.b=ci32vtEo; spf=pass (aspmx1.migadu.com: domain of inwardvessel@gmail.com designates 2607:f8b0:4864:20::636 as permitted sender) smtp.mailfrom=inwardvessel@gmail.com; dmarc=pass (policy=none) header.from=gmail.com
-ARC-Seal: i=1; s=key1; d=linux.dev; t=1745862594; a=rsa-sha256; cv=none; b=h6hnDA/r0jVlcSztxPLrFH7bThdRtG0pAeVd6rbVj4X4SF59w3xeCIaDV6NXcoSw2fasYH FA6vn9jLODXnklWc8t6qlChHUWHc0jTWHgtsB9DJenuBZcLEVpN1byHt9asJIWfi/W8OBl Ci1xuWEzDSMqzUQq5JHyxyj1YLH/6hE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20230601; t=1745862593; x=1746467393; darn=linux.dev; h=content-transfer-encoding:mime-version:references:in-reply-to :message-id:date:subject:to:from:from:to:cc:subject:date:message-id :reply-to; bh=T9FxElrI6X1f0BNtJHqNj7QKlHLxnjZJhQ1N93uc1Tc=; b=ci32vtEogx4cEeQcZtrAuBLyzwDlsmqWghOA6klX2bZowAJt0NM/nfiGU6BgKfL6cX npECEJ0w2f/k0d/7fl1CX0oAqbPhCrDv2UZr9U9L1FiKUu8TDeV8Yf7BWB47wAVHLpAR 731L5f/BzFmFoUrrjWI1QD3Jfq/OvwPc+OFSRIz36lcQGgsGrM6UIUjOQnItBiOSEh+/ gRlsIMrrcfGtC7Z1cXZ0QddVK7pQ0e05GrYgu+Q0Kr0uOnhlh/1qit5vHh5hD52nEoye sZfSfeis704+eQiddrBtfD+Nw3qWyqPPXlxSt8OVTqJpqySfVoHgpL3KwbGgy3VNrisv ++JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1745862593; x=1746467393; h=content-transfer-encoding:mime-version:references:in-reply-to :message-id:date:subject:to:from:x-gm-message-state:from:to:cc :subject:date:message-id:reply-to; bh=T9FxElrI6X1f0BNtJHqNj7QKlHLxnjZJhQ1N93uc1Tc=; b=BdV1AxGgcrsOtkplWI1fNsi1TIirplTaAzPb+E5d25gfZP+RIOdfzEnfKPS7xcFb5l ZfAmwgrWhMghGd4Q+nak3Da1b17BoDlRpXddyVf882ij/JySHM6EK3LMWv4EFNeRMhxL 4u4WxIpEHRgCXOXBGNOp5605dPLZgo4SekhRtZ56qjO9M8V6/twySiuOzusSGMD51Z1N nEqb39vh56K/8grqikSCsyTGsI7lMuxKvDmeZ3rE6WY+n+vuk+pNBKbUv7cEQRIrAPyZ wW2F32elphNW1PZZpeiOGksKibHmwKD0wcub8Fo+m8h2loPdKPXqO8+lZadAvVt6ArwH exfA==
-X-Gm-Message-State: AOJu0Yye91PsE+Ure1V8fqyJT8Fcmxc6sgQmgkODIcv4g7qHgIkLnJf/ LKNs43zrFDufjKLUrbEHRZsJCzHDpzgvYt7UAmpEywN8jgEisdPxCgvRDA==
-X-Gm-Gg: ASbGncs3UaapzVtqCFXlFVYVHMu4wTau3LUcY4rj6fPlENUoNeMnOHAGsYmqTTKZFil vp2SUJYfR2J1Aoyy/wS1En9hN0qdqoxRjJ3X4ZVHhAapaviVub9oPB+tkx1Oqh4DPi//mQukguz gV9HTGRMnIrS6ECNQPOitmyJRQLLcwl1R8MdiX91/q+6CMSTnLowxbVIfiWYZJlkbcDF9QgoKbF OgoMk0yoUJ5DONIWkR0gmP8JDrXhvhcprlv06Ihtl/W7ZE75M3a+sxlIp1sPMPHWfi6nkqSNVms diaGcd4d6xm7nn2jO39bbLY6HoeASatYqk9pP5mH92mucVT/xr6UX5ukzoum3O3axid5
-X-Google-Smtp-Source: AGHT+IGsAd1D2IKaxjoFfQ5223jM/wGLIRLsGqB17mzJvlp+SdkmS8QwKpGmi7DX+5UTYBepcSWnEA==
-X-Received: by 2002:a17:902:d485:b0:224:1609:a74a with SMTP id d9443c01a7336-22dc6a6851emr145269525ad.34.1745862593096; Mon, 28 Apr 2025 10:49:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gOTbLCYx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jKlbj1DDGz1SA9gLfjkVPLZC2eJtqkZ14o1vFVyMpdHTFGStY1BrBU2abtBH/jOy9TmWi3lWOyLDAsTgWOst3e3PcnN2D589WBoBLXjfVxE1yKjLIfXZINUfsaFXal3muqDOjPGToaN6zMulRGtxx20D0QvfxMQYkrIG4l14wjjcLq4f961aqGVvnOsRPQvWE1YxqITVt/jcRwCoKiI/B7tNg6Ft5ieK0isKtRCQcjA00gG1UYM0coPOZ+KL+QXUMm84xBTNTdFjMA61gTWHST3o6kQI9AlpWq9ttHshNrUcOMz/XMVrfwqXD0RFmD0bYi5sm/ENPWX8IYjfJinPWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T+PWd6AgBw5blmdjkuIzrNdcmRiYNUMa4OdsgJcXMgw=;
+ b=gWLVjF3QKNECbsiDoAhtNI1JmMiy/85C0NIANG6/orANPhlqYynw/ifEbtyOvGaRFSZyp+ANvp2CPSSM1/gYc5vyZyB2CAuRJ5q/9EThm4sdTDZwCZJKd3sdl6bd0PlDrNnqnoDEk6M/0iYOqxr/DtHMWUGKcYpGR+4RMhvf3ziHTfWOJCK0qkjNV12xkuP6LjcxXwfDvqJw9QuMa4sjfnj5bqAgfq0AKtAcCVdNFiXT6JMDrD9yM1Kb5UKRUaPr8TgC1wYdHgaBzhLbjFTa429eROnTRU9TjgWU5377Xn+jHYu6IPnKEWaRcvSaxkJphDZroTigUf+FqKdKhiYNlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T+PWd6AgBw5blmdjkuIzrNdcmRiYNUMa4OdsgJcXMgw=;
+ b=gOTbLCYxGF67T1AbRh5F9aKFe4yBVpzyzdtptl+kUwoXea7yOCb+SYdYNLEFRLhQU8Dzs624DNfOoS3ZTDSdIijK7U+FsegnWhhbeaQ++zkLUwKPaOMVvl1cJCFc6b/07NeX7ceyL9o9gFtqcI418fq3WQgOi1B9uBvGggPRp4o=
+Received: from MN2PR19CA0044.namprd19.prod.outlook.com (2603:10b6:208:19b::21)
+ by SN7PR12MB7347.namprd12.prod.outlook.com (2603:10b6:806:29a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.30; Tue, 29 Apr
+ 2025 06:13:33 +0000
+Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
+ (2603:10b6:208:19b:cafe::3c) by MN2PR19CA0044.outlook.office365.com
+ (2603:10b6:208:19b::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Tue,
+ 29 Apr 2025 06:13:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8678.33 via Frontend Transport; Tue, 29 Apr 2025 06:13:33 +0000
+Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 29 Apr 2025 01:13:19 -0500
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
+Subject: [PATCH v5 08/20] x86/apic: Add update_vector() callback for Secure AVIC
+Date: Tue, 29 Apr 2025 11:39:52 +0530
+Message-ID: <20250429061004.205839-9-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spam-Score: -5.78
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|SN7PR12MB7347:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49fbc694-bbb5-4938-7bb1-08dd86e4f836
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?F9NTga7PptbAIG+TKed6zgiuwOuldVu/Cmq37vIXsDeQYc/tF9kX6/lQEL5r?=
+ =?us-ascii?Q?N6rBDNwOUmDy3lLALMP5ulqjzPtmf2243f9osQku+NCzV+N2p97akPG+F28A?=
+ =?us-ascii?Q?j5eVW3yoxlGFZsvs3JJB3ZBN057GXOXagMENEPOspPW6i26Y05nD+ezUV7Iw?=
+ =?us-ascii?Q?4FRyw84AKeutlUmCXtRxh5COqMTC4s4i6AHZfmE1lzcs8t6/EZJQ0u27OpCQ?=
+ =?us-ascii?Q?iyk4i2DiKmTbV5q87Ima36+oemvxM5BEYHZ4qiMEwf2S/4j98w59po9ITDdM?=
+ =?us-ascii?Q?7aouNvy1jggofbaOXIsl9pML9gyRYur8l3zdRkRRdih85tKa7OZlTfMxodd/?=
+ =?us-ascii?Q?3jrc+S6wHokkhfFz7fB4nTziaysac86MHjAXa7qEKXI2GIYkN2XECXqYqlXZ?=
+ =?us-ascii?Q?viegYPNUet3w05RmYSBm4TPn40o7tsBr6WVuIvgLfz66G6NvreA0TlSXKMEV?=
+ =?us-ascii?Q?QcKGY5Kmx+3VpYP9wr5ckK1+QCDhKY1LFXylf221Xb3BBQsApOZODI3gUfMp?=
+ =?us-ascii?Q?GEsyLY7QaPnt1vbRr+PdHxrCSa8/dbXv5Q145nKi2Qe7OgO5kUgGDwzhHj4F?=
+ =?us-ascii?Q?H8KSqw8KaEyp4hkQplbI/mufgco+Gp58ciR5gx96VhSGpwRxwwqwM3GzivP+?=
+ =?us-ascii?Q?q4ofeB7rulosRHfqSESx8JTVFi04PoEqdsYptTUaO/DKyV+9wr0ufYtHufHX?=
+ =?us-ascii?Q?NKb0A5rjYb7DOBhVd7enQWpC/jUXQ7ynIlCC8gEi1PNFfPsig73BLJREMlDX?=
+ =?us-ascii?Q?zZ5GMheNnIhSx5v3OMUOzU+aPjbxfPktpusU4iNsbOWQdbqWM4OkpEymqioA?=
+ =?us-ascii?Q?FdmKGiKI9pgtvFFQN3EvVZf9qqUMBK6UBhbN2kH+hBnxarA4VT3bvfTHwwZJ?=
+ =?us-ascii?Q?hMcIxm4WBdGH+B66huhNbpFE8BB0vkPssONlzjS7/t8ixVAlGuWvA4ahxyzv?=
+ =?us-ascii?Q?yNqtf41pOKACxYCLNZjPFQF+h9dfc5qClbLgwwJUZooxla+gSnxf2lgLafNQ?=
+ =?us-ascii?Q?Bmu8uOoTORWGlWmMHZC0zzq3J0LtloNqo7MxZwiMiuKROtx3tVgNgHPJV9pV?=
+ =?us-ascii?Q?HJgz3mMLmHJQ4sO4q+X9vBd2l8O2bH5Ra8fQX3BLF+sBLcq+OQuZ4yHBCy5z?=
+ =?us-ascii?Q?eYh7lyKreEioKpa5BDiaPKYYkYb5hSQXMSWFXVrbtXKkHUFQk9n2uLs+NqHp?=
+ =?us-ascii?Q?k8MyaL4qMIpczn8WjlwHoJmEB1Fetd6DLNsQM6vHharWXkxDmuUi/0LE50sQ?=
+ =?us-ascii?Q?xn6MI5y/7gkQGTb93zkHOgyT4SLgksJit/dasiQdI97roSBliLcjYVqNjCGW?=
+ =?us-ascii?Q?1eJagOQuWmoFL55RZxKLF0W4jiaZR8RshYNzc8unVnTau7yG7o7c37SN9xVN?=
+ =?us-ascii?Q?tj3qxOX/ypHzg++8GWJJ0F4VFA5lm1GHxgxzOgPdzVDGIfSBno4761gaBRbW?=
+ =?us-ascii?Q?Cl7d+0odA+UtZiRBuNnRLMYlE/cUn+IBNDrDyiiDt+tenRSL6gNlCu2PqIUE?=
+ =?us-ascii?Q?36D6UBBEqD619ScueNtg1eOWi69C1ct202jy?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 06:13:33.1021
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49fbc694-bbb5-4938-7bb1-08dd86e4f836
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB52.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7347
 
-From: JP Kobryn <inwardvessel@gmail.com>
+Add update_vector() callback to set/clear ALLOWED_IRR field in
+a vCPU's APIC backing page for vectors which are emulated by the
+hypervisor.
 
-It is possible to eliminate contention between subsystems when
-updating/flushing stats by using subsystem-specific locks. Let the existing
-rstat locks be dedicated to the cgroup base stats and rename them to
-reflect that. Add similar locks to the cgroup_subsys struct for use with
-individual subsystems.
+The ALLOWED_IRR field indicates the interrupt vectors which the
+guest allows the hypervisor to inject (typically for emulated devices).
+Interrupt vectors used exclusively by the guest itself and the vectors
+which are not emulated by the hypervisor, such as IPI vectors, should
+not be set by the guest in the ALLOWED_IRR fields.
 
-Lock initialization is done in the new function ss_rstat_init(ss) which
-replaces cgroup_rstat_boot(void). If NULL is passed to this function, the
-global base stat locks will be initialized. Otherwise, the subsystem locks
-will be initialized.
+As clearing/setting state of a vector will also be used in subsequent
+commits for other APIC regs (such as APIC_IRR update for sending IPI),
+add a common update_vector() in Secure AVIC driver.
 
-Change the existing lock helper functions to accept a reference to a css.
-Then within these functions, conditionally select the appropriate locks
-based on the subsystem affiliation of the given css. Add helper functions
-for this selection routine to avoid repeated code.
-
-Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
+Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
 ---
- block/blk-cgroup.c              |   2 +-
- include/linux/cgroup-defs.h     |  16 +++--
- include/trace/events/cgroup.h   |  12 +++-
- kernel/cgroup/cgroup-internal.h |   2 +-
- kernel/cgroup/cgroup.c          |  10 ++-
- kernel/cgroup/rstat.c           | 108 +++++++++++++++++++++-----------
- 6 files changed, 103 insertions(+), 47 deletions(-)
+Changes since v4:
+ - Moved Secure AVIC driver update_vector() addition to this patch.
+ - Commit log updates.
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index abeb7ec27e92..d7563b4bb795 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1074,7 +1074,7 @@ static void __blkcg_rstat_flush(struct blkcg *blkcg, int cpu)
- 	/*
- 	 * For covering concurrent parent blkg update from blkg_release().
- 	 *
--	 * When flushing from cgroup, cgroup_rstat_lock is always held, so
-+	 * When flushing from cgroup, the subsystem lock is always held, so
- 	 * this lock won't cause contention most of time.
- 	 */
- 	raw_spin_lock_irqsave(&blkg_stat_lock, flags);
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 45a605c74ff8..560582c4dbeb 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -223,7 +223,10 @@ struct cgroup_subsys_state {
- 	/*
- 	 * A singly-linked list of css structures to be rstat flushed.
- 	 * This is a scratch field to be used exclusively by
--	 * css_rstat_flush_locked() and protected by cgroup_rstat_lock.
-+	 * css_rstat_flush_locked().
-+	 *
-+	 * Protected by rstat_base_lock when css is cgroup::self.
-+	 * Protected by css->ss->rstat_ss_lock otherwise.
- 	 */
- 	struct cgroup_subsys_state *rstat_flush_next;
- };
-@@ -359,11 +362,11 @@ struct css_rstat_cpu {
- 	 * are linked on the parent's ->updated_children through
- 	 * ->updated_next.
- 	 *
--	 * In addition to being more compact, singly-linked list pointing
--	 * to the cgroup makes it unnecessary for each per-cpu struct to
--	 * point back to the associated cgroup.
-+	 * In addition to being more compact, singly-linked list pointing to
-+	 * the css makes it unnecessary for each per-cpu struct to point back
-+	 * to the associated css.
- 	 *
--	 * Protected by per-cpu cgroup_rstat_cpu_lock.
-+	 * Protected by per-cpu css->ss->rstat_ss_cpu_lock.
- 	 */
- 	struct cgroup_subsys_state *updated_children;	/* terminated by self cgroup */
- 	struct cgroup_subsys_state *updated_next;	/* NULL iff not on the list */
-@@ -794,6 +797,9 @@ struct cgroup_subsys {
- 	 * specifies the mask of subsystems that this one depends on.
- 	 */
- 	unsigned int depends_on;
-+
-+	spinlock_t rstat_ss_lock;
-+	raw_spinlock_t __percpu *rstat_ss_cpu_lock;
- };
- 
- extern struct percpu_rw_semaphore cgroup_threadgroup_rwsem;
-diff --git a/include/trace/events/cgroup.h b/include/trace/events/cgroup.h
-index af2755bda6eb..7d332387be6c 100644
---- a/include/trace/events/cgroup.h
-+++ b/include/trace/events/cgroup.h
-@@ -231,7 +231,11 @@ DECLARE_EVENT_CLASS(cgroup_rstat,
- 		  __entry->cpu, __entry->contended)
- );
- 
--/* Related to global: cgroup_rstat_lock */
-+/*
-+ * Related to locks:
-+ * global rstat_base_lock for base stats
-+ * cgroup_subsys::rstat_ss_lock for subsystem stats
-+ */
- DEFINE_EVENT(cgroup_rstat, cgroup_rstat_lock_contended,
- 
- 	TP_PROTO(struct cgroup *cgrp, int cpu, bool contended),
-@@ -253,7 +257,11 @@ DEFINE_EVENT(cgroup_rstat, cgroup_rstat_unlock,
- 	TP_ARGS(cgrp, cpu, contended)
- );
- 
--/* Related to per CPU: cgroup_rstat_cpu_lock */
-+/*
-+ * Related to per CPU locks:
-+ * global rstat_base_cpu_lock for base stats
-+ * cgroup_subsys::rstat_ss_cpu_lock for subsystem stats
-+ */
- DEFINE_EVENT(cgroup_rstat, cgroup_rstat_cpu_lock_contended,
- 
- 	TP_PROTO(struct cgroup *cgrp, int cpu, bool contended),
-diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
-index c161d34be634..b14e61c64a34 100644
---- a/kernel/cgroup/cgroup-internal.h
-+++ b/kernel/cgroup/cgroup-internal.h
-@@ -272,7 +272,7 @@ int cgroup_task_count(const struct cgroup *cgrp);
-  */
- int css_rstat_init(struct cgroup_subsys_state *css);
- void css_rstat_exit(struct cgroup_subsys_state *css);
--void cgroup_rstat_boot(void);
-+int ss_rstat_init(struct cgroup_subsys *ss);
- void cgroup_base_stat_cputime_show(struct seq_file *seq);
- 
- /*
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index d9865299edf5..3528381ea73c 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -6141,8 +6141,10 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
- 		css->id = cgroup_idr_alloc(&ss->css_idr, css, 1, 2, GFP_KERNEL);
- 		BUG_ON(css->id < 0);
- 
--		if (ss->css_rstat_flush)
-+		if (ss->css_rstat_flush) {
-+			BUG_ON(ss_rstat_init(ss));
- 			BUG_ON(css_rstat_init(css));
-+		}
- 	}
- 
- 	/* Update the init_css_set to contain a subsys
-@@ -6219,7 +6221,7 @@ int __init cgroup_init(void)
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup1_base_files));
- 
--	cgroup_rstat_boot();
-+	BUG_ON(ss_rstat_init(NULL));
- 
- 	get_user_ns(init_cgroup_ns.user_ns);
- 
-@@ -6250,8 +6252,10 @@ int __init cgroup_init(void)
- 						   GFP_KERNEL);
- 			BUG_ON(css->id < 0);
- 
--			if (ss->css_rstat_flush)
-+			if (ss->css_rstat_flush) {
-+				BUG_ON(ss_rstat_init(ss));
- 				BUG_ON(css_rstat_init(css));
-+			}
- 		} else {
- 			cgroup_init_subsys(ss, false);
- 		}
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index ddc799ca6591..a30bcc4d4f48 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -9,8 +9,8 @@
- 
- #include <trace/events/cgroup.h>
- 
--static DEFINE_SPINLOCK(cgroup_rstat_lock);
--static DEFINE_PER_CPU(raw_spinlock_t, cgroup_rstat_cpu_lock);
-+static DEFINE_SPINLOCK(rstat_base_lock);
-+static DEFINE_PER_CPU(raw_spinlock_t, rstat_base_cpu_lock);
- 
- static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
- 
-@@ -26,8 +26,24 @@ static struct cgroup_rstat_base_cpu *cgroup_rstat_base_cpu(
- 	return per_cpu_ptr(cgrp->rstat_base_cpu, cpu);
+ arch/x86/kernel/apic/x2apic_savic.c | 35 +++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index 81d932061b7b..9d2e93656037 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -43,6 +43,34 @@ static __always_inline void set_reg(unsigned int offset, u32 val)
+ 	WRITE_ONCE(this_cpu_ptr(apic_page)->regs[offset >> 2], val);
  }
  
-+static spinlock_t *ss_rstat_lock(struct cgroup_subsys *ss)
++static inline unsigned long *get_reg_bitmap(unsigned int cpu, unsigned int offset)
 +{
-+	if (ss)
-+		return &ss->rstat_ss_lock;
++	struct apic_page *ap = per_cpu_ptr(apic_page, cpu);
 +
-+	return &rstat_base_lock;
++	return (unsigned long *) &ap->bytes[offset];
 +}
 +
-+static raw_spinlock_t *ss_rstat_cpu_lock(struct cgroup_subsys *ss, int cpu)
++static inline unsigned int get_vec_bit(unsigned int vector)
 +{
-+	if (ss)
-+		return per_cpu_ptr(ss->rstat_ss_cpu_lock, cpu);
-+
-+	return per_cpu_ptr(&rstat_base_cpu_lock, cpu);
++	/*
++	 * The registers are 32-bit wide and 16-byte aligned.
++	 * Compensate for the resulting bit number spacing.
++	 */
++	return vector + 96 * (vector / 32);
 +}
 +
- /*
-- * Helper functions for rstat per CPU lock (cgroup_rstat_cpu_lock).
-+ * Helper functions for rstat per CPU locks.
-  *
-  * This makes it easier to diagnose locking issues and contention in
-  * production environments. The parameter @fast_path determine the
-@@ -35,21 +51,23 @@ static struct cgroup_rstat_base_cpu *cgroup_rstat_base_cpu(
-  * operations without handling high-frequency fast-path "update" events.
-  */
- static __always_inline
--unsigned long _css_rstat_cpu_lock(raw_spinlock_t *cpu_lock, int cpu,
--				     struct cgroup_subsys_state *css, const bool fast_path)
-+unsigned long _css_rstat_cpu_lock(struct cgroup_subsys_state *css, int cpu,
-+		const bool fast_path)
- {
- 	struct cgroup *cgrp = css->cgroup;
-+	raw_spinlock_t *cpu_lock;
- 	unsigned long flags;
- 	bool contended;
++static inline void update_vector(unsigned int cpu, unsigned int offset,
++				 unsigned int vector, bool set)
++{
++	unsigned long *reg = get_reg_bitmap(cpu, offset);
++	unsigned int bit = get_vec_bit(vector);
++
++	if (set)
++		set_bit(bit, reg);
++	else
++		clear_bit(bit, reg);
++}
++
+ #define SAVIC_ALLOWED_IRR	0x204
  
- 	/*
--	 * The _irqsave() is needed because cgroup_rstat_lock is
--	 * spinlock_t which is a sleeping lock on PREEMPT_RT. Acquiring
--	 * this lock with the _irq() suffix only disables interrupts on
--	 * a non-PREEMPT_RT kernel. The raw_spinlock_t below disables
--	 * interrupts on both configurations. The _irqsave() ensures
--	 * that interrupts are always disabled and later restored.
-+	 * The _irqsave() is needed because the locks used for flushing are
-+	 * spinlock_t which is a sleeping lock on PREEMPT_RT. Acquiring this lock
-+	 * with the _irq() suffix only disables interrupts on a non-PREEMPT_RT
-+	 * kernel. The raw_spinlock_t below disables interrupts on both
-+	 * configurations. The _irqsave() ensures that interrupts are always
-+	 * disabled and later restored.
- 	 */
-+	cpu_lock = ss_rstat_cpu_lock(css->ss, cpu);
- 	contended = !raw_spin_trylock_irqsave(cpu_lock, flags);
- 	if (contended) {
- 		if (fast_path)
-@@ -69,17 +87,18 @@ unsigned long _css_rstat_cpu_lock(raw_spinlock_t *cpu_lock, int cpu,
- }
- 
- static __always_inline
--void _css_rstat_cpu_unlock(raw_spinlock_t *cpu_lock, int cpu,
--			      struct cgroup_subsys_state *css, unsigned long flags,
--			      const bool fast_path)
-+void _css_rstat_cpu_unlock(struct cgroup_subsys_state *css, int cpu,
-+		unsigned long flags, const bool fast_path)
- {
- 	struct cgroup *cgrp = css->cgroup;
-+	raw_spinlock_t *cpu_lock;
- 
- 	if (fast_path)
- 		trace_cgroup_rstat_cpu_unlock_fastpath(cgrp, cpu, false);
- 	else
- 		trace_cgroup_rstat_cpu_unlock(cgrp, cpu, false);
- 
-+	cpu_lock = ss_rstat_cpu_lock(css->ss, cpu);
- 	raw_spin_unlock_irqrestore(cpu_lock, flags);
- }
- 
-@@ -94,7 +113,6 @@ void _css_rstat_cpu_unlock(raw_spinlock_t *cpu_lock, int cpu,
-  */
- __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
- {
--	raw_spinlock_t *cpu_lock = per_cpu_ptr(&cgroup_rstat_cpu_lock, cpu);
- 	unsigned long flags;
- 
- 	/*
-@@ -108,7 +126,7 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
- 	if (data_race(css_rstat_cpu(css, cpu)->updated_next))
- 		return;
- 
--	flags = _css_rstat_cpu_lock(cpu_lock, cpu, css, true);
-+	flags = _css_rstat_cpu_lock(css, cpu, true);
- 
- 	/* put @css and all ancestors on the corresponding updated lists */
- 	while (true) {
-@@ -136,7 +154,7 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
- 		css = parent;
+ static u32 savic_read(u32 reg)
+@@ -144,6 +172,11 @@ static void savic_write(u32 reg, u32 data)
  	}
- 
--	_css_rstat_cpu_unlock(cpu_lock, cpu, css, flags, true);
-+	_css_rstat_cpu_unlock(css, cpu, flags, true);
  }
  
- /**
-@@ -163,13 +181,6 @@ static struct cgroup_subsys_state *css_rstat_push_children(
- 
- 	child->rstat_flush_next = NULL;
- 
--	/*
--	 * The cgroup_rstat_lock must be held for the whole duration from
--	 * here as the rstat_flush_next list is being constructed to when
--	 * it is consumed later in css_rstat_flush().
--	 */
--	lockdep_assert_held(&cgroup_rstat_lock);
--
- 	/*
- 	 * Notation: -> updated_next pointer
- 	 *	     => rstat_flush_next pointer
-@@ -238,12 +249,11 @@ static struct cgroup_subsys_state *css_rstat_push_children(
- static struct cgroup_subsys_state *css_rstat_updated_list(
- 		struct cgroup_subsys_state *root, int cpu)
++static void savic_update_vector(unsigned int cpu, unsigned int vector, bool set)
++{
++	update_vector(cpu, SAVIC_ALLOWED_IRR, vector, set);
++}
++
+ static void init_apic_page(void)
  {
--	raw_spinlock_t *cpu_lock = per_cpu_ptr(&cgroup_rstat_cpu_lock, cpu);
- 	struct css_rstat_cpu *rstatc = css_rstat_cpu(root, cpu);
- 	struct cgroup_subsys_state *head = NULL, *parent, *child;
- 	unsigned long flags;
- 
--	flags = _css_rstat_cpu_lock(cpu_lock, cpu, root, false);
-+	flags = _css_rstat_cpu_lock(root, cpu, false);
- 
- 	/* Return NULL if this subtree is not on-list */
- 	if (!rstatc->updated_next)
-@@ -280,7 +290,7 @@ static struct cgroup_subsys_state *css_rstat_updated_list(
- 	if (child != root)
- 		head = css_rstat_push_children(head, child, cpu);
- unlock_ret:
--	_css_rstat_cpu_unlock(cpu_lock, cpu, root, flags, false);
-+	_css_rstat_cpu_unlock(root, cpu, flags, false);
- 	return head;
- }
- 
-@@ -307,7 +317,7 @@ __weak noinline void bpf_rstat_flush(struct cgroup *cgrp,
- __bpf_hook_end();
- 
- /*
-- * Helper functions for locking cgroup_rstat_lock.
-+ * Helper functions for locking.
-  *
-  * This makes it easier to diagnose locking issues and contention in
-  * production environments.  The parameter @cpu_in_loop indicate lock
-@@ -317,27 +327,31 @@ __bpf_hook_end();
-  */
- static inline void __css_rstat_lock(struct cgroup_subsys_state *css,
- 		int cpu_in_loop)
--	__acquires(&cgroup_rstat_lock)
-+	__acquires(lock)
- {
- 	struct cgroup *cgrp = css->cgroup;
-+	spinlock_t *lock;
- 	bool contended;
- 
--	contended = !spin_trylock_irq(&cgroup_rstat_lock);
-+	lock = ss_rstat_lock(css->ss);
-+	contended = !spin_trylock_irq(lock);
- 	if (contended) {
- 		trace_cgroup_rstat_lock_contended(cgrp, cpu_in_loop, contended);
--		spin_lock_irq(&cgroup_rstat_lock);
-+		spin_lock_irq(lock);
- 	}
- 	trace_cgroup_rstat_locked(cgrp, cpu_in_loop, contended);
- }
- 
- static inline void __css_rstat_unlock(struct cgroup_subsys_state *css,
- 				      int cpu_in_loop)
--	__releases(&cgroup_rstat_lock)
-+	__releases(lock)
- {
- 	struct cgroup *cgrp = css->cgroup;
-+	spinlock_t *lock;
- 
-+	lock = ss_rstat_lock(css->ss);
- 	trace_cgroup_rstat_unlock(cgrp, cpu_in_loop, false);
--	spin_unlock_irq(&cgroup_rstat_lock);
-+	spin_unlock_irq(lock);
- }
- 
- /**
-@@ -444,12 +458,36 @@ void css_rstat_exit(struct cgroup_subsys_state *css)
- 	css->rstat_cpu = NULL;
- }
- 
--void __init cgroup_rstat_boot(void)
-+/**
-+ * ss_rstat_init - subsystem-specific rstat initialization
-+ * @ss: target subsystem
-+ *
-+ * If @ss is NULL, the static locks associated with the base stats
-+ * are initialized. If @ss is non-NULL, the subsystem-specific locks
-+ * are initialized.
-+ */
-+int __init ss_rstat_init(struct cgroup_subsys *ss)
- {
- 	int cpu;
- 
-+	if (!ss) {
-+		spin_lock_init(&rstat_base_lock);
+ 	u32 apic_id;
+@@ -225,6 +258,8 @@ static struct apic apic_x2apic_savic __ro_after_init = {
+ 	.eoi				= native_apic_msr_eoi,
+ 	.icr_read			= native_x2apic_icr_read,
+ 	.icr_write			= native_x2apic_icr_write,
 +
-+		for_each_possible_cpu(cpu)
-+			raw_spin_lock_init(per_cpu_ptr(&rstat_base_cpu_lock, cpu));
-+
-+		return 0;
-+	}
-+
-+	spin_lock_init(&ss->rstat_ss_lock);
-+	ss->rstat_ss_cpu_lock = alloc_percpu(raw_spinlock_t);
-+	if (!ss->rstat_ss_cpu_lock)
-+		return -ENOMEM;
-+
- 	for_each_possible_cpu(cpu)
--		raw_spin_lock_init(per_cpu_ptr(&cgroup_rstat_cpu_lock, cpu));
-+		raw_spin_lock_init(per_cpu_ptr(ss->rstat_ss_cpu_lock, cpu));
-+
-+	return 0;
- }
++	.update_vector			= savic_update_vector,
+ };
  
- /*
+ apic_driver(apic_x2apic_savic);
 -- 
-2.47.1
+2.34.1
 
