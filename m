@@ -1,102 +1,171 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1D726A0CA;
-	Tue, 29 Apr 2025 22:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D86B268FF9;
+	Tue, 29 Apr 2025 22:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745964404; cv=none; b=iaTopyu93/x3YO0V0B2Mh9g35UZdlg/jAmWFKbSGaH9LpDXilucpRfzkAeXigEehfvGHhRAColJ9WBBG8rrrI26oMX7IaK4iabcyY24VqusTxr/o7a/BEG7wfrKQgWP6oS2Bp+mExyLQyPXIFq2UjmOk67BVESpxUio51O6P5u0=
+	t=1745964420; cv=none; b=HjXSorIwfkOz3Xlccl33VH7xEt9F9kdy/ix1l09OJFjKUGQOKdiaMxFaD9DumNceDyK7HC8bQbqEplc64Csm+cFMX0o96T6V3WC4xXwDHjUYT7SuB1Zuwuqz+UxmjYq8dw1k9WQaMyc8xU1T2VSRpgwWqS7KTy0P7DCwOKvw8Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745964404; c=relaxed/simple;
-	bh=1qtA1j0MhbLF0zo1Nt4V6pirpw6boJzLVrd/FQprni8=;
-	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fP3Qn7HddIrKF0YUYDrqpjocX7aRN2sg0xtQl+WYrJer1r+taWdPR7TE5Ni0SJYNrLNEhNVOscBUkgKyRGQqHO2vhzFxadN6rafS3U+iRA6q/goWx9fOfeYjb9L1W4nnEQF0oVWebnOdHy8W7uSHwGbf+NLr4GEBmLhhKDm+D6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=m1wyhlQZ; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1745964420; c=relaxed/simple;
+	bh=rbjUHm4vjSzvx1jL+WAkU6QZDtxg0tARkYNO803VokE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TuvmgiK6ALWj5/qgwctTINCTGF8p6fLTAInL45xG/7CLtxle7TIMXJunMaJnEVoXEkGETWRwACoBjN/3jKrnTIjV4ZTWyvzmycfI4UZlRu2do4FBNr9TiP1Do4HQlM/1XJrcUu5VjL+nClAtzTLsrp+PCPykdZWeV7FvM/I6Vbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1FaOVp4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="m1wyhlQZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1745964403; x=1777500403;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=1qtA1j0MhbLF0zo1Nt4V6pirpw6boJzLVrd/FQprni8=;
-  b=m1wyhlQZSobXjYzA6xxyv//pscYIfsExd42SCsbrG/84602FKiO+/whp
-   7iB9fhkArDdv6hjuSUGrUGHpt97ALX79i6lqFYbdEDrAaWDP7jWiPxEZ0
-   r1OcuQ8Nfy5BlImIAGTuA9XUARZccu1EWlvDXVzS/uMHwqQD+tl1Sp+sL
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.15,250,1739836800"; 
-   d="scan'208";a="195640350"
-Subject: Re: EEVDF regression still exists
-Thread-Topic: EEVDF regression still exists
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 22:06:41 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:17678]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.30.21:2525] with esmtp (Farcaster)
- id 6f501886-48f9-40e5-bb89-67048c5aa3e8; Tue, 29 Apr 2025 22:06:41 +0000 (UTC)
-X-Farcaster-Flow-ID: 6f501886-48f9-40e5-bb89-67048c5aa3e8
-Received: from EX19D002UWC001.ant.amazon.com (10.13.138.148) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 29 Apr 2025 22:06:40 +0000
-Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
- EX19D002UWC001.ant.amazon.com (10.13.138.148) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 29 Apr 2025 22:06:40 +0000
-Received: from EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0]) by
- EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0%5]) with mapi id
- 15.02.1544.014; Tue, 29 Apr 2025 22:06:40 +0000
-From: "Prundeanu, Cristian" <cpru@amazon.com>
-To: Peter Zijlstra <peterz@infradead.org>
-CC: K Prateek Nayak <kprateek.nayak@amd.com>, "Mohamed Abuelfotoh, Hazem"
-	<abuehaze@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "Benjamin
- Herrenschmidt" <benh@kernel.crashing.org>, "Blake, Geoff"
-	<blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>, "Doebel, Bjoern"
-	<doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>, Swapnil Sapkal
-	<swapnil.sapkal@amd.com>, Joseph Salisbury <joseph.salisbury@oracle.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov
-	<bp@alien8.de>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
-	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Thread-Index: AQHbuU8Zth8BPweWAUWz5H5EpP8DD7O7MGMA//+vIgA=
-Date: Tue, 29 Apr 2025 22:06:40 +0000
-Message-ID: <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
-References: <20250429213817.65651-1-cpru@amazon.com>
- <20250429215604.GE4439@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250429215604.GE4439@noisy.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DA0471B48DE52F47B5D491744D0CD7D6@amazon.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1FaOVp4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA51AC4CEE3;
+	Tue, 29 Apr 2025 22:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745964419;
+	bh=rbjUHm4vjSzvx1jL+WAkU6QZDtxg0tARkYNO803VokE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W1FaOVp4vPjJOVaFgQpccjGeKpQRbecEknN1GqBvoKOQ6E4P+nz6dbQYNZEXu9IpE
+	 JbcKLRKLakHdWad43gUWHVGnNso8m1GCmEfEIqM9E6TkRF+qDdo89DaJYjLlXqWVfM
+	 2nzBDx99ftFBXBozrFAI4jsCUwwaP4JyKf482eyaRqs+hORdoM39rctNgXC6rYRb7g
+	 dkow2i/PFMI+7XCgvNZh5g/440VEVK+SOhceTnB0roYTnQdfG2xV+96kJcwSStSrYm
+	 xIsP+a81krD7lAB/TWTjwaFfSp+5zIXranaMwrCFST2+gdEdmqrXk0QSjPtrl1Fwc+
+	 ns1LNv2vE+5Qg==
+Date: Tue, 29 Apr 2025 15:06:57 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Jason Xing <kernelxing@tencent.com>, Richard Cochran
+ <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, "Russell King (Oracle)"
+ <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next] net: Add support for providing the PTP
+ hardware source in tsinfo
+Message-ID: <20250429150657.1f32a10c@kernel.org>
+In-Reply-To: <20250425-feature_ptp_source-v1-1-c2dfe7b2b8b4@bootlin.com>
+References: <20250425-feature_ptp_source-v1-1-c2dfe7b2b8b4@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-T24gMjAyNS0wNC0yOSwgMTY6NTcsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRlYWQu
-b3JnIDxtYWlsdG86cGV0ZXJ6QGluZnJhZGVhZC5vcmc+PiB3cm90ZToNCg0KPj4gSGVyZSBhcmUg
-dGhlIGxhdGVzdCByZXN1bHRzIGZvciB0aGUgRUVWREYgaW1wYWN0IG9uIGRhdGFiYXNlIHdvcmts
-b2Fkcy4NCj4+IFRoZSByZWdyZXNzaW9uIGludHJvZHVjZWQgaW4ga2VybmVsIDYuNiBzdGlsbCBw
-ZXJzaXN0cyBhbmQgZG9lc24ndCBsb29rDQo+PiBsaWtlIGl0IGlzIGltcHJvdmluZy4NCj4NCj4g
-V2VsbCwgSSB3YXMgdW5kZXIgdGhlIGltcHJlc3Npb24gaXQgaGFkIGFjdHVhbGx5IGJlZW4gc29s
-dmVkIDotKA0KPg0KPiBNeSB1bmRlcnN0YW5kaW5nIGZyb20gdGhlIGxhc3Qgcm91bmQgd2FzIHRo
-YXQgUHJhdGVlayBhbmQgY28gaGFkIGl0DQo+IHNvcnRlZCAtLSB3aXRoIHRoZSBjYXZlYXQgYmVp
-bmcgdGhhdCB5b3UgaGFkIHRvIHN0aWNrIFNDSEVEX0JBVENIIGluIGF0DQo+IHRoZSByaWdodCBw
-bGFjZSBpbiBNeVNRTCBzdGFydCBzY3JpcHRzIG9yIHNvbWVzdWNoLg0KDQpUaGUgc3RhdGVtZW50
-IGluIHRoZSBwcmV2aW91cyB0aHJlYWQgWzFdIHdhcyB0aGF0IHVzaW5nIFNDSEVEX0JBVENIIGlt
-cHJvdmVzIA0KcGVyZm9ybWFuY2Ugb3ZlciBkZWZhdWx0LiBXaGlsZSB0aGF0IHN0aWxsIGhvbGRz
-IHRydWUsIGl0IGlzIGFsc28gZXF1YWxseSB0cnVlDQphYm91dCB1c2luZyBTQ0hFRF9CQVRDSCBv
-biBrZXJuZWwgNi41Lg0KDQpTbywgd2hlbiB3ZSBjb21wYXJlIDYuNSB3aXRoIHJlY2VudCBrZXJu
-ZWxzLCBib3RoIHVzaW5nIFNDSEVEX0JBVENILCB0aGUNCnJlZ3Jlc3Npb24gaXMgc3RpbGwgdmlz
-aWJsZS4gKFByZXZpb3VzbHksIHdlIG9ubHkgY29tcGFyZWQgU0NIRURfQkFUQ0ggd2l0aCANCjYu
-NSBkZWZhdWx0LCBsZWFkaW5nIHRvIHRoZSB3cm9uZyBjb25jbHVzaW9uIHRoYXQgaXQncyBhIGZp
-eCkuDQoNClsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvZmViMzFiNmUtNjQ1Ny00NTRj
-LWE0ZjMtY2U4YWQ5NmJmOGRlQGFtZC5jb20vDQoNCg==
+On Fri, 25 Apr 2025 19:42:43 +0200 Kory Maincent wrote:
+> Multi-PTP source support within a network topology has been merged,
+> but the hardware timestamp source is not yet exposed to users.
+> Currently, users only see the PTP index, which does not indicate
+> whether the timestamp comes from a PHY or a MAC.
+> 
+> Add support for reporting the hwtstamp source using a
+> hwtstamp-source field, alongside hwtstamp-phyindex, to describe
+> the origin of the hardware timestamp.
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+> Not sure moving the hwtstamp_source enum to uapi/linux/net_tstamp.h and
+> adding this header to ynl/Makefile.deps is the best choice. Maybe it is
+> better to move the enum directly to ethtool.h header.
+
+Weak preference for the YAML and therefore ethtool.h from my side.
+That way the doc strings will propagate to more places, like the HTML
+docs.
+
+> diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+> index ff0758e88ea1008efe533cde003b12719bf4fcd3..1414aed0b6adeae15b56e7a99a7d9eeb43ba0b6c 100644
+> --- a/include/linux/net_tstamp.h
+> +++ b/include/linux/net_tstamp.h
+> @@ -13,12 +13,6 @@
+>  					 SOF_TIMESTAMPING_TX_HARDWARE | \
+>  					 SOF_TIMESTAMPING_RAW_HARDWARE)
+>  
+> -enum hwtstamp_source {
+> -	HWTSTAMP_SOURCE_UNSPEC,
+
+when is unspec used in practice? Only path I could spot that may not
+set it is if we fetch the data by PHC index?
+
+> -	HWTSTAMP_SOURCE_NETDEV,
+> -	HWTSTAMP_SOURCE_PHYLIB,
+> -};
+> -
+>  /**
+>   * struct hwtstamp_provider_desc - hwtstamp provider description
+>   *
+
+> diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
+> index a93e6ea37fb3a69f331b1c90851d4e68cb659a83..bf5fb9f7acf5c03aaa121e0cda3c0b1d83e49f71 100644
+> --- a/include/uapi/linux/net_tstamp.h
+> +++ b/include/uapi/linux/net_tstamp.h
+> @@ -13,6 +13,19 @@
+>  #include <linux/types.h>
+>  #include <linux/socket.h>   /* for SO_TIMESTAMPING */
+>  
+> +/**
+> + * enum hwtstamp_source - Source of the hardware timestamp
+> + * @HWTSTAMP_SOURCE_UNSPEC: Source not specified or unknown
+> + * @HWTSTAMP_SOURCE_NETDEV: Hardware timestamp comes from the net device
+
+We should probably document that netdev here means that the timestamp
+comes from a MAC or device which has MAC and PHY integrated together?
+
+> + * @HWTSTAMP_SOURCE_PHYLIB: Hardware timestamp comes from one of the PHY
+> + *			    devices of the network topology
+> + */
+> +enum hwtstamp_source {
+> +	HWTSTAMP_SOURCE_UNSPEC,
+> +	HWTSTAMP_SOURCE_NETDEV,
+> +	HWTSTAMP_SOURCE_PHYLIB,
+> +};
+
+> --- a/net/ethtool/common.c
+> +++ b/net/ethtool/common.c
+> @@ -920,12 +920,20 @@ int ethtool_get_ts_info_by_phc(struct net_device *dev,
+>  		struct phy_device *phy;
+>  
+>  		phy = ethtool_phy_get_ts_info_by_phc(dev, info, hwprov_desc);
+> -		if (IS_ERR(phy))
+> +		if (IS_ERR(phy)) {
+>  			err = PTR_ERR(phy);
+> -		else
+> -			err = 0;
+> +			goto out;
+> +		}
+> +
+> +		info->phc_source = HWTSTAMP_SOURCE_PHYLIB;
+> +		info->phc_phyindex = phy->phyindex;
+> +		err = 0;
+> +		goto out;
+
+The goto before the else looks a bit odd now.
+Can we return directly in the error cases?
+There is no cleanup to be done.
+
+> +	} else {
+> +		info->phc_source = HWTSTAMP_SOURCE_NETDEV;
+>  	}
+>  
+> +out:
+>  	info->so_timestamping |= SOF_TIMESTAMPING_RX_SOFTWARE |
+>  				 SOF_TIMESTAMPING_SOFTWARE;
+>  
+> @@ -947,10 +955,14 @@ int __ethtool_get_ts_info(struct net_device *dev,
+>  
+>  		ethtool_init_tsinfo(info);
+>  		if (phy_is_default_hwtstamp(phydev) &&
+> -		    phy_has_tsinfo(phydev))
+> +		    phy_has_tsinfo(phydev)) {
+>  			err = phy_ts_info(phydev, info);
+> -		else if (ops->get_ts_info)
+> +			info->phc_source = HWTSTAMP_SOURCE_PHYLIB;
+> +			info->phc_phyindex = phydev->phyindex;
+> +		} else if (ops->get_ts_info) {
+>  			err = ops->get_ts_info(dev, info);
+> +			info->phc_source = HWTSTAMP_SOURCE_NETDEV;
+
+Let's move the assignment before the calls if we can?
+Otherwise someone adding code below may miss the fact that err may
+already be carrying an unhandled error.
+
