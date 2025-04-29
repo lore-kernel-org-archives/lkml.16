@@ -1,157 +1,1188 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA1F2D29AD;
-	Tue, 29 Apr 2025 13:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FA62BF3CE
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934458; cv=none; b=O+OBKLy0C8SPK1rK5Rbwjrorb4Xb4wbFF4BgIwdNmvlNxFraA2bqLAbXP8/Q7djlLe4Ce4MRc1Fnj7K9FM8OXnVQvPwejObSbMT8QG3vhuqY/b2/nTn49oFa2N6aIgXkCfhDSUTgCLbA01UYw6mxb/JnTZHLkyPW7n3lWexwJUk=
+	t=1745934452; cv=none; b=IqBf67rCxba5pgkCMmA8/CmAxARL//LAGZRZvLoem8SxEx+SQwnBoYAHoA9CyzaLUoeGQEHd9AEVRp/Cv4oAcKoIAl0/+9Na7E77cRR04QzPQjxrNbazTVxVM4NiKK24E3k/wBYjDRLVWfSPrlvXTfVMXGx/t+MohsX5+u0wzFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934458; c=relaxed/simple;
-	bh=DjzHEUhss7O4w8xX58jtGF/4zzUbQ8mr8m5sP2MwNWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4heCHbr9bTYtDNITw1i3QH42Whn2IYd/loBHy0BdI6dgbXqAEUUQIqJ+rIsEjuLqXcID0CB3qNMyYTQFJOQPi8d5IX5hkyTTmlD2SFFtQR6dkFfpaNi9I+4Xv46I6t28rgImK7h5/oIQmyybZ1TYPWJrZwOY0cUrOi04Q2WzuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPjjcb5n; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745934452; c=relaxed/simple;
+	bh=ZwWBvzIJ5GC5M31c0M7zl8dfShRs+K7zCYno75T0OL0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dbyvamLo0HG5Id2p+o6hB37cXrhzCNkUym7aji3xQhLG6m7ILQAmqLInMovS5uIgPZ/7IQF30BhUbz70pgAI7udOnlUre5CtDxM78Z6q3sVEHED1XklJa8GIdXyc5C/RmBug81HcwbenZOslG7jEkwaZShIiy6eV7isqSi6rh5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LfBL6k4H; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPjjcb5n"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so1174968566b.3;
-        Tue, 29 Apr 2025 06:47:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LfBL6k4H"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54b10956398so6907089e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745934454; x=1746539254; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
-        b=MPjjcb5nz/phaZpZxbBaYDBfvBnNJ63keoI+FimAf47y9livMwmlHDz2YP68piLTSh
-         onlvH7lhv4ivqxs/aXz4HtkFqxRwGjtVb9MAICzvzyYM/XjR3Ufact/8devWmeAqnlxE
-         xwnjp4zsnBr19aZ2jwS0iJrqqQhss2j0TQU91Yu86h/4cSmp3WSc3AWa/5/yJMHyVBTB
-         FPhfYj0eRzX44mkVBiLQEyBVvqfHsQ/pa/Xb3Kx6qd7dT4F0jmOyaQ4hK6zlYZ9o5KWU
-         FnIzx6/AnLNCU+doW3cG1kpto0HAyIBYF0PqeVNpkCiePlpAFMrWp4/igpm86nPTAALl
-         uN+A==
+        d=chromium.org; s=google; t=1745934447; x=1746539247; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1DnyA9V780HJCFny7+LK/Q+ehxWuLx4xXoXEbbmbGd0=;
+        b=LfBL6k4H0RC9U4V/CHRsAs/KlzkJ1MMpoRlU2esvq36u/nZNZN1QouVP3o1vVCV/Ks
+         pZXyMeogp8B3galBGViNI5X4beOaXWfjNi/Z9AUVuj6RoqXgLAqmVJXWC07/uSabEKj8
+         U3upcF+PHpIRYBjOCcFNb6QIeD3xHjOgLOrJ4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745934454; x=1746539254;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
-        b=PHKhrLXxIMS+HfPhkK4ugFKK3RaoRw7J+L29SuKCxpHwqFwEywmc5fwSLV+3RCbqah
-         zcKSf3HI5qdDuLECSD6ZBprLXGRx6LLUrGLXlz3U1PEwuAn1eYoTU9jLHjMmkSaZrDgC
-         2JoI/c4E5FpQectoUeDxV5VoYZOVXCuI6ZraH1YNW6+lzC9OhPp1kBAROlO7A3KAdm7N
-         oRRmcDzaGqb4DFJUr7/Jd/jLE31HFSRh/UXHvIzYcQpixEMj2Hys6JRr5yije/TQT9Br
-         lRochJ5R6BApISrPlPge8uU9RwAm/ITej/4sIKELfZwysn1UQvY/rzzC8EtHrRSSMhxe
-         LEGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfG8aU32bE0PJP0O8ldxvDcgwidFddJqLjww1vxaJs10NVcOu7il9TK3kewI3V0ZF+r2/xLEjdCVld@vger.kernel.org, AJvYcCWWzujkhMk4rINXfcSlik4vdH4yU9fkBxTTF/jM7oLU78y4RRvlU1gBnUekxFzp9UrYprkSQ8l/fdh/Awnl@vger.kernel.org, AJvYcCX/+ATSgcX+4GnmWSVTruK9qS5xWcHVTot+aTk0u2jewm6emB+swZAcPbf5reYq9cjzlvkT5p1FMbbk@vger.kernel.org, AJvYcCX1aDwKHKsNdPOoKgALN3ilRezUwPzMKE28D4ZEKALWQN+ugknbBmGoBiuxDLnSoCnUe7E9JTDtqV9A@vger.kernel.org, AJvYcCXbBt0NAzV/e7COOeu8nqxcZsaFS2DwCNZhkGg0F9g6SdJrijgoe1Rv+KvwepHGb3FRCXPuMLIB8BFa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrB9TH+LojeMRe8LrYHyyxHO17p4R2h41eQSQ81KmgkN4DCj5e
-	JPGGOeerkHu/QT2bN3qYFNegocW9Q9Hotzl+36pLzzH3VwH7HZ5D
-X-Gm-Gg: ASbGncsBbYLYNR/iAXxyMGLWDy+zYDC758st3UFfFdZe/ETA0uBEMCOsqLegugVMlxp
-	mDfHK934iB3axU6lxlw4ovXhaXL/S1LEfhA7X0tQlnjuxQTxD+kttAE08Oxj6lhDH9YajGcGEOW
-	dibJllRwqpT66BtXsgujlG4BFIxlZaDbR7V+pb0cRPWSHA0qy0bs7H5b1H+DlDukBLC8FiiVwN0
-	UwJq0ANG4B1m+gATEwJSCk77pZAS3N+6SxUGTwFRdThmXC6L+XAjy+waQ6iEdcwbmsay4AdZNv/
-	Kl/JnDEOsBaRc3tnGodsnrG3CoXtzMqo6CxbDNylH2N89pTxCJenA5yN8zpMRPPYUnY=
-X-Google-Smtp-Source: AGHT+IHewjMQ0MZiNJB4DgK8tvKn2XGZDPn4MYHgyVOxmK6G/0S4ZlgFqHAA9mb76xCeTR/leX0CMw==
-X-Received: by 2002:a17:907:6089:b0:ac3:8516:9cf2 with SMTP id a640c23a62f3a-acec87bb143mr338540466b.55.1745934454357;
-        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([2a02:3033:26c:ba50:9d5c:4d3e:be76:7564])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acecfa384b5sm77159066b.0.2025.04.29.06.47.32
+        d=1e100.net; s=20230601; t=1745934447; x=1746539247;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1DnyA9V780HJCFny7+LK/Q+ehxWuLx4xXoXEbbmbGd0=;
+        b=DVxShX4itb+5SmiX2fMIiu5Cf/YlmivDV0LIHwa+m5dvkDO3WlpSc/KIzo4YHWa+ib
+         T4yav2NJqCZE9oF1JoAo8uCHm+ObUavs4pr18UoiJRl82MWh7e7hSZpZKWstur9Gu6cD
+         vl5U0KM6PzgfxeqNXLM4K3aHvF+Gi4MoFnXYbb8PzLEFFWTjVd0JdoYVcEXwZ3JUj/dI
+         oucsq5CfNsl3weW62EIrB26tCWFKhdem1p+8oboBVLNVl0x80z2Wt09uvMn/DHVCILeI
+         6eEYV/L2Uf1vcc8VpLwWdn+ioTEfQBFuqAe3rGDcLSdH2Zbk98ytocmQnb+L+exToGap
+         u5LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW9cE+cEZqX+JVXaZxyw5pCPLjgdEh6kbJqILVMDu8qRBVyG/fLcB/J9Uwg6D3r6V85OpwzYKxoVh0PWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3MfKVGYy33IyOe8hi2fqZewAU4vpX0qcUjWO1h1zwpS/YOs+j
+	lWaPN4ktdBu/0NlSXZtfoTj505BL99ZBGDfEgdopzm3XSUoNmCaVvu84xykkMA==
+X-Gm-Gg: ASbGncvwckSe79vqXtFXBiO+zxsTr4pbTUJ01oZlo+uyhOc3+ubg3pbIXzDi1cZEIFV
+	RwGtFFWJ2yGXHqLAPpzMNTxTyQNY0Gly0lypwCpHUcKC+6L7fjji2TIMjCy34DqQKU1Xvny8Mog
+	NqoxSwpRlolWfIxJmjgDa88bPfi63uxNbAFkgeiDQ8xnVdnG6z3r0br6nhsrJooLU651d6ax5YL
+	igm/N8uJPauxP/98FVtyjoaWULZusVJOgJBmS4GhvJfCuFOTJ/A0430cEn22eniTIWS+ci61fjH
+	urTXg0xG7UpqcZynAaarx7ramb0TYWtcFzn4axOfpNGBJ4KZL/46q8+xntTimKGbxgK+DpyYH38
+	tqO7aYfBW+dx8JxKLnHbQ
+X-Google-Smtp-Source: AGHT+IE6kffEGT1U7Ld+BifEkJPEY37YzSpY20eNW/La5eIkxBkaohbCHK6PkhNh8/QA1yuZmbn7Iw==
+X-Received: by 2002:a05:6512:234a:b0:549:6309:2b9d with SMTP id 2adb3069b0e04-54e9e173ecbmr901067e87.13.1745934447101;
+        Tue, 29 Apr 2025 06:47:27 -0700 (PDT)
+Received: from ribalda.c.googlers.com (228.231.88.34.bc.googleusercontent.com. [34.88.231.228])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb2626fsm1902375e87.46.2025.04.29.06.47.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
-Date: Tue, 29 Apr 2025 15:47:31 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
- sysfs-bus-iio
-Message-ID: <3w7y2e4yfkf6ujr2mpsxcammdrb77rdybxi3ikpfoguvwsnipn@j2v45uldkw5t>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
- <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
+        Tue, 29 Apr 2025 06:47:26 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 29 Apr 2025 13:47:25 +0000
+Subject: [PATCH 1/2] media: uvcvideo: Rewrite uvc_ids for keep-sorted.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-keep-sorted-v1-1-2fa3538c0315@chromium.org>
+References: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
+In-Reply-To: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hans@jjverkuil.nl>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.2
 
-Hi David,
+keep-sorted is a tool to check if the code is sorted. If we enable it in
+media-ci we will automate some of the boring comments.
 
-On Fri, Apr 25, 2025 at 04:16:20PM -0500, David Lechner wrote:
-> On 4/22/25 6:34 AM, Jorge Marques wrote:
-> 
-> ...
-> 
-> > Devices with this feature are max1363, ad7606, ad799x, and ad4052.
-> > The max1363 driver included the events/sampling_frequency in
-> > commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
-> > and ad799x in
-> > commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
-> > hysteresis")
-> > but went undocumented so far.
-> 
-> It looks like this part was copied from a different commit and isn't related
-> to this one.
-> 
+This is a preparation patch to enable keep-sorted. No functional change
+is expected. It has been tested with objdump:
+ribalda@ribalda:~/work/linux$ diff drivers/media/usb/uvc/uvc_driver.o.S drivers/media/usb/uvc/uvc_driver.o.new.S
+2c2
+< drivers/media/usb/uvc/uvc_driver.o:     file format elf64-x86-64
+---
+ drivers/media/usb/uvc/uvc_driver.c | 618 +++++++++++++++++++++++--------------
+ 1 file changed, 386 insertions(+), 232 deletions(-)
 
-You are right, this is from the other already applied patch, I will remove.
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 107e0fafd80f54ec98c9657e5d58d17a6ed8c02f..7ced8980543af5a207938d12a5eb833ee8a34c38 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -2501,8 +2501,7 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
+  */
+ static const struct usb_device_id uvc_ids[] = {
+ 	/* Quanta ACER HD User Facing */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+-				| USB_DEVICE_ID_MATCH_INT_INFO,
++	{
+ 	  .idVendor		= 0x0408,
+ 	  .idProduct		= 0x4033,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+@@ -2510,10 +2509,12 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
+ 	  .driver_info		= (kernel_ulong_t)&(const struct uvc_device_info){
+ 		.uvc_version = 0x010a,
+-	  } },
+-	/* Quanta ACER HD User Facing */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  },
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Quanta ACER HD User Facing */
++	{
+ 	  .idVendor		= 0x0408,
+ 	  .idProduct		= 0x4035,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+@@ -2521,530 +2522,648 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
+ 	  .driver_info		= (kernel_ulong_t)&(const struct uvc_device_info){
+ 		.uvc_version = 0x010a,
+-	  } },
+-	/* LogiLink Wireless Webcam */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  },
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* LogiLink Wireless Webcam */
++	{
+ 	  .idVendor		= 0x0416,
+ 	  .idProduct		= 0xa91a,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Genius eFace 2025 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Genius eFace 2025 */
++	{
+ 	  .idVendor		= 0x0458,
+ 	  .idProduct		= 0x706e,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Microsoft Lifecam NX-6000 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Microsoft Lifecam NX-6000 */
++	{
+ 	  .idVendor		= 0x045e,
+ 	  .idProduct		= 0x00f8,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Microsoft Lifecam NX-3000 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Microsoft Lifecam NX-3000 */
++	{
+ 	  .idVendor		= 0x045e,
+ 	  .idProduct		= 0x0721,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Microsoft Lifecam VX-7000 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Microsoft Lifecam VX-7000 */
++	{
+ 	  .idVendor		= 0x045e,
+ 	  .idProduct		= 0x0723,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Logitech, Webcam C910 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech, Webcam C910 */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x0821,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_WAKE_AUTOSUSPEND)},
+-	/* Logitech, Webcam B910 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_WAKE_AUTOSUSPEND),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech, Webcam B910 */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x0823,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_WAKE_AUTOSUSPEND)},
+-	/* Logitech Quickcam Fusion */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_WAKE_AUTOSUSPEND),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Quickcam Fusion */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08c1,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Logitech Quickcam Orbit MP */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Quickcam Orbit MP */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08c2,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Logitech Quickcam Pro for Notebook */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Quickcam Pro for Notebook */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08c3,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Logitech Quickcam Pro 5000 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Quickcam Pro 5000 */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08c5,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Logitech Quickcam OEM Dell Notebook */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Quickcam OEM Dell Notebook */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08c6,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Logitech Quickcam OEM Cisco VT Camera II */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Quickcam OEM Cisco VT Camera II */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08c7,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Logitech HD Pro Webcam C920 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech HD Pro Webcam C920 */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x082d,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT
+-					       | UVC_QUIRK_INVALID_DEVICE_SOF) },
+-	/* Logitech HD Pro Webcam C922 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++					       | UVC_QUIRK_INVALID_DEVICE_SOF),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech HD Pro Webcam C922 */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x085c,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF) },
+-	/* Logitech Rally Bar Huddle */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Rally Bar Huddle */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x087c,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME) },
+-	/* Logitech Rally Bar */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Rally Bar */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x089b,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME) },
+-	/* Logitech Rally Bar Mini */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Logitech Rally Bar Mini */
++	{
+ 	  .idVendor		= 0x046d,
+ 	  .idProduct		= 0x08d3,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME) },
+-	/* Chicony CNF7129 (Asus EEE 100HE) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Chicony CNF7129 (Asus EEE 100HE) */
++	{
+ 	  .idVendor		= 0x04f2,
+ 	  .idProduct		= 0xb071,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTRICT_FRAME_RATE) },
+-	/* Alcor Micro AU3820 (Future Boy PC USB Webcam) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTRICT_FRAME_RATE),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Alcor Micro AU3820 (Future Boy PC USB Webcam) */
++	{
+ 	  .idVendor		= 0x058f,
+ 	  .idProduct		= 0x3820,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Dell XPS m1530 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Dell XPS m1530 */
++	{
+ 	  .idVendor		= 0x05a9,
+ 	  .idProduct		= 0x2640,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Dell SP2008WFP Monitor */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Dell SP2008WFP Monitor */
++	{
+ 	  .idVendor		= 0x05a9,
+ 	  .idProduct		= 0x2641,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Dell Alienware X51 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Dell Alienware X51 */
++	{
+ 	  .idVendor		= 0x05a9,
+ 	  .idProduct		= 0x2643,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Dell Studio Hybrid 140g (OmniVision webcam) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Dell Studio Hybrid 140g (OmniVision webcam) */
++	{
+ 	  .idVendor		= 0x05a9,
+ 	  .idProduct		= 0x264a,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Dell XPS M1330 (OmniVision OV7670 webcam) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Dell XPS M1330 (OmniVision OV7670 webcam) */
++	{
+ 	  .idVendor		= 0x05a9,
+ 	  .idProduct		= 0x7670,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Apple Built-In iSight */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Apple Built-In iSight */
++	{
+ 	  .idVendor		= 0x05ac,
+ 	  .idProduct		= 0x8501,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_PROBE_MINMAX
+-					| UVC_QUIRK_BUILTIN_ISIGHT) },
+-	/* Apple FaceTime HD Camera (Built-In) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| UVC_QUIRK_BUILTIN_ISIGHT),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Apple FaceTime HD Camera (Built-In) */
++	{
+ 	  .idVendor		= 0x05ac,
+ 	  .idProduct		= 0x8514,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Apple Built-In iSight via iBridge */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Apple Built-In iSight via iBridge */
++	{
+ 	  .idVendor		= 0x05ac,
+ 	  .idProduct		= 0x8600,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* Foxlink ("HP Webcam" on HP Mini 5103) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Foxlink ("HP Webcam" on HP Mini 5103) */
++	{
+ 	  .idVendor		= 0x05c8,
+ 	  .idProduct		= 0x0403,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth },
+-	/* Genesys Logic USB 2.0 PC Camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Genesys Logic USB 2.0 PC Camera */
++	{
+ 	  .idVendor		= 0x05e3,
+ 	  .idProduct		= 0x0505,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Hercules Classic Silver */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Hercules Classic Silver */
++	{
+ 	  .idVendor		= 0x06f8,
+ 	  .idProduct		= 0x300c,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth },
+-	/* ViMicro Vega */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* ViMicro Vega */
++	{
+ 	  .idVendor		= 0x0ac8,
+ 	  .idProduct		= 0x332d,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth },
+-	/* ViMicro - Minoru3D */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* ViMicro - Minoru3D */
++	{
+ 	  .idVendor		= 0x0ac8,
+ 	  .idProduct		= 0x3410,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth },
+-	/* ViMicro Venus - Minoru3D */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* ViMicro Venus - Minoru3D */
++	{
+ 	  .idVendor		= 0x0ac8,
+ 	  .idProduct		= 0x3420,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth },
+-	/* Ophir Optronics - SPCAM 620U */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_fix_bandwidth,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Ophir Optronics - SPCAM 620U */
++	{
+ 	  .idVendor		= 0x0bd3,
+ 	  .idProduct		= 0x0555,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Sonix Technology Co. Ltd. - 292A IPC AR0330 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Sonix Technology Co. Ltd. - 292A IPC AR0330 */
++	{
+ 	  .idVendor		= 0x0c45,
+ 	  .idProduct		= 0x6366,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_MJPEG_NO_EOF) },
+-	/* MT6227 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_MJPEG_NO_EOF),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* MT6227 */
++	{
+ 	  .idVendor		= 0x0e8d,
+ 	  .idProduct		= 0x0004,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_PROBE_MINMAX
+-					| UVC_QUIRK_PROBE_DEF) },
+-	/* IMC Networks (Medion Akoya) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| UVC_QUIRK_PROBE_DEF),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* IMC Networks (Medion Akoya) */
++	{
+ 	  .idVendor		= 0x13d3,
+ 	  .idProduct		= 0x5103,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* JMicron USB2.0 XGA WebCam */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* JMicron USB2.0 XGA WebCam */
++	{
+ 	  .idVendor		= 0x152d,
+ 	  .idProduct		= 0x0310,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Kurokesu C1 PRO */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Kurokesu C1 PRO */
++	{
+ 	  .idVendor		= 0x16d0,
+ 	  .idProduct		= 0x0ed1,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_MJPEG_NO_EOF) },
+-	/* Syntek (HP Spartan) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_MJPEG_NO_EOF),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Syntek (HP Spartan) */
++	{
+ 	  .idVendor		= 0x174f,
+ 	  .idProduct		= 0x5212,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Syntek (Samsung Q310) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Syntek (Samsung Q310) */
++	{
+ 	  .idVendor		= 0x174f,
+ 	  .idProduct		= 0x5931,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Syntek (Packard Bell EasyNote MX52 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Syntek (Packard Bell EasyNote MX52 */
++	{
+ 	  .idVendor		= 0x174f,
+ 	  .idProduct		= 0x8a12,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Syntek (Asus F9SG) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Syntek (Asus F9SG) */
++	{
+ 	  .idVendor		= 0x174f,
+ 	  .idProduct		= 0x8a31,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Syntek (Asus U3S) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Syntek (Asus U3S) */
++	{
+ 	  .idVendor		= 0x174f,
+ 	  .idProduct		= 0x8a33,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Syntek (JAOtech Smart Terminal) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Syntek (JAOtech Smart Terminal) */
++	{
+ 	  .idVendor		= 0x174f,
+ 	  .idProduct		= 0x8a34,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Miricle 307K */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Miricle 307K */
++	{
+ 	  .idVendor		= 0x17dc,
+ 	  .idProduct		= 0x0202,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Lenovo Thinkpad SL400/SL500 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Lenovo Thinkpad SL400/SL500 */
++	{
+ 	  .idVendor		= 0x17ef,
+ 	  .idProduct		= 0x480b,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid },
+-	/* Aveo Technology USB 2.0 Camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_stream_no_fid,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Aveo Technology USB 2.0 Camera */
++	{
+ 	  .idVendor		= 0x1871,
+ 	  .idProduct		= 0x0306,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_PROBE_MINMAX
+-					| UVC_QUIRK_PROBE_EXTRAFIELDS) },
+-	/* Aveo Technology USB 2.0 Camera (Tasco USB Microscope) */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| UVC_QUIRK_PROBE_EXTRAFIELDS),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Aveo Technology USB 2.0 Camera (Tasco USB Microscope) */
++	{
+ 	  .idVendor		= 0x1871,
+ 	  .idProduct		= 0x0516,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Ecamm Pico iMage */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Ecamm Pico iMage */
++	{
+ 	  .idVendor		= 0x18cd,
+ 	  .idProduct		= 0xcafe,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_PROBE_EXTRAFIELDS) },
+-	/* Manta MM-353 Plako */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_PROBE_EXTRAFIELDS),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Manta MM-353 Plako */
++	{
+ 	  .idVendor		= 0x18ec,
+ 	  .idProduct		= 0x3188,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* FSC WebCam V30S */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* FSC WebCam V30S */
++	{
+ 	  .idVendor		= 0x18ec,
+ 	  .idProduct		= 0x3288,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Arkmicro unbranded */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Arkmicro unbranded */
++	{
+ 	  .idVendor		= 0x18ec,
+ 	  .idProduct		= 0x3290,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def },
+-	/* The Imaging Source USB CCD cameras */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_def,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* The Imaging Source USB CCD cameras */
++	{
+ 	  .idVendor		= 0x199e,
+ 	  .idProduct		= 0x8102,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+-	  .bInterfaceProtocol	= 0 },
+-	/* Bodelin ProScopeHR */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+-				| USB_DEVICE_ID_MATCH_DEV_HI
++	  .bInterfaceProtocol	= 0,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Bodelin ProScopeHR */
++	{
+ 	  .idVendor		= 0x19ab,
+ 	  .idProduct		= 0x1000,
+ 	  .bcdDevice_hi		= 0x0126,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_STATUS_INTERVAL) },
+-	/* MSI StarCam 370i */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_STATUS_INTERVAL),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_DEV_HI
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* MSI StarCam 370i */
++	{
+ 	  .idVendor		= 0x1b3b,
+ 	  .idProduct		= 0x2951,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Generalplus Technology Inc. 808 Camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Generalplus Technology Inc. 808 Camera */
++	{
+ 	  .idVendor		= 0x1b3f,
+ 	  .idProduct		= 0x2002,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Shenzhen Aoni Electronic Co.,Ltd 2K FHD camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Shenzhen Aoni Electronic Co.,Ltd 2K FHD camera */
++	{
+ 	  .idVendor		= 0x1bcf,
+ 	  .idProduct		= 0x0b40,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+@@ -3052,152 +3171,187 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= (kernel_ulong_t)&(const struct uvc_device_info){
+ 		.uvc_version = 0x010a,
+-	  } },
+-	/* SiGma Micro USB Web Camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  },
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* SiGma Micro USB Web Camera */
++	{
+ 	  .idVendor		= 0x1c4f,
+ 	  .idProduct		= 0x3000,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_PROBE_MINMAX
+-					| UVC_QUIRK_IGNORE_SELECTOR_UNIT) },
+-	/* Actions Microelectronics Co. Display capture-UVC05 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| UVC_QUIRK_IGNORE_SELECTOR_UNIT),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Actions Microelectronics Co. Display capture-UVC05 */
++	{
+ 	  .idVendor		= 0x1de1,
+ 	  .idProduct		= 0xf105,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_DISABLE_AUTOSUSPEND) },
+-	/* NXP Semiconductors IR VIDEO */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_DISABLE_AUTOSUSPEND),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* NXP Semiconductors IR VIDEO */
++	{
+ 	  .idVendor		= 0x1fc9,
+ 	  .idProduct		= 0x009b,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax },
+-	/* Oculus VR Positional Tracker DK2 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_probe_minmax,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Oculus VR Positional Tracker DK2 */
++	{
+ 	  .idVendor		= 0x2833,
+ 	  .idProduct		= 0x0201,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8 },
+-	/* Oculus VR Rift Sensor */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Oculus VR Rift Sensor */
++	{
+ 	  .idVendor		= 0x2833,
+ 	  .idProduct		= 0x0211,
+ 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8 },
+-	/* GEO Semiconductor GC6500 */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8,
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* GEO Semiconductor GC6500 */
++	{
+ 	  .idVendor		= 0x29fe,
+ 	  .idProduct		= 0x4d53,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP) },
+-	/* Insta360 Link */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Insta360 Link */
++	{
+ 	  .idVendor		= 0x2e1a,
+ 	  .idProduct		= 0x4c01,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_DISABLE_AUTOSUSPEND) },
+-	/* Intel D410/ASR depth camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_DISABLE_AUTOSUSPEND),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D410/ASR depth camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0ad2,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D415/ASRC depth camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D415/ASRC depth camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0ad3,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D430/AWG depth camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D430/AWG depth camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0ad4,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel RealSense D4M */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel RealSense D4M */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0b03,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D435/AWGC depth camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D435/AWGC depth camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0b07,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D435i depth camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D435i depth camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0b3a,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D405 Depth Camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D405 Depth Camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0b5b,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D455 Depth Camera */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D455 Depth Camera */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x0b5c,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-	/* Intel D421 Depth Module */
+-	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
++	/* Intel D421 Depth Module */
++	{
+ 	  .idVendor		= 0x8086,
+ 	  .idProduct		= 0x1155,
+ 	  .bInterfaceClass	= USB_CLASS_VIDEO,
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+-	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
++	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX),
++	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_INT_INFO,
++	},
+ 	/* Generic USB Video Class */
+ 	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_UNDEFINED) },
+ 	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_15) },
 
-> > 
-> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > index 33c09c4ac60a4feec82308461643134f5ba84b66..129061befb21b82a51142a01a94d96fcf1b60072 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
-> >  Description:
-> >  		Hardware dependent values supported by the oversampling filter.
-> >  
-> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
-> > +KernelVersion:	6.15
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Some devices have internal clocks for oversampling.
-> > +		Sets the resulting frequency in Hz to trigger a conversion used by
-> > +		the oversampling filter.
-> > +		If the device has a fixed internal clock or is computed based on
-> > +		the sampling frequency parameter, the parameter is read only.
-> 
-> Don't need a newline after every period.
+-- 
+2.49.0.901.g37484f566f-goog
 
-Ack.
-
-> 
-> > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
-> > +KernelVersion:	6.15
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Hardware dependent values supported by the oversampling
-> > +		frequency.
-> 
-> 		oversampling_frequency attribute.
-> 
-
-Ack.
-
-> > +
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
-> > 
-> 
-
-Regards,
-Jorge
