@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483D8224AE6
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F382517A6
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745947407; cv=none; b=VmbijchnBocm3w3BTLT6U6ddwOYMZVQhPyDbr6oaqQa8MCRETNRa0qSxd5Q3Zj+3SWoosTrA6Hbz4NSiEDKfFWWYYGWiMw76EYtNweEZsW03ZD1RCms+UNS8pMcfRwVmk/HLhgOw/jdC9/9BFfvJvcvpPpEnKSzfXyqaR7i3Rvk=
+	t=1745947503; cv=none; b=braQ+2a3Fi6QTTyb642S0HD4dmGMBKL+h1rVtmFY75CbajmQ/pt7AR17C5WhXnjYyHT7eM7yg50SQMyhAvZqZDKjuwF9ShBcupwg1TLutw7G5oWhvt8+ZyMacHkOSaCZCSbBrqPqqRXBShpH0G03lq6zLskaJCXp+Nd0Jyr95zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745947407; c=relaxed/simple;
-	bh=aT1PNU8bBsYPPvH3P7AuZtCgRAnSsIJK828EwxpbErA=;
+	s=arc-20240116; t=1745947503; c=relaxed/simple;
+	bh=6/2+cYiocmy0wyB5QejMKFLePah8s6a06xWG4IqQVKs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Whb78zYGGT4zJBF0n+sYNAk331RdaA0s8I6LE+nbYqXV0GWViMGyGczX+t1f4G4eqTXp/hlyq/wTcYg2MKD7VacN/8RBdtqmIrLT8LY6jPAo1QASimJ4ocS36+qWe/9R+S0AH+05N5OdLbiYwHetWV81f3Q5ZeYTXSHMFzTpW/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lp4beAF0; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=E1TJjq3121bTxTC0FKlGJw/MjDaX4zGTlP3hcIEmJO2IICKvAOQ3Mcc8Xw7rRjxupW8jvBHQee9tp2X6knZ6bPmWadLd64r6mzlrQkF8KveRcUQsq8PsYvAfE3VTtzOVERc6AwWIp+mwNL6OvZqgvyRlQmR87naz1Tb4Ii2vJCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jNsPN0q9; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lp4beAF0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jNsPN0q9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745947405;
+	s=mimecast20190719; t=1745947500;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mejufdpGoxe4mxva5kvPFm+VySXa27d3Wo1WQ6UneQU=;
-	b=Lp4beAF0PkqSnicuzGSBs3gszbG7Qh4QLBmuNWWJLghWDpJDcpw+PII28lHfuq2lGNU4mp
-	6x8Xs1Jt9tdwgXsRLImrqNmu+dwPhB4V23+26MlBVi5PL7aGCRjujNIxkqsYdwPC3I1p3R
-	wujgPbXSjAvczgqmdCvzNcZRiP7Cz8k=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=e/bLyArrocjzIsxdJa7jG1qfjWAEQUi1ZPYPngioU1o=;
+	b=jNsPN0q98uyh/sS58X7tBpFLRgVS1U+O5GVAt6Rh6KzOX2XH3llgLm8yQ4o2LSO59MB96N
+	DtTc3v3n39FbSrtXnnXdcojphRfmZ8ekryfrEWLXEjK9aZr7pZ7Aik1TE/PwltCh5nckf9
+	/QotCZEMOdgZUmdVnXP3gTmupDttPa8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-ISZnITw3PoK0SILl4svTow-1; Tue, 29 Apr 2025 13:23:23 -0400
-X-MC-Unique: ISZnITw3PoK0SILl4svTow-1
-X-Mimecast-MFC-AGG-ID: ISZnITw3PoK0SILl4svTow_1745947403
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d5ca7c86aso36395025e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:23:23 -0700 (PDT)
+ us-mta-649-dRMn6HvUOBi0iX5atZkUgw-1; Tue, 29 Apr 2025 13:24:32 -0400
+X-MC-Unique: dRMn6HvUOBi0iX5atZkUgw-1
+X-Mimecast-MFC-AGG-ID: dRMn6HvUOBi0iX5atZkUgw_1745947471
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso28801f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:24:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745947402; x=1746552202;
+        d=1e100.net; s=20230601; t=1745947471; x=1746552271;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=mejufdpGoxe4mxva5kvPFm+VySXa27d3Wo1WQ6UneQU=;
-        b=aWDqVE5O1Ic23Ghe4SnBF+eoEuasNQTR6vKM/HcSvIB8qkX1llwZO1rqTpshcZ/TNc
-         8aBeSz8ZTrU6nRQ50zKWV04RqCx3o1kI3/H4ao+E7Q9bSURh7iuewpFJIL8/7L0GuoMq
-         FBUgNdBVtEXIpQu3c8Hss+Py5GghEfzZAqfWMTLP4rd7Z4dOw/5++CvFBwCP6/Pz5vzb
-         kFrkBJ6tKBIMyISIUeDENOsnCotRM2jHS2s9nLdEmdv5VX3Rr0Sm94TwO333poDtWAWz
-         GJduRUWfQXJD+bgENobrNtBUaTX7DX9hEl2GC5KkW4ePut5WY+hC/ID8+K1HT9NVmuj8
-         gzlg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7VmHlKjQR3nPx3YsykRCtSuqHpqL9MJTQU+SxmmclMkKJalgjAnBKFExHTozu+R1DpUKnLCpR3uA2bBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX03qfNSIwGNfscoNi6LFq7CvwWAvgxav14NZruZrzLLuNqfpp
-	stOw6QASs3dIv0Hu/ED/T4mIBxX1DfHwl8CGmwOpyWw1uygH/sy0oW2eHpHMal/UWcRXOey+mB7
-	5PKryhtF0GcXSnmG9lh69GDBeMvzmgVX8eW8O8XIT0Z4eESXPcrKgsV9OZnjjkA==
-X-Gm-Gg: ASbGncuWFesFL9fZ6nK/yTR2aVaQnoDrsqTeXvK8gs3ZFQbElpyo4fKTgMY6QNSk5oK
-	AEUShC6dq9l+M8HxcQwnO+axiZ6zzLaSvjLg7lRo5uDyMgHO1AezLcPGG70o+NdzRM2bLf+2xZ5
-	CWxVgHvB6KSun+BMEcGToqJxMkLivt5p9jVGVebj36Hy5wxwRzjJheSdxuw5xWiexCt+El5r399
-	bFGaeqzS8O+GyWE1vA3VhmglSpPtaUzru81J3NtHRV+f3ST1ZGMdr4pOdGjCNqz28uXYaRZ4/7C
-	SAcoh44lrlW5mId8a2RnbSkmRgYvI4oM7ICpiUaZmZ66hkxQRYCIBUmjs4fvDkrX12CYFNpWCp2
-	QnH8oQXA7Pmda2ZXaTK4CHeC7Otzuo6PzQ8DWbPY=
-X-Received: by 2002:a05:600c:c86:b0:43c:ec4c:25b4 with SMTP id 5b1f17b1804b1-441b1f35e4emr1438945e9.10.1745947402652;
-        Tue, 29 Apr 2025 10:23:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNmnRHxTJDC6Sf1Feg9BZAcb7lU9XtPRhls0zLu4URvGAHP8TbMwuFoVKc6PogHibLfiWHcA==
-X-Received: by 2002:a05:600c:c86:b0:43c:ec4c:25b4 with SMTP id 5b1f17b1804b1-441b1f35e4emr1438655e9.10.1745947402323;
-        Tue, 29 Apr 2025 10:23:22 -0700 (PDT)
+        bh=e/bLyArrocjzIsxdJa7jG1qfjWAEQUi1ZPYPngioU1o=;
+        b=rguHwbOPR8TuL5daGLfEDZLLoyfeo76re8TqC7BYUFzXmANsTB6OzCJNlXNuaSkKRk
+         8OiJw/xMQUeHT0rvydVw0j6lbbSy1gjaUpAPZlyRKXCBjLwqA/5akw+LuGrOCAtXvP/y
+         FLzlqbHNebtXkHsB9+JjwZ7bBuPBb/Xga6FwpiZxpvSO52xvsQsZwCZVWZFYGaVttKNh
+         SHDtIZ/DvEOD0E/7Cw+xW4+otx3vbXHiWI1uVFa6xstunS45oE6DJqU9x2bTRUeALJ0W
+         x1rB7lYNPil+8VqsfF3G19XwQL/EhkrikmiWDh3pzlCEDEld68UeCmkGvKHjRvbazMlc
+         2o2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVIacvNoRWfIf2FRHJ5Nm/fPuUFizKGUCe8DOMflT3mr3yyOHHCUszgVhzrAaih1458/m4mDFKwYxReJYc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2Pclcfrt8nMdA4KcnwRbCmyWGbM+iBEtXjBaKaBiKa8/l3kf0
+	SjmbKNbpBYt1w7/vXGBOOl0oS3y/kNqShYlLoZj+IkXbv7ptrYDtcVPgjiJGy8DicisW9IsNKuz
+	UcjJaITUo86cTxvLF96Y5yr2iE6tvuegWg917+b5Ot1fgAbcq9+A7Zx1fWjmE5Q==
+X-Gm-Gg: ASbGncsTKtJ9Cx10GNRK+FY9+FCQmctao6AfATVRf15h9nxpWyzEPHpFjLgNIlXviL0
+	/4sbcEq1ZpZCaVDkpt5XC1FlnpGOVNfkdmf0z+0rEWoeoiEqaUmohtw+m8UXHHqlwMoYLvZMNwf
+	3B76Mpnee+SVZinFHLAYX51v5rFCJ3BY3Yn49D/nzlkOix2CfzC2O6ezpb7BkpSd6sYJFdxxNqq
+	W332SorBHuGos59j+XShZ3J2nM3nIUL7CiohqqH1a44u6OC/BsJYfy7zdaFeZd8qyhljoG92Hry
+	yTE9ibSeJrmOoT0fVfyF2PzwfUmkeXeqnxe2T9PRWQqcNm99JcbJiZCcOeoHSDXsX+mdUIGhMEY
+	KcM+WjPpZrFB1x7Kn0NbKL6oodr9QqpWiF1kCoW8=
+X-Received: by 2002:a05:6000:144f:b0:3a0:88b8:276 with SMTP id ffacd0b85a97d-3a08a501c34mr3475547f8f.3.1745947471501;
+        Tue, 29 Apr 2025 10:24:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGE7ui2XecAp7z+5YQCQ/G12l/zKaGk8AEgJ6wB0Jn+XqH6LadxEqe+Pn4apy1YfTj5fBzHZA==
+X-Received: by 2002:a05:6000:144f:b0:3a0:88b8:276 with SMTP id ffacd0b85a97d-3a08a501c34mr3475529f8f.3.1745947471138;
+        Tue, 29 Apr 2025 10:24:31 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8976sm194918965e9.27.2025.04.29.10.23.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ac27dsm197171435e9.22.2025.04.29.10.24.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 10:23:21 -0700 (PDT)
-Message-ID: <f192c143-b5f1-4899-814d-bcc7089759ad@redhat.com>
-Date: Tue, 29 Apr 2025 19:23:20 +0200
+        Tue, 29 Apr 2025 10:24:30 -0700 (PDT)
+Message-ID: <905a7c96-a162-4dbc-8592-8d040b398cb0@redhat.com>
+Date: Tue, 29 Apr 2025 19:24:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,7 +75,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] mm: move dup_mmap() to mm
+Subject: Re: [PATCH v3 4/4] mm: perform VMA allocation, freeing, duplication
+ in mm
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>
 Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
@@ -86,7 +87,7 @@ Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
  Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
  linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <cover.1745853549.git.lorenzo.stoakes@oracle.com>
- <e49aad3d00212f5539d9fa5769bfda4ce451db3e.1745853549.git.lorenzo.stoakes@oracle.com>
+ <f97b3a85a6da0196b28070df331b99e22b263be8.1745853549.git.lorenzo.stoakes@oracle.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -134,31 +135,32 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <e49aad3d00212f5539d9fa5769bfda4ce451db3e.1745853549.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <f97b3a85a6da0196b28070df331b99e22b263be8.1745853549.git.lorenzo.stoakes@oracle.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 28.04.25 17:28, Lorenzo Stoakes wrote:
-> This is a key step in our being able to abstract and isolate VMA allocation
-> and destruction logic.
+> Right now these are performed in kernel/fork.c which is odd and a violation
+> of separation of concerns, as well as preventing us from integrating this
+> and related logic into userland VMA testing going forward, and perhaps more
+> importantly - enabling us to, in a subsequent commit, make VMA
+> allocation/freeing a purely internal mm operation.
 > 
-> This function is the last one where vm_area_free() and vm_area_dup() are
-> directly referenced outside of mmap, so having this in mm allows us to
-> isolate these.
+> There is a fly in the ointment - nommu - mmap.c is not compiled if
+> CONFIG_MMU not set, and neither is vma.c.
 > 
-> We do the same for the nommu version which is substantially simpler.
+> To square the circle, let's add a new file - vma_init.c. This will be
+> compiled for both CONFIG_MMU and nommu builds, and will also form part of
+> the VMA userland testing.
 > 
-> We place the declaration for dup_mmap() in mm/internal.h and have
-> kernel/fork.c import this in order to prevent improper use of this
-> functionality elsewhere in the kernel.
+> This allows us to de-duplicate code, while maintaining separation of
+> concerns and the ability for us to userland test this logic.
 > 
-> While we're here, we remove the useless #ifdef CONFIG_MMU check around
-> mmap_read_lock_maybe_expand() in mmap.c, mmap.c is compiled only if
-> CONFIG_MMU is set.
+> Update the VMA userland tests accordingly, additionally adding a
+> detach_free_vma() helper function to correctly detach VMAs before freeing
+> them in test code, as this change was triggering the assert for this.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Suggested-by: Pedro Falcato <pfalcato@suse.de>
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 > ---
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
