@@ -1,254 +1,110 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2EA1E231E;
-	Tue, 29 Apr 2025 11:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344D41E766F;
+	Tue, 29 Apr 2025 11:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745924864; cv=none; b=MwPK61S7BVKW+u1J0Itci4a/i3WzDSvScQf77PtHaSkhyOfKZf68dxz2uBDZOnTsEVPFtTOln4/KSKRr/Tevgcvn3X6dSdqeJwzCaPdU5bJxTvIwhAdLsxmldTiT9/p4zcwG0uYxoqaz7a2PAqUXX09ibLzsL87iGJF3uh5xtAA=
+	t=1745924888; cv=none; b=hN3C+d657DMXPmRRBQnPR1pnTZq03JivvsEe/QSQJZYpXvbwQjMHAPAsI/On/1ftzO0tRB2pPXCC58+bcdC/Unw5eKmuxeb4aHQ67+sfOF9DostFOiMxsDYM2yOg74QWU4gy0MTsaN2SkkyUuCvz6Mi+Vtdfyd5hCwM17QGHRZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745924864; c=relaxed/simple;
-	bh=edHPaodqaP1a0IvfwmrYg8uPUJIzGTLRmXIzXH47auI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LnS+CaHtH1wh+An9BqiBu8Lh6Wj8CcAk7MZa6r6Es4OYLBca7VmzuvSqnXqmoKphthJRvZncZjQF30Iul6j5RQKbc5JIV0v1wfgCgIQAb+irR7y2Gh9lfNa4nUGWEdvG6mE1UQ2JOPuX240GVrr/4Tc7rEuAcs6nW24cPYirqq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OuS0i1R4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745924888; c=relaxed/simple;
+	bh=qPh/WrlbObgcctkRbyV6SsPJr/nOENTeraBZjUkNaww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQbRpxHzMTtMbIQp/fVz1LbNQtdrBeQhO8Zku0c2drFduTHf95Gx+QoUx7Ld2n8E0ygyjsmJGMIccnzIn/sJ+54IE6UY5Hhui5NC0l85rmxw/mSkMrqEIC4FhsEzLBa+Tjb0KpeMmay3R634NE3MxqGy97SmBkVeqKPn7NXzBvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upzrlCDO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OuS0i1R4"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53T9ahVV025060;
-	Tue, 29 Apr 2025 11:07:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NDzZtGf6FWvrEA7CuuRfqNvYUMS4s9rSAmG3RPXAHfo=; b=OuS0i1R4BWeIGYyj
-	SlJdYfsD+MKsiJ9hEtsFkyM0q/x3ijXQb5sOgvwy4SUvM7/jejZvUWQY2Ezs/thR
-	/c1Y+xazEOIiWXwqSWCQMT5o/ftaDvoPEXWf/yHbGrFjLlYI60vM020QDeksXc0H
-	JZVLXE5CkiaDOnmQKJyGejVHGzw1hQY6D5rAtXSFWRSjLrbsHbf7KG+bM6iIOfku
-	1RkzF3GOxxzQtTElO3u8xZ6xNIDdQNkmNRICb3od/wjJudoPGpyejtmLoD9Wg97T
-	gQ0w1ZY51Uum/L4C2VihqUm+yL64kMHFYUudjH//Zs5URDHP+yxe8R9m8dDKWWg/
-	9FKtSg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqmg6n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 11:07:37 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TB7aPl026468
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Apr 2025 11:07:36 GMT
-Received: from [10.50.5.200] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 04:07:28 -0700
-Message-ID: <fdd9d24e-8125-c826-07c8-2054257cd167@quicinc.com>
-Date: Tue, 29 Apr 2025 16:37:25 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upzrlCDO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4E1C4CEE3;
+	Tue, 29 Apr 2025 11:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745924887;
+	bh=qPh/WrlbObgcctkRbyV6SsPJr/nOENTeraBZjUkNaww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=upzrlCDOu25+anPHC9qHJrGtE9lgprNGBqAZF3Aw9jR4m7rYhcNhImz7gTBLelQJp
+	 ipaTGIsJwaM+5m92zHWBQel3ynbnw1d1dzEoh6ySYaCXp7Wa5I9781W6Bn6juIRjO5
+	 pkgDLASRxiFXKnyjCfBldYfxxCqATgFmAGcYfE0oozo/nFkdyDaN+kr0qRNXRmZ7/o
+	 YrUAeTtymw/19eanV/PAsqI68oVlKsnjHA1XNhdZ5/GTldHmI43FnObOa4/FMUW+o4
+	 g28BX5FfA4lEbnm7T+ZlygCe9V25dl0cRoEx2vrugITgO9o52yhmyKmkUHqJlYGAV5
+	 7AczTN260dvVA==
+Date: Tue, 29 Apr 2025 13:08:02 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Joe Damato <jdamato@fastly.com>, Carlos Llamas <cmllamas@google.com>, 
+	linux-fsdevel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Sridhar Samudrala <sridhar.samudrala@intel.com>, Alexander Duyck <alexander.h.duyck@intel.com>, 
+	open list <linux-kernel@vger.kernel.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	William McVicker <willmcvicker@google.com>
+Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
+ the future
+Message-ID: <20250429-begeben-zulagen-543d4ea75ca2@brauner>
+References: <20250416185826.26375-1-jdamato@fastly.com>
+ <20250426-haben-redeverbot-0b58878ac722@brauner>
+ <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
+ <aA-xutxtw3jd00Bz@LQ3V64L9R2>
+ <aBAB_4gQ6O_haAjp@google.com>
+ <aBAEDdvoazY6UGbS@LQ3V64L9R2>
+ <zvkvenkysbzves2qzknju5pmaws322r3lugzbstv6kuxcbw23k@mtddhwfxj3ce>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 01/23] media: iris: Skip destroying internal buffer if
- not dequeued
-Content-Language: en-US
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>,
-        <stable@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
- <feb6f710-899c-4a10-3224-d4ad16151b9d@quicinc.com>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <feb6f710-899c-4a10-3224-d4ad16151b9d@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA4MiBTYWx0ZWRfX4caekDd3FQCk YVrGOwDbztD124DtYdTzQCWx34uS8Ml1kTGxJiRR5D3zDiCB5Y7JQADKbsKkhaVdwgH0VKjyVYe Dk3eN2e02CADscRyFCz4t6/IuiiQ6Vv5TzF594PhRXBMpmMN4ZOv8KyV5MrC5AI96zXfqinwC1K
- WMY8/WQm+fVwZo3q09qJ8MYQU6pa5wjypCHki/9BAiOS9bp8a+FkeFEEMMQZ6YBUab93l/WnWjQ RS2uH1MebtNWLocQDb7IkR02viahtYzOaPuKQX70fOQNE8KZzHMjRfavRenKXeCm1pttfmYr2yH lknWluYEpjiL2V0AdCvv9iKg45hhJQdbbtbtE9FLAjuVXnnmra1gqIXfP3+YRAy4N20Td4X541w
- tszIr+dRvc/77Ai/bjMEjtWqFKzYxpErps/Ow3gXGo1u9JWSwg5ybxdeQzr63AAcfFd7ZrUr
-X-Proofpoint-GUID: CxJpQxu2v9UwZzrvM0O8qdHI1fg2bmoS
-X-Proofpoint-ORIG-GUID: CxJpQxu2v9UwZzrvM0O8qdHI1fg2bmoS
-X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=6810b2f9 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=Lm4sJm2uzP7NxcDb3WwA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504290082
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <zvkvenkysbzves2qzknju5pmaws322r3lugzbstv6kuxcbw23k@mtddhwfxj3ce>
 
-
-
-On 4/29/2025 2:54 PM, Vikash Garodia wrote:
+On Tue, Apr 29, 2025 at 12:19:15PM +0200, Jan Kara wrote:
+> On Mon 28-04-25 15:41:17, Joe Damato wrote:
+> > On Mon, Apr 28, 2025 at 10:32:31PM +0000, Carlos Llamas wrote:
+> > > On Mon, Apr 28, 2025 at 09:50:02AM -0700, Joe Damato wrote:
+> > > > Thank you for spotting that and sorry for the trouble.
+> > > 
+> > > This was also flagged by our Android's epoll_pwait2 tests here:
+> > > https://android.googlesource.com/platform/bionic/+/refs/heads/main/tests/sys_epoll_test.cpp
+> > > They would all timeout, so the hang reported by Christian fits.
+> > > 
+> > > 
+> > > > Christian / Jan what would be the correct way for me to deal with
+> > > > this? Would it be to post a v3 (re-submitting the patch in its
+> > > > entirety) or to post a new patch that fixes the original and lists
+> > > > the commit sha from vfs.fixes with a Fixes tag ?
+> > > 
+> > > The original commit has landed in mainline already, so it needs to be
+> > > new patch at this point. If if helps, here is the tag:
+> > > Fixes: 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the future")
+> > > 
+> > > > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> > > > index 4bc264b854c4..1a5d1147f082 100644
+> > > > --- a/fs/eventpoll.c
+> > > > +++ b/fs/eventpoll.c
+> > > > @@ -2111,7 +2111,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+> > > > 
+> > > >                 write_unlock_irq(&ep->lock);
+> > > > 
+> > > > -               if (!eavail && ep_schedule_timeout(to))
+> > > > +               if (!ep_schedule_timeout(to))
+> > > > +                       timed_out = 1;
+> > > > +               else if (!eavail)
+> > > >                         timed_out = !schedule_hrtimeout_range(to, slack,
+> > > >                                                               HRTIMER_MODE_ABS);
+> > > >                 __set_current_state(TASK_RUNNING);
+> > > 
+> > > I've ran your change through our internal CI and I confirm it fixes the
+> > > hangs seen on our end. If you send the fix feel free to add:
+> > > 
+> > > Tested-by: Carlos Llamas <cmllamas@google.com>
+> > 
+> > Thanks, will do.
+> > 
+> > I was waiting to hear back from Christian / Jan if they are OK with
+> > the proposed fix before submitting something, but glad to hear it
+> > fixes the issue for you. Sorry for the trouble.
 > 
-> On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
->> Firmware might hold the DPB buffers for reference in case of sequence
->> change, so skip destroying buffers for which QUEUED flag is not removed.
->> Also, make sure that all buffers are released during streamoff.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
->> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
->> ---
->>  drivers/media/platform/qcom/iris/iris_buffer.c | 37 +++++++++++++++++++++++++-
->>  drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
->>  drivers/media/platform/qcom/iris/iris_vdec.c   |  4 +--
->>  drivers/media/platform/qcom/iris/iris_vidc.c   |  6 +++--
->>  4 files changed, 44 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
->> index e5c5a564fcb8..606d76b10be2 100644
->> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
->> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
->> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
->>  	return 0;
->>  }
->>  
->> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
->> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
->>  {
->>  	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
->>  	struct iris_buffer *buf, *next;
->> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
->>  	for (i = 0; i < len; i++) {
->>  		buffers = &inst->buffers[internal_buf_type[i]];
->>  		list_for_each_entry_safe(buf, next, &buffers->list, list) {
->> +			/*
->> +			 * during stream on, skip destroying internal(DPB) buffer
->> +			 * if firmware did not return it.
->> +			 * during close, destroy all buffers irrespectively.
->> +			 */
->> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
->> +				continue;
->> +
->>  			ret = iris_destroy_internal_buffer(inst, buf);
->>  			if (ret)
->>  				return ret;
->> @@ -446,6 +454,33 @@ static int iris_release_input_internal_buffers(struct iris_inst *inst)
->>  	return 0;
->>  }
->>  
->> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
-> name this iris_check_num_queued_internal_buffers..
-> 
-Ack.
+> Yep, a new patch submission with proper Fixes tag is needed at this point.
 
-Thanks,
-Dikshita
->> +{
->> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
->> +	struct iris_buffer *buf, *next;
->> +	struct iris_buffers *buffers;
->> +	const u32 *internal_buf_type;
->> +	u32 internal_buffer_count, i;
->> +	u32 count = 0;
->> +
->> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
->> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
->> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
->> +	} else {
->> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
->> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
->> +	}
->> +
->> +	for (i = 0; i < internal_buffer_count; i++) {
->> +		buffers = &inst->buffers[internal_buf_type[i]];
->> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
->> +			count++;
->> +		if (count)
->> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
->> +				count, internal_buf_type[i]);
->> +	}
->> +}
->> +
->>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst)
->>  {
->>  	struct iris_buffers *buffers = &inst->buffers[BUF_PERSIST];
->> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
->> index c36b6347b077..03a32b91cf21 100644
->> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
->> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
->> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
->>  int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
->>  int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
->>  int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
->> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
->> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force);
->> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane);
-> make this static
-> 
-> Regards,
-> Vikash
->>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
->>  int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
->>  int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
->> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
->> index 4143acedfc57..2c1a7162d2da 100644
->> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
->> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
->> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
->>  
->>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->>  
->> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, false);
->>  	if (ret)
->>  		return ret;
->>  
->> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
->>  
->>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>  
->> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, false);
->>  	if (ret)
->>  		return ret;
->>  
->> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
->> index ca0f4e310f77..56531a7f0dfe 100644
->> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
->> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
->> @@ -233,8 +233,10 @@ int iris_close(struct file *filp)
->>  	iris_session_close(inst);
->>  	iris_inst_change_state(inst, IRIS_INST_DEINIT);
->>  	iris_v4l2_fh_deinit(inst);
->> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, true);
->> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, true);
->> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
->> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>  	iris_remove_session(inst);
->>  	mutex_unlock(&inst->lock);
->>  	mutex_destroy(&inst->ctx_q_lock);
->>
+Yes, please send a new fixes patch that I can pick up!
+
+Thanks!
+Christian
