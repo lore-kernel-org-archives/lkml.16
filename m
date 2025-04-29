@@ -1,131 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6548A2949F7;
-	Tue, 29 Apr 2025 10:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECF02BEC27;
+	Tue, 29 Apr 2025 10:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745921330; cv=none; b=XafF1URw24KWRwPmXexVWUUqDelKO0tW57y1jU8vW5VA07tGrhyZ67t3yT6KotKonl2yd2r0lZcVi71J+s9ok1GaV5djC1R1Q2oQ2Mw32D5dH8PNp0dUwsWQzW9GENrz3eGrVeFtIhVJUXiw6CtJs/mMdVuSbFGVFpZYIravN2A=
+	t=1745921335; cv=none; b=DixPh9gMWx5WMo08HLI2VTTdOfSbNhfih83ipzClAwpcGVrrq/KCw/UhRXCNkizoYvdyo9KOo5F+rd8ptPTruSlOotvjUcHTdZXYJaUpxyW6o+mWLrAE/ruIyA21rySl7FBk02Pfoq75mw1Xh1H7NwOlyfMOFzKWsPjfOaK0nog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745921330; c=relaxed/simple;
-	bh=0r7/u/RghNb9eJUw5r37qjxwNthSPVY+EKxonqbSJIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tMz+/C1YapTXb5yOXSMp4AWakwBNTDaSgKXQTe0p8M2nHzX8YzsaYF8O1R+Anm6X9jTkC67VFHm6P777O6pB7Laxk4qKJINBV+UXaAWKpl6Ar3gQth7F6OaEgZaIKs7Zok5XdEyPmIR1AYLXU8cMqdFvb6a886ZWUG95cmWD+i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YP5FMcM8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745921335; c=relaxed/simple;
+	bh=8eQHhZvKJeBbQJb/Z+PDZwKqqPQyu1KFMmO63/+jE7g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MKFZuALtrJp4LJ93sdTD9EiYkKBmr3z2yke8R8Ehspp7e1bHHIn1GujUow+Zyttm1ZMWR+/SRM6CoGV7zrVnvDXd71Jq2XX8CAdv74o0F0rx27+7F3rq9QIXLboBeDSeeZ0C0QnD7zPTZhFGdWQSeHqckPNskkwJiSZyYoBtSz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=of8JiTE1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YP5FMcM8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF446C4CEE3;
-	Tue, 29 Apr 2025 10:08:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="of8JiTE1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDB7C4AF09;
+	Tue, 29 Apr 2025 10:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745921329;
-	bh=0r7/u/RghNb9eJUw5r37qjxwNthSPVY+EKxonqbSJIA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YP5FMcM8WaU9sCyDg1yg8xDL6okyXuUGf7VBD4GerghsL/DxoUbdreuRFdB9oSQsA
-	 +sQnUmJmbLTnOqpNWttPa1M64wuCcTqMf4rbevJvOHyttpg90QUY9lrnyjXDPnRvzC
-	 xYT0NmA4AIZ9Xj2Zy8i2oT3h9JrIURDS5jBc3V6VkuVuGkfGZh0TYdHkSP/vvKjG08
-	 GbErrLhKqOzNrw39wwY92AYw6X6C9jv67FXF8AsMxBRV48BFTENWMJNkLuHfMAcVGk
-	 sOaV8ZqLIDpK9j3HBs4dccU7Dpgs1DCya+/twsIBL5NBg/2XDrbJqWcDy6dPFbQBDq
-	 El17NM0lDLWAA==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	rcu <rcu@vger.kernel.org>
-Subject: [PATCH v2] rcu: Robustify rcu_is_cpu_rrupt_from_idle()
-Date: Tue, 29 Apr 2025 12:08:40 +0200
-Message-ID: <20250429100840.13917-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=k20201202; t=1745921334;
+	bh=8eQHhZvKJeBbQJb/Z+PDZwKqqPQyu1KFMmO63/+jE7g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=of8JiTE1AjntJD1Zf3F7H/Utb/lNpVyhJzneIrl/XzCAzR/BewTjGxaszvjBJN8Vd
+	 9P376c8jZSuVW0IazNF62E5qx/H4unik8ws5wmirjEevdmmZ4HIGN31ZNYIfh+0JGm
+	 nWcfaQw6msRpvtvEVp3yk1BUS3OEh7D3URm8cQXSpCFOuBHPn2+wxK3V2LXQkaGHf4
+	 95CPWlbnKcZBYLHs3cuJHa1LphWfHLnsjgkTMb93KHzYXa7RWZ4S7a+BU8s6hgS7wX
+	 hN5MAcBETLE7ugGOzwyfPFpaFI80D3Vft4Rh0i7j5zt+JYYKzdBEVqEZOZFpO4TgBP
+	 R+bCcbl+sTRKg==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso7057927e87.3;
+        Tue, 29 Apr 2025 03:08:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgRaOCE2EElcFE1MAz/M+4Crt/PEAnZBkfYdjjxdgd0U/OmXcvM0I2K1uAmT6OK7DZ5PV1qAcaC1A=@vger.kernel.org, AJvYcCWrqOXx2Op0cPxZv5gPIqK8qaNBTJWdZF7pSzWMuMsQdcpJHg2hmoMxrYYpVB4vo1inbKclGzN6wzqCw9/u@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1H/3/tXpT1FVpWNi57epBA922sw4gPjHGthF4iEvCrgF/teo2
+	5HJWbwhL0vA49MPNuRmqa5fqZbCeT59U2dA+gxiKnGBkXhDPvdY+tn4ehlxWXgjlswe69NKRk5/
+	dv569sJ/aat3V2S/jB6ZiGDkOIww=
+X-Google-Smtp-Source: AGHT+IFHOjwc+z3+q19o9cvStKVDDWxFOIkGItGTtAfcqINGWAbgiIfiJ5ivvwYeafOBzOcAJAI6k78w03WoGwkqazs=
+X-Received: by 2002:a05:6512:15a5:b0:54a:f6e9:2c04 with SMTP id
+ 2adb3069b0e04-54e9e543a79mr502083e87.26.1745921333244; Tue, 29 Apr 2025
+ 03:08:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250424080950.289864-1-vkuznets@redhat.com> <20250424080950.289864-3-vkuznets@redhat.com>
+ <CAMj1kXFMmhROmaDZ0gsw+ozG5iSkMvSXb15qexToUSAFyBn5hQ@mail.gmail.com> <87ikmn9tri.fsf@redhat.com>
+In-Reply-To: <87ikmn9tri.fsf@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 29 Apr 2025 12:08:41 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHTtGP-UcJLut7OVUuULzg59npyoQhb+kuCZO5x-2NYWA@mail.gmail.com>
+X-Gm-Features: ATxdqUFuqvkbKjuCCg2UD1PYDObWWJcxc5jqND0lrnoRL8XTShRPlINKCfO5fDU
+Message-ID: <CAMj1kXHTtGP-UcJLut7OVUuULzg59npyoQhb+kuCZO5x-2NYWA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/efi: Implement support for embedding SBAT data
+ for x86
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: x86@kernel.org, linux-efi@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-RCU relies on the context tracking nesting counter in order to determine
-if it is running in extended quiescent state.
+On Tue, 29 Apr 2025 at 11:55, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Ard Biesheuvel <ardb@kernel.org> writes:
+>
+> > On Thu, 24 Apr 2025 at 10:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> ...
+>
+> >> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> >> index fdbce022db55..b9b80eccdc02 100644
+> >> --- a/arch/x86/boot/compressed/Makefile
+> >> +++ b/arch/x86/boot/compressed/Makefile
+> >> @@ -107,6 +107,8 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+> >>  vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+> >>  vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> >>
+> >> +vmlinux-objs-$(CONFIG_EFI_SBAT) += $(objtree)/drivers/firmware/efi/libstub/sbat.o
+> >> +
+> >
+> > Please drop this, and put the .incbin directly into header.S
+> >
+>
+> I'm sorry I'm probably missing something important but my understanding
+> is that that header.S is compiled into setup.elf:
+>
+>  ld -m elf_x86_64 -z noexecstack --no-warn-rwx-segments  -m elf_i386 -z
+>  noexecstack -T arch/x86/boot/setup.ld  ... arch/x86/boot/header.o ...  -o arch/x86/boot/setup.elf
+>
+> and then the result gets concatenated with vmlinux.bin to get bzImage:
+>
+>  objcopy  -O binary arch/x86/boot/setup.elf arch/x86/boot/setup.bin
+>  cp arch/x86/boot/setup.bin arch/x86/boot/bzImage; truncate -s %4K arch/x86/boot/bzImage; cat arch/x86/boot/vmlinux.bin >>arch/x86/boot/bzImage
+>
+> so if we want to have SBAT at the very end of bzImage without dirty
+> tricks it must be at the very end of vmlinux.bin, not setup.bin. I can,
+> of course, use some existing compilation unit but to be honest I can't
+> find anything suitable.
+>
 
-However the context tracking nesting counter is not completely
-synchronized with the actual context tracking state:
+Yeah, you're right. I keep forgetting the insane way the bzImage is
+put together.
 
-* The nesting counter is set to 1 or incremented further _after_ the
-  actual state is set to RCU watching.
-
-* The nesting counter is set to 0 or decremented further _before_ the
-  actual state is set to RCU not watching.
-
-Therefore it is safe to assume that if ct_nesting() > 0, RCU is
-watching. But if ct_nesting() <= 0, RCU is not watching except for tiny
-windows.
-
-This hasn't been a problem so far because rcu_is_cpu_rrupt_from_idle()
-has only been called from interrupts. However the code is confusing
-and abuses the role of the context tracking nesting counter while there
-are more accurate indicators available.
-
-Clarify and robustify accordingly.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- kernel/rcu/tree.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 90d0214c05c7..cbcd579c5630 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -377,7 +377,7 @@ EXPORT_SYMBOL_GPL(rcu_momentary_eqs);
-  */
- static int rcu_is_cpu_rrupt_from_idle(void)
- {
--	long nesting;
-+	long nmi_nesting = ct_nmi_nesting();
- 
- 	/*
- 	 * Usually called from the tick; but also used from smp_function_call()
-@@ -389,21 +389,28 @@ static int rcu_is_cpu_rrupt_from_idle(void)
- 	/* Check for counter underflows */
- 	RCU_LOCKDEP_WARN(ct_nesting() < 0,
- 			 "RCU nesting counter underflow!");
--	RCU_LOCKDEP_WARN(ct_nmi_nesting() <= 0,
--			 "RCU nmi_nesting counter underflow/zero!");
- 
--	/* Are we at first interrupt nesting level? */
--	nesting = ct_nmi_nesting();
--	if (nesting > 1)
-+	/* Non-idle interrupt or nested idle interrupt */
-+	if (nmi_nesting > 1)
- 		return false;
- 
- 	/*
--	 * If we're not in an interrupt, we must be in the idle task!
-+	 * Non nested idle interrupt (interrupting section where RCU
-+	 * wasn't watching).
- 	 */
--	WARN_ON_ONCE(!nesting && !is_idle_task(current));
-+	if (nmi_nesting == 1)
-+		return true;
- 
--	/* Does CPU appear to be idle from an RCU standpoint? */
--	return ct_nesting() == 0;
-+	/* Not in an interrupt */
-+	if (!nmi_nesting) {
-+		RCU_LOCKDEP_WARN(!in_task() || !is_idle_task(current),
-+				 "RCU nmi_nesting counter not in idle task!");
-+		return !rcu_is_watching_curr_cpu();
-+	}
-+
-+	RCU_LOCKDEP_WARN(1, "RCU nmi_nesting counter underflow/zero!");
-+
-+	return false;
- }
- 
- #define DEFAULT_RCU_BLIMIT (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 1000 : 10)
--- 
-2.48.1
-
+So you'll need to incorporate $(CONFIG_EFI_SBAT_FILE) into
+arch/x86/boot/vmlinux. But that does not mean it needs to be
+constructed under drivers/firmware/efi/libstub, and it also doesn't
+mean you need filechk and a separate .o file, right?
