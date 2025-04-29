@@ -1,161 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09223275844
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E234275847
 	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745909696; cv=none; b=JN6H8UbqtNbyzEz/UrD1zOnwpJ0aAZZGUorP8K2RvfGrzmCweS1KRh2+/QGl+J0YW6kzeCjATDBXEWwtdWkKZiAEpYpfYk/ifKZBnPNtAmFOzizqiQm6N0Ac37C4gny4SYOzlEonM7oBFOBohOE2ZmVwHohhPBrMZgGnWloXw1c=
+	t=1745909696; cv=none; b=aOgss3T1pTv0qBCQaPbK7grC3MNMVs39kAWD73jqFuE38dD8VPFIc3O08fB8xurCgMVMEfWp47/TXT88y74uk9VrsyqZltlAFs7rg4Bncf6YPCtMbVmCumaVo7CM5DuI+lYPXjfqaKHMN53+mK90Vd/nDH38Wowfxz4RNikV8FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745909696; c=relaxed/simple;
-	bh=R6Oe7khnWkwcjhwjQWXM9/cUpFiONrmk2BxBrz0nO2g=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Zvvy5irVKwVSASCILntGIPbN+BfiYTrs79EwCNTKY/y1MdV6RIfRK6zf+rBv+LM6CkY4MEUZ6oAL4L9MJ9u/dHvs8A26s6jR0NIEqKxzqsEHBR6ufpAHy940esl6MlEIiFxqVJ4l1ph106HQRK8LlyD+iaqHuGT2/ZsEXQgmJf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w47YubRX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RGDynBWn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=PpZtbA9kdwBRA3jbs9L3Dv6eNjFnhgwGX0jsrHH7Kxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DTaIhOgfe8gIHxnQuTOgXH8jETZ4qykqqs+3GIgZ/ZzbxmUCyvvIYYIJeRA6m6K4lk9o9Yn7FS1pOgGycS/Zex4qcYKHlXBojcJI+hdzHI8YbBcQm8hn8VqO1pUb/kqAgCaK3R9EY1Jkc77aqQj2MxfqUdh+Z+Gpct3KTKiFVLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CADZ9CHP; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w47YubRX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RGDynBWn"
-Message-ID: <20250429065420.188866381@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745909692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=8Lrnr7Wjtl13Tnh7B/iTi/GvYg4WRlxJArWA8pN4YdQ=;
-	b=w47YubRXI9t84t5CuVRZWKRf35gec+rHKEZ5RF24DKc7+eCXdupuvx+Ebblfoxl9bHKx8h
-	G50PCJXyX6s0ddun1PHVSFfAzLn5UWlfcusS1hD+xf1UumZYK8AjYSFJVvlzZCBBJfVoxM
-	+MfM4OBYVDBMI2ituE7a+W87DpP9K+ix1yqXvN2W79HVuj4zUZetqDdpTO/MiIs/3ESOdJ
-	dQhyPv8c4n6cJmCLmzsOv4TzyDsjc8bAPVbRvN5Ey2Fm2ZSd/EpWTTjPHUQJNDAdTvg1n4
-	EGBotDcS2WlbuSucv7T6vc+7oiif6FTCzHfgIWihw0V1QBU6gT2Z1BNouQeIsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745909692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=8Lrnr7Wjtl13Tnh7B/iTi/GvYg4WRlxJArWA8pN4YdQ=;
-	b=RGDynBWn4nFT2TMA+6tvl5xqFV2LwPBPGaH+w8OOmtpVGV21L2hrlQaJoPhP7VXlSod9Zh
-	zmfPPNQY2RgVWeAQ==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Subject: [patch V2 03/45] genirq/autoprobe: Switch to lock guards
-References: <20250429065337.117370076@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CADZ9CHP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745909695; x=1777445695;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PpZtbA9kdwBRA3jbs9L3Dv6eNjFnhgwGX0jsrHH7Kxo=;
+  b=CADZ9CHPrJpcKBQqEyyOlxwBoUU78onvl9Xq00CCbBD7f78OXTPCgzah
+   g480/nTvBGn+mekl5G7gDiztrUmsZNSWLWlJvL6dIFKurXPOyfupIM7I7
+   smxK9EtixzLylKEKycpd317FZy3NRxqGhQ3GDhW+pEJdvYyam6XW1kcFb
+   6AABDvOao6vtlNZ8sJG/OgtApo9V8VBuiaYyzPQ8qNMaSHFwUZelSSyn/
+   nnLRrdo7faqGo+C1FFKS81jiUVsL94L89SBHnQ9R0u9ZLN4w/3lV/kyOU
+   5MiVZhpbu/jrFZdv1o0MzHAPeEfnhPdg684VqhtNAd4SH6mwxfODxnE01
+   A==;
+X-CSE-ConnectionGUID: 4gZGoJoCSB+QYoykOqQV2Q==
+X-CSE-MsgGUID: wuEj8ySSQp6Ik3AR3v2S/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="70023581"
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="70023581"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 23:54:55 -0700
+X-CSE-ConnectionGUID: 9eL1swR/S7aR3gcphn1kQg==
+X-CSE-MsgGUID: 8dVE5jmeSmOYAhK9/+H+3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
+   d="scan'208";a="134695028"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 23:54:51 -0700
+Message-ID: <446b94d5-3192-448e-9f29-de1e04bbd517@linux.intel.com>
+Date: Tue, 29 Apr 2025 14:50:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 29 Apr 2025 08:54:52 +0200 (CEST)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/riscv: fix use after free of riscv_iommu_domain
+To: BillXiang <xiangwencheng@lanxincomputing.com>, tjeznach@rivosinc.com
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250429034007.578-1-xiangwencheng@lanxincomputing.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250429034007.578-1-xiangwencheng@lanxincomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Convert all lock/unlock pairs to guards.
+On 4/29/25 11:40, BillXiang wrote:
+> The function vfio_group_detach_container begins by calling
+> vfio_iommu_type1_detach_group, which may subsequently calls
 
-No functional change.
+I don't follow here. vfio_iommu_type1_detach_group() will eventually
+call riscv_iommu_attach_blocking_domain() and info->domain has been
+cleared there:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+static int riscv_iommu_attach_blocking_domain(struct iommu_domain 
+*iommu_domain,
+                                               struct device *dev)
+{
+         struct riscv_iommu_device *iommu = dev_to_iommu(dev);
+         struct riscv_iommu_info *info = dev_iommu_priv_get(dev);
 
----
- kernel/irq/autoprobe.c |   26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+         /* Make device context invalid, translation requests will fault 
+w/ #258 */
+         riscv_iommu_iodir_update(iommu, dev, RISCV_IOMMU_FSC_BARE, 0);
+         riscv_iommu_bond_unlink(info->domain, dev);
+         info->domain = NULL;
 
---- a/kernel/irq/autoprobe.c
-+++ b/kernel/irq/autoprobe.c
-@@ -43,18 +43,16 @@ unsigned long probe_irq_on(void)
- 	 * flush such a longstanding irq before considering it as spurious.
- 	 */
- 	for_each_irq_desc_reverse(i, desc) {
--		raw_spin_lock_irq(&desc->lock);
-+		guard(raw_spinlock_irq)(&desc->lock);
- 		if (!desc->action && irq_settings_can_probe(desc)) {
- 			/*
- 			 * Some chips need to know about probing in
- 			 * progress:
- 			 */
- 			if (desc->irq_data.chip->irq_set_type)
--				desc->irq_data.chip->irq_set_type(&desc->irq_data,
--							 IRQ_TYPE_PROBE);
-+				desc->irq_data.chip->irq_set_type(&desc->irq_data, IRQ_TYPE_PROBE);
- 			irq_activate_and_startup(desc, IRQ_NORESEND);
- 		}
--		raw_spin_unlock_irq(&desc->lock);
- 	}
- 
- 	/* Wait for longstanding interrupts to trigger. */
-@@ -66,13 +64,12 @@ unsigned long probe_irq_on(void)
- 	 * happened in the previous stage, it may have masked itself)
- 	 */
- 	for_each_irq_desc_reverse(i, desc) {
--		raw_spin_lock_irq(&desc->lock);
-+		guard(raw_spinlock_irq)(&desc->lock);
- 		if (!desc->action && irq_settings_can_probe(desc)) {
- 			desc->istate |= IRQS_AUTODETECT | IRQS_WAITING;
- 			if (irq_activate_and_startup(desc, IRQ_NORESEND))
- 				desc->istate |= IRQS_PENDING;
- 		}
--		raw_spin_unlock_irq(&desc->lock);
- 	}
- 
- 	/*
-@@ -84,18 +81,16 @@ unsigned long probe_irq_on(void)
- 	 * Now filter out any obviously spurious interrupts
- 	 */
- 	for_each_irq_desc(i, desc) {
--		raw_spin_lock_irq(&desc->lock);
--
-+		guard(raw_spinlock_irq)(&desc->lock);
- 		if (desc->istate & IRQS_AUTODETECT) {
- 			/* It triggered already - consider it spurious. */
- 			if (!(desc->istate & IRQS_WAITING)) {
- 				desc->istate &= ~IRQS_AUTODETECT;
- 				irq_shutdown_and_deactivate(desc);
--			} else
--				if (i < 32)
--					mask |= 1 << i;
-+			} else if (i < 32) {
-+				mask |= 1 << i;
-+			}
- 		}
--		raw_spin_unlock_irq(&desc->lock);
- 	}
- 
- 	return mask;
-@@ -121,7 +116,7 @@ unsigned int probe_irq_mask(unsigned lon
- 	int i;
- 
- 	for_each_irq_desc(i, desc) {
--		raw_spin_lock_irq(&desc->lock);
-+		guard(raw_spinlock_irq)(&desc->lock);
- 		if (desc->istate & IRQS_AUTODETECT) {
- 			if (i < 16 && !(desc->istate & IRQS_WAITING))
- 				mask |= 1 << i;
-@@ -129,7 +124,6 @@ unsigned int probe_irq_mask(unsigned lon
- 			desc->istate &= ~IRQS_AUTODETECT;
- 			irq_shutdown_and_deactivate(desc);
- 		}
--		raw_spin_unlock_irq(&desc->lock);
- 	}
- 	mutex_unlock(&probing_active);
- 
-@@ -160,8 +154,7 @@ int probe_irq_off(unsigned long val)
- 	struct irq_desc *desc;
- 
- 	for_each_irq_desc(i, desc) {
--		raw_spin_lock_irq(&desc->lock);
--
-+		guard(raw_spinlock_irq)(&desc->lock);
- 		if (desc->istate & IRQS_AUTODETECT) {
- 			if (!(desc->istate & IRQS_WAITING)) {
- 				if (!nr_of_irqs)
-@@ -171,7 +164,6 @@ int probe_irq_off(unsigned long val)
- 			desc->istate &= ~IRQS_AUTODETECT;
- 			irq_shutdown_and_deactivate(desc);
- 		}
--		raw_spin_unlock_irq(&desc->lock);
- 	}
- 	mutex_unlock(&probing_active);
- 
+         return 0;
+}
 
+Perhaps I overlooked anything?
 
+> riscv_iommu_free_paging_domain to release the riscv_iommu_domain.
+> Then, iommu_group_release_dma_owner is triggered, which results in
+> the execution of riscv_iommu_attach_paging_domain and
+> riscv_iommu_bond_unlink(info->domain). However, the info->domain
+> had been freed beforehand but was not set to NULL, leading to errors.
+> 
+> This commit resolves the issue by setting info->domain to NULL within
+> riscv_iommu_bond_unlink, a function that is called by
+> riscv_iommu_attach_blocking_domain before the domain was freed.
+> 
+> Signed-off-by: BillXiang<xiangwencheng@lanxincomputing.com>
+> ---
+>   drivers/iommu/riscv/iommu.c | 14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
 
+Thanks,
+baolu
