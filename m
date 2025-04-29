@@ -1,66 +1,96 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from tretyak2q.mcst.ru (tretyak2q.mcst.ru [213.247.143.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487A0524F;
-	Tue, 29 Apr 2025 12:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6920B29DB74
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.247.143.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745929730; cv=none; b=F1ORXhwTecoJDdSK6o7FULu1uKnx9sXrY4tMiBqeITgqpLTAqZdUojdb9K4jAsIBBgxwy+QzoSOLzpIC2mItRuzF5lVCdlRMsFaWSQfdDHfYt3O6emIAZGjFhF8NovZqu+EriZdjfG3ZfxGnHZ59QJkKXyiWNjvWGi8GvjMxnvs=
+	t=1745929730; cv=none; b=L5hnRo2kWRbG6ZGaGoRf1r7zphlz3kJuxXpr2crGNLcCeTxhhKaCZK3KeUZhSaZbR98+W/U8qOcc3VhZZ1jcrfATwKgE/lJDRLM2VAnWOY7cPIlmgQNCaaePDBSdvkOb3QkY8qgcNeai2kEmjlgcVirxmHZtm9wZcyLem3RKy4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745929730; c=relaxed/simple;
-	bh=jqowjZvlBiorAne8OamkMAWE/1Sis1GBvUHwc1czNHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vFv52zA2W1p51GCNNWqy9OscL59a8CMyYnyEnLNkhaE/EftPSU1Z8j17dOv7krwGCG3yane9twmZC3owr63FMjxhj6sarPPxp2w6zMoNeq9EAHf5OcLrJ6neNctB35urODxSIX93Cvqa2SO//7CeK9hbWTVaUg4Ju5fvU4Xx/CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=MfWx5slO; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	bh=ZGOwHJN9T6Ufq78cJaZMUAQsKWhGnJeXHj2oH8VgLH4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dZb43xQz1E1qHB3dv3p5p3ZOfV7uT75pydWqxErOtJfP/ZVCG2TdLQwowrr4nANqYdaNEXZzhZOiJZL9scuFkbrWpSkibWixvPhbuYKKpRcJDhNtvj48cn55FKQf0FIsxul6ruijpogKjrG6o19ucJsqmTSlMfeu8fOp1iuy0Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru; spf=pass smtp.mailfrom=mcst.ru; dkim=pass (2048-bit key) header.d=mcst.ru header.i=@mcst.ru header.b=p5ZA9exv; arc=none smtp.client-ip=213.247.143.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mcst.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MfWx5slO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=po7aA4vJqUXSpskhIE3e8lkgayysJvhbX54JD8OfIHE=; b=MfWx5slOJV/JFEGXhaiZ0ejvmp
-	lkS0+oUoMEnwnDObgtOP6U21T8gOnEzi6Wsj/WHxmYfUGPl78I9nDd5JtDLzT3wlkn6WPPPPX5riX
-	nmHP41hxeQUea9vk0Ibf6qCx5K4ZdUiWMnXYCgS/+Iec5yqxVm/nMq00BCR8ixwVsbH8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9k4l-00Aw6Q-AI; Tue, 29 Apr 2025 14:28:39 +0200
-Date: Tue, 29 Apr 2025 14:28:39 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: daniel.braunwarth@kuka.com
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: phy: realtek: Add support for WOL magic
- packet on RTL8211F
-Message-ID: <fefb3642-b741-483d-beaa-bba557306d68@lunn.ch>
-References: <20250429-realtek_wol-v2-1-8f84def1ef2c@kuka.com>
+	dkim=pass (2048-bit key) header.d=mcst.ru header.i=@mcst.ru header.b="p5ZA9exv"
+Received: from tretyak2q.mcst.ru (localhost.localdomain [127.0.0.1])
+	by tretyak2q.mcst.ru (Proxmox) with ESMTP id 11D07100C0F
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:28:38 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mcst.ru; h=cc:cc
+	:content-transfer-encoding:date:from:from:message-id
+	:mime-version:reply-to:subject:subject:to:to; s=dkim; bh=ywxBNZm
+	/e8MuqcQvNAqzfZyw9hVYSTV4wTfXNoxerqU=; b=p5ZA9exveVnEd/AVFHrAPky
+	wTA+tUq7WuVaCUDajMDcHNYVm9djyGMWplG4gnw/v5+vqO0AuWDvEcZ5EqdCg57F
+	5zDxMcDrv+XFlqtK6UVIdgS6V94imODgkH/xIglmjfXrfJJsaHqvg7/yUOdrKfdc
+	xwzN/Jfcmbqdky7blaWTENpCTDYn6pYk4tP79g+sB5liglyo55mtofn5FDCdepyE
+	570I9x8b/FiyV8QqPnXO9i1v0cSGuLL2Ewi+cTEAnjqMHt0VO1/myRYvepPIgclt
+	r2cfWLxQMz9KMBSPeXwFy6al93GFIDFdU+4PmyKLDX5E0zE7EvbaUXT6r3/rHUQ=
+	=
+X-Virus-Scanned: Debian amavis at mcst.ru
+From: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Igor Artemiev <Igor.A.Artemiev@mcst.ru>,
+	Evan Quan <evan.quan@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@linux.ie>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+Subject: [lvc-project] [PATCH 5.10/5.15] drm/amd/pm: vega10_hwmgr: fix potential off-by-one overflow in 'performance_levels'
+Date: Tue, 29 Apr 2025 15:20:15 +0300
+Message-Id: <20250429122015.1503994-1-Igor.A.Artemiev@mcst.ru>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429-realtek_wol-v2-1-8f84def1ef2c@kuka.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 01:33:37PM +0200, Daniel Braunwarth via B4 Relay wrote:
-> From: Daniel Braunwarth <daniel.braunwarth@kuka.com>
-> 
-> The RTL8211F supports multiple WOL modes. This patch adds support for
-> magic packets.
-> 
-> The PHY notifies the system via the INTB/PMEB pin when a WOL event
-> occurs.
-> 
-> Signed-off-by: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+From: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+commit 2cc4a5914ce952d6fc83b0f8089a23095ad4f677 upstream.
 
-    Andrew
+Since 'hardwareActivityPerformanceLevels' is set to the size of the
+'performance_levels' array in vega10_hwmgr_backend_init(), using the
+'<=' assertion to check for the next index value is incorrect.
+Replace it with '<'.
+
+Detected using the static analysis tool - Svace.
+Fixes: f83a9991648b ("drm/amd/powerplay: add Vega10 powerplay support (v5)")
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[Igor: In order to adapt this patch to branch 5.10/5.15 the variable name
+'vega10_ps' has been changed to 'vega10_power_state' as it is used 
+in branch 5.10/5.15.] 
+Signed-off-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
+---
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
+index 79a41180adf1..30eab5002077 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
+@@ -3171,7 +3171,7 @@ static int vega10_get_pp_table_entry_callback_func(struct pp_hwmgr *hwmgr,
+ 			return -1);
+ 
+ 	PP_ASSERT_WITH_CODE(
+-			(vega10_power_state->performance_level_count <=
++			(vega10_power_state->performance_level_count <
+ 					hwmgr->platform_descriptor.
+ 					hardwareActivityPerformanceLevels),
+ 			"Performance levels exceeds Driver limit!",
+-- 
+2.39.2
+
+
