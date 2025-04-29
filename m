@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BE92DCB41
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12BB2DAF90
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745968398; cv=none; b=V6WGt/TIjoAtHxKO78pI/S4ZQ/K/2Tj55pi7wOd+Pfv1nqdjiLOh86EojP5G0MJwV0iXxpzLs18lFwVexn2PgwBc2stmFLSub425ENpEYh5TfpKUU6hRNez2NIVkrGNjpKusTFBVChrF/grrNBObTHd8G7WzIxhkeSkzsnYwKkg=
+	t=1745968404; cv=none; b=Q5+apligJgUfPTIZIndG94sA8kWCgmZ4Y2YJqUS+kJqQkDrHb2MIeztVQgbsaEvW8eCcpDb1iuBqus8HScD6EC0ga69/3IfanjvovC046VTRD9jzP7BhR968zeo9lGyZXXoFeodJ7po3pWoGgn9n7+aohiZzbkv/c5n6ceKidyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745968398; c=relaxed/simple;
-	bh=MCmNFhiZw1asmOj5z7a+KQ3khmBCYE5zFOLBdRh/Lfo=;
+	s=arc-20240116; t=1745968404; c=relaxed/simple;
+	bh=L1akBAVuNGL/HgjuY+Dt/87IXyFTEjbq7vYmV4pniEU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NQaNFZdcmcCyBhKQGFDueaVF9YsY55RBV7/F26c90csdGW86dbHysgVnIIGfNRIKb+GWHh1F0IhhCOQHINaI18e50XeidCcZB9eimzt14QYA3xXqNZ3+7kZGnLSMc28jQqHhDMbVV9YEIjIDKVGVxJz7MFSNpiIiWRizYZ4lHQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WaPQu7i+; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=Vp0+18f5XU7aYwPBYB3U0y0oojqXJG/UHksP6P4nWxi7ETf7tc9aiGiwSySdCXbbuaP7Cfp6agQ6+V3E8C51Pfa83rz9sy5V1iJpj0azyeNq1HYb8SRevQzta9P/ugIpH4Gln36kXH5qwEhiPTOyHqZ42L5mej5jswuaXr1gquA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=314bLS1Z; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WaPQu7i+"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so4884298a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:13:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="314bLS1Z"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af59547f55bso3605988a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745968396; x=1746573196; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745968402; x=1746573202; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ptubX+4PRxSRuHNuaNIHmOvTzFtHE228lGkthuD+wwo=;
-        b=WaPQu7i+EOARZfIHTVVL/RO16KYkrPB8EAHLmvzp6r52DiBHO0YM6GzV+CWFc+yRxe
-         Es55bW62LdDaJ5cckJjDnuVblXeaFMmhlSlni0CLT9uX0oiTTMD2A1MYD26R+TfI2rKE
-         8WcWWIhQ0N36AimFmQBR0edj0wmsTZpcK8TvVFJ3iNaK+rECbw2VFBdx+9di8PH9D+YT
-         qcnkHrLWBckReRCRkW+Jdz8SKX8Bzi6a5cPMhY0U965kx3SN/Eb9tcq8wknsd3TQwBOQ
-         wsuQuj1r76PMx8SwYTVOZjtdab4PkS7Ftw7wLMFLU/s9YdflhHb/vLG14bm8y4D6+7yG
-         snNw==
+        bh=H5jsaexJJdkxvjPU7Sdj2kvtz8W8nkPeoHdR3jNANOg=;
+        b=314bLS1ZB8J9x3th2+txgE1UCfNmJhKwqSo2GIMKEOXKo/Igfog5x5sRTD5Oot0bHD
+         CuC4GEWIVVq7mWGtbX380uyMgrPSJ6/vzmZz2u9ZAaYAn2jBfnI11HE7ZgGjdnVhND7D
+         iCmVKhIVYiKV9nU0XHkW0AtVXow6kFTLYj6zsxEdkRPTmhjchk5vN4cxg7FdF9cNL6hA
+         ah9mXeBJaBYcrm2/1Fa0anIgcD+d9tG4Vi38003xB39DojRS/OSFBhQjYj2bDKLsEC8p
+         vmFmW5XDIw3p58ReplbjJdSrAlC6OiWHSS7fLmdRwAWVkcWJHyXCbMNTWkDg5B+wljsn
+         fQGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745968396; x=1746573196;
+        d=1e100.net; s=20230601; t=1745968402; x=1746573202;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ptubX+4PRxSRuHNuaNIHmOvTzFtHE228lGkthuD+wwo=;
-        b=dua58Goe/xpYRy32uv14NQ6xW8rBrld/Z2s8FA96zAsS173quoVzRrIutOUY8qauRw
-         eHc8vDs5rQgmgKVdg2CSZro1JXrcFMhnXcqwuZj6sVpFRj/IXzg6o54sFCJlUAL6Q3N4
-         jpJDhAjXQeM2qhUu4rcsPB/yx5UMlWjyYonRwq4oUgzAgQVhXJUqZF9Oea2Mnkn1zUfk
-         VvnjI37MEkABB9HJ3ZCduBWEvxyD/kS7nfnMacee/BMx27yYBlWnUkSFwuahvmNRGIBD
-         84zNENET9NjBktNF3kkBjJpWnhb5oT7juA+qQVXuWnKaDEfrvRW+euZpBrTPh6Uxg9DM
-         vZlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlKZJsXFi5YdpHX915+wKYq8Lc8JnGt0qT0Ge4Jj3T3IxuolS7gnNr/RSAUhGvG9Fssc/nENotnHebkUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHdP7GGChnGfXyLQAgUrP+rBo57WYiKhJGQy4Yz/9eiJl6RScZ
-	ll8G1spcZu8Yfrc2xWlmtsottRe/oe/E1iADg8Fhml5Ja+iEgq3akij2Wc2OLapQauFQ4zFksK5
-	0
-X-Google-Smtp-Source: AGHT+IFm8fO/EOznOvJbdJCOyS53ir+LzZX/uOe6DyxtNcMywtrFZXZEtFx5N0SC/FKTCYw47Z0veO+X0js=
-X-Received: from pjbpb12.prod.google.com ([2002:a17:90b:3c0c:b0:2ff:5df6:7e03])
- (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5547:b0:2fe:dd2c:f8e7
- with SMTP id 98e67ed59e1d1-30a332e8d74mr1388130a91.10.1745968396064; Tue, 29
- Apr 2025 16:13:16 -0700 (PDT)
-Date: Tue, 29 Apr 2025 16:12:59 -0700
+        bh=H5jsaexJJdkxvjPU7Sdj2kvtz8W8nkPeoHdR3jNANOg=;
+        b=gJRzHIA5rOtudZfAETY/Y69qOBBysJclnc8DB+EjuaQADdj5npPqbVgQrsiR9SyRwM
+         kWq0R5hkRIXgRvStabkz7NEbCEsDWidOehQ+5vyt48bz1Idu55omAsL+zsem0k/725dy
+         m8TzNYAlrWaelql9i/DXUl3dWndagmVxi79k87Ya2CIYTvskf4PrIqTFdgUhmKVkVCC4
+         xwNqVMEni/c3XDRZet+iv/Ji2/T4gL2schpov+pjrqpe7KNg3WyWDZJVdaoaYBK5SqO3
+         6EZiBD+10dSgq8Qq1508IxLb5PxQ6hnEG+dR1icHo0LSplBB+WP9FOeP8Xd4U5bvS8o9
+         WAkw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8Bk0A5+GN/KkFvvhO10QperQl9TZJ24d+57DMjntQ20PMJwMY7xlOy4J13OMrmDTZNCVuC3jnhGUkhkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydNnptZsCHVH9VoisqkJeLWKpAjqfDQ7WZxDs4AHldUA3FRYfH
+	5tE9X284gIPp+nGlJ/qHGfkW7CsjcCuu4lYNqmXymFm451r5lTsVvEppD7pQGabCP0iBZ+5ACkL
+	h
+X-Google-Smtp-Source: AGHT+IH50STJWtK1MCML9Q9BF1hzSCklojd5KzXO4ucJvZeFgv98Tbj7wq5WAu3vJGIOixVPU9Xw+SqETqA=
+X-Received: from pjbnd12.prod.google.com ([2002:a17:90b:4ccc:b0:2ef:78ff:bc3b])
+ (user=yabinc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db0b:b0:21f:2ded:76ea
+ with SMTP id d9443c01a7336-22df5839f4bmr4572335ad.36.1745968401836; Tue, 29
+ Apr 2025 16:13:21 -0700 (PDT)
+Date: Tue, 29 Apr 2025 16:13:00 -0700
 In-Reply-To: <20250429231301.1952246-1-yabinc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250429231301.1952246-1-yabinc@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250429231301.1952246-2-yabinc@google.com>
-Subject: [PATCH v5 1/2] coresight: catu: Introduce refcount and spinlock for enabling/disabling
+Message-ID: <20250429231301.1952246-3-yabinc@google.com>
+Subject: [PATCH v5 2/2] coresight: core: Disable helpers for devices that fail
+ to enable
 From: Yabin Cui <yabinc@google.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
 	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
@@ -70,99 +71,65 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When tracing ETM data on multiple CPUs concurrently via the
-perf interface, the CATU device is shared across different CPU
-paths. This can lead to race conditions when multiple CPUs attempt
-to enable or disable the CATU device simultaneously.
-
-To address these race conditions, this patch introduces the
-following changes:
-
-1. The enable and disable operations for the CATU device are not
-   reentrant. Therefore, a spinlock is added to ensure that only
-   one CPU can enable or disable a given CATU device at any point
-   in time.
-
-2. A reference counter is used to manage the enable/disable state
-   of the CATU device. The device is enabled when the first CPU
-   requires it and is only disabled when the last CPU finishes
-   using it. This ensures the device remains active as long as at
-   least one CPU needs it.
+When enabling a SINK or LINK type coresight device fails, the
+associated helpers should be disabled.
 
 Signed-off-by: Yabin Cui <yabinc@google.com>
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: James Clark <james.clark@linaro.org>
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-catu.c | 25 +++++++++++++-------
- drivers/hwtracing/coresight/coresight-catu.h |  1 +
- 2 files changed, 18 insertions(+), 8 deletions(-)
+ drivers/hwtracing/coresight/coresight-core.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-index 96cb48b140af..d4e2e175e077 100644
---- a/drivers/hwtracing/coresight/coresight-catu.c
-+++ b/drivers/hwtracing/coresight/coresight-catu.c
-@@ -458,12 +458,17 @@ static int catu_enable_hw(struct catu_drvdata *drvdata, enum cs_mode cs_mode,
- static int catu_enable(struct coresight_device *csdev, enum cs_mode mode,
- 		       void *data)
- {
--	int rc;
-+	int rc = 0;
- 	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index dabec7073aed..d3523f0262af 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -465,7 +465,7 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ 		/* Enable all helpers adjacent to the path first */
+ 		ret = coresight_enable_helpers(csdev, mode, path);
+ 		if (ret)
+-			goto err;
++			goto err_disable_path;
+ 		/*
+ 		 * ETF devices are tricky... They can be a link or a sink,
+ 		 * depending on how they are configured.  If an ETF has been
+@@ -486,8 +486,10 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ 			 * that need disabling. Disabling the path here
+ 			 * would mean we could disrupt an existing session.
+ 			 */
+-			if (ret)
++			if (ret) {
++				coresight_disable_helpers(csdev, path);
+ 				goto out;
++			}
+ 			break;
+ 		case CORESIGHT_DEV_TYPE_SOURCE:
+ 			/* sources are enabled from either sysFS or Perf */
+@@ -497,16 +499,19 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ 			child = list_next_entry(nd, link)->csdev;
+ 			ret = coresight_enable_link(csdev, parent, child, source);
+ 			if (ret)
+-				goto err;
++				goto err_disable_helpers;
+ 			break;
+ 		default:
+-			goto err;
++			ret = -EINVAL;
++			goto err_disable_helpers;
+ 		}
+ 	}
  
--	CS_UNLOCK(catu_drvdata->base);
--	rc = catu_enable_hw(catu_drvdata, mode, data);
--	CS_LOCK(catu_drvdata->base);
-+	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
-+	if (csdev->refcnt == 0) {
-+		CS_UNLOCK(catu_drvdata->base);
-+		rc = catu_enable_hw(catu_drvdata, mode, data);
-+		CS_LOCK(catu_drvdata->base);
-+	}
-+	if (!rc)
-+		csdev->refcnt++;
- 	return rc;
+ out:
+ 	return ret;
+-err:
++err_disable_helpers:
++	coresight_disable_helpers(csdev, path);
++err_disable_path:
+ 	coresight_disable_path_from(path, nd);
+ 	goto out;
  }
- 
-@@ -486,12 +491,15 @@ static int catu_disable_hw(struct catu_drvdata *drvdata)
- 
- static int catu_disable(struct coresight_device *csdev, void *__unused)
- {
--	int rc;
-+	int rc = 0;
- 	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
- 
--	CS_UNLOCK(catu_drvdata->base);
--	rc = catu_disable_hw(catu_drvdata);
--	CS_LOCK(catu_drvdata->base);
-+	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
-+	if (--csdev->refcnt == 0) {
-+		CS_UNLOCK(catu_drvdata->base);
-+		rc = catu_disable_hw(catu_drvdata);
-+		CS_LOCK(catu_drvdata->base);
-+	}
- 	return rc;
- }
- 
-@@ -550,6 +558,7 @@ static int __catu_probe(struct device *dev, struct resource *res)
- 	dev->platform_data = pdata;
- 
- 	drvdata->base = base;
-+	raw_spin_lock_init(&drvdata->spinlock);
- 	catu_desc.access = CSDEV_ACCESS_IOMEM(base);
- 	catu_desc.pdata = pdata;
- 	catu_desc.dev = dev;
-diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-index 141feac1c14b..755776cd19c5 100644
---- a/drivers/hwtracing/coresight/coresight-catu.h
-+++ b/drivers/hwtracing/coresight/coresight-catu.h
-@@ -65,6 +65,7 @@ struct catu_drvdata {
- 	void __iomem *base;
- 	struct coresight_device *csdev;
- 	int irq;
-+	raw_spinlock_t spinlock;
- };
- 
- #define CATU_REG32(name, offset)					\
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
