@@ -1,115 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10B129B23E
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 10:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A46D29B23E;
+	Tue, 29 Apr 2025 10:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922206; cv=none; b=UFEyJ3suHzN5XRlOZfQQoM+xwyvoaz0EhzxSclqJl9NoWFexsSYnF0c98/XI5sPeASci6CsfRUJwj0BHi8yYdKDbl1Zx/SYPDgfFykpmNykaMXrXL1QtMrfH/MVgkBhtZJhzPnI8681Z630O5DO5YJOFP3CognsOXrgkgZ1cBh4=
+	t=1745922212; cv=none; b=W4sL4seXsv2DRSkVMA6ABtHCtlQ+l5VnHVklqiAbrYRCNrojepQMJoUyipQDdaR2DLFtfMuv1G6zePaGzzf8J9JtWbKcSG6uD1f2xwpaIbFPFq1CLXY43x6OFW6L53yUqBN6SlgvlVbquxZcciLV7MIbAHfBEG4kK64vs+/DiFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922206; c=relaxed/simple;
-	bh=I7q3nYlcWKLpxcjMtPxCCBKwbSdilqasANOOowJX4IE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DJdWrGrR6s/lD2hnQYJ01B/b10aHHEWDzEJMxVympGsUKcWAqvNUqNO4ova1yX//Z2PVBaGHJmwU1mhCVZiYf/T0hOgXkbvKR+PYrs1oaq65H4YQPJZg7X0ZJ7hkjpvPx3RcPnwzAF1olOoUwy7IVnR+GaeqtN4L3sZ9sZURKY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGmvJyvZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745922212; c=relaxed/simple;
+	bh=PPEeSEGaX45e+jtAkOTmRmFBPa9nWtVC7p3hzMLLhiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AXjy+Iem/TWuReUu+Ybzy8g50GZORr09IsZlpXNKqrUEYq7jsBva+tvoyMeQkNnLjkCpDs7EPJtsxKKQFbeLJACi3yBOmHoLNnL84HiAn4B1rzA9iRdgnTjfQDhdtJCDymoL9pANEOZsx2Mj/HpnKZF4jE05aciPkmrcRysJ4v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GGgmhsB4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGmvJyvZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745922203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ou46RQiw27MHB6L9lNRbXAsrEhOAHGqjTdf1Xhm4BSg=;
-	b=EGmvJyvZ2tTVZjKXFR3VfitiV+whaJ5eSBNQJn76g72fZg6sNsAUEWY4LAIs87pPeYKQ9t
-	mb+IfZ9elxlnrr15HZnhbMftPYQahXR2RZ6ZpJNkkqj5sP66fnfvY6pn8QPK3m1S13AJp0
-	VdiXLkd9FyQwcvrfPctlZ6LRKpHdMIc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-211--SCbnjbVO-uQRIPU9vzKVw-1; Tue, 29 Apr 2025 06:23:22 -0400
-X-MC-Unique: -SCbnjbVO-uQRIPU9vzKVw-1
-X-Mimecast-MFC-AGG-ID: -SCbnjbVO-uQRIPU9vzKVw_1745922201
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39c30f26e31so3708207f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 03:23:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745922201; x=1746527001;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ou46RQiw27MHB6L9lNRbXAsrEhOAHGqjTdf1Xhm4BSg=;
-        b=WPj5czlzwjE+M6yKRx2j9yazXwM7RpmVAO6H0xRkFDp+TLgIwXldOwa08AcxYtSBNY
-         VzcXmqNUh6hhxk88wY5ZD7LrUjVk3tgCD1KF4Z3m95TdTch2QyP6NNnksqldDnuiQLUq
-         hJoRWtlEWlYCGU0+uUEou5hVH4yosAIa1bYLW0Pbq7hduwcQtzFIfoHq9tiJz2FkXSNI
-         1G8yW6UfoPCnkwe8uDFprnmoCcGSODFABO76dpuIL5rLQRc6+obGqzEAcM/+U8Z9gwBy
-         dzqKrHPD0OiAx5qHhByT5Ok2Ng5/w1LSpUL2s4rzTECDQSQdAKg5TGhZx1kGIupaejDp
-         e60A==
-X-Forwarded-Encrypted: i=1; AJvYcCWbAQBRgPTQrknqglywf6M/+kuIv0kAS70B5+TVnVo9p5yd3Ua9IX16bPID57G6g0oXr5n16D++HOKKeNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP0OuP6B713xVUCca0DxDapEO19BZf1QgVTITgL34rp1r75YXz
-	SNr5xOd/A9Fe7fBe0mTr1vdJ5KYS0mSEA1RD1NQ3R+hMHPhvwj8YkKltb+0wVV6M6b2qW5JJUHP
-	ZP2ix0gthu4xcoiy7VUQDVBe3a8HsoBiBdt4SBOHmaE/v2oc8n5qlGiKJiLWc5A==
-X-Gm-Gg: ASbGnctlfhNnP7sf9OiU4cA2NTkYutq1/eK+9bOx5Prh5XkAzLuFnYCT74Jx5dhe4Xb
-	SQ3+i5YrUEQT1O9jiKN6ru365HSaWVIzUvjtQsuNugET78QnP0OEnKVPOA5E0e/b/WCYRS5WcEr
-	4XtSnWatTl8q+bbvTtb2Ut0HFIom40S99ONrf8s8TlXH9jtSkgycvmSfNmkQnRdSSAel+i73KW6
-	dHrQjY2mDMsnaWjc+4D7e3Pzz6CPHVhFD0HgqNb5LtKS9MSPDaFE84h2f4rWEGxuJYsdEPGCnxb
-	uQckB9GRuoIiztjcT7EzY1DFadhRaM/zVd5quBaXT6np5FkkLXwyY85P3fACW4vQaKsYog==
-X-Received: by 2002:a5d:598c:0:b0:391:2c67:798f with SMTP id ffacd0b85a97d-3a07ab8176emr9560331f8f.41.1745922200992;
-        Tue, 29 Apr 2025 03:23:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTs5WgstZJckNJqUcEC4QQ/SCLXl1Ezn5Q82Us7fxkFAFEkizJrjHsAT0GnIPHkqaJtOYMjw==
-X-Received: by 2002:a5d:598c:0:b0:391:2c67:798f with SMTP id ffacd0b85a97d-3a07ab8176emr9560294f8f.41.1745922200601;
-        Tue, 29 Apr 2025 03:23:20 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5e345sm13720628f8f.94.2025.04.29.03.23.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 03:23:20 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Arnd Bergmann <arnd@kernel.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Marcus Folkesson
- <marcus.folkesson@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, David Lechner <david@lechnology.com>,
- Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, Alex Lanzano
- <lanzano.alex@gmail.com>, Kerem Karabay <kekrby@gmail.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/st7571-i2c: select CONFIG_DRM_CLIENT_SELECTION
-In-Reply-To: <20250428150752.3970145-1-arnd@kernel.org>
-References: <20250428150752.3970145-1-arnd@kernel.org>
-Date: Tue, 29 Apr 2025 12:23:17 +0200
-Message-ID: <87v7qnz2p6.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GGgmhsB4"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TA9RIP023841;
+	Tue, 29 Apr 2025 10:23:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ukYUbzX9sxf6BHYyfUSQGcXRkbpvnXWguUti6hUmQm0=; b=GGgmhsB40UoB6jYX
+	GefQeicl3OVYevjR891Wq+jVtQgh01ib7bdmEWIVLv6z2zCqqD7joLmiGv3eqo8p
+	qcggRvJrpcg25LAe7vOJ16FnTbrn7cbVethM0AlZP0UhwXyaMKpbXC9/Xjw/58Zt
+	CntO0E7P/kXM3KroZNMRO8ObOh0PzXfBQ1VXB9eiH6U2COFeGwqag1poY38zHfVL
+	sPZstlj4M5GkcjxqEHLI9Ml7X8mfEeQ1HjIKkZmc4OUz9p8rKo318jUcRLGXUggG
+	YvM4tDIYxK2y8EeNCuhEjTCsViGitZnhes30pMCtTwXJU2BK8UkEonzjCJcwRtCq
+	LK3B5w==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqmccu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:23:19 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53TANISA024347
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Apr 2025 10:23:18 GMT
+Received: from [10.50.27.172] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 03:23:12 -0700
+Message-ID: <3792552c-6447-4399-322b-448b1022f129@quicinc.com>
+Date: Tue, 29 Apr 2025 15:53:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 10/23] media: iris: Prevent HFI queue writes when core
+ is in deinit state
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-10-3a6013ecb8a5@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-10-3a6013ecb8a5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI5MDA3NyBTYWx0ZWRfX10X+3GJFgc+a og+v3y/faEi0WQhTcSwiXuqnJ2ygttSnIFsg2+oXHXOsSdmoM+3YSOU5xWlzhF3dofV3z1gBp9Z klgpK3/4dH/wDKizNBbuExoPmO2KQo8WGmZWN7ND1aGmAP7N1bJCffAPDxX6OQbWAptZRR6X1w6
+ pDZPsyK0pU0NbEPL2f+B1NEGBrq4IKmni7uXXp+trKZbfytX6zt60j804Dj8er6f7uYqtVKl2vY /Lr2KVJltcWf71MeuAp5i7uHE0mc+rEGEzOnzh5LQJ4ofxtjqCXd6GQgu9fiukjGzabhdLT0PT1 f9p/ALvn3+LRRIsuY+PydpKMw0a0mqaJgPCn4jDsSV74G11CMvkS42AoW6tF3WQq6U5WVSCk1yy
+ ELJhj21wRs9PfNkXENmOEgltARCKI7HrJPvEp3323lQvUkE+8Qg8exHvND1+4zGLncsSj7Pg
+X-Proofpoint-GUID: OtHAmKEeONYH1V9uksJ8qKEpEaBKHzvx
+X-Proofpoint-ORIG-GUID: OtHAmKEeONYH1V9uksJ8qKEpEaBKHzvx
+X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=6810a897 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=te1TGoh6iaXk0xCdwo0A:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-29_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504290077
 
 
-Hello Arnd,
-
-Arnd Bergmann <arnd@kernel.org> writes:
-
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The newly added driver calls drm_client_setup(), but that is not
-> always built in:
->
-> x86_64-linux-ld: vmlinux.o: in function `st7571_probe':
-> st7571-i2c.c:(.text+0x7b7119): undefined reference to `drm_client_setup'
->
-> Select the appropriate Kconfig symbol.
->
-> Fixes: 4b35f0f41ee2 ("drm/st7571-i2c: add support for Sitronix ST7571 LCD controller")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 4/28/2025 2:58 PM, Dikshita Agarwal wrote:
+> The current check only considers the core error state before allowing
+> writes to the HFI queues. However, the core can also transition to the
+> deinit state due to a system error triggered by the response thread.
+> In such cases, writing to the HFI queues should not be allowed.
+> 
+> Fix this by adding a check for the core deinit state, ensuring that
+> writes are rejected when core is not in a valid state.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: fb583a214337 ("media: iris: introduce host firmware interface with necessary hooks")
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 > ---
-
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+>  drivers/media/platform/qcom/iris/iris_hfi_queue.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_queue.c b/drivers/media/platform/qcom/iris/iris_hfi_queue.c
+> index fac7df0c4d1a..221dcd09e1e1 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_queue.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_queue.c
+> @@ -113,7 +113,7 @@ int iris_hfi_queue_cmd_write_locked(struct iris_core *core, void *pkt, u32 pkt_s
+>  {
+>  	struct iris_iface_q_info *q_info = &core->command_queue;
+>  
+> -	if (core->state == IRIS_CORE_ERROR)
+> +	if (core->state == IRIS_CORE_ERROR || core->state == IRIS_CORE_DEINIT)
+>  		return -EINVAL;
+>  
+>  	if (!iris_hfi_queue_write(q_info, pkt, pkt_size)) {
+> 
+Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
