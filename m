@@ -1,108 +1,192 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A812D1918
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931369; cv=none; b=lQE3klng3PilJnJmqPNk5JG6cUJ4khLGDpTRcui57Fs4CvbKLyjsT4w8KG2CT0G6ABjqNanRBn6q6PCFX6H1DjQKIV/YgiOLJMXfIg4b3kDySu1GFY8+TrEIFp6Mma/NKF4YjbaZY2k1YM1qEFmnCswMQ2OLRGrOgVFJ6LSNrR8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931369; c=relaxed/simple;
-	bh=9ioab1t8nXmZsDjk3HszCYql2zzBu0n7CbR97op4z8s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IOVwwZMAssunmMdfv7Sxrs19VRfHgD0fD7vpQFR7ZNPi+KnjlwjQcjNFXBIJAjq2AAiv12139jEWWLyrRKlHFmxyvleba5GT/CC/PcQKkLITXZms2QAl8+TUvHt/eo9KXdyZl+v0mSy2Za3Uruxf2xXgchJlwdxVGBTR7Z9ijdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D83lzDxK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZzP2ctHO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4B54654;
+	Tue, 29 Apr 2025 12:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745931478; cv=fail; b=Z6xTZib3tcMQMxbmL2v+T2gY9GwFQ2t8uXDZ7VlYHuQdnJUawPJ27Mmvk6Tgpraa7da71dQnfWHrLnskYy8ZYXMvQtrDT8plF9ukSRD9KFdRAPkhYOoLtjzBO6KFx8rx1gZG1RLIT0qgHTAt9xg+xaReiCrHx5X2dGGjb62aGiM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745931478; c=relaxed/simple;
+	bh=PRqJCQMfIYXvsQaHwtHCEQmqcK+EZC0cRBrBTaBKHVk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UQzL2RIjFCx4aokJgmPF1PARrDwIFC8BBnUI6Th+15Ww1RlUgq2SObLqB+ZKiTYtBQqxfaG7mTlbVxYu9n+UfQgxjtnIcu8WQnZsBn2t148QW7hYPFqd0Fe/ThMJbz9L2Y/qcjl7k9MtJaoOBDaX0hQ3hwQvBn3/OJ+DjyWY3J0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hDmiXgv/; arc=fail smtp.client-ip=40.107.93.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D83lzDxK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZzP2ctHO"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745931366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0g0kq1GJUBlyV/4mQJ3oyVCKLrTdBKzHhBh0h2Qg2mo=;
-	b=D83lzDxKEAZKLS4xvhsGKAkVZ2FickjGHV3/zzSVppOCWil0Tbzc8wufIlnJBVvuWYsyuk
-	C8iU/e6zFpn8ZBPdEDk3grjFVTFOr3Sei/Le6LRc7T3cpYi9Hasga/O+D6cQNV2zM4bULR
-	kZPbmKxFEjVeONu4cmYT0ds/CMFMyKilPUyuQp/ObDMg6hu1orxhWQuBiiVD9TuphEJDOY
-	SCWByvzmGiyVJ0rC7Zy1xGukru3pBwY/X6NiR7kEvNaRXMsm1TOxuohBy32eFegUWyH6hS
-	0AqpHeDkWwBiTTAAfITX5ZI92CyKnliNE0NnvbbTKF0Etr4y9+ksLsHW05Y/Gw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745931366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0g0kq1GJUBlyV/4mQJ3oyVCKLrTdBKzHhBh0h2Qg2mo=;
-	b=ZzP2ctHOk/iRiYGC2HJzCvIlvid5mdyxGKtuWdGZmF4K/4eRWmqmwAyb8IOOgI8EvFysi9
-	lBdHmjUTAvjfzcBQ==
-Date: Tue, 29 Apr 2025 14:55:37 +0200
-Subject: [PATCH 2/2] vdso: Reject absolute relocations during build
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hDmiXgv/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g7WVTfVizvhdqTp3KR6Hn1PRAYYkjTUezbHiq9nKMdP7qV3s5Cp4I2Xi/UGXNrlpbvrH33qLkoWeJWltuMpmo9yB2r+IWreGKBnt33D7U7E2agi41Wd2bbNbj1zEUkV+PaNsTOjmvJAu0eFdhjW0VYNFITuTrwHJDVQlfmLctzcpwJZe/Bk5l4vo1yDtaYpQPPcpMNl69CKPLbvTl/wJIgfZMv22zjd4He+Ek4SJpZGsr//ZQFhGClwc71Zd7kp6HFwYdIoTC+UvzqySdL1pGzDodXu2Me+E7r00ltXvlsNjdfYviZzVppOTUmbz+HdPM+fSz5tI0QmhA4kCn6X3nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=I9gg/3OiSHqyikjmsCVwccGncDMV4UFzxVy1NW1oiI0=;
+ b=mry8YloRCBfGs0+zrhY/hPeeHzsMMwdnYbj7iVgup5rMmOPTEwcmPldbr7Oc2oBOVVnX6dqNe5J2dx8RaY8iU0gpjw/la0Fl1UVUyJD1OnDf/pSuRzMWeiFgo0VzgPCjEobnHA1gg8+sGUArJQOvsWQYfwtidNhTpOOpFNFtqEQzdf4sku7B9+YXWnrFI8nR5ab5gvtbOatNOmJN/SVYmce8G+/bqDEuvqAP603D7Vs68YSetqkGwx/z2aothRw/ImsWcPtn7DzLRYaBwd5fswRHh4yx6bqDp8hJf2JGLX05z+tFqoJmcqHsn5c91h9VU2+29Ju2cnscco8gs1cLYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I9gg/3OiSHqyikjmsCVwccGncDMV4UFzxVy1NW1oiI0=;
+ b=hDmiXgv/nKHrMI3PpinTGNBN6u5UNhW5Cza+29Sb7k9mirmf1794TeqtF3MI01b/2IXREaJZYzrhxro5GYIDLnh8CPUU4AXuF2LJ91+qPagUTJ3odOvQUQGwHBZFz71DnakCc1RFZ1DIlq6qL+ILdqkij4G2unnEp6+0kEGewi4=
+Received: from PH8PR20CA0004.namprd20.prod.outlook.com (2603:10b6:510:23c::12)
+ by MW4PR12MB5666.namprd12.prod.outlook.com (2603:10b6:303:188::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Tue, 29 Apr
+ 2025 12:57:54 +0000
+Received: from CY4PEPF0000EE31.namprd05.prod.outlook.com
+ (2603:10b6:510:23c:cafe::9a) by PH8PR20CA0004.outlook.office365.com
+ (2603:10b6:510:23c::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.40 via Frontend Transport; Tue,
+ 29 Apr 2025 12:57:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE31.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.20 via Frontend Transport; Tue, 29 Apr 2025 12:57:53 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
+ 2025 07:57:53 -0500
+Date: Tue, 29 Apr 2025 07:57:37 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+CC: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86/mmu: Prevent installing hugepages when mem
+ attributes are changing
+Message-ID: <20250429125737.ygddoivogz2pf4mj@amd.com>
+References: <20250426001056.1025157-1-seanjc@google.com>
+ <aA7aozbc1grlevOm@yzhao56-desk.sh.intel.com>
+ <aA-VrWyCkFuMWsaN@google.com>
+ <aBAqAfBQRwP5Dx91@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250429-vdso-absolute-reloc-v1-2-987a0afd10b5@linutronix.de>
-References: <20250429-vdso-absolute-reloc-v1-0-987a0afd10b5@linutronix.de>
-In-Reply-To: <20250429-vdso-absolute-reloc-v1-0-987a0afd10b5@linutronix.de>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Nam Cao <namcao@linutronix.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Jan Stancek <jstancek@redhat.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745931364; l=1750;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=9ioab1t8nXmZsDjk3HszCYql2zzBu0n7CbR97op4z8s=;
- b=GqG+9nPu7ZpzsSRTLeO2J+RE6AibS1nmAQY+eWO/BXhGhDl4ouHvQk/DiwhEMyISnB+xhLsVj
- EaQ8sXrRPAnBp0itVvNsR/q6jLtqLGyAfNgi6F8tfv7Q58pRYAmmuOb
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aBAqAfBQRwP5Dx91@yzhao56-desk.sh.intel.com>
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|MW4PR12MB5666:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4dfa4c73-9a81-447a-04dc-08dd871d74e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mOAPT9mVNj0fzmcJlBNmzvcpt7jRvCbalss6kjDGJSpKrONDP7kRTLVEP1X2?=
+ =?us-ascii?Q?+b8/lQyOGMOtnKqzk6jM/vddVptgwxpzIzT1nSdCrVujvbEohSWMi9DjK0A2?=
+ =?us-ascii?Q?aW0Amh0GxHJr9k9KCgJCXyZIKyiRinLTM8u/LniR/ov11Wc0TOSPjB3HzK5y?=
+ =?us-ascii?Q?BZapJaGGltfXLUgdGTVaEx4P1JLiaLv+Uk4s2lQtgQVzCkRrJDu32rW8jbrX?=
+ =?us-ascii?Q?rvHiw7mlygVtyTEHnbEIKOlg0AIqZqiZD9s89S48v2dyXL9QYVi86UHj9z5l?=
+ =?us-ascii?Q?h19aZP1IPlKkNEYR+ReVtlCmW3vIUoBQJ43l/JlovA/A0c55eGzge4EcgcBt?=
+ =?us-ascii?Q?jW7zZtmTpLnbvp/RnnpiSfCvnv9bJxe7kkks9FrsutHvT4QDBRgJyTGf2iW+?=
+ =?us-ascii?Q?1r4MpjjN7lvbec7CuCk+sHXmVdynECzF7Giq7JYj0261GpCKCIZh3CdAUPbC?=
+ =?us-ascii?Q?kB8ebaTiaMgdc7wpmZ6UwuTHoSKoIBD0a5+M7DyIfKDIpPLX3S+Xms6vIeZl?=
+ =?us-ascii?Q?0EWMdXtuALynzy4kqT3ndvGDsBsY0QoBfZS/ilkim+ilgPRmzkKGqAcROrx+?=
+ =?us-ascii?Q?byYbHFXpQskXpFyo3z1HQB/2eHYFjDxalog23bJnws3tk1xaYdVv9FpenRdz?=
+ =?us-ascii?Q?Sr6gn4YOwcfHkhKU0tX8lWm1yHhbhcVn90lqxk7DCkKlhjU2Lj8MevjG4rAq?=
+ =?us-ascii?Q?kGlvEdKM78oTJ2zVhNBjCG2JOyOCuoUoCep2xS4BUGOXNy4CFr1ooPfoX3Ed?=
+ =?us-ascii?Q?wQg+EssshQA25awHhqXFsx6CbM2UKlO4NpyaYJdHCBz8tMTZ7OAurYvf3CSF?=
+ =?us-ascii?Q?3Uq7mGS6xH6+4r0FFcrDfzJbAgK2Ph4aRe9lUjqNJ3VI3OVTYpT8nq25au3l?=
+ =?us-ascii?Q?dN/ey34X51Jh7zLwq1a5SUzKbE483I68PIRWORmnIeTa66scqYIvtKlzcIWw?=
+ =?us-ascii?Q?9rwCqBdS5laK9u+SwzNXISRJwvN14gbFQcMlaqUzQlS0HwxEKGPXgr9U696Y?=
+ =?us-ascii?Q?CKnU3wKTn4IOvItzgHkdXSbrGzOEdduQvqVu70nphsrA38tzXEgyPZMTnTqe?=
+ =?us-ascii?Q?yrhuteETiS8a/MGe5clecy2Cz07Wdghe2LkMFXVQmq/vgsel5waAuK9zN+/K?=
+ =?us-ascii?Q?sQLIByJyRT9bFLuQR0aQizB2V61l7vOsuXIhdjFHGfWxSTfG6hvpEOEkEO8K?=
+ =?us-ascii?Q?fCohwzn7ySzLkaoLliC7Nd3ctPOFm9TsCaDYB3uG8KbwhUPr9kmsP1Q08ewV?=
+ =?us-ascii?Q?s8ic0JADTYsYP35oyR5y9y+Z4nPvPlVTSAJySE39IiZHcOO4zhQ07tUNqx+W?=
+ =?us-ascii?Q?QrENxB9W7cZ5lt2QhyZnKnCQG2+GgvcUsT4qh8jFuDqAW5eiclNTYyRUSm9P?=
+ =?us-ascii?Q?qm9uIbUKsitl7JgRoENDvwLm+eIIQkdCgfDCgQRc/s6+GXga3dObhvpyTb9y?=
+ =?us-ascii?Q?vJ/yIhW7BHjouvgaXABemQg30CmDT7071+5w4z5wSuzU4NcIqp3kYwQsTM5n?=
+ =?us-ascii?Q?z2rLGLjQZe5qsdsnDhj7po68WzvKJChbaiL7?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 12:57:53.9705
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dfa4c73-9a81-447a-04dc-08dd871d74e2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE31.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5666
 
-All vDSO code needs to be completely position independent.
-Symbol references are marked as hidden so the compiler is forced to emit
-PC-relative relocations.
-If the compiler does however emit an absolute relocation this will be
-resolved by the linker and break at runtime.
+On Tue, Apr 29, 2025 at 09:23:13AM +0800, Yan Zhao wrote:
+> On Mon, Apr 28, 2025 at 07:50:21AM -0700, Sean Christopherson wrote:
+> > On Mon, Apr 28, 2025, Yan Zhao wrote:
+> > > On Fri, Apr 25, 2025 at 05:10:56PM -0700, Sean Christopherson wrote:
+> > > > @@ -7686,6 +7707,37 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+> > > >  	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
+> > > >  		return false;
+> > > >  
+> > > > +	if (WARN_ON_ONCE(range->end <= range->start))
+> > > > +		return false;
+> > > > +
+> > > > +	/*
+> > > > +	 * If the head and tail pages of the range currently allow a hugepage,
+> > > > +	 * i.e. reside fully in the slot and don't have mixed attributes, then
+> > > > +	 * add each corresponding hugepage range to the ongoing invalidation,
+> > > > +	 * e.g. to prevent KVM from creating a hugepage in response to a fault
+> > > > +	 * for a gfn whose attributes aren't changing.  Note, only the range
+> > > > +	 * of gfns whose attributes are being modified needs to be explicitly
+> > > > +	 * unmapped, as that will unmap any existing hugepages.
+> > > > +	 */
+> > > > +	for (level = PG_LEVEL_2M; level <= KVM_MAX_HUGEPAGE_LEVEL; level++) {
+> > > > +		gfn_t start = gfn_round_for_level(range->start, level);
+> > > > +		gfn_t end = gfn_round_for_level(range->end - 1, level);
+> > > > +		gfn_t nr_pages = KVM_PAGES_PER_HPAGE(level);
+> > > > +
+> > > > +		if ((start != range->start || start + nr_pages > range->end) &&
+> > > > +		    start >= slot->base_gfn &&
+> > > > +		    start + nr_pages <= slot->base_gfn + slot->npages &&
+> > > > +		    !hugepage_test_mixed(slot, start, level))
+> > > Instead of checking mixed flag in disallow_lpage, could we check disallow_lpage
+> > > directly?
+> > > 
+> > > So, if mixed flag is not set but disallow_lpage is 1, there's no need to update
+> > > the invalidate range.
+> > > 
+> > > > +			kvm_mmu_invalidate_range_add(kvm, start, start + nr_pages);
+> > > > +
+> > > > +		if (end == start)
+> > > > +			continue;
+> > > > +
+> > > > +		if ((end + nr_pages) <= (slot->base_gfn + slot->npages) &&
+> > > > +		    !hugepage_test_mixed(slot, end, level))
+> > > if ((end + nr_pages > range->end) &&
+> Checking "end + nr_pages > range->end" is necessary?
+> 
+> if range->end equals to
+> "gfn_round_for_level(range->end - 1, level) + KVM_PAGES_PER_HPAGE(level)",
+> there's no need to do other checks to update the invalidate range.
 
-Introduce a build-time check for absolute relocations.
-The check is done on the object files as the relocations will not exist
-anymore in the final DSO. As there is no extension point for the
-compilation of each object file perform the validation in vdso_check.
+It's not really necessary, but yah, it would avoid an uneeded call to
+kvm_mmu_invalidate_range_add(), and it would more closely match the
+logic for the 'start' hugepage which similarly skips the call in that
+case.
 
-Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- lib/vdso/Makefile.include | 5 +++++
- 1 file changed, 5 insertions(+)
+-Mike
 
-diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
-index cedbf15f80874d4bb27c097244bc5b11272f261c..18fcc94e4d6bf7abf374c7a953349e7ad75f8a18 100644
---- a/lib/vdso/Makefile.include
-+++ b/lib/vdso/Makefile.include
-@@ -12,7 +12,12 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
- #
- # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
- # dynamic relocations, ignore R_*_NONE.
-+#
-+# Also validate that no absolute relocations are present in the object files themselves.
- quiet_cmd_vdso_check = VDSOCHK $@
-       cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
- 		       then (echo >&2 "$@: dynamic relocations are not supported"; \
-+			     rm -f $@; /bin/false); fi && \
-+		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS"; \
-+		       then (echo >&2 "$@: absolute relocations are not supported"; \
- 			     rm -f $@; /bin/false); fi
-
--- 
-2.49.0
-
+> 
+> > >     ((end + nr_pages) <= (slot->base_gfn + slot->npages)) &&
+> > >     !lpage_info_slot(gfn, slot, level)->disallow_lpage)
+> > > 
+> > > ?
+> 
+> 
