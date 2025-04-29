@@ -1,258 +1,219 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2081.outbound.protection.outlook.com [40.107.212.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A0825228D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 18:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745950194; cv=none; b=GeK7DeaFp8JHI9kcoLLIp+cnEXOs0HSLdeduM0HYZNg64bEv1Or7fM4kCd/hpxTm6nkeCgs/kUujKj5i2IDccH66C/5cUjfm9vu2bjOE2gvT5vKuej6XGCEvTlTA7lVKnr8yEtuQHv/ZPG4oaWiHHm3SUgds1XrIPCucEtKq9ac=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745950194; c=relaxed/simple;
-	bh=c3u864skK3RTvzcqx6hyTcY3YY2TbZxu831jV74hKtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QXXnCDZXHVc6OWzN/JrKhFYqxo5y8cy8sU2ZJHfLf6AymDOOGj2JiQG6xBQ+b0hOFveaUTUEev8rWVWlaTWsFmwUNXU8ddRMcFYCyT6q6AVTiaIHFO4t3r7m1jTEUMvzGz1iEtn4UKs9awYI71dVybV4lB0JJseokcJ8sr+KHq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pITG+UBt; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D032459C5;
+	Tue, 29 Apr 2025 18:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745950211; cv=fail; b=ZasWZercVWuAzopAruKPWw6DDJ2pkGjjIKl91TIseMd1Rz1UNrOz3a0yFfT8g43NLFoRXndhNjydSftB1vTJO3fXrXnggzK6J50dvlYYb8FfVkHMZBERQ82PB+nvnu4I78XUENoqtGf16N34eXdO55CVFAzJ1/Mu//uowC9huxA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745950211; c=relaxed/simple;
+	bh=GI8suaShKOQo3eBGqYjMhu4sHaAuyxUyLT1xR62KT0U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TQ8RXsd89DSLW42S+NYOs+7/8RUXPpMCHql7LIJdLGlbIA6j1Sc2EE3dRnNGmIQWmT2l/pl3UjfTEA4052bkeJ4MF+LWF3RgZUEXmR+R2ed7fs0sabBbahNZ0EHJmtKBNxaNi+NQ+AtEJ27XTfC8LsPSv6wBkPUsaK9A87EnOz8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gwI2xczi; arc=fail smtp.client-ip=40.107.212.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pITG+UBt"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf861f936so11169765e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 11:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745950189; x=1746554989; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jm1ufso7PEd/mzFpTpkcoocj3PhWS0h+LC0FP9sR0Gs=;
-        b=pITG+UBtGrHGBx6LpvceW8jAaF41rIhBKCGLXAZK2o3emyrDDNDWQYvrT9ORzoU9H3
-         n1uC09R3GGaxFwz6bPCoXoTzc88ihimm1eStehntcOBJQNlPCwVGVL5ESnIoHQypnbZ9
-         h+L0P4gJzmzPZk2+P/v0ACde3dOzI6yCS9XmTVirLrGxxv8NeewFltylpyrVlTsTA7Tm
-         NaxEg+mTAW0H9cJtTRfZJQAl+pv7eebatOiqw/3nDUKnKhgEd9gLbgRFdGfPteIMtBWY
-         Xa8BUkpTQuqC5ITz6F8gGJ/wo9pisWQ+4UKZLUS1Ht46/nM9c5faE13BIeIxS6CB+W3d
-         kE3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745950189; x=1746554989;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jm1ufso7PEd/mzFpTpkcoocj3PhWS0h+LC0FP9sR0Gs=;
-        b=ews8DstDvuyBwkacmJDXNhjLB6Ry9VxfaDSsVGcSigJe5OpmJnvGMYt5CzFC6QRWcY
-         CGioN5WLJ1jdjDAaNa49rV5GLv/b/tLdA/FGgWTlTsVEpXSJPobis+1lviXX7Q+0+FhR
-         xdDlH1XTyxeu7ybWiFG0F1etkSmZyZMKuQ0rlhlZ29bF21BIcXMTNxa8ioUEXZ8kuhhL
-         /+3rnK5Agr4oWc4/5jUuo3qf7QEzZjuN6sry3FvTjdYnVNJGrCU+fRsK3uwwNkdOfpZx
-         c8agS1Yu6mVXKzuLiLBzmVvDCTyEMhZ63Th6gDCTFs7gFgvCIlJnarJ8jC1AhMcPEVXh
-         mP0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVsIHy83WwYxPlupwY+/sRovvn5v3uv3ifk5wC0ZR3praZ2fRzfy1opdRnSml4DC5fNzRznWw+KMnuZLCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWIyjCvGm+cuk+P8bWWVO4zMuD4KDaquKBhR70VZFV+8CrDp7q
-	yke/JfJGxuyafIUH1h0rByHs3gYmNFv546dt0E2/UhvJ3qsae7Hun1Ycv7wk9rI=
-X-Gm-Gg: ASbGncud5LElfFR2ktcCNfboj+NOvcFXNvB6unPhthiImBILYgjToJgyrbvILbQc4jg
-	Jm/eToAyG+U+w4qG0KLETAvToAepA9vusCI54AjY8ybb6faf6422nZeOKx4V4VmCBkJeMOJRaBG
-	nMAvpEj5s1DXrokPphL3dbT/HII41wTMJbZ7kf04F1xmvE8a1StQeTnZgizQH/EuVCunEfUGULl
-	yCOJqsKhPHOZkZ+dqZtKaWzDl8TWhcRkQQSp6ZRi06a6Uh7dr71aHDfIRENG70+FIsq5UFlBZhy
-	sjbvOQEBlF3xz/uaagWjZ71MGhYCiCok8VvNzAj0eVf82UAAInTI2a5F3iQD
-X-Google-Smtp-Source: AGHT+IGzbI0xVa6Owa4r81FnDByp6u3DLOYoyScttfgoKJmtA7M14Gq4uCIzzqLYKP6ncMoWCYVdpQ==
-X-Received: by 2002:a05:600c:1c88:b0:440:58d1:7ec3 with SMTP id 5b1f17b1804b1-441b1f6b93amr972365e9.6.1745950189598;
-        Tue, 29 Apr 2025 11:09:49 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d52bsm15028818f8f.90.2025.04.29.11.09.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 11:09:49 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Robert Foss <rfoss@kernel.org>,
-	Todor Tomov <todor.too@gmail.com>,
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/3] media: qcom: camss: csid: Stop spamming logs with version
-Date: Tue, 29 Apr 2025 20:08:30 +0200
-Message-ID: <20250429180828.950219-5-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
-References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gwI2xczi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xTOQjNZV+C92YTk2B0f6iBmemr5HqOj1D0vTeMHXJhJY9Jw0jz+Yo3KWHS+UB3lvzooxG8sO2czYRLDPIF/JqhuePBeATtFTZRMqpEXhVsz9sO4r9APSKYNN3SvEbmBeIb9dDbJFRPvCu+d3pt1yRMONr23vIY18de0rcNSQTfpBlIdwm4KNsXIAHdyjCUMDF3wp9X7UdKqbbExWV5eVmD8Y5f4VU9GSgAeWCJNT/z0hW0w2zfz7TJugvMOhRfAa1whKXxL1t57pHks67TnRB4GJthpR5IOrfBegTf1aCR75i+cgM5UJQVFVG1e3aoHyJW0TLuc6ZDeEcRnqAles/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LUwDsCaUtv4dbsX0p39q52NSBt1H5t1zCFn8Dt6XYdA=;
+ b=QkqlgZL8wKJOook4Rn9KCleiZG5jkto5JchAsEz/PWsAA1SEorpShE8B0+OR6ksVqCmlPow7ivBKTdPFbptAtxxCYjKZf6jaKKKGkHC2wyjjD1N9+VOWuVCBgDb+kM2ZIYK7e8Rh28S9XnkLL83MarRNnky5p6ftaF3b/miNI5g094BhfXdZvo8pNVTkY76iyUwhyZHoaos1GPpv0Wl48vwEx7usJQQpatnAV0eZuPDsJQejUQmMg2HDgrOsYa4Xj6sBxX2FdZjwo7cqMcClT7dClwDzzOQqb6U6Q3syDNv0KFcWADhaaoyxtHlxSqtc6G58LDSBMOaJO7BXde8Yjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LUwDsCaUtv4dbsX0p39q52NSBt1H5t1zCFn8Dt6XYdA=;
+ b=gwI2xcziIyBhJQ2YboZPZgRnZhSDEWHIjn5R0Jw0kK2OBkDOUQzVs/SSEe2m5CWW29DaYz3R15938WFT9+UpC3/Y4mxQx9rfpO84AlRc4WrRqS8B0/3DARrBs3XxGdsrj4TPjN4fzl8legYxQNx1NgezISgnIcAHgDfxa5Gl28g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) by
+ CYYPR12MB8890.namprd12.prod.outlook.com (2603:10b6:930:c7::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.19; Tue, 29 Apr 2025 18:10:05 +0000
+Received: from DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627]) by DS0PR12MB6608.namprd12.prod.outlook.com
+ ([fe80::b71d:8902:9ab3:f627%6]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 18:10:05 +0000
+Message-ID: <62ae9c91-b62e-4bf9-8cf2-e68ddd0a1487@amd.com>
+Date: Tue, 29 Apr 2025 23:39:53 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/20] KVM: x86: Move find_highest_vector() to a common
+ header
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
+ mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
+ nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
+ Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
+ hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com,
+ kvm@vger.kernel.org, kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
+ naveen.rao@amd.com, francescolavra.fl@gmail.com
+References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+ <20250429061004.205839-2-Neeraj.Upadhyay@amd.com>
+ <aBDlVF4qXeUltuju@google.com>
+Content-Language: en-US
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+In-Reply-To: <aBDlVF4qXeUltuju@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0235.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:eb::13) To DS0PR12MB6608.namprd12.prod.outlook.com
+ (2603:10b6:8:d0::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6542; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=c3u864skK3RTvzcqx6hyTcY3YY2TbZxu831jV74hKtg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoERWgSpZjzk164XQaIAyiHPxsuNjN6YqYw4lcg
- /FpaTWAhoSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBEVoAAKCRDBN2bmhouD
- 106nD/0dWy9+Z6UR3TCIjBeKmEuJM9ID3lHfa1nQOERNa0RWbk+CNTiOhcpwN4H7i7ORcP21Rmw
- EaeIaYGmb6LAKwMPMDP6LXfIHmENzQUrTRWGOd0eNnlpmApBNnLuwX2d2xDba7QEIa9rdWxsdtI
- UEAbbxy5IiNFJF857PapDEZUfe3OGHzbClmhOX6u4ZtsaN0J8gRKiL2T16VsPCMtFr5ewqNGVvm
- v/Aurx+gRcZQPQAGFTvB90aG5Yg7wejkBPyu5qJthrZt5f9Q5RPKrH3LLx0UuQImvrOgFfR1/5J
- dgqIdWXwOPjEHU9zADKpJ2PzlKgxz9tIXDzYkw8AY7Gz1JqikslOW2ay3GJrRs3DUpKk7jAsm5O
- FE6zstsf/noIz77aahXGdA/LdRMGrbW9yXpipCK4coVtqyYqGTBWzLsLvgz21TUlDEAo60HGROB
- n5iHoM6av+lpKETZEoJkq87q/L9PrQkrTvCnYfy+kTKvg/vPgPHP2ZsjN/flqLSdjefaJBtkaJX
- P6io965WGsYQ9kOLJb0V43HH9RiB0jrS0OF9pAcDzyF0Ervqhx17K9/3I7PkDxW+6P6sm35FbmQ
- fsOX4rHc00sI1hk/6kClJoYqAI1fnF1tgenkxUu2+iPbVgK1VVuCdZPJD1i7Pmgr0JjKOh+76uj LJq50p4Buf3prQg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6608:EE_|CYYPR12MB8890:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0795bf26-c538-4dac-5f40-08dd87491121
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZHROaWRvNmtabkNkYjNOWkErdlZwSkVkK0NxTi9uMkhOc3l5UlFZU2N6N2U2?=
+ =?utf-8?B?dFZmQXRDTldTcEdBZWxHd3V0b2ZuUGN4ZW9ETGw4Y2hKd2FiYjJNT3FBeUpw?=
+ =?utf-8?B?QUp5UnZCc25OclVNZFNod2o3Ti9FckFJeVZ5a2dTMG4rVEsyRG94SEpiNVFl?=
+ =?utf-8?B?eGJhV3dhWWJzK0hPSmxGVkJHYWJUWVZqRnVEOWwwaVN5eVRIQkh5WFd5YzBD?=
+ =?utf-8?B?bWxFSGtXNFEwSkNwd3UwbUJkRHFvaHM5bGJWUm1JcTFrS1VPMGRYMHhDS1VY?=
+ =?utf-8?B?SXVLSDBvdnB4ZVBrTUNCeHR5UTV1MXc2ZGJjVjR3QkloTEJOUXIyYTFhYk5K?=
+ =?utf-8?B?aDZCNkgwaHoyVnJnc2dKdUN0SDBvdEZRMGJOVFdFV3oxSDJOc004WUNQS29w?=
+ =?utf-8?B?ZXdJOXh4VFdQdzhCbXJiWXovanNtVDhNbk1hajJHQ0Nuc3pQVldKdlVVbjVy?=
+ =?utf-8?B?SXNEeUlJRS9mczFoQ3kyN0NMSEJNc1Q0aW0zVVcyRnRCN3ZUcndTYlZRaWx1?=
+ =?utf-8?B?L1lzSklsUzRyUmhTZzdVQUx2QVozMHZ6YnB2TlRna1psUjdrUWRkaWt5QlZ4?=
+ =?utf-8?B?dzJTRUg0TXJMNU9jZDVMYzNpTFNLS3M0TGNnUkVKUmlOdEZJK1hVUmZyQU42?=
+ =?utf-8?B?NXBqVkIvUjJNSjZOb1JqMXFqamRLRGFnVWdyeEdmbVVTOEpaNExlRTc3aG5T?=
+ =?utf-8?B?eVl2Y0RCSzhqR1ZvZjc0ekVVZ2tQUm5qcHRyUXdIb2JISm1VcFBqVzVlNytR?=
+ =?utf-8?B?RHE3TmNYaEZyWStqZi85MU9VNXIyV01EVGNkcTJ4SC9QYVVNZU9yb0U4Ty85?=
+ =?utf-8?B?MFZqaVh3TFN1c3pNMUErL2lWazQ2N2F2UDdXVVNlL1AxMnRnRUlqVWhFMVVL?=
+ =?utf-8?B?SFVxNXpPSnFtQTVhcW5oRWQyNitrNk1OZmFDeUU0Q1ltaVJiRTdsSmdPWVh6?=
+ =?utf-8?B?dGdCenlmQk4vaVR2RzUxZm1qclJQR1FVK0p3djgvWmdweEhsaFhnN0IzZ0xj?=
+ =?utf-8?B?WE9lOTlDaHMvU2VpR256eUphTWlQTVZTM1VBQzYrdHM4aVppT0ZSbXgvWHhK?=
+ =?utf-8?B?QWdtSDZHVGZtaUhRN0hsdjRBU2lEMUNYZGNCazVNbEp2ajRFWFlQcUV5THZr?=
+ =?utf-8?B?UFc4UlRSNE53dVRmV3pGQVZCV2szSWZKeGdMNWFma3YxTkRPbS90ZHJobm4y?=
+ =?utf-8?B?SkdvU1k2aGtlRlQ0L3pXemZzb25uVExsS1pWZUtoTy9iekpoZUZXTk5Cem5T?=
+ =?utf-8?B?QlIzT1hNUk80NHJUYWVLbkRmUFltVE9PWDI1NzNCMWlRVmhDNWtUOUVONVRN?=
+ =?utf-8?B?L3R0RzBaSVJsTEkyak1qNGFUSjFvQUtDNm1pNHZja2FMcVhtRU8wajQzWmNp?=
+ =?utf-8?B?Rm55UVhYaEpZN2h3YUhEV0F4NUNxWnh6SjVjSzhUeWFkdElIbG5FQ3I4dGVE?=
+ =?utf-8?B?M3lialpuMGNYRWFJWno2SVUxaFFLRnorTW8vSyt0REZVV0VobUZiejRoZjkr?=
+ =?utf-8?B?WVdYMnh2UnhVOU55QlhBaFh2MWI4MzhyS0NPUmhVT0lWcFR4VUdhbXZhWE50?=
+ =?utf-8?B?eEN4ZVp5ejJKWjk0SWVNME9UQ2Jjam5EclpLYnN0QlRiZHJLcUJtbFE3NVN2?=
+ =?utf-8?B?SktjNGI2MnI5N1pwSjl5VStZVFlkNElGOXhyb3A4d2JJWEl1OUpUUU8rbTVQ?=
+ =?utf-8?B?YUJwRnY1eHppcUJ1WnM5ZDVTZVVKTzE1NkxTWUp2QlJjV1gxQStnV1JKRHJI?=
+ =?utf-8?B?Q1BwTFR3c3EzTnoyTEVBTnhOcVdrVDBlWnovUUVmYnBHL01iNjNYS0lROG9W?=
+ =?utf-8?B?OUlYZjRLOFFyTENPOENqc0c0b3dIR0FBd3g0bWRvMlYxZDVzQ3M0UE8yQUoy?=
+ =?utf-8?B?RlNaSTg4bVp0ajZGTU9yNDE1K1dlOXhoOHZHdkdXWGFWck1SL1pyaE0xcHFS?=
+ =?utf-8?Q?19sNhpcBEdY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6608.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aTc2R3JaQTFZL2djVGpCWlBUb2lvV3drMjc3enllNjZNenVMOXRwYVZ0d2VL?=
+ =?utf-8?B?cEdIeTczWEVKdzZUamFMK1dkZTg1WUxFL3FZOTJpOWU4aGMwNGpxamdYd3Jr?=
+ =?utf-8?B?VW0xOXhLNnNNSW9weG10MjBWeGJJSVpEdGo1RFAxeDZrRmZEei85a2k4aVh2?=
+ =?utf-8?B?SjFHbkdwUDA3N3FxSWF0UDhIMWdWU1FtaDY0aFB5SDR1SGtpcmVIaHFTbzV3?=
+ =?utf-8?B?ZU1STlhSQWtLVGJ2SFBUeFJXejJpOStYSDJDa1REdzYvaVhJNVltcXl2Q2x5?=
+ =?utf-8?B?bFZEQkRpOHl6Sk1yNWFtWVRza29sMlBaN3VrNWFPT24zMmpRRXNnOUZKNGNX?=
+ =?utf-8?B?blFLTFZ4VktJQW12SFNJeTN0bFZQV2x3NVp0TEI5bzZHZXduWVdRcndhbFl0?=
+ =?utf-8?B?VTNLa05QVmRlbHRTcVI1K2txTUhpdE80MWREd0crYUVMZnFoVTgzMEVDZVVM?=
+ =?utf-8?B?M2s3alN4Nmp6cE1vY0ZFSzd6U1ZFKzljS2RlWFE2RE9aN3JwazlKdjBsaXlW?=
+ =?utf-8?B?SSsvSDUyaC9hdjhGeXozNXBkNHJkYS9KdW1EUGRyQnFMNGpoZ2I5QS90Z2xl?=
+ =?utf-8?B?Qklod1Ryb0p1SEhOVHRya1lpcnBiNFNlTUFRd3JqSVdzNHFobVBDOHljNFNO?=
+ =?utf-8?B?emY0T3dPV05GdTJPbkNrZFBwSVhCcWxBUVY3WXFqMk5qQVhPa1ZvVEw3YUZ2?=
+ =?utf-8?B?NFhzRnZ2dm1YUWJKUW1TWnRldVJBRjcvREhWeUtteHlJUStCRjFzWG1JSFA3?=
+ =?utf-8?B?bFJLUE5KMmlRY3BEUTgvRkt6cjFGdEJMRkJDN3hiMGhneFA1V3o0WEd1NW9G?=
+ =?utf-8?B?VjlXVkZwNkxrNFJvQ1o3RG5YZDNYSFJiSnFNT2lMa1hkdTVEeEhuV2hjcmxt?=
+ =?utf-8?B?Rzl0R3NTZ1NpM012bVVxSHVIbW1Cbnh5YThmUk9keWd0S1lhMVZXWDlnV0dC?=
+ =?utf-8?B?RUNjMmg4eGVmL1dNVHBSQ1I4Skt0UkUrMzVWS0dkeDNsOXFyZlUzVmN5YTZV?=
+ =?utf-8?B?K2Z1QWEzbkh5Tk44N2tkdEsvczIzUitLbEovNFFXY3g4emdIcjJtT21tYWRq?=
+ =?utf-8?B?QUlTYkdvRGJ3YXF0QTNrWjJodW1KZlZObWVvYjB0SkRHMGQzWUFVaEZ1VTZD?=
+ =?utf-8?B?cWRuTWV0VDUzSlJxUG1jRG8xc2UwbnRLNjgya0pyWUhQTG1qaHhRUGZydnMr?=
+ =?utf-8?B?d2I0K0pJVGhDU1hhdXd1UVNLdnkvclcyN1ltd0FxUU5ydm05YnpZK21XN1NK?=
+ =?utf-8?B?Z2VzbmhDZnc1a3kzNzVvYncvRUdZRUwzTHlDdWtRRGdOSVNjNkxFZ3poZ3Ay?=
+ =?utf-8?B?RXI0MDJPTVc3SkJkQ1BvWWllUnRhMjI5SFZSdjBGVytjSmYvTlRwRUs2YTVz?=
+ =?utf-8?B?VVN2SnAvTHZFRHpjUWhmdVBRbDFveFV6WUxETkhNQkoyNXl5eTFSNWhjKzll?=
+ =?utf-8?B?UjFhdTlRaXlYUnliWGtoemdHRzcvazdYaW10VXYvZU5rYVdaY1hDT3FzVTB2?=
+ =?utf-8?B?d1FEUU8velNBZ1o0UVI2UmpQUXpkOWdtc1BtVDIzSE5OeklHOUYxeUo4WnpY?=
+ =?utf-8?B?bFMzMkVMQzJDeGZuVmEzVzE3M1RpemhvbkRoVDRRUHlDbVk4dHpLOStvM2Rm?=
+ =?utf-8?B?TDAySExKVFNHZndPREM3K3JBVGZXanlFWkVHNjlwWGdjM3VhM1JEc3JwWjRh?=
+ =?utf-8?B?dTRST2c5Wkc3M1J1TUdJVGN6L0gxZlRmV2d3NkdJSnV1anNzbzByT0Y2T0pO?=
+ =?utf-8?B?Y241K3cxNUtzaGJ4dG5ub0FpLzBFR3BvSlVmcjNybEZkTlpLNHZGZHIzWWxR?=
+ =?utf-8?B?cFRyemMydk5rNDBDZFlWbnZHdXBSRkN6a283a2tiVW9ZTDFLYkdZa3B6d2lh?=
+ =?utf-8?B?Q29FM2VKTVVtNkZkMGpuYVdjSklhb1lqeDF1anl4SVVabk9NWmY5enFzWVNz?=
+ =?utf-8?B?L2hoNGpWQ3IxYStqb0Z1MlVsa1BZTWdCV2cydkd4SkU1RmNsUERoVG9TTDJw?=
+ =?utf-8?B?M0lkSjBDZjNDRWdDWC95aGxLL1YxY05ZUU1QMk9MSWVXNmQxRkxCd2xBOU9l?=
+ =?utf-8?B?ZHhjUVRDcEh6NUdKZU5GSXc3TVB3VG91c2c1NWg2bnVjWk9paTVEYTZzemVp?=
+ =?utf-8?Q?+omm2NM8oa6GgFIs9/ahBSU88?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0795bf26-c538-4dac-5f40-08dd87491121
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6608.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 18:10:05.1592
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0pMHqFIRM2VpZKaVJRVGo17R6XIZLVau6roN6Yo9kFj3THcaGUYNw35N0D4sV7yv41dyTQ48U6UrRwZ2pUz1Tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8890
 
-Camss drivers spam kernel dmesg with 64 useless messages during boot:
 
-  qcom-camss acb7000.isp: VFE:1 HW Version = 3.0.2
-  qcom-camss acb7000.isp: VFE:2 HW Version = 2.4.0
 
-All of these messages are the same, so it makes no sense to print same
-information 32 times.
+On 4/29/2025 8:12 PM, Sean Christopherson wrote:
+...
 
-The driver does not use read version at all, so if it was needed for any
-real debugging purpose it would be provided via debugfs interface.
-However even then printing this is pointless, because version of
-hardware block is deducible from the compatible.
+>> +
+>> +static inline int apic_find_highest_vector(void *bitmap)
+>> +{
+>> +	unsigned int regno;
+>> +	unsigned int vec;
+>> +	u32 *reg;
+>> +
+>> +	/*
+>> +	 * The registers in the bitmap are 32-bit wide and 16-byte
+>> +	 * aligned. State of a vector is stored in a single bit.
+>> +	 */
+>> +	for (regno = MAX_APIC_VECTOR / APIC_VECTORS_PER_REG - 1; regno >= 0; regno--) {
+>> +		vec = regno * APIC_VECTORS_PER_REG;
+>> +		reg = bitmap + regno * 16;
+>> +		if (*reg)
+>> +			return __fls(*reg) + vec;
+>> +	}
+> 
+> NAK.  The changelog says nothing about rewriting the logic, and I have zero desire
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../platform/qcom/camss/camss-csid-4-1.c      |  1 -
- .../platform/qcom/camss/camss-csid-4-7.c      |  1 -
- .../platform/qcom/camss/camss-csid-680.c      |  1 -
- .../platform/qcom/camss/camss-csid-780.c      |  1 -
- .../platform/qcom/camss/camss-csid-gen2.c     |  1 -
- .../media/platform/qcom/camss/camss-csid.c    | 25 -------------------
- .../media/platform/qcom/camss/camss-csid.h    | 14 -----------
- 7 files changed, 44 deletions(-)
+My bad. I missed updating the changelog with the information about logic update.
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-4-1.c b/drivers/media/platform/qcom/camss/camss-csid-4-1.c
-index 6998e1c52895..8771e20d2a44 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-4-1.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-4-1.c
-@@ -179,7 +179,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_4_1 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-4-7.c b/drivers/media/platform/qcom/camss/camss-csid-4-7.c
-index 66054d4872e6..80135e63c595 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-4-7.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-4-7.c
-@@ -204,7 +204,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_4_7 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-680.c b/drivers/media/platform/qcom/camss/camss-csid-680.c
-index 3ad3a174bcfb..6eb9a5efa96a 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-680.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-680.c
-@@ -413,7 +413,6 @@ static void csid_subdev_init(struct csid_device *csid) {}
- const struct csid_hw_ops csid_ops_680 = {
- 	.configure_testgen_pattern = NULL,
- 	.configure_stream = csid_configure_stream,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-780.c b/drivers/media/platform/qcom/camss/camss-csid-780.c
-index 4c720d177731..8a8999747905 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-780.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-780.c
-@@ -328,7 +328,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_780 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen2.c b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-index 2a1746dcc1c5..9607ebd7fa3c 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-@@ -424,7 +424,6 @@ static void csid_subdev_init(struct csid_device *csid)
- const struct csid_hw_ops csid_ops_gen2 = {
- 	.configure_stream = csid_configure_stream,
- 	.configure_testgen_pattern = csid_configure_testgen_pattern,
--	.hw_version = csid_hw_version,
- 	.isr = csid_isr,
- 	.reset = csid_reset,
- 	.src_pad_code = csid_src_pad_code,
-diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
-index 5284b5857368..2f5058b681dc 100644
---- a/drivers/media/platform/qcom/camss/camss-csid.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid.c
-@@ -596,29 +596,6 @@ static int csid_set_clock_rates(struct csid_device *csid)
- 	return 0;
- }
+> to review or test this for correctness.  If someone has requested that the logic be
+> cleaned up, then do that as a separate patch (or patches) on top, with a changelog
+> that justifies the change, because to my eyes this isn't an improvement.
+>
+
+Ok. I will keep the original logic in apic_find_highest_vector() in next version of
+this patch.
  
--/*
-- * csid_hw_version - CSID hardware version query
-- * @csid: CSID device
-- *
-- * Return HW version or error
-- */
--u32 csid_hw_version(struct csid_device *csid)
--{
--	u32 hw_version;
--	u32 hw_gen;
--	u32 hw_rev;
--	u32 hw_step;
--
--	hw_version = readl_relaxed(csid->base + CSID_HW_VERSION);
--	hw_gen = (hw_version >> HW_VERSION_GENERATION) & 0xF;
--	hw_rev = (hw_version >> HW_VERSION_REVISION) & 0xFFF;
--	hw_step = (hw_version >> HW_VERSION_STEPPING) & 0xFFFF;
--	dev_dbg(csid->camss->dev, "CSID:%d HW Version = %u.%u.%u\n",
--		csid->id, hw_gen, hw_rev, hw_step);
--
--	return hw_version;
--}
--
- /*
-  * csid_src_pad_code - Pick an output/src format based on the input/sink format
-  * @csid: CSID device
-@@ -732,8 +709,6 @@ static int csid_set_power(struct v4l2_subdev *sd, int on)
- 			pm_runtime_put_sync(dev);
- 			return ret;
- 		}
--
--		csid->res->hw_ops->hw_version(csid);
- 	} else {
- 		disable_irq(csid->irq);
- 		camss_disable_clocks(csid->nclocks, csid->clock);
-diff --git a/drivers/media/platform/qcom/camss/camss-csid.h b/drivers/media/platform/qcom/camss/camss-csid.h
-index 9dc826d8c8f6..4b003ec1519c 100644
---- a/drivers/media/platform/qcom/camss/camss-csid.h
-+++ b/drivers/media/platform/qcom/camss/camss-csid.h
-@@ -88,12 +88,6 @@ struct csid_hw_ops {
- 	 */
- 	int (*configure_testgen_pattern)(struct csid_device *csid, s32 val);
- 
--	/*
--	 * hw_version - Read hardware version register from hardware
--	 * @csid: CSID device
--	 */
--	u32 (*hw_version)(struct csid_device *csid);
--
- 	/*
- 	 * isr - CSID module interrupt service routine
- 	 * @irq: Interrupt line
-@@ -225,14 +219,6 @@ extern const struct csid_hw_ops csid_ops_780;
-  */
- bool csid_is_lite(struct csid_device *csid);
- 
--/*
-- * csid_hw_version - CSID hardware version query
-- * @csid: CSID device
-- *
-- * Return HW version or error
-- */
--u32 csid_hw_version(struct csid_device *csid);
--
- /*
-  * csid_src_pad_code - Pick an output/src format based on the input/sink format
-  * @csid: CSID device
--- 
-2.45.2
+> I suspect the rewrite is in part due to REG_POS() being a KVM helper that's poorly
+> named for a global macro.  lapic_vector_set_in_irr() already has open coded
+> versions of REG_POS() and VEC_POS(), just dedup those.
+>  
+> *sigh*
+> 
+> And you created your own versions of those in get_reg_bitmap() and get_vec_bit().
+> 
+> Please slot the below in.  And if there is any more code in this series that is
+> duplicating existing functionality, try to figure out a clean way to share code
+> instead of open coding yet another version.
+> 
+
+Ok sure. I will take your patch and reuse the APIC regs manipulation functions
+between KVM and SAVIC in next version. Thanks for sharing the patch!
+
+
+- Neeraj
+
 
