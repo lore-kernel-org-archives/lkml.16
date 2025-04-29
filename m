@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C31EF2D320C;
-	Tue, 29 Apr 2025 14:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC0E2D8DAA;
+	Tue, 29 Apr 2025 14:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745935895; cv=none; b=qN1IBTizc4N2gS0eRywoUF/0h395OTLSwbnb6dsS8jJN0Gm1q7fT3SgfaYDhw8mA0kRupDgkZsSXKoDq8ZkMx5yVVAUa9LGtaF7D2r3k7++EImUoNGtcI+IT+oDpfHSRHwcxAsxjkBAjUoc08WYsVtrPWTfp8bc/OwZt6TD/p3k=
+	t=1745935901; cv=none; b=YNREQ3cTlGS4jZbwPy5uev/Pn6HAR2rlRXwbKxqIeRcjnwPTzLT1Gg41d0DoQTcaj+49DRnJxBMwD0BXsv4qqKQ4PIaT1p6+hwkpe9GuYHxz/aBCYX0WTMOqne/dQ9AY+tfNDCayK+wk33breUfadChUvaIMQWhyOMuHSvuTAds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745935895; c=relaxed/simple;
-	bh=0Vv2AcoNpHwsxsDVc/KHAkPjydfEUGrPsFOSCt1cGd0=;
+	s=arc-20240116; t=1745935901; c=relaxed/simple;
+	bh=p+MF+cbIVqQ81P67tantyBp6k9dyANtN4BgAnfsJXNc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QRaAXhkDninsS2hqrN5lvBfJAs9lA82U4HT4FNrTq6ys5nfqyv/kNW/kByoI6aGQsv7q5HBPzci0ECzVHWDSwed1sIPUWjDfZ865IXaKNs17mRoSCxuuGJ9mzB5VxJ05ppAaI6KbyvAwgLOI8fm3K78JzS5yal/JnbO2iBPUQx0=
+	 MIME-Version; b=cCpUgwkSMOqx6lqLPrDUelPv6+HwlOoHczerUl7m55aNmyHkjcpTqzyGmxpx2sRtibCFaDpPwlVABHEWI2QZavNZjHgVJs4aZc+1k080hh/iuvVCScn6syN3n2uGdctdku4wOEqvmHKi1Ww3BoP46jjo9u566zD2SgdERTdnksA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C4011516;
-	Tue, 29 Apr 2025 07:11:26 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 071E81516;
+	Tue, 29 Apr 2025 07:11:32 -0700 (PDT)
 Received: from pluto.guest.local (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F23813F66E;
-	Tue, 29 Apr 2025 07:11:30 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FAF53F66E;
+	Tue, 29 Apr 2025 07:11:36 -0700 (PDT)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -32,12 +32,10 @@ Cc: sudeep.holla@arm.com,
 	dan.carpenter@linaro.org,
 	maz@kernel.org,
 	johan@kernel.org,
-	stable@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
 	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH v3 1/3] firmware: arm_scmi: Ensure that the message-id supports fastchannel
-Date: Tue, 29 Apr 2025 15:11:06 +0100
-Message-ID: <20250429141108.406045-2-cristian.marussi@arm.com>
+Subject: [PATCH v3 3/3] firmware: arm_scmi: quirk: Fix CLOCK_DESCRIBE_RATES triplet
+Date: Tue, 29 Apr 2025 15:11:08 +0100
+Message-ID: <20250429141108.406045-4-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250429141108.406045-1-cristian.marussi@arm.com>
 References: <20250429141108.406045-1-cristian.marussi@arm.com>
@@ -49,163 +47,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sibi Sankar <quic_sibis@quicinc.com>
+Convert an existing quirk in CLOCK_DESCRIBE_RATES parsing to the new quirk
+framework. This is a sort of a peculiar quirk since it matches any platform
+and any firmware.
 
-Currently the perf and powercap protocol relies on the protocol domain
-attributes, which just ensures that one fastchannel per domain, before
-instantiating fastchannels for all possible message-ids. Fix this by
-ensuring that each message-id supports fastchannel before initialization.
-
-Logs:
-scmi: Failed to get FC for protocol 13 [MSG_ID:6 / RES_ID:0] - ret:-95. Using regular messaging.
-scmi: Failed to get FC for protocol 13 [MSG_ID:6 / RES_ID:1] - ret:-95. Using regular messaging.
-scmi: Failed to get FC for protocol 13 [MSG_ID:6 / RES_ID:2] - ret:-95. Using regular messaging.
-
-CC: stable@vger.kernel.org
-Reported-by: Johan Hovold <johan+linaro@kernel.org>
-Closes: https://lore.kernel.org/lkml/ZoQjAWse2YxwyRJv@hovoldconsulting.com/
-Fixes: 6f9ea4dabd2d ("firmware: arm_scmi: Generalize the fast channel support")
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-[Cristian: Modified the condition checked to establish support or not]
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
-RFC -> V1
- - picked up a few tags
-
-Since PROTOCOL_MESSAGE_ATTRIBUTES, used to check if message_id is supported,
-is a mandatory command, it cannot fail so we must bail-out NOT only if FC was
-not supported for that command but also if the query fails as a whole; so the
-condition checked for bailing out is modified to:
-
-	if (ret || !MSG_SUPPORTS_FASTCHANNEL(attributes)) {
+V1 -> V2
+- reduced the quirk size by placing the warn outside
+- using new compatibles conditions
 ---
- drivers/firmware/arm_scmi/driver.c    | 76 +++++++++++++++------------
- drivers/firmware/arm_scmi/protocols.h |  2 +
- 2 files changed, 45 insertions(+), 33 deletions(-)
+ drivers/firmware/arm_scmi/clock.c  | 33 ++++++++++++++++++------------
+ drivers/firmware/arm_scmi/quirks.c |  2 ++
+ drivers/firmware/arm_scmi/quirks.h |  3 +++
+ 3 files changed, 25 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 1cf18cc8e63f..0e281fca0a38 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -1738,6 +1738,39 @@ static int scmi_common_get_max_msg_size(const struct scmi_protocol_handle *ph)
- 	return info->desc->max_msg_size;
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index 2ed2279388f0..afa7981efe82 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -11,6 +11,7 @@
+ 
+ #include "protocols.h"
+ #include "notify.h"
++#include "quirks.h"
+ 
+ /* Updated only after ALL the mandatory features for that version are merged */
+ #define SCMI_PROTOCOL_SUPPORTED_VERSION		0x30000
+@@ -429,6 +430,23 @@ static void iter_clk_describe_prepare_message(void *message,
+ 	msg->rate_index = cpu_to_le32(desc_index);
  }
  
-+/**
-+ * scmi_protocol_msg_check  - Check protocol message attributes
-+ *
-+ * @ph: A reference to the protocol handle.
-+ * @message_id: The ID of the message to check.
-+ * @attributes: A parameter to optionally return the retrieved message
-+ *		attributes, in case of Success.
-+ *
-+ * An helper to check protocol message attributes for a specific protocol
-+ * and message pair.
-+ *
-+ * Return: 0 on SUCCESS
-+ */
-+static int scmi_protocol_msg_check(const struct scmi_protocol_handle *ph,
-+				   u32 message_id, u32 *attributes)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
++#define QUIRK_OUT_OF_SPEC_TRIPLET					       \
++	({								       \
++		/*							       \
++		 * A known quirk: a triplet is returned but num_returned != 3  \
++		 * Check for a safe payload size and fix.		       \
++		 */							       \
++		if (st->num_returned != 3 && st->num_remaining == 0 &&	       \
++		    st->rx_len == sizeof(*r) + sizeof(__le32) * 2 * 3) {       \
++			st->num_returned = 3;				       \
++			st->num_remaining = 0;				       \
++		} else {						       \
++			dev_err(p->dev,					       \
++				"Cannot fix out-of-spec reply !\n");	       \
++			return -EPROTO;					       \
++		}							       \
++	})
 +
-+	ret = xfer_get_init(ph, PROTOCOL_MESSAGE_ATTRIBUTES,
-+			    sizeof(__le32), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	put_unaligned_le32(message_id, t->tx.buf);
-+	ret = do_xfer(ph, t);
-+	if (!ret && attributes)
-+		*attributes = get_unaligned_le32(t->rx.buf);
-+	xfer_put(ph, t);
-+
-+	return ret;
-+}
-+
- /**
-  * struct scmi_iterator  - Iterator descriptor
-  * @msg: A reference to the message TX buffer; filled by @prepare_message with
-@@ -1879,6 +1912,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
- 	int ret;
- 	u32 flags;
- 	u64 phys_addr;
-+	u32 attributes;
- 	u8 size;
- 	void __iomem *addr;
- 	struct scmi_xfer *t;
-@@ -1887,6 +1921,15 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
- 	struct scmi_msg_resp_desc_fc *resp;
- 	const struct scmi_protocol_instance *pi = ph_to_pi(ph);
+ static int
+ iter_clk_describe_update_state(struct scmi_iterator_state *st,
+ 			       const void *response, void *priv)
+@@ -450,19 +468,8 @@ iter_clk_describe_update_state(struct scmi_iterator_state *st,
+ 			 p->clk->name, st->num_returned, st->num_remaining,
+ 			 st->rx_len);
  
-+	/* Check if the MSG_ID supports fastchannel */
-+	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
-+	if (ret || !MSG_SUPPORTS_FASTCHANNEL(attributes)) {
-+		dev_dbg(ph->dev,
-+			"Skip FC init for 0x%02X/%d  domain:%d - ret:%d\n",
-+			pi->proto->id, message_id, domain, ret);
-+		return;
-+	}
+-		/*
+-		 * A known quirk: a triplet is returned but num_returned != 3
+-		 * Check for a safe payload size and fix.
+-		 */
+-		if (st->num_returned != 3 && st->num_remaining == 0 &&
+-		    st->rx_len == sizeof(*r) + sizeof(__le32) * 2 * 3) {
+-			st->num_returned = 3;
+-			st->num_remaining = 0;
+-		} else {
+-			dev_err(p->dev,
+-				"Cannot fix out-of-spec reply !\n");
+-			return -EPROTO;
+-		}
++		SCMI_QUIRK(clock_rates_triplet_out_of_spec,
++			   QUIRK_OUT_OF_SPEC_TRIPLET);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/firmware/arm_scmi/quirks.c b/drivers/firmware/arm_scmi/quirks.c
+index eff03a89de85..8958f1fa4c89 100644
+--- a/drivers/firmware/arm_scmi/quirks.c
++++ b/drivers/firmware/arm_scmi/quirks.c
+@@ -167,6 +167,7 @@ struct scmi_quirk {
+ 	__DEFINE_SCMI_QUIRK_ENTRY(_qn, _ven, _sub, _impl, ##__VA_ARGS__)
+ 
+ /* Global Quirks Definitions */
++DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL);
+ 
+ /*
+  * Quirks Pointers Array
+@@ -175,6 +176,7 @@ struct scmi_quirk {
+  * defined quirks descriptors.
+  */
+ static struct scmi_quirk *scmi_quirks_table[] = {
++	__DECLARE_SCMI_QUIRK_ENTRY(clock_rates_triplet_out_of_spec),
+ 	NULL
+ };
+ 
+diff --git a/drivers/firmware/arm_scmi/quirks.h b/drivers/firmware/arm_scmi/quirks.h
+index 28829b4f0646..7fdc496c94c7 100644
+--- a/drivers/firmware/arm_scmi/quirks.h
++++ b/drivers/firmware/arm_scmi/quirks.h
+@@ -45,4 +45,7 @@ static inline void scmi_quirks_enable(struct device *dev, const char *vend,
+ 
+ #endif /* CONFIG_ARM_SCMI_QUIRKS */
+ 
++/* Quirk delarations */
++DECLARE_SCMI_QUIRK(clock_rates_triplet_out_of_spec);
 +
- 	if (!p_addr) {
- 		ret = -EINVAL;
- 		goto err_out;
-@@ -2004,39 +2047,6 @@ static void scmi_common_fastchannel_db_ring(struct scmi_fc_db_info *db)
- 		SCMI_PROTO_FC_RING_DB(64);
- }
- 
--/**
-- * scmi_protocol_msg_check  - Check protocol message attributes
-- *
-- * @ph: A reference to the protocol handle.
-- * @message_id: The ID of the message to check.
-- * @attributes: A parameter to optionally return the retrieved message
-- *		attributes, in case of Success.
-- *
-- * An helper to check protocol message attributes for a specific protocol
-- * and message pair.
-- *
-- * Return: 0 on SUCCESS
-- */
--static int scmi_protocol_msg_check(const struct scmi_protocol_handle *ph,
--				   u32 message_id, u32 *attributes)
--{
--	int ret;
--	struct scmi_xfer *t;
--
--	ret = xfer_get_init(ph, PROTOCOL_MESSAGE_ATTRIBUTES,
--			    sizeof(__le32), 0, &t);
--	if (ret)
--		return ret;
--
--	put_unaligned_le32(message_id, t->tx.buf);
--	ret = do_xfer(ph, t);
--	if (!ret && attributes)
--		*attributes = get_unaligned_le32(t->rx.buf);
--	xfer_put(ph, t);
--
--	return ret;
--}
--
- static const struct scmi_proto_helpers_ops helpers_ops = {
- 	.extended_name_get = scmi_common_extended_name_get,
- 	.get_max_msg_size = scmi_common_get_max_msg_size,
-diff --git a/drivers/firmware/arm_scmi/protocols.h b/drivers/firmware/arm_scmi/protocols.h
-index aaee57cdcd55..d62c4469d1fd 100644
---- a/drivers/firmware/arm_scmi/protocols.h
-+++ b/drivers/firmware/arm_scmi/protocols.h
-@@ -31,6 +31,8 @@
- 
- #define SCMI_PROTOCOL_VENDOR_BASE	0x80
- 
-+#define MSG_SUPPORTS_FASTCHANNEL(x)	((x) & BIT(0))
-+
- enum scmi_common_cmd {
- 	PROTOCOL_VERSION = 0x0,
- 	PROTOCOL_ATTRIBUTES = 0x1,
+ #endif /* _SCMI_QUIRKS_H */
 -- 
 2.47.0
 
