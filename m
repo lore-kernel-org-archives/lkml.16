@@ -1,150 +1,118 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2065.outbound.protection.outlook.com [40.107.93.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ED929E05B;
-	Tue, 29 Apr 2025 09:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917260; cv=fail; b=KNkUtRxCVrIat7smI+QS0C/h68f6e04JaErlozUBCu7jiRhHQWIwPazp/en2GpdL5TM+dAWBlxASpap0vXJIh3rkNcopgbzYL0jyhpZhe4SplcP/bRrp4kDo8Rv3wXYTXHz/gTDX1NnfVPI9btzB+rpe8AkdlPSHeVJqbZgKR9A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917260; c=relaxed/simple;
-	bh=OKPXnlTGhZandJ8zgvsU+sBp2Umfj1fcBqQM+kZg6No=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KlWvY0rJN+Wg3rdK/k2PpIbgqIY2GF7s4ui8VhmnhVLiVaDbT6oWSPjxYNn+gLJVHim/xNEqrelKCAbSU+FR4I7+GO4ZRY9SQygQFqyb7vpLIDiRUAMbCfdKrEQ1FthliAUge/CYxS82S9TguEWbBjRjTbPLk6+cUuBjoi284TU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=23km6hkT; arc=fail smtp.client-ip=40.107.93.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="23km6hkT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CN4kB4qLlhH9Mof7zE97WeynuPC9n1sb1BecV/y4IL5enrb+ERR8qi5Lc+0wUyS6WLZ2nNReckEv+DfS8/ZZRLpuOg3AfIzlLGCjyQGxKP3DZztLrUGzTuPt9REpMD0MtknJ3AiIPZeTuX9/C0oIEcT9Dn81VOUF31HJwlOpuhZxv3PmeJW6251MVzYdGeMG3IYRd3Gfh1nnbPw0iyjsZYwiHTYPa2cfftrxI+25yCX9Uuc27S7bgb8qrgoLNBMLINyuft53H9YbNqONdnhbZcIQWSx/5sUMo3xR8eEBUqfMHV+F8GDS96ROscdzHvoDve9hgOY3DRPj/TNQIlP/Dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8tm69Ta7oo5MXiRt0d3hVAcD1WV2WJqDpUtzBXaIRPs=;
- b=h7+RK1Cd5rDK+Xi2iv3wScSVGQcFZqkgbNghwAkMZ03vhOKmfJNzr5hiPrJ+ZYLxoP94Qtcrk+5cEAm/GhrBbc6TnB6F8KkYiqx8BbdmtAQ0/FOnIDJ+cyb7JYzaWeNnraueMjccI6hjv4luWN7qX9tmCBUb0KW+Nvn3PSwIIz07gkuGaFCXMoRWk5f/J6oTiTc0a2+AyS6+79ppUbVZcspnY0hsT7yh2P3/Gyu4iDaBqUu6CKIYzmQIkVURWf5qBon020TNTc1dnCis5gEU5XXX7WZ1pDelfCV8u3MZiVxEAnxMzTE898xXT26RkVOSwjzypqEFF5bWkg1YmV7muw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8tm69Ta7oo5MXiRt0d3hVAcD1WV2WJqDpUtzBXaIRPs=;
- b=23km6hkTofJRi1WWFPB+vat9h3gakbm7sstmdu2Gb3HRL1fEJSW5ZW6Uy8pP4nQ6fjcRJmZ6hVyAzhe75ZjQzSGMKXPa7L9apZC8B9sC/4uSqa+3XhMcy8r13wY0mCMWZubX5CI3msjPdCqCn/agBVVy030uoBLyFHBlAVws+xQ=
-Received: from BN8PR15CA0030.namprd15.prod.outlook.com (2603:10b6:408:c0::43)
- by IA0PR12MB8974.namprd12.prod.outlook.com (2603:10b6:208:488::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
- 2025 09:00:56 +0000
-Received: from BN2PEPF000044A3.namprd02.prod.outlook.com
- (2603:10b6:408:c0:cafe::63) by BN8PR15CA0030.outlook.office365.com
- (2603:10b6:408:c0::43) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Tue,
- 29 Apr 2025 09:00:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000044A3.mail.protection.outlook.com (10.167.243.154) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Tue, 29 Apr 2025 09:00:56 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
- 2025 04:00:55 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
- 2025 04:00:54 -0500
-Received: from xhdlc201955.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 29 Apr 2025 04:00:48 -0500
-From: Sai Krishna Musham <sai.krishna.musham@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <cassel@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
-	<sai.krishna.musham@amd.com>
-Subject: [PATCH v2 0/2] Add support for AMD Versal Gen 2 MDB PCIe RP PERST#
-Date: Tue, 29 Apr 2025 14:30:44 +0530
-Message-ID: <20250429090046.1512000-1-sai.krishna.musham@amd.com>
-X-Mailer: git-send-email 2.44.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341D72BCF6D
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745917266; cv=none; b=XA2xsCIGclSZoEGaKazKpyflsUlz+0YjPs4Wt3yVWx+8ghe2UDyyhysX2XBjioZ4RLO7deYtoTY5UpYkkOCICx6w2yzkAcfPQqvivsQMuyX115OfNFKTxiffEPNZ9gTVgyQIxtqcWkpDmonMY2dIdoKXqd7tlbzsYiH6vkBpJO4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745917266; c=relaxed/simple;
+	bh=hiabI30mRZZ4MdJcsJi8SMGD5sfa+ucxvEPRBH/zqwM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=k5ZtFmc7WMgZTnrB9ctaiJ6e4ECITzrRb/Zakiuwx4KexpdUQ5BnqlqmtjzgoYHmpp9vNdmtENm646oTRxM7DRolnhhvmv/MQ6FIVzKhXw7J7cyXC/SmnXy5c8Mfg5dPdyM/cnXrUX4ZmJo/3hoc10k+FndvBot96T+BgfgKlb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b402f69d4so558839739f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:01:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745917264; x=1746522064;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e2lC+GUJOB/mLT9V86EV+PtfcC1K+rrVOrQZHYwtXgY=;
+        b=D6Up45q+PGltDUcRJncCCMCNFj9KG1M8HSzUUba8KdZSM0od2QjGs13WKpeKS1oSnI
+         u6tvRcLjoG/nwtDIGuDVMPnF+Jx+zfS6b9hG3yF5dy3ILiWtbdNDisUs+gqvlFRW9PFf
+         G4wF+yt9W/vi0/uvUZe2dbKWOxlcYtVWAuqysp54U0TS0vtQ4fd51VYSR6LECml11ARR
+         23W6Se7b6MLz8Q/KttRhykVjzqy5kJ6OtKetasioZFqh8HVmkyzYpMGRmkslqVm3KKfn
+         tKZuzaNZO9ZsC2VabQMbUEf696jF5ykEongQYDcdgsBgEDjIa6oUCXPb+J8mAzwHTQoN
+         fWdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPdLFi/5YRrx80SJbElX3mQHorvxqnj2QfDwdlZmSe8FC/nvlX12EhykPLylWkT0Dgh9/98XVWWDJ+3mM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCYGjdJPwlTFT4vamPUyZxyEjtqX46p4vzhfBtmH/sWr2hwFtW
+	VOAXdgafecKowwbaeQ/mCh/umLLLxt90oJYEhpVhT0cwK6LAq3AhEqBHW7KZj830TmRNA95BOiQ
+	nkgTLKdS1REDNClEhjVFUg8R2svs2mKcjqIPbHLH/JAqp5P5zO8G3+uI=
+X-Google-Smtp-Source: AGHT+IFI/ihTqoFT04GJTHQXB2LR/lP+hUvXL7whIC+MXMoBW5uZXRy+q7Txv8rywiSrGjm5Ii/4BJnLm1M2N3g62RpprByLcgN5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: sai.krishna.musham@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A3:EE_|IA0PR12MB8974:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8454e59-bff9-47a9-3531-08dd86fc5a56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cgYy2AHXI5m6aSt0ynK/VUrIh+wEwDYrbVO3VSVzxVDENsCqMO19u65cglXn?=
- =?us-ascii?Q?x6fS1IuFZSDP51gxTRb8fNXOtPTbIB6L8GkU2IYbw6Z9gOYwPqZZ5hcUdMYW?=
- =?us-ascii?Q?j18WVI8K6uneXC3zqBgGNdiwTKoMGr/aRxjkr3GDIdklm76J+mnuJ1MnqJ8N?=
- =?us-ascii?Q?0vkEkucbx+jJlJ//FxM4me2CrsKcgIkv6ruh48r6+Mp1U/DEy5bpoBGlmwNn?=
- =?us-ascii?Q?N/TsQDR8yrYWqojIdyEpD32KynXZUV0c5PLhH5uVa9fTyVreOC4dHQTGekf3?=
- =?us-ascii?Q?NPSgOYdPoZc4eKTrW8gKiNs7/NJEBud8WSJo5pE5eVheTjKtM1keL+xOxR7R?=
- =?us-ascii?Q?WDSqcSjuIXLogH6ebcVEkIsXpdvC5jDWKP1RqrSMYJM2gq75zbEs5a+X4yiZ?=
- =?us-ascii?Q?61TED8k+v+Cro5utqbJw2bvy2FFW/UOs/UHUn1ad7z0pf/HExc11LR+7kfTN?=
- =?us-ascii?Q?cNTmaSOyaL5sm5dlZjhMJo6g6thuCpLvydF+8SyKNsw/alnWesXf2B4WQ0Q4?=
- =?us-ascii?Q?k/nWuuLgh5WLavtOVJsKNm40Rr0mYdOwQcxspEsUTYadKbxVkFhxvDNKUt4N?=
- =?us-ascii?Q?P/jCAtaAUMycmvZyAqyeUtbgW5T6PdeloEu8KHV0f/mKdzz5asgQ2CX5lto8?=
- =?us-ascii?Q?nTBEfumoQflI1LL3KYC7fn4OJ43Y5IEVsi38phbWap7999wVZ+I+EARnJX+F?=
- =?us-ascii?Q?CvnhU6vA5IAdkvoJHucFZ+LyDRNcmtvMJcjgFUKiElIbnO1CodtIW+CygtHk?=
- =?us-ascii?Q?80SgC43g7D6QmcEJNkv8spkDCmtCueWH0lxN1/eRK0FdJNvNWZBr0czj8z3W?=
- =?us-ascii?Q?41Wue+AG0Ed/R61aFJg4TEhtK5hpEjP8IGVrjdh7WPr+PHTArV68X3s3hdX3?=
- =?us-ascii?Q?U+s3D6cysrNwq3naJzdYZc1QMhIT6x6//OqyFPJz+LuVhxtw6kFrUbFyOKA4?=
- =?us-ascii?Q?janbZ1olgKBSEiF8RyoWn0JzyWV6sD1DAbaYcmcI4b+SkYf5FW/J4+XFnlHD?=
- =?us-ascii?Q?A1ETqsMKNlUkPKDPhOjwwgdPLKfkDmjcQfD6LJpo92MgLsS/VT1Cbj6fb5LV?=
- =?us-ascii?Q?+woFsWfmkUozGu01J2tlU+FUUh0fV8AYhzUwVyF2ebk+tj1bREGz3mHSUHD1?=
- =?us-ascii?Q?eDnxZlDMPEGDwLSbWMMnKRMgEDdzOxDQvhSiuJ21XA9SnfoRXI5FxMycDkjV?=
- =?us-ascii?Q?VpvaQOmRxa8hc9fNyw2Zjjxbev061paw+Cbj6yIrr2z9mHh+vEX+VGGvnn9q?=
- =?us-ascii?Q?7x4nOLH/d+NYtvECn+PhqG8V7gpegjHj832V+wKKb6vr+FN+KWUmoSNWHsWd?=
- =?us-ascii?Q?V4STHeTP4mXyqR/X5XGFOwD3/+VvAWmrzavFc+1IVXv5PpBRfaZz7+t7ezcL?=
- =?us-ascii?Q?G5lfvFP46d+Nv1DwEudMkoID3BXOm66Rt5L9WtjDaw8ak5ASnefEd8npD35v?=
- =?us-ascii?Q?cl9WMKr8Krlsb0dXCR4ZgVl8cb70kw8Z2+T+6/2gTspJ5o6n0mOE3Y4wvyQy?=
- =?us-ascii?Q?JgffxgoBsx032HmNELV7hBecZiIlO9rtYr5p?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 09:00:56.1521
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8454e59-bff9-47a9-3531-08dd86fc5a56
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A3.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8974
+X-Received: by 2002:a05:6602:1401:b0:864:48f7:56aa with SMTP id
+ ca18e2360f4ac-86467b0da7dmr1337945739f.7.1745917264273; Tue, 29 Apr 2025
+ 02:01:04 -0700 (PDT)
+Date: Tue, 29 Apr 2025 02:01:04 -0700
+In-Reply-To: <tencent_40C361A96683BE84519777576D06D0737D05@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68109550.050a0220.2b69d1.05ca.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add reset-gpios property to example device tree node
+Hello,
 
-Add support for PCIe Root Port PERST# signal handling
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
 
-Sai Krishna Musham (2):
-  dt-bindings: PCI: amd-mdb: Add `reset-gpios` property to example
-    device tree
-  PCI: amd-mdb: Add support for PCIe RP PERST# signal handling
+wlan1: Trigger new scan to find an IBSS to join
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1208:5
+index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
+CPU: 0 UID: 0 PID: 1038 Comm: kworker/u4:7 Not tainted 6.15.0-rc4-syzkaller-gca91b9500108-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1208
+ ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
+ ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+---[ end trace ]---
+Kernel panic - not syncing: UBSAN: panic_on_warn set ...
+CPU: 0 UID: 0 PID: 1038 Comm: kworker/u4:7 Not tainted 6.15.0-rc4-syzkaller-gca91b9500108-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
+ panic+0x2db/0x790 kernel/panic.c:354
+ check_panic_on_warn+0x89/0xb0 kernel/panic.c:243
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1208
+ ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
+ ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
- .../bindings/pci/amd,versal2-mdb-host.yaml       |  2 ++
- drivers/pci/controller/dwc/pcie-amd-mdb.c        | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+)
 
--- 
-2.44.1
+Tested on:
+
+commit:         ca91b950 Merge tag 'v6.15-rc4-ksmbd-server-fixes' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12847374580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=714654674710be70
+dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10911374580000
 
