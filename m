@@ -1,147 +1,127 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B274275857
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709A0219E93;
+	Tue, 29 Apr 2025 07:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745913061; cv=none; b=qCF8aKlOHABNYmJTjbdj54rwNLesAGGBtIBmgyctw+NuTZ1xT4TDyNmqo6nKwPGXBF2csqswVr5uuBC3LMLhFw7sJWIBd07YGoLpdQqBY4rOjhIAKFo6BYJarzf/CbLdmAvcP416QHMIFfB3JVJj7KuUjz2z4Xv+M2UExwj+SgQ=
+	t=1745913143; cv=none; b=FTF1Hyt2RozSQejxdPf/B7+PgqzmGeTdHN6oOd4EGCb+wf8ynim67BJcq8HsFJA2dNPBdjyMZmtzyUDLtA0HgKt/8ygQ3GPnwNw1oqVZe7re4oi2OVWW6tJzTs3dOu/tMwm5N49VWl3wGT/UnzC5c6ZHt8OLDFD+L2EOMLZClAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745913061; c=relaxed/simple;
-	bh=0maA4HWt+dfsb/SO6st7769kV3RQOZp5X82vWych+9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZSkQal0BhScq7v8LlapWAQ7u9ogCk+9CNQhvplt1Dlx8waNhbXWL14gJYP+FW79yXrRFogaHTbD+jDH/QuquVmphuAFXBQXuO4sGUzm7fn1TRl/WiXTIASMIrXAjZEPyPOp+z1GYImS9ZooKyuelzEP7q4D/n2uOhh46cVd8xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HQj5HrM9; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745913143; c=relaxed/simple;
+	bh=wE0U2VGA7GlUPMVPWivqfH6B/Zuo/KqSHYZwBGmVYM8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c48XbAStRaIkqryaR00DXp2SCsYWYIkmwZAZZXOCkgnXo48kAky8thceZ35Ef39h6F2110TKOHLxb37mqHvpxcKwNjGo8KirZ5UAnHW/LqCAh2q285TSQ9OSWLASU0eMwibotUynIk76ehStsE+nOxWhji3s4pRAtV6dyX5WiYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=JOWFpnQU; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HQj5HrM9"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso912815866b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 00:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745913058; x=1746517858; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4S3OVk3iZS4jTjecVJq5ncwg3Lfwh0WDUheLTONON4I=;
-        b=HQj5HrM9UKHvccVC+mihNf6EhrCBAjL27P+u1MU7lepruNBFyZ7LauxMxQlGOFsBF8
-         nLCMLxNGL5h2PjX9GqBo1wffrDjxWReDMUrClFEH2vM6KWLras+OqpVVpF5lOoFZhgSm
-         T1w4d4aYvevGEjKv3rWrEGnJMIlDTstgioaJlZzWmp7xKLyyBUzg2B8A87YrM1OSTIv3
-         pYHVWnn8zfI8c58GKGRsfcun6m6xkgOnwZ+4pVyadaDjqO/8P2afMBXnXfvl+9KQ39WP
-         mjtapZbZdNrR1MaBkupOskFVrBeUWAZPnl/qjPwIvGCIRPpQh0Ck8TtHKR81P+g95Y8O
-         eD/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745913058; x=1746517858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4S3OVk3iZS4jTjecVJq5ncwg3Lfwh0WDUheLTONON4I=;
-        b=JPu1sae/DfqlMXp74Vz0sldap3TGKf5nwVdPBPjY58xvT6DTYktPM00DYEnIq3XThb
-         wuFVZvQQTB35ga2aob0Pl5IwabYtDsjkY1Irc5ytlG0YbiS/g2h1Diu0jcZ5cO0EA88E
-         HpqvWiOMTCFQOOT7wYAx4RV0rhcTpG7ngDWBezm8EGvoQzUbqRWai0nrEUso95A1iaTr
-         z6dySfnzkJO6oj3+KpzmWhMvKUSiusd5EbJN8yz9f3BGKbobTg4zIYF3lAFjAIp3WWk6
-         sb8Gg7L8rpZxwSJTmNbXAxzgGV8fahMzu8Lon8ZPx2LVzL/NEqor6kqu0rbCfO6Tk6wT
-         yqaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSLrB03ENKs1wnet+oznPvPjALaeMzC35/SDZTMUT7tI2x4w2GuZ6lBaD4r1PzBXhDfKTL7o6FFwoTlB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgiO/nxq5LwLK3vaKtKKnI7q1xpiEGV55Ttx3uIRYBN0mAMzF+
-	y8Lf+fvM9V4RCi0DZYINp4Jx62x2glnEw0xa0Gmh5vfEfDB3CxSjgUUH6gG68Mw=
-X-Gm-Gg: ASbGnctLvopkn/e4Oa9nt3IQrA99rAxEpTL26+RJew6Hty6nA/aJKxfUTBKSYMe4llv
-	v6y+qi2rZ22DUcwy+/1IBbKVZYGa0QSs9BbOC+GnNm7b6iwKtivwCjdf3jAj7ungbfdCD80CJVp
-	AmqCSVbPoslvJKdA1zoUmXmCPC9fncREMIy1GwkXM8piPOoA/+5i0Lormo/RgYyvyiEsLwR/Aby
-	z7HZ2YdAz6rpYncqtTW6wRweBXRUfUIbFnKjW/uHY6jcdZL2X/v05fHG6Huie5zHUTajj2e8EY8
-	lCSgAyBGZTXIM1ngoobi42nWMLnemu2d5BW4zQ==
-X-Google-Smtp-Source: AGHT+IETfUdZEy4CFxn1YEIQmSr6ySR3G/g5zLsPVQSq6DzfPUY0rl3GN75l8UgZGLkV0LGhqQnxFA==
-X-Received: by 2002:a17:907:7f0f:b0:ac3:446d:142 with SMTP id a640c23a62f3a-acec84b8840mr173980866b.2.1745913057842;
-        Tue, 29 Apr 2025 00:50:57 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7035464e6sm6980176a12.64.2025.04.29.00.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 00:50:57 -0700 (PDT)
-Date: Tue, 29 Apr 2025 10:50:55 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	laurentiu.tudor1@dell.com
-Subject: Re: drm/msm/dp: Introduce link training per-segment for LTTPRs
-Message-ID: <aBCE3wSG2g5pp7jg@linaro.org>
-References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
- <aA8yFI2Bvm-lFJTl@hovoldconsulting.com>
- <CAMcHhXpmii=Rc9YVeKXaB17mYv0piSFs02K=0r8kWe5tQGk7eA@mail.gmail.com>
- <aA94yOjsayZHNDpx@hovoldconsulting.com>
- <aA+N8YHX0DZ6h9Uj@linaro.org>
- <aBB-gl150GVaZPn5@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="JOWFpnQU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
+	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=cHS9pP4p6fCGr0o3s86NTXq06gurSik+u2CaY+Hb9ZY=; b=JOWFpnQUdX01m/onw6NGe8aS4M
+	Bel5jI4/CeN9GEHAlfG00VN6+tyHswftPpDndvP6B2RJr1KUKZDxVzomZg9ZeURFZ5wz6S1vlMCkn
+	FgaHd8IzyA/zIt+hZ4J3qqdVTco+mYOPecCrQBqi/6ospM5vAtF4YfrIKCCz4VXLT8BbJ6wFWRHXm
+	keNrf9zFc/7jEygNfLQcQsx8toZBV728yUNVX0ai8E3m/hKv3ee3EcwgyfigOhGmXX16czcCxserN
+	MQhxA/MNMgdlY6JlU0aL5UH3qlQTEYYB79TcWCAjYxHxWKsBPgR0zGVN66hqzC9mqKDDnPKwEIgx1
+	z9uJTeWA==;
+Received: from 53.red-81-38-30.dynamicip.rima-tde.net ([81.38.30.53] helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1u9fl4-000DWe-EC; Tue, 29 Apr 2025 09:52:13 +0200
+From: =?utf-8?q?Ricardo_Ca=C3=B1uelo_Navarro?= <rcn@igalia.com>
+Date: Tue, 29 Apr 2025 09:51:50 +0200
+Subject: [PATCH 6.6/6.12] ext4: goto right label 'out_mmap_sem' in
+ ext4_setattr()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBB-gl150GVaZPn5@hovoldconsulting.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250429-rcn-20250429-v6-6-backport-v1-1-9a27617e4ba8@igalia.com>
+X-B4-Tracking: v=1; b=H4sIABWFEGgC/z3MwQqDMAwA0F+RnBdXg2Z2vzI81Bq3MKiSDhmI/
+ 27ZYcd3eTtkMZUM92oHk02zLqmguVQQXyE9BXUqBnLUuZY8Wkz4x8bIOIb4Xhf7YCDvRxf7m+s
+ ZSrCazPr95Q/gmq9cNwTDcZyVbd0RdgAAAA==
+X-Change-ID: 20250429-rcn-20250429-v6-6-backport-a299b0c87086
+To: stable@vger.kernel.org
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, 
+ Brian Foster <bfoster@redhat.com>, kernel-dev@igalia.com, 
+ linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Baokun Li <libaokun1@huawei.com>, Jan Kara <jack@suse.cz>
+X-Mailer: b4 0.14.2
 
-On 25-04-29 09:23:46, Johan Hovold wrote:
-> On Mon, Apr 28, 2025 at 05:17:21PM +0300, Abel Vesa wrote:
-> > On 25-04-28 14:47:04, Johan Hovold wrote:
-> > > On Mon, Apr 28, 2025 at 11:06:39AM +0200, Aleksandrs Vinarskis wrote:
-> > > > On Mon, 28 Apr 2025 at 09:45, Johan Hovold <johan@kernel.org> wrote:
-> > > > > On Thu, Apr 17, 2025 at 04:10:31AM +0200, Aleksandrs Vinarskis wrote:
-> > > > > > Recently added Initial LTTPR support in msm/dp has configured LTTPR(s)
-> > > > > > to non-transparent mode to enable video output on X1E-based devices
-> > > > > > that come with LTTPR on the motherboards. However, video would not work
-> > > > > > if additional LTTPR(s) are present between sink and source, which is
-> > > > > > the case for USB Type-C docks (eg. Dell WD19TB/WD22TB4), and at least
-> > > > > > some universal Thunderbolt/USB Type-C monitors (eg. Dell U2725QE).
-> > > > >
-> > > > > Does this mean that the incomplete LTTPR support in 6.15-rc1 broke
-> > > > > adapters or docks with retimers in transparent mode?
-> 
-> > > > Docks with retimers do not work in 6.15-rcX, but I am unable to verify
-> > > > if it did work before, as I do not have a Qualcomm based device
-> > > > without LTTPR on the baseboard.
-> > > 
-> > > Abel (or anyone else), do you have one of these docks that you could
-> > > test with the X13s to confirm whether this series fixes a regression or
-> > > not?
-> > 
-> > Before the support for LTTPRs has been merged, if you would have one of
-> > those docks (I do not own one) with LTTPRs, link training would've just
-> > failed if the LTTPRs were not by default in transparent mode, which IIRC
-> > is what the standard dictates.
-> 
-> Ok, but my concern is if they may have worked in a default transparent
-> mode.
+From: Baokun Li <libaokun1@huawei.com>
 
-But if they are by default in transparent mode, doing the setup to
-transparent mode will not break it in any way. At least that is my
-understanding of the standard. Also, I tested multiple writes to
-transparent mode on CRD back when I wrote the LTTPR msm/dp patches and
-doing multiple writes doesn't affect the link training that happens
-after in any way.
+[ Upstream commit 7e91ae31e2d264155dfd102101afc2de7bd74a64 ]
 
-I do not own such dock though to confirm 100%.
+Otherwise, if ext4_inode_attach_jinode() fails, a hung task will
+happen because filemap_invalidate_unlock() isn't called to unlock
+mapping->invalidate_lock. Like this:
 
-> 
-> > X13s doesn't have LTTPRs on-board so when reading the caps, LTTPRs count
-> > would return 0 and none of the of the transparent/non-transparent setup
-> > would happen.
-> 
-> But this is the crux; does any off-board LTTPRs in transparent mode add
-> to the count or not? If they don't, how would you ever learn that there
-> are any LTTPRs? If they do, it seems we may have a problem here.
+EXT4-fs error (device sda) in ext4_setattr:5557: Out of memory
+INFO: task fsstress:374 blocked for more than 122 seconds.
+      Not tainted 6.14.0-rc1-next-20250206-xfstests-dirty #726
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:fsstress state:D stack:0     pid:374   tgid:374   ppid:373
+                                  task_flags:0x440140 flags:0x00000000
+Call Trace:
+ <TASK>
+ __schedule+0x2c9/0x7f0
+ schedule+0x27/0xa0
+ schedule_preempt_disabled+0x15/0x30
+ rwsem_down_read_slowpath+0x278/0x4c0
+ down_read+0x59/0xb0
+ page_cache_ra_unbounded+0x65/0x1b0
+ filemap_get_pages+0x124/0x3e0
+ filemap_read+0x114/0x3d0
+ vfs_read+0x297/0x360
+ ksys_read+0x6c/0xe0
+ do_syscall_64+0x4b/0x110
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Count gets increased either way. It doesn't matter if they are in
-transparent mode or not.
+Fixes: c7fc0366c656 ("ext4: partial zero eof block on unaligned inode size extension")
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Link: https://patch.msgid.link/20250213112247.3168709-1-libaokun@huaweicloud.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Ricardo Cañuelo Navarro <rcn@igalia.com>
+---
+Hi,
 
-If they are in transparent mode by default, link training will succeed.
-No matter how many times the transparent mode is requested.
+Requesting this fix to be backported to stable v6.6 and v6.12, which
+contain the backport for upstream patch
+c7fc0366c656 ("ext4: partial zero eof block on unaligned inode size extension").
+That patch was also backported to v6.14 but the fix is there already as
+well.
 
-> 
-> Johan
+Thanks,
+Ricardo
+---
+ fs/ext4/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index ddfeaf19bff1ba22cea7e108c0564daceb09e9ee..ebb8097b11397fb3e8c005035a808712ac31ee77 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5478,7 +5478,7 @@ int ext4_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			    oldsize & (inode->i_sb->s_blocksize - 1)) {
+ 				error = ext4_inode_attach_jinode(inode);
+ 				if (error)
+-					goto err_out;
++					goto out_mmap_sem;
+ 			}
+ 
+ 			handle = ext4_journal_start(inode, EXT4_HT_INODE, 3);
+
+---
+base-commit: 23ec0b4057294d86cdefafe373b1f03568f75aff
+change-id: 20250429-rcn-20250429-v6-6-backport-a299b0c87086
+
