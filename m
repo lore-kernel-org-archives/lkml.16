@@ -1,285 +1,759 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F45270544;
-	Tue, 29 Apr 2025 06:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9AF27057C
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.218.175.170
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745907193; cv=fail; b=rexWtmtFoq4h4iseFZJvZ9O5H4HaiMaIw4+l0H876SPWpuzeBsYPutd4IyJ0dFbI7raqchPzKxiOl+Q24Bi1bi8C3MKkdaSsZrUpqFstHfvg8ApjA3PQze6oegy7ox8O54cuSrC06G3fqn4j0QCAjiG1wDw4i4cwzxKqC9a6yiU=
+	t=1745907194; cv=fail; b=la/zRa1/JUkOGKYUk/97Av8TFgF9fmjSGEtQnSAdkekdJyslJXzyh1xLl0K8bRjN9Mu0wS/lkx0jHTbhWaC6yqM1TJJkwvhcqQTfpePWv7YDfFnlTwBTerOGcfml1PKq2EtOcQkhsQa2bGq+6dify4qpvwEacZnm9Z9vZROJOl8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745907193; c=relaxed/simple;
-	bh=Sd8W4WC6C73BsC2I8Wsu3tr2VpSypnIXUxAHwHMKn94=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HmnZapvs50tMkJTKLyPgAMH7qw9c0zlcsCcpzCkhVDM4JYU6azv8X/qzQT7biEoi2gNAMzpAQCglibElhpPS260JqEbivXag2YHJHgxMZiOTqjAoDeh1AcLBf9dZWnQ5+YT4UFekvJsInBTzT2UWYbEjtinBjGTkRLL2qBDjRVk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L5vJwBZ5; arc=fail smtp.client-ip=40.107.237.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1745907194; c=relaxed/simple;
+	bh=u56fFkhyJbleXH6dcSPDSExfG+fvlrMHCco/0zoybpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ov3XPkwGTXptwcXP+snaJ+9xMXXRQBcjyc3YQ1yjJP5vy86iCyJFeQvv7uuObDFy36ImHrGB01O6++sP9BFcrCeyf0vdFt5kaYy8NRgJMAac4Gsxbp0xoAAivJoxfN9ABb7YENZAKfFQcW/V/WsXXT0zzHhuzHylk/3KsIAM7y4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qG3h9H65; dkim=fail (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lB5Bod6I reason="signature verification failed"; arc=fail smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L5vJwBZ5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cnHcl//lSFy+5SvpSS24cJ/8vo4XzM7y/LRdINjWJAwOmCzssvYTVT4gYnFpz0l0a9DmQeeHjVHPRchnRQDBElb2JYLlWag/MHh4hXvdDuiHjk9sFdpHWUHhS4RpB1FnUj7vzb0IeT2DCgBy3c4JmnxOlgN9gRxBalQC2yzqBfmvNzG7YM/UoPyw0J69ldds+CKpthwO5Cb8yZYT41soWaKVRaqZSkYq+XBIWE+A6XQ2k82c9DzPPNDQeoQSJ0MOthjICVBPpWsC0JsVQEc9bPYdura2qzPO2FAo+mq0fRY7KgvPcV+x2PgNkeklAp++fI9bShCp6BFixPrM0caOQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+svRvz1p62egVWWTd6n8/mcGj9fd5R223mR6J+9XQwc=;
- b=BlPVLXe/v/SZfnqAsJD2e8UUOsMVC3VTtj+ZiHO8b8B08mGKDJXjXx6GYS5g3qn5QqqcGXP+VC2XK9C4hohFO1IZ+W6hu27cAtJptoUG1oyJbIQD8V/+dVY3KJ7nuEnWnVsjWoJOgqgYt3ZAvYDdsfm+uJLZqJfhQPZ6FZVsmpmt5ceuKjQ4frUO50L8wkJJMwW1UvjswM1nX6DhHCvO23FIRC6QHlZOcnCUA0xgmKFa7BSOlhdxp4urGtEz+Q3fLzFbd1uF8Tm/C8CnTJVRgrCzV7Q+FGJ6l0pUWek0YkIbKAx2uXPldAO0+alJTl73TxTPQ/O0vT45df4hBnLpqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+svRvz1p62egVWWTd6n8/mcGj9fd5R223mR6J+9XQwc=;
- b=L5vJwBZ5KxPQLpy4qNEpZatAlA+7eUaic9fP/5h9Eb4It9czYYYjXli/UX3sgmLRshMWoJN2APFhu0x3VHQ1mF8sQYNxTBaG1YGj3immlAVuheId3wEQxn2m9AC1bNaQVBDJUZ48scrTMSrFo37O750+iX1tB+kbznjNnccmv9s=
-Received: from BL1PR13CA0418.namprd13.prod.outlook.com (2603:10b6:208:2c2::33)
- by CH3PR12MB7691.namprd12.prod.outlook.com (2603:10b6:610:151::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Tue, 29 Apr
- 2025 06:13:05 +0000
-Received: from BL6PEPF0001AB55.namprd02.prod.outlook.com
- (2603:10b6:208:2c2:cafe::99) by BL1PR13CA0418.outlook.office365.com
- (2603:10b6:208:2c2::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Tue,
- 29 Apr 2025 06:13:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB55.mail.protection.outlook.com (10.167.241.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8678.33 via Frontend Transport; Tue, 29 Apr 2025 06:13:04 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 29 Apr 2025 01:12:57 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>
-Subject: [PATCH v5 07/20] x86/apic: Add update_vector() callback for apic drivers
-Date: Tue, 29 Apr 2025 11:39:51 +0530
-Message-ID: <20250429061004.205839-8-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
-References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qG3h9H65";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lB5Bod6I"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745907189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aaWYa/zSH76DRcqTSG3TzB6Bp5La07DRHjR3U/ldUeM=;
+	b=qG3h9H65pzrGU8vBjryGKf2dpLXuMMwFLiHeWTLwn44LqJ5Tav7ehf38tQHTe1ck4Opj/O
+	glpRh67wIHgLAdl6cMrORHLZWNiXB8pd+a4HyIxVxt0euamjqVJZrWiHthWAzthmvqCA3g
+	uqoLGrkbehRQUsCJ1mWgL+LgJSteNTw=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Tejun Heo <tj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	shakeel.butt@linux.dev
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	JP Kobryn <inwardvessel@gmail.com>,
+	bpf@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [OFFLIST PATCH 1/2] cgroup: use separate rstat trees for each subsystem
+Date: Mon, 28 Apr 2025 23:12:10 -0700
+Message-ID: <20250428174943.69803-1-inwardvessel@gmail.com>
+In-Reply-To: <20250429061211.1295443-1-shakeel.butt@linux.dev>
+References: <20250429061211.1295443-1-shakeel.butt@linux.dev>
+X-Envelope-To: shakeel.butt@linux.dev
+Authentication-Results: aspmx1.migadu.com; dkim=pass header.d=gmail.com header.s=20230601 header.b=lB5Bod6I; spf=pass (aspmx1.migadu.com: domain of inwardvessel@gmail.com designates 2607:f8b0:4864:20::635 as permitted sender) smtp.mailfrom=inwardvessel@gmail.com; dmarc=pass (policy=none) header.from=gmail.com
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1; t=1745862594; h=from:from:reply-to:subject:subject:date:date:message-id:message-id: to:to:cc:mime-version:mime-version: content-transfer-encoding:content-transfer-encoding:dkim-signature; bh=S92fGW8ej/8zk4mv6JSI80WWDykYnaLwkG733M8HR7g=; b=txgXtbTLRoR/zJcmXoX/P0kiuuWFahmNOTx2c5xNtJiC89ntm8EzEyp06AaW+1XlfpaBxD rQShXoUObu2hHA2FEjqFjrMb4JewKNVRBXuE6WrzxudM6zZaDrxuFl17FIczc5qzd5ZJHk Qy2dh4uddWN2eRWaHPGBJMvo7qY76Kc=
+ARC-Authentication-Results: i=1; aspmx1.migadu.com; dkim=pass header.d=gmail.com header.s=20230601 header.b=lB5Bod6I; spf=pass (aspmx1.migadu.com: domain of inwardvessel@gmail.com designates 2607:f8b0:4864:20::635 as permitted sender) smtp.mailfrom=inwardvessel@gmail.com; dmarc=pass (policy=none) header.from=gmail.com
+ARC-Seal: i=1; s=key1; d=linux.dev; t=1745862594; a=rsa-sha256; cv=none; b=f93mhP5L8o35xJWI0SCA+iIPAgtDyGM1yCdDQxFsh64OVeieSlyspxRJ+4YegO3q1Mj9vt mQ3SgXcGyd+fg55GEPqNbtND/hSusvL+S/4WUp2E87JRttyytWZG3YN37phCQuJ8OO0ItA leiyANzQjJa+h4BnZJsD137J4oK6tnE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20230601; t=1745862592; x=1746467392; darn=linux.dev; h=content-transfer-encoding:mime-version:message-id:date:subject:to :from:from:to:cc:subject:date:message-id:reply-to; bh=S92fGW8ej/8zk4mv6JSI80WWDykYnaLwkG733M8HR7g=; b=lB5Bod6Ir+UwFBGSCjEgF9P23mf09fBp9ftZVgZKYuX++wIZWkqLj/9Fp2kTMIZE9J +MOdrhMUjE4znWw+5MGhSAttFVVY0uVLuzYhM3g8WKGTRC6TE72abi2x0joqkvVtIw5s 2FEIvJaC2PTpv+QkvTJK9z5z5LsYNMaW58QNPbioFyKutLI1w1D45EabJ7kxaqnKD7Ke tQinOm6bbhAGFnmSxdDpZKk6tTA8YSeepyDOxtJufjcOhgZPg06Q9UmINaAH4ysZsmH5 vyNwEcTPv5WOw6nmrBU6njxyDCFWvjOPdcTfjMA6/sI57dhqn/5djw1fwI0xsgv4bmYk kEGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1745862592; x=1746467392; h=content-transfer-encoding:mime-version:message-id:date:subject:to :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=S92fGW8ej/8zk4mv6JSI80WWDykYnaLwkG733M8HR7g=; b=H3n/IpygAtR5ltLc5IZH4PR0vfWcJK58GA7Ct8gI7Vnfkl5QrD/mTSbGe8G87b4x5B d765XhR6I2TE7Jw3CA8ZY/YGTBAZbA3q7lzVWrI6ku7WK5bjdKX/TWF3QXQK9OJAZjtb 2ACXUGAftBjOPJVq6XTBSrTmmYB230t+Rd2LDsC8ossBGQ6HriC06G8y5IPhJRXNyZ+g pv7/vrSebh6NP7glZPLpn74UAYDNEtoHEXO6OK6hLGHXgwI5pj67yaE0W6PGGQ8b7K2o ZbiVKGaueT53m2SWRNvHkjirMzuC8wz39oJMBBLx5ElkXSjGxrh50qE1PZTKRgPVSm2d Y9+g==
+X-Gm-Message-State: AOJu0YzNTgkCNVGkginYBJ2WW5H+SnfdE5n579EErAwg1ZZKT+K92EAx AhsmBnBa22jb/F+cuhAgCJ0kzOpLb5fkhmMwFAH7ddBvN5E5W8H9bj00ew==
+X-Gm-Gg: ASbGncs0nt3Imvr79Ih00g5ZR9aUnPjmv3CaVrKOL2DxUIkXdLZ6Bp5EJEOHBQ89j/f 5ezn/xylNP4h5xxViOtKIh5v/aohNcQmeGWQM7awQYQfhaLz+Dje1CbfEdwkVwRz18cob4gDu4h u3qcmdgfB6F6Kk5b1fhpUKRYtI+iD9WLV7lcPkbb4/wFb1DpdrdoPgxJlbj9i5MyOuYDx9cP1uA 66DG0wl5V4ZS+3zY6cakZWQwPGj6n7w6L6Anq8cju0suLvZcYmWJ979/eX/MDeLQAvbQEdHthtR Ms/V/H4dhjMEea45wcIpjot+uN2KaNWLPim5AmPXKEDB9v/EnnE4Qu2cL6bEvUpjWUDo
+X-Google-Smtp-Source: AGHT+IH5L0RFd6qxBFFxeo8YKWlbkznHSoomHuQ42gB5J/gXpn/MoqHXIF2MH/qYDOOjLlV5FKjBHQ==
+X-Received: by 2002:a17:903:40d0:b0:220:ea90:191e with SMTP id d9443c01a7336-22de6e8e335mr460325ad.4.1745862591889; Mon, 28 Apr 2025 10:49:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Spam-Score: -5.78
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB55:EE_|CH3PR12MB7691:EE_
-X-MS-Office365-Filtering-Correlation-Id: edac3851-9986-495d-f263-08dd86e4e758
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MCSgxb9WpQjNSupI8ADo9r564Urd4XJa/mh/uMKG86srCduUPU14VxXXd/s/?=
- =?us-ascii?Q?uRHjHUKrsof8P6giVghXpeA1b8eV5na5U6QrJXipf/9w1ZtkBL5tzLEkDhwA?=
- =?us-ascii?Q?iZv7Qo1u6uZa67kqMuCwf93EPEKbawtxHVM2VLV4JxgbfxMsqSWu+PUF5PfT?=
- =?us-ascii?Q?JD+qXdFvip+95Fy7gGAhB7uQkMDm6muVqBHmibsPPREZ7gNNmXdHSta5L6lX?=
- =?us-ascii?Q?+a+brCnJs1qjhqCBRnf5gHThFQ8FU5qKCjw3WqroNE9uKo4+NUspass6Pob5?=
- =?us-ascii?Q?lUVWXrktv1ffmMRIb8ZS2qSi1oNg/izhWB/sJFSDoEmKLSLEkTUKG/S7+no5?=
- =?us-ascii?Q?GOfLf6JpatBCqKam5Edv1vbL3DnrAv/VaGA81+djU+5H+MMZoE/KrVq81hOd?=
- =?us-ascii?Q?anaud0Sd16/KU8w25W7cOq3Hx/gM4bJgLB0gVNprKCk3KykeW+eIY0h/WOOk?=
- =?us-ascii?Q?6klqHPLgN0BJdOGerZJeYJHviop9zwSha0WJ3ybug7YBWxaifmOv+N0K1QvT?=
- =?us-ascii?Q?qUoKYm3maaQDa5DiMH8vmgZnc3/BECJDZIDBQju/DY+0/m3EMwwPB1Dochs+?=
- =?us-ascii?Q?62KiqBpImt8Wd3ResaF/RH2i538F4ZPeE/6vhDj5icasG9uRsBYTQFuTBfpI?=
- =?us-ascii?Q?89G8AbX8m7jMuj5X6MOZfu7ntworeu1huqDWTvMDsveH6xtrT7byxGmAfgU1?=
- =?us-ascii?Q?WvbR8m2er/ySu7NoRDeMNwM4OR6P5jdiQj+CweWzRhzPwp1X8bWB6d6bO0x3?=
- =?us-ascii?Q?fItR1UYlU++fYg/K3iAKAyRBiEyKUuG9V0HoS2jKhpPutXgPIS74Bwct1XRo?=
- =?us-ascii?Q?jm1Gdn6qhFClyTNmQdDDRA8El8b31PuT+hLAMX20kZNueFhPu4gxZmZiu+7/?=
- =?us-ascii?Q?ZFgLOy8guo//R52lJJtUWHbkJ0JW18DbsVap2JtoShbk7eJm9zeGj6WcXkwV?=
- =?us-ascii?Q?0Zdkt7O4E0kVRrK+Yi3oqbYl16fSS7GmgNP8IqojanZL06Viyn+aBNRYlhJx?=
- =?us-ascii?Q?aCreWGZrdY/FpRPumDAl0eYabtwXXvplTlPsNf3BL38tWWBHA6+FLCmZm7yq?=
- =?us-ascii?Q?loJflSemnfRZZNAaMJt38S6jryOJR1Tg/D+ozA0rfEnJhc0sMx8Zf3Rwfr3Q?=
- =?us-ascii?Q?KVl3riK/x2eJNwM4lcsDdvi9t8S/bEtqXOfYY231yFbWyvzTQ57SayWROihM?=
- =?us-ascii?Q?8Hxi90z0N9z/tuahpcYDEqEVICNqwNGADrwyK5L42/zWc5YQsZzOgOQONcqF?=
- =?us-ascii?Q?uVLqz27bmOmgyfRhZVman7q+1I2e4UdDHErih+xd3Vk5+0AijQBO5MubTR2j?=
- =?us-ascii?Q?gWj9V+ONEA3joetFGj2x68hCvmFuHtES6OXMjkM450lxbrc0v68bcktgN+u5?=
- =?us-ascii?Q?4cND08Oo14ihdfcWVGsFKZv6SGfhl5TtEDQJ9ow4372xrCAMUs9HRm2YTvU6?=
- =?us-ascii?Q?ZauvQuiovDWGBsFARZa/j8hYsiKnShK78QdbecNVeg6tRFPDqMFV/J1+L/sQ?=
- =?us-ascii?Q?f5UZ4PLeag0btGIcrICgUGwr8Rv16iv7O89/?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 06:13:04.8066
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: edac3851-9986-495d-f263-08dd86e4e758
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB55.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7691
+X-Migadu-Flow: FLOW_OUT
 
-Add an update_vector() callback to allow apic drivers to perform
-driver specific operations on external vector allocation/teardown
-on a CPU. This callback will be used in subsequent commits by Secure
-AVIC apic driver to configure the vectors which a guest vCPU allows
-the hypervisor to send to it.
+From: JP Kobryn <inwardvessel@gmail.com>
 
-As system vectors have fixed vector assignments and are not dynamically
-allocated, add apic_update_vector() public api to facilitate
-update_vector() callback invocation for them. This will be used for
-Secure AVIC enabled guests to allow the hypervisor to inject system
-vectors which are emulated by the hypervisor such as APIC timer vector
-and HYPERVISOR_CALLBACK_VECTOR.
+Different subsystems may call cgroup_rstat_updated() within the same
+cgroup, resulting in a tree of pending updates from multiple subsystems.
+When one of these subsystems is flushed via cgroup_rstat_flushed(), all
+other subsystems with pending updates on the tree will also be flushed.
 
-While at it, cleanup line break in apic_update_irq_cfg().
+Change the paradigm of having a single rstat tree for all subsystems to
+having separate trees for each subsystem. This separation allows for
+subsystems to perform flushes without the side effects of other subsystems.
+As an example, flushing the cpu stats will no longer cause the memory stats
+to be flushed and vice versa.
 
-Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+In order to achieve subsystem-specific trees, change the tree node type
+from cgroup to cgroup_subsys_state pointer. Then remove those pointers from
+the cgroup and instead place them on the css. Finally, change update/flush
+functions to make use of the different node type (css). These changes allow
+a specific subsystem to be associated with an update or flush. Separate
+rstat trees will now exist for each unique subsystem.
+
+Since updating/flushing will now be done at the subsystem level, there is
+no longer a need to keep track of updated css nodes at the cgroup level.
+The list management of these nodes done within the cgroup (rstat_css_list
+and related) has been removed accordingly.
+
+Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
 ---
-Changes since v4:
- - Separated out generic update_vector callback addition code to a
-   new patch.
- - Removed irq_alloc_vector() and irq_alloc_managed_vector().
-   Moved apic_update_vector() calls to apic_update_irq_cfg().
- - Renamed irq_free_vector to apic_free_vector.
- - Commit log refresh.
+ include/linux/cgroup-defs.h                   |  40 ++--
+ kernel/cgroup/cgroup.c                        |  49 ++---
+ kernel/cgroup/rstat.c                         | 174 +++++++++---------
+ .../selftests/bpf/progs/btf_type_tag_percpu.c |  18 +-
+ 4 files changed, 150 insertions(+), 131 deletions(-)
 
- arch/x86/include/asm/apic.h   |  9 +++++++++
- arch/x86/kernel/apic/vector.c | 29 ++++++++++++++++++-----------
- 2 files changed, 27 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 562115100038..c359cce60b22 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -318,6 +318,8 @@ struct apic {
- 	/* wakeup secondary CPU using 64-bit wakeup point */
- 	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index e58bfb880111..45a605c74ff8 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -169,6 +169,9 @@ struct cgroup_subsys_state {
+ 	/* reference count - access via css_[try]get() and css_put() */
+ 	struct percpu_ref refcnt;
  
-+	void	(*update_vector)(unsigned int cpu, unsigned int vector, bool set);
++	/* per-cpu recursive resource statistics */
++	struct css_rstat_cpu __percpu *rstat_cpu;
 +
- 	char	*name;
+ 	/*
+ 	 * siblings list anchored at the parent's ->children
+ 	 *
+@@ -177,9 +180,6 @@ struct cgroup_subsys_state {
+ 	struct list_head sibling;
+ 	struct list_head children;
+ 
+-	/* flush target list anchored at cgrp->rstat_css_list */
+-	struct list_head rstat_css_node;
+-
+ 	/*
+ 	 * PI: Subsys-unique ID.  0 is unused and root is always 1.  The
+ 	 * matching css can be looked up using css_from_id().
+@@ -219,6 +219,13 @@ struct cgroup_subsys_state {
+ 	 * Protected by cgroup_mutex.
+ 	 */
+ 	int nr_descendants;
++
++	/*
++	 * A singly-linked list of css structures to be rstat flushed.
++	 * This is a scratch field to be used exclusively by
++	 * css_rstat_flush_locked() and protected by cgroup_rstat_lock.
++	 */
++	struct cgroup_subsys_state *rstat_flush_next;
  };
  
-@@ -471,6 +473,12 @@ static __always_inline bool apic_id_valid(u32 apic_id)
- 	return apic_id <= apic->max_apic_id;
- }
+ /*
+@@ -329,10 +336,10 @@ struct cgroup_base_stat {
  
-+static __always_inline void apic_update_vector(unsigned int cpu, unsigned int vector, bool set)
-+{
-+	if (apic->update_vector)
-+		apic->update_vector(cpu, vector, set);
-+}
+ /*
+  * rstat - cgroup scalable recursive statistics.  Accounting is done
+- * per-cpu in cgroup_rstat_cpu which is then lazily propagated up the
++ * per-cpu in css_rstat_cpu which is then lazily propagated up the
+  * hierarchy on reads.
+  *
+- * When a stat gets updated, the cgroup_rstat_cpu and its ancestors are
++ * When a stat gets updated, the css_rstat_cpu and its ancestors are
+  * linked into the updated tree.  On the following read, propagation only
+  * considers and consumes the updated tree.  This makes reading O(the
+  * number of descendants which have been active since last read) instead of
+@@ -346,7 +353,7 @@ struct cgroup_base_stat {
+  * This struct hosts both the fields which implement the above -
+  * updated_children and updated_next.
+  */
+-struct cgroup_rstat_cpu {
++struct css_rstat_cpu {
+ 	/*
+ 	 * Child cgroups with stat updates on this cpu since the last read
+ 	 * are linked on the parent's ->updated_children through
+@@ -358,8 +365,8 @@ struct cgroup_rstat_cpu {
+ 	 *
+ 	 * Protected by per-cpu cgroup_rstat_cpu_lock.
+ 	 */
+-	struct cgroup *updated_children;	/* terminated by self cgroup */
+-	struct cgroup *updated_next;		/* NULL iff not on the list */
++	struct cgroup_subsys_state *updated_children;	/* terminated by self cgroup */
++	struct cgroup_subsys_state *updated_next;	/* NULL iff not on the list */
+ };
+ 
+ /*
+@@ -521,25 +528,16 @@ struct cgroup {
+ 	struct cgroup *dom_cgrp;
+ 	struct cgroup *old_dom_cgrp;		/* used while enabling threaded */
+ 
+-	/* per-cpu recursive resource statistics */
+-	struct cgroup_rstat_cpu __percpu *rstat_cpu;
++	/* per-cpu recursive basic resource statistics */
+ 	struct cgroup_rstat_base_cpu __percpu *rstat_base_cpu;
+-	struct list_head rstat_css_list;
+ 
+ 	/*
+-	 * Add padding to separate the read mostly rstat_cpu and
+-	 * rstat_css_list into a different cacheline from the following
+-	 * rstat_flush_next and *bstat fields which can have frequent updates.
++	 * Add padding to keep the read mostly rstat per-cpu pointer on a
++	 * different cacheline than the following *bstat fields which can have
++	 * frequent updates.
+ 	 */
+ 	CACHELINE_PADDING(_pad_);
+ 
+-	/*
+-	 * A singly-linked list of cgroup structures to be rstat flushed.
+-	 * This is a scratch field to be used exclusively by
+-	 * css_rstat_flush_locked() and protected by cgroup_rstat_lock.
+-	 */
+-	struct cgroup	*rstat_flush_next;
+-
+ 	/* cgroup basic resource statistics */
+ 	struct cgroup_base_stat last_bstat;
+ 	struct cgroup_base_stat bstat;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index a314138894e1..d9865299edf5 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -161,12 +161,12 @@ static struct static_key_true *cgroup_subsys_on_dfl_key[] = {
+ };
+ #undef SUBSYS
+ 
+-static DEFINE_PER_CPU(struct cgroup_rstat_cpu, root_rstat_cpu);
++static DEFINE_PER_CPU(struct css_rstat_cpu, root_rstat_cpu);
+ static DEFINE_PER_CPU(struct cgroup_rstat_base_cpu, root_rstat_base_cpu);
+ 
+ /* the default hierarchy */
+ struct cgroup_root cgrp_dfl_root = {
+-	.cgrp.rstat_cpu = &root_rstat_cpu,
++	.cgrp.self.rstat_cpu = &root_rstat_cpu,
+ 	.cgrp.rstat_base_cpu = &root_rstat_base_cpu,
+ };
+ EXPORT_SYMBOL_GPL(cgrp_dfl_root);
+@@ -1880,13 +1880,6 @@ int rebind_subsystems(struct cgroup_root *dst_root, u16 ss_mask)
+ 		}
+ 		spin_unlock_irq(&css_set_lock);
+ 
+-		if (ss->css_rstat_flush) {
+-			list_del_rcu(&css->rstat_css_node);
+-			synchronize_rcu();
+-			list_add_rcu(&css->rstat_css_node,
+-				     &dcgrp->rstat_css_list);
+-		}
+-
+ 		/* default hierarchy doesn't enable controllers by default */
+ 		dst_root->subsys_mask |= 1 << ssid;
+ 		if (dst_root == &cgrp_dfl_root) {
+@@ -2069,7 +2062,6 @@ static void init_cgroup_housekeeping(struct cgroup *cgrp)
+ 	cgrp->dom_cgrp = cgrp;
+ 	cgrp->max_descendants = INT_MAX;
+ 	cgrp->max_depth = INT_MAX;
+-	INIT_LIST_HEAD(&cgrp->rstat_css_list);
+ 	prev_cputime_init(&cgrp->prev_cputime);
+ 
+ 	for_each_subsys(ss, ssid)
+@@ -5454,6 +5446,9 @@ static void css_free_rwork_fn(struct work_struct *work)
+ 		struct cgroup_subsys_state *parent = css->parent;
+ 		int id = css->id;
+ 
++		if (ss->css_rstat_flush)
++			css_rstat_exit(css);
 +
- #else /* CONFIG_X86_LOCAL_APIC */
+ 		ss->css_free(css);
+ 		cgroup_idr_remove(&ss->css_idr, id);
+ 		cgroup_put(cgrp);
+@@ -5506,11 +5501,8 @@ static void css_release_work_fn(struct work_struct *work)
+ 	if (ss) {
+ 		struct cgroup *parent_cgrp;
  
- static inline u32 apic_read(u32 reg) { return 0; }
-@@ -482,6 +490,7 @@ static inline void apic_wait_icr_idle(void) { }
- static inline u32 safe_apic_wait_icr_idle(void) { return 0; }
- static inline void apic_native_eoi(void) { WARN_ON_ONCE(1); }
- static inline void apic_setup_apic_calls(void) { }
-+static inline void apic_update_vector(unsigned int cpu, unsigned int vector, bool set) { }
+-		/* css release path */
+-		if (!list_empty(&css->rstat_css_node)) {
++		if (ss->css_rstat_flush)
+ 			css_rstat_flush(css);
+-			list_del_rcu(&css->rstat_css_node);
+-		}
  
- #define apic_update_callback(_callback, _fn) do { } while (0)
+ 		cgroup_idr_replace(&ss->css_idr, NULL, css->id);
+ 		if (ss->css_released)
+@@ -5536,7 +5528,7 @@ static void css_release_work_fn(struct work_struct *work)
+ 		/* cgroup release path */
+ 		TRACE_CGROUP_PATH(release, cgrp);
  
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 155253af3deb..e1f570aed9d2 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -134,13 +134,21 @@ static void apic_update_irq_cfg(struct irq_data *irqd, unsigned int vector,
+-		css_rstat_flush(css);
++		css_rstat_flush(&cgrp->self);
  
- 	apicd->hw_irq_cfg.vector = vector;
- 	apicd->hw_irq_cfg.dest_apicid = apic->calc_dest_apicid(cpu);
-+
-+	apic_update_vector(cpu, vector, true);
-+
- 	irq_data_update_effective_affinity(irqd, cpumask_of(cpu));
--	trace_vector_config(irqd->irq, vector, cpu,
--			    apicd->hw_irq_cfg.dest_apicid);
-+	trace_vector_config(irqd->irq, vector, cpu, apicd->hw_irq_cfg.dest_apicid);
- }
+ 		spin_lock_irq(&css_set_lock);
+ 		for (tcgrp = cgroup_parent(cgrp); tcgrp;
+@@ -5584,7 +5576,6 @@ static void init_and_link_css(struct cgroup_subsys_state *css,
+ 	css->id = -1;
+ 	INIT_LIST_HEAD(&css->sibling);
+ 	INIT_LIST_HEAD(&css->children);
+-	INIT_LIST_HEAD(&css->rstat_css_node);
+ 	css->serial_nr = css_serial_nr_next++;
+ 	atomic_set(&css->online_cnt, 0);
  
--static void apic_update_vector(struct irq_data *irqd, unsigned int newvec,
--			       unsigned int newcpu)
-+static void apic_free_vector(unsigned int cpu, unsigned int vector, bool managed)
-+{
-+	apic_update_vector(cpu, vector, false);
-+	irq_matrix_free(vector_matrix, cpu, vector, managed);
-+}
-+
-+static void apic_chipd_update_vector(struct irq_data *irqd, unsigned int newvec,
-+				     unsigned int newcpu)
- {
- 	struct apic_chip_data *apicd = apic_chip_data(irqd);
- 	struct irq_desc *desc = irq_data_to_desc(irqd);
-@@ -174,8 +182,7 @@ static void apic_update_vector(struct irq_data *irqd, unsigned int newvec,
- 		apicd->prev_cpu = apicd->cpu;
- 		WARN_ON_ONCE(apicd->cpu == newcpu);
- 	} else {
--		irq_matrix_free(vector_matrix, apicd->cpu, apicd->vector,
--				managed);
-+		apic_free_vector(apicd->cpu, apicd->vector, managed);
+@@ -5593,9 +5584,6 @@ static void init_and_link_css(struct cgroup_subsys_state *css,
+ 		css_get(css->parent);
  	}
  
- setnew:
-@@ -261,7 +268,7 @@ assign_vector_locked(struct irq_data *irqd, const struct cpumask *dest)
- 	trace_vector_alloc(irqd->irq, vector, resvd, vector);
- 	if (vector < 0)
- 		return vector;
--	apic_update_vector(irqd, vector, cpu);
-+	apic_chipd_update_vector(irqd, vector, cpu);
- 
- 	return 0;
+-	if (ss->css_rstat_flush)
+-		list_add_rcu(&css->rstat_css_node, &cgrp->rstat_css_list);
+-
+ 	BUG_ON(cgroup_css(cgrp, ss));
  }
-@@ -337,7 +344,7 @@ assign_managed_vector(struct irq_data *irqd, const struct cpumask *dest)
- 	trace_vector_alloc_managed(irqd->irq, vector, vector);
- 	if (vector < 0)
- 		return vector;
--	apic_update_vector(irqd, vector, cpu);
-+	apic_chipd_update_vector(irqd, vector, cpu);
  
- 	return 0;
+@@ -5688,6 +5676,12 @@ static struct cgroup_subsys_state *css_create(struct cgroup *cgrp,
+ 		goto err_free_css;
+ 	css->id = err;
+ 
++	if (ss->css_rstat_flush) {
++		err = css_rstat_init(css);
++		if (err)
++			goto err_free_css;
++	}
++
+ 	/* @css is ready to be brought online now, make it visible */
+ 	list_add_tail_rcu(&css->sibling, &parent_css->children);
+ 	cgroup_idr_replace(&ss->css_idr, css, css->id);
+@@ -5701,7 +5695,6 @@ static struct cgroup_subsys_state *css_create(struct cgroup *cgrp,
+ err_list_del:
+ 	list_del_rcu(&css->sibling);
+ err_free_css:
+-	list_del_rcu(&css->rstat_css_node);
+ 	INIT_RCU_WORK(&css->destroy_rwork, css_free_rwork_fn);
+ 	queue_rcu_work(cgroup_destroy_wq, &css->destroy_rwork);
+ 	return ERR_PTR(err);
+@@ -6139,11 +6132,17 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
+ 	css->flags |= CSS_NO_REF;
+ 
+ 	if (early) {
+-		/* allocation can't be done safely during early init */
++		/*
++		 * Allocation can't be done safely during early init.
++		 * Defer IDR and rstat allocations until cgroup_init().
++		 */
+ 		css->id = 1;
+ 	} else {
+ 		css->id = cgroup_idr_alloc(&ss->css_idr, css, 1, 2, GFP_KERNEL);
+ 		BUG_ON(css->id < 0);
++
++		if (ss->css_rstat_flush)
++			BUG_ON(css_rstat_init(css));
+ 	}
+ 
+ 	/* Update the init_css_set to contain a subsys
+@@ -6242,9 +6241,17 @@ int __init cgroup_init(void)
+ 			struct cgroup_subsys_state *css =
+ 				init_css_set.subsys[ss->id];
+ 
++			/*
++			 * It is now safe to perform allocations.
++			 * Finish setting up subsystems that previously
++			 * deferred IDR and rstat allocations.
++			 */
+ 			css->id = cgroup_idr_alloc(&ss->css_idr, css, 1, 2,
+ 						   GFP_KERNEL);
+ 			BUG_ON(css->id < 0);
++
++			if (ss->css_rstat_flush)
++				BUG_ON(css_rstat_init(css));
+ 		} else {
+ 			cgroup_init_subsys(ss, false);
+ 		}
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 357c538d14da..ddc799ca6591 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -14,9 +14,10 @@ static DEFINE_PER_CPU(raw_spinlock_t, cgroup_rstat_cpu_lock);
+ 
+ static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
+ 
+-static struct cgroup_rstat_cpu *cgroup_rstat_cpu(struct cgroup *cgrp, int cpu)
++static struct css_rstat_cpu *css_rstat_cpu(
++		struct cgroup_subsys_state *css, int cpu)
+ {
+-	return per_cpu_ptr(cgrp->rstat_cpu, cpu);
++	return per_cpu_ptr(css->rstat_cpu, cpu);
  }
-@@ -357,7 +364,7 @@ static void clear_irq_vector(struct irq_data *irqd)
- 			   apicd->prev_cpu);
  
- 	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_SHUTDOWN;
--	irq_matrix_free(vector_matrix, apicd->cpu, vector, managed);
-+	apic_free_vector(apicd->cpu, vector, managed);
- 	apicd->vector = 0;
+ static struct cgroup_rstat_base_cpu *cgroup_rstat_base_cpu(
+@@ -87,13 +88,12 @@ void _css_rstat_cpu_unlock(raw_spinlock_t *cpu_lock, int cpu,
+  * @css: target cgroup subsystem state
+  * @cpu: cpu on which rstat_cpu was updated
+  *
+- * @css->cgroup's rstat_cpu on @cpu was updated. Put it on the parent's
+- * matching rstat_cpu->updated_children list. See the comment on top of
+- * cgroup_rstat_cpu definition for details.
++ * @css's rstat_cpu on @cpu was updated. Put it on the parent's matching
++ * rstat_cpu->updated_children list. See the comment on top of
++ * css_rstat_cpu definition for details.
+  */
+ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
+ {
+-	struct cgroup *cgrp = css->cgroup;
+ 	raw_spinlock_t *cpu_lock = per_cpu_ptr(&cgroup_rstat_cpu_lock, cpu);
+ 	unsigned long flags;
  
- 	/* Clean up move in progress */
-@@ -366,7 +373,7 @@ static void clear_irq_vector(struct irq_data *irqd)
+@@ -102,19 +102,19 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
+ 	 * temporary inaccuracies, which is fine.
+ 	 *
+ 	 * Because @parent's updated_children is terminated with @parent
+-	 * instead of NULL, we can tell whether @cgrp is on the list by
++	 * instead of NULL, we can tell whether @css is on the list by
+ 	 * testing the next pointer for NULL.
+ 	 */
+-	if (data_race(cgroup_rstat_cpu(cgrp, cpu)->updated_next))
++	if (data_race(css_rstat_cpu(css, cpu)->updated_next))
  		return;
  
- 	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_SHUTDOWN;
--	irq_matrix_free(vector_matrix, apicd->prev_cpu, vector, managed);
-+	apic_free_vector(apicd->prev_cpu, vector, managed);
- 	apicd->prev_vector = 0;
- 	apicd->move_in_progress = 0;
- 	hlist_del_init(&apicd->clist);
-@@ -905,7 +912,7 @@ static void free_moved_vector(struct apic_chip_data *apicd)
- 	 *    affinity mask comes online.
+ 	flags = _css_rstat_cpu_lock(cpu_lock, cpu, css, true);
+ 
+-	/* put @cgrp and all ancestors on the corresponding updated lists */
++	/* put @css and all ancestors on the corresponding updated lists */
+ 	while (true) {
+-		struct cgroup_rstat_cpu *rstatc = cgroup_rstat_cpu(cgrp, cpu);
+-		struct cgroup *parent = cgroup_parent(cgrp);
+-		struct cgroup_rstat_cpu *prstatc;
++		struct css_rstat_cpu *rstatc = css_rstat_cpu(css, cpu);
++		struct cgroup_subsys_state *parent = css->parent;
++		struct css_rstat_cpu *prstatc;
+ 
+ 		/*
+ 		 * Both additions and removals are bottom-up.  If a cgroup
+@@ -125,40 +125,41 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
+ 
+ 		/* Root has no parent to link it to, but mark it busy */
+ 		if (!parent) {
+-			rstatc->updated_next = cgrp;
++			rstatc->updated_next = css;
+ 			break;
+ 		}
+ 
+-		prstatc = cgroup_rstat_cpu(parent, cpu);
++		prstatc = css_rstat_cpu(parent, cpu);
+ 		rstatc->updated_next = prstatc->updated_children;
+-		prstatc->updated_children = cgrp;
++		prstatc->updated_children = css;
+ 
+-		cgrp = parent;
++		css = parent;
+ 	}
+ 
+ 	_css_rstat_cpu_unlock(cpu_lock, cpu, css, flags, true);
+ }
+ 
+ /**
+- * cgroup_rstat_push_children - push children cgroups into the given list
++ * css_rstat_push_children - push children css's into the given list
+  * @head: current head of the list (= subtree root)
+  * @child: first child of the root
+  * @cpu: target cpu
+  * Return: A new singly linked list of cgroups to be flushed
+  *
+- * Iteratively traverse down the cgroup_rstat_cpu updated tree level by
++ * Iteratively traverse down the css_rstat_cpu updated tree level by
+  * level and push all the parents first before their next level children
+  * into a singly linked list via the rstat_flush_next pointer built from the
+  * tail backward like "pushing" cgroups into a stack. The root is pushed by
+  * the caller.
+  */
+-static struct cgroup *cgroup_rstat_push_children(struct cgroup *head,
+-						 struct cgroup *child, int cpu)
++static struct cgroup_subsys_state *css_rstat_push_children(
++		struct cgroup_subsys_state *head,
++		struct cgroup_subsys_state *child, int cpu)
+ {
+-	struct cgroup *cnext = child;	/* Next head of child cgroup level */
+-	struct cgroup *ghead = NULL;	/* Head of grandchild cgroup level */
+-	struct cgroup *parent, *grandchild;
+-	struct cgroup_rstat_cpu *crstatc;
++	struct cgroup_subsys_state *cnext = child;	/* Next head of child css level */
++	struct cgroup_subsys_state *ghead = NULL;	/* Head of grandchild css level */
++	struct cgroup_subsys_state *parent, *grandchild;
++	struct css_rstat_cpu *crstatc;
+ 
+ 	child->rstat_flush_next = NULL;
+ 
+@@ -189,13 +190,13 @@ static struct cgroup *cgroup_rstat_push_children(struct cgroup *head,
+ 	while (cnext) {
+ 		child = cnext;
+ 		cnext = child->rstat_flush_next;
+-		parent = cgroup_parent(child);
++		parent = child->parent;
+ 
+ 		/* updated_next is parent cgroup terminated if !NULL */
+ 		while (child != parent) {
+ 			child->rstat_flush_next = head;
+ 			head = child;
+-			crstatc = cgroup_rstat_cpu(child, cpu);
++			crstatc = css_rstat_cpu(child, cpu);
+ 			grandchild = crstatc->updated_children;
+ 			if (grandchild != child) {
+ 				/* Push the grand child to the next level */
+@@ -217,31 +218,32 @@ static struct cgroup *cgroup_rstat_push_children(struct cgroup *head,
+ }
+ 
+ /**
+- * cgroup_rstat_updated_list - return a list of updated cgroups to be flushed
+- * @root: root of the cgroup subtree to traverse
++ * css_rstat_updated_list - return a list of updated cgroups to be flushed
++ * @root: root of the css subtree to traverse
+  * @cpu: target cpu
+  * Return: A singly linked list of cgroups to be flushed
+  *
+  * Walks the updated rstat_cpu tree on @cpu from @root.  During traversal,
+- * each returned cgroup is unlinked from the updated tree.
++ * each returned css is unlinked from the updated tree.
+  *
+  * The only ordering guarantee is that, for a parent and a child pair
+  * covered by a given traversal, the child is before its parent in
+  * the list.
+  *
+  * Note that updated_children is self terminated and points to a list of
+- * child cgroups if not empty. Whereas updated_next is like a sibling link
+- * within the children list and terminated by the parent cgroup. An exception
++ * child css's if not empty. Whereas updated_next is like a sibling link
++ * within the children list and terminated by the parent css. An exception
+  * here is the cgroup root whose updated_next can be self terminated.
+  */
+-static struct cgroup *cgroup_rstat_updated_list(struct cgroup *root, int cpu)
++static struct cgroup_subsys_state *css_rstat_updated_list(
++		struct cgroup_subsys_state *root, int cpu)
+ {
+ 	raw_spinlock_t *cpu_lock = per_cpu_ptr(&cgroup_rstat_cpu_lock, cpu);
+-	struct cgroup_rstat_cpu *rstatc = cgroup_rstat_cpu(root, cpu);
+-	struct cgroup *head = NULL, *parent, *child;
++	struct css_rstat_cpu *rstatc = css_rstat_cpu(root, cpu);
++	struct cgroup_subsys_state *head = NULL, *parent, *child;
+ 	unsigned long flags;
+ 
+-	flags = _css_rstat_cpu_lock(cpu_lock, cpu, &root->self, false);
++	flags = _css_rstat_cpu_lock(cpu_lock, cpu, root, false);
+ 
+ 	/* Return NULL if this subtree is not on-list */
+ 	if (!rstatc->updated_next)
+@@ -251,17 +253,17 @@ static struct cgroup *cgroup_rstat_updated_list(struct cgroup *root, int cpu)
+ 	 * Unlink @root from its parent. As the updated_children list is
+ 	 * singly linked, we have to walk it to find the removal point.
  	 */
- 	trace_vector_free_moved(apicd->irq, cpu, vector, managed);
--	irq_matrix_free(vector_matrix, cpu, vector, managed);
-+	apic_free_vector(cpu, vector, managed);
- 	per_cpu(vector_irq, cpu)[vector] = VECTOR_UNUSED;
- 	hlist_del_init(&apicd->clist);
- 	apicd->prev_vector = 0;
+-	parent = cgroup_parent(root);
++	parent = root->parent;
+ 	if (parent) {
+-		struct cgroup_rstat_cpu *prstatc;
+-		struct cgroup **nextp;
++		struct css_rstat_cpu *prstatc;
++		struct cgroup_subsys_state **nextp;
+ 
+-		prstatc = cgroup_rstat_cpu(parent, cpu);
++		prstatc = css_rstat_cpu(parent, cpu);
+ 		nextp = &prstatc->updated_children;
+ 		while (*nextp != root) {
+-			struct cgroup_rstat_cpu *nrstatc;
++			struct css_rstat_cpu *nrstatc;
+ 
+-			nrstatc = cgroup_rstat_cpu(*nextp, cpu);
++			nrstatc = css_rstat_cpu(*nextp, cpu);
+ 			WARN_ON_ONCE(*nextp == parent);
+ 			nextp = &nrstatc->updated_next;
+ 		}
+@@ -276,9 +278,9 @@ static struct cgroup *cgroup_rstat_updated_list(struct cgroup *root, int cpu)
+ 	child = rstatc->updated_children;
+ 	rstatc->updated_children = root;
+ 	if (child != root)
+-		head = cgroup_rstat_push_children(head, child, cpu);
++		head = css_rstat_push_children(head, child, cpu);
+ unlock_ret:
+-	_css_rstat_cpu_unlock(cpu_lock, cpu, &root->self, flags, false);
++	_css_rstat_cpu_unlock(cpu_lock, cpu, root, flags, false);
+ 	return head;
+ }
+ 
+@@ -339,41 +341,36 @@ static inline void __css_rstat_unlock(struct cgroup_subsys_state *css,
+ }
+ 
+ /**
+- * css_rstat_flush - flush stats in @css->cgroup's subtree
++ * css_rstat_flush - flush stats in @css's rstat subtree
+  * @css: target cgroup subsystem state
+  *
+- * Collect all per-cpu stats in @css->cgroup's subtree into the global counters
+- * and propagate them upwards.  After this function returns, all cgroups in
+- * the subtree have up-to-date ->stat.
++ * Collect all per-cpu stats in @css's subtree into the global counters
++ * and propagate them upwards. After this function returns, all rstat
++ * nodes in the subtree have up-to-date ->stat.
+  *
+- * This also gets all cgroups in the subtree including @css->cgroup off the
++ * This also gets all rstat nodes in the subtree including @css off the
+  * ->updated_children lists.
+  *
+  * This function may block.
+  */
+ __bpf_kfunc void css_rstat_flush(struct cgroup_subsys_state *css)
+ {
+-	struct cgroup *cgrp = css->cgroup;
+ 	int cpu;
+ 
+ 	might_sleep();
+ 	for_each_possible_cpu(cpu) {
+-		struct cgroup *pos;
++		struct cgroup_subsys_state *pos;
+ 
+ 		/* Reacquire for each CPU to avoid disabling IRQs too long */
+ 		__css_rstat_lock(css, cpu);
+-		pos = cgroup_rstat_updated_list(cgrp, cpu);
++		pos = css_rstat_updated_list(css, cpu);
+ 		for (; pos; pos = pos->rstat_flush_next) {
+-			struct cgroup_subsys_state *css;
+-
+-			cgroup_base_stat_flush(pos, cpu);
+-			bpf_rstat_flush(pos, cgroup_parent(pos), cpu);
+-
+-			rcu_read_lock();
+-			list_for_each_entry_rcu(css, &pos->rstat_css_list,
+-						rstat_css_node)
++			if (css_is_cgroup(pos)) {
++				cgroup_base_stat_flush(pos->cgroup, cpu);
++				bpf_rstat_flush(pos->cgroup,
++						cgroup_parent(pos->cgroup), cpu);
++			} else if (pos->ss->css_rstat_flush)
+ 				css->ss->css_rstat_flush(css, cpu);
+-			rcu_read_unlock();
+ 		}
+ 		__css_rstat_unlock(css, cpu);
+ 		if (!cond_resched())
+@@ -386,29 +383,36 @@ int css_rstat_init(struct cgroup_subsys_state *css)
+ 	struct cgroup *cgrp = css->cgroup;
+ 	int cpu;
+ 
+-	/* the root cgrp has rstat_cpu preallocated */
+-	if (!cgrp->rstat_cpu) {
+-		cgrp->rstat_cpu = alloc_percpu(struct cgroup_rstat_cpu);
+-		if (!cgrp->rstat_cpu)
+-			return -ENOMEM;
++	/* the root cgrp has rstat_base_cpu preallocated */
++	if (css_is_cgroup(css)) {
++		if (!cgrp->rstat_base_cpu) {
++			cgrp->rstat_base_cpu = alloc_percpu(struct cgroup_rstat_base_cpu);
++			if (!cgrp->rstat_base_cpu)
++				return -ENOMEM;
++		}
+ 	}
+ 
+-	if (!cgrp->rstat_base_cpu) {
+-		cgrp->rstat_base_cpu = alloc_percpu(struct cgroup_rstat_base_cpu);
+-		if (!cgrp->rstat_base_cpu) {
+-			free_percpu(cgrp->rstat_cpu);
+-			return -ENOMEM;
++	/* the root cgrp's self css has rstat_cpu preallocated */
++	if (!css->rstat_cpu) {
++		css->rstat_cpu = alloc_percpu(struct css_rstat_cpu);
++		if (!css->rstat_cpu) {
++			if (css_is_cgroup(css))
++				free_percpu(cgrp->rstat_base_cpu);
+ 		}
+ 	}
+ 
+ 	/* ->updated_children list is self terminated */
+ 	for_each_possible_cpu(cpu) {
+-		struct cgroup_rstat_cpu *rstatc = cgroup_rstat_cpu(cgrp, cpu);
+-		struct cgroup_rstat_base_cpu *rstatbc =
+-			cgroup_rstat_base_cpu(cgrp, cpu);
++		struct css_rstat_cpu *rstatc = css_rstat_cpu(css, cpu);
+ 
+-		rstatc->updated_children = cgrp;
+-		u64_stats_init(&rstatbc->bsync);
++		rstatc->updated_children = css;
++
++		if (css_is_cgroup(css)) {
++			struct cgroup_rstat_base_cpu *rstatbc;
++
++			rstatbc = cgroup_rstat_base_cpu(cgrp, cpu);
++			u64_stats_init(&rstatbc->bsync);
++		}
+ 	}
+ 
+ 	return 0;
+@@ -416,24 +420,28 @@ int css_rstat_init(struct cgroup_subsys_state *css)
+ 
+ void css_rstat_exit(struct cgroup_subsys_state *css)
+ {
+-	struct cgroup *cgrp = css->cgroup;
+ 	int cpu;
+ 
+-	css_rstat_flush(&cgrp->self);
++	css_rstat_flush(css);
+ 
+ 	/* sanity check */
+ 	for_each_possible_cpu(cpu) {
+-		struct cgroup_rstat_cpu *rstatc = cgroup_rstat_cpu(cgrp, cpu);
++		struct css_rstat_cpu *rstatc = css_rstat_cpu(css, cpu);
+ 
+-		if (WARN_ON_ONCE(rstatc->updated_children != cgrp) ||
++		if (WARN_ON_ONCE(rstatc->updated_children != css) ||
+ 		    WARN_ON_ONCE(rstatc->updated_next))
+ 			return;
+ 	}
+ 
+-	free_percpu(cgrp->rstat_cpu);
+-	cgrp->rstat_cpu = NULL;
+-	free_percpu(cgrp->rstat_base_cpu);
+-	cgrp->rstat_base_cpu = NULL;
++	if (css_is_cgroup(css)) {
++		struct cgroup *cgrp = css->cgroup;
++
++		free_percpu(cgrp->rstat_base_cpu);
++		cgrp->rstat_base_cpu = NULL;
++	}
++
++	free_percpu(css->rstat_cpu);
++	css->rstat_cpu = NULL;
+ }
+ 
+ void __init cgroup_rstat_boot(void)
+diff --git a/tools/testing/selftests/bpf/progs/btf_type_tag_percpu.c b/tools/testing/selftests/bpf/progs/btf_type_tag_percpu.c
+index 38f78d9345de..69f81cb555ca 100644
+--- a/tools/testing/selftests/bpf/progs/btf_type_tag_percpu.c
++++ b/tools/testing/selftests/bpf/progs/btf_type_tag_percpu.c
+@@ -30,22 +30,27 @@ int BPF_PROG(test_percpu2, struct bpf_testmod_btf_type_tag_2 *arg)
+ 
+ /* trace_cgroup_mkdir(struct cgroup *cgrp, const char *path)
+  *
+- * struct cgroup_rstat_cpu {
++ * struct css_rstat_cpu {
+  *   ...
+- *   struct cgroup *updated_children;
++ *   struct cgroup_subsys_state *updated_children;
+  *   ...
+  * };
+  *
+- * struct cgroup {
++ * struct cgroup_subsys_state {
++ *   ...
++ *   struct css_rstat_cpu __percpu *rstat_cpu;
+  *   ...
+- *   struct cgroup_rstat_cpu __percpu *rstat_cpu;
++ * };
++ *
++ * struct cgroup {
++ *   struct cgroup_subsys_state self;
+  *   ...
+  * };
+  */
+ SEC("tp_btf/cgroup_mkdir")
+ int BPF_PROG(test_percpu_load, struct cgroup *cgrp, const char *path)
+ {
+-	g = (__u64)cgrp->rstat_cpu->updated_children;
++	g = (__u64)cgrp->self.rstat_cpu->updated_children;
+ 	return 0;
+ }
+ 
+@@ -56,7 +61,8 @@ int BPF_PROG(test_percpu_helper, struct cgroup *cgrp, const char *path)
+ 	__u32 cpu;
+ 
+ 	cpu = bpf_get_smp_processor_id();
+-	rstat = (struct cgroup_rstat_cpu *)bpf_per_cpu_ptr(cgrp->rstat_cpu, cpu);
++	rstat = (struct cgroup_rstat_cpu *)bpf_per_cpu_ptr(
++			cgrp->self.rstat_cpu, cpu);
+ 	if (rstat) {
+ 		/* READ_ONCE */
+ 		*(volatile int *)rstat;
 -- 
-2.34.1
+2.47.1
 
