@@ -1,139 +1,160 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B28A242D80
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1DF253F0C;
+	Tue, 29 Apr 2025 19:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745955068; cv=none; b=GoEZ0NwAqrFKkTUfxPuEDwBRFEuV5Xkr3GvQhDpbPjeiCndhZVy6dPibgQjqu6t4fTv21lQIMSKZKkx52ET/tglXDH2f3Zljpp2KGSIZBG40mdYjvCEUU5fDAzHjFD1cMkpAGiDCjZuSwuox275AfQKOUOV4P3MF/rQ6HsFpBgQ=
+	t=1745955090; cv=none; b=NPgQ4sl/PwBsCrR4/KpRPlvl83y1cbqZ8c9UuZvVXDYa4DY2tLvcPY9J+1YIgMOj7+r+mxcmaKm2GPKvWVIwViV7d9s/Cp6VcBnADtY/bn5RCki7ZUfUht6Pi+ElnXSFdYvvgaLkX2ClpO0lPn3Baw2BOlzwBpm77FeUK15Bbxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745955068; c=relaxed/simple;
-	bh=F5u0T2bd9f9E1hJDBLndIIX0IL37h+00zGgcWxHjWgU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Jby8iLuTIKrczAs11E7NUtaNXeEPJvCXDv0RlKGNv9nLwV6hMmKX32q4uVyssZRMvMFCrpkZ/jC1wRUftjbtmDzTzYHo2DYNNcCd9kM8jrQjGGGPnQWMhDOcV97hsg/xLYBwbXrvhep8CXRddyB/dJl0yh2mMw89iEt1tGVuohg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QC3IWbjc; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745955090; c=relaxed/simple;
+	bh=E06KLMc9ut2C8183Z9uZRwX896+RnnB8y+ankyRhiOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rf/R12RVCScX2MajSVpsSp8Eu4+Hp4DqV3xSc2jsuKJ8XYT6mSNKrwjRnubOK8SQuSgoHEYA9EAWm0weCZZGXSSN1v7X1urI1oloGlfvM3tC+8lbPXyy7tIu8BL9DHgHqU3GVsjXBdv0X6a2ZzNT11307zdajtbJ1z2tWboXsfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tp0QfeAN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QC3IWbjc"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72c27166ab3so4867476a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 12:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745955063; x=1746559863; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IEA9coPSR+RXT/e6kG1IdF6r8oRJJfl6KimXKU4XDp0=;
-        b=QC3IWbjc5ICniceVNhODfd+Z01/cXFbxwXw5jf44xK0a5SQgZawFIb+aI4Xpirif4s
-         zew7UhV1UWg6A/ocFc93bp/JwnHp0Sjodbv/ilzJ9UCdH7O3ASxxQBoryImmed9IjGjZ
-         ggn5HFjSilGYpa85+/5v1eXwgfwHQb+nLID6PeBOaVz+5oDlRawI2bmACEx67NTsMdCR
-         937JSleIBXlQBLxv2wzAacin4OPW8luxbolNcxR4A/ohpmNDhNd17LexQxi0F858MkgD
-         pzdvj8vHEUlA2udN93B8Rk23h49IZhSwNDXWTeCCT5P23po3XTpAstIHD7et/O8QOfcp
-         HBCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745955063; x=1746559863;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IEA9coPSR+RXT/e6kG1IdF6r8oRJJfl6KimXKU4XDp0=;
-        b=rd/UAgI03+eXEHnjpB0UJTa2FQeGzWPf0ak0fE4i6jIV0b+lQrpIY3I66ihZRXps4o
-         RlCPwwn0gcX95NA6h7JRbV7tRZcCcx/LCJoHeoG1O+1nTezLrobzBSq8KuIGZ8kvWGvR
-         Bng659wexG6lBkrVCx6AkIF3PqMRr1vjXgS085uq6tT5X/hzhOhvt1iC/MqN5sL+yS6C
-         /HDqMi3q7zmPTKa8LG7EPTdgLzibKTscgtY+fs5dbt6qWs74o+CckpzBDmXm0uxaHZFK
-         6Cvst7y8Toa746RgKpXnicHA+k9T5k14bQYBAAu60dzcR5FOVX5PLr0177Vhcvl3MVdw
-         V72w==
-X-Forwarded-Encrypted: i=1; AJvYcCUShO2kHxlf89kgSpMiLwGhoEKEO8sSGDOMelBabM/7jKG494MKQhYJ1u15ejrZ276JcYRz5mxqmOAY/yM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybQ1oengMvSkmtwYVWRVHpciKEpESTBULPvwPncrQ/amW7h2Jw
-	8wSUOU3JeIUN5AJwmT5UpTy6Z4XDU2VQwn/tsmL9C6DFgEi5Oih76dSwZVdCN0K4c5Km9YOVs7C
-	O
-X-Gm-Gg: ASbGncuXy2huPczb2CP+z0dJAxZqlUJTXM0aqCnp/SOjUgr58WAOLqp190CGQMnNHab
-	9BIstv0rUGkIS0TedpTphczJJv+wgkawwzTh1lOAp8l1/VTaOj1eNVPw37QWn4JRsfXXUX1j1rc
-	VKUar9l4XmzeOnbDUUjDOCCqZZ9KN5c/uJMUIpeK0DyGcjQ5tZ9eT+Y+l/w/x3kn0I7c0GERlKe
-	XXfURktXUp8m0QA3R4REK9fV55GvZMe+YT8mVRAM/QZCcvOI6qK0YxSB1pGqdPa/d7Cc/GB7BhZ
-	Np6XMaq+OHccB1+ztb90njsqVu/Uw9nME+0et/6i/0GT/On3rspb56h6VlfZIvWjDj/0sBKarbb
-	uUp+6tySIknyFBN3WFw==
-X-Google-Smtp-Source: AGHT+IEaVlZVZe+jb2HlViK5TnZL0Nc4jro3bTaGV2+pNP/R765+0tJ8r0OzgrEjBUiZuFEMIPtr+g==
-X-Received: by 2002:a05:6830:4420:b0:727:42aa:e888 with SMTP id 46e09a7af769-731c0ab2949mr234320a34.27.1745955063337;
-        Tue, 29 Apr 2025 12:31:03 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6? ([2600:8803:e7e4:1d00:dc17:157d:e8b2:3ad6])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b0f35b0sm444024a34.11.2025.04.29.12.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 12:31:02 -0700 (PDT)
-Message-ID: <5c762653-b636-45bd-8800-e804ad8dfda5@baylibre.com>
-Date: Tue, 29 Apr 2025 14:31:02 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tp0QfeAN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23A9C4CEE3;
+	Tue, 29 Apr 2025 19:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745955090;
+	bh=E06KLMc9ut2C8183Z9uZRwX896+RnnB8y+ankyRhiOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tp0QfeANEdC5O/loeaMJSlz3kEDkDGfMcsD9PiQSQd4iB+q/F+f6Kba/QTI7BkfCq
+	 cJvKTnAJ6OJE2ClINacBN0vHNfQyy8c2v2u55sDA/zHI8xY585KFrH/35AvfL1XN6O
+	 hPeHOhTFta0C+SL9ZAn6RLR6yxAB2Wl7s+ONGwetTDQNGJoiSJEf1ycaO0DZdM91c3
+	 CfGGmc3X8srNWiaIZGkajWSH1hZQhfJw/xB3Wr0Q/n+PnMD908MXqNsa7J50lsGceP
+	 iZWcpPvCBkZVrmliEU30k5D1RoN5fqoAzG/svCJ8Ie5AHj2FSaK3xX5BHPO+Ae3rTf
+	 k8mLXqOx/M3+Q==
+Date: Tue, 29 Apr 2025 12:31:28 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, linux@leemhuis.info,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix in-source libperf build
+Message-ID: <aBEpEEN1zKQyeROr@google.com>
+References: <20250429-james-perf-fix-libperf-in-source-build-v1-1-a1a827ac15e5@linaro.org>
+ <aBEUFK6o41mlkd9j@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
- <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-1-6f7f6126f1cb@baylibre.com>
- <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <1d90fae5-9c58-4a77-b81c-2946e7cc74d4@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBEUFK6o41mlkd9j@x1>
 
-On 4/28/25 9:12 PM, David Lechner wrote:
-> On 4/28/25 3:23 PM, David Lechner wrote:
->> Add new macros to help with the common case of declaring a buffer that
->> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
->> to do correctly because of the alignment requirements of the timestamp.
->> This will make it easier for both authors and reviewers.
->>
->> To avoid double __align() attributes in cases where we also need DMA
->> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
+On Tue, Apr 29, 2025 at 03:01:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Apr 29, 2025 at 03:22:18PM +0100, James Clark wrote:
+> > When libperf is built alone in-source, $(OUTPUT) isn't set. This causes
+> > the generated uapi path to resolve to '/../arch' which results in a
+> > permissions error:
+>  
+> >   mkdir: cannot create directory '/../arch': Permission denied
 > 
-> ...
+> So this requires the only outstanding patch in perf-tools/perf-tools:
 > 
->> +/**
->> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
->> + * @type: element type of the buffer
->> + * @name: identifier name of the buffer
->> + * @count: number of elements in the buffer
->> + *
->> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
->> + * to ensure that the buffer doesn't share cachelines with anything that comes
->> + * before it in a struct. This should not be used for stack-allocated buffers
->> + * as stack memory cannot generally be used for DMA.
->> + */
->> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count)	\
->> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count)		\
->> +	/* IIO_DMA_MINALIGN may be 4 on some 32-bit arches. */	\
->> +	__aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
+> ⬢ [acme@toolbx perf-tools-next]$ git log -5 --oneline perf-tools/perf-tools
+> bfb713ea53c746b0 (perf-tools/tmp.perf-tools, perf-tools/perf-tools, perf-tools) perf tools: Fix arm64 build by generating unistd_64.h
+> 9c32cda43eb78f78 (tag: v6.15-rc3) Linux 6.15-rc3
+> ac71fabf15679fc7 gcc-15: work around sequence-point warning
+> 05e8d261a34e5c63 gcc-15: add '__nonstring' markers to byte arrays
+> be913e7c4034bd7a gcc-15: get rid of misc extra NUL character padding
+> ⬢ [acme@toolbx perf-tools-next]$
 > 
-> I just realized my logic behind this is faulty. It assumes sizeof(s64) ==
-> __alignof__(s64), but that isn't always true and that is what caused the builds
-> to hit the static_assert() on v3.
+> So probably should go to there, to be submitted to Linus in the current
+> merge window, right?
 > 
-> We should be able to leave this as __aligned(IIO_DMA_MINALIGN)
-> 
-> And have this (with better error message):
-> 
-> static assert(IIO_DMA_MINALIGN % __alignof__(s64) == 0);
+> Namhyung?
 
-I was working late yesterday and should have saved that reply until morning
-to think about it more!
+Yep, I'll add it to the perf-tools tree and send a PR later.
 
-We do want to align to to sizeof(s64) instead of __alignof__(s64) to avoid
-issues with, e.g. 32-bit kernel and 64-bit userspace (same reason that
-aligned_s64 exists and always uses 8-byte alignment).
+Thanks,
+Namhyung
 
-So I think this patch is correct as-is after all.
+> 
+> - Arnaldo
+>  
+> > Fix it by removing the preceding '/..' which means that it gets
+> > generated either in the tools/lib/perf part of the tree or the OUTPUT
+> > folder. Some other rules that rely on OUTPUT further refine this
+> > conditionally depending on whether it's an in-source or out-of-source
+> > build, but I don't think we need the extra complexity here. And this
+> > rule is slightly different to others because the header is needed by
+> > both libperf and Perf. This is further complicated by the fact that Perf
+> > always passes O=... to libperf even for in source builds, meaning that
+> > OUTPUT isn't set consistently between projects.
+> > 
+> > Because we're no longer going one level up to try to generate the file
+> > in the tools/ folder, Perf's include rule needs to descend into libperf.
+> > Also fix the clean rule while we're here.
+> > 
+> > Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+> > Closes: https://lore.kernel.org/linux-perf-users/7703f88e-ccb7-4c98-9da4-8aad224e780f@leemhuis.info/
+> > Fixes: bfb713ea53c7 ("perf tools: Fix arm64 build by generating unistd_64.h")
+> > Signed-off-by: James Clark <james.clark@linaro.org>
+> > ---
+> >  tools/lib/perf/Makefile    | 6 +++---
+> >  tools/perf/Makefile.config | 2 +-
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+> > index 1a19b5013f45..7fbb50b74c00 100644
+> > --- a/tools/lib/perf/Makefile
+> > +++ b/tools/lib/perf/Makefile
+> > @@ -42,7 +42,7 @@ libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
+> >  TEST_ARGS := $(if $(V),-v)
+> >  
+> >  INCLUDES = \
+> > --I$(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi \
+> > +-I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi \
+> >  -I$(srctree)/tools/lib/perf/include \
+> >  -I$(srctree)/tools/lib/ \
+> >  -I$(srctree)/tools/include \
+> > @@ -100,7 +100,7 @@ $(LIBAPI)-clean:
+> >  	$(call QUIET_CLEAN, libapi)
+> >  	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
+> >  
+> > -uapi-asm := $(OUTPUT)/../arch/$(SRCARCH)/include/generated/uapi/asm
+> > +uapi-asm := $(OUTPUT)arch/$(SRCARCH)/include/generated/uapi/asm
+> >  ifeq ($(SRCARCH),arm64)
+> >  	syscall-y := $(uapi-asm)/unistd_64.h
+> >  endif
+> > @@ -130,7 +130,7 @@ all: fixdep
+> >  clean: $(LIBAPI)-clean
+> >  	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
+> >                  *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
+> > -                $(TESTS_STATIC) $(TESTS_SHARED)
+> > +                $(TESTS_STATIC) $(TESTS_SHARED) $(syscall-y)
+> >  
+> >  TESTS_IN = tests-in.o
+> >  
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index a52482654d4b..b7769a22fe1a 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -29,7 +29,7 @@ include $(srctree)/tools/scripts/Makefile.arch
+> >  $(call detected_var,SRCARCH)
+> >  
+> >  CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated
+> > -CFLAGS += -I$(OUTPUT)arch/$(SRCARCH)/include/generated/uapi
+> > +CFLAGS += -I$(OUTPUT)libperf/arch/$(SRCARCH)/include/generated/uapi
+> >  
+> >  # Additional ARCH settings for ppc
+> >  ifeq ($(SRCARCH),powerpc)
+> > 
+> > ---
+> > base-commit: bfb713ea53c746b07ae69fe97fa9b5388e4f34f9
+> > change-id: 20250429-james-perf-fix-libperf-in-source-build-15609cc212aa
+> > 
+> > Best regards,
+> > -- 
+> > James Clark <james.clark@linaro.org>
+> > 
