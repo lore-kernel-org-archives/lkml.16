@@ -1,110 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E234275847
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168B9277002
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745909696; cv=none; b=aOgss3T1pTv0qBCQaPbK7grC3MNMVs39kAWD73jqFuE38dD8VPFIc3O08fB8xurCgMVMEfWp47/TXT88y74uk9VrsyqZltlAFs7rg4Bncf6YPCtMbVmCumaVo7CM5DuI+lYPXjfqaKHMN53+mK90Vd/nDH38Wowfxz4RNikV8FA=
+	t=1745909697; cv=none; b=CqWf07poQS9bIeSdvTMjIx9b7HOFOzLjuKnIxdxnAh7MUA3UvuhKpa+JiRIpNQcuA/MHSrfbQlPQLPGoMHKSob16ZZgM1mh6QwlUcnF6+2+9SF0lZcxOd3emdpvJXfY0dpljniCqGxKFCQXZCJzu3e7P2mUUNz/40sJdyywEoY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745909696; c=relaxed/simple;
-	bh=PpZtbA9kdwBRA3jbs9L3Dv6eNjFnhgwGX0jsrHH7Kxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DTaIhOgfe8gIHxnQuTOgXH8jETZ4qykqqs+3GIgZ/ZzbxmUCyvvIYYIJeRA6m6K4lk9o9Yn7FS1pOgGycS/Zex4qcYKHlXBojcJI+hdzHI8YbBcQm8hn8VqO1pUb/kqAgCaK3R9EY1Jkc77aqQj2MxfqUdh+Z+Gpct3KTKiFVLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CADZ9CHP; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745909697; c=relaxed/simple;
+	bh=5e8N7AhvOi0OtytDRRtSyTsFfv+PPBlDCnk0DxMSIbE=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=gyheihQ2EJJFP6RzX7CA0IOHGeopqVHd/auNcJOYcSS8KVjFX2cwr1ZkOdpW75hXQivNO+SBwn4nQiQ33z7RkCww7sZV+5BLtECC6SnlfPvQTrPl0BvPf4lhhu0fzOP33kMkGQh6MdbmtYXnxyGCIvvo5JjPLTmXFXpHahj9krI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2WAx6HTO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qwsB585x; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CADZ9CHP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745909695; x=1777445695;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PpZtbA9kdwBRA3jbs9L3Dv6eNjFnhgwGX0jsrHH7Kxo=;
-  b=CADZ9CHPrJpcKBQqEyyOlxwBoUU78onvl9Xq00CCbBD7f78OXTPCgzah
-   g480/nTvBGn+mekl5G7gDiztrUmsZNSWLWlJvL6dIFKurXPOyfupIM7I7
-   smxK9EtixzLylKEKycpd317FZy3NRxqGhQ3GDhW+pEJdvYyam6XW1kcFb
-   6AABDvOao6vtlNZ8sJG/OgtApo9V8VBuiaYyzPQ8qNMaSHFwUZelSSyn/
-   nnLRrdo7faqGo+C1FFKS81jiUVsL94L89SBHnQ9R0u9ZLN4w/3lV/kyOU
-   5MiVZhpbu/jrFZdv1o0MzHAPeEfnhPdg684VqhtNAd4SH6mwxfODxnE01
-   A==;
-X-CSE-ConnectionGUID: 4gZGoJoCSB+QYoykOqQV2Q==
-X-CSE-MsgGUID: wuEj8ySSQp6Ik3AR3v2S/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="70023581"
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="70023581"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 23:54:55 -0700
-X-CSE-ConnectionGUID: 9eL1swR/S7aR3gcphn1kQg==
-X-CSE-MsgGUID: 8dVE5jmeSmOYAhK9/+H+3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,248,1739865600"; 
-   d="scan'208";a="134695028"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 23:54:51 -0700
-Message-ID: <446b94d5-3192-448e-9f29-de1e04bbd517@linux.intel.com>
-Date: Tue, 29 Apr 2025 14:50:39 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2WAx6HTO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qwsB585x"
+Message-ID: <20250429065420.251299112@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745909694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=dzug9PSb1hRGMbAMs5O0DoRZ9PXFq2b5flFpCdZwkw4=;
+	b=2WAx6HTOgvruBzHCLLPo267oIajhucSXyc9iahp7kcMNZVwSQnR8pVIukjtNbYRnBMd4GX
+	QByhiF+hNeyif0oY1qmKxScWZgVHbtjIzXInIYGBYxCxUerqLEdbCj0nz6upknA1NQpDZq
+	PLeokLOUdOHMhxroah3UBjCLq2w5OpJY5CszN/Gu4mjELHcQOtGZgeYYwZgmKPjbKwIfu+
+	RfDUbHNMTSIR/RKjlHLARnE9eqbIwkWAQRCn9rfK2sQFGbWfFWXG9TuOWjfehXJn9ey8nQ
+	lE0s1dAKtQC/pnyy5LLlypTQcsIMzwM3+Ojy9uZB/XBk5JVJ4eiaOKC5pzgMOA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745909694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=dzug9PSb1hRGMbAMs5O0DoRZ9PXFq2b5flFpCdZwkw4=;
+	b=qwsB585xxlLceRAtnhT4OtwZjlzlptdcdCYMh5MVzHmnKKbygcJdAOM2IQVZNAo13mSY2I
+	I+ViehBUfmuUp8DA==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Subject: [patch V2 04/45] genirq/pm: Switch to lock guards
+References: <20250429065337.117370076@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/riscv: fix use after free of riscv_iommu_domain
-To: BillXiang <xiangwencheng@lanxincomputing.com>, tjeznach@rivosinc.com
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250429034007.578-1-xiangwencheng@lanxincomputing.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250429034007.578-1-xiangwencheng@lanxincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 29 Apr 2025 08:54:53 +0200 (CEST)
 
-On 4/29/25 11:40, BillXiang wrote:
-> The function vfio_group_detach_container begins by calling
-> vfio_iommu_type1_detach_group, which may subsequently calls
+Convert all lock/unlock pairs to guards and tidy up the code.
 
-I don't follow here. vfio_iommu_type1_detach_group() will eventually
-call riscv_iommu_attach_blocking_domain() and info->domain has been
-cleared there:
+No functional change.
 
-static int riscv_iommu_attach_blocking_domain(struct iommu_domain 
-*iommu_domain,
-                                               struct device *dev)
-{
-         struct riscv_iommu_device *iommu = dev_to_iommu(dev);
-         struct riscv_iommu_info *info = dev_iommu_priv_get(dev);
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-         /* Make device context invalid, translation requests will fault 
-w/ #258 */
-         riscv_iommu_iodir_update(iommu, dev, RISCV_IOMMU_FSC_BARE, 0);
-         riscv_iommu_bond_unlink(info->domain, dev);
-         info->domain = NULL;
+---
+ kernel/irq/pm.c |   38 +++++++++++++-------------------------
+ 1 file changed, 13 insertions(+), 25 deletions(-)
 
-         return 0;
-}
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -46,8 +46,7 @@ void irq_pm_install_action(struct irq_de
+ 		desc->cond_suspend_depth++;
+ 
+ 	WARN_ON_ONCE(desc->no_suspend_depth &&
+-		     (desc->no_suspend_depth +
+-			desc->cond_suspend_depth) != desc->nr_actions);
++		     (desc->no_suspend_depth + desc->cond_suspend_depth) != desc->nr_actions);
+ }
+ 
+ /*
+@@ -134,14 +133,12 @@ void suspend_device_irqs(void)
+ 	int irq;
+ 
+ 	for_each_irq_desc(irq, desc) {
+-		unsigned long flags;
+ 		bool sync;
+ 
+ 		if (irq_settings_is_nested_thread(desc))
+ 			continue;
+-		raw_spin_lock_irqsave(&desc->lock, flags);
+-		sync = suspend_device_irq(desc);
+-		raw_spin_unlock_irqrestore(&desc->lock, flags);
++		scoped_guard(raw_spinlock_irqsave, &desc->lock)
++			sync = suspend_device_irq(desc);
+ 
+ 		if (sync)
+ 			synchronize_irq(irq);
+@@ -186,18 +183,15 @@ static void resume_irqs(bool want_early)
+ 	int irq;
+ 
+ 	for_each_irq_desc(irq, desc) {
+-		unsigned long flags;
+-		bool is_early = desc->action &&
+-			desc->action->flags & IRQF_EARLY_RESUME;
++		bool is_early = desc->action &&	desc->action->flags & IRQF_EARLY_RESUME;
+ 
+ 		if (!is_early && want_early)
+ 			continue;
+ 		if (irq_settings_is_nested_thread(desc))
+ 			continue;
+ 
+-		raw_spin_lock_irqsave(&desc->lock, flags);
++		guard(raw_spinlock_irqsave)(&desc->lock);
+ 		resume_irq(desc);
+-		raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 	}
+ }
+ 
+@@ -207,22 +201,16 @@ static void resume_irqs(bool want_early)
+  */
+ void rearm_wake_irq(unsigned int irq)
+ {
+-	unsigned long flags;
+-	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
++	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
++		struct irq_desc *desc = scoped_irqdesc;
+ 
+-	if (!desc)
+-		return;
+-
+-	if (!(desc->istate & IRQS_SUSPENDED) ||
+-	    !irqd_is_wakeup_set(&desc->irq_data))
+-		goto unlock;
+-
+-	desc->istate &= ~IRQS_SUSPENDED;
+-	irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+-	__enable_irq(desc);
++		if (!(desc->istate & IRQS_SUSPENDED) || !irqd_is_wakeup_set(&desc->irq_data))
++			return;
+ 
+-unlock:
+-	irq_put_desc_busunlock(desc, flags);
++		desc->istate &= ~IRQS_SUSPENDED;
++		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
++		__enable_irq(desc);
++	}
+ }
+ 
+ /**
 
-Perhaps I overlooked anything?
 
-> riscv_iommu_free_paging_domain to release the riscv_iommu_domain.
-> Then, iommu_group_release_dma_owner is triggered, which results in
-> the execution of riscv_iommu_attach_paging_domain and
-> riscv_iommu_bond_unlink(info->domain). However, the info->domain
-> had been freed beforehand but was not set to NULL, leading to errors.
-> 
-> This commit resolves the issue by setting info->domain to NULL within
-> riscv_iommu_bond_unlink, a function that is called by
-> riscv_iommu_attach_blocking_domain before the domain was freed.
-> 
-> Signed-off-by: BillXiang<xiangwencheng@lanxincomputing.com>
-> ---
->   drivers/iommu/riscv/iommu.c | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
 
-Thanks,
-baolu
