@@ -1,90 +1,185 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD98017588;
-	Tue, 29 Apr 2025 00:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99978F49;
+	Tue, 29 Apr 2025 00:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745886095; cv=none; b=jswP7nCSm9TGXOXpkB0Ams+yPD1lw+SpElhhRdcn4WGldXK134Ges9r1LNh7ZvE3TXFUE0M/3SnrAsx7mCkPZL7AyymzieUsBcrrLKWX0DpC8fGq3k2yql9YeY7Uc/AtrpCVMPtNsI2O1sblW/4crUmp9pxnLwD9uQKJpeHpA7A=
+	t=1745886452; cv=none; b=dliF335yYmD/jfm8lgaofeLjgoYK/dxjMATzHdZD98RGGrMErGSmPndav/9SuBX/6MwS3a8K6JO9hM4YhBLpVnMDowFAdGzVg05umvYeNzX25M4CAFKrGnZMDuoR9Mbc4QgG5VJrJN4Kns/76MHXBVxM8Xu1+Fr0x3sE47jiz6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745886095; c=relaxed/simple;
-	bh=vRcYgLolkOu4x0b3yFeVx0iL5VudqRp/C5dy3C2h72k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CwzvzSEGFWa+N0KPVn/e7Xhh7BdO1AocX433Fj45Otrhu/ksg+xTi6izfZcq2baLCNyI7STaaXCD/xvjzVMJGkI5q9NXdGEjFsf0huUS8+fhbLM5cyZVfeu+i/lZJbypSUNce44ydtUS5CeUfaBRfyz2c2csOINQqtUdXEvIkYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=sevkdFOR; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1745886452; c=relaxed/simple;
+	bh=STqvQqB9VdqroVIjQ9O9iSgbyf9AE7dywx0Kt9YQ/X8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pIGYlfsva+64bgNVs+/zLcvQXzdW3XQyMC5A7KZIaGS6b7o3e4SmLo871f+1CpQGOtQdy6DMg/qoQUq2sna2ZBcqO9k9qrnReqhKpO56bm4Q1Bi5L/b9kB+Ac4kLLM8O+i53Hl5hsD1tw3+X78Yc5/mdkbmXUSAQozGiLRPQZDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YYB0D0Vu; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="sevkdFOR"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53T0LPBw83391512, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1745886085; bh=vRcYgLolkOu4x0b3yFeVx0iL5VudqRp/C5dy3C2h72k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=sevkdFOROkVIrjH4nn2ZTK2fJJiV/xF0VJ0IrFgYDyR8ux9ZJbVATAGLlWZ04AlfS
-	 CU266g6wNt4TvmSg7DF4v/CcWjF9wxjSGrTddHj0JyRrA2EPhB+khnCtPVozEdSlrM
-	 rxGWHunDMPXCmyDplKY1r8biYKnD1nHMUI3pySeJr/WguxQm4vs1o9952mTt5LLof7
-	 j9t93GhRSBgr6rReaBkolHwqpipsrGmwpm+q4DY2RyfFEL3+EXTFIgx/r5WqV37tuq
-	 /sNggpAll37d4fG5qd1EtClVxa+PkZj/g47GXIMWDUc0ny9H9ocjJDciAoRYAp0u/4
-	 ExXEggKayC0Bg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53T0LPBw83391512
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Apr 2025 08:21:25 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 29 Apr 2025 08:21:23 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 29 Apr 2025 08:21:22 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 29 Apr 2025 08:21:22 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: =?utf-8?B?T25kxZllaiBKaXJtYW4=?= <megi@xff.cz>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open
- list:REALTEK WIRELESS DRIVER (rtw89)" <linux-wireless@vger.kernel.org>
-Subject: RE: [PATCH] wifi: rtw89: Fix inadverent sharing of struct ieee80211_supported_band data
-Thread-Topic: [PATCH] wifi: rtw89: Fix inadverent sharing of struct
- ieee80211_supported_band data
-Thread-Index: AQHbtwrOUtNppvqbbk6+hgDxNYRyi7O4TFxAgADOeYCAAK+uYA==
-Date: Tue, 29 Apr 2025 00:21:22 +0000
-Message-ID: <85baab98b0e74936bdecac3a63552f1a@realtek.com>
-References: <20250427002414.410791-1-megi@xff.cz>
- <d3c6e149a2794551ba4570bdd7f1b7e7@realtek.com>
- <yurmw275hyo3zwstdwfqyepan3mj3anqavnpv6hu2742h4ofgx@c56eohg3s6ue>
-In-Reply-To: <yurmw275hyo3zwstdwfqyepan3mj3anqavnpv6hu2742h4ofgx@c56eohg3s6ue>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYB0D0Vu"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b1396171fb1so3447171a12.2;
+        Mon, 28 Apr 2025 17:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745886450; x=1746491250; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=E4+/s+VEvuC5FXOEm8slr7X2s/XWFR6SZw6sxO8nbRQ=;
+        b=YYB0D0VuZ3KJGi4qdy2mTQ16YPsvNmA12TLOytAFVVE4bwEnXULip/cVnz9uqxcLVX
+         zTOfHt7zh/VFIDqNQJWXtGVzI2LHq3/7AZgqudpgSPo2B0mGqhjiMzbxuMHdO+RT+V9T
+         /+y5Z/mfFWt7CKy0N2IG6EtN6pU28tp9VS9xR72IMjogCX0wJdUcnJ13suxtPIFPCOqi
+         uOMgVFeX2EvUn/U6qHAdaL1+a7+iB6SzToPVeXBWFJHTWz7MtDgSUFlZrOUs33lxayyF
+         6s+ui3+AFrC+5QKaxa8MBdFV2zhKu+MN+oHPYU6maS3D980gFIvbwB2nGcIJ0ZXWZkvT
+         Yuxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745886450; x=1746491250;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E4+/s+VEvuC5FXOEm8slr7X2s/XWFR6SZw6sxO8nbRQ=;
+        b=KROGODL21z1Nql+J7ZkVqlzkv6L7oZe/RA1Kl6QO9Z9ej4/Po+pRCutSFLZIbCgzPW
+         O1fNWLJRc6is6PCFyyV1bGjLWUuW3OgWAe9iVcOWa4n+DYx7iSfFYsiDyQV/OKL2j6VL
+         /KoY2MTBWU+LdMze5qP+xT2McZRoj9EelencWkPCVVaGPziuNu5UsU0984X73td+M87w
+         Austus6XpuYPiYolrPs7WM91w5nMGSKd39c6A0As2RufJvgG0V5mK/ZF5Wu7+SYuXx+G
+         SxGjwIV6oPT/Y4y4VtrRSjz7kyQvSH4ag2ALFK/tm2LM7ymhBCq8jH9TZl0C9pCgWb5K
+         jLFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFvLAn7+SnERBczbYpQRId/TNgBfkrV+z1oJ+O/pKevfuL+Til65QHac4ah/Rtvv2VjPCEr+TAzR5++Do=@vger.kernel.org, AJvYcCXI0z40bDWhqMfL5tBUq7tJVJ//4P4TdZeSYfnfAwIK+0Q1mmStrAExlffGCTT1uGawwEkl2YWFj4A6o0RT@vger.kernel.org, AJvYcCXRZs3aioD4mXKxa7vMhxqBE4mTvr6hQy4Y8bV4hVEanSNvjjqvnCCJMH026VJPoMQzuBvuzsX6OjrK@vger.kernel.org, AJvYcCXVxSQQ8uAFbLuZp8/DJtQJgMWVY8OitFzNMKmmnuEDflpd5UOgIQMiwRHIoFpd6CuDHw+GvFJYEbsV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5x7UfhBD86XHhoSJS8trbrpRXXFej3OyenquZMYompa+55zZW
+	OIxSVBgde9v1HTJggkt70IWSPkwnxX/jm8eejunGMzjUWtG3yNuS
+X-Gm-Gg: ASbGncsT0Kc2ShTHOIPanwozpfCRqx0kP33tXTdtwYU+yDCfbi819wPwqyRCYf3GJ6K
+	LsEYJx515a5/aYN/zWnYsjn6WJY4sdZFKhRdJnCxVd2xYi17rUL4GJwr1Dfl8yx3LL51qXznTuL
+	aDXB/3xDTyqcbimgQRB/6BbsIXBBQrEhQYBTZ8VME1kQrnKZv49rhJMotp6XI7xbNiAb44kAY6x
+	iF+b7Xo8A2HoNWhVMPmny166oxTzw0mPyBuLaw29T6aXy6ZdQQF9hoEqINhzXnF3n7Tts05TRKG
+	nPxcwXIQ9kZ5lL0+RD4gnb6G4b/wwismI1LKSdK0SJN274LMOBg+y/v8QwWAJLbfi/QZuMu7O0V
+	aJymWjT8dbcIElg==
+X-Google-Smtp-Source: AGHT+IFtMnFRx2QYnId/i9jukQX75HwClFDq2N45fA22F6PtOr/3Qugyj+Xg15EKW+yWXErhqcb+JQ==
+X-Received: by 2002:a17:90b:554f:b0:2fe:dd2c:f8e7 with SMTP id 98e67ed59e1d1-30a21551e90mr2678098a91.10.1745886449916;
+        Mon, 28 Apr 2025 17:27:29 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a244bf043sm150486a91.0.2025.04.28.17.27.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 17:27:29 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <ec2dbc97-664a-4eee-80cc-929f13f80129@roeck-us.net>
+Date: Mon, 28 Apr 2025 17:27:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] hwmon: pmbus: mpq8785: Implement voltage scale loop
+ configuration
+To: Pawel Dembicki <paweldembicki@gmail.com>, linux-hwmon@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Shen Lichuan <shenlichuan@vivo.com>, Greg KH <gregkh@linuxfoundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Charles Hsu <ythsu0511@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250428221420.2077697-1-paweldembicki@gmail.com>
+ <20250428221420.2077697-5-paweldembicki@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250428221420.2077697-5-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-PiA+IFNpbmNlIHlvdSBoYXZlIGR1cGxpY2F0ZWQgYXJyYXlzIG9mIGNoYW5uZWxzIGFuZCBiaXRy
-YXRlLCB3ZSBzaG91bGQgYWRkIGNvbnN0DQo+ID4gdG8gdGhlbSwgbGlrZToNCj4gPg0KPiA+ICAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBpZWVlODAyMTFfY2hhbm5lbCBydHc4OV9jaGFubmVsc197Mmdo
-eiw1Z2h6LDZnaHp9W10NCj4gPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaWVlZTgwMjExX3JhdGUg
-cnR3ODlfYml0cmF0ZXNbXQ0KPiANCj4gVGhhdCB3aWxsIHByb2R1Y2U6DQo+IA0KPiAgIGluaXRp
-YWxpemF0aW9uIGRpc2NhcmRzICdjb25zdCcgcXVhbGlmaWVyIGZyb20gcG9pbnRlciB0YXJnZXQg
-dHlwZSBbLVdkaXNjYXJkZWQtcXVhbGlmaWVyc10NCj4gDQo+IHdhcm5pbmdzLCBiZWNhdXNlICBz
-dHJ1Y3QgaWVlZTgwMjExX3N1cHBvcnRlZF9iYW5kIGRvZXNuJ3QgaGF2ZSB0aGVzZSBmaWVsZHMN
-Cj4gYXMgY29uc3QuIFRoZSBkaXNjYXJkaW5nIG9mIGNvbnN0IHF1YWxpZmllcnMgaXMgYXBwYXJl
-bnRseSBzYWZlIGluIHRoaXMgY2FzZSwNCj4gc28gSSBjYW4gZWl0aGVyIGNhc3QgdGhlIHBvaW50
-ZXJzIHRvIG5vbi1jb25zdCB3aGVuIGFzc2lnbmVkIGhlcmU6DQo+IA0KPiAgMjcwIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgaWVlZTgwMjExX3N1cHBvcnRlZF9iYW5kIHJ0dzg5X3NiYW5kXzJnaHogPSB7
-DQo+ICAyNzEgICAgICAgICAuYmFuZCAgICAgICAgICAgPSBOTDgwMjExX0JBTkRfMkdIWiwNCj4g
-IDI3MiAgICAgICAgIC5jaGFubmVscyAgICAgICA9IHJ0dzg5X2NoYW5uZWxzXzJnaHosDQo+ICAy
-NzMgICAgICAgICAubl9jaGFubmVscyAgICAgPSBBUlJBWV9TSVpFKHJ0dzg5X2NoYW5uZWxzXzJn
-aHopLA0KPiAgMjc0ICAgICAgICAgLmJpdHJhdGVzICAgICAgID0gcnR3ODlfYml0cmF0ZXMsDQo+
-ICAyNzUgICAgICAgICAubl9iaXRyYXRlcyAgICAgPSBBUlJBWV9TSVpFKHJ0dzg5X2JpdHJhdGVz
-KSwNCj4gIDI3NiAgICAgICAgIC5odF9jYXAgICAgICAgICA9IHswfSwNCj4gIDI3NyAgICAgICAg
-IC52aHRfY2FwICAgICAgICA9IHswfSwNCj4gIDI3OCB9Ow0KPiANCg0KQWguIEkgd2FzIG5vdCBh
-d2FyZSBvZiB0aGlzIHBvaW50LiBQbGVhc2Uga2VlcCBpdCBhcyB3YXMuIA0KDQo=
+On 4/28/25 15:13, Pawel Dembicki wrote:
+> Implement support for setting the VOUT_SCALE_LOOP PMBus register
+> based on an optional device tree property "voltage-scale-loop".
+> 
+> This allows the driver to provide the correct VOUT value depending
+> on the feedback voltage divider configuration for chips where the
+> bootloader does not configure the voltage scale.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> ---
+>   drivers/hwmon/pmbus/mpq8785.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/mpq8785.c b/drivers/hwmon/pmbus/mpq8785.c
+> index e6a643856f08..6e2325d7f37b 100644
+> --- a/drivers/hwmon/pmbus/mpq8785.c
+> +++ b/drivers/hwmon/pmbus/mpq8785.c
+> @@ -78,6 +78,8 @@ static int mpq8785_probe(struct i2c_client *client)
+>   	struct device *dev = &client->dev;
+>   	struct pmbus_driver_info *info;
+>   	enum chips chip_id;
+> +	u32 voltage_scale;
+> +	int ret;
+>   
+>   	info = devm_kmemdup(dev, &mpq8785_info, sizeof(*info), GFP_KERNEL);
+>   	if (!info)
+> @@ -105,6 +107,14 @@ static int mpq8785_probe(struct i2c_client *client)
+>   		return -ENODEV;
+>   	}
+>   
+> +	if (!of_property_read_u32(dev->of_node, "voltage-scale-loop",
+> +				  &voltage_scale)) {
+> +		ret = i2c_smbus_write_word_data(client, PMBUS_VOUT_SCALE_LOOP,
+> +						voltage_scale);
+
+Per PMBus specification this value can be in any supported scale.
+Also, the chips do not support the full 16-bit value range. I see 10 bit for
+mpq8785 and mpm3695, 7 bit for mp2853, and 12 bit for MPM82504. There will
+have to be some device specific range check.
+
+I don't understand the units. The devicetree document talks about
+VOUT_SCALE_LOOP = VFB / VOUT * 1000, but I don't see how that translates
+into chip values. For MPM82504, the datasheet says 1 LSB=2mV. For mpm3695
+it is 0.001/LSB. I have no idea how that is supposed to translate to the
+units suggested in the property patch.
+
+Either case, I think the property needs to be something generic that is well
+defined. Maybe "pmbus,voltage-scale-loop", but I really don't know what would
+be acceptable for DT maintainers.
+
+Guenter
+
