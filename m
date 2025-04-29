@@ -1,50 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC9C1C5D4B;
-	Tue, 29 Apr 2025 14:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3F021ABB7
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937966; cv=none; b=BP9k2vHOdH/7DQkJYu+fxUy8tLxADtdNB022dGTzGwcbbNJQiFodoTl4xF8ezCSORg5FQHG/1xf++H9hsqW3jio5QHjUKz8k0JgPvYhtiA+X4vLiP/ySqURmgNhGIw3R4s6Kmsr0yabSq0SjCWtGwK9WdfYxt3coUmDBgCvz5pE=
+	t=1745937987; cv=none; b=Vkfq7Kmr4o73scLGCeb7NU3cvxT1ZUm+sQhxTJOlnTFJWkJctKghBEgKys+SioRkV/sk7Hh544SIE1+Qrw9Tq0OGDkoawgEplHezKi65fWTheT+EtEyk0NuI7bXp7YBQQqkX65Xz1rZjhA6Pt6FzSlc5ryYNeuMoRqpYPddqstQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937966; c=relaxed/simple;
-	bh=GzBirkut/Gytfn/dO/5u/Ywe37cItn3g2ra7mfv/Xho=;
+	s=arc-20240116; t=1745937987; c=relaxed/simple;
+	bh=snIS4vhGRssXnoN1pY7HJdNuGFL3by2NCS3TDRu4gFs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kHp5yuw6qNw2+8QBsv6kBQbHPOfWWsISVYjAAYDatDnT1yHXlgb7EFEtuQy5onUt5N6b7X7bjvp2m0qUcdQ6e990cc7dFdqtKXrl+ViIzWOU+h6oYBGMdiAqN3n+MQ8Mac61F/JM3+HGJkufNcq2p/4FysMMak64jmVAaDRDzds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lINnhou2; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=C2N/+g90bo5dYO1+B8BUbXM+UcXYtCiBT5ueXLTtR6hPOxIzufzRqwvwUMFtP8RwVixEid+WUB+o1jEZKd77ZisRRnaSJhNfzjGFlovPbI7tRSLCJaP9T/bieQNnSJaGLUMzTkSnDaw3guPLsrqVy8VvoRynbWvc+J4hScVPZeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZqQGDr2r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lINnhou2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745937965; x=1777473965;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GzBirkut/Gytfn/dO/5u/Ywe37cItn3g2ra7mfv/Xho=;
-  b=lINnhou2d16Q8793/vhvaFsSeoITZzRGtsHmvt4/cEFFNwE1dGx1AHbl
-   T4SjODvyw2NeGXEiMS7tzIIG7nqzksILT+mGZd58s4EJ4fi8d3GUWLsq3
-   4le33Whvkmef2HRwZku6cnEY7aChEBHdgyo10SdEQd/qcSFptyy9uOf7B
-   wexbRx6HdOCaHM+AHy5J1PfNHb68LlbG192lofnpA0LKm2Sn0Q6lS1CAa
-   U5m4EJQtK0j68Gps288A9kJuTqGIw/ryaFe95KpljIrBSf/i3+Br+IhCZ
-   jFT7pYZQ7NojXHCfv83pv3e3y8diFZCDGApsFek+h4hXVsJdLhsOXgM4X
-   Q==;
-X-CSE-ConnectionGUID: iCg+6sx/SgmjMUJRTnm5wA==
-X-CSE-MsgGUID: nEPslIjlQNyBgwVJnd92rw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="35176121"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="35176121"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:46:04 -0700
-X-CSE-ConnectionGUID: tOtfHbvtRCakxikDidSRyg==
-X-CSE-MsgGUID: NUNUyP3eSk+17rK7cbwcBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="134345682"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.223.46]) ([10.124.223.46])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:46:03 -0700
-Message-ID: <8db47bc1-445b-49db-b932-96aff0eb58a9@intel.com>
-Date: Tue, 29 Apr 2025 07:46:01 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZqQGDr2r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745937984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=So5S8sD+I2YgOYOjQZKvpf3wIivuDABn+zCCZb8ZZ+4=;
+	b=ZqQGDr2r+UfNg5WHljRW4OzzF+D/tZwdgDEsocEaAOjaeKS8DlsHwmKgp4EqXsC8Ei/+Ki
+	dpl46BQpA3z9ng2W1VQGT/fAZ0POT2hTSNpLZ38xX3BhTNTS1VfN66RZJJMidg2FWnkzFd
+	vOXdJ/0Qr0UQND47+w34ZCOoPEt+6cg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-134-6JC0d57FOeqfDZe2z6zf-w-1; Tue, 29 Apr 2025 10:46:22 -0400
+X-MC-Unique: 6JC0d57FOeqfDZe2z6zf-w-1
+X-Mimecast-MFC-AGG-ID: 6JC0d57FOeqfDZe2z6zf-w_1745937982
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a064c45f03so2702395f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:46:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745937981; x=1746542781;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=So5S8sD+I2YgOYOjQZKvpf3wIivuDABn+zCCZb8ZZ+4=;
+        b=Z8+bJnGLDLOeu5jC9tqlk8BkHNLM/1YyWClyr9fVKLxVwX6gbrOVvmlRb3IDW4NU6K
+         oQHVQtHioQgkGpT5JmC1vUEVeSbTh3UrpyZlicEXc6Z54+3LWI/NOKPu/OlnH4rdf5bE
+         RhZaojYrrGfxTJP7riAFuuyo4r87zaEFhT0KHxItU7qggE8+NbBJOqDEXEZV4CjHHKQz
+         I9GEd9ObrrqoOIssFdUY8fkI/uOeRY5DHWBcuBH1mxZbRiNGLaG1B8qakldiUKlTHoWL
+         85jsiG/BnYCT0BLOqHeRKt3kaKVV1OTv9HFyJO0Mgw1ZxmFOm6P/izqlE5zleZPcSC8m
+         5VVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZvw9y91qgYqI3KrRtC6ICHWxSPA77e/zXuDBcefxDLh+OVJAARHanAf8ObgR6D5WwIjgAc0KGMPBrJXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjQ2vNgb5jGdgng0hMhmPADbmnYjRe46Uf8y2bfV42ogmrMpgf
+	/WXYR4W6rYTqadB+wsBduKEVIjWL2cXMW60q01/mVjrqWGrboI/0ZgbR9qGB5fO6wOF9YVEtusX
+	cOQK7tdSNo7DoTyJjJa5sP+20Ab6/LqY3NcveDMoKQ5qniviY0SyVQNfOTI6csg==
+X-Gm-Gg: ASbGncu/1jWvkXtvaF4eoy60I/jPIxtZISh/713bNDalYNJp+wL6j1W2y7Y4WvlKkG5
+	cjUpOduNDCZOfGBzxDX6/lHuFiKwtH8l8WxNDTRonDJRDY7VZ02q4aU11CBG/8AbGr1v+oSC1dj
+	QnfuwbJ51+PnkOpieNQRQqzQpbRh9Bios0YT08msb2O7Takk2+OSKlNZegfZNR0m4LYlgEcDLU3
+	2Z0+mfMIqkibvytqv9eg9WgMdZBmUYxoz2GwVr1sjKnvMDr0q4HMQUc/zglVW99q4OdY2CmxAC2
+	sJnNnuEaugrZcNhYnmkJ0UwDGN/VIraabOLMl2+LvUYOYGu1T0Tu6oWxmxjxuz2KmNdoNCrpu6c
+	vJrsfIHU+WMycgChP2nJkYUz7lMTO4EcRYXins/A=
+X-Received: by 2002:a05:6000:2a1:b0:39f:d0a:5b23 with SMTP id ffacd0b85a97d-3a08a51fb97mr2658110f8f.17.1745937981623;
+        Tue, 29 Apr 2025 07:46:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6dsJBdR+bHHaU2+8egweIE2dJ2t0DU4uwXHc22E2qh371BmcqxNVEvlNIK7604ghEWaDtdg==
+X-Received: by 2002:a05:6000:2a1:b0:39f:d0a:5b23 with SMTP id ffacd0b85a97d-3a08a51fb97mr2658084f8f.17.1745937981197;
+        Tue, 29 Apr 2025 07:46:21 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c73b:fa00:8909:2d07:8909:6a5a? (p200300cbc73bfa0089092d0789096a5a.dip0.t-ipconnect.de. [2003:cb:c73b:fa00:8909:2d07:8909:6a5a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5e345sm14319611f8f.94.2025.04.29.07.46.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 07:46:20 -0700 (PDT)
+Message-ID: <bb24f0d3-cbbf-4323-a9e6-09a627c8559b@redhat.com>
+Date: Tue, 29 Apr 2025 16:46:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,99 +75,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-To: "Reshetova, Elena" <elena.reshetova@intel.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: "jarkko@kernel.org" <jarkko@kernel.org>, "Huang, Kai"
- <kai.huang@intel.com>, "linux-sgx@vger.kernel.org"
- <linux-sgx@vger.kernel.org>,
- "Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "Annapurve, Vishal"
- <vannapurve@google.com>, "Cai, Chong" <chongc@google.com>,
- "Mallick, Asit K" <asit.k.mallick@intel.com>,
- "Aktas, Erdem" <erdemaktas@google.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "bondarn@google.com" <bondarn@google.com>,
- "dionnaglaze@google.com" <dionnaglaze@google.com>,
- "Raynor, Scott" <scott.raynor@intel.com>
-References: <aAo_2MPGOkOciNuM@google.com>
- <DM8PR11MB5750D373790399E324B98A18E7852@DM8PR11MB5750.namprd11.prod.outlook.com>
- <aApgOqHvsYNd-yht@google.com>
- <DM8PR11MB5750AB0E790096AFF9AFD3AFE7842@DM8PR11MB5750.namprd11.prod.outlook.com>
- <aAutUaQvgEliXPUs@google.com>
- <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
- <aAviqeAdGn-w1GpK@google.com>
- <fbd2acdb-35dc-4e8c-9bd9-e84264f88648@intel.com>
- <aAv445Sr71NUJP1X@google.com>
- <db1fd062-5a66-4942-82e2-c889dd645a7b@intel.com>
- <aAwFhaqQDLXoqbmv@google.com>
- <4b4ecaa1-2ace-43bf-b71b-0de78bcf113c@intel.com>
- <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
+To: Ryan Roberts <ryan.roberts@arm.com>, =?UTF-8?Q?Petr_Van=C4=9Bk?=
+ <arkamar@atlas.cz>, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ stable@vger.kernel.org
+References: <20250429142237.22138-1-arkamar@atlas.cz>
+ <20250429142237.22138-2-arkamar@atlas.cz>
+ <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
+ <e9617001-da1d-4c4f-99f4-0e51d51d385e@arm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <e9617001-da1d-4c4f-99f4-0e51d51d385e@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/29/25 04:44, Reshetova, Elena wrote:
->> On 4/25/25 14:58, Sean Christopherson wrote:
->>> On Fri, Apr 25, 2025, Dave Hansen wrote:
->>>> On 4/25/25 14:04, Sean Christopherson wrote:
->>>>> Userspace is going to be waiting on ->release() no matter what.
->>>> Unless it isn't even involved and it happens automatically.
->>> With my Google hat on: no thanks.
->> I'm completely open to the idea of adding transparency so that folks can
->> tell when the SVN increments. I'm mostly open to having a new ABI to do
->> it explicitly in addition to doing it implicitly.]
-> Could you please clarify here Dave what ABI do you have in mind? 
+On 29.04.25 16:41, Ryan Roberts wrote:
+> On 29/04/2025 15:29, David Hildenbrand wrote:
+>> On 29.04.25 16:22, Petr Vaněk wrote:
+>>> folio_pte_batch() could overcount the number of contiguous PTEs when
+>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
+>>> memory also happens to be zero. The loop doesn't break in such a case
+>>> because pte_same() returns true, and the batch size is advanced by one
+>>> more than it should be.
+>>>
+>>> To fix this, bail out early if a non-present PTE is encountered,
+>>> preventing the invalid comparison.
+>>>
+>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
+>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
+>>> bisect.
+>>>
+>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+>>> ---
+>>>    mm/internal.h | 2 ++
+>>>    1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/mm/internal.h b/mm/internal.h
+>>> index e9695baa5922..c181fe2bac9d 100644
+>>> --- a/mm/internal.h
+>>> +++ b/mm/internal.h
+>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio,
+>>> unsigned long addr,
+>>>                dirty = !!pte_dirty(pte);
+>>>            pte = __pte_batch_clear_ignored(pte, flags);
+>>>    +        if (!pte_present(pte))
+>>> +            break;
+>>>            if (!pte_same(pte, expected_pte))
+>>>                break;
+>>
+>> How could pte_same() suddenly match on a present and non-present PTE.
+>>
+>> Something with XEN is really problematic here.
+>>
+> 
+> We are inside a lazy MMU region (arch_enter_lazy_mmu_mode()) at this point,
+> which I believe XEN uses. If a PTE was written then read back while in lazy mode
+> you could get a stale value.
+> 
+> See
+> https://lore.kernel.org/all/912c7a32-b39c-494f-a29c-4865cd92aeba@agordeev.local/
+> for an example bug.
 
-I should have said I'm open to *eventually* adding features and new ABI
-to prod at the SVN state.
+So if we cannot trust ptep_get() output, then, ... how could we trust 
+anything here and ever possibly batch?
 
-Not now.
+-- 
+Cheers,
 
+David / dhildenb
 
