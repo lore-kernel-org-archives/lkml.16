@@ -1,136 +1,342 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6168A15ECD7
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3756D13A41F
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745889272; cv=none; b=fA/5E9Q6ZCXknR0oN+z7//HXQNaxWxQeLCu3l2ZwqYJa8LhYvTdUQVm0Kg6Rct+nzRnB8W0yN/Ffpun/xMTygUanTsC8AFXxnkwg+XAEFLwmi9+8quJm0MvpAz0nPeLrMJqyPCdOUGACo76mocwZ4f5Odq5ryHzJenjBDxwxrms=
+	t=1745889553; cv=none; b=a5mUFmKHw984DCQIIaUYCUUqpvupsQNNFlKcQ0NxLtd+a4eVficXmcL+PMyHeQdlKqQcN9vCrxSNxsw4VI8ai+xkedXPyyuCYJtHqBwUKyiVJs6fxtAz/49l/5z/wXO77s0kuI24/cilUYFkPSz79O9muNdf8tscQg2aS6DciUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745889272; c=relaxed/simple;
-	bh=RBo2Mn2bHpGNB8UyjIFOM04DyWMkqTId8WGEcsfsEAg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NdFwpgZ3SKxCyqNoCsl3W0H3ZNf15DQqMcPhzadNEMy9KjuWlFFlfw92hGdYkuAD7G8+goBZ5Qp3LT5RAHA5zsSUTqeN2hwDfABo1Y5y2rdliD4ystt++TrLHVSHsGcityZrKWpE5VALHcgByCcpQMqR4UtK26JeL1+vb0/6QAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=QsaoFzQ5; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1745889553; c=relaxed/simple;
+	bh=8oSsZIRrhqgjMG9L29Y+UGuvrGWsxwTQz535yyZMwqQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ezAiG1tb4aGvI988jl4Wv2Srrg7yQTHbmjeZ/9wmoG/4LmeGsBd0AZys6WPcI+UtAo1+piyT1gko0YSrfVmSY2B8b3CQiv1vOSx5gUMRppnXyU7Q+CpSOrzApSs6dx6oXpQI4K9kC6f/P/nkuA5nZtm/UuO5qYqdLFiEyv5NRqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=386rQsjO; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="QsaoFzQ5"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22c50beb0d5so9816525ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:14:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="386rQsjO"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7369c5ed395so6176515b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745889269; x=1746494069; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z4vcXlfoh1sb5Lp53u4SYaNwf3Gog9dLAy0NFh4Rsl4=;
-        b=QsaoFzQ5H4Rn0aMhF9c83w2g3l9VfJhGs7TrwZ3hU7+t1cP/kgxwG5J119zSDN7jXF
-         yW9Ladf9geCrmFFhXqydUZ1W+68iSPAxfnmbwJ+bO21Cp/i+/o0eSEhloOetcvpYWb12
-         EA8FzgixdvLLDTDB6OgPOMJC91GOrTk2Z/xuPJFHr1d/Vci9aigTvBis88Xs6RDTFt4Z
-         FvByyg8+XE1SnC+tLQB3p6rdY5rBKSHGnGuMbThyCTNAX7SgUvwCJ//WIfYklklhEdR4
-         Pe4Yc7nbSyOoKjy4I4Kg4w7THn1CGCDUnf52rYlmCo8LzRBBMo/wWuMMGBUoqjZILaaR
-         T74Q==
+        d=google.com; s=20230601; t=1745889551; x=1746494351; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IgdQOgaoElQqRGycTH5PUw+/zFDYClhZUhKSCH+8S4I=;
+        b=386rQsjO+nCy+CItozFbB0WsdccOGWrXAIVTy58x7N661m4alDxE9NZNFpAhPM0omf
+         /062jViU5LyBdR0SxgM+/RIiFjdi9qQdAyLa8mNhbk3C1If6vbt1kTIo5EAB0n8IWGiy
+         OzLU5iYx/KKOPboc3V5vHncbZn1c/59WTkAiowlI4gwZBAnGe6bgoPFPf+kkEaNA4c+E
+         thS1aviAzX7ZWHrVfUuW4++Qad1OBsHsy8ekMKVCgHyfXgFCCnULWSO39iQ1cLxogzl3
+         U2FvMz+O+suEzhRDUVvjfWfHja10tSomQ/RBotIZYUS88J8c3Q4T3iOJ4lWgg0PpYY0M
+         HWlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745889269; x=1746494069;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z4vcXlfoh1sb5Lp53u4SYaNwf3Gog9dLAy0NFh4Rsl4=;
-        b=Sb4UYyN6UcbEWAPbdyHGavsO/HdbzT1heVHgIwEmVOwWg+mY6GgNpaRnzZ+6PFyoXq
-         umfPj91j9DsfVj06t9r2D45lRCNFrk8SvUUIrMxDejX83/OX9kfn51My/5tpNvvNUl7g
-         8+ibeKzqFgyyfkBno6HxTdgnz280Pq/6t9UOg5h7Y+wRkO3iIC3/n3YI4G/5nenym9ot
-         t5NVpy48wUhKbp/HG5zBsKPV/VU5gOAK7q7ZSAYPgDgkfFUaureYdxMAe4KearX5M4rf
-         LVkNWhGweP2JRTEl8MrakzV0xdG7XQFxsq6/0vyByFlRQL/E5HX4oVKsVjKOCGpKyqK4
-         2RHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGSsCwwj60Kn5QMQNJ/BRP5941sP3IQ0zxsUkoaWX/321P8YnLQvOl9NoE+ko5Yco9CXn7H/JF42Fl3CQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+iH0+7iy1DDXBpulP7e/IfrAwbAAWIULfpLtQydEOtTh9jkTV
-	hM15vMs2//19Kifzf5GxXRbLhI86vdD7hZSxQWON9QrB3sJx9aT+8H73HW78LrAi26n4C9pif/r
-	Z5XOcg4zhMxgj7LXWDzYouWNriV0QcbWWXu6keQ==
-X-Gm-Gg: ASbGncsZbNuk6/t1/PoxWC1X6LawTJK8oG78ArtbvAeHoGvi628+RUIvn2arQKiwZAc
-	67lU9O928XFmgVUxKDA3Y/1WfR0otC+6L8/Qh7cBoxTA5n7NHc+IYsjQQHgu3esjnf7SkQlDKMY
-	QeyvW8cCNw4GGWwScMIhde
-X-Google-Smtp-Source: AGHT+IFMpUZdt5lXnWrFzoh8OA7WWo+/2IpzA/SAH+spW51gqncIW/npr13RagDrKvIc6dwu/oIwOxqV/BuZrVE8xqo=
-X-Received: by 2002:a17:903:2a88:b0:223:28a8:610b with SMTP id
- d9443c01a7336-22dbf740e51mr76238555ad.14.1745889269544; Mon, 28 Apr 2025
- 18:14:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745889551; x=1746494351;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IgdQOgaoElQqRGycTH5PUw+/zFDYClhZUhKSCH+8S4I=;
+        b=iPPspbTw68l0DNHAW0ywOqdpwJdBcnpTqpFwC2k+AuGWudBeH1t5VlwEnsC7Aqg3jc
+         J64CDO2t9F0GxeSkQ4BfcogKmzEoESxGmBTXUZv1xP1POERg6Nb+klGzu9kKE4VYkQIV
+         6ntlbA+Nk65TdAUrevX0NyF9aP65zRB2EJLGMmChrGW6VrM5YLksIm3MnSD11IXrdbDi
+         MZFWwkmeoHE1NtOooG2+zmwlyZKne1Ni3E/fxzGnVRerjO95MitFhc2g9X2kTudZFiYQ
+         0kBhRtd5Z1EODX8XyFnPdZotuxHvbP+QGXd3oTCkUPq5GlSCpezQrgDTdGc9G0ekgVLy
+         9UUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVC1EfS490d/Qir6jpx7M46Z6oBj2seH33Z+7iVfyoayZ6Gw68Cz9y1s18PH4dz7sIxVExCaXK8STCijKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8hWj0wXNmx4S2m26CgfsNT6BrHAyWCYJdNMWgM7AJ5hOW0skC
+	Q1OUp4yaQqHSjOrDyaRgpIPLed0PLgPkirktM6q6SOIQWatUspO+IrLmyvhm+okg5wWhaMc3lCh
+	XpA==
+X-Google-Smtp-Source: AGHT+IFMVZIcEoYw8FABuJXXX8OutA5bqS+INEhWMiGnzilKwpVAX2SYR+yiUpwvIN/ITA/l63MsHdptzFA=
+X-Received: from pfgu8.prod.google.com ([2002:a05:6a00:988:b0:737:6b9f:8ab4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:78b:b0:1f5:837b:1868
+ with SMTP id adf61e73a8af0-2046a646b03mr15898790637.29.1745889551303; Mon, 28
+ Apr 2025 18:19:11 -0700 (PDT)
+Date: Mon, 28 Apr 2025 18:19:09 -0700
+In-Reply-To: <20250414200929.3098202-6-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com> <20250428-ublk_selftests-v1-3-5795f7b00cda@purestorage.com>
-In-Reply-To: <20250428-ublk_selftests-v1-3-5795f7b00cda@purestorage.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Mon, 28 Apr 2025 18:14:18 -0700
-X-Gm-Features: ATxdqUGVIUaNR-zw5kYKAKCRBndgFNnTDWO54aCDFlmFpL_UjMXcDrWJSBCI0n0
-Message-ID: <CADUfDZoKictpMvAgu9FPbHRLVns4HvBgwddsCBgHsH9nhiK4AQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] selftests: ublk: kublk: fix include path
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250414200929.3098202-1-jthoughton@google.com> <20250414200929.3098202-6-jthoughton@google.com>
+Message-ID: <aBApDSHblacSBaFH@google.com>
+Subject: Re: [PATCH v3 5/5] KVM: selftests: access_tracking_perf_test: Use
+ MGLRU for access tracking
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 28, 2025 at 4:11=E2=80=AFPM Uday Shankar <ushankar@purestorage.=
-com> wrote:
->
-> Building kublk currently fails (with a "could not find linux/ublk_cmd.h"
-> error message) if kernel headers are not installed in a system-global
-> location (i.e. somewhere in the compiler's default include search path).
-> This failure is unnecessary, as make kselftest installs kernel headers
-> in the build tree - kublk's build just isn't looking for them properly.
-> There is an include path in kublk's CFLAGS which is probably intended to
-> find the kernel headers installed in the build tree; fix it so that it
-> can actually find them.
->
-> This introduces some macro redefinition issues between glibc-provided
-> headers and kernel headers; fix those by eliminating one include in
-> kublk.
+On Mon, Apr 14, 2025, James Houghton wrote:
+> By using MGLRU's debugfs for invoking test_young() and clear_young(), we
+> avoid page_idle's incompatibility with MGLRU, and we can mark pages as
+> idle (clear_young()) much faster.
+> 
+> The ability to use page_idle is left in, as it is useful for kernels
+> that do not have MGLRU built in. If MGLRU is enabled but is not usable
+> (e.g. we can't access the debugfs mount), the test will fail, as
+> page_idle is not compatible with MGLRU.
+> 
+> cgroup utility functions have been borrowed so that, when running with
+> MGLRU, we can create a memcg in which to run our test.
+> 
+> Other MGLRU-debugfs-specific parsing code has been added to
+> lru_gen_util.{c,h}.
 
-I'm curious what symbol was redefined. struct iovec? Anyways,
+This is not a proper changelog, at least not by upstream KVM standards.  Please
+rewrite it describe the changes being made, using imperative mood/tone.  From
+Documentation/process/maintainer-kvm-x86.rst:
 
-Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+  Changelog
+  ~~~~~~~~~
+  Most importantly, write changelogs using imperative mood and avoid pronouns.
 
->
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
->  tools/testing/selftests/ublk/Makefile | 2 +-
->  tools/testing/selftests/ublk/kublk.h  | 1 -
->  2 files changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selfte=
-sts/ublk/Makefile
-> index 86474cfe8d03b2df3f8c9bc1a5902701a0f72f58..feca641635d706a856898f8e2=
-2a630f5f47361b6 100644
-> --- a/tools/testing/selftests/ublk/Makefile
-> +++ b/tools/testing/selftests/ublk/Makefile
-> @@ -2,7 +2,7 @@
->
->  CONFIG =3D $(top_srcdir)/include/config/auto.conf
->  WERROR =3D $(if $(shell grep CONFIG_WERROR=3Dy ${CONFIG}),-Werror,)
-> -CFLAGS +=3D -O3 -Wl,-no-as-needed -Wall ${WERROR} -I $(top_srcdir)
-> +CFLAGS +=3D -O3 -Wl,-no-as-needed -Wall ${WERROR} -I $(top_srcdir)/usr/i=
-nclude
->  LDLIBS +=3D -lpthread -lm -luring
->
->  TEST_PROGS :=3D test_generic_01.sh
-> diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftes=
-ts/ublk/kublk.h
-> index 918db5cd633fc1041e1e0805142f00e7e4f28bf7..4b943e57a890e5f14fa11dd19=
-d67c4c8684c4417 100644
-> --- a/tools/testing/selftests/ublk/kublk.h
-> +++ b/tools/testing/selftests/ublk/kublk.h
-> @@ -19,7 +19,6 @@
->  #include <sys/inotify.h>
->  #include <sys/wait.h>
->  #include <sys/eventfd.h>
-> -#include <sys/uio.h>
->  #include <sys/ipc.h>
->  #include <sys/shm.h>
->  #include <linux/io_uring.h>
->
-> --
-> 2.34.1
->
->
+> @@ -354,7 +459,12 @@ static int access_tracking_unreliable(void)
+>  		puts("Skipping idle page count sanity check, because NUMA balancing is enabled");
+>  		return 1;
+>  	}
+> +	return 0;
+> +}
+>  
+> +int run_test_in_cg(const char *cgroup, void *arg)
+
+static
+
+> +{
+> +	for_each_guest_mode(run_test, arg);
+
+Having "separate" flows for MGLRU vs. page_idle is unnecessary.  Give the helper
+a more common name and use it for both:
+
+static int run_test_for_each_guest_mode(const char *cgroup, void *arg)
+{
+	for_each_guest_mode(run_test, arg);
+	return 0;
+}
+
+>  	return 0;
+>  }
+>  
+> @@ -372,7 +482,7 @@ static void help(char *name)
+>  	printf(" -v: specify the number of vCPUs to run.\n");
+>  	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
+>  	       "     them into a separate region of memory for each vCPU.\n");
+> -	printf(" -w: Control whether the test warns or fails if more than 10%\n"
+> +	printf(" -w: Control whether the test warns or fails if more than 10%%\n"
+>  	       "     of pages are still seen as idle/old after accessing guest\n"
+>  	       "     memory.  >0 == warn only, 0 == fail, <0 == auto.  For auto\n"
+>  	       "     mode, the test fails by default, but switches to warn only\n"
+> @@ -383,6 +493,12 @@ static void help(char *name)
+>  	exit(0);
+>  }
+>  
+> +void destroy_cgroup(char *cg)
+
+static.  But this is a pointless wrapper, just delete it.
+
+> +{
+> +	printf("Destroying cgroup: %s\n", cg);
+> +	cg_destroy(cg);
+> +}
+> +
+>  int main(int argc, char *argv[])
+>  {
+>  	struct test_params params = {
+> @@ -390,6 +506,7 @@ int main(int argc, char *argv[])
+>  		.vcpu_memory_bytes = DEFAULT_PER_VCPU_MEM_SIZE,
+>  		.nr_vcpus = 1,
+>  	};
+> +	char *new_cg = NULL;
+>  	int page_idle_fd;
+>  	int opt;
+>  
+> @@ -424,15 +541,53 @@ int main(int argc, char *argv[])
+>  		}
+>  	}
+>  
+> -	page_idle_fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
+> -	__TEST_REQUIRE(page_idle_fd >= 0,
+> -		       "CONFIG_IDLE_PAGE_TRACKING is not enabled");
+> -	close(page_idle_fd);
+> +	if (lru_gen_usable()) {
+
+Using MGLRU on my home box fails.  It's full cgroup v2, and has both
+CONFIG_IDLE_PAGE_TRACKING=y and MGLRU enabled.
+
+==== Test Assertion Failure ====
+  access_tracking_perf_test.c:244: false
+  pid=114670 tid=114670 errno=17 - File exists
+     1	0x00000000004032a9: find_generation at access_tracking_perf_test.c:244
+     2	0x00000000004032da: lru_gen_mark_memory_idle at access_tracking_perf_test.c:272
+     3	0x00000000004034e4: mark_memory_idle at access_tracking_perf_test.c:391
+     4	 (inlined by) run_test at access_tracking_perf_test.c:431
+     5	0x0000000000403d84: for_each_guest_mode at guest_modes.c:96
+     6	0x0000000000402c61: run_test_for_each_guest_mode at access_tracking_perf_test.c:492
+     7	0x000000000041d8e2: cg_run at cgroup_util.c:382
+     8	0x00000000004027fa: main at access_tracking_perf_test.c:572
+     9	0x00007fa1cb629d8f: ?? ??:0
+    10	0x00007fa1cb629e3f: ?? ??:0
+    11	0x00000000004029d4: _start at ??:?
+  Could not find a generation with 90% of guest memory (235929 pages).
+
+Interestingly, if I force the test to use /sys/kernel/mm/page_idle/bitmap, it
+passes.
+
+Please try to reproduce the failure (assuming you haven't already tested that
+exact combination of cgroups v2, MGLRU=y, and CONFIG_IDLE_PAGE_TRACKING=y). I
+don't have bandwidth to dig any further at this time.
+
+> +		if (cg_find_unified_root(cgroup_root, sizeof(cgroup_root), NULL))
+> +			ksft_exit_skip("cgroup v2 isn't mounted\n");
+> +
+> +		new_cg = cg_name(cgroup_root, TEST_MEMCG_NAME);
+> +		printf("Creating cgroup: %s\n", new_cg);
+> +		if (cg_create(new_cg) && errno != EEXIST)
+> +			ksft_exit_skip("could not create new cgroup: %s\n", new_cg);
+> +
+> +		use_lru_gen = true;
+> +	} else {
+> +		page_idle_fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
+> +		__TEST_REQUIRE(page_idle_fd >= 0,
+> +			       "Couldn't open /sys/kernel/mm/page_idle/bitmap. "
+> +			       "Is CONFIG_IDLE_PAGE_TRACKING enabled?");
+> +
+> +		close(page_idle_fd);
+> +	}
+
+Splitting the "check" and "execute" into separate if-else statements results in
+some compilers complaining about new_cg possibly being unused.  The compiler is
+probably being a bit stupid, but the code is just as must to blame.  There's zero
+reason to split this in two, just do everything after the idle_pages_warn_only
+and total_pages processing.  Code at the bottom (note, you'll have to rebase on
+my not-yet-posted series, or undo the use of __open_path_or_exit()).
+
+>  
+>  	if (idle_pages_warn_only == -1)
+>  		idle_pages_warn_only = access_tracking_unreliable();
+>  
+> -	for_each_guest_mode(run_test, &params);
+> +	/*
+> +	 * If guest_page_size is larger than the host's page size, the
+> +	 * guest (memstress) will only fault in a subset of the host's pages.
+> +	 */
+> +	total_pages = params.nr_vcpus * params.vcpu_memory_bytes /
+> +		      max(memstress_args.guest_page_size,
+> +			  (uint64_t)getpagesize());
+> +
+> +	if (use_lru_gen) {
+> +		int ret;
+> +
+> +		puts("Using lru_gen for aging");
+> +		/*
+> +		 * This will fork off a new process to run the test within
+> +		 * a new memcg, so we need to properly propagate the return
+> +		 * value up.
+> +		 */
+> +		ret = cg_run(new_cg, &run_test_in_cg, &params);
+> +		destroy_cgroup(new_cg);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		puts("Using page_idle for aging");
+> +		for_each_guest_mode(run_test, &params);
+> +	}
+
+static int run_test_for_each_guest_mode(const char *cgroup, void *arg)
+{
+	for_each_guest_mode(run_test, arg);
+	return 0;
+}
+
+int main(int argc, char *argv[])
+{
+	struct test_params params = {
+		.backing_src = DEFAULT_VM_MEM_SRC,
+		.vcpu_memory_bytes = DEFAULT_PER_VCPU_MEM_SIZE,
+		.nr_vcpus = 1,
+	};
+	int page_idle_fd;
+	int opt;
+
+	guest_modes_append_default();
+
+	while ((opt = getopt(argc, argv, "hm:b:v:os:w:")) != -1) {
+		switch (opt) {
+		case 'm':
+			guest_modes_cmdline(optarg);
+			break;
+		case 'b':
+			params.vcpu_memory_bytes = parse_size(optarg);
+			break;
+		case 'v':
+			params.nr_vcpus = atoi_positive("Number of vCPUs", optarg);
+			break;
+		case 'o':
+			overlap_memory_access = true;
+			break;
+		case 's':
+			params.backing_src = parse_backing_src_type(optarg);
+			break;
+		case 'w':
+			idle_pages_warn_only =
+				atoi_non_negative("Idle pages warning",
+						  optarg);
+			break;
+		case 'h':
+		default:
+			help(argv[0]);
+			break;
+		}
+	}
+
+	if (idle_pages_warn_only == -1)
+		idle_pages_warn_only = access_tracking_unreliable();
+
+	/*
+	 * If guest_page_size is larger than the host's page size, the
+	 * guest (memstress) will only fault in a subset of the host's pages.
+	 */
+	total_pages = params.nr_vcpus * params.vcpu_memory_bytes /
+		      max_t(uint64_t, memstress_args.guest_page_size, getpagesize());
+
+	if (lru_gen_usable()) {
+		bool cg_created = true;
+		char *test_cg = NULL;
+		int ret;
+
+		puts("Using lru_gen for aging");
+		use_lru_gen = true;
+
+		if (cg_find_controller_root(cgroup_root, sizeof(cgroup_root), "memory"))
+			ksft_exit_skip("Cannot find memory group controller\n");
+
+		test_cg = cg_name(cgroup_root, TEST_MEMCG_NAME);
+		printf("Creating cgroup: %s\n", test_cg);
+		if (cg_create(test_cg)) {
+			if (errno == EEXIST)
+				cg_created = false;
+			else
+				ksft_exit_skip("could not create new cgroup: %s\n", test_cg);
+		}
+
+		/*
+		 * This will fork off a new process to run the test within
+		 * a new memcg, so we need to properly propagate the return
+		 * value up.
+		 */
+		ret = cg_run(test_cg, &run_test_for_each_guest_mode, &params);
+		if (cg_created)
+			cg_destroy(test_cg);
+		return ret;
+	}
+
+	puts("Using page_idle for aging");
+	page_idle_fd = __open_path_or_exit("/sys/kernel/mm/page_idle/bitmap", O_RDWR,
+					   "Is CONFIG_IDLE_PAGE_TRACKING enabled?");
+	close(page_idle_fd);
+	run_test_for_each_guest_mode(NULL, &params);
+	return 0;
+}
