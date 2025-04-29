@@ -1,84 +1,138 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B24E21B8F8;
-	Tue, 29 Apr 2025 15:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700F335966
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 15:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745940892; cv=none; b=NjbJnhercP1U2tS2iDWtUyGXDrH4bYTVKrjI798Wbr/mipyLkrDCQVRMexxSMl/3/nYqIXv4sNuWlxipQ+UD+KtpJWDYSPbzCI5GfDJdkDuGy4snoueWYpOaTgDRevDS2ROkcJ8J9UYnYj11JzlYHeLS7Y44Ho4ECNL58QxITVY=
+	t=1745940943; cv=none; b=D+W+11o1g3iU5our7ayKRkUoKMjDRrzmuMUnFhma3rvTxpXP/5olKlCDx3AWGJQ3opQdxj0N/1dpLYrhzpwcxcVKP6BRJdeHVcv/ZE5/JPfEEZ2mVAIrn/O9ezUtVfdYSTAs8wlxXdOP+WNpVm0lz6dQ9lJ5qWVyNDsZduhW7B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745940892; c=relaxed/simple;
-	bh=LiUQo6GAZ+wuv9L2yLsXzocAbXJsEUOnptnyTnkiBC4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NdPth013FNym+UpNlbG73ZiBvUuL5Y1XPD550w4DmEIij7FOfYx44TvxyEfPNrot1gSBWnhGp2R8SpdrhfFOIICRehTiqmliHFVtU9uwM+NjIRYIUwEjnHfjGXVkfhJGUzo7ltw0uPfviAX2GSeGj2H5Awl2ZvACWh5HTFuOtIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zn47x5VVGz67QRR;
-	Tue, 29 Apr 2025 23:32:45 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 304951402F0;
-	Tue, 29 Apr 2025 23:34:48 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Apr
- 2025 17:34:47 +0200
-Date: Tue, 29 Apr 2025 16:34:46 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
- De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
-	<terry.bowman@amd.com>
-Subject: Re: [PATCH v5 06/14] cxl/region: Avoid duplicate call of
- cxl_port_pick_region_decoder()
-Message-ID: <20250429163446.00006e8f@huawei.com>
-In-Reply-To: <20250428214318.1682212-7-rrichter@amd.com>
-References: <20250428214318.1682212-1-rrichter@amd.com>
-	<20250428214318.1682212-7-rrichter@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1745940943; c=relaxed/simple;
+	bh=u/RqHIbWw29AlLRvqgqJ85ykokCGdXn5LkWWcNMVH78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cs3Q7ttM0HNG9EkM7cI9eOck4/GULEaK7eRBy0zI0R6xmfUYacXyOEqn78wAcsfmdcC8oK93V8NRrapICZ5e2BCbg9Ki0cdiTihL2d5+pdOAbulsW/34Eg05kSLWjeOFAyjReDU3QfYxIF6TymcLPVtYER2j/MDday3vBzIBo6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHRGGLJE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHRGGLJE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96441C4CEE3;
+	Tue, 29 Apr 2025 15:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745940941;
+	bh=u/RqHIbWw29AlLRvqgqJ85ykokCGdXn5LkWWcNMVH78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IHRGGLJEatmvmUk+jQqh7Obj0x32GBVz7ZL86Q91O3dTcQpmh8MyLOg73btdHs1b3
+	 7353UKQKs6P1SzVWaqyPPP6WxsRKama1rTO6wTdnEyWX6T1c2InX9VdRLjxtbGD6Y4
+	 /wzd50iT9xhG7SW24bZZgjU8zo/zI69kBie5LcPXhGXfKZvtPdoKqdQHg1hLwGi/87
+	 HXq4DBILkipC2mHLcbrL7SGL55BE4tcR57G980FxH8AOaSe1xAKJAQyPNwC4HovWTy
+	 6hhJAE6ouecQ3vlUavnIYVHAcqcR/sXko0K7qnwe2ZKveh0knvx6DhKM9JEZOWTJNQ
+	 Y0rVSp1AsYi5w==
+Date: Tue, 29 Apr 2025 17:35:39 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 04/11] drm/connector: unregister CEC data
+Message-ID: <20250429-whimsical-thankful-chowchow-dfaa5f@houat>
+References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
+ <20250407-drm-hdmi-connector-cec-v5-4-04809b10d206@oss.qualcomm.com>
+ <20250414-hissing-auspicious-goldfish-78b9dc@houat>
+ <f59c0ab6-2391-4712-a3d5-18e67f538d4f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="67qbdqkhlhrqpp5c"
+Content-Disposition: inline
+In-Reply-To: <f59c0ab6-2391-4712-a3d5-18e67f538d4f@oss.qualcomm.com>
 
-On Mon, 28 Apr 2025 23:43:09 +0200
-Robert Richter <rrichter@amd.com> wrote:
 
-> Function cxl_port_pick_region_decoder() is called twice, in
-> alloc_region_ref() and cxl_rr_alloc_decoder(). Both functions are
-> subsequently called from cxl_port_attach_region(). Make the decoder a
-> function argument to both which avoids a duplicate call of
-> cxl_port_pick_region_decoder().
-> 
-> Now, cxl_rr_alloc_decoder() no longer allocates the decoder. Instead,
-> the previously picked decoder is assigned to the region reference.
-> Hence, rename the function to cxl_rr_assign_decoder().
-> 
-> Moving the call out of alloc_region_ref() also moves it out of the
-> xa_for_each() loop in there. Now, cxld is determined no longer only
-> for each auto-generated region, but now once for all regions
-> regardless of auto-generated or not. This is fine as the cxld argument
-> is needed for all regions in cxl_rr_assign_decoder() and an error would
-> be returned otherwise anyway. So it is better to determine the decoder
-> in front of all this and fail early if missing instead of running
-> through all that code with multiple calls of
-> cxl_port_pick_region_decoder().
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Tested-by: Gregory Price <gourry@gourry.net>
+--67qbdqkhlhrqpp5c
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 04/11] drm/connector: unregister CEC data
+MIME-Version: 1.0
 
-Subject to considering that name change
+On Tue, Apr 15, 2025 at 12:03:23PM +0300, Dmitry Baryshkov wrote:
+> On 14/04/2025 17:47, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Mon, Apr 07, 2025 at 06:11:01PM +0300, Dmitry Baryshkov wrote:
+> > > In order to make sure that CEC adapters or notifiers are unregistered
+> > > and CEC-related data is properly destroyed make drm_connector_cleanup=
+()
+> > > call CEC's unregister() callback.
+> > >=20
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> > > ---
+> > >   drivers/gpu/drm/drm_connector.c | 9 +++++++++
+> > >   1 file changed, 9 insertions(+)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_co=
+nnector.c
+> > > index ba08fbd973829e49ea977251c4f0fb6d96ade631..ae9c02ef9ab102db03c28=
+24683ece37cfbcd3300 100644
+> > > --- a/drivers/gpu/drm/drm_connector.c
+> > > +++ b/drivers/gpu/drm/drm_connector.c
+> > > @@ -743,6 +743,13 @@ void drm_connector_cec_phys_addr_set(struct drm_=
+connector *connector)
+> > >   }
+> > >   EXPORT_SYMBOL(drm_connector_cec_phys_addr_set);
+> > > +static void drm_connector_cec_unregister(struct drm_connector *conne=
+ctor)
+> > > +{
+> > > +	if (connector->cec.funcs &&
+> > > +	    connector->cec.funcs->unregister)
+> > > +		connector->cec.funcs->unregister(connector);
+> > > +}
+> > > +
+> > >   /**
+> > >    * drm_connector_cleanup - cleans up an initialised connector
+> > >    * @connector: connector to cleanup
+> > > @@ -763,6 +770,8 @@ void drm_connector_cleanup(struct drm_connector *=
+connector)
+> > >   	platform_device_unregister(connector->hdmi_audio.codec_pdev);
+> > > +	drm_connector_cec_unregister(connector);
+> > > +
+> >=20
+> > Actually, since we know that the HDMI connector is drm-managed, why
+> > can't we make the call to connector->cec.funcs->unregister a drm-managed
+> > action registered by drm_connector_hdmi_cec_register?
+>=20
+> I haven't settled yet in my mind whether we can/should also use this
+> infrastructure for drm_dp_cec management. So, at this point, I'd prefer to
+> keep a non-managed unregister function. Once we settle on something for
+> drm_dp_cec, we can switch to drmm.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I'd rather do the opposite. Let's go for drmm for now, and if we need to
+change it for DP, we can always change it.
+
+"Nothing is so permanent as a temporary solution", so I'd rather have
+the natural and consistent one for now :)
+
+Maxime
+
+--67qbdqkhlhrqpp5c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBDxywAKCRAnX84Zoj2+
+dquGAX9diCR3VHKnmjjJg557ORbagHWbX+hSSbs7r2R2tkJ+Ja/x0YDaBCgmU2Cj
+d7sn0WQBgPywwwfmIroWW0LGXY0oHKK477iuV1o1zhVEf7oc3A3/19HcKHcSMqmz
+Okz/T/Nr2w==
+=sZQr
+-----END PGP SIGNATURE-----
+
+--67qbdqkhlhrqpp5c--
