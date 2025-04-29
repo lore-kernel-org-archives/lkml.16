@@ -1,96 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B666514D2A0;
-	Tue, 29 Apr 2025 05:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4736314D2A0
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 05:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745903072; cv=none; b=AhvmVM9Eyo7AspWv4xysWzSxz/3YK3ElqZZxkSopAQlDfe7aIVj6rJ2oo5Mz69siccPswDYUMseiFzDNYjA2ZF1hyj4ATnFgH6msT+6pHNyxnmILFj37FT7UhvqW7TzjS8AUACbiotYzARDcrdFJkeI+dcsKCa4U2P8wePrNH0Y=
+	t=1745903125; cv=none; b=eaV8sPMDpBYkgtdg9kxIpvx5fJQhcYQuodrkt9ZCQGPpk4CRr3B3g2WiMkm1NUEDS3C6lKAnwWXUOwkyYe52Wl0FAJrJavutEppZ0LeqwuGp+Aj3eNE+v7I0qS/tt9KwTDmHR5cDcnM9/p2Lhm1Tdi6O3Nogk/5vPGXoZ8E6+cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745903072; c=relaxed/simple;
-	bh=LNGtH5y4gw40TxiUmv6gMVCoBmYsea6D+tPHQZ/VOYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pWkzhHEZONDLYSs57CsxB5VonZCY5SM/L0njl2VmX+FjNuzd4ZrwYf0cVNFFtnPrFX6M5CT+DKWJRWpNM3lL0E9jJi09u/wjcHmSQ/tdmAPk3nudykhHkpeDHHp1QbvijRn21WxCg8Wvo9V7GjYR97I3AA1XSchtxD+pORc8APw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFHmk+e2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFHmk+e2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92EBC4CEE9;
-	Tue, 29 Apr 2025 05:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745903072;
-	bh=LNGtH5y4gw40TxiUmv6gMVCoBmYsea6D+tPHQZ/VOYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gFHmk+e2MzCEXKYbax07J7v6Xy3PruLLpAgyRwRwRmETgolYZtm6yfAzuPcC+UnNP
-	 n2+bjCqC0710KoQR7waiGj/6kbBTL6c9lk+pGDyeGhubWJv488CHsaS40ueeNB72Dl
-	 3fU8+PhuLsYgjMpIOZmrGxoNiQ4rPARRjqCsia6TCaSR9vkT8c727mG6xwMz3LzKMo
-	 b+9+n5gGdcgvYFVIW1fSCMvJary/KAenpGTV9LHyD4uBK8+o2odidmRW0y5gK+93cd
-	 ruA5kkjwo07CSisgLV4HWwxgcYktijU4Rmy3mmAto1aoo3GLtAijZco4ya4XWgRtGi
-	 2V2v48BCBAlVg==
-Date: Mon, 28 Apr 2025 22:04:30 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Artur Rojek <artur@conclusive.pl>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-wireless@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jakub Klama <jakub@conclusive.pl>,
-	Wojciech Kloska <wojciech@conclusive.pl>,
-	Ulf Axelsson <ulf.axelsson@nordicsemi.no>
-Subject: Re: [RFC PATCH 1/2] net: wireless: Add Nordic nRF70 series Wi-Fi
- driver
-Message-ID: <20250429050430.GA7003@sol.localdomain>
-References: <20250324211045.3508952-1-artur@conclusive.pl>
- <20250324211045.3508952-2-artur@conclusive.pl>
+	s=arc-20240116; t=1745903125; c=relaxed/simple;
+	bh=/nFJ5WgjPCXfN8LVYjdrRcQI3IDn0JLngTTI5cKg1OI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h+svS84X1vkc6uMn0wjfgsEWkmNLiR1OY3d85mzIP60skb6ALYAU3psmjfZj2Er2Dz8cMP/nUzzBKUWM5Dv1ZmIGCx9L3NzJ6rFR8T7mpDIosyuF05tLfZZfeAfDXXgZ6TqtBT07T36h2898VRrDhoDoSSqZE7A0Q9seCDvCiNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96D361515;
+	Mon, 28 Apr 2025 22:05:15 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.52.122])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5F3693F5A1;
+	Mon, 28 Apr 2025 22:05:18 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3] arm64/mm: Re-organise setting up FEAT_S1PIE registers PIRE0_EL1 and PIR_EL1
+Date: Tue, 29 Apr 2025 10:35:11 +0530
+Message-Id: <20250429050511.1663235-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324211045.3508952-2-artur@conclusive.pl>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 24, 2025 at 10:10:44PM +0100, Artur Rojek wrote:
-> +static int nrf70_verify_firmware(struct device *dev,
-> +				 const struct nrf70_fw_header *fw)
-> +{
-> +	struct crypto_shash *alg;
-> +	u8 hash[NRF70_FW_HASH_LEN];
-> +	int ret;
-> +
-> +	alg = crypto_alloc_shash("sha256", 0, 0);
-> +	if (IS_ERR(alg)) {
-> +		ret = PTR_ERR(alg);
-> +		dev_err(dev, "Unable to allocate shash memory: %d\n", ret);
-> +		goto out;
-> +	};
-> +
-> +	if (crypto_shash_digestsize(alg) != NRF70_FW_HASH_LEN) {
-> +		dev_err(dev, "Incorrect digest size\n");
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	ret = crypto_shash_tfm_digest(alg, fw->data, fw->length, hash);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to compute hash\n");
-> +		goto out;
-> +	}
-> +
-> +	if (memcmp(fw->hash, hash, sizeof(hash))) {
-> +		dev_err(dev, "Invalid firmware checksum\n");
-> +		ret = -EFAULT;
-> +	}
-> +
-> +out:
-> +	crypto_free_shash(alg);
-> +
-> +	return ret;
-> +}
+mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+as expected if those macro constants contain some 128 bit layout elements,
+that are required for D128 page tables. The primary issue is that for D128,
+PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
+which the assembler can't accommodate.
 
-You can just use sha256() here (and select CRYPTO_LIB_SHA256 from your kconfig
-option).  It's much simpler than crypto_shash.
+Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
+based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
 
-- Eric
+While here also drop PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides which
+are not required any longer, as the compiler toolchains are smart enough to
+compute both the PIE_[E0|E1]_ASM constants in all scenarios.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This patch applies on v6.15-rc4
+
+Changes in V3:
+
+- Dropped off macros PTE_MAYBE_NG and PTE_MAYBE_SHARED as per Ryan
+
+Changes in V2:
+
+https://lore.kernel.org/all/20250416035604.2717188-1-anshuman.khandual@arm.com/
+
+- Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
+- Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
+  along with the corresponding comment as per Ard
+
+Changes in V1:
+
+https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
+
+ arch/arm64/kernel/asm-offsets.c |  2 ++
+ arch/arm64/mm/proc.S            | 19 ++-----------------
+ 2 files changed, 4 insertions(+), 17 deletions(-)
+
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index eb1a840e4110..30d4bbe68661 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -182,5 +182,7 @@ int main(void)
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+   DEFINE(FTRACE_OPS_DIRECT_CALL,	offsetof(struct ftrace_ops, direct_call));
+ #endif
++  DEFINE(PIE_E0_ASM, PIE_E0);
++  DEFINE(PIE_E1_ASM, PIE_E1);
+   return 0;
+ }
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index fb30c8804f87..80d470aa469d 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -512,26 +512,11 @@ alternative_else_nop_endif
+ 	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
+ 	cbz	x1, .Lskip_indirection
+ 
+-	/*
+-	 * The PROT_* macros describing the various memory types may resolve to
+-	 * C expressions if they include the PTE_MAYBE_* macros, and so they
+-	 * can only be used from C code. The PIE_E* constants below are also
+-	 * defined in terms of those macros, but will mask out those
+-	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
+-	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
+-	 */
+-
+-#define PTE_MAYBE_NG		0
+-#define PTE_MAYBE_SHARED	0
+-
+-	mov_q	x0, PIE_E0
++	mov_q	x0, PIE_E0_ASM
+ 	msr	REG_PIRE0_EL1, x0
+-	mov_q	x0, PIE_E1
++	mov_q	x0, PIE_E1_ASM
+ 	msr	REG_PIR_EL1, x0
+ 
+-#undef PTE_MAYBE_NG
+-#undef PTE_MAYBE_SHARED
+-
+ 	orr	tcr2, tcr2, TCR2_EL1_PIE
+ 	msr	REG_TCR2_EL1, x0
+ 
+-- 
+2.25.1
+
