@@ -1,66 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5C8259CAF;
-	Tue, 29 Apr 2025 19:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F90253B71;
+	Tue, 29 Apr 2025 19:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956287; cv=none; b=Ey3jDw61hIBsjOXc7sZ81iqIfLz5HCLegGEW1WCaIxovBslcz0xBQcICSmaSb7DuDc1zTdchb2oofLK8DUUPkYdV1Rrz2N5BHGaqRr6LoeRo0VvdF+FHpbY28DTndSvklM2wJBr1sGJj/gBWvakHKfayhKeTS+0Azx8AAHPol9k=
+	t=1745956309; cv=none; b=IxEe6Io97aEAqOdZ1GrDJ6NMsIJ4geZqOV9Jz8JjwLgdmXGx+26jaOalFIvfSgpiiHwfSfGzF5gfCN3mSbByqoL3LrMt9f5SuT2fit0I8VhS0JJ5M6cqaHW4cDfEtlu1wN9y2crhaCuy2gnp0J//juqEX3qwBfj4Z985sdhzj78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956287; c=relaxed/simple;
-	bh=VJTYJ+DRSOZ7GY8qrph88f8OFS52yzkIz78IYtEQHco=;
+	s=arc-20240116; t=1745956309; c=relaxed/simple;
+	bh=z1fvvieY1psn6GVNY6iDPpzBM5AWRCz/GzQ7g8pEEVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cYGKlP9OOx0yKvfqrXN356HfYmX316Tq+YGnvhNmb27563Un2PTKjBhc1yr+FkYEx3unixM0no2skXYVSvJe8be7bz+zG0RWEDdL/fsAOkJSvfLM9cNQvDpeUOQklCFWEV3UIZ8a2bXQIqKhPPJVWhM0FpVV7GH1Gp4kyQcGcL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GcD7tVsY; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uVvhJRh4noxiSgt0W6sSMZLWtc+LwGlEAzkGZzjNqK7rEpfBV0i2YjsY53HVySAudVPaYuGYB4kosBNn2YqoYJd5p9cgallG4xvLztfujPQLTS5fSDv1ZpCP0YvB6KtTrltuk5etmY4tskjKedP+nMAvgif35eh0xJxMY+wl84s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1Wver2v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GcD7tVsY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745956286; x=1777492286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=VJTYJ+DRSOZ7GY8qrph88f8OFS52yzkIz78IYtEQHco=;
-  b=GcD7tVsY1TN0SPLyuWhmiOJWcXe3tcjo+K5CYODSiGv8Pk7ZJzf2oA5g
-   06+gf6yD//TKHHAGksO4qnia4UnPF+8ZuUZorPX0Sn4FJ2tBKG69TtnXM
-   xxwsRTxrDEMEA8WhWgmD+9PFh6/H+MnPjpubsnbxr7xNMFjRNT+yd5HNZ
-   SJg5iSO9kB3lxFsVphFuKhyAyDQZeT+BWg9HufjEm+AVDAoGDpDr/QBJE
-   WybIhg8TiORrQ4Ib6KPdRl6UMtECMoE5bJuK1azQx55ykjq/KqsA3zgzP
-   fb7UZVExc14dvrEtdLsRCe3T4fg+OPd9okKxBsEz+jw4jxO8r6jKWOlN6
-   g==;
-X-CSE-ConnectionGUID: XcXhtjlMTZmC8LjrDX/wCA==
-X-CSE-MsgGUID: 995BFKt2Sxqis8TxeEVYJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="65009684"
-X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
-   d="scan'208";a="65009684"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 12:51:25 -0700
-X-CSE-ConnectionGUID: Nyl775vaQ86rWQdZs/rvnA==
-X-CSE-MsgGUID: gOyjbdY+Qn24s/zSN/8koQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
-   d="scan'208";a="139102749"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orviesa005.jf.intel.com with SMTP; 29 Apr 2025 12:51:19 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 29 Apr 2025 22:51:17 +0300
-Date: Tue, 29 Apr 2025 22:51:17 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ben Hutchings <ben@decadent.org.uk>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: make all file references relative to source
- root
-Message-ID: <aBEttQH4kimHFScx@intel.com>
-References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1Wver2v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EC3C4CEE3;
+	Tue, 29 Apr 2025 19:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745956308;
+	bh=z1fvvieY1psn6GVNY6iDPpzBM5AWRCz/GzQ7g8pEEVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b1Wver2vES19Qwkp6AQZn80UfAWt/dCb+ZdPRTAu9+7Wr9f/3iShWlqG58YB+VX50
+	 dc1NbF3NmgotoSlA+EZnjAwc/hoXuGN97GWgYEr7fq5RofHVRZ0bNd/PPOuZ/BRRfs
+	 tBt8BDpU3F7i/2Jh+QjudJkaHx2uSs34ekHrTgYOq1m8CjFJR178bDapZGhUMRqC20
+	 TtSs3RxPwOOL+xndT8Gs+PFfQx+9Vj26jmrIuqdfM8olXCBmHkHMBF68lDay9OmIRI
+	 zSZnQFtP46/bDUxxmpDl4qRVBLZTuMzN9qA9dYHjZPPwfbveE1OZk+3NmQi4avqU5b
+	 KW5mBSc8SzP0g==
+Date: Tue, 29 Apr 2025 20:51:42 +0100
+From: Srinivas Kandagatla <srini@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v8 6/6] nvmem: max77759: add Maxim MAX77759 NVMEM driver
+Message-ID: <aBEtzh8w5PZKSntr@srini-hackbase>
+References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org>
+ <20250429-max77759-mfd-v8-6-72d72dc79a1f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,136 +53,142 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
-X-Patchwork-Hint: comment
+In-Reply-To: <20250429-max77759-mfd-v8-6-72d72dc79a1f@linaro.org>
 
-On Sat, Mar 15, 2025 at 02:20:14PM +0100, Thomas Weiﬂschuh wrote:
-> -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
-> Other references, for example in debug information, are not affected.
-> This makes handling of file references in the compiler outputs harder to
-> use and creates problems for reproducible builds.
+On Tue, Apr 29, 2025 at 09:21:42AM +0100, AndrÈ Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
 > 
-> Switch to -ffile-prefix map which affects all references.
+> This driver exposes the non volatile memory using the platform device
+> registered by the core MFD driver.
 > 
-> Also drop the documentation section advising manual specification of
-> -fdebug-prefix-map for reproducible builds, as it is not necessary
-> anymore.
-
-Hi,
-
-This broke 'objdump -S' completely for me.
-
-I see the following difference in the debug info:
--    <12>   DW_AT_name        : (indirect line string, offset: 0): drivers/gpu/drm/i915/i915_config.c
--    <16>   DW_AT_comp_dir    : (indirect line string, offset: 0x23): /home/.../src/linux-2.6/build
-+    <12>   DW_AT_name        : (indirect line string, offset: 0): ../drivers/gpu/drm/i915/i915_config.c
-+    <16>   DW_AT_comp_dir    : (indirect line string, offset: 0x26): /home/.../src/linux-2.6/build
-
-Looks like I can work around it with some combination of --prefix and
---prefix-strip, but that seems far too tedious to have to do every
-time I need to decode an oops.
-
-> 
-> Suggested-by: Ben Hutchings <ben@decadent.org.uk>
-> Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
-> Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Signed-off-by: AndrÈ Draszik <andre.draszik@linaro.org>
 > ---
-> Changes in v2:
-> - Pick up Ack from Borislav
-> - Merge all changes into single patch
-> - Also drop link to KCFLAGS from docs
-> - Link to v1: https://lore.kernel.org/r/20250313-kbuild-prefix-map-v1-0-38cea8448c5f@weissschuh.net
+> v8:
+> * replace MODULE_ALIAS() with .id_table (Krzysztof)
+> * drop previous tags
+> 
+> v5:
+> * follow API updates of max77759 core driver
+> 
+> v2:
+> * align sentinel in max77759_nvmem_of_id[] with other max77759 drivers
+>  (Christophe)
 > ---
->  Documentation/kbuild/reproducible-builds.rst | 17 -----------------
->  Makefile                                     |  2 +-
->  arch/x86/boot/Makefile                       |  2 +-
->  arch/x86/boot/compressed/Makefile            |  2 +-
->  4 files changed, 3 insertions(+), 20 deletions(-)
+>  MAINTAINERS                    |   1 +
+>  drivers/nvmem/Kconfig          |  12 +++
+>  drivers/nvmem/Makefile         |   2 +
+>  drivers/nvmem/max77759-nvmem.c | 162 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 177 insertions(+)
 > 
-> diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
-> index f2dcc39044e66ddd165646e0b51ccb0209aca7dd..a7762486c93fcd3eba08b836bed622a41e829e41 100644
-> --- a/Documentation/kbuild/reproducible-builds.rst
-> +++ b/Documentation/kbuild/reproducible-builds.rst
-> @@ -46,21 +46,6 @@ The kernel embeds the building user and host names in
->  `KBUILD_BUILD_USER and KBUILD_BUILD_HOST`_ variables.  If you are
->  building from a git commit, you could use its committer address.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0db5e1fe64930e85265913e6a7dd2669c645cf42..b821502afc48f95d48fb8c6ac6941d1dd8e63582 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14670,6 +14670,7 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
+>  F:	drivers/gpio/gpio-max77759.c
+>  F:	drivers/mfd/max77759.c
+> +F:	drivers/nvmem/max77759-nvmem.c
+>  F:	include/linux/mfd/max77759.h
 >  
-> -Absolute filenames
-> -------------------
-> -
-> -When the kernel is built out-of-tree, debug information may include
-> -absolute filenames for the source files.  This must be overridden by
-> -including the ``-fdebug-prefix-map`` option in the `KCFLAGS`_ variable.
-> -
-> -Depending on the compiler used, the ``__FILE__`` macro may also expand
-> -to an absolute filename in an out-of-tree build.  Kbuild automatically
-> -uses the ``-fmacro-prefix-map`` option to prevent this, if it is
-> -supported.
-> -
-> -The Reproducible Builds web site has more information about these
-> -`prefix-map options`_.
-> -
->  Generated files in source packages
->  ----------------------------------
+>  MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 8671b7c974b933e147154bb40b5d41b5730518d2..3de07ef524906ad24a89e58abdfe93529a83c80f 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -154,6 +154,18 @@ config NVMEM_LPC18XX_OTP
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called nvmem_lpc18xx_otp.
 >  
-> @@ -131,7 +116,5 @@ See ``scripts/setlocalversion`` for details.
->  
->  .. _KBUILD_BUILD_TIMESTAMP: kbuild.html#kbuild-build-timestamp
->  .. _KBUILD_BUILD_USER and KBUILD_BUILD_HOST: kbuild.html#kbuild-build-user-kbuild-build-host
-> -.. _KCFLAGS: kbuild.html#kcflags
-> -.. _prefix-map options: https://reproducible-builds.org/docs/build-path/
->  .. _Reproducible Builds project: https://reproducible-builds.org/
->  .. _SOURCE_DATE_EPOCH: https://reproducible-builds.org/docs/source-date-epoch/
-> diff --git a/Makefile b/Makefile
-> index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1067,7 +1067,7 @@ endif
->  
->  # change __FILE__ to the relative path to the source directory
->  ifdef building_out_of_srctree
-> -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
-> +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
->  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
->  endif
->  
-> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> index 9cc0ff6e9067d574488a35573eff4d0f8449e398..f500f82864aae80deb74faa3df9a8b6333d6c4ca 100644
-> --- a/arch/x86/boot/Makefile
-> +++ b/arch/x86/boot/Makefile
-> @@ -54,7 +54,7 @@ targets += cpustr.h
->  
->  KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
->  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
-> -KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
-> +KBUILD_CFLAGS	+= $(call cc-option,-ffile-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
->  KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
->  
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 5edee7a9786c67e13c295473751b82387bcbd67e..ad324978b2e5b1b6f8be82647769c99db8257ac7 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -38,7 +38,7 @@ KBUILD_CFLAGS += -fno-stack-protector
->  KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
->  KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
->  KBUILD_CFLAGS += -Wno-pointer-sign
-> -KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
-> +KBUILD_CFLAGS += $(call cc-option,-ffile-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
->  KBUILD_CFLAGS += -D__DISABLE_EXPORTS
->  # Disable relocation relaxation in case the link is not PIE.
-> 
-> ---
-> base-commit: a57512d6cd88eba04cdc1fb83832c00d248bd0d1
-> change-id: 20250312-kbuild-prefix-map-5ae76c209e7a
-> 
-> Best regards,
-> -- 
-> Thomas Weiﬂschuh <linux@weissschuh.net>
-> 
+> +config NVMEM_MAX77759
+> +	tristate "Maxim Integrated MAX77759 NVMEM Support"
+> +	depends on MFD_MAX77759
+> +	default MFD_MAX77759
+> +	help
+> +	  Say Y here to include support for the user-accessible storage found
+> +	  in Maxim Integrated MAX77759 PMICs. This IC provides space for 30
+> +	  bytes of storage.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem-max77759.
+> +
+>  config NVMEM_MESON_EFUSE
+>  	tristate "Amlogic Meson GX eFuse Support"
+>  	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..a9d03cfbbd27e68d40f8c330e72e20378b12a481 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -34,6 +34,8 @@ obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
+>  nvmem_lpc18xx_eeprom-y			:= lpc18xx_eeprom.o
+>  obj-$(CONFIG_NVMEM_LPC18XX_OTP)		+= nvmem_lpc18xx_otp.o
+>  nvmem_lpc18xx_otp-y			:= lpc18xx_otp.o
+> +obj-$(CONFIG_NVMEM_MAX77759)		+= nvmem-max77759.o
+> +nvmem-max77759-y			:= max77759-nvmem.o
+>  obj-$(CONFIG_NVMEM_MESON_EFUSE)		+= nvmem_meson_efuse.o
+>  nvmem_meson_efuse-y			:= meson-efuse.o
+>  obj-$(CONFIG_NVMEM_MESON_MX_EFUSE)	+= nvmem_meson_mx_efuse.o
+> diff --git a/drivers/nvmem/max77759-nvmem.c b/drivers/nvmem/max77759-nvmem.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..df7d1998fa2f116450d2fd50eba70d9b61a24574
+> --- /dev/null
+> +++ b/drivers/nvmem/max77759-nvmem.c
+> @@ -0,0 +1,162 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +//
+> +// Copyright 2020 Google Inc
+> +// Copyright 2025 Linaro Ltd.
+> +//
+> +// NVMEM driver for Maxim MAX77759
+> +
+> +#include <linux/dev_printk.h>
+> +#include <linux/device.h>
+> +#include <linux/device/driver.h>
+> +#include <linux/err.h>
+> +#include <linux/mfd/max77759.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/overflow.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/string.h>
+> +
+> +#define MAX77759_NVMEM_OPCODE_HEADER_LEN 3
+> +/*
+> + * NVMEM commands have a three byte header (which becomes part of the command),
+> + * so we need to subtract that.
+> + */
+> +#define MAX77759_NVMEM_SIZE (MAX77759_MAXQ_OPCODE_MAXLENGTH \
+> +			     - MAX77759_NVMEM_OPCODE_HEADER_LEN)
+> +
+> +struct max77759_nvmem {
+> +	struct device *dev;
+> +	struct max77759 *max77759;
+> +};
+> +
+> +static bool max77759_nvmem_is_valid(unsigned int offset, size_t bytes)
+> +{
+> +	return (offset + bytes - 1 <= MAX77759_NVMEM_SIZE);
+> +}
+Do you really need this check?
+nvmem core should take care of this boundary checks.
 
--- 
-Ville Syrj‰l‰
-Intel
+> +
+> +static int max77759_nvmem_reg_read(void *priv, unsigned int offset,
+> +				   void *val, size_t bytes)
+> +{
+> +	struct max77759_nvmem *nvmem = priv;
+> +	DEFINE_FLEX(struct max77759_maxq_command, cmd, cmd, length,
+> +		    MAX77759_NVMEM_OPCODE_HEADER_LEN);
+> +	DEFINE_FLEX(struct max77759_maxq_response, rsp, rsp, length,
+> +		    MAX77759_MAXQ_OPCODE_MAXLENGTH);
+> +	int ret;
+> +
+> +	if (!max77759_nvmem_is_valid(offset, bytes)) {
+> +		dev_err(nvmem->dev, "outside NVMEM area: %u / %zu\n",
+> +			offset, bytes);
+> +		return -EINVAL;
+> +	}
+> +
