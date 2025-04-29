@@ -1,133 +1,115 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4349B2D191D
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969462BE7C0;
+	Tue, 29 Apr 2025 13:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932772; cv=none; b=LrDcM5SXHbzKjMWNNSY32rEB0OBgYdzJRsSVdn6Hk/2EnGAi7f3xH+2ht5TJ8L8p0gReXnAvAaMgalZiMqLJ4dMWW5Nx9U49cV4hHCIlrpTNYuNkHP1zI+BOxLC/CNmtxDCmzrgoyn8tsM08HtmLNWaZU5fWlnqeY8LvrTkYlyA=
+	t=1745932830; cv=none; b=eHudDpfwlTgGCqAh7zHUIJw6KKcSeZiUYDIDJlo4rP43IlbnKYaqj3vHYR3VwFlZ5vwXspoIGextJp+lGeG98v/qyn7zoAeEn3Zo8iou9w7JzOtKo1hHnP2ORvZPwLcZVj57TcgwDp7bvYwAg1WV6hILqPNbdHfja/joBAnHeMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932772; c=relaxed/simple;
-	bh=XePYFUZFOmGANaCFVWnQbmv+MH6vntg+h8qSytSplf8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ggP243C1V9uSIcUbc+U/uUdHloGCuvOkBEvPrSU2w//h1sPVqcyX/vKkuHzXX5E1RD1fhDnqjIhhVJAJcCNvo7KxbtKhIC5FK09907cOuOWYKjNRAHO6DmYZNF4oc6YjHwensUfXu/osvFRYUQlxGiCu6ssp+myHcGTzVTJsxNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MfLos37w; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfLos37w"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe574976so41658245e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745932768; x=1746537568; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qSBA2FVneKH15/yfDJmf3I99yTke3ZzCIPR7/+gqo2M=;
-        b=MfLos37wyS3I5VBUmgD+VaBnXnH40VtAmbdJhaBIIdWhc+ox6RjTxT4fwk0xmxeNDL
-         chdR52l/LX+Tikd12zB/oeMvtJFRSqgsjL2rnPLFe2ycgLao2rcElTPNWDp48roq/XaY
-         NewmLaQ+Xx1BiWDYzgxK/pe2kzaBY+tKA2fEiYD/PMTajJ6xS/ZwXtrUc/R0W+s+SYGz
-         jjA2LvB/SkcqpWvqY6QHCSi5Ulh87lRROAteFBAAd/s7fo3yuxIMp/p8MeqFfEYSmoZB
-         58Bg7gZFOdMD8/Pv+RNxP+LvDE4QLM3p51DYw1HVESa2LmXbpEtYXms/ZYw46gn5/uvt
-         bJIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745932768; x=1746537568;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qSBA2FVneKH15/yfDJmf3I99yTke3ZzCIPR7/+gqo2M=;
-        b=HAZ9y6sZe5YuQzS6E8dsxh/9T15G0Uh4iiUeyt9hDMZ848kcADoCNHsy2uhHZJouxU
-         y5oHyHoN+pWqkCUpBY/SBKdDFKHBOGD0twV3xS/7eAXIWFMxS845ztEYiuHHChqM0Mmv
-         +kY9AGv/SmWW9dxOUa4UkkiaO60Ck69c16so5nVAzaLMkSZENQlEj4BJDt6iL3q941wk
-         GW84jmVipNRRDty22Y8A0bGF2CGN8P3ym5Br3jnG4vlDtQQVmQkoTeLo5vMJjchQRo1W
-         yE93vh2n3U2Rw6U41NUdCwz5MnrFAmlrhScOKpQmI4gRp7R0NY4BX2hOUZgakLcgI7SI
-         N2vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBXb4gzIno4v/kzN+lgj1XL0+7mBo8Q8I+k68Dp7Y8jAKNF5qG+pC7Ovfl3rYydWQX8Fk8c01cSIQntDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/9qoBI2iOzceJTZfItBzKVcaDtMxB6mxezk+vhBpOp76UqyZ6
-	/hZn6HEX2VAGahpyEPDAwk90bZFvFYef/kjX4fiP9TBaykE9OVp7woZEaqaSgE4=
-X-Gm-Gg: ASbGncuHhY0u174l7oN9LFYUewm5tufowbF1maipstygvaBLH363lZ3BNcjx/pYc9l6
-	5bWddqYJJFvcx8tgLNgU5A+mnwLNkyElcMOpPHFaBf4NqM621WMZyHF2q1n1BElqRSzqOWXZGFd
-	AXwU/dRNw/rU9zrkk6QMkGRH1IbZXSknm6A2Bm8oJws9V2L7m+PZ+eFKE88e+QWEWEStpFB2f6o
-	k82r1AtPqOn4wrKPRjdu5Ei3nGP3grMLlkoQN4xnndGBCsDkMBqr3Y9P+0V+UgFQpCtr091quTY
-	wTZUVOzDvBakXUkhH0SlHW9B8W05Mnn+95Ogzamv8dbNKxX0oYGRwfbgpnSl3/dnMhANKJTpz8m
-	kgm8w
-X-Google-Smtp-Source: AGHT+IHAYw0/lwXakKmjaC+/n7Ew4ZuEbD1KGM7D3NN5C8KbtKmvLbCZ8/H5NgImD03ODoBSykVgJw==
-X-Received: by 2002:a05:600c:4ece:b0:43d:fa58:81d4 with SMTP id 5b1f17b1804b1-441ac91d66dmr27017825e9.33.1745932768416;
-        Tue, 29 Apr 2025 06:19:28 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-440a530324dsm154990655e9.10.2025.04.29.06.19.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 06:19:26 -0700 (PDT)
-Message-ID: <0fc89d71-6510-4ca9-a789-290e1818798c@linaro.org>
-Date: Tue, 29 Apr 2025 15:19:25 +0200
+	s=arc-20240116; t=1745932830; c=relaxed/simple;
+	bh=+ddzy9jCYjhQes9mHraU7a+/SWmYuS3TBFPtlx+VGto=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u6qbVHnVjZArP3WjS2a1FSHML8qby1UjkahEBF9eFQALaZZ5iQ6F2VtmWh+IeO8tbjr7MxGIN2UisQsQerLNkR5VIc8uPaCA5du0XStZPBX7GyxIe6i0dmo1R79K8kmLvte2S+uutgBzG6APLqpMSvtJE7V3U/s2uQo6Xcux0hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zn18s5K5Jz6L5Wb;
+	Tue, 29 Apr 2025 21:18:21 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D9D9114064C;
+	Tue, 29 Apr 2025 21:20:23 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Apr
+ 2025 15:20:23 +0200
+Date: Tue, 29 Apr 2025 14:20:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zhe Qiao <qiaozhe@iscas.ac.cn>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <bhelgaas@google.com>,
+	<will@kernel.org>, <sunilvl@ventanamicro.com>, <linux-acpi@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ACPI: PCI: Release excess memory usage.
+Message-ID: <20250429142022.00003460@huawei.com>
+In-Reply-To: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
+References: <20250429091051.249911-1-qiaozhe@iscas.ac.cn>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] clocksource/drivers/timer-tegra186: add
- WDIOC_GETTIMELEFT support
-To: Jon Hunter <jonathanh@nvidia.com>, Robert Lin <robelin@nvidia.com>
-Cc: thierry.reding@gmail.com, tglx@linutronix.de, pohsuns@nvidia.com,
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, sumitg@nvidia.com
-References: <20250421100821.2907217-1-robelin@nvidia.com>
- <20250421100821.2907217-2-robelin@nvidia.com>
- <aBCU5vec0XMX5VRz@mai.linaro.org>
- <fbb3a1b3-3949-402a-b51c-f5446a392e83@nvidia.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <fbb3a1b3-3949-402a-b51c-f5446a392e83@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 29/04/2025 11:15, Jon Hunter wrote:
-> Hi Daniel,
+On Tue, 29 Apr 2025 17:10:51 +0800
+Zhe Qiao <qiaozhe@iscas.ac.cn> wrote:
+
+> In the pci_acpi_scan_root() function, if the PCI bus creation failed,
+> the allocated memory should be released to avoid memory occupation.
 > 
-> On 29/04/2025 09:59, Daniel Lezcano wrote:
->> On Mon, Apr 21, 2025 at 06:08:19PM +0800, Robert Lin wrote:
->>> From: Pohsun Su <pohsuns@nvidia.com>
->>>
->>> This change adds support for WDIOC_GETTIMELEFT so userspace
->>> programs can get the number of seconds before system reset by
->>> the watchdog timer via ioctl.
->>>
->>> Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
->>> Signed-off-by: Robert Lin <robelin@nvidia.com>
->>> ---
->>
->> Hi Robert,
->>
->> I realize that this driver should be split in two and the watchdog 
->> part go
->> under drivers/watchdog.
+> Fixes: 789befdfa389 ("arm64: PCI: Migrate ACPI related functions to pci-acpi.c")
+> Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
 > 
-> Are there any other examples you know of where the timer is split in 
-> this way? It is not clear to me how you propose we do this?
-
-Just keep the clocksource and move the watchdog code (everything related 
-to the watchdog_ops) to a new driver under drivers/watchdog
-
-BTW, there are three clocksources with the same rating, what is the 
-point of having them supported ?
-
-Is it not the architected clocksource enough ?
-
-May be the clocksource can be removed and the driver remains a pure 
-watchdog driver ?
-
-> BTW, for this series, I just want to get these updates merged. Any other 
-> re-factoring we can handle later.
+> ---
+> V1 -> V2:
+> Modified labels for better readability.
 > 
-> Cheers!
-> Jon
+> ---
+>  drivers/pci/pci-acpi.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 > 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index af370628e583..bde104ecac80 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1677,15 +1677,12 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  
+>  	root_ops = kzalloc(sizeof(*root_ops), GFP_KERNEL);
+>  	if (!root_ops) {
+> -		kfree(ri);
+> -		return NULL;
+> +		goto free_ri;
+>  	}
+>  
+>  	ri->cfg = pci_acpi_setup_ecam_mapping(root);
+>  	if (!ri->cfg) {
+> -		kfree(ri);
+> -		kfree(root_ops);
+> -		return NULL;
+> +		goto free_root_ops;
+>  	}
+>  
+>  	root_ops->release_info = pci_acpi_generic_release_info;
+> @@ -1693,7 +1690,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  	root_ops->pci_ops = (struct pci_ops *)&ri->cfg->ops->pci_ops;
+>  	bus = acpi_pci_root_create(root, root_ops, &ri->common, ri->cfg);
+>  	if (!bus)
+> -		return NULL;
+
+Do we also need to tear down the ecam mapping done in pci_acpi_setup_ecam_mapping()?
+Might just be pci_ecam_free(ri->cfg);
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> +		goto free_root_ops;
+>  
+>  	/* If we must preserve the resource configuration, claim now */
+>  	host = pci_find_host_bridge(bus);
+> @@ -1710,6 +1707,12 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+>  		pcie_bus_configure_settings(child);
+>  
+>  	return bus;
+> +
+> +free_root_ops:
+> +	kfree(root_ops);
+> +free_ri:
+> +	kfree(ri);
+> +	return NULL;
+>  }
+>  
+>  void pcibios_add_bus(struct pci_bus *bus)
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
