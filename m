@@ -1,61 +1,63 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E0A27F75A
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB39D292922
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 08:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916674; cv=none; b=nDHKtDHNFG5nggyuwEgoNhcdoIA5hzBvnKIy+99E/zE2XGtgkOVWauGj826afS2M9mAHZ1sfaSsrsd7TcArUBvB8cuFMLHeNaPMcjfxv45TIDjiBnaof7fE1QNfv4FOUGKTnaUNtZ3yeHjN/Ox2FBbnC8+kv+SHAO3fV0mtXexs=
+	t=1745916684; cv=none; b=Pr3SYu4jxe1EophqECC/0MvFL7OOBSMex6OQngLRH0tVVhlMX196pqEGTAYP+CY4Aj1FOySb9swQj2psgj99zUWS276Kd1bvO14Xtb1bmEV0u52mEqopGsjgCX1FY916xhqBvwBsyjV4c/VeWpsVK9QTGu5CK/KL6BqKCoED3M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916674; c=relaxed/simple;
-	bh=YsDFhu4HcEnff3t1qXe/L3ejyCjNlMTtIe/MIcb0h08=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bIr1rW8fz5+1JBXGWEpeMzxwBYWWVcb6t10Ft+B+RiXMtJaF93XpQu4l+B6EfBDRtBI/l9cAKJN2EjRLWLTlYQKIKIgnGNzzCedykDbDYYAhgY1T82H0a+cvzm1eCCbKWOTcfeZldYBr3sO5QMkKkZ8Ofx/WbBn5n/BlfAxl5eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=UhdSu1Us; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1745916684; c=relaxed/simple;
+	bh=nxp0t+VHyDDz8Zh9ljfkEOJVql6306/CDvJb8L/acNo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XqQfu5S4MPVnaTuiJh7svdu+MX+XELPydFsS9QyJlm/mWbpoSogixupHt6Uz5jCUsl0H2znI6ZgU8EFp+Qp1C34zQYjczvCRVJr0EzzM9m6kSMKpN2o1ssTDimyLa5AOtE0ZDrwEtj+9TDyte66tx6KSkyNQWLmxG4p0jX7cjqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=GpPfLIzu; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="UhdSu1Us"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso5208667b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:51:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="GpPfLIzu"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so3998812a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 01:51:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745916671; x=1746521471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YxwsaEgj+Q0Omu+vZ1eyC37eLFX1X+cgZiMPV4Vs2Kw=;
-        b=UhdSu1Us6iRu8aXXyY6WAJLdee4YB5yKjO02A136Q1NEt41nblNqRFdlwtNkY7blxS
-         xtY9OcftB5a73NVYgjiEmU7j8+SZPSsl6Jwk+rnSGgk23lXKj/WM1sK/3enkkDHawTPy
-         /zTfBR9PWDfIP7Hgwdz3aT7NG05e+C6RvIwD1999qBaTsnM+lMhfV5QhJyuT0HbisVzM
-         X0A8m4XPjcCC9cOF/eBfLtVU5gfF0D3fuXYZBgIDgxQtx35WHE2fW3eVjJIpzTEUqzsU
-         atQ/lueHzp2jt4MPjRTyvBMVy9w8eNUpo5Xzj+1ALDriYdCc6RrPDNvuzcwWvBRW3xcW
-         0N6A==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745916682; x=1746521482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PHJACfgxHpPYnkt6IQy+Z0WabgJ033p5WN25OiCcmgQ=;
+        b=GpPfLIzuHNN2jUoUTtIsXSgwNSD4T+ctLgfop5vqp7Ia9KqghxxZpnIvkPf12+9v9+
+         6vV0/0cQ6A0aR1v95Yf2wjOiyF8x9tF6a6rf21kDZgDoNi6KnXs1V8POCUnXLSjpTCYD
+         4dsMVWNMNCqIjwfGyZazO5cxfAEjvKjg9nSPt+8gNG12TuIZKjdus31pxKaxWUoviYg5
+         bmGGdcqft1GAs+JT/MsDAj/4wjWQHLtwupqt3iXt3RCLSsOoNRmn6TYEG1DJnnVoDX9J
+         0uVEycD2+OaMLe2Ywpj5weH5cW7/TlyWlhAom8t6el4K+1QzXTSVikWZ6pOXk8FE/DDe
+         opJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745916671; x=1746521471;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YxwsaEgj+Q0Omu+vZ1eyC37eLFX1X+cgZiMPV4Vs2Kw=;
-        b=Vq6nUheiivTfzDbBJCQxvaLXOqgtXsMpfIwYx8Rb9i768I3j8MkUOhdWLcv+KcWrFY
-         KqvmXV5olJy5Oy3coAfvEBhitoAjE6m2llYypARZ5+cKb27THPIZikPM9vrpX6GCsQQC
-         CpDRPr1gouXzBBSCDQURysKa/BVTnV9PHIh5UXvXmjq01zcnjMxQ0xi/nxwxbNIkZ0Je
-         YnSrQfbLdHhVDEmzbD/fH0cYYe+gGHMUrTn9SRdX/tft3C+ewgLypVd6OnABprsDlm98
-         u0T9DvbgTEaSoBAJ7sdAlO6scPmwXqmaB/Z28ZCDJfh86dYuCVHSv8fYuLYLnX/ANfqE
-         b0Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2GI7xA5TuurcDBMZEgNKz3f53z6FtRSlXxdpiet4604JJ/X/Lw0p5z/tb5EIhmjfLD38g0LrWv7FOrw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+jP+G/a5zaRcf8A3tIhqsCARgcsVBuNXezwwYpZpBpgYVi1qG
-	daWg08KwqAKBPriSXTNB5EIGlpFMV/RPWQe900FwzosjQIUoNRPu6l93f0CWYRU=
-X-Gm-Gg: ASbGncsCXlq6HDVWugItcZfORNqeiRAZUK6OxNXFvpGzyCFgTS/nY6tcLNKAydEiu9D
-	qEDhpIkeNMFfoenoJhOtUBkIxbiBlPY3dnOKC5oeUe7pZt6UBLQ6TcWkXw1ftTYzyP1kB10CozX
-	s09hxOtSg3txPRl15L8cQOlG8ABfDa0edhd6ISmbRLiVeXaSpxT0gbIb0qZq3htuOY/yBKo5/vV
-	1uEIqq4fsCCSvzuzjDt0T4IoTGdYU4otSPAZtewI9RiFSmbcWJwRovw9UOcSKXnsGoUYb1yZSeG
-	fmPFJ2LVQE/2XNtTKOaLmKFXZckyC1sFjUScCJF2PWnuJ9zrRjA2BIOFxYvFkvm8o5nN9qT+XKE
-	d0LGrIOtRhQn40ms=
-X-Google-Smtp-Source: AGHT+IEctMKqKIxfKHwBx6+1Ghb0+9YYYgqcw8OVqlt6Q6s6LPNYwZUXZToj5U3b66+aQrGv2/impw==
-X-Received: by 2002:a05:6a21:3a44:b0:1f5:93cd:59b5 with SMTP id adf61e73a8af0-2046a646f3cmr19836662637.28.1745916671308;
-        Tue, 29 Apr 2025 01:51:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745916682; x=1746521482;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PHJACfgxHpPYnkt6IQy+Z0WabgJ033p5WN25OiCcmgQ=;
+        b=SaNi7srrndzRiTrh3xQGu/Rr54o/Fu05ZhSpYWDs+BDBJLwZ8n4wrpC2gqpsV5F/Hb
+         Y2sxjQqV7sRgwmj/bX4Ipr0By3NyuQQJcSIEdy5RFCgL3RJnpl6mAkSUNzN6aAPUt/6/
+         dYN7kv5XxJWe8pVCVeqIwDO9tjk9iddWeR5S2AuyU/BO2PhLOTvEvQJUt6a3+Wagi5S7
+         6ZSF4r+Bxk+0utvSWPB5KHokSl3DB4uLy0qoqKu4LbQeG9sY0jxUGKeu2DqMWVDMUeAV
+         60E34MXKfS6uixtGAd5GQnm+aCaZhtPUHWEYwW3uEY2Ijo/HrdqY70cOZ/JkZXos5Ipy
+         cCQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpLWPatYzpwH5oUW/lzrKgQSvIzT8E5B1plqOXp5csBRIfkmowW23ERubi5c7Xb7i3cqA9YBQa9EZR0vg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRY1tA/7CVad5xdI1vI3C8nCrhFxTT2GQ8g95z25gX5wr1V5Z5
+	0R+C3zoOb+WMAim5g664BygzXyv4k1vGv6HNx5yS28egnvnIZeVAIY3xPk1sgiw=
+X-Gm-Gg: ASbGncsfLC+1uswzstul/f+p/8D8Te4d7qfkxMJ3XIaYuGUW/NSS1TL09WLvJp+TYlV
+	l0BUuqSuTT0IuJrHyh6PcN6q6qJYPPEf91ikNXdTFukVGLfBeNVF1DkLseosG9JLa+qemjvkUDG
+	1PpqTMiEDkeunx0XIRg8enzBEaMt5FwY0gGzvxYdXyx+D2aHw6SfM3KuB9+P8nAOPYIRTVyZhmX
+	9Ou+QfVTySAA2ZYbogqz4U+G4Pqb7Bw9uQn4Ac30eTS3VuDa5CtU6hJ0JbrhtnAqeWj+JZAnOms
+	qc5XQ5paPxwH1DY2/ocaPulFSLJu7yPp2G/OZWT3UqXwT35AUOgUCEI8BOMqnvWs0fy9QNptxgK
+	WJLxcDaUd4m6UThA=
+X-Google-Smtp-Source: AGHT+IFZEuQ6sdfjCY7tfFhs7M5WchmJ8YCpC4/JeiDTSPbAo3pUkubrMOUkP8IaSDenvQAkORYC5A==
+X-Received: by 2002:a05:6a20:12cc:b0:1f5:9961:c44 with SMTP id adf61e73a8af0-20955d042b0mr2744549637.3.1745916682223;
+        Tue, 29 Apr 2025 01:51:22 -0700 (PDT)
 Received: from localhost.localdomain (210-61-187-174.hinet-ip.hinet.net. [210.61.187.174])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597e0bsm8550119a12.44.2025.04.29.01.51.01
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597e0bsm8550119a12.44.2025.04.29.01.51.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:51:10 -0700 (PDT)
+        Tue, 29 Apr 2025 01:51:21 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: ukleinek@kernel.org,
 	robh@kernel.org,
@@ -83,10 +85,12 @@ Cc: elder@riscstar.com,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	guodong@riscstar.com
-Subject: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
-Date: Tue, 29 Apr 2025 16:50:42 +0800
-Message-ID: <20250429085048.1310409-1-guodong@riscstar.com>
+Subject: [PATCH v3 1/6] dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K1 PWM support
+Date: Tue, 29 Apr 2025 16:50:43 +0800
+Message-ID: <20250429085048.1310409-2-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250429085048.1310409-1-guodong@riscstar.com>
+References: <20250429085048.1310409-1-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,91 +99,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset adds support for the SpacemiT K1 SoC in the PWM_PXA driver
-and updates related device tree bindings. The changes enable PWM
-functionality on the K1 platform through driver enhancements,
-configuration updates, and device tree additions.
+The SpacemiT K1 SoC reuses the Marvell PXA910-compatible PWM controller
+with one notable difference: the addition of a resets property. To make
+the device tree pass schema validation (make dtbs_check W=3), this patch
+updates the binding to accept spacemit,k1-pwm as a compatible string, when
+used in conjunction with the fallback marvell,pxa910-pwm.
 
-Functionality has been verified on the Banana Pi BPI-F3 board using PWM14,
-configured as a pwm-backlight. Per community feedback, the actual
-pwm-backlight node is not included in this patchset but can be found in
-patch 7 of the v1 series, with modification of pwms property to 4-cell
-format to match updated binding (#pwm-cells = <3>) since v3.
+Support for the optional resets property is also added, as it is required
+by the K1 integration but was not present in the original Marvell bindings.
 
-+		pwms = <&pwm14 0 2000 0>;
+Since the PWM reset line may be deasserted during the early bootloader
+stage, making the resets property optional avoids potential
+double-deassertion, which could otherwise cause flickering on displays
+that use PWM for backlight control.
 
-This patchset is based on [spacemit/for-next]
-  base: https://github.com/spacemit-com/linux for-next
+Additionally, this patch adjusts the required value of the #pwm-cells
+property for the new compatible string:
+- For "spacemit,k1-pwm", #pwm-cells must be set to 3.
+- For existing Marvell compatibles, #pwm-cells remains 1.
 
-Plus the following dependencies:
-1. Clock controller driver, posted by Heylen Chu (v8), with most of it has
-   been accepted:
-https://lore.kernel.org/all/20250416135406.16284-1-heylenay@4d2.org/
-2. Reset controller driver, posted by Alex Elder (v5):
-https://lore.kernel.org/all/20250418145401.2603648-1-elder@riscstar.com/
+Background of #pwm-cells change is by an ongoing community discussion
+about increasing the #pwm-cells value from 1 to 3 for all Marvell PXA PWM
+devices. These devices are currently the only ones whose bindings do not
+pass the line index as the first argument. See [1] for further details.
 
-Major differences between v3 and v2:
- - Patch 1:
-    - Added: Reviewed-by: Rob Herring (Arm) <robh@kernel.org> # v2.
-    - When compatible string contains "spacemit,k1-pwm",
-      #pwm-cells must be 3.
- - Patch 2:
-    - Dropped the addition of a reset_control field to struct pxa_pwm_chip.
-    - Using a local variable in pwm_probe() instead.
- - Patch 3:
-    - In k1.dtsi, changed #pwm-cells = <1> to <3>.
+[1] https://lore.kernel.org/all/cover.1738842938.git.u.kleine-koenig@baylibre.com/
 
-Major differences between v2 and v1:
- - Dropped the addition of spacemit,k1-pwm as a compatible string in the
-   PWM_PXA driver; instead, it now falls back to marvell,pxa910-pwm.
- - Removed pinctrl settings for all PWM nodes (pwm0-pwm14); only the
-   pwm14_1 configuration is included in this version.
- - Changed PWM_PXA from built-in to a loadable module (=m) in the
-   riscv defconfig.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org> # v2
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+---
+v3: When compatible string contains "spacemit,k1-pwm", #pwm-cells must be 3
+    Added Reviewed-by: Rob Herring (Arm) <robh@kernel.org> # v2
+v2: Accept spacemit,k1-pwm as a compatible string, when used in conjunction
+    with the fallback marvell,pxa910-pwm
 
-v2 consists of the following patches:
-Patch 1: Add spacemit,k1-pwm compatible string (with fallback to
-           marvell,pxa910-pwm) and support optional resets property.
-Patch 2: Add reset controller support to the PWM_PXA driver.
-Patch 3: Add device tree nodes for all 20 PWM instances on K1.
-Patch 4: Add pinctrl settings for PWM14.
-Patch 5: Add ARCH_SPACEMIT dependency to the PWM_PXA Kconfig entry.
-Patch 6: Enable PWM and PWM_PXA in riscv defconfig for SpacemiT K1.
+ .../bindings/pwm/marvell,pxa-pwm.yaml         | 35 +++++++++++++++----
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
-v2:
-https://lore.kernel.org/all/20250420070251.378950-1-guodong@riscstar.com/
-
-v1:
-https://lore.kernel.org/all/20250411131423.3802611-1-guodong@riscstar.com/
-
-Best regards,
-Guodong Xu
-
-Guodong Xu (6):
-  dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K1 PWM support
-  pwm: pxa: add optional reset control
-  riscv: dts: spacemit: add PWM support for K1 SoC
-  riscv: dts: spacemit: add pwm14_1 pinctrl setting
-  pwm: Kconfig: add depends on ARCH_SPACEMIT to PWM_PXA
-  riscv: defconfig: Enable PWM support for SpacemiT K1 SoC
-
- .../bindings/pwm/marvell,pxa-pwm.yaml         |  35 +++-
- arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi  |   7 +
- arch/riscv/boot/dts/spacemit/k1.dtsi          | 180 ++++++++++++++++++
- arch/riscv/configs/defconfig                  |   2 +
- drivers/pwm/Kconfig                           |   2 +-
- drivers/pwm/pwm-pxa.c                         |   7 +
- 6 files changed, 225 insertions(+), 8 deletions(-)
-
-
-base-commit: cb9c3aeae509b36afbdf46942a7a0a0dfc856ce7
-prerequisite-patch-id: a5d2fb43fd88525fa6c8ee767c31adfee87f1012
-prerequisite-patch-id: 8a8d0eefd0b4423d87f3c093b451a0fa60622ec4
-prerequisite-patch-id: 30f92f93e5b3577bde61424303f21c709a715ec5
-prerequisite-patch-id: d774b8281b5c6a822445365ee94925e1ab6c7a93
-prerequisite-patch-id: 54a4f5d065eb9f212fd99efec6e7e06abbb9bad8
-prerequisite-patch-id: 93962be60d1b58a98d947edf51b4af9edf513785
-prerequisite-patch-id: 5f53f8bf16fb067628092daebc4831293261aa01
+diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+index 9ee1946dc2e1..8df327e52810 100644
+--- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+@@ -11,26 +11,47 @@ maintainers:
+ 
+ allOf:
+   - $ref: pwm.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: spacemit,k1-pwm
++    then:
++      properties:
++        "#pwm-cells":
++          const: 3
++    else:
++      properties:
++        "#pwm-cells":
++          const: 1
++          description: |
++            Used for specifying the period length in nanoseconds.
+ 
+ properties:
+   compatible:
+-    enum:
+-      - marvell,pxa250-pwm
+-      - marvell,pxa270-pwm
+-      - marvell,pxa168-pwm
+-      - marvell,pxa910-pwm
++    oneOf:
++      - enum:
++          - marvell,pxa250-pwm
++          - marvell,pxa270-pwm
++          - marvell,pxa168-pwm
++          - marvell,pxa910-pwm
++      - items:
++          - const: spacemit,k1-pwm
++          - const: marvell,pxa910-pwm
+ 
+   reg:
+     # Length should be 0x10
+     maxItems: 1
+ 
+   "#pwm-cells":
+-    # Used for specifying the period length in nanoseconds
+-    const: 1
++    description: Number of cells in a pwm specifier.
+ 
+   clocks:
+     maxItems: 1
+ 
++  resets:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
 -- 
 2.43.0
 
