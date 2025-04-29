@@ -1,76 +1,54 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FA4217F27;
-	Tue, 29 Apr 2025 16:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF5D2405ED;
+	Tue, 29 Apr 2025 16:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745943004; cv=none; b=KsbJoQsV1DKnG4eeYU4IIetV9o6s1hXSKpL5MXJbAjk6PSoz+pLhXfuqJ/RK0/accC8sytSdLrtDInY+vzXTFLmPvygk2hEz+DHdY7SoTDlUJie82Uo9Up6nCqXCxNKZCOieVfZJATVbVnS6Lrkl1JhT+yif2f56V0vBEpw1YT0=
+	t=1745943083; cv=none; b=feuefqWsInKFj2Sz2ddDDVdlg0QYVOeuE6VNgUOMtyeG7IB/qBLBuHJssaqwTzhaSQCMl41Zy7W4lZzLhrK7PcbGAO1hqWxGPWTHXSOtgIsrSuhK2jolA0jSkJ6rCi+O13BrpwhDRf4FDtS4eHmUQP90iIQ0jLIVjOqadIaATA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745943004; c=relaxed/simple;
-	bh=gQOECnHyi5YsqI/wovKB8htGE1EJ1z9Hy2iScY6OoZ8=;
+	s=arc-20240116; t=1745943083; c=relaxed/simple;
+	bh=oR1w33SSQ6omVDl7olGy+HBmxCOZTlnjOnPfmHUvvLc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ThKsvqd7t7B0CJ9aO8uiortxCrVxXJzLoRJwhgndXSrv/eQEqkTcVqdY9FO4Thu4SOBQP4WymkX059CAlrjUQN04pEggWKyp33GJHgZg7fLDjW/FxAycHHJLQKmSIhId7ZjnszoVZnxoviA6jREA110sisPGEgx6fyak5yVhEGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J0ftIZUC; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RbHhSlVm+Yc59B18m12W5hEdz46clwf6HTRneLZfBhoGbs+qdY2UzVBaA2BJdymcd17IAHLJfck03AjKJdN7J8RWHb7qg07Y6JOina5vIfcsIulAbUjQAOXfjWzhtnMJ0x0mUv8YuAhXRE3aI34a21K+szFsPIuBc/CzD9+FeyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aDgbckmz; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0ftIZUC"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-739be717eddso5137767b3a.2;
-        Tue, 29 Apr 2025 09:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745943002; x=1746547802; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2B5qENygMidXKJeYIpIMae3o3JEApgWUkkNB4KGW/vo=;
-        b=J0ftIZUC1zPPzmi1vvs+vyZhxgEO8oK0saRrb8YR6JgRu/uCiQGY+YBPqFsg/Fb+Ed
-         FcKgP34llx9qomAEVoj2AZRy/91iM640rUGgnHYe7RARAHfjzCR0e/95hrSJFbr6dtjk
-         vlzFwA/JxMXolf51ENlUxPeQy7M1A+yG+nYUG/KC8jOSyWJL7abCil9dcrHSpAOrq1vb
-         twsNqRJs2a71ZXj3vRnPzThddH3xOm9kOkDNrkwqmc98pphDCk5O1uQzJwzNlYeYvr+X
-         svidb6SEFSWmkrK1oTMayGGhULLUwt8c54baFVd92aIhfxSRPd7D95v657562/UlsIpP
-         phOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745943002; x=1746547802;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2B5qENygMidXKJeYIpIMae3o3JEApgWUkkNB4KGW/vo=;
-        b=vTo/qMIN25AwP3iFvgVbXHVYNWqzHw2EVrjKpmXDzzNQMB845LEiH3gKXaZ9PYx1SE
-         OZ10pOEAhc1gfmu0ScJtJh4TU+u5CyckBB8VIp7NXDjDSH7/Y6w8+Mc5zgmS71m0hvoC
-         b6QVoWEBHh3hAllNztoeECc5Bj+zqPgkaw2F1g/JqGUKczLgO3+HBeUdv4Kvh/4Q/cZl
-         kTdHTjFgFvt3YqIhKh1oYxohTwVMmVOp5w1buOY5xT4pnOX+F1bAt34FxUfQjyBNeIIz
-         ScP5QLurXErFyyc1M/1ubndwPo7BHjXcbyfmitvwnAMhMmzz3ihRpfsnYCX3gcFYQH+x
-         ULwg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7JzxfvCUiifexbV0uAJO8ezwllaDjtyeIzIDhMp5bZ32GbZJzTzz/2aUm6fkBucvJY/f8RCgAw276dfo=@vger.kernel.org, AJvYcCX19OpcjU19w7csTnYVv7hFO38Vd40TTSzXtEXwdIp7RCoqti/p3EhlaZmY6npc5MHioaAdzuLXRNTKD79Z@vger.kernel.org, AJvYcCXWzKKDPUk4MsXY9/W9xW+w4oc0ly2SnRsneOJDJUOwgGxNMnnVb1DowhdNNJdk9n5OOEq51QANIc1b@vger.kernel.org
-X-Gm-Message-State: AOJu0YySH0h843u/XutHCRKCYuM3RJtcFtWt7eJNfWN1fAlnaVi/8/NL
-	qQIEIMq9fgHIPPY30utVawGQqbDC/DwGfyUZfFUswDsc21XPfx2c
-X-Gm-Gg: ASbGncvH1gWDI/3kekZ6I/w6iP4ICktO2aUi2nWtV+Xz22Wp3BbO9QEVHoPqcVZJZf4
-	FNfNIc892RSFyy9m+zex+VpNpd+6JaqApRL4mMNNzbxBFzev70BOsOCxHLCQcjcbssGGiLMwciW
-	OXem0o9I8JVGmuWFSGuUD860HJ0Cnni8+IMkTbEGPJAxkNEoZzeS5LFyjMjzvtmJG6M04Lsh/Kz
-	cNprLS4vNOtPhco71W3Rq6RVW1ctRYwShP2+OG6jFR2l5iyom8YaeDAr77Qn/Fx3k9MOLPFsaR+
-	GvrlqSQkgprW/bZRnLJFxzwkcrI1hgIo7k2lQTxHTg==
-X-Google-Smtp-Source: AGHT+IFJXA+JUl9XZQeMm1jD33AZmNE9lmmbmnwd59z6JU57Fzy/YxxJ4Z562yGuwuW+5My+9fiFzA==
-X-Received: by 2002:a05:6a00:ac5:b0:739:4a93:a5df with SMTP id d2e1a72fcca58-740294703dcmr4534450b3a.12.1745943001926;
-        Tue, 29 Apr 2025 09:10:01 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:adc2:8397:4f51:d5a0])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15fa80fa6asm9150594a12.61.2025.04.29.09.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 09:10:01 -0700 (PDT)
-Date: Tue, 29 Apr 2025 09:09:58 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Esben Haabendal <esben@geanix.com>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: input: touchscreen: goodix: Add
- no-reset-pull-up property
-Message-ID: <2qwfe6yw3pil5tumibiagikqhgwct27vevi674fklfieabzozc@hzjwatn3vjss>
-References: <20250429-goodix-no-reset-pull-up-v2-0-0687a4ad5a04@geanix.com>
- <20250429-goodix-no-reset-pull-up-v2-1-0687a4ad5a04@geanix.com>
- <qql72NifdMmJKSRJmT2927URaXnbRAbz9Yjzn9lBrOwjka7NxVvy5YKJUSLmBp435aYJiTkPqeuW1hMDcKKC4g==@protonmail.internalid>
- <20250429-effects-subscript-58eb41737816@spud>
- <87selrt1vl.fsf@geanix.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aDgbckmz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gVKWWLH02zdPYf4ECkjnNjHF9iWECDI8Hr/g+xNsShY=; b=aDgbckmz/hgFalTkpvZDMWcsBn
+	YzFXREbm/DQ9QUqNtuTaly+sbBzrBF4egTvE4lmhqPWOqywwksQsg0gG0sfhOAJWuF+UCtwb7GU9c
+	/zj3brJ4hBGh6N+nxOp9PCsC6xFx2Uc+zDPzvloD+BmVEIvo5rsJnT/mJHPjAqzy7sMB5afNqvssu
+	J3BP5CkhZ5d67di99bxoEMUTCq4D6RvjBE1GCSJ9wcv6PKRli+HR9+xJhWRupkDi59UFQXH3p9HQH
+	3SrIdHb5pqDJXmBU7e8UP0HOMgaySi0usOyQpKh9Sdig47dLKPW+tGol9hP/cgrWRqtZCXPr4jK2o
+	Qwf4y8hg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u9nXB-00000000v20-34ww;
+	Tue, 29 Apr 2025 16:10:14 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B550F30057C; Tue, 29 Apr 2025 18:10:02 +0200 (CEST)
+Date: Tue, 29 Apr 2025 18:10:02 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, pawan.kumar.gupta@linux.intel.com, seanjc@google.com,
+	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 6/6] objtool: Validate kCFI calls
+Message-ID: <20250429161002.GB4439@noisy.programming.kicks-ass.net>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.540779611@infradead.org>
+ <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,46 +57,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87selrt1vl.fsf@geanix.com>
+In-Reply-To: <jsbau7iaqetgf6sa7pooebbbhkhnnidi24f2g7nieozeu63qes@flunkdj5eykb>
 
-On Tue, Apr 29, 2025 at 05:37:34PM +0200, Esben Haabendal wrote:
-> "Conor Dooley" <conor@kernel.org> writes:
+On Mon, Apr 14, 2025 at 04:43:26PM -0700, Josh Poimboeuf wrote:
+
+> > +	 * Verify all indirect calls are kCFI adorned by checking for the
+> > +	 * UD2. Notably, doing __nocfi calls to regular (cfi) functions is
+> > +	 * broken.
 > 
-> > On Tue, Apr 29, 2025 at 11:56:11AM +0200, Esben Haabendal wrote:
-> >> This should be added for boards where there is no pull-up on the reset pin,
-> >> as the driver will otherwise switch the reset signal to high-impedance to
-> >> save power, which obviously not safe without pull-up.
-> >> 
-> >> Signed-off-by: Esben Haabendal <esben@geanix.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/input/touchscreen/goodix.yaml | 4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> >> index eb4992f708b70fef93bd4b59b9565123f7c6ad5d..21ac13046b6e021eeb403d854aabc945801dd29f 100644
-> >> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> >> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> >> @@ -45,6 +45,10 @@ properties:
-> >>    reset-gpios:
-> >>      maxItems: 1
-> >>  
-> >> +  goodix,no-reset-pull-up:
-> >> +    type: boolean
-> >> +    description: There is no pull-up on reset pin
-> >
-> > I have to wonder, why are these system using the reset property if the
-> > reset is not usable? Shouldn't the property be omitted?
+> This "__nocfi calls" is confusing me.  IIUC, there are two completely
+> different meanings for "nocfi":
 > 
-> The reset are fully functional. It just have to be controlled in
-> push-pull mode.
-> 
-> Because of the lack of external pull-up, configuring the reset gpio as
-> input (to save power) puts the reset pin in an unknown state.
+>   - __nocfi: disable the kcfi function entry stuff
 
-How much power do we save by doing this? I don't recall other drivers
-trying to switch reset GPIO into input mode after performing reset...
+Ah, no. __nocfi is a bit of a mess, this is both the function entry
+thing, but also very much the caller verification stuff for indirect
+calls done inside this function.
 
-Thanks.
+This leads to lovely stuff like:
 
--- 
-Dmitry
+void (*foo)(void);
+
+static __always_inline __nocfi void nocfi_caller(void)
+{
+	foo();
+}
+
+void bar(void)
+{
+	nocfi_caller();
+	foo();
+}
+
+This actually compiles and has bar() have two distinctly different
+indirect calls to foo, while bar itself has a __cfi preamble.
+
+
+Anyway, let me have a poke at the annotation.
