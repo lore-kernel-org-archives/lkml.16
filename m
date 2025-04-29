@@ -1,254 +1,157 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5392C2AB2
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 13:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA1F2D29AD;
+	Tue, 29 Apr 2025 13:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934451; cv=none; b=Ja5cch/U93DpFJlp42La5H1fnjvCMCCjMfBrEdY+v0B6nfwV3DmA/1BS8DLOb95PDlcSOiKvkMtlYWOonM7RPKxL2/tJpmuxMevfeqHqfV/4pqX4JNYVBDN8IAFcZPUAxIX4eyvPiYvjq/fquPz5mQRx3drjpGOw3eGBSVnaapw=
+	t=1745934458; cv=none; b=O+OBKLy0C8SPK1rK5Rbwjrorb4Xb4wbFF4BgIwdNmvlNxFraA2bqLAbXP8/Q7djlLe4Ce4MRc1Fnj7K9FM8OXnVQvPwejObSbMT8QG3vhuqY/b2/nTn49oFa2N6aIgXkCfhDSUTgCLbA01UYw6mxb/JnTZHLkyPW7n3lWexwJUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934451; c=relaxed/simple;
-	bh=pof8yP94mdDttGxh38mnBzB+VgpR9Ua691PVjYsd7vg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IOv8PGVId+ZE5Y+Zdt26/5o+w/O/a9AdaLYBYlDLHJsj7gL8esZszlCYKFlkvZsOr5n/rI9g6aw+F6xypkhw4dmTt2BhG1m7UP/cIzPpn1Fw7D3gaq1jagwiodN5nO7YytWko6txBSz20kBiV328QiafPs2/giaymFs6ZhtQjSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MqJP1k2d; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745934458; c=relaxed/simple;
+	bh=DjzHEUhss7O4w8xX58jtGF/4zzUbQ8mr8m5sP2MwNWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4heCHbr9bTYtDNITw1i3QH42Whn2IYd/loBHy0BdI6dgbXqAEUUQIqJ+rIsEjuLqXcID0CB3qNMyYTQFJOQPi8d5IX5hkyTTmlD2SFFtQR6dkFfpaNi9I+4Xv46I6t28rgImK7h5/oIQmyybZ1TYPWJrZwOY0cUrOi04Q2WzuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPjjcb5n; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MqJP1k2d"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54996d30bfbso5748327e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 06:47:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPjjcb5n"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so1174968566b.3;
+        Tue, 29 Apr 2025 06:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745934447; x=1746539247; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3XSmQ7kUSeus5/Dn9M1UsGJBVKzSt+OwJlM1ExhsSwA=;
-        b=MqJP1k2dMmpljq7hfyaRaNSzl2+sfX2/O59VG5ZLEYflC4gw2yrzflUxfLxXiR/aN0
-         ogQOdasG9l769F8wRRausRiOjuxDdFUyae8tsZKdajzMDXaeyi/FYFQjTppRh53rjgnn
-         3gO5swvnIteCJRi+oDrQG9enuq8BoJalAXG5I=
+        d=gmail.com; s=20230601; t=1745934454; x=1746539254; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
+        b=MPjjcb5nz/phaZpZxbBaYDBfvBnNJ63keoI+FimAf47y9livMwmlHDz2YP68piLTSh
+         onlvH7lhv4ivqxs/aXz4HtkFqxRwGjtVb9MAICzvzyYM/XjR3Ufact/8devWmeAqnlxE
+         xwnjp4zsnBr19aZ2jwS0iJrqqQhss2j0TQU91Yu86h/4cSmp3WSc3AWa/5/yJMHyVBTB
+         FPhfYj0eRzX44mkVBiLQEyBVvqfHsQ/pa/Xb3Kx6qd7dT4F0jmOyaQ4hK6zlYZ9o5KWU
+         FnIzx6/AnLNCU+doW3cG1kpto0HAyIBYF0PqeVNpkCiePlpAFMrWp4/igpm86nPTAALl
+         uN+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745934447; x=1746539247;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3XSmQ7kUSeus5/Dn9M1UsGJBVKzSt+OwJlM1ExhsSwA=;
-        b=UnTUwZ2HNM9BHBZODT9Gjzkz2koFUlGpjpAKimr6r8r8wR5GqO5yeBgOoXHX/+Szvf
-         IbWjCenqfGJdwnFgu9BqMAOmJy1cHIkPvhUbpmq+GrmzkcaWJAxmf3xtpT9dBLLFk7BW
-         x6ixhgGPISzfvcfv9gA2+GW/d1UlOEB9gq+N2ao/KfoC58Rk8RynEgLAc6K39BY+FGyy
-         kAJiCXd11HMxX1cMqcCYCRczser3RtwfExdV58WbUKyG56pfEXbdUaNJHpxtyzTCk0QL
-         d9tOkZEZckMYuLm4OLckSsVywmMqDjkCCOoWPtor/opwRO7Vbx4dpPtyss/wS+o6hDkJ
-         u5Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsvGCQdtCdIe1QqE1hk3Z7nDAsFRewrAnUzh/oibJhLMTrNoxoXsui8029+GONGLCMkp8W3X1J14WK95c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvGXyjzxcLYcQDTDCbXo4Gj8cj6xQgdn849Iy0iBJhzVZP3eNs
-	5rYdwY59TVMtgJRjzF3BrWmg4nv79PNllzrxJGGe5YWQmDCATAS1d9+JG8t0Rw==
-X-Gm-Gg: ASbGnct/r7LIMUYvGew5zoLR4OAEQx8hr/gm3uqm6LE+zfB7wVTUVHzikf1FJMJe/AH
-	Wy9APQF79Nha9PXQoTLoa42FgM7uR9IIqbJf/1Os6C/nHHr/xPjuUtMpxIXhduRoMmEHUfag8fb
-	8gdefH0JA0opIgFqJl7cdVy5DnMDks8vcgQobS6IMyF2wtnBEHBsH5nSOhPQMaFeGqnWg0cBNdQ
-	+bZI1Nd0Ie/J/FgOmkhE4dNm3fj5PsBaqKYZL/u/Bpqd7Y++rIVeXIKXOmkMQ1TyW/2Z50AQ7eJ
-	K1aBzHFCvJBIhdWhAbfOZr+OG7jefEX2xiitxNESFhozPby8qEQEl00WmOMdtAmiCdmXNBxYuGQ
-	quhIuqFH+51CYUXsU12D7
-X-Google-Smtp-Source: AGHT+IFYLnU/7fMeN0Gg9PDxITl1rxZMa5y1OVRvGbZ9W4xGotKJbK9Iqb9KCh2ZoNTNWOCeuSZIIA==
-X-Received: by 2002:ac2:5d47:0:b0:545:8a1:5379 with SMTP id 2adb3069b0e04-54e90001400mr3315662e87.43.1745934447538;
-        Tue, 29 Apr 2025 06:47:27 -0700 (PDT)
-Received: from ribalda.c.googlers.com (228.231.88.34.bc.googleusercontent.com. [34.88.231.228])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb2626fsm1902375e87.46.2025.04.29.06.47.27
+        d=1e100.net; s=20230601; t=1745934454; x=1746539254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
+        b=PHKhrLXxIMS+HfPhkK4ugFKK3RaoRw7J+L29SuKCxpHwqFwEywmc5fwSLV+3RCbqah
+         zcKSf3HI5qdDuLECSD6ZBprLXGRx6LLUrGLXlz3U1PEwuAn1eYoTU9jLHjMmkSaZrDgC
+         2JoI/c4E5FpQectoUeDxV5VoYZOVXCuI6ZraH1YNW6+lzC9OhPp1kBAROlO7A3KAdm7N
+         oRRmcDzaGqb4DFJUr7/Jd/jLE31HFSRh/UXHvIzYcQpixEMj2Hys6JRr5yije/TQT9Br
+         lRochJ5R6BApISrPlPge8uU9RwAm/ITej/4sIKELfZwysn1UQvY/rzzC8EtHrRSSMhxe
+         LEGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfG8aU32bE0PJP0O8ldxvDcgwidFddJqLjww1vxaJs10NVcOu7il9TK3kewI3V0ZF+r2/xLEjdCVld@vger.kernel.org, AJvYcCWWzujkhMk4rINXfcSlik4vdH4yU9fkBxTTF/jM7oLU78y4RRvlU1gBnUekxFzp9UrYprkSQ8l/fdh/Awnl@vger.kernel.org, AJvYcCX/+ATSgcX+4GnmWSVTruK9qS5xWcHVTot+aTk0u2jewm6emB+swZAcPbf5reYq9cjzlvkT5p1FMbbk@vger.kernel.org, AJvYcCX1aDwKHKsNdPOoKgALN3ilRezUwPzMKE28D4ZEKALWQN+ugknbBmGoBiuxDLnSoCnUe7E9JTDtqV9A@vger.kernel.org, AJvYcCXbBt0NAzV/e7COOeu8nqxcZsaFS2DwCNZhkGg0F9g6SdJrijgoe1Rv+KvwepHGb3FRCXPuMLIB8BFa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrB9TH+LojeMRe8LrYHyyxHO17p4R2h41eQSQ81KmgkN4DCj5e
+	JPGGOeerkHu/QT2bN3qYFNegocW9Q9Hotzl+36pLzzH3VwH7HZ5D
+X-Gm-Gg: ASbGncsBbYLYNR/iAXxyMGLWDy+zYDC758st3UFfFdZe/ETA0uBEMCOsqLegugVMlxp
+	mDfHK934iB3axU6lxlw4ovXhaXL/S1LEfhA7X0tQlnjuxQTxD+kttAE08Oxj6lhDH9YajGcGEOW
+	dibJllRwqpT66BtXsgujlG4BFIxlZaDbR7V+pb0cRPWSHA0qy0bs7H5b1H+DlDukBLC8FiiVwN0
+	UwJq0ANG4B1m+gATEwJSCk77pZAS3N+6SxUGTwFRdThmXC6L+XAjy+waQ6iEdcwbmsay4AdZNv/
+	Kl/JnDEOsBaRc3tnGodsnrG3CoXtzMqo6CxbDNylH2N89pTxCJenA5yN8zpMRPPYUnY=
+X-Google-Smtp-Source: AGHT+IHewjMQ0MZiNJB4DgK8tvKn2XGZDPn4MYHgyVOxmK6G/0S4ZlgFqHAA9mb76xCeTR/leX0CMw==
+X-Received: by 2002:a17:907:6089:b0:ac3:8516:9cf2 with SMTP id a640c23a62f3a-acec87bb143mr338540466b.55.1745934454357;
+        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2a02:3033:26c:ba50:9d5c:4d3e:be76:7564])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acecfa384b5sm77159066b.0.2025.04.29.06.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:47:27 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 29 Apr 2025 13:47:26 +0000
-Subject: [PATCH 2/2] media: uvcvideo: Add keep-sorted statement and sort
- uvc_ids
+        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:47:31 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+Message-ID: <3w7y2e4yfkf6ujr2mpsxcammdrb77rdybxi3ikpfoguvwsnipn@j2v45uldkw5t>
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
+ <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-keep-sorted-v1-2-2fa3538c0315@chromium.org>
-References: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
-In-Reply-To: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hans@jjverkuil.nl>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
 
-We had some quirks that were out of order.
+Hi David,
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/usb/uvc/uvc_driver.c | 70 ++++++++++++++++++++------------------
- 1 file changed, 37 insertions(+), 33 deletions(-)
+On Fri, Apr 25, 2025 at 04:16:20PM -0500, David Lechner wrote:
+> On 4/22/25 6:34 AM, Jorge Marques wrote:
+> 
+> ...
+> 
+> > Devices with this feature are max1363, ad7606, ad799x, and ad4052.
+> > The max1363 driver included the events/sampling_frequency in
+> > commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
+> > and ad799x in
+> > commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
+> > hysteresis")
+> > but went undocumented so far.
+> 
+> It looks like this part was copied from a different commit and isn't related
+> to this one.
+> 
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 7ced8980543af5a207938d12a5eb833ee8a34c38..5f93a586c55936b0b41276b85df4456b64662fb0 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -2500,6 +2500,8 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
-  * Sort these by vendor/product ID.
-  */
- static const struct usb_device_id uvc_ids[] = {
-+	/* keep-sorted start block=yes */
-+
- 	/* Quanta ACER HD User Facing */
- 	{
- 	  .idVendor		= 0x0408,
-@@ -2603,108 +2605,108 @@ static const struct usb_device_id uvc_ids[] = {
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Quickcam Fusion */
-+	/* Logitech HD Pro Webcam C920 */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x08c1,
--	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
-+	  .idProduct		= 0x082d,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT
-+					       | UVC_QUIRK_INVALID_DEVICE_SOF),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Quickcam Orbit MP */
-+	/* Logitech HD Pro Webcam C922 */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x08c2,
--	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
-+	  .idProduct		= 0x085c,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Quickcam Pro for Notebook */
-+	/* Logitech Rally Bar Huddle */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x08c3,
--	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
-+	  .idProduct		= 0x087c,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Quickcam Pro 5000 */
-+	/* Logitech Rally Bar */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x08c5,
--	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
-+	  .idProduct		= 0x089b,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Quickcam OEM Dell Notebook */
-+	/* Logitech Quickcam Fusion */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x08c6,
-+	  .idProduct		= 0x08c1,
- 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Quickcam OEM Cisco VT Camera II */
-+	/* Logitech Quickcam Orbit MP */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x08c7,
-+	  .idProduct		= 0x08c2,
- 	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech HD Pro Webcam C920 */
-+	/* Logitech Quickcam Pro for Notebook */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x082d,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .idProduct		= 0x08c3,
-+	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
--	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT
--					       | UVC_QUIRK_INVALID_DEVICE_SOF),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech HD Pro Webcam C922 */
-+	/* Logitech Quickcam Pro 5000 */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x085c,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .idProduct		= 0x08c5,
-+	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
--	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_INVALID_DEVICE_SOF),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Rally Bar Huddle */
-+	/* Logitech Quickcam OEM Dell Notebook */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x087c,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .idProduct		= 0x08c6,
-+	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
--	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
--	/* Logitech Rally Bar */
-+	/* Logitech Quickcam OEM Cisco VT Camera II */
- 	{
- 	  .idVendor		= 0x046d,
--	  .idProduct		= 0x089b,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .idProduct		= 0x08c7,
-+	  .bInterfaceClass	= USB_CLASS_VENDOR_SPEC,
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
--	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_NO_RESET_RESUME),
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
-@@ -3352,6 +3354,8 @@ static const struct usb_device_id uvc_ids[] = {
- 	  .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
- 	},
-+
-+	/* keep-sorted end */
- 	/* Generic USB Video Class */
- 	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_UNDEFINED) },
- 	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_15) },
+You are right, this is from the other already applied patch, I will remove.
 
--- 
-2.49.0.901.g37484f566f-goog
+> > 
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> > index 33c09c4ac60a4feec82308461643134f5ba84b66..129061befb21b82a51142a01a94d96fcf1b60072 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-iio
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> > @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
+> >  Description:
+> >  		Hardware dependent values supported by the oversampling filter.
+> >  
+> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
+> > +KernelVersion:	6.15
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Some devices have internal clocks for oversampling.
+> > +		Sets the resulting frequency in Hz to trigger a conversion used by
+> > +		the oversampling filter.
+> > +		If the device has a fixed internal clock or is computed based on
+> > +		the sampling frequency parameter, the parameter is read only.
+> 
+> Don't need a newline after every period.
 
+Ack.
+
+> 
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
+> > +KernelVersion:	6.15
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Hardware dependent values supported by the oversampling
+> > +		frequency.
+> 
+> 		oversampling_frequency attribute.
+> 
+
+Ack.
+
+> > +
+> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
+> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
+> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
+> > 
+> 
+
+Regards,
+Jorge
