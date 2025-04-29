@@ -1,186 +1,150 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9047E219A63
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC9C1C5D4B;
+	Tue, 29 Apr 2025 14:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745937904; cv=none; b=VD7fuL3QLDFUGvRapd6F2kRtca8tjj7iWkLEx1Qfxv9TGUeBBGv8fCqVA7oAOluUjNB/eH+V1FqLT3Q4o20zwzcPlBfEXLj28sF3TDJpzAUScV/qd+36ZPiL5ZedF+nxZf8rHpW0buj5a4c+HJuHUS3veNbaLwEc8ILBaZfVQTs=
+	t=1745937966; cv=none; b=BP9k2vHOdH/7DQkJYu+fxUy8tLxADtdNB022dGTzGwcbbNJQiFodoTl4xF8ezCSORg5FQHG/1xf++H9hsqW3jio5QHjUKz8k0JgPvYhtiA+X4vLiP/ySqURmgNhGIw3R4s6Kmsr0yabSq0SjCWtGwK9WdfYxt3coUmDBgCvz5pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745937904; c=relaxed/simple;
-	bh=X4Wo18nxqtTMLDhZsnIwFvvWrKbVcmKLwzzbZn2wAfE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=al7pyUrqzuisW++HBD5C3XvfThFe+I2yNkD8qP2KNgDzXVFeeLt2Y3cbdlh7kfNsWc5RU242eQlkWKyH08JLKV+57PNmJ+I7SNVH+ifE2MqPWTdCg4qFGNfXjyaAbovqz26EdoV+I15a2SlAGCvr93F4Bmi8qqptHNZ9+NU2gZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DMiVA4bg; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745937966; c=relaxed/simple;
+	bh=GzBirkut/Gytfn/dO/5u/Ywe37cItn3g2ra7mfv/Xho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kHp5yuw6qNw2+8QBsv6kBQbHPOfWWsISVYjAAYDatDnT1yHXlgb7EFEtuQy5onUt5N6b7X7bjvp2m0qUcdQ6e990cc7dFdqtKXrl+ViIzWOU+h6oYBGMdiAqN3n+MQ8Mac61F/JM3+HGJkufNcq2p/4FysMMak64jmVAaDRDzds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lINnhou2; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DMiVA4bg"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745937899;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rOg8kBrXZEnZpRYh6yQ9Avc2ZWUXKTUFukDwMrQ1gOc=;
-	b=DMiVA4bgCsbTpuwrElY5dwht3Cvl2YsSagUxRzi9WTr4aZa0CHe7OYGjmvQ3jkWQYmkdWE
-	Q3nFIx+8SJ9JpafbUVrkIZyQJzlZysFdL+o9xmOJKWxddPO8u5/tSYuRiI5Y08fk72fEqh
-	IK04CZvyhOsWgHGn3BFqlVxYtH0emwE=
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Michal Hocko <mhocko@suse.com>
-Cc: linux-kernel@vger.kernel.org,  Andrew Morton
- <akpm@linux-foundation.org>,  Alexei Starovoitov <ast@kernel.org>,
-  Johannes Weiner <hannes@cmpxchg.org>,  Shakeel Butt
- <shakeel.butt@linux.dev>,  Suren Baghdasaryan <surenb@google.com>,  David
- Rientjes <rientjes@google.com>,  Josh Don <joshdon@google.com>,  Chuyi
- Zhou <zhouchuyi@bytedance.com>,  cgroups@vger.kernel.org,
-  linux-mm@kvack.org,  bpf@vger.kernel.org
-Subject: Re: [PATCH rfc 00/12] mm: BPF OOM
-In-Reply-To: <aBC7E487qDSDTdBH@tiehlicka> (Michal Hocko's message of "Tue, 29
-	Apr 2025 13:42:11 +0200")
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
-	<aBC7E487qDSDTdBH@tiehlicka>
-Date: Tue, 29 Apr 2025 07:44:52 -0700
-Message-ID: <87selrrpqz.fsf@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lINnhou2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745937965; x=1777473965;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GzBirkut/Gytfn/dO/5u/Ywe37cItn3g2ra7mfv/Xho=;
+  b=lINnhou2d16Q8793/vhvaFsSeoITZzRGtsHmvt4/cEFFNwE1dGx1AHbl
+   T4SjODvyw2NeGXEiMS7tzIIG7nqzksILT+mGZd58s4EJ4fi8d3GUWLsq3
+   4le33Whvkmef2HRwZku6cnEY7aChEBHdgyo10SdEQd/qcSFptyy9uOf7B
+   wexbRx6HdOCaHM+AHy5J1PfNHb68LlbG192lofnpA0LKm2Sn0Q6lS1CAa
+   U5m4EJQtK0j68Gps288A9kJuTqGIw/ryaFe95KpljIrBSf/i3+Br+IhCZ
+   jFT7pYZQ7NojXHCfv83pv3e3y8diFZCDGApsFek+h4hXVsJdLhsOXgM4X
+   Q==;
+X-CSE-ConnectionGUID: iCg+6sx/SgmjMUJRTnm5wA==
+X-CSE-MsgGUID: nEPslIjlQNyBgwVJnd92rw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="35176121"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="35176121"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:46:04 -0700
+X-CSE-ConnectionGUID: tOtfHbvtRCakxikDidSRyg==
+X-CSE-MsgGUID: NUNUyP3eSk+17rK7cbwcBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="134345682"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.223.46]) ([10.124.223.46])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 07:46:03 -0700
+Message-ID: <8db47bc1-445b-49db-b932-96aff0eb58a9@intel.com>
+Date: Tue, 29 Apr 2025 07:46:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+To: "Reshetova, Elena" <elena.reshetova@intel.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: "jarkko@kernel.org" <jarkko@kernel.org>, "Huang, Kai"
+ <kai.huang@intel.com>, "linux-sgx@vger.kernel.org"
+ <linux-sgx@vger.kernel.org>,
+ "Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "Annapurve, Vishal"
+ <vannapurve@google.com>, "Cai, Chong" <chongc@google.com>,
+ "Mallick, Asit K" <asit.k.mallick@intel.com>,
+ "Aktas, Erdem" <erdemaktas@google.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "bondarn@google.com" <bondarn@google.com>,
+ "dionnaglaze@google.com" <dionnaglaze@google.com>,
+ "Raynor, Scott" <scott.raynor@intel.com>
+References: <aAo_2MPGOkOciNuM@google.com>
+ <DM8PR11MB5750D373790399E324B98A18E7852@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aApgOqHvsYNd-yht@google.com>
+ <DM8PR11MB5750AB0E790096AFF9AFD3AFE7842@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aAutUaQvgEliXPUs@google.com>
+ <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
+ <aAviqeAdGn-w1GpK@google.com>
+ <fbd2acdb-35dc-4e8c-9bd9-e84264f88648@intel.com>
+ <aAv445Sr71NUJP1X@google.com>
+ <db1fd062-5a66-4942-82e2-c889dd645a7b@intel.com>
+ <aAwFhaqQDLXoqbmv@google.com>
+ <4b4ecaa1-2ace-43bf-b71b-0de78bcf113c@intel.com>
+ <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Michal Hocko <mhocko@suse.com> writes:
+On 4/29/25 04:44, Reshetova, Elena wrote:
+>> On 4/25/25 14:58, Sean Christopherson wrote:
+>>> On Fri, Apr 25, 2025, Dave Hansen wrote:
+>>>> On 4/25/25 14:04, Sean Christopherson wrote:
+>>>>> Userspace is going to be waiting on ->release() no matter what.
+>>>> Unless it isn't even involved and it happens automatically.
+>>> With my Google hat on: no thanks.
+>> I'm completely open to the idea of adding transparency so that folks can
+>> tell when the SVN increments. I'm mostly open to having a new ABI to do
+>> it explicitly in addition to doing it implicitly.]
+> Could you please clarify here Dave what ABI do you have in mind? 
 
-> On Mon 28-04-25 03:36:05, Roman Gushchin wrote:
->> This patchset adds an ability to customize the out of memory
->> handling using bpf.
->> 
->> It focuses on two parts:
->> 1) OOM handling policy,
->> 2) PSI-based OOM invocation.
->> 
->> The idea to use bpf for customizing the OOM handling is not new, but
->> unlike the previous proposal [1], which augmented the existing task
->> ranking-based policy, this one tries to be as generic as possible and
->> leverage the full power of the modern bpf.
->> 
->> It provides a generic hook which is called before the existing OOM
->> killer code and allows implementing any policy, e.g.  picking a victim
->> task or memory cgroup or potentially even releasing memory in other
->> ways, e.g. deleting tmpfs files (the last one might require some
->> additional but relatively simple changes).
->
-> Makes sense to me. I still have a slight concern though. We have 3
-> different oom handlers smashed into a single one with special casing
-> involved. This is manageable (although not great) for the in kernel
-> code but I am wondering whether we should do better for BPF based OOM
-> implementations. Would it make sense to have different callbacks for
-> cpuset, memcg and global oom killer handlers?
+I should have said I'm open to *eventually* adding features and new ABI
+to prod at the SVN state.
 
-Yes, it's certainly possible. If we go struct_ops path, we can even
-have both the common hook which handles all types of OOM's and separate
-hooks for each type. The user then can choose what's more convenient.
-Good point.
+Not now.
 
->
-> I can see you have already added some helper functions to deal with
-> memcgs but I do not see anything to iterate processes or find a process to
-> kill etc. Is that functionality generally available (sorry I am not
-> really familiar with BPF all that much so please bear with me)?
 
-Yes, task iterator is available since v6.7:
-https://docs.ebpf.io/linux/kfuncs/bpf_iter_task_new/
-
->
-> I like the way how you naturalely hooked into existing OOM primitives
-> like oom_kill_process but I do not see tsk_is_oom_victim exposed. Are
-> you waiting for a first user that needs to implement oom victim
-> synchronization or do you plan to integrate that into tasks iterators?
-
-It can be implemented in bpf directly, but I agree that it probably
-deserves at least an example in the test or a separate in-kernel helper.
-In-kernel helper is probably a better idea.
-
-> I am mostly asking because it is exactly these kind of details that
-> make the current in kernel oom handler quite complex and it would be
-> great if custom ones do not have to reproduce that complexity and only
-> focus on the high level policy.
-
-Totally agree.
-
->
->> The second part is related to the fundamental question on when to
->> declare the OOM event. It's a trade-off between the risk of
->> unnecessary OOM kills and associated work losses and the risk of
->> infinite trashing and effective soft lockups.  In the last few years
->> several PSI-based userspace solutions were developed (e.g. OOMd [3] or
->> systemd-OOMd [4]). The common idea was to use userspace daemons to
->> implement custom OOM logic as well as rely on PSI monitoring to avoid
->> stalls.
->
-> This makes sense to me as well. I have to admit I am not fully familiar
-> with PSI integration into sched code but from what I can see the
-> evaluation is done on regular bases from the worker context kicked off
-> from the scheduler code. There shouldn't be any locking constrains which
-> is good. Is there any risk if the oom handler took too long though?
-
-It's a good question. In theory yes, it can affect the timing of other
-PSI events. An option here is to move it into a separate work, however
-I'm not sure if it worth the added complexity. I actually tried this
-approach in an earlier version of this patchset, but the problem was
-that the code for scheduling this work should be dynamically turned
-on/off when a bpf program is attached/detached, otherwise it's an
-obvious cpu overhead.
-It's doable, but Idk if it's justified.
-
->
-> Also an important question. I can see selftests which are using the
-> infrastructure. But have you tried to implement a real OOM handler with
-> this proposed infrastructure?
-
-Not yet. Given the size and complexity of the infrastructure of my
-current employer, it's not a short process. But we're working on it.
-
->
->> [1]: https://lwn.net/ml/linux-kernel/20230810081319.65668-1-zhouchuyi@bytedance.com/
->> [2]: https://lore.kernel.org/lkml/20171130152824.1591-1-guro@fb.com/
->> [3]: https://github.com/facebookincubator/oomd
->> [4]: https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
->> 
->> ----
->> 
->> This is an RFC version, which is not intended to be merged in the current form.
->> Open questions/TODOs:
->> 1) Program type/attachment type for the bpf_handle_out_of_memory() hook.
->>    It has to be able to return a value, to be sleepable (to use cgroup iterators)
->>    and to have trusted arguments to pass oom_control down to bpf_oom_kill_process().
->>    Current patchset has a workaround (patch "bpf: treat fmodret tracing program's
->>    arguments as trusted"), which is not safe. One option is to fake acquire/release
->>    semantics for the oom_control pointer. Other option is to introduce a completely
->>    new attachment or program type, similar to lsm hooks.
->> 2) Currently lockdep complaints about a potential circular dependency because
->>    sleepable bpf_handle_out_of_memory() hook calls might_fault() under oom_lock.
->>    One way to fix it is to make it non-sleepable, but then it will require some
->>    additional work to allow it using cgroup iterators. It's intervened with 1).
->
-> I cannot see this in the code. Could you be more specific please? Where
-> is this might_fault coming from? Is this BPF constrain?
-
-It's in __bpf_prog_enter_sleepable(). But I hope I can make this hook
-non-sleepable (by going struct_ops path) and the problem will go away.
-
->
->> 3) What kind of hierarchical features are required? Do we want to nest oom policies?
->>    Do we want to attach oom policies to cgroups? I think it's too complicated,
->>    but if we want a full hierarchical support, it might be required.
->>    Patch "mm: introduce bpf_get_root_mem_cgroup() bpf kfunc" exposes the true root
->>    memcg, which is potentially outside of the ns of the loading process. Does
->>    it require some additional capabilities checks? Should it be removed?
->
-> Yes, let's start simple and see where we get from there.
-
-Agree.
-
-Thank you for taking a look and your comments/ideas!
