@@ -1,117 +1,107 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932C929DB79
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7910F288CAD;
+	Tue, 29 Apr 2025 09:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745917898; cv=none; b=DQFMkSXA8PGVPmCDYww9rdNgpn6FW4wb7FxgovP6c6HQ7MpYYrmff7SchLfacAli4cqh+DtNnZ1dTU9QAFq6TIiR5M3rcPoS1/UrWvm9M0wDNj2Z9NoBLvDlqKgDHdRaD8IPCLDw3ZApvrJcWPQZcCEOCgZW0cKYtvGZq8RSaWo=
+	t=1745917983; cv=none; b=KRcm0aq39AwlqXjpGpcpNLBXekuOP/Wm1Hp1YE5DAglFi6G8jZFDgoK6gMYtdYg7GgvGhwpxutXJg8s5KI4RzQG9xAfGRJJKn3bkdNpUhds61uLveyXnBMMxyiFfpYeXuDVLLs1GDvq9QAN63ihEgZ1yhQXoYKxMiEUpDjgi6fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745917898; c=relaxed/simple;
-	bh=7AZhpTKOvLOyLiuuO3wDIpGhvpjUehddROW89GGvk0o=;
+	s=arc-20240116; t=1745917983; c=relaxed/simple;
+	bh=Wbe2M0VWW0l3TpFJbV/zwwleX2QVAjqwy64HzEhZniQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iiAlSU+BQ0+a2NhtvlOGucuqPL4UxcFsbaqayHNYYJzdLJ8t14Sl86JRxM7E8zStYXI8hR8tHCCObHTfFO2vT5CWDyTzNUWvIqB6rDXyUn7oZmIdMOqQn54N9xIr249CdmabeFU+p1Y12F7LsZkPzAlY+DuEwona+2FH6VLM2L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wp09pEXA; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gnTIFUOecjD3UlmwrUebcvEM6T7YgL/lQqJYVEONz+6pUbABpxCDsspeayLZDVAn8pHY6ZZLI557OvwqImithh/PIysVgMjP6qwe1oLXQBCzDb3D00snAGiXdtvVNFw8ApihSCsN37A9q4PXAJ9tjQl90qZmeDbaT+aFimM2mi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZssbhFc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wp09pEXA"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so38195545e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745917895; x=1746522695; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VxD4j3vDyteNdqJvAUUpvoMHVBnOf6GCTmW7JIDK78U=;
-        b=Wp09pEXAHvAonYh5wBzLN2EEg/3c+VaofBQq3lTwWBcWfN+yk/14VKmBTo6eJ3XCid
-         nWtJHDCPGYeNiwYkzhWyqOMaFVfDoyjmDQcRQ7VwtUYvuUOk3LraFOomMn1uoYSWHVLC
-         liOa9/wuhukIPTVWu82bRyFAs1gwmfUqtRnJo/MMXem1BqmmCzEQXtfKuKkLHJH4F8Ul
-         baLVs8B5Eu4i2UoX0hmPD7QHNDne8IOyzxt3sVJnNzSeVSrpp1gwC0GByrWQ1KtF9DhI
-         +yChQHFgwAwSUdHm3XIbAjZrRtWuqfimv0fuuSnuMkGti0i6aR8THLUOnh5Gm9q654CS
-         YqsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745917895; x=1746522695;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VxD4j3vDyteNdqJvAUUpvoMHVBnOf6GCTmW7JIDK78U=;
-        b=uvT4GmctvleY/KKoWn4MdG2RTEj74T1xtCkRsRKblLaVbFaJ1MkRqzI/Jb82aQqPn4
-         Brm9LiJyCM8v96HwQY8PmHKeu9+y+kBhV8Bm2CoeZiQVlHMhwNGtvPg4m+XT4fwBjIjB
-         T01u65cWN/d56gZ6F8Kx2EBXzbaLWv7k1hskpqzoE/iQjfKxf2C1159fj+FgHflQQD3a
-         jFinsF7DWePt2ucI2Peq8d5JgPtSsoXKWUoqtql9tnaPJ6itUKuL54h+zYEyln3fPcKr
-         vaX8Pp0anLN3QDA4Pwm6PEkNhuwKHoyFEs5LU8aY5w+YaNwFzbEGabzFT44Ft4SLDGxr
-         cYSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXc6AMUO4K2mr56LIfnPQlLdF/o4+9uEjqBfCBeV4tJi6A2iyJyGCPyJa4xXrFi4/3sHZ64Vlk/7UhIF+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1+yDJ69HVmKOxUmjIBUY3ik/FnwcGj4wSeQtAsFt5Mq+Swrrp
-	WmUxldqX6eM8Y/pFFVHZC5ci0rOH8SoiIr3K9mcdi5SrjW2hTJI1YRCP8N/x5AZqmaGd9ObBMzn
-	C
-X-Gm-Gg: ASbGncu6YwYmdyMD9H5oRNERXq1lYTIwk6Ug4CclGj+m2y/zkyPqXwVAc2Eg/lJ2xVt
-	h/jIBRb1YV/n/rZ9QoGLFtfK4T65BhXLjpnICjFyokg+NUbJ3XtTV2Z2n7z2FZ2Y27DrDAhFD2M
-	uDRPtFAsUaccenkduK3/F6seTbjONeGkWZxDTbttbU9sdyUBHSoX68XMc+Xb/+oh9lycupiJIc9
-	LfRnZibGf6zTVNoVMbAPshP+mzD5/06AUd0xjVWBQy6gi1VfH5LkdcbeC9GlKUVqxcllF4hOOp2
-	RHX/H+LSnqET0kpF2z0wZx/sEz/bMso2RxcY3iIKuq36jclVpbqWcMVafvNSGoy0Xc/Lkdc3DxV
-	/HIU=
-X-Google-Smtp-Source: AGHT+IHt5dl4VzZgVx7VAtRzt6HvZYoeWhXSsoqa0MgpfyS8bg4NsVQEB378Uh/V/2NbR5QFA9Cw2Q==
-X-Received: by 2002:a05:600c:870f:b0:439:873a:1114 with SMTP id 5b1f17b1804b1-441acb065eamr19783835e9.6.1745917894850;
-        Tue, 29 Apr 2025 02:11:34 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ac079sm182483895e9.18.2025.04.29.02.11.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 02:11:34 -0700 (PDT)
-Date: Tue, 29 Apr 2025 11:11:32 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Markus Stockhausen <markus.stockhausen@gmx.de>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v3] clocksource: atmel_tcb: fix kconfig dependency
-Message-ID: <aBCXxH2WUlgLDA4h@mai.linaro.org>
-References: <20250409155313.1096915-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZssbhFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D715DC4CEE3;
+	Tue, 29 Apr 2025 09:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745917982;
+	bh=Wbe2M0VWW0l3TpFJbV/zwwleX2QVAjqwy64HzEhZniQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mZssbhFclDQ7ndTaodsXm6/kASD92fVbnD9t8cGcpzKx42f5vBUao/ozjjGPhdqYu
+	 53vipy8Oc9rI2qieXq98MHsr8M83eK+fEtQHnlO3/8wZNWCv1abSg4VFCLpogv3Wsx
+	 /Lvuh/cc1oRNTtDxa9BqFR6ns0ZV34qzupn7fbO6A5WTo8faaVgh8WYg4bmlHroyDF
+	 DdhdTh3kNFvedMszyDRmtNvSVpjr6PyGeMCKaotjpdyUE26/VUObIE+fvn4B9CTNxh
+	 1RkaXQrxohiriRWedHOfxC+GxuahoVvJ7TVo2+qTd6ndhpD5mkLbnD2L0CI1Q6Lf1X
+	 VA1vl2FeX6LKg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u9h1U-000000001GF-2nZH;
+	Tue, 29 Apr 2025 11:13:04 +0200
+Date: Tue, 29 Apr 2025 11:13:04 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Xilin Wu <wuxilin123@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Konrad Dybcio <quic_kdybcio@quicinc.com>
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
+ compatible override
+Message-ID: <aBCYIMdEPrhMzNxi@hovoldconsulting.com>
+References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
+ <aBCUiIrg3oehMVjx@hovoldconsulting.com>
+ <aBCWdpk2HXPaJPlH@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409155313.1096915-1-arnd@kernel.org>
+In-Reply-To: <aBCWdpk2HXPaJPlH@linaro.org>
 
-On Wed, Apr 09, 2025 at 05:53:08PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Apr 29, 2025 at 12:05:58PM +0300, Abel Vesa wrote:
+> On 25-04-29 10:57:44, Johan Hovold wrote:
+> > On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
+> > > It all started with the support for CRD back when we had different
+> > > compatibles for eDP and DP. Meanwhile, that has been sorted out and it
+> > > is now figured out at runtime while using only the DP compatible.
+> > > 
+> > > It's almost funny how this got copied over from CRD and spread to all
+> > > X Elite platforms.
+> > > 
+> > > TBH, the best reason to drop it ASAP is to make sure this doesn't spread
+> > > beyond X Elite to newer platforms.
+> > > 
+> > > Functionally nothing changes.
+> > > 
+> > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > > ---
+> > > Abel Vesa (7):
+> > >       arm64: dts: qcom: x1e-crd: Drop useless DP3 compatible override
+> > >       arm64: dts: acom: x1e80100-qcp: Drop useless DP3 compatible override
+> > >       arm64: dts: qcom: x1e80100-t14s: Drop useless DP3 compatible override
+> > >       arm64: dts: qcom: x1e80100-s15: Drop useless DP3 compatible override
+> > >       arm64: dts: qcom: x1e80100-hp-x14: Drop useless DP3 compatible override
+> > >       arm64: dts: qcom: x1e80100: Drop useless DP3 compatible override
+> > >       arm64: dts: qcom: x1e80100-romulus: Drop useless DP3 compatible override
+> > 
+> > Since this is essentially a clean up perhaps you should have squashed
+> > these into one patch.
 > 
-> Build-testing this driver on arm without CONFIG_OF produces a warning:
-> 
-> drivers/clocksource/timer-atmel-tcb.c:368:34: error: 'atmel_tcb_of_match' defined but not used [-Werror=unused-const-variable=]
->   368 | static const struct of_device_id atmel_tcb_of_match[] = {
->       |                                  ^~~~~~~~~~~~~~~~~~
-> 
-> Change the dependency to require CONFIG_OF for build testing to
-> avoid the warning. Testing remains possible on all architectures
-> as CONFIG_OF is user-selectable.
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+> I was actually thinking that before sending, but then I decided to add
+> the Fixes tag to each one. Since it's such a trivial worthless cleanup,
+> I wasn't sure if the Fixes tags were worth it either.
 
-Applied, thanks
+Right, since it's not a bug you should probably have skipped the Fixes
+tags too.
+ 
+> I can squash them if the consensus is that it's not backporting.
 
--- 
+We should definitely not backport these as they are not fixing any bugs.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Johan
