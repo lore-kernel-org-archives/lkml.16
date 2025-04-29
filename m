@@ -1,119 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5721E21504F;
-	Tue, 29 Apr 2025 14:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AFE218ABA
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745938212; cv=none; b=J3GwZGgqaSbuDg3khRV4M5qWqhn304fDYDV0ZqLRra4RlklO39FwtWNdQzZPmIErrzKtDYJo/2pq8AwTE55+a+XxAulp4578YDZG9TnJ/y2GbvUKhMzLthod4zIsqtGgADEgR73VjgPuTbCzxp+xiljoGLLaz8JUkeMzOb/RxnY=
+	t=1745938214; cv=none; b=ArWhX+uHY8ZIQvFa3/5inlei7XKAJ7dv3L47MseixDl1wvHrhYtW+pseVbhfk2/kohMAoQ3uXe9z5d+J4F0CXu3h8cv9JZPUlZhg+7Nk89fW4Al9l+4SD/0OHdNcq9THemZScKO3K4S+5XisbEDs2krIfKEoN52zmubi6NnB1mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745938212; c=relaxed/simple;
-	bh=Uy3lf6ShP5oCjnAZKa0yP+gSLA9pi9fUNrGuoryF1I4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JZdgS/BN/Q8AxkrIWkZHtlb2NPLdmrqViPALpwHLmSgl4/EUJjq8sg5l+TTsV9/sJs5OXgsnbqR1xpGuFzH9JYxt92fnxUsmWnN0wkiXzJV5hkFvussi/W8dguvjwVF/ncbaXan0c9VH8/+i2oG9iXlVuRerSV2y3qi57/V9y7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfK2BZ12; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745938214; c=relaxed/simple;
+	bh=krTaRF67fPNsLB+dqfMsYJ7ZzFpkv8kbuSh7hjXyKGQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bbhUk8USAUvW/a84GjRhl6PXUipqpSF3E63co/QMYLHd+1S2rXDk6A7eS6fLyNP4aKt26hUpEwxBF0EyyEkkSz4V4B2lRWA8kjkp8zha8BTwiQc88rPqobjQcHfh/UNSV4lMDgRjKDGcBnaK5EXP0DnyiWIvhw4NnRiXOXT5564=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=VUG6LLqT; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfK2BZ12"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A860C4CEEE;
-	Tue, 29 Apr 2025 14:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745938212;
-	bh=Uy3lf6ShP5oCjnAZKa0yP+gSLA9pi9fUNrGuoryF1I4=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=QfK2BZ122ILkjblPC2DYF+bxXv42KhvQwhWqsSqsxuA5D74qHtB2+g1MVGuZ/LtUO
-	 XW8L9dvTznLyrJiANqh6fg5wIxTjQq9PQhQyk9xTCwgTNFRsNL6sa9oh3iTDiuAMAM
-	 lwTTmeuu+P87+9qCodwqXdDxsmLA3hqzNbwafJoozojfbXp7TDXM79cGWg/GcgO4EJ
-	 GqZQ7cPMS5RquwS9pQA1b4MvXBsKl0s0LgiizDJS7QBRU+537yYYIZIwVRGm9qkOtA
-	 ArrbcdxQ8KHhgZl6ZT8umokghx96VqCMn/+lpq6ZRbdgkgeUHRwKISX9vP/Mtnm4A/
-	 Ubv4eZG378VfA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113E7C369DC;
-	Tue, 29 Apr 2025 14:50:12 +0000 (UTC)
-From: Levi Zim via B4 Relay <devnull+rsworktech.outlook.com@kernel.org>
-Date: Tue, 29 Apr 2025 22:49:37 +0800
-Subject: [PATCH net v2] docs: tproxy: fix code block style
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="VUG6LLqT"
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 154533F278
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 14:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1745938206;
+	bh=7zoJNAv7neP8pZ54k9HnfCrdAuXD65pSkqMbfySDhgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=VUG6LLqTbP0vBPD/vNeoYnQ2+t3r7FJIlGxvf59BTS+YOl309kvmNT1572yQaM6G/
+	 spsX4HSeNIHhio8pIzfiHrcndAxpwpRKyDntp+yzkXSG54CYIPAvIGg3uk5ixWK+wz
+	 6ND0cgmM4jcO0jkkcju/Tho26bL7FKDHmRh/A03KZKiPI0poZ6qrf/WbQHhujYZrXe
+	 iwvE8aV/MGr2Lup0w3ermf2mSyLxXHnyKNDdU6QoBqIgFocExPKzSJLH9U2lPdy4LE
+	 M9psTxnSrNIDXQjjW7tmWd5TC62rObZWbw83D+gq9VcQmyP2Lct5JtNUeWaueFysKv
+	 fgr/Es8gI83pw==
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d01024089so40746955e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 07:50:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745938204; x=1746543004;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7zoJNAv7neP8pZ54k9HnfCrdAuXD65pSkqMbfySDhgE=;
+        b=hAEAP4fiLDxRy00BZ4Vh5987SrhTCnYjW6JSZajpWuRkKSCeDzvdeAPqZwTouib4DB
+         UKzgK567ubq5PQsHot2RbTaPRaY8W4mlxUffN2bGyVcHhqaGVKyeBH2apxP4+t74xsRt
+         8pNAOubUqrQNuRkLaDxSFfzXITjcVH3bF4h0RBKbTlDB4yj14ZgIMipANgKRalOTR5mr
+         CEGTdPRu4aTUUPLJDVIUnCZyAc4loBwmthre4rnI1pRdrc79E6lW6401x8ZLaDilLe+O
+         bJVcDK18enwIvRiTZWsLXBkCcUsoT+lDC7AN/GemWU5iOZ27/v38hH0lE3hbZoghkJfN
+         wMwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXq+JWiiKrrIqwLelXECXo7Y5qJgdQQB0JUwui354+XRNH2QO/l7WnRUXri5nuXH2e55xuj9INmaRsc1kY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe5SDaZM2lJZd52ZQuF1q+c1dw/nESmh8RL3JI3DbmmOH6Lq0a
+	3hA8qigQE9MAgZ1K1YL2rXgtlejRgPwfnHI5EMWmQGpBfI2Wpz8trfXOla+5EJRcInD93xPxJlM
+	cCHI1wHJsajjXMbxvBlXYX/FIO5McbeW8jyIdPnIBsd3rV4c1pt2OfWLO4i5Hp2oKdu0lNDXbCz
+	W6yA==
+X-Gm-Gg: ASbGncvE815GBWhV9lI/YaTApLLDbIW9p75mTAW4o5vBHgXD8LukpGB7ZBfV0zP2Qxq
+	j8XpfDlR06ErpHL60FDJ1OGlC1C2taGLGAQn46P0Mezq6CObg9rnUb8bFvMBHAg3LZkHRYrcAFA
+	aWiBcw6gUQvi/KWphqdRip+EL2IzqFz/qAQYQH4NBQ4O/bb+mAL82y074FCepA1NGPpNV7dP2dN
+	Y4Z1UNnV77VeqorEH4Rux0dn+2oLDoBhj1OSK3GN5pTvu8k6+KC3eim34FrKIKM505bw5IMS8ny
+	/ol1ve4MQLxCMVTB9jXifFslp0yQHgkOJ3aeaI+wJa0rmhXI3Z5jBzb8
+X-Received: by 2002:a05:600c:c14:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-440ab846a52mr106209535e9.22.1745938204436;
+        Tue, 29 Apr 2025 07:50:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFFNDbbGCcksRyCuvtj7AZi9NRp+RqmwiuGFNbYjNx1+LdUjm8j11MjOpdX2/aQqHlEkGBb5g==
+X-Received: by 2002:a05:600c:c14:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-440ab846a52mr106209275e9.22.1745938204102;
+        Tue, 29 Apr 2025 07:50:04 -0700 (PDT)
+Received: from localhost (151-243-191-194.pool.dsl-net.ch. [194.191.243.151])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8842sm190654525e9.31.2025.04.29.07.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 07:50:03 -0700 (PDT)
+From: Juerg Haefliger <juerg.haefliger@canonical.com>
+To: juerg.haefliger@canonical.com
+Cc: andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: [PATCH v4 3/4] arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q: DT for HP EliteBook Ultra G1q
+Date: Tue, 29 Apr 2025 16:49:56 +0200
+Message-ID: <20250429144957.2088284-4-juerg.haefliger@canonical.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250429144957.2088284-1-juerg.haefliger@canonical.com>
+References: <20250416094236.312079-1-juerg.haefliger@canonical.com>
+ <20250429144957.2088284-1-juerg.haefliger@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-tproxy-docs-fix-v2-1-20cbe0d91827@outlook.com>
-X-B4-Tracking: v=1; b=H4sIAADnEGgC/3WNwQ7CIBBEf6XZs2taQiP15H+YHoQulqjdBpC0a
- fh3CXeP8ybz5oBA3lGAa3OAp+SC46UEcWrAzI/lSeimkkG0om+luGBcPW87TmwCWrehMVprK0U
- vBwtltXoquBrvsFCEscDZhch+ry+pq9VfYeqww0EpGqSSsuhv/I1v5tfZ8AfGnPMP4NGXbbUAA
- AA=
-X-Change-ID: 20250427-tproxy-docs-fix-ccbbbf42549f
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, 
- Levi Zim <rsworktech@outlook.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1513;
- i=rsworktech@outlook.com; s=not_default; h=from:subject:message-id;
- bh=NKjV0mTkVlgZ5Qae4uXgQi5NGdHyS6jBKgNza+UO9ck=;
- b=owEBbQKS/ZANAwAIAW87mNQvxsnYAcsmYgBoEOcaFCexvq7uGJB1WvGKOAK/+N2YlYX7U4MvE
- Xj/h1GjLKuJAjMEAAEIAB0WIQQolnD5HDY18KF0JEVvO5jUL8bJ2AUCaBDnGgAKCRBvO5jUL8bJ
- 2GzgD/9ioRWNEeQIjH1V0ALiE+1n0soTvI/Ck2yvHO7h9Byser86y8ZveLp5TV2+jvQME2HtupI
- UecwXF/GWFqM3aWN3+D3j4bzW72yxxP+9EtL90PIiZWdB48sgGae02oMFnQIH45gISVANiWwg8Q
- 5E/sCCopJEObePMgvy6FHgoRk6l4Qh+nxqGMYfbgpBIHoWloWy89s/+r5OFc9jJ9y5i4qkqtvZf
- IIJH9Wm/qDX3W2gY9Q8RzIAedV2LXI44dGGEMaA5AUA8o//PvMSOjyTi1bQ9QcvIYgoS2sWVKjn
- arViX4i3ZgTNDxcXyeE2oYNrrQ4OOQjKuAlyIkMIXWuVimRTnAvpPKBaj6h8O0iJQAJupDhhZVi
- gfn1gpLrqENeq5nSqNrn853Bt1dU3ui+gH5xKa4vJrMckhl/R00YAXwUVNpzetuWHbvtkUxdMH6
- qlRZxgr05Pzsursh/JK9smWnwW18I4NFfz+kjfiWrcuHgVvdzcLE4M+PKeihWxkgGKgkZSz3QIS
- 95/wypwNELvyBbP5zgyJ+h9b7ph7mAc9dzmo+W4+Y/TBk0uKyvZV5a8bW8GGciudPG4kkhjLoRa
- 4qEUMZAiPyWKWMSFmoLTpyY3U2RjvxJjKbNy5+cJSZmyyPBxtTbeu7BKE7qwq5CJ3Y0ziSYB1nR
- Nt7QWQk4zLEhCtA==
-X-Developer-Key: i=rsworktech@outlook.com; a=openpgp;
- fpr=17AADD6726DDC58B8EE5881757670CCFA42CCF0A
-X-Endpoint-Received: by B4 Relay for rsworktech@outlook.com/not_default
- with auth_id=390
-X-Original-From: Levi Zim <rsworktech@outlook.com>
-Reply-To: rsworktech@outlook.com
+Content-Transfer-Encoding: 8bit
 
-From: Levi Zim <rsworktech@outlook.com>
+Introduce a device tree for the HP EliteBook Ultra G1q 14" AI laptop. It
+seems to be using the same baseboard as the HP OmniBook X 14 so just use
+that for now.
 
-The last command is not indented thus does not show as code block when
-rendered. This patch fixes it.
-
-Fixes: 4ac0b122ee63 ("docs: networking: convert tproxy.txt to ReST")
-Signed-off-by: Levi Zim <rsworktech@outlook.com>
+Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
 ---
-Changes in v2:
-- Add double colons to the end of paragraph before the code block
-- Link to v1: https://lore.kernel.org/r/20250427-tproxy-docs-fix-v1-1-988e94844ccb@outlook.com
----
- Documentation/networking/tproxy.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../qcom/x1e80100-hp-elitebook-ultra-g1q.dts  | 30 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
 
-diff --git a/Documentation/networking/tproxy.rst b/Documentation/networking/tproxy.rst
-index 7f7c1ff6f159ed98d96c63d99c98ddbaefd47124..72ba41a10bb22b1f1054af55702423fa8086d98d 100644
---- a/Documentation/networking/tproxy.rst
-+++ b/Documentation/networking/tproxy.rst
-@@ -69,9 +69,9 @@ add rules like this to the iptables ruleset above::
-     # iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
-       --tproxy-mark 0x1/0x1 --on-port 50080
- 
--Or the following rule to nft:
-+Or the following rule to nft:::
- 
--# nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
-+    # nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
- 
- Note that for this to work you'll have to modify the proxy to enable (SOL_IP,
- IP_TRANSPARENT) for the listening socket.
-
----
-base-commit: f73f05c6f711fd1628c7565441b9febc0c4d6c58
-change-id: 20250427-tproxy-docs-fix-ccbbbf42549f
-
-Best regards,
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 140b0b2abfb5..732cc3f6a220 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -293,6 +293,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-vivobook-s15.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-elitebook-ultra-g1q.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-omnibook-x14.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-lenovo-yoga-slim7x.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus13.dtb
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+new file mode 100644
+index 000000000000..4ea00d823693
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: BSD-3-Clause
++
++/dts-v1/;
++
++#include "x1e80100-hp-omnibook-x14.dts"
++
++/ {
++	model = "HP EliteBook Ultra G1q";
++	compatible = "hp,elitebook-ultra-g1q", "qcom,x1e80100";
++};
++
++&gpu {
++	zap-shader {
++		firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcdxkmsuc8380.mbn";
++	};
++};
++
++&remoteproc_adsp {
++	firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcadsp8380.mbn",
++			"qcom/x1e80100/hp/elitebook-ultra-g1q/adsp_dtbs.elf";
++};
++
++&remoteproc_cdsp {
++	firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qccdsp8380.mbn",
++			"qcom/x1e80100/hp/elitebook-ultra-g1q/cdsp_dtbs.elf";
++};
++
++&sound {
++	model = "X1E80100-HP-ELITEBOOK-ULTRA-G1Q";
++};
 -- 
-Levi Zim <rsworktech@outlook.com>
-
+2.43.0
 
