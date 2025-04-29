@@ -1,192 +1,125 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847EB8BEE
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC892459C9
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745943698; cv=none; b=jDca45865SZ8bh2wZnQvLbz2rCzvAFoAwPRcE5SQA0SauokXVhYXofiPhsV7ieQZj4Gw1FjV5jFpAdO2vosgoQQ/8tFsawJLTiV6u70hMFRDWsIg2sCLINGYpQ5ZKAMsZ737dt+V0hdLBPVOv/zq+pNMjQ5xhMW8w2jwQGnGYZA=
+	t=1745943704; cv=none; b=Bfr/cJ4wL123w6xP/hN+BbMF9JYHoOgBmj5tRc4IPM55Zh6fze1sVrL9qiCBnWVouynBOKgjBq/AmY3ji/Y5dZ7c1ArQUgRBoMwgMdx+OWYY7JKzay/H2jT/K1zTaovbmAAs2FNTlg5ymssiin36vfvFSA9omSLtLlmyfcOHczk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745943698; c=relaxed/simple;
-	bh=X203x4J2u2Uiks7D81+rBjwN7+PlsNhFkfzpcAr2Qng=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=RZ0dro5HxBCUHajep/0TewYnAfYlxCYUBwf2JaCCTn3zlxD4LgDy++/9mLP3m5xx/XvUDbT9oNly4jP0jmbghXDHtCJylVMJuNUlzyQIFnfwwUiW/VtjWmzAha52zIHv+MllJhrPZ0cx51h3ZpnlT832BfWaFCVI1h22RHLmN/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=loH6rd46; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745943704; c=relaxed/simple;
+	bh=Y6JiO7oYoeOTKUsy66zGL+B19kEo8r9m8dto+yrP6TQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ca+hA+9EFPafk61gwwQJ5esjfbwPGJmr/QQM2NnMIAPfsO60O3rN1NQv3Aba5V5NJNEptJhRXDSpnoSJ41bW85sZNI9ttV3eXI8NkMtZJizh+bLBOyJaC4e10MAZ03gZvc/KAuGfwsJyVXpDZguvemxVVQTuxr3jDxq7uokngL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VeL22eYD; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="loH6rd46"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so7297655e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745943695; x=1746548495; darn=vger.kernel.org;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n4Wt+BZ71x/abgZTG5PyDsFpbW2D/kzzpuguZVbmGlc=;
-        b=loH6rd46YIM60l2Qf33WQz7VCTkW+nz/YbTExMeFeU/L5yPaxhnsZFQS0vuK8Ouby6
-         4l+uM/SbNjllAqgz09hmq8YdGI8i6UsakzZQ6yE775YxXZS7qMOToeRL3ujGTLomOi+F
-         dnUKvld0pwCdGzRCUIB4WH2jUSY5FIGXvutylAvSfTfc1LKaMll/pPB5VuQEvLdv8h1w
-         OZUgCJNBX0tDBa0CcOFpdVGaiNwwxhit2UZ9lvMKAHGZmhaJrl1Bfic99s8LUcF+QabN
-         UBm/+G+gv3IpQrupABvccVjMulERuLfPknDWx5PUDnyzrH+BBldmwlSWewbSVd7b31mB
-         YAEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745943695; x=1746548495;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=n4Wt+BZ71x/abgZTG5PyDsFpbW2D/kzzpuguZVbmGlc=;
-        b=VONt4bI4aldtc981zs4alp+ylugEgGl/J6VbdFuKrShxzEXkZqXV5OsWDllyGdT4lQ
-         pkzVUM2t9/ft509/WNzLaC/uDyagJM3/593vnoXewdNVGGI4tLf0EDd8+74mm4hhZe8O
-         fDrFjPPqJfkrsLd2WRx4aei8w9bwneWSm7uBxgnZLvQUtckRiYh2I6EXBvN7Z2fbFN1C
-         p0n+MPMZfTNp+xSUxm6pZMYX1+wG94QM2bSQ5jdjF98dI/oe5T60WIGlWYg1QmVzb+C4
-         7vpK46Cs+SyDUcgaMN8PRdDyuji+MuuHAykYtUKtfcCYjv5Rjgn20GOoFi+6C3NTxSHf
-         fCNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhCfiV6dWbph4w6/WgCRzrQWiCuujJ7yjVJw7dBENFr4c1Pdkgjrls+cqjhCfvUnTUsitIfwjWgO1kIW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBoi++HNO+SzODXuu72i21YNlbUnvkC2TQ5p8ik0PXvxlQbMsG
-	ynvcDnfO+W5/8ZHUNLeTshv36bD1S3YINkAcLYPXidnVyIu0pHyQuO4Vd8qdf2qCtzyPdcxiPZY
-	VfVA=
-X-Gm-Gg: ASbGnctqbZxynNzIfpAFFMrle8IAAyZdUPwKF4Uhuf469YaQ0Zio7DSkRPcXrqYRlRP
-	W+MbJOKXNEe/VRIfJC94RlYoctQpBcy6IEb5DWuG+KZZneOVQg6nbdZ9IZ9idqBwMHjSzh7xayc
-	YxowvFHtiMvFdoyIvs/kabOHBhofPdcyeDjpX2wOuw4JUK+OazvQzqNRBoVRWSZImFBarTT3zn1
-	NFpzUWC9+4qoRu37HJiv1v/gdE5JbOS2pGf+apCmqB/hLyfxKZcb2Pchni0OLB7EH28V1Y5SfBz
-	UmJyr/u/TS1mcX43JtWWeVFnvvo5wSJUi18G9v7UJOdwRhst
-X-Google-Smtp-Source: AGHT+IE7T1o3gyNSKYkssQg0Lf54mrrx8eDIwrOxAiax301n2e5FcgwZ3P+UeYD0s4r1YzAGb1Az4w==
-X-Received: by 2002:adf:f4c7:0:b0:3a0:75ff:261f with SMTP id ffacd0b85a97d-3a075ff267amr3429312f8f.11.1745943694680;
-        Tue, 29 Apr 2025 09:21:34 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:b996:f7e3:35e8:5091])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e4641csm14226859f8f.80.2025.04.29.09.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 09:21:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VeL22eYD"
+Date: Tue, 29 Apr 2025 12:21:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745943699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cTpA6o8PWXuPbIwQZ+jU9BV1D3QBfTnXkZ2PpDFhcgQ=;
+	b=VeL22eYDp+0JnPOPNWmQrO47wxt0dcHS4l10sYycSwWR+QuMITchnza5SE/uWI8Kh8X4pv
+	Rf/XuAdpyPn2LD2ErpUaiz/ZKA+T7upTeWDp4CMD3XJVlsmyTeAp7io8UT/x8kW2Dc767z
+	tBUd1mB1pfhpJ9Uz2QNoo/INNU7c2OQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Patrick Donnelly <batrick@batbytes.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <pkpzm6okfqchet42lhcebwaiuwrwil6wp76flnk3p3mgijtg2e@us7jkctbpsgc>
+References: <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+ <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+ <mlsjl7qigswkjvvqg2bheyagebpm2eo66nyysztnrbpjau2czt@pdxzjedm5nqw>
+ <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
+ <lmp73ynmvpl55lnfym3ry76ftegc6bu35akltfdwtwtjyyy46z@d3oygrswoiki>
+ <CAHk-=wiZ=ZBZyKfg-pyA3wmEq+RkscKB1s68c7k=3GaT48e9Jg@mail.gmail.com>
+ <CACh33FqQ_Ge6y0i0nRhGppftWdfMY=SpGsN0EFoy9B8VMgY-_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 29 Apr 2025 18:21:33 +0200
-Message-Id: <D9J9DW53Q2GD.1PB647ISOCXRX@ventanamicro.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming
- runnable
-Cc: "Anup Patel" <apatel@ventanamicro.com>, <kvm-riscv@lists.infradead.org>,
- <kvm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@atishpatra.org>,
- "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Andrew Jones" <ajones@ventanamicro.com>, "Mayuresh
- Chitale" <mchitale@ventanamicro.com>
-To: "Anup Patel" <anup@brainfault.org>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
- <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
- <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com>
- <CAK9=C2Woc5MtrJeqNtaVkMXWEsGeZPsmUgtFQET=OKLHLwRbPA@mail.gmail.com>
- <D9J1TBKYC8YH.1OPUI289U0O2C@ventanamicro.com>
- <CAAhSdy01yBBfJwdTn90WeXFR85=1zTxuebFhi4CQJuOujVTHXg@mail.gmail.com>
-In-Reply-To: <CAAhSdy01yBBfJwdTn90WeXFR85=1zTxuebFhi4CQJuOujVTHXg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACh33FqQ_Ge6y0i0nRhGppftWdfMY=SpGsN0EFoy9B8VMgY-_Q@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-2025-04-29T20:31:18+05:30, Anup Patel <anup@brainfault.org>:
-> On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrc=
-mar@ventanamicro.com> wrote:
->>
->> 2025-04-29T11:25:35+05:30, Anup Patel <apatel@ventanamicro.com>:
->> > On Mon, Apr 28, 2025 at 11:15=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <=
-rkrcmar@ventanamicro.com> wrote:
->> >>
->> >> 2025-04-28T17:52:25+05:30, Anup Patel <anup@brainfault.org>:
->> >> > On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 =
-<rkrcmar@ventanamicro.com> wrote:
->> >> >> For a cleaner solution, we should add interfaces to perform the KV=
-M-SBI
->> >> >> reset request on userspace demand.  I think it would also be much =
-better
->> >> >> if userspace was in control of the post-reset state.
->> >> >
->> >> > Apart from breaking KVM user-space, this patch is incorrect and
->> >> > does not align with the:
->> >> > 1) SBI spec
->> >> > 2) OS boot protocol.
->> >> >
->> >> > The SBI spec only defines the entry state of certain CPU registers
->> >> > (namely, PC, A0, and A1) when CPU enters S-mode:
->> >> > 1) Upon SBI HSM start call from some other CPU
->> >> > 2) Upon resuming from non-retentive SBI HSM suspend or
->> >> >     SBI system suspend
->> >> >
->> >> > The S-mode entry state of the boot CPU is defined by the
->> >> > OS boot protocol and not by the SBI spec. Due to this, reason
->> >> > KVM RISC-V expects user-space to set up the S-mode entry
->> >> > state of the boot CPU upon system reset.
->> >>
->> >> We can handle the initial state consistency in other patches.
->> >> What needs addressing is a way to trigger the KVM reset from userspac=
-e,
->> >> even if only to clear the internal KVM state.
->> >>
->> >> I think mp_state is currently the best signalization that KVM should
->> >> reset, so I added it there.
->> >>
->> >> What would be your preferred interface for that?
->> >>
->> >
->> > Instead of creating a new interface, I would prefer that VCPU
->> > which initiates SBI System Reset should be resetted immediately
->> > in-kernel space before forwarding the system reset request to
->> > user space.
->>
->> The initiating VCPU might not be the boot VCPU.
->> It would be safer to reset all of them.
->
-> I meant initiating VCPU and not the boot VCPU. Currently, the
-> non-initiating VCPUs are already resetted by VCPU requests
-> so nothing special needs to be done.
+On Tue, Apr 29, 2025 at 11:36:44AM -0400, Patrick Donnelly wrote:
+> I would not consider myself a kernel developer but I assume this
+> terminology (dentry aliases) refers to multiple dentries in the dcache
+> referring to the same physical dentry on the backing file system?
 
-Currently, we make the request only for VCPUs brought up by HSM -- the
-non-boot VCPUs.  There is a single VCPU not being reset and resetting
-the reset initiating VCPU changes nothing. e.g.
+This issue turned out to be my own pebcak; I'd missed the
+dentry_operations that do normalized lookups (to be fair, they were
+rather hidden) and I'd just pulled a 14 hour day so was a tad bitchy
+about it on the list.
 
-  1) VCPU 1 initiates the reset through an ecall.
-  2) All VCPUs are stopped and return to userspace.
-  3) Userspace prepares VCPU 0 as the boot VCPU.
-  4) VCPU 0 executes without going through KVM reset paths.
+> If so, I can't convince myself that's a real problem. Wouldn't this be
+> beneficial because each application/process may utilize a different
+> name for the backing file system dentry? This keeps the cache hot with
+> relevant names without any need to do transformations on the dentry
+> names. Happy to learn otherwise because I expected this situation to
+> occur in practice with ceph-fuse. I just tested and the dcache entries
+> (/proc/sys/fs/dentry-state) increases as expected when performing case
+> permutations on a case-insensitive file name. I didn't observe any
+> cache inconsistencies when editing/removing these dentries. The danger
+> perhaps is cache pollution and some kind of DoS? That should be a
+> solvable problem but perhaps I misunderstand some complexity.
 
-The point of this patch is to reset the boot VCPU, so we reset the VCPU
-that is made runnable by the KVM_SET_MP_STATE IOCTL.
+Dentry aliases are fine when they're intended, they're properly
+supported by the dcache.
 
-For design alternatives, it is also possible to reset immediately in an
-IOCTL instead of making the reset request.
+The issue with caching an alias for the un-normalized lookup name is
+(as you note) that by permuting the different combinations of upper and
+lower case characters in a filename, userspace would be able to create
+an unbounded (technically, exponential bound in the length of the
+filename) number of aliases, and that's not what we want.
 
->> You also previously mentioned that we need to preserve the pre-reset
->> state for userspace, which I completely agree with and it is why the
->> reset happens later.
->
-> Yes, that was only for debug purposes from user space. At the
-> moment, there is no one using this for debug purposes so we
-> can sacrifice that.
+(e.g. d_prune_aliases processes the whole list of aliases for an inode
+under a spinlock, so it's an easy way to produce unbounded latencies).
 
-We still can't immediately reset the boot VCPU, because it might already
-be in userspace.  We don't really benefit from immediately resetting the
-initiating VCPU.
-Also, making the reset request for all VCPUs from the initiating VCPU
-has some undesirable race conditions we would have to prevent, so I do
-prefer we go the IOCTL reset way.
+So it sounds like you probably didn't find the dentry_operations for
+normalized lookups, same as me.
 
->> >             This way we also force KVM user-space to explicitly
->> > set the PC, A0, and A1 before running the VCPU again after
->> > system reset.
->>
->> We also want to consider reset from emulation outside of KVM.
->>
->> There is a "simple" solution that covers everything (except speed) --
->> the userspace can tear down the whole VM and re-create it.
->> Do we want to do this instead and drop all resets from KVM?
->
-> I think we should keep the VCPU resets in KVM so that handling
-> of system reset handling in user space remains simple. The user
-> space can also re-create the VM upon system reset but that is
-> user space choice.
+Have a look at generic_set_sb_d_ops().
 
-Ok.
+> > Also, originally this was all in the same core dcache lookup path. So
+> > the whole "we have to check if the filesystem has its own hash
+> > function" ended up slowing down the normal case. It's obviously been
+> > massively modified since 1997 ("No, really?"), and now the code is
+> > very much set up so that the straight-line normal case is all the
+> > non-CI cases, and then case idnependence ends up out-of-line with its
+> > own dcache hash lookup loops so that it doesn't affect the normal good
+> > case.
+> 
+> It's seems to me this is a good argument for keeping case-sensitivity
+> awareness out of the dcache. Let the fs do the namespace mapping and
+> accept that you may have dentry aliases.
+> 
+> FWIW, I also wish we didn't have to deal with case-sensitivity but we
+> have users/protocols to support (as usual).
+
+The next issue I'm looking at is that the "keep d_ops out of the
+fastpath" only works if case sensitivity isn't enabled on the filesystem
+as a whole - i.e. if case sensitivity is enabled on even a single
+directory, we'll be flagging all the dentries to hit the d_ops methods.
+
+dcache.c doesn't check IS_CASEFOLD(inode) - d_init can probably be used
+for this, but we need to be careful when flipping casefolding on and off
+on an (empty) directory, there might still be cached negative dentries.
+
+ext4 has a filesystem wide flag for "case sensitive directories are
+allowed", so that enables/disables that optimization. But bcachefs
+doesn't have that kind of filesystem level flag, and I'm not going to
+add one - that sort of "you have to enable this option to have access to
+this other option" is a pita for end users.
