@@ -1,119 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E891B0435;
-	Tue, 29 Apr 2025 07:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17081B0435;
+	Tue, 29 Apr 2025 07:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745912001; cv=none; b=c4YypWtK9yYztXNuEVxGLpKPzSchZSs8GX9IDYZK6+0D5FczLXMjxDih9CTh8yjpJ5TtcBk8+u//pL9oBmXmPi1LVFizdeQGyCzOaYKHSwcC7M0KGeZBc5XEFbwArmUxmlEklRYiNRutwsO7RY1Aw5BvnmjLbfJNiSphCI/S58Y=
+	t=1745912007; cv=none; b=pyKsj2KSMYW19PqFYj/T0l11P9ZjRxb29PxE6tAq2Gok6d6Dies/Gxh1yoQLsNkvdFbkTfIyO1qX3GGdyywWkEMLAiyE6uWtm29U++n9qPGl8jEaoHoW32Ngs2vtXl4T2j+jgI5L8AxGVSzgYRqLCrqSWxrYNE6N4z+RiC0LkC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745912001; c=relaxed/simple;
-	bh=I7wnBcbNJaYz/fiGTEMW6tHkeDO3AeMTxn9cnFfWXE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DXUJ+mOnjvRq+wsz4lR/el5JjPvJ/SwZ3UAqya4hDk1ATaq9NGFExfy3lB8hr8/kyzR0OYLi1CG9ei1urn9H43Wehkd+Wr5Ol1IgRyiU8FJQsbxHvwbNAHs0cbKTKckzzEGb2R91FVbK81ikrKprUoHmxu6QLP0sdUAkPsp/Zf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk7oLHDz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745912007; c=relaxed/simple;
+	bh=xbBdlbJoUcbNkdE1y555rC3vQtsdOVxOcRqhEJpWYo4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vCDDj73v2BvEq+/mpgzdj5O7BSjGrxnzdti4iDRjhxfkrNByXHZcnM3LZPGNw7JP9Tx32wwYgS6L5HTcvn6H/UVbyYnadOzHWLsxkcEJKwnNM3wHdTo2e0DSW5B5Qr9DpcAqbhtcYdFNg2jfIJeA/iB5CAeOX1n9v8Vhzj0iKiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MyuxBiDl; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk7oLHDz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6869BC4CEE3;
-	Tue, 29 Apr 2025 07:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745912000;
-	bh=I7wnBcbNJaYz/fiGTEMW6tHkeDO3AeMTxn9cnFfWXE0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wk7oLHDzGibPk5SXUyNUk/drmI1JeUjAiBWeKMLJTh+qWX7GsUTB5qjSD+SqB1r1e
-	 KIeGQCUdxMK5puxcy3W8pBq/8Qr/fDbK8XBxcJk4X8brQIw6lu9QLmOCUurPWLK9ef
-	 MBwQu4akkqQpeKfxCSyKpUec5VdaXPSdOL4Ss2x+FyJK6ozxKoeH6LnWQDtipSwwqQ
-	 9yPniLnJicKpeUSZ9TiCs68xScBSHcfKlw+3wpic1iOAbgGGb0VYFYfCrdQ7jMaSsf
-	 dMvb/xKt6D/+5alfY0NEoJ9+mVjnHXv2ZFL60xUi03vv8VRMDSb2g4GOZh2nyj2D1K
-	 lNJW3tsadploQ==
-Date: Tue, 29 Apr 2025 10:33:12 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, linux-mm@kvack.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Michael Roth <michael.roth@amd.com>
-Subject: Re: SNP guest crash in memblock with unaccepted memory
-Message-ID: <aBCAuEJxBp9MPrOm@kernel.org>
-References: <f12f5bd0-135b-91fd-9703-7df98500f9c5@amd.com>
- <b037ffeb-bfeb-41a6-b200-d8c57076370f@redhat.com>
- <64c04e6c-43b1-996b-f83d-5fb1751debaa@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyuxBiDl"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso49982815e9.2;
+        Tue, 29 Apr 2025 00:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745912004; x=1746516804; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ZRTG5mCMYe6uwsMFdp7Pmy09fK7am4dTvGc1TmLUd4=;
+        b=MyuxBiDlhP/N4OTO7+GqaMe1/5J1pdl5+nurwAnj5FwJllFrt1xVUs5s3h0Z88SAqi
+         yV6zmvC7GK6JB1GXYU6CAmH/rvNAtvmUxytbOKEvf4EhOveNNudUfhAzvemv/RIGK/yW
+         SSkXj6p7mNaXljJey50t2EkSk8cG6Dvz0iIa7VpWPTAm8LarXoWeMxZ9A+ca9aTP0jmq
+         wcYzF9OIulNM9PEkZu7mnnN5UYCoi12QqbeUntaShop4VsH3JzhaDqR6Bf1WH2DfaHLC
+         fVU6qjXvwFflWuFr5IuJbBpw/wtnm4uNbI0A/2MImRugYj+V0/Gm4PZLAFKRZ1O16fuf
+         KelQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745912004; x=1746516804;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ZRTG5mCMYe6uwsMFdp7Pmy09fK7am4dTvGc1TmLUd4=;
+        b=L+LvG6NWpLr2PWksmHsaAzcXI5lFg2ge6FXZDU4xu9MKZQn7Dwd6J8oQGKkDWgq2Zs
+         jUlz/Py1kyU617vDeIUg/LNvXdkMGgucFHqqfwQgezgQaVSwR9wtdoAhg3mwyy6alMSq
+         84Q7Z0N9rkzJoU3nemLsvPJ0TB7R+rvJbnotTq5kDFL71gvxG5gr26ig2I4JT+y0xRzi
+         uy2VxTarylAWN+a/7cZktwMWEPf9oaJ8JhT8wh7QZAF9VWF9flk1fRodEnnh85+0zqfu
+         tQjsTgSg1LQlBjN9NAde+HON4wOWwEAlv+GulcN8GohAW+ZpsW9vLTzCMnfmQ01thrMW
+         q3dg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0erobSseJab2/ff9Gqfh5Cx0oteCfwoXfC2nWgozjxfwRAjZPB2vZ7vAPLsdB2//LwFeguXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1CeMSLz4e+IUKSQ2cMc4nTiiUGBoGQEAY6TGKcZeg85Z1qj1B
+	UbrfGFwAfAeHd61MxuiGn4l0XA+GPsu3CRnhjuacmCpnNJTpOzrN
+X-Gm-Gg: ASbGncskCsX+lXX8xzRSusLfcwSyuo45T2sTTvZu+g0wanMl8gqXD3u/vrglMmvWm+T
+	Ac5/7eg7NZ76gJjm3Sp2sB+TqVqv4JY1abaRP8LwN8+tpnvwt0+ShKxhmPZFRBJzpXKrTJZnkoR
+	dJEX3Gci6fnXd+P/2fbrHEqvuHcy1B1QaiylG1uXRH+afiyDgqdl7gTalfkB4MenTBosAtcJ43A
+	90IjcS5MsVc1/yDLLKqCZKG7Kx/0wfwqaoTwquCE1mXGxzdPUM2ip03KILWO33vsR1+WDjipNPG
+	s51OKScH8cEkL90aX7TNbaF5wOOMt/km1oxvREXCPa4dFMQ3h995NkSelGq4QBnZuSheJzRDCNd
+	5EzNVunAFuICc
+X-Google-Smtp-Source: AGHT+IEUrnuJA4deyu7945wrTrNUfySudUqxMZJWhUy8Gj0/dFs9gb2ysk2VCOhJsyfHHHJ7384okQ==
+X-Received: by 2002:a05:600c:674e:b0:440:8fcd:cf16 with SMTP id 5b1f17b1804b1-440ab7d517cmr96110885e9.19.1745912004073;
+        Tue, 29 Apr 2025 00:33:24 -0700 (PDT)
+Received: from fedora.advaoptical.com ([82.166.23.19])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d868asm178728705e9.26.2025.04.29.00.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 00:33:23 -0700 (PDT)
+From: Sagi Maimon <maimon.sagi@gmail.com>
+To: jonathan.lemon@gmail.com,
+	vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Sagi Maimon <sagi.maimon@adtran.com>,
+	Sagi Maimon <maimon.sagi@gmail.com>
+Subject: [PATCH v2] ptp: ocp: Fix NULL dereference in Adva board SMA sysfs operations
+Date: Tue, 29 Apr 2025 10:33:20 +0300
+Message-ID: <20250429073320.33277-1-maimon.sagi@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <64c04e6c-43b1-996b-f83d-5fb1751debaa@amd.com>
 
-On Mon, Apr 28, 2025 at 01:10:31PM -0500, Tom Lendacky wrote:
-> On 4/28/25 09:04, David Hildenbrand wrote:
-> > On 27.04.25 17:01, Tom Lendacky wrote:
-> >> Hi Kirill,
-> >>
-> >> Every now and then I experience an SNP guest boot failure for accessing
-> >> memory that hasn't been accepted. I managed to get a back trace:
-> >>
-> >>    RIP: 0010:memcpy_orig+0x68/0x130
-> >>    Code: ...
-> >>    RSP: 0000:ffffffff9cc03ce8 EFLAGS: 00010006
-> >>    RAX: ff11001ff83e5000 RBX: 0000000000000000 RCX: fffffffffffff000
-> >>    RDX: 0000000000000bc0 RSI: ffffffff9dba8860 RDI: ff11001ff83e5c00
-> >>    RBP: 0000000000002000 R08: 0000000000000000 R09: 0000000000002000
-> >>    R10: 000000207fffe000 R11: 0000040000000000 R12: ffffffff9d06ef78
-> >>    R13: ff11001ff83e5000 R14: ffffffff9dba7c60 R15: 0000000000000c00
-> >>    memblock_double_array+0xff/0x310
-> >>    memblock_add_range+0x1fb/0x2f0
-> >>    memblock_reserve+0x4f/0xa0
-> >>    memblock_alloc_range_nid+0xac/0x130
-> >>    memblock_alloc_internal+0x53/0xc0
-> >>    memblock_alloc_try_nid+0x3d/0xa0
-> >>    swiotlb_init_remap+0x149/0x2f0
-> >>    mem_init+0xb/0xb0
-> >>    mm_core_init+0x8f/0x350
-> >>    start_kernel+0x17e/0x5d0
-> >>    x86_64_start_reservations+0x14/0x30
-> >>    x86_64_start_kernel+0x92/0xa0
-> >>    secondary_startup_64_no_verify+0x194/0x19b
-> >>
-> >> I don't know a lot about memblock, but it appears that it needs to
-> >> allocate more memory for it's regions array and returns a range of memory
-> >> that hasn't been accepted. When the memcpy() runs, the SNP guest gets a
-> >> #VC 0x404 because of this.
-> >>
-> >> Do you think it is as simple as calling accept_memory() on the memory
-> >> range returned from memblock_find_in_range() in memblock_double_array()?
-> > 
-> > (not Kirill, but replying :) )
-> > 
-> > Yeah, we seem to be effectively allocating memory from memblock ("from
-> > ourselves") without considering that memory must be accepted first.
-> > 
-> > accept_memory() on the new memory (in case of !slab) should be the right
-> > thing to do.
-> 
-> Thanks, David. Let me add a call in for accept_memory in the !slab case
-> and see if that resolves it. May take a bit to repro, but should find
-> out eventually.
+From: Sagi Maimon <sagi.maimon@adtran.com>
 
-I think sticking a loop of memblock_alloc() somewhere before mm_core_init()
-should trigger the issue.
+On Adva boards, SMA sysfs store/get operations can call
+__handle_signal_outputs() or __handle_signal_inputs() while the `irig`
+and `dcf` pointers are uninitialized, leading to a NULL pointer
+dereference in __handle_signal() and causing a kernel crash. Adva boards
+don't use `irig` or `dcf` functionality, so add Adva-specific callbacks
+`ptp_ocp_sma_adva_set_outputs()` and `ptp_ocp_sma_adva_set_inputs()` that
+avoid invoking `irig` or `dcf` input/output routines.
+
+Fixes: ef61f5528fca ("ptp: ocp: add Adva timecard support")
+Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+---
+Addressed comments from Vadim Fedorenko:
+ - https://www.spinics.net/lists/kernel/msg5659845.html
+Changes since v1:
+ - Remove unused `irig` and `dcf` code.
+---
+---
+ drivers/ptp/ptp_ocp.c | 52 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 50 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index faf6e027f89a..2ccdca4f6960 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -2578,12 +2578,60 @@ static const struct ocp_sma_op ocp_fb_sma_op = {
+ 	.set_output	= ptp_ocp_sma_fb_set_output,
+ };
  
-> I'll submit a patch once I verify.
-> 
-> Thanks,
-> Tom
-> 
-> > 
-
++static int
++ptp_ocp_sma_adva_set_output(struct ptp_ocp *bp, int sma_nr, u32 val)
++{
++	u32 reg, mask, shift;
++	unsigned long flags;
++	u32 __iomem *gpio;
++
++	gpio = sma_nr > 2 ? &bp->sma_map1->gpio2 : &bp->sma_map2->gpio2;
++	shift = sma_nr & 1 ? 0 : 16;
++
++	mask = 0xffff << (16 - shift);
++
++	spin_lock_irqsave(&bp->lock, flags);
++
++	reg = ioread32(gpio);
++	reg = (reg & mask) | (val << shift);
++
++	iowrite32(reg, gpio);
++
++	spin_unlock_irqrestore(&bp->lock, flags);
++
++	return 0;
++}
++
++static int
++ptp_ocp_sma_adva_set_inputs(struct ptp_ocp *bp, int sma_nr, u32 val)
++{
++	u32 reg, mask, shift;
++	unsigned long flags;
++	u32 __iomem *gpio;
++
++	gpio = sma_nr > 2 ? &bp->sma_map2->gpio1 : &bp->sma_map1->gpio1;
++	shift = sma_nr & 1 ? 0 : 16;
++
++	mask = 0xffff << (16 - shift);
++
++	spin_lock_irqsave(&bp->lock, flags);
++
++	reg = ioread32(gpio);
++	reg = (reg & mask) | (val << shift);
++
++	iowrite32(reg, gpio);
++
++	spin_unlock_irqrestore(&bp->lock, flags);
++
++	return 0;
++}
++
+ static const struct ocp_sma_op ocp_adva_sma_op = {
+ 	.tbl		= { ptp_ocp_adva_sma_in, ptp_ocp_adva_sma_out },
+ 	.init		= ptp_ocp_sma_fb_init,
+ 	.get		= ptp_ocp_sma_fb_get,
+-	.set_inputs	= ptp_ocp_sma_fb_set_inputs,
+-	.set_output	= ptp_ocp_sma_fb_set_output,
++	.set_inputs	= ptp_ocp_sma_adva_set_inputs,
++	.set_output	= ptp_ocp_sma_adva_set_output,
+ };
+ 
+ static int
 -- 
-Sincerely yours,
-Mike.
+2.47.0
+
