@@ -1,127 +1,84 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F60870800
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E764A21
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745918566; cv=none; b=PdBz0CF5S/RS1diuBJIkcLPeHu+Y1HJuTqFh9cuwmY6jTVC8V5NK4dnW+0QSpqfMd6m0wg6i/wfl4Tq0rSlpnsW7A2YJ2W2t1crfSRtltenHHZ4dm27vkkbh8IcVr97RGpECvsSjPCa6lshH2UIW8/dafCxnzH0rvtTqV7Y2RQ8=
+	t=1745918594; cv=none; b=UP05MjTbeT1A7Xp2LbE0PSdYpJ31YD3vHmuQoEyrGQ5IMSIcarmY04srM4HYwtU1Sp6hMiGcT+zVVfbKaHJT58jE0btf+eJRSiWMdLYhkzld304mb7YQE0+uBjTOsKgu/DN56aWBy+83hYnMwTofGHEbOKCdA5L8WdHAyc/VhcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745918566; c=relaxed/simple;
-	bh=NLgm3ww3YO6bjJtJrLFxAJyT6HFnEfsaguPcMB2rQd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d+WSln8deD8MC9WyVBjXsaYv97Bm0zl3/tOs/cUyv+4s8PPehmFi5/05DrK25+uLiM887pOkgmVPiWT8iNHddcJWzu7MTpBIAfGCEmIpffO5OQUVQDrvUNiEHNmq4VXUkrhVCU+IVXnOQQN6qAKF6Pvd4axrLSRuV9mV5fLd4Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KVcgsul6; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745918594; c=relaxed/simple;
+	bh=+2cGPRIrVD8SvLOeqH9eQ/+WFFo1HAM2HPHEdzfI61k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QT9kFVrVLfbWrr6K3C0wrkvideGo9qqhnf9731tgqh+cCreVHo0gerZpIvN2erq/bVSj7iIF+uARCmt+sxK38czGBZkKWn59a/wuuELB+3dWkwYt8ElQS/lQT1wnTUNRVI+wF0gVX6o4cW4HkZIDrOc9HLmliKfdWQ0yjyLCJIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=afydCzvl; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KVcgsul6"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso11145407a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 02:22:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745918563; x=1746523363; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m5ETyMiENat5qiMjmd1YZvsOVUVueP+Yn8LaPAo84g8=;
-        b=KVcgsul62aBxZC6OQVYyF4mWH+6lzbjdNJq0DU/ItduhtT1fi+VXwOr62ffQQEJVeg
-         8CTRguXUWLUPpq0+W1VF/pm9OsqOr5mYP99k3lEtcg+3o0PdAWP7HruKs5wdDtzhagQ8
-         /TVkm2QO6mPoD+6bn0HfP9RaJgKMXZGeTeV3k7Ni+7RY2EFJpZy/hnl57PdyYYyaDmHR
-         dgHb/LaL9yrLfLn7J5dMvjfZQ612m8G6rgDq9i5Ahe7ZN0i07Kgc4tJakRJslyiTX2eT
-         juBr4+CWLdVzMPH6ML56adUIRwD2uYPcya5HKM1elMWh1G+68DG21Wt8xhHwd8NOjBqo
-         l34g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745918563; x=1746523363;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m5ETyMiENat5qiMjmd1YZvsOVUVueP+Yn8LaPAo84g8=;
-        b=ur8k5VMhTwnciv3IWlpZrXtW9FXa5YWM3R/OStwbU9IJBhrD0ttdts9VQlCq9zSpF2
-         nhk08CRKDjXO8nRMkREj/NnWFgqpiW7ANF1tYC9Wxx9OU3dKiGf+Ca9MpCjzPLg5PAyO
-         IvauutrDHmYTlO+L++N2LpXSr4E51fiBR9Biag5thKcMnwg+ODZPQ0EgeKolfDYq+j4K
-         OCNwR9X3R1JoZY5e4l6t2Do0eBXIbB9q/BgJavvFHUUN1gPW8hwfnEHss3oapuX3mJ7u
-         gX0jnhbKkrOBJ+azMu5g905jKfCDS225Shl1JYoz0y1rN3uV3F2i8uCtWztlLmm/O0Gx
-         xOVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXyv3yhzfC3Xn3Sh5nOan3h6qn+zE9nI7Ah+LD1aOsY6f679TFP/hvA/cSZ+YHltBz1Pt3sqVWMk0aV9PY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywki/PwBLtj2DDxmtMI65XaoF2+Ig8h10udAEe1nPBqilR7BGhq
-	y5aWUOy7lTy4uW7L6P5QKhdnpdSvP2yfzoJRSfKUBwuIT/7Zvd/uk/JGkbTajmILBtG6Ti9TALH
-	K
-X-Gm-Gg: ASbGnctPs14X3VRJWBxvFVOuBNWzYUPJDy+YxakmEj5kARM0hLGnJDW595QBM5VVnpz
-	U2Bhv/CwS2/mT/JBu+GNTkZrqjPY+Dwzdd1LoJk1pazIaLk2f5vxwV3dMyPpsqHWRAnUwsjj5rh
-	hu//f1Jrje4Bzst8FeoffQYVtFHzI5gYHMTbEmejCA2+H0LTJTbE7NWekQTKDbdrqkfMS7bEkjf
-	uMfWIZmsvn0UKVA8AkZsBEhu1436Z66NjcS3eVXJvMJI1rBaHV37vi6/X0o0NLyn+nrHEI7M6eF
-	bXHLv0zUiXJUml9ogm/C7KzGgWV/zK26D9IiAmUh2LQAb78wAQ==
-X-Google-Smtp-Source: AGHT+IGT47/KY+DVWifRNKDHeFCplx4qH6Vau0eK+jyg2W7wdu+e7jzwFboA4F0/aGKRwgS/kS3D5w==
-X-Received: by 2002:a05:6402:2b92:b0:5f6:44de:d97f with SMTP id 4fb4d7f45d1cf-5f83b24deeemr2182482a12.25.1745918562886;
-        Tue, 29 Apr 2025 02:22:42 -0700 (PDT)
-Received: from [192.168.0.14] ([82.76.212.167])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f66b7sm7340433a12.46.2025.04.29.02.22.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 02:22:42 -0700 (PDT)
-Message-ID: <10b40148-b949-442d-9d43-0db09517269a@linaro.org>
-Date: Tue, 29 Apr 2025 10:22:40 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="afydCzvl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A6D0642E81;
+	Tue, 29 Apr 2025 09:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745918590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+2cGPRIrVD8SvLOeqH9eQ/+WFFo1HAM2HPHEdzfI61k=;
+	b=afydCzvlZHCX4KBGrmWxUCAaohiMB8Z29EkDTIRA8n/F5RGPtvZ1C4MJ8ameuWwbE6YAm0
+	sLp8LH3C/r13z6V9ae8XzqD57EaZEp8fRW7oMCMhuHEhI5QcSO+txJQpdgqsRpAhkE+6nG
+	bcVkcRjxWCSZLdQ8PzoKa1Hcyt6G4CJj0AFEK0QF3bdl/4ygpeDGk5syq7km5x2He8Aa1Y
+	DeVELxVU4M29fV7o6dYUvzK+yV59pKwx+zxL4ngzZDA4Py+6ioCju5j0Gu1c6zjgYtws1C
+	bITu68gD/AQgt5t06KFc4Ld/0JOYl6pjMqv4EWHSmczzeiyKlo6ZaSlyIxWuMQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Lucas De Marchi <lucas.demarchi@intel.com>,  Thomas
+ =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,  Rodrigo
+ Vivi
+ <rodrigo.vivi@intel.com>,  Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Jani Nikula
+ <jani.nikula@linux.intel.com>,  Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Tvrtko Ursulin <tursulin@ursulin.net>,
+  Karthik Poosa <karthik.poosa@intel.com>,  Reuven Abliyev
+ <reuven.abliyev@intel.com>,  Oren Weil <oren.jer.weil@intel.com>,
+  linux-mtd@lists.infradead.org,  dri-devel@lists.freedesktop.org,
+  intel-gfx@lists.freedesktop.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 01/12] mtd: core: always create master device
+In-Reply-To: <20250326152623.3897204-2-alexander.usyskin@intel.com> (Alexander
+	Usyskin's message of "Wed, 26 Mar 2025 17:26:12 +0200")
+References: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+	<20250326152623.3897204-2-alexander.usyskin@intel.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 29 Apr 2025 11:23:08 +0200
+Message-ID: <87ldrjtj7n.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] mtd: spi-nor: core: avoid odd length/address
- writes in 8D-8D-8D mode
-To: Luke Wang <ziniu.wang_1@nxp.com>,
- "pratyush@kernel.org" <pratyush@kernel.org>
-Cc: "broonie@kernel.org" <broonie@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
- "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
- "michael@walle.cc" <michael@walle.cc>,
- "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
- "p.yadav@ti.com" <p.yadav@ti.com>, "richard@nod.at" <richard@nod.at>,
- "vigneshr@ti.com" <vigneshr@ti.com>, Bough Chen <haibo.chen@nxp.com>,
- Han Xu <han.xu@nxp.com>
-References: <DU2PR04MB85678048FE8B475B1E323E0AED802@DU2PR04MB8567.eurprd04.prod.outlook.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <DU2PR04MB85678048FE8B475B1E323E0AED802@DU2PR04MB8567.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieefgeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledvrddukeegrddutdekrddvheehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrddutdekrddvheehpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegrlhgvgigrnhguvghrrdhushihshhkihhnsehinhhtvghlrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehluhgtrghsrdguvghmrghrtghhihesihhnthgvlhdrtghomhdprhgtphhtthhopehthhhomhgrshdrhhgvlhhlshhtrhhomheslhhinhhugidrihhnthgvl
+ hdrtghomhdprhgtphhtthhopehrohgurhhighhordhvihhvihesihhnthgvlhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
+On 26/03/2025 at 17:26:12 +02, Alexander Usyskin <alexander.usyskin@intel.c=
+om> wrote:
 
+> Create master device without partition when
+> CONFIG_MTD_PARTITIONED_MASTER flag is unset.
+>
+> This streamlines device tree and allows to anchor
+> runtime power management on master device in all cases.
+>
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 
-On 4/29/25 10:03 AM, Luke Wang wrote:
-> Hi Pratyush,
-> 
->  
-> 
-> I'm following up on this patch series [1] Avoid odd length/address read/
-> writes in 8D-8D-8D mode. While some of the series has been merged, the
-> patch 4-6 remains unmerged.
-> 
->  
-> 
-> In fact, we also encountered similar read/write issue of odd address/
-> length with NXP FSPI controller (spi-nxp-fspi.c). Currently, we handled
-> the odd address/length in the controller driver, but I think this should
-> be a common issue in the octal dtr mode. Was there a technical reason
-> for not merging the core layer solution?
+Applied to mtd/next. Thanks!
 
-I guess I stumbled on those small comments and did not consider the
-greater benefit of taking the patches. No one cared and we forgot about
-it. Please address the comments and resubmit.
-> 
->  
-> 
-> [1] Original submission:  https://lore.kernel.org/
-> all/20210531181757.19458-1-p.yadav@ti.com/ <https://lore.kernel.org/
-> all/20210531181757.19458-1-p.yadav@ti.com/>
-> 
->  
-> 
-> Regards,
-> 
-> Luke Wang
-> 
->  
-> 
-
+Miqu=C3=A8l
