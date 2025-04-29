@@ -1,65 +1,65 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849AE242917
-	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B0623E32B
+	for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 16:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745942816; cv=none; b=oofwPrfkCfwAjwtB5BzwIe9b+7j62RKsmsGYssaQ0KB8+3IoMz6qoPa4RiYHKulZZrslQvjThuadXENnKPwPikEV60YNBHbFpUca+KlE7U6Hm/ABWokg9TIsJK3awzmJltV2DNJIJrHGour36Ue2yKWEsuSkmZ9cEAok+0s3qcU=
+	t=1745942842; cv=none; b=rcGYiEtVBfrEP9g1kyZgFkcwIuUgI4FJqrg9ecdZoqTt0nEKBLwrXg6ADhLa7K6CftHwdnu6MF7HijiT+7AC65dZvXy7IQg++RNRYCumM85y/kZjuTizdFPX2XUL4ofHrCPAWiy7nfOFYeoeqhHxXOhBJvE+BHOIVkrcelO+zgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745942816; c=relaxed/simple;
-	bh=SbxUmzQDjpdWgXNW648mViR6ApjtgoTdBjGQY5wczao=;
+	s=arc-20240116; t=1745942842; c=relaxed/simple;
+	bh=vk4HFBAT1zt5VoaOBCMzQw4ANuNvKRlbDYMt1L784q4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nAonwXEDbQN+gCKQWjcPFxd2HVss+ShOUdbI3j8/ggF5WbJRC0i0rQGtmXpehILSOLS9kHY7eO1OZwQxelfNSHUDucOo7TS7Yk2C9PG+RVH3/yJhvP2DraM8vfmaAPUM4ghjNfiAFUCXaXhx6tDcEVtwlQcoUKOJa4SIoRXe3nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNAGb6Dy; arc=none smtp.client-ip=209.85.210.52
+	 In-Reply-To:Content-Type; b=Y2qxn0pHsXryQrgSczZN45/wBmJJFBB04LIViY4ZR2MZwjQheF9zZJ/5Xcs+dSWMBBNymIIAzI5XuW0Emw2LqZ65Q5yCr5OR8Dy7GEmtlQ2tDCfDurBm1pMJmnFddaKak1NDmo1FYCDhAY9NLKIQ0++gxswHE33vyYNRZMicS/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkdpWnGE; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNAGb6Dy"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72b82c8230aso1622966a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:06:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkdpWnGE"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f9832f798aso4803872b6e.2
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 09:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745942812; x=1746547612; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745942840; x=1746547640; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0y1uS/4UQLFoz6lufgWT2BHmRa+Ve2aFRZxvFyt9eZw=;
-        b=aNAGb6DyuQY+HSgcTiDDQiTofgCg+QiFK5hXUmgPqNz3agpk0mOyGVZJn2LtW/wAUs
-         T8J6t5Td+kK+HpAwyalDf+cEzGTFwIihGkSMylpebMMG+9FWq6h1Qlw+E3IcfhQukA0M
-         s1zqC6zbgUytl1JTCdUrVUMH1/j6FzatSj60teM91F4m5tOjQgOpWEiC55v5AoHzMnM8
-         YCfipD7BriSx+Jm9LAGuVowiq3oCdpU0NoBpc5P3uhbMdMegsa7mhQ+GZSXhBjPb5mRd
-         8Moe2CC/ET/S6skAwe2qRBS0sqI3KxmWYDVtS0UMHPryZDIJgip/6i/Lmpfp5I/xames
-         ZIow==
+        bh=XIK7+9eNcooiOnLlmPgNOLYSoGDevBz5dwgdJkp4UHk=;
+        b=lkdpWnGETSiT0boQ8qkoBjKjHNYc+JWX7Nt6l1JzZ92QD4pwyF+E+dR0Ld324pUsru
+         3faGB+l/SD31QOxt32L3mJBIzedINCC6a56VjhLfoTfxz3YzL4Lb0R6Q6SJuRgi5K9HL
+         F9XdzW35HaDlm8cZ57QeLiM3GtFdTFkDgPDLW/oEqHDEZTKBszRaJgZK8b18HhfVCb9w
+         nXaNhHgLwYdtFL57mQXuzCw70s/gCsLE1KrQtq0MCj3YlU0mqhyg/VcYjeiwoiCkRiPL
+         0ejvTLgslML1+/xLtZ5VJfxF1LPtod5GTXNvQ6FRNagGkF4Ygq05n1rFHEA2l62mIUJq
+         /bxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745942812; x=1746547612;
+        d=1e100.net; s=20230601; t=1745942840; x=1746547640;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0y1uS/4UQLFoz6lufgWT2BHmRa+Ve2aFRZxvFyt9eZw=;
-        b=UlU/BkufGxR2imylbCXTHxSOk48KdPsycX/e/H40ZYq2MZ2N14t83Wzq14W3fMlFUC
-         mleodZ7ohAkG4RA3TieqpU70RJCxn8jQ64U50PhKGa5ao7Kl1j7om9nSosHiXm3/GJuA
-         y49P37B4oWyuIubqVS1NoSQGzl4MFzPUBcDSwXvO8qB/zak9OPmWaUVfnOr7jcEJ5P+u
-         DegBtFFdKfHWtoqPjOMBMI65CDh6fBTQk/6sTSlB4Spyji8no3AYdkn3VryQWtH9U5Hy
-         SQS/DmgPN75gKjiupH9NitUkOzKZTVOObZNpB1PS6lrItnBAZ/sNBMAG3AvCmzaiZbpm
-         UfFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFwsV+oxZeffNdsqyMtv5ihA236E2319u/RyHkZSg7tLN/IgjTVLTlWr9Jop0TTT+KK+nrABg9bOK4mDk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVqjQWC4FMTJ0buoUIz6xQglb6mJPcKGyld7h6Lc0WbaxWkden
-	Aa3sOL6GcxRyrSjE/0dXkcvifVy2DG1tYUfQREzT2B19/6SPC7kU
-X-Gm-Gg: ASbGncthhAty3l7mFaCBQSOFr6eaU5YQxO8lfixmZVAHLLTJ/wbee8W9K56amat0aTl
-	3bXKln3ezESU8TX+Eb0toDuKl1k8JXMjV9QUjdmMvNlZjO2knBhT9BkSMwzCetB/v30qjXp05Eb
-	DRsID2lrjkccLhTFmni931FPAnX1oT4KY3BxGAwM8Fr4ksHfuSaQnmHzfQa8QN1rj5yKDEZAVNE
-	6EfrcY46oOoEiVaoju31O104hmySysj2Gdri7jp4o0d17OwhFm81eKI24oHgjbpeMMAIcjJ+72s
-	427/IWWBt6SghsasP4atNQZaJ76SEufQ/4cr/QURZmHJMrxj0DIpCI6zAv7cOZqpsVN4CLuz1Me
-	R4nnn3lVKsfXJ6SAlpSPgIOtHACVw1WSOCUK4khY=
-X-Google-Smtp-Source: AGHT+IFh0+T5Gd+4cRWPINK+2WBoodQXt786o46R/wK9FQFzK2WVcosDANx67GsA+xadi5LIf4OAMg==
-X-Received: by 2002:a05:6830:6990:b0:72f:ff8b:e123 with SMTP id 46e09a7af769-7308a4fece7mr2464328a34.12.1745942812618;
-        Tue, 29 Apr 2025 09:06:52 -0700 (PDT)
+        bh=XIK7+9eNcooiOnLlmPgNOLYSoGDevBz5dwgdJkp4UHk=;
+        b=nWvT7mwjvVzhi3rKlfRATA5DU0LmmKk0oO1t07qozNuZ3IWQS31ShhfCNoV+qfcFa/
+         swTCsyQVU/SQjchDiuh8fGpFsQdF5iheuxIJhKLswl6jagN/U9dH5c2kZqL+NSxJixVM
+         dfclmT6EbxGLIT9fM9bZzIgK+FSnnVVs2/9a+ca1Y6i25cU4Hq7S5I+EOu7YQ/JXE7vI
+         Pz7gHsnqiE9y4zhrSOItBRJUrrFpL35eIn25nKT8F1+RW8s2ZPzZoD5QSx7aeF/dKVJu
+         pOVpF7lBVqzgJdu4B6BV7HTgo/BPOtjIM+mU8q60J/kG3hLNxS+WaoVvdXjkTMQ8Vczt
+         rzpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpfeWzqxezPVz6cI6xYwXGxrCR3jYXEx4ALLBamOgUTLvYpwxAiWZ798aeSlmaQ1Hu9fk3vOaBFOVDPVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1Q029vMxDIfaTf/3KbdQ1Us7R1/M5Z2G9phx3bAP5tUhpG76j
+	5lJ8beAG3DOOeeDH8sS+0e0Mf4btHwqwIRYWNMgB/Hm9OJC9cZvmdVROsA==
+X-Gm-Gg: ASbGncs77+e+ich/k92JUKjdRZKhlhXL8j7aAJVgEUGhnImiUMz9fMpbqWohjZg/Z6V
+	bxtzv2GvDhJIz72xcSrKOFLb0bAu6AcAmJ/W2ci5ttgK6jyi0r9GmN+IGMx2YJG04BcRlmEqLJR
+	tqPbFu2NWpBmQWqTcyq0PoLWcnqj08r//0H/zDJn5QrfLi/0x3H1806jpkRNJDk+x53/fJbDen6
+	Jj3MWTa8gbXdRBspONMhB+iZoKxUl122vlIi9mTNUvf6ghBjU8t9TFcIWy/tpU1Q1qbqbJO883D
+	jngOMCrjnBdTb8N6mDitO3BUENxSdVH4g8NWurDsf4co9rYlQEpptt6BcvdN8+YW44oEQ94U8Qu
+	k1YWdrRXRTJO25ZaqctdfO3Ax2eEU
+X-Google-Smtp-Source: AGHT+IHcAV6dQDM6RTU2zO2HYaLm2KJ/7mWRme4niHjqcdFyojuIB3gkgu9vseuWXZzhJGIi3+DM9w==
+X-Received: by 2002:a05:6808:6b96:b0:3f8:205a:98da with SMTP id 5614622812f47-402115647d4mr1914612b6e.11.1745942840428;
+        Tue, 29 Apr 2025 09:07:20 -0700 (PDT)
 Received: from ?IPV6:2603:8080:7400:36da:dff5:4180:2562:4c1e? ([2603:8080:7400:36da:dff5:4180:2562:4c1e])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b133d1asm341487a34.37.2025.04.29.09.06.50
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60686e96d4esm285936eaf.8.2025.04.29.09.07.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 09:06:51 -0700 (PDT)
-Message-ID: <5a5b1825-2ee7-455e-b52f-edc1a138d0dd@gmail.com>
-Date: Tue, 29 Apr 2025 09:25:04 -0500
+        Tue, 29 Apr 2025 09:07:20 -0700 (PDT)
+Message-ID: <575bdc12-be65-42a9-9581-e2a31e6ce810@gmail.com>
+Date: Tue, 29 Apr 2025 09:25:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,102 +67,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] panic: Allow for dynamic custom behavior after
- panic
+Subject: Re: [PATCH v2 2/2] x86/panic: Add x86_panic_handler as default
+ post-panic behavior
 To: Sean Christopherson <seanjc@google.com>, carlos.bilbao@kernel.org
 Cc: tglx@linutronix.de, jan.glauber@gmail.com, bilbao@vt.edu,
  pmladek@suse.com, akpm@linux-foundation.org, jani.nikula@intel.com,
  linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
  takakura@valinux.co.jp, john.ogness@linutronix.de
 References: <20250428215952.1332985-1-carlos.bilbao@kernel.org>
- <20250428215952.1332985-2-carlos.bilbao@kernel.org>
- <aBDoJLyiBcSZiAHm@google.com>
+ <20250428215952.1332985-3-carlos.bilbao@kernel.org>
+ <aBDox0dlo6S7KzSI@google.com>
 Content-Language: en-US
 From: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-In-Reply-To: <aBDoJLyiBcSZiAHm@google.com>
+In-Reply-To: <aBDox0dlo6S7KzSI@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-
-Sean, thanks for getting back to me so fast!
-
-
-On 4/29/25 09:54, Sean Christopherson wrote:
+On 4/29/25 09:57, Sean Christopherson wrote:
 > On Mon, Apr 28, 2025, carlos.bilbao@kernel.org wrote:
->> diff --git a/kernel/panic.c b/kernel/panic.c
->> index a3889f38153d..2cdd83b4afb6 100644
->> --- a/kernel/panic.c
->> +++ b/kernel/panic.c
->> @@ -276,6 +276,30 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
->>  		crash_smp_send_stop();
+>> From: Carlos Bilbao <carlos.bilbao@kernel.org>
+>>
+>> Add function x86_panic_handler() as the default behavior for x86 for
+>> post-panic stage via panic_set_handling(). Instead of busy-wait loop, it
+>> will halt if there's no console to save CPU cycles.
+>>
+>> Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
+>> ---
+>>  arch/x86/kernel/setup.c | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>> index 9d2a13b37833..3bfef55e9adb 100644
+>> --- a/arch/x86/kernel/setup.c
+>> +++ b/arch/x86/kernel/setup.c
+>> @@ -16,6 +16,7 @@
+>>  #include <linux/initrd.h>
+>>  #include <linux/iscsi_ibft.h>
+>>  #include <linux/memblock.h>
+>> +#include <linux/panic.h>
+>>  #include <linux/panic_notifier.h>
+>>  #include <linux/pci.h>
+>>  #include <linux/root_dev.h>
+>> @@ -837,6 +838,15 @@ static void __init x86_report_nx(void)
+>>  	}
 >>  }
 >>  
->> +/*
->> + * This is the default function called after a kernel panic has been
->> + * handled. Higher priority alternatives can be set with function
->> + * panic_set_handling()
->> + *
->> + */
->> +static void after_panic_handling(void)
+>> +
+> Spurious newline.
+>
+>> +static void x86_panic_handler(void)
 >> +{
->> +	mdelay(PANIC_TIMER_STEP);
+>> +	if (console_trylock()) {
+> A comment here would be very helpful.  Even with the changelog saying "if there's
+> no console", as an unfamiliar reader of console code, I have zero idea why being
+> able to lock the console is an effective test for no console.
+
+
+Agree, will fix in v3.
+
+
+>
+>> +		console_unlock();
+>> +		safe_halt();
+>> +	}
 >> +}
->> +
->> +static void (*panic_halt)(void) = after_panic_handling;
-> The default implementation clearly doesn't halt, which makes this unnecessarily
-> confusing.  And if you're going to provide a default implementation, why bother
-> checking for NULL in panic()?  Just leave panic_halt NULL.
-
-
-Agreed.
-
-
->
->> +static int panic_hlt_priority;
-> Uber nit, pick one of halt or hlt.
-
-
-True, will use halt.
-
-
->> +
->> +void panic_set_handling(void (*fn)(void), int priority)
->> +{
->> +	if (priority <= panic_hlt_priority)
-> If panic_halt is NULL by default, maybe do?
->
-> 	if (panic_halt && priority <= panic_halt_priority)
->
->> +		return;
->> +
->> +	panic_hlt_priority = priority;
->> +	panic_halt = fn;
->> +}
->> +EXPORT_SYMBOL_GPL(panic_set_handling);
-> This doesn't seem like something that should be exported unless it's absolutely
-> necessary, and it shouldn't be necessary as of this series.
->
->> +
->>  /**
->>   *	panic - halt the system
->>   *	@fmt: The text string to print
->> @@ -467,6 +491,9 @@ void panic(const char *fmt, ...)
->>  	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
->>  	nbcon_atomic_flush_unsafe();
->>  
->> +	if (panic_halt)
->> +		panic_halt();
->> +
->>  	local_irq_enable();
->>  	for (i = 0; ; i += PANIC_TIMER_STEP) {
->>  		touch_softlockup_watchdog();
->> -- 
->> 2.47.1
->>
-
-Agree with all. Will fix in v3.
 
 
 Thanks,
