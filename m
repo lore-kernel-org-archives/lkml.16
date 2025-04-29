@@ -1,114 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319F5293B58;
-	Tue, 29 Apr 2025 10:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263EF1DF754;
+	Tue, 29 Apr 2025 10:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922899; cv=none; b=NtJ/iwaCJhCWpz+u3sxAzWDUp1w6XUWy6Tfe2MvHjOcJuUQRX2c7oHIKoJ/LdIgATcgqnbsAJl5fNqtyF6Wd7IrpWpCvK+HIT7TuJ4uZL34cs/9eSmBgHRPVGODDg5SNlVb/3221URioto1+ap0TlJmcLM3KCKLceqzwifh3Hjw=
+	t=1745922990; cv=none; b=VGSbf7jzQQiS0w8rWb86UEVdNHXhjv3ueP4qh5ZpmfBBqteMV2zTyhNuDBJuZfinKwr7hsSRW+hTPjuqCYYIfKVkqYZEJHdO60Sio5neSzzQ+ffczA+Mw2ZYZSZ38cVVBhhy5rUBsa+zzdnP6E8TY+la2dmw4EZ4IVHsLI9X4mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922899; c=relaxed/simple;
-	bh=5Xaiv77pPqDR0JWNZbP97RXrrtQfNbUb/NQWJxnkVrw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qbFnK3WYqgsi0Y7z83jEulIIuv1mSFpsZ6zMxWkapeuka6OqqbWc+MzaMYjU9m6OeQuLlEeWdhkikeFGgKgW3tW2eowDIHYxfr6rJad/ykZvHSxbSKYtJf7oowdQ4IzB36K5kEX4FTWeSMH+iXRchpr25R9T6kaND5ll7pEvSLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xv3f3HPN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745922990; c=relaxed/simple;
+	bh=XvlFYCGm9QRKdPWrZ+CC9szelX1V1i98J3w/eXfSAEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GI+qc1Yj/cXnXBgiBMkZO4EDJdqWCigwFj4nmJQjApMCbsJem5LphuvhbePRODo6n/6EaVhG0PblAvr8+UWixMT1Vzxc/eQxhTQkxi0iu2DVJpwaqmKTBClRmwJDh+fl7t+tj9VtsUW0ABHKCnRE55PZtSjPNnmNIASgakpTyeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4OQ+FXi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xv3f3HPN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED33C4CEE3;
-	Tue, 29 Apr 2025 10:34:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4OQ+FXi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1162C4CEE3;
+	Tue, 29 Apr 2025 10:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745922898;
-	bh=5Xaiv77pPqDR0JWNZbP97RXrrtQfNbUb/NQWJxnkVrw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xv3f3HPN22BsCFvLatg87iv2U79wZb0pZQDrvgBpyuPwsy334ZKBuqJh9I6Sks9CY
-	 F5zAQPm6AtssjmFldHZmuntmkaPBwBF+dfeKVYaOYipu5H3FjgSGYU8G8yKDFfI0BV
-	 QyrXFiDeVxJWRw2jKr8gC32ujSD6Chg2RTnpUpPynzjkinZX8x2xvX0A6DwqlGpxuf
-	 kHxYGHUHVXHF/uyx5DWuty05gXF2FloTRr2AYJH4TBLzOSnqZLblYwbntY/j3jJoGm
-	 rQxC1k9B8eR6NrppxePXzq3a40SH2ENjbQ00JI7SFHM+KXrZbobbKLLT+7h6YYwPGS
-	 uU5SD4DoZ/1OA==
-Message-ID: <4e882e59-149d-4d9e-9897-69dab2659608@kernel.org>
-Date: Tue, 29 Apr 2025 19:34:56 +0900
+	s=k20201202; t=1745922989;
+	bh=XvlFYCGm9QRKdPWrZ+CC9szelX1V1i98J3w/eXfSAEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n4OQ+FXiWgYJHXjXf8za/0AyPfbKWngj5IW0V0NEobqJ0uCQr4DKr1yRvi01nvwff
+	 2CUB91TNDneoXgFewlJNVUvgKedIBMQLFlpxzw/ICzwux1jrkynLS2td2tbPyfpn6H
+	 SUnAQM7I3UMhxy9quIAoWEuZEvu56AqFYGFXHGU+fxhkK1GmEghlks3t1A0L4dAkWI
+	 NTxfHkaRt52ZLrJ/9Oe9BxQ5Zykpu/+/U2eJttRqH43cWBNqLf1/x8eikwOk4yerQ3
+	 4hvRgcFJyz3r4iEg8IGItB9Oj+P6KKnE/I4+K6kM49xCLjkelJvJv6NlgWB1WkiRAo
+	 4OLvHoRnMNnkA==
+Date: Tue, 29 Apr 2025 12:36:24 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] uaccess: rust: add
+ UserSliceReader::strcpy_into_buf
+Message-ID: <aBCrqJe4two4I45G@pollux>
+References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
+ <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard
- drives
-To: Niklas Cassel <cassel@kernel.org>,
- Mikko Juhani Korhonen <mjkorhon@gmail.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CAAZ0mTfSFZoL_CS9s1L0JhfaoyMGJ6Up5Z9_YvU-pX05MOZ99w@mail.gmail.com>
- <aA8xCLulpVz6V8T0@ryzen>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <aA8xCLulpVz6V8T0@ryzen>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
 
-On 4/28/25 16:40, Niklas Cassel wrote:
-> On Fri, Apr 25, 2025 at 10:33:17PM +0300, Mikko Juhani Korhonen wrote:
->> Make WDC WD20EFAX-68FB5N0 hard drives work again after regression in
->> 6.9.0 when LPM was enabled, so disable it for this model.
->>
->> Signed-off-by: Mikko Korhonen <mjkorhon@gmail.com>
->> ---
->> drivers/ata/libata-core.c | 5 +++++
->> 1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
->> index 773799cfd443..5c2f26945d61 100644
->> --- a/drivers/ata/libata-core.c
->> +++ b/drivers/ata/libata-core.c
->> @@ -4239,6 +4239,11 @@ static const struct ata_dev_quirks_entry
->> __ata_dev_quirks[] = {
->>        { "WDC WD3000JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
->>        { "WDC WD3200JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
->>
->> +       /*
->> +        * This specific WD SATA-3 model has problems with LPM.
->> +        */
->> +       { "WDC WD20EFAX-68FB5N0",       NULL,   ATA_QUIRK_NOLPM },
->> +
->>        /*
->>         * This sata dom device goes on a walkabout when the ATA_LOG_DIRECTORY
->>         * log page is accessed. Ensure we never ask for this log page with
->>
->> base-commit: 14a3cc755825ef7b34c986aa2786ea815023e9c5
->> --
->> 2.47.2
+On Tue, Apr 29, 2025 at 09:02:23AM +0000, Alice Ryhl wrote:
+> This patch adds a more convenient method for reading C strings from
+> userspace. Logic is added to NUL-terminate the buffer when necessary so
+> that a &CStr can be returned.
 > 
-> Hello Mikko,
+> Note that we treat attempts to read past `self.length` as a fault, so
+> this returns EFAULT if that limit is exceeded before `buf.len()` is
+> reached.
 > 
-> I tried to apply this commit, but it fails with:
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  rust/kernel/uaccess.rs | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> Applying: ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
-> Patch failed at 0001 ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
-> error: corrupt patch at line 10
-> 
-> 
-> Please use:
-> $ git format-patch -1
-> You should then get a foo.patch.
+> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> index acb703f074a30e60d42a222dd26aed80d8bdb76a..7cec1b62bd8b816f523c8be12cb29905740789fc 100644
+> --- a/rust/kernel/uaccess.rs
+> +++ b/rust/kernel/uaccess.rs
+> @@ -293,6 +293,41 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut Vec<u8, A>, flags: Flags) -> R
+>          unsafe { buf.set_len(buf.len() + len) };
+>          Ok(())
+>      }
+> +
+> +    /// Read a NUL-terminated string from userspace and append it to `dst`.
+> +    ///
+> +    /// Fails with [`EFAULT`] if the read happens on a bad address.
+> +    pub fn strcpy_into_buf<'buf>(&mut self, buf: &'buf mut [u8]) -> Result<&'buf CStr> {
+> +        if buf.is_empty() {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        // SAFETY: The types are compatible and `strncpy_from_user` doesn't write uninitialized
+> +        // bytes to `buf`.
+> +        let mut dst = unsafe { &mut *(buf as *mut [u8] as *mut [MaybeUninit<u8>]) };
+> +
+> +        // We never read more than `self.length` bytes.
+> +        if dst.len() > self.length {
+> +            dst = &mut dst[..self.length];
+> +        }
+> +
+> +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
+> +        if len < dst.len() {
+> +            // Add one to include the NUL-terminator.
+> +            len += 1;
+> +        } else if len < buf.len() {
+> +            // We hit the `self.length` limit before `buf.len()`.
+> +            return Err(EFAULT);
 
-And please do not copy-paste that into a mailer. Use "git send-email" to send
-the patch.
+So, this one we can only ever hit if `len == dst.len()`, which means that the
+string (incl. the NULL terminator) is longer than dst. If at the same time
+`len < buf.len()`, we know that dst has been shortened because
+`buf.len() > self.length`, which means that the string spans across the
+self.length boundary.
 
-> 
-> You should then be able to do (locally):
-> $ git checkout HEAD~
-> $ git am foo.patch
-> 
-> to verify that the commit can be applied.
-> 
-> 
-> Kind regards,
-> Niklas
+That seems a bit subtle to me. Maybe we should check for `dst.len() < buf.len()`
+instead and add a comment explaining the logic a bit more in detail.
 
-
--- 
-Damien Le Moal
-Western Digital Research
+> +        } else {
+> +            // SAFETY: Due to the check at the beginning, the buffer is not empty.
+> +            unsafe { *buf.last_mut().unwrap_unchecked() = 0 };
+> +        }
+> +        self.skip(len)?;
+> +
+> +        // SAFETY: `raw_strncpy_from_user` guarantees that this range of bytes represents a
+> +        // NUL-terminated string with the only NUL byte being at the end.
+> +        Ok(unsafe { CStr::from_bytes_with_nul_unchecked(&buf[..len]) })
+> +    }
+>  }
+>  
+>  /// A writer for [`UserSlice`].
+> 
+> -- 
+> 2.49.0.901.g37484f566f-goog
+> 
