@@ -1,80 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75119132103;
-	Tue, 29 Apr 2025 21:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8768214234;
+	Tue, 29 Apr 2025 21:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745963394; cv=none; b=RgqVPY510mlaV9ELY8tGlUAkVJe1vVR3/EHT1DON5/gm9RzdWaWG9UkYtVmu+mpa7iiUEFN/9vQzuvuS5J1MiODjagHsDc6UqN9K3W2Ww5Wirq0RIXJvO0OgdlCq9SslLWEMbPw8RlR6INDSV1oOcIfiUsD4LDDUS9RAj79DsOo=
+	t=1745963559; cv=none; b=FY5LGCRvXao19URFkwUeQL27AprZUnPARB3h1r3oXycAteEmsznt3Kha0jdW4+rMtIfSHQCDmlgT90TbcAL+w49a47HtJTWjusYpdHln1ZWMCxQdwgCNJ5FTtVdlLCtGmUrfQMjtxEqe0bxOoDWMkEQFjC9FwmnmGSEES1Ht3zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745963394; c=relaxed/simple;
-	bh=UjdCZlm7WDqcusIhWqtA1R5cnw9YVjL6XEiRR7s38DE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=N3aMu0rmGHLGeFrcP+M1aZi/cG7SzRk/ONiK3cAH+SaxN7//s1wno9Kg/lFL/GEpJBmwwMT7LrQ26A07f1htpzsAL3UniljNQr34EWSBgDcOni36PAwMoufLLzGdqW0+QNFDMPzVlGU/P8uo/YBl/O1E030yduSG1qKwTji9OPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7B2W2Cx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745963559; c=relaxed/simple;
+	bh=FxQBQd6WDeShNQc4GAnsjZILLoOhNVV6GGXUuNB48TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bahsGFDavzJqBOql2Fevi712H+onZxpdR0GSPuQrRGhbeMuXgmWSWYF2zwjY/KsiF6ux8X1AIPTsUJ+JRyd0vEOZ6oTIFDU1Uz+QYW8ju3+pkmJAMIGKkQE1hw+oI7TGwnhA0X58BD3q2MuRKu9ZpjFhbTipP/BG1ZOiN3yOH3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGx2QGDJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7B2W2Cx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF52C4CEEA;
-	Tue, 29 Apr 2025 21:49:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGx2QGDJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83DDEC4CEE3;
+	Tue, 29 Apr 2025 21:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745963393;
-	bh=UjdCZlm7WDqcusIhWqtA1R5cnw9YVjL6XEiRR7s38DE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S7B2W2CxVfXVIXga/XZ/s1ih+xgEKADkxWQ/pNgSYjJasHsvyS44SQLnbh9hc+XXQ
-	 sZIMGbYibbNXdJsTXvNDUpY7FcRkH3XIhL/kQ+OsoUlcGJSmDTfBAGeM4aVpXEYaws
-	 hIE6GE+I340K1X20xw33PiR3bjam4jpjOvj/GFMv9R8vWQCMw0zzB+vVRxbzsri/5m
-	 TynzfVg0vvL4bpwr9nRu8Ue6qaq7iNQb7Ox8ufY1bmS8Rw42y7Wt0CIMCmWdn2oYCa
-	 HLwqSH36HjtLKGMMeO3qhaZE02MvyDvMmV3YDRWga7v/XL/PPTxAqQTEGu6uRJNyy3
-	 o59MpG71+cyZQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB01B3822D4E;
-	Tue, 29 Apr 2025 21:50:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1745963558;
+	bh=FxQBQd6WDeShNQc4GAnsjZILLoOhNVV6GGXUuNB48TA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hGx2QGDJwL+PvhXo17zBJDJyiRi3mjSN7SiA02EODNe8GYgDAEY7enJJj2WR0HHUb
+	 FaKIlw46EQoLPyHNXWAYCNrWh8MHT5cl37UqXpsewnAV62VMI95TplgHKtiM9cuuG3
+	 /5cL/hccPuBYPz8z5BOLhvU/W+0caqdhGGnZ7oO3eLfwNs5ZfR4RkAiOenyNOSCBCT
+	 Gab0mXBlGJIgtYRBTCRJnhdIJDMG3Ry84muksN4Wayh/CIX0YQ3ahGoWWcFpaFRgPQ
+	 4nYPyBryStCGLFGbqVztkpMt630ds4C0AUyFKf5kGf/rU0NxEfJyVzt0gnLdjGUPmA
+	 bKnnwR27lVr2A==
+Date: Tue, 29 Apr 2025 23:52:32 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v2] rust: device: allow `Device<DeviceContext>::parent()`
+Message-ID: <aBFKII5I7R2piEcA@pollux>
+References: <20250429210629.513521-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: ethernet: mtk_eth_soc: fix SER panic with 4GB+
- RAM
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174596343260.1806681.7860771179526030169.git-patchwork-notify@kernel.org>
-Date: Tue, 29 Apr 2025 21:50:32 +0000
-References: <4adc2aaeb0fb1b9cdc56bf21cf8e7fa328daa345.1745715843.git.daniel@makrotopia.org>
-In-Reply-To: <4adc2aaeb0fb1b9cdc56bf21cf8e7fa328daa345.1745715843.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: chad@monroe.io, nbd@nbd.name, bc-bocun.chen@mediatek.com,
- sean.wang@mediatek.com, lorenzo@kernel.org, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429210629.513521-1-ojeda@kernel.org>
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Sun, 27 Apr 2025 02:05:44 +0100 you wrote:
-> From: Chad Monroe <chad@monroe.io>
+On Tue, Apr 29, 2025 at 11:06:29PM +0200, Miguel Ojeda wrote:
+> When `CONFIG_AUXILIARY_BUS` is disabled, `parent()` is still dead code:
 > 
-> If the mtk_poll_rx() function detects the MTK_RESETTING flag, it will
-> jump to release_desc and refill the high word of the SDP on the 4GB RFB.
-> Subsequently, mtk_rx_clean will process an incorrect SDP, leading to a
-> panic.
+>     error: method `parent` is never used
+>       --> rust/kernel/device.rs:71:19
+>        |
+>     64 | impl<Ctx: DeviceContext> Device<Ctx> {
+>        | ------------------------------------ method in this implementation
+>     ...
+>     71 |     pub(crate) fn parent(&self) -> Option<&Self> {
+>        |                   ^^^^^^
+>        |
+>        = note: `-D dead-code` implied by `-D warnings`
+>        = help: to override `-D warnings` add `#[allow(dead_code)]`
 > 
-> [...]
+> Thus reintroduce the `expect`, but now as a conditional one. Do so as
+> `dead_code` since that is narrower.
+> 
+> An `allow` would also be possible, but Danilo wants to catch new users
+> in the future [1].
+> 
+> Link: https://lore.kernel.org/rust-for-linux/aBE8qQrpXOfru_K3@pollux/ [1]
+> Fixes: ce735e73dd59 ("rust: auxiliary: add auxiliary device / driver abstractions")
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Here is the summary with links:
-  - [net,v2] net: ethernet: mtk_eth_soc: fix SER panic with 4GB+ RAM
-    https://git.kernel.org/netdev/net/c/6e0490fc36cd
+Applied to nova-next, thanks!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+[ Adjust commit subject to "rust: device: conditionally expect
+  `dead_code` for `parent()`". - Danilo ]
