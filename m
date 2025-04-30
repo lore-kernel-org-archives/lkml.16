@@ -1,110 +1,72 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413AA224B08;
-	Wed, 30 Apr 2025 22:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2730134545
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746051808; cv=none; b=Ns9YsFiZEvGEFGX0njosJZ4jtUGE2MMFP1iEnf/QcrdtSNExFoSKP2HT40Fkm9oZah02zu6BOwVsa0HZ2UazQ0/4wPcgnKqHcSGdAKMypR9+Dlejgqa7hTteFzKvjpPw44bETNsGf7azoiLsm6L3prJ8WrZQGdQXGnPdVBqLkfQ=
+	t=1746051966; cv=none; b=heFp4XOGhkUA7TEkDCv2cz5450eCrMvWU8KSBOFVzJs7Yi42RGEEL0aGKnbSAZJuXoeXDULI1oriTLAndR0PMAwCMzy85IjPusApn6aUkENBN6a6Hr4BhfSmYHa5f/+M4AmgKUJZxjuvriSIHrXVn/wCvFYqXakdxYCKJqjSyKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746051808; c=relaxed/simple;
-	bh=VZuKXxzGldX9LzIaU6VctUQqnQ8tlMc4yK/+gYxDzoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZxvUSj2SEwh+3lzA0cHaCWb36OxIZScVzv1B3DVNgT4SFHoR3DLZdeSkLmw1dRJztQ+kPKYVqpnqYDfr5QTUvneT4F0rzAVHH+bO96L0H97xY0xQ5FjhhqUvMLDPPkop+PMRP2VnP9Sh1pwwOUqGEFrFE+1M/oMU5iiMOv58y/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBpAk7LL; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBpAk7LL"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913d129c1aso275123f8f.0;
-        Wed, 30 Apr 2025 15:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746051805; x=1746656605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rg0uI63O02c4p1iLFOA5sNNvoK/KA8q0xPwjloWtPkQ=;
-        b=cBpAk7LLEIVKo3+/2mS6/KRTi9nCm3Qx/6q3VLs78tUy+v72riDtmkpuknvS8JVNpT
-         ccK1qGwBx9r+VHUqfkFjHDgwBpRTYavR4Y1VMgba2KWsiwRvHNjJwlGo5Kgs8nwIS6md
-         XyZTbfzzOFLEbrU4GXtbOl9Uf5HAeVE36T+RJJTB7aoeMcrPNFd0DudAbybpueuIiPzX
-         F/X7MAz8o/E+1ERixz3rvEq3O09Pc2bH18AKu/yb5oZ6s4qb9ixlzWQ0gIlA6193O1dj
-         r2/cgHjAPXPOWWGp6WSGbcfvsyTmvi0A25gv28l/eSIApm0FnShOZA1d+PTzUw5ficSa
-         C3lg==
+	s=arc-20240116; t=1746051966; c=relaxed/simple;
+	bh=IfhiXlIIJ5GpNh+qHlYkYj5F42Ux7gnIgA8XzIgqmos=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Y5Zcv/mXALu7PRqhecqX6+l/NYBGCCMg+omIO9FwiSq3JPWQGPyp+WzYvXfg6Ais2nfz6cTQZCML/tDCkzrOGghOz8OoxUd4DF6uRCSVOeyhrW3XkjTfBYVdmx7N/zT7AWQfjT87TKV8H4Au1ZKlnc9+hxAtNBNloEQ/J+dDgBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d90ba11afcso4944935ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:26:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746051805; x=1746656605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rg0uI63O02c4p1iLFOA5sNNvoK/KA8q0xPwjloWtPkQ=;
-        b=W12TUoYnfnD3IMArSEQu2g6yinP5yJtseZY/2wU7PRXR7b0Z0y4Uwz1U9R+Ww5Mbgu
-         3HRe9lFSasgfhnesPMZ/9fn62xP+jqpNpB62Y1ytyHCVjMm7Bv0xwTsO/iWxxA4j1Diu
-         VRMJde6Vr5y06t5NX9LpT9KpDA1qWwxgvFeZ7Bn14PnOFtncWe5PmoyzFbP6u5scsO66
-         kwURQ23N/JzbyHkDAXOc3s3IKFRGMjZ32mutzD0SsMdKVEoNFXtU4v5ZkXkA8cGwY5jC
-         F/Oyct6hVh/Rk9ILgVIRqXRTccbW7HMD4kNHiNQHOSjL6uwvOxNBCQ0lzYFiHIhquBD1
-         P5sw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhRwnQ/nwF2+NDHf/RaGdz4mpszv2G6/4xQqGewIvJYzk+dTaWF9e97GygKnijJELiPyI=@vger.kernel.org, AJvYcCVt/a3Y6fjyQWuu4xNsp9AbIAkJtL6gsbN6NseLiPteL0bm74AQB61/fmhoIEhRwGnMOoKV1JEpWj3MG3bO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC6xxsgmFnKAmTwgkhoFJRjuPRZ6zJIpVNn40V8n/Unmd1H8Zt
-	OTQFRIMbKXdeFUvqK9dvJkA1Xl2jo6FNKJepb8BDvlexyu+DyCo3ZUevpyukz/CZAgV37abrH8T
-	nWH390/RKh4oAutaRW7z/wUcnL6g=
-X-Gm-Gg: ASbGncsGfYOiSOnXD5mfe80Bz0UDOdl8E000EWLxRBsNklDT4PIC7d9tPC87UL0gVo4
-	K8fMCk7CPZtmf4y3r0464TAZ2OZqh/AEs978L6jMxCqxuWS6ziUfhS05KBB71Au3mfgpo2e3v2r
-	A9Oh4dfJkOLkk4MJn78CyCghs+rX6OibJjthyNYw==
-X-Google-Smtp-Source: AGHT+IGG+ERnGBJDsqMmUKI+z3+e6TKmbtoa8e1pOeIPXcVWLGApDN892M/K5ZLlVJHpeA4YTuSuAAp910s9QJ1uPUE=
-X-Received: by 2002:a5d:5141:0:b0:39c:30f7:b6ad with SMTP id
- ffacd0b85a97d-3a0941d0e2amr73815f8f.18.1746051805238; Wed, 30 Apr 2025
- 15:23:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746051964; x=1746656764;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O//HsoEYqnOi9gZqa+zVd+M7p5dt3lnMJTyaQ6oGy/U=;
+        b=pD/fqLlTcNVNZh/HtTT32v03Mqkz6MSPMrj7fjXN4dzDDfBnVBuY55Ee3WV6a+9gsD
+         rP8Xx98KLKu6JLnAT3kECGExGRNANb+oANquPdjk+dpOugmb7pOc5PA3ZuZ+5i7Gp9kk
+         DZaBdv53sCcNJPkdA0aSKz7bRK8/N0EQ6vHNtUgjcXyVTDABE8MJ/239ipoWMbMQx+jr
+         JHU5M9uM1Ag9O+dT8Q/94xnlY72e2DCF4lKnz3mDdWC4at+qsV2aSygxBFShlMD+qs1/
+         QBV2m6vJ/MWclGkTK7WB90X4S/pvnpEVTRbstv6/Bb8m6iiYD7+LRFf6ngG3QBciRxNz
+         pw/g==
+X-Forwarded-Encrypted: i=1; AJvYcCX1R6YvIOdmb5+giF95gx+YAi7IxHuW7LOmBiQTetd8u7KK1Tm8q3NywNoBnDTKRtOA9mAF6n9N5jUUISk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyCYu0PHqCZIjDqh9/J2DjGrRXCnQ/MsuulVJgDmIfOoiT5c5r
+	QppeI8n5It2twpLTaviX27voWkpKwZRvjoCx8rMMMIJkHHUSvHF7LMwMykNZCC+n8eXVrMqi+U4
+	jIi0bmHfNwqXha15ghtnC2MkXVZYZxUzFSnZQeukKFJ1nw3SBmM+SH7Y=
+X-Google-Smtp-Source: AGHT+IE7HnxzczIysrs7ORVMk/CyNb8ONVV8GX6K8JL0LVHOAbKFN8w4G6Kz4WfLXV4QThJEcRkkGWDvMmCKS1j8z6xah9buVNGW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430164608.3790552-1-chen.dylane@linux.dev>
- <20250430164608.3790552-3-chen.dylane@linux.dev> <4cabeaa5-0a6f-4be0-89c8-b7d0552b0dd0@oracle.com>
-In-Reply-To: <4cabeaa5-0a6f-4be0-89c8-b7d0552b0dd0@oracle.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 30 Apr 2025 15:23:13 -0700
-X-Gm-Features: ATxdqUGMrbdUTVhckpjhHQmx8C1KMqLLH-63CvU0GOSOJBqE-qFUAuM0Llfyoxk
-Message-ID: <CAADnVQKPLH7q2KcJM_Nkgc1z=OZmOPZes-0c8A-5gty1xEOKzA@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 2/2] bpf: Get fentry func addr from user when
- BTF info invalid
-To: Alan Maguire <alan.maguire@oracle.com>
-Cc: Tao Chen <chen.dylane@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6e02:190e:b0:3d1:97dc:2f93 with SMTP id
+ e9e14a558f8ab-3d9703b263fmr3615575ab.20.1746051964284; Wed, 30 Apr 2025
+ 15:26:04 -0700 (PDT)
+Date: Wed, 30 Apr 2025 15:26:04 -0700
+In-Reply-To: <20250501.014805.2174568059164798902.konishi.ryusuke@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6812a37c.050a0220.3a872c.000b.GAE@google.com>
+Subject: Re: [syzbot] [nilfs?] possible deadlock in nilfs_get_block
+From: syzbot <syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com>
+To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 10:57=E2=80=AFAM Alan Maguire <alan.maguire@oracle.=
-com> wrote:
-> > +
-> > +                     if (!addr && (prog->expected_attach_type =3D=3D B=
-PF_TRACE_FENTRY ||
-> > +                                     prog->expected_attach_type =3D=3D=
- BPF_TRACE_FEXIT)) {
-> > +                             fname =3D kallsyms_lookup((unsigned long)=
-prog->aux->fentry_func,
-> > +                                                     NULL, NULL, NULL,=
- trace_symbol);
-> > +                             if (fname)
-> > +                                     addr =3D (long)prog->aux->fentry_=
-func;
->
->
-> We should do some validation that the fname we get back matches the BTF
-> func name prefix (fname "foo.isra.0" matches "foo") I think?
+Hello,
 
-I don't think that will be enough.
-User space should not be able to pass a random kernel address
-and convince the kernel that it matches a particular btf_id.
-As discussed in the other thread matching based on name is
-breaking apart.
-pahole does all the safety check to make sure name/addr/btf_id
-are consistent.
-We shouldn't be adding workarounds like this because
-pahole/btf/kernel build is not smart enough.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-pw-bot: cr
+Reported-by: syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com
+Tested-by: syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         7a13c14e Merge tag 'for-6.15-rc4-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1073502f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dab654a85b8f48fe
+dashboard link: https://syzkaller.appspot.com/bug?extid=f30591e72bfc24d4715b
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1652af74580000
+
+Note: testing is done by a robot and is best-effort only.
