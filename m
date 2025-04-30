@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C9D22C356;
-	Wed, 30 Apr 2025 22:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49611227E9F;
+	Wed, 30 Apr 2025 22:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053515; cv=none; b=uYLeyBNz+KHMAR2lCVb1zrMS/w0XoS3743u00uFR1oCawnm2fhRiSZ0d+fjnd7SqDRbpdkwHdS8IzkW4Q0ufjzb9W1BdYeycCWfhbjYkYcd1e8QZN7dw2QG12NUviyLf77Bx9G3y18nu/GVd5Z+ngUnj3iAfQymx1IOnobCM8aE=
+	t=1746053517; cv=none; b=UMW/oqqVQKQATKrv4UBrohfj7Upbw0EBw8mEK5Pw3pk1gcbeUXspLTf/FmJHCl7IDRDXSXkvunXP+dcLunTyvmr09AUprzcL+RF/ZcYMsEhSF2nnlzi/dN06j01BLKhk9a6yI8nEZvOSBItHQ7pM2ljSRiUz9Ga9VnXbfgD9AA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053515; c=relaxed/simple;
-	bh=UM9tECXXlOEx4/fE0WtX2yt561V2boOHKx8HttqBlCc=;
+	s=arc-20240116; t=1746053517; c=relaxed/simple;
+	bh=NBtv0k8oRQ8U6l29xbUZsVIDfzTUsI+aeFFrJPTPpbs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RIiFfhypfUM7nVBcnB7qzGca7JlAPI7pVkBI5VhDt5XS8f7HIu/be09wqYZ7ZOw4t/MgApG1uhAVNMIi38oqkkFV8LCgbigqb/u0cpDXMT0w29H7yuOErqKzpfnI8ryhGsRv3qMmxioLvu7k6wWpWzT92h8TzOTVhhyKYbuJ/lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNYZkTr0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=r5l11pwXR42nEDM37R3PCVkRV82/8WJjEh8WPProR+o57SUaJK7BTwznOWWiUUl9CwfMC3fOHirXsSoT24wR09eFVnGQgw5bxdIUQV6eZEF/hfsLlGpFzgF47rrA0qWUXyj3VXlcUFUai8FGYRgpDsLLgTucBNgAhykZLmcYFnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7HM7O2d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNYZkTr0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF2BC4CEE7;
-	Wed, 30 Apr 2025 22:51:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7HM7O2d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E51C4CEED;
+	Wed, 30 Apr 2025 22:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746053514;
-	bh=UM9tECXXlOEx4/fE0WtX2yt561V2boOHKx8HttqBlCc=;
+	s=k20201202; t=1746053515;
+	bh=NBtv0k8oRQ8U6l29xbUZsVIDfzTUsI+aeFFrJPTPpbs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KNYZkTr0f91ihxdkqoegutPC90oJb6FeUpD/RdqJUDbm3ysW8viEhw/bfWsizcKcv
-	 /7GHmx7fpPEaMFhV86ASoBW2BL0ed+qkgbKd06N1gXP7ZZowsYcGy9ZH5TFGwxsyu/
-	 8bcTI7xff6WpkehU2+8rd0GIlzhFsvTB/Th1Lu8ckIHxAyvdCvqMiS2j1db3btHXmb
-	 NSJjGceiGLEa2BckBQB1XntoDcBLviz1O7oY0pltlLwMEEv7cXez/J6UQ+nZvAzl58
-	 Pan+lbQ5Uyd1bLFqoNFzQvJgmGYaBIMYJHiz97dRsBcV+t47dhPlmvUjzTby6q+GVe
-	 3kK+s80YrVWrA==
+	b=R7HM7O2dETH+Ryo2lI6C4M/fZxMGcf28lvTPbEt1vwNYKJ1pgPUH1V7XkkIbgHKHb
+	 E7tFSMXZA6qjX6EwUD5nMJaCD7/OK2whkCGHqCpqpymIiavQC6ZTJirQwWhlVS4o/o
+	 4+Gs4zvzPtQWS7+ELoZZsx8oWgv/lKFxJ4sJJ1ANP/HW2qP87P4jXtxjcCQsNWMxKJ
+	 vWYO/oAclS/M6SDvw7QPIjAJxr45OQMuiq6zjs7BU7kqYVAtjBA93WcAd10uCheVyn
+	 QpwLlbTlvkuoOeB8QZglK/XoUxIuwB4IdzKj+GgjJ2tj3pXmw/1uKxfO7b2BVHoWOh
+	 8AVsOWgWr4pjw==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Kees Cook <kees@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20250426062511.work.859-kees@kernel.org>
-References: <20250426062511.work.859-kees@kernel.org>
-Subject: Re: [PATCH] ASoC: SOF: ipc4-pcm: Adjust pipeline_list->pipelines
- allocation type
-Message-Id: <174605351049.3987837.5254876941350949279.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 07:51:50 +0900
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com, kernel test robot <lkp@intel.com>
+In-Reply-To: <20250428090803.97909-1-rf@opensource.cirrus.com>
+References: <20250428090803.97909-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH] ASoC: wm_adsp: Don't use no_free_ptr() when passing to
+ PTR_ERR()
+Message-Id: <174605351366.3987837.5374259118304157069.b4-ty@kernel.org>
+Date: Thu, 01 May 2025 07:51:53 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,16 +46,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 25 Apr 2025 23:25:12 -0700, Kees Cook wrote:
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
+On Mon, 28 Apr 2025 10:08:03 +0100, Richard Fitzgerald wrote:
+> It's no longer necessary to no_free_ptr() an auto-freed pointer before
+> passing it to PTR_ERR(). This was fixed by commit
+> cd7eb8f83fcf ("mm/slab: make __free(kfree) accept error pointers").
 > 
-> The assigned type is "struct snd_sof_pipeline **", but the returned type
-> will be "struct snd_sof_widget **". These are the same size allocation
-> (pointer size) but the types don't match. Adjust the allocation type to
-> match the assignment.
+> Removing the no_free_ptr() avoids the spurious warning
+> "inconsistent IS_ERR and PTR_ERR".
 > 
 > [...]
 
@@ -72,8 +62,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: SOF: ipc4-pcm: Adjust pipeline_list->pipelines allocation type
-      commit: 00a371adbbfb46db561db85a9d7b53b2363880a1
+[1/1] ASoC: wm_adsp: Don't use no_free_ptr() when passing to PTR_ERR()
+      commit: 94602d84163c127ec2374fba0fcb6587a07785ce
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
