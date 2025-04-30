@@ -1,108 +1,184 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DB3190676;
-	Wed, 30 Apr 2025 18:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFC7190676;
+	Wed, 30 Apr 2025 18:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037417; cv=none; b=VzP8Cc9W3ih8KMiS0IKYjqD5QDC3j+m8rL2e8nqsf8gmmUQz6gH4DnFPwiGujEXsHD4HoymMXhvwbJYLN24SwLvDttxw0GukRNgphgXvwlfuuqYXvD1AbNrC+BuGUxRecdbmGbeaho+EymS03SH+a5GxTCcpwDyjYq/q9IZ7t+s=
+	t=1746037517; cv=none; b=DaQwifFsiH8UGcGNSLgSfEyexoYHdyqVw0hzTUR9HKjJG+MnBSskqQP/ltvtdijRQ/KXXyw5I+8x7EvIoRXxxsDcflglMkMxgkwgQfr284ute1HP3JFmeRxN3Ct1WkyL8WZlFq7Qyc+NWEb/WK/MhbZTC8nhZ2Et1Dz6z4I8XDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037417; c=relaxed/simple;
-	bh=BGE5P8pILZj++lhgPLZi13PAymNSTla+4LMFaC02wP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fIjvbC0wXEgZIkNtk8DxyxR+ji4YpLA6ERWHfGXLv58QgVgiO4UQLvfm9t4nHGuXthR6og4wBx5a5t51/NWv9y2R7semuSA61CDMuN4O34xOBQbidgjoSJaF2zj8q/9Y9b1/sDlYE93FIHi+nKKuK3zusJG87Uif/rnocvQHurM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTzQSgTo; arc=none smtp.client-ip=209.85.219.45
+	s=arc-20240116; t=1746037517; c=relaxed/simple;
+	bh=dntHkSUODIQLMMzWfdC0ZCYDVYeurZEYNyJyydXvyRw=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=sl14xvP/oRxtbLJUmNlfehRO6MJuxkQmySD4v5k9SPm+aJfhj8TBM7gkgRUnbPmb46YVxwAzoRBCz8hiYhA2ZaiIxTb28QTf8Ixo661vPKQxH5XQZJ5d3pGzgTsfY9B5mI54c1IymoWObHzYu+FwagntLA668YRPRiNNzY+Y92Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gTn+/oCN; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTzQSgTo"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8ffa00555so2192986d6.0;
-        Wed, 30 Apr 2025 11:23:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTn+/oCN"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c53b9d66fdso14620285a.3;
+        Wed, 30 Apr 2025 11:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746037415; x=1746642215; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ni9fsiOSDdijzrkYLIlegIUtj7F8njM6gU+RRiJK3jo=;
-        b=OTzQSgTodHHI26L/6HNm/nLVClPezAT3Dmtz4/J1zYf8pfwgsqfGkQFKzvcss5O6hW
-         WVVPgsVcfJr10eOUdKQPquMtuf907TUsr0ukN49x33jDt1hKyTG9J8WlBXSPm5dUqeD7
-         zc+rCrOP/lElxkfMurn982Fy7zy9as6JsPVdWXsWTtyL/xq5qH0KhUQQvWkYynFIdJcn
-         mW4K9OAlTS2p6jmcVLi9me43eKHfnLZOrcjwOGa2CaH39UENo+H/PQ00mzdd9avyAj4d
-         NMdV1rxSYUOvV5jKTVfHi/DBY0RT/mOpeR8ZQWRkNCtrX5llf+KA4hXUoKHikNqKHXKd
-         Skvw==
+        d=gmail.com; s=20230601; t=1746037515; x=1746642315; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PuU9dJ/Di5OmDAwUgi7sluax8cJiERF6LgVjZOwJylI=;
+        b=gTn+/oCNzjLr+nmBrguxMBuw6h7efJyEJ2deGl5IWBqGJJsAr8DpROa7XZn1ray+mG
+         x7Uw9VCvbwm2bavdF95FXr+VXElejFG7j2YsYqjrV5v2t/rPD0jw/stA1ElfFA3NgK6l
+         fPdyxpu67kt5XtNODVMTRu1jqownHqTbJOlTTsQ76NLsr26/ymg03mq5R7hLA+Am3fx5
+         xMeS3HOTax9wOrxJxwZrGqorYlFhinEOG95qr9RRBHee3+1pPvDD+3HVKLX+2qcWeBm6
+         zs6ze/AcTEruusdjTwiv9qepMDDZ/pZjwthpEIr751z0STS8bYsKC3KIH9aCl30Zo+Zp
+         2isQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746037415; x=1746642215;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ni9fsiOSDdijzrkYLIlegIUtj7F8njM6gU+RRiJK3jo=;
-        b=RbEYRnxcvRKpN9nt68pZM9NWEE0CjLEO6pHpF5CqTZxAqNVP9T+FRrnbfIgLjxga3b
-         Ei72vpC3zfRKdF39zrIbAs9HWmVUJQBNflC7ZSvmlD/sSOX2rqHlyTXgpDsPzaWvFs7E
-         fMxfIilNFJ5ebDcUB2s7EKvlo9yeZZjlkQoXRwGzCFPiAMcVxRt/ux9+5wZNqTnvJluB
-         UwHjc/vzJHFrIXX3BZQz7emAO1wLeOpOdb67QFoDkpDYhKqE312vN4rjGkLwxy5cC6gU
-         og90vNKJjlvpfu/hXABrAAlLWoJbBmhvH8wUYH+RtzUaVmweGnh0qW31aBJbQ+3Rwt0s
-         GpOg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0I/Vj4fw1OKHsIa4vZiK/Hkp5jz0BHHVcX1LfWHopczAi24gX8RRl5SoDQ4O6dsFhxjUdC3pBwvA=@vger.kernel.org, AJvYcCWhxJEwri6llDDtPjPbCX9e7jp7/1VtryEE8EH7OSgz3S0nNhvUrY0Cqp4UhPYh06yX7coxGvnSvKAcSGO4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIF8uU0frn1i5M1j0Ai1RuT/mM8M95BSaOB7VctnscnmR0CZzu
-	HOaghW4BfpltfQ6J+k+B+e0xPcsIK915jHtVBUvqE7GjT4ZYGXis
-X-Gm-Gg: ASbGnctTpBjFklfpif7nNVnptcdY1IVCirHFwULhcYnS/sREe90X5pIY1peJYe//xLr
-	DTnJhlXqeta9e5iEnv6MkxFbZObVxsDOga9mb+dr5MuIIEIngqvh/azsxGZ4mvflbEQgdOvUMN0
-	Vu7hK781BcU4fa2jaFJOdg5Nwi42jOLlvO/Voqo0LjuKxsUQQGD+qvU+iWDFbRNCIWfSVhlUD5p
-	c0/M9QIz+78bkynnsHx1WzPpplEAQuHDhUG8t6KOZDxpD35POBWHCTbDOABxAyYJ0LbMM7UB+Sg
-	NWt5aZTYWeuHJOpDtK88i7RpASoAIJ1t8YV9MjXY+jrnKwN42DgLktpCbvogfc8uBxq/CcTb
-X-Google-Smtp-Source: AGHT+IG4uyiUy+B7giYkxeAY6IdTUsN4jxLf9aft69KrEkNVHODs+hWMZKgECu+DhpxrxYjvD4bDAA==
-X-Received: by 2002:a05:6214:2388:b0:6ea:d6e1:f3f8 with SMTP id 6a1803df08f44-6f4fe1333ecmr59467246d6.45.1746037415123;
-        Wed, 30 Apr 2025 11:23:35 -0700 (PDT)
-Received: from c65201v1.fyre.ibm.com ([129.41.87.7])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe88108esm11084396d6.122.2025.04.30.11.23.33
+        d=1e100.net; s=20230601; t=1746037515; x=1746642315;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PuU9dJ/Di5OmDAwUgi7sluax8cJiERF6LgVjZOwJylI=;
+        b=NBkZw6/MyFXoZC9INkCDeBCvzQ8htfwia64+KyN40lbYUYNAzvTBmDayBoqc/9SJ7p
+         bDpGP5HjM75adXAf75iyeb9f2X36NXgjGXPI4bbQ1CBcNCSD7SeXxd+z5j5nSh7Q/jc8
+         RC1bRqSQSjGv1bLQYgHlaBkmKN8fTXCyuFd46lyWqgPwxH6LMDwqPhso7Wmz/SDeDorF
+         warKLDp1cDNjCH62Uz28fv96zcHD8XgKCMWuVwHotBgc8Hkuyh5+8y97vWof7plI4x0a
+         Mqr2Ro7fe8y9N8JEN0Y/HKPs0iwA6dO7WU83DCmgIRk9Hwy1Ydf59n3eUVY417YWOxG2
+         YqrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJJ6KocnC41WZLBZni2JTjKDBrSXilz7CaihIzWWyh5auwGuRin77PUuDeCjDuYLaXtXMVcyw6@vger.kernel.org, AJvYcCVT+AampspA74ie5TGk9xJiIly60u1iIbCEqRXbKEWustDm7GJWYUMn6fg0bRBDDqIfOjA=@vger.kernel.org, AJvYcCVus+kmXsSHIOp2rlFIM+7Za3DLYadnAUV/H/XCEV3EDP8FvjJ0EZTaxtg6n+d0YDCILPMcwxEn5HuWXax9@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMo+MAdHUeyUbYPcNYEpV6A1nZfTi5WpvB1RKEfQTBZs5Gf65L
+	/X/oUhPMLBPz46+3BdAkgbtOzPFTJbRcHFxXrPcYtZYMgcrsYfjN
+X-Gm-Gg: ASbGnctXVYX2sQWJuMF51OQzh047BNAI+DcfEsEmgHsQ7yViNmt3ghOXGjCyTWmLuPU
+	g9O1eTo3qbQlGSE58D2sXQOpkLA02OU0ykgCbbogYRK5V2k5RK4Vw0NIYNPuyM4Z298mi4Gu0I5
+	auMP8iIEIbADACcyC0+akkIBHO1esnZisyxFTzOyOKVunnyw8gbigm2knxpZo90IFUuo4TeBoDQ
+	vTRxWH24FD/Xk8u3ZZ99qBAiWilAqKaEe0aWoCXobnKAM8TSq3jCwL49rMp0Ol0mqLjZxYo/nqR
+	CWQ4aVluLxPtCPTgtUCYHeniqV0zEoTP+Oe801CAvCMrjEJciRcr/eAs2fIonfywpIY9nsLpRno
+	zeX3QXXAeX5c54yw4pddLigt8hOdzkYA=
+X-Google-Smtp-Source: AGHT+IEdeBQS0rsgRgLgNnw2i5fBYy2oC7eKu5y/CBRhlsW9hDSYvHIxDh4yZVpXcWMS8fpuh7OTog==
+X-Received: by 2002:a05:620a:17a7:b0:7c5:57b1:1fd1 with SMTP id af79cd13be357-7cac7ea001dmr572603585a.47.1746037514950;
+        Wed, 30 Apr 2025 11:25:14 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c958e7bdfesm887579985a.75.2025.04.30.11.25.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:23:34 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: jikos@kernel.org,
-	jic23@kernel.org,
-	srinivas.pandruvada@linux.intel.com,
-	bentiss@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH] HID: sensor-hub: Fix typo and improve documentation for sensor_hub_remove_callback()
-Date: Wed, 30 Apr 2025 11:23:00 -0700
-Message-ID: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.43.5
+        Wed, 30 Apr 2025 11:25:14 -0700 (PDT)
+Date: Wed, 30 Apr 2025 14:25:13 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jon Kohler <jon@nutanix.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Simon Horman <horms@kernel.org>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org
+Cc: Jon Kohler <jon@nutanix.com>
+Message-ID: <68126b09c77f7_3080df29453@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250430182921.1704021-1-jon@nutanix.com>
+References: <20250430182921.1704021-1-jon@nutanix.com>
+Subject: Re: [PATCH net-next] xdp: add xdp_skb_reserve_put helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Fixed a typo in "registered" and improved grammar for better readability
-and consistency with kernel-doc standards. No functional changes.
+Jon Kohler wrote:
+> Add helper for calling skb_{put|reserve} to reduce repetitive pattern
+> across various drivers.
+> 
+> Plumb into tap and tun to start.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> ---
+>  drivers/net/tap.c | 3 +--
+>  drivers/net/tun.c | 3 +--
+>  include/net/xdp.h | 8 ++++++++
+>  net/core/xdp.c    | 3 +--
+>  4 files changed, 11 insertions(+), 6 deletions(-)
 
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
----
- include/linux/hid-sensor-hub.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Subjective, but I prefer the existing code. I understand what
+skb_reserve and skb_put do. While xdp_skb_reserve_put adds a layer of
+indirection that I'd have to follow.
 
-diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
-index c27329e2a5ad..5d2ac79429d4 100644
---- a/include/linux/hid-sensor-hub.h
-+++ b/include/linux/hid-sensor-hub.h
-@@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
- /**
- * sensor_hub_remove_callback() - Remove client callbacks
- * @hsdev:	Hub device instance.
--* @usage_id:	Usage id of the client (E.g. 0x200076 for Gyro).
-+* @usage_id:	Usage id of the client (e.g. 0x200076 for Gyro).
- *
--* If there is a callback registred, this call will remove that
--* callbacks, so that it will stop data and event notifications.
-+* Removes a previously registered callback for the given usage ID.
-+* Once removed, the client will no longer receive data or event
-+* notifications.
- */
- int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
- 			u32 usage_id);
--- 
-2.43.5
+Sometimes deduplication makes sense, sometimes the indirection adds
+more mental load than it's worth. In this case the code savings are
+small. As said, subjective. Happy to hear other opinions.
+
+> 
+> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
+> index d4ece538f1b2..54ce492da5e9 100644
+> --- a/drivers/net/tap.c
+> +++ b/drivers/net/tap.c
+> @@ -1062,8 +1062,7 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
+>  		goto err;
+>  	}
+>  
+> -	skb_reserve(skb, xdp->data - xdp->data_hard_start);
+> -	skb_put(skb, xdp->data_end - xdp->data);
+> +	xdp_skb_reserve_put(xdp, skb);
+>  
+>  	skb_set_network_header(skb, ETH_HLEN);
+>  	skb_reset_mac_header(skb);
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index 7babd1e9a378..30701ad5c27d 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -2415,8 +2415,7 @@ static int tun_xdp_one(struct tun_struct *tun,
+>  		goto out;
+>  	}
+>  
+> -	skb_reserve(skb, xdp->data - xdp->data_hard_start);
+> -	skb_put(skb, xdp->data_end - xdp->data);
+> +	xdp_skb_reserve_put(xdp, skb);
+>  
+>  	/* The externally provided xdp_buff may have no metadata support, which
+>  	 * is marked by xdp->data_meta being xdp->data + 1. This will lead to a
+> diff --git a/include/net/xdp.h b/include/net/xdp.h
+> index 48efacbaa35d..0e7414472464 100644
+> --- a/include/net/xdp.h
+> +++ b/include/net/xdp.h
+> @@ -345,6 +345,14 @@ struct sk_buff *xdp_build_skb_from_frame(struct xdp_frame *xdpf,
+>  					 struct net_device *dev);
+>  struct xdp_frame *xdpf_clone(struct xdp_frame *xdpf);
+>  
+> +static __always_inline
+> +void xdp_skb_reserve_put(const struct xdp_buff *xdp,
+> +			 struct sk_buff *skb)
+> +{
+> +	skb_reserve(skb, xdp->data - xdp->data_hard_start);
+> +	__skb_put(skb, xdp->data_end - xdp->data);
+> +}
+> +
+>  static inline
+>  void xdp_convert_frame_to_buff(const struct xdp_frame *frame,
+>  			       struct xdp_buff *xdp)
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index f86eedad586a..1fca2aa1d1fe 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -646,8 +646,7 @@ struct sk_buff *xdp_build_skb_from_buff(const struct xdp_buff *xdp)
+>  	if (unlikely(!skb))
+>  		return NULL;
+>  
+> -	skb_reserve(skb, xdp->data - xdp->data_hard_start);
+> -	__skb_put(skb, xdp->data_end - xdp->data);
+> +	xdp_skb_reserve_put(xdp, skb);
+>  
+>  	metalen = xdp->data - xdp->data_meta;
+>  	if (metalen > 0)
+> -- 
+> 2.43.0
+> 
+
 
