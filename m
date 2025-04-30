@@ -1,307 +1,296 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591D91411DE;
-	Wed, 30 Apr 2025 14:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9961411DE
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024608; cv=none; b=dfGm5a3oIzl7gGxkLk5pTnUH/OaJzc6R3Xm1ZW8LtxqAUT12JFXadGA5MZ99l31ecuENfJ4KxEpCsIuhR4A/1r1XxY/r/vePtImWbk827LeyZt51JkuDYuWtuYKZRj7qaIPARnJhgF21zDXWGW6lH0cMpf0oDUhUAuGajAMZBCs=
+	t=1746024641; cv=none; b=szPvc9R6T3FbdFhb17yKRLE0zMGuwEVzIQW+fwzsqr651FlkHmRlwSobiFWffiOpgpXsaU8zK3U5A9WNjW67KzxdJcV9q8dl4+g2nZpO/BGXsDcHMliE6H0enhH/gQtYi69OuRRjBA2nC4JjdJrFOWf6rSjNmMvmCoAnPQoFwM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024608; c=relaxed/simple;
-	bh=oRFFAwmreUKAQl4GaubuSrpvesoLAbJht/CpW/vi3Ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MgwWVPsgsyEuztAZffUd98rYCsy/3MFdWpaMvcoEvI01MDrolwdpbispNCy5I2iipvgkFKLuy3S4az/n2mxslk7OCD6sSWYptNt4GXzbp3CInlaxtm2mRKv3WH0g91/0TtGyoKul7CYwRwRTXkHACqcw1mpSFVe0vNGir/wH3Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i29vCD8b; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746024641; c=relaxed/simple;
+	bh=HA+n7/8LDVCvc9VQYM3DYCHpaqrNbKq/HGoGDuIeW1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cpbQUYog8A0ApsuN5GnufATvCxcKX5s4i2WTprMUYTKv0lsfyKPFHZLa2YaV/gXUn1YcRm90+9pQOqu1+1FRwX4zXEMLp3FMYht8wDoZYsT5kZSexj/7sqMadC54IqflnWbdyWAkHVRzb5oIGckIHnv+IuXHHZruIqNKvYDsg04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rp9D+lzQ; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i29vCD8b"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c54f67db99so134739885a.1;
-        Wed, 30 Apr 2025 07:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746024605; x=1746629405; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ivJGbPbRQxJmb19A5eHhq6GxMvN6uMGeDQRL4Erv6gQ=;
-        b=i29vCD8bpU2NxUFgpNpt4RVkaW1Hdql4nbvzV5ftwdRvI3D/YtzZON3T6cnef+tL1p
-         4aWnuU4Zxl9W1H7bvtvLQyr0zWhIx3WybYcsIe037IiHzpOB7jHG/Y+wOJbUjf75S5/W
-         QNYwcyCrIH+OV1YdRhehiQGoCL0E+qTuSnDZzHRjA9BmqKMgeEi2QPQCk4zUiySOFXUa
-         JZwxhx5L8BZPnluiu62pUhK7lBZJBA+0V5Q3dvLCVa3Lv6KjU2dQDFG3QXa+3q+MdDzI
-         VkHQlYmeE1rytpUq3kUJuc0JqHsIJr299b5RjbzH9Tt7BpYO+W3U4Zd/6mnIpmQ/Tkjz
-         h0+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746024605; x=1746629405;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ivJGbPbRQxJmb19A5eHhq6GxMvN6uMGeDQRL4Erv6gQ=;
-        b=H0EXhh/zFYS4cjZwEvfamu8ii6GrHwQw9OcCWOfaf2aCId1guFLr5X5tZ5Gmgid9vi
-         BonNnuqhG52zxLF/A73pCQ9+I1+FZNFk5CbmV4pkYYflzHqrtnpdx34Rl6xlI2IQwL4k
-         Xil6scWNzZWVUZkVY2dIJrWjGtHvlNM3fPD2vaQbn+C9q/G9xJ4CwKV9+SNOR1HlWKve
-         SUcT2K2Ri3rfIxt7ctuS/SCgs9c+hSFN1mT/07eQgZDIULygZ2zR//xoq3W2ing20+7b
-         Ikrezc0gbW6TdsyYliTChq+BfyZvSQNF4bSiSBOwq4hoWyeavUKV/XQbaVI4FQOxLn11
-         9qsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGldPuNHK1T8aIwStwd78WKoYD+IFyYLXKBoJ7ODDkXCvvG9EZ6hkRjN0SxLg7h5/10mMRJuqBmloauqIDaSo=@vger.kernel.org, AJvYcCWGVgK+aX0pXv1c+1BRFcz8N6WJxLWJx5FxGru4a5zKhAUw50V1EIcqXI3GN32GOiVItIQiYyfB@vger.kernel.org, AJvYcCWj386GAYrVrMskoWYBXWaw9/r7eNlzyfWRIZpIUvIVP9TUwJF8IxOA/dSNKIlAxU5Vp8gUImq9bdZphDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYHoeG9mj/Q3AkA6dGUtRHpXDpAzDdm5TSrLzBv86WB8l4Kdme
-	1kmkA7ud1wSOiOIVUC/JbL0aCdQqReBJXD2632suz4DSjxhgVxgW
-X-Gm-Gg: ASbGncu7betpGE+0ijpaXA1Dos5HaWHOUtICbPnMnkCq8r0ct/dO5ADVU5Y51WtQjrH
-	iFtCG5SXv3Ba5YuDqzjyS2y8eKahqdr9/m0yhumnVxEwMOG+B5MXUPd8nWdWbtZI6VIvJx8DdOZ
-	Uk4FpMVPqm2CwHbBUJZQUSY7vjs/7q5WCuEwC5I6hn+LeSO8eXHBFHyAbKdFKckFzytVA8hpH7u
-	XULqu2fxrNZL7td3xcs2Z/sdutHxNnUP1wx/80fdryhq89aslB0epwyYYOsIm3jyorel7p4lWzq
-	MXBJ/vqDfoys2viTcB8Q/OyVzb5VHZA0xVb1bAzHZBMQt4YQXCkgwsSwu1Psx4drO60Nz/o1w1Y
-	+pZbVo4JyHDZGtpspZP20/bVV/472hSw=
-X-Google-Smtp-Source: AGHT+IE+m0GrrxzhxSJDmEJ9GYN2oWngu+sxJoeRuTO/XymdfXTaQJBXj/EkOoo627ZAZoOe26Bovg==
-X-Received: by 2002:a05:620a:44d0:b0:7c5:9566:83dc with SMTP id af79cd13be357-7cac7b5b539mr418731385a.25.1746024604856;
-        Wed, 30 Apr 2025 07:50:04 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958ce3d7esm858766785a.54.2025.04.30.07.50.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 07:50:04 -0700 (PDT)
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 5A76E120007C;
-	Wed, 30 Apr 2025 10:50:03 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Wed, 30 Apr 2025 10:50:03 -0400
-X-ME-Sender: <xms:mzgSaAh62bBkFtLpqiQbr-P_I_6qmBXuE0ukaP2yKMDeSon2OYP88w>
-    <xme:mzgSaJBBkmdINzceXLuJ299hXctq3044IdmU-cK0xeYDTIWrf60VrdAKUZaHDLatP
-    -lgpBvt06bBNVXBrA>
-X-ME-Received: <xmr:mzgSaIGiTcjXPYVwSmzM3Xw1dQ9fJv-jDB8UWH68qPdoPFR74IQTvMu7>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeileekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepgedupdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhise
-    hgmhgrihhlrdgtohhmpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggrrdhsrghnugho
-    nhhishesghhmrghilhdrtghomhdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpd
-    hrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
-    mhgvsehklhhovghnkhdruggvvhdprhgtphhtthhopegurghnihgvlhdrrghlmhgvihgurg
-    estgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
-    vhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:mzgSaBSD3frZmn__VzozNS4LpYTVpOW5oAE0USqfo3MxOmv1kXhu9A>
-    <xmx:mzgSaNyLyD6oE86JI5GhEALLNfMptoN1GzCisXMUnbp04BkZCkChxw>
-    <xmx:mzgSaP7QwSAMiicJqAgAD-OU1s-NxayA0_JhegL_taIaGu6mf_c-AQ>
-    <xmx:mzgSaKzBD3VoQ8DqUbAXk2WhdM3rzDMVe-k_tObDutsIIvncrTy8eQ>
-    <xmx:mzgSaBjL9roN0z08mbPGPkC1iHEVyutGJ3GJI5KsRPPZq5uXMZ81Eaaj>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 30 Apr 2025 10:50:01 -0400 (EDT)
-Date: Wed, 30 Apr 2025 07:50:00 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: miguel.ojeda.sandonis@gmail.com, a.hindborg@kernel.org,
-	rust-for-linux@vger.kernel.org, gary@garyguo.net,
-	aliceryhl@google.com, me@kloenk.dev, daniel.almeida@collabora.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu,
-	ojeda@kernel.org, alex.gaynor@gmail.com, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@samsung.com,
-	anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
-	arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, tgunders@redhat.com,
-	david.laight.linux@gmail.com, pbonzini@redhat.com,
-	jfalempe@redhat.com, linux@armlinux.org.uk,
-	chrisi.schrefl@gmail.com, linus.walleij@linaro.org
-Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
-Message-ID: <aBI4mEgKx23qh1Zp@Mac.home>
-References: <871ptc40ds.fsf@kernel.org>
- <20250429.221733.2034231929519765445.fujita.tomonori@gmail.com>
- <CANiq72mMRpY4NC4_8v_wDpq6Z3qs99Y8gXd-7XL_3Bed58gkJg@mail.gmail.com>
- <20250430.225131.834272625051818223.fujita.tomonori@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rp9D+lzQ"
+Message-ID: <4729bf25-5044-4c21-b37a-0270fc2b0a19@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746024635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NQdgBPADVkoZ8bohQFnwKJ7oaa/ww0eD8m18xseIWfY=;
+	b=rp9D+lzQwRkhXDuytzoWDPPsnw+YfxDPcYt4PDg1SiCKXtLy0OveZRP5IMe+0d7AsyI34g
+	NFZhl5R2oBIk3xCgxQnNHSBZ2PCRSie014qqsM4ou/7FG4cfY1N1vWmHtOvYqyAWYpLr+v
+	FJlXkXwPGFnPmhuYhy0Y2iDfS4NvN70=
+Date: Wed, 30 Apr 2025 16:50:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430.225131.834272625051818223.fujita.tomonori@gmail.com>
+Subject: Re: [syzbot] [rdma?] KASAN: slab-use-after-free Read in
+ ib_register_device
+To: syzbot <syzbot+e2ce9e275ecc70a30b72@syzkaller.appspotmail.com>,
+ jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <6811f6dc.050a0220.39e3a1.0d0d.GAE@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <6811f6dc.050a0220.39e3a1.0d0d.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 30, 2025 at 10:51:31PM +0900, FUJITA Tomonori wrote:
-> On Tue, 29 Apr 2025 16:35:09 +0200
-> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+在 2025/4/30 12:09, syzbot 写道:
+> Hello,
 > 
-> >> It appears that there is still no consensus on how to resolve it. CC
-> >> the participants in the above thread.
-> >>
-> >> I think that we can drop this patch and better to focus on Instant and
-> >> Delta types in this merge window.
-> >>
-> >> With the patch below, this issue could be resolved like the C side,
-> >> but I'm not sure whether we can reach a consensus quickly.
-> > 
-> > I think using the C ones is fine for the moment, but up to what arm
-> > and others think.
+> syzbot found the following issue on:
 > 
-> I don't think anyone would disagree with the rule Russell mentioned
-> that expensive 64-bit by 64-bit division should be avoided unless
-> absolutely necessary so we should go with function div_s64() instead
-> of function div64_s64().
+> HEAD commit:    02ddfb981de8 Merge tag 'scsi-fixes' of git://git.kernel.or..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11434368580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f5bd2a76d9d0b4e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e2ce9e275ecc70a30b72
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 > 
-> The DRM QR driver was already fixed by avoiding 64-bit division, so
-> for now, the only place where we still need to solve this issue is the
-> time abstraction. So, it seems like Arnd's suggestion to simply call
-> ktime_to_ms() or ktime_to_us() is the right way to go.
+> Unfortunately, I don't have any reproducer for this issue yet.
 > 
-> > This one is also a constant, so something simpler may be better (and
-> > it is also a power of 10 divisor, so the other suggestions on that
-> > thread would apply too).
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/37d29bf0bb8b/disk-02ddfb98.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/04b17f9932d8/vmlinux-02ddfb98.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/a1c7813f1b54/bzImage-02ddfb98.xz
 > 
-> One downside of calling the C's functions is that the as_micros/millis
-> methods can no longer be const fn (or is there a way to make that
-> work?). We could implement the method Paolo suggested from Hacker's
-> Delight, 2nd edition in Rust and keep using const fn, but I'm not sure
-> if it's really worth it.
-> 
-> Any thoughts?
-> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+e2ce9e275ecc70a30b72@syzkaller.appspotmail.com
 
-For ARM, where the constant division optimization (into to mult/shift)
-is not available, I'm OK with anything you and others come out with
-(calling a C function, implementing our own optimization, etc.) For
-other architectures where the compilers can do the right thing, I
-suggest we use the compiler optimization and don't re-invent the wheel.
-For example, in your div10() solution below, we can have a generic
-version which just uses a normal division for x86, arm64, riscv, etc,
-and an ARM specific version.
+I suppose that the commit in the link: 
+https://lore.kernel.org/all/20250313092421.944658-1-wangliang74@huawei.com/T/
+can fix the problem in the link: 
+https://syzkaller.appspot.com/bug?extid=25bc6f0ed2b88b9eb9b8
 
-Btw, the const fn point is a good one, thanks for bringing that up.
+This problem is similar to the above problem.
 
-Regards,
-Boqun
+And in this problem, it seems that the same name is also accessed 
+lockless in the function kobject_uevent.
 
-> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-> index a8089a98da9e..daf9e5925e47 100644
-> --- a/rust/kernel/time.rs
-> +++ b/rust/kernel/time.rs
-> @@ -229,12 +229,116 @@ pub const fn as_nanos(self) -> i64 {
->      /// to the value in the [`Delta`].
->      #[inline]
->      pub const fn as_micros_ceil(self) -> i64 {
-> -        self.as_nanos().saturating_add(NSEC_PER_USEC - 1) / NSEC_PER_USEC
-> +        const NSEC_PER_USEC_EXP: u32 = 3;
-> +
-> +        div10::<NSEC_PER_USEC_EXP>(self.as_nanos().saturating_add(NSEC_PER_USEC - 1))
->      }
->  
->      /// Return the number of milliseconds in the [`Delta`].
->      #[inline]
->      pub const fn as_millis(self) -> i64 {
-> -        self.as_nanos() / NSEC_PER_MSEC
-> +        const NSEC_PER_MSEC_EXP: u32 = 6;
-> +
-> +        div10::<NSEC_PER_MSEC_EXP>(self.as_nanos())
-> +    }
-> +}
-> +
-> +/// Precomputed magic constants for division by powers of 10.
-> +///
-> +/// Each entry corresponds to dividing a number by `10^exp`, where `exp` ranges from 0 to 18.
-> +/// These constants were computed using the algorithm from Hacker's Delight, 2nd edition.
-> +struct MagicMul {
-> +    mult: u64,
-> +    shift: u32,
-> +}
-> +
-> +const DIV10: [MagicMul; 19] = [
-> +    MagicMul {
-> +        mult: 0x1,
-> +        shift: 0,
-> +    },
-> +    MagicMul {
-> +        mult: 0x6666666666666667,
-> +        shift: 66,
-> +    },
-> +    MagicMul {
-> +        mult: 0xA3D70A3D70A3D70B,
-> +        shift: 70,
-> +    },
-> +    MagicMul {
-> +        mult: 0x20C49BA5E353F7CF,
-> +        shift: 71,
-> +    },
-> +    MagicMul {
-> +        mult: 0x346DC5D63886594B,
-> +        shift: 75,
-> +    },
-> +    MagicMul {
-> +        mult: 0x29F16B11C6D1E109,
-> +        shift: 78,
-> +    },
-> +    MagicMul {
-> +        mult: 0x431BDE82D7B634DB,
-> +        shift: 82,
-> +    },
-> +    MagicMul {
-> +        mult: 0xD6BF94D5E57A42BD,
-> +        shift: 87,
-> +    },
-> +    MagicMul {
-> +        mult: 0x55E63B88C230E77F,
-> +        shift: 89,
-> +    },
-> +    MagicMul {
-> +        mult: 0x112E0BE826D694B3,
-> +        shift: 90,
-> +    },
-> +    MagicMul {
-> +        mult: 0x036F9BFB3AF7B757,
-> +        shift: 91,
-> +    },
-> +    MagicMul {
-> +        mult: 0x00AFEBFF0BCB24AB,
-> +        shift: 92,
-> +    },
-> +    MagicMul {
-> +        mult: 0x232F33025BD42233,
-> +        shift: 101,
-> +    },
-> +    MagicMul {
-> +        mult: 0x384B84D092ED0385,
-> +        shift: 105,
-> +    },
-> +    MagicMul {
-> +        mult: 0x0B424DC35095CD81,
-> +        shift: 106,
-> +    },
-> +    MagicMul {
-> +        mult: 0x480EBE7B9D58566D,
-> +        shift: 112,
-> +    },
-> +    MagicMul {
-> +        mult: 0x39A5652FB1137857,
-> +        shift: 115,
-> +    },
-> +    MagicMul {
-> +        mult: 0x5C3BD5191B525A25,
-> +        shift: 119,
-> +    },
-> +    MagicMul {
-> +        mult: 0x12725DD1D243ABA1,
-> +        shift: 120,
-> +    },
-> +];
-> +
-> +const fn div10<const EXP: u32>(val: i64) -> i64 {
-> +    crate::build_assert!(EXP <= 18);
-> +    let MagicMul { mult, shift } = DIV10[EXP as usize];
-> +    let abs_val = val.wrapping_abs() as u64;
-> +    let ret = ((abs_val as u128 * mult as u128) >> shift) as u64;
-> +    if val < 0 {
-> +        -(ret as i64)
-> +    } else {
-> +        ret as i64
->      }
->  }
+"
+...
+1470     dev_set_uevent_suppress(&device->dev, false);
+1471     /* Mark for userspace that device is ready */
+1472     kobject_uevent(&device->dev.kobj, KOBJ_ADD); <--- the name is 
+also accessed lockless
+...
+
+"
+Thus, the following can fix this problem?
+
+diff --git a/drivers/infiniband/core/device.c 
+b/drivers/infiniband/core/device.c
+index b4e3e4beb7f4..811c6f95abcf 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -1468,8 +1468,10 @@ int ib_register_device(struct ib_device *device, 
+const char *name,
+                 return ret;
+         }
+         dev_set_uevent_suppress(&device->dev, false);
++       down_read(&devices_rwsem);
+         /* Mark for userspace that device is ready */
+         kobject_uevent(&device->dev.kobj, KOBJ_ADD);
++       up_read(&devices_rwsem);
+
+         ib_device_notify_register(device);
+         ib_device_put(device);
+
+Zhu Yanjun
+
+> 
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in strlen+0x93/0xa0 lib/string.c:420
+> Read of size 1 at addr ffff88801e6cfea1 by task syz.2.292/7048
+> 
+> CPU: 1 UID: 0 PID: 7048 Comm: syz.2.292 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8 #0 PREEMPT(full)
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+> Call Trace:
+>   <TASK>
+>   __dump_stack lib/dump_stack.c:94 [inline]
+>   dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>   print_address_description mm/kasan/report.c:408 [inline]
+>   print_report+0xc3/0x670 mm/kasan/report.c:521
+>   kasan_report+0xe0/0x110 mm/kasan/report.c:634
+>   strlen+0x93/0xa0 lib/string.c:420
+>   __fortify_strlen include/linux/fortify-string.h:268 [inline]
+>   get_kobj_path_length lib/kobject.c:118 [inline]
+>   kobject_get_path+0x3f/0x2a0 lib/kobject.c:158
+>   kobject_uevent_env+0x289/0x1870 lib/kobject_uevent.c:545
+>   ib_register_device drivers/infiniband/core/device.c:1472 [inline]
+>   ib_register_device+0x8cf/0xe00 drivers/infiniband/core/device.c:1393
+>   rxe_register_device+0x275/0x320 drivers/infiniband/sw/rxe/rxe_verbs.c:1552
+>   rxe_net_add+0x8e/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:550
+>   rxe_newlink+0x70/0x190 drivers/infiniband/sw/rxe/rxe.c:225
+>   nldev_newlink+0x3a3/0x680 drivers/infiniband/core/nldev.c:1796
+>   rdma_nl_rcv_msg+0x387/0x6e0 drivers/infiniband/core/netlink.c:195
+>   rdma_nl_rcv_skb.constprop.0.isra.0+0x2e5/0x450 drivers/infiniband/core/netlink.c:239
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+>   netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
+>   netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+>   sock_sendmsg_nosec net/socket.c:712 [inline]
+>   __sock_sendmsg net/socket.c:727 [inline]
+>   ____sys_sendmsg+0xa95/0xc70 net/socket.c:2566
+>   ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+>   __sys_sendmsg+0x16d/0x220 net/socket.c:2652
+>   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>   do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7fb12658e969
+> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fb127391038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007fb1267b6080 RCX: 00007fb12658e969
+> RDX: 0000000000000000 RSI: 0000200000000240 RDI: 0000000000000009
+> RBP: 00007fb126610ab1 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000000 R14: 00007fb1267b6080 R15: 00007ffe92b5e748
+>   </TASK>
+> 
+> Allocated by task 7048:
+>   kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+>   kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+>   poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+>   __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+>   kasan_kmalloc include/linux/kasan.h:260 [inline]
+>   __do_kmalloc_node mm/slub.c:4341 [inline]
+>   __kmalloc_node_track_caller_noprof+0x221/0x510 mm/slub.c:4360
+>   __kmemdup_nul mm/util.c:63 [inline]
+>   kstrdup+0x53/0x100 mm/util.c:83
+>   kstrdup_const+0x63/0x80 mm/util.c:103
+>   kvasprintf_const+0x164/0x1a0 lib/kasprintf.c:46
+>   kobject_set_name_vargs+0x5a/0x140 lib/kobject.c:274
+>   dev_set_name+0xc7/0x100 drivers/base/core.c:3469
+>   assign_name drivers/infiniband/core/device.c:1211 [inline]
+>   ib_register_device+0x7df/0xe00 drivers/infiniband/core/device.c:1398
+>   rxe_register_device+0x275/0x320 drivers/infiniband/sw/rxe/rxe_verbs.c:1552
+>   rxe_net_add+0x8e/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:550
+>   rxe_newlink+0x70/0x190 drivers/infiniband/sw/rxe/rxe.c:225
+>   nldev_newlink+0x3a3/0x680 drivers/infiniband/core/nldev.c:1796
+>   rdma_nl_rcv_msg+0x387/0x6e0 drivers/infiniband/core/netlink.c:195
+>   rdma_nl_rcv_skb.constprop.0.isra.0+0x2e5/0x450 drivers/infiniband/core/netlink.c:239
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+>   netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
+>   netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+>   sock_sendmsg_nosec net/socket.c:712 [inline]
+>   __sock_sendmsg net/socket.c:727 [inline]
+>   ____sys_sendmsg+0xa95/0xc70 net/socket.c:2566
+>   ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+>   __sys_sendmsg+0x16d/0x220 net/socket.c:2652
+>   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>   do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Freed by task 7111:
+>   kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+>   kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+>   kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
+>   poison_slab_object mm/kasan/common.c:247 [inline]
+>   __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+>   kasan_slab_free include/linux/kasan.h:233 [inline]
+>   slab_free_hook mm/slub.c:2398 [inline]
+>   slab_free mm/slub.c:4656 [inline]
+>   kfree+0x2b6/0x4d0 mm/slub.c:4855
+>   kfree_const+0x55/0x60 mm/util.c:45
+>   kobject_rename+0x178/0x260 lib/kobject.c:524
+>   device_rename+0x130/0x230 drivers/base/core.c:4526
+>   ib_device_rename+0x113/0x5c0 drivers/infiniband/core/device.c:402
+>   nldev_set_doit+0x3d7/0x4e0 drivers/infiniband/core/nldev.c:1147
+>   rdma_nl_rcv_msg+0x387/0x6e0 drivers/infiniband/core/netlink.c:195
+>   rdma_nl_rcv_skb.constprop.0.isra.0+0x2e5/0x450 drivers/infiniband/core/netlink.c:239
+>   netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+>   netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
+>   netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+>   sock_sendmsg_nosec net/socket.c:712 [inline]
+>   __sock_sendmsg net/socket.c:727 [inline]
+>   ____sys_sendmsg+0xa95/0xc70 net/socket.c:2566
+>   ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+>   __sys_sendmsg+0x16d/0x220 net/socket.c:2652
+>   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>   do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> The buggy address belongs to the object at ffff88801e6cfea0
+>   which belongs to the cache kmalloc-8 of size 8
+> The buggy address is located 1 bytes inside of
+>   freed 8-byte region [ffff88801e6cfea0, ffff88801e6cfea8)
+> 
+> The buggy address belongs to the physical page:
+> page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1e6cf
+> flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+> page_type: f5(slab)
+> raw: 00fff00000000000 ffff88801b441500 ffffea00009f5200 dead000000000002
+> raw: 0000000000000000 0000000000800080 00000000f5000000 0000000000000000
+> page dumped because: kasan: bad access detected
+> page_owner tracks the page as allocated
+> page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 1, tgid 1 (swapper/0), ts 2371251963, free_ts 0
+>   set_page_owner include/linux/page_owner.h:32 [inline]
+>   post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+>   prep_new_page mm/page_alloc.c:1726 [inline]
+>   get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+>   __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+>   alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
+>   alloc_slab_page mm/slub.c:2468 [inline]
+>   allocate_slab mm/slub.c:2632 [inline]
+>   new_slab+0x244/0x340 mm/slub.c:2686
+>   ___slab_alloc+0xd9c/0x1940 mm/slub.c:3872
+>   __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3962
+>   __slab_alloc_node mm/slub.c:4037 [inline]
+>   slab_alloc_node mm/slub.c:4198 [inline]
+>   __do_kmalloc_node mm/slub.c:4340 [inline]
+>   __kmalloc_noprof+0x2f2/0x510 mm/slub.c:4353
+>   kmalloc_noprof include/linux/slab.h:909 [inline]
+>   kzalloc_noprof include/linux/slab.h:1039 [inline]
+>   acpi_ns_internalize_name+0x144/0x220 drivers/acpi/acpica/nsutils.c:331
+>   acpi_ns_get_node_unlocked+0x163/0x310 drivers/acpi/acpica/nsutils.c:666
+>   acpi_ns_get_node+0x4c/0x70 drivers/acpi/acpica/nsutils.c:726
+>   acpi_ns_evaluate+0x6ef/0xca0 drivers/acpi/acpica/nseval.c:62
+>   acpi_evaluate_object+0x1fa/0xa90 drivers/acpi/acpica/nsxfeval.c:354
+>   acpi_evaluate_dsm+0x194/0x290 drivers/acpi/utils.c:797
+>   acpi_check_dsm+0x51/0x260 drivers/acpi/utils.c:830
+>   device_has_acpi_name drivers/pci/pci-label.c:44 [inline]
+>   acpi_attr_is_visible+0xb3/0x130 drivers/pci/pci-label.c:221
+> page_owner free stack trace missing
+> 
+> Memory state around the buggy address:
+>   ffff88801e6cfd80: fa fc fc fc fa fc fc fc fa fc fc fc fa fc fc fc
+>   ffff88801e6cfe00: fa fc fc fc fa fc fc fc fa fc fc fc 00 fc fc fc
+>> ffff88801e6cfe80: 00 fc fc fc fa fc fc fc 02 fc fc fc 04 fc fc fc
+>                                 ^
+>   ffff88801e6cff00: fa fc fc fc 02 fc fc fc fa fc fc fc fa fc fc fc
+>   ffff88801e6cff80: fa fc fc fc fa fc fc fc fa fc fc fc fa fc fc fc
+> ==================================================================
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
+
