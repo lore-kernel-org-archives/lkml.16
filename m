@@ -1,357 +1,114 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DB428399
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54146F06A
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745994188; cv=none; b=Kb6IFgAeCRaMLn9TddyUId033Fd5dQgeFvlL/F2MutwD6/3xap8Ojw2rTdxJgClrfcMi3BZXUxhEFU+3nsZ35ldRIOx7GS337tMBpuE+ktKnd9qIfzEFWOFwCfELI2g7+sHHLZDGMto6j52sLmB3CQqajRY6MCKeoKsc+6psa+s=
+	t=1745994233; cv=none; b=nzsEQNyNjrFf5rD6mi6EnkpENwat2AjP3WYBudGTuau2JYi6ZZ7j1HhYMi/72LYyTq8pZaUCtxN3HoCWfUmGAY2EFdH5+vhJjDwnPjKMycQkiz5KZEr37ffzc6HfkvnICIDN1n3VYsk+mk8ilX3arjtiVznS1JTAlxuYQbgjOG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745994188; c=relaxed/simple;
-	bh=bB0Lqbfvi6H+V/Ha4KPjyQJJMp9/dhdIwXaSHbhGVzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WJPKDV8dSOYcqkEuL87k/dvh/5Tt2DTFAlRwFASLkL76ZqcApVmm5kaYtn8Nw6Ub/i62xyvnrub39PZLJorl5S3VrZkTX2gU4aWH4vlE1BlABEpjP0YpGRW+bryKjgRx+Ntc367f7lUg0+iYa6bPaSR9Wzc+kQ8HKa6/DPGhb+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ai9ipa+s; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745994233; c=relaxed/simple;
+	bh=QdW0ibxTwWwREp4tWV5Y7Dah9FZgyJW4dRHXA8zibYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBsBRWmJ9sAEzDQSezRpp4F79UbMQ/+yr/eNRNv/gRNubYdcLIzbJJMcweQ7h9qdJH6sIrQExaUtl2L/VR8QrtMhJCt14bd9PWZodtCYgXVGK8Tdw+dup/7V+KwxURCmmb1cNGLzOUb636YVHVAxIb8g8wU4M8mWSsVhybHX3+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UU5l5+rv; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ai9ipa+s"
-Message-ID: <c65c0aa0-1eb9-4ff1-ab81-87e63a3fa89a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745994182;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TicTVOmEB3gnVmsnSxlET08PtUTAw7ExU8QRHiIKy9o=;
-	b=Ai9ipa+swlvk6wp6hyZxKB+55UqBgEJPAgarn6r/UgjhhL+D5PngZJkXGwJI+d4l3phYyh
-	PE71HTKiS0ULVsUSSILir4g4HXTlBXhMsV0zKCvEm23t2+10PfvU1orBDbXD5Hw/A+QULH
-	ZWFyjRt0qmGuGPq+Cy6yfNTp3R+0i7k=
-Date: Wed, 30 Apr 2025 14:22:46 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UU5l5+rv"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22c33ac23edso63579045ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745994230; x=1746599030; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=03WoV54tz3M6hwT9sU/vqgSJjnQ/tgaaDuyl7WpQlLc=;
+        b=UU5l5+rv8og/Lm41FBjsfDNBIBSDIXkQu1uR6hCKoHqpEt83qKgiTA2Y8nLRsD1NnZ
+         jutsCYGXhojLY8wZRTxtWl/PGfa32/RCAN5SLvj4sTn3XLQO9GWrmGr7ZGYijf1eoOjr
+         n9lhFY3hXnTzUolYkKJCpYmTs3q0WmguGGxcYZvLnVhJId6UWwnyIJ6rk4wKhK7EPrE1
+         XbSKQRiiE8hqL34FqsIcGdz9E7KWboxoffI2qHcSjgVv+iu6rjAlMA1UoTU4yNUsqNa4
+         Bwm5H3wuinlxomNRF51OoywFy1nyNwK/MucSrIrX0mMIu8wM2fW885H7D4wu4sIwkNn8
+         xeow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745994230; x=1746599030;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=03WoV54tz3M6hwT9sU/vqgSJjnQ/tgaaDuyl7WpQlLc=;
+        b=vjkFMNeqVmZLufRVLGeu5NJmTzh3MQMagRRvgozAO6wQyKQQSF0zAC7QKDIDp29jIx
+         BX3IvTqUEamMtkpzVrlItDMgvRhExTp6Q1k8n0OgFzlA8rSJfo8DTSKaKhoCY4rUwV1j
+         ljTBN1sqlcCNbq95DOB1okCYIAqP7sVOy4dxglsppHlAzOSI5n5NUBQdgm/ddZnxSSPV
+         Xx5bA/FqvhwSb5vEptmiAV57CWJIh6j1PLcIl7zSzbMXpKjXI4pqxgkCh+x6tY6ydHZs
+         AKrHIfNcwmWJX7rg9dJN0dVJiG7VPC9aSz+m6yAn48dQIh6SP0tcdOSmiuz1/CDOjwwH
+         DfwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyQR/ToPYOnMDqydQq57nRsy+U7u2yOERpnzbwfz5or2CB+0ykoJekbPx4YFgknvww8kS6TDJesolzkLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTZVYxnFBf6ULSXn5R/J1ZsnhMizOZ2vGdEhp55PEHRQssSiti
+	i26mpPbj8y//7yxYZLI2x4XDPohl9BPG+K67Y/766JZmMGR3+B5Nx9CdTa50lg==
+X-Gm-Gg: ASbGncu1l00VcJ5xgnPoQigZgNPUN+FoD68tQ9q6p8ITwvyEzwiO9JlyAuYUx//SY3Y
+	kbhFUSdmkLlQzLlkEI/Akxn8izv8l58pmB1jDbOAvFT4ZPY4x/WfzawUv9sCKsklJrdDfZs5RuR
+	xw/Rd3yuTQue7E5ltPetR/Iv5Yu1TOMAq7FNgzo9bYIX3MdRSsPe/hpuKN6d9BfKoZziqbLL5c1
+	RCzYlpQwL9jLMJoOL1wUSxX4CQy1Kgy92+zG+aDt/5V03inF9TDMUQZUU8el0/CAtueZ0bwwgBv
+	e6MRUwk/aWCaOCF5IQaEGp0jKzx6IsiG/JF1kOJRxWRZVKgU5WR1
+X-Google-Smtp-Source: AGHT+IEeslhmFcqhuBeb3fAJDK9HU4zUhtq5N9GUPDoyLQYoyCTcLVDmw51YcSLVIRANtjSCwllR4A==
+X-Received: by 2002:a17:902:f68e:b0:224:826:279e with SMTP id d9443c01a7336-22df35887e6mr32343915ad.50.1745994230152;
+        Tue, 29 Apr 2025 23:23:50 -0700 (PDT)
+Received: from thinkpad ([120.56.197.193])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221943sm113794745ad.249.2025.04.29.23.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 23:23:49 -0700 (PDT)
+Date: Wed, 30 Apr 2025 11:53:46 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Devendra K Verma <devverma@amd.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michal.simek@amd.com, vkoul@kernel.org
+Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add HDMA NATIVE map check
+Message-ID: <lmfkq4k6fkm4rlayysf3m2qpbyejfkgxubu2c7txtvwzlp6ua6@6jl7glnnndcf>
+References: <20250429113048.199179-1-devverma@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/7] Optimize mprotect for large folios
-Content-Language: en-US
-To: Dev Jain <dev.jain@arm.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, david@redhat.com,
- willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
- vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
- peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
- baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <ba73873b-1b26-44cd-ac0f-76e33e8fc2cf@linux.dev>
- <05c3cd68-0d75-4682-a51c-59307e2b2e78@arm.com>
- <9d995850-d0c4-4e02-8547-74a9723e0405@lucifer.local>
- <11f86b1c-a12e-4cd3-8b4e-a8a34c64fbf1@arm.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <11f86b1c-a12e-4cd3-8b4e-a8a34c64fbf1@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250429113048.199179-1-devverma@amd.com>
 
-
-
-On 2025/4/30 13:42, Dev Jain wrote:
-> 
-> 
-> On 29/04/25 4:11 pm, Lorenzo Stoakes wrote:
->> FWIW can confirm the same thing. Lance's fixes sort most of it out, 
->> but I also
->> get this error:
-
-Good catch!
-
->>
->> mm/mprotect.c: In function ‘can_change_ptes_writable’:
->> mm/mprotect.c:46:22: error: unused variable ‘page’ [-Werror=unused- 
->> variable]
->>     46 |         struct page *page;
->>        |                      ^~~~
->>
->> So you also need to remove this unused variable at the stop of
->> can_change_ptes_writable().
-> 
-> Strange that my build didn't catch this.
-
-Well, to catch unused variable warnings with GCC, enable stricter
-checks by passing -Wunused-variable via KCFLAGS, and use 
--Werror=unused-variable
-to force the build to fail if any variable is declared but unused:
-
-make -j$(nproc) KCFLAGS="-Wunused-variable -Werror=unused-variable"
-
-Thanks,
-Lance
-
-
-> 
->>
->> Cheers, Lorenzo
->>
->> On Tue, Apr 29, 2025 at 02:32:59PM +0530, Dev Jain wrote:
->>>
->>>
->>> On 29/04/25 12:36 pm, Lance Yang wrote:
->>>> Hey Dev,
->>>>
->>>> Hmm... I also hit the same compilation errors:
->>>>
->>>> In file included from ./include/linux/kasan.h:37,
->>>>                    from ./include/linux/slab.h:260,
->>>>                    from ./include/linux/crypto.h:19,
->>>>                    from arch/x86/kernel/asm-offsets.c:9:
->>>> ./include/linux/pgtable.h: In function ‘modify_prot_start_ptes’:
->>>> ./include/linux/pgtable.h:905:15: error: implicit declaration of
->>>> function ‘ptep_modify_prot_start’
->>>> [-Werror=implicit-function-declaration]
->>>>     905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
->>>>         |               ^~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/pgtable.h:905:15: error: incompatible types when
->>>> assigning to type ‘pte_t’ from type ‘int’
->>>> ./include/linux/pgtable.h:909:27: error: incompatible types when
->>>> assigning to type ‘pte_t’ from type ‘int’
->>>>     909 |                 tmp_pte = ptep_modify_prot_start(vma, 
->>>> addr, ptep);
->>>>         |                           ^~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/pgtable.h: In function ‘modify_prot_commit_ptes’:
->>>> ./include/linux/pgtable.h:925:17: error: implicit declaration of
->>>> function ‘ptep_modify_prot_commit’
->>>> [-Werror=implicit-function-declaration]
->>>>     925 |                 ptep_modify_prot_commit(vma, addr, ptep,
->>>> old_pte, pte);
->>>>         |                 ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/pgtable.h: At top level:
->>>> ./include/linux/pgtable.h:1360:21: error: conflicting types for
->>>> ‘ptep_modify_prot_start’; have ‘pte_t(struct vm_area_struct *, long
->>>> unsigned int,  pte_t *)’
->>>>    1360 | static inline pte_t ptep_modify_prot_start(struct
->>>> vm_area_struct *vma,
->>>>         |                     ^~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/pgtable.h:905:15: note: previous implicit 
->>>> declaration of
->>>> ‘ptep_modify_prot_start’ with type ‘int()’
->>>>     905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
->>>>         |               ^~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/pgtable.h:1371:20: warning: conflicting types for
->>>> ‘ptep_modify_prot_commit’; have ‘void(struct vm_area_struct *, long
->>>> unsigned int,  pte_t *, pte_t,  pte_t)’
->>>>    1371 | static inline void ptep_modify_prot_commit(struct
->>>> vm_area_struct *vma,
->>>>         |                    ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/pgtable.h:1371:20: error: static declaration of
->>>> ‘ptep_modify_prot_commit’ follows non-static declaration
->>>> ./include/linux/pgtable.h:925:17: note: previous implicit 
->>>> declaration of
->>>> ‘ptep_modify_prot_commit’ with type ‘void(struct vm_area_struct *, long
->>>> unsigned int,  pte_t *, pte_t,  pte_t)’
->>>>     925 |                 ptep_modify_prot_commit(vma, addr, ptep,
->>>> old_pte, pte);
->>>>         |                 ^~~~~~~~~~~~~~~~~~~~~~~
->>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
->>>> objtool/
->>>> libstring.o
->>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
->>>> objtool/
->>>> libctype.o
->>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
->>>> objtool/
->>>> str_error_r.o
->>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
->>>> objtool/
->>>> librbtree.o
->>>> cc1: some warnings being treated as errors
->>>> make[2]: *** [scripts/Makefile.build:98: arch/x86/kernel/asm-offsets.s]
->>>> Error 1
->>>> make[1]: *** [/home/runner/work/mm-test-robot/mm-test-robot/linux/
->>>> Makefile:1280: prepare0] Error 2
->>>> make[1]: *** Waiting for unfinished jobs....
->>>>     LD /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
->>>> objtool/
->>>> objtool-in.o
->>>>     LINK /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/
->>>> objtool/objtool
->>>> make: *** [Makefile:248: __sub-make] Error 2
->>>>
->>>> Well, modify_prot_start_ptes() calls ptep_modify_prot_start(), but x86
->>>> does not define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION. To avoid
->>>> implicit declaration errors, the architecture-independent
->>>> ptep_modify_prot_start() must be defined before 
->>>> modify_prot_start_ptes().
->>>>
->>>> With the changes below, things work correctly now ;)
->>>
->>> Ah thanks! My bad :(
->>>
->>>>
->>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>>> index 10cdb87ccecf..d9d6c49bb914 100644
->>>> --- a/include/linux/pgtable.h
->>>> +++ b/include/linux/pgtable.h
->>>> @@ -895,44 +895,6 @@ static inline void wrprotect_ptes(struct mm_struct
->>>> *mm, unsigned long addr,
->>>>    }
->>>>    #endif
->>>>
->>>> -/* See the comment for ptep_modify_prot_start */
->>>> -#ifndef modify_prot_start_ptes
->>>> -static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
->>>> -        unsigned long addr, pte_t *ptep, unsigned int nr)
->>>> -{
->>>> -    pte_t pte, tmp_pte;
->>>> -
->>>> -    pte = ptep_modify_prot_start(vma, addr, ptep);
->>>> -    while (--nr) {
->>>> -        ptep++;
->>>> -        addr += PAGE_SIZE;
->>>> -        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
->>>> -        if (pte_dirty(tmp_pte))
->>>> -            pte = pte_mkdirty(pte);
->>>> -        if (pte_young(tmp_pte))
->>>> -            pte = pte_mkyoung(pte);
->>>> -    }
->>>> -    return pte;
->>>> -}
->>>> -#endif
->>>> -
->>>> -/* See the comment for ptep_modify_prot_commit */
->>>> -#ifndef modify_prot_commit_ptes
->>>> -static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
->>>> unsigned long addr,
->>>> -        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
->>>> -{
->>>> -    for (;;) {
->>>> -        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
->>>> -        if (--nr == 0)
->>>> -            break;
->>>> -        ptep++;
->>>> -        addr += PAGE_SIZE;
->>>> -        old_pte = pte_next_pfn(old_pte);
->>>> -        pte = pte_next_pfn(pte);
->>>> -    }
->>>> -}
->>>> -#endif
->>>> -
->>>>    /*
->>>>     * On some architectures hardware does not set page access bit when
->>>> accessing
->>>>     * memory page, it is responsibility of software setting this 
->>>> bit. It
->>>> brings
->>>> @@ -1375,6 +1337,45 @@ static inline void 
->>>> ptep_modify_prot_commit(struct
->>>> vm_area_struct *vma,
->>>>        __ptep_modify_prot_commit(vma, addr, ptep, pte);
->>>>    }
->>>>    #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
->>>> +
->>>> +/* See the comment for ptep_modify_prot_start */
->>>> +#ifndef modify_prot_start_ptes
->>>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
->>>> +        unsigned long addr, pte_t *ptep, unsigned int nr)
->>>> +{
->>>> +    pte_t pte, tmp_pte;
->>>> +
->>>> +    pte = ptep_modify_prot_start(vma, addr, ptep);
->>>> +    while (--nr) {
->>>> +        ptep++;
->>>> +        addr += PAGE_SIZE;
->>>> +        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
->>>> +        if (pte_dirty(tmp_pte))
->>>> +            pte = pte_mkdirty(pte);
->>>> +        if (pte_young(tmp_pte))
->>>> +            pte = pte_mkyoung(pte);
->>>> +    }
->>>> +    return pte;
->>>> +}
->>>> +#endif
->>>> +
->>>> +/* See the comment for ptep_modify_prot_commit */
->>>> +#ifndef modify_prot_commit_ptes
->>>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
->>>> unsigned long addr,
->>>> +        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
->>>> +{
->>>> +    for (;;) {
->>>> +        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
->>>> +        if (--nr == 0)
->>>> +            break;
->>>> +        ptep++;
->>>> +        addr += PAGE_SIZE;
->>>> +        old_pte = pte_next_pfn(old_pte);
->>>> +        pte = pte_next_pfn(pte);
->>>> +    }
->>>> +}
->>>> +#endif
->>>> +
->>>>    #endif /* CONFIG_MMU */
->>>>
->>>>    /*
->>>> -- 
->>>>
->>>> Thanks,
->>>> Lance
->>>>
->>>> On 2025/4/29 13:23, Dev Jain wrote:
->>>>> This patchset optimizes the mprotect() system call for large folios
->>>>> by PTE-batching.
->>>>>
->>>>> We use the following test cases to measure performance, mprotect()'ing
->>>>> the mapped memory to read-only then read-write 40 times:
->>>>>
->>>>> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
->>>>> pte-mapping those THPs
->>>>> Test case 2: Mapping 1G of memory with 64K mTHPs
->>>>> Test case 3: Mapping 1G of memory with 4K pages
->>>>>
->>>>> Average execution time on arm64, Apple M3:
->>>>> Before the patchset:
->>>>> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
->>>>>
->>>>> After the patchset:
->>>>> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.2 seconds
->>>>>
->>>>> Observing T1/T2 and T3 before the patchset, we also remove the 
->>>>> regression
->>>>> introduced by ptep_get() on a contpte block. And, for large folios 
->>>>> we get
->>>>> an almost 74% performance improvement.
->>>>>
->>>>> v1->v2:
->>>>>    - Rebase onto mm-unstable (6ebffe676fcf: util_macros.h: make the
->>>>> header more resilient)
->>>>>    - Abridge the anon-exclusive condition (Lance Yang)
->>>>>
->>>>> Dev Jain (7):
->>>>>     mm: Refactor code in mprotect
->>>>>     mm: Optimize mprotect() by batch-skipping PTEs
->>>>>     mm: Add batched versions of ptep_modify_prot_start/commit
->>>>>     arm64: Add batched version of ptep_modify_prot_start
->>>>>     arm64: Add batched version of ptep_modify_prot_commit
->>>>>     mm: Batch around can_change_pte_writable()
->>>>>     mm: Optimize mprotect() through PTE-batching
->>>>>
->>>>>    arch/arm64/include/asm/pgtable.h |  10 ++
->>>>>    arch/arm64/mm/mmu.c              |  21 +++-
->>>>>    include/linux/mm.h               |   4 +-
->>>>>    include/linux/pgtable.h          |  42 ++++++++
->>>>>    mm/gup.c                         |   2 +-
->>>>>    mm/huge_memory.c                 |   4 +-
->>>>>    mm/memory.c                      |   6 +-
->>>>>    mm/mprotect.c                    | 165 +++++++++++++++++++ 
->>>>> +-----------
->>>>>    mm/pgtable-generic.c             |  16 ++-
->>>>>    9 files changed, 198 insertions(+), 72 deletions(-)
->>>>>
->>>>
->>>
+On Tue, Apr 29, 2025 at 05:00:48PM +0530, Devendra K Verma wrote:
+> The HDMA IP supports the HDMA_NATIVE map format as part of Vendor-Specific
+> Extended Capability. Added the check for HDMA_NATIVE map format.
+> The check for map format enables the IP specific function invocation
+> during the DMA ops.
 > 
 
+You also need to update the 'Debug info' part in dw_edma_pcie_probe().
+
+- Mani
+
+> Signed-off-by: Devendra K Verma <devverma@amd.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 1c6043751dc9..42b2a554f7a5 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -136,7 +136,8 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
+>  	if (map != EDMA_MF_EDMA_LEGACY &&
+>  	    map != EDMA_MF_EDMA_UNROLL &&
+> -	    map != EDMA_MF_HDMA_COMPAT)
+> +	    map != EDMA_MF_HDMA_COMPAT &&
+> +	    map != EDMA_MF_HDMA_NATIVE)
+>  		return;
+>  
+>  	pdata->mf = map;
+> -- 
+> 2.43.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
