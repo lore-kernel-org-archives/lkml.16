@@ -1,206 +1,110 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40B0224B08
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413AA224B08;
+	Wed, 30 Apr 2025 22:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746051775; cv=none; b=Y7c751DtBfXg0UlPcCNEYWV4Rw+iwl0zxbJAlO5kqo9hu0JO3uBT5YF82JRUsTtlxFeQzInIX5Bweu80IMccTCYcTtvQJTsVc7DUHbyFmqK2vxDHGyC5kNb6LUsEjFFkk8nAVuMQdBraz1kzhjahAN7g/LNri/1zRkRG3UhFJ2M=
+	t=1746051808; cv=none; b=Ns9YsFiZEvGEFGX0njosJZ4jtUGE2MMFP1iEnf/QcrdtSNExFoSKP2HT40Fkm9oZah02zu6BOwVsa0HZ2UazQ0/4wPcgnKqHcSGdAKMypR9+Dlejgqa7hTteFzKvjpPw44bETNsGf7azoiLsm6L3prJ8WrZQGdQXGnPdVBqLkfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746051775; c=relaxed/simple;
-	bh=0YUWkd6wJtLdo5B/APnSVNXh0AfY+OdZbGmGhS8uFUY=;
+	s=arc-20240116; t=1746051808; c=relaxed/simple;
+	bh=VZuKXxzGldX9LzIaU6VctUQqnQ8tlMc4yK/+gYxDzoY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=USRnB3brOhmK7DsOPdibCx9q7qwiNGzXxifPXyiS8Pb3ZKvxjS9bBhLZ6Wp/4yMK/EK4wgvgRZ47YbsT1vhu/FOkCe35Y+NU5OWxCKDaC44op1qH76v/lFRj/bUOBBR/VlmN1hLilZE3gYcHCDUJeNFnwJI8NYAV8KvEOt0A6Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hfxr5D+L; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=ZxvUSj2SEwh+3lzA0cHaCWb36OxIZScVzv1B3DVNgT4SFHoR3DLZdeSkLmw1dRJztQ+kPKYVqpnqYDfr5QTUvneT4F0rzAVHH+bO96L0H97xY0xQ5FjhhqUvMLDPPkop+PMRP2VnP9Sh1pwwOUqGEFrFE+1M/oMU5iiMOv58y/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBpAk7LL; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hfxr5D+L"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d91a45d148so16905ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:22:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBpAk7LL"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913d129c1aso275123f8f.0;
+        Wed, 30 Apr 2025 15:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746051773; x=1746656573; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746051805; x=1746656605; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YokCi7aKrZdv2d/dyamRwVJ1e6HinNxOv5p5IIA6cT8=;
-        b=Hfxr5D+LzcBLf8cneDUeT6MocZIFbyj0I5I+ch4Ojx6h+kiHfGatZyVH7XamW4OabQ
-         YnCG12u85PMzbJwM90SDZeV9WlBuMTWV3vNQBTUwMPfeJ2Oa5idkjwANQ1zy4k6QPbvL
-         gKxelR4M2yotT62lrSY6Djzq8UsFUDQ4IVZ5+qgdfTneCjqljSwe+1Wbsk0rEE7IjUrO
-         TH8sk9rCJPhzZTnWD2Svsswndi3pnxs4XmEOovBD1OObIB8QBNbdkgB0aPQ0etGct5RR
-         qA3AF7gnDmN23/eQGqOExsq7swMFVigsiO7CYMvjoQ/sJ9UjtHIJo8xIOzPGB0MlKNWB
-         dIzw==
+        bh=rg0uI63O02c4p1iLFOA5sNNvoK/KA8q0xPwjloWtPkQ=;
+        b=cBpAk7LLEIVKo3+/2mS6/KRTi9nCm3Qx/6q3VLs78tUy+v72riDtmkpuknvS8JVNpT
+         ccK1qGwBx9r+VHUqfkFjHDgwBpRTYavR4Y1VMgba2KWsiwRvHNjJwlGo5Kgs8nwIS6md
+         XyZTbfzzOFLEbrU4GXtbOl9Uf5HAeVE36T+RJJTB7aoeMcrPNFd0DudAbybpueuIiPzX
+         F/X7MAz8o/E+1ERixz3rvEq3O09Pc2bH18AKu/yb5oZ6s4qb9ixlzWQ0gIlA6193O1dj
+         r2/cgHjAPXPOWWGp6WSGbcfvsyTmvi0A25gv28l/eSIApm0FnShOZA1d+PTzUw5ficSa
+         C3lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746051773; x=1746656573;
+        d=1e100.net; s=20230601; t=1746051805; x=1746656605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YokCi7aKrZdv2d/dyamRwVJ1e6HinNxOv5p5IIA6cT8=;
-        b=aLoeL9akOuEcTk8jEShp1n4VTWRRqDZuPSHfmnOVx5+tNo2c0fmfuh7fr1U45qdbNB
-         B30joCDDTSsp5VQm/opxNJCiuOw1p1/SoqNF/cXnl1/j0vy3T4KgneSMG8R8XrLJQ9By
-         TTcq2eyx83Hnw4c6BdJ0vOKeS+cugLQQsNOpiZsvcdLc2+/XctYyeVDo2NoKJqNemOC8
-         5Gm55qho1OvqJpyUTr4HmmsYXQwEkUNbkO9/nzfFhU0VwtfJWTGU6uzGARwEOUNCm3M0
-         TccdKvwid+xr/Ot7OX3O/PuYuoOdEs8K/VsLQ7T8IF/m62N2hxeFqM8dyrdtYnobpbJu
-         1gcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhc2RsACMfhQOn+Tc0OCAXPrYlGv853haFseruC4dJgbunem0gmM+yVYzRJA+v1NvsZZArVNOoPugBcyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXE85bxdjO8x15zAhckKBVYlQN3QsdsLJwKMYl7p9p08rn3aQt
-	oeWwMM6EGpnuQ1TYY6et0g/VPPd9pjj9CdTxw+AJ4PNq3uyGYRGqbxibixVxL7G14IflgTKUr4A
-	47UF05HdRzo/ZqbEQK4WoD0AiKgTGxXtN4h4n
-X-Gm-Gg: ASbGncv/fKa10sq0jHkpwrcxP7Ri1djl+ZZnj4c54s140cjbZlfz0+XbPoV9zzGan+7
-	cBBWzJtb5wFXYA/NmrSd/T7VGDxHbMWr6c4F/6danLJYYET/UIbpRyabsVQDCxnMv1+Tw1XO4pD
-	UtXcoU+qong6LlukkSAlRVRdAttRJuTupHAc+ktyAPVLx3twZwz3I=
-X-Google-Smtp-Source: AGHT+IHSQaroTYiAKLjNKynIk1WDzmR3Kvw4OqXhrt1MM3RYIj7IDWhIjIeLOR6Hj4qFR9501YVJsa8ofHBiWHdno8s=
-X-Received: by 2002:a05:6e02:18cf:b0:3d8:18f8:fb02 with SMTP id
- e9e14a558f8ab-3d970170ff3mr413755ab.17.1746051772386; Wed, 30 Apr 2025
- 15:22:52 -0700 (PDT)
+        bh=rg0uI63O02c4p1iLFOA5sNNvoK/KA8q0xPwjloWtPkQ=;
+        b=W12TUoYnfnD3IMArSEQu2g6yinP5yJtseZY/2wU7PRXR7b0Z0y4Uwz1U9R+Ww5Mbgu
+         3HRe9lFSasgfhnesPMZ/9fn62xP+jqpNpB62Y1ytyHCVjMm7Bv0xwTsO/iWxxA4j1Diu
+         VRMJde6Vr5y06t5NX9LpT9KpDA1qWwxgvFeZ7Bn14PnOFtncWe5PmoyzFbP6u5scsO66
+         kwURQ23N/JzbyHkDAXOc3s3IKFRGMjZ32mutzD0SsMdKVEoNFXtU4v5ZkXkA8cGwY5jC
+         F/Oyct6hVh/Rk9ILgVIRqXRTccbW7HMD4kNHiNQHOSjL6uwvOxNBCQ0lzYFiHIhquBD1
+         P5sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhRwnQ/nwF2+NDHf/RaGdz4mpszv2G6/4xQqGewIvJYzk+dTaWF9e97GygKnijJELiPyI=@vger.kernel.org, AJvYcCVt/a3Y6fjyQWuu4xNsp9AbIAkJtL6gsbN6NseLiPteL0bm74AQB61/fmhoIEhRwGnMOoKV1JEpWj3MG3bO@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC6xxsgmFnKAmTwgkhoFJRjuPRZ6zJIpVNn40V8n/Unmd1H8Zt
+	OTQFRIMbKXdeFUvqK9dvJkA1Xl2jo6FNKJepb8BDvlexyu+DyCo3ZUevpyukz/CZAgV37abrH8T
+	nWH390/RKh4oAutaRW7z/wUcnL6g=
+X-Gm-Gg: ASbGncsGfYOiSOnXD5mfe80Bz0UDOdl8E000EWLxRBsNklDT4PIC7d9tPC87UL0gVo4
+	K8fMCk7CPZtmf4y3r0464TAZ2OZqh/AEs978L6jMxCqxuWS6ziUfhS05KBB71Au3mfgpo2e3v2r
+	A9Oh4dfJkOLkk4MJn78CyCghs+rX6OibJjthyNYw==
+X-Google-Smtp-Source: AGHT+IGG+ERnGBJDsqMmUKI+z3+e6TKmbtoa8e1pOeIPXcVWLGApDN892M/K5ZLlVJHpeA4YTuSuAAp910s9QJ1uPUE=
+X-Received: by 2002:a5d:5141:0:b0:39c:30f7:b6ad with SMTP id
+ ffacd0b85a97d-3a0941d0e2amr73815f8f.18.1746051805238; Wed, 30 Apr 2025
+ 15:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430175036.184610-1-irogers@google.com> <20250430175036.184610-5-irogers@google.com>
- <gho6wdh00l.fsf@gouders.net> <CAP-5=fUdpa40MDNu0aDBO7o8H3YMe-cYsg-YfqUUZUY4M4XLeA@mail.gmail.com>
- <ghecx9guoj.fsf@gouders.net>
-In-Reply-To: <ghecx9guoj.fsf@gouders.net>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 30 Apr 2025 15:22:41 -0700
-X-Gm-Features: ATxdqUHF8bnMs2FUVX3_M8TTVB-rXwmAk4JR-eMpMw8Ws6gw_TrHiVv3n6ePWHA
-Message-ID: <CAP-5=fXJpD_f6dUqroVpqe-OX5kyOPc1zpbyOZoQtqvQWBGr=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 04/47] perf bench: Silence -Wshorten-64-to-32 warnings
-To: Dirk Gouders <dirk@gouders.net>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey <ben.gainey@arm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Eder Zulian <ezulian@redhat.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
-	He Zhe <zhe.he@windriver.com>, Brian Geffon <bgeffon@google.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Howard Chu <howardchu95@gmail.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Jann Horn <jannh@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Yang Jihong <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Hao Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Casey Chen <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Andrew Kreimer <algonell@gmail.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+References: <20250430164608.3790552-1-chen.dylane@linux.dev>
+ <20250430164608.3790552-3-chen.dylane@linux.dev> <4cabeaa5-0a6f-4be0-89c8-b7d0552b0dd0@oracle.com>
+In-Reply-To: <4cabeaa5-0a6f-4be0-89c8-b7d0552b0dd0@oracle.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 30 Apr 2025 15:23:13 -0700
+X-Gm-Features: ATxdqUGMrbdUTVhckpjhHQmx8C1KMqLLH-63CvU0GOSOJBqE-qFUAuM0Llfyoxk
+Message-ID: <CAADnVQKPLH7q2KcJM_Nkgc1z=OZmOPZes-0c8A-5gty1xEOKzA@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 2/2] bpf: Get fentry func addr from user when
+ BTF info invalid
+To: Alan Maguire <alan.maguire@oracle.com>
+Cc: Tao Chen <chen.dylane@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 3:19=E2=80=AFPM Dirk Gouders <dirk@gouders.net> wro=
-te:
->
-> Ian Rogers <irogers@google.com> writes:
->
-> > On Wed, Apr 30, 2025 at 1:23=E2=80=AFPM Dirk Gouders <dirk@gouders.net>=
- wrote:
-> >>
-> >> Hi Ian,
-> >>
-> >> considering so many eyes looking at this, I am probably wrong.
-> >>
-> >> So, this is only a "gauge reply" to see if it's worth I really read
-> >> through all the commits ;-)
-> >>
-> >> Ian Rogers <irogers@google.com> writes:
-> >>
-> >> [SNIP]
-> >>
-> >> > diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-=
-pipe.c
-> >> > index 70139036d68f..b847213fd616 100644
-> >> > --- a/tools/perf/bench/sched-pipe.c
-> >> > +++ b/tools/perf/bench/sched-pipe.c
-> >> > @@ -102,7 +102,8 @@ static const char * const bench_sched_pipe_usage=
-[] =3D {
-> >> >  static int enter_cgroup(int nr)
-> >> >  {
-> >> >       char buf[32];
-> >> > -     int fd, len, ret;
-> >> > +     int fd;
-> >> > +     ssize_t ret, len;
-> >> >       int saved_errno;
-> >> >       struct cgroup *cgrp;
-> >> >       pid_t pid;
-> >> > @@ -118,7 +119,7 @@ static int enter_cgroup(int nr)
-> >> >       cgrp =3D cgrps[nr];
-> >> >
-> >> >       if (threaded)
-> >> > -             pid =3D syscall(__NR_gettid);
-> >> > +             pid =3D (pid_t)syscall(__NR_gettid);
-> >> >       else
-> >> >               pid =3D getpid();
-> >> >
-> >> > @@ -172,23 +173,25 @@ static void exit_cgroup(int nr)
-> >> >
-> >> >  static inline int read_pipe(struct thread_data *td)
-> >> >  {
-> >> > -     int ret, m;
-> >> > +     ssize_t ret;
-> >> > +     int m;
-> >> >  retry:
-> >> >       if (nonblocking) {
-> >> >               ret =3D epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1)=
-;
-> >>
-> >> The epoll_wait(), I know of, returns an int and not ssize_t.
-> >>
-> >> That shouldn't show up, because it doesn't cause real problems...
-> >
-> > So the function is read_pipe so it should probably return a ssize_t. I
-> > stopped short of that but made ret a ssize_t to silence the truncation
-> > warning on the read call. Assigning smaller to bigger is of course not
-> > an issue for epoll_wait.
->
-> Oh yes, I missed that ret is also used for the result of read().
->
-> Some lines down there is also a combination of
->
-> ret =3D enter_cgroup() (which is int)
->
-> and
->
-> ret =3D write()
+On Wed, Apr 30, 2025 at 10:57=E2=80=AFAM Alan Maguire <alan.maguire@oracle.=
+com> wrote:
+> > +
+> > +                     if (!addr && (prog->expected_attach_type =3D=3D B=
+PF_TRACE_FENTRY ||
+> > +                                     prog->expected_attach_type =3D=3D=
+ BPF_TRACE_FEXIT)) {
+> > +                             fname =3D kallsyms_lookup((unsigned long)=
+prog->aux->fentry_func,
+> > +                                                     NULL, NULL, NULL,=
+ trace_symbol);
+> > +                             if (fname)
+> > +                                     addr =3D (long)prog->aux->fentry_=
+func;
 >
 >
-> Just confusing but yes, because ret is also used for read() and write()
-> in those cases it should be ssize_t.
->
-> I'm sorry for the noise.
+> We should do some validation that the fname we get back matches the BTF
+> func name prefix (fname "foo.isra.0" matches "foo") I think?
 
-No worries, I'm appreciative of the eyes. I suspect we'll only pick up
-the first patches in this series to fix what is a bug on ARM. I think
-I'm responsible for too much noise here ;-)
+I don't think that will be enough.
+User space should not be able to pass a random kernel address
+and convince the kernel that it matches a particular btf_id.
+As discussed in the other thread matching based on name is
+breaking apart.
+pahole does all the safety check to make sure name/addr/btf_id
+are consistent.
+We shouldn't be adding workarounds like this because
+pahole/btf/kernel build is not smart enough.
 
-Thanks,
-Ian
-
-> Best regards,
->
-> Dirk
+pw-bot: cr
