@@ -1,63 +1,33 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F4925A344
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAA923815D;
+	Wed, 30 Apr 2025 13:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746018736; cv=none; b=PtKtN+N48VqAT69oPv1E8alESMD9Jon6f2WENiUWV3qu58eG0AgiB/hL9wdteHbrkJ006hHB5ApZI1gyR5Tq9YBS4P/+BiF2K3JtQ5Ed+aMLMZls7Xx/qOxsbjmsjPwPvpFcmFQV4jATz+ENnx5x791bAO8TNSvh5HNsMOWnQts=
+	t=1746018865; cv=none; b=dXRgrI/t5KV+yMWDVD7Ba8DE25VIEWvGk9Q9oRoYsO0WQfuDESaiOfemITIa5/0VEXVpuBojBMXlmiGhC7SF10DgVl/glmUgVnfjoRnQfdUv5hAnOhZSwEzaeB8Lc8TNx8vxZe3CF+jYi++yrfKuagaIxC0RLZhfGZuHTz28a2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746018736; c=relaxed/simple;
-	bh=PIY85mKxHJ+UI+JYvM5nYj4nxGSfQYk+edb5eO6mGwU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=sNmgEe3ZV/E2e9oNlvbQwa82R/DFLhXANfmVUJwIiRr9bpU6C5qXIfsWkNFpqIXtlT1UpWTm4yPZrNOP9TF60wi56NxB/zqVE+TKLVPJLXJZR+RZLpldu8FD43/R/0MA0p9paxJLn6qXc3ZwP38qg0KRgDIrdY/vMxnD7M9794E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FpV+rXuV; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746018865; c=relaxed/simple;
+	bh=4K229jTSEoytrVRGZYVTEIZe34wrIcvfDmHAIE9mKeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NoqIuC6g13Ojsxy6Uqu21uAPTcBBgU+Wg78oZbJw24XUs73d4k4PC6Fm8250TEY9KsGqrPyfTcxgqpMxa+pVZ996BNSVcLbrSukx4tECwd+rtHz8vnbX6OYlkZsEFzqvwyf37sbFjdzGa1JJ6ug3wzwS4s2lv15xIbWOg4h++yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JW4AOmsG; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FpV+rXuV"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-acbb48bad09so24683166b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746018732; x=1746623532; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wjL1WsPsnsYmnWqXBUM0+iVtLhuhJsfn7GTamqYJHzY=;
-        b=FpV+rXuVxEMyAIOv39lSq7WdWHbFs4cs34XtDbuohYbR6saOIG4TafjT5egHC74Og4
-         kd0WoyTRilVQ0KAT+YwxB5JippkGc6cM6VSZsaumsHMZl3df7ctthoAPhcDatqldJZDt
-         8qWJ8Bv3U++Iw/gjaPplZuM4SvhtkfSUtieOb53ya3b19YEgtYLGFCgto4IwTfi+U6Vp
-         qDIkpJnY/XzxAoh00KE5U31j/gZ2iiDJ7Or16vE9MThCvnB0VkRjBqXz/vy0KKDagwDV
-         jVrMCzMhNTVK/lN+65UEZAjs7LeNSEfG09P7TTfeg7jfSurbBD/iJLs2rptCpYqsBy6i
-         8phg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746018732; x=1746623532;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wjL1WsPsnsYmnWqXBUM0+iVtLhuhJsfn7GTamqYJHzY=;
-        b=xFS2K8BVnTxFqmSfcE9NZAWWnupNgfDYzWwyjEctBvsKg84wJ1fCgCoBp1qpU8tgb7
-         suNMbmNYsXtS3xFQA2KSzDmTCEvk4tdj3VQx+MGTQ4gOaQpx5X9bursY4/3AeATOBDIv
-         1ehvYEMv+rVIcBqTj81vv0dFdB992LzCLP7vjG4rwpkHNA32r2V4AB1Ceyoi4a8Pk0l3
-         OvEDP6dtBRBe3HMvfxW6hYjittlKn9+6GZJZxagIbCRC6NNNMjjyMCwtd1GFMBb5tHwn
-         gCpbA12Fqa4XbbVMIXxlXVHhtYivtRjPwHPiOG5pElGMzpY9oRFMlwTyGKYJtatwq6z6
-         Y1qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcqDxB/Oca0acp6Cd98GHkmwD7VRKKNT9bIEd6+MDLpSFNv0ScRitB2wKTYv+ZQ8jObZLilhx/ZfjTnN8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUeOg8LnvdQHR4JySM+VeJ0QY1PNPqn4WSKFx/uaUetvFEJm73
-	hOCZFxiuZZtnrujBsiSSjIAjNbz538TZ/Elbg5reRk/GrvkZJ901XopolNyREII=
-X-Gm-Gg: ASbGncvFiL1+2+kfR5WPinio7rzLOoYAMhuXvevjCZoHV1Ek4/uangmMrV7TID0yM2f
-	C4VNHkwisNvqQak2MG66hA4vE2QcyPpNrZ2gvByn3SQPZMeDleyfw4YF5TUl95XNoP5iRoh7APM
-	J9hwBk5A19YF5rb5A3+3Kj8wapRu7uLjrzY6iQvqZHzHjRObLPidFtRGjlkMPdiN3cdsiF8O9B1
-	Bfu9opIo8lgXRgk37Y1H6R+JmTAnz5PInrwywgivWNWsZA66ENisUGoIumi5mKgj7s9S8zDC/0b
-	jvYtzkRBAHPpBXHBKFIpq+RlU/gKD9D3jzZsq6zaG9zEA1sx2wwsCQ==
-X-Google-Smtp-Source: AGHT+IETi/U1rnwgErZQDP2Zc6pA5YllvKPlYnjKU6evHX11NFKR9wcmYXjnkl4EVs84aMfZNsIkIA==
-X-Received: by 2002:a17:907:969f:b0:ace:3f00:25f5 with SMTP id a640c23a62f3a-acee21567bemr247077866b.2.1746018732276;
-        Wed, 30 Apr 2025 06:12:12 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed6af86sm926769066b.133.2025.04.30.06.12.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 06:12:11 -0700 (PDT)
-Message-ID: <223a3bc5-0696-4547-b6ca-ab6882510259@suse.com>
-Date: Wed, 30 Apr 2025 15:12:11 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JW4AOmsG"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D372F725;
+	Wed, 30 Apr 2025 15:14:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746018853;
+	bh=4K229jTSEoytrVRGZYVTEIZe34wrIcvfDmHAIE9mKeA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JW4AOmsG6Kn/ZVRKTcOkxxuHthEJOaYEnAorz2LDD0JwH3iPbO8CZgsDeuVNHsZQB
+	 U6Rfc6hjDP7BVbTDrkNb81fhjh0sAs65tTs5XcTcq2ZEiDxC0jSsINxUs85qno5x+1
+	 vQQqJzyHM++a9LMioqC7AaItR5Z9Mmcxm1mDXtOY=
+Message-ID: <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
+Date: Wed, 30 Apr 2025 16:14:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,46 +35,500 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] drm/tidss: Update infrastructure to support K3 DSS
+ cut-down versions
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: praneeth@ti.com, vigneshr@ti.com, aradhya.bhatia@linux.dev,
+ s-jain1@ti.com, r-donadkar@ti.com, j-choudhary@ti.com, h-shenoy@ti.com,
+ jyri.sarha@iki.fi, airlied@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
+ simona@ffwll.ch, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+References: <20250429143656.3252877-1-devarsht@ti.com>
+ <20250429143656.3252877-3-devarsht@ti.com>
 Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shyam Saini <shyamsaini@linux.microsoft.com>
-From: Petr Pavlu <petr.pavlu@suse.com>
-Subject: [GIT PULL] Modules fixes for v6.15-rc5
-Content-Type: text/plain; charset=UTF-8
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250429143656.3252877-3-devarsht@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+Hi,
 
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+On 29/04/2025 17:36, Devarsh Thakkar wrote:
+> SoCs like AM62Lx support cut-down version of K3 DSS where although same
+> register space is supported as in other K3 DSS supported SoCs such as
+> AM65x, AM62x, AM62Ax but some of the resources such as planes and
+> corresponding register spaces are truncated.
+> 
+> For e.g. AM62Lx has only single VIDL pipeline supported, so corresponding
+> register spaces for other video pipelines need to be skipped.
+> 
+> To add a generic support for future SoCs where one or more video pipelines
+> can get truncated from the parent register space, move the video plane
+> related information to vid_info struct which will also have a field to
+> indicate hardware index of each of the available video planes, so that
+> driver only maps and programs those video pipes and skips the unavailable
+> ones.
+> 
+> While at it, also change the num_planes field in the features structure to
+> num_vid so that all places in code which use vid_info structure are
+> highlighted in the code.
+> 
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> ---
+> V5:
+> - Use separate variable for hw_id and add it in missing places to access
+>    correct VID pipeline bits in common registers
+> 
+> V4:
+> - Create vid_info struct only for instantiated planes
+> - s/num_planes/num_vids
+> - s/vid_lite/is_lite
+> - Add hw_id member in vid_info struct and remove is_present
+> 
+> V2->V3:
+> - No change (patch introduced in V3)
+>   
+>   drivers/gpu/drm/tidss/tidss_crtc.c  |  11 +-
+>   drivers/gpu/drm/tidss/tidss_dispc.c | 152 +++++++++++++++++++++-------
+>   drivers/gpu/drm/tidss/tidss_dispc.h |  11 +-
+>   drivers/gpu/drm/tidss/tidss_kms.c   |   2 +-
+>   drivers/gpu/drm/tidss/tidss_plane.c |   2 +-
+>   5 files changed, 131 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
+> index 94f8e3178df5..c555f6717e7d 100644
+> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
+> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+> @@ -130,7 +130,7 @@ static void tidss_crtc_position_planes(struct tidss_device *tidss,
+>   	    !to_tidss_crtc_state(cstate)->plane_pos_changed)
+>   		return;
+>   
+> -	for (layer = 0; layer < tidss->feat->num_planes; layer++) {
+> +	for (layer = 0; layer < tidss->feat->num_vids ; layer++) {
+>   		struct drm_plane_state *pstate;
+>   		struct drm_plane *plane;
+>   		bool layer_active = false;
+> @@ -271,9 +271,12 @@ static void tidss_crtc_atomic_disable(struct drm_crtc *crtc,
+>   	 * another videoport, the DSS will report sync lost issues. Disable all
+>   	 * the layers here as a work-around.
+>   	 */
+> -	for (u32 layer = 0; layer < tidss->feat->num_planes; layer++)
+> -		dispc_ovr_enable_layer(tidss->dispc, tcrtc->hw_videoport, layer,
+> -				       false);
+> +	for (u32 layer = 0; layer < tidss->feat->num_vids; layer++) {
+> +		u32 hw_id = tidss->feat->vid_info[layer].hw_id;
+> +
+> +		dispc_ovr_enable_layer(tidss->dispc, tcrtc->hw_videoport,
+> +				       hw_id, false);
+> +	}
+>   
+>   	dispc_vp_disable(tidss->dispc, tcrtc->hw_videoport);
+>   
+> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+> index cacb5f3d8085..da6fe4e3ca85 100644
+> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
+> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+> @@ -103,9 +103,16 @@ const struct dispc_features dispc_k2g_feats = {
+>   		},
+>   	},
+>   
+> -	.num_planes = 1,
+> -	.vid_name = { "vid1" },
+> -	.vid_lite = { false },
+> +	.num_vids = 1,
+> +
+> +	.vid_info = {
+> +		{
+> +			.name = "vid1",
+> +			.is_lite = false,
+> +			.hw_id = 0,
+> +		},
+> +	},
+> +
+>   	.vid_order = { 0 },
+>   };
+>   
+> @@ -178,11 +185,22 @@ const struct dispc_features dispc_am65x_feats = {
+>   		},
+>   	},
+>   
+> -	.num_planes = 2,
+> +	.num_vids = 2,
+>   	/* note: vid is plane_id 0 and vidl1 is plane_id 1 */
+> -	.vid_name = { "vid", "vidl1" },
+> -	.vid_lite = { false, true, },
+> -	.vid_order = { 1, 0 },
+> +	.vid_info = {
+> +		{
+> +			.name = "vid",
+> +			.is_lite = false,
+> +			.hw_id = 0,
+> +		},
+> +		{
+> +			.name = "vidl1",
+> +			.is_lite = true,
+> +			.hw_id = 1,
+> +		},
+> +	},
+> +
+> +	.vid_order = {1, 0},
+>   };
+>   
+>   static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+> @@ -267,9 +285,32 @@ const struct dispc_features dispc_j721e_feats = {
+>   			.gamma_type = TIDSS_GAMMA_10BIT,
+>   		},
+>   	},
+> -	.num_planes = 4,
+> -	.vid_name = { "vid1", "vidl1", "vid2", "vidl2" },
+> -	.vid_lite = { 0, 1, 0, 1, },
+> +
+> +	.num_vids = 4,
+> +
+> +	.vid_info = {
+> +		{
+> +			.name = "vid1",
+> +			.is_lite = false,
+> +			.hw_id = 0,
+> +		},
+> +		{
+> +			.name = "vidl1",
+> +			.is_lite = true,
+> +			.hw_id = 1,
+> +		},
+> +		{
+> +			.name = "vid2",
+> +			.is_lite = false,
+> +			.hw_id = 2,
+> +		},
+> +		{
+> +			.name = "vidl2",
+> +			.is_lite = true,
+> +			.hw_id = 3,
+> +		},
+> +	},
+> +
+>   	.vid_order = { 1, 3, 0, 2 },
+>   };
+>   
+> @@ -315,11 +356,23 @@ const struct dispc_features dispc_am625_feats = {
+>   		},
+>   	},
+>   
+> -	.num_planes = 2,
+> +	.num_vids = 2,
+> +
+>   	/* note: vid is plane_id 0 and vidl1 is plane_id 1 */
+> -	.vid_name = { "vid", "vidl1" },
+> -	.vid_lite = { false, true, },
+> -	.vid_order = { 1, 0 },
+> +	.vid_info = {
+> +		{
+> +			.name = "vid",
+> +			.is_lite = false,
+> +			.hw_id = 0,
+> +		},
+> +		{
+> +			.name = "vidl1",
+> +			.is_lite = true,
+> +			.hw_id = 1,
+> +		}
+> +	},
+> +
+> +	.vid_order = {1, 0},
+>   };
+>   
+>   const struct dispc_features dispc_am62a7_feats = {
+> @@ -369,11 +422,22 @@ const struct dispc_features dispc_am62a7_feats = {
+>   		},
+>   	},
+>   
+> -	.num_planes = 2,
+> -	/* note: vid is plane_id 0 and vidl1 is plane_id 1 */
+> -	.vid_name = { "vid", "vidl1" },
+> -	.vid_lite = { false, true, },
+> -	.vid_order = { 1, 0 },
+> +	.num_vids = 2,
+> +
+> +	.vid_info = {
+> +		{
+> +			.name = "vid",
+> +			.is_lite = false,
+> +			.hw_id = 0,
+> +		},
+> +		{
+> +			.name = "vidl1",
+> +			.is_lite = true,
+> +			.hw_id = 1,
+> +		}
+> +	},
+> +
+> +	.vid_order = {1, 0},
+>   };
+>   
+>   static const u16 *dispc_common_regmap;
+> @@ -788,9 +852,12 @@ void dispc_k3_clear_irqstatus(struct dispc_device *dispc, dispc_irq_t clearmask)
+>   		if (clearmask & DSS_IRQ_VP_MASK(i))
+>   			dispc_k3_vp_write_irqstatus(dispc, i, clearmask);
+>   	}
+> -	for (i = 0; i < dispc->feat->num_planes; ++i) {
+> +
+> +	for (i = 0; i < dispc->feat->num_vids; ++i) {
+> +		u32 hw_id = dispc->feat->vid_info[i].hw_id;
+> +
+>   		if (clearmask & DSS_IRQ_PLANE_MASK(i))
+> -			dispc_k3_vid_write_irqstatus(dispc, i, clearmask);
+> +			dispc_k3_vid_write_irqstatus(dispc, hw_id, clearmask);
+>   	}
+>   
+>   	/* always clear the top level irqstatus */
+> @@ -809,8 +876,11 @@ dispc_irq_t dispc_k3_read_and_clear_irqstatus(struct dispc_device *dispc)
+>   	for (i = 0; i < dispc->feat->num_vps; ++i)
+>   		status |= dispc_k3_vp_read_irqstatus(dispc, i);
+>   
+> -	for (i = 0; i < dispc->feat->num_planes; ++i)
+> -		status |= dispc_k3_vid_read_irqstatus(dispc, i);
+> +	for (i = 0; i < dispc->feat->num_vids; ++i) {
+> +		u32 hw_id = dispc->feat->vid_info[i].hw_id;
+> +
+> +		status |= dispc_k3_vid_read_irqstatus(dispc, hw_id);
+> +	}
+>   
+>   	dispc_k3_clear_irqstatus(dispc, status);
+>   
+> @@ -825,8 +895,11 @@ static dispc_irq_t dispc_k3_read_irqenable(struct dispc_device *dispc)
+>   	for (i = 0; i < dispc->feat->num_vps; ++i)
+>   		enable |= dispc_k3_vp_read_irqenable(dispc, i);
+>   
+> -	for (i = 0; i < dispc->feat->num_planes; ++i)
+> -		enable |= dispc_k3_vid_read_irqenable(dispc, i);
+> +	for (i = 0; i < dispc->feat->num_vids; ++i) {
+> +		u32 hw_id = dispc->feat->vid_info[i].hw_id;
+> +
+> +		enable |= dispc_k3_vid_read_irqenable(dispc, hw_id);
+> +	}
+>   
+>   	return enable;
+>   }
+> @@ -849,19 +922,22 @@ static void dispc_k3_set_irqenable(struct dispc_device *dispc,
+>   			main_enable |= BIT(i);		/* VP IRQ */
+>   		else
+>   			main_disable |= BIT(i);		/* VP IRQ */
+> +
+>   	}
+>   
+> -	for (i = 0; i < dispc->feat->num_planes; ++i) {
+> -		dispc_k3_vid_set_irqenable(dispc, i, mask);
+> +	for (i = 0; i < dispc->feat->num_vids; ++i) {
+> +		u32 hw_id = dispc->feat->vid_info[i].hw_id;
+> +
+> +		dispc_k3_vid_set_irqenable(dispc, hw_id, mask);
+> +
+>   		if (mask & DSS_IRQ_PLANE_MASK(i))
+> -			main_enable |= BIT(i + 4);	/* VID IRQ */
+> +			main_enable |= BIT(hw_id + 4);	/* VID IRQ */
+>   		else
+> -			main_disable |= BIT(i + 4);	/* VID IRQ */
+> +			main_disable |= BIT(hw_id + 4);	/* VID IRQ */
+>   	}
+>   
+>   	if (main_enable)
+>   		dispc_write(dispc, DISPC_IRQENABLE_SET, main_enable);
+> -
+>   	if (main_disable)
+>   		dispc_write(dispc, DISPC_IRQENABLE_CLR, main_disable);
+>   
+> @@ -2025,7 +2101,7 @@ int dispc_plane_check(struct dispc_device *dispc, u32 hw_plane,
+>   		      const struct drm_plane_state *state,
+>   		      u32 hw_videoport)
+>   {
+> -	bool lite = dispc->feat->vid_lite[hw_plane];
+> +	bool lite = dispc->feat->vid_info[hw_plane].is_lite;
 
-are available in the Git repository at:
+I don't think this is correct. You can't access the vid_info[] with the 
+hw-id.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/modules/linux.git/ tags/modules-6.15-rc5
+>   	u32 fourcc = state->fb->format->format;
+>   	bool need_scaling = state->src_w >> 16 != state->crtc_w ||
+>   		state->src_h >> 16 != state->crtc_h;
+> @@ -2096,7 +2172,7 @@ void dispc_plane_setup(struct dispc_device *dispc, u32 hw_plane,
+>   		       const struct drm_plane_state *state,
+>   		       u32 hw_videoport)
+>   {
+> -	bool lite = dispc->feat->vid_lite[hw_plane];
+> +	bool lite = dispc->feat->vid_info[hw_plane].is_lite;
 
-for you to fetch changes up to f95bbfe18512c5c018720468959edac056a17196:
+Here too.
 
-  drivers: base: handle module_kobject creation (2025-04-16 15:10:55 +0200)
+>   	u32 fourcc = state->fb->format->format;
+>   	u16 cpp = state->fb->format->cpp[0];
+>   	u32 fb_width = state->fb->pitches[0] / cpp;
+> @@ -2210,7 +2286,7 @@ static void dispc_k2g_plane_init(struct dispc_device *dispc)
+>   	/* MFLAG_START = MFLAGNORMALSTARTMODE */
+>   	REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
+>   
+> -	for (hw_plane = 0; hw_plane < dispc->feat->num_planes; hw_plane++) {
+> +	for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
+>   		u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
+>   		u32 thr_low, thr_high;
+>   		u32 mflag_low, mflag_high;
+> @@ -2226,7 +2302,7 @@ static void dispc_k2g_plane_init(struct dispc_device *dispc)
+>   
+>   		dev_dbg(dispc->dev,
+>   			"%s: bufsize %u, buf_threshold %u/%u, mflag threshold %u/%u preload %u\n",
+> -			dispc->feat->vid_name[hw_plane],
+> +			dispc->feat->vid_info[hw_plane].name,
 
-----------------------------------------------------------------
-Modules fixes for v6.15-rc5
+Here hw_plane is not actually the hw-id (anymore), but elsewhere in this 
+function it is used as a hw-id, which is no longer correct.
 
-A single series is present to properly handle the module_kobject creation.
-It fixes a problem with missing /sys/module/<module>/drivers for built-in
-modules.
+>   			size,
+>   			thr_high, thr_low,
+>   			mflag_high, mflag_low,
+> @@ -2265,7 +2341,7 @@ static void dispc_k3_plane_init(struct dispc_device *dispc)
+>   	/* MFLAG_START = MFLAGNORMALSTARTMODE */
+>   	REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
+>   
+> -	for (hw_plane = 0; hw_plane < dispc->feat->num_planes; hw_plane++) {
+> +	for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
+>   		u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
+>   		u32 thr_low, thr_high;
+>   		u32 mflag_low, mflag_high;
+> @@ -2281,7 +2357,7 @@ static void dispc_k3_plane_init(struct dispc_device *dispc)
+>   
+>   		dev_dbg(dispc->dev,
+>   			"%s: bufsize %u, buf_threshold %u/%u, mflag threshold %u/%u preload %u\n",
+> -			dispc->feat->vid_name[hw_plane],
+> +			dispc->feat->vid_info[hw_plane].name,
 
-The fix has been on linux-next for two weeks with no reported issues.
+And here.
 
-----------------------------------------------------------------
-Shyam Saini (4):
-      kernel: param: rename locate_module_kobject
-      kernel: refactor lookup_or_create_module_kobject()
-      kernel: globalize lookup_or_create_module_kobject()
-      drivers: base: handle module_kobject creation
+All these issues make me wonder whether we have the right model. It's 
+just too easy to get the usage wrong.
 
- drivers/base/module.c  | 13 +++++--------
- include/linux/module.h |  2 ++
- kernel/params.c        | 47 ++++++++++++++++++++++-------------------------
- 3 files changed, 29 insertions(+), 33 deletions(-)
+I'm not sure which way to go here.
+
+Fix the current issues? It's a bit cumbersome to go from hw-id to the 
+index (needs a search), just to get some hw properties.
+
+Or go back to the earlier one, with a vid array containing unused slots? 
+That makes the for loops a bit harder.
+
+I need to think about it...
+
+  Tomi
+
+>   			size,
+>   			thr_high, thr_low,
+>   			mflag_high, mflag_low,
+> @@ -2898,8 +2974,8 @@ int dispc_init(struct tidss_device *tidss)
+>   	if (r)
+>   		return r;
+>   
+> -	for (i = 0; i < dispc->feat->num_planes; i++) {
+> -		r = dispc_iomap_resource(pdev, dispc->feat->vid_name[i],
+> +	for (i = 0; i < dispc->feat->num_vids; i++) {
+> +		r = dispc_iomap_resource(pdev, dispc->feat->vid_info[i].name,
+>   					 &dispc->base_vid[i]);
+>   		if (r)
+>   			return r;
+> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+> index 086327d51a90..72a0146e57d5 100644
+> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
+> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+> @@ -46,6 +46,12 @@ struct dispc_features_scaling {
+>   	u32 xinc_max;
+>   };
+>   
+> +struct dispc_vid_info {
+> +	const char *name; /* Should match dt reg names */
+> +	u32 hw_id;
+> +	bool is_lite;
+> +};
+> +
+>   struct dispc_errata {
+>   	bool i2000; /* DSS Does Not Support YUV Pixel Data Formats */
+>   };
+> @@ -82,9 +88,8 @@ struct dispc_features {
+>   	const char *vpclk_name[TIDSS_MAX_PORTS]; /* Should match dt clk names */
+>   	const enum dispc_vp_bus_type vp_bus_type[TIDSS_MAX_PORTS];
+>   	struct tidss_vp_feat vp_feat;
+> -	u32 num_planes;
+> -	const char *vid_name[TIDSS_MAX_PLANES]; /* Should match dt reg names */
+> -	bool vid_lite[TIDSS_MAX_PLANES];
+> +	u32 num_vids;
+> +	struct dispc_vid_info vid_info[TIDSS_MAX_PLANES];
+>   	u32 vid_order[TIDSS_MAX_PLANES];
+>   };
+>   
+> diff --git a/drivers/gpu/drm/tidss/tidss_kms.c b/drivers/gpu/drm/tidss/tidss_kms.c
+> index f371518f8697..19432c08ec6b 100644
+> --- a/drivers/gpu/drm/tidss/tidss_kms.c
+> +++ b/drivers/gpu/drm/tidss/tidss_kms.c
+> @@ -115,7 +115,7 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
+>   
+>   	const struct dispc_features *feat = tidss->feat;
+>   	u32 max_vps = feat->num_vps;
+> -	u32 max_planes = feat->num_planes;
+> +	u32 max_planes = feat->num_vids;
+>   
+>   	struct pipe pipes[TIDSS_MAX_PORTS];
+>   	u32 num_pipes = 0;
+> diff --git a/drivers/gpu/drm/tidss/tidss_plane.c b/drivers/gpu/drm/tidss/tidss_plane.c
+> index 719412e6c346..142ae81951a0 100644
+> --- a/drivers/gpu/drm/tidss/tidss_plane.c
+> +++ b/drivers/gpu/drm/tidss/tidss_plane.c
+> @@ -200,7 +200,7 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
+>   	struct tidss_plane *tplane;
+>   	enum drm_plane_type type;
+>   	u32 possible_crtcs;
+> -	u32 num_planes = tidss->feat->num_planes;
+> +	u32 num_planes = tidss->feat->num_vids;
+>   	u32 color_encodings = (BIT(DRM_COLOR_YCBCR_BT601) |
+>   			       BIT(DRM_COLOR_YCBCR_BT709));
+>   	u32 color_ranges = (BIT(DRM_COLOR_YCBCR_FULL_RANGE) |
+
