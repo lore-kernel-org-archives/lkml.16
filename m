@@ -1,37 +1,37 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4CF21CC59;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D43B21CC56;
 	Wed, 30 Apr 2025 08:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001767; cv=none; b=VVBG7Uwa+6yVl5OawCNJDWkSD45305UegtA4f9vLuVHvKZVV63isCPs+xqaWWQ7Vlwfw5EnS02tHOoRiT/1PJA3AR3d84efx3RURbhBHj2U9xUR5SAyqqHXfYaDxTK80UdXvSRm84IPaPVS76VAztR2z2M64sQ/NXncARAFITvE=
+	t=1746001767; cv=none; b=C30EKGpgnzEW8qcxdgUlpDgUsO5SPPIM6dnVegu/ILk0Mic/X2RyRB4R8vrLgGFXYDHPnzy53OeAYL2PhxVICrGF6sDH+saJan3XfAVG3vauTDIqGDikZKTd0sFGuN3xsP7TKISwOeg3mN+FIr0RCEndIUCMfSsGPTVY7w6QIlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746001767; c=relaxed/simple;
-	bh=meKdTzH2ck702aDndgRKwu2INdRv2cdwg+OFsPFYFjU=;
+	bh=7UzvkkUxniBTkynNGdvtJvNdvOBO3RzQWPle773eRZ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QuM7yIgbA3ig/8j0SMTPJ9ytQg7FGkRNo4RKOIm6mXGxAOnd+8TrMDiN5CpavTmKlinTK/+Qv3szmyNRWj1yJ78VwKVGAM4CCZvD6cBkcTZlJu8NEWfHMbHAoCdwi0y8fJ0nl6BeBcLSfdNiMqdf93BodIUboc31MIOJsS6bQ4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=COros5YQ; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version; b=haFHSDMfUjGPDP9ZVE+SVgXN7nP/x5kS2U/QGOPKULpN7xIH/D3nufl6CdcX8mhQWIytv9IOY+xrkU54f9GXUenYhsu/Sw6DYUPDJtqbxSA6EAT/E7+FTT/85aw9RgmOxnpg1c4WPbEKYj99s1Y2sUl4oD7xXz2JMYHDT1Of7CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=PPVjllzf; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="COros5YQ"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="PPVjllzf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=pNMjVj1AMrxiwOwN96Y/v4xLwkJzF6aKGVkZSCFmS3Y=; b=COros5YQ0h0Nqkdj3H0dWIQCaT
-	UKGjVtS4QLGfI9Txixt8NL1mpY+Fmz6+nEBtOcw12gCyxy4MYL5QlQTNu9KQljIbCycuBM+rVblea
-	SEWpmPAkYh5/5A1DykD+HVRXGHnDlbg/oE0Duib6P/Rlroc+5esRHYVDNsnNQEFDqcyovQiFQFH2y
-	W7MKKEvRz0yyU6cIqcUj28M7zyvDNa92542db16ESeja77hZmf0bGFmjEmwYrlFQcuKimfIagCnrD
-	ybzGy1QurI8pOqtniVIZvj6g35mKHlC5k5VX0ywkzSQWEphdiO/PjbhZZF9y70CH2juABaz7/5n1K
-	2CQvOOEw==;
+	bh=+sziV7MF8+jBwSYemNEdogvFX2m4sp7ZLD0VYElL25s=; b=PPVjllzf4GOZ8Kuc/PW/d8MSh7
+	TrGmSYLm0P0ko9zBkUBXv+9YehlBs+HOk1tn9e7iXgPAP0GWIi0QG7rxAAgsYt2SbLiLQvwvEl6Nk
+	oXYJ5AXHV1F+N5AoEUXeTluJb2HkmRuRGjRgTgqgsKUFT/nK8euPbYsXbpz4Y4wVmV2PmxJdJkqG8
+	y4QxjVfJbcgThgKwR6LE2A7I8OVQIxw8gxiMaE096KRW54aqgzL+Vdoo+TIdBIPXle34BMvcBrTGH
+	dc9MvV3LTFSQaW1wxYLYQDkmhwgp4NYL8/048dJdlrP9QWE2rdztbrnC6pmxFp+Oe5Z4qeJVph/ge
+	DCCK91mA==;
 Received: from i53875ba4.versanet.de ([83.135.91.164] helo=localhost.localdomain)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1uA2oW-00032E-BN; Wed, 30 Apr 2025 10:29:08 +0200
+	id 1uA2oX-00032E-1q; Wed, 30 Apr 2025 10:29:09 +0200
 From: Heiko Stuebner <heiko@sntech.de>
 To: neil.armstrong@linaro.org
 Cc: quic_jesszhan@quicinc.com,
@@ -46,11 +46,10 @@ Cc: quic_jesszhan@quicinc.com,
 	dri-devel@lists.freedesktop.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH 1/2] dt-bindings: display: ltk050h3146w: add port property
-Date: Wed, 30 Apr 2025 10:28:49 +0200
-Message-ID: <20250430082850.244199-2-heiko@sntech.de>
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH 2/2] dt-bindings: display: ltk500hd1829: add port property
+Date: Wed, 30 Apr 2025 10:28:50 +0200
+Message-ID: <20250430082850.244199-3-heiko@sntech.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250430082850.244199-1-heiko@sntech.de>
 References: <20250430082850.244199-1-heiko@sntech.de>
@@ -66,23 +65,16 @@ From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
 The panel can be connected to via graph nodes, so allow the port property.
 
-This fixes dtc checker warnings like:
->> arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-haikou-video-demo.dtb: panel@0 (leadtek,ltk050h3148w): 'port' does not match any of the regexes: 'pinctrl-[0-9]+'
-    from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
-   arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou-haikou-video-demo.dtb: /edp@fdec0000: failed to match any schema with compatible: ['rockchip,rk3588-edp']
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504300218.VDqQqGTT-lkp@intel.com/
 Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
 ---
- .../devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml  | 1 +
+ .../devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml  | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml
-index e2a2dd4ef5fa..5fcea62fd58f 100644
---- a/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml
-@@ -23,6 +23,7 @@ properties:
+diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+index af9e0ea0e72f..b0e2c82232d3 100644
+--- a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
++++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+@@ -22,6 +22,7 @@ properties:
      maxItems: 1
  
    backlight: true
