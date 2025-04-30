@@ -1,132 +1,177 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84A71A0714
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC4316DC28;
+	Wed, 30 Apr 2025 14:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746025008; cv=none; b=R4u1bWTTgwEzIUDPslcDjvPKgG2z33bNp5p3EuL6MC0koGR3v1zy8/WLqmohC2OGx4N5xyuP/mtf51lUpsQdHJqdzrDNNo+SEeiZ4JYJn1y2C5/MQfE4vtgUztzxobPr+YaIWt4Y26PRZIwsW1kec4xZuPscjKqQ7QWxZxKaZos=
+	t=1746025093; cv=none; b=Y1Y1sjBSDaruKffSk62mdw6/fIt96Ot08zjeCHcm/aIhkR5iaXc6sGb6VKQYFBhq++XTzxiSVMfp48KVYmCouTEmWUslYydOtKviuw081hG5mTL3yvtMVYGzDgURhPj/afCWGdiYd+BdYwE+uLUOHrq85mjqAa5QbYgrOSrFwOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746025008; c=relaxed/simple;
-	bh=2NcOLfzZKue6h2awXGoXt4niifDn/e+a1VZPDlSG97o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NaGIOK8zqOtg9sI66l+aEJzuLcNC3hN3Irk8ojiLS0d+gI/vw2HnhGAdzsmlcUCTxOhdE4pEQO0Cy9BejxYkuB8lt6sagNS1EqUDcbEwUz2FBVJ1XCZa+tVUwmjGHPX8EQSNqYJq34SbyiMunZMy357+7Nqef92a5nYIG8ujuyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1iUsR0Y3; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746025093; c=relaxed/simple;
+	bh=EYPKCdUT0tsxaRq3eHTkcGgvwaOZjVXqHJtKFOSpnxg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TSjODfzqBTMrM827fku7Xd5Uk5h8VXy69rcdkFHvH4qK98yLNlrmukF0IDkZQ6GrHDj2gsi+w6NcM7zSpJ+yhCEp+7fvdsjKINg1dGCQs64RiEUaENwVwr+KLYxiAEVYlSoxex6vRboySRt3mFQl1Y4ehD4CBMDA6kzaXyTLoT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9TMVAIa; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1iUsR0Y3"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d4e7797d59so1379fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:56:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9TMVAIa"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22423adf751so75457865ad.2;
+        Wed, 30 Apr 2025 07:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746025006; x=1746629806; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Sk93f/QmfWRFnir5kQcAvlAIOBCq59GYkwRW++xpxLQ=;
-        b=1iUsR0Y3hX0/HHa00t77cOkQ+I+QktEI9Fq6epgrW8Hm915ukNUi0oYIul+88EsxiI
-         ybsYBcKiHl28aLYStRJKuRlszVK9gVi2q2x/I+InHeJfOFzP7IiBVqnPC7jrHs7WvliA
-         rbKpaIqh9KO4cxUiLSkEjzXvt5wmOUbdYdIi8KqqCRdxTYUaFwgnpl1tl6HszIOlw6FX
-         TaNP9kVjVHkZK+In5HNx8yJSsjIXORn//bDHHS9eChWEA6tmvb9rgdJ/GqUzrSmn3uYk
-         3rSZ7K2rIeha+4E9zi+WMgitKzjCT7Lyjc/JRlCFznHcJsBPgP3X6i2T/aZGj7e4AkIK
-         q+zA==
+        d=gmail.com; s=20230601; t=1746025091; x=1746629891; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XysSvGAtMmxjFQL+azYhYASm1rOofXXZwEqUecB0bpk=;
+        b=f9TMVAIakOkT0k8RFiCxseiZe4WlEk4eWjPSUWpwAHG5HIZix4pC/UqaspBBvaom3f
+         b0iYB9uThpOVJGAxvRvCtqwsODNcmmxF7eUO1fbgjTomH63BYU3d5lupa6Np37aqoyas
+         QEwRj16ZnQDUulYOijq9CabTet4I9SbCRqCrnvJivO5gzRgPXxFSUAiEa0/DbBsSdnC5
+         ZNDxN9jJp90rvFwx+aj8FZvZ/uZamD7tpd49ToHOAeO4tfezP3JMj71J55+lM3CKOqmb
+         +ruBnqhx0HXtTKTKigF+TFNz5BQ5ydTbxPH4c8QcY5//C98O82GYHdO4jZRmkSt22J4D
+         /GXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746025006; x=1746629806;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sk93f/QmfWRFnir5kQcAvlAIOBCq59GYkwRW++xpxLQ=;
-        b=MlMcnas24H4HqsDffJ6oq1mrftGsJ0hsS/AbYOJf/ohhs2knKxuWz19uWdqi5j1TRw
-         juR3Fbh9MxCmqHolKVGQHgKpu0tB+vpX4PV3lApLA0sK7MD5e3dSwB1/vMhw91xe75d3
-         tivPZPk+ZoTeHzTJooo9tVj0hraHnd9rvY7as4yz0i6m5n/Ak9jetRnTxfltOIw5nZbo
-         Tvdzp80IkuNlc697LoZO2iAxyiQ3Ae8haVyJG8aTrkmQgaD7q5ocI8xhq/mKvBfomVFM
-         IT7Z3Ayn9jucWW44wm4/zAMRpASUINiyuuMuPjul8WczzdCzI1p4gLveYeQfULm4lIhj
-         Y4ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMd1d+b+sMJYM6lBdoW3skaP0tt3/XgYBJR5kZmvzC1QkOduzHyYnGLS6uXmz6vmlOoOGJ0ZKL7CC9Ex0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRzj4PukNr+V9ED+g+VgecS6zpjQxpmtX/8l5QouDtSbAS9pXV
-	9yjyl37c80gKwxOHo8MCbVBW3CP//78qdF+noNc7D6cF057+SZcLm4anNuLHzrM=
-X-Gm-Gg: ASbGncu1gwxBxSraLQNfg3GuMTAQj0D8FZLgFlO09hFTO4qMgm4rMzks50rXJS8oS1U
-	7irJRR3xJPNC3TYmvry/ZUwwbWPlikORndcHQl0EQDJWhoIAfMHiV8U3ayQcrPtYpkAatNTOU4A
-	hmhboN9uOmiHOAASvFBhBWyTKcilCvPkIFz2DWMZm991w848bm/nXCwEfiB3iT19w9EmzRTiEHK
-	IdFQUZlsRKoNFkZCe0p5d3zflN9KQHPZyenEThK+bIuHt2Z7Mobu9RtGamcES4kLE39A1/i+qh/
-	UxyyXGRidCR1TjzrzeEuUWJXlEbs9ZT+hYR7zGkbPwjpEVTeGdH3oVp1yjomF/tYXpnZQMJ5/Xa
-	Oygp61GGRD6pC5Qg=
-X-Google-Smtp-Source: AGHT+IEKD9KMxxcH3+s+rQUgR1CdT0kXIMoJRPA9zp3G4pnlVTK9HHZKKfZE0x8ViCpn6Iz77Q3PaA==
-X-Received: by 2002:a05:6870:e98e:b0:2bd:455e:c22e with SMTP id 586e51a60fabf-2da69f21801mr1756582fac.19.1746025005850;
-        Wed, 30 Apr 2025 07:56:45 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60686eec865sm808691eaf.22.2025.04.30.07.56.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 07:56:44 -0700 (PDT)
-Message-ID: <896023ae-c279-4201-a7a8-dfd9b33fe0e5@baylibre.com>
-Date: Wed, 30 Apr 2025 09:56:42 -0500
+        d=1e100.net; s=20230601; t=1746025091; x=1746629891;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XysSvGAtMmxjFQL+azYhYASm1rOofXXZwEqUecB0bpk=;
+        b=GtXBZieg8OCKzlUBuqlEa/iAAj5xtIG6OYtEIfFx9nrfANewTHd5fo2hMtTzuywISd
+         sHLRro3233SZylWfQrW0zOlbmjwt6Od17WNaAhFToFX5wgJk4G47ey7+KH6p9w+uhw40
+         4C686izejP0AulRBcT0zmvMkqwvPd1WL72ynR/lgC3KFJAbPn6pTUoFlSbgirixPQhYE
+         lpN//SHi2m+CxuhYNuedWDdUCfB3DXN5AqOpf+IV5MZGtJRpa4Ga3ukC8uRygyTr/iqu
+         ZKLKAgCGqnHKp955UzrWXIj79lZEuJEQVaynwzXqb96nONXSI0oohbKbmQqYweEvlvtq
+         Gy7w==
+X-Forwarded-Encrypted: i=1; AJvYcCV9z455aCIQHxItrgC7G4kqOYhKXcj3qHfMl5Wlp2VMqoYw2nBGvSysK+TJzTscJCmoI1Td@vger.kernel.org, AJvYcCXRJ7MbgakRbcUcBnG831J29OK0n7yzYSF41Q5nJPA5YHTaOpb+BxShoUoVW077dl40L9Uku4zrOoOSEMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn96QHHCBfaxCO4+pJIQkcT3XDIfC/Of82i7nivD+VkxTFeKM+
+	1ZhgMcX825R8tCpd3+EicYnpwgp1SS7LpHoVcQW1zWgbyBY7kOt8o3cJyVE/m7nFErs77CSqr9F
+	oZC6H4/eMAShbnpEVnCsSleXJL5g=
+X-Gm-Gg: ASbGncuUTjAAgvd+S1IfgPb4A22FVL45ejOjBa1nt3TE5WGbvpLs3w8oTIQ+ggf00xd
+	GY0wI0Wr42uLdgaR/GAscvPH7fLxYuf0qNwYD96S3LI+nc+FoA1/y4xeqaysCeluld9hK839xui
+	PtdoZyy4FdM0HoSH+u4TNc9mr+n5wX3ePot1PcrQDEGAFd/1kP7EIT28Sb
+X-Google-Smtp-Source: AGHT+IHomQH6ewvLhDPTUDHoLx20D1U1tgbcMBoVGtjZciQbAtMjuYsk6nsriUTRweHxz0bR2DSb6fMEX5V5lotgUsc=
+X-Received: by 2002:a17:90a:da83:b0:2ff:4bac:6fa2 with SMTP id
+ 98e67ed59e1d1-30a3330bc51mr5858081a91.16.1746025090569; Wed, 30 Apr 2025
+ 07:58:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
- documentation
-To: Andy Shevchenko <andy@kernel.org>
-Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Angelo Dureghello <adureghello@baylibre.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
- <20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
- <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
- <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
- <aBI3eUPirZEXpZgG@smile.fi.intel.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <aBI3eUPirZEXpZgG@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
+ <aA9U9QvB2t2MLuU2@pavilion.home> <CALm+0cW2tXM-HvzoMsNBk4DNyZ-LuUkGj5M4wVLJixSvUDP+Dw@mail.gmail.com>
+ <b1d6d155-de0a-4715-9de6-45d3d9e5c9a6@nvidia.com>
+In-Reply-To: <b1d6d155-de0a-4715-9de6-45d3d9e5c9a6@nvidia.com>
+From: Z qiang <qiang.zhang1211@gmail.com>
+Date: Wed, 30 Apr 2025 22:57:59 +0800
+X-Gm-Features: ATxdqUFu1fEcELVDHJti8TyXdQfer1gVANipbpWsr1PUkrZAE4GFyLTMoRnMjWM
+Message-ID: <CALm+0cUx2siBvaRYwWGsN21PC=UUUy1EqLTRe5HmRW2ECWtUWA@mail.gmail.com>
+Subject: Re: [PATCH] rcu/nocb: Add Safe checks for access offloaded rdp
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>, paulmck@kernel.org, neeraj.upadhyay@kernel.org, 
+	joel@joelfernandes.org, urezki@gmail.com, boqun.feng@gmail.com, 
+	rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/25 9:45 AM, Andy Shevchenko wrote:
-> On Wed, Apr 30, 2025 at 09:21:28AM -0500, David Lechner wrote:
->> On 4/30/25 12:40 AM, Nuno Sá wrote:
->>> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
->>>> From: Angelo Dureghello <adureghello@baylibre.com>
->>>>
->>>> Add new IIO calibphase_delay documentation.
->>>>
->>>> The delay suffix is added to specify that the phase, generally in
->>>> radiants, is for this case (needed from ad7606) in nanoseconds.
-> 
-> ...
-> 
->>>> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_delay
->>>
->>> Not sure if I'm too convinced on the _delay suffix
->>>
->> Phase is measured in radians, not seconds, so it seems wrong to use it here.
->>
->> https://en.wikipedia.org/wiki/Phase_(waves)
->>
->> And the delay here is with respect to individual samples in a simultaneous
->> conversion without regard for a sampling frequency, so I don't see how we could
->> convert the time to radians in any meaningful way.
-> 
-> And how this delay is aplicable to the phase in the hardware? Sounds to me that
-> HW has some meaningful way of such a conversion?
-> 
+>
+>
+>
+> On 4/28/2025 6:59 AM, Z qiang wrote:
+> >>
+> >> Le Mon, Apr 28, 2025 at 05:54:03PM +0800, Zqiang a =C3=A9crit :
+> >>> For Preempt-RT kernel, when enable CONFIG_PROVE_RCU Kconfig,
+> >>> disable local bh in rcuc kthreads will not affect preempt_count(),
+> >>> this resulted in the following splat:
+> >>>
+> >>> WARNING: suspicious RCU usage
+> >>> kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
+> >>> stack backtrace:
+> >>> CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
+> >>> Call Trace:
+> >>> [    0.407907]  <TASK>
+> >>> [    0.407910]  dump_stack_lvl+0xbb/0xd0
+> >>> [    0.407917]  dump_stack+0x14/0x20
+> >>> [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
+> >>> [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
+> >>> [    0.407939]  rcu_core+0x471/0x900
+> >>> [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
+> >>> [    0.407954]  rcu_cpu_kthread+0x25f/0x870
+> >>> [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
+> >>> [    0.407966]  smpboot_thread_fn+0x34c/0xa50
+> >>> [    0.407970]  ? trace_preempt_on+0x54/0x120
+> >>> [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
+> >>> [    0.407982]  kthread+0x40e/0x840
+> >>> [    0.407990]  ? __pfx_kthread+0x10/0x10
+> >>> [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
+> >>> [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
+> >>> [    0.408000]  ? __pfx_kthread+0x10/0x10
+> >>> [    0.408006]  ? __pfx_kthread+0x10/0x10
+> >>> [    0.408011]  ret_from_fork+0x40/0x70
+> >>> [    0.408013]  ? __pfx_kthread+0x10/0x10
+> >>> [    0.408018]  ret_from_fork_asm+0x1a/0x30
+> >>> [    0.408042]  </TASK>
+> >>>
+> >>> Currently, triggering an rdp offloaded state change need the
+> >>> corresponding rdp's CPU goes offline, and at this time the rcuc
+> >>> kthreads has already in parking state. this means the corresponding
+> >>> rcuc kthreads can safely read offloaded state of rdp while it's
+> >>> corresponding cpu is online.
+> >>>
+> >>> This commit therefore add rdp->rcu_cpu_kthread_task check for
+> >>> Preempt-RT kernels.
+> >>>
+> >>> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> >>> ---
+> >>>  kernel/rcu/tree_plugin.h | 4 +++-
+> >>>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> >>> index 003e549f6514..fe728eded36e 100644
+> >>> --- a/kernel/rcu/tree_plugin.h
+> >>> +++ b/kernel/rcu/tree_plugin.h
+> >>> @@ -31,7 +31,9 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *r=
+dp)
+> >>>                 lockdep_is_held(&rcu_state.nocb_mutex) ||
+> >>>                 (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible())=
+ &&
+> >>>                  rdp =3D=3D this_cpu_ptr(&rcu_data)) ||
+> >>> -               rcu_current_is_nocb_kthread(rdp)),
+> >>> +               rcu_current_is_nocb_kthread(rdp) ||
+> >>> +               (IS_ENABLED(CONFIG_PREEMPT_RT) &&
+> >>> +                current =3D=3D rdp->rcu_cpu_kthread_task)),
+> >>
+> >> Isn't it safe also on !CONFIG_PREEMPT_RT ?
+> >
+> > For !CONFIG_PREEMPT_RT and  in rcuc kthreads, it's also safe,
+> > but the following check will passed :
+> >
+> > (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
+> >           rdp =3D=3D this_cpu_ptr(&rcu_data))
+>
+> I think the fact that it already passes for !PREEMPT_RT does not matter, =
+because
+> it simplifies the code so drop the PREEMPT_RT check?
+>
+> Or will softirq_count() not work? It appears to have special casing for
+> PREEMPT_RT's local_bh_disable():
+>
+> (   ( !(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) || softirq_cou=
+nt() )
+>    && rdp =3D=3D this_cpu_ptr(&rcu_data))  )
 
-It is a calibration to account for a phase difference between two input signals.
-This is a simultaneous sampling ADC, so all channels normally sample at exactly
-the same time. This phase delay calibration factor can introduce a small delay
-on an individual channel so that it starts it's conversion some microseconds
-after the others.
+Thank you for Joel's reply,  I also willing to accept such
+modifications and resend :) .
 
-There is a nice diagram here:
-
-https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606c-18.pdf#%5B%7B%22num%22%3A113%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C34%2C594%2C0%5D
-
-To convert the phase delay to a phase angle and back would require also knowing
-the frequency of the input voltage signals.
+Thanks
+Zqiang
+>
+> thanks,
+>
+> - Joel
+>
+>
+>
+>
+>
