@@ -1,488 +1,279 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327CC27E7DA
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A242343CF
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746018123; cv=none; b=Iep5QeZwHoqeOGjQC1jK3y+aMP3HlZsOGkaBgNEkfk/YRnQYjQKJBgpnuJS3tJgnQSG3oRx2HUzZyHb7VFK/ZKU+93eM9OOZxthfy+MQdRgfO6S91tVyKcxMYtRxK3Foeg6853ABoeGCY/ngAl1o1oHXN9GHd6+8nmZvGWczHtw=
+	t=1746018162; cv=none; b=sPOL9ZJqfFdd2Ygal/vuodfvbfYQeMoytS5X1EIf+9lOyD+lnObRlhSZrJpaMfPOgtz7GJgjv9U2/9GL6U+DQW/1xHm5iNXqaueVZIgUmpK17EU8QhHd2kdrohu65ZN6+mN2xTV7cJG/UVBRXOr1mar5ZpC7Dv6b8xQmcgAUlTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746018123; c=relaxed/simple;
-	bh=3e54wA8aqQN+E6w44PaExnrYmkR+KjEIhfnRbipAyRM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H/4Gjya5YityMVuv09XssQBGVwJfdP+42nrC4EwT+YwiFRhB/0nqsuFo416wSPyjlBpjfKWQaRxvF1XEXzNHOulbDUs04oGEWOMR7j+ZzXwy5E2K2GeBOoWRdo47x4s0p5EpoGPLQ2wzc4Yiiu/idCWcnBw3YNsKRTNkViwKyaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t/zOcfNf; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t/zOcfNf"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-391295490c8so479525f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746018118; x=1746622918; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5+MDPguozj+eCC9e25K7sO+Bjo/lqsG1BvOCa2Y7aHk=;
-        b=t/zOcfNf8rxFZXcAli3eXou84p2jWkrq1uXVBtOhhZLMDOPUt1Wqnd8EsEGGksGLdj
-         kjfF9U+OWzC+wqKvcCSC7yCs6eDKgn3wH0uep//S+eLo97WKqvrDrDrRlsoCrm4VyPXG
-         239Uj9Bj0P1BE4462pcBtNSKUQNFgMqwZT7L+d2hEXV2PrBCIJRQPhnl5g8x35xjWB58
-         5R8othD25oxi+b5npakPATUqYluiffXVpgbiAUfAIdFMeY1/lfNaiwaQzmdVqkmv6IOB
-         PpeAStZHhqmtoFcFJgDMavsRc+nL1RZ8aazIuE6Ap0nYd4yQwxw3002euhhkmLLH9PLY
-         z2eQ==
+	s=arc-20240116; t=1746018162; c=relaxed/simple;
+	bh=x2ti7/R5nDhd7tDM2yYsl6Li6KD9V2vS1surI/MyTMw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sLJytg9nsDGmvyCmOlth5dqS3LDLKPqW4z7XDvCqKsKKniIbC5JIoAvgfCHHV9qvD5NgRbvPlBkUKf+vhwoeTSOzERAFY2OT303BPPNuTqLM1j2nQxzAtxggpi9hVaUcqXmFWrxl/wlrge+BMvZCiP9+hMmDhzZwX0tDnsR2Tqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d817cf6e72so9355265ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:02:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746018118; x=1746622918;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5+MDPguozj+eCC9e25K7sO+Bjo/lqsG1BvOCa2Y7aHk=;
-        b=V3CS4oK324tGEmLjkHLzLsHUgxrK37UGwk7mlpllPLV77FydbXfCUAYZtKvGh6+XjK
-         TKINslDJ7qu54II6zDhiJOb7NqBT44wpwsjj0bU7UCGOShE8GC12UdvguDpfKYsuMYGb
-         A8exTSAkdkG5XOyaW8Gzc9d6cc0NSsPOFd4l4d5KCkOQB6mNjGYT5t7V+AD4rwXLtAIh
-         sWPAxx0NIFiy7N0pAjUezB7kjlPTcsuqyob+W9tMQe/x4McHiAf9r09DO7ac0iqT6J5Q
-         edDEyvrXs0c93ZdfbKC4A17j+lsRXesPA3WPuJx49dSiS6PErgTApeF5e6N896XXG4dQ
-         60HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb5sNSY3Ia6oXmZq6vGNdKhUCRiJap5+6fAdreDrSio6lrcJ2zke7kn43lLyFzOeF90wR62JefThVPa8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyza1/nO+2Zd+veWtdLgCaYpa/DlPi0BJ3ObJzXO1ElmusSk7Ba
-	jO12lKJF5mtz4wfg8s6pQ70hunAuyW5PcKtVD4Tw7SswLaZWR0JJ6xDrs6QqCBs=
-X-Gm-Gg: ASbGncuKJFtywyniUh5FCP0uhs1+dlxXDmB/SjQHDS6EUxxGfWLFdeCu8KU7/HFD87m
-	oacTZAx75X/9W8iNoxLtry6B022+0/pR9dbNq/6EKxYLtKpI21atFKMxouQ6jSeBp+CgjWGErQG
-	Gf8KHtlyUirYh1PIgo4TYz5oqPCaP91gqgUmWQOhZjPtZKznaMVWSwsT04NYCbIhGGpvhmLl/AY
-	/Q5jeAK9sK5d/A1auTjYreYl3Vtqq4GnlT2ws4EJ45jLX6jfmuKKgBGkm4Ld8lLet/6FFfPZlm1
-	TxQMLE5jx1EH0by5oGQNuGUNvN69w1ay+/KSAYKvU9cFld6mvDyaZV+EUcs=
-X-Google-Smtp-Source: AGHT+IFlt244hqEhWjxrQLdaufn8eCDuKqQ6l6DQ2EGA1ZreF6dz9H0/mMWoaknb+jsJXHz/JRWOWQ==
-X-Received: by 2002:a05:6000:1ac5:b0:386:3a50:8c52 with SMTP id ffacd0b85a97d-3a08ff7241amr706803f8f.7.1746018118307;
-        Wed, 30 Apr 2025 06:01:58 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46c23sm16884043f8f.75.2025.04.30.06.01.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 06:01:57 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 30 Apr 2025 15:00:53 +0200
-Subject: [PATCH v5 23/24] drm/msm/dpu: Implement LM crossbar for v12.0 DPU
+        d=1e100.net; s=20230601; t=1746018159; x=1746622959;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hmOoeQf9gPzkDmiMisSnG7s0f6SHLuIsdiddQpOp3vM=;
+        b=po47XVfNMg7wpumSwAnuljFCa/oy5yj4Ik157h/E2SJ5+K7cMDzmm74xn51AzdETu8
+         FdWFqVPU7F5TyHtUDj7JmdQy/4AgBDW8qoG76lBbTFM9SVOWGE1fw8FB/fYXhk4m8q6r
+         soh+MBA6HKwRTJWwrYXiew5eCZwxxmVxb9PunHTW6OXzAksybKppCD6BLnmr84SotjGL
+         0UXvJW/0Fztc7vFzxayuOyrd/YoxiEuItREtUCOS8W93DbHV+lR4fmLEiidGkKbOEv+9
+         jkXyqbeciNrALRaArezp+Zrtec2y0arNLpAbLWyyKWS50vuvwKmREsGyiZRDKxR5sO8E
+         eofQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWapmzlQIj20RIxPrhRt/NDF1FNLb1FGX5l994lEfAajCrMYYvLViWkXnIi7LrV329aSIQcY5MkxT9i46U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk0xX0fBZ6ylopuHa0IARWGV/se5g89bUf53nNCf7tq5ExKulM
+	R4WtHwnOzPKgRcFi9faLV9SQXN2QXPwnM+Q/p2ZOFJHeni6j8v5pr0OUh+VjzG4vuo73poUN5rS
+	tJ/NaG4JJtUsGsSApIw7sq8A4BgIg5MkYSXjAXV4zvYqmtO/kX8+sxIo=
+X-Google-Smtp-Source: AGHT+IGWcJ9YH5i+42cHHNOMi/JmDtuM5N80ImmfT0BnlCFeXpfXN7ODPcasb/JJ6wxdcH4O0ruiTAy82WsY5JUmj3MDYNGL4fEu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-b4-sm8750-display-v5-23-8cab30c3e4df@linaro.org>
-References: <20250430-b4-sm8750-display-v5-0-8cab30c3e4df@linaro.org>
-In-Reply-To: <20250430-b4-sm8750-display-v5-0-8cab30c3e4df@linaro.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krishna Manikandan <quic_mkrishn@quicinc.com>, 
- Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Rob Clark <robdclark@chromium.org>, linux-clk@vger.kernel.org, 
- Srinivas Kandagatla <srini@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12899;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=3e54wA8aqQN+E6w44PaExnrYmkR+KjEIhfnRbipAyRM=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoEh8Oxbbk6zNyBJlzrFn2t4de7KC9ICxpmcTAa
- 8coaQl9eqeJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBIfDgAKCRDBN2bmhouD
- 12mOEACZEA2MIGFr4FBn018leO0WSyZEWvfI+517w9cGKykPJIkzhRGYxT8Ve/mgnXHFzd/BxWx
- 7jRFMzYyuKhXJTWxF6dx6ysksdLJc4qtQeKcIjjsBU2FxevRLqX9Cc/81vLPlY/UbbvqJJXVqSe
- B+BC4Su3Rw/heJE/oal7F0oegOnse009kVapwxNZUvhtCDToM/8OQl1YfdzqGXV+fDvA4nWpXVP
- 4TlPRHd8yarjk9btoo6iUQWPgcT6WLb4kj1B9oVliELETa9V1eCosldneIO8zC390w6+HmYEhWd
- thzwaEBm+gusq56uDAa53da0XPCQSO2vuK20+fcIgPW872JY4hjEUosDpaD4NRCewbceymc5QzS
- z7lCBiacJ7GlYKDzOURXWa1oHzTjk7NEd7PZ4cSFMZsfHJFZ9ZV3R8tIeEjtuhqH3DWFnHyFdhg
- K3a84I0SR5LSOjZGIercxAoA6209pesmDHl40o22wCmURuwZ1QA30yz6oj6UtxxlKc7rgyLtv0V
- 1BirYemBuRBPAxl/5DjSOjF3T2B0NlSAARxHJ4u5X9YEhcm4HPH+308HGDlYnV6I8n4BU3jJsdn
- JVSrsSn5b2iIGsklT5iYlwhNhG4j/8wtGNcYcJb3LCYSY1qkexm1ecftToW4VrxWD/c1BzN5j3b
- 4+JktG/ZzsKo7Ow==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+X-Received: by 2002:a05:6e02:de6:b0:3d2:af0b:6e2a with SMTP id
+ e9e14a558f8ab-3d96792b52cmr21081175ab.5.1746018153312; Wed, 30 Apr 2025
+ 06:02:33 -0700 (PDT)
+Date: Wed, 30 Apr 2025 06:02:33 -0700
+In-Reply-To: <66ec3506.050a0220.29194.002c.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68121f69.050a0220.14dd7d.0000.GAE@google.com>
+Subject: Re: [syzbot] [mm] INFO: rcu detected stall in shmem_fault (6)
+From: syzbot <syzbot+4145b11cdf925264bff4@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hughd@google.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, pasha.tatashin@soleen.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-v12.0 DPU on SM8750 comes with new LM crossbar that requires each pipe
-rectangle to be programmed separately in blend stage.  Implement support
-for this along with a new CTL_LAYER_ACTIVE register and setting the
-blend stage in layer mixer code.
+syzbot has found a reproducer for the following issue on:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+HEAD commit:    8bac8898fe39 Merge tag 'mmc-v6.15-rc1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=156131b3980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
+dashboard link: https://syzkaller.appspot.com/bug?extid=4145b11cdf925264bff4
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1390502f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e4fecc580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-8bac8898.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2a76d594c0f5/vmlinux-8bac8898.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/dae09c25780d/bzImage-8bac8898.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4145b11cdf925264bff4@syzkaller.appspotmail.com
+
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-0): P6103/1:b..l P6106/1:b..l P6104/1:b..l
+rcu: 	(detected by 0, t=10502 jiffies, g=24761, q=25 ncpus=1)
+task:syz-executor384 state:R  running task     stack:26008 pid:6104  tgid:6104  ppid:5332   task_flags:0x400040 flags:0x00004002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ preempt_schedule_common+0x83/0xd0 kernel/sched/core.c:6947
+ preempt_schedule+0xae/0xc0 kernel/sched/core.c:6971
+ preempt_schedule_thunk+0x16/0x30 arch/x86/entry/thunk.S:12
+ __raw_spin_unlock include/linux/spinlock_api_smp.h:143 [inline]
+ _raw_spin_unlock+0x3f/0x50 kernel/locking/spinlock.c:186
+ spin_unlock include/linux/spinlock.h:391 [inline]
+ finish_fault+0xd97/0x1020 mm/memory.c:5388
+ do_read_fault mm/memory.c:5522 [inline]
+ do_fault mm/memory.c:5652 [inline]
+ do_pte_missing mm/memory.c:4160 [inline]
+ handle_pte_fault mm/memory.c:5997 [inline]
+ __handle_mm_fault+0x3666/0x5380 mm/memory.c:6140
+ handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
+ faultin_page mm/gup.c:1193 [inline]
+ __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
+ populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
+ __mm_populate+0x24c/0x380 mm/gup.c:2032
+ mm_populate include/linux/mm.h:3487 [inline]
+ vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc94d0ef959
+RSP: 002b:00007ffed9bc6198 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
+RAX: ffffffffffffffda RBX: 000000000005d4df RCX: 00007fc94d0ef959
+RDX: b635773f06ebbeee RSI: 0000000000b36000 RDI: 0000200000000000
+RBP: 0000000000000000 R08: ffffffffffffffff R09: 0000000000000000
+R10: 0000000000008031 R11: 0000000000000246 R12: 00007ffed9bc61dc
+R13: 00007ffed9bc6210 R14: 00007ffed9bc61f0 R15: 000000000000003c
+ </TASK>
+task:dhcpcd-run-hook state:R  running task     stack:23928 pid:6106  tgid:6106  ppid:5016   task_flags:0x400000 flags:0x00004002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ preempt_schedule_notrace+0xd1/0x110 kernel/sched/core.c:7040
+ preempt_schedule_notrace_thunk+0x16/0x30 arch/x86/entry/thunk.S:13
+ rcu_is_watching+0x7f/0xb0 kernel/rcu/tree.c:737
+ trace_lock_release include/trace/events/lock.h:69 [inline]
+ lock_release+0x4b/0x3e0 kernel/locking/lockdep.c:5877
+ rcu_lock_release include/linux/rcupdate.h:341 [inline]
+ rcu_read_unlock include/linux/rcupdate.h:871 [inline]
+ class_rcu_destructor include/linux/rcupdate.h:1155 [inline]
+ unwind_next_frame+0x19a9/0x2390 arch/x86/kernel/unwind_orc.c:680
+ arch_stack_walk+0x11c/0x150 arch/x86/kernel/stacktrace.c:25
+ stack_trace_save+0x9c/0xe0 kernel/stacktrace.c:122
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
+ kasan_record_aux_stack+0xbc/0xd0 mm/kasan/generic.c:548
+ __call_rcu_common kernel/rcu/tree.c:3082 [inline]
+ call_rcu+0x142/0x990 kernel/rcu/tree.c:3202
+ ma_free_rcu lib/maple_tree.c:211 [inline]
+ mas_free lib/maple_tree.c:1313 [inline]
+ mas_topiary_replace lib/maple_tree.c:2584 [inline]
+ mas_wmb_replace+0x209d/0x25f0 lib/maple_tree.c:2641
+ mas_split lib/maple_tree.c:3368 [inline]
+ mas_commit_b_node+0xa6e/0xf40 lib/maple_tree.c:3388
+ mas_wr_bnode lib/maple_tree.c:4049 [inline]
+ mas_wr_store_entry+0x510/0x2550 lib/maple_tree.c:4090
+ mas_store_prealloc+0xb02/0xf60 lib/maple_tree.c:5475
+ vma_iter_store_new mm/vma.h:455 [inline]
+ vma_link+0x254/0x450 mm/vma.c:1754
+ insert_vm_struct+0x2d0/0x3d0 mm/mmap.c:1357
+ __install_special_mapping mm/mmap.c:1507 [inline]
+ _install_special_mapping+0x1b0/0x350 mm/mmap.c:1543
+ map_vdso+0x1ff/0x480 arch/x86/entry/vdso/vma.c:174
+ load_elf_binary+0x1c85/0x27b0 fs/binfmt_elf.c:1277
+ search_binary_handler fs/exec.c:1778 [inline]
+ exec_binprm fs/exec.c:1810 [inline]
+ bprm_execve+0x999/0x1440 fs/exec.c:1862
+ do_execveat_common+0x510/0x6a0 fs/exec.c:1968
+ do_execve fs/exec.c:2042 [inline]
+ __do_sys_execve fs/exec.c:2118 [inline]
+ __se_sys_execve fs/exec.c:2113 [inline]
+ __x64_sys_execve+0x94/0xb0 fs/exec.c:2113
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff7677a0ef7
+RSP: 002b:00007ff76764ae78 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
+RAX: ffffffffffffffda RBX: 00007ffc285c39b0 RCX: 00007ff7677a0ef7
+RDX: 0000557645b67700 RSI: 00007ffc285c3ea0 RDI: 000055761bc40df6
+RBP: 00007ff76764aff0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 00007ffc285c3cc8
+R13: 00007ff76764af28 R14: 0000000000000000 R15: 0000000000000041
+ </TASK>
+task:syz-executor384 state:R  running task     stack:26008 pid:6103  tgid:6103  ppid:5336   task_flags:0x400040 flags:0x00004002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ preempt_schedule_irq+0xb5/0x150 kernel/sched/core.c:7090
+ irqentry_exit+0x6f/0x90 kernel/entry/common.c:354
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:__sanitizer_cov_trace_cmp8+0x0/0x90 kernel/kcov.c:293
+Code: 7c 11 10 48 89 74 11 18 48 89 44 11 20 c3 cc cc cc cc cc 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <f3> 0f 1e fa 48 8b 04 24 65 48 8b 0c 25 08 40 75 92 65 8b 15 e8 7e
+RSP: 0018:ffffc9000d9d70a0 EFLAGS: 00000293
+RAX: ffffffff822c9a9b RBX: 0000000000000000 RCX: ffff88801f920000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: ffffffff822c998a R12: ffff888030e42f70
+R13: 0000000000000000 R14: 00000000000473cc R15: ffffea00011cf2f0
+ __page_table_check_zero+0x1d6/0x510 mm/page_table_check.c:139
+ page_table_check_alloc include/linux/page_table_check.h:33 [inline]
+ post_alloc_hook+0x1eb/0x230 mm/page_alloc.c:1719
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x21ce/0x22b0 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4970
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
+ folio_alloc_mpol_noprof+0x39/0x70 mm/mempolicy.c:2320
+ shmem_alloc_folio mm/shmem.c:1854 [inline]
+ shmem_alloc_and_add_folio+0x447/0xf60 mm/shmem.c:1893
+ shmem_get_folio_gfp+0x597/0x15f0 mm/shmem.c:2533
+ shmem_fault+0x179/0x390 mm/shmem.c:2734
+ __do_fault+0x135/0x390 mm/memory.c:5098
+ do_read_fault mm/memory.c:5518 [inline]
+ do_fault mm/memory.c:5652 [inline]
+ do_pte_missing mm/memory.c:4160 [inline]
+ handle_pte_fault mm/memory.c:5997 [inline]
+ __handle_mm_fault+0x363e/0x5380 mm/memory.c:6140
+ handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
+ faultin_page mm/gup.c:1193 [inline]
+ __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
+ populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
+ __mm_populate+0x24c/0x380 mm/gup.c:2032
+ mm_populate include/linux/mm.h:3487 [inline]
+ vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc94d0ef959
+RSP: 002b:00007ffed9bc6198 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
+RAX: ffffffffffffffda RBX: 000000000005d4c4 RCX: 00007fc94d0ef959
+RDX: b635773f06ebbeee RSI: 0000000000b36000 RDI: 0000200000000000
+RBP: 0000000000000000 R08: ffffffffffffffff R09: 0000000000000000
+R10: 0000000000008031 R11: 0000000000000246 R12: 00007ffed9bc61dc
+R13: 00007ffed9bc6210 R14: 00007ffed9bc61f0 R15: 000000000000003c
+ </TASK>
+rcu: rcu_preempt kthread timer wakeup didn't happen for 10501 jiffies! g24761 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
+rcu: 	Possible timer handling issue on cpu=0 timer-softirq=26096
+rcu: rcu_preempt kthread starved for 10502 jiffies! g24761 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:I stack:27640 pid:16    tgid:16    ppid:2      task_flags:0x208040 flags:0x00004000
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_timeout+0x12b/0x270 kernel/time/sleep_timeout.c:99
+ rcu_gp_fqs_loop+0x301/0x1540 kernel/rcu/tree.c:2046
+ rcu_gp_kthread+0x99/0x390 kernel/rcu/tree.c:2248
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+rcu: Stack dump where RCU GP kthread last ran:
+CPU: 0 UID: 0 PID: 1311 Comm: aoe_tx0 Not tainted 6.15.0-rc4-syzkaller-00040-g8bac8898fe39 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0xa8/0x110 kernel/locking/spinlock.c:194
+Code: 74 05 e8 8b e1 6e f6 48 c7 44 24 20 00 00 00 00 9c 8f 44 24 20 f6 44 24 21 02 75 4f f7 c3 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> 73 63 38 f6 65 8b 05 5c e5 1c 07 85 c0 74 40 48 c7 04 24 0e 36
+RSP: 0018:ffffc900029cf740 EFLAGS: 00000206
+RAX: b3874e252c70ba00 RBX: 0000000000000a06 RCX: b3874e252c70ba00
+RDX: 0000000000000002 RSI: ffffffff8d749f9b RDI: 0000000000000001
+RBP: ffffc900029cf7d0 R08: ffffffff8f7ed377 R09: 1ffffffff1efda6e
+R10: dffffc0000000000 R11: fffffbfff1efda6f R12: dffffc0000000000
+R13: dffffc0000000000 R14: ffffffff99b4c6c0 R15: 1ffff92000539ee8
+FS:  0000000000000000(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f22234160d0 CR3: 0000000035bd2000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ uart_port_unlock_irqrestore include/linux/serial_core.h:786 [inline]
+ uart_write+0x4cd/0xa40 drivers/tty/serial/serial_core.c:628
+ handle_tx+0x23c/0x610 drivers/net/caif/caif_serial.c:222
+ __netdev_start_xmit include/linux/netdevice.h:5203 [inline]
+ netdev_start_xmit include/linux/netdevice.h:5212 [inline]
+ xmit_one net/core/dev.c:3776 [inline]
+ dev_hard_start_xmit+0x2ff/0x880 net/core/dev.c:3792
+ __dev_queue_xmit+0x1adf/0x3a70 net/core/dev.c:4629
+ dev_queue_xmit include/linux/netdevice.h:3350 [inline]
+ tx+0x6b/0x190 drivers/block/aoe/aoenet.c:62
+ kthread+0x1cd/0x3e0 drivers/block/aoe/aoecmd.c:1237
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
 
 ---
-
-Changes in v4:
-1. Lowercase hex
-2. Add Dmitry's tag
-
-Changes in v3:
-1. New patch, split from previous big DPU v12.0.
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    |  18 +++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |   6 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c  |  27 +++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h  |   9 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c   | 126 ++++++++++++++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h   |  18 ++++
- 6 files changed, 201 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 3135e5ab9e8121f3dbd93dde9458f007ae45392a..bde87533b4b39ac99998740f7ec6cc59ea96e705 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -524,6 +524,7 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
- 	struct dpu_hw_ctl *ctl;
- 	struct dpu_hw_mixer *lm;
- 	struct dpu_hw_stage_cfg stage_cfg;
-+	DECLARE_BITMAP(active_lms, LM_MAX);
- 	int i;
- 
- 	DRM_DEBUG_ATOMIC("%s\n", dpu_crtc->name);
-@@ -537,10 +538,14 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
- 			mixer[i].lm_ctl->ops.set_active_fetch_pipes(mixer[i].lm_ctl, NULL);
- 		if (mixer[i].lm_ctl->ops.set_active_pipes)
- 			mixer[i].lm_ctl->ops.set_active_pipes(mixer[i].lm_ctl, NULL);
-+
-+		if (mixer[i].hw_lm->ops.clear_all_blendstages)
-+			mixer[i].hw_lm->ops.clear_all_blendstages(mixer[i].hw_lm);
- 	}
- 
- 	/* initialize stage cfg */
- 	memset(&stage_cfg, 0, sizeof(struct dpu_hw_stage_cfg));
-+	memset(active_lms, 0, sizeof(active_lms));
- 
- 	_dpu_crtc_blend_setup_mixer(crtc, dpu_crtc, mixer, &stage_cfg);
- 
-@@ -554,13 +559,22 @@ static void _dpu_crtc_blend_setup(struct drm_crtc *crtc)
- 		ctl->ops.update_pending_flush_mixer(ctl,
- 			mixer[i].hw_lm->idx);
- 
-+		set_bit(lm->idx, active_lms);
-+		if (ctl->ops.set_active_lms)
-+			ctl->ops.set_active_lms(ctl, active_lms);
-+
- 		DRM_DEBUG_ATOMIC("lm %d, op_mode 0x%X, ctl %d\n",
- 			mixer[i].hw_lm->idx - LM_0,
- 			mixer[i].mixer_op_mode,
- 			ctl->idx - CTL_0);
- 
--		ctl->ops.setup_blendstage(ctl, mixer[i].hw_lm->idx,
--			&stage_cfg);
-+		if (ctl->ops.setup_blendstage)
-+			ctl->ops.setup_blendstage(ctl, mixer[i].hw_lm->idx,
-+						  &stage_cfg);
-+
-+		if (lm->ops.setup_blendstage)
-+			lm->ops.setup_blendstage(lm, mixer[i].hw_lm->idx,
-+						 &stage_cfg);
- 	}
- }
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 52ae79fe8ba8537b13948d924b68e39c5ff4c753..516cfaa31b99136c82659e9060dc1929e6271862 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2191,6 +2191,12 @@ static void dpu_encoder_helper_reset_mixers(struct dpu_encoder_phys *phys_enc)
- 		if (ctl->ops.setup_blendstage)
- 			ctl->ops.setup_blendstage(ctl, hw_mixer[i]->idx, NULL);
- 
-+		if (hw_mixer[i]->ops.clear_all_blendstages)
-+			hw_mixer[i]->ops.clear_all_blendstages(hw_mixer[i]);
-+
-+		if (ctl->ops.set_active_lms)
-+			ctl->ops.set_active_lms(ctl, NULL);
-+
- 		if (ctl->ops.set_active_fetch_pipes)
- 			ctl->ops.set_active_fetch_pipes(ctl, NULL);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-index c9c65d5e9d36d3a4ce2aef9f57da631f2acd9123..2f9713227c287ffcfd6bedff7bad14cf8df6eb30 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-@@ -43,6 +43,7 @@
- #define   CTL_CDM_FLUSH                0x114
- #define   CTL_PERIPH_FLUSH              0x128
- #define   CTL_PIPE_ACTIVE               0x12c
-+#define   CTL_LAYER_ACTIVE              0x130
- #define   CTL_INTF_MASTER               0x134
- #define   CTL_DSPP_n_FLUSH(n)           ((0x13C) + ((n) * 4))
- 
-@@ -65,6 +66,8 @@ static const u32 fetch_tbl[SSPP_MAX] = {CTL_INVALID_BIT, 16, 17, 18, 19,
- 	CTL_INVALID_BIT, CTL_INVALID_BIT, CTL_INVALID_BIT, CTL_INVALID_BIT, 0,
- 	1, 2, 3, 4, 5};
- 
-+static const u32 lm_tbl[LM_MAX] = {CTL_INVALID_BIT, 0, 1, 2, 3, 4, 5, 6, 7};
-+
- static int _mixer_stages(const struct dpu_lm_cfg *mixer, int count,
- 		enum dpu_lm lm)
- {
-@@ -672,7 +675,11 @@ static void dpu_hw_ctl_reset_intf_cfg_v1(struct dpu_hw_ctl *ctx,
- 				merge3d_active);
- 	}
- 
--	dpu_hw_ctl_clear_all_blendstages(ctx);
-+	if (ctx->ops.clear_all_blendstages)
-+		ctx->ops.clear_all_blendstages(ctx);
-+
-+	if (ctx->ops.set_active_lms)
-+		ctx->ops.set_active_lms(ctx, NULL);
- 
- 	if (ctx->ops.set_active_fetch_pipes)
- 		ctx->ops.set_active_fetch_pipes(ctx, NULL);
-@@ -745,6 +752,23 @@ static void dpu_hw_ctl_set_active_pipes(struct dpu_hw_ctl *ctx,
- 	DPU_REG_WRITE(&ctx->hw, CTL_PIPE_ACTIVE, val);
- }
- 
-+static void dpu_hw_ctl_set_active_lms(struct dpu_hw_ctl *ctx,
-+				      unsigned long *active_lms)
-+{
-+	int i;
-+	u32 val = 0;
-+
-+	if (active_lms) {
-+		for (i = LM_0; i < LM_MAX; i++) {
-+			if (test_bit(i, active_lms) &&
-+			    lm_tbl[i] != CTL_INVALID_BIT)
-+				val |= BIT(lm_tbl[i]);
-+		}
-+	}
-+
-+	DPU_REG_WRITE(&ctx->hw, CTL_LAYER_ACTIVE, val);
-+}
-+
- /**
-  * dpu_hw_ctl_init() - Initializes the ctl_path hw driver object.
-  * Should be called before accessing any ctl_path register.
-@@ -812,6 +836,7 @@ struct dpu_hw_ctl *dpu_hw_ctl_init(struct drm_device *dev,
- 		c->ops.setup_blendstage = dpu_hw_ctl_setup_blendstage;
- 	} else {
- 		c->ops.set_active_pipes = dpu_hw_ctl_set_active_pipes;
-+		c->ops.set_active_lms = dpu_hw_ctl_set_active_lms;
- 	}
- 	c->ops.update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
- 	c->ops.update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
-index 186c467e1a64e71116b65b19dd8ecdbb09dac114..f9197d3f12a30d9ce2a4b3745353e35b645563c5 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h
-@@ -264,6 +264,15 @@ struct dpu_hw_ctl_ops {
- 	 */
- 	void (*set_active_pipes)(struct dpu_hw_ctl *ctx,
- 				 unsigned long *active_pipes);
-+
-+	/**
-+	 * Set active layer mixers attached to this CTL
-+	 * @ctx: ctl path ctx pointer
-+	 * @active_lms: bitmap of enum dpu_lm
-+	 */
-+	void (*set_active_lms)(struct dpu_hw_ctl *ctx,
-+			       unsigned long *active_lms);
-+
- };
- 
- /**
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-index f220a68e138cb9e7c88194e53e47391de7ed04f7..d5928c7cecc818d8d8f85c3cfff4d79794eab1d4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-@@ -28,11 +28,19 @@
- #define LM_FG_COLOR_FILL_XY              0x14
- 
- /* >= v12 DPU */
-+#define LM_BG_SRC_SEL_V12                0x14
-+#define LM_BG_SRC_SEL_V12_RESET_VALUE    0x0000c0c0
- #define LM_BORDER_COLOR_0_V12            0x1c
- #define LM_BORDER_COLOR_1_V12            0x20
- 
- /* >= v12 DPU with offset to mixer base + stage base */
-+#define LM_BLEND0_FG_SRC_SEL_V12         0x04
- #define LM_BLEND0_CONST_ALPHA_V12        0x08
-+#define LM_FG_COLOR_FILL_COLOR_0_V12     0x0c
-+#define LM_FG_COLOR_FILL_COLOR_1_V12     0x10
-+#define LM_FG_COLOR_FILL_SIZE_V12        0x14
-+#define LM_FG_COLOR_FILL_XY_V12          0x18
-+
- #define LM_BLEND0_FG_ALPHA               0x04
- #define LM_BLEND0_BG_ALPHA               0x08
- 
-@@ -215,6 +223,122 @@ static void dpu_hw_lm_setup_color3_v12(struct dpu_hw_mixer *ctx,
- 	}
- }
- 
-+static int _set_staged_sspp(u32 stage, struct dpu_hw_stage_cfg *stage_cfg,
-+			    int pipes_per_stage, u32 *value)
-+{
-+	int i;
-+	u32 pipe_type = 0, pipe_id = 0, rec_id = 0;
-+	u32 src_sel[PIPES_PER_STAGE];
-+
-+	*value = LM_BG_SRC_SEL_V12_RESET_VALUE;
-+	if (!stage_cfg || !pipes_per_stage)
-+		return 0;
-+
-+	for (i = 0; i < pipes_per_stage; i++) {
-+		enum dpu_sspp pipe = stage_cfg->stage[stage][i];
-+		enum dpu_sspp_multirect_index rect_index = stage_cfg->multirect_index[stage][i];
-+
-+		src_sel[i] = LM_BG_SRC_SEL_V12_RESET_VALUE;
-+
-+		if (!pipe)
-+			continue;
-+
-+		/* translate pipe data to SWI pipe_type, pipe_id */
-+		if (pipe >= SSPP_DMA0 && pipe <= SSPP_DMA5) {
-+			pipe_type = 0;
-+			pipe_id = pipe - SSPP_DMA0;
-+		} else if (pipe >= SSPP_VIG0 && pipe <= SSPP_VIG3) {
-+			pipe_type = 1;
-+			pipe_id = pipe - SSPP_VIG0;
-+		} else {
-+			DPU_ERROR("invalid rec-%d pipe:%d\n", i, pipe);
-+			return -EINVAL;
-+		}
-+
-+		/* translate rec data to SWI rec_id */
-+		if (rect_index == DPU_SSPP_RECT_SOLO || rect_index == DPU_SSPP_RECT_0) {
-+			rec_id = 0;
-+		} else if (rect_index == DPU_SSPP_RECT_1) {
-+			rec_id = 1;
-+		} else {
-+			DPU_ERROR("invalid rec-%d rect_index:%d\n", i, rect_index);
-+			rec_id = 0;
-+		}
-+
-+		/* calculate SWI value for rec-0 and rec-1 and store it temporary buffer */
-+		src_sel[i] = (((pipe_type & 0x3) << 6) | ((rec_id & 0x3) << 4) | (pipe_id & 0xf));
-+	}
-+
-+	/* calculate final SWI register value for rec-0 and rec-1 */
-+	*value = 0;
-+	for (i = 0; i < pipes_per_stage; i++)
-+		*value |= src_sel[i] << (i * 8);
-+
-+	return 0;
-+}
-+
-+static int dpu_hw_lm_setup_blendstage(struct dpu_hw_mixer *ctx, enum dpu_lm lm,
-+				      struct dpu_hw_stage_cfg *stage_cfg)
-+{
-+	struct dpu_hw_blk_reg_map *c = &ctx->hw;
-+	int i, ret, stages, stage_off, pipes_per_stage;
-+	u32 value;
-+
-+	stages = ctx->cap->sblk->maxblendstages;
-+	if (stages <= 0)
-+		return -EINVAL;
-+
-+	if (ctx->cap->sourcesplit)
-+		pipes_per_stage = PIPES_PER_STAGE;
-+	else
-+		pipes_per_stage = 1;
-+
-+	/*
-+	 * When stage configuration is empty, we can enable the
-+	 * border color by setting the corresponding LAYER_ACTIVE bit
-+	 * and un-staging all the pipes from the layer mixer.
-+	 */
-+	if (!stage_cfg)
-+		DPU_REG_WRITE(c, LM_BG_SRC_SEL_V12, LM_BG_SRC_SEL_V12_RESET_VALUE);
-+
-+	for (i = DPU_STAGE_0; i <= stages; i++) {
-+		stage_off = _stage_offset(ctx, i);
-+		if (stage_off < 0)
-+			return stage_off;
-+
-+		ret = _set_staged_sspp(i, stage_cfg, pipes_per_stage, &value);
-+		if (ret)
-+			return ret;
-+
-+		DPU_REG_WRITE(c, LM_BLEND0_FG_SRC_SEL_V12 + stage_off, value);
-+	}
-+
-+	return 0;
-+}
-+
-+static int dpu_hw_lm_clear_all_blendstages(struct dpu_hw_mixer *ctx)
-+{
-+	struct dpu_hw_blk_reg_map *c = &ctx->hw;
-+	int i, stages, stage_off;
-+
-+	stages = ctx->cap->sblk->maxblendstages;
-+	if (stages <= 0)
-+		return -EINVAL;
-+
-+	DPU_REG_WRITE(c, LM_BG_SRC_SEL_V12, LM_BG_SRC_SEL_V12_RESET_VALUE);
-+
-+	for (i = DPU_STAGE_0; i <= stages; i++) {
-+		stage_off = _stage_offset(ctx, i);
-+		if (stage_off < 0)
-+			return stage_off;
-+
-+		DPU_REG_WRITE(c, LM_BLEND0_FG_SRC_SEL_V12 + stage_off,
-+			      LM_BG_SRC_SEL_V12_RESET_VALUE);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * dpu_hw_lm_init() - Initializes the mixer hw driver object.
-  * should be called once before accessing every mixer.
-@@ -257,6 +381,8 @@ struct dpu_hw_mixer *dpu_hw_lm_init(struct drm_device *dev,
- 		c->ops.setup_border_color = dpu_hw_lm_setup_border_color;
- 	} else {
- 		c->ops.setup_alpha_out = dpu_hw_lm_setup_color3_v12;
-+		c->ops.setup_blendstage = dpu_hw_lm_setup_blendstage;
-+		c->ops.clear_all_blendstages = dpu_hw_lm_clear_all_blendstages;
- 		c->ops.setup_border_color = dpu_hw_lm_setup_border_color_v12;
- 	}
- 	c->ops.setup_misr = dpu_hw_lm_setup_misr;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h
-index fff1156add683fec8ce6785e7fe1d769d0de3fe0..1b9ecd082d7fd72b07008787e1caea968ed23376 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h
-@@ -11,6 +11,7 @@
- #include "dpu_hw_util.h"
- 
- struct dpu_hw_mixer;
-+struct dpu_hw_stage_cfg;
- 
- struct dpu_hw_mixer_cfg {
- 	u32 out_width;
-@@ -48,6 +49,23 @@ struct dpu_hw_lm_ops {
- 	 */
- 	void (*setup_alpha_out)(struct dpu_hw_mixer *ctx, uint32_t mixer_op);
- 
-+	/**
-+	 * Clear layer mixer to pipe configuration
-+	 * @ctx		: mixer ctx pointer
-+	 * Returns: 0 on success or -error
-+	 */
-+	int (*clear_all_blendstages)(struct dpu_hw_mixer *ctx);
-+
-+	/**
-+	 * Configure layer mixer to pipe configuration
-+	 * @ctx		: mixer ctx pointer
-+	 * @lm		: layer mixer enumeration
-+	 * @stage_cfg	: blend stage configuration
-+	 * Returns: 0 on success or -error
-+	 */
-+	int (*setup_blendstage)(struct dpu_hw_mixer *ctx, enum dpu_lm lm,
-+				struct dpu_hw_stage_cfg *stage_cfg);
-+
- 	/**
- 	 * setup_border_color : enable/disable border color
- 	 */
-
--- 
-2.45.2
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
