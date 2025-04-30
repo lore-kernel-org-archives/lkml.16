@@ -1,122 +1,113 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D4D1DD889;
-	Wed, 30 Apr 2025 14:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE241DE3BE;
+	Wed, 30 Apr 2025 14:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746022771; cv=none; b=IGWvjdGQhBs0FJ/CH56FqcuEjnyumKTaJmJ2ws2vIzBfOIbg71OAffBbwtaG5JLED9wtmb83kCekh2vOfK///vSwzZF0I6GunPc19Fp8zIJtRej20SQQTy8TW8vaTNeyELsEn4PsZMYjvC8TT+N0jivTwOu/OXrNwHpNbTfyKc4=
+	t=1746022863; cv=none; b=WVeq/506iO1B5ct2cU+lae7WvT+g8K1jd3iqVec3OKEeo8eRIeDNFRle6EytMICfmn2BgpwfYQaiPkcM5oxiWY94uer+urc0JbZqoMuqR168anD2eksa2atcKz7YnclvJD30jjcXPlxhW3MfP4SkX4eHrcAQ1HbRdugMQ03sXMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746022771; c=relaxed/simple;
-	bh=qYXytSF/h4BAw3XvCix160+CM+1Pr/rGmOL9cZ5Dxso=;
+	s=arc-20240116; t=1746022863; c=relaxed/simple;
+	bh=UXWimaLZ5rlbWA3qCs+ThqOdPLSxTpPVlEAtkEpyYYo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=CZ6x3Ft5mB0QZyKKDSo+I2lf/Na5gCn06haTkkAKybNrc5LSrINUnYKH9AAy0tDT9SayXGHgc6L4TVmjbSb+7mwjOTPoTfa3KOkuPD3r/Zm8lBJEgLrrTV4SjfBzaqy8A3GMgy8g4bePjAuSq5mSNqfiN1ysbNCzTRJBHhvh3iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mAUtO5JM; arc=none smtp.client-ip=209.85.221.41
+	 To:Cc:Content-Type; b=Vo5dIdKQFCYHU3ZBCSvM2Hm8qFnrLgyPfCRCRg03a1/9OPBgdvdW+J6XPSFdJ9pHXeuQf7+VrGzaYwjeEBM4xDPU8hiNZcvNRRrWOptzYNKoppj9kHxYnAivnyPbyewPpUxuVAbZLfs66igadDnBLFFuIN7LOQV6iPpmEwmZs8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jvUccf+L; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAUtO5JM"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so5235748f8f.1;
-        Wed, 30 Apr 2025 07:19:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvUccf+L"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-301a6347494so835611a91.3;
+        Wed, 30 Apr 2025 07:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746022768; x=1746627568; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1746022861; x=1746627661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qYXytSF/h4BAw3XvCix160+CM+1Pr/rGmOL9cZ5Dxso=;
-        b=mAUtO5JMi/9lo6gqEhCRE3995IttP0ZwlCWCI44NoPh/7eosa7nofiG/Zg/THKyyki
-         bB5/63u5tPnlOI6slKSuxQRl74t7pEfUNAw9Wg79V5YvmGHesCQnh89xNu3iyBLpVehD
-         qrtgfb5uF11Id6lap1oDIHKeOdBa+xB62m5Ey+IiT0hq/6A1fe3akA3Y+nvQMpk1Dxmr
-         ALQD1qiwu6hVUBUBjuHg9f67F3OFkCt2HpVIqpmD/L3Ms5nHdhIsKC7DwGiPeryX5NdP
-         dSJOetjlCnYQXF0tqGPeveQf3p0SPlkYWC1M5OYO0GOKQk6+sw2hp8TVUr4ctLQpkuZP
-         995g==
+        bh=sZmQwZmxB+/0iwMhAswU29lyI7OcK6uMy67401DmTrQ=;
+        b=jvUccf+LE946I63TYEsW5uoSBp3K3/M0GMYI/d13sh2N9sFrDQAyFMdxQlaPqfoM18
+         nF+9fjbidVY1Mjsp0sP+48vGkTeIa7MepMJM/N5erFMeaf0FRG+cPqvwZAY9LDK1L5T8
+         3JjPZYZrrBU/R/Wzs0jpYZEMsSlwHLH0p5Y2kkTZf2tJQiUMULvu6+AvFtmAjjVyfkpO
+         2pvbMSNIGfrfaR7EqS/DTLRYuRSn5AwjEXhJRMnAhmRi3RWy0sLiyR5+PqHpyz/HfrSe
+         Psl56ULyYqyAz2mVe30s32oDhwJgha8gfnYIjMqBfy1eATxW49Jzko/hqX4unvvIUlBe
+         c1xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746022768; x=1746627568;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1746022861; x=1746627661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qYXytSF/h4BAw3XvCix160+CM+1Pr/rGmOL9cZ5Dxso=;
-        b=fONCBVBhkiitkeiA1s814phD2/hrUzmMGF8s6o82RSxfB9qs8BrHkT4yzfv4Vza2tF
-         KPH+JPYGRypuRVYwqGgM/R6NBfSsBm23CiTNWPklnFQrBkPJdiN0cRtDNRIPZy8+wkFO
-         I8DqORaanjSzae1U8RTkmTveYz/HDd2pzlkMdR4IyDETHWyBxBi4JjMI4b4odR5IfW/1
-         Pyvpr5cRIj3jkguJhRQrLtI4Vem7acbxo0WKm/VPwmb30D+J0N8W7QvW3iNPQoRgRsxn
-         vb2nUBngZFu/epjS/dlZfFVLLG1nUtotSBIwkZWtm/irDs5hJPUHZ0uQIHo7G3oi4//H
-         Ueww==
-X-Forwarded-Encrypted: i=1; AJvYcCVhy67+bbKvER2T39hVHC4Cvat0WDcFQQztxv+H11MyHxn9xSH6GI0q4HrZ6IqBxDVG7fM32cqWB4OV/U08FAXLMTg=@vger.kernel.org, AJvYcCW3UYWItPc80imRcATQM0+BHdCmArPmFtHV7mJHg/zT+vCPLqmfYiYFUojh1DRO2UIzOVcDMgO17OU=@vger.kernel.org, AJvYcCXWtSygCiMblCAnA9tO+IHPnOxNG00dZLblxmAR0ylsbrhKVmLKjzd/npfEi3J/45PEaD3bUlVDZXvtDCXv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVe7fcm9H4l8AS0MPz+fm8RDCW+LMdPq9wnBEhAvJBqUegIUPl
-	tI9H+B7E3ipvNv0MUiQyRHulXMN9ryqpmMr/GxmoZbTAFtGr5ZQX5AT0EzOSgF4DSfq8DwG0A4S
-	4hV6KrsRYQ2fq+xr9oli7PK0CqZg=
-X-Gm-Gg: ASbGncvvh/iHoQaTFpClqhWzjgaKQVM5NkR7p6O+FFdEzVnAzVTkJhg1eYkVlgp9THK
-	s2Xjsk9RfpEESfPMUGPcI+QnPW5oMSfyTl4QqcixIunbegHFo9IDZJ7JpheWfTRpkmragc+YT2j
-	BzI9KQYD/UW+YoANYix6bUow==
-X-Google-Smtp-Source: AGHT+IHeVVx97jV8CvcEwLno1fQedZbosuupGPjGSFQ/trOVbpjS3wz2VStDQdszZITBakzfY8RQp7A9SzLo5OCvsso=
-X-Received: by 2002:a05:6000:310b:b0:39e:cbe3:881 with SMTP id
- ffacd0b85a97d-3a08f7549f2mr2811481f8f.12.1746022767422; Wed, 30 Apr 2025
- 07:19:27 -0700 (PDT)
+        bh=sZmQwZmxB+/0iwMhAswU29lyI7OcK6uMy67401DmTrQ=;
+        b=V9qTS6Rl8RCFmwCRZZbX0P1hoelTsSW5hhMBmM62psfU/NvDLZgB7tcoL7xquhV+ea
+         a7JK8seC7U9rW0t4HyhrkVX/dMFTgV90PAnCYAuZphVGWkXEhTierbFPxosVDTVirRRJ
+         zr9PjRxDyrE4u6XshfTcGdVnO7s3EL/WZJyYlHrCNiKHrpk/4vstj1gBSNaJtXyq0Rkv
+         GgOJ3xbY/xq57qq2yhKMBErocCsQBJmXue6Qieis1UMy8lJCG2Q46uWeULmhjJZI1C07
+         HRy6uYWixDRpxy5A8HckucuuOAzUIdwC/QqFT6hyVfBnzdHQ7FQ9BvhpmLn3f25NIYbz
+         psGw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9jnoR01WVhTp5GL8VKfD1UWqMZO/XJqVVl5PcrruEry7pY7c/ZxZxXHeqj1s2PfcJRZjI8uS+6hv/JvkbWD4=@vger.kernel.org, AJvYcCViGy0XYH7POkSD3Gn+qYncqE3m598VnbzKQ53G9DN0d+JDuK30G+20eDGDF1enfVUeNQKDkT7CDL0Eusiy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuHi5j5j5Z9UjsgqA00dd7KSXC5vuNE5MYgx60cVHfSo+rqLoO
+	3YTlZtoB1R7yB499Ynv2C0EnTWu2OtbS9nxK2TLlLHCWu+NgZLpbermgPszBULezPfIqbDdRCdi
+	BBhUDGhGOFobHh7JC+1buSpT18mg=
+X-Gm-Gg: ASbGncsmHHTFQR5O6gj0CcJ4Ji64U6d+hPdljskb8eb4M51pCe72ytnED6js36JBJNA
+	yzKUdR8WCtKNz2Nt9WcN+fThDUesdHU3aVK0KVyZ2CVmpp3110VQmuiPHiv9Z2y2nWDfPwKeoJr
+	WNjR0CJTY4EosttIfblen4DOKw3GxZ13lh
+X-Google-Smtp-Source: AGHT+IHrRGSCtx7yYWpJEIC2bzjI16vhGr+WvXakgytHAWV7umJvxRTzyd+RXip4iCHcc3z9o9KqkLvAU+fqkw7MRxw=
+X-Received: by 2002:a17:90b:1b52:b0:2ee:acea:9ec4 with SMTP id
+ 98e67ed59e1d1-30a34a7903fmr1258142a91.3.1746022860936; Wed, 30 Apr 2025
+ 07:21:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407121859.131156-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <aAC8f0dAMERD8GjW@shikoro> <CA+V-a8sM2mFS--zLSZt28mOUDuO2FpW0TsaV50A_VxFZ-juP4Q@mail.gmail.com>
- <aAFgwEB4SdgH-1fQ@shikoro> <CA+V-a8tmTqFi4iqGhR3cfUgKw7mxJrm6ixGAHq747ptrL3t2jA@mail.gmail.com>
- <aAITBfrOI0GAhGRA@shikoro> <aAikKreK-BCP-zLp@shikoro> <CA+V-a8uHxfmJLOO25acfK2=EZt41f_G6LShNpeL9RVy-X=Q3Cw@mail.gmail.com>
- <aAtSayFrtSh9LC-J@shikoro>
-In-Reply-To: <aAtSayFrtSh9LC-J@shikoro>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 30 Apr 2025 15:19:00 +0100
-X-Gm-Features: ATxdqUE44CXC8WnKFwq3_VVnLNnAIvGPlZ2qSZSscL6iMQzvtr-GBdjlm2x7PMc
-Message-ID: <CA+V-a8smaANOtJ9ETNudArHUcwvOAnKB+fEeEFnb_5ioxFSMKw@mail.gmail.com>
-Subject: Re: [PATCH v8] i2c: riic: Implement bus recovery
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Andy Shevchenko <andy@kernel.org>
+References: <aBHZuejTTKkdnGaZ@stanley.mountain>
+In-Reply-To: <aBHZuejTTKkdnGaZ@stanley.mountain>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 30 Apr 2025 10:20:49 -0400
+X-Gm-Features: ATxdqUEB0H-Jbi4I5kCfhljTEmMnfaxoRCMWULH3c0gZNlkLYq2fJo8Njqfwsus
+Message-ID: <CADnq5_O0CmTSScncQ5kV=BciZdEZ+D_THNEis+Lfy1ENPJ-+pQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu/userq: remove unnecessary NULL check
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Shashank Sharma <shashank.sharma@amd.com>, Sunil Khatri <sunil.khatri@amd.com>, 
+	Arvind Yadav <Arvind.Yadav@amd.com>, 
+	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Wolfram,
+On Wed, Apr 30, 2025 at 4:13=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> The "ticket" pointer points to in the middle of the &exec struct so it
+> can't be NULL.  Remove the check.
+>
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-On Fri, Apr 25, 2025 at 10:14=E2=80=AFAM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> Hi Prabhakar,
->
-> > I prepared a setup on SMARC2 RZ/G3S and I can confirm it is working
->
-> This is good news!
->
-> > (but this is failing on SMARC RZ/G2L I'll look further into this)
->
-> This not so much. Hmmm, are you verifying against the same I2C device
-> on the carrier board? If you compare against different I2C devices on
-> the module board, the culprit might be the I2C device.
->
-You were right, it was the slave indeed. After recovery from the
-generic algorithm during the transfer I am seeing arbitration lost due
-to which there was a timeout during transmission. So for now we can
-conclude the generic I2C recovery algo works for RIIC. I have tested
-with two slaves:
+Applied.  Thanks!
 
-- PMOD RTC on SMARC RZ/G2L
-- PMOD RTC + Audio codec on SMARC RZ/G3S
-
-After tidying up, I'll resping a new version of the patch.
-
-> > For the SMARC2 RZ/G3S to make sure the I2C GPIO pins behave as
-> > opendrain I have the below patch for pinctrl
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Do you really need this patch? The GPIO lines are wired to SCL/SDA which
-> are already pulled up. Search for R118 in the module schematics.
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/=
+amd/amdgpu/amdgpu_userq.c
+> index b0e8098a3988..7505d920fb3d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+> @@ -631,7 +631,7 @@ amdgpu_userq_validate_bos(struct amdgpu_userq_mgr *uq=
+_mgr)
+>                         clear =3D false;
+>                         unlock =3D true;
+>                 /* The caller is already holding the reservation lock */
+> -               } else if (ticket && dma_resv_locking_ctx(resv) =3D=3D ti=
+cket) {
+> +               } else if (dma_resv_locking_ctx(resv) =3D=3D ticket) {
+>                         clear =3D false;
+>                         unlock =3D false;
+>                 /* Somebody else is using the BO right now */
+> --
+> 2.47.2
 >
-Agreed the pullup isn't needed. This was needed on SMARC RZ/G2L as
-there were spikes.
-
-Cheers,
-Prabhakar
