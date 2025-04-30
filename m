@@ -1,39 +1,39 @@
 Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61E23F9D2;
-	Wed, 30 Apr 2025 17:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F31863F9D2;
+	Wed, 30 Apr 2025 17:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035444; cv=none; b=ETLq0sTN0bEhGk9K2UZKh+HtzNMkdhePEv8q0/40guXBn124a2mWxnqp/EZwWeG5kEGzzxvJyd2sSlFDeT/Atv9a3tu0TDOaNaFSqA1y5ipQIp8a1YMQ2ESyseBOMUdZbpVj2xOSzL2tN+4mwRwCtLorCszOKM7/Rf/rQVAKZHE=
+	t=1746035449; cv=none; b=IZmkMwjyufXGAujD54FRhlZhV3PHv8QgUUzHBe4yFmn0vNcBhRibRuMZPXysWV7T2r8xQkUBGn99nxw1h7+Wql6nOgQlq4WctJ3ypm8fT7Yw9P9oCoCdt2fH1U94BKVPUSzypxKV/g02JT535yw7yl81yEPisyjnn6zDLZOZEy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035444; c=relaxed/simple;
-	bh=C0civ7UfCnkq3OvhNTY/w/0vMX9MvLl6Hh9nZlX0Ogo=;
+	s=arc-20240116; t=1746035449; c=relaxed/simple;
+	bh=ZYopyMLlnLDX+woA9g511UQ2e+4AzYvHm3Jor5tF3lE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qvZX3NJ7xwpvtaTieQ25e+B2TDkahI/oAdB0fYiLgp4JVTAMFAlXmoeFvSGRgsqcRKdQdRfTeBOUuUodFNMlYObcHoRflbZ4PaSt99DbvUEmSp/YDTO48rfTMNiusI4eWRmSiR7Efu5BIG8nP+YR7vJuHapCAsGSXyOlOFooriQ=
+	 In-Reply-To:Content-Type; b=qn2yD2MHX9fRJclaB7/9ckijGrT2iryp/EQQzPCtRtqfnBOSjAh2RTKYo/VV59uWVTxhhtvcl5BSE41ZurwGERjYGadSE2k8Xo/moJ/4dJmqJrwqgfeK4LqED4br9L+lsP+LIlgIL/BG7xyo9xgrmUy0enF0/DGd3cB8iFAK5xM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4Znkpn2cG4z9sgJ;
-	Wed, 30 Apr 2025 19:35:13 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4ZnkqN2kqkz9sjs;
+	Wed, 30 Apr 2025 19:35:44 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
 	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id dAsYUwx7dfLd; Wed, 30 Apr 2025 19:35:13 +0200 (CEST)
+	with ESMTP id 1Qa8SuqShg7C; Wed, 30 Apr 2025 19:35:44 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4Znkpn1gckz9sfW;
-	Wed, 30 Apr 2025 19:35:13 +0200 (CEST)
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZnkqN1zfNz9sj6;
+	Wed, 30 Apr 2025 19:35:44 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 31F988B765;
-	Wed, 30 Apr 2025 19:35:13 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E48B8B765;
+	Wed, 30 Apr 2025 19:35:44 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 7luFV74bg8tK; Wed, 30 Apr 2025 19:35:13 +0200 (CEST)
+	with ESMTP id 11LIMd6Z3cYq; Wed, 30 Apr 2025 19:35:44 +0200 (CEST)
 Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 508E88B763;
-	Wed, 30 Apr 2025 19:35:12 +0200 (CEST)
-Message-ID: <0b2ca5c5-cad2-46f1-bc3a-f69d926443e9@csgroup.eu>
-Date: Wed, 30 Apr 2025 19:35:11 +0200
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C1928B763;
+	Wed, 30 Apr 2025 19:35:43 +0200 (CEST)
+Message-ID: <95e42755-13ad-4659-903f-5f087926c0a1@csgroup.eu>
+Date: Wed, 30 Apr 2025 19:35:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] powerpc: sysdev/gpio: use new line value setter
+Subject: Re: [PATCH 4/5] powerpc: 52xx/gpio: use new line value setter
  callbacks
 To: Bartosz Golaszewski <brgl@bgdev.pl>,
  Madhavan Srinivasan <maddy@linux.ibm.com>,
@@ -52,10 +52,10 @@ Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
- <20250408-gpiochip-set-rv-powerpc-v1-1-73dc1ebc6ef1@linaro.org>
+ <20250408-gpiochip-set-rv-powerpc-v1-4-73dc1ebc6ef1@linaro.org>
 Content-Language: fr-FR
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250408-gpiochip-set-rv-powerpc-v1-1-73dc1ebc6ef1@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-powerpc-v1-4-73dc1ebc6ef1@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -73,39 +73,39 @@ Le 08/04/2025 à 09:21, Bartosz Golaszewski a écrit :
 Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
 > ---
->   arch/powerpc/sysdev/cpm_common.c | 6 ++++--
+>   arch/powerpc/platforms/52xx/mpc52xx_gpt.c | 6 ++++--
 >   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/powerpc/sysdev/cpm_common.c b/arch/powerpc/sysdev/cpm_common.c
-> index 47db732981a8..e22fc638dbc7 100644
-> --- a/arch/powerpc/sysdev/cpm_common.c
-> +++ b/arch/powerpc/sysdev/cpm_common.c
-> @@ -138,7 +138,7 @@ static void __cpm2_gpio32_set(struct of_mm_gpio_chip *mm_gc, u32 pin_mask,
->   	out_be32(&iop->dat, cpm2_gc->cpdata);
+> diff --git a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> index 1ea591ec6083..c96af6b0eab4 100644
+> --- a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> +++ b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> @@ -280,7 +280,7 @@ static int mpc52xx_gpt_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+>   	return (in_be32(&gpt->regs->status) >> 8) & 1;
 >   }
 >   
-> -static void cpm2_gpio32_set(struct gpio_chip *gc, unsigned int gpio, int value)
-> +static int cpm2_gpio32_set(struct gpio_chip *gc, unsigned int gpio, int value)
+> -static void
+> +static int
+>   mpc52xx_gpt_gpio_set(struct gpio_chip *gc, unsigned int gpio, int v)
 >   {
->   	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->   	struct cpm2_gpio32_chip *cpm2_gc = gpiochip_get_data(gc);
-> @@ -150,6 +150,8 @@ static void cpm2_gpio32_set(struct gpio_chip *gc, unsigned int gpio, int value)
->   	__cpm2_gpio32_set(mm_gc, pin_mask, value);
->   
->   	spin_unlock_irqrestore(&cpm2_gc->lock, flags);
+>   	struct mpc52xx_gpt_priv *gpt = gpiochip_get_data(gc);
+> @@ -293,6 +293,8 @@ mpc52xx_gpt_gpio_set(struct gpio_chip *gc, unsigned int gpio, int v)
+>   	raw_spin_lock_irqsave(&gpt->lock, flags);
+>   	clrsetbits_be32(&gpt->regs->mode, MPC52xx_GPT_MODE_GPIO_MASK, r);
+>   	raw_spin_unlock_irqrestore(&gpt->lock, flags);
 > +
 > +	return 0;
 >   }
 >   
->   static int cpm2_gpio32_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
-> @@ -208,7 +210,7 @@ int cpm2_gpiochip_add32(struct device *dev)
->   	gc->direction_input = cpm2_gpio32_dir_in;
->   	gc->direction_output = cpm2_gpio32_dir_out;
->   	gc->get = cpm2_gpio32_get;
-> -	gc->set = cpm2_gpio32_set;
-> +	gc->set_rv = cpm2_gpio32_set;
->   	gc->parent = dev;
->   	gc->owner = THIS_MODULE;
+>   static int mpc52xx_gpt_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+> @@ -334,7 +336,7 @@ static void mpc52xx_gpt_gpio_setup(struct mpc52xx_gpt_priv *gpt)
+>   	gpt->gc.direction_input  = mpc52xx_gpt_gpio_dir_in;
+>   	gpt->gc.direction_output = mpc52xx_gpt_gpio_dir_out;
+>   	gpt->gc.get = mpc52xx_gpt_gpio_get;
+> -	gpt->gc.set = mpc52xx_gpt_gpio_set;
+> +	gpt->gc.set_rv = mpc52xx_gpt_gpio_set;
+>   	gpt->gc.base = -1;
+>   	gpt->gc.parent = gpt->dev;
 >   
 > 
 
