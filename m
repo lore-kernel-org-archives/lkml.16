@@ -1,104 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDE526988C
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E1D25DD10
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040638; cv=none; b=WZTvDtdRjEQfeXocDJQJS1upQF1ARnRZcVMMsSf89/51PNwiss8YBvGyAZK8PsWT8t3OlkLl1z4y7DrCzjdjYvOA/iTs2EP0+bSXmQFbgxQl3cDu2AvvXDFZesSHK+Q1yYQQioW30TygqHcfGVE9WTfDbijoDpC5JeShFUyDN/0=
+	t=1746040666; cv=none; b=Ge+/TDVUlvW8qyBEGYKJImFNxas8I8UgO4rKoPoh4Xd28LB0QAVVUwnUNTRbvsAf373IRDOIvbP50AhW5C1CpmBuzMhEZ1nhElP6gHNV1CDNa9iUFEwV4tvxk0d9KLq5B/GNLpLKtatPHlbuB7K/jiriwcxMluXofRUyLIS9BtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040638; c=relaxed/simple;
-	bh=WE3U9M6bFtNqTnlRCzpMfoMFofIWbXyu0m0xU2AgNKI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MRAVImHjA9QqKgmq4INUF34pdZfKJ3MxrL8wpS+oLTNwXcYxHMxU0hAGQRvIM9ox83xGdc4h4w34Kcu9427ciE7QZ8WUbz5LKp04WPiUN04B+hUdlrjpsIzsdcI2XHLLHHvTflSxIVBsfmIJ/Zx+g130hZIthlWH9VehRywVDYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eHmopTOC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746040666; c=relaxed/simple;
+	bh=DyHVpZe7sPP3pdh2AqiHnweC4kVwYKyUKswOh2cdzBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lE2TWuWZEwfKGC+vFTIOnug0GzRDcdIqMCpruoS/ldgfOK/oYkf21Lf6+67QGRPI2sJEpjZLMcKroX+/IlXBCWIsUj44ZS+cOdo42aWC5EprCdQhvfnkPoFPgGKEIlq6lVcljR1HJGTGqDvsQ6dbfKShxRWAXLEESJyUohxtTC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lhWWqPXS; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eHmopTOC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746040635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qcJbYty0ZuARoMmKQQUrWafrtx6uU8ln7Eiw3EBt3kw=;
-	b=eHmopTOCmYUOEjVWFk4ywDoN6f8FoDUFprTgDH8CRB1mrLsp8UC89fxjPhDHJs3NKWVjel
-	XY+Osj1gy0SWakdMZEZQ+GuSwYA+nR15+pEhqSzR0wfyxwqHwZRcr9rU0kMoqi1FQ7iqGZ
-	7R+hzQCi+2x4ADWutbgV9QIVQoFPm4I=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-sshOLpprMcSD7bfy4TRoSg-1; Wed,
- 30 Apr 2025 15:17:10 -0400
-X-MC-Unique: sshOLpprMcSD7bfy4TRoSg-1
-X-Mimecast-MFC-AGG-ID: sshOLpprMcSD7bfy4TRoSg_1746040629
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C6251800878;
-	Wed, 30 Apr 2025 19:17:09 +0000 (UTC)
-Received: from [10.22.80.45] (unknown [10.22.80.45])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82504180087B;
-	Wed, 30 Apr 2025 19:17:06 +0000 (UTC)
-Date: Wed, 30 Apr 2025 21:17:01 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, 
-    Benjamin Marzinski <bmarzins@redhat.com>
-cc: Eric Biggers <ebiggers@kernel.org>, Satya Tangirala <satyat@google.com>, 
-    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
-    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-    kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] dm: add missing unlock on in dm_keyslot_evict()
-In-Reply-To: <aBJgeV7pZ7Q47OCb@stanley.mountain>
-Message-ID: <cad25513-31c4-5895-cfc0-b9c7dce4ce08@redhat.com>
-References: <aBHZ4puON8GNK0vw@stanley.mountain> <20250430165037.GA1958@sol.localdomain> <aBJgeV7pZ7Q47OCb@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lhWWqPXS"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-401e77e5443so160620b6e.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746040662; x=1746645462; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xXhOqh4ZLVwyszMvf+9Z/x0nU/kY8/7DOicY6xuWBc4=;
+        b=lhWWqPXSjbb8svBw2Nexbhm8/Qlr4vLGQqi6fANlIs29mZi/YM1ngIyGJBiSDgEkVq
+         hbzJW3eiP0e84s794SKaCJ0oaeDVOc/SfDliyOBiR00FaWopS193z8qb1eQTkbJyEcKq
+         uA4lD1MMmDOtsCaaeP+pc6PfaR0t7nQT7dafSBtizksRNoBWWY9AU4/rYWqffNMeixS5
+         Wq7Wme0xQQPZJQsJDZwi7aBlgR3zDGFZqEZs+KPjBOOYP6Hu/w8Ldaj7EOV9TZ6dYlcB
+         qnTi/23gZv/sCq8xofcALvfzrrk0Yi2KvXNp+vVBHPiApRJKFkSVBdAMEK5U4aJeOLj6
+         FOVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746040662; x=1746645462;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xXhOqh4ZLVwyszMvf+9Z/x0nU/kY8/7DOicY6xuWBc4=;
+        b=rI93w7i9F9l9Bw/eTjz2UBDvpgdkK7l6XQkYoMkXcBPkyIXSjX3Z+KwLHbnrFRtSDG
+         loLR/MzoeXKouAMTZNH+Tgzsp+dG47m3sqnQDXSCir/maDvQtJa0hFd6bbhyLrUlqjX+
+         Z1erC29i1+lrFnc04DVCLKZ8YYbgNxQxXdonQ4ddeAy3eVOTDJQiH5Yow0KVTDFi0/I7
+         6lt/M3Vkr9FgZ9xFPjT04MMne89pAxqF2qyZHlpsL/LWwULebUbuZsEgk5Kt3h5Mvt19
+         1aC9R9Nd+/yQSuOA6INMsg7bp7lbJhlitTsKnUpPeQluQQngJkF7kEQQogHO2x/pNdFu
+         Buzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWONTxV16f+Zv2J6D52DsCd9bSGtMmIaNvOBpqgNg0U8Z8EwWixtYPcu+PIklbtLZQbPKpET7qQxndz/QY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2e3ClnNBVWXD10pSVL4QkfObZmBtD09rz5GjsfFX/U7zDXHjT
+	rm+v0weUuUlxtUIIVPxLAz1v7k0SJSO1bPEUiFs2nRDh5n/IZG9VwO1ewiYbAfQ=
+X-Gm-Gg: ASbGncuWIg+QmbdX/z78UD3F5EiULEwVhiP/ZK+6kFth63nbcLT7i33jtrUOY6Pg48M
+	I4dF97s1RMF9PGyY8sE0wUA5K2GlmehsoOUkLyxK6lG78ndXFyQFql53br6SUvpjExe4V37vxWz
+	FyoOEFYTllJxod7nV58L0vVnFAmePPwt2Cy8h9x/QkcVAott6qYlmevzqHjIOWzp0ELtwex+PB6
+	Ij7CsKjctQ+nrtDhqe9hpIxJGioXtZidCwwGV/xc3FA/tgnB1E2pixiFEmhtNIhC+0oZwzwg0vS
+	iX5Qf5dWo1eSPNv2YQat0S/HceDVZqRHPQlNA94ZTi9Fy2AFRk4h2Z6ZBdNlS0IgVSdmo2w4Bo5
+	Cj11jKCa3QBqKwIg=
+X-Google-Smtp-Source: AGHT+IGy4UEKIqEqUHbe0JTx+91yGHN8GtDOL5hK/oCVz9Muk88lGWpmRT+rWl7rMdtnMbKuWLummQ==
+X-Received: by 2002:a05:6808:2e4f:b0:3fe:aeaf:26a5 with SMTP id 5614622812f47-402439689d7mr2636968b6e.31.1746040662560;
+        Wed, 30 Apr 2025 12:17:42 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4021291e53esm923240b6e.9.2025.04.30.12.17.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 12:17:42 -0700 (PDT)
+Message-ID: <1f8de7bd-7049-4933-82e3-8ce71685998e@baylibre.com>
+Date: Wed, 30 Apr 2025 14:17:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: sensor-hub: Fix typo and improve documentation for
+ sensor_hub_remove_callback()
+To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, jikos@kernel.org,
+ jic23@kernel.org, srinivas.pandruvada@linux.intel.com, bentiss@kernel.org
+Cc: linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On Wed, 30 Apr 2025, Dan Carpenter wrote:
-
-> On Wed, Apr 30, 2025 at 09:50:37AM -0700, Eric Biggers wrote:
-> > On Wed, Apr 30, 2025 at 11:05:54AM +0300, Dan Carpenter wrote:
-> > > We need to call dm_put_live_table() even if dm_get_live_table() returns
-> > > NULL.
-> > > 
-> > > Fixes: 9355a9eb21a5 ("dm: support key eviction from keyslot managers of underlying devices")
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > ---
-> > >  drivers/md/dm-table.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > 
-> > Reviewed-by: Eric Biggers <ebiggers@kernel.org>
-> > 
-> > But that's an awfully error-prone API.
+On 4/30/25 1:23 PM, Chelsy Ratnawat wrote:
+> Fixed a typo in "registered" and improved grammar for better readability
+> and consistency with kernel-doc standards. No functional changes.
 > 
-> Yep.
+> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> ---
+>  include/linux/hid-sensor-hub.h | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> > 
-> > dm_blk_report_zones() gets this wrong too.
-> 
-> Ugh...  dm_blk_report_zones() is too weird for my static checker tool.
-> The checker is looking very specifically for error paths with missing
-> unlocks.
+> diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
+> index c27329e2a5ad..5d2ac79429d4 100644
+> --- a/include/linux/hid-sensor-hub.h
+> +++ b/include/linux/hid-sensor-hub.h
+> @@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
+>  /**
+>  * sensor_hub_remove_callback() - Remove client callbacks
 
-Ben already tried to fix it in dm_blk_report_zones (see the linux-dm git, 
-for-next branch) - but his fix is incorrect because the "if" condition for 
-dm_get_live_table and dm_put_live_table differs. I'll update his patch to 
-fix this mismatch.
+This says "callbacks", so is it possible to have more than one registered at a
+time?
 
-Mikulas
+>  * @hsdev:	Hub device instance.
+> -* @usage_id:	Usage id of the client (E.g. 0x200076 for Gyro).
+> +* @usage_id:	Usage id of the client (e.g. 0x200076 for Gyro).
 
-> regards,
-> dan carpenter
-> 
+should we also make gyro lower-case?
+
+>  *
+> -* If there is a callback registred, this call will remove that
+> -* callbacks, so that it will stop data and event notifications.
+> +* Removes a previously registered callback for the given usage ID.
+> +* Once removed, the client will no longer receive data or event
+> +* notifications.
+
+I like the revised wording, but possibly looses some clarity that could be
+fixed with:
+
+Removes a previously registered callback(s), if any, for the given usage ID.
+
+As above, not sure if singular or plural callbacks is correct.
+
+>  */
+>  int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
+>  			u32 usage_id);
 
