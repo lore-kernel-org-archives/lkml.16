@@ -1,159 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6616315C140;
-	Wed, 30 Apr 2025 18:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1152750F1
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036990; cv=none; b=SLlATLcZ2eer8RT4W5S32oVE/dvNwQqY6hQ/pCtgFuD+EDYmSl5fYQIze1p7dKRCMRaBEOejYReDJsoBSkG+HR7b3C8MyDfXcqP/aXAFsP7JHJ6SN+pJ+p7f9pyQMi9D7pSXsWw+9szUIe4tKs1vltIXNLaAlsj0LOax/f009aA=
+	t=1746037001; cv=none; b=GEvXBKgvaYPzxKjFI3E8UAHgkhY/phVGbBFci9ZYZ7G6FVRsvI0dtE2gHUQulcjnhr0XjdwSh9gkXPriLh8OI27pLTqCWDEfb2be0wx4wrBncRslowc+Ec/lsaUX05w8zK7mj+J0LtNbMYPSqFGWpuiqqWiLczM2u8wTvMOHooM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746036990; c=relaxed/simple;
-	bh=u+gLd6Cauqg83Q7vPE135p/3fXtheyIdEV1XMt+xhxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O7Y1BlKSEdB2AfQHZdyhdORvB4ztlW7fRV61mZBue3Z/r2nhVwaMInG+yl4ppmIPeNEqmalHQVCNxuVcUpyiIAMtDNYq59upOfbiScb9U4WxA93ilR2KDyCyqSSbvYFXXYvyebXtpx4hjCbrp5OWzFPpxjVgn7BM6njXKI2X1co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBN/ePs+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746037001; c=relaxed/simple;
+	bh=S2zZkE8kYk7DeYMqbaUF/R2UUdCZOiBVgolXvwU4Qzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hey6snBH7IwVYpCvfo6VfECsg7L81cHncPN6+VvyJGnrXHi0cxtrU4Ng96YSpJP9v4PMIOaMpaAVDGDMJ3reiapwWwG2AdNGC3PJiqneI1N7/ykW+UT/ptGKzPtD+Xat+FbIvWGKbvJqi7sT2ogNn9Ql8KSi8L66e6jqCJtq104=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoNGQ7+S; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBN/ePs+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFBA3C4CEE7;
-	Wed, 30 Apr 2025 18:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746036989;
-	bh=u+gLd6Cauqg83Q7vPE135p/3fXtheyIdEV1XMt+xhxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FBN/ePs+8ER1bxqKoTN23OCJ/q3dk2qoAgx0OTRaleborkhSxY1sSuVm2cmc9VNEw
-	 mXY1MtXfvQFxFkXuL1L2sQwnqTBXYRIrl28i1Uv7Wbv3um5MKxKKNmXt5P58dBlAHh
-	 /wjQsFpIGVVBUoghUOu2f1OqS1HQwGjQkOT64acXoUP4bAKB2zw/1IdskFvnw4kzVD
-	 lkO8aNbPKupRQYD5wo94L5fjBGIBmTNm9LDAV0nygZendKx6DV4QnVrelLXUbVEPWr
-	 xxJoqx+PWyI2Yk2IseALagcqoAgboZ7+xUFTppeZ/uOuEjtA7TFHQ0T0gzjSpveGjC
-	 rh1J67l04Imjg==
-Date: Wed, 30 Apr 2025 20:16:22 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 11/16] gpu: nova-core: add falcon register definitions
- and base code
-Message-ID: <aBJo9qNDn8xDEwlk@pollux>
-References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
- <20250420-nova-frts-v1-11-ecd1cca23963@nvidia.com>
- <aAerWF9j5d01pQv0@cassiopeiae>
- <D9K09AU4KTQJ.3TVVZPMDB0H7I@nvidia.com>
- <9977ad2e-ce2d-48b5-a222-f74a821abfeb@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoNGQ7+S"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240b4de10eso224065ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746036999; x=1746641799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S2zZkE8kYk7DeYMqbaUF/R2UUdCZOiBVgolXvwU4Qzk=;
+        b=eoNGQ7+SZM4rlBucKl/0DaYbRi30+E4Bjp5cIjS22O3Onb++0R8yNXhIvpckylWMne
+         UsqOlPcfo5BvpNnnVr+18SsNQ+zxpz82K/XUhvh05WSjFERP4wI5D52T3JQgyskGEOO8
+         puiUtdL35+3ueFO9+BTTMpqVVKoChdyie1HxXuNjzNO6cNV+oZa8aJ9GwVFCu4KhMUNw
+         k45V0P6LCjCn8BijcX81dBzvwi9LrUwebEU7NoC+Ynqz4Ni/TdosiNuDUMh2msREfKBb
+         UcQo4p72QxrYQcVJb1t4rg6slr6ky9vUHTZCr8BsJSvn2WRqcfkBs+8jMPyJR4cWk/Ht
+         IKJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746036999; x=1746641799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S2zZkE8kYk7DeYMqbaUF/R2UUdCZOiBVgolXvwU4Qzk=;
+        b=rzoPkK8hJyAD2IHoQDcGXO0KR62I7hDWIcliQevEgL0iHF6mZKd4HMBJqumrtDtjr9
+         uVHfj+50NJ4JdlonF7tfysMOv2HHSd4PK4hZ2JosTssPqr20CZpIsldtzhjVpCqrWmGO
+         hWYpC4e0Yg9vbwGZWo9HrTtocns5j/D0UUy+ey/D9oRYTpU02gMpQJG79KxBTw59h6Dp
+         ttJB4xTwGFFd8re17VC1s4qGIB5/FFHNGawwV90jT3vPfokXFgH+kH5NAAmPy34iMT5f
+         pO44hbLF9rlVT2GkA9MELE3lDV4Q2p9enfec8WMmKqfgLkWFqKjcFWlQt7Z52RKX/460
+         WRjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYYBMXXStLyZabHVXT3CIlRny6qedJcct65UU65XIQ0muvyOLKXSgzhsPv0Lhq+WkkRfHjKhDSNkgtqQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8HizLDCwbpqsaoDHNz4iar8WOWI2hFAe+Jav/V9DOQGpUprl8
+	OOhOG+61fecakv8PQYjhVyaTwi8pvp+xyEbORW4vr3+SKh31Hbn1a5Q+QJxdeg9ZG2nRTNqnIym
+	Lfv9n3ftWzZntKUKtJ9pWaJg6NnI=
+X-Gm-Gg: ASbGnctTAckIFN6yA50RrWlOU9GMVPOvVs8ZmhG/uSsIYAZuENLbtEP91KYECud+54C
+	1hM8XuJDJBJVGHGokWMWl2Uf6Q7QS5LNfI88yuSC+Ibxd0b+HEBkwcp2bHIOAdXWamgaMAo6EFb
+	WzwZE8u9Rp1KFAUmsBCNIc
+X-Google-Smtp-Source: AGHT+IF1N28ck+ncNtfwPcI+Xrl/j3rXmoy8i7dANTP5Fh1Weylgg5D+MGt+ZyUiTckDw4nsn/uqlyoK2BhO9nWWPw4=
+X-Received: by 2002:a17:903:1b2f:b0:221:751f:dab9 with SMTP id
+ d9443c01a7336-22df5835e22mr21391885ad.14.1746036998735; Wed, 30 Apr 2025
+ 11:16:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9977ad2e-ce2d-48b5-a222-f74a821abfeb@nvidia.com>
+References: <20250430165343.GA1436080@ax162>
+In-Reply-To: <20250430165343.GA1436080@ax162>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 30 Apr 2025 20:16:25 +0200
+X-Gm-Features: ATxdqUF9QKjnhgdhbv81XkThLwmEAwlHnaUZr3nyNeFy-Sx2UyqWacT6ckzKa1I
+Message-ID: <CANiq72n+0kxXfbnDsjNMH8wUXAPySfnPKx5OCoppotiNye9CVg@mail.gmail.com>
+Subject: Re: Prebuilt LLVM 20.1.4 uploaded
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, ojeda@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 10:38:11AM -0400, Joel Fernandes wrote:
-> On 4/30/2025 9:25 AM, Alexandre Courbot wrote:
-> > On Tue Apr 22, 2025 at 11:44 PM JST, Danilo Krummrich wrote:
-> 
-> >>> +/// Returns a boxed falcon HAL adequate for the passed `chipset`.
-> >>> +///
-> >>> +/// We use this function and a heap-allocated trait object instead of statically defined trait
-> >>> +/// objects because of the two-dimensional (Chipset, Engine) lookup required to return the
-> >>> +/// requested HAL.
-> >>
-> >> Do we really need the dynamic dispatch? AFAICS, there's only E::BASE that is
-> >> relevant to FalconHal impls?
-> >>
-> >> Can't we do something like I do in the following example [1]?
-> >>
-> >> [1] https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&gist=bf7035a07e79a4047fb6834eac03a9f2
-> > 
-> > So are you have noticed there are two dimensions from which the falcons
-> > can be instantiated:
-> > 
-> > - The engine, which determines its register BASE,
-> > - The HAL, which is determined by the chipset.
-> > 
-> > For the engine, I want to keep things static for the main reason that if
-> > BASE was dynamic, we would have to do all our IO using
-> > try_read()/try_write() and check for an out-of-bounds error at each
-> > register access. The cost of monomorphization is limited as there are
-> > only a handful of engines.
-> > 
-> > But the HAL introduces a second dimension to this, and if we support N
-> > engines then the amount of monomorphized code would then increase by N
-> > for each new HAL we add. Chipsets are released at a good cadence, so
-> > this is the dimension that risks growing the most.
-
-I agree, avoiding the dynamic dispatch is probably not worth in this case
-considering the long term. However, I wanted to point out an alternative with
-[2].
-
-> > It is also the one that makes use of methods to abstract things (vs.
-> > fixed parameters), so it is a natural candidate for using virtual
-> > methods. I am not a fan of having ever-growing boilerplate match
-> > statements for each method that needs to be abstracted, especially since
-> > this is that virtual methods do without requiring extra code, and for a
-> > runtime penalty that is completely negligible in our context and IMHO
-> > completely balanced by the smaller binary size that results from their
-> > use.
+On Wed, Apr 30, 2025 at 6:53=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
 >
-> Adding to what Alex said, note that the runtime cost is still there even without
-> using dyn. Because at runtime, the match conditionals need to route function
-> calls to the right place.
+> I have built and uploaded LLVM 20.1.4 to
+> https://mirrors.edge.kernel.org/pub/tools/llvm/.
+>
+> If there are any issues found, please let us know via email or
+> https://github.com/ClangBuiltLinux/linux/issues/new, so that we have an
+> opportunity to get them fixed in main and backported before the 20.x
+> series is no longer supported.
 
-Honestly, I don't know how dynamic dispatch scales compared to static dispatch
-with conditionals.
+Tested the x86_64 binaries for Rust x86_64 and arm64:
 
-OOC, I briefly looked for a benchmark and found [3], which doesn't look
-unreasonable at a first glance.
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-I modified it real quick to have more than 2 actions. [4]
+Thanks!
 
-2 Actions
----------
-Dynamic Dispatch: time:   [2.0679 ns 2.0825 ns 2.0945 ns]
- Static Dispatch: time:   [850.29 ps 851.05 ps 852.36 ps]
-
-20 Actions
-----------
-Dynamic Dispatch: time:   [21.368 ns 21.827 ns 22.284 ns]
- Static Dispatch: time:   [1.3623 ns 1.3703 ns 1.3793 ns]
-
-100 Actions
------------
-Dynamic Dispatch: time:   [103.72 ns 104.33 ns 105.13 ns]
- Static Dispatch: time:   [4.5905 ns 4.6311 ns 4.6775 ns]
-
-Absolutely take it with a grain of salt, I neither spend a lot of brain power
-nor time on this, which usually is not a great combination with benchmarking
-things. :)
-
-However, I think it's probably not too important here. Hence, feel free to go
-with dynamic dispatch for this.
-
-> I am just not seeing the benefits of not using dyn for
-> this use case and only drawbacks. IMHO, we should try to not be doing the
-> compiler's job.
-> 
-> Maybe the only benefit is you don't need an Arc or Kbox wrapper?
-
-That's not a huge concern for me, it's only one single allocation per Engine,
-correct?
-
-[2] https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&gist=99ce0f12542488f78e35356c99a1e23f
-[3] https://github.com/tailcallhq/rust-benchmarks
-[4] https://pastebin.com/k0PqtQnq
+Cheers,
+Miguel
