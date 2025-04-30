@@ -1,312 +1,156 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20131217659
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F36A21A928;
+	Wed, 30 Apr 2025 08:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001000; cv=none; b=UU+sv8BHP2DdmdanEBT5jdEvhpdPO6BjHqFiXGu+RPRSKqYgMTPZyYDIQPBGoN9PgDdx/Uur+E7gkd826PylXfPFR0HrCZcKt5IiBjhTr24LYldK0n+ls1qo1SXoJuwdGkWDgGeTA7Tsgs4WWmVEwj/pOZ0jr9jJq1pluFOS4c8=
+	t=1746001004; cv=none; b=sJTRT0uJPH8dPO9qA7jUNi2YhKfl5lekcNFPSBWVOJh9QT/RWsRVshF/EvfX+GtJGQ9m6xvHmIRk5GPMVsevgRCKdrzGYlnWhimBX6lm5LVsX45MkMYONxlbA2uVOX9wlKBlHYLExcfNqpQB9uxtXpN5MVrznGVM9qDBC7Nz5h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001000; c=relaxed/simple;
-	bh=dYCiT8CTv/AzRIm66eawG5+b26B3uaqZ6Ec5RKcvcRI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lb6rAANXTAksFGAq/ScCFMLe6TOgAA6SXm0dhzIbqeXDjcM9dWKFzXa5b0/uv6t1ZBgl6h55mz3n8RVcOJfa7i/qKo9xJajmDgOKtM0zCdIym5O0pTNCOy6xRilWWjJ7RppSdHxqpnW1Yv64y/tYh9W3OUqRZlc9U9ZZJeX4kX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rg/S3JUZ; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rg/S3JUZ"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7399838db7fso784279b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746000997; x=1746605797; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0lDEdTGA2Q78UeMoqaqSTZbOw+0Pt/xUh3MJ2TLU8dM=;
-        b=rg/S3JUZUy5fAHM2se7OPmjK/VtJJr/QnDnNIPz6roXFuu4SnAwBSiPDstB8OHRjQp
-         v8vfNqGihvv/wTno649Ovl1AKrgzy6ZV6qUqxqhi8crb9O3QNsGmqjPHrwVbOc9Krnw7
-         OdzLe5fLYaK2PcmV0Po9yA3ckURWqr9PvdDeUXeNyfWqmbtxpBKlaH6SuMSpsCkNK9K4
-         cMcUTAuOHXw9CBkW2zbzM3cwSC1FFD9XMYEFjDx3u6B+GURPh1lJ2MD/jWtVsXiYE7Eq
-         R8TU73++V7HwpYQ7OnPovQAK50gGbbu36z2hdYu8CkqWPoqR2ZBbT99S6krUSXJLpXM3
-         3xDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746000997; x=1746605797;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0lDEdTGA2Q78UeMoqaqSTZbOw+0Pt/xUh3MJ2TLU8dM=;
-        b=psEYHVaHTJbkK7Z3inZwT6hf71Bk8+ZcO2aXlexUrOrUezamXX6NV6Voo5n9g/yisg
-         IkYVlSSWFFgV5LEgfdD9cwUgO9HE0bbzZDYoB1yrJ9grV6g0U2vHA5XYasjNMG7ljiCf
-         Dn8Xr7qY3ZM5oM9dAePLKFpTP0KXfIjzhFGwNlru5Ti9Ir75NBG1bb0rtT408g1jGWlq
-         PuWcwDXgXltH1hsCOYIPj3gvJPc75qQxUPiaOtbd0N738FEVhUvk+UOUfH3Ef/YWPe1t
-         4iB5HfL/mttfoZgdtlHpro9KKox8senh8cIq6wUm7InkzkGyCrXkw4hICIAK7hXZAZTn
-         51Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkSPBv6I3or0Y3iMqqvcAM2M2Bxeiit4cTWKhd1/aQlRQ5ct1l+FG7+3pi7jI6MCGp6tRJvbKc8eoZCOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXGEaCVw37hagvj2oGLGf2Td4vepEM/ThS5CQM1Z8wQPfTpVa5
-	1SGaZkKtdKSCO6juW6KewhB0tUQrxIFJ60sJzegQnH+mFYbH7j428OpPunFInkc=
-X-Gm-Gg: ASbGncts3H8AMOwdepa6WyBjc2Ej+BEsQv0AKiaIWG1gjYWykzjLfMfk1SO+xZfYCRy
-	uP6uhM4tDlQEnOtQt4iqbHRLam2nHCtlUm7IBerbmXdtvekW97M2cGkJdRfsnr+Q2QjkWYyT+FI
-	lru9mpIzK6qmSVDEIpqaVK8RtaFPny7o5Myn1YcvTRCr1cMold7SXxeWJ8wqmYKT0SeSADcLxUR
-	OyoHdwY7aCaXv7hNVwaCkB9WXW781+ygVk6hSoE61o6mGb9MJs9y03/Xr8KBR/3ciKIcL87gCY8
-	EPz6UWB4tieqNCpK9L+KufA92tzOkMxeAdXeLWiXyFT7WOeof5aqfw==
-X-Google-Smtp-Source: AGHT+IEkdjlV5neYVI9bDJYCdGVzb/65Kw95vZlp55rVec7TfydZ/oH6ud1+HkgcavU0L1iHFVRsZg==
-X-Received: by 2002:a05:6a00:641a:b0:736:b923:5323 with SMTP id d2e1a72fcca58-74039bc39bcmr2341553b3a.10.1746000997307;
-        Wed, 30 Apr 2025 01:16:37 -0700 (PDT)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a309edsm1073084b3a.91.2025.04.30.01.16.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:16:37 -0700 (PDT)
-From: Atish Patra <atishp@rivosinc.com>
-Date: Wed, 30 Apr 2025 01:16:30 -0700
-Subject: [PATCH v3 3/3] KVM: riscv: selftests: Add vector extension tests
+	s=arc-20240116; t=1746001004; c=relaxed/simple;
+	bh=H7YxKxpfejzggNL2H3p8dGBc255WrjVbcBJpn4FlNyQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uuD3hHLD2ug9Nqsxy1eO5pzC9SjYDeVsompQe1mqJg19pv3hJla5MNFaUgeageZttSl/Q3U0p5pxzgSEC+55cQ+2Jz7w93rk08uFidKWCwKpOKt5lBawtOXgk+7QlLpUh3RdOVXQW8WK4LdUHV2q2Uk9oLMDshUfiTrOMIaRwwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8DxC3Jk3BFoAvPKAA--.8628S3;
+	Wed, 30 Apr 2025 16:16:36 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAxTsVf3BFoj+ifAA--.44671S2;
+	Wed, 30 Apr 2025 16:16:34 +0800 (CST)
+Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
+To: herbert@gondor.apana.org.au
+Cc: Huacai Chen <chenhuacai@kernel.org>, davem@davemloft.net,
+ peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
+ linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de,
+ Lee Jones <lee@kernel.org>
+References: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
+ <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn>
+Date: Wed, 30 Apr 2025 16:14:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-kvm_selftest_improve-v3-3-eea270ff080b@rivosinc.com>
-References: <20250430-kvm_selftest_improve-v3-0-eea270ff080b@rivosinc.com>
-In-Reply-To: <20250430-kvm_selftest_improve-v3-0-eea270ff080b@rivosinc.com>
-To: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
- Andrew Jones <ajones@ventanamicro.com>
-Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
- linux-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Atish Patra <atishp@rivosinc.com>
-X-Mailer: b4 0.15-dev-42535
+In-Reply-To: <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxTsVf3BFoj+ifAA--.44671S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF45tF4UurW8CF45KFWDKFX_yoW5KFWxpF
+	45Cay5Cr4UJF47Cr93try8CFy5Z3s3Xr9rKa9rJw15Wr9xAa4xJrW7CFyUCFsrZryrGryI
+	vFWkCa17u3W5AacCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
 
-Add vector related tests with the ISA extension standard template.
-However, the vector registers are bit tricky as the register length is
-variable based on vlenb value of the system. That's why the macros are
-defined with a default and overidden with actual value at runtime.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 132 +++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+在 2025/4/20 下午3:17, Huacai Chen 写道:
+> Hi, Qunqin,
+>
+> On Fri, Apr 18, 2025 at 5:33 PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
+>> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+>> accelerator engines. Each engine have its own DMA buffer provided
+>> by the controller. The kernel cannot directly send commands to the
+>> engine and must first send them to the controller, which will
+>> forward them to the corresponding engine. Based on these engines,
+>> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+>> as an engine.
+>>
+>> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>>      are all encryption related drivers and SM2, SM3, and SM4 drivers
+>>      will be added to the crypto subsystem in the future, the base driver
+>>      need to be changed when adding these drivers. Therefore, it may be
+>>      more appropriate to place the base driver within the crypto subsystem.
+> I don't know what Lee Jones exactly means. But I don't think this
+> version is what he wants. You move the SE driver from drivers/mfd to
+> drivers/crypto, but it is still a mfd driver because of "struct
+> mfd_cell engines".
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index 569f2d67c9b8..a0b7dabb5040 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -17,6 +17,15 @@ enum {
- 	VCPU_FEATURE_SBI_EXT,
- };
- 
-+enum {
-+	KVM_RISC_V_REG_OFFSET_VSTART = 0,
-+	KVM_RISC_V_REG_OFFSET_VL,
-+	KVM_RISC_V_REG_OFFSET_VTYPE,
-+	KVM_RISC_V_REG_OFFSET_VCSR,
-+	KVM_RISC_V_REG_OFFSET_VLENB,
-+	KVM_RISC_V_REG_OFFSET_MAX,
-+};
-+
- static bool isa_ext_cant_disable[KVM_RISCV_ISA_EXT_MAX];
- 
- bool filter_reg(__u64 reg)
-@@ -143,6 +152,38 @@ bool check_reject_set(int err)
- 	return err == EINVAL;
- }
- 
-+static int override_vector_reg_size(struct kvm_vcpu *vcpu, struct vcpu_reg_sublist *s,
-+				    uint64_t feature)
-+{
-+	unsigned long vlenb_reg = 0;
-+	int rc;
-+	u64 reg, size;
-+
-+	/* Enable V extension so that we can get the vlenb register */
-+	rc = __vcpu_set_reg(vcpu, feature, 1);
-+	if (rc)
-+		return rc;
-+
-+	vlenb_reg = vcpu_get_reg(vcpu, s->regs[KVM_RISC_V_REG_OFFSET_VLENB]);
-+	if (!vlenb_reg) {
-+		TEST_FAIL("Can't compute vector register size from zero vlenb\n");
-+		return -EPERM;
-+	}
-+
-+	size = __builtin_ctzl(vlenb_reg);
-+	size <<= KVM_REG_SIZE_SHIFT;
-+
-+	for (int i = 0; i < 32; i++) {
-+		reg = KVM_REG_RISCV | KVM_REG_RISCV_VECTOR | size | KVM_REG_RISCV_VECTOR_REG(i);
-+		s->regs[KVM_RISC_V_REG_OFFSET_MAX + i] = reg;
-+	}
-+
-+	/* We should assert if disabling failed here while enabling succeeded before */
-+	vcpu_set_reg(vcpu, feature, 0);
-+
-+	return 0;
-+}
-+
- void finalize_vcpu(struct kvm_vcpu *vcpu, struct vcpu_reg_list *c)
- {
- 	unsigned long isa_ext_state[KVM_RISCV_ISA_EXT_MAX] = { 0 };
-@@ -172,6 +213,13 @@ void finalize_vcpu(struct kvm_vcpu *vcpu, struct vcpu_reg_list *c)
- 		if (!s->feature)
- 			continue;
- 
-+		if (s->feature == KVM_RISCV_ISA_EXT_V) {
-+			feature = RISCV_ISA_EXT_REG(s->feature);
-+			rc = override_vector_reg_size(vcpu, s, feature);
-+			if (rc)
-+				goto skip;
-+		}
-+
- 		switch (s->feature_type) {
- 		case VCPU_FEATURE_ISA_EXT:
- 			feature = RISCV_ISA_EXT_REG(s->feature);
-@@ -186,6 +234,7 @@ void finalize_vcpu(struct kvm_vcpu *vcpu, struct vcpu_reg_list *c)
- 		/* Try to enable the desired extension */
- 		__vcpu_set_reg(vcpu, feature, 1);
- 
-+skip:
- 		/* Double check whether the desired extension was enabled */
- 		__TEST_REQUIRE(__vcpu_has_ext(vcpu, feature),
- 			       "%s not available, skipping tests", s->name);
-@@ -410,6 +459,35 @@ static const char *fp_d_id_to_str(const char *prefix, __u64 id)
- 	return strdup_printf("%lld /* UNKNOWN */", reg_off);
- }
- 
-+static const char *vector_id_to_str(const char *prefix, __u64 id)
-+{
-+	/* reg_off is the offset into struct __riscv_v_ext_state */
-+	__u64 reg_off = id & ~(REG_MASK | KVM_REG_RISCV_VECTOR);
-+	int reg_index = 0;
-+
-+	assert((id & KVM_REG_RISCV_TYPE_MASK) == KVM_REG_RISCV_VECTOR);
-+
-+	if (reg_off >= KVM_REG_RISCV_VECTOR_REG(0))
-+		reg_index = reg_off -  KVM_REG_RISCV_VECTOR_REG(0);
-+	switch (reg_off) {
-+	case KVM_REG_RISCV_VECTOR_REG(0) ...
-+	     KVM_REG_RISCV_VECTOR_REG(31):
-+		return strdup_printf("KVM_REG_RISCV_VECTOR_REG(%d)", reg_index);
-+	case KVM_REG_RISCV_VECTOR_CSR_REG(vstart):
-+		return "KVM_REG_RISCV_VECTOR_CSR_REG(vstart)";
-+	case KVM_REG_RISCV_VECTOR_CSR_REG(vl):
-+		return "KVM_REG_RISCV_VECTOR_CSR_REG(vl)";
-+	case KVM_REG_RISCV_VECTOR_CSR_REG(vtype):
-+		return "KVM_REG_RISCV_VECTOR_CSR_REG(vtype)";
-+	case KVM_REG_RISCV_VECTOR_CSR_REG(vcsr):
-+		return "KVM_REG_RISCV_VECTOR_CSR_REG(vcsr)";
-+	case KVM_REG_RISCV_VECTOR_CSR_REG(vlenb):
-+		return "KVM_REG_RISCV_VECTOR_CSR_REG(vlenb)";
-+	}
-+
-+	return strdup_printf("%lld /* UNKNOWN */", reg_off);
-+}
-+
- #define KVM_ISA_EXT_ARR(ext)		\
- [KVM_RISCV_ISA_EXT_##ext] = "KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_" #ext
- 
-@@ -639,6 +717,9 @@ void print_reg(const char *prefix, __u64 id)
- 	case KVM_REG_SIZE_U128:
- 		reg_size = "KVM_REG_SIZE_U128";
- 		break;
-+	case KVM_REG_SIZE_U256:
-+		reg_size = "KVM_REG_SIZE_U256";
-+		break;
- 	default:
- 		printf("\tKVM_REG_RISCV | (%lld << KVM_REG_SIZE_SHIFT) | 0x%llx /* UNKNOWN */,\n",
- 		       (id & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT, id & ~REG_MASK);
-@@ -670,6 +751,10 @@ void print_reg(const char *prefix, __u64 id)
- 		printf("\tKVM_REG_RISCV | %s | KVM_REG_RISCV_FP_D | %s,\n",
- 				reg_size, fp_d_id_to_str(prefix, id));
- 		break;
-+	case KVM_REG_RISCV_VECTOR:
-+		printf("\tKVM_REG_RISCV | %s | KVM_REG_RISCV_VECTOR | %s,\n",
-+		       reg_size, vector_id_to_str(prefix, id));
-+		break;
- 	case KVM_REG_RISCV_ISA_EXT:
- 		printf("\tKVM_REG_RISCV | %s | KVM_REG_RISCV_ISA_EXT | %s,\n",
- 				reg_size, isa_ext_id_to_str(prefix, id));
-@@ -874,6 +959,48 @@ static __u64 fp_d_regs[] = {
- 	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_D,
- };
- 
-+/* Define a default vector registers with length. This will be overwritten at runtime */
-+static __u64 vector_regs[] = {
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_CSR_REG(vstart),
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_CSR_REG(vl),
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_CSR_REG(vtype),
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_CSR_REG(vcsr),
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_CSR_REG(vlenb),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(0),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(1),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(2),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(3),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(4),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(5),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(6),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(7),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(8),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(9),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(10),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(11),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(12),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(13),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(14),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(15),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(16),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(17),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(18),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(19),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(20),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(21),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(22),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(23),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(24),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(25),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(26),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(27),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(28),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(29),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(30),
-+	KVM_REG_RISCV | KVM_REG_SIZE_U128 | KVM_REG_RISCV_VECTOR | KVM_REG_RISCV_VECTOR_REG(31),
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_V,
-+};
-+
- #define SUBLIST_BASE \
- 	{"base", .regs = base_regs, .regs_n = ARRAY_SIZE(base_regs), \
- 	 .skips_set = base_skips_set, .skips_set_n = ARRAY_SIZE(base_skips_set),}
-@@ -898,6 +1025,9 @@ static __u64 fp_d_regs[] = {
- 	{"fp_d", .feature = KVM_RISCV_ISA_EXT_D, .regs = fp_d_regs, \
- 		.regs_n = ARRAY_SIZE(fp_d_regs),}
- 
-+#define SUBLIST_V \
-+	{"v", .feature = KVM_RISCV_ISA_EXT_V, .regs = vector_regs, .regs_n = ARRAY_SIZE(vector_regs),}
-+
- #define KVM_ISA_EXT_SIMPLE_CONFIG(ext, extu)			\
- static __u64 regs_##ext[] = {					\
- 	KVM_REG_RISCV | KVM_REG_SIZE_ULONG |			\
-@@ -966,6 +1096,7 @@ KVM_SBI_EXT_SIMPLE_CONFIG(susp, SUSP);
- KVM_ISA_EXT_SUBLIST_CONFIG(aia, AIA);
- KVM_ISA_EXT_SUBLIST_CONFIG(fp_f, FP_F);
- KVM_ISA_EXT_SUBLIST_CONFIG(fp_d, FP_D);
-+KVM_ISA_EXT_SUBLIST_CONFIG(v, V);
- KVM_ISA_EXT_SIMPLE_CONFIG(h, H);
- KVM_ISA_EXT_SIMPLE_CONFIG(smnpm, SMNPM);
- KVM_ISA_EXT_SUBLIST_CONFIG(smstateen, SMSTATEEN);
-@@ -1040,6 +1171,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_fp_f,
- 	&config_fp_d,
- 	&config_h,
-+	&config_v,
- 	&config_smnpm,
- 	&config_smstateen,
- 	&config_sscofpmf,
+Hi, Herbert
 
--- 
-2.43.0
+Sorry to bother you, may i ask is it fine to move  the Security Engine 
+base driver[Patch v8 1/5] to drivers/crypto ?
+
+The base driver uses MFD  interface  to register child device(tpm, rng) 
+, as done in
+
+"drivers/iio/common/ssp_sensors/ssp_dev.c" and 
+"drivers/firmware/xilinx/zynqmp.c".
+
+Thank you, and I look forward to hearing from you.
+
+BR, Qunqin.
+
+>
+> Huacai
+>
+>>      Removed complete callback in all drivers. Removed the concepts of
+>>      "channel", "msg" and "request" as they may be confusing. Used the
+>>      concepts of "egnine" and "command" may be better.
+>>
+>> v7: Addressed Huacai's comments.
+>>
+>> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>>
+>>      crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>>      ls6000se-rng.c ->loongson-rng.c
+>>
+>>      tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>>
+>> v5: Registered "ls6000se-rng" device in mfd driver.
+>> v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+>>      and crypto.
+>> v3: Put the updates to the MAINTAINERS in a separate patch.
+>>
+>> Qunqin Zhao (5):
+>>    crypto: loongson - Add Loongson Security Engine chip controller driver
+>>    crypto: loongson - add Loongson RNG driver support
+>>    MAINTAINERS: Add entry for Loongson crypto driver
+>>    tpm: Add a driver for Loongson TPM device
+>>    MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>>
+>>   MAINTAINERS                            |   7 +
+>>   drivers/char/tpm/Kconfig               |   9 +
+>>   drivers/char/tpm/Makefile              |   1 +
+>>   drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+>>   drivers/crypto/Kconfig                 |   1 +
+>>   drivers/crypto/Makefile                |   1 +
+>>   drivers/crypto/loongson/Kconfig        |  17 ++
+>>   drivers/crypto/loongson/Makefile       |   3 +
+>>   drivers/crypto/loongson/loongson-rng.c | 198 ++++++++++++++++++++
+>>   drivers/crypto/loongson/loongson-se.c  | 239 +++++++++++++++++++++++++
+>>   drivers/crypto/loongson/loongson-se.h  |  52 ++++++
+>>   11 files changed, 606 insertions(+)
+>>   create mode 100644 drivers/char/tpm/tpm_loongson.c
+>>   create mode 100644 drivers/crypto/loongson/Kconfig
+>>   create mode 100644 drivers/crypto/loongson/Makefile
+>>   create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>>   create mode 100644 drivers/crypto/loongson/loongson-se.c
+>>   create mode 100644 drivers/crypto/loongson/loongson-se.h
+>>
+>>
+>> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+>> --
+>> 2.45.2
+>>
+>>
 
