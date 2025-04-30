@@ -1,81 +1,120 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4623C1EB197;
-	Wed, 30 Apr 2025 08:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEA6214223;
+	Wed, 30 Apr 2025 08:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001133; cv=none; b=sEpYGPw794DGREubyNig9pzftiLMgxUpYmQLlG3XQft4hbD8vJol/O3wf/mjwdWqjD6bcPHEvdVnVF0NSz+bwhfNrbe9RM3xDFehkLofQlIMr+zPi56XLklVsTsH4ysP+S1zyeh3lV4o1B4QQDGx1H+vCemt4DjHsAkmTa0/Klc=
+	t=1746001148; cv=none; b=acYY4sHtB3HnQZ3zmEjdz5SpP1Qt7JsZe2G9R1TofWZ/S6INKEFYxsSPxnEZs1vymVJHWAzf1AQLCe8ovn/GL92yqFexLqy8g0IuNVZRJrEip+PuVkNBaQdIYofK1TPHB9GNRDhWcYvpzOcvVxcgpHnT2sBOcWGP/LubMX//jew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001133; c=relaxed/simple;
-	bh=bHAZEpmXSdLpFJLUjkk5FAmT9/oL5KYYAbtM4RoPUsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KVQG/XzuwIioJiPoBMH0O/JxDSLuQn+eoJavYE34l7ZTnY93GK7sEgVwafWIq6kGMSkg+/oMN/wXSX9KL/ehVXz+UyhAAkKPzNiDkimONHDUY+mmZP4p4voBzvOO7X+rHtSeYOYzs8ZHaug3WmCEC6aEI98magsO1gdjuv/c8jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=qqJaDh4/; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746001148; c=relaxed/simple;
+	bh=sTjbLQMlvsQU8MCU4Zm2+0SCHO2CLBc/KryUeqrfJGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VEjuAUn94BfCdLBDVK1qW7ixFlktA27peItSVCiz5YkZbDIS1m43VvcVgsHd6Urm3/MAsrInqe0OgLtTRqXe+zw4SQ91xqvmLZY45D1FyNf7jSso6deelZbnfU4hyMN0OZrJTs8TZohnDaM/Ys9MsARGnCTtN1Rp+tl9LvXRX9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=aIIKwMKt; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=O8XjPnyO reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="qqJaDh4/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Dne3ROVglvwR4BrHcAfMFGXqQGQiHsk7Mm78Fflzfng=; b=qqJaDh4/YAUUQBOKMyxhXy2rF2
-	cRRkqbQ+60E67dd6gwWYxPTZuJDkUey3DHgcraCZtebWZysBFL/3Muq2S1pzbOFIb2frhAS01Y9EG
-	EoY3lOBUgKFFqpd5ig9U/u97qV7dgvZ9ReA2Vk5tPXmeeb46Gnv0bunoiNfOXyYIsQmdg6gU1aA68
-	ImQKJfgAHLB7HhaxyqxBZLRWB8Hhuf9nkj5E2xp4LlRzft7P0RM/qNcqRHeYHVoMXNxOAhevkWSCy
-	/5sbtpCBz7cV6rggl7ssRGReA9RKbNTsKaRkyJrBgqB1rmXvAXak9+QPjlFQwkMlZbY12rYteB+88
-	NGsJtYCw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uA2eI-002Cw4-1L;
-	Wed, 30 Apr 2025 16:18:35 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 30 Apr 2025 16:18:34 +0800
-Date: Wed, 30 Apr 2025 16:18:34 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, davem@davemloft.net,
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de, Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
-Message-ID: <aBHc2tT2-Duj3_-A@gondor.apana.org.au>
-References: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
- <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
- <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aIIKwMKt";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="O8XjPnyO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1746001144; x=1777537144;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mbemR3oRuGkOlc8+6KEUCkxK1UqOaYyGU6dV0XOH8fg=;
+  b=aIIKwMKt4WinFKsIlfedXMUThqd9vCRKsHJHnaDVvDaOarQlPen/BGcX
+   pxWZJtaD19TFWygEQShx8VKIvoCughsJCfgcTl0XjsG61r4QIMlpA9LbK
+   Xv4Vb3XCocyh6nHj4iYSq9btUkdR6YgTsWBRJOUubMIJO55wPzjHXV9d7
+   FyOZYPjcd/6o+7vGFsO8hWzER7j9ScMAjX1fEUsB0lQD4MjhX8/ID1cwO
+   jNEDMTvoNbzFtdkXqMjS2UISR+Q00wlO8fH30gQiMtYoT8JTi/V5goZsa
+   oqGD++erVRg0zfzJRc1L5Vpq3xpBjZlbT3e9u/MIfyUEL7ayI5hkRj0qv
+   g==;
+X-CSE-ConnectionGUID: 6qH8UY+5Sy2M7Jco+pwx5g==
+X-CSE-MsgGUID: a+PXonWyRzK3RnDABjbb0A==
+X-IronPort-AV: E=Sophos;i="6.15,251,1739833200"; 
+   d="scan'208";a="43802161"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 30 Apr 2025 10:19:01 +0200
+X-CheckPoint: {6811DCF5-1B-45F3AE15-E90F7DFA}
+X-MAIL-CPID: 31B617226BF72FB254ACD175EC0ED1A2_5
+X-Control-Analysis: str=0001.0A006397.6811DCF5.008E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id ABBED16B2E9;
+	Wed, 30 Apr 2025 10:18:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1746001137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mbemR3oRuGkOlc8+6KEUCkxK1UqOaYyGU6dV0XOH8fg=;
+	b=O8XjPnyOZz8llZYysGi4ehzwo8TryFjKtx9AElVXO+m2gx/EDndaMOcEgt5ZCIKFEiim4D
+	9lsPUmhfUL4Yx+lW7yvt0bmsh0KehJpCkuA+1mEJ2+nSfeDlgkARuRKjyiKux3e8RQIULT
+	4XFdxgHOxlljC+uKWBm7lM9gPPmlRb3TliVctEJe+Qa4+N/w9KbM9JcNgSXw4c13ndAN0U
+	8gOMUlLo1mJ9GQa8dXUIPDDoZ9zPOr+TgkF7tg/+sDiCgUP1NkbImNNxVb937dr8uTYmln
+	Ke8Ynht3QJhsVDg6LyFAetj7bQJXLmuWNk3j5VzPmr2nN9v4Ig/gGx3Ta6c92g==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Cc: linux@ew.tq-group.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] arm64: dts: imx93-tqma9352-mba91xxca: disable Open Drain for MDIO
+Date: Wed, 30 Apr 2025 10:18:48 +0200
+Message-ID: <20250430081849.1827688-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Apr 30, 2025 at 04:14:40PM +0800, Qunqin Zhao wrote:
->
-> Sorry to bother you, may i ask is it fine to move  the Security Engine base
-> driver[Patch v8 1/5] to drivers/crypto ?
-> 
-> The base driver uses MFD  interface  to register child device(tpm, rng) , as
-> done in
-> 
-> "drivers/iio/common/ssp_sensors/ssp_dev.c" and
-> "drivers/firmware/xilinx/zynqmp.c".
-> 
-> Thank you, and I look forward to hearing from you.
+From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
 
-I don't mind at this point in time.  But if this driver were to
-develop features way outside of the Crypto API in future then I
-may change my mind.
+Using the MDIO pins with Open Drain causes spec violations of the
+signals. Revert the changes.
+This is similar to commit 14e66e4b13221 ("Revert "arm64: dts:
+imx93-tqma9352-mba93xxca: enable Open Drain for MDIO"")
 
-Thanks,
+Fixes: e5bc07026f94 ("arm64: add initial device tree for TQMa93xx/MBa91xxCA")
+Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+ arch/arm64/boot/dts/freescale/imx93-tqma9352-mba91xxca.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba91xxca.dts b/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba91xxca.dts
+index 7b78faa4bfd09..9dbf41cf394bf 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba91xxca.dts
++++ b/arch/arm64/boot/dts/freescale/imx93-tqma9352-mba91xxca.dts
+@@ -571,7 +571,7 @@ pinctrl_eqos: eqosgrp {
+ 		fsl,pins = /* PD | FSEL_2 | DSE X4 */
+ 			   <MX93_PAD_ENET1_MDC__ENET_QOS_MDC				0x51e>,
+ 			   /* SION | HYS | ODE | FSEL_2 | DSE X4 */
+-			   <MX93_PAD_ENET1_MDIO__ENET_QOS_MDIO				0x4000191e>,
++			   <MX93_PAD_ENET1_MDIO__ENET_QOS_MDIO				0x4000111e>,
+ 			   /* HYS | FSEL_0 | DSE no drive */
+ 			   <MX93_PAD_ENET1_RD0__ENET_QOS_RGMII_RD0			0x1000>,
+ 			   <MX93_PAD_ENET1_RD1__ENET_QOS_RGMII_RD1			0x1000>,
+@@ -599,7 +599,7 @@ pinctrl_fec: fecgrp {
+ 		fsl,pins = /* PD | FSEL_2 | DSE X4 */
+ 			   <MX93_PAD_ENET2_MDC__ENET1_MDC			0x51e>,
+ 			   /* SION | HYS | ODE | FSEL_2 | DSE X4 */
+-			   <MX93_PAD_ENET2_MDIO__ENET1_MDIO			0x4000191e>,
++			   <MX93_PAD_ENET2_MDIO__ENET1_MDIO			0x4000111e>,
+ 			   /* HYS | FSEL_0 | DSE no drive */
+ 			   <MX93_PAD_ENET2_RD0__ENET1_RGMII_RD0			0x1000>,
+ 			   <MX93_PAD_ENET2_RD1__ENET1_RGMII_RD1			0x1000>,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.43.0
+
