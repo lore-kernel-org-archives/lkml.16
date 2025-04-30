@@ -1,137 +1,212 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BF3204F9C
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9351716DC28;
+	Wed, 30 Apr 2025 15:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746026533; cv=none; b=L8zbxSbidPyg2AY9vLmV8/nNvEif4Bn2U1Kh1Mhh9bNNVUQN8a3wd2T4uIwg6VUPBx98SWYEDy+aC953A4vg80ao0cjKZVTNOBp+tawwyni36PimtjnTVceaPByqc7b/XewXAcYgJORS28E/zI3nuc5/Pd20uC0D/FzNF/JOSSU=
+	t=1746026542; cv=none; b=VMS3CR/Q2L/OS+K1b1mdcWc+q5JcuS2M0YH4Equn1DzFpdXNrGp3AmeYlQCwe4dVtbi7LrYy7s7wl01CdbE3CCXfq66Q95fu3n52MX93HfgGNNdzfhAayYIEILUuKfWFAfJq7l3hV/yvjsqV2WpEKh9WZauRnw8aZMnxHdljgeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746026533; c=relaxed/simple;
-	bh=WZRYexjcI+FcMwQnFYdjjkqA9YMUqrFrRBtF8JzIvqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L4xSPXo0B8pZj7AQMcPT9dJKo2/31S+UlBFlMbH/dgEuUSA980cnplMWViL6CfVlT6A/O07NHhl1Ja2ksmVEqTdcO3rYDRZff2ev9l4bzpG26uhTDE3/CCYXCio+2iRyreN/scWwCOMmDfm0nBXy42Pbtklh+GgqnEs755KuW00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p3tx83uy; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746026542; c=relaxed/simple;
+	bh=r4ew49H4bKTs3LfqeIZz5NEwo0JMgLGQbRaSAAo0hs0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BM/ZSrwzi6zQB2WIcgOrT8Cd6VKnV3u/Asl1kNoKkMxUj0UwA+AEAac5HZiYuMq/MKAJObiuSnIgLi2mZyY5OBVqzpVlH9FNscpNZr/M23cD0KhxoXmXj6UHXTawhb4Yhm5EYVPzt5uRG7pUnAZo/BhTkO/DGm7UV2gSNn5DWN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CbCf/M78; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p3tx83uy"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so190095ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746026531; x=1746631331; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=93eCSnL7YqqbeGNknrrinPW0I2Te+1gugq/NSOoUJBI=;
-        b=p3tx83uyneiPanGtLTgkP+OyIoenVC8fUZg5kRbnZztHeQfT9098eqd6Ffy44wkLu9
-         bXDjIt9ix2VY36VFtRnRhvoQXLMZl//5iptsLwt99sGtGJK9TrSQkdqWppy1gnaSrfgM
-         dm02C41li8CRJwIPSIffowHVxiWVrclhFjNiW66p1xE47CJ5kZLjVgf5eG94biWxJqxp
-         LLyYIXZ1yo9Az6puafSyb8+kO6qe7Xgxx9sfkqHnnH6IQIKp78oW4WSgpGra+G/lSBv0
-         MrRH75l8azvrAvqIoc9PfyH7AiDw7R142Y2zJeFwQc2+hkS2vvWJ+N1YSxxqqDcMVPqq
-         P+dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746026531; x=1746631331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=93eCSnL7YqqbeGNknrrinPW0I2Te+1gugq/NSOoUJBI=;
-        b=lcIrW0+9gmgT6TyiYY5PQ3wavzdJ8VwLLy7aMtAdIYA9uRF3q6h3GRIC0f9VpQ53dA
-         3fzgsauyQW4lDTnDUxI/1C+JBeCiKPLe0nyyF1mTLk38I42Ho5EoK6csYHxBCMbqykRj
-         mulW6NW3rGrScab0cT0KxgDJCjBGrDEi+gCKu/VDhKOamj/KqVSS1wcnbTHQ+FnVxVMX
-         XNvqaQSbYmf8BEPypFaK1ieYWXQlFSHzfSt7ZfDE9RBvJAzyb5SF6RA5e/jamIp4+49G
-         0q3oiF9pqqSh/0M9TcTl5Ln6WSeJC511/gc2Sfefsdpub/H43LYYbIIicMq8grMw0TpC
-         Iigw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNpoX9VdMyoGAqzn4+4aK/4Ary1ExRlD/hjz+73vknE6PB72uxhf9j2GQHaMdWLq4yk8ixJA7duDPFFV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys2KmtGo/A/guqVfqlSnj1QIyGgT5LWER2J/aY1ojjYqysDuwN
-	/syDY8BNZqgrceaULIuWcRTs7UFiiodxOm8YCuc2bH/m6w72tAs4SjhLJLoYWSQKADhva+AU3nH
-	+pcZ7VJOpTgggrPazFA2UOXQMlmZb+zZ3Iw0C
-X-Gm-Gg: ASbGncttGGb37Zype+UNvKuUOuEz0QQKGAwv7Rwnb2s9Hkg32eVpgZX9rDIeoSWgA1Z
-	NBMk0CS5OnHQgLZjs9iBe/2CBHWZ82afqRz13crcFIyzbQ+ZY0gNpeb2XXWUExnUs3UdjygUZBi
-	Yh6AlzlHtvyTUG8hjaWNzUPtqO6++GCfqwYqwNxd0eCWC27sV32/g=
-X-Google-Smtp-Source: AGHT+IELFRtJscY2zbXLAgGomavWrz5X4sjvrTHzwB6yFqNo7j46RHB/wvbsUhzom5/2eGNsOqexGsnaS9kImIm15og=
-X-Received: by 2002:a05:6e02:330b:b0:3d6:d147:3126 with SMTP id
- e9e14a558f8ab-3d967f2dc37mr3787365ab.5.1746026530498; Wed, 30 Apr 2025
- 08:22:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CbCf/M78"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UA4G7X006462;
+	Wed, 30 Apr 2025 15:22:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ytRHOY
+	eqjabITmUgbm/Ecbe+B/ixJIyy8ToZHTTbedY=; b=CbCf/M78IsT8ZzF0c/KnBr
+	YybWVypFPp0KeftmoxzDJTlyr+hKr0V4L4WnF0VODvA7XRkk9lzWNGIKUqufZE3i
+	o/OqpW94Bm236aWuDpDVZLxLO2QKOCLEUyPhC9l6Fx7GZmdHWAQaemeNSwHjRcvZ
+	vyGeDPkFSAbuJA5MFsPhT41KtELk/AtfLDcX+0Lst3dxmy/gXB0zgfGxizKrMwis
+	V4oEBNFEcBLnz8sYMwv/DOsS0UAsJFmPxL2UMBuCnNSBPeQmg50euG7J+O2OTgYy
+	Ig8CbTHsW+YQU4r7YouLA9grDqS+ON+7OU7fnEl8BYNVbwjzCnUrVqxfj3iR9jgw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bhsjsh75-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 15:22:07 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53UFM67k025728;
+	Wed, 30 Apr 2025 15:22:07 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bhsjsh72-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 15:22:06 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53UEIcaj008494;
+	Wed, 30 Apr 2025 15:22:06 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 469ch3844t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 15:22:05 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53UFM1FY60490178
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 15:22:01 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4EC0658060;
+	Wed, 30 Apr 2025 15:22:04 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4462658056;
+	Wed, 30 Apr 2025 15:22:03 +0000 (GMT)
+Received: from [9.61.140.105] (unknown [9.61.140.105])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 30 Apr 2025 15:22:03 +0000 (GMT)
+Message-ID: <f098b278-e3a9-4434-ac0b-9bdb1bdf5855@linux.ibm.com>
+Date: Wed, 30 Apr 2025 11:22:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403202439.57791-1-irogers@google.com>
-In-Reply-To: <20250403202439.57791-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 30 Apr 2025 08:21:59 -0700
-X-Gm-Features: ATxdqUEX8IsJnW5m4DN3_VCxfO0u0ElVgGonJIShmJi7InKGbKOKF9LlxD3eVyM
-Message-ID: <CAP-5=fXkayZ7pj+EctOtSBiTcGuyi6SHm9c5RZ3HyyPYcot9zA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Add support for a DRM tool like PMU
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Junhao He <hejunhao3@huawei.com>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Brendan Gregg <brendan@intel.com>, 
-	gabriel.munoz@intel.com, matthew.olson@intel.com, 
-	brandon.kammerdiener@intel.com
-Cc: dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] powerpc/secvar: Expose secvars relevant to the key
+ management mode
+To: Srish Srinivasan <ssrish@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
+        zohar@linux.ibm.com, linux-kernel@vger.kernel.org
+References: <20250430090350.30023-1-ssrish@linux.ibm.com>
+ <20250430090350.30023-3-ssrish@linux.ibm.com>
+Content-Language: en-US
+From: Nayna Jain <nayna@linux.ibm.com>
+In-Reply-To: <20250430090350.30023-3-ssrish@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=dcuA3WXe c=1 sm=1 tr=0 ts=6812401f cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=KJy4oYrYVPbNKidmU1UA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: otvFdb7AGlj3ot212roM59_IncOgPEJE
+X-Proofpoint-ORIG-GUID: PinrsG26jDZGBYOebqIDV4RmBD1K4kPz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDEwNyBTYWx0ZWRfX24mZG9RR3XTC QtpZG5fg7b8kqu/sJMIegiJwIFzeV+saFGVsfkgu0ZiUIV7YshE4h6M/dELfvKuTzOE5AUC7pEO uAWtXIzbI0zpdkrAISGP99tZPuofZu8sNCTjWXEQb0+D43ss9tf21Cqxb7KNJHiIb/Tn9TTBGYt
+ PTEV/ccAXnItGABn7PxyEBjHAQLwkNhtPg2t9jDAju86fDPuBelhSe08Lcpmc9XsVrIMkzN361V 4ue6VfhtDRN+YVMdt+qZsLyBlSXJ5XgNgD2/TmdLAe9+Q7bPYhx5mE5UsViIIyMRFfuAXYxsdTl mbdwn4Z4+KOiv4E/1BdqR47IM2ml1zI5TELNACrZDQfisc3NIpo/r2vlP9yMmJRGi0qK4w4NN9+
+ y7nmpWIykkPhCTLbukO7bQNQArUmJgTRTpjcJIWYu+X/KmzODAbOo+GMQ2/t9A02lmFHR98n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ spamscore=0 impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300107
 
-On Thu, Apr 3, 2025 at 1:24=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> DRM clients expose information through usage stats as documented in
-> Documentation/gpu/drm-usage-stats.rst (available online at
-> https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
-> PMU, similar to the hwmon PMU, that exposes DRM information.
 
-I'm reminded by Brendan Gregg's new blog:
-https://www.brendangregg.com/blog/2025-05-01/doom-gpu-flame-graphs.html
-that this is still outstanding. The patches also reduce some directory
-scanning for the hwmon "PMU", they are in Google's tree:
-https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/too=
-ls/perf/util/drm_pmu.c
+On 4/30/25 5:03 AM, Srish Srinivasan wrote:
+> The PLPKS enabled PowerVM LPAR sysfs exposes all of the secure boot
+> secvars irrespective of the key management mode.
+>
+> The PowerVM LPAR supports static and dynamic key management for secure
+> boot. The key management option can be updated in the management
+> console. Only in the dynamic key mode can the user modify the secure
+> boot secvars db, dbx, grubdb, grubdbx, and sbat, which are exposed via
+> the sysfs interface. But the sysfs interface exposes these secvars even
+> in the static key mode. This could lead to errors when reading them or
+> writing to them in the static key mode.
+>
+> Expose only PK, trustedcadb, and moduledb in the static key mode to
+> enable loading of signed third-party kernel modules.
 
-Thanks,
-Ian
+Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
 
-> v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
->     trap cleanup.
+Thanks & Regards,
+    - Nayna
+
 >
-> v2: Add support to only scan hwmon and drm PMUs if the event or PMU
-> wildcard can match. Add a test as requested by Namhyung. Add file
-> comments.
+> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
+> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
+> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> ---
+>   Documentation/ABI/testing/sysfs-secvar        |  9 ++++--
+>   arch/powerpc/platforms/pseries/plpks-secvar.c | 28 ++++++++++++++++---
+>   2 files changed, 30 insertions(+), 7 deletions(-)
 >
-> v1:
-> https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.com/
->
-> Ian Rogers (4):
->   perf parse-events: Avoid scanning PMUs that can't contain events
->   perf parse-events: Avoid scanning PMUs that can't match a wildcard
->   perf drm_pmu: Add a tool like PMU to expose DRM information
->   perf tests: Add a DRM PMU test
->
->  tools/perf/tests/shell/drm_pmu.sh |  78 ++++
->  tools/perf/util/Build             |   1 +
->  tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++++
->  tools/perf/util/drm_pmu.h         |  39 ++
->  tools/perf/util/evsel.c           |   9 +
->  tools/perf/util/parse-events.c    |  30 +-
->  tools/perf/util/pmu.c             |  15 +
->  tools/perf/util/pmu.h             |   4 +-
->  tools/perf/util/pmus.c            | 101 ++++-
->  tools/perf/util/pmus.h            |   2 +
->  10 files changed, 952 insertions(+), 16 deletions(-)
->  create mode 100755 tools/perf/tests/shell/drm_pmu.sh
->  create mode 100644 tools/perf/util/drm_pmu.c
->  create mode 100644 tools/perf/util/drm_pmu.h
->
-> --
-> 2.49.0.504.g3bcea36a83-goog
->
+> diff --git a/Documentation/ABI/testing/sysfs-secvar b/Documentation/ABI/testing/sysfs-secvar
+> index 857cf12b0904..2bdc7d9c0c10 100644
+> --- a/Documentation/ABI/testing/sysfs-secvar
+> +++ b/Documentation/ABI/testing/sysfs-secvar
+> @@ -22,9 +22,12 @@ Description:	A string indicating which backend is in use by the firmware.
+>   		and is expected to be "ibm,edk2-compat-v1".
+>   
+>   		On pseries/PLPKS, this is generated by the kernel based on the
+> -		version number in the SB_VERSION variable in the keystore, and
+> -		has the form "ibm,plpks-sb-v<version>", or
+> -		"ibm,plpks-sb-unknown" if there is no SB_VERSION variable.
+> +		existence of the SB_VERSION property in firmware. This string
+> +		takes the form "ibm,plpks-sb-v1" in the presence of SB_VERSION,
+> +		indicating the key management mode is dynamic. Otherwise it
+> +		takes the form "ibm,plpks-sb-v0" in the static key management
+> +		mode. Only secvars relevant to the key management mode are
+> +		exposed.
+>   
+>   What:		/sys/firmware/secvar/vars/<variable name>
+>   Date:		August 2019
+> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c b/arch/powerpc/platforms/pseries/plpks-secvar.c
+> index d57067a733ab..cbcb2c356f2a 100644
+> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
+> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
+> @@ -59,7 +59,14 @@ static u32 get_policy(const char *name)
+>   		return PLPKS_SIGNEDUPDATE;
+>   }
+>   
+> -static const char * const plpks_var_names[] = {
+> +static const char * const plpks_var_names_static[] = {
+> +	"PK",
+> +	"moduledb",
+> +	"trustedcadb",
+> +	NULL,
+> +};
+> +
+> +static const char * const plpks_var_names_dynamic[] = {
+>   	"PK",
+>   	"KEK",
+>   	"db",
+> @@ -207,21 +214,34 @@ static int plpks_max_size(u64 *max_size)
+>   	return 0;
+>   }
+>   
+> +static const struct secvar_operations plpks_secvar_ops_static = {
+> +	.get = plpks_get_variable,
+> +	.set = plpks_set_variable,
+> +	.format = plpks_secvar_format,
+> +	.max_size = plpks_max_size,
+> +	.config_attrs = config_attrs,
+> +	.var_names = plpks_var_names_static,
+> +};
+>   
+> -static const struct secvar_operations plpks_secvar_ops = {
+> +static const struct secvar_operations plpks_secvar_ops_dynamic = {
+>   	.get = plpks_get_variable,
+>   	.set = plpks_set_variable,
+>   	.format = plpks_secvar_format,
+>   	.max_size = plpks_max_size,
+>   	.config_attrs = config_attrs,
+> -	.var_names = plpks_var_names,
+> +	.var_names = plpks_var_names_dynamic,
+>   };
+>   
+>   static int plpks_secvar_init(void)
+>   {
+> +	u8 mode;
+> +
+>   	if (!plpks_is_available())
+>   		return -ENODEV;
+>   
+> -	return set_secvar_ops(&plpks_secvar_ops);
+> +	mode = plpks_get_sb_keymgmt_mode();
+> +	if (mode)
+> +		return set_secvar_ops(&plpks_secvar_ops_dynamic);
+> +	return set_secvar_ops(&plpks_secvar_ops_static);
+>   }
+>   machine_device_initcall(pseries, plpks_secvar_init);
