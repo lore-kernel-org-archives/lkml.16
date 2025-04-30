@@ -1,113 +1,97 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27A32DC791;
-	Wed, 30 Apr 2025 14:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70283B640
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024765; cv=none; b=a30GkhikXIJVtBztRGH3XkIxET6aB8R/1pVHrrEJ2QovbpNCEwXmcHIAqWdVuW7AJKxQsjD9epk8pTIATx+NxXwqXKXeHHy06toFVtMbyki+06pSzi/vwJs9NO37wQwC//uySrvFgdvFq0Akh1KNJ2iFcvJlQcgGnuPyGoE2N+Q=
+	t=1746024849; cv=none; b=d7+woCs39ByVTWsJIaZoOoq/WAgh+JRubRFpw5aMyFXN9TgX+s28VBGciaUFDeb5S0pwMPjxVI5f0JpbtNsmFLz3fLRqTfR3kgC30CaUpwWFRPQIUzfkbTe4J/DyDSGoUkZKG5bRE0fWejGUdq/6o14AS1BO6QF0uxA4nFLNEtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024765; c=relaxed/simple;
-	bh=DqfSgVABBGrSLDg2s1B7t16DNFFluwHJ8LLyzrEjwUI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dziXSlyLAgMxqD3Ldd+YZYJKdyt6rdhiOtxMi6G0dmJtBTB2Rl48Xh/qxk++VixoIzJoY7skx0SD8ph0otyZcKjrbrfpZ7vNIba0YWWYlzSntyIBAOfi/p8Aw2O5MruwW28nRmdvXwsKlVg+F0CcDIQlK+k0xmgtSTnkn/7/O54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=HhuEzmMB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CzC7jZdI; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1746024849; c=relaxed/simple;
+	bh=0t/OWqEE+TONcYA8grt+EPvQWGLeiJ6QWPI4sdnUhtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRs5+qucaE94K7aVchbj6TGhVthkIFfxrVSYu34y00iTkgxsB8hVaECKwmBHh7WL391mqpERctOX9eQTtBx3ctO1RjC25XmSvU2RmPHVMODONcb+ZbnzUUiLlt837srfqB2bw5W1zLMyfC7wH4RZc8I20w/yr2Xx3vQ7AIVST+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=E0wr+Ehh; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="HhuEzmMB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CzC7jZdI"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 9C40625401F3;
-	Wed, 30 Apr 2025 10:52:41 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Wed, 30 Apr 2025 10:52:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1746024761; x=1746111161; bh=KoXlEHKE9g
-	NyoZYWrnpH30uGodhBmHO2937ZdEmrIPE=; b=HhuEzmMBrx9bw8IglEthSj47lB
-	mmsq2thCawGpfP6d5cOGh7VET8Oi+OSE41K1SqPoBJSAb2Z6Q/RUyFCSZOoSYsNo
-	vcgHFhxsdt5bAwoMevghMr/JeDC9GcFdjgKuTYmlLCVit9vh1Ed07qFHfY9xEGUJ
-	HkHIvTSWuFBUlQhSgxXkXQKmkTapCD62EuM1gDQ8GdmK1FZnZVE0dmIlqoOanSeE
-	LM1NkD2BDNG23RT0YLCPU9cWz9CIQRiEi4ZmFIfmGZLE+1/fCaAzo3T0/mlBAbfp
-	jXNWr26o+HpnlAf+7bWqRkGyilcYwa/osBFQxv/MPb2TqKbQZEeCi9iptpmg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746024761; x=1746111161; bh=KoXlEHKE9gNyoZYWrnpH30uGodhBmHO2937
-	ZdEmrIPE=; b=CzC7jZdI2wowZjH8Uplkb+2IxovqpFSQNvDvgTkDhxiWpp0V0UW
-	H6oeKkTJweavclaRwM7Rzia29PVdatBmRf34kT5BDggbUfSTucThlMKH3y+NenES
-	5na8UlFyBBU6gTqfbj2B4Czcso74ntQWxqh//1rSsBuZFTOcldokCauJ8+Yz8NZe
-	0WMBGAAbv0LzyD3saU5iuh4Fj7JiKS5o8nwxQuuAAvHXj/XRoIOtDKisNWh//dsp
-	gIAjgig+LID4hBMPEDpE7Lvvy/+OQC6aNNhJwiXv534ZlNJLdIH4+SRo9a4Q9TkR
-	fK46/NUlFWbTda1sjcU5mtnjjX2l6/VyWNA==
-X-ME-Sender: <xms:OTkSaNoZKYbTPyscDZbYBUXLdURncUYxUnIsdP-o4WHKEduos9NlQQ>
-    <xme:OTkSaPr5pzVHtvfwP1MgW_23mbz0y5c--hw-tkHGTk6DvyXLpsD9LRHDXsqRT4p6X
-    zTC7P9lkHG2mKm3oIQ>
-X-ME-Received: <xmr:OTkSaKNj9Pjivtqrv7TNzPleidY4oonOjeVMIz2BR990Wd6W4yTDf0WAtHuSh3YWdC5iaBxk8Xa0zkSOALJ6UQ0XtBPuL7xsfkjnhsX8nKEodQlPVg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeileekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
-    necuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrd
-    hnvghtqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdeh
-    ffduheduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthht
-    ohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghrghhlsegsghguvghvrd
-    hplhdprhgtphhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopegsrghrthhoshiirdhgohhlrghsiigvfihskhhisehlihhnrghrohdrohhrghdprh
-    gtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehlihhnuhigqdhsvghrihgrlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:OTkSaI5Kugqnlnn4MVAEs1rIHM90sjuTScGsqkDSTVVblZv7fxRyfw>
-    <xmx:OTkSaM4WeQuMjyV_v4jQfGTUrAbRoOJc6LgAFNEmtelCH0iJgaO1-g>
-    <xmx:OTkSaAhm2tfRfRYRbiDPnlfXuyTfIjafABL2M_l4O6av0XPYelCjNg>
-    <xmx:OTkSaO4yppF62XEMYkGsnTpU6cRI_yoCfyDjLq6cZqJ9t-_7jKJsUw>
-    <xmx:OTkSaPIjIvoZ6EmjHhAAPOyHq-AtMEYzDrRPfFK-jwGlfxFLalmCojlb>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 30 Apr 2025 10:52:41 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 961EE117534F;
-	Wed, 30 Apr 2025 10:52:40 -0400 (EDT)
-Date: Wed, 30 Apr 2025 10:52:40 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-    linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH] vt: add new dynamically generated files to .gitignore
-In-Reply-To: <sq7527p1-9218-r845-605n-2p419s2650s5@onlyvoer.pbz>
-Message-ID: <47np2on4-875o-21r2-p707-rr3rp30s82rq@syhkavp.arg>
-References: <20250430122917.72105-1-brgl@bgdev.pl> <sq7527p1-9218-r845-605n-2p419s2650s5@onlyvoer.pbz>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="E0wr+Ehh"
+Date: Wed, 30 Apr 2025 14:53:50 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746024835;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o2WfIJfkULi6jd69VpstuPL+eloDnxf89UwFbTADE+M=;
+	b=E0wr+Ehhi38fUhrRY4JGFtik3UcDULO4QpeMyNdfQtdQKsXxpN2TGmfVU+Ur2PKPjidHkj
+	WalMJXXN+eDKOVzkfge/EK/AkqSxvpsPXNMFyf9hXcJREEh6VKYxXlt5d4YczRhebL3srL
+	M/Jm5uC99IZZdpq2XcyINGE7biNDcvw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Michal Hocko <mhocko@suse.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org
+Subject: Re: [PATCH rfc 10/12] mm: introduce bpf_out_of_memory() bpf kfunc
+Message-ID: <aBI5fh28P1Qgi2zZ@google.com>
+References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
+ <20250428033617.3797686-11-roman.gushchin@linux.dev>
+ <aBC7_2Fv3NFuad4R@tiehlicka>
+ <aBFFNyGjDAekx58J@google.com>
+ <aBHQ69_rCqjnDaDl@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBHQ69_rCqjnDaDl@tiehlicka>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 30 Apr 2025, Nicolas Pitre wrote:
-
-> On Wed, 30 Apr 2025, Bartosz Golaszewski wrote:
-> 
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Apr 30, 2025 at 09:27:39AM +0200, Michal Hocko wrote:
+> On Tue 29-04-25 21:31:35, Roman Gushchin wrote:
+> > On Tue, Apr 29, 2025 at 01:46:07PM +0200, Michal Hocko wrote:
+> > > On Mon 28-04-25 03:36:15, Roman Gushchin wrote:
+> > > > Introduce bpf_out_of_memory() bpf kfunc, which allows to declare
+> > > > an out of memory events and trigger the corresponding kernel OOM
+> > > > handling mechanism.
+> > > > 
+> > > > It takes a trusted memcg pointer (or NULL for system-wide OOMs)
+> > > > as an argument, as well as the page order.
+> > > > 
+> > > > Only one OOM can be declared and handled in the system at once,
+> > > > so if the function is called in parallel to another OOM handling,
+> > > > it bails out with -EBUSY.
+> > > 
+> > > This makes sense for the global OOM handler because concurrent handlers
+> > > are cooperative. But is this really correct for memcg ooms which could
+> > > happen for different hierarchies? Currently we do block on oom_lock in
+> > > that case to make sure one oom doesn't starve others. Do we want the
+> > > same behavior for custom OOM handlers?
 > > 
-> > Add new dynamically generated headers to the local .gitignore.
+> > It's a good point and I had similar thoughts when I was working on it.
+> > But I think it's orthogonal to the customization of the oom handling.
+> > Even for the existing oom killer it makes no sense to serialize memcg ooms
+> > in independent memcg subtrees. But I'm worried about the dmesg reporting,
+> > it can become really messy for 2+ concurrent OOMs.
 > > 
-> > Fixes: b11a041179e7 ("vt: introduce gen_ucs_width_table.py to create ucs_width_table.h")
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Also, some memory can be shared, so one OOM can eliminate a need for another
+> > OOM, even if they look independent.
+> > 
+> > So my conclusion here is to leave things as they are until we'll get signs
+> > of real world problems with the (lack of) concurrency between ooms.
 > 
-> Reviewed-by: Nicolas Pitre <npitre@baylibre.com>
+> How do we learn about that happening though? I do not think we have any
+> counters to watch to suspect that some oom handlers cannot run.
 
-Actually, the fixed commit should be the one titled `vt: move UCS tables 
-to the "shipped" form`. And, unless Greg pushes the revert of the 
-initial series upstream, the commit hash is likely to change too.
-
-
-Nicolas
+The bpf program which declares an OOM can handle this: e.g. retry, wait
+and retry, etc. We can also try to mimick the existing behavior and wait
+on oom_lock (potentially splitting it into multiple locks to support
+concurrent ooms in various memcgs). Do you think it's preferable?
