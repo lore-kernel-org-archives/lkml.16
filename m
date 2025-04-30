@@ -1,95 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83F932DC768;
-	Wed, 30 Apr 2025 12:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D5625D541;
+	Wed, 30 Apr 2025 12:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017749; cv=none; b=TxuRAKJo5p7JnaCyOQjbnFxwJ+djyFqTTW20OV3Vq5bLIhUncmlOrsn1GUQIcGvyu8GRXzSTHnaA4Y/j70jSZOnsM9OdfbMPWtBHT0gSkCYx8ueSIUteYyqghbk3NtW0SmtRRNEl05uslnHEbCKon3yh9ILng6iJne8vnmjdVFQ=
+	t=1746017818; cv=none; b=uhSIXx9aDtwl4ey61yfhxd9HD4qCSTPjXSckgOM03ziiA+g3+6sI/mDDtY+pKV0IFyUX4azjlwnk2FBy9JguonfPkjErDq464kA9Odrk9DjtO25xfenPrie5wzi/lLuIJjDC28S+EbeGYdldZmDMink1GCG2pYwMcJOutMzTYr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017749; c=relaxed/simple;
-	bh=IIhm4u71VhCRr4Hr4OezOcTOn3FNdjGi8HgkI2i13kY=;
+	s=arc-20240116; t=1746017818; c=relaxed/simple;
+	bh=uLcVteZSPDqe2u74CAvMKYQO5qHTff2Fkb3KFWwvD4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fAAyD+VoLlvprxj2tFWkP0GsaK/X6z68wRYjEKgkdsKaA3BXXVYG6Cmfy0kg0pAzarf6IBfeYpiNA7y2d5mi0B5yxTIWDyitOej3vsMANim/HGM9ulXmNYuz8jNTmEvdfFGD5Nb0z3M1uA/ECiIjGi4Fp7PxVMoopr5KV8Jhqro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A10FB106F;
-	Wed, 30 Apr 2025 05:55:39 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 599C23F5A1;
-	Wed, 30 Apr 2025 05:55:46 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:55:41 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Mao Jinlong <quic_jinlmao@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] coresight: Disable MMIO logging for coresight stm driver
-Message-ID: <20250430125541.GJ551819@e132581.arm.com>
-References: <20250430110347.2091013-1-quic_jinlmao@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gBz1Jp8mGt0E11bzFEVPrAKgVOFxKk052nAAWNmF7ncMi8EJhijQkMFiAp+jCWdknENZLtpob4XrMznAS6eiotgyfuK9lv/SMZmtYdjlxqNAy9fIjV9a5BqyY/Qd+9B71mIVb6pCIeUGW99zeWvqZinXcD3M4V4hyynt33Tu1Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxzW83SP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxzW83SP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DDA1C4CEE9;
+	Wed, 30 Apr 2025 12:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746017817;
+	bh=uLcVteZSPDqe2u74CAvMKYQO5qHTff2Fkb3KFWwvD4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PxzW83SPf9ZZ4HFymch8b/+BMURaYyGgCYmOxJVXagSIhyQoSBlovI8WWsTUDRrir
+	 E1UVkInW31z9/Davm3uR30FvsKSVTNsA4CnXtdPuFlPkfWYExc2HjBG+QexyPJtRXZ
+	 jqJ9QZFz4emaAubh4vCZF4/5fAR5CDpY9ZorbPgtK10rP8MXJuDW41JKaVOR5xBs9+
+	 LGU2tOGEmUE67eBZ6WgGrCzim01goK/ZPPadEunbAnhJyGLoBNsooezwExFafNJwCg
+	 72klqPkgk3nqcNihBLuSk04VqJPxIPpJ+LmzQmy1rPtCSElK+fcbgYXRF87Qvs6G1H
+	 qJJ3haj51R9fw==
+Date: Wed, 30 Apr 2025 09:56:54 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+	ctshao@google.com, irogers@google.com, agordeev@linux.ibm.com,
+	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PING PATCH v3] perf test: Allow tolerance for leader sampling
+ test
+Message-ID: <aBIeFio2nkbzFj0b@x1>
+References: <20250422110643.2900090-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250430110347.2091013-1-quic_jinlmao@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250422110643.2900090-1-tmricht@linux.ibm.com>
 
-On Wed, Apr 30, 2025 at 04:03:47AM -0700, Mao Jinlong wrote:
-> When read/write registers with readl_relaxed and writel_relaxed,
-> log_read_mmio and log_write_mmio will be called. If mmio trace
-> is enabled to STM, STM driver will write the register to send the
-> trace and writel_relaxed will be called again. The circular call
-> like callstack below will happen. Disable mmio logging for stm
-> driver to avoid this issue.
-> 
-> [] stm_source_write[stm_core]+0xc4
-> [] stm_ftrace_write[stm_ftrace]+0x40
-> [] trace_event_buffer_commit+0x238
-> [] trace_event_raw_event_rwmmio_rw_template+0x8c
-> [] log_post_write_mmio+0xb4
-> [] writel_relaxed[coresight_stm]+0x80
-> [] stm_generic_packet[coresight_stm]+0x1a8
-> [] stm_data_write[stm_core]+0x78
-> [] ost_write[stm_p_ost]+0xc8
-> [] stm_source_write[stm_core]+0x7c
-> [] stm_ftrace_write[stm_ftrace]+0x40
-> [] trace_event_buffer_commit+0x238
-> [] trace_event_raw_event_rwmmio_read+0x84
-> [] log_read_mmio+0xac
-> [] readl_relaxed[coresight_tmc]+0x50
-> 
-> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+On Tue, Apr 22, 2025 at 01:06:43PM +0200, Thomas Richter wrote:
+> V3: Added check for missing samples as suggested by Chun-Tse.
+> V2: Changed bc invocation to return 0 on success and 1 on error.
+ 
+> There is a known issue that the leader sampling is inconsistent, since
+> throttle only affect leader, not the slave. The detail is in [1]. To
+> maintain test coverage, this patch sets a tolerance rate of 80% to
+> accommodate the throttled samples and prevent test failures due to
+> throttling.
+ 
+> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+ 
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-LGTM:
+This doesn't apply to perf-tools-next:
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+⬢ [acme@toolbx perf-tools-next]$        git am ./v3_20250422_tmricht_perf_test_allow_tolerance_for_leader_sampling_test.mbx
+Applying: perf test: Allow tolerance for leader sampling test
+error: patch failed: tools/perf/tests/shell/record.sh:238
+error: tools/perf/tests/shell/record.sh: patch does not apply
+Patch failed at 0001 perf test: Allow tolerance for leader sampling test
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+⬢ [acme@toolbx perf-tools-next]$
 
-> ---
->  drivers/hwtracing/coresight/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index 4ba478211b31..f3158266f75e 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -22,6 +22,8 @@ condflags := \
->  	$(call cc-option, -Wstringop-truncation)
->  subdir-ccflags-y += $(condflags)
->  
-> +CFLAGS_coresight-stm.o := -D__DISABLE_TRACE_MMIO__
-> +
->  obj-$(CONFIG_CORESIGHT) += coresight.o
->  coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
->  		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> CoreSight mailing list -- coresight@lists.linaro.org
-> To unsubscribe send an email to coresight-leave@lists.linaro.org
+Are you proposing this for perf-tools, i.e. for this release cycles?
+
+Namhyung, what do you think?
+
+I think it is not applying in perf-tools-next due to this patch that
+isn't in perf-tools:
+
+⬢ [acme@toolbx perf-tools-next]$ git log --oneline -5 perf-tools-next/perf-tools-next tools/perf/tests/shell/record.sh
+be8aefad33760dd8 perf tests record: Cleanup improvements <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+90d97674d4ad0166 perf test: Use cycles event in perf record test for leader_sampling
+859199431d768091 perf test: Fix perf record test for precise_max
+180fd0c1eac7cd8c perf tests: Make leader sampling test work without branch event
+2532be3d219d8819 perf test: Tag parallel failing shell tests with "(exclusive)"
+⬢ [acme@toolbx perf-tools-next]$
+
+⬢ [acme@toolbx perf-tools-next]$ git log --oneline -5 perf-tools/perf-tools tools/perf/tests/shell/record.sh
+90d97674d4ad0166 perf test: Use cycles event in perf record test for leader_sampling
+859199431d768091 perf test: Fix perf record test for precise_max
+180fd0c1eac7cd8c perf tests: Make leader sampling test work without branch event
+2532be3d219d8819 perf test: Tag parallel failing shell tests with "(exclusive)"
+36fae9f93e5f00eb perf test: Add precise_max subtest to the perf record shell test
+⬢ [acme@toolbx perf-tools-next]$
+
+- Arnaldo
