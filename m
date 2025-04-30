@@ -1,111 +1,195 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B17C248F5B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C721C259CBB
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015157; cv=none; b=VWRjX0YPid+aZKu0Irad0dK9a9DTLG7HqlKV12goO74PFa8Z0o7jRlfZ6tfuZVArKcmcVo3H8S41/RjaZeZcmeoAdejBNresd/Gpb7Pdrf8AeV3Uh1qwoVUWH1H6br7BG8ajOHqaJlplLuorSYU83ddLoUoq6JnCVt0t6UcbVSc=
+	t=1746015163; cv=none; b=OK6WZ2n8qS0PcMf7f8FzSCgpnxFuG3CF1nfeJ4k5FtVBWRhxmzqSCThjH0W8IwQabiv6UzibHFz+EV5iUL6gi4x+g1O5qkSX5p9Qx5MBiSI36ZiXt/oiEBVnwlnbzag9PxenQNuXk+fjbnimo/yXsw56G4YHxFKjWxXlWlYsK4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015157; c=relaxed/simple;
-	bh=gvAopjoNyA7dbzXulW4xl/bX7+60c+NQIsGH5vBcpAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JVV6Zk+0Mj5nc55DAcvTtgEVuvpkOwm72H4bsl7076gPJlgbdinXFh9JomdjY5Tx3Ew0BLkKlXQf6n9FKIwRC8MKZRbNU1g925CkwYkAU4GSsOHvQhUCaNZAYFl81sogLY9kFYV5sNUFizj3NbJ2VMGDssUBnKtKcVJAVMmmSlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoX/KL/S; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746015163; c=relaxed/simple;
+	bh=QiFE57zyx6kmjXiSN4/oHw9/UfRS+tfM4wy66RCOdrs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OjX8JI31jUzVpZfBhJ/f3YlxEdG1ZazZ2Hgr1LTlLZFoqBcOMwQI2K4h32pjzGlpcy5d2J+Ky9bWAj+ElFPrUYUqMR6N8bV/n5i+0Sno3R9NxnQV1uow7jyKMUJbTReajSopVcnJ7doFaMB1bVMLrt7oiCxFm8Jypg86Gube6HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+3JpQdK; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoX/KL/S"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso4931181f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:12:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+3JpQdK"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac25d2b2354so1094853266b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746015154; x=1746619954; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1746015160; x=1746619960; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=exV/Dw+Vt005ATLp0ivkfrkkCFtH2VHvaATRN0wi0iE=;
-        b=JoX/KL/SKxbwaYtrIb6e8M4d38edn7SB1VToPaMgHnu3bfLoPPLR5uz4DgXAj3vbDA
-         mifEb68lpFPpK6lr2U4f4KcbE+TyfjTp7+XXM4MtAqtmF36R7dmU7HWYEHk/RBGfzJBe
-         c3r18duR5+t/pvFAGiiLTDg8J08N5gGcOddqR5wb+Qk3VECxWVlUViJxIXcgHd5Y+d8A
-         De88Ijk6m33qvKXLtCZ1bRA5vjxy1OzZqE9L9ioA+cLu5lhZrsWbR36kzTf38ZtcOyQ0
-         bdH+xiRTSYFrYPGSxe6Vswo3fYy3SXDMbc9pAlIaEP7580Bn8ZWE/S9makTUDueQVLvC
-         DJIg==
+        bh=bw5vuERICCQaAaztVYNub3Fq870dmKKXz2A+Vw1GzLE=;
+        b=C+3JpQdKyNMU8tqXWq7fJIrOosbPBqu2wn6HfO8ikS3fZ4SaxiWaXlKwYQjWcVqxvW
+         2gB0cQzz8QS7sUBJC7tC0vhQ+SBt2BA9zBXPC9bOUNHY7Gx8iRAPi+M0FI7lFybaZ5e9
+         H7x98Feuv1BAu7CLMGl0QSzgwPdzxbYMngUUsetIBBq/xyTq66mTTiJXr+gmd+FTnIzk
+         HUF/lCcE7209kXTYQMlim30My/3LYXtTHGnVVI0LnUK7LAZkLbx5F3120OGN/jHpRHmm
+         IZsCipzGyDzwT2BE/wRU81CLO+1uMYkb292sRlDpYpvjFULMDwPUvp4FyPQmRYGFWDS8
+         nNFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746015154; x=1746619954;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746015160; x=1746619960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=exV/Dw+Vt005ATLp0ivkfrkkCFtH2VHvaATRN0wi0iE=;
-        b=hLWHsWZyWKhD/ufQ2UT+bvdrR/1w9qv1vLIjTaVpJnSE+O9rJdacCS0shHjVgKOIdD
-         MQqG8qiDTKz6DDsFaAbswr2BeBcblqG7TTZG2/8MYsiP1ztkEJ9SBPW0FhVEWLqFykh/
-         QGit//gjdCnC3asHnQ3mpo+Mtaeoea58UmiAwvHArn9iNOMqTeSUjayxA4lQKKTZEvzo
-         Pd8iO7o+bFI0RSyv1jsA9MxghoeVvsKOm+gxpeG7hJywWMCDjzLrFpoeLUcmmVL5LjX8
-         QwlHtAwpQ0VkCM9BLrgm7rODTntKdukF50GAwFX2KTp4HgW9abJVpunf4CHTJg4RKIXh
-         bmYg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6qlozVsS/k0Y8KrLU/6QgObZ8gNxwzW411lPGAYlSNfRfYXY8TBAzOtDZdFXburv6/B47ulBVGAoRTdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy06tonxiQXEDtgAPqBSD21V46/7PuM6ijvkU8IGnC0RsbKBGBA
-	KZbCgRt9R9gzu3FDPtr9FHIS+TAJzdT4ua4HE0bP3gGwH0ruljBh
-X-Gm-Gg: ASbGncvyWcdG+Qk7J1m89rGxpqfXlAe4pBc37zf9w0/UgXCcbhJUufbRZ7QFarZci7e
-	EcGZCxGvHPrxSOYENXE0ZUV1Zy9Wx0MSAEZFCR9ca6SZl5ZvfvBHdJXEMM1/oRqUnN+mWvf/Lnl
-	7osiHwwOkMX5SR33YfU/to1j8U0kSxRWaafr/mI6PlbtVAeXw3zizcBsPUiYntKtMRckGRrYQJd
-	eBdhORzr6hoxIOuXRslef5kj90R5wAhEuoTgqITDodlI2HgD+Nn2N+RQ3rl+Bj5Tt0WtMEIG1UX
-	cT3eq8RtvrIjtl0cRyVtgE0Xqu1cAIoCX0Cle8TUaeE3LeDEvRK+bs4qzP+OApwF/cPkoLD9wtZ
-	WJ0A=
-X-Google-Smtp-Source: AGHT+IHdNy2cnEFHIFGItGh5hGfN1ZHCaeYaOLyj5VuHMZN0pXEx9Cb435wW4njErTV4EecqJL6luQ==
-X-Received: by 2002:a05:6000:2585:b0:39e:e217:28c0 with SMTP id ffacd0b85a97d-3a08ff34c51mr2240192f8f.10.1746015154143;
-        Wed, 30 Apr 2025 05:12:34 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cc1842sm17094081f8f.54.2025.04.30.05.12.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 05:12:33 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:12:32 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, llvm@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: Adding __popcountsi2 and __popcountdi2
-Message-ID: <20250430131232.3caea352@pumpkin>
-In-Reply-To: <20250425003342.GA795313@ax162>
-References: <20250425003342.GA795313@ax162>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=bw5vuERICCQaAaztVYNub3Fq870dmKKXz2A+Vw1GzLE=;
+        b=Ki7FagO9kOVWTH1QJlnSZPJdfUGfuZlQnNFuUbbcbsxjW/Rb9i3Z9GRxcyXwKydd8G
+         ILdyzKAhg3BQdeqgQocblA32+QzLjEanEt6ANA7ZkoFyGG2/mBoRwajTwYB8qhwZJfaT
+         fRl8/5iIr+P51SFeYl5X3Qx4XTuLDhi3Vh1s08o5L6vonToOB03lnz5ueKGxk2B/Ph1n
+         pjDT4oW8a9hXEZ5evA8BkTk1zo7LGest2RHZksfR47ZVSe5TnWYdOPmo46f+ttxtPH2H
+         6IlB/NSIMt5ZfMhXUTV0YsKiml3JhztK34ViRuArE/AeZ7An84172EHS3w34LJHaYNZ3
+         CUDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEr6C+0pAmMs5gFH6Ni5s55nhBYgm+2SNSoKug/U0qb46CUjVTYcg74Qw+s1Qp9pVRuRigS5LP4r15Co4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhSagWkEl8L0kGMGY6N68Fd0QNW2N3bAX2wFKui+BXrhyx/Vjo
+	dlfINYRn/XWFQw8JpawMG93PA2gTNBrI7x/k8CwJXjji8MAX5MxApw+dWOL0ABKKknPt3jojzHq
+	Z08A7+yGJcmQ7iTfPpaPEBM2kwfGzs1GsXmDPnQ==
+X-Gm-Gg: ASbGncuKSfBrv7ZScIUiXAeFskAK54eRcrxnxAXCozqpp+Szv+QZiPrJ5GV1f//2AGN
+	bMuEAsj66WC5uA2Plfa3uiMFZp+jrdXQKpClEPe9i7KZiGip6IbKYNEccwcJvzCd+Iiib7/qk2d
+	eHje6AqFho2hmDBUhPUHnk7gVCGz59avaUxwjE4s242KmTTlRn7kKpMg==
+X-Google-Smtp-Source: AGHT+IEBVMXhh9O68BsmwiGuVRDwFqgaRwRx3WWJWKtbEdBnrWBtuHEntXm1t41yUiPtsDukCLWcJeDZW/ap4XicZtU=
+X-Received: by 2002:a17:907:7d86:b0:ac7:3817:d8da with SMTP id
+ a640c23a62f3a-acedc762e3bmr301811066b.52.1746015159919; Wed, 30 Apr 2025
+ 05:12:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com> <CAHUa44E_JZdYnGrReP0zWCP1wdu2BdJ9DSZZ3a2OiobRj61ThQ@mail.gmail.com>
+In-Reply-To: <CAHUa44E_JZdYnGrReP0zWCP1wdu2BdJ9DSZZ3a2OiobRj61ThQ@mail.gmail.com>
+From: Rouven Czerwinski <rouven.czerwinski@linaro.org>
+Date: Wed, 30 Apr 2025 14:12:28 +0200
+X-Gm-Features: ATxdqUGnAbXl5wqnE5WEVJ_UQiM-RMiem7NwvrC5SiRxCziM9qBoRHZIDqAo6Pc
+Message-ID: <CAK8z29XWCujUdLXcHz075+xcix8HV2Mp3EtxxX9GB7vGjwi3HA@mail.gmail.com>
+Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit kernels
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: Jann Horn <jannh@google.com>, Sumit Garg <sumit.garg@kernel.org>, 
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 24 Apr 2025 17:33:42 -0700
-Nathan Chancellor <nathan@kernel.org> wrote:
+Hi,
 
-> Hi Linus,
-> 
-> Since I ran into problems at pull request time previously, I figured I
-> would save myself some trouble and gauge your opinion up front. How
-> palatable would the diff at the end of the thread be for the kernel?
-> Clang would like to start emitting calls to __popcountsi2 and
-> __popcountdi2 [1] for certain architectures (ARM and RISC-V), which
-> would normally be a part of the compiler runtime but obviously the
-> kernel does not link against it so it breaks the build. I figured added
-> these may not be as bad as the wcslen() case because most architectures
-> generally have an optimized popcount implementation and I am not sure
-> compiler builtins are banned entirely from the kernel but I can
-> understand if it is still contentious. It sounds like GCC has previously
-> wanted to something similar [2] and it was somewhat brought up on the
-> mailing lists [3] but never persued further it seems. Since this is a
-> compiler runtime function, '-fno-builtin' would not work to avoid this.
+On Wed, 30 Apr 2025 at 13:53, Jens Wiklander <jens.wiklander@linaro.org> wr=
+ote:
+>
+> On Mon, Apr 28, 2025 at 3:06=E2=80=AFPM Jann Horn <jannh@google.com> wrot=
+e:
+> >
+> > The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
+> > 32-bit kernels: Multiplying a user-provided 32-bit value with the
+> > size of a structure can wrap around on such platforms.
+> >
+> > Fix it by using saturating arithmetic for the size calculation.
+> >
+> > This has no security consequences because, in all users of
+> > TEE_IOCTL_PARAM_SIZE(), the subsequent kcalloc() implicitly checks
+> > for wrapping.
+> >
+> > Signed-off-by: Jann Horn <jannh@google.com>
+> > ---
+> > Note that I don't have a test device with a TEE; I only compile-tested
+> > the change on an x86-64 build.
+> > ---
+> >  drivers/tee/tee_core.c | 11 ++++++-----
+> >  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> Looks good, I'm picking up this.
+>
+> Thanks,
+> Jens
+>
+> >
+> > diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> > index d113679b1e2d..acc7998758ad 100644
+> > --- a/drivers/tee/tee_core.c
+> > +++ b/drivers/tee/tee_core.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/fs.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/module.h>
+> > +#include <linux/overflow.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/tee_core.h>
+> >  #include <linux/uaccess.h>
+> > @@ -19,7 +20,7 @@
+> >
+> >  #define TEE_NUM_DEVICES        32
+> >
+> > -#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
+> > +#define TEE_IOCTL_PARAM_SIZE(x) (size_mul(sizeof(struct tee_param), (x=
+)))
+> >
+> >  #define TEE_UUID_NS_NAME_SIZE  128
+> >
+> > @@ -487,7 +488,7 @@ static int tee_ioctl_open_session(struct tee_contex=
+t *ctx,
+> >         if (copy_from_user(&arg, uarg, sizeof(arg)))
+> >                 return -EFAULT;
+> >
+> > -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf=
+.buf_len)
+> > +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params))=
+ !=3D buf.buf_len)
+> >                 return -EINVAL;
+> >
+> >         if (arg.num_params) {
+> > @@ -565,7 +566,7 @@ static int tee_ioctl_invoke(struct tee_context *ctx=
+,
+> >         if (copy_from_user(&arg, uarg, sizeof(arg)))
+> >                 return -EFAULT;
+> >
+> > -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf=
+.buf_len)
+> > +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params))=
+ !=3D buf.buf_len)
+> >                 return -EINVAL;
+> >
+> >         if (arg.num_params) {
+> > @@ -699,7 +700,7 @@ static int tee_ioctl_supp_recv(struct tee_context *=
+ctx,
+> >         if (get_user(num_params, &uarg->num_params))
+> >                 return -EFAULT;
+> >
+> > -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) !=3D buf.b=
+uf_len)
+> > +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) !=
+=3D buf.buf_len)
+> >                 return -EINVAL;
+> >
+> >         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KE=
+RNEL);
+> > @@ -798,7 +799,7 @@ static int tee_ioctl_supp_send(struct tee_context *=
+ctx,
+> >             get_user(num_params, &uarg->num_params))
+> >                 return -EFAULT;
+> >
+> > -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) > buf.buf_=
+len)
+> > +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) >=
+ buf.buf_len)
+> >                 return -EINVAL;
+> >
+> >         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KE=
+RNEL);
+> >
+> > ---
+> > base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+> > change-id: 20250428-tee-sizecheck-299d5eff8fc7
+> >
+> > --
+> > Jann Horn <jannh@google.com>
+> >
 
-Is this the compiler converting a call to __builtin_popcount() into
-a function call - which the kernel can arrange to never do.
+I ran this through the arm32 qemu virt machine to test my new development s=
+etup,
+so:
 
-Or the compiler detecting a code pattern that looks like an open-coded
-'popcount' function and deciding to convert it to a call to the builtin?
-(which is a translation the kernel pretty much never wants for any
-such code pattern - including memcpy()).
+Tested-by: Rouven Czerwinski <rouven.czerwinski@linaro.org>
 
-In either case the link failure is exactly what you want.
-
-	David
-
+Best regards,
+Rouven
