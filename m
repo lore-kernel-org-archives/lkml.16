@@ -1,169 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD62261362;
-	Wed, 30 Apr 2025 16:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4D1261362
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746030369; cv=none; b=ctY9AT4ocUg7RtunVYxvV5o2F9qOqbWPiH07P6+M/wuYrWY/D+aDw3OS/Ikj8D2iQYlx8W9fNmiOVWXksdrHL+xiyqk55BbIqI4f9CXeDK+xTsMlewmBOG+/ZiNlm0yteWBurBzRtGZGOfhmYq9cHMc/JFlvBoJjSQPqoYEuU9Y=
+	t=1746030447; cv=none; b=fjFDFb+rykZu3RxO8O8tiK2IV3h0mmpuyPqQedearTLZFrKo43Vg2/9KNpwPIbU7TbQl5qAZijUTRneTS58mNP6z4AEkWtdc5ARR7KfI0U5XqyE8ODbXOBy3y4ia1IG66iLONarIABrMM2Gd246y4aoVbYv8UOywQR5eTCu8sUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746030369; c=relaxed/simple;
-	bh=hDWjvaRuOUyneWLyZQ5qYzQIZME0G84HNq7ZxRdl/VI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCBXla68iriJeMsAQVfRX/hKE4CIT3hZzcoLg6jv7qIPE5EtP7X0/66BTTzPfvQw3s48tmXkEqQDB6Fm5WixSFT4Hh6kdB/xhPgGXc6cFs0SLzTVLmCzRiOn5cGfZYOt8uEDNiiVrCPzO1PJDOV3B6y/CeJKJ3sLUeGE+UNi2Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KD4Y2I0U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746030447; c=relaxed/simple;
+	bh=SLuh1vXjFWArp9DGV88WbiawPX5gMpDl3YY+JUPkHDc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JxKNpzUz7g31ixAmCmcOBc+NCB+41gEickKWVHPXRE+Ils38MDjrlF+OWBZMFryBbq1n/sLcKnXT2Erlj0xtTPOgSN9Fm+1V+nJuo2tor3QnzLxhbYq+MrNEkIFWc3RsceMobQMC8Xo5eOPWrNlo/a/xnnwxZ/dEY3wvogoewMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c2nmLJ7J; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KD4Y2I0U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB40C4CEE7;
-	Wed, 30 Apr 2025 16:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746030369;
-	bh=hDWjvaRuOUyneWLyZQ5qYzQIZME0G84HNq7ZxRdl/VI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KD4Y2I0UN/RvRqMxBNGk7d059X1HxBqxD7LhRB1W4WtwOEH5fJNZ55V/GReyXpVIa
-	 +gqvXyKjDeKQpH4C8CMsUrZC3LGWNl5bh9jzP1rL0ByjJeV7MhifKNbezrprLbASB7
-	 VuELCmdDeFrwbtJ6w88n4Xa+fKYVEW4QwHtaHgJqIQep2fOMlvuTyGyiAnNCfRRGit
-	 ycKogItCp8hUCcM61mzFZZaTaMKNAN4EIeCQSmEuJsojzovyEh1oaBzaAhYHBKz6ZU
-	 CsvOMYUe57cG/njsHKzpol6OOzguE/RBhjy37dkqy/2vLJT6JqI0f3Awl7Vn7cvLAh
-	 NEZH46yKCfNWw==
-Date: Wed, 30 Apr 2025 18:26:05 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/7] rust: alloc: add Vec::retain
-Message-ID: <aBJPHUDYBGyAgUNf@pollux>
-References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
- <20250429-vec-methods-v4-5-dad4436ff82d@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c2nmLJ7J"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ced8c2eb7so54119515e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746030443; x=1746635243; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=son2TtAYXWFKHIb+qv3GEJQE2heH3nn7VYU4EbNQqf8=;
+        b=c2nmLJ7Jm644UDF1RUPqiucbqQDkKwhkeUzEIF0y0GXgqC5SYDpKxzKKrIBMotk/ml
+         wdVhx9A3vqVu8HBNNgoWvavob6SjLtSFU5lHn/lfumi2GDxLHusUQNO+d+RdhNSjev+t
+         0O3Wlzlj/dphlcYpSVDzHwXebtWkC38iSHabHjIJTFX7FB/1R7/9g+DXDkVQ/Ym8T3Nv
+         m2Ry0fRq0u4gaQl8xyyY9ahiBg+Wz5XlkeoTi0F3izgnv4TtQHbuOFn9PQEmp75QTC8G
+         +zXORXLZBHmz6AuWmnFDdyLMcteXhzGRHAwxKFcpphRWu0utU1qZAy70OPXCmBN650ob
+         kMmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746030443; x=1746635243;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=son2TtAYXWFKHIb+qv3GEJQE2heH3nn7VYU4EbNQqf8=;
+        b=n3o1vvrYhk8tiwyoou2WqQbh1tpKaNli5H4WF3UUhaoqK9KKPx5IvKcvmJsYNgKaZ4
+         RUCrzUPEoUwx9V+xAA8gUgqx8YT2CzsOLEg2JeBjloibOorEtVD5zIBj1/ObkgiTUE+0
+         RCH7uVC6lwJmlAZw/o7iv+XftjQxhR2+MfJz8xP63/PbjK3NyQtKCOwdA8nplYPv5/tx
+         BREvXl18DGSmKAwAGdD7IWt+8DyAj8QarN3gXdD1rb7Qzw2AIE9kEds6otpAhuj9kiTq
+         vCw3w9z55iiDbu4WUSJ/lo0BBfwh9oymwNSoVJt2puqG7YWc+kpjbHyAWFX2dyG1C9Tc
+         voOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYtENN4VBcfboAS9k2UcG+rGXjCG7nuKmYAb+NcZg95qgPwhMWABelCznQ4QTbUnKY5jzHjq2BbzosNK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywLK7PSjhauIrvj2aPXYcGQEl5ZUtaseRzZM4bFa2Yp1bRPdJH
+	AT19b8GkYRe0Fi7e3gBPrjIN6qTsYvsJjWzseWzkHG0+Hti7YdrSUy6ZmbOGomYdk2qrRii6M4e
+	YHX6EL0KyIg==
+X-Google-Smtp-Source: AGHT+IFQ2Mdes0eRtKfnxWeLvHYhOcWYODGlYYFwAfRst9gZKnEGAYllVA7JEZatII5sz3zXBjKQtfWJvzFPDQ==
+X-Received: from wmqb17.prod.google.com ([2002:a05:600c:4e11:b0:440:5e10:a596])
+ (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1f0c:b0:43d:b51:46fb with SMTP id 5b1f17b1804b1-441b1f31004mr39397195e9.2.1746030443778;
+ Wed, 30 Apr 2025 09:27:23 -0700 (PDT)
+Date: Wed, 30 Apr 2025 16:27:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429-vec-methods-v4-5-dad4436ff82d@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250430162713.1997569-1-smostafa@google.com>
+Subject: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
+From: Mostafa Saleh <smostafa@google.com>
+To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kees@kernel.org, elver@google.com, andreyknvl@gmail.com, 
+	ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, 
+	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, 
+	nathan@kernel.org, nicolas.schier@linux.dev, 
+	Mostafa Saleh <smostafa@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 02:44:25PM +0000, Alice Ryhl wrote:
-> This adds a common Vec method called `retain` that removes all elements
-> that don't match a certain condition. Rust Binder uses it to find all
-> processes that match a given pid.
-> 
-> The stdlib retain method takes &T rather than &mut T and has a separate
-> retain_mut for the &mut T case. However, this is considered an API
-> mistake that can't be fixed now due to backwards compatibility. There's
-> no reason for us to repeat that mistake.
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/kernel/alloc/kvec.rs | 72 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
-> 
-> diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> index 72bc743ec88bf7b91a0a1ffd9f830cfe4f983ffd..357f5a37c7b1d15b709a10c162292841eed0e376 100644
-> --- a/rust/kernel/alloc/kvec.rs
-> +++ b/rust/kernel/alloc/kvec.rs
-> @@ -608,6 +608,29 @@ pub fn drain_all(&mut self) -> DrainAll<'_, T> {
->              elements: elems.iter_mut(),
->          }
->      }
-> +
-> +    /// Removes all elements that don't match the provided closure.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// let mut v = kernel::kvec![1, 2, 3, 4]?;
-> +    /// v.retain(|i| *i % 2 == 0);
+Many of the sanitizers the kernel supports are disabled when running
+in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+(and makes more sense) to integrate than others.
+Last year, kCFI support was added in [1]
 
-NIT: What about making this `v.retain(|&mut i| i % 2 == 0)`?
+This patchset adds support for UBSAN in EL2.
+UBSAN can run in 2 modes:
+  1) =E2=80=9CNormal=E2=80=9D (CONFIG_UBSAN_TRAP=3Dn): In this mode the com=
+piler will
+  do the UBSAN checks and insert some function calls in case of
+  failures, it can provide more information(ex: what is the value of
+  the out of bound) about the failures through those function arguments,
+  and those functions(implemented in lib/ubsan.c) will print a report with
+  such errors.
 
-> +    /// assert_eq!(v, [2, 4]);
-> +    /// # Ok::<(), Error>(())
-> +    /// ```
-> +    pub fn retain(&mut self, mut f: impl FnMut(&mut T) -> bool) {
-> +        let mut num_kept = 0;
-> +        let mut next_to_check = 0;
-> +        while let Some(to_check) = self.get_mut(next_to_check) {
-> +            if f(to_check) {
-> +                self.swap(num_kept, next_to_check);
-> +                num_kept += 1;
-> +            }
-> +            next_to_check += 1;
-> +        }
-> +        self.truncate(num_kept);
-> +    }
->  }
->  
->  impl<T: Clone, A: Allocator> Vec<T, A> {
-> @@ -1130,3 +1153,52 @@ fn drop(&mut self) {
->          }
->      }
->  }
-> +
-> +#[macros::kunit_tests(rust_kvec_kunit)]
-> +mod tests {
-> +    use super::*;
-> +    use crate::prelude::*;
-> +
-> +    #[test]
-> +    fn test_kvec_retain() {
+  2) Trap (CONFIG_UBSAN_TRAP=3Dy): This is a minimal mode, where similarly,
+  the compiler will do the checks, but instead of doing function calls,
+  it would do a =E2=80=9Cbrk #imm=E2=80=9D (for ARM64) with a unique code w=
+ith the failure
+  type, but without any extra information (ex: only print the out-bound lin=
+e
+  but not the index)
 
-Can we have this return a Result, like doctests can do?
+For nvhe/hvhe/proctected modes, #2 would be suitable, as there is no way to
+print reports from EL2, so similarly to kCFI(even with permissive) it would
+cause the hypervisor to panic.
 
-> +        /// Verify correctness for one specific function.
-> +        #[expect(clippy::needless_range_loop)]
-> +        fn verify(c: &[bool]) {
-> +            let mut vec1: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
-> +            let mut vec2: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
-> +
-> +            for i in 0..c.len() {
-> +                vec1.push_within_capacity(i).unwrap();
-> +                if c[i] {
-> +                    vec2.push_within_capacity(i).unwrap();
-> +                }
-> +            }
-> +
-> +            vec1.retain(|i| c[*i]);
-> +
-> +            assert_eq!(vec1, vec2);
+But that means that for EL2 we need to compile the code with the same optio=
+ns
+as used by =E2=80=9CCONFIG_UBSAN_TRAP=E2=80=9D independently from the kerne=
+l config.
 
-Don't we have macros around kunit_assert!() and kunit_assert_eq() outside of
-doctests (i.e. dedicated kunit tests)?
+This patch series adds a new KCONFIG for ARM64 to choose to enable UBSAN
+separately for the modes mentioned.
 
-I much prefer their output over the kernel panic we get with the "normal"
-asserts, unwraps, etc.
+The same logic decoding the kernel UBSAN is reused, so the messages from
+the hypervisor will look similar as:
+[   29.215332] kvm [190]: nVHE hyp UBSAN: array index out of bounds at: [<f=
+fff8000811f2344>] __kvm_nvhe_handle___pkvm_init_vm+0xa8/0xac!
 
-Consistently sticking to the same output on failure makes it easier to catch and
-easier to setup CI environments.
+In this patch set, the same UBSAN options(for check types) are used for bot=
+h
+EL1/EL2, although a case can be made to have separate options (leading to
+totally separate CFLAGS) if we want EL2 to be compiled with stricter checks
+for something as protected mode.
+However, re-using the current flags, makes code re-use easier for
+report_ubsan_failure() and  Makefile.ubsan
 
-> +        }
-> +
-> +        /// Add one to a binary integer represented as a boolean array.
-> +        fn add(value: &mut [bool]) {
-> +            let mut carry = true;
-> +            for v in value {
-> +                let new_v = carry != *v;
-> +                carry = carry && *v;
-> +                *v = new_v;
-> +            }
-> +        }
-> +
-> +        // This boolean array represents a function from index to boolean. We check that `retain`
-> +        // behaves correctly for all possible boolean arrays of every possible length less than
-> +        // ten.
-> +        let mut func = KVec::with_capacity(10, GFP_KERNEL).unwrap();
-> +        for len in 0..10 {
-> +            for _ in 0u32..1u32 << len {
-> +                verify(&func);
-> +                add(&mut func);
-> +            }
-> +            func.push_within_capacity(false).unwrap();
-> +        }
-> +    }
-> +}
-> 
-> -- 
-> 2.49.0.901.g37484f566f-goog
-> 
+[1] https://lore.kernel.org/all/20240610063244.2828978-1-ptosi@google.com/
+
+Changes from v1:
+- https://lore.kernel.org/all/20250416180440.231949-1-smostafa@google.com/
+- Collected Kees Acked-By
+- Rename CFLAGS flag to CFLAGS_UBSAN_TRAP
+- Small comment fix
+
+Mostafa Saleh (4):
+  arm64: Introduce esr_is_ubsan_brk()
+  ubsan: Remove regs from report_ubsan_failure()
+  KVM: arm64: Introduce CONFIG_UBSAN_KVM_EL2
+  KVM: arm64: Handle UBSAN faults
+
+ arch/arm64/include/asm/esr.h     | 5 +++++
+ arch/arm64/kernel/traps.c        | 4 ++--
+ arch/arm64/kvm/handle_exit.c     | 6 ++++++
+ arch/arm64/kvm/hyp/nvhe/Makefile | 6 ++++++
+ arch/x86/kernel/traps.c          | 2 +-
+ include/linux/ubsan.h            | 6 +++---
+ lib/Kconfig.ubsan                | 9 +++++++++
+ lib/ubsan.c                      | 8 +++++---
+ scripts/Makefile.ubsan           | 5 ++++-
+ 9 files changed, 41 insertions(+), 10 deletions(-)
+
+--=20
+2.49.0.967.g6a0df3ecc3-goog
+
