@@ -1,75 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF9A0235049;
-	Wed, 30 Apr 2025 09:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C722223184F;
+	Wed, 30 Apr 2025 09:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006815; cv=none; b=usxrxAuusMJxkh5NJz/mh7RzHxoyE/Wf6BJCPDm4HGr+y9kz3mWwP2rS003AmUPmojOQZmuEqrEdfUr1rB37v495yzwiBGId9l8Y17W71FCNbpiTXm8wM0cYv16ItS8YwB0bZz9Kn1HOKq1b43fNIVH6AyIyp4wj8ofYul3cUiw=
+	t=1746006845; cv=none; b=kkFmZ91BAK9cp/WBZdKIOuV9rWFo36irjpnBtnLS0F5OTcOdSvnMowSjQGGKeM79fP83KPTH+jfp/uIgRc2w3M2uE3JEL8ssHLgn7z+l1F4/LTMHhOjQpFGjc+D4PzsAApvnrfLLXcb1b8nBobr9k9lW4ghvFuwGk62efpSw0G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006815; c=relaxed/simple;
-	bh=ZYar+ZpT/hHW+BjicvwY2/oyKJa/a97+twGdFQAsV5E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lxSiumSqI/aRnnfbLuyVqK9C547i753xT4o2HqQ6Yl4Dtwk1uh655PbRc5ycof4YOd0NE6TzzxgeZ2aAiYAkZM/AOxewk5JxmeYdGcQUscHSLlIyC+IJIbE6qmxVLezvVgQnGMDXXrLnex5E0fQvKyYtTAlXZ9Mad0kmEYAw4T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=fail smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A229A106F;
-	Wed, 30 Apr 2025 02:53:25 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.manchester.arm.com [10.32.100.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3620B3F673;
-	Wed, 30 Apr 2025 02:53:31 -0700 (PDT)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: sunxi-ng: fix order of arguments in clock macro
-Date: Wed, 30 Apr 2025 10:53:25 +0100
-Message-Id: <20250430095325.477311-1-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1746006845; c=relaxed/simple;
+	bh=r06vbbdYSeyDhKUVj0TSgJTSH4wivO5RW6Zk56/fEZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r6HO6bZuwBFMoqSwBIxnyMQW3OAb3ig79v+NbDG7oCqFRmEJwtGud4B5wcGy6sZHmcn0a8XVVvUrrWn004FLb8aj8uAOb5hq47rmfvuoRFykEgn2J8b4K2s9orATMEl4GRLcYCwNCRAfO9vlEYrOMDded8/C5YSwxB8JoOvbxOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f0CXsBPi; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f0CXsBPi"
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id A039B5850FF;
+	Wed, 30 Apr 2025 09:33:53 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4642B4331A;
+	Wed, 30 Apr 2025 09:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746005625;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KQ8rQQEEj/pGpG4T8FIv47iidj+XTjL64Au76KsPOSU=;
+	b=f0CXsBPiFX0HawPxuZE3wtGbYmyChyVKoPw2z9vegzKah9s0+NLUYqCaq+xi5Gmtk2NNGg
+	BvZwvqWageoMCQpSEXLqf54axgiVZ4TeucppIJadSb1ZbfFmlIxAGOquuB6N/R3n+eW3zh
+	vTG4wD6Iev39dfna3+P35FZtbQ6pSUyhz58CdgZToR0FTNrC0DfGi3SFQVEVxQzFi/YpHG
+	ZcYcSTLTEPzwk5ouKXNScKIhZu7OzP5kgFUg9rFatsDKh1JUatY2rWC3AJyj2BjQQoiwmr
+	eOVGXTQ/1srPsbwyuXV3UbD17wQtq7nKx6cjxxssTXZlgZaxB/y2jBUSKPnijA==
+Message-ID: <752fb7bc-8666-4912-aac1-9778f8779067@bootlin.com>
+Date: Wed, 30 Apr 2025 11:33:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/12] pinctrl: remove extern specifier for functions
+ in machine.h
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+References: <20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com>
+ <20250429-aaeon-up-board-pinctrl-support-v4-2-b3fffc11417d@bootlin.com>
+ <CAHp75VcRYE6meHB9+MhcH242eXbA0jzYXhL-+WidvvLXiLX=MQ@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAHp75VcRYE6meHB9+MhcH242eXbA0jzYXhL-+WidvvLXiLX=MQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeifeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehudehuddvgfdvfeetgffgleeuveejgfejtdehkeetheevheevgedujefgvddtteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghro
+ hdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: thomas.richard@bootlin.com
 
-When introducing the SUNXI_CCU_MP_DATA_WITH_MUX_GATE_FEAT macro, the order
-of the last two arguments was different between the users and the
-definition: features became flags and flags became features.
+On 4/29/25 21:49, Andy Shevchenko wrote:
+> On Tue, Apr 29, 2025 at 5:08 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>>
+>> Extern is the default specifier for a function, no need to define it.
+> 
+> Suggested-by ?
+Oh yes, sorry about that. And also for patch 11/12.
 
-This just didn't end up in a desaster yet because most users ended up
-passing 0 for both arguments, and other clocks (for the new A523 SoC) are
-not yet used.
+Regards,
 
-Swap the order of the arguments in the definition, so that users stay
-untouched.
-
-Fixes: cdbb9d0d09db ("clk: sunxi-ng: mp: provide wrappers for setting feature flags")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- drivers/clk/sunxi-ng/ccu_mp.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/clk/sunxi-ng/ccu_mp.h b/drivers/clk/sunxi-ng/ccu_mp.h
-index b35aeec70484d..8fc7fdb7ef494 100644
---- a/drivers/clk/sunxi-ng/ccu_mp.h
-+++ b/drivers/clk/sunxi-ng/ccu_mp.h
-@@ -109,8 +109,7 @@ struct ccu_mp {
- 					     _mshift, _mwidth,		\
- 					     _pshift, _pwidth,		\
- 					     _muxshift, _muxwidth,	\
--					     _gate, _features,		\
--					     _flags)			\
-+					     _gate, _flags, _features)	\
- 	struct ccu_mp _struct = {					\
- 		.enable	= _gate,					\
- 		.m	= _SUNXI_CCU_DIV(_mshift, _mwidth),		\
--- 
-2.25.1
-
+Thomas
