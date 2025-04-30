@@ -1,94 +1,79 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF42F2B9A9
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5D325EF94;
+	Wed, 30 Apr 2025 14:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746023897; cv=fail; b=E82vjPmwvL7nr3WQRkMRb80YgbldJ9OE3PHV6A6tcwaFZeNWop/AWnZkg1Ao22kT1eM8RGtAGA04FUQVmMS7LiwslfgR3Aa6bwdvkgaggwtwxlbiyYY/zgqNihroAO+CCan9qKwssWxl58WW2zA0iL46p3wyBcp/PZxgI7jNw68=
+	t=1746023901; cv=fail; b=f2dhyTAZ9uz3ep7VNpqA8oKldsz4Ea6jGqj8sHh5w28i++fmD7cKPB8ce+ii3Y/dPkTNPZDNzqRFjnZgbQ+182XKGJph9Sgp8cUgNaaAVGRsSQiytyFjb7vb+MEi/4HFS+E+nx4NHiMJ1nu/rD607eKr+Wah0nsk4apI1HrgEHk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746023897; c=relaxed/simple;
-	bh=mazQ8wgrybQPWvVydQhQm4y6YQv0n1TUP+zA7Qao0wk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IjuiLwm1EpMLFDUNQkjP+5ksPfC7WwilqG+SUeyJJabXgf2rOk/NCC5xhIILO1Ms08W4eW6qRr7YQk3tPPhk4Z613AdsC3BIqLcdi043OwajRaBk1Nqufob2NBk8OyYpYZlCoPZxD0JoJqK/dWDijq9UEdKVaCzdoy5pmF4zovY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Iy504/uC; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wu02XjrA; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1746023901; c=relaxed/simple;
+	bh=AtJf9G6PpjGY4qcs8Srfpjzo/nmeC+2aWz7Oj5ptQgM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hd9HmEekkM+4EClqxkOcK7qFI++Mkp3V4PqWae/mRv8zcKejkeQK8xxcZElGQABi/HUgk/l/oVV0DVJ1uPG7c5ES5gSPz99df9u68TLX1yb4IszhOpbsciPce3vubkl3ES3L6KEzJtkwPEVRpWacbZYN3kyrUaas1biiOMS3FZ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eBrSEImG; arc=fail smtp.client-ip=40.107.94.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Iy504/uC";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wu02XjrA"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UDafjg020638;
-	Wed, 30 Apr 2025 14:37:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=BRzgdFJ7nT00q6F1ii
-	YjvVifXXNuafim3yF8ubX9ANE=; b=Iy504/uCldegUA6SviAQ7IOa0c8TJEqvd7
-	RaUHUNmbWsU2rxjBu9FeO27cZbHDwfbZ6vhCIkbDkwO2erqBy53NiwqTVwQA1Qvt
-	2+GF2fC/gmbfqIgmEYof91XuMCL+mStUE8KtRAzQdD2jza7SuO2HjjTlYgzfmYNz
-	f7wjrumYz2+kMXVWOQqfK9aq+0t8cdyyzllkvezcNhyFvudedd2++IDh+bG2S2A4
-	s+x4yK1l+xE+/CQkdSPUD3PazZ+5L0G95nht0Hz2BmKGl3pRFJM2zH4ZzuL8B9k2
-	+NrtQc6hRt+V9JbjYVwQcBNXvx4BgDIlp5+vTXeSpOUQ0r4XriJA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6ukhb0r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 14:37:43 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53UDfNBJ013889;
-	Wed, 30 Apr 2025 14:37:43 GMT
-Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010002.outbound.protection.outlook.com [40.93.11.2])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nxbds72-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 14:37:42 +0000
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eBrSEImG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I7Esq9UNT97bdYYYzIiL2D0kzcpZ7MzyTWM7hMIZPbJ1WQU1ToG7aGj7le6HrxUrovl4Hqwn4LOKPY57OJ4t4OCaebomuWOIVAbuXh3OKTMGoK/YhVll1Ou/1g0qoNKCfQ34pSIRuX9n2XS44DNnH2t9FCI7p11DHr1lOoAVkmBKhOEpAuJgiAe0G+6VUjcB2HkSiMiAX0KSPojC2MhqMnQlCPtTHjyu8v60Bk+weS03NEeJTowLW80366cRrlGQ/retrkOox4RztVNePc/05Tz1kG4VaM406suabEGrTN6SDD31ezGKVcOn7dPwIkZz4Lpe0VoQiSpcJFTX/i5R8A==
+ b=vrOdUgORFD/OWXVw2y6FLexN/OZ7a3Jr+tIqBlkRAIBYzSfyR5mCR2AGN0x6AEN0uHLCfntm7ZaeCH7re2FbKgHrx+nVQ54vaCEmqEhhK/EG4c6i4dnCRfO+NLIKyIfDycUr2mZUeV8QBhHF9eeaQz1haTOspMx/c7KhbgolwLT611mnYkoJOiwhfK0xMEswCLHY01hrV+6wOE0IF9x97BL5MOtHZPYNgzAT7jvzL9GQ/O9GexbSMohOewom0Xna/aY8K/sU0wlTESrZM+Cag5dLqSLuI5Ti5WJJv3vLUfgr3CfpZEbxVOJo2PE+srYiDU0kJA/gcHuMkWidRYmeBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BRzgdFJ7nT00q6F1iiYjvVifXXNuafim3yF8ubX9ANE=;
- b=KV5jlYHVqHLRqG465Pb9GdodBjS3YwWxGJJacyStiVm/2a06SHdBT9vuhoBfLGu+p1cIhi/5MnY9+QybXFTQtYsFOOvXHN5A80gQ+CJMsAKWvQsroV2j7JHNYl6mLF2HN75L2PnemSr1XAmoBms77pvYBFr97iuowp2v8NCmsOGQBHyLLmO+q9elN77TavUgfPI52zeKUSBX5O2Ty1Zz8gYTUAQaTCBFPpqW3fxUKhlGOZzeDIjNtWSgT96lJVPm70BwQhSf5wkR+Z2G6okyTqgonn8daOoQtJXfd6cYLujsXePldFFj6QlsZ23YP6XJi0nrOGu3wA3ghl7DsM71sw==
+ bh=1MDfyf477uxFIA7tIOCNclBzOQ+78TIs/UF7jBFsUAc=;
+ b=FTt4U2XcGahLs5BdnPhBS5ttW2NY5HMNfajJRSVuMxupYBma97h7YWkzaHsKtXg22ivg89BrAFV3jeNxZIlkfPfHRVJBs9JN1Sdp3tWojXOQjBAobksL1vjJCVbhBH0EXwKk8riWTVR7NTC3Mwri0AxqIhY5mUl70gunMUflARLhhFBfa9YpSitDpdXm0L+xmit+EfcECcwLLOr4nhDQNRUDBJx78KjljKdNxV1T/HCUdBk9eZINeKRfC01XsQb9h1WrT5V0d/d8bBItnj1pWoB9JlBdOz8zH548iSe87HGdOGnKZf9v3UFr08Bd7LlqFyohzByP2/7AynMBykgekA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BRzgdFJ7nT00q6F1iiYjvVifXXNuafim3yF8ubX9ANE=;
- b=wu02XjrAf7Uj6U7HG7Wux2WmdPLzuceHPNr8ZkZnqg7xTrre7HadZgoovJh+6x089HRZ6I0Cw3pvB5oXRHuMLW8LopadtRendBZCRXohRTojZl+7SXlZIC5+CAPmQDzswcv6LmR3Ln1hCQx+nZxq8m/vgJQgC/hDz5QnU6Cr9n4=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CH3PR10MB6809.namprd10.prod.outlook.com (2603:10b6:610:141::21) with
+ bh=1MDfyf477uxFIA7tIOCNclBzOQ+78TIs/UF7jBFsUAc=;
+ b=eBrSEImGd3c9WOMkGjmnVFjWJt7yywI98XE2cIfOXY8Ng6gOtkBNMyTqjjaRnT4MdmwosMtSkA6pgxJEClSrYsNgZF+PV4qx1fAmbx6Zr+JKzZva6t1xvYyQ7lFpHPEUA1+DBRcd8FIbtreALlfsE2dxwbvFYlYLF0RpEfnepcT8ML7x1cyfqn+BFACl+qU5zZsxWJpH6ott1d29ihUylBZZ1RxZW/ch48BlKzcAoHIJAduszQ6sqiUAejk+h3xR8QlCtZKzVrf4JhNwVkVrRmv1xLGqSTeJ+1ve906I5fZEIbWpSHZZEkgfui9T/dacmsXy5/qPFigLnXZA4Stm0g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH7PR12MB8056.namprd12.prod.outlook.com (2603:10b6:510:269::21)
+ by DM4PR12MB7527.namprd12.prod.outlook.com (2603:10b6:8:111::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Wed, 30 Apr
- 2025 14:37:39 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
- 14:37:39 +0000
-Date: Wed, 30 Apr 2025 15:37:37 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, david@redhat.com,
-        willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
-        vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
-        peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
-        baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
-        christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
-        linux-arm-kernel@lists.infradead.org, namit@vmware.com,
-        hughd@google.com, yang@os.amperecomputing.com, ziy@nvidia.com
-Subject: Re: [PATCH v2 3/7] mm: Add batched versions of
- ptep_modify_prot_start/commit
-Message-ID: <ec68b9ac-5d89-4048-a680-788525870e15@lucifer.local>
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-4-dev.jain@arm.com>
- <8780e63d-22c1-4133-a800-dec50fd1b5fa@lucifer.local>
- <f52746e9-f57a-4e65-af48-f5de3c5887c6@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f52746e9-f57a-4e65-af48-f5de3c5887c6@arm.com>
-X-ClientProxiedBy: LO0P265CA0008.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:355::11) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
+ 2025 14:38:16 +0000
+Received: from PH7PR12MB8056.namprd12.prod.outlook.com
+ ([fe80::5682:7bec:7be0:cbd6]) by PH7PR12MB8056.namprd12.prod.outlook.com
+ ([fe80::5682:7bec:7be0:cbd6%4]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
+ 14:38:15 +0000
+Message-ID: <9977ad2e-ce2d-48b5-a222-f74a821abfeb@nvidia.com>
+Date: Wed, 30 Apr 2025 10:38:11 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 11/16] gpu: nova-core: add falcon register definitions and
+ base code
+To: Alexandre Courbot <acourbot@nvidia.com>,
+ Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>,
+ Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-11-ecd1cca23963@nvidia.com>
+ <aAerWF9j5d01pQv0@cassiopeiae> <D9K09AU4KTQJ.3TVVZPMDB0H7I@nvidia.com>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <D9K09AU4KTQJ.3TVVZPMDB0H7I@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN6PR17CA0046.namprd17.prod.outlook.com
+ (2603:10b6:405:75::35) To PH7PR12MB8056.namprd12.prod.outlook.com
+ (2603:10b6:510:269::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,339 +81,453 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH3PR10MB6809:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ce2bfe3-4396-4b24-ba05-08dd87f48ecc
+X-MS-TrafficTypeDiagnostic: PH7PR12MB8056:EE_|DM4PR12MB7527:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57aae9b3-c01c-4461-7850-08dd87f4a426
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?X7TjqUJj2QZRFi2jg29/deoYECcmpTpkYMWB8W8MDbiq6YmC4/2/89Dqcj/K?=
- =?us-ascii?Q?Rna7sVSH9809R535lv1KmsBXLUywhHiwqPSLYFNydnXIXhtpyJqw9lZfRz6F?=
- =?us-ascii?Q?Rvv6oVx/rIGIlpBvbuYH40CTcwRTt8SGJTh3BuKuKPVRJKF3iG1kSUk+os1i?=
- =?us-ascii?Q?q4PM8CMF3EWHafEPIT54K780eCPaCIYzMxsAl0YIv19lVCyy7KwVyhLSEHc/?=
- =?us-ascii?Q?vj9LXOe8fIOW983Sh9VSf5ERNRFTndh8osQww/72w3qdrTnFpBXesgV2/P1k?=
- =?us-ascii?Q?MAsVq04bBhhB2aarlyjPgIq7vXCAOo1JtVj9iRZTI2MM3yKR70u0TA64Te8Y?=
- =?us-ascii?Q?wJw3HEqN+ob1/FbDFAvmqRx6YZ41KlDmgDrSvEsLr2Gw+HLgdoJcvzSmmDkD?=
- =?us-ascii?Q?kgt2CMYR79WF4AIJWcAmBfGgXoAxmYIdWHZMddYWl5WTFrwuN5HQiYswjr1v?=
- =?us-ascii?Q?45lvwUsKpHgLJLo30waaaUkrpu3ouQbA2LzHJrDFdgpnHoHPE2SV9BeNgZ7N?=
- =?us-ascii?Q?BCoBfKTAHCi9tl2RxhTdtTdgwcHk78uHiCsBJa3kQoe/ySNZdH1O3pz6oYUn?=
- =?us-ascii?Q?faOsne+o9sri30OOYKV4QOj7yX4VArWRLXT03i0jPKlkeoVelCtrnbpt3g49?=
- =?us-ascii?Q?glLn+khKCxgv6cIL64AIQP+LQme57A6VNgQKV0PFK4Gj1WpGLcE6/GXs4Kix?=
- =?us-ascii?Q?vHTRRN45kGLClOxkFH3HnexxzLqtmdNIsNy18zEuuWuhns6W3fzbT7+U55Iv?=
- =?us-ascii?Q?HTnHBP67uKLHgCg9zcwMOuvMzJxzGHJHTW13z9+A7cEb3bAtlxbpHiQBvN//?=
- =?us-ascii?Q?bxOVcSek1BcPcuB8/ylRIX1+sVLGtLqFSiuOc4MxIaFnYvhXjJUX11JUmP+d?=
- =?us-ascii?Q?+3zIEDY42PRvZ+qOd6OnTK6kWwC5KGHbfPYUesi4o3/ztJUjD4dzVSOz5M0m?=
- =?us-ascii?Q?N9hRBaLesyALTQWBg1SqWZCOdJdqDFGCczOlkZE9vHvgfY1E7zwNdys97e9N?=
- =?us-ascii?Q?fZ2WLiqPIL2dli59woPttN/B+AxH9k5uu3PX94is+BAuqhgZfSKOJxhl2FyV?=
- =?us-ascii?Q?9g63IRTsUi6EUFDM/Ucc+vYEkRDWrt8OPwUQjFwfA85FC11DFzxDkDFuMVrw?=
- =?us-ascii?Q?p+2R5pEopsWbWdEW//FaCssMuxOgzgdN6BMWhhqshgf4s26QIbdfFzMH8Koo?=
- =?us-ascii?Q?83BHeRWypRdLwHETSOZszTFfpXMclfsMZ6a7g7tLAqvyE6cdbPUe8ume5rPk?=
- =?us-ascii?Q?nr8gFW+g1gUcFUIATa0OmNwCP6zf0cChfePK00wsk9Siv3PSM5cg4DWwcY1L?=
- =?us-ascii?Q?vNfSANyduPfxwqH55p7JzKEQ/LTDuY+lcLzioJAs0RON1ayLJLUOk4qTu6rO?=
- =?us-ascii?Q?fzRQEjDM4S5vt5jlj8eqaYu/NX2kiUe+ZKZLXOfB3eNBIJcpn9p5ND1RUvfj?=
- =?us-ascii?Q?1riCvSWqZIw=3D?=
+	=?utf-8?B?ang4RW9leGhsbEpORlBWZTNMWG8xQ2tCVjl6N09pK1JJMTg2Q3BYcWU4SC9V?=
+ =?utf-8?B?SjVHcC9GRXpEbFR1aDVXcU8vYVBQbmh6cVBJWHNPa2tFMkkrVmJjOUoxRXhX?=
+ =?utf-8?B?OGwzSVZnSzVpMXAveHpJYndLN000OVI2WGUxanhXOXNQYzVwdk5uVUsxR2Q3?=
+ =?utf-8?B?b0hoV2dlT0dDUjlUN1BIZnh2bHBvN3dFcndLV3ZBQm9UbVVPRjVqdVhlYm5X?=
+ =?utf-8?B?WGphazZNNko5MVFOa01iQkI3ZE9hTUg0SGtBaTQ0NDBWZTVuOXhOSkh0Mk5F?=
+ =?utf-8?B?b1NuNzVBdmNSWlJPa0JKbzhEL1lEcy9HQm9DK1dMTDR1MkZOTlNXQ0xFZkNl?=
+ =?utf-8?B?VTVzeGQrWExFSzkyS2tTRDNERC8wVmYxVW5QQnhLdm1XbHNEblRucWh5dDd2?=
+ =?utf-8?B?VGJEakcwY2lmaUxlUFpKOSt3V050NEFGOHRCR0x6UkZubTdKd1dJaG9SUnJO?=
+ =?utf-8?B?aFkvZHc3aEJwcTBCV1VBa1JDeThBR0Z3eEJGN3ZDL1NvVUp4MVhSeEEybWhH?=
+ =?utf-8?B?WHFXS3dMVU4yWDhBenliKzhGUHhOK3ZGM21aM295V1VDUUQ1bFZua3VRdFdB?=
+ =?utf-8?B?cW52Ri9rSGdZVnQ0TlJNUXNvSWs3YWdvYmxpeXp0Tm95U1hxVFdQczNxRU16?=
+ =?utf-8?B?SGZNRGYxS1BVOE9wVDlvOWg2eHZmbi9YUGY4SFk4aHhLcmlPOFVIYlUvVU1C?=
+ =?utf-8?B?bmhyaGhmN3ZxMlI0L0xWejZkdWx6czBHbSt1dk0wTTE0cWx6amthSmd5bEJW?=
+ =?utf-8?B?dVpBbUtGL1pYNE1kNzBYU1pZQ2ZkMkRkajZnVjc1Skpsb08rajVqTlNJZzNq?=
+ =?utf-8?B?QWR2THJmTGg2YTVmSSt0VmQ2a3BqSmR1M0RnaUZDSkQ5ejUxZkwzK0c5RGY4?=
+ =?utf-8?B?YWJOMk8wd1hRY0ltdjgwL3Jzb2NLMU9QdVhVVnJjcEJ0dXB1R2lDZThraVE1?=
+ =?utf-8?B?THRVYTVJc2ZnM005U1NHa0lBOXpEdFJKWUVSMHNZd2RoQzU0b0xSU3JvSGF4?=
+ =?utf-8?B?VkQyUlA5cHJiTGVFZ3lSek04dlQ0bXovL3kyZDRLNFhCbjNSM3NPQXd5ZjVD?=
+ =?utf-8?B?MnFuQkJiSzV4NUJLbnFaelRnTGJXSGNtbS83RmNzVU9SdFBCVXBPaHFSZlpB?=
+ =?utf-8?B?R1g4VVYrQTVBZm1vRlk2bmNBdWpMcFJBKzVLWWVOOVRmRk55UCtBbTdRVnRW?=
+ =?utf-8?B?S0hxQTlwbXpwUDg5Yk5pbnMzaGR3WlYyR0pGcXptbllUK0Z2SEk3UzhEcXk3?=
+ =?utf-8?B?a25QOGJZQ3o3eWFmL2kvbUh5bG5MdllrVjJFSGpncU5BNjdrRzhqeTBFQkh4?=
+ =?utf-8?B?dGRFQ0hwaGorSHR2REhvT0M1M3o0MGN4NjlaRnNwYUZBcmhxamV1U016M0ox?=
+ =?utf-8?B?WkFUbU1SRStiWWMwWHpaRjdSQkxiNzB6L2VyY24yNVAySnhlUnl3dUhhWFFW?=
+ =?utf-8?B?SUF0OVgyZlJGWXFtTWlWSkdsNFhNZmRKOFNJWG9UY0hTQ0xWdlJCODIwR0tK?=
+ =?utf-8?B?WjAzb05JSnBDKytha2dvOFliTWhJYUNkUkpWTVloY2JVRnJIcjhLUHZndjBY?=
+ =?utf-8?B?SUl4bkxsTkhGeVN5TC9xaExEbzFXSFdOL0t4bmxzRXJ5eGpzSXUzZzlLWkJO?=
+ =?utf-8?B?b2J0c1RvRUxyT2FOZkZJTDV6UGxjRmZzUFYzdkRzNjA1QzJvRkFpcGpDS0Jj?=
+ =?utf-8?B?bERmYzRGWXNkUzhIRzlKUTJBcEpUdFF6cUR1eGp1TnV0TVVJZnJmU0grMksv?=
+ =?utf-8?B?Ukxua0crRU9HaXUyVHN3WXdVM1hhTy9RbHhMbVVNQmgrNGYrSHVDNmFBZmhk?=
+ =?utf-8?B?YnZ5Q2ptRkpScW5aNEkyaXc5YXlFMTN4WmtuU25JUEh6NFlyWmFkVktCRnJS?=
+ =?utf-8?B?ZjEyK0pSZzJqeC94MWxraDQvb09vVWw1endnRUJXUmlzRFNJUDdicjF1RTRF?=
+ =?utf-8?Q?4eYQ9iAUJYo=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB8056.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vnUocI4YzSg0CmnH7FZNm1oCwp6b84X+wmRrLnapGAiRVvQ2UstTaszRdBEh?=
- =?us-ascii?Q?ZPEZgNBxQ2luJiv8i5AKYh3yRVdn34YdzLyzl9n7U+5nMUoXtxsEgrHxB57W?=
- =?us-ascii?Q?c10o36H8ehzVBrDheBaM/jNgLcJrPIL+8JbhMbruC7yaOD0DcYxF0vXqp1nx?=
- =?us-ascii?Q?bB0R+JjVmvpQ9cfVO3bC9TZ73oPIVU4HkujmMhJzje6roopyUPYeI9La19eE?=
- =?us-ascii?Q?e0HxKNlrnwx+upRStJ3ML4JhTBL4pXSTpqIWz/OMg7hi6drTcH2aiJtLH8Ni?=
- =?us-ascii?Q?c3xD7o68aNn13MkObBn9Tq4dN5Z1hun64bABq88xnN+K29dDaqKn3ky8uhP6?=
- =?us-ascii?Q?aE/F9QxJZDntu5iafjAs8j3jNEPMvYZDW7my0/yV48mM2zL0bPZdgaHqj2VC?=
- =?us-ascii?Q?ND8N/Yf9Mzw1QltduwSwnxlO9gBS5vEebcf79W+17mfXdtpjv5O1fd1JmHve?=
- =?us-ascii?Q?3v+b1INyBllMZjcEE08ACgL34aklj9QjYVOgUykdhOalYljJfOYq1e5neA6O?=
- =?us-ascii?Q?O899zarKvsh8+TsJBYPkwssAt2eUtfq4htSYwLNlqHrBvtinKs+9BXiRijXr?=
- =?us-ascii?Q?5gjJ3BJwe7/OplK3jCoct+C1Coridgr+oOGkD2sH0+N1NI3YLC69duIvBXYb?=
- =?us-ascii?Q?ycNstG3gf+hdis3LUezgSXz3fhKTl0RdVf8g+CFVFUMzIf178Bwrc2PGpCOs?=
- =?us-ascii?Q?bTUUODHqZwXjIItOf2M8e77pWjQEi2Sfazyj++KFt+gkGx9iddQUksRtG6bE?=
- =?us-ascii?Q?KIuXlSc5bB7dyYHpiuUIU0xjxqWWDvN8V1IsC5hn+mqDIyWnwjFPruWQqMuA?=
- =?us-ascii?Q?aVBdf193SpqMfrUloPi+qT8azic56jc7pK5DX7J/luQqaVi1EBksdtjNBF3K?=
- =?us-ascii?Q?JS68DfNB0N6hFhS1aa2f6yPGNJiAILhfZWAkcV86oHr5WZ/KGhkgazv64Kul?=
- =?us-ascii?Q?Zo2KHLEs4o5T6tjjC7vaAIY/2wVNxWL8qHyo0hcKT6+ow6mdD/iuFX6tEcWZ?=
- =?us-ascii?Q?UrLIGT7t0h8B+P+U2dhMyCev8jrSapPu2VKRPHUeIfyGhCFsbvdLdmjNt31q?=
- =?us-ascii?Q?rKIwrnCZiKMHTcp5TYJoYLO4nmP1mXYyAmt8rGEe0Hi2XbT472B/0vD8+LX4?=
- =?us-ascii?Q?L3qQEoz+mX3nDPqeCC530pprh76jKfSi+4gcJSjEEuEfpNZ6IqCDiIlng8Gi?=
- =?us-ascii?Q?H/4C3AKBtF7BKRZ6wuVVImqVMHn+L2PS6AklDZKH+8nbQIZE6bmE4Sf0l8dw?=
- =?us-ascii?Q?WWN7BN6krWJxeC9DEjbGsRhzPwP5J3vboYQQUkzWgX/NM94FX5P8Y/6lOYS8?=
- =?us-ascii?Q?H/eAtm79PgZf1V9IRt2xmgvle0zXHS68CpJoN16MjdAvP3arfw6QMMyq5Opc?=
- =?us-ascii?Q?YurirwPigDbRkSnGnhd2Js5AkO7HpUHmleD8cvcxfKUQtCSYBaOXuafKSGJi?=
- =?us-ascii?Q?kw8NARAeDCYbAthoBiqMH3AVZC4upv0IDAWTC0J1VH57f+Rv7Huj8zy8mBQ8?=
- =?us-ascii?Q?ErfE+1qhOSoNgUY1Ywf6z7xs4jpjqRDwhtvRpM7J+8ZXiJcfyrTOs57U0spL?=
- =?us-ascii?Q?meQh74dPXFSQ4RJ+KLokGIhHHuGvqzBfYu8iSQtvVreFJ+qjUy288pE/1HV5?=
- =?us-ascii?Q?ng=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ZBJ2Sfx9EIGbWNsvpAy0u1/aHtQgHWw/oeXeNF6PeT8uhOSyBJM2wGN0/aD92SKkst2YVdOw/zFm9d8WcHFdRVjc9mzUwGwmlpm1o9xvDhmoSi3EBaKhN7PPzAtBQRU6o48cDUEuAh4rlbO8gLfzcCEUCmvhBlL7CAfdbaGXdOZ0SnEtC8tlYwAkUdi2hoWB1InFz8zYGdrX+5Y/MxrAUwLXYzvFAgWCot7rAlowFJ9QyITNI9panEsLDC5W/8goZlDKPYbK16XjJrQOYBk/lGqJQ/98Lql9QPJD2/Qo0AtrX6GBlAyJVfbIG5Xlrk3Jpk5v6wnaHHwbOApGeBitUkVZKaXfmOZG/vLePqhPA9nQoCRbZKCysLYVErWpuX+o5Ih9Dl2o3Tr9C766Sj94ofpKo+ICBixUDEph0LOrvikwHNL2T8gwCn6AIjlENs8Sh+MxsoTkQh5HIV3L3iCAtJXnGSJsgPUaUf2vh8X2E6QsTPL4eSI61lWp3DTmqgvZt64CS3Do00QQ0KEGyzaTlEBNrk51x074HqUzQsJqCwxbBbf5fNtYRJOe6UzkQbV4kIddXhYqAmRh+2XTIMEluazbBaaNeEB02S2IaYbvafE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ce2bfe3-4396-4b24-ba05-08dd87f48ecc
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+	=?utf-8?B?ZWdQanlsUlRxbDlCVHVXREEvNndxelFhcnh4MDI4d2Zxa1Rxc2Vkd1pxUU1V?=
+ =?utf-8?B?ZWtNd3ZaV2hxclIzemo5c1FCL2VneFdmR1dpdmxscHRHSWRHYisyQitjdmpi?=
+ =?utf-8?B?MEZMV1QxTmtCaVVUTTRPQktFQUdSdXY5a1N6MHpGZXJsR0tIWVA1QXBUR1c4?=
+ =?utf-8?B?dlN1TytPOXBGRkM4RlRUTWc4QVBCeHFKRmRqZVUvZlRNS3B5V2ZDcUlkVGFQ?=
+ =?utf-8?B?VXV1OWlBK3FaTHdQeXpFNVI5MStnN3RoMTZET0VxOU1Cb2ZZQmlRT0FGNGE2?=
+ =?utf-8?B?aUNFWjJwWWk1anpYYm1Ed0ZnTmZITHl3Z2Q2YkJWYkhsU2Q3NFJjcTBuWHpz?=
+ =?utf-8?B?Zk1JWUxxZjM1Q3hNS3R3NnVNWTUrQVJVSzBnamU3cmhiMDBoSklOeGNaeGVL?=
+ =?utf-8?B?R0U0cDFBZUZERWxHWE5YdFRYY1Q4YnZIZWsyQm15ODRlc29zREFtSzJFNHp5?=
+ =?utf-8?B?a2tERGI5ZC81QWNXbDlPUXo5UWtLQ0lMWmUxN09JekNNUVJ0ZkRweUZUcE1F?=
+ =?utf-8?B?RERFSkNvUWdueG1sd3ZoVjhmOFJDUlN5TUJ5VWZhWms0U3p6MkJXL0R1dVVR?=
+ =?utf-8?B?VkVOTlR0M2ZsYUV4Z3VoeEh5cUg1SnJTOG9UTE4vdTdEUUcyZUN4NkVoa21j?=
+ =?utf-8?B?YzBiNkZVL0FLRWY2dkhWQ1RJbUhpSEhwbm02YXBaSE1WcGpqNUlkMjNGbjFP?=
+ =?utf-8?B?cE5zUlkxbEQxNUc4b2l6MVhEeWpXM3MzSU81WkcrSnBVSG5WUjQwdUFQb1BX?=
+ =?utf-8?B?TlYwYkFNSjlJTERadWdmQ3ZvWnpLaUpOclFEcWlhZGVBOTJvaElyVmhFSXdX?=
+ =?utf-8?B?ZEoycUIzREpYUFc3REdNNzlYVWRWQlJUbEc4aTY3UlVMWEJSZGFKY1lkYmdn?=
+ =?utf-8?B?UXd0a1NPUWFXaUdmN3FmK3F1OE5BUHRsSXR3SEtWMHVMd2NLY3BreHRTN0lQ?=
+ =?utf-8?B?UXN5SXU4L1Y1cjVMTkRnMGMvRG11TmFtM2FsVzUySDNMeGJDRGtnZzczQm5a?=
+ =?utf-8?B?RHdROERsYmgyOXJQdlBzUFVDcGY1bnZmWTRERGFtSkN5MzlCb2YzR0REK2dR?=
+ =?utf-8?B?bG03RWRNd1lCYmRjRU5BVkU0U2FHcmdkaEZZNkhYTzYrUThSTnVaNmFCeUlH?=
+ =?utf-8?B?UDRPWnMyOWFMMkt0Z0IxUllOaTJmZi9RRWVnUjVHaHZLTVBIVGtHSkxPN0R4?=
+ =?utf-8?B?T2N6RFdTeWRLL0REeW1pSDZMQ05UekJ4bUpYY3dGbWhyY3VUTjNMUW8wNGQx?=
+ =?utf-8?B?Tm51bkU3REk3SzRsaUFjaTE4U2pJNHBuZ1lRRUs1aTFxVkJORUZRVkNVMDJV?=
+ =?utf-8?B?amV4aFppbkxrUjhWeEh6V1VSd0RLenJTN0Zhckg1VkZuOTh5SUp2dFZXK0RB?=
+ =?utf-8?B?VFpWMTEwdnk0bXVGeXdHNzl3K0w5eXArTVBUVEM3S0NUU2NBalhMZFdsdk5K?=
+ =?utf-8?B?RTg4dDhlN1E2Y2ljQUtJOEc4Y2hmbzZGbDhCYWRmOTEvZ1Bxbm01dlNWM1pv?=
+ =?utf-8?B?NEhlaHdjcVIwMWxmRkpEU2tDd1ppNUhhN3FmSDRSMEFmcUp5Q1hwajhwSlpy?=
+ =?utf-8?B?VmVGN2xadlAvdVM2SFdjaXB2V0cvNk1BeG5qaUhqWllDV3NkbmNMTDFxSFp6?=
+ =?utf-8?B?VklzV3Q4YmRWa1ZkeFAyL2tubGpjQ0RieEc0VHg0bTBKWkh2cGtrNWFwZHFi?=
+ =?utf-8?B?NWtEQVFGZHRQdGpEc2p5dHQzdjlPck4vU2hUZUlXd295dGhhODNXekJzNVNY?=
+ =?utf-8?B?NTQreU51NnN3UURMVUI2VGdmUVpsRjUwaGZOWFNKUkg0dXlDZ3o2aDkxVW0w?=
+ =?utf-8?B?UHNzK21rNkhZVmxsR1d3bGlmbDFNSjhSd3I5RlZPVXV5dkhmaTU1dzhSSkxR?=
+ =?utf-8?B?TmJpeFl2M1Z5a0t6Vk02ZDJqbTVmdXhUKzhwWkkyUjlCTU02bk0zWVdCbGQ2?=
+ =?utf-8?B?SlFidjJFSERZdU9tSDFlbHA1cDcycWdIamVJTGNicUZQYk5oZlZUZ0Q1RCsw?=
+ =?utf-8?B?emg5cGJoS1JlTlRYM3FwUDJCWnltOFR3Mm1UQjBOK1VSTW10U2lSbHpoZkdu?=
+ =?utf-8?B?MFEvT3ozRUcrbG0wZjZKVCtsWkYrcXBZQTluNzl4MkRHc0dnR3NmSm4yc1R3?=
+ =?utf-8?Q?g76ZawPf/M3N0l3nqrEoZVaYf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57aae9b3-c01c-4461-7850-08dd87f4a426
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB8056.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 14:37:39.4832
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 14:38:15.4878
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: meAHh7CyHsC9KcK7FYtb0icMlmdolJVA3aNfahparYbCIZT0GZkmzJWVNFsC6aEcVlIP/DXHbVQjVumEIMoZlqyi9JKYpDAKJMXSxKGiXys=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6809
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
- definitions=main-2504300103
-X-Authority-Analysis: v=2.4 cv=MIZgmNZl c=1 sm=1 tr=0 ts=681235b8 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=GoEa3M9JfhUA:10 a=7CQSdrXTAAAA:8 a=jqMWM6XrBOpAZaROMVcA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-GUID: b8KBfItfPMs62VIOF4vSfkvKeTKb_OAC
-X-Proofpoint-ORIG-GUID: b8KBfItfPMs62VIOF4vSfkvKeTKb_OAC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDEwNCBTYWx0ZWRfX00RKzmBP1qKx Hk1gOJBqRVueZbBvgCAGB7J1LZMYLeObEJHAyp/80nfl+cKsMyaXZaMUFIFMj38d3vsj05nO9lb YBSs5xo07edxZM6oM0c1DK/WPsV4ZK+tML+pKC/7rhn9oqahc66e0B35mXtDjn/w+pWTAs+r/a8
- Vv+rUL9yPnHaUl3QtFGVmFe60V98/m5jISmbdAgNoYW7+QgzmlOpyJMpEMF9m4RQqRs02c2qJzS W4SKcNzu1wMWSqVy2Y+J4hCzp9i6doVkPHDRG7Ktz0sF/Ql/9xe/Z+7RAbtiyqomgXCkT5+6saz Q4Hrc7jBNGwxTHgFrgX4D/TAqFHq59c/ZnW4r1PW7//StlvK6Wvh5O5yENivV57yHPUVj9hmQcY
- T3n1cJ+6x568DjP2gH9Mqg60PjLjWKvJYfSApoMkUfLg2Ibv1WV8V800TqPFxBSer5gjlZnZ
+X-MS-Exchange-CrossTenant-UserPrincipalName: eqoO/WfMwIdIt3heex2MLOh75FHwsHjt/TvWS/IwyUmQ/MBTKuMisH0tCwPh0BKarZACgnMM6xfDCfFCeWq+sQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7527
 
-On Wed, Apr 30, 2025 at 11:55:12AM +0530, Dev Jain wrote:
->
->
-> On 29/04/25 7:22 pm, Lorenzo Stoakes wrote:
-> > On Tue, Apr 29, 2025 at 10:53:32AM +0530, Dev Jain wrote:
-> > > Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
-> > > Architecture can override these helpers.
-> > >
-> > > Signed-off-by: Dev Jain <dev.jain@arm.com>
-> > > ---
-> > >   include/linux/pgtable.h | 38 ++++++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 38 insertions(+)
-> > >
-> > > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > > index b50447ef1c92..ed287289335f 100644
-> > > --- a/include/linux/pgtable.h
-> > > +++ b/include/linux/pgtable.h
-> > > @@ -891,6 +891,44 @@ static inline void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
-> > >   }
-> > >   #endif
-> > >
-> > > +/* See the comment for ptep_modify_prot_start */
-> >
-> > I feel like you really should add a little more here, perhaps point out
-> > that it's batched etc.
->
-> Sure. I couldn't easily figure out a way to write the documentation nicely,
-> I'll do it this time.
 
-Thanks! Though see the discussion with Ryan also.
 
->
-> >
-> > > +#ifndef modify_prot_start_ptes
-> > > +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
-> > > +		unsigned long addr, pte_t *ptep, unsigned int nr)
-> >
-> > This name is a bit confusing, it's not any ptes, it's those pte entries
-> > belonging to a large folio capped to the PTE table right that you are
-> > batching right?
->
-> yes, but I am just following the convention. See wrprotect_ptes(), etc. I
-> don't have a strong preference anyways.
->
-> >
-> > Perhaps modify_prot_start_large_folio() ? Or something with 'batched' in
-> > the name?
->
-> How about modify_prot_start_batched_ptes()?
+On 4/30/2025 9:25 AM, Alexandre Courbot wrote:
+> Hi Danilo,
+> 
+> On Tue Apr 22, 2025 at 11:44 PM JST, Danilo Krummrich wrote:
+>> This patch could probably split up a bit, to make it more pleasant to review. :)
+> 
+> Probably yes. I thought since it is mostly new files, splitting up
+> wouldn't change much. Let me see what I can do.
+> 
+>>
+>> On Sun, Apr 20, 2025 at 09:19:43PM +0900, Alexandre Courbot wrote:
+>>>
+>>> +#[repr(u8)]
+>>> +#[derive(Debug, Default, Copy, Clone)]
+>>> +pub(crate) enum FalconSecurityModel {
+>>> +    #[default]
+>>> +    None = 0,
+>>> +    Light = 2,
+>>> +    Heavy = 3,
+>>> +}
+>>
+>> Please add an explanation for the different security modules. Where are the
+>> differences?
+>>
+>> I think most of the structures, registers, abbreviations, etc. introduced in
+>> this patch need some documentation.
+> 
+> I've documented things a bit better for the next revision.
+> 
+>>
+>> Please see https://docs.kernel.org/gpu/nova/guidelines.html#documentation.
+>>
+>>> +
+>>> +impl TryFrom<u32> for FalconSecurityModel {
+>>> +    type Error = Error;
+>>> +
+>>> +    fn try_from(value: u32) -> core::result::Result<Self, Self::Error> {
+>>> +        use FalconSecurityModel::*;
+>>> +
+>>> +        let sec_model = match value {
+>>> +            0 => None,
+>>> +            2 => Light,
+>>> +            3 => Heavy,
+>>> +            _ => return Err(EINVAL),
+>>> +        };
+>>> +
+>>> +        Ok(sec_model)
+>>> +    }
+>>> +}
+>>> +
+>>> +#[repr(u8)]
+>>> +#[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+>>> +pub(crate) enum FalconCoreRevSubversion {
+>>> +    #[default]
+>>> +    Subversion0 = 0,
+>>> +    Subversion1 = 1,
+>>> +    Subversion2 = 2,
+>>> +    Subversion3 = 3,
+>>> +}
+>>> +
+>>> +impl From<u32> for FalconCoreRevSubversion {
+>>> +    fn from(value: u32) -> Self {
+>>> +        use FalconCoreRevSubversion::*;
+>>> +
+>>> +        match value & 0b11 {
+>>> +            0 => Subversion0,
+>>> +            1 => Subversion1,
+>>> +            2 => Subversion2,
+>>> +            3 => Subversion3,
+>>> +            // SAFETY: the `0b11` mask limits the possible values to `0..=3`.
+>>> +            4..=u32::MAX => unsafe { unreachable_unchecked() },
+>>> +        }
+>>
+>> FalconCoreRev uses TryFrom to avoid unsafe code, I think FalconCoreRevSubversion
+>> should do the same thing.
+> 
+> Since the field from which `FalconCoreRevSubversion` is built is only 2
+> bits, I thought we could avoid using `TryFrom` since we are effectively
+> covering all possible values (I wish Rust has n-bit integer types :)).
+> But yeah I have probably overthought that, and that unsafe block is
+> unsightly. Converted to `TryFrom`.
+> 
+>>
+>>> +/// Trait defining the parameters of a given Falcon instance.
+>>> +pub(crate) trait FalconEngine: Sync {
+>>> +    /// Base I/O address for the falcon, relative from which its registers are accessed.
+>>> +    const BASE: usize;
+>>> +}
+>>> +
+>>> +/// Represents a portion of the firmware to be loaded into a particular memory (e.g. IMEM or DMEM).
+>>> +#[derive(Debug)]
+>>> +pub(crate) struct FalconLoadTarget {
+>>> +    /// Offset from the start of the source object to copy from.
+>>> +    pub(crate) src_start: u32,
+>>> +    /// Offset from the start of the destination memory to copy into.
+>>> +    pub(crate) dst_start: u32,
+>>> +    /// Number of bytes to copy.
+>>> +    pub(crate) len: u32,
+>>> +}
+>>> +
+>>> +#[derive(Debug)]
+>>> +pub(crate) struct FalconBromParams {
+>>> +    pub(crate) pkc_data_offset: u32,
+>>> +    pub(crate) engine_id_mask: u16,
+>>> +    pub(crate) ucode_id: u8,
+>>> +}
+>>> +
+>>> +pub(crate) trait FalconFirmware {
+>>> +    type Target: FalconEngine;
+>>> +
+>>> +    /// Returns the DMA handle of the object containing the firmware.
+>>> +    fn dma_handle(&self) -> bindings::dma_addr_t;
+>>> +
+>>> +    /// Returns the load parameters for `IMEM`.
+>>> +    fn imem_load(&self) -> FalconLoadTarget;
+>>> +
+>>> +    /// Returns the load parameters for `DMEM`.
+>>> +    fn dmem_load(&self) -> FalconLoadTarget;
+>>> +
+>>> +    /// Returns the parameters to write into the BROM registers.
+>>> +    fn brom_params(&self) -> FalconBromParams;
+>>> +
+>>> +    /// Returns the start address of the firmware.
+>>> +    fn boot_addr(&self) -> u32;
+>>> +}
+>>> +
+>>> +/// Contains the base parameters common to all Falcon instances.
+>>> +pub(crate) struct Falcon<E: FalconEngine> {
+>>> +    pub hal: Arc<dyn FalconHal<E>>,
+>>
+>> This should probably be private and instead should be exposed via Deref.
+> 
+> Agreed - actually not all the HAL is supposed to be exposed, so I've
+> added a proxy method for the only method that needs to be called from
+> outside this module.
+> 
+>>
+>> Also, please see my comment at create_falcon_hal() regarding the dynamic
+>> dispatch.
+>>
+>>> +}
+>>> +
+>>> +impl<E: FalconEngine + 'static> Falcon<E> {
+>>> +    pub(crate) fn new(
+>>> +        pdev: &pci::Device,
+>>> +        chipset: Chipset,
+>>> +        bar: &Devres<Bar0>,
+>>> +        need_riscv: bool,
+>>> +    ) -> Result<Self> {
+>>> +        let hwcfg1 = with_bar!(bar, |b| regs::FalconHwcfg1::read(b, E::BASE))?;
+>>> +        // Ensure that the revision and security model contain valid values.
+>>> +        let _rev = hwcfg1.core_rev()?;
+>>> +        let _sec_model = hwcfg1.security_model()?;
+>>> +
+>>> +        if need_riscv {
+>>> +            let hwcfg2 = with_bar!(bar, |b| regs::FalconHwcfg2::read(b, E::BASE))?;
+>>> +            if !hwcfg2.riscv() {
+>>> +                dev_err!(
+>>> +                    pdev.as_ref(),
+>>> +                    "riscv support requested on falcon that does not support it\n"
+>>> +                );
+>>> +                return Err(EINVAL);
+>>> +            }
+>>> +        }
+>>> +
+>>> +        Ok(Self {
+>>> +            hal: hal::create_falcon_hal(chipset)?,
+>>
+>> I'd prefer to move the contents of create_falcon_hal() into this constructor.
+> 
+> I think it is actually beneficial to have this in a dedicated method:
+> that way the individual HAL constructors do not need to be visible to
+> the `falcon` module and can be contained in the `hal` sub-module, which
+> I think helps keeping things at their place. Is there a good reason to
+> prefer doing it here?
+> 
+> Ah, maybe you are thinking that we are returning a Boxed HAL because we
+> are going through this function? It's actually on purpose - see below.
+> 
+>>> +pub(crate) struct Gsp;
+>>> +impl FalconEngine for Gsp {
+>>> +    const BASE: usize = 0x00110000;
+>>> +}
+>>> +
+>>> +pub(crate) type GspFalcon = Falcon<Gsp>;
+>>
+>> Please drop this type alias, Falcon<Gsp> seems simple enough and is much more
+>> obvious IMHO.
+> 
+> Yeah, I wanted to avoid having to import two symbols into the gpu
+> module, but I've probably been overthinking it again.
+> 
+>>
+>>> +
+>>> +impl Falcon<Gsp> {
+>>> +    /// Clears the SWGEN0 bit in the Falcon's IRQ status clear register to
+>>> +    /// allow GSP to signal CPU for processing new messages in message queue.
+>>> +    pub(crate) fn clear_swgen0_intr(&self, bar: &Devres<Bar0>) -> Result<()> {
+>>> +        with_bar!(bar, |b| regs::FalconIrqsclr::default()
+>>> +            .set_swgen0(true)
+>>> +            .write(b, Gsp::BASE))
+>>> +    }
+>>> +}
+>>> diff --git a/drivers/gpu/nova-core/falcon/hal.rs b/drivers/gpu/nova-core/falcon/hal.rs
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..5ebf4e88f1f25a13cf47859a53507be53e795d34
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/nova-core/falcon/hal.rs
+>>> @@ -0,0 +1,54 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +use kernel::devres::Devres;
+>>> +use kernel::prelude::*;
+>>> +use kernel::sync::Arc;
+>>> +
+>>> +use crate::driver::Bar0;
+>>> +use crate::falcon::{FalconBromParams, FalconEngine};
+>>> +use crate::gpu::Chipset;
+>>> +use crate::timer::Timer;
+>>> +
+>>> +mod ga102;
+>>> +
+>>> +/// Hardware Abstraction Layer for Falcon cores.
+>>> +///
+>>> +/// Implements chipset-specific low-level operations. The trait is generic against [`FalconEngine`]
+>>> +/// so its `BASE` parameter can be used in order to avoid runtime bound checks when accessing
+>>> +/// registers.
+>>> +pub(crate) trait FalconHal<E: FalconEngine>: Sync {
+>>> +    // Activates the Falcon core if the engine is a risvc/falcon dual engine.
+>>> +    fn select_core(&self, _bar: &Devres<Bar0>, _timer: &Timer) -> Result<()> {
+>>> +        Ok(())
+>>> +    }
+>>> +
+>>> +    fn get_signature_reg_fuse_version(
+>>> +        &self,
+>>> +        bar: &Devres<Bar0>,
+>>> +        engine_id_mask: u16,
+>>> +        ucode_id: u8,
+>>> +    ) -> Result<u32>;
+>>> +
+>>> +    // Program the BROM registers prior to starting a secure firmware.
+>>> +    fn program_brom(&self, bar: &Devres<Bar0>, params: &FalconBromParams) -> Result<()>;
+>>> +}
+>>> +
+>>> +/// Returns a boxed falcon HAL adequate for the passed `chipset`.
+>>> +///
+>>> +/// We use this function and a heap-allocated trait object instead of statically defined trait
+>>> +/// objects because of the two-dimensional (Chipset, Engine) lookup required to return the
+>>> +/// requested HAL.
+>>
+>> Do we really need the dynamic dispatch? AFAICS, there's only E::BASE that is
+>> relevant to FalconHal impls?
+>>
+>> Can't we do something like I do in the following example [1]?
+>>
+>> ```
+>> use std::marker::PhantomData;
+>> use std::ops::Deref;
+>>
+>> trait Engine {
+>>     const BASE: u32;
+>> }
+>>
+>> trait Hal<E: Engine> {
+>>     fn access(&self);
+>> }
+>>
+>> struct Gsp;
+>>
+>> impl Engine for Gsp {
+>>     const BASE: u32 = 0x1;
+>> }
+>>
+>> struct Sec2;
+>>
+>> impl Engine for Sec2 {
+>>     const BASE: u32 = 0x2;
+>> }
+>>
+>> struct GA100<E: Engine>(PhantomData<E>);
+>>
+>> impl<E: Engine> Hal<E> for GA100<E> {
+>>     fn access(&self) {
+>>         println!("Base: {}", E::BASE);
+>>     }
+>> }
+>>
+>> impl<E: Engine> GA100<E> {
+>>     fn new() -> Self {
+>>         Self(PhantomData)
+>>     }
+>> }
+>>
+>> //struct Falcon<E: Engine>(GA100<E>);
+>>
+>> struct Falcon<H: Hal<E>, E: Engine>(H, PhantomData<E>);
+>>
+>> impl<H: Hal<E>, E: Engine> Falcon<H, E> {
+>>     fn new(hal: H) -> Self {
+>>         Self(hal, PhantomData)
+>>     }
+>> }
+>>
+>> impl<H: Hal<E>, E: Engine> Deref for Falcon<H, E> {
+>>     type Target = H;
+>>
+>>     fn deref(&self) -> &Self::Target {
+>>         &self.0
+>>     }
+>> }
+>>
+>> fn main() {
+>>     let gsp = Falcon::new(GA100::<Gsp>::new());
+>>     let sec2 = Falcon::new(GA100::<Sec2>::new());
+>>
+>>     gsp.access();
+>>     sec2.access();
+>> }
+>> ```
+>>
+>> [1] https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&gist=bf7035a07e79a4047fb6834eac03a9f2
+> 
+> So are you have noticed there are two dimensions from which the falcons
+> can be instantiated:
+> 
+> - The engine, which determines its register BASE,
+> - The HAL, which is determined by the chipset.
+> 
+> For the engine, I want to keep things static for the main reason that if
+> BASE was dynamic, we would have to do all our IO using
+> try_read()/try_write() and check for an out-of-bounds error at each
+> register access. The cost of monomorphization is limited as there are
+> only a handful of engines.
+> 
+> But the HAL introduces a second dimension to this, and if we support N
+> engines then the amount of monomorphized code would then increase by N
+> for each new HAL we add. Chipsets are released at a good cadence, so
+> this is the dimension that risks growing the most.
+> 
+> It is also the one that makes use of methods to abstract things (vs.
+> fixed parameters), so it is a natural candidate for using virtual
+> methods. I am not a fan of having ever-growing boilerplate match
+> statements for each method that needs to be abstracted, especially since
+> this is that virtual methods do without requiring extra code, and for a
+> runtime penalty that is completely negligible in our context and IMHO
+> completely balanced by the smaller binary size that results from their
+> use.
+Adding to what Alex said, note that the runtime cost is still there even without
+using dyn. Because at runtime, the match conditionals need to route function
+calls to the right place. I am just not seeing the benefits of not using dyn for
+this use case and only drawbacks. IMHO, we should try to not be doing the
+compiler's job.
 
-I like this :) Ryan - that work for you, or do you feel _batched_ should be
-dropped here?
+Maybe the only benefit is you don't need an Arc or Kbox wrapper?
 
->
-> >
-> > We definitely need to mention in comment or name or _somewhere_ the intent
-> > and motivation for this.
-> >
-> > > +{
-> > > +	pte_t pte, tmp_pte;
-> > > +
-> >
-> > are we not validating what 'nr' is? Even with debug asserts? I'm not sure I
-> > love this interface, where you require the user to know the number of
-> > remaining PTE entries in a PTE table.
->
-> Shall I write in the comments that the range is supposed to be within a PTE
-> table?
+ - Joel
 
-Yeah that'd be helpful I think thanks!
-
->
-> >
-> > > +	pte = ptep_modify_prot_start(vma, addr, ptep);
-> > > +	while (--nr) {
-> >
-> > This loop is a bit horrible. It seems needlessly confusing and you're in
-> > _dire_ need of comments to explain what's going on.
->
-> Again, following the pattern of get_and_clear_full_ptes :)
-
-Yeah, see discussion with Ryan :>)
-
-> >
-> > So my understanding is, you have the user figure out:
-> >
-> > nr = min(nr_pte_entries_in_pte, nr_pgs_in_folio)
-> >
-> > Then, you want to return the pte entry belonging to the start of the large
-> > folio batch, but you want to adjust that pte value to propagate dirty and
-> > young page table flags if any page table entries within the range contain
-> > those page table flags, having called ptep_modify_prot_start() on all of
-> > them?
-> >
-> > This is quite a bit to a. put in a header like this and b. not
-> > comment/explain.
-> >
-> > So maybe something like:
-> >
-> > pte = ptep_modify_prot_start(vma, addr, ptep);
-> >
-> > /* Iterate through large folio tail PTEs. */
-> > for (pg = 1; pg < nr; pg++) {
-> > 	pte_t inner_pte;
-> >
-> > 	ptep++;
-> > 	addr += PAGE_SIZE;
-> >
-> > 	inner_pte = ptep_modify_prot_start(vma, addr, ptep);
-> >
-> > 	/* We must propagate A/D state from tail PTEs. */
-> > 	if (pte_dirty(inner_pte))
-> > 		pte = pte_mkdirty(pte);
-> > 	if (pte_young(inner_pte))
-> > 		pte = pte_mkyoung(pte);
-> > }
-> >
-> > Would work better?
->
-> No preference, I'll do this then.
-
-Thanks!
-
->
-> >
-> >
-> >
-> > > +		ptep++;
-> > > +		addr += PAGE_SIZE;
-> > > +		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
-> >
-> >
-> >
-> > > +		if (pte_dirty(tmp_pte))
-> > > +			pte = pte_mkdirty(pte);
-> > > +		if (pte_young(tmp_pte))
-> > > +			pte = pte_mkyoung(pte);
-> >
-> > Why are you propagating these?
->
-> Because the a/d bits are per-folio; and, this will help us batch around
-> can_change_pte_writable (return pte_dirty(pte)) and, batch around
-> pte_needs_flush() for parisc.
-
-Understood, thanks!
-
->
-> >
-> > > +	}
-> > > +	return pte;
-> > > +}
-> > > +#endif
-> > > +
-> > > +/* See the comment for ptep_modify_prot_commit */
-> >
-> > Same comments as above, needs more meat on the bones!
-> >
-> > > +#ifndef modify_prot_commit_ptes
-> > > +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
-> >
-> > Again need to reference large folio, batched or something relevant here,
-> > 'ptes' is super vague.
-> >
-> > > +		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
-> >
-> > Nit, but you put 'p' suffix on ptep but not on 'old_pte'?
->
-> Because ptep is a pointer, and old_pte isn't.
-
-Oops :P :) sorry, this is me being a little 'slow' here... I missed that. Carry
-on then :P
-
->
-> >
-> > I'm even more concerned about the 'nr' API here now.
-> >
-> > So this is now a user-calculated:
-> >
-> > min3(large_folio_pages, number of pte entries left in ptep,
-> > 	number of pte entries left in old_pte)
-> >
-> > It really feels like something that should be calculated here, or at least
-> > be broken out more clearly.
-> >
-> > You definitely _at the very least_ need to document it in a comment.
-> >
-> > > +{
-> > > +	for (;;) {
-> > > +		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-> > > +		if (--nr == 0)
-> > > +			break;
-> >
-> > Why are you doing an infinite loop here with a break like this? Again feels
-> > needlessly confusing.
->
-> Following wrprotect_ptes().
-> I agree that this is confusing, which is why I thought why it was done in
-> the first place :) but I just followed what already is.
-> I'll change this to a simple for loop if that is your inclination.
-
-No, I guess let's keep it as-is, Ryan pointed out there are perf considerations
-here. This one is a lot less egregious.
-
->
-> >
-> > I think it's ok to duplicate this single line for the sake of clarity,
-> > also.
-> >
-> > Which gives us:
-> >
-> > unsigned long pg;
-> >
-> > ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-> > for (pg = 1; pg < nr; pg++) {
-> > 	ptep++;
-> > 	addr += PAGE_SIZE;
-> > 	old_pte = pte_next_pfn(old_pte);
-> > 	pte = pte_next_pfn(pte);
-> >
-> > 	ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-> > }
-> >
-> > There are alternative approaches, but I think doing an infinite loop that
-> > breaks and especially the confusing 'if (--foo) break;' stuff is much
-> > harder to parse than a super simple ranged loop.
-> >
-> > > +		ptep++;
-> > > +		addr += PAGE_SIZE;
-> > > +		old_pte = pte_next_pfn(old_pte);
-> > > +		pte = pte_next_pfn(pte);
-> > > +	}
-> > > +}
-> > > +#endif
-> > > +
-> > >   /*
-> > >    * On some architectures hardware does not set page access bit when accessing
-> > >    * memory page, it is responsibility of software setting this bit. It brings
-> > > --
-> > > 2.30.2
-> > >
->
-
-Thanks, Lorenzo
