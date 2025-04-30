@@ -1,158 +1,82 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0848EA921;
-	Wed, 30 Apr 2025 05:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D95C1E32D6;
+	Wed, 30 Apr 2025 05:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745990310; cv=none; b=MTv0wR0CDkqDc2UTzAGgojOQvyDX4MASycQ0EjoToNjd6SzttJcKLMujMIkKRl6k+p0OcHZ3VPV7qWU2rS2fTQAi/OANWfUfOHKBFNZpvLxgMNQiI6lFLoN7GJtRz+cWk7qLDJDewEHFdsCAIdObVnABNbF0MwtXcaAorOkW9jk=
+	t=1745990311; cv=none; b=izwDDBNX90DINOs+53qK9o1WueI84JtWlkNj5tu+hDhUmlDz8JViNcizIM4rujYAhoODNHY3MQFqkxQelli4Z5JovCDOw38uYSE/91mN+bofIc5T9STXIBfYGPzN5V1OwinDo4DnBDzmbNoTvI7ruP6D5/ysaxO3P+t5ZUnwQz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745990310; c=relaxed/simple;
-	bh=lPl54U/qqBrHjOX1YYhAPaRKXabra0RM17t6IxKVe2A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=osNxxO39TN401Mq0dHQ2UX2OElwV4AE5yN5gVEpP9QhsgVdkWq/vprWEfxt0Fya+5fYz+L65EmqS7m2yqjPDIzMxE8V0x2FrfIYRbHBAVJNyFxwnN4m52HyOf9EUgsxwjj00cOh5vh2oFHSSLieudoy5iDT32JxtAV4I/ClNLq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Z0nbmGqB; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1745990311; c=relaxed/simple;
+	bh=vJNafRqavmjLD9aDj+IFuyQdV0eiO+Scf8aHDP3rM74=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hcf1SYmO+/rBK8Wv6oztkrTk7ZzX8sskxNAGqHzLsEoe0oidK1d58rEkjiGIwzKimepUdJmt3ytI1TGGgtAk7qLCnfk/oTcSRb9o4grZgOudHv0uhyrkBBwEGbHAZM5AZGnb5hGuR1ag2CamFW+JePHXZr7lKfLRCaGREAJGelw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8OTW4Ye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Z0nbmGqB"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1B7891026CE8F;
-	Wed, 30 Apr 2025 07:18:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745990304; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=TErDts74dOF/38EZE2pPpZ6LyWNto2lM7fBOGJnyoqw=;
-	b=Z0nbmGqBGuQlaK0UMu2UDILnle5P3mLp60rmNGS8qhDWHsnD4O04A5jd9zCa7/Y2FRyrZu
-	FKqEzf4b+i2PvcjOncAgHPSHNV05TQJBRllYjDduBiQbsBC11+uX+OEKHyKG5WFuUBD+ch
-	wNO2JvFLqNfi8NJov1ua437F69uIX/C75euS7DlOWOZz2DAG+ifmFgs6GtFeg4VgDu+pha
-	vNROB6Sv8Odfxij8Rthj3T0mT/ZG8ZMghL6P6dCmJD+L5k93exVEOE7NDiBi7UdhzDWDGC
-	d0SUK/U7m4R7Tnr5RNAArxdJ9AjfKYoqQ5LUvLgtur40xXCCQQ+zGnpwq8P/xQ==
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next v9 0/7] net: mtip: Add support for MTIP imx287 L2 switch driver
-Date: Wed, 30 Apr 2025 07:17:49 +0200
-Message-Id: <20250430051756.574067-1-lukma@denx.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8OTW4Ye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0091C4CEE9;
+	Wed, 30 Apr 2025 05:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745990310;
+	bh=vJNafRqavmjLD9aDj+IFuyQdV0eiO+Scf8aHDP3rM74=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=N8OTW4YeWxaseH8T9vSS8ev8gTx72VRN7NqVbT+7JCutPUf+99l4WTa4mlQavvjD6
+	 atRLJ3ipMQjodipS4RqZI9MjDLS0nYvuWGpUR6qYzH9XkxSf538QCyeHkZ83162EQ3
+	 bqNB7hENbcM980H8/BLc9+t0/lQDGG52+5Rr+k3CM9m4rMS+sOxE8Cc6Le3AuP8Iee
+	 EwKSiwI8O54VsgwwYVDpHDO+trDq4doTeNnN506/oUj3Cep/YLk+r5dSmZ7adCB/zI
+	 L+Sy8GDNPXclynuA8jdFpVLmNwMTgoPvbTRn/46jhz3VNhZB0a8lndYENYZ5mTOJ8b
+	 0qM7or8q/CuYA==
+Date: Wed, 30 Apr 2025 07:18:25 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: brendan.higgins@linux.dev, davidgow@google.com, rmoar@google.com,
+ corbet@lwn.net, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] kunit: add tips to clean source tree to build help
+ message
+Message-ID: <20250430071825.1e196cb1@foz.lan>
+In-Reply-To: <dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
+References: <cover.1745965121.git.skhan@linuxfoundation.org>
+	<dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This patch series adds support for More Than IP's L2 switch driver embedded
-in some NXP's SoCs. This one has been tested on imx287, but is also available
-in the vf610.
+Em Tue, 29 Apr 2025 16:27:12 -0600
+Shuah Khan <skhan@linuxfoundation.org> escreveu:
 
-In the past there has been performed some attempts to upstream this driver:
+> Add tips to clean source tree to build help message. When user run
+> kunit.py after building another kernel for ARCH=foo, it is necessary
+> to run 'make ARCH=foo mrproper' to remove all build artifacts generated
+> during the build. In such cases, kunit build could fail.
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  tools/testing/kunit/kunit.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+> index 7f9ae55fd6d5..db86a396ed33 100755
+> --- a/tools/testing/kunit/kunit.py
+> +++ b/tools/testing/kunit/kunit.py
+> @@ -583,7 +583,7 @@ def main(argv: Sequence[str]) -> None:
+>  						'the options in .kunitconfig')
+>  	add_common_opts(config_parser)
+>  
+> -	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
+> +	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests. Successful build depends on a clean source tree. Run mrproper to clean generated artifcats for prior ARCH=foo kernel build. Run 'make ARCH=foo mrproper')
+>  	add_common_opts(build_parser)
+>  	add_build_opts(build_parser)
+>  
+Would be better instead to detect if the last build was not done
+by kunit.py and call "make mrproper" inside kunit.py?
 
-1. The 4.19-cip based one [1]
-2. DSA based one for 5.12 [2] - i.e. the switch itself was treat as a DSA switch
-   with NO tag appended.
-3. The extension for FEC driver for 5.12 [3] - the trick here was to fully reuse
-   FEC when the in-HW switching is disabled. When bridge offloading is enabled,
-   the driver uses already configured MAC and PHY to also configure PHY.
-
-All three approaches were not accepted as eligible for upstreaming.
-
-The driver from this series has floowing features:
-
-1. It is fully separated from fec_main - i.e. can be used interchangeable
-   with it. To be more specific - one can build them as modules and
-   if required switch between them when e.g. bridge offloading is required.
-
-   To be more specific:
-        - Use FEC_MAIN: When one needs support for two ETH ports with separate
-          uDMAs used for both and bridging can be realized in SW.
-
-        - Use MTIPL2SW: When it is enough to support two ports with only uDMA0
-          attached to switch and bridging shall be offloaded to HW. 
-
-2. This driver uses MTIP's L2 switch internal VLAN feature to provide port
-   separation at boot time. Port separation is disabled when bridging is
-   required.
-
-3. Example usage:
-        Configuration:
-        ip link set lan0 up; sleep 1;
-        ip link set lan1 up; sleep 1;
-        ip link add name br0 type bridge;
-        ip link set br0 up; sleep 1;
-        ip link set lan0 master br0;
-        ip link set lan1 master br0;
-        bridge link;
-        ip addr add 192.168.2.17/24 dev br0;
-        ping -c 5 192.168.2.222
-
-        Removal:
-        ip link set br0 down;
-        ip link delete br0 type bridge;
-        ip link set dev lan1 down
-        ip link set dev lan0 down
-
-4. Limitations:
-        - Driver enables and disables switch operation with learning and ageing.
-        - Missing is the advanced configuration (e.g. adding entries to FBD). This is
-          on purpose, as up till now we didn't had consensus about how the driver
-          shall be added to Linux.
-
-Links:
-[1] - https://github.com/lmajewski/linux-imx28-l2switch/commits/master
-[2] - https://github.com/lmajewski/linux-imx28-l2switch/tree/imx28-v5.12-L2-upstream-RFC_v1
-[3] - https://source.denx.de/linux/linux-imx28-l2switch/-/tree/imx28-v5.12-L2-upstream-switchdev-RFC_v1?ref_type=heads
-
-Lukasz Majewski (7):
-  dt-bindings: net: Add MTIP L2 switch description
-  ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2 switch description
-  ARM: dts: nxp: mxs: Adjust XEA board's DTS to support L2 switch
-  net: mtip: The L2 switch driver for imx287
-  ARM: mxs_defconfig: Enable CONFIG_NFS_FSCACHE
-  ARM: mxs_defconfig: Update mxs_defconfig to 6.15-rc1
-  ARM: mxs_defconfig: Enable CONFIG_FEC_MTIP_L2SW to support MTIP L2
-    switch
-
- .../bindings/net/nxp,imx28-mtip-switch.yaml   |  149 ++
- MAINTAINERS                                   |    7 +
- arch/arm/boot/dts/nxp/mxs/imx28-xea.dts       |   56 +
- arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |    9 +-
- arch/arm/configs/mxs_defconfig                |   13 +-
- drivers/net/ethernet/freescale/Kconfig        |    1 +
- drivers/net/ethernet/freescale/Makefile       |    1 +
- drivers/net/ethernet/freescale/mtipsw/Kconfig |   13 +
- .../net/ethernet/freescale/mtipsw/Makefile    |    4 +
- .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 1978 +++++++++++++++++
- .../net/ethernet/freescale/mtipsw/mtipl2sw.h  |  771 +++++++
- .../ethernet/freescale/mtipsw/mtipl2sw_br.c   |  120 +
- .../ethernet/freescale/mtipsw/mtipl2sw_mgnt.c |  436 ++++
- 13 files changed, 3547 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/Kconfig
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/Makefile
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_mgnt.c
-
--- 
-2.39.5
-
+Thanks,
+Mauro
