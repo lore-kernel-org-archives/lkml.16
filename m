@@ -1,195 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A190420C00C;
-	Wed, 30 Apr 2025 11:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6749235041
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012238; cv=none; b=ppPTm7Xl5YgzBA7a2kQMYp7kAbgJ6nfivoYfX/FGi5iCjVe4xcN8byr12oO+LTCLhjnm1O8A1pRoawdaS1kdv6NMSgWkz9MZzPQse7TugKUgvPNM6hWEYiDFUe7Mv0qWkCnh/RsY/aiZJZVq1ioqUekd4jLXzKUIJgCa5H63JwY=
+	t=1746012268; cv=none; b=WAT4Q9a1SVyxwshUKJFbzpAQG6yDZ2IFoZIwyih0f4a+A4cm+xX8jY6rCOh5Xp4vVK+gQP7CaibUvBXtKu/h3FMBnD9CTJsRDNEWze6b2QBL9txqBa3HDwVXAVC45S3VxIdyr6Ay2Lu9kDvUKBcx3zIbM5awwB4yenl4gnum/Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012238; c=relaxed/simple;
-	bh=+cKJuVrv6mu3F3XLqTDdTVwEQs3UEVa20t8ObcadCjM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lrXFcPg+HwVEc2alcwXSO0ywciQdT89r2+jJRxvijdTR/RAI62rwmZm7izyG/JDaH96gx+HZnX9TC1mcvFhKhgiFzMtHCT7MjUm53DjaLIFOSgPcgEN/DjuYowKQcSxPPRUrjfbE4xNmfQuK2lYq3pS1cjSTNsobzjufQ5uhyqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7UvqYa2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746012268; c=relaxed/simple;
+	bh=bZ9kSFAVhqilvJIaWIIW4kFg/TXFgNtCq3Cxyroer+A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rivhpsk9amtge2/XwNa5tifE/g0y1Z1w5Qpwo8l2dH1xgOLC/LoPzDzgEpV+tZKnV+bYt49yGunPPYdVbiQUkuLC6Ny+Mwo1uLDW1Xdbgy5huiCkNCZjZItigtekge5kqqIt1dmpF2p5C42NNhBvQhDdLaQXI2eXTabKxS00fd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BS5reHCn; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7UvqYa2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B2A2C4CEE9;
-	Wed, 30 Apr 2025 11:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746012238;
-	bh=+cKJuVrv6mu3F3XLqTDdTVwEQs3UEVa20t8ObcadCjM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=V7UvqYa2MSiQwq9FPpQl+b7Nv7EFIUHbAJ6aJh/UfmpGtZ8v8HcLFDwipz/dKHoTQ
-	 yyDg/K+e3LbnOruu9DfVC67mFaA+FKzKWyzcpVfsBtcFfSH+yXLAL/4vXCavZTOvBk
-	 UHlYZvwvhSdZE45CnXQnuXEoDFexAmsVsd5c6IOoTSfVu7tDgksy3p04k80DmxRNvS
-	 Cy67146zBy+aSMPXIxVtQAmbZmd8aGxnfY5HHk4blaPmI+1v+HCjKjJxV6fy2OU+dX
-	 Tdd+ZgHZ/3JP84B9mPUufNiZiSfBbHoxGoyKA+k26Psfj5l43yCEh8m6pmuwvGpDKX
-	 pMDE85+ZfW99w==
-From: Conor Dooley <conor@kernel.org>
-To: linux-i2c@vger.kernel.org
-Cc: conor@kernel.org,
-	prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] i2c: microchip-corei2c: add smbus support
-Date: Wed, 30 Apr 2025 12:23:39 +0100
-Message-ID: <20250430-preview-dormitory-85191523283d@spud>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BS5reHCn"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ea256f039so53177055e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:24:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746012265; x=1746617065; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iGAQKQ/aFDiQw4O9FsIPSw4ATD056ucQ6toOWszUxRs=;
+        b=BS5reHCnuqhD2WfC50evTyC4i8EXWu+HzQaTrTkW0VoNU+vkGywDo4+ZAi4T2FHbt3
+         aQS7zprOi9BXIaI2YXDlppf967fDzqmsbHsi0iVsT2ZbG6vMamfulkur/PRcoEC28nZt
+         QJJeY1J+08vBFzne2HkcBtaXiADRBjIDJ1YrgZTq1ED9q+P0vKbhjisMvCUqB9E5gN8R
+         XdBUexfKY/RcGhl+dLlpbXwx0/dZc/zmQjUMnaRep9FvyexQfyxnnEpWMtY9kgig+Ck3
+         5gMdIURySife6yn9g3JfHJNO8vDaNwL44KTM37/lkfaP/0DcQDYjvb6y+vtl0FQILqNH
+         M74Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746012265; x=1746617065;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iGAQKQ/aFDiQw4O9FsIPSw4ATD056ucQ6toOWszUxRs=;
+        b=t+nFjuwclLbxAMrDjTc1tUUsZXLt+gD9WMyS1QBEr4Nyu2mIQ9qlGdy5tdxOb+ltt2
+         VnFECTO96C2+EK/IWx07qIkENRBuWdWY88nLCmd5JLNFDljXmpAJ5kpUwhEA78n1LUJK
+         8fjc7Tn2Ju8gMQcSmIE0H23DW83Z/fxVWEMTpC2hBoRXyYBo3Syf2qdoWC/1Vb/tRbEi
+         Xv6iTu4LRJBRF2XmfdSJ8BodlbVRJl/BHHGi8XOmUSFBsYfq5DxSn/drfg/+KTjna0l+
+         LVsghhDNm6AgIntOqL794QmfW6u/GhlFD96tUh0sAueShEmgkl1nkAng+rZnnQ59vU37
+         JDGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAkgK877xyM66u901L2bgLE1KcWOica4phfUDZQMTPfqxjkee+cXRmdgAwYpdM8BuMkFI38VTiRvJame0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg/DGwgx7ofgZ2ksWM8+pVM6TKQkzDfTs+3EWyWs/Lr9sZeZXh
+	ui8lwZPMRphyQPbIy4STg33OSbtvgW6EJcm44SvnrhVc6qgZghZ/eYcmVY8rZc3U1NAzCJgY29F
+	xr5kkMlfC437eow==
+X-Google-Smtp-Source: AGHT+IFZHSdjjbSkHsQWG96/54Z9SMWj0Byc+ibvdGn0cXkoGVoUOZbYA7xLDo1rlzsYAJbkrQ/4Qd5WN7KPU6U=
+X-Received: from wmbes26.prod.google.com ([2002:a05:600c:811a:b0:43c:fd99:1b7e])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:500d:b0:43d:b32:40aa with SMTP id 5b1f17b1804b1-441b50210bemr2935555e9.3.1746012265231;
+ Wed, 30 Apr 2025 04:24:25 -0700 (PDT)
+Date: Wed, 30 Apr 2025 11:24:23 +0000
+In-Reply-To: <2025042925-kindly-squash-fa6f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4773; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=2Hmg/cLZzXgULghrfpO4UhHKZF4LEVjUpZ6KOXOTqJ0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBlCHNb5TPltNvxzF3zbsMBtodaGk/69clmnBdsfsgsmi WWYborpKGVhEONgkBVTZEm83dcitf6Pyw7nnrcwc1iZQIYwcHEKwER4oxn+yj587HfzViRj3bJc VUvtjet+cm2Z/s/k3MyyVI3drVsY/jL8z7Fdv/4EQ8Yvh9q78sfi1SbMM3HbIKj5u/fDkbneU6T vMQMA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
+ <20250429-vec-methods-v4-7-dad4436ff82d@google.com> <2025042925-kindly-squash-fa6f@gregkh>
+Message-ID: <aBIIZ64_Wsk1unB2@google.com>
+Subject: Re: [PATCH v4 7/7] rust: alloc: add Vec::insert_within_capacity
+From: Alice Ryhl <aliceryhl@google.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-From: prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>
+On Tue, Apr 29, 2025 at 05:30:06PM +0200, Greg KH wrote:
+> On Tue, Apr 29, 2025 at 02:44:27PM +0000, Alice Ryhl wrote:
+> > This adds a variant of Vec::insert that does not allocate memory. This
+> > makes it safe to use this function while holding a spinlock. Rust Binder
+> > uses it for the range allocator fast path.
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > ---
+> >  rust/kernel/alloc/kvec.rs | 39 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> > 
+> > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> > index 0682108951675cbee05faa130e5a9ce72fc343ba..998afdcde47bec94b2c9d990ba3afbb3488ea99e 100644
+> > --- a/rust/kernel/alloc/kvec.rs
+> > +++ b/rust/kernel/alloc/kvec.rs
+> > @@ -355,6 +355,45 @@ pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
+> >          unsafe { self.inc_len(1) };
+> >      }
+> >  
+> > +    /// Inserts an element at the given index in the [`Vec`] instance.
+> > +    ///
+> > +    /// Fails if the vector does not have capacity for the new element. Panics if the index is out
+> > +    /// of bounds.
+> 
+> Why panic and why not just return an error instead?
 
-In this driver the supported SMBUS commands are smbus_quick,
-smbus_byte, smbus_byte_data, smbus_word_data and smbus_block_data.
+It's for consistency with stdlib. Illegal use is panic, expected error
+conditions are errors.
 
-Signed-off-by: prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-smbus block read is not tested, due to lack of hardware, but is supported
-by the controller, although we have tested smbus i2c block read.
-
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Andi Shyti <andi.shyti@kernel.org>
-CC: linux-i2c@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/i2c/busses/i2c-microchip-corei2c.c | 102 +++++++++++++++++++++
- 1 file changed, 102 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-microchip-corei2c.c b/drivers/i2c/busses/i2c-microchip-corei2c.c
-index 5db73429125c0..492bf4c34722c 100644
---- a/drivers/i2c/busses/i2c-microchip-corei2c.c
-+++ b/drivers/i2c/busses/i2c-microchip-corei2c.c
-@@ -76,6 +76,8 @@
- #define CORE_I2C_FREQ		(0x14)
- #define CORE_I2C_GLITCHREG	(0x18)
- #define CORE_I2C_SLAVE1_ADDR	(0x1c)
-+#define CORE_I2C_SMBUS_MSG_WR	(0x0)
-+#define CORE_I2C_SMBUS_MSG_RD	(0x1)
- 
- #define PCLK_DIV_960	(CTRL_CR2)
- #define PCLK_DIV_256	(0)
-@@ -424,9 +426,109 @@ static u32 mchp_corei2c_func(struct i2c_adapter *adap)
- 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
- }
- 
-+static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned short flags,
-+				   char read_write, u8 command,
-+				   int size, union i2c_smbus_data *data)
-+{
-+	struct i2c_msg msgs[2];
-+	struct mchp_corei2c_dev *idev = i2c_get_adapdata(adap);
-+	u8 tx_buf[I2C_SMBUS_BLOCK_MAX + 2];
-+	u8 rx_buf[I2C_SMBUS_BLOCK_MAX + 1];
-+	int num_msgs = 1;
-+
-+	msgs[CORE_I2C_SMBUS_MSG_WR].addr = addr;
-+	msgs[CORE_I2C_SMBUS_MSG_WR].flags = 0;
-+
-+	if (read_write == I2C_SMBUS_READ && size <= I2C_SMBUS_BYTE)
-+		msgs[CORE_I2C_SMBUS_MSG_WR].flags = I2C_M_RD;
-+
-+	if (read_write == I2C_SMBUS_WRITE && size <= I2C_SMBUS_WORD_DATA)
-+		msgs[CORE_I2C_SMBUS_MSG_WR].len = size;
-+
-+	if (read_write == I2C_SMBUS_WRITE && size > I2C_SMBUS_BYTE) {
-+		msgs[CORE_I2C_SMBUS_MSG_WR].buf = tx_buf;
-+		msgs[CORE_I2C_SMBUS_MSG_WR].buf[0] = command;
-+	}
-+
-+	if (read_write == I2C_SMBUS_READ && size >= I2C_SMBUS_BYTE_DATA) {
-+		msgs[CORE_I2C_SMBUS_MSG_WR].buf = tx_buf;
-+		msgs[CORE_I2C_SMBUS_MSG_WR].buf[0] = command;
-+		msgs[CORE_I2C_SMBUS_MSG_RD].addr = addr;
-+		msgs[CORE_I2C_SMBUS_MSG_RD].flags = I2C_M_RD;
-+		num_msgs = 2;
-+	}
-+
-+	if (read_write == I2C_SMBUS_READ && size > I2C_SMBUS_QUICK)
-+		msgs[CORE_I2C_SMBUS_MSG_WR].len = 1;
-+
-+	switch (size) {
-+	case I2C_SMBUS_QUICK:
-+		msgs[CORE_I2C_SMBUS_MSG_WR].buf = NULL;
-+		return 0;
-+	case I2C_SMBUS_BYTE:
-+		if (read_write == I2C_SMBUS_WRITE)
-+			msgs[CORE_I2C_SMBUS_MSG_WR].buf = &command;
-+		else
-+			msgs[CORE_I2C_SMBUS_MSG_WR].buf = &data->byte;
-+		break;
-+	case I2C_SMBUS_BYTE_DATA:
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			msgs[CORE_I2C_SMBUS_MSG_WR].buf[1] = data->byte;
-+		} else {
-+			msgs[CORE_I2C_SMBUS_MSG_RD].len = size - 1;
-+			msgs[CORE_I2C_SMBUS_MSG_RD].buf = &data->byte;
-+		}
-+		break;
-+	case I2C_SMBUS_WORD_DATA:
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			msgs[CORE_I2C_SMBUS_MSG_WR].buf[1] = data->word & 0xFF;
-+			msgs[CORE_I2C_SMBUS_MSG_WR].buf[2] = (data->word >> 8) & 0xFF;
-+		} else {
-+			msgs[CORE_I2C_SMBUS_MSG_RD].len = size - 1;
-+			msgs[CORE_I2C_SMBUS_MSG_RD].buf = rx_buf;
-+		}
-+		break;
-+	case I2C_SMBUS_BLOCK_DATA:
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			int data_len;
-+
-+			data_len = data->block[0];
-+			msgs[CORE_I2C_SMBUS_MSG_WR].len = data_len + 2;
-+			for (int i = 0; i <= data_len; i++)
-+				msgs[CORE_I2C_SMBUS_MSG_WR].buf[i + 1] = data->block[i];
-+		} else {
-+			msgs[CORE_I2C_SMBUS_MSG_RD].len = I2C_SMBUS_BLOCK_MAX + 1;
-+			msgs[CORE_I2C_SMBUS_MSG_RD].buf = rx_buf;
-+		}
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	mchp_corei2c_xfer(&idev->adapter, msgs, num_msgs);
-+	if (read_write == I2C_SMBUS_WRITE || size <= I2C_SMBUS_BYTE_DATA)
-+		return 0;
-+
-+	switch (size) {
-+	case I2C_SMBUS_WORD_DATA:
-+		data->word = (rx_buf[0] | (rx_buf[1] << 8));
-+		break;
-+	case I2C_SMBUS_BLOCK_DATA:
-+		if (rx_buf[0] > I2C_SMBUS_BLOCK_MAX)
-+			rx_buf[0] = I2C_SMBUS_BLOCK_MAX;
-+		/* As per protocol first member of block is size of the block. */
-+		for (int i = 0; i <= rx_buf[0]; i++)
-+			data->block[i] = rx_buf[i];
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct i2c_algorithm mchp_corei2c_algo = {
- 	.master_xfer = mchp_corei2c_xfer,
- 	.functionality = mchp_corei2c_func,
-+	.smbus_xfer = mchp_corei2c_smbus_xfer,
- };
- 
- static int mchp_corei2c_probe(struct platform_device *pdev)
--- 
-2.45.2
-
+Alice
