@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ACD27A46A
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C784C27C84E
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035482; cv=none; b=M9hgECsohkaF7I4prc59dIEs4oGrd4bPWROq+G7GaGck21tpgDW1H14jLcUcvRlaAU8dHV2otEOYNN3d9MOXEgBk9E0RmGQYa+pFYXkDPVPfpe/TfoO/buxMAteJHIvGix8N+aetX4cf3UppXQXR5DOMduNBPX9872TFh5Cznbc=
+	t=1746035487; cv=none; b=cF3LTV4X1U7+4npJvDiez7GNueI48whJ9NzekRKLzf7OiMvVeqGp7Rp8Y1vBjDU6FvvwJSvzXUFDQb9gyOXuTV+uEIhWb+kkkseHVbwz5HEYyYQBnRGajBXe9EXYv8iuxwycfVPmgeRN7OFn5CNxn2PjcXh9nkfBb4XcyFUPJ7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035482; c=relaxed/simple;
-	bh=8fUvmcCfcU8Tw+ki/2jvsLxr8hwntY+/GFRMDV3sc6U=;
+	s=arc-20240116; t=1746035487; c=relaxed/simple;
+	bh=VX6L3472i4JrkQfafhGxmLWLhYQmX/Pu0zWoIZo9xAA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QT6eJOK84byEBHv1J1qLRrj15Mvg6aWmotJ2Cfp35M5YG0hpJ6V0zQ8LI5t2wc2l8UuFDCr2A0u5q0nqupKXFBthgfU3LuoLHY43ZZv0aGcwUghFrU2cSfjkg8dDgMGLDlQheFuqrp5PowCMehPrbnjDouLcaYdkLuaCDS7ZkY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sHxLg+IG; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=iqc5W3vTiO5STLYNYP9W+YpEKiVZ5Bz379WmlbHFyjd3Z2jkVzaCmdZTqeUGsq3/U7VKKXRlm+fc8EANY43HMXTAFKokdQluaNgZlcQGY2kW+z+kQ+hK4Mk7zq1RAZJV7Xj4Pp/YWi9OzPAG/VURiC2yUvvdW6sx4etE28r6HEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xW3Xjt1v; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sHxLg+IG"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2242ade807fso1668175ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xW3Xjt1v"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af8f28f85a7so52876a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035478; x=1746640278; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035484; x=1746640284; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5VByBxzpcreX5DTUA6Sm8JC14Gwzq94oy/vZRvFjOKc=;
-        b=sHxLg+IGNZccEfoMXEbPZPGqWU2eaCFLDiUQjxSJFLy6Pt8cIlFZuziueSucwFh1Kg
-         tDEoJ7YqzSnQ+XNzvBtGQwWmxmgSBj3qv1Asl8jecu11x+HGDSOB0xfJ+Xzm1Ui3QpBN
-         b2qQBBdjRua3AoGHXwQsEhP03Nv4jf8Sznfqm2IaiT4ETotloljbp/hGQN5yxkQMXEKu
-         u+jv8mpvqqoka/506kOO6Gf8hZ5Wlda3A3nffZZSKBWPcey0dK2Z1JSoAGcf7ma8iMEx
-         uRaoDTDJca+pDcwlNrsW1Ud9KMJEzna78OPjXIF/IP9n3Tny9xvK2uLnWm92c0VI+BBJ
-         fPYg==
+        bh=9YNDwC3oIEDhZClEpn/Abs2CW1Pq59XIsZ3g8aB84/k=;
+        b=xW3Xjt1vNF2/icWtvryn5G3p/G6AqSAjEkZiJ3nuo2mIkfsWhBnGW/tAoBmyIV0DeP
+         xyPA7+/27aCybnoAnImsmaNv15wuDUI2lWp/lEbg1yphxI2AJGDOK/v5YiNaLQMGQNZk
+         IcqJA7syADkj9JtyX3P7Lx3ielxU2+GniyxCelsqL4PJAT2Od1iYC9m3Ew0h/U+8tTiF
+         D2wRbpMn3ZBfwPcwcfXVatOTyCENa5YYbMUFNQsUybhxXmSPJyRU1NqFtZKv+44NIdZn
+         EnC8ygFFj+7ATTam2dlNPalxkieDFR84uFAmcX8ao1d8+YFul/x4T5NkeTl2qtDtW+Qs
+         NF6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035478; x=1746640278;
+        d=1e100.net; s=20230601; t=1746035484; x=1746640284;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5VByBxzpcreX5DTUA6Sm8JC14Gwzq94oy/vZRvFjOKc=;
-        b=CnL6qOuLBSRZy0dT50B6hsh0n+EXrpvb5X7XpFWXGrPNJBPytFOuM+ks6TzvD4FhQC
-         K7EspiMMozn8mitUggjPCfRllch5uTDsnJ/xqIoEnTebHazq5z+PQogxJsvZZq1mH/DV
-         SpvNY5cqruzuYwr74LdJhh2HlXepaETV7yVLJ20J0UBTCClLzTwdCVtOmK1g8UsvL7WR
-         VtIsgk/lFiLJpiN6VwVlTeNCXeiwiIHiCuUDTgVErWZGSBeLoElpmWCMVEoNrxC3r5mJ
-         /grbMLS63v84EOFtREfBnQkTI1p/FFxPCQCAtRiEOV+cS9ZMZGuTzuopz4Szh7BrInTh
-         2A3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVcPLFMQc5ZitvRa6I35+6VkbR9Z9kqlgrunQBzlDrkuAPyuXpNjtp3h9TZwYANv+ZPLQI7VORYwDzxvKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH8VTu3IHXtbs5LwKAWZvObNCONnF1THVKoOsMefWSM18viFal
-	jPu9O4Y/WarZrHjD4nxn6Q6ClFBdZIay2sMy4+CQhv09EhtL6TbLThOUfTVnFw5FVcDA33lSBFg
-	KPzNadQ==
-X-Google-Smtp-Source: AGHT+IHaomKMe2ovrdmhc21II8sFQnM6kbtVNrtQceZ+Q75T3X+4U4JjkFLW8j347ABowJm6hoW1g2jKS+Ds
-X-Received: from plch17.prod.google.com ([2002:a17:902:f2d1:b0:227:e9e8:7153])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c952:b0:223:f7ec:f834
- with SMTP id d9443c01a7336-22df35066ddmr66885885ad.31.1746035477516; Wed, 30
- Apr 2025 10:51:17 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:49:58 -0700
+        bh=9YNDwC3oIEDhZClEpn/Abs2CW1Pq59XIsZ3g8aB84/k=;
+        b=l3IMHVk1gHb9PEdty26rlTPbJ48HKLHVEPfZlUd60PZYJx9xvsvRtgHXJ3l4tU0OLk
+         ta1mwBo3LZmc9VQtDWCsW9jaAXUXiIrP+P7T8wcBI3ikN4ibJ23za2CfP/mS50rzRqkL
+         sEeFnVt6c7JS1oNR+b+w5PR5wBL71SxORBfqJh59nprykUxhK3tyJbzB34FkUiyrFsrH
+         WhmbsmnbTwY7Gpys1n7yi7OYuPR069w/sNK+V67rMhtyM4E0HWVsabzMSpIX+7vKvShQ
+         /XZxq6DuYr8tm77HVKa8SXMBqerfawXBty/cL9k1o84DsfXnN/O8QfkK+KoMZXWZSStM
+         ufsA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+npOpwlVifykm2kf3sVNoX8eHmbZodep6egjl7fJk9ghUcJ/8DEQIyavu3DemUho8Rpr9nk+FP4/uNbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGxw5ISfL+Q/jb4LJmdKRTM/A8vKS7sKExGDgCsF/jkDyn3rYI
+	5el2jmStXFBRXpcdcW6EK2ukJxvdRDNNrKp7sLAVMpt9muYC3tm6lRXeQKYTZwmesET0XvNiK+P
+	btY9skg==
+X-Google-Smtp-Source: AGHT+IFyafFOLODZtlLUZ4SAqt/4nbRDEmlR3bAZZbbzYAWGepLJ5AUduDFVX4vNjlHCCAGb/csW+ll6bldY
+X-Received: from pgll63.prod.google.com ([2002:a63:2542:0:b0:b16:9964:4283])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:a4c4:b0:1f5:9098:e42e
+ with SMTP id adf61e73a8af0-20ba6a18946mr186677637.7.1746035483831; Wed, 30
+ Apr 2025 10:51:23 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:01 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-11-irogers@google.com>
-Subject: [PATCH v2 10/47] perf arch x86: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-14-irogers@google.com>
+Subject: [PATCH v2 13/47] perf trace-event: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,509 +116,211 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/tests/bp-modify.c         |  2 +-
- tools/perf/arch/x86/util/intel-bts.c          |  4 +-
- tools/perf/arch/x86/util/intel-pt.c           | 10 ++---
- tools/perf/arch/x86/util/iostat.c             |  2 +-
- tools/perf/arch/x86/util/kvm-stat.c           |  6 +--
- tools/perf/arch/x86/util/perf_regs.c          |  3 +-
- tools/perf/arch/x86/util/topdown.c            |  2 +-
- tools/perf/util/intel-bts.c                   |  4 +-
- .../util/intel-pt-decoder/intel-pt-decoder.c  | 30 +++++++--------
- .../intel-pt-decoder/intel-pt-insn-decoder.c  |  2 +-
- .../perf/util/intel-pt-decoder/intel-pt-log.c |  2 +-
- .../intel-pt-decoder/intel-pt-pkt-decoder.c   |  2 +-
- tools/perf/util/intel-pt.c                    | 38 +++++++++----------
- 13 files changed, 54 insertions(+), 53 deletions(-)
+ tools/perf/util/python.c                      |  4 ++--
+ .../scripting-engines/trace-event-python.c    | 13 ++++++-----
+ tools/perf/util/trace-event-info.c            |  3 ++-
+ tools/perf/util/trace-event-parse.c           |  2 +-
+ tools/perf/util/trace-event-read.c            | 23 +++++++++----------
+ tools/perf/util/trace-event-scripting.c       |  2 +-
+ 6 files changed, 24 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/arch/x86/tests/bp-modify.c b/tools/perf/arch/x86/tests/bp-modify.c
-index 0924ccd9e36d..0bbc81fe9b1d 100644
---- a/tools/perf/arch/x86/tests/bp-modify.c
-+++ b/tools/perf/arch/x86/tests/bp-modify.c
-@@ -37,7 +37,7 @@ static int spawn_child(void)
- 		 * waits in signal for parent to trace it,
- 		 * then it calls bp_1 and quits.
- 		 */
--		int err = ptrace(PTRACE_TRACEME, 0, NULL, NULL);
-+		int err = (int)ptrace(PTRACE_TRACEME, 0, NULL, NULL);
- 
- 		if (err) {
- 			pr_debug("failed to PTRACE_TRACEME\n");
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index 85c8186300c8..1692ee735109 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -169,7 +169,7 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
- 			size_t sz = opts->auxtrace_snapshot_size;
- 
- 			sz = round_up(sz, page_size) / page_size;
--			opts->auxtrace_mmap_pages = roundup_pow_of_two(sz);
-+			opts->auxtrace_mmap_pages = (unsigned int)roundup_pow_of_two(sz);
- 		}
- 		if (opts->auxtrace_snapshot_size >
- 				opts->auxtrace_mmap_pages * (size_t)page_size) {
-@@ -347,7 +347,7 @@ static int intel_bts_snapshot_finish(struct auxtrace_record *itr)
- 
- static bool intel_bts_first_wrap(u64 *data, size_t buf_size)
- {
--	int i, a, b;
-+	size_t i, a, b;
- 
- 	b = buf_size >> 3;
- 	a = b - 512;
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 8f235d8b67b6..842dba02f082 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -418,7 +418,7 @@ static int intel_pt_track_switches(struct evlist *evlist)
- 
- 	evsel = evlist__add_sched_switch(evlist, true);
- 	if (IS_ERR(evsel)) {
--		err = PTR_ERR(evsel);
-+		err = (int)PTR_ERR(evsel);
- 		pr_debug2("%s: failed to create %s, error = %d\n",
- 			  __func__, sched_switch, err);
- 		return err;
-@@ -692,7 +692,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 			size_t sz = opts->auxtrace_snapshot_size;
- 
- 			sz = round_up(sz, page_size) / page_size;
--			opts->auxtrace_mmap_pages = roundup_pow_of_two(sz);
-+			opts->auxtrace_mmap_pages = (unsigned int)roundup_pow_of_two(sz);
- 		}
- 		if (opts->auxtrace_snapshot_size >
- 				opts->auxtrace_mmap_pages * (size_t)page_size) {
-@@ -726,7 +726,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 		if (!opts->auxtrace_mmap_pages) {
- 			size_t sz = round_up(max_sz, page_size) / page_size;
- 
--			opts->auxtrace_mmap_pages = roundup_pow_of_two(sz);
-+			opts->auxtrace_mmap_pages = (unsigned int)roundup_pow_of_two(sz);
- 		}
- 		if (max_sz > opts->auxtrace_mmap_pages * (size_t)page_size) {
- 			pr_err("Sample size %zu must not be greater than AUX area tracing mmap size %zu\n",
-@@ -772,7 +772,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 
- 	if (!opts->auxtrace_snapshot_mode && !opts->auxtrace_sample_mode) {
- 		size_t aw = opts->auxtrace_mmap_pages * (size_t)page_size / 4;
--		u32 aux_watermark = aw > UINT_MAX ? UINT_MAX : aw;
-+		u32 aux_watermark = aw > UINT_MAX ? UINT_MAX : (u32)aw;
- 
- 		intel_pt_evsel->core.attr.aux_watermark = aux_watermark;
- 	}
-@@ -1093,7 +1093,7 @@ static bool intel_pt_wrapped(struct intel_pt_recording *ptr, int idx,
- 
- static bool intel_pt_first_wrap(u64 *data, size_t buf_size)
- {
--	int i, a, b;
-+	size_t i, a, b;
- 
- 	b = buf_size >> 3;
- 	a = b - 512;
-diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
-index 7442a2cd87ed..ed508698dc22 100644
---- a/tools/perf/arch/x86/util/iostat.c
-+++ b/tools/perf/arch/x86/util/iostat.c
-@@ -305,7 +305,7 @@ static int iostat_event_group(struct evlist *evl,
- 	  uncore_iio_%x/event=0x83,umask=0x01,ch_mask=0xF,fc_mask=0x07/,\
- 	  uncore_iio_%x/event=0xc0,umask=0x04,ch_mask=0xF,fc_mask=0x07/,\
- 	  uncore_iio_%x/event=0xc0,umask=0x01,ch_mask=0xF,fc_mask=0x07/}";
--	const int len_template = strlen(iostat_cmd_template) + 1;
-+	const size_t len_template = strlen(iostat_cmd_template) + 1;
- 	struct evsel *evsel = NULL;
- 	int metrics_count = iostat_metrics_count();
- 	char *iostat_cmd = calloc(len_template, 1);
-diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
-index 424716518b75..6e97198b055a 100644
---- a/tools/perf/arch/x86/util/kvm-stat.c
-+++ b/tools/perf/arch/x86/util/kvm-stat.c
-@@ -31,7 +31,7 @@ static void mmio_event_get_key(struct evsel *evsel, struct perf_sample *sample,
- 			       struct event_key *key)
- {
- 	key->key  = evsel__intval(evsel, sample, "gpa");
--	key->info = evsel__intval(evsel, sample, "type");
-+	key->info = (int)evsel__intval(evsel, sample, "type");
- }
- 
- #define KVM_TRACE_MMIO_READ_UNSATISFIED 0
-@@ -94,7 +94,7 @@ static void ioport_event_get_key(struct evsel *evsel,
- 				 struct event_key *key)
- {
- 	key->key  = evsel__intval(evsel, sample, "port");
--	key->info = evsel__intval(evsel, sample, "rw");
-+	key->info = (int)evsel__intval(evsel, sample, "rw");
- }
- 
- static bool ioport_event_begin(struct evsel *evsel,
-@@ -138,7 +138,7 @@ static void msr_event_get_key(struct evsel *evsel,
- 				 struct event_key *key)
- {
- 	key->key  = evsel__intval(evsel, sample, "ecx");
--	key->info = evsel__intval(evsel, sample, "write");
-+	key->info = (int)evsel__intval(evsel, sample, "write");
- }
- 
- static bool msr_event_begin(struct evsel *evsel,
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 12fd93f04802..ed0c564dad7e 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -195,7 +195,8 @@ static void sdt_rename_register(char *sdt_reg, int sdt_len, char *uprobe_reg)
- int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- {
- 	char new_reg[SDT_REG_NAME_SIZE] = {0};
--	int new_len = 0, ret;
-+	int ret;
-+	size_t new_len = 0;
- 	/*
- 	 * rm[0]:  +/-NUM(REG)
- 	 * rm[1]:  +/-
-diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-index d1c654839049..c93c35c46145 100644
---- a/tools/perf/arch/x86/util/topdown.c
-+++ b/tools/perf/arch/x86/util/topdown.c
-@@ -43,7 +43,7 @@ bool arch_is_topdown_slots(const struct evsel *evsel)
- 
- bool arch_is_topdown_metrics(const struct evsel *evsel)
- {
--	int config = evsel->core.attr.config;
-+	__u64 config = evsel->core.attr.config;
- 	const char *name_from_config;
- 	struct perf_pmu *pmu;
- 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 3625c6224750..2598df776d4e 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -850,9 +850,9 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 	bts->session = session;
- 	bts->machine = &session->machines.host; /* No kvm support */
- 	bts->auxtrace_type = auxtrace_info->type;
--	bts->pmu_type = auxtrace_info->priv[INTEL_BTS_PMU_TYPE];
-+	bts->pmu_type = (u32)auxtrace_info->priv[INTEL_BTS_PMU_TYPE];
- 	bts->tc.time_shift = auxtrace_info->priv[INTEL_BTS_TIME_SHIFT];
--	bts->tc.time_mult = auxtrace_info->priv[INTEL_BTS_TIME_MULT];
-+	bts->tc.time_mult = (u32)auxtrace_info->priv[INTEL_BTS_TIME_MULT];
- 	bts->tc.time_zero = auxtrace_info->priv[INTEL_BTS_TIME_ZERO];
- 	bts->cap_user_time_zero =
- 			auxtrace_info->priv[INTEL_BTS_CAP_USER_TIME_ZERO];
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index e733f6b1f7ac..abb891f778cb 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -841,7 +841,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
- 		if (!data->have_tma)
- 			return 0;
- 
--		mtc = pkt_info->packet.payload;
-+		mtc = (uint32_t)pkt_info->packet.payload;
- 		if (decoder->mtc_shift > 8 && data->fixup_last_mtc) {
- 			data->fixup_last_mtc = false;
- 			intel_pt_fixup_last_mtc(mtc, decoder->mtc_shift,
-@@ -904,7 +904,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
- 		if (!decoder->tsc_ctc_ratio_d)
- 			return 0;
- 
--		ctc = pkt_info->packet.payload;
-+		ctc = (uint32_t)pkt_info->packet.payload;
- 		fc = pkt_info->packet.count;
- 		ctc_rem = ctc & decoder->ctc_rem_mask;
- 
-@@ -930,7 +930,7 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
- 		return 0;
- 
- 	case INTEL_PT_CBR:
--		cbr = pkt_info->packet.payload;
-+		cbr = (uint32_t)pkt_info->packet.payload;
- 		if (data->cbr && data->cbr != cbr)
- 			return 1;
- 		data->cbr = cbr;
-@@ -1268,7 +1268,7 @@ static void intel_pt_mode_exec_status(struct intel_pt_decoder *decoder)
- {
- 	bool iflag = decoder->packet.count & INTEL_PT_IFLAG;
- 
--	decoder->exec_mode = decoder->packet.payload;
-+	decoder->exec_mode = (int)decoder->packet.payload;
- 	decoder->iflag = iflag;
- 	decoder->next_iflag = iflag;
- 	decoder->state.from_iflag = iflag;
-@@ -1279,7 +1279,7 @@ static void intel_pt_mode_exec(struct intel_pt_decoder *decoder)
- {
- 	bool iflag = decoder->packet.count & INTEL_PT_IFLAG;
- 
--	decoder->exec_mode = decoder->packet.payload;
-+	decoder->exec_mode = (int)decoder->packet.payload;
- 	decoder->next_iflag = iflag;
- }
- 
-@@ -1331,7 +1331,7 @@ static bool intel_pt_fup_event(struct intel_pt_decoder *decoder, bool no_tip)
- 		if (!ip && decoder->pge)
- 			decoder->state.type |= INTEL_PT_BRANCH;
- 		decoder->state.cfe_type = decoder->fup_cfe_pkt.count;
--		decoder->state.cfe_vector = decoder->fup_cfe_pkt.payload;
-+		decoder->state.cfe_vector = (int)decoder->fup_cfe_pkt.payload;
- 		decoder->state.evd_cnt = decoder->evd_cnt;
- 		decoder->state.evd = decoder->evd;
- 		decoder->evd_cnt = 0;
-@@ -1906,7 +1906,7 @@ static inline void intel_pt_mtc_cyc_cnt_upd(struct intel_pt_decoder *decoder)
- 
- static void intel_pt_calc_tma(struct intel_pt_decoder *decoder)
- {
--	uint32_t ctc = decoder->packet.payload;
-+	uint32_t ctc = (uint32_t)decoder->packet.payload;
- 	uint32_t fc = decoder->packet.count;
- 	uint32_t ctc_rem = ctc & decoder->ctc_rem_mask;
- 
-@@ -1943,7 +1943,7 @@ static void intel_pt_calc_mtc_timestamp(struct intel_pt_decoder *decoder)
- 	if (!decoder->have_tma)
- 		return;
- 
--	mtc = decoder->packet.payload;
-+	mtc = (uint32_t)decoder->packet.payload;
- 
- 	if (decoder->mtc_shift > 8 && decoder->fixup_last_mtc) {
- 		decoder->fixup_last_mtc = false;
-@@ -2044,7 +2044,7 @@ static void intel_pt_bbp(struct intel_pt_decoder *decoder)
- 		memset(decoder->state.items.mask, 0, sizeof(decoder->state.items.mask));
- 		decoder->state.items.is_32_bit = false;
- 	}
--	decoder->blk_type = decoder->packet.payload;
-+	decoder->blk_type = (enum intel_pt_blk_type)decoder->packet.payload;
- 	decoder->blk_type_pos = intel_pt_blk_type_pos(decoder->blk_type);
- 	if (decoder->blk_type == INTEL_PT_GP_REGS)
- 		decoder->state.items.is_32_bit = decoder->packet.count;
-@@ -2488,12 +2488,12 @@ static uint64_t intel_pt_calc_expected_tsc(struct intel_pt_decoder *decoder,
- static uint64_t intel_pt_expected_tsc(struct intel_pt_decoder *decoder,
- 				      struct intel_pt_vm_tsc_info *data)
- {
--	uint32_t ctc = data->tma_packet.payload;
-+	uint32_t ctc = (uint32_t)data->tma_packet.payload;
- 	uint32_t fc = data->tma_packet.count;
- 
- 	return intel_pt_calc_expected_tsc(decoder, ctc, fc,
- 					  decoder->ctc_timestamp,
--					  data->ctc_delta, data->last_ctc);
-+					  data->ctc_delta, (uint32_t)data->last_ctc);
- }
- 
- static void intel_pt_translate_vm_tsc(struct intel_pt_decoder *decoder,
-@@ -2889,7 +2889,7 @@ static int intel_pt_vm_time_correlation(struct intel_pt_decoder *decoder)
- 			break;
- 
- 		case INTEL_PT_BBP:
--			decoder->blk_type = decoder->packet.payload;
-+			decoder->blk_type = (enum intel_pt_blk_type)decoder->packet.payload;
- 			break;
- 
- 		case INTEL_PT_BIP:
-@@ -3825,7 +3825,7 @@ static int intel_pt_part_psb(struct intel_pt_decoder *decoder)
- 		if (i > decoder->len)
- 			continue;
- 		if (!memcmp(end - i, INTEL_PT_PSB_STR, i))
--			return i;
-+			return (int)i;
- 	}
- 	return 0;
- }
-@@ -3839,7 +3839,7 @@ static int intel_pt_rest_psb(struct intel_pt_decoder *decoder, int part_psb)
- 	    memcmp(decoder->buf, psb + part_psb, rest_psb))
- 		return 0;
- 
--	return rest_psb;
-+	return (int)rest_psb;
- }
- 
- static int intel_pt_get_split_psb(struct intel_pt_decoder *decoder,
-@@ -3898,7 +3898,7 @@ static int intel_pt_scan_for_psb(struct intel_pt_decoder *decoder)
- 			continue;
- 		}
- 
--		decoder->pkt_step = next - decoder->buf;
-+		decoder->pkt_step = (int)(next - decoder->buf);
- 		return intel_pt_get_next_packet(decoder);
- 	}
- }
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-index 8fabddc1c0da..03e34afb69a3 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
-@@ -193,7 +193,7 @@ int intel_pt_get_insn(const unsigned char *buf, size_t len, int x86_64,
- 	struct insn insn;
- 	int ret;
- 
--	ret = insn_decode(&insn, buf, len,
-+	ret = insn_decode(&insn, buf, (int)len,
- 			  x86_64 ? INSN_MODE_64 : INSN_MODE_32);
- 	if (ret < 0 || insn.length > len)
- 		return -1;
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-log.c b/tools/perf/util/intel-pt-decoder/intel-pt-log.c
-index ef55d6232cf0..324692a45d42 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-log.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-log.c
-@@ -232,7 +232,7 @@ void __intel_pt_log_insn(struct intel_pt_insn *intel_pt_insn, uint64_t ip)
- 
- 	if (len > INTEL_PT_INSN_BUF_SZ)
- 		len = INTEL_PT_INSN_BUF_SZ;
--	intel_pt_print_data(intel_pt_insn->buf, len, ip, 8);
-+	intel_pt_print_data(intel_pt_insn->buf, (int)len, ip, 8);
- 	if (intel_pt_insn_desc(intel_pt_insn, desc, INTEL_PT_INSN_DESC_MAX) > 0)
- 		fprintf(f, "%s\n", desc);
- 	else
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-index 94fb16cf9e0c..8f2d7aab9ca4 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
-@@ -713,7 +713,7 @@ int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf,
- 		if (ret < 0)
- 			return ret;
- 		blen -= ret;
--		return buf_len - blen;
-+		return (int)(buf_len - blen);
- 	}
- 	case INTEL_PT_TIP_PGD:
- 	case INTEL_PT_TIP_PGE:
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 4e8a9b172fbc..037ccedf5d89 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -557,7 +557,7 @@ static int intel_pt_config_div(const char *var, const char *value, void *data)
- 	if (!strcmp(var, "intel-pt.cache-divisor")) {
- 		val = strtol(value, NULL, 0);
- 		if (val > 0 && val <= INT_MAX)
--			*d = val;
-+			*d = (int)val;
- 	}
- 
- 	return 0;
-@@ -589,7 +589,7 @@ static unsigned int intel_pt_cache_size(struct dso *dso,
- 		return 10;
- 	if (size > (1 << 21))
- 		return 21;
--	return 32 - __builtin_clz(size);
-+	return 32 - __builtin_clz((unsigned int)size);
- }
- 
- static struct auxtrace_cache *intel_pt_cache(struct dso *dso,
-@@ -635,7 +635,7 @@ static int intel_pt_cache_add(struct dso *dso, struct machine *machine,
- 	e->rel = intel_pt_insn->rel;
- 	memcpy(e->insn, intel_pt_insn->buf, INTEL_PT_INSN_BUF_SZ);
- 
--	err = auxtrace_cache__add(c, offset, &e->entry);
-+	err = auxtrace_cache__add(c, (u32)offset, &e->entry);
- 	if (err)
- 		auxtrace_cache__free_entry(c, e);
- 
-@@ -650,7 +650,7 @@ intel_pt_cache_lookup(struct dso *dso, struct machine *machine, u64 offset)
- 	if (!c)
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index f3c05da25b4a..f55b2b7435ad 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -305,7 +305,7 @@ tracepoint_field(const struct pyrf_event *pe, struct tep_format_field *field)
+ 		len    = field->size;
+ 		if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+ 			val     = tep_read_number(pevent, data + offset, len);
+-			offset  = val;
++			offset  = (unsigned int)val;
+ 			len     = offset >> 16;
+ 			offset &= 0xffff;
+ 			if (tep_field_is_relative(field->flags))
+@@ -599,7 +599,7 @@ static PyObject *pyrf_thread_map__item(PyObject *obj, Py_ssize_t i)
+ 	if (i >= perf_thread_map__nr(pthreads->threads))
  		return NULL;
  
--	return auxtrace_cache__lookup(dso__auxtrace_cache(dso), offset);
-+	return auxtrace_cache__lookup(dso__auxtrace_cache(dso), (u32)offset);
+-	return Py_BuildValue("i", perf_thread_map__pid(pthreads->threads, i));
++	return Py_BuildValue("i", (int)perf_thread_map__pid(pthreads->threads, (int)i));
  }
  
- static void intel_pt_cache_invalidate(struct dso *dso, struct machine *machine,
-@@ -661,7 +661,7 @@ static void intel_pt_cache_invalidate(struct dso *dso, struct machine *machine,
- 	if (!c)
- 		return;
- 
--	auxtrace_cache__remove(dso__auxtrace_cache(dso), offset);
-+	auxtrace_cache__remove(dso__auxtrace_cache(dso), (u32)offset);
+ static PySequenceMethods pyrf_thread_map__sequence_methods = {
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 520729e78965..547eeb45a832 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -713,9 +713,10 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
+ 			_PyUnicode_FromString(decode));
  }
  
- static inline bool intel_pt_guest_kernel_ip(uint64_t ip)
-@@ -1101,7 +1101,7 @@ static unsigned int intel_pt_mtc_period(struct intel_pt *pt)
+-static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, char *bf, int size)
++static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, char *bf, size_t size)
+ {
+-	unsigned int i = 0, r;
++	unsigned int i = 0;
++	u64 r;
+ 	int printed = 0;
  
- 	evlist__for_each_entry(pt->session->evlist, evsel) {
- 		if (intel_pt_get_config(pt, &evsel->core.attr, &config))
--			return (config & pt->mtc_freq_bits) >> shift;
-+			return (unsigned int)((config & pt->mtc_freq_bits) >> shift);
+ 	bf[0] = 0;
+@@ -731,7 +732,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
+ 
+ 		printed += scnprintf(bf + printed, size - printed,
+ 				     "%5s:0x%" PRIx64 " ",
+-				     perf_reg_name(r, arch), val);
++				     perf_reg_name((int)r, arch), val);
  	}
- 	return 0;
  }
-@@ -2424,7 +2424,7 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
- 	struct intel_pt_pebs_event *pe;
- 	struct intel_pt *pt = ptq->pt;
- 	int err = -EINVAL;
--	int hw_id;
-+	size_t hw_id;
  
- 	if (!items->has_applicable_counters || !items->applicable_counters) {
- 		if (!pt->single_pebs)
-@@ -2435,9 +2435,10 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
- 	for_each_set_bit(hw_id, (unsigned long *)&items->applicable_counters, INTEL_PT_MAX_PEBS) {
- 		pe = &ptq->pebs[hw_id];
- 		if (!pe->evsel) {
--			if (!pt->single_pebs)
--				pr_err("PEBS-via-PT record with no matching event, hw_id %d\n",
-+			if (!pt->single_pebs) {
-+				pr_err("PEBS-via-PT record with no matching event, hw_id %zu\n",
- 				       hw_id);
-+			}
- 			return intel_pt_synth_single_pebs_sample(ptq);
- 		}
- 		err = intel_pt_do_synth_pebs_sample(ptq, pe->evsel, pe->id);
-@@ -3272,7 +3273,7 @@ static int intel_pt_process_switch(struct intel_pt *pt,
- 	if (evsel != pt->switch_evsel)
+@@ -744,7 +745,7 @@ static int set_regs_in_dict(PyObject *dict,
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	const char *arch = perf_env__arch(evsel__env(evsel));
+ 
+-	int size = (__sw_hweight64(attr->sample_regs_intr) * MAX_REG_SIZE) + 1;
++	size_t size = (__sw_hweight64(attr->sample_regs_intr) * MAX_REG_SIZE) + 1;
+ 	char *bf = NULL;
+ 
+ 	if (sample->intr_regs) {
+@@ -957,7 +958,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 		Py_FatalError(handler_name);
+ 	}
+ 
+-	pid = raw_field_value(event, "common_pid", data);
++	pid = (int)raw_field_value(event, "common_pid", data);
+ 
+ 	sprintf(handler_name, "%s__%s", event->system, event->name);
+ 
+@@ -1017,7 +1018,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+ 				val     = tep_read_number(scripting_context->pevent,
+ 							  data + offset, len);
+-				offset  = val;
++				offset  = (unsigned int)val;
+ 				len     = offset >> 16;
+ 				offset &= 0xffff;
+ 				if (tep_field_is_relative(field->flags))
+diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+index c8755679281e..0f012890ff21 100644
+--- a/tools/perf/util/trace-event-info.c
++++ b/tools/perf/util/trace-event-info.c
+@@ -45,7 +45,8 @@ static int record_file(const char *file, ssize_t hdr_sz)
+ 	unsigned long long size = 0;
+ 	char buf[BUFSIZ], *sizep;
+ 	off_t hdr_pos = lseek(output_fd, 0, SEEK_CUR);
+-	int r, fd;
++	int fd;
++	ssize_t r;
+ 	int err = -EIO;
+ 
+ 	fd = open(file, O_RDONLY);
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
+index 9c015fc2bcfb..982cbbc57168 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -34,7 +34,7 @@ static int get_common_field(struct scripting_context *context,
+ 		*size = field->size;
+ 	}
+ 
+-	return tep_read_number(pevent, context->event_data + *offset, *size);
++	return (int)tep_read_number(pevent, context->event_data + *offset, *size);
+ }
+ 
+ int common_lock_depth(struct scripting_context *context)
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index ecbbb93f0185..78a3b3801d69 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -25,18 +25,18 @@ static int input_fd;
+ static ssize_t trace_data_size;
+ static bool repipe;
+ 
+-static int __do_read(int fd, void *buf, int size)
++static int __do_read(int fd, void *buf, size_t size)
+ {
+-	int rsize = size;
++	int rsize = (int)size;
+ 
+ 	while (size) {
+-		int ret = read(fd, buf, size);
++		ssize_t ret = read(fd, buf, size);
+ 
+ 		if (ret <= 0)
+ 			return -1;
+ 
+ 		if (repipe) {
+-			int retw = write(STDOUT_FILENO, buf, ret);
++			ssize_t retw = write(STDOUT_FILENO, buf, ret);
+ 
+ 			if (retw <= 0 || retw != ret) {
+ 				pr_debug("repiping input file");
+@@ -51,14 +51,13 @@ static int __do_read(int fd, void *buf, int size)
+ 	return rsize;
+ }
+ 
+-static int do_read(void *data, int size)
++static int do_read(void *data, size_t size)
+ {
+ 	int r;
+ 
+ 	r = __do_read(input_fd, data, size);
+ 	if (r <= 0) {
+-		pr_debug("reading input file (size expected=%d received=%d)",
+-			 size, r);
++		pr_debug("reading input file (size expected=%zd received=%d)", size, r);
+ 		return -1;
+ 	}
+ 
+@@ -68,10 +67,10 @@ static int do_read(void *data, int size)
+ }
+ 
+ /* If it fails, the next read will report it */
+-static void skip(int size)
++static void skip(unsigned long long size)
+ {
+ 	char buf[BUFSIZ];
+-	int r;
++	unsigned long long r;
+ 
+ 	while (size) {
+ 		r = size > BUFSIZ ? BUFSIZ : size;
+@@ -86,7 +85,7 @@ static unsigned int read4(struct tep_handle *pevent)
+ 
+ 	if (do_read(&data, 4) < 0)
  		return 0;
+-	return tep_read_number(pevent, &data, 4);
++	return (unsigned int)tep_read_number(pevent, &data, 4);
+ }
  
--	tid = evsel__intval(evsel, sample, "next_pid");
-+	tid = (pid_t)evsel__intval(evsel, sample, "next_pid");
- 	cpu = sample->cpu;
+ static unsigned long long read8(struct tep_handle *pevent)
+@@ -119,7 +118,7 @@ static char *read_string(void)
+ 		}
  
- 	intel_pt_log("sched_switch: cpu %d tid %d time %"PRIu64" tsc %#"PRIx64"\n",
-@@ -4258,14 +4259,14 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 	pt->session = session;
- 	pt->machine = &session->machines.host; /* No kvm support */
- 	pt->auxtrace_type = auxtrace_info->type;
--	pt->pmu_type = auxtrace_info->priv[INTEL_PT_PMU_TYPE];
-+	pt->pmu_type = (u32)auxtrace_info->priv[INTEL_PT_PMU_TYPE];
- 	pt->tc.time_shift = auxtrace_info->priv[INTEL_PT_TIME_SHIFT];
--	pt->tc.time_mult = auxtrace_info->priv[INTEL_PT_TIME_MULT];
-+	pt->tc.time_mult = (u32)auxtrace_info->priv[INTEL_PT_TIME_MULT];
- 	pt->tc.time_zero = auxtrace_info->priv[INTEL_PT_TIME_ZERO];
- 	pt->cap_user_time_zero = auxtrace_info->priv[INTEL_PT_CAP_USER_TIME_ZERO];
- 	pt->tsc_bit = auxtrace_info->priv[INTEL_PT_TSC_BIT];
- 	pt->noretcomp_bit = auxtrace_info->priv[INTEL_PT_NORETCOMP_BIT];
--	pt->have_sched_switch = auxtrace_info->priv[INTEL_PT_HAVE_SCHED_SWITCH];
-+	pt->have_sched_switch = (int)auxtrace_info->priv[INTEL_PT_HAVE_SCHED_SWITCH];
- 	pt->snapshot_mode = auxtrace_info->priv[INTEL_PT_SNAPSHOT_MODE];
- 	pt->per_cpu_mmaps = auxtrace_info->priv[INTEL_PT_PER_CPU_MMAPS];
- 	intel_pt_print_info(&auxtrace_info->priv[0], INTEL_PT_PMU_TYPE,
-@@ -4274,8 +4275,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 	if (intel_pt_has(auxtrace_info, INTEL_PT_CYC_BIT)) {
- 		pt->mtc_bit = auxtrace_info->priv[INTEL_PT_MTC_BIT];
- 		pt->mtc_freq_bits = auxtrace_info->priv[INTEL_PT_MTC_FREQ_BITS];
--		pt->tsc_ctc_ratio_n = auxtrace_info->priv[INTEL_PT_TSC_CTC_N];
--		pt->tsc_ctc_ratio_d = auxtrace_info->priv[INTEL_PT_TSC_CTC_D];
-+		pt->tsc_ctc_ratio_n = (u32)auxtrace_info->priv[INTEL_PT_TSC_CTC_N];
-+		pt->tsc_ctc_ratio_d = (u32)auxtrace_info->priv[INTEL_PT_TSC_CTC_D];
- 		pt->cyc_bit = auxtrace_info->priv[INTEL_PT_CYC_BIT];
- 		intel_pt_print_info(&auxtrace_info->priv[0], INTEL_PT_MTC_BIT,
- 				    INTEL_PT_CYC_BIT);
-@@ -4283,7 +4284,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		if (repipe) {
+-			int retw = write(STDOUT_FILENO, &c, 1);
++			ssize_t retw = write(STDOUT_FILENO, &c, 1);
  
- 	if (intel_pt_has(auxtrace_info, INTEL_PT_MAX_NONTURBO_RATIO)) {
- 		pt->max_non_turbo_ratio =
--			auxtrace_info->priv[INTEL_PT_MAX_NONTURBO_RATIO];
-+			(unsigned int)auxtrace_info->priv[INTEL_PT_MAX_NONTURBO_RATIO];
- 		intel_pt_print_info(&auxtrace_info->priv[0],
- 				    INTEL_PT_MAX_NONTURBO_RATIO,
- 				    INTEL_PT_MAX_NONTURBO_RATIO);
-@@ -4418,12 +4419,11 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 		u64 tsc_freq = intel_pt_ns_to_ticks(pt, 1000000000);
- 
- 		if (!pt->max_non_turbo_ratio)
--			pt->max_non_turbo_ratio =
--					(tsc_freq + 50000000) / 100000000;
-+			pt->max_non_turbo_ratio = (unsigned int)((tsc_freq + 50000000) / 100000000);
- 		intel_pt_log("TSC frequency %"PRIu64"\n", tsc_freq);
- 		intel_pt_log("Maximum non-turbo ratio %u\n",
- 			     pt->max_non_turbo_ratio);
--		pt->cbr2khz = tsc_freq / pt->max_non_turbo_ratio / 1000;
-+		pt->cbr2khz = (unsigned int)(tsc_freq / pt->max_non_turbo_ratio / 1000);
+ 			if (retw <= 0 || retw != r) {
+ 				pr_debug("repiping input file string");
+@@ -365,7 +364,7 @@ static int read_saved_cmdline(struct tep_handle *pevent)
  	}
+ 	buf[ret] = '\0';
  
- 	err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
+-	parse_saved_cmdline(pevent, buf, size);
++	parse_saved_cmdline(pevent, buf, (unsigned int)size);
+ 	ret = 0;
+ out:
+ 	free(buf);
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
+index 72abb28b7b5a..fb1fa227c98e 100644
+--- a/tools/perf/util/trace-event-scripting.c
++++ b/tools/perf/util/trace-event-scripting.c
+@@ -422,5 +422,5 @@ int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
+ 	if (pos < sz)
+ 		str[pos] = 0;
+ 
+-	return pos;
++	return (int)pos;
+ }
 -- 
 2.49.0.906.g1f30a19c02-goog
 
