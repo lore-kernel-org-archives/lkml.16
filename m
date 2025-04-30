@@ -1,98 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A54B2DC770;
-	Wed, 30 Apr 2025 14:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B3149DE8;
+	Wed, 30 Apr 2025 14:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024323; cv=none; b=pDKy9TouIrMny0nuiG0Wassz4I5AvxIThLsZZZ+5SX8IWMTYZxBCI+qNU1X146wrw0BFjzp/XNXDVpCQn6WRhwE1kZ/cJJ9ufZo+xvjXWnKztYeybhXAYL9e7HcKbl5k4ykgkDLOciqjrBF50AI96eruKD3HnbMr/U9wZSNjx3c=
+	t=1746024403; cv=none; b=jEF/NapnWpni0eW8lxLxZ42raL1cKnij5YZTuJLtG59/Wd8rOfdptDItYaeoQiBoTOG+brDzuIQ1sGzeon6/wsU7OpSbkjImROVcIRPgYOGv6CtguTCa5o3a3AXQ6LDPy8ChT8BgbWY0betgCIdngfFJkKcioi6Lm7QgoB04lfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024323; c=relaxed/simple;
-	bh=36OT3QoklzR6oVTmVWYqH45+dqveA3D0pcoW6+LcquY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BlMJhuMrM0RwXifpBbk69UXrpGS56CXiAEvd/YJ0isI7/tHhJTO19mK20Uum+jH4A2drv4En1pVJxdfpiQjPbqx8VFbHom18rQykQGwbEjOyv4DzIGPI/4ar1kanZI1OIRQvI2poYF9XGO6AhOXnh0E8M37BthuxrYkpgRqrYOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 3db42KlmTuGbl75TJ1ZtDw==
-X-CSE-MsgGUID: t81fCUIOTfafqxIW8b1e+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="47406996"
+	s=arc-20240116; t=1746024403; c=relaxed/simple;
+	bh=gJY5KpuGymBc06cwncC7Fx2bYurfhjxAo/SRBqouwtU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N221FsiWryTbyqZ1Zhfj2ygRCGzM+gBrC/5XgDvmqu97xy4EO8r209rSWyx+iPO1KeQo3huBIu06vZXJx1TaxHPPHWhVetkG8ycMWN+oj7osPFdA5DWmYw+rXtx6Zxz/F6c7OtxmMSH1EXsm4ctH57ASkU5DQpyqS3/v+5HraMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eNezmNMv; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eNezmNMv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746024402; x=1777560402;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gJY5KpuGymBc06cwncC7Fx2bYurfhjxAo/SRBqouwtU=;
+  b=eNezmNMvLaauO5A6/wj8H1MBDLj/IZt1HiZxgctz3HLlPJBkvJeIIQZZ
+   m+OecX1QpqrSJBO/P6e74sCr9mt55qczKjgkaX4INRWRoKi4o+rcTvpTx
+   bCprQrn4Zu3M1d6QWk3fVjHJy7GUrFPCMs50ewarMoiSHvKhBGkgY94Lm
+   6K5PRRqVueFkxgPw1UytlJVDynkB3mbQmKjduQXVFHqa95r1WV8PmSGgT
+   TvZNLowqrjHtrT0/hkxtykE0y6ZT9qjKjwIGUHd85o3rJShLh6KScuqiy
+   Rz0RTOfZI/Jr+9hd4982hbWfIYRLWt3VjRIImJ8iZFP+hl9vHA3WpTW6l
+   g==;
+X-CSE-ConnectionGUID: D6ZfClphQq+48xxLSQQUCA==
+X-CSE-MsgGUID: S/Avg8K3Rxms+zM3VTeZRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="46933551"
 X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="47406996"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:45:20 -0700
-X-CSE-ConnectionGUID: 5ySyaq5XRCy2yXSGoGfJYw==
-X-CSE-MsgGUID: oUv2qTAQT86AbRhnb/POFw==
+   d="scan'208";a="46933551"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:46:41 -0700
+X-CSE-ConnectionGUID: 2wrjLOIBRrGWeaAPg2HhCQ==
+X-CSE-MsgGUID: VwNQe1UnSdeD4loCSfEDKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="139267865"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:45:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uA8gT-00000001eVI-2qVG;
-	Wed, 30 Apr 2025 17:45:13 +0300
-Date: Wed, 30 Apr 2025 17:45:13 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	Angelo Dureghello <adureghello@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
- documentation
-Message-ID: <aBI3eUPirZEXpZgG@smile.fi.intel.com>
-References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
- <20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
- <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
- <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
+   d="scan'208";a="171374969"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 30 Apr 2025 07:46:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8BD6C9F; Wed, 30 Apr 2025 17:46:37 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [rft, PATCH v2 1/1] PM: Don't use "proxy" headers
+Date: Wed, 30 Apr 2025 17:42:13 +0300
+Message-ID: <20250430144635.3714821-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 30, 2025 at 09:21:28AM -0500, David Lechner wrote:
-> On 4/30/25 12:40 AM, Nuno Sá wrote:
-> > On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
-> >> From: Angelo Dureghello <adureghello@baylibre.com>
-> >>
-> >> Add new IIO calibphase_delay documentation.
-> >>
-> >> The delay suffix is added to specify that the phase, generally in
-> >> radiants, is for this case (needed from ad7606) in nanoseconds.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-> >> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_delay
-> > 
-> > Not sure if I'm too convinced on the _delay suffix
-> > 
-> Phase is measured in radians, not seconds, so it seems wrong to use it here.
-> 
-> https://en.wikipedia.org/wiki/Phase_(waves)
-> 
-> And the delay here is with respect to individual samples in a simultaneous
-> conversion without regard for a sampling frequency, so I don't see how we could
-> convert the time to radians in any meaningful way.
+v2: fixed obvious missing hrtimer_types.h include (LKP)
 
-And how this delay is aplicable to the phase in the hardware? Sounds to me that
-HW has some meaningful way of such a conversion?
+It may fail some builds, let's wait for CIs to report any issues before
+applying this. But I also encourage to test it locally as much as possible.
 
+ include/linux/pm.h | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index f0bd8fbae4f2..938b1b446a5d 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -8,14 +8,15 @@
+ #ifndef _LINUX_PM_H
+ #define _LINUX_PM_H
+ 
+-#include <linux/export.h>
+-#include <linux/list.h>
+-#include <linux/workqueue.h>
+-#include <linux/spinlock.h>
+-#include <linux/wait.h>
+-#include <linux/timer.h>
+-#include <linux/hrtimer.h>
+ #include <linux/completion.h>
++#include <linux/export.h>
++#include <linux/hrtimer_types.h>
++#include <linux/mutex.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/util_macros.h>
++#include <linux/wait.h>
++#include <linux/workqueue_types.h>
+ 
+ /*
+  * Callbacks for platform drivers to implement.
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.2
 
