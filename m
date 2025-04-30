@@ -1,107 +1,98 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A221EB5B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5639825B1CB;
+	Wed, 30 Apr 2025 13:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019905; cv=none; b=agK0W3BJBcSP3W/cTWKuaPgGg6UsmZQrSmHP8xLk4JhZQK21i9tcZQuJFM1UT65asJzSKKmmgqbL1DB42qCRLDam82/b0UW/yyUSnG2kDp3dJB58+zTkbFWhZUiNfHWznimGQLoPwGgihJaNfXF9B8EzNgU7gRBh2GytEHCEOq4=
+	t=1746019948; cv=none; b=T7tseMAUbS326HmAAEDgxqtBOezGVaRSHmzC4RXvHIjG7GXKPAhXMd9YcxGUJxoWrKJgL3j3JvUWIe/foPLIW8SaXljCcIpGCNFBd/GTAXWQJ0uGWUcI8BxvECRb5rkhZKDBqBEb6eaIYUCycDCLl7eLMEeFnqGiu1uVmYrWxfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019905; c=relaxed/simple;
-	bh=p98MxICZ2hRwZcgshomPAWNE3MrQP1Pftu+P1/2Tcfc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tYVDIMnJyXGwLnyPAFAWf0eTRPoBsg0bblUCtjwqMCwf2+2YyNRRmeoyrG6UEnMKoRwyTXpD446gmkRM3tmoWqilRPqtK3cSj4Lx8h7Tdx7j3nPq0fQyQUYy2/TNWQmsE72HHL6rpAsFKduAoLby7UNUQo2zRwT5LKKDjD1fbXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GiEbLLJ4; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746019948; c=relaxed/simple;
+	bh=XUP5kolmodj9omk+HB/pgaCL4rTsETkVye5Zg2LD1nA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xz8ymWeifYJ015mbrcca7A1zmFPSZV0+PtHNSiXae7qsx12MKKoeFEBTr4CrQMh/Gx3Cfwzges52ixiAjvlvVK+l/UNBqCLC9iFEkKyGvo1AG8e9h1go46l1Lxy0dSJzmr6ZUXsZyNeZ5H8qDFbKawYULn9oxWxMNzyzM655iwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Iso/t97O; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GiEbLLJ4"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4775ce8a4b0so143565051cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746019902; x=1746624702; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J27zH1j+2DGLSZuiVQYcAZeTzSnyKb84uUwM/rDsIQM=;
-        b=GiEbLLJ4SwvqnZ+rWGD9lr4E8UOYbZ75S/gGWPb9DlwI427Pcstq246UpNKnV/H3tO
-         KFcIuBLq9gpekY9hnyahirBZycknhkoyCVSLwUWC9lSR+t9ztzbff+0JrZvo35aClXfq
-         FdKjfOS7yUEQuZX0Gx2TBxMPMG9mFoZQcMNAYP3dOt5njkfdmpC9Kp50+ODVXcTJpsQE
-         GovqPlYGe/RiJ5e+p0Guhfibn2aNaHMALn80zzUv6x6YtHpArXGy0FTAgEyrEcRDvATl
-         ATEih+/adwQRbEl69X9l+mIPq+t1+HDl1pj/Vyp8w5EETqxi/LYkK3Zd7/gvNIBTcfjx
-         MYbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746019902; x=1746624702;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J27zH1j+2DGLSZuiVQYcAZeTzSnyKb84uUwM/rDsIQM=;
-        b=Nq9bWl9LP8c0Fts4oiWWhMyzOUH1bur1AtyIIEkvfvCqo/CFUdtSzrrfaW0MG0PxFg
-         2PXifryAFWab0u3CSyJmP5GknVTxGuEFio289qUs082MHdwzPzUVYrrO0Aa4v0QDfomV
-         fjXH8y4h2rDSwWgmPnhAg+ZryC6pC05RuD1jhp1yy6/SWEMt8Uf5yKmMsPsYL1P1V+Ih
-         dFVb4dKX1DfWQtLqIwmYXlxpaYyhOxcPhQeMmbo9KOxwUDFda/+MmPWFVsTufbTiCSht
-         jkF7MeqQ+x2u3/mA5ankLU79/g3nVdvIlz1SKSjGtnOB6z7o8Iq25dRehh1lLRGHe2qQ
-         KS7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVhS26Ya/ZFGVq6K2tTUY/JQZQJ5YeBZAN+xTlbFI1KLlgswT6Yxe3+f1QMC9vKBIGdzd9xobxkizx9R9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhm2PYsCnCzRIPxYoONewIn9i4BtTBCK3SXOr4b8kKEvuWAFDU
-	mVHVJT8nkZ/4i78O1hLgsl4nXaeb/TJqtdpIAn78ML0mtByUkcO/v0tdnlwAjbg=
-X-Gm-Gg: ASbGncuMobJFFrYAFa6Bl0vIdbJIYxQGQfLuKZ26FqYmJx1Wi1N/ZyaS7ycY+NA07Cd
-	lryZyPXUj5bxI56YoY/H2jIsmLgpWY4JjHm+i3/hCTpdgtcX0X2kcIq+6b/zf9OScYK1tv1eWHa
-	HXKmWrYFqk3IBlGuwSwVxOgKYwdbmeuxBUC+sarEQA1ykPRB/zXnnfRKbNejw+AJmepQ+h+2e0e
-	2ZvOenIh7u621NCSmRe0J9GAlnhai7NTUtOZ+o1TWQLRXHe2+jfsaA7uvyJbaegxb6Usx1leCoC
-	kroa42FPEbAhumkocWa4ajJm8b2jqeVwk0TMez2QX+m8gJOHUXje7VWi/vAAeoAAp+gENrmaPWv
-	MWNY=
-X-Google-Smtp-Source: AGHT+IFHOhrysBR+6DovsVdXIpuhTVp8HJr3/OBh9t/W0q0+yunbstdhdagS7/7fV+TcxTFn88rdTw==
-X-Received: by 2002:a05:622a:2514:b0:476:add4:d2c0 with SMTP id d75a77b69052e-489e63d73bcmr43950311cf.35.1746019901714;
-        Wed, 30 Apr 2025 06:31:41 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ea1ba29c2sm92032681cf.76.2025.04.30.06.31.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 06:31:41 -0700 (PDT)
-Date: Wed, 30 Apr 2025 09:31:40 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-    linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH] vt: add new dynamically generated files to .gitignore
-In-Reply-To: <20250430122917.72105-1-brgl@bgdev.pl>
-Message-ID: <sq7527p1-9218-r845-605n-2p419s2650s5@onlyvoer.pbz>
-References: <20250430122917.72105-1-brgl@bgdev.pl>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Iso/t97O"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1791B40E0214;
+	Wed, 30 Apr 2025 13:32:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id lVgQPf0OlpAX; Wed, 30 Apr 2025 13:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746019940; bh=A1CXwSD/7j6NwMGG4ZTzid19BC6+JXchxfFkihst34w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Iso/t97O4sCD8JcHCssOB0D0XRGWmX32iIraGerTh5NEBTbcs9T0GbdMp/U7DtPcO
+	 cAf0Q5p4itQrHWSEfAWlGXf50qMHkYQxHStiweP0v472YuXJAEXBFPXCNT6rtmBf8d
+	 Oj9dm1uCyFPyUCSxKMhaUPjvyld6xQojCDXT5NYpP2keKQB+Gk3N8LgMi8/sRQXWrw
+	 euoxensXE7TpEjb7FxHADeGlv9IHRIPcZBp4r/iOBDyj86+SVt400ZH9kI71J484yf
+	 tblDIS7SROL9YHhmxlwwcMZROkkqOZhEtFuSv5ytd/nLyvv8aMg6EwoMGF60tn6aGw
+	 YZCtAHnP5br9OgoMBczGWjs+qYwS4Iz/XgwN62PWvy7PvJmr9NDm/GKg8n7f+idGLT
+	 7S37pJGf0ZGQH0XA1N2M+Z3GqNHo8+CPFIXHtZPqzjfI9U0SdZKtVEdkS4BMES6Vb0
+	 Mn2YuggWaaagSV8ZyizN/BN5p35zSatsYlVe77GX/3EWxUTZ6ZuCb21x2X6ubP4fBa
+	 3kntCATbaCrCJIfuIPm3fg+1ALzbW7gQ6bGLIVH8aQUjtP8suWlu62bcpvgNFBtZbM
+	 X85uW67/bgi6YSTa70xhyqFwXmmUuFg7fp+KymNW8QcEwBWrk/XIdC/YmH2Ewa6jCt
+	 fsbxkEmKrqDzcNil5LeUHB4M=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1EA7740E016E;
+	Wed, 30 Apr 2025 13:32:05 +0000 (UTC)
+Date: Wed, 30 Apr 2025 15:31:59 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
+	michael.roth@amd.com, nikunj@amd.com, seanjc@google.com,
+	ardb@kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH v2] x86/sev: Fix making shared pages private during kdump
+Message-ID: <20250430133159.GEaBImTw8E1cqU3k5C@fat_crate.local>
+References: <20250428192657.76072-1-Ashish.Kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250428192657.76072-1-Ashish.Kalra@amd.com>
 
-On Wed, 30 Apr 2025, Bartosz Golaszewski wrote:
+On Mon, Apr 28, 2025 at 07:26:57PM +0000, Ashish Kalra wrote:
+> There is a bug in this additional check for GHCB page contained
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Add new dynamically generated headers to the local .gitignore.
-> 
-> Fixes: b11a041179e7 ("vt: introduce gen_ucs_width_table.py to create ucs_width_table.h")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+You don't write in the commit message that there is a bug - you explain what
+the bug is.
 
-Reviewed-by: Nicolas Pitre <npitre@baylibre.com>
+> within a huge page which causes any shared page just below the
+> per-cpu GHCB getting skipped from being transitioned back to private
+> before kdump preparation which subsequently causes a 0x404 #VC
+> exception when this shared page is accessed later while dumping guest
+> memory during vmcore generation via kdump.
 
+And you explain that *not* in a single, never-ending sentence but in simpler,
+smaller, more palatable sentences. Imagine you're trying to explain this to
+your colleagues who are not in your head.
 
-> ---
->  drivers/tty/vt/.gitignore | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/tty/vt/.gitignore b/drivers/tty/vt/.gitignore
-> index 0221709b177d..49ce44edad65 100644
-> --- a/drivers/tty/vt/.gitignore
-> +++ b/drivers/tty/vt/.gitignore
-> @@ -2,3 +2,5 @@
->  /conmakehash
->  /consolemap_deftbl.c
->  /defkeymap.c
-> +/ucs_recompose_table.h
-> +/ucs_width_table.h
-> -- 
-> 2.45.2
-> 
-> 
+I've been staring at the diff and trying to reverse-engineer what you're
+trying to tell me in the commit message and I have an idea but I'm not sure.
+And when I'm not sure, it often means the commit message needs more work.
+
+So try again pls.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
