@@ -1,155 +1,189 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F202258CC0
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746016052; cv=none; b=LNI32Uc0DxbTLS3Nr1cb8s6HBGsmNM3n9pqgvK2yIRtUEP/tHuVZK+mSMjpaH87w2rWgGys12hxtCvuLgpfo9FjU5YTsVVYuOyEx4lI+AHkjKMA/g34jVspHVSfXUdyexLB4JVoeIMvjsLm3CzeJCVXQsdCG5v3ziSUW33Qv1ZA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746016052; c=relaxed/simple;
-	bh=olyFW/2YZ23mxxuYHxWsFH8I9wW11WLvfCwOZndeOc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lq2jm8qMNPcpZT3qag3VTmkIlNwc4kowgkNY+mpWqDuD0ONPn165FEQ8pndjCKUtGt1LCOYC+Q5aOCwFKlIniXubpfr5jy7k0/+URssgsc2KceLsDV+rUFHzQ1NTYkQ1ls6RJ6UAnKwrzf7024JEjJk4/SEouH8PUhK9hEFTvMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qu6H+4+u; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5449248F59;
+	Wed, 30 Apr 2025 12:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746016090; cv=fail; b=YSF5G++DcIk4uhPvvAV6QUwCuVMEgizh4ZpPbyX4ZVX7jaiy6wunR6HUk6UuqUkid8tPFIYlKDT+e45pbGOHbvpgjf6q4p/A9e2MRxDC52H3qDLcCONFtgGMgpfPKvv7FIV+Q93kRFbxTYIRpXQOF2XA8M4/yjP+SXWegfNb07w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746016090; c=relaxed/simple;
+	bh=xhku17PCgBBuEQYUK+SXJwh3lrJR8Ob0eGNjZLJrpS8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=k3PnIJ4CRYL9QySyqvnM0GbsQ3x+fhq7iLpA6kPVvU+65Dm65RTrr6HkFfeBT+AZPn9aVgdgBWUcvJdT2D+8Xzi7ZgeiYwMOsAGv6HbQxkqg6rvxPcrremdY3rLLkzRU/NTmR1xeYtf7vPnx8q+phgqf07ZwndvHFRT0rmmmKgg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LYSAvkDj; arc=fail smtp.client-ip=40.107.94.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qu6H+4+u"
-Date: Wed, 30 Apr 2025 05:27:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746016043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W0HXN2DzPh6CIx7IDJDg3sDCnJ77GCrctxZ6KQHXBtw=;
-	b=Qu6H+4+uH5lx5/9sjnu+2K9kdBUqQ+AR+b2tQzjAAtDvpAPGD6n0FaQN5jpYnUIf98MOeO
-	/C0pZco2ELQVtf0ylIzPk7zqO1tUwrYhCrKiIrPZMgdq0gSfq8kGw90YIrUTWGR5QaMn74
-	tudtiITtE2m/a6osW7OBuOpCdqUcKF4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Igor Belousov <igor.b@beldev.am>, Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v4] mm: add zblock allocator
-Message-ID: <aBIXJrbxCmYSoCuz@Asmaa.>
-References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
- <aAdzjdv674Jn6G63@Asmaa.>
- <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LYSAvkDj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IcmnrHAdis8uKX5BjYrOa8YXm9HOeSZKypufPSJwCfgllLiGcS+vchfhNyXFhuWw3LT2P2rAa9KYRvkBUY9kJzhkHN8T9+CQX7A1Gkqy11YBZn0W/sjE5nnmemB7KDeJlefBspVDbKl91ThNPxocAQSkRw5UwN/F/5uhiMETCLS0as4mlVMdxNr7bk6Y2sSsh5O+7Ddj1rH7nZu0JXupgr61D1MEH1UnDua6UY/s9PzfIx5vaqZXuDd0qKqLovooAX3yoI2abaMh0OMsOlk8OC14o4HrNFyERP2LOocEI4wv6qFUGB/uaTOyu97typ3RMdto65Hj9Z2iwbif95+XTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jVnAMLBSoPbEV8P0L30Pq+zbm+NuS0Tqvgy8UhZTNOw=;
+ b=X+8iqPWsx7gRRaMJHVREdjQwCLWKB0pLiQOBxhMN1U0qM/AWIBu22BlYba1EDULv3KPaVWb+BDqN8O6+lOVKEvpe1/MD+cNxXrWWnDpn2vvyIGvBTAgKmXcf/9w6r1DXGqap+SVSvaUlFlufMeuycQoNQjUQdE38A2T/JbepPTJXUVgHnyGJnImM7l9YfmOFlswZXEvgOkhg9rFbOl8S2zfrP3+B8qLpwpKTvjeiickUBGX0GbuCClTvJ9jUi02YinORBY46PqiCPnCu3Xf57nedqzYCoTBcuO1IgaFcbNvfUD7ZSPd35lJEUbc4IyYH6VDs4ZflZINvnZjviwCenA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jVnAMLBSoPbEV8P0L30Pq+zbm+NuS0Tqvgy8UhZTNOw=;
+ b=LYSAvkDjObxvycZbncS/39pbvc7/1KEV0wH//v/nSdvn0yX6Hlckzdyyf5pAvgWXKzrfu0OdkkISTnijclyJccbjUE7ItxZClHbUl0Qhq0xqrnWrBpOYkMgIs7InLd+AM0zGXbO16x06mmTOAnxlGLnpEhx/YGEyoPzWBLc9hoM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by PH7PR12MB9074.namprd12.prod.outlook.com (2603:10b6:510:2f4::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
+ 2025 12:28:05 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 12:28:04 +0000
+Message-ID: <ff1ca949-3ccc-4cf6-9d1a-c1fc99e30fdb@amd.com>
+Date: Wed, 30 Apr 2025 14:28:00 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amdgpu/userq: remove unnecessary NULL check
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Alex Deucher <alexander.deucher@amd.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Shashank Sharma <shashank.sharma@amd.com>,
+ Sunil Khatri <sunil.khatri@amd.com>, Arvind Yadav <Arvind.Yadav@amd.com>,
+ Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <aBHZuejTTKkdnGaZ@stanley.mountain>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <aBHZuejTTKkdnGaZ@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR2P281CA0060.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::16) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|PH7PR12MB9074:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e383c91-dda3-4ba9-03d1-08dd87e27492
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OG5kTnh5SDkzOXQ4NmpoVGJqNDc0VGJPSlhWWkJLT2grS04xOGNObEFsWW5q?=
+ =?utf-8?B?ZU56V2Y2d2pmVkFZK1kxUitOQ0VnM0NwQjBRcUdmUFlHcFB3NlN6MUI5ZExK?=
+ =?utf-8?B?R2Ezc3RsL3NCQk1rck5xOUZ0QUpFK0tVbzJMR2dxOHVwOW9JM1NBNERWcDBs?=
+ =?utf-8?B?YXNRS0x5NWpHb011bkJBYVNEWGNlVXpKUDM1MkIrVmZzbmc0bEkyRXVYaTNZ?=
+ =?utf-8?B?WW5UeC9yM0RNdncyUnA4WHZuV2dkaDNXLzlyK3oxanVVSDZiMXYvNmZlZ0Nv?=
+ =?utf-8?B?T29uaVFuVDZPV1ZIYm41YlpXM0ZKWW1ZeFpZZ3FVZlBUaVNCckJqUXI1S0p1?=
+ =?utf-8?B?OWM1eUVOMnpqclh3R2RXWGNjamlSU3pRQWlNRS9Ga0pob1Z2UndLaklHdFdO?=
+ =?utf-8?B?alFmZTZWZ0hiKzJwSEVRVlA2U0dZSEtMaWhPMjVFcUlKYnBYZWY2dDBycXQx?=
+ =?utf-8?B?YzlhcUhDbTQzT010ckU2RU9EbnNzTmpSYUoxSDVHTG1IbFhkWHZBYzBldnJs?=
+ =?utf-8?B?Z0hNd1VtcktxUEZuWlNNZndJM2RpMUt2OTJPdk52Y2tNSXRMMlpLQTNKL3J5?=
+ =?utf-8?B?MW1GYlFmZ0w0QW1BbzVUbWIzdkltemg0REVRMllVZHU3NVVJRk4xSnhzYzRG?=
+ =?utf-8?B?TUZvaU9xS1N0UGpCSzRPa3diTWJ5TU5rdWkreDNqZVkxNFowZnhsQlpvOWxq?=
+ =?utf-8?B?TEFlbnFnNU5kM0NUYi9zNytMWW9tckpjdHJJS2swOTlqcDBnekxQRXJnYlpJ?=
+ =?utf-8?B?akJneGZ4U1lzQWxLYzliSlZwTGw3aE5NQ1BKbjNCdW4xa3dJMEF4V0pNUFFk?=
+ =?utf-8?B?cGRJQVZxWERDT1p1eWdJaGlyUWM2a0FSNTdyNTNhSVVCMVF1UWJjaHdtLzFt?=
+ =?utf-8?B?R1N3RjhBZHhiVjJxRDcwNk9rckkzYnkxeWIxcktUWjE4STRCNGhOclZLL28z?=
+ =?utf-8?B?TllyMGFrUW9haitxQ0ZsR3hPUTd6OU8zNEVOOHpVRjBJNUwzalZoWW9uZFpJ?=
+ =?utf-8?B?VzIxa2pNUFd0SU9oRVA4VG9tTVZ2L0lTSTczT0ZyektCdkxsdCtzb0x3WWNy?=
+ =?utf-8?B?NUMzdmpKR2lLdTJ5OEFiN3pzaHZ0OUx5WWlhNi9Tb0FGVFgzbmhzeW5GT2sv?=
+ =?utf-8?B?clJJNnR0bGRIZjMxbzBvYmZxaWd0NW5XRytaRlc5WmZsUnZoYWVKTGl1MG4v?=
+ =?utf-8?B?RTQ0b051enpLUFFwZmhuMDJKTUdLSmVObFVSUG9ZNXFKZ2JVN1ptajBSSVN1?=
+ =?utf-8?B?b21XRVVaUEczbGJ2aTVUZUZvS1l2WlZrbldUTXBwdjgwN3V4d0FwK0ZRODBm?=
+ =?utf-8?B?ZUNOWHZKdGdtejdHWkQ3OUY5N2VIVlZXb3NOL0NuejdTSlVEaDMrVUVRT3ky?=
+ =?utf-8?B?dVg2SnNFVXVza2hzTkJrT0VOYUFFa2dETHVRTlh0MlFZQTZKOG5qYnVMWXcz?=
+ =?utf-8?B?ekNrcEZPOXA2cWxrL1FTazlrcmNNSVFMTTd5cDh6TERPaE80QU10OTFGd1hr?=
+ =?utf-8?B?dXdOQ0FwbVMrTHRheGxWeStPNy8xYzB1ZWpjQ1lYK0hlNGI5d1ZBZElvenRV?=
+ =?utf-8?B?VjZKNlJBZFV6UmxMN20rOC9uQ25SWVJxTllObEtISHI3UCsxNy82eXFqVXRz?=
+ =?utf-8?B?cGdQcFc2cHdMV1ArNGQvazdyS2I2ZjZDMUVCbjlZVDNFamIrWWhjejhxZS8z?=
+ =?utf-8?B?OHV5VjBLZml3TU15d0w2d0U4TTdkOS9FUk52MzY5VUVXbWtHTVVOclBnOFJh?=
+ =?utf-8?B?cGFENTI0WERnUld3Y0ptTmxnWXEydS9nNFUwcHpLOEVSK1lWZXpRL054eHo1?=
+ =?utf-8?B?SzJBR0c3V2hHVGo0d0FJM0xLRmlIYlNyYU5KQk1Bd01ETlRnN0oxckluSnkx?=
+ =?utf-8?B?eTVFQ0VsSXY5TGQ4L1BhMTVoZ0tucnlsek5BRlZrQm5vN01uY3gvOTV1cGhE?=
+ =?utf-8?Q?KK/KmEHKiRQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d3NRRXZWTkJETndZcEJ0UFRySTA5TnhQWFhhTEFtb3ZyWmRQQXRPVnhyVGtq?=
+ =?utf-8?B?VGFkU0E0d0x2aEtQUC9NSkNHaG16YTBZc0R3b2V4VXY2TTNoZFFwbEFLYkRG?=
+ =?utf-8?B?NUZDa1pQTC9Fc2I2cGFxNzJwU2F5OSs1QmZQdkljQ0E1UjZUb1VjVHQ4RDhl?=
+ =?utf-8?B?OVZ1bUdIZTBSYWt2MXVQSXlNdW04bnowUDNpTVJNNnRpQ2h4UUFHR1BSb1VD?=
+ =?utf-8?B?b2R0K0Z2S09IZTVPN3VSRDYyZlliSXJBQ3NOOVhBc3FmYUQ2OE5qcUpWaGhH?=
+ =?utf-8?B?eEh5YkxUK05EVHNpaWg0RC9RcDNTZUxwdERjN2hTeXJQTHpwRXM3UEU4SGtv?=
+ =?utf-8?B?QUI2ejdWbjNoSXBHekM3YUhnR1VSbTlPaHIybXVHODNkQ3k5WVd6eTlxbExE?=
+ =?utf-8?B?Z1VaSHFkM3pEcng0Zkx4MDJvQVdFWE5PY2RRRUhRWmtTREN4UWZ2em0rQzY1?=
+ =?utf-8?B?ajMzRkY3YUxCWE9qSjZ0RFAyN25yTHYvTjhYWjBxTjVIazlkRUppWkh1Mnhj?=
+ =?utf-8?B?cGsvUExacHYxc1hpZnVBNEtpVWkvQy9IWUlRRkpyS1FkVUNNc1I4T1BReTYz?=
+ =?utf-8?B?ang0K2VMdXRLaVFLQStoZm9yYTNjdUl2QWNDbVpoM3I3MGNrSTZqTE53eGlr?=
+ =?utf-8?B?ZmZUWjlFU096dHhvaWZ0ZSs4RjUrOWJrbEF5NlcwNDZrUXlkek9HOGxnaldG?=
+ =?utf-8?B?dHBhRmRGRURMRXpjVmRHQ0VqTmwwaFhuWFBoMlNySk9UdkRnOVNoYmlRM3VR?=
+ =?utf-8?B?M2xHbUZ1R2lEdHJzMlRVTWR5MDJxVWtpRWpmZkkzZ3ZRRVFJRkZBTkNIZnh0?=
+ =?utf-8?B?U1FGUEx4ZG00bk1VV045NFowaU9XclVuQ0JDSC9GdVZRZE9GdE15cGN6bnpH?=
+ =?utf-8?B?OFVBL0tuV3ZWSDV1NVBYTjVQOE4yMFhzbUE2Z1gyazFHZGNLeGVqRUFKYlZG?=
+ =?utf-8?B?cjRFR2h0TFBUU1ErYnd4SUlPbktXdnhFMi9ML2JaZEgwZ2dubmFMRi9SWFls?=
+ =?utf-8?B?QkZldkZHdGhZQkhKR2xxZXdxc3JOR3FtK1FLSTY5R0VaL3pzU0ExdVY4ZC9o?=
+ =?utf-8?B?Z2ZXNUI1M3VLZ0N1VllWSlpPY1ZlSEEyZXR0bnh1Wjk4S1hyMjhMMDJncEZB?=
+ =?utf-8?B?amhLZDNQR05HZ2FLWFlneUZCTWdXY2lsK1p5SStrSHFGak9sdFdtNEV3aTBx?=
+ =?utf-8?B?bE5iQ0tRRkNCeEFzUlpnVVRwQnpwTVhKc0lSOWluUWNSeTAvT0UvVGlkQ3lJ?=
+ =?utf-8?B?V29EeDNQUXAvcDN5SkVKek1oeUVxMGVrUE5oai8xQldjM0FDaXMxVmM1MUpR?=
+ =?utf-8?B?ZFNFdTc2QmVaOCtqSldyKzlaNW1qNHJYZEpreFBNWkgvdXUyZ0hxMlhndTBK?=
+ =?utf-8?B?RlluN0hCSmZvQStXM3NqUXBza3AybHRxWi8vUG40Wk5wU3ExZkdwM0JXYVJt?=
+ =?utf-8?B?R3pBMU9CNU9leVlvS1IxWGp6cGd5QXlTVnJaOHkxZzZlWTF4L2orMFNNcnJM?=
+ =?utf-8?B?VktZTGwyRzZpQUo1V0ZMbmx1YklrcXNtZTZMTGVoVkpZSDZlbDBmNmY5SlhJ?=
+ =?utf-8?B?SVNxOERwajFvM0FVY0s0MExleERiSXpSaWhlcWtvVlNjUXpCV3RoNEpJcnV2?=
+ =?utf-8?B?RURJZzdrQ0hvOEU5djFNOEFIdHBtck1HU29lRGM1dWVnRGc4UkJrbnRJeXNC?=
+ =?utf-8?B?NUZ5ZG83b0taZW1FNHNUV0pNSGpNUzZ2Vkpia0RueW9WTkhleGtWaXVNQTE1?=
+ =?utf-8?B?R3ZmQ1RKelJzdTRsNUgrelpPMjVlcENNbVJDeE0vblAybHFzQmxOTGg3VGZS?=
+ =?utf-8?B?aWVRVjVpb1JKLzJ4RWxmeTl5VGJqdUdTRmpHUEkydTN4RitRTmhyOU1ZN29l?=
+ =?utf-8?B?ZmU4TFVtRy9GNnlqU1RaV1ZGU1ZjbE80bkxtVFRkSnQxVVl1UVdDL21MMHZ3?=
+ =?utf-8?B?MENBVkdpSVhNNGhjR2NDb2YwRVV1REhHbVYrK295SHBlOUN0aDI1cVVUdm1v?=
+ =?utf-8?B?UWg1ZGloOUN5akZ3OFdmbVhDUjI0WGNDZ1Y0K0dNclZZRkRCVFBGSTF5aVhT?=
+ =?utf-8?B?RkIwcWQ4djltUkJmSFJPRk5VYW1uNUlsNTd0V2E0VVErTkptYU5neUtBU1dw?=
+ =?utf-8?Q?o3KU2zOraVr+9H5hwPdorrAYX?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e383c91-dda3-4ba9-03d1-08dd87e27492
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 12:28:04.7866
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zwDVWmCSR2JzfsTBKEO7Fmbv3edbJcYR3YBOwt9JXE8zNffeF7rrs6E/Mc7eIlxu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9074
 
-On Wed, Apr 23, 2025 at 09:53:48PM +0200, Vitaly Wool wrote:
-> On 4/22/25 12:46, Yosry Ahmed wrote:
-> > I didn't look too closely but I generally agree that we should improve
-> > zsmalloc where possible rather than add a new allocator. We are trying
-> > not to repeat the zbud/z3fold or slub/slob stories here. Zsmalloc is
-> > getting a lot of mileage from both zswap and zram, and is more-or-less
-> > battle-tested. Let's work toward building upon that instead of starting
-> > over.
+On 4/30/25 10:05, Dan Carpenter wrote:
+> The "ticket" pointer points to in the middle of the &exec struct so it
+> can't be NULL.  Remove the check.
 > 
-> The thing here is, zblock is using a very different approach to small object
-> allocation. The idea is: we have an array of descriptors which correspond to
-> multi-page blocks divided in chunks of equal size (block_size[i]). For each
-> object of size x we find the descriptor n such as:
-> 	block_size[n-1] < n < block_size[n]
-> and then we store that object in an empty slot in one of the blocks. Thus,
-> the density is high, the search is fast (rbtree based) and there are no
-> objects spanning over 2 pages, so no extra memcpy involved.
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-The block sizes seem to be similar in principle to class sizes in
-zsmalloc. It seems to me that there are two apparent differentiating
-properties to zblock:
 
-- Block lookup uses an rbtree, so it's faster than zsmalloc's list
-  iteration. On the other hand, zsmalloc divides each class into
-  fullness groups and tries to pack almost full groups first. Not sure
-  if zblock's approach is strictly better.
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
-- Zblock uses higher order allocations vs. zsmalloc always using order-0
-  allocations. I think this may be the main advantage and I remember
-  asking if zsmalloc can support this. Always using order-0 pages is
-  more reliable but may not always be the best choice.
-
-On the other hand, zblock is lacking in other regards. For example:
-- The lack of compaction means that certain workloads will see a lot of
-  fragmentation. It purely depends on the access patterns. We could end
-  up with a lot of blocks each containing a single object and there is
-  no way to recover AFAICT.
-
-- Zblock will fail if a high order allocation cannot be satisfied, which
-  is more likely to happen under memory pressure, and it's usually when
-  zblock is needed in the first place.
-
-- There's probably more, I didn't check too closely, and I am hoping
-  that Minchan and Sergey will chime in here.
-
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> And with the latest zblock, we see that it has a clear advantage in
-> performance over zsmalloc, retaining roughly the same allocation density for
-> 4K pages and scoring better on 16K pages. E. g. on a kernel compilation:
-> 
-> * zsmalloc/zstd/make -j32 bzImage
-> 	real	8m0.594s
-> 	user	39m37.783s
-> 	sys	8m24.262s
-> 	Zswap:            200600 kB <-- after build completion
-> 	Zswapped:         854072 kB <-- after build completion
-> 	zswpin 309774
-> 	zswpout 1538332
-> 
-> * zblock/zstd/make -j32 bzImage
-> 	real	7m35.546s
-> 	user	38m03.475s
-> 	sys	7m47.407s
-> 	Zswap:            250940 kB <-- after build completion
-> 	Zswapped:         870660 kB <-- after build completion
-> 	zswpin 248606
-> 	zswpout 1277319
-> 
-> So what we see here is that zblock is definitely faster and at least not
-> worse with regard to allocation density under heavy load. It has slightly
-> worse _idle_ allocation density but since it will quickly catch up under
-> load it is not really important. What is important is that its
-> characteristics don't deteriorate over time. Overall, zblock is simple and
-> efficient and there is /raison d'etre/ for it.
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+> index b0e8098a3988..7505d920fb3d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+> @@ -631,7 +631,7 @@ amdgpu_userq_validate_bos(struct amdgpu_userq_mgr *uq_mgr)
+>  			clear = false;
+>  			unlock = true;
+>  		/* The caller is already holding the reservation lock */
+> -		} else if (ticket && dma_resv_locking_ctx(resv) == ticket) {
+> +		} else if (dma_resv_locking_ctx(resv) == ticket) {
+>  			clear = false;
+>  			unlock = false;
+>  		/* Somebody else is using the BO right now */
 
-Zblock is performing better for this specific workload, but as I
-mentioned earlier there are other aspects that zblock is missing.
-Zsmalloc has seen a very large range of workloads of different types,
-and we cannot just dismiss this.
-
-> 
-> Now, it is indeed possible to partially rework zsmalloc using zblock's
-> algorithm but this will be a rather substantial change, equal or bigger in
-> effort to implementing the approach described above from scratch (and this
-> is what we did), and with such drastic changes most of the testing that has
-> been done with zsmalloc would be invalidated, and we'll be out in the wild
-> anyway. So even though I see your point, I don't think it applies in this
-> particular case.
-
-
-Well, we should start by breaking down the differences and finding out
-why zblock is performing better, as I mentioned above. If it's the
-faster lookups or higher order allocations, we can work to support that
-in zsmalloc. Similarly, if zsmalloc has unnecessary complexity it'd be
-great to get rid of it rather than starting over.
-
-Also, we don't have to do it all at once and invalidate the testing that
-zsmalloc has seen. These can be incremental changes that get spread over
-multiple releases, getting incremental exposure in the process.
-
-> 
-> ~Vitaly
