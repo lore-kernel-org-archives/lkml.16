@@ -1,87 +1,70 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBEC1D61BB;
-	Wed, 30 Apr 2025 07:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9281D61BB;
+	Wed, 30 Apr 2025 07:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745998618; cv=none; b=A6c/7yMmrdIk5SgsANxlo+mae5sUOPFx5qRk/JqQ2kV7Hhvo2C/7nfalXpELaP/IK5h4uyyiV4anmIwn0DCXVlhIMU7Fk+nfkWQwVEXGtnmFq9B5pzK6l5wvVvMHBN3V7T9B4eqhDu707fuE41Ho7aj61uEE2CnX5wazN07ICFM=
+	t=1745998638; cv=none; b=H5fnXDU1t/OgpXfxI7MlFRA2qb8oRES/aiyI1LxQEFmCBg0RFdybm+EeAja9LaO4z/6odNDu6qPyMSE0ejpTBQej0xxrbb4Ae5xFWCgHa+k6qre1Ghu+x7j2DLyt2DDSd+hSDlBK49iOR1z8Z1/B7Eq3n3Tyl0f4fCUazqnH3wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745998618; c=relaxed/simple;
-	bh=2Iuc/YvGrIbLNWjU2N2AfmxINjk6Ywe4jzfPpKf5HuM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pdnspK7TY5x/geYG2rNMU4FPfMZaHRSUh3vOTVA0OdYilwrPiucvAH1JU1I+qgSUGjAGfF7C8FwCxklEHBVrbEZiz4TLrKSF7qpjES3JjePHjNZp2h/xWE+0x9tWyQf8oQlZX64s7rL0UmueOcEzKK8qSoKpEVHmQdiK45ltlDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rfRUrHL4; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745998638; c=relaxed/simple;
+	bh=D5BW2gpx6wpLJIoZXvp/LiKyekPZG4Ijf80HhWU5hJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E0kaB/t0FUPWwUFEnuKi5nGsDPohiMx50frJbzhDlbhSTwtZZR2PlJG4FQ59jrzMQ7Av9iyXBBBr1xNDjoXTMRhh4dcl42XTlBHKcz+8sFf9YQArNJ/HGoqrXDa3VauowGTfTTJxtbJ69dA127xiyojZCGjavoP95mmVrd0jxbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2WFTBv0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rfRUrHL4"
-Received: from Monstersaurus.hippo-penny.ts.net (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A7200725;
-	Wed, 30 Apr 2025 09:36:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745998607;
-	bh=2Iuc/YvGrIbLNWjU2N2AfmxINjk6Ywe4jzfPpKf5HuM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rfRUrHL4Tb9pUxOtQgUkJ2Hn/IySHCHUtTomwUKUAZPOdVfIURWlz6fn/sNoqhHks
-	 MXUuJsxul4tOi2Rkk/QwuffBwG6UwOFedPcrE3sWDc07ExQ2u60PYHCJgQ9xofFN/b
-	 E360+xxB3MkLlxFyZr8PiwHJFsiAtliO+oCbYfuo=
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-To: sakari.ailus@iki.fi,
-	linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: [PATCH] drivers: media: i2c: imx335: Fix frame size enumeration
-Date: Wed, 30 Apr 2025 08:36:49 +0100
-Message-ID: <20250430073649.1986018-1-kieran.bingham@ideasonboard.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2WFTBv0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A431DC4CEE9;
+	Wed, 30 Apr 2025 07:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745998637;
+	bh=D5BW2gpx6wpLJIoZXvp/LiKyekPZG4Ijf80HhWU5hJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h2WFTBv0+Ky7WjqYg7CNblp112S2OS1Yq6PrL1dVVCzbuN/RwGDkC+wT5zyIn9pya
+	 fbErUuaw/+dbDO58zSAQUiqfKMjJtenaCWDNRYGFNGhGP2teIR8+C/XW8RMuqLjyql
+	 KOgHHmNCppPZ7F+pjqnout4ojdCeVMbNOplhTR8PAeg/0KzjICSP6WS4NXeODw4lho
+	 Nk1zvVeWFVlKMZFz2VHQ9r3yNnN8zO/KZ64JIkpf0AtNXqX8pzN+iGb1y+ydIEfbrS
+	 /V4rlsZWj4Yzo78ee1E5eYwvZ6VdNugma7AUfhEIfV48YdZMNP8yJugs7+Z91xsNc6
+	 6UF8eV72x5EPQ==
+Date: Wed, 30 Apr 2025 09:37:14 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: Add BOE TD4320
+Message-ID: <20250430-economic-papaya-labradoodle-a947dd@kuoka>
+References: <20250429-lavender-panel-v2-0-fb467ff81bac@mainlining.org>
+ <20250429-lavender-panel-v2-1-fb467ff81bac@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250429-lavender-panel-v2-1-fb467ff81bac@mainlining.org>
 
-In commit cfa49ff0558a ("media: i2c: imx335: Support 2592x1940 10-bit
-mode") the IMX335 driver was extended to support multiple output
-bitdepth modes.
+On Tue, Apr 29, 2025 at 11:33:14PM GMT, Barnab=C3=A1s Cz=C3=A9m=C3=A1n wrot=
+e:
+> Document BOE TD4320 6.3" 2340x1080 panel
+> found in Xiaomi Redmi Note 7 smartphone.
+>=20
+> Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <barnabas.czeman@mainlining=
+=2Eorg>
+> ---
+>  .../bindings/display/panel/boe,td4320.yaml         | 65 ++++++++++++++++=
+++++++
+>  1 file changed, 65 insertions(+)
 
-This incorrectly extended the frame size enumeration to check against
-the supported mbus_codes array instead of the supported mode/frame
-array. This has the unwanted side effect of reporting the currently
-supported frame size 2592x1944 three times.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Fix the check accordingly to report a frame size for each supported
-size, which is presently only a single entry.
-
-Fixes: cfa49ff0558a ("media: i2c: imx335: Support 2592x1940 10-bit mode")
-Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
----
-
-I expect to post a 2/2 binning mode series on top of this later to then
-further extend the supported_mode into an array ...
-
-So I won't dwell on tracking fsize->index against the 'size' or number
-of supported modes yet... but this fixes an otherwise annoying glitch
-;-)
-
- drivers/media/i2c/imx335.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-index 0418875e996c..6369bdbd2b09 100644
---- a/drivers/media/i2c/imx335.c
-+++ b/drivers/media/i2c/imx335.c
-@@ -720,7 +720,8 @@ static int imx335_enum_frame_size(struct v4l2_subdev *sd,
- 	struct imx335 *imx335 = to_imx335(sd);
- 	u32 code;
- 
--	if (fsize->index > ARRAY_SIZE(imx335_mbus_codes))
-+	/* Only a single supported_mode available. */
-+	if (fsize->index > 0)
- 		return -EINVAL;
- 
- 	code = imx335_get_format_code(imx335, fsize->code);
--- 
-2.48.1
+Best regards,
+Krzysztof
 
