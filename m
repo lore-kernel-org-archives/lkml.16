@@ -1,48 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DA31DF25A;
-	Wed, 30 Apr 2025 12:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E41DF25A;
+	Wed, 30 Apr 2025 12:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014805; cv=none; b=sJdOg8QilcYwNBdBEP+ndU97XF95HLbVTLTqN/76eCBQwCeU3yifGFaPXJfdVjpYuWWuyxWWujUPMng0Tsoz4mU1aXs3okRxhl5VFWUMRwyAkZLwzIMo/lS1cqlO6ieEoIPZYYt+jfyuSuU/1w8lAYk70dzEBxUYe4ueg65n69s=
+	t=1746014808; cv=none; b=UeOuQ9v53E1D3xG3jibzFfD2NZpxn/GHb0/khQ77e6Xwk0TK5LRrzSN7BDrnewRaz4unyzlHdE8DtRTwCNo3AGfueYFCc8eIjvlngeqOucJTMLVp0siv7hVgMR8sP+Iow58T6mzmlvrgCvuXzLWJlcY/wZnRVjdPwp2pnffCfok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014805; c=relaxed/simple;
-	bh=IyVmcnxLst8x7+dH9uH0uZDS0nl/G8b8yL/MQzWe33w=;
+	s=arc-20240116; t=1746014808; c=relaxed/simple;
+	bh=ggzJdcF1LEuvRLwQjRDVUR7jfw+ysM+qJp8k4pzDC+g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B2GBJLCRHLMtFVgtmzU76kUb2dXc08U8PKgXyEbSVTuSZkKS7rDR1IDllAElpLncba5GA3YXVgzV3Tp4whsCd353qy0Pm9XQ4koM9KWsWatxaD5e2We83d3inc9BuqZyGkdbaLpA/huJtxRdVgnVy93FHlijS2wOp3MW3AwGK9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ssij5tKD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LrjHT/y7E5tHM+2Mon53h+ISnFYBu3/smH1IVHUWLTkmSrBWv/gTBC5cWF7IjjVhLnXMC4ZRa+iJF7gaebQI8n4C+q/cxNEsivbR10fHu+hL2JJBkPSXvKIzb/+9yNZ5PzvtVRMXWInlZcGy9azTgrz5zpql47t/KkpLS3PZSL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aXkosFex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ssij5tKD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F7CEC4CEE9;
-	Wed, 30 Apr 2025 12:06:44 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aXkosFex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5939C4CEE9;
+	Wed, 30 Apr 2025 12:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746014805;
-	bh=IyVmcnxLst8x7+dH9uH0uZDS0nl/G8b8yL/MQzWe33w=;
+	s=korg; t=1746014808;
+	bh=ggzJdcF1LEuvRLwQjRDVUR7jfw+ysM+qJp8k4pzDC+g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ssij5tKD22afvb834uyi/Xtzsd7VHbVkry/FS0u30StCJOZ6X3tFwDxzsaXlhxhtl
-	 HM9W9c52wSUKiZBAR1Owjv2+xrax5vszv+fJLNsBlOBdYTZ0SQY0GeP+px7aOj15iD
-	 1aC0mzBYv2N02dHhbarGsn3jzXZY649LRk6JFskM=
-Date: Wed, 30 Apr 2025 13:04:05 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	b=aXkosFex5aG+w4YePweaeBxzYDv68/FLVlp/UhflZ1Su5S4MOED3CW/b/hRaI7GOo
+	 7AphoZbh4jaoIOaqCSn+id2grR4TDNqmNv7+4qE2oLyXOp4WHTT0TIArvEbkyUtUXP
+	 eh2tkiuIPrUo2M0Edr0xdpwdsKO3iToXVKfVgcQY=
+Date: Wed, 30 Apr 2025 13:39:03 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
 To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] uaccess: rust: add
- UserSliceReader::strcpy_into_buf
-Message-ID: <2025043046-divisive-crawling-e4b9@gregkh>
-References: <20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com>
- <20250429-strncpy-from-user-v2-2-7e6facac0bf0@google.com>
- <2025042919-varsity-registrar-fb45@gregkh>
- <aBICQt-CzQkMw4uk@google.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] rust: alloc: add Vec::insert_within_capacity
+Message-ID: <2025043045-overbuilt-swab-5b65@gregkh>
+References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
+ <20250429-vec-methods-v4-7-dad4436ff82d@google.com>
+ <2025042925-kindly-squash-fa6f@gregkh>
+ <aBIIZ64_Wsk1unB2@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,41 +42,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBICQt-CzQkMw4uk@google.com>
+In-Reply-To: <aBIIZ64_Wsk1unB2@google.com>
 
-On Wed, Apr 30, 2025 at 10:58:10AM +0000, Alice Ryhl wrote:
-> On Tue, Apr 29, 2025 at 01:09:18PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Apr 29, 2025 at 09:02:23AM +0000, Alice Ryhl wrote:
-> > > This patch adds a more convenient method for reading C strings from
-> > > userspace. Logic is added to NUL-terminate the buffer when necessary so
-> > > that a &CStr can be returned.
-> > > 
-> > > Note that we treat attempts to read past `self.length` as a fault, so
-> > > this returns EFAULT if that limit is exceeded before `buf.len()` is
-> > > reached.
+On Wed, Apr 30, 2025 at 11:24:23AM +0000, Alice Ryhl wrote:
+> On Tue, Apr 29, 2025 at 05:30:06PM +0200, Greg KH wrote:
+> > On Tue, Apr 29, 2025 at 02:44:27PM +0000, Alice Ryhl wrote:
+> > > This adds a variant of Vec::insert that does not allocate memory. This
+> > > makes it safe to use this function while holding a spinlock. Rust Binder
+> > > uses it for the range allocator fast path.
 > > > 
 > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> 
-> > > +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
-> > > +        if len < dst.len() {
-> > > +            // Add one to include the NUL-terminator.
-> > > +            len += 1;
-> > > +        } else if len < buf.len() {
-> > > +            // We hit the `self.length` limit before `buf.len()`.
-> > > +            return Err(EFAULT);
+> > > ---
+> > >  rust/kernel/alloc/kvec.rs | 39 +++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 39 insertions(+)
+> > > 
+> > > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> > > index 0682108951675cbee05faa130e5a9ce72fc343ba..998afdcde47bec94b2c9d990ba3afbb3488ea99e 100644
+> > > --- a/rust/kernel/alloc/kvec.rs
+> > > +++ b/rust/kernel/alloc/kvec.rs
+> > > @@ -355,6 +355,45 @@ pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
+> > >          unsafe { self.inc_len(1) };
+> > >      }
+> > >  
+> > > +    /// Inserts an element at the given index in the [`Vec`] instance.
+> > > +    ///
+> > > +    /// Fails if the vector does not have capacity for the new element. Panics if the index is out
+> > > +    /// of bounds.
 > > 
-> > How can this happen?  And if it does, why is that a memory fault?
-> > Doesn't this just mean that we read smaller than our overall size of our
-> > buffer?  Or am I misreading this completely?
-> > 
-> > Maybe a self-test would be good to exercise all of this :)
+> > Why panic and why not just return an error instead?
 > 
-> How can I test userspace access? Is there a way to create a kernel
-> buffer that strncpy_from_user will let you read from for use in a kunit
-> test?
+> It's for consistency with stdlib. Illegal use is panic, expected error
+> conditions are errors.
 
-I think you'll need to just wire up a misc device and test it from
-userspace, sorry.
+But this is the kernel, not userspace :)
+
+As you can return an error, why not?  Rebooting a box should be a "last
+resort" type of thing when you can not recover from an error.  You can
+easily not overflow and return an error here, so why do you want to just
+give up and cause all data to be lost?
+
+And I don't see any other panics happening in this file, so would this
+be the first one?
 
 thanks,
 
