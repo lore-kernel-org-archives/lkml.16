@@ -1,116 +1,82 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C9625A352
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BCB248F5B;
+	Wed, 30 Apr 2025 12:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014983; cv=none; b=YYM4CR/jggBz7G1kkXi33n+DXwjN6Gf8JsT5GB+qZ72UmYMisjK1sB6eV1EQg4HIHJ8D1o3KfS7FwO/Hsake3De0O0I1lsNHH39XZx3Xvf7QLaW21q9Fm2T2Jm3kpYSH+9gu/sruLw0dQzYeEKDrsUuMkm7JkfEc5HSVseqke6w=
+	t=1746015006; cv=none; b=pKEe6DGS5U0CoP0Qf4JGSI0ooaOThL9XA9+g15QXnc154nTB/lSAe9NK1/lpdRWrKDjnNAXqJW92IgapxJhf6uQ2LATAIXa2lR3eKs47PsY30Fz0DkJ9AW0IbVNJ28re4TVwLaV49RJKjYmLqDZElsgBacSjc2cGl28gN2Shanw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014983; c=relaxed/simple;
-	bh=8KldIvPyeyrNxgTI0ZsvmXUIoixPtf61rxatBYhk6W0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CYwlnMK137o0nBmfxhmqWfCwqkRjLD/IBAOLfKZShwXpQJdD7rpJ5nCbL5LbqHjei06EqfVbGnqCL+19JJhOmZzoGCBUWjG+HNO63l7JGiTx2Hy9PnLWrSA84aY/r5oeocUKITxG47oVVSx9mxO0oUI6snEJqeKnahE1JKiBXCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=hBoCpDVJ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746015006; c=relaxed/simple;
+	bh=WBSrjNBJ3OQdsyQov5DoZYcjP/wb5pnfBR9JpejUXWw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=gXeYvYZJ6JS+zf5DViJwhNb7U1DsJAzbrvcbeOuNbz5v1X3gccthBy6SxbGI5vLBzQ27D6LeyZQM2qYJC0vk/AuZtYckzFnCbmRPOhNgoaTpLy+kFNnm4mK/x2mdWwM3j6nAb9sySRinQ9UWZ/7j9hldlob1uJ3tM8c6H6pIB5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkRIFjcX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="hBoCpDVJ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so1056769266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746014979; x=1746619779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yomRrib/ec+S+xnoz6mogpRGq964XEY/6Terik8eUrY=;
-        b=hBoCpDVJmgXyJNqRnv5u11KkvKGC5kD5oLl6jEdhu0UB5CVSwp5S50aMwdx5yKMysv
-         lR/hdsmAtvX1XnSgZ6bWsI2l23r+RvhmZrQBn/X67aRZhy917Iu6aoKdhYk7wQBMiwat
-         RV8ibiNpOs3eKGgAI+Lh3Ru/RjkH5QZjZTqay/VNlrO1//523F0mtwS1C0o36mbIjNNV
-         +gWayRe8o+wM7qOMgANlnLl7mV0tpnX1Dh9FedwLxQ9sQRzNE7tVZLOBhhyQW4/PH0lI
-         VFKYhJDYOqU0AswwBRnjapU6GB8eMgW7bHXEiGvNEoFKo79fgYJLAdRbY8wxBPxWyD3t
-         yDBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746014979; x=1746619779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yomRrib/ec+S+xnoz6mogpRGq964XEY/6Terik8eUrY=;
-        b=gQNHge8FWzg7HcKZiVhiaEQopimBqCxAzT155//0vxZMx399bCQzf3VKrq3kK96m/E
-         eQxzf3bG5+nrAcI3eM9G1KRdK684W+9dMvePhQo5svq1Lx1K7ngbgP5amR/1cpXN6FXO
-         fnZDKNmy3ygTcqi8dt8YOF+JeruvDfcYzs6qEJWlECiUVUtAjnnxSEyidEkNAavdLObO
-         /YSXs6/9lw82l8oPfZawAdRV2sO3Cgvdj1NDon1RKrnGg4znOI5bDd4pyXlEDJfpVLWF
-         T3iYsswGFjLhiAEiMf90YlAyt8CtKDmXXWEBOfjTJ8QiOU8ucr/XfMmOHdkHxISS4U/R
-         c9OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjNKA0hiF75t1f/lzkxzo2nGdjxcmKeqCv6um0iiOicAz5+jLXQnlGy4THPsLPFNhB0KUCOef3mCbNlq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6AceKYXWlXs3EZNM4kryfWgM1Cq6FC+G4ZxK/FLnZG/X29nq7
-	V+axnV0SvurIOREq+e86xxYn2Py5P9pU0nadskEI1p0qWtSJcTJwIuvVsFtTuG8xyDiCneiLAL7
-	v7E9mreN7t0GdEi8AVzGkj68hHp+BCg4Wj45VjA==
-X-Gm-Gg: ASbGncsUK5CEyGMMH2PE0vPOE4vjQ6PQuUDhsclMm8TfFnJBd2/+Zp5/SOVqW0YOwXC
-	xdtEl8sJ0dQgxUTXFYK7CYDTMQYjtlCaUEN+y4qwPDr25SI+QhkrGZar5RFg4MVKOexhm6yXsEm
-	xtlaehAbLk0ian+wFTRu4d
-X-Google-Smtp-Source: AGHT+IF582B4BNpnAWPeBIgXyE1DCKVvQmVItfAo4T9ZANlKsGl3EhfCKe59cp3JmShenfkdYaGJGiTgLiPA+rnFf7I=
-X-Received: by 2002:a17:907:2da3:b0:ace:3a1b:d3d with SMTP id
- a640c23a62f3a-acedc57504amr337067266b.2.1746014979210; Wed, 30 Apr 2025
- 05:09:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkRIFjcX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E82C4CEE9;
+	Wed, 30 Apr 2025 12:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746015005;
+	bh=WBSrjNBJ3OQdsyQov5DoZYcjP/wb5pnfBR9JpejUXWw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=GkRIFjcX5jmQMfCWmgz0rb4p4EBjTA4byTzg5/+AjLsg0Y5rZTTsHgpvlHHl3g6F5
+	 NkOFRG/BQoyrtP56ZWXskXX8BpgrjfxRy3N3/LXeBGITTIVsTK2g/+3omovUp+QtLc
+	 GnZy9jcpyLvoCx+5QP09QnuFRCTdcPDL9SwoiICdgao47VQB2jEwtV/HAVafDPBvxe
+	 3BGo1qxbCxUrJ6E+tah7MDVTcGpx9jHdAsQt39j2iKW9WwSnopiMpGtljJNLRDHrXH
+	 fjn75ubetyyblQ5sn9JuLiixxrnVDHLuGl6kQIWIjqPxvNfUQo8lKJF660eVa0EXu2
+	 pkKE8fORLoTsQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE523806642;
+	Wed, 30 Apr 2025 12:10:45 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429151800.649010-1-neelx@suse.com> <CAL3q7H7WPE+26v1uCKa5C=BwcGpUN3OjnaPUkexPGD=mpJbkSA@mail.gmail.com>
- <CAPjX3FevwHRzyHzgLjcZ8reHtJ3isw3eREYrMvNCPLMDR=NJ4g@mail.gmail.com>
- <CAL3q7H56LC5ro+oshGaVVCV9Gvxfnz4dLaq6bwVW=t0P=tLUCg@mail.gmail.com>
- <CAPjX3Fe3BZ8OB2ZVMn58pY5E9k9j=uNAmuqM4R1tO=sPvx7-pA@mail.gmail.com>
- <CAL3q7H5Bzvew9kGXBRLJNtZm+0_eMOyrgUvC1ZK544DunAPEsA@mail.gmail.com> <aBIE28WHbC2jPkpz@fedora>
-In-Reply-To: <aBIE28WHbC2jPkpz@fedora>
-From: Daniel Vacek <neelx@suse.com>
-Date: Wed, 30 Apr 2025 14:09:28 +0200
-X-Gm-Features: ATxdqUHxbZOqrlJ4zSj6vUkQey8LaW6Z-7BefegTh3VgTrkADgDumoGT3bZ8PZc
-Message-ID: <CAPjX3FctaJkUwv3ZsEfuamBhLwD5=MzoyWAotV2CN9-eJrxWZQ@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
-To: Johannes Thumshirn <morbidrsa@gmail.com>
-Cc: Filipe Manana <fdmanana@kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] pds_core: small code updates
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174601504450.2338913.3710874849878953588.git-patchwork-notify@kernel.org>
+Date: Wed, 30 Apr 2025 12:10:44 +0000
+References: <20250425204618.72783-1-shannon.nelson@amd.com>
+In-Reply-To: <20250425204618.72783-1-shannon.nelson@amd.com>
+To: Nelson@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org,
+	Shannon <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, brett.creeley@amd.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 
-On Wed, 30 Apr 2025 at 13:09, Johannes Thumshirn <morbidrsa@gmail.com> wrot=
-e:
->
-> On Wed, Apr 30, 2025 at 11:26:08AM +0100, Filipe Manana wrote:
-> > On Wed, Apr 30, 2025 at 9:50=E2=80=AFAM Daniel Vacek <neelx@suse.com> w=
-rote:
-> > >
-> > > Nah, thanks again. I was not aware of that. Will keep it in mind.
-> > >
-> > > Still, it doesn't make sense to me to be honest. I mean specifically
-> > > with this example. The header file is also private to btrfs, no publi=
-c
-> > > API. Personally I wouldn't differentiate if it's a source or a header
-> > > file. The code can be freely moved around. And with the prefix the
-> > > code would end up more bloated and less readable, IMO. But let's not
-> > > start any flamewars here.
-> >
-> > I'd disagree about less readability. Reading code that calls a
-> > function with the btrfs prefix makes it clear it's a btrfs specific
-> > function.
-> > Looking at ext4 and xfs, functions declared or defined in their
-> > headers have a "ext4_", "ext_" or "xfs_" prefix.
->
-> To add my $.02 here, it is also a matter of namespacing. There's nothing =
-more
-> anoying than having two functions with the same name in different subsyst=
-ems.
-> IIRC we did have this with the in_range() function, that is available glo=
-bally
-> and there has been a btrfs specific as well.
+Hello:
 
-Yeah, I've been there. Unloading debug symbols of some module(s) from
-the debugger due to collisions/aliases. That indeed can be very
-annoying.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-> Byte,
->         Johannes
+On Fri, 25 Apr 2025 13:46:15 -0700 you wrote:
+> These are a few little code touch ups for a kdoc complaint,
+> quicker error detection, and a cleaner initialization.
+> 
+> Shannon Nelson (3):
+>   pds_core: remove extra name description
+>   pds_core: smaller adminq poll starting interval
+>   pds_core: init viftype default in declaration
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/3] pds_core: remove extra name description
+    https://git.kernel.org/netdev/net-next/c/144530c15ec7
+  - [net-next,2/3] pds_core: smaller adminq poll starting interval
+    https://git.kernel.org/netdev/net-next/c/7c4f4c4fa9b6
+  - [net-next,3/3] pds_core: init viftype default in declaration
+    https://git.kernel.org/netdev/net-next/c/6828208a45c1
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
