@@ -1,264 +1,170 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3070231A23
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BDF21D3E9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746013373; cv=none; b=twDq+r9FdAsdpPl9plfAugb7JFBRvTu1SO6vA8bqBe8LrMCE0Q1tyllLZEL16+rVujzVSNCGnSzVnlEJ4bRCszY9v2fMo0MzPQ26ykebf+R4yNMXfY+BuAfRA4KJh8GK9XIZ0B8ScW+4vO406QqkXLOR3C7bxaixNHptJ2UxmaY=
+	t=1746013534; cv=none; b=COHHHlCBeyG+eYmAJXKZrLtxnGovQ5qsq63Qv16kusxqfVKOAnvKJtohc8nkmBugfl4bxjAXa2/AFvwb6JTBqZugr+Nugf63dlHiZG71AQVxTYSWSVZUf38uJWiAOuYDmIl5qplOFiZP9d9xtL9xcCZrYEuA8BgfvXBR1WuQHTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746013373; c=relaxed/simple;
-	bh=w1HsfbiZ81GXZWTYVUQqkmtNBU8SZdyaw75xVYEcFPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mHiJRf9cfvaEkWrSyLfLe77MyxA7JJinT9lpGtQeTThb/1GFJNjYF3oVb82A+EQfA49MFIk0Bfoq0A4f1+P5NsrflWxIJFCWZ3DJi2l3jB9JPEx4wG1iOqg8piuPoqBd3rnJIltEeKzlySwausFGQNMtmTForYWBEs2RiBISa/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=l54wFE/F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5BKmIgpf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=l54wFE/F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5BKmIgpf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746013534; c=relaxed/simple;
+	bh=CJJauCshp21Gt8IYh7pezCpA++nAGgiCyqfq7wFZA1I=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=XLaf3kus53aFKtQP0qhaG+uKDfhb/v7vSpIUrfJb3UvMMyPulw+ZuF5E2ffBZAkKZbQg5ViqyxzQQCU7VO3W82Dbdx0t+RqnjU3ixzzqt9HkW/wg1PzUKaWW2+XyY6nJjvUIsGuVYXZucDWVCgCs7/RlzpNhR3UovmzovxqrnTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=LctQzrmY; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="l54wFE/F";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5BKmIgpf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="l54wFE/F";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5BKmIgpf"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C17BD21200;
-	Wed, 30 Apr 2025 11:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746013367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DMdUf+G8z9UwnFqiI+Ohf1SNPY5q3W5xNuNqMGtKlLI=;
-	b=l54wFE/Fyyayk3OovslwsQ4asa1Pi4AgvAffXiZwgZOzttH/oxC6jk5LjGchupx3kPFXu3
-	1Dv6JpgyR2B2/d3tYnXBDgrPzVao0HiIpRChPS1nNLDwz7u75B57Bq7GzxtbiXk3IvA2IN
-	4HcJjTvXQVTQ/ds84rUN4C3XKP9jh3I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746013367;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DMdUf+G8z9UwnFqiI+Ohf1SNPY5q3W5xNuNqMGtKlLI=;
-	b=5BKmIgpfXflKaDnFG8V+ORenoH4P1/jhNQAt+HptR/T4clMTesTivFo7cDDi58rCuVgla/
-	DwZdggVsGeegzCDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="l54wFE/F";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=5BKmIgpf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746013367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DMdUf+G8z9UwnFqiI+Ohf1SNPY5q3W5xNuNqMGtKlLI=;
-	b=l54wFE/Fyyayk3OovslwsQ4asa1Pi4AgvAffXiZwgZOzttH/oxC6jk5LjGchupx3kPFXu3
-	1Dv6JpgyR2B2/d3tYnXBDgrPzVao0HiIpRChPS1nNLDwz7u75B57Bq7GzxtbiXk3IvA2IN
-	4HcJjTvXQVTQ/ds84rUN4C3XKP9jh3I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746013367;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DMdUf+G8z9UwnFqiI+Ohf1SNPY5q3W5xNuNqMGtKlLI=;
-	b=5BKmIgpfXflKaDnFG8V+ORenoH4P1/jhNQAt+HptR/T4clMTesTivFo7cDDi58rCuVgla/
-	DwZdggVsGeegzCDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A858F139E7;
-	Wed, 30 Apr 2025 11:42:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id K3zJKLcMEmhsUAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 30 Apr 2025 11:42:47 +0000
-Message-ID: <a9977cb2-3dce-4be1-81a3-23e760082922@suse.cz>
-Date: Wed, 30 Apr 2025 13:42:47 +0200
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="LctQzrmY"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-391324ef4a0so395314f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1746013531; x=1746618331; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MwfMy0+KN//YvkfkLkShPPR01KHLLVwze7q8vnuMUqk=;
+        b=LctQzrmYVxuoiKEcNFGPoiJMVuDod7iHS+hyKPuTm1tvzI5wa7YDEVAsIATZ5Z5S5/
+         AtiXmR91rOSOIHeorlEwEtQrYvSAYlbDuElhGo5+hOEx/en1LwEi4fvftqUdp6GNhm27
+         F6tYrV+dLFVFn6j36bEYPMp0iXshfWGlZqrc7uv4iSiIwxpOVMKjCB45+C1f/qwNfxvM
+         l8VTgDD8c3rOp7CVwfP/B0sLHzhuFNrw5tD33BY27ks8jh5TOZaJy59VPTA6bOnXsPiA
+         W8GfM5/cquuaPX9ewqoizSJhRcdRvOsnmNtK3qcZV8Vr2M3InW8CzYKggGJJ7URZ29X1
+         sTtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746013531; x=1746618331;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MwfMy0+KN//YvkfkLkShPPR01KHLLVwze7q8vnuMUqk=;
+        b=fn5S+94VAW3aw7hAKajGruOCP7h8hchC0yFNQ2D67cW/QGWrBhQ+LzHBOuREqZ0kDg
+         FiGUuGTr36tdsUdZf4n0Ym5k1+bh9CunxLEf5e6ieksmwYqSHh58FI8KNIEPkukObNaK
+         hvpVukfjdNAienup8kW0ocFUB617GKiW6pzvvY6ZTXoH3SGYP4oqhTJb6ajVx9k0MsKW
+         U6n4OvoJ1R6t/gql0OTLIcIuojCJAV8m+PdpxeTUTRy4oopSxG9czwE5ZLEK4fwpwP0C
+         HBFt0ncu60YfEmmYfmaMy95f52eXBOqMXasTFTynoRkcv54R5cmMbbJu+nUVsqIskAiR
+         MC1g==
+X-Forwarded-Encrypted: i=1; AJvYcCV4W/DhPcwk2VzFlS6Dc6qckpGyOT0w9QiTesFoGth7zSx9o0O7T9tcgVehWqdJWhTY6NNCtsU/2B4r4fA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLp+DYDdAAq+mUHZzvrYyCH0vUYeOUCtdS+40dEL/weRWB9bQP
+	6EjyDt2ZuPJCW8dXQAmO1eiRWGkN/EZC3jedtEw4lU80TglUwvuILFu1SdNFFsM=
+X-Gm-Gg: ASbGncs4b3IN03sFp846LNZahSDPLwcDKRCO3dSareG0unpGXWQ3p77EniEtkqklCSG
+	4bVG50Zpfnnznbk6Z91Y4phy3/FXBZGzyM6WfaVi7H3Zi/Tyc0c6rpDDogkujl5gSlpUVcyhnQZ
+	WYsWz+ChAZ/vp25u6AVdyS+o5hEU3D7EjYdi0VoHrShHgdDvv5JmbeWGNq0Ip9468rYeZznj6j9
+	YZoJ57FhIVYN37ujGmfMj5Meh6QiEYUDA7s3gKQQL8W0GR2UAX2O/X7KVKnq0vuVlrjYmYSWLAT
+	WTBJWrH2rvmXbZh0RG8zMwsi6Gd5KBPd8cZWnttiT2uvic2vAMwQGfRIjCpuQKUi/LjBUSZbss/
+	3OQMxpHC964A=
+X-Google-Smtp-Source: AGHT+IGPsHFo0i2I8e2STgcf8/9L1wSmTK1gIO5CuUV/Z9SjXZXm3h77FFhC8bIycStr7wFr3jgBMA==
+X-Received: by 2002:a05:6000:22c3:b0:3a0:678f:8023 with SMTP id ffacd0b85a97d-3a091a624b4mr22754f8f.4.1746013530645;
+        Wed, 30 Apr 2025 04:45:30 -0700 (PDT)
+Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e460b2sm17013970f8f.70.2025.04.30.04.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 04:45:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] memcg: separate local_trylock for memcg and obj
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-mm@kvack.org,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>, bpf <bpf@vger.kernel.org>
-References: <20250429230428.1935619-1-shakeel.butt@linux.dev>
- <20250429230428.1935619-3-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250429230428.1935619-3-shakeel.butt@linux.dev>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C17BD21200
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Date: Wed, 30 Apr 2025 13:45:29 +0200
+Message-Id: <D9JY52BJEFX2.2S5XL9NOOGBS7@ventanamicro.com>
+Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming
+ runnable
+Cc: "Anup Patel" <apatel@ventanamicro.com>, <kvm-riscv@lists.infradead.org>,
+ <kvm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@atishpatra.org>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
+ Ghiti" <alex@ghiti.fr>, "Andrew Jones" <ajones@ventanamicro.com>, "Mayuresh
+ Chitale" <mchitale@ventanamicro.com>
+To: "Anup Patel" <anup@brainfault.org>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+ <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
+ <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
+ <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com>
+ <CAK9=C2Woc5MtrJeqNtaVkMXWEsGeZPsmUgtFQET=OKLHLwRbPA@mail.gmail.com>
+ <D9J1TBKYC8YH.1OPUI289U0O2C@ventanamicro.com>
+ <CAAhSdy01yBBfJwdTn90WeXFR85=1zTxuebFhi4CQJuOujVTHXg@mail.gmail.com>
+ <D9J9DW53Q2GD.1PB647ISOCXRX@ventanamicro.com>
+ <CAAhSdy0B-pF-jHmTXNYE7NXwdCWJepDtGR__S+P4MhZ1bfUERQ@mail.gmail.com>
+ <CAAhSdy20pq3KvbCeST=h+O5PWfs2E4uXpX9BbbzE7GJzn+pzkA@mail.gmail.com>
+ <D9JTZ6HH00KY.1B1SKH1Z0UI1S@ventanamicro.com>
+ <CAAhSdy0TfpWQ-kC_gUUCU0oC5dR45A1v9q84H2Tj9A8kdO0d1A@mail.gmail.com>
+In-Reply-To: <CAAhSdy0TfpWQ-kC_gUUCU0oC5dR45A1v9q84H2Tj9A8kdO0d1A@mail.gmail.com>
 
-On 4/30/25 01:04, Shakeel Butt wrote:
-> The per-cpu stock_lock protects cached memcg and cached objcg and their
-> respective fields. However there is no dependency between these fields
-> and it is better to have fine grained separate locks for cached memcg
-> and cached objcg. This decoupling of locks allows us to make the memcg
-> charge cache and objcg charge cache to be nmi safe independently.
-> 
-> At the moment, memcg charge cache is already nmi safe and this
-> decoupling will allow to make memcg charge cache work without disabling
-> irqs.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
->  mm/memcontrol.c | 52 +++++++++++++++++++++++++++----------------------
->  1 file changed, 29 insertions(+), 23 deletions(-)
+2025-04-30T15:47:13+05:30, Anup Patel <anup@brainfault.org>:
+> On Wed, Apr 30, 2025 at 1:59=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrc=
+mar@ventanamicro.com> wrote:
+>> 2025-04-30T10:56:35+05:30, Anup Patel <anup@brainfault.org>:
+>> > On Wed, Apr 30, 2025 at 9:52=E2=80=AFAM Anup Patel <anup@brainfault.or=
+g> wrote:
+>> >> On Tue, Apr 29, 2025 at 9:51=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <=
+rkrcmar@ventanamicro.com> wrote:
+>> >> > The point of this patch is to reset the boot VCPU, so we reset the =
+VCPU
+>> >> > that is made runnable by the KVM_SET_MP_STATE IOCTL.
+>> >>
+>> >> Like I said before, we don't need to do this. The initiating VCPU
+>> >> can be resetted just before exiting to user space for system reset
+>> >> event exit.
+>>
+>> You assume initiating VCPU =3D=3D boot VCPU.
+>>
+>> We should prevent KVM_SET_MP_STATE IOCTL for all non-initiating VCPUs if
+>> we decide to accept the assumption.
+>
+> There is no such assumption.
 
-> @@ -1883,19 +1885,22 @@ static void drain_local_stock(struct work_struct *dummy)
->  	struct memcg_stock_pcp *stock;
->  	unsigned long flags;
->  
-> -	/*
-> -	 * The only protection from cpu hotplug (memcg_hotplug_cpu_dead) vs.
-> -	 * drain_stock races is that we always operate on local CPU stock
-> -	 * here with IRQ disabled
-> -	 */
-> -	local_lock_irqsave(&memcg_stock.stock_lock, flags);
-> +	if (WARN_ONCE(!in_task(), "drain in non-task context"))
-> +		return;
->  
-> +	preempt_disable();
->  	stock = this_cpu_ptr(&memcg_stock);
-> +
-> +	local_lock_irqsave(&memcg_stock.obj_lock, flags);
->  	drain_obj_stock(stock);
-> +	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
-> +
-> +	local_lock_irqsave(&memcg_stock.memcg_lock, flags);
->  	drain_stock_fully(stock);
-> -	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
-> +	local_unlock_irqrestore(&memcg_stock.memcg_lock, flags);
->  
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
-> +	preempt_enable();
+You probably haven't intended it:
 
-This usage of preempt_disable() looks rather weird and makes RT unhappy as
-the local lock is a mutex, so it gives you this:
+  1) VCPU 0 is "chilling" in userspace.
+  2) VCPU 1 initiates SBI reset.
+  3) VCPU 1 makes a reset request to VCPU 0.
+  4) VCPU 1 returns to userspace.
+  5) Userspace knows it should reset the VM.
+  6) VCPU 0 still hasn't entered KVM.
+  7) Userspace sets the initial state of VCPU 0 and enters KVM.
+  8) VCPU 0 is reset in KVM, because of the pending request.
+  9) The initial boot state from userspace is lost.
 
-BUG: sleeping function called from invalid context at
-kernel/locking/spinlock_rt.c:48
+>> I'd rather choose a different design, though.
+>>
+>> How about a new userspace interface for IOCTL reset?
+>> (Can be capability toggle for KVM_SET_MP_STATE or a straight new IOCTL.)
+>>
+>> That wouldn't "fix" current userspaces, but would significantly improve
+>> the sanity of the KVM interface.
+>
+> I believe the current implementation needs a few improvements
+> that's all. We certainly don't need to introduce any new IOCTL.
 
-I know the next patch removes it again but for bisectability purposes it
-should be avoided. Instead of preempt_disable() we can extend the local lock
-scope here?
+I do too.  The whole patch could have been a single line:
 
->  }
->  
->  static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-> @@ -1918,10 +1923,10 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
->  	VM_WARN_ON_ONCE(mem_cgroup_is_root(memcg));
->  
->  	if (nr_pages > MEMCG_CHARGE_BATCH ||
-> -	    !local_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
-> +	    !local_trylock_irqsave(&memcg_stock.memcg_lock, flags)) {
->  		/*
->  		 * In case of larger than batch refill or unlikely failure to
-> -		 * lock the percpu stock_lock, uncharge memcg directly.
-> +		 * lock the percpu memcg_lock, uncharge memcg directly.
->  		 */
->  		memcg_uncharge(memcg, nr_pages);
->  		return;
-> @@ -1953,7 +1958,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
->  		WRITE_ONCE(stock->nr_pages[i], nr_pages);
->  	}
->  
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	local_unlock_irqrestore(&memcg_stock.memcg_lock, flags);
->  }
->  
->  static bool is_drain_needed(struct memcg_stock_pcp *stock,
-> @@ -2028,11 +2033,12 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
->  
->  	stock = &per_cpu(memcg_stock, cpu);
->  
-> -	/* drain_obj_stock requires stock_lock */
-> -	local_lock_irqsave(&memcg_stock.stock_lock, flags);
-> +	/* drain_obj_stock requires obj_lock */
-> +	local_lock_irqsave(&memcg_stock.obj_lock, flags);
->  	drain_obj_stock(stock);
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
->  
-> +	/* no need for the local lock */
->  	drain_stock_fully(stock);
->  
->  	return 0;
-> @@ -2885,7 +2891,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
->  	unsigned long flags;
->  	bool ret = false;
->  
-> -	local_lock_irqsave(&memcg_stock.stock_lock, flags);
-> +	local_lock_irqsave(&memcg_stock.obj_lock, flags);
->  
->  	stock = this_cpu_ptr(&memcg_stock);
->  	if (objcg == READ_ONCE(stock->cached_objcg) && stock->nr_bytes >= nr_bytes) {
-> @@ -2896,7 +2902,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
->  			__account_obj_stock(objcg, stock, nr_bytes, pgdat, idx);
->  	}
->  
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
->  
->  	return ret;
->  }
-> @@ -2985,7 +2991,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
->  	unsigned long flags;
->  	unsigned int nr_pages = 0;
->  
-> -	local_lock_irqsave(&memcg_stock.stock_lock, flags);
-> +	local_lock_irqsave(&memcg_stock.obj_lock, flags);
->  
->  	stock = this_cpu_ptr(&memcg_stock);
->  	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
-> @@ -3007,7 +3013,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
->  		stock->nr_bytes &= (PAGE_SIZE - 1);
->  	}
->  
-> -	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-> +	local_unlock_irqrestore(&memcg_stock.obj_lock, flags);
->  
->  	if (nr_pages)
->  		obj_cgroup_uncharge_pages(objcg, nr_pages);
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index d3d957a9e5c4..b3e6ad87e1cd 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -511,6 +511,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vc=
+pu,
+=20
+ 	switch (mp_state->mp_state) {
+ 	case KVM_MP_STATE_RUNNABLE:
++		kvm_riscv_reset_vcpu(vcpu);
+ 		WRITE_ONCE(vcpu->arch.mp_state, *mp_state);
+ 		break;
+ 	case KVM_MP_STATE_STOPPED:
 
+It is the backward compatibility and trying to fix current userspaces
+that's making it ugly.  I already gave up on the latter, so we can have
+a decently clean solution with the former.
+
+> Also, keep in mind that so far we have avoided any RISC-V
+> specific KVM IOCTLs and we should try to keep it that way
+> as long as we can.
+
+We can re-use KVM_SET_MP_STATE and add a KVM capability.
+Userspace will opt-in to reset the VCPU through the existing IOCTL.
+
+This design will also allow userspace to trigger a VCPU reset without
+tearing down the whole VM.
