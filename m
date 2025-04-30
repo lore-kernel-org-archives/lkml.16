@@ -1,146 +1,115 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706EC25A2A1;
-	Wed, 30 Apr 2025 15:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228471EEA46;
+	Wed, 30 Apr 2025 15:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746026567; cv=none; b=LvPoO+HIXCd756IXwbRabqoCTaDLGdeBCAlqlRe6vL0zSORQibEskcGJ5IQQYQrnIDThC50DB3GgPzvTGB/pgN6Ty1E+ZHJ4oaGt2XPQKwc16tpYuY6ZkECOHRDzwvljhbkfrHosY5gv+MciKqZ6dRRSoJ0sUzc3/nxspQrjos8=
+	t=1746026627; cv=none; b=aXQkmofYKhmVCiUhSGNzRS4aGupBnrGeSUXL14T2SuFrXqJCT4ZDt0GjzOIpsedez3PnUmt2dwZU5gjLRkIaZ6j3H4c3JPq1RD8Zjh/xQbT8R4eWjTxHamc3u5WrUzNXwMkmdZLY5WZ3awHefwmeUWeAPrCfS/7QfXIgMieEo7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746026567; c=relaxed/simple;
-	bh=vK9x+fKPiphgnYio19S12ceCgeUhQ6mE/xg797ES+Bw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cC1FxMgKDzLW1VnJIX46XfteLgMLPi/MxlncV9bWUXi99ehf0GI6Q1hR9cKMcTkQt86N8iPIiCzi1zQzA4l/mqYG1UZ7Slh/W6vwo/5+hAOY+mGPJZVMzm3U6sNgo6rYOYXyu4BF9RdbidGNAMi6pJ4CuWB+2miZ4JrPy1DkUqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PIq+/w3v; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746026627; c=relaxed/simple;
+	bh=ma06EOR4a4yVkwpUCmBQumeiwrVs6EhpQs6HOVviQjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DaYQWoxbSuRVcC6k2qYFbU2ZHW/TR6joy5ZAJjH6OPgoUlF+q9wmeSc9CQU835UOtPHQZCLL+XULtV14Fg6VEE6GWBNmDa6Wzxu0kmkLV1iw0YHYkFGdmWg8o/b5ISJXXw8iIMVKIVUVGnNsAmnc0Nzlhco5VdQu20niuDLDWA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=STe1wDbk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PIq+/w3v"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UA4D8s006429;
-	Wed, 30 Apr 2025 15:22:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=qel6dC
-	z7U0QSLGwxwhtVvAr2kR+Adu0rEYWSsIjsTbY=; b=PIq+/w3vZHiC7BGoySnV6C
-	DhbHM0/dBCx11uXLIuoiv30NxQSkggFk4G/9mo9Iv3jTVFos6007a8Bik67GuZa6
-	pda98LoS+ZRpukf9nR/URjcMZ1ovs2K5tMdjaoYQbl4Bpxur4KU0mnL0HnE//ssI
-	eYhKz7fpJqAYWEQ4zcw78jG7vmPaNk84i9PV8FiaVS1mQIsJlhwxxx9Mf5+7bn/E
-	X6yspfsCVZnDILFbGULYelC+1dGcLSOXxn/1Qn/MNMq3dQEFy29Ol3ObXBHz1wzi
-	wDDUpKSQ8FxBmrP/Cd9Zq7UftO0n5EkYeR61vUqMFqmkvKjwfJJkNEkvlB7m0IOA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bhsjsh9t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 15:22:34 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53UFM9gS025898;
-	Wed, 30 Apr 2025 15:22:33 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bhsjsh9p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 15:22:33 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53UE72aJ024679;
-	Wed, 30 Apr 2025 15:22:32 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1m86ba-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 15:22:32 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53UFMVMw19268028
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 15:22:31 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1562558061;
-	Wed, 30 Apr 2025 15:22:31 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F19EE58054;
-	Wed, 30 Apr 2025 15:22:29 +0000 (GMT)
-Received: from [9.61.140.105] (unknown [9.61.140.105])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 30 Apr 2025 15:22:29 +0000 (GMT)
-Message-ID: <135ceca8-e98a-407f-a301-8b4720c8e8f0@linux.ibm.com>
-Date: Wed, 30 Apr 2025 11:22:29 -0400
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="STe1wDbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020EAC4CEE7;
+	Wed, 30 Apr 2025 15:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746026626;
+	bh=ma06EOR4a4yVkwpUCmBQumeiwrVs6EhpQs6HOVviQjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=STe1wDbk0hs9M5YwEUIb+3jnKhlnf8HeGWp2hfJOY4CZdc+FGsO64ZoCRoaD4XW6j
+	 q+FWcY5xddQa/eJYE6wTbcIyQP57xTzTxGg49h5PChdb4tiVVC+Gp1ivHomXSyGcrA
+	 PJ5iVujTMuK0PJDExgC/oWT4+T7q0UUpkGJazxlc=
+Date: Wed, 30 Apr 2025 17:23:43 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/8] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <2025043022-travesty-slicing-2089@gregkh>
+References: <20250429-debugfs-rust-v1-0-6b6e7cb7929f@google.com>
+ <20250429-debugfs-rust-v1-1-6b6e7cb7929f@google.com>
+ <2025043021-plaza-grip-2916@gregkh>
+ <CAGSQo00Kg2QV56LYFg6nRY+yS2KtiVAPaggKaKFCdprjBfXCcA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] integrity/platform_certs: Allow loading of keys in
- static key management mode
-To: Srish Srinivasan <ssrish@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
-        zohar@linux.ibm.com, linux-kernel@vger.kernel.org
-References: <20250430090350.30023-1-ssrish@linux.ibm.com>
- <20250430090350.30023-4-ssrish@linux.ibm.com>
-Content-Language: en-US
-From: Nayna Jain <nayna@linux.ibm.com>
-In-Reply-To: <20250430090350.30023-4-ssrish@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=dcuA3WXe c=1 sm=1 tr=0 ts=6812403a cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=KmA9UCYRVGLAr49MUM8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: bxiKuflN9motG-j3lwDGZK_NwY8jAYZ0
-X-Proofpoint-ORIG-GUID: 1VHetqsTmLpayLE2wP_W6Ed7bBU9fglq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDEwNyBTYWx0ZWRfX35Mo87z6GspG lfncH6zxnv3JpMWNydyqlW3vKBQ0Vx4cY/mq/qcTajHJyzD4BdFvzdPNBqzK79v23YcpoV2U4Rl mGf7jLUCqEEEeWK9DzgzSpkPNYoXwjOIH8gNzzUJ9WZV4N/8yhH93lbrXVkt6YZsYJz4TRGrQSc
- xjph8xt61b/B8+tDGgQToDw2CWGt5KREpaT1kcA3mLwvREgTjrhEt+O3WXF+GjJwpSnmDw2RHJk MCJaOMN/tIRTG8v+olfCbRkY0L1lCZ7/K8QpZVLwyWcdqvx1IqpOE/gMZvJs1o00G0gtwcK7LGD UBd0DvCcUcZlBOLyKhWgofQg4cPNMNfXtceezskgApRbSsvC+709C7V8OjGi00QJBAYuSnKpjlW
- 85hA25azAv+WoYb7o99bvd0Ok91r07otbKmD0pBZll7SXvijrBzW1Tjy/lbOobOXdi7DU/xB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- spamscore=0 impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300107
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGSQo00Kg2QV56LYFg6nRY+yS2KtiVAPaggKaKFCdprjBfXCcA@mail.gmail.com>
 
+On Wed, Apr 30, 2025 at 08:10:44AM -0700, Matthew Maurer wrote:
+> On Wed, Apr 30, 2025 at 5:06 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Apr 29, 2025 at 11:15:55PM +0000, Matthew Maurer wrote:
+> > > The basic API relies on `dput` to prevent leaks. Use of `debugfs_remove`
+> > > is delayed until the more full-featured API, because we need to avoid
+> > > the user having an reference to a dir that is recursively removed.
+> > >
+> > > Signed-off-by: Matthew Maurer <mmaurer@google.com>
+> >
+> > First off, many thanks for doing this.  I like this in general, but I
+> > have loads of specific questions/comments.  Don't take that as a
+> > criticism of this feature, I really want these bindings to be in the
+> > tree and work hopefully better/cleaner than the userspace ones do.
+> >
+> > First off, the main "rule" of debugfs is that you should NEVER care
+> > about the return value of any debugfs function.  So much so that the C
+> > side hides errors almost entirely where possible.  I'd like to see this
+> > carried through to the Rust side as well, but I think you didn't do that
+> > for various "traditional" reasons.
+> 
+> Sure, I mostly had to do error checking because I was using an
+> `ARef<Dir>` to represent a directory, which meant that the underlying
+> directory needed to be a valid pointer. Given that you've said that
+> the returned `dentry *` should never be used as an actual `dentry`,
+> only as an abstract handle to a DebugFS object, that requirement goes
+> away, and I can remove the error handling code and always successfully
+> return a `Dir`, even in cases where an error has occurred.
 
-On 4/30/25 5:03 AM, Srish Srinivasan wrote:
-> On PLPKS enabled PowerVM LPAR, there is no provision to load signed
-> third-party kernel modules when the key management mode is static. This
-> is because keys from secure boot secvars are only loaded when the key
-> management mode is dynamic.
->
-> Allow loading of the trustedcadb and moduledb keys even in the static
-> key management mode, where the secvar format string takes the form
-> "ibm,plpks-sb-v0".
+Great!
 
-Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+Except when debugfs is not enabled, then what are you going to return?
+The same structure, or an error?
 
-Thanks & Regards,
-    - Nayna
+I'd vote for the same pointer to the structure, just to make it more
+obvious that this is a totally opaque thing and that no caller should
+ever know or care if debugfs is working or even present in the system.
 
->
-> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->   security/integrity/platform_certs/load_powerpc.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-> index c85febca3343..714c961a00f5 100644
-> --- a/security/integrity/platform_certs/load_powerpc.c
-> +++ b/security/integrity/platform_certs/load_powerpc.c
-> @@ -75,12 +75,13 @@ static int __init load_powerpc_certs(void)
->   		return -ENODEV;
->   
->   	// Check for known secure boot implementations from OPAL or PLPKS
-> -	if (strcmp("ibm,edk2-compat-v1", buf) && strcmp("ibm,plpks-sb-v1", buf)) {
-> +	if (strcmp("ibm,edk2-compat-v1", buf) && strcmp("ibm,plpks-sb-v1", buf) &&
-> +	    strcmp("ibm,plpks-sb-v0", buf)) {
->   		pr_err("Unsupported secvar implementation \"%s\", not loading certs\n", buf);
->   		return -ENODEV;
->   	}
->   
-> -	if (strcmp("ibm,plpks-sb-v1", buf) == 0)
-> +	if (strcmp("ibm,plpks-sb-v1", buf) == 0 || strcmp("ibm,plpks-sb-v0", buf) == 0)
->   		/* PLPKS authenticated variables ESL data is prefixed with 8 bytes of timestamp */
->   		offset = 8;
->   
+Note that some drivers will want to save a bit of space if debugfs is
+not enabled in the build, so be prepared to make the binding work
+somehow that way too.  Can you have an "empty" object that takes no
+memory?  Or is this too overthinking things?
+
+> > Wait, what?  Why would an explicit drop(parent) be required here?  That
+> > feels wrong, and way too complex.  Why can't you rely on the child
+> > creation to properly manage this if needed (hint, it shouldn't be.)
+> 
+> The explicit `drop` is not required for normal usage, it was intended
+> to be illustrative - I was trying to explain what the semantics would
+> be if the parent `dentry` was released before the child was. As
+> before, now that the child will not be an `ARef<Dir>`, and so not
+> assumed to be a valid `dentry` pointer, this example won't be relevant
+> anymore.
+
+Great!
+
+thanks, hopefully this should make things simpler.
+
+greg k-h
