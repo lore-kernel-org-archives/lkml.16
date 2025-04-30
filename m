@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9CD801
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A789EBA53
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745973704; cv=none; b=KwjGmkahbaXpeWGY6BXY7H4Ty4Wf2OkRjH/s+yaUtyV5BVV1lQBUZXXFFkWFzJwoABiseCq++dharUSTks/b5yAiMwxXD2GjQX6DCgDrYk1V+SUJEpVufs6PiAxsoYXQvkS317MVYr7paHvSEuMkFdD4TptWbDKUXZkcMlu6Y2A=
+	t=1745973706; cv=none; b=DlgAal0e7y4au88Z9O3MtLSgLTVjG60w4JtyU9W3BR75cC0dMPvpsgKHYYrPjJMgb03gmVo/u98Z7tztMebBmW6vrLEHrDBgHOh4Ur1P9nJtFFZUGjtJ+HO5s2UHo6Fn+hPnS2l8SEPegdj7PNc7xcy+hYbEIYcVJqsJPDpEaSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745973704; c=relaxed/simple;
-	bh=aQ8Ixb2ii7TM17c5CxHc/kZsrUa4Me1nM9JR+KWLbRA=;
+	s=arc-20240116; t=1745973706; c=relaxed/simple;
+	bh=bQOUZ5ooNOtzWZnFpHAynQKZLkRbyLSyu+YVQL5hQ8U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gqqOmGWrEvYC4vwsSfP0UGtsfLnje2eHzZspnNWHNBfBNs2OiucZYzMFPUXJ/hlb/G9nZr6aeIq00HUok0A1cKPeiv1ov5a3IeqRmBEUEREkZpDW0l9VDLlzRvstzozKaqc0K7PNnANhDuX1x3RwJUw17D8PiJy5yWlRDwG1+Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pmvxetvA; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=GAMAXRgPZ/GwooIU4xrp3+SEyEe4bl8Isktz6sfTDfqymIOwzBKJJ2sM0z7NOzrGl2NQSrTo0kA3V2AKphj42j3ETnvIHuOqMQ3Sn7g4MjLNvqZZDoc+uHbOLA3346ItejwFcrWgz1myW0pofU+0Y5Y4GsNuociYu5rmTpJdIBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=spaBFm9+; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pmvxetvA"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b16837f1874so3442457a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:41:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="spaBFm9+"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-225107fbdc7so62103255ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745973702; x=1746578502; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745973704; x=1746578504; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e1KMrryhTDqYQRcc+MhBf4Nju0O0E10cRTohQDGFkGY=;
-        b=pmvxetvAX5sZV7/2/HiEwwwKtIl4NEgCdbbTwT9PYG1y72zDXeVY9cUSDGl5UycIxE
-         uBb6dBzwblJhxkHppRcinXejNF97yEhE9sJQ/Xc19htP+OCXXkWY53T4mj6CzBSotSwj
-         h5nFEOZxvr/XFrv8BAtvIgTWlAO0Fkz9OqPid+Xn9RQtBWG06WmeNxL+z1x795fLVU5l
-         4Kd2Js40qdyti4Pqjba+8oASCTL98Pqd8JWlAk6e6f3jGgi+p2I17H9Q1nELreo+OTQ2
-         /3Uj3ZbwT2GpUd0dO+dam4KnXrpDRpM/pcCtvm19hSyhiYqH8XVGNTHdBEBXebWu2vNI
-         Rkmg==
+        bh=3P8+0W8rcJSWHrA+D5OrYMrXp40a4gp5I5ey87XHEMw=;
+        b=spaBFm9+O3gnVkVsjA8+1JMAuYnv+kV30KqWLfd73qsOO8OwEBZ+SeaHWpmuJ3K+AV
+         WT/mt0RXDhRqKZI+GSddbO3ZZ4p+FdZm4+mdskNDngR0AsrRjvzjcfTeEWybDbwTsFc+
+         1rHL1QA0uBdi4Y1pvpgaGKRIhmj/wnhzaV160qb3sjCbwmU3WDYmUrEs46idpUjHiiTE
+         M/dwXJ2LX8ZiCTjRUfCZeJ5MBULmStqh98nzCL/D2wSUQ0d61k9yMrnt29T1HKGPNrbd
+         LAY/dVSDpN58t2MhEfNqJ1mIbuL3QUCwiVTw+RLSIM7lmY4pjUkPl2iQXNpz93rtxOen
+         K/Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745973702; x=1746578502;
+        d=1e100.net; s=20230601; t=1745973704; x=1746578504;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e1KMrryhTDqYQRcc+MhBf4Nju0O0E10cRTohQDGFkGY=;
-        b=uAw3OnDjoTThvlc1bJeZAEVKULyS/IDe59bK8XD4v0bLe532bwPgiCycoWNvpgJkL3
-         ha08Xx33nv/tmZzuJZs/1TMmyn1g8BwXqjkb2Vl9mXwt2RNhwhx7lqrIFj1W6ggmoD3D
-         +S6SfvCg2mcEugmD32HC0ZDNbV18SkzEqYqMAaeZop2wu8m/osvlIwBbZkDC0Z1mQg3T
-         AqOj18G48My2DjTB0uQ0FhcTaM9MQfRSCpNx7en6gYcI5l7tSRPia3vUQg69BybNukqf
-         ayj9/I4cJiD/tXAYxMuNvyUsTLcFvD7c7ocBKAbqVPp/z24vMscZUc2RytBaBLh3t3Yi
-         xyXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUginPHJz/G9jhXvzK7dkKvLqCQIvS3/wjIRZzn8GV211D7WszhV/NMukzDFVZUsfRjcunsRmgqlQ6R5oU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnDWz4dT0lUjQFgeM09UMdyDvQKssf1hPYJeKNbXL6r+Km/ErP
-	VPLvz3x3dXxj+NBc0TMui6tkvP+XKyxTSEgTAa4AZBNIFbWt19ZBDVkNtaghIT2Az1e12slip+o
-	JgtyKGg==
-X-Google-Smtp-Source: AGHT+IH5AV8B/lmxOmO7bvKCtJ0Ps0gr6YLjC9VmSVrpHIqji0bGhb7vyMUNXXGmFCeguUAOJMfQk3WEI6qq
-X-Received: from pfbfn23.prod.google.com ([2002:a05:6a00:2fd7:b0:740:555:f7af])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6f09:b0:1f5:70af:a32a
- with SMTP id adf61e73a8af0-20a88e1c278mr1607808637.32.1745973701640; Tue, 29
- Apr 2025 17:41:41 -0700 (PDT)
-Date: Tue, 29 Apr 2025 17:41:24 -0700
+        bh=3P8+0W8rcJSWHrA+D5OrYMrXp40a4gp5I5ey87XHEMw=;
+        b=jivi0KM25Xdc+Ckt4ygg0puSQugSncah9DveOgo/m6R9soIwY74LlI4U3fbB89rf2t
+         YSPQCfT9vLGX9CZmKGx+otK4f5is/YTW8cnPKRUxlrdyInrw+3qv/XoliBaw+gnrxHGh
+         JjrdVQRm5Sa5OdjNXJcJTOpqY8UN/ysY6tOSjij1m3kYIK+4qrKP1yOdin4XQeswSyUd
+         geN0c8YuUpyLsBKQQGAgEDGu2zakovqVqJwkT8nrvoDBtga4TiGhfXTtAEb1zTgVNPz1
+         OInKenL0xrGk+U3l/TVpDX3rtAR7vwH9PdJchZoqjXviXb4tQ98Q7tkPU11nWJMf1Gib
+         m+gA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrSoXUcuyGj1Z/seexVq4GWzBDchJHigy7ZyToqsuqHi20C7WlkJYuZvgdSVANlGgv4EYx+2YNNSq5FLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5lsBYxBJ+snQK1E9xoAgd/jU5pi//yrC6plrjwhu6DD6joXIL
+	p9GWOvf2aV+Y6AR/8blH85j20bkJtIPeqo+KH3O6B3Muw/YW7lJyZHb+fi9nQtAgiHkJ8ZJxakz
+	Y8gkPMA==
+X-Google-Smtp-Source: AGHT+IF6rGQczrBYLKeu5PIevKkC9hGr0+f3qbWmXMTSLnxpnnROvoClomrm5O7BzJV9EQmtFyeGFOVFy560
+X-Received: from plbja7.prod.google.com ([2002:a17:902:efc7:b0:223:f59e:ae50])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4d1:b0:223:669f:ca2d
+ with SMTP id d9443c01a7336-22df356d961mr21753095ad.35.1745973703883; Tue, 29
+ Apr 2025 17:41:43 -0700 (PDT)
+Date: Tue, 29 Apr 2025 17:41:25 -0700
 In-Reply-To: <20250430004128.474388-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430004128.474388-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-Message-ID: <20250430004128.474388-3-irogers@google.com>
-Subject: [PATCH v2 2/6] perf symbol-elf: Integrate rust-v0 demangling
+Message-ID: <20250430004128.474388-4-irogers@google.com>
+Subject: [PATCH v2 3/6] perf demangle-rust: Remove previous legacy rust decoder
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -83,115 +83,306 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Use the demangle-rust-v0 APIs to see if symbol is Rust mangled and
-demangle if so. The API requires a pre-allocated output buffer, some
-estimation and retrying are added for this.
+Code is unused since the introduction of rustc-demangle demangler.
 
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/Build        |  5 +++-
- tools/perf/util/symbol-elf.c | 47 ++++++++++++++++++++++++++----------
- 2 files changed, 38 insertions(+), 14 deletions(-)
+ tools/perf/util/demangle-rust.c | 269 --------------------------------
+ tools/perf/util/demangle-rust.h |   8 -
+ 2 files changed, 277 deletions(-)
+ delete mode 100644 tools/perf/util/demangle-rust.c
+ delete mode 100644 tools/perf/util/demangle-rust.h
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 4f7f072fa222..7910d908c814 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -241,9 +241,12 @@ perf-util-y += cap.o
- perf-util-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
- perf-util-y += demangle-ocaml.o
- perf-util-y += demangle-java.o
--perf-util-y += demangle-rust.o
-+perf-util-y += demangle-rust-v0.o
- perf-util-$(CONFIG_LIBLLVM) += llvm-c-helpers.o
- 
-+CFLAGS_demangle-rust-v0.o += -Wno-shadow -Wno-declaration-after-statement \
-+    -Wno-switch-default -Wno-switch-enum -Wno-missing-field-initializers
-+
- ifdef CONFIG_JITDUMP
- perf-util-$(CONFIG_LIBELF) += jitdump.o
- perf-util-$(CONFIG_LIBELF) += genelf.o
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index fbf6d0f73af9..3fc87309746f 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -16,13 +16,14 @@
- #include "demangle-cxx.h"
- #include "demangle-ocaml.h"
- #include "demangle-java.h"
+diff --git a/tools/perf/util/demangle-rust.c b/tools/perf/util/demangle-rust.c
+deleted file mode 100644
+index a659fc69f73a..000000000000
+--- a/tools/perf/util/demangle-rust.c
++++ /dev/null
+@@ -1,269 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <string.h>
+-#include "debug.h"
+-
 -#include "demangle-rust.h"
-+#include "demangle-rust-v0.h"
- #include "machine.h"
- #include "vdso.h"
- #include "debug.h"
- #include "util/copyfile.h"
- #include <linux/ctype.h>
- #include <linux/kernel.h>
-+#include <linux/log2.h>
- #include <linux/zalloc.h>
- #include <linux/string.h>
- #include <symbol/kallsyms.h>
-@@ -308,6 +309,9 @@ char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unuse
- 
- static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
- {
-+	struct demangle rust_demangle = {
-+		.style = DemangleStyleUnknown,
-+	};
- 	char *demangled = NULL;
- 
- 	/*
-@@ -318,21 +322,38 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
- 	if (!want_demangle(dso__kernel(dso) || kmodule))
- 		return demangled;
- 
--	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
--	if (demangled == NULL) {
--		demangled = ocaml_demangle_sym(elf_name);
--		if (demangled == NULL) {
--			demangled = java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
-+	rust_demangle_demangle(elf_name, &rust_demangle);
-+	if (rust_demangle_is_known(&rust_demangle)) {
-+		/* A rust mangled name. */
-+		if (rust_demangle.mangled_len == 0)
-+			return demangled;
-+
-+		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
-+		     buf_len < 1024 * 1024; buf_len += 32) {
-+			char *tmp = realloc(demangled, buf_len);
-+
-+			if (!tmp) {
-+				/* Failure to grow output buffer, return what is there. */
-+				return demangled;
-+			}
-+			demangled = tmp;
-+			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
-+							   /*alternate=*/true) == OverflowOk)
-+				return demangled;
- 		}
-+		/* Buffer exceeded sensible bounds, return what is there. */
-+		return demangled;
- 	}
--	else if (rust_is_mangled(demangled))
--		/*
--		    * Input to Rust demangling is the BFD-demangled
--		    * name which it Rust-demangles in place.
--		    */
--		rust_demangle_sym(demangled);
- 
--	return demangled;
-+	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
-+	if (demangled)
-+		return demangled;
-+
-+	demangled = ocaml_demangle_sym(elf_name);
-+	if (demangled)
-+		return demangled;
-+
-+	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
- }
- 
- struct rel_info {
+-
+-/*
+- * Mangled Rust symbols look like this:
+- *
+- *     _$LT$std..sys..fd..FileDesc$u20$as$u20$core..ops..Drop$GT$::drop::hc68340e1baa4987a
+- *
+- * The original symbol is:
+- *
+- *     <std::sys::fd::FileDesc as core::ops::Drop>::drop
+- *
+- * The last component of the path is a 64-bit hash in lowercase hex, prefixed
+- * with "h". Rust does not have a global namespace between crates, an illusion
+- * which Rust maintains by using the hash to distinguish things that would
+- * otherwise have the same symbol.
+- *
+- * Any path component not starting with a XID_Start character is prefixed with
+- * "_".
+- *
+- * The following escape sequences are used:
+- *
+- *     ","  =>  $C$
+- *     "@"  =>  $SP$
+- *     "*"  =>  $BP$
+- *     "&"  =>  $RF$
+- *     "<"  =>  $LT$
+- *     ">"  =>  $GT$
+- *     "("  =>  $LP$
+- *     ")"  =>  $RP$
+- *     " "  =>  $u20$
+- *     "'"  =>  $u27$
+- *     "["  =>  $u5b$
+- *     "]"  =>  $u5d$
+- *     "~"  =>  $u7e$
+- *
+- * A double ".." means "::" and a single "." means "-".
+- *
+- * The only characters allowed in the mangled symbol are a-zA-Z0-9 and _.:$
+- */
+-
+-static const char *hash_prefix = "::h";
+-static const size_t hash_prefix_len = 3;
+-static const size_t hash_len = 16;
+-
+-static bool is_prefixed_hash(const char *start);
+-static bool looks_like_rust(const char *sym, size_t len);
+-static bool unescape(const char **in, char **out, const char *seq, char value);
+-
+-/*
+- * INPUT:
+- *     sym: symbol that has been through BFD-demangling
+- *
+- * This function looks for the following indicators:
+- *
+- *  1. The hash must consist of "h" followed by 16 lowercase hex digits.
+- *
+- *  2. As a sanity check, the hash must use between 5 and 15 of the 16 possible
+- *     hex digits. This is true of 99.9998% of hashes so once in your life you
+- *     may see a false negative. The point is to notice path components that
+- *     could be Rust hashes but are probably not, like "haaaaaaaaaaaaaaaa". In
+- *     this case a false positive (non-Rust symbol has an important path
+- *     component removed because it looks like a Rust hash) is worse than a
+- *     false negative (the rare Rust symbol is not demangled) so this sets the
+- *     balance in favor of false negatives.
+- *
+- *  3. There must be no characters other than a-zA-Z0-9 and _.:$
+- *
+- *  4. There must be no unrecognized $-sign sequences.
+- *
+- *  5. There must be no sequence of three or more dots in a row ("...").
+- */
+-bool
+-rust_is_mangled(const char *sym)
+-{
+-	size_t len, len_without_hash;
+-
+-	if (!sym)
+-		return false;
+-
+-	len = strlen(sym);
+-	if (len <= hash_prefix_len + hash_len)
+-		/* Not long enough to contain "::h" + hash + something else */
+-		return false;
+-
+-	len_without_hash = len - (hash_prefix_len + hash_len);
+-	if (!is_prefixed_hash(sym + len_without_hash))
+-		return false;
+-
+-	return looks_like_rust(sym, len_without_hash);
+-}
+-
+-/*
+- * A hash is the prefix "::h" followed by 16 lowercase hex digits. The hex
+- * digits must comprise between 5 and 15 (inclusive) distinct digits.
+- */
+-static bool is_prefixed_hash(const char *str)
+-{
+-	const char *end;
+-	bool seen[16];
+-	size_t i;
+-	int count;
+-
+-	if (strncmp(str, hash_prefix, hash_prefix_len))
+-		return false;
+-	str += hash_prefix_len;
+-
+-	memset(seen, false, sizeof(seen));
+-	for (end = str + hash_len; str < end; str++)
+-		if (*str >= '0' && *str <= '9')
+-			seen[*str - '0'] = true;
+-		else if (*str >= 'a' && *str <= 'f')
+-			seen[*str - 'a' + 10] = true;
+-		else
+-			return false;
+-
+-	/* Count how many distinct digits seen */
+-	count = 0;
+-	for (i = 0; i < 16; i++)
+-		if (seen[i])
+-			count++;
+-
+-	return count >= 5 && count <= 15;
+-}
+-
+-static bool looks_like_rust(const char *str, size_t len)
+-{
+-	const char *end = str + len;
+-
+-	while (str < end)
+-		switch (*str) {
+-		case '$':
+-			if (!strncmp(str, "$C$", 3))
+-				str += 3;
+-			else if (!strncmp(str, "$SP$", 4)
+-					|| !strncmp(str, "$BP$", 4)
+-					|| !strncmp(str, "$RF$", 4)
+-					|| !strncmp(str, "$LT$", 4)
+-					|| !strncmp(str, "$GT$", 4)
+-					|| !strncmp(str, "$LP$", 4)
+-					|| !strncmp(str, "$RP$", 4))
+-				str += 4;
+-			else if (!strncmp(str, "$u20$", 5)
+-					|| !strncmp(str, "$u27$", 5)
+-					|| !strncmp(str, "$u5b$", 5)
+-					|| !strncmp(str, "$u5d$", 5)
+-					|| !strncmp(str, "$u7e$", 5))
+-				str += 5;
+-			else
+-				return false;
+-			break;
+-		case '.':
+-			/* Do not allow three or more consecutive dots */
+-			if (!strncmp(str, "...", 3))
+-				return false;
+-			/* Fall through */
+-		case 'a' ... 'z':
+-		case 'A' ... 'Z':
+-		case '0' ... '9':
+-		case '_':
+-		case ':':
+-			str++;
+-			break;
+-		default:
+-			return false;
+-		}
+-
+-	return true;
+-}
+-
+-/*
+- * INPUT:
+- *     sym: symbol for which rust_is_mangled(sym) returns true
+- *
+- * The input is demangled in-place because the mangled name is always longer
+- * than the demangled one.
+- */
+-void
+-rust_demangle_sym(char *sym)
+-{
+-	const char *in;
+-	char *out;
+-	const char *end;
+-
+-	if (!sym)
+-		return;
+-
+-	in = sym;
+-	out = sym;
+-	end = sym + strlen(sym) - (hash_prefix_len + hash_len);
+-
+-	while (in < end)
+-		switch (*in) {
+-		case '$':
+-			if (!(unescape(&in, &out, "$C$", ',')
+-					|| unescape(&in, &out, "$SP$", '@')
+-					|| unescape(&in, &out, "$BP$", '*')
+-					|| unescape(&in, &out, "$RF$", '&')
+-					|| unescape(&in, &out, "$LT$", '<')
+-					|| unescape(&in, &out, "$GT$", '>')
+-					|| unescape(&in, &out, "$LP$", '(')
+-					|| unescape(&in, &out, "$RP$", ')')
+-					|| unescape(&in, &out, "$u20$", ' ')
+-					|| unescape(&in, &out, "$u27$", '\'')
+-					|| unescape(&in, &out, "$u5b$", '[')
+-					|| unescape(&in, &out, "$u5d$", ']')
+-					|| unescape(&in, &out, "$u7e$", '~'))) {
+-				pr_err("demangle-rust: unexpected escape sequence");
+-				goto done;
+-			}
+-			break;
+-		case '_':
+-			/*
+-			 * If this is the start of a path component and the next
+-			 * character is an escape sequence, ignore the
+-			 * underscore. The mangler inserts an underscore to make
+-			 * sure the path component begins with a XID_Start
+-			 * character.
+-			 */
+-			if ((in == sym || in[-1] == ':') && in[1] == '$')
+-				in++;
+-			else
+-				*out++ = *in++;
+-			break;
+-		case '.':
+-			if (in[1] == '.') {
+-				/* ".." becomes "::" */
+-				*out++ = ':';
+-				*out++ = ':';
+-				in += 2;
+-			} else {
+-				/* "." becomes "-" */
+-				*out++ = '-';
+-				in++;
+-			}
+-			break;
+-		case 'a' ... 'z':
+-		case 'A' ... 'Z':
+-		case '0' ... '9':
+-		case ':':
+-			*out++ = *in++;
+-			break;
+-		default:
+-			pr_err("demangle-rust: unexpected character '%c' in symbol\n",
+-				*in);
+-			goto done;
+-		}
+-
+-done:
+-	*out = '\0';
+-}
+-
+-static bool unescape(const char **in, char **out, const char *seq, char value)
+-{
+-	size_t len = strlen(seq);
+-
+-	if (strncmp(*in, seq, len))
+-		return false;
+-
+-	**out = value;
+-
+-	*in += len;
+-	*out += 1;
+-
+-	return true;
+-}
+diff --git a/tools/perf/util/demangle-rust.h b/tools/perf/util/demangle-rust.h
+deleted file mode 100644
+index 2fca618b1aa5..000000000000
+--- a/tools/perf/util/demangle-rust.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __PERF_DEMANGLE_RUST
+-#define __PERF_DEMANGLE_RUST 1
+-
+-bool rust_is_mangled(const char *str);
+-void rust_demangle_sym(char *str);
+-
+-#endif /* __PERF_DEMANGLE_RUST */
 -- 
 2.49.0.901.g37484f566f-goog
 
