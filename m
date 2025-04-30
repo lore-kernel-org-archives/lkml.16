@@ -1,65 +1,50 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615D51E9B09
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AFB2FB2;
+	Wed, 30 Apr 2025 08:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001459; cv=none; b=LpKnOwKsktzqIGcL/59ILW6kyo8rbDykiIaemwODspzgRMHE+DXhKgeNefQgcVkDXOMiFLBP1RIfxXKLwUopriFrrriEEvKVK09SURBW3ni+FvKGhxJP2My8yJQybPY2ht0pX/qAYFnLgx7nZd+FAU9OER0wx/bJ1XTMTp/TdVs=
+	t=1746001523; cv=none; b=Q7gQE+IZpR+vI4Fk01aHZB6L+pI8rnn7zXmEaMR1cvJYKINJ32JmZULh4Dcs4tKuIMNgF+Xi0OoiOq4YBuM7pi8JWB2WIjZLRBW39g1vBYHUsGj8Rk6B519AfMw7iwlTYaqoVSyj4+h4Ugunf21dVGBSMkp7TiyEDUb09rs0yfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001459; c=relaxed/simple;
-	bh=jE4PEp33a5PU1lnBYNlqWTkmTy/oubM5i2hDNHSJbAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L1s6uMXjGR8ZQXUUYi7J2fvg0poLVy1KDSm1WmztL1vpPAkZY+u9D1Dora4vu7aEJJny9dHVB3eaVL71obLVQjOZleGkvtK72y9wo5CYo4K8uWBo00Nv1ws1He7FzCvraTpJ//WntedX9QKVjJTyj22QY9QoAPCWSQ8o5qpXU84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MT6BVCvi; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746001523; c=relaxed/simple;
+	bh=xl2PC/u/acKBiCM9v6IH+o5HldOBBnBmnBHN3O2JYik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=C3/gZCHUYjBCTLnyzheeSad/S7TwuSeD1xfnmq6JFpqwR6T4K+Vc4qOI1Ktu3/3OMecYYlkZCjq0D7GjTF1TKtynk6NG+a2U2u7KzHMLttJeEee+J7jtFBAUA5xj/mx1v5PpPClPfHKrCFUtRDsvBBx51T7hBaaDJ38hCQRrEeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=L1UTAJqh; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MT6BVCvi"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4394a823036so68227355e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746001454; x=1746606254; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ufqPEbOwWYWB18ZCf6Yh3nDmouH/kkXVRtJyRpSOlpU=;
-        b=MT6BVCvi4SjxHWopj6rBSu7AnH/4VuaLDr2PkcC/8L6gpfME+CZDsRgjnx/MDxpX1f
-         p97tH65b5RveQsOu48w1vURisczLNAotr/jt/Q9SfEWk9mgFTORUfzz+MLUa6B9nPkoX
-         ZsrdCC5gPY7/FhCRgZax709889dSGfCo9H+gvyG9z3nr3jwTJgEjJYYHuEAnoYDDTXvu
-         jwDX+832UnaLyL44zHbV6nhpGSfiG7bY5RTCcKCa+mZkr4X60w7F3j5+W9SIn4EzQTdd
-         T606BMMmZc8vcT9+/FoF1Y/1gIcVMsqwotdI2Y3tKrC03I44+/QIzLclNONGF72mKdwF
-         AMoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746001454; x=1746606254;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufqPEbOwWYWB18ZCf6Yh3nDmouH/kkXVRtJyRpSOlpU=;
-        b=llK4jJPO72p1lb7V/jEZTfR9aYQz/NP4sFTdFwmnAulxF4ncPoIldY8PTlMXHPhJG8
-         FkCnr/ApKLbPxB0nb9/urvqguWrDSETd3E/QLMefMy/BVNS21wB2yHzQcdpI0ofK7A9X
-         Rm1WjQVItKjxcdd8A/CcPkrFB/I+ouPpIa9aeyBpMjPyQf9I+UjK1wOe1eYe0ZGEmeo2
-         YMcE7zOVk79/LB+rbToHo7HxarWFN1go9qy1L3A4QCAwqz1SzhOPeYQ7V4a89gVC6U+V
-         vzdEfVPvVPIXo//J8zV2r2Yo/Hx9ld/Fu6IJi0fgNpWQqscgrfVlb3XfWIEqO2gauzzU
-         jt5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXL3qH5//zvAQeczBorM9jvTvXBu1cyudPYFp6GrWR7+NzkUe4H2cdtk+W4MInFOpyo4Drg0fExeBh/38s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWEzP+dLQrLNWih/eAwDtTr9S6i8WeiOdF2aiJiN1bc2Z3Rw6b
-	U8SCfZu+7eHh/ozrJye9lBENP8wi6+85GupyyyGy4l7LIbSntb5uCtQK+baFlXk=
-X-Gm-Gg: ASbGncvjKQhlHgEcwkSiR8FLLZYUGqGW/mHBCFU6e4ni1T8njIJ5Fl+yZXZTNHK4JBG
-	DI+IeJ2IaRKB4K/2DxkJt/phjsyeCb9WPo47E7537aqbt+4s8mjJ4ZQUSXvVSDq5kGyvrB9jVd+
-	XMzXuMeUV3YLM0RDO72SJXmDNM+RTNf5mBEcImCVQWDYSbNTJH1uda0kNieA8n2GyG9+oY298s4
-	iC8sPeHRBpKtxJVYqndnHU06fZdc3ixK9YK+8ponBgJJyDCl265NDpVGXpq7ZURmRgdXPJxKTfb
-	0BVn7XMbnN6u+5K6ikCIbBFLly+blvagEL8GCNgvyQJaO9RAFzSagMKP95QjTsMnTZPWZIiB4Bb
-	BmJOT1Q==
-X-Google-Smtp-Source: AGHT+IEC343GJFUazvyxQ/kBdVhvDtloUR9+rS6OZvl6aiNt5CYM4RgWteI3bMKGtRqRGwvmyMmn9A==
-X-Received: by 2002:a05:600c:3153:b0:440:6a37:be09 with SMTP id 5b1f17b1804b1-441b1f3865fmr19065115e9.16.1746001454638;
-        Wed, 30 Apr 2025 01:24:14 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2bbf046sm15474325e9.35.2025.04.30.01.24.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 01:24:14 -0700 (PDT)
-Message-ID: <c2ba9738-a383-4a53-a7ad-fc65a97d1c4a@linaro.org>
-Date: Wed, 30 Apr 2025 09:24:12 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="L1UTAJqh"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U7CCF5005514;
+	Wed, 30 Apr 2025 10:25:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	g96VULOJgTP+rXSvs0fblxCYj+Zob3SZLDsy/ja+mSo=; b=L1UTAJqhDQjAXriu
+	QIYM35A9Zsx4nRUU8b8up4/5WDEt/s5wEG+dLtFTOix1mK11mcRWLNFMoOMhFOLp
+	Kb+gYm8+e1gURB6NA79a+wtPKOlq679CMutcPZeqhO1xEq84Elc69C/0a0A8yvMc
+	LgMpPDYwAxM1nMHaDvHNRj2eqZFhIXtx406/0wOhQvWw/5eWtt6Pc2n6RYetK/DJ
+	IDb2E3GhSBSOhxl6atvQbF0I0DxyVR94rni9bkmUlw1FAmrFnOKHuF9/39a3mp1L
+	903vzHPo6dk4n7aUjm6dugoSWptW6hFN3f3/ORPjkfhnMfSbiz6ygqqfRTpuYGJ5
+	SJ3+BQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46b6tphy93-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 10:25:10 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 02D7940048;
+	Wed, 30 Apr 2025 10:23:56 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5267B922644;
+	Wed, 30 Apr 2025 10:23:24 +0200 (CEST)
+Received: from [10.252.1.18] (10.252.1.18) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
+ 2025 10:23:23 +0200
+Message-ID: <622301ae-0973-4cdb-936c-3152afdbfb46@foss.st.com>
+Date: Wed, 30 Apr 2025 10:23:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,32 +52,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
- version
-To: Johan Hovold <johan@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
- <aBHQejn_ksLyyUm1@hovoldconsulting.com>
+Subject: Re: [PATCH v6 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250407-b4-vd55g1-v6-0-1850f18b1f24@foss.st.com>
+ <20250407-b4-vd55g1-v6-2-1850f18b1f24@foss.st.com>
+ <aBCxpuppB6L-Ft2c@kekkonen.localdomain>
+ <70f7bc9b-4533-4c8e-a792-aad9a0b7a6d4@foss.st.com>
+ <aBC_gx8vFNWLacgB@kekkonen.localdomain>
 Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <aBHQejn_ksLyyUm1@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <aBC_gx8vFNWLacgB@kekkonen.localdomain>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
 
-On 30/04/2025 08:25, Johan Hovold wrote:
-> Unfortunately, it seems Bryan missed that this was a regression that
-> should be fixed in 6.15 and only included them in a pull request for 6.16:
+Hi Sakari,
+
+On 4/29/25 14:01, Sakari Ailus wrote:
+> Hi Benjamin,
 > 
-> 	https://lore.kernel.org/all/20250410233039.77093-1-bod@kernel.org/
+> On Tue, Apr 29, 2025 at 01:29:39PM +0200, Benjamin Mugnier wrote:
+>>>> +static int vd55g1_check_csi_conf(struct vd55g1 *sensor,
+>>>> +				 struct fwnode_handle *endpoint)
+>>>> +{
+>>>> +	struct i2c_client *client = sensor->i2c_client;
+>>>> +	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
+>>>> +	u8 n_lanes;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
+>>>> +	if (ret)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	/* Check lanes number */
+>>>> +	n_lanes = ep.bus.mipi_csi2.num_data_lanes;
+>>>> +	if (n_lanes != 1) {
+>>>> +		dev_err(&client->dev, "Sensor only supports 1 lane, found %d\n",
+>>>> +			n_lanes);
+>>>> +		ret = -EINVAL;
+>>>> +		goto done;
+>>>> +	}
+>>>> +
+>>>> +	/* Clock lane must be first */
+>>>> +	if (ep.bus.mipi_csi2.clock_lane != 0) {
+>>>> +		dev_err(&client->dev, "Clock lane must be mapped to lane 0\n");
+>>>> +		ret = -EINVAL;
+>>>> +		goto done;
+>>>> +	}
+>>>> +
+>>>> +	/* Handle polarities in sensor configuration */
+>>>> +	sensor->oif_ctrl = (ep.bus.mipi_csi2.lane_polarities[0] << 3) |
+>>>> +			   (ep.bus.mipi_csi2.lane_polarities[1] << 6);
+>>>> +
+>>>> +	/* Check the link frequency set in device tree */
+>>>> +	if (!ep.nr_of_link_frequencies) {
+>>>> +		dev_err(&client->dev, "link-frequency property not found in DT\n");
+>>>> +		ret = -EINVAL;
+>>>> +		goto done;
+>>>> +	}
+>>>> +	if (ep.nr_of_link_frequencies != 1) {
+>>>> +		dev_err(&client->dev, "Multiple link frequencies not supported\n");
+>>>> +		ret = -EINVAL;
+>>>> +		goto done;
+>>>
+>>> Please check the link frequency matches with what the driver supports,
+>>> using e.g. v4l2_link_freq_to_bitmap().
+>>>
+>>
+>> Are you referring to checks performed in in vd55g1_prepare_clock_tree()
+>> ? Keep in mind it will change a bit with Laurent's comments though.
+>> The sensor supports a range of frequencies therefore I chose to check it
+>> manually instead of v4l2_link_freq_to_bitmap().
 > 
-> Bryan, has your PR been merged? Can you try to get my fixes into 6.15
-> since this is a regression in 6.15-rc1?
+> Ok, that's fine then. But please check this results to the frequency that
+> was requested, currently it may be off AFAIR.
+> 
 
-Let me see.. there's a -fixes branch, I think I should be able to PR 
-anything with a Fixes: tag there.
+As far as I understand it should be fine in v7, could you have a look
+once sent ?
 
----
-bod
+>>>> +	ret = v4l2_async_register_subdev(&sensor->sd);
+>>>> +	if (ret) {
+>>>> +		dev_err(dev, "async subdev register failed %d\n", ret);
+>>>> +		goto err_subdev;
+>>>> +	}
+>>>
+>>> Aren't you missing:
+>>>
+>>> 	pm_runtime_put_autosuspend(dev);
+>>>
+>>> here?
+>>>
+>>
+>> Thank you. I'll add it to the pm_runtime block above.
+>> I also noticed I miss the pm_runtime_dont_use_autosuspend() call in
+>> err_power_off. I'll add that too.
+> 
+> Ack, sounds good.
+> 
+
+-- 
+Regards,
+Benjamin
