@@ -1,119 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9007E1F941
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676581F941
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746020739; cv=none; b=X6AtP8RMCrXXGR2akQpfJA2pnSZt6aG4TiB2XjLg/79B7HSYAedY51D6vUT7g0YCV1Y+2i9Hgq8qK/W3BoSkf5MdmLKmYYxUhuv0KLeta/GAQTD8Mf4nTR1JZLjFcRwoPhw6XyJr8usQvn2KA7kquZlCjBROXdhVmdR4Daymbk4=
+	t=1746020745; cv=none; b=GDYMpcZmMfjgFi+1RzLfP/MrGoLD+PiVCP9O0pA4Ui8yaYXPMlTgJVs0+0BdqJOg+hVohzcl1y6pqvqu6/FlR5ONP24dK1Clq2BqQpNrk4wRQpfaM1qiQbLoyKeZLGGQI9p2oSYMY8d3R7qN5TuvF9A4Bnl7/OAa7N5ayCF8B0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746020739; c=relaxed/simple;
-	bh=3FfutpMKrNfBR2/l99g1e02PoDEb4lX4KVKzxY/cV74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIDjn+DtEpH0BmunSkaVlKJQ4TE1vsfKYb6omTvuDw+o6IXmkQWyR7Iz4+XnwseOWoFQ9BPHaR1vfcXjqzFpLUTxFsemNk5EvRPQZHlEvpO0yXa8u0fYpI67W5CpVZr3yS7OAKXdO3dnJR9ACuwWD3RgkfZPmGj8Ld5mRv6O2rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZYkFQ5pE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZYkFQ5pE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746020736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k90/V1Lu0i517FPuuLC36ybJso/3NYI6nHmrS9bCtMA=;
-	b=ZYkFQ5pEVbHiLVpFKcovQ41rtNNFFZ5kPRn6mMbsxKGRCF3KNAqAm9enSPGTCLO5Dj1TXa
-	Z1HhdHIxLVQZCkzOLS07HC7jkszfH+/qFlo6u6mHtLzgFWrx8WaGnLE1alDanvfsCykYjl
-	TxztF3ZLVkqA8LmsMu4qKD9ATQOR5k4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-76-ADVg4nJhMxe7l5zi5TTBbw-1; Wed,
- 30 Apr 2025 09:45:31 -0400
-X-MC-Unique: ADVg4nJhMxe7l5zi5TTBbw-1
-X-Mimecast-MFC-AGG-ID: ADVg4nJhMxe7l5zi5TTBbw_1746020730
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8BC4218001CA;
-	Wed, 30 Apr 2025 13:45:29 +0000 (UTC)
-Received: from pauld.westford.csb (unknown [10.22.80.236])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B95F6180047F;
-	Wed, 30 Apr 2025 13:45:25 +0000 (UTC)
-Date: Wed, 30 Apr 2025 09:45:22 -0400
-From: Phil Auld <pauld@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com,
-	peter-yc.chang@mediatek.com
-Subject: Re: [PATCH v3] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-Message-ID: <20250430134522.GA133753@pauld.westford.csb>
-References: <20250429150736.3778580-1-jstultz@google.com>
- <20250429153605.GA69823@pauld.westford.csb>
- <20250430124425.GN4439@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1746020745; c=relaxed/simple;
+	bh=ZF9Yw2FW09cI+JGsUcloL/6gJ8Tx3hLerPQi/1EF8Uk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XEU2DjQzB+mYaZJdnWyPbJkL1ehNsB0+OAN/hEXpXlaBwKXKDqcH5w518HkimqlU47yTYTEmuETIJdb4TJi5tADvf4iuP1edht+ww2suzTjTsXaXzL2YEUtwpz8+DPzrcd1+Nqq/yxi4yf7l3JPQ/dbXdcKxYCBiBbuB7FrOR/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FB0D106F;
+	Wed, 30 Apr 2025 06:45:35 -0700 (PDT)
+Received: from [10.1.33.69] (Suzukis-MBP.cambridge.arm.com [10.1.33.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 06E303F5A1;
+	Wed, 30 Apr 2025 06:45:40 -0700 (PDT)
+Message-ID: <f2ffb9fd-ec59-4e67-83a3-437b986ece73@arm.com>
+Date: Wed, 30 Apr 2025 14:45:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430124425.GN4439@noisy.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] coresight: core: Disable helpers for devices that
+ fail to enable
+Content-Language: en-GB
+To: Yabin Cui <yabinc@google.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+ Jie Gan <quic_jiegan@quicinc.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250429231301.1952246-1-yabinc@google.com>
+ <20250429231301.1952246-3-yabinc@google.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250429231301.1952246-3-yabinc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 02:44:25PM +0200 Peter Zijlstra wrote:
-> On Tue, Apr 29, 2025 at 11:36:05AM -0400, Phil Auld wrote:
-> > Hi John,
-> > 
-> > On Tue, Apr 29, 2025 at 08:07:26AM -0700 John Stultz wrote:
-> > > It was reported that in 6.12, smpboot_create_threads() was
-> > > taking much longer then in 6.6.
-> > > 
-> > > I narrowed down the call path to:
-> > >  smpboot_create_threads()
-> > >  -> kthread_create_on_cpu()
-> > >     -> kthread_bind()
-> > >        -> __kthread_bind_mask()
-> > >           ->wait_task_inactive()
-> > > 
-> > > Where in wait_task_inactive() we were regularly hitting the
-> > > queued case, which sets a 1 tick timeout, which when called
-> > > multiple times in a row, accumulates quickly into a long
-> > > delay.
-> > > 
-> > > I noticed disabling the DELAY_DEQUEUE sched feature recovered
-> > > the performance, and it seems the newly create tasks are usually
-> > > sched_delayed and left on the runqueue.
-> > 
-> > This seems odd to me. Maybe I'm just misunderstanding something but
-> > I don't see how newly created tasks should have accumulated enough
-> > runtime to have negative lag that needs to be decayed. 
-> > 
-> > That said, I think it does make sense to dequeue in this case. 
+On 30/04/2025 00:13, Yabin Cui wrote:
+> When enabling a SINK or LINK type coresight device fails, the
+> associated helpers should be disabled.
 > 
-> Well, they start at 0, any runtime will likely push them negative.
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> Reviewed-by: Mike Leach <mike.leach@linaro.org>
+
+Again, this should have :
+
+Fixes: 6148652807ba ("coresight: Enable and disable helper devices 
+adjacent to the path")
+
+I have added it locally
+
+Rest looks good to me
+
+
+Suzuki
+
+
+> ---
+>   drivers/hwtracing/coresight/coresight-core.c | 15 ++++++++++-----
+>   1 file changed, 10 insertions(+), 5 deletions(-)
 > 
-
-I thought they "made a request" and got a slice when entering the
-competition so would not immediately go negative when executing.
-It's now been a while since I read the paper though...
-
-Starting at 0 (service that it ought to have is none) and going
-immediately negative seems to imply never having positive lag. But,
-like I said, probably just misunderstanding something :)
-
-
-
-Cheers,
-Phil
--- 
+> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+> index dabec7073aed..d3523f0262af 100644
+> --- a/drivers/hwtracing/coresight/coresight-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-core.c
+> @@ -465,7 +465,7 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+>   		/* Enable all helpers adjacent to the path first */
+>   		ret = coresight_enable_helpers(csdev, mode, path);
+>   		if (ret)
+> -			goto err;
+> +			goto err_disable_path;
+>   		/*
+>   		 * ETF devices are tricky... They can be a link or a sink,
+>   		 * depending on how they are configured.  If an ETF has been
+> @@ -486,8 +486,10 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+>   			 * that need disabling. Disabling the path here
+>   			 * would mean we could disrupt an existing session.
+>   			 */
+> -			if (ret)
+> +			if (ret) {
+> +				coresight_disable_helpers(csdev, path);
+>   				goto out;
+> +			}
+>   			break;
+>   		case CORESIGHT_DEV_TYPE_SOURCE:
+>   			/* sources are enabled from either sysFS or Perf */
+> @@ -497,16 +499,19 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+>   			child = list_next_entry(nd, link)->csdev;
+>   			ret = coresight_enable_link(csdev, parent, child, source);
+>   			if (ret)
+> -				goto err;
+> +				goto err_disable_helpers;
+>   			break;
+>   		default:
+> -			goto err;
+> +			ret = -EINVAL;
+> +			goto err_disable_helpers;
+>   		}
+>   	}
+>   
+>   out:
+>   	return ret;
+> -err:
+> +err_disable_helpers:
+> +	coresight_disable_helpers(csdev, path);
+> +err_disable_path:
+>   	coresight_disable_path_from(path, nd);
+>   	goto out;
+>   }
 
