@@ -1,142 +1,77 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45F21EDA06
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7763422333D;
+	Wed, 30 Apr 2025 22:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746050663; cv=none; b=brsv1cJ1Shpf3DVDWn/QPX1pWJMkqyOl+mVB3RT+OPX8IaUnpt68BbJLnij5UN6aqnJ8cNaLWBNTUZ1FmoDoymJ+ielQRlpe9E8Yz6xHpyfAioLEK5rBSTDSPHTiI1a33QP4uROX3Urz5vYynZWnvs0OaCn794frfdlpub68pl0=
+	t=1746050763; cv=none; b=M4Li2SKdJR7/qRg/F5DXuYNwz3KPKCUUrVwaI1d18RDZjxFaTeUDVPYVl0zquIq9H/U4xCMKmbwwXZN8c95+75EpgDptv658Y72FuB6/lkUQU0qxRxvNrWtoGJTZCjI6grtO5VFHic36hgEzTP2AnIu6RFPCMrjrSFTYqObXIuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746050663; c=relaxed/simple;
-	bh=V+uBfjWF7Nv/iGZBpfHhVifIs7t6R8r7ypyIiHDWEtE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iew6DML6hHRzfK4saiR5/MPtqckzgnJ5mWxEsc8GjLXgj5YaeGxz8Veo90CQ+NFbUkubvmqwjOtzJYdwdjkS4BrnpCSxVTT1rW2ecEX2Y3QlnbwfbEyHI9cbm2H1RI+R8ry0DZv21SxGLTQ5Ng/raZOJSKOoQqdEqrOGmAGqIss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RKzyXW/2; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746050763; c=relaxed/simple;
+	bh=dZmTYa2WrbG8uU0v4yF3gDzB84pygAVfgeiKLfAVXyU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=jvG2eRIqrcoCIcvPDEkQOQD0ivjh0ILfn69zUOIC83Nk3x68DJjWPFP8voZevFqEK+ynUohdCK57tI4+NT5TUDds2D+5iW4j1Xib/eu8L0vwwes3/0sxUbteEr0tajiDPXqTLSP/Al88zJBjArvX1X9xgCW+apMbhXGGRftzy8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=HFqmcz7Z; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RKzyXW/2"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54af20849adso379198e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746050660; x=1746655460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JfxhSPdXLWl6PO+Mfnzt5fptOWyX9muDxmvIopUSBvA=;
-        b=RKzyXW/2u5TU3Zxy5u/YZuBSLgACmkHGodzwSQdLLNoaY+HOdh8HqzUSpUXaHpW9i3
-         xtp9PX34IbgzReTRCNJ6Cl30cwvaN9iBLBMU/i4ukeAaBu95HGgfEMSrcscT1tOrQxTc
-         97gj/5946RfveAtWVrJHr+sr4Zcj/rHZFhHeTi813mWRhZ1CDgWnfc6fy4e9c88MTvcq
-         VZfU27PgcU95tdPM/GlsxzKQGTfbW46KrgBQlIDyUXaHoBvgisjHnyLKWxxM/dDW0naK
-         dy6MUMYsavNkS5NQsETUztQ9bPkq0XHXZ9l/mlsRn3v/ct+a80Zq11lbZMJIKAp5VUIR
-         iUFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746050660; x=1746655460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JfxhSPdXLWl6PO+Mfnzt5fptOWyX9muDxmvIopUSBvA=;
-        b=iqBwo/ryJTXVolRoZXOByQ1Ords42QpCMGvWlBJ7Q1mHcwsYvKOcJlsvrXHAspio3r
-         YVJ3VN3pD9XitUyFlUIxMZgDZIeRr8/8MQG5uCnWqCnJZ6ESIfmBQDmEwlWc65+SPH9J
-         srdM31+tyGkQ9nInUwYgR2/cGFJchzAI1uJavT/sVLUrhTM7GF4rvQPId2roPT3wYy2Y
-         xQiI0f5U6idYuwaxXY/oWd764pHPAFhygkFZ5g4gXt/TOeWIxZQvUKyreVPvxRiZlem7
-         57AQnIgBjLrPqgRffnDZur/TwjwWoYz/+3BuQEGjYBq5ZsSGf4JAmgk8oPeY/GPGIbJX
-         Hb9w==
-X-Gm-Message-State: AOJu0Yy9Xwl4jqd/E34DjmKfqfDvcG4wIlw8qc/sG0OKVryKGnCx2/dt
-	cG+ltwhxC8fq52KIdRM1M0EBsjhHOg6trKLT3OAiAuIzcd751wVRiSIdPv925rxs2niHWyM1xiX
-	UJ5MsmQlJl4RAHtkLuS5hyXRQa2tc7j64snE=
-X-Gm-Gg: ASbGncu5Un4F/u6M2+/TM7hZoLgmGxMlI3RqwmE+29xWq26UhBQgADrLI7OjKPVCBNq
-	auUF9cI+9HNn60HfyRobC4sYvuIl1ZKOKXOSLMUH4hyGQ12hQgIlNVLNOv3U7EH5h5KYdsoCCRX
-	Uu3oxhEKMPwDFM3unSM3AiUHPk0x4MAdlT0IpOb91erHtc8V1qMSfwUUDTVdgQvg==
-X-Google-Smtp-Source: AGHT+IG/8XC2NFmxTFwX9kl2NaGxudCN0erWY1DDz4TdrxeXHNJsucbZQoyHbYf6Kj0GoWtPlplQwodcUM5AtJ5hTdw=
-X-Received: by 2002:a05:6512:2389:b0:54e:8189:2eac with SMTP id
- 2adb3069b0e04-54ea7a4d63bmr34121e87.12.1746050659490; Wed, 30 Apr 2025
- 15:04:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="HFqmcz7Z"
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id B0FFD204E7F9; Wed, 30 Apr 2025 15:05:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B0FFD204E7F9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1746050759;
+	bh=JJgfHJQjS471Xi2mAFpjOUrny8p+UJFVs691sdQaQ+Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HFqmcz7ZVPEsXG5A55Cb/FVB9WRwH1TRmMCNkl8JolYGOYEDU9iTLJB6pdvc8vG2f
+	 rnT0MivNh2A19e0cIbSpBSQwjWt5oXag3lv5gzzIQze8hL2QmkYrZkGeqJPL7SoOMk
+	 yy0HAoXoOrSVQEQl5WP15qukc8F5q4Z3E3nyRtrs=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>
+Subject: [Patch v2 0/4] Fix uio_hv_generic on systems with >4k page sizes
+Date: Wed, 30 Apr 2025 15:05:54 -0700
+Message-Id: <1746050758-6829-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250429150736.3778580-1-jstultz@google.com> <20250430124339.GM4439@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250430124339.GM4439@noisy.programming.kicks-ass.net>
-From: John Stultz <jstultz@google.com>
-Date: Wed, 30 Apr 2025 15:04:06 -0700
-X-Gm-Features: ATxdqUEPBTTnnnzc6fwH0xN6iGwKVVt4J9u9-p1eu6QNfqq2iLCXi9JPLxl9Zys
-Message-ID: <CANDhNCq7qvW-CujA+bYzoK1=BJ_TEk6WD2fQJtOpcTC1fjNcfA@mail.gmail.com>
-Subject: Re: [PATCH v3] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com, 
-	peter-yc.chang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 5:43=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
-> On Tue, Apr 29, 2025 at 08:07:26AM -0700, John Stultz wrote:
-> > It was reported that in 6.12, smpboot_create_threads() was
-> > taking much longer then in 6.6.
-> >
-> > I narrowed down the call path to:
-> >  smpboot_create_threads()
-> >  -> kthread_create_on_cpu()
-> >     -> kthread_bind()
-> >        -> __kthread_bind_mask()
-> >           ->wait_task_inactive()
-> >
-> > Where in wait_task_inactive() we were regularly hitting the
-> > queued case, which sets a 1 tick timeout, which when called
-> > multiple times in a row, accumulates quickly into a long
-> > delay.
-> >
-> > I noticed disabling the DELAY_DEQUEUE sched feature recovered
-> > the performance, and it seems the newly create tasks are usually
-> > sched_delayed and left on the runqueue.
-> >
-> > So in wait_task_inactive() when we see the task
-> > p->se.sched_delayed, manually dequeue the sched_delayed task
-> > with DEQUEUE_DELAYED, so we don't have to constantly wait a
-> > tick.
->
-> ---
->
-> (that is, I'll trim the Changelog a this point, seeing how the rest is
-> 'discussion')
->
+From: Long Li <longli@microsoft.com>
 
-Ah, thanks. I've noted you tweaking my commit messages before merging,
-so I'll try to do better about leaving ephemeral notes (and Cc lists,
-apparently) after the "---" fold.
-My apologies for the trouble!
+UIO framework requires the device memory aligned to page boundary.
+Hyper-V may allocate some memory that is Hyper-V page aligned (4k)
+but not system page aligned.
 
+Fix this by having Hyper-V always allocate those pages on system page
+boundary and expose them to user-mode.
 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index c81cf642dba05..b986cd2fb19b7 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -2283,6 +2283,12 @@ unsigned long wait_task_inactive(struct task_str=
-uct *p, unsigned int match_state
-> >                * just go back and repeat.
-> >                */
-> >               rq =3D task_rq_lock(p, &rf);
-> > +             /*
-> > +              * If task is sched_delayed, force dequeue it, to avoid a=
-lways
-> > +              * hitting the tick timeout in the queued case
-> > +              */
-> > +             if (p->se.sched_delayed)
-> > +                     dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAY=
-ED);
-> >               trace_sched_wait_task(p);
-> >               running =3D task_on_cpu(rq, p);
-> >               queued =3D task_on_rq_queued(p);
->
-> Lets just do this. I'll to stick it in queue/sched/core.
+Change in v2:
+Added two more patches to the series:
+"uio_hv_generic: Adjust ring size according to system page alignment"
+"Drivers: hv: Remove hv_free/alloc_* helpers"
 
-Ok, thanks so much!
--john
+Added more details in the commit message of
+"uio_hv_generic: Use correct size for interrupt and monitor pages"
+
+Long Li (4):
+  Drivers: hv: Allocate interrupt and monitor pages aligned to system
+    page boundary
+  uio_hv_generic: Use correct size for interrupt and monitor pages
+  uio_hv_generic: Adjust ring size according to system page alignment
+  Drivers: hv: Remove hv_free/alloc_* helpers
+
+ drivers/hv/connection.c        | 21 +++++++++++-----
+ drivers/hv/hv_common.c         | 45 +++-------------------------------
+ drivers/uio/uio_hv_generic.c   |  7 ++++--
+ include/asm-generic/mshyperv.h |  4 ---
+ 4 files changed, 23 insertions(+), 54 deletions(-)
+
+-- 
+2.34.1
+
