@@ -1,82 +1,82 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606592882CD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C142882BD
 	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036691; cv=none; b=CuzQrhO/dumx1WT2mv6OBsR5M2vRppDJLKO8tUaSIieRPjVPSalOggLb2vUdr2GKvnswvsUH0+LBb9XajeF5MNQRxf9bw1bVgGhJyEpe0OBuLnx9LF8EP/MtpJxz2D237/LduzGiH8A6W8jFeSFiR4fGAyZpFHG0vsG4OvfX+Jo=
+	t=1746036691; cv=none; b=RUCH+ZG1HVG38XW6Hnj9FIqiCYjniOCT8QoX5yXKnTOAhtGTkJbR9JD+HotzS7aKCIvwy8N0gMKH5QI3T9aIGwsqQC5kTLvNbzcKUKdWj6iBzsc7BztdHVqQ/tU+zYu4yBvdTP7Ibcm/2IlXn/W61iJ++NJQMFU4lZPJ5RdoyiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746036691; c=relaxed/simple;
-	bh=iirzwEeYoxznZHJe7vcY27yiljb3AwlzwC5WRq52rLc=;
+	bh=j4nly31GVjWEhbgTSOnyZr5LFHdDhJ/vcbZlEmbkTs8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D85e0f9TolVXLsuygR92HPh9MOCn1BVZ1mweJefTQhey19JGNHlGsrE+Igjcehf6V7Qomo9ndf5caw6M9Se8+UNbQ+mdJ39BI4J2FNEwTXbB7miGOMwwPS0aoD/kuRl4EF0a/gHuyKG4tl7A5tVOXkUYKjdn2DMb+K9YtF/BMTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hrnPfHha; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 MIME-Version; b=Ut44zsUctlYkEgIziDBEmD71A+WdSPFAPFdZnOYcKPH2jcVc79isZ2xX2sYBVOtPFdqR/yei7+NDcxfes1ps9wc0v/leFSlcLKD1wdaOw+CJ1KVVg3YJwUIas+HXdC47FgIDeu+mQ5Ik98GwMGrdj9EDBN36BXtF7/9mFinAiIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjHvu0/A; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hrnPfHha"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4775ce8a4b0so3085271cf.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjHvu0/A"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736c3e7b390so241512b3a.2
         for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1746036688; x=1746641488; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A39YiB1Z+l6GCsVmrhqArPxiVLmwBB2VQEqP9tXT4Ig=;
-        b=hrnPfHhaQAzbrxbEaJMbYQ9nSMkwK3qabvTrVWPR51RX9eV6xdN4LMIrJNXRu3aLd+
-         R/lU/gXZceDxMVeebN9N0tpY6DyD92BBpzVIuAP61GPU+efI/QzI8VkZpZCv/AP3Lh5b
-         OM3n4RituY+VnxqBZDUgD3jEamKW54F8pMzMd6PIhVonpvEhqb7AZJisAsnaLVJowC0Q
-         l3OmCs0rkOV1GZo13/lJCLsdNbJ9RRJlLNlsc0PhUq98X9gx/AdFV2xYiolpTdW/l3bf
-         V2itiyeNxsAwbWhgNPTSJ15yN7myDiwjkpgYLzCXsyOpQ1oq9cUuzogUaAi4y9HUfOUb
-         9DqQ==
+        d=gmail.com; s=20230601; t=1746036689; x=1746641489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YPYU8xo1mzMVuKzjJlWPb2a6nMmELwwkYyTRspWFm2c=;
+        b=WjHvu0/AFF1rH0k3CnD3JPsA4kwk6gkQY0IvAyuOe66KEKXJjwQO1AWsO1eRbUbfGJ
+         2T6hBs355pux7+6pHurfDhhbRMo0rmFUtU3p2iBMmN/vWU/5VlN/fNkFcDNfjfdxOxti
+         GXRW3nNXTShIVDxPR9tJ9CgBa/B30/NsIWOimjEvnzJJ+kAPkeNw0mV4AxUWb4gnCcT/
+         G1NOKgP0B82BnE/ZZiQNCpxaJlpij2ZSVf45vqu9Z6zW3G8JpO311yVA+jV9XiRa069O
+         F2N73IYjWEt1Wfrkfgi/LxPO9vICScqZaOyIZdSFlTHkEgduilg5bR01Zsxw70+UOWxp
+         anCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036688; x=1746641488;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A39YiB1Z+l6GCsVmrhqArPxiVLmwBB2VQEqP9tXT4Ig=;
-        b=uVvL1y/1V3JIn79G88+7BtHTSOiVny8Pt7o+luXuGd7IS5cvYlL6POrEmEQ26fMnrZ
-         l9nxTXkvugNBAbSN0sWdi4dtELwovilbV7ZRuyURtVzcXRE7fYvOrap2KJVzgH8gJv3v
-         4J5dyRy2vnfbfsDhkhL+itQ+R/U4H2tWadTFfaGBS1vfz0JupfVDHzSIOBl0KAfEp17m
-         zsKTumedUscqSWVcQSGbY894fT0Z+VLdZ3Tck50IIiQWSI6fkN5taYfYIjxXtuP5SHF0
-         YvRdlTc0lodpU6pT2mIsH3xTF3L04x2zKar0wZiokVOAjPa9qSVGg24rd1K+S3QwDmTc
-         8EkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtpsbuk7pWSCc5l3Fdp/OwrdFLwOGBEj59WF+4rdftAlNaC2VLzNLAWumoTS40m6s5B58U5xiZf4jF8hg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLVH/V1GUAh31fMp7zF5wjD5IZoWYxW0JHmcMdfnoHNQ/y7hKi
-	5FHafJObvHiDrcfQnTrKa0sEf9pd0B6p0mzVi6J93EpTj9M8u9NGlnb5fRRbvPQ=
-X-Gm-Gg: ASbGncs+Mq37OJbmN0YaW290q1xjpfsi/RmHXvbYcZ2jm8RqjeJNLlDmatQPqbXXCFT
-	cSV7jnq3yml7JXR9D+41dnXChfxXO/rwKv/2gjqgSz8skjM3192n9RIALDJ+Dc01NV8Cs4NqMdO
-	qLW2hQQUTgW72BsKYJA2hcwIEDUFsoinMWb+WNQ+ZjsvrneLTUIra0ZcGhWfR0mbkwsAxNSkEPd
-	8TTSiKIa0qoM5Y118LtZZief6Jia6POK3n3WHIv8fQaVILhGX+AEWBezFATB/1UQKQBil2I4wak
-	i/lfCxwu5NwnfWBYNO6Adr9aC4ht2tPzDVV0IwIEx4eml1jQTwZijh2qATIoMI+cWv28xTnI+HA
-	5h/X5TK+Lh4lPCNKohZiFE7Sofg12
-X-Google-Smtp-Source: AGHT+IEjj5fRlO+G4AeYsj9CnMTHgu74PV6/AnY9a7Hyw1zOc1l/ean48c9t9b0uKuyRkKfZm4P+pg==
-X-Received: by 2002:a05:622a:4a17:b0:477:644a:72ec with SMTP id d75a77b69052e-48ae7a20044mr4433871cf.13.1746036688396;
+        d=1e100.net; s=20230601; t=1746036689; x=1746641489;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YPYU8xo1mzMVuKzjJlWPb2a6nMmELwwkYyTRspWFm2c=;
+        b=voW4TtPdOuomkarLHmD1vTIpJZBxArWynSKxtOFKjL02h18Xx2I5SFObVrqCrb3HC6
+         HpRxwtfL3TwT3Nh1qQ4i74b6KBgNIK2jbMLP5qom3bVE3xjALoU869cZw2RAC4Bgzjhq
+         ZjnoE+QZ1OuDD9TvtmyOF9R/m+ABEoLcLa19QlaPS8gifYhVq8Y/n7Ggt66Xes+D6aaE
+         w1zLOu2r2ORpKBicK2S5RRbeG1AxZ/zsQIy9B8/STTV8ERvhO4RyklWiQ7WUyIsfftXy
+         U33aLeS1NFDNFix/L4J8TvsMaE2GTZMHjUavY6WSzcfW7gFjqUibQxROydfcT30xTKKX
+         C7Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKlAqFQUXxlPkIYANh6m+gEfAr/B1IIeYbHLfABOx+JrtXGlaNnZzmW3622Fko7FmJ2uyvRm1aLNgB2fI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhqG4mhqoogc5J+tgF+xw9pIiS3T7fb8g4algIYInCOL0Ej07y
+	0KZfsD9pHsqUI1oiD7YYDKjXzUmAMJtDhitE8PfCUrc/0TIQ/2mi
+X-Gm-Gg: ASbGncvKiddWnK0wHHHiT09OhL9Rc5LSkz/jt4SACTekrsin0zIvtiAcIG+WCdbpPXh
+	JE6fRXSXKcOinKZrI1oyg6SbClvK7WyiqvFcsUJpMuVfHwqjyv32RWg2lDld8aJjYHCnzEv4cI3
+	yrJBe/eQSHZBzqoRWZ0+XHvWLt83vVrzw6yQRFYykWxebaCfwfymfS/crU41ZSrEKmXzdeCcY5a
+	KmYJjejMFGnwdbek5u2nx8MLiafYKTOIZWcJhlhG/yi0JseZF+L8LW053k+WBOnOvgEcHck55Gx
+	y3XOqsQG7FKvay9/LQZtcTkz6QB+rf3aeqJdgdf41DoPxMGI7reYF+8e9wmLwA==
+X-Google-Smtp-Source: AGHT+IEizwJh83fKA4GblxYQufq8IOSE9ngbKGJYIoIhX0XYft1sNuqLkCRCPDpZGvKkBh5oDGgu7w==
+X-Received: by 2002:a05:6a00:18a6:b0:736:d297:164 with SMTP id d2e1a72fcca58-7403897a50dmr5522387b3a.1.1746036689082;
+        Wed, 30 Apr 2025 11:11:29 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([106.37.122.198])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039947976sm1983822b3a.84.2025.04.30.11.11.25
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
         Wed, 30 Apr 2025 11:11:28 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:11:28 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Hugh Dickins <hughd@google.com>,
+	Chris Li <chrisl@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	corbet@lwn.net
-Subject: [RFC PATCH v2 16/18] cxl: docs/allocation/tiering
-Date: Wed, 30 Apr 2025 14:10:46 -0400
-Message-ID: <20250430181048.1197475-17-gourry@gourry.net>
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH v3 6/6] mm, swap: remove no longer used swap mapping helper
+Date: Thu,  1 May 2025 02:10:52 +0800
+Message-ID: <20250430181052.55698-7-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430181048.1197475-1-gourry@gourry.net>
-References: <20250430181048.1197475-1-gourry@gourry.net>
+In-Reply-To: <20250430181052.55698-1-ryncsn@gmail.com>
+References: <20250430181052.55698-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,52 +85,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Carve out a space for folks to explain existing tiering mechanisms
-and how CXL capacity interacts with it.
+From: Kairui Song <kasong@tencent.com>
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
+This helper existed to fix the circular header dependency issue
+but it is no longer used since commit 0d40cfe63a2f ("fs: remove
+folio_file_mapping()"), remove it.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: David Hildenbrand <david@redhat.com>
 ---
- .../driver-api/cxl/allocation/tiering.rst     | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/allocation/tiering.rst
+ include/linux/pagemap.h | 1 -
+ mm/swapfile.c           | 9 ---------
+ 2 files changed, 10 deletions(-)
 
-diff --git a/Documentation/driver-api/cxl/allocation/tiering.rst b/Documentation/driver-api/cxl/allocation/tiering.rst
-new file mode 100644
-index 000000000000..623bb23088be
---- /dev/null
-+++ b/Documentation/driver-api/cxl/allocation/tiering.rst
-@@ -0,0 +1,31 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============
-+Memory Tiering
-+==============
-+
-+todo
-+
-+Memory Tiers
-+============
-+
-+todo
-+
-+
-+Transparent Page Placement
-+==========================
-+
-+todo
-+
-+Data Access MONitor
-+===================
-+
-+to be updated
-+
-+References
-+----------
-+
-+- `Self-tuned Memory Tiering RFC prototype and its evaluation <https://lore.kernel.org/all/20250320053937.57734-1-sj@kernel.org/>`_
-+- `SK Hynix HMSDK Capacity Expansion <https://github.com/skhynix/hmsdk/wiki/Capacity-Expansion>`_
-+- `kernel documentation <https://origin.kernel.org/doc/html/latest/mm/damon/>`_
-+- `project website <https://damonitor.github.io/>`_
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 627cb0338e5d..8c6894d0ac27 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -533,7 +533,6 @@ static inline void filemap_nr_thps_dec(struct address_space *mapping)
+ }
+ 
+ struct address_space *folio_mapping(struct folio *);
+-struct address_space *swapcache_mapping(struct folio *);
+ 
+ /**
+  * folio_flush_mapping - Find the file mapping this folio belongs to.
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 9fe58284079d..026090bf3efe 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -3662,15 +3662,6 @@ struct swap_info_struct *swp_swap_info(swp_entry_t entry)
+ 	return swap_type_to_swap_info(swp_type(entry));
+ }
+ 
+-/*
+- * out-of-line methods to avoid include hell.
+- */
+-struct address_space *swapcache_mapping(struct folio *folio)
+-{
+-	return swp_swap_info(folio->swap)->swap_file->f_mapping;
+-}
+-EXPORT_SYMBOL_GPL(swapcache_mapping);
+-
+ /*
+  * add_swap_count_continuation - called when a swap count is duplicated
+  * beyond SWAP_MAP_MAX, it allocates a new page and links that to the entry's
 -- 
 2.49.0
 
