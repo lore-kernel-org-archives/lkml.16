@@ -1,110 +1,143 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6E12DC779;
-	Wed, 30 Apr 2025 12:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F226D2DC779
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014449; cv=none; b=LNwe80zr5JIYOuvebJvW6PNR9Jznkf4DCDplnq1LPVuzkWR0UeNcC52oK7e/oMOYhHxB1z6Rg2ZynTtOSRK6UyVzYjfo25/fjX8r5A2DlYjFtBx7jUqOTxjZRrCd/ZJAF3eBkPaQPAv4hQKBLXTJU/GH+Vwtl4r7wXeLl5hJiso=
+	t=1746014455; cv=none; b=JgSUGFAjMAIHtNQsTWhGOUk5+sx07a1Jx4W3kafqVXJ8czK2m0aAm8dGzQdcOX+l7ptfrC5ojPXJ5oB6HCug6tt+StoMZqgJoFpQLRqMpQRQsawkhuF4MHMpLuPSMJbBLj7nu2W4WM/8DC8J/Ezc7LLAXVIExgpE8HT6dzVNhQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014449; c=relaxed/simple;
-	bh=kxdRKp2lzjagy8gOzCDfUJcqbQMHv+M8TNnx8KCN8WI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IO4b14UGqtfBfrlDDBoiHEvTBEv42Fom46KoPtoK/E4a1c3CAmp+HZ32SQx3ug4FzdBON9CpOAJpmAL94dZjwer/+2/8gv4DO/4Dp65vexrKpfJNXWVe56H/IblUWEmEMzvi0acgaI3kdJywZH8CPw4SP2QFqKC1uZb5BTriyB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ftg6vtPC; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1746014455; c=relaxed/simple;
+	bh=8QsjaxLDIv0ISrAdDMHRML8ijQlfkOmaKKvq6LJ0kMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oH/LlCr7B0+zpkNbzKisie/sbuEDaGxhEBsuOXLU5as12wkSRUCmsoS9UNMZex+y8KJscuI1K38J1orFtYVwK+7QHynJ0lPPWBbCLkBoHScNUBWFnZDJMmXmsDtheAGtneJk5AkWsiPa284XRyYD8KnAdPyGFSYHsWXMGZcQGts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LTVXSE08; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ftg6vtPC"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so1421144766b.2;
-        Wed, 30 Apr 2025 05:00:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTVXSE08"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf257158fso40475275e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746014446; x=1746619246; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NnW1V4G7QDzDaIONh5ACII2mYnPVAr6ZbvWhIzGCX+k=;
-        b=Ftg6vtPC8SmmkrH+BvFIUKBKtoDO0aDFCB/JgAJ94fAFs7Ku2JaLTiZJMOFKv37pBx
-         3yae+jOYoRTBu4EEseR3NfHvJW4mnwJlqWPl1xh5mbBNNZbFg9Quzrvcn+yFeW7WBXOa
-         dS9TjJIwyfPEXfOxK9Ra79+H8PqOHKa/sEG7RsPmRawMvKUjUuzgwOxf7ORrbbncLSDR
-         Xfta2Zbrxdx9ldOdQY0qeRTmhYievxTOReEmcCwQ7x3/sI2HAO7JTIgJDesklcTrxYab
-         nFwKiLC86ItY/6nG2iRtZ4Slt19c6UO7umuqh4LrT3RFqGsW+BrJWMrs4rP3ixpop9CM
-         H2TQ==
+        d=gmail.com; s=20230601; t=1746014452; x=1746619252; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/DCQtpbmnNH8yPwrJGcf1JWJJVtWdng53I7ehlQb2+A=;
+        b=LTVXSE089NquEekVeaRlvJYbo/PRx7eBV7c9vvvkWhCOi5xpQW81huye+NnE0E/E8x
+         KgSGPFPZ0+DmcWvhV6EZh26BqlCWe/DAzImnrcvqSnpO8vre/f1gcK2Iu0rlibPOVxQj
+         unPBJUHKhnNNQpFIuPqHXmKvFnvt3W25Ef/jVrT5dYCRlT6XCEBnHkPnqaOoq1OiqY72
+         5hR3xW7/d6u+JBMIFUNsn/fQp8l2gkxsRAbm8rk4nu/w8G+g9aa2/yV8N4Tv0uNmk2vP
+         98Ctm+YfQ/fNCoi/5WecdfneJcReUMtaMLLumJJ1w7NFJ3M2rYdNrhgQMWtcvCQuHWu5
+         lYJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746014446; x=1746619246;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NnW1V4G7QDzDaIONh5ACII2mYnPVAr6ZbvWhIzGCX+k=;
-        b=ND7hU8lmOSDIKVldQaC/5Plnmmvgf2EuaaVG6qOFaGUmHdzYk2rQcddE6fMch8chTN
-         mnDGv2VjGdpV8UYpI5d3KHhW4e4IlaLyx8U8JORwVlIJsnJsZHAYS7X2VqmoJWc7TX1N
-         LnqvCSnwS4dzyvHtObJe50xD1UX89fy6qc7fwgxxfpCewumnvNDudCeIXoTQoU6DETIj
-         x8qf5jHxpbsVNtZrb1LiFYKYmbARVpagZ7yWbGEr2ujmvljxLhIjHrGWXGvchB+diXJc
-         t6fC/oEFxaadzbot2NK9yNPEAynmgIfmRzeyuiwoq5OEHdW+UPSZNpDrJ9ESkI2ILrlr
-         gqtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZbTux8jlKCcAboGDUz2H623XcJDa/REN2HuGyKJbEtw5jKfEtH7TcgvjrCB7DPJkIp1Rb7Yq0p3gpqOc=@vger.kernel.org, AJvYcCUmVvIMntCsuhe51dCHUFXGv/v/mLRfeSLfyrRYgMFVdUa6Zify/Jkm13URFUxY9eumIYSkVs2wP0xM/3uP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwIF8beAJxwEE6cyXK7ae+1haRhWNivTEY67/QRxF1ZyrKw4Ca
-	WK1Zrfi29vdN12xgsmRlF8nTwdJj/yzFgxFk1pYS1INRsmQO/HMK
-X-Gm-Gg: ASbGnctNK8RmcXZafEBBjcHTlNhuZhcfAOo07VADM9zD+ckeRC/MsSyCvrTvFqADpgp
-	IP/Xr9uQMOwoD8oPGU0p1fogNLlI5PAQ0JQ29pdKJ9mDZsI7e//jCAkzMTImKSuwKW6yzNVOawG
-	5Ta0KMvgk4pBZQV/JeHdYGt/oK/yvNoydDBC91LqOMTUmQtpeN4hoTauPsEqv1V2kktXcvIV0B3
-	6OlRVa04HRyh9nmF0o3X/81YWWcZpnO1UJwf5s1jxfD9DORtRva/iABSJ6JpGURW8T4b/KKMx/5
-	n2ZgAZZDhFJsCoqJvUeXhn9FDBTyxJFvr3d4ojYThpYu8CrG42dqy+NaZf87N5Vh+4wKma7TAIc
-	hdtU=
-X-Google-Smtp-Source: AGHT+IEzCqp2C+g91jO5PGP9Djnt7u31GuUe/k4aFGoYVUesU7GnbTtM7j8u4LECq2tRaHqh89SsbQ==
-X-Received: by 2002:a17:907:9488:b0:ace:3214:fed8 with SMTP id a640c23a62f3a-acedc630b9emr322914666b.27.1746014445764;
-        Wed, 30 Apr 2025 05:00:45 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41a850sm914382466b.32.2025.04.30.05.00.44
+        d=1e100.net; s=20230601; t=1746014452; x=1746619252;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/DCQtpbmnNH8yPwrJGcf1JWJJVtWdng53I7ehlQb2+A=;
+        b=pWmBOa1JKi582YUlCverTGjMZL3Gtptv0LHLPJUFl6o6cwRBrG64i6WrF1PTgQn5hW
+         qagA4ic5d/LzPExfBEQdv/nqi70LNwPIo5cdm2qF3V/tUVMjhgVU96NDkkGi8Fdl8dBt
+         4R5IZZYe5PFsFU3A/jOOzXWK07L87QP+Lwns+MlIImwt4XYIVQj0ph+XiPnm/HgOiTI2
+         OPrrUSk4mxAbm4zZcukUiJF4VQbB/bDdK4MC70xW/nDMDFrFPSS/IeQ5qYByX16Ragqe
+         CpqRAr38TJE7cRLqGLzeBCgtOZfqVVUrXekhCuGN3BwnF85s9Jezx0MQOQr4xNEfcJ7A
+         DEWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGecFZtAtmCch4isXJtqluGsKhXCA1X8z3Lg3yqMYtqi+kTpfynI8eh4uhgbVXiqaLWivk3lepGK7RO9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIkaaJ0hqxuNwHD5nsAzrVD1c2N2TS6W3cmKwsSK3/Cw5e5u/y
+	nQO5M8f20F5D4y+BbyVcGGNKpvciNaEEWVyTBTz7+mrB+jJuqyrO
+X-Gm-Gg: ASbGncuhOelhwMBWqyyKDsXXenUcZm+qhZBCX5bhaxxiL18JBBsO4FjfjTVvd6siYBO
+	dcZpgcvQ96bIlj9Ye2RZBf+mB+SibAC8TErt0Dm5ONRSTgmHgHp4OjmSklW85d7c4IgOivt4fuS
+	ikV//XUfX5RV6817tCGzfFWgBGGVFkFHTUspH2wbfT5mX5TgVaBUH9VYfCPFn/dgCQDCgYNdS6K
+	ICijfaaUkE329dJhCGlyFzAKfEX9LjorC7UotcMPvTkUef9V7PuBF/et+sAM6/WIq4REhdJnham
+	t0Yip6Nom+8X33Li5bkBheo+UrBHBd2aumdZQJT9l2nIVh0nEdv5hwhAdmglMS0aUbeoO4rcdd+
+	+zxI=
+X-Google-Smtp-Source: AGHT+IHdKokDsDAPpxiS26E99ubqRD+quvtP2rRWwTXxF12j2WHpvdyRyJppc7rg/JIjOLn49FAS8A==
+X-Received: by 2002:a05:600c:1c29:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-441b268b915mr14159175e9.22.1746014451847;
+        Wed, 30 Apr 2025 05:00:51 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b97288sm23331245e9.6.2025.04.30.05.00.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 05:00:45 -0700 (PDT)
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-To: herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Subject: [PATCH] crypto: rng - fix documentation for crypto_rng_alg()
-Date: Wed, 30 Apr 2025 14:59:53 +0300
-Message-ID: <20250430115953.1180650-1-ovidiu.panait.oss@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        Wed, 30 Apr 2025 05:00:51 -0700 (PDT)
+Date: Wed, 30 Apr 2025 13:00:50 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org, phasta@kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH] x86/boot: Work around broken busybox truncate tool
+Message-ID: <20250430130050.27be402e@pumpkin>
+In-Reply-To: <CAMj1kXH7Vi8ruqohvRrPM+Dk2vPtyaMUkNRzi0Ak77aq6Q_peg@mail.gmail.com>
+References: <20250424101917.1552527-2-ardb+git@google.com>
+	<aApm-lvBjREPOW47@gmail.com>
+	<CAMj1kXH7Vi8ruqohvRrPM+Dk2vPtyaMUkNRzi0Ak77aq6Q_peg@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Current documentation states that crypto_rng_alg() returns the cra_name of
-the rng algorithm, but it actually returns a 'struct rng_alg' pointer from
-a RNG handle.
+On Thu, 24 Apr 2025 18:39:13 +0200
+Ard Biesheuvel <ardb@kernel.org> wrote:
 
-Update documentation to reflect this.
+> On Thu, 24 Apr 2025 at 18:29, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Ard Biesheuvel <ardb+git@google.com> wrote:
+> >  
+> > > From: Ard Biesheuvel <ardb@kernel.org>
+> > >
+> > > The GNU coreutils version of truncate, which is the original, accepts a
+> > > % prefix for the -s size argument which means the file in question
+> > > should be padded to a multiple of the given size. This is currently used
+> > > to pad the setup block of bzImage to a multiple of 4k before appending
+> > > the decompressor.
+> > >
+> > > busybux reimplements truncate but does not support this idiom, and
+> > > therefore fails the build since commit
+> > >
+> > >   9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
+> > >
+> > > Work around this by avoiding truncate altogether, and relying on dd to
+> > > perform the padding.
+> > >
+> > > Reported-by: <phasta@kernel.org>
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > ---
+> > > I personally think using a busybox environment for building the kernel
+> > > is a terrible idea, and does not satisfy the build tool requirements
+> > > listed in the documentation. But apparently, it used to work and now it
+> > > doesn't, and the workaround is rather straight-forward.
+> > >
+> > > IOW, I don't care whether this gets applied or not, so I will leave it
+> > > to others to make the argument.  
+> >  
+> > >  quiet_cmd_image = BUILD   $@
+> > > -      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
+> > > +      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@  
+> >
+> > So the workaround isn't too terrible, and since someone did trigger the
+> > bug, debugged it and reported it to us, it costs us very little to
+> > apply the workaround and (re-)enable someone's Linux build environment.
+> >  
+> 
+> Indeed.
+> 
+> > Also there's almost no existing usage of 'truncate' within the kernel
+> > build system. Found one only:
+> >
+> >    drivers/firmware/efi/libstub/Makefile.zboot:                  truncate -s $$(hexdump -s16 -n4 -e '"%u"' $<) $@
+> >  
+> 
+> Yeah, and it was me who added that one too :-)
 
-Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
----
- include/crypto/rng.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+That could be changed to use dd as well - since it defaults to truncating the
+destination at the write offset.
 
-diff --git a/include/crypto/rng.h b/include/crypto/rng.h
-index 5ac4388f50e1..f8224cc390f8 100644
---- a/include/crypto/rng.h
-+++ b/include/crypto/rng.h
-@@ -102,12 +102,10 @@ static inline struct rng_alg *__crypto_rng_alg(struct crypto_alg *alg)
- }
- 
- /**
-- * crypto_rng_alg - obtain name of RNG
-- * @tfm: cipher handle
-- *
-- * Return the generic name (cra_name) of the initialized random number generator
-+ * crypto_rng_alg() - obtain 'struct rng_alg' pointer from RNG handle
-+ * @tfm: RNG handle
-  *
-- * Return: generic name string
-+ * Return: Pointer to 'struct rng_alg', derived from @tfm RNG handle
-  */
- static inline struct rng_alg *crypto_rng_alg(struct crypto_rng *tfm)
- {
--- 
-2.48.1
+	David
+
 
