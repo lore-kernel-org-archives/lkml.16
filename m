@@ -1,237 +1,121 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7667A43172
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77BB1EB1AF
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746008247; cv=none; b=i/8FKENGJyQBsxMFq4wRfEmaQ73HnKvMK0+lyYK1uHwkVNySlf8Pn06i0H0buane9v4HsIzvUOkY9tRAtb86HC/ZBpAMECwXWgU70ezAAXC3NGeCa3DEelydFV5rmxoZEpdXLvNhkDGLvX0q6cHxfwqXvE7uboGcDGbBilzohmc=
+	t=1746008322; cv=none; b=LAK9JUtAu+YWO5Iqi4XefJ4jugIImpxC7UcQ3NAp1JsM9f5/6s4wQaYtiKrw93HAy3uOvzMhReI+GtYEuEpQQ3SzLgqpRM8XlPp69m+dlOlKTUKPxe566e+8n0R8PPH5N8//Zngl7uPpYQnaMsMN2o3tjohDfbpwLgqJVhUWOf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746008247; c=relaxed/simple;
-	bh=l6Akiwz1X/gmRhz9aerO4WHMzRbLPunTL4DkbvHyF8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VDg6nfmgMCOTOxDJ+8Ti1SJPnV157x0omRY5wuh6eOcLh8Osl/QYSNmUwfHIPTT+XhmLTGyJn3Nkc2zrD9r0gB/rFYcWLgEyZu3GIytyseRjBSVkNF/zj4UXTL48yUgaOECM63aWaf/PYeejSeiNhtA+4CTZzmqOfU1etsB9DkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Af8K5xNi; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1746008322; c=relaxed/simple;
+	bh=okgaiHoCfNZIj1mJBgATqTIMGHfVHIGnTJ5M+2oeyF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VrDfC8b+IHNJEMhMoaB8K2Bm67d8tdHOLGVV2ckLitY95JyEV0bQoAavYeA7/pYfJODTVYTaS2VYUZEqtYxWLC8+Nmj7s/fMWJV6/NTkelbOMeFCZj5rW8z/Fnea+Ib35fqFgh4f1voo+CDl0SbQxP7tOu0DXlpkl2nxyVt0GcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=F9OKSmWv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Af8K5xNi"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d4436ba324so67134845ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746008244; x=1746613044; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hajr35wXoEFgGrgtJMs5DcJw47JrmZH1jIC06j4iHhQ=;
-        b=Af8K5xNiSTsOR/ormiKqIj2SGC2Ny9pUaxpzpbWE0RRU/1jYcvUGYDMvCoAGQhQnVt
-         cUsj0h7ddMyZsP+xm7CTKZ+SohEnM4K4qm9ul677h2Fyfcpo7IO/bnTInxMsrMub9eQZ
-         bQIPUvr+euBuktaOZxYG8U1FGSZg2hKRBPl3Bz1JbNovFEhgYTZdlcIWjMX1hZidFoaL
-         01RCjSgyKqjNshXigJtbuNEMU3JLuuEclX2Wq/1fThWJ4Rys126jvtD9Zaqb5KYYay4D
-         w1cVtV+nVcbIIYqoQaifDq2co/fWmXWW3FQiqECYoN3jX0eJ13w2PUh93qrr0OXRVEoG
-         0eWQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="F9OKSmWv"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9VTrJ002823
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:18:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	n8THpF6xzojubR0Ot/txkzNhNyCG9gBGkox8ywEikfM=; b=F9OKSmWvytaVM5P3
+	Zygb5c4WZ+Jh4dct4CHC+ZEue5xJAP0uGwzENos7SMwxfjUKf4r/b5AecaPTFtc8
+	/+jlbOEUzfUtkVxET0pgEJOffRF1gerj7S9vtNvoPrtu7SBBuq/jYejxJ3wjAVcZ
+	EcMAin+PobUM+8UYHG7xkvpZdTNxi8VVPXPobqk/aP4ecVvTVD7B8eenVIOrMyXE
+	J6eqRt52uPDVNC2sO6XDC8DCAjnoC4lbk2III5dG0FSJJhjAQHB1eRw56pFfM+A6
+	DlxgNByguPhrZS/2JOWCfW8sUWjmPuPfU7nIL9nIATmjndqmtupD6DyF6QmpT4YB
+	/pLgew==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u9sq5y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:18:37 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47ae9ed8511so13727271cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:18:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746008244; x=1746613044;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hajr35wXoEFgGrgtJMs5DcJw47JrmZH1jIC06j4iHhQ=;
-        b=lmandzApEtIGH+rfMTL5n36bYXhn8WhAcNTIOUA9o82FpwCVwWG0W3yMBTVvo+/2rj
-         D7n2Pw7u2WnPMiIH033HdtTUIzrpVo46dLZZ7t64Oh0k3UlywwyWkH2nA/nawJ0D5aY9
-         zPxPXnusjexsUVRs9LB61p0sBZ0fSWwNp1keyWoKhVGyMQaN9cwQ0ebgCKd16pc0RWLS
-         I+CPRRZ8G40fuDODpmFg04tHfveWv8HkFmDhTN0Bf5kUZFeKTcKveiah38Yffocog7TJ
-         lob4DYyV2+gvF2lJW5mYgpXJCF2lgWH3rlR1q+W0ri07vqk5Sf5AOm3FymQF0GvmhlW6
-         AV3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV/plLUfFc5uQuGDLYeor6Oh0LE2IBgszmB2Z4eq3QBUcfIawSdFf2ZCz4oIEaNZE/9Cw1G+TFzfPjCxk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxyx5Tr2UXUljU4QCO8jxSxG6bYcZ/oAtS9FOIopW+y5Ql5wkJp
-	DWd37TvHnPRdk8BfWmptquNZ+2eAS80WN2IqeBj/L9c//U+MOR8aoGh19Fu9iH1+tWhLdDnayra
-	wq/8gLIhTsjFEydWcNGaT7lOP4tbEMLTvuMZOwQ==
-X-Gm-Gg: ASbGncvCXr8zrJPxQUV8BpI689rYSl+UkGwyUROV+PtHK/wbSdyBIaX7VO7ku7M/F0Q
-	Re6nsV8sUg+Mvpl20Qgystolfj4wFJfzhCGh8gBbDKfNwPvFE/G66W3hV6kxcWqtWAqc7+CQIKs
-	KvyOnszVvK2Tm6XDmNwV0IR/I=
-X-Google-Smtp-Source: AGHT+IGfWKyj+8R/G3n3W48fayDFA5SRi91kVSTDvys0efjshDa91rFnxHxj6m5gFXeVWQDRSR/ZJT9BcvR1UL47KAQ=
-X-Received: by 2002:a05:6e02:2707:b0:3d8:1768:242f with SMTP id
- e9e14a558f8ab-3d967fa3de9mr20815675ab.2.1746008244393; Wed, 30 Apr 2025
- 03:17:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746008317; x=1746613117;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n8THpF6xzojubR0Ot/txkzNhNyCG9gBGkox8ywEikfM=;
+        b=I6HkTloP5ZZ1SfucPyy9b+ZE89RbF9eQ2qKxhxRYyFebotyqD3CDgtjUyp+YYddMXx
+         m6d4KEMy0LmY9MGHBfNXWtZssbi2PWJ9HMsivc2TbTuimLQTkZMJWHxUn6oxVDnw91cj
+         XqS/CkuRhg0YkkUkaLUw8jj0HhkR9vBgI1pPflpaZCL7kQ+9bvErKkUiunAhxoktGPB0
+         PbOKuEH2mFCw/2Rg8GWwDbOG4+oJrWDcktEtDHq+/RSI3+creOCmOJ366nwAnV7ERwtv
+         Dqk89Mt7VUHgKiMc+VidKmnKGiwuYVGSTZ7whyA1BpERzzFhv5CbSfLkQJibaS9NP5Sk
+         mTeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDKtjE7bZXw4/ypvO0jadj60LbZzfUL6AuuAXorh8WvoUijujACGvnTt4LPY/5Jr2C5H+HrmZZTo1H+kw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq6ZMPygGtnC27XQi6NFFmX5nVrkMTnm71BW/yFBKd0cbx6v0A
+	TPLH7hfX18nvCT0h4Gv/LlMAM7QOFdh0ri5qNwtZ8K9TMvxlPbTv7w1yjE4+pC+e5NCQrrfTyVm
+	oib9LuXweK+okpCyXJZpO8IrzmjGjGtZbyazpOm8OjBJMHBax778kLZH0jppwKNk=
+X-Gm-Gg: ASbGncs8GvQxZDixrD0EUn3grQYv6TPLAwfgCmLg07eHB1Sl2bEvQTEAT0GZpOaEjdQ
+	vnMPcsFxZxl1aerLXhK9Vtt1fPqPBx4jawAChZ91hYGJ9dN09nT2WK6wV8WonBp0lxM9P2co297
+	vjIgARfLhUEhsX2udNvEFLQ+1xvgEAfDPEy1OCglcV6k+BnE42bN8LoAluux0zyNRzkLNN+hY/H
+	UBh+O1y3SIHEiaMwktB0F/nfS6wHg3w6cSEs+zZW18enSk4CNruaEL4zL9ERTQDVjzhD278Uf0Z
+	8P2+6gPbVqQ56/FUfJXgf4Omv8PtElf4YuT19uOJ7FNEq31Ij8voSo8Cg3r/UaqpABU=
+X-Received: by 2002:a05:622a:550:b0:476:652f:4dbc with SMTP id d75a77b69052e-489e4d77485mr11338121cf.7.1746008316957;
+        Wed, 30 Apr 2025 03:18:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEO23cvXrGFB/iOngY/UOzNWgY0BSboZs1pXty1cvWHt/+wicp4JoHuzN5FLQhX8ailkyQqHA==
+X-Received: by 2002:a05:622a:550:b0:476:652f:4dbc with SMTP id d75a77b69052e-489e4d77485mr11338021cf.7.1746008316689;
+        Wed, 30 Apr 2025 03:18:36 -0700 (PDT)
+Received: from [192.168.65.132] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e595abfsm901834266b.86.2025.04.30.03.18.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 03:18:36 -0700 (PDT)
+Message-ID: <d99deabd-878d-4600-93df-7b9c1cf75393@oss.qualcomm.com>
+Date: Wed, 30 Apr 2025 12:18:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com> <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
- <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com> <CAK9=C2Woc5MtrJeqNtaVkMXWEsGeZPsmUgtFQET=OKLHLwRbPA@mail.gmail.com>
- <D9J1TBKYC8YH.1OPUI289U0O2C@ventanamicro.com> <CAAhSdy01yBBfJwdTn90WeXFR85=1zTxuebFhi4CQJuOujVTHXg@mail.gmail.com>
- <D9J9DW53Q2GD.1PB647ISOCXRX@ventanamicro.com> <CAAhSdy0B-pF-jHmTXNYE7NXwdCWJepDtGR__S+P4MhZ1bfUERQ@mail.gmail.com>
- <CAAhSdy20pq3KvbCeST=h+O5PWfs2E4uXpX9BbbzE7GJzn+pzkA@mail.gmail.com> <D9JTZ6HH00KY.1B1SKH1Z0UI1S@ventanamicro.com>
-In-Reply-To: <D9JTZ6HH00KY.1B1SKH1Z0UI1S@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Wed, 30 Apr 2025 15:47:13 +0530
-X-Gm-Features: ATxdqUF_q2ij9AhnCkW-YqEHHIjuO1czpMVKF6K9iOnegwjVM1IJPR_3stGj_7I
-Message-ID: <CAAhSdy0TfpWQ-kC_gUUCU0oC5dR45A1v9q84H2Tj9A8kdO0d1A@mail.gmail.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming runnable
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Anup Patel <apatel@ventanamicro.com>, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Andrew Jones <ajones@ventanamicro.com>, Mayuresh Chitale <mchitale@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: qcom: qcs8300: add the pcie smmu node
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250429-qcs8300-pcie-smmu-v2-1-445288af3ea7@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250429-qcs8300-pcie-smmu-v2-1-445288af3ea7@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: ekrnRM-dZbn8sBhX3LTTdZlyVD7mdXMI
+X-Proofpoint-ORIG-GUID: ekrnRM-dZbn8sBhX3LTTdZlyVD7mdXMI
+X-Authority-Analysis: v=2.4 cv=UZZRSLSN c=1 sm=1 tr=0 ts=6811f8fd cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=PbmTXqVU7kiPfYgbbi8A:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=kacYvNCVWA4VmyqE58fU:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA3MiBTYWx0ZWRfXx8fxxEczSEQE XkyLdsEA9gd9obU6y8cuiErlqGVvqQuPyG1DeNlMRtVY2zbZjp9bKf530XXmK86CMlvOUu/s4CO GaHpB7CwX5/wyeP4vovd6st/oTSpFSNM2IUtgQBxrhsBPkppUxZnaoIwU8222oVyjBOvX5IPXh2
+ 4B2lNO/JkcDkl3JCj+64r8O08qpBZO8lah46ha2GNKl4RHodUsxT8BRYjIL/5wN6DiNcURIjHZO rGCB2yjTbtUryTky8fUqGJIADl1ugzAzKW0O5UBlxZdp83InYOWoKVwEm0ru60CJx8jxCkRfnhE z0j94ZJs10GBIRAwET65y0x0+/HMzdNcW3md38GXEsshMn34+M05h7vHXjZBlDltqWUWIT1XxBw
+ hwoIDW71T8/oCmHdG/Gs2/8wczwAR/1RyZ7xW9cJgIc9Qa7KrEjXbQu9j2oVzftlCTqKABPF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ mlxlogscore=794 spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300072
 
-On Wed, Apr 30, 2025 at 1:59=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcma=
-r@ventanamicro.com> wrote:
->
-> 2025-04-30T10:56:35+05:30, Anup Patel <anup@brainfault.org>:
-> > On Wed, Apr 30, 2025 at 9:52=E2=80=AFAM Anup Patel <anup@brainfault.org=
-> wrote:
-> >>
-> >> On Tue, Apr 29, 2025 at 9:51=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <r=
-krcmar@ventanamicro.com> wrote:
-> >> >
-> >> > 2025-04-29T20:31:18+05:30, Anup Patel <anup@brainfault.org>:
-> >> > > On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=
-=99 <rkrcmar@ventanamicro.com> wrote:
-> >> > >>
-> >> > >> 2025-04-29T11:25:35+05:30, Anup Patel <apatel@ventanamicro.com>:
-> >> > >> > On Mon, Apr 28, 2025 at 11:15=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=
-=C5=99 <rkrcmar@ventanamicro.com> wrote:
-> >> > >> >>
-> >> > >> >> 2025-04-28T17:52:25+05:30, Anup Patel <anup@brainfault.org>:
-> >> > >> >> > On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=
-=C5=99 <rkrcmar@ventanamicro.com> wrote:
-> >> > >> >> >> For a cleaner solution, we should add interfaces to perform=
- the KVM-SBI
-> >> > >> >> >> reset request on userspace demand.  I think it would also b=
-e much better
-> >> > >> >> >> if userspace was in control of the post-reset state.
-> >> > >> >> >
-> >> > >> >> > Apart from breaking KVM user-space, this patch is incorrect =
-and
-> >> > >> >> > does not align with the:
-> >> > >> >> > 1) SBI spec
-> >> > >> >> > 2) OS boot protocol.
-> >> > >> >> >
-> >> > >> >> > The SBI spec only defines the entry state of certain CPU reg=
-isters
-> >> > >> >> > (namely, PC, A0, and A1) when CPU enters S-mode:
-> >> > >> >> > 1) Upon SBI HSM start call from some other CPU
-> >> > >> >> > 2) Upon resuming from non-retentive SBI HSM suspend or
-> >> > >> >> >     SBI system suspend
-> >> > >> >> >
-> >> > >> >> > The S-mode entry state of the boot CPU is defined by the
-> >> > >> >> > OS boot protocol and not by the SBI spec. Due to this, reaso=
-n
-> >> > >> >> > KVM RISC-V expects user-space to set up the S-mode entry
-> >> > >> >> > state of the boot CPU upon system reset.
-> >> > >> >>
-> >> > >> >> We can handle the initial state consistency in other patches.
-> >> > >> >> What needs addressing is a way to trigger the KVM reset from u=
-serspace,
-> >> > >> >> even if only to clear the internal KVM state.
-> >> > >> >>
-> >> > >> >> I think mp_state is currently the best signalization that KVM =
-should
-> >> > >> >> reset, so I added it there.
-> >> > >> >>
-> >> > >> >> What would be your preferred interface for that?
-> >> > >> >>
-> >> > >> >
-> >> > >> > Instead of creating a new interface, I would prefer that VCPU
-> >> > >> > which initiates SBI System Reset should be resetted immediately
-> >> > >> > in-kernel space before forwarding the system reset request to
-> >> > >> > user space.
-> >> > >>
-> >> > >> The initiating VCPU might not be the boot VCPU.
-> >> > >> It would be safer to reset all of them.
-> >> > >
-> >> > > I meant initiating VCPU and not the boot VCPU. Currently, the
-> >> > > non-initiating VCPUs are already resetted by VCPU requests
-> >> > > so nothing special needs to be done.
-> >>
-> >> There is no designated boot VCPU for KVM so let us only use the
-> >> term "initiating" or "non-initiating" VCPUs in context of system reset=
-.
->
-> That is exactly how I use it.  Some VCPU will be the boot VCPU (the VCPU
-> made runnable by KVM_SET_MP_STATE) and loaded with state from userspace.
->
-> RISC-V doesn't guarantee that the boot VCPU is the reset initiating
-> VCPU, so I think KVM should allow it.
+On 4/29/25 12:09 PM, Pratyush Brahma wrote:
+> Add the PCIe SMMU node to enable address translations
+> for pcie.
+> 
+> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> ---
+> Changes in v2:
+> - Updated the global-interrupts and interrupts based on Konrad's suggestions
 
-We do allow any VCPU to be the boot VCPU. I am not sure why you
-think otherwise.
+There was another discussion on a similar ambiguous numbering issue
+on the related sa8775p, and now I'm beyond confused. Please ask
+someone internally to confirm these numbers.
 
->
-> >> > Currently, we make the request only for VCPUs brought up by HSM -- t=
-he
-> >> > non-boot VCPUs.  There is a single VCPU not being reset and resettin=
-g
-> >> > the reset initiating VCPU changes nothing. e.g.
-> >> >
-> >> >   1) VCPU 1 initiates the reset through an ecall.
-> >> >   2) All VCPUs are stopped and return to userspace.
-> >>
-> >> When all VCPUs are stopped, all VCPUs except VCPU1
-> >> (in this example) will SLEEP because we do
-> >> "kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP)"
-> >> so none of the VCPUs except VCPU1 (in this case) will
-> >> return to userspace.
->
-> Userspace should be able to do whatever it likes -- in my example, all
-> the VCPUs are brought to userspace and a different boot VCPU is
-> selected.
-
-In your example, the VCPU1 (initiating VCPU) need not be the
-boot VCPU after system reset. The user space can setup some
-other VCPU as boot VCPU (by setting its MPSTATE, PC, A0,
-and A1) and simply do ioctl_run() for the initiating VCPU without
-changing its MPSTATE.
-
->
-> (Perhaps userspace wanted to record their reset pre-reset state, or
->  maybe it really wants to boot with a designated VCPU.)
->
-> >> >   3) Userspace prepares VCPU 0 as the boot VCPU.
-> >> >   4) VCPU 0 executes without going through KVM reset paths.
-> >>
-> >> Userspace will see a system reset event exit for the
-> >> initiating VCPU by that time all other VCPUs are already
-> >> sleeping with mp_state =3D=3D KVM_MP_STATE_STOPPED.
-> >>
-> >> >
-> >> > The point of this patch is to reset the boot VCPU, so we reset the V=
-CPU
-> >> > that is made runnable by the KVM_SET_MP_STATE IOCTL.
-> >>
-> >> Like I said before, we don't need to do this. The initiating VCPU
-> >> can be resetted just before exiting to user space for system reset
-> >> event exit.
->
-> You assume initiating VCPU =3D=3D boot VCPU.
->
-> We should prevent KVM_SET_MP_STATE IOCTL for all non-initiating VCPUs if
-> we decide to accept the assumption.
-
-There is no such assumption.
-
->
-> I'd rather choose a different design, though.
->
-> How about a new userspace interface for IOCTL reset?
-> (Can be capability toggle for KVM_SET_MP_STATE or a straight new IOCTL.)
->
-> That wouldn't "fix" current userspaces, but would significantly improve
-> the sanity of the KVM interface.
-
-I believe the current implementation needs a few improvements
-that's all. We certainly don't need to introduce any new IOCTL.
-
-Also, keep in mind that so far we have avoided any RISC-V
-specific KVM IOCTLs and we should try to keep it that way
-as long as we can.
-
-Regards,
-Anup
+Konrad
