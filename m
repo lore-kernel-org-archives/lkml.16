@@ -1,174 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437D217BA9
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C4F11712
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745975103; cv=none; b=rgbSI1JxKpjxqM7pjV0s+o6AG/Jqw1p9XBsmssU8mXCw3O93S+cQWNvPLdIA5rTfF1cdoJvgDfBLk9SEQFT/AV4JpB0TVBYX8ciotj/Y5I1+cigL4B4HLiSacB4zPWzqFQaqbgR8a74EYc3cgLtvg1AMLiV1k6wag8vG7C80Elk=
+	t=1745975126; cv=none; b=ng6pyXjh+CwVSiQyZF22a4/7bTbC5BeF4542D0y7eN5DnznBbct8U/RGmzChtyo2UF/FqvCbnpjjc9SeM601FQdlruFXmrLMbq8TvAKoj02hamVv8Z4HtH/aHBN0T3IQqh0yiUsNiqJehvYriLykYhmJNTKbDVqcJ9TcQR48Wrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745975103; c=relaxed/simple;
-	bh=zfMN+OuWOiL6b7Mc0kTwoXJkTCxc25MaAuv8otuWUvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dylqb0sUiUvSxmaaNATZED2f+81eb8k5aJ9imXmF1Z7TlYimSkqPc7QJa85SpKazHbuJPxIHfV6ay803pEfleIsoUtagBjmWed66ir5JMuZZsZsH4Afe1ZXgJ0gqImzJp8HD+OhSlLYq+9jPt/DuyCvum8jNv7vrPhCNIdnU5xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hn3izpPU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745975126; c=relaxed/simple;
+	bh=N3RIolT2/wwpsyp3qVL0vety09DWGenJ3HGIlVCg+P0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tTvEWLAneR1X4VSAHzGVWBymCLFu2hVdpqT2UIE1siVcDy+Jh80QG+E2xhs4mTV87Q1UdfzFi0pWdrKYOWYSruwjzjtbGrxSU7KvMLB0uBBTcOcxp5gFhrbCq6U/kuf0T1RjoCBhMmDFzsNmHDifKErROlchnx+rlvnqQdgnqaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtV0/lFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hn3izpPU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2445C4CEE3;
-	Wed, 30 Apr 2025 01:05:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtV0/lFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 621E7C4CEED;
+	Wed, 30 Apr 2025 01:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745975102;
-	bh=zfMN+OuWOiL6b7Mc0kTwoXJkTCxc25MaAuv8otuWUvo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Hn3izpPU4vOovFUK/F2h5pSByQq/JfdnUb8Zz0UQ3uQpyVJw4iAOn7Cyip/d9yML4
-	 i4dCC2Mffrt+zo1vpw5fCDmMXKw6uDE3ORIAsMEnzs8iu01XeGoZcwjEs0qLwHyzk7
-	 e6Exhy/98dLsYC54wtQB9kmr978nQqA1hknSzAwrYWDSG1XBcIYx0sIacztxOhCW/z
-	 rq0mnEH9Js97Jy3hdSUMbId2ibJcToRezlaci6RRdS483noBOXPzYoCkTvv0/KFccG
-	 pCIY7hepDHAM6vx6BmPPQQii0WwoyHRHlmRXBRucXP80t4PiSB14S2r6yr02ZzaklF
-	 ovv6mHA7+4Z4Q==
+	s=k20201202; t=1745975126;
+	bh=N3RIolT2/wwpsyp3qVL0vety09DWGenJ3HGIlVCg+P0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OtV0/lFX2qmoJ7fHvG5EdLqgeuJ0Sm79t1SeFHcHJ3K0nwFvue7YvDYn+akTnDneC
+	 fg/IcTLE3kpWjCg0ccDSP4m3Y3mQEdAKp+4uF5CfQHpxPNt2WUpebhrcvp76jZFe6E
+	 eChDq5euQTXGy0ClmmFTLj+fox4AdjJNvmo/3yJFTeWKb+zX5BM+PJjsKcoxOhHJ48
+	 jky+bkPgXoyUmkUiiCeZ7RhdryT3Wlwmrtv/8wh066o40OKtcfITWPyHxu2IHO3BrF
+	 y+jKvlaIKs1L1srqX6ZetQjwxLXA2IIunsYUx92Jf7hxy2T6++8siBJB6ICzqf9krE
+	 BHnr4XNVsuMig==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A8C9CCE077B; Tue, 29 Apr 2025 18:05:00 -0700 (PDT)
-Date: Tue, 29 Apr 2025 18:05:00 -0700
+	id 418E6CE084A; Tue, 29 Apr 2025 18:05:25 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
+Cc: kernel-team@meta.com,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Petr Mladek <pmladek@suse.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	John Ogness <john.ogness@linutronix.de>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Jon Pan-Doh <pandoh@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: [PATCH v4 0/20] ratelimit: Reduce ratelimit's false-positive misses
-Message-ID: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
- <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
- <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH v4 02/20] ratelimit: Create functions to handle ratelimit_state internals
+Date: Tue, 29 Apr 2025 18:05:06 -0700
+Message-Id: <20250430010524.3614408-2-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
+References: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
 
-Hello!
+A number of ratelimit use cases do open-coded access to the
+ratelimit_state structure's ->missed field.  This works, but is a bit
+messy and makes it more annoying to make changes to this field.
 
-This v4 series replaces open-coded uses of the ratelimit_state structure
-with formal APIs, counts all rate-limit misses, replaces jiffies=0 special
-case with a flag, provides a ___ratelimit() trylock-failure fastpath to
-(almost) eliminate false-positive misses, simplifies the code, and adds
-a simple test.
+Therefore, provide a ratelimit_state_inc_miss() function that increments
+the ->missed field, a ratelimit_state_get_miss() function that reads
+out the ->missed field, and a ratelimit_state_reset_miss() function
+that reads out that field, but that also resets its value to zero.
+These functions will replace client-code open-coded uses of ->missed.
 
-The key point of this series is the reduction of false-positive misses.
-More could be done to avoid open-coded access to the ->interval and
-->burst fields, and to tighten up checking of user input for these fields,
-but those are jobs for later patches.
+In addition, a new ratelimit_state_reset_interval() function encapsulates
+what was previously open-coded lock acquisition and direct field updates.
 
-The individual patches are as follows:
+[ paulmck: Apply kernel test robot feedback. ]
 
-1.	Add trivial kunit test for ratelimit.
+Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
+Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ include/linux/ratelimit.h | 40 ++++++++++++++++++++++++++++++++++-----
+ lib/ratelimit.c           |  8 ++++----
+ 2 files changed, 39 insertions(+), 9 deletions(-)
 
-2.	Create functions to handle ratelimit_state internals.
+diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
+index b17e0cd0a30cf..8400c5356c187 100644
+--- a/include/linux/ratelimit.h
++++ b/include/linux/ratelimit.h
+@@ -22,16 +22,46 @@ static inline void ratelimit_default_init(struct ratelimit_state *rs)
+ 					DEFAULT_RATELIMIT_BURST);
+ }
+ 
++static inline void ratelimit_state_inc_miss(struct ratelimit_state *rs)
++{
++	rs->missed++;
++}
++
++static inline int ratelimit_state_get_miss(struct ratelimit_state *rs)
++{
++	return rs->missed;
++}
++
++static inline int ratelimit_state_reset_miss(struct ratelimit_state *rs)
++{
++	int ret = rs->missed;
++
++	rs->missed = 0;
++	return ret;
++}
++
++static inline void ratelimit_state_reset_interval(struct ratelimit_state *rs, int interval_init)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&rs->lock, flags);
++	rs->interval = interval_init;
++	rs->begin = 0;
++	rs->printed = 0;
++	ratelimit_state_reset_miss(rs);
++	raw_spin_unlock_irqrestore(&rs->lock, flags);
++}
++
+ static inline void ratelimit_state_exit(struct ratelimit_state *rs)
+ {
++	int m;
++
+ 	if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE))
+ 		return;
+ 
+-	if (rs->missed) {
+-		pr_warn("%s: %d output lines suppressed due to ratelimiting\n",
+-			current->comm, rs->missed);
+-		rs->missed = 0;
+-	}
++	m = ratelimit_state_reset_miss(rs);
++	if (m)
++		pr_warn("%s: %d output lines suppressed due to ratelimiting\n", current->comm, m);
+ }
+ 
+ static inline void
+diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+index ce945c17980b9..85e22f00180c5 100644
+--- a/lib/ratelimit.c
++++ b/lib/ratelimit.c
+@@ -51,12 +51,12 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+ 		rs->begin = jiffies;
+ 
+ 	if (time_is_before_jiffies(rs->begin + interval)) {
+-		if (rs->missed) {
++		int m = ratelimit_state_reset_miss(rs);
++
++		if (m) {
+ 			if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE)) {
+ 				printk_deferred(KERN_WARNING
+-						"%s: %d callbacks suppressed\n",
+-						func, rs->missed);
+-				rs->missed = 0;
++						"%s: %d callbacks suppressed\n", func, m);
+ 			}
+ 		}
+ 		rs->begin   = jiffies;
+-- 
+2.40.1
 
-3.	Avoid open-coded use of ratelimit_state structure's ->missed
-	field.
-
-4.	Avoid open-coded use of ratelimit_state structure's ->missed
-	field.
-
-5.	Avoid open-coded use of ratelimit_state structure's internals.
-
-6.	Convert the ->missed field to atomic_t.
-
-7.	Count misses due to lock contention.
-
-8.	Avoid jiffies=0 special case.
-
-9.	Reduce ___ratelimit() false-positive rate limiting, courtesy of
-	Petr Mladek.
-
-10.	Allow zero ->burst to disable ratelimiting.
-
-11.	Force re-initialization when rate-limiting re-enabled.
-
-12.	Don't flush misses counter if RATELIMIT_MSG_ON_RELEASE.
-
-13.	Avoid atomic decrement if already rate-limited.
-
-14.	Avoid atomic decrement under lock if already rate-limited.
-
-15.	Warn if ->interval or ->burst are negative, courtesy of Petr
-	Mladek.
-
-16.	Simplify common-case exit path.
-
-17.	Use nolock_ret label to save a couple of lines of code.
-
-18.	Use nolock_ret label to collapse lock-failure code.
-
-19.	Use nolock_ret restructuring to collapse common case code.
-
-20.	Drop redundant accesses to burst.
-
-Changes since v3:
-
-o	Correctly handle zero-initialized ratelimit_state structures,
-	being careful to avoid acquiring the uninitialized ->lock.
-
-o	Remove redundant checks of the "burst" local variable.
-
-o	Add Reviewed-by tags.
-
-Changes since v2:
-
-o	Apply feedback from Bert Karwatzki, Srikanth Aithal, and Mark
-	Brown, fixing a hang that happened on some systems.
-
-o	Applied Reviewed-by tags and added links.
-
-o	Added a prototype patch from Petr Mladek that splats if either
-	interval or burst are negative.
-
-o	Added several commits that simplify the code.
-
-Changes since v1 (RFC):
-
-o	Switch from lockless fastpath to carrying out needed updates
-	upon trylock failure, per Petr Mladek feedback.  This greatly
-	simplifies the code and is a much smaller change from the
-	current code.  There is a small performance penalty compared to
-	the lockless fastpath, but not enough to matter.
-
-o	Never unconditionally acquire the lock, again per Petr Mladek
-	feedback.
-
-o	Better define effects of non-positive burst values (always
-	ratelimit) and non-positive interval values (never ratelimit
-	when the burst value is positive).
-
-o	The changes from Petr's original are supplied as five incremental
-	patches, but could easily be folded into Petr's original if
-	desired.  (Left to my lazy self, they stay as-is.)
-
-						Thanx, Paul
-
-------------------------------------------------------------------------
-
- b/drivers/char/random.c              |    9 +
- b/drivers/gpu/drm/amd/pm/amdgpu_pm.c |   11 --
- b/drivers/gpu/drm/i915/i915_perf.c   |    8 -
- b/include/linux/ratelimit.h          |   40 +++++++-
- b/include/linux/ratelimit_types.h    |    2 
- b/lib/Kconfig.debug                  |   11 ++
- b/lib/ratelimit.c                    |    8 -
- b/lib/tests/Makefile                 |    1 
- b/lib/tests/test_ratelimit.c         |   79 ++++++++++++++++
- include/linux/ratelimit.h            |   13 +-
- include/linux/ratelimit_types.h      |    3 
- lib/ratelimit.c                      |  165 ++++++++++++++++++++---------------
- 12 files changed, 246 insertions(+), 104 deletions(-)
