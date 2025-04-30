@@ -1,153 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from r9103.ps.combzmail.jp (r9103.ps.combzmail.jp [49.212.47.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D18224B08;
-	Wed, 30 Apr 2025 23:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1A3205519
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 23:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.47.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746055797; cv=none; b=PlLVZ2jaPZ6YuEX2FZe7Bz4zjy5Sl4EhUygzDq6rNw7RMTZlDl7lvloX1ZE/M0hhUyY/0+Tsk+FzF6ucr1IA7oym8Kbe5cNDy092EDOrQtn9kDYEgdTE06tVemasYtl8Dy2/uolKoiy9IfrJIEittOtxrxvpxUAKXUIvl9O7qoY=
+	t=1746055807; cv=none; b=YnWkIzfVKoFJ3QCwTH4ye10O5Gse+veN5QOib72xEIdWm8uZMme40yEInDeyPBiOqqeKneYpSDKsAFT52jDzM3si8BSbSmvwaHM4CIZ7zPk5RRlcjkx4/gLJi0/T1b/09+MKnY2erEtamvSCvvS7RgoimdIKFWiMQhUFGiiFmHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746055797; c=relaxed/simple;
-	bh=YfszCblJFyfY03DL8XXrgkd5xX++4FamuTO+wfAZTdU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mJ64cQSF/XfTU3qRxjNm310VnGkx4egMy6ZWjHD9YD7N7JR8hBZj9uh37spNfdn6/XVpibcjtuimMsVUo92SOFsSkoJKUvhd5svo+0vX/64eJRgoeUZ/sodKBjEX9iENinBYDAbxiIkX+hh3pMpd+ZDE3P2RD47vgMHk7xF0ufU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBSRN+Cd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBSRN+Cd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C991C4CEE7;
-	Wed, 30 Apr 2025 23:29:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746055796;
-	bh=YfszCblJFyfY03DL8XXrgkd5xX++4FamuTO+wfAZTdU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CBSRN+CdA8OVjt7ep85XM1fA0jHkm9myj0UJO2EsDz2aMo5y7137sioKwV2jOLXTx
-	 /IMuiO5y32c0jDW4fAJDai2Gp//p6y/DtvyrLKpViDyhNDVbSxo9cpA3nZP/cjk09N
-	 5NIDQYq/4GsbZ7kiBPKj7ugOiCzMr+oQjEuwhSSlZIkNs4Yks9XCrlD7PpWUj8UDVp
-	 o1/08fj4aDkyRj9uExjwOLnT2YRKM9VRbFXLmf7chlLO3ek/bUmK7DEoKPRM8OJJJf
-	 WkREvLWaYIpKahcKbYN6DGm8ZXG3s3myvIcVk8YL+/+/rxh+9VEHUk6p4mz/VegeRa
-	 bZswfG7sOR+Jg==
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso382804276.2;
-        Wed, 30 Apr 2025 16:29:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2gY4SgaCAJDt8g2+S42eNk27BrN8KDyC07E0tNfWvgBanpXjcQOSQ8TwZrRlgHO2MKam9wJSNk771WwM=@vger.kernel.org, AJvYcCVMJZ2GuoubnDJntPLC+w57WuliHftgyeeAnZVUhoipq6V5CPQvb2WqVfJAm3ZE7ZrcYh4pd8CS31ETnY0r1Ot+APHKFgI6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYpTOCZmoOTyIOz9YmisBPfK1kjk1J3aEaYv1iLzSm/ZBs8l0q
-	t8/WqCeZpbi+vFUNiPV+8duQ+OxiD6fIaIYSXtV2tqn0sK6z9dBzoqgUsBuGGPRO4Itf0zTsFon
-	Ih7Ta9PJ42VtiZ85NW9Vax+dFclc=
-X-Google-Smtp-Source: AGHT+IFEJ2qTrUej3AfwsK8YWr+xOQqZR4yKyK5COAxs42YmE7rXz5xDr8LVkJjJwzXz9HBJ1hhvGKLB9aczj7bsZkk=
-X-Received: by 2002:a05:6902:2b11:b0:e73:1ff1:ca38 with SMTP id
- 3f1490d57ef6-e75318276ecmr316609276.20.1746055795779; Wed, 30 Apr 2025
- 16:29:55 -0700 (PDT)
+	s=arc-20240116; t=1746055807; c=relaxed/simple;
+	bh=gwjJnRumWoLvNj3qviV1ZTAGA6bs3bwLKkqb7/fEMIw=;
+	h=To:From:Subject:Mime-Version:Content-Type:Message-Id:Date; b=rFW131dJCJVt6v2ydCxaPUtk98WufU/nKHt5frKhWMzE5++BjOIkuM8gnODG48uZC8eXf0JIEC43RtDHtGlMfFms9MOBT05Ptj9z0b2C79/CA01ZV1x9nyKyxF/0yVFDDp4vku/Fb91pk8UMWedU/49NpqJeas/yBDS6sNWTKFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=japan-kaigo-s.jp; spf=pass smtp.mailfrom=magerr.combzmail.jp; arc=none smtp.client-ip=49.212.47.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=japan-kaigo-s.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=magerr.combzmail.jp
+Received: by r9103.ps.combzmail.jp (Postfix, from userid 99)
+	id CDA6118887A; Thu,  1 May 2025 08:08:53 +0900 (JST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 r9103.ps.combzmail.jp CDA6118887A
+To: linux-kernel@vger.kernel.org
+From: =?ISO-2022-JP?B?GyRCRnxLXDJwOG4lNyU5JUYlYBsoQg==?= <info@japan-kaigo-s.jp>
+X-Ip: 3084061826515111
+X-Ip-source: k85gj7e448dnsa87u0p6gd
+Precedence: bulk
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Subject: =?ISO-2022-JP?B?RkMbJEJKZz04GyhCIBskQj83NSwxRBsoQg==?=
+ =?ISO-2022-JP?B?GyRCNkgkTiQkJGkkSiQkSyxMZDc/JE5NfUh+TUYlNSE8GyhC?=
+ =?ISO-2022-JP?B?GyRCJVMlORsoQg==?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <1745961770-7188-1-git-send-email-jasjivsingh@linux.microsoft.com> <1745961770-7188-2-git-send-email-jasjivsingh@linux.microsoft.com>
-In-Reply-To: <1745961770-7188-2-git-send-email-jasjivsingh@linux.microsoft.com>
-From: Fan Wu <wufan@kernel.org>
-Date: Wed, 30 Apr 2025 16:29:44 -0700
-X-Gmail-Original-Message-ID: <CAKtyLkG03zaOgC57-y4mNBXc+Nt0eZtKvyuhbs53SEUGwYUb5g@mail.gmail.com>
-X-Gm-Features: ATxdqUGvxqon-yThcz6VNe8SeUVTzobNsltqinBw3cTCikAeKb3yBcLsIcP487M
-Message-ID: <CAKtyLkG03zaOgC57-y4mNBXc+Nt0eZtKvyuhbs53SEUGwYUb5g@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/1] ipe: add script enforcement with BPRM check
-To: Jasjiv Singh <jasjivsingh@linux.microsoft.com>
-Cc: wufan@kernel.org, paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, 
-	mic@digikod.net, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+X-MagazineId: e487
+X-uId: 6763263937485961543963171016
+X-Sender: CombzMailSender
+X-Url: http://www.combzmail.jp/
+Message-Id: <20250430231920.CDA6118887A@r9103.ps.combzmail.jp>
+Date: Thu,  1 May 2025 08:08:53 +0900 (JST)
 
-On Tue, Apr 29, 2025 at 2:23=E2=80=AFPM Jasjiv Singh
-<jasjivsingh@linux.microsoft.com> wrote:
->
-> From: jasjivsingh_microsoft <jasjivsingh@linux.microsoft.com>
->
-> Like direct file execution (e.g. ./script.sh), indirect file execution
-> (e.g. sh script.sh) needs to be enforce by IPE based on the rules.
-> Added a new security_bprm_creds_for_exec() hook to verify the indirect
-> file's integrity.
->
-> Signed-off-by: Jasjiv Singh <jasjivsingh@linux.microsoft.com>
-> ---
->  security/ipe/hooks.c | 23 +++++++++++++++++++++++
->  security/ipe/hooks.h |  2 ++
->  security/ipe/ipe.c   |  1 +
->  3 files changed, 26 insertions(+)
->
-> diff --git a/security/ipe/hooks.c b/security/ipe/hooks.c
-> index d0323b81cd8f..12713a0495cf 100644
-> --- a/security/ipe/hooks.c
-> +++ b/security/ipe/hooks.c
-> @@ -35,6 +35,29 @@ int ipe_bprm_check_security(struct linux_binprm *bprm)
->         return ipe_evaluate_event(&ctx);
->  }
->
-> +/**
-> + * ipe_bprm_creds_for_exec() - ipe security hook function for bprm creds=
- check.
-> + * @bprm: Supplies a pointer to a linux_binprm structure to source the f=
-ile
-> + *       being evaluated.
-> + *
-> + * This LSM hook is called when a script is checked for execution throug=
-h the
-> + * execveat syscall with the AT_EXECVE_CHECK flag.
+　
+　　―　新規開拓の営業活動はいりません　―
+　
+　
+　　提携福祉施設からの依頼が殺到して、
+　　拠点不足になっている「訪問型 理美容サービス」の
+　　フランチャイズ加盟店を募集しています。
+　
+◆…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─◇
+　
+　　〜 加盟店へ、提携福祉施設を紹介する制度があります 〜
+　
+　　訪問型の理美容サービス
+　　Kami Bito（髪人）
+　　フランチャイズシステム説明会
+　
+　　―　理美容の資格・業界経験が無い方を、歓迎しています！　―
+　
+　
+　 ◯  日　程　：　5月9日（金）13:00〜14:00
 
-I remember the script is only one case, user space can add this flag
-for other cases.
+　 ◯ 開催方式 ：　オンライン
 
-> + *
-> + * Return:
-> + * * %0                - Success
-> + * * %-EACCES  - Did not pass IPE policy
-> + */
-> +int ipe_bprm_creds_for_exec(struct linux_binprm *bprm)
-> +{
-> +       struct ipe_eval_ctx ctx =3D IPE_EVAL_CTX_INIT;
-> +
-> +       if (!bprm->is_check)
-> +               return 0;
-> +
-> +       ipe_build_eval_ctx(&ctx, bprm->file, IPE_OP_EXEC, IPE_HOOK_BPRM_C=
-HECK);
+　 ◯  費　用　：　無料
 
-A new enum needs to be added to audit this new hook in the audit
-event. Please create something like IPE_HOOK_BPRM_CREDS_FOR_EXEC.
+　 ◯  対　象　：　法人／個人事業主　どちらでも可（未経験、歓迎です）
 
--Fan
 
-> +       return ipe_evaluate_event(&ctx);
-> +}
-> +
->  /**
->   * ipe_mmap_file() - ipe security hook function for mmap check.
->   * @f: File being mmap'd. Can be NULL in the case of anonymous memory.
-> diff --git a/security/ipe/hooks.h b/security/ipe/hooks.h
-> index 38d4a387d039..1c16a25d806e 100644
-> --- a/security/ipe/hooks.h
-> +++ b/security/ipe/hooks.h
-> @@ -24,6 +24,8 @@ enum ipe_hook_type {
->
->  int ipe_bprm_check_security(struct linux_binprm *bprm);
->
-> +int ipe_bprm_creds_for_exec(struct linux_binprm *bprm);
-> +
->  int ipe_mmap_file(struct file *f, unsigned long reqprot, unsigned long p=
-rot,
->                   unsigned long flags);
->
-> diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
-> index 4317134cb0da..845e3fd7a345 100644
-> --- a/security/ipe/ipe.c
-> +++ b/security/ipe/ipe.c
-> @@ -47,6 +47,7 @@ struct ipe_inode *ipe_inode(const struct inode *inode)
->
->  static struct security_hook_list ipe_hooks[] __ro_after_init =3D {
->         LSM_HOOK_INIT(bprm_check_security, ipe_bprm_check_security),
-> +       LSM_HOOK_INIT(bprm_creds_for_exec, ipe_bprm_creds_for_exec),
->         LSM_HOOK_INIT(mmap_file, ipe_mmap_file),
->         LSM_HOOK_INIT(file_mprotect, ipe_file_mprotect),
->         LSM_HOOK_INIT(kernel_read_file, ipe_kernel_read_file),
-> --
-> 2.34.1
->
+　          　　　　　▼詳細・申込▼
+　　　　　https://kami-bito-fcseminar.jp/250509/
+
+
+　　　　　　　　　　  ◇　主　催　◇
+　　　　　　　　日本介護システム株式会社
+
+◆…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─◇
+
+
+いつもお世話になります。
+
+
+この度、訪問型の理美容サービスのフランチャイズ加盟店を
+募集する説明会を開催しますのでご案内申し上げます。
+
+
+　□　訪問型の理美容サービスとは？　□
+
+　　　高齢や病気、ケガ、障がいなどの事情で、
+　　　外出が難しい方のご自宅や介護施設などに出張訪問し、
+　　　カットを中心とした理美容をご提供するサービスです。
+
+
+私たち日本介護システム株式会社がフランチャイズ展開する「KamiBito（髪人）」は
+全国4,300以上の提携福祉施設に対してサービスを提供しています。
+
+
+「KamiBito」は現在、北海道から沖縄県まで100拠点以上の体制で
+対応していますが、提携福祉施設からの依頼が殺到しており、
+まだまだ拠点が不足しているためフランチャイズ加盟店を募集しています。
+
+
+事業を始めるにあたって、オーナー様に理美容の資格・業界経験が無くても問題ありません。
+
+
+私たちフランチャイズ運営本部が、理美容師のスタッフ採用を
+サポートしますのでオーナー様はマネジメントに専念していただけます。
+
+
+さらに開業後は軌道に乗りやすいように、既存の提携施設案件だけでなく、
+本部が更に提携施設の新規開拓営業を行い、フランチャイズ加盟店に
+ご紹介する制度もございます。
+
+
+初期投資／収益性／回収期間／本部からのサポート制度など、
+説明会で詳しくお伝えしますのでご興味がある方はこの機会にご参加ください。
+
+
+　          　　　　　▼詳細・申込▼
+　　　　　https://kami-bito-fcseminar.jp/250509/
+
+
+***********************************************************************
+ご案内不要な方には大変失礼しました。
+配信停止のお手続きは下記URLにて承っています。
+▼配信停止フォーム▼
+　https://kami-bito-fcseminar.jp/mail/
+
+***********************************************************************
+日本介護システム株式会社
+大阪市中央区本町1-5-7 西村ビル5F
+TEL:080-7475-9111（セミナー事務局 担当直通）
+***********************************************************************
