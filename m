@@ -1,134 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D619D2AE8B;
-	Wed, 30 Apr 2025 14:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E777E248F6D
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746022984; cv=none; b=R9k120v+g/EaeNb8S6Hy93eZFhqpskx02ehezG2+wGNUDlI2HyUeHUUtOgjmVEMwxClo8iQ2n27ypJ8J+4/aR8ZZoBOIxM7/Dlv2rWLXEUQtpPxdfKXr1QXDyWJ+wAW79o3JPHxQ/ccdgGLo2VSEou25nMbkBny2naRMNh6sifQ=
+	t=1746023024; cv=none; b=D3nC8JzLxbkrZkjGHp5jkYUGa0ugAL6LE40rkssWEFUZn0Pf8sJ4+MFKwlcYDbKDtpy2B8H9XZqXfFIRZuGYewTf/t3J3diwGHTfKzzNtQL9pAyCt4QICHnEOAzBiu8QpeisbVzfhi8iNpbEjIWF7iPkVdG9b74MbBIRRuDOflo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746022984; c=relaxed/simple;
-	bh=EHmJoyT1t1HTWr93T5cTrjOvhbK6j7Z+nBdrivtN+KM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d4BOsLeFQabFOuuDUMEDTRijEed8hf4jgJtW5kTJbgvOPD+hXzJyaNp4tqK1TcSMGiRp9YKoxCFAXsQD7QnotWVgqALmoWk8DXtx6YlkYV3zqTM88UFViy0Bt7/bKyhRDe0PDnPjV3xNVSl7IYrxBVEYJM3T9V8YQ480Sb+WcDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1Q7eU9v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746023024; c=relaxed/simple;
+	bh=C2MJghkCDVDAdkeaRUbVZKkNrhVkZbLTD/Kdic6+XqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jRUPMIlSGytPzdfdRhpTdVax3+cXlAzKrsKXyrz4Wz5rh0UrltSSTsvOnIMpDvydn+S/nf684gIOYFNsr+IBA2pAhlgmQ4zx5qo2hTyrR3Dx3iCgSIL7B7JQSqZFTymHUGfkDUSnf7+IMR2Pu/AoZRW5rPq6YwMQ4Jfu/pX346w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ee+YoZEN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oKBA3Qil; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rtBXm4Oz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/ls/9nmy; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1Q7eU9v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFBEAC4CEE7;
-	Wed, 30 Apr 2025 14:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746022983;
-	bh=EHmJoyT1t1HTWr93T5cTrjOvhbK6j7Z+nBdrivtN+KM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i1Q7eU9v9c9LhftrfG98JhwjvdtIX79CBeve9Lm9W0p/zaxBB/CR370V7cwfPUGci
-	 25KfK/1vS7TQX5ECZxwu+KE077rM4bgeBY+Q/Vtv8oUdIKqvqUPWg+zIQoDpln+Tlb
-	 /TmX2lawn/mb7tU5xdarnbQtwswtW2SXMG7yWVd7b11VeE5I/sEmxz3OBrWqOvf1hF
-	 pPAbH8QqUv3ecrfsUEyv/l2zqHdiapP/8qWa2Scgq1L/bPXKK460WXhOCZTtnrkGG9
-	 K0OYKkZNdYznUBJ/H2RS9SuWz723aSULxpMKAJ2v7Tqkm9OG9KQUJiCsJwpLHNFFI/
-	 dK5uXZw+L4CHQ==
-Message-ID: <06268dcb-4a49-468e-8ebd-d9366a2cf0c2@kernel.org>
-Date: Wed, 30 Apr 2025 17:22:54 +0300
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ee+YoZEN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oKBA3Qil";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rtBXm4Oz";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/ls/9nmy"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id F287F21962;
+	Wed, 30 Apr 2025 14:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746023021;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WoqgZ+SGiQx0nqIExAB9bQY0k4lWT8MA/ATCOyCQzJw=;
+	b=ee+YoZEN6qlbOL6zA4l8tYsuTupW9qBfm1mnE8xD0BFZCSi2bEHWKOp4wLafy3u71RXQeU
+	CUzjDrHzAGOlWSHyYXYc6sCX/6FAYIk0bY72YVpJAmPYpxm0UpUP3xs3lQrKXemokbd4FN
+	US08HHRaGEwKzzxNsU+lLDiKiQX4NxM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746023021;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WoqgZ+SGiQx0nqIExAB9bQY0k4lWT8MA/ATCOyCQzJw=;
+	b=oKBA3QilMm/TA00LP6R+y1C+GwmB492bI2A3L4Si4moclcMaLs/sGmNmEGkx1E0y0+st8I
+	7LsIdDaiLt4TTNDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=rtBXm4Oz;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="/ls/9nmy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746023020;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WoqgZ+SGiQx0nqIExAB9bQY0k4lWT8MA/ATCOyCQzJw=;
+	b=rtBXm4OzE21O9iYd4f5O9c4IxD5Mt4tuiMPnMVwPmzo6Tq5AjPEjhhJSw1Jhwwo7sdsaoc
+	Jgetm6bjZPVG40vvFcRZA3luT2xk0CskyC0uKerVqfo/KTIZhehIs2r3I6BDoDwSoZS9ty
+	8+wg4c++nzF+qoEampmnaIIuX3aS9Mo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746023020;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WoqgZ+SGiQx0nqIExAB9bQY0k4lWT8MA/ATCOyCQzJw=;
+	b=/ls/9nmy4JxrMMzMWM5b2zUxvCUuWna33sdDUhewNNrwlzpKcLLFPgRVmHNndaqjK0vig1
+	jEW5CpmaeqhDoQCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CBBD6139E7;
+	Wed, 30 Apr 2025 14:23:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ByuDMWwyEmgSCQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 30 Apr 2025 14:23:40 +0000
+Date: Wed, 30 Apr 2025 16:23:35 +0200
+From: David Sterba <dsterba@suse.cz>
+To: David Sterba <dsterba@suse.cz>
+Cc: Daniel Vacek <neelx@suse.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: get rid of goto in alloc_test_extent_buffer()
+Message-ID: <20250430142335.GI9140@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250425072358.51788-1-neelx@suse.com>
+ <20250425113907.GC31681@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 2/4] dt-bindings: net: ti: k3-am654-cpsw-nuss:
- update phy-mode in example
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>,
- "mike .." <wingman205@gmx.com>
-Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe Perches <joe@perches.com>,
- Jonathan Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, Tero Kristo <kristo@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <4216050f7b33ce4e5ce54f32023ec6ce093bd83c.1744710099.git.matthias.schiffer@ew.tq-group.com>
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <4216050f7b33ce4e5ce54f32023ec6ce093bd83c.1744710099.git.matthias.schiffer@ew.tq-group.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425113907.GC31681@suse.cz>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [0.79 / 50.00];
+	REPLYTO_EQ_TO_ADDR(5.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:replyto,suse.cz:dkim]
+X-Spam-Flag: NO
+X-Spamd-Bar: /
+X-Rspamd-Queue-Id: F287F21962
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 0.79
+X-Spam-Level: 
 
-Hi Matthias,
-
-On 15/04/2025 13:18, Matthias Schiffer wrote:
-> k3-am65-cpsw-nuss controllers have a fixed internal TX delay, so RXID
-> mode is not actually possible and will result in a warning from the
-> driver going forward.
+On Fri, Apr 25, 2025 at 01:39:07PM +0200, David Sterba wrote:
+> On Fri, Apr 25, 2025 at 09:23:57AM +0200, Daniel Vacek wrote:
+> > The `free_eb` label is used only once. Simplify by moving the code inplace.
+> > 
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > ---
+> >  fs/btrfs/extent_io.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > index ea38c73d4bc5f..20cdddd924852 100644
+> > --- a/fs/btrfs/extent_io.c
+> > +++ b/fs/btrfs/extent_io.c
+> > @@ -3004,15 +3004,13 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
+> >  			goto again;
+> >  		}
+> >  		xa_unlock_irq(&fs_info->buffer_tree);
+> > -		goto free_eb;
+> > +		btrfs_release_extent_buffer(eb);
+> > +		return exists;
+> >  	}
+> >  	xa_unlock_irq(&fs_info->buffer_tree);
+> >  	check_buffer_tree_ref(eb);
+> >  
+> >  	return eb;
+> > -free_eb:
+> > -	btrfs_release_extent_buffer(eb);
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  .../devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml          | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> So the xarray conversion removed the other use of the free_eb label and
+> calls btrfs_release_extent_buffer() + return. Doing the same here and
+> removing the label completely looks as an improvement, as the whole
+> function does direct returns instead of goto exit block.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-> index b11894fbaec47..c8128b8ca74fb 100644
-> --- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-> +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-> @@ -282,7 +282,7 @@ examples:
->                      ti,syscon-efuse = <&mcu_conf 0x200>;
->                      phys = <&phy_gmii_sel 1>;
->  
-> -                    phy-mode = "rgmii-rxid";
-> +                    phy-mode = "rgmii-id";
->                      phy-handle = <&phy0>;
->                  };
->              };
+> Reviewed-by: David Sterba <dsterba@suse.com>
 
-FYI the following TI boards using this driver are using "rgmii-rxid".
-Will you be sending fixes to the device trees files?
-
-arch/arm64/boot/dts/ti
-k3-am625-beagleplay.dts:	phy-mode = "rgmii-rxid";
-k3-am625-sk.dts:	phy-mode = "rgmii-rxid";
-k3-am625-sk.dts.orig:	phy-mode = "rgmii-rxid";
-k3-am62a7-sk.dts:	phy-mode = "rgmii-rxid";
-k3-am62a-phycore-som.dtsi:	phy-mode = "rgmii-rxid";
-k3-am62p5-sk.dts:	phy-mode = "rgmii-rxid";
-k3-am62p5-sk.dts:	phy-mode = "rgmii-rxid";
-k3-am62-phycore-som.dtsi:	phy-mode = "rgmii-rxid";
-k3-am62-verdin-dev.dtsi:	phy-mode = "rgmii-rxid";
-k3-am62-verdin.dtsi:	phy-mode = "rgmii-rxid";
-k3-am62-verdin-ivy.dtsi:	phy-mode = "rgmii-rxid";
-k3-am62x-phyboard-lyra.dtsi:	phy-mode = "rgmii-rxid";
-k3-am62x-sk-common.dtsi:	phy-mode = "rgmii-rxid";
-k3-am642-evm.dts:	phy-mode = "rgmii-rxid";
-k3-am642-evm.dts:	phy-mode = "rgmii-rxid";
-k3-am642-sk.dts:	phy-mode = "rgmii-rxid";
-k3-am642-sk.dts:	phy-mode = "rgmii-rxid";
-k3-am642-tqma64xxl-mbax4xxl.dts:	phy-mode = "rgmii-rxid";
-k3-am642-tqma64xxl-mbax4xxl.dts:	/* phy-mode is fixed up to rgmii-rxid by prueth driver to account for
-k3-am64-phycore-som.dtsi:	phy-mode = "rgmii-rxid";
-k3-am654-base-board.dts:	phy-mode = "rgmii-rxid";
-k3-am67a-beagley-ai.dts:	phy-mode = "rgmii-rxid";
-k3-am68-sk-base-board.dts:	phy-mode = "rgmii-rxid";
-k3-am69-sk.dts:	phy-mode = "rgmii-rxid";
-k3-j7200-common-proc-board.dts:	phy-mode = "rgmii-rxid";
-k3-j721e-beagleboneai64.dts:	phy-mode = "rgmii-rxid";
-k3-j721e-common-proc-board.dts:	phy-mode = "rgmii-rxid";
-k3-j721e-evm-gesi-exp-board.dtso:	phy-mode = "rgmii-rxid";
-k3-j721e-evm-gesi-exp-board.dtso:	phy-mode = "rgmii-rxid";
-k3-j721e-evm-gesi-exp-board.dtso:	phy-mode = "rgmii-rxid";
-k3-j721e-evm-gesi-exp-board.dtso:	phy-mode = "rgmii-rxid";
-k3-j721e-sk.dts:	phy-mode = "rgmii-rxid";
-k3-j721s2-common-proc-board.dts:	phy-mode = "rgmii-rxid";
-k3-j721s2-evm-gesi-exp-board.dtso:	phy-mode = "rgmii-rxid";
-k3-j722s-evm.dts:	phy-mode = "rgmii-rxid";
-k3-j784s4-j742s2-evm-common.dtsi:	phy-mode = "rgmii-rxid";
-k3-j784s4-j742s2-evm-common.dtsi:	phy-mode = "rgmii-rxid";
-
--- 
-cheers,
--roger
-
+Xarray conversion is now in for-next so I've added this patch too.
