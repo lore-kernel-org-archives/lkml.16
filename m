@@ -1,127 +1,111 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F72D25E821
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657C038FA3;
+	Wed, 30 Apr 2025 14:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746022599; cv=none; b=laaFqNA5RevwR/iMca47639+G6HVF7E27TzL32ixpUcE0DIG3fBLlaDuO7/I0lqtubyuMegDCiDNAyXcibMx0uj5PWbmgUpjU2tiwmAjS8CA6qOLpAAiy9gDOm0yCx8q/lNfdRwDLpIcj2Mc1FNN6WVDV34lfGM1skd/XKr/IDw=
+	t=1746022615; cv=none; b=MZyDOyzNNUUXQxqtLFbqHGW+gZznWhl/zmxcMrcNxDvxsnFOvVJAB3xrlST4xlpufPFDNMbrh1+x2f8gSmCeTJHTGRoJjWVavskHh8MYDXTFUJyZ6i6VClsd3q8IqCEw22GT4CmCnjgJpTFSi3NbgYKk7UzSLyQeyQo9RGq7Dc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746022599; c=relaxed/simple;
-	bh=L4oureru/QhsHpZCf8GL8h8WuWk0kxwj123Xi75Vk5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hn8BREceb+rUmDP9e1DtwsN2vwUQK3uov4aq2/7A+bfOayhWOJEjAxBw9MdhaNzFGqf5QkLse9lBTg8yBPmod65rNgfcq93z3C5h44VBAfzSlitnrGhmvDEUBU3u3NuB2SFS++dzTuoz6NI41ZgtAoXE8m3PdfDI5jO1ZtOE2H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=FyKem6JO; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=FyKem6JO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746022615; c=relaxed/simple;
+	bh=97lQQrzb+1FlMyPNgUCrZH1MVNYJNiWBl07bdx0MxCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZZT/VUeAaj8YtGJcaMHJ7fSbk5MoDbAhvi5m1Fr6lWDCVBkm0TdF4a1brkzbK5P7QDkrxu2l05bqbtYElK5DxBbGNYf0PGHCUcCwfga8iFGArjdwML/7B67N+J+AVXfu6TsijjhfZKfeg1LXlulpZ4mIflBP3NqmrbzwckqQoJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYGn3nTy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="FyKem6JO";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="FyKem6JO"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6BB5A1F7BD;
-	Wed, 30 Apr 2025 14:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746022594; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=R0zyn1/q5qglad2th0J0BUpdc9+TDlLDZ3IhM/d9DJ8=;
-	b=FyKem6JOFYu6XylaOlx41X4CgQUdnb7DVk515+p4G1A5iybiUEd8KKBOyw/YVk/vp8w1kM
-	TtldbNMlF1x7fvH6/e8X0HMebWENwTN9qP2ZDRt6rQ4yzf6IzYXranxuK6m+5rAMpWCYX/
-	7V9QNgUAr7hD7Lb9JrqG2VaFb3OI5yY=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746022594; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=R0zyn1/q5qglad2th0J0BUpdc9+TDlLDZ3IhM/d9DJ8=;
-	b=FyKem6JOFYu6XylaOlx41X4CgQUdnb7DVk515+p4G1A5iybiUEd8KKBOyw/YVk/vp8w1kM
-	TtldbNMlF1x7fvH6/e8X0HMebWENwTN9qP2ZDRt6rQ4yzf6IzYXranxuK6m+5rAMpWCYX/
-	7V9QNgUAr7hD7Lb9JrqG2VaFb3OI5yY=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 63B23139E7;
-	Wed, 30 Apr 2025 14:16:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XINUGMIwEmjyBgAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Wed, 30 Apr 2025 14:16:34 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.15-rc5
-Date: Wed, 30 Apr 2025 16:16:30 +0200
-Message-ID: <cover.1746021929.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYGn3nTy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9705C4CEEC;
+	Wed, 30 Apr 2025 14:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746022614;
+	bh=97lQQrzb+1FlMyPNgUCrZH1MVNYJNiWBl07bdx0MxCA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DYGn3nTyzVV9tk8d9ESHeikgENDFOWsK9a4TY7JRq9rnM476HDCK+RwMUlTeT3x1m
+	 3nybFMrLZ7XTaa33Cwhj4CIVl16VOwZPt/bbcFZLlRRccJDn2YuM8a39gzz8X6Bpbq
+	 4+GkLDyIMsE+clCuCWthpPTeSLTJvMl4C981Ncmq5FyAhlh+/qYxT6+DGY+wSfcYpJ
+	 gMbCZUXpiytjMeb4bvh9enbRdJBHN6k55gg+zuQ4x0RT/gaKdShBVvUC0YmLn0JrRo
+	 3bhoTzvTyGVO+KZIFNC/9SjS4fOtKoUzcOGnTRIgMieo2gt0UEYcOGLq1W6HOmZOcK
+	 3UzsqIy7P4yKA==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2da73155e91so163503fac.0;
+        Wed, 30 Apr 2025 07:16:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7sAc+jrM6QdzvUyTWXXB9Ba2sORkGnbyEuS5zH41CHNQ9fLjlR0Kct0Z535W4//U38nf5jjuKcOY=@vger.kernel.org, AJvYcCWGWcBlipuRzzFhSnF3kDVBB/PaT8iulPfkC7FL1poz1JBFGk+ySUhfZKQnBDBkOm9eKJa4FaipCUNPUwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHE/n9JVnRZQaqkn1tKo2xsvV8QUAAiDRvMEyizX2ebUwJaq2I
+	VdQNe/CT4uai0Tjh9iaMDquxm76VYnCx/8kFjAZ+sLj93D3P+GLVzR8BFxOwFuFxpO2GOCGkknX
+	j0XhUJwSyw+ja6o/vHNVlZ2maf3s=
+X-Google-Smtp-Source: AGHT+IHpHf/dJZEl4/SvOUSiyHiPjRE5r41xWEePPEe+sPgqcr8qt3/+fgqihPr+yUxrxt1jy8d0v89dV5EFvsl5Xcc=
+X-Received: by 2002:a05:6870:a48b:b0:2c1:650b:fc86 with SMTP id
+ 586e51a60fabf-2da6cd1187emr1369654fac.1.1746022614116; Wed, 30 Apr 2025
+ 07:16:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.985];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250430113001.546066-1-shivankg@amd.com> <20250430113001.546066-2-shivankg@amd.com>
+In-Reply-To: <20250430113001.546066-2-shivankg@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 30 Apr 2025 16:16:43 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gm2WvcxeAHf5_Ct2RyK+fjoDz1Ck+T7DjpnBefJcPqFQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEzTWNkN95QICGXeGv-BRyt_edtEJiU1t35G7tZ5c12Y4chzN5oDHR9d0Y
+Message-ID: <CAJZ5v0gm2WvcxeAHf5_Ct2RyK+fjoDz1Ck+T7DjpnBefJcPqFQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] x86/power: hibernate: Fix W=1 build kernel-doc warnings
+To: Shivank Garg <shivankg@amd.com>
+Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	x86@kernel.org, hpa@zytor.com, luto@kernel.org, peterz@infradead.org, 
+	rafael@kernel.org, pavel@kernel.org, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Apr 30, 2025 at 1:31=E2=80=AFPM Shivank Garg <shivankg@amd.com> wro=
+te:
+>
+> Sample warnings generated with 'make W=3D1':
+> arch/x86/power/hibernate.c:47: warning: Function parameter or struct memb=
+er 'pfn' not described in 'pfn_is_nosave'
+> arch/x86/power/hibernate.c:92: warning: Function parameter or struct memb=
+er 'max_size' not described in 'arch_hibernation_header_save'
+>
+> Add missing parameter documentation in hibernate functions to
+> fix kernel-doc warnings.
+>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
 
-please pull a few short fixes, thanks.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-- fix potential inode leak in iget() after memory allocation failure
-
-- in subpage mode, fix extent buffer bitmap iteration when writing
-  out dirty sectors
-
-- fix range calculation when falling back to COW for a NOCOW file
-
-----------------------------------------------------------------
-The following changes since commit 866bafae59ecffcf1840d846cd79740be29f21d6:
-
-  btrfs: zoned: skip reporting zone for new block group (2025-04-17 11:57:25 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc4-tag
-
-for you to fetch changes up to e08e49d986f82c30f42ad0ed43ebbede1e1e3739:
-
-  btrfs: adjust subpage bit start based on sectorsize (2025-04-23 08:42:10 +0200)
-
-----------------------------------------------------------------
-Dave Chen (1):
-      btrfs: fix COW handling in run_delalloc_nocow()
-
-Josef Bacik (1):
-      btrfs: adjust subpage bit start based on sectorsize
-
-Penglei Jiang (1):
-      btrfs: fix the inode leak in btrfs_iget()
-
- fs/btrfs/extent_io.c |  2 +-
- fs/btrfs/inode.c     | 13 ++++++++-----
- 2 files changed, 9 insertions(+), 6 deletions(-)
+> ---
+>  arch/x86/power/hibernate.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+> index 5b81d19cd114..a7c23f2a58c9 100644
+> --- a/arch/x86/power/hibernate.c
+> +++ b/arch/x86/power/hibernate.c
+> @@ -42,6 +42,7 @@ unsigned long relocated_restore_code __visible;
+>
+>  /**
+>   *     pfn_is_nosave - check if given pfn is in the 'nosave' section
+> + *     @pfn: the page frame number to check.
+>   */
+>  int pfn_is_nosave(unsigned long pfn)
+>  {
+> @@ -86,7 +87,10 @@ static inline u32 compute_e820_crc32(struct e820_table=
+ *table)
+>  /**
+>   *     arch_hibernation_header_save - populate the architecture specific=
+ part
+>   *             of a hibernation image header
+> - *     @addr: address to save the data at
+> + *     @addr: address where architecture specific header data will be sa=
+ved.
+> + *     @max_size: maximum size of architecture specific data in hibernat=
+ion header.
+> + *
+> + *     Return: 0 on success, -EOVERFLOW if max_size is insufficient.
+>   */
+>  int arch_hibernation_header_save(void *addr, unsigned int max_size)
+>  {
+> --
+> 2.34.1
+>
