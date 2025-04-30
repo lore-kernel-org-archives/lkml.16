@@ -1,197 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7930D265614
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF661EEA46;
+	Wed, 30 Apr 2025 18:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038382; cv=none; b=XIOG2NvbHyLerhXAOMWLtGsMz22Lqbg7tEIgwHCKppckfb6cfIiEk3cBA96jJgwaslRZv3f1UBfUKAsa8ewLQna9KXYpipikTzAqa7A4uUj/1QumQw35IJkmcKyht3Dja5fPN1G5S/DWj5oKp3cvfjU8e8SzPrpGQh3EY76ld0M=
+	t=1746038464; cv=none; b=qgDTC8hMo5b8Oj2FPBDKX8JstPYdAqCU2IKj+UcYnN1cAGm9TlX5aWmdN2KrHU7RYBAiv2ASAFx6I6BNjkRxMsPE2Fal5fPit+FClsq5p8g88trqvT4BWY+j5BWKZiQknF9UTCLjrDfvCcYvdaLILYzQjR8FN0jladb5PVvad8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038382; c=relaxed/simple;
-	bh=uop7LMZYuz+EVPrsb8rncMFAD0a69RO4PcxjXzb4CH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=auBlN1aNzus+Eu/J5AS9KGhHKz8R4GUhUZCU+6ZPqNSg8yU7snbDF4+Ig5MujHixlRIVqibY34LJc7gbrheQPwDB8H7lwudV/dmSiFCXlBu7t+wdxi5heTfuIhx0cOsEX0Gv1tkgcn/rkq02qP9oxv937c6Hp7hb7nYXCJRbg2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ju8MzOi0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746038464; c=relaxed/simple;
+	bh=qgP2YJEKl9lEJVENCb1FcgNjLrhMpIE3abDrsfh/gKY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=up6BQp3ly2eGbaZT4GhCyjbpCAzNGjpADTgefF61OvaiaEDMljzx6Baw57GFFnfE3NYOpWetIToLUE/ywOQDzwLiMpZ3Y8bQ9QNL23xIrtxfy9HICvasA4oaBSxN60mlbANLLUkRdZ1ALbE+prHCk+k8cfOGMScF+LUG+z7dyV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=djGIGcf4; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ju8MzOi0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746038379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRjxDxDhTYKrorsZixsAP5Kxt917TzYAbdZEFQfMsaE=;
-	b=Ju8MzOi0gVPKwUN/hTOvN/3OabbtNGEatok/8wuPZUgZuMgDAA7JgYEh5PvSRu2iMqi0Iz
-	rovZ0GlXEl5ATxIFWRy89SiybrslUHaBmJs0sZ/9vTd4EdMIWr796NccRxKwhzo4+S3hA4
-	yHxtTTtb6dDbwKbU/k0Bt00izdy0Rps=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-BxP0yY-2NDW8ELzTYKDARg-1; Wed, 30 Apr 2025 14:39:37 -0400
-X-MC-Unique: BxP0yY-2NDW8ELzTYKDARg-1
-X-Mimecast-MFC-AGG-ID: BxP0yY-2NDW8ELzTYKDARg_1746038377
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-708b13627abso3396557b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:39:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746038377; x=1746643177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IRjxDxDhTYKrorsZixsAP5Kxt917TzYAbdZEFQfMsaE=;
-        b=IhfEHKVYo7zn43v2JSciNegg1wWNBE6PAI+kThdfeIqnDuSx/yMsSVCX3/QixIR195
-         CEW97QSRgBw1pRq0dxhokQEkgNBzMnmW33BMFi3yyf3wJV4sINnpTZ3a6NfFiEIdQ5av
-         LLGt8TUH239CDQFfQrYM72Y6yWJugQptTNO3Jw07Q0ra3LItSJac5QM71aMSZVbPDV6R
-         sy1TgFv6AidUsUAprvGzBADBWIyuh5QJXDkQW7WQIobKLQW/ZOn+YTLIfNW9VUGaGhkD
-         36c4+MNOeAjO4a2eQbWejadMEXhNw2SHentj5BsJ9DD2QzXgYZgYdcYk5VP0+0yElFuB
-         OF0g==
-X-Forwarded-Encrypted: i=1; AJvYcCW2KsozXnoqaF00VJ1A+UcCW5U/riTbXphaFdRUaWtukPpLqsgV40Hc+0n3VBmPokQCAQmWbXVVJkLzbFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5lRs5EtgBnkGRMHxXJ42I6EoqAEq9WyU25ocRnFz7IpgPNB3I
-	MQTvyU8TpQk57Hcm+p1ZUShFs47rrFRqlnBtb6a9kJAsIk3WdXRlCuHEMhAyz3CPdbV+cuoqj5T
-	S4mekg2gO346k2Cj3I0GIGzUKC+0SrnqaOsWUMoAFLZjEA97KG3EdsYKTnU6w76m7FmRuABP5nA
-	DrEuZE+scp5qn320UAW/gljEDN4CyyW1FWq0mK
-X-Gm-Gg: ASbGnct+GuORbRKVkzB/kXjdQwxeNHBBI3FGvPE3G9cNwZ+aRRJ0rsB2Yf3/X2xSUUJ
-	4bigd3eXyL+Xdy0+ZO5qd2GbCMClkKxNDFB5ejcZDhEIWOvVRVZxhguwFt2LlICi5fjugxnr6nN
-	sZyghpD0M=
-X-Received: by 2002:a05:690c:9:b0:6fd:a226:fb6c with SMTP id 00721157ae682-708abdabf95mr62404287b3.17.1746038377141;
-        Wed, 30 Apr 2025 11:39:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGUG8Gr8pCuMfJMWlcmWUQoisJmUZ1EDMBMinzj6P3MiMpx3S+K06g4TgDXVqU9n7uNHGfUH5de6C068UnlTA0=
-X-Received: by 2002:a05:690c:9:b0:6fd:a226:fb6c with SMTP id
- 00721157ae682-708abdabf95mr62403917b3.17.1746038376803; Wed, 30 Apr 2025
- 11:39:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="djGIGcf4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=OUllq6b9V2eoDzegUA8tEgJIXHBEsF3AfNjaXAcUvpI=; b=djGIGcf4B2z1il8ld4CUNIeIJ8
+	ArdCoL23pBcwo2FFZwm/YtsyYpYqKtQRMrMMV6Db2y9H0KeAzgnyLh4MVfhlah9Sux140QippLpJE
+	9Q4gU8xnzJbD16M7kUPKkFxIB7B06/kCk55Eef11WVhg74ehenGBNfh+/Df3j6hw98eEdxLH5OicT
+	RJdZzlYGyDunNwnbdGDGzDZNDZapYbMXCtpH2vHtwDWFBJlVflLCHdFL4BVyc7jesKTniCoCAVN9T
+	OudsHz92MU8AaOH0l+xbwY2C6oFgNFa7EtgEai2EPn5TqzP3V7LBBqU3JLfX5sYyUMmKtmAO8FtfD
+	Rz/x8GFQ==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uACMS-000Px5-2F;
+	Wed, 30 Apr 2025 20:40:49 +0200
+Received: from [85.195.247.12] (helo=[192.168.1.114])
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uACMS-0008Fj-1q;
+	Wed, 30 Apr 2025 20:40:48 +0200
+Message-ID: <a6a8625c-9d20-48eb-b894-7bd6673a16d3@iogearbox.net>
+Date: Wed, 30 Apr 2025 20:40:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428182904.93989-1-npache@redhat.com> <20250428182904.93989-2-npache@redhat.com>
- <B76CC5A1-D4DC-4E8B-BF5A-DFBEF13E02F5@nvidia.com>
-In-Reply-To: <B76CC5A1-D4DC-4E8B-BF5A-DFBEF13E02F5@nvidia.com>
-From: Nico Pache <npache@redhat.com>
-Date: Wed, 30 Apr 2025 12:39:10 -0600
-X-Gm-Features: ATxdqUFWpWLVzjLTZtwA2dC3DeeBs_qZQ8boE4jqqynD0FM3HxwqQb_YeWEGAHg
-Message-ID: <CAA1CXcAHzLZaiEf+uXPqoOMWyhDsW8D23vtouGWKGdkeSdaTow@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] mm: defer THP insertion to khugepaged
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, 
-	willy@infradead.org, peterx@redhat.com, shuah@kernel.org, 
-	wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com, 
-	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com, 
-	yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com, 
-	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com, 
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
-	jglisse@google.com, surenb@google.com, zokeefe@google.com, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] xdp: add xdp_skb_reserve_put helper
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Jon Kohler <jon@nutanix.com>, Jason Wang <jasowang@redhat.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+ Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250430182921.1704021-1-jon@nutanix.com>
+ <68126b09c77f7_3080df29453@willemb.c.googlers.com.notmuch>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <68126b09c77f7_3080df29453@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27624/Wed Apr 30 10:39:44 2025)
 
-On Tue, Apr 29, 2025 at 7:49=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 28 Apr 2025, at 14:29, Nico Pache wrote:
->
-> > setting /transparent_hugepages/enabled=3Dalways allows applications
-> > to benefit from THPs without having to madvise. However, the pf handler
->
-> s/pf/page fault
->
-> > takes very few considerations to decide weather or not to actually use =
-a
->
-> s/weather/whether
->
-> > THP. This can lead to a lot of wasted memory. khugepaged only operates
-> > on memory that was either allocated with enabled=3Dalways or MADV_HUGEP=
-AGE.
-> >
-> > Introduce the ability to set enabled=3Ddefer, which will prevent THPs f=
-rom
-> > being allocated by the page fault handler unless madvise is set,
-> > leaving it up to khugepaged to decide which allocations will collapse t=
-o a
-> > THP. This should allow applications to benefits from THPs, while curbin=
-g
-> > some of the memory waste.
-> >
-> > Co-developed-by: Rafael Aquini <raquini@redhat.com>
-> > Signed-off-by: Rafael Aquini <raquini@redhat.com>
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  include/linux/huge_mm.h | 15 +++++++++++++--
-> >  mm/huge_memory.c        | 31 +++++++++++++++++++++++++++----
-> >  2 files changed, 40 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > index e3d15c737008..57e6c962afb1 100644
-> > --- a/include/linux/huge_mm.h
-> > +++ b/include/linux/huge_mm.h
-> > @@ -48,6 +48,7 @@ enum transparent_hugepage_flag {
-> >       TRANSPARENT_HUGEPAGE_UNSUPPORTED,
-> >       TRANSPARENT_HUGEPAGE_FLAG,
-> >       TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
-> > +     TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG,
->
-> What does INST mean here? Can you add one sentence on this new flag
-> in the commit log to explain what it is short for?
-"INSERT". Someone else commented on the length of this FLAG name. I
-forgot to update it.
-I can shorten it to something like ..DEFER_FLAG or DEFER_PF_FLAG
->
->
-> >       TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG,
-> >       TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG,
-> >       TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG,
-> > @@ -186,6 +187,7 @@ static inline bool hugepage_global_enabled(void)
-> >  {
-> >       return transparent_hugepage_flags &
-> >                       ((1<<TRANSPARENT_HUGEPAGE_FLAG) |
-> > +                     (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG) |
-> >                       (1<<TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG));
-> >  }
-> >
-> > @@ -195,6 +197,12 @@ static inline bool hugepage_global_always(void)
-> >                       (1<<TRANSPARENT_HUGEPAGE_FLAG);
-> >  }
-> >
-> > +static inline bool hugepage_global_defer(void)
-> > +{
-> > +     return transparent_hugepage_flags &
-> > +                     (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG);
-> > +}
-> > +
-> >  static inline int highest_order(unsigned long orders)
-> >  {
-> >       return fls_long(orders) - 1;
-> > @@ -291,13 +299,16 @@ unsigned long thp_vma_allowable_orders(struct vm_=
-area_struct *vma,
-> >                                      unsigned long tva_flags,
-> >                                      unsigned long orders)
-> >  {
-> > +     if ((tva_flags & TVA_IN_PF) && hugepage_global_defer() &&
-> > +                     !(vm_flags & VM_HUGEPAGE))
-> > +             return 0;
-> > +
-> >       /* Optimization to check if required orders are enabled early. */
-> >       if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
-> >               unsigned long mask =3D READ_ONCE(huge_anon_orders_always)=
-;
-> > -
->
-> This newline should stay, right?
-Yes, I can fix that.
->
-> The rest looks good to me. Thanks. Acked-by: Zi Yan <ziy@nvidia.com>
-Thank you!
--- Nico
->
-> Best Regards,
-> Yan, Zi
->
+On 4/30/25 8:25 PM, Willem de Bruijn wrote:
+> Jon Kohler wrote:
+>> Add helper for calling skb_{put|reserve} to reduce repetitive pattern
+>> across various drivers.
+>>
+>> Plumb into tap and tun to start.
+>>
+>> No functional change intended.
+>>
+>> Signed-off-by: Jon Kohler <jon@nutanix.com>
+>> ---
+>>   drivers/net/tap.c | 3 +--
+>>   drivers/net/tun.c | 3 +--
+>>   include/net/xdp.h | 8 ++++++++
+>>   net/core/xdp.c    | 3 +--
+>>   4 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> Subjective, but I prefer the existing code. I understand what
+> skb_reserve and skb_put do. While xdp_skb_reserve_put adds a layer of
+> indirection that I'd have to follow.
+> 
+> Sometimes deduplication makes sense, sometimes the indirection adds
+> more mental load than it's worth. In this case the code savings are
+> small. As said, subjective. Happy to hear other opinions.
 
++1, agree with Willem
