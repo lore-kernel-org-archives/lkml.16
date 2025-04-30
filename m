@@ -1,167 +1,149 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C30E21129C
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CBB2185AC
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000240; cv=none; b=Y3XmZNrBL6bUoudedHdmwOKoyleBY44NAgtnZMvy2sbRxTKdV+pZR+1JLh3DVmTN9YSnD0vMCXu8xAedKAQQwdsaxrWlxDcftlST1pGuWHfPQB7FCIPlQo/Ti/QEAJq1X31M89GhDDWJoki7Q6APl7zCMpGk+537YPUGgtB0dTc=
+	t=1746000243; cv=none; b=kC8k7ncxY4hwP7l+Jijkgcx7LBeNeKq8vkb7dzn0RjRp7PPArWmEasiopTP8hJXAdWLXUakhFdHrm+xeDiDipQxcFjNoOJBbudTMHuLSxyGQQhQgC2rR3AuKjBbVF/YNaBdugXs8X7J8HESgBwZ3vAE8I86KRxaEe4N7sY9iwj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000240; c=relaxed/simple;
-	bh=jZK0QLebtMfOcEUm0h/6bxVrX1rTU7CIc+iZJypo1N8=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=JwuzgxxQ8DTIqZ9I/KR9sw4k4jiar+ciRg1n0BCMOT3gLyuDSicHd2n08ZHF8KDjAjSpNAp0uKg2YcJbLO9Tbid/rNay/oLJjl72MkPU1Kw51LfBcY3dbv1iFhxd0Ex3pkYnmgvuM0+k6zhj/zLm2mPdrpRIuuRc7OdpTZlNYG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SbzC+k1y; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1746000243; c=relaxed/simple;
+	bh=DKnudNd/9zBWW3fHL+84dgzzzUZDXPxTFrPLc0mlmb4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EVIsN6GYWts/JRcL/wgcitBtCMOJPy7isQa5JCa7zmZSsSD2Ndx0VScDk7nXGZTsx7KOVPhqsigh/399i5/itqTsXG9vA875aQMloEigIYgHuHX1M7kOpiIRAj1nW42oxsOETXBsXzBPt6Uko9T9Se00YQyg/RdMwnEFS4MKius=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=piekgDcY; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SbzC+k1y"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250430080349epoutp0146940e16c395a5bdd24e09e56c299df4~7CfVLehBJ1065410654epoutp01c
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250430080349epoutp0146940e16c395a5bdd24e09e56c299df4~7CfVLehBJ1065410654epoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1746000229;
-	bh=r0lzQPeD0TToeRVN66QVOhI3MZ56kDdIBrvCu7NCmjw=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=SbzC+k1yEJFb3FK3TVjh7wn2XicZsCZfGw1ZNk7kucXn4PPDG1tXuXG/OxWgmqsYe
-	 TE8TsWWS5PtMgQN+686m4uAk8agDj10Fi/4U7Ut5A5EZ8SHRKN5jQLyX4J1ZAVgSom
-	 ublS/E1Y1P9vFa04/dxP5Es8HKYhqKeKdZ9qxEbQ=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250430080348epcas5p29f981d5f79ac379b9a4e6f0e2eb20ea3~7CfUTQvmo1973919739epcas5p26;
-	Wed, 30 Apr 2025 08:03:48 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZnV7Q6z4Yz3hhT4; Wed, 30 Apr
-	2025 08:03:46 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250430080346epcas5p1ab9a54e2a451f0c273606be005a4c6a8~7CfSCb2ba3050630506epcas5p1v;
-	Wed, 30 Apr 2025 08:03:46 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250430080346epsmtrp2074fbc2854c58cfe9b1c566da8a38641~7CfSBjNNW2131021310epsmtrp23;
-	Wed, 30 Apr 2025 08:03:46 +0000 (GMT)
-X-AuditID: b6c32a29-55afd7000000223e-d4-6811d9622a01
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6A.08.08766.269D1186; Wed, 30 Apr 2025 17:03:46 +0900 (KST)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250430080344epsmtip1b5735d0f9aba6e2aeb8b6cb5da022a0e~7CfQAw4_x2209522095epsmtip1w;
-	Wed, 30 Apr 2025 08:03:43 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Pritam Manohar Sutar'" <pritam.sutar@samsung.com>, <krzk@kernel.org>,
-	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>, <sunyeal.hong@samsung.com>
-Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<rosa.pila@samsung.com>, <dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
-	"'stable'" <stable@kernel.org>
-In-Reply-To: <20250428115049.2064955-1-pritam.sutar@samsung.com>
-Subject: RE: [PATCH] clk: samsung: correct clock summary for hsi1 block
-Date: Wed, 30 Apr 2025 13:33:42 +0530
-Message-ID: <0b1b01dbb9a6$65bdd150$313973f0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="piekgDcY"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43f251dc364so37756125e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746000240; x=1746605040; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WpWRPKZTrgVHckN4fyywT4debJCD4sQBNo0HtHYOfx4=;
+        b=piekgDcYFApNd3imBxoZ4MKCi80HPthsYfw9jBS1tnXb3RvS8NBP1Bc/4tsZ6zXTE2
+         o9W0avrWCExyGCQtzNM22miFAymoh9A8qRkCHo+Mhk2lqbnVponsOk8WtlcP86LBjy52
+         udkUczFUHekeKR0MJEd6PqgWfVN0er5FfZLwMlE9f4MoeBuqdHN0wIaCmqyyhkNfYoHB
+         KY+NsMIVSN6luuVosa2ZFqgks4qD5uURUVVutfBUR3ipQNjgW2A7Wj+0M6T8gJ5mM180
+         KgzbVNvSQWRSJ1U6/hwW61yDQaEOWIWCKY7QmwfUsgV3yPG+DzS9VoQYs3j2qnIJRLxB
+         3Ozg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746000240; x=1746605040;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WpWRPKZTrgVHckN4fyywT4debJCD4sQBNo0HtHYOfx4=;
+        b=Lw/2pjMm39VMLZmb3qdUzBFUmk7sT1Fmdd9GN4lGzoDyfo03hi+sz1zQrAAf87445L
+         DqfRlQYC8TEQmmv0JNrLLLSsobz/1UmUopuNkp9St1rxjXwtDf5A1kroivww/SeM6Smy
+         AFP0Fm7mjiYDXuMqALJu1cuqLvY/EWa5F5Cpc3osETczP6vhtUrgqZouJZZEN78KxM87
+         zvAlYeVS9yVxyvY9A+ZIjhPCK5UNltppjnGbhJzejcbY8jFx2BHCcbXcAERQVT5onGmJ
+         GlRfvvHlrufSUlUrSI2Cvm8PkK+v5UmC5kAQ+okceMC/zmdjAVdlX2Lt3Z7CZD9Z28op
+         nhkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWnEqQqjM+6HuZ+RLFqxuoZ0APBqDLoE3oEaQ+KJ+IMdgP/yVFIj8JeKOES+OsX4AOWLDxPdEcHiQnNgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx529iNc22x5GirlFf3aWCIzM2/y4jm0rTyVhdyML7/cd5GC+p
+	xDSf+fxkLLIxfwK3xPdDAs64d/gw81ddyIsCbS6/U0zBy9Fa0zlx/fdZDtayjy/4tGXTCc+a7RD
+	TBEdJMjqebGrtdA==
+X-Google-Smtp-Source: AGHT+IEI2dIRyOiB0HL4tKwAkhWBl9UQLV5gBiXGbTGepKML2h3DJ3RmB/CkPYBC9G6m8mr7/DPfag2VQKdaGKE=
+X-Received: from wmbeu5.prod.google.com ([2002:a05:600c:81c5:b0:43d:b30:d2df])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:a4e:b0:43c:fcb1:528a with SMTP id 5b1f17b1804b1-441b1f30feemr17935465e9.6.1746000239963;
+ Wed, 30 Apr 2025 01:03:59 -0700 (PDT)
+Date: Wed, 30 Apr 2025 08:03:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJRzV9wh12IZchi0K7svot8vU81fQE18kpXssYBMwA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSnG7STcEMg9/veC2uf3nOanFvxzJ2
-	i2s3FrJbnD+/gd1i0+NrrBYfe+6xWlzeNYfNYsb5fUwWF0+5Wjy7t4LN4svPB8wWh9+0s1r8
-	u7aRxeLT+QtsFk3L1jM58Hu8v9HK7rFpVSebx+Yl9R59W1YxenzeJBfAGsVlk5Kak1mWWqRv
-	l8CV0fLgJmvBBdGKudM72BsYfwl2MXJySAiYSFxqXMfUxcjFISSwm1Hi97UbzBAJaYnrGyew
-	Q9jCEiv/PWeHKHrOKLH0wX1GkASbgK7EjsVtbCAJEYErjBLTfn8Fq2IWaGOSWN7fDdUykVHi
-	8Ov5LCAtnAIOEnOezgfbISzgLnFl60U2EJtFQFXi+7TvYPt4BSwlPq3uYIGwBSVOznwCZjML
-	aEv0PmxlhLDlJba/nQN1q4LEz6fLWEFsEQEriU1zVjND1IhLvDx6hH0Co/AsJKNmIRk1C8mo
-	WUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI5QLc0djNtXfdA7xMjEwXiI
-	UYKDWUmEd0ONYIYQb0piZVVqUX58UWlOavEhRmkOFiVxXvEXvSlCAumJJanZqakFqUUwWSYO
-	TqkGpun7XDb48dduknCdL5646P2NxUnu5o/O5+iuznJ1VDzwsf3nZ3X9BttSgScmN3mu/mz5
-	9uMeo6Te9rTWRL+Vas9tAlN+Tl80/WhXBee74Msls6YETJ/6ZeH6RP61E1doxIb+UxQ+bl7c
-	Y1Vy86SDcmnel6wfHh+KKy/6fXncc35qiKzJaiEbjQvhTrHh2+dqV9YHbnxY6xjxrmuz6R25
-	OX3HXyt4mR1u63qZPyvLoL5wYYlBt4jgNa5jvWr7Q79+6Tl6dPKWcEH94hW712aHCs1iMQie
-	emTB3Kkb/NUaOE9OLxVYlXY4tXSyQVfVSweTKsc7x79adwp8NrVavYdlTwKXtFzIV1Mje812
-	1ahKJZbijERDLeai4kQAVdW7wj8DAAA=
-X-CMS-MailID: 20250430080346epcas5p1ab9a54e2a451f0c273606be005a4c6a8
-X-Msg-Generator: CA
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAGrZEWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE2MD3aLS4hLd7OT8Ml2zZHOTtBSDNMM0AzMloPqCotS0zAqwWdGxtbU ALAxa6FsAAAA=
+X-Change-Id: 20250430-rust-kcov-6c74fd0f1f06
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2361; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=DKnudNd/9zBWW3fHL+84dgzzzUZDXPxTFrPLc0mlmb4=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoEdltHctz9D+GQdMdpsulmMJUFsQjQ4TdJk+NW
+ R8aFYqqGmuJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaBHZbQAKCRAEWL7uWMY5
+ RkM8EACNQ+B2tYSbeUNKxBIjv1jFJCJsBOD4ZIW9UXYWnSamDV6d+85oW4gtrz/3sNyWC6BrxIb
+ ef162AJCYx1p0heTqIwEuhhUfWddFwW8WqmZvYRMcMFm3LyVpaA9BvsXuVe4v4t5bTeaFeuPRHL
+ MIczft0hFYyp0T3j2jFuSaFNIHP8CTt9FcRG2AiZeSf0klb1Kmsx9G0ZwArLD8cnVuXeKGQz+Vy
+ h42QeKg6ZVhmd46p7FBUgX8RH0xbPpkELYz6YeMkHwp0jxx2zM6EoaJizuLFTE8SkPw4sLpM9XZ
+ iYiwS125lIVSnSzWYRpJj0CuSdM9+QekWXREltJD5MvAeTODPdBBp6nS9z+K1A96Q85awr6jqYg
+ 1suryL9Pkq+gMOdf7vbQ1iB+nKo/TdTDIAyfalAtu4vo6UKyaqWR4uZ2vLzAvON7cWKO3lkowKq
+ Qdw9z8eFTyKAX0a5oqadcrknlSEzZPboyuVxdAyDyiwQMG1dGcPJxeGl44z6UZF8U7xa3toy0Tc
+ /jFXxkxBlC8m4pJqUK3F/Ep8vSTPQpHpM1wQWhaqg24PS8cqW6aDgRdItMy59S1zmYcVc7WQ2cu
+ bDjzwYoDPQEMESBIbaTCK9GyNptDtJzA5a8oV9YxUprBaiSmLy0OGe3JxLeieWSVVZ685AqDZKR FoiAzOAkF+2jjLg==
+X-Mailer: b4 0.14.2
+Message-ID: <20250430-rust-kcov-v1-1-b9ae94148175@google.com>
+Subject: [PATCH] kcov: rust: add flags for KCOV with Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>
+Cc: Nicolas Schier <nicolas.schier@linux.dev>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Aleksandr Nogikh <nogikh@google.com>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
+	Matthew Maurer <mmaurer@google.com>, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250428114053epcas5p450f97a4b8e41a1b06606e695e8c19f5f
-References: <CGME20250428114053epcas5p450f97a4b8e41a1b06606e695e8c19f5f@epcas5p4.samsung.com>
-	<20250428115049.2064955-1-pritam.sutar@samsung.com>
 
-Hi Pritam
+Rust code is currently not instrumented properly when KCOV is enabled.
+Thus, add the relevant flags to perform instrumentation correctly. This
+is necessary for efficient fuzzing of Rust code.
 
-> -----Original Message-----
-> From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-> Sent: Monday, April 28, 2025 5:21 PM
-> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
-> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
-> sunyeal.hong@samsung.com
-> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org; linux-
-> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> rosa.pila@samsung.com; dev.tailor@samsung.com;
-> faraz.ata@samsung.com; Pritam Manohar Sutar
-> <pritam.sutar@samsung.com>; stable <stable@kernel.org>
-> Subject: [PATCH] clk: samsung: correct clock summary for hsi1 block
-> 
-> When debugfs is mounted to check clk_summary, 'mout_hsi1_usbdrd_user'
-> shows 400Mhz instead of 40Mhz. Snippet of the clock summary is given as
-> below
-> 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_hsi1_usbdrd_user     0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
-> 
-> Hence corrected the clk-tree for the cmu_hsi1 & the corrected clock
-> summary is as mentioned below.
-> 
-May be just " correct the clk_tree by adding correct clock patent for
-mout_hsi1_usbdrd_user "
+The sanitizer-coverage features of LLVM have existed for long enough
+that they are available on any LLVM version supported by rustc, so we do
+not need any Kconfig feature detection.
 
-see: https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+The coverage level is set to 3, as that is the level needed by trace-pc.
 
-> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
->   mout_clkcmu_hsi1_usbdrd   0 0 0 400000000 0 0 50000 Y ...
->     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
->       mout_hsi1_usbdrd_user 0 0 0 40000000  0 0 50000 Y ...
-> 
-> Fixes: 485e13fe2fb6 ("clk: samsung: add top clock support for ExynosAuto
-> v920 SoC")
-> Cc: stable <stable@kernel.org>
-> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynosautov920.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynosautov920.c
-> b/drivers/clk/samsung/clk-exynosautov920.c
-> index dc8d4240f6de..b0561faecfeb 100644
-> --- a/drivers/clk/samsung/clk-exynosautov920.c
-> +++ b/drivers/clk/samsung/clk-exynosautov920.c
-> @@ -1393,7 +1393,7 @@ static const unsigned long hsi1_clk_regs[]
-> __initconst = {
->  /* List of parent clocks for Muxes in CMU_HSI1 */
->  PNAME(mout_hsi1_mmc_card_user_p) = {"oscclk",
-> "dout_clkcmu_hsi1_mmc_card"};
->  PNAME(mout_hsi1_noc_user_p) = { "oscclk", "dout_clkcmu_hsi1_noc" };
-> -PNAME(mout_hsi1_usbdrd_user_p) = { "oscclk",
-> "mout_clkcmu_hsi1_usbdrd" };
-> +PNAME(mout_hsi1_usbdrd_user_p) = { "oscclk",
-> "dout_clkcmu_hsi1_usbdrd"
-> +};
->  PNAME(mout_hsi1_usbdrd_p) = { "dout_tcxo_div2",
-> "mout_hsi1_usbdrd_user" };
-> 
->  static const struct samsung_mux_clock hsi1_mux_clks[] __initconst = {
-> --
-> 2.34.1
+Co-developed-by: Matthew Maurer <mmaurer@google.com>
+Signed-off-by: Matthew Maurer <mmaurer@google.com>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ scripts/Makefile.kcov | 6 ++++++
+ scripts/Makefile.lib  | 3 +++
+ 2 files changed, 9 insertions(+)
 
+diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
+index 67e8cfe3474b7dcf7552e675cffe356788e6c3a2..ddcc3c6dc513e1988aeaf07b8efa106e8dffa640 100644
+--- a/scripts/Makefile.kcov
++++ b/scripts/Makefile.kcov
+@@ -3,4 +3,10 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)	+= -fsanitize-coverage=trace-pc
+ kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)	+= -fsanitize-coverage=trace-cmp
+ kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)		+= -fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
+ 
++kcov-rflags-y					+= -Cpasses=sancov-module
++kcov-rflags-y					+= -Cllvm-args=-sanitizer-coverage-level=3
++kcov-rflags-y					+= -Cllvm-args=-sanitizer-coverage-trace-pc
++kcov-rflags-$(CONFIG_KCOV_ENABLE_COMPARISONS)	+= -Cllvm-args=-sanitizer-coverage-trace-compares
++
+ export CFLAGS_KCOV := $(kcov-flags-y)
++export RUSTFLAGS_KCOV := $(kcov-rflags-y)
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 2fe73cda0bddb9dcf709d0a9ae541318d54754d2..520905f19a9b19631394cfb5e129effb8846d5b8 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -169,6 +169,9 @@ ifeq ($(CONFIG_KCOV),y)
+ _c_flags += $(if $(patsubst n%,, \
+ 	$(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-kernel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
+ 	$(CFLAGS_KCOV))
++_rust_flags += $(if $(patsubst n%,, \
++	$(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-kernel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
++	$(RUSTFLAGS_KCOV))
+ endif
+ 
+ #
+
+---
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250430-rust-kcov-6c74fd0f1f06
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
 
