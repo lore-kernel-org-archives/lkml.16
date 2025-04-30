@@ -1,78 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F6C3F9D2;
-	Wed, 30 Apr 2025 18:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F131E5B9C;
+	Wed, 30 Apr 2025 18:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038984; cv=none; b=WEtQt05d9ey7uZtkkfPDoyqhfq5WWcQDFfQjBjE+DmrCnynF4PCluk2aOMlxeEedDbHBvYwEZnZR2mfZ/tV9HR4SyWioxWweHqvqPzmGITcTmeF51Z1yMM1bRfTZD6dJ/B9FW8KBnfwofGSwkXPyFgVG5RBNzFVq1Xfab0ILlrU=
+	t=1746038995; cv=none; b=pFyXAL0l65uV21O11uccVn9ydOUKmHUULsH0dq1ZQo4BtehlCX9m51J08Hh4Sd5cjNtoZIQtG0z+X8bNxNP0UyS45tqmCSLk6NDZRkGrAf97vDq31TG/8XMCoG/qLjv17z/IYTpgbM8zX9Q1pnNU6xRPfL93TJogxgp94DrAVqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038984; c=relaxed/simple;
-	bh=gYZVW37oaaEysM8J5GVPaK3yFVPSginf17/UT7X3Amw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tZ8BJIzh+ivypAC9gjxr6p5vOV6FRyb53eD696kbwlL/W/eCHhuyqWId8K4TNCJuBRuC/wlyjwGFIfsZ850pCQw9bVC/QgTaNtpQLHNNvkZqAOBWVvmPJBca1MjgylVyf08EJwZEMYP/iAExoQxTnYXzqMYSclcdMDYvmAR9uPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAVU8ANe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746038995; c=relaxed/simple;
+	bh=k2jZImIplLtrep9ZLm69IqQCo72lpoWaYbejGDF7KOQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O3iSEenwlE17br5P2i1QbPVGbKzg1xG/CwqF3YMR0aoj+SZ6wh1d/HEuJJRSUp/k4ao7Rt9wFW8eWSkCKKRF5mv2dlfqcG2X5r5DSCE378dyOI7c8RInd3xPcNbVhE2janIszFk/Mtm8RwS8vWfiWUIpMCAEG/sbJChSsAtWB9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0G3VxxN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAVU8ANe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E7E5C4CEE7;
-	Wed, 30 Apr 2025 18:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0G3VxxN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775E9C4AF09;
+	Wed, 30 Apr 2025 18:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746038983;
-	bh=gYZVW37oaaEysM8J5GVPaK3yFVPSginf17/UT7X3Amw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KAVU8ANeTgPCkRc8OzbcCSZXoZgBTCPi19FYuHzaH2WrROONh8rhwJ4ENdj8gdudT
-	 tqK3N6cvgZNSyQp3jVAFVSglU58oF260aT8vCGnYueJBmyp7zDp/G9TCWItgf5NRxn
-	 TaPPjHfKru184r2y/9Ew0ifcYQyzCrjdJ0kbCRlQKuUUrW+2nrkRuBo4Qr9KNcf+15
-	 yViMtsTK9FuP6oNbJ3DWpJgxo8J6YbvFIzUQqg7/xLmpSVxeUE8JQZn30QwQkPJ1Zk
-	 LbCnE2rYKPRoczQ64tETzSGaM5BMvTBXxiTAIlR6k26qV4w3pqCVVWUj61qhhkevMa
-	 1jG1SWnkoojVw==
-From: Kees Cook <kees@kernel.org>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Subject: Re: [PATCH 1/1] hardening: simplify CONFIG_CC_HAS_COUNTED_BY
-Date: Wed, 30 Apr 2025 11:49:38 -0700
-Message-Id: <174603897563.2038935.1424040118974988068.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250430184231.671365-2-kernel@jfarr.cc>
-References: <20250430184231.671365-1-kernel@jfarr.cc> <20250430184231.671365-2-kernel@jfarr.cc>
+	s=k20201202; t=1746038995;
+	bh=k2jZImIplLtrep9ZLm69IqQCo72lpoWaYbejGDF7KOQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=N0G3VxxN/C4DBG/ztgKALICySfyN/lPMhnXRfgg481aZAd+FtYC01eQTQrmsZGbo4
+	 AZcfYCFxQ674tvMIbdEMy1tFuCsVHGkK+aysCZqt74NO3yn8Sycfi8lyKHQkNvXAmj
+	 kz5soKXbZMiT0WDhLelvlbu8jD0Wey5dpdyvX9QaHiBROLD1yYy/RUbQUpq6rivN+N
+	 O4BqkBPSpMU8foNKBqrE4cfVZmWtmdEw/hafde2hRMi1Ig7GY9hEtxAdkBEWbAqP+c
+	 MykKDCgJll7UaI/kRU+/Bp/Oe+umY7gN6yiyb7tTsLFsaacbDWHTR9ZkhccBTTZqGA
+	 Seb9yRrbRHB4w==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2da3c572a0bso145015fac.3;
+        Wed, 30 Apr 2025 11:49:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcWVwZ0FxdR61pSCoP0uJMZT5hzdRtS2Q5W8KBi+E5TMxYG6pelJ3Lq2wgamIDTiYtA/b20za9AuY0ODbS@vger.kernel.org, AJvYcCUpVG66rHfwmGnG7vVriBdTU6nu7kmnlr4wp9o4qpP9rYQKFQuAqsSxRUDtUIDAzJ8KT9VlAxdVYRDZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoBlspwM45gXKD7Pk3FXHoIF3y5aut0KgaEfAXyGMUbVZ0wUut
+	J+XJ6G2gy1GRBYUI7y86kixX+VB7m5nIyzAE/VVOEZPAzqudlvPOD8fGR2a1pH9Nol1tvI1ZPox
+	TFaTi0IEVe+OyUFSObrX/LndbhEE=
+X-Google-Smtp-Source: AGHT+IHCVfuzVWNY9nHwwlciHk6mqob+lxlgBdZjMWwwxzLNFTxBXSXIniXZZgevdbzCe9a+V+ySH2ltwONC2ikP5Os=
+X-Received: by 2002:a05:6870:9624:b0:2cc:4516:afc6 with SMTP id
+ 586e51a60fabf-2da8c82fc61mr263957fac.36.1746038994790; Wed, 30 Apr 2025
+ 11:49:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <12671029.O9o76ZdvQC@rjwysocki.net> <1841930.VLH7GnMWUR@rjwysocki.net>
+ <202504301134.2EF987A@keescook>
+In-Reply-To: <202504301134.2EF987A@keescook>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 30 Apr 2025 20:49:43 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hsJr+5vzrH1Yp4_r5hrxLsVaO0dTdR6EG1Ft8tMcWSYA@mail.gmail.com>
+X-Gm-Features: ATxdqUGMePn8O1hoCaC0DhO2eijxkVk5QWGVR9M4_P4K2Lak7-glCj_GgyFUnD8
+Message-ID: <CAJZ5v0hsJr+5vzrH1Yp4_r5hrxLsVaO0dTdR6EG1Ft8tMcWSYA@mail.gmail.com>
+Subject: Re: [PATCH v1 12/19] ACPICA: Introduce ACPI_NONSTRING
+To: Kees Cook <kees@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>, 
+	Saket Dumbre <saket.dumbre@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 30 Apr 2025 20:42:31 +0200, Jan Hendrik Farr wrote:
-> Simplifies CONFIG_CC_HAS_COUNTED_BY by removing the build test and
-> relying solely on gcc/clang version numbering (GCC_VERSION >= 150100 and
-> CLANG_VERSION >= 190103).
-> 
-> The build test was used to allow unreleased gcc 15.0 builds to use the
-> __counted_by attribute. Now that gcc 15.1.0 has been released, this is
-> not needed anymore. Note: This will disable __counted_by on unreleased
-> gcc 15.0 builds.
-> 
-> [...]
+On Wed, Apr 30, 2025 at 8:35=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Fri, Apr 25, 2025 at 09:27:58PM +0200, Rafael J. Wysocki wrote:
+> > From: Kees Cook <kees@kernel.org>
+> >
+> > ACPICA commit 878823ca20f1987cba0c9d4c1056be0d117ea4fe
+> >
+> > In order to distinguish character arrays from C Strings (i.e. strings w=
+ith
+> > a terminating NUL character), add support for the "nonstring" attribute
+> > provided by GCC. (A better name might be "ACPI_NONCSTRING", but that's
+> > the attribute name, so stick to the existing naming convention.)
+> >
+> > GCC 15's -Wunterminated-string-initialization will warn about truncatio=
+n
+> > of the NUL byte for string initializers unless the destination is marke=
+d
+> > with "nonstring". Prepare for applying this attribute to the project.
+> >
+> > Link: https://github.com/acpica/acpica/commit/878823ca
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Whoops, I missed adding my S-o-b to the original upstream ACPICA commit.
+> Please consider this:
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Applied to for-next/hardening, thanks!
-
-[1/1] hardening: simplify CONFIG_CC_HAS_COUNTED_BY
-      https://git.kernel.org/kees/c/788d882e609f
-
-Take care,
-
--- 
-Kees Cook
-
+Added, thanks!
