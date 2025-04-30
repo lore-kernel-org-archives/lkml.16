@@ -1,187 +1,136 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9D425D21E;
-	Wed, 30 Apr 2025 12:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F5125DCEE;
+	Wed, 30 Apr 2025 12:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017365; cv=none; b=FtVZJBHsAWrepSEZtfn0QyDFAh44cC0WxmS7w+MJr4SBWQ2KphiG9Cn8I1jrM//hq1ufEwpYgAWCu7yDfXJ/7cJy7pRlAn6vAhe7PcVjJH+u0NLMfdvwljWxW6a2Jf8PbCMp/X9Rexz/ebBEKbDRtgpSAYyp90DLGyOHd0y3uxI=
+	t=1746017366; cv=none; b=Qq8p15J4wrfh0xpS+TETRBXxNaq5fu24o3O1dqonalVCr7AUslOpoVNUo1i3YJkqDYZjePqO4UOU3qJVJ6soRd8IjAR+QYkPFRw91BesTz8EJxxvHDOffaq5NtxYb7NRb6j/3pJHGOmluWXvoMOxRWBOR5cRZbIkQVMIE2WB7VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017365; c=relaxed/simple;
-	bh=MLKFKlOcqD3JrCWLLX9Qo1rkuxqN8kw5WpQ7AXVTpbc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xg3i+PmpXU2vwfBX9UnnreyjLdGCtgp6lh4pamb10WDOnXCQjPyZ3YwfB0lUfX657SS/VVd+hBaZKAUEsPtM2FPqOpRfV/PxwMfPxAlMAN/lUiOgbUyM/zeWGv9jCek+Bb5N9e3XiXqj1WoDnaj6w7aCz5uy2FrIP0TTizdd5Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZOgXW/hh; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746017366; c=relaxed/simple;
+	bh=cDMJclNXODyK6FoHQdX9WffMNMsWwbdFdY0KjMSz0Oc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=p70dr+KMKNTLzevXxf67+7mLlJCnEs/8QDEuojcxSKGhzpzUl6cEeJkZv6azUb5OwNYFQeosBSQLl2Cq9k6k9Yz1z8SwmL4qEpENfPV40iJsj5t/t0LkZA8YrPE0aAib0p3Yx1NajcmJvoIshwmB/IKby4iGLXFTXsWR/FjvoIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hKJdZjlH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZOgXW/hh"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 0F9D943A24;
-	Wed, 30 Apr 2025 12:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746017361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iuXqI1mGwNYFzjUQZRY2v46st1QeOvBPHRc4DlxvEp4=;
-	b=ZOgXW/hhPU6EJE4aEd/ReRqRiatj328XMSO3B7UjPtqGnxXuicwOV4sMEmDRZ75GwwGC9P
-	QHwmb+qODuZX+Z4kHuxikkbFhAhvxM/MZeFLEoP4MkJBmGpRQpeHdipdd/faNW11I4s79l
-	5fDMk4aezUXvb6pv4ciNSRG2jgR60CQ3J36r4FqCN3fzhTDsO4N3Di/fCBmGmxdMU9Vzq1
-	cYGl2lw7KAkkYRQVl5haUnTZaROn/id5FtCrWWNYQP88TQuAIMC8vls3dn4PggMIHJQqa4
-	/rMq2719o8zpyB3aP+81vmyAQ7JwLp6mfTSHU5lGqB8/Q6hva09urHaBJ0KQKg==
-From: Herve Codina <herve.codina@bootlin.com>
-To: David Gibson <david@gibson.dropbear.id.au>,
-	Andrew Davis <afd@ti.com>,
-	Ayush Singh <ayush@beagleboard.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: devicetree@vger.kernel.org,
-	devicetree-compiler@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 4/7] of: resolver: Add support for the export symbols node
-Date: Wed, 30 Apr 2025 14:49:03 +0200
-Message-ID: <20250430124910.195368-5-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430124910.195368-1-herve.codina@bootlin.com>
-References: <20250430124910.195368-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hKJdZjlH"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9Xail005570;
+	Wed, 30 Apr 2025 12:49:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	occHxSA562krSi0Y+4bOpHp0aXC9KZXPxmhbQmxC0QU=; b=hKJdZjlHOarJ2S14
+	D9T5lIAjOE8H7NtSXayeyfASevP+zwpDwLSq3+9qgziS0cDLK8yO7GC+R4gKyWFd
+	1MP7zRBL3IqaE7DLuaqEmP74t05QbdvJkq2C7jlDycxiWD3bukBW+nZQ/jx66ci1
+	5bBJGFBylJat+AOjr+/jGJhLuctbJNX4iBltQBTg6hq/50w7gDbS1XIQPQKneG1V
+	sqwHL+gW0F/jaFsR0GgHulFcKJeE8cNfIte+9qCeFqzvX4JmAx7sU/djksLCULiM
+	m5RLPeV++fJmP7io01An55QFUgExvVHe2N+W63Os7lo/G+HEeeCoO84Vpw03iZeD
+	TEsOCg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u8a6ry-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 12:49:21 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UCnKcw028143
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 12:49:20 GMT
+Received: from [10.50.41.127] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
+ 2025 05:49:13 -0700
+Message-ID: <fc01b28d-713f-e6cc-565a-c24b2aabac2e@quicinc.com>
+Date: Wed, 30 Apr 2025 18:19:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeijeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheffiefgjeeuleeuueffleeufefglefhjefhheeigedukeetieeltddthfffkeffnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopegurghvihgusehgihgsshhonhdrughrohhpsggvrghrrdhiugdrrghupdhrtghpthhtoheprghfugesthhirdgtohhmpdhrtghpthhtoheprgihuhhshhessggvrghglhgvsghorghrugdrohhrghdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepk
- hhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 4/5] arm64: dts: qcom: qcs8300: add video node
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com>
+ <20250430-qcs8300_iris-v6-4-a2fa43688722@quicinc.com>
+ <5086f0d3-d097-4668-b195-5ee00e84aad5@oss.qualcomm.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <5086f0d3-d097-4668-b195-5ee00e84aad5@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=B7i50PtM c=1 sm=1 tr=0 ts=68121c51 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=uUng-3H5kDwaNyo2zCsA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: sE0a39aUFNiYKzMSG1L2_cO8IvGiU5Ul
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA5MSBTYWx0ZWRfX3phejJGNUUIk mY/ufdpaFODHineYJDki6UHbn2ffNa4vuGAOMpAMCvMvMx9rf7x0j5tiK/IhwWyz4SpXKMYtk6U T+Ykn6w2D2wj4zM1FgKyE3UUGbATHXEAinU0gIu6wvC0cH8PZjZf/xJl8P17ooAEuo1cqdUPBr2
+ hLaRmu8OUio6dc7Pk9ypoQc3RrFF7gEX52K6dBbGqM15/M47oWDMG9IOB+U261MPCBsI4K2aKeK bnwGtjFiEZFKGijO3Z57nkYpPLK6H1iZWER+0fZP0G0+A+40f0s+e1KK6vYwzCHEgCNxz0MrUNg ZGD+wfUGGEHvOW7KjpSWJGthokgUfxHD1HZjGj8W63Z2J2VGOoJSUo5GTGjK4GFfgXhpgbwsfZ/
+ T4tqwhpAhXJpiF1/ODd/Z/eNyEeVgG+zlhyraPV+9CD4P0h/CJI9wnFgVng2UipfKcXMHWAA
+X-Proofpoint-ORIG-GUID: sE0a39aUFNiYKzMSG1L2_cO8IvGiU5Ul
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 mlxlogscore=688 lowpriorityscore=0
+ malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300091
 
-Symbols resolution done when an overlay is applied looks only at the
-global __symbol__ node to resolve unknown symbols from the overlay (i.e
-symbols listed in the overlay __fixups__ node).
 
-In order to provide flexibilities and allow to define some additional
-symbols visible only when an overlay is applied to a specific node,
-introduce the export symbols node.
 
-The export symbols node adds some additional symbols that can be used
-in the symbols resolution. The resolver tries to match unresolved
-symbols first using the export symbols node and, if a match is not
-found, it tries to match using the global __symbol__ node.
+On 4/30/2025 6:09 PM, Konrad Dybcio wrote:
+> On 4/30/25 2:17 PM, Vikash Garodia wrote:
+>> Add the IRIS video-codec node on QCS8300 platform to support video
+>> functionality.
+>>
+>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>> ---
+> 
+> [...]
+> 
+>> +			iris_opp_table: opp-table {
+>> +				compatible = "operating-points-v2";
+>> +
+>> +				opp-366000000 {
+>> +					opp-hz = /bits/ 64 <366000000>;
+>> +					required-opps = <&rpmhpd_opp_svs_l1>,
+>> +							<&rpmhpd_opp_svs_l1>;
+>> +				};
+>> +
+>> +				opp-444000000 {
+>> +					opp-hz = /bits/ 64 <444000000>;
+>> +					required-opps = <&rpmhpd_opp_nom>,
+>> +							<&rpmhpd_opp_nom>;
+>> +				};
+>> +
+>> +				opp-533333334 {
+> 
+> 533.00 for this one, 533+1/3 for CVP, it seems
+You are right, its 533.00 as clock corner for video.
 
-Contrary to symbols available in the global __symbols__ node, symbols
-listed in the export symbols node can be considered as local symbols.
-Indeed, they can be changed depending on the node the overlay is going
-to be applied to and are only visibible from the current recolver call.
-
-Handle those additional symbols given by the export symbols node in the
-symbols resolution.
-
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Tested-by: Ayush Singh <ayush@beagleboard.org>
----
- drivers/of/resolver.c | 33 +++++++++++++++++++++++++++++----
- drivers/of/unittest.c |  4 ++--
- 2 files changed, 31 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 5c492711b21f..c2b63cec1865 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -220,6 +220,9 @@ static int get_phandle_from_symbols_node(const struct device_node *tree_symbols,
- 	const char *refpath;
- 	int err;
- 
-+	if (!tree_symbols)
-+		return -ENOENT;
-+
- 	err = of_property_read_string(tree_symbols, symbol_name, &refpath);
- 	if (err)
- 		return err;
-@@ -234,6 +237,25 @@ static int get_phandle_from_symbols_node(const struct device_node *tree_symbols,
- 	return 0;
- }
- 
-+static int get_phandle_from_export_node(const struct device_node *export_symbols,
-+					const char *symbol_name,
-+					phandle *phandle)
-+{
-+	struct device_node *refnode;
-+
-+	if (!export_symbols)
-+		return -ENOENT;
-+
-+	refnode = of_parse_phandle(export_symbols, symbol_name, 0);
-+	if (!refnode)
-+		return -ENOENT;
-+
-+	*phandle = refnode->phandle;
-+	of_node_put(refnode);
-+
-+	return 0;
-+}
-+
- /**
-  * of_resolve_phandles - Relocate and resolve overlay against live tree
-  *
-@@ -312,7 +334,7 @@ int of_resolve_phandles(struct device_node *overlay, const struct device_node *e
- 		return 0;
- 
- 	struct device_node __free(device_node) *tree_symbols = of_find_node_by_path("/__symbols__");
--	if (!tree_symbols) {
-+	if (!tree_symbols && !export_symbols) {
- 		pr_err("no symbols in root of device tree.\n");
- 		return -EINVAL;
- 	}
-@@ -323,10 +345,13 @@ int of_resolve_phandles(struct device_node *overlay, const struct device_node *e
- 		if (!of_prop_cmp(prop->name, "name"))
- 			continue;
- 
--		err = get_phandle_from_symbols_node(tree_symbols, prop->name,
--						    &phandle);
-+		err = get_phandle_from_export_node(export_symbols, prop->name,
-+						   &phandle);
-+		if (err)
-+			err = get_phandle_from_symbols_node(tree_symbols, prop->name,
-+							    &phandle);
- 		if (err) {
--			pr_err("node label '%s' not found or invalid in live devicetree symbols table\n",
-+			pr_err("node label '%s' not found or invalid in live devicetree symbols or export tables\n",
- 			       prop->name);
- 			return err;
- 		}
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 620237365566..658690fd6980 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -4146,7 +4146,7 @@ static __init void of_unittest_overlay_high_level(void)
- 	/* ---  overlay_bad_unresolved  --- */
- 
- 	EXPECT_BEGIN(KERN_ERR,
--		     "OF: resolver: node label 'this_label_does_not_exist' not found in live devicetree symbols table");
-+		     "OF: resolver: node label 'this_label_does_not_exist' not found or invalid in live devicetree symbols or export tables");
- 	EXPECT_BEGIN(KERN_ERR,
- 		     "OF: resolver: overlay phandle fixup failed: -22");
- 
-@@ -4156,7 +4156,7 @@ static __init void of_unittest_overlay_high_level(void)
- 	EXPECT_END(KERN_ERR,
- 		   "OF: resolver: overlay phandle fixup failed: -22");
- 	EXPECT_END(KERN_ERR,
--		   "OF: resolver: node label 'this_label_does_not_exist' not found in live devicetree symbols table");
-+		   "OF: resolver: node label 'this_label_does_not_exist' not found or invalid in live devicetree symbols or export tables");
- 
- 	return;
- 
--- 
-2.49.0
-
+Regards,
+Vikash
