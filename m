@@ -1,95 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4832E401;
-	Wed, 30 Apr 2025 22:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CD52E401
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746051341; cv=none; b=PB+UkDUiW9y1uoswi4xO2XpTX9vOr/I6CPDHzKq9dtvBt5wzEa/TWURPQjajKLbkwf0WYRaiY8Y+WhnJlIQV1Ycvz4YBICKnAsDZJVQ+OJ2FfSFHgLmd8DtPUTB1fhEBI1c4281kWIR/deXBhiQiUESnR3p22z0M1ppcKibpsCI=
+	t=1746051364; cv=none; b=jS/2oCtFzaGS9lcb/9UtGAgqBO0C0yFAHvmwMUfgx3i/6t5az3NvoHXcxEM+G33V7XgkquXerdZTbffz4wnhBcq1aamyJdzCyuY58tTc2YTHYstyIoB83C7C0HiCdBU+BQ+fwr7PoXtKpSsgKUaRIAPfKF9jLS0r1B+NirIPgBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746051341; c=relaxed/simple;
-	bh=aIbmssw0385CGx5GhIR2R+vsPi0bJ2we8C8Kd4Sw5CI=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=W7YzRbTR2xnyHV6a1E84AgMydAG442uT9kzo4Fu91VzlzfmE071vCshMnqHXlvXCJgliLIUlTRRFF7UoUR39JZ/wYvOR1l21QHhBz83LAP2zJ8PIXpj6gc+zhWbeagZwJxgjlzMCSjaSCp6jRp6Lt8wL4sH4pyGksuuCREJ97WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAH9YqRc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAH9YqRc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E957AC4CEE7;
-	Wed, 30 Apr 2025 22:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746051341;
-	bh=aIbmssw0385CGx5GhIR2R+vsPi0bJ2we8C8Kd4Sw5CI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=XAH9YqRcw/tW78dB534Ne6D7YpedE8wyfVkqbCd3WdD1Zg87kdihfeBaQE7jOHHc3
-	 u5WeQx4n7FeyAZh+7H4HVbML1U9c9gXfVIpnafL2Fte6CoLKR7mvL70B6ga9OBhchw
-	 sSuE8v7wWKXqieMNXB6R1162zdqIYhs2WrNK/hSE1NPvEtyGrAjMDujZuaDEsKc7Pn
-	 lXI0JvkqTcuFYclDgufQ8tI6wEc//xn4Cf9eH3sEbpw7G270RH+6gRjeJD3n92/pmB
-	 12xrQrpgz4dIDe+lTkXChKwd9+h4VbH3R+8js+2osFxfJzedJS0tKJkXdttaXeVa3z
-	 pN5Vmct4KVD9A==
-Message-ID: <40bf9ffc7ae98f6601122cd8850418f5@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1746051364; c=relaxed/simple;
+	bh=LA1hmvWoh1w/pViOhG4nskQrM3XFyEiqbyfZYBwzBME=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=m++feynQNKgR0cC+wjYiZM2px8w6VQ5eVXQxmBZZLo4+cfbg2fD72bjxxoLscAJgeyVRpYq+tPinGzkBzlh4jJY/AZw5Dq3QveeCZ/VW1QHYHxBkFboErwx9jcaHNP4K0+ohO9rVjcG4QUcTWHzI72GFRlZgPT2no+FRkqBYycQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e7f5129d5so40096139f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:16:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746051362; x=1746656162;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vb/fhlw7vaMZDp7UCH0BR+ACh6mnDax2s8vDaxFfkmM=;
+        b=gBTdo7TGUIbfcRDsNg4ScQqCCZvnVXH00vOLyFBHH0m1CNZNKS4snyN23ms1suY8wt
+         sr8w0xez4m6NGj4iGD7o4Cesi7Vx4def7EpmkbQUJbkWcTaYVKxXh3Cmr08Bcgm8my2f
+         pL8IaDgEMtBuJS1vX/XXmY1dRNbg5zYTUGZ6SOco1BQRgcYnusdGnAwjyqJSGbTaNlAt
+         od1/6MjiwMXTaTlACY5oNQYWPQNpgDRIilpaA1RN1P9Y+riNxzwSZnBOoAzMR0q98TbT
+         amveW9hw52R+FYBeYSF/AtxIX7QYJaTusDwfG6Bs93taPcvmTuLNzukH1X2Vnl+jqERi
+         OoUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7gHZCGESbOt8LTWQlro/+ASg1sUFM1yE6LB48Gl5HcTCZetxjYuTHC0kVUiMnD6f74O+cPUzDJ54OPdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI395s7Hk62yO43k/xZjdW6dJxCRQAJina0ln/VcDDdUaYBOpE
+	BFL0eFP9Pprsd8ZCSLJ82M/Gfo4mXEcZ0mB+cyIDATgWC0nTSQU7cNIzaMYmjoKdvUflYzLwzEz
+	bViDKC+sdL9tFHn8gTlBi0TFsNHkuqYV1At0TYCWIGhs7oX4xu9E+JrA=
+X-Google-Smtp-Source: AGHT+IFyTag1lbXyKijTHvQDaIe0k8hV9woQatpuChcXj3BjRYaHrEhRmB+2QpTrpUTLmAWSAPVSndPhfu8AYcLzVa5kVz6OqQ3Z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250430-clk-cdce6214-v4-1-9f15e7126ac6@pengutronix.de>
-References: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de> <20250430-clk-cdce6214-v4-1-9f15e7126ac6@pengutronix.de>
-Subject: Re: [PATCH v4 1/3] clk: make determine_rate optional for non reparenting clocks
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Alvin =?utf-8?q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>, Sascha Hauer <s.hauer@pengutronix.de>
-To: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
-Date: Wed, 30 Apr 2025 15:15:38 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+X-Received: by 2002:a05:6602:3808:b0:864:a1fe:1e41 with SMTP id
+ ca18e2360f4ac-864a22cd3ffmr144525439f.13.1746051362570; Wed, 30 Apr 2025
+ 15:16:02 -0700 (PDT)
+Date: Wed, 30 Apr 2025 15:16:02 -0700
+In-Reply-To: <20250501.013737.1960337608602672035.konishi.ryusuke@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6812a122.050a0220.14dd7d.0003.GAE@google.com>
+Subject: Re: [syzbot] [nilfs?] possible deadlock in __nilfs_error (3)
+From: syzbot <syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com>
+To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Quoting Sascha Hauer (2025-04-30 02:01:34)
-> With commit 326cc42f9fdc ("clk: Forbid to register a mux without
-> determine_rate") it became mandatory to provide a determine_rate hook
-> once a set_parent hook is provided. The determine_rate hook is only
-> needed though when the clock reparents to set its rate. Clocks which do
-> not reparent during set_rate do not need a determine_rate hook, so make
-> the hook optional for clocks with the CLK_SET_RATE_NO_REPARENT flag.
+Hello,
 
-Do you have a set_parent clk_op that you want use? But you set the flag
-so that rate changes don't try to change the parent? Do you implement
-a round_rate clk_op? I'm guessing round_rate isn't implemented.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-We want to get rid of round_rate and move drivers to use determine_rate
-everywhere because it passes a struct that we can extend in the future
-to do coordinated rate changes, per-clk locking, etc.
+Reported-by: syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com
+Tested-by: syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com
 
-We could change this to be something like:
+Tested on:
 
- if (core->ops->round_rate && core->ops->determine_rate)
-   return -EINVAL and pr_err("Pick one, not both");
- if (core->ops->set_parent && core->ops->round_rate)
-   return -EINVAL and pr_err("must implement .set_parent & .determine_rate")
+commit:         7a13c14e Merge tag 'for-6.15-rc4-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169daf74580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a42a9d552788177b
+dashboard link: https://syzkaller.appspot.com/bug?extid=00f7f5b884b117ee6773
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10e731b3980000
 
-so that if you have a set_parent clk_op you better implement
-determine_rate if you support changing the rate, regardless of the clk
-flags. I worry that we have some driver that implements both round_rate
-and determine_rate though. Indeed, the clk_divider_ops does that to
-support being copied by other clk drivers so we'll need to make the
-logic this:
-
- if (core->ops->set_parent && clk_core_can_round(core) && !core->ops->deter=
-mine_rate)
-   return -EINVAL and pr_err("must implement .set_parent & .determine_rate")
-
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 0565c87656cf5..07ae3652df6c1 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3937,7 +3937,8 @@ static int __clk_core_init(struct clk_core *core)
->                 goto out;
->         }
-> =20
-> -       if (core->ops->set_parent && !core->ops->determine_rate) {
-> +       if (!(core->flags & CLK_SET_RATE_NO_REPARENT) &&
-> +           core->ops->set_parent && !core->ops->determine_rate) {
->                 pr_err("%s: %s must implement .set_parent & .determine_ra=
-te\n",
->                         __func__, core->name);
->                 ret =3D -EINVAL;
+Note: testing is done by a robot and is best-effort only.
