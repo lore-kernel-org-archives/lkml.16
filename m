@@ -1,65 +1,33 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E1D25DD10
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622BD26FD9D;
+	Wed, 30 Apr 2025 19:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040666; cv=none; b=Ge+/TDVUlvW8qyBEGYKJImFNxas8I8UgO4rKoPoh4Xd28LB0QAVVUwnUNTRbvsAf373IRDOIvbP50AhW5C1CpmBuzMhEZ1nhElP6gHNV1CDNa9iUFEwV4tvxk0d9KLq5B/GNLpLKtatPHlbuB7K/jiriwcxMluXofRUyLIS9BtE=
+	t=1746040668; cv=none; b=nyx/JQ19HFGyU33of/enqkFJkaeCDCS1xfpdU8aqdR/TAnQ0JSW8CmR+Y1oED0cOu/PtAmcNc0HYgYzyN8VV+vyXWTTg40Bn6I4I7kN9qSle9vsJmc0bvrPrX56NiV5WvpcVLrwdoTP24DCM5HieG+hS9jUigmS8hz66RGfFAgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040666; c=relaxed/simple;
-	bh=DyHVpZe7sPP3pdh2AqiHnweC4kVwYKyUKswOh2cdzBI=;
+	s=arc-20240116; t=1746040668; c=relaxed/simple;
+	bh=vRAapF99D6lcXdd9RT4RqWfXXje3DRJWsR+L8eOLh10=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lE2TWuWZEwfKGC+vFTIOnug0GzRDcdIqMCpruoS/ldgfOK/oYkf21Lf6+67QGRPI2sJEpjZLMcKroX+/IlXBCWIsUj44ZS+cOdo42aWC5EprCdQhvfnkPoFPgGKEIlq6lVcljR1HJGTGqDvsQ6dbfKShxRWAXLEESJyUohxtTC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lhWWqPXS; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=WPY5hnynRvb92jb4K4xIbYS57ud+1lfnk7h5Ig8eIDJqlmgCjVtM/HsW2Acdj0UTrB+LRM5+mFKLvNrDO125EhqgOwZF8AI2ag6T286PdvNXLXw7JpI55y6LSgfKEG7Fx7GTlPPeFudKMR3wzr9UVhjBGD7Ik7rdETs04o83/Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrUBXtTB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lhWWqPXS"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-401e77e5443so160620b6e.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746040662; x=1746645462; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xXhOqh4ZLVwyszMvf+9Z/x0nU/kY8/7DOicY6xuWBc4=;
-        b=lhWWqPXSjbb8svBw2Nexbhm8/Qlr4vLGQqi6fANlIs29mZi/YM1ngIyGJBiSDgEkVq
-         hbzJW3eiP0e84s794SKaCJ0oaeDVOc/SfDliyOBiR00FaWopS193z8qb1eQTkbJyEcKq
-         uA4lD1MMmDOtsCaaeP+pc6PfaR0t7nQT7dafSBtizksRNoBWWY9AU4/rYWqffNMeixS5
-         Wq7Wme0xQQPZJQsJDZwi7aBlgR3zDGFZqEZs+KPjBOOYP6Hu/w8Ldaj7EOV9TZ6dYlcB
-         qnTi/23gZv/sCq8xofcALvfzrrk0Yi2KvXNp+vVBHPiApRJKFkSVBdAMEK5U4aJeOLj6
-         FOVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746040662; x=1746645462;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xXhOqh4ZLVwyszMvf+9Z/x0nU/kY8/7DOicY6xuWBc4=;
-        b=rI93w7i9F9l9Bw/eTjz2UBDvpgdkK7l6XQkYoMkXcBPkyIXSjX3Z+KwLHbnrFRtSDG
-         loLR/MzoeXKouAMTZNH+Tgzsp+dG47m3sqnQDXSCir/maDvQtJa0hFd6bbhyLrUlqjX+
-         Z1erC29i1+lrFnc04DVCLKZ8YYbgNxQxXdonQ4ddeAy3eVOTDJQiH5Yow0KVTDFi0/I7
-         6lt/M3Vkr9FgZ9xFPjT04MMne89pAxqF2qyZHlpsL/LWwULebUbuZsEgk5Kt3h5Mvt19
-         1aC9R9Nd+/yQSuOA6INMsg7bp7lbJhlitTsKnUpPeQluQQngJkF7kEQQogHO2x/pNdFu
-         Buzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWONTxV16f+Zv2J6D52DsCd9bSGtMmIaNvOBpqgNg0U8Z8EwWixtYPcu+PIklbtLZQbPKpET7qQxndz/QY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2e3ClnNBVWXD10pSVL4QkfObZmBtD09rz5GjsfFX/U7zDXHjT
-	rm+v0weUuUlxtUIIVPxLAz1v7k0SJSO1bPEUiFs2nRDh5n/IZG9VwO1ewiYbAfQ=
-X-Gm-Gg: ASbGncuWIg+QmbdX/z78UD3F5EiULEwVhiP/ZK+6kFth63nbcLT7i33jtrUOY6Pg48M
-	I4dF97s1RMF9PGyY8sE0wUA5K2GlmehsoOUkLyxK6lG78ndXFyQFql53br6SUvpjExe4V37vxWz
-	FyoOEFYTllJxod7nV58L0vVnFAmePPwt2Cy8h9x/QkcVAott6qYlmevzqHjIOWzp0ELtwex+PB6
-	Ij7CsKjctQ+nrtDhqe9hpIxJGioXtZidCwwGV/xc3FA/tgnB1E2pixiFEmhtNIhC+0oZwzwg0vS
-	iX5Qf5dWo1eSPNv2YQat0S/HceDVZqRHPQlNA94ZTi9Fy2AFRk4h2Z6ZBdNlS0IgVSdmo2w4Bo5
-	Cj11jKCa3QBqKwIg=
-X-Google-Smtp-Source: AGHT+IGy4UEKIqEqUHbe0JTx+91yGHN8GtDOL5hK/oCVz9Muk88lGWpmRT+rWl7rMdtnMbKuWLummQ==
-X-Received: by 2002:a05:6808:2e4f:b0:3fe:aeaf:26a5 with SMTP id 5614622812f47-402439689d7mr2636968b6e.31.1746040662560;
-        Wed, 30 Apr 2025 12:17:42 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4021291e53esm923240b6e.9.2025.04.30.12.17.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 12:17:42 -0700 (PDT)
-Message-ID: <1f8de7bd-7049-4933-82e3-8ce71685998e@baylibre.com>
-Date: Wed, 30 Apr 2025 14:17:40 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrUBXtTB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78883C4CEEA;
+	Wed, 30 Apr 2025 19:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746040665;
+	bh=vRAapF99D6lcXdd9RT4RqWfXXje3DRJWsR+L8eOLh10=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qrUBXtTBISUwNSo21NcrlMSLR3qV4cUuTrPkTmvxNpTaK2u1YUCA5J446KpqFZ7H1
+	 3LIXnmKhACIYob5y0j23H8uiHoBUJ0OPOnpKa3UGdjpYJPG/ptOZQPnn0OxetBaCft
+	 2RJgjLDBEYQMwCtjwCX5QYKQyQNKRDjmzWnewY0bWCWBrzjYfuTZHY6fHsERQ6obpX
+	 kITECqwxeRQcjcWGC7ZrZSWsjzAN5ela2rCVx7ntSJ7OdVJhOr/3uuMc37yAb21Lh7
+	 v7o81qjhwYwFs11pFioLsWP26yYnPL+r8Pw5zQLfutptlh/SlQbnIzN7WR2IwPRKEc
+	 v2jWvfATAK8sA==
+Message-ID: <35bae46e-3b57-438a-a561-c93868120dcb@kernel.org>
+Date: Wed, 30 Apr 2025 14:17:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,60 +35,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HID: sensor-hub: Fix typo and improve documentation for
- sensor_hub_remove_callback()
-To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, jikos@kernel.org,
- jic23@kernel.org, srinivas.pandruvada@linux.intel.com, bentiss@kernel.org
-Cc: linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v5 5/5] x86/CPU/AMD: Print the reason for the last reset
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <20250422234830.2840784-6-superm1@kernel.org>
+ <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
+ <e80be47b-5f8d-409c-8c3d-cd1af46944d0@kernel.org>
+ <20250430191025.GFaBJ1oQjxCuig1vS6@fat_crate.local>
 Content-Language: en-US
-In-Reply-To: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250430191025.GFaBJ1oQjxCuig1vS6@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/30/25 1:23 PM, Chelsy Ratnawat wrote:
-> Fixed a typo in "registered" and improved grammar for better readability
-> and consistency with kernel-doc standards. No functional changes.
+On 4/30/2025 2:10 PM, Borislav Petkov wrote:
+> On Wed, Apr 30, 2025 at 02:05:44PM -0500, Mario Limonciello wrote:
+>> On 4/30/2025 2:03 PM, Borislav Petkov wrote:
+>>> On Tue, Apr 22, 2025 at 06:48:30PM -0500, Mario Limonciello wrote:
+>>>> +	/* Iterate on each bit in the 'value' mask: */
+>>>> +	while (true) {
+>>>> +		bit = find_next_bit(&value, BITS_PER_LONG, bit + 1);
+>>>> +
+>>>> +		/* Reached the end of the word, no more bits: */
+>>>> +		if (bit >= BITS_PER_LONG) {
+>>>> +			if (!nr_reasons)
+>>>> +				pr_info("x86/amd: Previous system reset reason [0x%08lx]: Unknown\n", value);
+>>>> +			break;
+>>>> +		}
+>>>> +
+>>>> +		if (!s5_reset_reason_txt[bit])
+>>>> +			continue;
+>>>> +
+>>>> +		nr_reasons++;
+>>>> +		pr_info("x86/amd: Previous system reset reason [0x%08lx]: %s\n",
+>>>> +			value, s5_reset_reason_txt[bit]);
+>>>> +	}
+>>>
+>>> What happened to that simpler idea:
+>>>
+>>> https://lore.kernel.org/r/20250411125050.GEZ_kQKtYBfEMDQuXU@fat_crate.local
+>>>
+>>
+>> This one was more advantageous in that if multiple bits were set for any
+>> reason we could get messages for all of them printed.
 > 
-> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-> ---
->  include/linux/hid-sensor-hub.h | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> I don't understand - you dump an array element for every bit now too...
 > 
-> diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
-> index c27329e2a5ad..5d2ac79429d4 100644
-> --- a/include/linux/hid-sensor-hub.h
-> +++ b/include/linux/hid-sensor-hub.h
-> @@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
->  /**
->  * sensor_hub_remove_callback() - Remove client callbacks
 
-This says "callbacks", so is it possible to have more than one registered at a
-time?
-
->  * @hsdev:	Hub device instance.
-> -* @usage_id:	Usage id of the client (E.g. 0x200076 for Gyro).
-> +* @usage_id:	Usage id of the client (e.g. 0x200076 for Gyro).
-
-should we also make gyro lower-case?
-
->  *
-> -* If there is a callback registred, this call will remove that
-> -* callbacks, so that it will stop data and event notifications.
-> +* Removes a previously registered callback for the given usage ID.
-> +* Once removed, the client will no longer receive data or event
-> +* notifications.
-
-I like the revised wording, but possibly looses some clarity that could be
-fixed with:
-
-Removes a previously registered callback(s), if any, for the given usage ID.
-
-As above, not sure if singular or plural callbacks is correct.
-
->  */
->  int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
->  			u32 usage_id);
-
+Well with that approach once you got a known bit set you broke the loop 
+and would print a message for that known bit.  But if you have two bits 
+set you either need another loop or you only get one message print.
