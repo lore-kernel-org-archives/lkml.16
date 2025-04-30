@@ -1,77 +1,73 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761031BE251;
-	Wed, 30 Apr 2025 18:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B28D18024;
+	Wed, 30 Apr 2025 18:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038084; cv=none; b=cB6JMmgTCX2NWHN4hQC2yjfArbSyCv+falGJEd0wQE6HxS7eqzAcpwSfMa1/abcab4i/zKMAUk8XuJyhh59myFR2HHEcEsHAhebfoDmpXqwVwDTw0DUL87oW6F+2GJXq8LvmnZJRLzcEMGUoHx1/QgJxkNA9NCmzk3xdWs/trbQ=
+	t=1746038126; cv=none; b=E/b5fTfsE9zva4d/VJ88/DdQeaI+m+rqu6PXVQZSGJ1B+KUP7zghj5s5eyfNUMBYrfJRciX0T88349gLOF1KVtx0vHRPQaObbXCZXTsk0zE8KPSKT62D0SUMI4gQQz6Wy8IaLThRWUei873BT6ynfoBD4NhMkp7gh3/3Q+R2Rnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038084; c=relaxed/simple;
-	bh=5ZL/+NkKKP0dZhMg8QSEbjj0bFoy8v/j7dquKHWiKiI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6NyGtTdKlhhJtnIDJ0ZbDSkAhTfxuqSaT4LUoslxQKoUePtHjtrTlW2rTYjVjer47LdxSXXr+hhchsvSMEW4hQA/QRo0/gcLXfyRawuMM+pspEH2fDE/zG6Ry9fDptrYETYaSDTWD/I3wPYSw/8+E6N+1yx6sRSgwMGn4rlP+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=ep7WLC+E; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1746038126; c=relaxed/simple;
+	bh=MYqpFKUaSIk71XNr25v/CZ6EuiBJHRRvSuY0BW160aY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FG0eVPUFoVnUl22KiXz7kqIAf/LrD6HVuIBZv34aaU6KqObXZZspAOgaMruIFBAslrgY/1piJgErOrONLtcOJpr27wA3GTNXSCDhaKDqJpkTKfpTGgWPpcNZ/VidYT5bvtTfUaHhjXmLHQgzePG3Gp2N7j6e9aW5bHDg+/LMPiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6VexaoL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="ep7WLC+E"
-Received: from kreacher.localnet (unknown [217.114.34.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id DCBD266690D;
-	Wed, 30 Apr 2025 20:34:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1746038080;
-	bh=5ZL/+NkKKP0dZhMg8QSEbjj0bFoy8v/j7dquKHWiKiI=;
-	h=From:Subject:Date;
-	b=ep7WLC+EV+yOFvTiQjnVG3L74xx/TtEpu31bhQXEuq4Wq5nVd3d7O+RoRmUzCmnlo
-	 IVUjjPsPis/8VDaFPLPXIgu5BtE7gp7FSCNTdAWM191qz5DaRry7wNe5A27VyxelC9
-	 di9fydpUP7/botaWpqBu+9L3mDQUUk6G2P7ofwpHV7zMMK7xus0DF8U1byB3LsJeHR
-	 dengYsB13y2LYhXih1A8n4iMEs96hQGBYUNFeY5zWLgEZ+sDauTadTyJeUlv+GRMPH
-	 E+y7bAvDRhR8r86qpeu0waWpNj0UBHG+yqrda4fnPalscbSyzhi883TpG2Jf11pINp
-	 dNMRIOeXPEEFw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Greg KH <greg@kroah.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patch in the driver-core tree
-Date: Wed, 30 Apr 2025 20:34:39 +0200
-Message-ID: <4984921.GXAFRqVoOG@rjwysocki.net>
-In-Reply-To: <20250430174726.0322f461@canb.auug.org.au>
-References: <20250430174726.0322f461@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6VexaoL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75726C4CEE7;
+	Wed, 30 Apr 2025 18:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746038125;
+	bh=MYqpFKUaSIk71XNr25v/CZ6EuiBJHRRvSuY0BW160aY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L6VexaoLuiuSk/yv6kmgycQgRjNg1zbS4nifn9yD6G34FkfBre/hOWBdOXzJRK4bd
+	 m+cIy81zf6EBAepby1zixvMvFHdPV5ipzUXUB3ATxNhTJ73FmA20/4g428YyM3e8hP
+	 PTpX1VJf6fpGVIKcjy+pwQGXCXQGHM69rEfDwu9Z1ixdIvTUzJ6ilwgZQVgoHAmMP9
+	 ZM6huujvlxE8NfnmHX+dqmtnofP+4jhDpdNLMk8GFEIDnPg0H4T/PTHEpHuOI2rWxb
+	 H8tIweqftC7MIss6rYS92SA8bRo5BR3z3QmuLkXpzXFpeW2vz/v0AUNxWz6CqaX+dc
+	 U29wLI+g1kfjQ==
+Date: Wed, 30 Apr 2025 11:35:22 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Bob Moore <robert.moore@intel.com>,
+	Saket Dumbre <saket.dumbre@intel.com>
+Subject: Re: [PATCH v1 12/19] ACPICA: Introduce ACPI_NONSTRING
+Message-ID: <202504301134.2EF987A@keescook>
+References: <12671029.O9o76ZdvQC@rjwysocki.net>
+ <1841930.VLH7GnMWUR@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 217.114.34.19
-X-CLIENT-HOSTNAME: 217.114.34.19
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppedvudejrdduudegrdefgedrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddujedruddugedrfeegrdduledphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepgedprhgtphhtthhopehgrhgvgheskhhrohgrhhdrtghomhdprhgtphhtthhopehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1841930.VLH7GnMWUR@rjwysocki.net>
 
-On Wednesday, April 30, 2025 9:47:26 AM CEST Stephen Rothwell wrote:
-> Hi all,
+On Fri, Apr 25, 2025 at 09:27:58PM +0200, Rafael J. Wysocki wrote:
+> From: Kees Cook <kees@kernel.org>
 > 
-> The following commit is also in the pm tree as a different commit (but
-> the same patch):
+> ACPICA commit 878823ca20f1987cba0c9d4c1056be0d117ea4fe
 > 
->   142ba31d8b4a ("PM: wakeup: Do not expose 4 device wakeup source APIs")
+> In order to distinguish character arrays from C Strings (i.e. strings with
+> a terminating NUL character), add support for the "nonstring" attribute
+> provided by GCC. (A better name might be "ACPI_NONCSTRING", but that's
+> the attribute name, so stick to the existing naming convention.)
 > 
-> This is commit
+> GCC 15's -Wunterminated-string-initialization will warn about truncation
+> of the NUL byte for string initializers unless the destination is marked
+> with "nonstring". Prepare for applying this attribute to the project.
 > 
->   150b374b9ff9 ("PM: wakeup: Define four low-level functions as static")
-> 
-> in the pm tree.
+> Link: https://github.com/acpica/acpica/commit/878823ca
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-I'll drop this from the PM tree, but this technically is PM material.
+Whoops, I missed adding my S-o-b to the original upstream ACPICA commit.
+Please consider this:
 
-Thanks!
+Signed-off-by: Kees Cook <kees@kernel.org>
 
-
-
+-- 
+Kees Cook
