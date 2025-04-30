@@ -1,130 +1,101 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8DE25D551;
-	Wed, 30 Apr 2025 12:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC2024A047
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015473; cv=none; b=rVlAzTbBmsa02EhQHPBFl8ULLkEdAdr+qayjnV5NLYAJ0cpmP5RpJ90Pp+9UjQ3vQtXPxi/rK3/s4EMNPof2V3PO5uppIkbwzQMV6cM0GhDDquA2ZF7gIN19QrKdoAKM6SyKtjaHn1wXDwEESK9PBGciwdWs7NRRLssEG78YRds=
+	t=1746015510; cv=none; b=tvy3Cew7iy62FFTxyxeBlliEVHzbBeACJGL2R6aWbtkGrwzfD28gDEA2I0QceLbx1dwx+ucL8ujQllMYmZjOZa653iK2P7h8IaSvQ5K1UBoploeIyLxd6pBYHTCV7qJ2guv5TbzBSQp501SBrNp2+DDxmOnejkBGeW7bdEpzTFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015473; c=relaxed/simple;
-	bh=U0w1x+8Qh4hnZgZPeV+lNb1LUY4ehW5wushCpVQ3K+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=K2SYu3OE/wCELGAEWA0gJCX/j9Q7iPBrtNeg9iAooS6AmI2ALI7FGNUxfJyMlBXbg1eZOtv2AWQ722dCZuwDnZKJ+e2zN/x1+9ZcD9L9A2ULhQAh4x4iT/KzA8yuGApaVQrUW6xoaQIRXWlBujVNovGrmIQF01FWv22DldIo+xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oSSlrpeO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746015510; c=relaxed/simple;
+	bh=jLQ7VSocQYR71p+4p10bsNmcteCmdXgdSrNIPdrCjlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aciooI6ObjfwyxQkiDoRXPvm/G9o2dWQSLsOtVHN4cDBO9Yaqog1rK1osrjyu80q1qpcu6iRXk0xvksltdqMvBVIKQ9JBWB8GJTtX/7hpOzoPybf+VSASCq45oXJHaSEip6rB7WHJygOeIrYWJSW/CvnKli73H5pw66kvR/Skqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=BApprQi7; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oSSlrpeO"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9Gud9020937;
-	Wed, 30 Apr 2025 12:17:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rSy+SgCL5lGpQjeRIMvTtjJ3CYYax4gjcpMJGDuJbbw=; b=oSSlrpeO/SCqLUgp
-	NvzM9+CcZoT7YPSx4RkoFpeEFnfllW5BZHBncltIwikFP9MTbUefmSKRsNpg9xTv
-	wfDOtPuYyWnVWA6/h58OK0UlnQ8RNMmz8wCUVC9db6Zvl+fJ+knumdprQpPsEpVS
-	VPKzSm7tCWzkxgT1DZgZbx5/oSiE9a47cIZlBOkeObM85nB8lXRGEGx8woktQed5
-	zbrL91ZqNAbS28OiKu8pylGkI/yram7CC8/Du+/QWYRyVnQ9oexML4slidS0lREI
-	JtE0QfSS50t2fqRZuEMet5lfSImABkpKPAD/D2CA7fXn6DZPcNEhmYdxgpNVdslz
-	n8sgLQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u1t49s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 12:17:47 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UCHknP025009
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 12:17:46 GMT
-Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 30 Apr 2025 05:17:42 -0700
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Wed, 30 Apr 2025 17:47:11 +0530
-Subject: [PATCH v6 5/5] arm64: dts: qcom: qcs8300-ride: enable video
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BApprQi7"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f2b04a6169so79130726d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1746015507; x=1746620307; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W+V7cm9jvinYzZ6ye2QtNYnV8/h1lACQcCRpp+snmxs=;
+        b=BApprQi7IoHjfzY16R72gtdF43hbuQnsMLp3Qi+93iGBpfA8SatViUBBG0y39LiF2v
+         dbJSzUWB0ZjSv/z0WSmu5I98Kc621IYD45FoKZ7KzqNaNwoWmw8uEy189ER/zxYnnX5f
+         QqyNKcIAVUhwVSBPw94/pTN5STnY0NcI+yVBA0dKctBJJct8wyDjDplEHucsm5Z7x56d
+         WIAwwyJbkDqIQugzkMMLvUJxVhBxHGoPUitEgbL60l9dbSfSKzMquPeM4/tyCFLMH7+Q
+         xH+FJk5bzSdrd+TKAdXqFJbduN2vIJHLafOiaqpuBtVtUO2LuVZm43qJ0M0mZsd+1Q+Y
+         ObxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746015507; x=1746620307;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W+V7cm9jvinYzZ6ye2QtNYnV8/h1lACQcCRpp+snmxs=;
+        b=vlpWzyA55ex63Qt5PS5+Vl+DR/5O08cjbZjFWcvIUT08PYs27ds2xUZZ8qBZqyBEdB
+         zgutWiKKnhOysORwm4kzy6HJeILDWXVXLzAt0yOB94egFF9X4op/Me1C3igvR4Wkb2a0
+         XgRKwP/Xru022SoQISIPN/x9SeRt5Z6N5+unN2Fr5wn8unS3KksuBBJjFb2E/I6ZhO/d
+         dvgoRWXklU4zyYnnPJVuhUDmQNWpsor9cLjdredzjR6TfwS0YV3b9lIP+wWKDuqoM04n
+         V6OrkZxqncQLLFQWGZxBO1rOVU0sXY8sfjT3vtaIrOMX0qtxHGJjBDKP8RVTtgpnp6i4
+         1FJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVVsIr+o6fEVAGNZzza7MyJuSBEEB0JX80QvEs3GP8vljeINsuCJ/uHqBcfsKuKXrsVF8MJUoHk8Lbz4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVWi/LcQeJMsfves/iRtiEmFHT3S96RwX9Thqf4i2xK82bu/79
+	bjzntqZPycvx/W0W4wAbOR9K5EZb0G4AlChQIOvBKF89jOeVaH+Yy5SZ7BEDsPo=
+X-Gm-Gg: ASbGnctDn6CWBBqFeKLgnGsdn7tYgvAqPaaambCaKuWqxbtozXU4Ns0zXvDkH6hAbvs
+	R0RKzr1DWRkj/ZOqCI+5iJLdGjErP1CQVDkOrUVB3W5CTTtjNjjXp43naLnhlHSco0yikZaJly6
+	QbE6vscW64RTERv7LXscZW7mb06c37n0dhTKvfh1iVCLEgWCpmHLUqKQVHz+4E9m3eipUvaEzWs
+	2xl/aI+I9+7SJhzvKZUIND9EDQhHJCobrBqaqrlz2E3qKIAdM4RDdd0gobUA+w2QczZJDjvUO2y
+	ay/9qCNxv0VI6R7EVLvhMjRGiUBmz/9Kagpa0EFGExFxHkFmE0i52e+wauTohNkOu0uH/ATHER6
+	xIj5BGgae/DcQtc292Zk=
+X-Google-Smtp-Source: AGHT+IELliOgWL1VLuF3keZ0L9C0SuC6eT6G/zrGEIVhFJleyHOjZQlXG23pL+OAV2vZNQZVoxOzXg==
+X-Received: by 2002:a05:6214:40a:b0:6e8:f17e:e00d with SMTP id 6a1803df08f44-6f4fe057ae1mr42658596d6.14.1746015507283;
+        Wed, 30 Apr 2025 05:18:27 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe70a07esm7585906d6.57.2025.04.30.05.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 05:18:26 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uA6OQ-0000000BFaw-0xHr;
+	Wed, 30 Apr 2025 09:18:26 -0300
+Date: Wed, 30 Apr 2025 09:18:26 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	linux-integrity@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next][V4] tpm: remove kmalloc failure error message
+Message-ID: <20250430121826.GE2260621@ziepe.ca>
+References: <20250430083435.860146-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250430-qcs8300_iris-v6-5-a2fa43688722@quicinc.com>
-References: <20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com>
-In-Reply-To: <20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746015441; l=696;
- i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=U0w1x+8Qh4hnZgZPeV+lNb1LUY4ehW5wushCpVQ3K+I=;
- b=HswQuPcZcVLOkDlLa5CS4MXv8HofsKoc70mV3bLmTGTqDYG+CAPmRhjsNofPWTYJlXMZ28kgX
- ypkTXmaWO9dDwkuTX5VOt4sm5MBQUr3ih0UE8MsQN/iki3Sm4RsE4YP
-X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
- pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=G5AcE8k5 c=1 sm=1 tr=0 ts=681214eb cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=HJafQcN7i5IhSkUYFLQA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA4NyBTYWx0ZWRfX6Bb0Ho0RtYCc 8uWKVTJZbLx6H44alY6kZC1nKhWEHpWuwk5yk3fdiujy8B9d+nFHyZQzYDWB/aSD7JHeZ0lPtm3 +zSuN+soFrBx6UBFSNLG9zMXpXwlt+PFexO24F2unD2lO0mimG/rKpsURke9/AWMB+dNwQ4i3sA
- uPUoq2hrLIyISmpoR/jojlszN28OeeGUGEMOy7SAIQdYdglZ+5IDLv8KWAec0l9vUomOfacsH8z HV7zzJ4VnpIB+QJuC+Vj1CbAK2jxU4bS8+a00FioRXrQbKEW24GfhXIIw2lislMVMOOM5GszCJj TsiG0hW0r7HRtzqLHytXoD27ZsQYMJsLvErOrUr6ihuzTor3ZdmXmbHHYQ0bi8WY+/j9Z1j8Y8r
- 1Nag6OtELpFhL7NjNjao5AK4mpesoadjgBIEuWMjYastPjyZBrZM6SUd60/2oSalG987/O53
-X-Proofpoint-GUID: D_kAtyXhAQk7f2ck2nBGe9Bb0Ss7RNK6
-X-Proofpoint-ORIG-GUID: D_kAtyXhAQk7f2ck2nBGe9Bb0Ss7RNK6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=844
- lowpriorityscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- clxscore=1015 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430083435.860146-1-colin.i.king@gmail.com>
 
-Enable video nodes on the qcs8300-ride board.
+On Wed, Apr 30, 2025 at 09:34:35AM +0100, Colin Ian King wrote:
+> The kmalloc failure message is just noise. Remove it and
+> replace -EFAULT with -ENOMEM as standard for out of memory
+> allocation error returns.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+> V1: remove trailing space after \n
+> V2: remove entire message, originally just removed a trailing space
+> V3: replace -EFAULT with -ENOMEM
+> V4: send correct fix for V3, actually return -ENOMEM
+> ---
+> 
+>  drivers/char/tpm/eventlog/tpm1.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-index b5c9f89b34356bbf8387643e8702a2a5f50b332f..87114a349fedd80296abaf3d2f5f284b5adbbdfe 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-@@ -285,6 +285,10 @@ queue3 {
- 	};
- };
- 
-+&iris {
-+	status = "okay";
-+};
-+
- &qupv3_id_0 {
- 	status = "okay";
- };
-
--- 
-2.34.1
-
+Jason
