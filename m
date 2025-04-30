@@ -1,105 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2548E13632B;
-	Wed, 30 Apr 2025 15:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474172DC760;
+	Wed, 30 Apr 2025 15:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027693; cv=none; b=CkGbR0ujBlobE/9dIoqKGQcjoQT20KvJWSq2dCURhT5q4y6lhIK6NO/D8aXM7qVul0OhAOQmpQmAOPHVMT2Coj/bLyg/hgF8z4lIEWZGOdpUPt8r0fp9TX1C8TyVI2Js8rNpyGbZ+krqGxio9ZYCpOWYV0Z0eBxlk2Z6TjAjy64=
+	t=1746027708; cv=none; b=Vh/29qT+jaNI3BJ9hE1fwEiLGZbZH7rzIxAuYmRUCt3XXWKRUrLfzf1HvGq9KabtZwTlodhK4H/kwZLt2qNS2hi6jY4H5XMs5sFOqFRgt9Az1nGREYvPwPMt8lWMy5d2kV8xKeLsEdrn50WqijT2rJh4+QBzi6RZz26fzfBACLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027693; c=relaxed/simple;
-	bh=kdy+6lyDup6NN9r8Zyqs6ADoNhHFNmabeAeGewjscmk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jP68QAsNOB/ZL6CIuqFhcjm4Dy7ZIzdsUgu0gAwx70HOGg5+l8Wn+F8NVNgqkHQxoe8zbBRD9zj48HYvPu0kJzOwH+bqcCIouUZzdzwwwGnCDu1s/sD2pQZ3p8oRFtyLXZ/hRo7iECXMFQYDiNoBsB/P+zy/DCOWoCftHmxSnBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DEF61063;
-	Wed, 30 Apr 2025 08:41:23 -0700 (PDT)
-Received: from [10.57.47.173] (unknown [10.57.47.173])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1F5783F5A1;
-	Wed, 30 Apr 2025 08:41:27 -0700 (PDT)
-Message-ID: <55d0c2a9-54a3-4063-9f57-624e7eef4720@arm.com>
-Date: Wed, 30 Apr 2025 16:41:27 +0100
+	s=arc-20240116; t=1746027708; c=relaxed/simple;
+	bh=t3Uy1BtGwRmWTleefFwzwLEd+DTXVI1qrt1CFuU5vhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IMDdRjsH1NEuE+5JLopP0pB8QkqgMCEhZCyKOPqp26TwBVZ6B9ck3aX7goV4xpd3f1NTu+2uvNT6rUWSeIzkngnjJQAL4jFQ2bhxmoOk2qvT77f24jKfVmwZl6AZL/7IG+y/hkeDWFTyX4RglVThYVIKte+m0WB38YxCZYtRE6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYMmM/96; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYMmM/96"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B85AC4CEE7;
+	Wed, 30 Apr 2025 15:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746027707;
+	bh=t3Uy1BtGwRmWTleefFwzwLEd+DTXVI1qrt1CFuU5vhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sYMmM/96Ea5WB/UvivqqMgPKi50QLTkUGDOlUIy8mwSv8AYlnTHcebGdMJlGrm5I6
+	 poHKYrdkKnHyAYuUBE7nu1gKhpcHTZbAs1Y1YVsulkzKbrBRtnijB/6VXXw1PYtAzA
+	 VnhHz91fh02nYKhlA7IAwQGMLluYkCOJunjViNaP/RcSDb8vEV+RwQcZKG56FgPGwL
+	 ZO+FnTUv8Zu59RED36Xj/HRIUw+0S2GL8BAJqk0CO/XglbIgvlCPGyvepALRhEMi01
+	 A29hzM7jzpG0WVStsQYbvZtWvcFXpsm9Wes9S3rIStawxDCGKm+Jx+IyXowYzzzPAL
+	 yt4MFdxt2J5WA==
+Date: Wed, 30 Apr 2025 18:41:43 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-integrity@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v3 2/4] tpm: support devices with synchronous send()
+Message-ID: <aBJEt41g_T7Thm6s@kernel.org>
+References: <20250414145653.239081-1-sgarzare@redhat.com>
+ <20250414145653.239081-3-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Restrict devmem for confidential VMs
-Content-Language: en-GB
-To: Dan Williams <dan.j.williams@intel.com>,
- Dave Hansen <dave.hansen@intel.com>, dave.hansen@linux.intel.com
-Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>,
- Vishal Annapurve <vannapurve@google.com>, Kees Cook <kees@kernel.org>,
- stable@vger.kernel.org, x86@kernel.org,
- Nikolay Borisov <nik.borisov@suse.com>, Naveen N Rao <naveen@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
- linux-coco@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mpe@ellerman.id.au
-References: <174491711228.1395340.3647010925173796093.stgit@dwillia2-xfh.jf.intel.com>
- <63bb3383-de43-4638-b229-28c33c1582be@intel.com>
- <681005cdd3631_1d522948e@dwillia2-xfh.jf.intel.com.notmuch>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <681005cdd3631_1d522948e@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414145653.239081-3-sgarzare@redhat.com>
 
-Hi Dan
-
-On 28/04/2025 23:48, Dan Williams wrote:
-> Dave Hansen wrote:
->> On 4/17/25 12:11, Dan Williams wrote:
->>>   arch/x86/Kconfig          |    4 ++++
->>>   arch/x86/mm/pat/memtype.c |   31 ++++---------------------------
->>>   drivers/char/mem.c        |   27 +++++++++------------------
->>>   include/linux/io.h        |   21 +++++++++++++++++++++
->>>   4 files changed, 38 insertions(+), 45 deletions(-)
->>
->> This looks like a good idea on multiple levels. We can take it through
->> tip, but one things that makes me nervous is that neither of the "CHAR
->> and MISC DRIVERS" supporters are even on cc.
->>
->>> Arnd Bergmann <arnd@arndb.de> (supporter:CHAR and MISC DRIVERS)
->>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS)
+On Mon, Apr 14, 2025 at 04:56:51PM +0200, Stefano Garzarella wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
 > 
-> Good catch, just note that until this latest iteration the proposal was
-> entirely contained to x86 specific support functions like devmem_is_allowed().
-> So yes, an oversight as this moved to a more general devmem mechanism.
+> Some devices do not support interrupts and provide a single synchronous
+> operation to send the command and receive the response on the same buffer.
 > 
->> I guess arm and powerpc have cc_platform_has() so it's not _completely_
->> x86 only, either. Acks from those folks would also be appreciated since
->> it's going to affect them most immediately.
+> Currently, these types of drivers must use an internal buffer where they
+> temporarily store the response between .send() and recv() calls.
 > 
-> I have added Suzuki and Michael for their awareness, but I would not say
-> acks are needed at this point since to date CC_ATTR_GUEST_MEM_ENCRYPT is
-> strictly an x86-ism.
+> Introduce a new flag (TPM_CHIP_FLAG_SYNC) to support synchronous send().
+> If that flag is set by the driver, tpm_try_transmit() will use the send()
+> callback to send the command and receive the response on the same buffer
+> synchronously. In that case send() return the number of bytes of the
+> response on success, or -errno on failure.
 > 
-> For example, the PowerPC implementation of cc_platform_has() has not been
-> touched since Tom added it.
+> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v3:
+> - fixed comment style [Jarkko]
+> - renamend `out_send_sync` label to `out_sync` [Jarkko]
+> ---
+>  include/linux/tpm.h              |  1 +
+>  drivers/char/tpm/tpm-interface.c | 20 +++++++++++++++++---
+>  2 files changed, 18 insertions(+), 3 deletions(-)
 > 
-> Suzuki, Michael, at a minimum the question this patch poses to ARM64 and
-> PowerPC is whether they are going to allow CONFIG_STRICT_DEVMEM=n, or otherwise
-> understand that CONFIG_STRICT_DEVMEM=y == LOCKDOWN with
-> CC_ATTR_GUEST_MEM_ENCRYPT.
-
-For CCA we don't really enforce STRICT_DEVMEM. But we do expect people
-to use it for safety reasons, but is not mandatory.
-
-Does that help ?
-
-Suzuki
-
-
-
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 2e38edd5838c..0e9746dc9d30 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -350,6 +350,7 @@ enum tpm_chip_flags {
+>  	TPM_CHIP_FLAG_SUSPENDED			= BIT(8),
+>  	TPM_CHIP_FLAG_HWRNG_DISABLED		= BIT(9),
+>  	TPM_CHIP_FLAG_DISABLE			= BIT(10),
+> +	TPM_CHIP_FLAG_SYNC			= BIT(11),
+>  };
+>  
+>  #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index 3b6ddcdb4051..3dc06836f932 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -114,8 +114,19 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>  		return rc;
+>  	}
+>  
+> -	/* A sanity check. send() should just return zero on success e.g.
+> -	 * not the command length.
+> +	/*
+> +	 * Synchronous devices return the response directly during the send()
+> +	 * call in the same buffer.
+> +	 */
+> +	if (chip->flags & TPM_CHIP_FLAG_SYNC) {
+> +		len = rc;
+> +		rc = 0;
+> +		goto out_sync;
+> +	}
+> +
+> +	/*
+> +	 * A sanity check. send() of asynchronous devices should just return
+> +	 * zero on success e.g. not the command length.
+>  	 */
+>  	if (rc > 0) {
+>  		dev_warn(&chip->dev,
+> @@ -151,7 +162,10 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>  	if (len < 0) {
+>  		rc = len;
+>  		dev_err(&chip->dev, "tpm_transmit: tpm_recv: error %d\n", rc);
+> -	} else if (len < TPM_HEADER_SIZE || len != be32_to_cpu(header->length))
+> +		return rc;
+> +	}
+> +out_sync:
+> +	if (len < TPM_HEADER_SIZE || len != be32_to_cpu(header->length))
+>  		rc = -EFAULT;
+>  
+>  	return rc ? rc : len;
+> -- 
+> 2.49.0
 > 
->> Also, just to confirm, patch 2 can go to stable@ without _any_
->> dependency on patch 1, right?
-> 
-> Correct. I will make them independent / unordered patches on the repost.
-> 
-> Next posting to fix the "select" instead of "depends on" dependency
-> management, h/t Naveen, and clarify the "'crash' vs 'SEPT violation'"
-> description.
 
+I think this is ok.
+
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+
+BR, Jarkko
