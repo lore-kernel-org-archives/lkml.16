@@ -1,336 +1,90 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD2319048A
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B371E9B0B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745999791; cv=none; b=n2dK1IaOakWlMptcXgRJ91jqUZhblNcLwrpWVGKIOdi5IdVRXGIHO46ZDHCyzPTd+e/rhd6qWf2w2MC1bJVYebtn4uLbBXkgQ2Yb78imtYsUEuhAGLuV6HoGsI8rK8TJ3KhvF1S1uTg8oQc0YNt3Trr91Gj59+uOtaIT3A1h2kc=
+	t=1745999829; cv=none; b=gA96aTej76TH73w/iMB1I3mU9gcOYZ04lzMLshwQHaB8NhSGhJ6S8bccOB8i6wotQ+T5cvBerCqzaSky0NEQxqEhzaWaRcL5PTbFVW4+Eo3+vyAYdYvyYqXO5+IeTNSFP1yh3kaAqHnF5ftlWuGj6oh7aEJxpy2mPfRo6kcT9NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745999791; c=relaxed/simple;
-	bh=RszhLQ2p9O753ftdP5ZTcrAl9pu69x1hx1AVesjP6iU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RgzrCqsAb10hsZ4TYuENiUwRMcqUXGKjrSOR+ysGnnTcWjtw4RmmsbPQ3fDsuwt8yV0LpXeiTvi0s4vI1Uq6JMuGrFlgx0XehgYMpaSfGRRchaTNVlx6I3txXEFo5azHiMNIirTizUpKUFEQMGKfsyM69M23fhMaR05iBmDjZPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85e4f920dacso528244039f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:56:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745999789; x=1746604589;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gp8rAvLAmfy0NJCQzYnwm1r1iXTxdGiBnxsm8zao6vY=;
-        b=ZVoIchVDwNi1dIZ5yQ9MuSpkPO0ZY+aTOf/jMAer6Z2FthW6xPOKhljVgg4OHZ405Z
-         8dbNwHo35gm2nqxhJSKAjDkJxOpdnxFkAcGQ3MRfaYeZYm7eGSt0jCjjjMMPoOZXSAtx
-         toHjttpYmLepf93i8dvaxjeb+HKvmp/NX7elnyZQwBJ6XsT+jPS7JE88Sao4Xvcv6ubi
-         3lV/atshGpOVfI2nlmGjdJV1lvu97c5cBQ0jbyFhNZEjZ/GTV7Oe7i3LGIfDvbJf/f8x
-         wrmVAesQRQLnE98M4wSy0U2ZiSB50UOhf3Pru3+a5KvH79R06k6oy21qI5l5Qs4Ml5NR
-         49wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa4XU80SFeuAgphkcL/XCb5Src/rBDEnzXejMdUnzno9pGIKz8BJvTSVdcezTCJFsYd6rircWOcgFRnr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWQLN3EL/SKh8vDRO3x+xyDZm07PQQhp1W/fxkzPrQQuYhWEc3
-	P6E2u0TbimlfrzoXpk1rWd8eqTRW+qV+0Qmf4L6Hv3KjEKRGCp1h0bXY6chZEPJl2NCAxykc9gR
-	mk7GcQJqL5ui4KBPE7QRzL7C1zmoB3SATUn/qFfCRuI4bZwYQguhDcr8=
-X-Google-Smtp-Source: AGHT+IEsuzlP49aU25bLG0Ked4nMxkBgAx4ToAW5PVYFXtFOCTitXhEAHRGvCM5qlxhAt8HbMSoCWumiNZMmNnUsVk+xVS9N9Bk1
+	s=arc-20240116; t=1745999829; c=relaxed/simple;
+	bh=25yNZEN7dDtpmdjFY4m4KJFrrJUhrrx3jxXXSHZGJxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k5pvcUG3+NS03YH4cH6TI6AhmCp5W+lIxoVyK1yf+Ek/qFgWqLIf/xyMFrRk408aA4AXOU6VSQiAuYssznfnEnJgx4xgkG40jLwh8df1w4vYAdTzqgWOHI7aHgW53p1Yfrf0KHqYlkfXeJaAdRsGeexiPGTtohzBigEBluuzmKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aEW4C+QL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fVSOgbcY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aEW4C+QL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fVSOgbcY"
+Date: Wed, 30 Apr 2025 09:57:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745999826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=toytAj/veEzmRd9jRr6xKEUHjrwAvubS2ClIjN5hiKs=;
+	b=aEW4C+QL3uo/km3pzlB8vPJmANLKGQ+YtVoDtMBqsb3Q0r0Zzx7+cLwOW3kRFZYIUotj29
+	6rrVv5QCL174zj7glivk4VcVQGXsUHYJ4u51dBCYt2tiP5HnZr+QYX4TUi+uXlsPo/VYiT
+	Pgfuv6qWbM2loAKJ6/7zvGOy0krafwTjkHSGkeC2mp6aRzgqG8oPVeMDWEV6vp1MXLrUjs
+	WjrJPR3X7fHKRB7h0E0wwjhmjG06nAUBKk2q0y6rdNuxi+FrBtuejPYJIOITfPTGt+Qi2v
+	M8ev5kgBS1XStwAQoIP/stX4qIDBguscGb0Bw3XqVHMVIsX7CHgJKcosXwKZpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745999826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=toytAj/veEzmRd9jRr6xKEUHjrwAvubS2ClIjN5hiKs=;
+	b=fVSOgbcYSHklMfNonKJENAOqA39ELXq+KIAkzOI6Xnm4pUVizxgUk0R+UT/KFQ3pq0kuY0
+	oqkJLRsZVuJ5kBBw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jan Stancek <jstancek@redhat.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nam Cao <namcao@linutronix.de>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] vdso: Reject absolute relocations during build
+Message-ID: <20250430095411-349b13bf-a3c7-4968-9f97-551a1ded1696@linutronix.de>
+References: <20250429-vdso-absolute-reloc-v1-0-987a0afd10b5@linutronix.de>
+ <20250429-vdso-absolute-reloc-v1-2-987a0afd10b5@linutronix.de>
+ <CAASaF6yGT0pDythQ9nTcn5=MHmLYD=gCNVc6dFXhWUO_iXJXqA@mail.gmail.com>
+ <87selqp0j8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:7287:b0:855:5e3a:e56b with SMTP id
- ca18e2360f4ac-86495f0f3cfmr285730039f.12.1745999788957; Wed, 30 Apr 2025
- 00:56:28 -0700 (PDT)
-Date: Wed, 30 Apr 2025 00:56:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6811d7ac.050a0220.16fb2c.000b.GAE@google.com>
-Subject: [syzbot] [nilfs?] possible deadlock in nilfs_page_mkwrite (2)
-From: syzbot <syzbot+3f86ff971bc63d62b932@syzkaller.appspotmail.com>
-To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87selqp0j8.ffs@tglx>
 
-Hello,
+On Wed, Apr 30, 2025 at 09:32:27AM +0200, Thomas Gleixner wrote:
+> On Tue, Apr 29 2025 at 17:17, Jan Stancek wrote:
+> > On Tue, Apr 29, 2025 at 2:56 PM Thomas Weißschuh
+> > <thomas.weissschuh@linutronix.de> wrote:
+> >>
+> >> +# Also validate that no absolute relocations are present in the object files themselves.
+> >>  quiet_cmd_vdso_check = VDSOCHK $@
+> >>        cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
+> >>                        then (echo >&2 "$@: dynamic relocations are not supported"; \
+> >> +                            rm -f $@; /bin/false); fi && \
+> >> +                      if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS"; \
+> >> +                      then (echo >&2 "$@: absolute relocations are not supported"; \
+> >>                              rm -f $@; /bin/false); fi
+> >
+> > Should this check only some sections? I'm getting lot of matches on
+> > debuginfo related sections:
+> 
+> Hmm. All architecture VDSO Makefiles have -fPIC in CFLAGS except for
+> arm64, which only adds it in arm64/kernel/vdso32/Makefile but not in
+> arm64/kernel/vdso/Makefile. Confused.
 
-syzbot found the following issue on:
+Unfortunately -fPIC does not help. It generates code that is sufficiently
+position independent for regular DSOs, but not the vDSO.
 
-HEAD commit:    ca91b9500108 Merge tag 'v6.15-rc4-ksmbd-server-fixes' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=175868d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42a9d552788177b
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f86ff971bc63d62b932
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8f91302b28da/disk-ca91b950.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/99926b0845ed/vmlinux-ca91b950.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ace62028a7c9/bzImage-ca91b950.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3f86ff971bc63d62b932@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc4-syzkaller-00021-gca91b9500108 #0 Not tainted
-------------------------------------------------------
-syz.0.145/7282 is trying to acquire lock:
-ffff88806be68610 (sb_internal#4){.+.+}-{0:0}, at: nilfs_page_mkwrite+0x8b0/0xc20 fs/nilfs2/file.c:95
-
-but task is already holding lock:
-ffff88806be68518 (sb_pagefaults#4){.+.+}-{0:0}, at: do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #5 (sb_pagefaults#4){.+.+}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_pagefault include/linux/fs.h:1948 [inline]
-       nilfs_page_mkwrite+0x21e/0xc20 fs/nilfs2/file.c:57
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
-       __get_user_pages_locked mm/gup.c:1821 [inline]
-       __gup_longterm_locked+0x105d/0x15b0 mm/gup.c:2523
-       gup_fast_fallback+0x1843/0x1d60 mm/gup.c:3417
-       iov_iter_extract_user_pages lib/iov_iter.c:1849 [inline]
-       iov_iter_extract_pages+0x35a/0x5e0 lib/iov_iter.c:1912
-       dio_refill_pages fs/direct-io.c:172 [inline]
-       dio_get_page fs/direct-io.c:213 [inline]
-       do_direct_IO fs/direct-io.c:915 [inline]
-       __blockdev_direct_IO+0x10ed/0x3310 fs/direct-io.c:1243
-       blockdev_direct_IO include/linux/fs.h:3422 [inline]
-       nilfs_direct_IO+0xed/0x120 fs/nilfs2/inode.c:267
-       generic_file_read_iter+0x319/0x510 mm/filemap.c:2871
-       new_sync_read fs/read_write.c:489 [inline]
-       vfs_read+0x4cd/0x980 fs/read_write.c:570
-       ksys_read+0x145/0x250 fs/read_write.c:713
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #4 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __might_fault+0xcc/0x130 mm/memory.c:7151
-       _copy_to_iter+0xf3/0x15a0 lib/iov_iter.c:184
-       copy_page_to_iter+0xa7/0x150 lib/iov_iter.c:362
-       copy_folio_to_iter include/linux/uio.h:198 [inline]
-       filemap_read+0x78d/0x11d0 mm/filemap.c:2753
-       blkdev_read_iter+0x30a/0x440 block/fops.c:809
-       new_sync_read fs/read_write.c:489 [inline]
-       vfs_read+0x4cd/0x980 fs/read_write.c:570
-       ksys_read+0x145/0x250 fs/read_write.c:713
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #3 (&sb->s_type->i_mutex_key#7){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:867 [inline]
-       set_blocksize+0x23b/0x500 block/bdev.c:203
-       sb_set_blocksize block/bdev.c:224 [inline]
-       sb_min_blocksize+0x119/0x210 block/bdev.c:239
-       init_nilfs+0x43/0x690 fs/nilfs2/the_nilfs.c:710
-       nilfs_fill_super+0x8f/0x650 fs/nilfs2/super.c:1060
-       nilfs_get_tree+0x4f4/0x870 fs/nilfs2/super.c:1228
-       vfs_get_tree+0x8f/0x2b0 fs/super.c:1759
-       do_new_mount+0x24a/0xa40 fs/namespace.c:3884
-       do_mount fs/namespace.c:4224 [inline]
-       __do_sys_mount fs/namespace.c:4435 [inline]
-       __se_sys_mount+0x317/0x410 fs/namespace.c:4412
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&nilfs->ns_sem){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       nilfs_set_error fs/nilfs2/super.c:92 [inline]
-       __nilfs_error+0x1ca/0x4b0 fs/nilfs2/super.c:141
-       nilfs_bmap_convert_error fs/nilfs2/bmap.c:35 [inline]
-       nilfs_bmap_propagate+0x108/0x130 fs/nilfs2/bmap.c:332
-       nilfs_collect_file_data+0x4f/0xd0 fs/nilfs2/segment.c:589
-       nilfs_segctor_apply_buffers+0x161/0x330 fs/nilfs2/segment.c:1010
-       nilfs_segctor_scan_file+0x68e/0x8e0 fs/nilfs2/segment.c:1059
-       nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1254 [inline]
-       nilfs_segctor_collect fs/nilfs2/segment.c:1547 [inline]
-       nilfs_segctor_do_construct+0x1d46/0x6970 fs/nilfs2/segment.c:2122
-       nilfs_segctor_construct+0x17b/0x690 fs/nilfs2/segment.c:2478
-       nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
-       nilfs_segctor_thread+0x6f7/0xe00 fs/nilfs2/segment.c:2700
-       kthread+0x70e/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #1 (&nilfs->ns_segctor_sem){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
-       nilfs_transaction_begin+0x365/0x710 fs/nilfs2/segment.c:221
-       nilfs_create+0xc9/0x2f0 fs/nilfs2/namei.c:95
-       lookup_open fs/namei.c:3701 [inline]
-       open_last_lookups fs/namei.c:3800 [inline]
-       path_openat+0x14f1/0x3830 fs/namei.c:4036
-       do_filp_open+0x1fa/0x410 fs/namei.c:4066
-       do_sys_openat2+0x121/0x1c0 fs/open.c:1429
-       do_sys_open fs/open.c:1444 [inline]
-       __do_sys_openat fs/open.c:1460 [inline]
-       __se_sys_openat fs/open.c:1455 [inline]
-       __x64_sys_openat+0x138/0x170 fs/open.c:1455
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (sb_internal#4){.+.+}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_intwrite include/linux/fs.h:1966 [inline]
-       nilfs_transaction_begin+0x268/0x710 fs/nilfs2/segment.c:218
-       nilfs_page_mkwrite+0x8b0/0xc20 fs/nilfs2/file.c:95
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       do_shared_fault mm/memory.c:5594 [inline]
-       do_fault mm/memory.c:5656 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
-       __get_user_pages_locked mm/gup.c:1821 [inline]
-       __gup_longterm_locked+0x105d/0x15b0 mm/gup.c:2523
-       gup_fast_fallback+0x1843/0x1d60 mm/gup.c:3417
-       iov_iter_extract_user_pages lib/iov_iter.c:1849 [inline]
-       iov_iter_extract_pages+0x35a/0x5e0 lib/iov_iter.c:1912
-       dio_refill_pages fs/direct-io.c:172 [inline]
-       dio_get_page fs/direct-io.c:213 [inline]
-       do_direct_IO fs/direct-io.c:915 [inline]
-       __blockdev_direct_IO+0x10ed/0x3310 fs/direct-io.c:1243
-       blockdev_direct_IO include/linux/fs.h:3422 [inline]
-       nilfs_direct_IO+0xed/0x120 fs/nilfs2/inode.c:267
-       generic_file_read_iter+0x319/0x510 mm/filemap.c:2871
-       new_sync_read fs/read_write.c:489 [inline]
-       vfs_read+0x4cd/0x980 fs/read_write.c:570
-       ksys_read+0x145/0x250 fs/read_write.c:713
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  sb_internal#4 --> &mm->mmap_lock --> sb_pagefaults#4
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(sb_pagefaults#4);
-                               lock(&mm->mmap_lock);
-                               lock(sb_pagefaults#4);
-  rlock(sb_internal#4);
-
- *** DEADLOCK ***
-
-4 locks held by syz.0.145/7282:
- #0: ffff8880258a0b78 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x320 fs/file.c:1213
- #1: ffff88805d73c8c0 (&sb->s_type->i_mutex_key#23){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff88805d73c8c0 (&sb->s_type->i_mutex_key#23){+.+.}-{4:4}, at: __blockdev_direct_IO+0x318/0x3310 fs/direct-io.c:1140
- #2: ffff88806d6595e0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_lock_killable include/linux/mmap_lock.h:193 [inline]
- #2: ffff88806d6595e0 (&mm->mmap_lock){++++}-{4:4}, at: __get_user_pages_locked mm/gup.c:1812 [inline]
- #2: ffff88806d6595e0 (&mm->mmap_lock){++++}-{4:4}, at: __gup_longterm_locked+0x1005/0x15b0 mm/gup.c:2523
- #3: ffff88806be68518 (sb_pagefaults#4){.+.+}-{0:0}, at: do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 7282 Comm: syz.0.145 Not tainted 6.15.0-rc4-syzkaller-00021-gca91b9500108 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2079
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
- __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
- percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
- __sb_start_write include/linux/fs.h:1783 [inline]
- sb_start_intwrite include/linux/fs.h:1966 [inline]
- nilfs_transaction_begin+0x268/0x710 fs/nilfs2/segment.c:218
- nilfs_page_mkwrite+0x8b0/0xc20 fs/nilfs2/file.c:95
- do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
- do_shared_fault mm/memory.c:5594 [inline]
- do_fault mm/memory.c:5656 [inline]
- do_pte_missing mm/memory.c:4160 [inline]
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault+0x18d2/0x5380 mm/memory.c:6140
- handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
- faultin_page mm/gup.c:1193 [inline]
- __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
- __get_user_pages_locked mm/gup.c:1821 [inline]
- __gup_longterm_locked+0x105d/0x15b0 mm/gup.c:2523
- gup_fast_fallback+0x1843/0x1d60 mm/gup.c:3417
- iov_iter_extract_user_pages lib/iov_iter.c:1849 [inline]
- iov_iter_extract_pages+0x35a/0x5e0 lib/iov_iter.c:1912
- dio_refill_pages fs/direct-io.c:172 [inline]
- dio_get_page fs/direct-io.c:213 [inline]
- do_direct_IO fs/direct-io.c:915 [inline]
- __blockdev_direct_IO+0x10ed/0x3310 fs/direct-io.c:1243
- blockdev_direct_IO include/linux/fs.h:3422 [inline]
- nilfs_direct_IO+0xed/0x120 fs/nilfs2/inode.c:267
- generic_file_read_iter+0x319/0x510 mm/filemap.c:2871
- new_sync_read fs/read_write.c:489 [inline]
- vfs_read+0x4cd/0x980 fs/read_write.c:570
- ksys_read+0x145/0x250 fs/read_write.c:713
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f75a3f8e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f75a4de1038 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00007f75a41b6080 RCX: 00007f75a3f8e969
-RDX: 0000000000001000 RSI: 0000200000000400 RDI: 0000000000000004
-RBP: 00007f75a4010ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f75a41b6080 R15: 00007fffacbb86c8
- </TASK>
-NILFS error (device loop0): nilfs_bmap_lookup_contig: broken bmap (inode number=2097152)
-Remounting filesystem read-only
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+See also https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002#c5
