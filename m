@@ -1,124 +1,174 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9CE2DC79A;
-	Wed, 30 Apr 2025 01:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437D217BA9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745975029; cv=none; b=WoDWHFrkQqn3bgq5RetyfbF23eBdRUKc2123bgd/CagVruxpaqFlBN1tf69lmt+klUvkiuKJi1x7SLcIVoP0MjNMDKe86I5wPYkQmD6WTld00eNicMOAjxe9FHcy+eFQBL3bFoRuYhA4+aQX1WozOXPddUFPeJIii9SEr+glGkQ=
+	t=1745975103; cv=none; b=rgbSI1JxKpjxqM7pjV0s+o6AG/Jqw1p9XBsmssU8mXCw3O93S+cQWNvPLdIA5rTfF1cdoJvgDfBLk9SEQFT/AV4JpB0TVBYX8ciotj/Y5I1+cigL4B4HLiSacB4zPWzqFQaqbgR8a74EYc3cgLtvg1AMLiV1k6wag8vG7C80Elk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745975029; c=relaxed/simple;
-	bh=WGkpNTZUsK7CU1xL3gjLJERNuiZl8dOwUAb+SUP1Ig8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YpYP1L0Bdh/EDdsw/ZO+nqMleA0X1aQQcy2Pj0Vfq7lAoy3ERlSIx1+EV605UGtS+9sLfqn3BADlWvw6dSKKLzwXuDzbTJco3itBjvht2iQM0dvzaoN77m/S4a1AWDaQXOnt3fi49KNX/DotuwKdXaknmA/hewk1cbnlPLm0l3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NEkhqHnF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745975103; c=relaxed/simple;
+	bh=zfMN+OuWOiL6b7Mc0kTwoXJkTCxc25MaAuv8otuWUvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dylqb0sUiUvSxmaaNATZED2f+81eb8k5aJ9imXmF1Z7TlYimSkqPc7QJa85SpKazHbuJPxIHfV6ay803pEfleIsoUtagBjmWed66ir5JMuZZsZsH4Afe1ZXgJ0gqImzJp8HD+OhSlLYq+9jPt/DuyCvum8jNv7vrPhCNIdnU5xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hn3izpPU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NEkhqHnF"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLb0HA017451;
-	Wed, 30 Apr 2025 01:03:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bAKObRc30JspqidXyvLoAP4jdwVTBsyhDzP1ky/muf0=; b=NEkhqHnF/kW58ChE
-	M7Xt+CQf0AqUv7fe+UulAJYKcKNjQs8VGEPCTdD+gfYk3rSnFVsGQhZaoHNKnSTk
-	33lIRhXs8yVI16t7fOKjtA+KLVEqrCpaTBFNJCweAQ3kdKXMqFPY8g0xVwzHvBbe
-	350yC2DT95MnqcYLrQsWL3/nSDsIxomJ4qtR3y88cufTD8tNTYas1KLiHuQ0TmLL
-	cHfgoh093CvwTQv1w+f1oj6qc4QWcH6me6J27Qm2zXWI1DogPN9zQoc++ee+K1vd
-	QvE5BgGkMz1M5/aOnRi722XKZ8VK/AAI2jDA60b8q++pTKSNU3+frsD1BUl8u2Ol
-	qPrtlA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ua8bx3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 01:03:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53U1391a027862
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 01:03:09 GMT
-Received: from [10.110.114.218] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
- 2025 18:03:07 -0700
-Message-ID: <cd88b992-5d71-495f-a0cc-8ebc07544117@quicinc.com>
-Date: Tue, 29 Apr 2025 18:03:06 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hn3izpPU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2445C4CEE3;
+	Wed, 30 Apr 2025 01:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745975102;
+	bh=zfMN+OuWOiL6b7Mc0kTwoXJkTCxc25MaAuv8otuWUvo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Hn3izpPU4vOovFUK/F2h5pSByQq/JfdnUb8Zz0UQ3uQpyVJw4iAOn7Cyip/d9yML4
+	 i4dCC2Mffrt+zo1vpw5fCDmMXKw6uDE3ORIAsMEnzs8iu01XeGoZcwjEs0qLwHyzk7
+	 e6Exhy/98dLsYC54wtQB9kmr978nQqA1hknSzAwrYWDSG1XBcIYx0sIacztxOhCW/z
+	 rq0mnEH9Js97Jy3hdSUMbId2ibJcToRezlaci6RRdS483noBOXPzYoCkTvv0/KFccG
+	 pCIY7hepDHAM6vx6BmPPQQii0WwoyHRHlmRXBRucXP80t4PiSB14S2r6yr02ZzaklF
+	 ovv6mHA7+4Z4Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A8C9CCE077B; Tue, 29 Apr 2025 18:05:00 -0700 (PDT)
+Date: Tue, 29 Apr 2025 18:05:00 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Subject: [PATCH v4 0/20] ratelimit: Reduce ratelimit's false-positive misses
+Message-ID: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
+ <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
+ <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] drm/msm/hdmi: use new helper for ACR tables
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul
-	<sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        "Dave
- Stevenson" <dave.stevenson@raspberrypi.com>,
-        =?UTF-8?Q?Ma=C3=ADra_Canal?=
-	<mcanal@igalia.com>,
-        Raspberry Pi Kernel Maintenance
-	<kernel-list@raspberrypi.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        "Neil
- Armstrong" <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman
-	<jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        "Dmitry
- Baryshkov" <lumag@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>
-References: <20250408-drm-hdmi-acr-v2-0-dee7298ab1af@oss.qualcomm.com>
- <20250408-drm-hdmi-acr-v2-3-dee7298ab1af@oss.qualcomm.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250408-drm-hdmi-acr-v2-3-dee7298ab1af@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=BNizrEQG c=1 sm=1 tr=0 ts=681176ce cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=ZDreyfFLjIJ5M6uCXacA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDAwNSBTYWx0ZWRfX3swtVQukh+U/ yn6eLt+ll67OoW8sU81QSjytvoJfn8AYb8UX2DqKjnZhxob09xSmT7oBb1XXpBPOchwj5onOgAM g61g5L14TwliACEnCps2gcQ7a566tx3pMMGGsu9jJ8d0LOoS6C5TTJbd/aMYjs+sIs/jDGxQmUp
- hViAQEUHMG/ILeUeeS4TXnEEsjN30s4azxmtMpnIePzCIe+WQLDcV6vW+8Cfe/Ev2+PXuIVZjMt RKgfwPJ8Cpycge2E6uz1WCExmTxPWVgoIH/yRwkPCw86KkQZ1i0pf/RwrvNody2AhxRdTJtV6OP mhEaljGXWWfFva2H9ErUhEuEq0OMnU5MuOmYNp0a3UO20IlFN8FfnZgXpvmQXM2Cvu6tGBBPtYv
- 8uUPTn9V1USB8R+J9/spn++NrwJkFAiZ9uaanluWxeGVlS96Y+LvrVuS92T3MrcKbnNtxvZ0
-X-Proofpoint-GUID: vde4wTqUCmlvS-pDbeysOkYKQSAYRv5b
-X-Proofpoint-ORIG-GUID: vde4wTqUCmlvS-pDbeysOkYKQSAYRv5b
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-29_08,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 clxscore=1015 spamscore=0 adultscore=0
- phishscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=674 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300005
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
 
+Hello!
 
+This v4 series replaces open-coded uses of the ratelimit_state structure
+with formal APIs, counts all rate-limit misses, replaces jiffies=0 special
+case with a flag, provides a ___ratelimit() trylock-failure fastpath to
+(almost) eliminate false-positive misses, simplifies the code, and adds
+a simple test.
 
-On 4/8/2025 6:54 AM, Dmitry Baryshkov wrote:
-> Use new drm_hdmi_acr_get_n_cts() helper instead of hand-coding the
-> tables. Instead of storing the rate 'index', store the audio sample rate
-> in hdmi->audio.rate, removing the need for even more defines.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/gpu/drm/msm/hdmi/hdmi_audio.c | 107 +++-------------------------------
->   1 file changed, 9 insertions(+), 98 deletions(-)
-> 
+The key point of this series is the reduction of false-positive misses.
+More could be done to avoid open-coded access to the ->interval and
+->burst fields, and to tighten up checking of user input for these fields,
+but those are jobs for later patches.
 
-LGTM,
+The individual patches are as follows:
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+1.	Add trivial kunit test for ratelimit.
+
+2.	Create functions to handle ratelimit_state internals.
+
+3.	Avoid open-coded use of ratelimit_state structure's ->missed
+	field.
+
+4.	Avoid open-coded use of ratelimit_state structure's ->missed
+	field.
+
+5.	Avoid open-coded use of ratelimit_state structure's internals.
+
+6.	Convert the ->missed field to atomic_t.
+
+7.	Count misses due to lock contention.
+
+8.	Avoid jiffies=0 special case.
+
+9.	Reduce ___ratelimit() false-positive rate limiting, courtesy of
+	Petr Mladek.
+
+10.	Allow zero ->burst to disable ratelimiting.
+
+11.	Force re-initialization when rate-limiting re-enabled.
+
+12.	Don't flush misses counter if RATELIMIT_MSG_ON_RELEASE.
+
+13.	Avoid atomic decrement if already rate-limited.
+
+14.	Avoid atomic decrement under lock if already rate-limited.
+
+15.	Warn if ->interval or ->burst are negative, courtesy of Petr
+	Mladek.
+
+16.	Simplify common-case exit path.
+
+17.	Use nolock_ret label to save a couple of lines of code.
+
+18.	Use nolock_ret label to collapse lock-failure code.
+
+19.	Use nolock_ret restructuring to collapse common case code.
+
+20.	Drop redundant accesses to burst.
+
+Changes since v3:
+
+o	Correctly handle zero-initialized ratelimit_state structures,
+	being careful to avoid acquiring the uninitialized ->lock.
+
+o	Remove redundant checks of the "burst" local variable.
+
+o	Add Reviewed-by tags.
+
+Changes since v2:
+
+o	Apply feedback from Bert Karwatzki, Srikanth Aithal, and Mark
+	Brown, fixing a hang that happened on some systems.
+
+o	Applied Reviewed-by tags and added links.
+
+o	Added a prototype patch from Petr Mladek that splats if either
+	interval or burst are negative.
+
+o	Added several commits that simplify the code.
+
+Changes since v1 (RFC):
+
+o	Switch from lockless fastpath to carrying out needed updates
+	upon trylock failure, per Petr Mladek feedback.  This greatly
+	simplifies the code and is a much smaller change from the
+	current code.  There is a small performance penalty compared to
+	the lockless fastpath, but not enough to matter.
+
+o	Never unconditionally acquire the lock, again per Petr Mladek
+	feedback.
+
+o	Better define effects of non-positive burst values (always
+	ratelimit) and non-positive interval values (never ratelimit
+	when the burst value is positive).
+
+o	The changes from Petr's original are supplied as five incremental
+	patches, but could easily be folded into Petr's original if
+	desired.  (Left to my lazy self, they stay as-is.)
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ b/drivers/char/random.c              |    9 +
+ b/drivers/gpu/drm/amd/pm/amdgpu_pm.c |   11 --
+ b/drivers/gpu/drm/i915/i915_perf.c   |    8 -
+ b/include/linux/ratelimit.h          |   40 +++++++-
+ b/include/linux/ratelimit_types.h    |    2 
+ b/lib/Kconfig.debug                  |   11 ++
+ b/lib/ratelimit.c                    |    8 -
+ b/lib/tests/Makefile                 |    1 
+ b/lib/tests/test_ratelimit.c         |   79 ++++++++++++++++
+ include/linux/ratelimit.h            |   13 +-
+ include/linux/ratelimit_types.h      |    3 
+ lib/ratelimit.c                      |  165 ++++++++++++++++++++---------------
+ 12 files changed, 246 insertions(+), 104 deletions(-)
