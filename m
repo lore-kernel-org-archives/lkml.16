@@ -1,118 +1,171 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386661CD15;
-	Wed, 30 Apr 2025 10:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5AA23506F;
+	Wed, 30 Apr 2025 10:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746010482; cv=none; b=BPJo1ixucZoGUhT26rUlL6wPJY5DP8IweCKzC7TtF86aY3jZqeYRiAvj6D9Gvuh7BcfdbeN7uEfVAefbpV7eUO84E2u/pqBLSiv39eFWvlKn2u/4m/Sxusppu74RVksOXv+0a1JVHu5cF6ElGIDPDSNlIo0pwGP735BoKxyBkSw=
+	t=1746010510; cv=none; b=ngGsHthm3ZTQbUL/BIq2Jr70S7NgPSelMdh9UIp1svGJQNzIth4mPtmjxMEEU0Ka7/1gQc8clOAIe7H7bjIQlHY8CPo+98j9X2ufUZrpXGIiXQQbhuoklxTdybA/sfYFZRryj9OPvirLA7HOcBSuRXXkJxSKvKZ+VC0hWLvFLTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746010482; c=relaxed/simple;
-	bh=/BtwEq+TKoL4TxiHfus1NfzLpwf48XHvtcbEQ62q0Uc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xk0w2ztHjcIIf9eiOSu72d+faR9sDlI3dhPDuE35sXg9jI8IXFiUl9AdOFqTih8f7c9dTkogaWP05w4g/vyOH0STlvf2ALAQ3umK29BsSmB8nVCivpKgnAfIJB6WTRkaVgWTiqjSaEQ6G+mkIPLBIniNbHT7HBW2/us1eXuzodo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZnYwS21byzKHMWJ;
-	Wed, 30 Apr 2025 18:54:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 39B471A0FB4;
-	Wed, 30 Apr 2025 18:54:31 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgB3219lARJoGdoLLA--.26076S3;
-	Wed, 30 Apr 2025 18:54:31 +0800 (CST)
-Message-ID: <610525a1-5fb5-475e-9842-dc145aaf8718@huaweicloud.com>
-Date: Wed, 30 Apr 2025 18:54:29 +0800
+	s=arc-20240116; t=1746010510; c=relaxed/simple;
+	bh=zxME15EebRVsIvX/fz64swPwb6igKI40zmDzxT7+w3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bCEq8bLaA4afgt0iiZIspKhrqbbZ/l24ke9U6gIfJqRbH+pPaHcUnKpRD0TNGqRKHoIeeDSPaofVCU917JFdMJzJi3BQJuFDjlrwW61iqvJbxoFYhgDGSl5amZjVp4TE1HhmeuY3YAIIFxqL3t3FxT6m/CfWdORozw4pvVTIIUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IQMq9WfL; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IQMq9WfL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746010504;
+	bh=0MBspg0Ro0uJeWy92hfImYAIv5ZNp9nMlurNTZPV5WI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IQMq9WfLLQ+aJ/iOEg9mmzEpGR7QOxmjjTF/BaSuesZ34tbXXYpE35eKbVQAXeq56
+	 GLmXoswRDPKb60ICcPKkAw1q5YhhA0NXIBzSaEfcVxowbVhHgTWBJRvOHE9hUGI7rP
+	 XM+hMoMKTebDqlO0E0+JI8ayTLzKPwymVsVdcH5ZM6JxVuweQmrxBd/1moucplo+JA
+	 NAioDmeeIPUnhUXw7K75VTdAl3763OUzvm/LwJYx/CrmlxM4bz3f+GJjKyxRn3xiy9
+	 MCHrpvWBLLieUF9SVfPjTQKmRVJYhqX1KsOZgOAva3c/TKgMMNeBRsNGL4NvjY7rsG
+	 CBdMWXAXFq/rg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZnYx367GVz4x8W;
+	Wed, 30 Apr 2025 20:55:03 +1000 (AEST)
+Date: Wed, 30 Apr 2025 20:55:03 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: luogengkun@huaweicloud.com, Andrew Morton <akpm@linux-foundation.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, dianders@chromium.org,
+ joel.granados@kernel.org, song@kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>
+Subject: Re: [linux-next]Build Failure: kernel/watchdog.c:936:2: error: too
+ many arguments
+Message-ID: <20250430205503.4a316f48@canb.auug.org.au>
+In-Reply-To: <562a79d1-e8a4-4d8f-a576-47c017aadf93@linux.ibm.com>
+References: <339e2b3e-c7ee-418f-a84c-9c6360dc570b@linux.ibm.com>
+	<20250428084117.31215b8c@canb.auug.org.au>
+	<33aabaae-5789-4b67-bd06-06b79d03ea38@linux.ibm.com>
+	<562a79d1-e8a4-4d8f-a576-47c017aadf93@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] ext4: fix incorrect punch max_end
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
- wanghaichi0403@gmail.com, yi.zhang@huawei.com, libaokun1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250430011301.1106457-1-yi.zhang@huaweicloud.com>
- <20250430011301.1106457-2-yi.zhang@huaweicloud.com>
- <ykm27jvrnmhgd4spslhn4mano452c6z34fab7r3776dmjkgo7q@cv2lvsiteufa>
- <8c1f9230-a475-4fc3-9b2d-5f11f5122bb3@huaweicloud.com>
- <4u2frbxygagij6uxryijqmzgarhotk4cw2w4knm4rpivll5qvg@2d2wd2742v36>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <4u2frbxygagij6uxryijqmzgarhotk4cw2w4knm4rpivll5qvg@2d2wd2742v36>
+Content-Type: multipart/signed; boundary="Sig_/AozVZ7CvelvBtRXQa7Sc_o5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/AozVZ7CvelvBtRXQa7Sc_o5
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgB3219lARJoGdoLLA--.26076S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFyUXrykAr1fXr15Ww4rZrb_yoW8ur1fpF
-	y3CF1UKw4kG3y7u34IqFn8ZFnFy3WkAF4UXr4rWr13XF90kw1SkFy2ga1j93ZFqw4Ikw40
-	qas8tryfA34UKaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/4/30 18:09, Jan Kara wrote:
-> On Wed 30-04-25 16:44:25, Zhang Yi wrote:
->> On 2025/4/30 16:18, Jan Kara wrote:
->>> On Wed 30-04-25 09:12:59, Zhang Yi wrote:
->>>> From: Zhang Yi <yi.zhang@huawei.com>
->>>>
->>>> For the extents inodes, the maxbytes should be sb->s_maxbytes instead of
->>>> sbi->s_bitmap_maxbytes. Correct the maxbytes value to correct the
->>>> behavior of punch hole.
->>>>
->>>> Fixes: 2da376228a24 ("ext4: limit length to bitmap_maxbytes - blocksize in punch_hole")
->>>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
->>>
->>> Thinking about this some more...
->>>
->>>> @@ -4015,6 +4015,12 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
->>>>  	trace_ext4_punch_hole(inode, offset, length, 0);
->>>>  	WARN_ON_ONCE(!inode_is_locked(inode));
->>>>  
->>>> +	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
->>>> +		max_end = sb->s_maxbytes;
->>>> +	else
->>>> +		max_end = EXT4_SB(sb)->s_bitmap_maxbytes;
->>>> +	max_end -= sb->s_blocksize;
->>>
->>> I think the -= sb->s_blocksize is needed only for indirect-block based
->>> scheme (due to an implementation quirk in ext4_ind_remove_space()). But
->>> ext4_ext_remove_space() should be fine with punch hole ending right at
->>> sb->s_maxbytes. And since I find it somewhat odd that you can create file
->>> upto s_maxbytes but cannot punch hole to the end, it'd limit that behavior
->>> as much as possible. Ideally we'd fix ext4_ind_remove_space() but I can't
->>> be really bothered for the ancient format...
->>>
->>
->> Yes, I share your feelings. Currently, we do not seem to have any
->> practical issues. To maintain consistent behavior between the two inode
->> types and to keep the code simple, I retained the -= sb->s_blocksize
->> operation. Would you suggest that we should at least address the extents
->> inodes by removing the -=sb->s_blocksize now?
-> 
-> Yes, what I'm suggesting is that we keep -=sb->s_blocksize specific for the
-> case !ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS).
-> 
+Hi Venkat,
 
-Sure. Let's do it.
+On Wed, 30 Apr 2025 11:57:12 +0530 Venkat Rao Bagalkote <venkat88@linux.ibm=
+.com> wrote:
+>
+> On 28/04/25 3:11 pm, Venkat Rao Bagalkote wrote:
+> >
+> > On 28/04/25 4:11 am, Stephen Rothwell wrote: =20
+> >>
+> >> On Sat, 26 Apr 2025 20:39:26 +0530 Venkat Rao Bagalkote >> <venkat88@l=
+inux.ibm.com> wrote: =20
+> >>> I am observing below build failure on IBM Power8 server with >>> linu=
+x-next-20250424 repo.
+> >>>
+> >>> This issue seems to be introduced by the below commit. After >>> reve=
+rting the below commit, kernel build is successful.
+> >>>
+> >>> Bad Commit: 6b07f9a0fa41 watchdog: fix watchdog may detect false >>> =
+positive of softlockup
+> >>>
+> >>> Note: To hit this issue, one should first resolve this [1] >>> <https=
+://lore.kernel.org/all/e8bf676e-7bf0-4896-b104-ac75e1b22d2e@linux.ibm.com/>
+> >>>
+> >>> Repo: >>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-=
+next.git
+> >>> Branch: master
+> >>> GCC: 8.5.0 20210514
+> >>> ldd (GNU libc) 2.28
+> >>>
+> >>> Attached is the .config file.
+> >>>
+> >>> Errors:
+> >>>
+> >>> kernel/watchdog.c: In function 'lockup_detector_reconfigure':
+> >>> kernel/watchdog.c:936:2: error: too many arguments to function >>> '_=
+_lockup_detector_reconfigure'
+> >>> =C2=A0 =C2=A0 __lockup_detector_reconfigure(false);
+> >>> =C2=A0 =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>> kernel/watchdog.c:926:13: note: declared here
+> >>> =C2=A0 =C2=A0static void __lockup_detector_reconfigure(void)
+> >>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>> kernel/watchdog.c: In function 'lockup_detector_setup':
+> >>> kernel/watchdog.c:940:2: error: too many arguments to function >>> '_=
+_lockup_detector_reconfigure'
+> >>> =C2=A0 =C2=A0 __lockup_detector_reconfigure(false);
+> >>> =C2=A0 =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>> kernel/watchdog.c:926:13: note: declared here
+> >>> =C2=A0 =C2=A0static void __lockup_detector_reconfigure(void)
+> >>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>> kernel/watchdog.c: In function 'proc_watchdog_update':
+> >>> kernel/watchdog.c:962:2: error: too many arguments to function >>> '_=
+_lockup_detector_reconfigure'
+> >>> =C2=A0 =C2=A0 __lockup_detector_reconfigure(thresh_changed);
+> >>> =C2=A0 =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>> kernel/watchdog.c:926:13: note: declared here
+> >>> =C2=A0 =C2=A0static void __lockup_detector_reconfigure(void)
+> >>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>>
+> >>> If you happen to fix this, please add below tag.
+> >>>
+> >>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com> =20
+> >> Yeah, the CONFIG_SOFTLOCKUP_DETECTOR unset version of
+> >> __lockup_detector_reconfigure() was not updated :-( =20
+> > =20
+>=20
+> Hello Stephen,
+>=20
+>=20
+> Will this be fixed, or from now on we will have to set the SOFTLOCKUP_DET=
+ECTOR always in the .config file.
+>=20
+>=20
+> Trying to understand the way forward.
 
-Thanks,
-Yi.
+Yeah, it is still not fixed today :-(  hopefully soon.
 
+This is caused by commit
+
+  4ab274088f03 ("watchdog: fix watchdog may detect false positive of softlo=
+ckup")
+
+in the mm-nonmm-unstable tree.  I have reverted it today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/AozVZ7CvelvBtRXQa7Sc_o5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgSAYcACgkQAVBC80lX
+0GyMJQf/a2ML4aSxdL3xgsweb58kulLB2+PpoWlAvezJiNw7yZBa5Uwd1ucVY+k1
+GTAJPNeOnkJ/RPCNXm6fdTDnwKOZ12B46kEIR0W1K63kqAcpXCDZUaxB3tDMw8m9
+/66QFt/njcmuk70d1pAm2IlgMWCr8aWasZEdXUv53zTLD0yd+MCf9GPHMAdyz45P
+6cKTaqxgK0+1QGye2aoRICxcUfsCmRVKur31idDVu2g+qhKFwcChGajC/v/meQFg
+pnnhrvhbHAwRGHqf1ApeMYhvrgRIq4PSahtF+fxvZrOz/4rvyogE0JxT61MQ+9jA
++9uCiecyrRRvReQJQH3BvIc99eSYzA==
+=5OVw
+-----END PGP SIGNATURE-----
+
+--Sig_/AozVZ7CvelvBtRXQa7Sc_o5--
