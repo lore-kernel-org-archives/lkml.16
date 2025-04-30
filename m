@@ -1,78 +1,82 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A241625E459
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8DD25B1C2
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036665; cv=none; b=NRuqmjE0jo7P/wmZALACLXbbkynhRIn5uriImVobz3bqCfgN91MX9GvMo3PQBR/RKfqssiRz3US+i3tGEexUFHuScighYxppMMnH3ATuvvweLMM/Oj2Ctwvgv0n1/cCaB8I01xDHcFgPDWqaZPbU9FoP2sbJu6GZ8M11qsJMXNU=
+	t=1746036664; cv=none; b=qyjAXmuCaMQs/oMANcA4+JHAgpry14xPxX8FmTj5Ry2XQNQ7ZNmcmIjkOaZ8tNPWfD3vOfXQArjYdjCe3gykeJFj0YQsvdRcmif+5TsV3dkopumhOwimpPjDfLE94r7G0cN+HbhsopGCYY69pURtj7Uw7TCYrdAqTWFz4mvNu9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746036665; c=relaxed/simple;
-	bh=tOQlNTP1RqbOsNTRy4G8zcVvFccJipJHU0Bp1l+fieo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cgwPvgXw1VITOveiVkPxsl3Ko1UX0z1J7XhAzrzsJbaeyO3x9Higl9q0ut03n0EC7VpUHy2UJS5wvl2sX75bGT0PCT94HNRr7OAbn7grkJkUmzhw//pzZ1lCaCOgpLA/emKxy+vN+LRsWa9PryKrvxG7v7rITgtf6e1lz6+/P1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PVnKCqxz; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746036664; c=relaxed/simple;
+	bh=bc+l52lzMgg34Vw41X2Wy/FxQj+yccNEeALSbRGK27Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tPFNaYi8pCZf09DZ8G3r4iAPUd3FC0Sl/V7HMpEWZcWmY+yR0DXDiuj+ro4LSOGxia/0YlAAJ4FzW8sFuZDY//kAtNggvl4N8bXhnoj0BBAdptSLnOABf73vICXioH6yIrtzgqm1uxkSgacEbngBV/biM7NMigY9eO9Zl03jbwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aqsIxHzr; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVnKCqxz"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736c277331eso1328943b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aqsIxHzr"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476977848c4so2562121cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746036663; x=1746641463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BFR7AoJacqW7HaZwiZ98V1thSCcTnJzoeJlhOpgrdoc=;
-        b=PVnKCqxzIfG/dWwUZYih25S3PHWQKtw8BZsSRMBv26nxhx0/injVKD7dZu3S/1m0IJ
-         K6pjXaEKW8Tzo7gOgQzrm4xDy2QupfpH27Wjtv11ouMqTKwm5QTxr6pO/6knrDu4oEG1
-         RxuL7cowLUIWBR5F1Wi6XT5d+4VsM9m/jzXJ32jp/12vFxW/rOLBF7uet6uuP92Hmuap
-         TB+KKEB5xjwK0lBJm2FauR+wrxz8iZ80MqKDomlTq3BGVjFHsYFSN54vZZsc8uF7KiMr
-         PqXLz0DJlKzGm0y0IGxmo4SKBoHxIygLp2onbWbozHoMXJCLWApPS9ds42HeHox5t/vt
-         JMOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036663; x=1746641463;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=gourry.net; s=google; t=1746036662; x=1746641462; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BFR7AoJacqW7HaZwiZ98V1thSCcTnJzoeJlhOpgrdoc=;
-        b=i8xn/6VsoFAqlIzbUuYYNqvgCOkDrGi9IXOTNZEXo6kNC7xJWVAXQFYOSlBIbyAMn5
-         m+rFvNHFKh34kNDQxHhU5V8nifbl8Kz2Chm6qfNIha6VIeQRP+vTo4Gzyrdb2dYHWJBv
-         0ZQ9/zBH4+J/G6mwQQ3cgxrm6UrcL94McOxcy/CvqGa/93+1K+XjUiifns1q/StOMUaP
-         DxWFRFGwh6XmmHCn39IM4oIghjxsVKWVKOBqulTjQMFUqumJ2+KTn0RkjwNzUhn30gTx
-         cN4db2r44PXPkmG8KxmhKqUTUV+V+34DiUFvSNs24PzMB1ifvMWlUWfUKsIeDTJKQQIu
-         owcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAZBtYNx4Z211dNLuXr53YFvxk03e3S2wqcT5z1MMD1MW4fhTBrAZMImmwOaAmXm2vQ0YFIMXlXlM7vgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypIeikWYKqzDF9Jy7t8ziXyfMXW9uvYEFdIorWOquOn9/paZ7K
-	F4Lj73HZ32p6ppbIojNCKGBoYsnn+6MtEZqJuiceHQ5VrzEER3ba
-X-Gm-Gg: ASbGncs0GuiPZoiPH/Ez3lzvXVjefGpKeKLq4GpeMpCgl9lDP2o74OL2K0S9Ry0mmg0
-	sZKmewASiWf5Mb7QpbfIg/6BEUfoPI8lpXYhbVxMEfxJqMI/Yr5AQYwrsD1F92K6O9ShPF9KiKf
-	9m05+Cdd1Vtj0YD/kRiXiMaQUAU+8U5FLAd5UPnLrfbjYIS/Elp36LhikwIiI3uBNZ5/HweA9D6
-	iHY0b44OjSv4x85FXMsx31sYihGu2Yyv7tAhvwCl6zFlgTPLZwmPyoWs0djwSfkJubGbCo+pQk7
-	mQWXVPIfbiMlKTWggzOcqxkoSn54IWyJb3dWNU7oNHAo3D1jjCE4luEJ3n4K4g==
-X-Google-Smtp-Source: AGHT+IGNWoQRjjYwV+5Fgmq5l0irQkbd37wxK1tufot32watwCeXNfCMZBa34D0poHbU92Yq+iX/3g==
-X-Received: by 2002:a05:6a21:6da5:b0:1f3:3864:bbe0 with SMTP id adf61e73a8af0-20b9734f2d1mr559643637.8.1746036662637;
-        Wed, 30 Apr 2025 11:11:02 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([106.37.122.198])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039947976sm1983822b3a.84.2025.04.30.11.10.58
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 30 Apr 2025 11:11:02 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
+        bh=U3rVHINvuxD50BlXL+fWePXRUBl5vPBCCVNAK+caSv0=;
+        b=aqsIxHzrJDIZL/iYJd6VsqJJjdiFAzqfLxhI4c46o8J6KLCx/Y3bPNgzOBp2E+01Pr
+         OXf43OGl9NJZz4y9nguXpWSkt1s5CD5lV9m3Dm5VxODJDQmXuDJgMd4Wr4VAsu2k+i4b
+         539NJAljiflbVOnndzTRP6wK3IG6IZ9hZUuHWBdFz/6o61bNb3GwWaymj6UVJ/hOPSh8
+         PEg9kHMtIRg70gxZ+0VZ4F1nd+6zfNDXGEuGSuMZwQxg+gFaND4xa/FMOVrpiHdiXAAu
+         /G8pMCsxJOeo76u0sC9OdJtBFHpSYzwUxqIaA2/2sqw+LHEE5DORUh41lJn8z+ShKsxn
+         w20g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746036662; x=1746641462;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U3rVHINvuxD50BlXL+fWePXRUBl5vPBCCVNAK+caSv0=;
+        b=ocHdv0KvdK+kSK1IwXgL0DWLBXKK8sxUsFsTayToADE2HSfQFHuz2nE0DlO4ESJiDD
+         FLJF3Z67EYyw7w5k1RW2eH0MgN3SzE5r8frdtPZa2Fb/al+4vUek3CPBUdQKsLvdSqbT
+         2RfPx/o2R1xKZCFkPSmq3qHdixND9IT8N8Whoas0MM7iCcc4QikPWivGV9aBWUOANiqm
+         44DH+NVaf5zb2gQupgYjh7mRNwsRMZiBZrzWD8wjrXkmNfB3y6s+QVRQXrThaYu7bPjK
+         rPKCfnQIMVzyih9d2Owo7ODWUx/VgNTXgPwo2WPh8cVQPlDX1S3NHXd8VlSIx+eyaFR6
+         B12g==
+X-Forwarded-Encrypted: i=1; AJvYcCUhdohp8KljdnqkQjNAj8r6BPt6HPOD4Iyd3sOq0ypS9JdvQNhvoHVs6blSo42WylzDs8LR9ZRW5aCf/xw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV2EMuUCY4f0qcqQ43uRBek6JJGNAhc1oPpl/p3HEoNOS+nbBO
+	q5CMmgoQ8pR6Kqs5E5hcoJNMMV0nl7lQ95Bp/2zsi6YT2NJH07IsM3Tj41RDUXc=
+X-Gm-Gg: ASbGncvEaxF251VaBrQ2ZlmDZ5/BEfB12+3h7Meb4StV8LQsgzOFlC85QKegEFbxqax
+	+NsrOufmal3lVvpqe0nnI4cEOLH3bLUD6MDMFPYpc/DUwkgyJa6VtFpmuURLxvJ0Y/x7/h6rcKD
+	wdHXcGd8WyQ1fgRNwqrSacZLEUgQaqiwubvlB7qwipo/HX0+7jn6SAORgkCqvO20C4HYaa9w6lL
+	hBHH/vJ5IlD6uonbHLiv353LMTBF/eJeTzaMeXZbxyXPawTrZINEcue/tRq9Vms08XtEzq7CIKL
+	C5MITlBMUyDVD20Z3cGGXPV4uz1KLhJzBwsOAhX000iICS2cWslzEL0W+H6FRrg/ZZAzhKdd8tT
+	7B7bu6B18ZAVQPOY1WQnJgDbLSlyI
+X-Google-Smtp-Source: AGHT+IFEFexCZkfsgjT0Bdcj5OkkLcxTMyz8IGrh8K077WV+JwvSahKI4mujBFQCFuESr0+In0WTAQ==
+X-Received: by 2002:a05:622a:5815:b0:477:e7c:a4c with SMTP id d75a77b69052e-489c5212aebmr68148911cf.39.1746036661817;
+        Wed, 30 Apr 2025 11:11:01 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 11:11:01 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v3 0/6] mm, swap: clean up swap cache mapping helper
-Date: Thu,  1 May 2025 02:10:46 +0800
-Message-ID: <20250430181052.55698-1-ryncsn@gmail.com>
+	kernel-team@meta.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	corbet@lwn.net
+Subject: [RFC PATCH v2 01/18] cxl: update documentation structure in prep for new docs
+Date: Wed, 30 Apr 2025 14:10:31 -0400
+Message-ID: <20250430181048.1197475-2-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
-Reply-To: Kairui Song <kasong@tencent.com>
+In-Reply-To: <20250430181048.1197475-1-gourry@gourry.net>
+References: <20250430181048.1197475-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,52 +85,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kairui Song <kasong@tencent.com>
+Restructure the cxl folder to make adding docs per-page cleaner.
 
-This series removes usage of folio_index usage in fs/, and remove swap
-cache checking in folio_contains.
-
-Currently, the swap cache is already no longer directly exposed to fs,
-and swap cache will be more different from page cache. Clean up the
-helpers first to simplify the code and eliminate the helpers used for
-resolving circular header dependency issue between filemap and swap
-headers, and prepare for further changes.
-
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
+ Documentation/driver-api/cxl/index.rst           | 16 +++++++++++++---
+ .../cxl/{ => linux}/access-coordinates.rst       |  0
+ ...emory-devices.rst => theory-of-operation.rst} | 10 +++++-----
+ 3 files changed, 18 insertions(+), 8 deletions(-)
+ rename Documentation/driver-api/cxl/{ => linux}/access-coordinates.rst (100%)
+ rename Documentation/driver-api/cxl/{memory-devices.rst => theory-of-operation.rst} (98%)
 
-V1: https://lore.kernel.org/linux-mm/20250427185908.90450-1-ryncsn@gmail.com/
-Changes:
-- Collect Reviewed-by.
-- Fix a build bot error.
-- Slightly update commit messages to cover a few review concerns.
-
-V2: https://lore.kernel.org/linux-mm/20250429114949.41124-1-ryncsn@gmail.com/
-Changes:
-- Collect Acked-by.
-- VM_BUG_ON to VM_WARN_ON and minor code style update.
-
-Kairui Song (6):
-  fuse: drop usage of folio_index
-  btrfs: drop usage of folio_index
-  f2fs: drop usage of folio_index
-  filemap: do not use folio_contains for swap cache folios
-  mm: move folio_index to mm/swap.h and remove no longer needed helper
-  mm, swap: remove no longer used swap mapping helper
-
- fs/btrfs/extent_io.c    |  2 +-
- fs/f2fs/data.c          |  4 ++--
- fs/f2fs/inline.c        |  4 ++--
- fs/f2fs/super.c         |  2 +-
- fs/fuse/file.c          |  4 ++--
- include/linux/pagemap.h | 29 ++++-------------------------
- mm/gup.c                |  1 +
- mm/memfd.c              |  1 +
- mm/migrate.c            |  1 +
- mm/page-writeback.c     |  1 +
- mm/swap.h               | 18 ++++++++++++++++++
- mm/swapfile.c           | 15 ---------------
- 12 files changed, 34 insertions(+), 48 deletions(-)
-
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index 965ba90e8fb7..fe1594dc6778 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -4,12 +4,22 @@
+ Compute Express Link
+ ====================
+ 
++CXL device configuration has a complex handoff between platform (Hardware,
++BIOS, EFI), OS (early boot, core kernel, driver), and user policy decisions
++that have impacts on each other.  The docs here break up configurations steps.
++
++.. toctree::
++   :maxdepth: 2
++   :caption: Overview
++
++   theory-of-operation
++   maturity-map
++
+ .. toctree::
+    :maxdepth: 1
++   :caption: Linux Kernel Configuration
+ 
+-   memory-devices
+-   access-coordinates
++   linux/access-coordinates
+ 
+-   maturity-map
+ 
+ .. only::  subproject and html
+diff --git a/Documentation/driver-api/cxl/access-coordinates.rst b/Documentation/driver-api/cxl/linux/access-coordinates.rst
+similarity index 100%
+rename from Documentation/driver-api/cxl/access-coordinates.rst
+rename to Documentation/driver-api/cxl/linux/access-coordinates.rst
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/theory-of-operation.rst
+similarity index 98%
+rename from Documentation/driver-api/cxl/memory-devices.rst
+rename to Documentation/driver-api/cxl/theory-of-operation.rst
+index d732c42526df..32739e253453 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/theory-of-operation.rst
+@@ -1,9 +1,9 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ .. include:: <isonum.txt>
+ 
+-===================================
+-Compute Express Link Memory Devices
+-===================================
++===============================================
++Compute Express Link Driver Theory of Operation
++===============================================
+ 
+ A Compute Express Link Memory Device is a CXL component that implements the
+ CXL.mem protocol. It contains some amount of volatile memory, persistent memory,
+@@ -14,8 +14,8 @@ that optionally define a device's contribution to an interleaved address
+ range across multiple devices underneath a host-bridge or interleaved
+ across host-bridges.
+ 
+-CXL Bus: Theory of Operation
+-============================
++The CXL Bus
++===========
+ Similar to how a RAID driver takes disk objects and assembles them into a new
+ logical device, the CXL subsystem is tasked to take PCIe and ACPI objects and
+ assemble them into a CXL.mem decode topology. The need for runtime configuration
 -- 
 2.49.0
 
