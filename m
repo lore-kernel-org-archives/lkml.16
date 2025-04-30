@@ -1,126 +1,146 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8192B7FBA2;
-	Wed, 30 Apr 2025 17:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A4725F980
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746034574; cv=none; b=jOlxR9oZu3dm5v0fVyBcKPCMMIcbJBX7aIf2qVYPFB99uUv+jjMpPUKiBYB4Rm33sq+0X0AXv7khlSn/xzQ5h1xIXqlXm61zqM3cV9+Ok3O1GiQlqbqWsEs2m7jNr4JLPLJu7+bkAM9WFcjMB9MXMvVxwuEyPyaYNpT4VbySGNg=
+	t=1746034651; cv=none; b=Mv0bE+XbOQOJRa5q3YsDW1nwrg6mbUnEbCY8JcaaKS78EJ4nQZ9WFb2R7vaDVuF4djrs87ixdr78OdfCRyRUJd9O6oaHz6998dtCnXP5ZhnEJy99dwPHMxJSXDGM1pj5RogRdipZs5m7MI76NFBevYjnIzCS3EIKLduteKYm7CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746034574; c=relaxed/simple;
-	bh=ak9YUCFArsM5aUPhK2jd2yrJ29Vauu0uJrHsSTZ9vhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pa1PHyFZHxlogZ6XMMnuHvQdHgAPB0bPbFDGvvT+31Hqn+IxN5EVrgbQwaas65CSPcDZE5mBtkMlbulT/xjKNVtvQ0nzPTOkzGlw6IRajMZA+xhq8pfNt1cWso7LcbNTDV3kPYFjDslBpzrInBDsYTVzOsMBE04NcrtgGmjp3Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YBirQRGs; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746034651; c=relaxed/simple;
+	bh=OaA5OCQkvQnVP7nf8AXqDZtBH7PFGtrlg3Uojswc5M0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kdKxQNojhV2/K7w32AOesWjOYUs4dCrsAm8OK0w7z9f+yVDFeGWh+1Ov87S6iLDVuZUforFy4fk9RROQNbWJ+gn9L3TBbKoJPnVX8cW9MSrps2Re/uJlZKh+Y0wSw2MDktxcj+PhEqGDAzAt8crpRFFfO/keb3wwi0TNbAIEhJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wEgiSrDm; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YBirQRGs"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53UHYglH994677
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 30 Apr 2025 10:34:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53UHYglH994677
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746034492;
-	bh=MVcFuH6LQX3Y3pUhS9pDt2jTv3OOuhGgVjMgZBwFQbU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YBirQRGsh/eKhYCU46jEVunfYnCZZLGJwrkUur+AVnLfZOgM2knIRNzrZbf9yWCo9
-	 juTOLbfakM++FVNYbWI7VMM61OBGpjeTocu/tJJcKM4G8I/1t6+b+PzT4AnPvVbz0h
-	 BbdU7/90+cjC0oKiyPmbG4DiLeYyIE6yfLjoMHDwWuBzrqeLRRM4YyYJ5f9/sXGXHU
-	 egrQpYb03Y9EciKRAdv2n6yXgLPSMuEFconn56YWuD3tYuPf6WIqsEFB7eR6/ZBS7g
-	 hYXTVsGSsffm09JBcLUTgarngUDGWX8wE0EpOGSInhMhUwDxstW72Csx0RoTmWX5Jv
-	 fG5/w1SY9Cpug==
-Message-ID: <480f6bf5-20ea-47a0-a1be-3f3cf15227b6@zytor.com>
-Date: Wed, 30 Apr 2025 10:34:42 -0700
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wEgiSrDm"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso486161fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746034647; x=1746639447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B80QHmr+sB5OMT7DkCFdd8/2a+nIvyDwd83EjF1b7wg=;
+        b=wEgiSrDm4PpSIjcw4EnkIIIArFYyjm6Q9haUgNQ/RKw3qhK51kDS61qWy497RzVCua
+         80fVOm38TTTHGnJF8FCvpw3Pjc7Br3IQz30Rr0iivVfXN3ShsRdQxUM0A1e9jzp872yM
+         WciFlw222dUjrrGLh/nLG3GXF5jNzh7DTD30hKTGeMABlJ6SZEwY0rB0CouP5MNEJ0vo
+         a7kSoZ26W54U/U6Jt701vdd7yNzl0a0bapMZxb/chsDgKtWGi5B2NleAwwlv423wjY0N
+         LhCppanyRKWo9jNiK7AWFJA2svGZ6obonekccVTObeR8Jf5Gg37Lbaek1uhu83CHepJd
+         uTuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746034647; x=1746639447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B80QHmr+sB5OMT7DkCFdd8/2a+nIvyDwd83EjF1b7wg=;
+        b=DyRdPfoKGV603ljG3mxKPGkkyQhQL+HNXWzZL6nhCaBiQ33/aa8LNiS+S60oMmQpbA
+         Tksdxro9XxFtW6+C7sDjzpe7wHUw2Dw/NZRF9rOSYYGuroWHysqORMVfZKKfSd6ON5yw
+         M/szU/SWBeoAgV0XebP38C3TwnrQWR8bEF844U+niHHrPNIDYRMnMZrq5GFrX+y0vt9/
+         dHEZoCenK8LRwJ4ayRi8+od6yIo1dlTEj9Mg7sSppIaLDid6kuokavFzh/3Sw11FPveq
+         3pVqFo5zkKrA7OYR3aQ1hfndMGhW3Iuu79dopfGIOU2V7PaDB+5PsFgSKdM7pH3cVneI
+         PRpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVc77pDlqRqIRwCZoyu2jcwDP/uxACaa4z3j33NArWRDwyxIUcEzcXrjg79XUW+1C1YiHPYXZzlW/U4wLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXynxt5a7HG9FumoLiMeH0D3OymGAJEyGh48qUmtCPmSAadfY3
+	6N2eC6PpmwNk9qlloSNPXV39Q/v+gc65Og78oji6jgRYFt3f60Chk/mWAAUSpn/5bwxEkaDA9ya
+	SKDpKxmbfNCbOEF1pS8rJZUsLuwbEJBMt+M2ABw==
+X-Gm-Gg: ASbGnculNrJkiTuDrgxvrq35m3gNJroCiOd1QPFUMSwnI8uN02ko4IW9Fj7OxXILeVs
+	5AjetL3edrmwj7e7nba4g6wb3zS6UoeBVtDtpUThRwkxw3H/IIeQ2Xt177Zl9VvTqWF+i7igOq8
+	7ARHVyvUqR4LKiJlXdiEKtYWWu/6TI9pdFiEjyTx4hK72fiqwXUUzrgw==
+X-Google-Smtp-Source: AGHT+IHEUyDS2y73x5UTLVTCAeSkmZ9cGIaS0WUiShuP4klNjjtKcVRhzpqZk/qxLOTTSObt/mVmSixEfyP9TzJHf3w=
+X-Received: by 2002:a05:651c:2112:b0:30b:a185:47d8 with SMTP id
+ 38308e7fff4ca-31e69d17438mr13186651fa.4.1746034647109; Wed, 30 Apr 2025
+ 10:37:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-2-xin@zytor.com>
- <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
- <c16677bd-ee63-4032-8825-7d2789dd7555@zytor.com>
- <d1bf0657-1cc5-b6ec-5601-f31efefacd9a@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <d1bf0657-1cc5-b6ec-5601-f31efefacd9a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
+ <20250408-gpiochip-set-rv-powerpc-v1-2-73dc1ebc6ef1@linaro.org> <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
+In-Reply-To: <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 30 Apr 2025 19:37:14 +0200
+X-Gm-Features: ATxdqUEh34Gz1POqWO9v2IKaGBTgS6zz7pi2s7vMr2oV8EN8tMuslc97xocJ6hQ
+Message-ID: <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] powerpc: 83xx/gpio: use new line value setter callbacks
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/2025 2:17 AM, Ilpo Järvinen wrote:
-> While this is not my subsystem so don't have the final say here, you had
-> to explain quite much to prove that (and reviewer would have to go through
-> the same places to check). Wouldn't it be much simpler for all if all
-> those .c files would just include <asm/msr.h> directly? No need to explain
-> anything then.
-> 
-> Also, similar to what you're doing for some tsc related things in this
-> series, somebody could in the future decide that hey, these static inline
-> functions (that use .*msr.*) belong to some other file, allowing msr.h to
-> be removed from arch/x86/events/perf_event.h. Again, we'd need to add
-> asm/msr.h into more .c files. This is the problem with relying on indirect
-> includes, they create hard to track dependencies for #includes done in .h
-> files. If we actively encourage to depend on indirect #include
-> dependencies like that, it makes it very hard to_remove_ any #include
-> from a header file (as you have yourself discovered).
+On Wed, Apr 30, 2025 at 7:33=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 08/04/2025 =C3=A0 09:21, Bartosz Golaszewski a =C3=A9crit :
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > struct gpio_chip now has callbacks for setting line values that return
+> > an integer, allowing to indicate failures. Convert the driver to using
+> > them.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >   arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 6 ++++--
+> >   1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powe=
+rpc/platforms/83xx/mcu_mpc8349emitx.c
+> > index 4d8fa9ed1a67..d4ba6dbb86b2 100644
+> > --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> > +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+> > @@ -92,7 +92,7 @@ static void mcu_power_off(void)
+> >       mutex_unlock(&mcu->lock);
+> >   }
+> >
+> > -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int =
+val)
+> > +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int v=
+al)
+> >   {
+> >       struct mcu *mcu =3D gpiochip_get_data(gc);
+> >       u8 bit =3D 1 << (4 + gpio);
+> > @@ -105,6 +105,8 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsi=
+gned int gpio, int val)
+> >
+> >       i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctr=
+l);
+> >       mutex_unlock(&mcu->lock);
+> > +
+> > +     return 0;
+>
+> i2c_smbus_write_byte_data() can fail, why not return the value returned
+> by i2c_smbus_write_byte_data() ?
+>
 
-You're right, it makes a lot of sense from maintenance point of view.
+The calls to i2c_smbus_write_byte_data() in this driver are
+universally not checked. I cannot test it and wasn't sure if that's on
+purpose so I decided to stay safe. Someone who has access to this
+platform could potentially fix it across the file.
+
+Bartosz
+
+> >   }
+> >
+> >   static int mcu_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, =
+int val)
+> > @@ -123,7 +125,7 @@ static int mcu_gpiochip_add(struct mcu *mcu)
+> >       gc->can_sleep =3D 1;
+> >       gc->ngpio =3D MCU_NUM_GPIO;
+> >       gc->base =3D -1;
+> > -     gc->set =3D mcu_gpio_set;
+> > +     gc->set_rv =3D mcu_gpio_set;
+> >       gc->direction_output =3D mcu_gpio_dir_out;
+> >       gc->parent =3D dev;
+> >
+> >
+>
