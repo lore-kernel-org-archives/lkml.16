@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AA5347C7
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A191122A7E3
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746047299; cv=none; b=l/ggfbl+pKvvAr+/jfWKYzRRstoij+JsMVVT/QpnuQyqRWHszO1fwcLKrMmiq7Bea+QDgEj8lrmjOH5i8rwlLphi2piGjlrrvaGWeL81aHCzxQkPI8z+VZGi9HPyjkLIpXUDF2UuEbGvYpaHGArGLFUN78VQp77lawwfslFezp4=
+	t=1746047311; cv=none; b=cja6ZGcIFY3rBZdu5zCMEhoWm+CMIbPaJa3K4FtXeT/pQhRbxnUsttYvp6T6bQ9PamdCNyACKkQggyt+0BeeTX2ntjsozscyNzVCksf/C1P761vJWAy2IQh7+E50WtAJ/ZIN0lGkRptTJvSP4uToEW00w4hnH2pYAS/MtUNioaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746047299; c=relaxed/simple;
-	bh=1WlT2SrSfy0Td2d5Rk5U/Sxd4MjTMw+198rYgCZ7nok=;
+	s=arc-20240116; t=1746047311; c=relaxed/simple;
+	bh=/n6J6p/kYlfXs9g3AL90pF00gHuw03vUedzRYFzCSMA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TepfFsQEaLML871tN6kUgIV/8y/p9PaK3tTKfHvZt/F6WnX7Qj1m4YKqnyuWeyHEE5o2paawwymeBWoBX6i2b+6l/E+G6cmkE3WGMadEuE3k8KQ8bvSWDenv6v+3OapJ4LEs5Z0j8uSRBB8TSVo9SwHTR7c3yo8bbsRFY8O1gNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KSr0N+RE; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=PVHOEZAthmIowOR1Wr2ZT2f4quD4is8pAlAUWpkohWSc3NW+nXGgIYahnAeit+gDBRn9I1gJGqAOBjxMqzT9/OJmN+kesAfGMGp/46QMUlBSK/qMgQA5Nrhk5RknU4WdLw17nzIRTr0qj0OOKxgrr3d+8+uId068VpXGms5F4aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Git5eqQi; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSr0N+RE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Git5eqQi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746047295;
+	s=mimecast20190719; t=1746047308;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=01jBPxnqk92t1rPGznj6ym7/qLqG6tY/jU5pL3ZoH4k=;
-	b=KSr0N+RE+BAVIWbT4w/HCovqvH8cWmTw3lV/Abm47FuBZ2C1LmvbVHVatge43UuaqRkN4i
-	lVtlXbECXF/fvWWdCHjFqbOtJfa/upb88wd8xJ0ZLthXXWHh5YTYZhoyM6Sho2LnZI5Fed
-	VQ7Ja81vrUnTesCN8qd27UHa3jEZJAU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Zf75Wi3ZWE/mWR/ajf5F8uvVnkwMZAW0yZvw06r6h3g=;
+	b=Git5eqQi/z2cVb7YuyCqPCYjxN1Mg5tk1PHP6KnjjrFdcyaPGpk23j417SNxHgR2yfJ8Vz
+	Et9OuUnWlIUOAAnlBpXZz1jEGFQ9CuhRdVA/ZsCdSzI7WcKGiQAKoMuiy2BNaiQwEP93wO
+	rtjbAJxgIniVNSo7C6ChNEPUQ6VC8W8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-145-GBKVeOL4O7GDNr2WeMO0bQ-1; Wed, 30 Apr 2025 17:08:13 -0400
-X-MC-Unique: GBKVeOL4O7GDNr2WeMO0bQ-1
-X-Mimecast-MFC-AGG-ID: GBKVeOL4O7GDNr2WeMO0bQ_1746047292
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912539665cso576149f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:08:13 -0700 (PDT)
+ us-mta-15-bomchxBfOlqlP6uNRjHilg-1; Wed, 30 Apr 2025 17:08:26 -0400
+X-MC-Unique: bomchxBfOlqlP6uNRjHilg-1
+X-Mimecast-MFC-AGG-ID: bomchxBfOlqlP6uNRjHilg_1746047306
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ea256f039so1526725e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:08:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746047292; x=1746652092;
+        d=1e100.net; s=20230601; t=1746047306; x=1746652106;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=01jBPxnqk92t1rPGznj6ym7/qLqG6tY/jU5pL3ZoH4k=;
-        b=b/nDKtV+cJXoAdIWjH4iH1Wi3g0bswsCNFB9fq0nLnwtIFu099ITPzwS0gy3G/dgow
-         qbCDMTQcMyM0FQDImqBQZH2FVeGMW3lXifWo87XZoffgH50Ckecz2Bv4RcUz3A14PWZW
-         Hq7xKp8JNHPWaHi1gBdK31ONb/R5YBD53s8qnJgKPu9NfEv3i3TjARh9Uu5eaoF02AKB
-         Pkv+LyillKwATmYrugDxJszR2KFVmiv93xTOHQ442nPb29t8JctSaWpq9a4VdwFxiDFr
-         Jnpi15LHLI6vJ4Uu5WbsNksyJzl+nzSpjJd32wMdzHimHzhGZXCPaZKh1YZ5k8exu9oq
-         9OXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1/WeWgcrGzCZbRuqVm7/ygjDvcy87TzKL1xutniPRr+oZox1l/ghBmeUVCZxZOaKnAeAqrah8wNBTRy8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+K2r1/npZAS1Jfh2+5EhUyohcxy6JUlrxKETiQw5YX9CgeDNP
-	L0kDgC7b/u97Im52YkpsY2koO2pa6bgK1EGWzg5J0l/LojVJojTqaHw/VguASo1X9qpYVHluOHU
-	4BYjr1oKFk6Iqvk9129/oXGL4ooO0EgyBIs8/DeFafo3mwVF8Yz/4PboAvS/XdQ==
-X-Gm-Gg: ASbGncsIp3mV0Uvorq/cXZY0Ky5b1zXTkvglglBR+2pucDm6iA5Sod+KoswnMlyuOSC
-	vc2t3eSHKnWO6iT4f/qiKtOqXBG9AF1x5bMfP75GsURqbTlkyz22wcY3yZ9RL/og7JBHq3kFYCf
-	2diUFDiT4YO6IX5Rln0V0JZ1BNSA5r7QP5/lCt8FLofiQZ0hg4FZaTXt7ZM5NVzfoGNIaV3qlHX
-	e4SAYV8C9y6WyNLrnuj4Qf+s7gbN1K1I0lq5asrcIEsPUAItNuF5NjTJmbMEpI63XlCX1E85eQx
-	LFK7zU2W8LTy7xBepDC9KZpG0Q0yn95TKG5EPsDRheShAh6ZWb1f6YPh8252w95mTd+BNSH2oYM
-	A7IZOMoGwMi5MEzZlp9nB/im5VPNLm4Ryp0d0X48=
-X-Received: by 2002:a5d:684a:0:b0:39f:d13:32a with SMTP id ffacd0b85a97d-3a092d028ccmr748159f8f.29.1746047292486;
-        Wed, 30 Apr 2025 14:08:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHn7bC7vT1tiu/n8jrljv5sjGW6uSdNlOCmXc7ddSIDa2k3vXUMwpJkn2Ldnsb3A0+SQjpNkA==
-X-Received: by 2002:a5d:684a:0:b0:39f:d13:32a with SMTP id ffacd0b85a97d-3a092d028ccmr748144f8f.29.1746047292033;
-        Wed, 30 Apr 2025 14:08:12 -0700 (PDT)
+        bh=Zf75Wi3ZWE/mWR/ajf5F8uvVnkwMZAW0yZvw06r6h3g=;
+        b=Xn56YGEVoSFRiOV9lID7kncWTM2EnaruRcr4vIhHtJIZhLtTsy9UizLP1WqfPTWlti
+         dAsjiniOEw3pCjte5LFHnCNnYysqh14Swf3CGiDRxBEH8WjAQF7O+8RwydDt7lOcavC4
+         9/snRfc3wzSZBhj1auWegV0kUeaPjO3emRFg5Z70WO5wxlhRStJBSED0S6YTEYthjqSY
+         3niwMIINJllM3uSZDNvSwb8jfLRz5GKeSfnXpk6EgNG0+7d5qZB/060QUWEIhAfqrqyw
+         DN/G79okelYsmRJVSuhC3y34o4Fmiw4aHijgks2G3j6u1VnxhkXWjyAgGNUVB8wmaDQD
+         owDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWfxaJI/y5O5d0ce7Uh8j29gxPBdEFWKaM6UWSKQYwI7OfJCsLRfnCIJKswdusX21SSinuwMRPrhsvnPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaL4Fn/TKYgvbEbVmaTYfvVr6682cbs7ksygX5hsdxJffUawpa
+	6jmkhHbH11pYJ6mnwHsISKLKIp0b218bVRZXhLPZvAeToQgg1yH31H3obN7dxrjHmjl8eoN5R9p
+	3SzceMBfTeKmozjBF+x7JgRKsFX41BtL9QJMrAFHz66Pj3zZyMr89L9hGcYw+Yw==
+X-Gm-Gg: ASbGnctZK7c34Jb+A8EvQHnFJKCAG4s8Wu2qIGtzc6avHWanC7hih0Y7NmwkIRiQngH
+	lDai9s4T/vpppi/xPbBzZd7jxUkWdgSLWW/JGu9nnvYvpY5fjcXOInbGVvIzg5wUOCgsjVwBy3C
+	QMdHkyQ8zZZ8s0tE55YLiirFkUxh384Q+PRUFQP5Ym1kK1DrUd2gvtWz99lXIAQjm4p7h4ZNTQr
+	gQDNaf0LGwpmLVV6CTPFROThWupHsadBSuf/VyZKokdXbPuFdOne+oZ17qIpjRnnlrds7CiqAOH
+	rvXjhy6TolVafvaQWaEiVA7vVMuUt2XYwMq6UWv4SExTrOJQWxHnEhbwStGVlyIhj6zuIBhLKvM
+	FOn1AmXp/aFLpdE1oftuIJ+qEo19vvELU09eOnzw=
+X-Received: by 2002:a05:6000:2af:b0:3a0:8af9:f379 with SMTP id ffacd0b85a97d-3a094003b02mr12347f8f.0.1746047305830;
+        Wed, 30 Apr 2025 14:08:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEh2kIvvrmMWEfDRj9ATD8PLw6GQnjab2hqVipDv6tY3UvlIRVoqYxbhRVvgkhSMRGShw2KQ==
+X-Received: by 2002:a05:6000:2af:b0:3a0:8af9:f379 with SMTP id ffacd0b85a97d-3a094003b02mr12334f8f.0.1746047305525;
+        Wed, 30 Apr 2025 14:08:25 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c745:a500:7f54:d66b:cf40:8ee9? (p200300cbc745a5007f54d66bcf408ee9.dip0.t-ipconnect.de. [2003:cb:c745:a500:7f54:d66b:cf40:8ee9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca543bsm18124715f8f.34.2025.04.30.14.08.11
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07a5ed2e0sm15523808f8f.39.2025.04.30.14.08.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 14:08:11 -0700 (PDT)
-Message-ID: <5e6cd2c8-b0d1-436a-96e7-b8cb7f6d75cc@redhat.com>
-Date: Wed, 30 Apr 2025 23:08:10 +0200
+        Wed, 30 Apr 2025 14:08:25 -0700 (PDT)
+Message-ID: <97e55ba8-2627-47ec-9707-71b039b07d26@redhat.com>
+Date: Wed, 30 Apr 2025 23:08:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,17 +75,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] fuse: drop usage of folio_index
+Subject: Re: [PATCH v3 2/6] btrfs: drop usage of folio_index
 To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
  Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
  Chris Li <chrisl@kernel.org>, Yosry Ahmed <yosryahmed@google.com>,
  "Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>,
  Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org,
- Miklos Szeredi <miklos@szeredi.hu>, Joanne Koong <joannelkoong@gmail.com>,
- Josef Bacik <josef@toxicpanda.com>, linux-fsdevel@vger.kernel.org
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+ Qu Wenruo <wqu@suse.com>
 References: <20250430181052.55698-1-ryncsn@gmail.com>
- <20250430181052.55698-2-ryncsn@gmail.com>
+ <20250430181052.55698-3-ryncsn@gmail.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -133,7 +134,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250430181052.55698-2-ryncsn@gmail.com>
+In-Reply-To: <20250430181052.55698-3-ryncsn@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -145,40 +146,32 @@ On 30.04.25 20:10, Kairui Song wrote:
 > folio->index instead.
 > 
 > It can't be a swap cache folio here.  Swap mapping may only call into fs
-> through `swap_rw` but fuse does not use that method for SWAP.
+> through `swap_rw` but btrfs does not use that method for swap.
 > 
 > Signed-off-by: Kairui Song <kasong@tencent.com>
-> Cc: Miklos Szeredi <miklos@szeredi.hu>
-> Cc: Joanne Koong <joannelkoong@gmail.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: linux-fsdevel@vger.kernel.org
+> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
 > Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Qu Wenruo <wqu@suse.com>
 > ---
->   fs/fuse/file.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>   fs/btrfs/extent_io.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 754378dd9f71..6f19a4daa559 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -487,7 +487,7 @@ static inline bool fuse_folio_is_writeback(struct inode *inode,
->   					   struct folio *folio)
->   {
->   	pgoff_t last = folio_next_index(folio) - 1;
-> -	return fuse_range_is_writeback(inode, folio_index(folio), last);
-> +	return fuse_range_is_writeback(inode, folio->index, last);
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 197f5e51c474..e08b50504d13 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -3509,7 +3509,7 @@ static void btree_clear_folio_dirty_tag(struct folio *folio)
+>   	xa_lock_irq(&folio->mapping->i_pages);
+>   	if (!folio_test_dirty(folio))
+>   		__xa_clear_mark(&folio->mapping->i_pages,
+> -				folio_index(folio), PAGECACHE_TAG_DIRTY);
+> +				folio->index, PAGECACHE_TAG_DIRTY);
+>   	xa_unlock_irq(&folio->mapping->i_pages);
 >   }
 >   
->   static void fuse_wait_on_folio_writeback(struct inode *inode,
-> @@ -2349,7 +2349,7 @@ static bool fuse_writepage_need_send(struct fuse_conn *fc, struct folio *folio,
->   		return true;
->   
->   	/* Discontinuity */
-> -	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio_index(folio))
-> +	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio->index)
->   		return true;
->   
->   	/* Need to grow the pages array?  If so, did the expansion fail? */
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
 
