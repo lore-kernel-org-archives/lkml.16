@@ -1,439 +1,145 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2796725B673
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DD925C83D;
+	Wed, 30 Apr 2025 10:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746009576; cv=none; b=GayZ7Z7sRiVYyQS8txxRQo+7chMs15LlKYeCl1TwRH6fhzGxjCOij8v93jo//+sOBRZ6u1TmFOz5aK05SgybFWn1MobaKdXherK8E2aE1DkCOj+GXe6b5izEo0aS4H54MvRyararqXTV/3i4v5n30aRb8YkjQeuYqXkLSiZqvvU=
+	t=1746009584; cv=none; b=MQxcJm370pj3ELR3fJDBLs7rzswwE6t0va0h/NeDtM6U0jRvvo0k3yyol3F/Ayk/We6Y7IwqMBqcdMnylLVA9FatfrMFZUjc+eahrpvqyD29t/uZcFlbnjsrfZ2aVEFIr1moqHlo1UHBAXlAFjL+3o92enK5VB/LEtGEMgZjvng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746009576; c=relaxed/simple;
-	bh=d4RLgrZhyX8/Pg01VVv6h4TRP9Jm0WhqcAfzUScAuus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q4E6YAtqf0VA4BxkDl23IRa6+BRVHvf3d/WDZEd4JxnporsvppFmSreohoPMWpxWH1A/zI67zBKFyX2mPNc6mNYycsoQihHC9XuMJDCy6GTmGJu/5GkFxpw2F4s+orQYdx0yE6y6pamAvG8dKMUMU4gcrbzb2cWyrKAUcIAiAJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WYUJSuQi; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746009584; c=relaxed/simple;
+	bh=zbvnlFVWj0XKZR0nvcVIWzHP+vCohCj3wb6obVt2udg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=EIBQi3/nc2lNokTBNNta3g4O/QSvlnn+GcXbGX0vRnwoO1i7XGFdupX9As7NtD8Dx+YMYjyiVTwXjmgRktIclubD88k5+LBGtWxCLE4Ue5LHlqOB6REIUqtyTIj39UM4nFlclVUsjKhCzQTM8HzJYuttdd0r0pIyZMaqQs1MS1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fNI8AFpL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WYUJSuQi"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-525b44ec88aso3098917e0c.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746009571; x=1746614371; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ylwsJDrt4vv0hbcQwuLON7i6O6OaEoOImrGaJinpJGA=;
-        b=WYUJSuQiHnLWQFEYYBzqqz86iErDXvdI3apuelCg6jve83A0yametRUdLhmSHehiQn
-         Yh63xjU6qVvvGvlm+AbQBEvUmwccu9X6y6rEXHuyStGVErRL0TqYpd8hDLrtiAT8FBlx
-         US3achPj3jJcmcFAb49P1wHB9P5T0VndXXrPlKa8kgSpNLM3yUamrmwNHmtpdd2xjTOw
-         /LsIshelkLwlAMpFHXxck9GIvJISBUKWNriBrHQNxlYLpG3WrJAbIDMEwHPPezHUO9sk
-         7wM8CDPaj6cisAmsN0G3hSOj8a+Fr+OVHNbijwmsA1f/Q2JWpw+tratfAUVMBVJYWMvs
-         FAtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746009571; x=1746614371;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ylwsJDrt4vv0hbcQwuLON7i6O6OaEoOImrGaJinpJGA=;
-        b=DEhxwegarlQfngI5qykYdzySVIHEUchh4RivCFaq5JR3xMTfGdRTttV7XzyaWCuLRR
-         OJA1n+iXWmpCnw1MsPbT+zjnKnCnpvddcAVilKL/Xl5rVjzJZvYImY4meGVqVPEvptOb
-         UI1fZLkdxzKAI5xIDoyBiUu7XiKwveqMsJbvVgJvweXw/blbwvhnxeV4d+P894gBfMKQ
-         QhNYk50LTSKSgw6xcFsNKT2oYchbiXZj12hHqxEGkloB8JymrhHQcNt8S198rpFcys89
-         7kp/8VayoIMh8e9qPId7624e9Cx4WjZTDrWUY70dmWK6ljnfzuGQWEJ4hiClJIwOTfoK
-         c1EA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6flut/5MHrQxde8EFOiLwC7oWeKu9nHh4c1dH84yxaaPK1KpUT8lFLqE/WwFTplYeYky0AUHKs/3O0Qk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvPsmOeyY9/sF2dZ0HCJs89hDD0+V5DCffyt+xkwCtF2XDoxdL
-	f5s8yjoPStH6xBcPPZ5aTr8d+7s0eV8CSPaxbFRCKGvMTgiE/vdGmF1Uj3aAY5cjLwvJEstl39C
-	DpDcWABBpCri74CmLEv5qdF/Ex0VMUqIDXkJ/Kw==
-X-Gm-Gg: ASbGnctRHoEaFar/gX4kZaWjG5uKTF/99/SiSIbNang+4TlgKT0dgUQW7y+eoulNEpA
-	x5kIt+dDgnXPPyuZHbKZGquG87RZp6nETyx5VbhVn66sirrlvFPGbN0/TObNF+KVdDjplW/LRbI
-	3srNOqwwaARKtOLpxXqOl1/G6AnyZNCCWH67uqRndrHlcx/N8Zt8l5GakfmW8A3Yzj
-X-Google-Smtp-Source: AGHT+IEGrbJc8JxtRP89FE4xXSHbjaEwuC2CG8y2YBkTpepRUy6crz/1pfGUdfcI0IOB0Gksvo22zIGEP03RI2L25Ng=
-X-Received: by 2002:a05:6122:25d8:b0:52a:d0f3:1ec1 with SMTP id
- 71dfb90a1353d-52ad0f31f5fmr358417e0c.0.1746009570825; Wed, 30 Apr 2025
- 03:39:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fNI8AFpL"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9XaSs005570;
+	Wed, 30 Apr 2025 10:39:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0i+DaVo6pdGgXdnezJYZ73V9TZmxM2s3l3IAPHGSMRI=; b=fNI8AFpLNRpzZ8M7
+	C9wR/AczxfqAn3sxxrJNl/SI7FwpNISb8rax51CuvzFshHGSbkfzZykipoJeaifZ
+	lQ9t6g+HHLYPg1fPaGT9gGoaZ/UJNp94jgMdlMqAPZ0VHSYzrBCHh44MXYAVYa/b
+	r9Oi9WxWj0R+0NMarwnbXNRyJHP74ovjfYPlJ3ckyd0rR+OZgmrpIHgGW7/pA2Z+
+	LwEkUgOUPMEunp8f+iNLJXk5NbIGpcE9BThhcmIEZwIT1r/aZ/rcN4OKyaFTDcok
+	mCriU93gelbhwTjXGPcRlO4s+eDhFeppUo3HnD9tUHQ7o93P0Xzw2i5A4zwT+aqc
+	UtSutw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u89sqn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 10:39:37 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UAdaXv015654
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 10:39:36 GMT
+Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 30 Apr 2025 03:39:31 -0700
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Date: Wed, 30 Apr 2025 16:08:58 +0530
+Subject: [PATCH v2 4/4] arm64: dts: qcom: Add camera clock controller for
+ sc8180x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429161051.743239894@linuxfoundation.org>
-In-Reply-To: <20250429161051.743239894@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 30 Apr 2025 16:09:18 +0530
-X-Gm-Features: ATxdqUGXDo7pBa4eq0bS5qcWzmVSW-p2cU-XdgUlse38VYng22TRg-n231NAwjI
-Message-ID: <CA+G9fYuNjKcxFKS_MKPRuga32XbndkLGcY-PVuoSwzv6VWbY=w@mail.gmail.com>
-Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, clang-built-linux <llvm@lists.linux.dev>, 
-	Nathan Chancellor <nathan@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, linux-s390@vger.kernel.org, 
-	linux-mips@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250430-sc8180x-camcc-support-v2-4-6bbb514f467c@quicinc.com>
+References: <20250430-sc8180x-camcc-support-v2-0-6bbb514f467c@quicinc.com>
+In-Reply-To: <20250430-sc8180x-camcc-support-v2-0-6bbb514f467c@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Jagadeesh
+ Kona" <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=B7i50PtM c=1 sm=1 tr=0 ts=6811fde9 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=fv2zVKLHILqpzYTyU3AA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: LZboMHRVAwK78GaWp9rXBQP06Pb0GFYA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA3NSBTYWx0ZWRfX/8V3msOs/QOS uhcTmAJiKfFuwOBxRqI72IfqfBUiD5O1/sFGB+69dhmROQeUbClXHyh4pReZzu+AtYtuHV6hWxA GZMUlNhIO15nvlc/yXZ2rhx/NCfab7dDwI3UQZRZmNymLNYaP8zyd+mgOSEjS45TQtTJBrSdzt4
+ 6IstZBSug0ZjstA9F0ldaL5u9FgiDM4VewW/38HVOBAY6TWHSOgN8KdGuD4JHJdPD1scgWq1W+u USxB0ipVY6tgoWNP8bs3xczhpUxJiJUD3maZrYnut7+g3leRI7HD8qkr2jAI1Co3gXpgzIKFzUd 5uZKE3Vbby4gk29Kxvi6gqiiBNHZWlHSsscYTYGwd23bQ5fGErbvRc+YZ1j3RwyhUo56ituhwz3
+ EgYxn57/ZTeeGEIy/zdJElKjJ1Zj33Gd/s4g49Qhbjg5qtFDymXZPO1GLCAA5GqGYiDNNK+1
+X-Proofpoint-ORIG-GUID: LZboMHRVAwK78GaWp9rXBQP06Pb0GFYA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 mlxlogscore=854 lowpriorityscore=0
+ malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300075
 
-On Tue, 29 Apr 2025 at 23:31, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.1.136 release.
-> There are 167 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.136-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Add device node for camera clock controller on Qualcomm
+SC8180X platform.
 
-There are three build regressions and two build warnings.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-1)
-Regressions on x86_64 with defconfig builds with clang-nightly toolchain
-on the stable-rc 6.1.136-rc1.
+diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+index b84e47a461a014871ef11e08d18af70bec8e2d63..e53c242fda12b2b53a27e549e2e2e2ead9e88cf1 100644
+--- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/clock/qcom,gcc-sc8180x.h>
+ #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
++#include <dt-bindings/clock/qcom,sc8180x-camcc.h>
+ #include <dt-bindings/interconnect/qcom,icc.h>
+ #include <dt-bindings/interconnect/qcom,osm-l3.h>
+ #include <dt-bindings/interconnect/qcom,sc8180x.h>
+@@ -2934,6 +2935,19 @@ usb_sec_dwc3_ss: endpoint {
+ 			};
+ 		};
+ 
++		camcc: clock-controller@ad00000 {
++			compatible = "qcom,sc8180x-camcc";
++			reg = <0 0x0ad00000 0 0x20000>;
++			clocks = <&gcc GCC_CAMERA_AHB_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>,
++				 <&sleep_clk>;
++			power-domains = <&rpmhpd SC8180X_MMCX>;
++			required-opps = <&rpmhpd_opp_low_svs>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 		mdss: mdss@ae00000 {
+ 			compatible = "qcom,sc8180x-mdss";
+ 			reg = <0 0x0ae00000 0 0x1000>;
 
-* x86_64, build
-  - clang-nightly-lkftconfig
-  - clang-nightly-x86_64_defconfig
+-- 
+2.25.1
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Build regression: x86_64 clang-nightly net ip.h error default
-initialization of an object of type 'typeof (rt->dst.expires)'
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build error x86_64
-include/net/ip.h:462:14: error: default initialization of an object of
-type 'typeof (rt->dst.expires)' (aka 'const unsigned long') leaves the
-object uninitialized and is incompatible with C++
-[-Werror,-Wdefault-const-init-unsafe]
-  462 |                 if (mtu && time_before(jiffies, rt->dst.expires))
-      |                            ^
-
-## Build x86_64
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28268204/suite/build/test/clang-nightly-x86_64_defconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stale-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28268204/suite/build/test/clang-nightly-x86_64_defconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28268204/suite/build/test/clang-nightly-x86_64_defconfig/details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjfmTxuT4qMCUSSj4ZwJQJrqY/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjfmTxuT4qMCUSSj4ZwJQJrqY/config
-* Toolchain: Debian clang version 21.0.0
-(++20250428112741+e086d7b1464a-1~exp1~20250428112923.1416)
-
-2)
-Regressions on s390 with defconfig builds with gcc-13, gcc-8 and
-clang-20 and clang-nightly toolchains on the stable-rc 6.1.136-rc1.
-
-* s390, build
-  - clang-20-defconfig
-  - clang-nightly-defconfig
-  - gcc-13-allmodconfig
-  - gcc-13-defconfig
-  - gcc-8-defconfig-fe40093d
-
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Build regression: s390 pci_report.c fatal error linux sprintf.h No
-such file or directory
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build error S390
-arch/s390/pci/pci_report.c:14:10: fatal error: linux/sprintf.h: No
-such file or directory
-   14 | #include <linux/sprintf.h>
-      |          ^~~~~~~~~~~~~~~~~
-compilation terminated.
-arch/s390/pci/pci_fixup.c: In function 'zpci_ism_bar_no_mmap':
-arch/s390/pci/pci_fixup.c:19:13: error: 'struct pci_dev' has no member
-named 'non_mappable_bars'
-   19 |         pdev->non_mappable_bars = 1;
-      |             ^~
-drivers/s390/virtio/virtio_ccw.c:88:9: error: unknown type name 'dma64_t'
-   88 |         dma64_t queue;
-      |         ^~~~~~~
-drivers/s390/virtio/virtio_ccw.c:95:9: error: unknown type name 'dma64_t'
-   95 |         dma64_t desc;
-      |         ^~~~~~~
-drivers/s390/virtio/virtio_ccw.c:99:9: error: unknown type name 'dma64_t'
-   99 |         dma64_t avail;
-      |         ^~~~~~~
-drivers/s390/virtio/virtio_ccw.c:100:9: error: unknown type name 'dma64_t'
-  100 |         dma64_t used;
-      |         ^~~~~~~
-drivers/s390/virtio/virtio_ccw.c:109:9: error: unknown type name 'dma64_t'
-  109 |         dma64_t summary_indicator;
-      |         ^~~~~~~
-drivers/s390/virtio/virtio_ccw.c:110:9: error: unknown type name 'dma64_t'
-  110 |         dma64_t indicator;
-      |         ^~~~~~~
-drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_drop_indicator':
-drivers/s390/virtio/virtio_ccw.c:370:25: error: implicit declaration
-of function 'virt_to_dma64'; did you mean 'virt_to_page'?
-[-Werror=implicit-function-declaration]
-  370 |                         virt_to_dma64(get_summary_indicator(airq_info));
-      |                         ^~~~~~~~~~~~~
-      |                         virt_to_page
-drivers/s390/virtio/virtio_ccw.c:374:28: error: implicit declaration
-of function 'virt_to_dma32'; did you mean 'virt_to_page'?
-[-Werror=implicit-function-declaration]
-  374 |                 ccw->cda = virt_to_dma32(thinint_area);
-      |                            ^~~~~~~~~~~~~
-      |                            virt_to_page
-drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_setup_vq':
-drivers/s390/virtio/virtio_ccw.c:552:45: error: implicit declaration
-of function 'u64_to_dma64' [-Werror=implicit-function-declaration]
-  552 |                 info->info_block->l.queue = u64_to_dma64(queue);
-      |                                             ^~~~~~~~~~~~
-drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_find_vqs':
-drivers/s390/virtio/virtio_ccw.c:654:9: error: unknown type name 'dma64_t'
-  654 |         dma64_t *indicatorp = NULL;
-      |         ^~~~~~~
-cc1: some warnings being treated as errors
-
-## Build s390
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28268210/suite/build/test/gcc-13-defconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28268210/suite/build/test/gcc-13-defconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28268210/suite/build/test/gcc-13-defconfig/details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjfcqRiiDhTc38knEJ0xbygtF/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjfcqRiiDhTc38knEJ0xbygtF/config
-* Toolchain: Debian clang version 21.0.0
-(++20250428112741+e086d7b1464a-1~exp1~20250428112923.1416)
-
-3)
-Regressions on mips with defconfig builds with clang-nightly
-toolchains on the stable-rc 6.1.136-rc1.
-
-* mips, build
-  - clang-nightly-allnoconfig
-  - clang-nightly-defconfig
-  - clang-nightly-tinyconfig
-
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Build regression: mips kernel branch.c error default initialization of
-an object of type union
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build error mips
-arch/mips/kernel/branch.c:35:6: error: default initialization of an
-object of type 'union (unnamed union at
-arch/mips/kernel/branch.c:35:6)' with const member leaves the object
-uninitialized and is incompatible with C++
-[-Werror,-Wdefault-const-init-unsafe]
-   35 |         if (__get_user(inst, (u16 __user *) msk_isa16_mode(epc))) {
-      |             ^
-
-
-## Build mips
-* Build log:  https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28266863/suite/build/test/clang-nightly-tinyconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28266863/suite/build/test/clang-nightly-tinyconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d/testrun/28266863/suite/build/test/clang-nightly-tinyconfig/details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjfMHLLGL9OjZrjKvW9u8uy4b/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjfMHLLGL9OjZrjKvW9u8uy4b/config
-
-
-## Build warnings
-
-a)
-Build warnings on x86_64 builds.
-io_uring/timeout.c:410:31: warning: default initialization of an
-object of type 'typeof ((sqe->addr2))' (aka 'const unsigned long
-long') leaves the object uninitialized and is incompatible with C++
-[-Wdefault-const-init-unsafe]
-  410 |                 if (get_timespec64(&tr->ts,
-u64_to_user_ptr(sqe->addr2)))
-      |                                             ^
-
-Links:
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjeiV7BNYgKZ2oXuK3BNEYYBa/
-
-b)
-Build warnings on arm with clang-nightly with tinyconfig.
-
-clang: warning: argument unused during compilation: '-march=armv7-m'
-[-Wunused-command-line-argument]
-kernel/params.c:367:22: warning: default initialization of an object
-of type 'struct kernel_param' with const member leaves the object
-uninitialized and is incompatible with C++
-[-Wdefault-const-init-unsafe]
-  367 |         struct kernel_param dummy;
-      |                             ^
-include/linux/moduleparam.h:73:12: note: member 'perm' declared 'const' here
-   73 |         const u16 perm;
-      |                   ^
-kernel/params.c:423:22: warning: default initialization of an object
-of type 'struct kernel_param' with const member leaves the object
-uninitialized and is incompatible with C++
-[-Wdefault-const-init-unsafe]
-  423 |         struct kernel_param kp;
-      |                             ^
-include/linux/moduleparam.h:73:12: note: member 'perm' declared 'const' here
-   73 |         const u16 perm;
-      |                   ^
-2 warnings generated.
-
-Links:
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2wPjeaX1oyIaa7F0nsdW1BymEGQ/
-
-## Build
-* kernel: 6.1.136-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git commit: 961a5173f29d2aa1f2c87ff9612b029c46086972
-* git describe: v6.1.134-461-g961a5173f29d
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.134-461-g961a5173f29d
-
-## Test Regressions (compared to v6.1.134-292-gb8b5da130779)
-* i386, build
-  - clang-nightly-defconfig
-  - clang-nightly-lkftconfig
-
-* mips, build
-  - clang-nightly-allnoconfig
-  - clang-nightly-defconfig
-  - clang-nightly-tinyconfig
-
-* s390, build
-  - clang-20-defconfig
-  - clang-nightly-defconfig
-  - gcc-13-allmodconfig
-  - gcc-13-defconfig
-  - gcc-8-defconfig-fe40093d
-
-* x86_64, build
-  - clang-nightly-lkftconfig
-  - clang-nightly-x86_64_defconfig
-
-## Metric Regressions (compared to v6.1.134-292-gb8b5da130779)
-
-## Test Fixes (compared to v6.1.134-292-gb8b5da130779)
-
-## Metric Fixes (compared to v6.1.134-292-gb8b5da130779)
-
-## Test result summary
-total: 96862, pass: 76665, fail: 4435, skip: 15439, xfail: 323
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 135 total, 135 passed, 0 failed
-* arm64: 43 total, 43 passed, 0 failed
-* i386: 27 total, 20 passed, 7 failed
-* mips: 26 total, 22 passed, 4 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 32 total, 31 passed, 1 failed
-* riscv: 11 total, 9 passed, 2 failed
-* s390: 14 total, 8 passed, 6 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 7 total, 7 passed, 0 failed
-* x86_64: 35 total, 32 passed, 3 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
