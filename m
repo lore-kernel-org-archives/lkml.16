@@ -1,421 +1,137 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0AB1EEA4D;
-	Wed, 30 Apr 2025 00:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E0B213E71
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745972032; cv=none; b=tnsjLhy2wv2D1wYalwa51jyZ0rvns5JpOomlnMDfd0Xq0ugCzSRn9PIk0+OGnZf4v1l5/F+atnkBoh0ocB7xeHzG6xR6qjJYgsb8/J7wKUq9QpAyHu2MFWZBzpOLZcR3iXZD2rRu3/LTQZW0D/jGLOQwM5SEhRZgwadbZE2IyH8=
+	t=1745972191; cv=none; b=V7pcaaJa4Cg0S0jzvFGiXe8gFkztZGqdjanSA8nEpaW4zNwpwUoK+tRcVluRAbUPxjW5UGHT3ZUWCwpN7t3ZIB7AtDlysHdJ/InGSsELHLAmlfSm+cHIJi3Ljh054pYg8hn7J6oa7ml8T6egr1w6U5ekD5y/raueYe1N3drFm4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745972032; c=relaxed/simple;
-	bh=ax5e9I/1ulRxNz6IVWBGa7vUO7DSEEt72VhKqp49JKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Riom9Qclj1VFJnHEN79Ue4o0irmO3+xhpKeKa0v4a01HuvU2GUTlxdt2Z+TZDJ+yrSMu+zpJ1DT1AuH2GDadhoAbZVU2V8SvuGeF9RxcERvitxFgv7p5O5alJHCTdaF9ArsyaDr5mFYFX3tLpb+yhlHblL4G9nuUxehKeAn9jt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3LN15XG; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745972191; c=relaxed/simple;
+	bh=07JIHRwK+fbY/KS3WXdAQFowggDed4ZKoyBK3fLGucQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UkylzEMVW10vPniTaYIB2CZ4aPLKNkeuMiBgYV8GBklUAoZQoGYhIjWHSZ90Z39HxDHu5p3M3Ah/h5bXal4LVxb9JbQUnt1p93VrHERELb0Vo0gQw+aRdbiobh7InzJgZfxW1GP7ky5uobgMFMgUuo2AogpicvU+IcaoLzzkRts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Nzv7/mko; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3LN15XG"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so4614543f8f.1;
-        Tue, 29 Apr 2025 17:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Nzv7/mko"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224019ad9edso100153855ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745972029; x=1746576829; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1HB0pJCYnHHVtI6leB7kANPGdvrwtJT9eZo64kNwGM=;
-        b=h3LN15XGZB3jPee7aucdtrT5+oabHtcKEMbFkgEORo+5uyfW787WxoCqcD5F91Ho4q
-         rxgPtZ6Gl06F2siMx3OhAcpbcsY3S0/EzXAKIv3UY/xS8XP48ZjqTdJUUzx4DDzc1xN3
-         7SdOmTWQKpXRWY7dej3LD6ihMJTgntSEIK/QbKh4Kfz9OjcKtLzsfCkervFkV/nam7jX
-         PB6eAq4aySlDj6DkEU530gZGR7Kug7uZJcL6QfV2W9UaI3jf6vFox94z90S6vyrq9Mc4
-         kwSNpOjk7XnX5GljUsW43Djf3JO14yFItEalGTOhuHYWNoqTbBaSbm398VnCS4w4mGxo
-         Hpgw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745972189; x=1746576989; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SkVK3bviqHN/t8JmfUhzYvFjjtQu0YyYqPmZLVGI/TA=;
+        b=Nzv7/mkobhS1qwl3caSpbMi+f0htEk0T/vf7Qe1W5wYEr1P/pip/onTpADOa77EWPL
+         VC5yH3qrd1yerG80gpoTNpBqBzsH/YKyr9yHicinym+UF5AFlA6btYIFcdbe01ZGQix+
+         ur4iGwktyjesd2cnorq6wyIqROMMxpePJ2m2iRxx0h+IKFy7xzT6Q+pjxaqsS9kzfjl0
+         CVNF0FtZtkP9ELctLcok37XoHeUgnpXyzSOMd7xGf21NX5v/MrHpwAEIWQWTXaRrD+ln
+         XdX8GKmTUrslyWATKwGCsPw/EJqmlqpDP1ID9Fp5dqsXEG6b30GfgNlTohfxIHvz7Ja/
+         yMRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745972029; x=1746576829;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745972189; x=1746576989;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S1HB0pJCYnHHVtI6leB7kANPGdvrwtJT9eZo64kNwGM=;
-        b=PvL/4AYYzsbk95ewtoTbpXMengfMj4lAqhRdVQvXp8jR/BQi3adGVwiNGl4wN/0NeV
-         SV5wApArKACVrypNh46ddytiIPAh84Oe/zSCHxKaZ8VvcyyfhSD1Re9soRs3QnzJG0Z6
-         sNsWJ/eefh8QNa3fcQs6z5w0zvHJcE6jHIAoTVjpFgkUQsnbsWxu4uxpz2BZ54xzjSa0
-         PM9S8ClgscsrNe8rBverTRTSg7YAtzEUMUPC08WVo9Sx/i8R1nKdNH3iOCfrHGd1/H+z
-         dcVXwalpSmw2zEBZP5HT36v/EL4tcKn6tqugMpHUawvfMxfYys2/MbNPSrBMVrWKpjJP
-         AXKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX01/oyC5wQ0EXuSU+5n62EUzrSkjLrioq0KgwghVbEesItJOiYSnR4lVgG8s3AvcUwpW3eiUncc9mdlhrd@vger.kernel.org, AJvYcCXYzOjrbb9/woMYHntcghcLIu2LCIaN4qxKYhKdt2IyF8sAumIOZ1rcStdHZDoUJGP2s7tHCS0EECkI5l6G@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeHsxuRdPAZyJ7AtOl6V09V/6LKGCGU4wC0PSB7NoKVtyKzqBM
-	6Fi4Ji8y1i6PqZFbWJh2tQXnWOkw8/aNtDxOKtuQuqmTrwwTTvc=
-X-Gm-Gg: ASbGnctdWzBHDnmOVUuftXd/Te2PTZT2wuGjmI2zT4diII2I/nZ2FjD0OK71kLYkLPK
-	MAjs+ymQhMrODQZNv72iJp6yQUBw+6ZaFYDROAKDAxlbysDGDhuELk83zVoxJYEFrGER5BzC40n
-	K6ShyiiQ5hsm3dUU+gU6sJKMIwxXBpVoXuOjP2aYdYPJVbPGr3tELq5+4tEsZoema1xDCWiN9t8
-	bKVrtYywWdTBTrFcwqLgdogT6s3V4f1u+X1HuEaXg8crq5G1L4Vfy+Lp2+Tw8xLfLLZhUJqyn71
-	cdvmJvK1soUtQ9uq80EEeawILW+Cm9psl44bt/H4AOYyNz7h4WINcKiw
-X-Google-Smtp-Source: AGHT+IGbKUzfK8XZETH8woy9eFt8xfSQrWoqLCX0Oa2T7hxffwMabwMTUtRlu6be8fGYFcv0zYwhMg==
-X-Received: by 2002:a5d:584a:0:b0:3a0:8291:20d0 with SMTP id ffacd0b85a97d-3a08f779672mr864108f8f.29.1745972028377;
-        Tue, 29 Apr 2025 17:13:48 -0700 (PDT)
-Received: from alex-x1.lan ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5da4dsm15574565f8f.99.2025.04.29.17.13.47
+        bh=SkVK3bviqHN/t8JmfUhzYvFjjtQu0YyYqPmZLVGI/TA=;
+        b=TN+gCWz35JBTlKoFWbi4lSt0m5v6vL/ULM1ecOiBQz1pJs5aomhuMFWqI2ktl1J16s
+         mUnMdcUy12D+dlk575ivSFWncFFt5n3SIBVqIMqJZqLVT+w849gbruv2zYYF1aVQDd6s
+         LPAJP8Aeap+we3ohPcCOaJO8P64sdDpNHIe33zg8rGOFvho0laI/ygbRpy4wFaxyQmIN
+         boDwNRoEvwOODeDTocscvMxUGIyuDQdelbs47PFat3a0aloCsiW4zRnkK9PXR9ecym4w
+         IC5grIOo8xoYlEFFDrYCF9cfiRzfhOrJTWygij92+MyBLjy7WZ12v+EJKiqcvi4/8Tab
+         mYMA==
+X-Gm-Message-State: AOJu0YyoBslZxMF8COc7TPiROofMEjeIOdx9iZLOU9A28WXel+LsHu+K
+	yu7cMEqJ7PZ81KTj5fio2UctZG4zicLzk1J9LX7yvqD2Ok6usKR9bbWmkn9GOtE=
+X-Gm-Gg: ASbGncvRzdW925pf9Sq72N9ZwWsmmb18T+IXE6/UYQ/GF3EtEAeR8DdwKsIXKzozyc6
+	gSSToy933KbQRGAEtNEpcHUJucshYo0wAMda3AmE8hvTLcyXyLk4XZJyZ/IJWWJ1HaOYymKzJGs
+	tsPuO2tli510GGTx4h04QpQ+BTzrPezFK3PV7sJNa4f6zRtF1eO3SAvfsrnwfWH7F2Dpy9iNSVM
+	TDA1L2CyXK81HIhrJG/K6bbmtm7zSeXmHriPJwRBaUIZGl1Vq1uOJucnCCh9mbSbsuqL1fpS6aC
+	eaQsk0NVKZ9jzC/NIQMYKLXVGOHKk8kv/qqvNcHS/ff4BhsVG0s=
+X-Google-Smtp-Source: AGHT+IEaCOo3UdLjB/YDRvV5wqIWEkwy6tQXnBD9FT8T9fOLPTePyGUVcVc/ygroOS4hwPE4lcSyLA==
+X-Received: by 2002:a17:903:1983:b0:216:644f:bc0e with SMTP id d9443c01a7336-22df35192a3mr22839375ad.24.1745972189106;
+        Tue, 29 Apr 2025 17:16:29 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d770d6sm109386035ad.17.2025.04.29.17.16.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 17:13:47 -0700 (PDT)
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-To: Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com
-Cc: Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	laurentiu.tudor1@dell.com,
-	abel.vesa@linaro.org,
-	johan@kernel.org,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Stefan Schmidt <stefan.schmidt@linaro.org>
-Subject: [PATCH v4 4/4] drm/msm/dp: Introduce link training per-segment for LTTPRs
-Date: Wed, 30 Apr 2025 02:09:47 +0200
-Message-ID: <20250430001330.265970-5-alex.vinarskis@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250430001330.265970-1-alex.vinarskis@gmail.com>
-References: <20250430001330.265970-1-alex.vinarskis@gmail.com>
+        Tue, 29 Apr 2025 17:16:28 -0700 (PDT)
+From: Deepak Gupta <debug@rivosinc.com>
+Date: Tue, 29 Apr 2025 17:16:18 -0700
+Subject: [PATCH v14 01/27] mm: VM_SHADOW_STACK definition for riscv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-v5_user_cfi_series-v14-1-5239410d012a@rivosinc.com>
+References: <20250429-v5_user_cfi_series-v14-0-5239410d012a@rivosinc.com>
+In-Reply-To: <20250429-v5_user_cfi_series-v14-0-5239410d012a@rivosinc.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
+ rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org, 
+ Zong Li <zong.li@sifive.com>, Deepak Gupta <debug@rivosinc.com>
+X-Mailer: b4 0.13.0
 
-DisplayPort requires per-segment link training when LTTPR are switched
-to non-transparent mode, starting with LTTPR closest to the source.
-Only when each segment is trained individually, source can link train
-to sink.
+VM_HIGH_ARCH_5 is used for riscv
 
-Implement per-segment link traning when LTTPR(s) are detected, to
-support external docking stations. On higher level, changes are:
-
-* Pass phy being trained down to all required helpers
-* Run CR, EQ link training per phy
-* Set voltage swing, pre-emphasis levels per phy
-
-This ensures successful link training both when connected directly to
-the monitor (single LTTPR onboard most X1E laptops) and via the docking
-station (at least two LTTPRs).
-
-Fixes: 72d0af4accd9 ("drm/msm/dp: Add support for LTTPR handling")
-
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Rob Clark <robdclark@gmail.com>
-Tested-by: Stefan Schmidt <stefan.schmidt@linaro.org>
-Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Reviewed-by: Zong Li <zong.li@sifive.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
 ---
- drivers/gpu/drm/msm/dp/dp_ctrl.c | 126 ++++++++++++++++++++++---------
- 1 file changed, 89 insertions(+), 37 deletions(-)
+ include/linux/mm.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-index d8633a596f8d..35b28c2fcd64 100644
---- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
-+++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-@@ -1034,10 +1034,12 @@ static int msm_dp_ctrl_set_vx_px(struct msm_dp_ctrl_private *ctrl,
- 	return 0;
- }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b7f13f087954..3487f28fa0bf 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -352,6 +352,13 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_SHADOW_STACK	VM_HIGH_ARCH_6
+ #endif
  
--static int msm_dp_ctrl_update_vx_px(struct msm_dp_ctrl_private *ctrl)
-+static int msm_dp_ctrl_update_phy_vx_px(struct msm_dp_ctrl_private *ctrl,
-+					enum drm_dp_phy dp_phy)
- {
- 	struct msm_dp_link *link = ctrl->link;
--	int ret = 0, lane, lane_cnt;
-+	int lane, lane_cnt, reg;
-+	int ret = 0;
- 	u8 buf[4];
- 	u32 max_level_reached = 0;
- 	u32 voltage_swing_level = link->phy_params.v_level;
-@@ -1075,8 +1077,13 @@ static int msm_dp_ctrl_update_vx_px(struct msm_dp_ctrl_private *ctrl)
- 
- 	drm_dbg_dp(ctrl->drm_dev, "sink: p|v=0x%x\n",
- 			voltage_swing_level | pre_emphasis_level);
--	ret = drm_dp_dpcd_write(ctrl->aux, DP_TRAINING_LANE0_SET,
--					buf, lane_cnt);
++#if defined(CONFIG_RISCV_USER_CFI)
++/*
++ * Following x86 and picking up the same bitpos.
++ */
++# define VM_SHADOW_STACK	VM_HIGH_ARCH_5
++#endif
 +
-+	if (dp_phy == DP_PHY_DPRX)
-+		reg = DP_TRAINING_LANE0_SET;
-+	else
-+		reg = DP_TRAINING_LANE0_SET_PHY_REPEATER(dp_phy);
-+
-+	ret = drm_dp_dpcd_write(ctrl->aux, reg, buf, lane_cnt);
- 	if (ret == lane_cnt)
- 		ret = 0;
- 
-@@ -1084,9 +1091,10 @@ static int msm_dp_ctrl_update_vx_px(struct msm_dp_ctrl_private *ctrl)
- }
- 
- static bool msm_dp_ctrl_train_pattern_set(struct msm_dp_ctrl_private *ctrl,
--		u8 pattern)
-+		u8 pattern, enum drm_dp_phy dp_phy)
- {
- 	u8 buf;
-+	int reg;
- 	int ret = 0;
- 
- 	drm_dbg_dp(ctrl->drm_dev, "sink: pattern=%x\n", pattern);
-@@ -1096,7 +1104,12 @@ static bool msm_dp_ctrl_train_pattern_set(struct msm_dp_ctrl_private *ctrl,
- 	if (pattern && pattern != DP_TRAINING_PATTERN_4)
- 		buf |= DP_LINK_SCRAMBLING_DISABLE;
- 
--	ret = drm_dp_dpcd_writeb(ctrl->aux, DP_TRAINING_PATTERN_SET, buf);
-+	if (dp_phy == DP_PHY_DPRX)
-+		reg = DP_TRAINING_PATTERN_SET;
-+	else
-+		reg = DP_TRAINING_PATTERN_SET_PHY_REPEATER(dp_phy);
-+
-+	ret = drm_dp_dpcd_writeb(ctrl->aux, reg, buf);
- 	return ret == 1;
- }
- 
-@@ -1115,12 +1128,16 @@ static int msm_dp_ctrl_read_link_status(struct msm_dp_ctrl_private *ctrl,
- }
- 
- static int msm_dp_ctrl_link_train_1(struct msm_dp_ctrl_private *ctrl,
--			int *training_step)
-+			int *training_step, enum drm_dp_phy dp_phy)
- {
-+	int delay_us;
- 	int tries, old_v_level, ret = 0;
- 	u8 link_status[DP_LINK_STATUS_SIZE];
- 	int const maximum_retries = 4;
- 
-+	delay_us = drm_dp_read_clock_recovery_delay(ctrl->aux,
-+						    ctrl->panel->dpcd, dp_phy, false);
-+
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
- 	*training_step = DP_TRAINING_1;
-@@ -1129,18 +1146,19 @@ static int msm_dp_ctrl_link_train_1(struct msm_dp_ctrl_private *ctrl,
- 	if (ret)
- 		return ret;
- 	msm_dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_1 |
--		DP_LINK_SCRAMBLING_DISABLE);
-+		DP_LINK_SCRAMBLING_DISABLE, dp_phy);
- 
--	ret = msm_dp_ctrl_update_vx_px(ctrl);
-+	msm_dp_link_reset_phy_params_vx_px(ctrl->link);
-+	ret = msm_dp_ctrl_update_phy_vx_px(ctrl, dp_phy);
- 	if (ret)
- 		return ret;
- 
- 	tries = 0;
- 	old_v_level = ctrl->link->phy_params.v_level;
- 	for (tries = 0; tries < maximum_retries; tries++) {
--		drm_dp_link_train_clock_recovery_delay(ctrl->aux, ctrl->panel->dpcd);
-+		fsleep(delay_us);
- 
--		ret = msm_dp_ctrl_read_link_status(ctrl, link_status);
-+		ret = drm_dp_dpcd_read_phy_link_status(ctrl->aux, dp_phy, link_status);
- 		if (ret)
- 			return ret;
- 
-@@ -1161,7 +1179,7 @@ static int msm_dp_ctrl_link_train_1(struct msm_dp_ctrl_private *ctrl,
- 		}
- 
- 		msm_dp_link_adjust_levels(ctrl->link, link_status);
--		ret = msm_dp_ctrl_update_vx_px(ctrl);
-+		ret = msm_dp_ctrl_update_phy_vx_px(ctrl, dp_phy);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1213,21 +1231,31 @@ static int msm_dp_ctrl_link_lane_down_shift(struct msm_dp_ctrl_private *ctrl)
- 	return 0;
- }
- 
--static void msm_dp_ctrl_clear_training_pattern(struct msm_dp_ctrl_private *ctrl)
-+static void msm_dp_ctrl_clear_training_pattern(struct msm_dp_ctrl_private *ctrl,
-+					       enum drm_dp_phy dp_phy)
- {
--	msm_dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_DISABLE);
--	drm_dp_link_train_channel_eq_delay(ctrl->aux, ctrl->panel->dpcd);
-+	int delay_us;
-+
-+	msm_dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_DISABLE, dp_phy);
-+
-+	delay_us = drm_dp_read_channel_eq_delay(ctrl->aux,
-+						ctrl->panel->dpcd, dp_phy, false);
-+	fsleep(delay_us);
- }
- 
- static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
--			int *training_step)
-+			int *training_step, enum drm_dp_phy dp_phy)
- {
-+	int delay_us;
- 	int tries = 0, ret = 0;
- 	u8 pattern;
- 	u32 state_ctrl_bit;
- 	int const maximum_retries = 5;
- 	u8 link_status[DP_LINK_STATUS_SIZE];
- 
-+	delay_us = drm_dp_read_channel_eq_delay(ctrl->aux,
-+						ctrl->panel->dpcd, dp_phy, false);
-+
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
- 	*training_step = DP_TRAINING_2;
-@@ -1247,12 +1275,12 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
- 	if (ret)
- 		return ret;
- 
--	msm_dp_ctrl_train_pattern_set(ctrl, pattern);
-+	msm_dp_ctrl_train_pattern_set(ctrl, pattern, dp_phy);
- 
- 	for (tries = 0; tries <= maximum_retries; tries++) {
--		drm_dp_link_train_channel_eq_delay(ctrl->aux, ctrl->panel->dpcd);
-+		fsleep(delay_us);
- 
--		ret = msm_dp_ctrl_read_link_status(ctrl, link_status);
-+		ret = drm_dp_dpcd_read_phy_link_status(ctrl->aux, dp_phy, link_status);
- 		if (ret)
- 			return ret;
- 
-@@ -1262,7 +1290,7 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
- 		}
- 
- 		msm_dp_link_adjust_levels(ctrl->link, link_status);
--		ret = msm_dp_ctrl_update_vx_px(ctrl);
-+		ret = msm_dp_ctrl_update_phy_vx_px(ctrl, dp_phy);
- 		if (ret)
- 			return ret;
- 
-@@ -1271,9 +1299,32 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
- 	return -ETIMEDOUT;
- }
- 
-+static int msm_dp_ctrl_link_train_1_2(struct msm_dp_ctrl_private *ctrl,
-+				      int *training_step, enum drm_dp_phy dp_phy)
-+{
-+	int ret;
-+
-+	ret = msm_dp_ctrl_link_train_1(ctrl, training_step, dp_phy);
-+	if (ret) {
-+		DRM_ERROR("link training #1 on phy %d failed. ret=%d\n", dp_phy, ret);
-+		return ret;
-+	}
-+	drm_dbg_dp(ctrl->drm_dev, "link training #1 on phy %d successful\n", dp_phy);
-+
-+	ret = msm_dp_ctrl_link_train_2(ctrl, training_step, dp_phy);
-+	if (ret) {
-+		DRM_ERROR("link training #2 on phy %d failed. ret=%d\n", dp_phy, ret);
-+		return ret;
-+	}
-+	drm_dbg_dp(ctrl->drm_dev, "link training #2 on phy %d successful\n", dp_phy);
-+
-+	return 0;
-+}
-+
- static int msm_dp_ctrl_link_train(struct msm_dp_ctrl_private *ctrl,
- 			int *training_step)
- {
-+	int i;
- 	int ret = 0;
- 	const u8 *dpcd = ctrl->panel->dpcd;
- 	u8 encoding[] = { 0, DP_SET_ANSI_8B10B };
-@@ -1286,8 +1337,6 @@ static int msm_dp_ctrl_link_train(struct msm_dp_ctrl_private *ctrl,
- 	link_info.rate = ctrl->link->link_params.rate;
- 	link_info.capabilities = DP_LINK_CAP_ENHANCED_FRAMING;
- 
--	msm_dp_link_reset_phy_params_vx_px(ctrl->link);
--
- 	msm_dp_aux_link_configure(ctrl->aux, &link_info);
- 
- 	if (drm_dp_max_downspread(dpcd))
-@@ -1302,24 +1351,27 @@ static int msm_dp_ctrl_link_train(struct msm_dp_ctrl_private *ctrl,
- 				&assr, 1);
- 	}
- 
--	ret = msm_dp_ctrl_link_train_1(ctrl, training_step);
-+	for (i = ctrl->link->lttpr_count - 1; i >= 0; i--) {
-+		enum drm_dp_phy dp_phy = DP_PHY_LTTPR(i);
-+
-+		ret = msm_dp_ctrl_link_train_1_2(ctrl, training_step, dp_phy);
-+		msm_dp_ctrl_clear_training_pattern(ctrl, dp_phy);
-+
-+		if (ret)
-+			break;
-+	}
-+
- 	if (ret) {
--		DRM_ERROR("link training #1 failed. ret=%d\n", ret);
-+		DRM_ERROR("link training of LTTPR(s) failed. ret=%d\n", ret);
- 		goto end;
- 	}
- 
--	/* print success info as this is a result of user initiated action */
--	drm_dbg_dp(ctrl->drm_dev, "link training #1 successful\n");
--
--	ret = msm_dp_ctrl_link_train_2(ctrl, training_step);
-+	ret = msm_dp_ctrl_link_train_1_2(ctrl, training_step, DP_PHY_DPRX);
- 	if (ret) {
--		DRM_ERROR("link training #2 failed. ret=%d\n", ret);
-+		DRM_ERROR("link training on sink failed. ret=%d\n", ret);
- 		goto end;
- 	}
- 
--	/* print success info as this is a result of user initiated action */
--	drm_dbg_dp(ctrl->drm_dev, "link training #2 successful\n");
--
- end:
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
-@@ -1636,7 +1688,7 @@ static int msm_dp_ctrl_link_maintenance(struct msm_dp_ctrl_private *ctrl)
- 	if (ret)
- 		goto end;
- 
--	msm_dp_ctrl_clear_training_pattern(ctrl);
-+	msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
- 
-@@ -1660,7 +1712,7 @@ static bool msm_dp_ctrl_send_phy_test_pattern(struct msm_dp_ctrl_private *ctrl)
- 		return false;
- 	}
- 	msm_dp_catalog_ctrl_send_phy_pattern(ctrl->catalog, pattern_requested);
--	msm_dp_ctrl_update_vx_px(ctrl);
-+	msm_dp_ctrl_update_phy_vx_px(ctrl, DP_PHY_DPRX);
- 	msm_dp_link_send_test_response(ctrl->link);
- 
- 	pattern_sent = msm_dp_catalog_ctrl_read_phy_pattern(ctrl->catalog);
-@@ -1902,7 +1954,7 @@ int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl)
- 			}
- 
- 			/* stop link training before start re training  */
--			msm_dp_ctrl_clear_training_pattern(ctrl);
-+			msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 		}
- 
- 		rc = msm_dp_ctrl_reinitialize_mainlink(ctrl);
-@@ -1926,7 +1978,7 @@ int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl)
- 		 * link training failed
- 		 * end txing train pattern here
- 		 */
--		msm_dp_ctrl_clear_training_pattern(ctrl);
-+		msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 
- 		msm_dp_ctrl_deinitialize_mainlink(ctrl);
- 		rc = -ECONNRESET;
-@@ -1997,7 +2049,7 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl, bool force_link_train
- 		msm_dp_ctrl_link_retrain(ctrl);
- 
- 	/* stop txing train pattern to end link training */
--	msm_dp_ctrl_clear_training_pattern(ctrl);
-+	msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 
- 	/*
- 	 * Set up transfer unit values and set controller state to send
+ #ifndef VM_SHADOW_STACK
+ # define VM_SHADOW_STACK	VM_NONE
+ #endif
+
 -- 
-2.45.2
+2.43.0
 
