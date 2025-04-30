@@ -1,226 +1,165 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E26235048
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBFA23506E
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746007039; cv=none; b=my0/rCtyhjOA88TnxiIIuWbwSQkNmfLCtFOW57izmClLWHPOnEFRz+UxBp/gXKBss2kmVmNWM0xTkUl35HarOelXE6QPcdWelpq3TRowUdziOVSxL8k8MnAg07+kUHjJ27bqTXwfAQdTl1+C+h1tLM8bt1kRMvlLdFJDxUDxEkc=
+	t=1746007168; cv=none; b=l2s5jQnueVdfoXuFlu4uNAZK9w09z9DrFR1Fu+6oPSaJL7lHbyGoaoohK71SAfa3EDuiRDBojDjZaLc01FwFHsoYCfwLC1LYwS29XDMx0FQL+AmzFdUvm6NUmlPU0wP5R+chkB06sFayRG80qQnT6sdc84uGaS0vgGVotbZQU7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746007039; c=relaxed/simple;
-	bh=2N/gZ2xEz4587NZSPxfEBAB/1ICXtlQSDrPwawJJivE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WBwFlQZksV12GMbpF3sDS7fL7SOrzouK32K4SslMK+DR+JS2BK5I8waGx53PE5SRNcqKuzFk0UlSIJ710MPYTu6VQnmHQFrhMywcz73phwwvmmQXtzz2g34v24Td6KV5SlzLLF3uwz2Q0nm7KgIBMhoQPFozF/jQG5aS2UBId18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dieam/H3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kbsTSOfI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=S0odmGrE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FsXnafmM; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746007168; c=relaxed/simple;
+	bh=gU0cK+6rYhoCrfmO8Zc168gkmlEzEUm0imiU4BkXnxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+n3D5tI8N2f8TxyqbbYeldafzSVBLVoPtKFXyorw1b5NKk7vppeiNeC5oLyVrFMjpsSBpxt0hREcfiJJ9HPdd7D8E3V98xAONVV0gfwRo3tJLjQSwjmsvYWB5/A2DxaoMCGYFw1PjSHK9W97Gw+JYrpGRpGUSncq2cWzzs4d24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DdmQfHzR; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dieam/H3";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kbsTSOfI";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="S0odmGrE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FsXnafmM"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F3C0C1F7BD;
-	Wed, 30 Apr 2025 09:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746007035; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsHh1btTbSAA8CgjYdGISaW5MiMmd0VLCDwrfkvkSAU=;
-	b=dieam/H3ocYHiQr07Lfty8bGaKeGdej3g3gXK4x56a5/WCu17ZxIdzdAgxcN2st1xKbAQL
-	rQAkevx69JHnxdSLSzRC1NHgF/doKacmq5e4rPXtploYNjHuzIF/ZM2Mel+KgENpbCL7Ux
-	E0lPJ5sCQMZKbrfD3Qy5hH7VzsP3t7E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746007035;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsHh1btTbSAA8CgjYdGISaW5MiMmd0VLCDwrfkvkSAU=;
-	b=kbsTSOfI1gx6O3dLXj96daBHGv1GOVwaqshDWb8bEKI/5zUqxwD/3jXPASE8FuoXQx9rrU
-	bXADThEJUpXIhQDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746007034; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsHh1btTbSAA8CgjYdGISaW5MiMmd0VLCDwrfkvkSAU=;
-	b=S0odmGrElF8esTIguluV7jCAIbKgwRJaPPcTdAB2R8Jlg1F9I/jFR8tj11LnvrPBqn5V4K
-	McsCYKW/+a5XqgyVJXX979ZPOgs+eTXERcKd851mRYzqz7WMYpFJtM3GvksDaEi7SE1k+n
-	l8QxvIV+Yb6r2Qu6AKFBOxuEQokcrtc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746007034;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsHh1btTbSAA8CgjYdGISaW5MiMmd0VLCDwrfkvkSAU=;
-	b=FsXnafmMc971EpWD+JvgNQbDsYWK+pu39zsiI8otOFBph3Y6o7zqYQ+tauYRw+ADQQ6I+w
-	uvUKofsz++0l40Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D9A14139E7;
-	Wed, 30 Apr 2025 09:57:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id D120NPnzEWh4LQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 30 Apr 2025 09:57:13 +0000
-Message-ID: <f3e0c710-0815-44ad-844c-0e8a079bf663@suse.cz>
-Date: Wed, 30 Apr 2025 11:57:13 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DdmQfHzR"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so4645053f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746007165; x=1746611965; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6I143zOtsIb3U6VlapVBXBqNO181vL3QULnfrrsNbrQ=;
+        b=DdmQfHzRHQn+QHmOY/jAwJGVb9U2v6D940luAPQsGcklSA0gIn310szYtwjcTZD3ZJ
+         53c0V6W3pVUvqz6SDoR7AyJLH4ixqX9/A9Cx1ZBTujxw7qpYAIqz3D3TgCeRV+dPxfxT
+         OEH7NUJQoOUvaSjRXmAkncSXOrE84m4j0q94pCp+Hi6IyYYMxh++nb0N1E2JQjpuWKpx
+         O5qfVa3eYZV468Lh+pkywF2YdSunRfAT3eVaO69I01f6r5cJo1pAsLKFBUmAP4WSC+b9
+         sRlm4mvd8doYs9kCdHpUCqgnn7MkBn1iV8g2Id6h9vHaIkddFUhVbrq/F7CyKb3z8/GP
+         4zpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746007165; x=1746611965;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6I143zOtsIb3U6VlapVBXBqNO181vL3QULnfrrsNbrQ=;
+        b=wtwsUjszJKh5qt5FtV2SgZYtTPBStUA+XRDa2oUk+yEd3VrdIn7VKNIhaTwmlyREDK
+         0JFrQrxzdVxPvuRJL4U8E0wU3GhTg7Zt3cu2buMigYIKpglP3crjPN6+L2Q2e22RmF0u
+         lryHUdTEMGVPtbXzAD6vzEK+LRF1jCrA/+ryx1FiFymC5YZFhlbHT2SnHusKOsfujyEM
+         dsVQB9xaHuUWWaN4859kcGBpsOTTgwcy43KY6YhT4zGuInacN0RaUj3EodxzqShO6bqW
+         TMcnzKddF4NOHpxCQRZC4odsKmU2RRzUsWQ/BsCJ08KztqHsVg9H+5jLgN3m06y01HvT
+         pgVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvurarQGxs4JTzKQwp3/Clr5UNMbTKAFCiwe5drEgrQBwSZRjw+GRxkU6wa8w0Q0/gKu0uEaoxQVccrOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZuoHmo5Vy1N27Hf3ZDe6fxfPHRhWnE7WHwpRdPOpVJIuQ3DMt
+	ilwNP6n3Hqeyrs40kio998FOkcU3QPmm8yZ32pe+aFdyFzWq1XEBX2MU1n8zNLY=
+X-Gm-Gg: ASbGnctYPphFQGAfcLpAttjhdMXiMZUhRyNMECzGf3F36JSByGj604ZFnVKuvTMqcVz
+	zZitIofXhVef9ijZgpqJHOM6AS/1QOMg3XZcC52+ErQiRHyU8883EzKLIVoolT+yuderL1V/+2E
+	N5Ag7csdiXzwAyEZCH5RW2JOJyexcPI+swIMTvjjiZrWSPvbpNidEUPZXP5PmjtqSribNE+GqJg
+	qtZcx98s1/IDEf9DZLN1CbD53tmYdF5yTDMWQLPg7csgqwBvXrNL5lebHnEmDidzdtY9ivslXgN
+	dBtCV/htMV4SxJVQWW19rsjYTzguIQG9LPPs8xj3OmA3tw==
+X-Google-Smtp-Source: AGHT+IHLLxyeTc1HcEGag1qjfI4wrS/rupaaqDuV0HhYG9K4MQxOD+AmR9eIPJEaGfGvBmIL287Urw==
+X-Received: by 2002:a05:6000:2509:b0:391:3f64:ed00 with SMTP id ffacd0b85a97d-3a08f7793cdmr1998311f8f.26.1746007165306;
+        Wed, 30 Apr 2025 02:59:25 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073e5d479sm17012964f8f.92.2025.04.30.02.59.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 02:59:24 -0700 (PDT)
+Date: Wed, 30 Apr 2025 12:59:21 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Tarang Raval <tarang.raval@siliconsignals.io>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Shravan Chippa <Shravan.Chippa@microchip.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] media: i2c: imx334: uninitialized variable in
+ imx334_update_exp_gain()
+Message-ID: <255a8604-5aa9-441a-a4d6-ebc592a00be9@stanley.mountain>
+References: <cover.1746001540.git.dan.carpenter@linaro.org>
+ <ee811e7c6eabc390241e0227f7a26d1eaa7818a1.1746001540.git.dan.carpenter@linaro.org>
+ <PN3P287MB18296802E1A6C2CD55997BC68B832@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Soheil Hassas Yeganeh
- <soheil@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>
-References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250416180229.2902751-1-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,linux.dev:email,oom.group:url,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PN3P287MB18296802E1A6C2CD55997BC68B832@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
 
-On 4/16/25 20:02, Shakeel Butt wrote:
-> Memory cgroup accounting is expensive and to reduce the cost, the kernel
-> maintains per-cpu charge cache for a single memcg. So, if a charge
-> request comes for a different memcg, the kernel will flush the old
-> memcg's charge cache and then charge the newer memcg a fixed amount (64
-> pages), subtracts the charge request amount and stores the remaining in
-> the per-cpu charge cache for the newer memcg.
+On Wed, Apr 30, 2025 at 09:47:44AM +0000, Tarang Raval wrote:
+> Hi Dan,
 > 
-> This mechanism is based on the assumption that the kernel, for locality,
-> keep a process on a CPU for long period of time and most of the charge
-> requests from that process will be served by that CPU's local charge
-> cache.
+> > The "ret" variable is not initialized on the success path.  Set it to
+> > zero.
+> >
+> > Fixes: 7b19b0fc8ac8 ("media: i2c: imx334: Convert to CCI register access helpers")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> >  drivers/media/i2c/imx334.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+> > index fc875072f859..846b9928d4e8 100644
+> > --- a/drivers/media/i2c/imx334.c
+> > +++ b/drivers/media/i2c/imx334.c
+> > @@ -536,7 +536,8 @@ static int imx334_update_controls(struct imx334 *imx334,
+> >  static int imx334_update_exp_gain(struct imx334 *imx334, u32 exposure, u32 gain)
+> >  {
+> >         u32 lpfr, shutter;
+> > -       int ret, ret_hold;
+> > +       int ret_hold;
+> > +       int ret = 0;
 > 
-> However this assumption breaks down for incoming network traffic in a
-> multi-tenant machine. We are in the process of running multiple
-> workloads on a single machine and if such workloads are network heavy,
-> we are seeing very high network memory accounting cost. We have observed
-> multiple CPUs spending almost 100% of their time in net_rx_action and
-> almost all of that time is spent in memcg accounting of the network
-> traffic.
+> I think this initialization may not really be necessary.
 > 
-> More precisely, net_rx_action is serving packets from multiple workloads
-> and is observing/serving mix of packets of these workloads. The memcg
-> switch of per-cpu cache is very expensive and we are observing a lot of
-> memcg switches on the machine. Almost all the time is being spent on
-> charging new memcg and flushing older memcg cache. So, definitely we
-> need per-cpu cache that support multiple memcgs for this scenario.
+> If all of those cci_write are skipped, then yes, using ret uninitialized 
+> would be a problem.
 > 
-> This patch implements a simple (and dumb) multiple memcg percpu charge
-> cache. Actually we started with more sophisticated LRU based approach but
-> the dumb one was always better than the sophisticated one by 1% to 3%,
-> so going with the simple approach.
+> However, I don’t see any case where they would be skipped in the 
+> current implementation.
 > 
-> Some of the design choices are:
+> So, is this initialization really needed?
 > 
-> 1. Fit all caches memcgs in a single cacheline.
-> 2. The cache array can be mix of empty slots or memcg charged slots, so
->    the kernel has to traverse the full array.
-> 3. The cache drain from the reclaim will drain all cached memcgs to keep
->    things simple.
-> 
-> To evaluate the impact of this optimization, on a 72 CPUs machine, we
-> ran the following workload where each netperf client runs in a different
-> cgroup. The next-20250415 kernel is used as base.
-> 
->  $ netserver -6
->  $ netperf -6 -H ::1 -l 60 -t TCP_SENDFILE -- -m 10K
-> 
-> number of clients | Without patch | With patch
->   6               | 42584.1 Mbps  | 48603.4 Mbps (14.13% improvement)
->   12              | 30617.1 Mbps  | 47919.7 Mbps (56.51% improvement)
->   18              | 25305.2 Mbps  | 45497.3 Mbps (79.79% improvement)
->   24              | 20104.1 Mbps  | 37907.7 Mbps (88.55% improvement)
->   30              | 14702.4 Mbps  | 30746.5 Mbps (109.12% improvement)
->   36              | 10801.5 Mbps  | 26476.3 Mbps (145.11% improvement)
-> 
-> The results show drastic improvement for network intensive workloads.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Best Regards,
+> Tarang
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+This is a new bug that was introduced in linux-next...
 
-See below
+drivers/media/i2c/imx334.c
+   536  static int imx334_update_exp_gain(struct imx334 *imx334, u32 exposure, u32 gain)
+   537  {
+   538          u32 lpfr, shutter;
+   539          int ret, ret_hold;
+   540  
+   541          lpfr = imx334->vblank + imx334->cur_mode->height;
+   542          shutter = lpfr - exposure;
+   543  
+   544          dev_dbg(imx334->dev, "Set long exp %u analog gain %u sh0 %u lpfr %u\n",
+   545                  exposure, gain, shutter, lpfr);
+   546  
+   547          cci_write(imx334->cci, IMX334_REG_HOLD, 1, &ret);
 
-> ---
->  mm/memcontrol.c | 128 ++++++++++++++++++++++++++++++++++--------------
->  1 file changed, 91 insertions(+), 37 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 1ad326e871c1..0a02ba07561e 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1769,10 +1769,11 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
->  	pr_cont(" are going to be killed due to memory.oom.group set\n");
->  }
->  
-> +#define NR_MEMCG_STOCK 7
->  struct memcg_stock_pcp {
->  	local_trylock_t stock_lock;
-> -	struct mem_cgroup *cached; /* this never be root cgroup */
-> -	unsigned int nr_pages;
-> +	uint8_t nr_pages[NR_MEMCG_STOCK];
-> +	struct mem_cgroup *cached[NR_MEMCG_STOCK];
+This first call will do an unitialized read of ret to check if it holds
+an error code.
 
-I have noticed memcg_stock is a DEFINE_PER_CPU and not
-DEFINE_PER_CPU_ALIGNED so I think that the intended cacheline usage isn't
-guaranteed now.
+   548          cci_write(imx334->cci, IMX334_REG_VMAX, lpfr, &ret);
+   549          cci_write(imx334->cci, IMX334_REG_SHUTTER, shutter, &ret);
+   550          cci_write(imx334->cci, IMX334_REG_AGAIN, gain, &ret);
 
-Actually tried compiling and got in objdump -t vmlinux:
+cci_write() is designed to preserve the error codes from previous calls.
+It will only write error codes to "ret", it will not write success.  If
+everything succeeds then "ret" is uninitialized.
 
-ffffffff83a26e60 l     O .data..percpu  0000000000000088 memcg_stock
+   551  
+   552          ret_hold = cci_write(imx334->cci, IMX334_REG_HOLD, 0, NULL);
+   553          if (ret_hold)
+   554                  return ret_hold;
+   555  
+   556          return ret;
+   557  }
 
-AFAICS that's aligned to 32 bytes only (0x60 is 96) bytes, not 64.
+In production then everyone should run with INIT_STACK_ALL_ZERO.  In that
+case everything works fine.  However some older distributions do not use
+this option.  Also in testing, I would encourage everyone to run with
+INIT_STACK_ALL_PATTERN.
 
-changing to _ALIGNED gives me:
+regards,
+dan carpenter
 
-ffffffff83a2c5c0 l     O .data..percpu  0000000000000088 memcg_stock
-
-0xc0 is 192 so multiple of 64, so seems to work as intended and indeed
-necessary. So you should change it too while adding the comment.
-
->  	struct obj_cgroup *cached_objcg;
->  	struct pglist_data *cached_pgdat;
