@@ -1,1002 +1,295 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CEF29A3D2
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C0A2798EA;
+	Wed, 30 Apr 2025 17:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035556; cv=none; b=Ec6/0J2qbgQ9z6Njo6UTP3xekWkbsEHTADhTiffcD0BFwU1zlUv2d2mEaHspsv/zsx6EG2RbrciYj/y100tajt8VrEOmo/pMv9vjtEbm16/iNX3cr7uJ2izEP4txNuTRkHCeU+6tSao7ovN0lv2T53L726n7bFpPm67q8KAJKGY=
+	t=1746035573; cv=none; b=Uro2vJyZ46RZJZKtzEJlV/6B4PqXlYDOheGVOo8fQkcpQlvMwQ91XbyLeCEoC0PXaRrfJblaWDpo5fXcgZz4SxzP1uFYvZGa6O5mqbOkcxir3z9gfccLXFtz+y3ow5ET0NMlU8LzF3eNE9qkS/FonTo2ek3/9mN+XGTPdPubqTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035556; c=relaxed/simple;
-	bh=xJquY5Hl5E9RUZbJwT7S1BKF7xKcAmbftEcxQfDMZss=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bUUtuCYa1DH/oyl+N+YWhKdPXX9HMLgaBY64sBBLAvV5YfUWDS5dXHjCHILeTh8/pBKTtL1cQUPOxD0UD9S4ZZIjZzkGCoPzEOXXJ8J0QYWsUyYZ4kUpf3u0dR9tRihA0B9yI5V3GIGlMsw4/p1Wsj8dCmzCCp16OY50zaZyRrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m/kKYybp; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1746035573; c=relaxed/simple;
+	bh=zYw/s5vnoNifPWPELFEdxD8cn9LSC0nK+AUWE/Y7jNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=US29SL1u3TlwKeSXxjlOXSJ1riQQPcVyEKmiU4PWUB8FH6Vu42Ra9ZFQCfiCfoDGMxXwRRBzbTGyHF3ODE9ZNCvEXUeUHaUec+8pMyUurO1aRi1XRED5p4NK3ur980lYduQO7eCsLe/CTyjCieZsD3moT8kHiLxTKBhjdBzwbVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2w8U5Sb; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m/kKYybp"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3032f4eca83so125563a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:52:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2w8U5Sb"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso245022b3a.2;
+        Wed, 30 Apr 2025 10:52:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035553; x=1746640353; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9PuDrQPNJhy+WNCecljP6AeazJZzdfcGsUN32chaKzE=;
-        b=m/kKYybpPZg35HmzGapQafsPvJ41ZnY7B/VTcOyc7GC2y0KjFmcK8YS67LDSXnogHO
-         ynZpK1U4IcckBK1X4LKZa1dE2j6l6XvQF4BNIgai1GlrexH4GGAxdznqA7ERET2lkxBQ
-         qR1Nc9zptDvt2MeOggA63p5m9KTS+7Vn2F9OWi1pAruKinDJvYU4Cz5AsukN4wlqKQkK
-         qI87ygBqJ4a4BAfU/PF+VOHiZOOiquF67fRHcqfeiqpup0lSY+GOalTgEV7iUKZV7G1F
-         Tn5ZdcqqIUN19rCcQbWzIIEJuJxL+S9xrD3NxkHa02zlHCq8dJS54AMOQTlogLQzmghC
-         6faA==
+        d=gmail.com; s=20230601; t=1746035570; x=1746640370; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2nhmZSwtgikjWBSYNUyofWdCpk4ZqQ2gv/cEQTRW/cY=;
+        b=I2w8U5SbsoQwtJwlZ4sUCd3jkO0Lfs/h0eLQDbYwhwAAmyFYbX3QbvJ9mA1g6xkaML
+         oXeB6NXxVYwbIRxmoXftup4TsK7ONwpSJQ9brDeNOuuVB5ojCcSnHpI/lrLzklknjzh0
+         10zkDjgup2rT1AxuFxNoAPyCl7dnwF/yaaFxwOFhn9B3TImA3BsqhQw7dWa/jd6UmhOG
+         ZmBlJMGudkbf/UiO0bkRnDOVdEN9isjDc0mHge06OjJlI7OlwT8vURdc91dAvfsf61c3
+         JpF5Rl2OEwy7q1Od3H4Ie0ryb/kQMOv3tB2J5Xm6JzkJ55rVrqyfFhc5Fzz2qY2JGO+D
+         1XlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035553; x=1746640353;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9PuDrQPNJhy+WNCecljP6AeazJZzdfcGsUN32chaKzE=;
-        b=I3eTQoCvJ6+JS3xOGYYNiAkMDTe9MXrMjotekCr4mnJ1+M2bhNpVxv0fcjRyjolfZA
-         h2hcJq9QkR6Sm64KgPk8+N2K2CrSxI3m/WJc2iIAOp/yl9/o62UubaGOPoaLVC3+jsXN
-         gFNeps90VHEwE4iaMskbDjH8ZFiXb6c0xC76h7rqFgxdl9C3ddrdCrXR0iHeExcT05oI
-         iUB/WRt/xvARYQ3+8SlWh8pxHEyebhayXrlEEm570qi1Fjga+XOwWr1sAgpd4Hxo1Ytl
-         gkN8w1VXDRMLvitqazwWt6Po/i6hQiyqETpVfPxGoeE5sT2a8gtWDjAf5JCou9HvcTbs
-         FlSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsNCy+HrHabFPKalu4OGPdZRzx1wG/5e5x31G9YW5pneao/oGX36Ouo+JuU5kxZRFsbuKrVVYea17TbNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF7keLxL0Qp3SDZ8Hk2W7xgvvqRyrHeoXVViscA9RZzK7XOujE
-	rOjAsBQOxl2DQX4oKDGTvRTQwmfKDzsuCe7w8uxLifSvaox3D3UMd1QnBPLyWFBfI2CNzLGxi0i
-	ZHF+0pA==
-X-Google-Smtp-Source: AGHT+IFiuw5jeYNXxrT1gDpeBbkd2Rs1obnLvwQHVd5kocgaEUPLMsJ48NHBR1uxm4TxOQGZ9Je6lr3CDUPp
-X-Received: from pjk14.prod.google.com ([2002:a17:90b:558e:b0:2fc:2ee0:d38a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5647:b0:309:ebe3:1ef9
- with SMTP id 98e67ed59e1d1-30a343ffe13mr6624858a91.12.1746035553041; Wed, 30
- Apr 2025 10:52:33 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:35 -0700
-In-Reply-To: <20250430175036.184610-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1746035570; x=1746640370;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2nhmZSwtgikjWBSYNUyofWdCpk4ZqQ2gv/cEQTRW/cY=;
+        b=OfVTX4k4m9gMnQSOsfeH2BzYY/hw64nWYrfwfzjNkdBPQi/ZX3NOdYmg+Jexw4M7t5
+         rPm28DVpSbcdGfKpwIRNUhDlMkK1lBiqjzci2e5kNYD5O0dZWsmRnvBhImaH1mnLshAH
+         jv4Vp6fzOqgwW7hhvC+EHi75zrYxwL19u7i5Mhm8ScBnOhyIq9+i1xsqImzFlDxmKxvx
+         X2spOlKdflniINg7a5y9+23QObrcGbmcVjiFqvm8RgI0DRUPaWyGrkpQCkbZ1FIR1N6u
+         A7qQtz5sYx3iCIhzAXppTEWxMawF0iesZQPA34RPlE1Yzbb8ReVohVfxu97eQDGZfmc5
+         HdCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMo1uO09G4ZF/oAQy8Zmt0dp7UTxN0Xsr6cip3H0uyYKTA+7JbLHXPktEV8tmmNZgqY4iBhvhy0G0Se7p36xmkIg==@vger.kernel.org, AJvYcCXh+AL+XMO1mjcKyok5lM4Hkrtjkuy9/k4kYYadHSod+toNA3SMrFysknOo8DnX4TO9xR27GCc4CLj53Js=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySK1r2JeICEy+uo7gPYggfFnDrYNOs2JgH3rBvp3iOMCJujuVs
+	o75NhQ0rtzPUd5FdgrbKGnE0yvHAnoYRdI0ZidC2iYdLN70pT5jq
+X-Gm-Gg: ASbGncvcqoLr+fPkXqFUvO8P/Ql+6k7MMwCXWnzyBsPjen0eC7HXnvzGRP7ov3+51Ew
+	tqPPJ3HWSxgBKeYLAXKgm7GUCdTLZiSQ7sIRT+Ux18Ex+4qaqt+aoUniVteXCqonKAbVse89VYk
+	I9Dtm4lhRLkIO+XRKbquhUBGz3OExaHC54aeaLwnpqhLW9L3eWIBeR0OiRtgUr1m66ViUD+BWo3
+	FOca2591RGV6vkCpC1vUVeAhh0+o9s3dwX2DSRRX78n+RR3wOw152xpEkJgxXFga5HyFDtihKmO
+	N9hcSVF7NECo+YjYcisAS1Z2IK8wdWaaZp5kpwM=
+X-Google-Smtp-Source: AGHT+IHSsmjIHujeop0GPrFKZEE8a20ERgK4zOqvjWbsrPxVz4likdeGOhNqZUGu8tAYNJ9jJV6fcQ==
+X-Received: by 2002:a05:6a00:4b06:b0:736:eb7e:df39 with SMTP id d2e1a72fcca58-74038ac9bd3mr7160058b3a.24.1746035570279;
+        Wed, 30 Apr 2025 10:52:50 -0700 (PDT)
+Received: from hiago-nb ([2804:1b3:a7c0:d901:78f8:210a:bdd7:104])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a60081sm2008732b3a.139.2025.04.30.10.52.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 10:52:49 -0700 (PDT)
+Date: Wed, 30 Apr 2025 14:52:43 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com, linux-remoteproc@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
+ devm_clk_get_optional()
+Message-ID: <20250430175243.mszwmrd4iefjjs67@hiago-nb>
+References: <20250423155131.101473-1-hiagofranco@gmail.com>
+ <aAkf6bxBLjgFjvIZ@p14s>
+ <20250423192156.b44wobzcgwgojzk3@hiago-nb>
+ <20250426134958.GB13806@nxa18884-linux>
+ <20250428171257.276bqhaupe4ksu5l@hiago-nb>
+ <20250430060835.GA31028@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250430175036.184610-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-48-irogers@google.com>
-Subject: [PATCH v2 47/47] perf: Silence -Wshorten-64-to-32 warnings
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, 
-	"=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>, 
-	Ben Gainey <ben.gainey@arm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Eder Zulian <ezulian@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>, 
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Howard Chu <howardchu95@gmail.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Jann Horn <jannh@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Yang Jihong <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Hao Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Casey Chen <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Andrew Kreimer <algonell@gmail.com>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430060835.GA31028@nxa18884-linux>
 
-The clang warning -Wshorten-64-to-32 can be useful to catch
-inadvertent truncation. In some instances this truncation can lead to
-changing the sign of a result, for example, truncation to return an
-int to fit a sort routine. Silence the warning by making the implicit
-truncation explicit.
+On Wed, Apr 30, 2025 at 02:08:35PM +0800, Peng Fan wrote:
+> On Mon, Apr 28, 2025 at 02:12:57PM -0300, Hiago De Franco wrote:
+> >On Sat, Apr 26, 2025 at 09:49:58PM +0800, Peng Fan wrote:
+> >> On Wed, Apr 23, 2025 at 04:21:56PM -0300, Hiago De Franco wrote:
+> >> >Hi Mathieu,
+> >> >
+> >> >On Wed, Apr 23, 2025 at 11:14:17AM -0600, Mathieu Poirier wrote:
+> >> >> Good morning,
+> >> >> 
+> >> >> On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
+> >> >> > From: Hiago De Franco <hiago.franco@toradex.com>
+> >> >> > 
+> >> >> > The "clocks" device tree property is not mandatory, and if not provided
+> >> >> > Linux will shut down the remote processor power domain during boot if it
+> >> >> > is not present, even if it is running (e.g. it was started by U-Boot's
+> >> >> > bootaux command).
+> >> >> 
+> >> >> If a clock is not present imx_rproc_probe() will fail, the clock will remain
+> >> >> unused and Linux will switch it off.  I think that is description of what is
+> >> >> happening.
+> >> >> 
+> >> >> > 
+> >> >> > Use the optional devm_clk_get instead.
+> >> >> > 
+> >> >> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> >> >> > ---
+> >> >> >  drivers/remoteproc/imx_rproc.c | 2 +-
+> >> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >> > 
+> >> >> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> >> >> > index 74299af1d7f1..45b5b23980ec 100644
+> >> >> > --- a/drivers/remoteproc/imx_rproc.c
+> >> >> > +++ b/drivers/remoteproc/imx_rproc.c
+> >> >> > @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+> >> >> >  	if (dcfg->method == IMX_RPROC_NONE)
+> >> >> >  		return 0;
+> >> >> >  
+> >> >> > -	priv->clk = devm_clk_get(dev, NULL);
+> >> >> > +	priv->clk = devm_clk_get_optional(dev, NULL);
+> >> >> 
+> >> >> If my understanding of the problem is correct (see above), I think the real fix
+> >> >> for this is to make the "clocks" property mandatory in the bindings.
+> >> >
+> >> >Thanks for the information, from my understanding this was coming from
+> >> >the power domain, I had a small discussion about this with Peng [1],
+> >> >where I was able to bisect the issue into a scu-pd commit. But I see
+> >> >your point for this commit, I can update the commit description.
+> >> >
+> >> >About the change itself, I was not able to find a defined clock to use
+> >> >into the device tree node for the i.MX8QXP/DX, maybe I am missing
+> >> >something? I saw some downstream device trees from NXP using a dummy
+> >> >clock, which I tested and it works, however this would not be the
+> >> >correct solution.
+> >> 
+> >> The clock should be "clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;" for
+> >> i.MX8QX. This should be added into device tree to reflect the hardware truth.
+> >
+> >Is this correct? I added this clock entry and also updated the clk
+> >drivers to handle this option:
+> >
+> >diff --git a/drivers/clk/imx/clk-imx8qxp-rsrc.c b/drivers/clk/imx/clk-imx8qxp-rsrc.c
+> >index 585c425524a4..69c6f1711667 100644
+> >--- a/drivers/clk/imx/clk-imx8qxp-rsrc.c
+> >+++ b/drivers/clk/imx/clk-imx8qxp-rsrc.c
+> >@@ -58,6 +58,7 @@ static const u32 imx8qxp_clk_scu_rsrc_table[] = {
+> >        IMX_SC_R_NAND,
+> >        IMX_SC_R_LVDS_0,
+> >        IMX_SC_R_LVDS_1,
+> >+       IMX_SC_R_M4_0_PID0,
+> >        IMX_SC_R_M4_0_UART,
+> >        IMX_SC_R_M4_0_I2C,
+> >        IMX_SC_R_ELCDIF_PLL,
+> >diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
+> >index 3ae162625bb1..be6dfe0a5b97 100644
+> >--- a/drivers/clk/imx/clk-imx8qxp.c
+> >+++ b/drivers/clk/imx/clk-imx8qxp.c
+> >@@ -142,6 +142,7 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
+> >        imx_clk_scu("a35_clk", IMX_SC_R_A35, IMX_SC_PM_CLK_CPU);
+> >        imx_clk_scu("a53_clk", IMX_SC_R_A53, IMX_SC_PM_CLK_CPU);
+> >        imx_clk_scu("a72_clk", IMX_SC_R_A72, IMX_SC_PM_CLK_CPU);
+> >+       imx_clk_scu("cm40_clk", IMX_SC_R_M4_0_PID0, IMX_SC_PM_CLK_CPU);
+> >
+> >        /* LSIO SS */
+> >        imx_clk_scu("pwm0_clk", IMX_SC_R_PWM_0, IMX_SC_PM_CLK_PER);
+> >
+> >
+> >However I am seeing a permission denied (-13) from the imx_rproc:
+> >
+> >root@colibri-imx8x-07308754:~# dmesg | grep rproc
+> >[    0.489113] imx-rproc imx8x-cm4: Failed to enable clock
+> >[    0.489644] imx-rproc imx8x-cm4: probe with driver imx-rproc failed with error -13
+> >[    0.489708] remoteproc remoteproc0: releasing imx-rproc
+> >
+> >	imx8x-cm4 {
+> >		compatible = "fsl,imx8qxp-cm4";
+> >		clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;
+> 
+> From hardware perspective, this is correct. But i.MX8QXP has
+> SCFW which manages the system resources. For this clock, when
+> M4_0_PID0 is powered up, SCFW will not allow clk_prepare_enable to
+> enable the clock, the error return will be LOCKED if user continue
+> to send the enable request. When SCFW powers up M4, it will automatically
+> configure the clock as I said before.
+> 
+> Set rate is still allowed by SCFW, even enable API return failure, but I think
+> there is no such requirement.
+> 
+> So,
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 74299af1d7f1..627e57a88db2 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+>         struct device *dev = priv->dev;
+>         int ret;
+> 
+> -       /* Remote core is not under control of Linux */
+> -       if (dcfg->method == IMX_RPROC_NONE)
+> +       /* Remote core is not under control of Linux or it is managed by SCU API */
+> +       if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
+>                 return 0;
+> 
+>         priv->clk = devm_clk_get(dev, NULL);
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/perf.c                  |  2 +-
- tools/perf/util/bpf-event.c        |  2 +-
- tools/perf/util/env.c              |  2 +-
- tools/perf/util/event.c            |  4 +--
- tools/perf/util/header.c           | 54 ++++++++++++++++--------------
- tools/perf/util/hist.c             |  7 ++--
- tools/perf/util/machine.c          | 14 ++++----
- tools/perf/util/map.c              |  4 +--
- tools/perf/util/maps.c             |  6 ++--
- tools/perf/util/parse-events.c     | 16 ++++-----
- tools/perf/util/session.c          | 29 ++++++++--------
- tools/perf/util/sort.c             | 20 +++++------
- tools/perf/util/synthetic-events.c | 22 ++++++------
- tools/perf/util/target.c           |  2 +-
- tools/perf/util/thread-stack.c     |  2 +-
- tools/perf/util/thread.c           |  4 +--
- tools/perf/util/thread_map.c       |  6 ++--
- tools/perf/util/tool.c             |  2 +-
- tools/perf/util/values.c           |  4 +--
- 19 files changed, 104 insertions(+), 98 deletions(-)
+Got it, thanks for the information. I will prepare the V2 with this
+change.
 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index f0617cc41f5f..2e98a29df3b2 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -476,7 +476,7 @@ int main(int argc, const char **argv)
- 	if (!cmd)
- 		cmd = "perf-help";
- 
--	srandom(time(NULL));
-+	srandom((unsigned int)time(NULL));
- 
- 	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
- 	config_exclusive_filename = getenv("PERF_CONFIG");
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index c81444059ad0..3cf7d1a2b624 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -332,7 +332,7 @@ process_bpf_image(char *name, u64 addr, struct kallsyms_parse *data)
- 			.size = offsetof(struct perf_record_ksymbol, name),
- 		},
- 		.addr      = addr,
--		.len       = page_size,
-+		.len       = (__u32)page_size,
- 		.ksym_type = PERF_RECORD_KSYMBOL_TYPE_BPF,
- 		.flags     = 0,
- 	};
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 36411749e007..8238a9a609ab 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -596,7 +596,7 @@ char *perf_env__find_pmu_cap(struct perf_env *env, const char *pmu_name,
- 			     const char *cap)
- {
- 	char *cap_eq;
--	int cap_size;
-+	size_t cap_size;
- 	char **ptr;
- 	int i, j;
- 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index c23b77f8f854..edd7e2fccf60 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -156,7 +156,7 @@ void perf_event__read_stat_config(struct perf_stat_config *config,
- 		switch (event->data[i].tag) {
- #define CASE(__term, __val)					\
- 		case PERF_STAT_CONFIG_TERM__##__term:		\
--			config->__val = event->data[i].val;	\
-+			config->__val = (typeof(config->__val))event->data[i].val; \
- 			break;
- 
- 		CASE(AGGR_MODE,  aggr_mode)
-@@ -190,7 +190,7 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp)
- 	u32 nr_namespaces, idx;
- 
- 	ns_link_info = event->namespaces.link_info;
--	nr_namespaces = event->namespaces.nr_namespaces;
-+	nr_namespaces = (u32)event->namespaces.nr_namespaces;
- 
- 	ret += fprintf(fp, " %d/%d - nr_namespaces: %u\n\t\t[",
- 		       event->namespaces.pid,
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e3cdc3b7b4ab..e364dea9e243 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -185,7 +185,7 @@ static int do_write_string(struct feat_fd *ff, const char *str)
- 	u32 len, olen;
- 	int ret;
- 
--	olen = strlen(str) + 1;
-+	olen = (u32)strlen(str) + 1;
- 	len = PERF_ALIGN(olen, NAME_ALIGN);
- 
- 	/* write len, incl. \0 */
-@@ -286,7 +286,7 @@ static int do_read_bitmap(struct feat_fd *ff, unsigned long **pset, u64 *psize)
- 	if (ret)
- 		return ret;
- 
--	set = bitmap_zalloc(size);
-+	set = bitmap_zalloc((int)size);
- 	if (!set)
- 		return -ENOMEM;
- 
-@@ -1369,7 +1369,9 @@ static int memory_node__sort(const void *a, const void *b)
- 	const struct memory_node *na = a;
- 	const struct memory_node *nb = b;
- 
--	return na->node - nb->node;
-+	if (na->node == nb->node)
-+		return 0;
-+	return na->node < nb->node ? -1 : 1;
- }
- 
- static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
-@@ -2144,7 +2146,7 @@ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
- 	str = ff->ph->env.pmu_mappings;
- 
- 	while (pmu_num) {
--		type = strtoul(str, &tmp, 0);
-+		type = (u32)strtoul(str, &tmp, 0);
- 		if (*tmp != ':')
- 			goto error;
- 
-@@ -2214,10 +2216,10 @@ static void memory_node__fprintf(struct memory_node *n,
- 	char buf_map[100], buf_size[50];
- 	unsigned long long size;
- 
--	size = bsize * bitmap_weight(n->set, n->size);
-+	size = bsize * bitmap_weight(n->set, (unsigned int)n->size);
- 	unit_number__scnprintf(buf_size, 50, size);
- 
--	bitmap_scnprintf(n->set, n->size, buf_map, 100);
-+	bitmap_scnprintf(n->set, (unsigned int)n->size, buf_map, 100);
- 	fprintf(fp, "#  %3" PRIu64 " [%s]: %s\n", n->node, buf_size, buf_map);
- }
- 
-@@ -2782,7 +2784,7 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
- 
- static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
- {
--	size_t ret = -1;
-+	int ret = -1;
- 	u32 i, nr, nr_groups;
- 	struct perf_session *session;
- 	struct evsel *evsel, *leader = NULL;
-@@ -2996,7 +2998,7 @@ static int process_mem_topology(struct feat_fd *ff,
- 
- 	ff->ph->env.memory_bsize    = bsize;
- 	ff->ph->env.memory_nodes    = nodes;
--	ff->ph->env.nr_memory_nodes = nr;
-+	ff->ph->env.nr_memory_nodes = (int)nr;
- 	ret = 0;
- 
- out:
-@@ -3489,7 +3491,8 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	int fd = perf_data__fd(session->data);
- 	struct stat st;
- 	time_t stctime;
--	int ret, bit;
-+	int ret;
-+	size_t bit;
- 
- 	hd.fp = fp;
- 	hd.full = full;
-@@ -3586,15 +3589,15 @@ static int perf_header__adds_write(struct perf_header *header,
- 				   struct evlist *evlist, int fd,
- 				   struct feat_copier *fc)
- {
--	int nr_sections;
-+	size_t nr_sections;
- 	struct feat_fd ff = {
- 		.fd  = fd,
- 		.ph = header,
- 	};
- 	struct perf_file_section *feat_sec, *p;
--	int sec_size;
-+	size_t sec_size;
- 	u64 sec_start;
--	int feat;
-+	size_t feat;
- 	int err;
- 
- 	nr_sections = bitmap_weight(header->adds_features, HEADER_FEAT_BITS);
-@@ -3611,8 +3614,8 @@ static int perf_header__adds_write(struct perf_header *header,
- 	lseek(fd, sec_start + sec_size, SEEK_SET);
- 
- 	for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
--		if (do_write_feat(&ff, feat, &p, evlist, fc))
--			perf_header__clear_feat(header, feat);
-+		if (do_write_feat(&ff, (int)feat, &p, evlist, fc))
-+			perf_header__clear_feat(header, (int)feat);
- 	}
- 
- 	lseek(fd, sec_start, SEEK_SET);
-@@ -3821,9 +3824,9 @@ int perf_header__process_sections(struct perf_header *header, int fd,
- 						 int feat, int fd, void *data))
- {
- 	struct perf_file_section *feat_sec, *sec;
--	int nr_sections;
--	int sec_size;
--	int feat;
-+	size_t nr_sections;
-+	size_t sec_size;
-+	size_t feat;
- 	int err;
- 
- 	nr_sections = bitmap_weight(header->adds_features, HEADER_FEAT_BITS);
-@@ -3843,7 +3846,7 @@ int perf_header__process_sections(struct perf_header *header, int fd,
- 		goto out_free;
- 
- 	for_each_set_bit(feat, header->adds_features, HEADER_LAST_FEATURE) {
--		err = process(sec++, header, feat, fd, data);
-+		err = process(sec++, header, (int)feat, fd, data);
- 		if (err < 0)
- 			goto out_free;
- 	}
-@@ -4183,7 +4186,7 @@ static int evsel__prepare_tracepoint_event(struct evsel *evsel, struct tep_handl
- 		return -1;
- 	}
- 
--	event = tep_find_event(pevent, evsel->core.attr.config);
-+	event = tep_find_event(pevent, (int)evsel->core.attr.config);
- 	if (event == NULL) {
- 		pr_debug("cannot find event format for %d\n", (int)evsel->core.attr.config);
- 		return -1;
-@@ -4221,8 +4224,8 @@ int perf_session__read_header(struct perf_session *session)
- 	struct perf_file_header	f_header;
- 	struct perf_file_attr	f_attr;
- 	u64			f_id;
--	int nr_attrs, nr_ids, i, j, err;
--	int fd = perf_data__fd(data);
-+	u64 nr_attrs, nr_ids;
-+	int err, fd = perf_data__fd(data);
- 
- 	session->evlist = evlist__new();
- 	if (session->evlist == NULL)
-@@ -4271,7 +4274,7 @@ int perf_session__read_header(struct perf_session *session)
- 	nr_attrs = f_header.attrs.size / f_header.attr_size;
- 	lseek(fd, f_header.attrs.offset, SEEK_SET);
- 
--	for (i = 0; i < nr_attrs; i++) {
-+	for (u64 i = 0; i < nr_attrs; i++) {
- 		struct evsel *evsel;
- 		off_t tmp;
- 
-@@ -4308,7 +4311,7 @@ int perf_session__read_header(struct perf_session *session)
- 
- 		lseek(fd, f_attr.ids.offset, SEEK_SET);
- 
--		for (j = 0; j < nr_ids; j++) {
-+		for (int j = 0; j < (int)nr_ids; j++) {
- 			if (perf_header__getbuffer64(header, fd, &f_id, sizeof(f_id)))
- 				goto out_errno;
- 
-@@ -4537,7 +4540,8 @@ int perf_event__process_tracing_data(struct perf_session *session,
- 		return -1;
- 	}
- 	if (session->trace_event_repipe) {
--		int retw = write(STDOUT_FILENO, buf, padding);
-+		ssize_t retw = write(STDOUT_FILENO, buf, padding);
-+
- 		if (retw <= 0 || retw != padding) {
- 			pr_err("%s: repiping tracing data padding", __func__);
- 			return -1;
-@@ -4551,7 +4555,7 @@ int perf_event__process_tracing_data(struct perf_session *session,
- 
- 	evlist__prepare_tracepoint_events(session->evlist, session->tevent.pevent);
- 
--	return size_read + padding;
-+	return (int)(size_read + padding);
- }
- #endif
- 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index d65228c11412..37469da4afc2 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -700,7 +700,8 @@ static unsigned random_max(unsigned high)
- {
- 	unsigned thresh = -high % high;
- 	for (;;) {
--		unsigned r = random();
-+		unsigned int r = (unsigned int)random();
-+
- 		if (r >= thresh)
- 			return r % high;
- 	}
-@@ -929,7 +930,7 @@ iter_prepare_branch_entry(struct hist_entry_iter *iter, struct addr_location *al
- 		return -ENOMEM;
- 
- 	iter->curr = 0;
--	iter->total = sample->branch_stack->nr;
-+	iter->total = (int)sample->branch_stack->nr;
- 
- 	iter->bi = bi;
- 	return 0;
-@@ -2770,7 +2771,7 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 			 * Note that perf stores branches reversed from
- 			 * program order!
- 			 */
--			for (int i = bs->nr - 1; i >= 0; i--) {
-+			for (int i = (int)bs->nr - 1; i >= 0; i--) {
- 				addr_map_symbol__account_cycles(&bi[i].from,
- 					nonany_branch_mode ? NULL : prev,
- 					bi[i].flags.cycles, evsel,
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2531b373f2cf..0881b83532fd 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -809,7 +809,7 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
- 
- 	if (dso) {
- 		u8 *new_bytes = event->text_poke.bytes + event->text_poke.old_len;
--		int ret;
-+		ssize_t ret;
- 
- 		/*
- 		 * Kernel maps might be changed when loading symbols so loading
-@@ -2306,7 +2306,7 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
- 	struct branch_stack *lbr_stack = sample->branch_stack;
- 	struct branch_entry *entries = perf_sample__branch_entries(sample);
- 	u8 cpumode = PERF_RECORD_MISC_USER;
--	int lbr_nr = lbr_stack->nr;
-+	int lbr_nr = (int)lbr_stack->nr;
- 	struct branch_flags *flags;
- 	int err, i;
- 	u64 ip;
-@@ -2472,7 +2472,7 @@ static bool has_stitched_lbr(struct thread *thread,
- 	 *
- 	 * Starts from the base-of-stack of current sample.
- 	 */
--	for (i = distance, j = cur_stack->nr - 1; (i >= 0) && (j >= 0); i--, j--) {
-+	for (i = (int)distance, j = (int)cur_stack->nr - 1; (i >= 0) && (j >= 0); i--, j--) {
- 		if ((prev_entries[i].from != cur_entries[j].from) ||
- 		    (prev_entries[i].to != cur_entries[j].to) ||
- 		    (prev_entries[i].flags.value != cur_entries[j].flags.value))
-@@ -2488,7 +2488,7 @@ static bool has_stitched_lbr(struct thread *thread,
- 	 * and the base-of-stack of current sample into lbr_stitch->lists.
- 	 * These LBRs will be stitched later.
- 	 */
--	for (i = prev_stack->nr - 1; i > (int)distance; i--) {
-+	for (i = (int)prev_stack->nr - 1; i > (int)distance; i--) {
- 
- 		if (!lbr_stitch->prev_lbr_cursor[i].valid)
- 			continue;
-@@ -2687,7 +2687,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 	u64 leaf_frame_caller;
- 
- 	if (chain)
--		chain_nr = chain->nr;
-+		chain_nr = (int)chain->nr;
- 
- 	if (evsel__has_branch_callstack(evsel)) {
- 		struct perf_env *env = evsel__env(evsel);
-@@ -2783,7 +2783,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- check_calls:
- 	if (chain && callchain_param.order != ORDER_CALLEE) {
- 		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
--					&cpumode, chain->nr - first_call, symbols);
-+					&cpumode, (int)(chain->nr - first_call), symbols);
- 		if (err)
- 			return (err < 0) ? err : 0;
- 	}
-@@ -2794,7 +2794,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 		if (callchain_param.order == ORDER_CALLEE)
- 			j = i;
- 		else
--			j = chain->nr - i - 1;
-+			j = (int)(chain->nr - i - 1);
- 
- #ifdef HAVE_SKIP_CALLCHAIN_IDX
- 		if (j == skip_idx)
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index d729438b7d65..57e22e49e65c 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -74,8 +74,8 @@ static inline bool replace_android_lib(const char *filename, char *newfilename)
- 		if (!(ndk && app))
- 			return false;
- 
--		ndk_length = strlen(ndk);
--		app_length = strlen(app);
-+		ndk_length = (int)strlen(ndk);
-+		app_length = (int)strlen(app);
- 
- 		if (!(ndk_length && app_length && app_abi_length))
- 			return false;
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 0b40d901675e..8101a3e3810b 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -396,7 +396,7 @@ static unsigned int maps__by_address_index(const struct maps *maps, const struct
- 				sizeof(*mapp), map__start_cmp);
- 
- 		if (mapp)
--			return mapp - maps_by_address;
-+			return (unsigned int)(mapp - maps_by_address);
- 	} else {
- 		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
- 			if (RC_CHK_ACCESS(maps_by_address[i]) == RC_CHK_ACCESS(map))
-@@ -417,7 +417,7 @@ static unsigned int maps__by_name_index(const struct maps *maps, const struct ma
- 				sizeof(*mapp), map__strcmp);
- 
- 		if (mapp)
--			return mapp - maps_by_name;
-+			return (unsigned int)(mapp - maps_by_name);
- 	} else {
- 		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
- 			if (RC_CHK_ACCESS(maps_by_name[i]) == RC_CHK_ACCESS(map))
-@@ -1134,7 +1134,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
- 
- 			if (mapp) {
- 				result = map__get(*mapp);
--				i = mapp - maps__maps_by_name(maps);
-+				i = (unsigned int)(mapp - maps__maps_by_name(maps));
- 				RC_CHK_ACCESS(maps)->last_search_by_name_idx = i;
- 			}
- 			done = true;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 89708d1769c8..de879ab45ea5 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -317,7 +317,7 @@ static int parse_aliases(const char *str, const char *const names[][EVSEL__MAX_A
- 	*longest = -1;
- 	for (int i = 0; i < size; i++) {
- 		for (int j = 0; j < EVSEL__MAX_ALIASES && names[i][j]; j++) {
--			int n = strlen(names[i][j]);
-+			int n = (int)strlen(names[i][j]);
- 
- 			if (n > *longest && !strncasecmp(str, names[i][j], n))
- 				*longest = n;
-@@ -532,8 +532,8 @@ static int add_tracepoint(struct parse_events_state *parse_state,
- 					       !parse_state->fake_tp);
- 
- 	if (IS_ERR(evsel)) {
--		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name, loc->first_column);
--		return PTR_ERR(evsel);
-+		tracepoint_error(err, (int)PTR_ERR(evsel), sys_name, evt_name, loc->first_column);
-+		return (int)PTR_ERR(evsel);
- 	}
- 
- 	if (head_config) {
-@@ -1153,7 +1153,7 @@ static int get_config_terms(const struct parse_events_terms *head_config,
- #define ADD_CONFIG_TERM_VAL(__type, __name, __val, __weak)	\
- do {								\
- 	ADD_CONFIG_TERM(__type, __weak);			\
--	__t->val.__name = __val;				\
-+	__t->val.__name = (typeof(__t->val.__name))__val;	\
- } while (0)
- 
- #define ADD_CONFIG_TERM_STR(__type, __val, __weak)		\
-@@ -2303,12 +2303,12 @@ static void __parse_events_error__print(int err_idx, const char *err_str,
- 	const char *str = "invalid or unsupported event: ";
- 	char _buf[MAX_WIDTH];
- 	char *buf = (char *) event;
--	int idx = 0;
-+	size_t idx = 0;
- 	if (err_str) {
- 		/* -2 for extra '' in the final fprintf */
- 		int width       = get_term_width() - 2;
--		int len_event   = strlen(event);
--		int len_str, max_len, cut = 0;
-+		size_t len_event   = strlen(event);
-+		size_t len_str, max_len, cut = 0;
- 
- 		/*
- 		 * Maximum error index indent, we will cut
-@@ -2346,7 +2346,7 @@ static void __parse_events_error__print(int err_idx, const char *err_str,
- 
- 	fprintf(stderr, "%s'%s'\n", str, buf);
- 	if (idx) {
--		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
-+		fprintf(stderr, "%*s\\___ %s\n", (int)idx + 1, "", err_str);
- 		if (err_help)
- 			fprintf(stderr, "\n%s\n", err_help);
- 	}
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 81cc56503a2d..395cd82e44d1 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -263,7 +263,7 @@ void perf_session__delete(struct perf_session *session)
- static void swap_sample_id_all(union perf_event *event, void *data)
- {
- 	void *end = (void *) event + event->header.size;
--	int size = end - data;
-+	size_t size = end - data;
- 
- 	BUG_ON(size % sizeof(u64));
- 	mem_bswap_64(data, size);
-@@ -912,13 +912,13 @@ static void branch_stack__printf(struct perf_sample *sample,
- 
- static void regs_dump__printf(u64 mask, u64 *regs, const char *arch)
- {
--	unsigned rid, i = 0;
-+	unsigned int i = 0;
-+	size_t rid;
- 
- 	for_each_set_bit(rid, (unsigned long *) &mask, sizeof(mask) * 8) {
- 		u64 val = regs[i++];
- 
--		printf(".... %-5s 0x%016" PRIx64 "\n",
--		       perf_reg_name(rid, arch), val);
-+		printf(".... %-5s 0x%016" PRIx64 "\n", perf_reg_name((int)rid, arch), val);
- 	}
- }
- 
-@@ -1452,7 +1452,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		 */
- 		if (!perf_data__is_pipe(session->data))
- 			lseek(fd, file_offset + event->header.size, SEEK_SET);
--		err = tool->auxtrace(session, event);
-+		err = (int)tool->auxtrace(session, event);
- 		break;
- 	case PERF_RECORD_AUXTRACE_ERROR:
- 		perf_session__auxtrace_error_inc(session, event);
-@@ -1506,7 +1506,7 @@ int perf_session__deliver_synth_event(struct perf_session *session,
- 	events_stats__inc(&evlist->stats, event->header.type);
- 
- 	if (event->header.type >= PERF_RECORD_USER_TYPE_START)
--		return perf_session__process_user_event(session, event, 0, NULL);
-+		return (int)perf_session__process_user_event(session, event, 0, NULL);
- 
- 	return machines__deliver_event(&session->machines, evlist, event, sample, tool, 0, NULL);
- }
-@@ -1944,7 +1944,7 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 		perf_session__warn_about_errors(session);
- 	ordered_events__free(&session->ordered_events);
- 	auxtrace__free_events(session);
--	return err;
-+	return (int)err;
- }
- 
- static union perf_event *
-@@ -2164,7 +2164,7 @@ reader__read_event(struct reader *rd, struct perf_session *session,
- 	event = fetch_mmaped_event(rd->head, rd->mmap_size, rd->mmap_cur,
- 				   session->header.needs_swap);
- 	if (IS_ERR(event))
--		return PTR_ERR(event);
-+		return (int)PTR_ERR(event);
- 
- 	if (!event)
- 		return READER_NODATA;
-@@ -2177,8 +2177,8 @@ reader__read_event(struct reader *rd, struct perf_session *session,
- 	    (skip = rd->process(session, event, rd->file_pos, rd->path)) < 0) {
- 		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
- 		       rd->file_offset + rd->head, event->header.size,
--		       event->header.type, strerror(-skip));
--		err = skip;
-+			event->header.type, strerror((int)-skip));
-+		err = (int)skip;
- 		goto out;
- 	}
- 
-@@ -2692,14 +2692,14 @@ int perf_event__process_id_index(struct perf_session *session,
- 		if (!sid)
- 			return -ENOENT;
- 
--		sid->idx = e->idx;
-+		sid->idx = (int)e->idx;
- 		sid->cpu.cpu = e->cpu;
--		sid->tid = e->tid;
-+		sid->tid = (pid_t)e->tid;
- 
- 		if (!e2)
- 			continue;
- 
--		sid->machine_pid = e2->machine_pid;
-+		sid->machine_pid = (pid_t)e2->machine_pid;
- 		sid->vcpu.cpu = e2->vcpu;
- 
- 		if (!sid->machine_pid)
-@@ -2713,7 +2713,8 @@ int perf_event__process_id_index(struct perf_session *session,
- 			perf_guest = true;
- 		}
- 
--		ret = perf_session__set_guest_cpu(session, sid->machine_pid, e->tid, e2->vcpu);
-+		ret = perf_session__set_guest_cpu(session, sid->machine_pid,
-+						(pid_t)e->tid, (int)e2->vcpu);
- 		if (ret)
- 			return ret;
- 	}
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 594b75ca95bf..898f811e23a2 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -91,7 +91,7 @@ static int repsep_snprintf(char *bf, size_t size, const char *fmt, ...)
- 	va_end(ap);
- 
- 	if (n >= (int)size)
--		return size - 1;
-+		return (int)size - 1;
- 	return n;
- }
- 
-@@ -392,7 +392,7 @@ static int _hist_entry__sym_snprintf(struct map_symbol *ms,
- 				       len, ip);
- 	}
- 
--	return ret;
-+	return (int)ret;
- }
- 
- int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width)
-@@ -1339,7 +1339,7 @@ static int _hist_entry__addr_snprintf(struct map_symbol *ms,
- 				       len, ip);
- 	}
- 
--	return ret;
-+	return (int)ret;
- }
- 
- static int hist_entry__addr_from_snprintf(struct hist_entry *he, char *bf,
-@@ -2667,7 +2667,7 @@ static int __sort__hpp_width(struct perf_hpp_fmt *fmt,
- 	if (!len)
- 		len = hists__col_len(hists, hse->se->se_width_idx);
- 
--	return len;
-+	return (int)len;
- }
- 
- static int __sort__hpp_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-@@ -2681,7 +2681,7 @@ static int __sort__hpp_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	if (!len)
- 		len = hists__col_len(he->hists, hse->se->se_width_idx);
- 
--	return hse->se->se_snprintf(he, hpp->buf, hpp->size, len);
-+	return hse->se->se_snprintf(he, hpp->buf, hpp->size, (unsigned int)len);
- }
- 
- static int64_t __sort__hpp_cmp(struct perf_hpp_fmt *fmt,
-@@ -2919,7 +2919,7 @@ static int hde_width(struct hpp_dynamic_entry *hde)
- {
- 	if (!hde->hpp.len) {
- 		int len = hde->dynamic_len;
--		int namelen = strlen(hde->field->name);
-+		int namelen = (int)strlen(hde->field->name);
- 		int fieldlen = hde->field->size;
- 
- 		if (namelen > len)
-@@ -2969,7 +2969,7 @@ static void update_dynamic_len(struct hpp_dynamic_entry *hde,
- 			len = pos - str;
- 
- 			if (len > hde->dynamic_len)
--				hde->dynamic_len = len;
-+				hde->dynamic_len = (unsigned int)len;
- 			break;
- 		}
- 
-@@ -3008,7 +3008,7 @@ static int __sort__hde_width(struct perf_hpp_fmt *fmt,
- 	if (!len)
- 		len = hde_width(hde);
- 
--	return len;
-+	return (int)len;
- }
- 
- bool perf_hpp__defined_dynamic_entry(struct perf_hpp_fmt *fmt, struct hists *hists)
-@@ -3257,7 +3257,7 @@ static struct evsel *find_evsel(struct evlist *evlist, char *event_name)
- 
- 	/* case 1 */
- 	if (event_name[0] == '%') {
--		int nr = strtol(event_name+1, NULL, 0);
-+		int nr = (int)strtol(event_name+1, NULL, 0);
- 
- 		if (nr > evlist->core.nr_entries)
- 			return NULL;
-@@ -4222,7 +4222,7 @@ char *sort_help(const char *prefix, enum sort_mode mode)
- {
- 	struct strbuf sb;
- 	char *s;
--	int len = strlen(prefix) + INDENT;
-+	int len = (int)strlen(prefix) + INDENT;
- 
- 	strbuf_init(&sb, 300);
- 	strbuf_addstr(&sb, prefix);
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 2fc4d0537840..f65bb4b76ccb 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -338,10 +338,10 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
- 
- 	if (io__get_hex(io, &temp) != ':')
- 		return false;
--	*maj = temp;
-+	*maj = (u32)temp;
- 	if (io__get_hex(io, &temp) != ' ')
- 		return false;
--	*min = temp;
-+	*min = (u32)temp;
- 
- 	ch = io__get_dec(io, inode);
- 	if (ch != ' ') {
-@@ -433,7 +433,7 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
- 	const char *hugetlbfs_mnt = hugetlbfs__mountpoint();
--	int hugetlbfs_mnt_len = hugetlbfs_mnt ? strlen(hugetlbfs_mnt) : 0;
-+	size_t hugetlbfs_mnt_len = hugetlbfs_mnt ? strlen(hugetlbfs_mnt) : 0;
- 
- 	if (machine__is_default_guest(machine))
- 		return 0;
-@@ -815,7 +815,7 @@ static int __event__synthesize_thread(union perf_event *comm_event,
- 		if (!isdigit(dent->d_name[0]))
- 			continue;
- 
--		_pid = strtol(dent->d_name, &end, 10);
-+		_pid = (pid_t)strtol(dent->d_name, &end, 10);
- 		if (*end)
- 			continue;
- 
-@@ -1043,7 +1043,7 @@ int perf_event__synthesize_threads(const struct perf_tool *tool,
- 		return err;
- 
- 	if (nr_threads_synthesize == UINT_MAX)
--		thread_nr = sysconf(_SC_NPROCESSORS_ONLN);
-+		thread_nr = (int)sysconf(_SC_NPROCESSORS_ONLN);
- 	else
- 		thread_nr = nr_threads_synthesize;
- 
-@@ -1829,7 +1829,7 @@ int perf_event__synthesize_id_sample(__u64 *array, u64 type, const struct perf_s
- 		array++;
- 	}
- 
--	return (void *)array - (void *)start;
-+	return (int)((void *)array - (void *)start);
- }
- 
- int __perf_event__synthesize_id_index(const struct perf_tool *tool, perf_event__handler_t process,
-@@ -2213,7 +2213,7 @@ int perf_event__synthesize_tracing_data(const struct perf_tool *tool, int fd, st
- 	aligned_size = PERF_ALIGN(size, sizeof(u64));
- 	padding = aligned_size - size;
- 	ev.tracing_data.header.size = sizeof(ev.tracing_data);
--	ev.tracing_data.size = aligned_size;
-+	ev.tracing_data.size = (__u32)aligned_size;
- 
- 	process(tool, &ev, NULL, NULL);
- 
-@@ -2227,7 +2227,7 @@ int perf_event__synthesize_tracing_data(const struct perf_tool *tool, int fd, st
- 	if (write_padded(&ff, NULL, 0, padding))
- 		return -1;
- 
--	return aligned_size;
-+	return (int)aligned_size;
- }
- #endif
- 
-@@ -2375,8 +2375,8 @@ int perf_event__synthesize_features(const struct perf_tool *tool, struct perf_se
- 	struct perf_header *header = &session->header;
- 	struct perf_record_header_feature *fe;
- 	struct feat_fd ff;
--	size_t sz, sz_hdr;
--	int feat, ret;
-+	size_t sz, sz_hdr, feat;
-+	int ret;
- 
- 	sz_hdr = sizeof(fe->header);
- 	sz = sizeof(union perf_event);
-@@ -2394,7 +2394,7 @@ int perf_event__synthesize_features(const struct perf_tool *tool, struct perf_se
- 
- 	for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
- 		if (!feat_ops[feat].synthesize) {
--			pr_debug("No record header feature for header :%d\n", feat);
-+			pr_debug("No record header feature for header :%zu\n", feat);
- 			continue;
- 		}
- 
-diff --git a/tools/perf/util/target.c b/tools/perf/util/target.c
-index 0f383418e3df..6a331743a099 100644
---- a/tools/perf/util/target.c
-+++ b/tools/perf/util/target.c
-@@ -112,7 +112,7 @@ enum target_errno target__parse_uid(struct target *target)
- 		 * The user name not found. Maybe it's a UID number.
- 		 */
- 		char *endptr;
--		int uid = strtol(str, &endptr, 10);
-+		int uid = (int)strtol(str, &endptr, 10);
- 
- 		if (*endptr != '\0')
- 			return TARGET_ERRNO__INVALID_UID;
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index c6a0a27b12c2..09cd14854aa5 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -180,7 +180,7 @@ static struct thread_stack *thread_stack__new(struct thread *thread, int cpu,
- 	unsigned int new_sz = 1;
- 
- 	if (thread_stack__per_cpu(thread) && cpu > 0)
--		new_sz = roundup_pow_of_two(cpu + 1);
-+		new_sz = (unsigned int)roundup_pow_of_two(cpu + 1);
- 
- 	if (!ts || new_sz > old_sz) {
- 		new_ts = calloc(new_sz, sizeof(*ts));
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 89585f53c1d5..c108f238012e 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -309,7 +309,7 @@ static int __thread__comm_len(struct thread *thread, const char *comm)
- {
- 	if (!comm)
- 		return 0;
--	thread__set_comm_len(thread, strlen(comm));
-+	thread__set_comm_len(thread, (int)strlen(comm));
- 
- 	return thread__var_comm_len(thread);
- }
-@@ -544,7 +544,7 @@ int thread__memcpy(struct thread *thread, struct machine *machine,
- 
- 	addr_location__exit(&al);
- 
--	return dso__data_read_offset(dso, machine, offset, buf, len);
-+	return (int)dso__data_read_offset(dso, machine, offset, buf, len);
- }
- 
- void thread__free_stitch_list(struct thread *thread)
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index b5f12390c355..141fbb819a65 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -93,7 +93,7 @@ static struct perf_thread_map *__thread_map__new_all_cpus(uid_t uid)
- 	while ((dirent = readdir(proc)) != NULL) {
- 		char *end;
- 		bool grow = false;
--		pid_t pid = strtol(dirent->d_name, &end, 10);
-+		pid_t pid = (pid_t)strtol(dirent->d_name, &end, 10);
- 
- 		if (*end) /* only interested in proper numerical dirents */
- 			continue;
-@@ -195,7 +195,7 @@ static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
- 		return NULL;
- 
- 	strlist__for_each_entry(pos, slist) {
--		pid = strtol(pos->s, &end_ptr, 10);
-+		pid = (pid_t)strtol(pos->s, &end_ptr, 10);
- 
- 		if (pid == INT_MIN || pid == INT_MAX ||
- 		    (*end_ptr != '\0' && *end_ptr != ','))
-@@ -259,7 +259,7 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
- 		return NULL;
- 
- 	strlist__for_each_entry(pos, slist) {
--		tid = strtol(pos->s, &end_ptr, 10);
-+		tid = (pid_t)strtol(pos->s, &end_ptr, 10);
- 
- 		if (tid == INT_MIN || tid == INT_MAX ||
- 		    (*end_ptr != '\0' && *end_ptr != ','))
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 3b7f390f26eb..f13d5c1e3cd7 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -134,7 +134,7 @@ static int skipn(int fd, off_t n)
- 	while (n > 0) {
- 		ret = read(fd, buf, min(n, (off_t)sizeof(buf)));
- 		if (ret <= 0)
--			return ret;
-+			return (int)ret;
- 		n -= ret;
- 	}
- 
-diff --git a/tools/perf/util/values.c b/tools/perf/util/values.c
-index ec72d29f3d58..e44dbceaa88b 100644
---- a/tools/perf/util/values.c
-+++ b/tools/perf/util/values.c
-@@ -197,7 +197,7 @@ static void perf_read_values__display_pretty(FILE *fp,
- 	tidwidth = 3;
- 	pidwidth = 3;
- 	for (j = 0; j < values->num_counters; j++)
--		counterwidth[j] = strlen(evsel__name(values->counters[j]));
-+		counterwidth[j] = (int)strlen(evsel__name(values->counters[j]));
- 	for (i = 0; i < values->threads; i++) {
- 		int width;
- 
-@@ -251,7 +251,7 @@ static void perf_read_values__display_raw(FILE *fp,
- 			tidwidth = width;
- 	}
- 	for (j = 0; j < values->num_counters; j++) {
--		width = strlen(evsel__name(values->counters[j]));
-+		width = (int)strlen(evsel__name(values->counters[j]));
- 		if (width > namewidth)
- 			namewidth = width;
- 		width = snprintf(NULL, 0, "%x", values->counters[j]->core.idx);
--- 
-2.49.0.906.g1f30a19c02-goog
+> 
+> 
+> 
+> Regards,
+> Peng
+> 
+> >		mbox-names = "tx", "rx", "rxdb";
+> >		mboxes = <&lsio_mu5 0 1
+> >			  &lsio_mu5 1 1
+> >			  &lsio_mu5 3 1>;
+> >		memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>,
+> >				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
+> >		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+> >				<&pd IMX_SC_R_M4_0_MU_1A>;
+> >		fsl,entry-address = <0x34fe0000>;
+> >		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
+> >	};
+> >
+> >Am I missing something?
+> >
+> >> 
+> >> But there are several working configurations regarding M4 on i.MX8QM/QX/DX/DXL.
+> >> 
+> >> 1. M4 in a separate SCFW partition, linux has no permission to configure
+> >>   anything except building rpmsg connection.
+> >> 2. M4 in same SCFW partition with Linux, Linux has permission to start/stop M4
+> >>    In this scenario, there are two more items:
+> >>    -(2.1) M4 is started by bootloader
+> >>    -(2.2) M4 is started by Linux remoteproc.
+> >> 
+> >> 
+> >> Current imx_rproc.c only supports 1 and 2.2,
+> >> Your case is 2.1.
+> >> 
+> >> There is a clk_prepare_enable which not work for case 1 if adding a real
+> >> clock entry.
+> >> 
+> >> So need move clk_prepare_enable to imx_rproc_start, not leaving it in probe?
+> >> But for case 2.1, without clk_prepare_enable, kernel clk disable unused will
+> >> turn off the clk and hang M4. But even leaving clk_prepare_enable in probe,
+> >> if imx_rproc.c is built as module, clk_disable_unused will still turn
+> >> off the clk and hang M4.
+> >> 
+> >> So for case 2.1, there is no good way to keep M4 clk not being turned off,
+> >> unless pass "clk_ignore_unused" in bootargs.
+> >> 
+> >> 
+> >> For case 2.2, you could use the clock entry to enable the clock, but actually
+> >> SCFW will handle the clock automatically when power on M4.
+> >> 
+> >> If you have concern on the clk here, you may considering the various cases
+> >> and choose which to touch the clk, which to ignore the clk, but not 
+> >> "clk get and clk prepare" for all cases in current imx_rproc.c implementation.
+> >> 
+> >> Regards,
+> >> Peng
+> >> 
+> >> 
+> >> >
+> >> >[1] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+> >> >
+> >> >Cheers,
+> >> >Hiago.
+> >> >
+> >> >> 
+> >> >> Daniel and Iuliana, I'd like to have your opinions on this.
+> >> >> 
+> >> >> Thanks,
+> >> >> Mathieu
+> >> >> 
+> >> >> >  	if (IS_ERR(priv->clk)) {
+> >> >> >  		dev_err(dev, "Failed to get clock\n");
+> >> >> >  		return PTR_ERR(priv->clk);
+> >> >> > -- 
+> >> >> > 2.39.5
+> >> >> > 
 
+Cheers,
+Hiago.
