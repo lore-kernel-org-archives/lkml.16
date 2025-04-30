@@ -1,222 +1,164 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2071.outbound.protection.outlook.com [40.107.236.71])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2083.outbound.protection.outlook.com [40.107.20.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81421DF98B;
-	Wed, 30 Apr 2025 06:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBB2C148;
+	Wed, 30 Apr 2025 06:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.83
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745993624; cv=fail; b=WLH6tASkyaMPe05mY7ZX69GNYdaRJzEd61oJgWPLCUKNb3L+dzFdiqBfaxbH+5sEE5z5xWBUatAcNgK/vSJECrR4B2q12wQflpaPpH+9mBa9e8YW1j1+22hVU8Thf0m2FCFSxWDD1Lr7Xk8Iz9z8Su1X0a9N/G2EXuM65qtovag=
+	t=1745993721; cv=fail; b=TrbOoDCNCCDqaZMaubTj6OelnZnkYyy10dzbj1i3/BrM9/dV34QV0X89ZJ6frmoybpQZ7GGiJ6Bvw93Vsk9kDwfPu3WRAWU0ER7TuVMPf0MsRPkEI3YvH0qIEtEAQ1evYHJLt+o03/vZactS36UyioZ0Y6NBAjSgZFD1I0/etvs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745993624; c=relaxed/simple;
-	bh=Oed2qUEmOY/Ong6Ma6SY4oBtRaaHvxecnDlLJASCqzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YHCA7BkWBQgwDPpWDwjLpSBbH+xc5JQTAI+siY/npUuUiAnOMynB2QbwBbqTHaKPzYrsNB6PeEkQlj+hW8W6J1K0cVDmeFRy+kUBm5Gkw1gcqtiscS9Q2Gl6J6foN/i150rXmEDHPFkTivShtD/JoqB4KfwTN86CrsrKtN76OFI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=wYZ8EB20; arc=fail smtp.client-ip=40.107.236.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
+	s=arc-20240116; t=1745993721; c=relaxed/simple;
+	bh=ZgQjgA2f1p3Fan/tqCnGvriqoF7R4r6ABNQ2DD/vJqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iRY4FLNvphE1+kMBxyXoVPofPjEn1ApNgti3PrK349wXEECNtrGwT7r7Glhqm4gPMareXQqZB60kfIbd7OcjK8s1WUekI+kirOBiTYGn1RRWMnRop0r590qDCdGYfvrlaYPe8SaWuGsy+twUWQRgQF+ZhJa30K7474qtarchqJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=AA1SDbj9; arc=fail smtp.client-ip=40.107.20.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="wYZ8EB20"
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="AA1SDbj9"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zUgmKx88F9GDBPAea1a0IX0uN4d+BEuM6lNaahbW7U+vmUOhffKv79Ca6rn3j167F88DO9YKJ4jPAUACIB2f5H2XaFcHlvXRsVQC88kHYy7vRZM0XvKntj7j3kl+8AK5BZGQ8Fjxnqzw7twlCiCMxSyj0ZeYoS3/4dP7m/k1lwrCegb/amsKIKPvxJZFWsHkY+JJdiKCsd74XgwZ9puvbryxR4dXZ36jKnZd7KYTJpHz7qLmMsQwz2/wHvubLwV58OkCn+tv15V1ViX6DWGHJGPI0uK8OAvnUaQWRbV8QYZjpROlwt1DbNxp32jytOB6j5K7N2lLyy3xYWNCCqgCLA==
+ b=QKyb+I6Nq+E3jT3/pPrxwXaA78JqJGbblJHBxrsYRDSCoVx4AtflikZax+qiCwQe/CMWSB5lqeRD8HFknMj/5DxN/1jiWClEWeHFIyljbA3ZZxY3V/aL069IFWALtHI2pvss/rw4mZhYrVryBgdt9+2MmiTZvOgUjSZwzi0RVF4xuVqqkwnGYxSSYFOaqomqbb2iyzwgGAfPSFSblepOPk+dQGorkAzLy93dDrrVebRAxXIDIOGCwxZoQYX05KVPVybNvbzdUg1Uk052joiR3bm3g5Lj3RjdKFR4S6v3+9td/Sbitgq6sxi3KETaN9k7+tCMXGU20MiMk7tnktIOrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TeCyw32QqhEy6rLUjCRZJ8l6PfDyWm0B67y/uXdaVro=;
- b=fRZX47Y9rKWVklPfXk/UcQeuNeeaVcfJPssQTiN7o1kfxYTml3ksYlePHLEzzSXKHfiLXHty/jBnNXLwnXeo27bZTNwxAy7EL01OTllHNDTY5eCHDWbN4T1suXYpYN0bqgISpCOza7dULte0cyzcPm80QYqSv8P6LLU71WVXs99Cn7rzi96pdbj/LeJHp2i7egF8x/An9Bft+55sSUQywPeWDceSCQsQJdOywQ/NFfGarDft8qH4dx8YQMUDUqXxik7oF18S/swMDbqocQVm3oeJqhqtsvUo7mAf3Jxqx0DHxXeBzUv2bEYYPdqNToCzTBENhb6sM459QFisKsrF5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
- pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
- not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
- s=selector1;
+ bh=qnboFYafT3HPPxQdWw6r7CnVnfyCiJpWW77bQMjY6Xk=;
+ b=qACgcV3UUYVmNxA7A2XUO6dOK1U0BIBzDeRBrZyBuGvwRkhaDp9z92me32S1P2xSqMwUw76a7r8k9XsYpqzSDj+mq/YyT0dxN36AIgiyKYzS8TdT+cCKbjE6zCF13YYjB+yKIsCVuhfi3yWUDc1l0NyL8cSPA9pX3m1P5/kVmCnZKgm5a/olMu/tdeEz48doh6BmJzEfIG85bh9SSKJg98jmZG4PxSqZdZn0EWBpPwCi6RZbuEW8ujSAUEoIHwnhjbml3ZFIzQz5JHbnngVZ2BFMwx1sF81QCT4M+ZIJ3M019oF/yoczs4lJo6zNqUqt2DSjIX3RZvVUUSw/glV6Xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.206) smtp.rcpttodomain=buenzli.dev smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TeCyw32QqhEy6rLUjCRZJ8l6PfDyWm0B67y/uXdaVro=;
- b=wYZ8EB20vAkgIaKw4U4bSQ8lXA/JH95PiWdabI6sv4R4G5uKVjDtDy4FFbvsBSf+wmPIcF34u8hFs1/3bpWbOxYy1HWrvrWkg+7kqieHXz1tPnjoOxLUy5eRH4j+iFnxIzyzNUd9IBbKiqVgoMGc5FR5SUjaYqSFCxrkLxavT9liWuBxDmugpCGc/u9UgRpVJWLbkq7dfZMASrJGpz3ruIYq83GJXrogBn+eVp6mgNwCNJh/GTLlX3NTZ6T1SJPAqk50Cybdg9u4hdyN/yWTeaSPVKFpYoYevYqJHefV+oFlQ8ZzDiSQ0zCQ45Q3kRJCRQzLGGWyIlfVmKu4tY3qbQ==
-Received: from PH8PR15CA0015.namprd15.prod.outlook.com (2603:10b6:510:2d2::23)
- by SN7PR22MB4026.namprd22.prod.outlook.com (2603:10b6:806:2e1::16) with
+ bh=qnboFYafT3HPPxQdWw6r7CnVnfyCiJpWW77bQMjY6Xk=;
+ b=AA1SDbj9W5iC+9aDBHgcwjBk1z98FgwK3aY6jbhy/wt24i/H3X3BIt3ytTGT2pYOKMkQ7fn2A1spYAaA23HNKDj27Xfr1eDNNkTP9Zfqy/s8ckUo1RlnUFPoe6Q88gg7BJdaSaFQBB9CBPabgkoMEZwE80f8QlZrTlZu8D0qMcoodxvsPv2HhGlOqFFCVJnCN6Lz6qx7oHrQmyeNrqMlxtFEkDN0V9JrwZQAFCZv1V8MCHvgABs3hOvWrfhokE/o4pZCnq9QpdbZzlNvPv2FTDwn4/4f+JK8qti6JsoImlap17t6XR0XNgdVrdRdivF9Vt0DPcOaayJdTVsy9r2yLA==
+Received: from DU2P251CA0027.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::33)
+ by PA1PR10MB8329.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:450::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Wed, 30 Apr
- 2025 06:13:38 +0000
-Received: from SA2PEPF000015C7.namprd03.prod.outlook.com
- (2603:10b6:510:2d2:cafe::6e) by PH8PR15CA0015.outlook.office365.com
- (2603:10b6:510:2d2::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.40 via Frontend Transport; Wed,
- 30 Apr 2025 06:13:38 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
- smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
-Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
- not designate 165.85.157.49 as permitted sender)
- receiver=protection.outlook.com; client-ip=165.85.157.49;
- helo=atlrelay1.compute.ge-healthcare.net;
-Received: from atlrelay1.compute.ge-healthcare.net (165.85.157.49) by
- SA2PEPF000015C7.mail.protection.outlook.com (10.167.241.197) with Microsoft
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Wed, 30 Apr
+ 2025 06:15:14 +0000
+Received: from DB1PEPF000509E7.eurprd03.prod.outlook.com
+ (2603:10a6:10:230:cafe::c8) by DU2P251CA0027.outlook.office365.com
+ (2603:10a6:10:230::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Wed,
+ 30 Apr 2025 06:15:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.206) by
+ DB1PEPF000509E7.mail.protection.outlook.com (10.167.242.57) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 06:13:38 +0000
-Received: from 0ec9f3ddc3bf (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
-	by builder1.fihel.lab.ge-healthcare.net (Postfix) with SMTP id BB28FCFB78;
-	Wed, 30 Apr 2025 09:13:34 +0300 (EEST)
-Date: Wed, 30 Apr 2025 09:13:34 +0300
-From: Ian Ray <ian.ray@gehealthcare.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	brian.ruley@gehealthcare.com, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	ian.ray@gehealthcare.com
-Subject: Re: [PATCH] igb: Fix watchdog_task race with shutdown
-Message-ID: <aBG_jm62ngj0Mqq-@0ec9f3ddc3bf>
-References: <20250428115450.639-1-ian.ray@gehealthcare.com>
- <20250429152021.GP3339421@horms.kernel.org>
+ 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 06:15:13 +0000
+Received: from SI-EXCAS2000.de.bosch.com (10.139.217.201) by eop.bosch-org.com
+ (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 30 Apr
+ 2025 08:15:02 +0200
+Received: from [10.34.219.93] (10.139.217.196) by SI-EXCAS2000.de.bosch.com
+ (10.139.217.201) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.43; Wed, 30 Apr
+ 2025 08:15:02 +0200
+Message-ID: <776c8c73-4719-4675-b747-53faec1ac5d5@de.bosch.com>
+Date: Wed, 30 Apr 2025 08:14:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429152021.GP3339421@horms.kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v3 1/7] rust: property: Move property_present to separate
+ file
+To: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	"Alex Gaynor" <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+	<bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Trevor
+ Gross" <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<rust-for-linux@vger.kernel.org>
+References: <20250425150130.13917-1-remo@buenzli.dev>
+ <20250425150130.13917-2-remo@buenzli.dev>
+Content-Language: en-GB
+From: Dirk Behme <dirk.behme@de.bosch.com>
+In-Reply-To: <20250425150130.13917-2-remo@buenzli.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C7:EE_|SN7PR22MB4026:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62a368ce-baa0-49e7-90ff-08dd87ae25c4
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509E7:EE_|PA1PR10MB8329:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7473fb08-6fcc-46cd-75dc-08dd87ae5ec2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?T6HKDHg5n2OMH0MhPiuE6WxmraM0+pzlajnHdUDHqCQab+ixwe0VOiQzIeOC?=
- =?us-ascii?Q?2tpejVJor5dFSLUquMSjvMwuKRGwR2hUIf9YY/tdk+5ABYMkNrENtdEBN39z?=
- =?us-ascii?Q?i0W1Fled53SeUvigbqVnQAvbx+icW75mboKet+3KmQKcQGJZfRZdbid4aq04?=
- =?us-ascii?Q?VD9ZQNal0oUO61vT9Ljo3fI5T5eVDX/YHtkkYYanmgyGqjy9GamKWqGOUi1e?=
- =?us-ascii?Q?ehG+c4uV6VG5S5/+Am4QL5zEuVhSV+6OBbyvEkW4dbCtTCR+JY6Tyt+Re6gZ?=
- =?us-ascii?Q?npcbua8tpLUeoYCBakeeLj7be5bzRBOfpG4KDsBbG1gR7Tu0S3qfjAvK0Wl1?=
- =?us-ascii?Q?awwGTk3As8UieVa1b9VAHeRHGTpY9N06Ezw+xR4uEooh+gsKJqzksCH+1GWt?=
- =?us-ascii?Q?MSYhZEtkLxVQaCpdASmbBFdp7a5AKBhw3KbSo19HQs4ydeKCiOcMdo8lQVRq?=
- =?us-ascii?Q?CO/qEKBqqQY0PfsY3pDnAdkXi/La2x22zCdeWZ3+FnGHACs4Kci6r7lfqN2z?=
- =?us-ascii?Q?gO1ftlKDHd9L6CDvdQnT7x/5aaSUCtdu6mwGAgB77wNRpoSqiHcv2I0ttIhy?=
- =?us-ascii?Q?c3mTqIHEea/PDYxgI1mVEfIjnPvub+Vu4q5qdurMq4gaaOjYWTICH5H5BeVd?=
- =?us-ascii?Q?bs5pmasLFy3fuokapOMDLK7WJmf0yeMl1dstfyqSy/iCVQZTCZpfLPeqQi0O?=
- =?us-ascii?Q?nWgkDFNm8sR8VEAJ0c9pqZ/bAZ2zto2PbhjlLRx0PyOZfmxXD8rLhnukt8H+?=
- =?us-ascii?Q?4SitzxFo+4OOwGd9AGoYwxtEIv48lB/blBGXHL2n84Iwp4eerJKY8Gf19arI?=
- =?us-ascii?Q?27E13b0mQ8JkGDchX9MuczG7/fmXiX7av6KA08V41xwLlKJSaKhXGZ+inJVe?=
- =?us-ascii?Q?nakfiHTFIoNFznyhFX2pgpDi0PB3UYPTb76Sq6mPiK5SvNYeMfBV1BMeG/FX?=
- =?us-ascii?Q?hytJDrxdqDK7P/ljRTlGjbuMQnvW6AuauNGyhMHRWWtOd1huVuSNsDHa3dEJ?=
- =?us-ascii?Q?9M9ccsJcj/qV9qIDH158kuX1I+Ew/rYfciQ+6OWIoO9ixGiMRK+sZEe1h5bv?=
- =?us-ascii?Q?ZDbW3Z08akKrDZ9Iz4VzSAKdySi32xMkSzYbBpwLfa+hUvOHw41bXvlQLHSu?=
- =?us-ascii?Q?lDy3UJbT/a7DaDAFG/k9iqAn0585FzU8MdMDWCnd/0wCoe19mUynDMw+Xm8Z?=
- =?us-ascii?Q?qI8QmjKxULzVHIjNTtJgVI321ZPKe/iAjkPR9KcRphKKTvoOclF32/c/YS13?=
- =?us-ascii?Q?lFse01+wGnW/Zls2t+OjLf5OOQS/aqsfq6mAMSIBSHywc8A41GgHn6QBAvuQ?=
- =?us-ascii?Q?LUZUiuA/dnlOFC1X5cyuXvVZiK9idT9FUbmHbA9+8MctYUSimHixk+qEcoEa?=
- =?us-ascii?Q?RNZBep4bXco30xXy4rS+BWyPOs1QzGj0P2J/c9DPHc1qbX7e9tJvV2E+kBL3?=
- =?us-ascii?Q?q0nCXor/g+2RIhEujTgUYxcpBaRiMt6wAe0hLliHa6rvoGXlC4k9aWozexUJ?=
- =?us-ascii?Q?AG6qNIIrG1JRLccxJoBTb6gl/xZORkEj9P9Z?=
+	=?utf-8?B?aURCMWdzSGhVbTFMcnJuUVpNWFBra2hzWnNOdVVGYnRpUVdoelNaZ2NsSnZu?=
+ =?utf-8?B?VnVMdTk2bG8rUEEwTEFFcW5reHJqbnlxRTRiSHJFRWVDeGdzL2ZRQ1k3K29N?=
+ =?utf-8?B?ZGlnUEI3OTZqem9ObHFoUk1aTng0d2c3NVNsQ2wrcmtCNEwvNjQxK21kbzVh?=
+ =?utf-8?B?WHJJRVp5WkdabmIyVmxWanYxWWFqa2FQeGRXbUE5RlpiZm8vUHRYNmhKUTB4?=
+ =?utf-8?B?eHMxbmc2QXRVRHc1NmNJREF3Vi93emwwVkRTWXhoeXZsMUhuZkZjODJwTDJi?=
+ =?utf-8?B?eXNiSFJXVGp3dzA0c0tqY3N3R2FTT0FUWXFaSHU1Z3VDQ3FCSGxOREl6a2M4?=
+ =?utf-8?B?L2FkclI5c3ZtalBLSnExVXNvSlhiUklsL3NwcUxJTjFBQ0tBK0YybEI4WklX?=
+ =?utf-8?B?Z3hPdUlJSTNRU1g3SFF1dU1EaDE0UHN0N3d3dTMzcEhGcE82TEYzVWJPVXhl?=
+ =?utf-8?B?YUp3TkVCOTZKTkRXb0drRUdMcTY4M0laMDJQOVl5cHkvR1duR0NVRGZtL3VS?=
+ =?utf-8?B?MjJrTmQwZjNBNXdnejRqWFk4VEpDdDR4cmppbWNRK05pazJGcEk5ak04bS8v?=
+ =?utf-8?B?eGdYakhqclJHZ0FxWmc5MEJSRWhhZmJ3NTQ1cE1Cemo5WkIra1lScXJmR055?=
+ =?utf-8?B?eEdyWml2TlNOSU9uaFIxYXN0bE5nTzJRMCtvd3hwZ0RweDFIeDFoRTJHZmgz?=
+ =?utf-8?B?bUkrOGF6aWVhdlFsaUxZem05cUYrZGV3cGx0QlFGN0ZuaUdBbjhCbUR3VEtz?=
+ =?utf-8?B?Z0pOaTlVOXJaQ3ZFVFl4Y1VXbTRFQUZZTmU5dWVjVUhzdU1FTnlWQWc5MTBY?=
+ =?utf-8?B?NWV1dTdRdHV3cndMdWtUZGJ1Y2swQkw3ZndOVy9aRm9UZ29OeUhyQ3lGQUZp?=
+ =?utf-8?B?amJwbHc3RDRZbEt4TCs0am5MOTlLeWhwU2hqN25rckZYN1VJV0IzbEJjUW1E?=
+ =?utf-8?B?SjRCS1UrQkZ5T1VldXBNa09BMVpQcU50cVk5V1Q0K3R4MjAxV0toMkx3Q2h1?=
+ =?utf-8?B?Yjd2WWRrSk82a2FOVkVyWVhNMGlHNWJsVVYwQlFnemFwTXZzOXcrL0tseXY2?=
+ =?utf-8?B?dnE2SjJhN1NFL1krYmRIR1U1dForT21nTlhKR1NsZGVBaHFYWHBVOW8vbWJ3?=
+ =?utf-8?B?eThTSlp3dVRFYSt3bkxvL3pwRzZ3aHJOVitZcWVWOGNBUWtJeFBHSjc3YTM5?=
+ =?utf-8?B?NCswMkJiaHpFWFBKT0Q2ZDBpU0Y3NDhQQTFZUyt4Vkt2bVl2ZmlGcENIU2tR?=
+ =?utf-8?B?S3luUnBvcGg3VHFCZUxEck9Fc3lMMDFqTXkxdmdDRTRwU29YNkQ2SFk3ZkFI?=
+ =?utf-8?B?U3ZLUzY3TnByL2EzNWxRajVSLzh1VFQ4UWZQRHhKMUVLYlIyZDdzZ3A3NEdO?=
+ =?utf-8?B?ek5EVm5Zdml4WnZKYkZvMWg4eWNMRU9UZXVmSUxnVmc0UVd2MGY3dWx6UzZF?=
+ =?utf-8?B?RFJQTXE1djB0cDBwellwV1l3a0s2bkJkNDVaVHQraWpsYXgzSys3TlBBdExL?=
+ =?utf-8?B?NFdkT2RyMUJPUVYxYmVXUjBFYmp3SzR4eFNwbnAxeEFDdVExYnVqb3ZJWEJO?=
+ =?utf-8?B?akFBTnQwb3hRN1V3czF6YWNHZXlrQzVaYjBOdnMyd2RzNkJyWGZ5U2FTRlp5?=
+ =?utf-8?B?dlFaNzV1b20xelEwRUoxOWR4bFZBRnpFbS9hL3kzNTAwU1BFQ0YyVFpUM011?=
+ =?utf-8?B?QUVxSGlmdFlON05maW1CckxTdHdjREMrRTFNSURCVUFHTWQ3MWF0V3Vlb0pQ?=
+ =?utf-8?B?MCtHcnUwMUFWSTNFTWNBVVl0VUp3STVhRG9uTlFMQ2RzY21HL2p4cXJUaUZO?=
+ =?utf-8?B?anZFZUxGVUFOYkFzMldZcmYxaVhydEZHUGdCNGdvQ1FyR0U1UnFBRDdYUXJ3?=
+ =?utf-8?B?WXZVVTZwSVBmdG5hODJaSER6eDdhL2JjYndZTyt5bEhYZXF2d0ltdHRSc1Ar?=
+ =?utf-8?B?R3FsN1c1eFVjeVRrWDZwVjYyZXJnTTdVK1hGMDZFVFQ2cWV4aXRnbG1oNDBp?=
+ =?utf-8?B?ak5admFVUGlxUmd4T2R0S0tvcklrT2hWTm5YcEtPb00za2daWFVXRWpjeCtI?=
+ =?utf-8?B?aGI5eTUwZmlvMnV2amE1emdWcUhJYlliNlNEQT09?=
 X-Forefront-Antispam-Report:
-	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:atlrelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: gehealthcare.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 06:13:38.1014
+	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 06:15:13.9404
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62a368ce-baa0-49e7-90ff-08dd87ae25c4
-X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[atlrelay1.compute.ge-healthcare.net]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SA2PEPF000015C7.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7473fb08-6fcc-46cd-75dc-08dd87ae5ec2
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509E7.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR22MB4026
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR10MB8329
 
-On Tue, Apr 29, 2025 at 04:20:21PM +0100, Simon Horman wrote:
-> + Toke
+On 25/04/2025 17:01, Remo Senekowitsch wrote:
+> Not all property-related APIs can be exposed directly on a device.
+> For example, iterating over child nodes of a device will yield
+> fwnode_handle. Thus, in order to access properties on these child nodes,
+> the property access methods must be implemented on the abstraction over
+> fwnode_handle.
 > 
-> On Mon, Apr 28, 2025 at 02:54:49PM +0300, Ian Ray wrote:
-> > A rare [1] race condition is observed between the igb_watchdog_task and
-> > shutdown on a dual-core i.MX6 based system with two I210 controllers.
-> >
-> > Using printk, the igb_watchdog_task is hung in igb_read_phy_reg because
-> > __igb_shutdown has already called __igb_close.
-> >
-> > Fix this by locking in igb_watchdog_task (in the same way as is done in
-> > igb_reset_task).
-> >
-> > reboot             kworker
-> >
-> > __igb_shutdown
-> >   rtnl_lock
-> >   __igb_close
-> >   :                igb_watchdog_task
-> >   :                :
-> >   :                igb_read_phy_reg (hung)
-> >   rtnl_unlock
-> >
-> > [1] Note that this is easier to reproduce with 'initcall_debug' logging
-> > and additional and printk logging in igb_main.
-> >
-> > Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
-> 
-> Hi Ian,
-> 
-> Thanks for your patch.
-> 
-> While I think that the simplicity of this approach may well be appropriate
-> as a fix for the problem described I do have a concern.
-> 
-> I am worried that taking RTNL each time the watchdog tasks will create
-> unnecessary lock contention. That may manifest in weird and wonderful ways
-> in future.  Maybe this patch doesn't make things materially worse in that
-> regard.  But it would be nice to have a plan to move away from using RTNL,
-> as is happening elsewhere.
-> 
-> ...
+> While it's possible to expose similar methods on `Device` directly for
+> convenience, those methods would have to get the `FwNode` first, which
+> is a fallible operation, making the API inconsistent. For this reason,
+> such duplicated methods are omitted. Users who need to read properties
+> of a device will have to explictily get the `FwNode` first (handle the
+Typo: explictily -> explicitly
 
-Hi Simon,
-
-Many thanks for the review.  I've been reflecting on the patch (and
-discussing internally) and I think it would be better to model the
-behaviour on igb_remove instead of igb_reset_task.  Meaning that the
-timer should be deleted, and the work cancelled, after setting bit
-IGB_DOWN.  This would mirror igb_up.  (And has the advantage of not
-using the RTNL.)
-
-(As you can probably tell) I am not very familiar with this subsystem,
-but the modified proposal, below, works well in my testing.  I will
-happily send a V2 if you think this is a better direction.
-
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 291348505868..d4b905469cc2 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -2173,10 +2173,14 @@ void igb_down(struct igb_adapter *adapter)
-        u32 tctl, rctl;
-        int i;
-
--       /* signal that we're down so the interrupt handler does not
--        * reschedule our watchdog timer
-+       /* The watchdog timer may be rescheduled, so explicitly
-+        * disable watchdog from being rescheduled.
-         */
-        set_bit(__IGB_DOWN, &adapter->state);
-+       del_timer_sync(&adapter->watchdog_timer);
-+       del_timer_sync(&adapter->phy_info_timer);
-+
-+       cancel_work_sync(&adapter->watchdog_task);
-
-        /* disable receives in the hardware */
-        rctl = rd32(E1000_RCTL);
-@@ -2207,11 +2211,6 @@ void igb_down(struct igb_adapter *adapter)
-                }
-        }
-
--       del_timer_sync(&adapter->watchdog_timer);
--       del_timer_sync(&adapter->phy_info_timer);
--
--       cancel_work_sync(&adapter->watchdog_task);
--
-        /* record the stats before reset*/
-        spin_lock(&adapter->stats64_lock);
-        igb_update_stats(adapter);
+Dirk
