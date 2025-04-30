@@ -1,200 +1,90 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671F722333D
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3C21DB92C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746050999; cv=none; b=Miw/S9pujgOdjC8OAIeqnW4Mr1RfDrChFb2SNMN4aNgD/iJ0vWQ/Woy/3txXFqvgmNL84//b+HftV2FMuhSRv9xPApfchSLYHpc2r9UCD7sUYx8wEH1pti7kDqZMG5YTTzx5totVoXGQIrBPMlJI2HgNkaOoIqjft4OgFH3pHAc=
+	t=1746051268; cv=none; b=kPLfiuHJopg5Gcm35MR5xNqMXIQzRoxwTnUHCXtvMqNfNF00eGijYrRA4Ephlzjo/X7N4++o67pd4fUQOVmcm42T8bfRF9u1l1irzjz989UhNQhvgHUOMSFBV5PYXwWFdY/WHwfirOcG8X5szWcWFzaYnvMmpa3fFSbEGrDof5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746050999; c=relaxed/simple;
-	bh=nt9O3bY8xYpbbY8hLFsXM3ylEbVtCa/AX1l7at7vIZE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BbVED7I9elMKkIESqxL1grwpQiZ+rTq+N4dG1RQPJovHpJo8my1WggUQjH4/6YoFlWR8nBToE37f7PJMsAjBZ32BpAWCLDMVboS4nac3RV5wc5ZX8XTq4uxpHJqlX0Yo43n9KLF9YoJyQeeYLHkwHIqZ0EsgSMkMZzfzMEjG0jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3hzIGGtx; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1746051268; c=relaxed/simple;
+	bh=V9WDxKmbdiSpIlDadQAH2ZhEjw6NkGRgMf5OeffVS+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pRxtGQvqdsjyQivS5hIH4zeu0KWd3zGnFRMSvQrT4h1q7UibzuMQY6trqz/UefvsZbYWtV5YBR8555d33v0dwJyw7fSiUfQFawdCzb9K9G4kG9Od8aH8E7fmGT1xrk+uzI2vpIoLiKUgC9nq3gIiZm3G/83dqWj+WpzN/IBb1QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4fn8nvr9; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3hzIGGtx"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a204efeaeso275697a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:09:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4fn8nvr9"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so16631821fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746050997; x=1746655797; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZ/MaCiqXtq7XnMNvwgF7ZXXhu0iWgk2GK4UvEq7z4I=;
-        b=3hzIGGtxfnMPznGrqcwm39URy/M2kUhl/DL4S3w3hMMfOmrXxpLy2/nOb8yAST52XC
-         bXHyEUUuKx3eUcqRZA6DEyJL1PPHsdtIkL3NIst6cm0C7NI+TM8B71GOEQPiNtHe29u/
-         umgeFS8BMXU1tqwN7dyaV+gnmTpXBofN9gDNz0fzQLh8ZUFbAdDZVaRyvnY8jmOKTGIl
-         OqlRzXBJoatyFdbDBmMcKZZhPLbtPXuUbakmvLRfHwJ+6H7vKY4qngpMDUzLVDneeMHO
-         fHtF40b3eN7shsUGtnpcUW70m7VRV0XL3mSXKhwRRUzWVzp4MA89FP+5VMkvm/klJIvt
-         eNTg==
+        d=google.com; s=20230601; t=1746051264; x=1746656064; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V9WDxKmbdiSpIlDadQAH2ZhEjw6NkGRgMf5OeffVS+s=;
+        b=4fn8nvr9x+3k1U/zHznXCY8BeZx9Iv1CFiM/j+MIN7LwljExhjWvoKTZF4d06i5rtn
+         4ULpfk1QcAY2nGC3iZleLiUnUVB5bTCyzam2J5ftNgRCfe3clUYx7fgmA22G55RebHPe
+         xP8MC5st85GGNwoTJlNUkmRSoWXoyMkkogFwfKQythFuPqL0I6u31/vVOQEAr7Cys4aK
+         hfWCzm5/mcL+swWusLwxzfRFpGV2E+U894yqReHlIrTGcjo8lnYYUCj8qe5rSQ4VhPGi
+         QMMn9OwosKFv5QEQXZ2kBRkrJXpOhB8TLqtxEJQ2smcFPMtj/Br5wdnTQjDVLMYJuSjE
+         lDNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746050997; x=1746655797;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wZ/MaCiqXtq7XnMNvwgF7ZXXhu0iWgk2GK4UvEq7z4I=;
-        b=c1St3PHpsYLeB7p6iZDJ1/6ISVl8U4g1aMV/jvHmeAQKxBIcP7PDAkbJiLDvKpu/v5
-         gRhxmD7N/h8BadZW5gvcafHNzNEfWvirWLcsvVg725n4YBeofg13JEmQ8rZfsivEBJMw
-         u/GDGxGjpf7cQtIwtYAGuzF6h5ElWLdc3tLkq+rszScstTlBkaDwWJ0PFSNA8Qz9hdJB
-         IXdyR4kzvtSJqRfOP3KTWP6v8mmIbmSBPaoWNouazYQBJGJ/wmZ6VyAx4KPmTSRw4qLN
-         XuMF+YTMNYliSLh0Wp4RzGIyF3+z0hbx4hVs8HrCUkm9R4Gr5iEfgwOyc7RoL0Krw1Rf
-         MSuw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+UsBQYeYp18werelKm7WlMkZrF2Rh3kRKoDowN4awBOiQtAoQe4x8Un7v1Btd8l19ooSb+6wz5jBgUfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGpxQPG2kAJaXq4tyIqw+ICFNu/e0xRx8dF+hPEbCxSeLNVNjb
-	bEc5d/fcidlw4duvy9Q5CIhiQrbQEUw7BfXHJmyiDoIAzfvqZmrC3fhu6vMT+u+2rTxqBLHoBQ8
-	K9w==
-X-Google-Smtp-Source: AGHT+IFDCE4ixEWkqW6JuW3nZKoDOeyTblrj/HS+JgqpSphQzY3xCCE/XlAvFn9djfhRe2sBMtC9+CGBoY4=
-X-Received: from pjoo6.prod.google.com ([2002:a17:90b:5826:b0:308:65f7:9f24])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e10:b0:2f8:34df:5652
- with SMTP id 98e67ed59e1d1-30a431b6d57mr94171a91.21.1746050996743; Wed, 30
- Apr 2025 15:09:56 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 30 Apr 2025 15:09:54 -0700
+        d=1e100.net; s=20230601; t=1746051264; x=1746656064;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V9WDxKmbdiSpIlDadQAH2ZhEjw6NkGRgMf5OeffVS+s=;
+        b=Y0EqRv7/uXRpvzGTrGxBKuFYsrFCcUXBV4H9bbdmo5GBuwErR0sLIZZ9b6uzdxKcCy
+         HCFS6KFoVT/3cpnzZ6xVgC3K7f6nXeZneV68J9jetZH2XwRzUse3qhXvc4DGjWwtTAIS
+         7rUp1kzr+MrXQmcTTl1Km8tYOGxhszA18mpavhmBrqL4b3/FcY10ZYNdig0fvG1/tTEz
+         9b1w3iVgbimC1VWxpWHvjjP2lslwKPXdIBOnUS4PQGZN2H7PTvzzynQweWG4Sf8kBY52
+         G0ayFlmfkTISHMgzY4ecrq0IZlFabtNEJWseZaE1nZK8iYgOvPJ7bDlBq3e960I1/nmS
+         l8ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXE2y6Id8Kk1CbuRgNtEIAGMmR4R4Nu771URSgqwWRQAzYxjXPKgvGnmQAHcD/ytkuDwMGqyh36rEGQTGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXbxLdsWsQr6UFkTn5AqqekLxeHGIyEUTU4fYxrbkgIZvuLCCN
+	0j4cQO81WikGgAz6vSzrjgjEzR4qQqR14Iak0+G2fQcFbc2SYYAErW/QWUn0HeHmJekrdhV/0y/
+	7raFHPXx1I1hG0HQmNTRXtasCYnkikSHvl2s=
+X-Gm-Gg: ASbGncv9rXmmoYxZCbCwo2lUFhpc5X+mmlyUIJSirSbadIpFbIsx4D36MCZ+f2Zg029
+	yUQWqndMifGE3g3JTkrJnBEvvJRZ9yrofj6ISNFj/50FW8VjF6KocI65pwEiMhMJe35XAq2V7ky
+	pOG3nuZMkQbMx5L06mYDaM8axN12KZ3v+a5xmwCzhH/WL0niSf64o=
+X-Google-Smtp-Source: AGHT+IGcNh9yw9nc4Yx/ffRiXl092nCHuoLn11PQbii50lPqD4q9Py5oNhPVn6IHL0f3qmlN9GjqYP02rpgrtGeBNnk=
+X-Received: by 2002:a2e:a542:0:b0:30d:6270:a3b4 with SMTP id
+ 38308e7fff4ca-31fbcf4c9ddmr379181fa.15.1746051263441; Wed, 30 Apr 2025
+ 15:14:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430220954.522672-1-seanjc@google.com>
-Subject: [PATCH v2] KVM: x86/mmu: Prevent installing hugepages when mem
- attributes are changing
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Roth <michael.roth@amd.com>
+MIME-Version: 1.0
+References: <20250430032734.2079290-1-suhui@nfschina.com> <20250430032734.2079290-3-suhui@nfschina.com>
+In-Reply-To: <20250430032734.2079290-3-suhui@nfschina.com>
+From: John Stultz <jstultz@google.com>
+Date: Wed, 30 Apr 2025 15:14:10 -0700
+X-Gm-Features: ATxdqUERc6GpuG98Jh6BtDrV4nw-tcK2ntbbVRGaQhHKl6XNSl4xdHGIuhRzOR8
+Message-ID: <CANDhNCqgQ_c3_fsUcUcuUoiUrHRh267PiCSvb_XXU5O2rP8R5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] alarmtimer: remove dead return value in clock2alarm()
+To: Su Hui <suhui@nfschina.com>
+Cc: tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When changing memory attributes on a subset of a potential hugepage, add
-the hugepage to the invalidation range tracking to prevent installing a
-hugepage until the attributes are fully updated.  Like the actual hugepage
-tracking updates in kvm_arch_post_set_memory_attributes(), process only
-the head and tail pages, as any potential hugepages that are entirely
-covered by the range will already be tracked.
+On Tue, Apr 29, 2025 at 8:27=E2=80=AFPM Su Hui <suhui@nfschina.com> wrote:
+>
+> 'clockid' only can be ALARM_REALTIME and ALARM_BOOTTIME. It's impossible
+> to return -1 and callers never check the value of -1.
+>
+> Only alarm_clock_get_timespec(), alarm_clock_get_ktime(),
+> alarm_timer_create() and alarm_timer_nsleep() call clock2alarm(). These
+> callers using clockid_to_kclock() to get 'struct k_clock', this ensures
+> clock2alarm() never returns -1.
+>
+> Remove the impossible -1 return value, and add a warn to be aware of any
+> misuse of this function.
+>
+> Signed-off-by: Su Hui <suhui@nfschina.com>
 
-Note, only hugepage chunks whose current attributes are NOT mixed need to
-be added to the invalidation set, as mixed attributes already prevent
-installing a hugepage, and it's perfectly safe to install a smaller
-mapping for a gfn whose attributes aren't changing.
-
-Fixes: 8dd2eee9d526 ("KVM: x86/mmu: Handle page fault for private memory")
-Cc: stable@vger.kernel.org
-Reported-by: Michael Roth <michael.roth@amd.com>
-Tested-by: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
-
-Mike, if you haven't arleady, can you rerun your testcase to double check
-that adding the "(end + nr_pages) > range->end" check didn't break anything?
-
-v2: Don't add the tail page if its wholly contained by the range whose
-    attributes are being modified. [Yan]
-v1: https://lore.kernel.org/all/20250426001056.1025157-1-seanjc@google.com
-
- arch/x86/kvm/mmu/mmu.c | 69 ++++++++++++++++++++++++++++++++----------
- 1 file changed, 53 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 63bb77ee1bb1..de7fd6d4b9d7 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7669,9 +7669,30 @@ void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
- }
- 
- #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
-+static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-+				int level)
-+{
-+	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
-+}
-+
-+static void hugepage_clear_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-+				 int level)
-+{
-+	lpage_info_slot(gfn, slot, level)->disallow_lpage &= ~KVM_LPAGE_MIXED_FLAG;
-+}
-+
-+static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-+			       int level)
-+{
-+	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
-+}
-+
- bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 					struct kvm_gfn_range *range)
- {
-+	struct kvm_memory_slot *slot = range->slot;
-+	int level;
-+
- 	/*
- 	 * Zap SPTEs even if the slot can't be mapped PRIVATE.  KVM x86 only
- 	 * supports KVM_MEMORY_ATTRIBUTE_PRIVATE, and so it *seems* like KVM
-@@ -7686,6 +7707,38 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
- 		return false;
- 
-+	if (WARN_ON_ONCE(range->end <= range->start))
-+		return false;
-+
-+	/*
-+	 * If the head and tail pages of the range currently allow a hugepage,
-+	 * i.e. reside fully in the slot and don't have mixed attributes, then
-+	 * add each corresponding hugepage range to the ongoing invalidation,
-+	 * e.g. to prevent KVM from creating a hugepage in response to a fault
-+	 * for a gfn whose attributes aren't changing.  Note, only the range
-+	 * of gfns whose attributes are being modified needs to be explicitly
-+	 * unmapped, as that will unmap any existing hugepages.
-+	 */
-+	for (level = PG_LEVEL_2M; level <= KVM_MAX_HUGEPAGE_LEVEL; level++) {
-+		gfn_t start = gfn_round_for_level(range->start, level);
-+		gfn_t end = gfn_round_for_level(range->end - 1, level);
-+		gfn_t nr_pages = KVM_PAGES_PER_HPAGE(level);
-+
-+		if ((start != range->start || start + nr_pages > range->end) &&
-+		    start >= slot->base_gfn &&
-+		    start + nr_pages <= slot->base_gfn + slot->npages &&
-+		    !hugepage_test_mixed(slot, start, level))
-+			kvm_mmu_invalidate_range_add(kvm, start, start + nr_pages);
-+
-+		if (end == start)
-+			continue;
-+
-+		if ((end + nr_pages) > range->end &&
-+		    (end + nr_pages) <= (slot->base_gfn + slot->npages) &&
-+		    !hugepage_test_mixed(slot, end, level))
-+			kvm_mmu_invalidate_range_add(kvm, end, end + nr_pages);
-+	}
-+
- 	/* Unmap the old attribute page. */
- 	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
- 		range->attr_filter = KVM_FILTER_SHARED;
-@@ -7695,23 +7748,7 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	return kvm_unmap_gfn_range(kvm, range);
- }
- 
--static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
--				int level)
--{
--	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
--}
- 
--static void hugepage_clear_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
--				 int level)
--{
--	lpage_info_slot(gfn, slot, level)->disallow_lpage &= ~KVM_LPAGE_MIXED_FLAG;
--}
--
--static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
--			       int level)
--{
--	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
--}
- 
- static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
- 			       gfn_t gfn, int level, unsigned long attrs)
-
-base-commit: 2d7124941a273c7233849a7a2bbfbeb7e28f1caa
--- 
-2.49.0.906.g1f30a19c02-goog
-
+Acked-by: John Stultz <jstultz@google.com>
