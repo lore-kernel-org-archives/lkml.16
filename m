@@ -1,71 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBB11E503D;
-	Wed, 30 Apr 2025 06:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478E51EEF9;
+	Wed, 30 Apr 2025 06:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745994843; cv=none; b=gKWuOK2Js20ei8wYYkcdU+Le97CnLWAPZYfmiDBKPAGpaW+mCeHcWNzp9aSxvHsISNyQx6eYwMH7PhlkDk4oGtLwez6Wm+Ksg2WjdGjr9EIquDKtnYqpTDHJRHPdbFuirqOqT0QAhO9F0u5BgtjH0EGrqTEmjNYljrdrkMOe1U0=
+	t=1745994917; cv=none; b=BJaZQ+VwhCNJIOvOhIXCFdqCnz1EH3Ir/cwwKGdux55kl59nXjkfKqpiI1NCZ9VDamU0q3IsG66wDvhWjp8Gw+pmtsomF1miwsOjRqeZbNRkdDtrE8ZZqnXA+tVbORbG1msvNQSygyD/fyQqyIzq1B4GOZJaHnK7XKUZLIGAVlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745994843; c=relaxed/simple;
-	bh=IyHB6uFWCj9O2ik4uLLUV3YzmH1JqtPLDd77B+UQYN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p1MWBTRUSLxDIdYiDcLLo+D7YjJl3bWodnS8TxqubJ49zvJ+iiNgRQ96jMG+i+xRwYWA/QyIUc/bup97K5+QtDKo+dMUFI/Qp1XDroILHbFV1wBLog26IIghGdfagGQqOGYGyRHbD5N2P+wu/3fRze3Ub1MO0u5vRqO11s0YYnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffmELrSS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745994917; c=relaxed/simple;
+	bh=R0EzpLjoRCY0UKjIKj/B4YO03H+hveYLXF2IY8J5jes=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Qqe1hhm8c/OA9FQqNwWEnbJ6ugLt+bv/zka9uuQlJZTn7hZwfMkQ+4bGL5YBiFuifDtFtZEvepNY+yPWQBhSWy9DQHXPvAc3onuB5Md1HKK/5iu8NPUsyZx+ELItEipNALq39li/M4O9qd2vtkZGmUBtpAvzi4Gc6tsS4sbcUhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baf3zwOt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffmELrSS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ACF4C4CEE9;
-	Wed, 30 Apr 2025 06:34:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baf3zwOt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA637C4CEE9;
+	Wed, 30 Apr 2025 06:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745994842;
-	bh=IyHB6uFWCj9O2ik4uLLUV3YzmH1JqtPLDd77B+UQYN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ffmELrSSn2yHjyD6oPPn8UMvaOpXb+C4hNIWiHRbZFIdEYaLtdOV3NAYvTrY8/Xik
-	 5iBLd1wJBfblbGzmi187EQorFBmoLRX8egIbK7QJ/rRi/mAmVCuCWWJKvIKEWerzTU
-	 bCGX6hG+E75ePJtp28zypeEgi6QEAdBrFNroQHpth2KJ8S/anDJCYdDl4Yt/8m7Oab
-	 /HxUrwnJsK+V7EQJgCn/ZGp5Wv9MLQ0DfJRsi163W+22F/8ESsxBV7D0D1uvsqyAY/
-	 uqcrEbi+sK9Hcf/q74pUnWEeOvLTQGAoHOSLlk3pF1TBq9q1qvIeYeEvb+bZINew7Z
-	 oLCQHVOFk2Ccg==
-Date: Wed, 30 Apr 2025 08:33:59 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Wasim Nazir <quic_wasimn@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel@quicinc.com, kernel@oss.qualcomm.com
-Subject: Re: [PATCH v6 1/4] dt-bindings: arm: qcom: Add bindings for QCS9075
- SOC based board
-Message-ID: <20250430-enlightened-enchanted-jellyfish-7049d0@kuoka>
-References: <20250429054906.113317-1-quic_wasimn@quicinc.com>
- <20250429054906.113317-2-quic_wasimn@quicinc.com>
+	s=k20201202; t=1745994915;
+	bh=R0EzpLjoRCY0UKjIKj/B4YO03H+hveYLXF2IY8J5jes=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=baf3zwOt1kmYSyB09vMY/s4cup7zaGV4+KBOZ7wx1PCSFPuxF7dCL4Cq+BGthzGMn
+	 iMWGaDz7xxF0d6DgwoHWsx4SnV3AEdbgZsjt9BMjAFGfDqnyYgnJX13Jo5E38pUkXt
+	 nFvzOnqdHdOj2WbfQMSkW8GcsQBXZb1hPaDSY9DZ+u1u8K25jN8SRjRlmZkuT/tGGw
+	 ee7/2d5apylN6rpOTi8wWW5XfHSxPhmbA12sqcfpq/7BuZRrUoTWHqysBYvs3It8Ip
+	 0iYHCSapTdoeHx85O/E5TTdt+y6dGErEgia7v2T0HgDQdkT2bfP/TXVVr1WVlyBjRF
+	 5Ota7gypV8I0Q==
+From: Niklas Cassel <cassel@kernel.org>
+To: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Damien Le Moal <dlemoal@kernel.org>, Mikko Korhonen <mjkorhon@gmail.com>
+In-Reply-To: <20250429164610.68746-1-mjkorhon@gmail.com>
+References: <20250429164610.68746-1-mjkorhon@gmail.com>
+Subject: Re: [PATCH v4] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0
+ hard drives
+Message-Id: <174599491460.1423052.1166861891633519770.b4-ty@kernel.org>
+Date: Wed, 30 Apr 2025 08:35:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250429054906.113317-2-quic_wasimn@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Tue, Apr 29, 2025 at 11:19:01AM GMT, Wasim Nazir wrote:
-> QCS9075 is compatible Industrial-IOT grade variant of SA8775p SOC.
-> Unlike QCS9100, it doesn't have safety monitoring feature of
-> Safety-Island(SAIL) subsystem, which affects thermal management.
+On Tue, 29 Apr 2025 19:44:35 +0300, Mikko Korhonen wrote:
+> Make WDC WD20EFAX-68FB5N0 hard drives work again after regression in
+> 6.9.0 when LPM was enabled, so disable it for this model.
 > 
-> QCS9075M SOM is based on QCS9075 SOC and also it has PMICs, DDR
-> along with memory-map updates.
 > 
-> qcs9075-iq-9075-evk board is based on QCS9075M SOM.
-> 
-> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Applied to libata/linux.git (for-6.15-fixes), thanks!
 
-Best regards,
-Krzysztof
+[1/1] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
+      https://git.kernel.org/libata/linux/c/f847305c
+
+Kind regards,
+Niklas
 
