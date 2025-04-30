@@ -1,121 +1,171 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB49B158DAC
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF0C1E51FF
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004103; cv=none; b=qhO5NAqRPeY1XTNlW8jBHDo84ANsvq944z5AS+94KP5TEkMj8u9XwD3n8s8PT42ZqNP/pob7+SnLNTDEmc76e8/e9p/EuUuhqD0Vfx1AjrQ0nOHWOQVxgQzuuC/tw2bwpwms3rLq4DP+aToW+K0VixNPvGGBcqkLfKs6tUKAako=
+	t=1746004180; cv=none; b=eZQlXALd7OIbEGA1MJw5+uiOHjkq4o90IHCVntKSz+VgN1Y0mfnxKlyWk27Ai+Aw92pg4nKryOLzIc+qGNuDX5QGMFt0BsFt6K+fJBxpCOvM1m2RAhkt9T2VT0KTlq5EumG956YUORN2WOQE2zWvPEY+20XOn8WFH15ZaDNhRIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746004103; c=relaxed/simple;
-	bh=WQ06cfInUnLKA97xKzt5aHyl3AJCxltnuUTd24moQso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sTXq+fYM3SyhWC6eG1LsaQ1eFnRWUS9oEpoCEYTsQWRZWKRVE1AAiSlNDd3DN6GTTjOF8dGcAt1MsCoiLN+8FhqY1pG7ZngSoIgvS69h9fKxxIJ3WAT6gSz4us2lAjBd5S6Wx/4Hwq/nS+/O/1WVD0NEoOMxE5QxPGKHMItS8Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=N/j9DK9t; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1746004180; c=relaxed/simple;
+	bh=e4VAosr0IColf0a/CAOwD0TIFn3zHD6ZO9SpkXnE7kY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BgHiQVQgQvtVA7tx35/Dvi8qVtbMeeUWVeIuONloPMtfdihBh8Xc4nKA/qugFmp6fHp0g9Co2z/uwWXMyfaql/vFILjwa7JpO/8BgCDUc9MIfnliph4nLbxbZom0i/4rZQbWQ3SBhKg3tvCegooqfvcs4/3KM+1CIB5NMv1d43Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eyCZ9Z7e; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="N/j9DK9t"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4769aef457bso101425911cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1746004098; x=1746608898; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BhMpF9ZPTtusLyxadlrysDYthg/t1DJyaG/WQBBKCKw=;
-        b=N/j9DK9tPFPLqP2NlfnUrhIvVVKASGxMuyOpkWGPXogR0zrPQVK3sc4DmSjPFte/x5
-         owsOhnRhXDJOk8LJogAxkk2xrKkUIBh8prEpNDvF0+Xmf8GEB4+U/413k65waao1P3Du
-         8sP9t0VgXW5jTFaU+YCl4YzYAj4QD/o17RiLw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746004098; x=1746608898;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BhMpF9ZPTtusLyxadlrysDYthg/t1DJyaG/WQBBKCKw=;
-        b=ZMVC1b7VnrfQscFTkQAAr3xNzPGSAVnz6sov90qwbHTf897qF2TPrpZSrfO2kb/4QJ
-         hQCoB0yG9SaTZXIPv7ld2MYE+cBMzEwV2wBnMTUUVGC4KIQ05lWOgoneEJT3+T/Mb43l
-         Gxi5P4n1KizBsmJZRYqjREXB406iWj69r1kTQuukebKuP+aVkdU69//gddrkP4fPPgoB
-         t/zYRy6KaPweK2CjYGMXvsWdipfBBH3FXF88MbxuiLfaoVTQ7yizu02gs+/W083L97jy
-         6yGAih21eUTiP9BIXzXa1j9M11mi17VXGop4cAb4LjDCO7IH41U9RZWDxkNlwqMD/YXQ
-         PGOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1IL7oLcPSkj/n5EmDlgNG7DeMvDydHxp3fmqMJb6nhXViIByQRYEYfbGXOo7zc+Z60ExcEvhLbeefWrg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKgFNazD5IjtXLfmGdJn/ifZTXqbYL6R8A5Jz5tZ18n2VpHwaI
-	jZJPsjXcD6SvL0xPpUyjbKntncIhPvuvYNupUSrapP1GJqhrgMaTzQSaYr5Ne88MqNirzJ7g0Zs
-	hyhuTAsXDhKMxjJoPgB8gShIETYtn23ELsBnmwQ==
-X-Gm-Gg: ASbGncu8yGylVonTHzYFMyWoEbu252cWam6N7rG6p1vyZCdnb6+j1TFZDGzS3bHxGMf
-	9u90qAXSM0oS5Y2m3dhPG25ppNP7q+NlJrx8yBC81EZiL7NUnVzuU3F2BLY/aLeZRu+4KZP0Q5B
-	yajMniA/JUlxMfMy3a80HyrFW+XRxYzsMODr4O/pQ4L3g3PsdZdGSppPk=
-X-Google-Smtp-Source: AGHT+IGVG98iDSdK5lfsXQAEPtB0RBdUTnCRr6rYE2tT58B+Up30VLXz0bmholjrwMFdvFRX0rFvuoOuy5LcMubDIP0=
-X-Received: by 2002:a05:622a:544d:b0:476:aa36:d67c with SMTP id
- d75a77b69052e-489c57f93f5mr39719451cf.49.1746004098321; Wed, 30 Apr 2025
- 02:08:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eyCZ9Z7e"
+Date: Wed, 30 Apr 2025 11:09:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746004175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QCRBRZZ/FbaHEC4RagoiZb8qIZ+TxSNDeJF2W7TvLAU=;
+	b=eyCZ9Z7e8YR2Rw072GaF3/+eIOxnaOFEvCAWB0Oin1QOD91c3RZq8vaMArKTKiFB0oWClh
+	2o/WsYstSvqxQzoZWbwgqN+sjthWAeFBFge56eABRNoxpPxiFGgW41ejk1uyQ9AJZE4xtX
+	qmPGcn6ezL+h8O51QC5MjQ++J0YKDWU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v3 8/9] media: i2c: ov9282: add strobe_duration v4l2
+ control
+Message-ID: <t7lnqmhufsyf5ygfkfyllvxpm4h2qdxotgi2lcfoxlhxjpejjd@mf2poxik2zje>
+References: <20250429-ov9282-flash-strobe-v3-0-2105ce179952@linux.dev>
+ <20250429-ov9282-flash-strobe-v3-8-2105ce179952@linux.dev>
+ <aBHe-55_U3bYTXyG@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429183850.211682-1-andrealmeid@igalia.com>
-In-Reply-To: <20250429183850.211682-1-andrealmeid@igalia.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 30 Apr 2025 11:08:06 +0200
-X-Gm-Features: ATxdqUEpofBZK62vFi7AqnDOQPvWYkOAMkHP_DpJNRC3xvO-qNFpo2CmpBv2h4k
-Message-ID: <CAJfpegv=CFjkAXLM26vFc0prGJ18aVeO3j_0LQSh290DQZn_+g@mail.gmail.com>
-Subject: Re: [PATCH] ovl: Fix nested backing file paths
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
-	John Schoenick <johns@valvesoftware.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBHe-55_U3bYTXyG@kekkonen.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 29 Apr 2025 at 20:39, Andr=C3=A9 Almeida <andrealmeid@igalia.com> w=
-rote:
->
-> When the lowerdir of an overlayfs is a merged directory of another
-> overlayfs, ovl_open_realfile() will fail to open the real file and point
-> to a lower dentry copy, without the proper parent path. After this,
-> d_path() will then display the path incorrectly as if the file is placed
-> in the root directory.
->
-> This bug can be triggered with the following setup:
->
->  mkdir -p ovl-A/lower ovl-A/upper ovl-A/merge ovl-A/work
->  mkdir -p ovl-B/upper ovl-B/merge ovl-B/work
->
->  cp /bin/cat ovl-A/lower/
->
->  mount -t overlay overlay -o \
->  lowerdir=3Dovl-A/lower,upperdir=3Dovl-A/upper,workdir=3Dovl-A/work \
->  ovl-A/merge
->
->  mount -t overlay overlay -o \
->  lowerdir=3Dovl-A/merge,upperdir=3Dovl-B/upper,workdir=3Dovl-B/work \
->  ovl-B/merge
->
->  ovl-A/merge/cat /proc/self/maps | grep --color cat
->  ovl-B/merge/cat /proc/self/maps | grep --color cat
->
-> The first cat will correctly show `/ovl-A/merge/cat`, while the second
-> one shows just `/cat`.
->
-> To fix that, uses file_user_path() inside of backing_file_open() to get
-> the correct file path for the dentry.
->
-> Co-developed-by: John Schoenick <johns@valvesoftware.com>
-> Signed-off-by: John Schoenick <johns@valvesoftware.com>
-> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+Hi Sakari,
 
-Perfect, thanks!
+thanks for the review!
 
-Added these:
+On Wed, Apr 30, 2025 at 08:27:39AM +0000, Sakari Ailus wrote:
+> Hi Richard,
+> 
+> On Tue, Apr 29, 2025 at 02:59:13PM +0200, Richard Leitner wrote:
+> > Add V4L2_CID_FLASH_DURATION support using the "strobe_frame_span"
+> > feature of the sensor. This is implemented by transforming the given µs
+> > value by an interpolated formula to a "span step width" value and
+> > writing it to register PWM_CTRL_25, PWM_CTRL_26, PWM_CTRL_27,
+> > PWM_CTRL_28 (0x3925, 0x3926, 0x3927, 0x3928).
+> > 
+> > The maximum control value is set to the period of the current default
+> > framerate.
+> > 
+> > All register values are based on the OV9281 datasheet v1.53 (jan 2019)
+> > and tested using an ov9281 VisionComponents module.
+> > 
+> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > ---
+> >  drivers/media/i2c/ov9282.c | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> > 
+> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> > index 35edbe1e0efb61a0e03da0ed817c4c4ec0ae9c35..5ddbfc51586111fbd2e17b739fb3d28bfb0aee1e 100644
+> > --- a/drivers/media/i2c/ov9282.c
+> > +++ b/drivers/media/i2c/ov9282.c
+> > @@ -97,6 +97,10 @@
+> >  #define OV9282_REG_MIPI_CTRL00	0x4800
+> >  #define OV9282_GATED_CLOCK	BIT(5)
+> >  
+> > +/* Flash/Strobe control registers */
+> > +#define OV9282_REG_FLASH_DURATION	0x3925
+> > +#define OV9282_FLASH_DURATION_DEFAULT	0x0000001A
+> > +
+> >  /* Input clock rate */
+> >  #define OV9282_INCLK_RATE	24000000
+> >  
+> > @@ -687,6 +691,24 @@ static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
+> >  				current_val);
+> >  }
+> >  
+> > +static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
+> > +{
+> > +	/* Calculate "strobe_frame_span" increments from a given value (µs).
+> 
+> /*
+>  * Multi-line
+>  * comment.
+>  */
 
-    Fixes: def3ae83da02 ("fs: store real path instead of fake path in
-backing file f_path")
-    Cc: <stable@vger.kernel.org> # v6.7
+sure. will adapt that in v4.
 
-and pushed to ovl-next.
+> 
+> > +	 * This is quite tricky as "The step width of shift and span is
+> > +	 * programmable under system clock domain.", but it's not documented
+> > +	 * how to program this step width (at least in the datasheet available
+> > +	 * to the author at time of writing).
+> > +	 * The formula below is interpolated from different modes/framerates
+> > +	 * and should work quite well for most settings.
+> > +	 */
+> > +	u32 val = value * 192 / (ov9282->cur_mode->width + ov9282->hblank_ctrl->val);
+> > +
+> > +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> 24) & 0xff);
+> > +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val >> 16) & 0xff);
+> > +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 2, 1, (val >> 8) & 0xff);
+> > +	return ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 3, 1, val & 0xff);
+> 
+> The granularity of the hardware supported values is lower than that of the
+> control. Could you add try_ctrl op to provide the actual value back to the
+> user space?
 
-Thanks,
-Miklos
+Tbh, I've never implemented a try_ctrl before, but sure. I will dig into it and
+add it for the ov9282 FLASH_DURATION in v4.
+
+> 
+> > +}
+> > +
+> >  /**
+> >   * ov9282_set_ctrl() - Set subdevice control
+> >   * @ctrl: pointer to v4l2_ctrl structure
+> > @@ -756,6 +778,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  	case V4L2_CID_FLASH_LED_MODE:
+> >  		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
+> >  		break;
+> > +	case V4L2_CID_FLASH_DURATION:
+> > +		ret = ov9282_set_ctrl_flash_duration(ov9282, ctrl->val);
+> > +		break;
+> >  	default:
+> >  		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
+> >  		ret = -EINVAL;
+> > @@ -1418,6 +1443,9 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+> >  			       (1 << V4L2_FLASH_LED_MODE_TORCH),
+> >  			       V4L2_FLASH_LED_MODE_NONE);
+> >  
+> > +	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
+> 
+> Should the number of controls in the handler be updated?
+
+What do you mean by "number of controls in the handler" exactly? Which
+handler?
+
+> > +			  0, 13900, 1, 8);
+> > +
+> >  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+> >  	if (!ret) {
+> >  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> > 
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
+
+regards;rl
