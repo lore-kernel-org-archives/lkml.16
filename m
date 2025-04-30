@@ -1,96 +1,113 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E1B21ADC3;
-	Wed, 30 Apr 2025 14:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79142609E3
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746023824; cv=none; b=BKctJPW9mAnP9JLTAqT8zBABUrOeV2gckW+6tdlGlqUMgoeHPW98fB8G3jW4wBTng6lchBt4UZkEeaHL72p7zJGnbIzD+1PYZM9hT7lZiCyLbjSIJlmLD384qS2euHJdhdWniwEJ6l53wa1PMduioqllS8JQA4KfOOAt1eoCN78=
+	t=1746023827; cv=none; b=M+UQOYOsINSmgoQ7zKOSmqpfLfzIXiqP4+5fRGIQdnoXN4Lm87j9sjzymIqJACDCXL948ULLoTj3dL9k328T8qAbXYNwitLZHwl5qqcXfG9u7/qVRuy4V03rzokYq4dsf+VH67ZMAIsGHL3DnLdcCARDDmyG/XskwrPRO7Ub7MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746023824; c=relaxed/simple;
-	bh=bqhe/3wNNetMAnct5PI5HuOKdKT6FhLcSekOS/ZFhsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+c6yafwZ2HYbhpTbL6FIGMZ7ZMxNxiv82oxhltYAWA712BHri+Vl5oA7dZr+A3MpCwhqVX9UzJq6Y5MUzInRZ2HbxCB7KgsnJFFM8LEFd+Q6QxH/ha8e30P4v7sevx/IhYywV0sRo9PQWfV+VWA/hXino/OTolmtGWFq4ABDs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qt0JpBNR; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746023827; c=relaxed/simple;
+	bh=Cw01BMeCM6YvnE7+TtUzkEpxFldrGUjEnSxcsjrIT4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MHTQXyv2mMZmAtQS/1A1eoOKc/tPMMNsybJzG4PGs+dPmRSTwGhjV5Zr/RSo5tos7vRQuFvdFtQcOXDQq3rzGSCi1nHiGLijiQXBsQP4tWu7JTYiA0tPOKi2QebQOn4WC48uEQx+gsDLO9mbAMTSP1YwCA+1wu/2Lc4u9abgIS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sQNIXZ86; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qt0JpBNR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746023812;
-	bh=bqhe/3wNNetMAnct5PI5HuOKdKT6FhLcSekOS/ZFhsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qt0JpBNR2hK2mKSMpQBhV7DlvYlkIh8CixnfUKZGYR4vzp7g13bKclX1wami2lQRG
-	 Q0rs6uQmC8kbxpeCPq1E3oDsARy6iY5rfR2nNmYXhJUcK+/lOkdXRWoi5km0KFfbSu
-	 VAVyAcilSGw4vxeIRuSnTdzkdcIKYEETGVWVRYF0=
-Date: Wed, 30 Apr 2025 16:36:51 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Sung-Chi Li <lschyi@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 3/3] hwmon: (cros_ec) register fans into thermal
- framework cooling devices
-Message-ID: <2518c6a3-6524-48b3-8e64-8990a61cc608@t-8ch.de>
-References: <20250429-cros_ec_fan-v1-0-a8d9e3efbb1a@chromium.org>
- <20250429-cros_ec_fan-v1-3-a8d9e3efbb1a@chromium.org>
- <ec2f7e54-0582-475d-af91-42d9be65cd3e@t-8ch.de>
- <aBGCB6_4XR4Z-vFI@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sQNIXZ86"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DC4AC4CEE9;
+	Wed, 30 Apr 2025 14:37:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746023827;
+	bh=Cw01BMeCM6YvnE7+TtUzkEpxFldrGUjEnSxcsjrIT4c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sQNIXZ86gygyH4kzJtUk54VZIp45q6TMW0t9/c95Hx3woh+QEhSdjpQUnTj+vMyZs
+	 Texavzc0yfxjD387doQyurxbPFZdOLeMT4CbL6UFjrwobI0pr3m57ufpKQbfO5GMkt
+	 SggjEhVaaZHWQ50H+uAzCHJCRu8poS0hykBOh5xY=
+Date: Wed, 30 Apr 2025 16:36:59 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "conduct@kernel.org" <conduct@kernel.org>,
+	tech-board <tech-board@lists.linux-foundation.org>
+Subject: Code of Conduct Committee report for April 2024 - March 2025
+Message-ID: <2025043021-reprogram-gloss-acb5@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBGCB6_4XR4Z-vFI@google.com>
 
-On 2025-04-30 09:51:03+0800, Sung-Chi Li wrote:
-> On Tue, Apr 29, 2025 at 10:45:56PM +0200, Thomas Weißschuh wrote:
-> > On 2025-04-29 16:14:23+0800, Sung-Chi Li via B4 Relay wrote:
-> > > From: Sung-Chi Li <lschyi@chromium.org>
-> > > 
-> > > Register fans connected under EC as thermal cooling devices as well, so
-> > > these fans can then work with the thermal framework.
-> > > 
-> > > During the driver probing phase, we will also try to register each fan
-> > > as a thermal cooling device based on previous probe result (whether the
-> > > there are fans connected on that channel, and whether EC supports fan
-> > > control). The basic get max state, get current state, and set current
-> > > state methods are then implemented as well.
-> > 
-> > There is also HWMON_C_REGISTER_TZ, however it depends on OF.
-> > But this patch looks very generic, so maybe it makes sense to implement
-> > it in the hwmon core.
-> > 
-> 
-> Hi, the HWMON_C_REGISTER_TZ is for registering a thermal sensor, and here I
-> registered it as thermal cooling devices, so they are different. I followed
-> other hwmon drivers:
-> 
->   - gpio-fan.c
->   - aspeed-pwm-tacho.c
->   - max6650.c
->   - qnap-mcu-hwmon.c
->   - ...
 
-Indeed, sorry.
+Linux Kernel Code of Conduct Committee: March 31, 2025
 
-> . These hwmon drivers also manually registered other cooling devices, and that
-> makes sense to me, so I think it is good to just register cooling devices rather
-> than make big changes to hwmon core.
+Updates to the Code of Conduct documents:
+ - The Code of Conduct documentation has been updated to clearly
+   outline the enforcement when Unacceptable Behavior Code
+   of Conduct Violations take place, and outline the Technical
+   Advisory Board's role in approving remedial actions recommended
+   by the Code of Conduct Committee.
 
-The implementation does look like a lot of boilerplate.
-If Guenter doesn't chime in, let's stick with the current approach.
+Reference:
+   https://docs.kernel.org/process/code-of-conduct-interpretation.html#code-of-conduct-interpretation
 
-> > > Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
-> > > ---
-> > >  Documentation/hwmon/cros_ec_hwmon.rst |  2 +
-> > >  drivers/hwmon/cros_ec_hwmon.c         | 72 +++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 74 insertions(+)
-> > 
-> > <snip>
+In the period of April 1, 2024 through March 31, 2025, the Code of
+Conduct Committee received the following reports:
+
+Reports received: 17
+
+Development process related reports:
+ - Education and coaching on maintainers' right to accept or reject
+   patches. Clarifying the expectations that developers can't demand
+   their patches to be reviewed and/or accepted by the community.
+
+   These reports were about a developer demanding their patch to be
+   accepted even after repeated attempts by maintainers advising the
+   developers to understand the development process.
+
+Code of Conduct scope and enforcement related reports:
+ - Education and coaching on the role and scope of the Code of Conduct.
+
+   Several reports from people outside the kernel community reporting
+   past incidents before the Code of Conduct was adopted. Reports
+   resolved clarifying the scope and validity of reports about past
+   incidents before adopting the Code of Conduct.
+
+Insensitive comments reports:
+ - Education and coaching on the role and scope of the Code of Conduct.
+
+   Reports about Office of Foreign Assets Control (OFAC) related actions
+   and offhand comments in technical discussions that do not rise to the
+   level of violations.
+
+Unacceptable behavior or comments in email: 6
+- 4 reports resolved instituting remedial measures on two individuals
+  restricting their participation in development process.
+
+  -- Rejecting pull requests from an individual for a full release cycle.
+     Reference: 1
+
+  -- Banning an individual for 3 months from Linux kernel mailing lists.
+     Reference: 2
+
+- References:
+  -- 1. https://lore.kernel.org/all/6740fc3aabec0_5eb129497@dwillia2-xfh.jf.intel.com.notmuch/
+  -- 2. https://lore.kernel.org/all/67cf7499597e9_1198729450@dwillia2-xfh.jf.intel.com.notmuch/
+
+- Others
+  - Resolved with the individuals making amends for their behaviors.
+
+We would like to thank the Linux kernel community members who have
+supported the adoption of the Code of Conduct and who continue to
+uphold the professional standards of our community. If you have
+questions about this report, please write to <conduct@kernel.org>.
+
+Please visit the following Code of Conduct link below for information
+about the Code of Conduct Committee and previous reports:
+
+- https://www.kernel.org/code-of-conduct.html
+
+
+greg k-h
+(On behalf of the Code of Conduct Committee)
